@@ -74,10 +74,10 @@
 /* VISCOSITY PROPERTIES */
 #define ACTVISCMAN       3e5                    /**< [J/mol] Mantle viscosity activation energy */
 #define ACTSHMODMAN      2e5                    /**< [J/mol] Mantle shear modulus activation energy */
-#define STIFFNESS        1e13                   /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100) */
-#define SHMODREF         6e6                    /**< [Pa] Reference kinematic mantle shear modulus */
-#define VISCREF          5e7                    /**< [m^2/s] Reference kinematic mantle viscosity */
-#define VISCJUMPMAN      2.7                    /**< [nd] Viscosity jump from upper to lower mantle */
+#define STIFFNESS        1.7169e13  //1e13                   /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100) */
+#define SHMODREF         6.24e4    //6e6                    /**< [Pa] Reference kinematic mantle shear modulus */
+#define VISCREF          6e7   //5e7                    /**< [m^2/s] Reference kinematic mantle viscosity */
+#define VISCJUMPMAN      2.49                    /**< [nd] Viscosity jump from upper to lower mantle */
 #define FIXVISCJUMPMAN   0                      /**< [nd] (default) Option to fix viscjumpulm. if =0 then viscLM is computed from TLMan. */
 #define VISCJUMPMMAN     10.                    /**< [nd] Viscosity jump from upper to average (mid) mantle */
 #define VISCMELTB        2.5                    /**< [nd] Viscosity-melt reduction coefficient "B" (DB15 eq 8) */
@@ -107,8 +107,8 @@
 /* CORE CHEMISTRY */
 #define DTCHIREF         300.                   /**< [K] Core reference liquidus depression */
 #define CHI_OC_E         0.18                   /**< [nd] Earth's outer core light element concentration */
-#define PARTITION_CHI_CORE (ERICB)/(ERCORE)     /**< [nd] Core light element partition coefficent */
-#define CHI_IC_E         PARTITION_CHI_CORE*CHI_OC_E /**< [nd] Inner core light element concentration in Earth  (CHI_IC_E=partition*CHI_OC_E) */
+#define PARTITION_CHI_CORE (ERCORE)/(ERICB)  //(ERICB)/(ERCORE)     /**< [nd] Core light element partition coefficent */
+#define CHI_IC_E         CHI_OC_E/PARTITION_CHI_CORE  //PARTITION_CHI_CORE*CHI_OC_E /**< [nd] Inner core light element concentration in Earth  (CHI_IC_E=partition*CHI_OC_E) */
 #define EMASSOC_CHI      CHI_OC_E*EMASSOC       /**< [kg] Mass of light elements (Chi) in Earth's outer core */
 #define EMASSIC_CHI      CHI_IC_E*EMASSIC       /**< [kg] Mass of light elements (Chi) in Earth's inner core */
 #define EMASSCORE_CHI    EMASSOC_CHI+EMASSIC_CHI/**< [kg] Total core light element mass of Earth (conserved) */

@@ -1403,6 +1403,8 @@ void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dMeltMassFluxMan=fdMeltMassFluxMan(body,iBody);
   body[iBody].dViscMMan=fdViscMMan(body,iBody);
   body[iBody].dRayleighMan=fdRayleighMan(body,iBody);
+  body[iBody].dK2Man=fdK2Man(body,iBody);
+  body[iBody].dImk2Man=fdImk2Man(body,iBody);
 
   /* Heat Flows */
   /* Mantle */
@@ -1416,16 +1418,19 @@ void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dHflowMeltMan=fdHflowMeltMan(body,iBody);
   body[iBody].dHflowSecMan=fdHflowSecMan(body,iBody);
   body[iBody].dHflowSurf=fdHflowSurf(body,iBody);
+  body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
 
   /* Core */
   /* Iterate on Core chemistry before R_ICB */
   // The order matters here!
   body[iBody].dMassIC=fdMassIC(body,iBody);
   body[iBody].dMassOC=fdMassOC(body,iBody);
-  body[iBody].dMassChiOC=fdMassChiOC(body,iBody);
-  body[iBody].dMassChiIC=fdMassChiIC(body,iBody);
+//  body[iBody].dMassChiOC=fdMassChiOC(body,iBody);
+//  body[iBody].dMassChiIC=fdMassChiIC(body,iBody);
   body[iBody].dChiOC=fdChiOC(body,iBody);
   body[iBody].dChiIC=fdChiIC(body,iBody);
+  body[iBody].dMassChiOC=fdMassChiOC(body,iBody); 
+  body[iBody].dMassChiIC=fdMassChiIC(body,iBody);
   body[iBody].dDTChi=fdDTChi(body,iBody);
   body[iBody].dRIC=fdRIC(body,iBody);
   body[iBody].dDRICDTCMB=fdDRICDTCMB(body,iBody);
@@ -2849,7 +2854,7 @@ void fvWriteHflowSecMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   } else { }
 }
 
-/* All tidal phenomena should live in eqtide.c
+///* All tidal phenomena should live in eqtide.c
 void fvWriteTidalPowMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = body[iBody].dTidalPowMan;
   if (output->bDoNeg[iBody]) {
@@ -2857,7 +2862,9 @@ void fvWriteTidalPowMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     strcpy(cUnit,output->cNeg);
   } else { }
 }
-*/
+//*/
+
+
 /**
   Write latent heat flow from ICB output
 
@@ -3494,7 +3501,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLOWMELTMAN].iNum = 1;
   output[OUT_HFLOWMELTMAN].iModuleBit = THERMINT;
   fnWrite[OUT_HFLOWMELTMAN] = &fvWriteHflowMeltMan;
-  /* TidalPowMan
+  /* TidalPowMan */
   sprintf(output[OUT_TIDALPOWMAN].cName,"TidalPowMan");
   sprintf(output[OUT_TIDALPOWMAN].cDescr,"Tidal Power Mantle");
   sprintf(output[OUT_TIDALPOWMAN].cNeg,"TW");
@@ -3502,7 +3509,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALPOWMAN].dNeg = 1e-12;
   output[OUT_TIDALPOWMAN].iNum = 1;
   output[OUT_TIDALPOWMAN].iModuleBit = THERMINT;
-  fnWrite[OUT_TIDALPOWMAN] = &fvWriteTidalPowMan; */
+  fnWrite[OUT_TIDALPOWMAN] = &fvWriteTidalPowMan; 
   /* HFlowSecMan */
   sprintf(output[OUT_HFLOWSECMAN].cName,"HflowSecMan");
   sprintf(output[OUT_HFLOWSECMAN].cDescr,"Mantle Secular Heat Flow");
@@ -4038,8 +4045,13 @@ double fdDynamicViscosity(BODY *body,int iBody) {
 */
 double fdImk2Man(BODY *body,int iBody) {
   double viscdyn=fdDynamicViscosity(body,iBody);
-  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan),2.);
+  //  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan),2.);
+  double tidal_q = viscdyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+  double denom2 = pow(3./2*tidal_q/body[iBody].dK2,2.);
   double imk2=(57./4)*viscdyn*body[iBody].dMeanMotion/( (body[iBody].dStiffness)*(1.0+ denom2) );
+  //  double meanmotion=body[iBody].dMeanMotion*(YEARSEC); //conv to s^-1
+  //  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*meanmotion/body[iBody].dShmodUMan),2.);
+  //  double imk2=(57./4)*viscdyn*meanmotion/( (body[iBody].dStiffness)*(1.0+ denom2) );
   return imk2;
 }
 
@@ -4066,28 +4078,7 @@ double fdMassIC(BODY *body, int iBody) {
 double fdMassOC(BODY *body, int iBody) {
   return EMASSCORE-body[iBody].dMassIC;
 }
-/**
-  Function compute light element mass in outer core
 
-  @param body Body struct
-  @param iBody Index of body
-
-  @return Light element mass in outer core
-*/
-double fdMassChiOC(BODY *body, int iBody) {
-  return EMASSCORE_CHI/( PARTITION_CHI_CORE*body[iBody].dMassIC/body[iBody].dMassOC + 1. );
-}
-/**
-  Function compute light element mass in inner core
-
-  @param body Body struct
-  @param iBody Index of body
-
-  @return Light element mass in inner core
-*/
-double fdMassChiIC(BODY *body, int iBody) {
-  return EMASSCORE_CHI-body[iBody].dMassChiOC;
-}
 /**
   Function compute light element concentration in outer core
 
@@ -4097,7 +4088,8 @@ double fdMassChiIC(BODY *body, int iBody) {
   @return Light element concentration in outer core
 */
 double fdChiOC(BODY *body, int iBody) {
-  return body[iBody].dMassChiOC/body[iBody].dMassOC;
+  //  return body[iBody].dMassChiOC/body[iBody].dMassOC;
+  return (EMASSCORE_CHI)/(body[iBody].dMassOC+body[iBody].dMassIC/(PARTITION_CHI_CORE)) ;
 }
 /**
   Function compute light element concentration in inner core
@@ -4109,11 +4101,39 @@ double fdChiOC(BODY *body, int iBody) {
 */
 double fdChiIC(BODY *body, int iBody) {
   if (body[iBody].dRIC>0.) {
-    return body[iBody].dMassChiIC/body[iBody].dMassIC;
+    //    return body[iBody].dMassChiIC/body[iBody].dMassIC;
+    return body[iBody].dChiOC/(PARTITION_CHI_CORE);
   } else {
     return 0.;
   }
 }
+
+/**
+  Function compute light element mass in outer core
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Light element mass in outer core
+*/
+double fdMassChiOC(BODY *body, int iBody) {
+  //  return EMASSCORE_CHI/( PARTITION_CHI_CORE*body[iBody].dMassIC/body[iBody].dMassOC + 1. );
+  return body[iBody].dMassOC*body[iBody].dChiOC;
+}
+/**
+  Function compute light element mass in inner core
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Light element mass in inner core
+*/
+double fdMassChiIC(BODY *body, int iBody) {
+  //  return EMASSCORE_CHI-body[iBody].dMassChiOC;
+  return body[iBody].dChiIC*body[iBody].dMassIC;
+}
+
+
 /**
   Function compute core liquidus depression due to light element concentration
 
@@ -4139,6 +4159,9 @@ double fdRIC(BODY *body,int iBody) {
   double T_fe_cen=body[iBody].dTrefLind-(body[iBody].dDTChi);     //Liquidus at center of core.
   double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(body[iBody].dDLind),2.0))-(body[iBody].dDTChi); //Liquidus@CMB
   double numerator=1.+pow((body[iBody].dDAdCore)/(ERCORE),2.)*log(body[iBody].dTCMB/T_fe_cen);
+  if ((T_fe_cmb/T_fe_cen)<0){
+    return 0;   //for debugging only!
+  }
   double denom=1.+pow((body[iBody].dDAdCore)/(ERCORE),2.0)*log(T_fe_cmb/T_fe_cen);
   if ((numerator/denom)>0.) {    //IC exists
     dRIC = (ERCORE)*sqrt(numerator/denom);
@@ -4291,9 +4314,10 @@ double fdMagPauseRad(BODY *body, int iBody) {
   @return Tidal power in solid mantle
 */
 double fdTidalPowMan(BODY *body,int iBody) {
-  // dflemin3: dRadius -> dTidalRadius
-  // PD: Should this use dTidalRadius or dRadius??
-  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dTidalRadius,5.)*body[iBody].dMeanMotion*pow(body[iBody].dEcc,2.);
+    double meanmotion=body[iBody].dMeanMotion*(YEARSEC); //conv to s^-1
+    double TidalPowMan = (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dTidalRadius,5.)*meanmotion*pow(body[iBody].dEcc,2.);
+    body[iBody].dPowerEqtide = TidalPowMan; //reset this tidal power, which is used in the orb evo.
+    return TidalPowMan;
 }
 
 /* Heat Fluxes/flows */
@@ -4615,12 +4639,12 @@ double cubicroot(int type,BODY *body,int iBody) {
     }
     double delta0=pow(b,2.0)-3.0*a*c;                                             //cubic root component (wikip)
     double delta1=2.0*cube(b)-9.0*a*b*c+27.0*pow(a,2.0)*d;                        //cubic root component (wikip)
-    double croot=pow( (delta1+sqrt(pow(delta1,2.0)-4.0*cube(delta0))) /2.0,1./3); //cubic root component (wikip)
-    if (pow(delta1,2.0)-4.0*cube(delta0) < 0) {
+    if ((pow(delta1,2.0)-4.0*cube(delta0)) < 0) {
       //        printf("imaginary cubic root!\n");
       //        exit(1);
       return 0;       //imaginary root implies no intersection, no melt layer?
     }
+    double croot=pow( (delta1+sqrt(pow(delta1,2.0)-4.0*cube(delta0))) /2.0,1./3); //cubic root component (wikip)
     double root=-1.0/(3.0*a)*(b+croot+delta0/croot);                              //real cubic root, radius of layer.
     return ERMAN-root;                                                            //Return depth.
 }

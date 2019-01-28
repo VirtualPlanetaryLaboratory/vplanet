@@ -19,15 +19,13 @@
 
 void InitializeControlEqtide(CONTROL *control,int iBody) {
 
-  /* We only want to initialize these values once. The following will not
-     work if moons are included! */
-  if (iBody==0) {
+  /* We only want to initialize these values once, but if the user fails to instantiate
+     eqtide for body 0, then the code segaults and fixing this is hard. So we just re-malloc.
+     */
     control->Evolve.bForceEqSpin=malloc(control->Evolve.iNumBodies*sizeof(int));
     control->Evolve.dMaxLockDiff=malloc(control->Evolve.iNumBodies*sizeof(double));
     control->Evolve.dSyncEcc=malloc(control->Evolve.iNumBodies*sizeof(double));
     control->Evolve.bFixOrbit=malloc(control->Evolve.iNumBodies*sizeof(int));
-
-  }
 }
 
 /* All the auxiliary properties for EQTIDE calculations need to be included
@@ -1205,19 +1203,25 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
 
     if (body[iBody].bEqtide) {
       if (body[iBody].iTidePerts > 0) {
-	for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
-	  bFound[iPert] = 0;
-	  for (iBodyPert=0;iBodyPert<iNumBodies;iBodyPert++) {
-	    if (iBodyPert != iBody) {
-	      if (strncmp(body[iBody].saTidePerts[iPert],body[iBodyPert].cName,sizeof(body[iBody].saTidePerts[iPert])) == 0) {
-		/* This parameter contains the body # of the "iPert-th"
-		   tidal perturber */
-		body[iBody].iaTidePerts[iPert]=iBodyPert;
-		bFound[iPert]=1;
-	      }
-	    }
-	  }
-	}
+	       for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
+	          bFound[iPert] = 0;
+	          for (iBodyPert=0;iBodyPert<iNumBodies;iBodyPert++) {
+	             if (iBodyPert != iBody) {
+	                if (strncmp(body[iBody].saTidePerts[iPert],body[iBodyPert].cName,sizeof(body[iBody].saTidePerts[iPert])) == 0) {
+		                 /* This parameter contains the body # of the "iPert-th"
+		                    tidal perturber */
+		                 body[iBody].iaTidePerts[iPert]=iBodyPert;
+		                 bFound[iPert]=1;
+
+                     // Was eqtide set for the perturbed body?
+                     if (!body[iBodyPert].bEqtide) {
+                       fprintf(stderr,"ERROR: %s tidally perturbs %s, but module EQTIDE was not selected for body %s.\n",body[iBody].cName,body[iBodyPert].cName,body[iBodyPert].cName);
+                       DoubleLineExit(options[OPT_TIDEPERTS].cFile[iBody+1],options[OPT_MODULES].cFile[iBodyPert+1],options[OPT_TIDEPERTS].iLine[iBody+1],options[OPT_MODULES].iLine[iBodyPert+1]);
+                     }
+	                }
+	             }
+	          }
+	       }
       }
 
       /* Were all tidal perturbers identified? */
@@ -1242,6 +1246,7 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
         }
       }
 
+      // Was saTidePerts set?
       for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
         if (!(body[body[iBody].iaTidePerts[iPert]].bEqtide)) {
           fprintf(stderr,"ERROR: Eqtide called for body %s, but option %s not set.\n",body[iBody].cName,options[OPT_TIDEPERTS].cName);
@@ -1260,10 +1265,10 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
     ok=0;
     if (body[iBody].bEqtide) {
       for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
-	for (iBodyPert=0;iBodyPert<body[body[iBody].iaTidePerts[iPert]].iTidePerts;iBodyPert++) {
-	  if (iBody == body[body[iBody].iaTidePerts[iPert]].iaTidePerts[iBodyPert])
-	    /* Match */
-	    ok=1;
+	       for (iBodyPert=0;iBodyPert<body[body[iBody].iaTidePerts[iPert]].iTidePerts;iBodyPert++) {
+	          if (iBody == body[body[iBody].iaTidePerts[iPert]].iaTidePerts[iBodyPert])
+	           /* Match */
+	            ok=1;
 	}
 	if (!ok) {
 	  fprintf(stderr,"ERROR: %s tidally perturbs %s, but %s does NOT tidally perturb %s\n",body[iBody].cName,body[body[iBody].iaTidePerts[iPert]].cName,body[body[iBody].iaTidePerts[iPert]].cName,body[iBody].cName);
@@ -1805,14 +1810,22 @@ void WriteDOblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void WriteTidalQOcean(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = body[iBody].dK2Ocean/body[iBody].dImK2Ocean;
+  /* Return -1 if dImK2Ocean is 0. There may be a better way to do this. XXX */
+  if (body[iBody].dImK2Ocean > 0)
+    *dTmp = body[iBody].dK2Ocean/body[iBody].dImK2Ocean;
+  else
+    *dTmp = -1;
 
   strcpy(cUnit,"");
 }
 
 void WriteTidalQEnv(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = body[iBody].dK2Env/body[iBody].dImK2Env;
+  /* Return -1 if dImK2Env is 0. There may be a better way to do this. XXX */
+  if (body[iBody].dImK2Env > 0)
+    *dTmp = body[iBody].dK2Env/body[iBody].dImK2Env;
+  else
+    *dTmp = -1;
 
   strcpy(cUnit,"");
 }
@@ -3127,7 +3140,9 @@ double fdCPLTidePower(BODY *body,int iBody) {
     // XXX RB: Does this work with DF's changes to da/dt with the synchronous case?
     dOrbPow += -body[iBody].dTidalZ[iIndex]/8 * (4*body[iBody].iTidalEpsilon[iIndex][0] + body[iOrbiter].dEccSq*(-20*body[iBody].iTidalEpsilon[iIndex][0] + 147./2*body[iBody].iTidalEpsilon[iIndex][1] + 0.5*body[iBody].iTidalEpsilon[iIndex][2] - 3*body[iBody].iTidalEpsilon[iIndex][5]) - 4*sin(body[iBody].dObliquity)*sin(body[iBody].dObliquity)*(body[iBody].iTidalEpsilon[iIndex][0] - body[iBody].iTidalEpsilon[iIndex][8]));
 
+    /* Removing rotational power to check for consistency with Peter's IDL code
     dRotPow += body[iBody].dTidalZ[iIndex]*body[iBody].dRotRate/(8*body[iOrbiter].dMeanMotion) * (4*body[iBody].iTidalEpsilon[iIndex][0] + body[iOrbiter].dEccSq*(-20*body[iBody].iTidalEpsilon[iIndex][0] + 49*body[iBody].iTidalEpsilon[iIndex][1] + body[iBody].iTidalEpsilon[iIndex][2]) + 2*sin(body[iBody].dObliquity)*sin(body[iBody].dObliquity)*(-2*body[iBody].iTidalEpsilon[iIndex][0] + body[iBody].iTidalEpsilon[iIndex][8] + body[iBody].iTidalEpsilon[iIndex][9]));
+    */
   }
 
   return dOrbPow + dRotPow;

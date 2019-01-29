@@ -34,6 +34,12 @@ void InitializeControlEqtide(CONTROL *control,int iBody) {
 void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
 
+  /* XXX Lines from ThermInt. Should be incorporated into new DB15 model */
+  dest[iBody].dK2Man=src[iBody].dK2Man;
+  dest[iBody].dImk2Man=src[iBody].dImk2Man;
+  dest[iBody].dTidalPowMan=src[iBody].dTidalPowMan;
+
+
   dest[iBody].iTidePerts = src[iBody].iTidePerts;
   dest[iBody].dImK2 = src[iBody].dImK2;
   dest[iBody].dImK2Ocean = src[iBody].dImK2Ocean;
@@ -80,6 +86,9 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
       dest[iBody].dTidalBeta = src[iBody].dTidalBeta;
       for (iIndex=0;iIndex<5;iIndex++)
           dest[iBody].dTidalF[iPert][iIndex] = src[iBody].dTidalF[iPert][iIndex];
+    }
+    if (iTideModel == DB15) {
+      dest[iBody].dImK2Man = src[iBody].dImK2Man
     }
   }
 }
@@ -507,9 +516,11 @@ void ReadTideModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       control->Evolve.iEqtideModel = CPL;
     } else if (!memcmp(sLower(cTmp),"t8",2)) {
       control->Evolve.iEqtideModel = CTL;
+    } else if (!memcmp(sLower(cTmp),"db15",4)) {
+      control->Evolve.iEqtideModel = DB15;
     } else {
       if (control->Io.iVerbose >= VERBERR)
-        fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are p2 or t8.\n",options->cName,cTmp);
+        fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are p2, t8 or DB15.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -794,7 +805,7 @@ void VerifyRotationEqtideWarning(char cName1[],char cName2[],char cFile[],int iL
 
 void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *options,int iBody) {
 
-  if(control->Evolve.iEqtideModel == CPL) {
+  if (control->Evolve.iEqtideModel == CPL) {
     update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 5;
     update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
     update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide]*sizeof(int));
@@ -802,15 +813,18 @@ void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *op
 
     update[iBody].pdLostEngEqtide = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngEqtide];
   }
-  else if(control->Evolve.iEqtideModel == CTL) {
+  else if (control->Evolve.iEqtideModel == CTL) {
     update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 5;
     update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
     update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide]*sizeof(int));
     update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide][0] = iBody;
 
     update[iBody].pdLostEngEqtide = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngEqtide];
-  }
-  else{
+  } else if (control->Evolve.iEqtideModel == DB15) {
+    if (control->Io.iVerbose > VERBPROG) {
+      printf("WARNING: Angular momentum conservation is not checked for EqTide model DB15.\n");
+    }
+  } else {
     fprintf(stderr,"ERROR: Must choose CPL or CTL tidal model!\n");
     exit(1);
   }
@@ -1188,12 +1202,16 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
   output[OUT_TIDALTAU].iNum = 0;
 }
 
+void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,int iBody,int iModule) {
+}
+
 /** Verify all arguments to saTidePerturbers. This subroutine will called
    from each body using module eqtide, but we must make sure that each pair
    of perturbing bodies points to each other, so we must loop through verify
    all the bodies at the same time. This means all these lines will be
    repeated for each tidally evolving body. But, if it's verified the first
    time, it should verify every time! */
+
 
 void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *update,int iNumBodies,int iBody) {
   int iPert,iBodyPert,iVar,ok;
@@ -1351,13 +1369,14 @@ void VerifyTideModel(CONTROL *control,FILES *files,OPTIONS *options) {
 
 void AssignEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   int iPert;
-  if(evolve->iEqtideModel == CPL) {
+  if (evolve->iEqtideModel == CPL) {
     fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngEqtide] = &fdDEdTCPLEqtide;
-  }
-  else if(evolve->iEqtideModel == CTL) {
+  } else if (evolve->iEqtideModel == CTL) {
     fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngEqtide] = &fdDEdTCTLEqtide;
-  }
-  else{
+  } else if (evolve->iEqtideModel == DB15) {
+    // Energy not tracked in DB15
+    fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngEqtide] = &fndUpdateFunctionTiny;
+  } else {
     fprintf(stderr,"ERROR: Must choose CPL or CTL tidal model!\n");
     exit(1);
   }
@@ -1397,6 +1416,22 @@ void AssignEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
       else
         fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fdCPLDrotrateDt;
     }
+
+    // DB15 Derivatives
+
+    if (evolve->iEqtideModel == DB15) {
+
+      // DB15 assumes no obliquity => must be initialized to 0, and not evolve
+      fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]] = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iYobl][update[iBody].iaYoblEqtide[iPert]] = &fndUpdateFunctionTiny;
+      fnUpdate[iBody][update[iBody].iZobl][update[iBody].iaZoblEqtide[iPert]] = &fndUpdateFunctionTiny;
+
+      // DB15 assumes rotation rate is fixed at synchronous
+      evolve->bForceEqSpin[iBody] = 1;
+      fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] = &fndUpdateFunctionTiny;
+    }
+
+
   }
 
   /* Is this the secondary body, and hence we assign da/dt and de/dt? */
@@ -1418,6 +1453,14 @@ void AssignEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
         fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdCPLDHeccDt;
         fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdCPLDKeccDt;
       }
+
+      // DB15 Model Derivatives
+      if (evolve->iEqtideModel == DB15) {
+
+        fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fdDB15DsemiDt;
+        fnUpdate[iBody][update[iBody].iHecc][update[iBody].iHeccEqtide] = &fdDB15DHeccDt;
+        fnUpdate[iBody][update[iBody].iKecc][update[iBody].iKeccEqtide] = &fdDB15DKeccDt;
+      }
     } else {
       // If the orbit is fixed, function return dTINY
       fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqtide] = &fndUpdateFunctionTiny;
@@ -1426,6 +1469,8 @@ void AssignEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
     }
   }
 }
+
+// XXX What is this function about? Why is it only for CTL?
 
 void NullEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   int iPert;
@@ -1475,6 +1520,9 @@ void VerifyEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   if (control->Evolve.iEqtideModel == CPL)
     VerifyCPL(body,control,files,options,output,update,iBody,iModule);
+
+  if (control->Evolve.iEqtideModel == DB15)
+    VerifyDB15(body,control,files,options,output,update,iBody,iModule);
 
   VerifyLostEngEqtide(body,update,control,options,iBody);
 
@@ -1707,6 +1755,7 @@ void VerifyHaltEqtide(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
 }
 
 /************* EQTIDE Outputs ******************/
+
 
 /*
  * B
@@ -2338,6 +2387,22 @@ void WriteTideLock(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 }
 
 void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
+
+// DB15
+  /* TidalPowMan */
+  sprintf(output[OUT_TIDALPOWMAN].cName,"TidalPowMan");
+  sprintf(output[OUT_TIDALPOWMAN].cDescr,"Tidal Power Mantle");
+  sprintf(output[OUT_TIDALPOWMAN].cNeg,"TW");
+  output[OUT_TIDALPOWMAN].bNeg = 1;
+  output[OUT_TIDALPOWMAN].dNeg = 1e-12;
+  output[OUT_TIDALPOWMAN].iNum = 1;
+  output[OUT_TIDALPOWMAN].iModuleBit = THERMINT;
+  fnWrite[OUT_TIDALPOWMAN] = &fvWriteTidalPowMan;
+
+
+
+
+
 
   sprintf(output[OUT_BODYDSEMIDTEQTIDE].cName,"BodyDsemiDtEqtide");
   sprintf(output[OUT_BODYDSEMIDTEQTIDE].cDescr,"Body's Contribution to dSemi/dt in EQTIDE");
@@ -3558,4 +3623,140 @@ double fdCTLDoblDt(BODY *body ,int *iaBody) {
   double tmp = (body[iB0].dTidalZ[iB1]*sin(body[iaBody[0]].dObliquity))/(2*body[iaBody[0]].dMass*body[iaBody[0]].dRadGyra*body[iaBody[0]].dRadGyra*body[iaBody[0]].dTidalRadius*body[iaBody[0]].dTidalRadius*body[iOrbiter].dMeanMotion*body[iaBody[0]].dRotRate);
   tmp *= ((cos(body[iaBody[0]].dObliquity) - body[iB0].dTidalChi[iB1]/body[iB0].dTidalBeta[iB1])*body[iB0].dTidalF[iB1][4]*body[iaBody[0]].dRotRate/(pow(body[iB0].dTidalBeta[iB1],9)*body[iOrbiter].dMeanMotion) - 2*body[iB0].dTidalF[iB1][1]/pow(body[iB0].dTidalBeta[iB1],12));
   return tmp;
+}
+
+
+
+
+
+
+
+/* ************************ From ThermInt *********************************** */
+
+// This stuff should all get the "DB15" suffix
+
+/**
+  Initialize values in body struct.
+
+  @param body Body struct
+  @param control Control struct
+  @param update Update struct
+  @param iBody Body index
+  @param iModule Module index
+*/
+void fvInitializeBodyThermint(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+
+/* XXX This should probably be cut. Initialize is for allocating. The whole typedef
+should be changed, and then a new initialize typedef created for this stuff */
+
+  /* A non-eqtide run requires this to be 0 to start. If eqtide is called,
+     then the value will be updated in PropsAuxMultiEqtideThermint. */
+
+  body[iBody].dTidalPowMan = 0;
+
+  /* XXX -- Is this OK to initalize these values to 0. Otherwise there can
+     be a memory link. The connection between dK2, dK2Man, and dImk2Man
+     really needs to be improved. */
+  //body[iBody].dK2Man = fdK2Man(body,iBody);
+  body[iBody].dK2Man = 0;
+  body[iBody].dImk2Man = 0;
+}
+
+///* All tidal phenomena should live in eqtide.c
+
+// To DB15
+void fvWriteTidalPowMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = body[iBody].dTidalPowMan;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+//*/
+
+/* All tidal phenomena should exist exclusively in eqtide.c.*/
+/* Heat Flows */
+/**
+  Function compute tidal power in solid mantle
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Tidal power in solid mantle
+
+DB15
+*/
+double fdTidalPowMan(BODY *body,int iBody) {
+    double meanmotion=body[iBody].dMeanMotion*(YEARSEC); //conv to s^-1
+    double TidalPowMan = (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dTidalRadius,5.)*meanmotion*pow(body[iBody].dEcc,2.);
+    body[iBody].dPowerEqtide = TidalPowMan; //reset this tidal power, which is used in the orb evo.
+    return TidalPowMan;
+}
+
+void PropsAuxDB15((body,evolve,update,iBody) {
+  body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
+  body[iBody].dImk2Man=fdImk2Man(body,iBody);
+  body[iBody].dK2Man=fdK2Man(body,iBody);
+}
+
+/**
+  Function compute upper mantle imaginary component of k2 Love number
+
+  @param body Body struct
+  @param iBody Index of body
+
+DB15
+  @return Imaginary component of k2 Love number
+*/
+double fdImk2Man(BODY *body,int iBody) {
+  double dViscDyn,dTidalQ,dDenom2,dImK2;
+
+  dViscDyn=fdDynamicViscosity(body,iBody);
+  //  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan),2.);
+  dTidalQ = dViscDyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+  dDenom2 = pow(3./2*tidal_q/body[iBody].dK2,2.);
+  dImK2=(57./4)*viscdyn*body[iBody].dMeanMotion/( (body[iBody].dStiffness)*(1.0+ denom2) );
+  //  double meanmotion=body[iBody].dMeanMotion*(YEARSEC); //conv to s^-1
+  //  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*meanmotion/body[iBody].dShmodUMan),2.);
+  //  double imk2=(57./4)*viscdyn*meanmotion/( (body[iBody].dStiffness)*(1.0+ denom2) );
+  return dImK2;
+}
+
+/*
+void fvWriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = fdK2Man(body,iBody);//body[iBody].dK2Man;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+void fvWriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = fdImk2Man(body,iBody);//body[iBody].dImk2Man;
+  strcpy(cUnit,"");
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+*/
+
+/**
+  Function compute upper mantle k2 Love number
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Upper mantle k2 Love number
+*/
+double fdK2Man(BODY *body,int iBody) {
+  return 1.5/(1+9.5*body[iBody].dShmodUMan/(STIFFNESS));
+}
+
+double fdDB15DsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
+
+}
+
+/* Hecc and Kecc calculated by chain rule, e.g. dh/dt = de/dt * dh/de. */
+
+double fdDB15DeccDt(BODY *body,int *iaBody) {
 }

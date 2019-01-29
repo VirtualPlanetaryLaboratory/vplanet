@@ -562,6 +562,26 @@ double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
 }
 
 /**
+  Function compute secular mantle heat flow: heat sinks - sources
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Heat flow of erupted mantle melt
+*/
+double fdHflowSecMan(BODY *body,int iBody) {
+  double dHflowSecMan = 0;
+
+  if (body[iBody].bThermint) {
+    dHflowSecMan += fdPowerThermint(body,system,update,iBody);
+  }
+  if (body[iBody].bEqtide) {
+    dHflowSecMan -= fdTidePower(body,system,update,iBody,control->Evolve.iEqtideModel); // formerly dTidalPowerMan
+  }
+  return dHflowSecMan;
+}
+
+/**
   For use with `fdProximaCenStellar()` to interpolate stellar properties
   (temperature, radius, luminosity) from a grid.
 

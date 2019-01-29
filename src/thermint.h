@@ -132,7 +132,6 @@
 void fvAddModuleThermint(MODULE*,int,int);
 void fvBodyCopyThermint(BODY*,BODY*,int,int,int);
 void fvInitializeBodyThermint(BODY*,CONTROL*,UPDATE*,int,int);
-//void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 //void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */

@@ -14,6 +14,7 @@
 
 #define CPL           0
 #define CTL           1
+#define DB15          2
 
 /* Options Info */
 

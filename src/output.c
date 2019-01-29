@@ -124,6 +124,24 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
    }
  }
 
+ void WriteInstellation(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+   // Should have special case if bBinary=1
+   if (body[iBody].bSpiNBody)
+    //Bary2OrbElems(body,control->Evolve.iNumBodies);
+
+   *dTmp = fdInstellation(body,iBody);
+
+   if (output->bDoNeg[iBody]) {
+     *dTmp *= output->dNeg;
+     strcpy(cUnit,output->cNeg);
+   } else {
+     *dTmp /= fdUnitsAngle(units->iAngle);
+     fsUnitsAngle(units->iAngle,cUnit);
+   }
+ }
+
+
 /*
  * K
  */
@@ -894,6 +912,15 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_INC].iNum = 1;
   output[OUT_INC].iModuleBit = DISTORB + GALHABIT + SPINBODY + BINARY;
   fnWrite[OUT_INC] = &WriteBodyInc;
+
+  sprintf(output[OUT_INSTELLATION].cName,"Instellation");
+  sprintf(output[OUT_INSTELLATION].cDescr,"Orbit-averaged INcident STELLar radiATION");
+  sprintf(output[OUT_INSTELLATION].cNeg,"W/m^2");
+  output[OUT_INSTELLATION].bNeg = 1;
+  output[OUT_INSTELLATION].dNeg = 1;
+  output[OUT_INSTELLATION].iNum = 1;
+  output[OUT_INSTELLATION].iModuleBit = 1;
+  fnWrite[OUT_INSTELLATION] = &WriteInstellation;
 
   /*
    * K
@@ -1848,5 +1875,4 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputFlare(output,fnWrite);
   InitializeOutputGalHabit(output,fnWrite);
   InitializeOutputSpiNBody(output, fnWrite);
-
 }

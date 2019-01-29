@@ -431,7 +431,9 @@ struct BODY {
   double dImK2Ocean;     /**< Ocean Component to Imaginary part of Love's K_2 */
   double dImK2Env;       /**< Envelope Component to Imaginary part of Love's K_2 */
   double dImK2Rock;
-  double dTidalQ;	 /**< Body's Tidal Q */
+  double dK2Man;           /**< Mantle k2 love number -- to delete */
+  double dImk2Man;         /**< Mantle Im(k2) love number  -- to delete */
+    double dTidalQ;	 /**< Body's Tidal Q */
   double dTidalQRock;    /**< Tidal Q in interior */ // add in dk2rock...
   double dTidalQOcean;   /**< Body's Ocean Component to Tidal Q */
   int bOcean;            /** <is there an ocean? */
@@ -551,8 +553,6 @@ struct BODY {
   double dTDepthMeltMan;   /**< Temp at base of UM Melt layer */
   double dTJumpMeltMan;    /**< Temp Jump to base of UM Melt layer */
   double dMeltMassFluxMan; /**< Mantle upwelling melt mass flux */
-  double dK2Man;           /**< Mantle k2 love number */
-  double dImk2Man;         /**< Mantle Im(k2) love number */
   double dRayleighMan;     /**< Mantle Rayleigh Number */
   /* Time Derivatives & Gradients */
   double dTDotMan;         /**< Time deriv of mean mantle temp */

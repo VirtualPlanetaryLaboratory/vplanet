@@ -90,6 +90,9 @@ double fdRadToMass_ReidHawley(double);
 double fdRadToMass_Sotin07(double);
 double fdLehmerRadius(double RadSurf, double Pxuv, double H, double PresSurf);
 double fdLehmerPres(double Menv, double lil_g, double RadSurf);
+
+double fdHflowSecMan(BODY*,int);
+
 void BodyCopy(BODY*,BODY*,EVOLVE*);
 
 void CalcXYZobl(BODY*,int);

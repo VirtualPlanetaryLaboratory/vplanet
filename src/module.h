@@ -34,6 +34,8 @@ void VerifyModuleMulti(BODY*,UPDATE*,CONTROL*,FILES*,MODULE*,OPTIONS*,int,fnUpda
 void AssignEqtideStellarDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
 void NullEqtideStellarDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
 
+void VerifyDB15(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,UPDATE*,int,int);
+
 void PropsAuxEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxAtmescEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxDistOrbDistRot(BODY*,EVOLVE*,UPDATE*,int);

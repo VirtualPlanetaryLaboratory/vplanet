@@ -825,6 +825,88 @@ void NullEqtideStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpd
     fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqSt] = &fndUpdateFunctionTiny;
   }
 }
+
+void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,int iBody,int iModule) {
+  int iPert;
+
+  /*
+  bThermint must be set
+  Q,k_2,ImK2, Man
+  */
+
+  if (body[iBody].bThermint) { // Tidal properties calculate from mantle material
+
+    if (options[OPT_TIDALQ].iLine[iBody+1] != -1) {
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr,"WARNING: Option %s set, but module ThermInt also selected. The tidal Q will be calculated by Thermint.\n",
+          options[OPT_TIDALQ].cName);
+      }
+    }
+
+    if (options[OPT_K2].iLine[iBody+1] != -1) {
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr,"WARNING: Option %s set, but module ThermInt also selected. ",
+          options[OPT_K2].cName);
+        fprintf(stderr,"The Love number k_2 will be calculated by Thermint.\n");
+      }
+    }
+  } else {
+    // k_2 and (Q || tau) must be set
+    if (options[OPT_K2].iLine[iBody+1] == -1) {
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr,"ERROR: Module ThermInt *not* selected for %s, but the tidal model is DB15. ",
+          body[iBody].cName);
+        fprintf(stderr,"Thefore %s must be set.\n",options[OPT_K2].cName);
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+      }
+    }
+    if (options[OPT_TIDALQ].iLine[iBody+1] == -1) {
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr,"ERROR: Module ThermInt *not* selected for %s, but the tidal model is DB15. ",
+          body[iBody].cName);
+        fprintf(stderr,"Thefore %s must be set.\n",options[OPT_TIDALQ].cName);
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+      }
+    }
+
+    // XXX Must add functionality for CTL
+    // Since ThermInt is not called, we can now set the mantle properties
+    // XXX Must add checks for K2, K2Man, K2Ocean, K2Atm
+    body[iBody].dK2Man = body[iBody].dK2;
+    body[iBody].dImK2Man = body[iBody].dK2/body[iBody].dTidalQ;
+
+  }
+
+  /* Everything OK, assign Updates */
+
+  for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
+    /* Obliquity */
+    // Xobl
+    InitializeXoblEqtide(body,update,iBody,iPert);
+    // Yobl
+    InitializeYoblEqtide(body,update,iBody,iPert);
+    // Zobl
+    InitializeZoblEqtide(body,update,iBody,iPert);
+    /* Rotation Rate */
+    InitializeRotEqtide(body,update,iBody,iPert);
+  }
+
+  /* Is this the secondary body, and hence we assign da/dt and de/dt? */
+  if (!bPrimary(body,iBody)) {
+    // Initialize Orbital variable for the matrix
+    InitializeSemiEqtide(body,update,iBody);
+    InitializeHeccEqtide(body,update,iBody);
+    InitializeKeccEqtide(body,update,iBody);
+  }
+
+  control->fnPropsAux[iBody][iModule]=&PropsAuxDB15;
+
+  /* Note that the mantle k_2 and Im(k_2) are calculated in VerifyEqtideThermint.
+    This choice is made because they depend on mantle properties that are calculated
+    by Thermint, and all individual modules are verified before multi-modules are. */
+
+}
+
 void VerifyModuleMultiEqtideStellar(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   int iOtherBody, iEqn;
 
@@ -1162,8 +1244,9 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,UPDATE *update,CONTROL *co
   }
 
   // Call PropsAuxAtmescThermint to initialize interior Properties
-  fvPropsAuxThermint(body,&control->Evolve,update,iBody);
-
+  if (iBody >0) {
+    fvPropsAuxThermint(body,&control->Evolve,update,iBody);
+  }
 }
 
 void VerifyModuleMultiFlareStellar(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
@@ -1388,98 +1471,22 @@ void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     body[iBody].dTidalRadius = body[iBody].dRadius;
 }
 
-
+/** Calculate auxiliary properties if EqTide and ThermInt are called. At present
+  this funciton only needs to calculate Im(k_2), possibly including the effects
+  of an ocean and envelope. */
 void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  /* RB- These first 3 lines were taken from PropsAuxThermint, but
-   as they rely on eqtide being called, they belong here.*/
-  body[iBody].dK2=fdK2DB15(body,iBody);
-  body[iBody].dImK2=fdImK2DB15(body,iBody);
 
-  // Include tidal dissapation due to oceans:
-  if(body[iBody].bOceanTides) {
-    body[iBody].dK2 += body[iBody].dK2Ocean;
+  AssignTidalProperties(body,evolve,iBody);
 
-    // Im(K_2) is weighted sum of mantle and oceam component
-    // weighted by the love number of each component
-    body[iBody].dImK2 += body[iBody].dImK2Ocean;
-  } // No oceans => thermint dictates ImK2 alone XXX What about envelope?
-
-  // Sanity checks: enforce upper bound
-  if(body[iBody].dK2 > 1.5) {
-    body[iBody].dK2 = 1.5;
-    fprintf(stderr,"WARNING: body[%d].dK2 > 1.5 at time %.5e years.\n",iBody,evolve->dTime/YEARSEC);
-  }
-  /* XXX Why are these here? Won't PropsAux"Eqtide" be called in eqtide?
-  PropsAuxCPL(body,evolve,update,iBody);
-  // Call dTidePowerMan
-  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
-*/
 }
 
+/** Calculate auxiliary properties if AtmEsc, EqTide and ThermInt are called. At present
+  this funciton only needs to calculate Im(k_2), possibly including the effects
+  of an ocean and envelope. */
 void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  // Set the mantle parameters first
-  body[iBody].dK2=fdK2DB15(body,iBody);
-  body[iBody].dImK2=fdImK2DB15(body,iBody);
 
-  // If it's the first step, see if it's a runaway greenhouse
-  if (evolve->bFirstStep) {
-    // RG -> no ocean tides
-    if(fdInsolation(body, iBody, 0) >= fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)) {
-      body[iBody].bOceanTides = 0;
-    }
-  }
-
-  // Case: No oceans, no envelope
-  if (!body[iBody].bOceanTides && !body[iBody].bEnvTides) {
-    // Mantle controls evolution via thermint
-    /* These are now deprecated XXX
-    body[iBody].dImK2 = body[iBody].dImk2Man;
-    body[iBody].dK2 = body[iBody].dK2Man;
-    */
-  }
-  // Case: Oceans, no envelope:
-  else if (body[iBody].bOceanTides && !body[iBody].bEnvTides) {
-    // Oceans dominate
-    //body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
-    body[iBody].dK2 += body[iBody].dK2Ocean;
-    // Im(K_2) is weighted sum of mantle and oceam component
-    // weighted by the love number of each component
-    //body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Ocean);
-    body[iBody].dImK2 += body[iBody].dImK2Ocean;
-  }
-  // Case: No oceans, envelope (envelope evap while in runaway):
-  else if (!body[iBody].bOceanTides && body[iBody].bEnvTides) {
-    // Envelope dominates
-    //body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
-    body[iBody].dK2 += body[iBody].dK2Env;
-    // Im(K_2) is weighted sum of mantle and enevelope component
-    // weighted by the love number of each component
-    //body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Env);
-    body[iBody].dImK2 += body[iBody].dImK2Env;
-  }
-  // Case: Oceans and evelope->envelope has massive pressure so oceans are super critical (?):
-  // Also, envelope and ocean are mutually exclusive so envelope dominates
-  else if (body[iBody].bOceanTides && body[iBody].bEnvTides) {
-    // Envelope and ocean!
-    // body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
-    body[iBody].dK2 += body[iBody].dK2Env;
-    // Im(K_2) is weighted sum of mantle, envelope and ocean component
-    // weighted by the love number of each component
-    //body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Env);
-    body[iBody].dImK2 += body[iBody].dImK2Env;
-  } else
-    assert(0); // Unknown envelope + ocean behavior
-
-  // Sanity checks: enforce upper bound
-  if(body[iBody].dK2 > 1.5) {
-    body[iBody].dK2 = 1.5;
-    fprintf(stderr,"WARNRING: Love Number k_2 > 1.5.\n");
-  }
-
-  // Finally, call EQTIDE props aux then set mantle tidal power
-  // XXX Why are these called? Can't ThermInt work with CTL and DB15?
-  PropsAuxCPL(body,evolve,update,iBody);
-  body[iBody].dTidalPowMan = fdTidePower(body,iBody,evolve->iEqtideModel);
+  // XXX Should check to see if this was already called in PropsAuxEqtideThermint
+  AssignTidalProperties(body,evolve,iBody);
 
 }
 /* This does not seem to be necessary
@@ -1726,20 +1733,29 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,MODULE *module,EVOLVE *evolve,
   int bOceans = 0;
   int bEnv = 0;
 
-  for(iBody = 1; iBody < evolve->iNumBodies; iBody++)
-  {
+  for (iBody = 1; iBody < evolve->iNumBodies; iBody++) {
     // If body 1 is a star (iBodyType==1), pass
-    if(iBody == 1 && body[iBody].iBodyType == 1)
+    if (iBody == 1 && body[iBody].iBodyType == 1)
       continue;
 
     // Ocean check
-    if(body[iBody].dTidalQOcean < 0)
+    if (body[iBody].dTidalQOcean < 0) {
       bOceans = 0;
-    else
+    } else {
       bOceans = 1;
+    }
+    /* But if in a runaway greenhouse, no ocean. Note that this is a bit of a fudge:
+      If the planet's surface temperature is between 70 and 100 C, then it could
+      have oceans *and* be in an RG. */
+    if (evolve->bFirstStep) {
+      // RG -> no ocean tides
+      if (fdInsolation(body, iBody, 0) >= fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)) {
+        bOceans = 0;
+      }
+    }
 
-    // Env check
-    if(body[iBody].dTidalQEnv < 0)
+    // Envelope check
+    if (body[iBody].dTidalQEnv < 0)
       bEnv = 0;
     else
       bEnv = 1;
@@ -1748,18 +1764,13 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,MODULE *module,EVOLVE *evolve,
     // i.e. if bOceanTides == 1 from initial conditions
 
     // Case: No water -> no ocean tides
-    if(bOceans && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass))
-    {
+    if (bOceans && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)) {
       body[iBody].bOceanTides = 0;
-    }
-    // Case: Water but it's in the atmosphere: RUNAWAY GREENHOUSE (this is when body actively loses water!)
-    else if(bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && body[iBody].bRunaway)
-    {
+    } else if (bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && body[iBody].bRunaway) {
+      // Case: Water but it's in the atmosphere: RUNAWAY GREENHOUSE (this is when body actively loses water!)
       body[iBody].bOceanTides = 0;
-    }
-    // Case: Water and on the surface! (this is when body does NOT actively lose water!)
-    else if(bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && !body[iBody].bRunaway)
-    {
+    } else if (bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && !body[iBody].bRunaway) {
+      // Case: Water on the surface! (this is when body does NOT actively lose water!)
       body[iBody].bOceanTides = 1;
     }
 

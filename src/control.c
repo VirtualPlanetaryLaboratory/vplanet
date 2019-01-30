@@ -417,7 +417,7 @@ void LongHelp(OPTIONS *options,OUTPUT *output,char exe[]) {
  */
 
 void LineExit(char cFile[],int iLine) {
-  fprintf(stderr,"\t%s: Line %d\n",cFile,iLine);
+  fprintf(stderr,"\t%s: Line %d\n",cFile,iLine+1);
   exit(EXIT_INPUT);
 }
 

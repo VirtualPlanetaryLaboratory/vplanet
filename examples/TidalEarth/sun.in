@@ -6,3 +6,6 @@ dLuminosity  3.846e26
 sStellarModel none
 saModules    stellar eqtide
 saTidePerts  tidalearth
+
+dTidalQ       1e6
+dK2           1.5

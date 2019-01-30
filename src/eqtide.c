@@ -1062,16 +1062,12 @@ void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
 
     /* Obliquity */
-
     // Xobl
     InitializeXoblEqtide(body,update,iBody,iPert);
-
     // Yobl
     InitializeYoblEqtide(body,update,iBody,iPert);
-
     // Zobl
     InitializeZoblEqtide(body,update,iBody,iPert);
-
     /* Rotation Rate */
     InitializeRotEqtide(body,update,iBody,iPert);
   }
@@ -1160,16 +1156,12 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
 
     /* Obliquity */
-
     // Xobl
     InitializeXoblEqtide(body,update,iBody,iPert);
-
     // Yobl
     InitializeYoblEqtide(body,update,iBody,iPert);
-
     // Zobl
     InitializeZoblEqtide(body,update,iBody,iPert);
-
     /* Rotation Rate */
     InitializeRotEqtide(body,update,iBody,iPert);
   }
@@ -1202,11 +1194,6 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
      faults as memory will not be allocated to some parameters unless CTL
      is chosen. */
   output[OUT_TIDALTAU].iNum = 0;
-}
-
-void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,int iBody,int iModule) {
-  control->fnPropsAux[iBody][iModule]=&PropsAuxDB15;
-
 }
 
 /** Verify all arguments to saTidePerturbers. This subroutine will called
@@ -1381,8 +1368,8 @@ void AssignEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
     // Energy not tracked in DB15
     fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngEqtide] = &fndUpdateFunctionTiny;
   } else {
-    fprintf(stderr,"ERROR: Must choose CPL or CTL tidal model!\n");
-    exit(1);
+    fprintf(stderr,"ERROR: Must choose CPL, CTL of DB15 tidal model!\n");
+    exit(EXIT_INPUT);
   }
 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
@@ -1525,8 +1512,10 @@ void VerifyEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   if (control->Evolve.iEqtideModel == CPL)
     VerifyCPL(body,control,files,options,output,update,iBody,iModule);
 
-  if (control->Evolve.iEqtideModel == DB15)
+  if (control->Evolve.iEqtideModel == DB15) {
+    // Note that DB15 requires ThermInt, so this function lives in module.c
     VerifyDB15(body,control,files,options,output,update,iBody,iModule);
+  }
 
   VerifyLostEngEqtide(body,update,control,options,iBody);
 
@@ -2163,10 +2152,8 @@ void WriteEqRotPerDiscrete(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
 
   if (control->Evolve.iEqtideModel == CPL) {
     *dTmp = fdFreqToPer(fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq));
-  }
-  else {
-    fprintf(stderr,"ERROR: Can only use discrete rotation for CPL model!\n");
-    exit(1);
+  } else {
+    *dTmp = -1;
   }
 
   if (output->bDoNeg[iBody]) {
@@ -2233,10 +2220,8 @@ void WriteEqRotRateDiscrete(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 
   if(control->Evolve.iEqtideModel == CPL) {
     *dTmp = fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq);
-  }
-  else {
-    fprintf(stderr,"ERROR: Can only use discrete rotations with the CPL model!\n");
-    exit(1);
+  } else {
+    *dTmp = -1;
   }
 
   if (output->bDoNeg[iBody]) {
@@ -3101,9 +3086,7 @@ void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 }
 
 void PropsAuxDB15(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  //body[iBody].dPowerEqtide=fdTidePower(body,iBody); // Necessary? Move to PropsAuxEqtideThermint?
-  body[iBody].dImK2=fdImK2DB15(body,iBody);
-  body[iBody].dK2=fdK2DB15(body,iBody);
+  // Nothing here -- everything taken care of in PropsAuxEqtideThermint
 }
 
 /*! Lost energy due to tidal heating in the CPL model. */
@@ -3724,69 +3707,17 @@ double fdPowerEqtideDB15(BODY *body,int iBody) {
       pow(body[iBody].dTidalRadius,5.)*body[iBody].dMeanMotion*body[iBody].dEccSq;
 }
 
-/**
-  Function compute upper mantle imaginary component of k2 Love number
-
-  @param body Body struct
-  @param iBody Index of body
-
-  @return Imaginary component of k2 Love number
-*/
-double fdImK2DB15(BODY *body,int iBody) {
-  double dViscDyn,dTidalQ,dDenom2,dImK2;
-
-  dViscDyn=fdDynamicViscosity(body,iBody);
-  //  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan),2.);
-  dTidalQ = dViscDyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
-  dDenom2 = pow(3./2*dTidalQ/body[iBody].dK2,2.);
-  dImK2=(57./4)*dViscDyn*body[iBody].dMeanMotion/( (body[iBody].dStiffness)*(1.0+ dDenom2) );
-  //  double meanmotion=body[iBody].dMeanMotion*(YEARSEC); //conv to s^-1
-  //  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*meanmotion/body[iBody].dShmodUMan),2.);
-  //  double imk2=(57./4)*viscdyn*meanmotion/( (body[iBody].dStiffness)*(1.0+ denom2) );
-  return dImK2;
-}
-
-/*
-void fvWriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-    *dTmp = fdK2Man(body,iBody);//body[iBody].dK2Man;
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else { }
-}
-void fvWriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = fdImk2Man(body,iBody);//body[iBody].dImk2Man;
-  strcpy(cUnit,"");
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else { }
-}
-*/
-
-/**
-  Function compute upper mantle k2 Love number
-
-  @param body Body struct
-  @param iBody Index of body
-
-  @return Upper mantle k2 Love number
-*/
-double fdK2DB15(BODY *body,int iBody) {
-  return 1.5/(1+9.5*body[iBody].dShmodUMan/(STIFFNESS));
-}
-
 double fdDB15DsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody = iaBody[0];
 
-  return 10*body[iBody].dImK2*body[iBody].dSemi*body[0].dMass/body[iBody].dMass*
+  return -10*body[iBody].dImK2*body[iBody].dSemi*body[0].dMass/body[iBody].dMass*
       pow((body[iBody].dRadius/body[iBody].dSemi),5)*body[iBody].dMeanMotion*body[iBody].dEccSq;
 }
 
 double fdDB15DeccDt(BODY *body,UPDATE *update,int *iaBody) {
   int iBody = iaBody[0];
 
-  return 10.5*body[iBody].dImK2*body[0].dMass/body[iBody].dMass*pow((body[iBody].dRadius/body[iBody].dSemi),5)*
+  return -10.5*body[iBody].dImK2*body[0].dMass/body[iBody].dMass*pow((body[iBody].dRadius/body[iBody].dSemi),5)*
       body[iBody].dMeanMotion*body[iBody].dEcc;
 }
 

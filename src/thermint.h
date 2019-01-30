@@ -5,6 +5,8 @@
   @date June 1 2015
 */
 
+// XXX Check for duplications in vplanet.h!
+
 // GLOBAL VARIABLE INDEXES
 #define TMAN             20                    /**< Index of TMAN (mantle temperature) global variable */
 #define TCORE            21                    /**< Index of TCORE (core temperature) global variable */
@@ -491,7 +493,6 @@ double fdHfluxUMan(BODY*,int);
 double fdHfluxLMan(BODY*,int);
 double fdHfluxCMB(BODY*,int);
 double fdHflowUMan(BODY*,int);
-double fdPowerThermint(BODY*,int);
 double fdHflowLMan(BODY*,int);
 double fdHflowCMB(BODY*,int);
 double fdHflowMeltMan(BODY*,int);
@@ -524,7 +525,7 @@ double fdMagMom(BODY*,int);
 double fdPresSWind(BODY*,int);
 double fdMagPauseRad(BODY*,int);
 double fdSurfEnFlux(BODY*,SYSTEM*,UPDATE*,int,int);
-
+double fdPowerThermint(BODY*,int);
 
 /* MATH  FUNCTIONS */
 double cube(double);

@@ -116,6 +116,14 @@ void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyEqtide(BODY*,CONTROL*,UPDATE*,int);
 int fiGetModuleIntEqtide(MODULE*,int);
 
+void InitializeXoblEqtide(BODY*,UPDATE*,int,int);
+void InitializeYoblEqtide(BODY*,UPDATE*,int,int);
+void InitializeZoblEqtide(BODY*,UPDATE*,int,int);
+void InitializeRotEqtide(BODY*,UPDATE*,int,int);
+void InitializeHeccEqtide(BODY*,UPDATE*,int);
+void InitializeKeccEqtide(BODY*,UPDATE*,int);
+void InitializeSemiEqtide(BODY*,UPDATE*,int);
+
 /* Options Functions */
 void HelpOptionsEqtide(OPTIONS*);
 void ReadDiscreteRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -284,8 +292,6 @@ double fdCTLDoblDt(BODY*,int*);
 
 /******************** DB15 Functions ********************/
 double fdPowerEqtideDB15(BODY*,int);
-double fdImK2DB15(BODY*,int);
-double fdK2DB15(BODY*,int);
 void PropsAuxDB15(BODY*,EVOLVE*,UPDATE*,int);
 
 

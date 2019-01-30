@@ -751,24 +751,18 @@ void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 
 void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  // XXX This probably needs to change
-  // Just thermint, no eqtide
-  if((body[iBody].bThermint && !body[iBody].bEqtide) || (body[iBody].bThermint && (!body[iBody].bOceanTides && body[iBody].bEnvTides)))
-    *dTmp = fdImK2DB15(body,iBody);
-  else
-    *dTmp = body[iBody].dImK2;
+  // Must call AssignTidalProperties in case bThermint set
+  AssignTidalProperties(body,&control->Evolve,iBody);
+  *dTmp = body[iBody].dImK2;
 
   strcpy(cUnit,"");
 }
 
 void WriteK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  // XXX This probably needs to change
-  // If just thermint
-  if((body[iBody].bThermint && !body[iBody].bEqtide) || (body[iBody].bThermint && (!body[iBody].bOceanTides && !body[iBody].bEnvTides)))
-    *dTmp = fdK2DB15(body,iBody);
-  else
-    *dTmp = body[iBody].dK2;
+  // Must call AssignTidalProperties in case bThermint set
+  AssignTidalProperties(body,&control->Evolve,iBody);
+  *dTmp = body[iBody].dK2;
 
   strcpy(cUnit,"");
 }

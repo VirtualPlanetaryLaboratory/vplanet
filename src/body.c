@@ -562,6 +562,69 @@ double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
 }
 
 /**
+  Function compute upper mantle imaginary component of k2 Love number
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Imaginary component of k2 Love number
+*/
+double fdImK2Man(BODY *body,int iBody) {
+  double dViscDyn,dTidalQ,dDenom2,dImK2;
+
+  dViscDyn=fdDynamicViscosity(body,iBody);
+  dTidalQ = dViscDyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+  dDenom2 = pow(3./2*dTidalQ/body[iBody].dK2,2.);
+  dImK2=(57./4)*dViscDyn*body[iBody].dMeanMotion/( (body[iBody].dStiffness)*(1.0+ dDenom2) );
+
+  return dImK2;
+}
+
+/**
+  Function compute upper mantle k2 Love number
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Upper mantle k2 Love number
+*/
+double fdK2Man(BODY *body,int iBody) {
+  return 1.5/(1+9.5*body[iBody].dShmodUMan/(STIFFNESS));
+}
+
+/** Calculate total k_2 and Im(k_2) for a body. This value depends on which tidal
+  model is called, and it the properties depend on the internal properties. */
+void AssignTidalProperties(BODY *body,EVOLVE *evolve,int iBody) {
+  if (body[iBody].bThermint) {
+    // The planet's tidal response depends on mantle properties
+    body[iBody].dK2=fdK2Man(body,iBody);
+    body[iBody].dImK2=fdImK2Man(body,iBody);
+  } else {
+    /* We're in a CPL/CTL type mode, and let's start building the total K2 and
+      ImK2 with the mantle. This should be sorted out in Verify. */
+    body[iBody].dK2 = body[iBody].dK2Man;
+    body[iBody].dImK2 = body[iBody].dImK2Man;
+  }
+  // Include tidal dissapation due to oceans
+  if (body[iBody].bOceanTides) {
+    // weighted by the love number of each component
+    body[iBody].dK2 += body[iBody].dK2Ocean;
+    body[iBody].dImK2 += body[iBody].dImK2Ocean;
+  }
+  // Include tidal dissapation due to envelope
+  if (body[iBody].bEnvTides) {
+    // weighted by the love number of each component
+    body[iBody].dK2 += body[iBody].dK2Env;
+    body[iBody].dImK2 += body[iBody].dImK2Env;
+  }
+  // Sanity checks: enforce upper bound
+  if (body[iBody].dK2 > 1.5) {
+    body[iBody].dK2 = 1.5;
+    fprintf(stderr,"WARNING: body[%d].dK2 > 1.5 at time %.5e years.\n",iBody,evolve->dTime/YEARSEC);
+  }
+}
+
+/**
   Function compute secular mantle heat flow: heat sinks - sources
 
   @param body Body struct

@@ -2,6 +2,8 @@
 sName		tidalearth			# Body's name
 saModules 	radheat thermint eqtide
 
+sTideModel  DB15
+
 # Physical Properties
 dMass		     -1.0  			# Mass, negative -> Earth masses
 dRadius		   -1.0  			# Radius, negative -> Earth radii
@@ -41,5 +43,5 @@ dTMan          3000
 dTCore         6000
 
 saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
-      -PowerEqtide TidalPowMan TidalQ ImK2 $
+      -PowerEqtide TidalQ ImK2 $
       -SemiMajorAxis Eccentricity

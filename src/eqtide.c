@@ -34,10 +34,10 @@ void InitializeControlEqtide(CONTROL *control,int iBody) {
 void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
 
-  /* XXX Lines from ThermInt. Should be incorporated into new DB15 model */
+  /* XXX Lines from ThermInt. Should be incorporated into new DB15 model
   dest[iBody].dK2Man=src[iBody].dK2Man;
   dest[iBody].dImk2Man=src[iBody].dImk2Man;
-  dest[iBody].dTidalPowMan=src[iBody].dTidalPowMan;
+  dest[iBody].dTidalPowMan=src[iBody].dTidalPowMan; */
 
 
   dest[iBody].iTidePerts = src[iBody].iTidePerts;
@@ -87,9 +87,11 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
       for (iIndex=0;iIndex<5;iIndex++)
           dest[iBody].dTidalF[iPert][iIndex] = src[iBody].dTidalF[iPert][iIndex];
     }
+    /*
     if (iTideModel == DB15) {
       dest[iBody].dImK2Man = src[iBody].dImK2Man
     }
+    */
   }
 }
 
@@ -1203,6 +1205,8 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
 }
 
 void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,int iBody,int iModule) {
+  control->fnPropsAux[iBody][iModule]=&PropsAuxDB15;
+
 }
 
 /** Verify all arguments to saTidePerturbers. This subroutine will called
@@ -2344,7 +2348,7 @@ void WriteSemiTimescaleEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
 
 void WritePowerEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total tidal power */
-  *dTmp = fdTidePower(body,system,update,iBody,control->Evolve.iEqtideModel);
+  *dTmp = fdTidePower(body,iBody,control->Evolve.iEqtideModel);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2388,8 +2392,8 @@ void WriteTideLock(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 
 void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
-// DB15
   /* TidalPowMan */
+/* Deprecated! XXX
   sprintf(output[OUT_TIDALPOWMAN].cName,"TidalPowMan");
   sprintf(output[OUT_TIDALPOWMAN].cDescr,"Tidal Power Mantle");
   sprintf(output[OUT_TIDALPOWMAN].cNeg,"TW");
@@ -2398,7 +2402,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALPOWMAN].iNum = 1;
   output[OUT_TIDALPOWMAN].iModuleBit = THERMINT;
   fnWrite[OUT_TIDALPOWMAN] = &fvWriteTidalPowMan;
-
+*/
 
 
 
@@ -2848,11 +2852,11 @@ void AddModuleEqtide(MODULE *module,int iBody,int iModule) {
 
 double fdEqRotRate(BODY *body, int iBody, double dMeanMotion,double dEccSq ,int iTideModel,int bDiscreteRot) {
 
-  if (iTideModel == CPL)
+  if (iTideModel == CPL || iTideModel == DB15) { // XXX Does DB15 = CPL for tidally locked rotation?
     return fdCPLEqRotRate(dEccSq,dMeanMotion,bDiscreteRot);
-  else if (iTideModel == CTL)
+  } else if (iTideModel == CTL) {
     return fdCTLEqRotRate(dEccSq,body[iBody].dObliquity,dMeanMotion);
-
+  }
   /* Whoops! */
   assert(0);
 }
@@ -2891,10 +2895,11 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
       body[iBody].dRotRate = (1.0 + 2.0*evolve->dMaxLockDiff[iBody])*dEqRate;
 
       // Update PropsAux
-      if (evolve->iEqtideModel == CPL)
+      if (evolve->iEqtideModel == CPL) {
         PropsAuxCPL(body,evolve,update,iBody);
-      else
+      } else if (evolve->iEqtideModel == CTL) {
         PropsAuxCTL(body,evolve,update,iBody);
+      } // DB15 assumes tidal locking
 
       // Recompute, sum up new derivatives using perturbed dRotRate
       dTmpDeriv = 0.0;
@@ -2909,10 +2914,11 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
         body[iBody].dRotRate = (1.0 - 2.0*evolve->dMaxLockDiff[iBody])*dEqRate;
 
         // Update PropsAux
-        if (evolve->iEqtideModel == CPL)
+        if (evolve->iEqtideModel == CPL) {
           PropsAuxCPL(body,evolve,update,iBody);
-        else
+        } else if (evolve->iEqtideModel == CTL) {
           PropsAuxCTL(body,evolve,update,iBody);
+        } // DB15 assumes tidal locking
 
         // Recompute, sum up new derivatives using perturbed dRotRate
         dTmpDeriv = 0.0;
@@ -2939,10 +2945,11 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
       body[iBody].dRotRate = dOldRotRate;
 
       // Update PropsAux
-      if (evolve->iEqtideModel == CPL)
+      if (evolve->iEqtideModel == CPL) {
         PropsAuxCPL(body,evolve,update,iBody);
-      else
+      } else if (evolve->iEqtideModel == CTL) {
         PropsAuxCTL(body,evolve,update,iBody);
+      } // DB15 assumes tidal locking
 
       // Reset derivatives
       dTmpDeriv = 0.0;
@@ -3001,6 +3008,16 @@ void PropsAuxOrbiterCTL(BODY *body,UPDATE *update,int iBody) {
   // PrecA is needed for Xobl,Yobl,Zobl calculations
 
   body[iBody].dDeccDtEqtide = fdCTLDeccDt(body,update,update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccEqtide]);
+}
+
+void PropsAuxOrbiterDB15(BODY *body,UPDATE *update,int iBody) {
+  body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
+  body[iBody].dEcc = sqrt(body[iBody].dEccSq);
+  // LongP is needed for Hecc and Kecc calculations
+  body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
+  // PrecA is needed for Xobl,Yobl,Zobl calculations
+
+  body[iBody].dDeccDtEqtide = fdDB15DeccDt(body,update,update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccEqtide]);
 }
 
 void PropsAuxCPL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
@@ -3083,6 +3100,12 @@ void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   }
 }
 
+void PropsAuxDB15(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+  //body[iBody].dPowerEqtide=fdTidePower(body,iBody); // Necessary? Move to PropsAuxEqtideThermint?
+  body[iBody].dImK2=fdImK2DB15(body,iBody);
+  body[iBody].dK2=fdK2DB15(body,iBody);
+}
+
 /*! Lost energy due to tidal heating in the CPL model. */
 double fdDEdTCPLEqtide(BODY *body,SYSTEM *system,int *iaBody)
 {
@@ -3100,13 +3123,16 @@ double fdDEdTCTLEqtide(BODY *body,SYSTEM *system,int *iaBody)
   return fdCTLTidePower(body,iBody);
 }
 
-double fdTidePower(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iTideModel) {
+double fdTidePower(BODY *body,int iBody,int iTideModel) {
 
   /* Get total tidal power */
-  if (iTideModel == CPL)
+  if (iTideModel == CPL) {
     return fdCPLTidePower(body,iBody);
-  else if (iTideModel == CTL)
+  } else if (iTideModel == CTL) {
     return fdCTLTidePower(body,iBody);
+  } else if (iTideModel == DB15) {
+    return fdPowerEqtideDB15(body,iBody);
+  }
 
   /* Whoops! */
   assert(0);
@@ -3116,7 +3142,7 @@ double fdTidePower(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iTideM
 double fdSurfEnFluxEqtide(BODY *body,SYSTEM *foo,UPDATE *bar,int iBody,int iTideModel) {
   double dPower;
 
-  dPower = fdTidePower(body,foo,bar,iBody,iTideModel);
+  dPower = fdTidePower(body,iBody,iTideModel);
 
   return dPower/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
@@ -3216,7 +3242,10 @@ double fdCPLTidePower(BODY *body,int iBody) {
 /* Tidal Power due to Ocean Tides */
 double fdTidePowerOcean(BODY *body, int iBody) {
   // Total CPL Tide Power = Ocean + Man contributions
-  return fdCPLTidePower(body,iBody) - fdTidalPowMan(body,iBody);
+  // XXX This looks broken now
+  //return fdCPLTidePower(body,iBody) - fdTidePower(body,iBody);
+  fprintf(stderr,"ERROR: fdTidePowerOcean called, but it's broken.");
+  return 1;
 }
 
 /* Surface Energy Flux due to Ocean Tides */
@@ -3383,14 +3412,14 @@ double fdCPLDeccDt(BODY *body,int *iaBody) {
 
 double fdCPLDHeccDt(BODY *body,SYSTEM *system,int *iaBody) {
   /* This routine should only be called for the orbiters.
-     iaBody[0] = the orbiter, iaBody[0] = central body */
+     iaBody[0] = the orbiter, iaBody[1] = central body */
 
   return body[iaBody[0]].dDeccDtEqtide * sin(body[iaBody[0]].dLongP);
 }
 
 double fdCPLDKeccDt(BODY *body,SYSTEM *system,int *iaBody) {
   /* This routine should only be called for the orbiters.
-     iaBody[0] = the orbiter, iaBody[0] = central body */
+     iaBody[0] = the orbiter, iaBody[1] = central body */
 
   return body[iaBody[0]].dDeccDtEqtide * cos(body[iaBody[0]].dLongP);
 }
@@ -3547,14 +3576,14 @@ void fdaCTLZ(BODY *body,double dSemi,int iBody,int iPert) {
 
 double fdCTLDHeccDt(BODY *body,SYSTEM *system,int *iaBody) {
   /* This routine should only be called for the orbiters.
-  iaBody[0] = the orbiter, iaBody[0] = central body */
+  iaBody[0] = the orbiter, iaBody[1] = central body */
 
   return body[iaBody[0]].dDeccDtEqtide * sin(body[iaBody[0]].dLongP);
 }
 
 double fdCTLDKeccDt(BODY *body,SYSTEM *system,int *iaBody) {
   /* This routine should only be called for the orbiters.
-    iaBody[0] = the orbiter, iaBody[0] = central body */
+    iaBody[0] = the orbiter, iaBody[1] = central body */
 
     return body[iaBody[0]].dDeccDtEqtide * cos(body[iaBody[0]].dLongP);
 }
@@ -3625,7 +3654,9 @@ double fdCTLDoblDt(BODY *body ,int *iaBody) {
   return tmp;
 }
 
-
+/*
+ ********************** DB15 Functions ************************
+*/
 
 
 
@@ -3658,20 +3689,22 @@ should be changed, and then a new initialize typedef created for this stuff */
      be a memory link. The connection between dK2, dK2Man, and dImk2Man
      really needs to be improved. */
   //body[iBody].dK2Man = fdK2Man(body,iBody);
+
+/*
   body[iBody].dK2Man = 0;
   body[iBody].dImk2Man = 0;
+*/
 }
 
-///* All tidal phenomena should live in eqtide.c
-
-// To DB15
-void fvWriteTidalPowMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-    *dTmp = body[iBody].dTidalPowMan;
+/*
+void fvWritePowerEqtideDB15(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+    *dTmp = fdPowerEqtideDB15(body,iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else { }
 }
+*/
 //*/
 
 /* All tidal phenomena should exist exclusively in eqtide.c.*/
@@ -3684,19 +3717,11 @@ void fvWriteTidalPowMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
 
   @return Tidal power in solid mantle
 
-DB15
 */
-double fdTidalPowMan(BODY *body,int iBody) {
-    double meanmotion=body[iBody].dMeanMotion*(YEARSEC); //conv to s^-1
-    double TidalPowMan = (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dTidalRadius,5.)*meanmotion*pow(body[iBody].dEcc,2.);
-    body[iBody].dPowerEqtide = TidalPowMan; //reset this tidal power, which is used in the orb evo.
-    return TidalPowMan;
-}
-
-void PropsAuxDB15((body,evolve,update,iBody) {
-  body[iBody].dTidalPowMan=fdTidalPowMan(body,iBody);
-  body[iBody].dImk2Man=fdImk2Man(body,iBody);
-  body[iBody].dK2Man=fdK2Man(body,iBody);
+double fdPowerEqtideDB15(BODY *body,int iBody) {
+    //double meanmotion=body[iBody].dMeanMotion*(YEARSEC); //conv to s^-1
+    return (21./2)*body[iBody].dImK2*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*
+      pow(body[iBody].dTidalRadius,5.)*body[iBody].dMeanMotion*body[iBody].dEccSq;
 }
 
 /**
@@ -3705,17 +3730,16 @@ void PropsAuxDB15((body,evolve,update,iBody) {
   @param body Body struct
   @param iBody Index of body
 
-DB15
   @return Imaginary component of k2 Love number
 */
-double fdImk2Man(BODY *body,int iBody) {
+double fdImK2DB15(BODY *body,int iBody) {
   double dViscDyn,dTidalQ,dDenom2,dImK2;
 
   dViscDyn=fdDynamicViscosity(body,iBody);
   //  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan),2.);
   dTidalQ = dViscDyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
-  dDenom2 = pow(3./2*tidal_q/body[iBody].dK2,2.);
-  dImK2=(57./4)*viscdyn*body[iBody].dMeanMotion/( (body[iBody].dStiffness)*(1.0+ denom2) );
+  dDenom2 = pow(3./2*dTidalQ/body[iBody].dK2,2.);
+  dImK2=(57./4)*dViscDyn*body[iBody].dMeanMotion/( (body[iBody].dStiffness)*(1.0+ dDenom2) );
   //  double meanmotion=body[iBody].dMeanMotion*(YEARSEC); //conv to s^-1
   //  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*meanmotion/body[iBody].dShmodUMan),2.);
   //  double imk2=(57./4)*viscdyn*meanmotion/( (body[iBody].dStiffness)*(1.0+ denom2) );
@@ -3748,15 +3772,30 @@ void fvWriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
   @return Upper mantle k2 Love number
 */
-double fdK2Man(BODY *body,int iBody) {
+double fdK2DB15(BODY *body,int iBody) {
   return 1.5/(1+9.5*body[iBody].dShmodUMan/(STIFFNESS));
 }
 
 double fdDB15DsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
+  int iBody = iaBody[0];
 
+  return 10*body[iBody].dImK2*body[iBody].dSemi*body[0].dMass/body[iBody].dMass*
+      pow((body[iBody].dRadius/body[iBody].dSemi),5)*body[iBody].dMeanMotion*body[iBody].dEccSq;
+}
+
+double fdDB15DeccDt(BODY *body,UPDATE *update,int *iaBody) {
+  int iBody = iaBody[0];
+
+  return 10.5*body[iBody].dImK2*body[0].dMass/body[iBody].dMass*pow((body[iBody].dRadius/body[iBody].dSemi),5)*
+      body[iBody].dMeanMotion*body[iBody].dEcc;
 }
 
 /* Hecc and Kecc calculated by chain rule, e.g. dh/dt = de/dt * dh/de. */
 
-double fdDB15DeccDt(BODY *body,int *iaBody) {
+double fdDB15DHeccDt(BODY *body,SYSTEM *system,int *iaBody) {
+  return body[iaBody[0]].dDeccDtEqtide*cos(body[iaBody[0]].dLongP);
+}
+
+double fdDB15DKeccDt(BODY *body,SYSTEM *system,int *iaBody) {
+  return body[iaBody[0]].dDeccDtEqtide*sin(body[iaBody[0]].dLongP);
 }

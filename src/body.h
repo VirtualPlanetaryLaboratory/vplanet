@@ -91,7 +91,7 @@ double fdRadToMass_Sotin07(double);
 double fdLehmerRadius(double RadSurf, double Pxuv, double H, double PresSurf);
 double fdLehmerPres(double Menv, double lil_g, double RadSurf);
 
-double fdHflowSecMan(BODY*,int);
+double fdHflowSecMan(BODY*,EVOLVE*,int);
 
 void BodyCopy(BODY*,BODY*,EVOLVE*);
 

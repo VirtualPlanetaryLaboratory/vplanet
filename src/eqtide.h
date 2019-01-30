@@ -214,7 +214,7 @@ void LogBodyEqtide(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 void PropertiesEqtide(BODY*,int);
 void fdaChi(BODY*,double,double,int,int);
 double fdEqRotRate(BODY*,int,double,double,int,int);
-double fdTidePower(BODY*,SYSTEM*,UPDATE*,int,int);
+double fdTidePower(BODY*,int,int);
 double fdSurfEnFluxEqtide(BODY*,SYSTEM*,UPDATE*,int,int);
 void ForceBehaviorEqtide(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
@@ -281,5 +281,19 @@ double fdCTLDHeccDt(BODY*,SYSTEM*,int*);
 double fdCTLDKeccDt(BODY*,SYSTEM*,int*);
 double fdDEdTCTLEqtide(BODY*,SYSTEM*,int*);
 double fdCTLDoblDt(BODY*,int*);
+
+/******************** DB15 Functions ********************/
+double fdPowerEqtideDB15(BODY*,int);
+double fdImK2DB15(BODY*,int);
+double fdK2DB15(BODY*,int);
+void PropsAuxDB15(BODY*,EVOLVE*,UPDATE*,int);
+
+
+double fdDB15DsemiDt(BODY*,SYSTEM*,int*);
+double fdDB15DeccDt(BODY*,UPDATE*,int*);
+double fdDB15DHeccDt(BODY*,SYSTEM*,int*);
+double fdDB15DKeccDt(BODY*,SYSTEM*,int*);
+
+
 
 /* @endcond */

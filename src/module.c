@@ -705,22 +705,22 @@ void VerifyModuleMultiEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,
   if (body[iBody].bEqtide) {
     if (!body[iBody].bThermint) {
       /* Eqtide called, but not thermint. Make sure that bOceanTides=0 and
-	 check if dTidalQOcean and dK2Ocean are set. These should only be set if THERMINT
-	 selected. */
+	       check if dTidalQOcean and dK2Ocean are set. These should only be set if THERMINT
+	       selected. */
       if (body[iBody].bOceanTides) {
-	if (control->Io.iVerbose >= VERBINPUT)
-	  fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_OCEANTIDES].cName);
-        exit(EXIT_INPUT);
+	      if (control->Io.iVerbose >= VERBINPUT)
+	        fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_OCEANTIDES].cName);
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_OCEANTIDES].iLine[iBody+1]);
       }
       if (options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1) {
-	if (control->Io.iVerbose >= VERBINPUT)
-	  fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_TIDALQOCEAN].cName);
-	exit(EXIT_INPUT);
-        }
+        if (control->Io.iVerbose >= VERBINPUT)
+	        fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_TIDALQOCEAN].cName);
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_TIDALQOCEAN].iLine[iBody+1]);
+      }
       if (options[OPT_K2OCEAN].iLine[iBody+1] > -1) {
         if (control->Io.iVerbose >= VERBINPUT)
           fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_K2OCEAN].cName);
-        exit(EXIT_INPUT);
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_K2OCEAN].iLine[iBody+1]);
       }
 
       // Set Im(k_2) here
@@ -731,10 +731,12 @@ void VerifyModuleMultiEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,
       body[iBody].dK2Ocean = 1.0;
       body[iBody].dTidalQOcean = 30.0;
 
+      /* This should now be deprecated
       // Now set the "Man" functions as the WriteTidalQ uses them
       // This ensures that the write function works
       body[iBody].dImk2Man = body[iBody].dImK2;
       body[iBody].dK2Man = body[iBody].dK2;
+*/
     } else { // Thermint and Eqtide called
 
       // If dTidalQ or K2 set, ignore/warn user as thermint computes these
@@ -1159,6 +1161,9 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,UPDATE *update,CONTROL *co
     }
   }
 
+  // Call PropsAuxAtmescThermint to initialize interior Properties
+  fvPropsAuxThermint(body,&control->Evolve,update,iBody);
+
 }
 
 void VerifyModuleMultiFlareStellar(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
@@ -1387,97 +1392,94 @@ void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   /* RB- These first 3 lines were taken from PropsAuxThermint, but
    as they rely on eqtide being called, they belong here.*/
-  body[iBody].dK2Man=fdK2Man(body,iBody);
-  body[iBody].dImk2Man=fdImk2Man(body,iBody);
+  body[iBody].dK2=fdK2DB15(body,iBody);
+  body[iBody].dImK2=fdImK2DB15(body,iBody);
 
   // Include tidal dissapation due to oceans:
-  if(body[iBody].bOceanTides)
-  {
-    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
+  if(body[iBody].bOceanTides) {
+    body[iBody].dK2 += body[iBody].dK2Ocean;
 
     // Im(K_2) is weighted sum of mantle and oceam component
     // weighted by the love number of each component
-    body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Ocean);
-  }
-  // No oceans, thermint dictates ImK2
-  else
-  {
-    body[iBody].dImK2 = body[iBody].dImk2Man;
-    body[iBody].dK2 = body[iBody].dK2Man;
-  }
+    body[iBody].dImK2 += body[iBody].dImK2Ocean;
+  } // No oceans => thermint dictates ImK2 alone XXX What about envelope?
 
   // Sanity checks: enforce upper bound
-  if(body[iBody].dK2 > 1.5)
+  if(body[iBody].dK2 > 1.5) {
     body[iBody].dK2 = 1.5;
-
+    fprintf(stderr,"WARNING: body[%d].dK2 > 1.5 at time %.5e years.\n",iBody,evolve->dTime/YEARSEC);
+  }
+  /* XXX Why are these here? Won't PropsAux"Eqtide" be called in eqtide?
   PropsAuxCPL(body,evolve,update,iBody);
   // Call dTidePowerMan
   body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
+*/
 }
 
 void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   // Set the mantle parameters first
-  body[iBody].dK2Man=fdK2Man(body,iBody);
-  body[iBody].dImk2Man=fdImk2Man(body,iBody);
+  body[iBody].dK2=fdK2DB15(body,iBody);
+  body[iBody].dImK2=fdImK2DB15(body,iBody);
 
   // If it's the first step, see if it's a runaway greenhouse
-  if (evolve->bFirstStep)
-  {
+  if (evolve->bFirstStep) {
     // RG -> no ocean tides
-    if(fdInsolation(body, iBody, 0) >= fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass))
-    {
+    if(fdInsolation(body, iBody, 0) >= fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)) {
       body[iBody].bOceanTides = 0;
     }
   }
 
   // Case: No oceans, no envelope
-  if(!body[iBody].bOceanTides && !body[iBody].bEnvTides)
-  {
+  if (!body[iBody].bOceanTides && !body[iBody].bEnvTides) {
     // Mantle controls evolution via thermint
+    /* These are now deprecated XXX
     body[iBody].dImK2 = body[iBody].dImk2Man;
     body[iBody].dK2 = body[iBody].dK2Man;
+    */
   }
   // Case: Oceans, no envelope:
-  else if(body[iBody].bOceanTides && !body[iBody].bEnvTides)
-  {
+  else if (body[iBody].bOceanTides && !body[iBody].bEnvTides) {
     // Oceans dominate
-    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
-
+    //body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
+    body[iBody].dK2 += body[iBody].dK2Ocean;
     // Im(K_2) is weighted sum of mantle and oceam component
     // weighted by the love number of each component
-    body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Ocean);
+    //body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Ocean);
+    body[iBody].dImK2 += body[iBody].dImK2Ocean;
   }
   // Case: No oceans, envelope (envelope evap while in runaway):
-  else if(!body[iBody].bOceanTides && body[iBody].bEnvTides)
-  {
+  else if (!body[iBody].bOceanTides && body[iBody].bEnvTides) {
     // Envelope dominates
-    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
-
+    //body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
+    body[iBody].dK2 += body[iBody].dK2Env;
     // Im(K_2) is weighted sum of mantle and enevelope component
     // weighted by the love number of each component
-    body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Env);
+    //body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Env);
+    body[iBody].dImK2 += body[iBody].dImK2Env;
   }
   // Case: Oceans and evelope->envelope has massive pressure so oceans are super critical (?):
   // Also, envelope and ocean are mutually exclusive so envelope dominates
-  else if(body[iBody].bOceanTides && body[iBody].bEnvTides)
-  {
+  else if (body[iBody].bOceanTides && body[iBody].bEnvTides) {
     // Envelope and ocean!
-    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
-
+    // body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
+    body[iBody].dK2 += body[iBody].dK2Env;
     // Im(K_2) is weighted sum of mantle, envelope and ocean component
     // weighted by the love number of each component
-    body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Env);
-  }
-  else
+    //body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Env);
+    body[iBody].dImK2 += body[iBody].dImK2Env;
+  } else
     assert(0); // Unknown envelope + ocean behavior
 
   // Sanity checks: enforce upper bound
-  if(body[iBody].dK2 > 1.5)
+  if(body[iBody].dK2 > 1.5) {
     body[iBody].dK2 = 1.5;
+    fprintf(stderr,"WARNRING: Love Number k_2 > 1.5.\n");
+  }
 
   // Finally, call EQTIDE props aux then set mantle tidal power
+  // XXX Why are these called? Can't ThermInt work with CTL and DB15?
   PropsAuxCPL(body,evolve,update,iBody);
-  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
+  body[iBody].dTidalPowMan = fdTidePower(body,iBody,evolve->iEqtideModel);
 
 }
 /* This does not seem to be necessary

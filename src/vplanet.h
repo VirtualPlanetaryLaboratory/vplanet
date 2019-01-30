@@ -419,7 +419,7 @@ struct BODY {
 	double dLockTime;			 /**< Time when body tidally-locked */
 	int bOceanTides;       /**< Have Q be from ocean and thermal interior components? */
   int bEnvTides;         /**< Have Q contribution from the envelope as well? */
-  int bUseTidalRadius;      /**< Set a fixed tidal radius? */
+  int bUseTidalRadius;   /**< Set a fixed tidal radius? */
   double dTidalRadius;   /**< Radius used by tidal evoltion equations (CPL only currently) */
   int iTidePerts;        /**< Number of Tidal Perturbers */
   int *iaTidePerts;      /**< Body #'s of Tidal Perturbers */
@@ -431,9 +431,9 @@ struct BODY {
   double dImK2Ocean;     /**< Ocean Component to Imaginary part of Love's K_2 */
   double dImK2Env;       /**< Envelope Component to Imaginary part of Love's K_2 */
   double dImK2Rock;
-  double dK2Man;           /**< Mantle k2 love number -- to delete */
-  double dImk2Man;         /**< Mantle Im(k2) love number  -- to delete */
-    double dTidalQ;	 /**< Body's Tidal Q */
+  //double dK2Man;           /**< Mantle k2 love number -- to delete */
+  //double dImk2Man;         /**< Mantle Im(k2) love number  -- to delete */
+  double dTidalQ;	       /**< Body's Tidal Q */
   double dTidalQRock;    /**< Tidal Q in interior */ // add in dk2rock...
   double dTidalQOcean;   /**< Body's Ocean Component to Tidal Q */
   int bOcean;            /** <is there an ocean? */

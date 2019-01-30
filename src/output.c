@@ -146,6 +146,7 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
  * K
  */
 
+/* Deprecated!
 void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dK2Man;
   if (output->bDoNeg[iBody]) {
@@ -163,7 +164,7 @@ void WriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     strcpy(cUnit,output->cNeg);
   } else { }
 }
-
+*/
 void WriteKecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = body[iBody].dKecc;
@@ -750,9 +751,10 @@ void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 
 void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
+  // XXX This probably needs to change
   // Just thermint, no eqtide
   if((body[iBody].bThermint && !body[iBody].bEqtide) || (body[iBody].bThermint && (!body[iBody].bOceanTides && body[iBody].bEnvTides)))
-    *dTmp = fdImk2Man(body,iBody);
+    *dTmp = fdImK2DB15(body,iBody);
   else
     *dTmp = body[iBody].dImK2;
 
@@ -761,9 +763,10 @@ void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
 void WriteK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
+  // XXX This probably needs to change
   // If just thermint
   if((body[iBody].bThermint && !body[iBody].bEqtide) || (body[iBody].bThermint && (!body[iBody].bOceanTides && !body[iBody].bEnvTides)))
-    *dTmp = fdK2Man(body,iBody);
+    *dTmp = fdK2DB15(body,iBody);
   else
     *dTmp = body[iBody].dK2;
 
@@ -895,6 +898,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
    */
 
   /* Imk2Man */
+  /* Deprecated!
   sprintf(output[OUT_IMK2MAN].cName,"Imk2Man");
   sprintf(output[OUT_IMK2MAN].cDescr,"Imaginary Love Number k2 Mantle");
   sprintf(output[OUT_IMK2MAN].cNeg,"nd");
@@ -903,6 +907,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_IMK2MAN].iNum = 1;
   output[OUT_IMK2MAN].iModuleBit = THERMINT + EQTIDE; // XXX Is EQTIDE right?
   fnWrite[OUT_IMK2MAN] = &WriteImk2Man;
+*/
 
   sprintf(output[OUT_INC].cName,"Inc");
   sprintf(output[OUT_INC].cDescr,"Body's Inclination");
@@ -927,6 +932,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
    */
 
   /* K2Man */
+/* Deprecated!
   sprintf(output[OUT_K2MAN].cName,"K2Man");
   sprintf(output[OUT_K2MAN].cDescr,"Real Love Number k2 Mantle");
   sprintf(output[OUT_K2MAN].cNeg,"nd");
@@ -935,6 +941,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_K2MAN].iNum = 1;
   output[OUT_K2MAN].iModuleBit = THERMINT + EQTIDE;
   fnWrite[OUT_K2MAN] = &WriteK2Man;
+*/
 
   sprintf(output[OUT_KECC].cName,"KEcc");
   sprintf(output[OUT_KECC].cDescr,"Poincare's k (=e*cos(varpi)");

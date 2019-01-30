@@ -491,7 +491,7 @@ double fdHfluxUMan(BODY*,int);
 double fdHfluxLMan(BODY*,int);
 double fdHfluxCMB(BODY*,int);
 double fdHflowUMan(BODY*,int);
-double fdHflowSecMan(BODY*,int);
+double fdPowerThermint(BODY*,int);
 double fdHflowLMan(BODY*,int);
 double fdHflowCMB(BODY*,int);
 double fdHflowMeltMan(BODY*,int);

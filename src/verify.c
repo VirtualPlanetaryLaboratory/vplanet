@@ -518,10 +518,12 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,int iBody,int iVerbose,ch
 
 void VerifyInterior(BODY *body,OPTIONS *options,int iBody) {
   // Is this OK? XXX
+  /* No! Deprecate!
   if (!body[iBody].bThermint) {
     body[iBody].dK2Man = 0;
     body[iBody].dImk2Man = 0;
   }
+  */
 }
 
 /*

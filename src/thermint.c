@@ -1385,7 +1385,7 @@ void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dHflowCMB=fdHflowCMB(body,iBody);
   body[iBody].dHflowLatentMan=fdHflowLatentMan(body,update,iBody);
   body[iBody].dHflowMeltMan=fdHflowMeltMan(body,iBody);
-  body[iBody].dHflowSecMan=fdHflowSecMan(body,iBody);
+  body[iBody].dHflowSecMan=fdHflowSecMan(body,evolve,iBody);
   body[iBody].dHflowSurf=fdHflowSurf(body,iBody);
 
   /* Core */
@@ -4373,8 +4373,8 @@ double fdMassICDot(BODY *body,UPDATE *update,int iBody) {
       return 0;
     }
 }
-double dfHflowSecMan(BODY *body,SYSTEM *system,UPDATE *update,int iBody) {
-  body[iBody].dHflowUMan+body[iBody].dHflowMeltMan-body[iBody].dHflowLMan-body[iBody].dHflowLatentMan-body[iBody].dRadPowerMan
+double fdPowerThermint(BODY *body,int iBody) {
+  return body[iBody].dHflowUMan+body[iBody].dHflowMeltMan-body[iBody].dHflowLMan-body[iBody].dHflowLatentMan-body[iBody].dRadPowerMan;
 }
 /**
   Function compute latent heat flow from inner core solidification

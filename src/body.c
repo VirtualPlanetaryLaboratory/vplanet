@@ -569,15 +569,16 @@ double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
 
   @return Heat flow of erupted mantle melt
 */
-double fdHflowSecMan(BODY *body,int iBody) {
+double fdHflowSecMan(BODY *body,EVOLVE *evolve,int iBody) {
   double dHflowSecMan = 0;
 
   if (body[iBody].bThermint) {
-    dHflowSecMan += fdPowerThermint(body,system,update,iBody);
+    dHflowSecMan += fdPowerThermint(body,iBody);
   }
   if (body[iBody].bEqtide) {
-    dHflowSecMan -= fdTidePower(body,system,update,iBody,control->Evolve.iEqtideModel); // formerly dTidalPowerMan
+    dHflowSecMan -= fdTidePower(body,iBody,evolve->iEqtideModel); // formerly dTidalPowerMan
   }
+  // Should add RadHeat here
   return dHflowSecMan;
 }
 

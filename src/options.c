@@ -578,6 +578,14 @@ void ReadVerbose(FILES *files,OPTIONS *options,int *iVerbose,int iFile) {
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else if (*iVerbose == -1) // Was not set at command line, so set to default
      *iVerbose = atoi(options->cDefault);
+
+  // XXX From ReadInitialOptions,iin this location
+  /* Now we can search through files for all options. First we scan the files for Verbosity */
+  /* Initialize other input files */
+  for (iFile=1;iFile<files->iNumInputs;iFile++) {
+    InitializeInput(&files->Infile[iFile]);
+    ReadVerbose(files,&options[OPT_VERBOSE],iVerbose,iFile);
+  }
 }
 
 int iAssignMassUnit(char cTmp[],int iVerbose,char cFile[],char cName[],int iLine) {
@@ -1031,26 +1039,18 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
 
   /* First find input files */
   ReadBodyFileNames(control,files,&options[OPT_BODYFILES],&input);
+
+  // allocate the body struct
   *body = malloc(control->Evolve.iNumBodies*sizeof(BODY));
-
-  InitializeBodyModules(body,control->Evolve.iNumBodies);
-
-  /* Is iVerbose set in primary input? */
-  ReadVerbose(files,&options[OPT_VERBOSE],&control->Io.iVerbose,0);
-
-  /* Now we can search through files for all options. First we scan the files for Verbosity */
-  /* Initialize other input files */
-  for (iFile=1;iFile<files->iNumInputs;iFile++) {
-    InitializeInput(&files->Infile[iFile]);
-    ReadVerbose(files,&options[OPT_VERBOSE],&control->Io.iVerbose,iFile);
-  }
-
-  /* Now initialize arrays */
-  control->Units = malloc(files->iNumInputs*sizeof(UNITS));
 
   /* Initialize functions in the module struct */
   InitializeModule(module,control->Evolve.iNumBodies);
-  control->Halt = malloc(control->Evolve.iNumBodies*sizeof(HALT));
+
+  // Read Verbosity level
+  ReadVerbose(files,&options[OPT_VERBOSE],&control->Io.iVerbose,0);
+
+  /* Need units prior to any parameter read */
+  control->Units = malloc(files->iNumInputs*sizeof(UNITS));
 
   /* Next we must find the units, modules, and system name */
   for (iFile=0;iFile<files->iNumInputs;iFile++) {
@@ -1063,16 +1063,6 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
     /* Get Modules first as it helps with verification
        ReadModules is in module.c */
     ReadModules(*body,control,files,module,&options[OPT_MODULES],iFile);
-  }
-
-  InitializeControlVerifyProperty(control);
-
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++)
-    FinalizeModule(*body,control,module,iBody);
-
-  /* Check that selected modules are compatable */
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    VerifyModuleCompatability(*body,control,files,module,options,iBody);
   }
 
   free(input.bLineOK);
@@ -2641,7 +2631,7 @@ void ReadSemiMajorAxis(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       AssignDefaultDouble(options,&body[iFile-1].dSemi,files->iNumInputs);
 }
 
-void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[]) {
+void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,fnReadOption fnRead[]) {
   /* Now get all other options, if not in MODULE mode */
   int iOpt,iFile;
 
@@ -2655,6 +2645,16 @@ void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       if (options[iOpt].iType != -1 && iOpt != OPT_OUTPUTORDER && iOpt != OPT_GRIDOUTPUT) {
         fnRead[iOpt](body,control,files,&options[iOpt],system,iFile);
       }
+  }
+
+  /* Read in output order */
+  for (iFile=1;iFile<files->iNumInputs;iFile++) {
+    ReadOutputOrder(files,module,options,output,iFile,control->Io.iVerbose);
+    if (body[iFile-1].bPoise) {
+      ReadGridOutput(files,options,output,iFile,control->Io.iVerbose);
+    } else
+      // Initialize iNumGrid to 0 so no memory issues
+      files->Outfile[iFile-1].iNumGrid = 0;
   }
 }
 
@@ -2759,7 +2759,7 @@ void ReadZobl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
  */
 
 void ReadOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE **update,fnReadOption fnRead[],char infile[]) {
-  int iFile,iModule;
+  int iBody;
 
   /* Read options for files, units, verbosity, and system name. */
   ReadInitialOptions(body,control,files,module,options,output,system,infile);
@@ -2770,24 +2770,16 @@ void ReadOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module,OPTION
   /* Initialize module control */
   InitializeControl(control,module);
 
-  /* Initialize halts XXX Done in verify
-     InitializeHalt(control,module); */
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    FinalizeModule(*body,control,module,iBody);
+    VerifyModuleCompatability(*body,control,files,module,options,iBody);
+  }
 
   /* Now read in remaining options */
-  ReadOptionsGeneral(*body,control,files,options,system,fnRead);
+  ReadOptionsGeneral(*body,control,files,module,options,output,system,fnRead);
 
   /* Read in module options */
   ReadOptionsModules(*body,control,files,module,options,system,fnRead);
-
-  /* Read in output order -- merge into ReadGeneralOptions? */
-  for (iFile=1;iFile<files->iNumInputs;iFile++) {
-    ReadOutputOrder(files,module,options,output,iFile,control->Io.iVerbose);
-    if ((*body)[iFile-1].bPoise) {
-      ReadGridOutput(files,options,output,iFile,control->Io.iVerbose);
-    } else
-      // Initialize iNumGrid to 0 so no memory issues
-      files->Outfile[iFile-1].iNumGrid = 0;
-  }
 
   /* Any unrecognized options? */
   Unrecognized(*files);

@@ -106,6 +106,7 @@ void InitializeControl(CONTROL *control,MODULE *module) {
   control->fnForceBehavior = malloc(control->Evolve.iNumBodies*sizeof(fnForceBehaviorModule*));
   control->fnForceBehaviorMulti = malloc(control->Evolve.iNumBodies*sizeof(fnForceBehaviorModule*));
   control->iNumMultiForce = malloc(control->Evolve.iNumBodies*sizeof(int));
+  control->Halt = malloc(control->Evolve.iNumBodies*sizeof(HALT));
 
   control->fnPropsAux = malloc(control->Evolve.iNumBodies*sizeof(fnPropsAuxModule*));
   control->fnPropsAuxMulti = malloc(control->Evolve.iNumBodies*sizeof(fnPropsAuxModule*));
@@ -119,6 +120,8 @@ void InitializeControl(CONTROL *control,MODULE *module) {
       control->fnPropsAux[iBody][iModule] = &PropsAuxNULL;
     }
   }
+
+  InitializeControlVerifyProperty(control);
 }
 
 /* This is called from Verify, after the update matrix has been

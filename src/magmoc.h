@@ -9,8 +9,8 @@
 
 
 /* Parameter */
+// mantle parameters
 #define SILICATEHEATCAP           1.2e3  //silicate heat capacity (J/kg/K)
-#define WATERHEATCAP              2.08e3 //water heat capacity (J/kg/K)
 #define HEATFUSIONSILICATE        4e5    //heat of fusion of soliciates (J/kg)
 #define THERMALCONDUC             4.2    //thermal conductivity mantle (W/m/K)
 #define THERMALDIFFUS             1e-6   //thermal diffusivity mantle (m^2/s)
@@ -19,24 +19,44 @@
 #define ALBEDOWATERATMOS          0.75   //albedo 100% water atmosphere
 #define ALBEDOROCK                0.3    //albedo bare rock
 #define WATERPARTCOEFF            0.01   //partition coeff. water between melt & solid
-#define MOLWEIGHTWATER            18.01528 //molar weight water
-#define MOLWEIGHTHYDROGEN         1.00794  //molar weight hydrogen
-#define MOLWEIGHTOXYGEN           15.999   //molar weight oxygen
-#define MOLWEIGHTFEO              79.844   //molar weight FeO_1.5
 #define CRITMELTFRAC              0.4    //critical melt fraction
 #define DYNVISCLIQUID             0.01   //dynamic viscosity of liquid melt
 #define DYNVISCSOLID              3.8e9  //dynamic viscosity of solid
-#define IDEALGASCONST             8.314  //ideal gas constant
 #define ACTIVENERGY               3.5e5  //activation energy viscosity
 #define RADCOREEARTH              3.4e6  //core radius Earth (m)
+
+// molar masses of volatiles
+#define MOLWEIGHTWATER            18.01528 //molar weight water
+#define MOLWEIGHTHYDROGEN         1.00794  //molar weight hydrogen
+#define MOLWEIGHTOXYGEN           15.999   //molar weight oxygen
+#define MOLWEIGHTFEO15            79.844   //molar weight FeO_1.5
+#define MOLWEIGHTFEO              71.844   //molar weight FeO
 
 // prefactors for linear solidus (Hirschmann 2000)
 #define ALOWPRESSURE              1.0442e-7 //low pressure (K/Pa)
 #define BLOWPRESSURE              1420      // (K)
 #define AHIGHPRESSURE             0.2653E-7 //high pressure (K/Pa)
 #define BHIGHPRESSURE             1825      // (K)
-// #define PREFACTORA                0.2653E-7
-// #define PREFACTORB                1825
+
+// mantle composition (mole fractions)
+#define MOLFRACAL2O3              2.433e-2
+#define MOLFRACFEO                5.791e-2
+#define MOLFRACCAO                3.506e-2
+#define MOLFRACNA2O               2.937e-3
+#define MOLFRACK2O                2.209e-4
+#define AVEMOLMASS                52.833 // average molar mass of mantle
+#define TOTMASSFRACFEO            0.0788 // total mass fraction of FeO in mantle
+
+// OLR Elkins-Tanton 2008
+#define ABSORPCOEFFH2O            0.01 // absorp. coeff. of water at ref. press.
+#define REFPRESSUREOPACITY        101325 // reference pressure (Pa)
+#define WATERHEATCAP              3.2e3 //water heat capacity (J/kg/K)
+
+// Atmospheric escape (double to ATMESC)
+#define ATMESCTHERMT              500 //average atmospheric temp. (K)
+#define ATMESCBDIFF               4.8e19 * pow(THERMT, 0.75) // Binary diffusion coefficient of H through O (/m/s)
+#define ATMESCQOH                 16. // Atomic mass ratio oxygen/hydrogen
+
 
 void InitializeOptionsMagmOc(OPTIONS*,fnReadOption[]);
 void AddModuleMagmOc(MODULE*,int,int);
@@ -105,10 +125,10 @@ void LogBodyMagmOc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 
 /* MagmOc functions */
 void fnForceBehaviorMagmOc(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
-double fdDPotTemp(BODY*, CONTROL*, SYSTEM*, int*);
-double fdDSurfTemp(BODY*, CONTROL*, SYSTEM*, int*);
-double fdDSolidRadius(BODY*, CONTROL*, SYSTEM*, int*);
+double fdDPotTemp(BODY*, SYSTEM*, int*);
+double fdDSurfTemp(BODY*, SYSTEM*, int*);
+double fdDSolidRadius(BODY*, SYSTEM*, int*);
 double fdDWaterMassMOAtm(BODY*, SYSTEM*, int*);
-double fdDWaterMassSol(BODY*, CONTROL*, SYSTEM*, int*);
-double fdDOxygenMassMOAtm(BODY*, CONTROL*, SYSTEM*, int*);
-double fdDOxygenMassSol(BODY*, CONTROL*, SYSTEM*, int*);
+double fdDWaterMassSol(BODY*, SYSTEM*, int*);
+double fdDOxygenMassMOAtm(BODY*, SYSTEM*, int*);
+double fdDOxygenMassSol(BODY*, SYSTEM*, int*);

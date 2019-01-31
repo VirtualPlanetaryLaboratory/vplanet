@@ -165,14 +165,20 @@ void ReadOptionsMagmOc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 
 // Initilaization of a primary variable
 void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-  body[iBody].dWaterMassMOAtm  = body[iBody].dWaterMassAtm; // initial water mass in MO&Atm is equal to inital Water mass in atmosphere
-  body[iBody].dPotTemp         = body[iBody].dSurfTemp; // initial potential temp = initial surface temp
-  body[iBody].dWaterMassSol    = 0; // initial water mass in solid = 0
+  // primary variables: HARD CODED INITIAL VALUES
+  body[iBody].dPotTemp         = 4000; //body[iBody].dSurfTemp; // initial potential temp = initial surface temp
+  body[iBody].dSurfTemp        = 4000;
   body[iBody].dSolidRadius     = body[iBody].dRadius * RADCOREEARTH / REARTH; // initial solid. rad. = core radius
-  body[iBody].dPrefactorA      = AHIGHPRESSURE;
-  body[iBody].dPrefactorB      = BHIGHPRESSURE;
+  body[iBody].dWaterMassMOAtm  = TOMASS; // body[iBody].dWaterMassAtm; // initial water mass in MO&Atm is equal to inital Water mass in atmosphere
+  body[iBody].dWaterMassSol    = 0; // initial water mass in solid = 0
   body[iBody].dOxygenMassMOAtm = 0; // initial oxygen mass in MO&Atm = 0
   body[iBody].dOxygenMassSol   = 0; // initial oxygen mass in solid = 0
+
+  // other variables
+  body[iBody].dManMeltDensity  = 4000;
+  body[iBody].dCoreRadius      = body[iBody].dRadius * RADCOREEARTH / REARTH; // same relative core radius as Earth
+  body[iBody].dPrefactorA      = AHIGHPRESSURE;
+  body[iBody].dPrefactorB      = BHIGHPRESSURE;
 }
 
 /******************* Verify MAGMOC ******************/
@@ -181,6 +187,24 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
 
 /* Assign Nums */
 
+/* Equations needed in PropsAuxMagmOc */
+double Bisection(double (*f)(double), double xl, double xu) {
+  double xm,epsilon,prod;
+  epsilon = 1;
+  while(epsilon>1e-5) {
+    xm = (xl + xu)/2.;
+    epsilon = fabs((*f)(xm));
+    prod = (xl / fabs(xl)) * (xm / fabs(xm));
+    if (prod < 0) {
+      xu = xm;
+    } else {
+      xl = xm;
+    }
+  }
+  return xm;
+}
+
+double WaterMassMOTime(double);
 
 /* Auxs Props */
 /* auxiliarie parameters/variables that need to be calculated in order to calculate the primary variable
@@ -189,64 +213,115 @@ calculated every quarter step for Runge-Kutta
 if needed in other parts of the code, or to be printed: body[iBody]!!! otherwise it will be deleted after the
 end of this equation */
 void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+  // define minimum of two variables
 
-  // define help variables to calculate melt_frac
-  // double radius[101];      // radius
-  // double Trad[101];        // radius dep. temperature
-  // double melt_frac_r[101]; // radius dep. melt_frac
-  // double melt_vol;         // melt volume
-  // double r_c;              // core radius
-  // double a, b;             // prefactors for linear solidus
-  // double Tsol;             // solidus temperature
-  // int j;
-  //
-  // r_c = body[iBody].dRadius * RADCOREEARTH / REARTH;
-  // melt_vol = 0;
-  //
-  // for (j=0; j<100; j=j+1){
-  //   radius[j] = j*(body[iBody].dRadius-r_c)/100 +r_c;
-  //   if (body[iBody].dRadius-radius[j] < 1e5) {
-  //     a = ALOWPRESSURE;
-  //     b = BLOWPRESSURE;
-  //   } else {
-  //     a = AHIGHPRESSURE;
-  //     b = BHIGHPRESSURE;
-  //   }
-  //   Tsol = a*body[iBody].dManMeltDensity*body[iBody].dGravAccel*(body[iBody].dRadius-radius[j])+b;
-  //   Trad[j] = body[iBody].dPotTemp*(1+(THERMALEXPANCOEFF*body[iBody].dGravAccel/SILICATEHEATCAP)*body[iBody].dRadius-radius[j]);
-  //   melt_frac_r[j] = (Trad[j]-Tsol)/600;
-  //   if (melt_frac_r[j] > 1) {
-  //     melt_frac_r[j] = 1; // melt fraction can't be larger than 1
-  //   } else if (melt_frac_r[j] < 0) {
-  //     melt_frac_r[j] = 0; // melt fraction can't be smaller than 0
-  //   }
-  //   melt_vol = melt_vol + melt_frac_r[j]*(pow(radius[j+1],3)-pow(radius[j],3));
-  // }
-  //
-  // body[iBody].dSolidRadius = body[iBody].dRadius - ( (body[iBody].dPrefactorB-body[iBody].dPotTemp) / (body[iBody].dGravAccel*(body[iBody].dPotTemp*THERMALEXPANCOEFF/SILICATEHEATCAP - body[iBody].dPrefactorA*body[iBody].dManMeltDensity)));
-  //
-  // if (body[iBody].dSolidRadius < r_c) {
-  //   body[iBody].dSolidRadius = r_c;
-  //   body[iBody].dMeltFraction = melt_vol / (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3));
-  // } else if (body[iBody].dSolidRadius >= body[iBody].dRadius) {
-  //   body[iBody].dSolidRadius = body[iBody].dRadius;
-  //   body[iBody].dMeltFraction = 0;
-  // } else {
-  //   body[iBody].dMeltFraction = melt_vol / (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3));
-  // }
-  //
-  // if (body[iBody].dMeltFraction > 1) {
-  //   body[iBody].dMeltFraction = 1;
-  // } else if (body[iBody].dMeltFraction < 0) {
-  //   body[iBody].dMeltFraction = 0;
-  // }
-  //
-  // if (body[iBody].dMeltFraction > CRITMELTFRAC) {
-  //   body[iBody].dDynamViscos = DYNVISCLIQUID / pow((1-(1-body[iBody].dMeltFraction)/(1-CRITMELTFRAC)),2.5);
-  // } else {
-  //   body[iBody].dDynamViscos = DYNVISCSOLID * exp(-ACTIVENERGY/(IDEALGASCONST*body[iBody].dPotTemp));
-  // }
+  /*
+   * Calculation of melt fraction and kinematic viscosity
+   * Function melt_fraction() in functions_rk.py
+   */
+  double radius[101];      // radius
+  double Trad[101];        // radius dep. temperature
+  double melt_frac_r[101]; // radius dep. melt_frac
+  double melt_vol;         // melt volume
+  double a, b;             // prefactors for linear solidus
+  double Tsol;             // solidus temperature
+  double eta_a;            // liquid viscosity
+  double eta_b;            // solid viscosity
+  int j;
 
+  melt_vol = 0;
+
+  for (j=0; j<100; j=j+1){
+    radius[j] = j*(body[iBody].dRadius-body[iBody].dCoreRadius)/100 +body[iBody].dCoreRadius;
+    if (body[iBody].dRadius-radius[j] < 1e5) {
+      a = ALOWPRESSURE;
+      b = BLOWPRESSURE;
+    } else {
+      a = AHIGHPRESSURE;
+      b = BHIGHPRESSURE;
+    }
+    Tsol = a*body[iBody].dManMeltDensity*body[iBody].dGravAccel*(body[iBody].dRadius-radius[j])+b;
+    Trad[j] = body[iBody].dPotTemp*(1+(THERMALEXPANCOEFF*body[iBody].dGravAccel/SILICATEHEATCAP)*body[iBody].dRadius-radius[j]);
+    melt_frac_r[j] = (Trad[j]-Tsol)/600;
+    if (melt_frac_r[j] > 1) {
+      melt_frac_r[j] = 1; // melt fraction can't be larger than 1
+    } else if (melt_frac_r[j] < 0) {
+      melt_frac_r[j] = 0; // melt fraction can't be smaller than 0
+    }
+    melt_vol = melt_vol + melt_frac_r[j]*(pow(radius[j+1],3)-pow(radius[j],3));
+  }
+
+  body[iBody].dSolidRadiusLocal = body[iBody].dRadius - ( (body[iBody].dPrefactorB-body[iBody].dPotTemp) / (body[iBody].dGravAccel*(body[iBody].dPotTemp*THERMALEXPANCOEFF/SILICATEHEATCAP - body[iBody].dPrefactorA*body[iBody].dManMeltDensity)));
+
+  if (body[iBody].dSolidRadiusLocal < body[iBody].dCoreRadius) {
+    body[iBody].dSolidRadiusLocal = body[iBody].dCoreRadius;
+    body[iBody].dMeltFraction = melt_vol / (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadiusLocal,3));
+  } else if (body[iBody].dSolidRadiusLocal >= body[iBody].dRadius) {
+    body[iBody].dSolidRadiusLocal = body[iBody].dRadius;
+    body[iBody].dMeltFraction = 0;
+  } else {
+    body[iBody].dMeltFraction = melt_vol / (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadiusLocal,3));
+  }
+
+  if (body[iBody].dMeltFraction > 1) {
+    body[iBody].dMeltFraction = 1;
+  } else if (body[iBody].dMeltFraction < 0) {
+    body[iBody].dMeltFraction = 0;
+  }
+
+  if (body[iBody].dMeltFraction > CRITMELTFRAC) {
+    eta_a = 0.00024 * exp(4600/(body[iBody].dPotTemp-1000)) / pow((1-(1-body[iBody].dMeltFraction)/(1-CRITMELTFRAC)),2.5);
+    eta_b = DYNVISCSOLID * exp(-ACTIVENERGY/(RGAS*body[iBody].dPotTemp));
+    body[iBody].dKinemViscos = fmin(eta_a,eta_b) / body[iBody].dManMeltDensity;
+  } else {
+    body[iBody].dKinemViscos = DYNVISCSOLID * exp(-ACTIVENERGY/(RGAS*body[iBody].dPotTemp)) / body[iBody].dManMeltDensity;
+  }
+  // END of melt_fraction(): returns Melt fraction and Kinematic viscosity
+
+  /*
+   * Calculation of the mantle heat flux
+   * Function mantle_flux() in functions_rk.py
+   */
+  if (body[iBody].dPotTemp > body[iBody].dSurfTemp) {
+    body[iBody].dManHeatFlux = THERMALCONDUC * pow((body[iBody].dPotTemp-body[iBody].dSurfTemp),1.33) \
+                               * pow((THERMALEXPANCOEFF*body[iBody].dGravAccel/(CRITRAYLEIGHNO*THERMALDIFFUS*body[iBody].dKinemViscos)),0.33);
+  } else {
+    body[iBody].dManHeatFlux = THERMALCONDUC * body[iBody].dPotTemp * THERMALEXPANCOEFF * body[iBody].dGravAccel / SILICATEHEATCAP;
+  }
+   // END of mantle_flux(): return mantle heat flux
+
+   /*
+    * Calculation of the radiogenic heating rate
+    * Function rad_heat() in functions_rk.py
+    */
+   body[iBody].dRadioHeat = 30.8e-9 * 9.46e-5 * exp(1.55e-10*(4.6e9-body[iBody].dAge/YEARSEC)) + \
+                            0.22e-9 * 5.69e-4 * exp(9.85e-10*(4.6e9-body[iBody].dAge/YEARSEC)) + \
+                            0124e-9 * 2.64e-5 * exp(4.95e-11*(4.6e9-body[iBody].dAge/YEARSEC)) + \
+                            36.9e-9 * 2.92e-5 * exp(5.55e-10*(4.6e9-body[iBody].dAge/YEARSEC));
+   // End of rad_heat()
+
+   /*
+    * Calculation of the water mass fraction in the magma ocean
+    * Function water_fraction() in functions_rk.py
+    */
+   double MassMagmOcTot; //total mass of magma ocean
+   MassMagmOcTot = 4./3 * PI * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadiusLocal,3));
+   body[iBody].dMassMagmOcLiq = body[iBody].dMeltFraction * MassMagmOcTot;
+   body[iBody].dMassMagmOcCry = (1 - body[iBody].dMeltFraction) * MassMagmOcTot;
+
+
+   // End of water_fraction()
+
+
+   double EffTempAtm; // effective temperature of the atmosphere
+
+
+  // important stuff, needed for the Derivatives
+  body[iBody].dFactorDerivative = SILICATEHEATCAP * (body[iBody].dPrefactorB*THERMALEXPANCOEFF - body[iBody].dPrefactorA*body[iBody].dManMeltDensity*SILICATEHEATCAP) / (body[iBody].dGravAccel*pow((body[iBody].dPrefactorA*body[iBody].dManMeltDensity*SILICATEHEATCAP - THERMALEXPANCOEFF*body[iBody].dPotTemp),2));
+}
+
+double M_water_mo_time(BODY *body, int iBody, double Frac) {
+  return 1e-19*(WATERPARTCOEFF*Frac*body[iBody].dMassMagmOcCry + Frac*body[iBody].dMassMagmOcLiq + (4*PI*pow(body[iBody].dRadius,2)/body[iBody].dGravAccel)*pow((Frac/3.44e-8),1/074) - body[iBody].dWaterMassMOAtm);
 }
 
 /* Only updated every full step. Use for check of different behaviors and force parameters to a value,
@@ -667,15 +742,15 @@ void AddModuleMagmOc(MODULE *module,int iBody,int iModule) {
 
 /************* MAGMOC Functions ************/
 // real physic is happening here: calculation of the derivatives of the primary variable!
-double fdDPotTemp(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) {
+double fdDPotTemp(BODY *body, SYSTEM *system, int *iaBody) {
   return -10; /* * sin(1e-8 * control->Evolve.dTime); */
 }
 
-double fdDSurfTemp(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) {
+double fdDSurfTemp(BODY *body, SYSTEM *system, int *iaBody) {
   return -15; /* * sin(1e-8 * control->Evolve.dTime); */
 }
 
-double fdDSolidRadius(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) {
+double fdDSolidRadius(BODY *body, SYSTEM *system, int *iaBody) {
   return -15; /* * sin(1e-8 * control->Evolve.dTime); */
 }
 
@@ -683,14 +758,14 @@ double fdDWaterMassMOAtm(BODY *body, SYSTEM *system, int *iaBody) {
   return -1 * sin(1e-7 * body[iaBody[0]].dAge/YEARSEC);
 }
 
-double fdDWaterMassSol(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) {
+double fdDWaterMassSol(BODY *body, SYSTEM *system, int *iaBody) {
   return TOMASS; /* * sin(1e-8 * control->Evolve.dTime); */
 }
 
-double fdDOxygenMassMOAtm(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) {
+double fdDOxygenMassMOAtm(BODY *body, SYSTEM *system, int *iaBody) {
   return TOMASS; /* * sin(1e-8 * control->Evolve.dTime); */
 }
 
-double fdDOxygenMassSol(BODY *body,CONTROL *control, SYSTEM *system, int *iaBody) {
+double fdDOxygenMassSol(BODY *body, SYSTEM *system, int *iaBody) {
   return TOMASS; /* * sin(1e-8 * control->Evolve.dTime); */
 }

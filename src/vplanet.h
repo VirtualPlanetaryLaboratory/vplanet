@@ -980,23 +980,39 @@ struct BODY {
   //MAGMOC
 	/* HERE
 	 * declare all variables used
-	 * which type?
 	 */
   int bMagmOc;              /**< Use magmoc model */
-  double dFeO;              /**< FeO in the magma ocean */
-  double dWaterMassAtm;     /**< Water mass in the atmosphere */
+	/* Primary variables */
+	double dPotTemp;          /**< Potential Temp of the mantle */
+	double dSurfTemp;         /**< Surface Temp of the planet */
+	double dSolidRadius;      /**< Solidification radius of the mantle */
   double dWaterMassMOAtm;   /**< Water mass in magma ocean and atmosphere */
-  double dSurfTemp;         /**< Surface Temp of the planet */
-  double dManMeltDensity;   /**< Density of the molten mantle */
-  double dPotTemp;          /**< Potential Temp of the mantle */
-  double dWaterMassSol;     /**< Water mass in the solidified mantle */
-  double dSolidRadius;      /**< Solidification radius of the mantle */
+	double dWaterMassSol;     /**< Water mass in the solidified mantle */
 	double dOxygenMassMOAtm;  /**< Water mass in magma ocean and atmosphere */
 	double dOxygenMassSol;    /**< Water mass in the solidified mantle */
+	/* Input variables */
+	double dCoreRadius;       /**< Core radius of the planet*/
+	double dWaterMassAtm;     /**< Water mass in the atmosphere */
+  double dManMeltDensity;   /**< Density of the molten mantle */
+	double dFeO;              /**< FeO in the magma ocean */
+	/* Other variables Thermal model */
+	double dSolidRadiusLocal; /**< Local variable for solidification radius of the mantle */
   double dPrefactorA;       /**< Prefactor for linear solidus */
   double dPrefactorB;       /**< Prefactor for linear solidus */
   double dMeltFraction;     /**< Melt fraction of the mantle */
-  double dDynamViscos;      /**< Dynamic viscosity of the mantle */
+  double dKinemViscos;      /**< Kinematic viscosity of the mantle */
+	double dFactorDerivative; /**< Factor to calculate the derivatives of Tpot and Rsol */
+	double dManHeatFlux;      /**< Mantle heat flux */
+	double dRadioHeat;        /**< Radiogenic heating rate GET FROM RADHEAT */
+	double dNetFluxAtmo;      /**< Net atmospheric flux OLR-ASR */
+	/* Other variables Volatile model */
+	double dPressWaterAtm;    /**< Water pressure in atmosphere */
+	double dMassMagmOcLiq; 		/**< liquid mass of magma ocean */
+	double dMassMagmOcCry; 		/**< crystal mass of magma ocean */
+	double dWaterFracMelt;    /**< Mass fraction of water in the magma ocean */
+	double dFracFe2O3Man;     /**< Mass fraction of Fe2O3 in the mantle */
+	double dEscRateHydro;     /**< Atmospheric escape rate hydrogen GET FROM ATMESC */
+	double dEscRateOxy;  			/**< Atmospheric escape rate oxygen GET FROM ATMESC */
 };
 
 /* SYSTEM contains properties of the system that pertain to

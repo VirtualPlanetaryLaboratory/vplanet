@@ -24,7 +24,7 @@ double fndUpdateFunctionTiny(BODY*,SYSTEM*,int*);
 void SetDerivTiny(fnUpdateVariable***,int,int,int);
 
 void InitializeModule(MODULE*,int);
-void FinalizeModule(BODY*,MODULE*,int);
+void FinalizeModule(BODY*,CONTROL*,MODULE*,int);
 double fdReturnOutputZero(BODY*,SYSTEM*,UPDATE*,int,int);
 void ReadModules(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,int);
 void InitializeBodyModules(BODY**,int);
@@ -33,8 +33,6 @@ void VerifyModuleCompatability(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,int);
 void VerifyModuleMulti(BODY*,UPDATE*,CONTROL*,FILES*,MODULE*,OPTIONS*,int,fnUpdateVariable****);
 void AssignEqtideStellarDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
 void NullEqtideStellarDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
-
-void VerifyDB15(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,UPDATE*,int,int);
 
 void PropsAuxEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxAtmescEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);

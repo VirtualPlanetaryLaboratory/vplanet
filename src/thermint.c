@@ -1256,6 +1256,12 @@ void fvReadOptionsThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
 }
 
 /******************* Verify THERMINT ******************/
+
+void VerifyImK2Thermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iBody) {
+
+}
+
+
 /**
   Verify assigning of TMan to body
 
@@ -3585,9 +3591,11 @@ void fvLogBodyThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   @param iBody Index of body
   @param iModule Index of module
 */
-void fvAddModuleThermint(MODULE *module,int iBody,int iModule) {
+void fvAddModuleThermint(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]              = THERMINT;
+
+  control->fnVerifyImK2[iBody][iModule]         = &VerifyImK2Thermint;
 
   module->fnCountHalts[iBody][iModule]          = &fvCountHaltsThermint;
   module->fnReadOptions[iBody][iModule]         = &fvReadOptionsThermint;

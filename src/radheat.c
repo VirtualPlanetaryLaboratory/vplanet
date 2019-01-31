@@ -5386,9 +5386,11 @@ void fvLogBodyRadheat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
    @param iModule Index of module
    @param iBody Index of body
 */
-void fvAddModuleRadheat(MODULE *module,int iBody,int iModule) {
+void fvAddModuleRadheat(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]                      = RADHEAT;
+
+  //control->fnVerifyImK2[iBody][iModule]                 = &VerifyImK2Radheat;
 
   module->fnInitializeControl[iBody][iModule]           = &fvInitializeControlRadheat;
   module->fnInitializeUpdateTmpBody[iBody][iModule]     = &fvInitializeUpdateTmpBodyRadheat;

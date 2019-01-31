@@ -269,7 +269,7 @@ typedef struct FILES FILES;
 typedef struct OPTIONS OPTIONS;
 typedef struct OUTPUT OUTPUT;
 typedef struct MODULE MODULE;
-
+typedef struct VERIFY VERIFY;
 
 struct PHOTOCHEM {
   double dInitTimeStep;
@@ -1661,6 +1661,8 @@ typedef void (*fnForceBehaviorModule)(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,
 
 typedef int (*fnHaltModule)(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 
+typedef void (*fnVerifyImK2Module)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+
 struct CONTROL {
   EVOLVE Evolve;
   HALT *Halt;
@@ -1678,6 +1680,9 @@ struct CONTROL {
   fnPropsAuxModule **fnPropsAux; /**< Function Pointers to Auxiliary Properties */
   fnPropsAuxModule **fnPropsAuxMulti;  /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
   int *iNumMultiProps;   /**< Number of Multi-module PropsAux functions */
+
+  fnVerifyImK2Module **fnVerifyImK2; /**< Fn ptr to verify initial inputs for Im(k_2) */
+  fnVerifyImK2Module **fnVerifyImK2Multi; /**< Fn ptr to verify initial inputs for Im(k_2) */
 
   /* Things for DistOrb */
   double dAngNum;         /**< Value used in calculating timestep from angle variable */

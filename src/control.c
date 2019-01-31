@@ -138,7 +138,7 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
       control->Evolve.fnBodyCopy[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnBodyCopyModule));
 
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-	control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyNULL;
+	       control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyNULL;
       }
   }
 
@@ -148,6 +148,22 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
     control->Evolve.daDeriv = malloc(4*sizeof(double**));
     for (iSubStep=0;iSubStep<4;iSubStep++) {
       control->Evolve.daDeriv[iSubStep] = malloc(control->Evolve.iNumBodies*sizeof(double*));
+    }
+  }
+}
+
+void InitializeControlVerifyProperty(CONTROL *control) {
+  int iBody,iModule;
+
+  control->fnVerifyImK2 = malloc(control->Evolve.iNumBodies*sizeof(fnVerifyImK2Module*));
+  control->fnVerifyImK2Multi = malloc(control->Evolve.iNumBodies*sizeof(fnVerifyImK2Module*));
+
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    control->fnVerifyImK2[iBody] = malloc(control->Evolve.iNumBodies*sizeof(fnVerifyImK2Module));
+    control->fnVerifyImK2Multi[iBody] = malloc(control->Evolve.iNumBodies*sizeof(fnVerifyImK2Module));
+    for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++) {
+      control->fnVerifyImK2[iBody][iModule] = &VerifyPropertyNULL;
+      control->fnVerifyImK2Multi[iBody][iModule] = &VerifyPropertyNULL;
     }
   }
 }

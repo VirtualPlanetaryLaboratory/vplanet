@@ -1,5 +1,5 @@
 /**
-    @file atmesc.c 
+    @file atmesc.c
     @brief Subroutines that control the integration of the
     atmospheric escape model.
     @author Rodrigo Luger ([rodluger@gmail.com](mailto:rodluger@gmail.com>))
@@ -2239,7 +2239,7 @@ Adds atmesc to the current array of MODULEs.
 @param iBody The current BODY number
 @param iModule The current MODULE number
 */
-void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
+void AddModuleAtmEsc(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]                         = ATMESC;
 

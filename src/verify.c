@@ -103,11 +103,14 @@ void VerifyTripleExit(char cName1[],char cName2[],char cName3[],int iLine1,int i
 }
 
 void VerifyTwoOfThreeExit(char cName1[],char cName2[],char cName3[],int iLine1,int iLine2,int iLine3,char cFile[],int iVerbose) {
-
   if (iVerbose >= VERBERR) {
     fprintf(stderr,"ERROR: Can only set 2 of %s, %s, and %s.\n",cName1,cName2,cName3);
-    TripleLineExit(cFile,iLine1,iLine2,iLine3);
   }
+  TripleLineExit(cFile,iLine1,iLine2,iLine3);
+}
+
+void VerifyPropertyNULL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iBody) {
+  // This space intentionally left blank
 }
 
 void VerifyDynEllip(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody,int iVerbose) {
@@ -516,14 +519,39 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,int iBody,int iVerbose,ch
     body[iBody].dRotRate = fdRadiusRotVelToFreq(body[iBody].dRotVel,body[iBody].dRadius);
 }
 
-void VerifyInterior(BODY *body,OPTIONS *options,int iBody) {
-  // Is this OK? XXX
-  /* No! Deprecate!
-  if (!body[iBody].bThermint) {
-    body[iBody].dK2Man = 0;
-    body[iBody].dImk2Man = 0;
+void VerifyImK2General(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system) {
+
+}
+
+/**
+
+  Verify all input parameters related to tidal energy dissipation (Power) into all
+  regions of a planet. The parameter Im(k2) is set by the orbit and the internal
+  temperature in the layer, which is set by the tidal, secular, and radiogenic heating
+  rates. The heating is divided into layers: 1) Mantle, 2) Ocean, and 3) Envelope,
+  and may be calculated by the EqTide, RadHeat, and/or ThermInt modules. Those
+  modules in turn have different possibilities. By the end of this function, the
+  values of Im(k2) in all layers and the body as a whole are set. */
+
+void VerifyImK2(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system) {
+  int iBody,iModule; // Dummy counter variables
+
+  VerifyImK2General(body,control,files,options,system);
+
+  /* Get properties from each module */
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    // Uni-module properties
+    for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++) {
+      control->fnVerifyImK2[iBody][iModule](body,control,files,options,system,iBody);
+    }
   }
-  */
+
+  // Multi-module properties
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    for (iModule=0;iModule<control->iNumMultiProps[iBody];iModule++) {
+      control->fnVerifyImK2Multi[iBody][iModule](body,control,files,options,system,iBody);
+    }
+  }
 }
 
 /*
@@ -586,6 +614,8 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
   VerifyIntegration(body,control,files,options,system,fnOneStep);
   InitializeControlEvolve(control,module,update);
 
+  VerifyImK2(body,control,files,options,system);
+
   // Default to no orbiting bodies
   control->bOrbiters = 0;
 
@@ -598,6 +628,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     control->Evolve.iNumModules[iBody] = module->iNumModules[iBody];
 
     // If any body has an orbit related module initialized, we have orbiters!
+    // XXX Move to InitializeControlEvolve?
     if(body[iBody].bEqtide || body[iBody].bDistOrb || body[iBody].bPoise || body[iBody].bAtmEsc ||
         body[iBody].bGalHabit || body[iBody].bSpiNBody) {
       control->bOrbiters = 1;
@@ -631,7 +662,6 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
       module->fnVerify[iBody][iModule](body,control,files,options,output,system,update,iBody,iModule);
     }
 
-    VerifyInterior(body,options,iBody);
     // Verify multi-module couplings
     VerifyModuleMulti(body,update,control,files,module,options,iBody,fnUpdate);
 

@@ -472,7 +472,7 @@ void LogBodyFlare(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDA
   }
 }
 
-void AddModuleFlare(MODULE *module,int iBody,int iModule) {
+void AddModuleFlare(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->fnCountHalts[iBody][iModule]         = &CountHaltsFlare;
   module->fnReadOptions[iBody][iModule]        = &ReadOptionsFlare;

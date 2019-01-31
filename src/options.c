@@ -1051,8 +1051,6 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
   /* Initialize functions in the module struct */
   InitializeModule(module,control->Evolve.iNumBodies);
   control->Halt = malloc(control->Evolve.iNumBodies*sizeof(HALT));
-  /* XXX Does this belong here? Need to know iNumHalts, so should this come in verify? -- I think so
-     InitializeHalt(control,module); */
 
   /* Next we must find the units, modules, and system name */
   for (iFile=0;iFile<files->iNumInputs;iFile++) {
@@ -1067,8 +1065,10 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
     ReadModules(*body,control,files,module,&options[OPT_MODULES],iFile);
   }
 
+  InitializeControlVerifyProperty(control);
+
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++)
-    FinalizeModule(*body,module,iBody);
+    FinalizeModule(*body,control,module,iBody);
 
   /* Check that selected modules are compatable */
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {

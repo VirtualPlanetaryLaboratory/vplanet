@@ -77,7 +77,7 @@
 /* @cond DOXYGEN_OVERRIDE */
 
 void InitializeControlStellar(CONTROL*);
-void AddModuleStellar(MODULE*,int,int);
+void AddModuleStellar(CONTROL*,MODULE*,int,int);
 void BodyCopyStellar(BODY*,BODY*,int,int,int);
 void InitializeUpdateTmpBodyStellar(BODY*,CONTROL*,UPDATE*,int);
 

@@ -192,7 +192,8 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   }
 }
 
-void FinalizeModule(BODY *body,MODULE *module,int iBody) {
+//XXX This function should be broken up
+void FinalizeModule(BODY *body,CONTROL *control,MODULE *module,int iBody) {
   int iModule=0,iNumModules = 0,iNumModuleMulti = 0;
 
   /************************
@@ -401,65 +402,67 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
 
   iModule = 0;
   if (body[iBody].bEqtide) {
-    AddModuleEqtide(module,iBody,iModule);
+    AddModuleEqtide(control,module,iBody,iModule);
     module->iaEqtide[iBody] = iModule;
     module->iaModule[iBody][iModule++] = EQTIDE;
   }
   if (body[iBody].bDistOrb) {
-    AddModuleDistOrb(module,iBody,iModule);
+    AddModuleDistOrb(control,module,iBody,iModule);
     module->iaDistOrb[iBody] = iModule;
     module->iaModule[iBody][iModule++] = DISTORB;
   }
    if (body[iBody].bDistRot) {
-    AddModuleDistRot(module,iBody,iModule);
+    AddModuleDistRot(control,module,iBody,iModule);
     module->iaDistRot[iBody] = iModule;
     module->iaModule[iBody][iModule++] = DISTROT;
   }
   if (body[iBody].bRadheat) {
-    fvAddModuleRadheat(module,iBody,iModule);
+    fvAddModuleRadheat(control,module,iBody,iModule);
     module->iaRadheat[iBody] = iModule;
     module->iaModule[iBody][iModule++] = RADHEAT;
   }
   if (body[iBody].bThermint) {
-    fvAddModuleThermint(module,iBody,iModule);
+    fvAddModuleThermint(control,module,iBody,iModule);
     module->iaThermint[iBody] = iModule;
     module->iaModule[iBody][iModule++] = THERMINT;
   }
   if (body[iBody].bAtmEsc) {
-    AddModuleAtmEsc(module,iBody,iModule);
+    AddModuleAtmEsc(control,module,iBody,iModule);
     module->iaAtmEsc[iBody] = iModule;
     module->iaModule[iBody][iModule++] = ATMESC;
   }
   if (body[iBody].bStellar) {
-    AddModuleStellar(module,iBody,iModule);
+    AddModuleStellar(control,module,iBody,iModule);
     module->iaStellar[iBody] = iModule;
     module->iaModule[iBody][iModule++] = STELLAR;
   }
   if (body[iBody].bPoise) {
-    AddModulePoise(module,iBody,iModule);
+    AddModulePoise(control,module,iBody,iModule);
     module->iaPoise[iBody] = iModule;
     module->iaModule[iBody][iModule++] = POISE;
   }
   if (body[iBody].bBinary) {
-    AddModuleBinary(module,iBody,iModule);
+    AddModuleBinary(control,module,iBody,iModule);
     module->iaBinary[iBody] = iModule;
     module->iaModule[iBody][iModule++] = BINARY;
   }
   if (body[iBody].bFlare) {
-    AddModuleFlare(module,iBody,iModule);
+    AddModuleFlare(control,module,iBody,iModule);
     module->iaFlare[iBody] = iModule;
     module->iaModule[iBody][iModule++] = FLARE;
   }
   if (body[iBody].bGalHabit) {
-    AddModuleGalHabit(module,iBody,iModule);
+    AddModuleGalHabit(control,module,iBody,iModule);
     module->iaGalHabit[iBody] = iModule;
     module->iaModule[iBody][iModule++] = GALHABIT;
   }
   if (body[iBody].bSpiNBody) {
-    AddModuleSpiNBody(module,iBody,iModule);
+    AddModuleSpiNBody(control,module,iBody,iModule);
     module->iaSpiNBody[iBody] = iModule;
     module->iaModule[iBody][iModule++] = SPINBODY;
   }
+
+  // XXX THis seems out of place, and generalizable -- maybe a new function?
   if (body[iBody].bEqtide && body[iBody].bStellar) {
     module->fnAssignDerivatives[iBody][iModule] = &AssignEqtideStellarDerivatives;
     module->fnNullDerivatives[iBody][iModule]   = &NullEqtideStellarDerivatives;
@@ -533,11 +536,11 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
 	      body[iFile-1].bGalHabit = 1;
 	      module->iBitSum[iFile-1] += GALHABIT;
       } else if (memcmp(sLower(saTmp[iModule]),"spinbody",8) == 0) {
-  body[iFile-1].bSpiNBody = 1;
-  module->iBitSum[iFile-1] += SPINBODY;
+        body[iFile-1].bSpiNBody = 1;
+        module->iBitSum[iFile-1] += SPINBODY;
       } else if (memcmp(sLower(saTmp[iModule]),"magmoc",6) == 0) {
-  body[iFile-1].bMagmOc = 1;
-  module->iBitSum[iFile-1] += MAGMOC;
+        body[iFile-1].bMagmOc = 1;
+        module->iBitSum[iFile-1] += MAGMOC;
       } else {
         if (control->Io.iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
@@ -826,86 +829,6 @@ void NullEqtideStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpd
   }
 }
 
-void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,int iBody,int iModule) {
-  int iPert;
-
-  /*
-  bThermint must be set
-  Q,k_2,ImK2, Man
-  */
-
-  if (body[iBody].bThermint) { // Tidal properties calculate from mantle material
-
-    if (options[OPT_TIDALQ].iLine[iBody+1] != -1) {
-      if (control->Io.iVerbose >= VERBINPUT) {
-        fprintf(stderr,"WARNING: Option %s set, but module ThermInt also selected. The tidal Q will be calculated by Thermint.\n",
-          options[OPT_TIDALQ].cName);
-      }
-    }
-
-    if (options[OPT_K2].iLine[iBody+1] != -1) {
-      if (control->Io.iVerbose >= VERBINPUT) {
-        fprintf(stderr,"WARNING: Option %s set, but module ThermInt also selected. ",
-          options[OPT_K2].cName);
-        fprintf(stderr,"The Love number k_2 will be calculated by Thermint.\n");
-      }
-    }
-  } else {
-    // k_2 and (Q || tau) must be set
-    if (options[OPT_K2].iLine[iBody+1] == -1) {
-      if (control->Io.iVerbose >= VERBINPUT) {
-        fprintf(stderr,"ERROR: Module ThermInt *not* selected for %s, but the tidal model is DB15. ",
-          body[iBody].cName);
-        fprintf(stderr,"Thefore %s must be set.\n",options[OPT_K2].cName);
-        LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
-      }
-    }
-    if (options[OPT_TIDALQ].iLine[iBody+1] == -1) {
-      if (control->Io.iVerbose >= VERBINPUT) {
-        fprintf(stderr,"ERROR: Module ThermInt *not* selected for %s, but the tidal model is DB15. ",
-          body[iBody].cName);
-        fprintf(stderr,"Thefore %s must be set.\n",options[OPT_TIDALQ].cName);
-        LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
-      }
-    }
-
-    // XXX Must add functionality for CTL
-    // Since ThermInt is not called, we can now set the mantle properties
-    // XXX Must add checks for K2, K2Man, K2Ocean, K2Atm
-    body[iBody].dK2Man = body[iBody].dK2;
-    body[iBody].dImK2Man = body[iBody].dK2/body[iBody].dTidalQ;
-
-  }
-
-  /* Everything OK, assign Updates */
-
-  for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
-    /* Obliquity */
-    // Xobl
-    InitializeXoblEqtide(body,update,iBody,iPert);
-    // Yobl
-    InitializeYoblEqtide(body,update,iBody,iPert);
-    // Zobl
-    InitializeZoblEqtide(body,update,iBody,iPert);
-    /* Rotation Rate */
-    InitializeRotEqtide(body,update,iBody,iPert);
-  }
-
-  /* Is this the secondary body, and hence we assign da/dt and de/dt? */
-  if (!bPrimary(body,iBody)) {
-    // Initialize Orbital variable for the matrix
-    InitializeSemiEqtide(body,update,iBody);
-    InitializeHeccEqtide(body,update,iBody);
-    InitializeKeccEqtide(body,update,iBody);
-  }
-
-  control->fnPropsAux[iBody][iModule]=&PropsAuxDB15;
-
-  /* Note that the mantle k_2 and Im(k_2) are calculated in VerifyEqtideThermint.
-    This choice is made because they depend on mantle properties that are calculated
-    by Thermint, and all individual modules are verified before multi-modules are. */
-
-}
 
 void VerifyModuleMultiEqtideStellar(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   int iOtherBody, iEqn;

@@ -798,6 +798,13 @@ void ReadOptionsEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 
 /******************* Verify EQTIDE ******************/
 
+/* First are any multi-module properties */
+
+void VerifyImK2Eqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iBody) {
+
+}
+
+
 void VerifyRotationEqtideWarning(char cName1[],char cName2[],char cFile[],int iLine1,int iLine2, int iVerbose) {
   if (iVerbose >= VERBINPUT) {
     fprintf(stderr,"WARNING: %s and %s are both set. Rotation rate will be in equilibrium.\n",cName1,cName2);
@@ -2805,9 +2812,11 @@ void LogBodyEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
 /************* MODULE Functions ***********/
 
-void AddModuleEqtide(MODULE *module,int iBody,int iModule) {
+void AddModuleEqtide(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]                  = EQTIDE;
+
+  control->fnVerifyImK2[iBody][iModule]             = &VerifyImK2Eqtide;
 
   module->fnInitializeControl[iBody][iModule]       = &InitializeControlEqtide;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyEqtide;
@@ -3729,4 +3738,85 @@ double fdDB15DHeccDt(BODY *body,SYSTEM *system,int *iaBody) {
 
 double fdDB15DKeccDt(BODY *body,SYSTEM *system,int *iaBody) {
   return body[iaBody[0]].dDeccDtEqtide*sin(body[iaBody[0]].dLongP);
+}
+
+void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,int iBody,int iModule) {
+  int iPert;
+
+  /*
+  bThermint must be set
+  Q,k_2,ImK2, Man
+  */
+
+  if (body[iBody].bThermint) { // Tidal properties calculate from mantle material
+
+    if (options[OPT_TIDALQ].iLine[iBody+1] != -1) {
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr,"WARNING: Option %s set, but module ThermInt also selected. The tidal Q will be calculated by Thermint.\n",
+          options[OPT_TIDALQ].cName);
+      }
+    }
+
+    if (options[OPT_K2].iLine[iBody+1] != -1) {
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr,"WARNING: Option %s set, but module ThermInt also selected. ",
+          options[OPT_K2].cName);
+        fprintf(stderr,"The Love number k_2 will be calculated by Thermint.\n");
+      }
+    }
+  } else {
+    // k_2 and (Q || tau) must be set
+    if (options[OPT_K2].iLine[iBody+1] == -1) {
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr,"ERROR: Module ThermInt *not* selected for %s, but the tidal model is DB15. ",
+          body[iBody].cName);
+        fprintf(stderr,"Thefore %s must be set.\n",options[OPT_K2].cName);
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+      }
+    }
+    if (options[OPT_TIDALQ].iLine[iBody+1] == -1) {
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr,"ERROR: Module ThermInt *not* selected for %s, but the tidal model is DB15. ",
+          body[iBody].cName);
+        fprintf(stderr,"Thefore %s must be set.\n",options[OPT_TIDALQ].cName);
+        LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+      }
+    }
+
+    // XXX Must add functionality for CTL
+    // Since ThermInt is not called, we can now set the mantle properties
+    // XXX Must add checks for K2, K2Man, K2Ocean, K2Atm
+    body[iBody].dK2Man = body[iBody].dK2;
+    body[iBody].dImK2Man = body[iBody].dK2/body[iBody].dTidalQ;
+
+  }
+
+  /* Everything OK, assign Updates */
+
+  for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
+    /* Obliquity */
+    // Xobl
+    InitializeXoblEqtide(body,update,iBody,iPert);
+    // Yobl
+    InitializeYoblEqtide(body,update,iBody,iPert);
+    // Zobl
+    InitializeZoblEqtide(body,update,iBody,iPert);
+    /* Rotation Rate */
+    InitializeRotEqtide(body,update,iBody,iPert);
+  }
+
+  /* Is this the secondary body, and hence we assign da/dt and de/dt? */
+  if (!bPrimary(body,iBody)) {
+    // Initialize Orbital variable for the matrix
+    InitializeSemiEqtide(body,update,iBody);
+    InitializeHeccEqtide(body,update,iBody);
+    InitializeKeccEqtide(body,update,iBody);
+  }
+
+  control->fnPropsAux[iBody][iModule]=&PropsAuxDB15;
+
+  /* Note that the mantle k_2 and Im(k_2) are calculated in VerifyEqtideThermint.
+    This choice is made because they depend on mantle properties that are calculated
+    by Thermint, and all individual modules are verified before multi-modules are. */
+
 }

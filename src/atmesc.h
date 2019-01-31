@@ -49,7 +49,7 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
-void AddModuleAtmEsc(MODULE*,int,int);
+void AddModuleAtmEsc(CONTROL *control,MODULE*,int,int);
 void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 
 /* Options Functions */

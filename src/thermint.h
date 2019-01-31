@@ -131,7 +131,7 @@
 #define EMAGPAUSERAD     9.103*(ERADIUS)        /**< [m] Earth's magnetopause radius (DB13) */
 
 //void InitializeControlThermint(CONTROL*);
-void fvAddModuleThermint(MODULE*,int,int);
+void fvAddModuleThermint(CONTROL*,MODULE*,int,int);
 void fvBodyCopyThermint(BODY*,BODY*,int,int,int);
 void fvInitializeBodyThermint(BODY*,CONTROL*,UPDATE*,int,int);
 //void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);

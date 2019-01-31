@@ -110,7 +110,7 @@
 /* @cond DOXYGEN_OVERRIDE */
 
 void InitializeControlEqtide(CONTROL*,int);
-void AddModuleEqtide(MODULE*,int,int);
+void AddModuleEqtide(CONTROL*,MODULE*,int,int);
 void BodyCopyEqtide(BODY*,BODY*,int,int,int);
 void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyEqtide(BODY*,CONTROL*,UPDATE*,int);
@@ -162,6 +162,7 @@ void VerifyRotationEqtideWarning(char[],char[],char[],int,int,int);
 void VerifyRotationEqtide(BODY*,CONTROL*,UPDATE*,OPTIONS*,char[],int);
 void VerifyEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 void InitializeModuleEqtide(CONTROL*,MODULE*);
+void VerifyDB15(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,UPDATE*,int,int);
 
 /* Update Functions */
 

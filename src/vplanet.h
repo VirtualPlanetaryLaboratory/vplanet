@@ -982,37 +982,44 @@ struct BODY {
 	 * declare all variables used
 	 */
   int bMagmOc;              /**< Use magmoc model */
+	int bManSolid;            /**< Mantle solidified */
 	/* Primary variables */
-	double dPotTemp;          /**< Potential Temp of the mantle */
-	double dSurfTemp;         /**< Surface Temp of the planet */
-	double dSolidRadius;      /**< Solidification radius of the mantle */
-  double dWaterMassMOAtm;   /**< Water mass in magma ocean and atmosphere */
-	double dWaterMassSol;     /**< Water mass in the solidified mantle */
-	double dOxygenMassMOAtm;  /**< Water mass in magma ocean and atmosphere */
-	double dOxygenMassSol;    /**< Water mass in the solidified mantle */
+	double dPotTemp;          /**< Potential Temp of the mantle [K] */
+	double dSurfTemp;         /**< Surface Temp of the planet [K] */
+	double dSolidRadius;      /**< Solidification radius of the mantle [m] */
+  double dWaterMassMOAtm;   /**< Water mass in magma ocean and atmosphere [kg] */
+	double dWaterMassSol;     /**< Water mass in the solidified mantle [kg] */
+	double dOxygenMassMOAtm;  /**< Water mass in magma ocean and atmosphere [kg] */
+	double dOxygenMassSol;    /**< Water mass in the solidified mantle [kg] */
 	/* Input variables */
-	double dCoreRadius;       /**< Core radius of the planet*/
-	double dWaterMassAtm;     /**< Water mass in the atmosphere */
-  double dManMeltDensity;   /**< Density of the molten mantle */
+	double dPlanetFormTime;   /**< Formation time of the planet after formation of the star [s] */
+	double dCoreRadius;       /**< Core radius of the planet [m] */
+	double dWaterMassAtm;     /**< Water mass in the atmosphere [kg] */
+  double dManMeltDensity;   /**< Density of the molten mantle [km/m^3] */
 	double dFeO;              /**< FeO in the magma ocean */
 	/* Other variables Thermal model */
-	double dSolidRadiusLocal; /**< Local variable for solidification radius of the mantle */
+	double dSolidRadiusLocal; /**< Local variable for solidification radius of the mantle [m] */
   double dPrefactorA;       /**< Prefactor for linear solidus */
   double dPrefactorB;       /**< Prefactor for linear solidus */
   double dMeltFraction;     /**< Melt fraction of the mantle */
-  double dKinemViscos;      /**< Kinematic viscosity of the mantle */
+  double dKinemViscos;      /**< Kinematic viscosity of the mantle [m/s^2] */
 	double dFactorDerivative; /**< Factor to calculate the derivatives of Tpot and Rsol */
-	double dManHeatFlux;      /**< Mantle heat flux */
-	double dRadioHeat;        /**< Radiogenic heating rate GET FROM RADHEAT */
-	double dNetFluxAtmo;      /**< Net atmospheric flux OLR-ASR */
+	double dManHeatFlux;      /**< Mantle heat flux [W/m^2] */
+	double dRadioHeat;        /**< Radiogenic heating rate GET FROM RADHEAT [W/kg] */
+	double dNetFluxAtmo;      /**< Net atmospheric flux OLR-ASR [W/m^2] */
+	double dAlbedo;						/**< Albedo of the planet */
 	/* Other variables Volatile model */
-	double dPressWaterAtm;    /**< Water pressure in atmosphere */
-	double dMassMagmOcLiq; 		/**< liquid mass of magma ocean */
-	double dMassMagmOcCry; 		/**< crystal mass of magma ocean */
+	double dPressWaterAtm;    /**< Water pressure in atmosphere [N/m^2] */
+	double dMassMagmOcLiq; 		/**< liquid mass of magma ocean [kg] */
+	double dMassMagmOcCry; 		/**< crystal mass of magma ocean [kg] */
 	double dWaterFracMelt;    /**< Mass fraction of water in the magma ocean */
 	double dFracFe2O3Man;     /**< Mass fraction of Fe2O3 in the mantle */
-	double dEscRateHydro;     /**< Atmospheric escape rate hydrogen GET FROM ATMESC */
-	double dEscRateOxy;  			/**< Atmospheric escape rate oxygen GET FROM ATMESC */
+	double dEscRateHydro;     /**< Atmospheric escape rate hydrogen GET FROM ATMESC [kg/m^2/s] */
+	double dEscRateOxy;  			/**< Atmospheric escape rate oxygen GET FROM ATMESC [kg/m^2/s] */
+	double dOxygenMassAtm;    /**< Oxygen mass in the atmosphere [kg] */
+	double dOxyFugNewMax;
+	double dOxyFugFactor;
+	double dPressAtmTot;      /**< Total atmospheric pressure */
 };
 
 /* SYSTEM contains properties of the system that pertain to

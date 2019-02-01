@@ -1877,6 +1877,4 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputFlare(output,fnWrite);
   InitializeOutputGalHabit(output,fnWrite);
   InitializeOutputSpiNBody(output, fnWrite);
-  InitializeOutputMagmOc(output, fnWrite);
-
 }

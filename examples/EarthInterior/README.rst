@@ -1,10 +1,8 @@
-EarthInterior
+Thermal and Magnetic Evolution of Earth's Interior
 ==========
 
 Overview
 --------
-
-Evolution of Earth's interior.
 
 ===================   ============
 **Date**              10/03/18

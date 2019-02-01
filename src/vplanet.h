@@ -73,11 +73,11 @@
 #define DAYSEC        86400       // Seconds per day
 #define REARTH        6.3781e6    // Equatorial; Prsa et al. 2016
 #define RJUP          7.1492e7    // Equatorial; Prsa et al. 2016
-#define MJUP          1.898130e27 // Prsa et al. 2016
 #define RNEP          2.4764e7    // Neptune's Radius (ref?)
 #define MNEP          1.0244e26   // Neptune's Mass (ref?)
 #define RHOEARTH      5515        // Earth's Density
 #define eEARTH        0.016710219 // Earth's Eccentricity
+#define MJUP          1.898130e27 // Prsa et al. 2016
 #define YEARDAY       365.25      // Days per year (more precise??)
 #define MSAT          5.6851e26   // Saturns' Mass (ref?)
 #define DEGRAD        0.017453292519444445 // Degrees per radian
@@ -135,7 +135,7 @@
 #define OUTLONDESCR   2048  /* Number of characters in output long description */
 #define NAMELEN       100
 
-#define MAXFILES      24    /* Maximum number of input files */
+#define MAXFILES      128    /* Maximum number of input files */
 #define MAXARRAY      128    /* Maximum number of options in
 			     * an option array */
 #define NUMOPT	      1000  /* Number of options that could be
@@ -2161,4 +2161,3 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "flare.h"
 #include "galhabit.h"
 #include "spinbody.h"
-#include "magmoc.h"

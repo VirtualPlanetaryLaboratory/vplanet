@@ -194,14 +194,14 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
  */
 
 /* Bisection method to find root */
-double fndBisection(double (*f)(double), double dXl, double dXu) {
+double fndBisection(double (*f)(BODY*,double,int), BODY *body,double dXl, double dXu,int iBody) {
   double dXm,dEpsilon,dProd,dFxm,dFxl;
   dEpsilon = 1;
   while(dEpsilon>1e-5) {
     dXm      = (dXl + dXu)/2.;
-    dEpsilon = fabs((*f)(dXm));
-    dFxm     = (*f)(dXm);
-    dFxl     = (*f)(dXl);
+    dEpsilon = fabs((*f)(body,dXm,iBody));
+    dFxm     = (*f)(body,dEpsilon,iBody);
+    dFxl     = (*f)(body,dFxm,iBody);
     dProd    = (dFxl / fabs(dFxl)) * (dFxm / fabs(dFxm));
     if (dProd < 0) {
       dXu = dXm;
@@ -213,12 +213,12 @@ double fndBisection(double (*f)(double), double dXl, double dXu) {
 }
 
 /* Mass of water in the mo+atm system to get the water frac in the magmoc */
-double fndWaterMassMOTime(BODY *body, int iBody, double dFrac) {
+double fndWaterMassMOTime(BODY *body, double dFrac, int iBody) {
   return 1e-19*(WATERPARTCOEFF*dFrac*body[iBody].dMassMagmOcCry + dFrac*body[iBody].dMassMagmOcLiq + (4*PI*pow(body[iBody].dRadius,2)/body[iBody].dGravAccel)*pow((dFrac/3.44e-8),1/074) - body[iBody].dWaterMassMOAtm);
 }
 
 /* Fugacity equation for Fe2O3/FeO_tot = 0.3 -> get critical fugacity */
-double fndCriticalOxygenFugacity(BODY *body, int iBody, double dFug) {
+double fndCriticalOxygenFugacity(BODY *body, double dFug, int iBody) {
   return 0.196*log(dFug*1e-5) + 11492/body[iBody].dPotTemp - 6.675 \
            - 2.243 * MOLFRACAL2O3 - 1.828 * MOLFRACFEO \
            + 3.201 * MOLFRACCAO   + 5.854 * MOLFRACNA2O \
@@ -231,7 +231,7 @@ double fndCriticalOxygenFugacity(BODY *body, int iBody, double dFug) {
 }
 
 /* Oxygen equilibrium between magma ocean and atmosphere */
-double fndOxygenEquiManAtm(BODY *body, int iBody, double dDelFrac) {
+double fndOxygenEquiManAtm(BODY *body, double dDelFrac, int iBody) {
   double dChem, dA, dB, dC, dFracNewMax, dDelFug;
 
   dChem = 11492/body[iBody].dPotTemp - 6.675 - 2.243 * MOLFRACAL2O3 - 1.828 * MOLFRACFEO \
@@ -360,7 +360,7 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   } else if (fndWaterMassMOTime(body, iBody, 1) == 0) {
     body[iBody].dWaterFracMelt = 1;
   } else {
-    body[iBody].dWaterFracMelt = fndBisection(fndWaterMassMOTime,0,1);
+    body[iBody].dWaterFracMelt = fndBisection(fndWaterMassMOTime,body,0,1,iBody);
   }
   // End of water_fraction()
 
@@ -432,12 +432,12 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   }
 
   /* critical fugacity (corresponding to x=0.3) */
-  if (fndCriticalOxygenFugacity(body, iBody, 1e10)) {
+  if (fndCriticalOxygenFugacity(body,1e10,iBody)) {
     dOxyFugacityCrit = 1e10;
-  } else if (fndCriticalOxygenFugacity(body, iBody, 1e-20)) {
+  } else if (fndCriticalOxygenFugacity(body,1e-20,iBody)) {
     dOxyFugacityCrit = 1e-20;
   } else {
-    dOxyFugacityCrit = fndBisection(fndCriticalOxygenFugacity,1e10,1e-20);
+    dOxyFugacityCrit = fndBisection(fndCriticalOxygenFugacity,body,1e10,1e-20,iBody);
   }
 
   if (dOxygenMassAtmNew <= 0) { // net loss of oxygen/no new oxygen
@@ -452,7 +452,7 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man;
     body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
   } else { // x > 0.3 and fug > fug_crit
-    dFracFe2O3ManNew  = fndBisection(fndOxygenEquiManAtm,0,1);
+    dFracFe2O3ManNew  = fndBisection(fndOxygenEquiManAtm,body,0,1,iBody);
     body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man + dFracFe2O3ManNew;
     dOxygenMassAtmNew = (body[iBody].dOxyFugNewMax - body[iBody].dFracFe2O3Man*body[iBody].dOxyFugFactor) * 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccel;
     body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
@@ -935,5 +935,5 @@ double fdDOxygenMassSol(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdDOxygenMassMOAtm(BODY *body, SYSTEM *system, int *iaBody) {
-  return 4*PI*pow(body[iaBody[0]].dRadius,2)*body[iaBody[0]].dEscRateHydro*MOLWEIGHTOXYGEN/(2*MOLWEIGHTHYDROGEN) - 4*PI*pow(body[iaBody[0]].dRadius,2)*body[iaBody[0]].dEscRateOxy - fdDOxygenMassSol(body,system,iaBody); 
+  return 4*PI*pow(body[iaBody[0]].dRadius,2)*body[iaBody[0]].dEscRateHydro*MOLWEIGHTOXYGEN/(2*MOLWEIGHTHYDROGEN) - 4*PI*pow(body[iaBody[0]].dRadius,2)*body[iaBody[0]].dEscRateOxy - fdDOxygenMassSol(body,system,iaBody);
 }

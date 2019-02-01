@@ -561,6 +561,15 @@ double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
   return dPresSurf;
 }
 
+double fdImK2Total(BODY *body,int iBody) {
+
+  if (body[iBody].bMantle || body[iBody].bOcean || body[iBody].bEnv) {
+    return body[iBody].dImK2Mantle + body[iBody].dImK2Ocean + body[iBody].dImK2Env;
+  } else {
+    return body[iBody].K2/body[iBody].dTidalQ;
+  }
+}
+
 /**
   Function compute upper mantle imaginary component of k2 Love number
 

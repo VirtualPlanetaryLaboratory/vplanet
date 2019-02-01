@@ -192,8 +192,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   }
 }
 
-//XXX This function should be broken up
-void FinalizeModule(BODY *body,CONTROL *control,MODULE *module,int iBody) {
+void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   int iModule=0,iNumModules = 0,iNumModuleMulti = 0;
 
   /************************
@@ -402,67 +401,65 @@ void FinalizeModule(BODY *body,CONTROL *control,MODULE *module,int iBody) {
 
   iModule = 0;
   if (body[iBody].bEqtide) {
-    AddModuleEqtide(control,module,iBody,iModule);
+    AddModuleEqtide(module,iBody,iModule);
     module->iaEqtide[iBody] = iModule;
     module->iaModule[iBody][iModule++] = EQTIDE;
   }
   if (body[iBody].bDistOrb) {
-    AddModuleDistOrb(control,module,iBody,iModule);
+    AddModuleDistOrb(module,iBody,iModule);
     module->iaDistOrb[iBody] = iModule;
     module->iaModule[iBody][iModule++] = DISTORB;
   }
    if (body[iBody].bDistRot) {
-    AddModuleDistRot(control,module,iBody,iModule);
+    AddModuleDistRot(module,iBody,iModule);
     module->iaDistRot[iBody] = iModule;
     module->iaModule[iBody][iModule++] = DISTROT;
   }
   if (body[iBody].bRadheat) {
-    fvAddModuleRadheat(control,module,iBody,iModule);
+    fvAddModuleRadheat(module,iBody,iModule);
     module->iaRadheat[iBody] = iModule;
     module->iaModule[iBody][iModule++] = RADHEAT;
   }
   if (body[iBody].bThermint) {
-    fvAddModuleThermint(control,module,iBody,iModule);
+    fvAddModuleThermint(module,iBody,iModule);
     module->iaThermint[iBody] = iModule;
     module->iaModule[iBody][iModule++] = THERMINT;
   }
   if (body[iBody].bAtmEsc) {
-    AddModuleAtmEsc(control,module,iBody,iModule);
+    AddModuleAtmEsc(module,iBody,iModule);
     module->iaAtmEsc[iBody] = iModule;
     module->iaModule[iBody][iModule++] = ATMESC;
   }
   if (body[iBody].bStellar) {
-    AddModuleStellar(control,module,iBody,iModule);
+    AddModuleStellar(module,iBody,iModule);
     module->iaStellar[iBody] = iModule;
     module->iaModule[iBody][iModule++] = STELLAR;
   }
   if (body[iBody].bPoise) {
-    AddModulePoise(control,module,iBody,iModule);
+    AddModulePoise(module,iBody,iModule);
     module->iaPoise[iBody] = iModule;
     module->iaModule[iBody][iModule++] = POISE;
   }
   if (body[iBody].bBinary) {
-    AddModuleBinary(control,module,iBody,iModule);
+    AddModuleBinary(module,iBody,iModule);
     module->iaBinary[iBody] = iModule;
     module->iaModule[iBody][iModule++] = BINARY;
   }
   if (body[iBody].bFlare) {
-    AddModuleFlare(control,module,iBody,iModule);
+    AddModuleFlare(module,iBody,iModule);
     module->iaFlare[iBody] = iModule;
     module->iaModule[iBody][iModule++] = FLARE;
   }
   if (body[iBody].bGalHabit) {
-    AddModuleGalHabit(control,module,iBody,iModule);
+    AddModuleGalHabit(module,iBody,iModule);
     module->iaGalHabit[iBody] = iModule;
     module->iaModule[iBody][iModule++] = GALHABIT;
   }
   if (body[iBody].bSpiNBody) {
-    AddModuleSpiNBody(control,module,iBody,iModule);
+    AddModuleSpiNBody(module,iBody,iModule);
     module->iaSpiNBody[iBody] = iModule;
     module->iaModule[iBody][iModule++] = SPINBODY;
   }
-
-  // XXX THis seems out of place, and generalizable -- maybe a new function?
   if (body[iBody].bEqtide && body[iBody].bStellar) {
     module->fnAssignDerivatives[iBody][iModule] = &AssignEqtideStellarDerivatives;
     module->fnNullDerivatives[iBody][iModule]   = &NullEqtideStellarDerivatives;
@@ -536,11 +533,11 @@ void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS
 	      body[iFile-1].bGalHabit = 1;
 	      module->iBitSum[iFile-1] += GALHABIT;
       } else if (memcmp(sLower(saTmp[iModule]),"spinbody",8) == 0) {
-        body[iFile-1].bSpiNBody = 1;
-        module->iBitSum[iFile-1] += SPINBODY;
+  body[iFile-1].bSpiNBody = 1;
+  module->iBitSum[iFile-1] += SPINBODY;
       } else if (memcmp(sLower(saTmp[iModule]),"magmoc",6) == 0) {
-        body[iFile-1].bMagmOc = 1;
-        module->iBitSum[iFile-1] += MAGMOC;
+  body[iFile-1].bMagmOc = 1;
+  module->iBitSum[iFile-1] += MAGMOC;
       } else {
         if (control->Io.iVerbose >= VERBERR)
           fprintf(stderr,"ERROR: Unknown Module %s provided to %s.\n",saTmp[iModule],options->cName);
@@ -828,8 +825,6 @@ void NullEqtideStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpd
     fnUpdate[iBody][update[iBody].iSemi][update[iBody].iSemiEqSt] = &fndUpdateFunctionTiny;
   }
 }
-
-
 void VerifyModuleMultiEqtideStellar(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   int iOtherBody, iEqn;
 
@@ -913,9 +908,6 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
    * Q, k_2 and Im(k_2) for the world
    */
 
-   // dImK2Env has no read options, so must initialize here!
-   body[iBody].dImK2Env = 1;
-
   // If this is the star (body 0 or body 1 in binary), tidal radius == radius
   if(iBody == 0 || (body[iBody].bBinary && iBody == 1) || (body[iBody].bStellar))
   {
@@ -938,87 +930,7 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
     {
 
       // if user wants to include tides due to envelope: (do same with oceans)
-      if (body[iBody].bEnvTides) {
-        // they better have defined k2Env, tidalqenv, denvmass
-        if (!(options[OPT_TIDALQENV].iLine[iBody+1] > -1)) {
-          fprintf(stderr,"ERROR: if bEnvTides == 1, must specify %s.\n",options[OPT_TIDALQENV].cName);
-          exit(EXIT_INPUT);
-        }
-        // k2env not set
-        else if (!(options[OPT_K2ENV].iLine[iBody+1] > -1)) {
-          fprintf(stderr,"ERROR: if bEnvTides == 1, must specify %s.\n",options[OPT_K2ENV].cName);
-          exit(EXIT_INPUT);
-        }
-        // envmass not set
-        else if (!(options[OPT_ENVELOPEMASS].iLine[iBody+1] > -1)) {
-          fprintf(stderr, "ERROR: if bEnvTides == 1, must specify %s.\n",options[OPT_ENVELOPEMASS].cName);
-          exit(EXIT_INPUT);
-        }
-      }
 
-      if (body[iBody].bOceanTides) {
-        // they better have defined k2Ocean, tidalqocean, dSurfaceWaterMass
-        if (!(options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1)) {
-          fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_TIDALQOCEAN].cName);
-          exit(EXIT_INPUT);
-        }
-        else if (!(options[OPT_SURFACEWATERMASS].iLine[iBody+1] > -1)) {
-          fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_SURFACEWATERMASS].cName);
-          exit(EXIT_INPUT);
-        }
-        else if (!(options[OPT_K2OCEAN].iLine[iBody+1] > -1)) {
-          fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_K2OCEAN].cName);
-          exit(EXIT_INPUT);
-        }
-      }
-      // now lets check there's actually an envelope
-      // there is not an envelope!!
-      if (!(body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass)) {
-        body[iBody].bEnv = 0;
-      }
-      else {
-        body[iBody].bEnv = 1;
-        body[iBody].dImK2Env = body[iBody].dK2Env / body[iBody].dTidalQEnv;
-      }
-      // what about an ocean?
-      if (!(body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
-        body[iBody].bOcean = 0;
-      }
-      else {
-        body[iBody].bOcean = 1;
-        body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
-      }
-
-      // there's definitely at least gonna be some rock...
-      body[iBody].dImK2Rock = body[iBody].dK2Rock / body[iBody].dTidalQRock;
-
-      // if there is an envelope/ocean, we calculate ImK2Env/ImK2Ocean
-      if (body[iBody].bEnv && (body[iBody].dTidalQ != body[iBody].dTidalQEnv)) {
-        if (control->Io.iVerbose > 1) {
-          fprintf(stderr,"Using dTidalQEnv for %s.\n",body[iBody].cName);
-        }
-        body[iBody].dTidalQ = body[iBody].dTidalQEnv;
-        body[iBody].dK2 = body[iBody].dK2Env;
-        body[iBody].dImK2Env = body[iBody].dK2Env / body[iBody].dTidalQEnv;
-        body[iBody].dImK2 = body[iBody].dImK2Env;
-      }
-      else {
-        if (body[iBody].bOcean && (body[iBody].dTidalQ != body[iBody].dTidalQOcean)) {
-          fprintf(stderr,"Using dTidalQOcean for %s.\n",body[iBody].cName);
-          body[iBody].dTidalQ = body[iBody].dTidalQOcean;
-          body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
-          body[iBody].dImK2 = body[iBody].dImK2Ocean;
-          body[iBody].dK2 = body[iBody].dK2Ocean;
-        }
-        else if (!body[iBody].bEnv && !body[iBody].bOcean && (body[iBody].dTidalQ != body[iBody].dTidalQRock) && (iBody != 0)){
-          fprintf(stderr,"Using dTidalQRock for %s.\n",body[iBody].cName);
-          // now we just use dTidalQRock and dK2Rock
-          body[iBody].dImK2Rock = body[iBody].dK2Rock / body[iBody].dTidalQRock;
-          body[iBody].dTidalQ = body[iBody].dTidalQRock;
-          body[iBody].dK2 = body[iBody].dK2Rock;
-          body[iBody].dImK2 = body[iBody].dImK2Rock;
-        }
-    }
       // Using tidal radus
       if(body[iBody].bUseTidalRadius)
       {
@@ -1166,10 +1078,9 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,UPDATE *update,CONTROL *co
     }
   }
 
-  // Call PropsAuxAtmescThermint to initialize interior Properties
-  if (iBody >0) {
-    fvPropsAuxThermint(body,&control->Evolve,update,iBody);
-  }
+  // Call PropsAuxThermint to initialize interior Properties
+  fvPropsAuxThermint(body,&control->Evolve,update,iBody);
+
 }
 
 void VerifyModuleMultiFlareStellar(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
@@ -1394,22 +1305,98 @@ void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     body[iBody].dTidalRadius = body[iBody].dRadius;
 }
 
-/** Calculate auxiliary properties if EqTide and ThermInt are called. At present
-  this funciton only needs to calculate Im(k_2), possibly including the effects
-  of an ocean and envelope. */
+
 void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+  /* RB- These first 3 lines were taken from PropsAuxThermint, but
+   as they rely on eqtide being called, they belong here.*/
+  body[iBody].dK2=fdK2DB15(body,iBody);
+  body[iBody].dImK2=fdImK2DB15(body,iBody);
 
-  AssignTidalProperties(body,evolve,iBody);
+  // Include tidal dissapation due to oceans:
+  if(body[iBody].bOceanTides) {
+    body[iBody].dK2 += body[iBody].dK2Ocean;
 
+    // Im(K_2) is weighted sum of mantle and oceam component
+    // weighted by the love number of each component
+    body[iBody].dImK2 += body[iBody].dImK2Ocean;
+  } // No oceans => thermint dictates ImK2 alone XXX What about envelope?
+
+  // Sanity checks: enforce upper bound
+  if(body[iBody].dK2 > 1.5) {
+    body[iBody].dK2 = 1.5;
+    fprintf(stderr,"WARNING: body[%d].dK2 > 1.5 at time %.5e years.\n",iBody,evolve->dTime/YEARSEC);
+  }
+  /* XXX Why are these here? Won't PropsAux"Eqtide" be called in eqtide?
+  PropsAuxCPL(body,evolve,update,iBody);
+  // Call dTidePowerMan
+  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
+*/
 }
 
-/** Calculate auxiliary properties if AtmEsc, EqTide and ThermInt are called. At present
-  this funciton only needs to calculate Im(k_2), possibly including the effects
-  of an ocean and envelope. */
 void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+  // Set the mantle parameters first
+  body[iBody].dK2=fdK2DB15(body,iBody);
+  body[iBody].dImK2=fdImK2DB15(body,iBody);
 
-  // XXX Should check to see if this was already called in PropsAuxEqtideThermint
-  AssignTidalProperties(body,evolve,iBody);
+  // If it's the first step, see if it's a runaway greenhouse
+  if (evolve->bFirstStep) {
+    // RG -> no ocean tides
+    if(fdInsolation(body, iBody, 0) >= fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)) {
+      body[iBody].bOceanTides = 0;
+    }
+  }
+
+  // Case: No oceans, no envelope
+  if (!body[iBody].bOceanTides && !body[iBody].bEnvTides) {
+    // Mantle controls evolution via thermint
+    /* These are now deprecated XXX
+    body[iBody].dImK2 = body[iBody].dImk2Man;
+    body[iBody].dK2 = body[iBody].dK2Man;
+    */
+  }
+  // Case: Oceans, no envelope:
+  else if (body[iBody].bOceanTides && !body[iBody].bEnvTides) {
+    // Oceans dominate
+    //body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
+    body[iBody].dK2 += body[iBody].dK2Ocean;
+    // Im(K_2) is weighted sum of mantle and oceam component
+    // weighted by the love number of each component
+    //body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Ocean);
+    body[iBody].dImK2 += body[iBody].dImK2Ocean;
+  }
+  // Case: No oceans, envelope (envelope evap while in runaway):
+  else if (!body[iBody].bOceanTides && body[iBody].bEnvTides) {
+    // Envelope dominates
+    //body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
+    body[iBody].dK2 += body[iBody].dK2Env;
+    // Im(K_2) is weighted sum of mantle and enevelope component
+    // weighted by the love number of each component
+    //body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Env);
+    body[iBody].dImK2 += body[iBody].dImK2Env;
+  }
+  // Case: Oceans and evelope->envelope has massive pressure so oceans are super critical (?):
+  // Also, envelope and ocean are mutually exclusive so envelope dominates
+  else if (body[iBody].bOceanTides && body[iBody].bEnvTides) {
+    // Envelope and ocean!
+    // body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
+    body[iBody].dK2 += body[iBody].dK2Env;
+    // Im(K_2) is weighted sum of mantle, envelope and ocean component
+    // weighted by the love number of each component
+    //body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Env);
+    body[iBody].dImK2 += body[iBody].dImK2Env;
+  } else
+    assert(0); // Unknown envelope + ocean behavior
+
+  // Sanity checks: enforce upper bound
+  if(body[iBody].dK2 > 1.5) {
+    body[iBody].dK2 = 1.5;
+    fprintf(stderr,"WARNRING: Love Number k_2 > 1.5.\n");
+  }
+
+  // Finally, call EQTIDE props aux then set mantle tidal power
+  // XXX Why are these called? Can't ThermInt work with CTL and DB15?
+  PropsAuxCPL(body,evolve,update,iBody);
+  body[iBody].dTidalPowMan = fdTidePower(body,iBody,evolve->iEqtideModel);
 
 }
 /* This does not seem to be necessary
@@ -1656,29 +1643,20 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,MODULE *module,EVOLVE *evolve,
   int bOceans = 0;
   int bEnv = 0;
 
-  for (iBody = 1; iBody < evolve->iNumBodies; iBody++) {
+  for(iBody = 1; iBody < evolve->iNumBodies; iBody++)
+  {
     // If body 1 is a star (iBodyType==1), pass
-    if (iBody == 1 && body[iBody].iBodyType == 1)
+    if(iBody == 1 && body[iBody].iBodyType == 1)
       continue;
 
     // Ocean check
-    if (body[iBody].dTidalQOcean < 0) {
+    if(body[iBody].dTidalQOcean < 0)
       bOceans = 0;
-    } else {
+    else
       bOceans = 1;
-    }
-    /* But if in a runaway greenhouse, no ocean. Note that this is a bit of a fudge:
-      If the planet's surface temperature is between 70 and 100 C, then it could
-      have oceans *and* be in an RG. */
-    if (evolve->bFirstStep) {
-      // RG -> no ocean tides
-      if (fdInsolation(body, iBody, 0) >= fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)) {
-        bOceans = 0;
-      }
-    }
 
-    // Envelope check
-    if (body[iBody].dTidalQEnv < 0)
+    // Env check
+    if(body[iBody].dTidalQEnv < 0)
       bEnv = 0;
     else
       bEnv = 1;
@@ -1687,13 +1665,18 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,MODULE *module,EVOLVE *evolve,
     // i.e. if bOceanTides == 1 from initial conditions
 
     // Case: No water -> no ocean tides
-    if (bOceans && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)) {
+    if(bOceans && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass))
+    {
       body[iBody].bOceanTides = 0;
-    } else if (bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && body[iBody].bRunaway) {
-      // Case: Water but it's in the atmosphere: RUNAWAY GREENHOUSE (this is when body actively loses water!)
+    }
+    // Case: Water but it's in the atmosphere: RUNAWAY GREENHOUSE (this is when body actively loses water!)
+    else if(bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && body[iBody].bRunaway)
+    {
       body[iBody].bOceanTides = 0;
-    } else if (bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && !body[iBody].bRunaway) {
-      // Case: Water on the surface! (this is when body does NOT actively lose water!)
+    }
+    // Case: Water and on the surface! (this is when body does NOT actively lose water!)
+    else if(bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && !body[iBody].bRunaway)
+    {
       body[iBody].bOceanTides = 1;
     }
 

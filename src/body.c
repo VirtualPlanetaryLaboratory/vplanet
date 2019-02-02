@@ -564,9 +564,9 @@ double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
 double fdImK2Total(BODY *body,int iBody) {
 
   if (body[iBody].bMantle || body[iBody].bOcean || body[iBody].bEnv) {
-    return body[iBody].dImK2Mantle + body[iBody].dImK2Ocean + body[iBody].dImK2Env;
+    return body[iBody].dImK2Man + body[iBody].dImK2Ocean + body[iBody].dImK2Env;
   } else {
-    return body[iBody].K2/body[iBody].dTidalQ;
+    return body[iBody].dK2/body[iBody].dTidalQ;
   }
 }
 

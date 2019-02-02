@@ -192,7 +192,7 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   }
 }
 
-void FinalizeModule(BODY *body,MODULE *module,int iBody) {
+void FinalizeModule(BODY *body,CONTROL*control,MODULE *module,int iBody) {
   int iModule=0,iNumModules = 0,iNumModuleMulti = 0;
 
   /************************
@@ -401,62 +401,62 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
 
   iModule = 0;
   if (body[iBody].bEqtide) {
-    AddModuleEqtide(module,iBody,iModule);
+    AddModuleEqtide(control,module,iBody,iModule);
     module->iaEqtide[iBody] = iModule;
     module->iaModule[iBody][iModule++] = EQTIDE;
   }
   if (body[iBody].bDistOrb) {
-    AddModuleDistOrb(module,iBody,iModule);
+    AddModuleDistOrb(control,module,iBody,iModule);
     module->iaDistOrb[iBody] = iModule;
     module->iaModule[iBody][iModule++] = DISTORB;
   }
    if (body[iBody].bDistRot) {
-    AddModuleDistRot(module,iBody,iModule);
+    AddModuleDistRot(control,module,iBody,iModule);
     module->iaDistRot[iBody] = iModule;
     module->iaModule[iBody][iModule++] = DISTROT;
   }
   if (body[iBody].bRadheat) {
-    fvAddModuleRadheat(module,iBody,iModule);
+    fvAddModuleRadheat(control,module,iBody,iModule);
     module->iaRadheat[iBody] = iModule;
     module->iaModule[iBody][iModule++] = RADHEAT;
   }
   if (body[iBody].bThermint) {
-    fvAddModuleThermint(module,iBody,iModule);
+    fvAddModuleThermint(control,module,iBody,iModule);
     module->iaThermint[iBody] = iModule;
     module->iaModule[iBody][iModule++] = THERMINT;
   }
   if (body[iBody].bAtmEsc) {
-    AddModuleAtmEsc(module,iBody,iModule);
+    AddModuleAtmEsc(control,module,iBody,iModule);
     module->iaAtmEsc[iBody] = iModule;
     module->iaModule[iBody][iModule++] = ATMESC;
   }
   if (body[iBody].bStellar) {
-    AddModuleStellar(module,iBody,iModule);
+    AddModuleStellar(control,module,iBody,iModule);
     module->iaStellar[iBody] = iModule;
     module->iaModule[iBody][iModule++] = STELLAR;
   }
   if (body[iBody].bPoise) {
-    AddModulePoise(module,iBody,iModule);
+    AddModulePoise(control,module,iBody,iModule);
     module->iaPoise[iBody] = iModule;
     module->iaModule[iBody][iModule++] = POISE;
   }
   if (body[iBody].bBinary) {
-    AddModuleBinary(module,iBody,iModule);
+    AddModuleBinary(control,module,iBody,iModule);
     module->iaBinary[iBody] = iModule;
     module->iaModule[iBody][iModule++] = BINARY;
   }
   if (body[iBody].bFlare) {
-    AddModuleFlare(module,iBody,iModule);
+    AddModuleFlare(control,module,iBody,iModule);
     module->iaFlare[iBody] = iModule;
     module->iaModule[iBody][iModule++] = FLARE;
   }
   if (body[iBody].bGalHabit) {
-    AddModuleGalHabit(module,iBody,iModule);
+    AddModuleGalHabit(control,module,iBody,iModule);
     module->iaGalHabit[iBody] = iModule;
     module->iaModule[iBody][iModule++] = GALHABIT;
   }
   if (body[iBody].bSpiNBody) {
-    AddModuleSpiNBody(module,iBody,iModule);
+    AddModuleSpiNBody(control,module,iBody,iModule);
     module->iaSpiNBody[iBody] = iModule;
     module->iaModule[iBody][iModule++] = SPINBODY;
   }
@@ -1307,8 +1307,7 @@ void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 
 
 void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  /* RB- These first 3 lines were taken from PropsAuxThermint, but
-   as they rely on eqtide being called, they belong here.*/
+  /* RB- All this should be cut? Calculate ImK2 in PropsAuxGeneral
   body[iBody].dK2=fdK2DB15(body,iBody);
   body[iBody].dImK2=fdImK2DB15(body,iBody);
 
@@ -1326,7 +1325,7 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
     body[iBody].dK2 = 1.5;
     fprintf(stderr,"WARNING: body[%d].dK2 > 1.5 at time %.5e years.\n",iBody,evolve->dTime/YEARSEC);
   }
-  /* XXX Why are these here? Won't PropsAux"Eqtide" be called in eqtide?
+  XXX Why are these here? Won't PropsAux"Eqtide" be called in eqtide?
   PropsAuxCPL(body,evolve,update,iBody);
   // Call dTidePowerMan
   body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
@@ -1334,10 +1333,11 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
 }
 
 void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  // Set the mantle parameters first
+  /* Should be cut, as they will be set in PropsAuxGeneral
+   Set the mantle parameters first
   body[iBody].dK2=fdK2DB15(body,iBody);
   body[iBody].dImK2=fdImK2DB15(body,iBody);
-
+*/
   // If it's the first step, see if it's a runaway greenhouse
   if (evolve->bFirstStep) {
     // RG -> no ocean tides

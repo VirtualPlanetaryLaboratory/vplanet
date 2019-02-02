@@ -301,6 +301,7 @@ struct BODY {
   char cColor[OPTLEN];   /**< Body color (for plotting) */
   double *daSED;         /**< Body's spectral energy distribution by wavelength N/I */
 
+  int bMantle;           /**< Is there a mantle? */
   int bOcean;            /**< Is there an ocean? */
   int bEnv;              /**< Is there an envelope? */
 
@@ -435,6 +436,7 @@ struct BODY {
   double dImK2Env;       /**< Envelope Component to Imaginary part of Love's K_2 */
   double dImK2Rock;
   double dK2Man;         /**< Mantle k2 love number */
+  double dTidalQMan;
   double dImK2Man;       /**< Mantle Im(k2) love number */
   double dTidalQ;	       /**< Body's Tidal Q */
   double dTidalQRock;    /**< Tidal Q in interior */ // add in dk2rock...

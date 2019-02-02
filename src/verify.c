@@ -524,38 +524,41 @@ void VerifyImK2Env(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
   // Is there an envelope? If so, fix it's Im(k2)
   if (body[iBody].bEnvTides) {
 
-  // they better have defined k2Env, tidalqenv, denvmass
-  if (options[OPT_TIDALQENV].iLine[iBody+1] == -1) {
-    fprintf(stderr,"ERROR: %s = 1, but %s not set.\n",options[OPT_ENVTIDES].cName,options[OPT_TIDALQENV].cName);
-    LineExit(files->Infile[iBody+1].cIn,options[OPT_ENVTIDES].iLine[iBody+1]);
-  }
-  if (options[OPT_K2ENV].iLine[iBody+1] == -1) {
-    fprintf(stderr,"ERROR: %s = 1, but %s not set.\n",options[OPT_ENVTIDES].cName,options[OPT_K2ENV].cName);
-    LineExit(files->Infile[iBody+1].cIn,options[OPT_ENVTIDES].iLine[iBody+1]);
-  }
-  if (options[OPT_ENVELOPEMASS].iLine[iBody+1] == -1) {
-    fprintf(stderr, "ERROR: %s = 1, but %s not set.\n",options[OPT_ENVTIDES].cName,options[OPT_ENVELOPEMASS].cName);
-    LineExit(files->Infile[iBody+1].cIn,options[OPT_ENVTIDES].iLine[iBody+1]);
-  }
+    // they better have defined k2Env, tidalqenv, denvmass
+    if (options[OPT_TIDALQENV].iLine[iBody+1] == -1) {
+      fprintf(stderr,"ERROR: %s = 1, but %s not set.\n",options[OPT_ENVTIDES].cName,options[OPT_TIDALQENV].cName);
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_ENVTIDES].iLine[iBody+1]);
+    }
+    if (options[OPT_K2ENV].iLine[iBody+1] == -1) {
+      fprintf(stderr,"ERROR: %s = 1, but %s not set.\n",options[OPT_ENVTIDES].cName,options[OPT_K2ENV].cName);
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_ENVTIDES].iLine[iBody+1]);
+    }
+    if (options[OPT_ENVELOPEMASS].iLine[iBody+1] == -1) {
+      fprintf(stderr, "ERROR: %s = 1, but %s not set.\n",options[OPT_ENVTIDES].cName,options[OPT_ENVELOPEMASS].cName);
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_ENVTIDES].iLine[iBody+1]);
+    }
 
-  // Cannot set TidalQ and TidalQEnv
-  if (options[OPT_TIDALQ].iLine[iBody+1] > -1 && options[OPT_TIDALQENV].iLine[iBody+1] > -1) {
-    fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_TIDALQ].cName,options[OPT_TIDALQENV].cName);
-    DoubleLineExit(options[OPT_TIDALQ].cFile[iBody+1],options[OPT_TIDALQENV].cFile[iBody+1]);
-  }
-  // Cannot set K2 and K2Env
-  if (options[OPT_K2].iLine[iBody+1] > -1 && options[OPT_K2ENV].iLine[iBody+1] > -1) {
-    fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_K2].cName,options[OPT_K2ENV].cName);
-    DoubleLineExit(options[OPT_K2].cFile[iBody+1],options[OPT_K2QENV].cFile[iBody+1]);
-  }
+    // Cannot set TidalQ and TidalQEnv
+    if (options[OPT_TIDALQ].iLine[iBody+1] > -1 && options[OPT_TIDALQENV].iLine[iBody+1] > -1) {
+      fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_TIDALQ].cName,options[OPT_TIDALQENV].cName);
+      DoubleLineExit(options[OPT_TIDALQ].cFile[iBody+1],options[OPT_TIDALQENV].cFile[iBody+1],
+        options[OPT_TIDALQ].iLine[iBody+1],options[OPT_TIDALQENV].iLine[iBody+1]);
+    }
+    // Cannot set K2 and K2Env
+    if (options[OPT_K2].iLine[iBody+1] > -1 && options[OPT_K2ENV].iLine[iBody+1] > -1) {
+      fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_K2].cName,options[OPT_K2ENV].cName);
+      DoubleLineExit(options[OPT_K2].cFile[iBody+1],options[OPT_K2ENV].cFile[iBody+1],
+        options[OPT_K2].iLine[iBody+1],options[OPT_K2ENV].iLine[iBody+1]);
+    }
 
-  // Everything OK, set dImK2Env
-  // Defining this here is OK until we have a real envelope model
-  body[iBody].dImK2Env = body[iBody].dK2Env/body[iBody].dTidalQEnv;
+    // Everything OK, set dImK2Env
+    // Defining this here is OK until we have a real envelope model
+    body[iBody].dImK2Env = body[iBody].dK2Env/body[iBody].dTidalQEnv;
 
-} else {
-  // Set dImK2Env to 0, i.e. no Dissipation
-  body[iBody].dImK2Env = 0;
+  } else {
+    // Set dImK2Env to 0, i.e. no Dissipation
+    body[iBody].dImK2Env = 0;
+  }
 }
 
 void VerifyImK2Ocean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iBody) {
@@ -563,60 +566,65 @@ void VerifyImK2Ocean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
   // Is there an ocean? If so, fix it's Im(k2)
   if (body[iBody].bOceanTides) {
 
+    // they better have defined k2Ocean, tidalqOcean, dOceanmass
+    if (options[OPT_TIDALQOCEAN].iLine[iBody+1] == -1) {
+      fprintf(stderr,"ERROR: %s = 1, but %s not set.\n",options[OPT_OCEANTIDES].cName,options[OPT_TIDALQOCEAN].cName);
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_OCEANTIDES].iLine[iBody+1]);
+    }
+    if (options[OPT_K2OCEAN].iLine[iBody+1] == -1) {
+      fprintf(stderr,"ERROR: %s = 1, but %s not set.\n",options[OPT_OCEANTIDES].cName,options[OPT_K2OCEAN].cName);
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_OCEANTIDES].iLine[iBody+1]);
+    }
+    if (options[OPT_SURFACEWATERMASS].iLine[iBody+1] == -1) {
+      fprintf(stderr, "ERROR: %s = 1, but %s not set.\n",options[OPT_OCEANTIDES].cName,options[OPT_SURFACEWATERMASS].cName);
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_OCEANTIDES].iLine[iBody+1]);
+    }
 
-  // they better have defined k2Ocean, tidalqOcean, dOceanmass
-  if (options[OPT_TIDALQOCEAN].iLine[iBody+1] == -1) {
-    fprintf(stderr,"ERROR: %s = 1, but %s not set.\n",options[OPT_OCEANTIDES].cName,options[OPT_TIDALQOCEAN].cName);
-    LineExit(files->Infile[iBody+1].cIn,options[OPT_OCEANTIDES].iLine[iBody+1]);
-  }
-  if (options[OPT_K2OCEAN].iLine[iBody+1] == -1) {
-    fprintf(stderr,"ERROR: %s = 1, but %s not set.\n",options[OPT_OCEANTIDES].cName,options[OPT_K2OCEAN].cName);
-    LineExit(files->Infile[iBody+1].cIn,options[OPT_OCEANTIDES].iLine[iBody+1]);
-  }
-  if (options[OPT_SURFACEWATERMASS].iLine[iBody+1] == -1) {
-    fprintf(stderr, "ERROR: %s = 1, but %s not set.\n",options[OPT_OCEANTIDES].cName,options[OPT_SURFACEWATERMASS].cName);
-    LineExit(files->Infile[iBody+1].cIn,options[OPT_OCEANTIDES].iLine[iBody+1]);
-  }
+    // Cannot set TidalQ and TidalQOcean
+    if (options[OPT_TIDALQ].iLine[iBody+1] > -1 && options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1) {
+      fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_TIDALQ].cName,options[OPT_TIDALQOCEAN].cName);
+      DoubleLineExit(options[OPT_TIDALQ].cFile[iBody+1],options[OPT_TIDALQOCEAN].cFile[iBody+1],
+        options[OPT_TIDALQ].iLine[iBody+1],options[OPT_TIDALQOCEAN].iLine[iBody+1]);
+    }
+    // Cannot set K2 and K2Ocean
+    if (options[OPT_K2].iLine[iBody+1] > -1 && options[OPT_K2OCEAN].iLine[iBody+1] > -1) {
+      fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_K2].cName,options[OPT_K2OCEAN].cName);
+      DoubleLineExit(options[OPT_K2].cFile[iBody+1],options[OPT_K2OCEAN].cFile[iBody+1],
+        options[OPT_K2].iLine[iBody+1],options[OPT_K2OCEAN].iLine[iBody+1]);
+    }
 
-  // Cannot set TidalQ and TidalQOcean
-  if (options[OPT_TIDALQ].iLine[iBody+1] > -1 && options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1) {
-    fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_TIDALQ].cName,options[OPT_TIDALQOCEAN].cName);
-    DoubleLineExit(options[OPT_TIDALQ].cFile[iBody+1],options[OPT_TIDALQOCEAN].cFile[iBody+1]);
-  }
-  // Cannot set K2 and K2Ocean
-  if (options[OPT_K2].iLine[iBody+1] > -1 && options[OPT_K2OCEAN].iLine[iBody+1] > -1) {
-    fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_K2].cName,options[OPT_K2OCEAN].cName);
-    DoubleLineExit(options[OPT_K2].cFile[iBody+1],options[OPT_K2QOCEAN].cFile[iBody+1]);
-  }
+    // Everything OK, set dImK2Ocean
+    // Defining this here is OK until we have a real ocean model
+    body[iBody].dImK2Ocean = body[iBody].dK2Ocean/body[iBody].dTidalQOcean;
 
-  // Everything OK, set dImK2Ocean
-  // Defining this here is OK until we have a real ocean model
-  body[iBody].dImK2Ocean = body[iBody].dK2Ocean/body[iBody].dTidalQOcean;
-
-} else {
-  // Set dImK2Ocean to 0, i.e. no Dissipation
-  body[iBody].dImK2Ocean = 0;
+  } else {
+    // Set dImK2Ocean to 0, i.e. no Dissipation
+    body[iBody].dImK2Ocean = 0;
+  }
 }
 
-void VerifyImK2Mantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iBody) {
+void VerifyImK2Mantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,UPDATE *update,int iBody) {
   // There's always a mantle
   // Cannot set TidalQ and TidalQMantle
   if (options[OPT_TIDALQ].iLine[iBody+1] > -1 && options[OPT_TIDALQMANTLE].iLine[iBody+1] > -1) {
     fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_TIDALQ].cName,options[OPT_TIDALQMANTLE].cName);
-    DoubleLineExit(options[OPT_TIDALQ].cFile[iBody+1],options[OPT_TIDALQMANTLE].cFile[iBody+1]);
+    DoubleLineExit(options[OPT_TIDALQ].cFile[iBody+1],options[OPT_TIDALQMANTLE].cFile[iBody+1],
+        options[OPT_TIDALQ].iLine[iBody+1],options[OPT_TIDALQMANTLE].iLine[iBody+1]);
   }
   // Cannot set K2 and K2Mantle
   if (options[OPT_K2].iLine[iBody+1] > -1 && options[OPT_K2MANTLE].iLine[iBody+1] > -1) {
     fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_K2].cName,options[OPT_K2MANTLE].cName);
-    DoubleLineExit(options[OPT_K2].cFile[iBody+1],options[OPT_K2QMANTLE].cFile[iBody+1]);
+    DoubleLineExit(options[OPT_K2].cFile[iBody+1],options[OPT_K2MANTLE].cFile[iBody+1],
+      options[OPT_K2].iLine[iBody+1],options[OPT_K2MANTLE].iLine[iBody+1]);
   }
 
   if (body[iBody].bThermint) {
-    fvVerifyThermint(body,control,files,options,output,system,update,iBody,iModule);
+    fvVerifyTMan(body,options,system,update,body[iBody].dAge,iBody);  //Verify Man.
+    fvVerifyTCore(body,options,system,update,body[iBody].dAge,iBody);        //Verify Core.
     VerifyOrbit(body,*files,options,control,iBody,control->Io.iVerbose);
-    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass)
+    body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
     body[iBody].dK2Man = fdK2Man(body,iBody);
-    body[iBody].ImK2Man = fdImK2Man(body,iBody);
+    body[iBody].dImK2Man = fdImK2Man(body,iBody);
   } else {
     // Everything OK, set dImK2Ocean
     // Defining this here is OK until we have a real ocean model
@@ -625,20 +633,27 @@ void VerifyImK2Mantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
   }
 }
 
+
 /**
-  if ThermInt set, then no tidal other tidal information needs to be found, if not
-  then we need to identify all the tidal properties */
-void VerifyImK2General(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system) {
+
+  Verify all input parameters related to tidal energy dissipation (Power) into all
+  regions of a planet. The parameter Im(k2) is set by the orbit and the internal
+  temperature in the layer, which is set by the tidal, secular, and radiogenic heating
+  rates. The heating is divided into layers: 1) Mantle, 2) Ocean, and 3) Envelope,
+  and may be calculated by the EqTide, RadHeat, and/or ThermInt modules. Those
+  modules in turn have different possibilities. By the end of this function, the
+  values of Im(k2) in all layers and the body as a whole are set. */
+void VerifyImK2(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,UPDATE *update,int iBody) {
 
   VerifyImK2Env(body,control,files,options,system,iBody);
 
   VerifyImK2Ocean(body,control,files,options,system,iBody);
 
-  VerifyImK2Mantle(body,control,files,options,system,iBody);
+  VerifyImK2Mantle(body,control,files,options,system,update,iBody);
 
   body[iBody].dImK2 = fdImK2Total(body,iBody);
 
-  if (control->io.iVerbose > VERBPROG) {
+  if (control->Io.iVerbose > VERBPROG) {
     fprintf(stderr,"Im(k_2) verified.n");
   }
 /*
@@ -690,41 +705,9 @@ void VerifyImK2General(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
         body[iBody].dImK2 = body[iBody].dImK2Rock;
       }
   }
-  }
 */
-
 }
 
-/**
-
-  Verify all input parameters related to tidal energy dissipation (Power) into all
-  regions of a planet. The parameter Im(k2) is set by the orbit and the internal
-  temperature in the layer, which is set by the tidal, secular, and radiogenic heating
-  rates. The heating is divided into layers: 1) Mantle, 2) Ocean, and 3) Envelope,
-  and may be calculated by the EqTide, RadHeat, and/or ThermInt modules. Those
-  modules in turn have different possibilities. By the end of this function, the
-  values of Im(k2) in all layers and the body as a whole are set. */
-
-void VerifyImK2(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system) {
-  int iBody,iModule; // Dummy counter variables
-
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    if (body[ibody].bEqtide) {
-
-      VerifyImK2General(body,control,files,options,system);
-
-      /* Get properties from each module */
-      for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++) {
-        control->fnVerifyImK2[iBody][iModule](body,control,files,options,system,iBody);
-      }
-
-      // Multi-module properties
-      for (iModule=0;iModule<control->iNumMultiProps[iBody];iModule++) {
-        control->fnVerifyImK2Multi[iBody][iModule](body,control,files,options,system,iBody);
-      }
-    }
-  }
-}
 
 /*
  *
@@ -786,8 +769,6 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
   VerifyIntegration(body,control,files,options,system,fnOneStep);
   InitializeControlEvolve(control,module,update);
 
-  VerifyImK2(body,control,files,options,system);
-
   // Default to no orbiting bodies
   control->bOrbiters = 0;
 
@@ -808,6 +789,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
 
     /* Must verify density first: RotVel requires a radius in VerifyRotation */
     VerifyMassRad(&body[iBody],control,options,iBody,files->Infile[iBody].cIn,control->Io.iVerbose);
+    VerifyImK2(body,control,files,options,system,update,iBody);
 
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
       // Must initialize entire body struct before verifying modules

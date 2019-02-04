@@ -181,6 +181,7 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   body[iBody].dPrefactorA      = AHIGHPRESSURE;
   body[iBody].dPrefactorB      = BHIGHPRESSURE;
   body[iBody].dAlbedo          = ALBEDOWATERATMOS;
+  body[iBody].dGravAccelSurf   = BIGG * body[iBody].dMass / pow(body[iBody].dRadius,2);
 }
 
 /******************* Verify MAGMOC ******************/
@@ -193,15 +194,25 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
  * Equations needed in PropsAuxMagmOc
  */
 
-/* Bisection method to find root */
+/**
+Bisection method to find root
+
+@param (*f) function pointer to the function the root of which should be found
+@param body A pointer to the current BODY instance
+@param dXl the lower boundary of the root finder
+@param dXu the upper boundary of the root finder
+@param iBody The current BODY number
+
+@return dXm the root of function (*f)
+*/
 double fndBisection(double (*f)(BODY*,double,int), BODY *body,double dXl, double dXu,int iBody) {
   double dXm,dEpsilon,dProd,dFxm,dFxl;
   dEpsilon = 1;
   while(dEpsilon>1e-5) {
     dXm      = (dXl + dXu)/2.;
     dEpsilon = fabs((*f)(body,dXm,iBody));
-    dFxm     = (*f)(body,dEpsilon,iBody);
-    dFxl     = (*f)(body,dFxm,iBody);
+    dFxm     = (*f)(body,dXm,iBody);
+    dFxl     = (*f)(body,dXl,iBody);
     dProd    = (dFxl / fabs(dFxl)) * (dFxm / fabs(dFxm));
     if (dProd < 0) {
       dXu = dXm;
@@ -212,12 +223,30 @@ double fndBisection(double (*f)(BODY*,double,int), BODY *body,double dXl, double
   return dXm;
 }
 
-/* Mass of water in the mo+atm system to get the water frac in the magmoc */
+/**
+Mass of water in the mo+atm system to get the water frac in the magmoc
+Will be used in PropsAuxMagmOc to find its root with fndBisection
+
+@param body A pointer to the current BODY instance
+@param dFrac water mass fraction in the magma oean
+@param iBody The current BODY number
+
+@return Water mass for a given dFrac - actual water mass in mo+atm
+*/
 double fndWaterMassMOTime(BODY *body, double dFrac, int iBody) {
-  return 1e-19*(WATERPARTCOEFF*dFrac*body[iBody].dMassMagmOcCry + dFrac*body[iBody].dMassMagmOcLiq + (4*PI*pow(body[iBody].dRadius,2)/body[iBody].dGravAccel)*pow((dFrac/3.44e-8),1/074) - body[iBody].dWaterMassMOAtm);
+  return 1e-19*(WATERPARTCOEFF*dFrac*body[iBody].dMassMagmOcCry + dFrac*body[iBody].dMassMagmOcLiq + (4*PI*pow(body[iBody].dRadius,2)/body[iBody].dGravAccelSurf)*pow((dFrac/3.44e-8),1/074) - body[iBody].dWaterMassMOAtm);
 }
 
-/* Fugacity equation for Fe2O3/FeO_tot = 0.3 -> get critical fugacity */
+/**
+Fugacity equation for Fe2O3/FeO_tot = 0.3 -> get critical fugacity
+Will be used in PropsAuxMagmOc to find its root with fndBisection
+
+@param body A pointer to the current BODY instance
+@param dFug oxygen fugacity
+@param iBody The current BODY number
+
+@return 0 if dFug = critical fugacity
+*/
 double fndCriticalOxygenFugacity(BODY *body, double dFug, int iBody) {
   return 0.196*log(dFug*1e-5) + 11492/body[iBody].dPotTemp - 6.675 \
            - 2.243 * MOLFRACAL2O3 - 1.828 * MOLFRACFEO \
@@ -230,7 +259,16 @@ double fndCriticalOxygenFugacity(BODY *body, double dFug, int iBody) {
            + 1.735;
 }
 
-/* Oxygen equilibrium between magma ocean and atmosphere */
+/**
+Oxygen equilibrium between magma ocean and atmosphere
+Will be used in PropsAuxMagmOc to find its root with fndBisection
+
+@param body A pointer to the current BODY instance
+@param dDelFrac delta mass fraction of Fe2O3 in magmoc
+@param iBody The current BODY number
+
+@return 0 if oxygen in atm and mo are in equilibrium
+*/
 double fndOxygenEquiManAtm(BODY *body, double dDelFrac, int iBody) {
   double dChem, dA, dB, dC, dFracNewMax, dDelFug;
 
@@ -286,8 +324,8 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
       dA = AHIGHPRESSURE;
       dB = BHIGHPRESSURE;
     }
-    dTsol        = dA*body[iBody].dManMeltDensity*body[iBody].dGravAccel*(body[iBody].dRadius-daRadius[iItr])+dB;
-    daTrad[iItr] = body[iBody].dPotTemp*(1+(THERMALEXPANCOEFF*body[iBody].dGravAccel/SILICATEHEATCAP)*body[iBody].dRadius-daRadius[iItr]);
+    dTsol        = dA*body[iBody].dManMeltDensity*body[iBody].dGravAccelSurf*(body[iBody].dRadius-daRadius[iItr])+dB;
+    daTrad[iItr] = body[iBody].dPotTemp*(1+(THERMALEXPANCOEFF*body[iBody].dGravAccelSurf/SILICATEHEATCAP)*body[iBody].dRadius-daRadius[iItr]);
     daMelt_frac_r[iItr] = (daTrad[iItr]-dTsol)/600;
     if (daMelt_frac_r[iItr] > 1) {
       daMelt_frac_r[iItr] = 1; // melt fraction can't be larger than 1
@@ -297,7 +335,7 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     dMelt_vol = dMelt_vol + daMelt_frac_r[iItr]*(pow(daRadius[iItr+1],3)-pow(daRadius[iItr],3));
   }
 
-  body[iBody].dSolidRadiusLocal = body[iBody].dRadius - ( (body[iBody].dPrefactorB-body[iBody].dPotTemp) / (body[iBody].dGravAccel*(body[iBody].dPotTemp*THERMALEXPANCOEFF/SILICATEHEATCAP - body[iBody].dPrefactorA*body[iBody].dManMeltDensity)));
+  body[iBody].dSolidRadiusLocal = body[iBody].dRadius - ( (body[iBody].dPrefactorB-body[iBody].dPotTemp) / (body[iBody].dGravAccelSurf*(body[iBody].dPotTemp*THERMALEXPANCOEFF/SILICATEHEATCAP - body[iBody].dPrefactorA*body[iBody].dManMeltDensity)));
 
   if (body[iBody].dSolidRadiusLocal < body[iBody].dCoreRadius) {
     body[iBody].dSolidRadiusLocal = body[iBody].dCoreRadius;
@@ -330,9 +368,9 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
    */
   if (body[iBody].dPotTemp > body[iBody].dSurfTemp) {
     body[iBody].dManHeatFlux = THERMALCONDUC * pow((body[iBody].dPotTemp-body[iBody].dSurfTemp),1.33) \
-                               * pow((THERMALEXPANCOEFF*body[iBody].dGravAccel/(CRITRAYLEIGHNO*THERMALDIFFUS*body[iBody].dKinemViscos)),0.33);
+                               * pow((THERMALEXPANCOEFF*body[iBody].dGravAccelSurf/(CRITRAYLEIGHNO*THERMALDIFFUS*body[iBody].dKinemViscos)),0.33);
   } else {
-    body[iBody].dManHeatFlux = THERMALCONDUC * body[iBody].dPotTemp * THERMALEXPANCOEFF * body[iBody].dGravAccel / SILICATEHEATCAP;
+    body[iBody].dManHeatFlux = THERMALCONDUC * body[iBody].dPotTemp * THERMALEXPANCOEFF * body[iBody].dGravAccelSurf / SILICATEHEATCAP;
   }
   // END of mantle_flux(): return mantle heat flux
 
@@ -366,7 +404,7 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 
   /* Get water pressure and water mass in the atmosphere */
   body[iBody].dPressWaterAtm = pow((body[iBody].dWaterFracMelt/3.44e-8),1/0.74);
-  body[iBody].dWaterMassAtm  = 4 * PI * pow(body[iBody].dRadius,2) * body[iBody].dPressWaterAtm / body[iBody].dGravAccel;
+  body[iBody].dWaterMassAtm  = 4 * PI * pow(body[iBody].dRadius,2) * body[iBody].dPressWaterAtm / body[iBody].dGravAccelSurf;
 
   /*
    * Calculation of the flux from the star
@@ -389,12 +427,12 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   double dEffTempAtm; // effective temperature of the atmosphere
   double dOptDep;     // optical depth
   dEffTempAtm              = pow((dBolFlux * (1 - body[iBody].dAlbedo) / (4 * SIGMA) ),0.25);
-  dOptDep                  = body[iBody].dPressWaterAtm * pow((0.75*ABSORPCOEFFH2O/body[iBody].dGravAccel/REFPRESSUREOPACITY),0.5);
+  dOptDep                  = body[iBody].dPressWaterAtm * pow((0.75*ABSORPCOEFFH2O/body[iBody].dGravAccelSurf/REFPRESSUREOPACITY),0.5);
   body[iBody].dNetFluxAtmo = 2 / (2 + dOptDep) * SIGMA * (pow(body[iBody].dSurfTemp,4) - pow(dEffTempAtm,4));
   // End of OLR_Elkins()
 
   /* Factor in the derivative of Tpot and Rsol */
-  body[iBody].dFactorDerivative = SILICATEHEATCAP * (body[iBody].dPrefactorB*THERMALEXPANCOEFF - body[iBody].dPrefactorA*body[iBody].dManMeltDensity*SILICATEHEATCAP) / (body[iBody].dGravAccel*pow((body[iBody].dPrefactorA*body[iBody].dManMeltDensity*SILICATEHEATCAP - THERMALEXPANCOEFF*body[iBody].dPotTemp),2));
+  body[iBody].dFactorDerivative = SILICATEHEATCAP * (body[iBody].dPrefactorB*THERMALEXPANCOEFF - body[iBody].dPrefactorA*body[iBody].dManMeltDensity*SILICATEHEATCAP) / (body[iBody].dGravAccelSurf*pow((body[iBody].dPrefactorA*body[iBody].dManMeltDensity*SILICATEHEATCAP - THERMALEXPANCOEFF*body[iBody].dPotTemp),2));
 
   /*
    * Calculation of the atmospheric escape rates
@@ -419,11 +457,11 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 
   dOxygenMassAtmNew = dSurfWaterMassLossRate * evolve->dTimeStep;
   dNumFeO15Man      = 2 * dOxygenMassAtmNew / (MOLWEIGHTOXYGEN*ATOMMASS);
-  dOxyFugacity      = body[iBody].dOxygenMassAtm * body[iBody].dGravAccel / (4*PI*pow(body[iBody].dRadius,2));
+  dOxyFugacity      = body[iBody].dOxygenMassAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
 
   body[iBody].dPressAtmTot  = dOxyFugacity + body[iBody].dPressWaterAtm;
-  body[iBody].dOxyFugNewMax = dOxygenMassAtmNew * body[iBody].dGravAccel / (4*PI*pow(body[iBody].dRadius,2));
-  body[iBody].dOxyFugFactor = MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) * body[iBody].dManMeltDensity*body[iBody].dGravAccel * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadiusLocal,3))/(3*pow(body[iBody].dRadius,2));
+  body[iBody].dOxyFugNewMax = dOxygenMassAtmNew * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
+  body[iBody].dOxyFugFactor = MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) * body[iBody].dManMeltDensity*body[iBody].dGravAccelSurf * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadiusLocal,3))/(3*pow(body[iBody].dRadius,2));
 
   if (body[iBody].bManSolid) {
     dFracFe2O3ManNew = 0;
@@ -454,7 +492,7 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   } else { // x > 0.3 and fug > fug_crit
     dFracFe2O3ManNew  = fndBisection(fndOxygenEquiManAtm,body,0,1,iBody);
     body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man + dFracFe2O3ManNew;
-    dOxygenMassAtmNew = (body[iBody].dOxyFugNewMax - body[iBody].dFracFe2O3Man*body[iBody].dOxyFugFactor) * 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccel;
+    dOxygenMassAtmNew = (body[iBody].dOxyFugNewMax - body[iBody].dFracFe2O3Man*body[iBody].dOxyFugFactor) * 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf;
     body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
   }
 
@@ -904,9 +942,9 @@ double fdDPotTemp(BODY *body, SYSTEM *system, int *iaBody) {
 double fdDSurfTemp(BODY *body, SYSTEM *system, int *iaBody) {
   double dFluxPart,dWaterPart,dManPart,dTempPart;
   dFluxPart  = body[iaBody[0]].dManHeatFlux - body[iaBody[0]].dNetFluxAtmo;
-  dWaterPart = WATERHEATCAP * body[iaBody[0]].dPressWaterAtm / body[iaBody[0]].dGravAccel;
+  dWaterPart = WATERHEATCAP * body[iaBody[0]].dPressWaterAtm / body[iaBody[0]].dGravAccelSurf;
   dManPart   = SILICATEHEATCAP * body[iaBody[0]].dManMeltDensity / (3*pow(body[iaBody[0]].dRadius,2));
-  dTempPart  = pow(body[iaBody[0]].dRadius,3) - (body[iaBody[0]].dPotTemp-body[iaBody[0]].dSurfTemp) * THERMALEXPANCOEFF * body[iaBody[0]].dGravAccel / (CRITRAYLEIGHNO*THERMALDIFFUS*body[iaBody[0]].dKinemViscos);
+  dTempPart  = pow(body[iaBody[0]].dRadius,3) - (body[iaBody[0]].dPotTemp-body[iaBody[0]].dSurfTemp) * THERMALEXPANCOEFF * body[iaBody[0]].dGravAccelSurf / (CRITRAYLEIGHNO*THERMALDIFFUS*body[iaBody[0]].dKinemViscos);
   return dFluxPart / (dWaterPart + dManPart * dTempPart);
 }
 

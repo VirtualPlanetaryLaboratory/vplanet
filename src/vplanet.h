@@ -239,13 +239,13 @@
  * define primary variables
  * give them a number
  */
-#define VWATERMASSMOATM  2310
-#define VWATERMASSSOL    2311
-#define VSURFTEMP        2312
-#define VPOTTEMP         2313
-#define VSOLIDRADIUS     2314
-#define VOXYGENMASSMOATM 2315
-#define VOXYGENMASSSOL   2316
+#define VWATERMASSMOATM  2302
+#define VWATERMASSSOL    2303
+#define VSURFTEMP        2304
+#define VPOTTEMP         2305
+#define VSOLIDRADIUS     2306
+#define VOXYGENMASSMOATM 2307
+#define VOXYGENMASSSOL   2308
 
 /* Now define the structs */
 
@@ -998,6 +998,7 @@ struct BODY {
   double dManMeltDensity;   /**< Density of the molten mantle [km/m^3] */
 	double dFeO;              /**< FeO in the magma ocean */
 	/* Other variables Thermal model */
+	double dGravAccelSurf;    /**< Graviational acceleration at the surface [m/s^2] */
 	double dSolidRadiusLocal; /**< Local variable for solidification radius of the mantle [m] */
   double dPrefactorA;       /**< Prefactor for linear solidus */
   double dPrefactorB;       /**< Prefactor for linear solidus */
@@ -2161,3 +2162,4 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "flare.h"
 #include "galhabit.h"
 #include "spinbody.h"
+#include "magmoc.h"

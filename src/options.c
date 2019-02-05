@@ -452,8 +452,10 @@ void InitializeInput(INFILE *input) {
   }
   input->iNumLines = iGetNumLines(input->cIn);
   input->bLineOK = malloc(input->iNumLines*sizeof(int));
+  /*
   input->cSpecies[0] = 0;
   input->cReactions[0] = 0;
+  */
 
   for (iLine=0;iLine<input->iNumLines;iLine++) {
     /* Initialize bLineOK */
@@ -1044,9 +1046,10 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
   *body = malloc(control->Evolve.iNumBodies*sizeof(BODY));
 
   /* Initialize functions in the module struct */
-  InitializeModule(module,control->Evolve.iNumBodies);
+  InitializeModule(*body,control,module);
 
   // Read Verbosity level
+  // !! Note that this function also initializes inputs for the body files !!
   ReadVerbose(files,&options[OPT_VERBOSE],&control->Io.iVerbose,0);
 
   /* Need units prior to any parameter read */
@@ -2773,6 +2776,8 @@ void ReadOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module,OPTION
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     FinalizeModule(*body,control,module,iBody);
     VerifyModuleCompatability(*body,control,files,module,options,iBody);
+    // Assign MODULE pointers for each selected module
+    AddModules(*body,control,module,iBody);
   }
 
   /* Now read in remaining options */

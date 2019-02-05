@@ -582,7 +582,7 @@ double fdImK2Man(BODY *body,int iBody) {
   double dViscDyn,dTidalQ,dDenom2,dImK2;
 
   dViscDyn=fdDynamicViscosity(body,iBody);
-  dTidalQ = dViscDyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+  dTidalQ = dViscDyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan; // Should be own function PETER
   dDenom2 = pow(3./2*dTidalQ/body[iBody].dK2,2.);
   dImK2=(57./4)*dViscDyn*body[iBody].dMeanMotion/( (body[iBody].dStiffness)*(1.0+ dDenom2) );
 

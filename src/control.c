@@ -100,7 +100,7 @@ void sort_output(OUTPUT *output, int sorted[]) {
 void InitializeControl(CONTROL *control,MODULE *module) {
   int iBody,iModule;
 
-  control->bOutputLapl=0; // XXX Shouldn't be module-specific lines here.
+  control->bOutputLapl=0; // XXX This should become part of EVOLVE -- RUSSELL
 
   control->iMassRad = malloc(control->Evolve.iNumBodies*sizeof(int));
   control->fnForceBehavior = malloc(control->Evolve.iNumBodies*sizeof(fnForceBehaviorModule*));
@@ -120,13 +120,18 @@ void InitializeControl(CONTROL *control,MODULE *module) {
       control->fnPropsAux[iBody][iModule] = &PropsAuxNULL;
     }
   }
-
-  InitializeControlVerifyProperty(control);
 }
 
-/* This is called from Verify, after the update matrix has been
-   initialized. */
-void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
+/**
+  This function performs the following tasks:
+
+  1) Allocates control->Evolve.fnBodyCopy, iNumMultiProps, tmpUpdate, daDeriv,
+     and control->iNumMultiProps.
+  2) Initializes control->bOrbiters
+  3) Initializes control->Evolve.iNumModules
+
+ */
+void InitializeControlEvolve(BODY *body,CONTROL *control,MODULE *module,UPDATE *update) {
   int iBody,iModule,iSubStep;
 
   control->Evolve.fnBodyCopy = malloc(control->Evolve.iNumBodies*sizeof(fnBodyCopyModule*));
@@ -153,20 +158,22 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
       control->Evolve.daDeriv[iSubStep] = malloc(control->Evolve.iNumBodies*sizeof(double*));
     }
   }
-}
 
-void InitializeControlVerifyProperty(CONTROL *control) {
-  int iBody,iModule;
+  // Default to no orbiting bodies
+  control->bOrbiters = 0;
 
-  control->fnVerifyImK2 = malloc(control->Evolve.iNumBodies*sizeof(fnVerifyImK2Module*));
-  control->fnVerifyImK2Multi = malloc(control->Evolve.iNumBodies*sizeof(fnVerifyImK2Module*));
+  /* First we must determine all the primary variables. The user may not
+     input them, but instead a redundant variable. Yet these need to be
+     defined before we can call InitializeUpdate. */
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    control->fnVerifyImK2[iBody] = malloc(control->Evolve.iNumBodies*sizeof(fnVerifyImK2Module));
-    control->fnVerifyImK2Multi[iBody] = malloc(control->Evolve.iNumBodies*sizeof(fnVerifyImK2Module));
-    for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++) {
-      control->fnVerifyImK2[iBody][iModule] = &VerifyPropertyNULL;
-      control->fnVerifyImK2Multi[iBody][iModule] = &VerifyPropertyNULL;
+    /* First pass NumModules from MODULE -> CONTROL->EVOLVE */
+    control->Evolve.iNumModules[iBody] = module->iNumModules[iBody];
+
+    // If any body has an orbit related module initialized, we have orbiters!
+    if(body[iBody].bEqtide || body[iBody].bDistOrb || body[iBody].bPoise || body[iBody].bAtmEsc ||
+        body[iBody].bGalHabit || body[iBody].bSpiNBody) {
+      control->bOrbiters = 1;
     }
   }
 }

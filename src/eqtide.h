@@ -229,6 +229,8 @@ double fdTidePower(BODY*,int,int);
 double fdSurfEnFluxEqtide(BODY*,SYSTEM*,UPDATE*,int,int);
 void ForceBehaviorEqtide(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
+void PropsAuxEqtide(BODY*,EVOLVE*,UPDATE*,int);
+
 /******************** CPL Functions ********************/
 
 /* Auxiliary parameters */

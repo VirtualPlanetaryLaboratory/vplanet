@@ -41,23 +41,27 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
 
 
   dest[iBody].iTidePerts = src[iBody].iTidePerts;
+
   dest[iBody].dImK2 = src[iBody].dImK2;
+  dest[iBody].dImK2Man = src[iBody].dImK2Man;
   dest[iBody].dImK2Ocean = src[iBody].dImK2Ocean;
   dest[iBody].dImK2Env = src[iBody].dImK2Env;
+
   dest[iBody].dK2 = src[iBody].dK2;
+  dest[iBody].dK2Man = src[iBody].dK2Man;
   dest[iBody].dK2Ocean = src[iBody].dK2Ocean;
   dest[iBody].dK2Env = src[iBody].dK2Env;
-  dest[iBody].dObliquity = src[iBody].dObliquity;
-  dest[iBody].dPrecA = src[iBody].dPrecA;
+
+  dest[iBody].bMantleTides = src[iBody].bMantleTides;
   dest[iBody].bOceanTides = src[iBody].bOceanTides;
   dest[iBody].bEnvTides = src[iBody].bEnvTides;
+
+  dest[iBody].dObliquity = src[iBody].dObliquity;
+  dest[iBody].dPrecA = src[iBody].dPrecA;
   dest[iBody].bUseTidalRadius = src[iBody].bUseTidalRadius;
   dest[iBody].dTidalRadius = src[iBody].dTidalRadius;
   dest[iBody].bTideLock = src[iBody].bTideLock;
-  dest[iBody].dTidalQRock = src[iBody].dTidalQRock;
-  dest[iBody].dK2Rock = src[iBody].dK2Rock;
   dest[iBody].bEqtide = src[iBody].bEqtide;
-
 
   if (iBody > 0) {
     dest[iBody].dEccSq = src[iBody].dEccSq;
@@ -74,14 +78,18 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
     dest[iBody].dTidalChi[iPert] = src[iBody].dTidalChi[iPert];
     dest[iBody].daDoblDtEqtide[iPert] = src[iBody].daDoblDtEqtide[iPert];
 
-    if (iTideModel == CPL) {
+    if (iTideModel == CPL || iTideModel == DB15) {
+      // XXX Does this need to be copied?
       dest[iBody].dTidalQ = src[iBody].dTidalQ;
+      dest[iBody].dTidalQMan = src[iBody].dTidalQMan;
       dest[iBody].dTidalQOcean = src[iBody].dTidalQOcean;
       dest[iBody].dTidalQEnv = src[iBody].dTidalQEnv;
+
       for (iIndex=0;iIndex<10;iIndex++)
           dest[iBody].iTidalEpsilon[iPert][iIndex] = src[iBody].iTidalEpsilon[iPert][iIndex];
     }
     if (iTideModel == CTL) {
+      // XXX Does this need to be copied?
       dest[iBody].dTidalTau = src[iBody].dTidalTau;
       dest[iBody].dTidalBeta = src[iBody].dTidalBeta;
       for (iIndex=0;iIndex<5;iIndex++)
@@ -127,7 +135,7 @@ void InitializeUpdateTmpBodyEqtide(BODY *body,CONTROL *control,UPDATE *update,in
 
 /* Tidal Q of Rocky Body */
 
-void ReadTidalQRock(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
+void ReadTidalQMantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
   int lTmp=-1;
   double dTmp;
 
@@ -135,13 +143,13 @@ void ReadTidalQRock(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0)
-      body[iFile-1].dTidalQRock = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      body[iFile-1].dTidalQMan = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
     else
-      body[iFile-1].dTidalQRock = dTmp;
+      body[iFile-1].dTidalQMan = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      body[iFile-1].dTidalQRock = options->dDefault;
+      body[iFile-1].dTidalQMan = options->dDefault;
 }
 
 /* */
@@ -337,7 +345,7 @@ void ReadK2Env(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
       body[iFile-1].dK2Env = options->dDefault;
 }
 
-void ReadK2Rock(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void ReadK2Mantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;
   double dTmp;
@@ -350,11 +358,11 @@ void ReadK2Rock(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
         fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
-    body[iFile-1].dK2Rock = dTmp;
+    body[iFile-1].dK2Man = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if(iFile > 0)
-      body[iFile-1].dK2Rock = options->dDefault;
+      body[iFile-1].dK2Man = options->dDefault;
 }
 
 /* Maximum allowable offset between primary's spin period and its
@@ -768,21 +776,21 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_OCEANTIDES].iType = 0;
   fnRead[OPT_OCEANTIDES] = &ReadEqtideOceanTides;
 
-  sprintf(options[OPT_TIDALQROCK].cName,"dTidalQRock");
-  sprintf(options[OPT_TIDALQROCK].cDescr,"Tidal Q of Rocky body");
-  sprintf(options[OPT_TIDALQROCK].cDefault,"300");
-  options[OPT_TIDALQROCK].dDefault = 300;
-  options[OPT_TIDALQROCK].iType = 2;
-  options[OPT_TIDALQROCK].iMultiFile = 1;
-  fnRead[OPT_TIDALQROCK] = &ReadTidalQRock;
+  sprintf(options[OPT_TIDALQMANTLE].cName,"dTidalQMantle");
+  sprintf(options[OPT_TIDALQMANTLE].cDescr,"Tidal Q of Mantle");
+  sprintf(options[OPT_TIDALQMANTLE].cDefault,"100");
+  options[OPT_TIDALQMANTLE].dDefault = 100;
+  options[OPT_TIDALQMANTLE].iType = 2;
+  options[OPT_TIDALQMANTLE].iMultiFile = 1;
+  fnRead[OPT_TIDALQMANTLE] = &ReadTidalQMantle;
 
-  sprintf(options[OPT_K2ROCK].cName,"dK2Rock");
-  sprintf(options[OPT_K2ROCK].cDescr,"Rock's Love Number of Degree 2");
-  sprintf(options[OPT_K2ROCK].cDefault,"0.01");
-  options[OPT_K2ROCK].dDefault = 0.01;
-  options[OPT_K2ROCK].iType = 2;
-  options[OPT_K2ROCK].iMultiFile = 1;
-  fnRead[OPT_K2ROCK] = &ReadK2Rock;
+  sprintf(options[OPT_K2MANTLE].cName,"dK2Mantle");
+  sprintf(options[OPT_K2MANTLE].cDescr,"Mantle's Love Number of Degree 2");
+  sprintf(options[OPT_K2MANTLE].cDefault,"0.01");
+  options[OPT_K2MANTLE].dDefault = 0.01;
+  options[OPT_K2MANTLE].iType = 2;
+  options[OPT_K2MANTLE].iMultiFile = 1;
+  fnRead[OPT_K2MANTLE] = &ReadK2Mantle;
 
 }
 
@@ -797,13 +805,6 @@ void ReadOptionsEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 
 
 /******************* Verify EQTIDE ******************/
-
-/* First are any multi-module properties */
-
-void VerifyImK2Eqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iBody) {
-
-}
-
 
 void VerifyRotationEqtideWarning(char cName1[],char cName2[],char cFile[],int iLine1,int iLine2, int iVerbose) {
   if (iVerbose >= VERBINPUT) {
@@ -2816,8 +2817,6 @@ void AddModuleEqtide(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]                  = EQTIDE;
 
-  control->fnVerifyImK2[iBody][iModule]             = &VerifyImK2Eqtide;
-
   module->fnInitializeControl[iBody][iModule]       = &InitializeControlEqtide;
   module->fnInitializeUpdateTmpBody[iBody][iModule] = &InitializeUpdateTmpBodyEqtide;
   module->fnCountHalts[iBody][iModule]              = &CountHaltsEqtide;
@@ -2983,6 +2982,15 @@ else {
 
 /* Auxiliary properties required for the CPL calculations. N.B.: These
    parameters also need to be included in BodyCopyEqtide!!! */
+void PropsAuxEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+  if (evolve->iEqtideModel == CPL) {
+    PropsAuxCPL(body,evolve,update,iBody);
+  } else if (evolve->iEqtideModel == CTL) {
+    PropsAuxCTL(body,evolve,update,iBody);
+  } else if (evolve->iEqtideModel == DB15) {
+    PropsAuxDB15(body,evolve,update,iBody);
+  }
+}
 
 void PropsAuxOrbiterCPL(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;

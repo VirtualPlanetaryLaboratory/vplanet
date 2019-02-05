@@ -422,26 +422,24 @@ struct BODY {
   int bEqtide;           /**< Apply Module EQTIDE? */
   int bTideLock;         /**< Is a body tidally locked? */
 	double dLockTime;			 /**< Time when body tidally-locked */
-	int bOceanTides;       /**< Have Q be from ocean and thermal interior components? */
-  int bEnvTides;         /**< Have Q contribution from the envelope as well? */
+	int bOceanTides;       /**< Tidal dissipation from ocean? */
+  int bEnvTides;         /**<  Tidal dissipation from envelope? */
+  int bMantleTides;      /**< Tidal dissipation from mantle? */
   int bUseTidalRadius;   /**< Set a fixed tidal radius? */
   double dTidalRadius;   /**< Radius used by tidal evoltion equations (CPL only currently) */
   int iTidePerts;        /**< Number of Tidal Perturbers */
   int *iaTidePerts;      /**< Body #'s of Tidal Perturbers */
   char saTidePerts[MAXARRAY][NAMELEN];  /**< Names of Tidal Perturbers */
+  double dK2Man;         /**< Mantle k2 love number */
   double dK2Ocean;       /**< Ocean's Love Number */
   double dK2Env;         /**< Envelope's Love Number */
-  double dK2Rock;
-  double dImK2Ocean;     /**< Ocean Component to Imaginary part of Love's K_2 */
-  double dImK2Env;       /**< Envelope Component to Imaginary part of Love's K_2 */
-  double dImK2Rock;
-  double dK2Man;         /**< Mantle k2 love number */
   double dTidalQMan;
-  double dImK2Man;       /**< Mantle Im(k2) love number */
-  double dTidalQ;	       /**< Body's Tidal Q */
-  double dTidalQRock;    /**< Tidal Q in interior */ // add in dk2rock...
   double dTidalQOcean;   /**< Body's Ocean Component to Tidal Q */
   double dTidalQEnv;     /**< Body's Envelope Component to Tidal Q */
+  double dImK2Man;       /**< Mantle Im(k2) love number */
+  double dImK2Ocean;       /**< Envelope Component to Imaginary part of Love's K_2 */
+  double dImK2Env;       /**< Envelope Component to Imaginary part of Love's K_2 */
+  double dTidalQ;	       /**< Body's Tidal Q */
   double dTidalTau;      /**< Body's Tidal Time Lag */
   //double dTidePower;   deprecated to allow communication with thermint
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */
@@ -1663,8 +1661,6 @@ typedef void (*fnForceBehaviorModule)(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,
 
 typedef int (*fnHaltModule)(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 
-typedef void (*fnVerifyImK2Module)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-
 struct CONTROL {
   EVOLVE Evolve;
   HALT *Halt;
@@ -1682,9 +1678,6 @@ struct CONTROL {
   fnPropsAuxModule **fnPropsAux; /**< Function Pointers to Auxiliary Properties */
   fnPropsAuxModule **fnPropsAuxMulti;  /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
   int *iNumMultiProps;   /**< Number of Multi-module PropsAux functions */
-
-  fnVerifyImK2Module **fnVerifyImK2; /**< Fn ptr to verify initial inputs for Im(k_2) */
-  fnVerifyImK2Module **fnVerifyImK2Multi; /**< Fn ptr to verify initial inputs for Im(k_2) */
 
   /* Things for DistOrb */
   double dAngNum;         /**< Value used in calculating timestep from angle variable */

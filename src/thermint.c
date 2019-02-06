@@ -3771,7 +3771,8 @@ double fdBLUMan(BODY *body,int iBody) {
   @return Lower mantle thermal boundary layer thickness
 */
 double fdBLLMan(BODY *body,int iBody) {
-  return (EDMAN)*pow((RACRIT)*body[iBody].dViscLMan*(THERMDIFFLMAN)/((THERMEXPANMAN)*(GRAVLMAN)*body[iBody].dTJumpLMan*cube(EDMAN)),(CONVEXPON));
+  return (EDMAN)*pow((RACRIT)*body[iBody].dViscLMan*(THERMDIFFLMAN)/
+    ((THERMEXPANMAN)*(GRAVLMAN)*body[iBody].dTJumpLMan*cube(EDMAN)),(CONVEXPON));
 }
 /**
   Function compute upper mantle shear modulus
@@ -4378,8 +4379,11 @@ double fdMassICDot(BODY *body,UPDATE *update,int iBody) {
       return 0;
     }
 }
+
+//XXX RadPowerMan should be moved to RadHeat
 double fdPowerThermint(BODY *body,int iBody) {
-  return body[iBody].dHflowUMan+body[iBody].dHflowMeltMan-body[iBody].dHflowLMan-body[iBody].dHflowLatentMan-body[iBody].dRadPowerMan;
+  return body[iBody].dHflowUMan+body[iBody].dHflowMeltMan-body[iBody].dHflowLMan
+    -body[iBody].dHflowLatentMan-body[iBody].dRadPowerMan;
 }
 /**
   Function compute latent heat flow from inner core solidification

@@ -12,7 +12,7 @@ dObliquity	  0
 dRadGyra	   0.5
 # Orbital Properties
 dEcc         0.1		# Eccentricity
-dSemi        -0.01		# Semi-major axis, negative -> AU
+dSemi        -0.02		# Semi-major axis, negative -> AU
 
 # EQTIDE Parameters
 dTidalQ     100     #
@@ -34,7 +34,7 @@ d235UPowerMan     -1
 d235UPowerCore	  -1
 d235UPowerCrust	  -1
 ### 238U
-d238UPowerMan	  -1
+d238UPowerMan	    -1
 d238UPowerCore	  -1
 d238UPowerCrust	  -1
 

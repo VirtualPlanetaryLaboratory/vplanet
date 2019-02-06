@@ -575,7 +575,7 @@ double fdImK2Total(BODY *body,int iBody) {
   if (body[iBody].bMantle || body[iBody].bOcean || body[iBody].bEnv) {
     return body[iBody].dImK2Man + body[iBody].dImK2Ocean + body[iBody].dImK2Env;
   } else {
-    return body[iBody].dK2/body[iBody].dTidalQ;
+    return -body[iBody].dK2/body[iBody].dTidalQ;
   }
 }
 
@@ -600,7 +600,7 @@ double fdImK2ManThermint(BODY *body,int iBody) {
   double dDenom2;
 
   dDenom2 = pow(1.5*body[iBody].dTidalQMan/body[iBody].dK2Man,2.);
-  return (57./4)*body[iBody].dDynamViscos*body[iBody].dMeanMotion/((body[iBody].dStiffness)*(1.0+dDenom2));
+  return -(57./4)*body[iBody].dDynamViscos*body[iBody].dMeanMotion/((body[iBody].dStiffness)*(1.0+dDenom2));
 }
 
 

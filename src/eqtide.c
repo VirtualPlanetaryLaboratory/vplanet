@@ -3697,10 +3697,12 @@ void fvWritePowerEqtideDB15(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 */
 //*/
 
-/* All tidal phenomena should exist exclusively in eqtide.c.*/
 /* Heat Flows */
 /**
   Function compute tidal power in solid mantle
+
+  Currently this assumes only the orbital frequency is important. The function
+  must be modified to permit non-tidally-locked rotation.
 
   @param body Body struct
   @param iBody Index of body
@@ -3709,35 +3711,41 @@ void fvWritePowerEqtideDB15(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 
 */
 double fdPowerEqtideDB15(BODY *body,int iBody) {
-  int iOrbiter,iPert,iIndex;
-  double dPower=0;
 
-  for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
-    if (iBody == 0)
-      iOrbiter = body[iBody].iaTidePerts[iPert];
-    else
-      iOrbiter = iBody;
-    iIndex = body[iBody].iaTidePerts[iPert];
-
-    dPower += 10.5*body[iBody].dImK2*pow(BIGG,1.5)*pow(body[iIndex].dMass,2.5)*
-      pow(body[iBody].dRadius,5)*body[iOrbiter].dEccSq*pow(body[iOrbiter].dSemi,-7.5);
+  // Power is only dissipated in planets
+  if (iBody > 0) {
+    return -10.5*body[iBody].dImK2*pow(BIGG,1.5)*pow(body[0].dMass,2.5)*
+      pow(body[iBody].dRadius,5)*body[iBody].dEccSq*pow(body[iBody].dSemi,-7.5);
+  } else {
+    return 0;
   }
-
-  return dPower;
 }
 
 double fdDB15DsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody = iaBody[0];
+  int iPert = iaBody[1];
 
-  return -10*body[iBody].dImK2*body[iBody].dSemi*body[0].dMass/body[iBody].dMass*
-      pow((body[iBody].dRadius/body[iBody].dSemi),5)*body[iBody].dMeanMotion*body[iBody].dEccSq;
+  // Only the planet contributes in the DB15 model
+  if (iBody > 0) { // Also means iBody is the orbiter
+  return 21*body[iBody].dImK2*body[iBody].dSemi*body[iPert].dMass/body[iBody].dMass*
+      pow((body[iBody].dRadius/body[iBody].dSemi),5)*body[iBody].dMeanMotion*
+      body[iBody].dEccSq;
+  } else {
+    return 0;
+  }
 }
 
 double fdDB15DeccDt(BODY *body,UPDATE *update,int *iaBody) {
   int iBody = iaBody[0];
+  int iPert = iaBody[1];
 
-  return -10.5*body[iBody].dImK2*body[0].dMass/body[iBody].dMass*pow((body[iBody].dRadius/body[iBody].dSemi),5)*
+  // Only the planet contributes in the DB15 model
+  if (iBody > 0) {
+    return 10.5*body[iBody].dImK2*body[iPert].dMass/body[iBody].dMass*pow((body[iBody].dRadius/body[iBody].dSemi),5)*
       body[iBody].dMeanMotion*body[iBody].dEcc;
+  } else {
+    return 0;
+  }
 }
 
 /* Hecc and Kecc calculated by chain rule, e.g. dh/dt = de/dt * dh/de. */

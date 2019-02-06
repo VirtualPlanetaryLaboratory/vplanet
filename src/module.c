@@ -480,9 +480,9 @@ void AddModules(BODY *body,CONTROL *control,MODULE *module) {
       module->iaSpiNBody[iBody] = iModule;
       module->iaModule[iBody][iModule++] = SPINBODY;
     }
-  }
 
-  AddModulesMulti(body,control,module,iBody,&iModule);
+    AddModulesMulti(body,control,module,iBody,&iModule);
+  }
 }
 
 void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iFile){

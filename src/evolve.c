@@ -92,31 +92,34 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
       if (update[iBody].iNumVars > 0) {
         for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
 
-    // The parameter does not require a derivative, but is calculated explicitly as a function of age.
-    printf("%d %d\n",iBody,iVar);
-    fflush(stdout);
-  	if (update[iBody].iaType[iVar][0] == 0) {
-  	  dVarNow = *update[iBody].pdVar[iVar];
-  	  for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-  	    update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
-  	  }
-  	  if (control->Evolve.bFirstStep) {
-  	    dMin = integr.dTimeStep;
-  	    control->Evolve.bFirstStep = 0;
-  	  } else {
-  	    /* Sum over all equations giving new value of the variable */
-  	    dVarTotal = 0.;
-  	    for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
-  	      dVarTotal += update[iBody].daDerivProc[iVar][iEqn];
-  	    }
-  	    // Prevent division by zero
-  	    if (dVarNow != dVarTotal) {
-  	      dMinNow = fabs(dVarNow/((dVarNow - dVarTotal)/integr.dTimeStep));
-  	      if (dMinNow < dMin)
-  		      dMin = dMinNow;
-  	    }
-  	  }
-  	}
+          // The parameter does not require a derivative, but is calculated explicitly as a function of age.
+          /*
+          printf("%d %d\n",iBody,iVar);
+          fflush(stdout);
+          */
+  	      if (update[iBody].iaType[iVar][0] == 0) {
+  	        dVarNow = *update[iBody].pdVar[iVar];
+  	        for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+  	          update[iBody].daDerivProc[iVar][iEqn] =
+                fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+  	        }
+  	        if (control->Evolve.bFirstStep) {
+  	          dMin = integr.dTimeStep;
+  	          control->Evolve.bFirstStep = 0;
+  	        } else {
+  	          /* Sum over all equations giving new value of the variable */
+  	          dVarTotal = 0.;
+  	          for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+  	            dVarTotal += update[iBody].daDerivProc[iVar][iEqn];
+  	          }
+  	          // Prevent division by zero
+  	          if (dVarNow != dVarTotal) {
+  	            dMinNow = fabs(dVarNow/((dVarNow - dVarTotal)/integr.dTimeStep));
+  	            if (dMinNow < dMin)
+  		            dMin = dMinNow;
+  	           }
+  	         }
+  	      }
     /* Equations that are integrated in the matrix but are NOT allowed to dictate
        timestepping.  These are derived quantities, like lost energy, that must
        be integrated as primary variables to keep track of them properly, i.e.

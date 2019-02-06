@@ -995,8 +995,6 @@ struct BODY {
 /* Pointer to Laplace semi-major axis functions in DistOrb */
 typedef double (*fnLaplaceFunction)(double,int);
 
-
-
 struct SYSTEM {
   char cName[NAMELEN];	 /**< System's Name */
 

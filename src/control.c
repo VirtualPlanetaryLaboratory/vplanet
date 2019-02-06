@@ -869,7 +869,8 @@ void InfileCopy(INFILE *dest,INFILE *src) {
   for (iLine=0;iLine<src->iNumLines;iLine++)
     dest->bLineOK[iLine] = src->bLineOK[iLine];
 
-  /* PHOTOCHEM fields */
+  /* PHOTOCHEM fields
   strcpy(dest->cSpecies,src->cSpecies);
   strcpy(dest->cReactions,src->cReactions);
+  */
 }

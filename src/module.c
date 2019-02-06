@@ -810,7 +810,9 @@ void VerifyModuleMultiEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,
       iEqtide = fiGetModuleIntEqtide(module,iBody);
       control->fnPropsAux[iBody][iEqtide] = &PropsAuxNULL;
       */
-      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
+      if (body[iBody].bEqtide && body[iBody].bThermint) {
+        control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
+      }
 /*
     }
   }

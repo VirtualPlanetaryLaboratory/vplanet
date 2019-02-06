@@ -576,6 +576,22 @@ void ReadEqtideOceanTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
       body[iFile-1].bOceanTides = 0; // Default to no ocean tides
 }
 
+// Include effects of ocean tides?
+void ReadEqtideMantleTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bMantleTides = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].bMantleTides = 0; // Default to no ocean tides
+}
+
 // Use fixed tidal radius?
 void ReadUseTidalRadius(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -698,6 +714,14 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_OCEANTIDES].iType = 0;
   options[OPT_OCEANTIDES].iMultiFile = 1;
   fnRead[OPT_OCEANTIDES] = &ReadEqtideOceanTides;
+
+  sprintf(options[OPT_MANTLETIDES].cName,"bMantleTides");
+  sprintf(options[OPT_MANTLETIDES].cDescr,"Include effects of mantle tides");
+  sprintf(options[OPT_MANTLETIDES].cDefault,"0");
+  options[OPT_MANTLETIDES].iType = 0;
+  options[OPT_MANTLETIDES].iMultiFile = 1;
+  fnRead[OPT_MANTLETIDES] = &ReadEqtideMantleTides;
+
 
   sprintf(options[OPT_USETIDALRADIUS].cName,"bUseTidalRadius");
   sprintf(options[OPT_USETIDALRADIUS].cDescr,"Fix radius used for CPL tidal equations");

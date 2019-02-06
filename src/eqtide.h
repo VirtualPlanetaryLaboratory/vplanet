@@ -43,8 +43,7 @@
 #define OPT_TIDALQENV           1053
 #define OPT_ENVTIDES            1054
 #define OUT_ECCA                1055
-#define OPT_TIDALQROCK          1056
-#define OPT_K2ROCK              1057
+#define OPT_MANTLETIDES         1057
 #define OPT_TIDALQMANTLE        1058
 #define OPT_K2MANTLE            1059
 

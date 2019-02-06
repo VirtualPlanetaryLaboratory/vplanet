@@ -228,8 +228,6 @@ void FinalizeModule(BODY *body,CONTROL *control,MODULE *module,int iBody) {
     iNumModules++;
   if (body[iBody].bSpiNBody)
     iNumModules++;
-  if (body[iBody].bMagmOc)
-    iNumModules++;
   if (body[iBody].bEqtide && body[iBody].bStellar) {
     iNumModuleMulti++;
   }

@@ -505,7 +505,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
         control->fnForceBehavior[iBody][iModule](body,module,&control->Evolve,&control->Io,system,update,fnUpdate,iBody,iModule);
 
       for (iModule=0;iModule<control->iNumMultiForce[iBody];iModule++)
-        control->fnForceBehaviorMulti[iBody][iModule](body,module,&control->Evolve,&control->Io,system,update,fnUpdate,iModule,iBody);
+        control->fnForceBehaviorMulti[iBody][iModule](body,module,&control->Evolve,&control->Io,system,update,fnUpdate,iBody,iModule);
     }
 
     fdGetUpdateInfo(body,control,system,update,fnUpdate);

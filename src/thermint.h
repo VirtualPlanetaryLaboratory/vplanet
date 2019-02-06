@@ -254,7 +254,6 @@ void fvReadStagLid(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadManHFlowPref(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadMagMomCoef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadPresSWind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-/* vemcee parameters */
 void fvReadActViscMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadShModRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadStiffness(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;

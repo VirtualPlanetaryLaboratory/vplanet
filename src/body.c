@@ -461,6 +461,11 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
 
     //dest[iBody].dLXUV = src[iBody].dLXUV;
 
+    // Im(k_2) properties
+    dest[iBody].dK2Man = src[iBody].dK2Man;
+    dest[iBody].dTidalQMan = src[iBody].dTidalQMan;
+    dest[iBody].dImK2Man = src[iBody].dImK2Man;
+
     if (iBody > 0) {
       dest[iBody].dHecc = src[iBody].dHecc;
       dest[iBody].dKecc = src[iBody].dKecc;
@@ -571,25 +576,6 @@ double fdImK2Total(BODY *body,int iBody) {
 }
 
 /**
-  Function compute upper mantle imaginary component of k2 Love number
-
-  @param body Body struct
-  @param iBody Index of body
-
-  @return Imaginary component of k2 Love number
-*/
-double fdImK2Man(BODY *body,int iBody) {
-  double dViscDyn,dTidalQ,dDenom2,dImK2;
-
-  dViscDyn=fdDynamicViscosity(body,iBody);
-  dTidalQ = dViscDyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan; // Should be own function PETER
-  dDenom2 = pow(3./2*dTidalQ/body[iBody].dK2,2.);
-  dImK2=(57./4)*dViscDyn*body[iBody].dMeanMotion/( (body[iBody].dStiffness)*(1.0+ dDenom2) );
-
-  return dImK2;
-}
-
-/**
   Function compute upper mantle k2 Love number
 
   @param body Body struct
@@ -601,16 +587,47 @@ double fdK2Man(BODY *body,int iBody) {
   return 1.5/(1+9.5*body[iBody].dShmodUMan/(STIFFNESS));
 }
 
+double fdTidalQMan(BODY *body,int iBody) {
+  return body[iBody].dDynamViscos*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+}
+
+
+double fdImK2ManThermint(BODY *body,int iBody) {
+  double dDenom2;
+
+  dDenom2 = pow(1.5*body[iBody].dTidalQMan/body[iBody].dK2Man,2.);
+  return (57./4)*body[iBody].dDynamViscos*body[iBody].dMeanMotion/((body[iBody].dStiffness)*(1.0+dDenom2));
+}
+
+
+/**
+  Function compute upper mantle imaginary component of k2 Love number
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Imaginary component of k2 Love number
+*/
+double fdImK2Man(BODY *body,int iBody) {
+
+  if (body[iBody].bThermint) {
+    body[iBody].dK2 = fdK2Man(body,iBody);
+    return fdImK2ManThermint(body,iBody);
+  } else {
+    return body[iBody].dImK2Man;
+  }
+}
+
 /** Calculate total k_2 and Im(k_2) for a body. This value depends on which tidal
-  model is called, and it the properties depend on the internal properties. */
+  model is called, and it the properties depend on the internal properties.  XXX Cut?
 void AssignTidalProperties(BODY *body,EVOLVE *evolve,int iBody) {
   if (body[iBody].bThermint) {
     // The planet's tidal response depends on mantle properties
     body[iBody].dK2=fdK2Man(body,iBody);
     body[iBody].dImK2=fdImK2Man(body,iBody);
   } else {
-    /* We're in a CPL/CTL type mode, and let's start building the total K2 and
-      ImK2 with the mantle. This should be sorted out in Verify. */
+     We're in a CPL/CTL type mode, and let's start building the total K2 and
+      ImK2 with the mantle. This should be sorted out in Verify.
     body[iBody].dK2 = body[iBody].dK2Man;
     body[iBody].dImK2 = body[iBody].dImK2Man;
   }
@@ -632,6 +649,7 @@ void AssignTidalProperties(BODY *body,EVOLVE *evolve,int iBody) {
     fprintf(stderr,"WARNING: body[%d].dK2 > 1.5 at time %.5e years.\n",iBody,evolve->dTime/YEARSEC);
   }
 }
+*/
 
 /**
   Function compute secular mantle heat flow: heat sinks - sources

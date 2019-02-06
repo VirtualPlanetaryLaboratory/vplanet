@@ -610,24 +610,30 @@ void VerifyImK2Mantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
   if (body[iBody].bMantleTides) {
 
     if (options[OPT_TIDALQ].iLine[iBody+1] > -1 && options[OPT_TIDALQMANTLE].iLine[iBody+1] > -1) {
-      fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_TIDALQ].cName,options[OPT_TIDALQMANTLE].cName);
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_TIDALQ].cName,options[OPT_TIDALQMANTLE].cName);
+      }
       DoubleLineExit(options[OPT_TIDALQ].cFile[iBody+1],options[OPT_TIDALQMANTLE].cFile[iBody+1],
         options[OPT_TIDALQ].iLine[iBody+1],options[OPT_TIDALQMANTLE].iLine[iBody+1]);
     }
     // Cannot set K2 and K2Mantle
     if (options[OPT_K2].iLine[iBody+1] > -1 && options[OPT_K2MANTLE].iLine[iBody+1] > -1) {
-      fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_K2].cName,options[OPT_K2MANTLE].cName);
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_K2].cName,options[OPT_K2MANTLE].cName);
+      }
       DoubleLineExit(options[OPT_K2].cFile[iBody+1],options[OPT_K2MANTLE].cFile[iBody+1],
         options[OPT_K2].iLine[iBody+1],options[OPT_K2MANTLE].iLine[iBody+1]);
     }
 
     if (body[iBody].bThermint) {
-      /* XXX Can this be safely cut?
-      fvVerifyTMan(body,options,system,update,body[iBody].dAge,iBody);  //Verify Man.
-      fvVerifyTCore(body,options,system,update,body[iBody].dAge,iBody);        //Verify Core.
-      VerifyOrbit(body,*files,options,control,iBody,control->Io.iVerbose);
-      body[iBody].dMeanMotion = fdSemiToMeanMotion(body[iBody].dSemi,body[0].dMass+body[iBody].dMass);
-      */
+      // User set dTidalQMan
+      if (options[OPT_TIDALQMANTLE].iLine[iBody+1] == -1) {
+        body[iBody].dTidalQMan = body[iBody].dTidalQ;
+          if (control->Io.iVerbose >= VERBALL) {
+            fprintf(stderr,"WARNING: %s set, but ThermInt computes it. Input value will be ignored.",options[OPT_TIDALQMANTLE].cName);
+          }
+      }
+
       body[iBody].dK2Man = fdK2Man(body,iBody);
       body[iBody].dImK2Man = fdImK2Man(body,iBody);
     } else {
@@ -651,7 +657,9 @@ void VerifyImK2(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
 
   // First gather auxiliary properties for relevant modules
   PropsAuxEqtide(body,&control->Evolve,update,iBody);
-  fvPropsAuxThermint(body,&control->Evolve,update,iBody);
+  if (body[iBody].bThermint) {
+    fvPropsAuxThermint(body,&control->Evolve,update,iBody);
+  }
 
   VerifyImK2Env(body,control,files,options,system,iBody);
 
@@ -663,7 +671,7 @@ void VerifyImK2(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
   body[iBody].dImK2 = fdImK2Total(body,iBody);
 
   if (control->Io.iVerbose > VERBPROG) {
-    fprintf(stderr,"Im(k_2) verified.n");
+    fprintf(stderr,"%s's Im(k_2) verified.\n",body[iBody].cName);
   }
 /*
     // now lets check there's actually an envelope
@@ -765,6 +773,12 @@ void fnNullDerivatives(BODY *body,EVOLVE *evolve,MODULE *module,UPDATE *update,f
 
 void VerifyMantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody) {
 
+  if (body[iBody].bThermint) {
+    body[iBody].bMantle = 1;
+  } else {
+    body[iBody].bMantle = 0;
+  }
+
 }
 
 void VerifyOcean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody) {
@@ -849,7 +863,9 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     // Verify multi-module couplings
     VerifyModuleMulti(body,update,control,files,module,options,iBody,fnUpdate);
 
-    for (iModule=0;iModule<module->iNumManageDerivs[iBody];iModule++) {
+    // XXX I don't think this works for non-binary interactions
+    // for (iModule=0;iModule<module->iNumManageDerivs[iBody];iModule++) {
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
       module->fnAssignDerivatives[iBody][iModule](body,&(control->Evolve),update,*fnUpdate,iBody);
     }
 

@@ -94,6 +94,8 @@ double fdLehmerPres(double Menv, double lil_g, double RadSurf);
 double fdImK2Total(BODY*,int);
 double fdImK2Man(BODY*,int);
 double fdK2Man(BODY*,int);
+double fdTidalQMan(BODY*,int);
+double fdImK2ManThermint(BODY*,int);
 void AssignTidalProperties(BODY*,EVOLVE*,int);
 double fdHflowSecMan(BODY*,EVOLVE*,int);
 

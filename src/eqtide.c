@@ -70,36 +70,33 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
     dest[iBody].dDeccDtEqtide = src[iBody].dDeccDtEqtide;
   }
 
+  if (iTideModel == CPL || iTideModel == DB15) {
+    dest[iBody].dTidalQ = src[iBody].dTidalQ;
+    dest[iBody].dTidalQMan = src[iBody].dTidalQMan;
+    dest[iBody].dTidalQOcean = src[iBody].dTidalQOcean;
+    dest[iBody].dTidalQEnv = src[iBody].dTidalQEnv;
+  }
+
+  if (iTideModel == CTL) {
+    dest[iBody].dTidalTau = src[iBody].dTidalTau;
+    dest[iBody].dTidalBeta = src[iBody].dTidalBeta;
+  }
+
   for (iPert=0;iPert<src[iBody].iTidePerts;iPert++)
     dest[iBody].iaTidePerts[iPert] = src[iBody].iaTidePerts[iPert];
 
   for (iPert=0;iPert<iNumBodies;iPert++) {
-    dest[iBody].dTidalZ[iPert] = src[iBody].dTidalZ[iPert];
-    dest[iBody].dTidalChi[iPert] = src[iBody].dTidalChi[iPert];
     dest[iBody].daDoblDtEqtide[iPert] = src[iBody].daDoblDtEqtide[iPert];
-
-    if (iTideModel == CPL || iTideModel == DB15) {
-      // XXX Does this need to be copied?
-      dest[iBody].dTidalQ = src[iBody].dTidalQ;
-      dest[iBody].dTidalQMan = src[iBody].dTidalQMan;
-      dest[iBody].dTidalQOcean = src[iBody].dTidalQOcean;
-      dest[iBody].dTidalQEnv = src[iBody].dTidalQEnv;
-
+    if (iTideModel == CPL) {
+      dest[iBody].dTidalZ[iPert] = src[iBody].dTidalZ[iPert];
+      dest[iBody].dTidalChi[iPert] = src[iBody].dTidalChi[iPert];
       for (iIndex=0;iIndex<10;iIndex++)
           dest[iBody].iTidalEpsilon[iPert][iIndex] = src[iBody].iTidalEpsilon[iPert][iIndex];
     }
     if (iTideModel == CTL) {
-      // XXX Does this need to be copied?
-      dest[iBody].dTidalTau = src[iBody].dTidalTau;
-      dest[iBody].dTidalBeta = src[iBody].dTidalBeta;
       for (iIndex=0;iIndex<5;iIndex++)
           dest[iBody].dTidalF[iPert][iIndex] = src[iBody].dTidalF[iPert][iIndex];
     }
-    /*
-    if (iTideModel == DB15) {
-      dest[iBody].dImK2Man = src[iBody].dImK2Man
-    }
-    */
   }
 }
 
@@ -1879,14 +1876,7 @@ void WriteTidalQEnv(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 
   strcpy(cUnit,"");
 }
-/*
-void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = body[iBody].dTidalQ;
-
-  strcpy(cUnit,"");
-}
-*/
 void WriteDSemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
 
@@ -2462,7 +2452,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_DSEMIDTEQTIDE].cDescr,"Total da/dt in EQTIDE");
   sprintf(output[OUT_DSEMIDTEQTIDE].cNeg,"AU/Gyr");
   output[OUT_DSEMIDTEQTIDE].bNeg = 1;
-  output[OUT_DSEMIDTEQTIDE].dNeg = YEARSEC*1e9/AUM;
+  output[OUT_DSEMIDTEQTIDE].dNeg = (YEARSEC*1e9)/AUM;
   output[OUT_DSEMIDTEQTIDE].iNum = 1;
   output[OUT_DSEMIDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DSEMIDTEQTIDE] = &WriteDSemiDtEqtide;
@@ -3103,7 +3093,7 @@ void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 }
 
 void PropsAuxDB15(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  // Nothing here -- everything taken care of in PropsAuxEqtideThermint
+  // Nothing here -- all non-orbit properties are constant
 }
 
 /*! Lost energy due to tidal heating in the CPL model. */

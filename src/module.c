@@ -412,16 +412,16 @@ void AddModulesMulti(BODY *body,CONTROL *control,MODULE *module,int iBody,int *i
   }
 }
 
-void AddModules(BODY *body,CONTROL *control,MODULE *module,int iBody) {
-  int iModule;
-
-  iModule = 0;
+void AddModules(BODY *body,CONTROL *control,MODULE *module) {
+  int iBody,iModule;
 
   /************************
   * ADD NEW MODULES HERE *
   ************************/
 
-//  for (iBody = 0;iBody<control->Evolve.iNumBodies;iBody++) {
+  for (iBody = 0;iBody<control->Evolve.iNumBodies;iBody++) {
+    iModule = 0;
+
     if (body[iBody].bEqtide) {
       AddModuleEqtide(control,module,iBody,iModule);
       module->iaEqtide[iBody] = iModule;
@@ -482,9 +482,9 @@ void AddModules(BODY *body,CONTROL *control,MODULE *module,int iBody) {
       module->iaSpiNBody[iBody] = iModule;
       module->iaModule[iBody][iModule++] = SPINBODY;
     }
+  }
 
-    AddModulesMulti(body,control,module,iBody,&iModule);
-//  }
+  AddModulesMulti(body,control,module,iBody,&iModule);
 }
 
 void ReadModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iFile){
@@ -1158,7 +1158,8 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,UPDATE *update,CONTROL *co
         control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] = &ForceBehaviorAtmescEqtideThermint;
 
         // Switch PropAuxEqtideThermint -> PropsAuxAtmescEqtideThermint
-        control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxAtmescEqtideThermint;
+        // XXX Hack! This has been PropsAuxAtmescEqtideThermint, but I think it can be cut.
+        control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
       }
       // No AtmEsc
       else
@@ -1414,20 +1415,23 @@ void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   of an ocean and envelope. */
 void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 
-  AssignTidalProperties(body,evolve,iBody);
+  body[iBody].dK2Man = fdK2Man(body,iBody);
+  body[iBody].dTidalQMan = fdTidalQMan(body,iBody);
+  body[iBody].dImK2Man = fdImK2ManThermint(body,iBody);
 
+  body[iBody].dImK2 = fdImK2Total(body,iBody);
 }
 
 /** Calculate auxiliary properties if AtmEsc, EqTide and ThermInt are called. At present
   this funciton only needs to calculate Im(k_2), possibly including the effects
-  of an ocean and envelope. */
+  of an ocean and envelope.
 void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-
-  // XXX Should check to see if this was already called in PropsAuxEqtideThermint
-  AssignTidalProperties(body,evolve,iBody);
+  XXX Is this necessary?
 
 }
-/* This does not seem to be necessary
+*/
+
+/* This does not seem to be necessary XXX Russell
 void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
 }
@@ -1589,16 +1593,15 @@ void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   }
 }
 
-void ForceBehaviorSpiNBodyAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
-  int iBody;
+void ForceBehaviorSpiNBodyAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,
+  SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 
-  for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
-    //Need to get orbital elements for AtmEsc to use for escape
-    Bary2OrbElems(body, iBody);
-  }
+  //Need to get orbital elements for AtmEsc to use for escape
+  Bary2OrbElems(body, iBody);
 }
 
-void ForceBehaviorEqtideDistOrb(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
+void ForceBehaviorEqtideDistOrb(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,
+  SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   if (evolve->iDistOrbModel == RD4) {
     RecalcLaplace(body,evolve,system,io->iVerbose);
   } else if (evolve->iDistOrbModel == LL2) {
@@ -1606,66 +1609,35 @@ void ForceBehaviorEqtideDistOrb(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,
   };
 }
 
-void ForceBehaviorEqtideAtmesc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
+void ForceBehaviorEqtideAtmesc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,
+  SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 
-  int iBody;
-  // add print statement
-  // output options for benv
-  // if benv and denvmass less than dminenvmass, same with oceans, bEnv set initially in verify
-  // specify k2man, gas, ocean,
-  // specify tidalqman, gas, ocean;
-  // verify checks
-
-  // there are a few cases we want to account for:
-  // 1) env -> ocean -> rock; 2) ocean -> rock; 3) env -> rock
-  for (iBody = 1; iBody<=evolve->iNumBodies-1; iBody++) {
-
-    // We think there is an envelope, but there isnt!
-    if (body[iBody].bEnv && (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass)) {
-      if (io->iVerbose > VERBERR) {
-        fprintf(stderr,"Envelope lost! Changing dTidalQ to:");
-      }
-      body[iBody].bEnv = 0;
-
-      // is there an ocean? lets set tidalq to that!
-      if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
-        if (io->iVerbose > VERBERR) {
-          fprintf(stderr," dTidalQOcean,\n");
-        }
-        body[iBody].dTidalQ = body[iBody].dTidalQOcean;
-        body[iBody].dK2 = body[iBody].dK2Ocean;
-        body[iBody].dImK2 = body[iBody].dImK2Ocean;
-      }
-      // there is not ocean, so lets use dTidalQMan!
-      else {
-        if (io->iVerbose > VERBERR) {
-          fprintf(stderr," dTidalQMan.\n");
-        }
-        // XXX Check this! David
-        body[iBody].dTidalQ = body[iBody].dTidalQMan;
-        body[iBody].dK2 = body[iBody].dK2Man;
-        body[iBody].dImK2 = body[iBody].dImK2Man;
-      }
+  // We think there is an envelope, but there isn't!
+  if (body[iBody].bEnv && (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass)) {
+    if (io->iVerbose >= VERBPROG) {
+      fprintf(stderr,"Envelope lost at t = %.2e years!\n",evolve->dTime/YEARSEC);
     }
-    // we think theres an ocean, but there isnt!!
-    else if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)) {
-      if (io->iVerbose > VERBERR) {
-        fprintf(stderr,"Ocean Lost! Switching dTidalQ to: dTidalQMan.\n");
-      }
-      body[iBody].dTidalQ = body[iBody].dTidalQMan;
-      body[iBody].dK2 = body[iBody].dK2Man;
-      body[iBody].dImK2 = body[iBody].dImK2Man;
-      body[iBody].bOcean = 0;
+    body[iBody].bEnv = 0;
+    body[iBody].dImK2Env = 0;
+  }
+
+  // We think there's an ocean, but there isn't!!
+  if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)) {
+    if (io->iVerbose > VERBPROG) {
+      fprintf(stderr,"Ocean lost at t = %.2e years!\n",evolve->dTime/YEARSEC);
     }
+    body[iBody].bOcean = 0;
+    body[iBody].dImK2Ocean = 0;
   }
 }
 
-
-void ForceBehaviorAtmescEqtideThermint(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iFoo,int iBar) {
+/* XXX RB: I think this subroutine can be cut. We want a ForceBehaviorStellarEqtide
+that determines if a planet enters/exits a runaway greenhouse so as to turn on/off
+bOceanTides. */
+void ForceBehaviorAtmescEqtideThermint(BODY *body,MODULE *module,EVOLVE *evolve,
+  IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 
   // Loop over non-star bodies
-  int iBody;
-
   // Keeps track of whether or not bOceanTides or bEnvTides were initially set
   // to ensure they don't get turned back on by force behavior
   // If oceans or envelope weren't initially set to be modeled, their Q == -dHUGE

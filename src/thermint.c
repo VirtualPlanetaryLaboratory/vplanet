@@ -66,6 +66,7 @@ void fvBodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dTJumpMeltMan=src[iBody].dTJumpMeltMan;
   dest[iBody].dMeltMassFluxMan=src[iBody].dMeltMassFluxMan;
   dest[iBody].dRayleighMan=src[iBody].dRayleighMan;
+  dest[iBody].dDynamViscos=src[iBody].dDynamViscos;
   /* Heat Flows */
   /* Mantle */
   dest[iBody].dHfluxUMan=src[iBody].dHfluxUMan;
@@ -103,7 +104,6 @@ void fvBodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dMagMom=src[iBody].dMagMom;
   dest[iBody].dPresSWind=src[iBody].dPresSWind;
   dest[iBody].dMagPauseRad=src[iBody].dMagPauseRad;
-  /* Begin vemcee parameters */
   dest[iBody].dActViscMan=src[iBody].dActViscMan;
   dest[iBody].dShModRef=src[iBody].dShModRef;
   dest[iBody].dStiffness=src[iBody].dStiffness;
@@ -113,7 +113,6 @@ void fvBodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dAdJumpM2LM=src[iBody].dAdJumpM2LM;
   dest[iBody].dAdJumpC2CMB=src[iBody].dAdJumpC2CMB;
   dest[iBody].dElecCondCore=src[iBody].dElecCondCore;
-  /* End vemcee parameters */
 }
 
 /**************** THERMINT options ********************/
@@ -1336,6 +1335,7 @@ void fvVerifyTCore(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,dou
   @param update Update struct
   @param iBody Index of body
 */
+
 void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   /* Scalar Properties */
   body[iBody].dTUMan=fdTUMan(body,iBody);
@@ -1375,6 +1375,7 @@ void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dMeltMassFluxMan=fdMeltMassFluxMan(body,iBody);
   body[iBody].dViscMMan=fdViscMMan(body,iBody);
   body[iBody].dRayleighMan=fdRayleighMan(body,iBody);
+  body[iBody].dDynamViscos = fdDynamicViscosity(body,iBody);
 
   /* Heat Flows */
   /* Mantle */
@@ -1462,6 +1463,9 @@ void fvNullThermintDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdate
   @param iModule Index of module
 */
 void fvVerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+
+  body[iBody].bMantle = 1;
+
   fvVerifyTMan(body,options,system,update,body[iBody].dAge,iBody);  //Verify Man.
   fvVerifyTCore(body,options,system,update,body[iBody].dAge,iBody);        //Verify Core.
 

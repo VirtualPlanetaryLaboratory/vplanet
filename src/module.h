@@ -25,7 +25,7 @@ void SetDerivTiny(fnUpdateVariable***,int,int,int);
 
 void InitializeModule(BODY*,CONTROL*,MODULE*);
 void FinalizeModule(BODY*,CONTROL*,MODULE*,int);
-void AddModules(BODY*,CONTROL*,MODULE*,int);
+void AddModules(BODY*,CONTROL*,MODULE*);
 double fdReturnOutputZero(BODY*,SYSTEM*,UPDATE*,int,int);
 void ReadModules(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,int);
 void InitializeBodyModules(BODY**,int);

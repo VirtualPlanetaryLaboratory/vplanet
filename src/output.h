@@ -57,6 +57,7 @@
 
 #define OUT_K2MAN               590   //Mantle k2 love number
 #define OUT_IMK2MAN             592   //Mantle Im(k2) love number
+#define OUT_TIDALQMAN           593
 #define OUT_VISCUMAN            595   //Viscosity UMTBL
 
 #define OUT_HECC                600

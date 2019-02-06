@@ -581,13 +581,6 @@ void ReadVerbose(FILES *files,OPTIONS *options,int *iVerbose,int iFile) {
   } else if (*iVerbose == -1) // Was not set at command line, so set to default
      *iVerbose = atoi(options->cDefault);
 
-  // XXX From ReadInitialOptions,iin this location
-  /* Now we can search through files for all options. First we scan the files for Verbosity */
-  /* Initialize other input files */
-  for (iFile=1;iFile<files->iNumInputs;iFile++) {
-    InitializeInput(&files->Infile[iFile]);
-    ReadVerbose(files,&options[OPT_VERBOSE],iVerbose,iFile);
-  }
 }
 
 int iAssignMassUnit(char cTmp[],int iVerbose,char cFile[],char cName[],int iLine) {
@@ -1048,9 +1041,16 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
   /* Initialize functions in the module struct */
   InitializeModule(*body,control,module);
 
-  // Read Verbosity level
-  // !! Note that this function also initializes inputs for the body files !!
+ /* Is iVerbose set in primary input? */
   ReadVerbose(files,&options[OPT_VERBOSE],&control->Io.iVerbose,0);
+
+  // XXX From ReadInitialOptions,iin this location
+  /* Now we can search through files for all options. First we scan the files for Verbosity */
+  /* We have to initialize other input files first */
+  for (iFile=1;iFile<files->iNumInputs;iFile++) {
+    InitializeInput(&files->Infile[iFile]);
+    ReadVerbose(files,options,&control->Io.iVerbose,iFile);
+  }
 
   /* Need units prior to any parameter read */
   control->Units = malloc(files->iNumInputs*sizeof(UNITS));
@@ -1067,6 +1067,15 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
        ReadModules is in module.c */
     ReadModules(*body,control,files,module,&options[OPT_MODULES],iFile);
   }
+
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    FinalizeModule(*body,control,module,iBody);
+  }
+  /* Check that selected modules are compatable */
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    VerifyModuleCompatability(*body,control,files,module,options,iBody);
+  }
+
 
   free(input.bLineOK);
 
@@ -2770,15 +2779,11 @@ void ReadOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module,OPTION
   /* Now that we know how many bodies there are, initialize more features */
   *update = malloc(control->Evolve.iNumBodies*sizeof(UPDATE));
 
-  /* Initialize module control */
-  InitializeControl(control,module);
+  // Assign MODULE pointers for each selected module
+  AddModules(*body,control,module);
 
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    FinalizeModule(*body,control,module,iBody);
-    VerifyModuleCompatability(*body,control,files,module,options,iBody);
-    // Assign MODULE pointers for each selected module
-    AddModules(*body,control,module,iBody);
-  }
+    /* Initialize module control */
+  InitializeControl(control,module);
 
   /* Now read in remaining options */
   ReadOptionsGeneral(*body,control,files,module,options,output,system,fnRead);

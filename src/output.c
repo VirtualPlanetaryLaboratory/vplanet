@@ -146,8 +146,8 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
  * K
  */
 
-/* Deprecated!
 void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  // This is calculated during PropsAux
   *dTmp = body[iBody].dK2Man;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -155,16 +155,16 @@ void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
   } else { }
 }
 
-void WriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteImK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = body[iBody].dImk2Man;
+  *dTmp = body[iBody].dImK2Man;
   strcpy(cUnit,"");
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else { }
 }
-*/
+
 void WriteKecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = body[iBody].dKecc;
@@ -618,6 +618,26 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
   }
 }
 
+void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  if (body[iBody].bThermint && !body[iBody].bOcean && !body[iBody].bEnv) {
+    *dTmp = body[iBody].dTidalQMan;
+  } else {
+    *dTmp = body[iBody].dTidalQ;
+  }
+
+  strcpy(cUnit,"");
+}
+
+
+void WriteTidalQMantle(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Updated every timestep by PropsAuxEqtideThermint
+  *dTmp = body[iBody].dTidalQMan;
+
+  strcpy(cUnit,"");
+}
+
 void WriteTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   *dTmp = control->Evolve.iDir*control->Evolve.dTime;
@@ -736,23 +756,9 @@ void WriteTotOrbEnergy(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *sys
   }
 }
 
-void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-
-  // change to if eq
-  // Just thermint, not eqtide
-  if(body[iBody].bThermint)
-    *dTmp = fdDynamicViscosity(body,iBody)*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
-  else
-    *dTmp = body[iBody].dK2/body[iBody].dImK2;
-
-
-  strcpy(cUnit,"");
-}
-
 void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  // Must call AssignTidalProperties in case bThermint set
-  AssignTidalProperties(body,&control->Evolve,iBody);
+  // ImK2 should always be up to date
   *dTmp = body[iBody].dImK2;
 
   strcpy(cUnit,"");
@@ -760,10 +766,11 @@ void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
 void WriteK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  // Must call AssignTidalProperties in case bThermint set
-  AssignTidalProperties(body,&control->Evolve,iBody);
-  *dTmp = body[iBody].dK2;
-
+  if (body[iBody].bThermint && !body[iBody].bOcean && !body[iBody].bEnv) {
+    *dTmp = fdK2Man(body,iBody);
+  } else {
+    *dTmp = body[iBody].dK2;
+  }
   strcpy(cUnit,"");
 }
 
@@ -892,16 +899,15 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
    */
 
   /* Imk2Man */
-  /* Deprecated!
   sprintf(output[OUT_IMK2MAN].cName,"Imk2Man");
   sprintf(output[OUT_IMK2MAN].cDescr,"Imaginary Love Number k2 Mantle");
   sprintf(output[OUT_IMK2MAN].cNeg,"nd");
   output[OUT_IMK2MAN].bNeg = 1;
   output[OUT_IMK2MAN].dNeg = 1;
   output[OUT_IMK2MAN].iNum = 1;
-  output[OUT_IMK2MAN].iModuleBit = THERMINT + EQTIDE; // XXX Is EQTIDE right?
-  fnWrite[OUT_IMK2MAN] = &WriteImk2Man;
-*/
+  output[OUT_IMK2MAN].iModuleBit = THERMINT + EQTIDE;
+  fnWrite[OUT_IMK2MAN] = &WriteImK2Man;
+
 
   sprintf(output[OUT_INC].cName,"Inc");
   sprintf(output[OUT_INC].cDescr,"Body's Inclination");
@@ -926,7 +932,6 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
    */
 
   /* K2Man */
-/* Deprecated!
   sprintf(output[OUT_K2MAN].cName,"K2Man");
   sprintf(output[OUT_K2MAN].cDescr,"Real Love Number k2 Mantle");
   sprintf(output[OUT_K2MAN].cNeg,"nd");
@@ -935,7 +940,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_K2MAN].iNum = 1;
   output[OUT_K2MAN].iModuleBit = THERMINT + EQTIDE;
   fnWrite[OUT_K2MAN] = &WriteK2Man;
-*/
+
 
   sprintf(output[OUT_KECC].cName,"KEcc");
   sprintf(output[OUT_KECC].cDescr,"Poincare's k (=e*cos(varpi)");
@@ -1271,6 +1276,13 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALQ].iNum = 1;
   output[OUT_TIDALQ].iModuleBit = EQTIDE + THERMINT;
   fnWrite[OUT_TIDALQ] = WriteTidalQ;
+
+  sprintf(output[OUT_TIDALQMAN].cName,"TidalQMantle");
+  sprintf(output[OUT_TIDALQMAN].cDescr,"Mantle's Tidal Q");
+  output[OUT_TIDALQMAN].bNeg = 0;
+  output[OUT_TIDALQMAN].iNum = 1;
+  output[OUT_TIDALQMAN].iModuleBit = EQTIDE + THERMINT;
+  fnWrite[OUT_TIDALQMAN] = WriteTidalQMantle;
 
   sprintf(output[OUT_XOBL].cName,"Xobl");
   sprintf(output[OUT_XOBL].cDescr,"Body's sin(obl)*cos(pA)");

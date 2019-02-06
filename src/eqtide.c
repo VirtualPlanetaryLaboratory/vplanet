@@ -3761,11 +3761,7 @@ double fdDB15DKeccDt(BODY *body,SYSTEM *system,int *iaBody) {
 void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,int iBody,int iModule) {
   int iPert;
 
-  /*
-  bThermint must be set
-  Q,k_2,ImK2, Man
-  */
-
+  // XXX Do these checks need to be here? DB15 no longer requires ThermInt to be set
   if (body[iBody].bThermint) { // Tidal properties calculate from mantle material
 
     if (options[OPT_TIDALQ].iLine[iBody+1] != -1) {
@@ -3800,28 +3796,9 @@ void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT
         LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
       }
     }
-
-    // XXX Must add functionality for CTL
-    // Since ThermInt is not called, we can now set the mantle properties
-    // XXX Must add checks for K2, K2Man, K2Ocean, K2Atm
-    body[iBody].dK2Man = body[iBody].dK2;
-    body[iBody].dImK2Man = body[iBody].dK2/body[iBody].dTidalQ;
-
   }
 
   /* Everything OK, assign Updates */
-
-  for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
-    /* Obliquity */
-    // Xobl
-    InitializeXoblEqtide(body,update,iBody,iPert);
-    // Yobl
-    InitializeYoblEqtide(body,update,iBody,iPert);
-    // Zobl
-    InitializeZoblEqtide(body,update,iBody,iPert);
-    /* Rotation Rate */
-    InitializeRotEqtide(body,update,iBody,iPert);
-  }
 
   /* Is this the secondary body, and hence we assign da/dt and de/dt? */
   if (!bPrimary(body,iBody)) {

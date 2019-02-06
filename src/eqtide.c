@@ -3824,6 +3824,19 @@ void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT
 
   /* Everything OK, assign Updates */
 
+  for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
+
+    /* Obliquity */
+    // Xobl
+    InitializeXoblEqtide(body,update,iBody,iPert);
+    // Yobl
+    InitializeYoblEqtide(body,update,iBody,iPert);
+    // Zobl
+    InitializeZoblEqtide(body,update,iBody,iPert);
+    /* Rotation Rate */
+    InitializeRotEqtide(body,update,iBody,iPert);
+  }
+
   /* Is this the secondary body, and hence we assign da/dt and de/dt? */
   if (!bPrimary(body,iBody)) {
     // Initialize Orbital variable for the matrix

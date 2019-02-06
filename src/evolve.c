@@ -93,6 +93,8 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
         for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
 
     // The parameter does not require a derivative, but is calculated explicitly as a function of age.
+    printf("%d %d\n",iBody,iVar);
+    fflush(stdout);
   	if (update[iBody].iaType[iVar][0] == 0) {
   	  dVarNow = *update[iBody].pdVar[iVar];
   	  for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
@@ -122,7 +124,7 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
        case, since they are derived quantities, they should NOT participate in
        timestep selection - dflemin3
      */
-    else if(update[iBody].iaType[iVar][0] == 5) {
+    else if (update[iBody].iaType[iVar][0] == 5) {
       continue;
     }
 

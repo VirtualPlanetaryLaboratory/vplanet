@@ -51,7 +51,7 @@ void fvBodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dViscMMan=src[iBody].dViscMMan;
   dest[iBody].dBLUMan=src[iBody].dBLUMan;
   dest[iBody].dBLLMan=src[iBody].dBLLMan;
-  dest[iBody].dShmodUMan=src[iBody].dShmodUMan;
+  // dShmodUMan in body.c:BodyCopy to avoid floating point exceptions with other modules
   dest[iBody].dTsolUMan=src[iBody].dTsolUMan;
   dest[iBody].dTsolLMan=src[iBody].dTsolLMan;
   dest[iBody].dTliqUMan=src[iBody].dTliqUMan;
@@ -106,7 +106,7 @@ void fvBodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dMagPauseRad=src[iBody].dMagPauseRad;
   dest[iBody].dActViscMan=src[iBody].dActViscMan;
   dest[iBody].dShModRef=src[iBody].dShModRef;
-  dest[iBody].dStiffness=src[iBody].dStiffness;
+  // dStiffness in body.c:BodyCopy to avoid floating point exceptions
   dest[iBody].dDLind=src[iBody].dDLind;
   dest[iBody].dDAdCore=src[iBody].dDAdCore;
   dest[iBody].dAdJumpM2UM=src[iBody].dAdJumpM2UM;

@@ -3709,9 +3709,21 @@ void fvWritePowerEqtideDB15(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 
 */
 double fdPowerEqtideDB15(BODY *body,int iBody) {
-    //double meanmotion=body[iBody].dMeanMotion*(YEARSEC); //conv to s^-1
-    return (21./2)*body[iBody].dImK2*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*
-      pow(body[iBody].dTidalRadius,5.)*body[iBody].dMeanMotion*body[iBody].dEccSq;
+  int iOrbiter,iPert,iIndex;
+  double dPower=0;
+
+  for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
+    if (iBody == 0)
+      iOrbiter = body[iBody].iaTidePerts[iPert];
+    else
+      iOrbiter = iBody;
+    iIndex = body[iBody].iaTidePerts[iPert];
+
+    dPower += 10.5*body[iBody].dImK2*pow(BIGG,1.5)*pow(body[iIndex].dMass,2.5)*
+      pow(body[iBody].dRadius,5)*body[iOrbiter].dEccSq*pow(body[iOrbiter].dSemi,-7.5);
+  }
+
+  return dPower;
 }
 
 double fdDB15DsemiDt(BODY *body,SYSTEM *system,int *iaBody) {

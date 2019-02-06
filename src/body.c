@@ -465,6 +465,10 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dK2Man = src[iBody].dK2Man;
     dest[iBody].dTidalQMan = src[iBody].dTidalQMan;
     dest[iBody].dImK2Man = src[iBody].dImK2Man;
+    // These copies are needed to avoid floating point exceptions in
+    //   (eqtide + !thermint) bodies
+    dest[iBody].dShmodUMan=src[iBody].dShmodUMan;
+    dest[iBody].dStiffness=src[iBody].dStiffness;
 
     if (iBody > 0) {
       dest[iBody].dHecc = src[iBody].dHecc;

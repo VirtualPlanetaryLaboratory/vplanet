@@ -638,6 +638,9 @@ void VerifyImK2Mantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       body[iBody].dImK2Man = fdImK2Man(body,iBody);
     } else {
       body[iBody].dImK2Man = body[iBody].dK2Man/body[iBody].dTidalQMan;
+      body[iBody].dShmodUMan = 1; // Set to avoid division by zero in log file
+      body[iBody].dDynamViscos = 1; // Also used in log file
+      body[iBody].dStiffness = 1; // Ditto
     }
   } else {
     body[iBody].dImK2Man = 0;

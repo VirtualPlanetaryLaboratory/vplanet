@@ -719,12 +719,13 @@ void VerifyModuleMultiRadheatThermint(BODY *body,UPDATE *update,CONTROL *control
 void VerifyModuleMultiEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   int iEqtide;
 
+  /* I think all this is deprecated
   // Eqtide, not thermint
   if (body[iBody].bEqtide) {
     if (!body[iBody].bThermint) {
-      /* Eqtide called, but not thermint. Make sure that bOceanTides=0 and
+       Eqtide called, but not thermint. Make sure that bOceanTides=0 and
 	       check if dTidalQOcean and dK2Ocean are set. These should only be set if THERMINT
-	       selected. */
+	       selected.
       if (body[iBody].bOceanTides) {
 	      if (control->Io.iVerbose >= VERBINPUT)
 	        fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_OCEANTIDES].cName);
@@ -745,16 +746,17 @@ void VerifyModuleMultiEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,
       body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
 
       // No ocean contribution if not using thermint (still assign a default value)
+      // XXX No! Use input values David
       body[iBody].dImK2Ocean = 1.0/30.0;
       body[iBody].dK2Ocean = 1.0;
       body[iBody].dTidalQOcean = 30.0;
 
-      /* This should now be deprecated
+      This should now be deprecated
       // Now set the "Man" functions as the WriteTidalQ uses them
       // This ensures that the write function works
       body[iBody].dImk2Man = body[iBody].dImK2;
       body[iBody].dK2Man = body[iBody].dK2;
-*/
+
     } else { // Thermint and Eqtide called
 
       // If dTidalQ or K2 set, ignore/warn user as thermint computes these
@@ -767,12 +769,12 @@ void VerifyModuleMultiEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,
           fprintf(stderr,"WARNING: %s set, but module THERMINT computes it.  Inputted value ignored.\n",options[OPT_K2].cName);
       }
 
-      /* When Thermint and Eqtide are called together, care must be taken as
+       When Thermint and Eqtide are called together, care must be taken as
          Im(k_2) must be known in order to calculate TidalZ. As the individual
          module PropsAux are called prior to PropsAuxMulti, we must call the
          "PropsAuxEqtide" function after Im(k_2) is called. Thus, we replace
          "PropsAuxEqtide" with PropsAuxNULL and call "PropsAuxEqtide" in
-         PropsAuxEqtideThermint. */
+         PropsAuxEqtideThermint.
 
       // If using ocean tides...
       //Convert Q_ocean -> Im(k2)_ocean
@@ -809,19 +811,12 @@ void VerifyModuleMultiEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,
 
       iEqtide = fiGetModuleIntEqtide(module,iBody);
       control->fnPropsAux[iBody][iEqtide] = &PropsAuxNULL;
+      */
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
+/*
     }
   }
-
-  /*
-  else if (body[iBody].bThermint) { // eqtide not called, but thermint is
-    //exit(1);
-
-    printf("%d\n",iBody);
-    fflush(stdout);
-    body[iBody].dImk2Man = fdImk2Man(body,iBody);
-  }
-  */
+*/
 }
 
 void VerifyModuleMultiEqtideDistOrb(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {

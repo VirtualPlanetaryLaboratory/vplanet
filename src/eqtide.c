@@ -3006,33 +3006,29 @@ void PropsAuxEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   }
 }
 
-void PropsAuxOrbiterCPL(BODY *body,UPDATE *update,int iBody) {
+void PropsAuxOrbiterGeneral(BODY *body,int iBody) {
   body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
   body[iBody].dEcc = sqrt(body[iBody].dEccSq);
   // LongP is needed for Hecc and Kecc calculations
   body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
-  // PrecA is needed for Xobl,Yobl,Zobl calculations
+}
 
+
+void PropsAuxOrbiterCPL(BODY *body,UPDATE *update,int iBody) {
+
+  PropsAuxOrbiterGeneral(body,iBody);
   body[iBody].dDeccDtEqtide = fdCPLDeccDt(body,update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccEqtide]);
 }
 
 void PropsAuxOrbiterCTL(BODY *body,UPDATE *update,int iBody) {
-  body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
-  body[iBody].dEcc = sqrt(body[iBody].dEccSq);
-  // LongP is needed for Hecc and Kecc calculations
-  body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
-  // PrecA is needed for Xobl,Yobl,Zobl calculations
 
+  PropsAuxOrbiterGeneral(body,iBody);
   body[iBody].dDeccDtEqtide = fdCTLDeccDt(body,update,update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccEqtide]);
 }
 
 void PropsAuxOrbiterDB15(BODY *body,UPDATE *update,int iBody) {
-  body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
-  body[iBody].dEcc = sqrt(body[iBody].dEccSq);
-  // LongP is needed for Hecc and Kecc calculations
-  body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
-  // PrecA is needed for Xobl,Yobl,Zobl calculations
 
+  PropsAuxOrbiterGeneral(body,iBody);
   body[iBody].dDeccDtEqtide = fdDB15DeccDt(body,update,update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccEqtide]);
 }
 
@@ -3117,7 +3113,10 @@ void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 }
 
 void PropsAuxDB15(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  // Nothing here -- all non-orbit properties are constant
+
+  if (iBody > 0) {
+    PropsAuxOrbiterDB15(body,update,iBody);
+  }
 }
 
 /*! Lost energy due to tidal heating in the CPL model. */
@@ -3775,11 +3774,11 @@ double fdDB15DeccDt(BODY *body,UPDATE *update,int *iaBody) {
 /* Hecc and Kecc calculated by chain rule, e.g. dh/dt = de/dt * dh/de. */
 
 double fdDB15DHeccDt(BODY *body,SYSTEM *system,int *iaBody) {
-  return body[iaBody[0]].dDeccDtEqtide*cos(body[iaBody[0]].dLongP);
+  return body[iaBody[0]].dDeccDtEqtide*sin(body[iaBody[0]].dLongP);
 }
 
 double fdDB15DKeccDt(BODY *body,SYSTEM *system,int *iaBody) {
-  return body[iaBody[0]].dDeccDtEqtide*sin(body[iaBody[0]].dLongP);
+  return body[iaBody[0]].dDeccDtEqtide*cos(body[iaBody[0]].dLongP);
 }
 
 void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,int iBody,int iModule) {

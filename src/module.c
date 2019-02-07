@@ -1106,6 +1106,8 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,UPDATE *update,CONTROL *co
   // Note: VerifyEqtideThermint handles all things oceans
 
   // dImK2Env has no ReadOption, so we must initialize it here.
+
+  if (body[iBody].bAtmEsc && body[iBody].bEqtide && body[iBody].bThermint) {
   body[iBody].dImK2Env = 1;
 
   if(body[iBody].bEqtide)
@@ -1180,6 +1182,7 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,UPDATE *update,CONTROL *co
   // Call PropsAuxAtmescThermint to initialize interior Properties
   if (iBody >0) {
     fvPropsAuxThermint(body,&control->Evolve,update,iBody);
+  }
   }
 }
 

@@ -3011,6 +3011,8 @@ void PropsAuxOrbiterGeneral(BODY *body,int iBody) {
   body[iBody].dEcc = sqrt(body[iBody].dEccSq);
   // LongP is needed for Hecc and Kecc calculations
   body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
+  printf("%e\n",body[iBody].dHecc);
+  printf("%e\n",body[iBody].dKecc);
 }
 
 

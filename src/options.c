@@ -1012,6 +1012,9 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
 
   control->Evolve.iNumBodies=iNumIndices;
   files->Outfile = malloc(iNumIndices*sizeof(OUTFILE));
+  for (iIndex=0;iIndex<iNumIndices;iIndex++) {
+     memset(files->Outfile[iIndex].cOut,'\0',NAMELEN);
+  }
 
   UpdateFoundOptionMulti(&files->Infile[0],options,lTmp,iNumLines,0);
 

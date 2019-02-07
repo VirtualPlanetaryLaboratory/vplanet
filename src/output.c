@@ -1684,8 +1684,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
             for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++)
               dCol[iCol+iSubOut+iExtra]=dTmp[iSubOut];
             iExtra += (output[iOut].iNum-1);
-	          free(dTmp);
-	          dTmp = NULL;
+	           free(dTmp);
+	           dTmp = NULL;
           }
         }
       }
@@ -1695,8 +1695,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
     if (files->Outfile[iBody].iNumCols > 0) {
       fp = fopen(files->Outfile[iBody].cOut,"a");
       for (iCol=0;iCol<files->Outfile[iBody].iNumCols+iExtra;iCol++) {
-	       fprintd(fp,dCol[iCol],control->Io.iSciNot,control->Io.iDigits);
-	       fprintf(fp," ");
+	        fprintd(fp,dCol[iCol],control->Io.iSciNot,control->Io.iDigits);
+	        fprintf(fp," ");
       }
       fprintf(fp,"\n");
       fclose(fp);

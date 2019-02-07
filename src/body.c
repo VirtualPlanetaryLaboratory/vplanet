@@ -595,14 +595,12 @@ double fdTidalQMan(BODY *body,int iBody) {
   return body[iBody].dDynamViscos*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
 }
 
-
 double fdImK2ManThermint(BODY *body,int iBody) {
   double dDenom2;
 
   dDenom2 = pow(1.5*body[iBody].dTidalQMan/body[iBody].dK2Man,2.);
   return -(57./4)*body[iBody].dDynamViscos*body[iBody].dMeanMotion/((body[iBody].dStiffness)*(1.0+dDenom2));
 }
-
 
 /**
   Function compute upper mantle imaginary component of k2 Love number

@@ -466,6 +466,11 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->iaSpiNBody[iBody] = iModule;
     module->iaModule[iBody][iModule++] = SPINBODY;
   }
+  if (body[iBody].bMagmOc) {
+    AddModuleMagmOc(module,iBody,iModule);
+    module->iaMagmOc[iBody] = iModule;
+    module->iaModule[iBody][iModule++] = MAGMOC;
+  }
   if (body[iBody].bEqtide && body[iBody].bStellar) {
     module->fnAssignDerivatives[iBody][iModule] = &AssignEqtideStellarDerivatives;
     module->fnNullDerivatives[iBody][iModule]   = &NullEqtideStellarDerivatives;

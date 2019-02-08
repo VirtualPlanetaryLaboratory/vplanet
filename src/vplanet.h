@@ -1010,7 +1010,8 @@ struct BODY {
 	double dNetFluxAtmo;      /**< Net atmospheric flux OLR-ASR [W/m^2] */
 	double dAlbedo;						/**< Albedo of the planet */
 	/* Other variables Volatile model */
-	double dPressWaterAtm;    /**< Water pressure in atmosphere [N/m^2] */
+	double dPressWaterAtm;    /**< Water pressure in atmosphere [Pa] */
+	double dPressOxygenAtm;   /**< Oxygen pressure in atmosphere [Pa] */
 	double dMassMagmOcLiq; 		/**< liquid mass of magma ocean [kg] */
 	double dMassMagmOcCry; 		/**< crystal mass of magma ocean [kg] */
 	double dWaterFracMelt;    /**< Mass fraction of water in the magma ocean */

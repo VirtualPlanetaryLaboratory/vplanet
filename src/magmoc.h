@@ -57,10 +57,6 @@
 #define ATMESCBDIFF               4.8e19 * pow(THERMT, 0.75) // Binary diffusion coefficient of H through O (/m/s)
 #define ATMESCQOH                 16. // Atomic mass ratio oxygen/hydrogen
 
-
-void InitializeOptionsMagmOc(OPTIONS*,fnReadOption[]);
-void AddModuleMagmOc(MODULE*,int,int);
-
 /* Options Info */
 
 #define OPTSTARTMAGMOC            2300 /* Start of Magmoc options */
@@ -71,17 +67,23 @@ void AddModuleMagmOc(MODULE*,int,int);
 #define OPT_SURFTEMP              2312
 #define OPT_MANMELTDENSITY        2313
 
+void AddModuleMagmOc(MODULE*,int,int);
+void BodyCopyMagmOc(BODY*,BODY*,int,int,int);
 
 /* Options Functions */
 void HelpOptionsMagmOc(OPTIONS*);
+void InitializeOptionsMagmOc(OPTIONS*,fnReadOption[]);
 void ReadFeO(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadWaterMassAtm(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadSurfTemp(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadManMeltDensity(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadOptionsMagmOc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 /* Halt Functions */
 #define MAGMOCHALTSYSEND       5
 #define MAGMOCHALTBODYEND      5
+
+void CountHaltsMagmOc(HALT*,int*);
 
 /* Verify Functions */
 void VerifyMagmOc(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
@@ -93,8 +95,13 @@ void VerifyRotationMagmOc(BODY*,CONTROL*,OPTIONS*,char[],int);
 
 /* Update functions */
 void InitializeUpdateMagmOc(BODY*,UPDATE*,int);
-void FinalizeUpdateEccMagmOc(BODY*,UPDATE*,int*,int,int,int);
-
+void FinalizeUpdatePotTemp(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateSurfTemp(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateSolidRadius(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateWaterMassMOAtm(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateWaterMassSol(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateOxygenMassMOAtm(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateOxygenMassSol(BODY*,UPDATE*,int*,int,int,int);
 /* Output Functions */
 
 /* MagmOc 1100 - 1199 */
@@ -109,14 +116,23 @@ void FinalizeUpdateEccMagmOc(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_SOLIDRADIUS        2315
 #define OUT_OXYGENMASSMOATM    2316
 #define OUT_OXYGENMASSSOL      2317
+#define OUT_PRESSWATERATM      2318
+#define OUT_PRESSOXYGENATM     2319
 
 void HelpOutputMagmOc(OUTPUT*);
 void InitializeOutputMagmOc(OUTPUT*,fnWriteOutput[]);
 void InitializeOutputFunctionMagmOc(OUTPUT*,int,int);
 void FinalizeOutputFunctionMagmOc(OUTPUT*,int,int);
 
-// void WriteFe2O3(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-
+void WritePotTemp(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteSurfTemp(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteSolidRadius(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteWaterMassMOAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteWaterMassSol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteOxygenMassMOAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteOxygenMassSol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WritePressWaterAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WritePressOxygenAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsMagmOc(CONTROL*,FILE*);

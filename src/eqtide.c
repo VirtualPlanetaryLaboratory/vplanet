@@ -836,6 +836,7 @@ void VerifyRotationEqtideWarning(char cName1[],char cName2[],char cFile[],int iL
 
 void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *options,int iBody) {
 
+/* XXX I think this old way doesn't depend on tidal model
   if (control->Evolve.iEqtideModel == CPL) {
     update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 5;
     update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
@@ -859,6 +860,15 @@ void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *op
     fprintf(stderr,"ERROR: Must choose CPL or CTL tidal model!\n");
     exit(1);
   }
+*/
+
+  update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 5;
+  update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
+  update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide][0] = iBody;
+
+  update[iBody].pdLostEngEqtide = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngEqtide];
+
 }
 
 void VerifyRotationEqtide(BODY *body,CONTROL *control, UPDATE *update, OPTIONS *options,char cFile[],int iBody) {
@@ -3011,9 +3021,11 @@ void PropsAuxOrbiterGeneral(BODY *body,int iBody) {
   body[iBody].dEcc = sqrt(body[iBody].dEccSq);
   // LongP is needed for Hecc and Kecc calculations
   body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
+  /*
   printf("%e\n",body[iBody].dHecc);
   printf("%e\n",body[iBody].dKecc);
   fflush(stdout);
+  */
 }
 
 

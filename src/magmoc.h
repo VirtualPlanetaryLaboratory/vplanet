@@ -83,6 +83,7 @@ void ReadOptionsMagmOc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int
 #define MAGMOCHALTSYSEND       5
 #define MAGMOCHALTBODYEND      5
 
+int fbHaltMantleSolidifed(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 void CountHaltsMagmOc(HALT*,int*);
 
 /* Verify Functions */

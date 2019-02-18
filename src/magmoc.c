@@ -710,14 +710,27 @@ void InitializeUpdateMagmOc(BODY *body,UPDATE *update,int iBody) {
 
 /***************** MAGMOC Halts *****************/
 
-
+/*
+ * Checks if mantle soldified
+ */
+int fbHaltMantleSolidifed(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  if (body[iBody].dRadius <= body[iBody].dSolidRadius) {
+    if (io->iVerbose >= VERBPROG) {
+      printf("HALT: %s's mantle completely solidified. \n",body[iBody].cName);
+    }
+    return 1;
+  }
+  return 0;
+}
 
 void CountHaltsMagmOc(HALT *halt,int *iNumHalts) {
-
+  if (halt->bMantleSolidifed)
+    (*iNumHalts)++;
 }
 
 void VerifyHaltMagmOc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
-
+  if (control->Halt[iBody].bMantleSolidifed)
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltMantleSolidifed;
 }
 
 /************* MAGMOC Outputs ******************/

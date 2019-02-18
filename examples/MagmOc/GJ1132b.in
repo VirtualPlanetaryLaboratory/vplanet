@@ -1,0 +1,21 @@
+# Planet a parameters
+sName         GJ1132b                     # Body's name
+saModules     magmoc                      # Modules to apply, exact spelling required
+cColor        13aed5
+
+# Physical Properties
+dMass         -1.62                       # Mass, negative -> Earth masses
+dRadius       -1.15                       # Radius, negative -> Earth radii
+
+# MAGMOC Properties
+dFeO		0.08
+dWaterMassAtm	-100
+dSurfTemp	4000
+dManMeltDensity	4000
+
+# Orbital Properties
+dSemi         -0.0154                     # Semi-major axis, negative -> AU
+dEcc          0.0                         # Eccentricity
+
+# Output
+saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -PressWaterAtm -PressOxygenAtm

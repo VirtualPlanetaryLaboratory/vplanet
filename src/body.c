@@ -405,19 +405,19 @@ double fdMassToRad(double dMass,int iRelation) {
 // Assign mass from radius and published relationship
 double fdRadToMass(double dMass,int iRelation) {
 
-  if (iRelation == REIDHAWLEY)
+  if (iRelation == REIDHAWLEY) {
     return fdRadToMass_ReidHawley(dMass);
-  else if (iRelation == GORDASVECH99)
+  } else if (iRelation == GORDASVECH99) {
     return fdRadToMass_GordaSvech99(dMass);
-  else if (iRelation == BAYLESSOROSZ06)
+  } else if (iRelation == BAYLESSOROSZ06) {
     return fdRadToMass_BaylessOrosz06(dMass);
-  else if (iRelation == SOTIN07)
+  } else if (iRelation == SOTIN07) {
     return fdRadToMass_Sotin07(dMass);
-
-  /* Need to add more! XXX */
-
-  /* Whoops! */
-  return 1./0;
+  } else {
+    /* Whoops! */
+    fprintf(stderr,"ERROR: Unknown mass-radius relation.\n");
+    exit(EXIT_UNITS);
+  }
 }
 
 /**

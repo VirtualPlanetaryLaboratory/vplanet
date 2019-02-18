@@ -199,7 +199,7 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   body[iBody].dPotTemp         = 4000; //body[iBody].dSurfTemp; // initial potential temp = initial surface temp
   body[iBody].dSurfTemp        = 4000;
   body[iBody].dSolidRadius     = body[iBody].dRadius * RADCOREEARTH / REARTH; // initial solid. rad. = core radius
-  body[iBody].dWaterMassMOAtm  = 100*TOMASS; // body[iBody].dWaterMassAtm; // initial water mass in MO&Atm is equal to inital Water mass in atmosphere
+  body[iBody].dWaterMassMOAtm  = 1*TOMASS; // body[iBody].dWaterMassAtm; // initial water mass in MO&Atm is equal to inital Water mass in atmosphere
   body[iBody].dWaterMassSol    = 0; // initial water mass in solid = 0
   body[iBody].dOxygenMassMOAtm = 0; // initial oxygen mass in MO&Atm = 0
   body[iBody].dOxygenMassSol   = 0; // initial oxygen mass in solid = 0
@@ -338,7 +338,14 @@ double fndOxygenEquiManAtm(BODY *body, double dDelFrac, int iBody) {
  * end of this equation
  */
 void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  // define minimum of two variables
+
+  /*
+   * No negative masses!
+   */
+  if (body[iBody].dWaterMassMOAtm  < 0) {body[iBody].dWaterMassMOAtm  = 0;}
+  if (body[iBody].dWaterMassSol    < 0) {body[iBody].dWaterMassSol    = 0;}
+  if (body[iBody].dOxygenMassMOAtm < 0) {body[iBody].dOxygenMassMOAtm = 0;}
+  if (body[iBody].dOxygenMassSol   < 0) {body[iBody].dOxygenMassSol   = 0;}
 
   /*
    * Calculation of melt fraction and kinematic viscosity
@@ -483,8 +490,13 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
    * Function atmesc() in atmesc_function_rk.py
    * Later replaced by module ATMESC!
    */
-  body[iBody].dEscRateHydro = 1e-9;   // hard coded. first 1e-7
-  body[iBody].dEscRateOxy   = 1e-10;   // first 1e-6
+  if (body[iBody].dWaterMassMOAtm >= 0) {
+    body[iBody].dEscRateHydro = 1e-10;   // hard coded. first 1e-7
+    body[iBody].dEscRateOxy   = 1e-11;   // first 1e-6
+  } else {
+    body[iBody].dEscRateHydro = 0;   // hard coded. first 1e-7
+    body[iBody].dEscRateOxy   = 0;   // first 1e-6
+  }
   // End of atmesc()
 
   /*
@@ -538,9 +550,8 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
   }
 
-  if (body[iBody].dOxygenMassAtm < 0) {
-    body[iBody].dOxygenMassAtm = 0;
-  }
+  if (body[iBody].dOxygenMassAtm < 0) {body[iBody].dOxygenMassAtm = 0;}
+
 
   body[iBody].dPressOxygenAtm = body[iBody].dOxygenMassAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
   // END of oxygen_mo()
@@ -714,7 +725,7 @@ void InitializeUpdateMagmOc(BODY *body,UPDATE *update,int iBody) {
  * Checks if mantle soldified
  */
 int fbHaltMantleSolidifed(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-  if (body[iBody].dRadius <= body[iBody].dSolidRadius) {
+  if (body[iBody].bManSolid) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's mantle completely solidified. \n",body[iBody].cName);
     }
@@ -1001,10 +1012,10 @@ void AddModuleMagmOc(MODULE *module,int iBody,int iModule) {
 /* real physic is happening here: calculation of the derivatives of the primary variables */
 double fdDPotTemp(BODY *body, SYSTEM *system, int *iaBody) {
   double dRadioPart,dManFluxPart,dRsolPart,dFusionPart;
-  dRadioPart   = body[iaBody[0]].dRadioHeat * (pow(body[iaBody[0]].dRadius,3) - body[iaBody[0]].dCoreRadius)/3;
-  dManFluxPart = pow(body[iaBody[0]].dRadius,2) * body[iaBody[0]].dManHeatFlux / body[iaBody[0]].dManMeltDensity;
-  dRsolPart    = SILICATEHEATCAP * (pow(body[iaBody[0]].dRadius,3) - pow(body[iaBody[0]].dSolidRadius,3))/3;
-  dFusionPart  = HEATFUSIONSILICATE * pow(body[iaBody[0]].dSolidRadius,2) * body[iaBody[0]].dFactorDerivative;
+  dRadioPart   = body[iaBody[0]].dRadioHeat * (pow(body[iaBody[0]].dRadius,3) - pow(body[iaBody[0]].dCoreRadius,3));
+  dManFluxPart = 3 * pow(body[iaBody[0]].dRadius,2) * body[iaBody[0]].dManHeatFlux / body[iaBody[0]].dManMeltDensity;
+  dRsolPart    = SILICATEHEATCAP * (pow(body[iaBody[0]].dRadius,3) - pow(body[iaBody[0]].dSolidRadiusLocal,3));
+  dFusionPart  = 3 * HEATFUSIONSILICATE * pow(body[iaBody[0]].dSolidRadiusLocal,2) * body[iaBody[0]].dFactorDerivative;
   return (dRadioPart - dManFluxPart)/(dRsolPart - dFusionPart);
 }
 
@@ -1026,6 +1037,9 @@ double fdDSolidRadius(BODY *body, SYSTEM *system, int *iaBody) {
   } else {
     dDerivative = body[iaBody[0]].dFactorDerivative * fdDPotTemp(body,system,iaBody);
   }
+  if (dDerivative < 0) {
+    return 0;
+  }
   return dDerivative;
 }
 
@@ -1034,6 +1048,9 @@ double fdDWaterMassSol(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdDWaterMassMOAtm(BODY *body, SYSTEM *system, int *iaBody) {
+  if (body[iaBody[0]].dWaterMassMOAtm <= 0) {
+    return 0;
+  }
   return -fdDWaterMassSol(body,system,iaBody) - 4*PI*pow(body[iaBody[0]].dRadius,2)*body[iaBody[0]].dEscRateHydro*MOLWEIGHTWATER/(2*MOLWEIGHTHYDROGEN);
 }
 

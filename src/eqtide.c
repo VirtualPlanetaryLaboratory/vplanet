@@ -3259,9 +3259,8 @@ double fdCPLTidePower(BODY *body,int iBody) {
     // XXX RB: Does this work with DF's changes to da/dt with the synchronous case?
     dOrbPow += -body[iBody].dTidalZ[iIndex]/8 * (4*body[iBody].iTidalEpsilon[iIndex][0] + body[iOrbiter].dEccSq*(-20*body[iBody].iTidalEpsilon[iIndex][0] + 147./2*body[iBody].iTidalEpsilon[iIndex][1] + 0.5*body[iBody].iTidalEpsilon[iIndex][2] - 3*body[iBody].iTidalEpsilon[iIndex][5]) - 4*sin(body[iBody].dObliquity)*sin(body[iBody].dObliquity)*(body[iBody].iTidalEpsilon[iIndex][0] - body[iBody].iTidalEpsilon[iIndex][8]));
 
-    /* Removing rotational power to check for consistency with Peter's IDL code
     dRotPow += body[iBody].dTidalZ[iIndex]*body[iBody].dRotRate/(8*body[iOrbiter].dMeanMotion) * (4*body[iBody].iTidalEpsilon[iIndex][0] + body[iOrbiter].dEccSq*(-20*body[iBody].iTidalEpsilon[iIndex][0] + 49*body[iBody].iTidalEpsilon[iIndex][1] + body[iBody].iTidalEpsilon[iIndex][2]) + 2*sin(body[iBody].dObliquity)*sin(body[iBody].dObliquity)*(-2*body[iBody].iTidalEpsilon[iIndex][0] + body[iBody].iTidalEpsilon[iIndex][8] + body[iBody].iTidalEpsilon[iIndex][9]));
-    */
+
   }
 
   return dOrbPow + dRotPow;
@@ -3304,10 +3303,10 @@ void fiaCPLEpsilon(double dRotRate,double dMeanMotion,int *iEpsilon) {
 void fdCPLZ(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
 
   /* Note that this is different from Heller et al (2011) because
-     we now use Im(k_2) which equals k_2/Q. The value of Im(k_2) is set in
+     we now use Im(k_2) which equals -k_2/Q. The value of Im(k_2) is set in
      VerifyEqtideThermint in module.c
   */
-  body[iBody].dTidalZ[iPert] = 3.*body[iBody].dImK2*BIGG*BIGG*body[iPert].dMass*body[iPert].dMass*(body[iBody].dMass+body[iPert].dMass)*pow(body[iBody].dTidalRadius,5)/(pow(dSemi,9)*dMeanMotion);
+  body[iBody].dTidalZ[iPert] = -3.*body[iBody].dImK2*BIGG*BIGG*body[iPert].dMass*body[iPert].dMass*(body[iBody].dMass+body[iPert].dMass)*pow(body[iBody].dTidalRadius,5)/(pow(dSemi,9)*dMeanMotion);
 }
 
 /*
@@ -3386,7 +3385,7 @@ iaBody[0] = central body */
     return dSum;
   }
   // Secondary (orbiter) is tidally locked
-  else if(body[iB0].bTideLock && !body[iB1].bTideLock) {
+  else if (body[iB0].bTideLock && !body[iB1].bTideLock) {
     dSum = 0.0;
 
     // Contribution from orbiter
@@ -3398,7 +3397,7 @@ iaBody[0] = central body */
     return dSum;
   }
   // If primary and secondary are tidally locked
-  else if(body[iB0].bTideLock && body[iB1].bTideLock) {
+  else if (body[iB0].bTideLock && body[iB1].bTideLock) {
     dSum = 0.0;
 
     // Contribution from orbiter

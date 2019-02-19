@@ -776,6 +776,7 @@ void fnNullDerivatives(BODY *body,EVOLVE *evolve,MODULE *module,UPDATE *update,f
 
 void VerifyMantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody) {
 
+  // XXX This is broken, user should be able to set mantle properties w/o thermint
   if (body[iBody].bThermint) {
     body[iBody].bMantle = 1;
   } else {
@@ -866,9 +867,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     // Verify multi-module couplings
     VerifyModuleMulti(body,update,control,files,module,options,iBody,fnUpdate);
 
-    // XXX I don't think this works for non-binary interactions
-    // for (iModule=0;iModule<module->iNumManageDerivs[iBody];iModule++) {
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
+   for (iModule=0;iModule<module->iNumManageDerivs[iBody];iModule++) {
       module->fnAssignDerivatives[iBody][iModule](body,&(control->Evolve),update,*fnUpdate,iBody);
     }
 
@@ -881,7 +880,9 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
 
   // Verify multi-mpdule parameters
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    VerifyImK2(body,control,files,options,system,update,iBody);
+    if (body[iBody].bEqtide) {
+      VerifyImK2(body,control,files,options,system,update,iBody);
+    }
   }
 
   // Finally, initialize angular momentum and energy prior to logging/integration

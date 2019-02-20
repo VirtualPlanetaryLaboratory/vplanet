@@ -129,6 +129,28 @@ void ReadManMeltDensity(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       body[iFile-1].dManMeltDensity = options->dDefault;
 }
 
+/*
+ * Read halt options
+ */
+
+/* Halt when mantle solidified */
+
+void ReadHaltMantleSolidified(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    control->Halt[iFile-1].bHaltMantleSolidified = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultInt(options,&control->Halt[iFile-1].bHaltMantleSolidified,files->iNumInputs);
+  }
+}
+
 /* Initiatlize Input Options */
 // initialize input = tell code what he is reading in
 void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
@@ -181,6 +203,11 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MANMELTDENSITY].cNeg,"kg/m^3");
   fnRead[OPT_MANMELTDENSITY] = &ReadManMeltDensity;
 
+  sprintf(options[OPT_HALTMANTLESOLIDIFIED].cName,"bHaltMantleSolidified");
+  sprintf(options[OPT_HALTMANTLESOLIDIFIED].cDescr,"Halt When Mantle Solidified?");
+  sprintf(options[OPT_HALTMANTLESOLIDIFIED].cDefault,"0");
+  options[OPT_HALTMANTLESOLIDIFIED].iType = 0;
+  fnRead[OPT_HALTMANTLESOLIDIFIED] = &ReadHaltMantleSolidified;
 }
 
 // Don't change this
@@ -563,7 +590,7 @@ e.g. if all the hydrogen is lost to space (= no more water in atmosphere) -> set
 */
 void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   /* Mantle solidified? */
-  if (body[iBody].dSolidRadiusLocal >= body[iBody].dRadius) {
+  if (body[iBody].dSolidRadius >= body[iBody].dRadius) {
     body[iBody].bManSolid = 1;
   }
   /* High or low pressure regime of the solidus? */
@@ -735,13 +762,15 @@ int fbHaltMantleSolidifed(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *up
 }
 
 void CountHaltsMagmOc(HALT *halt,int *iNumHalts) {
-  if (halt->bMantleSolidifed)
+  if (halt->bHaltMantleSolidified) {
     (*iNumHalts)++;
+  }
 }
 
 void VerifyHaltMagmOc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
-  if (control->Halt[iBody].bMantleSolidifed)
+  if (control->Halt[iBody].bHaltMantleSolidified) {
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMantleSolidifed;
+  }
 }
 
 /************* MAGMOC Outputs ******************/

@@ -8,10 +8,11 @@ dMass         -1.62                       # Mass, negative -> Earth masses
 dRadius       -1.15                       # Radius, negative -> Earth radii
 
 # MAGMOC Properties
-dFeO		0.08
-dWaterMassAtm	-100
-dSurfTemp	4000
-dManMeltDensity	4000
+dFeO			0.08
+dWaterMassAtm		-100
+dSurfTemp		4000
+dManMeltDensity		4000
+bHaltMantleSolidified 	0
 
 # Orbital Properties
 dSemi         -0.0154                     # Semi-major axis, negative -> AU

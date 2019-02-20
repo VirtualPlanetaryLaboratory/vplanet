@@ -66,6 +66,7 @@
 #define OPT_WATERMASSATM          2311
 #define OPT_SURFTEMP              2312
 #define OPT_MANMELTDENSITY        2313
+#define OPT_HALTMANTLESOLIDIFIED  2314
 
 void AddModuleMagmOc(MODULE*,int,int);
 void BodyCopyMagmOc(BODY*,BODY*,int,int,int);

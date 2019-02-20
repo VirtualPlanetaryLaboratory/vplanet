@@ -1610,7 +1610,7 @@ struct HALT {
   int bHaltRocheLobe;      /** if secondary enters the Roche lobe of the primary, HALT! */
 
 	/* MAGMOC */
-	int bMantleSolidifed;    /**< Halt if mantle completely solidified */
+	int bHaltMantleSolidified;    /**< Halt if mantle completely solidified */
 };
 
 /* Units. These can be different for different bodies. If set

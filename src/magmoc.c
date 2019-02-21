@@ -536,6 +536,10 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   double dFracFe2O3ManNew;  // New Fe2O3 in mantle
   double dOxyFugacityCrit;  // Critical fugacity
 
+  // Coupling to ATMESC HERE!!
+  // double dWaterMassChange;  // Negative (H escape)
+  // double dOxygenMassChange; // Negative (O escape) or positive (O build-up) = dOxygenMassAtmNew
+
   dOxygenMassAtmNew = 4*PI*pow(body[iBody].dRadius,2) * evolve->dTimeStep * (8*body[iBody].dEscRateHydro - body[iBody].dEscRateOxy);
   dNumFeO15Man      = 2 * dOxygenMassAtmNew / (MOLWEIGHTOXYGEN*ATOMMASS);
   dOxyFugacity      = body[iBody].dOxygenMassAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));

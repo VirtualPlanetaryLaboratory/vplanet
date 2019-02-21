@@ -1,6 +1,6 @@
 # Planet a parameters
 sName         GJ1132b                     # Body's name
-saModules     magmoc                      # Modules to apply, exact spelling required
+saModules     magmoc, atmesc                      # Modules to apply, exact spelling required
 cColor        13aed5
 
 # Physical Properties
@@ -13,6 +13,18 @@ dWaterMassAtm		-100
 dSurfTemp		4000
 dManMeltDensity		4000
 bHaltMantleSolidified 	0
+
+# ATMESC Properties
+dXFrac                    1.0             # X-Ray/XUV absorption radius (fraction of planet radius)
+dSurfWaterMass            -5.0            # Initial surface water (Earth oceans)
+dEnvelopeMass             0               # Initial envelope mass (Earth masses)
+bHaltSurfaceDesiccated    0               # Halt when dry?
+bHaltEnvelopeGone         0               # Halt when evaporated?
+dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
+sWaterLossModel           lbexact
+sPlanetRadiusModel        none
+bInstantO2Sink            1
+sAtmXAbsEffH2OModel       bolmont16
 
 # Orbital Properties
 dSemi         -0.0154                     # Semi-major axis, negative -> AU

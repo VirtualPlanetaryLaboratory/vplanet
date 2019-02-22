@@ -48,12 +48,12 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
 	dest[iBody].dMassMagmOcCry 	  = src[iBody].dMassMagmOcCry;
 	dest[iBody].dWaterFracMelt    = src[iBody].dWaterFracMelt;
 	dest[iBody].dFracFe2O3Man     = src[iBody].dFracFe2O3Man;
-	dest[iBody].dEscRateHydro     = src[iBody].dEscRateHydro;
-	dest[iBody].dEscRateOxy  		  = src[iBody].dEscRateOxy;
 	dest[iBody].dOxygenMassAtm    = src[iBody].dOxygenMassAtm;
 	dest[iBody].dOxyFugNewMax     = src[iBody].dOxyFugNewMax;
 	dest[iBody].dOxyFugFactor     = src[iBody].dOxyFugFactor;
 	dest[iBody].dPressAtmTot      = src[iBody].dPressAtmTot;
+  dest[iBody].dWaterMassEsc     = src[iBody].dWaterMassEsc;
+  dest[iBody].dOxygenMassEsc    = src[iBody].dOxygenMassEsc;
 }
 
 /**************** MAGMOC options ********************/
@@ -223,10 +223,11 @@ void ReadOptionsMagmOc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 // Initilaization of variables
 void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
   // primary variables: HARD CODED INITIAL VALUES
-  body[iBody].dPotTemp         = 4000; //body[iBody].dSurfTemp; // initial potential temp = initial surface temp
   body[iBody].dSurfTemp        = 4000;
+  body[iBody].dPotTemp         = body[iBody].dSurfTemp; // initial potential temp = initial surface temp
   body[iBody].dSolidRadius     = body[iBody].dRadius * RADCOREEARTH / REARTH; // initial solid. rad. = core radius
-  body[iBody].dWaterMassMOAtm  = 1*TOMASS; // body[iBody].dWaterMassAtm; // initial water mass in MO&Atm is equal to inital Water mass in atmosphere
+  body[iBody].dWaterMassAtm    = 100 * TOMASS;
+  body[iBody].dWaterMassMOAtm  = body[iBody].dWaterMassAtm; // initial water mass in MO&Atm is equal to inital Water mass in atmosphere
   body[iBody].dWaterMassSol    = 0; // initial water mass in solid = 0
   body[iBody].dOxygenMassMOAtm = 0; // initial oxygen mass in MO&Atm = 0
   body[iBody].dOxygenMassSol   = 0; // initial oxygen mass in solid = 0
@@ -239,6 +240,8 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   body[iBody].dPrefactorB      = BHIGHPRESSURE;
   body[iBody].dAlbedo          = ALBEDOWATERATMOS;
   body[iBody].dGravAccelSurf   = BIGG * body[iBody].dMass / pow(body[iBody].dRadius,2);
+  body[iBody].dFracFe2O3Man    = 0;
+  body[iBody].dFeO             = 0.08;
 }
 
 /******************* Verify MAGMOC ******************/
@@ -513,20 +516,6 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dFactorDerivative = SILICATEHEATCAP * (body[iBody].dPrefactorB*THERMALEXPANCOEFF - body[iBody].dPrefactorA*body[iBody].dManMeltDensity*SILICATEHEATCAP) / (body[iBody].dGravAccelSurf*pow((body[iBody].dPrefactorA*body[iBody].dManMeltDensity*SILICATEHEATCAP - THERMALEXPANCOEFF*body[iBody].dPotTemp),2));
 
   /*
-   * Calculation of the atmospheric escape rates
-   * Function atmesc() in atmesc_function_rk.py
-   * Later replaced by module ATMESC!
-   */
-  if (body[iBody].dWaterMassMOAtm >= 0) {
-    body[iBody].dEscRateHydro = 1e-10;   // hard coded. first 1e-7
-    body[iBody].dEscRateOxy   = 1e-11;   // first 1e-6
-  } else {
-    body[iBody].dEscRateHydro = 0;   // hard coded. first 1e-7
-    body[iBody].dEscRateOxy   = 0;   // first 1e-6
-  }
-  // End of atmesc()
-
-  /*
    * Calculation of the mass fraction of Fe2O3 in the manlte and the mass of oxygen in the atmosphere
    * Function oxygen_mo() in oxygen_rk.py
    */
@@ -540,45 +529,52 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   // double dWaterMassChange;  // Negative (H escape)
   // double dOxygenMassChange; // Negative (O escape) or positive (O build-up) = dOxygenMassAtmNew
 
-  dOxygenMassAtmNew = 4*PI*pow(body[iBody].dRadius,2) * evolve->dTimeStep * (8*body[iBody].dEscRateHydro - body[iBody].dEscRateOxy);
-  dNumFeO15Man      = 2 * dOxygenMassAtmNew / (MOLWEIGHTOXYGEN*ATOMMASS);
+  dOxygenMassAtmNew = body[iBody].dOxygenMassEsc;
   dOxyFugacity      = body[iBody].dOxygenMassAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
-
-  body[iBody].dPressAtmTot  = dOxyFugacity + body[iBody].dPressWaterAtm;
-  body[iBody].dOxyFugNewMax = dOxygenMassAtmNew * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
-  body[iBody].dOxyFugFactor = MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) * body[iBody].dManMeltDensity*body[iBody].dGravAccelSurf * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadiusLocal,3))/(3*pow(body[iBody].dRadius,2));
-
-  if (body[iBody].bManSolid) {
-    dFracFe2O3ManNew = 0;
-  } else {
-    dFracFe2O3ManNew = MOLWEIGHTFEO15*ATOMMASS*dNumFeO15Man / (body[iBody].dManMeltDensity*PI*(pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadiusLocal,3))*4/3);
-  }
-
-  /* critical fugacity (corresponding to x=0.3) */
-  if (fabs(fndCriticalOxygenFugacity(body,1e10,iBody)) < 1e-5) {
-    dOxyFugacityCrit = 1e10;
-  } else if (fabs(fndCriticalOxygenFugacity(body,1e-20,iBody)) < 1e-5) {
-    dOxyFugacityCrit = 1e-20;
-  } else {
-    dOxyFugacityCrit = fndBisection(fndCriticalOxygenFugacity,body,1e10,1e-20,iBody);
-  }
 
   if (dOxygenMassAtmNew <= 0) { // net loss of oxygen/no new oxygen
     body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man;
     body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
-  } else if (body[iBody].dFracFe2O3Man >= TOTMASSFRACFEO) { // all FeO oxidized to Fe2O3
+  } else if (body[iBody].bAllFeOOxid) { // all FeO oxidized to Fe2O3
+    body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
     body[iBody].dFracFe2O3Man  = TOTMASSFRACFEO;
-    body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
   } else if (body[iBody].dFracFe2O3Man/TOTMASSFRACFEO < 0.3) { // X < 0.3 -> assuming no O2 buildup in atm
+    dNumFeO15Man = 2 * dOxygenMassAtmNew / (MOLWEIGHTOXYGEN*ATOMMASS);
+    if (body[iBody].bManSolid) {
+      dFracFe2O3ManNew = 0;
+    } else {
+      dFracFe2O3ManNew = MOLWEIGHTFEO15*ATOMMASS*dNumFeO15Man / (body[iBody].dManMeltDensity*PI*(pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadiusLocal,3))*4/3);
+    }
     body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man + dFracFe2O3ManNew;
-  } else if (dOxyFugacity <= dOxyFugacityCrit) { // all O stays in atmosphere
-    body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man;
-    body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
-  } else { // x > 0.3 and fug > fug_crit
-    dFracFe2O3ManNew  = fndBisection(fndOxygenEquiManAtm,body,0,1,iBody);
-    body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man + dFracFe2O3ManNew;
-    dOxygenMassAtmNew = (body[iBody].dOxyFugNewMax - body[iBody].dFracFe2O3Man*body[iBody].dOxyFugFactor) * 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf;
-    body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
+  } else {
+    /* critical fugacity (corresponding to x=0.3) */
+    if (fabs(fndCriticalOxygenFugacity(body,1e10,iBody)) < 1e-5) {
+      dOxyFugacityCrit = 1e10;
+    } else if (fabs(fndCriticalOxygenFugacity(body,1e-20,iBody)) < 1e-5) {
+      dOxyFugacityCrit = 1e-20;
+    } else {
+      dOxyFugacityCrit = fndBisection(fndCriticalOxygenFugacity,body,1e10,1e-20,iBody);
+    }
+
+    if (dOxyFugacity <= dOxyFugacityCrit) { // all O stays in atmosphere
+      body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man;
+      body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
+    } else { // x > 0.3 and fug > fug_crit
+      body[iBody].dPressAtmTot  = dOxyFugacity + body[iBody].dPressWaterAtm;
+      body[iBody].dOxyFugNewMax = dOxygenMassAtmNew * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
+      body[iBody].dOxyFugFactor = MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) * body[iBody].dManMeltDensity*body[iBody].dGravAccelSurf * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadiusLocal,3))/(3*pow(body[iBody].dRadius,2));
+
+      dFracFe2O3ManNew  = fndBisection(fndOxygenEquiManAtm,body,0,1,iBody);
+      body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man + dFracFe2O3ManNew;
+      dOxygenMassAtmNew = (body[iBody].dOxyFugNewMax - body[iBody].dFracFe2O3Man*body[iBody].dOxyFugFactor) * 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf;
+      body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
+    }
+  }
+
+  if (body[iBody].dFracFe2O3Man > TOTMASSFRACFEO) { // too 'much' FeO oxidized to Fe2O3
+    body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + 4/3 * (body[iBody].dFracFe2O3Man-TOTMASSFRACFEO) * PI \
+              * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadiusLocal,3)) * MOLWEIGHTOXYGEN/2/MOLWEIGHTFEO15;
+    body[iBody].dFracFe2O3Man  = TOTMASSFRACFEO;
   }
 
   if (body[iBody].dOxygenMassAtm < 0) {body[iBody].dOxygenMassAtm = 0;}
@@ -603,8 +599,18 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     body[iBody].dPrefactorB = BLOWPRESSURE;
   }
   /* Albedo Rock or Water Vapor? */
-  if (body[iBody].dPressWaterAtm < 1) {
+  if (body[iBody].dAlbedo == ALBEDOWATERATMOS && body[iBody].dPressWaterAtm < 1) {
     body[iBody].dAlbedo = ALBEDOROCK;
+    if (io->iVerbose >= VERBPROG) {
+      printf("%s's atmosphere desiccated, albedo set to 0.3. \n",body[iBody].cName);
+    }
+  }
+  /* All FeO in mantle oxidized to Fe2O3 */
+  if (body[iBody].bAllFeOOxid == 0 && body[iBody].dFracFe2O3Man >= TOTMASSFRACFEO) {
+    body[iBody].bAllFeOOxid = 1;
+    if (io->iVerbose >= VERBPROG) {
+      printf("All FeO in %s's mantle oxidized to Fe2O3. \n",body[iBody].cName);
+    }
   }
 }
 
@@ -1084,7 +1090,7 @@ double fdDWaterMassMOAtm(BODY *body, SYSTEM *system, int *iaBody) {
   if (body[iaBody[0]].dWaterMassMOAtm <= 0) {
     return 0;
   }
-  return -fdDWaterMassSol(body,system,iaBody) - 4*PI*pow(body[iaBody[0]].dRadius,2)*body[iaBody[0]].dEscRateHydro*MOLWEIGHTWATER/(2*MOLWEIGHTHYDROGEN);
+  return body[iaBody[0]].dWaterMassEsc - fdDWaterMassSol(body,system,iaBody);
 }
 
 double fdDOxygenMassSol(BODY *body, SYSTEM *system, int *iaBody) {
@@ -1092,5 +1098,5 @@ double fdDOxygenMassSol(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdDOxygenMassMOAtm(BODY *body, SYSTEM *system, int *iaBody) {
-  return 4*PI*pow(body[iaBody[0]].dRadius,2) * ( body[iaBody[0]].dEscRateHydro*MOLWEIGHTOXYGEN/(2*MOLWEIGHTHYDROGEN) - body[iaBody[0]].dEscRateOxy ) - fdDOxygenMassSol(body,system,iaBody);
+  return body[iaBody[0]].dOxygenMassEsc - fdDOxygenMassSol(body,system,iaBody);
 }

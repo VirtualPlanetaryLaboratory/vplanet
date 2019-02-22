@@ -1249,7 +1249,17 @@ void VerifyModuleMultiSpiNBodyDistOrb(BODY *body,UPDATE *update,CONTROL *control
 }
 
 void VerifyModuleMultiMagmOcAtmEsc(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
-  // so far, nothing happens, but MagmOc and AtmEsc are coupled
+  if (body[iBody].bMagmOc) {
+    if (!body[iBody].bAtmEsc) {
+      if (control->Io.iVerbose > VERBINPUT) {
+        fprintf(stderr,"WARNING: Module MagmOc selected for %s, but AtmEsc not selected.\n",body[iBody].cName);
+      }
+      body[iBody].dWaterMassEsc  = 0;
+      body[iBody].dOxygenMassEsc = 0;
+    } else {
+      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxMagmOcAtmEsc;
+    }
+  }
 }
 
 /** Verify that selected modules are compatable */
@@ -1534,7 +1544,38 @@ void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 }
 
 void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  // no content yet
+  if (body[iBody].bMagmOc && body[iBody].bAtmEsc) {
+
+    // Use Water and Oxygen mass from magmoc for atmesc
+    body[iBody].dSurfaceWaterMass = body[iBody].dWaterMassAtm;
+    body[iBody].dOxygenMass       = body[iBody].dOxygenMassAtm;
+
+    // Call PropsAux from Atmesc (or fnPropertiesAtmEsc)
+    fnPropertiesAtmEsc(body,evolve,update,iBody);
+
+    // Water and Oxygen mass lost through atmospheric escape
+    if ((body[iBody].bRunaway) && (body[iBody].dSurfaceWaterMass > 0)) {
+      // This takes care of both energy-limited and diffusion limited escape!
+      body[iBody].dWaterMassEsc = -(9. / (1 + 8 * body[iBody].dOxygenEta)) * body[iBody].dMDotWater;
+    } else {
+      body[iBody].dWaterMassEsc = 0;
+    }
+
+    if ((body[iBody].bRunaway) && (!body[iBody].bInstantO2Sink) && (body[iBody].dSurfaceWaterMass > 0)) {
+      if (body[iBody].iWaterLossModel == ATMESC_LB15) {
+        // Rodrigo and Barnes (2015)
+        if (body[iBody].dCrossoverMass >= 16 * ATOMMASS)
+          body[iBody].dOxygenMassEsc = (320. * PI * BIGG * ATOMMASS * ATOMMASS * BDIFF * body[iBody].dMass) / (KBOLTZ * THERMT);
+        else
+          body[iBody].dOxygenMassEsc = (8 - 8 * body[iBody].dOxygenEta) / (1 + 8 * body[iBody].dOxygenEta) * body[iBody].dMDotWater;
+      } else {
+        // Exact
+        body[iBody].dOxygenMassEsc = (8 - 8 * body[iBody].dOxygenEta) / (1 + 8 * body[iBody].dOxygenEta) * body[iBody].dMDotWater;
+      }
+    } else {
+      body[iBody].dOxygenMassEsc = 0;
+    }
+  }
 }
 
 /*

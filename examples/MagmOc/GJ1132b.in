@@ -12,7 +12,7 @@ dFeO			0.08
 dWaterMassAtm		-100
 dSurfTemp		4000
 dManMeltDensity		4000
-bHaltMantleSolidified 	0
+bHaltMantleSolidified 	1
 
 # ATMESC Properties
 dXFrac                    1.0             # X-Ray/XUV absorption radius (fraction of planet radius)
@@ -23,8 +23,8 @@ bHaltEnvelopeGone         0               # Halt when evaporated?
 dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
 sWaterLossModel           lbexact
 sPlanetRadiusModel        none
-bInstantO2Sink            1
-sAtmXAbsEffH2OModel       bolmont16
+bInstantO2Sink            0
+sAtmXAbsEffH2OModel       none
 
 # Orbital Properties
 dSemi         -0.0154                     # Semi-major axis, negative -> AU

@@ -983,6 +983,7 @@ struct BODY {
 	 */
   int bMagmOc;              /**< Use magmoc model */
 	int bManSolid;            /**< Mantle solidified */
+	int bAllFeOOxid;   			  /**< All FeO in manlte oxidized to Fe2O3 */
 	/* Primary variables */
 	double dPotTemp;          /**< Potential Temp of the mantle [K] */
 	double dSurfTemp;         /**< Surface Temp of the planet [K] */
@@ -1016,12 +1017,13 @@ struct BODY {
 	double dMassMagmOcCry; 		/**< crystal mass of magma ocean [kg] */
 	double dWaterFracMelt;    /**< Mass fraction of water in the magma ocean */
 	double dFracFe2O3Man;     /**< Mass fraction of Fe2O3 in the mantle */
-	double dEscRateHydro;     /**< Atmospheric escape rate hydrogen GET FROM ATMESC [kg/m^2/s] */
-	double dEscRateOxy;  			/**< Atmospheric escape rate oxygen GET FROM ATMESC [kg/m^2/s] */
 	double dOxygenMassAtm;    /**< Oxygen mass in the atmosphere [kg] */
 	double dOxyFugNewMax;
 	double dOxyFugFactor;
 	double dPressAtmTot;      /**< Total atmospheric pressure */
+	/* Variables for the connection between magmoc and atmesc */
+	double dWaterMassEsc;     /**< Water mass escaped */
+	double dOxygenMassEsc;    /**< Oxygen mass escaped */
 };
 
 /* SYSTEM contains properties of the system that pertain to

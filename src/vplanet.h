@@ -422,9 +422,11 @@ struct BODY {
   int bEqtide;           /**< Apply Module EQTIDE? */
   int bTideLock;         /**< Is a body tidally locked? */
 	double dLockTime;			 /**< Time when body tidally-locked */
-	int bOceanTides;       /**< Tidal dissipation from ocean? */
-  int bEnvTides;         /**<  Tidal dissipation from envelope? */
-  int bMantleTides;      /**< Tidal dissipation from mantle? */
+/*
+	int bOceanTides;
+  int bEnvTides;
+  int bMantleTides;
+*/
   int bUseTidalRadius;   /**< Set a fixed tidal radius? */
   double dTidalRadius;   /**< Radius used by tidal evoltion equations (CPL only currently) */
   int iTidePerts;        /**< Number of Tidal Perturbers */

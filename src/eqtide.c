@@ -52,10 +52,6 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
   dest[iBody].dK2Ocean = src[iBody].dK2Ocean;
   dest[iBody].dK2Env = src[iBody].dK2Env;
 
-  dest[iBody].bMantleTides = src[iBody].bMantleTides;
-  dest[iBody].bOceanTides = src[iBody].bOceanTides;
-  dest[iBody].bEnvTides = src[iBody].bEnvTides;
-
   dest[iBody].dObliquity = src[iBody].dObliquity;
   dest[iBody].dPrecA = src[iBody].dPrecA;
   dest[iBody].bUseTidalRadius = src[iBody].bUseTidalRadius;
@@ -569,14 +565,14 @@ void ReadEqtideOceanTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    body[iFile-1].bOceanTides = bTmp;
+    body[iFile-1].bOcean = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      body[iFile-1].bOceanTides = 0; // Default to no ocean tides
+      body[iFile-1].bOcean = 0; // Default to no ocean tides
 }
 
-// Include effects of ocean tides?
+// Include effects of mantle tides?
 void ReadEqtideMantleTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -585,11 +581,11 @@ void ReadEqtideMantleTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    body[iFile-1].bMantleTides = bTmp;
+    body[iFile-1].bMantle = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      body[iFile-1].bMantleTides = 0; // Default to no ocean tides
+      body[iFile-1].bMantle = 0; // Default to no ocean tides
 }
 
 // Use fixed tidal radius?
@@ -617,11 +613,11 @@ void ReadEqtideEnvTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
   if(lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    body[iFile-1].bEnvTides = bTmp;
+    body[iFile-1].bEnv = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if(iFile > 0)
-      body[iFile-1].bEnvTides = 0; // Default to no envelope tides
+      body[iFile-1].bEnv = 0; // Default to no envelope tides
 }
 
 void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
@@ -1928,14 +1924,8 @@ void WriteDSemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
 }
 
 void WriteDEccDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  int *iaBody;
 
-  iaBody = malloc(2*sizeof(int));
-  iaBody[0] = iBody;
-  iaBody[1] = 0;
-
-  if (control->Evolve.iEqtideModel == CPL)
-    *dTmp = body[iBody].dDeccDtEqtide;
+  *dTmp = body[iBody].dDeccDtEqtide;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1944,8 +1934,6 @@ void WriteDEccDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
   }
-
-  free(iaBody);
 }
 
 void WriteDMeanMotionDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -3271,14 +3259,16 @@ double fdTidePowerOcean(BODY *body, int iBody) {
   // Total CPL Tide Power = Ocean + Man contributions
   // XXX This looks broken now
   //return fdCPLTidePower(body,iBody) - fdTidePower(body,iBody);
-  fprintf(stderr,"ERROR: fdTidePowerOcean called, but it's broken.");
-  return 1;
+  //fprintf(stderr,"ERROR: fdTidePowerOcean called, but it's broken.");
+  return -1;
 }
 
 /* Surface Energy Flux due to Ocean Tides */
 double fdSurfEnFluxOcean(BODY *body,int iBody) {
   // Total Ocean Tide power / surface area of body
-  return fdTidePowerOcean(body,iBody)/(4.0*PI*body[iBody].dRadius*body[iBody].dRadius);
+  // XXX Broken!
+  //return fdTidePowerOcean(body,iBody)/(4.0*PI*body[iBody].dRadius*body[iBody].dRadius);
+  return -1;
 }
 
 double fdGammaRot(double dEccSq,double dPsi,int *epsilon) {

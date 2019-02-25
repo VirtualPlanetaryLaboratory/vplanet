@@ -127,7 +127,7 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
  void WriteInstellation(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
    // Should have special case if bBinary=1
-   if (body[iBody].bSpiNBody)
+   //if (body[iBody].bSpiNBody)
     //Bary2OrbElems(body,control->Evolve.iNumBodies);
 
    *dTmp = fdInstellation(body,iBody);
@@ -589,7 +589,7 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     else
       bEnv = 1;
 
-    if((body[iBody].bOceanTides && bOcean) || (body[iBody].bEnvTides && bEnv)) {
+    if((body[iBody].bOcean && bOcean) || (body[iBody].bEnv && bEnv)) {
       *dTmp += fdSurfEnFluxOcean(body,iBody);
     }
   }
@@ -1590,13 +1590,13 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     fprintf(fp,"Color: %s\n", body[iBody].cColor);
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       if (output[iOut].iNum > 0) {
-	if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
-	  /* Useful for debugging
-	  printf("%d %d\n",iBody,iOut);
-	  fflush(stdout);
-	  */
-	  WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
-	}
+	       if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
+	          /* Useful for debugging
+	           printf("%d %d\n",iBody,iOut);
+	           fflush(stdout);
+             */
+	         WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+	       }
       }
     }
     LogBodyRelations(control,fp,iBody);

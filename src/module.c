@@ -865,10 +865,10 @@ void VerifyModuleMultiEqtideStellar(BODY *body,UPDATE *update,CONTROL *control,F
 
       // Can't have any ocean, envelope tidal parameters set
       // Body is a star, but has an ocean or an envelope!
-      if(body[iBody].bOceanTides || body[iBody].bEnvTides)
+      if(body[iBody].bOcean || body[iBody].bEnv)
       {
         if(control->Io.iVerbose >= VERBINPUT)
-          fprintf(stderr,"ERROR: If both stellar AND eqtide are set, body cannot have bOceanTides or bEnvTides set!\n");
+          fprintf(stderr,"ERROR: If both stellar AND eqtide are set, body cannot set bOceanTides or bEnvTides!\n");
         LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
       }
 
@@ -948,7 +948,7 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
     {
 
       // if user wants to include tides due to envelope: (do same with oceans)
-      if (body[iBody].bEnvTides) {
+      if (body[iBody].bEnv) {
         // they better have defined k2Env, tidalqenv, denvmass
         if (!(options[OPT_TIDALQENV].iLine[iBody+1] > -1)) {
           fprintf(stderr,"ERROR: if bEnvTides == 1, must specify %s.\n",options[OPT_TIDALQENV].cName);
@@ -966,8 +966,9 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
         }
       }
 
-      if (body[iBody].bOceanTides) {
+      if (body[iBody].bOcean) {
         // they better have defined k2Ocean, tidalqocean, dSurfaceWaterMass
+        // XXX Use option.cName instead of, e.g. bOceanTides
         if (!(options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1)) {
           fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_TIDALQOCEAN].cName);
           exit(EXIT_INPUT);
@@ -1117,7 +1118,7 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,UPDATE *update,CONTROL *co
       if(body[iBody].bAtmEsc)
       {
         // If modelling envelope tides
-        if(body[iBody].bEnvTides)
+        if(body[iBody].bEnv)
         {
           // Make sure both dK2Env AND dTidalQEnv are set, otherwise exit
           if(!(options[OPT_TIDALQENV].iLine[iBody+1] > -1 && options[OPT_K2ENV].iLine[iBody+1] > -1))
@@ -1674,30 +1675,30 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,MODULE *module,EVOLVE *evolve,
 
     // Case: No water -> no ocean tides
     if (bOceans && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)) {
-      body[iBody].bOceanTides = 0;
+      body[iBody].bOcean = 0;
     } else if (bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && body[iBody].bRunaway) {
       // Case: Water but it's in the atmosphere: RUNAWAY GREENHOUSE (this is when body actively loses water!)
-      body[iBody].bOceanTides = 0;
+      body[iBody].bOcean = 0;
     } else if (bOceans && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass) && !body[iBody].bRunaway) {
       // Case: Water on the surface! (this is when body does NOT actively lose water!)
-      body[iBody].bOceanTides = 1;
+      body[iBody].bOcean = 1;
     }
 
     // Check to see if the envelope is gone: when dEnvelopeMass <= dMinEnvelopeMass
     if(bEnv && (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass))
     {
-      body[iBody].bEnvTides = 0;
+      body[iBody].bEnv = 0;
     }
     // Still have the envelope!
     else if(bEnv && (body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass))
     {
-      body[iBody].bEnvTides = 1;
+      body[iBody].bEnv = 1;
     }
 
     // Enfore that they are mutually exclusive
     // i.e. if using EnvTides or an envelope exists, ocean can't do anything
-    if(body[iBody].bEnvTides || (body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass))
-      body[iBody].bOceanTides = 0;
+    if(body[iBody].bEnv || (body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass))
+      body[iBody].bOcean = 0;
   }
 }
 

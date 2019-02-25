@@ -707,9 +707,9 @@ void fvReadShModRef(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
      body[iFile-1].dShModRef = dTmp;  //no units.
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
-      body[iFile-1].dShModRef = options->dDefault;
-
+      if (iFile > 0) { //if line num not ge 0, then if iFile gt 0, then set default.
+        body[iFile-1].dShModRef = options->dDefault;
+      }
 }
 /**
   Read mantle stiffness from input file

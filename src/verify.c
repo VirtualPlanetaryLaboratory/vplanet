@@ -523,7 +523,7 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,char cFile[],int iBody,in
 void VerifyImK2Env(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iBody) {
 
   // Is there an envelope? If so, fix its Im(k2)
-  if (body[iBody].bEnvTides) {
+  if (body[iBody].bEnv) {
 
     // they better have defined k2Env, tidalqenv, denvmass
     if (options[OPT_TIDALQENV].iLine[iBody+1] == -1) {
@@ -565,7 +565,7 @@ void VerifyImK2Env(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
 void VerifyImK2Ocean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iBody) {
 
   // Is there an ocean? If so, fix its Im(k2)
-  if (body[iBody].bOceanTides) {
+  if (body[iBody].bOcean) {
 
     // they better have defined k2Ocean, tidalqOcean, dOceanmass
     if (options[OPT_TIDALQOCEAN].iLine[iBody+1] == -1) {
@@ -607,7 +607,7 @@ void VerifyImK2Ocean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 void VerifyImK2Mantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,UPDATE *update,int iBody) {
 
   // Is there a mantle? If so, fix its Im(k2)
-  if (body[iBody].bMantleTides) {
+  if (body[iBody].bMantle) {
 
     if (options[OPT_TIDALQ].iLine[iBody+1] > -1 && options[OPT_TIDALQMANTLE].iLine[iBody+1] > -1) {
       if (control->Io.iVerbose >= VERBINPUT) {
@@ -630,7 +630,7 @@ void VerifyImK2Mantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       if (options[OPT_TIDALQMANTLE].iLine[iBody+1] == -1) {
         body[iBody].dTidalQMan = body[iBody].dTidalQ;
           if (control->Io.iVerbose >= VERBALL) {
-            fprintf(stderr,"WARNING: %s set, but ThermInt computes it. Input value will be ignored.",options[OPT_TIDALQMANTLE].cName);
+            fprintf(stderr,"WARNING: %s set, but ThermInt computes it. Input value will be ignored.\n",options[OPT_TIDALQMANTLE].cName);
           }
       }
 
@@ -744,8 +744,8 @@ void InitializeConstants(BODY *body,UPDATE *update,CONTROL *control,SYSTEM *syst
   // Set to dTINY, not 0 since these are integrated
   // and it being 0 can mess up the time step
   for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
-    body[iBody].dLostAngMom = 0.0;
-    body[iBody].dLostEng = 0.0;
+    body[iBody].dLostAngMom = dTINY;
+    body[iBody].dLostEng = dTINY;
   }
 
   // Compute initial total angular momentum

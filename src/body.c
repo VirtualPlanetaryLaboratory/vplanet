@@ -459,6 +459,10 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].bRadheat = src[iBody].bRadheat;
     dest[iBody].bSpiNBody = src[iBody].bSpiNBody;
 
+    dest[iBody].bMantle = src[iBody].bMantle;
+    dest[iBody].bOcean = src[iBody].bOcean;
+    dest[iBody].bEnv = src[iBody].bEnv;
+
     //dest[iBody].dLXUV = src[iBody].dLXUV;
 
     // Im(k_2) properties

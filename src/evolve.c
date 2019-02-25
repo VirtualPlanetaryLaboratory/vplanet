@@ -179,11 +179,17 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   		             /* ?Obl require special treatment because they can
   		                overconstrain obliquity and PrecA */
   		             if (iVar == update[iBody].iXobl || iVar == update[iBody].iYobl || iVar == update[iBody].iZobl) {
-  		                if (body[iBody].dObliquity != 0)
+  		                if (body[iBody].dObliquity != 0) {
   		                  dMinNow = fabs(sin(body[iBody].dObliquity)/update[iBody].daDerivProc[iVar][iEqn]);
+                      } else { // Obliquity is 0, so its evolution shouldn't impact the timestep
+                        dMinNow = dHUGE;
+                      }
   		             } else if (iVar == update[iBody].iHecc || iVar == update[iBody].iKecc) {
-  		                if (body[iBody].dEcc != 0)
+  		                if (body[iBody].dEcc != 0) {
   		                  dMinNow = fabs(body[iBody].dEcc/update[iBody].daDerivProc[iVar][iEqn]);
+                      } else { // Eccentricity is 0, so its evolution shouldn't impact the timestep
+                        dMinNow = dHUGE;
+                      }
   		             } else {
   		                dMinNow = fabs(1.0/update[iBody].daDerivProc[iVar][iEqn]);
   		             }

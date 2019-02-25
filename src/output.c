@@ -136,8 +136,8 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
      *dTmp *= output->dNeg;
      strcpy(cUnit,output->cNeg);
    } else {
-     *dTmp /= fdUnitsAngle(units->iAngle);
-     fsUnitsAngle(units->iAngle,cUnit);
+     *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+     fsUnitsEnergyFlux(units,cUnit);
    }
  }
 
@@ -1591,10 +1591,10 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       if (output[iOut].iNum > 0) {
 	       if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
-	          /* Useful for debugging
+	          // /* Useful for debugging
 	           printf("%d %d\n",iBody,iOut);
 	           fflush(stdout);
-             */
+
 	         WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
 	       }
       }

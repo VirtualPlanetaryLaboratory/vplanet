@@ -53,7 +53,7 @@ To run this example
     vplanet vpl.in
     cd ..
 
-    python plotsolsys.py
+    python makeplot.py <png | pdf>
 
 
 Expected output

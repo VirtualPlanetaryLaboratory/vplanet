@@ -18,7 +18,7 @@ def test_MagneticBraking():
     # Check
 
     # Confirm
-    assert np.isclose(output.log.final.matt.RotPer, 0.305385)
+    assert np.isclose(output.log.final.matt.RotPer, 0.252432)
     assert np.isclose(output.log.final.reiners.RotPer, 1.059182)
     assert np.isclose(output.log.final.sk.RotPer, 1.486450)
 

@@ -1,5 +1,5 @@
 sSystemName   solarsystem                   # System Name
-iVerbose      0                             # Verbosity level
+iVerbose      5                             # Verbosity level
 bOverwrite    1                             # Allow file overwrites?
 
 # List of "body files" that contain body-specific parameters
@@ -20,5 +20,5 @@ dMinValue      1e-10                        # Minimum value of eccentricity/obli
 bDoForward    1                             # Perform a forward evolution?
 bVarDt        1                             # Use variable timestepping?
 dEta          0.1                           # Coefficient for variable timestepping
-dStopTime     1e8                         # Stop time for evolution
-dOutputTime   1e8                           # Output timesteps (assuming in body files)
+dStopTime     1e9                         # Stop time for evolution
+dOutputTime   1e2                           # Output timesteps (assuming in body files)

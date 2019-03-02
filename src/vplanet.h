@@ -984,6 +984,9 @@ struct BODY {
   int bMagmOc;              /**< Use magmoc model */
 	int bManSolid;            /**< Mantle solidified */
 	int bAllFeOOxid;   			  /**< All FeO in manlte oxidized to Fe2O3 */
+	int bLowPressSol;         /**< Switch to low pressure treatment of solidus */
+	int bManStartSol;         /**< Mantle starts to solidify */
+	int bCalcFugacity;        /**< Need to calc oxygen fugacity */
 	/* Primary variables */
 	double dPotTemp;          /**< Potential Temp of the mantle [K] */
 	double dSurfTemp;         /**< Surface Temp of the planet [K] */
@@ -993,7 +996,6 @@ struct BODY {
 	double dOxygenMassMOAtm;  /**< Water mass in magma ocean and atmosphere [kg] */
 	double dOxygenMassSol;    /**< Water mass in the solidified mantle [kg] */
 	/* Input variables */
-	double dPlanetFormTime;   /**< Formation time of the planet after formation of the star [s] */
 	double dCoreRadius;       /**< Core radius of the planet [m] */
 	double dWaterMassAtm;     /**< Water mass in the atmosphere [kg] */
   double dManMeltDensity;   /**< Density of the molten mantle [km/m^3] */
@@ -1022,8 +1024,19 @@ struct BODY {
 	double dOxyFugFactor;
 	double dPressAtmTot;      /**< Total atmospheric pressure */
 	/* Variables for the connection between magmoc and atmesc */
-	double dWaterMassEsc;     /**< Water mass escaped */
-	double dOxygenMassEsc;    /**< Oxygen mass escaped */
+	double dWaterMassEsc;     /**< Water mass escaped per time */
+	double dOxygenMassEsc;    /**< Oxygen mass escaped per time */
+	/* Keep track of the different reservoirs */
+	double dNumHydroSpace;
+	double dNumHydroAtm;
+	double dNumHydroMO;
+	double dNumHydroSol;
+	double dNumOxySpace;
+	double dNumOxyAtm;
+	double dNumOxyMO;
+	double dNumOxySol;
+	double dNumFeMO;
+	double dNumFeSol;
 };
 
 /* SYSTEM contains properties of the system that pertain to

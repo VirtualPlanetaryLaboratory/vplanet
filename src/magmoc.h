@@ -26,11 +26,11 @@
 #define RADCOREEARTH              3.4e6  //core radius Earth (m)
 
 // molar masses of volatiles
-#define MOLWEIGHTWATER            18.01528 //molar weight water
-#define MOLWEIGHTHYDROGEN         1.00794  //molar weight hydrogen
-#define MOLWEIGHTOXYGEN           15.999   //molar weight oxygen
-#define MOLWEIGHTFEO15            79.844   //molar weight FeO_1.5
-#define MOLWEIGHTFEO              71.844   //molar weight FeO
+#define MOLWEIGHTWATER            18.01528e-3 //molar weight water
+#define MOLWEIGHTHYDROGEN         1.00794e-3  //molar weight hydrogen
+#define MOLWEIGHTOXYGEN           15.999e-3   //molar weight oxygen
+#define MOLWEIGHTFEO15            79.844e-3   //molar weight FeO_1.5
+#define MOLWEIGHTFEO              71.844e-3   //molar weight FeO
 
 // prefactors for linear solidus (Hirschmann 2000)
 #define ALOWPRESSURE              1.0442e-7 //low pressure (K/Pa)
@@ -120,6 +120,10 @@ void FinalizeUpdateOxygenMassSol(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_OXYGENMASSSOL      2317
 #define OUT_PRESSWATERATM      2318
 #define OUT_PRESSOXYGENATM     2319
+#define OUT_NUMHYDROSPACE      2320
+#define OUT_NUMOXYSPACE        2321
+#define OUT_NUMHYDROMO         2322
+#define OUT_FRACFE2O3MAN       2323
 
 void HelpOutputMagmOc(OUTPUT*);
 void InitializeOutputMagmOc(OUTPUT*,fnWriteOutput[]);
@@ -135,6 +139,10 @@ void WriteOxygenMassMOAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,doub
 void WriteOxygenMassSol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WritePressWaterAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WritePressOxygenAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteNumHydroSpace(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteNumOxySpace(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteNumHydroMO(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteFracFe2O3Man(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsMagmOc(CONTROL*,FILE*);

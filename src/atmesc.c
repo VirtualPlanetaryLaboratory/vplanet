@@ -1,5 +1,5 @@
 /**
-    @file atmesc.c 
+    @file atmesc.c
     @brief Subroutines that control the integration of the
     atmospheric escape model.
     @author Rodrigo Luger ([rodluger@gmail.com](mailto:rodluger@gmail.com>))
@@ -1090,7 +1090,7 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
         body[iBody].dCrossoverMass = 43. / 3. * ATOMMASS + KBOLTZ * THERMT * body[iBody].dFHRef / (6 * BDIFF * g);
       }
 
-    } else if ((body[iBody].iWaterLossModel == ATMESC_LBEXACT) | (body[iBody].iWaterLossModel == ATMESC_TIAN)) {
+    } else if ((body[iBody].iWaterLossModel == ATMESC_LBEXACT) || (body[iBody].iWaterLossModel == ATMESC_TIAN)) {
 
       double x = (QOH - 1.) * (1. - XO) * (BDIFF * g * ATOMMASS) / (KBOLTZ * THERMT);
       double FH;

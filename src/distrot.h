@@ -45,7 +45,7 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
-void AddModuleDistRot(MODULE*,int,int);
+void AddModuleDistRot(CONTROL*,MODULE*,int,int);
 void BodyCopyDistRot(BODY*,BODY*,int,int,int);
 
 /* Options Functions */

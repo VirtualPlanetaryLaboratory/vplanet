@@ -11,6 +11,7 @@
 #include <assert.h>
 #include <string.h>
 #include "vplanet.h"
+#include <sys/time.h>
 
 /*
 #ifdef DEBUG
@@ -34,8 +35,12 @@ int main(int argc,char *argv[]) {
   _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
 #endif
 
-  time_t dStartTime;
-  dStartTime = time(NULL);
+  struct timeval start, end;
+
+  gettimeofday(&start, NULL);
+
+//  time_t dStartTime;
+  //dStartTime = time(NULL);
 
   int iOption,iVerbose,iQuiet,iOverwrite;
   OPTIONS *options;
@@ -129,7 +134,7 @@ int main(int argc,char *argv[]) {
   control.Evolve.bFirstStep=1;
 
   if (control.Io.bLog) {
-    WriteLog(body,&control,&files,&module,options,output,&system,update,fnUpdate,fnWrite,dStartTime,0);
+    WriteLog(body,&control,&files,&module,options,output,&system,update,fnUpdate,fnWrite,0);
     if (control.Io.iVerbose >= VERBPROG)
       printf("Log file written.\n");
   }
@@ -141,12 +146,18 @@ int main(int argc,char *argv[]) {
 
     /* If evolution performed, log final system parameters */
     if (control.Io.bLog) {
-      WriteLog(body,&control,&files,&module,options,output,&system,update,fnUpdate,fnWrite,dStartTime,1);
+      WriteLog(body,&control,&files,&module,options,output,&system,update,fnUpdate,fnWrite,1);
       if (control.Io.iVerbose >= VERBPROG)
-	printf("Log file updated.\n");
+	      printf("Log file updated.\n");
     }
   }
 
+  gettimeofday(&end, NULL);
+
+  if (control.Io.iVerbose >= VERBPROG) {
+    printf("Simulation completed. ");
+    printf("Total time: %.4e [sec]\n", ((end.tv_usec-start.tv_usec)/1e6));
+  }
   exit(0);
 
 }

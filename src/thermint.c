@@ -13,30 +13,6 @@
 #include "vplanet.h"
 
 /**
-  Initialize values in body struct.
-
-  @param body Body struct
-  @param control Control struct
-  @param update Update struct
-  @param iBody Body index
-  @param iModule Module index
-*/
-void fvInitializeBodyThermint(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-
-  /* A non-eqtide run requires this to be 0 to start. If eqtide is called,
-     then the value will be updated in PropsAuxMultiEqtideThermint. */
-
-  body[iBody].dTidalPowMan = 0;
-
-  /* XXX -- Is this OK to initalize these values to 0. Otherwise there can
-     be a memory link. The connection between dK2, dK2Man, and dImk2Man
-     really needs to be improved. */
-  //body[iBody].dK2Man = fdK2Man(body,iBody);
-  body[iBody].dK2Man = 0;
-  body[iBody].dImk2Man = 0;
-}
-
-/**
   Copy values from src to dest for iBody.
 
   @param dest Body struct containing destination
@@ -75,7 +51,7 @@ void fvBodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dViscMMan=src[iBody].dViscMMan;
   dest[iBody].dBLUMan=src[iBody].dBLUMan;
   dest[iBody].dBLLMan=src[iBody].dBLLMan;
-  dest[iBody].dShmodUMan=src[iBody].dShmodUMan;
+  // dShmodUMan in body.c:BodyCopy to avoid floating point exceptions with other modules
   dest[iBody].dTsolUMan=src[iBody].dTsolUMan;
   dest[iBody].dTsolLMan=src[iBody].dTsolLMan;
   dest[iBody].dTliqUMan=src[iBody].dTliqUMan;
@@ -90,10 +66,7 @@ void fvBodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dTJumpMeltMan=src[iBody].dTJumpMeltMan;
   dest[iBody].dMeltMassFluxMan=src[iBody].dMeltMassFluxMan;
   dest[iBody].dRayleighMan=src[iBody].dRayleighMan;
-  /* Tides XXX Should these live in eqtide? They're really only for when
-   Q is allowed to change, which requires thermint. */
-  dest[iBody].dK2Man=src[iBody].dK2Man;
-  dest[iBody].dImk2Man=src[iBody].dImk2Man;
+  dest[iBody].dDynamViscos=src[iBody].dDynamViscos;
   /* Heat Flows */
   /* Mantle */
   dest[iBody].dHfluxUMan=src[iBody].dHfluxUMan;
@@ -102,7 +75,6 @@ void fvBodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dHflowUMan=src[iBody].dHflowUMan;
   dest[iBody].dHflowLMan=src[iBody].dHflowLMan;
   dest[iBody].dHflowCMB=src[iBody].dHflowCMB;
-  dest[iBody].dTidalPowMan=src[iBody].dTidalPowMan;
   dest[iBody].dHflowLatentMan=src[iBody].dHflowLatentMan;
   dest[iBody].dHflowMeltMan=src[iBody].dHflowMeltMan;
   dest[iBody].dHflowSecMan=src[iBody].dHflowSecMan;
@@ -132,17 +104,15 @@ void fvBodyCopyThermint(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dMagMom=src[iBody].dMagMom;
   dest[iBody].dPresSWind=src[iBody].dPresSWind;
   dest[iBody].dMagPauseRad=src[iBody].dMagPauseRad;
-  /* Begin vemcee parameters */
   dest[iBody].dActViscMan=src[iBody].dActViscMan;
   dest[iBody].dShModRef=src[iBody].dShModRef;
-  dest[iBody].dStiffness=src[iBody].dStiffness;
+  // dStiffness in body.c:BodyCopy to avoid floating point exceptions
   dest[iBody].dDLind=src[iBody].dDLind;
   dest[iBody].dDAdCore=src[iBody].dDAdCore;
   dest[iBody].dAdJumpM2UM=src[iBody].dAdJumpM2UM;
   dest[iBody].dAdJumpM2LM=src[iBody].dAdJumpM2LM;
   dest[iBody].dAdJumpC2CMB=src[iBody].dAdJumpC2CMB;
   dest[iBody].dElecCondCore=src[iBody].dElecCondCore;
-  /* End vemcee parameters */
 }
 
 /**************** THERMINT options ********************/
@@ -737,9 +707,9 @@ void fvReadShModRef(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
      body[iFile-1].dShModRef = dTmp;  //no units.
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
-      body[iFile-1].dShModRef = options->dDefault;
-
+      if (iFile > 0) { //if line num not ge 0, then if iFile gt 0, then set default.
+        body[iFile-1].dShModRef = options->dDefault;
+      }
 }
 /**
   Read mantle stiffness from input file
@@ -1062,7 +1032,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCMELTB].dDefault = VISCMELTB;
   sprintf(options[OPT_VISCMELTB].cNeg,"Default is VISCMELTB");
   fnRead[OPT_VISCMELTB] = &fvReadViscMeltB;
-  
+
   /* MeltfactorLMan XXX Added by Rory -- Check!*/
   sprintf(options[OPT_MELTFACTORLMAN].cName,"dMeltfactorLMan");
   sprintf(options[OPT_MELTFACTORLMAN].cDescr,"Lower Mantle Viscosity Melt Factor");
@@ -1140,7 +1110,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_PRESSWIND].dDefault = EPRESSWIND;
   sprintf(options[OPT_PRESSWIND].cNeg,"Default is EPRESSWIND");
   fnRead[OPT_PRESSWIND] = &fvReadPresSWind;
-  
+
   /* Halt at Minimum Mantle Temperature */
   sprintf(options[OPT_HALTMINTMAN].cName,"dHaltMinTMan");
   sprintf(options[OPT_HALTMINTMAN].cDescr,"Halt at Minimum Mantle Temperature");
@@ -1284,7 +1254,8 @@ void fvReadOptionsThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
   }
 }
 
-/******************* Verify THERMINT ******************/
+/******************* Verify THERMINT *****************/
+
 /**
   Verify assigning of TMan to body
 
@@ -1364,6 +1335,7 @@ void fvVerifyTCore(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,dou
   @param update Update struct
   @param iBody Index of body
 */
+
 void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   /* Scalar Properties */
   body[iBody].dTUMan=fdTUMan(body,iBody);
@@ -1403,6 +1375,7 @@ void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dMeltMassFluxMan=fdMeltMassFluxMan(body,iBody);
   body[iBody].dViscMMan=fdViscMMan(body,iBody);
   body[iBody].dRayleighMan=fdRayleighMan(body,iBody);
+  body[iBody].dDynamViscos = fdDynamicViscosity(body,iBody);
 
   /* Heat Flows */
   /* Mantle */
@@ -1414,7 +1387,7 @@ void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dHflowCMB=fdHflowCMB(body,iBody);
   body[iBody].dHflowLatentMan=fdHflowLatentMan(body,update,iBody);
   body[iBody].dHflowMeltMan=fdHflowMeltMan(body,iBody);
-  body[iBody].dHflowSecMan=fdHflowSecMan(body,iBody);
+  body[iBody].dHflowSecMan=fdHflowSecMan(body,evolve,iBody);
   body[iBody].dHflowSurf=fdHflowSurf(body,iBody);
 
   /* Core */
@@ -1422,10 +1395,12 @@ void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   // The order matters here!
   body[iBody].dMassIC=fdMassIC(body,iBody);
   body[iBody].dMassOC=fdMassOC(body,iBody);
-  body[iBody].dMassChiOC=fdMassChiOC(body,iBody);
-  body[iBody].dMassChiIC=fdMassChiIC(body,iBody);
+//  body[iBody].dMassChiOC=fdMassChiOC(body,iBody);
+//  body[iBody].dMassChiIC=fdMassChiIC(body,iBody);
   body[iBody].dChiOC=fdChiOC(body,iBody);
   body[iBody].dChiIC=fdChiIC(body,iBody);
+  body[iBody].dMassChiOC=fdMassChiOC(body,iBody);
+  body[iBody].dMassChiIC=fdMassChiIC(body,iBody);
   body[iBody].dDTChi=fdDTChi(body,iBody);
   body[iBody].dRIC=fdRIC(body,iBody);
   body[iBody].dDRICDTCMB=fdDRICDTCMB(body,iBody);
@@ -1488,6 +1463,9 @@ void fvNullThermintDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdate
   @param iModule Index of module
 */
 void fvVerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
+
+  body[iBody].bMantle = 1;
+
   fvVerifyTMan(body,options,system,update,body[iBody].dAge,iBody);  //Verify Man.
   fvVerifyTCore(body,options,system,update,body[iBody].dAge,iBody);        //Verify Core.
 
@@ -1506,8 +1484,8 @@ void fvVerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
   @param iBody Index of body
 */
 void fvInitializeUpdateThermint(BODY *body,UPDATE *update,int iBody) {
-  /* Initially allow all radiogenic heat sources to be present. If any are 0, 
-     or < dMinRadPower, they will me removed from update[iBody] in 
+  /* Initially allow all radiogenic heat sources to be present. If any are 0,
+     or < dMinRadPower, they will me removed from update[iBody] in
      ForceBehavior.
   */
   if (body[iBody].dTMan > 0) {
@@ -2227,23 +2205,6 @@ void fvWriteEruptEff(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   } else { }
 }
 
-/*
-void fvWriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-    *dTmp = fdK2Man(body,iBody);//body[iBody].dK2Man;
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else { }
-}
-void fvWriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = fdImk2Man(body,iBody);//body[iBody].dImk2Man;
-  strcpy(cUnit,"");
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else { }
-}
-*/
 /**
   Write inner core radius RIC output
 
@@ -2849,15 +2810,6 @@ void fvWriteHflowSecMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   } else { }
 }
 
-/* All tidal phenomena should live in eqtide.c
-void fvWriteTidalPowMan(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-    *dTmp = body[iBody].dTidalPowMan;
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else { }
-}
-*/
 /**
   Write latent heat flow from ICB output
 
@@ -3039,7 +2991,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_SIGNTJUMPLMAN].cDescr,"Sign of Lower Mantle Temperature Jump");
   sprintf(output[OUT_SIGNTJUMPLMAN].cNeg,"K");
   output[OUT_SIGNTJUMPLMAN].bNeg = 1;
-  output[OUT_SIGNTJUMPLMAN].dNeg = 1; 
+  output[OUT_SIGNTJUMPLMAN].dNeg = 1;
   output[OUT_SIGNTJUMPLMAN].iNum = 1;
   output[OUT_SIGNTJUMPLMAN].iModuleBit = THERMINT;
   fnWrite[OUT_SIGNTJUMPLMAN] = &fvWriteSignTJumpLMan;
@@ -3048,7 +3000,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TCMB].cDescr,"CMB Temperature");
   sprintf(output[OUT_TCMB].cNeg,"K");
   output[OUT_TCMB].bNeg = 1;
-  output[OUT_TCMB].dNeg = 1; 
+  output[OUT_TCMB].dNeg = 1;
   output[OUT_TCMB].iNum = 1;
   output[OUT_TCMB].iModuleBit = THERMINT;
   fnWrite[OUT_TCMB] = &fvWriteTCMB;
@@ -3057,7 +3009,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TCORE].cDescr,"Core Temperature");
   sprintf(output[OUT_TCORE].cNeg,"K");
   output[OUT_TCORE].bNeg = 1;
-  output[OUT_TCORE].dNeg = 1; 
+  output[OUT_TCORE].dNeg = 1;
   output[OUT_TCORE].iNum = 1;
   output[OUT_TCORE].iModuleBit = THERMINT;
   fnWrite[OUT_TCORE] = &fvWriteTCore;
@@ -3208,7 +3160,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MELTMASSFLUXMAN].iNum = 1;
   output[OUT_MELTMASSFLUXMAN].iModuleBit = THERMINT;
   fnWrite[OUT_MELTMASSFLUXMAN] = &fvWriteMeltMassFluxMan;
-  
+
   /* EruptEff */
   sprintf(output[OUT_ERUPTEFF].cName,"EruptEff");
   sprintf(output[OUT_ERUPTEFF].cDescr,"Mantle Melt Eruption Efficiency");
@@ -3257,7 +3209,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DYNVISC].iNum = 1;
   output[OUT_DYNVISC].iModuleBit = THERMINT;
   fnWrite[OUT_DYNVISC] = &fvWriteDynamicViscosity;
-  
+
   /* ChiOC */
   sprintf(output[OUT_CHIOC].cName,"ChiOC");
   sprintf(output[OUT_CHIOC].cDescr,"Light Element Concentration in Outer Core");
@@ -3393,7 +3345,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MAGPAUSERAD].iNum = 1;
   output[OUT_MAGPAUSERAD].iModuleBit = THERMINT;
   fnWrite[OUT_MAGPAUSERAD] = &fvWriteMagPauseRad;
-  
+
   /* Heat Fluxes/Flows */
   /* HFluxUMan */
   sprintf(output[OUT_HFLUXUMAN].cName,"HfluxUMan");
@@ -3494,15 +3446,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLOWMELTMAN].iNum = 1;
   output[OUT_HFLOWMELTMAN].iModuleBit = THERMINT;
   fnWrite[OUT_HFLOWMELTMAN] = &fvWriteHflowMeltMan;
-  /* TidalPowMan
-  sprintf(output[OUT_TIDALPOWMAN].cName,"TidalPowMan");
-  sprintf(output[OUT_TIDALPOWMAN].cDescr,"Tidal Power Mantle");
-  sprintf(output[OUT_TIDALPOWMAN].cNeg,"TW");
-  output[OUT_TIDALPOWMAN].bNeg = 1;
-  output[OUT_TIDALPOWMAN].dNeg = 1e-12;
-  output[OUT_TIDALPOWMAN].iNum = 1;
-  output[OUT_TIDALPOWMAN].iModuleBit = THERMINT;
-  fnWrite[OUT_TIDALPOWMAN] = &fvWriteTidalPowMan; */
+
   /* HFlowSecMan */
   sprintf(output[OUT_HFLOWSECMAN].cName,"HflowSecMan");
   sprintf(output[OUT_HFLOWSECMAN].cDescr,"Mantle Secular Heat Flow");
@@ -3547,7 +3491,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TDOTMAN].cDescr,"Change in Mantle Temperature");
   sprintf(output[OUT_TDOTMAN].cNeg,"K/s");
   output[OUT_TDOTMAN].bNeg = 1;
-  output[OUT_TDOTMAN].dNeg = 1; 
+  output[OUT_TDOTMAN].dNeg = 1;
   output[OUT_TDOTMAN].iNum = 1;
   output[OUT_TDOTMAN].iModuleBit = THERMINT;
   fnWrite[OUT_TDOTMAN] = &fvWriteTDotMan;
@@ -3556,7 +3500,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TDOTCORE].cDescr,"Change in Core Temperature");
   sprintf(output[OUT_TDOTCORE].cNeg,"K/s");
   output[OUT_TDOTCORE].bNeg = 1;
-  output[OUT_TDOTCORE].dNeg = 1; 
+  output[OUT_TDOTCORE].dNeg = 1;
   output[OUT_TDOTCORE].iNum = 1;
   output[OUT_TDOTCORE].iModuleBit = THERMINT;
   fnWrite[OUT_TDOTCORE] = &fvWriteTDotCore;
@@ -3599,7 +3543,7 @@ void fvLogOptionsThermint(CONTROL *control, FILE *fp) {
   @param fp File
 */
 void fvLogThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
-  /* Anything here? 
+  /* Anything here?
   int iOut;
   fprintf(fp,"\n----- RADHEAT PARAMETERS ------\n");
   for (iOut=OUTSTARTRADHEAT;iOut<OUTBODYSTARTRADHEAT;iOut++) {
@@ -3646,7 +3590,7 @@ void fvLogBodyThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   @param iBody Index of body
   @param iModule Index of module
 */
-void fvAddModuleThermint(MODULE *module,int iBody,int iModule) {
+void fvAddModuleThermint(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]              = THERMINT;
 
@@ -3658,7 +3602,7 @@ void fvAddModuleThermint(MODULE *module,int iBody,int iModule) {
   module->fnNullDerivatives[iBody][iModule]     = &fvNullThermintDerivatives;
   module->fnVerifyHalt[iBody][iModule]          = &fvVerifyHaltThermint;
   module->fnVerifyHalt[iBody][iModule]          = &fvVerifyHaltThermint;
-  
+
   module->fnInitializeBody[iBody][iModule]      = &fvInitializeBodyThermint;
   module->fnInitializeUpdate[iBody][iModule]    = &fvInitializeUpdateThermint;
   module->fnInitializeOutput[iBody][iModule]    = &fvInitializeOutputThermint;
@@ -3760,7 +3704,7 @@ double fdSignTJumpLMan(BODY *body,int iBody) {
 
   @return Arrhenius component of upper mantle viscosity
 */
-double fdViscUManArr(BODY *body,int iBody) {  
+double fdViscUManArr(BODY *body,int iBody) {
   return body[iBody].dViscRef*exp(body[iBody].dActViscMan/(GASCONSTANT*body[iBody].dTUMan));
 }
 /**
@@ -3827,7 +3771,8 @@ double fdBLUMan(BODY *body,int iBody) {
   @return Lower mantle thermal boundary layer thickness
 */
 double fdBLLMan(BODY *body,int iBody) {
-  return (EDMAN)*pow((RACRIT)*body[iBody].dViscLMan*(THERMDIFFLMAN)/((THERMEXPANMAN)*(GRAVLMAN)*body[iBody].dTJumpLMan*cube(EDMAN)),(CONVEXPON));
+  return (EDMAN)*pow((RACRIT)*body[iBody].dViscLMan*(THERMDIFFLMAN)/
+    ((THERMEXPANMAN)*(GRAVLMAN)*body[iBody].dTJumpLMan*cube(EDMAN)),(CONVEXPON));
 }
 /**
   Function compute upper mantle shear modulus
@@ -4007,17 +3952,6 @@ double fdRayleighMan(BODY *body,int iBody) {
   return body[iBody].dSignTJumpUMan*(THERMEXPANMAN)*(GRAVUMAN)*(body[iBody].dTJumpUMan+body[iBody].dTJumpLMan)*pow(EDMAN,3.)/((THERMDIFFUMAN)*body[iBody].dViscMMan);  //Mantle Rayleigh number defined in terms of ViscMMan and SignTJumpUMan.
 }
 /**
-  Function compute upper mantle k2 Love number
-
-  @param body Body struct
-  @param iBody Index of body
-
-  @return Upper mantle k2 Love number
-*/
-double fdK2Man(BODY *body,int iBody) {
-  return 1.5/(1+9.5*body[iBody].dShmodUMan/(STIFFNESS));
-}
-/**
   Function compute upper mantle dynamic viscosity: ViscUMan*EDENSMAN.
 
   @param body Body struct
@@ -4027,20 +3961,6 @@ double fdK2Man(BODY *body,int iBody) {
 */
 double fdDynamicViscosity(BODY *body,int iBody) {
   return body[iBody].dViscUMan*(EDENSMAN);
-}
-/**
-  Function compute upper mantle imaginary component of k2 Love number
-
-  @param body Body struct
-  @param iBody Index of body
-
-  @return Imaginary component of k2 Love number
-*/
-double fdImk2Man(BODY *body,int iBody) {
-  double viscdyn=fdDynamicViscosity(body,iBody);
-  double denom2=pow((1.+(19./2)*(body[iBody].dShmodUMan/(body[iBody].dStiffness)))*(viscdyn*body[iBody].dMeanMotion/body[iBody].dShmodUMan),2.);
-  double imk2=(57./4)*viscdyn*body[iBody].dMeanMotion/( (body[iBody].dStiffness)*(1.0+ denom2) );
-  return imk2;
 }
 
 /* Core Chemistry */
@@ -4066,28 +3986,7 @@ double fdMassIC(BODY *body, int iBody) {
 double fdMassOC(BODY *body, int iBody) {
   return EMASSCORE-body[iBody].dMassIC;
 }
-/**
-  Function compute light element mass in outer core
 
-  @param body Body struct
-  @param iBody Index of body
-
-  @return Light element mass in outer core
-*/
-double fdMassChiOC(BODY *body, int iBody) {
-  return EMASSCORE_CHI/( PARTITION_CHI_CORE*body[iBody].dMassIC/body[iBody].dMassOC + 1. );
-}
-/**
-  Function compute light element mass in inner core
-
-  @param body Body struct
-  @param iBody Index of body
-
-  @return Light element mass in inner core
-*/
-double fdMassChiIC(BODY *body, int iBody) {
-  return EMASSCORE_CHI-body[iBody].dMassChiOC;
-}
 /**
   Function compute light element concentration in outer core
 
@@ -4097,7 +3996,8 @@ double fdMassChiIC(BODY *body, int iBody) {
   @return Light element concentration in outer core
 */
 double fdChiOC(BODY *body, int iBody) {
-  return body[iBody].dMassChiOC/body[iBody].dMassOC;
+  //  return body[iBody].dMassChiOC/body[iBody].dMassOC;
+  return (EMASSCORE_CHI)/(body[iBody].dMassOC+body[iBody].dMassIC/(PARTITION_CHI_CORE)) ;
 }
 /**
   Function compute light element concentration in inner core
@@ -4109,11 +4009,39 @@ double fdChiOC(BODY *body, int iBody) {
 */
 double fdChiIC(BODY *body, int iBody) {
   if (body[iBody].dRIC>0.) {
-    return body[iBody].dMassChiIC/body[iBody].dMassIC;
+    //    return body[iBody].dMassChiIC/body[iBody].dMassIC;
+    return body[iBody].dChiOC/(PARTITION_CHI_CORE);
   } else {
     return 0.;
   }
 }
+
+/**
+  Function compute light element mass in outer core
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Light element mass in outer core
+*/
+double fdMassChiOC(BODY *body, int iBody) {
+  //  return EMASSCORE_CHI/( PARTITION_CHI_CORE*body[iBody].dMassIC/body[iBody].dMassOC + 1. );
+  return body[iBody].dMassOC*body[iBody].dChiOC;
+}
+/**
+  Function compute light element mass in inner core
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Light element mass in inner core
+*/
+double fdMassChiIC(BODY *body, int iBody) {
+  //  return EMASSCORE_CHI-body[iBody].dMassChiOC;
+  return body[iBody].dChiIC*body[iBody].dMassIC;
+}
+
+
 /**
   Function compute core liquidus depression due to light element concentration
 
@@ -4139,6 +4067,9 @@ double fdRIC(BODY *body,int iBody) {
   double T_fe_cen=body[iBody].dTrefLind-(body[iBody].dDTChi);     //Liquidus at center of core.
   double T_fe_cmb=(body[iBody].dTrefLind)*exp(-2.*(1.-1./(3.*(GRUNEISEN)))*pow((ERCORE)/(body[iBody].dDLind),2.0))-(body[iBody].dDTChi); //Liquidus@CMB
   double numerator=1.+pow((body[iBody].dDAdCore)/(ERCORE),2.)*log(body[iBody].dTCMB/T_fe_cen);
+  if ((T_fe_cmb/T_fe_cen)<0){
+    return 0;   //for debugging only!
+  }
   double denom=1.+pow((body[iBody].dDAdCore)/(ERCORE),2.0)*log(T_fe_cmb/T_fe_cen);
   if ((numerator/denom)>0.) {    //IC exists
     dRIC = (ERCORE)*sqrt(numerator/denom);
@@ -4280,22 +4211,6 @@ double fdMagPauseRad(BODY *body, int iBody) {
   return pow((MAGPERM)*pow(body[iBody].dMagMom,2)/(8*pow(PI,2)*body[iBody].dPresSWind),1./6);
 }
 
-/* All tidal phenomena should exist exclusively in eqtide.c.*/
-/* Heat Flows */
-/**
-  Function compute tidal power in solid mantle
-
-  @param body Body struct
-  @param iBody Index of body
-
-  @return Tidal power in solid mantle
-*/
-double fdTidalPowMan(BODY *body,int iBody) {
-  // dflemin3: dRadius -> dTidalRadius
-  // PD: Should this use dTidalRadius or dRadius??
-  return (21./2)*body[iBody].dImk2Man*(BIGG)*pow(body[0].dMass/pow(body[iBody].dSemi,3.),2.)*pow(body[iBody].dTidalRadius,5.)*body[iBody].dMeanMotion*pow(body[iBody].dEcc,2.);
-}
-
 /* Heat Fluxes/flows */
 /**
   Function compute heat flux across upper mantle thermal boundary layer
@@ -4416,17 +4331,7 @@ double fdHflowMeltMan(BODY *body,int iBody) {
   // PD: only specific heat lost contributes to mantle heat balance (latent heat comes from melting)
   return body[iBody].dEruptEff*body[iBody].dMeltMassFluxMan*((SPECHEATMAN)*body[iBody].dTJumpMeltMan);
 }
-/**
-  Function compute secular mantle heat flow: heat sinks - sources
 
-  @param body Body struct
-  @param iBody Index of body
-
-  @return Heat flow of erupted mantle melt
-*/
-double fdHflowSecMan(BODY *body,int iBody) {
-  return body[iBody].dHflowUMan+body[iBody].dHflowMeltMan-body[iBody].dHflowLMan-body[iBody].dHflowLatentMan-body[iBody].dTidalPowMan-body[iBody].dRadPowerMan;
-}
 /**
   Function compute heat flux across surface of mantle
 
@@ -4473,6 +4378,12 @@ double fdMassICDot(BODY *body,UPDATE *update,int iBody) {
     } else {                    //If no IC.
       return 0;
     }
+}
+
+//XXX RadPowerMan should be moved to RadHeat
+double fdPowerThermint(BODY *body,int iBody) {
+  return body[iBody].dHflowUMan+body[iBody].dHflowMeltMan-body[iBody].dHflowLMan
+    -body[iBody].dHflowLatentMan-body[iBody].dRadPowerMan;
 }
 /**
   Function compute latent heat flow from inner core solidification
@@ -4532,7 +4443,7 @@ double fdTDotMan(BODY *body,SYSTEM *system,int *iaBody) {
 */
 double fdTDotCore(BODY *body,SYSTEM *system,int *iaBody) {
   double foo;
-  int iBody=iaBody[0]; 
+  int iBody=iaBody[0];
   double areaic=4.0*PI*pow(body[iBody].dRIC,2.0);
   foo= (-body[iBody].dHflowCMB+body[iBody].dRadPowerCore)/((EMASSCORE)*(SPECHEATCORE) - areaic*(EDENSIC)*(body[iBody].dAdJumpC2CMB)*body[iBody].dDRICDTCMB*(SPECLATENTICB+SPECPOWGRAVIC));
   return foo;
@@ -4615,12 +4526,12 @@ double cubicroot(int type,BODY *body,int iBody) {
     }
     double delta0=pow(b,2.0)-3.0*a*c;                                             //cubic root component (wikip)
     double delta1=2.0*cube(b)-9.0*a*b*c+27.0*pow(a,2.0)*d;                        //cubic root component (wikip)
-    double croot=pow( (delta1+sqrt(pow(delta1,2.0)-4.0*cube(delta0))) /2.0,1./3); //cubic root component (wikip)
-    if (pow(delta1,2.0)-4.0*cube(delta0) < 0) {
+    if ((pow(delta1,2.0)-4.0*cube(delta0)) < 0) {
       //        printf("imaginary cubic root!\n");
       //        exit(1);
       return 0;       //imaginary root implies no intersection, no melt layer?
     }
+    double croot=pow( (delta1+sqrt(pow(delta1,2.0)-4.0*cube(delta0))) /2.0,1./3); //cubic root component (wikip)
     double root=-1.0/(3.0*a)*(b+croot+delta0/croot);                              //real cubic root, radius of layer.
     return ERMAN-root;                                                            //Return depth.
 }

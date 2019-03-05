@@ -1,5 +1,5 @@
 /**
-    @file atmesc.c 
+    @file atmesc.c
     @brief Subroutines that control the integration of the
     atmospheric escape model.
     @author Rodrigo Luger ([rodluger@gmail.com](mailto:rodluger@gmail.com>))
@@ -430,33 +430,7 @@ void ReadAtmXAbsEffH2O(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       body[iFile-1].dAtmXAbsEffH2O = options->dDefault;
 }
 
-/**
-Read the planet's initial gaseous envelope mass.
-
-@param body A pointer to the current BODY instance
-@param control A pointer to the integration CONTROL instance
-@param files A pointer to the array of input FILES
-@param options A pointer to the OPTIONS instance
-@param system A pointer to the SYSTEM instance
-@param iFile The current file number
-*/
-void ReadEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile-1].dEnvelopeMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else
-      body[iFile-1].dEnvelopeMass = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dEnvelopeMass = options->dDefault;
-}
+// ReadEnvelopeMass is in options.c to avoid memory leaks in verifying envelope.
 
 /**
 Read the planet's initial atmospheric oxygen mass (Luger and Barnes 2015 model).
@@ -518,34 +492,6 @@ void ReadOxygenMantleMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
       body[iFile-1].dOxygenMantleMass = options->dDefault;
 }
 
-/**
-Read the planet's initial surface water mass.
-
-@param body A pointer to the current BODY instance
-@param control A pointer to the integration CONTROL instance
-@param files A pointer to the array of input FILES
-@param options A pointer to the OPTIONS instance
-@param system A pointer to the SYSTEM instance
-@param iFile The current file number
-*/
-void ReadSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile-1].dSurfaceWaterMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else
-      body[iFile-1].dSurfaceWaterMass = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dSurfaceWaterMass = options->dDefault;
-}
-
 /* Halts */
 
 /**
@@ -574,33 +520,11 @@ void ReadHaltMinSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTION
   }
 }
 
-/**
-Read the minimum surface water mass.
+/* ReadMinSurfaceWaterMass is in options.c to avoid memory leaks when verifying
+  ocean. */
 
-@param body A pointer to the current BODY instance
-@param control A pointer to the integration CONTROL instance
-@param files A pointer to the array of input FILES
-@param options A pointer to the OPTIONS instance
-@param system A pointer to the SYSTEM instance
-@param iFile The current file number
-*/
-void ReadMinSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile-1].dMinSurfaceWaterMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else
-      body[iFile-1].dMinSurfaceWaterMass = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dMinSurfaceWaterMass = options->dDefault;
-}
+/* ReadSurfaceWaterMass is in options.c to avoid memory leaks when verifying
+  ocean. */
 
 /**
 Read the parameter that controls whether the code halts when the planet's envelope is fully evaporated.
@@ -628,33 +552,7 @@ void ReadHaltMinEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *o
   }
 }
 
-/**
-Read the minimum envelope mass.
-
-@param body A pointer to the current BODY instance
-@param control A pointer to the integration CONTROL instance
-@param files A pointer to the array of input FILES
-@param options A pointer to the OPTIONS instance
-@param system A pointer to the SYSTEM instance
-@param iFile The current file number
-*/
-void ReadMinEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile-1].dMinEnvelopeMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else
-      body[iFile-1].dMinEnvelopeMass = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dMinEnvelopeMass = options->dDefault;
-}
+// ReadMinEnvelopeMass is in options.c to eliminate memory leak in verifying envelope
 
 /**
 Initialize the user options for the atmospheric escape model.
@@ -696,16 +594,6 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ATMXABSEFFH2OMODEL].iMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2OMODEL] = &ReadAtmXAbsEffH2OModel;
 
-  sprintf(options[OPT_SURFACEWATERMASS].cName,"dSurfWaterMass");
-  sprintf(options[OPT_SURFACEWATERMASS].cDescr,"Initial Surface Water Mass");
-  sprintf(options[OPT_SURFACEWATERMASS].cDefault,"0");
-  options[OPT_SURFACEWATERMASS].dDefault = 0;
-  options[OPT_SURFACEWATERMASS].iType = 2;
-  options[OPT_SURFACEWATERMASS].iMultiFile = 1;
-  options[OPT_SURFACEWATERMASS].dNeg = TOMASS;
-  sprintf(options[OPT_SURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
-  fnRead[OPT_SURFACEWATERMASS] = &ReadSurfaceWaterMass;
-
   sprintf(options[OPT_OXYGENMASS].cName,"dOxygenMass");
   sprintf(options[OPT_OXYGENMASS].cDescr,"Initial Oxygen Mass");
   sprintf(options[OPT_OXYGENMASS].cDefault,"0");
@@ -743,16 +631,6 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_INSTANTO2SINK].iMultiFile = 1;
   fnRead[OPT_INSTANTO2SINK] = &ReadInstantO2Sink;
 
-  sprintf(options[OPT_ENVELOPEMASS].cName,"dEnvelopeMass");
-  sprintf(options[OPT_ENVELOPEMASS].cDescr,"Initial Envelope Mass");
-  sprintf(options[OPT_ENVELOPEMASS].cDefault,"0");
-  options[OPT_ENVELOPEMASS].dDefault = 0;
-  options[OPT_ENVELOPEMASS].iType = 2;
-  options[OPT_ENVELOPEMASS].iMultiFile = 1;
-  options[OPT_ENVELOPEMASS].dNeg = MEARTH;
-  sprintf(options[OPT_ENVELOPEMASS].cNeg,"Earth");
-  fnRead[OPT_ENVELOPEMASS] = &ReadEnvelopeMass;
-
   sprintf(options[OPT_HALTDESICCATED].cName,"bHaltSurfaceDesiccated");
   sprintf(options[OPT_HALTDESICCATED].cDescr,"Halt at Desiccation?");
   sprintf(options[OPT_HALTDESICCATED].cDefault,"0");
@@ -764,24 +642,6 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTENVELOPEGONE].cDefault,"0");
   options[OPT_HALTENVELOPEGONE].iType = 0;
   fnRead[OPT_HALTENVELOPEGONE] = &ReadHaltMinEnvelopeMass;
-
-  sprintf(options[OPT_MINSURFACEWATERMASS].cName,"dMinSurfWaterMass");
-  sprintf(options[OPT_MINSURFACEWATERMASS].cDescr,"Minimum Surface Water Mass");
-  sprintf(options[OPT_MINSURFACEWATERMASS].cDefault,"1.e-5 TO");
-  options[OPT_MINSURFACEWATERMASS].dDefault = 1.e-5*TOMASS;
-  options[OPT_MINSURFACEWATERMASS].iType = 2;
-  options[OPT_MINSURFACEWATERMASS].dNeg = TOMASS;
-  sprintf(options[OPT_MINSURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
-  fnRead[OPT_MINSURFACEWATERMASS] = &ReadMinSurfaceWaterMass;
-
-  sprintf(options[OPT_MINENVELOPEMASS].cName,"dMinEnvelopeMass");
-  sprintf(options[OPT_MINENVELOPEMASS].cDescr,"Minimum Envelope Mass");
-  sprintf(options[OPT_MINENVELOPEMASS].cDefault,"1.e-8 Earth");
-  options[OPT_MINENVELOPEMASS].dDefault = 1.e-8*MEARTH;
-  options[OPT_MINENVELOPEMASS].iType = 2;
-  options[OPT_MINENVELOPEMASS].dNeg = MEARTH;
-  sprintf(options[OPT_MINENVELOPEMASS].cNeg,"Earth");
-  fnRead[OPT_MINENVELOPEMASS] = &ReadMinEnvelopeMass;
 
   sprintf(options[OPT_THERMTEMP].cName,"dThermTemp");
   sprintf(options[OPT_THERMTEMP].cDescr,"Thermosphere temperature");
@@ -2239,7 +2099,7 @@ Adds atmesc to the current array of MODULEs.
 @param iBody The current BODY number
 @param iModule The current MODULE number
 */
-void AddModuleAtmEsc(MODULE *module,int iBody,int iModule) {
+void AddModuleAtmEsc(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]                         = ATMESC;
 

@@ -1645,7 +1645,7 @@ void LogBodyDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UP
 
 /************* MODULE Functions ***********/
 
-void AddModuleDistOrb(MODULE *module,int iBody,int iModule) {
+void AddModuleDistOrb(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]                  = DISTORB;
 

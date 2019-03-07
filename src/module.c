@@ -174,6 +174,8 @@ void InitializeModule(MODULE *module,int iNumBodies) {
   module->fnFinalizeUpdateSolidRadius     = malloc(iNumBodies*sizeof(fnFinalizeUpdateSolidRadiusModule));
   module->fnFinalizeUpdateOxygenMassMOAtm = malloc(iNumBodies*sizeof(fnFinalizeUpdateOxygenMassMOAtmModule));
   module->fnFinalizeUpdateOxygenMassSol   = malloc(iNumBodies*sizeof(fnFinalizeUpdateOxygenMassSolModule));
+  module->fnFinalizeUpdateHydrogenMassSpace   = malloc(iNumBodies*sizeof(fnFinalizeUpdateHydrogenMassSpaceModule));
+  module->fnFinalizeUpdateOxygenMassSpace   = malloc(iNumBodies*sizeof(fnFinalizeUpdateOxygenMassSpaceModule));
 
   // Function Pointer Matrices
   module->fnLogBody                 = malloc(iNumBodies*sizeof(fnLogBodyModule*));
@@ -320,6 +322,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
   module->fnFinalizeUpdateSolidRadius[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdateSolidRadiusModule));
   module->fnFinalizeUpdateOxygenMassMOAtm[iBody]  = malloc(iNumModules*sizeof(fnFinalizeUpdateOxygenMassMOAtmModule));
   module->fnFinalizeUpdateOxygenMassSol[iBody]    = malloc(iNumModules*sizeof(fnFinalizeUpdateOxygenMassSolModule));
+  module->fnFinalizeUpdateHydrogenMassSpace[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateHydrogenMassSpaceModule));
+  module->fnFinalizeUpdateOxygenMassSpace[iBody]   = malloc(iNumModules*sizeof(fnFinalizeUpdateOxygenMassSpaceModule));
 
   for (iModule = 0; iModule < (iNumModules); iModule++) {
     /* Initialize all module functions pointers to point to their respective
@@ -399,6 +403,8 @@ void FinalizeModule(BODY *body,MODULE *module,int iBody) {
     module->fnFinalizeUpdateSolidRadius[iBody][iModule]      = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateOxygenMassMOAtm[iBody][iModule]  = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateOxygenMassSol[iBody][iModule]    = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateHydrogenMassSpace[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateOxygenMassSpace[iBody][iModule]   = &FinalizeUpdateNULL;
   }
 
   /************************

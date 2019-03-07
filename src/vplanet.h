@@ -246,6 +246,8 @@
 #define VSOLIDRADIUS     2306
 #define VOXYGENMASSMOATM 2307
 #define VOXYGENMASSSOL   2308
+#define VHYDROGENMASSSPACE 2309
+#define VOXYGENMASSSPACE   2310
 
 /* Now define the structs */
 
@@ -995,6 +997,8 @@ struct BODY {
 	double dWaterMassSol;     /**< Water mass in the solidified mantle [kg] */
 	double dOxygenMassMOAtm;  /**< Water mass in magma ocean and atmosphere [kg] */
 	double dOxygenMassSol;    /**< Water mass in the solidified mantle [kg] */
+	double dHydrogenMassSpace;/**< Mass of hydrogen that is lost to space */
+	double dOxygenMassSpace;	/**< Mass of oxygen that is lost to space */
 	/* Input variables */
 	double dCoreRadius;       /**< Core radius of the planet [m] */
 	double dWaterMassAtm;     /**< Water mass in the atmosphere [kg] */
@@ -1020,24 +1024,11 @@ struct BODY {
 	double dWaterFracMelt;    /**< Mass fraction of water in the magma ocean */
 	double dFracFe2O3Man;     /**< Mass fraction of Fe2O3 in the mantle */
 	double dOxygenMassAtm;    /**< Oxygen mass in the atmosphere [kg] */
-	double dOxyFugNewMax;
-	double dOxyFugFactor;
-	double dPressAtmTot;      /**< Total atmospheric pressure */
+	double dOxyFugFactor;     /**< Factor to convert oxygen press into Fe2O3 mass frac */
 	double dAveMolarMassMan;  /**< Average molar mass of the mantle */
 	/* Variables for the connection between magmoc and atmesc */
 	double dWaterMassEsc;     /**< Water mass escaped per time */
 	double dOxygenMassEsc;    /**< Oxygen mass escaped per time */
-	/* Keep track of the different reservoirs */
-	double dNumHydroSpace;
-	double dNumHydroAtm;
-	double dNumHydroMO;
-	double dNumHydroSol;
-	double dNumOxySpace;
-	double dNumOxyAtm;
-	double dNumOxyMO;
-	double dNumOxySol;
-	double dNumFeMO;
-	double dNumFeSol;
 	/* Old */
 	double dWaterMassMOAtmOld;
 	double dWaterMassEscOld;
@@ -1228,6 +1219,10 @@ struct UPDATE {
   int iNumOxygenMassMOAtm;
   int iOxygenMassSol;
   int iNumOxygenMassSol;
+	int iOxygenMassSpace;
+  int iNumOxygenMassSpace;
+	int iHydrogenMassSpace;
+	int iNumHydrogenMassSpace;
 
   double dWaterMassMOAtm;
   double dWaterMassSol;
@@ -1236,6 +1231,8 @@ struct UPDATE {
 	double dSolidRadius;
 	double dOxygenMassMOAtm;
   double dOxygenMassSol;
+	double dHyrdogenMassSpace;
+	double dOxygenMassSpace;
 
   double *pdDWaterMassMOAtm;
   double *pdDWaterMassSol;
@@ -1244,6 +1241,8 @@ struct UPDATE {
 	double *pdDSolidRadius;
 	double *pdDOxygenMassMOAtm;
   double *pdDOxygenMassSol;
+	double *pdDHydrogenMassSpace;
+	double *pdDOxygenMassSpace;
 
   /* SPINBODY parameters */
   int iVelX;
@@ -1949,6 +1948,8 @@ typedef void (*fnFinalizeUpdatePotTempModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSolidRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateOxygenMassMOAtmModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateOxygenMassSolModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateHydrogenMassSpaceModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateOxygenMassSpaceModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
@@ -2133,6 +2134,8 @@ struct MODULE {
 	fnFinalizeUpdateSolidRadiusModule **fnFinalizeUpdateSolidRadius;
 	fnFinalizeUpdateOxygenMassMOAtmModule **fnFinalizeUpdateOxygenMassMOAtm;
   fnFinalizeUpdateOxygenMassSolModule **fnFinalizeUpdateOxygenMassSol;
+	fnFinalizeUpdateHydrogenMassSpaceModule **fnFinalizeUpdateHydrogenMassSpace;
+	fnFinalizeUpdateOxygenMassSpaceModule **fnFinalizeUpdateOxygenMassSpace;
 
   /*! These functions log module-specific data. */
   fnLogBodyModule **fnLogBody;

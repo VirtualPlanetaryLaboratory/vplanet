@@ -125,6 +125,8 @@ void FinalizeUpdateWaterMassMOAtm(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateWaterMassSol(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateOxygenMassMOAtm(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateOxygenMassSol(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateHydrogenMassSpace(BODY*,UPDATE*,int*,int,int,int);
+void FinalizeUpdateOxygenMassSpace(BODY*,UPDATE*,int*,int,int,int);
 /* Output Functions */
 
 /* MagmOc 1100 - 1199 */
@@ -141,9 +143,8 @@ void FinalizeUpdateOxygenMassSol(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_OXYGENMASSSOL      2317
 #define OUT_PRESSWATERATM      2318
 #define OUT_PRESSOXYGENATM     2319
-#define OUT_NUMHYDROSPACE      2320
-#define OUT_NUMOXYSPACE        2321
-#define OUT_NUMHYDROMO         2322
+#define OUT_HYDROGENMASSSPACE  2320
+#define OUT_OXYGENMASSSPACE    2321
 #define OUT_FRACFE2O3MAN       2323
 
 void HelpOutputMagmOc(OUTPUT*);
@@ -160,9 +161,8 @@ void WriteOxygenMassMOAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,doub
 void WriteOxygenMassSol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WritePressWaterAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WritePressOxygenAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteNumHydroSpace(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteNumOxySpace(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteNumHydroMO(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteHydrogenMassSpace(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteOxygenMassSpace(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteFracFe2O3Man(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
@@ -179,3 +179,5 @@ double fdDWaterMassSol(BODY*, SYSTEM*, int*);
 double fdDWaterMassMOAtm(BODY*, SYSTEM*, int*);
 double fdDOxygenMassSol(BODY*, SYSTEM*, int*);
 double fdDOxygenMassMOAtm(BODY*, SYSTEM*, int*);
+double fdDHydrogenMassSpace(BODY*, SYSTEM*, int*);
+double fdDOxygenMassSpace(BODY*, SYSTEM*, int*);

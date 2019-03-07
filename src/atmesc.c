@@ -1134,30 +1134,6 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
     }
   }
 
-  // Added by Patrick for test of atom number conservation
-  if ((body[iBody].bRunaway) && (body[iBody].dSurfaceWaterMass > 0)) {
-    // This takes care of both energy-limited and diffusion limited escape!
-    body[iBody].dWaterMassEsc = -(9. / (1 + 8 * body[iBody].dOxygenEta)) * body[iBody].dMDotWater;
-  } else {
-    body[iBody].dWaterMassEsc = 0.;
-  }
-  if ((body[iBody].bRunaway) && (!body[iBody].bInstantO2Sink) && (body[iBody].dSurfaceWaterMass > 0)) {
-    if (body[iBody].iWaterLossModel == ATMESC_LB15) {
-      // Rodrigo and Barnes (2015)
-      if (body[iBody].dCrossoverMass >= 16 * ATOMMASS)
-        body[iBody].dOxygenMassEsc = (320. * PI * BIGG * ATOMMASS * ATOMMASS * BDIFF * body[iBody].dMass) / (KBOLTZ * THERMT);
-      else
-        body[iBody].dOxygenMassEsc = (8 - 8 * body[iBody].dOxygenEta) / (1 + 8 * body[iBody].dOxygenEta) * body[iBody].dMDotWater;
-    } else {
-      // Exact
-      body[iBody].dOxygenMassEsc = (8 - 8 * body[iBody].dOxygenEta) / (1 + 8 * body[iBody].dOxygenEta) * body[iBody].dMDotWater;
-    }
-  } else {
-    body[iBody].dOxygenMassEsc = 0.;
-  }
-  double dRound = 1e45;
-  body[iBody].dNumHydroSpace = body[iBody].dNumHydroSpace - 2* body[iBody].dWaterMassEsc * 1e2*evolve->dTimeStep * 6.022e23 / (0.018 * dRound);
-  body[iBody].dNumOxySpace   = body[iBody].dNumOxySpace - body[iBody].dWaterMassEsc * 1e2*evolve->dTimeStep * 6.022e23 / (0.018 * dRound) - body[iBody].dOxygenMassEsc * 1e2*evolve->dTimeStep * 6.022e23 / (0.016 * dRound);
 }
 
 
@@ -2012,22 +1988,6 @@ void WriteFXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
   }
 }
 
-// Added by Patrick for test of atom mass conservation
-void WriteNumHydroSpace_A(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dNumHydroSpace;
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else { }
-}
-
-void WriteNumOxySpace_A(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dNumOxySpace;
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else { }
-}
 /**
 Set up stuff to be logged for atmesc.
 
@@ -2199,23 +2159,6 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_FXUV].iNum = 1;
   output[OUT_FXUV].iModuleBit = ATMESC;
   fnWrite[OUT_FXUV] = &WriteFXUV;
-
-  // added by Patrick for test of atom mass conservation
-
-  sprintf(output[OUT_NUMHYDROSPACE_A].cName,"NumHydroSpace");
-  sprintf(output[OUT_NUMHYDROSPACE_A].cDescr,"H atoms lost to space");
-  output[OUT_NUMHYDROSPACE_A].bNeg = 1;
-  output[OUT_NUMHYDROSPACE_A].iNum = 1;
-  output[OUT_NUMHYDROSPACE_A].iModuleBit = ATMESC; //name of module
-  fnWrite[OUT_NUMHYDROSPACE_A] = &WriteNumHydroSpace_A;
-
-  sprintf(output[OUT_NUMOXYSPACE_A].cName,"NumOxySpace");
-  sprintf(output[OUT_NUMOXYSPACE_A].cDescr,"O atoms lost to space");
-  output[OUT_NUMOXYSPACE_A].bNeg = 1;
-  output[OUT_NUMOXYSPACE_A].iNum = 1;
-  output[OUT_NUMOXYSPACE_A].iModuleBit = ATMESC; //name of module
-  fnWrite[OUT_NUMOXYSPACE_A] = &WriteNumOxySpace_A;
-
 
 }
 

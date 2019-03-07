@@ -1023,6 +1023,7 @@ struct BODY {
 	double dOxyFugNewMax;
 	double dOxyFugFactor;
 	double dPressAtmTot;      /**< Total atmospheric pressure */
+	double dAveMolarMassMan;  /**< Average molar mass of the mantle */
 	/* Variables for the connection between magmoc and atmesc */
 	double dWaterMassEsc;     /**< Water mass escaped per time */
 	double dOxygenMassEsc;    /**< Oxygen mass escaped per time */
@@ -1037,6 +1038,12 @@ struct BODY {
 	double dNumOxySol;
 	double dNumFeMO;
 	double dNumFeSol;
+	/* Old */
+	double dWaterMassMOAtmOld;
+	double dWaterMassEscOld;
+	double dWaterMassSolOld;
+	double dOxygenMassEscOld;
+	double dCurrentTimeOld;
 };
 
 /* SYSTEM contains properties of the system that pertain to

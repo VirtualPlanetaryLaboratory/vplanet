@@ -24,13 +24,24 @@
 #define DYNVISCSOLID              3.8e9  //dynamic viscosity of solid
 #define ACTIVENERGY               3.5e5  //activation energy viscosity
 #define RADCOREEARTH              3.4e6  //core radius Earth (m)
+#define AVOGADROCONST             6.022e23 //particle per mol
+#define TIMESTEPCORRECTION        1e2
 
-// molar masses of volatiles
+// molar masses [kg/mol]
 #define MOLWEIGHTWATER            18.01528e-3 //molar weight water
 #define MOLWEIGHTHYDROGEN         1.00794e-3  //molar weight hydrogen
 #define MOLWEIGHTOXYGEN           15.999e-3   //molar weight oxygen
 #define MOLWEIGHTFEO15            79.844e-3   //molar weight FeO_1.5
 #define MOLWEIGHTFEO              71.844e-3   //molar weight FeO
+
+#define MOLWEIGHTAL2O3            0.10196
+#define MOLWEIGHTCAO              0.05608
+#define MOLWEIGHTNA2O             0.06198
+#define MOLWEIGHTK2O              0.09420
+#define MOLWEIGHTMGO              0.04030
+#define MOLWEIGHTSIO2             0.06008
+#define MOLWEIGHTTIO2             0.07987
+#define MOLWEIGHTP2O5             0.14194
 
 // prefactors for linear solidus (Hirschmann 2000)
 #define ALOWPRESSURE              1.0442e-7 //low pressure (K/Pa)
@@ -45,7 +56,17 @@
 #define MOLFRACNA2O               2.937e-3
 #define MOLFRACK2O                2.209e-4
 #define AVEMOLMASS                52.833 // average molar mass of mantle
+// mass fractions
+#define MASSFRACAL2O3             0.0477
+#define MASSFRACCAO               0.0378
+#define MASSFRACNA2O              0.0035
+#define MASSFRACK2O               0.0004
 #define TOTMASSFRACFEO            0.0788 // total mass fraction of FeO in mantle
+#define MASSFRACMGO               0.0367
+#define MASSFRACSIO2              0.4597
+#define MASSFRACTIO2              0.0120
+#define MASSFRACP2O5              0.0020
+
 
 // OLR Elkins-Tanton 2008
 #define ABSORPCOEFFH2O            0.01 // absorp. coeff. of water at ref. press.

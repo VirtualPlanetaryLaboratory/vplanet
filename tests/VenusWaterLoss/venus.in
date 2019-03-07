@@ -27,4 +27,4 @@ dSemi         -0.723                      # Semi-major axis, negative -> AU
 dEcc          0.006772                    # Eccentricity
 
 # Output
-saOutputOrder Time -SurfWaterMass -RGLimit -OxygenMantleMass -OxygenMass
+saOutputOrder Time -SurfWaterMass -RGLimit -OxygenMantleMass -OxygenMass NumHydroSpace NumOxySpace

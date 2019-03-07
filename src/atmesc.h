@@ -111,6 +111,8 @@ void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_DENVMASSDT         1225 /**< Rate of change of the envelope mass */
 #define OUT_FXUV               1226 /**< XUV flux */
 #define OUT_EPSH2O             1227 /**< XUV Atmospheric Escape Efficiency for H2O */
+#define OUT_NUMHYDROSPACE_A    1228
+#define OUT_NUMOXYSPACE_A      1229
 
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);
 void InitializeOutputFunctionAtmEsc(OUTPUT*,int,int);
@@ -124,6 +126,8 @@ void WriteRGLimit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char
 void WriteOxygenMixingRatio(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteOxygenEta(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteAtmXAbsEffH2O(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteNumHydroSpace_A(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteNumOxySpace_A(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsAtmEsc(CONTROL*,FILE*);

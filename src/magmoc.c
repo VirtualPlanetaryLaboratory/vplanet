@@ -53,6 +53,7 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
 	dest[iBody].dPressAtmTot      = src[iBody].dPressAtmTot;
   dest[iBody].dWaterMassEsc     = src[iBody].dWaterMassEsc;
   dest[iBody].dOxygenMassEsc    = src[iBody].dOxygenMassEsc;
+  dest[iBody].dAveMolarMassMan  = src[iBody].dAveMolarMassMan;
   /* Boolean */
   dest[iBody].bManSolid         = src[iBody].bManSolid;
   dest[iBody].bAllFeOOxid       = src[iBody].bAllFeOOxid;
@@ -70,6 +71,12 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dNumOxySol        = src[iBody].dNumOxySol;
   dest[iBody].dNumFeMO          = src[iBody].dNumFeMO;
   dest[iBody].dNumFeSol         = src[iBody].dNumFeSol;
+  // old
+  dest[iBody].dWaterMassMOAtmOld = src[iBody].dWaterMassMOAtmOld;
+  dest[iBody].dWaterMassEscOld = src[iBody].dWaterMassEscOld;
+  dest[iBody].dWaterMassSolOld = src[iBody].dWaterMassSolOld;
+  dest[iBody].dOxygenMassEscOld = src[iBody].dOxygenMassEscOld;
+  dest[iBody].dCurrentTimeOld = src[iBody].dCurrentTimeOld;
 }
 
 /**************** MAGMOC options ********************/
@@ -257,6 +264,33 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   body[iBody].dGravAccelSurf   = BIGG * body[iBody].dMass / pow(body[iBody].dRadius,2);
   body[iBody].dFracFe2O3Man    = 0;
   body[iBody].dFeO             = 0.08;
+
+  double dMassMantle;
+  double dManMolNum;
+  doubel dMolNumAl2O3, dMolNumCaO, dMolNumNa2O, dMolNumK2O, dMolNumFeO;
+  doubel dMolNumSiO2,  dMolNumMgO, dMolNumTiO2, dMolNumP2O5;
+
+  dMassMantle  = 4./3 * PI * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3));
+  dMolNumAl2O3 = dMassMantle * MASSFRACAL2O3  / MOLWEIGHTAL2O3 ;
+  dMolNumCaO   = dMassMantle * MASSFRACCAO    / MOLWEIGHTCAO   ;
+  dMolNumNa2O  = dMassMantle * MASSFRACNA2O   / MOLWEIGHTNA2O  ;
+  dMolNumK2O   = dMassMantle * MASSFRACK2O    / MOLWEIGHTK2O   ;
+  dMolNumFeO   = dMassMantle * TOTMASSFRACFEO / MOLWEIGHTFEO   ;
+  dMolNumSiO2  = dMassMantle * MASSFRACSIO2   / MOLWEIGHTSIO2  ;
+  dMolNumMgO   = dMassMantle * MASSFRACMGO    / MOLWEIGHTMGO   ;
+  dMolNumTiO2  = dMassMantle * MASSFRACTIO2   / MOLWEIGHTTIO2  ;
+  dMolNumP2O5  = dMassMantle * MASSFRACP2O5   / MOLWEIGHTP2O5  ;
+  dManMolNum   = dMolNumAl2O3 + dMolNumCaO + dMolNumNa2O + dMolNumK2O + dMolNumFeO + \
+                 dMolNumSiO2  + dMolNumMgO + dMolNumTiO2 + dMolNumP2O5;
+  body[iBody].dAveMolarMassMan = ( MOLWEIGHTAL2O3 * dMolNumAl2O3 \
+                                 + MOLWEIGHTCAO   * dMolNumCaO   \
+                                 + MOLWEIGHTNA2O  * dMolNumNa2O  \
+                                 + MOLWEIGHTK2O   * dMolNumK2O   \
+                                 + MOLWEIGHTFEO   * dMolNumFeO   \
+                                 + MOLWEIGHTSIO2  * dMolNumSiO2  \
+                                 + MOLWEIGHTMGO   * dMolNumMgO   \
+                                 + MOLWEIGHTTIO2  * dMolNumTiO2  \
+                                 + MOLWEIGHTP2O5  * dMolNumP2O5  ) / dManMolNum;
 }
 
 /******************* Verify MAGMOC ******************/
@@ -383,6 +417,9 @@ double fndOxygenEquiManAtm(BODY *body, double dDelFrac, int iBody) {
  * end of this equation
  */
 void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+  double dCurrentTime     = evolve->dTime;
+  double dCurrentTimeStep = evolve->dTimeStep;
+  double dCurrentStepNum  = evolve->nSteps;
 
   /*
    * No negative masses!
@@ -485,7 +522,7 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
    * Function water_fraction() in functions_rk.py
    */
   double dMassMagmOcTot; //total mass of magma ocean
-  dMassMagmOcTot             = 4./3 * PI * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadiusLocal,3));
+  dMassMagmOcTot             = 4./3 * PI * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3));
   body[iBody].dMassMagmOcLiq = body[iBody].dMeltFraction * dMassMagmOcTot;
   body[iBody].dMassMagmOcCry = (1 - body[iBody].dMeltFraction) * dMassMagmOcTot;
 
@@ -538,13 +575,15 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   double dNumFeO15Man;      // corresponding mass of FeO1.5 in the mantle
   double dFracFe2O3ManNew;  // New Fe2O3 in mantle
   double dOxyFugacityCrit;  // Critical fugacity
+  double dUpperBoundPress;  // Upper boundary for root finding of fndOxygenEquiManAtm, calc. with oxygen press
+  double dUpperBoundFrac;   // Upper boundary for root finding of fndOxygenEquiManAtm, calc. with Fe2O3
   double dUpperBound;       // Upper boundary for root finding of fndOxygenEquiManAtm
 
   // Coupling to ATMESC HERE!!
   // double dWaterMassChange;  // Negative (H escape)
   // double dOxygenMassChange; // Negative (O escape) or positive (O build-up) = dOxygenMassAtmNew
 
-  dOxygenMassAtmNew = body[iBody].dOxygenMassEsc * 1e2*evolve->dTimeStep;
+  dOxygenMassAtmNew = body[iBody].dOxygenMassEsc * TIMESTEPCORRECTION*evolve->dTimeStep;
 
   if (dOxygenMassAtmNew <= 0) { // net loss of oxygen/no new oxygen
     body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man;
@@ -553,52 +592,72 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
     body[iBody].dFracFe2O3Man  = TOTMASSFRACFEO;
   } else if (body[iBody].dFracFe2O3Man/TOTMASSFRACFEO < 0.3) { // X < 0.3 -> assuming no O2 buildup in atm
-    dNumFeO15Man = 2 * dOxygenMassAtmNew / (MOLWEIGHTOXYGEN*ATOMMASS);
+    dNumFeO15Man = 2 * dOxygenMassAtmNew * AVOGADROCONST/ MOLWEIGHTOXYGEN;
     if (body[iBody].bManSolid) {
       dFracFe2O3ManNew = 0;
     } else {
-      dFracFe2O3ManNew = MOLWEIGHTFEO15*ATOMMASS*dNumFeO15Man / (body[iBody].dManMeltDensity*PI*(pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadiusLocal,3))*4/3);
+      dFracFe2O3ManNew = MOLWEIGHTFEO15*dNumFeO15Man/AVOGADROCONST / (body[iBody].dManMeltDensity*PI*(pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3))*4/3);
     }
     body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man + dFracFe2O3ManNew;
   } else {
-    /* critical fugacity (corresponding to x=0.3) */
     body[iBody].bCalcFugacity = 1;
-    if (fabs(fndCriticalOxygenFugacity(body,1e10,iBody)) < 1e-5) {
-      dOxyFugacityCrit = 1e10;
-    } else if (fabs(fndCriticalOxygenFugacity(body,1e-20,iBody)) < 1e-5) {
-      dOxyFugacityCrit = 1e-20;
-    } else {
-      dOxyFugacityCrit = fndBisection(fndCriticalOxygenFugacity,body,1e10,1e-20,iBody);
-    }
-
     body[iBody].dOxyFugNewMax = dOxygenMassAtmNew * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
+    body[iBody].dPressAtmTot  = body[iBody].dPressOxygenAtm + body[iBody].dPressWaterAtm;
+    body[iBody].dOxyFugFactor = MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) * body[iBody].dManMeltDensity*body[iBody].dGravAccelSurf * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3))/(3*pow(body[iBody].dRadius,2));
 
-    if ((body[iBody].dPressOxygenAtm + body[iBody].dOxyFugNewMax) <= dOxyFugacityCrit ) { // all O stays in atmosphere
-      body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man;
+    dUpperBoundFrac  = TOTMASSFRACFEO - body[iBody].dFracFe2O3Man - 1e-15;
+    dUpperBoundPress = (body[iBody].dPressOxygenAtm+body[iBody].dOxyFugNewMax)/body[iBody].dOxyFugFactor - 1e-15;
+    dUpperBound = fmin(dUpperBoundFrac,dUpperBoundPress);
+
+    if (fndOxygenEquiManAtm(body,0,iBody) <= 0) { // oxygen flow only into mantle, no outgasing from oxidized Fe2O3
+      dFracFe2O3ManNew  = 0;
+      dOxygenMassAtmNew = dOxygenMassAtmNew;
+    } else if (fndOxygenEquiManAtm(body,dUpperBound,iBody) >= 0) {
+      body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man + dUpperBound;
+      body[iBody].dOxygenMassAtm = 0;
+    } else {
+      dFracFe2O3ManNew  = fndBisection(fndOxygenEquiManAtm,body,0,dUpperBound,iBody);
+      dOxygenMassAtmNew = (body[iBody].dOxyFugNewMax - dFracFe2O3ManNew*body[iBody].dOxyFugFactor) * 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf;
+      body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man + dFracFe2O3ManNew;
       body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
-    } else { // x > 0.3 and fug > fug_crit
-      body[iBody].dPressAtmTot  = body[iBody].dPressOxygenAtm + body[iBody].dPressWaterAtm;
-      body[iBody].dOxyFugFactor = MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) * body[iBody].dManMeltDensity*body[iBody].dGravAccelSurf * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadiusLocal,3))/(3*pow(body[iBody].dRadius,2));
-
-      dUpperBound = (body[iBody].dPressOxygenAtm+body[iBody].dOxyFugNewMax)/body[iBody].dOxyFugFactor - 1e-15;
-      if (fndOxygenEquiManAtm(body,0,iBody) <= 0) { // oxygen flow only into mantle, no outgasing from oxidized Fe2O3
-        dFracFe2O3ManNew  = 0;
-        dOxygenMassAtmNew = dOxygenMassAtmNew;
-      } else if (fndOxygenEquiManAtm(body,dUpperBound,iBody) >= 0) {
-        body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man + dUpperBound;
-        body[iBody].dOxygenMassAtm = 0;
-      } else {
-        dFracFe2O3ManNew  = fndBisection(fndOxygenEquiManAtm,body,0,dUpperBound,iBody);
-        dOxygenMassAtmNew = (body[iBody].dOxyFugNewMax - dFracFe2O3ManNew*body[iBody].dOxyFugFactor) * 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf;
-        body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man + dFracFe2O3ManNew;
-        body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
-      }
+    /* critical fugacity (corresponding to x=0.3) */
+    // body[iBody].bCalcFugacity = 1;
+    // if (fabs(fndCriticalOxygenFugacity(body,1e10,iBody)) < 1e-5) {
+    //   dOxyFugacityCrit = 1e10;
+    // } else if (fabs(fndCriticalOxygenFugacity(body,1e-20,iBody)) < 1e-5) {
+    //   dOxyFugacityCrit = 1e-20;
+    // } else {
+    //   dOxyFugacityCrit = fndBisection(fndCriticalOxygenFugacity,body,1e10,1e-20,iBody);
+    // }
+    //
+    // body[iBody].dOxyFugNewMax = dOxygenMassAtmNew * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
+    //
+    // if ((body[iBody].dPressOxygenAtm + body[iBody].dOxyFugNewMax) <= dOxyFugacityCrit ) { // all O stays in atmosphere
+    //   body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man;
+    //   body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
+    // } else { // x > 0.3 and fug > fug_crit
+    //   body[iBody].dPressAtmTot  = body[iBody].dPressOxygenAtm + body[iBody].dPressWaterAtm;
+    //   body[iBody].dOxyFugFactor = MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) * body[iBody].dManMeltDensity*body[iBody].dGravAccelSurf * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3))/(3*pow(body[iBody].dRadius,2));
+    //
+    //   dUpperBound = (body[iBody].dPressOxygenAtm+body[iBody].dOxyFugNewMax)/body[iBody].dOxyFugFactor - 1e-15;
+    //   if (fndOxygenEquiManAtm(body,0,iBody) <= 0) { // oxygen flow only into mantle, no outgasing from oxidized Fe2O3
+    //     dFracFe2O3ManNew  = 0;
+    //     dOxygenMassAtmNew = dOxygenMassAtmNew;
+    //   } else if (fndOxygenEquiManAtm(body,dUpperBound,iBody) >= 0) {
+    //     body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man + dUpperBound;
+    //     body[iBody].dOxygenMassAtm = 0;
+    //   } else {
+    //     dFracFe2O3ManNew  = fndBisection(fndOxygenEquiManAtm,body,0,dUpperBound,iBody);
+    //     dOxygenMassAtmNew = (body[iBody].dOxyFugNewMax - dFracFe2O3ManNew*body[iBody].dOxyFugFactor) * 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf;
+    //     body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man + dFracFe2O3ManNew;
+    //     body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + dOxygenMassAtmNew;
+    //   }
     }
   }
 
   if (body[iBody].dFracFe2O3Man > TOTMASSFRACFEO) { // too 'much' FeO oxidized to Fe2O3
     body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm + 4/3 * (body[iBody].dFracFe2O3Man-TOTMASSFRACFEO) * PI \
-              * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadiusLocal,3)) * MOLWEIGHTOXYGEN/2/MOLWEIGHTFEO15;
+              * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3)) * MOLWEIGHTOXYGEN/2/MOLWEIGHTFEO15;
     body[iBody].dFracFe2O3Man  = TOTMASSFRACFEO;
   }
 
@@ -608,6 +667,13 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dPressOxygenAtm = body[iBody].dOxygenMassAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
   // END of oxygen_mo()
 
+  /* Save old values */
+  body[iBody].dWaterMassMOAtmOld = body[iBody].dWaterMassMOAtm;
+  body[iBody].dWaterMassEscOld   = body[iBody].dWaterMassEsc;
+  body[iBody].dWaterMassSolOld   = body[iBody].dWaterMassSol;
+  body[iBody].dOxygenMassEscOld  = body[iBody].dOxygenMassEsc;
+  body[iBody].dCurrentTimeOld    = evolve->dTime;
+
   /*
    * Keep track of the number of H, O, and Fe atoms
    * in the different reservoirs: space, atmosphere, magma ocean, and solidified mantle
@@ -616,22 +682,22 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   double dRound = 1e45;  // divide number of atoms by large number for computational reasons
 
   /* Hydrogen: only in water */
-  body[iBody].dNumHydroSol   = 2 * body[iBody].dWaterMassSol / (MOLWEIGHTWATER * ATOMMASS * dRound);
-  // body[iBody].dNumHydroMO    = 2 * (body[iBody].dWaterMassMOAtm - body[iBody].dWaterMassAtm) / (MOLWEIGHTWATER * ATOMMASS * dRound);
-  body[iBody].dNumHydroMO    = 2 * body[iBody].dWaterFracMelt * (WATERPARTCOEFF*body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq) / (MOLWEIGHTWATER * ATOMMASS * dRound);
-  body[iBody].dNumHydroAtm   = 2 * body[iBody].dWaterMassAtm / (MOLWEIGHTWATER * ATOMMASS * dRound);
-  body[iBody].dNumHydroSpace = body[iBody].dNumHydroSpace - 2* body[iBody].dWaterMassEsc * 1e2*evolve->dTimeStep / (MOLWEIGHTWATER * ATOMMASS * dRound);
+  body[iBody].dNumHydroSol   = 2 * body[iBody].dWaterMassSol * AVOGADROCONST / (MOLWEIGHTWATER * dRound);
+  // body[iBody].dNumHydroMO    = 2 * (body[iBody].dWaterMassMOAtm - body[iBody].dWaterMassAtm) * AVOGADROCONST / (MOLWEIGHTWATER * dRound);
+  body[iBody].dNumHydroMO    = 2 * body[iBody].dWaterFracMelt * (WATERPARTCOEFF*body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq) * AVOGADROCONST / (MOLWEIGHTWATER * dRound);
+  body[iBody].dNumHydroAtm   = 2 * body[iBody].dWaterMassAtm * AVOGADROCONST/ (MOLWEIGHTWATER * dRound);
+  body[iBody].dNumHydroSpace = body[iBody].dNumHydroSpace - 2* body[iBody].dWaterMassEsc * TIMESTEPCORRECTION*evolve->dTimeStep * AVOGADROCONST / (MOLWEIGHTWATER * dRound);
 
   /* Oxygen: in water and Fe2O3 (neglect O in FeO first) */
-  body[iBody].dNumOxySol   = body[iBody].dWaterMassSol / (MOLWEIGHTWATER * ATOMMASS * dRound) + body[iBody].dOxygenMassSol / (MOLWEIGHTOXYGEN * ATOMMASS * dRound);
-  // body[iBody].dNumOxyMO    = (body[iBody].dWaterMassMOAtm - body[iBody].dWaterMassAtm) / (MOLWEIGHTWATER * ATOMMASS * dRound) + (body[iBody].dOxygenMassMOAtm - body[iBody].dOxygenMassAtm) / (MOLWEIGHTOXYGEN * ATOMMASS * dRound);
-  body[iBody].dNumOxyMO    = body[iBody].dWaterFracMelt * (WATERPARTCOEFF*body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq) / (MOLWEIGHTWATER * ATOMMASS * dRound) + (body[iBody].dOxygenMassMOAtm - body[iBody].dOxygenMassAtm) / (MOLWEIGHTOXYGEN * ATOMMASS * dRound);
-  body[iBody].dNumOxyAtm   = body[iBody].dWaterMassAtm / (MOLWEIGHTWATER * ATOMMASS * dRound) + body[iBody].dOxygenMassAtm / (MOLWEIGHTOXYGEN * ATOMMASS * dRound);
-  body[iBody].dNumOxySpace = body[iBody].dNumOxySpace - body[iBody].dWaterMassEsc * 1e2*evolve->dTimeStep / (MOLWEIGHTWATER * ATOMMASS * dRound) - body[iBody].dOxygenMassEsc * 1e2*evolve->dTimeStep / (MOLWEIGHTOXYGEN * ATOMMASS * dRound);
+  body[iBody].dNumOxySol   = body[iBody].dWaterMassSol * AVOGADROCONST / (MOLWEIGHTWATER * dRound) + body[iBody].dOxygenMassSol * AVOGADROCONST / (MOLWEIGHTOXYGEN * dRound);
+  // body[iBody].dNumOxyMO    = (body[iBody].dWaterMassMOAtm - body[iBody].dWaterMassAtm) * AVOGADROCONST / (MOLWEIGHTWATER * dRound) + (body[iBody].dOxygenMassMOAtm - body[iBody].dOxygenMassAtm) * AVOGADROCONST / (MOLWEIGHTOXYGEN * dRound);
+  body[iBody].dNumOxyMO    = body[iBody].dWaterFracMelt * (WATERPARTCOEFF*body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq) * AVOGADROCONST / (MOLWEIGHTWATER * dRound) + (body[iBody].dOxygenMassMOAtm - body[iBody].dOxygenMassAtm) * AVOGADROCONST / (MOLWEIGHTOXYGEN * dRound);
+  body[iBody].dNumOxyAtm   = body[iBody].dWaterMassAtm * AVOGADROCONST / (MOLWEIGHTWATER * dRound) + body[iBody].dOxygenMassAtm * AVOGADROCONST/ (MOLWEIGHTOXYGEN * dRound);
+  body[iBody].dNumOxySpace = body[iBody].dNumOxySpace - body[iBody].dWaterMassEsc * TIMESTEPCORRECTION*evolve->dTimeStep * AVOGADROCONST / (MOLWEIGHTWATER * dRound) - body[iBody].dOxygenMassEsc * TIMESTEPCORRECTION*evolve->dTimeStep * AVOGADROCONST / (MOLWEIGHTOXYGEN * dRound);
 
-  double CurrentTime     = evolve->dTime;
-  double CurrentTimeStep = evolve->dTimeStep;
-  double CurrentStepNum  = evolve->nSteps;
+
+
+
 
 }
 
@@ -1174,8 +1240,8 @@ double fdDPotTemp(BODY *body, SYSTEM *system, int *iaBody) {
   double dRadioPart,dManFluxPart,dRsolPart,dFusionPart;
   dRadioPart   = body[iaBody[0]].dRadioHeat * (pow(body[iaBody[0]].dRadius,3) - pow(body[iaBody[0]].dCoreRadius,3));
   dManFluxPart = 3 * pow(body[iaBody[0]].dRadius,2) * body[iaBody[0]].dManHeatFlux / body[iaBody[0]].dManMeltDensity;
-  dRsolPart    = SILICATEHEATCAP * (pow(body[iaBody[0]].dRadius,3) - pow(body[iaBody[0]].dSolidRadiusLocal,3));
-  dFusionPart  = 3 * HEATFUSIONSILICATE * pow(body[iaBody[0]].dSolidRadiusLocal,2) * body[iaBody[0]].dFactorDerivative;
+  dRsolPart    = SILICATEHEATCAP * (pow(body[iaBody[0]].dRadius,3) - pow(body[iaBody[0]].dSolidRadius,3));
+  dFusionPart  = 3 * HEATFUSIONSILICATE * pow(body[iaBody[0]].dSolidRadius,2) * body[iaBody[0]].dFactorDerivative;
   return (dRadioPart - dManFluxPart)/(dRsolPart - dFusionPart);
 }
 

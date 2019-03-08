@@ -8,10 +8,10 @@ dMass         -1.62                       # Mass, negative -> Earth masses
 dRadius       -1.15                       # Radius, negative -> Earth radii
 
 # MAGMOC Properties
-dFeO			0.08
-dWaterMassAtm		-100
-dSurfTemp		4000
-dManMeltDensity		4000
+dMassFracFeOIni		0.04		  # Initial mass fraction of FeO in the mantle (default: 0.0788)
+dWaterMassAtm		-100		  # Initial water mass in the system (neg: terrestrial oceans, default: -1)
+dSurfTemp		4000		  # Initial surface temperature (default: 4000K)
+dManMeltDensity		4000		  # Mantle melt density (default 
 bHaltMantleSolidified 	1
 
 # ATMESC Properties

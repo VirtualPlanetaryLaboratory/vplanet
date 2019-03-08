@@ -95,7 +95,7 @@ void BodyCopyMagmOc(BODY*,BODY*,int,int,int);
 /* Options Functions */
 void HelpOptionsMagmOc(OPTIONS*);
 void InitializeOptionsMagmOc(OPTIONS*,fnReadOption[]);
-void ReadFeO(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void ReadMassFracFeOIni(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadWaterMassAtm(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadSurfTemp(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadManMeltDensity(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);

@@ -1003,7 +1003,7 @@ struct BODY {
 	double dCoreRadius;       /**< Core radius of the planet [m] */
 	double dWaterMassAtm;     /**< Water mass in the atmosphere [kg] */
   double dManMeltDensity;   /**< Density of the molten mantle [km/m^3] */
-	double dFeO;              /**< FeO in the magma ocean */
+	double dMassFracFeOIni;   /**< Initial FeO mass fraction in the mantle */
 	/* Other variables Thermal model */
 	double dGravAccelSurf;    /**< Graviational acceleration at the surface [m/s^2] */
 	double dSolidRadiusLocal; /**< Local variable for solidification radius of the mantle [m] */
@@ -1030,11 +1030,7 @@ struct BODY {
 	double dWaterMassEsc;     /**< Water mass escaped per time */
 	double dOxygenMassEsc;    /**< Oxygen mass escaped per time */
 	/* Old */
-	double dWaterMassMOAtmOld;
-	double dWaterMassEscOld;
-	double dWaterMassSolOld;
-	double dOxygenMassEscOld;
-	double dCurrentTimeOld;
+	double dFracFe2O3ManOld;
 };
 
 /* SYSTEM contains properties of the system that pertain to

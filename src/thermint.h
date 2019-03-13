@@ -76,10 +76,10 @@
 /* VISCOSITY PROPERTIES */
 #define ACTVISCMAN       3e5                    /**< [J/mol] Mantle viscosity activation energy */
 #define ACTSHMODMAN      2e5                    /**< [J/mol] Mantle shear modulus activation energy */
-#define STIFFNESS        1.7169e13  //1e13                   /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100) */
-#define SHMODREF         6.24e4    //6e6                    /**< [Pa] Reference kinematic mantle shear modulus */
-#define VISCREF          6e7   //5e7                    /**< [m^2/s] Reference kinematic mantle viscosity */
-#define VISCJUMPMAN      2.49                    /**< [nd] Viscosity jump from upper to lower mantle */
+#define STIFFNESS        1.7169e13              /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100) */
+#define SHMODREF         6.24e4                 /**< [Pa] Reference kinematic mantle shear modulus */
+#define VISCREF          6e7                    /**< [m^2/s] Reference kinematic mantle viscosity */
+#define VISCJUMPMAN      4.55                   /**< [nd] Viscosity jump from upper to lower mantle */
 #define FIXVISCJUMPMAN   0                      /**< [nd] (default) Option to fix viscjumpulm. if =0 then viscLM is computed from TLMan. */
 #define VISCJUMPMMAN     10.                    /**< [nd] Viscosity jump from upper to average (mid) mantle */
 #define VISCMELTB        2.5                    /**< [nd] Viscosity-melt reduction coefficient "B" (DB15 eq 8) */
@@ -107,10 +107,10 @@
 #define CRUSTACCRFRAC    0.015                  /**< [nd] Constant fraction of oceanic crust accreted onto continent */
 #define CRUSTINSOFACT    (65.)/(94.)            /**< [nd] Reduction in heat conducted through contintental crust compared to oceanic crust (Jaupart 07, table 3) */
 /* CORE CHEMISTRY */
-#define DTCHIREF         300.                   /**< [K] Core reference liquidus depression */
-#define CHI_OC_E         0.18                   /**< [nd] Earth's outer core light element concentration */
-#define PARTITION_CHI_CORE (ERCORE)/(ERICB)  //(ERICB)/(ERCORE)     /**< [nd] Core light element partition coefficent */
-#define CHI_IC_E         CHI_OC_E/PARTITION_CHI_CORE  //PARTITION_CHI_CORE*CHI_OC_E /**< [nd] Inner core light element concentration in Earth  (CHI_IC_E=partition*CHI_OC_E) */
+#define DTCHIREF         0.0                    /**< [K] Core reference liquidus depression */
+#define CHI_OC_E         0.10                   /**< [nd] Earth's outer core light element concentration */
+#define PARTITION_CHI_CORE 1e-2                 /**< [nd] Core light element partition coefficent */
+#define CHI_IC_E         CHI_OC_E*PARTITION_CHI_CORE  //PARTITION_CHI_CORE*CHI_OC_E /**< [nd] Inner core light element concentration in Earth  (CHI_IC_E=partition*CHI_OC_E) */
 #define EMASSOC_CHI      CHI_OC_E*EMASSOC       /**< [kg] Mass of light elements (Chi) in Earth's outer core */
 #define EMASSIC_CHI      CHI_IC_E*EMASSIC       /**< [kg] Mass of light elements (Chi) in Earth's inner core */
 #define EMASSCORE_CHI    EMASSOC_CHI+EMASSIC_CHI/**< [kg] Total core light element mass of Earth (conserved) */
@@ -123,7 +123,7 @@
 #define ADJUMPC2CMB      0.8                    /**< [nd] Adiabatic temperature jump from average core to CMB "epsilon_c" */
 /* MAGNETIC DYNAMO PROPERTIES */
 #define MAGPERM          4*PI*1e-7              /**< [H/m] Magnetic permeability constant */
-#define MAGMOMCOEF       0.146                  /**< [nd] Saturation constant for fast rotating dipolar dynamos (OC2006) */
+#define MAGMOMCOEF       0.155                  /**< [nd] Saturation constant for fast rotating dipolar dynamos (OC2006) */
 #define ELECCONDCORE     10e5                   /**< [S/m] Electrical conductivity of core  */
 #define LORENTZNUM       2.5e-8                 /**< [W Ohm/K] Lorentz number, relates thermal and electrical conductivity */
 #define EMAGMOM          80e21                  /**< [Am^2] Earth's present day magnetic moment */

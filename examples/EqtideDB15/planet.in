@@ -20,3 +20,8 @@ dK2         0.299   # Love number of degree 2 (Yoder 1995)
 saTidePerts sun    # Names of perturbing bodies (only central body may have >1)
 
 saOutputOrder -Time -PowerEqtide -SemiMajorAxis Eccentricity -dSemiDt -dEccDtE
+
+
+#saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
+#      -PowerEqtide TidalQ ImK2 K2 TidalQMan K2Man $
+#      -SemiMajorAxis Eccentricity -dSemiDt -dEccDtE

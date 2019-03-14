@@ -79,7 +79,7 @@
 #define STIFFNESS        1.7169e13              /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100) */
 #define SHMODREF         6.24e4                 /**< [Pa] Reference kinematic mantle shear modulus */
 #define VISCREF          6e7                    /**< [m^2/s] Reference kinematic mantle viscosity */
-#define VISCJUMPMAN      4.55                   /**< [nd] Viscosity jump from upper to lower mantle */
+#define VISCJUMPMAN      2.42                   /**< [nd] Viscosity jump from upper to lower mantle */
 #define FIXVISCJUMPMAN   0                      /**< [nd] (default) Option to fix viscjumpulm. if =0 then viscLM is computed from TLMan. */
 #define VISCJUMPMMAN     10.                    /**< [nd] Viscosity jump from upper to average (mid) mantle */
 #define VISCMELTB        2.5                    /**< [nd] Viscosity-melt reduction coefficient "B" (DB15 eq 8) */
@@ -97,7 +97,7 @@
 #define DSOLIDUS         +1.993e4               /**< [K] Solidus D coefficient */
 #define DTLIQMAN         +500.0                 /**< [K] Mantle liquidus offset, T_liq=T_sol+DTLIQMAN */
 #define DLIND            7000.0*KM              /**< [m] Lindemann's law length scale for iron liquidus "D_Fe" (DB15 A23) */
-#define TREFLIND         5705.0                 /**< [K] Lindemann's law reference temp. "T_Fe0" (DB15 A23) */
+#define TREFLIND         5451.6                 /**< [K] Lindemann's law reference temp. "T_Fe0" (DB15 A23) */
 #define DVLIQDTEMP       8e17                   /**< [m^3/K] Approximation of change in mantle liquid volume with T_m, DV_liq/DT  (DB15) */
 #define ERUPTEFF         0.1                    /**< [nd] (Default) Mantle melt heat loss eruption efficiency */
 /* Continental Crust */

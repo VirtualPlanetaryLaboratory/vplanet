@@ -27,6 +27,11 @@
 #define AVOGADROCONST             6.022e23 //particle per mol
 #define TIMESTEPCORRECTION        1e2
 
+#define MAGMOC_NONE               0
+#define MAGMOC_SCHAEFER           1
+#define MAGMOC_GREY               2
+#define MAGMOC_PETIT              3
+
 // molar masses [kg/mol]
 #define MOLWEIGHTWATER            18.01528e-3 //molar weight water
 #define MOLWEIGHTHYDROGEN         1.00794e-3  //molar weight hydrogen
@@ -88,6 +93,8 @@
 #define OPT_SURFTEMP              2312
 #define OPT_MANMELTDENSITY        2313
 #define OPT_HALTMANTLESOLIDIFIED  2314
+#define OPT_RADIOHEATMODEL        2315
+#define OPT_MAGMOCATMMODEL        2316
 
 void AddModuleMagmOc(MODULE*,int,int);
 void BodyCopyMagmOc(BODY*,BODY*,int,int,int);

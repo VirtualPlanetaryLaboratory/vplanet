@@ -785,8 +785,8 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_THERMTEMP].cName,"dThermTemp");
   sprintf(options[OPT_THERMTEMP].cDescr,"Thermosphere temperature");
-  sprintf(options[OPT_THERMTEMP].cDefault,"880");
-  options[OPT_THERMTEMP].dDefault = 880;
+  sprintf(options[OPT_THERMTEMP].cDefault,"400");
+  options[OPT_THERMTEMP].dDefault = 400;
   options[OPT_THERMTEMP].iType = 2;
   options[OPT_THERMTEMP].iMultiFile = 1;
   fnRead[OPT_THERMTEMP] = &ReadThermTemp;
@@ -1062,7 +1062,7 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   double XO = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass, body[iBody].dOxygenMass);
 
   // Diffusion-limited H escape rate
-  body[iBody].dFHDiffLim = BDIFF * g * ATOMMASS * (QOH - 1.) / (KBOLTZ * THERMT * (1. + XO / (1. - XO)));
+  body[iBody].dFHDiffLim = 4.8e19 * pow(body[iBody].dThermTemp, 0.75) * g * ATOMMASS * (QOH - 1.) / (KBOLTZ * body[iBody].dThermTemp * (1. + XO / (1. - XO)));
 
   // Is water escaping?
   if (!fbDoesWaterEscape(body, iBody)) {
@@ -1081,18 +1081,18 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
     if (body[iBody].iWaterLossModel == ATMESC_LB15) {
 
       // Luger and Barnes (2015)
-      double x = (KBOLTZ * THERMT * body[iBody].dFHRef) / (10 * BDIFF * g * ATOMMASS);
+      double x = (KBOLTZ * body[iBody].dThermTemp * body[iBody].dFHRef) / (10 * 4.8e19 * pow(body[iBody].dThermTemp, 0.75) * g * ATOMMASS);
       if (x < 1) {
         body[iBody].dOxygenEta = 0;
-        body[iBody].dCrossoverMass = ATOMMASS + 1.5 * KBOLTZ * THERMT * body[iBody].dFHRef / (BDIFF * g);
+        body[iBody].dCrossoverMass = ATOMMASS + 1.5 * KBOLTZ * body[iBody].dThermTemp * body[iBody].dFHRef / (4.8e19 * pow(body[iBody].dThermTemp, 0.75) * g);
       } else {
         body[iBody].dOxygenEta = (x - 1) / (x + 8);
-        body[iBody].dCrossoverMass = 43. / 3. * ATOMMASS + KBOLTZ * THERMT * body[iBody].dFHRef / (6 * BDIFF * g);
+        body[iBody].dCrossoverMass = 43. / 3. * ATOMMASS + KBOLTZ * body[iBody].dThermTemp * body[iBody].dFHRef / (6 * 4.8e19 * pow(body[iBody].dThermTemp, 0.75) * g);
       }
 
     } else if ((body[iBody].iWaterLossModel == ATMESC_LBEXACT) || (body[iBody].iWaterLossModel == ATMESC_TIAN)) {
 
-      double x = (QOH - 1.) * (1. - XO) * (BDIFF * g * ATOMMASS) / (KBOLTZ * THERMT);
+      double x = (QOH - 1.) * (1. - XO) * (4.8e19 * pow(body[iBody].dThermTemp, 0.75) * g * ATOMMASS) / (KBOLTZ * body[iBody].dThermTemp);
       double FH;
       double rat;
 
@@ -1100,7 +1100,7 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
       if (body[iBody].dFHRef < x) {
 
         // mcross < mo
-        body[iBody].dCrossoverMass = ATOMMASS + (1. / (1. - XO)) * (KBOLTZ * THERMT * body[iBody].dFHRef) / (BDIFF * g);
+        body[iBody].dCrossoverMass = ATOMMASS + (1. / (1. - XO)) * (KBOLTZ * body[iBody].dThermTemp * body[iBody].dFHRef) / (4.8e19 * pow(body[iBody].dThermTemp, 0.75) * g);
         FH = body[iBody].dFHRef;
         rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) / (body[iBody].dCrossoverMass / ATOMMASS - 1.);
         body[iBody].dOxygenEta = 0;
@@ -1110,7 +1110,7 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
         // mcross >= mo
         double num = 1. + (XO / (1. - XO)) * QOH * QOH;
         double den = 1. + (XO / (1. - XO)) * QOH;
-        body[iBody].dCrossoverMass = ATOMMASS * num / den + (KBOLTZ * THERMT * body[iBody].dFHRef) / ((1 + XO * (QOH - 1)) * BDIFF * g);
+        body[iBody].dCrossoverMass = ATOMMASS * num / den + (KBOLTZ * body[iBody].dThermTemp * body[iBody].dFHRef) / ((1 + XO * (QOH - 1)) * 4.8e19 * pow(body[iBody].dThermTemp, 0.75) * g);
         rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) / (body[iBody].dCrossoverMass / ATOMMASS - 1.);
         FH = body[iBody].dFHRef * pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
         body[iBody].dOxygenEta = 2 * XO / (1. - XO) * rat;
@@ -2299,7 +2299,7 @@ double fdDOxygenMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
       // Rodrigo and Barnes (2015)
       if (body[iaBody[0]].dCrossoverMass >= 16 * ATOMMASS)
-        return (320. * PI * BIGG * ATOMMASS * ATOMMASS * BDIFF * body[iaBody[0]].dMass) / (KBOLTZ * THERMT);
+        return (320. * PI * BIGG * ATOMMASS * ATOMMASS * 4.8e19 * pow(body[iaBody[0]].dThermTemp, 0.75) * body[iaBody[0]].dMass) / (KBOLTZ * body[iaBody[0]].dThermTemp);
       else
         return (8 - 8 * body[iaBody[0]].dOxygenEta) / (1 + 8 * body[iaBody[0]].dOxygenEta) * body[iaBody[0]].dMDotWater;
 
@@ -2332,7 +2332,7 @@ double fdDOxygenMantleMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
       // Rodrigo and Barnes (2015)
       if (body[iaBody[0]].dCrossoverMass >= 16 * ATOMMASS)
-        return (320. * PI * BIGG * ATOMMASS * ATOMMASS * BDIFF * body[iaBody[0]].dMass) / (KBOLTZ * THERMT);
+        return (320. * PI * BIGG * ATOMMASS * ATOMMASS * 4.8e19 * pow(body[iaBody[0]].dThermTemp, 0.75) * body[iaBody[0]].dMass) / (KBOLTZ * body[iaBody[0]].dThermTemp);
       else
         return (8 - 8 * body[iaBody[0]].dOxygenEta) / (1 + 8 * body[iaBody[0]].dOxygenEta) * body[iaBody[0]].dMDotWater;
 

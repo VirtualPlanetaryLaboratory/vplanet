@@ -1556,6 +1556,9 @@ void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     body[iBody].dSurfaceWaterMass = body[iBody].dWaterMassAtm;
     body[iBody].dOxygenMass       = body[iBody].dOxygenMassAtm;
 
+    // Use atmospheric skin temperature
+    body[iBody].dThermTemp = body[iBody].dEffTempAtm * pow(0.5,0.25);
+
     // Call PropsAux from Atmesc (or fnPropertiesAtmEsc)
     fnPropertiesAtmEsc(body,evolve,update,iBody);
 

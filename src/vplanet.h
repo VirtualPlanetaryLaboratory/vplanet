@@ -989,6 +989,8 @@ struct BODY {
 	int bLowPressSol;         /**< Switch to low pressure treatment of solidus */
 	int bManStartSol;         /**< Mantle starts to solidify */
 	int bCalcFugacity;        /**< Need to calc oxygen fugacity */
+	int iRadioHeatModel;
+	int iMagmOcAtmModel;
 	/* Primary variables */
 	double dPotTemp;          /**< Potential Temp of the mantle [K] */
 	double dSurfTemp;         /**< Surface Temp of the planet [K] */
@@ -1016,6 +1018,7 @@ struct BODY {
 	double dRadioHeat;        /**< Radiogenic heating rate GET FROM RADHEAT [W/kg] */
 	double dNetFluxAtmo;      /**< Net atmospheric flux OLR-ASR [W/m^2] */
 	double dAlbedo;						/**< Albedo of the planet */
+	double dEffTempAtm;       /**< Effective temperature of the planet's atmosphere */
 	/* Other variables Volatile model */
 	double dPressWaterAtm;    /**< Water pressure in atmosphere [Pa] */
 	double dPressOxygenAtm;   /**< Oxygen pressure in atmosphere [Pa] */
@@ -1024,13 +1027,10 @@ struct BODY {
 	double dWaterFracMelt;    /**< Mass fraction of water in the magma ocean */
 	double dFracFe2O3Man;     /**< Mass fraction of Fe2O3 in the mantle */
 	double dOxygenMassAtm;    /**< Oxygen mass in the atmosphere [kg] */
-	double dOxyFugFactor;     /**< Factor to convert oxygen press into Fe2O3 mass frac */
 	double dAveMolarMassMan;  /**< Average molar mass of the mantle */
 	/* Variables for the connection between magmoc and atmesc */
 	double dWaterMassEsc;     /**< Water mass escaped per time */
 	double dOxygenMassEsc;    /**< Oxygen mass escaped per time */
-	/* Old */
-	double dFracFe2O3ManOld;
 };
 
 /* SYSTEM contains properties of the system that pertain to
@@ -1219,6 +1219,16 @@ struct UPDATE {
   int iNumOxygenMassSpace;
 	int iHydrogenMassSpace;
 	int iNumHydrogenMassSpace;
+
+	int iWaterMassMOAtmMagmOc;
+  int iWaterMassSolMagmOc;
+  int iSurfTempMagmOc;
+  int iPotTempMagmOc;
+	int iSolidRadiusMagmOc;
+	int iOxygenMassMOAtmMagmOc;
+  int iOxygenMassSolMagmOc;
+	int iOxygenMassSpaceMagmOc;
+	int iHydrogenMassSpaceMagmOc;
 
   double dWaterMassMOAtm;
   double dWaterMassSol;

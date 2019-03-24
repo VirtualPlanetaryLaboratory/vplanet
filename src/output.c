@@ -51,15 +51,14 @@ void WriteCriticalSemi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   // Only valid for simulations of tidally-interacting binary stars that have
   // 2 bodies: 0, 1, both stars, with bStellar = bEqtide = 1
   // All of the following must be true
-  if(control->evolve.iNumBodies > 1 && iBody < 2 && body[iBody].bStellar && body[iBody].bEqtide) {
+  if(control->Evolve.iNumBodies > 1 && iBody == 1 && body[iBody].bStellar && body[iBody].bEqtide) {
     double a = body[1].dSemi;
     double e = body[1].dEcc;
     double mu = body[1].dMass/(body[0].dMass + body[1].dMass);
     *dTmp = (1.6 + 5.1*e -2.22*e*e + 4.12*mu - 4.27*e*mu - 5.09*mu*mu + 4.61*e*e*mu*mu)*a;
   }
   else {
-    fprintf(stderr, "ERROR: Critical Semi-major axis output only valid for simulations of tidally-interacting stellar binaries!\n");
-    exit(1);
+    *dTmp = -1;
   }
 
   if (output->bDoNeg[iBody]) {
@@ -68,6 +67,7 @@ void WriteCriticalSemi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength,cUnit);
+  }
 }
 
 /*

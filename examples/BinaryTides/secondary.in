@@ -1,6 +1,6 @@
 # The host star, the sun -> Primary body!
 sName		secondary		# Body's name
-saModules       stellar eqtide 
+saModules       stellar eqtide
 
 # Physical Parameters
 iBodyType     1 # Star!
@@ -22,4 +22,4 @@ saTidePerts	primary   	# Body name(s) of tidal perturbers
 sStellarModel baraffe
 sMagBrakingModel skumanich
 
-saOutputOrder	Time -TotEn -TotAngMom -Semim -Radius -RotPer Ecce -RotRate -MeanMotion -OrbPer RadGyra -SurfEnFluxTotal 
+saOutputOrder	Time -TotEn -TotAngMom -Semim -Radius -RotPer Ecce -RotRate -MeanMotion -OrbPer RadGyra -SurfEnFluxTotal

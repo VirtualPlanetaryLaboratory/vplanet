@@ -32,6 +32,7 @@ void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].iMagBrakingModel = src[iBody].iMagBrakingModel;
   dest[iBody].dLXUV = src[iBody].dLXUV;
   dest[iBody].bRossbyCut = src[iBody].bRossbyCut;
+  dest[iBody].bEvolveRG = src[iBody].bEvolveRG;
 }
 
 /**************** STELLAR options ********************/
@@ -270,6 +271,23 @@ void ReadRossbyCut(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
   }
 }
 
+
+void ReadEvolveRG(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bEvolveRG = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      body[iFile-1].bEvolveRG = 1; // Default to evolve RG
+  }
+}
+
 /* Halts */
 
 void ReadHaltEndBaraffeGrid(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -395,6 +413,14 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ROSSBYCUT].iModuleBit = STELLAR;
   fnRead[OPT_ROSSBYCUT] = &ReadRossbyCut;
 
+  sprintf(options[OPT_EVOVLERG].cName,"bEvolveRG");
+  sprintf(options[OPT_EVOVLERG].cDescr,"Evolve stellar radius of gyration?");
+  sprintf(options[OPT_EVOVLERG].cDefault,"1");
+  options[OPT_EVOVLERG].iType = 0;
+  options[OPT_EVOVLERG].iMultiFile = 1;
+  options[OPT_EVOVLERG].iModuleBit = STELLAR;
+  fnRead[OPT_EVOVLERG] = &ReadEvolveRG;
+
 }
 
 void ReadOptionsStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -491,6 +517,8 @@ void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,
 
 void VerifyRadGyra(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
+  // If evolving radius of gyration, stellar model must be set
+  if(body[iBody].bEvolveRG) {
   // Assign radius
   if (body[iBody].iStellarModel == STELLAR_MODEL_BARAFFE) {
     body[iBody].dRadGyra = fdRadGyraFunctionBaraffe(body[iBody].dAge, body[iBody].dMass);
@@ -514,6 +542,16 @@ void VerifyRadGyra(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update
   update[iBody].iaBody[update[iBody].iRadGyra][0][0] = iBody;
 
   update[iBody].pdRadGyraStellar = &update[iBody].daDerivProc[update[iBody].iRadGyra][0];  // NOTE: This points to the VALUE of the radius of gyration
+  }
+  // Not evolving RG, must be supplied by user
+  else {
+    if (options[OPT_RG].iLine[iBody+1] < 0) {
+      // User specified radius, but we're reading it from the grid!
+      if (control->Io.iVerbose >= VERBINPUT)
+        printf("ERROR: Must set radius of gyration for body %d when its bEvolveRG = 0.\n", iBody);
+        exit(1);
+    }
+  }
 }
 
 void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
@@ -603,7 +641,9 @@ void AssignStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateV
   fnUpdate[iBody][update[iBody].iLuminosity][0]                                = &fdLuminosity;  // NOTE: This points to the value of the Luminosity!
   fnUpdate[iBody][update[iBody].iRadius][0]                                    = &fdRadius;      // NOTE: This points to the value of the Radius!
   fnUpdate[iBody][update[iBody].iTemperature][0]                               = &fdTemperature; // NOTE: This points to the value of the Temperature!
-  fnUpdate[iBody][update[iBody].iRadGyra][0]                                   = &fdRadGyra; // NOTE: This points to the value of the Radius of Gyration!
+  if(body[iBody].bEvolveRG) {
+    fnUpdate[iBody][update[iBody].iRadGyra][0]                                 = &fdRadGyra; // NOTE: This points to the value of the Radius of Gyration!
+  }
 }
 
 void NullStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
@@ -613,7 +653,9 @@ void NullStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVar
   fnUpdate[iBody][update[iBody].iLuminosity][0]                                = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Luminosity!
   fnUpdate[iBody][update[iBody].iRadius][0]                                    = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Radius!
   fnUpdate[iBody][update[iBody].iTemperature][0]                               = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Temperature!
-  fnUpdate[iBody][update[iBody].iRadGyra][0]                                   = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Radius of Gyration!
+  if(body[iBody].bEvolveRG) {
+    fnUpdate[iBody][update[iBody].iRadGyra][0]                                 = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Radius of Gyration!
+  }
 }
 
 void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
@@ -632,6 +674,12 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   if (update[iBody].iNumRadius > 1) {
     if (control->Io.iVerbose >= VERBERR)
       fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dRadius for body %d!", iBody);
+    exit(EXIT_INPUT);
+  }
+
+  if (update[iBody].iNumRadGyra > 1) {
+    if (control->Io.iVerbose >= VERBERR)
+      fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dRadGyra for body %d!", iBody);
     exit(EXIT_INPUT);
   }
 
@@ -673,7 +721,7 @@ void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumRadius++;
   }
 
-  if (body[iBody].dRadGyra > 0) {
+  if (body[iBody].dRadGyra > 0 && body[iBody].bEvolveRG) {
     if (update[iBody].iNumRadGyra == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumRadGyra++;
@@ -716,8 +764,10 @@ void FinalizeUpdateRadiusStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int
 }
 
 void FinalizeUpdateRadGyraStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
-  update[iBody].iaModule[iVar][*iEqn] = STELLAR;
-  update[iBody].iNumRadGyra = (*iEqn)++;
+  if(body[iBody].bEvolveRG) {
+    update[iBody].iaModule[iVar][*iEqn] = STELLAR;
+    update[iBody].iNumRadGyra = (*iEqn)++;
+  }
 }
 
 void FinalizeUpdateRotRateStellar(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
@@ -1144,6 +1194,12 @@ double fdTemperature(BODY *body,SYSTEM *system,int *iaBody) {
 }
 
 double fdRadGyra(BODY *body,SYSTEM *system,int *iaBody) {
+
+  // If not evolving the radius of gyration, ignore rest of function
+  if(!body[iaBody[0]].bEvolveRG) {
+    return body[iaBody[0]].dRadGyra;
+  }
+
   double foo;
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE) {
     foo = fdRadGyraFunctionBaraffe(body[iaBody[0]].dAge, body[iaBody[0]].dMass);
@@ -1190,7 +1246,8 @@ double fdDRadGyraDtStellar(BODY *body,SYSTEM *system,int *iaBody) {
   // stellar mass are changing, too! Perhaps it's better to keep track of the previous
   // values of the radius of gyration and compute the derivative from those? TODO: Check this.
 
-  if(body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
+  // If not evolving RG or not using Baraffe+2015 models, ignore RG evolution
+  if(body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE || !body[iaBody[0]].bEvolveRG) {
     return dTINY;
   }
 

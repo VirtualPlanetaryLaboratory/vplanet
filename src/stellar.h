@@ -50,6 +50,8 @@
 #define OPT_HZMODEL             1520 /**< Habitable zone model */
 #define OPT_MAGBRAKINGMODEL     1521 /**< Magnetic braking model */
 
+#define OPT_EVOVLERG            1522 /**< Whether or not to evolve stellar radius of gyration */
+
 /* Halt Functions */
 #define STELLARHALTSYSEND       5
 #define STELLARHALTBODYEND      5

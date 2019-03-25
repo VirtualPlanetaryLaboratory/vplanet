@@ -153,6 +153,7 @@ void FinalizeUpdateOxygenMassSpace(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_HYDROGENMASSSPACE  2320
 #define OUT_OXYGENMASSSPACE    2321
 #define OUT_FRACFE2O3MAN       2323
+#define OUT_NETFLUXATMO        2324
 
 void HelpOutputMagmOc(OUTPUT*);
 void InitializeOutputMagmOc(OUTPUT*,fnWriteOutput[]);
@@ -171,6 +172,7 @@ void WritePressOxygenAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,doubl
 void WriteHydrogenMassSpace(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteOxygenMassSpace(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteFracFe2O3Man(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteNetFluxAtmo(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsMagmOc(CONTROL*,FILE*);

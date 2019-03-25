@@ -1563,14 +1563,14 @@ void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     fnPropertiesAtmEsc(body,evolve,update,iBody);
 
     // Water and Oxygen mass lost through atmospheric escape
-    if ((body[iBody].bRunaway) && (body[iBody].dSurfaceWaterMass > 0)) {
+    if ((body[iBody].bRunaway) && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
       // This takes care of both energy-limited and diffusion limited escape!
       body[iBody].dWaterMassEsc = -(9. / (1 + 8 * body[iBody].dOxygenEta)) * body[iBody].dMDotWater;
     } else {
       body[iBody].dWaterMassEsc = 0;
     }
 
-    if ((body[iBody].bRunaway) && (!body[iBody].bInstantO2Sink) && (body[iBody].dSurfaceWaterMass > 0)) {
+    if ((body[iBody].bRunaway) && (!body[iBody].bInstantO2Sink) && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
       if (body[iBody].iWaterLossModel == ATMESC_LB15) {
         // Rodrigo and Barnes (2015)
         if (body[iBody].dCrossoverMass >= 16 * ATOMMASS)
@@ -1582,6 +1582,11 @@ void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
         body[iBody].dOxygenMassEsc = (8 - 8 * body[iBody].dOxygenEta) / (1 + 8 * body[iBody].dOxygenEta) * body[iBody].dMDotWater;
       }
     } else {
+      body[iBody].dOxygenMassEsc = 0;
+    }
+
+    if (body[iBody].bPlanetDesiccated) {
+      body[iBody].dWaterMassEsc  = 0;
       body[iBody].dOxygenMassEsc = 0;
     }
   }

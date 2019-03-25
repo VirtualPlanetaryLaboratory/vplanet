@@ -989,6 +989,7 @@ struct BODY {
 	int bLowPressSol;         /**< Switch to low pressure treatment of solidus */
 	int bManStartSol;         /**< Mantle starts to solidify */
 	int bCalcFugacity;        /**< Need to calc oxygen fugacity */
+	int bPlanetDesiccated;    /**< Atmosphere desiccated */
 	int iRadioHeatModel;
 	int iMagmOcAtmModel;
 	/* Primary variables */
@@ -1021,6 +1022,7 @@ struct BODY {
 	double dEffTempAtm;       /**< Effective temperature of the planet's atmosphere */
 	/* Other variables Volatile model */
 	double dPressWaterAtm;    /**< Water pressure in atmosphere [Pa] */
+	double dPartialPressWaterAtm; /**< Partial Water pressure in atmosphere [Pa] */
 	double dPressOxygenAtm;   /**< Oxygen pressure in atmosphere [Pa] */
 	double dMassMagmOcLiq; 		/**< liquid mass of magma ocean [kg] */
 	double dMassMagmOcCry; 		/**< crystal mass of magma ocean [kg] */

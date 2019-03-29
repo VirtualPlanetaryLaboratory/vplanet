@@ -1,5 +1,5 @@
 /**
-    @file atmesc.c 
+    @file atmesc.c
     @brief Subroutines that control the integration of the
     atmospheric escape model.
     @author Rodrigo Luger ([rodluger@gmail.com](mailto:rodluger@gmail.com>))
@@ -2405,7 +2405,14 @@ double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
 
   double foo;
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LOP12) {
-    foo = fdLopezRadius(body[iaBody[0]].dMass, body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, 1., body[iaBody[0]].dAge, 0);
+    // If no envelope, return solid body radius according to Sotin+2007 model
+    if(body[iaBody[0]].dEnvelopeMass <= 0.0) {
+      foo = fdMassToRad_Sotin07(body[iaBody[0]].dMass);
+    }
+    // Envelope present: estimate planetary radius using Lopez models
+    else {
+      foo = fdLopezRadius(body[iaBody[0]].dMass, body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, 1., body[iaBody[0]].dAge, 0);
+    }
     if (!isnan(foo))
       return foo;
     else

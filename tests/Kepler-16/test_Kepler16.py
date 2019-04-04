@@ -8,7 +8,7 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 def test_Kepler16():
     """Test module Binary."""
     # Remove old log file
-    subprocess.run(['rm', 'kepelr16.log'], cwd=cwd)
+    subprocess.run(['rm', 'kepler16.log'], cwd=cwd)
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
 

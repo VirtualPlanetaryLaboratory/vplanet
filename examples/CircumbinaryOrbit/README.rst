@@ -9,7 +9,7 @@ The orbits of circumbinary planets evolve due to the binary stars' changing posi
 ===================   ============
 **Date**              07/24/18
 **Author**            David Fleming
-**Modules**           binary
+**Modules**           BINARY
 **Approx. runtime**   24 seconds
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/cbp_dyn>`_
 ===================   ============

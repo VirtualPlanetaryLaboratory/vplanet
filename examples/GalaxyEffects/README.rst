@@ -10,7 +10,7 @@ the galactic tide, and passing field stars.
 ===================   ============
 **Date**              07/25/18
 **Author**            Russell Deitrick
-**Modules**           galhabit
+**Modules**           GalHabit
 **Approx. runtime**   6 minutes
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/galhabit>`_
 ===================   ============

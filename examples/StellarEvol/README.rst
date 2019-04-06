@@ -9,7 +9,7 @@ Stellar evolution for stars between 0.1 and 1.3 solar masses.
 ===================   ============
 **Date**              07/25/18
 **Author**            Rodrigo Luger
-**Modules**           stellar
+**Modules**           STELLAR
 **Approx. runtime**   2 minutes
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/MainSequence>`_
 ===================   ============

@@ -9,7 +9,7 @@ This example shows how Earth's interior evolves in a plate tectonics-like mode.
 ===================   ============
 **Date**              10/03/18
 **Author**            Peter Driscoll
-**Modules**           radheat thermint
+**Modules**           RadHeat ThermInt
 **Approx. runtime**   <1 second
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/EarthInterior>`_
 ===================   ============

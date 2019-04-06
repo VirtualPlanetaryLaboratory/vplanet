@@ -10,9 +10,9 @@ often called a a Cassini state.
 ===================   ============
 **Date**              07/25/18
 **Author**            Russell Deitrick
-**Modules**           eqtide
-                      distorb
-                      distrot
+**Modules**           EqTide
+                      DistOrb
+                      DistRot
 **Approx. runtime**   54 seconds
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/cassini>`_
 ===================   ============

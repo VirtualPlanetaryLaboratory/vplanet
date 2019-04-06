@@ -9,12 +9,12 @@ Orbital evolution from an N-body model.
 ===================   ============
 **Date**              10/30/18
 **Author**            Hayden Smotherman
-**Modules**           `spinbody <../src/spinbody.html>`_
-**Approx. runtime**   | 27 seconds (:code:`vpl.in`)
+**Modules**           SpiNBody
+**Approx. runtime**   27 seconds
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/spinbody>`_
 ===================   ============
 
-This example uses SpiNBody to model the orbits of the solar system planets and compares
+This example uses **SpiNBody** to model the orbits of the solar system planets and compares
 the results to a similar simulation run by HNBody v1.0.10. The output files for
 hnbody are generated using the HNBody input script :code:`SpiNBody_Comparison.hnb`.
 

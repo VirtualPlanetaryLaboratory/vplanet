@@ -1,11 +1,11 @@
-Orbital Damping in the CoRoT-7 System
+Apsidal Locking of the CoRoT-7 System
 =================
 
 Overview
 --------
 
-Orbital damping into the "fixed-point solution" in which two planets' major axes
-circulate with the same frequency.
+Demonstration of apsidal locking, in which two planets' major axes
+circulate with the same frequency as a result of tidal damping.
 
 ===================   ============
 **Date**              9/12/18

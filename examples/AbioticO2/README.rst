@@ -1,4 +1,4 @@
-Oxygen Buildup from XUV Radiation
+Accumulation of Oxygen due to Water Photolysis and Hydrogen Escape.
 ==============
 
 Overview

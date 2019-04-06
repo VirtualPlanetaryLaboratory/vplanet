@@ -4,7 +4,7 @@ Orbital Evolution of the Circumbinary Planet Kepler-16 b
 Overview
 --------
 
-Orbital evolution of the circumbinary planet Kepler-16 b.
+The orbits of circumbinary planets evolve due to the binary stars' changing positions.
 
 ===================   ============
 **Date**              07/24/18

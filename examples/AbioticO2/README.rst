@@ -1,4 +1,4 @@
-Accumulation of Oxygen due to Water Photolysis and Hydrogen Escape.
+Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape.
 ==============
 
 Overview

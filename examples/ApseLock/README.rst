@@ -5,7 +5,7 @@ Overview
 --------
 
 Demonstration of apsidal locking, in which two planets' major axes
-circulate with the same frequency as a result of tidal damping.
+circulate with the same frequency after tidal damping.
 
 ===================   ============
 **Date**              9/12/18

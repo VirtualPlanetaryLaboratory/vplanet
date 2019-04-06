@@ -4,7 +4,8 @@ Cassini States
 Overview
 --------
 
-A planetary system can damping into a Cassini state.
+Demonstration of tidal damping can drive a planet's obliquity to a constant value,
+often called a a Cassini state.
 
 ===================   ============
 **Date**              07/25/18

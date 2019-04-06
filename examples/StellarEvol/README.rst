@@ -15,7 +15,7 @@ Stellar evolution for stars between 0.1 and 1.3 solar masses.
 ===================   ============
 
 This example shows the evolution of pre- and main sequence stars as predicted by
-Baraffe et al. (2016). **VPLANET** interpolates the results of that paper, accounting
+Baraffe et al. (2016). **VPLanet** interpolates the results of that paper, accounting
 for the changes that occur as convection sets in for higher mass stars.
 
 To run this example

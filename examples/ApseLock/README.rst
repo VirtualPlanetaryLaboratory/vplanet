@@ -10,9 +10,9 @@ circulate with the same frequency after tidal damping.
 ===================   ============
 **Date**              9/12/18
 **Author**            David Fleming
-**Modules**           distorb
-                      eqtide
-                      stellar
+**Modules**           DistOrb
+                      EqTide
+                      STELLAR
 **Approx. runtime**   500 seconds
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/corot7>`_
 ===================   ============

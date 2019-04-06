@@ -9,8 +9,8 @@ Track water loss and oxygen build-up due to hydrodynamic atmospheric escape.
 ===================   ============
 **Date**              07/25/18
 **Author**            Rodrigo Luger
-**Modules**           atmesc
-                      stellar
+**Modules**           AtmEsc
+                      STELLAR
 **Approx. runtime**   10 minutes (!!)
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/o2buildup>`_
 ===================   ============

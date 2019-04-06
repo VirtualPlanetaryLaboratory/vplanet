@@ -1,5 +1,5 @@
 # Primary input file for VPLANET
-sSystemName	corot7		# System Name
+sSystemName	ApseLock		# System Name
 iVerbose	5			# Verbosity level
 bOverwrite	1			# Allow file overwrites?
 

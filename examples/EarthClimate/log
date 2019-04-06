@@ -1,0 +1,66 @@
+WARNING: sUnitMass set in vpl.in, all bodies will use this unit.
+WARNING: sUnitTime set in vpl.in, all bodies will use this unit.
+WARNING: sUnitAngle set in vpl.in, all bodies will use this unit.
+WARNING: sUnitLength set in vpl.in, all bodies will use this unit.
+WARNING: sUnitTemp not set in file sun.in, defaulting to Kelvin.
+WARNING: sUnitTemp not set in file mercury.in, defaulting to kelvin.
+WARNING: sUnitTemp not set in file venus.in, defaulting to kelvin.
+WARNING: sUnitTemp not set in file earth.in, defaulting to kelvin.
+WARNING: sUnitTemp not set in file mars.in, defaulting to kelvin.
+WARNING: sUnitTemp not set in file jupiter.in, defaulting to kelvin.
+WARNING: sUnitTemp not set in file saturn.in, defaulting to kelvin.
+WARNING: sUnitTemp not set in file george.in, defaulting to kelvin.
+WARNING: sUnitTemp not set in file neptune.in, defaulting to kelvin.
+WARNING: dRadius < 0 in file mercury.in, units assumed to be Earth radii.
+WARNING: dRotPeriod < 0 in file mercury.in, units assumed to be Days.
+WARNING: dRadius < 0 in file venus.in, units assumed to be Earth radii.
+WARNING: dRotPeriod < 0 in file venus.in, units assumed to be Days.
+WARNING: dRadius < 0 in file earth.in, units assumed to be Earth radii.
+WARNING: dRotPeriod < 0 in file earth.in, units assumed to be Days.
+WARNING: dRadius < 0 in file mars.in, units assumed to be Earth radii.
+WARNING: dRotPeriod < 0 in file mars.in, units assumed to be Days.
+WARNING: dRadius < 0 in file jupiter.in, units assumed to be Earth radii.
+WARNING: dRotPeriod < 0 in file jupiter.in, units assumed to be Days.
+WARNING: dRadius < 0 in file saturn.in, units assumed to be Earth radii.
+WARNING: dRotPeriod < 0 in file saturn.in, units assumed to be Days.
+WARNING: dRadius < 0 in file george.in, units assumed to be Earth radii.
+WARNING: dRotPeriod < 0 in file george.in, units assumed to be Days.
+WARNING: dRadius < 0 in file neptune.in, units assumed to be Earth radii.
+WARNING: dRotPeriod < 0 in file neptune.in, units assumed to be Days.
+WARNING: sOutFile not set, defaulting to solarsys.sun.forward.
+WARNING: sOutFile not set, defaulting to solarsys.Mercury.forward.
+WARNING: sOutFile not set, defaulting to solarsys.Venus.forward.
+WARNING: sOutFile not set, defaulting to solarsys.Earth.forward.
+WARNING: sOutFile not set, defaulting to solarsys.Mars.forward.
+WARNING: sOutFile not set, defaulting to solarsys.Jupiter.forward.
+WARNING: sOutFile not set, defaulting to solarsys.Saturn.forward.
+WARNING: sOutFile not set, defaulting to solarsys.George.forward.
+WARNING: sOutFile not set, defaulting to solarsys.Neptune.forward.
+WARNING: sIntegrationMethod not set, defaulting to Runge-Kutta4.
+WARNING: No rotational information set in file sun.in. Defaulting to dRotRate = 2*pi/day.
+Input files read.
+All of sun's modules verified.
+All of Mercury's modules verified.
+All of Venus's modules verified.
+TGlobal = 13.368629
+TGlobal = 13.909513
+TGlobal = 14.188601
+TGlobal = 14.365209
+TGlobal = 14.495537
+TGlobal = 14.565920; Prev RunningMean = 0.000000; Curr RunningMean = 14.304956 
+TGlobal = 14.604138; Prev RunningMean = 14.304956; Curr RunningMean = 14.443881 
+TGlobal = 14.629948; Prev RunningMean = 14.443881; Curr RunningMean = 14.532150 
+TGlobal = 14.643636; Prev RunningMean = 14.532150; Curr RunningMean = 14.587836 
+TGlobal = 14.648177; Prev RunningMean = 14.587836; Curr RunningMean = 14.618364 
+TGlobal = 14.649833; Prev RunningMean = 14.618364; Curr RunningMean = 14.635146 
+All of Earth's modules verified.
+All of Mars's modules verified.
+All of Jupiter's modules verified.
+All of Saturn's modules verified.
+All of George's modules verified.
+All of Neptune's modules verified.
+Input files verified.
+Log file written.
+Evolution completed.
+Runtime = 323.000000 s
+Log file updated.

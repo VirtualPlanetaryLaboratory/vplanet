@@ -93,8 +93,9 @@
 #define OPT_SURFTEMP              2312
 #define OPT_MANMELTDENSITY        2313
 #define OPT_HALTMANTLESOLIDIFIED  2314
-#define OPT_RADIOHEATMODEL        2315
-#define OPT_MAGMOCATMMODEL        2316
+#define OPT_HALTATMDESISRUFCOOL   2315
+#define OPT_RADIOHEATMODEL        2316
+#define OPT_MAGMOCATMMODEL        2317
 
 void AddModuleMagmOc(MODULE*,int,int);
 void BodyCopyMagmOc(BODY*,BODY*,int,int,int);
@@ -112,7 +113,8 @@ void ReadOptionsMagmOc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int
 #define MAGMOCHALTSYSEND       5
 #define MAGMOCHALTBODYEND      5
 
-int fbHaltMantleSolidifed(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltMantleSolidified(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltAtmDesiSurfCool(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 void CountHaltsMagmOc(HALT*,int*);
 
 /* Verify Functions */
@@ -154,6 +156,9 @@ void FinalizeUpdateOxygenMassSpace(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_OXYGENMASSSPACE    2321
 #define OUT_FRACFE2O3MAN       2323
 #define OUT_NETFLUXATMO        2324
+#define OUT_WATERFRACMELT      2325
+#define OUT_RADIOPOWER         2326
+#define OUT_TIDALPOWER         2327
 
 void HelpOutputMagmOc(OUTPUT*);
 void InitializeOutputMagmOc(OUTPUT*,fnWriteOutput[]);
@@ -173,6 +178,9 @@ void WriteHydrogenMassSpace(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,do
 void WriteOxygenMassSpace(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteFracFe2O3Man(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteNetFluxAtmo(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteWaterFracMelt(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteRadioPower(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteTidalPower(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsMagmOc(CONTROL*,FILE*);

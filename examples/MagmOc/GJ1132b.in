@@ -1,6 +1,6 @@
 # Planet a parameters
 sName         GJ1132b                     # Body's name
-saModules     magmoc, atmesc                      # Modules to apply, exact spelling required
+saModules     magmoc, atmesc, radheat                      # Modules to apply, exact spelling required
 cColor        13aed5
 
 # Physical Properties
@@ -13,7 +13,8 @@ dWaterMassAtm		-100		  # Initial water mass in the system (neg: terrestrial ocea
 dSurfTemp		4000		  # Initial surface temperature (default: 4000K)
 dManMeltDensity		4000		  # Mantle melt density (default: 4000kg/m^3)
 bHaltMantleSolidified 	1		  # Halt when mantle solidified? (default: 0 = no, 1 = yes)
-sRadioHeatModel		schaefer          # Radiogenic heating model (default: none = RadHeat; schaefer = BSE composition)
+bHaltAtmDesiSurfCool    1                 # Halt when atmosphere desiccated and surface below 1000K? (default: 0 = no, 1 = yes)
+sRadioHeatModel		none              # Radiogenic heating model (default: none = RadHeat; schaefer = BSE composition)
 sMagmOcAtmModel 	grey		  # Atmospheric net flux model (default: grey; petit only for GJ1132b-H2O)
 
 # ATMESC Properties
@@ -29,9 +30,31 @@ bInstantO2Sink            0
 sAtmXAbsEffH2OModel       none
 dAtmXAbsEffH2O 		  0.3
 
+# RADHEAT Parameters
+# *Num* are in numbers of atoms, negative -> Earth vals
+### 40K
+d40KNumMan    -1
+d40KNumCore   -1
+d40KNumCrust  -1.0
+
+### 232Th
+d232ThNumMan      -1
+d232ThNumCore     -1
+d232ThNumCrust    -1
+
+### 235U
+d235UNumMan      -1
+d235UNumCore     -1
+d235UNumCrust    -1
+
+### 238U
+d238UNumMan      -1
+d238UNumCore     -1
+d238UNumCrust    -1
+
 # Orbital Properties
 dSemi         -0.0154                     # Semi-major axis, negative -> AU
 dEcc          0.0                         # Eccentricity
 
 # Output
-saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -PressWaterAtm -PressOxygenAtm -HydrogenMassSpace -OxygenMassSpace FracFe2O3Man NetFluxAtmo
+saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -PressWaterAtm -PressOxygenAtm -HydrogenMassSpace -OxygenMassSpace FracFe2O3Man NetFluxAtmo WaterFracMelt -RadioPower -TidalPower

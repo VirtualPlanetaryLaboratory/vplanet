@@ -41,6 +41,7 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
 	dest[iBody].dFactorDerivative     = src[iBody].dFactorDerivative;
 	dest[iBody].dManHeatFlux          = src[iBody].dManHeatFlux;
 	dest[iBody].dRadioHeat            = src[iBody].dRadioHeat;
+  dest[iBody].dTidalHeat            = src[iBody].dTidalHeat;
 	dest[iBody].dNetFluxAtmo          = src[iBody].dNetFluxAtmo;
 	dest[iBody].dAlbedo			 		      = src[iBody].dAlbedo;
 	/* Other variables Volatile model */
@@ -63,6 +64,7 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].bManStartSol          = src[iBody].bManStartSol;
   dest[iBody].bCalcFugacity         = src[iBody].bCalcFugacity;
   dest[iBody].bPlanetDesiccated     = src[iBody].bPlanetDesiccated;
+  dest[iBody].bManQuasiSol          = src[iBody].bManQuasiSol;
   dest[iBody].iRadioHeatModel       = src[iBody].iRadioHeatModel;
   dest[iBody].iMagmOcAtmModel       = src[iBody].iMagmOcAtmModel;
 }
@@ -179,6 +181,26 @@ void ReadHaltMantleSolidified(BODY *body,CONTROL *control,FILES *files,OPTIONS *
   }
 }
 
+void ReadHaltAtmDesiSurfCool(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    control->Halt[iFile-1].bHaltAtmDesiSurfCool = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultInt(options,&control->Halt[iFile-1].bHaltAtmDesiSurfCool,files->iNumInputs);
+  }
+}
+
+/*
+ * Read model options
+ */
+
 void ReadRadioHeatModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -275,6 +297,12 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HALTMANTLESOLIDIFIED].iType = 0;
   fnRead[OPT_HALTMANTLESOLIDIFIED] = &ReadHaltMantleSolidified;
 
+  sprintf(options[OPT_HALTATMDESISRUFCOOL].cName,"bHaltAtmDesiSurfCool");
+  sprintf(options[OPT_HALTATMDESISRUFCOOL].cDescr,"Halt when atmosphere desiccated and surface below 1000K?");
+  sprintf(options[OPT_HALTATMDESISRUFCOOL].cDefault,"0");
+  options[OPT_HALTATMDESISRUFCOOL].iType = 0;
+  fnRead[OPT_HALTATMDESISRUFCOOL] = &ReadHaltAtmDesiSurfCool;
+
   sprintf(options[OPT_RADIOHEATMODEL].cName,"sRadioHeatModel");
   sprintf(options[OPT_RADIOHEATMODEL].cDescr,"Radiogenic heating model");
   sprintf(options[OPT_RADIOHEATMODEL].cDefault,"NONE");
@@ -317,6 +345,9 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   body[iBody].dAlbedo          = ALBEDOWATERATMOS;
   body[iBody].dGravAccelSurf   = BIGG * body[iBody].dMass / pow(body[iBody].dRadius,2);
   body[iBody].dFracFe2O3Man    = 0;
+
+  // initialize water pressure in atmosphere to avoid deviding by 0. Use 1 % of initial water mass
+  body[iBody].dPressWaterAtm   = body[iBody].dWaterMassAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
 
   double dMassMantle;
   double dManMolNum;
@@ -710,18 +741,28 @@ void fndWaterFracMelt(BODY *body, int iBody) {
   body[iBody].dMassMagmOcLiq = body[iBody].dMeltFraction * dMassMagmOcTot;
   body[iBody].dMassMagmOcCry = (1 - body[iBody].dMeltFraction) * dMassMagmOcTot;
 
-  if (fabs(fndWaterMassMOTime(body, 0, iBody)) < 1e-5) {
+  if (body[iBody].bPlanetDesiccated){
     body[iBody].dWaterFracMelt = 0;
-  } else if (fabs(fndWaterMassMOTime(body, 1, iBody)) < 1e-5) {
-    body[iBody].dWaterFracMelt = 1;
   } else {
-    body[iBody].dWaterFracMelt = fndBisection(fndWaterMassMOTime,body,0,1,1e-5,iBody);
+    if (fabs(fndWaterMassMOTime(body, 0, iBody)) < 1e-5) {
+      body[iBody].dWaterFracMelt = 0;
+    } else if (fabs(fndWaterMassMOTime(body, 1, iBody)) < 1e-5) {
+      body[iBody].dWaterFracMelt = 1;
+    } else {
+      body[iBody].dWaterFracMelt = fndBisection(fndWaterMassMOTime,body,0,1,1e-5,iBody);
+    }
   }
+
 
   /* Get water pressure and water mass in the atmosphere */
   dAveMolarMassAtm = (MOLWEIGHTWATER * body[iBody].dPressWaterAtm + MOLWEIGHTOXYGEN * body[iBody].dPressOxygenAtm)/(body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm);
-  body[iBody].dPartialPressWaterAtm = pow((body[iBody].dWaterFracMelt/3.44e-8),1/0.74);
-  body[iBody].dPressWaterAtm        = body[iBody].dPartialPressWaterAtm * MOLWEIGHTWATER / dAveMolarMassAtm;
+  if (body[iBody].bPlanetDesiccated){
+    body[iBody].dPartialPressWaterAtm = 0;
+    body[iBody].dPressWaterAtm        = 0;
+  } else {
+    body[iBody].dPartialPressWaterAtm = pow((body[iBody].dWaterFracMelt/3.44e-8),1/0.74);
+    body[iBody].dPressWaterAtm        = body[iBody].dPartialPressWaterAtm * MOLWEIGHTWATER / dAveMolarMassAtm;
+  }
 }
 
 /* Auxs Props */
@@ -752,12 +793,27 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   }
 
   /*
-   * Radiogenic heating
+   * Radiogenic heating: RadioHeat in W/kg
    */
+  double dPowerRadio;
   if (body[iBody].iRadioHeatModel == MAGMOC_SCHAEFER) {
     body[iBody].dRadioHeat = fndRadioHeatingEarth(body,iBody);
+  } else if (body[iBody].bRadheat) {
+    dPowerRadio = fdRadPowerMan(update,iBody);
+    body[iBody].dRadioHeat = dPowerRadio / (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3))); // add here RADHEAT
   } else {
-    body[iBody].dRadioHeat = 0; // add here RADHEAT
+    body[iBody].dRadioHeat = 0;
+  }
+
+  /*
+   * Tidal heating: TidalHeat in W/kg
+   */
+  double dTidalPower;
+  if (body[iBody].bEqtide) {
+    // dTidalPower = fdTidePower(body,system,update,iBody,evolve->iEqtideModel);
+    body[iBody].dTidalHeat = dTidalPower / (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3))); // add here RADHEAT
+  } else {
+    body[iBody].dTidalHeat = 0;
   }
 
   /*
@@ -853,20 +909,27 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
   //   }
   // }
   /* All FeO in mantle oxidized to Fe2O3 */
-  if ((body[iBody].bAllFeOOxid == 0) && (body[iBody].dFracFe2O3Man >= body[iBody].dMassFracFeOIni * MOLWEIGHTFEO15 / MOLWEIGHTFEO)) {
+  if ((!body[iBody].bAllFeOOxid) && (body[iBody].dFracFe2O3Man >= body[iBody].dMassFracFeOIni * MOLWEIGHTFEO15 / MOLWEIGHTFEO)) {
     body[iBody].bAllFeOOxid = 1;
     if (io->iVerbose >= VERBPROG) {
       printf("All FeO in magma ocean oxidized to Fe2O3 after %f years. \n",evolve->dTime/YEARSEC);
     }
   }
 
-  if ((body[iBody].bPlanetDesiccated == 0) && (body[iBody].dWaterMassMOAtm <= 1e-5 * TOMASS)) {
+  if ((!body[iBody].bPlanetDesiccated) && (body[iBody].dWaterMassMOAtm <= 1e-5 * TOMASS)) {
     body[iBody].bPlanetDesiccated = 1;
     body[iBody].dWaterMassEsc     = 0;
     body[iBody].dOxygenMassEsc    = 0;
     SetDerivTiny(fnUpdate,iBody,update[iBody].iWaterMassMOAtm,update[iBody].iWaterMassMOAtmMagmOc);
     if (io->iVerbose >= VERBPROG) {
       printf("%s's atmosphere desiccated after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+    }
+  }
+
+  if ((!body[iBody].bManQuasiSol) && (body[iBody].bPlanetDesiccated) && (body[iBody].dSurfTemp <= 1000)) {
+    body[iBody].bManQuasiSol = 1;
+    if (io->iVerbose >= VERBPROG) {
+      printf("%s's atmosphere desiccated & surface temperature below 1000K after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
   }
 }
@@ -1050,10 +1113,20 @@ void InitializeUpdateMagmOc(BODY *body,UPDATE *update,int iBody) {
 /*
  * Checks if mantle soldified
  */
-int fbHaltMantleSolidifed(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltMantleSolidified(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   if (body[iBody].bManSolid) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's mantle completely solidified after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+    }
+    return 1;
+  }
+  return 0;
+}
+
+int fbHaltAtmDesiSurfCool(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  if (body[iBody].bManQuasiSol) {
+    if (io->iVerbose >= VERBPROG) {
+      printf("HALT: %s's atmosphere desiccated & surface temperature below 1000K after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
     return 1;
   }
@@ -1064,11 +1137,17 @@ void CountHaltsMagmOc(HALT *halt,int *iNumHalts) {
   if (halt->bHaltMantleSolidified) {
     (*iNumHalts)++;
   }
+  if (halt->bHaltAtmDesiSurfCool) {
+    (*iNumHalts)++;
+  }
 }
 
 void VerifyHaltMagmOc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
   if (control->Halt[iBody].bHaltMantleSolidified) {
-    control->fnHalt[iBody][(*iHalt)++] = &fbHaltMantleSolidifed;
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltMantleSolidified;
+  }
+  if (control->Halt[iBody].bHaltAtmDesiSurfCool) {
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltAtmDesiSurfCool;
   }
 }
 
@@ -1209,6 +1288,36 @@ void WriteNetFluxAtmo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   } else { }
 }
 
+void WriteWaterFracMelt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dWaterFracMelt;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
+void WriteRadioPower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dRadioHeat * (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3)));
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsPower(units->iTime,units->iMass,units->iLength);
+    fsUnitsPower(units,cUnit);
+  }
+}
+
+void WriteTidalPower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dTidalHeat * (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3)));
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsPower(units->iTime,units->iMass,units->iLength);
+    fsUnitsPower(units,cUnit);
+  }
+}
+
 // similar to initialize options
 void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
@@ -1325,6 +1434,31 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_NETFLUXATMO].iNum = 1;
   output[OUT_NETFLUXATMO].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_NETFLUXATMO] = &WriteNetFluxAtmo;
+
+  sprintf(output[OUT_WATERFRACMELT].cName,"WaterFracMelt");
+  sprintf(output[OUT_WATERFRACMELT].cDescr,"water mass fraction in magma ocean");
+  output[OUT_WATERFRACMELT].bNeg = 1;
+  output[OUT_WATERFRACMELT].iNum = 1;
+  output[OUT_WATERFRACMELT].iModuleBit = MAGMOC; //name of module
+  fnWrite[OUT_WATERFRACMELT] = &WriteWaterFracMelt;
+
+  sprintf(output[OUT_RADIOPOWER].cName,"RadioPower");
+  sprintf(output[OUT_RADIOPOWER].cDescr,"Power from radiogenic heating in the mantle");
+  sprintf(output[OUT_RADIOPOWER].cNeg,"TW");
+  output[OUT_RADIOPOWER].bNeg = 1;
+  output[OUT_RADIOPOWER].dNeg = 1e-12;
+  output[OUT_RADIOPOWER].iNum = 1;
+  output[OUT_RADIOPOWER].iModuleBit = MAGMOC; //name of module
+  fnWrite[OUT_RADIOPOWER] = &WriteRadioPower;
+
+  sprintf(output[OUT_TIDALPOWER].cName,"TidalPower");
+  sprintf(output[OUT_TIDALPOWER].cDescr,"Power from tidal heating in the mantle");
+  sprintf(output[OUT_TIDALPOWER].cNeg,"TW");
+  output[OUT_TIDALPOWER].bNeg = 1;
+  output[OUT_TIDALPOWER].dNeg = 1e-12;
+  output[OUT_TIDALPOWER].iNum = 1;
+  output[OUT_TIDALPOWER].iModuleBit = MAGMOC; //name of module
+  fnWrite[OUT_TIDALPOWER] = &WriteTidalPower;
 }
 
 //========================= Finalize Variable Functions ========================

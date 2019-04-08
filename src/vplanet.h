@@ -990,6 +990,7 @@ struct BODY {
 	int bManStartSol;         /**< Mantle starts to solidify */
 	int bCalcFugacity;        /**< Need to calc oxygen fugacity */
 	int bPlanetDesiccated;    /**< Atmosphere desiccated */
+	int bManQuasiSol;         /**< Atmosphere desiccated & T_surf below 1000K */
 	int iRadioHeatModel;
 	int iMagmOcAtmModel;
 	/* Primary variables */
@@ -1017,6 +1018,7 @@ struct BODY {
 	double dFactorDerivative; /**< Factor to calculate the derivatives of Tpot and Rsol */
 	double dManHeatFlux;      /**< Mantle heat flux [W/m^2] */
 	double dRadioHeat;        /**< Radiogenic heating rate GET FROM RADHEAT [W/kg] */
+	double dTidalHeat;        /**< Tidal heating rate GET FROM EQTIDE [W/kg] */
 	double dNetFluxAtmo;      /**< Net atmospheric flux OLR-ASR [W/m^2] */
 	double dAlbedo;						/**< Albedo of the planet */
 	double dEffTempAtm;       /**< Effective temperature of the planet's atmosphere */
@@ -1640,6 +1642,7 @@ struct HALT {
 
 	/* MAGMOC */
 	int bHaltMantleSolidified;    /**< Halt if mantle completely solidified */
+	int bHaltAtmDesiSurfCool;     /**< Halt if atmosphere desiccated & T_surf below 1000K */
 };
 
 /* Units. These can be different for different bodies. If set

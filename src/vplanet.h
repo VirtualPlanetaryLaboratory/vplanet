@@ -1735,7 +1735,7 @@ struct IO {
    matrix through fnForceBehavior. */
 
 typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
-typedef void (*fnPropsAuxModule)(BODY*,EVOLVE*,UPDATE*,int);
+typedef void (*fnPropsAuxModule)(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
 typedef void (*fnForceBehaviorModule)(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */

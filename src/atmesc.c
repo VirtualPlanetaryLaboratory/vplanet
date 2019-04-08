@@ -1015,7 +1015,7 @@ Initializes several helper variables and properties used in the integration.
 @param update A pointer to the UPDATE instance
 @param iBody The current BODY number
 */
-void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, SYSTEM *system, UPDATE *update, int iBody) {
 
   body[iBody].dAge = body[0].dAge;
 

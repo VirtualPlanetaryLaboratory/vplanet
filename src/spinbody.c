@@ -875,7 +875,7 @@ void fnForceBehaviorSpiNBody(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYS
 
 }
 
-void PropertiesSpiNBody(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void PropertiesSpiNBody(BODY *body, EVOLVE *evolve, SYSTEM *system, UPDATE *update, int iBody) {
   int jBody,iNumBodies;
   double DistanceX,DistanceY,DistanceZ,Distance3;
 

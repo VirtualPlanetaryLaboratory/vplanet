@@ -35,7 +35,7 @@ void FinalizeUpdateNULL(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,i
   /* Nothing */
 }
 
-void PropsAuxNULL(BODY *body,EVOLVE *evolve,UPDATE *update,int iFoo) {
+void PropsAuxNULL(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iFoo) {
 }
 
 // Functions that are helpful for integrations
@@ -1408,16 +1408,16 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
  * Auxiliary Properties for multi-module calculations
  */
 
-void PropsAuxSpiNbodyEqtide(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void PropsAuxSpiNbodyEqtide(BODY *body, EVOLVE *evolve, SYSTEM *system, UPDATE *update, int iBody) {
   // Nothing to see here...
 
 }
 
-void PropsAuxSpiNBodyDistOrb(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void PropsAuxSpiNBodyDistOrb(BODY *body, EVOLVE *evolve, SYSTEM *system, UPDATE *update, int iBody) {
 
 }
 
-void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
   // This function controls how tidal radius is set.
 
   // If bUseTidalRadius == 0, dTidalRadius <- dRadius
@@ -1426,7 +1426,7 @@ void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 }
 
 
-void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
   /* RB- These first 3 lines were taken from PropsAuxThermint, but
    as they rely on eqtide being called, they belong here.*/
   body[iBody].dK2Man=fdK2Man(body,iBody);
@@ -1452,12 +1452,12 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) 
   if(body[iBody].dK2 > 1.5)
     body[iBody].dK2 = 1.5;
 
-  PropsAuxCPL(body,evolve,update,iBody);
+  PropsAuxCPL(body,evolve,system,update,iBody);
   // Call dTidePowerMan
   body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
 }
 
-void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
   // Set the mantle parameters first
   body[iBody].dK2Man=fdK2Man(body,iBody);
   body[iBody].dImk2Man=fdImk2Man(body,iBody);
@@ -1518,7 +1518,7 @@ void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int i
     body[iBody].dK2 = 1.5;
 
   // Finally, call EQTIDE props aux then set mantle tidal power
-  PropsAuxCPL(body,evolve,update,iBody);
+  PropsAuxCPL(body,evolve,system,update,iBody);
   body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
 
 }
@@ -1528,28 +1528,28 @@ void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
 }
 */
 
-void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
   body[iBody].dRadPowerCore = fdRadPowerCore(update,iBody);
   body[iBody].dRadPowerCrust = fdRadPowerCrust(update,iBody);
   body[iBody].dRadPowerMan = fdRadPowerMan(update,iBody);
 }
 
-void PropsAuxEqtideDistorb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxEqtideDistorb(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
   body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
 }
 
-void PropsAuxEqtideStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxEqtideStellar(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
   // In stellar, radius can change depending on model so make sure tidal radius
   // knows that
   body[iBody].dTidalRadius = body[iBody].dRadius;
 }
 
-void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  SYSTEM system; // dummy for LXUVStellar
+void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
+  // SYSTEM system; // dummy for LXUVStellar
   //body[iBody].dLXUV = fdLXUVStellar(body,&system,update,iBody,iBody) + body[iBody].dLXUVFlare;
 }
 
-void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
   if (body[iBody].bMagmOc && body[iBody].bAtmEsc) {
 
     // Use Water and Oxygen mass from magmoc for atmesc
@@ -1560,7 +1560,7 @@ void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     body[iBody].dThermTemp = body[iBody].dEffTempAtm * pow(0.5,0.25);
 
     // Call PropsAux from Atmesc (or fnPropertiesAtmEsc)
-    fnPropertiesAtmEsc(body,evolve,update,iBody);
+    fnPropertiesAtmEsc(body,evolve,system,update,iBody);
 
     // Water and Oxygen mass lost through atmospheric escape
     if ((body[iBody].bRunaway) && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {

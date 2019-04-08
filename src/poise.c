@@ -3035,7 +3035,7 @@ Standard properties function for POISE. Updates auxiliary quantities
 @param update Struct containing update information and variables
 @param iBody Body in question
 */
-void PropertiesPoise(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropertiesPoise(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
   if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
     if (body[iBody].bDistRot == 0) {
       body[iBody].dDynEllip = CalcDynEllipEq(body, iBody);

@@ -225,7 +225,7 @@ void fdCPLZ(BODY*,double,double,int,int);
 double fdGammaRot(double,double,int*);
 double fdGammaOrb(double,double,int*);
 double fdCPLTidePower(BODY*,int);
-void PropsAuxCPL(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxCPL(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
 
 /* Equilibrium parameters */
 double fdCPLEqSpinRate(double,double,int);
@@ -260,7 +260,7 @@ double fdCTLF4(double);
 double fdCTLBeta(double);
 double fdCTLF5(double);
 double fdCTLTidePower(BODY*,int);
-void PropsAuxCTL(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxCTL(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
 double fdSurfEnFluxOcean(BODY*,int);
 double fdTidePowerOcean(BODY*,int);
 

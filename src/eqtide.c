@@ -2814,9 +2814,9 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
       // Update PropsAux
       if (evolve->iEqtideModel == CPL)
-        PropsAuxCPL(body,evolve,update,iBody);
+        PropsAuxCPL(body,evolve,system,update,iBody);
       else
-        PropsAuxCTL(body,evolve,update,iBody);
+        PropsAuxCTL(body,evolve,system,update,iBody);
 
       // Recompute, sum up new derivatives using perturbed dRotRate
       dTmpDeriv = 0.0;
@@ -2832,9 +2832,9 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
         // Update PropsAux
         if (evolve->iEqtideModel == CPL)
-          PropsAuxCPL(body,evolve,update,iBody);
+          PropsAuxCPL(body,evolve,system,update,iBody);
         else
-          PropsAuxCTL(body,evolve,update,iBody);
+          PropsAuxCTL(body,evolve,system,update,iBody);
 
         // Recompute, sum up new derivatives using perturbed dRotRate
         dTmpDeriv = 0.0;
@@ -2862,9 +2862,9 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
       // Update PropsAux
       if (evolve->iEqtideModel == CPL)
-        PropsAuxCPL(body,evolve,update,iBody);
+        PropsAuxCPL(body,evolve,system,update,iBody);
       else
-        PropsAuxCTL(body,evolve,update,iBody);
+        PropsAuxCTL(body,evolve,system,update,iBody);
 
       // Reset derivatives
       dTmpDeriv = 0.0;
@@ -2925,7 +2925,7 @@ void PropsAuxOrbiterCTL(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dDeccDtEqtide = fdCTLDeccDt(body,update,update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccEqtide]);
 }
 
-void PropsAuxCPL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxCPL(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
   int iPert,iIndex;
   /* dMeanMotion claculated in PropsAuxGeneral */
   int iOrbiter;
@@ -2958,7 +2958,7 @@ void PropsAuxCPL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   }
 }
 
-void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxCTL(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
   int iPert,iIndex;
   /* dMeanMotion claculated in PropsAuxGeneral */
   int iOrbiter;

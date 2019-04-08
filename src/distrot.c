@@ -1218,7 +1218,7 @@ void UpdateOrbitData(BODY *body, EVOLVE *evolve, int iBody) {
   }
 }
 
-void PropertiesDistRot(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropertiesDistRot(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
   // if (body[iBody].bForcePrecRate) {
 //     body[iBody].dObliquity = atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
 //     body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);

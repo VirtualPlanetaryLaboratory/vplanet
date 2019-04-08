@@ -772,7 +772,7 @@ void fndWaterFracMelt(BODY *body, int iBody) {
  * if needed in other parts of the code, or to be printed: body[iBody]!!! otherwise it will be deleted after the
  * end of this equation
  */
-void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
   double dCurrentTime     = evolve->dTime;
   double dCurrentTimeStep = evolve->dTimeStep;
   double dCurrentStepNum  = evolve->nSteps;

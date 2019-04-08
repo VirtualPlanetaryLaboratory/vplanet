@@ -16,7 +16,7 @@ void InitializeBodyNULL(BODY*,CONTROL*,UPDATE*,int,int);
 void FinalizeUpdateNULL(BODY*,UPDATE*,int*,int,int,int);
 void InitializeUpdateTmpBodyNULL(BODY*,CONTROL*,UPDATE*,int);
 void InitializeModuleNULL(CONTROL*,MODULE*);
-void PropsAuxNULL(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxNULL(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
 
 void PrintModuleList(FILE*,int);
 
@@ -34,17 +34,17 @@ void VerifyModuleMulti(BODY*,UPDATE*,CONTROL*,FILES*,MODULE*,OPTIONS*,int,fnUpda
 void AssignEqtideStellarDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
 void NullEqtideStellarDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
 
-void PropsAuxEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);
-void PropsAuxAtmescEqtideThermint(BODY*,EVOLVE*,UPDATE*,int);
-void PropsAuxDistOrbDistRot(BODY*,EVOLVE*,UPDATE*,int);
-void PropsAuxRadheatThermint(BODY*,EVOLVE*,UPDATE*,int);
-void PropsAuxFlareStellar(BODY*,EVOLVE*,UPDATE*,int);
-void PropsAuxAtmescEqtide(BODY*,EVOLVE*,UPDATE*,int);
-void PropsAuxEqtideDistorb(BODY*,EVOLVE*,UPDATE*,int);
-void PropsAuxEqtideStellar(BODY*,EVOLVE*,UPDATE*,int);
-void PropsAuxSpiNbodyEqtide(BODY*,EVOLVE*,UPDATE*,int);
-void PropsAuxSpiNBodyDistOrb(BODY*,EVOLVE*,UPDATE*,int);
-void PropsAuxMagmOcAtmEsc(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxEqtideThermint(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
+void PropsAuxAtmescEqtideThermint(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
+void PropsAuxDistOrbDistRot(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
+void PropsAuxRadheatThermint(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
+void PropsAuxFlareStellar(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
+void PropsAuxAtmescEqtide(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
+void PropsAuxEqtideDistorb(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
+void PropsAuxEqtideStellar(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
+void PropsAuxSpiNbodyEqtide(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
+void PropsAuxSpiNBodyDistOrb(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
+void PropsAuxMagmOcAtmEsc(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
 
 void ForceBehaviorAtmescEqtideThermint(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void ForceBehaviorEqtideDistOrb(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);

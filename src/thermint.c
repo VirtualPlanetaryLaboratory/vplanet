@@ -1062,7 +1062,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCMELTB].dDefault = VISCMELTB;
   sprintf(options[OPT_VISCMELTB].cNeg,"Default is VISCMELTB");
   fnRead[OPT_VISCMELTB] = &fvReadViscMeltB;
-  
+
   /* MeltfactorLMan XXX Added by Rory -- Check!*/
   sprintf(options[OPT_MELTFACTORLMAN].cName,"dMeltfactorLMan");
   sprintf(options[OPT_MELTFACTORLMAN].cDescr,"Lower Mantle Viscosity Melt Factor");
@@ -1140,7 +1140,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_PRESSWIND].dDefault = EPRESSWIND;
   sprintf(options[OPT_PRESSWIND].cNeg,"Default is EPRESSWIND");
   fnRead[OPT_PRESSWIND] = &fvReadPresSWind;
-  
+
   /* Halt at Minimum Mantle Temperature */
   sprintf(options[OPT_HALTMINTMAN].cName,"dHaltMinTMan");
   sprintf(options[OPT_HALTMINTMAN].cDescr,"Halt at Minimum Mantle Temperature");
@@ -1364,7 +1364,7 @@ void fvVerifyTCore(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,dou
   @param update Update struct
   @param iBody Index of body
 */
-void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
   /* Scalar Properties */
   body[iBody].dTUMan=fdTUMan(body,iBody);
   body[iBody].dTLMan=fdTLMan(body,iBody);
@@ -1506,8 +1506,8 @@ void fvVerifyThermint(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
   @param iBody Index of body
 */
 void fvInitializeUpdateThermint(BODY *body,UPDATE *update,int iBody) {
-  /* Initially allow all radiogenic heat sources to be present. If any are 0, 
-     or < dMinRadPower, they will me removed from update[iBody] in 
+  /* Initially allow all radiogenic heat sources to be present. If any are 0,
+     or < dMinRadPower, they will me removed from update[iBody] in
      ForceBehavior.
   */
   if (body[iBody].dTMan > 0) {
@@ -3039,7 +3039,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_SIGNTJUMPLMAN].cDescr,"Sign of Lower Mantle Temperature Jump");
   sprintf(output[OUT_SIGNTJUMPLMAN].cNeg,"K");
   output[OUT_SIGNTJUMPLMAN].bNeg = 1;
-  output[OUT_SIGNTJUMPLMAN].dNeg = 1; 
+  output[OUT_SIGNTJUMPLMAN].dNeg = 1;
   output[OUT_SIGNTJUMPLMAN].iNum = 1;
   output[OUT_SIGNTJUMPLMAN].iModuleBit = THERMINT;
   fnWrite[OUT_SIGNTJUMPLMAN] = &fvWriteSignTJumpLMan;
@@ -3048,7 +3048,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TCMB].cDescr,"CMB Temperature");
   sprintf(output[OUT_TCMB].cNeg,"K");
   output[OUT_TCMB].bNeg = 1;
-  output[OUT_TCMB].dNeg = 1; 
+  output[OUT_TCMB].dNeg = 1;
   output[OUT_TCMB].iNum = 1;
   output[OUT_TCMB].iModuleBit = THERMINT;
   fnWrite[OUT_TCMB] = &fvWriteTCMB;
@@ -3057,7 +3057,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TCORE].cDescr,"Core Temperature");
   sprintf(output[OUT_TCORE].cNeg,"K");
   output[OUT_TCORE].bNeg = 1;
-  output[OUT_TCORE].dNeg = 1; 
+  output[OUT_TCORE].dNeg = 1;
   output[OUT_TCORE].iNum = 1;
   output[OUT_TCORE].iModuleBit = THERMINT;
   fnWrite[OUT_TCORE] = &fvWriteTCore;
@@ -3208,7 +3208,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MELTMASSFLUXMAN].iNum = 1;
   output[OUT_MELTMASSFLUXMAN].iModuleBit = THERMINT;
   fnWrite[OUT_MELTMASSFLUXMAN] = &fvWriteMeltMassFluxMan;
-  
+
   /* EruptEff */
   sprintf(output[OUT_ERUPTEFF].cName,"EruptEff");
   sprintf(output[OUT_ERUPTEFF].cDescr,"Mantle Melt Eruption Efficiency");
@@ -3257,7 +3257,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DYNVISC].iNum = 1;
   output[OUT_DYNVISC].iModuleBit = THERMINT;
   fnWrite[OUT_DYNVISC] = &fvWriteDynamicViscosity;
-  
+
   /* ChiOC */
   sprintf(output[OUT_CHIOC].cName,"ChiOC");
   sprintf(output[OUT_CHIOC].cDescr,"Light Element Concentration in Outer Core");
@@ -3393,7 +3393,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MAGPAUSERAD].iNum = 1;
   output[OUT_MAGPAUSERAD].iModuleBit = THERMINT;
   fnWrite[OUT_MAGPAUSERAD] = &fvWriteMagPauseRad;
-  
+
   /* Heat Fluxes/Flows */
   /* HFluxUMan */
   sprintf(output[OUT_HFLUXUMAN].cName,"HfluxUMan");
@@ -3547,7 +3547,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TDOTMAN].cDescr,"Change in Mantle Temperature");
   sprintf(output[OUT_TDOTMAN].cNeg,"K/s");
   output[OUT_TDOTMAN].bNeg = 1;
-  output[OUT_TDOTMAN].dNeg = 1; 
+  output[OUT_TDOTMAN].dNeg = 1;
   output[OUT_TDOTMAN].iNum = 1;
   output[OUT_TDOTMAN].iModuleBit = THERMINT;
   fnWrite[OUT_TDOTMAN] = &fvWriteTDotMan;
@@ -3556,7 +3556,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TDOTCORE].cDescr,"Change in Core Temperature");
   sprintf(output[OUT_TDOTCORE].cNeg,"K/s");
   output[OUT_TDOTCORE].bNeg = 1;
-  output[OUT_TDOTCORE].dNeg = 1; 
+  output[OUT_TDOTCORE].dNeg = 1;
   output[OUT_TDOTCORE].iNum = 1;
   output[OUT_TDOTCORE].iModuleBit = THERMINT;
   fnWrite[OUT_TDOTCORE] = &fvWriteTDotCore;
@@ -3599,7 +3599,7 @@ void fvLogOptionsThermint(CONTROL *control, FILE *fp) {
   @param fp File
 */
 void fvLogThermint(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
-  /* Anything here? 
+  /* Anything here?
   int iOut;
   fprintf(fp,"\n----- RADHEAT PARAMETERS ------\n");
   for (iOut=OUTSTARTRADHEAT;iOut<OUTBODYSTARTRADHEAT;iOut++) {
@@ -3658,7 +3658,7 @@ void fvAddModuleThermint(MODULE *module,int iBody,int iModule) {
   module->fnNullDerivatives[iBody][iModule]     = &fvNullThermintDerivatives;
   module->fnVerifyHalt[iBody][iModule]          = &fvVerifyHaltThermint;
   module->fnVerifyHalt[iBody][iModule]          = &fvVerifyHaltThermint;
-  
+
   module->fnInitializeBody[iBody][iModule]      = &fvInitializeBodyThermint;
   module->fnInitializeUpdate[iBody][iModule]    = &fvInitializeUpdateThermint;
   module->fnInitializeOutput[iBody][iModule]    = &fvInitializeOutputThermint;
@@ -3760,7 +3760,7 @@ double fdSignTJumpLMan(BODY *body,int iBody) {
 
   @return Arrhenius component of upper mantle viscosity
 */
-double fdViscUManArr(BODY *body,int iBody) {  
+double fdViscUManArr(BODY *body,int iBody) {
   return body[iBody].dViscRef*exp(body[iBody].dActViscMan/(GASCONSTANT*body[iBody].dTUMan));
 }
 /**
@@ -4532,7 +4532,7 @@ double fdTDotMan(BODY *body,SYSTEM *system,int *iaBody) {
 */
 double fdTDotCore(BODY *body,SYSTEM *system,int *iaBody) {
   double foo;
-  int iBody=iaBody[0]; 
+  int iBody=iaBody[0];
   double areaic=4.0*PI*pow(body[iBody].dRIC,2.0);
   foo= (-body[iBody].dHflowCMB+body[iBody].dRadPowerCore)/((EMASSCORE)*(SPECHEATCORE) - areaic*(EDENSIC)*(body[iBody].dAdJumpC2CMB)*body[iBody].dDRICDTCMB*(SPECLATENTICB+SPECPOWGRAVIC));
   return foo;

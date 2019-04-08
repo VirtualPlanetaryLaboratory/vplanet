@@ -186,7 +186,7 @@ void LogPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* Poise Functions */
-void PropertiesPoise(BODY*,EVOLVE*,UPDATE*,int);
+void PropertiesPoise(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
 void ForceBehaviorPoise(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void AlbedoAnnual(BODY*,int);
 void AlbedoSeasonal(BODY*,int,int);

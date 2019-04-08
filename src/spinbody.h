@@ -67,7 +67,7 @@ void VerifyPerturbersSpiNBody(BODY *body,int iNumBodies,int iBody);
 void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule);
 
 void fnForceBehaviorSpiNBody(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule);
-void PropertiesSpiNBody(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody);
+void PropertiesSpiNBody(BODY *body, EVOLVE *evolve, SYSTEM *system, UPDATE *update, int iBody);
 
 void FinalizeUpdateVelXSpiNBody(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo);
 void FinalizeUpdateVelYSpiNBody(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo);

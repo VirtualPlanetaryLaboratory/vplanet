@@ -1,6 +1,6 @@
 # Planet a parameters
 sName         GJ1132b                     # Body's name
-saModules     magmoc, atmesc, radheat                      # Modules to apply, exact spelling required
+saModules     magmoc, atmesc, radheat, eqtide                      # Modules to apply, exact spelling required
 cColor        13aed5
 
 # Physical Properties
@@ -33,24 +33,30 @@ dAtmXAbsEffH2O 		  0.3
 # RADHEAT Parameters
 # *Num* are in numbers of atoms, negative -> Earth vals
 ### 40K
-d40KNumMan    -1
-d40KNumCore   -1
-d40KNumCrust  -1.0
+d40KNumMan    -0
+d40KNumCore   -0
+d40KNumCrust  -0.0
 
 ### 232Th
-d232ThNumMan      -1
-d232ThNumCore     -1
-d232ThNumCrust    -1
+d232ThNumMan      -0
+d232ThNumCore     -0
+d232ThNumCrust    -0
 
 ### 235U
-d235UNumMan      -1
-d235UNumCore     -1
-d235UNumCrust    -1
+d235UNumMan      -0
+d235UNumCore     -0
+d235UNumCrust    -0
 
 ### 238U
-d238UNumMan      -1
-d238UNumCore     -1
-d238UNumCrust    -1
+d238UNumMan      -0
+d238UNumCore     -0
+d238UNumCrust    -0
+
+# EQTIDE Parameters
+dTidalQ         1.25e5          # Tidal phase lag
+dK2             0.5             # Love number of degree 2
+dMaxLockDiff    0.01
+saTidePerts     GJ1132          # Body name(s) of tidal perturbers
 
 # Orbital Properties
 dSemi         -0.0154                     # Semi-major axis, negative -> AU

@@ -1,6 +1,6 @@
 # The host star
 sName	        GJ1132                    # Body's name
-saModules	stellar                   # Modules to apply, exact spelling required
+saModules	stellar, eqtide                   # Modules to apply, exact spelling required
 
 # Output
 saOutputOrder Age -Luminosity -LXUVStellar -Radius Temperature
@@ -13,3 +13,10 @@ dAge          5e5
 sStellarModel baraffe                     # Stellar evolution model: `baraffe` or `none`
 dSatXUVFrac   1.e-3                       # Saturation level of the XUV luminosity
 dSatXUVTime   -0.1
+
+# EQTIDE Parameters
+dTidalQ         1.25e5          # Tidal phase lag
+dK2             0.5             # Love number of degree 2
+dMaxLockDiff    0.01
+sTideModel      p2              # Tidal model, p2=CPL, t8=CTL
+saTidePerts     GJ1132b         # Body name(s) of tidal perturbers

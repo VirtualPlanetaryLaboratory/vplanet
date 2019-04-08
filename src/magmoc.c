@@ -810,7 +810,7 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int 
    */
   double dTidalPower;
   if (body[iBody].bEqtide) {
-    // dTidalPower = fdTidePower(body,system,update,iBody,evolve->iEqtideModel);
+    dTidalPower = fdTidePower(body,system,update,iBody,evolve->iEqtideModel);
     body[iBody].dTidalHeat = dTidalPower / (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3))); // add here RADHEAT
   } else {
     body[iBody].dTidalHeat = 0;
@@ -1556,7 +1556,7 @@ void AddModuleMagmOc(MODULE *module,int iBody,int iModule) {
 /* real physic is happening here: calculation of the derivatives of the primary variables */
 double fdDPotTemp(BODY *body, SYSTEM *system, int *iaBody) {
   double dRadioPart,dManFluxPart,dRsolPart,dFusionPart;
-  dRadioPart   = body[iaBody[0]].dRadioHeat * (pow(body[iaBody[0]].dRadius,3) - pow(body[iaBody[0]].dCoreRadius,3));
+  dRadioPart   = (body[iaBody[0]].dRadioHeat + body[iaBody[0]].dTidalHeat) * (pow(body[iaBody[0]].dRadius,3) - pow(body[iaBody[0]].dCoreRadius,3));
   dManFluxPart = 3 * pow(body[iaBody[0]].dRadius,2) * body[iaBody[0]].dManHeatFlux / body[iaBody[0]].dManMeltDensity;
   dRsolPart    = SILICATEHEATCAP * (pow(body[iaBody[0]].dRadius,3) - pow(body[iaBody[0]].dSolidRadius,3));
   dFusionPart  = 3 * HEATFUSIONSILICATE * pow(body[iaBody[0]].dSolidRadius,2) * body[iaBody[0]].dFactorDerivative;

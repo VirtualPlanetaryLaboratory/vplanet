@@ -82,6 +82,6 @@ for ax in axes.flatten():
     ax.set_rasterization_zorder(0)
 
 if (sys.argv[1] == 'pdf'):
-    plt.savefig('Kepler-16.pdf', bbox_inches="tight", dpi=600)
+    plt.savefig('CircumbinaryOrbit.pdf', bbox_inches="tight", dpi=600)
 if (sys.argv[1] == 'png'):
-    plt.savefig('Kepler-16.png', bbox_inches="tight", dpi=600)
+    plt.savefig('CircumbinaryOrbit.png', bbox_inches="tight", dpi=600)

@@ -141,6 +141,6 @@ leg = ax[0, 1].legend(loc=(-0.2, 0.15), title=r'Mass ($\mathrm{M}_\odot$)',
 leg.get_title().set_fontweight('bold')
 
 if (sys.argv[1] == 'pdf'):
-    fig.savefig('MainSequence.pdf', bbox_inches="tight", dpi=600)
+    fig.savefig('StellarEvol.pdf', bbox_inches="tight", dpi=600)
 if (sys.argv[1] == 'png'):
-    fig.savefig('MainSequence.png', bbox_inches="tight", dpi=600)
+    fig.savefig('StellarEvol.png', bbox_inches="tight", dpi=600)

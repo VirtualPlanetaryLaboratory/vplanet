@@ -120,7 +120,7 @@ inset2.set_xticklabels(["0.1", "0.25", "0.5", "1", "2", "3"], fontsize=12)
 inset2.set_xlabel("Time [Myr]", fontsize=12)
 
 if (sys.argv[1] == 'pdf'):
-    fig.savefig('Corot-7.pdf', bbox_inches="tight", dpi=600)
+    fig.savefig('ApseLock.pdf', bbox_inches="tight", dpi=600)
 if (sys.argv[1] == 'png'):
-    fig.savefig('Corot-7.png', bbox_inches="tight", dpi=600)
+    fig.savefig('ApseLock.png', bbox_inches="tight", dpi=600)
 #fig.savefig("Rodriguez2011_Figs23.pdf", bbox_inches="tight", dpi=600)

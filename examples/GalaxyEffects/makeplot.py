@@ -30,7 +30,7 @@ plt.xlabel('Time (Gyr)')
 plt.ylim(10,2e4)
 
 if (sys.argv[1] == 'pdf'):
-    plt.savefig('Galhabit.pdf')
+    plt.savefig('GalaxyEffects.pdf')
 if (sys.argv[1] == 'png'):
-    plt.savefig('Galhabit.png')
+    plt.savefig('GalaxyEffects.png')
 plt.close()

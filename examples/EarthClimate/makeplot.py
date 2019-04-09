@@ -217,9 +217,9 @@ def comp2huybers(plname,dir='.',xrange=False,show=True):
       dir[ii] = 'cwd'
 
   if (sys.argv[1] == 'pdf'):
-      plt.savefig('MilankovitchComp.pdf')
+      plt.savefig('EarthClimateMilankovitch.pdf')
   if (sys.argv[1] == 'png'):
-      plt.savefig('MilankovitchComp.png')
+      plt.savefig('EarthClimateMilankovitch.png')
   if show:
     plt.show()
   else:
@@ -370,9 +370,9 @@ def seasonal_maps(time, dir = '.', show = True):
     clb.set_label(r'OLR (W m$^{-2}$)',fontsize=12)
 
     if (sys.argv[1] == 'pdf'):
-        plt.savefig('MilankovitchSeasons.pdf', dpi=300)
+        plt.savefig('EarthClimateSeasons.pdf', dpi=300)
     if (sys.argv[1] == 'png'):
-        plt.savefig('MilankovitchSeasons.png', dpi=300)
+        plt.savefig('EarthClimateSeasons.png', dpi=300)
     if show:
         plt.show()
     else:

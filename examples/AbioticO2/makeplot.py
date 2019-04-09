@@ -168,11 +168,11 @@ for n in [0, 1]:
     ax[n].set_xlabel('Position in Habitable Zone', fontsize=18)
     ax[n].set_xticks((0, 0.25, 0.5, 0.75, 1.0))
     ax[n].set_xticklabels(("RV", "25%", "50%", "75%", "EM"))
-ax[0].set_ylabel(r'Stellar mass ($\mathrm{M}_\odot$)', fontsize=18)
-ax[0].set_title("Water Lost (TO)", fontsize=20)
-ax[1].set_title(r"$\mathrm{O}_2$ buildup (bar)", fontsize=20)
+ax[0].set_ylabel(r'Stellar Mass ($\mathrm{M}_\odot$)', fontsize=18)
+ax[0].set_title("Water Lost (Earth Oceans)", fontsize=20)
+ax[1].set_title(r"$\mathrm{O}_2$ Accumulation (bar)", fontsize=20)
 
 if (sys.argv[1] == 'pdf'):
-    fig.savefig('O2BuildUp.pdf')
+    fig.savefig('AbioticO2.pdf')
 if (sys.argv[1] == 'png'):
-    fig.savefig('O2BuildUp.png')
+    fig.savefig('AbioticO2.png')

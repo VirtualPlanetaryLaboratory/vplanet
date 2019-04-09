@@ -7,10 +7,10 @@ Overview
 This example shows tidal locking for the planet candidate Gl 581 d.
 
 ===================   ============
-**Date**              07/25/18
+**Date**              04/09/2019
 **Author**            Rory Barnes
 **Modules**           EqTide
-**Approx. runtime**   1 minute
+**Approx. runtime**   10 seconds
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/IoHeat>`_
 ===================   ============
 
@@ -30,6 +30,7 @@ To run this example
    cd ../CTL
    vplanet vpl.in
 
+   cd ..
    python makeplot.py <pdf | png>
 
 

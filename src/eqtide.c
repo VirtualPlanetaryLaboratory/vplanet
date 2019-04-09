@@ -735,7 +735,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_TIDALTAU].dDefault = 1;
   options[OPT_TIDALTAU].iType = 2;
   options[OPT_TIDALTAU].iMultiFile = 1;
-  options[OPT_TIDALTAU].dNeg = 1./YEARSEC;
+  options[OPT_TIDALTAU].dNeg = 1;
   sprintf(options[OPT_TIDALTAU].cNeg,"Seconds");
   fnRead[OPT_TIDALTAU] = &ReadTidalTau;
 

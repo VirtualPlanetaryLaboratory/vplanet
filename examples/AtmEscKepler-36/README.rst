@@ -43,7 +43,7 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: AtMescKepler-36.png
+.. figure:: AtmEscKepler-36.png
    :width: 400px
    :align: center
 

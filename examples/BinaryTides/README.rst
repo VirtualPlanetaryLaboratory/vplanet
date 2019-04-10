@@ -10,8 +10,8 @@ the pre-main sequence and tidal torques.
 ===================   ============
 **Date**              07/25/18
 **Author**            David Fleming
-**Modules**           eqtide
-                      stellar
+**Modules**           EqTide
+                      STELLAR
 **Approx. runtime**   71 seconds
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/zahn>`_
 ===================   ============
@@ -21,7 +21,7 @@ can also experience tidal torques on the rotation and orbit. As tidal torques sc
 with stellar radius to the 5th power, the torques can be very strong early on. This
 early tidal evolution circularizes binary star orbits for orbital periods less than
 ~8 days, which is observed :cite::Meibom05. This example reproduce Figure 1 of
-Zahn and Bouchet (1989) :cite:`ZahnBouchet89` using **EQTIDE** and **STELLAR**.
+Zahn and Bouchet (1989) :cite:`ZahnBouchet89` using **EqTide** and **STELLAR**.
 
 To run this example
 -------------------

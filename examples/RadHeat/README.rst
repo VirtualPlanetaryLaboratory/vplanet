@@ -9,7 +9,7 @@ Radiogenic heating in Earth's interior.
 ===================   ============
 **Date**              09/12/18
 **Author**            Rory Barnes
-**Modules**           radheat
+**Modules**           RadHeat
 **Approx. runtime**   1 second
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/RadHeat>`_
 ===================   ============

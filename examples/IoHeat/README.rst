@@ -10,7 +10,7 @@ model.
 ===================   ============
 **Date**              07/25/18
 **Author**            Rory Barnes
-**Modules**           eqtide
+**Modules**           EqTide
 **Approx. runtime**   1 minute
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/IoHeat>`_
 ===================   ============

@@ -9,14 +9,14 @@ Internal evolution of Venus.
 ===================   ============
 **Date**              10/15/18
 **Author**            Peter Driscoll
-**Modules**           radheat thermint
+**Modules**           RadHeat ThermInt
 **Approx. runtime**   <1 second
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/VenusInterior>`_
 ===================   ============
 
 This example uses the stagnant lid model of Venus to estimate its thermal and magnetic
 evolution. Without much data on its interior, this problem is underconstrained, but
-**VPLANET** does reproduce the available observations.
+**VPLanet** does reproduce the available observations.
 
 To run this example
 -------------------

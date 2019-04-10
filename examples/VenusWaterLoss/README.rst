@@ -43,7 +43,7 @@ Expected output
    surface water inventories. The vertical dashed line is the Watson et al. (1981)
    :cite:`Watson81` timescale for the complete desiccation of Venus.
 
-To run this example
+To create the Bolmont scaling relationship figure
 -------------------
 
 .. code-block:: bash

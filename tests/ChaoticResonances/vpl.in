@@ -1,0 +1,26 @@
+# Primary input file for VPLANET
+sSystemName               ChaosRes  # System Name
+bOverwrite                1               # Allow file overwrites?
+saBodyFiles               star.in $     # Host star
+                          earth.in $    # Inner Earth-like planet
+                          outer.in      # Outer Neptune-mass planet in 3:1 MMR
+sIntegrationMethod        Runge
+
+# Input/Output Units
+sUnitMass                 solar           # Options: gram, kg, Earth, Neptune, Jupiter, solar
+sUnitLength               AU              # Options: cm, m, km, Earth, Jupiter, solar, AU
+sUnitTime                 year            # Options: sec, day, year, Myr, Gyr
+sUnitAngle                deg             # Options: deg, rad
+
+# Input/Output
+bDoLog                    1               # Write a log file?
+iDigits                   16              # Maximum number of digits to right of decimal
+dMinValue                 1e-10           # Minimum value of eccentricity/obliquity
+iSciNot                   4
+
+# Evolution Parameters
+bDoForward                1               # Perform a forward evolution?
+bVarDt                    1               # Use variable timestepping?
+dEta                      0.001
+dStopTime                 10            # Stop time for evolution
+dOutputTime               1            # Output timesteps (assuming in body files)

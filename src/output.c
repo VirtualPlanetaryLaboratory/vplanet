@@ -31,10 +31,43 @@ void WriteAge(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *u
   }
 }
 
+/*
+ * B
+ */
+
 /* iBodyType */
 void WriteBodyType(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].iBodyType;
   strcpy(cUnit,"");
+}
+
+/*
+ * C
+ */
+
+/* Critical Semi-major Axis (Holman & Wiegert, 1999 for P-type circumbinary orbit) */
+void WriteCriticalSemi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Only valid for simulations of tidally-interacting binary stars that have
+  // 2 bodies: 0, 1, both stars, with bStellar = bEqtide = 1
+  // All of the following must be true
+  if(control->Evolve.iNumBodies > 1 && iBody == 1 && body[iBody].bStellar && body[iBody].bEqtide) {
+    double a = body[1].dSemi;
+    double e = body[1].dEcc;
+    double mu = body[1].dMass/(body[0].dMass + body[1].dMass);
+    *dTmp = (1.6 + 5.1*e -2.22*e*e + 4.12*mu - 4.27*e*mu - 5.09*mu*mu + 4.61*e*e*mu*mu)*a;
+  }
+  else {
+    *dTmp = -1;
+  }
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
 }
 
 /*
@@ -844,7 +877,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_AGE] = &WriteAge;
 
   /*
-   * BodyType
+   * B
    */
 
   sprintf(output[OUT_BODYTYPE].cName,"BodyType");
@@ -852,6 +885,19 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BODYTYPE].iNum = 1;
   output[OUT_BODYTYPE].iModuleBit = 1;
   fnWrite[OUT_BODYTYPE] = &WriteBodyType;
+
+  /*
+   * C
+   */
+
+  sprintf(output[OUT_CRITSEMI].cName,"CriticalSemiMajorAxis");
+  sprintf(output[OUT_CRITSEMI].cDescr,"Holman & Wiegert (1999) P-type Critical Semi-major Axis");
+  sprintf(output[OUT_CRITSEMI].cNeg,"AU");
+  output[OUT_CRITSEMI].bNeg = 1;
+  output[OUT_CRITSEMI].dNeg = 1./AUM;
+  output[OUT_CRITSEMI].iNum = 1;
+  output[OUT_CRITSEMI].iModuleBit = BINARY + EQTIDE + STELLAR;
+  fnWrite[OUT_CRITSEMI] = &WriteCriticalSemi;
 
   /*
    * D

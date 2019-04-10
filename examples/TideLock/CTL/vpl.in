@@ -1,0 +1,44 @@
+# Template vpl.in file to calculate tidal locking
+sSystemName	gl581		# System Name
+iVerbose	5			# Verbosity level
+bOverwrite	1			# Allow file overwrites?
+
+# All space after a # is ignored, as is white space
+# The first lowercase letter(s) denote the cast: b=boolean, i=int, d=double,
+# s=string. An "a" indicates an array and multiple arguments are allowed/expected.
+
+# List of "body files" that contain body-specific parameters
+saBodyFiles	gl581.in $	# star's input file
+					  d.in 			 	# "planet" d's input file
+
+# Array options can continue to the next line with a terminating "$". The $ can be
+# at the end of the string or not. Comments are allowed afterwards.
+
+# Input/Output Units
+sUnitMass	  solar		 # Options: gram, kg, Earth, Neptune, Jupiter, solar
+sUnitLength	AU	  # Options: cm, m, km, Earth, Jupiter, solar, AU
+sUnitTime	  yr		  # Options: sec, day, year, Myr, Gyr
+sUnitAngle	d		    # Options: deg, rad
+sUnitTemp   K       # Options: Kelvin, Celsius, Farenheit
+
+# Units specified in the primary input file are propagated into the bodies.
+# Otherwise specify units on a per body basis in the body files.
+# Most string arguments can be in any case and need only be unambiguous.
+
+# Input/Output
+bDoLog		1					# Write a log file?
+iDigits		16					# Maximum number of digits to right of decimal
+
+# Option names must be exact in spelling and case.
+
+# If no forward or backward integrations are requested, but a log file is, then
+# the log file will be generated. Useful for parameter space surveys.
+
+bDoForward 	1
+bVarDt				1
+dEta					0.01
+dOutputTime 	1e5
+dStopTime			1e9
+
+# Some options are only permitted in the primary file, some are forbidden.
+# See the online documentation of vplanet for the rules

@@ -1080,9 +1080,9 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
     {
       // Using tidal radius without atmesc doesn't make sense, just need to set radius
       // Ignore if using stellar with some radius relation
-      if(!(options[OPT_RADIUS].iLine[iBody+1] > -1))
+      if(!(options[OPT_RADIUS].iLine[iBody+1] > -1) && !(options[OPT_MASSRAD].iLine[iBody+1] > -1))
       {
-        fprintf(stderr,"ERROR: Using EQTIDE but %s not set!\n",options[OPT_RADIUS].cName);
+        fprintf(stderr,"ERROR: Using EQTIDE but neither %s or %s is set!\n",options[OPT_RADIUS].cName,options[OPT_MASSRAD].cName);
         exit(EXIT_INPUT);
       }
 

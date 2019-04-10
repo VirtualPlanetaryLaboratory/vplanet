@@ -817,6 +817,15 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *u
   if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
     body[iBody].dRadius = fdLopezRadius(body[iBody].dMass, body[iBody].dEnvelopeMass / body[iBody].dMass, 1., body[iBody].dAge, 0);
 
+    // If there is no envelope and Lopez Radius specified, use Sotin+2007 radius!
+    if(body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) {
+      if (control->Io.iVerbose >= VERBINPUT)
+        printf("WARNING: Lopez+2012 Radius model specified, but no envelope present. Using Sotin+2007 Mass-radius relation to compute planet's solid radius.\n");
+
+      // Set radius using Sotin+2007 model
+      body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
+    }
+
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
@@ -863,6 +872,15 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
   if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) && (body[iBody].dEnvelopeMass > 0.)){
     // Let's remove its envelope.
     body[iBody].dEnvelopeMass = 0.;
+
+    // If using Lopez+2012 radius model, set radius to Sotin+2007 radius
+    if(body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
+      // Let user know what's happening
+      printf("Envelope removed. Use Lopez+12 radius models for envelope, switching to Sotin+2007 model for solid planet radius.\n");
+
+      // Update radius
+      body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
+    }
   }
 }
 
@@ -2265,7 +2283,14 @@ double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
 
   double foo;
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LOP12) {
-    foo = fdLopezRadius(body[iaBody[0]].dMass, body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, 1., body[iaBody[0]].dAge, 0);
+    // If no envelope, return solid body radius according to Sotin+2007 model
+    if(body[iaBody[0]].dEnvelopeMass <= body[iaBody[0]].dMinEnvelopeMass) {
+      foo = fdMassToRad_Sotin07(body[iaBody[0]].dMass);
+    }
+    // Envelope present: estimate planetary radius using Lopez models
+    else {
+      foo = fdLopezRadius(body[iaBody[0]].dMass, body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass, 1., body[iaBody[0]].dAge, 0);
+    }
     if (!isnan(foo))
       return foo;
     else

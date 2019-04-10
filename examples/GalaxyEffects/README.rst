@@ -40,7 +40,7 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: Galhabit.png
+.. figure:: GalaxyEffects.png
    :width: 600px
    :align: center
 

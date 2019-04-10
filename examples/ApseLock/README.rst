@@ -33,7 +33,7 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: Corot-7.png
+.. figure:: ApseLock.png
    :width: 300px
    :align: center
 

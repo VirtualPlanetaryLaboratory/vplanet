@@ -29,7 +29,7 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: MainSequence.png
+.. figure:: StellarEvol.png
    :width: 600px
    :align: center
 

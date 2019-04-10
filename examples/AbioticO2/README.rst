@@ -41,7 +41,7 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: O2BuildUp.png
+.. figure:: AbioticO2.png
    :width: 600px
    :align: center
 

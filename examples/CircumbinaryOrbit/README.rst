@@ -32,7 +32,7 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: Kepler-16.png
+.. figure:: CircumbinaryOrbit.png
    :width: 600px
    :align: center
 

@@ -36,7 +36,7 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: MilankovitchSeasons.png
+.. figure:: EarthClimateSeasons.png
    :width: 600px
    :align: center
 
@@ -46,7 +46,7 @@ single year, as modeled by `poise`. Note that negative values in ice mass balanc
 represent **potential** melting, i.e. this value is calculated even in the
 absence of ice on the surface.
 
-.. figure:: MilankovitchComp.png
+.. figure:: EarthClimateMilankovitch.png
    :width: 600px
    :align: center
 

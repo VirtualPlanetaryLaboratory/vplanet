@@ -3,7 +3,7 @@ iVerbose      5                             # Verbosity level
 bOverwrite    1                             # Allow file overwrites?
 
 # List of "body files" that contain body-specific parameters
-saBodyFiles   Trappist1.in Trappist1g.in
+saBodyFiles   Trappist1.in Trappist1e.in Trappist1f.in Trappist1g.in
 
 # Input/Output Units
 sUnitMass      solar                        # Options: gram, kg, Earth, Neptune, Jupiter, solar

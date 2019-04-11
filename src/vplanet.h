@@ -991,6 +991,7 @@ struct BODY {
 	int bCalcFugacity;        /**< Need to calc oxygen fugacity */
 	int bPlanetDesiccated;    /**< Atmosphere desiccated */
 	int bManQuasiSol;         /**< Atmosphere desiccated & T_surf below 1000K */
+	int bMagmOcHalt;
 	int iRadioHeatModel;
 	int iMagmOcAtmModel;
 	/* Primary variables */
@@ -1643,6 +1644,7 @@ struct HALT {
 	/* MAGMOC */
 	int bHaltMantleSolidified;    /**< Halt if mantle completely solidified */
 	int bHaltAtmDesiSurfCool;     /**< Halt if atmosphere desiccated & T_surf below 1000K */
+	int bHaltAllPlanetsSolid;			/**< Halt if all planets solidified (for multiplanet system) */
 };
 
 /* Units. These can be different for different bodies. If set

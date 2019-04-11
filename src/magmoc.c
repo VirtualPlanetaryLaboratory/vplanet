@@ -65,6 +65,7 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].bCalcFugacity         = src[iBody].bCalcFugacity;
   dest[iBody].bPlanetDesiccated     = src[iBody].bPlanetDesiccated;
   dest[iBody].bManQuasiSol          = src[iBody].bManQuasiSol;
+  dest[iBody].bMagmOcHalt           = src[iBody].bMagmOcHalt;
   dest[iBody].iRadioHeatModel       = src[iBody].iRadioHeatModel;
   dest[iBody].iMagmOcAtmModel       = src[iBody].iMagmOcAtmModel;
 }
@@ -197,6 +198,22 @@ void ReadHaltAtmDesiSurfCool(BODY *body,CONTROL *control,FILES *files,OPTIONS *o
   }
 }
 
+void ReadHaltAllPlanetsSolid(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    control->Halt[iFile-1].bHaltAllPlanetsSolid = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultInt(options,&control->Halt[iFile-1].bHaltAllPlanetsSolid,files->iNumInputs);
+  }
+}
+
 /*
  * Read model options
  */
@@ -291,6 +308,8 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MANMELTDENSITY].cNeg,"kg/m^3");
   fnRead[OPT_MANMELTDENSITY] = &ReadManMeltDensity;
 
+  /* Halts */
+
   sprintf(options[OPT_HALTMANTLESOLIDIFIED].cName,"bHaltMantleSolidified");
   sprintf(options[OPT_HALTMANTLESOLIDIFIED].cDescr,"Halt when mantle solidified?");
   sprintf(options[OPT_HALTMANTLESOLIDIFIED].cDefault,"0");
@@ -302,6 +321,14 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTATMDESISRUFCOOL].cDefault,"0");
   options[OPT_HALTATMDESISRUFCOOL].iType = 0;
   fnRead[OPT_HALTATMDESISRUFCOOL] = &ReadHaltAtmDesiSurfCool;
+
+  sprintf(options[OPT_HALTALLPLANETSSOLID].cName,"bHaltAllPlanetsSolid");
+  sprintf(options[OPT_HALTALLPLANETSSOLID].cDescr,"Halt when all planets solidified");
+  sprintf(options[OPT_HALTALLPLANETSSOLID].cDefault,"0");
+  options[OPT_HALTALLPLANETSSOLID].iType = 0;
+  fnRead[OPT_HALTALLPLANETSSOLID] = &ReadHaltAllPlanetsSolid;
+
+  /* Model options */
 
   sprintf(options[OPT_RADIOHEATMODEL].cName,"sRadioHeatModel");
   sprintf(options[OPT_RADIOHEATMODEL].cDescr,"Radiogenic heating model");
@@ -882,14 +909,14 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     SetDerivTiny(fnUpdate,iBody,update[iBody].iOxygenMassSol    ,update[iBody].iOxygenMassSolMagmOc    );
 
     if (io->iVerbose >= VERBPROG) {
-      printf("Mantle solidified after %f years. \n",evolve->dTime/YEARSEC);
+      printf("%s's mantle solidified after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
   }
 
   if (!body[iBody].bManStartSol && (body[iBody].dSolidRadius - body[iBody].dCoreRadius) > 1e-5) {
     body[iBody].bManStartSol = 1;
     if (io->iVerbose >= VERBPROG) {
-      printf("Mantle starts to solidify after %f years. \n",evolve->dTime/YEARSEC);
+      printf("%s's mantle starts to solidify after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
   }
   /* High or low pressure regime of the solidus? */
@@ -898,7 +925,7 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     body[iBody].dPrefactorB  = BLOWPRESSURE;
     body[iBody].bLowPressSol = 1;
     if (io->iVerbose >= VERBPROG) {
-      printf("Switch to low-pressure treatment of solidus after %f years. \n",evolve->dTime/YEARSEC);
+      printf("%s: Switch to low-pressure treatment of solidus after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
   }
   /* Albedo Rock or Water Vapor? */
@@ -912,7 +939,7 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
   if ((!body[iBody].bAllFeOOxid) && (body[iBody].dFracFe2O3Man >= body[iBody].dMassFracFeOIni * MOLWEIGHTFEO15 / MOLWEIGHTFEO)) {
     body[iBody].bAllFeOOxid = 1;
     if (io->iVerbose >= VERBPROG) {
-      printf("All FeO in magma ocean oxidized to Fe2O3 after %f years. \n",evolve->dTime/YEARSEC);
+      printf("%s: All FeO in magma ocean oxidized to Fe2O3 after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
   }
 
@@ -930,6 +957,12 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     body[iBody].bManQuasiSol = 1;
     if (io->iVerbose >= VERBPROG) {
       printf("%s's atmosphere desiccated & surface temperature below 1000K after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+    }
+  }
+
+  if (!body[iBody].bMagmOcHalt) {
+    if (body[iBody].bManQuasiSol || body[iBody].bManSolid) {
+      body[iBody].bMagmOcHalt = 1;
     }
   }
 }
@@ -1133,11 +1166,34 @@ int fbHaltAtmDesiSurfCool(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *up
   return 0;
 }
 
+int fbHaltAllPlanetsSolid(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  double dCountSolid = 0;
+  int iBodyTemp;
+
+  if (body[iBody].bMagmOcHalt) {
+    for (iBodyTemp=1;iBodyTemp<evolve->iNumBodies;iBodyTemp++) {
+      if (body[iBodyTemp].bMagmOcHalt) {
+        dCountSolid++;
+      }
+    }
+    if (dCountSolid == (evolve->iNumBodies-1)){
+      if (io->iVerbose >= VERBPROG) {
+        printf("HALT: All planets solidified after %f years. \n",evolve->dTime/YEARSEC);
+      }
+      return 1;
+    }
+  }
+  return 0;
+}
+
 void CountHaltsMagmOc(HALT *halt,int *iNumHalts) {
   if (halt->bHaltMantleSolidified) {
     (*iNumHalts)++;
   }
   if (halt->bHaltAtmDesiSurfCool) {
+    (*iNumHalts)++;
+  }
+  if (halt->bHaltAllPlanetsSolid) {
     (*iNumHalts)++;
   }
 }
@@ -1148,6 +1204,9 @@ void VerifyHaltMagmOc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
   }
   if (control->Halt[iBody].bHaltAtmDesiSurfCool) {
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltAtmDesiSurfCool;
+  }
+  if (control->Halt[iBody].bHaltAllPlanetsSolid) {
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltAllPlanetsSolid;
   }
 }
 

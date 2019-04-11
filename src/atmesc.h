@@ -25,15 +25,12 @@
 /* Options Info */
 #define OPTSTARTATMESC          1200  /**< Start of AtmEsc options */
 #define OPTENDATMESC            1300  /**< End of AtmEsc options */
-
-#define OPT_SURFACEWATERMASS    1210 /**< Initial surface water mass */
 #define OPT_HALTDESICCATED      1211 /**< Halt if desiccated? */
-#define OPT_MINSURFACEWATERMASS 1212 /**< Minimum surface water mass (desiccated below this) */
 #define OPT_XFRAC               1213 /**< X-ray absorption radius as a fraction of planet radius */
 #define OPT_ATMXABSEFFH         1214 /**< Hydrogen Absorption efficiency (epsilon) */
-#define OPT_ENVELOPEMASS        1215 /**< Initial envelope mass */
+
 #define OPT_HALTENVELOPEGONE    1216 /**< Halt if evaporated? */
-#define OPT_MINENVELOPEMASS     1217 /**< Minimum envelope mass (evaporated below this) */
+
 #define OPT_OXYGENMASS          1218 /**< Initial oxygen mass */
 #define OPT_WATERLOSSMODEL      1219 /**< Oxygen buildup / water loss model */
 #define OPT_PLANETRADIUSMODEL   1220 /**< Gaseous planet radius model (for atmesc) */
@@ -49,7 +46,7 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
-void AddModuleAtmEsc(MODULE*,int,int);
+void AddModuleAtmEsc(CONTROL *control,MODULE*,int,int);
 void BodyCopyAtmEsc(BODY*,BODY*,int,int,int);
 
 /* Options Functions */

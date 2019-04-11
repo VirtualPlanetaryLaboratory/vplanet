@@ -160,7 +160,7 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
  void WriteInstellation(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
    // Should have special case if bBinary=1
-   if (body[iBody].bSpiNBody)
+   //if (body[iBody].bSpiNBody)
     //Bary2OrbElems(body,control->Evolve.iNumBodies);
 
    *dTmp = fdInstellation(body,iBody);
@@ -169,8 +169,8 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
      *dTmp *= output->dNeg;
      strcpy(cUnit,output->cNeg);
    } else {
-     *dTmp /= fdUnitsAngle(units->iAngle);
-     fsUnitsAngle(units->iAngle,cUnit);
+     *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+     fsUnitsEnergyFlux(units,cUnit);
    }
  }
 
@@ -180,6 +180,7 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
  */
 
 void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  // This is calculated during PropsAux
   *dTmp = body[iBody].dK2Man;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -187,9 +188,9 @@ void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
   } else { }
 }
 
-void WriteImk2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteImK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = body[iBody].dImk2Man;
+  *dTmp = body[iBody].dImK2Man;
   strcpy(cUnit,"");
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -438,18 +439,16 @@ void WriteOrbEnergy(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 void WriteOrbMeanMotion(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   if(body[iBody].bBinary == 0) { // Not doing binary
-  if (iBody > 0)
-    *dTmp = body[iBody].dMeanMotion;
-  else
-    *dTmp = -1;
-  }
-  else { // doing binary
-  if(iBody > 0)
-  {
-    *dTmp = body[iBody].dMeanMotion;
-  }
-  else
-    *dTmp = -1;
+    if (iBody > 0)
+      *dTmp = body[iBody].dMeanMotion;
+    else
+      *dTmp = -1;
+  } else { // doing binary
+    if(iBody > 0) {
+      *dTmp = body[iBody].dMeanMotion;
+    } else {
+      *dTmp = -1;
+    }
   }
 
   if (output->bDoNeg[iBody]) {
@@ -623,7 +622,7 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     else
       bEnv = 1;
 
-    if((body[iBody].bOceanTides && bOcean) || (body[iBody].bEnvTides && bEnv)) {
+    if((body[iBody].bOcean && bOcean) || (body[iBody].bEnv && bEnv)) {
       *dTmp += fdSurfEnFluxOcean(body,iBody);
     }
   }
@@ -650,6 +649,26 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
     fsUnitsEnergyFlux(units,cUnit);
   }
+}
+
+void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  if (body[iBody].bThermint && !body[iBody].bOcean && !body[iBody].bEnv) {
+    *dTmp = body[iBody].dTidalQMan;
+  } else {
+    *dTmp = body[iBody].dTidalQ;
+  }
+
+  strcpy(cUnit,"");
+}
+
+
+void WriteTidalQMantle(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Updated every timestep by PropsAuxEqtideThermint
+  *dTmp = body[iBody].dTidalQMan;
+
+  strcpy(cUnit,"");
 }
 
 void WriteTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -770,38 +789,21 @@ void WriteTotOrbEnergy(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *sys
   }
 }
 
-void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-
-  // change to if eq
-  // Just thermint, not eqtide
-  if(body[iBody].bThermint)
-    *dTmp = fdDynamicViscosity(body,iBody)*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
-  else
-    *dTmp = body[iBody].dK2/body[iBody].dImK2;
-
-
-  strcpy(cUnit,"");
-}
-
 void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  // Just thermint, no eqtide
-  if((body[iBody].bThermint && !body[iBody].bEqtide) || (body[iBody].bThermint && (!body[iBody].bOceanTides && body[iBody].bEnvTides)))
-    *dTmp = fdImk2Man(body,iBody);
-  else
-    *dTmp = body[iBody].dImK2;
+  // ImK2 should always be up to date
+  *dTmp = body[iBody].dImK2;
 
   strcpy(cUnit,"");
 }
 
 void WriteK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  // If just thermint
-  if((body[iBody].bThermint && !body[iBody].bEqtide) || (body[iBody].bThermint && (!body[iBody].bOceanTides && !body[iBody].bEnvTides)))
+  if (body[iBody].bThermint && !body[iBody].bOcean && !body[iBody].bEnv) {
     *dTmp = fdK2Man(body,iBody);
-  else
+  } else {
     *dTmp = body[iBody].dK2;
-
+  }
   strcpy(cUnit,"");
 }
 
@@ -949,8 +951,9 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_IMK2MAN].bNeg = 1;
   output[OUT_IMK2MAN].dNeg = 1;
   output[OUT_IMK2MAN].iNum = 1;
-  output[OUT_IMK2MAN].iModuleBit = THERMINT + EQTIDE; // XXX Is EQTIDE right?
-  fnWrite[OUT_IMK2MAN] = &WriteImk2Man;
+  output[OUT_IMK2MAN].iModuleBit = THERMINT + EQTIDE;
+  fnWrite[OUT_IMK2MAN] = &WriteImK2Man;
+
 
   sprintf(output[OUT_INC].cName,"Inc");
   sprintf(output[OUT_INC].cDescr,"Body's Inclination");
@@ -983,6 +986,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_K2MAN].iNum = 1;
   output[OUT_K2MAN].iModuleBit = THERMINT + EQTIDE;
   fnWrite[OUT_K2MAN] = &WriteK2Man;
+
 
   sprintf(output[OUT_KECC].cName,"KEcc");
   sprintf(output[OUT_KECC].cDescr,"Poincare's k (=e*cos(varpi)");
@@ -1319,6 +1323,13 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALQ].iModuleBit = EQTIDE + THERMINT;
   fnWrite[OUT_TIDALQ] = WriteTidalQ;
 
+  sprintf(output[OUT_TIDALQMAN].cName,"TidalQMantle");
+  sprintf(output[OUT_TIDALQMAN].cDescr,"Mantle's Tidal Q");
+  output[OUT_TIDALQMAN].bNeg = 0;
+  output[OUT_TIDALQMAN].iNum = 1;
+  output[OUT_TIDALQMAN].iModuleBit = EQTIDE + THERMINT;
+  fnWrite[OUT_TIDALQMAN] = WriteTidalQMantle;
+
   sprintf(output[OUT_XOBL].cName,"Xobl");
   sprintf(output[OUT_XOBL].cDescr,"Body's sin(obl)*cos(pA)");
   output[OUT_XOBL].iNum = 1;
@@ -1625,13 +1636,13 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     fprintf(fp,"Color: %s\n", body[iBody].cColor);
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       if (output[iOut].iNum > 0) {
-	if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
-	  /* Useful for debugging
-	  printf("%d %d\n",iBody,iOut);
-	  fflush(stdout);
-	  */
-	  WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
-	}
+	       if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
+	          // /* Useful for debugging
+	           printf("%d %d\n",iBody,iOut);
+	           fflush(stdout);
+
+	         WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+	       }
       }
     }
     LogBodyRelations(control,fp,iBody);
@@ -1644,7 +1655,7 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
   }
 }
 
-void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,fnWriteOutput fnWrite[],time_t dStartTime,int iEnd) {
+void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,fnWriteOutput fnWrite[],int iEnd) {
   char cTime[OPTLEN];
   FILE *fp;
   double dDt,dTotTime;
@@ -1679,6 +1690,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   /* Bodies' Properties */
   LogBody(body,control,files,module,output,system,fnWrite,fp,update);
 
+  /* Deprecated
   if (iEnd) {
     dTotTime = difftime(time(NULL),dStartTime);
     fprintf(fp,"\nRuntime = %d s\n", (int)dTotTime);
@@ -1686,7 +1698,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
     if (control->Io.iVerbose >= VERBPROG)
       printf("Runtime = %d s\n", (int)dTotTime);
   }
-
+  */
   fclose(fp);
 }
 
@@ -1719,8 +1731,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
             for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++)
               dCol[iCol+iSubOut+iExtra]=dTmp[iSubOut];
             iExtra += (output[iOut].iNum-1);
-	          free(dTmp);
-	          dTmp = NULL;
+	           free(dTmp);
+	           dTmp = NULL;
           }
         }
       }
@@ -1730,8 +1742,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
     if (files->Outfile[iBody].iNumCols > 0) {
       fp = fopen(files->Outfile[iBody].cOut,"a");
       for (iCol=0;iCol<files->Outfile[iBody].iNumCols+iExtra;iCol++) {
-	       fprintd(fp,dCol[iCol],control->Io.iSciNot,control->Io.iDigits);
-	       fprintf(fp," ");
+	        fprintd(fp,dCol[iCol],control->Io.iSciNot,control->Io.iDigits);
+	        fprintf(fp," ");
       }
       fprintf(fp,"\n");
       fclose(fp);

@@ -1,21 +1,21 @@
 # Planet a parameters
-sName         GJ1132b                     # Body's name
+sName         Trappist1g                     # Body's name
 saModules     magmoc, atmesc, radheat, eqtide                      # Modules to apply, exact spelling required
 cColor        13aed5
 
 # Physical Properties
-dMass         -1.62                       # Mass, negative -> Earth masses
-dRadius       -1.15                       # Radius, negative -> Earth radii
+dMass         -1.341                       # Mass, negative -> Earth masses
+dRadius       -1.127                       # Radius, negative -> Earth radii
 
 # MAGMOC Properties
 dMassFracFeOIni		0.0788		  # Initial mass fraction of FeO in the mantle (default: 0.0788)
-dWaterMassAtm		-100		  # Initial water mass in the system (neg: terrestrial oceans, default: -1)
+dWaterMassAtm		-10		  # Initial water mass in the system (neg: terrestrial oceans, default: -1)
 dSurfTemp		4000		  # Initial surface temperature (default: 4000K)
 dManMeltDensity		4000		  # Mantle melt density (default: 4000kg/m^3)
 bHaltMantleSolidified 	1		  # Halt when mantle solidified? (default: 0 = no, 1 = yes)
 bHaltAtmDesiSurfCool    1                 # Halt when atmosphere desiccated and surface below 1000K? (default: 0 = no, 1 = yes)
 sRadioHeatModel		none              # Radiogenic heating model (default: none = RadHeat; schaefer = BSE composition)
-sMagmOcAtmModel 	petit		  # Atmospheric net flux model (default: grey; petit only for GJ1132b-H2O)
+sMagmOcAtmModel 	grey		  # Atmospheric net flux model (default: grey; petit only for GJ1132b-H2O)
 
 # ATMESC Properties
 dXFrac                    1.0             # X-Ray/XUV absorption radius (fraction of planet radius)
@@ -33,22 +33,22 @@ dAtmXAbsEffH2O 		  0.3
 # RADHEAT Parameters
 # *Num* are in numbers of atoms, negative -> Earth vals
 ### 40K
-d40KNumMan    -1.62
+d40KNumMan    -1.341
 d40KNumCore   -0
 d40KNumCrust  -0.0
 
 ### 232Th
-d232ThNumMan      -1.62
+d232ThNumMan      -1.341
 d232ThNumCore     -0
 d232ThNumCrust    -0
 
 ### 235U
-d235UNumMan      -1.62
+d235UNumMan      -1.341
 d235UNumCore     -0
 d235UNumCrust    -0
 
 ### 238U
-d238UNumMan      -1.62
+d238UNumMan      -1.341
 d238UNumCore     -0
 d238UNumCrust    -0
 
@@ -56,11 +56,13 @@ d238UNumCrust    -0
 dTidalQ         100          # Tidal phase lag
 dK2             0.5             # Love number of degree 2
 dMaxLockDiff    0.01
-saTidePerts     GJ1132          # Body name(s) of tidal perturbers
+saTidePerts     Trappist1          # Body name(s) of tidal perturbers
+bFixOrbit 	1		   # Keep dEcc constant?
+bForceEqSpin	1		   # Planet tidally locked, no rotation?
 
 # Orbital Properties
-dSemi         -0.0154                     # Semi-major axis, negative -> AU
-dEcc          0.0                         # Eccentricity
+dSemi         -0.0451                     # Semi-major axis, negative -> AU
+dEcc          0.001                         # Eccentricity
 
 # Output
 saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -PressWaterAtm -PressOxygenAtm -HydrogenMassSpace -OxygenMassSpace FracFe2O3Man NetFluxAtmo WaterFracMelt -RadioPower -TidalPower

@@ -1,12 +1,12 @@
 # The host star
-sName	        GJ1132                    # Body's name
+sName	        Trappist1                    # Body's name
 saModules	stellar, eqtide                   # Modules to apply, exact spelling required
 
 # Output
 saOutputOrder Age -Luminosity -LXUVStellar -Radius Temperature
 
 # Physical Parameters
-dMass         0.181                       # Mass, solar masses
+dMass         0.08                       # Mass, solar masses
 dAge          5e5
 
 # STELLAR Parameters
@@ -19,4 +19,4 @@ dTidalQ         100          # Tidal phase lag
 dK2             0.5             # Love number of degree 2
 dMaxLockDiff    0.01
 sTideModel      p2              # Tidal model, p2=CPL, t8=CTL
-saTidePerts     GJ1132b         # Body name(s) of tidal perturbers
+saTidePerts     Trappist1g         # Body name(s) of tidal perturbers

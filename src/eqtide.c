@@ -39,6 +39,7 @@ void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody
   dest[iBody].dImk2Man=src[iBody].dImk2Man;
   dest[iBody].dTidalPowMan=src[iBody].dTidalPowMan; */
 
+  dest[iBody].dTidalPowMan=src[iBody].dTidalPowMan;
 
   dest[iBody].iTidePerts = src[iBody].iTidePerts;
 
@@ -2353,7 +2354,8 @@ void WriteSemiTimescaleEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
 
 void WritePowerEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total tidal power */
-  *dTmp = fdTidePower(body,iBody,control->Evolve.iEqtideModel);
+  //  *dTmp = fdTidePower(body,iBody,control->Evolve.iEqtideModel);
+  *dTmp = body[iBody].dTidalPowMan;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2398,7 +2400,7 @@ void WriteTideLock(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   /* TidalPowMan */
-/* Deprecated! XXX
+  /* Deprecated! XXX 
   sprintf(output[OUT_TIDALPOWMAN].cName,"TidalPowMan");
   sprintf(output[OUT_TIDALPOWMAN].cDescr,"Tidal Power Mantle");
   sprintf(output[OUT_TIDALPOWMAN].cNeg,"TW");
@@ -2408,10 +2410,6 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALPOWMAN].iModuleBit = THERMINT;
   fnWrite[OUT_TIDALPOWMAN] = &fvWriteTidalPowMan;
 */
-
-
-
-
 
   sprintf(output[OUT_BODYDSEMIDTEQTIDE].cName,"BodyDsemiDtEqtide");
   sprintf(output[OUT_BODYDSEMIDTEQTIDE].cDescr,"Body's Contribution to dSemi/dt in EQTIDE");
@@ -2995,6 +2993,7 @@ else {
 /* Auxiliary properties required for the CPL calculations. N.B.: These
    parameters also need to be included in BodyCopyEqtide!!! */
 void PropsAuxEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+
   if (evolve->iEqtideModel == CPL) {
     PropsAuxCPL(body,evolve,update,iBody);
   } else if (evolve->iEqtideModel == CTL) {
@@ -3118,6 +3117,7 @@ void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 void PropsAuxDB15(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 
   if (iBody > 0) {
+    body[iBody].dTidalPowMan = fdTidePower(body,iBody,evolve->iEqtideModel);
     PropsAuxOrbiterDB15(body,update,iBody);
   }
 }
@@ -3159,6 +3159,8 @@ double fdSurfEnFluxEqtide(BODY *body,SYSTEM *foo,UPDATE *bar,int iBody,int iTide
   double dPower;
 
   dPower = fdTidePower(body,iBody,iTideModel);
+
+  //printf("TidePower=%e\n",dPower);
 
   return dPower/(4*PI*body[iBody].dRadius*body[iBody].dRadius);
 }
@@ -3741,8 +3743,14 @@ double fdPowerEqtideDB15(BODY *body,int iBody) {
 
   // Power is only dissipated in planets
   if (iBody > 0) {
-    return -10.5*body[iBody].dImK2*pow(BIGG,1.5)*pow(body[0].dMass,2.5)*
+    //    return -10.5*body[iBody].dImK2*pow(BIGG,1.5)*pow(body[0].dMass,2.5)*
+    //      pow(body[iBody].dRadius,5)*body[iBody].dEccSq*pow(body[iBody].dSemi,-7.5);
+    double dPower;
+    dPower = -10.5*body[iBody].dImK2*pow(BIGG,1.5)*pow(body[0].dMass,2.5)*
       pow(body[iBody].dRadius,5)*body[iBody].dEccSq*pow(body[iBody].dSemi,-7.5);
+
+    //printf("PowerEqtideDB15=%e\n",dPower);
+    return dPower;
   } else {
     return 0;
   }
@@ -3751,12 +3759,17 @@ double fdPowerEqtideDB15(BODY *body,int iBody) {
 double fdDB15DsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody = iaBody[0];
   int iPert = iaBody[1];
-
   // Only the planet contributes in the DB15 model
   if (iBody > 0) { // Also means iBody is the orbiter
-  return 21*body[iBody].dImK2*body[iBody].dSemi*body[iPert].dMass/body[iBody].dMass*
-      pow((body[iBody].dRadius/body[iBody].dSemi),5)*body[iBody].dMeanMotion*
-      body[iBody].dEccSq;
+    double imk2;
+    /* Set imk2 using appropriate model */
+    if (body[iBody].dImK2ManOrbModel==1) {
+      imk2 = body[iBody].dImK2Man;
+    }
+    if (body[iBody].dImK2ManOrbModel==2) {
+      imk2 = -body[iBody].dK2Man/body[iBody].dTidalQMan;
+    }
+    return 21*imk2*body[iBody].dSemi*body[iPert].dMass/body[iBody].dMass*pow((body[iBody].dRadius/body[iBody].dSemi),5)*body[iBody].dMeanMotion*body[iBody].dEccSq;
   } else {
     return 0;
   }
@@ -3765,11 +3778,17 @@ double fdDB15DsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
 double fdDB15DeccDt(BODY *body,UPDATE *update,int *iaBody) {
   int iBody = iaBody[0];
   int iPert = iaBody[1];
-
   // Only the planet contributes in the DB15 model
   if (iBody > 0) {
-    return 10.5*body[iBody].dImK2*body[iPert].dMass/body[iBody].dMass*pow((body[iBody].dRadius/body[iBody].dSemi),5)*
-      body[iBody].dMeanMotion*body[iBody].dEcc;
+    double imk2;
+    /* Set imk2 using appropriate model */
+    if (body[iBody].dImK2ManOrbModel==1) {
+      imk2 = body[iBody].dImK2Man;
+    }
+    if (body[iBody].dImK2ManOrbModel==2) {
+      imk2 = -body[iBody].dK2Man/body[iBody].dTidalQMan;
+    }
+    return 21/2.*imk2*pow(body[iPert].dMass,3./2)*pow(BIGG,1./2)*pow(body[iBody].dRadius,5)*body[iBody].dEcc/body[iBody].dMass/pow(body[iBody].dSemi,13./2);  //DB15 (16)
   } else {
     return 0;
   }

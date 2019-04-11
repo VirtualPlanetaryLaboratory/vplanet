@@ -76,10 +76,11 @@
 /* VISCOSITY PROPERTIES */
 #define ACTVISCMAN       3e5                    /**< [J/mol] Mantle viscosity activation energy */
 #define ACTSHMODMAN      2e5                    /**< [J/mol] Mantle shear modulus activation energy */
-#define STIFFNESS        1.7169e13              /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100) */
-#define SHMODREF         6.24e4                 /**< [Pa] Reference kinematic mantle shear modulus */
+#define STIFFNESS        1.71e13                   /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100) */
+#define SHMODREF         1e6               /**< [Pa] Reference kinematic mantle shear modulus */
 #define VISCREF          6e7                    /**< [m^2/s] Reference kinematic mantle viscosity */
-#define VISCJUMPMAN      2.42                   /**< [nd] Viscosity jump from upper to lower mantle */
+#define DYNAMVISCREF     1.5e9                  /**< [m^2/s] Reference kinematic mantle viscosity */
+#define VISCJUMPMAN      2.40                   /**< [nd] Viscosity jump from upper to lower mantle */
 #define FIXVISCJUMPMAN   0                      /**< [nd] (default) Option to fix viscjumpulm. if =0 then viscLM is computed from TLMan. */
 #define VISCJUMPMMAN     10.                    /**< [nd] Viscosity jump from upper to average (mid) mantle */
 #define VISCMELTB        2.5                    /**< [nd] Viscosity-melt reduction coefficient "B" (DB15 eq 8) */
@@ -129,6 +130,7 @@
 #define EMAGMOM          80e21                  /**< [Am^2] Earth's present day magnetic moment */
 #define EPRESSWIND       2.6761e-9              /**< [N/m^2] Earth's solar wind pressure: Psw=m_proton*n_sw*v_sw^2 (DB13) */
 #define EMAGPAUSERAD     9.103*(ERADIUS)        /**< [m] Earth's magnetopause radius (DB13) */
+#define IMK2MANORBMODEL  1                      /**< [nd] Option for ImK2 model to use in orbital equations */
 
 //void InitializeControlThermint(CONTROL*);
 void fvAddModuleThermint(CONTROL*,MODULE*,int,int);
@@ -142,6 +144,7 @@ void fvInitializeBodyThermint(BODY*,CONTROL*,UPDATE*,int,int);
 #define OPTENDTHERMINT      1900                /**< End of THERMINT options indexes */
 
 /* Scalar Properties */
+#define OPT_TSURF	    1709		/**< Surface temperature */
 #define OPT_TMAN	    1710		/**< Average mantle temperature */
 #define OPT_TUMAN	    1711		/**< Temperature base of upper mantle boundary layer */
 #define OPT_TLMAN	    1712		/**< Temperature top of lower mantle boundary layer */
@@ -230,11 +233,13 @@ void fvInitializeBodyThermint(BODY*,CONTROL*,UPDATE*,int,int);
 #define OPT_ADJUMPM2LM      1806                /**< [nd] Adiabatic temperature jump from average mantle to top of lower mantle thermal boundary layer: "epsilon_LM" */
 #define OPT_ADJUMPC2CMB     1807                /**< [nd] Adiabatic temperature jump from average core to core-mantle boundary: "epsilon_c" */
 #define OPT_ELECCONDCORE    1808                /**< [S/m] Electrical conductivity of core */
+#define OPT_IMK2MANORBMODEL 1809                /**< [nd] Option of ImK2 model to use in orbital equations */
 /* End vemcee parameters */
 
 /* Options Functions */
 void fvHelpOptionsThermint(OPTIONS*);
 void fvReadTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadTSurf(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadViscJumpMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadViscRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
@@ -263,6 +268,7 @@ void fvReadAdJumpM2UM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadAdJumpM2LM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadAdJumpC2CMB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadElecCondCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadImK2ManOrbModel(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 /* end vemcee parameters */
 
 void fvInitializeOptionsThermint(OPTIONS*,fnReadOption[]);
@@ -502,6 +508,7 @@ double fdPowerGravIC(BODY*,UPDATE*,int);
 double fdTidalPowMan(BODY*,int);
 double fdHflowSurf(BODY*,int);
 double fdHfluxSurf(BODY*,int);
+double fdHflowSecManThermint(BODY*,int);
 double fdRIC(BODY*,int);
 double fdDRICDTCMB(BODY*,int);
 double fdChiOC(BODY*,int);

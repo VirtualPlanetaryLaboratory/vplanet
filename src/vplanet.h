@@ -439,9 +439,10 @@ struct BODY {
   double dTidalQOcean;   /**< Body's Ocean Component to Tidal Q */
   double dTidalQEnv;     /**< Body's Envelope Component to Tidal Q */
   double dImK2Man;       /**< Mantle Im(k2) love number */
-  double dImK2Ocean;       /**< Envelope Component to Imaginary part of Love's K_2 */
+  double dImK2ManOrbModel;    /**< Mantle Im(k2) model for DB15 orbital eqns */
+  double dImK2Ocean;     /**< Envelope Component to Imaginary part of Love's K_2 */
   double dImK2Env;       /**< Envelope Component to Imaginary part of Love's K_2 */
-  double dTidalQ;	       /**< Body's Tidal Q */
+  double dTidalQ;	 /**< Body's Tidal Q */
   double dTidalTau;      /**< Body's Tidal Time Lag */
   //double dTidePower;   deprecated to allow communication with thermint
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */
@@ -519,6 +520,7 @@ struct BODY {
 
   /* Thermint Parameters */
   int bThermint;           /**< Apply Module THERMINT? */
+  double dTSurf;           /**< Surface Temperature */
   double dTMan;            /**< Temperature Mantle AVE */
   double dTCore;           /**< Temperature Core AVE */
   double dTUMan;           /**< Temperature UMTBL */

@@ -8,6 +8,8 @@ import scipy.signal as sig
 plt.rcParams.update({'font.size':15,'legend.fontsize':15})
 import sys
 
+s_yr = 3600.*24*365
+
 # Check correct number of arguments
 if (len(sys.argv) != 2):
     print('ERROR: Incorrect number of arguments.')
@@ -30,8 +32,8 @@ print('e %.3e %.3e'%(out.tidalearth.Eccentricity[0],out.tidalearth.Eccentricity[
 print('TMan %.3e %.3e'%(out.tidalearth.TMan[0],out.tidalearth.TMan[-1]))
 print('TCore %.3e %.3e'%(out.tidalearth.TCore[0],out.tidalearth.TCore[-1]))
 print('HflowUMan %.3e %.3e'%(out.tidalearth.HflowUMan[0],out.tidalearth.HflowUMan[-1]))
+#print('PowerEqtide %.3e %.3e'%(out.tidalearth.PowerEqtide[0],out.tidalearth.PowerEqtide[-1]))
 print('PowerEqtide %.3e %.3e'%(out.tidalearth.PowerEqtide[0],out.tidalearth.PowerEqtide[-1]))
-print('TidalPowMan %.3e %.3e'%(out.tidalearth.TidalPowMan[0],out.tidalearth.TidalPowMan[-1]))
 print('ImK2 %.3e %.3e'%(out.tidalearth.ImK2[0],out.tidalearth.ImK2[-1]))
 print('K2 %.3e %.3e'%(out.tidalearth.K2[0],out.tidalearth.K2[-1]))
 print('RadPowerMan %.3e %.3e'%(out.tidalearth.RadPowerMan[0],out.tidalearth.RadPowerMan[-1]))
@@ -57,44 +59,50 @@ plt.legend(loc='best',ncol=2,frameon=False,columnspacing=1)
 plt.ylabel('Temperature (K)')
 plt.xlabel('Time (Gyr)')
 plt.ylim(0,10000)
+plt.xscale('log')
 panel += 1
 plt.subplot(rows,cols,panel)
 plt.plot(out.tidalearth.Time,out.tidalearth.HflowUMan,linestyle='-',label=r'$Q_{UMan}$')
+plt.plot(out.tidalearth.Time,out.tidalearth.HflowMeltMan,linestyle='-',label=r'$Q_{Melt,Man}$')
 plt.plot(out.tidalearth.Time,out.tidalearth.HflowCMB,linestyle='-',label=r'$Q_{CMB}$')
 plt.plot(out.tidalearth.Time,out.tidalearth.RadPowerMan,linestyle='-',label=r'$Q_{Rad,Man}$')
 plt.plot(out.tidalearth.Time,out.tidalearth.RadPowerCore,'-',label=r'$Q_{Rad,Core}$')
-plt.plot(out.tidalearth.Time,out.tidalearth.PowerEqtide*1e-12,'-',label=r'PowerEqtide')
-plt.plot(out.tidalearth.Time,out.tidalearth.TidalPowMan*1e-12,'-',label=r'TidalPowMan')
+plt.plot(out.tidalearth.Time,out.tidalearth.PowerEqtide,'-',label=r'PowerEqtide')
+plt.yscale('log'); plt.xscale('log')
 plt.legend(loc='best',frameon=False)
 plt.ylabel('Heat Flow (TW)')
 plt.xlabel('Time (Gyr)')
-plt.ylim(0,200)
+ymax=np.max([out.tidalearth.PowerEqtide[50:].max(),out.tidalearth.HflowUMan[50:].max()])
+ymax=1e6
+plt.ylim(1,ymax)
 panel += 1
 plt.subplot(rows,cols,panel)
-plt.plot(out.tidalearth.Time,out.tidalearth.BLUMan,label=r'$\delta_{UM}$')
-plt.plot(out.tidalearth.Time,out.tidalearth.BLLMan,label=r'$\delta_{LM}$')
-plt.legend(loc='best',frameon=False)
-plt.ylabel(r'Boundary Layer Depths (km)')
+plt.plot(out.tidalearth.Time,out.tidalearth.SemiMajorAxis,label='a(AU)')
+plt.ylabel(r'Semi Major Axis (AU)')
 plt.xlabel('Time (Gyr)')
+plt.ylim(0,0.10)
+plt.xscale('log')
 panel += 1
 plt.subplot(rows,cols,panel)
-plt.semilogy(out.tidalearth.Time,out.tidalearth.ViscUMan,label=r'$\nu_{UM}$')
-plt.semilogy(out.tidalearth.Time,out.tidalearth.ViscLMan,label=r'$\nu_{LM}$')
-plt.legend(loc='best',frameon=False)
-plt.ylabel(r'Mantle Viscosity ($m^2s^{-1}$)')
+plt.loglog(out.tidalearth.Time,out.tidalearth.Eccentricity,label='ecc')
+plt.ylabel(r'Eccentricity')
 plt.xlabel('Time (Gyr)')
-plt.ylim(1e12,1e19)
+plt.ylim(1e-5,1)
+plt.yscale('log'); plt.xscale('log')
 panel += 1
 plt.subplot(rows,cols,panel)
-plt.plot(out.tidalearth.Time,out.tidalearth.FMeltUMan)
-plt.ylabel(r'Melt Fraction Upper Mantle (n.d.)')
+plt.plot(out.tidalearth.Time,out.tidalearth.MagMom,label='MagMom')
+plt.ylim(0,2)
+plt.ylabel('Magnetic Moment (E. Units)')
 plt.xlabel('Time (Gyr)')
+plt.xscale('log')
 panel += 1
 plt.subplot(rows,cols,panel)
-plt.plot(out.tidalearth.Time,out.tidalearth.MeltMassFluxMan*1e-6)
-plt.ylabel(r'Melt Mass Flux Mantle ($\times 10^6$ kg$/$s)')
+plt.plot(out.tidalearth.Time,out.tidalearth.MeltMassFluxMan*s_yr)
+plt.ylabel(r'Melt Mass Flux Mantle (kg$/$yr)')
 plt.xlabel('Time (Gyr)')
-plt.ylim(0,100)
+plt.ylim(1e12,1e18)
+plt.yscale('log'); plt.xscale('log')
 
 vplot.make_pretty(fig)
 if (sys.argv[1] == 'pdf'):
@@ -145,7 +153,7 @@ if (sys.argv[1] == 'pdf'):
 if (sys.argv[1] == 'png'):
     plt.savefig(filepref+'%d.png'%nfig)
 
-# Tidal Dissipation Plots
+# Orbital Evolution Plots
 nfig += 1
 fig = plt.figure(nfig, figsize=(10,15))
 panel = 1
@@ -166,9 +174,11 @@ plt.ylabel(r'Semi Major Axis (AU)')
 plt.xlabel('Time (Gyr)')
 panel += 1
 plt.subplot(rows,cols,panel)
-plt.semilogy(out.tidalearth.Time,out.tidalearth.Eccentricity,label='ecc')
+plt.loglog(out.tidalearth.Time,out.tidalearth.Eccentricity,label='ecc')
 plt.ylabel(r'Eccentricity')
 plt.xlabel('Time (Gyr)')
+plt.ylim(1e-5,1)
+plt.yscale('log'); plt.xscale('log')
 
 vplot.make_pretty(fig)
 if (sys.argv[1] == 'pdf'):
@@ -182,27 +192,6 @@ nfig += 1
 fig = plt.figure(nfig, figsize=(10,15))
 panel = 1
 plt.subplot(rows,cols,panel)
-plt.plot(out.tidalearth.TUMan,out.tidalearth.K2,label='K2')
-plt.ylim(0,1.5)
-plt.ylabel(r'K2')
-plt.xlabel('TUMan')
-panel += 1
-plt.subplot(rows,cols,panel)
-plt.semilogy(out.tidalearth.TUMan,out.tidalearth.ImK2,label='ImK2')
-plt.ylabel(r'ImK2')
-plt.xlabel('TUMan')
-panel += 1
-plt.subplot(rows,cols,panel)
-plt.semilogy(out.tidalearth.TUMan,out.tidalearth.ViscUMan,label='ViscUMan')
-plt.ylabel(r'ViscUMan')
-plt.xlabel('TUMan')
-panel += 1
-plt.subplot(rows,cols,panel)
-plt.semilogy(out.tidalearth.TUMan,out.tidalearth.ShmodUMan,label='ShmodUMan')
-plt.ylabel(r'ShmodUMan')
-plt.xlabel('TUMan')
-panel += 1
-plt.subplot(rows,cols,panel)
 plt.plot(out.tidalearth.TUMan,out.tidalearth.FMeltUMan,label='FMeltUMan')
 plt.ylabel(r'FMeltUMan')
 plt.xlabel('TUMan')
@@ -213,7 +202,51 @@ plt.plot(out.tidalearth.TUMan,out.tidalearth.BLUMan,label='BLUMan')
 plt.ylabel(r'BLUMan (km)')
 plt.xlabel('TUMan')
 plt.ylim(0)
+panel += 1
+plt.subplot(rows,cols,panel)
+plt.semilogy(out.tidalearth.TUMan,out.tidalearth.ViscUMan,label='ViscUMan')
+plt.semilogy(out.tidalearth.TUMan,out.tidalearth.ShmodUMan,label='ShmodUMan')
+plt.ylabel(r'ViscUMan, ShmodUMan')
+plt.xlabel('TUMan')
+plt.legend()
+panel += 1
+plt.subplot(rows,cols,panel)
+plt.plot(out.tidalearth.TUMan,out.tidalearth.K2,label='K2')
+plt.ylim(0,1.5)
+plt.ylabel(r'K2')
+plt.xlabel('TUMan')
+panel += 1
+plt.subplot(rows,cols,panel)
+plt.semilogy(out.tidalearth.TUMan,np.abs(out.tidalearth.ImK2),label='ImK2')
+plt.ylabel(r'ImK2')
+plt.xlabel('TUMan')
+panel += 1
+plt.subplot(rows,cols,panel)
+plt.semilogy(out.tidalearth.TUMan,out.tidalearth.PowerEqtide,label='PowerEqtide')
+plt.ylabel(r'PowerEqtide [TW]')
+plt.xlabel('TUMan')
+vplot.make_pretty(fig)
+if (sys.argv[1] == 'pdf'):
+    plt.savefig(filepref+'%d.pdf'%nfig)
+if (sys.argv[1] == 'png'):
+    plt.savefig(filepref+'%d.png'%nfig)
 
+
+# Temperature-dep Orbital evo
+nfig += 1
+fig = plt.figure(nfig, figsize=(10,15))
+panel = 1
+plt.subplot(rows,cols,panel)
+plt.semilogy(out.tidalearth.TUMan,out.tidalearth.PowerEqtide,label='PowerEqtide')
+plt.ylabel(r'PowerEqtide [TW]')
+plt.xlabel('TUMan')
+plt.ylim(1e-8,1e4)
+panel += 1
+plt.subplot(rows,cols,panel)
+plt.semilogy(out.tidalearth.TUMan,out.tidalearth.Eccentricity,label='Ecc')
+plt.ylabel(r'Eccentricity')
+plt.xlabel('TUMan')
+plt.ylim(1e-8,1e0)
 vplot.make_pretty(fig)
 if (sys.argv[1] == 'pdf'):
     plt.savefig(filepref+'%d.pdf'%nfig)

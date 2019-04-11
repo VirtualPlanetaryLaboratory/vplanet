@@ -35,6 +35,7 @@ d238UPowerCrust	  -1
 ### THERMINT inputs.
 dTMan          3000
 dTCore         6000
+#dViscJumpMan     2.40
 
 saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
     -HflowUMan -HflowMeltMan -RadPowerMan -RadPowerCore -RadPowerCrust $

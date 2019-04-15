@@ -12,21 +12,21 @@ plots, and more description of the physics. Use these scripts to reproduce publi
 
 `AtmEscKepler-36 <AtMescKepler-36>`_: The loss of a hydrogen envelope due to stellar XUV flux. [AtmEsc, STELLAR]
 
-`EarthClimate <EarthClimate>`_: Earth's climate through one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
+`EarthClimate <EarthClimate>`_: Energy balance climate model of Earth over one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
 
-`VenusWaterLoss <VenusWaterLoss>`_: Water loss from Venus due to the Sun's XUV flux. [AtmEsc, STELLAR]
+`VenusWaterLoss <VenusWaterLoss>`_: Water loss from Venus due to water photolyzation and hydrogen escape. [AtmEsc, STELLAR]
 
 **Galactic Effects**
 ====================
 
-`GalaxyEffects <GalaxyEffects>`_: Evolution of a wide binary's orbit due to radial migration in the galaxy and perturbations from passing stars. [GalHabit]
+`GalaxyEffects <GalaxyEffects>`_: Evolution of a wide binary's orbit due to the galactic tide, perturbations from passing stars, and radial migration in the galaxy. [GalHabit]
 
 **Interiors**
 =============
 
 `EarthInterior <EarthInterior>`_: Evolution of Earth's thermal and magnetic properties (plate tectonics). [RadHeat, ThermInt]
 
-`IoHeat <IoHeat>`_: Tidal heating of Io. [EqTide]
+`IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity, according to equilibrium tide theory. [EqTide, VSPACE]
 
 `RadHeat <RadHeat>`_: Radiogenic heating evolution in Earth's core, mantle and crust. [RadHeat]
 

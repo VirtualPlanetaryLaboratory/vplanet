@@ -8,11 +8,11 @@ plots, and more description of the physics. Use these scripts to reproduce publi
 **Atmospheres**
 ===============
 
+`AbioticO2 <AbioticO2>`_: Production of abiotic oxygen on terrestrial worlds due to water photolyzation and hydrogen escape. [AtmEsc, Stellar]
+
 `AtmEscKepler-36 <AtMescKepler-36>`_: The loss of a hydrogen envelope due to stellar XUV flux. [AtmEsc, STELLAR]
 
-`EarthClimate <EarthClimate>`_: Earth's climate through one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings. [DistOrb, DistRot, POISE]
-
-`AbioticO2 <AbioticO2>`_: Production of abiotic oxygen on terrestrial worlds due to water photolyzation and hydrogen escape. [AtmEsc, Stellar]
+`EarthClimate <EarthClimate>`_: Earth's climate through one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
 
 `VenusWaterLoss <VenusWaterLoss>`_: Water loss from Venus due to the Sun's XUV flux. [AtmEsc, STELLAR]
 
@@ -37,40 +37,42 @@ plots, and more description of the physics. Use these scripts to reproduce publi
 **Orbital Dynamics**
 ====================
 
-`CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [Distorb, DistRot, EqTide]
-
 `ApseLock <ApseLock>`_: Evolution of a tidally-damped two-planet system into a state in which the major axes circulate with the same frequency. [Distorb, EqTide]
 
-`TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTl equilibrium tide models [EqTide]
-
-`TidalEarth <TidalEarth>`_: Internal/orbital evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]
-
-`CircumbinaryOrbit <CircumbinaryOrbit>`_: Orbital evolution of a circumbinary planet. [BINARY]
+`CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [Distorb, DistRot, EqTide]
 
 `ChaoticResonances <ChaoticResonances>`_: N-body integration of a planetary system in a chaotic eccentricity-inclination mean motion resonance. [SpiNBody]
 
+`CircumbinaryOrbit <CircumbinaryOrbit>`_: Orbital evolution of a circumbinary planet. [BINARY]
+
+`EarthClimate <EarthClimate>`_: Earth's climate through one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
+
 `SSDistOrbDistRot <SSDistOrbDistRot>`_: Evolution of the Solar System planets' orbital and rotational angular momenta from approximate models. [DistOrb, DistRot]
+
+`TidalEarth <TidalEarth>`_: Internal/orbital evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]
+
+`TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTl equilibrium tide models [EqTide]
 
 **Stars**
 =========
 
 `BinaryTides <BinaryTides>`_: Coupled stellar and tidal evolution of short-period binary stars. [EqTide, STELLAR]
 
-`StellarEvol <StellarEvol>`_: Pre-main sequence and main sequence evolution of stellar properties. [STELLAR]
-
 `MagneticBraking <MagneticBraking>`_: Rotational evolution of stars under different magnetic braking assumptions. [STELLAR]
+
+`StellarEvol <StellarEvol>`_: Pre-main sequence and main sequence evolution of stellar properties. [STELLAR]
 
 **Tidal Effects**
 =================
+
+`ApseLock <ApseLock>`_: Evolution of a tidally-damped two-planet system into a state in which the major axes circulate with the same frequency. [Distorb, EqTide]
 
 `BinaryTides <BinaryTides>`_: Coupled stellar and tidal evolution of short-period binary stars. [EqTide, STELLAR]
 
 `CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [Distorb, DistRot, EqTide]
 
-`ApseLock <ApseLock>`_: Evolution of a tidally-damped two-planet system into a state in which the major axes circulate with the same frequency. [Distorb, EqTide]
-
-`TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTl equilibrium tide models [EqTide]
-
 `IoHeat <IoHeat>`_: Tidal heating of Io. [EqTide]
 
 `TidalEarth <TidalEarth>`_: Internal/orbital evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]
+
+`TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTl equilibrium tide models [EqTide]

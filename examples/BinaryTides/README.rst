@@ -13,7 +13,6 @@ the pre-main sequence and tidal torques.
 **Modules**           EqTide
                       STELLAR
 **Approx. runtime**   71 seconds
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/zahn>`_
 ===================   ============
 
 As stars form, they contract onto the main sequence, and those in binary star systems

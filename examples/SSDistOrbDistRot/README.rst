@@ -34,20 +34,20 @@ To run this example
 
 .. code-block:: bash
 
-    # Run the main script
+    # Run the baseline case
     vplanet vpl.in
 
-    # Run the script without the Earth's moon
+    # Run without the Earth's moon
     cd womoon
     vplanet vpl.in
     cd ..
 
-    # Run the Mars N-Body script
+    # Run the Mars N-Body case
     cd marshnb
     vplanet vpl.in
     cd ..
 
-    # Run the Mars vplanet script
+    # Run the Mars vplanet case
     cd marsvpl
     vplanet vpl.in
     cd ..

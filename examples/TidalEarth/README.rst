@@ -20,13 +20,14 @@ Earth-like planet using **ThermInt**, **RadHeat**, and **EqTide**.
 The model is 1-D and many free parameters have been
 tuned to Earth.  This example reproduces the results of
 Driscoll & Barnes (2015).  The generated
-figures should be compared to DB15 Figures 4 and 5.
+figures should be compared to their Figures 4 and 5.
 
 
 To run this example
 -------------------
 
 .. code-block:: bash
+
    python makeplot.py <pdf | png>
 
 

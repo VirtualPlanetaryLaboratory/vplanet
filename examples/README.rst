@@ -51,7 +51,7 @@ plots, and more description of the physics. Use these scripts to reproduce publi
 
 `TidalEarth <TidalEarth>`_: Internal/orbital evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]
 
-`TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTl equilibrium tide models [EqTide]
+`TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTL equilibrium tide models. [EqTide]
 
 **Stars**
 =========
@@ -75,4 +75,4 @@ plots, and more description of the physics. Use these scripts to reproduce publi
 
 `TidalEarth <TidalEarth>`_: Internal/orbital evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]
 
-`TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTl equilibrium tide models [EqTide]
+`TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTL equilibrium tide models. [EqTide]

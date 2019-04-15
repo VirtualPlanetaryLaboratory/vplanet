@@ -11,7 +11,6 @@ Stellar evolution for stars between 0.1 and 1.3 solar masses.
 **Author**            Rodrigo Luger
 **Modules**           STELLAR
 **Approx. runtime**   2 minutes
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/MainSequence>`_
 ===================   ============
 
 This example shows the evolution of pre- and main sequence stars as predicted by

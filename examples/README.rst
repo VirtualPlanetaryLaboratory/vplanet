@@ -8,18 +8,18 @@ plots, and more description of the physics. Use these scripts to reproduce publi
 **Atmospheres**
 ===============
 
-`AtmEscKepler-36 <AtMescKepler-36>`_: The loss of a hydrogen envelope due to stellar XUV flux. [AtmEsc, Stellar]
+`AtmEscKepler-36 <AtMescKepler-36>`_: The loss of a hydrogen envelope due to stellar XUV flux. [AtmEsc, STELLAR]
 
 `EarthClimate <EarthClimate>`_: Earth's climate through one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings. [DistOrb, DistRot, POISE]
 
 `AbioticO2 <AbioticO2>`_: Production of abiotic oxygen on terrestrial worlds due to water photolyzation and hydrogen escape. [AtmEsc, Stellar]
 
-`VenusWaterLoss <VenusWaterLoss>`_: Water loss from Venus due to the Sun's XUV flux. [AtmEsc, Stellar]
+`VenusWaterLoss <VenusWaterLoss>`_: Water loss from Venus due to the Sun's XUV flux. [AtmEsc, STELLAR]
 
 **Galactic Effects**
 ====================
 
-`GalaxyEffects <GalaxyEffects>`_: Evolution of a wide binary's orbit due to radial migration in the galaxy and perturbations from passing stars. [Galhabit]
+`GalaxyEffects <GalaxyEffects>`_: Evolution of a wide binary's orbit due to radial migration in the galaxy and perturbations from passing stars. [GalHabit]
 
 **Interiors**
 =============
@@ -45,7 +45,7 @@ plots, and more description of the physics. Use these scripts to reproduce publi
 
 `TidalEarth <TidalEarth>`_: Internal/orbital evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]
 
-`CircumbinaryOrbit <CircumbinaryOrbit>`_: Orbital evolution of a circumbinary planet. [Binary]
+`CircumbinaryOrbit <CircumbinaryOrbit>`_: Orbital evolution of a circumbinary planet. [BINARY]
 
 `ChaoticResonances <ChaoticResonances>`_: N-body integration of a planetary system in a chaotic eccentricity-inclination mean motion resonance. [SpiNBody]
 
@@ -54,16 +54,16 @@ plots, and more description of the physics. Use these scripts to reproduce publi
 **Stars**
 =========
 
-`BinaryTides <BinaryTides>`_: Coupled stellar and tidal evolution of short-period binary stars. [EqTide, Stellar]
+`BinaryTides <BinaryTides>`_: Coupled stellar and tidal evolution of short-period binary stars. [EqTide, STELLAR]
 
-`StellarEvol <StellarEvol>`_: Pre-main sequence and main sequence evolution of stellar properties. [Stellar]
+`StellarEvol <StellarEvol>`_: Pre-main sequence and main sequence evolution of stellar properties. [STELLAR]
 
-`MagneticBraking <MagneticBraking>`_: Rotational evolution of stars under different magnetic braking assumptions. [Stellar]
+`MagneticBraking <MagneticBraking>`_: Rotational evolution of stars under different magnetic braking assumptions. [STELLAR]
 
 **Tidal Effects**
 =================
 
-`BinaryTides <BinaryTides>`_: Coupled stellar and tidal evolution of short-period binary stars. [EqTide, Stellar]
+`BinaryTides <BinaryTides>`_: Coupled stellar and tidal evolution of short-period binary stars. [EqTide, STELLAR]
 
 `CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [Distorb, DistRot, EqTide]
 

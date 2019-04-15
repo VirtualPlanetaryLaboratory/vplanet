@@ -11,7 +11,6 @@ This example shows how Earth's interior evolves in a plate tectonics-like mode.
 **Author**            Peter Driscoll
 **Modules**           RadHeat ThermInt
 **Approx. runtime**   <1 second
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/EarthInterior>`_
 ===================   ============
 
 This example shows the thermal and magnetic evolution of Earth's interior from

@@ -842,7 +842,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
   // Verify physical and orbital properties
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     /* Must verify density first: RotVel requires a radius in VerifyRotation */
-    VerifyMassRad(body,control,options,files->Infile[iBody].cIn,iBody);
+    VerifyMassRad(&body[iBody],control,options,files->Infile[iBody].cIn,iBody);
     VerifyRotationGeneral(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
 
     // If any bodies orbit, make sure they do so properly!

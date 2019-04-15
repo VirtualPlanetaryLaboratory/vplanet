@@ -16,7 +16,8 @@ def test_HEC():
     output = GetOutput(path=cwd)
 
     # Check
-    assert np.isclose(output.log.final.star.Luminosity, 5.876542e+23)
+    #assert np.isclose(output.log.final.star.Luminosity, 5.876542e+23)
+    assert np.isclose(output.log.final.star.Luminosity, 5.882512e+23)
     assert np.isclose(output.log.final.b.DsemiDtEqtide,  -8.304900e-10)
     assert np.isclose(output.log.final.b.SurfEnFluxTotal, 1.694527)
     assert np.isclose(output.log.final.b.SurfWaterMass, 1.702222, rtol=1e-4)

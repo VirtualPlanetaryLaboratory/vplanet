@@ -2354,8 +2354,8 @@ void WriteSemiTimescaleEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
 
 void WritePowerEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get total tidal power */
-  //  *dTmp = fdTidePower(body,iBody,control->Evolve.iEqtideModel);
-  *dTmp = body[iBody].dTidalPowMan;
+  *dTmp = fdTidePower(body,iBody,control->Evolve.iEqtideModel);
+  //*dTmp = body[iBody].dTidalPowMan;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2400,7 +2400,7 @@ void WriteTideLock(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   /* TidalPowMan */
-  /* Deprecated! XXX 
+  /* Deprecated! XXX
   sprintf(output[OUT_TIDALPOWMAN].cName,"TidalPowMan");
   sprintf(output[OUT_TIDALPOWMAN].cDescr,"Tidal Power Mantle");
   sprintf(output[OUT_TIDALPOWMAN].cNeg,"TW");

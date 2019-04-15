@@ -67,7 +67,7 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
-void AddModuleGalHabit(MODULE*,int,int);
+void AddModuleGalHabit(CONTROL*,MODULE*,int,int);
 void BodyCopyGalHabit(BODY*,BODY*,int,int,int);
 void InitializeBodyGalHabit(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyGalHabit(BODY*,CONTROL*,UPDATE*,int);

@@ -1118,7 +1118,7 @@ void LogBodyStellar(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UP
   }
 }
 
-void AddModuleStellar(MODULE *module,int iBody,int iModule) {
+void AddModuleStellar(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]                    = STELLAR;
 

@@ -1172,7 +1172,7 @@ void LogBodyDistRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UP
 
 /************* MODULE Functions ***********/
 
-void AddModuleDistRot(MODULE *module,int iBody,int iModule) {
+void AddModuleDistRot(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]                  = DISTROT;
 

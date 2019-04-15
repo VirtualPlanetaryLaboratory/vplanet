@@ -405,19 +405,19 @@ double fdMassToRad(double dMass,int iRelation) {
 // Assign mass from radius and published relationship
 double fdRadToMass(double dMass,int iRelation) {
 
-  if (iRelation == REIDHAWLEY)
+  if (iRelation == REIDHAWLEY) {
     return fdRadToMass_ReidHawley(dMass);
-  else if (iRelation == GORDASVECH99)
+  } else if (iRelation == GORDASVECH99) {
     return fdRadToMass_GordaSvech99(dMass);
-  else if (iRelation == BAYLESSOROSZ06)
+  } else if (iRelation == BAYLESSOROSZ06) {
     return fdRadToMass_BaylessOrosz06(dMass);
-  else if (iRelation == SOTIN07)
+  } else if (iRelation == SOTIN07) {
     return fdRadToMass_Sotin07(dMass);
-
-  /* Need to add more! XXX */
-
-  /* Whoops! */
-  return 1./0;
+  } else {
+    /* Whoops! */
+    fprintf(stderr,"ERROR: Unknown mass-radius relation.\n");
+    exit(EXIT_UNITS);
+  }
 }
 
 /**
@@ -459,7 +459,20 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].bRadheat = src[iBody].bRadheat;
     dest[iBody].bSpiNBody = src[iBody].bSpiNBody;
 
+    dest[iBody].bMantle = src[iBody].bMantle;
+    dest[iBody].bOcean = src[iBody].bOcean;
+    dest[iBody].bEnv = src[iBody].bEnv;
+
     //dest[iBody].dLXUV = src[iBody].dLXUV;
+
+    // Im(k_2) properties
+    dest[iBody].dK2Man = src[iBody].dK2Man;
+    dest[iBody].dTidalQMan = src[iBody].dTidalQMan;
+    dest[iBody].dImK2Man = src[iBody].dImK2Man;
+    // These copies are needed to avoid floating point exceptions in
+    //   (eqtide + !thermint) bodies
+    dest[iBody].dShmodUMan=src[iBody].dShmodUMan;
+    dest[iBody].dStiffness=src[iBody].dStiffness;
 
     if (iBody > 0) {
       dest[iBody].dHecc = src[iBody].dHecc;
@@ -560,6 +573,118 @@ double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
 	dPresSurf = dGravAccel * dMassEnv / (4 * PI * dRadSurf * dRadSurf); // [kg/ms2]
   return dPresSurf;
 }
+
+double fdImK2Total(BODY *body,int iBody) {
+
+  if (body[iBody].bMantle || body[iBody].bOcean || body[iBody].bEnv) {
+    return body[iBody].dImK2Man + body[iBody].dImK2Ocean + body[iBody].dImK2Env;
+  } else {
+    return -body[iBody].dK2/body[iBody].dTidalQ;
+  }
+}
+
+/**
+  Function compute upper mantle k2 Love number
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Upper mantle k2 Love number
+*/
+double fdK2Man(BODY *body,int iBody) {
+  //  return 1.5/(1+9.5*body[iBody].dShmodUMan/(STIFFNESS));
+    return 1.5/(1+9.5*body[iBody].dShmodUMan/body[iBody].dStiffness);
+}
+
+double fdTidalQMan(BODY *body,int iBody) {
+  double ShmodUManArr;
+  ShmodUManArr = body[iBody].dShmodUMan*body[iBody].dMeltfactorUMan;
+  //return body[iBody].dDynamViscos*body[iBody].dMeanMotion/ShmodUManArr;
+  return body[iBody].dDynamViscos*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+}
+
+double fdImK2ManThermint(BODY *body,int iBody) {
+  double dDenom2 = pow(1.5*body[iBody].dTidalQMan/body[iBody].dK2Man,2.);
+  double imk2 = -(57./4)*body[iBody].dDynamViscos*body[iBody].dMeanMotion/((body[iBody].dStiffness)*(1.0+dDenom2));
+  return imk2;
+}
+
+/**
+  Function compute upper mantle imaginary component of k2 Love number
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Imaginary component of k2 Love number
+*/
+double fdImK2Man(BODY *body,int iBody) {
+
+  if (body[iBody].bThermint) {
+    body[iBody].dK2 = fdK2Man(body,iBody);
+    return fdImK2ManThermint(body,iBody);
+  } else {
+    return body[iBody].dImK2Man;
+  }
+}
+
+/** Calculate total k_2 and Im(k_2) for a body. This value depends on which tidal
+  model is called, and it the properties depend on the internal properties.  XXX Cut?
+void AssignTidalProperties(BODY *body,EVOLVE *evolve,int iBody) {
+  if (body[iBody].bThermint) {
+    // The planet's tidal response depends on mantle properties
+    body[iBody].dK2=fdK2Man(body,iBody);
+    body[iBody].dImK2=fdImK2Man(body,iBody);
+  } else {
+     We're in a CPL/CTL type mode, and let's start building the total K2 and
+      ImK2 with the mantle. This should be sorted out in Verify.
+    body[iBody].dK2 = body[iBody].dK2Man;
+    body[iBody].dImK2 = body[iBody].dImK2Man;
+  }
+  // Include tidal dissapation due to oceans
+  if (body[iBody].bOceanTides) {
+    // weighted by the love number of each component
+    body[iBody].dK2 += body[iBody].dK2Ocean;
+    body[iBody].dImK2 += body[iBody].dImK2Ocean;
+  }
+  // Include tidal dissapation due to envelope
+  if (body[iBody].bEnvTides) {
+    // weighted by the love number of each component
+    body[iBody].dK2 += body[iBody].dK2Env;
+    body[iBody].dImK2 += body[iBody].dImK2Env;
+  }
+  // Sanity checks: enforce upper bound
+  if (body[iBody].dK2 > 1.5) {
+    body[iBody].dK2 = 1.5;
+    fprintf(stderr,"WARNING: body[%d].dK2 > 1.5 at time %.5e years.\n",iBody,evolve->dTime/YEARSEC);
+  }
+}
+*/
+
+/**
+  Function compute secular mantle heat flow: heat sinks - sources
+
+  @param body Body struct
+  @param iBody Index of body
+
+  @return Heat flow of secular mantle cooling
+*/
+double fdHflowSecMan(BODY *body,EVOLVE *evolve,int iBody) {
+  double dHflowSecMan = 0;
+
+  if (body[iBody].bThermint) {
+    dHflowSecMan += fdPowerThermint(body,iBody);
+    //dHflowSecMan += fdHflowSecManThermint(body,iBody);
+  }
+  if (body[iBody].bEqtide) {
+    //dHflowSecMan -= fdTidePower(body,iBody,evolve->iEqtideModel); // formerly dTidalPowerMan
+    dHflowSecMan -= body[iBody].dTidalPowMan;
+  }
+  // Should add RadHeat here
+  return dHflowSecMan;
+}
+
+
+
 
 /**
   For use with `fdProximaCenStellar()` to interpolate stellar properties

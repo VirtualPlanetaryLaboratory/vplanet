@@ -95,8 +95,9 @@
 #define OPT_HALTMANTLESOLIDIFIED  2314
 #define OPT_HALTATMDESISRUFCOOL   2315
 #define OPT_HALTALLPLANETSSOLID   2316
-#define OPT_RADIOHEATMODEL        2317
-#define OPT_MAGMOCATMMODEL        2318
+#define OPT_HALTALLPLANETSDESICC  2317
+#define OPT_RADIOHEATMODEL        2318
+#define OPT_MAGMOCATMMODEL        2319
 
 void AddModuleMagmOc(MODULE*,int,int);
 void BodyCopyMagmOc(BODY*,BODY*,int,int,int);
@@ -117,6 +118,7 @@ void ReadOptionsMagmOc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int
 int fbHaltMantleSolidified(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 int fbHaltAtmDesiSurfCool(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 int fbHaltAllPlanetsSolid(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltAllPlanetsDesicc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 void CountHaltsMagmOc(HALT*,int*);
 
 /* Verify Functions */

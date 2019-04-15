@@ -65,7 +65,10 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].bCalcFugacity         = src[iBody].bCalcFugacity;
   dest[iBody].bPlanetDesiccated     = src[iBody].bPlanetDesiccated;
   dest[iBody].bManQuasiSol          = src[iBody].bManQuasiSol;
-  dest[iBody].bMagmOcHalt           = src[iBody].bMagmOcHalt;
+  dest[iBody].bMagmOcHaltSolid      = src[iBody].bMagmOcHaltSolid;
+  dest[iBody].bMagmOcHaltDesicc     = src[iBody].bMagmOcHaltDesicc;
+  dest[iBody].bEscapeStop           = src[iBody].bEscapeStop;
+  /* Model indicators */
   dest[iBody].iRadioHeatModel       = src[iBody].iRadioHeatModel;
   dest[iBody].iMagmOcAtmModel       = src[iBody].iMagmOcAtmModel;
 }
@@ -214,6 +217,22 @@ void ReadHaltAllPlanetsSolid(BODY *body,CONTROL *control,FILES *files,OPTIONS *o
   }
 }
 
+void ReadHaltAllPlanetsDesicc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    control->Halt[iFile-1].bHaltAllPlanetsDesicc = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultInt(options,&control->Halt[iFile-1].bHaltAllPlanetsDesicc,files->iNumInputs);
+  }
+}
+
 /*
  * Read model options
  */
@@ -323,10 +342,16 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_HALTATMDESISRUFCOOL] = &ReadHaltAtmDesiSurfCool;
 
   sprintf(options[OPT_HALTALLPLANETSSOLID].cName,"bHaltAllPlanetsSolid");
-  sprintf(options[OPT_HALTALLPLANETSSOLID].cDescr,"Halt when all planets solidified");
+  sprintf(options[OPT_HALTALLPLANETSSOLID].cDescr,"Halt when all planets solidified?");
   sprintf(options[OPT_HALTALLPLANETSSOLID].cDefault,"0");
   options[OPT_HALTALLPLANETSSOLID].iType = 0;
   fnRead[OPT_HALTALLPLANETSSOLID] = &ReadHaltAllPlanetsSolid;
+
+  sprintf(options[OPT_HALTALLPLANETSDESICC].cName,"bHaltAllPlanetsDesicc");
+  sprintf(options[OPT_HALTALLPLANETSDESICC].cDescr,"Halt when all planets desiccated?");
+  sprintf(options[OPT_HALTALLPLANETSDESICC].cDefault,"0");
+  options[OPT_HALTALLPLANETSDESICC].iType = 0;
+  fnRead[OPT_HALTALLPLANETSDESICC] = &ReadHaltAllPlanetsDesicc;
 
   /* Model options */
 
@@ -896,14 +921,16 @@ e.g. if all the hydrogen is lost to space (= no more water in atmosphere) -> set
 void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   /* Mantle solidified? */
   if ((!body[iBody].bManSolid) && (body[iBody].dSolidRadius >= body[iBody].dRadius)) {
-    body[iBody].bManSolid = 1;
+    body[iBody].bManSolid       = 1;
+    body[iBody].dManMeltDensity = 4200;
+    body[iBody].dSolidRadius    = body[iBody].dRadius;
     /*
      * When mantle solidified:
      * Stop updating PotTemp, SurfTemp, SolidRadius, WaterMassSol, OxygenMassSol
      * But continue to update WaterMassMOAtm, OxygenMassMOAtm, HydrogenMassSpace, OxygenMassSpace
      */
-    SetDerivTiny(fnUpdate,iBody,update[iBody].iPotTemp          ,update[iBody].iPotTempMagmOc          );
-    SetDerivTiny(fnUpdate,iBody,update[iBody].iSurfTemp         ,update[iBody].iSurfTempMagmOc         );
+    // SetDerivTiny(fnUpdate,iBody,update[iBody].iPotTemp          ,update[iBody].iPotTempMagmOc          );
+    // SetDerivTiny(fnUpdate,iBody,update[iBody].iSurfTemp         ,update[iBody].iSurfTempMagmOc         );
     SetDerivTiny(fnUpdate,iBody,update[iBody].iSolidRadius      ,update[iBody].iSolidRadiusMagmOc      );
     SetDerivTiny(fnUpdate,iBody,update[iBody].iWaterMassSol     ,update[iBody].iWaterMassSolMagmOc     );
     SetDerivTiny(fnUpdate,iBody,update[iBody].iOxygenMassSol    ,update[iBody].iOxygenMassSolMagmOc    );
@@ -960,9 +987,22 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     }
   }
 
-  if (!body[iBody].bMagmOcHalt) {
+  if ((!body[iBody].bEscapeStop) && (body[iBody].dWaterMassEsc <= 0)) {
+    body[iBody].bEscapeStop = 1;
+    if (io->iVerbose >= VERBPROG) {
+      printf("%s's atmospheric escape stopped after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+    }
+  }
+
+  if (!body[iBody].bMagmOcHaltSolid) {
     if (body[iBody].bManQuasiSol || body[iBody].bManSolid) {
-      body[iBody].bMagmOcHalt = 1;
+      body[iBody].bMagmOcHaltSolid = 1;
+    }
+  }
+
+  if (!body[iBody].bMagmOcHaltDesicc) {
+    if (body[iBody].bPlanetDesiccated || body[iBody].bEscapeStop) {
+      body[iBody].bMagmOcHaltDesicc = 1;
     }
   }
 }
@@ -1170,15 +1210,35 @@ int fbHaltAllPlanetsSolid(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *up
   double dCountSolid = 0;
   int iBodyTemp;
 
-  if (body[iBody].bMagmOcHalt) {
+  if (body[iBody].bMagmOcHaltSolid) {
     for (iBodyTemp=1;iBodyTemp<evolve->iNumBodies;iBodyTemp++) {
-      if (body[iBodyTemp].bMagmOcHalt) {
+      if (body[iBodyTemp].bMagmOcHaltSolid) {
         dCountSolid++;
       }
     }
     if (dCountSolid == (evolve->iNumBodies-1)){
       if (io->iVerbose >= VERBPROG) {
         printf("HALT: All planets solidified after %f years. \n",evolve->dTime/YEARSEC);
+      }
+      return 1;
+    }
+  }
+  return 0;
+}
+
+int fbHaltAllPlanetsDesicc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  double dCountSolid = 0;
+  int iBodyTemp;
+
+  if (body[iBody].bMagmOcHaltDesicc) {
+    for (iBodyTemp=1;iBodyTemp<evolve->iNumBodies;iBodyTemp++) {
+      if (body[iBodyTemp].bMagmOcHaltDesicc) {
+        dCountSolid++;
+      }
+    }
+    if (dCountSolid == (evolve->iNumBodies-1)){
+      if (io->iVerbose >= VERBPROG) {
+        printf("HALT: All planets desiccated or escape stopped after %f years. \n",evolve->dTime/YEARSEC);
       }
       return 1;
     }
@@ -1196,6 +1256,9 @@ void CountHaltsMagmOc(HALT *halt,int *iNumHalts) {
   if (halt->bHaltAllPlanetsSolid) {
     (*iNumHalts)++;
   }
+  if (halt->bHaltAllPlanetsDesicc) {
+    (*iNumHalts)++;
+  }
 }
 
 void VerifyHaltMagmOc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
@@ -1207,6 +1270,9 @@ void VerifyHaltMagmOc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
   }
   if (control->Halt[iBody].bHaltAllPlanetsSolid) {
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltAllPlanetsSolid;
+  }
+  if (control->Halt[iBody].bHaltAllPlanetsDesicc) {
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltAllPlanetsDesicc;
   }
 }
 

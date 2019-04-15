@@ -991,9 +991,11 @@ struct BODY {
 	int bCalcFugacity;        /**< Need to calc oxygen fugacity */
 	int bPlanetDesiccated;    /**< Atmosphere desiccated */
 	int bManQuasiSol;         /**< Atmosphere desiccated & T_surf below 1000K */
-	int bMagmOcHalt;
-	int iRadioHeatModel;
-	int iMagmOcAtmModel;
+	int bMagmOcHaltSolid;	  	/**< Mantle solidifed or atm desiccated */
+	int bMagmOcHaltDesicc;  	/**< Atm desiccated or escape stopped*/
+	int bEscapeStop;          /**< Atmospheric escaped stopped */
+	int iRadioHeatModel;			/**< Which Radiogenic Heating model to use */
+	int iMagmOcAtmModel;			/**< Which Atmopsheric Flux model to use */
 	/* Primary variables */
 	double dPotTemp;          /**< Potential Temp of the mantle [K] */
 	double dSurfTemp;         /**< Surface Temp of the planet [K] */
@@ -1645,6 +1647,7 @@ struct HALT {
 	int bHaltMantleSolidified;    /**< Halt if mantle completely solidified */
 	int bHaltAtmDesiSurfCool;     /**< Halt if atmosphere desiccated & T_surf below 1000K */
 	int bHaltAllPlanetsSolid;			/**< Halt if all planets solidified (for multiplanet system) */
+	int bHaltAllPlanetsDesicc;	  /**< Halt if all planets desiccated (for multiplanet system) */
 };
 
 /* Units. These can be different for different bodies. If set

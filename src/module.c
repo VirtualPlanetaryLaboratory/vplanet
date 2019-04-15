@@ -1628,6 +1628,48 @@ void ForceBehaviorEqtideAtmesc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,
     body[iBody].bOcean = 0;
     body[iBody].dImK2Ocean = 0;
   }
+
+  /* Old way, in which Q is set by top layer. need a switch for this. 
+  for (iBody = 1; iBody<=evolve->iNumBodies-1; iBody++) {
+
+    // We think there is an envelope, but there isnt!
+    if (body[iBody].bEnv && (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass)) {
+      if (io->iVerbose > VERBERR) {
+        fprintf(stderr,"Envelope lost! Changing dTidalQ to:");
+      }
+      body[iBody].bEnv = 0;
+
+      // is there an ocean? lets set tidalq to that!
+      if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
+        if (io->iVerbose > VERBERR) {
+          fprintf(stderr," dTidalQOcean,\n");
+        }
+        body[iBody].dTidalQ = body[iBody].dTidalQOcean;
+        body[iBody].dK2 = body[iBody].dK2Ocean;
+        body[iBody].dImK2 = body[iBody].dImK2Ocean;
+      }
+      // there is not ocean, so lets use dTidalQRock!
+      else {
+        if (io->iVerbose > VERBERR) {
+          fprintf(stderr," dTidalQRock.\n");
+        }
+        body[iBody].dTidalQ = body[iBody].dTidalQRock;
+        body[iBody].dK2 = body[iBody].dK2Rock;
+        body[iBody].dImK2 = body[iBody].dImK2Rock;
+      }
+    }
+    // we think theres an ocean, but there isnt!!
+    else if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)) {
+      if (io->iVerbose > VERBERR) {
+        fprintf(stderr,"Ocean Lost! Switching dTidalQ to: dTidalQRock.\n");
+      }
+      body[iBody].dTidalQ = body[iBody].dTidalQRock;
+      body[iBody].dK2 = body[iBody].dK2Rock;
+      body[iBody].dImK2 = body[iBody].dImK2Rock;
+      body[iBody].bOcean = 0;
+    }
+  }
+*/
 }
 
 /* XXX RB: I think this subroutine can be cut. We want a ForceBehaviorStellarEqtide

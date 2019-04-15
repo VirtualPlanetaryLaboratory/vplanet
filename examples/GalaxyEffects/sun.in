@@ -1,0 +1,21 @@
+sName		sun		# Body's name
+#saModules       galhabit
+
+# Physical Parameters
+dMass		1		# Mass, negative -> Earth masses
+dRadius		0.0026		# Radius, negative -> Earth radii
+dObliquity	0
+dRotPeriod	0.2579		# Rotation period, negative -> days
+dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
+cColor 00ff00
+
+# The first body in the saBodyFiles list must be the central mass.
+# This body carries no orbital information => the coordinate system is bodycentric.
+
+
+# Some options are allowed to only appear in one file, but it can be primary or body.
+# That should really be documented!
+
+#iSciNot		12		# Decade to switch between normal/scientific notation
+
+saOutputOrder

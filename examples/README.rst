@@ -1,25 +1,25 @@
-VPLANET Examples
+VPLanet Examples
 ================
 
-This subdirectory contains examples of numerous ways to use `vplanet`. A brief
+This subdirectory contains examples of numerous ways to use `VPLanet`. A brief
 description of each is provided below, arranged by topic [with modules listed in brackets]. Click on the directory above to see scripts,
-plots, and more description of the physics. Use these scripts to reproduce published figures, or as a starting point to begin your own fundamental research. The simulations used to generate these figures are `validated with continuous integration <../tests>`_ with the identical (or representative, in the case of parameter sweeps) initial conditions. Looking for something not currently shown? E-mail Rory Barnes, rory@astro.washington.edu, to find out if that functionality is available and validated.
+plots, and more description of the physics. Use these scripts to reproduce published figures, or as a starting point to begin your own fundamental research. The simulations used to generate these figures are `validated with continuous integration <../tests>`_ with the identical (or representative, in the case of parameter sweeps) initial conditions. Looking for something not present? E-mail Rory Barnes, rory@astro.washington.edu, to inquire if that functionality is available and validated.
 
 **Atmospheres**
 ===============
 
-`AtmEscKepler-36 <AtMescKepler-36>`_: The loss of a hydrogen envelope due to stellar XUV flux. [AtmEsc, Stellar]
+`AbioticO2 <AbioticO2>`_: Production of abiotic oxygen on terrestrial worlds due to water photolyzation and hydrogen escape. [AtmEsc, Stellar]
 
-`Milankovitch <Milankovitch>`_: Earth's climate through one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings. [DistOrb, DistRot, POISE]
+`AtmEscKepler-36 <AtMescKepler-36>`_: The loss of a hydrogen envelope due to stellar XUV flux. [AtmEsc, STELLAR]
 
-`O2BuildUp <O2BuildUp>`_: Production of abiotic oxygen on terrestrial worlds due to water photolyzation and hydrogen escape. [AtmEsc, Stellar]
+`EarthClimate <EarthClimate>`_: Earth's climate through one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
 
-`VenusWaterLoss <VenusWaterLoss>`_: Water loss from Venus due to the Sun's XUV flux. [AtmEsc, Stellar]
+`VenusWaterLoss <VenusWaterLoss>`_: Water loss from Venus due to the Sun's XUV flux. [AtmEsc, STELLAR]
 
 **Galactic Effects**
 ====================
 
-`GalHabit <GalHabit>`_: Evolution of a wide binary's orbit due to radial migration in the galaxy and perturbations from passing stars. [Galhabit]
+`GalaxyEffects <GalaxyEffects>`_: Evolution of a wide binary's orbit due to radial migration in the galaxy and perturbations from passing stars. [GalHabit]
 
 **Interiors**
 =============
@@ -30,42 +30,49 @@ plots, and more description of the physics. Use these scripts to reproduce publi
 
 `RadHeat <RadHeat>`_: Radiogenic heating evolution in Earth's core, mantle and crust. [RadHeat]
 
+`TidalEarth <TidalEarth>`_: Internal/orbital evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]
+
 `VenusInterior <VenusInterior>`_: Thermal and magnetic evolution of Venus' interior (stagnant lid). [RadHeat, ThermInt]
 
 **Orbital Dynamics**
 ====================
 
+`ApseLock <ApseLock>`_: Evolution of a tidally-damped two-planet system into a state in which the major axes circulate with the same frequency. [Distorb, EqTide]
+
 `CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [Distorb, DistRot, EqTide]
 
-`Corot-7 <Corot-7>`_: Evolution of a tidally-damped two-planet system into a state in which the major axes circulate with the same frequency. [Distorb, EqTide]
+`ChaoticResonances <ChaoticResonances>`_: N-body integration of a planetary system in a chaotic eccentricity-inclination mean motion resonance. [SpiNBody]
 
-`EarthMoonTides <EarthMoonTides>`_: Evolution of the Earth-Moon system due to equilibrium tides. [EqTide]
+`CircumbinaryOrbit <CircumbinaryOrbit>`_: Orbital evolution of a circumbinary planet. [BINARY]
 
-`Kepler-16 <Kepler-16>`_: Orbital evolution of a circumbinary planet. [Binary]
-
-`SpiNBody <SpiNBody>`_: N-body integration of the Solar System. [SpiNBody]
+`EarthClimate <EarthClimate>`_: Earth's climate through one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
 
 `SSDistOrbDistRot <SSDistOrbDistRot>`_: Evolution of the Solar System planets' orbital and rotational angular momenta from approximate models. [DistOrb, DistRot]
+
+`TidalEarth <TidalEarth>`_: Internal/orbital evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]
+
+`TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTL equilibrium tide models. [EqTide]
 
 **Stars**
 =========
 
-`BinaryTides <BinaryTides>`_: Coupled stellar and tidal evolution of short-period binary stars. [EqTide, Stellar]
+`BinaryTides <BinaryTides>`_: Coupled stellar and tidal evolution of short-period binary stars. [EqTide, STELLAR]
 
-`MainSequence <MainSequence>`_: Pre-main sequence and main sequence evolution of stellar properties. [Stellar]
+`MagneticBraking <MagneticBraking>`_: Rotational evolution of stars under different magnetic braking assumptions. [STELLAR]
 
-`MagneticBraking <MagneticBraking>`_: Rotational evolution of stars under different magnetic braking assumptions. [Stellar]
+`StellarEvol <StellarEvol>`_: Pre-main sequence and main sequence evolution of stellar properties. [STELLAR]
 
 **Tidal Effects**
 =================
 
-`BinaryTides <BinaryTides>`_: Coupled stellar and tidal evolution of short-period binary stars. [EqTide, Stellar]
+`ApseLock <ApseLock>`_: Evolution of a tidally-damped two-planet system into a state in which the major axes circulate with the same frequency. [Distorb, EqTide]
+
+`BinaryTides <BinaryTides>`_: Coupled stellar and tidal evolution of short-period binary stars. [EqTide, STELLAR]
 
 `CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [Distorb, DistRot, EqTide]
 
-`Corot-7 <Corot-7>`_: Evolution of a tidally-damped two-planet system into a state in which the major axes circulate with the same frequency. [Distorb, EqTide]
-
-`EarthMoonTides <EarthMoonTides>`_: Evolution of the Earth-Moon system due to equilibrium tides. [EqTide]
-
 `IoHeat <IoHeat>`_: Tidal heating of Io. [EqTide]
 
+`TidalEarth <TidalEarth>`_: Internal/orbital evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]
+
+`TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTL equilibrium tide models. [EqTide]

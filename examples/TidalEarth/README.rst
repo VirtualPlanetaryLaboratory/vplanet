@@ -12,7 +12,6 @@ from its host star.
 **Author**            Peter Driscoll
 **Modules**           RadHeat ThermInt EqTide
 **Approx. runtime**   10 minutes
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/TidalEarth>`_
 ===================   ============
 
 This example shows the thermal, magnetic, and orbital evolution of an

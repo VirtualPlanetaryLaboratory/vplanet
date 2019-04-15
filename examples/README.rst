@@ -1,4 +1,4 @@
-VPLANET Examples
+VPLanet Examples
 ================
 
 This subdirectory contains examples of numerous ways to use `vplanet`. A brief
@@ -30,6 +30,8 @@ plots, and more description of the physics. Use these scripts to reproduce publi
 
 `RadHeat <RadHeat>`_: Radiogenic heating evolution in Earth's core, mantle and crust. [RadHeat]
 
+_`TidalEarth <TidalEarth>`_: Internal/orbital evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]
+
 `VenusInterior <VenusInterior>`_: Thermal and magnetic evolution of Venus' interior (stagnant lid). [RadHeat, ThermInt]
 
 **Orbital Dynamics**
@@ -40,6 +42,8 @@ plots, and more description of the physics. Use these scripts to reproduce publi
 `ApseLock <ApseLock>`_: Evolution of a tidally-damped two-planet system into a state in which the major axes circulate with the same frequency. [Distorb, EqTide]
 
 `TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTl equilibrium tide models [EqTide]
+
+_`TidalEarth <TidalEarth>`_: Internal/orbital evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]
 
 `CircumbinaryOrbit <CircumbinaryOrbit>`_: Orbital evolution of a circumbinary planet. [Binary]
 
@@ -68,3 +72,5 @@ plots, and more description of the physics. Use these scripts to reproduce publi
 `TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTl equilibrium tide models [EqTide]
 
 `IoHeat <IoHeat>`_: Tidal heating of Io. [EqTide]
+
+_`TidalEarth <TidalEarth>`_: Internal/orbital evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]

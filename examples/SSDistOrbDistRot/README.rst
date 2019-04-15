@@ -15,7 +15,6 @@ Orbital and rotational evolution of the Solar System.
                       | 112 seconds (:code:`womoon/vpl.in`)
                       | 25 seconds (:code:`marshnb/vpl.in`)
                       | 110 seconds (:code:`marsvpl/vpl.in`)
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/dist_solsys2>`_
 ===================   ============
 
 This example uses **DistOrb** to model the orbits of the solar system planets and

@@ -26,10 +26,10 @@ filepref = 'TidalEarth'
 dir_path = os.path.dirname(os.path.realpath(__file__))
 dirs = ["au0.01","au0.02","au0.05"]
 # Run the simulations
-#for dir in dirs:
-#    print("Running simulation in %s directory...\n" % dir)
-#    os.chdir(os.path.join(dir_path,dir))
-#    subprocess.call(['vplanet', 'vpl.in'])
+for dir in dirs:
+    print("Running simulation in %s directory...\n" % dir)
+    os.chdir(os.path.join(dir_path,dir))
+    subprocess.call(['vplanet', 'vpl.in'])
 # load data
 outputs = [vplot.GetOutput(str(os.path.join(dir_path,dir))) for dir in dirs]
 #out0 = vplot.GetOutput(dirs[0])

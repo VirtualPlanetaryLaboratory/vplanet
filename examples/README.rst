@@ -73,7 +73,7 @@ plots, and more description of the physics. Use these scripts to reproduce publi
 
 `CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [Distorb, DistRot, EqTide]
 
-
+`IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity, according to equilibrium tide theory. [EqTide, VSPACE]
 
 `TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]
 

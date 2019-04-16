@@ -12,7 +12,6 @@ the galactic tide, and passing field stars.
 **Author**            Russell Deitrick
 **Modules**           GalHabit
 **Approx. runtime**   6 minutes
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/galhabit>`_
 ===================   ============
 
 Wide orbits are subject to torques from the galactic tide, as well as impulses from

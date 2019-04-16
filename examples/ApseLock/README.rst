@@ -14,7 +14,6 @@ circulate with the same frequency after tidal damping.
                       EqTide
                       STELLAR
 **Approx. runtime**   500 seconds
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/corot7>`_
 ===================   ============
 
 In a planetary system consisting of two or more planets and in which at least one

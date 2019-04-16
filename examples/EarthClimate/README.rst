@@ -13,7 +13,6 @@ Annual and Milankovitch climate cycles on Earth.
                       DistOrb
                       DistRot
 **Approx. runtime**   5 minutes
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/Milankovitch>`_
 ===================   ============
 
 This example validates **VPLanet**'s 1-D climate model with dynamic ice sheets over annual

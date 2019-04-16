@@ -5,7 +5,7 @@ import os
 cwd = os.path.dirname(os.path.realpath(__file__))
 
 
-def test_SS_NBody():
+def test_SS_SpiNBody():
     """Test NBody Evolution."""
     # Remove old log file
     subprocess.run(['rm', 'SpiNBody.log'], cwd=cwd)
@@ -29,4 +29,4 @@ def test_SS_NBody():
 
 
 if __name__ == "__main__":
-    test_SS_NBody()
+    test_SS_SpiNBody()

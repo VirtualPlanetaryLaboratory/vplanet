@@ -15,7 +15,6 @@ Orbital and rotational evolution of the Solar System.
                       | 112 seconds (:code:`womoon/vpl.in`)
                       | 25 seconds (:code:`marshnb/vpl.in`)
                       | 110 seconds (:code:`marsvpl/vpl.in`)
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/dist_solsys2>`_
 ===================   ============
 
 This example uses **DistOrb** to model the orbits of the solar system planets and
@@ -35,20 +34,20 @@ To run this example
 
 .. code-block:: bash
 
-    # Run the main script
+    # Run the baseline case
     vplanet vpl.in
 
-    # Run the script without the Earth's moon
+    # Run without the Earth's moon
     cd womoon
     vplanet vpl.in
     cd ..
 
-    # Run the Mars N-Body script
+    # Run the Mars N-Body case
     cd marshnb
     vplanet vpl.in
     cd ..
 
-    # Run the Mars vplanet script
+    # Run the Mars vplanet case
     cd marsvpl
     vplanet vpl.in
     cd ..

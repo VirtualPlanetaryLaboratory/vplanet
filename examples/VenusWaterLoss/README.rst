@@ -12,7 +12,6 @@ Water loss on Venus from thermal escape processes.
 **Modules**           AtmEsc
                       STELLAR
 **Approx. runtime**   49 seconds
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/VenusWaterLoss>`_
 ===================   ============
 
 The Sun's XUV radiation likely removed water from Venus early in the history of the

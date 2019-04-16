@@ -11,7 +11,6 @@ Rotational evolution of stars due to magnetic effects.
 **Author**            David Fleming
 **Modules**           STELLAR
 **Approx. runtime**   2 minutes
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/MagneticBraking>`_
 ===================   ============
 
 Rotation period evolution for 0.1 and 1.0 solar-mass stars due to stellar

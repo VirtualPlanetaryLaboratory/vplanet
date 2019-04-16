@@ -14,8 +14,6 @@ An animation of this system is available `here <http://faculty.washington.edu/rk
 **Author**            Rory Barnes
 **Modules**           SpiNBody
 **Approx. runtime**   14 hr
-**Source code**       `vplanet <https://github.com/VirtualPlanetaryLaboratory/vplanet>`_,
-                      `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_
 ===================   ============
 
 To run this example

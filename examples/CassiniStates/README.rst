@@ -14,7 +14,6 @@ often called a a Cassini state.
                       DistOrb
                       DistRot
 **Approx. runtime**   54 seconds
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/cassini>`_
 ===================   ============
 
 A damped orbital-rotational system can enter a "Cassini state," in which

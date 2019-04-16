@@ -592,18 +592,21 @@ double fdImK2Total(BODY *body,int iBody) {
   @return Upper mantle k2 Love number
 */
 double fdK2Man(BODY *body,int iBody) {
-  return 1.5/(1+9.5*body[iBody].dShmodUMan/(STIFFNESS));
+  //  return 1.5/(1+9.5*body[iBody].dShmodUMan/(STIFFNESS));
+    return 1.5/(1+9.5*body[iBody].dShmodUMan/body[iBody].dStiffness);
 }
 
 double fdTidalQMan(BODY *body,int iBody) {
+  double ShmodUManArr;
+  ShmodUManArr = body[iBody].dShmodUMan*body[iBody].dMeltfactorUMan;
+  //return body[iBody].dDynamViscos*body[iBody].dMeanMotion/ShmodUManArr;
   return body[iBody].dDynamViscos*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
 }
 
 double fdImK2ManThermint(BODY *body,int iBody) {
-  double dDenom2;
-
-  dDenom2 = pow(1.5*body[iBody].dTidalQMan/body[iBody].dK2Man,2.);
-  return -(57./4)*body[iBody].dDynamViscos*body[iBody].dMeanMotion/((body[iBody].dStiffness)*(1.0+dDenom2));
+  double dDenom2 = pow(1.5*body[iBody].dTidalQMan/body[iBody].dK2Man,2.);
+  double imk2 = -(57./4)*body[iBody].dDynamViscos*body[iBody].dMeanMotion/((body[iBody].dStiffness)*(1.0+dDenom2));
+  return imk2;
 }
 
 /**
@@ -663,20 +666,25 @@ void AssignTidalProperties(BODY *body,EVOLVE *evolve,int iBody) {
   @param body Body struct
   @param iBody Index of body
 
-  @return Heat flow of erupted mantle melt
+  @return Heat flow of secular mantle cooling
 */
 double fdHflowSecMan(BODY *body,EVOLVE *evolve,int iBody) {
   double dHflowSecMan = 0;
 
   if (body[iBody].bThermint) {
     dHflowSecMan += fdPowerThermint(body,iBody);
+    //dHflowSecMan += fdHflowSecManThermint(body,iBody);
   }
   if (body[iBody].bEqtide) {
-    dHflowSecMan -= fdTidePower(body,iBody,evolve->iEqtideModel); // formerly dTidalPowerMan
+    //dHflowSecMan -= fdTidePower(body,iBody,evolve->iEqtideModel); // formerly dTidalPowerMan
+    dHflowSecMan -= body[iBody].dTidalPowMan;
   }
   // Should add RadHeat here
   return dHflowSecMan;
 }
+
+
+
 
 /**
   For use with `fdProximaCenStellar()` to interpolate stellar properties

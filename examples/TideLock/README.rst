@@ -11,7 +11,6 @@ This example shows tidal locking for the planet candidate Gl 581 d.
 **Author**            Rory Barnes
 **Modules**           EqTide
 **Approx. runtime**   10 seconds
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/IoHeat>`_
 ===================   ============
 
 Although Gl 581 d is no longer thought to be a planet, this example reproduces

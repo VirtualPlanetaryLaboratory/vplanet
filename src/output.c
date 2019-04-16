@@ -1637,10 +1637,10 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       if (output[iOut].iNum > 0) {
 	       if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
-	          // /* Useful for debugging
+	          /* Useful for debugging
 	           printf("%d %d\n",iBody,iOut);
 	           fflush(stdout);
-
+             */
 	         WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
 	       }
       }
@@ -1731,8 +1731,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
             for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++)
               dCol[iCol+iSubOut+iExtra]=dTmp[iSubOut];
             iExtra += (output[iOut].iNum-1);
-	           free(dTmp);
-	           dTmp = NULL;
+	          free(dTmp);
+	          dTmp = NULL;
           }
         }
       }

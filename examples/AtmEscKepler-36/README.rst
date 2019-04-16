@@ -12,7 +12,6 @@ Loss of a hydrogen envelope due to stellar XUV stripping.
 **Modules**           AtmEsc
                       STELLAR
 **Approx. runtime**   31 seconds
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/kepler36>`_
 ===================   ============
 
 Hydrogen-rich planets that are close to their host star can lose significant mass

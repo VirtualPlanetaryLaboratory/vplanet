@@ -11,8 +11,7 @@ Track water loss and oxygen build-up due to hydrodynamic atmospheric escape.
 **Author**            Rodrigo Luger
 **Modules**           AtmEsc
                       STELLAR
-**Approx. runtime**   10 minutes (!!)
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/o2buildup>`_
+**Approx. runtime**   10 minutes
 ===================   ============
 
 Water-rich terrestrial planets orbiting low mass stars may experience sustained

@@ -39,7 +39,7 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
-void AddModuleSpiNBody(MODULE*,int,int);
+void AddModuleSpiNBody(CONTROL*,MODULE*,int,int);
 void BodyCopySpiNBody(BODY*,BODY*,int,int,int);
 
 void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]);

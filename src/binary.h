@@ -52,7 +52,7 @@
 /* @cond DOXYGEN_OVERRIDE */
 
 void InitializeModuleBinary(CONTROL*,MODULE*);
-void AddModuleBinary(MODULE*,int,int);
+void AddModuleBinary(CONTROL*,MODULE*,int,int);
 void BodyCopyBinary(BODY*,BODY*,int,int,int);
 void InitializeBodyBinary(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyBinary(BODY*,CONTROL*,UPDATE*,int);

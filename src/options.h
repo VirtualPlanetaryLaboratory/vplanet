@@ -106,6 +106,11 @@
 #define OPT_YOBL                710
 #define OPT_ZOBL                720
 
+#define OPT_SURFACEWATERMASS    810 /**< Initial surface water mass */
+#define OPT_MINSURFACEWATERMASS 812 /**< Minimum surface water mass (desiccated below this) */
+#define OPT_ENVELOPEMASS        815 /**< Initial envelope mass */
+#define OPT_MINENVELOPEMASS     817 /**< Minimum envelope mass (evaporated below this) */
+
 /* @cond DOXYGEN_OVERRIDE */
 
 void InitializeOptions(OPTIONS*,fnReadOption*);

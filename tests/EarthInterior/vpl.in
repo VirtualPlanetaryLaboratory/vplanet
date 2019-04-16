@@ -8,9 +8,9 @@ bOverwrite	1			# Allow file overwrites?
 # s=string. An "a" indicates an array and multiple arguments are allowed/expected.
 
 # List of "body files" that contain body-specific parameters
-#saBodyFiles	sun.in $	# The host star
-#		earth.in	# Earth
-saBodyFiles earth.in
+saBodyFiles	sun.in $	# The host star
+		earth.in	# Earth
+
 
 # Array options can continue to the next line with a terminating "$". The $ can be
 # at the end of the string or not. Comments are allowed afterwards.
@@ -36,9 +36,9 @@ dMinValue	1e-10		# Minimum value of eccentricity/obliquity
 # Evolution Parameters
 bDoForward	1		# Perform a forward evolution?
 bVarDt		1		# Use variable timestepping?
-dEta		0.001		# Coefficient for variable timestepping
+dEta		0.1		# Coefficient for variable timestepping
 dStopTime	4.5e9  #1e10		# Stop time for evolution
-dOutputTime	4.5e9		# Output timesteps (assuming in body files)
+dOutputTime	1e7  # 4.5e9		# Output timesteps (assuming in body files)
 
 # Some options are only permitted in the primary file, some are forbidden.
 # That should really be documented!

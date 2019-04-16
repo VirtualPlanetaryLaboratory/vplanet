@@ -137,7 +137,7 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
-void AddModulePoise(MODULE*,int,int);
+void AddModulePoise(CONTROL*,MODULE*,int,int);
 void BodyCopyPoise(BODY*,BODY*,int,int,int);
 void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 

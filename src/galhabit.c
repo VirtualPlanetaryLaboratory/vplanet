@@ -1457,7 +1457,7 @@ void LogBodyGalHabit(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 
 /************* MODULE Functions ***********/
 
-void AddModuleGalHabit(MODULE *module,int iBody,int iModule) {
+void AddModuleGalHabit(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]              = GALHABIT;
 

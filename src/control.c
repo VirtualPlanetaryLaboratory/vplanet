@@ -100,12 +100,13 @@ void sort_output(OUTPUT *output, int sorted[]) {
 void InitializeControl(CONTROL *control,MODULE *module) {
   int iBody,iModule;
 
-  control->bOutputLapl=0; // XXX Shouldn't be module-specific lines here.
+  control->bOutputLapl=0; // XXX This should become part of EVOLVE -- RUSSELL
 
   control->iMassRad = malloc(control->Evolve.iNumBodies*sizeof(int));
   control->fnForceBehavior = malloc(control->Evolve.iNumBodies*sizeof(fnForceBehaviorModule*));
   control->fnForceBehaviorMulti = malloc(control->Evolve.iNumBodies*sizeof(fnForceBehaviorModule*));
   control->iNumMultiForce = malloc(control->Evolve.iNumBodies*sizeof(int));
+  control->Halt = malloc(control->Evolve.iNumBodies*sizeof(HALT));
 
   control->fnPropsAux = malloc(control->Evolve.iNumBodies*sizeof(fnPropsAuxModule*));
   control->fnPropsAuxMulti = malloc(control->Evolve.iNumBodies*sizeof(fnPropsAuxModule*));
@@ -121,9 +122,16 @@ void InitializeControl(CONTROL *control,MODULE *module) {
   }
 }
 
-/* This is called from Verify, after the update matrix has been
-   initialized. */
-void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
+/**
+  This function performs the following tasks:
+
+  1) Allocates control->Evolve.fnBodyCopy, iNumMultiProps, tmpUpdate, daDeriv,
+     and control->iNumMultiProps.
+  2) Initializes control->bOrbiters
+  3) Initializes control->Evolve.iNumModules
+
+ */
+void InitializeControlEvolve(BODY *body,CONTROL *control,MODULE *module,UPDATE *update) {
   int iBody,iModule,iSubStep;
 
   control->Evolve.fnBodyCopy = malloc(control->Evolve.iNumBodies*sizeof(fnBodyCopyModule*));
@@ -138,7 +146,7 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
       control->Evolve.fnBodyCopy[iBody] = malloc(module->iNumModules[iBody]*sizeof(fnBodyCopyModule));
 
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
-	control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyNULL;
+	       control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyNULL;
       }
   }
 
@@ -148,6 +156,24 @@ void InitializeControlEvolve(CONTROL *control,MODULE *module,UPDATE *update) {
     control->Evolve.daDeriv = malloc(4*sizeof(double**));
     for (iSubStep=0;iSubStep<4;iSubStep++) {
       control->Evolve.daDeriv[iSubStep] = malloc(control->Evolve.iNumBodies*sizeof(double*));
+    }
+  }
+
+  // Default to no orbiting bodies
+  control->bOrbiters = 0;
+
+  /* First we must determine all the primary variables. The user may not
+     input them, but instead a redundant variable. Yet these need to be
+     defined before we can call InitializeUpdate. */
+
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    /* First pass NumModules from MODULE -> CONTROL->EVOLVE */
+    control->Evolve.iNumModules[iBody] = module->iNumModules[iBody];
+
+    // If any body has an orbit related module initialized, we have orbiters!
+    if(body[iBody].bEqtide || body[iBody].bDistOrb || body[iBody].bPoise || body[iBody].bAtmEsc ||
+        body[iBody].bGalHabit || body[iBody].bSpiNBody) {
+      control->bOrbiters = 1;
     }
   }
 }
@@ -417,7 +443,7 @@ void LongHelp(OPTIONS *options,OUTPUT *output,char exe[]) {
  */
 
 void LineExit(char cFile[],int iLine) {
-  fprintf(stderr,"\t%s: Line %d\n",cFile,iLine);
+  fprintf(stderr,"\t%s: Line %d\n",cFile,iLine+1);
   exit(EXIT_INPUT);
 }
 
@@ -843,7 +869,8 @@ void InfileCopy(INFILE *dest,INFILE *src) {
   for (iLine=0;iLine<src->iNumLines;iLine++)
     dest->bLineOK[iLine] = src->bLineOK[iLine];
 
-  /* PHOTOCHEM fields */
+  /* PHOTOCHEM fields
   strcpy(dest->cSpecies,src->cSpecies);
   strcpy(dest->cReactions,src->cReactions);
+  */
 }

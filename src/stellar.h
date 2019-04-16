@@ -11,7 +11,7 @@
 #define RM12OMEGACRITFULLYCONVEC      1.82e-6           /**< Critical angular velocity (1/s) for fully convective stars, Reiners & Mohanty (2012) */
 #define RM12CONST                     (2.66e3 * 46.416) /**< dJ/dt constant [(kg^5 m^-10 s^-3)^1/3] from Reiners & Mohanty (2012) */
 #define SK72CONST                     5.0e-25           /**< dJ/dt constant from Skumanich 1972 (Repetto+2014) */
-#define MATT15T0                      9.5e23            /**< Matt+2015 T0 constant in Joules */
+#define MATT15T0                      6.3e23            /**< Matt+2015 T0 constant in Joules */
 #define MATT15X                       10.0              /**< Matt+2015 saturation ratio threshold */
 #define MATT15R0SUN                   2.168             /**< Matt+2015 solar Rossby number */
 #define MATT15TAUCZ                   1.115e6           /**< Matt+2015 solar TauCZ value in s */
@@ -50,6 +50,8 @@
 #define OPT_HZMODEL             1520 /**< Habitable zone model */
 #define OPT_MAGBRAKINGMODEL     1521 /**< Magnetic braking model */
 
+#define OPT_EVOVLERG            1522 /**< Whether or not to evolve stellar radius of gyration */
+
 /* Halt Functions */
 #define STELLARHALTSYSEND       5
 #define STELLARHALTBODYEND      5
@@ -77,7 +79,7 @@
 /* @cond DOXYGEN_OVERRIDE */
 
 void InitializeControlStellar(CONTROL*);
-void AddModuleStellar(MODULE*,int,int);
+void AddModuleStellar(CONTROL*,MODULE*,int,int);
 void BodyCopyStellar(BODY*,BODY*,int,int,int);
 void InitializeUpdateTmpBodyStellar(BODY*,CONTROL*,UPDATE*,int);
 

@@ -2947,7 +2947,7 @@ void LogBodyPoise(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDA
 
 /************* MODULE Functions ***********/
 
-void AddModulePoise(MODULE *module,int iBody,int iModule) {
+void AddModulePoise(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]                  = POISE;
 

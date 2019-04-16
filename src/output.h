@@ -57,6 +57,7 @@
 
 #define OUT_K2MAN               590   //Mantle k2 love number
 #define OUT_IMK2MAN             592   //Mantle Im(k2) love number
+#define OUT_TIDALQMAN           593
 #define OUT_VISCUMAN            595   //Viscosity UMTBL
 
 #define OUT_HECC                600
@@ -70,6 +71,7 @@
 #define OUT_ORBMEANMOTION	      630
 #define OUT_ORBPER	           	640
 #define OUT_ORBSEMI		          650
+#define OUT_CRITSEMI            651
 #define OUT_ORBANGMOM		        660
 #define OUT_ARGP                661
 #define OUT_MEANA               662
@@ -93,7 +95,7 @@ void WriteLogEntry(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput,FILE*,in
 
 void InitializeOutputFunctions(MODULE*,OUTPUT*,int);
 void WriteOutput(BODY*,CONTROL*,FILES*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput*,double,double);
-void WriteLog(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,fnWriteOutput*,time_t,int);
+void WriteLog(BODY*,CONTROL*,FILES*,MODULE*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,fnWriteOutput*,int);
 void InitializeOutput(OUTPUT*,fnWriteOutput*);
 void WriteTime(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 

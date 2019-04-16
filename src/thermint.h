@@ -5,6 +5,8 @@
   @date June 1 2015
 */
 
+// XXX Check for duplications in vplanet.h!
+
 // GLOBAL VARIABLE INDEXES
 #define TMAN             20                    /**< Index of TMAN (mantle temperature) global variable */
 #define TCORE            21                    /**< Index of TCORE (core temperature) global variable */
@@ -74,10 +76,11 @@
 /* VISCOSITY PROPERTIES */
 #define ACTVISCMAN       3e5                    /**< [J/mol] Mantle viscosity activation energy */
 #define ACTSHMODMAN      2e5                    /**< [J/mol] Mantle shear modulus activation energy */
-#define STIFFNESS        1e13                   /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100) */
-#define SHMODREF         6e6                    /**< [Pa] Reference kinematic mantle shear modulus */
-#define VISCREF          5e7                    /**< [m^2/s] Reference kinematic mantle viscosity */
-#define VISCJUMPMAN      2.7                    /**< [nd] Viscosity jump from upper to lower mantle */
+#define STIFFNESS        1.71e13                   /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100) */
+#define SHMODREF         1e6               /**< [Pa] Reference kinematic mantle shear modulus */
+#define VISCREF          6e7                    /**< [m^2/s] Reference kinematic mantle viscosity */
+#define DYNAMVISCREF     1.5e9                  /**< [m^2/s] Reference kinematic mantle viscosity */
+#define VISCJUMPMAN      2.40                   /**< [nd] Viscosity jump from upper to lower mantle */
 #define FIXVISCJUMPMAN   0                      /**< [nd] (default) Option to fix viscjumpulm. if =0 then viscLM is computed from TLMan. */
 #define VISCJUMPMMAN     10.                    /**< [nd] Viscosity jump from upper to average (mid) mantle */
 #define VISCMELTB        2.5                    /**< [nd] Viscosity-melt reduction coefficient "B" (DB15 eq 8) */
@@ -95,7 +98,7 @@
 #define DSOLIDUS         +1.993e4               /**< [K] Solidus D coefficient */
 #define DTLIQMAN         +500.0                 /**< [K] Mantle liquidus offset, T_liq=T_sol+DTLIQMAN */
 #define DLIND            7000.0*KM              /**< [m] Lindemann's law length scale for iron liquidus "D_Fe" (DB15 A23) */
-#define TREFLIND         5705.0                 /**< [K] Lindemann's law reference temp. "T_Fe0" (DB15 A23) */
+#define TREFLIND         5451.6                 /**< [K] Lindemann's law reference temp. "T_Fe0" (DB15 A23) */
 #define DVLIQDTEMP       8e17                   /**< [m^3/K] Approximation of change in mantle liquid volume with T_m, DV_liq/DT  (DB15) */
 #define ERUPTEFF         0.1                    /**< [nd] (Default) Mantle melt heat loss eruption efficiency */
 /* Continental Crust */
@@ -105,10 +108,10 @@
 #define CRUSTACCRFRAC    0.015                  /**< [nd] Constant fraction of oceanic crust accreted onto continent */
 #define CRUSTINSOFACT    (65.)/(94.)            /**< [nd] Reduction in heat conducted through contintental crust compared to oceanic crust (Jaupart 07, table 3) */
 /* CORE CHEMISTRY */
-#define DTCHIREF         300.                   /**< [K] Core reference liquidus depression */
-#define CHI_OC_E         0.18                   /**< [nd] Earth's outer core light element concentration */
-#define PARTITION_CHI_CORE (ERICB)/(ERCORE)     /**< [nd] Core light element partition coefficent */
-#define CHI_IC_E         PARTITION_CHI_CORE*CHI_OC_E /**< [nd] Inner core light element concentration in Earth  (CHI_IC_E=partition*CHI_OC_E) */
+#define DTCHIREF         0.0                    /**< [K] Core reference liquidus depression */
+#define CHI_OC_E         0.10                   /**< [nd] Earth's outer core light element concentration */
+#define PARTITION_CHI_CORE 1e-2                 /**< [nd] Core light element partition coefficent */
+#define CHI_IC_E         CHI_OC_E*PARTITION_CHI_CORE  //PARTITION_CHI_CORE*CHI_OC_E /**< [nd] Inner core light element concentration in Earth  (CHI_IC_E=partition*CHI_OC_E) */
 #define EMASSOC_CHI      CHI_OC_E*EMASSOC       /**< [kg] Mass of light elements (Chi) in Earth's outer core */
 #define EMASSIC_CHI      CHI_IC_E*EMASSIC       /**< [kg] Mass of light elements (Chi) in Earth's inner core */
 #define EMASSCORE_CHI    EMASSOC_CHI+EMASSIC_CHI/**< [kg] Total core light element mass of Earth (conserved) */
@@ -121,18 +124,18 @@
 #define ADJUMPC2CMB      0.8                    /**< [nd] Adiabatic temperature jump from average core to CMB "epsilon_c" */
 /* MAGNETIC DYNAMO PROPERTIES */
 #define MAGPERM          4*PI*1e-7              /**< [H/m] Magnetic permeability constant */
-#define MAGMOMCOEF       0.146                  /**< [nd] Saturation constant for fast rotating dipolar dynamos (OC2006) */
+#define MAGMOMCOEF       0.155                  /**< [nd] Saturation constant for fast rotating dipolar dynamos (OC2006) */
 #define ELECCONDCORE     10e5                   /**< [S/m] Electrical conductivity of core  */
 #define LORENTZNUM       2.5e-8                 /**< [W Ohm/K] Lorentz number, relates thermal and electrical conductivity */
 #define EMAGMOM          80e21                  /**< [Am^2] Earth's present day magnetic moment */
 #define EPRESSWIND       2.6761e-9              /**< [N/m^2] Earth's solar wind pressure: Psw=m_proton*n_sw*v_sw^2 (DB13) */
 #define EMAGPAUSERAD     9.103*(ERADIUS)        /**< [m] Earth's magnetopause radius (DB13) */
+#define IMK2MANORBMODEL  1                      /**< [nd] Option for ImK2 model to use in orbital equations */
 
 //void InitializeControlThermint(CONTROL*);
-void fvAddModuleThermint(MODULE*,int,int);
+void fvAddModuleThermint(CONTROL*,MODULE*,int,int);
 void fvBodyCopyThermint(BODY*,BODY*,int,int,int);
 void fvInitializeBodyThermint(BODY*,CONTROL*,UPDATE*,int,int);
-//void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 //void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
@@ -141,6 +144,7 @@ void fvInitializeBodyThermint(BODY*,CONTROL*,UPDATE*,int,int);
 #define OPTENDTHERMINT      1900                /**< End of THERMINT options indexes */
 
 /* Scalar Properties */
+#define OPT_TSURF	    1709		/**< Surface temperature */
 #define OPT_TMAN	    1710		/**< Average mantle temperature */
 #define OPT_TUMAN	    1711		/**< Temperature base of upper mantle boundary layer */
 #define OPT_TLMAN	    1712		/**< Temperature top of lower mantle boundary layer */
@@ -229,11 +233,13 @@ void fvInitializeBodyThermint(BODY*,CONTROL*,UPDATE*,int,int);
 #define OPT_ADJUMPM2LM      1806                /**< [nd] Adiabatic temperature jump from average mantle to top of lower mantle thermal boundary layer: "epsilon_LM" */
 #define OPT_ADJUMPC2CMB     1807                /**< [nd] Adiabatic temperature jump from average core to core-mantle boundary: "epsilon_c" */
 #define OPT_ELECCONDCORE    1808                /**< [S/m] Electrical conductivity of core */
+#define OPT_IMK2MANORBMODEL 1809                /**< [nd] Option of ImK2 model to use in orbital equations */
 /* End vemcee parameters */
 
 /* Options Functions */
 void fvHelpOptionsThermint(OPTIONS*);
 void fvReadTMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadTSurf(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadTCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadViscJumpMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadViscRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
@@ -253,7 +259,6 @@ void fvReadStagLid(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadManHFlowPref(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadMagMomCoef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadPresSWind(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
-/* vemcee parameters */
 void fvReadActViscMan(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadShModRef(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadStiffness(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
@@ -263,6 +268,7 @@ void fvReadAdJumpM2UM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadAdJumpM2LM(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadAdJumpC2CMB(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void fvReadElecCondCore(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
+void fvReadImK2ManOrbModel(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 /* end vemcee parameters */
 
 void fvInitializeOptionsThermint(OPTIONS*,fnReadOption[]);
@@ -492,7 +498,6 @@ double fdHfluxUMan(BODY*,int);
 double fdHfluxLMan(BODY*,int);
 double fdHfluxCMB(BODY*,int);
 double fdHflowUMan(BODY*,int);
-double fdHflowSecMan(BODY*,int);
 double fdHflowLMan(BODY*,int);
 double fdHflowCMB(BODY*,int);
 double fdHflowMeltMan(BODY*,int);
@@ -503,6 +508,7 @@ double fdPowerGravIC(BODY*,UPDATE*,int);
 double fdTidalPowMan(BODY*,int);
 double fdHflowSurf(BODY*,int);
 double fdHfluxSurf(BODY*,int);
+double fdHflowSecManThermint(BODY*,int);
 double fdRIC(BODY*,int);
 double fdDRICDTCMB(BODY*,int);
 double fdChiOC(BODY*,int);
@@ -525,7 +531,7 @@ double fdMagMom(BODY*,int);
 double fdPresSWind(BODY*,int);
 double fdMagPauseRad(BODY*,int);
 double fdSurfEnFlux(BODY*,SYSTEM*,UPDATE*,int,int);
-
+double fdPowerThermint(BODY*,int);
 
 /* MATH  FUNCTIONS */
 double cube(double);

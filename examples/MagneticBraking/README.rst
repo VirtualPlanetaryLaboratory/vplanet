@@ -36,4 +36,4 @@ Expected output
    :align: center
 
    Rotation period evolution for a 0.1 and 1 Msun star due to stellar evolution
-   (Baraffe et al. (2015)) and one of the 3 available magnetic braking laws.
+   (Baraffe et al. (2015) and one of the 3 available magnetic braking laws.

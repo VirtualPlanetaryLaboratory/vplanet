@@ -163,6 +163,8 @@ void FinalizeUpdateOxygenMassSpace(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_WATERFRACMELT      2325
 #define OUT_RADIOPOWER         2326
 #define OUT_TIDALPOWER         2327
+#define OUT_SEMIMAJORAXIS      2328
+#define OUT_HZINNEREDGE        2329
 
 void HelpOutputMagmOc(OUTPUT*);
 void InitializeOutputMagmOc(OUTPUT*,fnWriteOutput[]);
@@ -185,6 +187,8 @@ void WriteNetFluxAtmo(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,
 void WriteWaterFracMelt(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteRadioPower(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTidalPower(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteSemiMajorAxis(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteHZInnerEdge(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsMagmOc(CONTROL*,FILE*);

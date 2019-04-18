@@ -987,10 +987,16 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     }
   }
 
-  if ((!body[iBody].bEscapeStop) && (body[iBody].dWaterMassEsc <= 0)) {
-    body[iBody].bEscapeStop = 1;
+  // if ((!body[iBody].bEscapeStop) && (body[iBody].dWaterMassEsc <= 0)) {
+  //   body[iBody].bEscapeStop = 1;
+  //   if (io->iVerbose >= VERBPROG) {
+  //     printf("%s's atmospheric escape stopped after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+  //   }
+  // }
+
+  if ((body[iBody].bRunaway) && (body[iBody].dHZInnerEdge <= body[iBody].dSemi)) {
     if (io->iVerbose >= VERBPROG) {
-      printf("%s's atmospheric escape stopped after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+      printf("%s enters habitable zone after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
   }
 
@@ -1001,7 +1007,7 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
   }
 
   if (!body[iBody].bMagmOcHaltDesicc) {
-    if (body[iBody].bPlanetDesiccated || body[iBody].bEscapeStop) {
+    if (body[iBody].bPlanetDesiccated || !body[iBody].bRunaway) {
       body[iBody].bMagmOcHaltDesicc = 1;
     }
   }
@@ -1238,7 +1244,7 @@ int fbHaltAllPlanetsDesicc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *u
     }
     if (dCountSolid == (evolve->iNumBodies-1)){
       if (io->iVerbose >= VERBPROG) {
-        printf("HALT: All planets desiccated or escape stopped after %f years. \n",evolve->dTime/YEARSEC);
+        printf("HALT: All planets desiccated or reached HZ after %f years. \n",evolve->dTime/YEARSEC);
       }
       return 1;
     }
@@ -1443,6 +1449,28 @@ void WriteTidalPower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   }
 }
 
+void WriteSemiMajorAxis(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dSemi;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
+void WriteHZInnerEdge(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dHZInnerEdge;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
 // similar to initialize options
 void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
@@ -1584,6 +1612,24 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALPOWER].iNum = 1;
   output[OUT_TIDALPOWER].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_TIDALPOWER] = &WriteTidalPower;
+
+  sprintf(output[OUT_SEMIMAJORAXIS].cName,"SemiMajorAxis");
+  sprintf(output[OUT_SEMIMAJORAXIS].cDescr,"Semi Major Axis of the planet's orbit");
+  sprintf(output[OUT_SEMIMAJORAXIS].cNeg,"AU");
+  output[OUT_SEMIMAJORAXIS].bNeg = 1;
+  output[OUT_SEMIMAJORAXIS].dNeg = 1/AUM; // division factor to get from SI to desired unit
+  output[OUT_SEMIMAJORAXIS].iNum = 1;
+  output[OUT_SEMIMAJORAXIS].iModuleBit = MAGMOC; //name of module
+  fnWrite[OUT_SEMIMAJORAXIS] = &WriteSemiMajorAxis;
+
+  sprintf(output[OUT_HZINNEREDGE].cName,"HZInnerEdge");
+  sprintf(output[OUT_HZINNEREDGE].cDescr,"Inner Edge of the Habitable Zone (Runaway Greenhouse)");
+  sprintf(output[OUT_HZINNEREDGE].cNeg,"AU");
+  output[OUT_HZINNEREDGE].bNeg = 1;
+  output[OUT_HZINNEREDGE].dNeg = 1/AUM; // division factor to get from SI to desired unit
+  output[OUT_HZINNEREDGE].iNum = 1;
+  output[OUT_HZINNEREDGE].iModuleBit = MAGMOC; //name of module
+  fnWrite[OUT_HZINNEREDGE] = &WriteHZInnerEdge;
 }
 
 //========================= Finalize Variable Functions ========================

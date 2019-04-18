@@ -1589,6 +1589,11 @@ void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *updat
       body[iBody].dWaterMassEsc  = 0;
       body[iBody].dOxygenMassEsc = 0;
     }
+
+  /* Get inner edge of the habitable zone (Runaway greenhouse) */
+  double dFlux = fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass);
+  body[iBody].dHZInnerEdge = pow(4 * PI * dFlux /  (body[0].dLuminosity * pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5)), -0.5);
+
   }
 }
 

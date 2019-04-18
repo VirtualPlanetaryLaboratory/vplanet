@@ -1038,6 +1038,7 @@ struct BODY {
 	/* Variables for the connection between magmoc and atmesc */
 	double dWaterMassEsc;     /**< Water mass escaped per time */
 	double dOxygenMassEsc;    /**< Oxygen mass escaped per time */
+	double dHZInnerEdge;      /**< Inner edge of habitable zone (runaway) */
 };
 
 /* SYSTEM contains properties of the system that pertain to

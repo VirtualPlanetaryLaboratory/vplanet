@@ -50,16 +50,11 @@ def ReadHNBody(FileName):
 
 SS = vpl.GetOutput()
 
-#star = Planet()
-#Time, dt, star.a, star.e, star.i, star.LongP, star.LongA, star.MeanA, AngMom, OrbEnergy = np.loadtxt('SpiNBody.Star.forward', unpack=True)
-
 hnEarth = ReadHNBody('plan3.dat')
 hnEarth.Mass = 1.
 
 
-#hnarray = (hnEarth.Time <= EndTime)
-#array   = (hnEarth.Time <= EndTime)
-fig,([ax1,ax2],[ax3,ax4],[ax5,ax6])=plt.subplots(3,2,figsize=[12,16])
+fig,([ax1,ax2],[ax3,ax4],[ax5,ax6])=plt.subplots(3,2,figsize=[14,16])
 
 ax1.plot(hnEarth.Time,hnEarth.a,color=vpl.colors.red)
 ax1.plot(SS.Earth.Time,SS.Earth.SemiMajorAxis,'k')
@@ -75,27 +70,36 @@ ax2.set_ylabel('Eccentricity')
 plt.subplot(3,2,3)
 plt.plot(hnEarth.Time, hnEarth.i,color=vpl.colors.red)
 plt.plot(SS.Earth.Time, SS.Earth.SpiNBodyInc,'k')
-
 #plt.xlabel('Time (yrs)')
+plt.legend(['HNBody','VPLanet'],loc='upper left')
 plt.ylabel('Inclination ($^\circ$)')
 
 plt.subplot(3,2,4)
-plt.plot(hnEarth.Time, hnEarth.LongP,color=vpl.colors.red)
-plt.plot(SS.Earth.Time, SS.Earth.LongP,'k')
+plt.plot(hnEarth.Time, hnEarth.LongP,color=vpl.colors.red,marker='.',linewidth=0)
+plt.plot(SS.Earth.Time, SS.Earth.LongP,'k',marker='.',linewidth=0)
+plt.xlabel('Time (yrs)')
+plt.ylim(0,360)
 plt.ylabel('Longitude of Pericenter ($^\circ$)')
 
 plt.subplot(3,2,5)
-plt.plot(hnEarth.Time, hnEarth.LongA,color=vpl.colors.red)
-plt.plot(SS.Earth.Time, SS.Earth.SpiNBodyLongA,'k')
+plt.plot(hnEarth.Time, hnEarth.LongA,color=vpl.colors.red,marker='.',linewidth=0)
+plt.plot(SS.Earth.Time, SS.Earth.SpiNBodyLongA,color='k',marker='.',linewidth=0)
+plt.ylim(0,360)
 plt.ylabel('Longitude of Ascending Node ($^\circ$)')
 plt.xlabel('Time (yrs)')
-plt.legend(['HNBody','VPLanet'])
+
+
+etot = (SS.Sun.TotOrbEnergy/SS.Sun.TotOrbEnergy[0] - 1)*1e9
+jtot = (SS.Sun.TotAngMom/SS.Sun.TotAngMom[0] - 1)*1e11
 
 plt.subplot(3,2,6)
-plt.plot(hnEarth.Time, hnEarth.MeanA,color=vpl.colors.red)
-plt.plot(SS.Earth.Time, SS.Earth.MeanAnomaly,'k')
-plt.ylabel('Mean Anomaly ($^\circ$)')
+plt.plot(SS.Sun.Time,etot,color=vpl.colors.orange,label=(r'Energy $\times 10^9$'))
+plt.plot(SS.Sun.Time,jtot,color=vpl.colors.purple,label=(r'Ang. Mom. $\times 10^{11}$'))
+plt.xlabel('Time (yr)', fontsize=16)
+plt.ylabel(r'$(\Delta E / E - 1)/10^{9}$', fontsize=16)
+plt.ylabel(r"$\Delta$E,  $\Delta$J")
 plt.xlabel('Time (yrs)')
+plt.legend(loc='upper left')
 
 if (sys.argv[1] == 'pdf'):
     plt.savefig('SS_NBody.pdf')
@@ -103,21 +107,3 @@ if (sys.argv[1] == 'png'):
     plt.savefig('SS_NBody.png')
 
 plt.close()
-
-#Plot the fractional angular momentum over time
-#fig,([ax1,ax2])=plt.subplots(2,1,figsize=[8,8])
-
-#plt.subplot(2,1,1)
-#dEta=(AngMom/AngMom[0]-1)
-#plt.plot(Time,dEta*1e11)
-#plt.ylabel(r'$(\Delta L / L - 1)/10^{11}$', fontsize=16)
-
-#Now for energy
-#plt.subplot(2,1,2)
-#Energy = OrbEnergy
-#dEnergy = (Energy/Energy[0]-1)
-#plt.plot(Time,dEnergy*1e9,'r')
-#plt.xlabel('Time (yr)', fontsize=16)
-#plt.ylabel(r'$(\Delta E / E - 1)/10^{9}$', fontsize=16)
-#plt.savefig('SpiNBody_Conservation.pdf')
-#plt.savefig('SpiNBody_Conservation.png')

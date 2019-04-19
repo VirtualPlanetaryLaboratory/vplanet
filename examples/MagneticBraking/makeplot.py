@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 import sys
+import vplot as vpl
 
 # Check correct number of arguments
 if (len(sys.argv) != 2):
@@ -30,7 +31,7 @@ ms = ["a_matt", "a_reiners", "a_sk"]
 gs = ["b_matt", "b_reiners", "b_sk"]
 labels = ["Matt et al. (2015)", "Reiners & Mohanty (2012)",
           "Repetto & Nelemans (2014)"]
-colors = ["C0", "C1", "C2"]
+colors = [vpl.colors.orange, vpl.colors.dark_blue, vpl.colors.pale_blue]
 
 fig, ax = plt.subplots()
 
@@ -46,9 +47,9 @@ for ii in range(len(ms)):
     ax.plot(g[:,0], g[:,6], lw=3, ls="--", color=colors[ii])
 
 # Annotate
-ax.plot([500], [500], lw=3, ls="-", color="C0", label="Matt et al. (2015)")
-ax.plot([500], [500], lw=3, ls="-", color="C1", label="Reiners & Mohanty (2012)")
-ax.plot([500], [500], lw=3, ls="-", color="C2", label="Repetto & Nelemans (2014)")
+ax.plot([500], [500], lw=3, ls="-", color=vpl.colors.orange, label="Matt et al. (2015)")
+ax.plot([500], [500], lw=3, ls="-", color=vpl.colors.dark_blue, label="Reiners & Mohanty (2012)")
+ax.plot([500], [500], lw=3, ls="-", color=vpl.colors.pale_blue, label="Repetto & Nelemans (2014)")
 ax.plot([500], [500], lw=3, ls="-", color="C7", label="M = 0.1 M$_{\odot}$")
 ax.plot([500], [500], lw=3, ls="--", color="C7", label="M = 1 M$_{\odot}$")
 

@@ -63,7 +63,7 @@ axes[1,0].scatter(time, varpi, color=color, s=10, zorder=-1)
 axes[1,0].set_xlim(time.min(),time.max())
 axes[1,0].set_ylim(0,360)
 axes[1,0].set_xlabel("Time [yr]")
-axes[1,0].set_ylabel("Longitude of the Periapsis [$^{\circ}$]")
+axes[1,0].set_ylabel("Longitude of Periapsis [$^{\circ}$]")
 
 ## Lower right: Longitude of the ascending node ##
 axes[1,1].scatter(time, longa, color=color, s=10, zorder=-1)
@@ -72,7 +72,7 @@ axes[1,1].scatter(time, longa, color=color, s=10, zorder=-1)
 axes[1,1].set_xlim(time.min(),time.max())
 axes[1,1].set_ylim(0,360)
 axes[1,1].set_xlabel("Time [yr]")
-axes[1,1].set_ylabel("Longitude of the\n Ascending Node [$^{\circ}$]")
+axes[1,1].set_ylabel("Longitude of\n Ascending Node [$^{\circ}$]")
 
 fig.tight_layout()
 fig.subplots_adjust(wspace=0.4)

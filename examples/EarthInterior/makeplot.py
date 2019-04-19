@@ -5,7 +5,8 @@ import vplot
 import scipy.signal as sig
 #plt.rcParams["text.usetex"]=True
 #plt.rcParams["text.latex.unicode"]=True
-plt.rcParams.update({'font.size':15,'legend.fontsize':15})
+plt.rcParams.update({'font.size':16,'legend.fontsize':15})
+
 import sys
 
 # Check correct number of arguments
@@ -20,7 +21,7 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
 
 out = vplot.GetOutput()
 # Print final state
-print('Final: t=%.3f TUMan=%f TMan=%f TCMB=%f TCore=%f HflowUMan=%.1f HflowCMB=%.1f RadPowerTotal=%f RadPowerMan=%.1f RadPowerCore=%.1f MagMom=%f RIC=%f'%(out.earth.Time[-1],out.earth.TUMan[-1],out.earth.TMan[-1],out.earth.TCMB[-1],out.earth.TCore[-1],out.earth.HflowUMan[-1],out.earth.HflowCMB[-1],out.earth.RadPowerTotal[-1],out.earth.RadPowerMan[-1],out.earth.RadPowerCore[-1],out.earth.MagMom[-1],out.earth.RIC[-1]))
+#print('Final: t=%.3f TUMan=%f TMan=%f TCMB=%f TCore=%f HflowUMan=%.1f HflowCMB=%.1f RadPowerTotal=%f RadPowerMan=%.1f RadPowerCore=%.1f MagMom=%f RIC=%f'%(out.earth.Time[-1],out.earth.TUMan[-1],out.earth.TMan[-1],out.earth.TCMB[-1],out.earth.TCore[-1],out.earth.HflowUMan[-1],out.earth.HflowCMB[-1],out.earth.RadPowerTotal[-1],out.earth.RadPowerMan[-1],out.earth.RadPowerCore[-1],out.earth.MagMom[-1],out.earth.RIC[-1]))
 
 # Plots
 rows=3
@@ -35,46 +36,52 @@ plt.plot(out.earth.Time,out.earth.TUMan,color=vplot.colors.orange,linestyle='-',
 plt.plot(out.earth.Time,out.earth.TLMan,color=vplot.colors.pale_blue,linestyle='-',label=r'$T_{LM}$')
 plt.plot(out.earth.Time,out.earth.TCMB,color=vplot.colors.purple,linestyle='-',label=r'$T_{CMB}$')
 plt.plot(out.earth.Time,out.earth.TCore,'k-',label=r'$T_{C}$')
-plt.legend(loc='best',ncol=2,frameon=False,columnspacing=1)
+plt.legend(loc='best',ncol=2,frameon=True,columnspacing=1)
 plt.ylabel('Temperature (K)')
 plt.xlabel('Time (Gyr)')
 plt.ylim(0,10000)
+plt.xticks([0,1,2,3,4])
 panel += 1
 plt.subplot(rows,cols,panel)
 plt.plot(out.earth.Time,out.earth.HflowUMan,color=vplot.colors.red,linestyle='-',label=r'$Q_{UMan}$')
 plt.plot(out.earth.Time,out.earth.HflowCMB,color=vplot.colors.orange,linestyle='-',label=r'$Q_{CMB}$')
 plt.plot(out.earth.Time,out.earth.RadPowerMan,color=vplot.colors.pale_blue,linestyle='-',label=r'$Q_{Rad,Man}$')
 plt.plot(out.earth.Time,out.earth.RadPowerCore,'k-',label=r'$Q_{Rad,Core}$')
-plt.legend(loc='best',frameon=False)
+plt.legend(loc='best',frameon=True)
 plt.ylabel('Heat Flow (TW)')
 plt.xlabel('Time (Gyr)')
 plt.ylim(0,150)
+plt.xticks([0,1,2,3,4])
 panel += 1
 plt.subplot(rows,cols,panel)
 plt.plot(out.earth.Time,out.earth.BLUMan,label=r'$\delta_{UM}$')
 plt.plot(out.earth.Time,out.earth.BLLMan,label=r'$\delta_{LM}$')
-plt.legend(loc='best',frameon=False)
+plt.legend(loc='best',frameon=True)
 plt.ylabel(r'Boundary Layer Depths (km)')
 plt.xlabel('Time (Gyr)')
+plt.xticks([0,1,2,3,4])
 panel += 1
 plt.subplot(rows,cols,panel)
 plt.semilogy(out.earth.Time,out.earth.ViscUMan,label=r'$\nu_{UM}$')
 plt.semilogy(out.earth.Time,out.earth.ViscLMan,label=r'$\nu_{LM}$')
-plt.legend(loc='best',frameon=False)
+plt.legend(loc='best',frameon=True)
 plt.ylabel(r'Mantle Viscosity ($m^2s^{-1}$)')
 plt.xlabel('Time (Gyr)')
 plt.ylim(1e12,1e19)
+plt.xticks([0,1,2,3,4])
 panel += 1
 plt.subplot(rows,cols,panel)
 plt.plot(out.earth.Time,out.earth.FMeltUMan)
 plt.ylabel(r'Melt Fraction Upper Mantle (n.d.)')
 plt.xlabel('Time (Gyr)')
+plt.xticks([0,1,2,3,4])
 panel += 1
 plt.subplot(rows,cols,panel)
 plt.plot(out.earth.Time,out.earth.MeltMassFluxMan*1e-6)
 plt.ylabel(r'Melt Mass Flux Mantle ($\times 10^6$ kg$/$s)')
 plt.xlabel('Time (Gyr)')
 plt.ylim(0,100)
+plt.xticks([0,1,2,3,4])
 
 vplot.make_pretty(fig)
 if (sys.argv[1] == 'pdf'):
@@ -97,20 +104,23 @@ plt.subplot(rows,cols,panel)
 plt.plot(out.earth.Time,out.earth.CoreBuoyTherm*1e13,label='Thermal')
 plt.plot(out.earth.Time,out.earth.CoreBuoyCompo*1e13,label='Compositional')
 plt.plot(out.earth.Time,out.earth.CoreBuoyTotal*1e13,label='Total')
-plt.legend(loc='best',frameon=False)
+plt.legend(loc='best',frameon=True)
 plt.ylabel(r'Core Buoyancy Flux ($\times10^{-13}$ m$^2/$s$^3$)')
 plt.xlabel('Time (Gyr)')
+plt.xticks([0,1,2,3,4])
 panel += 1
 plt.subplot(rows,cols,panel)
 plt.plot(out.earth.Time,out.earth.MagMom,label='MagMom')
 plt.ylim(0,2)
 plt.ylabel('Magnetic Moment (E. Units)')
 plt.xlabel('Time (Gyr)')
+plt.xticks([0,1,2,3,4])
 panel += 1
 plt.subplot(rows,cols,panel)
 plt.plot(out.earth.Time,out.earth.MagPauseRad)
 plt.ylabel(r'Magnetopause Radius (E. Units)')
 plt.xlabel('Time (Gyr)')
+plt.xticks([0,1,2,3,4])
 #panel += 1
 #plt.subplot(rows,cols,panel)
 #plt.plot(out.earth.Time,out.earth.ChiOC,label='ChiOC')

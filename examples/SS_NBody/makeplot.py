@@ -89,7 +89,7 @@ plt.plot(hnEarth.Time, hnEarth.LongA,color=vpl.colors.red)
 plt.plot(SS.Earth.Time, SS.Earth.SpiNBodyLongA,'k')
 plt.ylabel('Longitude of Ascending Node ($^\circ$)')
 plt.xlabel('Time (yrs)')
-plt.legend(['HNBody','VPlanet'])
+plt.legend(['HNBody','VPLanet'])
 
 plt.subplot(3,2,6)
 plt.plot(hnEarth.Time, hnEarth.MeanA,color=vpl.colors.red)

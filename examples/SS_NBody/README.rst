@@ -38,4 +38,4 @@ Expected output
    :align: center
 
    Evolution of Earth's orbital elements in a Solar System simulation over the next
-   100,000 years. Blak is VPLanet results; red is HNBody.
+   100,000 years. Black is VPLanet results; red is HNBody.

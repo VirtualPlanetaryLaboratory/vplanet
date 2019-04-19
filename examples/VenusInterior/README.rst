@@ -34,5 +34,5 @@ Expected output
    :align: center
 
 Analagous to EarthInterior.  Nominal thermal history of the Venus, mantle and core.  Radiogenic
-heating is from radheat. Magnetic moment evolution is estimated from
+heating is from **RadHeat**. Magnetic moment evolution is estimated from
 the core energy balance and inner core growth.

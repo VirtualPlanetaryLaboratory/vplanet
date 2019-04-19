@@ -1038,6 +1038,7 @@ struct BODY {
 	/* Variables for the connection between magmoc and atmesc */
 	double dWaterMassEsc;     /**< Water mass escaped per time */
 	double dOxygenMassEsc;    /**< Oxygen mass escaped per time */
+	double dHZInnerEdge;      /**< Inner edge of habitable zone (runaway) */
 };
 
 /* SYSTEM contains properties of the system that pertain to
@@ -1646,6 +1647,7 @@ struct HALT {
 	/* MAGMOC */
 	int bHaltMantleSolidified;    /**< Halt if mantle completely solidified */
 	int bHaltAtmDesiSurfCool;     /**< Halt if atmosphere desiccated & T_surf below 1000K */
+	int bHaltEnterHabZone;        /**< Halt if palenet enters Habitable Zone*/
 	int bHaltAllPlanetsSolid;			/**< Halt if all planets solidified (for multiplanet system) */
 	int bHaltAllPlanetsDesicc;	  /**< Halt if all planets desiccated (for multiplanet system) */
 };

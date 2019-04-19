@@ -94,10 +94,11 @@
 #define OPT_MANMELTDENSITY        2313
 #define OPT_HALTMANTLESOLIDIFIED  2314
 #define OPT_HALTATMDESISRUFCOOL   2315
-#define OPT_HALTALLPLANETSSOLID   2316
-#define OPT_HALTALLPLANETSDESICC  2317
-#define OPT_RADIOHEATMODEL        2318
-#define OPT_MAGMOCATMMODEL        2319
+#define OPT_HALTENTERHABZONE      2316
+#define OPT_HALTALLPLANETSSOLID   2317
+#define OPT_HALTALLPLANETSDESICC  2318
+#define OPT_RADIOHEATMODEL        2319
+#define OPT_MAGMOCATMMODEL        2320
 
 void AddModuleMagmOc(MODULE*,int,int);
 void BodyCopyMagmOc(BODY*,BODY*,int,int,int);
@@ -117,6 +118,7 @@ void ReadOptionsMagmOc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int
 
 int fbHaltMantleSolidified(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 int fbHaltAtmDesiSurfCool(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltEnterHabZone(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 int fbHaltAllPlanetsSolid(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 int fbHaltAllPlanetsDesicc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 void CountHaltsMagmOc(HALT*,int*);
@@ -163,6 +165,8 @@ void FinalizeUpdateOxygenMassSpace(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_WATERFRACMELT      2325
 #define OUT_RADIOPOWER         2326
 #define OUT_TIDALPOWER         2327
+#define OUT_SEMIMAJORAXIS      2328
+#define OUT_HZINNEREDGE        2329
 
 void HelpOutputMagmOc(OUTPUT*);
 void InitializeOutputMagmOc(OUTPUT*,fnWriteOutput[]);
@@ -185,6 +189,8 @@ void WriteNetFluxAtmo(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,
 void WriteWaterFracMelt(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteRadioPower(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteTidalPower(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteSemiMajorAxis(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteHZInnerEdge(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsMagmOc(CONTROL*,FILE*);

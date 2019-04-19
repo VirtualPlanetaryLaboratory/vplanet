@@ -201,6 +201,22 @@ void ReadHaltAtmDesiSurfCool(BODY *body,CONTROL *control,FILES *files,OPTIONS *o
   }
 }
 
+void ReadHaltEnterHabZone(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    control->Halt[iFile-1].bHaltEnterHabZone = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultInt(options,&control->Halt[iFile-1].bHaltEnterHabZone,files->iNumInputs);
+  }
+}
+
 void ReadHaltAllPlanetsSolid(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -340,6 +356,12 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTATMDESISRUFCOOL].cDefault,"0");
   options[OPT_HALTATMDESISRUFCOOL].iType = 0;
   fnRead[OPT_HALTATMDESISRUFCOOL] = &ReadHaltAtmDesiSurfCool;
+
+  sprintf(options[OPT_HALTENTERHABZONE].cName,"bHaltEnterHabZone");
+  sprintf(options[OPT_HALTENTERHABZONE].cDescr,"Halt when planet enters habitable zone?");
+  sprintf(options[OPT_HALTENTERHABZONE].cDefault,"0");
+  options[OPT_HALTENTERHABZONE].iType = 0;
+  fnRead[OPT_HALTENTERHABZONE] = &ReadHaltEnterHabZone;
 
   sprintf(options[OPT_HALTALLPLANETSSOLID].cName,"bHaltAllPlanetsSolid");
   sprintf(options[OPT_HALTALLPLANETSSOLID].cDescr,"Halt when all planets solidified?");
@@ -987,10 +1009,16 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     }
   }
 
-  if ((!body[iBody].bEscapeStop) && (body[iBody].dWaterMassEsc <= 0)) {
-    body[iBody].bEscapeStop = 1;
+  // if ((!body[iBody].bEscapeStop) && (body[iBody].dWaterMassEsc <= 0)) {
+  //   body[iBody].bEscapeStop = 1;
+  //   if (io->iVerbose >= VERBPROG) {
+  //     printf("%s's atmospheric escape stopped after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+  //   }
+  // }
+
+  if ((body[iBody].bRunaway) && (body[iBody].dHZInnerEdge <= body[iBody].dSemi)) {
     if (io->iVerbose >= VERBPROG) {
-      printf("%s's atmospheric escape stopped after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+      printf("%s enters habitable zone after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
   }
 
@@ -1001,7 +1029,7 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
   }
 
   if (!body[iBody].bMagmOcHaltDesicc) {
-    if (body[iBody].bPlanetDesiccated || body[iBody].bEscapeStop) {
+    if (body[iBody].bPlanetDesiccated || !body[iBody].bRunaway) {
       body[iBody].bMagmOcHaltDesicc = 1;
     }
   }
@@ -1206,6 +1234,16 @@ int fbHaltAtmDesiSurfCool(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *up
   return 0;
 }
 
+int fbHaltEnterHabZone(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+  if (body[iBody].bRunaway) {
+    if (io->iVerbose >= VERBPROG) {
+      printf("HALT: %s enters habitable zone after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+    }
+    return 1;
+  }
+  return 0;
+}
+
 int fbHaltAllPlanetsSolid(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   double dCountSolid = 0;
   int iBodyTemp;
@@ -1238,7 +1276,7 @@ int fbHaltAllPlanetsDesicc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *u
     }
     if (dCountSolid == (evolve->iNumBodies-1)){
       if (io->iVerbose >= VERBPROG) {
-        printf("HALT: All planets desiccated or escape stopped after %f years. \n",evolve->dTime/YEARSEC);
+        printf("HALT: All planets desiccated or reached HZ after %f years. \n",evolve->dTime/YEARSEC);
       }
       return 1;
     }
@@ -1251,6 +1289,9 @@ void CountHaltsMagmOc(HALT *halt,int *iNumHalts) {
     (*iNumHalts)++;
   }
   if (halt->bHaltAtmDesiSurfCool) {
+    (*iNumHalts)++;
+  }
+  if (halt->bHaltEnterHabZone) {
     (*iNumHalts)++;
   }
   if (halt->bHaltAllPlanetsSolid) {
@@ -1267,6 +1308,9 @@ void VerifyHaltMagmOc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
   }
   if (control->Halt[iBody].bHaltAtmDesiSurfCool) {
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltAtmDesiSurfCool;
+  }
+  if (control->Halt[iBody].bHaltEnterHabZone) {
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltEnterHabZone;
   }
   if (control->Halt[iBody].bHaltAllPlanetsSolid) {
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltAllPlanetsSolid;
@@ -1443,6 +1487,28 @@ void WriteTidalPower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   }
 }
 
+void WriteSemiMajorAxis(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dSemi;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
+void WriteHZInnerEdge(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dHZInnerEdge;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
 // similar to initialize options
 void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
@@ -1584,6 +1650,24 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALPOWER].iNum = 1;
   output[OUT_TIDALPOWER].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_TIDALPOWER] = &WriteTidalPower;
+
+  sprintf(output[OUT_SEMIMAJORAXIS].cName,"SemiMajorAxis");
+  sprintf(output[OUT_SEMIMAJORAXIS].cDescr,"Semi Major Axis of the planet's orbit");
+  sprintf(output[OUT_SEMIMAJORAXIS].cNeg,"AU");
+  output[OUT_SEMIMAJORAXIS].bNeg = 1;
+  output[OUT_SEMIMAJORAXIS].dNeg = 1/AUM; // division factor to get from SI to desired unit
+  output[OUT_SEMIMAJORAXIS].iNum = 1;
+  output[OUT_SEMIMAJORAXIS].iModuleBit = MAGMOC; //name of module
+  fnWrite[OUT_SEMIMAJORAXIS] = &WriteSemiMajorAxis;
+
+  sprintf(output[OUT_HZINNEREDGE].cName,"HZInnerEdge");
+  sprintf(output[OUT_HZINNEREDGE].cDescr,"Inner Edge of the Habitable Zone (Runaway Greenhouse)");
+  sprintf(output[OUT_HZINNEREDGE].cNeg,"AU");
+  output[OUT_HZINNEREDGE].bNeg = 1;
+  output[OUT_HZINNEREDGE].dNeg = 1/AUM; // division factor to get from SI to desired unit
+  output[OUT_HZINNEREDGE].iNum = 1;
+  output[OUT_HZINNEREDGE].iModuleBit = MAGMOC; //name of module
+  fnWrite[OUT_HZINNEREDGE] = &WriteHZInnerEdge;
 }
 
 //========================= Finalize Variable Functions ========================

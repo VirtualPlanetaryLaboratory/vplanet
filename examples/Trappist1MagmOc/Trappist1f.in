@@ -14,6 +14,7 @@ dSurfTemp		4000		  # Initial surface temperature (default: 4000K)
 dManMeltDensity		4000		  # Mantle melt density (default: 4000kg/m^3)
 bHaltMantleSolidified 	0		  # Halt when mantle solidified? (default: 0 = no, 1 = yes)
 bHaltAtmDesiSurfCool    0                 # Halt when atmosphere desiccated and surface below 1000K? (default: 0 = no, 1 = yes)
+bHaltEnterHabZone       0                 # Halt when planet enters habitable zone? (default: 0 = no, 1 = yes)
 bHaltAllPlanetsSolid  	0                 # Halt when all planets are soldified	(for multiple planet systems)
 bHaltAllPlanetsDesicc 	1                 # Halt when all planets are desiccated (for multiple planet systems)
 sRadioHeatModel		none              # Radiogenic heating model (default: none = RadHeat; schaefer = BSE composition)
@@ -67,4 +68,4 @@ dSemi         -0.0385                     # Semi-major axis, negative -> AU
 dEcc          0.00                       # Eccentricity
 
 # Output
-saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -PressWaterAtm -PressOxygenAtm -HydrogenMassSpace -OxygenMassSpace FracFe2O3Man NetFluxAtmo WaterFracMelt -RadioPower -TidalPower
+saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -PressWaterAtm -PressOxygenAtm -HydrogenMassSpace -OxygenMassSpace FracFe2O3Man NetFluxAtmo WaterFracMelt -RadioPower -TidalPower -HZInnerEdge

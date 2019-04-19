@@ -19,7 +19,7 @@ dEcc 0.05
 dSemi 0.125
 
 # DISTORB Parameters
-dInc 0.5
+dInc 6
 dLongA 20.677483
 dArgP 248.870768
 sOrbitModel rd4

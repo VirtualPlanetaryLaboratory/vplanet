@@ -10,7 +10,7 @@ Note that to run the scripts and generate the figures in the subdirectories, you
 **Atmospheres**
 ===============
 
-`AbioticO2 <AbioticO2>`_: Production of abiotic oxygen on terrestrial worlds due to water photolyzation and hydrogen escape. [AtmEsc, Stellar]
+`AbioticO2 <AbioticO2>`_: Production of abiotic oxygen on terrestrial worlds due to water photolyzation and hydrogen escape. [AtmEsc, STELLAR]
 
 `AtmEscKepler-36 <AtMescKepler-36>`_: The loss of a hydrogen envelope due to stellar XUV flux. [AtmEsc, STELLAR]
 

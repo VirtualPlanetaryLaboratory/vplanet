@@ -9,7 +9,7 @@ Orbital evolution from an N-body model.
 ===================   ============
 **Date**              10/30/18
 **Author**            Hayden Smotherman
-**Modules**           `spinbody <../src/spinbody.html>`_
+**Modules**           SpiNBody
 **Approx. runtime**   20 min (VPLanet)
                       10 Min (HNBody)
 ===================   ============

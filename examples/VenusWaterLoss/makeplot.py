@@ -5,6 +5,8 @@ import numpy as np
 import vplot as vpl
 import sys
 
+pl.rcParams.update({'font.size':16,'legend.fontsize':16})
+
 # Check correct number of arguments
 if (len(sys.argv) != 2):
     print('ERROR: Incorrect number of arguments.')

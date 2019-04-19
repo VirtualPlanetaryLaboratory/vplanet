@@ -7,7 +7,7 @@ import os
 import subprocess
 #plt.rcParams["text.usetex"]=True
 #plt.rcParams["text.latex.unicode"]=True
-plt.rcParams.update({'font.size':15,'legend.fontsize':15})
+plt.rcParams.update({'font.size':16,'legend.fontsize':16})
 import sys
 
 s_yr = 3600.*24*365
@@ -46,7 +46,7 @@ def fig2x3(out,nfig,color='k',legendon=False):
     plt.subplot(rows,cols,panel)
     plt.plot(out.tidalearth.Time,out.tidalearth.TMan,linestyle='-',color=color,label=r'$T_{M}$')
     plt.plot(out.tidalearth.Time,out.tidalearth.TCore,'--',color=color,label=r'$T_{C}$')
-    if legendon: plt.legend(loc='best',ncol=2,frameon=False)
+    if legendon: plt.legend(loc='best',ncol=2,frameon=True)
     plt.ylabel('Temperature (K)')
     plt.xlabel('Time (Gyr)')
     plt.ylim(0,6e3)
@@ -57,13 +57,13 @@ def fig2x3(out,nfig,color='k',legendon=False):
     plt.plot(out.tidalearth.Time,out.tidalearth.HflowMeltMan,linestyle=(0, (3, 5, 1, 5, 1, 5)),color=color,label=r'$Q_{Melt,Man}$')
     plt.plot(out.tidalearth.Time,out.tidalearth.HflowCMB,linestyle='--',color=color,label=r'$Q_{CMB}$')
     plt.plot(out.tidalearth.Time,out.tidalearth.RadPowerMan,linestyle=(0, (1, 5)),color=color,label=r'$Q_{Rad,Man}$')
-    plt.plot(out.tidalearth.Time,out.tidalearth.PowerEqtide,'-.',color=color,label=r'PowerEqtide')
+    plt.plot(out.tidalearth.Time,out.tidalearth.PowerEqtide,'-.',color=color,label=r'$Q_{Tide}$')
     plt.yscale('log'); plt.xscale('log')
-    if legendon: plt.legend(loc='upper right',frameon=False)#,ncol=2,columnspacing=1)
+    if legendon: plt.legend(loc='upper right',frameon=True,ncol=2,columnspacing=1)
     plt.ylabel('Power (TW)')
     plt.xlabel('Time (Gyr)')
     ymax=np.max([out.tidalearth.PowerEqtide[50:].max(),out.tidalearth.HflowUMan[50:].max()])
-    ymax=1e8
+    ymax=1e10
     plt.ylim(1e-4,ymax)
     panel += 1
     plt.subplot(rows,cols,panel)
@@ -72,7 +72,7 @@ def fig2x3(out,nfig,color='k',legendon=False):
     plt.xlabel('Time (Gyr)')
     plt.ylim(0,0.10)
     plt.xscale('log')
-    plt.legend(frameon=False,loc='upper left')
+    plt.legend(frameon=True,loc='upper left')
     panel += 1
     plt.subplot(rows,cols,panel)
     plt.loglog(out.tidalearth.Time,out.tidalearth.Eccentricity,color=color,label='ecc')
@@ -84,8 +84,8 @@ def fig2x3(out,nfig,color='k',legendon=False):
     plt.subplot(rows,cols,panel)
     plt.plot(out.tidalearth.Time,out.tidalearth.MagMom,color=color,label='MagMom')
     plt.plot(out.tidalearth.Time,out.tidalearth.RIC/3481,linestyle='--')
-    plt.ylim(0,2)
-    plt.ylabel('Magnetic Moment (Earth Units)')
+    plt.ylim(0,1.5)
+    plt.ylabel('Mag. Mom., R$_{ic}$ ($\oplus$ Units)')
     plt.xlabel('Time (Gyr)')
     plt.xscale('log')
     panel += 1
@@ -123,8 +123,8 @@ planet=out1.tidalearth
 plt.semilogy(planet.TUMan,planet.PowerEqtide,color=colors[1],label='$a_0$=%.2f'%planet.SemiMajorAxis[0])
 planet=out2.tidalearth
 plt.semilogy(planet.TUMan,planet.PowerEqtide,color=colors[2],label='$a_0$=%.2f'%planet.SemiMajorAxis[0])
-plt.ylabel(r'PowerEqtide [TW]')
-plt.xlabel('TUMan')
+plt.ylabel(r'Tidal Power [TW]')
+plt.xlabel('Upper Mantle Temp. [K]')
 plt.ylim(1e-8,1e4)
 plt.xlim(1600,2400)
 plt.legend()
@@ -137,7 +137,7 @@ plt.semilogy(planet.TUMan,planet.Eccentricity,color=colors[1],label='Ecc')
 planet=out2.tidalearth
 plt.semilogy(planet.TUMan,planet.Eccentricity,color=colors[2],label='Ecc')
 plt.ylabel(r'Eccentricity')
-plt.xlabel('TUMan')
+plt.xlabel('Upper Mantle Temp. [K]')
 plt.ylim(1e-8,1e0)
 plt.xlim(1600,2400)
 vplot.make_pretty(fig)

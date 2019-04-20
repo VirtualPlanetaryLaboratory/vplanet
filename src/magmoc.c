@@ -666,7 +666,7 @@ void fndFe2O3MassFracOxyMass(BODY *body, int iBody) {
   double dOxygenMassNew;    // New oxygen mass in atmosphere
 
   dFracFe2O3Max = body[iBody].dOxygenMassMOAtm * 2*MOLWEIGHTFEO15/MOLWEIGHTOXYGEN * 3\
-                  / ( 4*PI*body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3) ));
+                  / ( body[iBody].dMeltFraction * 4*PI*body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3) ));
   dMagmOcFull   = body[iBody].dMassFracFeOIni * MOLWEIGHTFEO15 / MOLWEIGHTFEO - 1e-15;
   dUpperBound   = fmin(dFracFe2O3Max,dMagmOcFull);
   /* Don't use fugacity but oxidize all FeO to Fe2O3 before building up O in atm */
@@ -674,10 +674,6 @@ void fndFe2O3MassFracOxyMass(BODY *body, int iBody) {
     dFracFe2O3New = body[iBody].dFracFe2O3Man;
   } else {
     dFracFe2O3New = dUpperBound;
-    if (dUpperBound < dFracFe2O3Max) {
-      dOxygenMassNew = (dFracFe2O3Max - dFracFe2O3New) * MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) * 4/3 * PI \
-            * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3));
-    }
   }
   // ---------------
   // if ((body[iBody].dFracFe2O3Man/body[iBody].dMassFracFeOIni) < 0.3 && (!body[iBody].bManSolid) && (!body[iBody].bCalcFugacity)) { // X < 0.3 -> assuming no O2 buildup in atm
@@ -704,8 +700,8 @@ void fndFe2O3MassFracOxyMass(BODY *body, int iBody) {
   if (dFracFe2O3New <= 0) {
     dOxygenMassNew = body[iBody].dOxygenMassMOAtm;
   } else {
-    dOxygenMassNew = (dFracFe2O3Max - dFracFe2O3New) * MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) \
-                                  * 4/3 * PI * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3));
+    dOxygenMassNew = body[iBody].dMeltFraction * (dFracFe2O3Max - dFracFe2O3New) * MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) \
+                     * 4/3 * PI * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3));
   }
 
   if (dOxygenMassNew < 0) {
@@ -869,12 +865,11 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int 
   /*
    * Radiogenic heating: RadioHeat in W/kg
    */
-  double dPowerRadio;
   if (body[iBody].iRadioHeatModel == MAGMOC_SCHAEFER) {
-    body[iBody].dRadioHeat = fndRadioHeatingEarth(body,iBody);
+    body[iBody].dRadioHeat = fndRadioHeatingEarth(body,iBody) * (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3)));
   } else if (body[iBody].bRadheat) {
-    dPowerRadio = fdRadPowerMan(update,iBody);
-    body[iBody].dRadioHeat = dPowerRadio / (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3))); // add here RADHEAT
+    body[iBody].dRadioHeat = fdRadPowerMan(update,iBody);
+    // body[iBody].dRadioHeat = dPowerRadio / (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3))); // add here RADHEAT
   } else {
     body[iBody].dRadioHeat = 0;
   }
@@ -882,10 +877,9 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int 
   /*
    * Tidal heating: TidalHeat in W/kg
    */
-  double dTidalPower;
   if (body[iBody].bEqtide) {
-    dTidalPower = fdTidePower(body,system,update,iBody,evolve->iEqtideModel);
-    body[iBody].dTidalHeat = dTidalPower / (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3))); // add here RADHEAT
+    body[iBody].dTidalHeat = fdTidePower(body,system,update,iBody,evolve->iEqtideModel);
+    // body[iBody].dTidalHeat = dTidalPower / (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3))); // add here RADHEAT
   } else {
     body[iBody].dTidalHeat = 0;
   }
@@ -929,7 +923,8 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int 
   } else {
     fndFe2O3MassFracOxyMass(body,iBody);
     /* Factor in the derivative of Tpot and Rsol */
-    body[iBody].dFactorDerivative = SILICATEHEATCAP * (body[iBody].dPrefactorB*THERMALEXPANCOEFF - body[iBody].dPrefactorA*body[iBody].dManMeltDensity*SILICATEHEATCAP) / (body[iBody].dGravAccelSurf*pow((body[iBody].dPrefactorA*body[iBody].dManMeltDensity*SILICATEHEATCAP - THERMALEXPANCOEFF*body[iBody].dPotTemp),2));
+    body[iBody].dFactorDerivative = SILICATEHEATCAP * (body[iBody].dPrefactorB*THERMALEXPANCOEFF - body[iBody].dPrefactorA*body[iBody].dManMeltDensity*SILICATEHEATCAP) \
+                                    / (body[iBody].dGravAccelSurf*pow((body[iBody].dPrefactorA*body[iBody].dManMeltDensity*SILICATEHEATCAP - THERMALEXPANCOEFF*body[iBody].dPotTemp),2));
   }
 
   body[iBody].dPressOxygenAtm = body[iBody].dOxygenMassAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
@@ -941,7 +936,34 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int 
 e.g. if all the hydrogen is lost to space (= no more water in atmosphere) -> set albedo to pure rock
 */
 void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
-  /* Mantle solidified? */
+
+  /* Mantle starts to solidify */
+  if (!body[iBody].bManStartSol && (body[iBody].dSolidRadius - body[iBody].dCoreRadius) > 1e-5) {
+    body[iBody].bManStartSol = 1;
+    if (io->iVerbose >= VERBPROG) {
+      printf("%s's mantle starts to solidify after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+    }
+  }
+
+  /* Switch from high to low pressure regime of the solidus */
+  if ( !body[iBody].bLowPressSol && (body[iBody].dRadius-body[iBody].dSolidRadius) < 1e5) {
+    body[iBody].dPrefactorA  = ALOWPRESSURE;
+    body[iBody].dPrefactorB  = BLOWPRESSURE;
+    body[iBody].bLowPressSol = 1;
+    if (io->iVerbose >= VERBPROG) {
+      printf("%s: Switch to low-pressure treatment of solidus after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+    }
+  }
+
+  /* All FeO in mantle oxidized to Fe2O3 */
+  if ((!body[iBody].bAllFeOOxid) && (body[iBody].dFracFe2O3Man >= body[iBody].dMassFracFeOIni * MOLWEIGHTFEO15 / MOLWEIGHTFEO)) {
+    body[iBody].bAllFeOOxid = 1;
+    if (io->iVerbose >= VERBPROG) {
+      printf("%s: All FeO in magma ocean oxidized to Fe2O3 after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+    }
+  }
+
+  /* Mantle solidified */
   if ((!body[iBody].bManSolid) && (body[iBody].dSolidRadius >= body[iBody].dRadius)) {
     body[iBody].bManSolid       = 1;
     body[iBody].dManMeltDensity = 4200;
@@ -953,45 +975,16 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
      */
     // SetDerivTiny(fnUpdate,iBody,update[iBody].iPotTemp          ,update[iBody].iPotTempMagmOc          );
     // SetDerivTiny(fnUpdate,iBody,update[iBody].iSurfTemp         ,update[iBody].iSurfTempMagmOc         );
-    SetDerivTiny(fnUpdate,iBody,update[iBody].iSolidRadius      ,update[iBody].iSolidRadiusMagmOc      );
-    SetDerivTiny(fnUpdate,iBody,update[iBody].iWaterMassSol     ,update[iBody].iWaterMassSolMagmOc     );
-    SetDerivTiny(fnUpdate,iBody,update[iBody].iOxygenMassSol    ,update[iBody].iOxygenMassSolMagmOc    );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iSolidRadius  ,update[iBody].iSolidRadiusMagmOc  );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iWaterMassSol ,update[iBody].iWaterMassSolMagmOc );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iOxygenMassSol,update[iBody].iOxygenMassSolMagmOc);
 
     if (io->iVerbose >= VERBPROG) {
       printf("%s's mantle solidified after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
   }
 
-  if (!body[iBody].bManStartSol && (body[iBody].dSolidRadius - body[iBody].dCoreRadius) > 1e-5) {
-    body[iBody].bManStartSol = 1;
-    if (io->iVerbose >= VERBPROG) {
-      printf("%s's mantle starts to solidify after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
-    }
-  }
-  /* High or low pressure regime of the solidus? */
-  if ( !body[iBody].bLowPressSol && (body[iBody].dRadius-body[iBody].dSolidRadius) < 1e5) {
-    body[iBody].dPrefactorA  = ALOWPRESSURE;
-    body[iBody].dPrefactorB  = BLOWPRESSURE;
-    body[iBody].bLowPressSol = 1;
-    if (io->iVerbose >= VERBPROG) {
-      printf("%s: Switch to low-pressure treatment of solidus after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
-    }
-  }
-  /* Albedo Rock or Water Vapor? */
-  // if (body[iBody].dAlbedo == ALBEDOWATERATMOS && body[iBody].dPressWaterAtm < 1) {
-  //   body[iBody].dAlbedo = ALBEDOROCK;
-  //   if (io->iVerbose >= VERBPROG) {
-  //     printf("%s's atmosphere desiccated, albedo set to 0.3. \n",body[iBody].cName);
-  //   }
-  // }
-  /* All FeO in mantle oxidized to Fe2O3 */
-  if ((!body[iBody].bAllFeOOxid) && (body[iBody].dFracFe2O3Man >= body[iBody].dMassFracFeOIni * MOLWEIGHTFEO15 / MOLWEIGHTFEO)) {
-    body[iBody].bAllFeOOxid = 1;
-    if (io->iVerbose >= VERBPROG) {
-      printf("%s: All FeO in magma ocean oxidized to Fe2O3 after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
-    }
-  }
-
+  /* Planet desiccated = no water left in atmosphere */
   if ((!body[iBody].bPlanetDesiccated) && (body[iBody].dWaterMassMOAtm <= 1e-5 * TOMASS)) {
     body[iBody].bPlanetDesiccated = 1;
     body[iBody].dWaterMassEsc     = 0;
@@ -1002,6 +995,7 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     }
   }
 
+  /* When planet desiccated and T_surf below 1000K treat mantle as solidified */
   if ((!body[iBody].bManQuasiSol) && (body[iBody].bPlanetDesiccated) && (body[iBody].dSurfTemp <= 1000)) {
     body[iBody].bManQuasiSol = 1;
     if (io->iVerbose >= VERBPROG) {
@@ -1009,25 +1003,35 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     }
   }
 
-  // if ((!body[iBody].bEscapeStop) && (body[iBody].dWaterMassEsc <= 0)) {
-  //   body[iBody].bEscapeStop = 1;
-  //   if (io->iVerbose >= VERBPROG) {
-  //     printf("%s's atmospheric escape stopped after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
-  //   }
-  // }
-
+  /* When planet enters habitable zone atmospheric escape stops */
   if ((body[iBody].bRunaway) && (body[iBody].dHZInnerEdge <= body[iBody].dSemi)) {
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iOxygenMassSpace  ,update[iBody].iOxygenMassSpaceMagmOc  );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iHydrogenMassSpace,update[iBody].iHydrogenMassSpaceMagmOc);
     if (io->iVerbose >= VERBPROG) {
       printf("%s enters habitable zone after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
   }
 
+  /* Albedo Rock or Water Vapor? */
+  // if (body[iBody].dAlbedo == ALBEDOWATERATMOS && body[iBody].dPressWaterAtm < 1) {
+  //   body[iBody].dAlbedo = ALBEDOROCK;
+  //   if (io->iVerbose >= VERBPROG) {
+  //     printf("%s's atmosphere desiccated, albedo set to 0.3. \n",body[iBody].cName);
+  //   }
+  // }
+
+  /*
+   * For multiple planet systems
+   */
+
+  /* Mantle solidified or planet desiccated with T_surf below 1000K */
   if (!body[iBody].bMagmOcHaltSolid) {
     if (body[iBody].bManQuasiSol || body[iBody].bManSolid) {
       body[iBody].bMagmOcHaltSolid = 1;
     }
   }
 
+  /* Planet desiccated or atmospheric escape stopped due to entry into HZ */
   if (!body[iBody].bMagmOcHaltDesicc) {
     if (body[iBody].bPlanetDesiccated || !body[iBody].bRunaway) {
       body[iBody].bMagmOcHaltDesicc = 1;
@@ -1035,12 +1039,10 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
   }
 }
 
-// ??
 void MagmOcExit(FILES *files,char cSpecies[16],int iFile) {
 
 }
 
-// ??
 void VerifyPotTemp(BODY *body, OPTIONS *options, UPDATE *update, double dAge, int iBody) {
   update[iBody].iaType[update[iBody].iPotTemp][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iPotTemp][0] = 1;
@@ -1186,7 +1188,7 @@ void InitializeUpdateMagmOc(BODY *body,UPDATE *update,int iBody) {
     if (update[iBody].iNumWaterMassMOAtm == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumWaterMassMOAtm++;
-    /* may use different condition for WaterMassSol*/
+
     if (update[iBody].iNumWaterMassSol == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumWaterMassSol++;
@@ -1194,7 +1196,7 @@ void InitializeUpdateMagmOc(BODY *body,UPDATE *update,int iBody) {
     if (update[iBody].iNumOxygenMassMOAtm == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumOxygenMassMOAtm++;
-    /* may use different condition for OxygenMassSol*/
+
     if (update[iBody].iNumOxygenMassSol == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumOxygenMassSol++;
@@ -1466,7 +1468,7 @@ void WriteWaterFracMelt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
 }
 
 void WriteRadioPower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dRadioHeat * (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3)));
+  *dTmp = body[iBody].dRadioHeat; //* (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3)));
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1477,7 +1479,7 @@ void WriteRadioPower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 }
 
 void WriteTidalPower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dTidalHeat * (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3)));
+  *dTmp = body[iBody].dTidalHeat;// * (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3)));
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1765,19 +1767,20 @@ void AddModuleMagmOc(MODULE *module,int iBody,int iModule) {
 /* real physic is happening here: calculation of the derivatives of the primary variables */
 double fdDPotTemp(BODY *body, SYSTEM *system, int *iaBody) {
   double dRadioPart,dManFluxPart,dRsolPart,dFusionPart;
-  dRadioPart   = (body[iaBody[0]].dRadioHeat + body[iaBody[0]].dTidalHeat) * (pow(body[iaBody[0]].dRadius,3) - pow(body[iaBody[0]].dCoreRadius,3));
-  dManFluxPart = 3 * pow(body[iaBody[0]].dRadius,2) * body[iaBody[0]].dManHeatFlux / body[iaBody[0]].dManMeltDensity;
-  dRsolPart    = SILICATEHEATCAP * (pow(body[iaBody[0]].dRadius,3) - pow(body[iaBody[0]].dSolidRadius,3));
-  dFusionPart  = 3 * HEATFUSIONSILICATE * pow(body[iaBody[0]].dSolidRadius,2) * body[iaBody[0]].dFactorDerivative;
+  dRadioPart   = (body[iaBody[0]].dRadioHeat + body[iaBody[0]].dTidalHeat) / (4 * PI);
+  dManFluxPart = pow(body[iaBody[0]].dRadius,2) * body[iaBody[0]].dManHeatFlux;
+  dRsolPart    = body[iaBody[0]].dManMeltDensity * SILICATEHEATCAP * (pow(body[iaBody[0]].dRadius,3) - pow(body[iaBody[0]].dSolidRadius,3)) / 3;
+  dFusionPart  = body[iaBody[0]].dManMeltDensity * HEATFUSIONSILICATE * pow(body[iaBody[0]].dSolidRadius,2) * body[iaBody[0]].dFactorDerivative;
   return (dRadioPart - dManFluxPart)/(dRsolPart - dFusionPart);
 }
 
 double fdDSurfTemp(BODY *body, SYSTEM *system, int *iaBody) {
-  double dFluxPart,dWaterPart,dManPart,dTempPart;
+  double dFluxPart,dWaterPart,dManPart,dTempPart,dTBL;
+  dTBL       = (body[iaBody[0]].dPotTemp-body[iaBody[0]].dSurfTemp) * THERMALCONDUC / body[iaBody[0]].dManHeatFlux;
   dFluxPart  = body[iaBody[0]].dManHeatFlux - body[iaBody[0]].dNetFluxAtmo;
-  dWaterPart = WATERHEATCAP * body[iaBody[0]].dPressWaterAtm / body[iaBody[0]].dGravAccelSurf;
+  dWaterPart = WATERHEATCAP * (body[iaBody[0]].dPressWaterAtm + body[iaBody[0]].dPressOxygenAtm) / body[iaBody[0]].dGravAccelSurf;
   dManPart   = SILICATEHEATCAP * body[iaBody[0]].dManMeltDensity / (3*pow(body[iaBody[0]].dRadius,2));
-  dTempPart  = pow(body[iaBody[0]].dRadius,3) - (body[iaBody[0]].dPotTemp-body[iaBody[0]].dSurfTemp) * THERMALEXPANCOEFF * body[iaBody[0]].dGravAccelSurf / (CRITRAYLEIGHNO*THERMALDIFFUS*body[iaBody[0]].dKinemViscos);
+  dTempPart  = pow(body[iaBody[0]].dRadius,3) - pow(dTBL,3);
   return dFluxPart / (dWaterPart + dManPart * dTempPart);
 }
 

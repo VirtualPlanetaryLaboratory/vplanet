@@ -1,7 +1,7 @@
 # No files with these names in top-level directory
 .PHONY: docs test debug opt profile optprof clean coverage sanitize
 
-GITVERSION := $(shell git describe --abbrev=40  --always)
+GITVERSION := $(shell git describe --tags --abbrev=40)
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 GCC_FLAGS1 = -fPIC -Wl,-Bsymbolic-functions -c

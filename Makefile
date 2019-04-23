@@ -1,6 +1,7 @@
 # No files with these names in top-level directory
 .PHONY: docs test debug opt profile optprof clean coverage sanitize
 
+GITVERSION := $(shell git describe --abbrev=40  --always)
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 GCC_FLAGS1 = -fPIC -Wl,-Bsymbolic-functions -c
@@ -12,7 +13,7 @@ GCC_FLAGS2 = -shared -Wl,-install_name,vplanetlib.so
 endif
 
 default:
-	-gcc -o vplanet src/*.c -lm
+	-gcc -o vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 	@echo ""
 	@echo "=========================================================================================================="
 	@echo 'To add vplanet to your $$PATH, please run the appropriate command for your shell type:'
@@ -25,13 +26,13 @@ default:
 	@echo "=========================================================================================================="
 
 debug:
-	-gcc -g -D DEBUG -o vplanet src/*.c -lm
+	-gcc -g -D DEBUG -o vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 
 debug_no_AE:
-	-gcc -g -o vplanet src/*.c -lm
+	-gcc -g -o vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 
 opt:
-	-gcc -o vplanet src/*.c -lm -O3
+	-gcc -o vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
 	@echo ""
 	@echo "=========================================================================================================="
 	@echo 'To add vplanet to your $$PATH, please run the appropriate command for your shell type:'
@@ -44,17 +45,17 @@ opt:
 	@echo "=========================================================================================================="
 
 profile:
-	-gcc -pg -o vplanet src/*.c -lm
+	-gcc -pg -o vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 
 optprof:
-	-gcc -pg -o vplanet src/*.c -lm -O3
+	-gcc -pg -o vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
 
 test:
-	-gcc -o vplanet src/*.c -lm
+	-gcc -o vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 	py.test
 
 coverage:
-	-mkdir -p gcov && cd gcov && gcc -coverage -o ../vplanet ../src/*.c -lm  
+	-mkdir -p gcov && cd gcov && gcc -coverage -o ../vplanet ../src/*.c -lm
 	-py.test
 	-cd gcov && lcov --capture --directory . --output-file coverage.info && genhtml coverage.info --output-directory html
 

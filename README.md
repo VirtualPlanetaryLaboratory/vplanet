@@ -47,13 +47,14 @@ An ecosystem of support software is also publicly available. In this repo, [vspa
 
 Behind the scenes, the vplanet team maintains code integrity through continuous integration, in which numerous scientific and numerical tests are validated at every commit. Check the "build" badge above for the current status. See the [tests/](tests) directory for the validation checks that the current build passes. Additionally, we use valgrind and addresssanitizer to periodically search for memory issues like leaks, accessing memory beyond array bounds, etc. We are committed to maintaining a stable tool that planetary scientists can rely on for fast analyses of the Solar System and beyond.  
 
-Additional `VPLanet` examples can be found at:
+Additional `VPLanet` examples can be found at the following GitHub pages:
 
-[Rory Barnes' GitHub Page](https://github.com/RoryBarnes) <br />
-[Virtual Planetary Laboratory GitHub Page](https://github.com/VirtualPlanetaryLaboratory)
+[Virtual Planetary Laboratory](https://github.com/VirtualPlanetaryLaboratory) <br />
+[Rory Barnes](https://github.com/RoryBarnes) <br />
+[David Fleming](https://github.com/dflemin3)
 
 If you'd like to stay up to date on `VPLanet` by joining the e-mail list, please send a request to Rory Barnes, rory@astro.washington.edu.
 
-`VPLanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, and 13-13NAI7_0024. We also acnkowledge support from the University of Washington and the Carnegie Institute for Science.
+`VPLanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, and 13-13NAI7_0024. We also acknowledge support from the University of Washington and the Carnegie Institute for Science.
 
 Enjoy!

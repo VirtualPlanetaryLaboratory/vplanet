@@ -86,7 +86,7 @@ Alternatively, you can provide the number of trials instead of the spacing by pu
 
     dSemi  [1, 2, n10]  a
     
-would generate ten trials, equally spaced, from 1 to 2. You can also changed to 
+would generate ten trials, equally spaced, from 1 to 2. You can also change to 
 logarithmic spacing by using ``l`` instead of ``n``:
   
     dSemi  [1, 2, l10]  a

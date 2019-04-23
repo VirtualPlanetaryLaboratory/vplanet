@@ -155,8 +155,8 @@ int main(int argc,char *argv[]) {
   gettimeofday(&end, NULL);
 
   if (control.Io.iVerbose >= VERBPROG) {
-    printf("Simulation completed. ");
-    printf("Total time: %.4e [sec]\n", ((end.tv_usec-start.tv_usec)/1e6));
+    printf("Simulation completed.\n");
+    //printf("Total time: %.4e [sec]\n", difftime(end.tv_usec,start.tv_usec)/1e6);
   }
   exit(0);
 

@@ -789,7 +789,7 @@ void VerifyOcean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
 
   if (body[iBody].dSurfaceWaterMass < body[iBody].dMinSurfaceWaterMass) {
     body[iBody].bOcean = 0;
-    if (control->Io.iVerbose >= VERBINPUT) {
+    if (control->Io.iVerbose && body[iBody].bAtmEsc) {
       fprintf(stderr,"WARNING: %s < %s. No envelope evolution will be included.\n",
         options[OPT_SURFACEWATERMASS].cName,options[OPT_MINSURFACEWATERMASS].cName);
     }
@@ -800,7 +800,7 @@ void VerifyEnvelope(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,in
 
   if (body[iBody].dEnvelopeMass < body[iBody].dMinEnvelopeMass) {
     body[iBody].bEnv = 0;
-    if (control->Io.iVerbose >= VERBINPUT) {
+    if (control->Io.iVerbose >= VERBINPUT && body[iBody].bAtmEsc) {
       fprintf(stderr,"WARNING: %s < %s. No envelope evolution will be included.\n",
         options[OPT_ENVELOPEMASS].cName,options[OPT_MINENVELOPEMASS].cName);
     }

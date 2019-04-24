@@ -973,8 +973,8 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
      * Stop updating PotTemp, SurfTemp, SolidRadius, WaterMassSol, OxygenMassSol
      * But continue to update WaterMassMOAtm, OxygenMassMOAtm, HydrogenMassSpace, OxygenMassSpace
      */
-    // SetDerivTiny(fnUpdate,iBody,update[iBody].iPotTemp          ,update[iBody].iPotTempMagmOc          );
-    // SetDerivTiny(fnUpdate,iBody,update[iBody].iSurfTemp         ,update[iBody].iSurfTempMagmOc         );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iPotTemp          ,update[iBody].iPotTempMagmOc          );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iSurfTemp         ,update[iBody].iSurfTempMagmOc         );
     SetDerivTiny(fnUpdate,iBody,update[iBody].iSolidRadius  ,update[iBody].iSolidRadiusMagmOc  );
     SetDerivTiny(fnUpdate,iBody,update[iBody].iWaterMassSol ,update[iBody].iWaterMassSolMagmOc );
     SetDerivTiny(fnUpdate,iBody,update[iBody].iOxygenMassSol,update[iBody].iOxygenMassSolMagmOc);
@@ -1731,7 +1731,14 @@ void LogMagmOc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE 
 }
 
 void LogBodyMagmOc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp,int iBody) {
+  int iOut;
+  fprintf(fp,"----- MAGMOC PARAMETERS (%s)------\n",body[iBody].cName);
 
+  for (iOut=OUTSTARTMAGMOC;iOut<OUTENDMAGMOC;iOut++) {
+    if (output[iOut].iNum > 0) {
+      WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+    }
+  }
 }
 
 void AddModuleMagmOc(MODULE *module,int iBody,int iModule) {

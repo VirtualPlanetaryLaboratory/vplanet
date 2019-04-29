@@ -20,9 +20,9 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
 # Number of dimensions
 necc=30
 nobl=30
-ecc=["" for j in range(necc)]
-obl=["" for j in range(nobl)]
-heat=[["" for j in range(necc)] for k in range(nobl)]
+ecc=[0 for j in range(necc)]
+obl=[0 for j in range(nobl)]
+heat=[[0 for j in range(necc)] for k in range(nobl)]
 
 result = subp.run("ls -d data/io*", shell=True, stdout=subp.PIPE).stdout.decode('utf-8')
 dirs=result.split()
@@ -56,7 +56,7 @@ for dir in dirs:
                 if (words[0] == "(Obliquity)") and (found == 1):
                     obl[iObl] = float(words[3])*180/3.1415926535
                 if (words[0] == "(SurfEnFluxEqtide)") and (found == 1):
-                    heat[iEcc][iObl] = float(words[10])
+                    heat[iObl][iEcc] = float(words[10])
         iObl += 1
         if (iObl == nobl):
         # New line in ecc
@@ -69,23 +69,23 @@ plt.xlabel('Eccentricity',fontsize=20)
 plt.ylabel('Obliquity ($^\circ$)',fontsize=20)
 plt.tick_params(axis='both', labelsize=20)
 
-plt.xscale('log')
+#plt.xscale('log')
 plt.yscale('log')
-plt.xlim(1e-3,0.3)
-plt.ylim(1e-4,0.01)
+plt.xlim(1e-3,0.01)
+plt.ylim(1e-3,1)
 
 ContSet = plt.contour(ecc,obl,heat,5,colors='black',linestyles='solid',
-                      levels=[0.01,0.1,1,10,100],linewidths=3)
+                      levels=[0.01,0.1,1,10,100],linewidths=3,origin='lower')
 plt.clabel(ContSet,fmt="%.2f",inline=True,fontsize=18)
 
 # Io's heat flux is 1.5-3 W/m^2. After some fussing, this choice of contour matches that range.
 plt.contour(ecc,obl,heat,5,colors=vpl.colors.orange,linestyles='solid',
-                      levels=[2.1],linewidths=45)
+                      levels=[2.1],linewidths=45,origin='lower')
 
 plt.tight_layout()
 
 x=[0.0041,0.0041]
-y=[1e-4,0.1]
+y=[1e-3,1]
 plt.plot(x,y,linestyle='dashed',color='black')
 
 x=[1e-3,0.3]

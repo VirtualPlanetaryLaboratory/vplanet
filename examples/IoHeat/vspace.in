@@ -7,5 +7,5 @@ file   vpl.in
 file   jupiter.in
 
 file   io.in
-dEcc  [1e-3,0.1,l30] e
+dEcc  [1e-3,0.01,n30] e
 dObliquity [1e-3,1,l30] o

@@ -19,7 +19,7 @@ and obliquity. It also shows how to use vspace, a script in this repository that
 can generate input files across a parameter range. vspace will create a large
 number of directories, each of which has 3 input files. In this example, the makeplot
 script will run each individual trial, gather the results, and create the summary
-plot below. The yellow strip corresponds to the observed heat flow of Io :cite::Veeder04.
+plot below. The orange strip corresponds to the observed heat flow of Io.
 
 
 To run this example

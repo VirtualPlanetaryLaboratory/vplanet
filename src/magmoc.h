@@ -77,6 +77,7 @@
 #define ABSORPCOEFFH2O            0.01 // absorp. coeff. of water at ref. press.
 #define REFPRESSUREOPACITY        101325 // reference pressure (Pa)
 #define WATERHEATCAP              3.2e3 //water heat capacity (J/kg/K)
+#define PRESSWATERMIN             1e3 // minimal water pressure in atm (if smaller -> desiccated)
 
 // Atmospheric escape (double to ATMESC)
 #define ATMESCTHERMT              500 //average atmospheric temp. (K)

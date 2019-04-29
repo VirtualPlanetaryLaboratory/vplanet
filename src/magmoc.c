@@ -609,7 +609,7 @@ From Elkins-Tanton (2008) & Carone et al. (2014)
 double fndNetFluxAtmGrey(BODY *body, int iBody) {
 
 
-  if ((body[iBody].dSurfTemp <= 1800) && (body[iBody].dSurfTemp >= 600) && (body[iBody].dPressWaterAtm >= 100)) {
+  if ((body[iBody].dSurfTemp <= 1800) && (body[iBody].dSurfTemp >= 600) && (body[iBody].dPressWaterAtm >= PRESSWATERMIN)) {
     double dOLR = 280; // Outgoing Longwave Radiation, Runaway Greenhouse (W/m^2)
     double dASR = pow(body[iBody].dEffTempAtm,4) * SIGMA; // Absorbed Stellar Radiation (W/m^2)
 
@@ -845,7 +845,7 @@ void fndWaterFracMelt(BODY *body, int iBody) {
   }
 
   /* Get water pressure and water mass in the atmosphere */
-  if (body[iBody].bPlanetDesiccated || body[iBody].dPressWaterAtm <= 100){
+  if (body[iBody].bPlanetDesiccated || body[iBody].dPressWaterAtm <= PRESSWATERMIN){
     body[iBody].dPartialPressWaterAtm = 0;
     body[iBody].dPressWaterAtm        = 0;
   } else {
@@ -929,7 +929,7 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int 
    */
   body[iBody].dEffTempAtm  = pow((dBolFlux * (1 - body[iBody].dAlbedo) / (4 * SIGMA) ),0.25);
 
-  if (body[iBody].iMagmOcAtmModel == MAGMOC_GREY || body[iBody].dPressWaterAtm <= 100) {
+  if (body[iBody].iMagmOcAtmModel == MAGMOC_GREY || body[iBody].dPressWaterAtm <= PRESSWATERMIN) {
     body[iBody].dNetFluxAtmo = fndNetFluxAtmGrey(body,iBody);
   } else if (body[iBody].iMagmOcAtmModel == MAGMOC_PETIT){
     body[iBody].dNetFluxAtmo = fndNetFluxAtmPetit(body,dCurrentTime/3.15576e7,iBody);
@@ -1005,7 +1005,7 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
   }
 
   /* Planet desiccated = no water left in atmosphere (less than 10 mbar) */
-  if ((!body[iBody].bPlanetDesiccated) && (body[iBody].dPressWaterAtm <= 100)) {
+  if ((!body[iBody].bPlanetDesiccated) && (body[iBody].dPressWaterAtm <= PRESSWATERMIN)) {
     body[iBody].bPlanetDesiccated = 1;
     body[iBody].dWaterMassEsc     = 0;
     body[iBody].dOxygenMassEsc    = 0;

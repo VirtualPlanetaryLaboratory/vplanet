@@ -1,9 +1,17 @@
 import numpy as np
 import matplotlib.pyplot  as plt
 import seaborn as sns
+import matplotlib as mpl
 
 sns.set_style("whitegrid")
 plt.close('all')
+
+# Set style for plot #
+mpl.rcParams['lines.linewidth'] = 2
+mpl.rcParams['axes.labelsize'] = 13
+mpl.rcParams['xtick.labelsize'] = 12
+mpl.rcParams['ytick.labelsize'] = 12
+mpl.rcParams['legend.fontsize'] = 13
 
 cmap=plt.get_cmap('nipy_spectral')
 A = 0
@@ -13,9 +21,9 @@ individual = 0
 log_plot = 1
 Initial_water = 1
 # read data
-data = np.loadtxt("radheatGJ1132.GJ1132b.forward")
-data_sch = np.loadtxt("radheat2GJ1132.GJ1132b.forward")
-data_4 = np.loadtxt("radheat4GJ1132.GJ1132b.forward")
+data = np.loadtxt("1800K_1rad.forward")
+data_sch = np.loadtxt("1800K_schaefer.forward")
+data_4 = np.loadtxt("1800K_2rad.forward")
 
 time        = data[:,0]  # time (yr)
 Tpot        = data[:,1]  # Potential temp magma ocean (K)
@@ -164,7 +172,7 @@ print('Magma ocean solidification time (2.0 Schaefer) = ' , time_4[n_time_4-1]/1
 
 fig = plt.figure()
 fig.suptitle('GJ1132b: Initial water content '+str(M_water_mo[0])+' terrestrial oceans', fontsize=16, fontweight='bold')
-fig.text(x=0.5, y=0.02, s='Different Radiogenic Heating rates: Solid = 0.5 Schaefer, Dashed = 1 Schaefer, Dotted = 2 Schaefer', fontsize=14, ha="center")
+fig.text(x=0.5, y=0.02, s='Different Radiogenic Heating rates: Solid = 0.8 Schaefer, Dashed = 1 Schaefer, Dotted = 1.6 Schaefer', fontsize=14, ha="center")
 # plt.text(x=0.5, y=0.88, s= "My title 2 in different size", fontsize=12, ha="center", transform=fig.transFigure)
 
 ax1 = fig.add_subplot(231)
@@ -180,8 +188,8 @@ ax1.plot(time_4*10**-6, Tsurf_4, linestyle=':', color=cmap(220))
 ax1.legend(loc='best', frameon=True)
 ax1.set_ylabel('Temperature (K)')
 # ax1.set_xscale('log')
-ax1.set_xlim([10,28])
-ax1.set_ylim([600,1800])
+ax1.set_xlim([0,37])
+ax1.set_ylim([500,2000])
 
 ax2 = fig.add_subplot(232, sharex=ax1)
 ax2.plot(time*10**-6, r_sol/1.15, color=cmap(0))
@@ -190,7 +198,7 @@ ax2.plot(time_sch*10**-6, r_sol_sch/1.15, color=cmap(0), linestyle='--')
 
 ax2.plot(time_4*10**-6, r_sol_4/1.15, color=cmap(0), linestyle=':')
 
-ax2.set_ylim([0.99,1])
+ax2.set_ylim([0.989,1])
 # ax2.legend(loc='best', frameon=True)
 ax2.set_ylabel('Solidification radius ($r_p$)')
 
@@ -243,8 +251,8 @@ ax5.set_ylabel('Mass frac in magma ocean')
 # ax5.set_yscale('log')
 # ax5.set_ylim([1e16,5e21])
 ax5.set_xlabel('Time (Myrs)')
-ax5.set_ylim([0.02,0.1])
-ax5.set_xlim([10,28])
+ax5.set_ylim([0.02,0.08])
+# ax5.set_xlim([10,28])
 
 # ax6 = fig.add_subplot(236, sharex=ax1)
 # ax6.plot(time*10**-6, M_O_atm, label='atmosphere', color=cmap(0))

@@ -33,6 +33,7 @@ NetFluxAtmo = data[:,13] # atmospheric net flux (W/m^2)
 Frac_H2O    = data[:,14] # Water fraction in magma ocean
 RadioHeat   = data[:,15] # Radiogenic Heating Power (TW)
 TidalHeat   = data[:,16] # Tidal Heating Power (TW)
+MeltFrac    = data[:,17] # Melt Fraction magma ocean
 
 n_time = len(time)
 i_end  = n_time-1
@@ -162,15 +163,22 @@ ax6.set_yscale('log')
 ax7 = fig.add_subplot(337, sharex=ax1)
 ax7.plot(time*10**-6, NetFluxAtmo, color=cmap(0))
 ax7.set_ylabel('Atmospheric net flux ($W/m^2$)')
-# ax7.set_yscale('log')
+ax7.set_yscale('log')
 ax7.set_xlabel('Time (Myrs)')
+#
+# ax8 = fig.add_subplot(338, sharex=ax1)
+# ax8.plot(time*10**-6, RadioHeat, color=cmap(0), label='Radiogenic')
+# ax8.plot(time*10**-6, TidalHeat, color=cmap(220), label='Tidal')
+# ax8.legend(loc='best', frameon=True)
+# ax8.set_ylabel('Mantle Heating Power (TW)')
+# ax8.set_yscale('log')
+# ax8.set_xlabel('Time (Myrs)')
 
 ax8 = fig.add_subplot(338, sharex=ax1)
-ax8.plot(time*10**-6, RadioHeat, color=cmap(0), label='Radiogenic')
-ax8.plot(time*10**-6, TidalHeat, color=cmap(220), label='Tidal')
-ax8.legend(loc='best', frameon=True)
-ax8.set_ylabel('Mantle Heating Power (TW)')
-ax8.set_yscale('log')
+ax8.plot(time*10**-6, MeltFrac, color=cmap(0))
+# ax8.legend(loc='best', frameon=True)
+ax8.set_ylabel('Melt Fraction Magma Ocean')
+# ax8.set_yscale('log')
 ax8.set_xlabel('Time (Myrs)')
 
 # ax8.set_ylim([292,300])

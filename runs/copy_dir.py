@@ -21,14 +21,14 @@ for w in range(len(water)):
     for e in range(len(ecc)):
         for r in range(len(rad)):
             for p in range(len(planets)):
-                new_directory = 'TR1_'+planets[p][:-1]+'_'+water[w][:-1]+'TO_ecc_'+ecc[e][:-1]+'_rad_'+rad[r][:-1]+''
-                os.system('cp -r TR1_'+planets[p][:-1]+'_example '+new_directory+'')
+                new_directory = 'TR1_'+planets[p]+'_'+water[w][:-1]+'TO_ecc_'+ecc[e][:-1]+'_rad_'+rad[r][:-1]+''
+                os.system('cp -r TR1_'+planets[p]+'_example '+new_directory+'')
 
                 ## Change input files
 
                 # e.in
 
-                inputfile = open(''+new_directory+'/'+planets[p][:-1]+'.in')
+                inputfile = open(''+new_directory+'/'+planets[p]+'.in')
                 input = inputfile.readlines()
                 inputfile.close()
 
@@ -38,7 +38,7 @@ for w in range(len(water)):
                 input[38] = 'd40KNumMan    -'+str(rad_p)+'\n'
                 input[67] = 'dEcc          '+ecc[e][:-1]+'                         # Eccentricity \n'
 
-                inputfile = open(''+new_directory+'/'+planets[p][:-1]+'.in','w')
+                inputfile = open(''+new_directory+'/'+planets[p]+'.in','w')
                 for l in range(len(input)):
                     inputfile.write(input[l])
                 inputfile.close()

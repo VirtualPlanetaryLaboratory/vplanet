@@ -22,9 +22,9 @@ for w in range(len(water)):
     for e in range(len(ecc)):
         for r in range(len(rad)):
             for p in range(len(planets)):
-                new_directory = 'TR1_'+planets[p][:-1]+'_'+water[w][:-1]+'TO_ecc_'+ecc[e][:-1]+'_rad_'+rad[r][:-1]+''
+                new_directory = 'TR1_'+planets[p]+'_'+water[w][:-1]+'TO_ecc_'+ecc[e][:-1]+'_rad_'+rad[r][:-1]+''
 
-                if (not os.path.isfile(new_directory+'/Trappist1.'+planets[p][:-1]+'.forward')):
+                if (not os.path.isfile(new_directory+'/Trappist1.'+planets[p]+'.forward')):
                 while not PT.PT_free():
                     time.sleep(30)
 

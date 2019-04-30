@@ -1247,9 +1247,9 @@ int fbHaltMantleSolidified(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *u
 }
 
 int fbHaltAtmDesiSurfCool(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-  if (body[iBody].bManQuasiSol) {
+  if (body[iBody].bPlanetDesiccated) {
     if (io->iVerbose >= VERBPROG) {
-      printf("HALT: %s's atmosphere desiccated & surface temperature below 1000K after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+      printf("HALT: %s's atmosphere desiccated after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
     return 1;
   }

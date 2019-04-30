@@ -1,6 +1,6 @@
 # Planet a parameters
 sName         GJ1132b                     # Body's name
-saModules     magmoc, atmesc, radheat, eqtide                      # Modules to apply, exact spelling required
+saModules     magmoc, atmesc                      # Modules to apply, exact spelling required
 cColor        13aed5
 
 # Physical Properties
@@ -9,13 +9,13 @@ dRadius       -1.15                       # Radius, negative -> Earth radii
 
 # MAGMOC Properties
 dMassFracFeOIni		0.0788		  # Initial mass fraction of FeO in the mantle (default: 0.0788)
-dWaterMassAtm		-100		  # Initial water mass in the system (neg: terrestrial oceans, default: -1)
+dWaterMassAtm		-0.1		  # Initial water mass in the system (neg: terrestrial oceans, default: -1)
 dSurfTemp		4000		  # Initial surface temperature (default: 4000K)
 dManMeltDensity		4000		  # Mantle melt density (default: 4000kg/m^3)
 bHaltMantleSolidified 	1		  # Halt when mantle solidified? (default: 0 = no, 1 = yes)
-bHaltAtmDesiSurfCool    0                 # Halt when atmosphere desiccated and surface below 1000K? (default: 0 = no, 1 = yes)
+bHaltAtmDesiSurfCool    1                 # Halt when atmosphere desiccated? (default: 0 = no, 1 = yes)
 bHaltEnterHabZone       0                 # Halt when planet enters habitable zone? (default: 0 = no, 1 = yes)
-sRadioHeatModel		none              # Radiogenic heating model (default: none = RadHeat; schaefer = BSE composition)
+sRadioHeatModel		schaefer              # Radiogenic heating model (default: none = RadHeat; schaefer = BSE composition)
 sMagmOcAtmModel 	grey		  # Atmospheric net flux model (default: grey; petit only for GJ1132b-H2O)
 
 # ATMESC Properties
@@ -29,41 +29,11 @@ sWaterLossModel           lbexact
 sPlanetRadiusModel        none
 bInstantO2Sink            0
 sAtmXAbsEffH2OModel       none
-dAtmXAbsEffH2O 		  0.3
-
-# RADHEAT Parameters
-# *Num* are in numbers of atoms, negative -> Earth vals
-### 40K
-d40KNumMan    -3.24
-d40KNumCore   -0
-d40KNumCrust  -0.0
-
-### 232Th
-d232ThNumMan      -3.24
-d232ThNumCore     -0
-d232ThNumCrust    -0
-
-### 235U
-d235UNumMan      -3.24
-d235UNumCore     -0
-d235UNumCrust    -0
-
-### 238U
-d238UNumMan      -3.24
-d238UNumCore     -0
-d238UNumCrust    -0
-
-# EQTIDE Parameters
-dTidalQ         100          # Tidal phase lag
-dK2             0.5             # Love number of degree 2
-dMaxLockDiff    0.01
-saTidePerts     GJ1132          # Body name(s) of tidal perturbers
-bFixOrbit       1                  # Keep dEcc constant?
-bForceEqSpin    1                  # Planet tidally locked, no rotation?
+dAtmXAbsEffH2O 		  0.
 
 # Orbital Properties
 dSemi         -0.0154                     # Semi-major axis, negative -> AU
 dEcc          0.0                         # Eccentricity
 
 # Output
-saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -PressWaterAtm -PressOxygenAtm -HydrogenMassSpace -OxygenMassSpace FracFe2O3Man NetFluxAtmo WaterFracMelt -RadioPower -TidalPower MeltFraction
+saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -PressWaterAtm -PressOxygenAtm -HydrogenMassSpace -OxygenMassSpace FracFe2O3Man NetFluxAtmo WaterFracMelt MeltFraction

@@ -1,0 +1,72 @@
+# Planet f parameters
+sName         f			                     # Body's name
+saModules     magmoc, atmesc, radheat, eqtide        # Modules to apply, exact spelling required
+cColor        13aed5
+
+# Physical Properties
+dMass         -0.926                        # Mass, negative -> Earth masses
+dRadius       -1.05                         # Radius, negative -> Earth radii
+
+# MAGMOC Properties
+dMassFracFeOIni		0.0788		  # Initial mass fraction of FeO in the mantle (default: 0.0788)
+dWaterMassAtm		-10		  # Initial water mass in the system (neg: terrestrial oceans, default: -1)
+dSurfTemp		4000		  # Initial surface temperature (default: 4000K)
+dManMeltDensity		4000		  # Mantle melt density (default: 4000kg/m^3)
+bHaltMantleSolidified 	0		  # Halt when mantle solidified? (default: 0 = no, 1 = yes)
+bHaltAtmDesiSurfCool    1                 # Halt when atmosphere desiccated? (default: 0 = no, 1 = yes)
+bHaltEnterHabZone       1                 # Halt when planet enters habitable zone? (default: 0 = no, 1 = yes)
+bHaltAllPlanetsSolid  	0                 # Halt when all planets are soldified	(for multiple planet systems)
+bHaltAllPlanetsDesicc 	0                 # Halt when all planets are desiccated (for multiple planet systems)
+sRadioHeatModel		none              # Radiogenic heating model (default: none = RadHeat; schaefer = BSE composition)
+sMagmOcAtmModel 	grey		  # Atmospheric net flux model (default: grey; petit only for GJ1132b-H2O)
+
+# ATMESC Properties
+dXFrac                    1.0             # X-Ray/XUV absorption radius (fraction of planet radius)
+dSurfWaterMass            -1.0            # Initial surface water (Earth oceans)
+dEnvelopeMass             0               # Initial envelope mass (Earth masses)
+bHaltSurfaceDesiccated    0               # Halt when dry?
+bHaltEnvelopeGone         0               # Halt when evaporated?
+dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
+sWaterLossModel           lbexact
+sPlanetRadiusModel        none
+bInstantO2Sink            0
+sAtmXAbsEffH2OModel       none
+dAtmXAbsEffH2O 		  0.3
+
+# RADHEAT Parameters
+# *Num* are in numbers of atoms, negative -> Earth vals
+### 40K
+d40KNumMan    -0.926
+d40KNumCore   -0
+d40KNumCrust  -0.0
+
+### 232Th
+d232ThNumMan      -0.926
+d232ThNumCore     -0
+d232ThNumCrust    -0
+
+### 235U
+d235UNumMan      -0.926
+d235UNumCore     -0
+d235UNumCrust    -0
+
+### 238U
+d238UNumMan      -0.926
+d238UNumCore     -0
+d238UNumCrust    -0
+
+# EQTIDE Parameters
+dTidalQ         100          # Tidal phase lag
+dK2             0.5             # Love number of degree 2
+dMaxLockDiff    0.01
+saTidePerts     Trappist1          # Body name(s) of tidal perturbers
+bFixOrbit 	1		   # Keep dEcc constant?
+bForceEqSpin	1		   # Planet tidally locked, no rotation?
+
+# Orbital Properties
+dSemi         -0.0385                     # Semi-major axis, negative -> AU
+dEcc          0.00                       # Eccentricity
+
+# Output
+saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -PressWaterAtm -PressOxygenAtm -HydrogenMassSpace -OxygenMassSpace FracFe2O3Man NetFluxAtmo WaterFracMelt -RadioPower -TidalPower $
+-SemiMajorAxis -HZInnerEdge

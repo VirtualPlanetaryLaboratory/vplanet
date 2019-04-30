@@ -1,0 +1,14 @@
+sName			planet
+saModules 		atmesc eqtide
+
+# Physical Parameters
+dMass			-1.0	# Mass, negative -> Earth masses
+dRadius         -1.0
+
+# Orbital Parameters
+dEcc            	0.03	# Eccentricity
+dOrbPeriod		    -1.0	# Orbital period, negative -> d
+
+# ATMESC Parameters
+dAtmXAbsEffH    	0.1     # Atmospheric XUV absorption efficiency (epsilon)
+dEnvelopeMass       -0.001  # Initial envelope mass (Earth masses)

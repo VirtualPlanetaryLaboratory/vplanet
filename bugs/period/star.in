@@ -1,0 +1,12 @@
+# Host star parameters
+sName		star
+saModules   stellar
+
+# Physical properties
+dMass        	1.0
+
+# STELLAR parameters
+sStellarModel	baraffe
+dSatXUVFrac   	1e-3
+dSatXUVTime	    1e8
+dXUVBeta	    1.5

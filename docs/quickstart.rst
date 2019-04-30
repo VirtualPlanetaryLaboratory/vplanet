@@ -10,7 +10,8 @@ To get started very quickly with one example:
 
 .. code-block:: bash
 
-  git clone https://github.com/VirtualPlanetaryLaboratory/vplanet-private.git
+  git clone https://github.com/VirtualPlanetaryLaboratory/vplanet.git
+  cd vplanet
   make opt
   cd examples/VenusWaterLoss
   ../../vplanet vpl.in

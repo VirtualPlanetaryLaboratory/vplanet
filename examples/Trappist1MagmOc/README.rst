@@ -1,16 +1,16 @@
-Magma ocean evolution on GJ1132b
+Magma ocean evolution on the Trappist-1 planets
 ===========
 
 Overview
 --------
 
-Thermal and volatile evolution of GJ1132b's mantle and atmosphere
+Thermal and volatile evolution of Trappist-1 e's, f's, and g's mantle and atmosphere
 
 ===================   ============
-**Date**              02/18/19
+**Date**              04/16/19
 **Author**            Patrick Barth
-**Modules**           magmoc
-                      stellar?
+**Modules**           magmoc, atmesc, radheat, eqtide
+                      stellar
 **Approx. runtime**   30 minutes
 **Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/magmoc/examples/MagmOc>`_
 ===================   ============

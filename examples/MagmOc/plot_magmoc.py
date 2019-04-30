@@ -110,7 +110,7 @@ print('Oxygen mass in mantle in Fe2O3 = ', M_O_sol_tot, ' kg')
 
 ### Plot ###
 
-fig = plt.figure()
+fig = plt.figure(num=None, figsize=(15, 9), dpi=300, facecolor='w', edgecolor='k')
 fig.suptitle('GJ1132b: Initial water content '+str(M_water_mo[0])+' terrestrial oceans', fontsize=16, fontweight='bold')
 
 ax1 = fig.add_subplot(331)
@@ -230,7 +230,11 @@ ax9.set_ylabel('Ratio of atoms gained')
 # ax9.set_xlabel('Time (Myrs)')
 # ax9.set_ylabel('Number of atoms lost ($10^{45}$)')
 
-plt.show()
+
+plt.subplots_adjust(left=0.05, right=0.99, top=0.93, bottom=0.07)
+plt.savefig('Results_GJ1132b.png')
+
+# plt.show()
 
 # plt.figure()
 # plt.title('GJ1132b: $M_{water}^{ini} = $'+str(M_water_mo[0])+' TO', fontsize=18, fontweight='bold')

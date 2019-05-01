@@ -18,7 +18,7 @@ Water-rich terrestrial planets orbiting low mass stars may experience sustained
 bombardment by XUV photons during the pre-main sequence phase of the host star.
 As the planets will likely be in a runaway greenhouse, water can be in the stratosphere
 where it is photolyzed. Hydrogen can then escape leaving behind the heavier oxygen.
-This script reproduces Figure 7 in Luger and Barnes (2015) :cite:`LugerBarnes2015`.
+This script reproduces Figure 7 in `Luger and Barnes (2015) <http://adsabs.harvard.edu/abs/2015AsBio..15..119L>`_.
 
 To run this example
 -------------------

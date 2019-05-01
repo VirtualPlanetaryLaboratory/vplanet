@@ -14,7 +14,7 @@ dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
 #cColor ff0000
 
 # Orbital Properties
-dEcc 0.05
+dEcc 0.1
 #dSemi 0.1167317
 dSemi 0.125
 

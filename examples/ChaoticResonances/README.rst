@@ -4,8 +4,7 @@ Chaotic Eccentricity-Inclination Resonances
 Overview
 --------
 
-Orbital evolution of System U in `Barnes et al (2015) <http://adsabs.harvard.edu/abs/2015ApJ...801..101B>`_
-(see Fig. 13) as predicted by `vplanet <https://github.com/VirtualPlanetaryLaboratory/vplanet>`_.
+Orbital evolution of System U in `Barnes et al (2015) <http://adsabs.harvard.edu/abs/2015ApJ...801..101B>`_, Fig. 13.
 
 An animation of this system is available `here <http://faculty.washington.edu/rkb9/animations/>`_.
 

@@ -14,8 +14,8 @@ The orbits of circumbinary planets evolve due to the binary stars' changing posi
 ===================   ============
 
 
-The orbital evolution of Kepler-16 b, a circumbinary planet, ir shown in this example
-using the semi-analytic model of `Leung & Lee (2013) <https://ui.adsabs.harvard.edu/abs/2013ApJ...763..107L/abstract>`_. The orbit is non-Keplerian
+The orbital evolution of Kepler-16 b, a circumbinary planet, is shown in this example
+using the semi-analytic model of `Leung & Lee (2013) <https://ui.adsabs.harvard.edu/abs/2013ApJ...763..107L/abstract>`_, see their Fig. 5. The orbit is non-Keplerian
 due to the changing positions of the host stars.
 
 

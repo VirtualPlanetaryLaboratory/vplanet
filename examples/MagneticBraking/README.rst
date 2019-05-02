@@ -15,8 +15,8 @@ Rotational evolution of stars due to magnetic effects.
 
 Rotation period evolution for 0.1 and 1.0 solar-mass stars due to stellar
 evolution and magnetic braking.  We compare the how our different available
-magnetic braking laws (Reiners & Mohanty (2012), Repetto & Nelemans (2014),
-and Matt et al. (2015)) impact the rotation period evolution.
+magnetic braking laws (`Reiners & Mohanty [2012] <https://ui.adsabs.harvard.edu/abs/2012ApJ...746...43R/abstract>`_, `Repetto & Nelemans [2014] <https://ui.adsabs.harvard.edu/abs/2014MNRAS.444..542R/abstract>`_,
+and `Matt et al. [2015] <https://ui.adsabs.harvard.edu/abs/2015ApJ...799L..23M/abstract>`_) impact the rotation period evolution.
 
 
 To run this example
@@ -36,4 +36,4 @@ Expected output
    :align: center
 
    Rotation period evolution for a 0.1 and 1 Msun star due to stellar evolution
-   (Baraffe et al. (2015) and one of the 3 available magnetic braking laws.
+   (`Baraffe et al. 2015 <https://ui.adsabs.harvard.edu/abs/2015A%26A...577A..42B/abstract>`_) and one of the 3 available magnetic braking laws.

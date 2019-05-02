@@ -15,7 +15,4 @@ check is automatically triggered. Briefly, this check compiles and runs **vplane
 on all the subdirectories listed here and compares the results to the expected
 behavior. This quality control ensures that as changes are made to the code base,
 the outcomes of the simulations match expectations. Each check here corresponds
-to a figure in the `examples <../examples>`_ directory or the following public
-repositories:
-
-`ProximaHistory <https://github.com/VirtualPlanetaryLaboratory/ProximaHistory>`_
+to a figure in the `examples <../examples>`_ directory.

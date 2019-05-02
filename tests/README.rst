@@ -15,4 +15,5 @@ check is automatically triggered. Briefly, this check compiles and runs **VPLane
 on all the subdirectories listed here and compares the results to the expected
 behavior. This quality control ensures that as changes are made to the code base,
 the outcomes of the simulations match expectations. Each check here corresponds
-to a figure in the `examples <../examples>`_ directory.
+to a figure in the `examples <../examples>`_ directory, so if the tests are passing, 
+then all figures should be reproduced by **VPLanet**.

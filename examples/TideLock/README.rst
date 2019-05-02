@@ -14,7 +14,7 @@ This example shows tidal locking for the planet candidate Gl 581 d.
 ===================   ============
 
 Although Gl 581 d is no longer thought to be a planet, this example reproduces
-Fig. 6 in Heller et al. (2011) and validates the EqTide module. Results for the
+Fig. 6 in `Heller et al. (2011) <https://ui.adsabs.harvard.edu/abs/2011A%26A...528A..27H/abstract>`_ and validates the EqTide module. Results for the
 rotational period and obliquity for both the CPL and CTL models are shown.
 
 

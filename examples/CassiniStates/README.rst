@@ -23,7 +23,7 @@ star damp the rotation rate, obliquity, semi-major axis and orbital eccentricity
 Tides tend to damp the rotational axis so that it is perpendicular to the orbital
 plane, but perturbations from other planets drive the obliquity to higher values.
 Over time, the systems settles in a damped-drived state in which the obliquity is
-non-zero, but also not oscillating. This example is modeled after `Winn & Holman (2005) <https://ui.adsabs.harvard.edu/abs/2005ApJ...628L.159W/abstract>`_.
+non-zero, but also not oscillating. This example is modeled after `Winn & Holman (2005) <https://ui.adsabs.harvard.edu/abs/2005ApJ...628L.159W/abstract>`_, see their Fig. 2.
 
 To run this example
 -------------------
@@ -51,7 +51,7 @@ constructed to be similar to Figure 2 of `Winn & Holman (2005) <https://ui.adsab
    :align: center
 
 Phase space of the three prograde Cassini states (numbered). The gray curves
-show lines of constant Hamiltonian (Equation 5 in :`Winn & Holman [2005] <https://ui.adsabs.harvard.edu/abs/2005ApJ...628L.159W/abstract>`_) and the
+show lines of constant Hamiltonian (Equation 5 in `Winn & Holman [2005] <https://ui.adsabs.harvard.edu/abs/2005ApJ...628L.159W/abstract>`_) and the
 black curve shows the separatrix between states 1 and 2. The three possible
 Cassini states for this system are denoted by the light gray numbers 1, 2, and
 4. This case is constructed to be similar to the illustrative case shown in

@@ -15,19 +15,22 @@ radfile.close()
 
 planets = ['e','f','g']
 masses  = [0.766,0.926,1.14]
-# Copy directories
+
+dir_number = 0
+
+# File with numbers and input parameters
+dir_names_file = open('dir_names.txt', 'w')
+dir_names_file.write('# Number \t Planet \t Water mass [TO] \t Eccentricity \t 40K abundance [Earth]\n ')
 
 for w in range(len(water)):
     for e in range(len(ecc)):
         for r in range(len(rad)):
             for p in range(len(planets)):
-                new_directory = 'TR1_'+planets[p]+'_'+water[w][:-1]+'TO_ecc_'+ecc[e][:-1]+'_rad_'+rad[r][:-1]+''
+                # new_directory = 'TR1_'+planets[p]+'_'+water[w][:-1]+'TO_ecc_'+ecc[e][:-1]+'_rad_'+rad[r][:-1]+''
+                new_directory = 'TR1_'+str(dir_number)+''
                 os.system('cp -r TR1_'+planets[p]+'_example '+new_directory+'')
 
                 ## Change input files
-
-                # e.in
-
                 inputfile = open(''+new_directory+'/'+planets[p]+'.in')
                 input = inputfile.readlines()
                 inputfile.close()
@@ -42,3 +45,9 @@ for w in range(len(water)):
                 for l in range(len(input)):
                     inputfile.write(input[l])
                 inputfile.close()
+
+                # write input parameters to list of folder numbers & update folder number
+                dir_names_file.write(''+str(dir_number)+'\t'+planets[p]+'\t'+water[w][:-1]+'\t'+ecc[e][:-1]+'\t'+rad[r][:-1]+'\n')
+                dir_number = dir_number + 1
+
+dir_names_file.close()

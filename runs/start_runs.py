@@ -30,6 +30,7 @@ for w in range(len(water)):
 
                 #os.system('cd '+fnames[i][:-1]+' ')
                 #print('changed to folder')
+                qsub -q queue2g64c@bachelor-node04 -N name -t 1:108 -tc 10 -cwd script.sh
                 os.system('oqsubBA_queue1g1c '+new_directory+' '+new_directory+'/vplanet vpl.in')
                 #print('submitted')
                 #os.system('cd ..')

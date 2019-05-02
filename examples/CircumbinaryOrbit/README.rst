@@ -4,7 +4,7 @@ Orbital Evolution of the Circumbinary Planet Kepler-16 b
 Overview
 --------
 
-The orbits of circumbinary planets evolve due to the binary stars' changing positions.
+The orbital evolution of circumbinary planets, which varies as the host stars positions change.
 
 ===================   ============
 **Date**              07/24/18
@@ -36,8 +36,8 @@ Expected output
    :align: center
 
    Orbital evolution of circumbinary planet Kepler-16b according to
-   VPLANET's **BINARY** module.  Perturbations from the central binary
+   **VPLanet**'s **BINARY** module.  Perturbations from the central binary
    force orbital eccentricity and inclination oscillations for the planet
    (top left and right panels, respectively) and cause appreciable precession
-   of the longitude of the periapse and ascending node (bottom left and right
+   of the longitudes of the periapse and ascending node (bottom left and right
    panels, respectively).

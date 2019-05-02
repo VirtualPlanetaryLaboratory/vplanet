@@ -44,9 +44,9 @@ Expected output
    :width: 600px
    :align: center
 
-Water loss and oxygen buildup for planets orbiting in the habitable
+Water loss and oxygen accumulation for planets orbiting in the habitable
 zones of M dwarfs. The extended pre-main sequence phase of low mass
 stars leads to vigorous hydrodynamic escape from planets in their
 habitable zone, causing the loss of surface water (left) and the
-buildup of atmospheric oxygen (right). See `Luger and Barnes (2015) <https://ui.adsabs.harvard.edu/abs/2015AsBio..15..119L/abstract>`_
+accumulation of atmospheric oxygen (right). See `Luger and Barnes (2015) <https://ui.adsabs.harvard.edu/abs/2015AsBio..15..119L/abstract>`_
 for more details.

@@ -21,7 +21,7 @@ northern and southern hemispheres. On longer timescales, ice sheets grow and ret
 due to changes in eccentricity and obliquity, which are caused by perturbations
 from other bodies. Note that we assume every latitude grid is 75% water, 25% land
 so the latitudinal extent of the ice sheets does not exactly match the geologic
-record, but the frequencies and intensities do (Huybers & Tzipermann 2008).
+record, but the frequencies and intensities do `(Huybers & Tzipermann 2008) <https://ui.adsabs.harvard.edu/abs/2008PalOc..23.1208H/abstract>`_.
 
 To run this example
 -------------------

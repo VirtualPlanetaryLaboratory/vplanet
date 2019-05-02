@@ -1257,7 +1257,7 @@ int fbHaltAtmDesiSurfCool(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *up
 }
 
 int fbHaltEnterHabZone(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-  if (body[iBody].bRunaway) {
+  if (!body[iBody].bRunaway) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s enters habitable zone after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }

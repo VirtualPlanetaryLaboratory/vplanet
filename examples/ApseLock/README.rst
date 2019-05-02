@@ -18,8 +18,8 @@ circulate with the same frequency after tidal damping.
 
 In a planetary system consisting of two or more planets and in which at least one
 experiences damping, the orbits will evolve such that the eccentricity cycles stop
-and the major axes evolve in lock stop. This "fixed point solution" :cite::`WuGoldreich02`
-is reproduced below for the case of CoRoT-7 b and c as examined by :cite::Rodriguez11.
+and the major axes evolve in lock stop. This "fixed point solution" `(Wu & Goldreich (2002) <https://ui.adsabs.harvard.edu/abs/2002ApJ...564.1024W/abstract>`_
+is reproduced below for the case of CoRoT-7 b and c as examined by `Rodriguez et al. (2011) <https://ui.adsabs.harvard.edu/abs/2011CeMDA.111..161R/abstract>`_.
 
 To run this example
 -------------------

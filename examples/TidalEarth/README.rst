@@ -10,7 +10,7 @@ from its host star.
 ===================   ============
 **Date**              04/09/19
 **Author**            Peter Driscoll
-**Modules**           RadHeat ThermInt EqTide
+**Modules**           RadHeat, ThermInt, EqTide
 **Approx. runtime**   10 minutes
 ===================   ============
 

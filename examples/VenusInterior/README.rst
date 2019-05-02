@@ -15,7 +15,7 @@ Internal evolution of Venus.
 
 This example uses the stagnant lid model of Venus to estimate its thermal and magnetic
 evolution. Without much data on its interior, this problem is underconstrained, but
-**VPLanet** does reproduce the available observations.
+**VPLanet** does reproduce the available observations. These figures reproduce results from Driscoll & Bercovici (`2013 <https://ui.adsabs.harvard.edu/abs/2013Icar..226.1447D/abstract>`_, `2014 <https://ui.adsabs.harvard.edu/abs/2014PEPI..236...36D/abstract>`_).
 
 To run this example
 -------------------

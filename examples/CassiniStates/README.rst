@@ -23,7 +23,7 @@ star damp the rotation rate, obliquity, semi-major axis and orbital eccentricity
 Tides tend to damp the rotational axis so that it is perpendicular to the orbital
 plane, but perturbations from other planets drive the obliquity to higher values.
 Over time, the systems settles in a damped-drived state in which the obliquity is
-non-zero, but also not oscillating. This example is modeled after Winn & Holman (2005).
+non-zero, but also not oscillating. This example is modeled after `Winn & Holman (2005) <https://ui.adsabs.harvard.edu/abs/2005ApJ...628L.159W/abstract>`_.
 
 To run this example
 -------------------
@@ -44,18 +44,18 @@ Expected output
 
 An Earth-mass planet damping into Cassini state 2 under the influence of tides
 and perturbations from an 18 Earth-mass companion planet. This example is
-constructed to be similar to Figure 2 of :cite::WinnHolman05.
+constructed to be similar to Figure 2 of `Winn & Holman (2005) <https://ui.adsabs.harvard.edu/abs/2005ApJ...628L.159W/abstract>`_.
 
 .. figure:: CassiniStatesSection.png
    :width: 600px
    :align: center
 
 Phase space of the three prograde Cassini states (numbered). The gray curves
-show lines of constant Hamiltonian (Equation 5 in :cite::WinnHolman05) and the
+show lines of constant Hamiltonian (Equation 5 in :`Winn & Holman [2005] <https://ui.adsabs.harvard.edu/abs/2005ApJ...628L.159W/abstract>`_) and the
 black curve shows the separatrix between states 1 and 2. The three possible
 Cassini states for this system are denoted by the light gray numbers 1, 2, and
 4. This case is constructed to be similar to the illustrative case shown in
-Figure 2 of :cite::WinnHolman05, with -g/\alpha ~ 0.75$ and i = 6 deg. The
+Figure 2 of `Winn & Holman (2005) <https://ui.adsabs.harvard.edu/abs/2005ApJ...628L.159W/abstract>`_, with -g/\alpha ~ 0.75$ and i = 6 deg. The
 location of the planet's pole after ~400 kyr is shown as the black points. As
 the planet's spin is damped by tidal torques, its obliquity sinks into Cassini
 state 2.

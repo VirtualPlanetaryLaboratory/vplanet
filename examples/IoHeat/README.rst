@@ -41,5 +41,5 @@ Expected output
 Contour plot of surface tidal heat flux of Io as a function of its eccentricity
 and obliquity. Contour units are W/m^2, the vertical line corresponds to Io's
 observed eccentricity, and the horizontal line is the expected obliquity if Io
-is in a Cassini state :cite:`BillsRay00`. The orange shaded region corresponds
-to the observed value of 1.5-3 W/m^2 :cite:`Veeder12`.
+is in a Cassini state `(Bills & Ray 2000) <https://ui.adsabs.harvard.edu/abs/2000JGR...10529277B/abstract>`_. The orange shaded region corresponds
+to the observed value of 1.5-3 W/m^2 `(Veeder et al. 2012) <https://ui.adsabs.harvard.edu/abs/2012Icar..219..701V/abstract>`_.

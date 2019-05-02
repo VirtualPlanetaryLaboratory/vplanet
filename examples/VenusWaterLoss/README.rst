@@ -16,8 +16,8 @@ Water loss on Venus from thermal escape processes.
 
 The Sun's XUV radiation likely removed water from Venus early in the history of the
 Solar System. If Venus was in a runaway greenhouse, then water would be in the
-stratosphere where it can be photolyzed and the hydrogen can escape. Watson et al.
-(1981) estimated 280 Myr, but did not account for early activity. Including that effect,
+stratosphere where it can be photolyzed and the hydrogen can escape. `Watson et al.
+(1981) <https://ui.adsabs.harvard.edu/abs/1981Icar...48..150W/abstract>`_ estimated 280 Myr, but did not account for early activity. Including that effect,
 **VPLanet** predicts a desiccation timescale of about 100 Myr.
 
 
@@ -37,10 +37,10 @@ Expected output
    :width: 600px
    :align: center
 
-   Evolution of the surface water content (left) and amount of oxygen absorbed
-   by the surface (right) as a function of time for three different initial
-   surface water inventories. The vertical dashed line is the Watson et al. (1981)
-   :cite:`Watson81` timescale for the complete desiccation of Venus.
+Evolution of the surface water content (left) and amount of oxygen absorbed
+by the surface (right) as a function of time for three different initial
+surface water inventories. The vertical dashed line is the `Watson et al.
+(1981) <https://ui.adsabs.harvard.edu/abs/1981Icar...48..150W/abstract>`_ timescale for the complete desiccation of Venus.
 
 To create the Bolmont scaling relationship figure
 -------------------
@@ -55,5 +55,5 @@ To create the Bolmont scaling relationship figure
    :width: 600px
    :align: center
 
-   The scaling of the atmospheric escape efficiency for H2O based on the XUV flux
-   received by the planet as given by Bolmont (2016) :cite:`Bolmont16`.
+The scaling of the atmospheric escape efficiency for H2O based on the XUV flux
+received by the planet as given by `Bolmont et al. (2017) <https://ui.adsabs.harvard.edu/abs/2017MNRAS.464.3728B/abstract>`_.

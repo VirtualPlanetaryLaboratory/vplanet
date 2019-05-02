@@ -2,7 +2,7 @@ VPLanet Examples
 ================
 
 This subdirectory contains examples of numerous ways to use `VPLanet`. A brief
-description of each is provided below, arranged by topic [with modules listed in brackets]. Click on the directory above to see scripts,
+description of each is provided below, arranged by topic [with modules listed in brackets]. Click on the directory to see scripts,
 plots, and more description of the physics. Use these scripts to reproduce published figures, or as a starting point to begin your own fundamental research. The simulations used to generate these figures are `validated with continuous integration <../tests>`_ with the identical (or representative, in the case of parameter sweeps) initial conditions. Looking for something not present? E-mail Rory Barnes, rory@astro.washington.edu, to inquire if that functionality is available and validated.
 
 Note that all example plots require `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_.
@@ -28,11 +28,11 @@ Note that all example plots require `vplot <https://github.com/VirtualPlanetaryL
 
 `EarthInterior <EarthInterior>`_: Evolution of Earth's thermal and magnetic properties (plate tectonics). [RadHeat, ThermInt]
 
-`IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity, according to equilibrium tide theory. [EqTide, VSPACE]
+`IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity according to equilibrium tide theory. [EqTide, VSPACE]
 
-`RadHeat <RadHeat>`_: Radiogenic heating evolution in Earth's core, mantle and crust. [RadHeat]
+`RadHeat <RadHeat>`_: Radiogenic heating evolution in Earth's core, mantle, and crust. [RadHeat]
 
-`TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]
+`TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a low mass star and tidally heated. [EqTide, RadHeat, ThermInt]
 
 `VenusInterior <VenusInterior>`_: Thermal and magnetic evolution of Venus' interior (stagnant lid). [RadHeat, ThermInt]
 
@@ -51,11 +51,9 @@ Note that all example plots require `vplot <https://github.com/VirtualPlanetaryL
 
 `SSDistOrbDistRot <SSDistOrbDistRot>`_: Evolution of the Solar System planets' orbital and rotational angular momenta from approximate models. [DistOrb, DistRot]
 
-`TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]
+`TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a low mass star and tidally heated. [EqTide, RadHeat, ThermInt]
 
-`IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity, according to equilibrium tide theory. [EqTide, VSPACE]
-
-`TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTL equilibrium tide models. [EqTide]
+`IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity according to equilibrium tide theory. [EqTide, VSPACE]
 
 **Stars**
 =========
@@ -75,8 +73,8 @@ Note that all example plots require `vplot <https://github.com/VirtualPlanetaryL
 
 `CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [Distorb, DistRot, EqTide]
 
-`IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity, according to equilibrium tide theory. [EqTide, VSPACE]
+`IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity according to equilibrium tide theory. [EqTide, VSPACE]
 
-`TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a late M dwarf and tidally heated. [EqTide, RadHeat, ThermInt]
+`TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a low mass star and tidally heated. [EqTide, RadHeat, ThermInt]
 
 `TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTL equilibrium tide models. [EqTide]

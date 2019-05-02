@@ -4,7 +4,7 @@ Orbital Evolution of the Circumbinary Planet Kepler-16 b
 Overview
 --------
 
-The orbits of circumbinary planets evolve due to the binary stars' changing positions.
+The orbital evolution of circumbinary planets, which varies as the host stars positions change.
 
 ===================   ============
 **Date**              07/24/18
@@ -14,8 +14,8 @@ The orbits of circumbinary planets evolve due to the binary stars' changing posi
 ===================   ============
 
 
-The orbital evolution of Kepler-16 b, a circumbinary planet, ir shown in this example
-using the semi-analytic model of `Leung & Lee (2013) <https://ui.adsabs.harvard.edu/abs/2013ApJ...763..107L/abstract>`_. The orbit is non-Keplerian
+The orbital evolution of Kepler-16 b, a circumbinary planet, is shown in this example
+using the semi-analytic model of `Leung & Lee (2013) <https://ui.adsabs.harvard.edu/abs/2013ApJ...763..107L/abstract>`_, see their Fig. 5. The orbit is non-Keplerian
 due to the changing positions of the host stars.
 
 
@@ -36,8 +36,8 @@ Expected output
    :align: center
 
    Orbital evolution of circumbinary planet Kepler-16b according to
-   VPLANET's **BINARY** module.  Perturbations from the central binary
+   **VPLanet**'s **BINARY** module.  Perturbations from the central binary
    force orbital eccentricity and inclination oscillations for the planet
    (top left and right panels, respectively) and cause appreciable precession
-   of the longitude of the periapse and ascending node (bottom left and right
+   of the longitudes of the periapse and ascending node (bottom left and right
    panels, respectively).

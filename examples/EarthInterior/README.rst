@@ -17,7 +17,7 @@ This example shows the thermal and magnetic evolution of Earth's interior from
 **ThermInt** and **RadHeat**. The model is 1-D and many free parameters have been
 tuned to reproduce Earth's current properties. Earth is divided in a core, mantle,
 and crust. The evolution depends only on the temperature of the core and mantle. 
-These figures reproduce results from Driscoll & Bercovici (`2013 <https://ui.adsabs.harvard.edu/abs/2013Icar..226.1447D/abstract>`_, `2014 <https://ui.adsabs.harvard.edu/abs/2014PEPI..236...36D/abstract>`_).
+These figures are similar to Fig. 5 in Driscoll & Bercovici (`2014 <https://ui.adsabs.harvard.edu/abs/2014PEPI..236...36D/abstract>`_).
 
 
 To run this example

@@ -4,7 +4,7 @@ Tidal Heating of Io
 Overview
 --------
 
-Surface energy flux on Io due to tidal dissipation according the the eqtide-CPL
+Surface energy flux on Io due to tidal dissipation according to **EqTide**'s "constant-phase-lag"
 model.
 
 ===================   ============
@@ -15,11 +15,11 @@ model.
 ===================   ============
 
 This example reproduces the surface energy flux on Io over a range of eccentricity
-and obliquity. It also shows how to use vspace, a script in this repository that
-can generate input files across a parameter range. vspace will create a large
-number of directories, each of which has 3 input files. In this example, the makeplot
+and obliquity. It also shows how to use `VSPACE <../../vspace>`_, a script in this repository that
+can generate input files across a parameter range. **VSPACE** will create a large
+number of directories, each of which has 3 input files. In this example, the `makeplot.py`
 script will run each individual trial, gather the results, and create the summary
-plot below. The orange strip corresponds to the observed heat flow of Io.
+plot below. The orange strip corresponds to the observed heat flow of Io `(Veeder et al. 2012) <https://ui.adsabs.harvard.edu/abs/2012Icar..219..701V/abstract>`_.
 
 
 To run this example

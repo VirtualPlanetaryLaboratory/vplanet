@@ -102,8 +102,8 @@ plt.xlabel('Time (yrs)')
 plt.legend(loc='upper left')
 
 if (sys.argv[1] == 'pdf'):
-    plt.savefig('SS_NBody.pdf')
+    plt.savefig('SS_NBody.pdf', bbox_inches="tight", dpi=600)
 if (sys.argv[1] == 'png'):
-    plt.savefig('SS_NBody.png')
+    plt.savefig('SS_NBody.png', bbox_inches="tight", dpi=600)
 
 plt.close()

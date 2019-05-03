@@ -16,16 +16,16 @@ radfile.close()
 planets = ['e','f','g']
 masses  = [0.766,0.926,1.14]
 
-dir_number = 0
+dir_number = 1
 
 # File with numbers and input parameters
 dir_names_file = open('dir_names.txt', 'w')
 dir_names_file.write('# Number \t Planet \t Water mass [TO] \t Eccentricity \t 40K abundance [Earth]\n ')
 
-for w in range(len(water)):
-    for e in range(len(ecc)):
-        for r in range(len(rad)):
-            for p in range(len(planets)):
+for p in range(len(planets)):
+    for w in range(len(water)):
+        for e in range(len(ecc)):
+            for r in range(len(rad)):
                 # new_directory = 'TR1_'+planets[p]+'_'+water[w][:-1]+'TO_ecc_'+ecc[e][:-1]+'_rad_'+rad[r][:-1]+''
                 new_directory = 'TR1_'+str(dir_number)+''
                 os.system('cp -r TR1_'+planets[p]+'_example '+new_directory+'')
@@ -45,6 +45,19 @@ for w in range(len(water)):
                 for l in range(len(input)):
                     inputfile.write(input[l])
                 inputfile.close()
+
+                ## Change time stepping for 1TO
+                if (float(water[w][:-1]) < 10):
+                    vplfile = open(''+new_directory+'/vpl.in')
+                    vpl = vplfile.readlines()
+                    vplfile.close()
+
+                    vpl[21] = 'dEta          0.1                           # Coefficient for variable timestepping \n'
+
+                    vplfile = open(''+new_directory+'/vpl.in','w')
+                    for v in range(len(vpl)):
+                        vplfile.write(vpl[v])
+                    vplfile.close()
 
                 # write input parameters to list of folder numbers & update folder number
                 dir_names_file.write(''+str(dir_number)+'\t'+planets[p]+'\t'+water[w][:-1]+'\t'+ecc[e][:-1]+'\t'+rad[r][:-1]+'\n')

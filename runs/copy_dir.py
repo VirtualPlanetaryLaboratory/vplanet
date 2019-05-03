@@ -16,7 +16,7 @@ radfile.close()
 planets = ['e','f','g']
 masses  = [0.766,0.926,1.14]
 
-dir_number = 0
+dir_number = 1
 
 # File with numbers and input parameters
 dir_names_file = open('dir_names.txt', 'w')

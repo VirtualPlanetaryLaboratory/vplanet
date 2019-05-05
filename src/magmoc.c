@@ -1024,9 +1024,10 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
   }
 
   /* When planet enters habitable zone atmospheric escape stops */
-  if ((body[iBody].bRunaway) && (body[iBody].dHZInnerEdge <= body[iBody].dSemi)) {
+  if ((!body[iBody].bEscapeStop) && (body[iBody].bRunaway) && (body[iBody].dHZInnerEdge <= body[iBody].dSemi)) {
     SetDerivTiny(fnUpdate,iBody,update[iBody].iOxygenMassSpace  ,update[iBody].iOxygenMassSpaceMagmOc  );
     SetDerivTiny(fnUpdate,iBody,update[iBody].iHydrogenMassSpace,update[iBody].iHydrogenMassSpaceMagmOc);
+    body[iBody].bEscapeStop = 1;
     if (io->iVerbose >= VERBPROG) {
       printf("%s enters habitable zone after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
@@ -1257,7 +1258,7 @@ int fbHaltAtmDesiSurfCool(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *up
 }
 
 int fbHaltEnterHabZone(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-  if (!body[iBody].bRunaway) {
+  if (body[iBody].bEscapeStop) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s enters habitable zone after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }

@@ -16,7 +16,8 @@ This example shows how Earth's interior evolves in a plate tectonics-like mode.
 This example shows the thermal and magnetic evolution of Earth's interior from
 **ThermInt** and **RadHeat**. The model is 1-D and many free parameters have been
 tuned to reproduce Earth's current properties. Earth is divided in a core, mantle,
-and crust. The evolution depends only on the temperature of the core and mantle.
+and crust. The evolution depends only on the temperature of the core and mantle. 
+These figures are similar to Fig. 5 in Driscoll & Bercovici (`2014 <https://ui.adsabs.harvard.edu/abs/2014PEPI..236...36D/abstract>`_).
 
 
 To run this example

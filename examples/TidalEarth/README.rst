@@ -10,15 +10,15 @@ from its host star.
 ===================   ============
 **Date**              04/09/19
 **Author**            Peter Driscoll
-**Modules**           RadHeat ThermInt EqTide
+**Modules**           RadHeat, ThermInt, EqTide
 **Approx. runtime**   10 minutes
 ===================   ============
 
 This example shows the thermal, magnetic, and orbital evolution of an
-Earth-like planet using **ThermInt**, **RadHeat**, and **EqTide**.
-The model is 1-D and many free parameters have been
-tuned to Earth.  This example reproduces the results of
-Driscoll & Barnes (2015).  The generated
+Earth-like planet using **ThermInt**, **RadHeat**, and **EqTide**. Here we use the "orbit-only" tidal model, which is highly idealized.
+The interior model is 1-D and many free parameters have been
+tuned to match `the modern Earth <../EarthInterior>`_.  This example reproduces the results of
+`Driscoll & Barnes (2015) <https://ui.adsabs.harvard.edu/abs/2015AsBio..15..739D/abstract>`_.  The generated
 figures should be compared to their Figures 4 and 5.
 
 

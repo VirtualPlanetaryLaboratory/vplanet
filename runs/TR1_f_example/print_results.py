@@ -138,7 +138,7 @@ else:
         results.write('# Water pressure in atmosphere [bar] \n')
         results.write(str(Press_H2O[t_habit])+'\n')
         results.write('# Oxygen pressure in atmosphere [bar] \n')
-        results.write(str(Press_O[t_habit])+'/n')
+        results.write(str(Press_O[t_habit])+'\n')
 
     results.write('# ------------------------------------------------------------------- # \n')
 results.close()

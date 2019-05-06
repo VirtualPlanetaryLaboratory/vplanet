@@ -63,6 +63,8 @@ radfile.close()
 planets = ['e','f','g']
 masses  = [0.766,0.926,1.14]
 
+color_water = [0,80,220]
+
 for p in range(len(planets)):
 
     fig = plt.figure(num=None, figsize=(10, 9), dpi=300, facecolor='w', edgecolor='k')
@@ -70,13 +72,8 @@ for p in range(len(planets)):
 
     ax1 = fig.add_subplot(221)
     for w in range(len(water)):
-        solid_time        = np.genfromtxt('Results_TR1_'+planets[p]+'_'+water[w][:-1]+'_solid_time.dat')
-        # solid_waterlocked = np.genfromtxt('Results_TR1_'+planets[p]+'_'+water[w][:-1]+'_solid_waterlocked.dat')
-        solid_watertot    = np.genfromtxt('Results_TR1_'+planets[p]+'_'+water[w][:-1]+'_solid_watertot.dat')
-        solid_presswater  = np.genfromtxt('Results_TR1_'+planets[p]+'_'+water[w][:-1]+'_solid_presswater.dat')
-        solid_pressoxy    = np.genfromtxt('Results_TR1_'+planets[p]+'_'+water[w][:-1]+'_solid_pressoxy.dat')
-
-        CS_1 = ax1.contour(ecc, rad, solid_time, [8, 12, 16], colors=cmap(np.log10(water[w])*110), linestyles=(':','--','-'))
+        solid_time = np.genfromtxt('Results_TR1_'+planets[p]+'_'+water[w][:-1]+'_solid_time.dat')
+        CS_1 = ax1.contour(ecc, rad, solid_time, [8, 12, 16], colors=cmap(color_water), linestyles=(':','--','-'))
 
     labels = ['8','12','16']
     for i in range(len(labels)):
@@ -88,66 +85,52 @@ for p in range(len(planets)):
     # ax1.set_xlabel('Eccentricity')
     ax1.set_ylabel('$^{40}K$ Abundance / Earth')
 
-ax2 = fig.add_subplot(222)
-if (N_Planet==4):
-    CS_1 = ax2.contour(Ecc, K40, TSol, [8, 12, 16], colors='k', linestyles=(':','--','-'))
+    ax2 = fig.add_subplot(222)
+    for w in range(len(water)):
+        solid_waterlocked = np.genfromtxt('Results_TR1_'+planets[p]+'_'+water[w][:-1]+'_solid_waterlocked.dat')
+        CS_1 = ax2.contour(ecc, rad, solid_waterlocked, [8, 12, 16], colors=cmap(color_water), linestyles=(':','--','-'))
+
     labels = ['8','12','16']
-elif (N_Planet==5):
-    CS_1 = ax2.contour(Ecc, K40, TSol, [6, 10, 14], colors='k', linestyles=(':','--','-'))
-    labels = ['6', '10','14']
-elif (N_Planet==6):
-    CS_1 = ax2.contour(Ecc, K40, TSol, [6, 10, 14], colors='k', linestyles=(':','--','-'))
-    labels = ['6', '10','14']
-for i in range(len(labels)):
-    CS_1.collections[i].set_label(labels[i])
-ax2.legend(loc='best', frameon=True)
-ax2.set_title('(b) Desiccation Time (Myr)')
-ax2.set_xscale('log')
-ax2.set_yscale('log')
-# ax2.set_xlabel('Eccentricity')
-# ax2.set_ylabel('$^{40}K$ Abundance / Earth')
+    for i in range(len(labels)):
+        CS_1.collections[i].set_label(labels[i])
+    ax2.legend(loc='best', frameon=True)
+    ax2.set_title('(b) Water locked in mantle (TO)')
+    ax2.set_xscale('log')
+    ax2.set_yscale('log')
+    # ax2.set_xlabel('Eccentricity')
+    # ax2.set_ylabel('$^{40}K$ Abundance / Earth')
 
-ax3 = fig.add_subplot(223)
-if (N_Planet==4):
-    CS_3 = ax3.contour(Ecc, K40, WaterLeft, [3, 4, 5], colors='k', linestyles=(':','--','-'))
+    ax3 = fig.add_subplot(223)
+    for w in range(len(water)):
+        solid_presswater = np.genfromtxt('Results_TR1_'+planets[p]+'_'+water[w][:-1]+'_solid_presswater.dat')
+        CS_3 = ax3.contour(ecc, rad, WaterLeft, [3, 4, 5], colors=cmap(color_water), linestyles=(':','--','-'))
+
     labels = ['3', '4','5']
-elif (N_Planet==5):
-    CS_3 = ax3.contour(Ecc, K40, WaterLeft, [5, 5.75, 6.5], colors='k', linestyles=(':','--','-'))
-    labels = ['5', '5.75','6.5']
-elif (N_Planet==6):
-    CS_3 = ax3.contour(Ecc, K40, WaterLeft, [6.5, 7, 7.5], colors='k', linestyles=(':','--','-'))
-    labels = ['6.5', '7','7.5']
-for i in range(len(labels)):
-    CS_3.collections[i].set_label(labels[i])
-ax3.legend(loc='best', frameon=True)
-ax3.set_title('(c) Water left at solidification (TO)')
-ax3.set_xscale('log')
-ax3.set_yscale('log')
-ax3.set_xlabel('Eccentricity')
-ax3.set_ylabel('$^{40}K$ Abundance')
+    for i in range(len(labels)):
+        CS_3.collections[i].set_label(labels[i])
+    ax3.legend(loc='best', frameon=True)
+    ax3.set_title('(c) Water pressure (bar)')
+    ax3.set_xscale('log')
+    ax3.set_yscale('log')
+    ax3.set_xlabel('Eccentricity')
+    ax3.set_ylabel('$^{40}K$ Abundance')
 
-ax4 = fig.add_subplot(224)
-if (N_Planet==4):
-    CS_4 = ax4.contour(Ecc, K40, OxyPress, [0.1, 1, 10], colors='k', linestyles=(':','--','-'))
+    ax4 = fig.add_subplot(224)
+    for w in range(len(water)):
+        solid_pressoxy = np.genfromtxt('Results_TR1_'+planets[p]+'_'+water[w][:-1]+'_solid_pressoxy.dat')
+        CS_4 = ax4.contour(ecc, rad, solid_pressoxy, [0.1, 1, 10], colors=cmap(color_water), linestyles=(':','--','-'))
+
     labels = ['0.1','1','10']
-elif (N_Planet==5):
-    CS_4 = ax4.contour(Ecc, K40, OxyPress, [0.1, 1, 10], colors='k', linestyles=(':','--','-'))
-    labels = ['0.1','1','10']
-elif (N_Planet==6):
-    CS_4 = ax4.contour(Ecc, K40, OxyPress, [0.1, 1, 10], colors='k', linestyles=(':','--','-'))
-    labels = ['0.1', '1','10']
-for i in range(len(labels)):
-    CS_4.collections[i].set_label(labels[i])
-# ax2.clabel(CS_3, inline=1, fontsize=12, fmt='%1.0f', inline_spacing=1)
-ax4.legend(loc='best', frameon=True)
-ax4.set_title('(d) Oxygen pressure (bar)')
-ax4.set_xscale('log')
-ax4.set_yscale('log')
-ax4.set_xlabel('Eccentricity')
-# ax4.set_ylabel('$^{40}K$ Abundance / Earth')
+    for i in range(len(labels)):
+        CS_4.collections[i].set_label(labels[i])
+    # ax2.clabel(CS_3, inline=1, fontsize=12, fmt='%1.0f', inline_spacing=1)
+    ax4.legend(loc='best', frameon=True)
+    ax4.set_title('(d) Oxygen pressure (bar)')
+    ax4.set_xscale('log')
+    ax4.set_yscale('log')
+    ax4.set_xlabel('Eccentricity')
+    # ax4.set_ylabel('$^{40}K$ Abundance / Earth')
 
-plt.subplots_adjust(left=0.1, right=0.97, top=0.9, bottom=0.07)
-plt.savefig('../Results_VPlanet/Trappist-1/'+str(Name_Folder)+'/'+str(clock)+'_'+str(Name_Folder)+'_'+str(M_ini)+'TO_CountourPlot.png')
-# plt.show()
-
-# ax1.clabel(CS, inline=1, fontsize=12, fmt='%1.0f', inline_spacing=1)
+    plt.subplots_adjust(left=0.1, right=0.97, top=0.9, bottom=0.07)
+    plt.savefig('TR1_'+planets[p]+'_Contourplot_Solidification.png')
+    # plt.show()

@@ -12,7 +12,7 @@ from time import time
 
 # TRAPPIST-1 g #
 # read data
-data_g = np.loadtxt("Trappist1.g.forward")
+data = np.loadtxt("Trappist1.g.forward")
 R_N_Planet = 1.15
 M_N_Planet = 1.14
 Name_Planet = 'Trappist-1 g'
@@ -138,7 +138,7 @@ else:
         results.write('# Water pressure in atmosphere [bar] \n')
         results.write(str(Press_H2O[t_habit])+'\n')
         results.write('# Oxygen pressure in atmosphere [bar] \n')
-        results.write(str(Press_O[t_habit])+'/n')
+        results.write(str(Press_O[t_habit])+'\n')
 
     results.write('# ------------------------------------------------------------------- # \n')
 results.close()

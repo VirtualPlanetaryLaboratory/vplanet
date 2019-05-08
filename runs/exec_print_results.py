@@ -25,7 +25,7 @@ radfile = open('rad.txt')
 rad_values = radfile.readlines()
 radfile.close()
 
-planets = ['e','f','g']
+planets = ['e']#,'f','g']
 
 n = 0
 
@@ -48,23 +48,25 @@ for p in range(len(planets)):
 
         for e in range(len(ecc_values)):
             for r in range(len(rad_values)):
-                if (os.path.isfile('TR1_'+str(Number[n])+'/Results.dat')):
-                    resultfile = open('TR1_'+str(Number[n])+'/Results.dat')
-                    results = resultfile.readlines()
-                    resultfile.close()
+                # if (os.path.isfile('TR1_'+str(Number[n])+'/Results.dat')):
+                resultfile = open('TR1_'+str(Number[n])+'/Results.dat')
+                results = resultfile.readlines()
+                resultfile.close()
 
-                    solid_time[r,e]        = results[4]
-                    solid_waterlocked[r,e] = results[6]
-                    solid_watertot[r,e]    = results[10]
-                    solid_presswater[r,e]  = results[12]
-                    solid_pressoxy[r,e]    = results[14]
+                print(p,w,e,r)
 
-                    if (results[2]==1):
-                        atm_desicc              = results[19]
-                        desicc_time[r,e]        = results[21]
-                        desicc_watertot[r,e]    = results[23]
-                        desicc_presswater[r,e]  = results[25]
-                        desicc_pressoxy[r,e]    = results[27]
+                solid_time[r,e]        = results[4]
+                solid_waterlocked[r,e] = results[6]
+                solid_watertot[r,e]    = results[10]
+                solid_presswater[r,e]  = results[12]
+                solid_pressoxy[r,e]    = results[14]
+
+                if (float(results[2])==0):
+                    atm_desicc[r,e]         = results[19]
+                    desicc_time[r,e]        = results[21]
+                    desicc_watertot[r,e]    = results[23]
+                    desicc_presswater[r,e]  = results[25]
+                    desicc_pressoxy[r,e]    = results[27]
 
                 n = n + 1
 
@@ -79,4 +81,3 @@ for p in range(len(planets)):
         np.savetxt('Results_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_desicc_watertot.dat',desicc_watertot)
         np.savetxt('Results_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_desicc_presswater.dat',desicc_presswater)
         np.savetxt('Results_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_desicc_pressoxy.dat',desicc_pressoxy)
-        

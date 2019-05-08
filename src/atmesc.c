@@ -2239,7 +2239,7 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   // TODO: This needs to be moved. Ideally we'd just remove this equation from the matrix.
   // RB: move to ForceBehaviorAtmesc
   if ((body[iaBody[0]].dEnvelopeMass <= 0) || (body[iaBody[0]].dAge > body[iaBody[0]].dJeansTime)) {
-    return TINY;
+    return dTINY;
   }
 
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17) {

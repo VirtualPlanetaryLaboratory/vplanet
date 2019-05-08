@@ -922,7 +922,7 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
   // The XUV flux
   if (body[iBody].bCalcFXUV){
-    body[iBody].dFXUV = fdInsolation(body, iBody, 1);
+    body[iBody].dFXUV = fdXUVFlux(body, iBody);
   }
 
   // The H2O XUV escape efficiency
@@ -2306,40 +2306,6 @@ double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
 /************* ATMESC Helper Functions ************/
 
 /**
-Computes the insolation.
-
-@param body A pointer to the current BODY instance
-@param iBody The current BODY index
-@param iXUV Integer describing the XUV model
-*/
-double fdInsolation(BODY *body, int iBody, int iXUV) {
-
-  double flux;
-
-  if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
-
-    // Body orbits two stars
-    if (iXUV)
-      flux = fndFluxExactBinary(body,iBody,body[0].dLXUV,body[1].dLXUV);
-    else
-      flux = fndFluxExactBinary(body,iBody,body[0].dLuminosity,body[1].dLuminosity);
-
-  } else {
-
-    // Body orbits one star
-    if (iXUV)
-      flux = body[0].dLXUV / (4 * PI * pow(body[iBody].dSemi, 2) *
-             pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
-    else
-      flux = body[0].dLuminosity / (4 * PI * pow(body[iBody].dSemi, 2) *
-             pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
-  }
-
-  return flux;
-
-}
-
-/**
 Computes whether or not water is escaping.
 
 @param body A pointer to the current BODY instance
@@ -2353,7 +2319,7 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // 1. Check if there's hydrogen to be lost; this happens first
   if (body[iBody].dEnvelopeMass > 0) {
     // (But let's still check whether the RG phase has ended)
-    if ((body[iBody].dRGDuration == 0.) && (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)))
+    if ((body[iBody].dRGDuration == 0.) && (fdInstellation(body, iBody) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)))
       body[iBody].dRGDuration = body[iBody].dAge;
     return 0;
   }
@@ -2364,7 +2330,7 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // spectrum! The Kopparapu+14 limit is for a single star only. This
   // approximation for a binary is only valid if the two stars have
   // similar spectral types, or if body zero dominates the flux.
-  else if (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)){
+  else if (fdInstellation(body, iBody) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)){
     if (body[iBody].dRGDuration == 0.)
       body[iBody].dRGDuration = body[iBody].dAge;
     return 0;
@@ -2412,7 +2378,7 @@ runaway greenhouse limit.
 
 @param dLuminosity The stellar luminosity
 @param dTeff The stellar effective temperature
-@param dEcc The planet's eccentricity
+@param dEcc The planet's eccentricity -- RB: Why is ecc passed?
 @param dPlanetMass The planet mass
 */
 double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMass) {
@@ -2420,6 +2386,7 @@ double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMas
   int i;
   double seff[3];
   double daCoeffs[2];
+  double dHZRG14Limit;
 
   double tstar = dTeff - 5780;
   double daLogMP[3] = {-1.0, 0., 0.69897};
@@ -2435,7 +2402,9 @@ double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMas
 
   fvLinearFit(daLogMP,seff,3,daCoeffs);
 
-  return (daCoeffs[0]*log10(dPlanetMass/MEARTH) + daCoeffs[1]) * LSUN / (4 * PI * AUM * AUM);
+  dHZRG14Limit =  (daCoeffs[0]*log10(dPlanetMass/MEARTH) + daCoeffs[1]) * LSUN / (4 * PI * AUM * AUM);
+
+  return dHZRG14Limit;
 }
 
 /**

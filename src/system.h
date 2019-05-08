@@ -30,6 +30,7 @@ void CalcHK(BODY*,int);
 void CalcPQ(BODY*,int);
 
 double fdInstellation(BODY*,int);
+double fdXUVFlux(BODY*,int);
 
 /* Multi-body derivative equations */
 double fdSemiDtEqSt(BODY*,SYSTEM*,int*);

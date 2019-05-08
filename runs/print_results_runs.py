@@ -8,7 +8,7 @@ Planet  = data[:,1]  # Planet name (e,f,g)
 
 No_results = []
 
-for n in range(len(Number)):
+for n in range(217, len(Number)):
     os.chdir('TR1_'+Number[n]+'')
     file_exists = 0
     for file in os.listdir('./'):

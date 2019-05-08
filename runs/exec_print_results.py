@@ -48,12 +48,9 @@ for p in range(len(planets)):
 
         for e in range(len(ecc_values)):
             for r in range(len(rad_values)):
-                # if (os.path.isfile('TR1_'+str(Number[n])+'/Results.dat')):
                 resultfile = open('TR1_'+str(Number[n])+'/Results.dat')
                 results = resultfile.readlines()
                 resultfile.close()
-
-                print(p,w,e,r)
 
                 solid_time[r,e]        = results[4]
                 solid_waterlocked[r,e] = results[6]

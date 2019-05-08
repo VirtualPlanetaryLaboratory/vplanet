@@ -48,23 +48,23 @@ for p in range(len(planets)):
 
         for e in range(len(ecc_values)):
             for r in range(len(rad_values)):
-                if (os.path.isfile('TR1_'+str(Number[n])+'/Results.dat')):
-                    resultfile = open('TR1_'+str(Number[n])+'/Results.dat')
-                    results = resultfile.readlines()
-                    resultfile.close()
+                #if (os.path.isfile('TR1_'+str(Number[n])+'/Results.dat')):
+                resultfile = open('TR1_'+str(Number[n])+'/Results.dat')
+                results = resultfile.readlines()
+                resultfile.close()
 
-                    solid_time[r,e]        = results[4]
-                    solid_waterlocked[r,e] = results[6]
-                    solid_watertot[r,e]    = results[10]
-                    solid_presswater[r,e]  = results[12]
-                    solid_pressoxy[r,e]    = results[14]
+                solid_time[r,e]        = results[4]
+                solid_waterlocked[r,e] = results[6]
+                solid_watertot[r,e]    = results[10]
+                solid_presswater[r,e]  = results[12]
+                solid_pressoxy[r,e]    = results[14]
 
-                    if (results[2]==1):
-                        atm_desicc              = results[19]
-                        desicc_time[r,e]        = results[21]
-                        desicc_watertot[r,e]    = results[23]
-                        desicc_presswater[r,e]  = results[25]
-                        desicc_pressoxy[r,e]    = results[27]
+                if (float(results[2])==0):
+                    atm_desicc[r,e]         = results[19]
+                    desicc_time[r,e]        = results[21]
+                    desicc_watertot[r,e]    = results[23]
+                    desicc_presswater[r,e]  = results[25]
+                    desicc_pressoxy[r,e]    = results[27]
 
                 n = n + 1
 

@@ -1701,7 +1701,7 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,MODULE *module,EVOLVE *evolve,
       have oceans *and* be in an RG. */
     if (evolve->bFirstStep) {
       // RG -> no ocean tides
-      if (fdInstellation(body, iBody) >= fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)) {
+      if (fdInstellation(body, iBody) >= fdHZRG14(body,iBody)) {
         bOceans = 0;
       }
     }

@@ -917,7 +917,7 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
       if (xi > 1)
         body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
       else
-        body[iBody].dKTide = 0;
+        body[iBody].dKTide = 1.0;
   }
 
   // The XUV flux
@@ -1565,7 +1565,7 @@ Logs the semi-major axis corresponding to the current runaway greenhouse limit.
 void WriteRGLimit(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   // Get the RG flux
-  double flux = fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass);
+  double flux = fdHZRG14(body,iBody);
 
   // Convert to semi-major axis *at current eccentricity!*
   *dTmp = pow(4 * PI * flux /  (body[0].dLuminosity * pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5)), -0.5);
@@ -2324,7 +2324,7 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // 1. Check if there's hydrogen to be lost; this happens first
   if (body[iBody].dEnvelopeMass > 0) {
     // (But let's still check whether the RG phase has ended)
-    if ((body[iBody].dRGDuration == 0.) && (fdInstellation(body, iBody) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)))
+    if ((body[iBody].dRGDuration == 0.) && (fdInstellation(body, iBody) < fdHZRG14(body,iBody)))
       body[iBody].dRGDuration = body[iBody].dAge;
     return 0;
   }
@@ -2335,7 +2335,7 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // spectrum! The Kopparapu+14 limit is for a single star only. This
   // approximation for a binary is only valid if the two stars have
   // similar spectral types, or if body zero dominates the flux.
-  else if (fdInstellation(body, iBody) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)){
+  else if (fdInstellation(body, iBody) < fdHZRG14(body,iBody)) {
     if (body[iBody].dRGDuration == 0.)
       body[iBody].dRGDuration = body[iBody].dAge;
     return 0;
@@ -2388,14 +2388,15 @@ runaway greenhouse limit.
 */
 
 // Why isn't this in system.c?
-double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMass) {
+double fdHZRG14(BODY *body,int iBody) {
+  //double dLuminosity, double dTeff, double dEcc, double dPlanetMass) {
   // Do a simple log-linear fit to the Kopparapu+14 mass-dependent RG limit
   int i;
   double seff[3];
   double daCoeffs[2];
   double dHZRG14Limit;
 
-  double tstar = dTeff - 5780;
+  double tstar = body[0].dTemperature - 5780;
   double daLogMP[3] = {-1.0, 0., 0.69897};
   double seffsun[3] = {0.99, 1.107, 1.188};
   double a[3] = {1.209e-4, 1.332e-4, 1.433e-4};
@@ -2409,7 +2410,7 @@ double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMas
 
   fvLinearFit(daLogMP,seff,3,daCoeffs);
 
-  dHZRG14Limit =  (daCoeffs[0]*log10(dPlanetMass/MEARTH) + daCoeffs[1]) * LSUN / (4 * PI * AUM * AUM);
+  dHZRG14Limit =  (daCoeffs[0]*log10(body[iBody].dMass/MEARTH) + daCoeffs[1]) * LSUN / (4 * PI * AUM * AUM);
 
   return dHZRG14Limit;
 }

@@ -2237,17 +2237,22 @@ The rate of change of the envelope mass.
 double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   // TODO: This needs to be moved. Ideally we'd just remove this equation from the matrix.
-  if ((body[iaBody[0]].dEnvelopeMass <= 0) || (body[iaBody[0]].dAge > body[iaBody[0]].dJeansTime)){
-    return 0;
+  // RB: move to ForceBehaviorAtmesc
+  if ((body[iaBody[0]].dEnvelopeMass <= 0) || (body[iaBody[0]].dAge > body[iaBody[0]].dJeansTime)) {
+    return TINY;
   }
 
-  if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17){
+  if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17) {
 
-  	return -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass - body[iaBody[0]].dEnvelopeMass));
+  	return -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV
+        * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass
+          - body[iaBody[0]].dEnvelopeMass));
 
-  }
-  else{
-  	return -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius * body[iaBody[0]].dXFrac * body[iaBody[0]].dXFrac);
+  } else {
+  	return -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH
+      / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI
+        * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius
+          * body[iaBody[0]].dXFrac * body[iaBody[0]].dXFrac);
   }
 
 }
@@ -2381,6 +2386,8 @@ runaway greenhouse limit.
 @param dEcc The planet's eccentricity -- RB: Why is ecc passed?
 @param dPlanetMass The planet mass
 */
+
+// Why isn't this in system.c?
 double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMass) {
   // Do a simple log-linear fit to the Kopparapu+14 mass-dependent RG limit
   int i;
@@ -2396,7 +2403,7 @@ double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMas
   double c[3] = {-7.418e-12, -8.308e-12, -8.968e-12};
   double d[3] = {-1.713e-15, -1.931e-15, -2.084e-15};
 
-  for (i=0;i<3;i++){
+  for (i=0;i<3;i++) {
   	seff[i] = seffsun[i] + a[i]*tstar + b[i]*tstar*tstar + c[i]*pow(tstar,3) + d[i]*pow(tstar,4);
   }
 
@@ -2457,6 +2464,8 @@ Performs a really simple linear least-squares fit on data.
 @param iLen The length of the arrays
 @param daCoeffs The slope and the intercept of the fit
 */
+
+// should be in another file. control?
 void fvLinearFit(double *x, double *y, int iLen, double *daCoeffs){
 	// Simple least squares linear regression, y(x) = mx + b
 	// from http://en.wikipedia.org/wiki/Simple_linear_regression

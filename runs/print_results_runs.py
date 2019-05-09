@@ -1,7 +1,7 @@
 import os as os
 import numpy as np
 
-data = np.genfromtxt('dir_names.txt',dtype='str', skip_header=1)
+data = np.genfromtxt('dir_names2.txt',dtype='str', skip_header=1)
 
 Number  = data[:,0]  # Number of folder
 Planet  = data[:,1]  # Planet name (e,f,g)
@@ -20,7 +20,7 @@ for n in range(217, len(Number)):
     if (file_exists == 0):
         No_results.append(Number[n])
 
-noresfile = open('no_results_in_dir.dat','w')
+noresfile = open('no_results_in_dir2.dat','w')
 for l in range(len(No_results)):
     noresfile.write(''+No_results[l]+'\n')
 noresfile.close()

@@ -27,7 +27,7 @@ for p in range(len(planets)):
     for w in range(len(water)):
         for e in range(len(ecc)):
             for r in range(len(rad)):
-                new_directory = 'TR1_'+planets[p]+'_'+water[w][:-1]+'TO_ecc_'+ecc[e][:-1]+'_rad_'+rad[r][:-1]+''
+                #new_directory = 'TR1_'+planets[p]+'_'+water[w][:-1]+'TO_ecc_'+ecc[e][:-1]+'_rad_'+rad[r][:-1]+''
                 new_directory = 'TR1_'+str(dir_number)+''
                 os.system('cp -r TR1_'+planets[p]+'_example '+new_directory+'')
 

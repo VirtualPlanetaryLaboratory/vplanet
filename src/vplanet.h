@@ -1017,6 +1017,7 @@ struct BODY {
   double dPrefactorA;       /**< Prefactor for linear solidus */
   double dPrefactorB;       /**< Prefactor for linear solidus */
   double dMeltFraction;     /**< Melt fraction of the mantle */
+	double dMeltFracSurf;     /**< Melt fraction at the surface */
   double dKinemViscos;      /**< Kinematic viscosity of the mantle [m/s^2] */
 	double dFactorDerivative; /**< Factor to calculate the derivatives of Tpot and Rsol */
 	double dManHeatFlux;      /**< Mantle heat flux [W/m^2] */

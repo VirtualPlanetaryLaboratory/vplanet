@@ -37,6 +37,7 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dPrefactorA           = src[iBody].dPrefactorA;
   dest[iBody].dPrefactorB           = src[iBody].dPrefactorB;
   dest[iBody].dMeltFraction         = src[iBody].dMeltFraction;
+  dest[iBody].dMeltFracSurf         = src[iBody].dMeltFracSurf;
   dest[iBody].dKinemViscos          = src[iBody].dKinemViscos;
 	dest[iBody].dFactorDerivative     = src[iBody].dFactorDerivative;
 	dest[iBody].dManHeatFlux          = src[iBody].dManHeatFlux;
@@ -781,9 +782,9 @@ void fndMeltFracMan(BODY *body, int iBody) {
   }
 
   // get kinematic viscosity at surface
-  dMelt_frac_surf = (body[iBody].dPotTemp-BLOWPRESSURE)/600;
-  if (dMelt_frac_surf > CRITMELTFRAC) {
-    dEta_a = 0.00024 * exp(4600/(body[iBody].dPotTemp-1000)) / pow((1-(1-dMelt_frac_surf)/(1-CRITMELTFRAC)),2.5);
+  body[iBody].dMeltFracSurf = (body[iBody].dPotTemp-BLOWPRESSURE)/600;
+  if (body[iBody].dMeltFracSurf > CRITMELTFRAC) {
+    dEta_a = 0.00024 * exp(4600/(body[iBody].dPotTemp-1000)) / pow((1-(1-body[iBody].dMeltFracSurf)/(1-CRITMELTFRAC)),2.5);
     dEta_b = DYNVISCSOLID * exp(ACTIVENERGY/(RGAS*body[iBody].dPotTemp));
     body[iBody].dKinemViscos = fmin(dEta_a,dEta_b) / body[iBody].dManMeltDensity;
   } else {
@@ -1015,16 +1016,19 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     }
   }
 
-  /* When planet desiccated and T_surf below 1000K treat mantle as solidified */
-  if ((!body[iBody].bManQuasiSol) && (body[iBody].bPlanetDesiccated) && (body[iBody].dSurfTemp <= 1000)) {
+  /* Treat mantle as solidified when melt fraction at surface smaller than 0.4 */
+  // /* When planet desiccated and T_surf below 1000K treat mantle as solidified */
+  // if ((!body[iBody].bManQuasiSol) && (body[iBody].bPlanetDesiccated) && (body[iBody].dSurfTemp <= 1000)) {
+  if ((!body[iBody].bManQuasiSol) && (body[iBody].dMeltFracSurf < CRITMELTFRAC)) {
     body[iBody].bManQuasiSol = 1;
     if (io->iVerbose >= VERBPROG) {
-      printf("%s's atmosphere desiccated & surface temperature below 1000K after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+      printf("Surface melt fraction of %s's smaller than 0.4 after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+      // printf("%s's atmosphere desiccated & surface temperature below 1000K after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
   }
 
   /* When planet enters habitable zone atmospheric escape stops */
-  if ((!body[iBody].bEscapeStop) && (body[iBody].bRunaway) && (body[iBody].dHZInnerEdge <= body[iBody].dSemi)) {
+  if ((!body[iBody].bEscapeStop) && (body[iBody].dHZInnerEdge <= body[iBody].dSemi)) {
     SetDerivTiny(fnUpdate,iBody,update[iBody].iOxygenMassSpace  ,update[iBody].iOxygenMassSpaceMagmOc  );
     SetDerivTiny(fnUpdate,iBody,update[iBody].iHydrogenMassSpace,update[iBody].iHydrogenMassSpaceMagmOc);
     body[iBody].bEscapeStop = 1;
@@ -1238,9 +1242,11 @@ void InitializeUpdateMagmOc(BODY *body,UPDATE *update,int iBody) {
  * Checks if mantle soldified
  */
 int fbHaltMantleSolidified(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-  if (body[iBody].bManSolid) {
+  // if (body[iBody].bManSolid) {
+  if (body[iBody].bManQuasiSol) {
     if (io->iVerbose >= VERBPROG) {
-      printf("HALT: %s's mantle completely solidified after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+      printf("HALT: %s's mantle mostly solidified after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+      // printf("HALT: %s's mantle completely solidified after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
     return 1;
   }

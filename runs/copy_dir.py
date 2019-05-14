@@ -18,13 +18,15 @@ masses  = [0.766,0.926,1.14]
 
 # 1 - 324: ecc locked, tidally locked -- OLD
 # 325 - 485: ecc not locked -- OLD
-# 487 - 702: ecc locked, tidally locked
-# 703 - 864: ecc not locked, tidally locked
-dir_number = 487
+# 487 - 702: ecc locked, tidally locked -- OLD
+# 703 - 864: ecc not locked, tidally locked -- OLD
+# 865 - 1080: ecc locked, tidally locked
+# 1081 - 1242: ecc not locked, tidally locked
+dir_number = 865
 bFixOrbit  = 1
 
 # File with numbers and input parameters
-dir_names_file = open('dir_names3.txt', 'w')
+dir_names_file = open('dir_names5.txt', 'w')
 dir_names_file.write('# Number \t Planet \t Water mass [TO] \t Eccentricity \t 40K abundance [Earth] \t bFixOrbit \n ')
 
 for p in range(len(planets)):

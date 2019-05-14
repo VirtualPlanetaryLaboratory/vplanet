@@ -985,7 +985,7 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
   }
 
   /* Mantle solidified */
-  if ((!body[iBody].bManSolid) && (body[iBody].dSolidRadius >= body[iBody].dRadius)) {
+  if ((!body[iBody].bManSolid) && (body[iBody].dSolidRadius >= (0.9999 * body[iBody].dRadius))) {
     body[iBody].bManSolid       = 1;
     body[iBody].dManMeltDensity = 4200;
     body[iBody].dSolidRadius    = body[iBody].dRadius;

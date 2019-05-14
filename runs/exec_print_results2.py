@@ -51,19 +51,22 @@ for p in range(len(planets)):
                 resultfile = open('TR1_'+str(Number[n])+'/Results.dat')
                 results = resultfile.readlines()
                 resultfile.close()
+                
+                print(n,Number[n])
+                
+                if (n<48) or (n>53):
+                    solid_time[r,e]        = results[4]
+                    solid_waterlocked[r,e] = results[6]
+                    solid_watertot[r,e]    = results[10]
+                    solid_presswater[r,e]  = results[12]
+                    solid_pressoxy[r,e]    = results[14]
 
-                solid_time[r,e]        = results[4]
-                solid_waterlocked[r,e] = results[6]
-                solid_watertot[r,e]    = results[10]
-                solid_presswater[r,e]  = results[12]
-                solid_pressoxy[r,e]    = results[14]
-
-                if (float(results[2])==0):
-                    atm_desicc[r,e]         = results[19]
-                    desicc_time[r,e]        = results[21]
-                    desicc_watertot[r,e]    = results[23]
-                    desicc_presswater[r,e]  = results[25]
-                    desicc_pressoxy[r,e]    = results[27]
+                    if (float(results[2])==0):
+                        atm_desicc[r,e]         = results[19]
+                        desicc_time[r,e]        = results[21]
+                        desicc_watertot[r,e]    = results[23]
+                        desicc_presswater[r,e]  = results[25]
+                        desicc_pressoxy[r,e]    = results[27]
 
                 n = n + 1
 

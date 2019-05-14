@@ -5,7 +5,7 @@ waterfile = open('water.txt')
 water = waterfile.readlines()
 waterfile.close()
 
-eccfile = open('ecc.txt')
+eccfile = open('ecc2.txt')
 ecc = eccfile.readlines()
 eccfile.close()
 
@@ -20,11 +20,11 @@ masses  = [0.766,0.926,1.14]
 # 325 - 485: ecc not locked -- OLD
 # 487 - 702: ecc locked, tidally locked
 # 703 - 864: ecc not locked, tidally locked
-dir_number = 487
-bFixOrbit  = 1
+dir_number = 703
+bFixOrbit  = 0
 
 # File with numbers and input parameters
-dir_names_file = open('dir_names3.txt', 'w')
+dir_names_file = open('dir_names4.txt', 'w')
 dir_names_file.write('# Number \t Planet \t Water mass [TO] \t Eccentricity \t 40K abundance [Earth] \t bFixOrbit \n ')
 
 for p in range(len(planets)):

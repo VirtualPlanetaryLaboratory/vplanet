@@ -912,12 +912,14 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   // For circumbinary planets, assume no Ktide enhancement
   if(body[iBody].bBinary && body[iBody].iBodyType == 0) {
       body[iBody].dKTide = 1.0;
-  }
-  else {
-      if (xi > 1)
+  } else {
+      if (xi > 1) {
         body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
-      else
+      } else {
+        fprintf(stderr,"WARNING: Roche lobe radius is larger than XUV radius for %s, evolution may not be accurate.\n",
+              body[iBody].cName);
         body[iBody].dKTide = 1.0;
+      }
   }
 
   // The XUV flux

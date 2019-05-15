@@ -13,9 +13,9 @@ Internal evolution of Venus.
 **Approx. runtime**   <1 second
 ===================   ============
 
-This example uses the stagnant lid model of Venus to estimate its thermal and magnetic
+This example uses the stagnant lid model in **ThemInt** to estimate Venus' thermal and magnetic
 evolution. Without much data on its interior, this problem is underconstrained, but
-**VPLanet** does reproduce the available observations.
+**VPLanet** does match the available observations. These figures reproduce Fig. 6 from (`Driscoll & Bercovici (2014) <https://ui.adsabs.harvard.edu/abs/2014PEPI..236...36D/abstract>`_.
 
 To run this example
 -------------------
@@ -33,6 +33,6 @@ Expected output
    :width: 600px
    :align: center
 
-Analagous to EarthInterior.  Nominal thermal history of the Venus, mantle and core.  Radiogenic
+Analagous to EarthInterior.  Nominal thermal history of the Venus' mantle and core.  Radiogenic
 heating is from **RadHeat**. Magnetic moment evolution is estimated from
 the core energy balance and inner core growth.

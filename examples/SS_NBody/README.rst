@@ -15,8 +15,8 @@ Orbital evolution from an N-body model.
 ===================   ============
 
 This example uses SpiNBody to model the orbits of the solar system planets and compares
-the results to a similar simulation run by HNBody v1.0.10. The output files for
-hnbody are generated using the HNBody input script :code:`SpiNBody_Comparison.hnb`.
+the results to a similar simulation run by :code:`HNBody` v1.0.10 (`Rauch & Hamilton 2002 <https://ui.adsabs.harvard.edu/abs/2002DDA....33.0802R/abstract>`_). The output files for
+hnbody are generated using the :code:`HNBody` input script :code:`SpiNBody_Comparison.hnb`.
 
 To run this example
 -------------------
@@ -37,5 +37,5 @@ Expected output
    :width: 600px
    :align: center
 
-   Evolution of Earth's orbital elements in a Solar System simulation over the next
-   100,000 years. Black is **VPLanet** results; red is **HNBody**. The lower right panel shows the energy and angular   momentum conservation for **VPLanet** only.
+Evolution of Earth's slowly varying orbital elements in a Solar System simulation over the next
+100,000 years. Black is **VPLanet** results; red is :code:`HNBody`. The lower right panel shows the energy and angular   momentum conservation for **VPLanet** only.

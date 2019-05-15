@@ -4,8 +4,7 @@ Chaotic Eccentricity-Inclination Resonances
 Overview
 --------
 
-Orbital evolution of System U in `Barnes et al (2015) <http://adsabs.harvard.edu/abs/2015ApJ...801..101B>`_
-(see Fig. 13) as predicted by `vplanet <https://github.com/VirtualPlanetaryLaboratory/vplanet>`_.
+Planets in a mean motion resonance and in which the orbital planes are inclined relative to each other can evolve chaotically, but still survive for over 10 Gyr. This example reproduce System U in `Barnes et al (2015) <https://ui.adsabs.harvard.edu/abs/2015ApJ...801..101B/abstract>`_, see their Fig. 13.
 
 An animation of this system is available `here <http://faculty.washington.edu/rkb9/animations/>`_.
 
@@ -42,4 +41,4 @@ of the inner planet. Although typically around the Earth's solar constant of 136
 W/m^2, increases over a factor of 30 are possible during epochs of star-grazingly-high eccentricity.
 *Bottom Right:* Energy (orange) and angular momentum (purple) are conserved to high
 precision in this run. The slow drifts are typical of the 4th order Runge-Kutta scheme
-in vplanet.
+in vplanet. Note that `Barnes et al (2015) <https://ui.adsabs.harvard.edu/abs/2015ApJ...801..101B/abstract>`_ found this system to be stable for 10 Gyr.

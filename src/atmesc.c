@@ -912,17 +912,19 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   // For circumbinary planets, assume no Ktide enhancement
   if(body[iBody].bBinary && body[iBody].iBodyType == 0) {
       body[iBody].dKTide = 1.0;
-  }
-  else {
-      if (xi > 1)
+  } else {
+      if (xi > 1) {
         body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
-      else
-        body[iBody].dKTide = 0;
+      } else {
+        fprintf(stderr,"WARNING: Roche lobe radius is larger than XUV radius for %s, evolution may not be accurate.\n",
+              body[iBody].cName);
+        body[iBody].dKTide = 1.0;
+      }
   }
 
   // The XUV flux
   if (body[iBody].bCalcFXUV){
-    body[iBody].dFXUV = fdInsolation(body, iBody, 1);
+    body[iBody].dFXUV = fdXUVFlux(body, iBody);
   }
 
   // The H2O XUV escape efficiency
@@ -1565,7 +1567,7 @@ Logs the semi-major axis corresponding to the current runaway greenhouse limit.
 void WriteRGLimit(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   // Get the RG flux
-  double flux = fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass);
+  double flux = fdHZRG14(body,iBody);
 
   // Convert to semi-major axis *at current eccentricity!*
   *dTmp = pow(4 * PI * flux /  (body[0].dLuminosity * pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5)), -0.5);
@@ -2237,17 +2239,22 @@ The rate of change of the envelope mass.
 double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   // TODO: This needs to be moved. Ideally we'd just remove this equation from the matrix.
-  if ((body[iaBody[0]].dEnvelopeMass <= 0) || (body[iaBody[0]].dAge > body[iaBody[0]].dJeansTime)){
-    return 0;
+  // RB: move to ForceBehaviorAtmesc
+  if ((body[iaBody[0]].dEnvelopeMass <= 0) || (body[iaBody[0]].dAge > body[iaBody[0]].dJeansTime)) {
+    return dTINY;
   }
 
-  if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17){
+  if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17) {
 
-  	return -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass - body[iaBody[0]].dEnvelopeMass));
+  	return -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV
+        * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass
+          - body[iaBody[0]].dEnvelopeMass));
 
-  }
-  else{
-  	return -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius * body[iaBody[0]].dXFrac * body[iaBody[0]].dXFrac);
+  } else {
+  	return -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH
+      / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI
+        * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius
+          * body[iaBody[0]].dXFrac * body[iaBody[0]].dXFrac);
   }
 
 }
@@ -2306,40 +2313,6 @@ double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
 /************* ATMESC Helper Functions ************/
 
 /**
-Computes the insolation.
-
-@param body A pointer to the current BODY instance
-@param iBody The current BODY index
-@param iXUV Integer describing the XUV model
-*/
-double fdInsolation(BODY *body, int iBody, int iXUV) {
-
-  double flux;
-
-  if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
-
-    // Body orbits two stars
-    if (iXUV)
-      flux = fndFluxExactBinary(body,iBody,body[0].dLXUV,body[1].dLXUV);
-    else
-      flux = fndFluxExactBinary(body,iBody,body[0].dLuminosity,body[1].dLuminosity);
-
-  } else {
-
-    // Body orbits one star
-    if (iXUV)
-      flux = body[0].dLXUV / (4 * PI * pow(body[iBody].dSemi, 2) *
-             pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
-    else
-      flux = body[0].dLuminosity / (4 * PI * pow(body[iBody].dSemi, 2) *
-             pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
-  }
-
-  return flux;
-
-}
-
-/**
 Computes whether or not water is escaping.
 
 @param body A pointer to the current BODY instance
@@ -2353,7 +2326,7 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // 1. Check if there's hydrogen to be lost; this happens first
   if (body[iBody].dEnvelopeMass > 0) {
     // (But let's still check whether the RG phase has ended)
-    if ((body[iBody].dRGDuration == 0.) && (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)))
+    if ((body[iBody].dRGDuration == 0.) && (fdInstellation(body, iBody) < fdHZRG14(body,iBody)))
       body[iBody].dRGDuration = body[iBody].dAge;
     return 0;
   }
@@ -2364,7 +2337,7 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   // spectrum! The Kopparapu+14 limit is for a single star only. This
   // approximation for a binary is only valid if the two stars have
   // similar spectral types, or if body zero dominates the flux.
-  else if (fdInsolation(body, iBody, 0) < fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)){
+  else if (fdInstellation(body, iBody) < fdHZRG14(body,iBody)) {
     if (body[iBody].dRGDuration == 0.)
       body[iBody].dRGDuration = body[iBody].dAge;
     return 0;
@@ -2412,16 +2385,20 @@ runaway greenhouse limit.
 
 @param dLuminosity The stellar luminosity
 @param dTeff The stellar effective temperature
-@param dEcc The planet's eccentricity
+@param dEcc The planet's eccentricity -- RB: Why is ecc passed?
 @param dPlanetMass The planet mass
 */
-double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMass) {
+
+// Why isn't this in system.c?
+double fdHZRG14(BODY *body,int iBody) {
+  //double dLuminosity, double dTeff, double dEcc, double dPlanetMass) {
   // Do a simple log-linear fit to the Kopparapu+14 mass-dependent RG limit
   int i;
   double seff[3];
   double daCoeffs[2];
+  double dHZRG14Limit;
 
-  double tstar = dTeff - 5780;
+  double tstar = body[0].dTemperature - 5780;
   double daLogMP[3] = {-1.0, 0., 0.69897};
   double seffsun[3] = {0.99, 1.107, 1.188};
   double a[3] = {1.209e-4, 1.332e-4, 1.433e-4};
@@ -2429,13 +2406,15 @@ double fdHZRG14(double dLuminosity, double dTeff, double dEcc, double dPlanetMas
   double c[3] = {-7.418e-12, -8.308e-12, -8.968e-12};
   double d[3] = {-1.713e-15, -1.931e-15, -2.084e-15};
 
-  for (i=0;i<3;i++){
+  for (i=0;i<3;i++) {
   	seff[i] = seffsun[i] + a[i]*tstar + b[i]*tstar*tstar + c[i]*pow(tstar,3) + d[i]*pow(tstar,4);
   }
 
   fvLinearFit(daLogMP,seff,3,daCoeffs);
 
-  return (daCoeffs[0]*log10(dPlanetMass/MEARTH) + daCoeffs[1]) * LSUN / (4 * PI * AUM * AUM);
+  dHZRG14Limit =  (daCoeffs[0]*log10(body[iBody].dMass/MEARTH) + daCoeffs[1]) * LSUN / (4 * PI * AUM * AUM);
+
+  return dHZRG14Limit;
 }
 
 /**
@@ -2488,6 +2467,8 @@ Performs a really simple linear least-squares fit on data.
 @param iLen The length of the arrays
 @param daCoeffs The slope and the intercept of the fit
 */
+
+// should be in another file. control?
 void fvLinearFit(double *x, double *y, int iLen, double *daCoeffs){
 	// Simple least squares linear regression, y(x) = mx + b
 	// from http://en.wikipedia.org/wiki/Simple_linear_regression

@@ -1629,7 +1629,7 @@ void ForceBehaviorEqtideAtmesc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,
     body[iBody].dImK2Ocean = 0;
   }
 
-  /* Old way, in which Q is set by top layer. need a switch for this. 
+  /* Old way, in which Q is set by top layer. need a switch for this.
   for (iBody = 1; iBody<=evolve->iNumBodies-1; iBody++) {
 
     // We think there is an envelope, but there isnt!
@@ -1701,7 +1701,7 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body,MODULE *module,EVOLVE *evolve,
       have oceans *and* be in an RG. */
     if (evolve->bFirstStep) {
       // RG -> no ocean tides
-      if (fdInsolation(body, iBody, 0) >= fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass)) {
+      if (fdInstellation(body, iBody) >= fdHZRG14(body,iBody)) {
         bOceans = 0;
       }
     }

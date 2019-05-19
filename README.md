@@ -1,6 +1,8 @@
 # VPLanet
 [![Build Status](https://travis-ci.com/VirtualPlanetaryLaboratory/vplanet.svg?token=jABaFLLgJNHTWSqkT7CM&branch=master)](https://travis-ci.com/VirtualPlanetaryLaboratory/vplanet)
 [![Documentation](https://img.shields.io/badge/read-the_docs-blue.svg?style=flat)](https://VirtualPlanetaryLaboratory.github.io/vplanet)
+<a href="https://arxiv.org/abs/1905.06367"><img src="https://img.shields.io/badge/read-the_paper-7d93c7.svg?style=flat"/></a>
+<a href="http://ascl.net/1811.017"><img src="https://img.shields.io/badge/ascl-1811.017-blue.svg?colorB=262255" alt="ascl:1811.017" /></a>
 
 © 2018 The VPLanet Team.
 

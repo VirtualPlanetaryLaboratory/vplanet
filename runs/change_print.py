@@ -1,8 +1,7 @@
 import os as os
-import numpy as np
 
-n = 217
+n = 1134
 
-while (n<325):
-    os.system('cp TR1_g_example/print_results.py TR1_'+str(n)+'/')
+while (n<1188):
+    os.system('cp TR1_f_example/vpl.in TR1_'+str(n)+'/')
     n = n+1

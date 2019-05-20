@@ -69,7 +69,7 @@ for i in range(n_time):
         atm_des  = 1
         t_desicc = i
 
-    if (man_sol == 0) and (r_sol[i] >= R_N_Planet):
+    if (man_sol == 0) and ((r_sol[i] >= 0.9999*R_N_Planet) or (Tpot[i]<=1660)):
         man_sol = 1
         t_solid = i
 

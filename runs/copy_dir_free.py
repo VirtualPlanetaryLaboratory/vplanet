@@ -44,10 +44,10 @@ for p in range(len(planets)):
 
                 rad_p = float(rad[r][:-1])*masses[p]
 
-                input[11] = 'dWaterMassAtm		-'+water[w][:-1]+'		  # Initial water mass in the system (neg: terrestrial oceans, default: -1) \n'
-                input[38] = 'd40KNumMan    -'+str(rad_p)+'\n'
-                input[62] = 'bFixOrbit 	'+str(bFixOrbit)+'		   # Keep dEcc constant? \n'
-                input[67] = 'dEcc          '+ecc[e][:-1]+'                         # Eccentricity \n'
+                input[12] = 'dWaterMassAtm		-'+water[w][:-1]+'		  # Initial water mass in the system (neg: terrestrial oceans, default: -1) \n'
+                input[39] = 'd40KNumMan    -'+str(rad_p)+'\n'
+                input[63] = 'bFixOrbit 	'+str(bFixOrbit)+'		   # Keep dEcc constant? \n'
+                input[68] = 'dEcc          '+ecc[e][:-1]+'                         # Eccentricity \n'
 
                 inputfile = open(''+new_directory+'/'+planets[p]+'.in','w')
                 for l in range(len(input)):

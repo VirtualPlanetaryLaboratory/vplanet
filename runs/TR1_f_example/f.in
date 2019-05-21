@@ -6,6 +6,7 @@ cColor        13aed5
 # Physical Properties
 dMass         -0.926                        # Mass, negative -> Earth masses
 dRadius       -1.05                         # Radius, negative -> Earth radii
+dRotPeriod    -1                           # Rotation Period, negative -> days
 
 # MAGMOC Properties
 dMassFracFeOIni		0.0788		  # Initial mass fraction of FeO in the mantle (default: 0.0788)

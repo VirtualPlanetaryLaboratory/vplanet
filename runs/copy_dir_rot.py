@@ -50,7 +50,7 @@ for p in range(len(planets)):
 
                     rad_p = float(rad[r][:-1])*masses[p]
 
-                    input[8]  = 'dRotPeriod    -'+rot[t][:-1]+'                           # Rotation Period, negative -> days'
+                    input[8]  = 'dRotPeriod    -'+rot[t][:-1]+'                           # Rotation Period, negative -> days \n'
                     input[12] = 'dWaterMassAtm		-'+water[w][:-1]+'		  # Initial water mass in the system (neg: terrestrial oceans, default: -1) \n'
                     input[39] = 'd40KNumMan    -'+str(rad_p)+'\n'
                     input[63] = 'bFixOrbit 	'+str(bFixOrbit)+'		   # Keep dEcc constant? \n'

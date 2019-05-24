@@ -1842,9 +1842,6 @@ double fdDSolidRadius(BODY *body, SYSTEM *system, int *iaBody) {
   } else {
     dDerivative = body[iaBody[0]].dFactorDerivative * fdDPotTemp(body,system,iaBody);
   }
-  if (dDerivative < 0) {
-    return 0;
-  }
   return dDerivative;
 }
 

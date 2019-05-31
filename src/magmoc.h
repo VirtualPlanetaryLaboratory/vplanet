@@ -94,12 +94,13 @@
 #define OPT_SURFTEMP              2312
 #define OPT_MANMELTDENSITY        2313
 #define OPT_HALTMANTLESOLIDIFIED  2314
-#define OPT_HALTATMDESISRUFCOOL   2315
-#define OPT_HALTENTERHABZONE      2316
-#define OPT_HALTALLPLANETSSOLID   2317
-#define OPT_HALTALLPLANETSDESICC  2318
-#define OPT_RADIOHEATMODEL        2319
-#define OPT_MAGMOCATMMODEL        2320
+#define OPT_HALTMANTLEMELTFRACLOW 2315
+#define OPT_HALTATMDESISRUFCOOL   2316
+#define OPT_HALTENTERHABZONE      2317
+#define OPT_HALTALLPLANETSSOLID   2318
+#define OPT_HALTALLPLANETSDESICC  2319
+#define OPT_RADIOHEATMODEL        2320
+#define OPT_MAGMOCATMMODEL        2321
 
 void AddModuleMagmOc(MODULE*,int,int);
 void BodyCopyMagmOc(BODY*,BODY*,int,int,int);
@@ -118,6 +119,7 @@ void ReadOptionsMagmOc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int
 #define MAGMOCHALTBODYEND      5
 
 int fbHaltMantleSolidified(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltMantleMeltFracLow(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 int fbHaltAtmDesiSurfCool(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 int fbHaltEnterHabZone(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 int fbHaltAllPlanetsSolid(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);

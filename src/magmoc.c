@@ -186,6 +186,22 @@ void ReadHaltMantleSolidified(BODY *body,CONTROL *control,FILES *files,OPTIONS *
   }
 }
 
+void ReadHaltMantleMeltFracLow(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    control->Halt[iFile-1].bHaltMantleMeltFracLow = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      AssignDefaultInt(options,&control->Halt[iFile-1].bHaltMantleMeltFracLow,files->iNumInputs);
+  }
+}
+
 void ReadHaltAtmDesiSurfCool(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -351,6 +367,12 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMANTLESOLIDIFIED].cDefault,"0");
   options[OPT_HALTMANTLESOLIDIFIED].iType = 0;
   fnRead[OPT_HALTMANTLESOLIDIFIED] = &ReadHaltMantleSolidified;
+
+  sprintf(options[OPT_HALTMANTLEMELTFRACLOW].cName,"bHaltMantleMeltFracLow");
+  sprintf(options[OPT_HALTMANTLEMELTFRACLOW].cDescr,"Halt when mantle mostly solidified?");
+  sprintf(options[OPT_HALTMANTLEMELTFRACLOW].cDefault,"0");
+  options[OPT_HALTMANTLEMELTFRACLOW].iType = 0;
+  fnRead[OPT_HALTMANTLEMELTFRACLOW] = &ReadHaltMantleMeltFracLow;
 
   sprintf(options[OPT_HALTATMDESISRUFCOOL].cName,"bHaltAtmDesiSurfCool");
   sprintf(options[OPT_HALTATMDESISRUFCOOL].cDescr,"Halt when atmosphere desiccated and surface below 1000K?");
@@ -638,22 +660,35 @@ double fndNetFluxAtmPetit(BODY *body, double dTime, int iBody) {
   double dLogP, dTsurf;               // log10 of water pressure, surface temperature,
   double dLogF_ms, dLogF_pms, dLogF;  // log10 of atmospheric net flux (main sequence, pre-main sequence, acutal time)
   double dTimeMain = 1.647e8;
+  double dFNetPetit;
 
-  dLogP  = log10(body[iBody].dPressWaterAtm/1e5);
-  dTsurf = body[iBody].dSurfTemp;
+  double dOLR = 280; // Outgoing Longwave Radiation, Runaway Greenhouse (W/m^2)
+  double dASR = pow(body[iBody].dEffTempAtm,4) * SIGMA; // Absorbed Stellar Radiation (W/m^2)
 
-  dLogF_ms = -8.03520391e-02 + 3.08508158e-03*dTsurf - 6.96356770e-01*dLogP - 3.09084067e-07*pow(dTsurf,2) \
-         + 2.38672208e-08*pow(dTsurf,2)*dLogP - 2.58853235e-08*pow(dTsurf,2)*pow(dLogP,2) - 3.60631795e-01*pow(dLogP,2) \
-         + 1.90372485e-04*dTsurf*pow(dLogP,2) - 1.63177944e-04*dTsurf*dLogP;
+  if ((body[iBody].dSurfTemp <= 1800) && (body[iBody].dSurfTemp >= 600) && (body[iBody].dPressWaterAtm >= PRESSWATERMIN)) {
+    return dOLR - dASR;
+  } else {
+    dLogP  = log10(body[iBody].dPressWaterAtm/1e5);
+    dTsurf = body[iBody].dSurfTemp;
 
-  dLogF_pms = -8.40997236e+00 + 7.66867497e-03*dTsurf - 4.43217915e-01*dLogP - 9.48344751e-07*pow(dTsurf,2) \
-         + 5.70475594e-08*pow(dTsurf,2)*dLogP - 2.62351040e-08*pow(dTsurf,2)*pow(dLogP,2) - 1.88040467e-01*pow(dLogP,2) \
-         + 1.45691797e-04*dTsurf*pow(dLogP,2) - 3.61617207e-04*dTsurf*dLogP;
+    dLogF_ms = -8.03520391e-02 + 3.08508158e-03*dTsurf - 6.96356770e-01*dLogP - 3.09084067e-07*pow(dTsurf,2) \
+           + 2.38672208e-08*pow(dTsurf,2)*dLogP - 2.58853235e-08*pow(dTsurf,2)*pow(dLogP,2) - 3.60631795e-01*pow(dLogP,2) \
+           + 1.90372485e-04*dTsurf*pow(dLogP,2) - 1.63177944e-04*dTsurf*dLogP;
 
-  dLogF = dLogF_pms + (dTime - 1)*(dLogF_ms - dLogF_pms)/(dTimeMain - 1);
+    dLogF_pms = -8.40997236e+00 + 7.66867497e-03*dTsurf - 4.43217915e-01*dLogP - 9.48344751e-07*pow(dTsurf,2) \
+           + 5.70475594e-08*pow(dTsurf,2)*dLogP - 2.62351040e-08*pow(dTsurf,2)*pow(dLogP,2) - 1.88040467e-01*pow(dLogP,2) \
+           + 1.45691797e-04*dTsurf*pow(dLogP,2) - 3.61617207e-04*dTsurf*dLogP;
 
-  return pow(10,dLogF);
+    dLogF = dLogF_pms + (dTime - 1)*(dLogF_ms - dLogF_pms)/(dTimeMain - 1);
 
+    dFNetPetit = pow(10,dLogF);
+
+    if ((dFNetPetit < (dOLR - dASR)) && (body[iBody].dPressWaterAtm >= PRESSWATERMIN)) {
+      dFNetPetit = dOLR - dASR;
+    }
+
+    return dFNetPetit;
+  }
 }
 
 /**
@@ -1242,11 +1277,19 @@ void InitializeUpdateMagmOc(BODY *body,UPDATE *update,int iBody) {
  * Checks if mantle soldified
  */
 int fbHaltMantleSolidified(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-  // if (body[iBody].bManSolid) {
+  if (body[iBody].bManSolid) {
+    if (io->iVerbose >= VERBPROG) {
+      printf("HALT: %s's mantle completely solidified after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+    }
+    return 1;
+  }
+  return 0;
+}
+
+int fbHaltMantleMeltFracLow(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   if (body[iBody].bManQuasiSol) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's mantle mostly solidified after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
-      // printf("HALT: %s's mantle completely solidified after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
     return 1;
   }
@@ -1317,6 +1360,9 @@ void CountHaltsMagmOc(HALT *halt,int *iNumHalts) {
   if (halt->bHaltMantleSolidified) {
     (*iNumHalts)++;
   }
+  if (halt->bHaltMantleMeltFracLow) {
+    (*iNumHalts)++;
+  }
   if (halt->bHaltAtmDesiSurfCool) {
     (*iNumHalts)++;
   }
@@ -1334,6 +1380,9 @@ void CountHaltsMagmOc(HALT *halt,int *iNumHalts) {
 void VerifyHaltMagmOc(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt) {
   if (control->Halt[iBody].bHaltMantleSolidified) {
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMantleSolidified;
+  }
+  if (control->Halt[iBody].bHaltMantleMeltFracLow) {
+    control->fnHalt[iBody][(*iHalt)++] = &fbHaltMantleMeltFracLow;
   }
   if (control->Halt[iBody].bHaltAtmDesiSurfCool) {
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltAtmDesiSurfCool;

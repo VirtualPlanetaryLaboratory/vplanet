@@ -1647,6 +1647,7 @@ struct HALT {
 
 	/* MAGMOC */
 	int bHaltMantleSolidified;    /**< Halt if mantle completely solidified */
+	int bHaltMantleMeltFracLow;   /**< Halt if melt fraction drops below 0.4 at surface */
 	int bHaltAtmDesiSurfCool;     /**< Halt if atmosphere desiccated & T_surf below 1000K */
 	int bHaltEnterHabZone;        /**< Halt if palenet enters Habitable Zone*/
 	int bHaltAllPlanetsSolid;			/**< Halt if all planets solidified (for multiplanet system) */

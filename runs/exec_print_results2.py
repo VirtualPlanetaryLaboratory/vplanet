@@ -2,7 +2,7 @@ import os as os
 import numpy as np
 
 # data = np.loadtxt("dir_names.txt", skiprows=1)
-data = np.genfromtxt('dir_names2.txt',dtype='str', skip_header=1)
+data = np.genfromtxt('dir_names6.txt',dtype='str', skip_header=1)
 # datafile = open('dir_names.txt')
 # data = datafile.readlines()
 # datafile.close()

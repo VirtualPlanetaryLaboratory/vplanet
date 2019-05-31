@@ -1,7 +1,7 @@
 import os as os
 import numpy as np
 
-data = np.genfromtxt('dir_names5.txt',dtype='str', skip_header=1)
+data = np.genfromtxt('dir_names6.txt',dtype='str', skip_header=1)
 
 Number  = data[:,0]  # Number of folder
 Planet  = data[:,1]  # Planet name (e,f,g)
@@ -10,7 +10,7 @@ No_results = []
 
 for n in range(len(Number)):
     os.chdir('TR1_'+Number[n]+'')
-    os.system('cp ../TR1_'+planets[p]+'_example/print_results.py .')
+    os.system('cp ../TR1_'+Planet[n]+'_example/print_results.py .')
     file_exists = 0
     for file in os.listdir('./'):
         if file.endswith('.'+Planet[n]+'.forward'):

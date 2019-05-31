@@ -2,7 +2,7 @@ import os as os
 import numpy as np
 
 # data = np.loadtxt("dir_names.txt", skiprows=1)
-data = np.genfromtxt('dir_names.txt',dtype='str', skip_header=1)
+data = np.genfromtxt('dir_names5.txt',dtype='str', skip_header=1)
 # datafile = open('dir_names.txt')
 # data = datafile.readlines()
 # datafile.close()
@@ -25,7 +25,7 @@ radfile = open('rad.txt')
 rad_values = radfile.readlines()
 radfile.close()
 
-planets = ['e']#,'f','g']
+planets = ['e','f','g']
 
 n = 0
 
@@ -68,13 +68,13 @@ for p in range(len(planets)):
                 n = n + 1
 
         # schreibe array in file
-        np.savetxt('Results_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_solid_time.dat',solid_time)
-        np.savetxt('Results_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_solid_waterlocked.dat',solid_waterlocked)
-        np.savetxt('Results_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_solid_watertot.dat',solid_watertot)
-        np.savetxt('Results_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_solid_presswater.dat',solid_presswater)
-        np.savetxt('Results_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_solid_pressoxy.dat',solid_pressoxy)
-        np.savetxt('Results_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_atm_desicc.dat',atm_desicc)
-        np.savetxt('Results_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_desicc_time.dat',desicc_time)
-        np.savetxt('Results_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_desicc_watertot.dat',desicc_watertot)
-        np.savetxt('Results_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_desicc_presswater.dat',desicc_presswater)
-        np.savetxt('Results_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_desicc_pressoxy.dat',desicc_pressoxy)
+        np.savetxt('Results_locked_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_solid_time.dat',solid_time)
+        np.savetxt('Results_locked_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_solid_waterlocked.dat',solid_waterlocked)
+        np.savetxt('Results_locked_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_solid_watertot.dat',solid_watertot)
+        np.savetxt('Results_locked_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_solid_presswater.dat',solid_presswater)
+        np.savetxt('Results_locked_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_solid_pressoxy.dat',solid_pressoxy)
+        np.savetxt('Results_locked_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_atm_desicc.dat',atm_desicc)
+        np.savetxt('Results_locked_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_desicc_time.dat',desicc_time)
+        np.savetxt('Results_locked_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_desicc_watertot.dat',desicc_watertot)
+        np.savetxt('Results_locked_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_desicc_presswater.dat',desicc_presswater)
+        np.savetxt('Results_locked_TR1_'+planets[p]+'_'+water_values[w][:-1]+'_desicc_pressoxy.dat',desicc_pressoxy)

@@ -125,7 +125,6 @@
 
 /* File Limits */
 
-#define MAXBODIES     10    // Maximum number of bodies XXX obsolete?
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      128   /* Number of characters in option description */
 #define OPTLONDESCR   2048  /* Number of characters in option long description */

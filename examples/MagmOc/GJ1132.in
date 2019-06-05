@@ -7,7 +7,7 @@ saOutputOrder Age -Luminosity -LXUVStellar -Radius Temperature
 
 # Physical Parameters
 dMass         0.181                       # Mass, solar masses
-dAge          5e5
+dAge          5e6
 
 # STELLAR Parameters
 sStellarModel baraffe                     # Stellar evolution model: `baraffe` or `none`

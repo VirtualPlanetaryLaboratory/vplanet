@@ -31,9 +31,9 @@ M_O_Space   = data[:,11] # partial pressure oxygen in atmosphere (bar)
 Frac_Fe2O3  = data[:,12] # partial pressure oxygen in atmosphere (bar)
 NetFluxAtmo = data[:,13] # atmospheric net flux (W/m^2)
 Frac_H2O    = data[:,14] # Water fraction in magma ocean
-RadioHeat   = data[:,15] # Radiogenic Heating Power (TW)
-TidalHeat   = data[:,16] # Tidal Heating Power (TW)
-MeltFrac    = data[:,17] # Melt Fraction magma ocean
+#RadioHeat   = data[:,15] # Radiogenic Heating Power (TW)
+#TidalHeat   = data[:,16] # Tidal Heating Power (TW)
+MeltFrac    = data[:,15] # Melt Fraction magma ocean
 
 n_time = len(time)
 i_end  = n_time-1
@@ -138,7 +138,7 @@ ax3.set_yscale('log')
 
 ax4 = fig.add_subplot(334, sharex=ax1)
 ax4.plot(time*10**-6, Press_H2O, label='$H_2O$')
-ax4.plot(time*10**-6, Press_O, label='$O$')
+ax4.plot(time*10**-6, Press_O, label='$O_2$')
 ax4.legend(loc='best', frameon=True)
 ax4.set_ylabel('Atmospheric pressure (bar)')
 ax4.set_yscale('log')

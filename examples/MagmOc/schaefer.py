@@ -1,10 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib as mpl
 
 sns.set_style("whitegrid")
 plt.close('all')
-
+# Set style for plot #
+mpl.rcParams['lines.linewidth'] = 2
+mpl.rcParams['axes.labelsize'] = 13
+mpl.rcParams['xtick.labelsize'] = 12
+mpl.rcParams['ytick.labelsize'] = 12
+mpl.rcParams['legend.fontsize'] = 13
+######################
 cmap=plt.get_cmap('nipy_spectral')
 
 # Points along curve
@@ -33,6 +40,8 @@ LogT_petit = np.zeros(len(time_petit))
 for i in range(len(time_petit)):
     LogT_petit[i] = np.log10(time_petit[i]) - 6
 
+fig = plt.figure(num=None, figsize=(14, 4), dpi=300, facecolor='w', edgecolor='k')
+
 img = plt.imread('Results_Schaefer_a.png')
 plt.imshow(img, zorder=0, extent=[-6, 3.7, 280, 4000], aspect='auto')
 
@@ -52,4 +61,7 @@ plt.xlim([-6,3.7])
 plt.ylim([280,4000])
 plt.ylabel('Temperature (K)', fontsize=14, fontweight='bold')
 plt.xlabel('$log_{10}(t)$ (Myr)', fontsize=14, fontweight='bold')
-plt.show()
+# plt.show()
+plt.tight_layout()
+# plt.subplots_adjust(left=0.15, right=0.95, top=0.95, bottom=0.12)
+plt.savefig('Schaefer_Grey_Petit_TeqCons.png')

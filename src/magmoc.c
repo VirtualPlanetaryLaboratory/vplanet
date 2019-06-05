@@ -963,7 +963,8 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int 
   /*
    * Net flux leaving the atmosphere
    */
-  body[iBody].dEffTempAtm  = pow((dBolFlux * (1 - body[iBody].dAlbedo) / (4 * SIGMA) ),0.25);
+
+  body[iBody].dEffTempAtm = pow((dBolFlux * (1 - body[iBody].dAlbedo) / (4 * SIGMA) ),0.25);
 
   if (body[iBody].iMagmOcAtmModel == MAGMOC_GREY || body[iBody].dPressWaterAtm <= PRESSWATERMIN) {
     body[iBody].dNetFluxAtmo = fndNetFluxAtmGrey(body,iBody);

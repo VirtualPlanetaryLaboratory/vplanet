@@ -245,6 +245,10 @@
 
 #define MAXSPECIES       100
 
+#ifndef GITVERSION
+	#define GITVERSION "command-line"
+#endif
+
 /* Do not change these declarations */
 extern const double dHUGE;
 extern const double dTINY;

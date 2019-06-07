@@ -240,14 +240,9 @@
 #define VPOTTEMP        2313
 #define VSOLIDRADIUS    2314
 
-
 /* Now define the structs */
 
 #define MAXSPECIES       100
-
-#ifndef GITVERSION
-	#define GITVERSION "command-line"
-#endif
 
 /* Do not change these declarations */
 extern const double dHUGE;
@@ -1672,6 +1667,8 @@ struct CONTROL {
   HALT *Halt;
   IO Io;
   UNITS *Units;
+
+	char sGitVersion[64];
 
   /* Move to BODY */
   int *iMassRad;           /**< Mass-Radius Relationship */

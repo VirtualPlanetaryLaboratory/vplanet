@@ -2080,7 +2080,7 @@ double fndApproxInsol(BODY *body, int iBody) {
 }
 
 /** Dumps out a bunch of values to see if they agree with LL13 */
-void fnvbinaryDebug(BODY * body) {
+void fnvBinaryDebug(BODY * body) {
 
   fprintf(stderr,"binary debug information:\n");
   fprintf(stderr,"r0: %lf.\n",body[2].dR0/AUM);

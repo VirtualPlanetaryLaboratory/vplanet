@@ -1577,7 +1577,7 @@ void LogOptions(CONTROL *control,FILES *files,MODULE *module,SYSTEM *system,FILE
 
   fprintf(fp,"-------- Log file %s -------\n\n",files->cLog);
   fprintf(fp,"Executable: %s\n",files->cExe);
-  fprintf(fp,"Version: %s\n", GITVERSION);
+  fprintf(fp,"Version: %s\n", control->sGitVersion);
   fprintf(fp,"System Name: %s\n",system->cName);
   fprintf(fp,"Primary Input File: %s\n",files->Infile[0].cIn);
   for (iFile=1;iFile<files->iNumInputs;iFile++)

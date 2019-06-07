@@ -44,6 +44,9 @@ opt:
 	@echo 'bash:    echo '"'"'export PATH=$$PATH:/path/to/vplanet/'"'"' >> ~/.bashrc'
 	@echo "=========================================================================================================="
 
+cpp:
+	g++ -o vplanet src/*.c -lm -O3 -fpermissive -w -DGITVERSION=\"$(GITVERSION)\"
+
 profile:
 	-gcc -pg -o vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 

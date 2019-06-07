@@ -58,7 +58,7 @@ int main(int argc,char *argv[]) {
   fnIntegrate fnOneStep;
 
   #ifdef GITVERSION
-  control.sGitVersion = GITVERSION;
+  strcpy(control.sGitVersion,GITVERSION);
   #else
   FILE *fp;
   char version[64];

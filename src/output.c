@@ -1577,7 +1577,7 @@ void LogOptions(CONTROL *control,FILES *files,MODULE *module,SYSTEM *system,FILE
 
   fprintf(fp,"-------- Log file %s -------\n\n",files->cLog);
   fprintf(fp,"Executable: %s\n",files->cExe);
-  fprintf(fp,"Version: %s\n", GITVERSION);
+  fprintf(fp,"Version: %s\n", control->sGitVersion);
   fprintf(fp,"System Name: %s\n",system->cName);
   fprintf(fp,"Primary Input File: %s\n",files->Infile[0].cIn);
   for (iFile=1;iFile<files->iNumInputs;iFile++)
@@ -1894,14 +1894,14 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
     output[iOut].bNeg = 0; /* Is a negative option allowed */
     output[iOut].dNeg = 1; /* Conversion factor for negative options */
     output[iOut].iNum = 0; /* Number of parameters associated with option */
-    output[iOut].bDoNeg = malloc(MAXBODIES*sizeof(int));
+    output[iOut].bDoNeg = malloc(MAXFILES*sizeof(int));
     memset(output[iOut].cDescr,'\0',OUTDESCR);
     sprintf(output[iOut].cDescr,"null");
     memset(output[iOut].cLongDescr,'\0',OUTLONDESCR);
     sprintf(output[iOut].cLongDescr,"null");
     memset(output[iOut].cNeg,'\0',OUTDESCR);
     sprintf(output[iOut].cNeg,"null");
-    for (iBody=0;iBody<MAXBODIES;iBody++)
+    for (iBody=0;iBody<MAXFILES;iBody++)
         output[iOut].bDoNeg[iBody] = 0;
   }
 

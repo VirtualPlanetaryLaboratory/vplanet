@@ -57,6 +57,28 @@ int main(int argc,char *argv[]) {
   fnUpdateVariable ***fnUpdate;
   fnIntegrate fnOneStep;
 
+  #ifdef GITVERSION
+  strcpy(control.sGitVersion,GITVERSION);
+  #else
+  FILE *fp;
+  char version[64];
+
+  /* Open the command for reading. */
+  fp = popen("git describe --tags --abbrev=40 --always", "r");
+  if (fp == NULL) {
+  	printf("Failed to run git command\n" );
+  	exit(1);
+  }
+
+  /* Read the output a line at a time - output it. */
+  fgets(version, sizeof(version)-1, fp);
+  strcpy(control.sGitVersion,version);
+
+  pclose(fp);
+
+  //exit(1);
+  #endif
+
   /** Must initialize all options and outputs for all modules
      independent of what is selected. This allows a complete
      help screen as well as checks during ReadOptions. This

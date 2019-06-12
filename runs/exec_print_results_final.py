@@ -52,5 +52,5 @@ for p in range(len(planets)):
         Results_Trappist1_file.write(''+str(water[w])+'\t'+str(solid_time)+'\t'+str(desicc_time)+'\t'+str(water_locked)+'\t'+str(water_tot)+'\t'+str(press_water)+'\t'+str(press_oxy)+'\n')
 
         num_dir = num_dir + 1
-        
+
     Results_Trappist1_file.close()

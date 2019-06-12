@@ -67,7 +67,7 @@ bForceEqSpin	1		   # Planet tidally locked, no rotation?
 
 # Orbital Properties
 dSemi         -0.0293                       # Semi-major axis, negative -> AU
-dEcc          0.00                         # Eccentricity
+dEcc          0.005                         # Eccentricity
 
 # Output
 saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -PressWaterAtm -PressOxygenAtm -HydrogenMassSpace -OxygenMassSpace FracFe2O3Man NetFluxAtmo WaterFracMelt -RadioPower -TidalPower $

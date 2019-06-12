@@ -656,6 +656,7 @@ struct BODY {
   double dAtmGasConst;  //lehmer var
   double dFXUV;         //lehmer var
   double dJeansTime;
+  double dFlowTemp;
   int bCalcFXUV;
 
   /* STELLAR Parameters */

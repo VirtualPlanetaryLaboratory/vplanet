@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+#set -e
 
 # Make the docs
 cd $TRAVIS_BUILD_DIR/docs
@@ -23,7 +23,6 @@ rev=$(git rev-parse --short HEAD)
 cd $TRAVIS_BUILD_DIR/docs/.build/html
 git init
 touch .nojekyll
-unset -e
 git add -f .nojekyll
 git add -f *.html
 git add -f *.js
@@ -35,7 +34,6 @@ git add -f bugs
 git add -f src
 git add -f $COVERAGE_HASH
 git add -f docs.log
-set -e
 git -c user.name='sphinx' -c user.email='sphinx' commit -m "rebuild gh-pages at ${rev}"
 git push -q -f https://$GITHUB_USER:$GITHUB_API_KEY@github.com/$TRAVIS_REPO_SLUG HEAD:gh-pages
 

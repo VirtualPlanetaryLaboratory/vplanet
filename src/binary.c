@@ -1919,7 +1919,8 @@ double fndDMk(int k, BODY * body, int iBody) {
 /** Computes the CBP orbital radius */
 double fndCBPRBinary(BODY *body,SYSTEM *system,int *iaBody) {
 
-  int iBody = iaBody[0], k;
+  int iBody = iaBody[0];
+  int k;
 
   double dPsi = body[iBody].dCBPPsi;
   double dTime = body[iBody].dAge; // Time == Age of the body

@@ -14,7 +14,12 @@ while (num_dir<2021):
     new_directory = 'TR1_'+str(num_dir)+''
 
     os.chdir(''+new_directory+'')
-    os.system('cp ../TR1_'+planets[p]+'_example/print_results.py .')
+    if (num_dir<2007):
+        os.system('cp ../TR1_'+planets[0]+'_example/print_results.py .')
+    elif (num_dir<2014):
+        os.system('cp ../TR1_'+planets[1]+'_example/print_results.py .')
+    else:
+        os.system('cp ../TR1_'+planets[2]+'_example/print_results.py .')
 
     os.system('python print_results.py')
 

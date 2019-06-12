@@ -29,7 +29,7 @@ for p in range(len(planets)):
             press_water  = float(results[12])
             press_oxy    = float(results[14])
             desicc_time  = solid_time
-        if (float(results[2])==2):
+        elif (float(results[2])==2):
             water_locked = float(results[6])
             water_tot    = float(results[10])
             press_water  = float(results[12])

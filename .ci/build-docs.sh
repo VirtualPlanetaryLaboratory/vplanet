@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+#set -e
 
 # Make the docs
 cd $TRAVIS_BUILD_DIR/docs

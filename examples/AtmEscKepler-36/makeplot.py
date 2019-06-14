@@ -5,7 +5,7 @@ import vplot as vpl
 from tqdm import tqdm
 import matplotlib.pyplot as pl
 import sys
-cmap = pl.get_cmap('jet')
+cmap = pl.get_cmap('plasma')
 
 star = """#
 sName	                  star

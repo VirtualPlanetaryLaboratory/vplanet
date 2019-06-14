@@ -207,9 +207,15 @@ void ReadJeansTime(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     else
       body[iFile-1].dJeansTime = dTmp*fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
+  } else {
+    if (iFile > 0) {
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr,"WARNING: %s not set for body %s, defaulting to %.2e seconds.\n",
+          options->cName,body[iFile-1].cName,options->dDefault);
+      }
       body[iFile-1].dJeansTime = options->dDefault;
+    }
+  }
 }
 
 /**
@@ -948,7 +954,7 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
                body[iBody].dSemi) / (body[iBody].dRadius * body[iBody].dXFrac);
 
   // For circumbinary planets, assume no Ktide enhancement
-  if(body[iBody].bBinary && body[iBody].iBodyType == 0) {
+  if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
       body[iBody].dKTide = 1.0;
   } else {
       if (xi > 1) {
@@ -1134,6 +1140,37 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
     body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,body[iBody].dPresSurf);
   } else {
+    int iCol,bError = 0;
+    for (iCol=0;iCol<files->Outfile[iBody].iNumCols;iCol++) {
+      if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_PLANETRADXUV].cName,strlen(output[OUT_PLANETRADXUV].cName)) == 0) {
+        /* Match! */
+        fprintf(stderr,"ERROR: Cannot output %s for body %s while using AtmEsc's LOPEZ12 model.\n",
+            output[OUT_PLANETRADXUV].cName,body[iBody].cName);
+        bError=1;
+      }
+      if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_RADSOLID].cName,strlen(output[OUT_RADSOLID].cName)) == 0) {
+        /* Match! */
+        fprintf(stderr,"ERROR: Cannot output %s for body %s while using AtmEsc's LOPEZ12 model.\n",
+            output[OUT_RADSOLID].cName,body[iBody].cName);
+        bError=1;
+      }
+      if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_SCALEHEIGHT].cName,strlen(output[OUT_SCALEHEIGHT].cName)) == 0) {
+        /* Match! */
+        fprintf(stderr,"ERROR: Cannot output %s for body %s while using AtmEsc's LOPEZ12 model.\n",
+            output[OUT_SCALEHEIGHT].cName,body[iBody].cName);
+        bError=1;
+      }
+      if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_PRESSURF].cName,strlen(output[OUT_PRESSURF].cName)) == 0) {
+        /* Match! */
+        fprintf(stderr,"ERROR: Cannot output %s for body %s while using AtmEsc's LOPEZ12 model.\n",
+            output[OUT_PRESSURF].cName,body[iBody].cName);
+        bError=1;
+      }
+    }
+
+    if (bError) {
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_OUTPUTORDER].iLine[iBody+1]);
+    }
     /* Must initialized the above values to avoid memory leaks. */
     body[iBody].dRadXUV = -1;
     body[iBody].dRadSolid = -1;
@@ -2021,7 +2058,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_ENVELOPEMASS] = &WriteEnvelopeMass;
 
   sprintf(output[OUT_PLANETRADXUV].cName,"RadXUV");
-  sprintf(output[OUT_PLANETRADXUV].cDescr,"XUV Radius separating hydro. dyn. escpape and equilibrium");
+  sprintf(output[OUT_PLANETRADXUV].cDescr,"XUV Radius separating hydro. dyn. escape and equilibrium");
   sprintf(output[OUT_PLANETRADXUV].cNeg,"Earth Radii");
   output[OUT_PLANETRADXUV].bNeg = 1;
   output[OUT_PLANETRADXUV].dNeg = 1./REARTH;

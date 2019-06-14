@@ -926,7 +926,7 @@ void WriteBinSecRBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   // Radial position of each star (- accounts for 180 deg phase offset)
   double dInvMass = 1.0/(body[0].dMass+body[1].dMass);
 
-  *dTmp = -body[0].dMass*radius*dInvMass;
+  *dTmp = body[0].dMass*radius*dInvMass;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);

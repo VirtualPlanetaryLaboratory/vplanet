@@ -1202,12 +1202,12 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   body[iBody].dRGDuration = 0.;
 
   if (!bAtmEsc && control->Io.iVerbose >= VERBINPUT)
-    fprintf(stderr,"WARNING: ATMESC called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
+    fprintf(stderr,"WARNING: AtmEsc called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
 
   // Radius evolution
   if (update[iBody].iNumRadius > 1) {
     if (control->Io.iVerbose >= VERBERR)
-      fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dRadius for body %d!", iBody);
+      fprintf(stderr,"ERROR: More than one module is trying to set dRadius for body %d!", iBody);
     exit(EXIT_INPUT);
   }
   VerifyRadiusAtmEsc(body,control,options,update,body[iBody].dAge,iBody);

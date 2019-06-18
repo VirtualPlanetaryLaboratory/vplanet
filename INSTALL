@@ -23,7 +23,7 @@ simulate the examples in this repository.
     > python setup.py install --user
 
 4. If you encountered no errors, then everything should be setup. To quickly
-    determine if it worked, execute the following:
+    determine if it worked, execute the following from the vplanet directory:
 
     > cd examples/EarthInterior
     > vplanet vpl.in
@@ -33,7 +33,8 @@ simulate the examples in this repository.
       identical to those in the examples/EarthInterior directory.
 
 5. If you did encounter errors, it is probably because either a) vplanet is not
-    in your PATH, b) the proper version of python is not in your PATH, or c) you
-    do not have the proper version of python installed. If you have followed
-    these instructions exactly and still cannot generate the EarthInterior png
-    files, please contact Rory Barnes at rory@astro.washington.edu.
+    in your PATH, b) the proper version of python is not in your PATH, c) you do
+    not have the proper version of python installed, or d) you need to update
+    matplotlib. If you have followed these instructions exactly and still cannot
+    generate the EarthInterior png files, please contact Rory Barnes at
+    rory@astro.washington.edu.

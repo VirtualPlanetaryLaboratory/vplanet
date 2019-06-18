@@ -29,7 +29,7 @@ simulate the examples in this repository.
     > vplanet vpl.in
     > python makeplot.py png
 
-    These commands require less than 1 minute and to create 2 png figures
+    These commands require less than 1 minute and should create 2 png figures
       identical to those in the examples/EarthInterior directory.
 
 5. If you did encounter errors, it is probably because either a) vplanet is not

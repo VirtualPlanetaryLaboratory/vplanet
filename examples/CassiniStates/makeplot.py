@@ -151,6 +151,9 @@ plt.xlabel(r'$\sin{\epsilon}$ $\cos{(\psi+\Omega)}$')
 plt.ylabel(r'$\sin{\epsilon}$ $\sin{(\psi+\Omega)}$')
 plt.xlim(-1.1,1.1)
 plt.ylim(-1.1,1.1)
+plt.arrow(0.45,-0.05,0,0.1,color='k',width=0.01,zorder=10000)
+plt.arrow(1.05,0.05,0,-0.1,color='k',width=0.01,zorder=10000)
+
 
 if (sys.argv[1] == 'pdf'):
     fig.savefig('CassiniStatesSection.pdf')

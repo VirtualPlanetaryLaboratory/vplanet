@@ -50,7 +50,7 @@ def comp2huybers(plname,dir='.',xrange=False,show=True):
 
   for ii in np.arange(nfiles):
     out = vplot.GetOutput(dir[ii])
-
+    import pdb; pdb.set_trace()
     #pdb.set_trace()
 
     ctmp = 0

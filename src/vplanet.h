@@ -125,7 +125,6 @@
 
 /* File Limits */
 
-#define MAXBODIES     10    // Maximum number of bodies XXX obsolete?
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      128   /* Number of characters in option description */
 #define OPTLONDESCR   2048  /* Number of characters in option long description */
@@ -240,7 +239,6 @@
 #define VSURFTEMP       2312
 #define VPOTTEMP        2313
 #define VSOLIDRADIUS    2314
-
 
 /* Now define the structs */
 
@@ -658,6 +656,7 @@ struct BODY {
   double dAtmGasConst;  //lehmer var
   double dFXUV;         //lehmer var
   double dJeansTime;
+  double dFlowTemp;
   int bCalcFXUV;
 
   /* STELLAR Parameters */
@@ -1669,6 +1668,8 @@ struct CONTROL {
   HALT *Halt;
   IO Io;
   UNITS *Units;
+
+	char sGitVersion[64];
 
   /* Move to BODY */
   int *iMassRad;           /**< Mass-Radius Relationship */

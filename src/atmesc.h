@@ -18,8 +18,6 @@
 #define ATMESC_PROXCENB         7           /**< Flag: Proxima Centauri b gaseous planet radius model */
 #define ATMESC_LEHMER17         8           /**< Flag: Lehmer & Catling (2017) planet radius model */
 #define ATMESC_BOL16            9           /**< Flag: Bolmont (2016) XUV absorption efficiency model */
-#define THERMT                  400.                          /**< Average thermospheric temperature (K, Venus) */
-#define BDIFF                   4.8e19 * pow(THERMT, 0.75)    /**< Binary diffusion coefficient of H through O (m^-1 s^-1) */
 #define QOH                     16.                           /**< Atomic mass ratio oxygen/hydrogen */
 
 /* Options Info */
@@ -43,6 +41,7 @@
 #define OPT_FXUV                1227 /**< The value of the XUV flux */
 #define OPT_ATMXABSEFFH2OMODEL  1228 /**< Model for time evolution of epsilon for H2O */
 #define OPT_JEANSTIME           1229 /**< Time at which flow becomes ballistic (Jeans escape) */
+#define OPT_FLOWTEMP            1230 /**< flow temperature */
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -132,7 +131,7 @@ void fnForceBehaviorAtmEsc(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVar
 void fnPropertiesAtmEsc(BODY*,EVOLVE*,UPDATE*,int);
 double fdDSurfaceWaterMassDt(BODY*,SYSTEM*,int*);
 double fdDEnvelopeMassDt(BODY*,SYSTEM*,int*);
-double fdHZRG14(double,double,double,double);
+double fdHZRG14(BODY*,int);
 void fvLinearFit(double*,double*,int,double*);
 double fdDOxygenMassDt(BODY*,SYSTEM*,int*);
 double fdDOxygenMantleMassDt(BODY*,SYSTEM*,int*);

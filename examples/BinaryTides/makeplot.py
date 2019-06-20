@@ -93,7 +93,8 @@ plt.text(0.77, 0.9,r"1 M$_{\odot}$ + 1 M$_{\odot}$",
 # Save figure
 fig.tight_layout()
 if (sys.argv[1] == 'pdf'):
-    fig.savefig('BinaryTides.pdf')
+    fig.savefig('BinaryTides.pdf', bbox_inches="tight", dpi=600)
 if (sys.argv[1] == 'png'):
-    fig.savefig('BinaryTides.png')
-#fig.savefig("zahncomp.pdf", bbox_inches="tight")
+    fig.savefig('BinaryTides.png', bbox_inches="tight", dpi=600)
+
+plt.close()

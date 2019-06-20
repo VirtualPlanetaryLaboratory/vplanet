@@ -5,7 +5,7 @@ import vplot as vpl
 from tqdm import tqdm
 import matplotlib.pyplot as pl
 import sys
-cmap = pl.get_cmap('jet')
+cmap = pl.get_cmap('plasma')
 
 star = """#
 sName	                  star
@@ -143,6 +143,6 @@ ax[1].set_xlabel(r"Initial Envelope Mass ($\mathrm{M}_\oplus$)")
 ax[2].set_xlabel(r"Initial Total Mass ($\mathrm{M}_\oplus$)")
 
 if (sys.argv[1] == 'pdf'):
-    fig.savefig('AtmEscKepler-36.pdf')
+    fig.savefig('AtmEscKepler-36.pdf', bbox_inches="tight", dpi=600)
 if (sys.argv[1] == 'png'):
-    fig.savefig('AtmEscKepler-36.png')    
+    fig.savefig('AtmEscKepler-36.png', bbox_inches="tight", dpi=600)    

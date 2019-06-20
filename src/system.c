@@ -297,11 +297,49 @@ void CalcPQ(BODY *body, int iBody) {
 
 /* Instellation */
 double fdInstellation(BODY *body,int iBody) {
+  double dInstell;
 
-  if (iBody > 0)
-    return body[0].dLuminosity/(4*PI*body[iBody].dSemi*body[iBody].dSemi*sqrt(1-body[iBody].dEcc*body[iBody].dEcc));
-  else // Central body can't have instellation (for now) XXX
-    return -1;
+  if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
+    // Body orbits two stars
+    dInstell = fndFluxExactBinary(body,iBody,body[0].dLuminosity,body[1].dLuminosity);
+  } else {
+    // Body orbits one star
+    if (iBody > 0)
+      dInstell = body[0].dLuminosity/(4*PI*body[iBody].dSemi*body[iBody].dSemi*
+        sqrt(1-body[iBody].dEcc*body[iBody].dEcc));
+    else { // Central body can't have instellation (for now)
+      dInstell = -1;
+    }
+  }
+
+  return dInstell;
+}
+
+/**
+Compute the XUV Flux.
+
+@param body A pointer to the current BODY instance
+@param iBody The current BODY index
+@param iXUV Integer describing the XUV model
+*/
+double fdXUVFlux(BODY *body, int iBody) {
+
+  double flux;
+
+  if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
+    // Body orbits two stars
+    flux = fndFluxExactBinary(body,iBody,body[0].dLXUV,body[1].dLXUV);
+  } else {
+    // Body orbits one star
+    if (iBody > 0)
+      flux = body[0].dLXUV / (4 * PI * pow(body[iBody].dSemi, 2) *
+             pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
+    else { // Central body can't have XUV flux (for now)
+      flux = -1;
+    }
+  }
+
+  return flux;
 }
 
 /*

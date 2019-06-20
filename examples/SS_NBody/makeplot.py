@@ -58,6 +58,7 @@ fig,([ax1,ax2],[ax3,ax4],[ax5,ax6])=plt.subplots(3,2,figsize=[14,16])
 
 ax1.plot(hnEarth.Time,hnEarth.a,color=vpl.colors.red)
 ax1.plot(SS.Earth.Time,SS.Earth.SemiMajorAxis,'k')
+ax1.set_rasterization_zorder(0)
 #plt.xlabel('Time (yrs)')
 ax1.set_ylabel('Semi-Major Axis (AU)')
 ax1.yaxis.set_major_formatter(FormatStrFormatter('%.6f'))

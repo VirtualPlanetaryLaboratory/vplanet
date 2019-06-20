@@ -1,0 +1,40 @@
+***** INSTALL *****
+
+This file provides a description of how to install the software necessary to
+simulate the examples in this repository.
+
+1. Ensure you have installed the following:
+    A. A C compiler, e.g. gcc, clang, etc.
+    B. Python 3.x [Note that this version should be the python in your PATH]
+        N.B. We recommend installing python via anaconda
+    C. matplotlib v1.4.0 or higher
+
+2. Clone the repository from GitHub.
+    Compile the code: > make opt
+
+3. Pip install or clone vplot.
+    > pip install vplot
+    OR
+    > git clone https://github.com/VirtualPlanetaryLaboratory/vplot.git
+    > cd vplot
+    > python setup.py develop
+    We recommend installing as administrator, but it does work for regular users
+      by changing the last command to
+    > python setup.py install --user
+
+4. If you encountered no errors, then everything should be setup. To quickly
+    determine if it worked, execute the following from the vplanet directory:
+
+    > cd examples/EarthInterior
+    > vplanet vpl.in
+    > python makeplot.py png
+
+    These commands require less than 1 minute and should create 2 png figures
+      identical to those in the examples/EarthInterior directory.
+
+5. If you did encounter errors, it is probably because either a) vplanet is not
+    in your PATH, b) the proper version of python is not in your PATH, c) you do
+    not have the proper version of python installed, or d) you need to update
+    matplotlib. If you have followed these instructions exactly and still cannot
+    generate the EarthInterior png files, please contact Rory Barnes at
+    rory@astro.washington.edu.

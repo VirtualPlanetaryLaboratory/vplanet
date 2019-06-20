@@ -350,9 +350,9 @@ def seasonal_maps(time, dir = '.', show = True):
     plt.ylim(lats[0],lats[-1])
     plt.ylabel('Latitude ($^{\circ}$)')
     plt.yticks([-60,-30,0,30,60],['60S','30S','0','30N','60N'])
-    plt.xlabel('Day')
+    plt.xlabel('Day of Year')
     clb =plt.colorbar(c3,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
-    clb.set_label(r'Ice balance (10$^{-3}$ kg/m$^2$/s)',fontsize=12)
+    clb.set_label(r'Ice Mass Balance (10$^{-3}$ kg/m$^2$/s)',fontsize=12)
 
 
     scale = 4*np.shape(insol)[1]/np.shape(temp)[1]
@@ -364,9 +364,9 @@ def seasonal_maps(time, dir = '.', show = True):
     plt.xlim(0,np.shape(temp)[1]*scale/4.)
     # plt.ylabel('Latitude ($^{\circ}$)')
     plt.yticks([-60,-30,0,30,60],['60S','30S','0','30N','60N'])
-    plt.xlabel('Day')
+    plt.xlabel('Day of Year')
     clb=plt.colorbar(c2,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
-    clb.set_label(r'OLR (W m$^{-2}$)',fontsize=12)
+    clb.set_label(r'OLR (W/m$^{2}$)',fontsize=12)
 
     if (sys.argv[1] == 'pdf'):
         plt.savefig('EarthClimateSeasons.pdf', dpi=300)

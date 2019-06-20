@@ -48,7 +48,7 @@ Rotation period evolution of 0.1 and 1 solar-mass stars due to stellar evolution
 Rotation period distribution of a ~4 Gyr-old synthetic cluster of stars
 simulated using STELLAR with the `Matt et al. [2015] <https://ui.adsabs.harvard.edu/abs/2015ApJ...799L..23M/abstract>`_ magnetic braking model
 (black, adapting VPLanet simulations from `Fleming et al. [2019] <https://adsabs.harvard.edu/abs/2019arXiv190305686F>`_). Following Fig. (3) in
-Matt et al. [2015], we compare the Fleming et al. [2019] <https://adsabs.harvard.edu/abs/2019arXiv190305686F>`_ simulated distribution to
+Matt et al. [2015], we compare the `Fleming et al. [2019] <https://adsabs.harvard.edu/abs/2019arXiv190305686F>`_ simulated distribution to
 the rotation distribution of Kepler field stars (red) measured by
 `McQuillan et al. [2014] <https://adsabs.harvard.edu/abs/2014ApJS..211...24M>`_. For reference, we plot the modern solar rotation period
 as a blue star. Using STELLAR, `Fleming et al. [2019] <https://adsabs.harvard.edu/abs/2019arXiv190305686F>`_

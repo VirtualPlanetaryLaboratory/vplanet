@@ -18,7 +18,7 @@ def test_EarthClimate():
     # Run our comparisons
     assert np.isclose(output.log.final.Earth.TGlobal, 14.649776)
     assert np.isclose(output.log.final.Earth.Eccentricity, 0.0167)
-    assert np.isclose(output.log.final.Earth.Obliquity, 0.4091)
+    assert np.isclose(output.log.final.Earth.Obliquity, 0.409103)
     assert np.isclose(output.log.final.Earth.AlbedoGlobal, 0.344298)
     assert np.isclose(output.log.final.Earth.FluxOutGlobal, 233.918031)
 

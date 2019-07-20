@@ -34,4 +34,4 @@ dSemi         -1                     # Semi-major axis, negative -> AU
 dEcc          0.017                         # Eccentricity
 
 # Output
-saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -PressWaterAtm -PressOxygenAtm -HydrogenMassSpace -OxygenMassSpace FracFe2O3Man NetFluxAtmo
+saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -PressWaterAtm -PressOxygenAtm -HydrogenMassSpace -OxygenMassSpace FracFe2O3Man NetFluxAtmo MeltFraction

@@ -18,7 +18,7 @@ log_plot = 1
 Initial_water = 1
 # read data
 # data = np.loadtxt("Solarsystem.Earth.forward")
-data = np.loadtxt("10TOSolarsystem.Earth.forward")
+data = np.loadtxt("Solarsystem.Earth.forward")
 
 time        = data[:,0]  # time (yr)
 Tpot        = data[:,1]  # Potential temp magma ocean (K)

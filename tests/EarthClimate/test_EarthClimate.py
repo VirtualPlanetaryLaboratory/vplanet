@@ -12,6 +12,9 @@ def test_EarthClimate():
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
 
+    files = os.listdir(cwd)
+    print (files)
+
     # Grab the output
     output = GetOutput(path=cwd)
 

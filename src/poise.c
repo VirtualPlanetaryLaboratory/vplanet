@@ -1721,6 +1721,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
       daRunningMean = malloc((RunLen+1)*sizeof(double));
       daRunningMean[RunLen] = 0;
       TotalMean = 0;
+      RunningMeanTmp = daRunningMean[RunLen];
       while (fabs(RunningMeanTmp - daRunningMean[RunLen]) > body[iBody].dSpinUpTol || count <= 2*RunLen) {
         RunningMeanTmp = daRunningMean[RunLen];
         PoiseSeasonal(body,iBody);

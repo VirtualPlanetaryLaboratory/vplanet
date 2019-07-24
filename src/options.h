@@ -91,7 +91,6 @@
 #define OPT_DYNELLIP            611
 #define OPT_CALCDYNELLIP        612
 #define OPT_PRILUM	        615
-#define OPT_SPECMOMINERTIA       616
 
 #define OPT_VISCUMAN            630   //Viscosity UMTBL
 

@@ -658,6 +658,9 @@ struct BODY {
   double dJeansTime;
   double dFlowTemp;
   int bCalcFXUV;
+	double dRocheRadius; 	// Radius of the Roche lobe
+	double dBondiRadius;	// Bondi Radius
+	int bBondiLimited;		// Cap the mass loss rate at the Bondi limit
 
   /* STELLAR Parameters */
   int bStellar;

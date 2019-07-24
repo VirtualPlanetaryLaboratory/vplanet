@@ -67,7 +67,9 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dFXUV = src[iBody].dFXUV;
   dest[iBody].bCalcFXUV = src[iBody].bCalcFXUV;
   dest[iBody].dJeansTime = src[iBody].dJeansTime;
-
+  dest[iBody].dRocheRadius = src[iBody].dRocheRadius; // XXX read/write functions
+  dest[iBody].dBondiRadius = src[iBody].dBondiRadius; // XXX read/write functions
+  dest[iBody].bBondiLimited = src[iBody].bBondiLimited; // XXX read function
 }
 
 /**************** ATMESC options ********************/
@@ -960,6 +962,7 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
       if (xi > 1) {
         body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
       } else {
+        // XXX roche lobe overflow?
         fprintf(stderr,"WARNING: Roche lobe radius is larger than XUV radius for %s, evolution may not be accurate.\n",
               body[iBody].cName);
         body[iBody].dKTide = 1.0;
@@ -1737,6 +1740,31 @@ void WritePlanetRadXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 }
 
 /**
+Logs the planet's Roche radius
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteRocheRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dRocheRadius;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
+/**
 Logs the atmospheric mass loss rate.
 
 \warning This routine is currently broken.
@@ -1755,6 +1783,7 @@ void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   double dDeriv;
 
   *dTmp = -1;
+  // XXX
   /* BROKEN!!!!
   dDeriv = *(update[iBody].pdDEnvelopeMassDtAtmesc);
   *dTmp = dDeriv;
@@ -2588,4 +2617,31 @@ void fvLinearFit(double *x, double *y, int iLen, double *daCoeffs){
 	}
 	daCoeffs[0] = num/den;									// Slope
 	daCoeffs[1] = yavg-daCoeffs[0]*xavg;		// Intercept
+}
+
+/**
+ Calculate the Roche radius assuming body 0 is the host star
+
+ @param body BODY struct
+ @param iBody int body indentifier
+
+ @return Body's Roche radius
+*/
+double fdRocheRadius(BODY *body, int iBody) {
+  return pow(body[iBody].dMass / (3.0 * body[0].dMass), 1./3.) * body[iBody].dSemi;
+}
+
+/**
+ Calculate the Bondi radius assuming body 0 is the host star and that the
+ planetary atmosphere at the Bondi radius is diatomic H2 at the blackbody
+ equilibrium temperature set by thermal emission from the host star adapting
+ equation. Adapted from equations 2 and 4 from Owen & Wu (2016)
+
+ @param body BODY struct
+ @param iBody int body indentifier
+
+ @return Body's Bondi radius
+*/
+double fdBondiRadius(BODY *body, int iBody) {
+  return 0.0;
 }

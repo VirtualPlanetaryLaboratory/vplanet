@@ -3296,7 +3296,7 @@ void AnnualInsolation(BODY *body, int iBody) {
   int i, j;
   double LongP, TrueA, EccA, MeanL, Ecc;
 
-  LongP = body[iBody].dLongP+body[iBody].dPrecA;// + PI; //Pericenter, relative to direction of planet at spring equinox
+  LongP = body[iBody].dLongP+body[iBody].dPrecA+ PI; //Pericenter, relative to direction of planet at spring equinox
   Ecc = sqrt(body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc);
 
   body[iBody].dTrueL = -PI/2;        //starts the year at the (northern) winter solstice

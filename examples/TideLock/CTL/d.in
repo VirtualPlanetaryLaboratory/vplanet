@@ -1,0 +1,25 @@
+# Gl 581 d's Properties
+sName		    d		   # Body's name
+saModules   eqtide   # Modules to apply to this body
+
+# Physical Parameters
+# Mass and radius
+dMass		     -5.6  # Mass, negative -> Earth masses
+sMassRad  sotin07
+#dRadius      -1.592
+dRadGyra	   0.5	   # Radius of gyration (moment of inertia constant)
+dRotPeriod      -1
+dObliquity   23.5      # Obliquity
+
+# Orbital Parameters, from
+dEcc          0.38     # Eccentricity
+dSemi         0.21847  # Semi-major axis (negative for AU)
+
+# EQTIDE Parameters
+#dTidalQ       100   # Tidal Q
+dTidalTau     -638
+dK2           0.3   # Love Number of degree 2
+saTidePerts   gl581   # Name of tidal perturber (only central body may have >1)
+dMaxLockDiff  0.01
+
+saOutputOrder Time -RotPer Obliq

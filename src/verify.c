@@ -103,11 +103,10 @@ void VerifyTripleExit(char cName1[],char cName2[],char cName3[],int iLine1,int i
 }
 
 void VerifyTwoOfThreeExit(char cName1[],char cName2[],char cName3[],int iLine1,int iLine2,int iLine3,char cFile[],int iVerbose) {
-
   if (iVerbose >= VERBERR) {
     fprintf(stderr,"ERROR: Can only set 2 of %s, %s, and %s.\n",cName1,cName2,cName3);
-    TripleLineExit(cFile,iLine1,iLine2,iLine3);
   }
+  TripleLineExit(cFile,iLine1,iLine2,iLine3);
 }
 
 void VerifyDynEllip(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody,int iVerbose) {
@@ -152,13 +151,16 @@ void VerifyNames(BODY *body,CONTROL *control,OPTIONS *options) {
  *
  */
 
-void VerifyOrbit(BODY *body, FILES files,OPTIONS *options,CONTROL *control, int iBody,int iVerbose) {
-  int iFile=iBody+1;
+void VerifyOrbit(BODY *body,CONTROL *control,FILES files,OPTIONS *options,int iBody) {
+  int iFile=iBody+1,iVerbose;
   double dSemi=0,dMeanMotion=0,dPeriod=0;
 
   // Body 0 is never an orbiter
-  if(iBody == 0)
+  if (iBody == 0) {
     return;
+  }
+
+  iVerbose = control->Io.iVerbose;
 
   /* !!!!! ------ Semi IS ALWAYS CORRECT AND IN BODY[iBody] ------- !!!!!! */
 
@@ -405,8 +407,10 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
  *
  */
 
-void VerifyMassRad(BODY *body,CONTROL *control,OPTIONS *options,int iBody,char cFile[],int iVerbose) {
-  int iFile=iBody+1;
+void VerifyMassRad(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int iBody) {
+  int iFile=iBody+1,iVerbose;
+
+  iVerbose = control->Io.iVerbose;
 
   /* !!!!!! --- Mass and Radius ARE ALWAYS UPDATED AND CORRECT --- !!!!!! */
 
@@ -477,7 +481,7 @@ void VerifyMassRad(BODY *body,CONTROL *control,OPTIONS *options,int iBody,char c
  *
  */
 
-void VerifyRotationGeneral(BODY *body,OPTIONS *options,int iBody,int iVerbose,char cFile[]) {
+void VerifyRotationGeneral(BODY *body,OPTIONS *options,char cFile[],int iBody,int iVerbose) {
   /* Add 1, as this information could not have been set in primary input */
   int iFileNum = iBody+1;
   /* Was more than one version set? */
@@ -516,13 +520,214 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,int iBody,int iVerbose,ch
     body[iBody].dRotRate = fdRadiusRotVelToFreq(body[iBody].dRotVel,body[iBody].dRadius);
 }
 
-void VerifyInterior(BODY *body,OPTIONS *options,int iBody) {
-  // Is this OK? XXX
-  if (!body[iBody].bThermint) {
-    body[iBody].dK2Man = 0;
-    body[iBody].dImk2Man = 0;
+void VerifyImK2Env(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iBody) {
+
+  // Is there an envelope? If so, fix its Im(k2)
+  if (body[iBody].bEnv) {
+
+    // they better have defined k2Env, tidalqenv, denvmass
+    if (options[OPT_TIDALQENV].iLine[iBody+1] == -1) {
+      fprintf(stderr,"ERROR: %s = 1, but %s not set.\n",options[OPT_ENVTIDES].cName,options[OPT_TIDALQENV].cName);
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_ENVTIDES].iLine[iBody+1]);
+    }
+    if (options[OPT_K2ENV].iLine[iBody+1] == -1) {
+      fprintf(stderr,"ERROR: %s = 1, but %s not set.\n",options[OPT_ENVTIDES].cName,options[OPT_K2ENV].cName);
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_ENVTIDES].iLine[iBody+1]);
+    }
+    if (options[OPT_ENVELOPEMASS].iLine[iBody+1] == -1) {
+      fprintf(stderr, "ERROR: %s = 1, but %s not set.\n",options[OPT_ENVTIDES].cName,options[OPT_ENVELOPEMASS].cName);
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_ENVTIDES].iLine[iBody+1]);
+    }
+
+    // Cannot set TidalQ and TidalQEnv
+    if (options[OPT_TIDALQ].iLine[iBody+1] > -1 && options[OPT_TIDALQENV].iLine[iBody+1] > -1) {
+      fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_TIDALQ].cName,options[OPT_TIDALQENV].cName);
+      DoubleLineExit(options[OPT_TIDALQ].cFile[iBody+1],options[OPT_TIDALQENV].cFile[iBody+1],
+        options[OPT_TIDALQ].iLine[iBody+1],options[OPT_TIDALQENV].iLine[iBody+1]);
+    }
+    // Cannot set K2 and K2Env
+    if (options[OPT_K2].iLine[iBody+1] > -1 && options[OPT_K2ENV].iLine[iBody+1] > -1) {
+      fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_K2].cName,options[OPT_K2ENV].cName);
+      DoubleLineExit(options[OPT_K2].cFile[iBody+1],options[OPT_K2ENV].cFile[iBody+1],
+        options[OPT_K2].iLine[iBody+1],options[OPT_K2ENV].iLine[iBody+1]);
+    }
+
+    // Everything OK, set dImK2Env
+    // Defining this here is OK until we have a real envelope model
+    body[iBody].dImK2Env = body[iBody].dK2Env/body[iBody].dTidalQEnv;
+
+  } else {
+    // Set dImK2Env to 0, i.e. no Dissipation
+    body[iBody].dImK2Env = 0;
   }
 }
+
+void VerifyImK2Ocean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iBody) {
+
+  // Is there an ocean? If so, fix its Im(k2)
+  if (body[iBody].bOcean) {
+
+    // they better have defined k2Ocean, tidalqOcean, dOceanmass
+    if (options[OPT_TIDALQOCEAN].iLine[iBody+1] == -1) {
+      fprintf(stderr,"ERROR: %s = 1, but %s not set.\n",options[OPT_OCEANTIDES].cName,options[OPT_TIDALQOCEAN].cName);
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_OCEANTIDES].iLine[iBody+1]);
+    }
+    if (options[OPT_K2OCEAN].iLine[iBody+1] == -1) {
+      fprintf(stderr,"ERROR: %s = 1, but %s not set.\n",options[OPT_OCEANTIDES].cName,options[OPT_K2OCEAN].cName);
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_OCEANTIDES].iLine[iBody+1]);
+    }
+    if (options[OPT_SURFACEWATERMASS].iLine[iBody+1] == -1) {
+      fprintf(stderr, "ERROR: %s = 1, but %s not set.\n",options[OPT_OCEANTIDES].cName,options[OPT_SURFACEWATERMASS].cName);
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_OCEANTIDES].iLine[iBody+1]);
+    }
+
+    // Cannot set TidalQ and TidalQOcean
+    if (options[OPT_TIDALQ].iLine[iBody+1] > -1 && options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1) {
+      fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_TIDALQ].cName,options[OPT_TIDALQOCEAN].cName);
+      DoubleLineExit(options[OPT_TIDALQ].cFile[iBody+1],options[OPT_TIDALQOCEAN].cFile[iBody+1],
+        options[OPT_TIDALQ].iLine[iBody+1],options[OPT_TIDALQOCEAN].iLine[iBody+1]);
+    }
+    // Cannot set K2 and K2Ocean
+    if (options[OPT_K2].iLine[iBody+1] > -1 && options[OPT_K2OCEAN].iLine[iBody+1] > -1) {
+      fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_K2].cName,options[OPT_K2OCEAN].cName);
+      DoubleLineExit(options[OPT_K2].cFile[iBody+1],options[OPT_K2OCEAN].cFile[iBody+1],
+        options[OPT_K2].iLine[iBody+1],options[OPT_K2OCEAN].iLine[iBody+1]);
+    }
+
+    // Everything OK, set dImK2Ocean
+    // Defining this here is OK until we have a real ocean model
+    body[iBody].dImK2Ocean = body[iBody].dK2Ocean/body[iBody].dTidalQOcean;
+
+  } else {
+    // Set dImK2Ocean to 0, i.e. no Dissipation
+    body[iBody].dImK2Ocean = 0;
+  }
+}
+
+void VerifyImK2Mantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,UPDATE *update,int iBody) {
+
+  // Is there a mantle? If so, fix its Im(k2)
+  if (body[iBody].bMantle) {
+
+    if (options[OPT_TIDALQ].iLine[iBody+1] > -1 && options[OPT_TIDALQMANTLE].iLine[iBody+1] > -1) {
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_TIDALQ].cName,options[OPT_TIDALQMANTLE].cName);
+      }
+      DoubleLineExit(options[OPT_TIDALQ].cFile[iBody+1],options[OPT_TIDALQMANTLE].cFile[iBody+1],
+        options[OPT_TIDALQ].iLine[iBody+1],options[OPT_TIDALQMANTLE].iLine[iBody+1]);
+    }
+    // Cannot set K2 and K2Mantle
+    if (options[OPT_K2].iLine[iBody+1] > -1 && options[OPT_K2MANTLE].iLine[iBody+1] > -1) {
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr, "ERROR: Cannot set both %s and %s.\n",options[OPT_K2].cName,options[OPT_K2MANTLE].cName);
+      }
+      DoubleLineExit(options[OPT_K2].cFile[iBody+1],options[OPT_K2MANTLE].cFile[iBody+1],
+        options[OPT_K2].iLine[iBody+1],options[OPT_K2MANTLE].iLine[iBody+1]);
+    }
+
+    if (body[iBody].bThermint) {
+      // User set dTidalQMan
+      if (options[OPT_TIDALQMANTLE].iLine[iBody+1] == -1) {
+        body[iBody].dTidalQMan = body[iBody].dTidalQ;
+          if (control->Io.iVerbose >= VERBALL) {
+            fprintf(stderr,"WARNING: %s set, but ThermInt computes it. Input value will be ignored.\n",options[OPT_TIDALQMANTLE].cName);
+          }
+      }
+
+      body[iBody].dK2Man = fdK2Man(body,iBody);
+      body[iBody].dImK2Man = fdImK2Man(body,iBody);
+    } else {
+      body[iBody].dImK2Man = body[iBody].dK2Man/body[iBody].dTidalQMan;
+      body[iBody].dShmodUMan = 1; // Set to avoid division by zero in log file
+      body[iBody].dDynamViscos = 1; // Also used in log file
+      body[iBody].dStiffness = 1; // Ditto
+    }
+  } else {
+    body[iBody].dImK2Man = 0;
+  }
+}
+
+/**
+
+  Verify all input parameters related to tidal energy dissipation (Power) into all
+  regions of a planet. The parameter Im(k2) is set by the orbit and the internal
+  temperature in the layer, which is set by the tidal, secular, and radiogenic heating
+  rates. The heating is divided into layers: 1) Mantle, 2) Ocean, and 3) Envelope,
+  and may be calculated by the EqTide, RadHeat, and/or ThermInt modules. Those
+  modules in turn have different possibilities. By the end of this function, the
+  values of Im(k2) in all layers and the body as a whole are set. */
+void VerifyImK2(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,UPDATE *update,int iBody) {
+
+  // First gather auxiliary properties for relevant modules
+  PropsAuxEqtide(body,&control->Evolve,update,iBody);
+  if (body[iBody].bThermint) {
+    fvPropsAuxThermint(body,&control->Evolve,update,iBody);
+  }
+
+  VerifyImK2Env(body,control,files,options,system,iBody);
+
+  VerifyImK2Ocean(body,control,files,options,system,iBody);
+
+  VerifyImK2Mantle(body,control,files,options,system,update,iBody);
+
+  // fdImK2Total determines which layers set (if any), and returns appropriate Im(k_2)
+  body[iBody].dImK2 = fdImK2Total(body,iBody);
+
+  if (control->Io.iVerbose > VERBPROG) {
+    fprintf(stderr,"%s's Im(k_2) verified.\n",body[iBody].cName);
+  }
+/*
+    // now lets check there's actually an envelope
+    // there is not an envelope!!
+    if (!(body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass)) {
+      body[iBody].bEnv = 0;
+    }
+    else {
+      body[iBody].bEnv = 1;
+      body[iBody].dImK2Env = body[iBody].dK2Env / body[iBody].dTidalQEnv;
+    }
+    // what about an ocean?
+    if (!(body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
+      body[iBody].bOcean = 0;
+    }
+    else {
+      body[iBody].bOcean = 1;
+      body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
+    }
+
+    // there's definitely at least gonna be some rock...
+    body[iBody].dImK2Rock = body[iBody].dK2Rock / body[iBody].dTidalQRock;
+
+    // if there is an envelope/ocean, we calculate ImK2Env/ImK2Ocean
+    if (body[iBody].bEnv && (body[iBody].dTidalQ != body[iBody].dTidalQEnv)) {
+      if (control->Io.iVerbose > 1) {
+        fprintf(stderr,"Using dTidalQEnv for %s.\n",body[iBody].cName);
+      }
+      body[iBody].dTidalQ = body[iBody].dTidalQEnv;
+      body[iBody].dK2 = body[iBody].dK2Env;
+      body[iBody].dImK2Env = body[iBody].dK2Env / body[iBody].dTidalQEnv;
+      body[iBody].dImK2 = body[iBody].dImK2Env;
+    }
+    else {
+      if (body[iBody].bOcean && (body[iBody].dTidalQ != body[iBody].dTidalQOcean)) {
+        fprintf(stderr,"Using dTidalQOcean for %s.\n",body[iBody].cName);
+        body[iBody].dTidalQ = body[iBody].dTidalQOcean;
+        body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
+        body[iBody].dImK2 = body[iBody].dImK2Ocean;
+        body[iBody].dK2 = body[iBody].dK2Ocean;
+      }
+      else if (!body[iBody].bEnv && !body[iBody].bOcean && (body[iBody].dTidalQ != body[iBody].dTidalQRock) && (iBody != 0)){
+        fprintf(stderr,"Using dTidalQRock for %s.\n",body[iBody].cName);
+        // now we just use dTidalQRock and dK2Rock
+        body[iBody].dImK2Rock = body[iBody].dK2Rock / body[iBody].dTidalQRock;
+        body[iBody].dTidalQ = body[iBody].dTidalQRock;
+        body[iBody].dK2 = body[iBody].dK2Rock;
+        body[iBody].dImK2 = body[iBody].dImK2Rock;
+      }
+  }
+*/
+}
+
 
 /*
  *
@@ -530,18 +735,17 @@ void VerifyInterior(BODY *body,OPTIONS *options,int iBody) {
  *
  */
 
-/*! Verify Initial angular momentum, energy for conservation checks.  Initialize
+/*! Initialize angular momentum for energy for conservation checks.  Initialize
  *  here so anything that changes E, J is monitored to ensure conservation */
-void VerifySystem(BODY *body,UPDATE *update,CONTROL *control,SYSTEM *system,OPTIONS *options) {
+void InitializeConstants(BODY *body,UPDATE *update,CONTROL *control,SYSTEM *system,OPTIONS *options) {
   int iBody;
 
   // Initially no lost angular momentum, energy
   // Set to dTINY, not 0 since these are integrated
   // and it being 0 can mess up the time step
-  for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++)
-  {
-    body[iBody].dLostAngMom = 0.0;
-    body[iBody].dLostEng = 0.0;
+  for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
+    body[iBody].dLostAngMom = dTINY;
+    body[iBody].dLostEng = dTINY;
   }
 
   // Compute initial total angular momentum
@@ -570,10 +774,53 @@ void fnNullDerivatives(BODY *body,EVOLVE *evolve,MODULE *module,UPDATE *update,f
   }
 }
 
-/*
- *
+void VerifyMantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody) {
+
+  // XXX This is broken, user should be able to set mantle properties w/o thermint
+  if (body[iBody].bThermint) {
+    body[iBody].bMantle = 1;
+  } else {
+    body[iBody].bMantle = 0;
+  }
+
+}
+
+void VerifyOcean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody) {
+
+  if (body[iBody].dSurfaceWaterMass < body[iBody].dMinSurfaceWaterMass) {
+    body[iBody].bOcean = 0;
+    if (control->Io.iVerbose && body[iBody].bAtmEsc) {
+      fprintf(stderr,"WARNING: %s < %s. No envelope evolution will be included.\n",
+        options[OPT_SURFACEWATERMASS].cName,options[OPT_MINSURFACEWATERMASS].cName);
+    }
+  }
+}
+
+void VerifyEnvelope(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody) {
+
+  if (body[iBody].dEnvelopeMass < body[iBody].dMinEnvelopeMass) {
+    body[iBody].bEnv = 0;
+    if (control->Io.iVerbose >= VERBINPUT && body[iBody].bAtmEsc) {
+      fprintf(stderr,"WARNING: %s < %s. No envelope evolution will be included.\n",
+        options[OPT_ENVELOPEMASS].cName,options[OPT_MINENVELOPEMASS].cName);
+    }
+  }
+}
+
+void VerifyLayers(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody) {
+
+  VerifyMantle(body,control,files,options,iBody);
+  VerifyOcean(body,control,files,options,iBody);
+  VerifyEnvelope(body,control,files,options,iBody);
+
+}
+
+/**
+
  * Master Verify subroutine
- *
+
+   This function validates the input options. After this function, the structs are
+   prepared for integration.
  */
 
 void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnIntegrate *fnOneStep,fnUpdateVariable ****fnUpdate) {
@@ -581,41 +828,29 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
 
   VerifyNames(body,control,options);
 
+  // Need to know integration type before we can initialize CONTROL
   VerifyIntegration(body,control,files,options,system,fnOneStep);
-  InitializeControlEvolve(control,module,update);
+  InitializeControlEvolve(body,control,module,update);
 
-  // Default to no orbiting bodies
-  control->bOrbiters = 0;
-
-  /* First we must determine all the primary variables. The user may not
-     input them, but instead a redundant variable. Yet these need to be
-     defined before we can call InitializeUpdate. */
-
+  // Allocate all memory for the BODY struct, based on selected modules
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    /* First pass NumModules from MODULE -> CONTROL->EVOLVE */
-    control->Evolve.iNumModules[iBody] = module->iNumModules[iBody];
-
-    // If any body has an orbit related module initialized, we have orbiters!
-    if(body[iBody].bEqtide || body[iBody].bDistOrb || body[iBody].bPoise || body[iBody].bAtmEsc ||
-        body[iBody].bGalHabit || body[iBody].bSpiNBody) {
-      control->bOrbiters = 1;
-    }
-
-    /* Must verify density first: RotVel requires a radius in VerifyRotation */
-    VerifyMassRad(&body[iBody],control,options,iBody,files->Infile[iBody].cIn,control->Io.iVerbose);
-
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
-      // Must initialize entire body struct before verifying modules
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
       module->fnInitializeBody[iBody][iModule](body,control,update,iBody,iModule);
-    /* Verify Modules */
+    }
+  }
 
-    VerifyRotationGeneral(body,options,iBody,control->Io.iVerbose,files->Infile[iBody+1].cIn);
+  // Verify physical and orbital properties
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    /* Must verify density first: RotVel requires a radius in VerifyRotation */
+    VerifyMassRad(&body[iBody],control,options,files->Infile[iBody].cIn,iBody);
+    VerifyRotationGeneral(body,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
 
     // If any bodies orbit, make sure they do so properly!
-    if(control->bOrbiters) {
-      VerifyOrbit(body,*files,options,control,iBody,control->Io.iVerbose);
+    if (control->bOrbiters) {
+      VerifyOrbit(body,control,*files,options,iBody);
     }
 
+    VerifyLayers(body,control,files,options,iBody);
   }
 
   InitializeUpdate(body,control,module,update,fnUpdate);
@@ -623,17 +858,16 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
 
   VerifyHalts(body,control,module,options);
 
+  // Now verify the modules' parameters
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    // Now we can verify the modules
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++) {
       module->fnVerify[iBody][iModule](body,control,files,options,output,system,update,iBody,iModule);
     }
 
-    VerifyInterior(body,options,iBody);
     // Verify multi-module couplings
     VerifyModuleMulti(body,update,control,files,module,options,iBody,fnUpdate);
 
-    for (iModule=0;iModule<module->iNumManageDerivs[iBody];iModule++) {
+   for (iModule=0;iModule<module->iNumManageDerivs[iBody];iModule++) {
       module->fnAssignDerivatives[iBody][iModule](body,&(control->Evolve),update,*fnUpdate,iBody);
     }
 
@@ -642,11 +876,15 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
       InitializeUpdateBodyPerts(control,update,iBody);
       InitializeUpdateTmpBody(body,control,module,update,iBody);
     }
-
   }
 
-  // Verify system (initialize angular momentum, energy) now that everything else
-  // has been verified
-  VerifySystem(body,update,control,system,options);
+  // Verify multi-mpdule parameters
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    if (body[iBody].bEqtide) {
+      VerifyImK2(body,control,files,options,system,update,iBody);
+    }
+  }
 
+  // Finally, initialize angular momentum and energy prior to logging/integration
+  InitializeConstants(body,update,control,system,options);
 }

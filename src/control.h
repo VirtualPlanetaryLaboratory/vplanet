@@ -14,7 +14,8 @@
 void BodyCopyNULL(BODY*,BODY*,int,int,int);
 
 void InitializeControl(CONTROL*,MODULE*);
-void InitializeControlEvolve(CONTROL*,MODULE*,UPDATE*);
+void InitializeControlEvolve(BODY*,CONTROL*,MODULE*,UPDATE*);
+void InitializeControlVerifyProperty(CONTROL*);
 
 void WriteHelpOption(OPTIONS*, int);
 void WriteHelpOutput(OUTPUT*, int);

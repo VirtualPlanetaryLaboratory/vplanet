@@ -10,12 +10,12 @@ bOverwrite	1			# Allow file overwrites?
 # List of "body files" that contain body-specific parameters
 saBodyFiles	primary.in secondary.in	# The primary star
 
-# Array options can continue to the next line with a terminating "$". The $ can be 
+# Array options can continue to the next line with a terminating "$". The $ can be
 # at the end of the string or not. Comments are allowed afterwards.
 
 # Input/Output Units
 sUnitMass	solar		# Options: gram, kg, Earth, Neptune, Jupiter, solar
-sUnitLength	aU		# Options: cm, m, km, Earth, Jupiter, solar, AU 	
+sUnitLength	aU		# Options: cm, m, km, Earth, Jupiter, solar, AU
 sUnitTime	year		# Options: sec, day, year, Myr, Gyr
 sUnitAngle	d		# Options: deg, rad
 sUnitTemp       K
@@ -38,5 +38,5 @@ dEta		0.001		# Coefficient for variable timestepping
 dStopTime	1.0e8		# Stop time for evolution
 dOutputTime	1.0e3		# Output timesteps (assuming in body files)
 
-# Some options are only permitted in the primary file, some are forbidden. 
+# Some options are only permitted in the primary file, some are forbidden.
 # That should really be documented!

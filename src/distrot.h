@@ -19,6 +19,8 @@
 #define OPT_PRECRATE              1404
 #define OPT_READORBITDATA         1405
 #define OPT_FILEORBITDATA         1406
+#define OPT_SPECMOMINERTIA        1407
+
 
 /* DISTROT 1400 - 1499 */
 /* System properties 1400-1419, body properties 1420-1499 */
@@ -45,7 +47,7 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
-void AddModuleDistRot(MODULE*,int,int);
+void AddModuleDistRot(CONTROL*,MODULE*,int,int);
 void BodyCopyDistRot(BODY*,BODY*,int,int,int);
 
 /* Options Functions */

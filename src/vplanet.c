@@ -11,6 +11,7 @@
 #include <assert.h>
 #include <string.h>
 #include "vplanet.h"
+#include <sys/time.h>
 
 /*
 #ifdef DEBUG
@@ -34,8 +35,12 @@ int main(int argc,char *argv[]) {
   _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
 #endif
 
-  time_t dStartTime;
-  dStartTime = time(NULL);
+  struct timeval start, end;
+
+  gettimeofday(&start, NULL);
+
+//  time_t dStartTime;
+  //dStartTime = time(NULL);
 
   int iOption,iVerbose,iQuiet,iOverwrite;
   OPTIONS *options;
@@ -51,6 +56,28 @@ int main(int argc,char *argv[]) {
   fnWriteOutput fnWrite[MODULEOUTEND];
   fnUpdateVariable ***fnUpdate;
   fnIntegrate fnOneStep;
+
+  #ifdef GITVERSION
+  strcpy(control.sGitVersion,GITVERSION);
+  #else
+  FILE *fp;
+  char version[64];
+
+  /* Open the command for reading. */
+  fp = popen("git describe --tags --abbrev=40 --always", "r");
+  if (fp == NULL) {
+  	printf("Failed to run git command\n" );
+  	exit(1);
+  }
+
+  /* Read the output a line at a time - output it. */
+  fgets(version, sizeof(version)-1, fp);
+  strcpy(control.sGitVersion,version);
+
+  pclose(fp);
+
+  //exit(1);
+  #endif
 
   /** Must initialize all options and outputs for all modules
      independent of what is selected. This allows a complete
@@ -129,7 +156,7 @@ int main(int argc,char *argv[]) {
   control.Evolve.bFirstStep=1;
 
   if (control.Io.bLog) {
-    WriteLog(body,&control,&files,&module,options,output,&system,update,fnUpdate,fnWrite,dStartTime,0);
+    WriteLog(body,&control,&files,&module,options,output,&system,update,fnUpdate,fnWrite,0);
     if (control.Io.iVerbose >= VERBPROG)
       printf("Log file written.\n");
   }
@@ -141,12 +168,18 @@ int main(int argc,char *argv[]) {
 
     /* If evolution performed, log final system parameters */
     if (control.Io.bLog) {
-      WriteLog(body,&control,&files,&module,options,output,&system,update,fnUpdate,fnWrite,dStartTime,1);
+      WriteLog(body,&control,&files,&module,options,output,&system,update,fnUpdate,fnWrite,1);
       if (control.Io.iVerbose >= VERBPROG)
-	printf("Log file updated.\n");
+	      printf("Log file updated.\n");
     }
   }
 
+  gettimeofday(&end, NULL);
+
+  if (control.Io.iVerbose >= VERBPROG) {
+    printf("Simulation completed.\n");
+    //printf("Total time: %.4e [sec]\n", difftime(end.tv_usec,start.tv_usec)/1e6);
+  }
   exit(0);
 
 }

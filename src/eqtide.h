@@ -14,6 +14,7 @@
 
 #define CPL           0
 #define CTL           1
+#define DB15          2
 
 /* Options Info */
 
@@ -42,8 +43,9 @@
 #define OPT_TIDALQENV           1053
 #define OPT_ENVTIDES            1054
 #define OUT_ECCA                1055
-#define OPT_TIDALQROCK          1056
-#define OPT_K2ROCK              1057
+#define OPT_MANTLETIDES         1057
+#define OPT_TIDALQMANTLE        1058
+#define OPT_K2MANTLE            1059
 
 /* Halt Functions */
 #define EQTIDEHALTSYSEND       5
@@ -109,11 +111,19 @@
 /* @cond DOXYGEN_OVERRIDE */
 
 void InitializeControlEqtide(CONTROL*,int);
-void AddModuleEqtide(MODULE*,int,int);
+void AddModuleEqtide(CONTROL*,MODULE*,int,int);
 void BodyCopyEqtide(BODY*,BODY*,int,int,int);
 void InitializeBodyEqtide(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyEqtide(BODY*,CONTROL*,UPDATE*,int);
 int fiGetModuleIntEqtide(MODULE*,int);
+
+void InitializeXoblEqtide(BODY*,UPDATE*,int,int);
+void InitializeYoblEqtide(BODY*,UPDATE*,int,int);
+void InitializeZoblEqtide(BODY*,UPDATE*,int,int);
+void InitializeRotEqtide(BODY*,UPDATE*,int,int);
+void InitializeHeccEqtide(BODY*,UPDATE*,int);
+void InitializeKeccEqtide(BODY*,UPDATE*,int);
+void InitializeSemiEqtide(BODY*,UPDATE*,int);
 
 /* Options Functions */
 void HelpOptionsEqtide(OPTIONS*);
@@ -153,6 +163,7 @@ void VerifyRotationEqtideWarning(char[],char[],char[],int,int,int);
 void VerifyRotationEqtide(BODY*,CONTROL*,UPDATE*,OPTIONS*,char[],int);
 void VerifyEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 void InitializeModuleEqtide(CONTROL*,MODULE*);
+void VerifyDB15(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,UPDATE*,int,int);
 
 /* Update Functions */
 
@@ -213,9 +224,11 @@ void LogBodyEqtide(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 void PropertiesEqtide(BODY*,int);
 void fdaChi(BODY*,double,double,int,int);
 double fdEqRotRate(BODY*,int,double,double,int,int);
-double fdTidePower(BODY*,SYSTEM*,UPDATE*,int,int);
+double fdTidePower(BODY*,int,int);
 double fdSurfEnFluxEqtide(BODY*,SYSTEM*,UPDATE*,int,int);
 void ForceBehaviorEqtide(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
+
+void PropsAuxEqtide(BODY*,EVOLVE*,UPDATE*,int);
 
 /******************** CPL Functions ********************/
 
@@ -280,5 +293,17 @@ double fdCTLDHeccDt(BODY*,SYSTEM*,int*);
 double fdCTLDKeccDt(BODY*,SYSTEM*,int*);
 double fdDEdTCTLEqtide(BODY*,SYSTEM*,int*);
 double fdCTLDoblDt(BODY*,int*);
+
+/******************** DB15 Functions ********************/
+double fdPowerEqtideDB15(BODY*,int);
+void PropsAuxDB15(BODY*,EVOLVE*,UPDATE*,int);
+
+
+double fdDB15DsemiDt(BODY*,SYSTEM*,int*);
+double fdDB15DeccDt(BODY*,UPDATE*,int*);
+double fdDB15DHeccDt(BODY*,SYSTEM*,int*);
+double fdDB15DKeccDt(BODY*,SYSTEM*,int*);
+
+
 
 /* @endcond */

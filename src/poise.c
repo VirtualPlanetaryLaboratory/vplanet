@@ -1721,6 +1721,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
       daRunningMean = malloc((RunLen+1)*sizeof(double));
       daRunningMean[RunLen] = 0;
       TotalMean = 0;
+      RunningMeanTmp = daRunningMean[RunLen];
       while (fabs(RunningMeanTmp - daRunningMean[RunLen]) > body[iBody].dSpinUpTol || count <= 2*RunLen) {
         RunningMeanTmp = daRunningMean[RunLen];
         PoiseSeasonal(body,iBody);
@@ -2947,7 +2948,7 @@ void LogBodyPoise(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDA
 
 /************* MODULE Functions ***********/
 
-void AddModulePoise(MODULE *module,int iBody,int iModule) {
+void AddModulePoise(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]                  = POISE;
 
@@ -3295,7 +3296,7 @@ void AnnualInsolation(BODY *body, int iBody) {
   int i, j;
   double LongP, TrueA, EccA, MeanL, Ecc;
 
-  LongP = body[iBody].dLongP+body[iBody].dPrecA;// + PI; //Pericenter, relative to direction of planet at spring equinox
+  LongP = body[iBody].dLongP+body[iBody].dPrecA+ PI; //Pericenter, relative to direction of planet at spring equinox
   Ecc = sqrt(body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc);
 
   body[iBody].dTrueL = -PI/2;        //starts the year at the (northern) winter solstice

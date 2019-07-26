@@ -91,7 +91,6 @@
 #define OPT_DYNELLIP            611
 #define OPT_CALCDYNELLIP        612
 #define OPT_PRILUM	        615
-#define OPT_SPECMOMINERTIA       616
 
 #define OPT_VISCUMAN            630   //Viscosity UMTBL
 
@@ -105,6 +104,11 @@
 #define OPT_XOBL                700
 #define OPT_YOBL                710
 #define OPT_ZOBL                720
+
+#define OPT_SURFACEWATERMASS    810 /**< Initial surface water mass */
+#define OPT_MINSURFACEWATERMASS 812 /**< Minimum surface water mass (desiccated below this) */
+#define OPT_ENVELOPEMASS        815 /**< Initial envelope mass */
+#define OPT_MINENVELOPEMASS     817 /**< Minimum envelope mass (evaporated below this) */
 
 /* @cond DOXYGEN_OVERRIDE */
 

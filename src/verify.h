@@ -15,4 +15,5 @@ void VerifyDynEllip(BODY*,CONTROL*,OPTIONS*,char[],int,int);
 int bFloatComparison(double,double);
 void fnNullDerivatives(BODY*,EVOLVE*,MODULE*,UPDATE*,fnUpdateVariable***);
 
+void VerifyPropertyNULL(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 /* @endcond */

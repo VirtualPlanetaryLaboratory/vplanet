@@ -1179,7 +1179,7 @@ void LogBodyBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
   }
 }
 
-void AddModuleBinary(MODULE *module,int iBody,int iModule) {
+void AddModuleBinary(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]                  = BINARY;
 

@@ -125,7 +125,6 @@
 
 /* File Limits */
 
-#define MAXBODIES     10    // Maximum number of bodies XXX obsolete?
 #define OPTLEN        24    /* Maximum length of an option */
 #define OPTDESCR      128   /* Number of characters in option description */
 #define OPTLONDESCR   2048  /* Number of characters in option long description */
@@ -276,7 +275,7 @@ typedef struct FILES FILES;
 typedef struct OPTIONS OPTIONS;
 typedef struct OUTPUT OUTPUT;
 typedef struct MODULE MODULE;
-
+typedef struct VERIFY VERIFY;
 
 struct PHOTOCHEM {
   double dInitTimeStep;
@@ -288,17 +287,18 @@ struct PHOTOCHEM {
  */
 struct BODY {
   char cName[NAMELEN];   /**< Body's Name */
-  int iBodyType;        /**< Body's type: 0 for planet, 1 for star */
+  int iBodyType;         /**< Body's type: 0 for planet, 1 for star */
   /**< Type of object: 0=star, 1=rocky planet, 2 = giant */
   char iType;
 
   /* Body Properties */
   double dAge;           /**< Body's Age */
-  double dMass;		 /**< Body's Mass */
-  double dRadius;	 /**< Radius of body */
+  double dMass;		       /**< Body's Mass */
+  double dRadius;	       /**< Radius of body */
   double dDensity;       /**< Bulk density of body*/
   double dGravAccel;     /**< Body's gravitational acceleration */
-  double dK2;		 /**< Body's Love number */
+  double dK2;		         /**< Body's Total Love number */
+  double dImK2;          /**< Imaginary part of Love's k_2 (total) */
   double dObliquity;     /**< Body's Obliquity */
   double dRotRate;       /**< Body's Rotation Rate */
   double dRotPer;        /**< Body's Rotation Period */
@@ -306,6 +306,10 @@ struct BODY {
   double dRadGyra;       /**< Body's Radius of Gyration */
   char cColor[OPTLEN];   /**< Body color (for plotting) */
   double *daSED;         /**< Body's spectral energy distribution by wavelength N/I */
+
+  int bMantle;           /**< Is there a mantle? */
+  int bOcean;            /**< Is there an ocean? */
+  int bEnv;              /**< Is there an envelope? */
 
   /* Orbital Properties. By convention, these are stored in the
    * second element in the BODY array and, if using binary
@@ -424,26 +428,27 @@ struct BODY {
   int bEqtide;           /**< Apply Module EQTIDE? */
   int bTideLock;         /**< Is a body tidally locked? */
 	double dLockTime;			 /**< Time when body tidally-locked */
-	int bOceanTides;       /**< Have Q be from ocean and thermal interior components? */
-  int bEnvTides;         /**< Have Q contribution from the envelope as well? */
-  int bUseTidalRadius;      /**< Set a fixed tidal radius? */
+/*
+	int bOceanTides;
+  int bEnvTides;
+  int bMantleTides;
+*/
+  int bUseTidalRadius;   /**< Set a fixed tidal radius? */
   double dTidalRadius;   /**< Radius used by tidal evoltion equations (CPL only currently) */
   int iTidePerts;        /**< Number of Tidal Perturbers */
   int *iaTidePerts;      /**< Body #'s of Tidal Perturbers */
   char saTidePerts[MAXARRAY][NAMELEN];  /**< Names of Tidal Perturbers */
-  double dImK2;          /**< Imaginary part of Love's K_2 */
+  double dK2Man;         /**< Mantle k2 love number */
   double dK2Ocean;       /**< Ocean's Love Number */
   double dK2Env;         /**< Envelope's Love Number */
-  double dK2Rock;
-  double dImK2Ocean;     /**< Ocean Component to Imaginary part of Love's K_2 */
-  double dImK2Env;       /**< Envelope Component to Imaginary part of Love's K_2 */
-  double dImK2Rock;
-  double dTidalQ;	 /**< Body's Tidal Q */
-  double dTidalQRock;    /**< Tidal Q in interior */ // add in dk2rock...
+  double dTidalQMan;
   double dTidalQOcean;   /**< Body's Ocean Component to Tidal Q */
-  int bOcean;            /** <is there an ocean? */
   double dTidalQEnv;     /**< Body's Envelope Component to Tidal Q */
-  int bEnv;              /**< is there an envelope? */
+  double dImK2Man;       /**< Mantle Im(k2) love number */
+  double dImK2ManOrbModel;    /**< Mantle Im(k2) model for DB15 orbital eqns */
+  double dImK2Ocean;     /**< Envelope Component to Imaginary part of Love's K_2 */
+  double dImK2Env;       /**< Envelope Component to Imaginary part of Love's K_2 */
+  double dTidalQ;	 /**< Body's Tidal Q */
   double dTidalTau;      /**< Body's Tidal Time Lag */
   //double dTidePower;   deprecated to allow communication with thermint
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */
@@ -521,6 +526,7 @@ struct BODY {
 
   /* Thermint Parameters */
   int bThermint;           /**< Apply Module THERMINT? */
+  double dTSurf;           /**< Surface Temperature */
   double dTMan;            /**< Temperature Mantle AVE */
   double dTCore;           /**< Temperature Core AVE */
   double dTUMan;           /**< Temperature UMTBL */
@@ -558,8 +564,6 @@ struct BODY {
   double dTDepthMeltMan;   /**< Temp at base of UM Melt layer */
   double dTJumpMeltMan;    /**< Temp Jump to base of UM Melt layer */
   double dMeltMassFluxMan; /**< Mantle upwelling melt mass flux */
-  double dK2Man;           /**< Mantle k2 love number */
-  double dImk2Man;         /**< Mantle Im(k2) love number */
   double dRayleighMan;     /**< Mantle Rayleigh Number */
   /* Time Derivatives & Gradients */
   double dTDotMan;         /**< Time deriv of mean mantle temp */
@@ -660,6 +664,7 @@ struct BODY {
   double dAtmGasConst;  //lehmer var
   double dFXUV;         //lehmer var
   double dJeansTime;
+  double dFlowTemp;
   int bCalcFXUV;
 
   /* STELLAR Parameters */
@@ -678,6 +683,7 @@ struct BODY {
   double dLostAngMom;    /**< Angular momemntum lost to space via magnetic braking */
   double dLostEng;       /**< Energy lost to space, i.e. via stellar contraction */
   int bRossbyCut;       /**< Whether or not to shut off magnetic braking for Ro>ROSSBYCRIT */
+	int bEvolveRG;				/**< Whether or not to evolve radius of gyration? Defaults to 0 */
 
   /* PHOTOCHEM Parameters
   PHOTOCHEM Photochem;   // Properties for PHOTOCHEM module N/I
@@ -1048,8 +1054,6 @@ struct BODY {
 /* Pointer to Laplace semi-major axis functions in DistOrb */
 typedef double (*fnLaplaceFunction)(double,int);
 
-
-
 struct SYSTEM {
   char cName[NAMELEN];	 /**< System's Name */
 
@@ -1401,6 +1405,7 @@ struct UPDATE {
   int iNumTCore;       /**< Number of Equations Affecting TCore */
   double dTDotCore;    /**< TCore time Derivative */
   double *pdTDotCore;
+	double dDynamViscos;
 
   /* DISTORB */
   /* Number of eqns to modify a parameter */
@@ -1756,6 +1761,8 @@ struct CONTROL {
   HALT *Halt;
   IO Io;
   UNITS *Units;
+
+	char sGitVersion[64];
 
   /* Move to BODY */
   int *iMassRad;           /**< Mass-Radius Relationship */

@@ -52,7 +52,7 @@ const int OPT_FLAREMAXENERGY= 2080;
 /* @cond DOXYGEN_OVERRIDE */
 
 void InitializeControlFlare(CONTROL*);
-void AddModuleFlare(MODULE*,int,int);
+void AddModuleFlare(CONTROL*,MODULE*,int,int);
 void BodyCopyFlare(BODY*,BODY*,int,int,int);
 void InitializeBodyFlare(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyFlare(BODY*,CONTROL*,UPDATE*,int);
@@ -80,7 +80,6 @@ void FinalizeUpdateLXUVFlare(BODY*,UPDATE*,int*,int,int,int);
 void InitializeOutputFlare(OUTPUT*,fnWriteOutput[]);
 void InitializeOutputFunctionFlare(OUTPUT*,int,int);
 void FinalizeOutputFunctionFlare(OUTPUT*,int,int);
-void AddModuleFlare(MODULE*,int,int);
 
 void WriteLXUVFlare(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 

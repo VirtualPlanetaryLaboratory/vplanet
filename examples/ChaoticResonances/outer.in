@@ -1,0 +1,23 @@
+# Outer planet's parameters
+sName                     outer        # Body's name
+saModules                 spinbody       # Modules to apply, exact spelling required
+
+saOutputOrder Time SemiMajorAxis Eccentricity SpiNBodyInc LongP SpiNBodyLongA MeanL
+# Physical Properties
+dMass                     -22.2          # Mass, negative -> Earth masses
+dRadius                   -3.883         # Radius, negative -> Earth radii
+dRotPeriod                -1             # Rotation period, negative -> days
+dObliquity                28.32          # Obliquity (deg)
+dRadGyra                  0.5            # Radius of gyration (moment of inertia constant)
+
+# SpiNBody Properties
+bUseOrbParams                    1
+
+# Orbital Properties
+dSemi                     -2.0801    # Semi-major axis, negative -> AU
+dEcc                       0.2755    # Eccentricity
+#dInc                      0         # Inclination (deg)
+dInc                       1.27      # Inclination (deg)
+dArgP                      51.82     # Argument of pericenter (deg)
+dLongA                     260.51    # Longitude of ascending node (deg)
+dMeanA                     6.72      # Mean Anomoly (deg)

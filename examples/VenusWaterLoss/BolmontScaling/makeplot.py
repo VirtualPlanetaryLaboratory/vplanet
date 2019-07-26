@@ -5,6 +5,8 @@ import numpy as np
 import vplot as vpl
 import sys
 
+pl.rcParams.update({'font.size': 16})
+
 # Check correct number of arguments
 if (len(sys.argv) != 2):
     print('ERROR: Incorrect number of arguments.')
@@ -32,11 +34,10 @@ ax.plot(FXUV[0], eps[0], color = 'black')
 
 
 # Tweaks
-ax.set_xlabel('XUV Flux Received by Planet (W/m^2)')
-ax.set_ylabel('XUV Atmospheric Escape Efficiency for H2O')
-ax.set_xscale('log')
+ax.set_xlabel('XUV Flux Received by Planet (W/m$^2$)')
+ax.set_ylabel('XUV Atmospheric Escape Efficiency for H$_2$O')
 
 if (sys.argv[1] == 'pdf'):
-    fig.savefig('BolmontScaling.pdf', bbox_inches="tight")
+    fig.savefig('../BolmontScaling.pdf', bbox_inches="tight")
 if (sys.argv[1] == 'png'):
-    fig.savefig('BolmontScaling.png', bbox_inches="tight")
+    fig.savefig('../BolmontScaling.png', bbox_inches="tight")

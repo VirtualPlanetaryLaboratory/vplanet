@@ -3,6 +3,19 @@ Quickstart
 
 .. contents:: :local:
 
+Very Quick Start
+----------------
+
+To get started very quickly with one example:
+
+.. code-block:: bash
+
+  git clone https://github.com/VirtualPlanetaryLaboratory/vplanet.git
+  cd vplanet
+  make opt
+  cd examples/VenusWaterLoss
+  ../../vplanet vpl.in
+
 Downloading the code
 --------------------
 
@@ -33,23 +46,23 @@ You should now have a file called vplanet in the directory.
 
 .. note::
 
-  We recommend you add :code:`VPLANET` to your PATH variable.
+  We recommend you add :code:`VPLanet` to your PATH variable.
 
 
 
 A simple example
 ----------------
 
-Let's go over how to use :code:`VPLANET` to simulate the evolution of
+Let's go over how to use :code:`VPLanet` to simulate the evolution of
 a hypothetical ocean on the surface of early Venus. Isotopic evidence
 suggests Venus may have had a similar amount of water to Earth in the
 past :cite:`Donahue1982`, but because of vigorous hydrodynamic escape it probably lost all
 of it in the first few hundred Myr :cite:`Hunten1973`. Here we're going to use the :doc:`stellar </src/stellar>`
-and :doc:`atmesc </src/atmesc>` modules of :code:`VPLANET` to jointly model the evolution
+and :doc:`atmesc </src/atmesc>` modules of :code:`VPLanet` to jointly model the evolution
 of the Sun and Venus. This guide shows how to interpret the :doc:`VenusWaterLoss </examples/VenusWaterLoss>`
 example, but here we will only use one planet, whereas the example uses three.
 
-The basic workflow for a :code:`VPLANET` simulation is to create input
+The basic workflow for a :code:`VPLanet` simulation is to create input
 (:code:`.in`) files with the pertinent system, star, and planet parameters
 and to call the executable directly from the command line. Let's go over
 the three input files for this example.
@@ -57,7 +70,7 @@ the three input files for this example.
 The input files
 ---------------
 
-The first input file is for the system, which tells :code:`VPLANET` what bodies
+The first input file is for the system, which tells :code:`VPLanet` what bodies
 are in the simulation and sets some configuration options. This file is usally
 called :code:`vpl.in`, but you can actually call it whatever you'd like:
 
@@ -104,7 +117,7 @@ But here's a line-by-line breakdown.
 We're calling the
 system :code:`"solarsystem"` (our output files will have this prefix and any
 plots will have this title). We specified maximum verbosity (:code:`5`),
-so :code:`VPLANET` will talk a LOT. We're allowing output file overwrites,
+so :code:`VPLanet` will talk a LOT. We're allowing output file overwrites,
 and we're telling the code to expect two body files: :code:`sun.in` and
 :code:`venus.in`, which we'll create below. Note that  in :doc:`VenusWaterLoss </examples/VenusWaterLoss>`
 uses 3 planets, each representing a different amount of initial water content.
@@ -117,12 +130,12 @@ for I/O: solar masses, astronomical units, years, and degrees.
     For instance, it's kind of a pain to input planet masses in solar
     masses, or the other way around. Fortunately, the default unit can
     be overriden with the minus sign ("-") character, which tells
-    :code:`VPLANET` to assume custom units for the parameter in question.
+    :code:`VPLanet` to assume custom units for the parameter in question.
     We'll see an example of this below.
 
 Moving along, we tell the code to spit out a log file at the end, set the
 output precision and a tolerance parameter. The final section is probably
-the most important: here we tell :code:`VPLANET` what to *actually* do
+the most important: here we tell :code:`VPLanet` what to *actually* do
 in the simulation. We want to evolve the system *forward* in time using
 variable (adaptive) timestepping with a coefficient :code:`dEta = 0.01`. The
 smaller this coefficient, the higher the precision of the integration (but
@@ -130,7 +143,7 @@ the slower it will run). We then specify how long to run the simulation for
 (the age of the solar system in our case) and how often to output (every
 million years).
 
-Ok, so we told :code:`VPLANET` to expect two additional input files.
+Ok, so we told :code:`VPLanet` to expect two additional input files.
 Here's :code:`sun.in`:
 
 sun.in
@@ -171,7 +184,7 @@ uses the negative option for dSatXUVTime, which means the units are Gyr.
     optin, type :code:`vplanet -h` in a terminal.
 
 We gave the star a name,
-told :code:`VPLANET` we want to use the :code:`stellar` module to compute
+told :code:`VPLanet` we want to use the :code:`stellar` module to compute
 its evolution, requested that the code output time and the XUV luminosity at each output time, 1 Myr as set by
 option dOutputTime in vpl.in. (The example outputs a few more parameters.) We assigned the mass and age at time = 0, and set a few :code:`stellar`-specific
 properties. Specifically, we're using the Baraffe et al. (2015) :cite:`Baraffe15`
@@ -213,7 +226,7 @@ a few things. First, because the arguments for :code:`saOutputOrder` were pretty
 we split the input over multiple lines with the line continuation character
 :code:`$`. Second, note that we appear to have given the planet a **negative**
 mass and radius! As we mentioned above, this actually tells
-:code:`VPLANET` we're specifying these values using *custom* units. Every
+:code:`VPLanet` we're specifying these values using *custom* units. Every
 parameter has an associated custom unit that overrides the default units
 specified in :code:`vpl.in`. In this case, we're using Earth units for the mass
 and radius.
@@ -347,7 +360,7 @@ solarsystem.log
 Next, we have the **forward** evolution files, one per body. The
 columns in these files correspond to the :code:`saOutputOrder`
 parameters in the corresponding input files. Recall the for the
-Sun, we requested that :code:`VPLANET` output the timestamp
+Sun, we requested that :code:`VPLanet` output the timestamp
 and the XUV luminosity:
 
 
@@ -387,7 +400,7 @@ Plotting
 --------
 
 The :code:`vplot` tool (:doc:`docs here <vplot>`) can be used to easily visualize the results of
-any :code:`VPLANET` simulation. If you run
+any :code:`VPLanet` simulation. If you run
 
 
 .. code-block:: bash

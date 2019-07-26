@@ -452,8 +452,10 @@ void InitializeInput(INFILE *input) {
   }
   input->iNumLines = iGetNumLines(input->cIn);
   input->bLineOK = malloc(input->iNumLines*sizeof(int));
+  /*
   input->cSpecies[0] = 0;
   input->cReactions[0] = 0;
+  */
 
   for (iLine=0;iLine<input->iNumLines;iLine++) {
     /* Initialize bLineOK */
@@ -578,6 +580,7 @@ void ReadVerbose(FILES *files,OPTIONS *options,int *iVerbose,int iFile) {
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else if (*iVerbose == -1) // Was not set at command line, so set to default
      *iVerbose = atoi(options->cDefault);
+
 }
 
 int iAssignMassUnit(char cTmp[],int iVerbose,char cFile[],char cName[],int iLine) {
@@ -1009,6 +1012,9 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
 
   control->Evolve.iNumBodies=iNumIndices;
   files->Outfile = malloc(iNumIndices*sizeof(OUTFILE));
+  for (iIndex=0;iIndex<iNumIndices;iIndex++) {
+     memset(files->Outfile[iIndex].cOut,'\0',NAMELEN);
+  }
 
   UpdateFoundOptionMulti(&files->Infile[0],options,lTmp,iNumLines,0);
 
@@ -1031,28 +1037,26 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
 
   /* First find input files */
   ReadBodyFileNames(control,files,&options[OPT_BODYFILES],&input);
+
+  // allocate the body struct
   *body = malloc(control->Evolve.iNumBodies*sizeof(BODY));
 
-  InitializeBodyModules(body,control->Evolve.iNumBodies);
+  /* Initialize functions in the module struct */
+  InitializeModule(*body,control,module);
 
-  /* Is iVerbose set in primary input? */
+ /* Is iVerbose set in primary input? */
   ReadVerbose(files,&options[OPT_VERBOSE],&control->Io.iVerbose,0);
 
+  // XXX From ReadInitialOptions,iin this location
   /* Now we can search through files for all options. First we scan the files for Verbosity */
-  /* Initialize other input files */
+  /* We have to initialize other input files first */
   for (iFile=1;iFile<files->iNumInputs;iFile++) {
     InitializeInput(&files->Infile[iFile]);
-    ReadVerbose(files,&options[OPT_VERBOSE],&control->Io.iVerbose,iFile);
+    ReadVerbose(files,options,&control->Io.iVerbose,iFile);
   }
 
-  /* Now initialize arrays */
+  /* Need units prior to any parameter read */
   control->Units = malloc(files->iNumInputs*sizeof(UNITS));
-
-  /* Initialize functions in the module struct */
-  InitializeModule(module,control->Evolve.iNumBodies);
-  control->Halt = malloc(control->Evolve.iNumBodies*sizeof(HALT));
-  /* XXX Does this belong here? Need to know iNumHalts, so should this come in verify? -- I think so
-     InitializeHalt(control,module); */
 
   /* Next we must find the units, modules, and system name */
   for (iFile=0;iFile<files->iNumInputs;iFile++) {
@@ -1067,13 +1071,14 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
     ReadModules(*body,control,files,module,&options[OPT_MODULES],iFile);
   }
 
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++)
-    FinalizeModule(*body,module,iBody);
-
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    FinalizeModule(*body,control,module,iBody);
+  }
   /* Check that selected modules are compatable */
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     VerifyModuleCompatability(*body,control,files,module,options,iBody);
   }
+
 
   free(input.bLineOK);
 
@@ -1451,6 +1456,35 @@ void ReadEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
     if (iFile > 0)
       AssignDefaultDouble(options,&body[iFile-1].dEcc,files->iNumInputs);
 }
+
+/**
+Read the planet's initial gaseous envelope mass.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dEnvelopeMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dEnvelopeMass = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dEnvelopeMass = options->dDefault;
+}
+
 
 /*
  *
@@ -2022,6 +2056,63 @@ void ReadMeanMotion(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
       AssignDefaultDouble(options,&body[iFile-1].dMeanMotion,files->iNumInputs);
   }
 }
+
+/**
+Read the minimum surface water mass.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadMinSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dMinSurfaceWaterMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dMinSurfaceWaterMass = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dMinSurfaceWaterMass = options->dDefault;
+}
+
+/**
+Read the minimum envelope mass.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadMinEnvelopeMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dMinEnvelopeMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dMinEnvelopeMass = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dMinEnvelopeMass = options->dDefault;
+}
+
 
 /* Minimum Value */
 
@@ -2641,7 +2732,36 @@ void ReadSemiMajorAxis(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       AssignDefaultDouble(options,&body[iFile-1].dSemi,files->iNumInputs);
 }
 
-void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[]) {
+/**
+Read the planet's initial surface water mass.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dSurfaceWaterMass = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dSurfaceWaterMass = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dSurfaceWaterMass = options->dDefault;
+}
+
+
+void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,fnReadOption fnRead[]) {
   /* Now get all other options, if not in MODULE mode */
   int iOpt,iFile;
 
@@ -2655,6 +2775,16 @@ void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       if (options[iOpt].iType != -1 && iOpt != OPT_OUTPUTORDER && iOpt != OPT_GRIDOUTPUT) {
         fnRead[iOpt](body,control,files,&options[iOpt],system,iFile);
       }
+  }
+
+  /* Read in output order */
+  for (iFile=1;iFile<files->iNumInputs;iFile++) {
+    ReadOutputOrder(files,module,options,output,iFile,control->Io.iVerbose);
+    if (body[iFile-1].bPoise) {
+      ReadGridOutput(files,options,output,iFile,control->Io.iVerbose);
+    } else
+      // Initialize iNumGrid to 0 so no memory issues
+      files->Outfile[iFile-1].iNumGrid = 0;
   }
 }
 
@@ -2759,7 +2889,7 @@ void ReadZobl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
  */
 
 void ReadOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE **update,fnReadOption fnRead[],char infile[]) {
-  int iFile,iModule;
+  int iBody;
 
   /* Read options for files, units, verbosity, and system name. */
   ReadInitialOptions(body,control,files,module,options,output,system,infile);
@@ -2767,27 +2897,17 @@ void ReadOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module,OPTION
   /* Now that we know how many bodies there are, initialize more features */
   *update = malloc(control->Evolve.iNumBodies*sizeof(UPDATE));
 
-  /* Initialize module control */
+  // Assign MODULE pointers for each selected module
+  AddModules(*body,control,module);
+
+    /* Initialize module control */
   InitializeControl(control,module);
 
-  /* Initialize halts XXX Done in verify
-     InitializeHalt(control,module); */
-
   /* Now read in remaining options */
-  ReadOptionsGeneral(*body,control,files,options,system,fnRead);
+  ReadOptionsGeneral(*body,control,files,module,options,output,system,fnRead);
 
   /* Read in module options */
   ReadOptionsModules(*body,control,files,module,options,system,fnRead);
-
-  /* Read in output order -- merge into ReadGeneralOptions? */
-  for (iFile=1;iFile<files->iNumInputs;iFile++) {
-    ReadOutputOrder(files,module,options,output,iFile,control->Io.iVerbose);
-    if ((*body)[iFile-1].bPoise) {
-      ReadGridOutput(files,options,output,iFile,control->Io.iVerbose);
-    } else
-      // Initialize iNumGrid to 0 so no memory issues
-      files->Outfile[iFile-1].iNumGrid = 0;
-  }
 
   /* Any unrecognized options? */
   Unrecognized(*files);
@@ -3355,6 +3475,44 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_CALCDYNELLIP].bNeg = 0;
   options[OPT_CALCDYNELLIP].iFileType = 1;
   fnRead[OPT_CALCDYNELLIP] = &ReadCalcDynEllip;
+
+  sprintf(options[OPT_SURFACEWATERMASS].cName,"dSurfWaterMass");
+  sprintf(options[OPT_SURFACEWATERMASS].cDescr,"Initial Surface Water Mass");
+  sprintf(options[OPT_SURFACEWATERMASS].cDefault,"0");
+  options[OPT_SURFACEWATERMASS].dDefault = 0;
+  options[OPT_SURFACEWATERMASS].iType = 2;
+  options[OPT_SURFACEWATERMASS].iMultiFile = 1;
+  options[OPT_SURFACEWATERMASS].dNeg = TOMASS;
+  sprintf(options[OPT_SURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
+  fnRead[OPT_SURFACEWATERMASS] = &ReadSurfaceWaterMass;
+
+  sprintf(options[OPT_MINSURFACEWATERMASS].cName,"dMinSurfWaterMass");
+  sprintf(options[OPT_MINSURFACEWATERMASS].cDescr,"Minimum Surface Water Mass");
+  sprintf(options[OPT_MINSURFACEWATERMASS].cDefault,"1.e-5 TO");
+  options[OPT_MINSURFACEWATERMASS].dDefault = 1.e-5*TOMASS;
+  options[OPT_MINSURFACEWATERMASS].iType = 2;
+  options[OPT_MINSURFACEWATERMASS].dNeg = TOMASS;
+  sprintf(options[OPT_MINSURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
+  fnRead[OPT_MINSURFACEWATERMASS] = &ReadMinSurfaceWaterMass;
+
+  sprintf(options[OPT_ENVELOPEMASS].cName,"dEnvelopeMass");
+  sprintf(options[OPT_ENVELOPEMASS].cDescr,"Initial Envelope Mass");
+  sprintf(options[OPT_ENVELOPEMASS].cDefault,"0");
+  options[OPT_ENVELOPEMASS].dDefault = 0;
+  options[OPT_ENVELOPEMASS].iType = 2;
+  options[OPT_ENVELOPEMASS].iMultiFile = 1;
+  options[OPT_ENVELOPEMASS].dNeg = MEARTH;
+  sprintf(options[OPT_ENVELOPEMASS].cNeg,"Earth");
+  fnRead[OPT_ENVELOPEMASS] = &ReadEnvelopeMass;
+
+  sprintf(options[OPT_MINENVELOPEMASS].cName,"dMinEnvelopeMass");
+  sprintf(options[OPT_MINENVELOPEMASS].cDescr,"Minimum Envelope Mass");
+  sprintf(options[OPT_MINENVELOPEMASS].cDefault,"1.e-8 Earth");
+  options[OPT_MINENVELOPEMASS].dDefault = 1.e-8*MEARTH;
+  options[OPT_MINENVELOPEMASS].iType = 2;
+  options[OPT_MINENVELOPEMASS].dNeg = MEARTH;
+  sprintf(options[OPT_MINENVELOPEMASS].cNeg,"Earth");
+  fnRead[OPT_MINENVELOPEMASS] = &ReadMinEnvelopeMass;
 
   /*
    *

@@ -966,7 +966,7 @@ void LogSpiNBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDAT
 //============================= End Log Functions ==============================
 
 // Add Module Function
-void AddModuleSpiNBody(MODULE *module,int iBody,int iModule) {
+void AddModuleSpiNBody(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->iaModule[iBody][iModule]                  = SPINBODY; //Name
 

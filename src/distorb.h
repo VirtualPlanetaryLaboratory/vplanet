@@ -71,7 +71,7 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
-void AddModuleDistOrb(MODULE*,int,int);
+void AddModuleDistOrb(CONTROL*,MODULE*,int,int);
 void BodyCopyDistOrb(BODY*,BODY*,int,int,int);
 void InitializeBodyDistOrb(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyDistOrb(BODY*,CONTROL*,UPDATE*,int);

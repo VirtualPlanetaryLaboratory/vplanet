@@ -117,7 +117,7 @@ void fvInitializeControlRadheat(CONTROL*,int);
 void fvInitializeBodyRadheat(BODY*,CONTROL*,UPDATE*,int,int);
 void fvInitializeUpdateTmpBodyEqtide(BODY*,CONTROL*,UPDATE*,int);
 
-void fvAddModuleRadheat(MODULE*,int,int);
+void fvAddModuleRadheat(CONTROL*,MODULE*,int,int);
 void fvBodyCopyRadheat(BODY*,BODY*,int,int,int);
 
 /* Options Info */
@@ -453,8 +453,6 @@ void fvInitializeOutputRadheat(OUTPUT*,fnWriteOutput[]);
 void fvLogOptionsRadheat(CONTROL*,FILE*);
 void fvLogRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void fvLogBodyRadheat(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
-
-void fvAddModuleRadheat(MODULE*,int,int);
 
 /* RadHeat functions */
 double fd26AlConstant(double,double);

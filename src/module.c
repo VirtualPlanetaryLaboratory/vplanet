@@ -692,9 +692,9 @@ void VerifyModuleMultiEqtideDistRot(BODY *body,UPDATE *update,CONTROL *control,F
       fprintf(stderr,"ERROR: Cannot set both EQTIDE and bReadOrbitData for body %s.\n",body[iBody].cName);
       exit(EXIT_INPUT);
     }
-  }
 
-  control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideDistRot;
+    control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideDistRot;
+  }
 }
 
 void VerifyModuleMultiRadheatThermint(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {

@@ -1742,6 +1742,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
     if (files->Outfile[iBody].iNumCols > 0) {
       fp = fopen(files->Outfile[iBody].cOut,"a");
       for (iCol=0;iCol<files->Outfile[iBody].iNumCols+iExtra;iCol++) {
+          //printf("%d %d\n",iBody,iCol);
+          //fflush(stdout);
 	        fprintd(fp,dCol[iCol],control->Io.iSciNot,control->Io.iDigits);
 	        fprintf(fp," ");
       }

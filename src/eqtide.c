@@ -3262,10 +3262,11 @@ double fdCPLTidePower(BODY *body,int iBody) {
       (-2*body[iBody].iTidalEpsilon[iIndex][0] +
       body[iBody].iTidalEpsilon[iIndex][8] +
       body[iBody].iTidalEpsilon[iIndex][9]));
-
+    /*
     printf("%lf\n",dOrbPow);
     printf("%lf\n",dRotPow);
     fflush(stdout);
+    */
   }
 
   return dOrbPow + dRotPow;

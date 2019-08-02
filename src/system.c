@@ -257,6 +257,8 @@ double fdTotEnergy(BODY *body, CONTROL *control, SYSTEM *system) {
 
     // Add back in lost energy
     dTot += body[iBody].dLostEng;
+    //printf("%lf\n",body[iBody].dLostEng);
+    //fflush(stdout);
   }
 
   return dTot;

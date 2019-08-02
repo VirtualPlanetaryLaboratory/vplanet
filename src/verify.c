@@ -815,6 +815,30 @@ void VerifyLayers(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int 
 
 }
 
+void VerifyAge(BODY *body,CONTROL *control,OPTIONS *options) {
+  int bAgeSet,iBody;
+  double dAge;
+
+  // Assume age wasn't set
+  bAgeSet=0;
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    if (options[OPT_AGE].iLine[iBody+1] > -1) {
+      // Age was set!
+      bAgeSet=1;
+      dAge = body[iBody].dAge;
+    }
+  }
+
+  // For now, all bodies must be the same age
+  if (bAgeSet) {
+    if (control->Io.iVerbose == VERBALL) {
+      printf("INFO: Age set in one file, all bodies will have this age.\n");
+    }
+    for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+      body[iBody].dAge = dAge;
+    }
+  }
+}
 /**
 
  * Master Verify subroutine
@@ -826,6 +850,7 @@ void VerifyLayers(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int 
 void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnIntegrate *fnOneStep,fnUpdateVariable ****fnUpdate) {
   int iBody,iModule;
 
+  VerifyAge(body,control,options);
   VerifyNames(body,control,options);
 
   // Need to know integration type before we can initialize CONTROL

@@ -703,6 +703,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 //   VerifyStabilityHalts(control,files,options);
 
   body[iBody].dMeanA = 0.0;
+  body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
 
   if (control->Evolve.iDistOrbModel == RD4) {
     /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
@@ -865,11 +866,11 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       }
       if (iBody == control->Evolve.iNumBodies-1) {
         if (control->bInvPlane) {
-	  /* Must initialize dMeanA to prevent memory corruption. This
-	     parameter has no real meaning in DistOrb runs, but inv_plave
-	     requires it. I will set it to zero for each body. --RKB */
-	  for (kBody=0;kBody<control->Evolve.iNumBodies;kBody++)
-	    body[kBody].dMeanA = 0;
+	        /* Must initialize dMeanA to prevent memory corruption. This
+	           parameter has no real meaning in DistOrb runs, but inv_plave
+	           requires it. I will set it to zero for each body. --RKB */
+	        for (kBody=0;kBody<control->Evolve.iNumBodies;kBody++)
+	          body[kBody].dMeanA = 0;
           inv_plane(body, system, control->Evolve.iNumBodies);
         }
       }

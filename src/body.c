@@ -473,6 +473,7 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     //   (eqtide + !thermint) bodies
     dest[iBody].dShmodUMan=src[iBody].dShmodUMan;
     dest[iBody].dStiffness=src[iBody].dStiffness;
+    dest[iBody].dImK2ManOrbModel = src[iBody].dImK2ManOrbModel;
 
     if (iBody > 0) {
       dest[iBody].dHecc = src[iBody].dHecc;
@@ -983,11 +984,6 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int 
 		for (f = 0; f < FLUXLEN-1; f++)
 			if (dFlux < daLopezFlux[f+1]) break;
 	}
-/*
-  printf("%lf\n",dAgeYears);
-  printf("%lf\n",daLopezAge[0]);
-  fflush(stdout);
-*/
 	if (dAgeYears < daLopezAge[0]) {
 		/* Out of bounds, assuming it's OK to use min val */
 		dAgeYears = daLopezAge[0];

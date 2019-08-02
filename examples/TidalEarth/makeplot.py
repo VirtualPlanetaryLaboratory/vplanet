@@ -27,7 +27,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 dirs = ["au0.01","au0.02","au0.05"]
 # Run the simulations
 for dir in dirs:
-    print("Running simulation in %s directory...\n" % dir)
+    print("\nRunning simulation in %s directory..." % dir)
     os.chdir(os.path.join(dir_path,dir))
     subprocess.call(['vplanet', 'vpl.in'])
 # load data

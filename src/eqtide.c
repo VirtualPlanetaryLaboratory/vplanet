@@ -1960,7 +1960,7 @@ void WriteDOrbPerDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
     strcpy(cUnit,output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime)/fdUnitsLength(units->iLength);
-    sprintf(cUnit,"");
+    sprintf(cUnit,"%s","");
   }
 }
 

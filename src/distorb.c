@@ -1248,7 +1248,7 @@ int fniHaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,i
 /************* DISTORB Outputs ******************/
 
 void WriteEigen(CONTROL *control, SYSTEM *system) {
-  char cEccEigFile[NAMELEN], cIncEigFile[NAMELEN];
+  char cEccEigFile[2*NAMELEN], cIncEigFile[2*NAMELEN];
   int iBody;
   FILE *fecc, *finc;
 

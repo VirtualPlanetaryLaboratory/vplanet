@@ -13,7 +13,7 @@ if ! command -v conda > /dev/null; then
 fi
 
 # Display some info
-conda info -a
+#conda info -a
 
 # Install docs stuff
 pip install sphinx==1.8.4

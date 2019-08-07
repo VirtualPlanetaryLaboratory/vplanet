@@ -40,6 +40,8 @@ out2 = outputs[2]
 # Print final state
 out = out0
 
+os.chdir(dir_path)
+
 def fig2x3(out,nfig,color='k',legendon=False):
     fig = plt.figure(nfig, figsize=(10,15))
     panel=1
@@ -83,7 +85,7 @@ def fig2x3(out,nfig,color='k',legendon=False):
     panel += 1
     plt.subplot(rows,cols,panel)
     plt.plot(out.tidalearth.Time,out.tidalearth.MagMom,color=color,label='MagMom')
-    plt.plot(out.tidalearth.Time,out.tidalearth.RIC/3481,linestyle='--')
+    plt.plot(out.tidalearth.Time,out.tidalearth.RIC/3481,color=color,linestyle='--')
     plt.ylim(0,1.5)
     plt.ylabel('Mag. Mom., R$_{ic}$ ($\oplus$ Units)')
     plt.xlabel('Time (Gyr)')
@@ -141,6 +143,7 @@ plt.xlabel('Upper Mantle Temp. [K]')
 plt.ylim(1e-8,1e0)
 plt.xlim(1600,2400)
 vplot.make_pretty(fig)
+
 if (sys.argv[1] == 'pdf'):
     plt.savefig(filepref+'%d.pdf'%nfig)
 if (sys.argv[1] == 'png'):

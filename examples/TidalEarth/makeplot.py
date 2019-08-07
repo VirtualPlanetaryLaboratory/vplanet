@@ -83,7 +83,7 @@ def fig2x3(out,nfig,color='k',legendon=False):
     panel += 1
     plt.subplot(rows,cols,panel)
     plt.plot(out.tidalearth.Time,out.tidalearth.MagMom,color=color,label='MagMom')
-    plt.plot(out.tidalearth.Time,out.tidalearth.RIC/3481,linestyle='--')
+    plt.plot(out.tidalearth.Time,out.tidalearth.RIC/3481,color=color,linestyle='--')
     plt.ylim(0,1.5)
     plt.ylabel('Mag. Mom., R$_{ic}$ ($\oplus$ Units)')
     plt.xlabel('Time (Gyr)')

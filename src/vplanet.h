@@ -631,6 +631,8 @@ struct BODY {
   double dAdJumpC2CMB;     /**< adiabatic temp jump from ave core to CMB */
   double dElecCondCore;    /**< electrical conductivity of core */
 
+	double dDynamViscos;
+
   /* ATMESC Parameters */
   int bAtmEsc;           /**< Apply Module ATMESC? */
   double dSurfaceWaterMass;
@@ -1405,7 +1407,7 @@ struct UPDATE {
   int iNumTCore;       /**< Number of Equations Affecting TCore */
   double dTDotCore;    /**< TCore time Derivative */
   double *pdTDotCore;
-	double dDynamViscos;
+	// double dDynamViscos;
 
   /* DISTORB */
   /* Number of eqns to modify a parameter */
@@ -1749,7 +1751,7 @@ struct IO {
    matrix through fnForceBehavior. */
 
 typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
-typedef void (*fnPropsAuxModule)(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
+typedef void (*fnPropsAuxModule)(BODY*,EVOLVE*,UPDATE*,int);
 typedef void (*fnForceBehaviorModule)(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */

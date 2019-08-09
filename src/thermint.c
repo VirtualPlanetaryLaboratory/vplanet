@@ -1411,7 +1411,7 @@ void fvVerifyTCore(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,dou
   @param update Update struct
   @param iBody Index of body
 */
-void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
+void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   /* Scalar Properties */
   body[iBody].dTUMan=fdTUMan(body,iBody);
   body[iBody].dTLMan=fdTLMan(body,iBody);

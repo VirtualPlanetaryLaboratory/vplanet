@@ -130,7 +130,7 @@ void CountHaltsMagmOc(HALT*,int*);
 void VerifyMagmOc(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 void VerifyRotationMagmOc(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetMagmOc(CONTROL*,MODULE*);
-void PropsAuxMagmOc(BODY*,EVOLVE*,SYSTEM*,UPDATE*,int);
+void PropsAuxMagmOc(BODY*,EVOLVE*,UPDATE*,int);
 void VerifyHaltMagmOc(BODY*,CONTROL*,OPTIONS*,int,int*);
 void VerifyRotationMagmOc(BODY*,CONTROL*,OPTIONS*,char[],int);
 

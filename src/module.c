@@ -35,7 +35,7 @@ void FinalizeUpdateNULL(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,i
   /* Nothing */
 }
 
-void PropsAuxNULL(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iFoo) {
+void PropsAuxNULL(BODY *body,EVOLVE *evolve,UPDATE *update,int iFoo) {
 }
 
 // Functions that are helpful for integrations
@@ -764,7 +764,7 @@ void VerifyModuleMultiEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,
       This should now be deprecated
       // Now set the "Man" functions as the WriteTidalQ uses them
       // This ensures that the write function works
-      body[iBody].dImk2Man = body[iBody].dImK2;
+      body[iBody].dImK2Man = body[iBody].dImK2;
       body[iBody].dK2Man = body[iBody].dK2;
 
     } else { // Thermint and Eqtide called
@@ -1429,16 +1429,16 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
  * Auxiliary Properties for multi-module calculations
  */
 
-void PropsAuxSpiNbodyEqtide(BODY *body, EVOLVE *evolve, SYSTEM *system, UPDATE *update, int iBody) {
+void PropsAuxSpiNbodyEqtide(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   // Nothing to see here...
 
 }
 
-void PropsAuxSpiNBodyDistOrb(BODY *body, EVOLVE *evolve, SYSTEM *system, UPDATE *update, int iBody) {
+void PropsAuxSpiNBodyDistOrb(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
 }
 
-void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
+void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   // This function controls how tidal radius is set.
 
   // If bUseTidalRadius == 0, dTidalRadius <- dRadius
@@ -1447,102 +1447,104 @@ void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *updat
 }
 
 
-void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
+void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   /* RB- These first 3 lines were taken from PropsAuxThermint, but
    as they rely on eqtide being called, they belong here.*/
-  body[iBody].dK2Man=fdK2Man(body,iBody);
-  body[iBody].dImk2Man=fdImk2Man(body,iBody);
-
-  // Include tidal dissapation due to oceans:
-  if(body[iBody].bOceanTides)
-  {
-    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
-
-    // Im(K_2) is weighted sum of mantle and oceam component
-    // weighted by the love number of each component
-    body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Ocean);
-  }
-  // No oceans, thermint dictates ImK2
-  else
-  {
-    body[iBody].dImK2 = body[iBody].dImk2Man;
-    body[iBody].dK2 = body[iBody].dK2Man;
-  }
+  // body[iBody].dK2Man=fdK2Man(body,iBody);
+  // body[iBody].dImK2Man=fdImk2Man(body,iBody);
+  //
+  // // Include tidal dissapation due to oceans:
+  // if(body[iBody].bOceanTides)
+  // {
+  //   body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
+  //
+  //   // Im(K_2) is weighted sum of mantle and oceam component
+  //   // weighted by the love number of each component
+  //   body[iBody].dImK2 = (body[iBody].dImK2Man + body[iBody].dImK2Ocean);
+  // }
+  // // No oceans, thermint dictates ImK2
+  // else
+  // {
+  //   body[iBody].dImK2 = body[iBody].dImK2Man;
+  //   body[iBody].dK2 = body[iBody].dK2Man;
+  // }
 
   body[iBody].dK2Man = fdK2Man(body,iBody);
   body[iBody].dTidalQMan = fdTidalQMan(body,iBody);
   body[iBody].dImK2Man = fdImK2ManThermint(body,iBody);
 
-  PropsAuxCPL(body,evolve,system,update,iBody);
-  // Call dTidePowerMan
-  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
+  body[iBody].dImK2 = fdImK2Total(body,iBody);
+
+  // PropsAuxCPL(body,evolve,update,iBody);
+  // // Call dTidePowerMan
+  // body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
 }
 
-void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
-  // Set the mantle parameters first
-  body[iBody].dK2Man=fdK2Man(body,iBody);
-  body[iBody].dImk2Man=fdImk2Man(body,iBody);
-
-  // If it's the first step, see if it's a runaway greenhouse
-  if (evolve->bFirstStep)
-  {
-    // RG -> no ocean tides
-    if(fdInsolation(body, iBody, 0) >= fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass))
-    {
-      body[iBody].bOceanTides = 0;
-    }
-  }
-
-  // Case: No oceans, no envelope
-  if(!body[iBody].bOceanTides && !body[iBody].bEnvTides)
-  {
-    // Mantle controls evolution via thermint
-    body[iBody].dImK2 = body[iBody].dImk2Man;
-    body[iBody].dK2 = body[iBody].dK2Man;
-  }
-  // Case: Oceans, no envelope:
-  else if(body[iBody].bOceanTides && !body[iBody].bEnvTides)
-  {
-    // Oceans dominate
-    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
-
-    // Im(K_2) is weighted sum of mantle and oceam component
-    // weighted by the love number of each component
-    body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Ocean);
-  }
-  // Case: No oceans, envelope (envelope evap while in runaway):
-  else if(!body[iBody].bOceanTides && body[iBody].bEnvTides)
-  {
-    // Envelope dominates
-    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
-
-    // Im(K_2) is weighted sum of mantle and enevelope component
-    // weighted by the love number of each component
-    body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Env);
-  }
-  // Case: Oceans and evelope->envelope has massive pressure so oceans are super critical (?):
-  // Also, envelope and ocean are mutually exclusive so envelope dominates
-  else if(body[iBody].bOceanTides && body[iBody].bEnvTides)
-  {
-    // Envelope and ocean!
-    body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
-
-    // Im(K_2) is weighted sum of mantle, envelope and ocean component
-    // weighted by the love number of each component
-    body[iBody].dImK2 = (body[iBody].dImk2Man + body[iBody].dImK2Env);
-  }
-  else
-    assert(0); // Unknown envelope + ocean behavior
-
-  // Sanity checks: enforce upper bound
-  if(body[iBody].dK2 > 1.5)
-    body[iBody].dK2 = 1.5;
-
-  // Finally, call EQTIDE props aux then set mantle tidal power
-  PropsAuxCPL(body,evolve,system,update,iBody);
-  body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
-
-}
+// void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+//   // Set the mantle parameters first
+//   body[iBody].dK2Man=fdK2Man(body,iBody);
+//   body[iBody].dImK2Man=fdImk2Man(body,iBody);
+//
+//   // If it's the first step, see if it's a runaway greenhouse
+//   if (evolve->bFirstStep)
+//   {
+//     // RG -> no ocean tides
+//     if(fdInsolation(body, iBody, 0) >= fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass))
+//     {
+//       body[iBody].bOceanTides = 0;
+//     }
+//   }
+//
+//   // Case: No oceans, no envelope
+//   if(!body[iBody].bOceanTides && !body[iBody].bEnvTides)
+//   {
+//     // Mantle controls evolution via thermint
+//     body[iBody].dImK2 = body[iBody].dImK2Man;
+//     body[iBody].dK2 = body[iBody].dK2Man;
+//   }
+//   // Case: Oceans, no envelope:
+//   else if(body[iBody].bOceanTides && !body[iBody].bEnvTides)
+//   {
+//     // Oceans dominate
+//     body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
+//
+//     // Im(K_2) is weighted sum of mantle and oceam component
+//     // weighted by the love number of each component
+//     body[iBody].dImK2 = (body[iBody].dImK2Man + body[iBody].dImK2Ocean);
+//   }
+//   // Case: No oceans, envelope (envelope evap while in runaway):
+//   else if(!body[iBody].bOceanTides && body[iBody].bEnvTides)
+//   {
+//     // Envelope dominates
+//     body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
+//
+//     // Im(K_2) is weighted sum of mantle and enevelope component
+//     // weighted by the love number of each component
+//     body[iBody].dImK2 = (body[iBody].dImK2Man + body[iBody].dImK2Env);
+//   }
+//   // Case: Oceans and evelope->envelope has massive pressure so oceans are super critical (?):
+//   // Also, envelope and ocean are mutually exclusive so envelope dominates
+//   else if(body[iBody].bOceanTides && body[iBody].bEnvTides)
+//   {
+//     // Envelope and ocean!
+//     body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
+//
+//     // Im(K_2) is weighted sum of mantle, envelope and ocean component
+//     // weighted by the love number of each component
+//     body[iBody].dImK2 = (body[iBody].dImK2Man + body[iBody].dImK2Env);
+//   }
+//   else
+//     assert(0); // Unknown envelope + ocean behavior
+//
+//   // Sanity checks: enforce upper bound
+//   if(body[iBody].dK2 > 1.5)
+//     body[iBody].dK2 = 1.5;
+//
+//   // Finally, call EQTIDE props aux then set mantle tidal power
+//   PropsAuxCPL(body,evolve,update,iBody);
+//   body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
+//
+// }
 
 
 /* This does not seem to be necessary XXX Russell
@@ -1551,28 +1553,28 @@ void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
 }
 */
 
-void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
+void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dRadPowerCore = fdRadPowerCore(update,iBody);
   body[iBody].dRadPowerCrust = fdRadPowerCrust(update,iBody);
   body[iBody].dRadPowerMan = fdRadPowerMan(update,iBody);
 }
 
-void PropsAuxEqtideDistorb(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
+void PropsAuxEqtideDistorb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
 }
 
-void PropsAuxEqtideStellar(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
+void PropsAuxEqtideStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   // In stellar, radius can change depending on model so make sure tidal radius
   // knows that
   body[iBody].dTidalRadius = body[iBody].dRadius;
 }
 
-void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
+void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   // SYSTEM system; // dummy for LXUVStellar
   //body[iBody].dLXUV = fdLXUVStellar(body,&system,update,iBody,iBody) + body[iBody].dLXUVFlare;
 }
 
-void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
+void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   if (body[iBody].bMagmOc && body[iBody].bAtmEsc) {
 
     // Use Water and Oxygen mass from magmoc for atmesc
@@ -1583,7 +1585,7 @@ void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *updat
     body[iBody].dThermTemp = body[iBody].dEffTempAtm * pow(0.5,0.25);
 
     // Call PropsAux from Atmesc (or fnPropertiesAtmEsc)
-    fnPropertiesAtmEsc(body,evolve,system,update,iBody);
+    fnPropertiesAtmEsc(body,evolve,update,iBody);
 
     // Water and Oxygen mass lost through atmospheric escape
     if ((body[iBody].bRunaway) && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
@@ -1596,10 +1598,13 @@ void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *updat
     if ((body[iBody].bRunaway) && (!body[iBody].bInstantO2Sink) && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
       if (body[iBody].iWaterLossModel == ATMESC_LB15) {
         // Rodrigo and Barnes (2015)
-        if (body[iBody].dCrossoverMass >= 16 * ATOMMASS)
-          body[iBody].dOxygenMassEsc = (320. * PI * BIGG * ATOMMASS * ATOMMASS * BDIFF * body[iBody].dMass) / (KBOLTZ * THERMT);
-        else
+        if (body[iBody].dCrossoverMass >= 16 * ATOMMASS) {
+          double BDIFF = 4.8e19 * pow(body[iBody].dFlowTemp, 0.75);
+          body[iBody].dOxygenMassEsc = (320. * PI * BIGG * ATOMMASS * ATOMMASS * BDIFF * body[iBody].dMass) / (KBOLTZ * body[iBody].dFlowTemp);
+        }
+        else {
           body[iBody].dOxygenMassEsc = (8 - 8 * body[iBody].dOxygenEta) / (1 + 8 * body[iBody].dOxygenEta) * body[iBody].dMDotWater;
+        }
       } else {
         // Exact
         body[iBody].dOxygenMassEsc = (8 - 8 * body[iBody].dOxygenEta) / (1 + 8 * body[iBody].dOxygenEta) * body[iBody].dMDotWater;
@@ -1614,7 +1619,7 @@ void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *updat
     }
 
   /* Get inner edge of the habitable zone (Runaway greenhouse) */
-  double dFlux = fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass);
+  double dFlux = fdHZRG14(body,iBody);
   body[iBody].dHZInnerEdge = pow(4 * PI * dFlux /  (body[0].dLuminosity * pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5)), -0.5);
 
   }

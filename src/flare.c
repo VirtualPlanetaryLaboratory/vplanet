@@ -308,7 +308,7 @@ void ReadOptionsFlare(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
 
 /******************* Verify FLARE ******************/
 
-void PropertiesFlare(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
+void PropertiesFlare(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   /* Nothing */
 }
 

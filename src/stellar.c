@@ -581,7 +581,7 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *up
   update[iBody].pdTemperatureStellar = &update[iBody].daDerivProc[update[iBody].iTemperature][0];  // NOTE: This points to the VALUE of the temperature
 }
 
-void fnPropertiesStellar(BODY *body, EVOLVE *evolve, SYSTEM *system, UPDATE *update, int iBody) {
+void fnPropertiesStellar(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
 
   // Set rotation period for rossby number calculations
   body[iBody].dRotPer = fdFreqToPer(body[iBody].dRotRate);

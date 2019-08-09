@@ -534,7 +534,7 @@ void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int 
   update[iBody].pdCBPPhiDotBinary = &update[iBody].daDerivProc[update[iBody].iCBPPhiDot][0];
 }
 
-void fnPropertiesBinary(BODY *body, EVOLVE *evolve, SYSTEM *system, UPDATE *update, int iBody){
+void fnPropertiesBinary(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody){
 
   if(body[iBody].iBodyType == 0) { // CBP
     // If not including eqns in the matrix, compute main variables on the fly!

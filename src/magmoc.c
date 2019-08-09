@@ -898,7 +898,7 @@ void fndWaterFracMelt(BODY *body, int iBody) {
  * if needed in other parts of the code, or to be printed: body[iBody]!!! otherwise it will be deleted after the
  * end of this equation
  */
-void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
+void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   double dCurrentTime     = evolve->dTime;
   double dCurrentTimeStep = evolve->dTimeStep;
   double dCurrentStepNum  = evolve->nSteps;
@@ -934,7 +934,7 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int 
    * Tidal heating: TidalHeat in W/kg
    */
   if (body[iBody].bEqtide) {
-    body[iBody].dTidalHeat = fdTidePower(body,system,update,iBody,evolve->iEqtideModel);
+    body[iBody].dTidalHeat = fdTidePower(body,iBody,evolve->iEqtideModel);
     // body[iBody].dTidalHeat = dTidalPower / (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3))); // add here RADHEAT
   } else {
     body[iBody].dTidalHeat = 0;

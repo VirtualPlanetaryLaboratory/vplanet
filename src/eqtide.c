@@ -3067,7 +3067,7 @@ void PropsAuxCPL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   }
 }
 
-void PropsAuxCTL(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
+void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   int iPert,iIndex;
   /* dMeanMotion claculated in PropsAuxGeneral */
   int iOrbiter;

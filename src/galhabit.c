@@ -1481,7 +1481,7 @@ void AddModuleGalHabit(CONTROL *control,MODULE *module,int iBody,int iModule) {
 }
 
 /************* GALHABIT Functions ***********/
-void PropertiesGalHabit(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
+void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   double sinw, cosw, cosw_alt, sign, dMu, dL;
 
   /* calculate osculating elements */

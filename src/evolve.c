@@ -39,11 +39,11 @@ void PropertiesAuxiliary(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *upda
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     // Uni-module properties
     for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
-      control->fnPropsAux[iBody][iModule](body,&control->Evolve,system,update,iBody);
+      control->fnPropsAux[iBody][iModule](body,&control->Evolve,update,iBody);
 
     // Multi-module properties
     for (iModule=0;iModule<control->iNumMultiProps[iBody];iModule++)
-      control->fnPropsAuxMulti[iBody][iModule](body,&control->Evolve,system,update,iBody);
+      control->fnPropsAuxMulti[iBody][iModule](body,&control->Evolve,update,iBody);
   }
 }
 

@@ -2340,7 +2340,7 @@ void fvVerify235U(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,doub
    @param iBody Index of body
 */
 /* Auxs Props */
-void fvPropsAuxRadheat(BODY *body,EVOLVE *evolve,SYSTEM *system,UPDATE *update,int iBody) {
+void fvPropsAuxRadheat(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dRadPowerMan=fdRadPowerMan(update,iBody);
   body[iBody].dRadPowerCore=fdRadPowerCore(update,iBody);
   body[iBody].dRadPowerCrust=fdRadPowerCrust(update,iBody);

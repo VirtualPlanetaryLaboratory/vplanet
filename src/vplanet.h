@@ -238,15 +238,17 @@
  * define primary variables
  * give them a number
  */
-#define VWATERMASSMOATM  2302
-#define VWATERMASSSOL    2303
-#define VSURFTEMP        2304
-#define VPOTTEMP         2305
-#define VSOLIDRADIUS     2306
-#define VOXYGENMASSMOATM 2307
-#define VOXYGENMASSSOL   2308
+#define VWATERMASSMOATM    2302
+#define VWATERMASSSOL      2303
+#define VSURFTEMP          2304
+#define VPOTTEMP           2305
+#define VSOLIDRADIUS       2306
+#define VOXYGENMASSMOATM   2307
+#define VOXYGENMASSSOL     2308
 #define VHYDROGENMASSSPACE 2309
 #define VOXYGENMASSSPACE   2310
+#define VCO2MASSMOATM      2311
+#define VCO2MASSSOL        2312
 
 /* Now define the structs */
 
@@ -1014,6 +1016,8 @@ struct BODY {
 	double dOxygenMassSol;    /**< Water mass in the solidified mantle [kg] */
 	double dHydrogenMassSpace;/**< Mass of hydrogen that is lost to space */
 	double dOxygenMassSpace;	/**< Mass of oxygen that is lost to space */
+	double dCO2MassMOAtm; 		/**< Mass of CO2 in magma ocean and atmosphere [kg] */
+	double dCO2MassSol; 			/**< Mass of CO2 in solidified mantle [kg] */
 	/* Input variables */
 	double dCoreRadius;       /**< Core radius of the planet [m] */
 	double dWaterMassAtm;     /**< Water mass in the atmosphere [kg] */
@@ -1037,10 +1041,13 @@ struct BODY {
 	/* Other variables Volatile model */
 	double dPressWaterAtm;    /**< Water pressure in atmosphere [Pa] */
 	double dPartialPressWaterAtm; /**< Partial Water pressure in atmosphere [Pa] */
+	double dPressCO2Atm;			/**< CO2 pressure in atmosphere [Pa] */
+	double dPartialPressCO2Atm;   /**< Partial CO2 pressure in atmosphere [Pa] */
 	double dPressOxygenAtm;   /**< Oxygen pressure in atmosphere [Pa] */
 	double dMassMagmOcLiq; 		/**< liquid mass of magma ocean [kg] */
 	double dMassMagmOcCry; 		/**< crystal mass of magma ocean [kg] */
 	double dWaterFracMelt;    /**< Mass fraction of water in the magma ocean */
+	double dCO2FracMelt;      /**< Mass fraction of CO2 in the magma ocean */
 	double dFracFe2O3Man;     /**< Mass fraction of Fe2O3 in the mantle */
 	double dOxygenMassAtm;    /**< Oxygen mass in the atmosphere [kg] */
 	double dAveMolarMassMan;  /**< Average molar mass of the mantle */
@@ -1234,6 +1241,10 @@ struct UPDATE {
   int iNumOxygenMassSpace;
 	int iHydrogenMassSpace;
 	int iNumHydrogenMassSpace;
+	int iCO2MassMOAtm;
+	int iNumCO2MassMOAtm;
+	int iCO2MassSol;
+	int iNumCO2MassSol;
 
 	int iWaterMassMOAtmMagmOc;
   int iWaterMassSolMagmOc;
@@ -1244,6 +1255,8 @@ struct UPDATE {
   int iOxygenMassSolMagmOc;
 	int iOxygenMassSpaceMagmOc;
 	int iHydrogenMassSpaceMagmOc;
+	int iCO2MassMOAtmMagmOc;
+	int iCO2MassSolMagmOc;
 
   double dWaterMassMOAtm;
   double dWaterMassSol;
@@ -1254,6 +1267,8 @@ struct UPDATE {
   double dOxygenMassSol;
 	double dHyrdogenMassSpace;
 	double dOxygenMassSpace;
+	double dCO2MassMOAtm;
+	double dCO2MassSol;
 
   double *pdDWaterMassMOAtm;
   double *pdDWaterMassSol;
@@ -1264,6 +1279,8 @@ struct UPDATE {
   double *pdDOxygenMassSol;
 	double *pdDHydrogenMassSpace;
 	double *pdDOxygenMassSpace;
+	double *pdDCO2MassMOAtm;
+	double *pdDCO2MassSol;
 
   /* SPINBODY parameters */
   int iVelX;
@@ -1979,6 +1996,8 @@ typedef void (*fnFinalizeUpdateOxygenMassMOAtmModule)(BODY*,UPDATE*,int*,int,int
 typedef void (*fnFinalizeUpdateOxygenMassSolModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateHydrogenMassSpaceModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateOxygenMassSpaceModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCO2MassMOAtmModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCO2MassSolModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
@@ -2165,6 +2184,8 @@ struct MODULE {
   fnFinalizeUpdateOxygenMassSolModule **fnFinalizeUpdateOxygenMassSol;
 	fnFinalizeUpdateHydrogenMassSpaceModule **fnFinalizeUpdateHydrogenMassSpace;
 	fnFinalizeUpdateOxygenMassSpaceModule **fnFinalizeUpdateOxygenMassSpace;
+	fnFinalizeUpdateCO2MassMOAtmModule **fnFinalizeUpdateCO2MassMOAtm;
+  fnFinalizeUpdateCO2MassSolModule **fnFinalizeUpdateCO2MassSol;
 
   /*! These functions log module-specific data. */
   fnLogBodyModule **fnLogBody;

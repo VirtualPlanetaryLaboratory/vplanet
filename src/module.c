@@ -176,8 +176,10 @@ void InitializeModule(BODY *body,CONTROL *control,MODULE *module) {
   module->fnFinalizeUpdateSolidRadius     = malloc(iNumBodies*sizeof(fnFinalizeUpdateSolidRadiusModule));
   module->fnFinalizeUpdateOxygenMassMOAtm = malloc(iNumBodies*sizeof(fnFinalizeUpdateOxygenMassMOAtmModule));
   module->fnFinalizeUpdateOxygenMassSol   = malloc(iNumBodies*sizeof(fnFinalizeUpdateOxygenMassSolModule));
-  module->fnFinalizeUpdateHydrogenMassSpace   = malloc(iNumBodies*sizeof(fnFinalizeUpdateHydrogenMassSpaceModule));
+  module->fnFinalizeUpdateHydrogenMassSpace = malloc(iNumBodies*sizeof(fnFinalizeUpdateHydrogenMassSpaceModule));
   module->fnFinalizeUpdateOxygenMassSpace   = malloc(iNumBodies*sizeof(fnFinalizeUpdateOxygenMassSpaceModule));
+  module->fnFinalizeUpdateCO2MassMOAtm    = malloc(iNumBodies*sizeof(fnFinalizeUpdateCO2MassMOAtmModule));
+  module->fnFinalizeUpdateCO2MassSol      = malloc(iNumBodies*sizeof(fnFinalizeUpdateCO2MassSolModule));
 
   // Function Pointer Matrices
   module->fnLogBody                 = malloc(iNumBodies*sizeof(fnLogBodyModule*));
@@ -231,6 +233,8 @@ void FinalizeModule(BODY *body,CONTROL *control,MODULE *module,int iBody) {
   if (body[iBody].bGalHabit)
     iNumModules++;
   if (body[iBody].bSpiNBody)
+    iNumModules++;
+  if (body[iBody].bMagmOc)
     iNumModules++;
   if (body[iBody].bEqtide && body[iBody].bStellar) {
     iNumModuleMulti++;
@@ -327,6 +331,8 @@ void FinalizeModule(BODY *body,CONTROL *control,MODULE *module,int iBody) {
   module->fnFinalizeUpdateOxygenMassSol[iBody]    = malloc(iNumModules*sizeof(fnFinalizeUpdateOxygenMassSolModule));
   module->fnFinalizeUpdateHydrogenMassSpace[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateHydrogenMassSpaceModule));
   module->fnFinalizeUpdateOxygenMassSpace[iBody]   = malloc(iNumModules*sizeof(fnFinalizeUpdateOxygenMassSpaceModule));
+  module->fnFinalizeUpdateCO2MassMOAtm[iBody]     = malloc(iNumModules*sizeof(fnFinalizeUpdateCO2MassMOAtmModule));
+  module->fnFinalizeUpdateCO2MassSol[iBody]       = malloc(iNumModules*sizeof(fnFinalizeUpdateCO2MassSolModule));
 
   for (iModule = 0; iModule < (iNumModules); iModule++) {
     /* Initialize all module functions pointers to point to their respective
@@ -408,6 +414,8 @@ void FinalizeModule(BODY *body,CONTROL *control,MODULE *module,int iBody) {
     module->fnFinalizeUpdateOxygenMassSol[iBody][iModule]    = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateHydrogenMassSpace[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateOxygenMassSpace[iBody][iModule]   = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCO2MassMOAtm[iBody][iModule]     = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCO2MassSol[iBody][iModule]       = &FinalizeUpdateNULL;
   }
 
 }
@@ -492,7 +500,11 @@ void AddModules(BODY *body,CONTROL *control,MODULE *module) {
       module->iaSpiNBody[iBody] = iModule;
       module->iaModule[iBody][iModule++] = SPINBODY;
     }
-
+    if (body[iBody].bMagmOc) {
+      AddModuleMagmOc(module,iBody,iModule);
+      module->iaMagmOc[iBody] = iModule;
+      module->iaModule[iBody][iModule++] = MAGMOC;
+    }
     AddModulesMulti(body,control,module,iBody,&iModule);
   }
 }
@@ -667,6 +679,7 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
     (*body)[iBody].bStellar  = 0;
     (*body)[iBody].bThermint = 0;
     (*body)[iBody].bSpiNBody = 0;
+    (*body)[iBody].bMagmOc   = 0;
   }
 }
 

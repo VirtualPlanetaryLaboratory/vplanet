@@ -144,6 +144,8 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNumOxygenMassSol = 0;
     update[iBody].iNumHydrogenMassSpace = 0;
     update[iBody].iNumOxygenMassSpace = 0;
+    update[iBody].iNumCO2MassMOAtm = 0;
+    update[iBody].iNumCO2MassSol = 0;
 
     update[iBody].iNumLostAngMom=0;
     update[iBody].iNumLostEng=0;
@@ -621,6 +623,64 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
         module->fnFinalizeUpdateOxygenMassSpace[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
+    update[iBody].iCO2MassMOAtm = -1;
+    if (update[iBody].iNumCO2MassMOAtm) {
+      update[iBody].iCO2MassMOAtm  = iVar;
+      update[iBody].iaVar[iVar]      = VCO2MASSMOATM;
+      update[iBody].iNumEqns[iVar]   = update[iBody].iNumCO2MassMOAtm;
+      update[iBody].pdVar[iVar]      = &body[iBody].dCO2MassMOAtm;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int));
+      update[iBody].iaBody[iVar]     = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int*));
+      update[iBody].iaType[iVar]     = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int));
+      update[iBody].iaModule[iVar]   = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar]       = &control->Evolve.tmpBody[iBody].dCO2MassMOAtm;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar]  = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar]    = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar]  = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar]      = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdateCO2MassMOAtm[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+    
+    update[iBody].iCO2MassSol = -1;
+    if (update[iBody].iNumCO2MassSol) {
+      update[iBody].iCO2MassSol    = iVar;
+      update[iBody].iaVar[iVar]      = VCO2MASSSOL;
+      update[iBody].iNumEqns[iVar]   = update[iBody].iNumCO2MassSol;
+      update[iBody].pdVar[iVar]      = &body[iBody].dCO2MassSol;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumCO2MassSol*sizeof(int));
+      update[iBody].iaBody[iVar]     = malloc(update[iBody].iNumCO2MassSol*sizeof(int*));
+      update[iBody].iaType[iVar]     = malloc(update[iBody].iNumCO2MassSol*sizeof(int));
+      update[iBody].iaModule[iVar]   = malloc(update[iBody].iNumCO2MassSol*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar]       = &control->Evolve.tmpBody[iBody].dCO2MassSol;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar]  = malloc(update[iBody].iNumCO2MassSol*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumCO2MassSol*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar]    = malloc(update[iBody].iNumCO2MassSol*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar]  = malloc(update[iBody].iNumCO2MassSol*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar]      = malloc(update[iBody].iNumCO2MassSol*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdateCO2MassSol[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));

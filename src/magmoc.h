@@ -19,6 +19,7 @@
 #define ALBEDOWATERATMOS          0.75   //albedo 100% water atmosphere
 #define ALBEDOROCK                0.3    //albedo bare rock
 #define WATERPARTCOEFF            0.01   //partition coeff. water between melt & solid
+#define CO2PARTCOEFF              0.002  //partition coeff. CO2 between melt & solid
 #define CRITMELTFRAC              0.4    //critical melt fraction
 #define DYNVISCLIQUID             0.01   //dynamic viscosity of liquid melt
 #define DYNVISCSOLID              3.8e9  //dynamic viscosity of solid
@@ -38,6 +39,7 @@
 #define MOLWEIGHTOXYGEN           15.999e-3   //molar weight oxygen
 #define MOLWEIGHTFEO15            79.844e-3   //molar weight FeO_1.5
 #define MOLWEIGHTFEO              71.844e-3   //molar weight FeO
+#define MOLWEIGHTCO2              44.01e-3   //molar weight CO2
 
 #define MOLWEIGHTAL2O3            0.10196
 #define MOLWEIGHTCAO              0.05608
@@ -101,6 +103,7 @@
 #define OPT_HALTALLPLANETSDESICC  2319
 #define OPT_RADIOHEATMODEL        2320
 #define OPT_MAGMOCATMMODEL        2321
+#define OPT_PRESSCO2ATM           2322
 
 void AddModuleMagmOc(MODULE*,int,int);
 void BodyCopyMagmOc(BODY*,BODY*,int,int,int);
@@ -110,6 +113,7 @@ void HelpOptionsMagmOc(OPTIONS*);
 void InitializeOptionsMagmOc(OPTIONS*,fnReadOption[]);
 void ReadMassFracFeOIni(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadWaterMassAtm(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadPressCO2Atm(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadSurfTemp(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadManMeltDensity(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadOptionsMagmOc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
@@ -171,6 +175,9 @@ void FinalizeUpdateOxygenMassSpace(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_SEMIMAJORAXIS      2328
 #define OUT_HZINNEREDGE        2329
 #define OUT_MELTFRACTION       2330
+#define OUT_CO2MASSMOATM       2331
+#define OUT_CO2MASSSOL         2332
+#define OUT_PRESSCO2ATM        2333
 
 void HelpOutputMagmOc(OUTPUT*);
 void InitializeOutputMagmOc(OUTPUT*,fnWriteOutput[]);
@@ -182,9 +189,12 @@ void WriteSurfTemp(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,cha
 void WriteSolidRadius(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteWaterMassMOAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteWaterMassSol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteCO2MassMOAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteCO2MassSol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteOxygenMassMOAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteOxygenMassSol(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WritePressWaterAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WritePressCO2Atm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WritePressOxygenAtm(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteHydrogenMassSpace(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteOxygenMassSpace(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -209,6 +219,8 @@ double fdDSurfTemp(BODY*, SYSTEM*, int*);
 double fdDSolidRadius(BODY*, SYSTEM*, int*);
 double fdDWaterMassSol(BODY*, SYSTEM*, int*);
 double fdDWaterMassMOAtm(BODY*, SYSTEM*, int*);
+double fdDCO2MassSol(BODY*, SYSTEM*, int*);
+double fdDCO2MassMOAtm(BODY*, SYSTEM*, int*);
 double fdDOxygenMassSol(BODY*, SYSTEM*, int*);
 double fdDOxygenMassMOAtm(BODY*, SYSTEM*, int*);
 double fdDHydrogenMassSpace(BODY*, SYSTEM*, int*);

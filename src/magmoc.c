@@ -26,6 +26,8 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dOxygenMassSol        = src[iBody].dOxygenMassSol;
   dest[iBody].dHydrogenMassSpace    = src[iBody].dHydrogenMassSpace;
   dest[iBody].dOxygenMassSpace      = src[iBody].dOxygenMassSpace;
+  dest[iBody].dCO2MassMOAtm         = src[iBody].dCO2MassMOAtm;
+  dest[iBody].dCO2MassSol           = src[iBody].dCO2MassSol;
   /* Input variables */
 	dest[iBody].dCoreRadius           = src[iBody].dCoreRadius;
 	dest[iBody].dWaterMassAtm         = src[iBody].dWaterMassAtm;
@@ -115,6 +117,26 @@ void ReadWaterMassAtm(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
   } else {
     if (iFile > 0) {  //if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile-1].dWaterMassAtm = options->dDefault;
+    }
+  }
+}
+
+/* CO2 pressure */
+void ReadPressCO2Atm(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) {  //if input value lt 0
+      body[iFile-1].dPressCO2Atm = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    }
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0) {  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dPressCO2Atm = options->dDefault;
     }
   }
 }
@@ -336,6 +358,18 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_WATERMASSATM].cNeg,"Terrestrial Oceans");
   fnRead[OPT_WATERMASSATM] = &ReadWaterMassAtm;
 
+  /* CO2 */
+
+  sprintf(options[OPT_PRESSCO2ATM].cName,"dPressCO2Atm");
+  sprintf(options[OPT_PRESSCO2ATM].cDescr,"Initial CO2 pressure in the atmosphere");
+  sprintf(options[OPT_PRESSCO2ATM].cDefault,"0 bar");
+  options[OPT_PRESSCO2ATM].iType = 2;
+  options[OPT_PRESSCO2ATM].iMultiFile = 1;
+  options[OPT_PRESSCO2ATM].dNeg = 1e5; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
+  options[OPT_PRESSCO2ATM].dDefault = 0;
+  sprintf(options[OPT_PRESSCO2ATM].cNeg,"bar");
+  fnRead[OPT_PRESSCO2ATM] = &ReadPressCO2Atm;
+
   /* Temperature */
 
   sprintf(options[OPT_SURFTEMP].cName,"dSurfTemp");
@@ -442,6 +476,10 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   body[iBody].dAlbedo          = ALBEDOWATERATMOS;
   body[iBody].dGravAccelSurf   = BIGG * body[iBody].dMass / pow(body[iBody].dRadius,2);
   body[iBody].dFracFe2O3Man    = 0;
+
+  // CO2
+  body[iBody].dCO2MassMOAtm    = body[iBody].dPressCO2Atm * 4*PI*pow(body[iBody].dRadius,2)/body[iBody].dGravAccelSurf; // initial CO2 mass in MO&Atm is equal to inital CO2 mass in atmosphere
+  body[iBody].dCO2MassSol      = 0; // initial water mass in solid = 0
 
   // initialize water pressure in atmosphere to avoid deviding by 0. Use 1 % of initial water mass
   body[iBody].dPressWaterAtm   = body[iBody].dWaterMassAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
@@ -881,13 +919,18 @@ void fndWaterFracMelt(BODY *body, int iBody) {
   }
 
   /* Get water pressure and water mass in the atmosphere */
-  if (body[iBody].bPlanetDesiccated || body[iBody].dPressWaterAtm <= PRESSWATERMIN){
-    body[iBody].dPartialPressWaterAtm = 0;
-    body[iBody].dPressWaterAtm        = 0;
-  } else {
-    dAveMolarMassAtm = (MOLWEIGHTWATER * body[iBody].dPressWaterAtm + MOLWEIGHTOXYGEN * body[iBody].dPressOxygenAtm)/(body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm);
-    body[iBody].dPartialPressWaterAtm = pow((body[iBody].dWaterFracMelt/3.44e-8),1/0.74);
+  // if (body[iBody].bPlanetDesiccated || body[iBody].dPressWaterAtm <= PRESSWATERMIN){
+  //   body[iBody].dPartialPressWaterAtm = 0;
+  //   body[iBody].dPressWaterAtm        = 0;
+  // } else {
+  if ((body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm + body[iBody].dPressCO2Atm) > 1) {
+    dAveMolarMassAtm = (MOLWEIGHTWATER * body[iBody].dPressWaterAtm + 2*MOLWEIGHTOXYGEN * body[iBody].dPressOxygenAtm + MOLWEIGHTCO2 * body[iBody].dPressCO2Atm)/(body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm + body[iBody].dPressCO2Atm);
+    body[iBody].dPartialPressWaterAtm = pow((body[iBody].dWaterFracMelt/3.44e-8),1/0.74); // Schaefer+ (2016), Eq. 19
     body[iBody].dPressWaterAtm        = body[iBody].dPartialPressWaterAtm * MOLWEIGHTWATER / dAveMolarMassAtm;
+
+
+    body[iBody].dPartialPressCO2Atm = pow(((100*body[iBody].dCO2FracMelt-0.05)/2.08e-4),1/0.45); // Elkins-Tanton (2008), Eq. 4
+    body[iBody].dPressCO2Atm        = body[iBody].dPartialPressWaterAtm * MOLWEIGHTWATER / dAveMolarMassAtm;
   }
 }
 
@@ -1149,6 +1192,25 @@ void VerifyWaterMassSol(BODY *body, OPTIONS *options, UPDATE *update, double dAg
   update[iBody].pdDWaterMassSol = &update[iBody].daDerivProc[update[iBody].iWaterMassSol][0];
 }
 
+void VerifyCO2MassMOAtm(BODY *body, OPTIONS *options, UPDATE *update, double dAge, int iBody) {
+  update[iBody].iaType[update[iBody].iCO2MassMOAtm][0]     = 1;
+  update[iBody].iNumBodies[update[iBody].iCO2MassMOAtm][0] = 1;
+  update[iBody].iaBody[update[iBody].iCO2MassMOAtm][0]     = malloc(update[iBody].iNumBodies[update[iBody].iCO2MassMOAtm][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iCO2MassMOAtm][0][0]  = iBody;
+
+  update[iBody].pdDCO2MassMOAtm = &update[iBody].daDerivProc[update[iBody].iCO2MassMOAtm][0];
+}
+
+void VerifyCO2MassSol(BODY *body, OPTIONS *options, UPDATE *update, double dAge, int iBody) {
+  update[iBody].iaType[update[iBody].iCO2MassSol][0]     = 1;
+  update[iBody].iNumBodies[update[iBody].iCO2MassSol][0] = 1;
+  update[iBody].iaBody[update[iBody].iCO2MassSol][0]     = malloc(update[iBody].iNumBodies[update[iBody].iCO2MassSol][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iCO2MassSol][0][0]  = iBody;
+
+  update[iBody].pdDCO2MassSol = &update[iBody].daDerivProc[update[iBody].iCO2MassSol][0];
+}
+
+
 void VerifyOxygenMassMOAtm(BODY *body, OPTIONS *options, UPDATE *update, double dAge, int iBody) {
   update[iBody].iaType[update[iBody].iOxygenMassMOAtm][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iOxygenMassMOAtm][0] = 1;
@@ -1192,6 +1254,8 @@ void AssignMagmOcDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
   fnUpdate[iBody][update[iBody].iSolidRadius][0]      = &fdDSolidRadius;
   fnUpdate[iBody][update[iBody].iWaterMassMOAtm][0]   = &fdDWaterMassMOAtm;
   fnUpdate[iBody][update[iBody].iWaterMassSol][0]     = &fdDWaterMassSol;
+  fnUpdate[iBody][update[iBody].iCO2MassMOAtm][0]     = &fdDCO2MassMOAtm;
+  fnUpdate[iBody][update[iBody].iCO2MassSol][0]       = &fdDCO2MassSol;
   fnUpdate[iBody][update[iBody].iOxygenMassMOAtm][0]  = &fdDOxygenMassMOAtm;
   fnUpdate[iBody][update[iBody].iOxygenMassSol][0]    = &fdDOxygenMassSol;
   fnUpdate[iBody][update[iBody].iHydrogenMassSpace][0] = &fdDHydrogenMassSpace;
@@ -1206,6 +1270,8 @@ void NullMagmOcDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVari
   fnUpdate[iBody][update[iBody].iSolidRadius][0]      = &fndUpdateFunctionTiny;
   fnUpdate[iBody][update[iBody].iWaterMassMOAtm][0]   = &fndUpdateFunctionTiny;
   fnUpdate[iBody][update[iBody].iWaterMassSol][0]     = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iCO2MassMOAtm][0]     = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iCO2MassSol][0]       = &fndUpdateFunctionTiny;
   fnUpdate[iBody][update[iBody].iOxygenMassMOAtm][0]  = &fndUpdateFunctionTiny;
   fnUpdate[iBody][update[iBody].iOxygenMassSol][0]    = &fndUpdateFunctionTiny;
   fnUpdate[iBody][update[iBody].iHydrogenMassSpace][0] = &fndUpdateFunctionTiny;
@@ -1219,6 +1285,8 @@ void VerifyMagmOc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   VerifySolidRadius(body, options, update, body[iBody].dAge, iBody);
   VerifyWaterMassMOAtm(body, options, update, body[iBody].dAge, iBody);
   VerifyWaterMassSol(body, options, update, body[iBody].dAge, iBody);
+  VerifyCO2MassMOAtm(body, options, update, body[iBody].dAge, iBody);
+  VerifyCO2MassSol(body, options, update, body[iBody].dAge, iBody);
   VerifyOxygenMassMOAtm(body, options, update, body[iBody].dAge, iBody);
   VerifyOxygenMassSol(body, options, update, body[iBody].dAge, iBody);
   VerifyHydrogenMassSpace(body, options, update, body[iBody].dAge, iBody);
@@ -1253,6 +1321,14 @@ void InitializeUpdateMagmOc(BODY *body,UPDATE *update,int iBody) {
     if (update[iBody].iNumWaterMassSol == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumWaterMassSol++;
+
+    if (update[iBody].iNumCO2MassMOAtm == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumCO2MassMOAtm++;
+
+    if (update[iBody].iNumCO2MassSol == 0)
+      update[iBody].iNumVars++;
+    update[iBody].iNumCO2MassSol++;
 
     if (update[iBody].iNumOxygenMassMOAtm == 0)
       update[iBody].iNumVars++;
@@ -1460,6 +1536,28 @@ void WriteWaterMassSol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
   }
 }
 
+void WriteCO2MassMOAtm(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dCO2MassMOAtm;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass,cUnit);
+  }
+}
+
+void WriteCO2MassSol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dCO2MassSol;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass,cUnit);
+  }
+}
+
 void WriteOxygenMassMOAtm(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dOxygenMassMOAtm;
   if (output->bDoNeg[iBody]) {
@@ -1484,6 +1582,14 @@ void WriteOxygenMassSol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
 
 void WritePressWaterAtm(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dPressWaterAtm;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
+void WritePressCO2Atm(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dPressCO2Atm;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1644,6 +1750,24 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_WATERMASSSOL].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_WATERMASSSOL] = &WriteWaterMassSol;
 
+  sprintf(output[OUT_CO2MASSMOATM].cName,"CO2MassMOAtm");
+  sprintf(output[OUT_CO2MASSMOATM].cDescr,"CO2 mass in magma ocean and atmosphere");
+  sprintf(output[OUT_CO2MASSMOATM].cNeg,"kg");
+  output[OUT_CO2MASSMOATM].bNeg = 1;
+  output[OUT_CO2MASSMOATM].dNeg = 1; // division factor to get from SI to desired unit
+  output[OUT_CO2MASSMOATM].iNum = 1;
+  output[OUT_CO2MASSMOATM].iModuleBit = MAGMOC; //name of module
+  fnWrite[OUT_CO2MASSMOATM] = &WriteCO2MassMOAtm;
+
+  sprintf(output[OUT_CO2MASSSOL].cName,"CO2MassSol");
+  sprintf(output[OUT_CO2MASSSOL].cDescr,"CO2 mass in solidified mantle");
+  sprintf(output[OUT_CO2MASSSOL].cNeg,"kg");
+  output[OUT_CO2MASSSOL].bNeg = 1;
+  output[OUT_CO2MASSSOL].dNeg = 1; // division factor to get from SI to desired unit
+  output[OUT_CO2MASSSOL].iNum = 1;
+  output[OUT_CO2MASSSOL].iModuleBit = MAGMOC; //name of module
+  fnWrite[OUT_CO2MASSSOL] = &WriteCO2MassSol;
+
   sprintf(output[OUT_OXYGENMASSMOATM].cName,"OxygenMassMOAtm");
   sprintf(output[OUT_OXYGENMASSMOATM].cDescr,"Oxygen mass in magma ocean and atmosphere");
   sprintf(output[OUT_OXYGENMASSMOATM].cNeg,"kg");
@@ -1670,6 +1794,15 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PRESSWATERATM].iNum = 1;
   output[OUT_PRESSWATERATM].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_PRESSWATERATM] = &WritePressWaterAtm;
+
+  sprintf(output[OUT_PRESSCO2ATM].cName,"PressCO2Atm");
+  sprintf(output[OUT_PRESSCO2ATM].cDescr,"CO2 pressure in atmosphere");
+  sprintf(output[OUT_PRESSCO2ATM].cNeg,"bar");
+  output[OUT_PRESSCO2ATM].bNeg = 1;
+  output[OUT_PRESSCO2ATM].dNeg = 1/1e5; // division factor to get from SI to desired unit
+  output[OUT_PRESSCO2ATM].iNum = 1;
+  output[OUT_PRESSCO2ATM].iModuleBit = MAGMOC; //name of module
+  fnWrite[OUT_PRESSCO2ATM] = &WritePressCO2Atm;
 
   sprintf(output[OUT_PRESSOXYGENATM].cName,"PressOxygenAtm");
   sprintf(output[OUT_PRESSOXYGENATM].cDescr,"Oxygen pressure in atmosphere");
@@ -1791,6 +1924,16 @@ void FinalizeUpdateWaterMassSol(BODY *body,UPDATE*update,int *iEqn,int iVar,int 
   update[iBody].iWaterMassSolMagmOc = (*iEqn)++;
 }
 
+void FinalizeUpdateCO2MassMOAtm(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = MAGMOC;
+  update[iBody].iCO2MassMOAtmMagmOc = (*iEqn)++;
+}
+
+void FinalizeUpdateCO2MassSol(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = MAGMOC;
+  update[iBody].iCO2MassSolMagmOc = (*iEqn)++;
+}
+
 void FinalizeUpdateOxygenMassMOAtm(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = MAGMOC;
   update[iBody].iOxygenMassMOAtmMagmOc = (*iEqn)++;
@@ -1854,9 +1997,11 @@ void AddModuleMagmOc(MODULE *module,int iBody,int iModule) {
   module->fnFinalizeUpdateSolidRadius[iBody][iModule]     = &FinalizeUpdateSolidRadius;
   module->fnFinalizeUpdateWaterMassMOAtm[iBody][iModule]  = &FinalizeUpdateWaterMassMOAtm;
   module->fnFinalizeUpdateWaterMassSol[iBody][iModule]    = &FinalizeUpdateWaterMassSol;
+  module->fnFinalizeUpdateCO2MassMOAtm[iBody][iModule]    = &FinalizeUpdateCO2MassMOAtm;
+  module->fnFinalizeUpdateCO2MassSol[iBody][iModule]      = &FinalizeUpdateCO2MassSol;
   module->fnFinalizeUpdateOxygenMassMOAtm[iBody][iModule] = &FinalizeUpdateOxygenMassMOAtm;
   module->fnFinalizeUpdateOxygenMassSol[iBody][iModule]   = &FinalizeUpdateOxygenMassSol;
-  module->fnFinalizeUpdateHydrogenMassSpace[iBody][iModule]   = &FinalizeUpdateHydrogenMassSpace;
+  module->fnFinalizeUpdateHydrogenMassSpace[iBody][iModule] = &FinalizeUpdateHydrogenMassSpace;
   module->fnFinalizeUpdateOxygenMassSpace[iBody][iModule]   = &FinalizeUpdateOxygenMassSpace;
   /* HERE */
 
@@ -1904,6 +2049,14 @@ double fdDWaterMassMOAtm(BODY *body, SYSTEM *system, int *iaBody) {
     return 0;
   }
   return body[iaBody[0]].dWaterMassEsc - fdDWaterMassSol(body,system,iaBody);
+}
+
+double fdDCO2MassSol(BODY *body, SYSTEM *system, int *iaBody) {
+  return 4*PI*body[iaBody[0]].dManMeltDensity*CO2PARTCOEFF*body[iaBody[0]].dCO2FracMelt*pow(body[iaBody[0]].dSolidRadius,2)*fdDSolidRadius(body,system,iaBody);
+}
+
+double fdDCO2MassMOAtm(BODY *body, SYSTEM *system, int *iaBody) {
+  return - fdDWaterMassSol(body,system,iaBody);
 }
 
 double fdDOxygenMassSol(BODY *body, SYSTEM *system, int *iaBody) {

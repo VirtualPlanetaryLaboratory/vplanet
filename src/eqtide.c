@@ -3077,17 +3077,16 @@ void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
     iIndex = body[iBody].iaTidePerts[iPert];
-    if (bPrimary(body,iIndex))
+    if (bPrimary(body,iIndex)) {
       iOrbiter = iBody;
-    else
+    } else {
       iOrbiter = iIndex;
+    }
 
     /* If tidally locked, assign equilibrium rotational frequency? */
-    if (evolve->bForceEqSpin[iBody])
+    if (evolve->bForceEqSpin[iBody]) {
       body[iBody].dRotRate = fdEqRotRate(body,iBody,body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
-
-    if (iBody > 0)
-      PropsAuxOrbiterCTL(body,update,iBody);
+    }
   }
 
   if (iBody == 0) {
@@ -3105,6 +3104,7 @@ void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     fdaCTLZ(body,body[iBody].dSemi,iBody,0);
     body[iBody].dTidalBeta[0] = fdCTLBeta(body[iBody].dEcc);
     fdaChi(body,body[iBody].dMeanMotion,body[iBody].dSemi,iBody,0);
+    PropsAuxOrbiterCTL(body,update,iBody);
   }
 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
@@ -3638,16 +3638,26 @@ double fdCTLDsemiDt(BODY *body,SYSTEM *system,int *iaBody) {
 }
 
 double fdCTLDeccDt(BODY *body,UPDATE *update,int *iaBody) {
-  /* This routine should only be called for the orbiters. iaBody[0] = the orbiter, iaBody[1] = central body */
+  /* This routine should only be called for the orbiters.
+     iaBody[0] = the orbiter, iaBody[1] = central body */
   double dSum=0;
 
   // Contribution from orbiter
-  dSum += body[iaBody[0]].dTidalZ[iaBody[1]]*(cos(body[iaBody[0]].dObliquity)*body[iaBody[0]].dTidalF[iaBody[1]][3]*body[iaBody[0]].dRotRate/(pow(body[iaBody[0]].dTidalBeta[iaBody[1]],10)*body[iaBody[0]].dMeanMotion) - 18*body[iaBody[0]].dTidalF[iaBody[1]][2]/(11*pow(body[iaBody[0]].dTidalBeta[iaBody[1]],13)));
+  dSum += body[iaBody[0]].dTidalZ[iaBody[1]]*(cos(body[iaBody[0]].dObliquity)*
+    body[iaBody[0]].dTidalF[iaBody[1]][3]*body[iaBody[0]].dRotRate/
+    (pow(body[iaBody[0]].dTidalBeta[iaBody[1]],10)*body[iaBody[0]].dMeanMotion)
+    - 18*body[iaBody[0]].dTidalF[iaBody[1]][2]/(11*
+    pow(body[iaBody[0]].dTidalBeta[iaBody[1]],13)));
 
   // Contribution from central body
-  dSum += body[iaBody[1]].dTidalZ[iaBody[0]]*(cos(body[iaBody[1]].dObliquity)*body[iaBody[0]].dTidalF[iaBody[1]][3]*body[iaBody[1]].dRotRate/(pow(body[iaBody[0]].dTidalBeta[iaBody[1]],10)*body[iaBody[0]].dMeanMotion) - 18*body[iaBody[0]].dTidalF[iaBody[1]][2]/(11*pow(body[iaBody[0]].dTidalBeta[iaBody[1]],13)));
+  dSum += body[iaBody[1]].dTidalZ[iaBody[0]]*(cos(body[iaBody[1]].dObliquity)*
+    body[iaBody[0]].dTidalF[iaBody[1]][3]*body[iaBody[1]].dRotRate/
+    (pow(body[iaBody[0]].dTidalBeta[iaBody[1]],10)*body[iaBody[0]].dMeanMotion)
+    - 18*body[iaBody[0]].dTidalF[iaBody[1]][2]/(11*
+    pow(body[iaBody[0]].dTidalBeta[iaBody[1]],13)));
 
-  return 11*body[iaBody[0]].dSemi*body[iaBody[0]].dEcc/(2*BIGG*body[iaBody[0]].dMass*body[iaBody[1]].dMass)*dSum;
+  return 11*body[iaBody[0]].dSemi*body[iaBody[0]].dEcc/(2*BIGG*
+    body[iaBody[0]].dMass*body[iaBody[1]].dMass)*dSum;
 }
 
 double fdCTLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {

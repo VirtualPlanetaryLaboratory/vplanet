@@ -805,7 +805,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   int i, iEqn;
   int n;
   double dSigma, dDMR, dStarR, dGasR, dCurrentAge;
-  char cOut[NAMELEN];
+  char cOut[3*NAMELEN];
   FILE *fOut;
 
   srand(system->iSeed);
@@ -1536,7 +1536,7 @@ void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 void ForceBehaviorGalHabit(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   double dp, dkzi, dVMax, dCurrentAge, dMeanATmp, C;
   double sinw, cosw, cosw_alt, sign;
-  char cOut[NAMELEN];
+  char cOut[3*NAMELEN];
   int idr;
   FILE *fOut;
 

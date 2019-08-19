@@ -2167,7 +2167,7 @@ void WritePeakInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 
 void WriteDailyInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  char cOut[NAMELEN];
+  char cOut[3*NAMELEN];
   FILE *fp;
   int iLat,iDay;
   double dTime;
@@ -2199,7 +2199,7 @@ void WriteDailyInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 }
 
 void WritePlanckB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  char cOut[NAMELEN];
+  char cOut[3*NAMELEN];
   FILE *fp;
   int iLat,iDay;
   double dTime;
@@ -2231,7 +2231,7 @@ void WritePlanckB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
 }
 
 void WriteSeasonalTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  char cOut[NAMELEN];
+  char cOut[3*NAMELEN];
   FILE *fp;
   int iLat,iDay;
 
@@ -2266,7 +2266,7 @@ void WriteSeasonalTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 }
 
 void WriteSeasonalFluxes(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  char cOutM[NAMELEN], cOutI[NAMELEN], cOutO[NAMELEN], cOutD[NAMELEN];
+  char cOutM[3*NAMELEN], cOutI[3*NAMELEN], cOutO[3*NAMELEN], cOutD[3*NAMELEN];
   FILE *fpM, *fpI, *fpO, *fpD ;
   int iLat,iDay;
 
@@ -2329,7 +2329,7 @@ void WriteSeasonalFluxes(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
 }
 
 void WriteSeasonalIceBalance(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  char cOut[NAMELEN];
+  char cOut[3*NAMELEN];
   FILE *fp;
   int iLat,iDay;
 

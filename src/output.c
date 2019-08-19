@@ -407,7 +407,7 @@ void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
     else
       *dTmp = -1;
   }
-  sprintf(cUnit,"");
+  sprintf(cUnit,"%s","");
 }
 
 void WriteLostEng(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -531,7 +531,7 @@ void WriteRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 
 void WriteRadGyra(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dRadGyra;
-  sprintf(cUnit,"");
+  sprintf(cUnit,"%s","");
 }
 
 void WriteRotAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -1706,7 +1706,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
   int iBody,iCol,iOut,iSubOut,iExtra=0,iGrid,iLat,jBody,j;
   double dCol[NUMOPT],*dTmp,dGrid[NUMOPT];
   FILE *fp;
-  char cUnit[OPTLEN], cPoiseGrid[NAMELEN], cLaplaceFunc[NAMELEN];
+  char cUnit[OPTLEN], cPoiseGrid[3*NAMELEN], cLaplaceFunc[3*NAMELEN];
 
   /* Write out all data columns for each body. As some data may span more than
      1 column, we search the input list sequentially, adding iExtra to the

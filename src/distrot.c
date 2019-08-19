@@ -1025,7 +1025,7 @@ void WriteDynEllip(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     *dTmp = body[iBody].dDynEllip;
   else
     *dTmp = -1;
-  sprintf(cUnit,"");
+  sprintf(cUnit,"%s","");
 }
 
 void WritePrecFNat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {

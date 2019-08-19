@@ -42,6 +42,7 @@ vplanet.egg-info
 gcov/*
 *.o
 *.so
+valgrind.log
 
 # Documentation
 docs/.build

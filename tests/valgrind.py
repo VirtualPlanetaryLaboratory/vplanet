@@ -12,11 +12,12 @@ os.chdir('..')
 subprocess.run(['make debug >& /dev/null'], shell=True)
 os.chdir('tests')
 
-print(' done.')
+print('done.')
 for sub in subdir:
     print(sub)
     os.chdir(sub)
-    subprocess.run(['valgrind --track-origins=yes ../../vplanet vpl.in >& valgrind.log'], shell=True)
+    cmd = 'valgrind --track-origins=yes ../../vplanet vpl.in >& '+sub+'.valgrind'
+    subprocess.run(cmd, shell=True)
     os.chdir('..')
 
 print('Done!')

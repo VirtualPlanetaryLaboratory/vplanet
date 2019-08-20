@@ -1174,6 +1174,9 @@ void LogBodyBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
   for (iOut=OUTSTARTBINARY;iOut<OUTENDBINARY;iOut++) {
     if (output[iOut].iNum > 0) {
+      //Useful for debugging
+      printf("%d\n",iOut);
+      fflush(stdout);
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
     }
   }

@@ -163,7 +163,16 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
    //if (body[iBody].bSpiNBody)
     //Bary2OrbElems(body,control->Evolve.iNumBodies);
 
-   *dTmp = fdInstellation(body,iBody);
+   // Must take care since only bodies orbiting a star can have an instellation
+   if (iBody == 0) {
+     *dTmp = -1;
+   } else {
+     if (body[iBody].bStellar) {
+       *dTmp = fdInstellation(body,iBody);
+     } else {
+       *dTmp = -1;
+     }
+   }
 
    if (output->bDoNeg[iBody]) {
      *dTmp *= output->dNeg;
@@ -1607,13 +1616,17 @@ void LogOptions(CONTROL *control,FILES *files,MODULE *module,SYSTEM *system,FILE
   }
 }
 
-void LogSystem(BODY *body,CONTROL *control,MODULE *module,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
+void LogSystem(BODY *body,CONTROL *control,MODULE *module,OUTPUT *output,
+    SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
   int iOut,iModule;
 
   fprintf(fp,"SYSTEM PROPERTIES ----\n");
 
   for (iOut=OUTSTART;iOut<OUTBODYSTART;iOut++) {
     if (output[iOut].iNum > 0) {
+      //Useful for debugging
+      //printf("%d\n",iOut);
+      //fflush(stdout);
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,0);
     }
   }
@@ -1637,10 +1650,9 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       if (output[iOut].iNum > 0) {
 	       if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
-	          /* Useful for debugging
-	           printf("%d %d\n",iBody,iOut);
-	           fflush(stdout);
-             */
+	         //Useful for debugging
+	         //printf("%d %d\n",iBody,iOut);
+	         //fflush(stdout);
 	         WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
 	       }
       }

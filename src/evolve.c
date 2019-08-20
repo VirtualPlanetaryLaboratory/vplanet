@@ -130,7 +130,11 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
              timestep selection - dflemin3
            */
            } else if (update[iBody].iaType[iVar][0] == 5) {
-             continue;
+             //continue;
+             for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+               update[iBody].daDerivProc[iVar][iEqn] =
+                 fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+             }
 
            /* Integration for binary, where parameters can be computed via derivatives,
            or as an explicit function of age */
@@ -365,7 +369,6 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   /* First midpoint derivative.*/
   PropertiesAuxiliary(evolve->tmpBody,control,update);
 
-  /* Don't need this timestep info, so assign output to dFoo */
   fdGetUpdateInfo(evolve->tmpBody,control,system,evolve->tmpUpdate,fnUpdate);
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
@@ -416,6 +419,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
       }
     }
   }
+
   /* Full step derivative */
   PropertiesAuxiliary(evolve->tmpBody,control,update);
 

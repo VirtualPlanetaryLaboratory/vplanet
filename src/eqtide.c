@@ -832,40 +832,12 @@ void VerifyRotationEqtideWarning(char cName1[],char cName2[],char cFile[],int iL
 }
 
 void VerifyLostEngEqtide(BODY *body,UPDATE *update, CONTROL *control,OPTIONS *options,int iBody) {
-
-/* XXX I think this old way doesn't depend on tidal model
-  if (control->Evolve.iEqtideModel == CPL) {
-    update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 5;
-    update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
-    update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide]*sizeof(int));
-    update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide][0] = iBody;
-
-    update[iBody].pdLostEngEqtide = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngEqtide];
-  }
-  else if (control->Evolve.iEqtideModel == CTL) {
-    update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 5;
-    update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
-    update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide]*sizeof(int));
-    update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide][0] = iBody;
-
-    update[iBody].pdLostEngEqtide = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngEqtide];
-  } else if (control->Evolve.iEqtideModel == DB15) {
-    if (control->Io.iVerbose > VERBPROG) {
-      printf("WARNING: Angular momentum conservation is not checked for EqTide model DB15.\n");
-    }
-  } else {
-    fprintf(stderr,"ERROR: Must choose CPL or CTL tidal model!\n");
-    exit(1);
-  }
-*/
-
   update[iBody].iaType[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 5;
   update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = 1;
   update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide] = malloc(update[iBody].iNumBodies[update[iBody].iLostEng][update[iBody].iLostEngEqtide]*sizeof(int));
   update[iBody].iaBody[update[iBody].iLostEng][update[iBody].iLostEngEqtide][0] = iBody;
 
   update[iBody].pdLostEngEqtide = &update[iBody].daDerivProc[update[iBody].iLostEng][update[iBody].iLostEngEqtide];
-
 }
 
 void VerifyRotationEqtide(BODY *body,CONTROL *control, UPDATE *update, OPTIONS *options,char cFile[],int iBody) {
@@ -3123,11 +3095,12 @@ void PropsAuxDB15(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 }
 
 /*! Lost energy due to tidal heating in the CPL model. */
-double fdDEdTCPLEqtide(BODY *body,SYSTEM *system,int *iaBody)
-{
+double fdDEdTCPLEqtide(BODY *body,SYSTEM *system,int *iaBody) {
   int iBody = iaBody[0];
+  double dDEDt;
 
-  return fdCPLTidePower(body,iBody);
+  dDEDt = fdCPLTidePower(body,iBody);
+  return dDEDt;
 }
 
 
@@ -3883,6 +3856,13 @@ void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT
     InitializeZoblEqtide(body,update,iBody,iPert);
     /* Rotation Rate */
     InitializeRotEqtide(body,update,iBody,iPert);
+
+    /* Although obliquity is not in the orbit-only model, initialize it to avoid
+      any memory issues. */
+    iIndex = body[iBody].iaTidePerts[iPert];
+    body[iBody].daDoblDtEqtide[iIndex] = fdCTLDoblDt(body,update[iBody].iaBody[update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]]);
+
+    }
   }
 
   /* Is this the secondary body, and hence we assign da/dt and de/dt? */

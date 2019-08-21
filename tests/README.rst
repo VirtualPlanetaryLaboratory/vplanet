@@ -26,4 +26,4 @@ To check for memory issues with valgrind, run
 
   python valgrind.py
   
-which will test each directory.
+which will test each directory, creating a file called *.valgrind that contains the output.

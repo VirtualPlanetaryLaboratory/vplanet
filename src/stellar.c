@@ -631,8 +631,6 @@ void NullStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVar
 }
 
 void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
-  int bStellar=0;
-
   /* Stellar is active for this body if this subroutine is called. */
 
   if (update[iBody].iNumLuminosity > 1) {
@@ -641,7 +639,6 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     exit(EXIT_INPUT);
   }
   VerifyLuminosity(body,control,options,update,body[iBody].dAge,iBody);
-  bStellar = 1;
 
   if (update[iBody].iNumRadius > 1) {
     if (control->Io.iVerbose >= VERBERR)
@@ -681,11 +678,11 @@ void InitializeModuleStellar(CONTROL *control,MODULE *module) {
 /**************** STELLAR update ****************/
 
 void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {
-  if (body[iBody].dLuminosity > 0) {
+  //if (body[iBody].dLuminosity > 0) {
     if (update[iBody].iNumLuminosity == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumLuminosity++;
-  }
+  //}
 
   if (body[iBody].dRadius > 0) {
     if (update[iBody].iNumRadius == 0)
@@ -699,7 +696,7 @@ void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumRadGyra++;
   }
 
-  // NOTE: Rory and I decided to ALWAYS track the rotation evolution of the star,
+  // NOTE: Rory and Rodrigo decided to ALWAYS track the rotation evolution of the star,
   // so I'm not going to check whether dRotRate is zero here. If it is, it gets set
   // to its default value, and we track angular momentum conservation from there.
   if (update[iBody].iNumRot == 0)

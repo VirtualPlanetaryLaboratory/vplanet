@@ -79,6 +79,7 @@
 #define OPT_LONGA               563
 #define OPT_GRCORR              564
 #define OPT_LUMINOSITY          575 /**< (Initial) luminosity */
+#define OPT_TIDALQ              577
 
 #define OPT_OBL	                640
 #define OPT_OUTDIGITS           570

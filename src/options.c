@@ -1981,9 +1981,10 @@ void ReadLXUV(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
   if (lTmp >= 0) {
     fprintf(stderr,"ERROR: Option %s is not currently supported.\n",options->cName);
     exit(EXIT_INPUT);
-  } else
+  } else {
     if (iFile > 0)
       body[iFile-1].dLXUV = options->dDefault;
+    }
 }
 
 /*
@@ -2779,6 +2780,29 @@ void ReadSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
       body[iFile-1].dSurfaceWaterMass = options->dDefault;
 }
 
+/* Tidal Q */
+
+void ReadTidalQ(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+
+    body[iFile-1].dTidalQ = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      body[iFile-1].dTidalQ = options->dDefault;
+  }
+}
 
 void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,fnReadOption fnRead[]) {
   /* Now get all other options, if not in MODULE mode */

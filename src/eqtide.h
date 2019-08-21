@@ -37,7 +37,6 @@
 #define OPT_TIDEMODEL           1040
 #define OPT_TIDEPERTS           1042
 #define OPT_TIDALTAU            1045
-#define OPT_TIDALQ              1050
 #define OPT_TIDALQOCEAN         1051
 #define OPT_OCEANTIDES          1052
 #define OPT_TIDALQENV           1053

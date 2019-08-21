@@ -1306,9 +1306,15 @@ void WriteBodyDSincDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+    if (body[iBody].dPinc !=0 && body[iBody].dQinc != 0 &&
+      *(update[iBody].padDPincDtDistOrb[iPert]) != 0 &&
+      *(update[iBody].padDQincDtDistOrb[iPert]) ) {
     dDeriv += 1./sqrt(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*(body[iBody].dPinc*(*(update[iBody].padDPincDtDistOrb[iPert]))+body[iBody].dQinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
-
+    } else {
+      dDeriv = 0;
+    }
+  }
   *dTmp = dDeriv;
 
   if (output->bDoNeg[iBody]) {
@@ -1348,9 +1354,15 @@ void WriteBodyDLongADtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
-    dDeriv += 1./(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*(body[iBody].dQinc*(*(update[iBody].padDPincDtDistOrb[iPert]))-body[iBody].dPinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
-
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+    if (body[iBody].dPinc !=0 && body[iBody].dQinc != 0 &&
+      *(update[iBody].padDPincDtDistOrb[iPert]) != 0 &&
+      *(update[iBody].padDQincDtDistOrb[iPert]) ) {
+        dDeriv += 1./(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*(body[iBody].dQinc*(*(update[iBody].padDPincDtDistOrb[iPert]))-body[iBody].dPinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
+    } else {
+      dDeriv = 0;
+    }
+  }
   *dTmp = dDeriv;
 
   if (output->bDoNeg[iBody]) {
@@ -1364,15 +1376,26 @@ void WriteBodyDLongADtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
   }
 }
 
-void WriteBodyDIncDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDIncDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM
+    *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
   int iPert;
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
-    dDeriv += 2./sqrt((1-(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc))*(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc))*(body[iBody].dPinc*(*(update[iBody].padDPincDtDistOrb[iPert]))+body[iBody].dQinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
-
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+    if (body[iBody].dPinc !=0 && body[iBody].dQinc != 0 &&
+      *(update[iBody].padDPincDtDistOrb[iPert]) != 0 &&
+      *(update[iBody].padDQincDtDistOrb[iPert]) ) {
+        dDeriv += 2./sqrt((1-(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*
+          body[iBody].dQinc))*(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc
+          *body[iBody].dQinc))*(body[iBody].dPinc*
+          (*(update[iBody].padDPincDtDistOrb[iPert]))+body[iBody].dQinc*
+          (*(update[iBody].padDQincDtDistOrb[iPert])));
+    } else {
+      dDeriv = 0;
+    }
+  }
   *dTmp = dDeriv;
 
   if (output->bDoNeg[iBody]) {

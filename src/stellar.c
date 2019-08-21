@@ -219,24 +219,6 @@ void ReadHZModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
       body[iFile-1].iHZModel = HZ_MODEL_KOPPARAPU;
 }
 
-void ReadLuminosity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile-1].dLuminosity = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else
-      body[iFile-1].dLuminosity = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dLuminosity = options->dDefault;
-}
-
 void ReadTemperature(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -380,16 +362,6 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HZMODEL].iType = 3;
   options[OPT_HZMODEL].iMultiFile = 1;
   fnRead[OPT_HZMODEL] = &ReadHZModel;
-
-  sprintf(options[OPT_LUMINOSITY].cName,"dLuminosity");
-  sprintf(options[OPT_LUMINOSITY].cDescr,"Initial Luminosity");
-  sprintf(options[OPT_LUMINOSITY].cDefault,"LSUN");
-  options[OPT_LUMINOSITY].dDefault = LSUN;
-  options[OPT_LUMINOSITY].iType = 0;
-  options[OPT_LUMINOSITY].iMultiFile = 1;
-  options[OPT_LUMINOSITY].dNeg = LSUN;
-  sprintf(options[OPT_LUMINOSITY].cNeg,"Solar Luminosity (LSUN)");
-  fnRead[OPT_LUMINOSITY] = &ReadLuminosity;
 
   sprintf(options[OPT_TEMPERATURE].cName,"dTemperature");
   sprintf(options[OPT_TEMPERATURE].cDescr,"Initial Effective Temperature");
@@ -659,8 +631,6 @@ void NullStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVar
 }
 
 void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
-  int bStellar=0;
-
   /* Stellar is active for this body if this subroutine is called. */
 
   if (update[iBody].iNumLuminosity > 1) {
@@ -669,7 +639,6 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     exit(EXIT_INPUT);
   }
   VerifyLuminosity(body,control,options,update,body[iBody].dAge,iBody);
-  bStellar = 1;
 
   if (update[iBody].iNumRadius > 1) {
     if (control->Io.iVerbose >= VERBERR)
@@ -709,11 +678,11 @@ void InitializeModuleStellar(CONTROL *control,MODULE *module) {
 /**************** STELLAR update ****************/
 
 void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {
-  if (body[iBody].dLuminosity > 0) {
+  //if (body[iBody].dLuminosity > 0) {
     if (update[iBody].iNumLuminosity == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumLuminosity++;
-  }
+  //}
 
   if (body[iBody].dRadius > 0) {
     if (update[iBody].iNumRadius == 0)
@@ -727,7 +696,7 @@ void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumRadGyra++;
   }
 
-  // NOTE: Rory and I decided to ALWAYS track the rotation evolution of the star,
+  // NOTE: Rory and Rodrigo decided to ALWAYS track the rotation evolution of the star,
   // so I'm not going to check whether dRotRate is zero here. If it is, it gets set
   // to its default value, and we track angular momentum conservation from there.
   if (update[iBody].iNumRot == 0)

@@ -1175,8 +1175,8 @@ void LogBodyBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
   for (iOut=OUTSTARTBINARY;iOut<OUTENDBINARY;iOut++) {
     if (output[iOut].iNum > 0) {
       //Useful for debugging
-      printf("%d\n",iOut);
-      fflush(stdout);
+      //printf("%d\n",iOut);
+      //fflush(stdout);
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
     }
   }
@@ -2076,10 +2076,14 @@ double fndApproxEqTemp(BODY *body, int iBody, double dAlbedo) {
     planet averaged over the binary orbit relative to Earth's
     where F_Earth = 1361 W/m^2 */
 double fndApproxInsol(BODY *body, int iBody) {
-  // Compute the approximate flux
-  double flux = fndFluxApproxBinary(body,iBody);
+  // Compute the approximate flux if the stars have luminosities
+  if (body[0].dLuminosity > 0 && body[1].dLuminosity > 0) {
+    double flux = fndFluxApproxBinary(body,iBody);
 
-  return flux/FLUX_EARTH;
+    return flux/FLUX_EARTH;
+  } else {
+    return -1;
+  }
 }
 
 /** Dumps out a bunch of values to see if they agree with LL13 */

@@ -1952,6 +1952,25 @@ void ReadInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
     }
 }
 
+void ReadLuminosity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dLuminosity = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dLuminosity = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      body[iFile-1].dLuminosity = options->dDefault;
+  }
+}
+
 /* LXUV -- currently unsupported */
 void ReadLXUV(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
@@ -2773,6 +2792,8 @@ void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,MODULE *module,
     for (iOpt=100;iOpt<NUMOPT;iOpt++)
       /* OutputOrder is special */
       if (options[iOpt].iType != -1 && iOpt != OPT_OUTPUTORDER && iOpt != OPT_GRIDOUTPUT) {
+        //printf("%d\n",iOpt);
+        //fflush(stdout);
         fnRead[iOpt](body,control,files,&options[iOpt],system,iFile);
       }
   }
@@ -3253,6 +3274,16 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_LONGP].bNeg = 0;
   options[OPT_LONGP].iFileType = 1;
   fnRead[OPT_LONGP] = &ReadLongP;
+
+  sprintf(options[OPT_LUMINOSITY].cName,"dLuminosity");
+  sprintf(options[OPT_LUMINOSITY].cDescr,"Initial Luminosity");
+  sprintf(options[OPT_LUMINOSITY].cDefault,"0");
+  options[OPT_LUMINOSITY].dDefault = 0;
+  options[OPT_LUMINOSITY].iType = 0;
+  options[OPT_LUMINOSITY].iMultiFile = 1;
+  options[OPT_LUMINOSITY].dNeg = LSUN;
+  sprintf(options[OPT_LUMINOSITY].cNeg,"Solar Luminosity (LSUN)");
+  fnRead[OPT_LUMINOSITY] = &ReadLuminosity;
 
   sprintf(options[OPT_LXUV].cName,"dLXUV");
   sprintf(options[OPT_LXUV].cDescr,"Total XUV Luminosity -- Unsupported!");

@@ -3804,7 +3804,7 @@ double fdDB15DKeccDt(BODY *body,SYSTEM *system,int *iaBody) {
 }
 
 void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,int iBody,int iModule) {
-  int iPert;
+  int iPert,iIndex;
 
   // XXX Do these checks need to be here? DB15 no longer requires ThermInt to be set
   if (body[iBody].bThermint) { // Tidal properties calculate from mantle material
@@ -3861,8 +3861,6 @@ void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT
       any memory issues. */
     iIndex = body[iBody].iaTidePerts[iPert];
     body[iBody].daDoblDtEqtide[iIndex] = fdCTLDoblDt(body,update[iBody].iaBody[update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]]);
-
-    }
   }
 
   /* Is this the secondary body, and hence we assign da/dt and de/dt? */

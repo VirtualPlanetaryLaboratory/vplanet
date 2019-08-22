@@ -1,14 +1,16 @@
 # VPLanet
 [![Build Status](https://travis-ci.com/VirtualPlanetaryLaboratory/vplanet.svg?token=jABaFLLgJNHTWSqkT7CM&branch=master)](https://travis-ci.com/VirtualPlanetaryLaboratory/vplanet)
+<img src = "https://img.shields.io/badge/memcheck-dirty-red.svg?style=flat">
 [![Documentation](https://img.shields.io/badge/read-the_docs-blue.svg?style=flat)](https://VirtualPlanetaryLaboratory.github.io/vplanet)
 <a href="https://arxiv.org/abs/1905.06367"><img src="https://img.shields.io/badge/read-the_paper-7d93c7.svg?style=flat"/></a>
 <a href="http://ascl.net/1811.017"><img src="https://img.shields.io/badge/ascl-1811.017-blue.svg?colorB=262255" alt="ascl:1811.017" /></a>
+<img src = "https://img.shields.io/badge/platform-Linux_|%20macOS-silver.svg?style=flat">
 
 © 2018 The VPLanet Team.
 
 `VPLanet` is software to simulate planetary system evolution, with a focus on habitability. Physical models, typically consisting of ordinary differential equations, are coupled together to simulate evolution for the age of a system. We strive for full transparency and reproducibility in our software, and this repository contains the [source code](src), [extensive documentation](https://VirtualPlanetaryLaboratory.github.io/vplanet), [the scripts and files to generate published figures](examples), and [scripts to validate the current release](tests). We can't claim we found aliens with closed source software!
 
-To get started, ensure you have clang/gcc installed and follow the [QuickStart Guide](https://virtualplanetarylaboratory.github.io/vplanet/quickstart.html). Alternatively you can follow the instructions in [INSTALL](INSTALL).
+To get started, ensure you have clang/gcc installed and follow the [QuickStart Guide](https://virtualplanetarylaboratory.github.io/vplanet/quickstart.html). Note that VPLanet does not currently function on Windows operating systems.
 
 `VPLanet` currently consists of 11 functioning "modules," each containing a set of equations
 that models a specifc physical process:
@@ -22,17 +24,17 @@ escape, oxygen escape, and oxygen build-up.
 of resonance.
 
 **DistRot**: Evolution of a world's rotational axis due to orbital evolution and
-the stellar torque (includes shape evolution as a function of rotational frequency).
+the stellar torque (including shape evolution as a function of rotational frequency).
 
 **EqTide**: Tidal evolution in the equilibrium tide framework.
 
 **GalHabit**: Evolution of a wide orbit due to the galactic tide and impulses from
-passing stars (includes radial migration).
+passing stars (including radial migration).
 
 **POISE**: Energy balance climate model including dynamic ice sheets and lithospheric
 compression/rebound.
 
-**RadHeat**: Radiogenic heating of a world's interior.
+**RadHeat**: Radiogenic heating in a world's core, mantle, and crust.
 
 **SpiNBody**: N-body integrator for the evolution of a system of massive particles.
 
@@ -41,13 +43,13 @@ compression/rebound.
 **ThermInt**: Thermal interior evolution, including magnetic fields, for planets
 undergoing plate tectonics or stagnant lid evolution.
 
+The [examples/](examples) directory contains input files and scripts for generating the figures in [Barnes et al. (2019)](https://arxiv.org/abs/1905.06367) and all subsequent module descriptions. The [Manual/](Manual) directory contains the pdf of [Barnes et al. (2019)](https://arxiv.org/abs/1905.06367), which describes the physics of each module, validates the software against observations and/or past results, and uses figures from the [examples/](examples) directory.
+
+An ecosystem of support software is also publicly available. In this repo, [vspace/](vspace) contains scripts to generate input files for a parameter space sweep. [bigplanet/](bigplanet) contains scripts to store large datasets in HDF5 format and quickly calculate summary properties from an integration, such as change in surface temperature. In a separate repository is [vplot](https://github.com/VirtualPlanetaryLaboratory/vplot), which consists of both a command line tool to quickly plot the evolution of a system, and also matplotlib functions to generate publication-worthy figures. Finally, we recommend using [approxposterior](https://github.com/dflemin3/approxposterior) to quickly obtain posterior distributions of model parameters.
+
 `VPLanet` is a community project. We're happy to take pull requests; if you want to create one, please issue it to the *dev* branch. Soon we will include tutorials on adding new input options, governing variables, and modules. It's a platform for planetary science that can grow exponentially, either by adding new physics or by adding competing models for clean comparisons.
 
-The [examples/](examples) directory contains input files and scripts for generating the figures in [Barnes et al. (2019)](https://arxiv.org/abs/1905.06367) and all subsequent module descriptions. The [Manual/](Manual) directory contains the pdf of [Barnes et al. (2019)](https://arxiv.org/abs/1905.06367), which describes the physics of each module, validates each module against observations or past results, and uses figures from the [examples/](examples) directory.
-
-An ecosystem of support software is also publicly available. In this repo, [vspace/](vspace) contains scripts to generate input files for a parameter space sweep. [bigplanet/](bigplanet) contains scripts to store large datasets in HDF5 format and quickly calculate summary properties from an integration, like change in surface temperature. In a separate repository is [vplot](https://github.com/VirtualPlanetaryLaboratory/vplot), which consists of both a command line tool to quickly plot the evolution of a system, and also matplotlib functions to more easily generate publication-worthy figures. Finally, we recommend using [approxposterior](https://github.com/dflemin3/approxposterior) to quickly obtain posterior distributions of model parameters.
-
-Behind the scenes, the vplanet team maintains code integrity through continuous integration, in which numerous scientific and numerical tests are validated at every commit. Check the "build" badge above for the current status. See the [tests/](tests) directory for the validation checks that the current build passes. Additionally, we use valgrind and addresssanitizer to periodically search for memory issues like leaks, accessing memory beyond array bounds, etc. We are committed to maintaining a stable tool that planetary scientists can rely on for fast analyses of the Solar System and beyond.  
+Behind the scenes, the VPLanet team maintains code integrity through [continuous integration](https://travis-ci.org), in which numerous scientific and numerical tests are validated at every commit. Check the "build" badge above for the current status. See the [tests/](tests) directory for the validation checks that the current build passes. Additionally, we use [valgrind](http://valgrind.org) and [addresssanitizer](https://github.com/google/sanitizers/wiki/AddressSanitizer) to periodically search for memory issues like leaks, accessing memory beyond array bounds, etc. The "memcheck" badge shows the current status, either clean (no errors) or dirty. We are committed to maintaining a stable tool for scientists to analyze any planetary system.  
 
 Additional `VPLanet` examples can be found at the following GitHub pages:
 

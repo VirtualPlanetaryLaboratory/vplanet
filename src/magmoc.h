@@ -76,7 +76,8 @@
 
 
 // OLR Elkins-Tanton 2008
-#define ABSORPCOEFFH2O            0.01 // absorp. coeff. of water at ref. press.
+#define ABSORPCOEFFH2O            0.01 // absorp. coeff. of water at ref. press. (Elkins-Tanton, 2008)
+#define ABSORPCOEFFCO2            0.0001 // absorp. coeff. of CO2 at ref. press. (Nakajima+ 2012)
 #define REFPRESSUREOPACITY        101325 // reference pressure (Pa)
 #define WATERHEATCAP              3.2e3 //water heat capacity (J/kg/K)
 #define PRESSWATERMIN             1e3 // minimal water pressure in atm (if smaller -> desiccated)

@@ -579,6 +579,31 @@ double fndWaterMassMOTime(BODY *body, double dFrac, int iBody) {
 }
 
 /**
+Mass of CO2 in the mo+atm system to get the water frac in the magmoc
+Will be used in PropsAuxMagmOc to find its root with fndBisection
+
+@param body A pointer to the current BODY instance
+@param dFracCO2 CO2 mass fraction in the magma oean
+@param iBody The current BODY number
+
+@return CO2 mass for a given dFracCO2 - actual CO2 mass in mo+atm
+*/
+double fndCO2MassMOTime(BODY *body, double dFracCO2, int iBody) {
+  double dPartialPressCO2AtmTemp;
+  double dPressCO2AtmTemp;
+
+  dPartialPressCO2AtmTemp = pow(((100*dFracCO2-0.05)/2.08e-4),1/0.45);
+  dPressCO2AtmTemp        = 1/(2*MOLWEIGHTCO2) * ( pow( pow( -MOLWEIGHTCO2*dPartialPressCO2AtmTemp + MOLWEIGHTWATER*body[iBody].dPressWaterAtm + 2*MOLWEIGHTOXYGEN*body[iBody].dPressOxygenAtm,2)  \
+                              + 4 * pow(MOLWEIGHTCO2,2) * dPartialPressCO2AtmTemp * (body[iBody].dPressOxygenAtm + body[iBody].dPressWaterAtm),0.5) \
+                              + dPartialPressCO2AtmTemp*MOLWEIGHTCO2 - MOLWEIGHTWATER*body[iBody].dPressWaterAtm - 2*MOLWEIGHTOXYGEN*body[iBody].dPressOxygenAtm);
+
+  return 1e-19 * (  CO2PARTCOEFF*dFracCO2*body[iBody].dMassMagmOcCry \
+                    + dFracCO2*body[iBody].dMassMagmOcLiq \
+                    + ( 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf ) * dPressCO2AtmTemp \
+                    - body[iBody].dCO2MassMOAtm );
+}
+
+/**
 Oxygen equilibrium between magma ocean and atmosphere
 Will be used in PropsAuxMagmOc to find its root with fndBisection
 
@@ -678,7 +703,8 @@ double fndNetFluxAtmGrey(BODY *body, int iBody) {
 
   } else {
     double dOptDep;     // optical depth
-    dOptDep = body[iBody].dPartialPressWaterAtm * pow((0.75*ABSORPCOEFFH2O/body[iBody].dGravAccelSurf/REFPRESSUREOPACITY),0.5);
+    dOptDep = body[iBody].dPartialPressWaterAtm * pow((0.75*ABSORPCOEFFH2O/body[iBody].dGravAccelSurf/REFPRESSUREOPACITY),0.5) \
+              + body[iBody].dPartialPressCO2Atm * pow((0.75*ABSORPCOEFFCO2/body[iBody].dGravAccelSurf/REFPRESSUREOPACITY),0.5);
 
     return 2 / (2 + dOptDep) * SIGMA * (pow(body[iBody].dSurfTemp,4) - pow(body[iBody].dEffTempAtm,4));
   }
@@ -893,7 +919,7 @@ void fndMeltFracMan(BODY *body, int iBody) {
 }
 
 /**
-Calculation of the water mass fraction in the magma ocean
+Calculation of the water and CO2 mass fraction in the magma ocean
 Function water_fraction() in functions_rk.py
 
 @param body A pointer to the current BODY instance
@@ -918,6 +944,14 @@ void fndWaterFracMelt(BODY *body, int iBody) {
     }
   }
 
+  if (fabs(fndCO2MassMOTime(body, 0, iBody)) < 1e-5) {
+    body[iBody].dCO2FracMelt = 0;
+  } else if (fabs(fndCO2MassMOTime(body, 1, iBody)) < 1e-5) {
+    body[iBody].dCO2FracMelt = 1;
+  } else {
+    body[iBody].dCO2FracMelt = fndBisection(fndCO2MassMOTime,body,0,1,1e-2,iBody);
+  }
+
   /* Get water pressure and water mass in the atmosphere */
   // if (body[iBody].bPlanetDesiccated || body[iBody].dPressWaterAtm <= PRESSWATERMIN){
   //   body[iBody].dPartialPressWaterAtm = 0;
@@ -925,9 +959,9 @@ void fndWaterFracMelt(BODY *body, int iBody) {
   // } else {
   if ((body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm + body[iBody].dPressCO2Atm) > 1) {
     dAveMolarMassAtm = (MOLWEIGHTWATER * body[iBody].dPressWaterAtm + 2*MOLWEIGHTOXYGEN * body[iBody].dPressOxygenAtm + MOLWEIGHTCO2 * body[iBody].dPressCO2Atm)/(body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm + body[iBody].dPressCO2Atm);
-    body[iBody].dPartialPressWaterAtm = pow((body[iBody].dWaterFracMelt/3.44e-8),1/0.74); // Schaefer+ (2016), Eq. 19
-    body[iBody].dPressWaterAtm        = body[iBody].dPartialPressWaterAtm * MOLWEIGHTWATER / dAveMolarMassAtm;
 
+    body[iBody].dPressWaterAtm        = pow((body[iBody].dWaterFracMelt/3.44e-8),1/0.74); // Schaefer+ (2016), Eq. 19
+    body[iBody].dPartialPressWaterAtm = body[iBody].dPressWaterAtm * dAveMolarMassAtm / MOLWEIGHTWATER;
 
     body[iBody].dPartialPressCO2Atm = pow(((100*body[iBody].dCO2FracMelt-0.05)/2.08e-4),1/0.45); // Elkins-Tanton (2008), Eq. 4
     body[iBody].dPressCO2Atm        = body[iBody].dPartialPressWaterAtm * MOLWEIGHTWATER / dAveMolarMassAtm;

@@ -1,4 +1,4 @@
-# VPLanet
+# VPLanet: The Virtual Planet Simulator
 <p align="center">
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet"><img src="https://img.shields.io/badge/read-the_docs-blue.svg?style=flat"></a>
   <a href="https://arxiv.org/abs/1905.06367"><img src="https://img.shields.io/badge/read-the_paper-7d93c7.svg?style=flat"/></a>
@@ -8,7 +8,7 @@
 <img src = "https://img.shields.io/badge/memcheck-dirty-red.svg?style=flat">
 </p>
 
-© 2018 The VPLanet Team.
+
 
 `VPLanet` is software to simulate planetary system evolution, with a focus on habitability. Physical models, typically consisting of ordinary differential equations, are coupled together to simulate evolution for the age of a system. We strive for full transparency and reproducibility in our software, and this repository contains the [source code](src), [extensive documentation](https://VirtualPlanetaryLaboratory.github.io/vplanet), [the scripts and files to generate published figures](examples), and [scripts to validate the current release](tests). We can't claim we found aliens with closed source software!
 
@@ -66,3 +66,6 @@ Finally, if you use this code to generate results used in any publication or con
 `VPLanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, and 13-13NAI7_0024. We also acknowledge support from the University of Washington and the Carnegie Institute for Science.
 
 Enjoy!
+
+
+© 2018 The VPLanet Team.

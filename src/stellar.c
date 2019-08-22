@@ -441,14 +441,14 @@ void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *upd
     if (options[OPT_LUMINOSITY].iLine[iBody+1] >= 0) {
       // User specified luminosity, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Luminosity set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Luminosity set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
     body[iBody].dLuminosity = fdLuminosityFunctionProximaCen(body[iBody].dAge,body[iBody].dMass);
     if (options[OPT_LUMINOSITY].iLine[iBody+1] >= 0) {
       // User specified luminosity, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Luminosity set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Luminosity set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   }
 
@@ -468,14 +468,14 @@ void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
     body[iBody].dRadius = fdRadiusFunctionProximaCen(body[iBody].dAge,body[iBody].dMass);
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   }
 
@@ -497,7 +497,7 @@ void VerifyRadGyra(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update
     if (options[OPT_RG].iLine[iBody+1] >= 0) {
       // User specified radius of gyration, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Radius of Gyration set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Radius of Gyration set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
     if (options[OPT_RG].iLine[iBody+1] < 0) {
@@ -534,14 +534,14 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *up
     if (options[OPT_TEMPERATURE].iLine[iBody+1] >= 0) {
       // User specified temperature, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Temperature set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Temperature set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
     body[iBody].dTemperature = fdTemperatureFunctionProximaCen(body[iBody].dAge,body[iBody].dMass);
     if (options[OPT_TEMPERATURE].iLine[iBody+1] >= 0) {
       // User specified temperature, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Temperature set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Temperature set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   }
 

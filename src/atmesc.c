@@ -210,7 +210,7 @@ void ReadJeansTime(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
   } else {
     if (iFile > 0) {
       if (control->Io.iVerbose >= VERBINPUT) {
-        fprintf(stderr,"WARNING: %s not set for body %s, defaulting to %.2e seconds.\n",
+        fprintf(stderr,"INFO: %s not set for body %s, defaulting to %.2e seconds.\n",
           options->cName,body[iFile-1].cName,options->dDefault);
       }
       body[iFile-1].dJeansTime = options->dDefault;
@@ -864,7 +864,7 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *u
     // If there is no envelope and Lopez Radius specified, use Sotin+2007 radius!
     if(body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) {
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Lopez+2012 Radius model specified, but no envelope present. Using Sotin+2007 Mass-radius relation to compute planet's solid radius.\n");
+        printf("INFO: Lopez+2012 Radius model specified, but no envelope present. Using Sotin+2007 Mass-radius relation to compute planet's solid radius.\n");
 
       // Set radius using Sotin+2007 model
       body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
@@ -873,14 +873,14 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *u
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iPlanetRadiusModel == ATMESC_PROXCENB) {
     body[iBody].dRadius = fdProximaCenBRadius(body[iBody].dEnvelopeMass / body[iBody].dMass, body[iBody].dAge, body[iBody].dMass);
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   }
 

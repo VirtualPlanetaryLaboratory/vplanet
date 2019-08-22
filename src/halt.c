@@ -157,8 +157,7 @@ int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBo
 /* Halt if two bodies, i.e. planet and star, merge? */
 
   /* Sometimes integration overshoots and dSemi becomes NaN -> merger */
-  if(body[iBody].dSemi != body[iBody].dSemi)
-  {
+  if (body[iBody].dSemi != body[iBody].dSemi) {
     if (io->iVerbose > VERBPROG)
       printf("HALT: Merge at %.2e years!\n",evolve->dTime/YEARSEC);
       printf("Numerical merger: body %d's dSemi became a NaN! Try decreasing dEta by a factor of 10.\n",iBody);
@@ -167,40 +166,36 @@ int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBo
   }
 
   // Is iBody not using binary?
-  if(body[iBody].bBinary == 0) {
+  if (!body[iBody].bBinary) {
     if (body[iBody].dSemi*(1.-sqrt(body[iBody].dEccSq)) <= (body[0].dRadius + body[iBody].dRadius) && halt->bMerge) { /* Merge! */
       if (io->iVerbose > VERBPROG)
         printf("HALT: Merge at %.2e years!\n",evolve->dTime/YEARSEC);
 
       return 1;
     }
-  }
+
   // Check for merge when planet is using binary
   // This also checks if stars merged, for simplicity
-  else if(body[iBody].bBinary == 1 && body[iBody].iBodyType == 0) { // Using binary, is planet
+  } else if (body[iBody].bBinary == 1 && body[iBody].iBodyType == 0) { // Using binary, is planet
     double max_radius = max(body[0].dRadius,body[1].dRadius);
-    if((body[iBody].dSemi*(1.-sqrt(body[iBody].dEccSq)) <= (body[1].dSemi + max_radius + body[iBody].dRadius)) && halt->bMerge) { /* Merge! */
-        if(io->iVerbose > VERBPROG)
-        {
-          printf("HALT: Merge at %.2e years! %e,%d\n",evolve->dTime/YEARSEC,body[iBody].dEccSq,iBody);
-          printf("cbp.dSemi: %e, bin.dSemi: %e, max_radius: %e\n",body[iBody].dSemi/AUM,body[1].dSemi/AUM,max_radius/AUM);
-        }
-        return 1;
+    if ((body[iBody].dSemi*(1.-sqrt(body[iBody].dEccSq)) <= (body[1].dSemi + max_radius + body[iBody].dRadius)) && halt->bMerge) { /* Merge! */
+      if(io->iVerbose > VERBPROG) {
+        printf("HALT: Merge at %.2e years! %e,%d\n",evolve->dTime/YEARSEC,body[iBody].dEccSq,iBody);
+        printf("cbp.dSemi: %e, bin.dSemi: %e, max_radius: %e\n",body[iBody].dSemi/AUM,body[1].dSemi/AUM,max_radius/AUM);
       }
-  }
-  else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) // Did binary merge?
-  {
-      // Merge if sum of radii greater than binary perihelion distance
-      if((body[0].dRadius + body[1].dRadius >= (1.0 - body[1].dEcc)*body[1].dSemi) && halt->bMerge)
-      {
-          if(io->iVerbose > VERBPROG)
-          {
-            fprintf(stderr,"Binary merged at %.2e years!  Semimajor axis [km]: %e.\n",evolve->dTime/YEARSEC,body[iBody].dSemi);
-            fprintf(stderr,"Stellar radii [km]: %e, %e. \n",body[0].dRadius,body[1].dRadius);
-          }
-          return 1;
+      return 1;
+    }
+  } else if (body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) {// Did binary merge?
+    // Merge if sum of radii greater than binary perihelion distance
+    if ((body[0].dRadius + body[1].dRadius >= (1.0 - body[1].dEcc)*body[1].dSemi) && halt->bMerge) {
+      if (io->iVerbose > VERBPROG) {
+        fprintf(stderr,"Binary merged at %.2e years!  Semimajor axis [km]: %e.\n",evolve->dTime/YEARSEC,body[iBody].dSemi);
+        fprintf(stderr,"Stellar radii [km]: %e, %e. \n",body[0].dRadius,body[1].dRadius);
       }
+      return 1;
+    }
   }
+
   return 0;
 }
 

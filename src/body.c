@@ -473,6 +473,7 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     //   (eqtide + !thermint) bodies
     dest[iBody].dShmodUMan=src[iBody].dShmodUMan;
     dest[iBody].dStiffness=src[iBody].dStiffness;
+    dest[iBody].dImK2ManOrbModel = src[iBody].dImK2ManOrbModel;
 
     if (iBody > 0) {
       dest[iBody].dHecc = src[iBody].dHecc;
@@ -931,7 +932,7 @@ double fdProximaCenBRadius(double C, double A, double M){
   XXX What are the arguments?
 
 */
-double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int iMetal){
+double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int iMetal) {
 	int m, c, f, t, z;
 	double dm, dc, df, dt;
 	double R000,R001,R010,R011,R100,R101,R110,R111;
@@ -983,7 +984,7 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int 
 		for (f = 0; f < FLUXLEN-1; f++)
 			if (dFlux < daLopezFlux[f+1]) break;
 	}
-	if (dAgeYears < daLopezAge[0]){
+	if (dAgeYears < daLopezAge[0]) {
 		/* Out of bounds, assuming it's OK to use min val */
 		dAgeYears = daLopezAge[0];
 		t = 0;

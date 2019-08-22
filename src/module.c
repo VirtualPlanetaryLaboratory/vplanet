@@ -712,14 +712,13 @@ void VerifyModuleMultiDistOrbDistRot(BODY *body,UPDATE *update,CONTROL *control,
 }
 
 void VerifyModuleMultiEqtideDistRot(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
-
-  if (body[iBody].bDistRot) {
-    if (body[iBody].bEqtide) {
-      if (body[iBody].bReadOrbitData) {
-        fprintf(stderr,"ERROR: Cannot set both EQTIDE and bReadOrbitData for body %s.\n",body[iBody].cName);
-        exit(EXIT_INPUT);
-      }
+  if (body[iBody].bDistRot && body[iBody].bEqtide) {
+    if (body[iBody].bReadOrbitData) {
+      fprintf(stderr,"ERROR: Cannot set both EQTIDE and bReadOrbitData for body %s.\n",body[iBody].cName);
+      exit(EXIT_INPUT);
     }
+
+    control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideDistRot;
   }
 }
 
@@ -1256,11 +1255,6 @@ void VerifyModuleMultiBinaryEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
   }
 }
 
-void VerifyModuleMultiEqtideDistorb(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
-  if (body[iBody].bEqtide || body[iBody].bDistOrb)
-      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideDistorb;
-}
-
 void VerifyModuleMultiSpiNBodyDistOrb(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   int iTmpBody;
   // This gets done repeatedly, but should be only done once
@@ -1403,32 +1397,48 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
      these functions as some default behavior is set if other modules aren't
      called. */
 
-  VerifyModuleMultiSpiNBodyAtmEsc(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiSpiNBodyAtmEsc(body,update,control,files,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiSpiNBodyDistOrb(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiSpiNBodyDistOrb(body,update,control,files,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiDistOrbDistRot(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiDistOrbDistRot(body,update,control,files,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiEqtideDistRot(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiEqtideDistRot(body,update,control,files,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiRadheatThermint(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiRadheatThermint(body,update,control,files,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiEqtideDistOrb(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiEqtideDistOrb(body,update,control,files,module,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiAtmescEqtide(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiEqtideDistRot(body,update,control,files,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiEqtideThermint(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiAtmescEqtide(body,update,control,files,module,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
+
+  VerifyModuleMultiEqtideThermint(body,update,control,files,module,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
   // Always call after VerifyModuleMultiEqtideThermint !!
-  VerifyModuleMultiAtmescEqtideThermint(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiAtmescEqtideThermint(body,update,control,files,module,
+    options,iBody,&iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiFlareStellar(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiFlareStellar(body,update,control,files,module,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiBinaryEqtide(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiBinaryEqtide(body,update,control,files,module,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiEqtideStellar(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiEqtideStellar(body,update,control,files,module,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiBinaryStellar(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiBinaryStellar(body,update,control,files,module,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
   VerifyModuleMultiMagmOcAtmEsc(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
@@ -1459,106 +1469,26 @@ void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     body[iBody].dTidalRadius = body[iBody].dRadius;
 }
 
-
+/** Calculate auxiliary properties if EqTide and ThermInt are called. At present
+  this funciton only needs to calculate Im(k_2), possibly including the effects
+  of an ocean and envelope. */
 void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  /* RB- These first 3 lines were taken from PropsAuxThermint, but
-   as they rely on eqtide being called, they belong here.*/
-  // body[iBody].dK2Man=fdK2Man(body,iBody);
-  // body[iBody].dImK2Man=fdImk2Man(body,iBody);
-  //
-  // // Include tidal dissapation due to oceans:
-  // if(body[iBody].bOceanTides)
-  // {
-  //   body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
-  //
-  //   // Im(K_2) is weighted sum of mantle and oceam component
-  //   // weighted by the love number of each component
-  //   body[iBody].dImK2 = (body[iBody].dImK2Man + body[iBody].dImK2Ocean);
-  // }
-  // // No oceans, thermint dictates ImK2
-  // else
-  // {
-  //   body[iBody].dImK2 = body[iBody].dImK2Man;
-  //   body[iBody].dK2 = body[iBody].dK2Man;
-  // }
 
   body[iBody].dK2Man = fdK2Man(body,iBody);
   body[iBody].dTidalQMan = fdTidalQMan(body,iBody);
   body[iBody].dImK2Man = fdImK2ManThermint(body,iBody);
 
   body[iBody].dImK2 = fdImK2Total(body,iBody);
-
-  // PropsAuxCPL(body,evolve,update,iBody);
-  // // Call dTidePowerMan
-  // body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
 }
 
-// void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-//   // Set the mantle parameters first
-//   body[iBody].dK2Man=fdK2Man(body,iBody);
-//   body[iBody].dImK2Man=fdImk2Man(body,iBody);
-//
-//   // If it's the first step, see if it's a runaway greenhouse
-//   if (evolve->bFirstStep)
-//   {
-//     // RG -> no ocean tides
-//     if(fdInsolation(body, iBody, 0) >= fdHZRG14(body[0].dLuminosity, body[0].dTemperature, body[iBody].dEcc, body[iBody].dMass))
-//     {
-//       body[iBody].bOceanTides = 0;
-//     }
-//   }
-//
-//   // Case: No oceans, no envelope
-//   if(!body[iBody].bOceanTides && !body[iBody].bEnvTides)
-//   {
-//     // Mantle controls evolution via thermint
-//     body[iBody].dImK2 = body[iBody].dImK2Man;
-//     body[iBody].dK2 = body[iBody].dK2Man;
-//   }
-//   // Case: Oceans, no envelope:
-//   else if(body[iBody].bOceanTides && !body[iBody].bEnvTides)
-//   {
-//     // Oceans dominate
-//     body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Ocean;
-//
-//     // Im(K_2) is weighted sum of mantle and oceam component
-//     // weighted by the love number of each component
-//     body[iBody].dImK2 = (body[iBody].dImK2Man + body[iBody].dImK2Ocean);
-//   }
-//   // Case: No oceans, envelope (envelope evap while in runaway):
-//   else if(!body[iBody].bOceanTides && body[iBody].bEnvTides)
-//   {
-//     // Envelope dominates
-//     body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
-//
-//     // Im(K_2) is weighted sum of mantle and enevelope component
-//     // weighted by the love number of each component
-//     body[iBody].dImK2 = (body[iBody].dImK2Man + body[iBody].dImK2Env);
-//   }
-//   // Case: Oceans and evelope->envelope has massive pressure so oceans are super critical (?):
-//   // Also, envelope and ocean are mutually exclusive so envelope dominates
-//   else if(body[iBody].bOceanTides && body[iBody].bEnvTides)
-//   {
-//     // Envelope and ocean!
-//     body[iBody].dK2 = body[iBody].dK2Man + body[iBody].dK2Env;
-//
-//     // Im(K_2) is weighted sum of mantle, envelope and ocean component
-//     // weighted by the love number of each component
-//     body[iBody].dImK2 = (body[iBody].dImK2Man + body[iBody].dImK2Env);
-//   }
-//   else
-//     assert(0); // Unknown envelope + ocean behavior
-//
-//   // Sanity checks: enforce upper bound
-//   if(body[iBody].dK2 > 1.5)
-//     body[iBody].dK2 = 1.5;
-//
-//   // Finally, call EQTIDE props aux then set mantle tidal power
-//   PropsAuxCPL(body,evolve,update,iBody);
-//   body[iBody].dTidalPowMan = fdTidalPowMan(body,iBody);
-//
-// }
+/** Calculate auxiliary properties if AtmEsc, EqTide and ThermInt are called. At present
+  this funciton only needs to calculate Im(k_2), possibly including the effects
+  of an ocean and envelope.
+void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+  XXX Is this necessary?
 
+}
+*/
 
 /* This does not seem to be necessary XXX Russell
 void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
@@ -1575,6 +1505,13 @@ void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody)
 void PropsAuxEqtideDistorb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
 }
+
+void PropsAuxEqtideDistRot(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+  if (body[iBody].bCalcDynEllip) {
+    body[iBody].dDynEllip = CalcDynEllipEq(body,iBody);
+  }
+}
+
 
 void PropsAuxEqtideStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   // In stellar, radius can change depending on model so make sure tidal radius

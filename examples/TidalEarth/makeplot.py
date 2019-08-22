@@ -27,7 +27,11 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 dirs = ["au0.01","au0.02","au0.05"]
 # Run the simulations
 for dir in dirs:
+<<<<<<< HEAD
     print("Running simulation in %s directory...\n" % dir)
+=======
+    print("\nRunning simulation in %s directory..." % dir)
+>>>>>>> a45095dc8e0b53eba999c90f3556ce5713085cea
     os.chdir(os.path.join(dir_path,dir))
     subprocess.call(['vplanet', 'vpl.in'])
 # load data
@@ -40,6 +44,11 @@ out2 = outputs[2]
 # Print final state
 out = out0
 
+<<<<<<< HEAD
+=======
+os.chdir(dir_path)
+
+>>>>>>> a45095dc8e0b53eba999c90f3556ce5713085cea
 def fig2x3(out,nfig,color='k',legendon=False):
     fig = plt.figure(nfig, figsize=(10,15))
     panel=1
@@ -83,7 +92,11 @@ def fig2x3(out,nfig,color='k',legendon=False):
     panel += 1
     plt.subplot(rows,cols,panel)
     plt.plot(out.tidalearth.Time,out.tidalearth.MagMom,color=color,label='MagMom')
+<<<<<<< HEAD
     plt.plot(out.tidalearth.Time,out.tidalearth.RIC/3481,linestyle='--')
+=======
+    plt.plot(out.tidalearth.Time,out.tidalearth.RIC/3481,color=color,linestyle='--')
+>>>>>>> a45095dc8e0b53eba999c90f3556ce5713085cea
     plt.ylim(0,1.5)
     plt.ylabel('Mag. Mom., R$_{ic}$ ($\oplus$ Units)')
     plt.xlabel('Time (Gyr)')
@@ -141,6 +154,10 @@ plt.xlabel('Upper Mantle Temp. [K]')
 plt.ylim(1e-8,1e0)
 plt.xlim(1600,2400)
 vplot.make_pretty(fig)
+<<<<<<< HEAD
+=======
+
+>>>>>>> a45095dc8e0b53eba999c90f3556ce5713085cea
 if (sys.argv[1] == 'pdf'):
     plt.savefig(filepref+'%d.pdf'%nfig)
 if (sys.argv[1] == 'png'):

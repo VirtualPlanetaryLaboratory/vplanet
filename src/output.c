@@ -163,7 +163,16 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
    //if (body[iBody].bSpiNBody)
     //Bary2OrbElems(body,control->Evolve.iNumBodies);
 
-   *dTmp = fdInstellation(body,iBody);
+   // Must take care since only bodies orbiting a star can have an instellation
+   if (iBody == 0) {
+     *dTmp = -1;
+   } else {
+     if (body[iBody].bStellar) {
+       *dTmp = fdInstellation(body,iBody);
+     } else {
+       *dTmp = -1;
+     }
+   }
 
    if (output->bDoNeg[iBody]) {
      *dTmp *= output->dNeg;
@@ -181,21 +190,29 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 
 void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   // This is calculated during PropsAux
-  *dTmp = body[iBody].dK2Man;
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else { }
+  if (body[iBody].bEqtide) {
+    *dTmp = body[iBody].dK2Man;
+    if (output->bDoNeg[iBody]) {
+      *dTmp *= output->dNeg;
+      strcpy(cUnit,output->cNeg);
+    }
+  } else {
+    *dTmp=-1;
+  }
 }
 
 void WriteImK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = body[iBody].dImK2Man;
-  strcpy(cUnit,"");
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else { }
+  if (body[iBody].bEqtide) {
+    *dTmp = body[iBody].dImK2Man;
+    strcpy(cUnit,"");
+    if (output->bDoNeg[iBody]) {
+      *dTmp *= output->dNeg;
+      strcpy(cUnit,output->cNeg);
+    }
+  } else {
+    *dTmp = -1;
+  }
 }
 
 void WriteKecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -294,10 +311,12 @@ void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
 
   *dTmp=0;
 
-  if (body[iBody].bFlare)
+  if (body[iBody].bFlare) {
     *dTmp += fdLXUVFlare(body,control->Evolve.dTimeStep,iBody);
-  if (body[iBody].bStellar)
+  }
+  if (body[iBody].bStellar) {
     *dTmp += body[iBody].dLXUV;
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -305,6 +324,10 @@ void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
     fsUnitsEnergyFlux(units,cUnit);
+  }
+
+  if (!body[iBody].bFlare && !body[iBody].bStellar) {
+    *dTmp = -1;
   }
 }
 
@@ -407,7 +430,7 @@ void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
     else
       *dTmp = -1;
   }
-  sprintf(cUnit,"");
+  sprintf(cUnit,"%s","");
 }
 
 void WriteLostEng(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -531,7 +554,7 @@ void WriteRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 
 void WriteRadGyra(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dRadGyra;
-  sprintf(cUnit,"");
+  sprintf(cUnit,"%s","");
 }
 
 void WriteRotAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -653,7 +676,7 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 
 void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if (body[iBody].bThermint && !body[iBody].bOcean && !body[iBody].bEnv) {
+  if (body[iBody].bThermint && body[iBody].bEqtide && !body[iBody].bOcean && !body[iBody].bEnv) {
     *dTmp = body[iBody].dTidalQMan;
   } else {
     *dTmp = body[iBody].dTidalQ;
@@ -666,8 +689,11 @@ void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 void WriteTidalQMantle(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   // Updated every timestep by PropsAuxEqtideThermint
-  *dTmp = body[iBody].dTidalQMan;
-
+  if (body[iBody].bEqtide) {
+    *dTmp = body[iBody].dTidalQMan;
+  } else {
+    *dTmp = -1;
+  }
   strcpy(cUnit,"");
 }
 
@@ -792,8 +818,11 @@ void WriteTotOrbEnergy(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *sys
 void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   // ImK2 should always be up to date
-  *dTmp = body[iBody].dImK2;
-
+  if (body[iBody].bEqtide) {
+    *dTmp = body[iBody].dImK2;
+  } else {
+    *dTmp = -1;
+  }
   strcpy(cUnit,"");
 }
 
@@ -1607,13 +1636,17 @@ void LogOptions(CONTROL *control,FILES *files,MODULE *module,SYSTEM *system,FILE
   }
 }
 
-void LogSystem(BODY *body,CONTROL *control,MODULE *module,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
+void LogSystem(BODY *body,CONTROL *control,MODULE *module,OUTPUT *output,
+    SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
   int iOut,iModule;
 
   fprintf(fp,"SYSTEM PROPERTIES ----\n");
 
   for (iOut=OUTSTART;iOut<OUTBODYSTART;iOut++) {
     if (output[iOut].iNum > 0) {
+      //Useful for debugging
+      //printf("%d\n",iOut);
+      //fflush(stdout);
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,0);
     }
   }
@@ -1637,10 +1670,9 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       if (output[iOut].iNum > 0) {
 	       if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
-	          /* Useful for debugging
-	           printf("%d %d\n",iBody,iOut);
-	           fflush(stdout);
-             */
+	         //Useful for debugging
+	         //printf("%d %d\n",iBody,iOut);
+	         //fflush(stdout);
 	         WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
 	       }
       }
@@ -1706,7 +1738,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
   int iBody,iCol,iOut,iSubOut,iExtra=0,iGrid,iLat,jBody,j;
   double dCol[NUMOPT],*dTmp,dGrid[NUMOPT];
   FILE *fp;
-  char cUnit[OPTLEN], cPoiseGrid[NAMELEN], cLaplaceFunc[NAMELEN];
+  char cUnit[OPTLEN], cPoiseGrid[3*NAMELEN], cLaplaceFunc[3*NAMELEN];
 
   /* Write out all data columns for each body. As some data may span more than
      1 column, we search the input list sequentially, adding iExtra to the
@@ -1742,6 +1774,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
     if (files->Outfile[iBody].iNumCols > 0) {
       fp = fopen(files->Outfile[iBody].cOut,"a");
       for (iCol=0;iCol<files->Outfile[iBody].iNumCols+iExtra;iCol++) {
+          //printf("%d %d\n",iBody,iCol);
+          //fflush(stdout);
 	        fprintd(fp,dCol[iCol],control->Io.iSciNot,control->Io.iDigits);
 	        fprintf(fp," ");
       }

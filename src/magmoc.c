@@ -1931,7 +1931,7 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_MELTFRACTION] = &WriteMeltFraction;
 }
 
-//========================= Finalize Variable Functions ========================
+//------------------------- Finalize Variable Functions ------------------------
 // ??
 void FinalizeUpdatePotTemp(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = MAGMOC;

@@ -34,7 +34,8 @@ void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBod
   dest[iBody].dPrecRate = src[iBody].dPrecRate;
   dest[iBody].iCurrentStep = src[iBody].iCurrentStep;
   dest[iBody].bReadOrbitData = src[iBody].bReadOrbitData;
-
+  dest[iBody].bCalcDynEllip = src[iBody].bCalcDynEllip;
+  dest[iBody].dSpecMomInertia = src[iBody].dSpecMomInertia;
 }
 
 void InitializeUpdateTmpBodyDistRot(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
@@ -1024,7 +1025,7 @@ void WriteDynEllip(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     *dTmp = body[iBody].dDynEllip;
   else
     *dTmp = -1;
-  sprintf(cUnit,"");
+  sprintf(cUnit,"%s","");
 }
 
 void WritePrecFNat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -1243,13 +1244,7 @@ void PropertiesDistRot(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 //     body[iBody].dObliquity = atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
 //     body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);
 //   }
-  if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
-    /* XXX Conflict -- not sure which is right
-    CalcDynEllip(body, iBody);
-  }
-    */
-    body[iBody].dDynEllip = CalcDynEllipEq(body, iBody);
-  }
+
 
   if (body[iBody].bReadOrbitData) {
     UpdateOrbitData(body,evolve,iBody);

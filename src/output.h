@@ -18,18 +18,18 @@
 #define OUTBODYSTART            500
 #define OUTEND                  1000
 
-#define OUT_AGE			160
-#define OUT_TIME		170
-#define OUT_TOTANGMOM		180
+#define OUT_AGE			            160
+#define OUT_TIME		            170
+#define OUT_TOTANGMOM		        180
 
-#define OUT_TOTENERGY		190
+#define OUT_TOTENERGY		        190
 
 #define OUT_POTENERGY           191
 #define OUT_KINENERGY           192
 #define OUT_TOTORBENERGY        193
 
-#define OUT_DT			200
-#define OUT_DENSITY			210
+#define OUT_DT			            200
+#define OUT_DENSITY			        210
 
 #define OUT_LONGP               300
 #define OUT_LXUVTOT             310
@@ -43,9 +43,9 @@
 
 #define OUT_RADIUS              520
 #define OUT_RADGYRA             521
-#define OUT_ROTANGMOM		530
+#define OUT_ROTANGMOM		        530
 #define OUT_ROTKINENERGY        535
-#define OUT_ROTVEL		540
+#define OUT_ROTVEL		          540
 #define OUT_BODYTYPE            545
 #define OUT_ROTRATE             550
 #define OUT_ROTPER              560
@@ -78,7 +78,6 @@
 #define OUT_INC                 663
 #define OUT_LONGA               664
 #define OUT_MEANL               665
-
 
 #define OUT_ORBKINENERGY        670
 #define OUT_ORBPOTENERGY        680

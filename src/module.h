@@ -42,6 +42,7 @@ void PropsAuxRadheatThermint(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxFlareStellar(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxAtmescEqtide(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxEqtideDistorb(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxEqtideDistRot(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxEqtideStellar(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxSpiNbodyEqtide(BODY*,EVOLVE*,UPDATE*,int);
 void PropsAuxSpiNBodyDistOrb(BODY*,EVOLVE*,UPDATE*,int);

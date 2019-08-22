@@ -405,12 +405,13 @@ void LongHelp(OPTIONS *options,OUTPUT *output,char exe[]) {
     for (i = 0; i < sz; i++) printf("-");
     printf("\n\n");
 
-    printf("**Author:** Rory Barnes\n");
+    printf("Primary Developer: Rory Barnes\n");
     printf("\n%s is a general purpose planetary evolution integrator. It takes ", exe);
     printf("an input file consisting of options and initial conditions ");
     printf("and simulates tidal evolution, along with other secondary ");
     printf("parameters, forward and/or backward in time. This help ");
     printf("describes the basics of the input file.\n\n");
+    printf("\n** Note that long help is not fully implemented.**\n");
 
     printf("Command Line Options\n");
     printf("~~~~~~~~~~~~~~~~~~~~\n\n");

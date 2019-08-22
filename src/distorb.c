@@ -382,7 +382,7 @@ void VerifyOrbitModel(CONTROL *control,FILES *files,OPTIONS *options) {
       control->Evolve.iDistOrbModel = RD4;
     }
     if (control->Io.iVerbose >= VERBINPUT)
-      fprintf(stderr,"WARNING: %s not set in any file, defaulting to %s.\n",options[OPT_ORBITMODEL].cName,options[OPT_ORBITMODEL].cDefault);
+      fprintf(stderr,"INFO: %s not set in any file, defaulting to %s.\n",options[OPT_ORBITMODEL].cName,options[OPT_ORBITMODEL].cDefault);
 
     /* Chicanery. Since I only want this set once, I will
        make it seem like the user set it. */

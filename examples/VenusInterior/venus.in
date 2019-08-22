@@ -37,9 +37,9 @@ dTSurf          737
 dTMan          3000
 dTCore         6000
 dStagLid          1
-dEruptEff      1e-9
-dViscRef      2.5e9 #2.0e9
-#dViscJumpMan   10.0
+dEruptEff      1e-2 #1e-9
+dViscRef      2.2e9 
+#dViscJumpMan  10.0
 dActViscMan   3.5e5
 
 saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $

@@ -72,9 +72,9 @@ Expected output
    :width: 600px
    :align: center
 
-   Eccentricity evolution (left) and inclination evolution (right) for the  
-   outer solar system planets over the next 1 Myr. Initial condition are taken
-   from Appendix A of `Murray & Dermott (1999) <https://ui.adsabs.harvard.edu/abs/1999ssd..book.....M/abstract>`_.
+    Eccentricity evolution (left) and inclination evolution (right) for the  
+    outer solar system planets over the next 1 Myr. Initial condition are taken
+    from Appendix A of `Murray & Dermott (1999) <https://ui.adsabs.harvard.edu/abs/1999ssd..book.....M/abstract>`_.
 
 
 .. figure:: SSDistOrbDistRotError.png

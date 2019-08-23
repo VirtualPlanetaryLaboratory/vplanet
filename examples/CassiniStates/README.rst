@@ -4,7 +4,7 @@ Cassini States
 Overview
 --------
 
-Demonstration of a planet's obliquity evolution under the influence of tides and gravitational perturbations from another planet, and arriving in a "Cassini state."
+Demonstration of a planet's obliquity evolution under the influence of tides and gravitational perturbations from another planet, resulting in capture into a "Cassini state."
 
 ===================   ============
 **Date**              07/25/18

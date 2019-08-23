@@ -71,7 +71,7 @@ Additional `VPLanet` examples can be found at the following GitHub pages:
 
 If you'd like to stay up to date on `VPLanet` by joining the e-mail list, please send a request to Rory Barnes, rory@astro.washington.edu. You can also follow VPLanet on twitter: [@VPLanetCode](https://twitter.com/VPLanetCode).
 
-### Acknowledgements
+### Acknowledgments
 
 If you use this code to generate results used in any publication or conference contribution, please cite [Barnes, R. et al. (2019), PASP, submitted](https://arxiv.org/abs/1905.06367).
 

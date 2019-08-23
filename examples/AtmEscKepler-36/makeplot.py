@@ -36,7 +36,7 @@ saOutputOrder Time -EnvelopeMass Radius
 
 system = """#
 sSystemName               kepler36
-iVerbose                  5
+iVerbose                  0
 bOverwrite                1
 saBodyFiles               star.in %s
 sUnitMass                 solar

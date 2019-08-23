@@ -55,6 +55,6 @@ black curve shows the separatrix between states 1 and 2. The three possible
 Cassini states for this system are denoted by the light gray numbers 1, 2, and
 4. This case is constructed to be similar to the illustrative case shown in
 Figure 2 of `Winn & Holman (2005) <https://ui.adsabs.harvard.edu/abs/2005ApJ...628L.159W/abstract>`_, with -g/\alpha ~ 0.75 and i = 6 deg. The
-location of the planet's pole after ~400 kyr is shown as the black points. As
+location of the planet's pole after ~400 kyr is shown as the black points, with the arrows depicting the direction of evolution. As
 the planet's spin is damped by tidal torques, its obliquity sinks into Cassini
 state 2.

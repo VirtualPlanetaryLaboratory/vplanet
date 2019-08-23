@@ -42,7 +42,7 @@ Expected output
    :align: center
 
 An Earth-mass planet damping into Cassini state 2 under the influence of tides
-and perturbations from an 18 Earth-mass companion planet. The bottom right panel shows a "Cassini parameter" which is locked at either 1 or -1 indicates the presence of a Cassini state. This example is
+and perturbations from an 18 Earth-mass companion planet. The bottom right panel shows a "Cassini parameter" which is locked at either 1 or -1 indicates the presence of a Cassini state. At the end of the simtulation, the inner planet is synchronously rotating, but its obliquity is approximately fixed at 60 degrees. This example is
 constructed to be similar to Figure 2 of `Winn & Holman (2005) <https://ui.adsabs.harvard.edu/abs/2005ApJ...628L.159W/abstract>`_.
 
 .. figure:: CassiniStatesSection.png

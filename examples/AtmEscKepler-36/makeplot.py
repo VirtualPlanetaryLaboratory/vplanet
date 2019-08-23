@@ -36,7 +36,7 @@ saOutputOrder Time -EnvelopeMass Radius
 
 system = """#
 sSystemName               kepler36
-iVerbose                  0
+iVerbose                  5
 bOverwrite                1
 saBodyFiles               star.in %s
 sUnitMass                 solar
@@ -77,6 +77,7 @@ def run(envmass, mass):
     """Run vplanet and collect the output."""
     write_in(envmass, mass)
     subprocess.call(['vplanet', 'vpl.in'])
+    #exit()
     output = vpl.GetOutput()
     envmassfinal = np.zeros(len(output.bodies) - 1)
     for i, body in enumerate(output.bodies[1:]):
@@ -145,4 +146,4 @@ ax[2].set_xlabel(r"Initial Total Mass ($\mathrm{M}_\oplus$)")
 if (sys.argv[1] == 'pdf'):
     fig.savefig('AtmEscKepler-36.pdf', bbox_inches="tight", dpi=600)
 if (sys.argv[1] == 'png'):
-    fig.savefig('AtmEscKepler-36.png', bbox_inches="tight", dpi=600)    
+    fig.savefig('AtmEscKepler-36.png', bbox_inches="tight", dpi=600)

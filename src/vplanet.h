@@ -658,6 +658,8 @@ struct BODY {
   double dJeansTime;
   double dFlowTemp;
   int bCalcFXUV;
+	int bEnvelopeLostMessage; /**< Has the envelope lost message been printed? */
+	int bRocheMessage; /** Has the Roche lobe message been printed? */
 
   /* STELLAR Parameters */
   int bStellar;

@@ -21,7 +21,7 @@ vector are all coplanar. In this case, we consider a system in which tides from 
 star damp the rotation rate, obliquity, semi-major axis, and orbital eccentricity.
 Tides tend to damp the rotational axis so that it is perpendicular to the orbital
 plane, but perturbations from other planets drive the obliquity to higher values.
-Over time, the systems settles in a damped-drived state in which the obliquity is
+Over time, the systems settles into a damped-drived state in which the obliquity is
 non-zero, but also not oscillating. This example is modeled after `Winn & Holman (2005) <https://ui.adsabs.harvard.edu/abs/2005ApJ...628L.159W/abstract>`_, see their Fig. 2.
 
 To run this example

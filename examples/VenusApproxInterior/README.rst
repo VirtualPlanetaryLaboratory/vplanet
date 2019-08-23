@@ -28,8 +28,8 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: VenusInterior1.png
-.. figure:: VenusInterior2.png
+.. figure:: VenusApproxInterior1.png
+.. figure:: VenusApproxInterior2.png
    :width: 600px
    :align: center
 

@@ -914,8 +914,9 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     body[iBody].dSurfaceWaterMass = 0.;
   }
   if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) && (body[iBody].dEnvelopeMass > 0.)){
-    // Let's remove its envelope.
+    // Let's remove its envelope and prevent further evolution.
     body[iBody].dEnvelopeMass = 0.;
+    fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = & fndUpdateFunctionTiny;
 
     // If using Lopez+2012 radius model, set radius to Sotin+2007 radius
     if(body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {

@@ -17,17 +17,17 @@ def test_AbioticO2():
 
     # Primary Variables
     # Star
-    assert np.isclose(output.log.final.star.Luminosity, 7.362970e+23)
-    assert np.isclose(output.log.final.star.LXUVStellar, 7.362970e+20)
-    assert np.isclose(output.log.final.star.Radius, 1.186513e+08)
-    assert np.isclose(output.log.final.star.Temperature, 2926.559809)
+    assert np.isclose(output.log.final.star.Luminosity, 7.362835e+23)
+    assert np.isclose(output.log.final.star.LXUVStellar, 7.362835e+20)
+    assert np.isclose(output.log.final.star.Radius, 1.186502e+08)
+    assert np.isclose(output.log.final.star.Temperature, 2926.556751)
     assert np.isclose(output.log.final.star.RadGyra, 0.466090)
     # Planet
-    assert np.isclose(output.log.final.e.SurfWaterMass, 7.403320, rtol=1e-4)
-    assert np.isclose(output.log.final.e.OxygenMass, 418.194151)
+    assert np.isclose(output.log.final.e.SurfWaterMass, 7.511356, rtol=1e-4)
+    assert np.isclose(output.log.final.e.OxygenMass, 420.619083)
 
     # Other checks
-    assert np.isclose(output.log.final.e.FXUV, 3.053313)
+    assert np.isclose(output.log.final.e.FXUV, 3.053257)
     assert np.isclose(output.log.final.e.AtmXAbsEffH2O, 0.051776)
 
 

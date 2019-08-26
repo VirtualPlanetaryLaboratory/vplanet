@@ -910,7 +910,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     body[iBody].daRelativeVel = malloc(3*sizeof(double));
 
 
-    control->fnPropsAux[iBody][iModule] = &PropertiesGalHabit;
+    control->fnPropsAux[iBody][iModule] = &PropsAuxGalHabit;
 
     iEqn = 0;
     if (body[iBody].bGalacTides) {
@@ -1481,7 +1481,7 @@ void AddModuleGalHabit(CONTROL *control,MODULE *module,int iBody,int iModule) {
 }
 
 /************* GALHABIT Functions ***********/
-void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxGalHabit(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   double sinw, cosw, cosw_alt, sign, dMu, dL;
 
   /* calculate osculating elements */

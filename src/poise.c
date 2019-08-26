@@ -1868,7 +1868,7 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
 //     }
   }
 
-  control->fnPropsAux[iBody][iModule] = &PropertiesPoise;
+  control->fnPropsAux[iBody][iModule] = &PropsAuxPoise;
 
   control->fnForceBehavior[iBody][iModule]=&ForceBehaviorPoise;
   control->Evolve.fnBodyCopy[iBody][iModule]=&BodyCopyPoise;
@@ -3036,7 +3036,7 @@ Standard properties function for POISE. Updates auxiliary quantities
 @param update Struct containing update information and variables
 @param iBody Body in question
 */
-void PropertiesPoise(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxPoise(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
     if (body[iBody].bDistRot == 0) {
       body[iBody].dDynEllip = CalcDynEllipEq(body, iBody);

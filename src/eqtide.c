@@ -2847,9 +2847,9 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
       // Update PropsAux
       if (evolve->iEqtideModel == CPL) {
-        PropsAuxCPL(body,evolve,update,iBody);
+        PropsAuxCPL(body,evolve,io,update,iBody);
       } else if (evolve->iEqtideModel == CTL) {
-        PropsAuxCTL(body,evolve,update,iBody);
+        PropsAuxCTL(body,evolve,io,update,iBody);
       } // DB15 assumes tidal locking
 
       // Recompute, sum up new derivatives using perturbed dRotRate
@@ -2866,9 +2866,9 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
         // Update PropsAux
         if (evolve->iEqtideModel == CPL) {
-          PropsAuxCPL(body,evolve,update,iBody);
+          PropsAuxCPL(body,evolve,io,update,iBody);
         } else if (evolve->iEqtideModel == CTL) {
-          PropsAuxCTL(body,evolve,update,iBody);
+          PropsAuxCTL(body,evolve,io,update,iBody);
         } // DB15 assumes tidal locking
 
         // Recompute, sum up new derivatives using perturbed dRotRate
@@ -2897,9 +2897,9 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
       // Update PropsAux
       if (evolve->iEqtideModel == CPL) {
-        PropsAuxCPL(body,evolve,update,iBody);
+        PropsAuxCPL(body,evolve,io,update,iBody);
       } else if (evolve->iEqtideModel == CTL) {
-        PropsAuxCTL(body,evolve,update,iBody);
+        PropsAuxCTL(body,evolve,io,update,iBody);
       } // DB15 assumes tidal locking
 
       // Reset derivatives
@@ -2940,14 +2940,14 @@ else {
 
 /* Auxiliary properties required for the CPL calculations. N.B.: These
    parameters also need to be included in BodyCopyEqtide!!! */
-void PropsAuxEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxEqtide(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
 
   if (evolve->iEqtideModel == CPL) {
-    PropsAuxCPL(body,evolve,update,iBody);
+    PropsAuxCPL(body,evolve,io,update,iBody);
   } else if (evolve->iEqtideModel == CTL) {
-    PropsAuxCTL(body,evolve,update,iBody);
+    PropsAuxCTL(body,evolve,io,update,iBody);
   } else if (evolve->iEqtideModel == DB15) {
-    PropsAuxDB15(body,evolve,update,iBody);
+    PropsAuxDB15(body,evolve,io,update,iBody);
   }
 }
 
@@ -2982,7 +2982,7 @@ void PropsAuxOrbiterDB15(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dDeccDtEqtide = fdDB15DeccDt(body,update,update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccEqtide]);
 }
 
-void PropsAuxCPL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxCPL(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   int iPert,iIndex;
   /* dMeanMotion claculated in PropsAuxGeneral */
   int iOrbiter;
@@ -3015,7 +3015,7 @@ void PropsAuxCPL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   }
 }
 
-void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxCTL(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   int iPert,iIndex;
   /* dMeanMotion claculated in PropsAuxGeneral */
   int iOrbiter;
@@ -3062,7 +3062,7 @@ void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   }
 }
 
-void PropsAuxDB15(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxDB15(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
 
   if (iBody > 0) {
     body[iBody].dTidalPowMan = fdTidePower(body,iBody,evolve->iEqtideModel);

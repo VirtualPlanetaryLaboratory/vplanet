@@ -14,7 +14,7 @@ well as VSPACE.
 
 **Rodrigo Luger** wrote the AtmEsc and STELLAR modules, as well as the accompanying
 VPLOT resource. He also deisgned the repository, including setting up the continuous
-integration.
+integration and calculating code coverage.
 
 **David Fleming** wrote the BINARY module and has contributed to the development
 of STELLAR, AtmEsc, EqTide. He also wrote BigPlanet.

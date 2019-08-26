@@ -1,4 +1,4 @@
-VPLANET Style Guide
+VPLanet Style Guide
 ===================
 
 .. contents:: :local:

@@ -34,7 +34,8 @@ void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBod
   dest[iBody].dPrecRate = src[iBody].dPrecRate;
   dest[iBody].iCurrentStep = src[iBody].iCurrentStep;
   dest[iBody].bReadOrbitData = src[iBody].bReadOrbitData;
-
+  dest[iBody].bCalcDynEllip = src[iBody].bCalcDynEllip;
+  dest[iBody].dSpecMomInertia = src[iBody].dSpecMomInertia;
 }
 
 void InitializeUpdateTmpBodyDistRot(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
@@ -88,7 +89,19 @@ void ReadPrecRate(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
 
 }
 
-
+void ReadSpecMomInertia(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* Cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    /* Option was found */
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].dSpecMomInertia = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    AssignDefaultDouble(options,&body[iFile-1].dSpecMomInertia,files->iNumInputs);
+}
 
 void ReadOrbitData(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1,bTmp;
@@ -151,6 +164,14 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_PRECRATE].iType = 2;
   options[OPT_PRECRATE].iMultiFile = 1;
   fnRead[OPT_PRECRATE] = &ReadPrecRate;
+
+  sprintf(options[OPT_SPECMOMINERTIA].cName,"dSpecMomInertia");
+  sprintf(options[OPT_SPECMOMINERTIA].cDescr,"Specific moment of inertia of polar axis");
+  sprintf(options[OPT_SPECMOMINERTIA].cDefault,"0.33");
+  options[OPT_SPECMOMINERTIA].dDefault = 0.33;
+  options[OPT_SPECMOMINERTIA].iType = 2;
+  options[OPT_SPECMOMINERTIA].iMultiFile = 1;
+  fnRead[OPT_SPECMOMINERTIA] = &ReadSpecMomInertia;
 
 
   sprintf(options[OPT_READORBITDATA].cName,"bReadOrbitData");
@@ -454,7 +475,7 @@ void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
 
   if (iBody >= 1) {
-    control->fnPropsAux[iBody][iModule] = &PropertiesDistRot;
+    control->fnPropsAux[iBody][iModule] = &PropsAuxDistRot;
     VerifyDynEllip(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
 
     if (body[iBody].bReadOrbitData) {
@@ -1004,7 +1025,7 @@ void WriteDynEllip(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
     *dTmp = body[iBody].dDynEllip;
   else
     *dTmp = -1;
-  sprintf(cUnit,"");
+  sprintf(cUnit,"%s","");
 }
 
 void WritePrecFNat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -1218,18 +1239,12 @@ void UpdateOrbitData(BODY *body, EVOLVE *evolve, int iBody) {
   }
 }
 
-void PropertiesDistRot(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxDistRot(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   // if (body[iBody].bForcePrecRate) {
 //     body[iBody].dObliquity = atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
 //     body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);
 //   }
-  if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
-    /* XXX Conflict -- not sure which is right
-    CalcDynEllip(body, iBody);
-  }
-    */
-    body[iBody].dDynEllip = CalcDynEllipEq(body, iBody);
-  }
+
 
   if (body[iBody].bReadOrbitData) {
     UpdateOrbitData(body,evolve,iBody);

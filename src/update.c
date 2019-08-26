@@ -2083,8 +2083,8 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
         control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dLostEng;
         control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumLostEng*sizeof(int));
         control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumLostEng*sizeof(double));
-          control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumLostEng*sizeof(int));
-          control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumLostEng*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumLostEng*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumLostEng*sizeof(int));
         control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumLostEng*sizeof(int*));
       }
 

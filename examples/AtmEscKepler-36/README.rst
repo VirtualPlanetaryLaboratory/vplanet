@@ -18,7 +18,7 @@ Hydrogen-rich planets that are close to their host star can lose significant mas
 as the XUV radiation from the host star imparts enough energy for individual atoms
 to acheive escape velocity. In this example, **VPLanet** simulates atmmospheric loss
 for the case of Kepler-36 b, which is considerably smaller in radius than its very
-nearby companions, Kepler-36 c. `Lopez & Fortney (2013) <https://ui.adsabs.harvard.edu/abs/2013ApJ...776....2L/abstract>`_ argue that this extreme
+nearby companion, Kepler-36 c. `Lopez & Fortney (2013) <https://ui.adsabs.harvard.edu/abs/2013ApJ...776....2L/abstract>`_ argue that this
 radius dichotomy can be explained by XUV winds, and **VPLanet** reproduces that
 result, see Figure 3 in `Lopez & Fortney (2013) <https://ui.adsabs.harvard.edu/abs/2013ApJ...776....2L/abstract>`_ .
 

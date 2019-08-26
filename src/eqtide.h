@@ -37,7 +37,6 @@
 #define OPT_TIDEMODEL           1040
 #define OPT_TIDEPERTS           1042
 #define OPT_TIDALTAU            1045
-#define OPT_TIDALQ              1050
 #define OPT_TIDALQOCEAN         1051
 #define OPT_OCEANTIDES          1052
 #define OPT_TIDALQENV           1053
@@ -228,7 +227,7 @@ double fdTidePower(BODY*,int,int);
 double fdSurfEnFluxEqtide(BODY*,SYSTEM*,UPDATE*,int,int);
 void ForceBehaviorEqtide(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
-void PropsAuxEqtide(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxEqtide(BODY*,EVOLVE*,IO*,UPDATE*,int);
 
 /******************** CPL Functions ********************/
 
@@ -238,7 +237,7 @@ void fdCPLZ(BODY*,double,double,int,int);
 double fdGammaRot(double,double,int*);
 double fdGammaOrb(double,double,int*);
 double fdCPLTidePower(BODY*,int);
-void PropsAuxCPL(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxCPL(BODY*,EVOLVE*,IO*,UPDATE*,int);
 
 /* Equilibrium parameters */
 double fdCPLEqSpinRate(double,double,int);
@@ -273,7 +272,7 @@ double fdCTLF4(double);
 double fdCTLBeta(double);
 double fdCTLF5(double);
 double fdCTLTidePower(BODY*,int);
-void PropsAuxCTL(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxCTL(BODY*,EVOLVE*,IO*,UPDATE*,int);
 double fdSurfEnFluxOcean(BODY*,int);
 double fdTidePowerOcean(BODY*,int);
 
@@ -296,7 +295,7 @@ double fdCTLDoblDt(BODY*,int*);
 
 /******************** DB15 Functions ********************/
 double fdPowerEqtideDB15(BODY*,int);
-void PropsAuxDB15(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxDB15(BODY*,EVOLVE*,IO*,UPDATE*,int);
 
 
 double fdDB15DsemiDt(BODY*,SYSTEM*,int*);

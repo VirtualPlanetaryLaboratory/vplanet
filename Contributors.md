@@ -4,10 +4,10 @@
 expertise. This file records who is responsible for which aspects of the code.
 
 **Rory Barnes** is the lead developer who conceived the project, 
-implemented the matrices and vectors of function pointers, and designed
-the I/O scheme. He also wrote most of the top-level files, such as vplanet.h,
+implemented the matrices and vectors of function pointers, designed
+the I/O scheme, and maintains this repository. He also wrote most of the top-level files, such as vplanet.h,
 control.c, body.c, evolve.c, etc. He wrote most of EqTide and RadHeat.
-Finally, he maintains the repository and can be reached at rory@astro.washington.edu.
+He can be reached at rory@astro.washington.edu.
 
 **Russell Deitrick** wrote the DistOrb, DistRot, GalHabit and POISE modules, as
 well as VSPACE.

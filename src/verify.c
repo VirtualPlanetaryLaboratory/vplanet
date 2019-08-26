@@ -659,9 +659,9 @@ void VerifyImK2Mantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
 void VerifyImK2(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,UPDATE *update,int iBody) {
 
   // First gather auxiliary properties for relevant modules
-  PropsAuxEqtide(body,&control->Evolve,update,iBody);
+  PropsAuxEqtide(body,&control->Evolve,&control->Io,update,iBody);
   if (body[iBody].bThermint) {
-    fvPropsAuxThermint(body,&control->Evolve,update,iBody);
+    fvPropsAuxThermint(body,&control->Evolve,&control->Io,update,iBody);
   }
 
   VerifyImK2Env(body,control,files,options,system,iBody);

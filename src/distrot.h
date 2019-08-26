@@ -96,7 +96,7 @@ void LogDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* DistRot Functions */
-void PropertiesDistRot(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxDistRot(BODY*,EVOLVE*,IO*,UPDATE*,int);
 void ForceBehaviorDistRot(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void RotateVector(double*,double*,double,int);
 

@@ -942,7 +942,7 @@ Initializes several helper variables and properties used in the integration.
 @param update A pointer to the UPDATE instance
 @param iBody The current BODY number
 */
-void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iBody) {
 
   body[iBody].dAge = body[0].dAge;
 
@@ -965,7 +965,7 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
       if (xi > 1) {
         body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
       } else {
-        if (!body[iBody].bRocheMessage) {
+        if (!body[iBody].bRocheMessage && io->iVerbose >= VERBINPUT) {
           fprintf(stderr,"WARNING: Roche lobe radius is larger than XUV radius for %s, evolution may not be accurate.\n",
               body[iBody].cName);
           body[iBody].bRocheMessage = 1;
@@ -1222,7 +1222,7 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   VerifyRadiusAtmEsc(body,control,options,update,body[iBody].dAge,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorAtmEsc;
-  control->fnPropsAux[iBody][iModule] = &fnPropertiesAtmEsc;
+  control->fnPropsAux[iBody][iModule] = &fnPropsAuxAtmEsc;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyAtmEsc;
 
 }

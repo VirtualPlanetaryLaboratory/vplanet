@@ -433,6 +433,7 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
      Module-specific parameters belong in the fnBodyCopy subroutines. */
 
   for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+    strcpy(dest[iBody].cName,src[iBody].cName);
     dest[iBody].iBodyType = src[iBody].iBodyType;
     dest[iBody].dMass = src[iBody].dMass;
     dest[iBody].dRadius = src[iBody].dRadius;

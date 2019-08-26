@@ -67,6 +67,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dFXUV = src[iBody].dFXUV;
   dest[iBody].bCalcFXUV = src[iBody].bCalcFXUV;
   dest[iBody].dJeansTime = src[iBody].dJeansTime;
+  dest[iBody].bRocheMessage = src[iBody].bRocheMessage;
 
 }
 
@@ -913,15 +914,19 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     // Let's desiccate this planet.
     body[iBody].dSurfaceWaterMass = 0.;
   }
-  if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) && (body[iBody].dEnvelopeMass > 0.)){
-    // Let's remove its envelope.
+
+  if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) && (body[iBody].dEnvelopeMass > 0.)) {
+    // Let's remove its envelope and prevent further evolution.
     body[iBody].dEnvelopeMass = 0.;
+    fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
 
     // If using Lopez+2012 radius model, set radius to Sotin+2007 radius
     if(body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
       // Let user know what's happening
-      printf("Envelope removed. Use Lopez+12 radius models for envelope, switching to Sotin+2007 model for solid planet radius.\n");
-
+      if (io->iVerbose >= VERBPROG && !body[iBody].bEnvelopeLostMessage) {
+        printf("%s's envelope removed. Used Lopez+12 radius models for envelope, switching to Sotin+2007 model for solid planet radius.\n",body[iBody].cName);
+        body[iBody].bEnvelopeLostMessage = 1;
+      }
       // Update radius
       body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
     }
@@ -937,7 +942,7 @@ Initializes several helper variables and properties used in the integration.
 @param update A pointer to the UPDATE instance
 @param iBody The current BODY number
 */
-void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iBody) {
 
   body[iBody].dAge = body[0].dAge;
 
@@ -960,10 +965,13 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
       if (xi > 1) {
         body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
       } else {
-        fprintf(stderr,"WARNING: Roche lobe radius is larger than XUV radius for %s, evolution may not be accurate.\n",
+        if (!body[iBody].bRocheMessage && io->iVerbose >= VERBINPUT) {
+          fprintf(stderr,"WARNING: Roche lobe radius is larger than XUV radius for %s, evolution may not be accurate.\n",
               body[iBody].cName);
-        body[iBody].dKTide = 1.0;
+          body[iBody].bRocheMessage = 1;
+        }
       }
+      body[iBody].dKTide = 1.0;
   }
 
   // The XUV flux
@@ -1123,7 +1131,8 @@ Verify all the inputs for the atmospheric escape module.
 void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int bAtmEsc=0;
 
-  /* AtmEsc is active for this body if this subroutine is called. */
+  body[iBody].bEnvelopeLostMessage = 0;
+  body[iBody].bRocheMessage = 0;
 
   // Is FXUV specified in input file?
   if (options[OPT_FXUV].iLine[iBody+1] > -1){
@@ -1213,7 +1222,7 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   VerifyRadiusAtmEsc(body,control,options,update,body[iBody].dAge,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorAtmEsc;
-  control->fnPropsAux[iBody][iModule] = &fnPropertiesAtmEsc;
+  control->fnPropsAux[iBody][iModule] = &fnPropsAuxAtmEsc;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyAtmEsc;
 
 }

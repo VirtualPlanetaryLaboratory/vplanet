@@ -219,24 +219,6 @@ void ReadHZModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
       body[iFile-1].iHZModel = HZ_MODEL_KOPPARAPU;
 }
 
-void ReadLuminosity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile-1].dLuminosity = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else
-      body[iFile-1].dLuminosity = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dLuminosity = options->dDefault;
-}
-
 void ReadTemperature(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -381,16 +363,6 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HZMODEL].iMultiFile = 1;
   fnRead[OPT_HZMODEL] = &ReadHZModel;
 
-  sprintf(options[OPT_LUMINOSITY].cName,"dLuminosity");
-  sprintf(options[OPT_LUMINOSITY].cDescr,"Initial Luminosity");
-  sprintf(options[OPT_LUMINOSITY].cDefault,"LSUN");
-  options[OPT_LUMINOSITY].dDefault = LSUN;
-  options[OPT_LUMINOSITY].iType = 0;
-  options[OPT_LUMINOSITY].iMultiFile = 1;
-  options[OPT_LUMINOSITY].dNeg = LSUN;
-  sprintf(options[OPT_LUMINOSITY].cNeg,"Solar Luminosity (LSUN)");
-  fnRead[OPT_LUMINOSITY] = &ReadLuminosity;
-
   sprintf(options[OPT_TEMPERATURE].cName,"dTemperature");
   sprintf(options[OPT_TEMPERATURE].cDescr,"Initial Effective Temperature");
   sprintf(options[OPT_TEMPERATURE].cDefault,"TSUN");
@@ -469,14 +441,14 @@ void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *upd
     if (options[OPT_LUMINOSITY].iLine[iBody+1] >= 0) {
       // User specified luminosity, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Luminosity set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Luminosity set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
     body[iBody].dLuminosity = fdLuminosityFunctionProximaCen(body[iBody].dAge,body[iBody].dMass);
     if (options[OPT_LUMINOSITY].iLine[iBody+1] >= 0) {
       // User specified luminosity, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Luminosity set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Luminosity set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   }
 
@@ -496,14 +468,14 @@ void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
     body[iBody].dRadius = fdRadiusFunctionProximaCen(body[iBody].dAge,body[iBody].dMass);
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   }
 
@@ -525,7 +497,7 @@ void VerifyRadGyra(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update
     if (options[OPT_RG].iLine[iBody+1] >= 0) {
       // User specified radius of gyration, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Radius of Gyration set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Radius of Gyration set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
     if (options[OPT_RG].iLine[iBody+1] < 0) {
@@ -562,14 +534,14 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *up
     if (options[OPT_TEMPERATURE].iLine[iBody+1] >= 0) {
       // User specified temperature, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Temperature set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Temperature set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
     body[iBody].dTemperature = fdTemperatureFunctionProximaCen(body[iBody].dAge,body[iBody].dMass);
     if (options[OPT_TEMPERATURE].iLine[iBody+1] >= 0) {
       // User specified temperature, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Temperature set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Temperature set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   }
 
@@ -581,7 +553,7 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *up
   update[iBody].pdTemperatureStellar = &update[iBody].daDerivProc[update[iBody].iTemperature][0];  // NOTE: This points to the VALUE of the temperature
 }
 
-void fnPropertiesStellar(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void fnPropsAuxStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iBody) {
 
   // Set rotation period for rossby number calculations
   body[iBody].dRotPer = fdFreqToPer(body[iBody].dRotRate);
@@ -659,8 +631,6 @@ void NullStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVar
 }
 
 void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
-  int bStellar=0;
-
   /* Stellar is active for this body if this subroutine is called. */
 
   if (update[iBody].iNumLuminosity > 1) {
@@ -669,7 +639,6 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     exit(EXIT_INPUT);
   }
   VerifyLuminosity(body,control,options,update,body[iBody].dAge,iBody);
-  bStellar = 1;
 
   if (update[iBody].iNumRadius > 1) {
     if (control->Io.iVerbose >= VERBERR)
@@ -697,7 +666,7 @@ void VerifyStellar(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
   VerifyLostEngStellar(body,control,options,update,body[iBody].dAge,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorStellar;
-  control->fnPropsAux[iBody][iModule] = &fnPropertiesStellar;
+  control->fnPropsAux[iBody][iModule] = &fnPropsAuxStellar;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyStellar;
 
 }
@@ -709,11 +678,11 @@ void InitializeModuleStellar(CONTROL *control,MODULE *module) {
 /**************** STELLAR update ****************/
 
 void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {
-  if (body[iBody].dLuminosity > 0) {
+  //if (body[iBody].dLuminosity > 0) {
     if (update[iBody].iNumLuminosity == 0)
       update[iBody].iNumVars++;
     update[iBody].iNumLuminosity++;
-  }
+  //}
 
   if (body[iBody].dRadius > 0) {
     if (update[iBody].iNumRadius == 0)
@@ -727,7 +696,7 @@ void InitializeUpdateStellar(BODY *body,UPDATE *update,int iBody) {
     update[iBody].iNumRadGyra++;
   }
 
-  // NOTE: Rory and I decided to ALWAYS track the rotation evolution of the star,
+  // NOTE: Rory and Rodrigo decided to ALWAYS track the rotation evolution of the star,
   // so I'm not going to check whether dRotRate is zero here. If it is, it gets set
   // to its default value, and we track angular momentum conservation from there.
   if (update[iBody].iNumRot == 0)

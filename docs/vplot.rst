@@ -2,7 +2,7 @@ VPLOT
 =====
 
 The :code:`vplot` Python package allows users to easily plot and interact with
-:code:`VPLANET` simulation output. The easiest way to install it is by running
+:code:`VPLanet` simulation output. The easiest way to install it is by running
 
 .. code-block:: bash
 

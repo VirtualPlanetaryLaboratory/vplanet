@@ -50,7 +50,6 @@ def comp2huybers(plname,dir='.',xrange=False,show=True):
 
   for ii in np.arange(nfiles):
     out = vplot.GetOutput(dir[ii])
-
     #pdb.set_trace()
 
     ctmp = 0
@@ -97,7 +96,7 @@ def comp2huybers(plname,dir='.',xrange=False,show=True):
           pco2 = np.float(lines[i].split()[1])
 
     try:
-      longp = (body.ArgP + body.LongA + body.PrecA)*np.pi/180.0
+      longp = (body.ArgP + body.LongA + body.PrecA + 180)*np.pi/180.0
     except:
       longp = body.PrecA*np.pi/180.0
 
@@ -126,9 +125,9 @@ def comp2huybers(plname,dir='.',xrange=False,show=True):
       plt.xlim(xrange)
     # plt.contour(body.Time/1e6,lats[lats>60],temp.T[lats>60],levels=[0],colors='w')
     plt.xticks(visible=False)
-    clb=plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
+    clb=plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]),ticks=[-17,-15,-13,-11,-9,-7,-5])
     clb.set_label('Surface Temp.\n($^{\circ}$C)',fontsize=12)
-
+    # clb.ax.set_yticklabels([-17,-15,-13,-11,-9,-7])
     # plot ice height
     ice = np.reshape(body.IceHeight+body.BedrockH,(ntimes,nlats))
 

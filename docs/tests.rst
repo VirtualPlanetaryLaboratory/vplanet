@@ -95,7 +95,7 @@ on:
     **Author**            Rodrigo Luger
     ===================   ============
 
-    If EQTIDE is present in any of the body .in files, but *not in the primary* .in file,
+    If EqTide is present in any of the body .in files, but *not in the primary* .in file,
     a segfault occurs.
 
     Long description

@@ -91,9 +91,9 @@ plt.xticks([0,1,2,3,4])
 
 vplot.make_pretty(fig)
 if (sys.argv[1] == 'pdf'):
-    plt.savefig('VenusInterior%d.pdf'%nfig)
+    plt.savefig('VenusApproxInterior%d.pdf'%nfig)
 if (sys.argv[1] == 'png'):
-    plt.savefig('VenusInterior%d.png'%nfig)
+    plt.savefig('VenusApproxInterior%d.png'%nfig)
 
 # Core Plots
 nfig += 1
@@ -133,7 +133,7 @@ plt.xticks([0,1,2,3,4])
 
 vplot.make_pretty(fig)
 if (sys.argv[1] == 'pdf'):
-    plt.savefig('VenusInterior%d.pdf'%nfig)
+    plt.savefig('VenusApproxInterior%d.pdf'%nfig)
 if (sys.argv[1] == 'png'):
-    plt.savefig('VenusInterior%d.png'%nfig)
+    plt.savefig('VenusApproxInterior%d.png'%nfig)
 plt.close()

@@ -73,7 +73,7 @@ If you'd like to stay up to date on `VPLanet` by joining the e-mail list, please
 
 ### Acknowledgments
 
-If you use this code to generate results used in any publication or conference contribution, please cite [Barnes, R. et al. (2019), PASP, submitted](https://arxiv.org/abs/1905.06367).
+If you use this code to generate results used in any publication or conference contribution, please cite [Barnes, R. et al. (2019), PASP, accepted](https://arxiv.org/abs/1905.06367).
 
 `VPLanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, 80NSSC17K048, and 13-13NAI7_0024. We also acknowledge support from the University of Washington and the Carnegie Institute for Science.
 

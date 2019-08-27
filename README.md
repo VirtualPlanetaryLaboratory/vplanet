@@ -6,7 +6,7 @@
   <a href="https://raw.github.com/VirtualPlanetaryLaboratory/vplanet/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-purple.svg"/></a>
   <img src = "https://img.shields.io/badge/platform-Linux_|%20macOS-darkgreen.svg?style=flat"><br>
   <a href="https://travis-ci.com/VirtualPlanetaryLaboratory/vplanet"><img src="https://travis-ci.com/VirtualPlanetaryLaboratory/vplanet.svg?token=jABaFLLgJNHTWSqkT7CM&branch=master"></a>
-  <img src = "https://img.shields.io/badge/memcheck-clean-green.svg?style=flat">
+  <img src = "https://img.shields.io/badge/memcheck-clean-brightgreen.svg?style=flat">
   <img src = "https://img.shields.io/badge/coverage-74%25-red.svg?style=flat">
 </p>
 

@@ -27,7 +27,7 @@ your suite of initial conditions will live:
   
     destfolder <path of directory>
     
-Then, provide a list of the files you wish to be copied and used by VPLANET, and all 
+Then, provide a list of the files you wish to be copied and used by ``VPLanet``, and all 
 options you wish to change, in the following format:
     
     file <name of file in srcfolder>
@@ -104,7 +104,7 @@ or,
     dRadius  [-2, -1, 0.1]  R
     
 rather than ``dRadius [-1, -2, 0.1]  R``. VSPACE will not check whether a minus option is 
-allowed by VPLANET, so make sure you check ``vplanet -h``. 
+allowed by ``VPLanet``, so make sure you check ``vplanet -h``. 
 
 You can vary more than one parameter at a time! For example, in your input file you might 
 have,

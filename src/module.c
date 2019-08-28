@@ -1275,6 +1275,14 @@ void  VerifyModuleCompatability(BODY *body,CONTROL *control,FILES *files,MODULE 
     }
   }
 
+  if (body[iBody].bAtmEsc) {
+    if (body[iBody].bPoise) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: Modules AtmEsc and POISE cannot be applied to the same body.\n");
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+    }
+  }
+
   // Distorb
   if (body[iBody].bDistOrb) {
     if (body[iBody].bSpiNBody) {

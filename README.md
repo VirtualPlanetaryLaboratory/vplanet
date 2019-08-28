@@ -1,7 +1,7 @@
 # VPLanet: The Virtual Planet Simulator
 <p align="center">
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet"><img src="https://img.shields.io/badge/read-the_docs-blue.svg?style=flat"></a>
-  <a href="https://arxiv.org/abs/1905.06367"><img src="https://img.shields.io/badge/read-the_paper-7d93c7.svg?style=flat"/></a>
+  <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract"><img src="https://img.shields.io/badge/read-the_paper-7d93c7.svg?style=flat"/></a>
   <a href="http://ascl.net/1811.017"><img src="https://img.shields.io/badge/ascl-1811.017-blue.svg?colorB=262255" alt="ascl:1811.017" /></a>
   <a href="https://raw.github.com/VirtualPlanetaryLaboratory/vplanet/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-purple.svg"/></a>
   <img src = "https://img.shields.io/badge/platform-Linux_|%20macOS-darkgreen.svg?style=flat"><br>

@@ -69,6 +69,8 @@ Additional `VPLanet` examples can be found at the following GitHub pages:
 [Rory Barnes](https://github.com/RoryBarnes) <br />
 [David Fleming](https://github.com/dflemin3)
 
+If you believe you have encountered a bug, please raise an issue using the "Issues" tab at the top of this page. 
+
 If you'd like to stay up to date on `VPLanet` by joining the e-mail list, please send a request to Rory Barnes, rory@astro.washington.edu. You can also follow VPLanet on twitter: [@VPLanetCode](https://twitter.com/VPLanetCode).
 
 ### Acknowledgments

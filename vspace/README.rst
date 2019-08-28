@@ -1,6 +1,6 @@
 VSPACE
 ------
-A quick way to generate a parameter space for ``VPLANET``.
+A quick way to generate a parameter space for ``VPLanet``.
 
 Installation
 ============
@@ -15,7 +15,7 @@ Run vspace on the command line by typing:
 
 An input file is necessary. Take a look at the ``input`` file in the examples directory. 
 This file will contain a list of files to be copied (from some source directory to a 
-destination directory) and all the VPLANET options you wish to change or add to each file. 
+destination directory) and all the ``VPLanet`` options you wish to change or add to each file. 
 
 You will need to provide a directory that contains template/example input files (such as 
 any directory in vplanet/examples) in the following syntax:

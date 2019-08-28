@@ -13,11 +13,11 @@ He can be reached at rory@astro.washington.edu.
 well as VSPACE.
 
 **Rodrigo Luger** wrote the AtmEsc and STELLAR modules, as well as the accompanying
-VPLOT resource. He also deisgned the repository, including setting up the continuous
+VPLOT resource. He also designed this repository, including setting up the continuous
 integration and calculating code coverage.
 
 **David Fleming** wrote the BINARY module and has contributed to the development
-of STELLAR, AtmEsc, EqTide. He also wrote BigPlanet.
+of STELLAR, AtmEsc, and EqTide. He also wrote BigPlanet.
 
 **Hayden Smotherman** wrote SpiNBody and has contributed to various subroutines
 that have signficantly increased the efficiency of the executable.
@@ -33,6 +33,8 @@ also found many bugs with valgrind and address-sanitizer.
 **Benjamin Guyer** assisted in the coupling of EqTide and ThermInt.
 
 **Caitlyn Wilhelm** added forced eccentricity and obliquity oscillations to
-POISE and assisted in debugging it.
+POISE, and assisted in debugging it.
 
 **Rodolfo Garcia** assisted in AtmEsc and ThermInt development.
+
+**Patrick Barth** assisted in AtmEsc development.

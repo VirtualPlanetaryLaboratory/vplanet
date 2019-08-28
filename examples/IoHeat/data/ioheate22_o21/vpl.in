@@ -1,0 +1,38 @@
+# Template vpl.in file for vspace generation of files for Io tidal heat validation
+sSystemName	ioheat		# System Name
+iVerbose	5			# Verbosity level
+bOverwrite	1			# Allow file overwrites?
+
+# All space after a # is ignored, as is white space
+# The first lowercase letter(s) denote the cast: b=boolean, i=int, d=double,
+# s=string. An "a" indicates an array and multiple arguments are allowed/expected.
+
+# List of "body files" that contain body-specific parameters
+saBodyFiles	jupiter.in $	# Jupiter's input file
+					  io.in 			 	# Io's input file
+
+# Array options can continue to the next line with a terminating "$". The $ can be
+# at the end of the string or not. Comments are allowed afterwards.
+
+# Input/Output Units
+sUnitMass	  Jup		  # Options: gram, kg, Earth, Neptune, Jupiter, solar
+sUnitLength	jUpit	  # Options: cm, m, km, Earth, Jupiter, solar, AU
+sUnitTime	  day		  # Options: sec, day, year, Myr, Gyr
+sUnitAngle	d		    # Options: deg, rad
+sUnitTemp   K       # Options: Kelvin, Celsius, Farenheit
+
+# Units specified in the primary input file are propagated into the bodies.
+# Otherwise specifiy units on a per body basis in the body files.
+# Most string arguments can be in any case and need only be unambiguous.
+
+# Input/Output
+bDoLog		1					# Write a log file?
+iDigits		6					# Maximum number of digits to right of decimal
+
+# Option names must be exact in spelling and case.
+
+# If no forward or backward integrations are requested, but a log file is, then
+# the log file will be generated. Useful for parameter space surveys.
+
+# Some options are only permitted in the primary file, some are forbidden.
+# See the online documentation of vplanet for the rules

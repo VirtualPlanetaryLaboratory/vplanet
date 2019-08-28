@@ -15,7 +15,7 @@ the pre-main sequence and tidal torques.
 **Approx. runtime**   71 seconds
 ===================   ============
 
-As stars form, they contract onto the main sequence, and those in binary star systems
+As stars form they contract onto the main sequence, and those in binary star systems
 can also experience tidal torques on the rotation and orbit. As tidal torques scale
 with stellar radius to the 5th power, the torques can be very strong early on. This
 early tidal evolution circularizes binary star orbits for orbital periods less than

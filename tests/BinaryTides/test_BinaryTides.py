@@ -8,7 +8,7 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 def test_BinaryTides():
     """Test tidal/stellar evolution of tight binary star systems."""
     # Remove old log file
-    subprocess.run(['rm', 'Zahn89.log'], cwd=cwd)
+    subprocess.run(['rm', 'BinaryTides.log'], cwd=cwd)
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
 

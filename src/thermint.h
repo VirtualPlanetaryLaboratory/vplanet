@@ -296,7 +296,7 @@ void fvNullThermintDerivatives(BODY*,EVOLVE*,UPDATE*,fnUpdateVariable***,int);
 void fvInitializeUpdateThermint(BODY*,UPDATE*,int);
 
 /* Auxiliary Properties */
-void fvPropsAuxThermint(BODY*,EVOLVE*,UPDATE*,int);
+void fvPropsAuxThermint(BODY*,EVOLVE*,IO*,UPDATE*,int);
 /* Force Behavior */
 void fvForceBehaviorThermint(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable ***fnUpdate,int,int);
 

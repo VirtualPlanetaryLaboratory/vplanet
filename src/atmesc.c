@@ -67,9 +67,11 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dFXUV = src[iBody].dFXUV;
   dest[iBody].bCalcFXUV = src[iBody].bCalcFXUV;
   dest[iBody].dJeansTime = src[iBody].dJeansTime;
-  dest[iBody].dRocheRadius = src[iBody].dRocheRadius; // XXX read/write functions
-  dest[iBody].dBondiRadius = src[iBody].dBondiRadius; // XXX read/write functions
+  dest[iBody].dRocheRadius = src[iBody].dRocheRadius;
+  dest[iBody].dBondiRadius = src[iBody].dBondiRadius;
   dest[iBody].bBondiLimited = src[iBody].bBondiLimited; // XXX read function
+  dest[iBody].bRocheMessage = src[iBody].bRocheMessage;
+
 }
 
 /**************** ATMESC options ********************/
@@ -212,7 +214,7 @@ void ReadJeansTime(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
   } else {
     if (iFile > 0) {
       if (control->Io.iVerbose >= VERBINPUT) {
-        fprintf(stderr,"WARNING: %s not set for body %s, defaulting to %.2e seconds.\n",
+        fprintf(stderr,"INFO: %s not set for body %s, defaulting to %.2e seconds.\n",
           options->cName,body[iFile-1].cName,options->dDefault);
       }
       body[iFile-1].dJeansTime = options->dDefault;
@@ -866,7 +868,7 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *u
     // If there is no envelope and Lopez Radius specified, use Sotin+2007 radius!
     if(body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) {
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Lopez+2012 Radius model specified, but no envelope present. Using Sotin+2007 Mass-radius relation to compute planet's solid radius.\n");
+        printf("INFO: Lopez+2012 Radius model specified, but no envelope present. Using Sotin+2007 Mass-radius relation to compute planet's solid radius.\n");
 
       // Set radius using Sotin+2007 model
       body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
@@ -875,14 +877,14 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *u
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iPlanetRadiusModel == ATMESC_PROXCENB) {
     body[iBody].dRadius = fdProximaCenBRadius(body[iBody].dEnvelopeMass / body[iBody].dMass, body[iBody].dAge, body[iBody].dMass);
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   }
 
@@ -915,15 +917,19 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     // Let's desiccate this planet.
     body[iBody].dSurfaceWaterMass = 0.;
   }
-  if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) && (body[iBody].dEnvelopeMass > 0.)){
-    // Let's remove its envelope.
+
+  if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) && (body[iBody].dEnvelopeMass > 0.)) {
+    // Let's remove its envelope and prevent further evolution.
     body[iBody].dEnvelopeMass = 0.;
+    fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
 
     // If using Lopez+2012 radius model, set radius to Sotin+2007 radius
     if(body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
       // Let user know what's happening
-      printf("Envelope removed. Use Lopez+12 radius models for envelope, switching to Sotin+2007 model for solid planet radius.\n");
-
+      if (io->iVerbose >= VERBPROG && !body[iBody].bEnvelopeLostMessage) {
+        printf("%s's envelope removed. Used Lopez+12 radius models for envelope, switching to Sotin+2007 model for solid planet radius.\n",body[iBody].cName);
+        body[iBody].bEnvelopeLostMessage = 1;
+      }
       // Update radius
       body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
     }
@@ -939,7 +945,7 @@ Initializes several helper variables and properties used in the integration.
 @param update A pointer to the UPDATE instance
 @param iBody The current BODY number
 */
-void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iBody) {
 
   body[iBody].dAge = body[0].dAge;
 
@@ -962,11 +968,13 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
       if (xi > 1) {
         body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
       } else {
-        // XXX roche lobe overflow?
-        fprintf(stderr,"WARNING: Roche lobe radius is larger than XUV radius for %s, evolution may not be accurate.\n",
+        if (!body[iBody].bRocheMessage && io->iVerbose >= VERBINPUT) {
+          fprintf(stderr,"WARNING: Roche lobe radius is larger than XUV radius for %s, evolution may not be accurate.\n",
               body[iBody].cName);
-        body[iBody].dKTide = 1.0;
+          body[iBody].bRocheMessage = 1;
+        }
       }
+      body[iBody].dKTide = 1.0;
   }
 
   // The XUV flux
@@ -1061,6 +1069,10 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
     }
   }
 
+  // Compute various radii of interest
+  body[iBody].dBondiRadius = fdBondiRadius(body,iBody);
+  body[iBody].dRocheRadius = fdRocheRadius(body,iBody);
+
 }
 
 
@@ -1126,7 +1138,8 @@ Verify all the inputs for the atmospheric escape module.
 void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int bAtmEsc=0;
 
-  /* AtmEsc is active for this body if this subroutine is called. */
+  body[iBody].bEnvelopeLostMessage = 0;
+  body[iBody].bRocheMessage = 0;
 
   // Is FXUV specified in input file?
   if (options[OPT_FXUV].iLine[iBody+1] > -1){
@@ -1213,10 +1226,14 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
       fprintf(stderr,"ERROR: More than one module is trying to set dRadius for body %d!", iBody);
     exit(EXIT_INPUT);
   }
+
+  // Setup radius and other radii of interest
   VerifyRadiusAtmEsc(body,control,options,update,body[iBody].dAge,iBody);
+  body[iBody].dBondiRadius = fdBondiRadius(body,iBody);
+  body[iBody].dRocheRadius = fdRocheRadius(body,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorAtmEsc;
-  control->fnPropsAux[iBody][iModule] = &fnPropertiesAtmEsc;
+  control->fnPropsAux[iBody][iModule] = &fnPropsAuxAtmEsc;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyAtmEsc;
 
 }
@@ -1740,31 +1757,6 @@ void WritePlanetRadXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 }
 
 /**
-Logs the planet's Roche radius
-
-@param body A pointer to the current BODY instance
-@param control A pointer to the current CONTROL instance
-@param output A pointer to the current OUTPUT instance
-@param system A pointer to the current SYSTEM instance
-@param units A pointer to the current UNITS instance
-@param update A pointer to the current UPDATE instance
-@param iBody The current body Number
-@param dTmp Temporary variable used for unit conversions
-@param cUnit The unit for this variable
-*/
-void WriteRocheRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-
-  *dTmp = body[iBody].dRocheRadius;
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsLength(units->iLength);
-    fsUnitsLength(units->iLength,cUnit);
-  }
-}
-
-/**
 Logs the atmospheric mass loss rate.
 
 \warning This routine is currently broken.
@@ -1971,6 +1963,57 @@ void WriteRadSolid(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 }
 
 /**
+Logs the planet's Roche radius.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteRocheRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dRocheRadius;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
+
+/**
+Logs the planet's Bondi radius.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteBondiRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = body[iBody].dBondiRadius;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
+/**
 Logs the XUV flux received by the planet.
 
 @param body A pointer to the current BODY instance
@@ -2094,6 +2137,24 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PLANETRADXUV].iNum = 1;
   output[OUT_PLANETRADXUV].iModuleBit = ATMESC;
   fnWrite[OUT_PLANETRADXUV] = &WritePlanetRadXUV;
+
+  sprintf(output[OUT_BONDIRADIUS].cName,"BondiRadius");
+  sprintf(output[OUT_BONDIRADIUS].cDescr,"Bondi Radius");
+  output[OUT_BONDIRADIUS].bNeg = 1;
+  sprintf(output[OUT_BONDIRADIUS].cNeg,"Earth Radii");
+  output[OUT_BONDIRADIUS].dNeg = 1./REARTH;
+  output[OUT_BONDIRADIUS].iNum = 1;
+  output[OUT_BONDIRADIUS].iModuleBit = ATMESC;
+  fnWrite[OUT_BONDIRADIUS] = &WriteBondiRadius;
+
+  sprintf(output[OUT_ROCHERADIUS].cName,"RocheRadius");
+  sprintf(output[OUT_ROCHERADIUS].cDescr,"Roche Lobe Radius");
+  output[OUT_ROCHERADIUS].bNeg = 1;
+  sprintf(output[OUT_ROCHERADIUS].cNeg,"Earth Radii");
+  output[OUT_ROCHERADIUS].dNeg = 1./REARTH;
+  output[OUT_ROCHERADIUS].iNum = 1;
+  output[OUT_ROCHERADIUS].iModuleBit = ATMESC;
+  fnWrite[OUT_ROCHERADIUS] = &WriteRocheRadius;
 
   sprintf(output[OUT_DENVMASSDT].cName,"DEnvMassDt");
   sprintf(output[OUT_DENVMASSDT].cDescr,"Envelope Mass Loss Rate");
@@ -2364,6 +2425,9 @@ The rate of change of the envelope mass.
 @param body A pointer to the current BODY instance
 @param system A pointer to the current SYSTEM instance
 @param iaBody An array of body indices. The current body is index 0.
+
+XXX edit for bondi-limited and rr-limited flows via a min fn if bBondi is set
+
 */
 double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
@@ -2620,6 +2684,22 @@ void fvLinearFit(double *x, double *y, int iLen, double *daCoeffs){
 }
 
 /**
+ Calculate sound speed of a diatomic H (H2) isothermal gaseous atmosphere in
+ which the temperature is set by the local equilibrium temperature.
+
+ @param dTemp double stellar effective temperature
+ @param dRad double stellar radius
+ @param dSemi double planetary semi-major axis
+
+ @return sound speed
+*/
+double fdEqH2AtmosphereSoundSpeed(double dTemp, double dRad, double dSemi) {
+
+  double cs = 2300.0 * sqrt(dTemp / 5800.0) * pow(dRad / RSUN, 0.25) * pow(dSemi / (0.1 * AUM), 0.25);
+  return cs;
+}
+
+/**
  Calculate the Roche radius assuming body 0 is the host star
 
  @param body BODY struct
@@ -2628,7 +2708,8 @@ void fvLinearFit(double *x, double *y, int iLen, double *daCoeffs){
  @return Body's Roche radius
 */
 double fdRocheRadius(BODY *body, int iBody) {
-  return pow(body[iBody].dMass / (3.0 * body[0].dMass), 1./3.) * body[iBody].dSemi;
+  double rr = pow(body[iBody].dMass / (3.0 * body[0].dMass), 1./3.) * body[iBody].dSemi;
+  return rr;
 }
 
 /**
@@ -2643,5 +2724,11 @@ double fdRocheRadius(BODY *body, int iBody) {
  @return Body's Bondi radius
 */
 double fdBondiRadius(BODY *body, int iBody) {
-  return 0.0;
+
+  // Compute sound speed in planet's atmosphere assuming a diatomic H atmosphere
+  // assuming body 0 is the star as it should be when using atmesc
+  double cs = fdEqH2AtmosphereSoundSpeed(body[0].dTemperature, body[0].dRadius, body[iBody].dSemi);
+  double rb = BIGG * body[iBody].dMass / (2.0 * cs * cs);
+
+  return rb;
 }

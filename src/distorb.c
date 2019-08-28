@@ -382,7 +382,7 @@ void VerifyOrbitModel(CONTROL *control,FILES *files,OPTIONS *options) {
       control->Evolve.iDistOrbModel = RD4;
     }
     if (control->Io.iVerbose >= VERBINPUT)
-      fprintf(stderr,"WARNING: %s not set in any file, defaulting to %s.\n",options[OPT_ORBITMODEL].cName,options[OPT_ORBITMODEL].cDefault);
+      fprintf(stderr,"INFO: %s not set in any file, defaulting to %s.\n",options[OPT_ORBITMODEL].cName,options[OPT_ORBITMODEL].cDefault);
 
     /* Chicanery. Since I only want this set once, I will
        make it seem like the user set it. */
@@ -703,6 +703,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 //   VerifyStabilityHalts(control,files,options);
 
   body[iBody].dMeanA = 0.0;
+  body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
 
   if (control->Evolve.iDistOrbModel == RD4) {
     /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
@@ -865,11 +866,11 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       }
       if (iBody == control->Evolve.iNumBodies-1) {
         if (control->bInvPlane) {
-	  /* Must initialize dMeanA to prevent memory corruption. This
-	     parameter has no real meaning in DistOrb runs, but inv_plave
-	     requires it. I will set it to zero for each body. --RKB */
-	  for (kBody=0;kBody<control->Evolve.iNumBodies;kBody++)
-	    body[kBody].dMeanA = 0;
+	        /* Must initialize dMeanA to prevent memory corruption. This
+	           parameter has no real meaning in DistOrb runs, but inv_plave
+	           requires it. I will set it to zero for each body. --RKB */
+	        for (kBody=0;kBody<control->Evolve.iNumBodies;kBody++)
+	          body[kBody].dMeanA = 0;
           inv_plane(body, system, control->Evolve.iNumBodies);
         }
       }
@@ -1247,7 +1248,7 @@ int fniHaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,i
 /************* DISTORB Outputs ******************/
 
 void WriteEigen(CONTROL *control, SYSTEM *system) {
-  char cEccEigFile[NAMELEN], cIncEigFile[NAMELEN];
+  char cEccEigFile[2*NAMELEN], cIncEigFile[2*NAMELEN];
   int iBody;
   FILE *fecc, *finc;
 
@@ -1305,9 +1306,15 @@ void WriteBodyDSincDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+    if (body[iBody].dPinc !=0 && body[iBody].dQinc != 0 &&
+      *(update[iBody].padDPincDtDistOrb[iPert]) != 0 &&
+      *(update[iBody].padDQincDtDistOrb[iPert]) ) {
     dDeriv += 1./sqrt(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*(body[iBody].dPinc*(*(update[iBody].padDPincDtDistOrb[iPert]))+body[iBody].dQinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
-
+    } else {
+      dDeriv = 0;
+    }
+  }
   *dTmp = dDeriv;
 
   if (output->bDoNeg[iBody]) {
@@ -1347,9 +1354,15 @@ void WriteBodyDLongADtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
-    dDeriv += 1./(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*(body[iBody].dQinc*(*(update[iBody].padDPincDtDistOrb[iPert]))-body[iBody].dPinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
-
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+    if (body[iBody].dPinc !=0 && body[iBody].dQinc != 0 &&
+      *(update[iBody].padDPincDtDistOrb[iPert]) != 0 &&
+      *(update[iBody].padDQincDtDistOrb[iPert]) ) {
+        dDeriv += 1./(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*(body[iBody].dQinc*(*(update[iBody].padDPincDtDistOrb[iPert]))-body[iBody].dPinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
+    } else {
+      dDeriv = 0;
+    }
+  }
   *dTmp = dDeriv;
 
   if (output->bDoNeg[iBody]) {
@@ -1363,15 +1376,26 @@ void WriteBodyDLongADtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
   }
 }
 
-void WriteBodyDIncDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDIncDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM
+    *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
   int iPert;
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
-    dDeriv += 2./sqrt((1-(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc))*(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc))*(body[iBody].dPinc*(*(update[iBody].padDPincDtDistOrb[iPert]))+body[iBody].dQinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
-
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+    if (body[iBody].dPinc !=0 && body[iBody].dQinc != 0 &&
+      *(update[iBody].padDPincDtDistOrb[iPert]) != 0 &&
+      *(update[iBody].padDQincDtDistOrb[iPert]) ) {
+        dDeriv += 2./sqrt((1-(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*
+          body[iBody].dQinc))*(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc
+          *body[iBody].dQinc))*(body[iBody].dPinc*
+          (*(update[iBody].padDPincDtDistOrb[iPert]))+body[iBody].dQinc*
+          (*(update[iBody].padDQincDtDistOrb[iPert])));
+    } else {
+      dDeriv = 0;
+    }
+  }
   *dTmp = dDeriv;
 
   if (output->bDoNeg[iBody]) {
@@ -1669,7 +1693,7 @@ void AddModuleDistOrb(CONTROL *control,MODULE *module,int iBody,int iModule) {
 }
 
 /************* DistOrb Functions ************/
-void PropsAuxDistOrb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxDistOrb(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   /* Conflict XXX -- Hopefully this is wrong as there should be no calls to Pizza in DISTORB
   if (body[iBody].bPoise) {
     body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);

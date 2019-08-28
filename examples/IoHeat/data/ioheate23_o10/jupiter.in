@@ -1,0 +1,20 @@
+# Jupiter's properties
+# Template for vspace, but in IoHeat validation, all properties are held constant
+sName		jupiter		# Body's name
+saModules eqtide  # List of modules to apply to this body
+
+# Physical Parameters
+dMass		   1      # Mass, negative -> Earth masses
+dRadGyra	 0.27		# Radius of gyration (moment of inertia constant)
+dRadius    1      # Radius (-1 for AU)
+# Rotation period and obliquity from https://pds.jpl.nasa.gov/planets/special/jupiter.htm
+dRotPeriod -0.47  # Rotation period (-1 -> days)
+dObliquity 3.08   # Obliquity
+
+# EQTIDE Parameters
+dTidalQ     1e5   # Tidal Q
+dK2         0.37  # Love number of degree 2
+saTidePerts io    # Names of perturbing bodies (only central body may have >1)
+
+# If no output selected, only a log file is written (assuming bDoLog is set to 1)
+#saOutputOrder

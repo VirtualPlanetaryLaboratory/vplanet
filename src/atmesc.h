@@ -107,6 +107,8 @@ void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_DENVMASSDT         1225 /**< Rate of change of the envelope mass */
 #define OUT_FXUV               1226 /**< XUV flux */
 #define OUT_EPSH2O             1227 /**< XUV Atmospheric Escape Efficiency for H2O */
+#define OUT_ROCHERADIUS        1228 /**< Roche Lobe radius */
+#define OUT_BONDIRADIUS        1229 /**< Bondi radius */
 
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);
 void InitializeOutputFunctionAtmEsc(OUTPUT*,int,int);
@@ -117,6 +119,8 @@ void WriteOxygenMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,c
 void WriteOxygenMantleMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteEnvelopeMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteRGLimit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBondiRadius(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteRocheRadius(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteOxygenMixingRatio(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteOxygenEta(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteAtmXAbsEffH2O(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
@@ -128,7 +132,7 @@ void LogBodyAtmEsc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 
 /* AtmEsc functions */
 void fnForceBehaviorAtmEsc(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
-void fnPropertiesAtmEsc(BODY*,EVOLVE*,UPDATE*,int);
+void fnPropsAuxAtmEsc(BODY*,EVOLVE*,IO*,UPDATE*,int);
 double fdDSurfaceWaterMassDt(BODY*,SYSTEM*,int*);
 double fdDEnvelopeMassDt(BODY*,SYSTEM*,int*);
 double fdHZRG14(BODY*,int);
@@ -140,6 +144,8 @@ double fdInsolation(BODY*,int,int);
 int fbDoesWaterEscape(BODY*,int);
 double fdPlanetRadius(BODY*,SYSTEM*,int*);
 double fdXUVEfficiencyBolmont2016(double);
+double fdBondiRadius(BODY*,int);
+double fdRocheRadius(BODY*,int);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY*,SYSTEM*,UPDATE*,int,int);

@@ -19,7 +19,11 @@ To get started very quickly with one example:
 Downloading the Code
 --------------------
 
-Navigate to the directory in which you want to place :code:`vplanet` and type
+There are two ways to download VPLanet: 1) cloning via GitHub, or 2) downloading
+the source of a specific release from GitHub.
+
+To clone from GitHub, navigate to the directory on your local computer in which
+you want to place :code:`vplanet` and type
 
 .. code-block:: bash
 
@@ -27,6 +31,24 @@ Navigate to the directory in which you want to place :code:`vplanet` and type
 
 This creates a sub-directory called vplanet that contains all the files in the
 repository.
+
+To build from the source code, point your web browser to `releases <https://github.com/VirtualPlanetaryLaboratory/vplanet/releases>`_, 
+select the release you want (we strongly recommend a version greater than or equal
+to 1.0.0). Place the downloaded file in the directory on your local computer in which
+you want to place :code:`vplanet` and type
+
+.. code-block:: bash
+
+  unzip vplanet-x.x.x
+
+or
+
+.. code-block:: bash
+
+  tar xvfz vplanet-x.x.x.tar.gz
+
+where "x.x.x" is the version number of the source you selected.
+
 
 Compiling the Code
 ------------------

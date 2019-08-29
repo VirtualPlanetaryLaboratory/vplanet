@@ -22,7 +22,7 @@ default:
 	@echo 'tsch:    set path=($$path /path/to/vplanet/)'
 	@echo 'csh :    set path=($$path /path/to/vplanet/)'
 	@echo 'or permanently add the VPLanet directory to the $$PATH by editing the appropriate environment file. e.g.:'
-	@echo 'bash:    echo '"'"'export PATH=$$PATH:/path/to/vplanet/'"'"' >> ~/.bashrc'
+	@echo 'bash:    echo '"'"'export PATH=$$PATH:$(CURDIR)'"'"' >> ~/.bashrc'
 	@echo "=========================================================================================================="
 
 debug:
@@ -41,7 +41,7 @@ opt:
 	@echo 'tsch:    set path=($$path /path/to/vplanet/)'
 	@echo 'csh :    set path=($$path /path/to/vplanet/)'
 	@echo 'or permanently add the VPLanet directory to the $$PATH by editing the appropriate environment file. e.g.:'
-	@echo 'bash:    echo '"'"'export PATH=$$PATH:/path/to/vplanet/'"'"' >> ~/.bashrc'
+	@echo 'bash:    echo '"'"'export PATH=$$PATH:$(CURDIR)'"'"' >> ~/.bashrc'
 	@echo "=========================================================================================================="
 
 profile:

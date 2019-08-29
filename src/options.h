@@ -78,7 +78,8 @@
 #define OPT_ARGP                562
 #define OPT_LONGA               563
 #define OPT_GRCORR              564
-
+#define OPT_LUMINOSITY          575 /**< (Initial) luminosity */
+#define OPT_TIDALQ              577
 
 #define OPT_OBL	                640
 #define OPT_OUTDIGITS           570
@@ -91,7 +92,6 @@
 #define OPT_DYNELLIP            611
 #define OPT_CALCDYNELLIP        612
 #define OPT_PRILUM	        615
-#define OPT_SPECMOMINERTIA       616
 
 #define OPT_VISCUMAN            630   //Viscosity UMTBL
 

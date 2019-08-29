@@ -1721,6 +1721,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
       daRunningMean = malloc((RunLen+1)*sizeof(double));
       daRunningMean[RunLen] = 0;
       TotalMean = 0;
+      RunningMeanTmp = daRunningMean[RunLen];
       while (fabs(RunningMeanTmp - daRunningMean[RunLen]) > body[iBody].dSpinUpTol || count <= 2*RunLen) {
         RunningMeanTmp = daRunningMean[RunLen];
         PoiseSeasonal(body,iBody);
@@ -1867,7 +1868,7 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
 //     }
   }
 
-  control->fnPropsAux[iBody][iModule] = &PropertiesPoise;
+  control->fnPropsAux[iBody][iModule] = &PropsAuxPoise;
 
   control->fnForceBehavior[iBody][iModule]=&ForceBehaviorPoise;
   control->Evolve.fnBodyCopy[iBody][iModule]=&BodyCopyPoise;
@@ -2166,7 +2167,7 @@ void WritePeakInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 
 void WriteDailyInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  char cOut[NAMELEN];
+  char cOut[3*NAMELEN];
   FILE *fp;
   int iLat,iDay;
   double dTime;
@@ -2198,7 +2199,7 @@ void WriteDailyInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 }
 
 void WritePlanckB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  char cOut[NAMELEN];
+  char cOut[3*NAMELEN];
   FILE *fp;
   int iLat,iDay;
   double dTime;
@@ -2230,7 +2231,7 @@ void WritePlanckB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
 }
 
 void WriteSeasonalTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  char cOut[NAMELEN];
+  char cOut[3*NAMELEN];
   FILE *fp;
   int iLat,iDay;
 
@@ -2265,7 +2266,7 @@ void WriteSeasonalTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 }
 
 void WriteSeasonalFluxes(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  char cOutM[NAMELEN], cOutI[NAMELEN], cOutO[NAMELEN], cOutD[NAMELEN];
+  char cOutM[3*NAMELEN], cOutI[3*NAMELEN], cOutO[3*NAMELEN], cOutD[3*NAMELEN];
   FILE *fpM, *fpI, *fpO, *fpD ;
   int iLat,iDay;
 
@@ -2328,7 +2329,7 @@ void WriteSeasonalFluxes(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
 }
 
 void WriteSeasonalIceBalance(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  char cOut[NAMELEN];
+  char cOut[3*NAMELEN];
   FILE *fp;
   int iLat,iDay;
 
@@ -3035,7 +3036,7 @@ Standard properties function for POISE. Updates auxiliary quantities
 @param update Struct containing update information and variables
 @param iBody Body in question
 */
-void PropertiesPoise(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxPoise(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {
     if (body[iBody].bDistRot == 0) {
       body[iBody].dDynEllip = CalcDynEllipEq(body, iBody);
@@ -3295,7 +3296,7 @@ void AnnualInsolation(BODY *body, int iBody) {
   int i, j;
   double LongP, TrueA, EccA, MeanL, Ecc;
 
-  LongP = body[iBody].dLongP+body[iBody].dPrecA;// + PI; //Pericenter, relative to direction of planet at spring equinox
+  LongP = body[iBody].dLongP+body[iBody].dPrecA+ PI; //Pericenter, relative to direction of planet at spring equinox
   Ecc = sqrt(body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc);
 
   body[iBody].dTrueL = -PI/2;        //starts the year at the (northern) winter solstice

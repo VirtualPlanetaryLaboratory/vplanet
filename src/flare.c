@@ -308,7 +308,7 @@ void ReadOptionsFlare(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
 
 /******************* Verify FLARE ******************/
 
-void PropertiesFlare(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxFlare(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   /* Nothing */
 }
 
@@ -362,7 +362,7 @@ void VerifyFlare(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPU
 
   VerifyLXUVFlare(body,options,update,iBody);
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorFlare;
-  control->fnPropsAux[iBody][iModule] = &PropertiesFlare;
+  control->fnPropsAux[iBody][iModule] = &PropsAuxFlare;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyFlare;
 
   /* For now, user may only input FlareConst and FlareExp. Eventually, user

@@ -658,6 +658,9 @@ struct BODY {
   double dJeansTime;
   double dFlowTemp;
   int bCalcFXUV;
+	int bEnvelopeLostMessage; /**< Has the envelope lost message been printed? */
+	int bRocheMessage; /** Has the Roche lobe message been printed? */
+	int bIgnoreRocheLobe; /** Ignore Roche lobe overflow? */
 
   /* STELLAR Parameters */
   int bStellar;
@@ -1656,7 +1659,7 @@ struct IO {
    matrix through fnForceBehavior. */
 
 typedef double (*fnUpdateVariable)(BODY*,SYSTEM*,int*);
-typedef void (*fnPropsAuxModule)(BODY*,EVOLVE*,UPDATE*,int);
+typedef void (*fnPropsAuxModule)(BODY*,EVOLVE*,IO*,UPDATE*,int);
 typedef void (*fnForceBehaviorModule)(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */

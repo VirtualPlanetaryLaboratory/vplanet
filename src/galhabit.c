@@ -805,7 +805,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   int i, iEqn;
   int n;
   double dSigma, dDMR, dStarR, dGasR, dCurrentAge;
-  char cOut[NAMELEN];
+  char cOut[3*NAMELEN];
   FILE *fOut;
 
   srand(system->iSeed);
@@ -910,7 +910,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     body[iBody].daRelativeVel = malloc(3*sizeof(double));
 
 
-    control->fnPropsAux[iBody][iModule] = &PropertiesGalHabit;
+    control->fnPropsAux[iBody][iModule] = &PropsAuxGalHabit;
 
     iEqn = 0;
     if (body[iBody].bGalacTides) {
@@ -1481,7 +1481,7 @@ void AddModuleGalHabit(CONTROL *control,MODULE *module,int iBody,int iModule) {
 }
 
 /************* GALHABIT Functions ***********/
-void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxGalHabit(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   double sinw, cosw, cosw_alt, sign, dMu, dL;
 
   /* calculate osculating elements */
@@ -1536,7 +1536,7 @@ void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 void ForceBehaviorGalHabit(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   double dp, dkzi, dVMax, dCurrentAge, dMeanATmp, C;
   double sinw, cosw, cosw_alt, sign;
-  char cOut[NAMELEN];
+  char cOut[3*NAMELEN];
   int idr;
   FILE *fOut;
 

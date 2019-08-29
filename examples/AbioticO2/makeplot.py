@@ -6,7 +6,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as pl
 import matplotlib.colors as colors
 import sys
-cmap = pl.get_cmap('jet')
+cmap = pl.get_cmap('plasma')
 
 
 star = """#
@@ -169,8 +169,8 @@ for n in [0, 1]:
     ax[n].set_xticks((0, 0.25, 0.5, 0.75, 1.0))
     ax[n].set_xticklabels(("RV", "25%", "50%", "75%", "EM"))
 ax[0].set_ylabel(r'Stellar Mass ($\mathrm{M}_\odot$)', fontsize=18)
-ax[0].set_title("Water Lost (Earth Oceans)", fontsize=20)
-ax[1].set_title(r"$\mathrm{O}_2$ Accumulation (bar)", fontsize=20)
+ax[0].set_title("Water Lost (Earth Oceans)", fontsize=18)
+ax[1].set_title(r"$\mathrm{O}_2$ Accumulation (bar)", fontsize=18)
 
 if (sys.argv[1] == 'pdf'):
     fig.savefig('AbioticO2.pdf')

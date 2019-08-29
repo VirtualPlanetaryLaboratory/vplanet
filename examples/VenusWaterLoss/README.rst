@@ -8,7 +8,7 @@ Water loss on Venus from thermal escape processes.
 
 ===================   ============
 **Date**              07/25/18
-**Author**            Rodrigo Luger
+**Author**            Rodrigo Luger, Rudy Garcia
 **Modules**           AtmEsc
                       STELLAR
 **Approx. runtime**   49 seconds

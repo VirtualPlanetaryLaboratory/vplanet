@@ -1,7 +1,7 @@
 For developers
 ==============
 
-Information for **vplanet** developers.
+Information for **VPLanet** developers.
 
 .. toctree::
    :maxdepth: 1

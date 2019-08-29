@@ -36,7 +36,6 @@
 #define OPTSTARTSTELLAR         1500 /**< Start of Stellar options */
 #define OPTENDSTELLAR           1600 /**< End of Stellar options */
 
-#define OPT_LUMINOSITY          1510 /**< (Initial) luminosity */
 #define OPT_SATXUVFRAC          1511 /**< Saturation XUV luminosity fraction */
 #define OPT_STELLARMODEL        1512 /**< Luminosity evolution model */
 #define OPT_TEMPERATURE         1513 /**< Stellar effective temperature (initial) */
@@ -95,7 +94,7 @@ void CountHaltsStellar(HALT*,int*);
 void VerifyStellar(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 void VerifyRotationStellar(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetStellar(CONTROL*,MODULE*);
-void fnPropertiesStellar(BODY*,EVOLVE*,UPDATE*,int);
+void fnPropsAuxStellar(BODY*,EVOLVE*,IO*,UPDATE*,int);
 void VerifyHaltStellar(BODY*,CONTROL*,OPTIONS*,int,int*);
 void VerifyRotationStellar(BODY*,CONTROL*,OPTIONS*,char[],int);
 

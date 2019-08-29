@@ -61,7 +61,7 @@ void HelpOptionsFlare(OPTIONS*);
 void InitializeOptionsFlare(OPTIONS*,fnReadOption[]);
 void ReadOptionsFlare(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
-void PropertiesFlare(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxFlare(BODY*,EVOLVE*,IO*,UPDATE*,int);
 void fnForceBehaviorFlare(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 /* Options Functions */

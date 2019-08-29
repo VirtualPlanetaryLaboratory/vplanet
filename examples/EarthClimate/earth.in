@@ -1,4 +1,4 @@
-sName        Earth   
+sName        Earth
 saModules    distorb distrot poise
 dMass        3.00316726e-06
 dRadius      -1.00
@@ -7,7 +7,7 @@ dObliquity   23.44    #no Moons yet in vplanet....
 dSemi        1.00000011
 dEcc         0.0167
 dInc         5e-5
-dLongP       282.94719
+dLongP       102.94719
 dLongA       348.73936
 bGRCorr      1
 saOutputOrder    Time Ecce Inc ArgP LongA Obliq PrecA -TGlobal AlbedoGlobal -FluxOutGlobal -TotIceMass DeltaTime

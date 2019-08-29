@@ -26,6 +26,8 @@
 #define ACTIVENERGY               3.5e5  //activation energy viscosity
 #define RADCOREEARTH              3.4e6  //core radius Earth (m)
 #define AVOGADROCONST             6.022e23 //particle per mol
+#define FRACCO2MELTMIN            0.0005 //minimal fraction of CO2 in the melt
+#define FRACCO2MELTMAX            0.0025 //maximal fraction of CO2 in the melt (=1e4 bar)
 #define TIMESTEPCORRECTION        1e2
 
 #define MAGMOC_NONE               0

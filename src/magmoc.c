@@ -593,7 +593,7 @@ double fndCO2MassMOTime(BODY *body, double dFracCO2, int iBody) {
   double dPressCO2AtmTemp;
 
   dPartialPressCO2AtmTemp = pow(((100*dFracCO2-0.05)/2.08e-4),1/0.45);
-  dPressCO2AtmTemp        = 1/(2*MOLWEIGHTCO2) * ( pow( pow( -MOLWEIGHTCO2*dPartialPressCO2AtmTemp + MOLWEIGHTWATER*body[iBody].dPressWaterAtm + 2*MOLWEIGHTOXYGEN*body[iBody].dPressOxygenAtm,2)  \
+  dPressCO2AtmTemp        = 1/(2*MOLWEIGHTCO2) * ( (-1)*pow( pow( -MOLWEIGHTCO2*dPartialPressCO2AtmTemp + MOLWEIGHTWATER*body[iBody].dPressWaterAtm + 2*MOLWEIGHTOXYGEN*body[iBody].dPressOxygenAtm,2)  \
                               + 4 * pow(MOLWEIGHTCO2,2) * dPartialPressCO2AtmTemp * (body[iBody].dPressOxygenAtm + body[iBody].dPressWaterAtm),0.5) \
                               + dPartialPressCO2AtmTemp*MOLWEIGHTCO2 - MOLWEIGHTWATER*body[iBody].dPressWaterAtm - 2*MOLWEIGHTOXYGEN*body[iBody].dPressOxygenAtm);
 
@@ -944,12 +944,12 @@ void fndWaterFracMelt(BODY *body, int iBody) {
     }
   }
 
-  if (fabs(fndCO2MassMOTime(body, 0, iBody)) < 1e-5) {
-    body[iBody].dCO2FracMelt = 0;
-  } else if (fabs(fndCO2MassMOTime(body, 1, iBody)) < 1e-5) {
-    body[iBody].dCO2FracMelt = 1;
+  if (fabs(fndCO2MassMOTime(body, FRACCO2MELTMIN, iBody)) < 1e-5) {
+    body[iBody].dCO2FracMelt = FRACCO2MELTMIN;
+  } else if (fabs(fndCO2MassMOTime(body, FRACCO2MELTMAX, iBody)) < 1e-5) {
+    body[iBody].dCO2FracMelt = FRACCO2MELTMAX;
   } else {
-    body[iBody].dCO2FracMelt = fndBisection(fndCO2MassMOTime,body,0,1,1e-2,iBody);
+    body[iBody].dCO2FracMelt = fndBisection(fndCO2MassMOTime,body,FRACCO2MELTMIN,FRACCO2MELTMAX,1e-2,iBody);
   }
 
   /* Get water pressure and water mass in the atmosphere */

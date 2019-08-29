@@ -218,12 +218,12 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
 
 void PrintDefault(char cName[],char cDefault[],char cFile[],int iVerbose,int iVerbThreshold) {
   if (iVerbose >= iVerbThreshold)
-    fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",cName,cFile,cDefault);
+    fprintf(stderr,"INFO: %s not set in file %s, defaulting to %s.\n",cName,cFile,cDefault);
 }
 
 double dNegativeDouble(OPTIONS options,char cFile[],int iVerbose) {
   if (iVerbose >= VERBUNITS)
-    fprintf(stderr,"WARNING: %s < 0 in file %s, units assumed to be %s.\n",options.cName,cFile,options.cNeg);
+    fprintf(stderr,"INFO: %s < 0 in file %s, units assumed to be %s.\n",options.cName,cFile,options.cNeg);
   return -options.dNeg;
 }
 
@@ -566,7 +566,7 @@ void ReadVerbose(FILES *files,OPTIONS *options,int *iVerbose,int iFile) {
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     if (*iVerbose == VERBALL) {
-      fprintf(stderr,"WARNING: -v set at command line, but %s option set.\n",options->cName);
+      fprintf(stderr,"INFO: -v set at command line, but %s option set.\n",options->cName);
       fprintf(stderr,"\tiVerbose is set to %d.\n",VERBALL);
     } else if (*iVerbose == 0) {
       /*
@@ -623,7 +623,7 @@ void ReadUnitMass(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* This unit is propagated to all other files */
       /* Now assign the integer value */
       if (control->Io.iVerbose >= VERBINPUT)
-        fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+        fprintf(stderr,"INFO: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
       control->Units[iFile].iMass = iAssignMassUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
@@ -656,7 +656,7 @@ void ReadUnitMass(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       if (options->iLine[0] == -1) {
         /* No, assign default */
         if (control->Io.iVerbose >= VERBUNITS)
-          fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+          fprintf(stderr,"INFO: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
         control->Units[iFile].iMass = iAssignMassUnit(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
@@ -702,7 +702,7 @@ void ReadUnitTime(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* This unit is propagated to all other files */
       /* Now assign the integer value */
       if (control->Io.iVerbose >= VERBINPUT)
-        fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+        fprintf(stderr,"INFO: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
       control->Units[iFile].iTime = iAssignUnitTime(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
@@ -732,7 +732,7 @@ void ReadUnitTime(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       if (options->iLine[0] == -1) {
         /* No, assign default */
         if (control->Io.iVerbose >= VERBUNITS)
-          fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+          fprintf(stderr,"INFO: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
         control->Units[iFile].iTime = iAssignUnitTime(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
@@ -768,7 +768,7 @@ void ReadUnitAngle(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* This unit is propagated to all other files */
       /* Now assign the integer value */
       if (control->Io.iVerbose >= VERBINPUT)
-        fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+        fprintf(stderr,"INFO: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
       control->Units[iFile].iAngle = iAssignUnitAngle(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
@@ -798,7 +798,7 @@ void ReadUnitAngle(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       if (options->iLine[0] == -1) {
         /* No, assign default */
         if (control->Io.iVerbose >= VERBUNITS)
-          fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+          fprintf(stderr,"INFO: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
         control->Units[iFile].iAngle = iAssignUnitAngle(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
@@ -849,7 +849,7 @@ void ReadUnitLength(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* This unit is propagated to all other files */
       /* Now assign the integer value */
       if (control->Io.iVerbose >= VERBINPUT)
-        fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+        fprintf(stderr,"INFO: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
       control->Units[iFile].iLength = iAssignUnitLength(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
@@ -880,7 +880,7 @@ void ReadUnitLength(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       if (options->iLine[0] == -1) {
         /* No, assign default */
         if (control->Io.iVerbose >= VERBUNITS)
-          fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+          fprintf(stderr,"INFO: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
         control->Units[iFile].iLength = iAssignUnitLength(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
@@ -918,7 +918,7 @@ void ReadUnitTemp(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* This unit is propagated to all other files */
       /* Now assign the integer value */
       if (control->Io.iVerbose >= VERBINPUT)
-        fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+        fprintf(stderr,"INFO: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
       control->Units[iFile].iTemp = iAssignTempUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
@@ -951,7 +951,7 @@ void ReadUnitTemp(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       if (options->iLine[0] == -1) {
         /* No, assign default */
         if (control->Io.iVerbose >= VERBUNITS)
-          fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+          fprintf(stderr,"INFO: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
         control->Units[iFile].iTemp = iAssignTempUnit(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
@@ -2480,7 +2480,7 @@ void ReadOverwrite(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (control->Io.bOverwrite > -1) {
       if (control->Io.iVerbose >= VERBERR)
-        fprintf(stderr,"WARNING: -f set at command line, and %s set (%s:%d). Overwrite authorized.\n",options->cName,files->Infile[iFile].cIn,lTmp);
+        fprintf(stderr,"INFO: -f set at command line, and %s set (%s:%d). Overwrite authorized.\n",options->cName,files->Infile[iFile].cIn,lTmp);
     } else {
       control->Io.bOverwrite = bTmp;
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);

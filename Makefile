@@ -50,6 +50,9 @@ profile:
 optprof:
 	-gcc -pg -o vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
 
+sanatize:
+	-gcc -g -fsanitize=address -o vplanet src/*.c -DGITVERSION=\"$(GITVERSION)\"
+
 test:
 	-gcc -o vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 	py.test

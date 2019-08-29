@@ -802,7 +802,7 @@ void ReadOptionsEqtide(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 
 void VerifyRotationEqtideWarning(char cName1[],char cName2[],char cFile[],int iLine1,int iLine2, int iVerbose) {
   if (iVerbose >= VERBINPUT) {
-    fprintf(stderr,"WARNING: %s and %s are both set. Rotation rate will be in equilibrium.\n",cName1,cName2);
+    fprintf(stderr,"INFO: %s and %s are both set. Rotation rate will be in equilibrium.\n",cName1,cName2);
     fprintf(stderr,"\tFile: %s, Lines %d and %d\n",cFile,iLine1,iLine2);
   }
 }
@@ -964,7 +964,7 @@ void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
     if (options[OPT_TIDALTAU].iLine[iBody+1] >= 0) {
       /* Tidal Tau was also set */
       if (control->Io.iVerbose >= VERBINPUT)
-      fprintf(stderr,"WARNING: Time lag model selected, %s and %s set in file %s. Using %s = %lf and ignoring %s.\n",options[OPT_TIDALTAU].cName,options[OPT_TIDALQ].cName,options[OPT_TIDALTAU].cFile[iBody+1],options[OPT_TIDALTAU].cName,body[iBody+1].dTidalTau,options[OPT_TIDALQ].cName);
+      fprintf(stderr,"INFO: Time lag model selected, %s and %s set in file %s. Using %s = %lf and ignoring %s.\n",options[OPT_TIDALTAU].cName,options[OPT_TIDALQ].cName,options[OPT_TIDALTAU].cFile[iBody+1],options[OPT_TIDALTAU].cName,body[iBody+1].dTidalTau,options[OPT_TIDALQ].cName);
     } else {
       /* Tidal Tau was not set */
       if (control->Io.iVerbose >= VERBERR)
@@ -1110,7 +1110,7 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
     if (options[OPT_TIDALQ].iLine[iBody+1] >= 0) {
       /* Tidal Q was also set */
       if (control->Io.iVerbose >= VERBINPUT)
-        fprintf(stderr,"WARNING: Phase lag model selected, %s and %s set in file %s. Using %s = %lf and ignoring %s.\n",options[OPT_TIDALTAU].cName,options[OPT_TIDALQ].cName,options[OPT_TIDALTAU].cFile[iBody+1],options[OPT_TIDALQ].cName,body[iBody+1].dTidalQ,options[OPT_TIDALTAU].cName);
+        fprintf(stderr,"INFO: Phase lag model selected, %s and %s set in file %s. Using %s = %lf and ignoring %s.\n",options[OPT_TIDALTAU].cName,options[OPT_TIDALQ].cName,options[OPT_TIDALTAU].cFile[iBody+1],options[OPT_TIDALQ].cName,body[iBody+1].dTidalQ,options[OPT_TIDALTAU].cName);
     } else {
       /* Tidal Tau was not set */
       if (control->Io.iVerbose >= VERBERR)
@@ -1334,7 +1334,7 @@ void VerifyTideModel(CONTROL *control,FILES *files,OPTIONS *options) {
       control->Evolve.iEqtideModel = CTL;
     }
     if (control->Io.iVerbose >= VERBINPUT)
-      fprintf(stderr,"WARNING: %s not set in any file, defaulting to %s.\n",options[OPT_TIDEMODEL].cName,options[OPT_TIDEMODEL].cDefault);
+      fprintf(stderr,"INFO: %s not set in any file, defaulting to %s.\n",options[OPT_TIDEMODEL].cName,options[OPT_TIDEMODEL].cDefault);
 
     /* Chicanery. Since I only want this set once, I will
        make it seem like the user set it. */
@@ -2847,9 +2847,9 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
       // Update PropsAux
       if (evolve->iEqtideModel == CPL) {
-        PropsAuxCPL(body,evolve,update,iBody);
+        PropsAuxCPL(body,evolve,io,update,iBody);
       } else if (evolve->iEqtideModel == CTL) {
-        PropsAuxCTL(body,evolve,update,iBody);
+        PropsAuxCTL(body,evolve,io,update,iBody);
       } // DB15 assumes tidal locking
 
       // Recompute, sum up new derivatives using perturbed dRotRate
@@ -2866,9 +2866,9 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
         // Update PropsAux
         if (evolve->iEqtideModel == CPL) {
-          PropsAuxCPL(body,evolve,update,iBody);
+          PropsAuxCPL(body,evolve,io,update,iBody);
         } else if (evolve->iEqtideModel == CTL) {
-          PropsAuxCTL(body,evolve,update,iBody);
+          PropsAuxCTL(body,evolve,io,update,iBody);
         } // DB15 assumes tidal locking
 
         // Recompute, sum up new derivatives using perturbed dRotRate
@@ -2897,9 +2897,9 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
       // Update PropsAux
       if (evolve->iEqtideModel == CPL) {
-        PropsAuxCPL(body,evolve,update,iBody);
+        PropsAuxCPL(body,evolve,io,update,iBody);
       } else if (evolve->iEqtideModel == CTL) {
-        PropsAuxCTL(body,evolve,update,iBody);
+        PropsAuxCTL(body,evolve,io,update,iBody);
       } // DB15 assumes tidal locking
 
       // Reset derivatives
@@ -2940,14 +2940,14 @@ else {
 
 /* Auxiliary properties required for the CPL calculations. N.B.: These
    parameters also need to be included in BodyCopyEqtide!!! */
-void PropsAuxEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxEqtide(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
 
   if (evolve->iEqtideModel == CPL) {
-    PropsAuxCPL(body,evolve,update,iBody);
+    PropsAuxCPL(body,evolve,io,update,iBody);
   } else if (evolve->iEqtideModel == CTL) {
-    PropsAuxCTL(body,evolve,update,iBody);
+    PropsAuxCTL(body,evolve,io,update,iBody);
   } else if (evolve->iEqtideModel == DB15) {
-    PropsAuxDB15(body,evolve,update,iBody);
+    PropsAuxDB15(body,evolve,io,update,iBody);
   }
 }
 
@@ -2982,7 +2982,7 @@ void PropsAuxOrbiterDB15(BODY *body,UPDATE *update,int iBody) {
   body[iBody].dDeccDtEqtide = fdDB15DeccDt(body,update,update[iBody].iaBody[update[iBody].iHecc][update[iBody].iHeccEqtide]);
 }
 
-void PropsAuxCPL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxCPL(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   int iPert,iIndex;
   /* dMeanMotion claculated in PropsAuxGeneral */
   int iOrbiter;
@@ -3015,7 +3015,7 @@ void PropsAuxCPL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   }
 }
 
-void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxCTL(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   int iPert,iIndex;
   /* dMeanMotion claculated in PropsAuxGeneral */
   int iOrbiter;
@@ -3062,7 +3062,7 @@ void PropsAuxCTL(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
   }
 }
 
-void PropsAuxDB15(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxDB15(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
 
   if (iBody > 0) {
     body[iBody].dTidalPowMan = fdTidePower(body,iBody,evolve->iEqtideModel);
@@ -3787,14 +3787,14 @@ void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT
 
     if (options[OPT_TIDALQ].iLine[iBody+1] != -1) {
       if (control->Io.iVerbose >= VERBINPUT) {
-        fprintf(stderr,"WARNING: Option %s set, but module ThermInt also selected. The tidal Q will be calculated by Thermint.\n",
+        fprintf(stderr,"INFO: Option %s set, but module ThermInt also selected. The tidal Q will be calculated by Thermint.\n",
           options[OPT_TIDALQ].cName);
       }
     }
 
     if (options[OPT_K2].iLine[iBody+1] != -1) {
       if (control->Io.iVerbose >= VERBINPUT) {
-        fprintf(stderr,"WARNING: Option %s set, but module ThermInt also selected. ",
+        fprintf(stderr,"INFO: Option %s set, but module ThermInt also selected. ",
           options[OPT_K2].cName);
         fprintf(stderr,"The Love number k_2 will be calculated by Thermint.\n");
       }

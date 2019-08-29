@@ -128,7 +128,7 @@ void LogBodyAtmEsc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,
 
 /* AtmEsc functions */
 void fnForceBehaviorAtmEsc(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
-void fnPropertiesAtmEsc(BODY*,EVOLVE*,UPDATE*,int);
+void fnPropsAuxAtmEsc(BODY*,EVOLVE*,IO*,UPDATE*,int);
 double fdDSurfaceWaterMassDt(BODY*,SYSTEM*,int*);
 double fdDEnvelopeMassDt(BODY*,SYSTEM*,int*);
 double fdHZRG14(BODY*,int);

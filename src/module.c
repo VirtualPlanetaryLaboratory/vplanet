@@ -35,7 +35,7 @@ void FinalizeUpdateNULL(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,i
   /* Nothing */
 }
 
-void PropsAuxNULL(BODY *body,EVOLVE *evolve,UPDATE *update,int iFoo) {
+void PropsAuxNULL(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iFoo) {
 }
 
 // Functions that are helpful for integrations
@@ -1206,7 +1206,7 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,UPDATE *update,CONTROL *co
 
   // Call PropsAuxAtmescThermint to initialize interior Properties
   if (iBody >0) {
-    fvPropsAuxThermint(body,&control->Evolve,update,iBody);
+    fvPropsAuxThermint(body,&control->Evolve,&control->Io,update,iBody);
   }
   }
 }
@@ -1310,6 +1310,14 @@ void  VerifyModuleCompatability(BODY *body,CONTROL *control,FILES *files,MODULE 
     if (body[iBody].bPoise) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: Modules Binary and Poise cannot be applied to the same body.\n");
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+    }
+  }
+
+  if (body[iBody].bAtmEsc) {
+    if (body[iBody].bPoise) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: Modules AtmEsc and POISE cannot be applied to the same body.\n");
       LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
     }
   }
@@ -1452,16 +1460,16 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
  * Auxiliary Properties for multi-module calculations
  */
 
-void PropsAuxSpiNbodyEqtide(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void PropsAuxSpiNbodyEqtide(BODY *body, EVOLVE *evolve, IO *io,UPDATE *update, int iBody) {
   // Nothing to see here...
 
 }
 
-void PropsAuxSpiNBodyDistOrb(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void PropsAuxSpiNBodyDistOrb(BODY *body, EVOLVE *evolve, IO *io,UPDATE *update, int iBody) {
 
 }
 
-void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   // This function controls how tidal radius is set.
 
   // If bUseTidalRadius == 0, dTidalRadius <- dRadius
@@ -1472,7 +1480,7 @@ void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 /** Calculate auxiliary properties if EqTide and ThermInt are called. At present
   this funciton only needs to calculate Im(k_2), possibly including the effects
   of an ocean and envelope. */
-void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
 
   body[iBody].dK2Man = fdK2Man(body,iBody);
   body[iBody].dTidalQMan = fdTidalQMan(body,iBody);
@@ -1496,35 +1504,35 @@ void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
 }
 */
 
-void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   body[iBody].dRadPowerCore = fdRadPowerCore(update,iBody);
   body[iBody].dRadPowerCrust = fdRadPowerCrust(update,iBody);
   body[iBody].dRadPowerMan = fdRadPowerMan(update,iBody);
 }
 
-void PropsAuxEqtideDistorb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxEqtideDistorb(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
 }
 
-void PropsAuxEqtideDistRot(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxEqtideDistRot(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   if (body[iBody].bCalcDynEllip) {
     body[iBody].dDynEllip = CalcDynEllipEq(body,iBody);
   }
 }
 
 
-void PropsAuxEqtideStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxEqtideStellar(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   // In stellar, radius can change depending on model so make sure tidal radius
   // knows that
   body[iBody].dTidalRadius = body[iBody].dRadius;
 }
 
-void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  // SYSTEM system; // dummy for LXUVStellar
+void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
+  SYSTEM system; // dummy for LXUVStellar
   //body[iBody].dLXUV = fdLXUVStellar(body,&system,update,iBody,iBody) + body[iBody].dLXUVFlare;
 }
 
-void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   if (body[iBody].bMagmOc && body[iBody].bAtmEsc) {
 
     // Use Water and Oxygen mass from magmoc for atmesc
@@ -1534,8 +1542,8 @@ void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
     // Use atmospheric skin temperature
     body[iBody].dThermTemp = body[iBody].dEffTempAtm * pow(0.5,0.25);
 
-    // Call PropsAux from Atmesc (or fnPropertiesAtmEsc)
-    fnPropertiesAtmEsc(body,evolve,update,iBody);
+    // Call PropsAux from Atmesc (or fnPropsAuxAtmEsc)
+    fnPropsAuxAtmEsc(body,evolve,io,update,iBody);
 
     // Water and Oxygen mass lost through atmospheric escape
     if ((body[iBody].bRunaway) && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {

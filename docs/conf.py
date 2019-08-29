@@ -57,8 +57,8 @@ plot_html_show_source_link = False
 plot_html_show_formats = False
 
 # Breathe bridge to Doxygen C docs
-breathe_default_project = "vplanet"
-breathe_projects_source = {"vplanet": (srcdir, srcfiles)}
+breathe_default_project = "VPLanet"
+breathe_projects_source = {"VPLanet": (srcdir, srcfiles)}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['.templates']
@@ -73,8 +73,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'vplanet'
-copyright = '2018, The VPLANET Team'
+project = 'VPLanet'
+copyright = '2018, The VPLanet Team'
 author = 'Rory Barnes et al.'
 
 # Prologue to be included in all .rst files
@@ -176,7 +176,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'vplanet.tex', 'VPLANET Documentation',
+    (master_doc, 'vplanet.tex', 'VPLanet Documentation',
      'Rory Barnes', 'manual'),
 ]
 
@@ -186,7 +186,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'vplanet', 'VPLANET Documentation',
+    (master_doc, 'vplanet', 'VPLanet Documentation',
      [author], 1)
 ]
 
@@ -197,7 +197,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'vplanet', 'VPLANET Documentation',
+    (master_doc, 'vplanet', 'VPLanet Documentation',
      author, 'vplanet', 'The Virtual Planet',
      'Miscellaneous'),
 ]

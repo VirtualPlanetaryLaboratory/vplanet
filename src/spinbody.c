@@ -452,7 +452,7 @@ void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   //VerifyGM(body,control);
 
   control->fnForceBehavior[iBody][iModule]   = &fnForceBehaviorSpiNBody;
-  control->fnPropsAux[iBody][iModule]        = &PropertiesSpiNBody;
+  control->fnPropsAux[iBody][iModule]        = &PropsAuxSpiNBody;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopySpiNBody;
 }
 
@@ -875,7 +875,7 @@ void fnForceBehaviorSpiNBody(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYS
 
 }
 
-void PropertiesSpiNBody(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void PropsAuxSpiNBody(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iBody) {
   int jBody,iNumBodies;
   double DistanceX,DistanceY,DistanceZ,Distance3;
 

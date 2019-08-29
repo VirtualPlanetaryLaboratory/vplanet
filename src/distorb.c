@@ -382,7 +382,7 @@ void VerifyOrbitModel(CONTROL *control,FILES *files,OPTIONS *options) {
       control->Evolve.iDistOrbModel = RD4;
     }
     if (control->Io.iVerbose >= VERBINPUT)
-      fprintf(stderr,"WARNING: %s not set in any file, defaulting to %s.\n",options[OPT_ORBITMODEL].cName,options[OPT_ORBITMODEL].cDefault);
+      fprintf(stderr,"INFO: %s not set in any file, defaulting to %s.\n",options[OPT_ORBITMODEL].cName,options[OPT_ORBITMODEL].cDefault);
 
     /* Chicanery. Since I only want this set once, I will
        make it seem like the user set it. */
@@ -1693,7 +1693,7 @@ void AddModuleDistOrb(CONTROL *control,MODULE *module,int iBody,int iModule) {
 }
 
 /************* DistOrb Functions ************/
-void PropsAuxDistOrb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxDistOrb(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   /* Conflict XXX -- Hopefully this is wrong as there should be no calls to Pizza in DISTORB
   if (body[iBody].bPoise) {
     body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);

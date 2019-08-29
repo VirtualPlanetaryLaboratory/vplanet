@@ -15,7 +15,17 @@ def test_ApseLock():
     # Grab the output
     output = GetOutput(path=cwd)
 
-    # Run our comparisons
+    # Checks
+    # Primary Variables
+    assert np.isclose(output.log.final.b.HEcc, -0.042671)
+    assert np.isclose(output.log.final.b.KEcc, -0.069231)
+    assert np.isclose(output.log.final.b.DHEccDtEqtide, 2.269581e-15)
+    assert np.isclose(output.log.final.b.DKEccDtEqtide, 3.682246e-15)
+    assert np.isclose(output.log.final.b.DHeccDtDistOrb, -2.488505e-11)
+    assert np.isclose(output.log.final.b.DKeccDtDistOrb, -1.344098e-11)
+    assert np.isclose(output.log.final.c.SemiMajorAxis, 6.911428e+09)
+
+    # Other Checks
     assert np.isclose(output.log.final.b.Eccentricity, 0.081326)
     assert np.isclose(output.log.final.b.ArgP, 3.693953)
     assert np.isclose(output.log.final.b.SemiMajorAxis, 2.812439e+09)

@@ -1010,17 +1010,19 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
       // there is not an envelope!!
       if (!(body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass)) {
         body[iBody].bEnv = 0;
-      }
-      else {
+      } else {
         body[iBody].bEnv = 1;
         body[iBody].dImK2Env = body[iBody].dK2Env / body[iBody].dTidalQEnv;
       }
       // what about an ocean?
       if (!(body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
         body[iBody].bOcean = 0;
-      }
-      else {
-        body[iBody].bOcean = 1;
+      } else {
+        if (!body[iBody].bMagmOc) {
+          // This is probably a terrible fix. To merge MagmOc we need a better
+          // strategy for water reservoirs
+          body[iBody].bOcean = 1;
+        }
         body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
       }
 

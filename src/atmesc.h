@@ -41,7 +41,9 @@
 #define OPT_FXUV                1227 /**< The value of the XUV flux */
 #define OPT_ATMXABSEFFH2OMODEL  1228 /**< Model for time evolution of epsilon for H2O */
 #define OPT_JEANSTIME           1229 /**< Time at which flow becomes ballistic (Jeans escape) */
-#define OPT_FLOWTEMP            1230 /**< flow temperature */
+#define OPT_FLOWTEMP            1230 /**< Flow temperature */
+#define OPT_BONDILIMITED       1231 /**< Whether or not to cap max envelope mass loss at Bondi limit */
+
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -146,6 +148,7 @@ double fdPlanetRadius(BODY*,SYSTEM*,int*);
 double fdXUVEfficiencyBolmont2016(double);
 double fdBondiRadius(BODY*,int);
 double fdRocheRadius(BODY*,int);
+double fdBondiLimitedDmDt(BODY*,int);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY*,SYSTEM*,UPDATE*,int,int);

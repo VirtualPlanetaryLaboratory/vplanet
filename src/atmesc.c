@@ -69,7 +69,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dJeansTime = src[iBody].dJeansTime;
   dest[iBody].dRocheRadius = src[iBody].dRocheRadius;
   dest[iBody].dBondiRadius = src[iBody].dBondiRadius;
-  dest[iBody].bBondiLimited = src[iBody].bBondiLimited; // XXX read function
+  dest[iBody].bBondiLimited = src[iBody].bBondiLimited;
   dest[iBody].bRocheMessage = src[iBody].bRocheMessage;
 
 }
@@ -380,6 +380,32 @@ void ReadInstantO2Sink(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       AssignDefaultInt(options,&body[iFile-1].bInstantO2Sink,files->iNumInputs);
 }
 
+
+/**
+Read the parameter that controls whether or not to limit envelope mass loss at the Bondi limit
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadBondiLimited(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bBondiLimited = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      AssignDefaultInt(options,&body[iFile-1].bBondiLimited,files->iNumInputs);
+}
+
 /**
 Read the planet's effective XUV radius.
 
@@ -670,6 +696,13 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_INSTANTO2SINK].iType = 0;
   options[OPT_INSTANTO2SINK].iMultiFile = 1;
   fnRead[OPT_INSTANTO2SINK] = &ReadInstantO2Sink;
+
+  sprintf(options[OPT_BONDILIMITED].cName,"bBondiLimited");
+  sprintf(options[OPT_BONDILIMITED].cDescr,"Is the maximum envelope mass loss Bondi-limited?");
+  sprintf(options[OPT_BONDILIMITED].cDefault,"0");
+  options[OPT_BONDILIMITED].iType = 0;
+  options[OPT_BONDILIMITED].iMultiFile = 1;
+  fnRead[OPT_BONDILIMITED] = &ReadBondiLimited;
 
   sprintf(options[OPT_HALTDESICCATED].cName,"bHaltSurfaceDesiccated");
   sprintf(options[OPT_HALTDESICCATED].cDescr,"Halt at Desiccation?");
@@ -974,7 +1007,14 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iB
           body[iBody].bRocheMessage = 1;
         }
       }
-      body[iBody].dKTide = 1.0;
+      // If Bondi-limited flow, dKTide allowed to get arbitrarily small.
+      // Otherwise, fix dKTide at 1
+      if(!body[iBody].bBondiLimited) {
+          body[iBody].dKTide = 1.0;
+      }
+      else {
+        fprintf(stderr,"dKTide: %e, bBondiLimited: %d\n",body[iBody].dKTide, body[iBody].bBondiLimited);
+    }
   }
 
   // The XUV flux
@@ -2426,10 +2466,10 @@ The rate of change of the envelope mass.
 @param system A pointer to the current SYSTEM instance
 @param iaBody An array of body indices. The current body is index 0.
 
-XXX edit for bondi-limited and rr-limited flows via a min fn if bBondi is set
-
 */
 double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
+
+  double dMassDt;
 
   // TODO: This needs to be moved. Ideally we'd just remove this equation from the matrix.
   // RB: move to ForceBehaviorAtmesc
@@ -2439,17 +2479,23 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17) {
 
-  	return -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV
+  	dMassDt =  -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV
         * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass
           - body[iaBody[0]].dEnvelopeMass));
 
   } else {
-  	return -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH
+  	dMassDt =  -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH
       / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI
         * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius
           * body[iaBody[0]].dXFrac * body[iaBody[0]].dXFrac);
   }
 
+  // If flow is Bondi-limited, cap mass loss id dMassDt > Bondi limit
+  if(body[iaBody[0]].bBondiLimited) {
+    dMassDt = min(dMassDt, fdBondiLimitedDmDt(body,iaBody[0]));
+  }
+
+  return dMassDt;
 }
 
 /**
@@ -2731,4 +2777,20 @@ double fdBondiRadius(BODY *body, int iBody) {
   double rb = BIGG * body[iBody].dMass / (2.0 * cs * cs);
 
   return rb;
+}
+
+/**
+ Calculate the Bondi-limited envelope mass loss rate
+
+ @param body BODY struct
+ @param iBody int body indentifier
+
+ @return Body's Bondi-limited mass loss rate
+*/
+double fdBondiLimitedDmDt(BODY *body, int iBody) {
+
+  double dMDt = (body[iBody].dMass / (10.0 * MEARTH)) / sqrt(body[0].dTemperature / 5800.0);
+  dMDt = dMDt * pow(body[iBody].dSemi / (0.1 * AUM), 0.25) / pow(body[0].dRadius / RSUN, 0.25);
+
+  return 1.9e18 * dMDt;
 }

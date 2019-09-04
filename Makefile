@@ -45,7 +45,7 @@ opt:
 	@echo "=========================================================================================================="
 
 cpp:
-	g++ -o vplanet src/*.c -lm -O3 -fpermissive -w -DGITVERSION=\"$(GITVERSION)\"
+	g++ -o vplanet src/*.c -lm -O3 -openmp -fpermissive -w -DGITVERSION=\"$(GITVERSION)\"
 
 profile:
 	-gcc -pg -o vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"

@@ -338,7 +338,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
      Does RK4 require the equations to be independent over the full step? */
 
   iNumBodies = evolve->iNumBodies;
-
+  #pragma omp parallel for
   for (iBody=0;iBody<iNumBodies;iBody++) {
     iNumVars = update[iBody].iNumVars;
     for (iVar=0;iVar<iNumVars;iVar++) {
@@ -368,6 +368,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   /* Don't need this timestep info, so assign output to dFoo */
   fdGetUpdateInfo(evolve->tmpBody,control,system,evolve->tmpUpdate,fnUpdate);
 
+  #pragma omp parallel for
   for (iBody=0;iBody<iNumBodies;iBody++) {
     iNumVars = update[iBody].iNumVars;
     for (iVar=0;iVar<iNumVars;iVar++) {
@@ -395,6 +396,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   fdGetUpdateInfo(evolve->tmpBody,control,system,evolve->tmpUpdate,fnUpdate);
 
+  #pragma omp parallel for
   for (iBody=0;iBody<iNumBodies;iBody++) {
     iNumVars = update[iBody].iNumVars;
     for (iVar=0;iVar<iNumVars;iVar++) {
@@ -421,6 +423,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   fdGetUpdateInfo(evolve->tmpBody,control,system,evolve->tmpUpdate,fnUpdate);
 
+  #pragma omp parallel for
   for (iBody=0;iBody<iNumBodies;iBody++) {
     iNumVars = update[iBody].iNumVars;
     for (iVar=0;iVar<iNumVars;iVar++) {

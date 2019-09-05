@@ -51,9 +51,12 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
 	dest[iBody].dPressWaterAtm        = src[iBody].dPressWaterAtm;
   dest[iBody].dPartialPressWaterAtm = src[iBody].dPartialPressWaterAtm;
   dest[iBody].dPressOxygenAtm       = src[iBody].dPressOxygenAtm;
+  dest[iBody].dPressCO2Atm          = src[iBody].dPressCO2Atm;
+  dest[iBody].dPartialPressCO2Atm   = src[iBody].dPartialPressCO2Atm;
 	dest[iBody].dMassMagmOcLiq 	      = src[iBody].dMassMagmOcLiq;
 	dest[iBody].dMassMagmOcCry 	      = src[iBody].dMassMagmOcCry;
 	dest[iBody].dWaterFracMelt        = src[iBody].dWaterFracMelt;
+  dest[iBody].dCO2FracMelt          = src[iBody].dCO2FracMelt;
 	dest[iBody].dFracFe2O3Man         = src[iBody].dFracFe2O3Man;
 	dest[iBody].dOxygenMassAtm        = src[iBody].dOxygenMassAtm;
   dest[iBody].dAveMolarMassMan      = src[iBody].dAveMolarMassMan;

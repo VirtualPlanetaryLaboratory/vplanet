@@ -1007,6 +1007,7 @@ struct BODY {
 	int bMagmOcHaltSolid;	  	/**< Mantle solidifed or atm desiccated */
 	int bMagmOcHaltDesicc;  	/**< Atm desiccated or escape stopped*/
 	int bEscapeStop;          /**< Atmospheric escaped stopped */
+	int bCO2InAtmosphere;     /**< Is CO2 present in the atmopshere? */
 	int iRadioHeatModel;			/**< Which Radiogenic Heating model to use */
 	int iMagmOcAtmModel;			/**< Which Atmopsheric Flux model to use */
 	/* Primary variables */

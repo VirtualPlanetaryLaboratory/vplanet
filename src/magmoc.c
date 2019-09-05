@@ -71,6 +71,7 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].bMagmOcHaltSolid      = src[iBody].bMagmOcHaltSolid;
   dest[iBody].bMagmOcHaltDesicc     = src[iBody].bMagmOcHaltDesicc;
   dest[iBody].bEscapeStop           = src[iBody].bEscapeStop;
+  dest[iBody].bCO2InAtmosphere      = src[iBody].bCO2InAtmosphere;
   /* Model indicators */
   dest[iBody].iRadioHeatModel       = src[iBody].iRadioHeatModel;
   dest[iBody].iMagmOcAtmModel       = src[iBody].iMagmOcAtmModel;
@@ -480,9 +481,24 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   // CO2
   body[iBody].dCO2MassMOAtm    = body[iBody].dPressCO2Atm * 4*PI*pow(body[iBody].dRadius,2)/body[iBody].dGravAccelSurf; // initial CO2 mass in MO&Atm is equal to inital CO2 mass in atmosphere
   body[iBody].dCO2MassSol      = 0; // initial water mass in solid = 0
+  if (body[iBody].dCO2MassMOAtm < 1) {
+    body[iBody].bCO2InAtmosphere = 0;
+  } else {
+    body[iBody].bCO2InAtmosphere = 1;
+  }
 
   // initialize water pressure in atmosphere to avoid deviding by 0. Use 1 % of initial water mass
   body[iBody].dPressWaterAtm   = body[iBody].dWaterMassAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
+
+  // initialize bools
+  body[iBody].bManSolid   = 0; // start with a (partially) molten mantle
+  body[iBody].bAllFeOOxid = 0; // start with a unoxidized FeO
+  if (body[iBody].dPressWaterAtm >= PRESSWATERMIN) {
+    body[iBody].bPlanetDesiccated = 0; // start with water in the atm + mo system
+  } else {
+    body[iBody].bPlanetDesiccated = 1; // desiccated from start
+  }
+
 
   double dMassMantle;
   double dManMolNum;
@@ -513,6 +529,15 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
 
   if (!body[0].bStellar) {
     printf("Module STELLAR not used for star. Flux only for GJ1132. \n");
+  }
+
+  if (body[iBody].bCO2InAtmosphere && body[iBody].iMagmOcAtmModel == MAGMOC_PETIT) {
+    printf("WARNING: When including CO2, petit atmosphere model cannot be used! Set to grey. \n");
+    body[iBody].iMagmOcAtmModel = MAGMOC_GREY;
+  }
+
+  if (body[iBody].iMagmOcAtmModel == MAGMOC_PETIT) {
+    printf("WARNING: petit atmosphere model can only be used when modelling GJ1132b! \n");
   }
 }
 
@@ -601,6 +626,23 @@ double fndCO2MassMOTime(BODY *body, double dFracCO2, int iBody) {
                     + dFracCO2*body[iBody].dMassMagmOcLiq \
                     + ( 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf ) * dPressCO2AtmTemp \
                     - body[iBody].dCO2MassMOAtm );
+}
+
+/**
+Physical pressure of CO2 in the atmosphere
+Will be used in PropsAuxMagmOc to find its root with fndBisection
+
+@param body A pointer to the current BODY instance
+@param dPhysPressCO2 Physical CO2 pressure in the atmosphere
+@param iBody The current BODY number
+
+@return 0
+*/
+double fndPhysPressCO2(BODY *body, double dPhysPressCO2, int iBody) {
+  double dAveMolarMassAtm;
+
+  dAveMolarMassAtm = (MOLWEIGHTWATER*body[iBody].dPressWaterAtm + 2*MOLWEIGHTOXYGEN*body[iBody].dPressOxygenAtm + MOLWEIGHTCO2*dPhysPressCO2) / (body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm + dPhysPressCO2);
+  return body[iBody].dPartialPressCO2Atm * MOLWEIGHTCO2 / dAveMolarMassAtm - dPhysPressCO2;
 }
 
 /**
@@ -790,7 +832,7 @@ void fndFe2O3MassFracOxyMass(BODY *body, int iBody) {
     // dOxygenMassMO = body[iBody].dFracFe2O3Man * MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) * body[iBody].dMassMagmOcLiq;
     body[iBody].dOxygenMassAtm = 0; //fmax(0,body[iBody].dOxygenMassMOAtm - dOxygenMassMO);
   }
-  if (dOxygenMassNew < 0) {body[iBody].dOxygenMassAtm = 0;}
+  if (body[iBody].dOxygenMassAtm < 0) {body[iBody].dOxygenMassAtm = 0;}
   // ---------------
   // if ((body[iBody].dFracFe2O3Man/body[iBody].dMassFracFeOIni) < 0.3 && (!body[iBody].bManSolid) && (!body[iBody].bCalcFugacity)) { // X < 0.3 -> assuming no O2 buildup in atm
   //   dFracFe2O3New = dUpperBound;
@@ -928,6 +970,10 @@ Function water_fraction() in functions_rk.py
 void fndWaterFracMelt(BODY *body, int iBody) {
   double dMassMagmOcTot;   // total mass of magma ocean
   double dAveMolarMassAtm; // average molar mass of atmosphere
+
+  // CO2:
+  double dMassFracCO2Old, dLow, dUp;
+
   dMassMagmOcTot             = 4./3 * PI * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3));
   body[iBody].dMassMagmOcLiq = body[iBody].dMeltFraction * dMassMagmOcTot;
   body[iBody].dMassMagmOcCry = (1 - body[iBody].dMeltFraction) * dMassMagmOcTot;
@@ -943,29 +989,51 @@ void fndWaterFracMelt(BODY *body, int iBody) {
       body[iBody].dWaterFracMelt = fndBisection(fndWaterMassMOTime,body,0,1,1e-2,iBody);
     }
   }
+  // Water pressure in atmosphere [Schaefer+ (2016), Eq. 19]
+  body[iBody].dPressWaterAtm = pow((body[iBody].dWaterFracMelt/3.44e-8),1/0.74);
 
-  if (fabs(fndCO2MassMOTime(body, FRACCO2MELTMIN, iBody)) < 1e-5) {
-    body[iBody].dCO2FracMelt = FRACCO2MELTMIN;
-  } else if (fabs(fndCO2MassMOTime(body, FRACCO2MELTMAX, iBody)) < 1e-5) {
-    body[iBody].dCO2FracMelt = FRACCO2MELTMAX;
+  // CO2 mass fraction in the magma ocean
+  if (body[iBody].bCO2InAtmosphere) {
+
+    body[iBody].dCO2FracMelt = body[iBody].dCO2MassMOAtm / (body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+    if (body[iBody].dCO2FracMelt < 5e-4) {
+      body[iBody].dPartialPressCO2Atm = 0;
+      body[iBody].dPressCO2Atm = 0;
+      if (body[iBody].dPressOxygenAtm + body[iBody].dPressWaterAtm > 1) {
+        dAveMolarMassAtm = (MOLWEIGHTWATER * body[iBody].dPressWaterAtm + 2*MOLWEIGHTOXYGEN * body[iBody].dPressOxygenAtm)/(body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm);
+      }
+    } else {
+      dMassFracCO2Old = 0;
+
+      while (fabs(body[iBody].dCO2FracMelt-dMassFracCO2Old)>1e-7) {
+        // mass frac from last iteration
+        dMassFracCO2Old = body[iBody].dCO2FracMelt;
+
+        // partial pressure of CO2 [from Elkins-Tanton (2008)]
+        body[iBody].dPartialPressCO2Atm = pow(((100*body[iBody].dCO2FracMelt - 0.05)/2.08e-4),(1/0.45));
+
+        // get physical CO2 pressure with bisection root finder
+        dLow = body[iBody].dPartialPressCO2Atm;
+        dUp  = body[iBody].dPartialPressCO2Atm * MOLWEIGHTCO2 / MOLWEIGHTWATER;
+        if (fabs(fndPhysPressCO2(body, dLow, iBody)) < 1e-2*dLow) {
+          body[iBody].dPressCO2Atm = dLow;
+        } else if (fabs(fndPhysPressCO2(body, dUp, iBody)) < 1e-2*dLow) {
+          body[iBody].dPressCO2Atm = dUp;
+        } else {
+          body[iBody].dPressCO2Atm = fndBisection(fndPhysPressCO2,body,dLow,dUp,1e-2*dLow,iBody);
+        }
+        body[iBody].dCO2FracMelt = (body[iBody].dCO2MassMOAtm - body[iBody].dPressCO2Atm * 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf) / (CO2PARTCOEFF*body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+      }
+      // get average molar mass
+      dAveMolarMassAtm = body[iBody].dPartialPressCO2Atm * MOLWEIGHTCO2 / body[iBody].dPressCO2Atm;
+    }
+  } else if (body[iBody].dPressOxygenAtm > 1) {
+    dAveMolarMassAtm = (MOLWEIGHTWATER * body[iBody].dPressWaterAtm + 2*MOLWEIGHTOXYGEN * body[iBody].dPressOxygenAtm)/(body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm);
   } else {
-    body[iBody].dCO2FracMelt = fndBisection(fndCO2MassMOTime,body,FRACCO2MELTMIN,FRACCO2MELTMAX,1e-2,iBody);
+    dAveMolarMassAtm = MOLWEIGHTWATER;
   }
 
-  /* Get water pressure and water mass in the atmosphere */
-  // if (body[iBody].bPlanetDesiccated || body[iBody].dPressWaterAtm <= PRESSWATERMIN){
-  //   body[iBody].dPartialPressWaterAtm = 0;
-  //   body[iBody].dPressWaterAtm        = 0;
-  // } else {
-  if ((body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm + body[iBody].dPressCO2Atm) > 1) {
-    dAveMolarMassAtm = (MOLWEIGHTWATER * body[iBody].dPressWaterAtm + 2*MOLWEIGHTOXYGEN * body[iBody].dPressOxygenAtm + MOLWEIGHTCO2 * body[iBody].dPressCO2Atm)/(body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm + body[iBody].dPressCO2Atm);
-
-    body[iBody].dPressWaterAtm        = pow((body[iBody].dWaterFracMelt/3.44e-8),1/0.74); // Schaefer+ (2016), Eq. 19
-    body[iBody].dPartialPressWaterAtm = body[iBody].dPressWaterAtm * dAveMolarMassAtm / MOLWEIGHTWATER;
-
-    body[iBody].dPartialPressCO2Atm = pow(((100*body[iBody].dCO2FracMelt-0.05)/2.08e-4),1/0.45); // Elkins-Tanton (2008), Eq. 4
-    body[iBody].dPressCO2Atm        = body[iBody].dPartialPressWaterAtm * MOLWEIGHTWATER / dAveMolarMassAtm;
-  }
+  body[iBody].dPartialPressWaterAtm = body[iBody].dPressWaterAtm * dAveMolarMassAtm / MOLWEIGHTWATER;
 }
 
 /* Auxs Props */
@@ -1174,6 +1242,16 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     if (body[iBody].bPlanetDesiccated || !body[iBody].bRunaway) {
       body[iBody].bMagmOcHaltDesicc = 1;
     }
+  }
+
+  /* No CO2 */
+  if (!body[iBody].bCO2InAtmosphere) {
+    /*
+     * When no CO2 included:
+     * Stop updating CO2MassMOAtm, CO2MassSol
+     */
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iCO2MassMOAtm,update[iBody].iCO2MassMOAtmMagmOc);
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iCO2MassSol  ,update[iBody].iCO2MassSolMagmOc  );
   }
 }
 

@@ -886,6 +886,92 @@ void WriteFreeIncBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   }
 }
 
+/** Write the binary primary star radial position */
+void WriteBinPriRBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Compute current binary true anomaly
+  double meanAnomaly = body[1].dMeanMotion*body[0].dAge + body[1].dLL13PhiAB;
+  double eccAnomaly = fndMeanToEccentric(meanAnomaly,body[1].dEcc); // Solve Kepler's equation
+  double trueAnomaly = fndEccToTrue(eccAnomaly,body[1].dEcc);
+
+  // Compute binary separation
+  double radius = body[1].dSemi * (1.0 - body[1].dEcc*body[1].dEcc);
+  radius /= (1.0 + body[1].dEcc*cos(trueAnomaly-body[1].dLongP));
+
+  // Radial position of each star (- accounts for 180 deg phase offset)
+  double dInvMass = 1.0/(body[0].dMass+body[1].dMass);
+
+  *dTmp = body[1].dMass*radius*dInvMass;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
+/** Write the binary secondary star radial position */
+void WriteBinSecRBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Compute current binary true anomaly
+  double meanAnomaly = body[1].dMeanMotion*body[1].dAge + body[1].dLL13PhiAB;
+  double eccAnomaly = fndMeanToEccentric(meanAnomaly,body[1].dEcc); // Solve Kepler's equation
+  double trueAnomaly = fndEccToTrue(eccAnomaly,body[1].dEcc);
+
+  // Compute binary separation
+  double radius = body[1].dSemi * (1.0 - body[1].dEcc*body[1].dEcc);
+  radius /= (1.0 + body[1].dEcc*cos(trueAnomaly-body[1].dLongP));
+
+  // Radial position of each star (- accounts for 180 deg phase offset)
+  double dInvMass = 1.0/(body[0].dMass+body[1].dMass);
+
+  *dTmp = body[0].dMass*radius*dInvMass;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
+
+void WriteBinPriPhiBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Compute current binary true anomaly
+  double meanAnomaly = body[1].dMeanMotion*body[0].dAge + body[1].dLL13PhiAB;
+  double eccAnomaly = fndMeanToEccentric(meanAnomaly,body[1].dEcc); // Solve Kepler's equation
+
+  *dTmp = fndEccToTrue(eccAnomaly,body[1].dEcc);
+  if(output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
+
+void WriteBinSecPhiBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Compute current binary true anomaly
+  double meanAnomaly = body[1].dMeanMotion*body[1].dAge + body[1].dLL13PhiAB;
+  double eccAnomaly = fndMeanToEccentric(meanAnomaly,body[1].dEcc); // Solve Kepler's equation
+
+  // Secondary is PI radians away from primary
+  *dTmp = fndEccToTrue(eccAnomaly,body[1].dEcc) + PI;
+  if(output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
+
 void WriteCBPPhiBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   if(body[iBody].iBodyType == 0) {
     *dTmp = body[iBody].dCBPPhi;
@@ -1066,6 +1152,24 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_CBPPHI].iModuleBit = BINARY;
   fnWrite[OUT_CBPPHI] = &WriteCBPPhiBinary;
 
+  sprintf(output[OUT_BINPRIPHI].cName,"BinPriPhi");
+  sprintf(output[OUT_BINPRIPHI].cDescr,"Binary primary star azimuthal angle");
+  sprintf(output[OUT_BINPRIPHI].cNeg,"Deg");
+  output[OUT_BINPRIPHI].bNeg = 1;
+  output[OUT_BINPRIPHI].dNeg = 1.0/DEGRAD;
+  output[OUT_BINPRIPHI].iNum = 1;
+  output[OUT_BINPRIPHI].iModuleBit = BINARY;
+  fnWrite[OUT_BINPRIPHI] = &WriteBinPriPhiBinary;
+
+  sprintf(output[OUT_BINSECPHI].cName,"BinSecPhi");
+  sprintf(output[OUT_BINSECPHI].cDescr,"Binary secondary star azimuthal angle");
+  sprintf(output[OUT_BINSECPHI].cNeg,"Deg");
+  output[OUT_BINSECPHI].bNeg = 1;
+  output[OUT_BINSECPHI].dNeg = 1.0/DEGRAD;
+  output[OUT_BINSECPHI].iNum = 1;
+  output[OUT_BINSECPHI].iModuleBit = BINARY;
+  fnWrite[OUT_BINSECPHI] = &WriteBinSecPhiBinary;
+
   sprintf(output[OUT_LL13N0].cName,"LL13N0");
   sprintf(output[OUT_LL13N0].cDescr,"Leung+Lee 2013 Mean Motion");
   sprintf(output[OUT_LL13N0].cNeg,"1/year");
@@ -1101,6 +1205,24 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_CBPR].iNum = 1;
   output[OUT_CBPR].iModuleBit = BINARY;
   fnWrite[OUT_CBPR] = &WriteCBPRBinary;
+
+  sprintf(output[OUT_BINPRIR].cName,"BinPriR");
+  sprintf(output[OUT_BINPRIR].cDescr,"Radial position of binary primary star");
+  output[OUT_BINPRIR].bNeg = 1;
+  sprintf(output[OUT_BINPRIR].cNeg,"AU");
+  output[OUT_BINPRIR].dNeg = 1.0/AUM;
+  output[OUT_BINPRIR].iNum = 1;
+  output[OUT_BINPRIR].iModuleBit = BINARY;
+  fnWrite[OUT_BINPRIR] = &WriteBinPriRBinary;
+
+  sprintf(output[OUT_BINSECR].cName,"BinSecR");
+  sprintf(output[OUT_BINSECR].cDescr,"Radial position of binary secondary star");
+  output[OUT_BINSECR].bNeg = 1;
+  sprintf(output[OUT_BINSECR].cNeg,"AU");
+  output[OUT_BINSECR].dNeg = 1.0/AUM;
+  output[OUT_BINSECR].iNum = 1;
+  output[OUT_BINSECR].iModuleBit = BINARY;
+  fnWrite[OUT_BINSECR] = &WriteBinSecRBinary;
 
   sprintf(output[OUT_CBPR0].cName,"R0");
   sprintf(output[OUT_CBPR0].cDescr,"CBP's Orbital Guiding Center Radius");
@@ -1437,8 +1559,12 @@ double fndComputeArgPeri(BODY *body, int iBody) {
   }
 }
 
-/** Convert mean anomaly M to eccentric anomaly E
-    by solving kepler equation using Newton's Method
+/**
+Solves kepler's equation via Newton's method
+
+@param M double, Mean anomaly
+@param e, eccentricity
+*/
 double fndMeanToEccentric(double M, double e) {
   // Make sure M in [0,2pi)
   M = fmod(M,2.0*PI);
@@ -1474,36 +1600,7 @@ double fndMeanToEccentric(double M, double e) {
 
   return E;
 }
-*/
 
-/**
-Solves kepler's equation for one body
-
-@param M double, Mean anomaly
-@param e, eccentricity
-*/
-double fndMeanToEccentric(double M, double e) {
-  double di1, di2, di3, fi, fi1, fi2, fi3, dEccA;
-  if(M) {
-    dEccA = 0;
-  } else {
-    dEccA = M + fiSign(sin(M))*0.85*e;
-    di3 = 1.0;
-
-    while (di3 > 1e-10) {
-      fi = dEccA - e*sin(dEccA) - M;
-      fi1 = 1.0 - e*cos(dEccA);
-      fi2 = e*sin(dEccA);
-      fi3 = e*cos(dEccA);
-      di1 = -fi/fi1;
-      di2 = -fi/(fi1+0.5*di1*fi2);
-      di3 = -fi/(fi1+0.5*di2*fi2+1./6.*di2*di2*fi3);
-      dEccA += di3;
-    }
-  }
-
-  return dEccA;
-}
 
 /** Convert eccentric anomaly to true anomaly */
 double fndEccToTrue(double E, double e) {
@@ -1825,7 +1922,8 @@ double fndDMk(int k, BODY * body, int iBody) {
 /** Computes the CBP orbital radius */
 double fndCBPRBinary(BODY *body,SYSTEM *system,int *iaBody) {
 
-  int iBody = iaBody[0], k;
+  int iBody = iaBody[0];
+  int k;
 
   double dPsi = body[iBody].dCBPPsi;
   double dTime = body[iBody].dAge; // Time == Age of the body
@@ -2087,7 +2185,7 @@ double fndApproxInsol(BODY *body, int iBody) {
 }
 
 /** Dumps out a bunch of values to see if they agree with LL13 */
-void fnvbinaryDebug(BODY * body) {
+void fnvBinaryDebug(BODY * body) {
 
   fprintf(stderr,"binary debug information:\n");
   fprintf(stderr,"r0: %lf.\n",body[2].dR0/AUM);

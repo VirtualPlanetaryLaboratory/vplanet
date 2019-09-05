@@ -1,0 +1,13 @@
+# This planet is experiencing Roche lobe overflow
+sName                     b
+saModules                 atmesc
+dXFrac                    1.0
+dSurfWaterMass            0
+bHaltEnvelopeGone         0
+sPlanetRadiusModel        lopez
+dAtmXAbsEffH              0.1
+dSemi                     -0.1
+dEcc                      0.
+dEnvelopeMass             -0.81818
+dMass                     -1.81818
+saOutputOrder             Time -EnvelopeMass Radius -Mass DeltaTime

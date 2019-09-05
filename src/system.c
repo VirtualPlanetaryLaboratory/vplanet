@@ -246,8 +246,7 @@ double fdTotEnergy(BODY *body, CONTROL *control, SYSTEM *system) {
   int iBody;
 
   // Add all rotational angular momentum, angular momentum lost
-  for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++)
-  {
+  for(iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
     // Add body's potential, kinetic energy
     dTot += fdPotEnergy(body,control,system,iBody);
     dTot += fdKinEnergy(body,control,system,iBody);
@@ -257,6 +256,11 @@ double fdTotEnergy(BODY *body, CONTROL *control, SYSTEM *system) {
 
     // Add back in lost energy
     dTot += body[iBody].dLostEng;
+    /*
+    printf("%lf\n",body[iBody].dLostEng);
+    printf("%lf\n",dTot);
+    fflush(stdout);
+    */
   }
 
   return dTot;

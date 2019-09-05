@@ -62,10 +62,12 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dPresXUV = src[iBody].dPresXUV;
   dest[iBody].dScaleHeight = src[iBody].dScaleHeight;
   dest[iBody].dThermTemp = src[iBody].dThermTemp;
+  dest[iBody].dFlowTemp = src[iBody].dFlowTemp;
   dest[iBody].dAtmGasConst = src[iBody].dAtmGasConst;
   dest[iBody].dFXUV = src[iBody].dFXUV;
   dest[iBody].bCalcFXUV = src[iBody].bCalcFXUV;
   dest[iBody].dJeansTime = src[iBody].dJeansTime;
+  dest[iBody].bRocheMessage = src[iBody].bRocheMessage;
 
 }
 
@@ -128,6 +130,35 @@ void ReadThermTemp(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
 }
 
 /**
+\rst
+Read the temperature of the hydro flow for the Luger+Barnes escape model.
+\endrst
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadFlowTemp(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile){
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dFlowTemp = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dFlowTemp = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dFlowTemp = options->dDefault;
+}
+
+/**
 Read the atmospheric gas constant the Lehmer and Catling (2017) atmospheric escape model.
 
 @param body A pointer to the current BODY instance
@@ -177,9 +208,15 @@ void ReadJeansTime(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     else
       body[iFile-1].dJeansTime = dTmp*fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
+  } else {
+    if (iFile > 0) {
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr,"INFO: %s not set for body %s, defaulting to %.2e seconds.\n",
+          options->cName,body[iFile-1].cName,options->dDefault);
+      }
       body[iFile-1].dJeansTime = options->dDefault;
+    }
+  }
 }
 
 /**
@@ -651,6 +688,14 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_THERMTEMP].iMultiFile = 1;
   fnRead[OPT_THERMTEMP] = &ReadThermTemp;
 
+  sprintf(options[OPT_FLOWTEMP].cName,"dFlowTemp");
+  sprintf(options[OPT_FLOWTEMP].cDescr,"Temperature of the hydrodynamic flow");
+  sprintf(options[OPT_FLOWTEMP].cDefault,"400");
+  options[OPT_FLOWTEMP].dDefault = 400;
+  options[OPT_FLOWTEMP].iType = 2;
+  options[OPT_FLOWTEMP].iMultiFile = 1;
+  fnRead[OPT_FLOWTEMP] = &ReadFlowTemp;
+
   sprintf(options[OPT_JEANSTIME].cName,"dJeansTime");
   sprintf(options[OPT_JEANSTIME].cDescr,"Time at which flow transitions to Jeans escape");
   sprintf(options[OPT_JEANSTIME].cDefault,"1 Gyr");
@@ -820,7 +865,7 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *u
     // If there is no envelope and Lopez Radius specified, use Sotin+2007 radius!
     if(body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) {
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Lopez+2012 Radius model specified, but no envelope present. Using Sotin+2007 Mass-radius relation to compute planet's solid radius.\n");
+        printf("INFO: Lopez+2012 Radius model specified, but no envelope present. Using Sotin+2007 Mass-radius relation to compute planet's solid radius.\n");
 
       // Set radius using Sotin+2007 model
       body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
@@ -829,14 +874,14 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *u
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   } else if (body[iBody].iPlanetRadiusModel == ATMESC_PROXCENB) {
     body[iBody].dRadius = fdProximaCenBRadius(body[iBody].dEnvelopeMass / body[iBody].dMass, body[iBody].dAge, body[iBody].dMass);
     if (options[OPT_RADIUS].iLine[iBody+1] >= 0) {
       // User specified radius, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("WARNING: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
+        printf("INFO: Radius set for body %d, but this value will be computed from the grid.\n", iBody);
     }
   }
 
@@ -869,15 +914,19 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     // Let's desiccate this planet.
     body[iBody].dSurfaceWaterMass = 0.;
   }
-  if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) && (body[iBody].dEnvelopeMass > 0.)){
-    // Let's remove its envelope.
+
+  if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) && (body[iBody].dEnvelopeMass > 0.)) {
+    // Let's remove its envelope and prevent further evolution.
     body[iBody].dEnvelopeMass = 0.;
+    fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
 
     // If using Lopez+2012 radius model, set radius to Sotin+2007 radius
     if(body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
       // Let user know what's happening
-      printf("Envelope removed. Use Lopez+12 radius models for envelope, switching to Sotin+2007 model for solid planet radius.\n");
-
+      if (io->iVerbose >= VERBPROG && !body[iBody].bEnvelopeLostMessage) {
+        printf("%s's envelope removed. Used Lopez+12 radius models for envelope, switching to Sotin+2007 model for solid planet radius.\n",body[iBody].cName);
+        body[iBody].bEnvelopeLostMessage = 1;
+      }
       // Update radius
       body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
     }
@@ -893,7 +942,7 @@ Initializes several helper variables and properties used in the integration.
 @param update A pointer to the UPDATE instance
 @param iBody The current BODY number
 */
-void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iBody) {
 
   body[iBody].dAge = body[0].dAge;
 
@@ -910,16 +959,19 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
                body[iBody].dSemi) / (body[iBody].dRadius * body[iBody].dXFrac);
 
   // For circumbinary planets, assume no Ktide enhancement
-  if(body[iBody].bBinary && body[iBody].iBodyType == 0) {
+  if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
       body[iBody].dKTide = 1.0;
   } else {
       if (xi > 1) {
         body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
       } else {
-        fprintf(stderr,"WARNING: Roche lobe radius is larger than XUV radius for %s, evolution may not be accurate.\n",
+        if (!body[iBody].bRocheMessage && io->iVerbose >= VERBINPUT) {
+          fprintf(stderr,"WARNING: Roche lobe radius is larger than XUV radius for %s, evolution may not be accurate.\n",
               body[iBody].cName);
-        body[iBody].dKTide = 1.0;
+          body[iBody].bRocheMessage = 1;
+        }
       }
+      body[iBody].dKTide = 1.0;
   }
 
   // The XUV flux
@@ -942,7 +994,8 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
   double XO = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass, body[iBody].dOxygenMass);
 
   // Diffusion-limited H escape rate
-  body[iBody].dFHDiffLim = BDIFF * g * ATOMMASS * (QOH - 1.) / (KBOLTZ * THERMT * (1. + XO / (1. - XO)));
+  double BDIFF = 4.8e19 * pow(body[iBody].dFlowTemp, 0.75);
+  body[iBody].dFHDiffLim = BDIFF * g * ATOMMASS * (QOH - 1.) / (KBOLTZ * body[iBody].dFlowTemp * (1. + XO / (1. - XO)));
 
   // Is water escaping?
   if (!fbDoesWaterEscape(body, iBody)) {
@@ -961,18 +1014,18 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
     if (body[iBody].iWaterLossModel == ATMESC_LB15) {
 
       // Luger and Barnes (2015)
-      double x = (KBOLTZ * THERMT * body[iBody].dFHRef) / (10 * BDIFF * g * ATOMMASS);
+      double x = (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) / (10 * BDIFF * g * ATOMMASS);
       if (x < 1) {
         body[iBody].dOxygenEta = 0;
-        body[iBody].dCrossoverMass = ATOMMASS + 1.5 * KBOLTZ * THERMT * body[iBody].dFHRef / (BDIFF * g);
+        body[iBody].dCrossoverMass = ATOMMASS + 1.5 * KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef / (BDIFF * g);
       } else {
         body[iBody].dOxygenEta = (x - 1) / (x + 8);
-        body[iBody].dCrossoverMass = 43. / 3. * ATOMMASS + KBOLTZ * THERMT * body[iBody].dFHRef / (6 * BDIFF * g);
+        body[iBody].dCrossoverMass = 43. / 3. * ATOMMASS + KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef / (6 * BDIFF * g);
       }
 
     } else if ((body[iBody].iWaterLossModel == ATMESC_LBEXACT) | (body[iBody].iWaterLossModel == ATMESC_TIAN)) {
 
-      double x = (QOH - 1.) * (1. - XO) * (BDIFF * g * ATOMMASS) / (KBOLTZ * THERMT);
+      double x = (QOH - 1.) * (1. - XO) * (BDIFF * g * ATOMMASS) / (KBOLTZ * body[iBody].dFlowTemp);
       double FH;
       double rat;
 
@@ -980,7 +1033,7 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
       if (body[iBody].dFHRef < x) {
 
         // mcross < mo
-        body[iBody].dCrossoverMass = ATOMMASS + (1. / (1. - XO)) * (KBOLTZ * THERMT * body[iBody].dFHRef) / (BDIFF * g);
+        body[iBody].dCrossoverMass = ATOMMASS + (1. / (1. - XO)) * (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) / (BDIFF * g);
         FH = body[iBody].dFHRef;
         rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) / (body[iBody].dCrossoverMass / ATOMMASS - 1.);
         body[iBody].dOxygenEta = 0;
@@ -990,7 +1043,7 @@ void fnPropertiesAtmEsc(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
         // mcross >= mo
         double num = 1. + (XO / (1. - XO)) * QOH * QOH;
         double den = 1. + (XO / (1. - XO)) * QOH;
-        body[iBody].dCrossoverMass = ATOMMASS * num / den + (KBOLTZ * THERMT * body[iBody].dFHRef) / ((1 + XO * (QOH - 1)) * BDIFF * g);
+        body[iBody].dCrossoverMass = ATOMMASS * num / den + (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) / ((1 + XO * (QOH - 1)) * BDIFF * g);
         rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) / (body[iBody].dCrossoverMass / ATOMMASS - 1.);
         FH = body[iBody].dFHRef * pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
         body[iBody].dOxygenEta = 2 * XO / (1. - XO) * rat;
@@ -1078,7 +1131,8 @@ Verify all the inputs for the atmospheric escape module.
 void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int bAtmEsc=0;
 
-  /* AtmEsc is active for this body if this subroutine is called. */
+  body[iBody].bEnvelopeLostMessage = 0;
+  body[iBody].bRocheMessage = 0;
 
   // Is FXUV specified in input file?
   if (options[OPT_FXUV].iLine[iBody+1] > -1){
@@ -1095,6 +1149,37 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
     body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,body[iBody].dPresSurf);
   } else {
+    int iCol,bError = 0;
+    for (iCol=0;iCol<files->Outfile[iBody].iNumCols;iCol++) {
+      if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_PLANETRADXUV].cName,strlen(output[OUT_PLANETRADXUV].cName)) == 0) {
+        /* Match! */
+        fprintf(stderr,"ERROR: Cannot output %s for body %s while using AtmEsc's LOPEZ12 model.\n",
+            output[OUT_PLANETRADXUV].cName,body[iBody].cName);
+        bError=1;
+      }
+      if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_RADSOLID].cName,strlen(output[OUT_RADSOLID].cName)) == 0) {
+        /* Match! */
+        fprintf(stderr,"ERROR: Cannot output %s for body %s while using AtmEsc's LOPEZ12 model.\n",
+            output[OUT_RADSOLID].cName,body[iBody].cName);
+        bError=1;
+      }
+      if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_SCALEHEIGHT].cName,strlen(output[OUT_SCALEHEIGHT].cName)) == 0) {
+        /* Match! */
+        fprintf(stderr,"ERROR: Cannot output %s for body %s while using AtmEsc's LOPEZ12 model.\n",
+            output[OUT_SCALEHEIGHT].cName,body[iBody].cName);
+        bError=1;
+      }
+      if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_PRESSURF].cName,strlen(output[OUT_PRESSURF].cName)) == 0) {
+        /* Match! */
+        fprintf(stderr,"ERROR: Cannot output %s for body %s while using AtmEsc's LOPEZ12 model.\n",
+            output[OUT_PRESSURF].cName,body[iBody].cName);
+        bError=1;
+      }
+    }
+
+    if (bError) {
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_OUTPUTORDER].iLine[iBody+1]);
+    }
     /* Must initialized the above values to avoid memory leaks. */
     body[iBody].dRadXUV = -1;
     body[iBody].dRadSolid = -1;
@@ -1126,18 +1211,18 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   body[iBody].dRGDuration = 0.;
 
   if (!bAtmEsc && control->Io.iVerbose >= VERBINPUT)
-    fprintf(stderr,"WARNING: ATMESC called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
+    fprintf(stderr,"WARNING: AtmEsc called for body %s, but no atmosphere/water present!\n",body[iBody].cName);
 
   // Radius evolution
   if (update[iBody].iNumRadius > 1) {
     if (control->Io.iVerbose >= VERBERR)
-      fprintf(stderr,"ERROR: Looks like there's more than one equation trying to set dRadius for body %d!", iBody);
+      fprintf(stderr,"ERROR: More than one module is trying to set dRadius for body %d!", iBody);
     exit(EXIT_INPUT);
   }
   VerifyRadiusAtmEsc(body,control,options,update,body[iBody].dAge,iBody);
 
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorAtmEsc;
-  control->fnPropsAux[iBody][iModule] = &fnPropertiesAtmEsc;
+  control->fnPropsAux[iBody][iModule] = &fnPropsAuxAtmEsc;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyAtmEsc;
 
 }
@@ -1709,6 +1794,28 @@ void WriteThermTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
 }
 
 /**
+Logs the temperature of the flow.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteFlowTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+ *dTmp = body[iBody].dFlowTemp;
+
+ if (output->bDoNeg[iBody]) {
+   *dTmp *= output->dNeg;
+   strcpy(cUnit,output->cNeg);
+ } else { }
+}
+
+/**
 Logs the surface pressure.
 
 @param body A pointer to the current BODY instance
@@ -1960,7 +2067,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_ENVELOPEMASS] = &WriteEnvelopeMass;
 
   sprintf(output[OUT_PLANETRADXUV].cName,"RadXUV");
-  sprintf(output[OUT_PLANETRADXUV].cDescr,"XUV Radius separating hydro. dyn. escpape and equilibrium");
+  sprintf(output[OUT_PLANETRADXUV].cDescr,"XUV Radius separating hydro. dyn. escape and equilibrium");
   sprintf(output[OUT_PLANETRADXUV].cNeg,"Earth Radii");
   output[OUT_PLANETRADXUV].bNeg = 1;
   output[OUT_PLANETRADXUV].dNeg = 1./REARTH;
@@ -2177,11 +2284,12 @@ double fdDOxygenMassDt(BODY *body,SYSTEM *system,int *iaBody) {
     if (body[iaBody[0]].iWaterLossModel == ATMESC_LB15) {
 
       // Rodrigo and Barnes (2015)
-      if (body[iaBody[0]].dCrossoverMass >= 16 * ATOMMASS)
-        return (320. * PI * BIGG * ATOMMASS * ATOMMASS * BDIFF * body[iaBody[0]].dMass) / (KBOLTZ * THERMT);
-      else
+      if (body[iaBody[0]].dCrossoverMass >= 16 * ATOMMASS) {
+        double BDIFF = 4.8e19 * pow(body[iaBody[0]].dFlowTemp, 0.75);
+        return (320. * PI * BIGG * ATOMMASS * ATOMMASS * BDIFF * body[iaBody[0]].dMass) / (KBOLTZ * body[iaBody[0]].dFlowTemp);
+      } else {
         return (8 - 8 * body[iaBody[0]].dOxygenEta) / (1 + 8 * body[iaBody[0]].dOxygenEta) * body[iaBody[0]].dMDotWater;
-
+      }
     } else {
 
       // Exact
@@ -2210,11 +2318,12 @@ double fdDOxygenMantleMassDt(BODY *body,SYSTEM *system,int *iaBody) {
     if (body[iaBody[0]].iWaterLossModel == ATMESC_LB15) {
 
       // Rodrigo and Barnes (2015)
-      if (body[iaBody[0]].dCrossoverMass >= 16 * ATOMMASS)
-        return (320. * PI * BIGG * ATOMMASS * ATOMMASS * BDIFF * body[iaBody[0]].dMass) / (KBOLTZ * THERMT);
-      else
+      if (body[iaBody[0]].dCrossoverMass >= 16 * ATOMMASS) {
+        double BDIFF = 4.8e19 * pow(body[iaBody[0]].dFlowTemp, 0.75);
+        return (320. * PI * BIGG * ATOMMASS * ATOMMASS * BDIFF * body[iaBody[0]].dMass) / (KBOLTZ * body[iaBody[0]].dFlowTemp);
+      } else {
         return (8 - 8 * body[iaBody[0]].dOxygenEta) / (1 + 8 * body[iaBody[0]].dOxygenEta) * body[iaBody[0]].dMDotWater;
-
+      }
     } else {
 
       // Exact

@@ -35,7 +35,7 @@ void FinalizeUpdateNULL(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,i
   /* Nothing */
 }
 
-void PropsAuxNULL(BODY *body,EVOLVE *evolve,UPDATE *update,int iFoo) {
+void PropsAuxNULL(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iFoo) {
 }
 
 // Functions that are helpful for integrations
@@ -687,14 +687,13 @@ void VerifyModuleMultiDistOrbDistRot(BODY *body,UPDATE *update,CONTROL *control,
 }
 
 void VerifyModuleMultiEqtideDistRot(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
-
-  if (body[iBody].bDistRot) {
-    if (body[iBody].bEqtide) {
-      if (body[iBody].bReadOrbitData) {
-        fprintf(stderr,"ERROR: Cannot set both EQTIDE and bReadOrbitData for body %s.\n",body[iBody].cName);
-        exit(EXIT_INPUT);
-      }
+  if (body[iBody].bDistRot && body[iBody].bEqtide) {
+    if (body[iBody].bReadOrbitData) {
+      fprintf(stderr,"ERROR: Cannot set both EQTIDE and bReadOrbitData for body %s.\n",body[iBody].cName);
+      exit(EXIT_INPUT);
     }
+
+    control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideDistRot;
   }
 }
 
@@ -1182,7 +1181,7 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body,UPDATE *update,CONTROL *co
 
   // Call PropsAuxAtmescThermint to initialize interior Properties
   if (iBody >0) {
-    fvPropsAuxThermint(body,&control->Evolve,update,iBody);
+    fvPropsAuxThermint(body,&control->Evolve,&control->Io,update,iBody);
   }
   }
 }
@@ -1231,11 +1230,6 @@ void VerifyModuleMultiBinaryEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
   }
 }
 
-void VerifyModuleMultiEqtideDistorb(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
-  if (body[iBody].bEqtide || body[iBody].bDistOrb)
-      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideDistorb;
-}
-
 void VerifyModuleMultiSpiNBodyDistOrb(BODY *body,UPDATE *update,CONTROL *control,FILES *files,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
   int iTmpBody;
   // This gets done repeatedly, but should be only done once
@@ -1277,6 +1271,14 @@ void  VerifyModuleCompatability(BODY *body,CONTROL *control,FILES *files,MODULE 
     if (body[iBody].bPoise) {
       if (control->Io.iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: Modules Binary and Poise cannot be applied to the same body.\n");
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+    }
+  }
+
+  if (body[iBody].bAtmEsc) {
+    if (body[iBody].bPoise) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: Modules AtmEsc and POISE cannot be applied to the same body.\n");
       LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
     }
   }
@@ -1355,32 +1357,48 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
      these functions as some default behavior is set if other modules aren't
      called. */
 
-  VerifyModuleMultiSpiNBodyAtmEsc(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiSpiNBodyAtmEsc(body,update,control,files,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiSpiNBodyDistOrb(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiSpiNBodyDistOrb(body,update,control,files,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiDistOrbDistRot(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiDistOrbDistRot(body,update,control,files,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiEqtideDistRot(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiEqtideDistRot(body,update,control,files,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiRadheatThermint(body,update,control,files,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiRadheatThermint(body,update,control,files,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiEqtideDistOrb(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiEqtideDistOrb(body,update,control,files,module,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiAtmescEqtide(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiEqtideDistRot(body,update,control,files,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiEqtideThermint(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiAtmescEqtide(body,update,control,files,module,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
+
+  VerifyModuleMultiEqtideThermint(body,update,control,files,module,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
   // Always call after VerifyModuleMultiEqtideThermint !!
-  VerifyModuleMultiAtmescEqtideThermint(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiAtmescEqtideThermint(body,update,control,files,module,
+    options,iBody,&iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiFlareStellar(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiFlareStellar(body,update,control,files,module,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiBinaryEqtide(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiBinaryEqtide(body,update,control,files,module,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiEqtideStellar(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiEqtideStellar(body,update,control,files,module,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
-  VerifyModuleMultiBinaryStellar(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
+  VerifyModuleMultiBinaryStellar(body,update,control,files,module,options,iBody,
+    &iNumMultiProps,&iNumMultiForce);
 
   control->iNumMultiProps[iBody] = iNumMultiProps;
   control->iNumMultiForce[iBody] = iNumMultiForce;
@@ -1392,16 +1410,16 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
  * Auxiliary Properties for multi-module calculations
  */
 
-void PropsAuxSpiNbodyEqtide(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void PropsAuxSpiNbodyEqtide(BODY *body, EVOLVE *evolve, IO *io,UPDATE *update, int iBody) {
   // Nothing to see here...
 
 }
 
-void PropsAuxSpiNBodyDistOrb(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void PropsAuxSpiNBodyDistOrb(BODY *body, EVOLVE *evolve, IO *io,UPDATE *update, int iBody) {
 
 }
 
-void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   // This function controls how tidal radius is set.
 
   // If bUseTidalRadius == 0, dTidalRadius <- dRadius
@@ -1412,7 +1430,7 @@ void PropsAuxAtmescEqtide(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 /** Calculate auxiliary properties if EqTide and ThermInt are called. At present
   this funciton only needs to calculate Im(k_2), possibly including the effects
   of an ocean and envelope. */
-void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
 
   body[iBody].dK2Man = fdK2Man(body,iBody);
   body[iBody].dTidalQMan = fdTidalQMan(body,iBody);
@@ -1436,23 +1454,30 @@ void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
 }
 */
 
-void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   body[iBody].dRadPowerCore = fdRadPowerCore(update,iBody);
   body[iBody].dRadPowerCrust = fdRadPowerCrust(update,iBody);
   body[iBody].dRadPowerMan = fdRadPowerMan(update,iBody);
 }
 
-void PropsAuxEqtideDistorb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxEqtideDistorb(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
 }
 
-void PropsAuxEqtideStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxEqtideDistRot(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
+  if (body[iBody].bCalcDynEllip) {
+    body[iBody].dDynEllip = CalcDynEllipEq(body,iBody);
+  }
+}
+
+
+void PropsAuxEqtideStellar(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   // In stellar, radius can change depending on model so make sure tidal radius
   // knows that
   body[iBody].dTidalRadius = body[iBody].dRadius;
 }
 
-void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   SYSTEM system; // dummy for LXUVStellar
   //body[iBody].dLXUV = fdLXUVStellar(body,&system,update,iBody,iBody) + body[iBody].dLXUVFlare;
 }

@@ -114,7 +114,7 @@ void VerifyDynEllip(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],in
     /* check if bCalcDynEllip and dDynEllip are both set */
     if (options[OPT_DYNELLIP].iLine[iBody+1] > -1) {
       if (iVerbose >= VERBINPUT)
-        fprintf(stderr,"WARNING: %s set in file %s, but %s set to 1. %s will be overridden.\n",options[OPT_DYNELLIP].cName,cFile,options[OPT_CALCDYNELLIP].cName,options[OPT_DYNELLIP].cName);
+        fprintf(stderr,"INFO: %s set in file %s, but %s set to 1. %s will be overridden.\n",options[OPT_DYNELLIP].cName,cFile,options[OPT_CALCDYNELLIP].cName,options[OPT_DYNELLIP].cName);
     }
     body[iBody].dDynEllip = CalcDynEllipEq(body,iBody);
   }
@@ -130,7 +130,7 @@ void VerifyNames(BODY *body,CONTROL *control,OPTIONS *options) {
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     if (strlen(body[iBody].cName) == 0) {
       if (control->Io.iVerbose > VERBINPUT) {
-        fprintf(stderr,"WARNING: No input to %s in file %s, defaulting to %d/\n",options[OPT_BODYNAME].cName,options[OPT_BODYNAME].cFile[iBody]+1,iBody);
+        fprintf(stderr,"INFO: No input to %s in file %s, defaulting to %d/\n",options[OPT_BODYNAME].cName,options[OPT_BODYNAME].cFile[iBody]+1,iBody);
       }
       sprintf(body[iBody].cName,"%d",iBody+1);
     }
@@ -315,7 +315,7 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       if (options[OPT_OUTFILE].iLine[iFile] == -1) {
         sprintf(files->Outfile[iFile-1].cOut,"%s.%s.backward",system->cName,body[iFile-1].cName);
         if (control->Io.iVerbose >= VERBINPUT)
-          fprintf(stderr,"WARNING: %s not set, defaulting to %s.\n",options[OPT_OUTFILE].cName,files->Outfile[iFile-1].cOut);
+          fprintf(stderr,"INFO: %s not set, defaulting to %s.\n",options[OPT_OUTFILE].cName,files->Outfile[iFile-1].cOut);
       }
     }
     control->Evolve.iDir = -1;
@@ -327,7 +327,7 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
       if (options[OPT_OUTFILE].iLine[iFile] == -1) {
         sprintf(files->Outfile[iFile-1].cOut,"%s.%s.forward",system->cName,body[iFile-1].cName);
         if (control->Io.iVerbose >= VERBINPUT)
-          fprintf(stderr,"WARNING: %s not set, defaulting to %s.\n",options[OPT_OUTFILE].cName,files->Outfile[iFile-1].cOut);
+          fprintf(stderr,"INFO: %s not set, defaulting to %s.\n",options[OPT_OUTFILE].cName,files->Outfile[iFile-1].cOut);
       }
     }
     control->Evolve.iDir = 1;
@@ -376,7 +376,7 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     /* Assign Default */
     strcpy(cTmp,options[OPT_INTEGRATIONMETHOD].cDefault);
     if (control->Io.iVerbose >= VERBINPUT)
-      fprintf(stderr,"WARNING: %s not set, defaulting to %s.\n",options[OPT_INTEGRATIONMETHOD].cName,options[OPT_INTEGRATIONMETHOD].cDefault);
+      fprintf(stderr,"INFO: %s not set, defaulting to %s.\n",options[OPT_INTEGRATIONMETHOD].cName,options[OPT_INTEGRATIONMETHOD].cDefault);
     if (memcmp(sLower(cTmp),"e",1) == 0) {
       control->Evolve.iOneStep = EULER;
       *fnOneStep = &EulerStep;
@@ -507,7 +507,7 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,char cFile[],int iBody,in
   if (options[OPT_ROTPER].iLine[iFileNum] == -1 && options[OPT_ROTVEL].iLine[iFileNum] == -1 && options[OPT_ROTRATE].iLine[iFileNum] == -1) {
     /* Nothing set, print warning and return */
     if (iVerbose >= VERBINPUT)
-      fprintf(stderr,"WARNING: No rotational information set in file %s. Defaulting to %s = %s.\n",cFile,options[OPT_ROTRATE].cName,options[OPT_ROTRATE].cDefault);
+      fprintf(stderr,"INFO: No rotational information set in file %s. Defaulting to %s = %s.\n",cFile,options[OPT_ROTRATE].cName,options[OPT_ROTRATE].cDefault);
     body[iBody].dRotRate = options[OPT_ROTRATE].dDefault;
     return;
   }
@@ -630,7 +630,7 @@ void VerifyImK2Mantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       if (options[OPT_TIDALQMANTLE].iLine[iBody+1] == -1) {
         body[iBody].dTidalQMan = body[iBody].dTidalQ;
           if (control->Io.iVerbose >= VERBALL) {
-            fprintf(stderr,"WARNING: %s set, but ThermInt computes it. Input value will be ignored.\n",options[OPT_TIDALQMANTLE].cName);
+            fprintf(stderr,"INFO: %s set, but ThermInt computes it. Input value will be ignored.\n",options[OPT_TIDALQMANTLE].cName);
           }
       }
 
@@ -659,9 +659,9 @@ void VerifyImK2Mantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
 void VerifyImK2(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,UPDATE *update,int iBody) {
 
   // First gather auxiliary properties for relevant modules
-  PropsAuxEqtide(body,&control->Evolve,update,iBody);
+  PropsAuxEqtide(body,&control->Evolve,&control->Io,update,iBody);
   if (body[iBody].bThermint) {
-    fvPropsAuxThermint(body,&control->Evolve,update,iBody);
+    fvPropsAuxThermint(body,&control->Evolve,&control->Io,update,iBody);
   }
 
   VerifyImK2Env(body,control,files,options,system,iBody);
@@ -790,7 +790,7 @@ void VerifyOcean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int i
   if (body[iBody].dSurfaceWaterMass < body[iBody].dMinSurfaceWaterMass) {
     body[iBody].bOcean = 0;
     if (control->Io.iVerbose && body[iBody].bAtmEsc) {
-      fprintf(stderr,"WARNING: %s < %s. No envelope evolution will be included.\n",
+      fprintf(stderr,"INFO: %s < %s. No envelope evolution will be included.\n",
         options[OPT_SURFACEWATERMASS].cName,options[OPT_MINSURFACEWATERMASS].cName);
     }
   }
@@ -801,7 +801,7 @@ void VerifyEnvelope(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,in
   if (body[iBody].dEnvelopeMass < body[iBody].dMinEnvelopeMass) {
     body[iBody].bEnv = 0;
     if (control->Io.iVerbose >= VERBINPUT && body[iBody].bAtmEsc) {
-      fprintf(stderr,"WARNING: %s < %s. No envelope evolution will be included.\n",
+      fprintf(stderr,"INFO: %s < %s. No envelope evolution will be included.\n",
         options[OPT_ENVELOPEMASS].cName,options[OPT_MINENVELOPEMASS].cName);
     }
   }
@@ -815,6 +815,30 @@ void VerifyLayers(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int 
 
 }
 
+void VerifyAge(BODY *body,CONTROL *control,OPTIONS *options) {
+  int bAgeSet,iBody;
+  double dAge;
+
+  // Assume age wasn't set
+  bAgeSet=0;
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    if (options[OPT_AGE].iLine[iBody+1] > -1) {
+      // Age was set!
+      bAgeSet=1;
+      dAge = body[iBody].dAge;
+    }
+  }
+
+  // For now, all bodies must be the same age
+  if (bAgeSet) {
+    if (control->Io.iVerbose == VERBALL) {
+      printf("INFO: Age set in one file, all bodies will have this age.\n");
+    }
+    for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+      body[iBody].dAge = dAge;
+    }
+  }
+}
 /**
 
  * Master Verify subroutine
@@ -826,6 +850,7 @@ void VerifyLayers(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int 
 void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnIntegrate *fnOneStep,fnUpdateVariable ****fnUpdate) {
   int iBody,iModule;
 
+  VerifyAge(body,control,options);
   VerifyNames(body,control,options);
 
   // Need to know integration type before we can initialize CONTROL

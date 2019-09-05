@@ -171,10 +171,15 @@ void InitializeControlEvolve(BODY *body,CONTROL *control,MODULE *module,UPDATE *
     control->Evolve.iNumModules[iBody] = module->iNumModules[iBody];
 
     // If any body has an orbit related module initialized, we have orbiters!
-    if(body[iBody].bEqtide || body[iBody].bDistOrb || body[iBody].bPoise || body[iBody].bAtmEsc ||
+    if (body[iBody].bEqtide || body[iBody].bDistOrb || body[iBody].bPoise || body[iBody].bAtmEsc ||
         body[iBody].bGalHabit || body[iBody].bSpiNBody) {
       control->bOrbiters = 1;
     }
+    // Why does bUsingDistOrb exist? Why can't body[iBody].bDistOrb work?
+    if (!body[iBody].bDistOrb) {
+      control->Evolve.bUsingDistOrb = 0;
+    }
+
   }
 }
 
@@ -400,12 +405,13 @@ void LongHelp(OPTIONS *options,OUTPUT *output,char exe[]) {
     for (i = 0; i < sz; i++) printf("-");
     printf("\n\n");
 
-    printf("**Author:** Rory Barnes\n");
+    printf("Primary Developer: Rory Barnes\n");
     printf("\n%s is a general purpose planetary evolution integrator. It takes ", exe);
     printf("an input file consisting of options and initial conditions ");
     printf("and simulates tidal evolution, along with other secondary ");
     printf("parameters, forward and/or backward in time. This help ");
     printf("describes the basics of the input file.\n\n");
+    printf("\n** Note that long help is not fully implemented.**\n");
 
     printf("Command Line Options\n");
     printf("~~~~~~~~~~~~~~~~~~~~\n\n");

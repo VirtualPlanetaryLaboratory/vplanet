@@ -534,7 +534,7 @@ void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int 
   update[iBody].pdCBPPhiDotBinary = &update[iBody].daDerivProc[update[iBody].iCBPPhiDot][0];
 }
 
-void fnPropertiesBinary(BODY *body, EVOLVE *evolve,UPDATE *update, int iBody){
+void fnPropsAuxBinary(BODY *body, EVOLVE *evolve,IO *io, UPDATE *update, int iBody){
 
   if(body[iBody].iBodyType == 0) { // CBP
     // If not including eqns in the matrix, compute main variables on the fly!
@@ -737,7 +737,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   // Other things that must be set
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorBinary;
-  control->fnPropsAux[iBody][iModule] = &fnPropertiesBinary;
+  control->fnPropsAux[iBody][iModule] = &fnPropsAuxBinary;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyBinary;
 }
 
@@ -1296,6 +1296,9 @@ void LogBodyBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
   for (iOut=OUTSTARTBINARY;iOut<OUTENDBINARY;iOut++) {
     if (output[iOut].iNum > 0) {
+      //Useful for debugging
+      //printf("%d\n",iOut);
+      //fflush(stdout);
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
     }
   }
@@ -2171,10 +2174,14 @@ double fndApproxEqTemp(BODY *body, int iBody, double dAlbedo) {
     planet averaged over the binary orbit relative to Earth's
     where F_Earth = 1361 W/m^2 */
 double fndApproxInsol(BODY *body, int iBody) {
-  // Compute the approximate flux
-  double flux = fndFluxApproxBinary(body,iBody);
+  // Compute the approximate flux if the stars have luminosities
+  if (body[0].dLuminosity > 0 && body[1].dLuminosity > 0) {
+    double flux = fndFluxApproxBinary(body,iBody);
 
-  return flux/FLUX_EARTH;
+    return flux/FLUX_EARTH;
+  } else {
+    return -1;
+  }
 }
 
 /** Dumps out a bunch of values to see if they agree with LL13 */

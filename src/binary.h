@@ -60,7 +60,7 @@ void AddModuleBinary(CONTROL*,MODULE*,int,int);
 void BodyCopyBinary(BODY*,BODY*,int,int,int);
 void InitializeBodyBinary(BODY*,CONTROL*,UPDATE*,int,int);
 void InitializeUpdateTmpBodyBinary(BODY*,CONTROL*,UPDATE*,int);
-void fnPropertiesBinary(BODY*,EVOLVE*,UPDATE*,int);
+void fnPropsAuxBinary(BODY*,EVOLVE*,IO*,UPDATE*,int);
 void fnForceBehaviorBinary(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
 /* Options Functions */

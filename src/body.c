@@ -433,6 +433,7 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
      Module-specific parameters belong in the fnBodyCopy subroutines. */
 
   for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+    strcpy(dest[iBody].cName,src[iBody].cName);
     dest[iBody].iBodyType = src[iBody].iBodyType;
     dest[iBody].dMass = src[iBody].dMass;
     dest[iBody].dRadius = src[iBody].dRadius;
@@ -473,6 +474,7 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     //   (eqtide + !thermint) bodies
     dest[iBody].dShmodUMan=src[iBody].dShmodUMan;
     dest[iBody].dStiffness=src[iBody].dStiffness;
+    dest[iBody].dImK2ManOrbModel = src[iBody].dImK2ManOrbModel;
 
     if (iBody > 0) {
       dest[iBody].dHecc = src[iBody].dHecc;
@@ -519,18 +521,24 @@ void CalcXYZobl(BODY *body, int iBody) {
    */
 double CalcDynEllipEq(BODY *body, int iBody) {
   double J2Earth = 1.08262668e-3, J2Venus = 4.56e-6, CEarth = 8.034e37;
-  double nuEarth, EdEarth, EdVenus, dTmp, dDynEllip;
+  double nuEarth, EdEarth, EdVenus, dTmp, dDynEllip, dJ2;
 
-  EdEarth = J2Earth*MEARTH*pow(REARTH,2)/CEarth;
-  EdVenus = J2Venus/0.336;
+  // EdEarth = J2Earth*MEARTH*pow(REARTH,2)/CEarth;
+  // EdVenus = J2Venus/0.336;
   nuEarth = 2*PI/(DAYSEC);
 
-  dTmp = EdEarth*MEARTH/(pow(nuEarth,2)*pow(REARTH,3));
+  dJ2 = J2Earth*pow(body[iBody].dRotRate/nuEarth,2)*pow(body[iBody].dRadius/REARTH,3)*MEARTH/body[iBody].dMass;
 
-  dDynEllip = dTmp*pow(body[iBody].dRotRate,2)*pow(body[iBody].dRadius,3)/body[iBody].dMass;
+  if (dJ2 < J2Venus) dJ2 = J2Venus;
 
-  if (dDynEllip < EdVenus)
-    dDynEllip = EdVenus;
+  dDynEllip = dJ2/body[iBody].dSpecMomInertia;
+
+  // dTmp = EdEarth*MEARTH/(pow(nuEarth,2)*pow(REARTH,3));
+  //
+  // dDynEllip = dTmp*pow(body[iBody].dRotRate,2)*pow(body[iBody].dRadius,3)/body[iBody].dMass;
+
+  // if (dDynEllip < EdVenus)
+  //   dDynEllip = EdVenus;
 
   return dDynEllip;
 }
@@ -925,7 +933,7 @@ double fdProximaCenBRadius(double C, double A, double M){
   XXX What are the arguments?
 
 */
-double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int iMetal){
+double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int iMetal) {
 	int m, c, f, t, z;
 	double dm, dc, df, dt;
 	double R000,R001,R010,R011,R100,R101,R110,R111;
@@ -977,7 +985,7 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int 
 		for (f = 0; f < FLUXLEN-1; f++)
 			if (dFlux < daLopezFlux[f+1]) break;
 	}
-	if (dAgeYears < daLopezAge[0]){
+	if (dAgeYears < daLopezAge[0]) {
 		/* Out of bounds, assuming it's OK to use min val */
 		dAgeYears = daLopezAge[0];
 		t = 0;

@@ -19,6 +19,8 @@
 #define OPT_PRECRATE              1404
 #define OPT_READORBITDATA         1405
 #define OPT_FILEORBITDATA         1406
+#define OPT_SPECMOMINERTIA        1407
+
 
 /* DISTROT 1400 - 1499 */
 /* System properties 1400-1419, body properties 1420-1499 */
@@ -94,7 +96,7 @@ void LogDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyDistRot(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* DistRot Functions */
-void PropertiesDistRot(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxDistRot(BODY*,EVOLVE*,IO*,UPDATE*,int);
 void ForceBehaviorDistRot(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void RotateVector(double*,double*,double,int);
 

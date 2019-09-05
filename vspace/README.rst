@@ -1,6 +1,6 @@
 VSPACE
 ------
-A quick way to generate a parameter space for ``VPLANET``.
+A quick way to generate a parameter space for ``VPLanet``.
 
 Installation
 ============
@@ -15,7 +15,7 @@ Run vspace on the command line by typing:
 
 An input file is necessary. Take a look at the ``input`` file in the examples directory. 
 This file will contain a list of files to be copied (from some source directory to a 
-destination directory) and all the VPLANET options you wish to change or add to each file. 
+destination directory) and all the ``VPLanet`` options you wish to change or add to each file. 
 
 You will need to provide a directory that contains template/example input files (such as 
 any directory in vplanet/examples) in the following syntax:
@@ -27,7 +27,7 @@ your suite of initial conditions will live:
   
     destfolder <path of directory>
     
-Then, provide a list of the files you wish to be copied and used by VPLANET, and all 
+Then, provide a list of the files you wish to be copied and used by ``VPLanet``, and all 
 options you wish to change, in the following format:
     
     file <name of file in srcfolder>
@@ -86,7 +86,7 @@ Alternatively, you can provide the number of trials instead of the spacing by pu
 
     dSemi  [1, 2, n10]  a
     
-would generate ten trials, equally spaced, from 1 to 2. You can also changed to 
+would generate ten trials, equally spaced, from 1 to 2. You can also change to 
 logarithmic spacing by using ``l`` instead of ``n``:
   
     dSemi  [1, 2, l10]  a
@@ -104,7 +104,7 @@ or,
     dRadius  [-2, -1, 0.1]  R
     
 rather than ``dRadius [-1, -2, 0.1]  R``. VSPACE will not check whether a minus option is 
-allowed by VPLANET, so make sure you check ``vplanet -h``. 
+allowed by ``VPLanet``, so make sure you check ``vplanet -h``. 
 
 You can vary more than one parameter at a time! For example, in your input file you might 
 have,

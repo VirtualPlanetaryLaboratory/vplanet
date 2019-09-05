@@ -660,7 +660,7 @@ struct BODY {
   int bCalcFXUV;
 	double dRocheRadius; 	// Radius of the Roche lobe
 	double dBondiRadius;	// Bondi Radius
-	int bBondiLimited;		// Cap the mass loss rate at the Bondi limit
+	int bUseBondiLimited;		// Cap the mass loss rate at the Bondi limit
 	int bEnvelopeLostMessage; /**< Has the envelope lost message been printed? */
 	int bRocheMessage; /** Has the Roche lobe message been printed? */
 	int bIgnoreRocheLobe; /** Ignore Roche lobe overflow? */

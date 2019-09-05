@@ -69,7 +69,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dJeansTime = src[iBody].dJeansTime;
   dest[iBody].dRocheRadius = src[iBody].dRocheRadius;
   dest[iBody].dBondiRadius = src[iBody].dBondiRadius;
-  dest[iBody].bBondiLimited = src[iBody].bBondiLimited;
+  dest[iBody].bUseBondiLimited = src[iBody].bUseBondiLimited;
   dest[iBody].bRocheMessage = src[iBody].bRocheMessage;
 
 }
@@ -399,11 +399,11 @@ void ReadBondiLimited(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    body[iFile-1].bBondiLimited = bTmp;
+    body[iFile-1].bUseBondiLimited = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      AssignDefaultInt(options,&body[iFile-1].bBondiLimited,files->iNumInputs);
+      AssignDefaultInt(options,&body[iFile-1].bUseBondiLimited,files->iNumInputs);
 }
 
 /**
@@ -697,7 +697,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_INSTANTO2SINK].iMultiFile = 1;
   fnRead[OPT_INSTANTO2SINK] = &ReadInstantO2Sink;
 
-  sprintf(options[OPT_BONDILIMITED].cName,"bBondiLimited");
+  sprintf(options[OPT_BONDILIMITED].cName,"bUseBondiLimited");
   sprintf(options[OPT_BONDILIMITED].cDescr,"Is the maximum envelope mass loss Bondi-limited?");
   sprintf(options[OPT_BONDILIMITED].cDefault,"0");
   options[OPT_BONDILIMITED].iType = 0;
@@ -1001,20 +1001,20 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iB
       if (xi > 1) {
         body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
       } else {
-        if (!body[iBody].bRocheMessage && io->iVerbose >= VERBINPUT) {
+        if (!body[iBody].bRocheMessage && io->iVerbose >= VERBINPUT && !body[iBody].bUseBondiLimited) {
           fprintf(stderr,"WARNING: Roche lobe radius is larger than XUV radius for %s, evolution may not be accurate.\n",
               body[iBody].cName);
+          fprintf(stderr,"Consider setting bUseBondiLimited = 1 to limit envelope mass loss.\n");
           body[iBody].bRocheMessage = 1;
         }
+        body[iBody].dKTide = 1.0;
+
       }
       // If Bondi-limited flow, dKTide allowed to get arbitrarily small.
       // Otherwise, fix dKTide at 1
-      if(!body[iBody].bBondiLimited) {
+      if(!body[iBody].bUseBondiLimited) {
           body[iBody].dKTide = 1.0;
       }
-      else {
-        fprintf(stderr,"dKTide: %e, bBondiLimited: %d\n",body[iBody].dKTide, body[iBody].bBondiLimited);
-    }
   }
 
   // The XUV flux
@@ -2469,7 +2469,7 @@ The rate of change of the envelope mass.
 */
 double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
-  double dMassDt;
+  double dMassDt = dHUGE;
 
   // TODO: This needs to be moved. Ideally we'd just remove this equation from the matrix.
   // RB: move to ForceBehaviorAtmesc
@@ -2491,8 +2491,8 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
   }
 
   // If flow is Bondi-limited, cap mass loss id dMassDt > Bondi limit
-  if(body[iaBody[0]].bBondiLimited) {
-    dMassDt = min(dMassDt, fdBondiLimitedDmDt(body,iaBody[0]));
+  if(body[iaBody[0]].bUseBondiLimited) {
+    dMassDt = max(dMassDt, fdBondiLimitedDmDt(body,iaBody[0]));
   }
 
   return dMassDt;
@@ -2741,8 +2741,8 @@ void fvLinearFit(double *x, double *y, int iLen, double *daCoeffs){
 */
 double fdEqH2AtmosphereSoundSpeed(double dTemp, double dRad, double dSemi) {
 
-  double cs = 2300.0 * sqrt(dTemp / 5800.0) * pow(dRad / RSUN, 0.25) * pow(dSemi / (0.1 * AUM), 0.25);
-  return cs;
+  double dCS = 2300.0 * sqrt(dTemp / 5800.0) * pow(dRad / RSUN, 0.25) * pow(dSemi / (0.1 * AUM), 0.25);
+  return dCS;
 }
 
 /**
@@ -2754,8 +2754,8 @@ double fdEqH2AtmosphereSoundSpeed(double dTemp, double dRad, double dSemi) {
  @return Body's Roche radius
 */
 double fdRocheRadius(BODY *body, int iBody) {
-  double rr = pow(body[iBody].dMass / (3.0 * body[0].dMass), 1./3.) * body[iBody].dSemi;
-  return rr;
+  double dRoche = pow(body[iBody].dMass / (3.0 * body[0].dMass), 1./3.) * body[iBody].dSemi;
+  return dRoche;
 }
 
 /**
@@ -2789,8 +2789,8 @@ double fdBondiRadius(BODY *body, int iBody) {
 */
 double fdBondiLimitedDmDt(BODY *body, int iBody) {
 
-  double dMDt = (body[iBody].dMass / (10.0 * MEARTH)) / sqrt(body[0].dTemperature / 5800.0);
+  double dMDt = -1.9e15 * (body[iBody].dMass / (10.0 * MEARTH)) / sqrt(body[0].dTemperature / 5800.0);
   dMDt = dMDt * pow(body[iBody].dSemi / (0.1 * AUM), 0.25) / pow(body[0].dRadius / RSUN, 0.25);
 
-  return 1.9e18 * dMDt;
+  return dMDt;
 }

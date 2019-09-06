@@ -167,7 +167,7 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
    if (iBody == 0) {
      *dTmp = -1;
    } else {
-     if (body[iBody].bStellar) {
+     if (body[0].bStellar) {
        *dTmp = fdInstellation(body,iBody);
      } else {
        *dTmp = -1;

@@ -501,7 +501,12 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   } else {
     body[iBody].bPlanetDesiccated = 1; // desiccated from start
   }
-
+  body[iBody].bManStartSol      = 0; // mantle does not solidify from beginning
+  body[iBody].bLowPressSol      = 0; // start high pressure region of mantle
+  body[iBody].bManQuasiSol      = 0; // start with a (partially) molten mantle
+  body[iBody].bEscapeStop       = 0; // start with atmospheric escaped
+  body[iBody].bMagmOcHaltSolid  = 0; // no halt at beginning
+  body[iBody].bMagmOcHaltDesicc = 0; // no halt at beginning
 
   double dMassMantle;
   double dManMolNum;
@@ -567,7 +572,7 @@ Bisection method to find root
 */
 double fndBisection(double (*f)(BODY*,double,int), BODY *body,double dXl, double dXu, double dEps, int iBody) {
   double dXm,dEpsilon,dProd,dFxm,dFxl;
-  dEpsilon = 1;
+  dEpsilon = 10*dEps;
   while(dEpsilon>dEps) {
     dXm      = (dXl + dXu)/2.;
     dFxm     = (*f)(body,dXm,iBody);
@@ -976,6 +981,7 @@ void fndWaterFracMelt(BODY *body, int iBody) {
 
   // CO2:
   double dMassFracCO2Old, dLow, dUp;
+  int iIteration;
 
   dMassMagmOcTot             = 4./3 * PI * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3));
   body[iBody].dMassMagmOcLiq = body[iBody].dMeltFraction * dMassMagmOcTot;
@@ -999,7 +1005,7 @@ void fndWaterFracMelt(BODY *body, int iBody) {
   if (body[iBody].bCO2InAtmosphere) {
 
     body[iBody].dCO2FracMelt = body[iBody].dCO2MassMOAtm / (body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
-    if (body[iBody].dCO2FracMelt < 5e-4) {
+    if (body[iBody].dCO2FracMelt <= 5e-4) {
       body[iBody].dPartialPressCO2Atm = 0;
       body[iBody].dPressCO2Atm = 0;
       if (body[iBody].dPressOxygenAtm + body[iBody].dPressWaterAtm > 1) {
@@ -1007,8 +1013,13 @@ void fndWaterFracMelt(BODY *body, int iBody) {
       }
     } else {
       dMassFracCO2Old = 0;
+      iIteration = 0;
 
       while (fabs(body[iBody].dCO2FracMelt-dMassFracCO2Old)>1e-7) {
+        // after 100 iterations: use middle between F_old and F_new to avoid endless loop
+        if (iIteration>100) {
+          body[iBody].dCO2FracMelt = (body[iBody].dCO2FracMelt + dMassFracCO2Old)/2;
+        }
         // mass frac from last iteration
         dMassFracCO2Old = body[iBody].dCO2FracMelt;
 
@@ -1018,21 +1029,27 @@ void fndWaterFracMelt(BODY *body, int iBody) {
         // get physical CO2 pressure with bisection root finder
         dLow = body[iBody].dPartialPressCO2Atm;
         dUp  = body[iBody].dPartialPressCO2Atm * MOLWEIGHTCO2 / MOLWEIGHTWATER;
-        if (fabs(fndPhysPressCO2(body, dLow, iBody)) < 1e-2*dLow) {
+        if (fabs(fndPhysPressCO2(body, dLow, iBody)) < 1e-3*dLow) {
           body[iBody].dPressCO2Atm = dLow;
-        } else if (fabs(fndPhysPressCO2(body, dUp, iBody)) < 1e-2*dLow) {
+        } else if (fabs(fndPhysPressCO2(body, dUp, iBody)) < 1e-3*dLow) {
           body[iBody].dPressCO2Atm = dUp;
         } else {
-          body[iBody].dPressCO2Atm = fndBisection(fndPhysPressCO2,body,dLow,dUp,1e-2*dLow,iBody);
+          body[iBody].dPressCO2Atm = fndBisection(fndPhysPressCO2,body,dLow,dUp,1e-3*dLow,iBody);
         }
         body[iBody].dCO2FracMelt = (body[iBody].dCO2MassMOAtm - body[iBody].dPressCO2Atm * 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf) / (CO2PARTCOEFF*body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+        if (body[iBody].dCO2FracMelt < 5e-4) {
+          body[iBody].dCO2FracMelt = 5e-4;
+        }
+        iIteration++;
       }
       // get average molar mass
       dAveMolarMassAtm = body[iBody].dPartialPressCO2Atm * MOLWEIGHTCO2 / body[iBody].dPressCO2Atm;
     }
   } else if (body[iBody].dPressOxygenAtm > 1) {
+    body[iBody].dPressCO2Atm = 0;
     dAveMolarMassAtm = (MOLWEIGHTWATER * body[iBody].dPressWaterAtm + 2*MOLWEIGHTOXYGEN * body[iBody].dPressOxygenAtm)/(body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm);
   } else {
+    body[iBody].dPressCO2Atm = 0;
     dAveMolarMassAtm = MOLWEIGHTWATER;
   }
 
@@ -1064,6 +1081,8 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
    */
   if (!body[iBody].bManSolid) {
     fndMeltFracMan(body,iBody);
+  } else {
+    body[iBody].dMeltFraction = 0;
   }
 
   /*
@@ -1134,6 +1153,11 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
 
   body[iBody].dPressOxygenAtm = body[iBody].dOxygenMassAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
 
+  // Only for debugging:
+  // double dTest;
+  // if (body[iBody].dPressCO2Atm > 9e8) {
+  //   dTest = 1;
+  // }
 }
 
 

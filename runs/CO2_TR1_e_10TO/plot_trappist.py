@@ -76,8 +76,8 @@ TidalHeat   = data[:,16] # Tidal Heating Power (TW)
 SemiMajor   = data[:,17] # Semi Major Axis (AU)
 HZInnerEdge = data[:,18] # Inner Edge of the HZ (AU)
 M_CO2_mo    = data[:,19] # CO2 Mass mo + atm [kg]
-M_CO2_sol   = data[:,19] # CO2 Mass sol [kg]
-Press_CO2   = data[:,20] # pressure of CO2 in atmosphere [bar]
+M_CO2_sol   = data[:,20] # CO2 Mass sol [kg]
+Press_CO2   = data[:,21] # pressure of CO2 in atmosphere [bar]
 
 
 n_time = len(time)
@@ -204,6 +204,7 @@ ax1.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
 ax1.legend(loc='best', frameon=True)
 ax1.set_ylabel('Temperature (K)')
 ax1.set_xscale('log')
+ax1.set_xlim([1e-1, 3e-1])
 
 # --- Solidification Radius --- #
 ax2 = fig.add_subplot(332, sharex=ax1)

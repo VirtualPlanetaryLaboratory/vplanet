@@ -1008,7 +1008,11 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iB
           body[iBody].bRocheMessage = 1;
         }
       }
-        body[iBody].dKTide = 1.0;
+
+        // Fix dKTide if not using the Bondi-limited formalism to prevent unphysical mass loss
+        if(!body[iBody].bUseBondiLimited) {
+          body[iBody].dKTide = 1.0;
+      }
   }
 
   // The XUV flux

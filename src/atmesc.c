@@ -1007,14 +1007,8 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iB
           fprintf(stderr,"Consider setting bUseBondiLimited = 1 to limit envelope mass loss.\n");
           body[iBody].bRocheMessage = 1;
         }
+      }
         body[iBody].dKTide = 1.0;
-
-      }
-      // If Bondi-limited flow, dKTide allowed to get arbitrarily small.
-      // Otherwise, fix dKTide at 1
-      if(!body[iBody].bUseBondiLimited) {
-          body[iBody].dKTide = 1.0;
-      }
   }
 
   // The XUV flux
@@ -2685,15 +2679,25 @@ double fdXUVEfficiencyBolmont2016(double dFXUV) {
   double x = log10(dFXUV * 1.e3);
   double y;
 
-  // Piecewise polynomial fit
-  if ((x >= -2) && (x < -1))
+  // Piecewise polynomial fit and handle edge cases
+  if ((x >= -2) && (x < -1)) {
     y = pow(10, a0 * x * x + a1 * x + a2);
-  else if ((x >= -1) && (x < 0))
+  }
+  else if ((x >= -1) && (x < 0)) {
     y = pow(10, b0 * x * x * x + b1 * x * x + b2 * x + b3);
-  else if ((x >= 0) && (x <= 5))
+  }
+  else if ((x >= 0) && (x <= 5)) {
     y = pow(10, c0 * x * x * x + c1 * x * x + c2 * x + c3);
-  else
-    y = 0;
+  }
+  else if (x < -2) { // Lower flux bound
+    y = 0.005;
+  }
+  else if (x > 5) { // Upper flux bound
+    y = 0.1;
+  }
+  else { // Base case that never happens but I like code symmetry
+    y = 0.1;
+  }
   return y;
 
 }

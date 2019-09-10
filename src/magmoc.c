@@ -480,6 +480,7 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   body[iBody].dAlbedo          = ALBEDOWATERATMOS;
   body[iBody].dGravAccelSurf   = BIGG * body[iBody].dMass / pow(body[iBody].dRadius,2);
   body[iBody].dFracFe2O3Man    = 0;
+  body[iBody].dPressOxygenAtm  = 0;
 
   // CO2
   body[iBody].dCO2MassMOAtm    = body[iBody].dPressCO2Atm * 4*PI*pow(body[iBody].dRadius,2)/body[iBody].dGravAccelSurf; // initial CO2 mass in MO&Atm is equal to inital CO2 mass in atmosphere
@@ -489,6 +490,8 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   } else {
     body[iBody].bCO2InAtmosphere = 1;
   }
+  body[iBody].dCO2FracMelt = body[iBody].dCO2MassMOAtm / (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3)));
+
 
   // initialize water pressure in atmosphere to avoid deviding by 0. Use 1 % of initial water mass
   body[iBody].dPressWaterAtm   = body[iBody].dWaterMassAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
@@ -980,7 +983,7 @@ void fndWaterFracMelt(BODY *body, int iBody) {
   double dAveMolarMassAtm; // average molar mass of atmosphere
 
   // CO2:
-  double dMassFracCO2Old, dLow, dUp;
+  double dMassFracCO2Current, dMassFracCO2Old, dLow, dUp;
   int iIteration;
 
   dMassMagmOcTot             = 4./3 * PI * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3));
@@ -1004,47 +1007,76 @@ void fndWaterFracMelt(BODY *body, int iBody) {
   // CO2 mass fraction in the magma ocean
   if (body[iBody].bCO2InAtmosphere) {
 
-    body[iBody].dCO2FracMelt = body[iBody].dCO2MassMOAtm / (body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
-    if (body[iBody].dCO2FracMelt <= 5e-4) {
+    // dMassFracCO2Current = body[iBody].dCO2MassMOAtm / (body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+    dMassFracCO2Current = body[iBody].dCO2FracMelt;
+    if (dMassFracCO2Current <= 5e-4) {
+      body[iBody].dCO2FracMelt        = dMassFracCO2Current;
       body[iBody].dPartialPressCO2Atm = 0;
-      body[iBody].dPressCO2Atm = 0;
-      if (body[iBody].dPressOxygenAtm + body[iBody].dPressWaterAtm > 1) {
-        dAveMolarMassAtm = (MOLWEIGHTWATER * body[iBody].dPressWaterAtm + 2*MOLWEIGHTOXYGEN * body[iBody].dPressOxygenAtm)/(body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm);
-      }
+      body[iBody].dPressCO2Atm        = 0;
+      // if (body[iBody].dPressOxygenAtm + body[iBody].dPressWaterAtm > 1) {
+      //   dAveMolarMassAtm = (MOLWEIGHTWATER * body[iBody].dPressWaterAtm + 2*MOLWEIGHTOXYGEN * body[iBody].dPressOxygenAtm)/(body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm);
+      // }
     } else {
       dMassFracCO2Old = 0;
       iIteration = 0;
 
-      while (fabs(body[iBody].dCO2FracMelt-dMassFracCO2Old)>1e-7) {
-        // after 100 iterations: use middle between F_old and F_new to avoid endless loop
-        if (iIteration>100) {
-          body[iBody].dCO2FracMelt = (body[iBody].dCO2FracMelt + dMassFracCO2Old)/2;
+      while (fabs(dMassFracCO2Current-dMassFracCO2Old)>1e-7) {
+        // when mass of CO2 in m.o. and atm become similar, loop will not converge without following lines:
+        if (dMassFracCO2Current < 0) {
+          dMassFracCO2Current = dMassFracCO2Current * (-1);
         }
+
+        if (iIteration > 0) {
+          if (dMassFracCO2Current > dMassFracCO2Old) {
+            dMassFracCO2Current = 1.1 * dMassFracCO2Old;
+          } else {
+            dMassFracCO2Current = 0.9 * dMassFracCO2Old;
+          }
+        }
+
         // mass frac from last iteration
-        dMassFracCO2Old = body[iBody].dCO2FracMelt;
+        dMassFracCO2Old = dMassFracCO2Current;
 
         // partial pressure of CO2 [from Elkins-Tanton (2008)]
-        body[iBody].dPartialPressCO2Atm = pow(((100*body[iBody].dCO2FracMelt - 0.05)/2.08e-4),(1/0.45));
-
-        // get physical CO2 pressure with bisection root finder
-        dLow = body[iBody].dPartialPressCO2Atm;
-        dUp  = body[iBody].dPartialPressCO2Atm * MOLWEIGHTCO2 / MOLWEIGHTWATER;
-        if (fabs(fndPhysPressCO2(body, dLow, iBody)) < 1e-3*dLow) {
-          body[iBody].dPressCO2Atm = dLow;
-        } else if (fabs(fndPhysPressCO2(body, dUp, iBody)) < 1e-3*dLow) {
-          body[iBody].dPressCO2Atm = dUp;
+        if (dMassFracCO2Current <= 5e-4) {
+          body[iBody].dPartialPressCO2Atm = 0;
+          body[iBody].dPressCO2Atm = 0;
         } else {
-          body[iBody].dPressCO2Atm = fndBisection(fndPhysPressCO2,body,dLow,dUp,1e-3*dLow,iBody);
+          body[iBody].dPartialPressCO2Atm = pow(((100*dMassFracCO2Current - 0.05)/2.08e-4),(1/0.45));
+
+          // get physical CO2 pressure with bisection root finder
+          dLow = body[iBody].dPartialPressCO2Atm;
+          dUp  = body[iBody].dPartialPressCO2Atm * MOLWEIGHTCO2 / MOLWEIGHTWATER;
+          if (fabs(fndPhysPressCO2(body, dLow, iBody)) < 1e-3*dLow) {
+            body[iBody].dPressCO2Atm = dLow;
+          } else if (fabs(fndPhysPressCO2(body, dUp, iBody)) < 1e-3*dLow) {
+            body[iBody].dPressCO2Atm = dUp;
+          } else {
+            body[iBody].dPressCO2Atm = fndBisection(fndPhysPressCO2,body,dLow,dUp,1e-3*dLow,iBody);
+          }
         }
-        body[iBody].dCO2FracMelt = (body[iBody].dCO2MassMOAtm - body[iBody].dPressCO2Atm * 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf) / (CO2PARTCOEFF*body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
-        if (body[iBody].dCO2FracMelt < 5e-4) {
-          body[iBody].dCO2FracMelt = 5e-4;
+        dMassFracCO2Current = (body[iBody].dCO2MassMOAtm - body[iBody].dPressCO2Atm * 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf) / (CO2PARTCOEFF*body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+
+        // if (body[iBody].dCO2FracMelt < 5e-4) {
+        //   body[iBody].dCO2FracMelt = 5e-4;
+        // }
+        // after 1000 iterations: use middle between F_old and F_new to avoid endless loop
+        if (iIteration>1000) {
+          dMassFracCO2Current = (dMassFracCO2Current + dMassFracCO2Old)/2;
+          if ((dMassFracCO2Current + dMassFracCO2Old)/dMassFracCO2Old < 0.1) {
+            break;
+          }
         }
         iIteration++;
       }
+      body[iBody].dCO2FracMelt = dMassFracCO2Current;
       // get average molar mass
-      dAveMolarMassAtm = body[iBody].dPartialPressCO2Atm * MOLWEIGHTCO2 / body[iBody].dPressCO2Atm;
+      // dAveMolarMassAtm = body[iBody].dPartialPressCO2Atm * MOLWEIGHTCO2 / body[iBody].dPressCO2Atm;
     }
+  }
+
+  if (body[iBody].dPressCO2Atm > 0) {
+    dAveMolarMassAtm = body[iBody].dPartialPressCO2Atm * MOLWEIGHTCO2 / body[iBody].dPressCO2Atm;
   } else if (body[iBody].dPressOxygenAtm > 1) {
     body[iBody].dPressCO2Atm = 0;
     dAveMolarMassAtm = (MOLWEIGHTWATER * body[iBody].dPressWaterAtm + 2*MOLWEIGHTOXYGEN * body[iBody].dPressOxygenAtm)/(body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm);
@@ -1789,6 +1821,14 @@ void WriteWaterFracMelt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   } else { }
 }
 
+void WriteCO2FracMelt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].dCO2FracMelt;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else { }
+}
+
 void WriteRadioPower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dRadioHeat; //* (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3)));
   if (output->bDoNeg[iBody]) {
@@ -1991,6 +2031,13 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_WATERFRACMELT].iNum = 1;
   output[OUT_WATERFRACMELT].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_WATERFRACMELT] = &WriteWaterFracMelt;
+
+  sprintf(output[OUT_CO2FRACMELT].cName,"CO2FracMelt");
+  sprintf(output[OUT_CO2FRACMELT].cDescr,"CO2 mass fraction in magma ocean");
+  output[OUT_CO2FRACMELT].bNeg = 1;
+  output[OUT_CO2FRACMELT].iNum = 1;
+  output[OUT_CO2FRACMELT].iModuleBit = MAGMOC; //name of module
+  fnWrite[OUT_CO2FRACMELT] = &WriteCO2FracMelt;
 
   sprintf(output[OUT_RADIOPOWER].cName,"RadioPower");
   sprintf(output[OUT_RADIOPOWER].cDescr,"Power from radiogenic heating in the mantle");

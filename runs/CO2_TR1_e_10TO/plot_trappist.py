@@ -78,6 +78,7 @@ HZInnerEdge = data[:,18] # Inner Edge of the HZ (AU)
 M_CO2_mo    = data[:,19] # CO2 Mass mo + atm [kg]
 M_CO2_sol   = data[:,20] # CO2 Mass sol [kg]
 Press_CO2   = data[:,21] # pressure of CO2 in atmosphere [bar]
+Frac_CO2    = data[:,22] # mass frac of CO2 in magma ocean
 
 
 n_time = len(time)
@@ -85,6 +86,7 @@ i_end  = n_time-1
 
 M_water_atm = np.zeros(n_time)
 M_O_atm     = np.zeros(n_time)
+M_CO2_atm   = np.zeros(n_time)
 
 N_H_sol = np.zeros(n_time) # number of H atoms in solid mantle
 N_H_space = np.zeros(n_time) # number of H atoms in solid mantle
@@ -132,6 +134,7 @@ for i in range(n_time):
 
     M_water_atm[i] = Press_H2O[i]*1e5 * 4 * np.pi * r_p**2 / g
     M_O_atm[i]     = Press_O[i]*1e5 * 4 * np.pi * r_p**2 / g
+    M_CO2_atm[i]   = Press_CO2[i]*1e5 * 4 * np.pi * r_p**2 / g
 
     N_H_space[i] = M_H_Space[i] * AVOGADROCONST / (0.001 * round)
     N_H_sol[i] = 2 * M_water_sol[i]*TO * AVOGADROCONST / (0.018 * round)
@@ -190,6 +193,8 @@ else:
         T_Desicc = time[n_t_desicc]/1e6
     elif (esc_stop==1):
         T_Desicc = time[n_t_habit]/1e6
+    else:
+        T_Desicc = time[n_time-1]/1e6
 ### Plot ###
 
 fig = plt.figure(num=None, figsize=(15, 9), dpi=300, facecolor='w', edgecolor='k')
@@ -204,7 +209,7 @@ ax1.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
 ax1.legend(loc='best', frameon=True)
 ax1.set_ylabel('Temperature (K)')
 ax1.set_xscale('log')
-ax1.set_xlim([1e-1, 3e-1])
+# ax1.set_xlim([1e-1, 3e-1])
 
 # --- Solidification Radius --- #
 ax2 = fig.add_subplot(332, sharex=ax1)
@@ -241,12 +246,13 @@ ax4.set_yscale('log')
 ax5 = fig.add_subplot(335, sharex=ax1)
 ax5.plot(time*10**-6, Frac_H2O, label='$H_2O$', color=cmap(0))
 ax5.plot(time*10**-6, Frac_Fe2O3, label='$Fe_2O_3$', color=cmap(220))
+ax5.plot(time*10**-6, Frac_CO2, label='$CO_2$', color=cmap(100))
 ax5.axvline(x=T_Solid,linestyle='--', color=cmap(20))
 ax5.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
 ax5.legend(loc='best', frameon=True)
 ax5.set_ylabel('Mass frac in magma ocean')
 # ax5.set_yscale('log')
-# ax5.set_ylim([1e16,5e21])
+ax5.set_ylim([0,0.1])
 
 # --- Oxygen mass --- #
 ax6 = fig.add_subplot(336, sharex=ax1)
@@ -281,6 +287,19 @@ ax8.set_ylabel('Mantle Heating Power (TW)')
 ax8.set_yscale('log')
 ax8.set_xlabel('Time (Myrs)')
 
+# --- CO2 mass --- #
+ax9 = fig.add_subplot(339, sharex=ax1)
+ax9.plot(time*10**-6, M_CO2_mo-M_CO2_atm, label='magma ocean', color=cmap(0))
+ax9.plot(time*10**-6, M_CO2_atm, label='atmosphere', color=cmap(220))
+ax9.plot(time*10**-6, M_CO2_sol, label='solid', color=cmap(70))
+# ax9.plot(time*10**-6, M_CO2_sol+M_CO2_mo, label='total', color=cmap(100))
+ax9.axvline(x=T_Solid,linestyle='--', color=cmap(20))
+ax9.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
+ax9.legend(loc='best', frameon=True)
+ax9.set_ylabel('$CO_2$ Mass (kg)')
+ax9.set_yscale('log')
+xup = max(M_CO2_atm[i_end],M_CO2_sol[i_end],M_CO2_mo[i_end]-M_CO2_atm[i_end])
+ax9.set_ylim([1e19,1e23])
 # ax8.set_ylim([292,300])
 # ax8.set_yticks([292,294,296,298,300])
 # ax8.get_yaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x))))
@@ -314,15 +333,15 @@ ax8.set_xlabel('Time (Myrs)')
 # ax8.set_ylim([1e-1,1e5])
 
 # --- Consistency --- #
-ax9 = fig.add_subplot(339, sharex=ax1)
-ax9.plot(time*10**-6, 100*(N_H_tot/N_H_tot[0]-1), label='H', color=cmap(0))
-ax9.plot(time*10**-6, 100*(N_O_tot/N_O_tot[0]-1), label='O', linestyle='--', color=cmap(0))
-ax9.plot(time*10**-6, 100*((N_O_tot/N_O_tot[0]-1)-(N_H_tot/N_H_tot[0]-1)), label='O-H', linestyle=':', color=cmap(0))
-ax9.axvline(x=T_Solid,linestyle='--', color=cmap(20))
-ax9.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
-ax9.legend(loc='best', frameon=True)
-ax9.set_xlabel('Time (Myrs)')
-ax9.set_ylabel('Ratio of atoms gained (%)')
+# ax9 = fig.add_subplot(339, sharex=ax1)
+# ax9.plot(time*10**-6, 100*(N_H_tot/N_H_tot[0]-1), label='H', color=cmap(0))
+# ax9.plot(time*10**-6, 100*(N_O_tot/N_O_tot[0]-1), label='O', linestyle='--', color=cmap(0))
+# ax9.plot(time*10**-6, 100*((N_O_tot/N_O_tot[0]-1)-(N_H_tot/N_H_tot[0]-1)), label='O-H', linestyle=':', color=cmap(0))
+# ax9.axvline(x=T_Solid,linestyle='--', color=cmap(20))
+# ax9.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
+# ax9.legend(loc='best', frameon=True)
+# ax9.set_xlabel('Time (Myrs)')
+# ax9.set_ylabel('Ratio of atoms gained (%)')
 # ax8.set_yscale('log')
 #
 # ax9 = fig.add_subplot(339, sharex=ax1)

@@ -72,4 +72,4 @@ dEcc          0.005                         # Eccentricity
 
 # Output
 saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -PressWaterAtm -PressOxygenAtm -HydrogenMassSpace -OxygenMassSpace FracFe2O3Man NetFluxAtmo WaterFracMelt -RadioPower -TidalPower $
--SemiMajorAxis -HZInnerEdge -CO2MassMOAtm -CO2MassSol -PressCO2Atm
+-SemiMajorAxis -HZInnerEdge -CO2MassMOAtm -CO2MassSol -PressCO2Atm CO2FracMelt

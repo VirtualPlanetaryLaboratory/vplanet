@@ -951,6 +951,12 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     body[iBody].dSurfaceWaterMass = 0.;
   }
 
+  // If envelope is lost or in ballistic escape regime, prevent further evolution
+  if ((body[iBody].dEnvelopeMass <= 0) || (body[iBody].dAge > body[iBody].dJeansTime)) {
+    fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
+  }
+
+  // If envelope is lost, set mass to 0 and prevent further evolution
   if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) && (body[iBody].dEnvelopeMass > 0.)) {
     // Let's remove its envelope and prevent further evolution.
     body[iBody].dEnvelopeMass = 0.;
@@ -967,6 +973,9 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
       body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
     }
   }
+
+  // XXX switch derivatives depending on mass loss regime
+
 }
 
 
@@ -1008,11 +1017,8 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iB
           body[iBody].bRocheMessage = 1;
         }
       }
-
-        // Fix dKTide if not using the Bondi-limited formalism to prevent unphysical mass loss
-        if(!body[iBody].bUseBondiLimited) {
-          body[iBody].dKTide = 1.0;
-      }
+        // Fix dKTide to prevent infs when in Roche Lobe overflow
+        body[iBody].dKTide = 1.0;
   }
 
   // The XUV flux
@@ -2458,7 +2464,7 @@ double fdDOxygenMantleMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 }
 
 /**
-The rate of change of the envelope mass.
+The rate of change of the envelope mass given energy-limited escape.
 
 @param body A pointer to the current BODY instance
 @param system A pointer to the current SYSTEM instance
@@ -2467,14 +2473,9 @@ The rate of change of the envelope mass.
 */
 double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
-  double dMassDt = dHUGE;
+  double dMassDt = dTINY;
 
-  // TODO: This needs to be moved. Ideally we'd just remove this equation from the matrix.
-  // RB: move to ForceBehaviorAtmesc
-  if ((body[iaBody[0]].dEnvelopeMass <= 0) || (body[iaBody[0]].dAge > body[iaBody[0]].dJeansTime)) {
-    return dTINY;
-  }
-
+  // Calculate mass loss depending on model
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17) {
 
   	dMassDt =  -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV
@@ -2488,10 +2489,28 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
           * body[iaBody[0]].dXFrac * body[iaBody[0]].dXFrac);
   }
 
-  // If flow is Bondi-limited, cap mass loss id dMassDt > Bondi limit
+  // If flow is Bondi-limited, cap mass loss
   if(body[iaBody[0]].bUseBondiLimited) {
+    // max to select least negative mass loss
     dMassDt = max(dMassDt, fdBondiLimitedDmDt(body,iaBody[0]));
   }
+
+  return dMassDt;
+}
+
+
+/**
+The rate of change of the envelope mass given Bondi-limited escape.
+
+@param body A pointer to the current BODY instance
+@param system A pointer to the current SYSTEM instance
+@param iaBody An array of body indices. The current body is index 0.
+
+*/
+double fdDEnvelopeMassDtBondiLimited(BODY *body,SYSTEM *system,int *iaBody) {
+
+  // Compute Bondi-limited mass loss rate
+  double dMassDt = fdBondiLimitedDmDt(body,iaBody[0]);
 
   return dMassDt;
 }

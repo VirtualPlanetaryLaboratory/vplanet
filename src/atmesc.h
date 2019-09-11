@@ -137,6 +137,7 @@ void fnForceBehaviorAtmEsc(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVar
 void fnPropsAuxAtmEsc(BODY*,EVOLVE*,IO*,UPDATE*,int);
 double fdDSurfaceWaterMassDt(BODY*,SYSTEM*,int*);
 double fdDEnvelopeMassDt(BODY*,SYSTEM*,int*);
+double fdDEnvelopeMassDtBondiLimited(BODY*,SYSTEM*,int*);
 double fdHZRG14(BODY*,int);
 void fvLinearFit(double*,double*,int,double*);
 double fdDOxygenMassDt(BODY*,SYSTEM*,int*);

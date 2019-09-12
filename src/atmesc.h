@@ -42,7 +42,10 @@
 #define OPT_ATMXABSEFFH2OMODEL  1228 /**< Model for time evolution of epsilon for H2O */
 #define OPT_JEANSTIME           1229 /**< Time at which flow becomes ballistic (Jeans escape) */
 #define OPT_FLOWTEMP            1230 /**< Flow temperature */
-#define OPT_BONDILIMITED       1231 /**< Whether or not to cap max envelope mass loss at Bondi limit */
+#define OPT_BONDILIMITED        1231 /**< Whether or not to use Bondi-limited escape */
+#define OPT_ENERGYLIMITED       1232 /**< Whether or not to use energy-limited escape */
+#define OPT_RRLIMITED           1233 /**< Whether or not to use radiation/recombination-limited escape */
+#define OPT_ESCAPETRANSITION    1234 /**< Whether or not to let atmesc determine escape regime */
 
 
 /* @cond DOXYGEN_OVERRIDE */
@@ -138,6 +141,7 @@ void fnPropsAuxAtmEsc(BODY*,EVOLVE*,IO*,UPDATE*,int);
 double fdDSurfaceWaterMassDt(BODY*,SYSTEM*,int*);
 double fdDEnvelopeMassDt(BODY*,SYSTEM*,int*);
 double fdDEnvelopeMassDtBondiLimited(BODY*,SYSTEM*,int*);
+double fdDEnvelopeMassDtRRLimited(BODY*,SYSTEM*,int*);
 double fdHZRG14(BODY*,int);
 void fvLinearFit(double*,double*,int,double*);
 double fdDOxygenMassDt(BODY*,SYSTEM*,int*);

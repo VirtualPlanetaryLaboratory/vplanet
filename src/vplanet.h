@@ -658,9 +658,12 @@ struct BODY {
   double dJeansTime;
   double dFlowTemp;
   int bCalcFXUV;
-	double dRocheRadius; 	// Radius of the Roche lobe
-	double dBondiRadius;	// Bondi Radius
-	int bUseBondiLimited;		// Cap the mass loss rate at the Bondi limit
+	double dRocheRadius; 	/**< Radius of the Roche lobe */
+	double dBondiRadius;	/**< Bondi (Sonic) Radius */
+	int bUseEnergyLimited; /**< Use energy-limited escape */
+	int bUseBondiLimited;		/**< Use Bondi-limited H mass loss */
+	int bUseRRLimited; /**< Use radiation/recombination-limited H mass loss */
+	int bEscapeTransition; /**< Transition H escape regime depending on physics */
 	int bEnvelopeLostMessage; /**< Has the envelope lost message been printed? */
 	int bRocheMessage; /** Has the Roche lobe message been printed? */
 	int bIgnoreRocheLobe; /** Ignore Roche lobe overflow? */

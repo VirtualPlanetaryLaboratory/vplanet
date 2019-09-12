@@ -69,7 +69,10 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dJeansTime = src[iBody].dJeansTime;
   dest[iBody].dRocheRadius = src[iBody].dRocheRadius;
   dest[iBody].dBondiRadius = src[iBody].dBondiRadius;
+  dest[iBody].bUseEnergyLimited = src[iBody].bUseEnergyLimited;
+  dest[iBody].bUseRRLimited = src[iBody].bUseRRLimited;
   dest[iBody].bUseBondiLimited = src[iBody].bUseBondiLimited;
+  dest[iBody].bEscapeTransition = src[iBody].bEscapeTransition;
   dest[iBody].bRocheMessage = src[iBody].bRocheMessage;
 
 }
@@ -406,6 +409,84 @@ void ReadBondiLimited(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       AssignDefaultInt(options,&body[iFile-1].bUseBondiLimited,files->iNumInputs);
 }
 
+
+/**
+Read the parameter that controls whether or not to use energy-limited escape
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadEnergyLimited(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bUseEnergyLimited = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      AssignDefaultInt(options,&body[iFile-1].bUseEnergyLimited,files->iNumInputs);
+}
+
+
+/**
+Read the parameter that controls whether or not to use radiation/recombination-limited escape
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadRRLimited(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bUseRRLimited = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      AssignDefaultInt(options,&body[iFile-1].bUseRRLimited,files->iNumInputs);
+}
+
+/**
+Read the parameter that controls whether or not to let atmesc determine which
+escape regime the planet is in
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadEscapeTransition(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bEscapeTransition = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      AssignDefaultInt(options,&body[iFile-1].bEscapeTransition,files->iNumInputs);
+}
+
 /**
 Read the planet's effective XUV radius.
 
@@ -698,11 +779,32 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_INSTANTO2SINK] = &ReadInstantO2Sink;
 
   sprintf(options[OPT_BONDILIMITED].cName,"bUseBondiLimited");
-  sprintf(options[OPT_BONDILIMITED].cDescr,"Is the maximum envelope mass loss Bondi-limited?");
+  sprintf(options[OPT_BONDILIMITED].cDescr,"Use Bondi-limited escape for H envelope?");
   sprintf(options[OPT_BONDILIMITED].cDefault,"0");
   options[OPT_BONDILIMITED].iType = 0;
   options[OPT_BONDILIMITED].iMultiFile = 1;
   fnRead[OPT_BONDILIMITED] = &ReadBondiLimited;
+
+  sprintf(options[OPT_ENERGYLIMITED].cName,"bUseEnergyLimited");
+  sprintf(options[OPT_ENERGYLIMITED].cDescr,"Use energy-limited escape for H envelope?");
+  sprintf(options[OPT_ENERGYLIMITED].cDefault,"1");
+  options[OPT_ENERGYLIMITED].iType = 0;
+  options[OPT_ENERGYLIMITED].iMultiFile = 1;
+  fnRead[OPT_ENERGYLIMITED] = &ReadEnergyLimited;
+
+  sprintf(options[OPT_RRLIMITED].cName,"bUseRRLimited");
+  sprintf(options[OPT_RRLIMITED].cDescr,"Use radiation/recombination-limited escape for H envelope?");
+  sprintf(options[OPT_RRLIMITED].cDefault,"0");
+  options[OPT_RRLIMITED].iType = 0;
+  options[OPT_RRLIMITED].iMultiFile = 1;
+  fnRead[OPT_RRLIMITED] = &ReadRRLimited;
+
+  sprintf(options[OPT_ESCAPETRANSITION].cName,"bEscapeTransition");
+  sprintf(options[OPT_ESCAPETRANSITION].cDescr,"Let atmesc determine H envelope escape regime?");
+  sprintf(options[OPT_ESCAPETRANSITION].cDefault,"0");
+  options[OPT_ESCAPETRANSITION].iType = 0;
+  options[OPT_ESCAPETRANSITION].iMultiFile = 1;
+  fnRead[OPT_ESCAPETRANSITION] = &ReadEscapeTransition;
 
   sprintf(options[OPT_HALTDESICCATED].cName,"bHaltSurfaceDesiccated");
   sprintf(options[OPT_HALTDESICCATED].cDescr,"Halt at Desiccation?");
@@ -951,11 +1053,6 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     body[iBody].dSurfaceWaterMass = 0.;
   }
 
-  // If envelope is lost or in ballistic escape regime, prevent further evolution
-  if ((body[iBody].dEnvelopeMass <= 0) || (body[iBody].dAge > body[iBody].dJeansTime)) {
-    fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
-  }
-
   // If envelope is lost, set mass to 0 and prevent further evolution
   if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) && (body[iBody].dEnvelopeMass > 0.)) {
     // Let's remove its envelope and prevent further evolution.
@@ -975,6 +1072,7 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
   }
 
   // XXX switch derivatives depending on mass loss regime
+  // when using variable evolution
 
 }
 
@@ -1137,8 +1235,27 @@ void AssignAtmEscDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
     fnUpdate[iBody][update[iBody].iOxygenMantleMass][0] = &fdDOxygenMantleMassDt;
   }
   if (body[iBody].dEnvelopeMass > 0) {
-    fnUpdate[iBody][update[iBody].iEnvelopeMass][0]     = &fdDEnvelopeMassDt;
-    fnUpdate[iBody][update[iBody].iMass][0]             = &fdDEnvelopeMassDt;
+    // Set derivative depending on regime
+    // Energy-limited (or if, transition start as energy-limited)
+    if(body[iBody].bUseEnergyLimited || body[iBody].bEscapeTransition) {
+      fnUpdate[iBody][update[iBody].iEnvelopeMass][0]     = &fdDEnvelopeMassDt;
+      fnUpdate[iBody][update[iBody].iMass][0]             = &fdDEnvelopeMassDt;
+    }
+    // Bondi-limited escape
+    else if (body[iBody].bUseBondiLimited) {
+      fnUpdate[iBody][update[iBody].iEnvelopeMass][0]     = &fdDEnvelopeMassDtBondiLimited;
+      fnUpdate[iBody][update[iBody].iMass][0]             = &fdDEnvelopeMassDtBondiLimited;
+    }
+    // Radiation/recombination-limited escape
+    else if (body[iBody].bUseRRLimited) {
+      fnUpdate[iBody][update[iBody].iEnvelopeMass][0]     = &fdDEnvelopeMassDtRRLimited;
+      fnUpdate[iBody][update[iBody].iMass][0]             = &fdDEnvelopeMassDtRRLimited;
+    }
+    // Default to energy-limited
+    else {
+      fnUpdate[iBody][update[iBody].iEnvelopeMass][0]     = &fdDEnvelopeMassDt;
+      fnUpdate[iBody][update[iBody].iMass][0]             = &fdDEnvelopeMassDt;
+    }
   }
   fnUpdate[iBody][update[iBody].iRadius][0]             = &fdPlanetRadius; // NOTE: This points to the VALUE of the radius!
 }
@@ -1250,6 +1367,22 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     VerifyMassAtmEsc(body,options,update,body[iBody].dAge,iBody);
     bAtmEsc = 1;
   }
+  else {
+    // No H enevelope but Bondi Limited escape is set - warn user and use energy-limited escape
+    if(body[iBody].bUseBondiLimited) {
+      if (control->Io.iVerbose >= VERBINPUT)
+        fprintf(stderr,"WARNING: bUseBondiLimited = 1 for body %s, but no H envelope present!\n",body[iBody].cName);
+        fprintf(stderr,"Using energy-limited escape for H20 loss calculations.");
+    }
+  }
+
+  // XXX - for force behavior fn I think
+  /* If flow is Bondi-limited, cap mass loss
+  if(body[iaBody[0]].bUseBondiLimited) {
+    // max to select least negative mass loss
+    dMassDt = max(dMassDt, fdBondiLimitedDmDt(body,iaBody[0]));
+  }
+  */
 
   // Ensure envelope mass is physical
   if (body[iBody].dEnvelopeMass > body[iBody].dMass) {
@@ -2475,6 +2608,11 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   double dMassDt = dTINY;
 
+  // If envelope is lost or in ballistic escape regime, prevent further evolution
+  if ((body[iaBody[0]].dEnvelopeMass <= 0) || (body[iaBody[0]].dAge > body[iaBody[0]].dJeansTime)) {
+    return dTINY;
+  }
+
   // Calculate mass loss depending on model
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17) {
 
@@ -2487,12 +2625,6 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
       / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI
         * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius
           * body[iaBody[0]].dXFrac * body[iaBody[0]].dXFrac);
-  }
-
-  // If flow is Bondi-limited, cap mass loss
-  if(body[iaBody[0]].bUseBondiLimited) {
-    // max to select least negative mass loss
-    dMassDt = max(dMassDt, fdBondiLimitedDmDt(body,iaBody[0]));
   }
 
   return dMassDt;
@@ -2509,8 +2641,28 @@ The rate of change of the envelope mass given Bondi-limited escape.
 */
 double fdDEnvelopeMassDtBondiLimited(BODY *body,SYSTEM *system,int *iaBody) {
 
-  // Compute Bondi-limited mass loss rate
-  double dMassDt = fdBondiLimitedDmDt(body,iaBody[0]);
+  // Compute Bondi-limited mass loss rate where body 0 is always the host star
+  double dMDt = -1.9e15 * (body[iaBody[0]].dMass / (10.0 * MEARTH)) / sqrt(body[0].dTemperature / 5800.0);
+  dMDt = dMDt * pow(body[iaBody[0]].dSemi / (0.1 * AUM), 0.25) / pow(body[0].dRadius / RSUN, 0.25);
+
+  return dMDt;
+}
+
+/**
+The rate of change of the envelope mass given raditation/recombination-limited escape.
+
+@param body A pointer to the current BODY instance
+@param system A pointer to the current SYSTEM instance
+@param iaBody An array of body indices. The current body is index 0.
+
+*/
+double fdDEnvelopeMassDtRRLimited(BODY *body,SYSTEM *system,int *iaBody) {
+
+  // Compute radiation/recombination-limited mass loss rate using
+  // equation 13 from Luger+2015
+  // XXX convert FXUV to cgs for this normalization
+  // XXX include gas sound speed term not modeled by Luger+2015?
+  double dMassDt = -7.11e4 * sqrt(body[iaBody[0]].dFXUV) * pow(body[iaBody[0]].dRadius / REARTH, 1.5);
 
   return dMassDt;
 }
@@ -2804,20 +2956,4 @@ double fdBondiRadius(BODY *body, int iBody) {
   double rb = BIGG * body[iBody].dMass / (2.0 * cs * cs);
 
   return rb;
-}
-
-/**
- Calculate the Bondi-limited envelope mass loss rate
-
- @param body BODY struct
- @param iBody int body indentifier
-
- @return Body's Bondi-limited mass loss rate
-*/
-double fdBondiLimitedDmDt(BODY *body, int iBody) {
-
-  double dMDt = -1.9e15 * (body[iBody].dMass / (10.0 * MEARTH)) / sqrt(body[0].dTemperature / 5800.0);
-  dMDt = dMDt * pow(body[iBody].dSemi / (0.1 * AUM), 0.25) / pow(body[0].dRadius / RSUN, 0.25);
-
-  return dMDt;
 }

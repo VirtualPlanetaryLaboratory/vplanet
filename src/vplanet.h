@@ -663,7 +663,7 @@ struct BODY {
 	int bUseEnergyLimited; /**< Use energy-limited escape */
 	int bUseBondiLimited;		/**< Use Bondi-limited H mass loss */
 	int bUseRRLimited; /**< Use radiation/recombination-limited H mass loss */
-	int bEscapeTransition; /**< Transition H escape regime depending on physics */
+	int bAtmEscAuto; /**< Transition H escape regime depending on physics */
 	int bEnvelopeLostMessage; /**< Has the envelope lost message been printed? */
 	int bRocheMessage; /** Has the Roche lobe message been printed? */
 	int bIgnoreRocheLobe; /** Ignore Roche lobe overflow? */

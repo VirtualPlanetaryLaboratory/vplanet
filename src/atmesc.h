@@ -45,7 +45,7 @@
 #define OPT_BONDILIMITED        1231 /**< Whether or not to use Bondi-limited escape */
 #define OPT_ENERGYLIMITED       1232 /**< Whether or not to use energy-limited escape */
 #define OPT_RRLIMITED           1233 /**< Whether or not to use radiation/recombination-limited escape */
-#define OPT_ESCAPETRANSITION    1234 /**< Whether or not to let atmesc determine escape regime */
+#define OPT_ATMESCAUTO          1234 /**< Whether or not to let atmesc determine escape regime */
 
 
 /* @cond DOXYGEN_OVERRIDE */

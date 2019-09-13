@@ -72,7 +72,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].bUseEnergyLimited = src[iBody].bUseEnergyLimited;
   dest[iBody].bUseRRLimited = src[iBody].bUseRRLimited;
   dest[iBody].bUseBondiLimited = src[iBody].bUseBondiLimited;
-  dest[iBody].bEscapeTransition = src[iBody].bEscapeTransition;
+  dest[iBody].bAtmEscAuto = src[iBody].bAtmEscAuto;
   dest[iBody].bRocheMessage = src[iBody].bRocheMessage;
 
 }
@@ -472,7 +472,7 @@ escape regime the planet is in
 @param system A pointer to the SYSTEM instance
 @param iFile The current file number
 */
-void ReadEscapeTransition(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void ReadAtmEscAuto(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
   int bTmp;
@@ -480,11 +480,11 @@ void ReadEscapeTransition(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    body[iFile-1].bEscapeTransition = bTmp;
+    body[iFile-1].bAtmEscAuto = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      AssignDefaultInt(options,&body[iFile-1].bEscapeTransition,files->iNumInputs);
+      AssignDefaultInt(options,&body[iFile-1].bAtmEscAuto,files->iNumInputs);
 }
 
 /**
@@ -799,12 +799,12 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_RRLIMITED].iMultiFile = 1;
   fnRead[OPT_RRLIMITED] = &ReadRRLimited;
 
-  sprintf(options[OPT_ESCAPETRANSITION].cName,"bEscapeTransition");
-  sprintf(options[OPT_ESCAPETRANSITION].cDescr,"Let atmesc determine H envelope escape regime?");
-  sprintf(options[OPT_ESCAPETRANSITION].cDefault,"0");
-  options[OPT_ESCAPETRANSITION].iType = 0;
-  options[OPT_ESCAPETRANSITION].iMultiFile = 1;
-  fnRead[OPT_ESCAPETRANSITION] = &ReadEscapeTransition;
+  sprintf(options[OPT_ATMESCAUTO].cName,"bAtmEscAuto");
+  sprintf(options[OPT_ATMESCAUTO].cDescr,"Let atmesc determine H envelope escape regime?");
+  sprintf(options[OPT_ATMESCAUTO].cDefault,"0");
+  options[OPT_ATMESCAUTO].iType = 0;
+  options[OPT_ATMESCAUTO].iMultiFile = 1;
+  fnRead[OPT_ATMESCAUTO] = &ReadAtmEscAuto;
 
   sprintf(options[OPT_HALTDESICCATED].cName,"bHaltSurfaceDesiccated");
   sprintf(options[OPT_HALTDESICCATED].cDescr,"Halt at Desiccation?");
@@ -1237,7 +1237,7 @@ void AssignAtmEscDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
   if (body[iBody].dEnvelopeMass > 0) {
     // Set derivative depending on regime
     // Energy-limited (or if, transition start as energy-limited)
-    if(body[iBody].bUseEnergyLimited || body[iBody].bEscapeTransition) {
+    if(body[iBody].bUseEnergyLimited || body[iBody].bAtmEscAuto) {
       fnUpdate[iBody][update[iBody].iEnvelopeMass][0]     = &fdDEnvelopeMassDt;
       fnUpdate[iBody][update[iBody].iMass][0]             = &fdDEnvelopeMassDt;
     }
@@ -2660,9 +2660,8 @@ double fdDEnvelopeMassDtRRLimited(BODY *body,SYSTEM *system,int *iaBody) {
 
   // Compute radiation/recombination-limited mass loss rate using
   // equation 13 from Luger+2015
-  // XXX convert FXUV to cgs for this normalization
   // XXX include gas sound speed term not modeled by Luger+2015?
-  double dMassDt = -7.11e4 * sqrt(body[iaBody[0]].dFXUV) * pow(body[iaBody[0]].dRadius / REARTH, 1.5);
+  double dMassDt = -7.11e4 * sqrt(body[iaBody[0]].dFXUV * 1000.0) * pow(body[iaBody[0]].dRadius / REARTH, 1.5);
 
   return dMassDt;
 }

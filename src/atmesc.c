@@ -53,6 +53,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dCrossoverMass = src[iBody].dCrossoverMass;
   dest[iBody].bRunaway = src[iBody].bRunaway;
   dest[iBody].iWaterEscapeRegime = src[iBody].iWaterEscapeRegime;
+  dest[iBody].iHEscapeRegime = src[iBody].iHEscapeRegime;
   dest[iBody].dFHDiffLim = src[iBody].dFHDiffLim;
   dest[iBody].iPlanetRadiusModel = src[iBody].iPlanetRadiusModel;
   dest[iBody].bInstantO2Sink = src[iBody].bInstantO2Sink;
@@ -1071,8 +1072,75 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     }
   }
 
-  // XXX switch derivatives depending on mass loss regime
-  // when using variable evolution
+  // Using variable evolution: determine proper escape regime and set
+  // H envelope mass loss derivatives accordingly (if H envelope exists)
+  if(body[iBody].bAtmEscAuto && body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass) {
+    // If currently energy-limited, see if we should switch to another regime
+    if(body[iBody].iHEscapeRegime == ATMESC_ELIM) {
+      // Is the flux RR-limited?
+      if(fbRRCriticalFlux(body,iBody)) {
+          // Switch regime, derivatives
+          body[iBody].iHEscapeRegime == ATMESC_RRLIM;
+          fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtRRLimited;
+          fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtRRLimited;
+        }
+
+      // Is the flux Bondi-limited?
+      if(fbBondiCriticalDmDt(body, iBody)) {
+        // Switch regime, derivatives
+        body[iBody].iHEscapeRegime == ATMESC_BONDILIM;
+        fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtBondiLimited;
+        fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtBondiLimited;
+      }
+    }
+    // If currently RR-limited, see if we should switch to another regime
+    else if(body[iBody].iHEscapeRegime == ATMESC_RRLIM) {
+      // Is the escape now energy-limited?
+      if(!fbRRCriticalFlux(body,iBody)) {
+          // Switch regime, derivatives
+          body[iBody].iHEscapeRegime == ATMESC_ELIM;
+          fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
+          fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
+        }
+
+      // Is the escape now Bondi-limited?
+      if(fbBondiCriticalDmDt(body, iBody)) {
+        // Switch regime, derivatives
+        body[iBody].iHEscapeRegime == ATMESC_BONDILIM;
+        fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtBondiLimited;
+        fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtBondiLimited;
+      }
+    }
+    // Flux currently Bondi-limited, but should we switch?
+    else if(body[iBody].iHEscapeRegime == ATMESC_BONDILIM) {
+      // No longer Bondi-limited, see if EL or RR-limited
+      if(!fbBondiCriticalDmDt(body, iBody)) {
+        // RR-limited!
+        if(fbRRCriticalFlux(body,iBody)) {
+          // Switch regime, derivatives
+          body[iBody].iHEscapeRegime == ATMESC_RRLIM;
+          fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtRRLimited;
+          fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtRRLimited;
+        }
+        // Energy-limited!
+        else {
+          // Switch regime, derivatives
+          body[iBody].iHEscapeRegime == ATMESC_ELIM;
+          fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
+          fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
+        }
+      }
+    }
+    // Undefined regime! Warn user and switch to energy-limited
+    else {
+      fprintf(stderr, "WARNING: Undefined iHEscapeRegime = %d for body %s!\n",body[iBody].iHEscapeRegime, body[iBody].cName);
+      fprintf(stderr, "Switching to default energy-limited escape.\n");
+
+      body[iBody].iHEscapeRegime == ATMESC_ELIM;
+      fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
+      fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
+    }
+  }
 
 }
 
@@ -1299,6 +1367,7 @@ Verify all the inputs for the atmospheric escape module.
 void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
   int bAtmEsc=0;
 
+  body[iBody].iHEscapeRegime = ATMESC_NONE; // Default to no H escape - updated if envelope is present
   body[iBody].bEnvelopeLostMessage = 0;
   body[iBody].bRocheMessage = 0;
 
@@ -1362,27 +1431,37 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     bAtmEsc = 1;
   }
 
+  // If envelope is present, pick correct derivative
   if (body[iBody].dEnvelopeMass > 0) {
+
+    // Input error handling -  can only set one of bUseBondiLimited,
+    // bUseRRLimited, bUseEnergyLimited, bAtmEscAuto
+    // xxx
+
+    // Identify correct H escape regime
+    if(body[iBody].bUseRRLimited) {
+      body[iBody].iHEscapeRegime = ATMESC_RRLIM;
+    }
+    else if(body[iBody].bUseBondiLimited) {
+      body[iBody].iHEscapeRegime = ATMESC_BONDILIM;
+    }
+    // Default to energy-limited escape if explicitely set or if using auto feature
+    else {
+      body[iBody].iHEscapeRegime = ATMESC_ELIM;
+    }
+
     VerifyEnvelopeMass(body,options,update,body[iBody].dAge,iBody);
     VerifyMassAtmEsc(body,options,update,body[iBody].dAge,iBody);
     bAtmEsc = 1;
   }
   else {
     // No H enevelope but Bondi Limited escape is set - warn user and use energy-limited escape
-    if(body[iBody].bUseBondiLimited) {
+    if(body[iBody].bUseBondiLimited || body[iBody].bUseRRLimited) {
       if (control->Io.iVerbose >= VERBINPUT)
-        fprintf(stderr,"WARNING: bUseBondiLimited = 1 for body %s, but no H envelope present!\n",body[iBody].cName);
-        fprintf(stderr,"Using energy-limited escape for H20 loss calculations.");
+        fprintf(stderr,"WARNING: No H envelope present but Bondi/Radiation-recombination-limited escape is set for body %s!\n",body[iBody].cName);
+        fprintf(stderr,"AtmEsc currently supports only energy-limited escape for H20 loss calculations.");
     }
   }
-
-  // XXX - for force behavior fn I think
-  /* If flow is Bondi-limited, cap mass loss
-  if(body[iaBody[0]].bUseBondiLimited) {
-    // max to select least negative mass loss
-    dMassDt = max(dMassDt, fdBondiLimitedDmDt(body,iaBody[0]));
-  }
-  */
 
   // Ensure envelope mass is physical
   if (body[iBody].dEnvelopeMass > body[iBody].dMass) {
@@ -2955,4 +3034,48 @@ double fdBondiRadius(BODY *body, int iBody) {
   double rb = BIGG * body[iBody].dMass / (2.0 * cs * cs);
 
   return rb;
+}
+
+/**
+ Calculate the critical flux between the radiation/recombination-limited and
+ energy-limited H envelope escape regimes following Luger+2015
+
+ @param body BODY struct
+ @param iBody int body indentifier
+
+ @return whether or not the flux is radiation/recombination-limited
+*/
+int fbRRCriticalFlux(BODY *body, int iBody) {
+
+  // XXX testing hack -> always return 0 to force EL escape for now
+  return 0;
+
+  // Compute critical flux
+  double dCSq = 1.955e-11; // Proportionality constant
+  double dFCrit = dCSq * BIGG * BIGG * body[iBody].dMass * body[iBody].dMass;
+  dFCrit *= (body[iBody].dKTide * body[iBody].dKTide * body[iBody].dRadius);
+  dFCrit /= (body[iBody].dAtmXAbsEffH * body[iBody].dAtmXAbsEffH * PI * PI * pow(body[iBody].dRadXUV, 4));
+
+  // If FXUV > Fcrit -> RR-limited escape
+  if(body[iBody].dFXUV >= dFCrit) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+/**
+ Calculate the critical mass flux for a Bondi-limited flow. If the H envelope
+ mass loss flux exceeds this threshold, the flux is considered to be Bondi-limted
+
+ @param body BODY struct
+ @param iBody int body indentifier
+
+ @return whether or not the flux is Bondi-limited
+*/
+int fbBondiCriticalDmDt(BODY *body, int iBody) {
+
+  // XXX testing hack -> always return 0 to force EL escape for now
+  return 0;
 }

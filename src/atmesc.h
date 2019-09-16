@@ -13,7 +13,9 @@
 #define ATMESC_TIAN             2           /**< Flag: Tian (2015) atmospheric escape formulae flag */
 #define ATMESC_ELIM             3           /**< Flag: Energy-limited escape */
 #define ATMESC_DIFFLIM          4           /**< Flag: Diffusion-limited escape */
-#define ATMESC_NONE             5           /**< Flag: No atmospheric escape */
+#define ATMESC_BONDILIM         5           /**< Flag: Bondi-limited escape */
+#define ATMESC_RRLIM            6           /**< Flag: Radiation/recombination-limited escape */
+#define ATMESC_NONE             7           /**< Flag: No atmospheric escape */
 #define ATMESC_LOP12            6           /**< Flag: Lopez (2012) gaseous planet radius model */
 #define ATMESC_PROXCENB         7           /**< Flag: Proxima Centauri b gaseous planet radius model */
 #define ATMESC_LEHMER17         8           /**< Flag: Lehmer & Catling (2017) planet radius model */
@@ -154,6 +156,8 @@ double fdXUVEfficiencyBolmont2016(double);
 double fdBondiRadius(BODY*,int);
 double fdRocheRadius(BODY*,int);
 double fdBondiLimitedDmDt(BODY*,int);
+int fbRRCriticalFlux(BODY*,int);
+int fbBondiCriticalDmDt(BODY*,int);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY*,SYSTEM*,UPDATE*,int,int);

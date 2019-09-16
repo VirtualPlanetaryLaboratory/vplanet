@@ -646,6 +646,7 @@ struct BODY {
   double dCrossoverMass;
   int bRunaway;
   int iWaterEscapeRegime;
+	int iHEscapeRegime; /**< Tracks H escape regime */
   double dFHDiffLim;
   double dRadXUV;       //lehmer var
   double dRadSolid;     //lehmer var

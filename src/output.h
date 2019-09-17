@@ -12,6 +12,28 @@
 
 */
 
+/* Exit Status */
+
+#define EXIT_EXE      1
+#define EXIT_INPUT    2
+#define EXIT_UNITS    3
+#define EXIT_WRITE    4
+#define EXIT_INT      5
+#define EXIT_OUTPUT   6
+
+/* Verbosity Level */
+
+#define VERBERR       1
+#define VERBPROG      2
+#define VERBINPUT     3
+#define VERBUNITS     4
+#define VERBALL       5
+
+/* File Limits */
+#define OUTLEN        48    /* Maximum number of characters in an output column header */
+#define OUTDESCR      256   /* Number of characters in output description */
+#define OUTLONDESCR   2048  /* Number of characters in output long description */
+
 /* General Outuput 0-999 */
 /* System properties 0-499, body properties 500-999 */
 #define OUTSTART                0

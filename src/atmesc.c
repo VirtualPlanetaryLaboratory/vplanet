@@ -601,43 +601,48 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   int iOpt,iFile;
 
   sprintf(options[OPT_XFRAC].cName,"dXFrac");
-  sprintf(options[OPT_XFRAC].cDescr,"Fraction of planet radius in X-ray/XUV");
+  sprintf(options[OPT_XFRAC].cDescr,"Fraction of planet radius in X-ray/UV");
   sprintf(options[OPT_XFRAC].cDefault,"1");
   options[OPT_XFRAC].dDefault = 1;
   options[OPT_XFRAC].iType = 2;
   options[OPT_XFRAC].iMultiFile = 1;
   fnRead[OPT_XFRAC] = &ReadXFrac;
+  sprintf(options[OPT_XFRAC].cLongDescr,"Ratio of the planet's XUV radius to its total radius.\nThe XUV radius is defined to be the distance between\nthe center of the planet and the absorbing layer,\ndefined to be where the optical depth is 1.\nShould be in the range (0,1].\n");
 
   sprintf(options[OPT_ATMXABSEFFH].cName,"dAtmXAbsEffH");
-  sprintf(options[OPT_ATMXABSEFFH].cDescr,"Hydrogen X-ray/XUV absorption efficiency (epsilon)");
+  sprintf(options[OPT_ATMXABSEFFH].cDescr,"Hydrogen X-ray/UV absorption efficiency (epsilon)");
   sprintf(options[OPT_ATMXABSEFFH].cDefault,"0.15");
   options[OPT_ATMXABSEFFH].dDefault = 0.15;
   options[OPT_ATMXABSEFFH].iType = 2;
   options[OPT_ATMXABSEFFH].iMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH] = &ReadAtmXAbsEffH;
+  sprintf(options[OPT_XFRAC].cLongDescr,"XUV absoprtion efficiency parameter, epsilon_{XUV}, in Eq. (A1)\nin Barnes et al. (2019).\nMust lie in the range [0,1].\n");
 
   sprintf(options[OPT_ATMXABSEFFH2O].cName,"dAtmXAbsEffH2O");
-  sprintf(options[OPT_ATMXABSEFFH2O].cDescr,"Water X-ray/XUV absorption efficiency (epsilon)");
+  sprintf(options[OPT_ATMXABSEFFH2O].cDescr,"Water X-ray/UV absorption efficiency (epsilon)");
   sprintf(options[OPT_ATMXABSEFFH2O].cDefault,"0.30");
   options[OPT_ATMXABSEFFH2O].dDefault = 0.15;
   options[OPT_ATMXABSEFFH2O].iType = 2;
   options[OPT_ATMXABSEFFH2O].iMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2O] = &ReadAtmXAbsEffH2O;
+  sprintf(options[OPT_XFRAC].cLongDescr,"XUV absoprtion efficiency parameter for water vapor as defined in\nLuger & Barnes (2015, AsBio, 15, 57). Must lie in range [0,1].\n");
 
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cName,"sAtmXAbsEffH2OModel");
-  sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDescr,"Water X-ray/XUV absorption efficiency evolution model");
+  sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDescr,"Water X-ray/XUV absorption efficiency evolution model. Options are BOLMONT16 or NONE.");
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDefault,"NONE");
   options[OPT_ATMXABSEFFH2OMODEL].iType = 3;
   options[OPT_ATMXABSEFFH2OMODEL].iMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2OMODEL] = &ReadAtmXAbsEffH2OModel;
+  sprintf(options[OPT_XFRAC].cLongDescr,"If BOLMONT16 is selected, then the value of %s will follow\nthe model of Bolmont et al. (2017, MNRAS, 464, 3728).\nNONE will not change the input value for %s.\n",options[OPT_ATMXABSEFFH2O].cName,options[OPT_ATMXABSEFFH2O].cName);
 
   sprintf(options[OPT_OXYGENMASS].cName,"dOxygenMass");
-  sprintf(options[OPT_OXYGENMASS].cDescr,"Initial Oxygen Mass");
+  sprintf(options[OPT_OXYGENMASS].cDescr,"The initial oxygen mass in the atmosphere.");
   sprintf(options[OPT_OXYGENMASS].cDefault,"0");
   options[OPT_OXYGENMASS].dDefault = 0;
   options[OPT_OXYGENMASS].iType = 2;
   options[OPT_OXYGENMASS].iMultiFile = 1;
   fnRead[OPT_OXYGENMASS] = &ReadOxygenMass;
+  // No LongDescr needed
 
   sprintf(options[OPT_OXYGENMANTLEMASS].cName,"dOxygenMantleMass");
   sprintf(options[OPT_OXYGENMANTLEMASS].cDescr,"Initial Oxygen Mass in the Mantle");
@@ -646,20 +651,23 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OXYGENMANTLEMASS].iType = 2;
   options[OPT_OXYGENMANTLEMASS].iMultiFile = 1;
   fnRead[OPT_OXYGENMANTLEMASS] = &ReadOxygenMantleMass;
+  // No LongDescr needed
 
   sprintf(options[OPT_WATERLOSSMODEL].cName,"sWaterLossModel");
-  sprintf(options[OPT_WATERLOSSMODEL].cDescr,"Water Loss and Oxygen Buildup Model");
+  sprintf(options[OPT_WATERLOSSMODEL].cDescr,"Water loss and oxygen buildup model. Options are LB15, LBEXACT, or TIAN.");
   sprintf(options[OPT_WATERLOSSMODEL].cDefault,"LBEXACT");
   options[OPT_WATERLOSSMODEL].iType = 3;
   options[OPT_WATERLOSSMODEL].iMultiFile = 1;
   fnRead[OPT_WATERLOSSMODEL] = &ReadWaterLossModel;
+  sprintf(options[OPT_XFRAC].cLongDescr,"The water loss rate will be determined by the selected model.\n XXX What are these options?\n");
 
   sprintf(options[OPT_PLANETRADIUSMODEL].cName,"sPlanetRadiusModel");
-  sprintf(options[OPT_PLANETRADIUSMODEL].cDescr,"Gaseous Planet Radius Model");
+  sprintf(options[OPT_PLANETRADIUSMODEL].cDescr,"Gaseous Planet Radius Model. Options are LOPEZ12, PROXCENB, LEHMER17 or NONE.");
   sprintf(options[OPT_PLANETRADIUSMODEL].cDefault,"NONE");
   options[OPT_PLANETRADIUSMODEL].iType = 3;
   options[OPT_PLANETRADIUSMODEL].iMultiFile = 1;
   fnRead[OPT_PLANETRADIUSMODEL] = &ReadPlanetRadiusModel;
+  sprintf(options[OPT_XFRAC].cLongDescr,"The radius of the planet will follow the selected model.\nLOPEZ12 is Lopez et al. (2012, ApJ, 761, 59). PROXCENB\nis the model for Proxima b in Barnes et al. (2016, arXiv:1608.06919).\nLEHMER17 is the Lehmer & Catling (2017, ApJ, 845, 130).\nNONE will cause the radius to remain constant.\n");
 
   sprintf(options[OPT_INSTANTO2SINK].cName,"bInstantO2Sink");
   sprintf(options[OPT_INSTANTO2SINK].cDescr,"Is oxygen absorbed instantaneously at the surface?");
@@ -667,6 +675,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_INSTANTO2SINK].iType = 0;
   options[OPT_INSTANTO2SINK].iMultiFile = 1;
   fnRead[OPT_INSTANTO2SINK] = &ReadInstantO2Sink;
+  sprintf(options[OPT_XFRAC].cLongDescr,"If set to 1, then all oxygen released by photolysis is immediately\nremoved from teh atmosphere. This mimics rapid surface oxidation.\n");
 
   sprintf(options[OPT_HALTDESICCATED].cName,"bHaltSurfaceDesiccated");
   sprintf(options[OPT_HALTDESICCATED].cDescr,"Halt at Desiccation?");
@@ -707,7 +716,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_JEANSTIME] = &ReadJeansTime;
 
   sprintf(options[OPT_PRESXUV].cName,"dPresXUV");
-  sprintf(options[OPT_PRESXUV].cDescr,"Pressure at base of Thermosphere");
+  sprintf(options[OPT_PRESXUV].cDescr,"Pressure at base of thermosphere");
   sprintf(options[OPT_PRESXUV].cDefault,"5 Pa");
   options[OPT_PRESXUV].dDefault = 5.0;
   options[OPT_PRESXUV].iType = 2;
@@ -723,7 +732,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_ATMGASCONST] = &ReadAtmGasConst;
 
   sprintf(options[OPT_FXUV].cName,"dFXUV");
-  sprintf(options[OPT_FXUV].cDescr,"XUV Flux");
+  sprintf(options[OPT_FXUV].cDescr,"XUV flux at the body's orbit");
   options[OPT_FXUV].iType = 2;
   options[OPT_FXUV].iMultiFile = 1;
   fnRead[OPT_FXUV] = &ReadFXUV;

@@ -12,7 +12,6 @@
 #include <ctype.h>
 #include <string.h>
 #include "vplanet.h"
-#include "output.h"
 
 /* Individual WriteOutput functions */
 

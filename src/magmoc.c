@@ -983,7 +983,7 @@ void fndWaterFracMelt(BODY *body, int iBody) {
   double dAveMolarMassAtm; // average molar mass of atmosphere
 
   // CO2:
-  double dMassFracCO2Current, dMassFracCO2Old, dLow, dUp;
+  double dMassFracCO2Current, dCO2MassMO, dMassFracCO2Old, dLow, dUp;
   int iIteration;
 
   dMassMagmOcTot             = 4./3 * PI * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3));
@@ -1027,11 +1027,14 @@ void fndWaterFracMelt(BODY *body, int iBody) {
         }
 
         if (iIteration > 0) {
+          // dCO2MassMO = dMassFracCO2Current * (body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+          // if (dCO2MassMO < 0.6 * body[iBody].dCO2MassMOAtm) {
           if (dMassFracCO2Current > dMassFracCO2Old) {
             dMassFracCO2Current = 1.1 * dMassFracCO2Old;
           } else {
             dMassFracCO2Current = 0.9 * dMassFracCO2Old;
           }
+          // }
         }
 
         // mass frac from last iteration
@@ -1057,9 +1060,9 @@ void fndWaterFracMelt(BODY *body, int iBody) {
         }
         dMassFracCO2Current = (body[iBody].dCO2MassMOAtm - body[iBody].dPressCO2Atm * 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf) / (CO2PARTCOEFF*body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
 
-        // if (body[iBody].dCO2FracMelt < 5e-4) {
-        //   body[iBody].dCO2FracMelt = 5e-4;
-        // }
+        if (dMassFracCO2Current < 0) {
+          dMassFracCO2Current = 0;
+        }
         // after 1000 iterations: use middle between F_old and F_new to avoid endless loop
         if (iIteration>1000) {
           dMassFracCO2Current = (dMassFracCO2Current + dMassFracCO2Old)/2;
@@ -1099,6 +1102,7 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   double dCurrentTime     = evolve->dTime;
   double dCurrentTimeStep = evolve->dTimeStep;
   double dCurrentStepNum  = evolve->nSteps;
+  double dAveMolarMassAtm;
 
   /*
    * No negative masses!
@@ -1145,7 +1149,17 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   if (!body[iBody].bManSolid) {
     fndWaterFracMelt(body,iBody);
   } else {
-    body[iBody].dPressWaterAtm = body[iBody].dWaterMassMOAtm * body[iBody].dGravAccelSurf / (4 * PI * pow(body[iBody].dRadius,2));
+    body[iBody].dPressWaterAtm  = body[iBody].dWaterMassMOAtm  * body[iBody].dGravAccelSurf / (4 * PI * pow(body[iBody].dRadius,2));
+    body[iBody].dPressCO2Atm    = body[iBody].dCO2MassMOAtm    * body[iBody].dGravAccelSurf / (4 * PI * pow(body[iBody].dRadius,2));
+    body[iBody].dPressOxygenAtm = body[iBody].dOxygenMassMOAtm * body[iBody].dGravAccelSurf / (4 * PI * pow(body[iBody].dRadius,2));
+    if ((body[iBody].dPressWaterAtm + body[iBody].dPressCO2Atm + body[iBody].dPressOxygenAtm) > 1) {
+      dAveMolarMassAtm = (MOLWEIGHTWATER * body[iBody].dPressWaterAtm + MOLWEIGHTCO2 * body[iBody].dPressCO2Atm + 2*MOLWEIGHTOXYGEN * body[iBody].dPressOxygenAtm)/(body[iBody].dPressWaterAtm + body[iBody].dPressCO2Atm + body[iBody].dPressOxygenAtm);
+      body[iBody].dPartialPressWaterAtm = body[iBody].dPressWaterAtm * dAveMolarMassAtm / MOLWEIGHTWATER;
+      body[iBody].dPartialPressCO2Atm   = body[iBody].dPressCO2Atm   * dAveMolarMassAtm / MOLWEIGHTCO2;
+    } else {
+      body[iBody].dPartialPressWaterAtm = 0;
+      body[iBody].dPartialPressCO2Atm   = 0;
+    }
   }
 
   /*
@@ -1234,11 +1248,13 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
      * Stop updating PotTemp, SurfTemp, SolidRadius, WaterMassSol, OxygenMassSol
      * But continue to update WaterMassMOAtm, OxygenMassMOAtm, HydrogenMassSpace, OxygenMassSpace
      */
-    SetDerivTiny(fnUpdate,iBody,update[iBody].iPotTemp          ,update[iBody].iPotTempMagmOc          );
-    SetDerivTiny(fnUpdate,iBody,update[iBody].iSurfTemp         ,update[iBody].iSurfTempMagmOc         );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iPotTemp      ,update[iBody].iPotTempMagmOc      );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iSurfTemp     ,update[iBody].iSurfTempMagmOc     );
     SetDerivTiny(fnUpdate,iBody,update[iBody].iSolidRadius  ,update[iBody].iSolidRadiusMagmOc  );
     SetDerivTiny(fnUpdate,iBody,update[iBody].iWaterMassSol ,update[iBody].iWaterMassSolMagmOc );
     SetDerivTiny(fnUpdate,iBody,update[iBody].iOxygenMassSol,update[iBody].iOxygenMassSolMagmOc);
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iCO2MassSol   ,update[iBody].iCO2MassSolMagmOc   );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iCO2MassMOAtm ,update[iBody].iCO2MassMOAtmMagmOc );
 
     if (io->iVerbose >= VERBPROG) {
       printf("%s's mantle solidified after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);

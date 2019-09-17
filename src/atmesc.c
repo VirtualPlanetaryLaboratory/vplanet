@@ -1451,16 +1451,16 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     //Ensure only 1 escape regime is set
     int iRegimeCounter = 0;
 
-    if (options[OPT_ENERGYLIMITED].iLine[iBody+1] > -1) {
+    if (body[iBody].bUseEnergyLimited) {
       iRegimeCounter += 1;
     }
-    if (options[OPT_RRLIMITED].iLine[iBody+1] > -1) {
+    if (body[iBody].bUseRRLimited) {
       iRegimeCounter += 1;
     }
-    if (options[OPT_BONDILIMITED].iLine[iBody+1] > -1) {
+    if (body[iBody].bUseBondiLimited) {
       iRegimeCounter += 1;
     }
-    if (options[OPT_ATMESCAUTO].iLine[iBody+1] > -1) {
+    if (body[iBody].bAtmEscAuto) {
       iRegimeCounter += 1;
     }
 

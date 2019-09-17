@@ -1,6 +1,10 @@
 # Template vpl.in file to calculate tidal locking
 sSystemName	gl581		# System Name
+<<<<<<< HEAD
+iVerbose	5			# Verbosity level
+=======
 iVerbose	  5			# Verbosity level
+>>>>>>> a45095dc8e0b53eba999c90f3556ce5713085cea
 bOverwrite	1			# Allow file overwrites?
 
 # All space after a # is ignored, as is white space
@@ -34,7 +38,11 @@ iDigits		16					# Maximum number of digits to right of decimal
 # If no forward or backward integrations are requested, but a log file is, then
 # the log file will be generated. Useful for parameter space surveys.
 
+<<<<<<< HEAD
+bDoForward 	1
+=======
 bDoForward 	  1
+>>>>>>> a45095dc8e0b53eba999c90f3556ce5713085cea
 bVarDt				1
 dEta					0.01
 dOutputTime 	1e7

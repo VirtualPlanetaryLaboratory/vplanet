@@ -1693,7 +1693,7 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   double dDt,dTotTime;
 
   /* Get derivatives */
-  PropertiesAuxiliary(body,control,update);
+  PropertiesAuxiliary(body,control,system,update);
   dDt=fdGetTimeStep(body,control,system,update,fnUpdate);
 
   if (iEnd == 0) {
@@ -1969,4 +1969,5 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputFlare(output,fnWrite);
   InitializeOutputGalHabit(output,fnWrite);
   InitializeOutputSpiNBody(output, fnWrite);
+  InitializeOutputMagmOc(output, fnWrite);
 }

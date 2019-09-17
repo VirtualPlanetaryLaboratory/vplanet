@@ -15,6 +15,16 @@ def test_AbioticO2():
     # Grab the output
     output = GetOutput(path=cwd)
 
+<<<<<<< HEAD
+    # Check
+    assert np.isclose(output.log.final.star.Luminosity, 2.013347e+23)
+    assert np.isclose(output.log.final.star.LXUVStellar, 2.774075e+19)
+    assert np.isclose(output.log.final.star.Radius, 7.770586e+07)
+    assert np.isclose(output.log.final.star.Temperature, 2618.768109)
+    assert np.isclose(output.log.final.e.SurfWaterMass, 3.273452, rtol=1e-4)
+    assert np.isclose(output.log.final.star.HZLimRecVenus, 2.811125e+09)
+    assert np.isclose(output.log.final.star.HZLimEarlyMars, 7.885448e+09)
+=======
     # Primary Variables
     # Star
     assert np.isclose(output.log.final.star.Luminosity, 7.362835e+23)
@@ -31,6 +41,7 @@ def test_AbioticO2():
     assert np.isclose(output.log.final.e.AtmXAbsEffH2O, 0.051776)
     assert np.isclose(output.log.final.e.Instellation, 3053.257033)
 
+>>>>>>> 253f42c70cc371f04e8c3b0a20a7fd1ffd6fc9d2
 
 if __name__ == "__main__":
     test_AbioticO2()

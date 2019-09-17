@@ -682,8 +682,8 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_THERMTEMP].cName,"dThermTemp");
   sprintf(options[OPT_THERMTEMP].cDescr,"Thermosphere temperature");
-  sprintf(options[OPT_THERMTEMP].cDefault,"880");
-  options[OPT_THERMTEMP].dDefault = 880;
+  sprintf(options[OPT_THERMTEMP].cDefault,"400");
+  options[OPT_THERMTEMP].dDefault = 400;
   options[OPT_THERMTEMP].iType = 2;
   options[OPT_THERMTEMP].iMultiFile = 1;
   fnRead[OPT_THERMTEMP] = &ReadThermTemp;
@@ -1023,7 +1023,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iB
         body[iBody].dCrossoverMass = 43. / 3. * ATOMMASS + KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef / (6 * BDIFF * g);
       }
 
-    } else if ((body[iBody].iWaterLossModel == ATMESC_LBEXACT) | (body[iBody].iWaterLossModel == ATMESC_TIAN)) {
+    } else if ((body[iBody].iWaterLossModel == ATMESC_LBEXACT) || (body[iBody].iWaterLossModel == ATMESC_TIAN)) {
 
       double x = (QOH - 1.) * (1. - XO) * (BDIFF * g * ATOMMASS) / (KBOLTZ * body[iBody].dFlowTemp);
       double FH;
@@ -1052,7 +1052,8 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iB
 
     }
 
-    if ((XO > 0.6) && (body[iBody].iWaterLossModel == ATMESC_LBEXACT)) {
+    // if ((XO > 0.6) && (body[iBody].iWaterLossModel == ATMESC_LBEXACT)) {
+    if ((body[iBody].dOxygenEta > 1) && (body[iBody].iWaterLossModel == ATMESC_LBEXACT)) {
       // Schaefer et al. (2016) prescription, section 2.2
       // NOTE: Perhaps a better criterion is (body[iBody].dOxygenEta > 1),
       // which ensures oxygen never escapes faster than it is being produced?

@@ -234,11 +234,21 @@
 #define VMEANL          2301
 
 //MAGMOC
-#define VWATERMASSMOATM 2310
-#define VWATERMASSSOL   2311
-#define VSURFTEMP       2312
-#define VPOTTEMP        2313
-#define VSOLIDRADIUS    2314
+/* HERE
+ * define primary variables
+ * give them a number
+ */
+#define VWATERMASSMOATM    2302
+#define VWATERMASSSOL      2303
+#define VSURFTEMP          2304
+#define VPOTTEMP           2305
+#define VSOLIDRADIUS       2306
+#define VOXYGENMASSMOATM   2307
+#define VOXYGENMASSSOL     2308
+#define VHYDROGENMASSSPACE 2309
+#define VOXYGENMASSSPACE   2310
+#define VCO2MASSMOATM      2311
+#define VCO2MASSSOL        2312
 
 /* Now define the structs */
 
@@ -623,6 +633,8 @@ struct BODY {
   double dAdJumpC2CMB;     /**< adiabatic temp jump from ave core to CMB */
   double dElecCondCore;    /**< electrical conductivity of core */
 
+	double dDynamViscos;
+
   /* ATMESC Parameters */
   int bAtmEsc;           /**< Apply Module ATMESC? */
   double dSurfaceWaterMass;
@@ -981,19 +993,72 @@ struct BODY {
   double dMeanL;            /**< Body's mean longitude */
 
   //MAGMOC
+	/* HERE
+	 * declare all variables used
+	 */
   int bMagmOc;              /**< Use magmoc model */
-  double dFeO;              /**< FeO in the magma ocean */
-  double dWaterMassAtm;     /**< Water mass in the atmosphere */
-  double dWaterMassMOAtm;   /**< Water mass in magma ocean and atmosphere */
-  double dSurfTemp;         /**< Surface Temp of the planet */
-  double dManMeltDensity;   /**< Density of the molten mantle */
-  double dPotTemp;          /**< Potential Temp of the mantle */
-  double dWaterMassSol;     /**< Water mass in the solidified mantle */
-  double dSolidRadius;      /**< Solidification radius of the mantle */
+	int bManSolid;            /**< Mantle solidified */
+	int bAllFeOOxid;   			  /**< All FeO in manlte oxidized to Fe2O3 */
+	int bLowPressSol;         /**< Switch to low pressure treatment of solidus */
+	int bManStartSol;         /**< Mantle starts to solidify */
+	int bCalcFugacity;        /**< Need to calc oxygen fugacity */
+	int bPlanetDesiccated;    /**< Atmosphere desiccated */
+	int bManQuasiSol;         /**< Atmosphere desiccated & T_surf below 1000K */
+	int bMagmOcHaltSolid;	  	/**< Mantle solidifed or atm desiccated */
+	int bMagmOcHaltDesicc;  	/**< Atm desiccated or escape stopped*/
+	int bEscapeStop;          /**< Atmospheric escaped stopped */
+	int bCO2InAtmosphere;     /**< Is CO2 present in the atmopshere? */
+	int iRadioHeatModel;			/**< Which Radiogenic Heating model to use */
+	int iMagmOcAtmModel;			/**< Which Atmopsheric Flux model to use */
+	/* Primary variables */
+	double dPotTemp;          /**< Potential Temp of the mantle [K] */
+	double dSurfTemp;         /**< Surface Temp of the planet [K] */
+	double dSolidRadius;      /**< Solidification radius of the mantle [m] */
+  double dWaterMassMOAtm;   /**< Water mass in magma ocean and atmosphere [kg] */
+	double dWaterMassSol;     /**< Water mass in the solidified mantle [kg] */
+	double dOxygenMassMOAtm;  /**< Water mass in magma ocean and atmosphere [kg] */
+	double dOxygenMassSol;    /**< Water mass in the solidified mantle [kg] */
+	double dHydrogenMassSpace;/**< Mass of hydrogen that is lost to space */
+	double dOxygenMassSpace;	/**< Mass of oxygen that is lost to space */
+	double dCO2MassMOAtm; 		/**< Mass of CO2 in magma ocean and atmosphere [kg] */
+	double dCO2MassSol; 			/**< Mass of CO2 in solidified mantle [kg] */
+	/* Input variables */
+	double dCoreRadius;       /**< Core radius of the planet [m] */
+	double dWaterMassAtm;     /**< Water mass in the atmosphere [kg] */
+  double dManMeltDensity;   /**< Density of the molten mantle [km/m^3] */
+	double dMassFracFeOIni;   /**< Initial FeO mass fraction in the mantle */
+	/* Other variables Thermal model */
+	double dGravAccelSurf;    /**< Graviational acceleration at the surface [m/s^2] */
+	double dSolidRadiusLocal; /**< Local variable for solidification radius of the mantle [m] */
   double dPrefactorA;       /**< Prefactor for linear solidus */
   double dPrefactorB;       /**< Prefactor for linear solidus */
   double dMeltFraction;     /**< Melt fraction of the mantle */
-  double dDynamViscos;      /**< Dynamic viscosity of the mantle */
+	double dMeltFracSurf;     /**< Melt fraction at the surface */
+  double dKinemViscos;      /**< Kinematic viscosity of the mantle [m/s^2] */
+	double dFactorDerivative; /**< Factor to calculate the derivatives of Tpot and Rsol */
+	double dManHeatFlux;      /**< Mantle heat flux [W/m^2] */
+	double dRadioHeat;        /**< Radiogenic heating rate GET FROM RADHEAT [W/kg] */
+	double dTidalHeat;        /**< Tidal heating rate GET FROM EQTIDE [W/kg] */
+	double dNetFluxAtmo;      /**< Net atmospheric flux OLR-ASR [W/m^2] */
+	double dAlbedo;						/**< Albedo of the planet */
+	double dEffTempAtm;       /**< Effective temperature of the planet's atmosphere */
+	/* Other variables Volatile model */
+	double dPressWaterAtm;    /**< Water pressure in atmosphere [Pa] */
+	double dPartialPressWaterAtm; /**< Partial Water pressure in atmosphere [Pa] */
+	double dPressCO2Atm;			/**< CO2 pressure in atmosphere [Pa] */
+	double dPartialPressCO2Atm;   /**< Partial CO2 pressure in atmosphere [Pa] */
+	double dPressOxygenAtm;   /**< Oxygen pressure in atmosphere [Pa] */
+	double dMassMagmOcLiq; 		/**< liquid mass of magma ocean [kg] */
+	double dMassMagmOcCry; 		/**< crystal mass of magma ocean [kg] */
+	double dWaterFracMelt;    /**< Mass fraction of water in the magma ocean */
+	double dCO2FracMelt;      /**< Mass fraction of CO2 in the magma ocean */
+	double dFracFe2O3Man;     /**< Mass fraction of Fe2O3 in the mantle */
+	double dOxygenMassAtm;    /**< Oxygen mass in the atmosphere [kg] */
+	double dAveMolarMassMan;  /**< Average molar mass of the mantle */
+	/* Variables for the connection between magmoc and atmesc */
+	double dWaterMassEsc;     /**< Water mass escaped per time */
+	double dOxygenMassEsc;    /**< Oxygen mass escaped per time */
+	double dHZInnerEdge;      /**< Inner edge of habitable zone (runaway) */
 };
 
 /* SYSTEM contains properties of the system that pertain to
@@ -1159,6 +1224,9 @@ struct UPDATE {
   /* Next comes the identifiers for the module that modifies a variable */
 
   /* MAGMOC parameters */
+	/* HERE
+	 * again for primary variables
+	 */
   int iWaterMassMOAtm;
   int iNumWaterMassMOAtm;
   int iWaterMassSol;
@@ -1167,20 +1235,56 @@ struct UPDATE {
   int iNumSurfTemp;
   int iPotTemp;
   int iNumPotTemp;
-  int iSolidRadius;
+	int iSolidRadius;
   int iNumSolidRadius;
+	int iOxygenMassMOAtm;
+  int iNumOxygenMassMOAtm;
+  int iOxygenMassSol;
+  int iNumOxygenMassSol;
+	int iOxygenMassSpace;
+  int iNumOxygenMassSpace;
+	int iHydrogenMassSpace;
+	int iNumHydrogenMassSpace;
+	int iCO2MassMOAtm;
+	int iNumCO2MassMOAtm;
+	int iCO2MassSol;
+	int iNumCO2MassSol;
+
+	int iWaterMassMOAtmMagmOc;
+  int iWaterMassSolMagmOc;
+  int iSurfTempMagmOc;
+  int iPotTempMagmOc;
+	int iSolidRadiusMagmOc;
+	int iOxygenMassMOAtmMagmOc;
+  int iOxygenMassSolMagmOc;
+	int iOxygenMassSpaceMagmOc;
+	int iHydrogenMassSpaceMagmOc;
+	int iCO2MassMOAtmMagmOc;
+	int iCO2MassSolMagmOc;
 
   double dWaterMassMOAtm;
   double dWaterMassSol;
   double dSurfTemp;
   double dPotTemp;
-  double dSolidRadius;
+	double dSolidRadius;
+	double dOxygenMassMOAtm;
+  double dOxygenMassSol;
+	double dHyrdogenMassSpace;
+	double dOxygenMassSpace;
+	double dCO2MassMOAtm;
+	double dCO2MassSol;
 
   double *pdDWaterMassMOAtm;
   double *pdDWaterMassSol;
   double *pdDSurfTemp;
   double *pdDPotTemp;
-  double *pdDSolidRadius;
+	double *pdDSolidRadius;
+	double *pdDOxygenMassMOAtm;
+  double *pdDOxygenMassSol;
+	double *pdDHydrogenMassSpace;
+	double *pdDOxygenMassSpace;
+	double *pdDCO2MassMOAtm;
+	double *pdDCO2MassSol;
 
   /* SPINBODY parameters */
   int iVelX;
@@ -1324,6 +1428,7 @@ struct UPDATE {
   int iNumTCore;       /**< Number of Equations Affecting TCore */
   double dTDotCore;    /**< TCore time Derivative */
   double *pdTDotCore;
+	// double dDynamViscos;
 
   /* DISTORB */
   /* Number of eqns to modify a parameter */
@@ -1567,6 +1672,14 @@ struct HALT {
   /* BINARY */
   int bHaltHolmanUnstable; /** if CBP.dSemi < holman_crit_a, CBP dynamically unstable -> halt */
   int bHaltRocheLobe;      /** if secondary enters the Roche lobe of the primary, HALT! */
+
+	/* MAGMOC */
+	int bHaltMantleSolidified;    /**< Halt if mantle completely solidified */
+	int bHaltMantleMeltFracLow;   /**< Halt if melt fraction drops below 0.4 at surface */
+	int bHaltAtmDesiSurfCool;     /**< Halt if atmosphere desiccated & T_surf below 1000K */
+	int bHaltEnterHabZone;        /**< Halt if palenet enters Habitable Zone*/
+	int bHaltAllPlanetsSolid;			/**< Halt if all planets solidified (for multiplanet system) */
+	int bHaltAllPlanetsDesicc;	  /**< Halt if all planets desiccated (for multiplanet system) */
 };
 
 /* Units. These can be different for different bodies. If set
@@ -1875,11 +1988,20 @@ typedef void (*fnFinalizeUpdateAngMZModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateMeanLModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLostAngMomModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLostEngModule)(BODY*,UPDATE*,int*,int,int,int);
+/* HERE
+ * declare Finalize Update for primary parameters
+ */
 typedef void (*fnFinalizeUpdateWaterMassMOAtmModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateWaterMassSolModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSurfTempModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdatePotTempModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSolidRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateOxygenMassMOAtmModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateOxygenMassSolModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateHydrogenMassSpaceModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateOxygenMassSpaceModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCO2MassMOAtmModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCO2MassSolModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
@@ -2054,11 +2176,20 @@ struct MODULE {
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
 
   /*! Function pointers to finalize magmoc functions */
+	/* HERE
+	 * Finalize Update for primary variables
+	 */
   fnFinalizeUpdateWaterMassMOAtmModule **fnFinalizeUpdateWaterMassMOAtm;
   fnFinalizeUpdateWaterMassSolModule **fnFinalizeUpdateWaterMassSol;
   fnFinalizeUpdateSurfTempModule **fnFinalizeUpdateSurfTemp;
   fnFinalizeUpdatePotTempModule **fnFinalizeUpdatePotTemp;
-  fnFinalizeUpdateSolidRadiusModule **fnFinalizeUpdateSolidRadius;
+	fnFinalizeUpdateSolidRadiusModule **fnFinalizeUpdateSolidRadius;
+	fnFinalizeUpdateOxygenMassMOAtmModule **fnFinalizeUpdateOxygenMassMOAtm;
+  fnFinalizeUpdateOxygenMassSolModule **fnFinalizeUpdateOxygenMassSol;
+	fnFinalizeUpdateHydrogenMassSpaceModule **fnFinalizeUpdateHydrogenMassSpace;
+	fnFinalizeUpdateOxygenMassSpaceModule **fnFinalizeUpdateOxygenMassSpace;
+	fnFinalizeUpdateCO2MassMOAtmModule **fnFinalizeUpdateCO2MassMOAtm;
+  fnFinalizeUpdateCO2MassSolModule **fnFinalizeUpdateCO2MassSol;
 
   /*! These functions log module-specific data. */
   fnLogBodyModule **fnLogBody;
@@ -2114,3 +2245,4 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "flare.h"
 #include "galhabit.h"
 #include "spinbody.h"
+#include "magmoc.h"

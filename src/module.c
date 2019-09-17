@@ -169,11 +169,17 @@ void InitializeModule(BODY *body,CONTROL *control,MODULE *module) {
   module->fnFinalizeUpdateVelY          = malloc(iNumBodies*sizeof(fnFinalizeUpdateVelYModule));
   module->fnFinalizeUpdateVelZ          = malloc(iNumBodies*sizeof(fnFinalizeUpdateVelZModule));
 
-  module->fnFinalizeUpdateWaterMassMOAtm = malloc(iNumBodies*sizeof(fnFinalizeUpdateWaterMassMOAtmModule));
-  module->fnFinalizeUpdateWaterMassSol   = malloc(iNumBodies*sizeof(fnFinalizeUpdateWaterMassSolModule));
-  module->fnFinalizeUpdateSurfTemp       = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfTempModule));
-  module->fnFinalizeUpdatePotTemp        = malloc(iNumBodies*sizeof(fnFinalizeUpdatePotTempModule));
-  module->fnFinalizeUpdateSolidRadius    = malloc(iNumBodies*sizeof(fnFinalizeUpdateSolidRadiusModule));
+  module->fnFinalizeUpdateWaterMassMOAtm  = malloc(iNumBodies*sizeof(fnFinalizeUpdateWaterMassMOAtmModule));
+  module->fnFinalizeUpdateWaterMassSol    = malloc(iNumBodies*sizeof(fnFinalizeUpdateWaterMassSolModule));
+  module->fnFinalizeUpdateSurfTemp        = malloc(iNumBodies*sizeof(fnFinalizeUpdateSurfTempModule));
+  module->fnFinalizeUpdatePotTemp         = malloc(iNumBodies*sizeof(fnFinalizeUpdatePotTempModule));
+  module->fnFinalizeUpdateSolidRadius     = malloc(iNumBodies*sizeof(fnFinalizeUpdateSolidRadiusModule));
+  module->fnFinalizeUpdateOxygenMassMOAtm = malloc(iNumBodies*sizeof(fnFinalizeUpdateOxygenMassMOAtmModule));
+  module->fnFinalizeUpdateOxygenMassSol   = malloc(iNumBodies*sizeof(fnFinalizeUpdateOxygenMassSolModule));
+  module->fnFinalizeUpdateHydrogenMassSpace = malloc(iNumBodies*sizeof(fnFinalizeUpdateHydrogenMassSpaceModule));
+  module->fnFinalizeUpdateOxygenMassSpace   = malloc(iNumBodies*sizeof(fnFinalizeUpdateOxygenMassSpaceModule));
+  module->fnFinalizeUpdateCO2MassMOAtm    = malloc(iNumBodies*sizeof(fnFinalizeUpdateCO2MassMOAtmModule));
+  module->fnFinalizeUpdateCO2MassSol      = malloc(iNumBodies*sizeof(fnFinalizeUpdateCO2MassSolModule));
 
   // Function Pointer Matrices
   module->fnLogBody                 = malloc(iNumBodies*sizeof(fnLogBodyModule*));
@@ -227,6 +233,8 @@ void FinalizeModule(BODY *body,CONTROL *control,MODULE *module,int iBody) {
   if (body[iBody].bGalHabit)
     iNumModules++;
   if (body[iBody].bSpiNBody)
+    iNumModules++;
+  if (body[iBody].bMagmOc)
     iNumModules++;
   if (body[iBody].bEqtide && body[iBody].bStellar) {
     iNumModuleMulti++;
@@ -319,6 +327,12 @@ void FinalizeModule(BODY *body,CONTROL *control,MODULE *module,int iBody) {
   module->fnFinalizeUpdateSurfTemp[iBody]         = malloc(iNumModules*sizeof(fnFinalizeUpdateSurfTempModule));
   module->fnFinalizeUpdatePotTemp[iBody]          = malloc(iNumModules*sizeof(fnFinalizeUpdatePotTempModule));
   module->fnFinalizeUpdateSolidRadius[iBody]      = malloc(iNumModules*sizeof(fnFinalizeUpdateSolidRadiusModule));
+  module->fnFinalizeUpdateOxygenMassMOAtm[iBody]  = malloc(iNumModules*sizeof(fnFinalizeUpdateOxygenMassMOAtmModule));
+  module->fnFinalizeUpdateOxygenMassSol[iBody]    = malloc(iNumModules*sizeof(fnFinalizeUpdateOxygenMassSolModule));
+  module->fnFinalizeUpdateHydrogenMassSpace[iBody] = malloc(iNumModules*sizeof(fnFinalizeUpdateHydrogenMassSpaceModule));
+  module->fnFinalizeUpdateOxygenMassSpace[iBody]   = malloc(iNumModules*sizeof(fnFinalizeUpdateOxygenMassSpaceModule));
+  module->fnFinalizeUpdateCO2MassMOAtm[iBody]     = malloc(iNumModules*sizeof(fnFinalizeUpdateCO2MassMOAtmModule));
+  module->fnFinalizeUpdateCO2MassSol[iBody]       = malloc(iNumModules*sizeof(fnFinalizeUpdateCO2MassSolModule));
 
   for (iModule = 0; iModule < (iNumModules); iModule++) {
     /* Initialize all module functions pointers to point to their respective
@@ -396,6 +410,12 @@ void FinalizeModule(BODY *body,CONTROL *control,MODULE *module,int iBody) {
     module->fnFinalizeUpdateSurfTemp[iBody][iModule]         = &FinalizeUpdateNULL;
     module->fnFinalizeUpdatePotTemp[iBody][iModule]          = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateSolidRadius[iBody][iModule]      = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateOxygenMassMOAtm[iBody][iModule]  = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateOxygenMassSol[iBody][iModule]    = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateHydrogenMassSpace[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateOxygenMassSpace[iBody][iModule]   = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCO2MassMOAtm[iBody][iModule]     = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCO2MassSol[iBody][iModule]       = &FinalizeUpdateNULL;
   }
 
 }
@@ -480,7 +500,11 @@ void AddModules(BODY *body,CONTROL *control,MODULE *module) {
       module->iaSpiNBody[iBody] = iModule;
       module->iaModule[iBody][iModule++] = SPINBODY;
     }
-
+    if (body[iBody].bMagmOc) {
+      AddModuleMagmOc(module,iBody,iModule);
+      module->iaMagmOc[iBody] = iModule;
+      module->iaModule[iBody][iModule++] = MAGMOC;
+    }
     AddModulesMulti(body,control,module,iBody,&iModule);
   }
 }
@@ -655,6 +679,7 @@ void InitializeBodyModules(BODY **body,int iNumBodies) {
     (*body)[iBody].bStellar  = 0;
     (*body)[iBody].bThermint = 0;
     (*body)[iBody].bSpiNBody = 0;
+    (*body)[iBody].bMagmOc   = 0;
   }
 }
 
@@ -751,7 +776,7 @@ void VerifyModuleMultiEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,
       This should now be deprecated
       // Now set the "Man" functions as the WriteTidalQ uses them
       // This ensures that the write function works
-      body[iBody].dImk2Man = body[iBody].dImK2;
+      body[iBody].dImK2Man = body[iBody].dImK2;
       body[iBody].dK2Man = body[iBody].dK2;
 
     } else { // Thermint and Eqtide called
@@ -985,17 +1010,19 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
       // there is not an envelope!!
       if (!(body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass)) {
         body[iBody].bEnv = 0;
-      }
-      else {
+      } else {
         body[iBody].bEnv = 1;
         body[iBody].dImK2Env = body[iBody].dK2Env / body[iBody].dTidalQEnv;
       }
       // what about an ocean?
       if (!(body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
         body[iBody].bOcean = 0;
-      }
-      else {
-        body[iBody].bOcean = 1;
+      } else {
+        if (!body[iBody].bMagmOc) {
+          // This is probably a terrible fix. To merge MagmOc we need a better
+          // strategy for water reservoirs
+          body[iBody].bOcean = 1;
+        }
         body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
       }
 
@@ -1257,6 +1284,20 @@ void VerifyModuleMultiSpiNBodyDistOrb(BODY *body,UPDATE *update,CONTROL *control
   }
 }
 
+void VerifyModuleMultiMagmOcAtmEsc(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
+  if (body[iBody].bMagmOc) {
+    if (!body[iBody].bAtmEsc) {
+      if (control->Io.iVerbose > VERBINPUT) {
+        fprintf(stderr,"WARNING: Module MagmOc selected for %s, but AtmEsc not selected.\n",body[iBody].cName);
+      }
+      body[iBody].dWaterMassEsc  = 0;
+      body[iBody].dOxygenMassEsc = 0;
+    } else {
+      control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxMagmOcAtmEsc;
+    }
+  }
+}
+
 /** Verify that selected modules are compatable */
 
 void  VerifyModuleCompatability(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody) {
@@ -1340,6 +1381,15 @@ void  VerifyModuleCompatability(BODY *body,CONTROL *control,FILES *files,MODULE 
     }
   }
 
+  // Magmoc
+  if (body[iBody].bMagmOc) {
+    if (body[iBody].bThermint) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: Modules MagmOc and ThermInt cannot be applied to the same body.\n");
+      LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
+    }
+  }
+
 }
 
 void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,fnUpdateVariable ****fnUpdate) {
@@ -1399,6 +1449,8 @@ void VerifyModuleMulti(BODY *body,UPDATE *update,CONTROL *control,FILES *files,M
 
   VerifyModuleMultiBinaryStellar(body,update,control,files,module,options,iBody,
     &iNumMultiProps,&iNumMultiForce);
+
+  VerifyModuleMultiMagmOcAtmEsc(body,update,control,files,module,options,iBody,&iNumMultiProps,&iNumMultiForce);
 
   control->iNumMultiProps[iBody] = iNumMultiProps;
   control->iNumMultiForce[iBody] = iNumMultiForce;
@@ -1480,6 +1532,57 @@ void PropsAuxEqtideStellar(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int i
 void PropsAuxFlareStellar(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   SYSTEM system; // dummy for LXUVStellar
   //body[iBody].dLXUV = fdLXUVStellar(body,&system,update,iBody,iBody) + body[iBody].dLXUVFlare;
+}
+
+void PropsAuxMagmOcAtmEsc(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
+  if (body[iBody].bMagmOc && body[iBody].bAtmEsc) {
+
+    // Use Water and Oxygen mass from magmoc for atmesc
+    body[iBody].dSurfaceWaterMass = body[iBody].dWaterMassAtm;
+    body[iBody].dOxygenMass       = body[iBody].dOxygenMassAtm;
+
+    // Use atmospheric skin temperature
+    body[iBody].dThermTemp = body[iBody].dEffTempAtm * pow(0.5,0.25);
+
+    // Call PropsAux from Atmesc (or fnPropsAuxAtmEsc)
+    fnPropsAuxAtmEsc(body,evolve,io,update,iBody);
+
+    // Water and Oxygen mass lost through atmospheric escape
+    if ((body[iBody].bRunaway) && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
+      // This takes care of both energy-limited and diffusion limited escape!
+      body[iBody].dWaterMassEsc = -(9. / (1 + 8 * body[iBody].dOxygenEta)) * body[iBody].dMDotWater;
+    } else {
+      body[iBody].dWaterMassEsc = 0;
+    }
+
+    if ((body[iBody].bRunaway) && (!body[iBody].bInstantO2Sink) && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
+      if (body[iBody].iWaterLossModel == ATMESC_LB15) {
+        // Rodrigo and Barnes (2015)
+        if (body[iBody].dCrossoverMass >= 16 * ATOMMASS) {
+          double BDIFF = 4.8e19 * pow(body[iBody].dFlowTemp, 0.75);
+          body[iBody].dOxygenMassEsc = (320. * PI * BIGG * ATOMMASS * ATOMMASS * BDIFF * body[iBody].dMass) / (KBOLTZ * body[iBody].dFlowTemp);
+        }
+        else {
+          body[iBody].dOxygenMassEsc = (8 - 8 * body[iBody].dOxygenEta) / (1 + 8 * body[iBody].dOxygenEta) * body[iBody].dMDotWater;
+        }
+      } else {
+        // Exact
+        body[iBody].dOxygenMassEsc = (8 - 8 * body[iBody].dOxygenEta) / (1 + 8 * body[iBody].dOxygenEta) * body[iBody].dMDotWater;
+      }
+    } else {
+      body[iBody].dOxygenMassEsc = 0;
+    }
+
+    if (body[iBody].bPlanetDesiccated) {
+      body[iBody].dWaterMassEsc  = 0;
+      body[iBody].dOxygenMassEsc = 0;
+    }
+
+  /* Get inner edge of the habitable zone (Runaway greenhouse) */
+  double dFlux = fdHZRG14(body,iBody);
+  body[iBody].dHZInnerEdge = pow(4 * PI * dFlux /  (body[0].dLuminosity * pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5)), -0.5);
+
+  }
 }
 
 /*

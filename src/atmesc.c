@@ -1056,12 +1056,22 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     body[iBody].dSurfaceWaterMass = 0.;
   }
 
+  // If time > jeans time, transition to ballistic regime and halt the escape
+  if ((body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass) && (body[iBody].dAge > body[iBody].dJeansTime) && (body[iBody].iHEscapeRegime != ATMESC_BALLISTIC)) {
+    // Reassign regime and derivatives to prevent further evolution
+    body[iBody].iHEscapeRegime = ATMESC_BALLISTIC;
+    fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
+    fnUpdate[iBody][update[iBody].iMass][0] = &fndUpdateFunctionTiny;
+
+  }
+
   // If envelope is lost, set mass to 0 and prevent further evolution
   if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) && (body[iBody].dEnvelopeMass > 0.)) {
     // Let's remove its envelope and prevent further evolution.
     body[iBody].dEnvelopeMass = 0.;
     body[iBody].dEnvMassDt = 0.0;
     fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
+    fnUpdate[iBody][update[iBody].iMass][0] = &fndUpdateFunctionTiny;
 
     // If using Lopez+2012 radius model, set radius to Sotin+2007 radius
     if(body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
@@ -2708,11 +2718,6 @@ double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   double dMassDt = dTINY;
 
-  // If envelope is lost or in ballistic escape regime, prevent further evolution
-  if ((body[iaBody[0]].dEnvelopeMass <= 0) || (body[iaBody[0]].dAge > body[iaBody[0]].dJeansTime)) {
-    return dTINY;
-  }
-
   // Calculate mass loss depending on model
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17) {
 
@@ -3067,9 +3072,6 @@ double fdBondiRadius(BODY *body, int iBody) {
  @return whether or not the flux is radiation/recombination-limited
 */
 int fbRRCriticalFlux(BODY *body, int iBody) {
-
-  // XXX testing hack -> always return 0 to force EL escape for now
-  return 0;
 
   // Compute critical flux
   double dCSq = 1.955e-11; // Proportionality constant

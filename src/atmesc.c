@@ -53,7 +53,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dCrossoverMass = src[iBody].dCrossoverMass;
   dest[iBody].bRunaway = src[iBody].bRunaway;
   dest[iBody].iWaterEscapeRegime = src[iBody].iWaterEscapeRegime;
-  dest[iBody].iHEscapeRegime = src[iBody].iHEscapeRegime;
+  dest[iBody].iHEscapeRegime = src[iBody].iHEscapeRegime; // XXX turn into output variable
   dest[iBody].dFHDiffLim = src[iBody].dFHDiffLim;
   dest[iBody].iPlanetRadiusModel = src[iBody].iPlanetRadiusModel;
   dest[iBody].bInstantO2Sink = src[iBody].bInstantO2Sink;
@@ -1062,7 +1062,6 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     body[iBody].iHEscapeRegime = ATMESC_BALLISTIC;
     fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
     fnUpdate[iBody][update[iBody].iMass][0] = &fndUpdateFunctionTiny;
-
   }
 
   // If envelope is lost, set mass to 0 and prevent further evolution
@@ -1456,6 +1455,7 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   // If envelope is present, pick correct derivative and ensure settings
   // conflicts don't exist, i.e. can't set energy and Bondi-limited escape!
+  // XXX: array to track line numbers for error handling?
   if (body[iBody].dEnvelopeMass > 0) {
 
     //Ensure only 1 escape regime is set
@@ -1477,11 +1477,11 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     // If more than one is set, let the user know what's wrong and quit.
     if (iRegimeCounter > 1) {
       fprintf(stderr, "ERROR: Multiple H envelope atmospheric regimes are enabled for body %s!\n",body[iBody].cName);
-      fprintf(stderr, "AtmEsc defaults to bUseEnergyLimited = 1.\n");
-      fprintf(stderr, "bUseEnergyLimited = %d\n",body[iBody].bUseEnergyLimited);
-      fprintf(stderr, "bUseRRLimited = %d\n",body[iBody].bUseRRLimited);
-      fprintf(stderr, "bUseBondiLimited = %d\n",body[iBody].bUseBondiLimited);
-      fprintf(stderr, "bAtmEscAuto = %d\n",body[iBody].bAtmEscAuto);
+      fprintf(stderr, "\tAtmEsc defaults to bUseEnergyLimited = 1.\n");
+      fprintf(stderr, "\tbUseEnergyLimited = %d\n",body[iBody].bUseEnergyLimited);
+      fprintf(stderr, "\tbUseRRLimited = %d\n",body[iBody].bUseRRLimited);
+      fprintf(stderr, "\tbUseBondiLimited = %d\n",body[iBody].bUseBondiLimited);
+      fprintf(stderr, "\tbAtmEscAuto = %d\n",body[iBody].bAtmEscAuto);
       exit(EXIT_INPUT);
     }
 
@@ -2068,6 +2068,9 @@ void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 
   *dTmp = body[iBody].dEnvMassDt;
   *dTmp *= fdUnitsTime(units->iTime)/fdUnitsMass(units->iMass);
+
+  // XXX units
+
 }
 
 /**
@@ -3090,7 +3093,7 @@ int fbRRCriticalFlux(BODY *body, int iBody) {
 
 /**
  Calculate the critical mass flux for a Bondi-limited flow. If the H envelope
- mass loss flux exceeds this threshold, the flux is considered to be Bondi-limted
+ mass loss flux exceeds this threshold, the flux is considered to be Bondi-limited
 
  @param body BODY struct
  @param iBody int body indentifier
@@ -3099,6 +3102,16 @@ int fbRRCriticalFlux(BODY *body, int iBody) {
 */
 int fbBondiCriticalDmDt(BODY *body, int iBody) {
 
-  // XXX testing hack -> always return 0 to force EL escape for now
-  return 0;
+  // Compute Bondi-limited mass loss rate where body 0 is always the host star
+  double dMDtBondi = -1.9e15 * (body[iBody].dMass / (10.0 * MEARTH)) / sqrt(body[0].dTemperature / 5800.0);
+  dMDtBondi = dMDtBondi * pow(body[iBody].dSemi / (0.1 * AUM), 0.25) / pow(body[0].dRadius / RSUN, 0.25);
+
+  // If the current envelope mass loss rate exceeds the Bondi limit, switch to
+  // Bondi-limited flux (note negative because mass loss!)
+  if(body[iBody].dEnvMassDt < dMDtBondi) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
 }

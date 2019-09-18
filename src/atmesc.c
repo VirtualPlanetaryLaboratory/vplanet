@@ -395,9 +395,9 @@ void ReadXFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0) {
+    if (dTmp < 0 || dTmp > 1) {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+	      fprintf(stderr,"ERROR: %s must lie in the range [0,1].\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dXFrac = dTmp;
@@ -425,9 +425,9 @@ void ReadAtmXAbsEffH(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0) {
+    if (dTmp < 0 || dTmp > 1) {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+	      fprintf(stderr,"ERROR: %s must be in the range [0,1].\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dAtmXAbsEffH = dTmp;
@@ -455,9 +455,9 @@ void ReadAtmXAbsEffH2O(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0) {
+    if (dTmp < 0 || dTmp > 1) {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+	      fprintf(stderr,"ERROR: %s must be in the rane [0,1].\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dAtmXAbsEffH2O = dTmp;
@@ -607,7 +607,12 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_XFRAC].iType = 2;
   options[OPT_XFRAC].iMultiFile = 1;
   fnRead[OPT_XFRAC] = &ReadXFrac;
-  sprintf(options[OPT_XFRAC].cLongDescr,"Ratio of the planet's XUV radius to its total radius.\nThe XUV radius is defined to be the distance between\nthe center of the planet and the absorbing layer,\ndefined to be where the optical depth is 1.\nShould be in the range (0,1].\n");
+  sprintf(options[OPT_XFRAC].cLongDescr,
+    "Ratio of the planet's XUV radius to its total radius. The XUV radius is\n"
+    "defined to be the distance between the center of the planet and the\n"
+    "absorbing layer, defined to be where the optical depth is 1. Should be\n"
+    "in the range (0,1]."
+  );
 
   sprintf(options[OPT_ATMXABSEFFH].cName,"dAtmXAbsEffH");
   sprintf(options[OPT_ATMXABSEFFH].cDescr,"Hydrogen X-ray/UV absorption efficiency (epsilon)");
@@ -616,7 +621,10 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ATMXABSEFFH].iType = 2;
   options[OPT_ATMXABSEFFH].iMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH] = &ReadAtmXAbsEffH;
-  sprintf(options[OPT_XFRAC].cLongDescr,"XUV absoprtion efficiency parameter, epsilon_{XUV}, in Eq. (A1)\nin Barnes et al. (2019).\nMust lie in the range [0,1].\n");
+  sprintf(options[OPT_XFRAC].cLongDescr,
+    "XUV absoprtion efficiency parameter, epsilon_{XUV}, in Eq. (A1) in\n"
+    "Barnes et al. (2019). Must lie in the range [0,1]."
+  );
 
   sprintf(options[OPT_ATMXABSEFFH2O].cName,"dAtmXAbsEffH2O");
   sprintf(options[OPT_ATMXABSEFFH2O].cDescr,"Water X-ray/UV absorption efficiency (epsilon)");
@@ -625,15 +633,23 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ATMXABSEFFH2O].iType = 2;
   options[OPT_ATMXABSEFFH2O].iMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2O] = &ReadAtmXAbsEffH2O;
-  sprintf(options[OPT_XFRAC].cLongDescr,"XUV absoprtion efficiency parameter for water vapor as defined in\nLuger & Barnes (2015, AsBio, 15, 57). Must lie in range [0,1].\n");
+  sprintf(options[OPT_XFRAC].cLongDescr,
+    "XUV absoprtion efficiency parameter for water vapor as defined in\n"
+    "Luger & Barnes (2015, AsBio, 15, 57). Must lie in range [0,1]."
+  );
 
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cName,"sAtmXAbsEffH2OModel");
-  sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDescr,"Water X-ray/XUV absorption efficiency evolution model. Options are BOLMONT16 or NONE.");
+  sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDescr,"Water X-ray/XUV absorption efficiency evolution model");
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDefault,"NONE");
+  sprintf(options[OPT_ATMXABSEFFH2OMODEL].cValues,"BOLMONT16 NONE");
   options[OPT_ATMXABSEFFH2OMODEL].iType = 3;
   options[OPT_ATMXABSEFFH2OMODEL].iMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2OMODEL] = &ReadAtmXAbsEffH2OModel;
-  sprintf(options[OPT_XFRAC].cLongDescr,"If BOLMONT16 is selected, then the value of %s will follow\nthe model of Bolmont et al. (2017, MNRAS, 464, 3728).\nNONE will not change the input value for %s.\n",options[OPT_ATMXABSEFFH2O].cName,options[OPT_ATMXABSEFFH2O].cName);
+  sprintf(options[OPT_XFRAC].cLongDescr,
+    "If BOLMONT16 is selected, then the value of %s will follow the model of\n"
+    "Bolmont et al. (2017, MNRAS, 464, 3728). NONE will not change the input\n"
+    "value for %s.",options[OPT_ATMXABSEFFH2O].cName,options[OPT_ATMXABSEFFH2O].cName
+  );
 
   sprintf(options[OPT_OXYGENMASS].cName,"dOxygenMass");
   sprintf(options[OPT_OXYGENMASS].cDescr,"The initial oxygen mass in the atmosphere.");
@@ -654,20 +670,30 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   // No LongDescr needed
 
   sprintf(options[OPT_WATERLOSSMODEL].cName,"sWaterLossModel");
-  sprintf(options[OPT_WATERLOSSMODEL].cDescr,"Water loss and oxygen buildup model. Options are LB15, LBEXACT, or TIAN.");
+  sprintf(options[OPT_WATERLOSSMODEL].cDescr,"Water loss and oxygen buildup model");
   sprintf(options[OPT_WATERLOSSMODEL].cDefault,"LBEXACT");
+  sprintf(options[OPT_WATERLOSSMODEL].cValues,"LB15 LBEXACT TIAN");
   options[OPT_WATERLOSSMODEL].iType = 3;
   options[OPT_WATERLOSSMODEL].iMultiFile = 1;
   fnRead[OPT_WATERLOSSMODEL] = &ReadWaterLossModel;
-  sprintf(options[OPT_XFRAC].cLongDescr,"The water loss rate will be determined by the selected model.\n XXX What are these options?\n");
+  sprintf(options[OPT_XFRAC].cLongDescr,
+    "The water loss rate will be determined by the selected model.\n"
+    "XXX What are these options???"
+  );
 
   sprintf(options[OPT_PLANETRADIUSMODEL].cName,"sPlanetRadiusModel");
-  sprintf(options[OPT_PLANETRADIUSMODEL].cDescr,"Gaseous Planet Radius Model. Options are LOPEZ12, PROXCENB, LEHMER17 or NONE.");
+  sprintf(options[OPT_PLANETRADIUSMODEL].cDescr,"Gaseous Planet Radius Model");
   sprintf(options[OPT_PLANETRADIUSMODEL].cDefault,"NONE");
+  sprintf(options[OPT_PLANETRADIUSMODEL].cValues,"LOPEZ12 PROXCENB LEHMER17 NONE.");
   options[OPT_PLANETRADIUSMODEL].iType = 3;
   options[OPT_PLANETRADIUSMODEL].iMultiFile = 1;
   fnRead[OPT_PLANETRADIUSMODEL] = &ReadPlanetRadiusModel;
-  sprintf(options[OPT_XFRAC].cLongDescr,"The radius of the planet will follow the selected model.\nLOPEZ12 is Lopez et al. (2012, ApJ, 761, 59). PROXCENB\nis the model for Proxima b in Barnes et al. (2016, arXiv:1608.06919).\nLEHMER17 is the Lehmer & Catling (2017, ApJ, 845, 130).\nNONE will cause the radius to remain constant.\n");
+  sprintf(options[OPT_XFRAC].cLongDescr,
+    "If LOPEZ12 is selected, the planet radius will follow the model in\n"
+    "Lopez et al. (2012, ApJ, 761, 59). PROXCENB will use the model for\n"
+    "Proxima b in Barnes et al. (2016, arXiv:1608.06919). LEHMER17 is the\n"
+    "Lehmer & Catling (2017, ApJ, 845, 130). NONE will cause the radius to\n"
+    "remain constant.\n");
 
   sprintf(options[OPT_INSTANTO2SINK].cName,"bInstantO2Sink");
   sprintf(options[OPT_INSTANTO2SINK].cDescr,"Is oxygen absorbed instantaneously at the surface?");
@@ -675,7 +701,10 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_INSTANTO2SINK].iType = 0;
   options[OPT_INSTANTO2SINK].iMultiFile = 1;
   fnRead[OPT_INSTANTO2SINK] = &ReadInstantO2Sink;
-  sprintf(options[OPT_XFRAC].cLongDescr,"If set to 1, then all oxygen released by photolysis is immediately\nremoved from teh atmosphere. This mimics rapid surface oxidation.\n");
+  sprintf(options[OPT_XFRAC].cLongDescr,
+    "If set to 1, then all oxygen released by photolysis is immediately\n"
+    "removed from teh atmosphere. This mimics rapid surface oxidation."
+  );
 
   sprintf(options[OPT_HALTDESICCATED].cName,"bHaltSurfaceDesiccated");
   sprintf(options[OPT_HALTDESICCATED].cDescr,"Halt at Desiccation?");
@@ -1992,7 +2021,7 @@ Set up stuff to be logged for atmesc.
 void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_SURFACEWATERMASS].cName,"SurfWaterMass");
-  sprintf(output[OUT_SURFACEWATERMASS].cDescr,"Surface Water Mass");
+  sprintf(output[OUT_SURFACEWATERMASS].cDescr,"Surface water mass");
   sprintf(output[OUT_SURFACEWATERMASS].cNeg,"TO");
   output[OUT_SURFACEWATERMASS].bNeg = 1;
   output[OUT_SURFACEWATERMASS].dNeg = 1./TOMASS;
@@ -2001,8 +2030,8 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_SURFACEWATERMASS] = &WriteSurfaceWaterMass;
 
   sprintf(output[OUT_PLANETRADIUS].cName,"PlanetRadius");
-  sprintf(output[OUT_PLANETRADIUS].cDescr,"Planet Radius");
-  sprintf(output[OUT_PLANETRADIUS].cNeg,"Earth Radii");
+  sprintf(output[OUT_PLANETRADIUS].cDescr,"Planet radius");
+  sprintf(output[OUT_PLANETRADIUS].cNeg,"Earth radii");
   output[OUT_PLANETRADIUS].bNeg = 1;
   output[OUT_PLANETRADIUS].dNeg = 1./REARTH;
   output[OUT_PLANETRADIUS].iNum = 1;
@@ -2010,7 +2039,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_PLANETRADIUS] = &WritePlanetRadius;
 
   sprintf(output[OUT_OXYGENMASS].cName,"OxygenMass");
-  sprintf(output[OUT_OXYGENMASS].cDescr,"Oxygen Mass");
+  sprintf(output[OUT_OXYGENMASS].cDescr,"Oxygen mass in the atmosphere");
   sprintf(output[OUT_OXYGENMASS].cNeg,"bars");
   output[OUT_OXYGENMASS].bNeg = 1;
   output[OUT_OXYGENMASS].dNeg = 1;
@@ -2019,7 +2048,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_OXYGENMASS] = &WriteOxygenMass;
 
   sprintf(output[OUT_OXYGENMANTLEMASS].cName,"OxygenMantleMass");
-  sprintf(output[OUT_OXYGENMANTLEMASS].cDescr,"Mass of Oxygen in Mantle");
+  sprintf(output[OUT_OXYGENMANTLEMASS].cDescr,"Mass of oxygen in mantle");
   sprintf(output[OUT_OXYGENMANTLEMASS].cNeg,"bars");
   output[OUT_OXYGENMANTLEMASS].bNeg = 1;
   output[OUT_OXYGENMANTLEMASS].dNeg = 1;
@@ -2028,7 +2057,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_OXYGENMANTLEMASS] = &WriteOxygenMantleMass;
 
   sprintf(output[OUT_RGLIMIT].cName,"RGLimit");
-  sprintf(output[OUT_RGLIMIT].cDescr,"Runaway Greenhouse Semi-Major Axis");
+  sprintf(output[OUT_RGLIMIT].cDescr,"Runaway greenhouse semi-major axis");
   sprintf(output[OUT_RGLIMIT].cNeg,"AU");
   output[OUT_RGLIMIT].bNeg = 1;
   output[OUT_RGLIMIT].dNeg = 1. / AUM;
@@ -2037,28 +2066,28 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_RGLIMIT] = &WriteRGLimit;
 
   sprintf(output[OUT_XO].cName,"XO");
-  sprintf(output[OUT_XO].cDescr,"Atomic Oxygen Mixing Ratio in Upper Atmosphere");
+  sprintf(output[OUT_XO].cDescr,"Atomic oxygen mixing ratio in upper atmosphere");
   output[OUT_XO].bNeg = 0;
   output[OUT_XO].iNum = 1;
   output[OUT_XO].iModuleBit = ATMESC;
   fnWrite[OUT_XO] = &WriteOxygenMixingRatio;
 
   sprintf(output[OUT_ETAO].cName,"EtaO");
-  sprintf(output[OUT_ETAO].cDescr,"Oxygen Eta Parameter (Luger and Barnes 2015)");
+  sprintf(output[OUT_ETAO].cDescr,"Oxygen eta parameter (Luger and Barnes 2015)");
   output[OUT_ETAO].bNeg = 0;
   output[OUT_ETAO].iNum = 1;
   output[OUT_ETAO].iModuleBit = ATMESC;
   fnWrite[OUT_ETAO] = &WriteOxygenEta;
 
   sprintf(output[OUT_EPSH2O].cName,"AtmXAbsEffH2O");
-  sprintf(output[OUT_EPSH2O].cDescr,"XUV Atmospheric Escape Efficiency for H2O");
+  sprintf(output[OUT_EPSH2O].cDescr,"XUV atmospheric escape efficiency for H2O");
   output[OUT_EPSH2O].bNeg = 0;
   output[OUT_EPSH2O].iNum = 1;
   output[OUT_EPSH2O].iModuleBit = ATMESC;
   fnWrite[OUT_EPSH2O] = &WriteAtmXAbsEffH2O;
 
   sprintf(output[OUT_FXUV].cName,"XUVFlux");
-  sprintf(output[OUT_FXUV].cDescr,"XUV Flux Incident on Planet");
+  sprintf(output[OUT_FXUV].cDescr,"Incident XUV flux");
   sprintf(output[OUT_FXUV].cNeg,"erg/cm^2/s");
   output[OUT_FXUV].dNeg = 1.e3;
   output[OUT_FXUV].bNeg = 1;
@@ -2067,7 +2096,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FXUV] = &WriteFXUV;
 
   sprintf(output[OUT_ENVELOPEMASS].cName,"EnvelopeMass");
-  sprintf(output[OUT_ENVELOPEMASS].cDescr,"Envelope Mass");
+  sprintf(output[OUT_ENVELOPEMASS].cDescr,"Envelope mass");
   sprintf(output[OUT_ENVELOPEMASS].cNeg,"Earth");
   output[OUT_ENVELOPEMASS].bNeg = 1;
   output[OUT_ENVELOPEMASS].dNeg = 1./MEARTH;
@@ -2076,7 +2105,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_ENVELOPEMASS] = &WriteEnvelopeMass;
 
   sprintf(output[OUT_PLANETRADXUV].cName,"RadXUV");
-  sprintf(output[OUT_PLANETRADXUV].cDescr,"XUV Radius separating hydro. dyn. escape and equilibrium");
+  sprintf(output[OUT_PLANETRADXUV].cDescr,"XUV radius separating hydro. dyn. escape and equilibrium");
   sprintf(output[OUT_PLANETRADXUV].cNeg,"Earth Radii");
   output[OUT_PLANETRADXUV].bNeg = 1;
   output[OUT_PLANETRADXUV].dNeg = 1./REARTH;
@@ -2085,7 +2114,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_PLANETRADXUV] = &WritePlanetRadXUV;
 
   sprintf(output[OUT_DENVMASSDT].cName,"DEnvMassDt");
-  sprintf(output[OUT_DENVMASSDT].cDescr,"Envelope Mass Loss Rate");
+  sprintf(output[OUT_DENVMASSDT].cDescr,"Envelope mass loss late");
   sprintf(output[OUT_DENVMASSDT].cNeg,"kg/s");
   output[OUT_DENVMASSDT].bNeg = 1;
   output[OUT_DENVMASSDT].iNum = 1;
@@ -2093,7 +2122,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DENVMASSDT] = &WriteDEnvMassDt;
 
   sprintf(output[OUT_THERMTEMP].cName,"ThermTemp");
-  sprintf(output[OUT_THERMTEMP].cDescr,"Isothermal Atmospheric Temperature");
+  sprintf(output[OUT_THERMTEMP].cDescr,"Isothermal atmospheric temperature");
   sprintf(output[OUT_THERMTEMP].cNeg,"K");
   output[OUT_THERMTEMP].bNeg = 1;
   output[OUT_THERMTEMP].dNeg = 1; // default units are K.
@@ -2102,7 +2131,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_THERMTEMP] = &WriteThermTemp;
 
   sprintf(output[OUT_PRESSURF].cName,"PresSurf");
-  sprintf(output[OUT_PRESSURF].cDescr,"Surface Pressure due to Atmosphere");
+  sprintf(output[OUT_PRESSURF].cDescr,"Surface pressure due to atmosphere");
   sprintf(output[OUT_PRESSURF].cNeg,"Pa");
   output[OUT_PRESSURF].bNeg = 1;
   output[OUT_PRESSURF].dNeg = 1;
@@ -2111,7 +2140,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_PRESSURF] = &WritePresSurf;
 
   sprintf(output[OUT_PRESXUV].cName,"PresXUV");
-  sprintf(output[OUT_PRESXUV].cDescr,"Pressure at base of Thermosphere");
+  sprintf(output[OUT_PRESXUV].cDescr,"Pressure at base of thermosphere");
   sprintf(output[OUT_PRESXUV].cNeg,"Pa");
   output[OUT_PRESXUV].bNeg = 1;
   output[OUT_PRESXUV].dNeg = 1;
@@ -2120,7 +2149,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_PRESXUV] = &WritePresXUV;
 
   sprintf(output[OUT_SCALEHEIGHT].cName,"ScaleHeight");
-  sprintf(output[OUT_SCALEHEIGHT].cDescr,"Scaling factor in fdLehmerRadius");
+  sprintf(output[OUT_SCALEHEIGHT].cDescr,"Scale height in Lehmer & Catling (2016) model");
   sprintf(output[OUT_SCALEHEIGHT].cNeg,"J s^2 / kg m");
   output[OUT_SCALEHEIGHT].bNeg = 1;
   output[OUT_SCALEHEIGHT].dNeg = 1;
@@ -2129,7 +2158,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_SCALEHEIGHT] = &WriteScaleHeight;
 
   sprintf(output[OUT_ATMGASCONST].cName,"AtmGasConst");
-  sprintf(output[OUT_ATMGASCONST].cDescr,"Atmospheric Gas Constant");
+  sprintf(output[OUT_ATMGASCONST].cDescr,"Atmospheric gas constant");
   sprintf(output[OUT_ATMGASCONST].cNeg,"J / K kg");
   output[OUT_ATMGASCONST].bNeg = 1;
   output[OUT_ATMGASCONST].dNeg = 1;
@@ -2146,8 +2175,9 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_RADSOLID].iModuleBit = ATMESC;
   fnWrite[OUT_RADSOLID] = &WriteRadSolid;
 
+  // What the difference between this and XUVFlux?
   sprintf(output[OUT_FXUV].cName,"FXUV");
-  sprintf(output[OUT_FXUV].cDescr,"XUV Flux");
+  sprintf(output[OUT_FXUV].cDescr,"XUV flux");
   sprintf(output[OUT_FXUV].cNeg,"W/m^2");
   output[OUT_FXUV].bNeg = 1;
   output[OUT_FXUV].dNeg = 1;

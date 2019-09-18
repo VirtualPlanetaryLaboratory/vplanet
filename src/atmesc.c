@@ -2401,15 +2401,6 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_EPSH2O].iModuleBit = ATMESC;
   fnWrite[OUT_EPSH2O] = &WriteAtmXAbsEffH2O;
 
-  sprintf(output[OUT_FXUV].cName,"XUVFlux");
-  sprintf(output[OUT_FXUV].cDescr,"XUV Flux Incident on Planet");
-  sprintf(output[OUT_FXUV].cNeg,"erg/cm^2/s");
-  output[OUT_FXUV].dNeg = 1.e3;
-  output[OUT_FXUV].bNeg = 1;
-  output[OUT_FXUV].iNum = 1;
-  output[OUT_FXUV].iModuleBit = ATMESC;
-  fnWrite[OUT_FXUV] = &WriteFXUV;
-
   sprintf(output[OUT_ENVELOPEMASS].cName,"EnvelopeMass");
   sprintf(output[OUT_ENVELOPEMASS].cDescr,"Envelope Mass");
   sprintf(output[OUT_ENVELOPEMASS].cNeg,"Earth");

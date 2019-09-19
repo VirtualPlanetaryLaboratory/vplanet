@@ -21,7 +21,7 @@
 #define ATMESC_PROXCENB         7           /**< Flag: Proxima Centauri b gaseous planet radius model */
 #define ATMESC_LEHMER17         8           /**< Flag: Lehmer & Catling (2017) planet radius model */
 #define ATMESC_BOL16            9           /**< Flag: Bolmont (2016) XUV absorption efficiency model */
-#define QOH                     16.                           /**< Atomic mass ratio oxygen/hydrogen */
+#define QOH                     16.         /**< Atomic mass ratio oxygen/hydrogen */
 
 /* Options Info */
 #define OPTSTARTATMESC          1200  /**< Start of AtmEsc options */

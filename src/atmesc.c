@@ -1067,6 +1067,7 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
   // If envelope is lost, set mass to 0 and prevent further evolution
   if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) && (body[iBody].dEnvelopeMass > 0.)) {
     // Let's remove its envelope and prevent further evolution.
+    body[iBody].iHEscapeRegime = ATMESC_NONE;
     body[iBody].dEnvelopeMass = 0.;
     body[iBody].dEnvMassDt = 0.0;
     fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
@@ -1086,7 +1087,7 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
 
   // Using variable evolution: determine proper escape regime and set
   // H envelope mass loss derivatives accordingly (if H envelope exists)
-  if(body[iBody].bAtmEscAuto && body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass) {
+  if(body[iBody].bAtmEscAuto && body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass && body[iBody].iHEscapeRegime != ATMESC_NONE) {
     // If currently energy-limited, see if we should switch to another regime
     if(body[iBody].iHEscapeRegime == ATMESC_ELIM) {
       // Is the flux RR-limited?
@@ -1127,7 +1128,7 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     else if(body[iBody].iHEscapeRegime == ATMESC_BONDILIM) {
       // No longer Bondi-limited, see if EL or RR-limited
       if(!fbBondiCriticalDmDt(body, iBody)) {
-        // RR-limited!
+        // RR-limited?
         if(fbRRCriticalFlux(body,iBody)) {
           // Switch regime, derivatives
           body[iBody].iHEscapeRegime = ATMESC_RRLIM;
@@ -1191,7 +1192,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iB
         if (!body[iBody].bRocheMessage && io->iVerbose >= VERBINPUT && !body[iBody].bUseBondiLimited) {
           fprintf(stderr,"WARNING: Roche lobe radius is larger than XUV radius for %s, evolution may not be accurate.\n",
               body[iBody].cName);
-          fprintf(stderr,"Consider setting bUseBondiLimited = 1 to limit envelope mass loss.\n");
+          fprintf(stderr,"Consider setting bUseBondiLimited = 1 or bAtmEscAuto = 1 to limit envelope mass loss.\n");
           body[iBody].bRocheMessage = 1;
         }
       }
@@ -2818,7 +2819,8 @@ The rate of change of the envelope mass given raditation/recombination-limited e
 double fdDEnvelopeMassDtRRLimited(BODY *body,SYSTEM *system,int *iaBody) {
 
   // Compute radiation/recombination-limited mass loss rate using
-  // equation 13 from Luger+2015
+  // equation 13 from Luger+2015 (note: factor of 10^3 converts between cgs and
+  // vplanet internal mks units for scaling relation derivative calculated here)
   double dMassDt = -7.11e4 * sqrt(body[iaBody[0]].dFXUV * 1000.0) * pow(body[iaBody[0]].dRadius / REARTH, 1.5);
 
   return dMassDt;
@@ -3160,8 +3162,7 @@ double fdRRCriticalFlux(BODY *body, int iBody) {
 }
 
 /**
- Calculate the critical mass flux for a Bondi-limited flow. If the H envelope
- mass loss flux exceeds this threshold, the flux is considered to be Bondi-limited
+ Estimate if mass loss is Bondi-limited, i.e. is planet in Roche lobe overflow
 
  @param body BODY struct
  @param iBody int body indentifier
@@ -3170,16 +3171,13 @@ double fdRRCriticalFlux(BODY *body, int iBody) {
 */
 int fbBondiCriticalDmDt(BODY *body, int iBody) {
 
-  // Compute Bondi-limited mass loss rate where body 0 is always the host star
-  double dMDtBondi = -1.9e15 * (body[iBody].dMass / (10.0 * MEARTH)) / sqrt(body[0].dTemperature / 5800.0);
-  dMDtBondi = dMDtBondi * pow(body[iBody].dSemi / (0.1 * AUM), 0.25) / pow(body[0].dRadius / RSUN, 0.25);
-
-  // If the current envelope mass loss rate exceeds the Bondi limit, switch to
-  // Bondi-limited flux (note negative because mass loss!)
-  if(body[iBody].dEnvMassDt < dMDtBondi) {
+  // If the planetary radius exceeds the roche radius, assume Bondi-limited mass
+  // loss at the Bondi radius
+  if(body[iBody].dRocheRadius < body[iBody].dRadius) {
     return 1;
   }
   else {
     return 0;
   }
+
 }

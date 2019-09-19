@@ -53,7 +53,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dCrossoverMass = src[iBody].dCrossoverMass;
   dest[iBody].bRunaway = src[iBody].bRunaway;
   dest[iBody].iWaterEscapeRegime = src[iBody].iWaterEscapeRegime;
-  dest[iBody].iHEscapeRegime = src[iBody].iHEscapeRegime; // XXX turn into output variable
+  dest[iBody].iHEscapeRegime = src[iBody].iHEscapeRegime;
   dest[iBody].dFHDiffLim = src[iBody].dFHDiffLim;
   dest[iBody].iPlanetRadiusModel = src[iBody].iPlanetRadiusModel;
   dest[iBody].bInstantO2Sink = src[iBody].bInstantO2Sink;
@@ -1455,7 +1455,6 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   // If envelope is present, pick correct derivative and ensure settings
   // conflicts don't exist, i.e. can't set energy and Bondi-limited escape!
-  // XXX: array to track line numbers for error handling?
   if (body[iBody].dEnvelopeMass > 0) {
 
     //Ensure only 1 escape regime is set
@@ -1834,6 +1833,24 @@ void WriteSurfaceWaterMass(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
     fsUnitsMass(units->iMass,cUnit);
   }
 
+}
+
+/**
+Logs the H escape regime
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteHEscapeRegime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  *dTmp = body[iBody].iHEscapeRegime;
+  strcpy(cUnit,"");
 }
 
 /**
@@ -2328,6 +2345,33 @@ void WriteFXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 }
 
 /**
+Logs the critical XUV flux that separates the radiation/recombination-limited
+and energy-limited H envelope escape regimes
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteRRCriticalFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Calculate critical flux for body
+  *dTmp = fdRRCriticalFlux(body,iBody);
+
+  if (output->bDoNeg[iBody]){
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    strcpy(cUnit,"W/m^2");
+  }
+}
+
+/**
 Set up stuff to be logged for atmesc.
 
 @param output A pointer to the current OUTPUT instance
@@ -2507,6 +2551,22 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_FXUV].iNum = 1;
   output[OUT_FXUV].iModuleBit = ATMESC;
   fnWrite[OUT_FXUV] = &WriteFXUV;
+
+  sprintf(output[OUT_HESCAPEREGIME].cName,"HEscapeRegime");
+  sprintf(output[OUT_HESCAPEREGIME].cDescr,"Integer flag for H envelope escape regime");
+  output[OUT_HESCAPEREGIME].bNeg = 0;
+  output[OUT_HESCAPEREGIME].iNum = 1;
+  output[OUT_HESCAPEREGIME].iModuleBit = ATMESC;
+  fnWrite[OUT_HESCAPEREGIME] = &WriteHEscapeRegime;
+
+  sprintf(output[OUT_RRCRITICALFLUX].cName,"RRCriticalFlux");
+  sprintf(output[OUT_RRCRITICALFLUX].cDescr,"Critical XUV Flux that separates RR and energy-limited escape");
+  sprintf(output[OUT_RRCRITICALFLUX].cNeg,"W/m^2");
+  output[OUT_RRCRITICALFLUX].bNeg = 1;
+  output[OUT_RRCRITICALFLUX].dNeg = 1;
+  output[OUT_RRCRITICALFLUX].iNum = 1;
+  output[OUT_RRCRITICALFLUX].iModuleBit = ATMESC;
+  fnWrite[OUT_RRCRITICALFLUX] = &WriteRRCriticalFlux;
 
 }
 
@@ -2759,7 +2819,6 @@ double fdDEnvelopeMassDtRRLimited(BODY *body,SYSTEM *system,int *iaBody) {
 
   // Compute radiation/recombination-limited mass loss rate using
   // equation 13 from Luger+2015
-  // XXX include gas sound speed term not modeled by Luger+2015?
   double dMassDt = -7.11e4 * sqrt(body[iaBody[0]].dFXUV * 1000.0) * pow(body[iaBody[0]].dRadius / REARTH, 1.5);
 
   return dMassDt;
@@ -2968,7 +3027,7 @@ double fdXUVEfficiencyBolmont2016(double dFXUV) {
   else if (x > 5) { // Upper flux bound
     y = 0.1;
   }
-  else { // Base case that never happens but I like code symmetry
+  else { // Base case that never happens but DPF likes code symmetry
     y = 0.1;
   }
   return y;
@@ -3057,8 +3116,9 @@ double fdBondiRadius(BODY *body, int iBody) {
 }
 
 /**
- Calculate the critical flux between the radiation/recombination-limited and
- energy-limited H envelope escape regimes following Luger+2015
+ Calculate the whether or not incident XUV flux exceeds critical flux between
+ the radiation/recombination-limited and energy-limited H envelope escape
+ regimes following Luger+2015 Eqn. 13
 
  @param body BODY struct
  @param iBody int body indentifier
@@ -3067,11 +3127,8 @@ double fdBondiRadius(BODY *body, int iBody) {
 */
 int fbRRCriticalFlux(BODY *body, int iBody) {
 
-  // Compute critical flux
-  double dCSq = 1.955e-11; // Proportionality constant
-  double dFCrit = dCSq * BIGG * BIGG * body[iBody].dMass * body[iBody].dMass;
-  dFCrit *= (body[iBody].dKTide * body[iBody].dKTide * body[iBody].dRadius);
-  dFCrit /= (body[iBody].dAtmXAbsEffH * body[iBody].dAtmXAbsEffH * PI * PI * pow(body[iBody].dRadXUV, 4));
+  // Calculate critical flux for this planet
+  double dFCrit = fdRRCriticalFlux(body,iBody);
 
   // If FXUV > Fcrit -> RR-limited escape
   if(body[iBody].dFXUV >= dFCrit) {
@@ -3080,6 +3137,26 @@ int fbRRCriticalFlux(BODY *body, int iBody) {
   else {
     return 0;
   }
+}
+
+/**
+ Calculate the critical flux between the radiation/recombination-limited and
+ energy-limited H envelope escape regimes following Luger+2015 Eqn. A23-25
+
+ @param body BODY struct
+ @param iBody int body indentifier
+
+ @return critical flux between radiation/recombination and Energy-limited regimes
+*/
+double fdRRCriticalFlux(BODY *body, int iBody) {
+
+  // Compute critical flux using Eqns. A23-25 from Luger+2015
+  double dA = PI * body[iBody].dAtmXAbsEffH * pow(body[iBody].dRadius * body[iBody].dXFrac, 3);
+  dA /= (BIGG * body[iBody].dMass * body[iBody].dKTide);
+  double dB = 2.248e6 * pow(body[iBody].dRadius / REARTH, 1.5);
+  double dFCrit = pow(dB/dA, 2);
+
+  return dFCrit;
 }
 
 /**

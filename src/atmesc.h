@@ -117,6 +117,8 @@ void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_EPSH2O             1227 /**< XUV Atmospheric Escape Efficiency for H2O */
 #define OUT_ROCHERADIUS        1228 /**< Roche Lobe radius */
 #define OUT_BONDIRADIUS        1229 /**< Bondi radius */
+#define OUT_HESCAPEREGIME      1230 /**< Hydrogen envelope escape regime */
+#define OUT_RRCRITICALFLUX     1231 /**< Critical flux between RR and energy-limited escape */
 
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);
 void InitializeOutputFunctionAtmEsc(OUTPUT*,int,int);
@@ -132,6 +134,8 @@ void WriteRocheRadius(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,
 void WriteOxygenMixingRatio(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteOxygenEta(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteAtmXAbsEffH2O(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteRRCriticalFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteHEscapeRegime(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsAtmEsc(CONTROL*,FILE*);
@@ -159,6 +163,7 @@ double fdRocheRadius(BODY*,int);
 double fdBondiLimitedDmDt(BODY*,int);
 int fbRRCriticalFlux(BODY*,int);
 int fbBondiCriticalDmDt(BODY*,int);
+double fdRRCriticalFlux(BODY*,int);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY*,SYSTEM*,UPDATE*,int,int);

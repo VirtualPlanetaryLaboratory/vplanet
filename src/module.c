@@ -9,9 +9,6 @@
 
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "vplanet.h"
 
 /* NULL functions for all module function pointer matrices. All pointers are

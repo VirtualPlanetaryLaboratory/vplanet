@@ -13,11 +13,6 @@
 
 */
 
-#include <stdio.h>
-#include <math.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
 #include "vplanet.h"
 
 void BodyCopyStellar(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
@@ -45,9 +40,9 @@ void ReadSatXUVFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0 || dTmp > 1) {
+    if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: %s must in the range [0,1].\n",options->cName);
+	      fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dSatXUVFrac = dTmp;
@@ -314,8 +309,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SATXUVTIME].cNeg,"Gyr");
   fnRead[OPT_SATXUVTIME] = &ReadSatXUVTime;
   sprintf(options[OPT_SATXUVTIME].cLongDescr,
-    "The time a star will remain in its \"saturated\" phase. Must be less than dAge.\n"
-  ); // XXX Is this checked in Verify??
+    "The time a star will remain in its \"saturated\" phase.");
 
   sprintf(options[OPT_XUVBETA].cName,"dXUVBeta");
   sprintf(options[OPT_XUVBETA].cDescr,"XUV decay power law exponent");
@@ -330,8 +324,9 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   );
 
   sprintf(options[OPT_STELLARMODEL].cName,"sStellarModel");
-  sprintf(options[OPT_STELLARMODEL].cDescr,"Luminosity evolution model. Options are BARAFFE, PROXIMA, and NONE");
+  sprintf(options[OPT_STELLARMODEL].cDescr,"Luminosity evolution model");
   sprintf(options[OPT_STELLARMODEL].cDefault,"BARAFFE");
+  sprintf(options[OPT_STELLARMODEL].cValues,"BARAFFE PROXIMA NONE");
   options[OPT_STELLARMODEL].iType = 3;
   options[OPT_STELLARMODEL].iMultiFile = 1;
   fnRead[OPT_STELLARMODEL] = &ReadStellarModel;

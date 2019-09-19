@@ -9,13 +9,6 @@
 
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <ctype.h>
-#include <assert.h>
-#include <unistd.h>
-#include <string.h>
 #include "vplanet.h"
 
 void BodyCopyNULL(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
@@ -197,140 +190,125 @@ void PrintFileTypes(int iFileType) {
 }
 
 void WriteHelpOption(OPTIONS *options, int bLong) {
-  char ESC=27;
-
   if (memcmp(options->cName,"null",4)) {
 
     if (bLong == 0) {
 
-        // ** Short help **
+      // ** Short help **
 
-        if (options->dNeg != 0)
-          printf("%c[1m[-]%c[0m",ESC,ESC);
-        printf("%c[1m%s%c[0m (",ESC,options->cName,ESC);
+      if (options->dNeg != 0) {
+        printf("[-]");
+      }
+      printf("%s (",options->cName);
 
-        // Cast
-        if (options->iType == 0)
-          printf("Bool");
-        else if (options->iType == 1)
-          printf("Int");
-        else if (options->iType == 2)
-          printf("Double");
-        else if (options->iType == 3)
-          printf("String");
-        else if (options->iType >= 4)
-          printf("Array");
-        printf(") -- %s ",options->cDescr);
+      // Cast
+      if (options->iType == 0)
+        printf("Bool");
+      else if (options->iType == 1)
+        printf("Int");
+      else if (options->iType == 2)
+        printf("Double");
+      else if (options->iType == 3)
+        printf("String");
+      else if (options->iType >= 4)
+        printf("Array");
+      printf(") -- %s ",options->cDescr);
 
-        if (options->dNeg != 0)
-          printf(" [Negative = %s] ",options->cNeg);
+      if (options->dNeg != 0)
+        printf(" [Negative = %s] ",options->cNeg);
 
-        // allowed modules
-        printf("{Modules = ");
-        if (options->iModuleBit)
-          PrintModuleList(stdout,options->iModuleBit);
-        else
-          printf("ALL");
-        printf("} ");
+      // allowed modules
+      printf("{Modules = ");
+      if (options->iModuleBit)
+        PrintModuleList(stdout,options->iModuleBit);
+      else
+        printf("ALL");
+      printf("} ");
 
-        // allowed input files
-        printf("<Files = ");
-        PrintFileTypes(options->iFileType);
-        printf("> ");
+      // allowed input files
+      printf("<Files = ");
+      PrintFileTypes(options->iFileType);
+      printf("> ");
 
-        // default (always last)
-        printf("(Default = %s).\n",options->cDefault);
+      // default (always last)
+      printf("(Default = %s).\n",options->cDefault);
     } else {
+      // ** Long help **
+      // Header
 
-        // ** Long help **
-
-        // Header
-        printf("%s\n",options->cName);
-        char* pch = strchr(options->cName, '\0');
-        int sz = (int)(pch - options->cName);
-        int i;
-        for (i = 0; i < sz; i++) printf("^");
-        printf("\n");
-
-        // Properties
-        printf("==================  ====================================\n");
-        printf("**Type**            ");
-        if (options->iType == 0) printf("Bool\n");
-        else if (options->iType == 1) printf("Int\n");
-        else if (options->iType == 2) printf("Double\n");
-        else if (options->iType == 3) printf("String\n");
-        else if (options->iType >= 4) printf("Array\n");
-        if (options->bNeg == 1)
-            printf("**Custom unit**     %s\n", options->cNeg);
-        else
-            printf("**Custom unit**     \n");
-        printf("**Modules**         ");
-        if (options->iModuleBit) PrintModuleList(stdout, options->iModuleBit);
-        else printf("ALL");
-        printf("\n");
-        printf("**Files**           ");
-        PrintFileTypes(options->iFileType);
-        printf("\n");
-        printf("**Default value**   %s\n", options->cDefault);
+      // Properties
+      printf("%s\n",options->cName);
+      printf("==================  ====================================\n");
+      printf("**Type**            ");
+      if (options->iType == 0) printf("Bool\n");
+      else if (options->iType == 1) printf("Int\n");
+      else if (options->iType == 2) printf("Double\n");
+      else if (options->iType == 3) printf("String\n");
+      else if (options->iType >= 4) printf("Array\n");
+      if (options->bNeg == 1)
+          printf("**Custom unit**     %s\n", options->cNeg);
+      else
+          printf("**Custom unit**     \n");
+      printf("**Modules**         ");
+      if (options->iModuleBit) PrintModuleList(stdout, options->iModuleBit);
+      else printf("ALL");
+      printf("\n");
+      printf("**Files**           ");
+      PrintFileTypes(options->iFileType);
+      printf("\n");
+      printf("**Default value**   %s\n", options->cDefault);
+      if (memcmp(options->cValues,"null",4)) {
         printf("**Allowed values**  %s\n", options->cValues);
-        printf("**Description**     %s\n", options->cDescr);
-        printf("==================  ====================================\n\n");
-
-        // Long description
-        if (memcmp(options->cLongDescr,"null",4)) {
-            printf("%s\n\n",options->cLongDescr);
-        }
-
+      }
+      printf("**Description**     %s\n", options->cDescr);
+      // Long description
+      if (memcmp(options->cLongDescr,"null",4)) {
+          printf("\n**Overview**\n");
+          printf("%s\n",options->cLongDescr);
+      }
+      printf("==================  ====================================\n\n");
     }
   }
 }
 
 void WriteHelpOutput(OUTPUT *output, int bLong) {
-    char ESC=27;
+  if (memcmp(output->cName,"null",4)) {
+    if (bLong == 0) {
+      // ** Short help **
+      if (output->bNeg == 1)
+        printf("[-]");
+      printf("%s -- %s.",output->cName,output->cDescr);
+      if (output->bNeg == 1)
+        printf(" [Negative = %s]",output->cNeg);
+      printf("\n");
+    } else {
+      // ** Long help **
+      // Header
+      char* pch = strchr(output->cName, '\0');
+      int sz = (int)(pch - output->cName);
+      int i;
+      for (i = 0; i < sz; i++) printf("^");
+      printf("\n");
 
-    if (memcmp(output->cName,"null",4)) {
-        if (bLong == 0) {
-
-            // ** Short help **
-            if (output->bNeg == 1)
-                printf("%c[1m[-]%c[0m",ESC,ESC);
-            printf("%c[1m%s%c[0m -- %s.",ESC,output->cName,ESC,output->cDescr);
-            if (output->bNeg == 1)
-                printf(" [Negative = %s]",output->cNeg);
-            printf("\n");
-
-        } else {
-
-            // ** Long help **
-
-            // Header
-            printf("%s\n",output->cName);
-            char* pch = strchr(output->cName, '\0');
-            int sz = (int)(pch - output->cName);
-            int i;
-            for (i = 0; i < sz; i++) printf("^");
-            printf("\n");
-
-            // Properties
-            printf("==================  ====================================\n");
-            if (output->bNeg == 1)
-                printf("**Custom unit**     %s\n", output->cNeg);
-            else
-                printf("**Custom unit**     \n");
-            printf("**Modules**         ");
-            if (output->iModuleBit) PrintModuleList(stdout, output->iModuleBit);
-            else printf("ALL");
-            printf("\n");
-            printf("**Description**     %s\n", output->cDescr);
-            printf("==================  ====================================\n\n");
-
-            // Long description
-            if (memcmp(output->cLongDescr,"null",4)) {
-                printf("%s\n\n",output->cLongDescr);
-            }
-
-        }
+      // Properties
+      printf("========================  ====================================\n");
+      printf("%s\n",output->cName);
+      if (output->bNeg == 1)
+        printf("**Custom unit**           %s\n", output->cNeg);
+      else
+        printf("**Custom unit**     \n");
+      printf("**Modules**               ");
+      if (output->iModuleBit) PrintModuleList(stdout, output->iModuleBit);
+      else printf("ALL");
+      printf("\n");
+      printf("**Description**           %s\n", output->cDescr);
+      printf("========================  ====================================\n\n");
+        // Long description
+      if (memcmp(output->cLongDescr,"null",4)) {
+        printf("%s\n\n",output->cLongDescr);
+      }
     }
+  }
 }
 
 void HelpOptions(OPTIONS *options, int bLong) {
@@ -357,91 +335,57 @@ void HelpOutput(OUTPUT *output, int bLong) {
 
 }
 
-void Help(OPTIONS *options,OUTPUT *output,char exe[]) {
+void Help(OPTIONS *options,OUTPUT *output,char exe[],int bLong) {
 
-    char ESC=27;
+  printf("\n\t\tHelp Message for %s\n\t\t", exe);
+  char* pch = strchr(exe, '\0');
+  int sz = (int)(pch - exe) + 17;
+  int i;
+  for (i = 0; i < sz; i++) printf("-");
+  printf("\n\n");
 
-    printf("\n\t\t\tHelp Message for %s\n", exe);
-    printf("\nWritten by Rory Barnes\n");
-    printf("\n%s is a general purpose planetary evolution integrator. It takes ",exe);
-    printf("an input file consisting of options and initial conditions ");
-    printf("and simulates tidal evolution, along with other secondary ");
-    printf("parameters, forward and/or backward in time. This help ");
-    printf("describes the basics of the input file.\n\n");
+  printf("Lead Developer: Rory Barnes\n\n");
+  printf("\n%s is a general purpose planetary evolution integrator. It takes \n", exe);
+  printf(
+    "a \"primary\" input file consisting of options and initial conditions and simulates\n"
+    "planetary systen evolution forward and/or backward in time. This long\n"
+    "help provides extra information regarding each option and output parameter.\n"
+  );
 
-    printf("----- Command Line Options -----\n\n");
-    printf("%c[1m-v, -verbose%c[0m -- Maximum verbosity, i.e. display all warnings and updates.\n",ESC,ESC);
-    printf("%c[1m-q, -quiet%c[0m   -- No verbosity, i.e. nothing printed to device.\n",ESC,ESC);
-    printf("%c[1m-h, -help%c[0m    -- Display this message.\n\n",ESC,ESC);
-    printf("%c[1m-H, -Help%c[0m    -- Display the extended help.\n\n",ESC,ESC);
+  printf("Command Line Options\n");
+  printf("====================   ==========================================================\n");
+  printf("-v, -verbose           -- Maximum verbosity, i.e. display all warnings and updates.\n");
+  printf("-q, -quiet             -- No verbosity, i.e. nothing printed to device.\n");
+  printf("-h, -help              -- Display short help.\n");
+  printf("-H, -Help              -- Display extended help.\n");
+  printf("====================   ==========================================================\n\n");
 
-    printf("----- Input File -----\n\n");
-    printf("Comments/White Space: Any characters to the right of a # sign ");
-    printf("are treated as a comment and are ignored. All white space is ");
-    printf("ignored.\n");
-    printf("Options that take an array may span multiple lines if a $ is ");
-    printf("placed at the end of the line.\n");
-    printf("Options must be the first string on any line, and must be ");
-    printf("written exactly as listed below.\n");
-    printf("Arguments may have any format, and need only be unambiguous.\n\n");
+  printf("Input File Structure\n");
+  printf("====================\n\n");
+  printf(
+    "Comments/White Space: Any characters to the right of a # sign are treated\n"
+    "as a comment and are ignored. All white space is ignored.\n"
+    "\nOptions must be the first string on the line and must be written\n"
+    "exactly as shown below; the options are case-sensitive.\n"
+    "Options that take an array may span multiple lines if a $ is placed at\n"
+    "the end of the line. "
+    "\nOutput parameters (the arguments to %s) are not case sensitive,\n",
+      options[OPT_OUTPUTORDER].cName);
+  printf("and need only enough characters to be unambiguous.\n\n");
 
-    printf("----- Input Options -----\n\n");
-    HelpOptions(options, 0);
+  printf("Output File Structure\n");
+  printf("=====================\n\n");
+  printf("Output files consist columns of data separated by white space in\n"
+    "the same order as listed in %s.\n\n",options[OPT_OUTPUTORDER].cName);
+  printf("Input Options\n");
+  printf("=============\n\n");
+  HelpOptions(options,bLong);
 
-    printf("\n----- Output Options -----\n\n");
-    printf("These options follow the argument %s.\n",options[OPT_OUTPUTORDER].cName);
-    HelpOutput(output, 0);
+  printf("\n\nOutput Parameters\n");
+  printf("=====================\n");
+  HelpOutput(output,bLong);
 
-    exit(0);
-
-}
-
-void LongHelp(OPTIONS *options,OUTPUT *output,char exe[]) {
-
-    printf("\nHelp Message for %s\n", exe);
-    char* pch = strchr(exe, '\0');
-    int sz = (int)(pch - exe) + 17;
-    int i;
-    for (i = 0; i < sz; i++) printf("-");
-    printf("\n\n");
-
-    printf("Primary Developer: Rory Barnes\n");
-    printf("\n%s is a general purpose planetary evolution integrator. It takes ", exe);
-    printf("an input file consisting of options and initial conditions ");
-    printf("and simulates tidal evolution, along with other secondary ");
-    printf("parameters, forward and/or backward in time. This help ");
-    printf("describes the basics of the input file.\n\n");
-    printf("\n** Note that long help is not fully implemented.**\n");
-
-    printf("Command Line Options\n");
-    printf("~~~~~~~~~~~~~~~~~~~~\n\n");
-    printf("=================   ==========================================================\n");
-    printf("**-v, -verbose**    Maximum verbosity, i.e. display all warnings and updates.\n");
-    printf("**-q, -quiet**      No verbosity, i.e. nothing printed to device.\n");
-    printf("**-h, -help**       Display the short help message.\n");
-    printf("**-H, -Help**       Display the extended help message.\n");
-    printf("=================   ==========================================================\n\n");
-
-    printf("Input File\n");
-    printf("~~~~~~~~~~\n\n");
-    printf("Comments/White Space: Any characters to the right of a # sign ");
-    printf("are treated as a comment and are ignored. All white space is ");
-    printf("ignored.\n");
-    printf("Options that take an array may span multiple lines if a $ is ");
-    printf("placed at the end of the line.\n");
-    printf("Options must be the first string on any line, and must be ");
-    printf("written exactly as listed below.\n");
-    printf("Arguments may have any format, and need only be unambiguous.\n\n");
-
-    printf("Input Options\n~~~~~~~~~~~~~\n\n");
-    HelpOptions(options, 1);
-
-    printf("Output Options\n~~~~~~~~~~~~~~\n\n");
-    printf(".. note:: These options follow the argument %s.\n\n",options[OPT_OUTPUTORDER].cName);
-    HelpOutput(output, 1);
-
-    exit(0);
-
+  exit(0);
 }
 
 /*

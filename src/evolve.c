@@ -10,10 +10,6 @@
 
 */
 
-#include <stdio.h>
-#include <math.h>
-#include <assert.h>
-#include <stdlib.h>
 #include "vplanet.h"
 
 void PropsAuxGeneral(BODY *body,CONTROL *control) {

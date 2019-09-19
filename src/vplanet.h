@@ -6,6 +6,19 @@
 */
 
 
+#include <assert.h>
+#include <ctype.h>
+#include <float.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <unistd.h>
+#include <xmmintrin.h>
+
 /*! Top-level declarations */
 
 /* Implemented Moduules
@@ -1896,9 +1909,6 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
  * Other Header Files - These are primarily for function declarations
  */
 
-#include <assert.h>
-#include <time.h>
-#include <float.h>
 /* Top-level files */
 #include "body.h"
 #include "control.h"

@@ -668,7 +668,6 @@ struct BODY {
 	int bEnvelopeLostMessage; /**< Has the envelope lost message been printed? */
 	int bRocheMessage; /**< Has the Roche lobe message been printed? */
 	int bIgnoreRocheLobe; /**< Ignore Roche lobe overflow? */
-	double dEnvMassDt; /**< Time derivative of H envelope mass */
 
   /* STELLAR Parameters */
   int bStellar;

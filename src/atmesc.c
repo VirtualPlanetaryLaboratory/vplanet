@@ -75,7 +75,6 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].bUseBondiLimited = src[iBody].bUseBondiLimited;
   dest[iBody].bAtmEscAuto = src[iBody].bAtmEscAuto;
   dest[iBody].bRocheMessage = src[iBody].bRocheMessage;
-  dest[iBody].dEnvMassDt = src[iBody].dEnvMassDt;
 
 }
 
@@ -1069,7 +1068,6 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     // Let's remove its envelope and prevent further evolution.
     body[iBody].iHEscapeRegime = ATMESC_NONE;
     body[iBody].dEnvelopeMass = 0.;
-    body[iBody].dEnvMassDt = 0.0;
     fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
     fnUpdate[iBody][update[iBody].iMass][0] = &fndUpdateFunctionTiny;
 
@@ -1295,12 +1293,6 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iB
   // Compute various radii of interest
   body[iBody].dBondiRadius = fdBondiRadius(body,iBody);
   body[iBody].dRocheRadius = fdRocheRadius(body,iBody);
-
-  // Compute current H envelope mass loss (if the envelope exists)
-  if(body[iBody].dEnvelopeMass >= body[iBody].dMinEnvelopeMass) {
-    body[iBody].dEnvMassDt = *(update[iBody].pdDEnvelopeMassDtAtmesc);
-  }
-
 }
 
 
@@ -1323,6 +1315,7 @@ void AssignAtmEscDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
   if (body[iBody].dEnvelopeMass > 0) {
     // Set derivative depending on regime
     // Energy-limited (or if, transition start as energy-limited)
+    // XXX pick regime if bAtmEscAuto before force behavior? -- do I know FXUV now?
     if(body[iBody].bUseEnergyLimited || body[iBody].bAtmEscAuto) {
       body[iBody].iHEscapeRegime = ATMESC_ELIM;
       fnUpdate[iBody][update[iBody].iEnvelopeMass][0]     = &fdDEnvelopeMassDt;
@@ -1392,7 +1385,6 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   body[iBody].iHEscapeRegime = ATMESC_NONE; // Default to no H escape - updated if envelope is present
   body[iBody].bEnvelopeLostMessage = 0;
   body[iBody].bRocheMessage = 0;
-  body[iBody].dEnvMassDt = 0.0; // Assume no H envelope mass loss at first
 
   // Is FXUV specified in input file?
   if (options[OPT_FXUV].iLine[iBody+1] > -1){
@@ -2084,7 +2076,7 @@ Logs the atmospheric mass loss rate.
 void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]){
   double dDeriv;
 
-  *dTmp = body[iBody].dEnvMassDt;
+  *dTmp = *(update[iBody].pdDEnvelopeMassDtAtmesc);
   *dTmp *= fdUnitsTime(units->iTime)/fdUnitsMass(units->iMass);
 
   // XXX units

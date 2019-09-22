@@ -2157,7 +2157,11 @@ void WriteDailyInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
 
   struct stat st = {0};
   if (stat("SeasonalClimateFiles",&st) == -1) {
-    mkdir("SeasonalClimateFiles",0777);
+#ifdef _WIN32
+    mkdir("SeasonalClimateFiles");
+#else
+    mkdir("SeasonalClimateFiles",0700);
+#endif
   }
 
   dTime = control->Evolve.dTime/fdUnitsTime(units->iTime);
@@ -2189,7 +2193,11 @@ void WritePlanckB(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
 
   struct stat st = {0};
   if (stat("SeasonalClimateFiles",&st) == -1) {
-    mkdir("SeasonalClimateFiles",0777);
+#ifdef _WIN32
+    mkdir("SeasonalClimateFiles");
+#else
+    mkdir("SeasonalClimateFiles",0700);
+#endif
   }
 
   dTime = control->Evolve.dTime/fdUnitsTime(units->iTime);
@@ -2222,7 +2230,11 @@ void WriteSeasonalTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
   struct stat st = {0};
   if (stat("SeasonalClimateFiles",&st) == -1) {
-    mkdir("SeasonalClimateFiles",0777);
+#ifdef _WIN32
+    mkdir("SeasonalClimateFiles");
+#else
+    mkdir("SeasonalClimateFiles",0700);
+#endif
   }
 
   dTime = control->Evolve.dTime/fdUnitsTime(units->iTime);
@@ -2257,7 +2269,11 @@ void WriteSeasonalFluxes(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
 
   struct stat st = {0};
   if (stat("SeasonalClimateFiles",&st) == -1) {
-    mkdir("SeasonalClimateFiles",0777);
+#ifdef _WIN32
+    mkdir("SeasonalClimateFiles");
+#else
+    mkdir("SeasonalClimateFiles",0700);
+#endif
   }
 
   dTime = control->Evolve.dTime/fdUnitsTime(units->iTime);
@@ -2320,7 +2336,11 @@ void WriteSeasonalIceBalance(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
 
   struct stat st = {0};
   if (stat("SeasonalClimateFiles",&st) == -1) {
-    mkdir("SeasonalClimateFiles",0777);
+#ifdef _WIN32
+    mkdir("SeasonalClimateFiles");
+#else
+    mkdir("SeasonalClimateFiles",0700);
+#endif
   }
 
   dTime = control->Evolve.dTime/fdUnitsTime(units->iTime);

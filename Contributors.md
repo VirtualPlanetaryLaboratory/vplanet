@@ -38,3 +38,5 @@ POISE, and assisted in debugging it.
 **Rodolfo Garcia** assisted in AtmEsc and ThermInt development.
 
 **Patrick Barth** assisted in AtmEsc development.
+
+**Pramod Gupta** ported VPLanet to Windows 10.

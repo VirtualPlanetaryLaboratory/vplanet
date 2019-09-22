@@ -9,24 +9,7 @@
 
 */
 
-/* lines where something like iBody == 0 occurs
- * ~1833 : where solar flux is important (alter for body!)
- * 1931-will want to alter astrodist for binary
- * ~1389
- *
- */
-
-#include <stdio.h>
-#include <math.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
 #include "vplanet.h"
-#include "options.h"
-#include "output.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
 
 void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
 }

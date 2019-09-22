@@ -698,7 +698,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_INSTANTO2SINK] = &ReadInstantO2Sink;
   sprintf(options[OPT_XFRAC].cLongDescr,
     "If set to 1, then all oxygen released by photolysis is immediately\n"
-    "removed from teh atmosphere. This mimics rapid surface oxidation."
+    "removed from the atmosphere. This mimics rapid surface oxidation."
   );
 
   sprintf(options[OPT_HALTDESICCATED].cName,"bHaltSurfaceDesiccated");

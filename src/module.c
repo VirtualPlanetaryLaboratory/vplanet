@@ -572,7 +572,7 @@ void PrintModuleList(FILE *file,int iBitSum) {
   if (iBitSum & ATMESC) {
     if (space) fprintf(file," ");
     space = 1;
-    fprintf(file,"ATMESC");
+    fprintf(file,"AtmEsc");
   }
   if (iBitSum & BINARY) {
     if (space) fprintf(file," ");
@@ -582,17 +582,17 @@ void PrintModuleList(FILE *file,int iBitSum) {
   if (iBitSum & DISTORB) {
     if (space) fprintf(file," ");
     space = 1;
-    fprintf(file,"DISTORB");
+    fprintf(file,"DistOrb");
   }
   if (iBitSum & DISTROT) {
     if (space) fprintf(file," ");
     space = 1;
-    fprintf(file,"DISTROT");
+    fprintf(file,"DistRot");
   }
   if (iBitSum & EQTIDE) {
     if (space) fprintf(file," ");
     space = 1;
-    fprintf(file,"EQTIDE");
+    fprintf(file,"EqTide");
   }
   if (iBitSum & FLARE) {
     if (space) fprintf(file," ");
@@ -602,12 +602,12 @@ void PrintModuleList(FILE *file,int iBitSum) {
   if (iBitSum & GALHABIT) {
     if (space) fprintf(file," ");
     space = 1;
-    fprintf(file,"GALHABIT");
+    fprintf(file,"GalHabit");
   }
   if (iBitSum & MAGMOC) {
     if (space) fprintf(file," ");
     space = 1;
-    fprintf(file,"MAGMOC");
+    fprintf(file,"MagmOc");
   }
   if (iBitSum & POISE) {
     if (space) fprintf(file," ");
@@ -617,12 +617,12 @@ void PrintModuleList(FILE *file,int iBitSum) {
   if (iBitSum & RADHEAT) {
     if (space) fprintf(file," ");
     space = 1;
-    fprintf(file,"RADHEAT");
+    fprintf(file,"RadHeat");
   }
   if (iBitSum & SPINBODY) {
     if (space) fprintf(file," ");
     space = 1;
-    fprintf(file,"SPINBODY");
+    fprintf(file,"SpiNBody");
   }
   if (iBitSum & STELLAR) {
     if (space) fprintf(file," ");
@@ -632,7 +632,7 @@ void PrintModuleList(FILE *file,int iBitSum) {
   if (iBitSum & THERMINT) {
     if (space) fprintf(file," ");
     space = 1;
-    fprintf(file,"THERMINT");
+    fprintf(file,"ThermInt");
   }
 }
 

@@ -320,7 +320,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_XUVBETA] = &ReadXUVBeta;
   sprintf(options[OPT_XUVBETA].cLongDescr,
     "After the \"saturation\" phase, the ratio of the XUV to total luminosity\n"
-    "will follow a power law in time to this value. Units are gigayears."
+    "will follow a power law followinfg this exponent. Units are gigayears."
   );
 
   sprintf(options[OPT_STELLARMODEL].cName,"sStellarModel");
@@ -407,7 +407,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HALTENDBARAFFEFGRID].iType = 0;
   fnRead[OPT_HALTENDBARAFFEFGRID] = &ReadHaltEndBaraffeGrid;
   sprintf(options[OPT_HALTENDBARAFFEFGRID].cLongDescr,
-    "The BARRAFE stellar model will only compute parameters until the end of\n"
+    "The BARRAFFE stellar model will only compute parameters until the end of\n"
     "the main sequence. Setting this flag to 1 will halt the code if the end\n"
     "of the model grid is reached."
   );

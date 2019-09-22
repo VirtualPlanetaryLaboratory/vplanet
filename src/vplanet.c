@@ -77,7 +77,7 @@ int main(int argc,char *argv[]) {
   strcpy(files.cExe,argv[0]);
 
   if (argc == 1) {
-    fprintf(stderr,"ERROR: Incorrect number of arguments. Usage: %s [-verbose] [-help] file [file].\n",argv[0]);
+    fprintf(stderr,"Usage: %s [-v, -verbose] [-q, -quiet] [-h, -help] [-H, -Help] <file>\n",argv[0]);
     exit(EXIT_EXE);
   }
 

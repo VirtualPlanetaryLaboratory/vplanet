@@ -283,23 +283,20 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
       printf("\n");
     } else {
       // ** Long help **
-      // Header
-      char* pch = strchr(output->cName, '\0');
-      int sz = (int)(pch - output->cName);
-      int i;
-      for (i = 0; i < sz; i++) printf("^");
-      printf("\n");
 
       // Properties
-      printf("========================  ====================================\n");
       printf("%s\n",output->cName);
+      printf("========================  ====================================\n");
       if (output->bNeg == 1)
         printf("**Custom unit**           %s\n", output->cNeg);
       else
         printf("**Custom unit**     \n");
       printf("**Modules**               ");
-      if (output->iModuleBit) PrintModuleList(stdout, output->iModuleBit);
-      else printf("ALL");
+      if (output->iModuleBit) {
+        PrintModuleList(stdout, output->iModuleBit);
+      } else {
+        printf("ALL");
+      }
       printf("\n");
       printf("**Description**           %s\n", output->cDescr);
       printf("========================  ====================================\n\n");
@@ -318,9 +315,12 @@ void HelpOptions(OPTIONS *options, int bLong) {
   int sorted[MODULEOPTEND];
   sort_options(options, sorted);
 
-  for (iOpt=0;iOpt<MODULEOPTEND;iOpt++)
+  if (!bLong) {
+    printf("Format: [Negative forces units] Name -- Description [Negative unit] {Compatible modules} <Permited files> (Default value)\n\n");
+  }
+  for (iOpt=0;iOpt<MODULEOPTEND;iOpt++) {
     WriteHelpOption(&options[sorted[iOpt]], bLong);
-
+  }
 }
 
 void HelpOutput(OUTPUT *output, int bLong) {
@@ -330,9 +330,9 @@ void HelpOutput(OUTPUT *output, int bLong) {
   int sorted[MODULEOUTEND];
   sort_output(output, sorted);
 
-  for (iOut=0;iOut<MODULEOUTEND;iOut++)
+  for (iOut=0;iOut<MODULEOUTEND;iOut++) {
     WriteHelpOutput(&output[sorted[iOut]], bLong);
-
+  }
 }
 
 void Help(OPTIONS *options,OUTPUT *output,char exe[],int bLong) {
@@ -345,11 +345,17 @@ void Help(OPTIONS *options,OUTPUT *output,char exe[],int bLong) {
   printf("\n\n");
 
   printf("Lead Developer: Rory Barnes\n\n");
-  printf("\n%s is a general purpose planetary evolution integrator. It takes \n", exe);
+  printf("\n%s is a general purpose planetary evolution integrator. From the command\n", exe);
   printf(
-    "a \"primary\" input file consisting of options and initial conditions and simulates\n"
-    "planetary systen evolution forward and/or backward in time. This long\n"
-    "help provides extra information regarding each option and output parameter.\n"
+    "line, enter one optional command line option and one file name, e.g.:\n\n"
+    "> vplanet vpl.in\n\n"
+    "where vpl.in is the \"primary\" input file consisting of options and a list\n"
+    "of files that contain the initial conditions for all bodies in a system.\n"
+    "The code then simulates planetary systen evolution forward or backward in\n"
+    "time. This onboard help provides information regarding the input and output\n"
+    "files, command line options, and each option and output parameter. For more\n"
+    "more information, see https://virtualplanetarylaboratory.github.io/vplanet,\n"
+    "or consult the examples directory.\n\n"
   );
 
   printf("Command Line Options\n");
@@ -363,15 +369,15 @@ void Help(OPTIONS *options,OUTPUT *output,char exe[],int bLong) {
   printf("Input File Structure\n");
   printf("====================\n\n");
   printf(
-    "Comments/White Space: Any characters to the right of a # sign are treated\n"
-    "as a comment and are ignored. All white space is ignored.\n"
-    "\nOptions must be the first string on the line and must be written\n"
+    "- Options must be the first string on the line and must be written\n"
     "exactly as shown below; the options are case-sensitive.\n"
-    "Options that take an array may span multiple lines if a $ is placed at\n"
-    "the end of the line. "
-    "\nOutput parameters (the arguments to %s) are not case sensitive,\n",
+    "- All characters to the right of a # sign are treated as a comment\n"
+    "and are ignored. Blank lines are also ignored.\n"
+    "- Options that take an array of arguments may span multiple lines if a $ is\n"
+    "placed at the end of the line.\n"
+    "- Output parameters (the arguments to %s) are not case sensitive,and\n",
       options[OPT_OUTPUTORDER].cName);
-  printf("and need only enough characters to be unambiguous.\n\n");
+  printf("need only enough characters to be unambiguous.\n\n");
 
   printf("Output File Structure\n");
   printf("=====================\n\n");
@@ -382,7 +388,11 @@ void Help(OPTIONS *options,OUTPUT *output,char exe[],int bLong) {
   HelpOptions(options,bLong);
 
   printf("\n\nOutput Parameters\n");
-  printf("=====================\n");
+  printf("=====================\n\n");
+  if (!bLong) {
+    printf("Format: [Negative forces units] Name -- Description [Negative unit]\n\n");
+  }
+  printf("These options follow the argument %s.\n",options[OPT_OUTPUTORDER].cName);
   HelpOutput(output,bLong);
 
   exit(0);

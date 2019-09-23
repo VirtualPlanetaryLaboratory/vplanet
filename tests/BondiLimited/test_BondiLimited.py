@@ -6,7 +6,7 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 
 
 def test_BondiLimited():
-    """Test oxygen build up, HZ limits."""
+    """Test Bondi-limited atmospheric escape"""
     # Remove old log file
     subprocess.run(['rm', 'BondiLimited.log'], cwd=cwd)
     # Run vplanet
@@ -14,6 +14,9 @@ def test_BondiLimited():
 
     # Grab the output
     output = GetOutput(path=cwd)
+
+    # Make sure the Bondi-limited escape regime has been selected
+    assert np.isclose(output.log.initial.bondi.HEscapeRegime, 5.0)
 
     # Ensure Bondi-limited mass loss rate is correct by comparing it to
     # Eqn. 4 from Owen & Wu (2016), ~1e-2 Earth masses / yr in kg/s

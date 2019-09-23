@@ -5,14 +5,7 @@
   @date May 7 2014
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <assert.h>
-#include <ctype.h>
-#include <string.h>
 #include "vplanet.h"
-#include "output.h"
 
 /* Individual WriteOutput functions */
 

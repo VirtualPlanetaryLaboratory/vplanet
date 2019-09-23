@@ -18,11 +18,6 @@
 
 */
 
-#include <stdio.h>
-#include <math.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
 #include "vplanet.h"
 
 /** Copy body properties from src to dest for cbp */

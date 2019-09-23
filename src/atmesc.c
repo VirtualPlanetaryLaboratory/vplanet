@@ -786,7 +786,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_WATERLOSSMODEL] = &ReadWaterLossModel;
   sprintf(options[OPT_XFRAC].cLongDescr,
     "The water loss rate will be determined by the selected model.\n"
-    "XXX What are these options???"
+    "The options are LB15, LBEXACT, and TIAN.\n"
   );
 
   sprintf(options[OPT_PLANETRADIUSMODEL].cName,"sPlanetRadiusModel");
@@ -820,6 +820,13 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_BONDILIMITED].iType = 0;
   options[OPT_BONDILIMITED].iMultiFile = 1;
   fnRead[OPT_BONDILIMITED] = &ReadBondiLimited;
+  sprintf(options[OPT_BONDILIMITED].cLongDescr,
+    "Force the atmospheric erosion of a H envelope to be Bondi-limited where the\n"
+    "mass loss is regulated by the sound speed at the sonic point following Equation 4\n"
+    "from Owen \& Wu (2016). Note we compute the sound speed by assuming an isothermal\n"
+    "atmosphere composed of diatomic hydrogen and that the local temperature is set by\n"
+    "the local blackbody equlibrium temperature (Owen & Wu 2016, Equation 2).\n"
+  );
 
   sprintf(options[OPT_ENERGYLIMITED].cName,"bUseEnergyLimited");
   sprintf(options[OPT_ENERGYLIMITED].cDescr,"Use energy-limited escape for H envelope?");
@@ -827,6 +834,11 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ENERGYLIMITED].iType = 0;
   options[OPT_ENERGYLIMITED].iMultiFile = 1;
   fnRead[OPT_ENERGYLIMITED] = &ReadEnergyLimited;
+  sprintf(options[OPT_ENERGYLIMITED].cLongDescr,
+    "Force the atmospheric erosion of a H envelope to be energy-limited, i.e. the\n"
+    "mass loss is directly proportional to the incident XUV flux (Equation 5\n"
+    "from Luger et al. (2015)).\n"
+  );
 
   sprintf(options[OPT_RRLIMITED].cName,"bUseRRLimited");
   sprintf(options[OPT_RRLIMITED].cDescr,"Use radiation/recombination-limited escape for H envelope?");
@@ -834,6 +846,11 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_RRLIMITED].iType = 0;
   options[OPT_RRLIMITED].iMultiFile = 1;
   fnRead[OPT_RRLIMITED] = &ReadRRLimited;
+  sprintf(options[OPT_RRLIMITED].cLongDescr,
+    "Force the atmospheric erosion of a H envelope to be radiation/recombination-limited, i.e. the\n"
+    "mass loss is directly proportional to the sqrt of the incident XUV flux (Equation 13\n"
+    "from Luger et al. (2015) and Murray-Clay et al. (2009).\n"
+  );
 
   sprintf(options[OPT_ATMESCAUTO].cName,"bAtmEscAuto");
   sprintf(options[OPT_ATMESCAUTO].cDescr,"Let atmesc determine H envelope escape regime?");
@@ -841,6 +858,15 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ATMESCAUTO].iType = 0;
   options[OPT_ATMESCAUTO].iMultiFile = 1;
   fnRead[OPT_ATMESCAUTO] = &ReadAtmEscAuto;
+  sprintf(options[OPT_ATMESCAUTO].cLongDescr,
+    "Let AtmEsc determine the proper atmospheric escape regime for an eroding H envelope.\n"
+    "If the planetary radius exceeds the Roche lobe, the unbound material is assumed to be\n"
+    "Bondi-limited and mass loss proceeds following Equation 4 from Owen & Wu (2016).\n"
+    "For planetary radius less than the Roche limit, if the incident XUV flux exceeds\n"
+    "the critical flux (Equation A25 from Luger et. al. 2015), the mass loss is\n"
+    "radiation/recombination-limited and scales as XUV^0.5. Otherwise, the loss\n"
+    "is energy-limited and is linearly proportional to the incident XUV flux.\n"
+  );
 
   sprintf(options[OPT_HALTDESICCATED].cName,"bHaltSurfaceDesiccated");
   sprintf(options[OPT_HALTDESICCATED].cDescr,"Halt at Desiccation?");

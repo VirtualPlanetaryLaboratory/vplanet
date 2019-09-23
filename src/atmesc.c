@@ -2513,7 +2513,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_ROCHERADIUS] = &WriteRocheRadius;
 
   sprintf(output[OUT_DENVMASSDT].cName,"DEnvMassDt");
-  sprintf(output[OUT_DENVMASSDT].cDescr,"Envelope Mass Loss Rate [kg/s]");
+  sprintf(output[OUT_DENVMASSDT].cDescr,"Envelope Mass Loss Rate");
   output[OUT_DENVMASSDT].bNeg = 0;
   output[OUT_DENVMASSDT].iNum = 1;
   output[OUT_DENVMASSDT].iModuleBit = ATMESC;

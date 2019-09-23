@@ -16,7 +16,7 @@ dSemi           -0.1            # Semi-major axis [AU]
 dXFrac                  1.0     # X-Ray/XUV absorption radius in planet radii
 dAtmXAbsEffH            0.15    # H X-ray/XUV absorption efficiency (epsilon)
 dSurfWaterMass   	      0.0     # Initial water mass, negative -> Earth oceans
-dEnvelopeMass           -0.3    # Initial H envelope mass, negative -> Earth Mass
+dEnvelopeMass           -3.0    # Initial H envelope mass, negative -> Earth Mass
 bInstantO2Sink          0       # Is Oxygen instantly absorbed by the surface?
 bUseBondiLimited        1       # Is the flow Bondi-limited?
 bHaltSurfaceDesiccated  0 	    # Halt when dry?
@@ -28,5 +28,4 @@ bUseEnergyLimited       0       # Is the flow energy-limited?
 bUseRRLimited           0       # Is the flow radiation/recombination-limited?
 bAtmEscAuto             0       # Should atmesc decide the escape regime?
 
-saOutputOrder 	Time -Mass -EnvelopeMass -PlanetRadius -BondiRadius -RocheRadius $
-dEnvMassDt FXUV RRCriticalFlux HEscapeRegime -SurfWaterMass  # Output options
+saOutputOrder 	Time -Mass -EnvelopeMass -BondiRadius -RocheRadius DEnvMassDt # Output options

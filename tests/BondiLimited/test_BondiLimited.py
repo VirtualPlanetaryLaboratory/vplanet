@@ -5,7 +5,7 @@ import os
 cwd = os.path.dirname(os.path.realpath(__file__))
 
 
-def test_AbioticO2():
+def test_BondiLimited():
     """Test oxygen build up, HZ limits."""
     # Remove old log file
     subprocess.run(['rm', 'BondiLimited.log'], cwd=cwd)
@@ -15,23 +15,18 @@ def test_AbioticO2():
     # Grab the output
     output = GetOutput(path=cwd)
 
-    # Primary Variables
-    # Star
-    """
-    assert np.isclose(output.log.final.star.Luminosity, 7.362835e+23)
-    assert np.isclose(output.log.final.star.LXUVStellar, 7.362835e+20)
-    assert np.isclose(output.log.final.star.Radius, 1.186502e+08)
-    assert np.isclose(output.log.final.star.Temperature, 2926.556751)
-    assert np.isclose(output.log.final.star.RadGyra, 0.466090)
-    # Planet
-    assert np.isclose(output.log.final.e.SurfWaterMass, 7.511356, rtol=1e-4)
-    assert np.isclose(output.log.final.e.OxygenMass, 420.619083)
+    # Ensure Bondi-limited mass loss rate is correct by comparing it to
+    # Eqn. 4 from Owen & Wu (2016), ~1e-2 Earth masses / yr in kg/s
+    assert np.isclose(output.bondi.DEnvMassDt[0], -1.753603e+15)
 
-    # Other checks
-    assert np.isclose(output.log.final.e.FXUV, 3.053257)
-    assert np.isclose(output.log.final.e.AtmXAbsEffH2O, 0.051776)
-    assert np.isclose(output.log.final.e.Instellation, 3053.257033)
-    """
+    # Ensure final Roche Lobe and Bondi Radius are correct [Earth radii]
+    assert np.isclose(output.log.final.bondi.BondiRadius, 35.824267)
+    assert np.isclose(output.log.final.bondi.RocheRadius, 44.88505)
+
+    # Ensure final H envelope and planetary mass are correct
+    # That is, the H envelope should have been entirely lost!
+    assert np.isclose(output.log.final.bondi.EnvelopeMass, 0.0)
+    assert np.isclose(output.log.final.bondi.Mass, 7.0)
 
 
 if __name__ == "__main__":

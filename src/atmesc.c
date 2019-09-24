@@ -823,7 +823,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_BONDILIMITED].cLongDescr,
     "Force the atmospheric erosion of a H envelope to be Bondi-limited where the\n"
     "mass loss is regulated by the sound speed at the sonic point following Equation 4\n"
-    "from Owen \& Wu (2016). Note we compute the sound speed by assuming an isothermal\n"
+    "from Owen & Wu (2016). Note we compute the sound speed by assuming an isothermal\n"
     "atmosphere composed of diatomic hydrogen and that the local temperature is set by\n"
     "the local blackbody equlibrium temperature (Owen & Wu 2016, Equation 2).\n"
   );

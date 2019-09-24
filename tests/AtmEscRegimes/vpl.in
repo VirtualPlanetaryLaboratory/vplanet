@@ -1,7 +1,7 @@
-sSystemName               RRLimited
+sSystemName               AtmEscRegimes
 iVerbose                  5
 bOverwrite                1
-saBodyFiles               star.in rr.in
+saBodyFiles               star.in bondi.in rr.in
 sUnitMass                 solar
 sUnitLength               AU
 sUnitTime                 YEARS

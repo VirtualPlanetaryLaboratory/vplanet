@@ -167,7 +167,8 @@ struct BODY {
   int iWaterLossModel;   /**< Water Loss and Oxygen Buildup Model */
   int iAtmXAbsEffH2OModel;  /**< Water X-ray/XUV absorption efficiency evolution model */
   int iPlanetRadiusModel;   /**< Planet Radius model. */
-  int iWaterEscapeRegime;   /**< This doesn't seem to do anything */
+  int iWaterEscapeRegime;   /**< Track water escape regime */
+	int iHEscapeRegime; /**< Tracks H escape regime */
 
   double dSurfaceWaterMass;     /**< Surface water mass */
   double dMinSurfaceWaterMass;  /**< Minimum surface water to avoid a halt */
@@ -195,6 +196,13 @@ struct BODY {
   double dFXUV;         /**< XUV Flux at planet's atmosphere */
   double dJeansTime;    /**< Jeans timescale for atmospheric escape */
   double dFlowTemp;     /**< Temperature of the hydrodynamic flow */
+	double dRocheRadius; 	/**< Radius of the Roche lobe */
+	double dBondiRadius;	/**< Bondi (Sonic) Radius */
+	int bUseEnergyLimited; /**< Use energy-limited escape */
+	int bUseBondiLimited;		/**< Use Bondi-limited H mass loss */
+	int bUseRRLimited; /**< Use radiation/recombination-limited H mass loss */
+	int bAtmEscAuto; /**< Transition H escape regime depending on physics */
+	double dEnvMassDt; /**< Time derivative of H envelope mass */
 
   /* BINARY parameters */
   int bBinary;           /**< Apply BINARY module? */
@@ -500,8 +508,6 @@ struct BODY {
   double dAdJumpM2LM;      /**< adiabatic temp jump from ave mantle to LM */
   double dAdJumpC2CMB;     /**< adiabatic temp jump from ave core to CMB */
   double dElecCondCore;    /**< electrical conductivity of core */
-
-
 
   /* STELLAR Parameters */
   int bStellar;

@@ -48,12 +48,12 @@ Then open a File Explorer window and navigate to the directory with the zip file
 right click, and select "Extract All", type in the destination directory, and
 click "Extract."
 
-Next open a cygwin terminal window and type the following commands:
+Next open a cygwin terminal window and type the following commands (substituting your username for "rory"):
 
 .. code-block:: bash
 
   cd /home/rory/src/vplanet-master/src
   gcc *.c -o vplanet
 
-This will create a file called ./vplanet.exe that can be run inside the cygwin terminal 
+This will create a file called ./vplanet.exe that can be run inside the cygwin terminal
 exactly as in the Linux and macOS instructions.

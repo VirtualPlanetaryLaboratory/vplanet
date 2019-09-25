@@ -36,7 +36,7 @@ every package that begins with "gcc." Note that as of their v3.0.7, this option
 is not the default. Next click the "Clone or Download" box on the VPLanet webpage,
 select zip, and download it into your preferred directory.
 
-Next open the command window (i.e., a DOS window; open with "cmd") and navigate to the
+Next open the command window (DOS window; open with "cmd") and navigate to the
 cygwin directory where you wish to place VPLanet, e.g.,
 
 .. code-block:: bash
@@ -55,5 +55,5 @@ Next open a cygwin terminal window and type the following commands (substituting
   cd /home/rory/src/vplanet-master/src
   gcc *.c -o vplanet
 
-This will create a file called vplanet.exe that can be run inside the cygwin terminal 
+This will create a file called ./vplanet.exe that can be run inside the cygwin terminal
 exactly as in the Linux and macOS instructions.

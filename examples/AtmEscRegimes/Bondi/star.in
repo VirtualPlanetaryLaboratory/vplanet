@@ -11,7 +11,7 @@ dAge            1.0e6               # Initial age [yr]
 sStellarModel	      baraffe         # Stellar evolution model
 bHaltEndBaraffeGrid 0               # Don't end sim when we reach end of grid
 sMagBrakingModel    matt            # Magnetic braking model
-dSatXUVFrac         1.0e-3          # XUV Saturation fraction
+dSatXUVFrac         5.0e-4          # XUV Saturation fraction
 dSatXUVTime         -0.1            # XUV Saturation timescale, negative-> in Gyr
 dXUVBeta            1.23            # XUV decay power law exponent
 

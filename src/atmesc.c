@@ -3140,7 +3140,8 @@ double fdEqH2AtmosphereSoundSpeed(double dTemp, double dRad, double dSemi) {
 }
 
 /**
- Calculate the Roche radius assuming body 0 is the host star
+ Calculate the Roche radius assuming body 0 is the host star using Eqn. 8 from
+ Luger et al. (2015)
 
  @param body BODY struct
  @param iBody int body indentifier

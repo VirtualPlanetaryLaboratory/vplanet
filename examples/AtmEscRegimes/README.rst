@@ -50,7 +50,7 @@ Expected output
    as opposed to scaling linearly with the flux as is the case with energy-limited
    escape.
 
- .. figure:: AtmEscRegimesZoom.png
+.. figure:: AtmEscRegimesZoom.png
     :width: 600px
     :align: center
 

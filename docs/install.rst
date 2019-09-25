@@ -36,7 +36,7 @@ every package that begins with "gcc." Note that as of their v3.0.7, this option
 is not the default. Next click the "Clone or Download" box on the VPLanet webpage,
 select zip, and download it into your preferred directory.
 
-Next open the command window (DOS window open with "cmd") and navigate to the
+Next open the command window (i.e., a DOS window; open with "cmd") and navigate to the
 cygwin directory where you wish to place VPLanet, e.g.,
 
 .. code-block:: bash
@@ -48,7 +48,7 @@ Then open a File Explorer window and navigate to the directory with the zip file
 right click, and select "Extract All", type in the destination directory, and
 click "Extract."
 
-Next open a cygwin terminal window and type the following commands:
+Next open a cygwin terminal window and type the following commands (substituting your username for "rory"):
 
 .. code-block:: bash
 

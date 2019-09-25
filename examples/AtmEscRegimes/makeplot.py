@@ -90,7 +90,7 @@ axes[1,0].plot(time, regimes.bondi.Mass, color="C3")
 axes[1,0].axhline(regimes.auto.Mass[0], color="k", ls="--")
 
 # Format
-axes[1,0].set_xlabel("Time")
+axes[1,0].set_xlabel("Time [yr]")
 axes[1,0].set_ylabel(r"Mass [M$_{\oplus}$]")
 
 ## Lower right: Planet Radius ##
@@ -161,7 +161,7 @@ axes[1,0].plot(time, bondi.bondi.Mass, color="C3")
 axes[1,0].axhline(bondi.auto.Mass[0], color="k", ls="--")
 
 # Format
-axes[1,0].set_xlabel("Time")
+axes[1,0].set_xlabel("Time [yr]")
 axes[1,0].set_ylabel(r"Mass [M$_{\oplus}$]")
 
 ## Lower right: Planet Radius ##

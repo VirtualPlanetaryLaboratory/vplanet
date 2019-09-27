@@ -143,8 +143,6 @@ struct BODY {
   double dRotVel;        /**< Body's Rotational Velocity */
   double dRadGyra;       /**< Body's Radius of Gyration */
 
-  double *daSED;         /**< Body's spectral energy distribution by wavelength N/I */
-
   /* Orbital Properties. By convention, these are stored in the
    * second element in the BODY array and, if using binary
    * in the secondary (1st (0, 1, ..)) body*/
@@ -160,15 +158,15 @@ struct BODY {
   int bRunaway;          /**< Is the planet experiencing a runaway greenhouse? */
   int bCalcFXUV;         /**< Does incidenx XUV flow need to be calculated every
                               time step? */
-	int bEnvelopeLostMessage; /**< Has the envelope lost message been printed? */
-	int bRocheMessage;     /**< Has the Roche lobe message been printed? */
-	int bIgnoreRocheLobe;  /**< Ignore Roche lobe overflow? */
+  int bEnvelopeLostMessage; /**< Has the envelope lost message been printed? */
+  int bRocheMessage;     /**< Has the Roche lobe message been printed? */
+  int bIgnoreRocheLobe;  /**< Ignore Roche lobe overflow? */
 
   int iWaterLossModel;   /**< Water Loss and Oxygen Buildup Model */
   int iAtmXAbsEffH2OModel;  /**< Water X-ray/XUV absorption efficiency evolution model */
   int iPlanetRadiusModel;   /**< Planet Radius model. */
   int iWaterEscapeRegime;   /**< Track water escape regime */
-	int iHEscapeRegime; /**< Tracks H escape regime */
+  int iHEscapeRegime; /**< Tracks H escape regime */
 
   double dSurfaceWaterMass;     /**< Surface water mass */
   double dMinSurfaceWaterMass;  /**< Minimum surface water to avoid a halt */
@@ -196,13 +194,13 @@ struct BODY {
   double dFXUV;         /**< XUV Flux at planet's atmosphere */
   double dJeansTime;    /**< Jeans timescale for atmospheric escape */
   double dFlowTemp;     /**< Temperature of the hydrodynamic flow */
-	double dRocheRadius; 	/**< Radius of the Roche lobe */
-	double dBondiRadius;	/**< Bondi (Sonic) Radius */
-	int bUseEnergyLimited; /**< Use energy-limited escape */
-	int bUseBondiLimited;		/**< Use Bondi-limited H mass loss */
-	int bUseRRLimited; /**< Use radiation/recombination-limited H mass loss */
-	int bAtmEscAuto; /**< Transition H escape regime depending on physics */
-	double dEnvMassDt; /**< Time derivative of H envelope mass */
+  double dRocheRadius; 	/**< Radius of the Roche lobe */
+  double dBondiRadius;	/**< Bondi (Sonic) Radius */
+  int bUseEnergyLimited; /**< Use energy-limited escape */
+  int bUseBondiLimited;		/**< Use Bondi-limited H mass loss */
+  int bUseRRLimited; /**< Use radiation/recombination-limited H mass loss */
+  int bAtmEscAuto; /**< Transition H escape regime depending on physics */
+  double dEnvMassDt; /**< Time derivative of H envelope mass */
 
   /* BINARY parameters */
   int bBinary;           /**< Apply BINARY module? */
@@ -311,7 +309,7 @@ struct BODY {
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
   int bTideLock;         /**< Is a body tidally locked? */
-	double dLockTime;			 /**< Time when body tidally-locked */
+  double dLockTime;	 /**< Time when body tidally-locked */
   int bUseTidalRadius;   /**< Set a fixed tidal radius? */
   double dTidalRadius;   /**< Radius used by tidal evoltion equations (CPL only currently) */
   int iTidePerts;        /**< Number of Tidal Perturbers */
@@ -320,7 +318,7 @@ struct BODY {
   double dK2Man;         /**< Mantle k2 love number */
   double dK2Ocean;       /**< Ocean's Love Number */
   double dK2Env;         /**< Envelope's Love Number */
-  double dTidalQMan;
+  double dTidalQMan;     /**< Tidal Q of the Mantle */
   double dTidalQOcean;   /**< Body's Ocean Component to Tidal Q */
   double dTidalQEnv;     /**< Body's Envelope Component to Tidal Q */
   double dImK2Man;       /**< Mantle Im(k2) love number */
@@ -525,7 +523,7 @@ struct BODY {
   double dLostAngMom;    /**< Angular momemntum lost to space via magnetic braking */
   double dLostEng;       /**< Energy lost to space, i.e. via stellar contraction */
   int bRossbyCut;       /**< Whether or not to shut off magnetic braking for Ro>ROSSBYCRIT */
-	int bEvolveRG;				/**< Whether or not to evolve radius of gyration? Defaults to 0 */
+  int bEvolveRG;				/**< Whether or not to evolve radius of gyration? Defaults to 0 */
 
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
@@ -1472,7 +1470,7 @@ struct CONTROL {
   IO Io;
   UNITS *Units;
 
-	char sGitVersion[64];
+  char sGitVersion[64];
 
   /* Move to BODY */
   int *iMassRad;           /**< Mass-Radius Relationship */

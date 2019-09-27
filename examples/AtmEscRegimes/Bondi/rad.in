@@ -1,9 +1,9 @@
-# auto
-sName		auto        	          # Body's name
+# rad
+sName		rad         	          # Body's name
 saModules 	atmesc              # Active modules
 
 # Physical Parameters
-dMass		           -2 	        # Mass, negative -> Earth masses
+dMass		           -2.0	        # Mass, negative -> Earth masses
 sPlanetRadiusModel lopez12      # Mass-radius model
 dRadGyra	         0.4	        # Radius of gyration; ang. mom. coeff.
 dAge               1.0e6        # Age [yr]
@@ -14,7 +14,7 @@ dSemi           -0.1            # Semi-major axis [AU]
 
 # ATMESC Parameters
 dXFrac                  1.0     # X-Ray/XUV absorption radius in planet radii
-dAtmXAbsEffH            0.1     # H X-ray/XUV absorption efficiency (epsilon)
+dAtmXAbsEffH            0.0     # H X-ray/XUV absorption efficiency (epsilon)
 dSurfWaterMass   	      0.0     # Initial water mass, negative -> Earth oceans
 dEnvelopeMass           -1.0    # Initial H envelope mass, negative -> Earth Mass
 bInstantO2Sink          0       # Is Oxygen instantly absorbed by the surface?

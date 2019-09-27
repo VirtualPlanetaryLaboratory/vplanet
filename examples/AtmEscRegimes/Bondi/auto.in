@@ -28,4 +28,4 @@ bUseRRLimited           0       # Is the flow radiation/recombination-limited?
 bUseBondiLimited        0       # Is the flow Bondi-limited?
 bAtmEscAuto             1       # Should atmesc decide the escape regime?
 
-saOutputOrder 	Time -Mass -EnvelopeMass -PlanetRadius -BondiRadius -RocheRadius DEnvMassDt RRCriticalFlux HEscapeRegime # Output options
+saOutputOrder 	Time -Mass -EnvelopeMass -PlanetRadius -BondiRadius -RocheRadius DEnvMassDt RRCriticalFlux HEscapeRegime FXUV # Output options

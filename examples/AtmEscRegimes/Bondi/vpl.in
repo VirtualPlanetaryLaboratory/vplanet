@@ -1,7 +1,7 @@
 sSystemName               Bondi
 iVerbose                  5
 bOverwrite                1
-saBodyFiles               star.in bondi.in auto.in
+saBodyFiles               star.in bondi.in auto.in rad.in
 sUnitMass                 solar
 sUnitLength               AU
 sUnitTime                 YEARS

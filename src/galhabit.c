@@ -17,8 +17,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "vplanet.h"
-#include "options.h"
-#include "output.h"
 
 void BodyCopyGalHabit(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
     dest[iBody].dPeriQ = src[iBody].dPeriQ;

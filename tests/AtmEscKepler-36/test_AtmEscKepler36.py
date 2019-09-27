@@ -18,9 +18,9 @@ def test_AtmEscKepler36():
     # Run our comparisons
     assert np.isclose(output.log.final.star.LXUVStellar, 3.120390e+21)
     assert np.isclose(output.log.final.b.EnvelopeMass, 0)
-    assert np.isclose(output.log.final.b.Radius, 6.324093e+06)
+    assert np.isclose(output.log.final.b.Radius, 6.378100e+06)
     assert np.isclose(output.log.final.c.EnvelopeMass, 3.972871)
-    assert np.isclose(output.log.final.c.Radius, 3.591011e+07)    
+    assert np.isclose(output.log.final.c.Radius, 3.5899080e+07)
 
 
 if __name__ == "__main__":

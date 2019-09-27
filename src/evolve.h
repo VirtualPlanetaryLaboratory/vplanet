@@ -10,6 +10,10 @@
 
 */
 
+/* 0 => Not input by user, verify assigns default */
+#define EULER         1
+#define RUNGEKUTTA    2
+
 /* @cond DOXYGEN_OVERRIDE */
 
 void PropertiesAuxiliary(BODY*,CONTROL*,UPDATE*);

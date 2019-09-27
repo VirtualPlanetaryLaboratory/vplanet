@@ -5,9 +5,6 @@
   @date May 7 2014
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 #include "vplanet.h"
 
 /*

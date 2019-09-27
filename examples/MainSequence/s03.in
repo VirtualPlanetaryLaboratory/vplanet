@@ -1,0 +1,10 @@
+#
+sName	                  s03
+saModules	              stellar
+dMass                     0.75000
+dAge                      5e6
+sStellarModel             baraffe
+dSatXUVFrac               1.e-3
+dSatXUVTime               -0.1
+saOutputOrder Time -Luminosity -Radius Temperature -RotPer -LXUVTot RadGyra
+

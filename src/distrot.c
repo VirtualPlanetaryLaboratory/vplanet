@@ -20,8 +20,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "vplanet.h"
-#include "options.h"
-#include "output.h"
 
 void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
@@ -149,7 +147,7 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_CALCDYNELLIP].iMultiFile = 1;
   fnRead[OPT_CALCDYNELLIP] = &ReadCalcDynEllip;
 
-  sprintf(options[OPT_FORCEPRECRATE].cName,"bForcePrecRate");
+    sprintf(options[OPT_FORCEPRECRATE].cName,"bForcePrecRate");
   sprintf(options[OPT_FORCEPRECRATE].cDescr,"Set the axial precession to a fixed rate");
   sprintf(options[OPT_FORCEPRECRATE].cDefault,"0");
   options[OPT_FORCEPRECRATE].dDefault = 0;
@@ -1285,7 +1283,8 @@ Correction to axial precession rate for eccentricity (and possible additional ef
 @return Correction to precession rate
 */
 double fndCentralTorqueSfac(BODY *body, int iBody) {
-  return 0.5*pow(1.-(body[iBody].dHecc*body[iBody].dHecc)-(body[iBody].dKecc*body[iBody].dKecc),-1.5) - S0;
+  return 0.5*pow(1.-(body[iBody].dHecc*body[iBody].dHecc)-(body[iBody].dKecc*
+    body[iBody].dKecc),-1.5);
 }
 
 /**

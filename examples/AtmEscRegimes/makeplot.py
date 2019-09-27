@@ -39,7 +39,7 @@ for dir in dirs:
     os.chdir(os.path.join(dir_path,dir))
 
     # Run simulation
-    #subprocess.call(['vplanet', 'vpl.in'])
+    subprocess.call(['vplanet', 'vpl.in'])
 # Return to top-level directory
 os.chdir(dir_path)
 

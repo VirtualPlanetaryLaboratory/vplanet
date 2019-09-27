@@ -34,20 +34,24 @@ Expected output
    :align: center
 
    Evolution of the H envelope mass fraction (top left), time derivative of the
-   envelope mass (top right), total planet mass (bottom left), and planet radius
-   (bottom right) for planets following AtmEscAuto (blue), energy-limited (orange),
+   envelope mass (top center), total planet mass (top right), planet radius
+   (bottom left), Critical XUV Flux (bottom center), and the H envelope escape
+   regime (bottom right) for planets following AtmEscAuto (blue), energy-limited (orange),
    radiation/recombination-limited (green), and Bondi-limited escape (red). The
    black-dashed lines indicate the initial values for the respective quantities.
    All planets start with the same initial conditions. The Bondi-limited case
    rapidly loses its entire envelope. We probe this early mass loss in the figure
    below. After a few hundred years of Bondi-limited loss, the AtmEscAuto cases
    transitions to radiation/recombination-limited escape then briefly transitions
-   again to energy-limited escape before its envelope has been completely stripped.
+   again to energy-limited escape once the incident XUV flux exceeds the critical
+   value. Shortly after, its envelope is been completely stripped.
    The energy-limited escape case rapidly loses envelope mass, eventually completely
    stripping the envelope within 100 Myr. The radiation/recombination-limited
    escape case, however, is able to retain part of its envelope for much longer
    since its mass loss rate scales as the square root of the incident XUV flux
    as opposed to scaling linearly with the flux as is the case with energy-limited
+   escape. Note that the "No Escape" (black curve) in the radius panel corresponds
+   to a planet whose radius contracts as the planet cools, not due to atmospheric
    escape.
 
 .. figure:: AtmEscRegimesZoom.png

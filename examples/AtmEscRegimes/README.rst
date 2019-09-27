@@ -12,7 +12,7 @@ incident XUV flux.
 ===================   ============
 **Date**              09/24/19
 **Author**            David Fleming
-**Modules**           ATMESC
+**Modules**           AtmEsc
                       STELLAR
 **Approx. runtime**   70 seconds
 ===================   ============

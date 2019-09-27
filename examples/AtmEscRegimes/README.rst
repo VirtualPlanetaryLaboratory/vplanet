@@ -1,4 +1,4 @@
-Atmospheric Erosion of H Envelopes in the Energy, Radiation/Recombination, and Bondi-limited Regimes
+Atmospheric Erosion of H Envelopes in the Energy-, Radiation/Recombination-, and Bondi-limited Regimes
 ====================================================================================================
 
 Overview

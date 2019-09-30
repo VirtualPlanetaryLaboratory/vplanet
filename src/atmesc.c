@@ -830,7 +830,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_ENERGYLIMITED].cName,"bUseEnergyLimited");
   sprintf(options[OPT_ENERGYLIMITED].cDescr,"Use energy-limited escape for H envelope?");
-  sprintf(options[OPT_ENERGYLIMITED].cDefault,"1");
+  sprintf(options[OPT_ENERGYLIMITED].cDefault,"0");
   options[OPT_ENERGYLIMITED].iType = 0;
   options[OPT_ENERGYLIMITED].iMultiFile = 1;
   fnRead[OPT_ENERGYLIMITED] = &ReadEnergyLimited;
@@ -1537,12 +1537,16 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     // If more than one is set, let the user know what's wrong and quit.
     if (iRegimeCounter > 1) {
       fprintf(stderr, "ERROR: Multiple H envelope atmospheric regimes are enabled for body %s!\n",body[iBody].cName);
-      fprintf(stderr, "\tAtmEsc defaults to bUseEnergyLimited = 1.\n");
       fprintf(stderr, "\tbUseEnergyLimited = %d\n",body[iBody].bUseEnergyLimited);
       fprintf(stderr, "\tbUseRRLimited = %d\n",body[iBody].bUseRRLimited);
       fprintf(stderr, "\tbUseBondiLimited = %d\n",body[iBody].bUseBondiLimited);
       fprintf(stderr, "\tbAtmEscAuto = %d\n",body[iBody].bAtmEscAuto);
       exit(EXIT_INPUT);
+    }
+    else if (iRegimeCounter == 0) {
+      fprintf(stderr, "WARNING: No H envelope escape regime set for body %s!\n",body[iBody].cName);
+      fprintf(stderr, "Defaulting to energy-limited escape: bUseEnergyLimited = 1.\n");
+      body[iBody].bUseEnergyLimited = 1;
     }
 
     // Verify and set derivatives (including correct H envelope escape regime!)

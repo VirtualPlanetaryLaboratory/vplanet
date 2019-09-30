@@ -1,18 +1,19 @@
-Atmospheric Erosion of H Envelopes in the Energy, Radiation/Recombination, and Bondi-limited Regimes
+Atmospheric Erosion of H Envelopes in the Energy-, Radiation/Recombination-, and Bondi-limited Regimes
 ====================================================================================================
 
 Overview
 --------
 
 This examples compares the atmospheric erosion of four planets subject
-to energy-limited escape, radiation/recombination-limited escape, Bondi-limited escape,
+to energy-limited escape, radiation/recombination-limited escape, "Bondi-limited" escape,
 and one planet whose escape regime evolves depending on its mass, radius, and
-incident XUV flux.
+incident XUV flux. Bondi-limited escape occurs for planets overflowing their Roche lobe, 
+in which case particles escape at the local sound speed.
 
 ===================   ============
 **Date**              09/24/19
 **Author**            David Fleming
-**Modules**           ATMESC
+**Modules**           AtmEsc
                       STELLAR
 **Approx. runtime**   70 seconds
 ===================   ============

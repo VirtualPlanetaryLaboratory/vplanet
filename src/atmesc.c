@@ -1235,6 +1235,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iB
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
     body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
     body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,body[iBody].dPresSurf);
+    body[iBody].dRadius = body[iBody].dRadXUV/body[iBody].dXFrac;
   }
 
   // Ktide (due to body zero only). WARNING: not suited for binary...
@@ -1463,6 +1464,19 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   }
 
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
+    if (body[iBody].dEnvelopeMass >= 0.5*body[iBody].dMass) {
+      fprintf(stderr,
+        "ERROR: %s's Envelope mass is greater than 50%% of its total mass, which ",
+        body[iBody].cName);
+      fprintf(stderr,"is not allowed  for the Lehmer-Catling (2017) envelope model.\n");
+      DoubleLineExit(files->Infile[iBody+1].cIn,files->Infile[iBody+1].cIn,
+        options[OPT_ENVELOPEMASS].iLine[iBody+1],options[OPT_ENVELOPEMASS].iLine[iBody+1]);
+    }
+    if (body[iBody].dEnvelopeMass >= 0.1*body[iBody].dMass) {
+      fprintf(stderr,"WARNING: Envelope masses more than 10%% of the total mass are not "
+        "recommended for the Lehmer-Catling (2017) envelope model. %s's envelope ",body[iBody].cName);
+      fprintf(stderr, "mass exceeds this threshold.\n");
+    }
     body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;

@@ -127,9 +127,12 @@ void ReadThermTemp(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     else
       body[iFile-1].dThermTemp = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dThermTemp = options->dDefault;
+    body[iFile-1].bAutoThermTemp = 0;
+  } else {
+    if (iFile > 0) {
+      body[iFile-1].bAutoThermTemp = 1;
+    }
+  }
 }
 
 /**
@@ -887,6 +890,13 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_THERMTEMP].iType = 2;
   options[OPT_THERMTEMP].iMultiFile = 1;
   fnRead[OPT_THERMTEMP] = &ReadThermTemp;
+  sprintf(options[OPT_THERMTEMP].cLongDescr,
+    "The thermal temperature of a planet heated by radiation from the primary.\n"
+    "The user may set a value which will then remain constant for the simulation.\n"
+    "If the user does not specify a value, then it will be calculated automatically\n"
+    "from the formula T = (F(1-A)/sigma)^0.25, where F is the incident radiation,\n"
+    "A is albedo and sigma is the Steffan-Boltzman constant.\n"
+  );
 
   sprintf(options[OPT_FLOWTEMP].cName,"dFlowTemp");
   sprintf(options[OPT_FLOWTEMP].cDescr,"Temperature of the hydrodynamic flow");
@@ -1230,6 +1240,9 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iB
   body[iBody].dAge = body[0].dAge;
 
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
+    if (body[iBody].bAutoThermTemp) {
+      body[iBody].dThermTemp = fdThermalTemp(body,iBody);
+    }
     body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
@@ -1476,6 +1489,11 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
       fprintf(stderr,"WARNING: Envelope masses more than 10%% of the total mass are not "
         "recommended for the Lehmer-Catling (2017) envelope model. %s's envelope ",body[iBody].cName);
       fprintf(stderr, "mass exceeds this threshold.\n");
+    }
+
+    // Get thermal temperature
+    if (body[iBody].bAutoThermTemp) {
+      body[iBody].dThermTemp = fdThermalTemp(body,iBody);
     }
     body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);

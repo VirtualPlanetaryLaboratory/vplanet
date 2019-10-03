@@ -576,6 +576,21 @@ double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
   return dPresSurf;
 }
 
+/**
+  Thermal temperature of an object heated by the radiation of its primary.
+
+  @param dFlux Incident flux on the body
+  @param dTemp Thermal temperature
+  */
+double fdThermalTemp(BODY *body,int iBody) {
+  double dFlux,dTemp;
+
+  dFlux = body[0].dLuminosity*(1-body[iBody].dAlbedo)/(4*PI*body[iBody].dSemi*body[iBody].dSemi);
+  dTemp = pow(dFlux/SIGMA,0.25);
+
+  return dTemp;
+}
+
 double fdImK2Total(BODY *body,int iBody) {
 
   if (body[iBody].bMantle || body[iBody].bOcean || body[iBody].bEnv) {

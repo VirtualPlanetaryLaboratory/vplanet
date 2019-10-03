@@ -131,6 +131,7 @@ struct BODY {
   int iBodyType;         /**< Type of object: 0=star, 1=rocky planet, 2 = giant */
 
   double dAge;           /**< Body's Age */
+	double dAlbedo;				 /**< Body's albedo */
   double dMass;		       /**< Body's Mass */
   double dRadius;	       /**< Radius of body */
   double dDensity;       /**< Bulk density of body*/
@@ -159,8 +160,13 @@ struct BODY {
   int bCalcFXUV;         /**< Does incidenx XUV flow need to be calculated every
                               time step? */
   int bEnvelopeLostMessage; /**< Has the envelope lost message been printed? */
-  int bRocheMessage;     /**< Has the Roche lobe message been printed? */
-  int bIgnoreRocheLobe;  /**< Ignore Roche lobe overflow? */
+  int bRocheMessage;     	/**< Has the Roche lobe message been printed? */
+  int bIgnoreRocheLobe;  	/**< Ignore Roche lobe overflow? */
+	int bUseEnergyLimited; 	/**< Use energy-limited escape */
+  int bUseBondiLimited;		/**< Use Bondi-limited H mass loss */
+  int bUseRRLimited; 			/**< Use radiation/recombination-limited H mass loss */
+  int bAtmEscAuto; 				/**< Transition H escape regime depending on physics */
+	int bAutoThermTemp;			/**< Calculate thermal temperature from environemnt? */
 
   int iWaterLossModel;   /**< Water Loss and Oxygen Buildup Model */
   int iAtmXAbsEffH2OModel;  /**< Water X-ray/XUV absorption efficiency evolution model */
@@ -196,10 +202,6 @@ struct BODY {
   double dFlowTemp;     /**< Temperature of the hydrodynamic flow */
   double dRocheRadius; 	/**< Radius of the Roche lobe */
   double dBondiRadius;	/**< Bondi (Sonic) Radius */
-  int bUseEnergyLimited; /**< Use energy-limited escape */
-  int bUseBondiLimited;		/**< Use Bondi-limited H mass loss */
-  int bUseRRLimited; /**< Use radiation/recombination-limited H mass loss */
-  int bAtmEscAuto; /**< Transition H escape regime depending on physics */
   double dEnvMassDt; /**< Time derivative of H envelope mass */
 
   /* BINARY parameters */

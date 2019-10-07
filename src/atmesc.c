@@ -2202,7 +2202,11 @@ void WriteThermTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
  if (output->bDoNeg[iBody]) {
    *dTmp *= output->dNeg;
    strcpy(cUnit,output->cNeg);
- } else { }
+ } else {
+  //*dTmp /= fdUnitsTemp(*dTmp,0,units->iTemp);
+  // Only K allowed until units can be converted XXX
+  fsUnitsTemp(0,cUnit);
+ }
 }
 
 /**
@@ -2224,7 +2228,11 @@ void WriteFlowTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
  if (output->bDoNeg[iBody]) {
    *dTmp *= output->dNeg;
    strcpy(cUnit,output->cNeg);
- } else { }
+ } else {
+   // *dTmp /= fdUnitsTemp(*dTmp,0,units->iTemp);
+   // Only K allowed until units can be converted XXX
+   fsUnitsTemp(units->iTemp,cUnit);
+ }
 }
 
 /**
@@ -2268,7 +2276,10 @@ void WritePresXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   if (output->bDoNeg[iBody]){
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
-  } else { }
+  } else {
+    //*dTmp /= fdUnitsPressure(units->iLength);
+    //fsUnitsLength(units->iLength,cUnit);
+  }
 }
 
 /**
@@ -2290,7 +2301,9 @@ void WriteJeansTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   if (output->bDoNeg[iBody]){
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
-  } else { }
+  } else {
+    *dTmp /= fdUnitsTime(units->iTime);
+    fsUnitsTime(units->iTime,cUnit);}
 }
 
 /**
@@ -2312,7 +2325,10 @@ void WriteScaleHeight(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   if (output->bDoNeg[iBody]){
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
-  } else { }
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
 }
 
 /**
@@ -2610,9 +2626,9 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_SCALEHEIGHT].cName,"ScaleHeight");
   sprintf(output[OUT_SCALEHEIGHT].cDescr,"Scale height in Lehmer & Catling (2016) model");
-  sprintf(output[OUT_SCALEHEIGHT].cNeg,"J s^2 / kg m");
+  sprintf(output[OUT_SCALEHEIGHT].cNeg,"km");
   output[OUT_SCALEHEIGHT].bNeg = 1;
-  output[OUT_SCALEHEIGHT].dNeg = 1;
+  output[OUT_SCALEHEIGHT].dNeg = 0.001;
   output[OUT_SCALEHEIGHT].iNum = 1;
   output[OUT_SCALEHEIGHT].iModuleBit = ATMESC;
   fnWrite[OUT_SCALEHEIGHT] = &WriteScaleHeight;

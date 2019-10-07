@@ -17,6 +17,7 @@ dSurfWaterMass   	      0.0     # Initial water mass, negative -> Earth oceans
 dEnvelopeMass           -0.06    # Initial H envelope mass, negative -> Earth Mass
 dJeansTime		          -12.0   # Time when flow transitions to ballistic escape (Gyr)
 bUseEnergyLimited       1       # Is the flow energy-limited?
+#dThermTemp              800
 
 # Output options
-saOutputOrder 	Time -Mass -EnvelopeMass -PlanetRadius FXUV ScaleHeight PresSurf ThermTemp
+saOutputOrder 	Time -Mass -EnvelopeMass -PlanetRadius FXUV -ScaleHeight PresSurf ThermTemp -RadXUV

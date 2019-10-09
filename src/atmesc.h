@@ -17,10 +17,10 @@
 #define ATMESC_RRLIM            6           /**< Flag: Radiation/recombination-limited escape */
 #define ATMESC_BALLISTIC        7           /**< Flag: Ballistic escape regime */
 #define ATMESC_NONE             8           /**< Flag: No atmospheric escape */
-#define ATMESC_LOP12            6           /**< Flag: Lopez (2012) gaseous planet radius model */
-#define ATMESC_PROXCENB         7           /**< Flag: Proxima Centauri b gaseous planet radius model */
-#define ATMESC_LEHMER17         8           /**< Flag: Lehmer & Catling (2017) planet radius model */
-#define ATMESC_BOL16            9           /**< Flag: Bolmont (2016) XUV absorption efficiency model */
+#define ATMESC_LOP12            9           /**< Flag: Lopez (2012) gaseous planet radius model */
+#define ATMESC_PROXCENB         10           /**< Flag: Proxima Centauri b gaseous planet radius model */
+#define ATMESC_LEHMER17         11           /**< Flag: Lehmer & Catling (2017) planet radius model */
+#define ATMESC_BOL16            12           /**< Flag: Bolmont (2016) XUV absorption efficiency model */
 #define QOH                     16.         /**< Atomic mass ratio oxygen/hydrogen */
 
 /* Options Info */

@@ -1144,14 +1144,18 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
 
     // Let user know what's happening
     if (io->iVerbose >= VERBPROG && !body[iBody].bEnvelopeLostMessage) {
-      printf("%s's envelope removed after %.3lf million years.\n",body[iBody].cName,evolve->dTime/(1e6*YEARSEC));
+      printf("%s's envelope removed after %.3lf million years. ",body[iBody].cName,evolve->dTime/(1e6*YEARSEC));
+      if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
+        printf("Switching to Sotin+2007 model for solid planet radius.\n");
+      } else {
+        printf("\n");
+      }
       body[iBody].bEnvelopeLostMessage = 1;
     }
 
     // Update radius
     // If using Lopez+2012 radius model, set radius to Sotin+2007 radius
     if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
-      printf("Switching to Sotin+2007 model for solid planet radius.\n");
       body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
     }
   }

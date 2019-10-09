@@ -1,0 +1,22 @@
+# planet
+sName		    planet         	    # Body's name
+saModules 	atmesc              # Active modules
+
+# Physical Parameters
+dMass		           -2.0	        # Mass, negative -> Earth masses
+sPlanetRadiusModel lehmer      # Mass-radius model
+
+# Orbital Parameters
+dEcc            0.00            # Eccentricity
+dSemi           -0.1            # Semi-major axis [AU]
+
+# ATMESC Parameters
+dXFrac                  1.0     # X-Ray/XUV absorption radius in planet radii
+dAtmXAbsEffH            0.1     # H X-ray/XUV absorption efficiency (epsilon)
+dSurfWaterMass   	      0.0     # Initial water mass, negative -> Earth oceans
+dEnvelopeMass           -0.06   # Initial H envelope mass, negative -> Earth Mass
+dJeansTime		          -12.0   # Time when flow transitions to ballistic escape (Gyr)
+bAtmEscAuto             1       # Envelope escape determined by environment?
+
+# Output options
+saOutputOrder 	Time -Mass -EnvelopeMass -PlanetRadius FXUV -ScaleHeight PresSurf ThermTemp -RadXUV DEnvMassDt

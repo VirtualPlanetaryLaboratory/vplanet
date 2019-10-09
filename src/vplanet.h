@@ -131,7 +131,6 @@ struct BODY {
   int iBodyType;         /**< Type of object: 0=star, 1=rocky planet, 2 = giant */
 
   double dAge;           /**< Body's Age */
-	double dAlbedo;				 /**< Body's albedo */
   double dMass;		       /**< Body's Mass */
   double dRadius;	       /**< Radius of body */
   double dDensity;       /**< Bulk density of body*/

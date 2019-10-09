@@ -589,7 +589,7 @@ double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
 double fdThermalTemp(BODY *body,int iBody) {
   double dFlux,dTemp;
 
-  dFlux = body[0].dLuminosity*(1-body[iBody].dAlbedo)/(4*PI*body[iBody].dSemi*body[iBody].dSemi);
+  dFlux = body[0].dLuminosity*(1-body[iBody].dAlbedoGlobal)/(4*PI*body[iBody].dSemi*body[iBody].dSemi);
   dTemp = pow(dFlux/SIGMA,0.25);
 
   return dTemp;

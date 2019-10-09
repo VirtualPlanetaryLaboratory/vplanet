@@ -358,6 +358,10 @@ double fdMassToRad_Sotin07(double dMass) {
     return pow(dMass/MEARTH,0.272)*REARTH;
 }
 
+double fdMassToRad_LehmerCatling17(double dMass) {
+    return 1.3*pow(dMass,0.27);
+}
+
 /**
   Terrestrial planet mass-radius relationship from Sotin et al 2007, Icarus,
   191, 337-351.

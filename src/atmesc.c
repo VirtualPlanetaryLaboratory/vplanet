@@ -1142,14 +1142,16 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
     fnUpdate[iBody][update[iBody].iMass][0] = &fndUpdateFunctionTiny;
 
+    // Let user know what's happening
+    if (io->iVerbose >= VERBPROG && !body[iBody].bEnvelopeLostMessage) {
+      printf("%s's envelope removed after %.3lf million years.\n",body[iBody].cName,evolve->dTime/(1e6*YEARSEC));
+      body[iBody].bEnvelopeLostMessage = 1;
+    }
+
+    // Update radius
     // If using Lopez+2012 radius model, set radius to Sotin+2007 radius
-    if(body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
-      // Let user know what's happening
-      if (io->iVerbose >= VERBPROG && !body[iBody].bEnvelopeLostMessage) {
-        printf("%s's envelope removed. Used Lopez+12 radius models for envelope, switching to Sotin+2007 model for solid planet radius.\n",body[iBody].cName);
-        body[iBody].bEnvelopeLostMessage = 1;
-      }
-      // Update radius
+    if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
+      printf("Switching to Sotin+2007 model for solid planet radius.\n");
       body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
     }
   }
@@ -1237,13 +1239,13 @@ Initializes several helper variables and properties used in the integration.
 */
 void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iBody) {
 
-  body[iBody].dAge = body[0].dAge;
+  //body[iBody].dAge = body[0].dAge;
 
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
     if (body[iBody].bAutoThermTemp) {
       body[iBody].dThermTemp = fdThermalTemp(body,iBody);
     }
-    body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
+    //body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
     body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
@@ -1495,7 +1497,7 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     if (body[iBody].bAutoThermTemp) {
       body[iBody].dThermTemp = fdThermalTemp(body,iBody);
     }
-    body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
+    body[iBody].dRadSolid = fdMassToRad_LehmerCatling17(body[iBody].dMass - body[iBody].dEnvelopeMass);
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
     body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
@@ -2880,20 +2882,10 @@ The rate of change of the envelope mass given energy-limited escape.
 double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   double dMassDt = dTINY;
-
-  // Calculate mass loss depending on model
-  if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17) {
-
-  	dMassDt =  -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV
-        * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass
-          - body[iaBody[0]].dEnvelopeMass));
-
-  } else {
-  	dMassDt =  -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH
-      / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI
-        * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius
-          * body[iaBody[0]].dXFrac * body[iaBody[0]].dXFrac);
-  }
+	dMassDt =  -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH
+    / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI
+    * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius
+    * body[iaBody[0]].dXFrac * body[iaBody[0]].dXFrac);
 
   return dMassDt;
 }

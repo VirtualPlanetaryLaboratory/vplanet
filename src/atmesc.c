@@ -1253,7 +1253,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iB
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
     body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
-    body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,body[iBody].dPresSurf);
+    body[iBody].dRadXUV = fdLehmerRadius(body,iBody);
     body[iBody].dRadius = body[iBody].dRadXUV/body[iBody].dXFrac;
   }
 
@@ -1505,7 +1505,7 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
     body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
-    body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,body[iBody].dPresSurf);
+    body[iBody].dRadXUV = fdLehmerRadius(body,iBody);
   } else {
     int iCol,bError = 0;
     for (iCol=0;iCol<files->Outfile[iBody].iNumCols;iCol++) {
@@ -2956,7 +2956,7 @@ double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
 
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17) {
     body[iaBody[0]].dPresSurf = fdLehmerPres(body[iaBody[0]].dEnvelopeMass, body[iaBody[0]].dGravAccel, body[iaBody[0]].dRadSolid);
-    body[iaBody[0]].dRadXUV = fdLehmerRadius(body[iaBody[0]].dRadSolid, body[iaBody[0]].dPresXUV, body[iaBody[0]].dScaleHeight,body[iaBody[0]].dPresSurf);
+    body[iaBody[0]].dRadXUV = fdLehmerRadius(body,iaBody[0]);
   }
 
   double foo;

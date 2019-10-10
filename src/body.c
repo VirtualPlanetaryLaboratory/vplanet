@@ -552,13 +552,25 @@ double CalcDynEllipEq(BODY *body, int iBody) {
    @param dPresSurf pressure at surface due to envelope
    @param dRadXUV radius from center of planet where optical depth of XUV is unity
    */
-double fdLehmerRadius(double dRadSurf, double dPresXUV, double dScaleHeight, double dPresSurf) {
-	double dRadXUV;
+double fdLehmerRadius(BODY *body,int iBody) {
+	double dRadXUV,dRoche;
 
-	dRadXUV = dRadSurf * dRadSurf / (dScaleHeight * log(dPresXUV/dPresSurf) + dRadSurf);
-	if (dRadXUV <= dRadSurf) {
-		dRadXUV = dRadSurf;
+	dRadXUV = body[iBody].dRadSolid * body[iBody].dRadSolid / (body[iBody].dScaleHeight
+    * log(body[iBody].dPresXUV/body[iBody].dPresSurf) + body[iBody].dRadSolid);
+  dRoche=fdRocheRadius(body,iBody);
+    //printf("%lf %lf %lf %lf %lf\n",body[iBody].dPresXUV,body[iBody].dPresSurf,body[iBody].dGravAccel,body[iBody].dEnvelopeMass,dRadXUV);
+  if (dRadXUV <= 0) {
+    dRadXUV = dRoche;
+  }
+  if (dRadXUV > dRoche) {
+    dRadXUV = dRoche;
+  }
+	if (dRadXUV < body[iBody].dRadSolid) {
+		dRadXUV = body[iBody].dRadSolid;
 	}
+  if (body[iBody].dEnvelopeMass == 0) {
+    dRadXUV = body[iBody].dRadSolid;
+  }
   return dRadXUV;
 }
 
@@ -577,6 +589,8 @@ double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
 	double dPresSurf;
 
 	dPresSurf = dGravAccel * dMassEnv / (4 * PI * dRadSurf * dRadSurf); // [kg/ms2]
+//  if (dPresSurf < 0)
+//    printf("%lf %lf %lf %lf\n",dGravAccel,dRadSurf,dMassEnv,dPresSurf);
   return dPresSurf;
 }
 

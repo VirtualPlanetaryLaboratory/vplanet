@@ -19,4 +19,5 @@ dJeansTime		          -12.0   # Time when flow transitions to ballistic escape (
 bAtmEscAuto             1       # Envelope escape determined by environment?
 
 # Output options
-saOutputOrder 	Time -Mass -EnvelopeMass -PlanetRadius FXUV -ScaleHeight PresSurf ThermTemp -RadXUV DEnvMassDt
+saOutputOrder 	Time -Mass -EnvelopeMass -PlanetRadius FXUV -ScaleHeight $
+                PresSurf ThermTemp -RadXUV DEnvMassDt -RocheRadius

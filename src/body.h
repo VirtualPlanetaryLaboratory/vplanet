@@ -89,7 +89,7 @@ double fdRadToMass_GordaSvech99(double);
 double fdRadToMass_ReidHawley(double);
 double fdRadToMass_Sotin07(double);
 double fdMassToRad_LehmerCatling17(double);
-double fdLehmerRadius(double,double,double,double);
+double fdLehmerRadius(BODY*,int);
 double fdLehmerPres(double,double,double);
 double fdThermalTemp(BODY*,int);
 

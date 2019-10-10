@@ -1268,7 +1268,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iB
       if (xi > 1) {
         body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
       } else {
-        if (!body[iBody].bRocheMessage && io->iVerbose >= VERBINPUT && !body[iBody].bUseBondiLimited) {
+        if (!body[iBody].bRocheMessage && io->iVerbose >= VERBINPUT && (!body[iBody].bUseBondiLimited && !body[iBody].bAtmEscAuto)) {
           fprintf(stderr,"WARNING: Roche lobe radius is larger than XUV radius for %s, evolution may not be accurate.\n",
               body[iBody].cName);
           fprintf(stderr,"Consider setting bUseBondiLimited = 1 or bAtmEscAuto = 1 to limit envelope mass loss.\n");

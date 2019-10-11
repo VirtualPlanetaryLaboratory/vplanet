@@ -9,7 +9,7 @@
   @date May 2014
 
 */
-
+#define NUM_THREADS 1
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
@@ -338,18 +338,27 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
      Does RK4 require the equations to be independent over the full step? */
 
   iNumBodies = evolve->iNumBodies;
-  #pragma omp parallel for num_threads(4) private(iNumVars,iNumEqns,iVar,iEqn)
+  #pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars,iNumEqns,iVar,iEqn)
   for (iBody=0;iBody<iNumBodies;iBody++) {
+    //int thread_num = omp_get_thread_num();
+    //int cpu_num = sched_getcpu();
+    //printf("Thread %3d is running on CPU %3d\n", thread_num, cpu_num); 
+    float daDerivVar;
     iNumVars = update[iBody].iNumVars;
     for (iVar=0;iVar<iNumVars;iVar++) {
-      evolve->daDeriv[0][iBody][iVar] = 0;
+      daDerivVar = 0;
       iNumEqns = update[iBody].iNumEqns[iVar];
       for (iEqn=0;iEqn<iNumEqns;iEqn++) {
         // XXX Set update.dDxDtModule here?
-        evolve->daDeriv[0][iBody][iVar] += iDir*evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        daDerivVar += iDir*evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
         //evolve->daTmpVal[0][iBody][iVar] += (*dDt)*iDir*evolve->tmpUpdate[iBody].daDeriv[iVar][iEqn];
       }
+      evolve->daDeriv[0][iBody][iVar] = daDerivVar;
+    }
+  }
 
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    for (iVar=0;iVar<iNumVars;iVar++) {
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
         // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be
@@ -368,15 +377,23 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   /* Don't need this timestep info, so assign output to dFoo */
   fdGetUpdateInfo(evolve->tmpBody,control,system,evolve->tmpUpdate,fnUpdate);
 
-  #pragma omp parallel for num_threads(4) private(iNumVars,iNumEqns,iVar,iEqn)
+  #pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars,iNumEqns,iVar,iEqn)
   for (iBody=0;iBody<iNumBodies;iBody++) {
     iNumVars = update[iBody].iNumVars;
+    float daDerivVar;
     for (iVar=0;iVar<iNumVars;iVar++) {
-      evolve->daDeriv[1][iBody][iVar] = 0;
+      daDerivVar = 0;
       iNumEqns = update[iBody].iNumEqns[iVar];
       for (iEqn=0;iEqn<iNumEqns;iEqn++) {
-        evolve->daDeriv[1][iBody][iVar] += iDir*evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        daDerivVar += iDir*evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        //evolve->daTmpVal[0][iBody][iVar] += (*dDt)*iDir*evolve->tmpUpdate[iBody].daDeriv[iVar][iEqn];
       }
+      evolve->daDeriv[1][iBody][iVar] = daDerivVar;
+    }
+  }
+
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    for (iVar=0;iVar<iNumVars;iVar++) {
 
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
@@ -396,15 +413,23 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   fdGetUpdateInfo(evolve->tmpBody,control,system,evolve->tmpUpdate,fnUpdate);
 
-  #pragma omp parallel for num_threads(4) private(iNumVars,iNumEqns,iVar,iEqn)
+  #pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars,iNumEqns,iVar,iEqn)
   for (iBody=0;iBody<iNumBodies;iBody++) {
     iNumVars = update[iBody].iNumVars;
+    float daDerivVar;
     for (iVar=0;iVar<iNumVars;iVar++) {
-      evolve->daDeriv[2][iBody][iVar] = 0;
+      daDerivVar = 0;
       iNumEqns = update[iBody].iNumEqns[iVar];
       for (iEqn=0;iEqn<iNumEqns;iEqn++) {
-        evolve->daDeriv[2][iBody][iVar] += iDir*evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        daDerivVar += iDir*evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        //evolve->daTmpVal[0][iBody][iVar] += (*dDt)*iDir*evolve->tmpUpdate[iBody].daDeriv[iVar][iEqn];
       }
+      evolve->daDeriv[2][iBody][iVar] = daDerivVar;
+    }
+  }
+
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    for (iVar=0;iVar<iNumVars;iVar++) {
 
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
@@ -423,19 +448,21 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   fdGetUpdateInfo(evolve->tmpBody,control,system,evolve->tmpUpdate,fnUpdate);
 
-  #pragma omp parallel for num_threads(4) private(iNumVars,iNumEqns,iVar,iEqn)
+  #pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars,iNumEqns,iVar,iEqn)
   for (iBody=0;iBody<iNumBodies;iBody++) {
+    float daDerivVar;
     iNumVars = update[iBody].iNumVars;
     for (iVar=0;iVar<iNumVars;iVar++) {
-
+      daDerivVar = 0;
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // NOTHING!
       } else {
         evolve->daDeriv[3][iBody][iVar] = 0;
         iNumEqns = update[iBody].iNumEqns[iVar];
         for (iEqn=0;iEqn<iNumEqns;iEqn++) {
-          evolve->daDeriv[3][iBody][iVar] += iDir*evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+          daDerivVar += iDir*evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
         }
+        evolve->daDeriv[3][iBody][iVar] = daDerivVar;
       }
     }
   }

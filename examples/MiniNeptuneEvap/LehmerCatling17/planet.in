@@ -21,4 +21,5 @@ dThermTemp              880
 dAtmGasConst         4157
 
 # Output options
-saOutputOrder 	Time -Mass -EnvelopeMass -PlanetRadius FXUV -ScaleHeight PresSurf ThermTemp -RadXUV DEnvMassDt
+saOutputOrder 	Time -Mass -EnvelopeMass -PlanetRadius FXUV -ScaleHeight $
+                PresSurf ThermTemp -RadXUV DEnvMassDt -RocheRadius

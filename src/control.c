@@ -115,9 +115,9 @@ void InitializeControl(CONTROL *control,MODULE *module) {
   }
 
   // Initialize IO arrays
-  control->Io.bRocheMessage = malloc(module->iNumModules[iBody]*sizeof(int));
+  control->Io.baRocheMessage = malloc(control->Evolve.iNumBodies*sizeof(int));
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    control->Io.bRocheMessage[iBody] = 0;
+    control->Io.baRocheMessage[iBody] = 0;
   }
 }
 

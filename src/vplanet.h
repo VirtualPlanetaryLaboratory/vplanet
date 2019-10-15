@@ -1449,7 +1449,7 @@ struct IO {
 
   int bOverwrite;         /**< Allow files to be overwritten? */
 
-  int *bRocheMessage;     	/**< Has the Roche lobe message been printed? */
+  int *baRocheMessage;     	/**< Has the Roche lobe message been printed? */
 };
 
 /* The CONTROL struct contains all the parameters that

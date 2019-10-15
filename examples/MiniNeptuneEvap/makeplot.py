@@ -65,12 +65,12 @@ axes[0,1].set_ylim(1.93, 2)
 axes[0,1].set_ylabel(r"Total Mass ($M_\oplus$)")
 
 ## Upper right: Envelope mass time derivative ##
-axes[0,2].plot(time, lc17.planet.DEnvMassDt/1e6, color='k')
-axes[0,2].plot(time, dyn.planet.DEnvMassDt/1e6, color=vpl.colors.dark_blue)
+axes[0,2].plot(time, lc17.planet.DEnvMassDt/1e9, color='k')
+axes[0,2].plot(time, dyn.planet.DEnvMassDt/1e9, color=vpl.colors.dark_blue)
 
-axes[0,2].set_ylim(-6500, 100)
+axes[0,2].set_ylim(-6.5, 0.1)
 #axes[0,2].set_yscale("symlog", linthreshy=0.1)
-axes[0,2].set_ylabel(r"$\dot{M}_{envelope}$ [$10^6$kg/s]")
+axes[0,2].set_ylabel(r"$\dot{M}_{envelope}$ [$10^9$ kg/s]")
 
 ## Upper Middle left: Stellar Luminosity
 axes[1,0].plot(time, lc17.star.Luminosity, color='k')
@@ -90,7 +90,7 @@ axes[1,1].set_ylabel(r"$L_{XUV}$ ($10^{-3}L_\odot$)")
 
 ## Upper Right middle: Incident XUV flux
 axes[1,2].plot(time, lc17.planet.FXUV, color='k',label='L&C (2017)')
-axes[1,2].plot(time, dyn.planet.FXUV, color=vpl.colors.dark_blue,label='E-limited')
+axes[1,2].plot(time, dyn.planet.FXUV, color=vpl.colors.dark_blue,label='Auto AtmEsc')
 axes[1,2].legend(loc='upper right')
 
 # Format

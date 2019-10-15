@@ -2182,9 +2182,15 @@ Logs the atmospheric mass loss rate.
 @param cUnit The unit for this variable
 */
 void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]){
-
   *dTmp = body[iBody].dEnvMassDt;
-  strcpy(cUnit,"kg/s");
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    //*dTmp *= fdUnitsTime(units->iTime)/fdUnitsMass(units->iMass);
+    strcpy(cUnit,"kg/s");
+  }
 }
 
 /**
@@ -2258,7 +2264,9 @@ void WritePresSurf(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   if (output->bDoNeg[iBody]){
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
-  } else { }
+  } else {
+    strcpy(cUnit,"Pa");
+  }
 }
 
 /**
@@ -2596,7 +2604,9 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_DENVMASSDT].cName,"DEnvMassDt");
   sprintf(output[OUT_DENVMASSDT].cDescr,"Envelope Mass Loss Rate");
-  output[OUT_DENVMASSDT].bNeg = 0;
+  sprintf(output[OUT_DENVMASSDT].cNeg,"Earth Masses/Myr");
+  output[OUT_DENVMASSDT].bNeg = 1;
+  output[OUT_DENVMASSDT].dNeg = (YEARSEC*1e6)/MEARTH;
   output[OUT_DENVMASSDT].iNum = 1;
   output[OUT_DENVMASSDT].iModuleBit = ATMESC;
   fnWrite[OUT_DENVMASSDT] = &WriteDEnvMassDt;
@@ -2612,9 +2622,9 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_PRESSURF].cName,"PresSurf");
   sprintf(output[OUT_PRESSURF].cDescr,"Surface pressure due to atmosphere");
-  sprintf(output[OUT_PRESSURF].cNeg,"Pa");
+  sprintf(output[OUT_PRESSURF].cNeg,"GPa");
   output[OUT_PRESSURF].bNeg = 1;
-  output[OUT_PRESSURF].dNeg = 1;
+  output[OUT_PRESSURF].dNeg = 1e-9;
   output[OUT_PRESSURF].iNum = 1;
   output[OUT_PRESSURF].iModuleBit = ATMESC;
   fnWrite[OUT_PRESSURF] = &WritePresSurf;

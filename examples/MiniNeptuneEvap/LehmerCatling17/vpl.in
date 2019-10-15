@@ -1,7 +1,7 @@
 # Reproduce Fig. 3 from Lehmer & Catling (2017)
 sSystemName               evaporation
 
-iVerbose                  5
+iVerbose                  0
 bOverwrite                1
 saBodyFiles               star.in planet.in
 

@@ -159,7 +159,6 @@ struct BODY {
   int bCalcFXUV;         /**< Does incidenx XUV flow need to be calculated every
                               time step? */
   int bEnvelopeLostMessage; /**< Has the envelope lost message been printed? */
-  int bRocheMessage;     	/**< Has the Roche lobe message been printed? */
   int bIgnoreRocheLobe;  	/**< Ignore Roche lobe overflow? */
 	int bUseEnergyLimited; 	/**< Use energy-limited escape */
   int bUseBondiLimited;		/**< Use Bondi-limited H mass loss */
@@ -1449,6 +1448,8 @@ struct IO {
   int iSciNot;            /**< Crossover Decade to Switch between Standard and Scientific Notation */
 
   int bOverwrite;         /**< Allow files to be overwritten? */
+
+  int *bRocheMessage;     	/**< Has the Roche lobe message been printed? */
 };
 
 /* The CONTROL struct contains all the parameters that
@@ -1559,7 +1560,7 @@ struct OUTFILE {
 /* The FILES struct contains all the information
  * regarding every file. */
 
-struct FILES{
+struct FILES {
   char cExe[LINE];             /**< Name of Executable */
   OUTFILE *Outfile;            /**< Output File Name for Forward Integration */
   char cLog[NAMELEN];          /**< Log File Name */
@@ -1570,7 +1571,7 @@ struct FILES{
 /* The OPTIONS struct contains all the information
  * regarding the options, including their file data. */
 
-struct OPTIONS{
+struct OPTIONS {
   char cName[OPTLEN];          /**< Option Name */
   char cDescr[OPTDESCR];       /**< Brief Description of Option */
   char cLongDescr[OPTLONDESCR];/**< Long Description of Option */

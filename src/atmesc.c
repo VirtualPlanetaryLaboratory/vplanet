@@ -69,7 +69,6 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].bUseRRLimited = src[iBody].bUseRRLimited;
   dest[iBody].bUseBondiLimited = src[iBody].bUseBondiLimited;
   dest[iBody].bAtmEscAuto = src[iBody].bAtmEscAuto;
-  dest[iBody].bRocheMessage = src[iBody].bRocheMessage;
   dest[iBody].dEnvMassDt = src[iBody].dEnvMassDt;
 
 }
@@ -1268,11 +1267,11 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iB
       if (xi > 1) {
         body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
       } else {
-        if (!body[iBody].bRocheMessage && io->iVerbose >= VERBINPUT && (!body[iBody].bUseBondiLimited && !body[iBody].bAtmEscAuto)) {
+        if (!io->bRocheMessage[iBody] && io->iVerbose >= VERBINPUT && (!body[iBody].bUseBondiLimited && !body[iBody].bAtmEscAuto)) {
           fprintf(stderr,"WARNING: Roche lobe radius is larger than XUV radius for %s, evolution may not be accurate.\n",
               body[iBody].cName);
           fprintf(stderr,"Consider setting bUseBondiLimited = 1 or bAtmEscAuto = 1 to limit envelope mass loss.\n");
-          body[iBody].bRocheMessage = 1;
+          io->bRocheMessage[iBody] = 1;
         }
       }
         // Fix dKTide to prevent infs when in Roche Lobe overflow
@@ -1471,7 +1470,6 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   body[iBody].iHEscapeRegime = ATMESC_NONE; // Default to no H escape - updated if envelope is present
   body[iBody].bEnvelopeLostMessage = 0;
-  body[iBody].bRocheMessage = 0;
   body[iBody].dEnvMassDt = 0.0; // Assume no H envelope mass loss at first
 
   // Is FXUV specified in input file?

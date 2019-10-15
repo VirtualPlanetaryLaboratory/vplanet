@@ -113,6 +113,12 @@ void InitializeControl(CONTROL *control,MODULE *module) {
       control->fnPropsAux[iBody][iModule] = &PropsAuxNULL;
     }
   }
+
+  // Initialize IO arrays
+  control->Io.bRocheMessage = malloc(module->iNumModules[iBody]*sizeof(int));
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    control->Io.bRocheMessage[iBody] = 0;
+  }
 }
 
 /**

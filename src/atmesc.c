@@ -1218,10 +1218,10 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
           fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
         }
       }
-    }
-    // Undefined regime! Warn user and switch to energy-limited
-    else {
-      fprintf(stderr, "WARNING: Undefined iHEscapeRegime = %d for body %s!\n",body[iBody].iHEscapeRegime, body[iBody].cName);
+    } else {
+      // Undefined regime! Warn user and switch to energy-limited
+      fprintf(stderr, "WARNING: Undefined iHEscapeRegime = %d for body %s!\n",
+        body[iBody].iHEscapeRegime, body[iBody].cName);
       fprintf(stderr, "Switching to default energy-limited escape.\n");
 
       body[iBody].iHEscapeRegime = ATMESC_ELIM;
@@ -1241,15 +1241,19 @@ Initializes several helper variables and properties used in the integration.
 @param update A pointer to the UPDATE instance
 @param iBody The current BODY number
 */
-void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iBody) {
+void fnPropsAuxAtmEsc(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,
+  int iBody) {
 
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
     if (body[iBody].bAutoThermTemp) {
       body[iBody].dThermTemp = fdThermalTemp(body,iBody);
     }
-    body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
-    body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
-    body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
+    body[iBody].dGravAccel = BIGG * (body[iBody].dMass -
+      body[iBody].dEnvelopeMass)/(body[iBody].dRadSolid*body[iBody].dRadSolid);
+    body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp
+      / body[iBody].dGravAccel;
+    body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass,
+      body[iBody].dGravAccel, body[iBody].dRadSolid);
     body[iBody].dRadXUV = fdLehmerRadius(body,iBody);
     body[iBody].dRadius = body[iBody].dRadXUV/body[iBody].dXFrac;
   }

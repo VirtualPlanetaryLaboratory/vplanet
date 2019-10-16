@@ -70,7 +70,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].bUseBondiLimited = src[iBody].bUseBondiLimited;
   dest[iBody].bAtmEscAuto = src[iBody].bAtmEscAuto;
   dest[iBody].dEnvMassDt = src[iBody].dEnvMassDt;
-
+  dest[iBody].bAutoThermTemp = src[iBody].bAutoThermTemp;
 }
 
 /**************** ATMESC options ********************/
@@ -1627,7 +1627,6 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorAtmEsc;
   control->fnPropsAux[iBody][iModule] = &fnPropsAuxAtmEsc;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyAtmEsc;
-
 }
 
 /**************** ATMESC update ****************/
@@ -2182,7 +2181,7 @@ Logs the atmospheric mass loss rate.
 @param cUnit The unit for this variable
 */
 void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]){
-  *dTmp = body[iBody].dEnvMassDt;
+  *dTmp = *(update[iBody].pdDEnvelopeMassDtAtmesc);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;

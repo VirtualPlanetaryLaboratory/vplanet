@@ -56,6 +56,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dRadXUV = src[iBody].dRadXUV;
   dest[iBody].dRadSolid = src[iBody].dRadSolid;
   dest[iBody].dPresXUV = src[iBody].dPresXUV;
+  dest[iBody].dPresSurf = src[iBody].dPresSurf;
   dest[iBody].dScaleHeight = src[iBody].dScaleHeight;
   dest[iBody].dThermTemp = src[iBody].dThermTemp;
   dest[iBody].dFlowTemp = src[iBody].dFlowTemp;
@@ -1242,13 +1243,10 @@ Initializes several helper variables and properties used in the integration.
 */
 void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iBody) {
 
-  //body[iBody].dAge = body[0].dAge;
-
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
     if (body[iBody].bAutoThermTemp) {
       body[iBody].dThermTemp = fdThermalTemp(body,iBody);
     }
-    //body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
     body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
@@ -1578,8 +1576,7 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
       fprintf(stderr, "\tbUseBondiLimited = %d\n",body[iBody].bUseBondiLimited);
       fprintf(stderr, "\tbAtmEscAuto = %d\n",body[iBody].bAtmEscAuto);
       exit(EXIT_INPUT);
-    }
-    else if (iRegimeCounter == 0) {
+    } else if (iRegimeCounter == 0) {
       fprintf(stderr, "WARNING: No H envelope escape regime set for body %s!\n",body[iBody].cName);
       fprintf(stderr, "Defaulting to energy-limited escape: bUseEnergyLimited = 1.\n");
       body[iBody].bUseEnergyLimited = 1;
@@ -1589,14 +1586,15 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     VerifyEnvelopeMass(body,options,update,body[iBody].dAge,iBody);
     VerifyMassAtmEsc(body,options,update,body[iBody].dAge,iBody);
     bAtmEsc = 1;
-  }
-  else {
+  } else {
     // No H enevelope but Bondi Limited escape is set - warn user and use energy-limited escape
     if(body[iBody].bUseBondiLimited || body[iBody].bUseRRLimited || body[iBody].bAtmEscAuto) {
       if (control->Io.iVerbose >= VERBINPUT)
         fprintf(stderr,"WARNING: No H envelope present but Bondi/Radiation-recombination-limited escape is set for body %s!\n",body[iBody].cName);
         fprintf(stderr,"AtmEsc currently supports only energy-limited escape for H20 loss calculations.");
     }
+    // Point pdDEnvelopeMassDtAtmesc to zero. This should be done better.
+    update[iBody].pdDEnvelopeMassDtAtmesc = &update[iBody].dZero;
   }
 
   // Ensure envelope mass is physical

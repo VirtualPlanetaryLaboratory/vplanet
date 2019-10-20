@@ -714,7 +714,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_XFRAC].cName,"dXFrac");
   sprintf(options[OPT_XFRAC].cDescr,"Fraction of planet radius in X-ray/UV");
   sprintf(options[OPT_XFRAC].cDefault,"1");
-  options[OPT_XFRAC].dDefault = 1;
+  options[OPT_XFRAC].dDefault = 1.0;
   options[OPT_XFRAC].iType = 2;
   options[OPT_XFRAC].iMultiFile = 1;
   fnRead[OPT_XFRAC] = &ReadXFrac;
@@ -1034,7 +1034,7 @@ void VerifyEnvelopeMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,i
   update[iBody].iaBody[update[iBody].iEnvelopeMass][0] = malloc(update[iBody].iNumBodies[update[iBody].iEnvelopeMass][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iEnvelopeMass][0][0] = iBody;
 
-  update[iBody].pdDEnvelopeMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iEnvelopeMass][0];
+  update[iBody].pdDEnvelopeMassDtAtmesc = &update[iBody].daDeriv[update[iBody].iEnvelopeMass];
 }
 
 /**
@@ -1168,6 +1168,10 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
       // Is the flux RR-limited?
       if(fbRRCriticalFlux(body,iBody)) {
           // Switch regime, derivatives
+          if (io->iVerbose >= VERBPROG) {
+            printf("Switching from energy-limited to RR-limited escape at t = %.4lf Myr.\n",
+              evolve->dTime/(1e6*YEARSEC));
+          }
           body[iBody].iHEscapeRegime = ATMESC_RRLIM;
           fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtRRLimited;
           fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtRRLimited;
@@ -1176,6 +1180,10 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
       // Is the flux Bondi-limited?
       if(fbBondiCriticalDmDt(body, iBody)) {
         // Switch regime, derivatives
+        if (io->iVerbose >= VERBPROG) {
+          printf("Switching from energy-limited to Bondi-limited escape at t = %.4lf Myr.\n",
+            evolve->dTime/(1e6*YEARSEC));
+        }
         body[iBody].iHEscapeRegime = ATMESC_BONDILIM;
         fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtBondiLimited;
         fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtBondiLimited;
@@ -1186,6 +1194,10 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
       // Is the escape now energy-limited?
       if(!fbRRCriticalFlux(body,iBody)) {
           // Switch regime, derivatives
+          if (io->iVerbose >= VERBPROG) {
+            printf("Switching from RR-limited to energy-limited escape at t = %.4lf Myr.\n",
+              evolve->dTime/(1e6*YEARSEC));
+          }
           body[iBody].iHEscapeRegime = ATMESC_ELIM;
           fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
           fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
@@ -1194,6 +1206,10 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
       // Is the escape now Bondi-limited?
       if(fbBondiCriticalDmDt(body, iBody)) {
         // Switch regime, derivatives
+        if (io->iVerbose >= VERBPROG) {
+          printf("Switching from RR-limited to Bondi-limited escape at t = %.4lf Myr.\n",
+            evolve->dTime/(1e6*YEARSEC));
+        }
         body[iBody].iHEscapeRegime = ATMESC_BONDILIM;
         fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtBondiLimited;
         fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtBondiLimited;
@@ -1206,6 +1222,10 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
         // RR-limited?
         if(fbRRCriticalFlux(body,iBody)) {
           // Switch regime, derivatives
+          if (io->iVerbose >= VERBPROG) {
+            printf("Switching from Bondi-limited to RR-limited escape at t = %.4lf Myr.\n",
+              evolve->dTime/(1e6*YEARSEC));
+          }
           body[iBody].iHEscapeRegime = ATMESC_RRLIM;
           fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtRRLimited;
           fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtRRLimited;
@@ -1213,6 +1233,10 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
         // Energy-limited!
         else {
           // Switch regime, derivatives
+          if (io->iVerbose >= VERBPROG) {
+            printf("Switching from Bondi-limited to energy-limited escape at t = %.4lf Myr.\n",
+              evolve->dTime/(1e6*YEARSEC));
+          }
           body[iBody].iHEscapeRegime = ATMESC_ELIM;
           fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
           fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
@@ -2185,6 +2209,8 @@ Logs the atmospheric mass loss rate.
 void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]){
   *dTmp = *(update[iBody].pdDEnvelopeMassDtAtmesc);
 
+  //*dTmp = fnUpdate[iBody][update[iBody].iEnvelopeMass][0];
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -2756,6 +2782,7 @@ void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
   for (iOut=OUTSTARTATMESC;iOut<OUTENDATMESC;iOut++) {
     if (output[iOut].iNum > 0) {
+      //fprintf(stderr,"%d\n",iOut);
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
     }
   }

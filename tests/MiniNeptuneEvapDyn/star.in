@@ -9,6 +9,7 @@ dAge            1.0e6               # Initial age [yr]
 
 # STELLAR parameters
 sStellarModel       baraffe
+#sStellarModel       none
 dSatXUVFrac         1e-3          # XUV Saturation fraction
 dSatXUVTime         -0.1            # XUV Saturation timescale, negative-> in Gyr
 dXUVBeta            1.23            # XUV decay power law exponent

@@ -1404,7 +1404,7 @@ struct EVOLVE {
   int bFirstStep;        /**< Has the First Dtep Been Taken? */
   int iNumBodies;        /**< Number of Bodies to be Integrated */
   int iOneStep;          /**< Integration Method number */
-  double dCurrentDt;
+  double dCurrentDt;     /**< Current timestep */
 
   // These are to store midpoint derivative info in RK4.
   BODY *tmpBody;         /**< Temporary BODY struct */
@@ -1438,8 +1438,9 @@ struct EVOLVE {
  * control program flow. */
 
 struct IO {
-  int iVerbose;           /**< Verbosity Level. 0=none; 1=error; 2=progress; 3=input; 4=units; 5=all */
-  double dOutputTime;	  /**< Integration Output Interval */
+  int iVerbose;          /**< Verbosity Level. 0=none; 1=error; 2=progress; 3=input; 4=units; 5=all */
+  double dOutputTime;	   /**< Integration Output Interval */
+  double dNextOutput;    /**< Time of next output */
 
   int bLog;               /**< Write Log File? */
 
@@ -1449,7 +1450,7 @@ struct IO {
 
   int bOverwrite;         /**< Allow files to be overwritten? */
 
-  int *baRocheMessage;     	/**< Has the Roche lobe message been printed? */
+  int *baRocheMessage;    /**< Has the Roche lobe message been printed? */
 };
 
 /* The CONTROL struct contains all the parameters that

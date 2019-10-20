@@ -59,15 +59,23 @@ double AssignDt(double dMin,double dNextOutput,double dEta) {
   return dMin;
 }
 
+/* Deprecated!
 double fdNextOutput(double dTime,double dOutputInterval) {
-/* Compute when the next timestep occurs. */
+// Compute when the next timestep occurs.
   int nSteps; // Number of outputs so far
+  double dNextOutput;
+  printf("In NextOutput.\n");
 
-  /* Number of output so far */
+  // Number of output so far
   nSteps = (int)(dTime/dOutputInterval);
-  /* Next output is one more */
-  return (nSteps+1.0)*dOutputInterval;
+  //nSteps = dTime % dOutputInterval;
+  //printf("nSteps: %d   ",nSteps);
+  // Next output is one more
+  dNextOutput = (nSteps+1.0)*dOutputInterval;
+  //printf("dNextOutput: %.4lf\n",dNextOutput);
+  return dNextOutput;
 }
+*/
 
 double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate) {
   /* Fills the Update arrays with the derivatives
@@ -78,12 +86,9 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
     int iBody,iVar,iEqn; // Dummy counting variables
     EVOLVE integr; // Dummy EVOLVE struct so we don't have to dereference control a lot
-    double dVarNow,dMinNow,dMin=dHUGE,dVarTotal,dTimeOut; // Intermediate storage variables
+    double dVarNow,dMinNow,dMin=dHUGE,dVarTotal; // Intermediate storage variables
 
     integr = control->Evolve;
-
-
-    // XXX Change Eqn to Proc?
 
     dMin = dHUGE;
 
@@ -138,7 +143,8 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
            /* Equations not in matrix, computing things as explicit function of time,
              so we set dMin to time until next output
              Figure out time until next output */
-             dMinNow = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
+             //dMinNow = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
+             dMinNow = control->Io.dNextOutput;
              if (dMinNow < dMin) {
                dMin = dMinNow;
              }
@@ -255,7 +261,6 @@ void fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   integr = control->Evolve;
 
-  // XXX Change Eqn to Proc?
   iNumBodies = control->Evolve.iNumBodies;
   for (iBody=0;iBody<iNumBodies;iBody++) {
     if (update[iBody].iNumVars > 0) {
@@ -274,14 +279,14 @@ void fdGetUpdateInfo(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,double *dDt,int iDir) {
 /* Compute and apply an Euler update step to a given parameter (x = dx/dt * dt) */
   int iBody,iVar,iEqn;
-  double dTimeOut,dFoo;
+  double dFoo;
 
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
-    dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
+    //dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
     /* This is minimum dynamical timescale */
     *dDt = fdGetTimeStep(body,control,system,update,fnUpdate);
-    *dDt = AssignDt(*dDt,(dTimeOut - control->Evolve.dTime),control->Evolve.dEta);
+    *dDt = AssignDt(*dDt,(control->Io.dNextOutput - control->Evolve.dTime),control->Evolve.dEta);
   }
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
@@ -302,7 +307,7 @@ void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdat
 void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,double *dDt,int iDir) {
 /* Compute and apply a 4th order Runge-Kutta update step a given parameter. */
   int iBody,iVar,iEqn,iSubStep,iNumBodies,iNumVars,iNumEqns;
-  double dTimeOut,dFoo,dDelta;
+  double dFoo,dDelta;
 
   EVOLVE *evolve = &(control->Evolve); // Save Evolve as a variable for speed and legibility
 
@@ -324,14 +329,15 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   /* Adjust dt? */
   if (evolve->bVarDt) {
-     dTimeOut = fdNextOutput(evolve->dTime,control->Io.dOutputTime);
+     //dTimeOut = fdNextOutput(evolve->dTime,control->Io.dOutputTime);
      /*  This is minimum dynamical timescale */
-     *dDt = AssignDt(*dDt,(dTimeOut - evolve->dTime),evolve->dEta);
+     *dDt = AssignDt(*dDt,(control->Io.dNextOutput - evolve->dTime),evolve->dEta);
   } else {
     *dDt = evolve->dTimeStep;
   }
 
   evolve->dCurrentDt = *dDt;
+  //printf("Time: %.3lf, Dt: %.3lf\n",evolve->dTime/YEARSEC,evolve->dCurrentDt/YEARSEC);
 
   /* XXX Should each eqn be updated separately? Each parameter at a
      midpoint is moved by all the modules operating on it together.
@@ -460,7 +466,6 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *output,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,fnWriteOutput *fnWrite,fnIntegrate fnOneStep) {
 /* Master evolution routine that controls the simulation integration. */
   int iDir,iBody,iModule,nSteps; // Dummy counting variables
-  double dTimeOut; // When to output next
   double dDt,dFoo; // Next timestep, dummy variable
   double dEqSpinRate; // Store the equilibrium spin rate
 
@@ -472,7 +477,8 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
   else
     iDir=-1;
 
-  dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
+  //control->Evolve.dNextOutput = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
+  control->Io.dNextOutput = control->Evolve.dTime + control->Io.dOutputTime;
 
   PropertiesAuxiliary(body,control,update);
 
@@ -481,10 +487,8 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
 
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
-    /* Get time to next output */
-    dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
     /* Now choose the correct timestep */
-    dDt = AssignDt(dDt,(dTimeOut - control->Evolve.dTime),control->Evolve.dEta);
+    dDt = AssignDt(dDt,(control->Io.dNextOutput - control->Evolve.dTime),control->Evolve.dEta);
   } else
       dDt = control->Evolve.dTimeStep;
 
@@ -535,10 +539,12 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
     nSteps++;
 
     /* Time for Output? */
-    if (control->Evolve.dTime >= dTimeOut) {
+    if (control->Evolve.dTime >= control->Io.dNextOutput) {
       //fdGetUpdateInfo(body,control,system,update,fnUpdate);
       WriteOutput(body,control,files,output,system,update,fnWrite,control->Evolve.dTime,control->Io.dOutputTime/control->Evolve.nSteps);
-      dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
+      //control->Evolve.dNextOutput = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
+      // Timesteps are synchronized with the output time, so this statement is sufficient
+      control->Io.dNextOutput += control->Io.dOutputTime;
       control->Evolve.nSteps += nSteps;
       nSteps=0;
     }

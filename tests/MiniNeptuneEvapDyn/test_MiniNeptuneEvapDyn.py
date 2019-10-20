@@ -17,11 +17,11 @@ def test_MiniNeptuneEvapDyn():
 
     # Check Primary Variables
     assert np.isclose(output.log.final.planet.EnvelopeMass, 0.032361)
-    assert np.isclose(output.log.final.planet.DEnvMassDt, -4.568102e+09)
+    assert np.isclose(output.log.final.planet.DEnvMassDt, -4.568120e+09)
 
     # Check other variables
-    assert np.isclose(output.log.final.planet.RadXUV, 29.425994)
-    assert np.isclose(output.log.final.planet.RocheRadius, 29.425994)
+    assert np.isclose(output.log.final.planet.RadXUV, 29.425995)
+    assert np.isclose(output.log.final.planet.RocheRadius, 29.425995)
     assert np.isclose(output.log.final.planet.ScaleHeight, 401.210931)
     assert np.isclose(output.log.final.planet.PresSurf, 3.551891)
 

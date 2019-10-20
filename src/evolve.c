@@ -59,24 +59,6 @@ double AssignDt(double dMin,double dNextOutput,double dEta) {
   return dMin;
 }
 
-/* Deprecated!
-double fdNextOutput(double dTime,double dOutputInterval) {
-// Compute when the next timestep occurs.
-  int nSteps; // Number of outputs so far
-  double dNextOutput;
-  printf("In NextOutput.\n");
-
-  // Number of output so far
-  nSteps = (int)(dTime/dOutputInterval);
-  //nSteps = dTime % dOutputInterval;
-  //printf("nSteps: %d   ",nSteps);
-  // Next output is one more
-  dNextOutput = (nSteps+1.0)*dOutputInterval;
-  //printf("dNextOutput: %.4lf\n",dNextOutput);
-  return dNextOutput;
-}
-*/
-
 double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate) {
   /* Fills the Update arrays with the derivatives
    * or new values. It returns the smallest timescale for use
@@ -143,7 +125,6 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
            /* Equations not in matrix, computing things as explicit function of time,
              so we set dMin to time until next output
              Figure out time until next output */
-             //dMinNow = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
              dMinNow = control->Io.dNextOutput;
              if (dMinNow < dMin) {
                dMin = dMinNow;
@@ -283,7 +264,6 @@ void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdat
 
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
-    //dTimeOut = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
     /* This is minimum dynamical timescale */
     *dDt = fdGetTimeStep(body,control,system,update,fnUpdate);
     *dDt = AssignDt(*dDt,(control->Io.dNextOutput - control->Evolve.dTime),control->Evolve.dEta);
@@ -329,7 +309,6 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   /* Adjust dt? */
   if (evolve->bVarDt) {
-     //dTimeOut = fdNextOutput(evolve->dTime,control->Io.dOutputTime);
      /*  This is minimum dynamical timescale */
      *dDt = AssignDt(*dDt,(control->Io.dNextOutput - evolve->dTime),evolve->dEta);
   } else {
@@ -477,7 +456,6 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
   else
     iDir=-1;
 
-  //control->Evolve.dNextOutput = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
   control->Io.dNextOutput = control->Evolve.dTime + control->Io.dOutputTime;
 
   PropertiesAuxiliary(body,control,update);
@@ -540,9 +518,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
 
     /* Time for Output? */
     if (control->Evolve.dTime >= control->Io.dNextOutput) {
-      //fdGetUpdateInfo(body,control,system,update,fnUpdate);
       WriteOutput(body,control,files,output,system,update,fnWrite,control->Evolve.dTime,control->Io.dOutputTime/control->Evolve.nSteps);
-      //control->Evolve.dNextOutput = fdNextOutput(control->Evolve.dTime,control->Io.dOutputTime);
       // Timesteps are synchronized with the output time, so this statement is sufficient
       control->Io.dNextOutput += control->Io.dOutputTime;
       control->Evolve.nSteps += nSteps;

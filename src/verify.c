@@ -840,7 +840,10 @@ void VerifyAge(BODY *body,CONTROL *control,OPTIONS *options) {
    prepared for integration.
  */
 
-void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnIntegrate *fnOneStep,fnUpdateVariable ****fnUpdate) {
+void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,
+    OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,
+    fnIntegrate *fnOneStep,fnUpdateVariable ****fnUpdate) {
+
   int iBody,iModule;
 
   VerifyAge(body,control,options);
@@ -903,6 +906,10 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     }
   }
 
-  // Finally, initialize angular momentum and energy prior to logging/integration
+  // Initialize angular momentum and energy prior to logging/integration
   InitializeConstants(body,update,control,system,options);
+
+  // Finally, initialize derivative values -- this avoids leaks while logging
+  PropertiesAuxiliary(body,control,update);
+  CalculateDerivatives(body,system,update,*fnUpdate,control->Evolve.iNumBodies);
 }

@@ -43,6 +43,24 @@ void PropertiesAuxiliary(BODY *body,CONTROL *control,UPDATE *update) {
   }
 }
 
+void CalculateDerivatives(BODY *body,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,
+    int iNumBodies) {
+  int iBody,iVar,iEqn;
+
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
+      update[iBody].daDeriv[iVar] = 0;
+      for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+        update[iBody].daDerivProc[iVar][iEqn] =
+          fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
+        update[iBody].daDeriv[iVar] += update[iBody].daDerivProc[iVar][iEqn];
+      }
+    }
+  }
+  iBody = 0;
+}
+
+
 /*
  * Integration Control
  */
@@ -264,7 +282,7 @@ void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdat
 
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
-    /* This is minimum dynamical timescale */
+    /* dDt is the dynamical timescale */
     *dDt = fdGetTimeStep(body,control,system,update,fnUpdate);
     *dDt = AssignDt(*dDt,(control->Io.dNextOutput - control->Evolve.dTime),control->Evolve.dEta);
   }
@@ -294,18 +312,8 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   /* Create a copy of BODY array */
   BodyCopy(evolve->tmpBody,body,&control->Evolve);
 
-  /* Verify that rotation angles behave correctly in an eqtide-only run
-  if (evolve->tmpBody[1].dPrecA != 0)
-    printf("PrecA = %e\n",evolve->tmpBody[1].dPrecA);
-  XXX
-  */
-
   /* Derivatives at start */
-  //*dDt = fdGetTimeStep(body,control,system,evolve->tmpUpdate,fnUpdate);
-  //UpdateCopy(update,control->Evolve.tmpUpdate,control->Evolve.iNumBodies);
   *dDt = fdGetTimeStep(body,control,system,control->Evolve.tmpUpdate,fnUpdate);
-  //UpdateCopy(update,control->Evolve.tmpUpdate,control->Evolve.iNumBodies);
-  //fdGetUpdateInfo(body,control,system,update,fnUpdate);
 
   /* Adjust dt? */
   if (evolve->bVarDt) {
@@ -316,12 +324,6 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   }
 
   evolve->dCurrentDt = *dDt;
-  //printf("Time: %.3lf, Dt: %.3lf\n",evolve->dTime/YEARSEC,evolve->dCurrentDt/YEARSEC);
-
-  /* XXX Should each eqn be updated separately? Each parameter at a
-     midpoint is moved by all the modules operating on it together.
-     Does RK4 require the equations to be independent over the full step? */
-
   iNumBodies = evolve->iNumBodies;
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
@@ -332,7 +334,6 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
       for (iEqn=0;iEqn<iNumEqns;iEqn++) {
         // XXX Set update.dDxDtModule here?
         evolve->daDeriv[0][iBody][iVar] += iDir*evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
-        //evolve->daTmpVal[0][iBody][iVar] += (*dDt)*iDir*evolve->tmpUpdate[iBody].daDeriv[iVar][iEqn];
       }
 
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
@@ -471,7 +472,6 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
       dDt = control->Evolve.dTimeStep;
 
   /* Write out initial conditions */
-
   WriteOutput(body,control,files,output,system,update,fnWrite,control->Evolve.dTime,dDt);
 
   /* If Runge-Kutta need to copy actual update to that in
@@ -501,10 +501,6 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
 
     /* Halt? */
     if (fbCheckHalt(body,control,update)) {
-      /* Use dummy variable as dDt is used for the integration.
-       * Here we just want the instantaneous derivatives.
-       * This should make the output self-consistent.
-       */
       fdGetUpdateInfo(body,control,system,update,fnUpdate);
       WriteOutput(body,control,files,output,system,update,fnWrite,control->Evolve.dTime,control->Io.dOutputTime/control->Evolve.nSteps);
       return;

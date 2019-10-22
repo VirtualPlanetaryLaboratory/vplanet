@@ -17,7 +17,7 @@ def test_LehmerCatling17():
 
     # Check Primary Variables
     assert np.isclose(output.log.final.planet.EnvelopeMass, 0.029770)
-    assert np.isclose(output.log.final.planet.DEnvMassDt, -4.918275e+08)
+    assert np.isclose(output.log.final.planet.DEnvMassDt, -4.923106e+08)
 
     # Check other variables
     assert np.isclose(output.log.final.planet.Radius, 2.821863e+07)

@@ -23,7 +23,7 @@ def test_MiniNeptuneEvapDyn():
     assert np.isclose(output.log.final.planet.RadXUV, 29.425995)
     assert np.isclose(output.log.final.planet.RocheRadius, 29.425995)
     assert np.isclose(output.log.final.planet.ScaleHeight, 401.210931)
-    assert np.isclose(output.log.final.planet.PresSurf, 3.551891)
+    assert np.isclose(output.log.final.planet.PresSurf, 3.551934)
 
 if __name__ == "__main__":
     test_MiniNeptuneEvapDyn()

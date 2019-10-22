@@ -130,7 +130,10 @@ void ReadThermTemp(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     body[iFile-1].bAutoThermTemp = 0;
   } else {
     if (iFile > 0) {
+      /* Note that here we both assign the default and force the code to
+      calculate the thermal temperature automatically */
       body[iFile-1].bAutoThermTemp = 1;
+      body[iFile-1].dThermTemp = options->dDefault;
     }
   }
 }

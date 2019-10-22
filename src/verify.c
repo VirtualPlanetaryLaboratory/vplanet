@@ -909,7 +909,14 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,
   // Initialize angular momentum and energy prior to logging/integration
   InitializeConstants(body,update,control,system,options);
 
+  // Set next output time so logging does not contain a memory leak
+  //control->Io.dNextOutput = control->Evolve.dTime + control->Io.dOutputTime;
+
   // Finally, initialize derivative values -- this avoids leaks while logging
   PropertiesAuxiliary(body,control,update);
   CalculateDerivatives(body,system,update,*fnUpdate,control->Evolve.iNumBodies);
+
+  control->Evolve.dTime=0;
+  control->Evolve.nSteps=0;
+  control->Io.dNextOutput = control->Evolve.dTime + control->Io.dOutputTime;
 }

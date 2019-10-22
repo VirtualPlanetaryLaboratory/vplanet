@@ -13,4 +13,4 @@ bDoForward                1
 bVarDt                    1
 dEta                      0.01
 dStopTime                 1e5
-dOutputTime               1e2
+dOutputTime               1e5

@@ -25,7 +25,7 @@ def test_AtmEscRegimes():
     assert np.isclose(output.bondi.DEnvMassDt[0], -1.753603e+15)
 
     # Ensure final Roche Lobe and Bondi Radius are correct [Earth radii]
-    assert np.isclose(output.log.final.bondi.BondiRadius, 35.824267)
+    assert np.isclose(output.log.final.bondi.BondiRadius, 35.824637)
     assert np.isclose(output.log.final.bondi.RocheRadius, 44.88505)
 
     # Ensure final H envelope and planetary mass are correct

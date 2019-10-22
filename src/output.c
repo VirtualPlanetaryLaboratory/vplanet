@@ -1692,8 +1692,6 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   if (iEnd == 0) {
     sprintf(cTime,"Input");
     fp=fopen(files->cLog,"w");
-    control->Evolve.dTime=0;
-    control->Evolve.nSteps=0;
   } else if (iEnd == 1) {
     sprintf(cTime,"Final");
     fp=fopen(files->cLog,"a");

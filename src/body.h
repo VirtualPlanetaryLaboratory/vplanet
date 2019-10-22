@@ -88,8 +88,10 @@ double fdRadToMass_BaylessOrosz06(double);
 double fdRadToMass_GordaSvech99(double);
 double fdRadToMass_ReidHawley(double);
 double fdRadToMass_Sotin07(double);
-double fdLehmerRadius(double RadSurf, double Pxuv, double H, double PresSurf);
-double fdLehmerPres(double Menv, double lil_g, double RadSurf);
+double fdMassToRad_LehmerCatling17(double);
+double fdLehmerRadius(BODY*,int);
+double fdLehmerPres(double,double,double);
+double fdThermalTemp(BODY*,int);
 
 double fdImK2Total(BODY*,int);
 double fdImK2Man(BODY*,int);

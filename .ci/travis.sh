@@ -26,5 +26,5 @@ pip install git+git://github.com/VirtualPlanetaryLaboratory/vplot.git
 # Build vplanet
 export PATH="$TRAVIS_BUILD_DIR:$PATH"
 cd $TRAVIS_BUILD_DIR
-gcc-4.8 -o vplanet src/*.c -lm -DGITVERSION=\"Travis-CI\"
+gcc-4.8 -o vplanet src/*.c -lm -O3 -DGITVERSION=\"Travis-CI\"
 sudo mv vplanet /usr/local/bin/vplanet

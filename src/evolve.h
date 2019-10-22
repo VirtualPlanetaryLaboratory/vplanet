@@ -19,6 +19,7 @@
 void PropertiesAuxiliary(BODY*,CONTROL*,UPDATE*);
 void fdGetUpdateInfo(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***);
 double fdGetTimeStep(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***);
+void CalculateDerivatives(BODY*,SYSTEM*,UPDATE*,fnUpdateVariable***,int);
 
 void Evolve(BODY*,CONTROL*,FILES*,MODULE*,OUTPUT*,SYSTEM*,UPDATE*,fnUpdateVariable***,fnWriteOutput*,fnIntegrate);
 

@@ -159,8 +159,12 @@ struct BODY {
   int bCalcFXUV;         /**< Does incidenx XUV flow need to be calculated every
                               time step? */
   int bEnvelopeLostMessage; /**< Has the envelope lost message been printed? */
-  int bRocheMessage;     /**< Has the Roche lobe message been printed? */
-  int bIgnoreRocheLobe;  /**< Ignore Roche lobe overflow? */
+  int bIgnoreRocheLobe;  	/**< Ignore Roche lobe overflow? */
+	int bUseEnergyLimited; 	/**< Use energy-limited escape */
+  int bUseBondiLimited;		/**< Use Bondi-limited H mass loss */
+  int bUseRRLimited; 			/**< Use radiation/recombination-limited H mass loss */
+  int bAtmEscAuto; 				/**< Transition H escape regime depending on physics */
+	int bAutoThermTemp;			/**< Calculate thermal temperature from environemnt? */
 
   int iWaterLossModel;   /**< Water Loss and Oxygen Buildup Model */
   int iAtmXAbsEffH2OModel;  /**< Water X-ray/XUV absorption efficiency evolution model */
@@ -196,10 +200,6 @@ struct BODY {
   double dFlowTemp;     /**< Temperature of the hydrodynamic flow */
   double dRocheRadius; 	/**< Radius of the Roche lobe */
   double dBondiRadius;	/**< Bondi (Sonic) Radius */
-  int bUseEnergyLimited; /**< Use energy-limited escape */
-  int bUseBondiLimited;		/**< Use Bondi-limited H mass loss */
-  int bUseRRLimited; /**< Use radiation/recombination-limited H mass loss */
-  int bAtmEscAuto; /**< Transition H escape regime depending on physics */
   double dEnvMassDt; /**< Time derivative of H envelope mass */
 
   /* BINARY parameters */
@@ -1404,7 +1404,7 @@ struct EVOLVE {
   int bFirstStep;        /**< Has the First Dtep Been Taken? */
   int iNumBodies;        /**< Number of Bodies to be Integrated */
   int iOneStep;          /**< Integration Method number */
-  double dCurrentDt;
+  double dCurrentDt;     /**< Current timestep */
 
   // These are to store midpoint derivative info in RK4.
   BODY *tmpBody;         /**< Temporary BODY struct */
@@ -1438,8 +1438,9 @@ struct EVOLVE {
  * control program flow. */
 
 struct IO {
-  int iVerbose;           /**< Verbosity Level. 0=none; 1=error; 2=progress; 3=input; 4=units; 5=all */
-  double dOutputTime;	  /**< Integration Output Interval */
+  int iVerbose;          /**< Verbosity Level. 0=none; 1=error; 2=progress; 3=input; 4=units; 5=all */
+  double dOutputTime;	   /**< Integration Output Interval */
+  double dNextOutput;    /**< Time of next output */
 
   int bLog;               /**< Write Log File? */
 
@@ -1448,6 +1449,8 @@ struct IO {
   int iSciNot;            /**< Crossover Decade to Switch between Standard and Scientific Notation */
 
   int bOverwrite;         /**< Allow files to be overwritten? */
+
+  int *baRocheMessage;    /**< Has the Roche lobe message been printed? */
 };
 
 /* The CONTROL struct contains all the parameters that
@@ -1558,7 +1561,7 @@ struct OUTFILE {
 /* The FILES struct contains all the information
  * regarding every file. */
 
-struct FILES{
+struct FILES {
   char cExe[LINE];             /**< Name of Executable */
   OUTFILE *Outfile;            /**< Output File Name for Forward Integration */
   char cLog[NAMELEN];          /**< Log File Name */
@@ -1569,7 +1572,7 @@ struct FILES{
 /* The OPTIONS struct contains all the information
  * regarding the options, including their file data. */
 
-struct OPTIONS{
+struct OPTIONS {
   char cName[OPTLEN];          /**< Option Name */
   char cDescr[OPTDESCR];       /**< Brief Description of Option */
   char cLongDescr[OPTLONDESCR];/**< Long Description of Option */

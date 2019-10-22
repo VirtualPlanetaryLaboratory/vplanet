@@ -494,6 +494,14 @@ void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *upd
       if (control->Io.iVerbose >= VERBINPUT)
         printf("INFO: Luminosity set for body %d, but this value will be computed from the grid.\n", iBody);
     }
+  } else if (body[iBody].iStellarModel == STELLAR_MODEL_NONE) {
+    if (options[OPT_LUMINOSITY].iLine[iBody+1] == -1) {
+      // Luminosity must be input if sStellarModel is set to NONE
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr,"ERROR: If STELLAR model NONE is selected, then %s must be set.\n",options[OPT_LUMINOSITY].cName);
+        exit(EXIT_INPUT);
+      }
+    }
   }
 
   update[iBody].iaType[update[iBody].iLuminosity][0] = 0;

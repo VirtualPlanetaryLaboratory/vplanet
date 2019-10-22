@@ -56,6 +56,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dRadXUV = src[iBody].dRadXUV;
   dest[iBody].dRadSolid = src[iBody].dRadSolid;
   dest[iBody].dPresXUV = src[iBody].dPresXUV;
+  dest[iBody].dPresSurf = src[iBody].dPresSurf;
   dest[iBody].dScaleHeight = src[iBody].dScaleHeight;
   dest[iBody].dThermTemp = src[iBody].dThermTemp;
   dest[iBody].dFlowTemp = src[iBody].dFlowTemp;
@@ -69,9 +70,8 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].bUseRRLimited = src[iBody].bUseRRLimited;
   dest[iBody].bUseBondiLimited = src[iBody].bUseBondiLimited;
   dest[iBody].bAtmEscAuto = src[iBody].bAtmEscAuto;
-  dest[iBody].bRocheMessage = src[iBody].bRocheMessage;
   dest[iBody].dEnvMassDt = src[iBody].dEnvMassDt;
-
+  dest[iBody].bAutoThermTemp = src[iBody].bAutoThermTemp;
 }
 
 /**************** ATMESC options ********************/
@@ -127,9 +127,15 @@ void ReadThermTemp(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     else
       body[iFile-1].dThermTemp = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
+    body[iFile-1].bAutoThermTemp = 0;
+  } else {
+    if (iFile > 0) {
+      /* Note that here we both assign the default and force the code to
+      calculate the thermal temperature automatically */
+      body[iFile-1].bAutoThermTemp = 1;
       body[iFile-1].dThermTemp = options->dDefault;
+    }
+  }
 }
 
 /**
@@ -711,7 +717,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_XFRAC].cName,"dXFrac");
   sprintf(options[OPT_XFRAC].cDescr,"Fraction of planet radius in X-ray/UV");
   sprintf(options[OPT_XFRAC].cDefault,"1");
-  options[OPT_XFRAC].dDefault = 1;
+  options[OPT_XFRAC].dDefault = 1.0;
   options[OPT_XFRAC].iType = 2;
   options[OPT_XFRAC].iMultiFile = 1;
   fnRead[OPT_XFRAC] = &ReadXFrac;
@@ -887,6 +893,13 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_THERMTEMP].iType = 2;
   options[OPT_THERMTEMP].iMultiFile = 1;
   fnRead[OPT_THERMTEMP] = &ReadThermTemp;
+  sprintf(options[OPT_THERMTEMP].cLongDescr,
+    "The thermal temperature of a planet heated by radiation from the primary.\n"
+    "The user may set a value which will then remain constant for the simulation.\n"
+    "If the user does not specify a value, then it will be calculated automatically\n"
+    "from the formula T = (F(1-A)/sigma)^0.25, where F is the incident radiation,\n"
+    "A is albedo and sigma is the Steffan-Boltzman constant.\n"
+  );
 
   sprintf(options[OPT_FLOWTEMP].cName,"dFlowTemp");
   sprintf(options[OPT_FLOWTEMP].cDescr,"Temperature of the hydrodynamic flow");
@@ -1024,7 +1037,7 @@ void VerifyEnvelopeMass(BODY *body,OPTIONS *options,UPDATE *update,double dAge,i
   update[iBody].iaBody[update[iBody].iEnvelopeMass][0] = malloc(update[iBody].iNumBodies[update[iBody].iEnvelopeMass][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iEnvelopeMass][0][0] = iBody;
 
-  update[iBody].pdDEnvelopeMassDtAtmesc = &update[iBody].daDerivProc[update[iBody].iEnvelopeMass][0];
+  update[iBody].pdDEnvelopeMassDtAtmesc = &update[iBody].daDeriv[update[iBody].iEnvelopeMass];
 }
 
 /**
@@ -1132,14 +1145,20 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
     fnUpdate[iBody][update[iBody].iMass][0] = &fndUpdateFunctionTiny;
 
-    // If using Lopez+2012 radius model, set radius to Sotin+2007 radius
-    if(body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
-      // Let user know what's happening
-      if (io->iVerbose >= VERBPROG && !body[iBody].bEnvelopeLostMessage) {
-        printf("%s's envelope removed. Used Lopez+12 radius models for envelope, switching to Sotin+2007 model for solid planet radius.\n",body[iBody].cName);
-        body[iBody].bEnvelopeLostMessage = 1;
+    // Let user know what's happening
+    if (io->iVerbose >= VERBPROG && !body[iBody].bEnvelopeLostMessage) {
+      printf("%s's envelope removed after %.3lf million years. ",body[iBody].cName,evolve->dTime/(1e6*YEARSEC));
+      if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
+        printf("Switching to Sotin+2007 model for solid planet radius.\n");
+      } else {
+        printf("\n");
       }
-      // Update radius
+      body[iBody].bEnvelopeLostMessage = 1;
+    }
+
+    // Update radius
+    // If using Lopez+2012 radius model, set radius to Sotin+2007 radius
+    if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
       body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
     }
   }
@@ -1152,6 +1171,10 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
       // Is the flux RR-limited?
       if(fbRRCriticalFlux(body,iBody)) {
           // Switch regime, derivatives
+          if (io->iVerbose >= VERBPROG) {
+            printf("Switching from energy-limited to RR-limited escape at t = %.4lf Myr.\n",
+              evolve->dTime/(1e6*YEARSEC));
+          }
           body[iBody].iHEscapeRegime = ATMESC_RRLIM;
           fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtRRLimited;
           fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtRRLimited;
@@ -1160,6 +1183,10 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
       // Is the flux Bondi-limited?
       if(fbBondiCriticalDmDt(body, iBody)) {
         // Switch regime, derivatives
+        if (io->iVerbose >= VERBPROG) {
+          printf("Switching from energy-limited to Bondi-limited escape at t = %.4lf Myr.\n",
+            evolve->dTime/(1e6*YEARSEC));
+        }
         body[iBody].iHEscapeRegime = ATMESC_BONDILIM;
         fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtBondiLimited;
         fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtBondiLimited;
@@ -1170,6 +1197,10 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
       // Is the escape now energy-limited?
       if(!fbRRCriticalFlux(body,iBody)) {
           // Switch regime, derivatives
+          if (io->iVerbose >= VERBPROG) {
+            printf("Switching from RR-limited to energy-limited escape at t = %.4lf Myr.\n",
+              evolve->dTime/(1e6*YEARSEC));
+          }
           body[iBody].iHEscapeRegime = ATMESC_ELIM;
           fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
           fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
@@ -1178,6 +1209,10 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
       // Is the escape now Bondi-limited?
       if(fbBondiCriticalDmDt(body, iBody)) {
         // Switch regime, derivatives
+        if (io->iVerbose >= VERBPROG) {
+          printf("Switching from RR-limited to Bondi-limited escape at t = %.4lf Myr.\n",
+            evolve->dTime/(1e6*YEARSEC));
+        }
         body[iBody].iHEscapeRegime = ATMESC_BONDILIM;
         fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtBondiLimited;
         fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtBondiLimited;
@@ -1190,6 +1225,10 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
         // RR-limited?
         if(fbRRCriticalFlux(body,iBody)) {
           // Switch regime, derivatives
+          if (io->iVerbose >= VERBPROG) {
+            printf("Switching from Bondi-limited to RR-limited escape at t = %.4lf Myr.\n",
+              evolve->dTime/(1e6*YEARSEC));
+          }
           body[iBody].iHEscapeRegime = ATMESC_RRLIM;
           fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtRRLimited;
           fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtRRLimited;
@@ -1197,15 +1236,19 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
         // Energy-limited!
         else {
           // Switch regime, derivatives
+          if (io->iVerbose >= VERBPROG) {
+            printf("Switching from Bondi-limited to energy-limited escape at t = %.4lf Myr.\n",
+              evolve->dTime/(1e6*YEARSEC));
+          }
           body[iBody].iHEscapeRegime = ATMESC_ELIM;
           fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
           fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDt;
         }
       }
-    }
-    // Undefined regime! Warn user and switch to energy-limited
-    else {
-      fprintf(stderr, "WARNING: Undefined iHEscapeRegime = %d for body %s!\n",body[iBody].iHEscapeRegime, body[iBody].cName);
+    } else {
+      // Undefined regime! Warn user and switch to energy-limited
+      fprintf(stderr, "WARNING: Undefined iHEscapeRegime = %d for body %s!\n",
+        body[iBody].iHEscapeRegime, body[iBody].cName);
       fprintf(stderr, "Switching to default energy-limited escape.\n");
 
       body[iBody].iHEscapeRegime = ATMESC_ELIM;
@@ -1225,16 +1268,21 @@ Initializes several helper variables and properties used in the integration.
 @param update A pointer to the UPDATE instance
 @param iBody The current BODY number
 */
-void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iBody) {
-
-  body[iBody].dAge = body[0].dAge;
+void fnPropsAuxAtmEsc(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,
+  int iBody) {
 
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
-    body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
-    body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
-    body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
-    body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
-    body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,body[iBody].dPresSurf);
+    if (body[iBody].bAutoThermTemp) {
+      body[iBody].dThermTemp = fdThermalTemp(body,iBody);
+    }
+    body[iBody].dGravAccel = BIGG * (body[iBody].dMass -
+      body[iBody].dEnvelopeMass)/(body[iBody].dRadSolid*body[iBody].dRadSolid);
+    body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp
+      / body[iBody].dGravAccel;
+    body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass,
+      body[iBody].dGravAccel, body[iBody].dRadSolid);
+    body[iBody].dRadXUV = fdLehmerRadius(body,iBody);
+    body[iBody].dRadius = body[iBody].dRadXUV/body[iBody].dXFrac;
   }
 
   // Ktide (due to body zero only). WARNING: not suited for binary...
@@ -1248,11 +1296,11 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iB
       if (xi > 1) {
         body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
       } else {
-        if (!body[iBody].bRocheMessage && io->iVerbose >= VERBINPUT && !body[iBody].bUseBondiLimited) {
+        if (!io->baRocheMessage[iBody] && io->iVerbose >= VERBINPUT && (!body[iBody].bUseBondiLimited && !body[iBody].bAtmEscAuto)) {
           fprintf(stderr,"WARNING: Roche lobe radius is larger than XUV radius for %s, evolution may not be accurate.\n",
               body[iBody].cName);
           fprintf(stderr,"Consider setting bUseBondiLimited = 1 or bAtmEscAuto = 1 to limit envelope mass loss.\n");
-          body[iBody].bRocheMessage = 1;
+          io->baRocheMessage[iBody] = 1;
         }
       }
         // Fix dKTide to prevent infs when in Roche Lobe overflow
@@ -1451,7 +1499,6 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   body[iBody].iHEscapeRegime = ATMESC_NONE; // Default to no H escape - updated if envelope is present
   body[iBody].bEnvelopeLostMessage = 0;
-  body[iBody].bRocheMessage = 0;
   body[iBody].dEnvMassDt = 0.0; // Assume no H envelope mass loss at first
 
   // Is FXUV specified in input file?
@@ -1463,11 +1510,29 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   }
 
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
-    body[iBody].dRadSolid = 1.3 * pow(body[iBody].dMass - body[iBody].dEnvelopeMass, 0.27);
+    if (body[iBody].dEnvelopeMass >= 0.5*body[iBody].dMass) {
+      fprintf(stderr,
+        "ERROR: %s's Envelope mass is greater than 50%% of its total mass, which ",
+        body[iBody].cName);
+      fprintf(stderr,"is not allowed  for the Lehmer-Catling (2017) envelope model.\n");
+      DoubleLineExit(files->Infile[iBody+1].cIn,files->Infile[iBody+1].cIn,
+        options[OPT_ENVELOPEMASS].iLine[iBody+1],options[OPT_ENVELOPEMASS].iLine[iBody+1]);
+    }
+    if (body[iBody].dEnvelopeMass >= 0.1*body[iBody].dMass) {
+      fprintf(stderr,"WARNING: Envelope masses more than 10%% of the total mass are not "
+        "recommended for the Lehmer-Catling (2017) envelope model. %s's envelope ",body[iBody].cName);
+      fprintf(stderr, "mass exceeds this threshold.\n");
+    }
+
+    // Get thermal temperature
+    if (body[iBody].bAutoThermTemp) {
+      body[iBody].dThermTemp = fdThermalTemp(body,iBody);
+    }
+    body[iBody].dRadSolid = fdMassToRad_LehmerCatling17(body[iBody].dMass - body[iBody].dEnvelopeMass);
     body[iBody].dGravAccel = BIGG * (body[iBody].dMass - body[iBody].dEnvelopeMass) / (body[iBody].dRadSolid * body[iBody].dRadSolid);
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
     body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
-    body[iBody].dRadXUV = fdLehmerRadius(body[iBody].dRadSolid, body[iBody].dPresXUV, body[iBody].dScaleHeight,body[iBody].dPresSurf);
+    body[iBody].dRadXUV = fdLehmerRadius(body,iBody);
   } else {
     int iCol,bError = 0;
     for (iCol=0;iCol<files->Outfile[iBody].iNumCols;iCol++) {
@@ -1542,8 +1607,7 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
       fprintf(stderr, "\tbUseBondiLimited = %d\n",body[iBody].bUseBondiLimited);
       fprintf(stderr, "\tbAtmEscAuto = %d\n",body[iBody].bAtmEscAuto);
       exit(EXIT_INPUT);
-    }
-    else if (iRegimeCounter == 0) {
+    } else if (iRegimeCounter == 0) {
       fprintf(stderr, "WARNING: No H envelope escape regime set for body %s!\n",body[iBody].cName);
       fprintf(stderr, "Defaulting to energy-limited escape: bUseEnergyLimited = 1.\n");
       body[iBody].bUseEnergyLimited = 1;
@@ -1553,14 +1617,15 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     VerifyEnvelopeMass(body,options,update,body[iBody].dAge,iBody);
     VerifyMassAtmEsc(body,options,update,body[iBody].dAge,iBody);
     bAtmEsc = 1;
-  }
-  else {
+  } else {
     // No H enevelope but Bondi Limited escape is set - warn user and use energy-limited escape
     if(body[iBody].bUseBondiLimited || body[iBody].bUseRRLimited || body[iBody].bAtmEscAuto) {
       if (control->Io.iVerbose >= VERBINPUT)
         fprintf(stderr,"WARNING: No H envelope present but Bondi/Radiation-recombination-limited escape is set for body %s!\n",body[iBody].cName);
         fprintf(stderr,"AtmEsc currently supports only energy-limited escape for H20 loss calculations.");
     }
+    // Point pdDEnvelopeMassDtAtmesc to zero. This should be done better.
+    update[iBody].pdDEnvelopeMassDtAtmesc = &update[iBody].dZero;
   }
 
   // Ensure envelope mass is physical
@@ -1591,7 +1656,6 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorAtmEsc;
   control->fnPropsAux[iBody][iModule] = &fnPropsAuxAtmEsc;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyAtmEsc;
-
 }
 
 /**************** ATMESC update ****************/
@@ -2146,9 +2210,17 @@ Logs the atmospheric mass loss rate.
 @param cUnit The unit for this variable
 */
 void WriteDEnvMassDt(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]){
+  *dTmp = *(update[iBody].pdDEnvelopeMassDtAtmesc);
 
-  *dTmp = body[iBody].dEnvMassDt;
-  strcpy(cUnit,"kg/s");
+  //*dTmp = fnUpdate[iBody][update[iBody].iEnvelopeMass][0];
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    //*dTmp *= fdUnitsTime(units->iTime)/fdUnitsMass(units->iMass);
+    strcpy(cUnit,"kg/s");
+  }
 }
 
 /**
@@ -2170,7 +2242,11 @@ void WriteThermTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
  if (output->bDoNeg[iBody]) {
    *dTmp *= output->dNeg;
    strcpy(cUnit,output->cNeg);
- } else { }
+ } else {
+  //*dTmp /= fdUnitsTemp(*dTmp,0,units->iTemp);
+  // Only K allowed until units can be converted XXX
+  fsUnitsTemp(0,cUnit);
+ }
 }
 
 /**
@@ -2192,7 +2268,11 @@ void WriteFlowTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
  if (output->bDoNeg[iBody]) {
    *dTmp *= output->dNeg;
    strcpy(cUnit,output->cNeg);
- } else { }
+ } else {
+   // *dTmp /= fdUnitsTemp(*dTmp,0,units->iTemp);
+   // Only K allowed until units can be converted XXX
+   fsUnitsTemp(units->iTemp,cUnit);
+ }
 }
 
 /**
@@ -2214,7 +2294,9 @@ void WritePresSurf(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   if (output->bDoNeg[iBody]){
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
-  } else { }
+  } else {
+    strcpy(cUnit,"Pa");
+  }
 }
 
 /**
@@ -2236,7 +2318,10 @@ void WritePresXUV(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   if (output->bDoNeg[iBody]){
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
-  } else { }
+  } else {
+    //*dTmp /= fdUnitsPressure(units->iLength);
+    //fsUnitsLength(units->iLength,cUnit);
+  }
 }
 
 /**
@@ -2258,7 +2343,9 @@ void WriteJeansTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   if (output->bDoNeg[iBody]){
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
-  } else { }
+  } else {
+    *dTmp /= fdUnitsTime(units->iTime);
+    fsUnitsTime(units->iTime,cUnit);}
 }
 
 /**
@@ -2280,7 +2367,10 @@ void WriteScaleHeight(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   if (output->bDoNeg[iBody]){
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
-  } else { }
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
 }
 
 /**
@@ -2544,7 +2634,9 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_DENVMASSDT].cName,"DEnvMassDt");
   sprintf(output[OUT_DENVMASSDT].cDescr,"Envelope Mass Loss Rate");
-  output[OUT_DENVMASSDT].bNeg = 0;
+  sprintf(output[OUT_DENVMASSDT].cNeg,"Earth Masses/Myr");
+  output[OUT_DENVMASSDT].bNeg = 1;
+  output[OUT_DENVMASSDT].dNeg = (YEARSEC*1e6)/MEARTH;
   output[OUT_DENVMASSDT].iNum = 1;
   output[OUT_DENVMASSDT].iModuleBit = ATMESC;
   fnWrite[OUT_DENVMASSDT] = &WriteDEnvMassDt;
@@ -2560,9 +2652,9 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_PRESSURF].cName,"PresSurf");
   sprintf(output[OUT_PRESSURF].cDescr,"Surface pressure due to atmosphere");
-  sprintf(output[OUT_PRESSURF].cNeg,"Pa");
+  sprintf(output[OUT_PRESSURF].cNeg,"GPa");
   output[OUT_PRESSURF].bNeg = 1;
-  output[OUT_PRESSURF].dNeg = 1;
+  output[OUT_PRESSURF].dNeg = 1e-9;
   output[OUT_PRESSURF].iNum = 1;
   output[OUT_PRESSURF].iModuleBit = ATMESC;
   fnWrite[OUT_PRESSURF] = &WritePresSurf;
@@ -2578,9 +2670,9 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_SCALEHEIGHT].cName,"ScaleHeight");
   sprintf(output[OUT_SCALEHEIGHT].cDescr,"Scale height in Lehmer & Catling (2016) model");
-  sprintf(output[OUT_SCALEHEIGHT].cNeg,"J s^2 / kg m");
+  sprintf(output[OUT_SCALEHEIGHT].cNeg,"km");
   output[OUT_SCALEHEIGHT].bNeg = 1;
-  output[OUT_SCALEHEIGHT].dNeg = 1;
+  output[OUT_SCALEHEIGHT].dNeg = 0.001;
   output[OUT_SCALEHEIGHT].iNum = 1;
   output[OUT_SCALEHEIGHT].iModuleBit = ATMESC;
   fnWrite[OUT_SCALEHEIGHT] = &WriteScaleHeight;
@@ -2693,6 +2785,7 @@ void LogBodyAtmEsc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
   for (iOut=OUTSTARTATMESC;iOut<OUTENDATMESC;iOut++) {
     if (output[iOut].iNum > 0) {
+      //fprintf(stderr,"%d\n",iOut);
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
     }
   }
@@ -2832,20 +2925,10 @@ The rate of change of the envelope mass given energy-limited escape.
 double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   double dMassDt = dTINY;
-
-  // Calculate mass loss depending on model
-  if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17) {
-
-  	dMassDt =  -body[iaBody[0]].dAtmXAbsEffH * PI * body[iaBody[0]].dFXUV
-        * pow(body[iaBody[0]].dRadXUV, 3.0) / ( BIGG * (body[iaBody[0]].dMass
-          - body[iaBody[0]].dEnvelopeMass));
-
-  } else {
-  	dMassDt =  -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH
-      / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI
-        * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius
-          * body[iaBody[0]].dXFrac * body[iaBody[0]].dXFrac);
-  }
+	dMassDt =  -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH
+    / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI
+    * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius
+    * body[iaBody[0]].dXFrac * body[iaBody[0]].dXFrac);
 
   return dMassDt;
 }
@@ -2912,7 +2995,7 @@ double fdPlanetRadius(BODY *body,SYSTEM *system,int *iaBody) {
 
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LEHMER17) {
     body[iaBody[0]].dPresSurf = fdLehmerPres(body[iaBody[0]].dEnvelopeMass, body[iaBody[0]].dGravAccel, body[iaBody[0]].dRadSolid);
-    body[iaBody[0]].dRadXUV = fdLehmerRadius(body[iaBody[0]].dRadSolid, body[iaBody[0]].dPresXUV, body[iaBody[0]].dScaleHeight,body[iaBody[0]].dPresSurf);
+    body[iaBody[0]].dRadXUV = fdLehmerRadius(body,iaBody[0]);
   }
 
   double foo;

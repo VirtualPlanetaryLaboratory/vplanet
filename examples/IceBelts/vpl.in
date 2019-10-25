@@ -1,6 +1,6 @@
-sSystemName   tilted
+sSystemName   icebelt
 iVerbose      5                  #how much do you want vplanet to yell at you?
-iDigits       6                  #how many digits do you want in your numbers? 
+iDigits       6                  #how many digits do you want in your numbers?
 bOverwrite    1                  #overwrite old files
 sUnitMass     solar              #mass unit used for input
 sUnitLength   au                 #length unit used for input
@@ -12,4 +12,4 @@ bDoForward    1                  #integrate forward in time
 bVarDt        1                  #use variable time stepping (not relevant to poise)
 dEta          0.1                #how much to scale variable time step
 dStopTime     1000               #how long should the integration be
-dOutputTime 100                  #how much output you want
+dOutputTime   100                  #how much output you want

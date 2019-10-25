@@ -13,7 +13,7 @@ Formation on an ice belt on a terretrial planet with high obliquity
 **Approx. runtime**   14.6 Seconds
 ===================   ============
 
-This example validates **VPLanet**'s 1-D climate model by reproducing Figure 2 of  `(Rose et. al 2017) <https://iopscience.iop.org/article/10.3847/1538-4357/aa8306/meta#apjaa8306s2>`_.
+This example validates **VPLanet**'s 1-D climate model by reproducing Figure 2 of  `Rose et. al (2017) <https://iopscience.iop.org/article/10.3847/1538-4357/aa8306/meta#apjaa8306s2>`_.
 
 
 To run this example

@@ -3167,10 +3167,10 @@ double fdXUVEfficiencyBolmont2016(double dFXUV) {
     y = pow(10, c0 * x * x * x + c1 * x * x + c2 * x + c3);
   }
   else if (x < -2) { // Lower flux bound
-    y = 0.005;
+    y = 0.001;
   }
   else if (x > 5) { // Upper flux bound
-    y = 0.1;
+    y = 0.01;
   }
   else { // Base case that never happens but DPF likes code symmetry
     y = 0.1;

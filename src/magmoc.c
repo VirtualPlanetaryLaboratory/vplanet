@@ -1272,13 +1272,50 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     }
   }
 
-  /* Treat mantle as solidified when melt fraction at surface smaller than 0.4 */
+  /* Treat mantle as solidified when melt fraction at surface smaller than 0.4
+   * Set mantle completely solid & water into atm.
+   */
   // /* When planet desiccated and T_surf below 1000K treat mantle as solidified */
   // if ((!body[iBody].bManQuasiSol) && (body[iBody].bPlanetDesiccated) && (body[iBody].dSurfTemp <= 1000)) {
   if ((!body[iBody].bManQuasiSol) && (body[iBody].dMeltFracSurf < CRITMELTFRAC)) {
+    double dOxygenMassMO;
+
     body[iBody].bManQuasiSol = 1;
+
+    body[iBody].dManMeltDensity = 4200;
+    body[iBody].dSolidRadius    = body[iBody].dRadius;
+
+    body[iBody].dWaterMassSol   = body[iBody].dWaterMassSol   + WATERPARTCOEFF*body[iBody].dWaterFracMelt*(body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+    body[iBody].dWaterMassMOAtm = body[iBody].dWaterMassMOAtm + (1-WATERPARTCOEFF)*body[iBody].dWaterFracMelt*body[iBody].dMassMagmOcLiq;
+
+    body[iBody].dCO2MassSol   = body[iBody].dCO2MassSol   + CO2PARTCOEFF*body[iBody].dCO2FracMelt*(body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+    body[iBody].dCO2MassMOAtm = body[iBody].dCO2MassMOAtm + (1-CO2PARTCOEFF)*body[iBody].dCO2FracMelt*body[iBody].dMassMagmOcLiq;
+
+    if (!body[iBody].bAllFeOOxid) {
+      body[iBody].dOxygenMassAtm = 0;
+      body[iBody].dOxygenMassSol = body[iBody].dOxygenMassSol + body[iBody].dOxygenMassMOAtm;
+    } else {
+      dOxygenMassMO = body[iBody].dFracFe2O3Man * MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) * (body[iBody].dMassMagmOcLiq + body[iBody].dMassMagmOcCry);
+      body[iBody].dOxygenMassSol = body[iBody].dOxygenMassSol   + dOxygenMassMO;
+      body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassMOAtm - dOxygenMassMO;
+    }
+
+    /*
+     * When mantle solidified:
+     * Stop updating PotTemp, SurfTemp, SolidRadius, WaterMassSol, OxygenMassSol
+     * But continue to update WaterMassMOAtm, OxygenMassMOAtm, HydrogenMassSpace, OxygenMassSpace
+     */
+    // SetDerivTiny(fnUpdate,iBody,update[iBody].iPotTemp      ,update[iBody].iPotTempMagmOc      );
+    // SetDerivTiny(fnUpdate,iBody,update[iBody].iSurfTemp     ,update[iBody].iSurfTempMagmOc     );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iSolidRadius  ,update[iBody].iSolidRadiusMagmOc  );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iWaterMassSol ,update[iBody].iWaterMassSolMagmOc );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iOxygenMassSol,update[iBody].iOxygenMassSolMagmOc);
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iCO2MassSol   ,update[iBody].iCO2MassSolMagmOc   );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iCO2MassMOAtm ,update[iBody].iCO2MassMOAtmMagmOc );
+
+
     if (io->iVerbose >= VERBPROG) {
-      printf("Surface melt fraction of %s's smaller than 0.4 after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+      printf("Surface melt fraction of %s's smaller than 0.4 after %f years - mantle set to solidified. \n",body[iBody].cName,evolve->dTime/YEARSEC);
       // printf("%s's atmosphere desiccated & surface temperature below 1000K after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
   }

@@ -106,7 +106,7 @@
 #define OPT_HALTALLPLANETSDESICC  2319
 #define OPT_RADIOHEATMODEL        2320
 #define OPT_MAGMOCATMMODEL        2321
-#define OPT_PRESSCO2ATM           2322
+#define OPT_CO2MASSMOATM          2322
 
 void AddModuleMagmOc(MODULE*,int,int);
 void BodyCopyMagmOc(BODY*,BODY*,int,int,int);
@@ -116,7 +116,7 @@ void HelpOptionsMagmOc(OPTIONS*);
 void InitializeOptionsMagmOc(OPTIONS*,fnReadOption[]);
 void ReadMassFracFeOIni(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadWaterMassAtm(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadPressCO2Atm(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadCO2MassMOAtm(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadSurfTemp(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadManMeltDensity(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadOptionsMagmOc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);

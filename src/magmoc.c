@@ -125,8 +125,8 @@ void ReadWaterMassAtm(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
   }
 }
 
-/* CO2 pressure */
-void ReadPressCO2Atm(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/* CO2 Mass */
+void ReadCO2MassMOAtm(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
   double dTmp;
@@ -135,12 +135,14 @@ void ReadPressCO2Atm(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
   if (lTmp >= 0) {   //if line num of option ge 0
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0) {  //if input value lt 0
-      body[iFile-1].dPressCO2Atm = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      body[iFile-1].dCO2MassMOAtm = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    } else {
+      body[iFile-1].dCO2MassMOAtm = fdUnitsMass(dTmp);
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else {
     if (iFile > 0) {  //if line num not ge 0, then if iFile gt 0, then set default.
-      body[iFile-1].dPressCO2Atm = options->dDefault;
+      body[iFile-1].dCO2MassMOAtm = options->dDefault;
     }
   }
 }
@@ -364,15 +366,15 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
 
   /* CO2 */
 
-  sprintf(options[OPT_PRESSCO2ATM].cName,"dPressCO2Atm");
-  sprintf(options[OPT_PRESSCO2ATM].cDescr,"Initial CO2 pressure in the atmosphere");
-  sprintf(options[OPT_PRESSCO2ATM].cDefault,"0 bar");
-  options[OPT_PRESSCO2ATM].iType = 2;
-  options[OPT_PRESSCO2ATM].iMultiFile = 1;
-  options[OPT_PRESSCO2ATM].dNeg = 1e5; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
-  options[OPT_PRESSCO2ATM].dDefault = 0;
-  sprintf(options[OPT_PRESSCO2ATM].cNeg,"bar");
-  fnRead[OPT_PRESSCO2ATM] = &ReadPressCO2Atm;
+  sprintf(options[OPT_CO2MASSMOATM].cName,"dCO2MassMOAtm");
+  sprintf(options[OPT_CO2MASSMOATM].cDescr,"Initial CO2 mass in the system");
+  sprintf(options[OPT_CO2MASSMOATM].cDefault,"0 TO");
+  options[OPT_CO2MASSMOATM].iType = 2;
+  options[OPT_CO2MASSMOATM].iMultiFile = 1;
+  options[OPT_CO2MASSMOATM].dNeg = TOMASS; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
+  options[OPT_CO2MASSMOATM].dDefault = 0;
+  sprintf(options[OPT_CO2MASSMOATM].cNeg,"Terrestrial Oceans");
+  fnRead[OPT_CO2MASSMOATM] = &ReadCO2MassMOAtm;
 
   /* Temperature */
 
@@ -483,7 +485,7 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   body[iBody].dPressOxygenAtm  = 0;
 
   // CO2
-  body[iBody].dCO2MassMOAtm    = body[iBody].dPressCO2Atm * 4*PI*pow(body[iBody].dRadius,2)/body[iBody].dGravAccelSurf; // initial CO2 mass in MO&Atm is equal to inital CO2 mass in atmosphere
+  body[iBody].dPressCO2Atm     = body[iBody].dCO2MassMOAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2)); // initial CO2 mass in MO&Atm is equal to inital CO2 mass in atmosphere
   body[iBody].dCO2MassSol      = 0; // initial water mass in solid = 0
   if (body[iBody].dCO2MassMOAtm < 1) {
     body[iBody].bCO2InAtmosphere = 0;

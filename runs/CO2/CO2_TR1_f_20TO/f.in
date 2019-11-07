@@ -1,25 +1,25 @@
-# Planet e parameters
-sName         e			                   # Body's name
-saModules     magmoc, atmesc, radheat, eqtide      # Modules to apply, exact spelling required
+# Planet f parameters
+sName         f			                     # Body's name
+saModules     magmoc, atmesc, radheat, eqtide        # Modules to apply, exact spelling required
 cColor        13aed5
 
 # Physical Properties
-dMass         -0.766                       # Mass, negative -> Earth masses
-dRadius       -0.913                       # Radius, negative -> Earth radii
+dMass         -0.926                        # Mass, negative -> Earth masses
+dRadius       -1.05                         # Radius, negative -> Earth radii
 dRotPeriod    -1                           # Rotation Period, negative -> days
 
 # MAGMOC Properties
 dMassFracFeOIni		0.0788		  # Initial mass fraction of FeO in the mantle (default: 0.0788)
-dWaterMassAtm		-10		  # Initial water mass in the system (neg: terrestrial oceans, default: -1)
-dCO2MassMOAtm 		-2		  # Initial mass of CO2 in the system (neg: terrestrial oceans, default: 0) 
+dWaterMassAtm		-20		  # Initial water mass in the system (neg: terrestrial oceans, default: -1) 
+dCO2MassMOAtm 		-4		  # Initial CO2 mass in the system (neg: terrestrial oceans, default: 0)
 dSurfTemp		4000		  # Initial surface temperature (default: 4000K)
 dManMeltDensity		4000		  # Mantle melt density (default: 4000kg/m^3)
-bHaltMantleSolidified 	1		  # Halt when mantle solidified? (default: 0 = no, 1 = yes)
-bHaltMantleMeltFracLow  1     		  # Halt when melt fraction smaller than 0.4 at surface? (default: 0 = no, 1 = yes)
+bHaltMantleSolidified 	0		  # Halt when mantle solidified? (default: 0 = no, 1 = yes)
+bHaltMantleMeltFracLow  0     # Halt when melt fraction smaller than 0.4 at surface? (default: 0 = no, 1 = yes)
 bHaltAtmDesiSurfCool    1                 # Halt when atmosphere desiccated? (default: 0 = no, 1 = yes)
-bHaltEnterHabZone	1		  # Halt when planet enters habitable zone? (default: 0 = no, 1 = yes)
-bHaltAllPlanetsSolid    0		  # Halt when all planets are soldified (for multiple planet systems)
-bHaltAllPlanetsDesicc  	0		  # Halt when all planets are desiccated (for multiple planet systems)
+bHaltEnterHabZone       1                 # Halt when planet enters habitable zone? (default: 0 = no, 1 = yes)
+bHaltAllPlanetsSolid  	0                 # Halt when all planets are soldified	(for multiple planet systems)
+bHaltAllPlanetsDesicc 	0                 # Halt when all planets are desiccated (for multiple planet systems)
 sRadioHeatModel		none              # Radiogenic heating model (default: none = RadHeat; schaefer = BSE composition)
 sMagmOcAtmModel 	grey		  # Atmospheric net flux model (default: grey; petit only for GJ1132b-H2O)
 
@@ -39,22 +39,22 @@ dAtmXAbsEffH2O 		  0.3
 # RADHEAT Parameters
 # *Num* are in numbers of atoms, negative -> Earth vals
 ### 40K
-d40KNumMan    -0.766
+d40KNumMan    -0.926
 d40KNumCore   -0
 d40KNumCrust  -0.0
 
 ### 232Th
-d232ThNumMan      -0.766
+d232ThNumMan      -0.926
 d232ThNumCore     -0
 d232ThNumCrust    -0
 
 ### 235U
-d235UNumMan      -0.766
+d235UNumMan      -0.926
 d235UNumCore     -0
 d235UNumCrust    -0
 
 ### 238U
-d238UNumMan      -0.766
+d238UNumMan      -0.926
 d238UNumCore     -0
 d238UNumCrust    -0
 
@@ -67,8 +67,8 @@ bFixOrbit 	1		   # Keep dEcc constant?
 bForceEqSpin	1		   # Planet tidally locked, no rotation?
 
 # Orbital Properties
-dSemi         -0.0293                       # Semi-major axis, negative -> AU
-dEcc          0.005                         # Eccentricity
+dSemi         -0.0385                     # Semi-major axis, negative -> AU
+dEcc          0.01                       # Eccentricity
 
 # Output
 saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -PressWaterAtm -PressOxygenAtm -HydrogenMassSpace -OxygenMassSpace FracFe2O3Man NetFluxAtmo WaterFracMelt -RadioPower -TidalPower $

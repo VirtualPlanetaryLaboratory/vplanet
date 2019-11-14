@@ -69,10 +69,18 @@ void WriteCriticalSemi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void WriteDeltaTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if (control->Evolve.dTime > 0 || control->Evolve.nSteps == 0)
-    *dTmp = control->Io.dOutputTime/control->Evolve.nSteps;
-  else
-    *dTmp = 0;
+  if (control->Evolve.bVarDt) {
+    if (control->Evolve.dTime > 0) {
+      *dTmp = control->Io.dOutputTime/control->Evolve.nSteps;
+    } else {
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr,"INFO: DeltaTime output for first step is defined to be 0 when bVarDt = 1.\n");
+      }
+      *dTmp = 0;
+    }
+  } else {
+    *dTmp = control->Evolve.dTimeStep;
+  }
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);

@@ -904,7 +904,7 @@ void WriteBodyCassOne(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   double h, inc, longa, Lnorm=0.0, obliq, eqnode;
   int i, jBody;
 
-  if (body[iBody].bDistOrb) {
+  if (body[iBody].dInc != 0 && body[iBody].dObliquity != 0) {
     for (i=0;i<3;i++) system->daLOrb[i] = 0.0;
 
     for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
@@ -957,7 +957,13 @@ void WriteBodyCassOne(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     *dTmp = sqrt(system->daLOrb[0]*system->daLOrb[0]+system->daLOrb[1]*system->daLOrb[1]+\
         system->daLOrb[2]*system->daLOrb[2]);
   } else {
-    *dTmp = 0.0;
+    if (control->Io.iVerbose >= VERBPROG && !control->Io.baCassiniOneMessage[iBody]) {
+      fprintf(stderr,"INFO: The inclination and obliqutiy of %s are both 0, "
+                "therefore its %s is defined to be -1.\n",body[iBody].cName,
+                output->cName);
+      control->Io.baCassiniOneMessage[iBody] = 1;
+    }
+    *dTmp = -1;
   }
 }
 
@@ -965,7 +971,7 @@ void WriteBodyCassTwo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   double h, inc, longa, Lnorm=0.0, obliq, eqnode;
   int i, jBody;
 
-  if (body[iBody].bDistOrb) {
+  if (body[iBody].dInc != 0 && body[iBody].dObliquity != 0) {
     for (i=0;i<3;i++) system->daLOrb[i] = 0.0;
 
     for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
@@ -1014,7 +1020,13 @@ void WriteBodyCassTwo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     *dTmp = 0.0;
     for (i=0;i<3;i++) *dTmp += body[iBody].daLRotTmp[i]*body[iBody].daLOrbTmp[i];
   } else {
-    *dTmp = 0.0;
+    if (control->Io.iVerbose >= VERBPROG && !control->Io.baCassiniTwoMessage[iBody]) {
+      fprintf(stderr,"INFO: The inclination and obliqutiy of %s are both 0, "
+                "therefore its %s is defined to be -1.\n",body[iBody].cName,
+                output->cName);
+      control->Io.baCassiniTwoMessage[iBody] = 1;
+    }
+    *dTmp = -1;
   }
 }
 

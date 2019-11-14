@@ -1450,7 +1450,12 @@ struct IO {
 
   int bOverwrite;         /**< Allow files to be overwritten? */
 
+	/* The following record whether an error message that should only be reported
+		 once has been printed. */
+	int bDeltaTimeMessage;  /**< Has the message for DeltaTime on the first timestep been printed? */
   int *baRocheMessage;    /**< Has the Roche lobe message been printed? */
+	int *baCassiniOneMessage;		/**< Has the CassiniOne message been printed? */
+	int *baCassiniTwoMessage;		/**< Has the CassiniTwo message been printed? */
 };
 
 /* The CONTROL struct contains all the parameters that

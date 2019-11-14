@@ -508,10 +508,10 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
 
     /* Time for Output? */
     if (control->Evolve.dTime >= control->Io.dNextOutput) {
+      control->Evolve.nSteps += nSteps;
       WriteOutput(body,control,files,output,system,update,fnWrite,control->Evolve.dTime,control->Io.dOutputTime/control->Evolve.nSteps);
       // Timesteps are synchronized with the output time, so this statement is sufficient
       control->Io.dNextOutput += control->Io.dOutputTime;
-      control->Evolve.nSteps += nSteps;
       nSteps=0;
     }
 

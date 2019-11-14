@@ -73,8 +73,9 @@ void WriteDeltaTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
     if (control->Evolve.dTime > 0) {
       *dTmp = control->Io.dOutputTime/control->Evolve.nSteps;
     } else {
-      if (control->Io.iVerbose >= VERBINPUT) {
+      if (control->Io.iVerbose >= VERBINPUT && !control->Io.bDeltaTimeMessage) {
         fprintf(stderr,"INFO: DeltaTime output for first step is defined to be 0 when bVarDt = 1.\n");
+        control->Io.bDeltaTimeMessage = 1;
       }
       *dTmp = 0;
     }

@@ -652,6 +652,25 @@ void ReadFrzTSeaIce(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
       body[iFile-1].dFrzTSeaIce = options->dDefault;
 }
 
+void ReadLandFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp > 1 || dTmp < 0) {
+      fprintf(stderr,"ERROR: %s must be in the range [0,1].\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+    body[iFile-1].dLandFrac = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dLandFrac = options->dDefault;
+}
+
 void ReadNuLandWater(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -992,6 +1011,14 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_NULANDWATER].iMultiFile = 1;
   fnRead[OPT_NULANDWATER] = &ReadNuLandWater;
 
+  sprintf(options[OPT_LANDFRAC].cName,"dLandFrac");
+  sprintf(options[OPT_LANDFRAC].cDescr,"Fraction of land on the planetary surface");
+  sprintf(options[OPT_LANDFRAC].cDefault,"0.34");
+  options[OPT_LANDFRAC].dDefault = 0.34;
+  options[OPT_LANDFRAC].iType = 2;
+  options[OPT_LANDFRAC].iMultiFile = 1;
+  fnRead[OPT_LANDFRAC] = &ReadLandFrac;
+
   sprintf(options[OPT_NSTEPINYEAR].cName,"iNStepInYear");
   sprintf(options[OPT_NSTEPINYEAR].cDescr,"Number of time-steps/year in seasonal model");
   sprintf(options[OPT_NSTEPINYEAR].cDefault,"60");
@@ -1286,7 +1313,7 @@ void InitializeLandWater(BODY *body, int iBody) {
 
   if (body[iBody].iGeography == UNIFORM3) {
     for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-      body[iBody].daLandFrac[iLat] = 0.34;
+      body[iBody].daLandFrac[iLat] = body[iBody].dLandFrac;
       body[iBody].daWaterFrac[iLat] = 1.0-body[iBody].daLandFrac[iLat];
     }
   } else if (body[iBody].iGeography == MODERN) {

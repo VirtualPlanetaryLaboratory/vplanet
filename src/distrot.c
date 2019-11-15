@@ -1321,7 +1321,15 @@ C(p,q) function in obliquity evol equations if RD4 orbital model is used
 @return C(p,q) function
 */
 double fndObliquityCRD4(BODY *body, SYSTEM *system, int *iaBody) {
-  return body[iaBody[0]].dQinc*fndDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fndDistOrbRD4DqDt(body,system,iaBody);
+  double dObliquityCRD4,dDistOrbRD4DpDt,dDistOrbRD4DqDt;
+
+  dDistOrbRD4DpDt = fndDistOrbRD4DpDt(body,system,iaBody);
+  dDistOrbRD4DqDt = fndDistOrbRD4DqDt(body,system,iaBody);
+
+  dObliquityCRD4 = body[iaBody[0]].dQinc*dDistOrbRD4DpDt - body[iaBody[0]].dPinc*
+    dDistOrbRD4DqDt;
+
+  return dObliquityCRD4;
 }
 
 /**
@@ -1333,7 +1341,16 @@ A(p,q) function in obliquity evol equations if RD4 orbital model is used
 @return A(p,q) function
 */
 double fndObliquityARD4(BODY *body, SYSTEM *system, int *iaBody) {
-  return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fndDistOrbRD4DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fndObliquityCRD4(body,system,iaBody) );
+  double dObliquityARD4,dDistOrbRD4DqDt,dObliquityCRD4;
+
+  dDistOrbRD4DqDt = fndDistOrbRD4DqDt(body,system,iaBody);
+  dObliquityCRD4 = fndObliquityCRD4(body,system,iaBody);
+
+  dObliquityARD4 = 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-
+    (body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * (dDistOrbRD4DqDt +
+    body[iaBody[0]].dPinc*dObliquityCRD4);
+
+  return dObliquityARD4;
 }
 
 /**

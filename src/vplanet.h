@@ -689,6 +689,7 @@ struct BODY {
   double **daIceSheetMat;    /**< Matrix used in ice sheet flow */
   double **daInvMSea;        /**< Inverted matrix in seasonal EBM */
   double *daLambdaSea;       /**< Diffusion terms in seasonal EBM matrix */
+	double dLandFrac;					 /**< Land fraction input by user */
   double *daLandFrac;        /**< Fraction of cell which is land */
   double **daMDiffSea;       /**< Diffusion only matrix in seasonal EBM */
   double **daMEulerCopySea;  /**< Temporary copy of Euler time step matrix (seasonal) */

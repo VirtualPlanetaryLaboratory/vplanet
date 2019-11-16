@@ -20,8 +20,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "vplanet.h"
-#include "options.h"
-#include "output.h"
 
 void BodyCopyDistRot(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
@@ -149,7 +147,7 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_CALCDYNELLIP].iMultiFile = 1;
   fnRead[OPT_CALCDYNELLIP] = &ReadCalcDynEllip;
 
-  sprintf(options[OPT_FORCEPRECRATE].cName,"bForcePrecRate");
+    sprintf(options[OPT_FORCEPRECRATE].cName,"bForcePrecRate");
   sprintf(options[OPT_FORCEPRECRATE].cDescr,"Set the axial precession to a fixed rate");
   sprintf(options[OPT_FORCEPRECRATE].cDefault,"0");
   options[OPT_FORCEPRECRATE].dDefault = 0;
@@ -906,7 +904,7 @@ void WriteBodyCassOne(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   double h, inc, longa, Lnorm=0.0, obliq, eqnode;
   int i, jBody;
 
-  if (body[iBody].bDistOrb) {
+  if (body[iBody].dInc != 0 && body[iBody].dObliquity != 0) {
     for (i=0;i<3;i++) system->daLOrb[i] = 0.0;
 
     for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
@@ -959,7 +957,13 @@ void WriteBodyCassOne(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     *dTmp = sqrt(system->daLOrb[0]*system->daLOrb[0]+system->daLOrb[1]*system->daLOrb[1]+\
         system->daLOrb[2]*system->daLOrb[2]);
   } else {
-    *dTmp = 0.0;
+    if (control->Io.iVerbose >= VERBPROG && !control->Io.baCassiniOneMessage[iBody]) {
+      fprintf(stderr,"INFO: The inclination and obliqutiy of %s are both 0, "
+                "therefore its %s is defined to be -1.\n",body[iBody].cName,
+                output->cName);
+      control->Io.baCassiniOneMessage[iBody] = 1;
+    }
+    *dTmp = -1;
   }
 }
 
@@ -967,7 +971,7 @@ void WriteBodyCassTwo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   double h, inc, longa, Lnorm=0.0, obliq, eqnode;
   int i, jBody;
 
-  if (body[iBody].bDistOrb) {
+  if (body[iBody].dInc != 0 && body[iBody].dObliquity != 0) {
     for (i=0;i<3;i++) system->daLOrb[i] = 0.0;
 
     for (jBody=1;jBody<control->Evolve.iNumBodies;jBody++) {
@@ -1016,7 +1020,13 @@ void WriteBodyCassTwo(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     *dTmp = 0.0;
     for (i=0;i<3;i++) *dTmp += body[iBody].daLRotTmp[i]*body[iBody].daLOrbTmp[i];
   } else {
-    *dTmp = 0.0;
+    if (control->Io.iVerbose >= VERBPROG && !control->Io.baCassiniTwoMessage[iBody]) {
+      fprintf(stderr,"INFO: The inclination and obliqutiy of %s are both 0, "
+                "therefore its %s is defined to be -1.\n",body[iBody].cName,
+                output->cName);
+      control->Io.baCassiniTwoMessage[iBody] = 1;
+    }
+    *dTmp = -1;
   }
 }
 
@@ -1285,7 +1295,8 @@ Correction to axial precession rate for eccentricity (and possible additional ef
 @return Correction to precession rate
 */
 double fndCentralTorqueSfac(BODY *body, int iBody) {
-  return 0.5*pow(1.-(body[iBody].dHecc*body[iBody].dHecc)-(body[iBody].dKecc*body[iBody].dKecc),-1.5) - S0;
+  return 0.5*pow(1.-(body[iBody].dHecc*body[iBody].dHecc)-(body[iBody].dKecc*
+    body[iBody].dKecc),-1.5);
 }
 
 /**
@@ -1310,7 +1321,15 @@ C(p,q) function in obliquity evol equations if RD4 orbital model is used
 @return C(p,q) function
 */
 double fndObliquityCRD4(BODY *body, SYSTEM *system, int *iaBody) {
-  return body[iaBody[0]].dQinc*fndDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dPinc*fndDistOrbRD4DqDt(body,system,iaBody);
+  double dObliquityCRD4,dDistOrbRD4DpDt,dDistOrbRD4DqDt;
+
+  dDistOrbRD4DpDt = fndDistOrbRD4DpDt(body,system,iaBody);
+  dDistOrbRD4DqDt = fndDistOrbRD4DqDt(body,system,iaBody);
+
+  dObliquityCRD4 = body[iaBody[0]].dQinc*dDistOrbRD4DpDt - body[iaBody[0]].dPinc*
+    dDistOrbRD4DqDt;
+
+  return dObliquityCRD4;
 }
 
 /**
@@ -1322,7 +1341,16 @@ A(p,q) function in obliquity evol equations if RD4 orbital model is used
 @return A(p,q) function
 */
 double fndObliquityARD4(BODY *body, SYSTEM *system, int *iaBody) {
-  return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fndDistOrbRD4DqDt(body,system,iaBody) + body[iaBody[0]].dPinc*fndObliquityCRD4(body,system,iaBody) );
+  double dObliquityARD4,dDistOrbRD4DqDt,dObliquityCRD4;
+
+  dDistOrbRD4DqDt = fndDistOrbRD4DqDt(body,system,iaBody);
+  dObliquityCRD4 = fndObliquityCRD4(body,system,iaBody);
+
+  dObliquityARD4 = 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-
+    (body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * (dDistOrbRD4DqDt +
+    body[iaBody[0]].dPinc*dObliquityCRD4);
+
+  return dObliquityARD4;
 }
 
 /**

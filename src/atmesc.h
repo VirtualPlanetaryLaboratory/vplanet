@@ -13,12 +13,15 @@
 #define ATMESC_TIAN             2           /**< Flag: Tian (2015) atmospheric escape formulae flag */
 #define ATMESC_ELIM             3           /**< Flag: Energy-limited escape */
 #define ATMESC_DIFFLIM          4           /**< Flag: Diffusion-limited escape */
-#define ATMESC_NONE             5           /**< Flag: No atmospheric escape */
-#define ATMESC_LOP12            6           /**< Flag: Lopez (2012) gaseous planet radius model */
-#define ATMESC_PROXCENB         7           /**< Flag: Proxima Centauri b gaseous planet radius model */
-#define ATMESC_LEHMER17         8           /**< Flag: Lehmer & Catling (2017) planet radius model */
-#define ATMESC_BOL16            9           /**< Flag: Bolmont (2016) XUV absorption efficiency model */
-#define QOH                     16.                           /**< Atomic mass ratio oxygen/hydrogen */
+#define ATMESC_BONDILIM         5           /**< Flag: Bondi-limited escape */
+#define ATMESC_RRLIM            6           /**< Flag: Radiation/recombination-limited escape */
+#define ATMESC_BALLISTIC        7           /**< Flag: Ballistic escape regime */
+#define ATMESC_NONE             8           /**< Flag: No atmospheric escape */
+#define ATMESC_LOP12            9           /**< Flag: Lopez (2012) gaseous planet radius model */
+#define ATMESC_PROXCENB         10           /**< Flag: Proxima Centauri b gaseous planet radius model */
+#define ATMESC_LEHMER17         11           /**< Flag: Lehmer & Catling (2017) planet radius model */
+#define ATMESC_BOL16            12           /**< Flag: Bolmont (2016) XUV absorption efficiency model */
+#define QOH                     16.         /**< Atomic mass ratio oxygen/hydrogen */
 
 /* Options Info */
 #define OPTSTARTATMESC          1200  /**< Start of AtmEsc options */
@@ -41,7 +44,12 @@
 #define OPT_FXUV                1227 /**< The value of the XUV flux */
 #define OPT_ATMXABSEFFH2OMODEL  1228 /**< Model for time evolution of epsilon for H2O */
 #define OPT_JEANSTIME           1229 /**< Time at which flow becomes ballistic (Jeans escape) */
-#define OPT_FLOWTEMP            1230 /**< flow temperature */
+#define OPT_FLOWTEMP            1230 /**< Flow temperature */
+#define OPT_BONDILIMITED        1231 /**< Whether or not to use Bondi-limited escape */
+#define OPT_ENERGYLIMITED       1232 /**< Whether or not to use energy-limited escape */
+#define OPT_RRLIMITED           1233 /**< Whether or not to use radiation/recombination-limited escape */
+#define OPT_ATMESCAUTO          1234 /**< Whether or not to let atmesc determine escape regime */
+
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -107,6 +115,10 @@ void FinalizeUpdateMassAtmEsc(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_DENVMASSDT         1225 /**< Rate of change of the envelope mass */
 #define OUT_FXUV               1226 /**< XUV flux */
 #define OUT_EPSH2O             1227 /**< XUV Atmospheric Escape Efficiency for H2O */
+#define OUT_ROCHERADIUS        1228 /**< Roche Lobe radius */
+#define OUT_BONDIRADIUS        1229 /**< Bondi radius */
+#define OUT_HESCAPEREGIME      1230 /**< Hydrogen envelope escape regime */
+#define OUT_RRCRITICALFLUX     1231 /**< Critical flux between RR and energy-limited escape */
 
 void InitializeOutputAtmEsc(OUTPUT*,fnWriteOutput[]);
 void InitializeOutputFunctionAtmEsc(OUTPUT*,int,int);
@@ -117,9 +129,13 @@ void WriteOxygenMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,c
 void WriteOxygenMantleMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteEnvelopeMass(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteRGLimit(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBondiRadius(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteRocheRadius(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteOxygenMixingRatio(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteOxygenEta(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteAtmXAbsEffH2O(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteRRCriticalFlux(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteHEscapeRegime(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 
 /* Logging Functions */
 void LogOptionsAtmEsc(CONTROL*,FILE*);
@@ -131,6 +147,8 @@ void fnForceBehaviorAtmEsc(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVar
 void fnPropsAuxAtmEsc(BODY*,EVOLVE*,IO*,UPDATE*,int);
 double fdDSurfaceWaterMassDt(BODY*,SYSTEM*,int*);
 double fdDEnvelopeMassDt(BODY*,SYSTEM*,int*);
+double fdDEnvelopeMassDtBondiLimited(BODY*,SYSTEM*,int*);
+double fdDEnvelopeMassDtRRLimited(BODY*,SYSTEM*,int*);
 double fdHZRG14(BODY*,int);
 void fvLinearFit(double*,double*,int,double*);
 double fdDOxygenMassDt(BODY*,SYSTEM*,int*);
@@ -140,6 +158,12 @@ double fdInsolation(BODY*,int,int);
 int fbDoesWaterEscape(BODY*,int);
 double fdPlanetRadius(BODY*,SYSTEM*,int*);
 double fdXUVEfficiencyBolmont2016(double);
+double fdBondiRadius(BODY*,int);
+double fdRocheRadius(BODY*,int);
+double fdBondiLimitedDmDt(BODY*,int);
+int fbRRCriticalFlux(BODY*,int);
+int fbBondiCriticalDmDt(BODY*,int);
+double fdRRCriticalFlux(BODY*,int);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY*,SYSTEM*,UPDATE*,int,int);

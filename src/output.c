@@ -5,14 +5,7 @@
   @date May 7 2014
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <assert.h>
-#include <ctype.h>
-#include <string.h>
 #include "vplanet.h"
-#include "output.h"
 
 /* Individual WriteOutput functions */
 
@@ -76,10 +69,19 @@ void WriteCriticalSemi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void WriteDeltaTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if (control->Evolve.dTime > 0 || control->Evolve.nSteps == 0)
-    *dTmp = control->Io.dOutputTime/control->Evolve.nSteps;
-  else
-    *dTmp = 0;
+  if (control->Evolve.bVarDt) {
+    if (control->Evolve.dTime > 0) {
+      *dTmp = control->Io.dOutputTime/control->Evolve.nSteps;
+    } else {
+      if (control->Io.iVerbose >= VERBINPUT && !control->Io.bDeltaTimeMessage) {
+        fprintf(stderr,"INFO: DeltaTime output for first step is defined to be 0 when bVarDt = 1.\n");
+        control->Io.bDeltaTimeMessage = 1;
+      }
+      *dTmp = 0;
+    }
+  } else {
+    *dTmp = control->Evolve.dTimeStep;
+  }
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -167,7 +169,7 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
    if (iBody == 0) {
      *dTmp = -1;
    } else {
-     if (body[iBody].bStellar) {
+     if (body[0].bStellar) {
        *dTmp = fdInstellation(body,iBody);
      } else {
        *dTmp = -1;
@@ -1699,8 +1701,6 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   if (iEnd == 0) {
     sprintf(cTime,"Input");
     fp=fopen(files->cLog,"w");
-    control->Evolve.dTime=0;
-    control->Evolve.nSteps=0;
   } else if (iEnd == 1) {
     sprintf(cTime,"Final");
     fp=fopen(files->cLog,"a");

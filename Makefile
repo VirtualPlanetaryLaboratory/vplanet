@@ -18,11 +18,11 @@ default:
 	@echo "=========================================================================================================="
 	@echo 'To add vplanet to your $$PATH, please run the appropriate command for your shell type:'
 	@echo '( You can see your shell by typing: echo $$0 )'
-	@echo 'bash:    export PATH=$$PATH:/path/to/vplanet/'
-	@echo 'tsch:    set path=($$path /path/to/vplanet/)'
-	@echo 'csh :    set path=($$path /path/to/vplanet/)'
+	@echo 'bash:    export PATH=$$PATH:$(CURDIR)'
+	@echo 'tsch:    set path=($$path $(CURDIR))'
+	@echo 'csh :    set path=($$path $(CURDIR))'
 	@echo 'or permanently add the VPLanet directory to the $$PATH by editing the appropriate environment file. e.g.:'
-	@echo 'bash:    echo '"'"'export PATH=$$PATH:/path/to/vplanet/'"'"' >> ~/.bashrc'
+	@echo 'bash:    echo '"'"'export PATH=$$PATH:$(CURDIR)'"'"' >> ~/.bashrc'
 	@echo "=========================================================================================================="
 
 debug:
@@ -37,11 +37,11 @@ opt:
 	@echo "=========================================================================================================="
 	@echo 'To add vplanet to your $$PATH, please run the appropriate command for your shell type:'
 	@echo '( You can see your shell by typing: echo $$0 )'
-	@echo 'bash:    export PATH=$$PATH:/path/to/vplanet/'
-	@echo 'tsch:    set path=($$path /path/to/vplanet/)'
-	@echo 'csh :    set path=($$path /path/to/vplanet/)'
+	@echo 'bash:    export PATH=$$PATH:$(CURDIR)'
+	@echo 'tsch:    set path=($$path $(CURDIR))'
+	@echo 'csh :    set path=($$path $(CURDIR))'
 	@echo 'or permanently add the VPLanet directory to the $$PATH by editing the appropriate environment file. e.g.:'
-	@echo 'bash:    echo '"'"'export PATH=$$PATH:/path/to/vplanet/'"'"' >> ~/.bashrc'
+	@echo 'bash:    echo '"'"'export PATH=$$PATH:$(CURDIR)'"'"' >> ~/.bashrc'
 	@echo "=========================================================================================================="
 
 profile:
@@ -50,11 +50,11 @@ profile:
 optprof:
 	-gcc -pg -o vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
 
-sanatize:
+sanitize:
 	-gcc -g -fsanitize=address -o vplanet src/*.c -DGITVERSION=\"$(GITVERSION)\"
 
 test:
-	-gcc -o vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
+	-gcc -o vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
 	py.test
 
 coverage:

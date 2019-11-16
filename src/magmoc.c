@@ -1906,6 +1906,7 @@ void WriteTidalPower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   }
 }
 
+/* XXX in output.c as WriteOrbSemi
 void WriteSemiMajorAxis(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dSemi;
   if (output->bDoNeg[iBody]) {
@@ -1916,6 +1917,7 @@ void WriteSemiMajorAxis(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     fsUnitsLength(units->iLength,cUnit);
   }
 }
+*/
 
 void WriteHZInnerEdge(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dHZInnerEdge;
@@ -2112,6 +2114,7 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALPOWER].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_TIDALPOWER] = &WriteTidalPower;
 
+/* In output.c as WriteOrbSemi
   sprintf(output[OUT_SEMIMAJORAXIS].cName,"SemiMajorAxis");
   sprintf(output[OUT_SEMIMAJORAXIS].cDescr,"Semi Major Axis of the planet's orbit");
   sprintf(output[OUT_SEMIMAJORAXIS].cNeg,"AU");
@@ -2120,6 +2123,7 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SEMIMAJORAXIS].iNum = 1;
   output[OUT_SEMIMAJORAXIS].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_SEMIMAJORAXIS] = &WriteSemiMajorAxis;
+*/
 
   sprintf(output[OUT_HZINNEREDGE].cName,"HZInnerEdge");
   sprintf(output[OUT_HZINNEREDGE].cDescr,"Inner Edge of the Habitable Zone (Runaway Greenhouse)");

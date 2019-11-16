@@ -15,8 +15,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "vplanet.h"
-#include "options.h"
-#include "output.h"
 
 void BodyCopyDistOrb(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
@@ -1813,8 +1811,8 @@ double fndGRCorrMatrix(BODY *body, int jBody, int kBody) {
   n = KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN/(body[jBody].dSemi/AUM*\
     body[jBody].dSemi/AUM*body[jBody].dSemi/AUM));
   if (jBody == kBody) {
-    GRC = 3*n*n*n*body[jBody].dSemi/AUM*body[jBody].dSemi/AUM/(cLIGHT/AUM*DAYSEC*\
-      cLIGHT/AUM*DAYSEC* (1.0-body[jBody].dHecc*body[jBody].dHecc-\
+    GRC = 3*n*n*n*body[jBody].dSemi/AUM*body[jBody].dSemi/AUM/(LIGHTSPEED/AUM*DAYSEC*\
+      LIGHTSPEED/AUM*DAYSEC* (1.0-body[jBody].dHecc*body[jBody].dHecc-\
       body[jBody].dKecc*body[jBody].dKecc));
     return GRC*365.25;
 
@@ -5340,7 +5338,7 @@ double fndApsidalGRCorrection(BODY *body, int *iaBody) {
   double n;
   n = KGAUSS*sqrt((body[0].dMass+body[iaBody[0]].dMass)/MSUN/(body[iaBody[0]].dSemi/AUM*\
     body[iaBody[0]].dSemi/AUM*body[iaBody[0]].dSemi/AUM));
-  return 3*n*n*n*body[iaBody[0]].dSemi/AUM*body[iaBody[0]].dSemi/AUM/(cLIGHT/AUM*DAYSEC*cLIGHT/AUM*DAYSEC*(1.0-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-body[iaBody[0]].dKecc*body[iaBody[0]].dKecc))/DAYSEC;
+  return 3*n*n*n*body[iaBody[0]].dSemi/AUM*body[iaBody[0]].dSemi/AUM/(LIGHTSPEED/AUM*DAYSEC*LIGHTSPEED/AUM*DAYSEC*(1.0-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-body[iaBody[0]].dKecc*body[iaBody[0]].dKecc))/DAYSEC;
 }
 
 /**

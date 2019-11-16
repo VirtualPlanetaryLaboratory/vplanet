@@ -175,7 +175,7 @@ void FinalizeUpdateOxygenMassSpace(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_WATERFRACMELT      2325
 #define OUT_RADIOPOWER         2326
 #define OUT_TIDALPOWER         2327
-#define OUT_SEMIMAJORAXIS      2328
+//#define OUT_SEMIMAJORAXIS      2328
 #define OUT_HZINNEREDGE        2329
 #define OUT_MELTFRACTION       2330
 #define OUT_CO2MASSMOATM       2331

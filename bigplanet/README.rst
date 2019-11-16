@@ -1,6 +1,6 @@
 bigplanet
 -----
-A suite of data analysis and extraction routines for ``VPLANET``.
+A suite of data analysis and extraction routines for ``VPLanet``.
 
 Installation
 ============

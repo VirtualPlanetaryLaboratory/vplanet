@@ -15,12 +15,6 @@
 
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <assert.h>
-#include <ctype.h>
-#include <string.h>
 #include "vplanet.h"
 
 /*
@@ -364,6 +358,10 @@ double fdMassToRad_Sotin07(double dMass) {
     return pow(dMass/MEARTH,0.272)*REARTH;
 }
 
+double fdMassToRad_LehmerCatling17(double dMass) {
+    return 1.3*pow(dMass,0.27);
+}
+
 /**
   Terrestrial planet mass-radius relationship from Sotin et al 2007, Icarus,
   191, 337-351.
@@ -448,6 +446,8 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dObliquity = src[iBody].dObliquity;
     dest[iBody].dLostAngMom = src[iBody].dLostAngMom;
     dest[iBody].dLostEng = src[iBody].dLostEng;
+    dest[iBody].dAlbedoGlobal = src[iBody].dAlbedoGlobal;
+
     dest[iBody].bBinary = src[iBody].bBinary;
     dest[iBody].bDistOrb = src[iBody].bDistOrb;
     dest[iBody].bDistRot = src[iBody].bDistRot;
@@ -554,13 +554,25 @@ double CalcDynEllipEq(BODY *body, int iBody) {
    @param dPresSurf pressure at surface due to envelope
    @param dRadXUV radius from center of planet where optical depth of XUV is unity
    */
-double fdLehmerRadius(double dRadSurf, double dPresXUV, double dScaleHeight, double dPresSurf) {
-	double dRadXUV;
+double fdLehmerRadius(BODY *body,int iBody) {
+	double dRadXUV,dRoche;
 
-	dRadXUV = dRadSurf * dRadSurf / (dScaleHeight * log(dPresXUV/dPresSurf) + dRadSurf);
-	if (dRadXUV <= dRadSurf) {
-		dRadXUV = dRadSurf;
+	dRadXUV = body[iBody].dRadSolid * body[iBody].dRadSolid / (body[iBody].dScaleHeight
+    * log(body[iBody].dPresXUV/body[iBody].dPresSurf) + body[iBody].dRadSolid);
+  dRoche=fdRocheRadius(body,iBody);
+    //printf("%lf %lf %lf %lf %lf\n",body[iBody].dPresXUV,body[iBody].dPresSurf,body[iBody].dGravAccel,body[iBody].dEnvelopeMass,dRadXUV);
+  if (dRadXUV <= 0) {
+    dRadXUV = dRoche;
+  }
+  if (dRadXUV > dRoche) {
+    dRadXUV = dRoche;
+  }
+	if (dRadXUV < body[iBody].dRadSolid) {
+		dRadXUV = body[iBody].dRadSolid;
 	}
+  if (body[iBody].dEnvelopeMass == 0) {
+    dRadXUV = body[iBody].dRadSolid;
+  }
   return dRadXUV;
 }
 
@@ -579,7 +591,24 @@ double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
 	double dPresSurf;
 
 	dPresSurf = dGravAccel * dMassEnv / (4 * PI * dRadSurf * dRadSurf); // [kg/ms2]
+//  if (dPresSurf < 0)
+//    printf("%lf %lf %lf %lf\n",dGravAccel,dRadSurf,dMassEnv,dPresSurf);
   return dPresSurf;
+}
+
+/**
+  Thermal temperature of an object heated by the radiation of its primary.
+
+  @param dFlux Incident flux on the body
+  @param dTemp Thermal temperature
+  */
+double fdThermalTemp(BODY *body,int iBody) {
+  double dFlux,dTemp;
+
+  dFlux = body[0].dLuminosity*(1-body[iBody].dAlbedoGlobal)/(4*PI*body[iBody].dSemi*body[iBody].dSemi);
+  dTemp = pow(dFlux/SIGMA,0.25);
+
+  return dTemp;
 }
 
 double fdImK2Total(BODY *body,int iBody) {

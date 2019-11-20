@@ -43,8 +43,8 @@ void PropertiesAuxiliary(BODY *body,CONTROL *control,UPDATE *update) {
   }
 }
 
-void CalculateDerivatives(BODY *body,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,
-    int iNumBodies) {
+void CalculateDerivatives(BODY *body,SYSTEM *system,UPDATE *update,
+  fnUpdateVariable ***fnUpdate,int iNumBodies) {
   int iBody,iVar,iEqn;
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
@@ -60,6 +60,29 @@ void CalculateDerivatives(BODY *body,SYSTEM *system,UPDATE *update,fnUpdateVaria
   iBody = 0;
 }
 
+void CheckProgress(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update) {
+  int iBody,jBody;
+
+  if (control->Io.iVerbose >= VERBPROG && !control->Io.bMutualIncMessage
+      && control->Io.dMaxMutualInc > 0) {
+
+    // If made it here, more than 1 body must be present
+    if (body[1].bSpiNBody) {
+      // Calculate orbital elements
+      for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+        cart2osc(body,iBody);
+      }
+    }
+
+    for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+      for (jBody=iBody;jBody<evolve->iNumBodies;jBody++) {
+        if (fniCheckMaxMutualInc(body,iBody,jBody)) {
+          control->Io.bMutualIncMessage = 1;
+        }
+      }
+    }
+  }
+}
 
 /*
  * Integration Control
@@ -523,6 +546,9 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
     if (control->Evolve.bFirstStep) {
       control->Evolve.bFirstStep = 0;
     }
+
+    // Any variables reached an interesting value?
+    CheckProgress(body,control,system,update);
   }
 
   if (control->Io.iVerbose >= VERBPROG)

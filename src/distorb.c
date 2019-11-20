@@ -879,6 +879,11 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         InitializeKeccDistOrbGR(body,update,iBody,body[iBody].iGravPerts);
       }
     }
+
+    /* If the mutual inclination of any object gets above MAXMUTUALINCRD4,
+       print a warning message. */
+    control->Io.dMaxMutualInc = MAXMUTUALINCRD4 * PI/180;
+
   } else if (control->Evolve.iDistOrbModel == LL2) {
     VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
     control->fnPropsAux[iBody][iModule] = &PropsAuxDistOrb;
@@ -1022,6 +1027,10 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         /* q = s*cos(LongA) */
         InitializeQincDistOrbLL2(body,update,iBody,iPert);
     }
+
+    /* If the mutual inclination of any object gets above MAXMUTUALINCLL2,
+       print a warning message. */
+    control->Io.dMaxMutualInc = MAXMUTUALINCLL2 * PI/180;
 
     // if (body[iBody].bGRCorr) {
 //       fprintf(stderr,"ERROR: %s cannot be used in LL2 orbital solution.\n",options[OPT_GRCORR].cName);
@@ -1242,6 +1251,37 @@ int fniHaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,i
 
   return 0;
 }
+
+/**
+  Check the maximum allowed mutual inclination when DistOrb is active.
+
+@param body A pointer to the current BODY instance
+@param evolve A pointer to the integration EVOLVE instance
+@param halt A pointer to the HALT instance
+@param io A pointer to the IO instance
+@param update A pointer to the UPDATE instance
+@param iBody The current index in the BODY instance, irrelevant in this case
+  because mutual inclination is by definition a multi-body variable
+
+@return TRUE if one mutual incliantion in a system is larger than
+  dHaltMaxMutualInc, FALSE if not
+*/
+int fnbHaltMaxMutualIncDistorb(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,int iBody) {
+
+  int jBody;
+
+  for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+    for (jBody=iBody;jBody<evolve->iNumBodies;jBody++) {
+      if (fnbHaltMaxMutualInc(body,iBody,jBody)) {
+        return 1;
+      }
+    }
+  }
+
+  return 0;
+}
+
 
 /************* DISTORB Outputs ******************/
 

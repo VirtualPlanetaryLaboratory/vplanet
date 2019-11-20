@@ -14,6 +14,8 @@
 #define RD4           0
 #define TEENY				1e-20 // Already a dTINY in vplanet.h! XXX
 #define MAXECCDISTORB 0.6627434
+#define MAXMUTUALINCRD4 45 // Degrees
+#define MAXMUTUALINCLL2 10 // Degrees
 
 #define RADIX 2.0   //factor used by matrix solver in LL2 solution
 #define SWAP(g,h) {y = (g); (g) = (h); (h) = y;}
@@ -85,11 +87,13 @@ void ReadLongA(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadLongP(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadArgP(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void InitializeOptionsDistOrb(OPTIONS*, fnReadOption[]);
-void ReadOptionsDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
+void ReadOptionsDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],
+    int);
 
 /* Verify Functions */
 void VerifyPericenter(BODY*,CONTROL*,OPTIONS*,char[],int,int);
-void VerifyDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
+void VerifyDistOrb(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,
+    int);
 
 /* Update Functions */
 
@@ -103,29 +107,46 @@ int fniHaltCloseEnc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 int fniHaltHillStab(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 
 void HelpOutputDistOrb(OUTPUT*);
-void WriteBodyDEccDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDSincDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDLongPDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDLongADtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDIncDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodySinc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyLongP(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyArgP(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyHecc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyKecc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyPinc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyQinc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDHeccDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDKeccDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDPincDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
-void WriteBodyDQincDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
+void WriteBodyDEccDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,
+    double*,char[]);
+void WriteBodyDSincDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,
+    double*,char[]);
+void WriteBodyDLongPDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,
+    double*,char[]);
+void WriteBodyDLongADtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,
+    double*,char[]);
+void WriteBodyDIncDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,
+    double*,char[]);
+void WriteBodySinc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,
+    char[]);
+void WriteBodyLongP(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,
+    char[]);
+void WriteBodyArgP(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,
+    char[]);
+void WriteBodyHecc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,
+    char[]);
+void WriteBodyKecc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,
+    char[]);
+void WriteBodyPinc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,
+    char[]);
+void WriteBodyQinc(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,
+    char[]);
+void WriteBodyDHeccDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,
+    double*,char[]);
+void WriteBodyDKeccDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,
+    double*,char[]);
+void WriteBodyDPincDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,
+    double*,char[]);
+void WriteBodyDQincDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,
+    double*,char[]);
 void InitializeOutputDistOrb(OUTPUT*,fnWriteOutput[]);
 void WriteEigen(CONTROL*,SYSTEM*);
 
 /* Logging Functions */
 void LogOptionsDistOrb(CONTROL*,FILE*);
 void LogDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
-void LogBodyDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
+void LogBodyDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],
+    FILE*,int);
 
 /* DistOrb Functions */
 double fndMutualHillRad(BODY*,int,int);

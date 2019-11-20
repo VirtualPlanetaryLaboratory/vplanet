@@ -1579,10 +1579,47 @@ void ReadHaltMerge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
 	 known by ReadOptionsGeneral. Therefore, we can assign it based on
 	 the "bModule" members of the body struct. */
       // XXX Russell -- Include galhabit?
-      if (body[iFile-1].bEqtide || body[iFile-1].bDistOrb || body[iFile-1].bBinary)
-	control->Halt[iFile-1].bMerge = 1;
-      else
-	control->Halt[iFile-1].bMerge = 0;
+      if (body[iFile-1].bEqtide || body[iFile-1].bDistOrb
+          || body[iFile-1].bBinary) {
+	           control->Halt[iFile-1].bMerge = 1;
+      } else {
+	           control->Halt[iFile-1].bMerge = 0;
+      }
+    }
+  }
+}
+
+/**
+  Read in the maximum allowed mutual inclination. This parameter applies to both
+  SpiNBbody and DistOrb. If set to 0, then the mutual inclination will not be
+  calculated every timestep in HaltMaxMutualIncSpiNBody or
+  HaltMaxMutualIncDistorb.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+
+void ReadHaltMaxMutualInc(BODY *body,CONTROL *control,FILES *files,
+      OPTIONS *options,SYSTEM *system,int iFile) {
+
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,
+      control->Io.iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,
+      control->Io.iVerbose);
+  if (lTmp >= 0) {
+    control->Halt.dMaxMutualInc = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0) {
+      control->Halt.dMaxMutualInc = options->dDefault;
     }
   }
 }
@@ -3147,9 +3184,9 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
    *
    */
 
-
   sprintf(options[OPT_HALTMAXECC].cName,"dHaltMaxEcc");
-  sprintf(options[OPT_HALTMAXECC].cDescr,"Maximum Eccentricity Value that Halts Integration");
+  sprintf(options[OPT_HALTMAXECC].cDescr,
+      "Maximum eccentricity value that halts ntegration");
   sprintf(options[OPT_HALTMAXECC].cDefault,"1");
   options[OPT_HALTMAXECC].dDefault = 1;
   options[OPT_HALTMAXECC].iType = 2;
@@ -3157,6 +3194,29 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HALTMAXECC].bNeg = 0;
   options[OPT_HALTMAXECC].iFileType = 2;
   fnRead[OPT_HALTMAXECC] = &ReadHaltMaxEcc;
+
+  sprintf(options[OPT_HALTMAXMUTUALINC].cName,"dHaltMaxMutualInc");
+  sprintf(options[OPT_HALTMAXMUTUALINC].cDescr,
+      "Maximum mutual inclination value that halts integration");
+  sprintf(options[OPT_HALTMAXMUTUALINC].cDefault,"0 [not checked]");
+  options[OPT_HALTMAXMUTALINC].dDefault = 0;
+  options[OPT_HALTMAXMUTUALINC].iType = 2;
+  options[OPT_HALTMAXMUTUALINC].iModuleBit = SPINBODY + DISTORB;
+  options[OPT_HALTMAXMUTUALINC].bNeg = 0;
+  options[OPT_HALTMAXMUTUALINC].iFileType = 2;
+  fnRead[OPT_HALTMAXMTUALINC] = &ReadHaltMaxMutualInc;
+  sprintf(options[OPT_HALTMAXMUTUALINC].cLongDescr,
+    "The execution halts when dHaltMaxMutualInc is reached. The mutual (or\n"
+    "relative) inclination is the value of the angle between the orbital\n"
+    "angular momentum vector of two bodies. If set to 0, then the mutual\n"
+    "inclination will not be checked every timestep for halts, i.e. the code\n"
+    "should run faster. For DistOrb calculations with the RD4 %s model,\n"
+    "mutual inclinations above %.2lf degrees, especially if the eccentricities\n"
+    "are significant, should be interpreted cautiously. For the DistOrb-%s\n"
+    "model, values above %.2lf degrees are suspect. SpiNBody is accurate for\n"
+    "any value.",options[OPT_ORBITMODEL].cName,MAXMUTUALINCRD4
+        options[OPT_ORBITMODEL].cName,MAXMUTUALINCLL2
+  );
 
   sprintf(options[OPT_HALTMERGE].cName,"bHaltMerge");
   sprintf(options[OPT_HALTMERGE].cDescr,"Halt at Merge");

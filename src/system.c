@@ -343,6 +343,80 @@ double fdXUVFlux(BODY *body, int iBody) {
   return flux;
 }
 
+/**
+  Calculate the mutual or relative inclination of the orbital planes of iBody
+  and jBody.
+
+@param body A pointer to the current BODY instance
+@param iBody The index of the BODY struct for the 1st orbit
+@param jBody The index of the BODY struct for the 2nd orbit
+
+@return The mutual inclination
+*/
+
+void fdMutualInclination(BODY *body,int iBody,int jBody) {
+  double dMutualInc;
+
+  dMutualInc = acos( cos(body[iBody].dInc)*cos(body[jBody].dInc) *
+      sin(body[iBody].dInc)*sin(body[jBody].dInc)*
+      cos(body[iBody].dLongA - body[jBody].dLongA) );
+
+  return dMutualInc;
+}
+
+/**
+  Check the maximum allowed mutual inclination.
+
+@param body A pointer to the BODY instance
+@param evolve A pointer to the integration EVOLVE instance
+@param halt A pointer to the HALT instance
+@param io A pointer to the IO instance
+@param update A pointer to the UPDATE instance
+@param iBody The current index in the BODY instance, irrelevant in this case
+  because mutual inclination is by definition a multi-body variable
+@param iReason Was the subroutine called from CheckHalts (0) or CheckProgress
+  (1)?
+
+@return TRUE if the mutual incliantion is larger than dMaxMutualInc, FALSE
+  if not
+*/
+int fniCheckMaxMutualInc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,int iBody,
+    int jBody,int iReason) {
+
+  double dMutualInc,dMaxMutualInc;
+
+  if (iReason == 0) {
+    // Called to check halt
+    dMaxMutualInc = halt->dMaxMutualInc;
+  } else if (iReason == 1) {
+    // Called from CheckProgress
+    dMaxMutualInc = io->dMaxMutualInc;
+  }
+
+  dMutualInc = fdMutualInclination(body,iBody,jBody);
+  if (dMutualInc >= dMaxMutualInc) {
+    if (io->iVerbose >= VERBPROG) {
+      if (iReason == 0) {
+        // Called to check halt
+        printf("HALT: ");
+      } else if (iReason == 1) {
+        // Called from CheckProgress
+        printf("WARNING: ");
+      }
+      printf("Mutual Inclination[%s - %s] = ",body[iBody].cName,
+          body[jBody].cName);
+      fprintd(stdout,dMutualInc,io->iSciNot,io->iDigits);
+      printf(", > max = ");
+      fprintd(stdout,dMaxMutualInc,io->iSciNot,io->iDigits);
+      printf(" at %.2e years\n",evolve->dTime/YEARSEC);
+    }
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+
 /*
  *
  * Multi-body matrix equations

@@ -14,7 +14,7 @@
 #define RD4           0
 #define TEENY				1e-20 // Already a dTINY in vplanet.h! XXX
 #define MAXECCDISTORB 0.6627434
-#define MAXMUTUALINCRD4 45 // Degrees
+#define MAXMUTUALINCRD4 35 // Degrees
 #define MAXMUTUALINCLL2 10 // Degrees
 
 #define RADIX 2.0   //factor used by matrix solver in LL2 solution

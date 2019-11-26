@@ -74,20 +74,20 @@ void CheckProgress(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update) {
       }
     }
 
-    for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-      for (jBody=iBody;jBody<control->Evolve.iNumBodies;jBody++) {
+    // Skip central body
+    for (iBody=1;iBody<control->Evolve.iNumBodies;iBody++) {
+      for (jBody=iBody+1;jBody<control->Evolve.iNumBodies;jBody++) {
         // 1 to check progress, not halt
         if (fbCheckMaxMutualInc(body,&control->Evolve,&control->Halt[iBody],
               &control->Io,iBody,jBody,1)) {
-
                 /*
-          if (control->Io.iVerbose >= VERBPROG) {
-            printf("WARNING: Mutual inclination of %s and %s exceeds ",
-                body[iBody].cName,body[jBody].cName);
-            fprintd(stdout,control->Io.dMaxMutualInc,control->Io.iSciNot,
-                control->Io.iDigits);
-            printf(" at t = %.2e years.\n",control->Evolve.dTime);
-          }
+        if (control->Io.iVerbose >= VERBPROG) {
+          printf("WARNING: Mutual inclination of %s and %s exceeds ",
+              body[iBody].cName,body[jBody].cName);
+          fprintd(stdout,control->Io.dMaxMutualInc,control->Io.iSciNot,
+              control->Io.iDigits);
+          printf(" at t = %.2e years.\n",control->Evolve.dTime);
+        }
 */
           control->Io.bMutualIncMessage = 1;
         }

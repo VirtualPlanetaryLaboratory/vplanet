@@ -1459,7 +1459,7 @@ struct IO {
   /*! Has the large mutual inclination message been printed? */
   int bMutualIncMessage;
   /*! Print warning message if mutual inc exceeds this value */
-  int dMaxMutualInc;
+  double dMaxMutualInc;
   int *baRocheMessage;    /**< Has the Roche lobe message been printed? */
 	int *baCassiniOneMessage;		/**< Has the CassiniOne message been printed? */
 	int *baCassiniTwoMessage;		/**< Has the CassiniTwo message been printed? */

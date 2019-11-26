@@ -1362,7 +1362,16 @@ B(p,q) function in obliquity evol equations if RD4 orbital model is used
 @return B(p,q) function
 */
 double fndObliquityBRD4(BODY *body, SYSTEM *system, int *iaBody) {
-  return 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-(body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) * ( fndDistOrbRD4DpDt(body,system,iaBody) - body[iaBody[0]].dQinc*fndObliquityCRD4(body,system,iaBody) );
+  double dDistOrbRD4DpDt,dObliquityCRD4,dObliquityBRD4;
+
+  dDistOrbRD4DpDt = fndDistOrbRD4DpDt(body,system,iaBody);
+  dObliquityCRD4 = fndObliquityCRD4(body,system,iaBody);
+
+  dObliquityBRD4 = 2.0/sqrt(1-(body[iaBody[0]].dPinc*body[iaBody[0]].dPinc)-
+      (body[iaBody[0]].dQinc*body[iaBody[0]].dQinc)) *
+      (dDistOrbRD4DpDt - body[iaBody[0]].dQinc*dObliquityCRD4);
+
+  return dObliquityBRD4;
 }
 
 /**
@@ -1535,7 +1544,15 @@ Derivative of z = cos(obliquity) when RD4 orbital model is used
 @return Derivative dz/dt
 */
 double fndDistRotRD4DzDt(BODY *body, SYSTEM *system, int *iaBody) {
-  return body[iaBody[0]].dYobl*fndObliquityBRD4(body,system,iaBody) - body[iaBody[0]].dXobl*fndObliquityARD4(body,system,iaBody);
+  double dObliquityBRD4,dObliquityARD4,dDistRotRD4DzDt;
+
+  dObliquityBRD4=fndObliquityBRD4(body,system,iaBody);
+  dObliquityARD4=fndObliquityARD4(body,system,iaBody);
+
+  dDistRotRD4DzDt = body[iaBody[0]].dYobl*dObliquityBRD4 - body[iaBody[0]].dXobl
+      *dObliquityARD4;
+
+  return dDistRotRD4DzDt;
 }
 
 /**

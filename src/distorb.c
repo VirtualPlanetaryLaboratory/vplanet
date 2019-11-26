@@ -882,7 +882,9 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 
     /* If the mutual inclination of any object gets above MAXMUTUALINCRD4,
        print a warning message. */
-    control->Io.dMaxMutualInc = MAXMUTUALINCRD4 * PI/180;
+    //control->Io.dMaxMutualInc = MAXMUTUALINCRD4 * PI/180.;
+    control->Io.dMaxMutualInc = 35*3.1415926535/180;
+    double dFoo = 35*3.1415926535/180;
 
   } else if (control->Evolve.iDistOrbModel == LL2) {
     VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
@@ -1303,7 +1305,7 @@ int fbCheckMutualIncDistorb(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
   int jBody;
 
   for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
-    for (jBody=iBody;jBody<evolve->iNumBodies;jBody++) {
+    for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
       // 1 is to check for halt, not progress
       if (fbCheckMaxMutualInc(body,evolve,halt,io,iBody,jBody,1)) {
         return 1;

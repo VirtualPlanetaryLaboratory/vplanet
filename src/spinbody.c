@@ -482,7 +482,7 @@ int fbHaltMaxMutualIncSpiNBody(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
   }
 
   for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
-    for (jBody=iBody;jBody<evolve->iNumBodies;jBody++) {
+    for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
       // 0 is to check for halt, not progress
       if (fbCheckMaxMutualInc(body,evolve,halt,io,iBody,jBody,0)) {
         return 1;

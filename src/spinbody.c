@@ -471,10 +471,10 @@ void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
 @return TRUE if one mutual incliantion in a system is larger than
   dHaltMaxMutualInc, FALSE if not
 */
-int fnbHaltMaxMutualIncSpiNBody(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+int fbHaltMaxMutualIncSpiNBody(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
       UPDATE *update,int iBody) {
 
-  int iBody,jBody;
+  int jBody;
 
   // Calculate orbital elements
   for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
@@ -483,7 +483,8 @@ int fnbHaltMaxMutualIncSpiNBody(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
 
   for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
     for (jBody=iBody;jBody<evolve->iNumBodies;jBody++) {
-      if (fnbHaltMaxMutualInc(body,iBody,jBody)) {
+      // 0 is to check for halt, not progress
+      if (fbCheckMaxMutualInc(body,evolve,halt,io,iBody,jBody,0)) {
         return 1;
       }
     }

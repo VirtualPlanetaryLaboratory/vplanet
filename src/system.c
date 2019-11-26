@@ -354,7 +354,7 @@ double fdXUVFlux(BODY *body, int iBody) {
 @return The mutual inclination
 */
 
-void fdMutualInclination(BODY *body,int iBody,int jBody) {
+double fdMutualInclination(BODY *body,int iBody,int jBody) {
   double dMutualInc;
 
   dMutualInc = acos( cos(body[iBody].dInc)*cos(body[jBody].dInc) *
@@ -380,7 +380,7 @@ void fdMutualInclination(BODY *body,int iBody,int jBody) {
 @return TRUE if the mutual incliantion is larger than dMaxMutualInc, FALSE
   if not
 */
-int fniCheckMaxMutualInc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,int iBody,
+int fbCheckMaxMutualInc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,int iBody,
     int jBody,int iReason) {
 
   double dMutualInc,dMaxMutualInc;

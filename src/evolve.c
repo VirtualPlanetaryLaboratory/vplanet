@@ -69,14 +69,26 @@ void CheckProgress(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update) {
     // If made it here, more than 1 body must be present
     if (body[1].bSpiNBody) {
       // Calculate orbital elements
-      for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+      for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
         cart2osc(body,iBody);
       }
     }
 
-    for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
-      for (jBody=iBody;jBody<evolve->iNumBodies;jBody++) {
-        if (fniCheckMaxMutualInc(body,iBody,jBody)) {
+    for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+      for (jBody=iBody;jBody<control->Evolve.iNumBodies;jBody++) {
+        // 1 to check progress, not halt
+        if (fbCheckMaxMutualInc(body,&control->Evolve,&control->Halt[iBody],
+              &control->Io,iBody,jBody,1)) {
+
+                /*
+          if (control->Io.iVerbose >= VERBPROG) {
+            printf("WARNING: Mutual inclination of %s and %s exceeds ",
+                body[iBody].cName,body[jBody].cName);
+            fprintd(stdout,control->Io.dMaxMutualInc,control->Io.iSciNot,
+                control->Io.iDigits);
+            printf(" at t = %.2e years.\n",control->Evolve.dTime);
+          }
+*/
           control->Io.bMutualIncMessage = 1;
         }
       }

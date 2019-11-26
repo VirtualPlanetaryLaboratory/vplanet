@@ -1266,14 +1266,15 @@ int fniHaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,i
 @return TRUE if one mutual incliantion in a system is larger than
   dHaltMaxMutualInc, FALSE if not
 */
-int fnbHaltMaxMutualIncDistorb(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+int fbHaltMaxMutualIncDistorb(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
       UPDATE *update,int iBody) {
 
   int jBody;
 
   for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
     for (jBody=iBody;jBody<evolve->iNumBodies;jBody++) {
-      if (fnbHaltMaxMutualInc(body,iBody,jBody)) {
+      // 0 is to check for halt, not progress
+      if (fbCheckMaxMutualInc(body,evolve,halt,io,iBody,jBody,0)) {
         return 1;
       }
     }
@@ -1281,6 +1282,38 @@ int fnbHaltMaxMutualIncDistorb(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
 
   return 0;
 }
+
+/**
+  Check if mutual inclination exceeds the warning limit
+
+@param body A pointer to the current BODY instance
+@param evolve A pointer to the integration EVOLVE instance
+@param halt A pointer to the HALT instance
+@param io A pointer to the IO instance
+@param update A pointer to the UPDATE instance
+@param iBody The current index in the BODY instance, irrelevant in this case
+  because mutual inclination is by definition a multi-body variable
+
+@return TRUE if one mutual incliantion in a system is larger than
+  dHaltMaxMutualInc, FALSE if not
+*/
+int fbCheckMutualIncDistorb(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,int iBody) {
+
+  int jBody;
+
+  for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+    for (jBody=iBody;jBody<evolve->iNumBodies;jBody++) {
+      // 1 is to check for halt, not progress
+      if (fbCheckMaxMutualInc(body,evolve,halt,io,iBody,jBody,1)) {
+        return 1;
+      }
+    }
+  }
+
+  return 0;
+}
+
 
 
 /************* DISTORB Outputs ******************/
@@ -1301,9 +1334,11 @@ void WriteEigen(CONTROL *control, SYSTEM *system) {
     finc = fopen(cIncEigFile,"a");
   }
 
-  fprintd(fecc,control->Evolve.dTime/fdUnitsTime(control->Units[1].iTime),control->Io.iSciNot,control->Io.iDigits);
+  fprintd(fecc,control->Evolve.dTime/fdUnitsTime(control->Units[1].iTime),
+      control->Io.iSciNot,control->Io.iDigits);
   fprintf(fecc," ");
-  fprintd(finc,control->Evolve.dTime/fdUnitsTime(control->Units[1].iTime),control->Io.iSciNot,control->Io.iDigits);
+  fprintd(finc,control->Evolve.dTime/fdUnitsTime(control->Units[1].iTime),
+      control->Io.iSciNot,control->Io.iDigits);
   fprintf(finc," ");
 
   for (iBody=1;iBody<(control->Evolve.iNumBodies);iBody++) {

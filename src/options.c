@@ -1615,11 +1615,12 @@ void ReadHaltMaxMutualInc(BODY *body,CONTROL *control,FILES *files,
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,
       control->Io.iVerbose);
   if (lTmp >= 0) {
-    control->Halt.dMaxMutualInc = dTmp;
+    // System-wide halt, so stored in body 0
+    control->Halt[0].dMaxMutualInc = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else {
     if (iFile > 0) {
-      control->Halt.dMaxMutualInc = options->dDefault;
+      control->Halt[0].dMaxMutualInc = options->dDefault;
     }
   }
 }
@@ -3199,12 +3200,12 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMAXMUTUALINC].cDescr,
       "Maximum mutual inclination value that halts integration");
   sprintf(options[OPT_HALTMAXMUTUALINC].cDefault,"0 [not checked]");
-  options[OPT_HALTMAXMUTALINC].dDefault = 0;
+  options[OPT_HALTMAXMUTUALINC].dDefault = 0;
   options[OPT_HALTMAXMUTUALINC].iType = 2;
   options[OPT_HALTMAXMUTUALINC].iModuleBit = SPINBODY + DISTORB;
   options[OPT_HALTMAXMUTUALINC].bNeg = 0;
   options[OPT_HALTMAXMUTUALINC].iFileType = 2;
-  fnRead[OPT_HALTMAXMTUALINC] = &ReadHaltMaxMutualInc;
+  fnRead[OPT_HALTMAXMUTUALINC] = &ReadHaltMaxMutualInc;
   sprintf(options[OPT_HALTMAXMUTUALINC].cLongDescr,
     "The execution halts when dHaltMaxMutualInc is reached. The mutual (or\n"
     "relative) inclination is the value of the angle between the orbital\n"
@@ -3214,8 +3215,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
     "mutual inclinations above %.2lf degrees, especially if the eccentricities\n"
     "are significant, should be interpreted cautiously. For the DistOrb-%s\n"
     "model, values above %.2lf degrees are suspect. SpiNBody is accurate for\n"
-    "any value.",options[OPT_ORBITMODEL].cName,MAXMUTUALINCRD4
-        options[OPT_ORBITMODEL].cName,MAXMUTUALINCLL2
+    "any value.",options[OPT_ORBITMODEL].cName,((double)MAXMUTUALINCRD4),
+        options[OPT_ORBITMODEL].cName,((double)MAXMUTUALINCLL2)
   );
 
   sprintf(options[OPT_HALTMERGE].cName,"bHaltMerge");

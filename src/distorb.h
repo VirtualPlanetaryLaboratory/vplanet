@@ -105,6 +105,9 @@ void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int,int);
 
 int fniHaltCloseEnc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 int fniHaltHillStab(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltMaxMutualIncDistorb(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+
+int fbCheckMutualIncDistorb(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 
 void HelpOutputDistOrb(OUTPUT*);
 void WriteBodyDEccDtDistOrb(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,

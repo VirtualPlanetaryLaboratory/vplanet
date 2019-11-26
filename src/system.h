@@ -30,7 +30,7 @@ void CalcHK(BODY*,int);
 void CalcPQ(BODY*,int);
 
 double fdMutualInclination(BODY*,int,int);
-int fniCheckMaxMutualInc(BODY*,EVOLVE*,HALT*,IO*,int,int,int);
+int fbCheckMaxMutualInc(BODY*,EVOLVE*,HALT*,IO*,int,int,int);
 
 double fdInstellation(BODY*,int);
 double fdXUVFlux(BODY*,int);

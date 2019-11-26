@@ -241,7 +241,7 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
   }
 
   if (control->Halt[iBody].dMaxMutualInc > 0) {
-    if control->Evolve.iNumBodies == 0) {
+    if (control->Evolve.iNumBodies == 0) {
       fprintf(stderr,
         "ERROR: %s set, but only 1 body present.\n",
         options[OPT_HALTMAXMUTUALINC].cName);
@@ -263,10 +263,11 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
     if (control->Halt[iBody].dMaxEcc < 1)
       control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxEcc;
     if (control->Halt[iBody].dMaxMutualInc > 0) {
+      // Note the different approach here. These fn live in their module file
       if (body[iBody].bDistOrb) {
-        control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxMutualIncDistorb;
+        control->fnHalt[iBody][iHaltNow++] = &fbHaltMaxMutualIncDistorb;
       } else if (body[iBody].bSpiNBody) {
-        control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxMutualIncSpiNBody;
+        control->fnHalt[iBody][iHaltNow++] = &fbHaltMaxMutualIncSpiNBody;
       }
     }
     if (control->Halt[iBody].dMinSemi > 0)

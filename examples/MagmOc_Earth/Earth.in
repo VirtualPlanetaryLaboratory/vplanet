@@ -16,6 +16,7 @@ bHaltMantleSolidified 	1		  # Halt when mantle solidified? (default: 0 = no, 1 =
 bHaltMantleMeltFracLow  1     		  # Halt when melt fraction smaller than 0.4 at surface? (default: 0 = no, 1 = yes)
 sRadioHeatModel		schaefer          # Radiogenic heating model (default: none = RadHeat; schaefer = BSE composition)
 sMagmOcAtmModel 	grey		  # Atmospheric net flux model (default: grey; petit only for GJ1132b-H2O)
+bOptManQuasiSol         1                 # Instantaneous solidification of mantle when surf. melt frac 0.4? (default: 0 = no, 1 = yes)
 
 # ATMESC Properties
 dXFrac                    1.0             # X-Ray/XUV absorption radius (fraction of planet radius)

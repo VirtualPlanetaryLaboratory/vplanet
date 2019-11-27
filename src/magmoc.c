@@ -1305,17 +1305,21 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
   // if ((!body[iBody].bManQuasiSol) && (body[iBody].bPlanetDesiccated) && (body[iBody].dSurfTemp <= 1000)) {
   if (body[iBody].bOptManQuasiSol && (!body[iBody].bManQuasiSol) && (body[iBody].dMeltFracSurf < CRITMELTFRAC)) {
     double dOxygenMassMO;
+    double dDeltaWaterMass;
+    double dDeltaCO2Mass;
 
     body[iBody].bManQuasiSol = 1;
 
     body[iBody].dManMeltDensity = 4200;
     body[iBody].dSolidRadius    = body[iBody].dRadius;
 
-    body[iBody].dWaterMassSol   = body[iBody].dWaterMassSol   + WATERPARTCOEFF*body[iBody].dWaterFracMelt*(body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
-    body[iBody].dWaterMassMOAtm = body[iBody].dWaterMassMOAtm + (1-WATERPARTCOEFF)*body[iBody].dWaterFracMelt*body[iBody].dMassMagmOcLiq;
+    dDeltaWaterMass = WATERPARTCOEFF*body[iBody].dWaterFracMelt*(body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+    body[iBody].dWaterMassSol   = body[iBody].dWaterMassSol   + dDeltaWaterMass;
+    body[iBody].dWaterMassMOAtm = body[iBody].dWaterMassMOAtm - dDeltaWaterMass;
 
-    body[iBody].dCO2MassSol   = body[iBody].dCO2MassSol   + CO2PARTCOEFF*body[iBody].dCO2FracMelt*(body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
-    body[iBody].dCO2MassMOAtm = body[iBody].dCO2MassMOAtm + (1-CO2PARTCOEFF)*body[iBody].dCO2FracMelt*body[iBody].dMassMagmOcLiq;
+    dDeltaCO2Mass = CO2PARTCOEFF*body[iBody].dCO2FracMelt*(body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+    body[iBody].dCO2MassSol   = body[iBody].dCO2MassSol   + dDeltaCO2Mass;
+    body[iBody].dCO2MassMOAtm = body[iBody].dCO2MassMOAtm - dDeltaCO2Mass;
 
     if (!body[iBody].bAllFeOOxid) {
       body[iBody].dOxygenMassAtm = 0;
@@ -1325,6 +1329,11 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
       body[iBody].dOxygenMassSol = body[iBody].dOxygenMassSol   + dOxygenMassMO;
       body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassMOAtm - dOxygenMassMO;
     }
+
+    body[iBody].dPressWaterAtm  = body[iBody].dWaterMassMOAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
+    body[iBody].dPressCO2Atm    = body[iBody].dCO2MassMOAtm   * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
+    body[iBody].dPressOxygenAtm = body[iBody].dOxygenMassAtm  * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
+
 
     /*
      * When mantle solidified:

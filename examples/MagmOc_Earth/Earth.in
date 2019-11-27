@@ -13,6 +13,7 @@ dWaterMassAtm		-5		  # Initial water mass in the system (neg: terrestrial oceans
 dSurfTemp		4000		  # Initial surface temperature (default: 4000K)
 dManMeltDensity		4000		  # Mantle melt density (default: 4000kg/m^3)
 bHaltMantleSolidified 	1		  # Halt when mantle solidified? (default: 0 = no, 1 = yes)
+bHaltMantleMeltFracLow  1     		  # Halt when melt fraction smaller than 0.4 at surface? (default: 0 = no, 1 = yes)
 sRadioHeatModel		schaefer          # Radiogenic heating model (default: none = RadHeat; schaefer = BSE composition)
 sMagmOcAtmModel 	grey		  # Atmospheric net flux model (default: grey; petit only for GJ1132b-H2O)
 

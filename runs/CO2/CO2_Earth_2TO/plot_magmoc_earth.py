@@ -18,7 +18,7 @@ log_plot = 1
 Initial_water = 1
 # read data
 # data = np.loadtxt("Solarsystem.Earth.forward")
-data = np.loadtxt("Solarsystem.Earth.forward")
+data = np.loadtxt("Solarsystem.Earth_sol.forward")
 
 time        = data[:,0]  # time (yr)
 Tpot        = data[:,1]  # Potential temp magma ocean (K)
@@ -270,100 +270,5 @@ else:
     ax.set_xlabel('Time (Myrs)', fontsize=14, fontweight='bold')
     ax.tick_params(labelsize=13)
 
-plt.show()
-
-
-# r_core = np.zeros(n_time)+r_c
-#
-# if individual == 1:
-#     ## plot individual figures
-#
-#     plt.figure()
-#     plt.title('GJ1132b: $M_{water}^{ini} = $'+str(Initial_water)+' TO', fontsize=18, fontweight='bold')
-#     # plt.plot(time*10**-6, Tpot, label='T_p', linewidth=3.0)
-#     # plt.plot(time*10**-6, Tsurf, label='T_surf', linestyle='--', linewidth=3.0)
-#     plt.plot(time*10**-6, Tpot, label='T_p', linewidth=3.0, color=cmap(0))
-#     plt.plot(time*10**-6, Tsurf, label='T_surf', linestyle='--', linewidth=3.0, color=cmap(0))
-#     plt.xlim([1e-6,time[i_end+1]*1e-6])
-#     # ax1.set_ylim([0,4100])
-#     plt.legend(loc='best', frameon=True, fontsize=16)
-#     plt.xlabel('Time (Myrs)', fontsize=18, fontweight='bold')
-#     plt.ylabel('Temperature (K)', fontsize=18, fontweight='bold')
-#     if log_plot == 1:
-#         plt.xscale('log')
-#     plt.xlim([1e-6,time[i_end+1]*1e-6])
-#     plt.tick_params(labelsize=14)
-#     plt.show()
-#
-#     plt.figure()
-#     plt.title('GJ1132b: $M_{water}^{ini} = $'+str(Initial_water)+' TO', fontsize=18, fontweight='bold')
-#     # plt.plot(time*10**-6, r_sol/r_p, label='$r_s$', color=cmap(100), linewidth=3.0)
-#     # plt.plot(time*10**-6, r_core/r_p, label='$r_c$', color=cmap(220), linestyle='--', linewidth=3.0)
-#     plt.plot(time*10**-6, r_sol, label='$r_s$', color=cmap(0), linewidth=3.0)
-#     # plt.plot(time*10**-6, r_core, label='$r_c$', color=cmap(0), linestyle='--', linewidth=3.0)
-#     plt.ylim([0.5,1])
-#     plt.legend(loc='best', frameon=True, fontsize=16)
-#     plt.xlabel('Time (Myrs)', fontsize=18, fontweight='bold')
-#     plt.ylabel('Solidification radius ($r_p$)', fontsize=18, fontweight='bold')
-#     if log_plot == 1:
-#         plt.xscale('log')
-#     plt.xlim([1e-6,time[i_end+1]*1e-6])
-#     plt.tick_params(labelsize=14)
-#     plt.show()
-#
-#     plt.figure()
-#     plt.title('GJ1132b: $M_{water}^{ini} = $'+str(Initial_water)+' TO', fontsize=18, fontweight='bold')
-#     # plt.plot(time*10**-6, q_m, label='Mantle heat flux', linewidth=3.0)
-#     # plt.plot(time*10**-6, Flux_OLR, label='Outgoing longwave radiation', linewidth=3.0)
-#     # plt.plot(time*10**-6, Flux_BOL, label='Absorbed stellar radiation', linewidth=3.0)
-#     # plt.plot(time*10**-6, Flux_XUV, label='Absorbed stellar XUV flux', linewidth=3.0)
-#     plt.plot(time*10**-6, q_m, label='Mantle heat flux', linewidth=3.0, color=cmap(0))
-#     plt.plot(time*10**-6, OLR, label='Net Flux Atmosphere', linewidth=3.0, linestyle='--', color=cmap(0))
-#     # plt.plot(time*10**-6, ASR, label='Absorbed stellar radiation', linewidth=3.0, linestyle='-.', color=cmap(0))
-#     plt.plot(time*10**-6, XUV, label='Absorbed stellar XUV flux', linewidth=3.0, linestyle=':', color=cmap(0))
-#     plt.legend(loc='best', frameon=True, fontsize=16)
-#     plt.xlabel('Time (Myrs)', fontsize=18, fontweight='bold')
-#     plt.ylabel('Flux ($W/m^2$)', fontsize=18, fontweight='bold')
-#     plt.yscale('log')
-#     if log_plot == 1:
-#         plt.xscale('log')
-#     plt.xlim([1e-6,time[i_end+1]*1e-6])
-#     plt.tick_params(labelsize=14)
-#     plt.show()
-#
-#     plt.figure()
-#     plt.title('GJ1132b: $M_{water}^{ini} = $'+str(Initial_water)+' TO', fontsize=18, fontweight='bold')
-#     # plt.plot(time*10**-6, M_water_mo/M_water_mo[0], label='magma ocean + atm', linewidth=3.0)
-#     # plt.plot(time*10**-6, M_water_atm/M_water_mo[0], label='atmosphere', linewidth=3.0)
-#     # plt.plot(time*10**-6, M_water_sol/M_water_mo[0], label='solid', linewidth=3.0)
-#     plt.plot(time*10**-6, M_water_mo/M_water_mo[0], label='magma ocean + atm', linewidth=3.0, color=cmap(0))
-#     plt.plot(time*10**-6, M_water_atm/M_water_mo[0], label='atmosphere', linewidth=3.0, linestyle='--', color=cmap(0))
-#     plt.plot(time*10**-6, M_water_sol/M_water_mo[0], label='solid', linewidth=3.0, linestyle=':', color=cmap(0))
-#     plt.ylim([1e-3,1.05])
-#     plt.legend(loc='best', frameon=True, fontsize=16)
-#     plt.xlabel('Time (Myrs)', fontsize=18, fontweight='bold')
-#     plt.ylabel('Water Mass Fraction', fontsize=18, fontweight='bold')
-#     plt.yscale('log')
-#     if log_plot == 1:
-#         plt.xscale('log')
-#     plt.xlim([1e-6,time[i_end+1]*1e-6])
-#     plt.tick_params(labelsize=14)
-#     plt.show()
-#
-#     plt.figure()
-#     plt.title('GJ1132b: $M_{water}^{ini} = $'+str(Initial_water)+' TO', fontsize=18, fontweight='bold')
-#     plt.plot(time*10**-6, Press_atm, label='total pressure', linewidth=3.0, color=cmap(0))
-#     plt.plot(time*10**-6, Press_H2O, label='partial pressure H2O', linestyle='--', linewidth=3.0, color=cmap(0))
-#     plt.plot(time*10**-6, Press_O, label='partial pressure O', linestyle=':', linewidth=3.0, color=cmap(0))
-#     plt.legend(loc='best', frameon=True, fontsize=16)
-#     plt.xlabel('Time (Myrs)', fontsize=18, fontweight='bold')
-#     plt.ylabel('Atmospheric pressure (bar)', fontsize=18, fontweight='bold')
-#     if log_plot == 1:
-#         plt.xscale('log')
-#     plt.xlim([1e-6,time[i_end+1]*1e-6])
-#     plt.yscale('log')
-#     plt.tick_params(labelsize=14)
-#     plt.show()
-#
-# else:
-#     ## plot multiple figures
+plt.subplots_adjust(left=0.05, right=0.99, top=0.93, bottom=0.07)
+plt.savefig('plot_sol.png')

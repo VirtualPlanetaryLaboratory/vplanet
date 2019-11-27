@@ -336,6 +336,23 @@ void ReadMagmOcAtmModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       body[iFile-1].iMagmOcAtmModel = MAGMOC_GREY;
 }
 
+void ReadMantleQuasiSolid(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bOptManQuasiSol = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0) {
+      AssignDefaultInt(options,&body[iFile-1].bOptManQuasiSol,files->iNumInputs);
+    }
+  }
+}
+
 /* Initiatlize Input Options */
 // initialize input = tell code what he is reading in
 void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
@@ -453,6 +470,13 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MAGMOCATMMODEL].iType = 3;
   options[OPT_MAGMOCATMMODEL].iMultiFile = 1;
   fnRead[OPT_MAGMOCATMMODEL] = &ReadMagmOcAtmModel;
+
+  sprintf(options[OPT_MANQUASISOL].cName,"bOptManQuasiSol");
+  sprintf(options[OPT_MANQUASISOL].cDescr,"Solidify when melt frac = 0.4?");
+  sprintf(options[OPT_MANQUASISOL].cDefault,"0");
+  options[OPT_MANQUASISOL].iType = 0;
+  options[OPT_MANQUASISOL].iMultiFile = 1;
+  fnRead[OPT_MANQUASISOL] = &ReadMantleQuasiSolid;
 }
 
 // Don't change this
@@ -1279,7 +1303,7 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
    */
   // /* When planet desiccated and T_surf below 1000K treat mantle as solidified */
   // if ((!body[iBody].bManQuasiSol) && (body[iBody].bPlanetDesiccated) && (body[iBody].dSurfTemp <= 1000)) {
-  if ((!body[iBody].bManQuasiSol) && (body[iBody].dMeltFracSurf < CRITMELTFRAC)) {
+  if (body[iBody].bOptManQuasiSol && (!body[iBody].bManQuasiSol) && (body[iBody].dMeltFracSurf < CRITMELTFRAC)) {
     double dOxygenMassMO;
 
     body[iBody].bManQuasiSol = 1;
@@ -1319,6 +1343,11 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     if (io->iVerbose >= VERBPROG) {
       printf("Surface melt fraction of %s's smaller than 0.4 after %f years - mantle set to solidified. \n",body[iBody].cName,evolve->dTime/YEARSEC);
       // printf("%s's atmosphere desiccated & surface temperature below 1000K after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+    }
+  } else if ((!body[iBody].bOptManQuasiSol) && (!body[iBody].bManQuasiSol) && (body[iBody].dMeltFracSurf < CRITMELTFRAC)){
+    body[iBody].bManQuasiSol = 1;
+    if (io->iVerbose >= VERBPROG) {
+      printf("Surface melt fraction of %s's smaller than 0.4 after %f years \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
   }
 

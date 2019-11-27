@@ -107,6 +107,7 @@
 #define OPT_RADIOHEATMODEL        2320
 #define OPT_MAGMOCATMMODEL        2321
 #define OPT_CO2MASSMOATM          2322
+#define OPT_MANQUASISOL           2323
 
 void AddModuleMagmOc(MODULE*,int,int);
 void BodyCopyMagmOc(BODY*,BODY*,int,int,int);

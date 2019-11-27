@@ -14,7 +14,7 @@ dCO2MassMOAtm 		-2	    	  # Initial mass of CO2 in the system (neg: terrestrial 
 dSurfTemp		4000		  # Initial surface temperature (default: 4000K)
 dManMeltDensity		4000		  # Mantle melt density (default: 4000kg/m^3)
 bHaltMantleSolidified 	1		  # Halt when mantle solidified? (default: 0 = no, 1 = yes)
-bHaltMantleMeltFracLow  0     		  # Halt when melt fraction smaller than 0.4 at surface? (default: 0 = no, 1 = yes)
+bHaltMantleMeltFracLow  1     		  # Halt when melt fraction smaller than 0.4 at surface? (default: 0 = no, 1 = yes)
 bHaltAtmDesiSurfCool    1                 # Halt when atmosphere desiccated? (default: 0 = no, 1 = yes)
 bHaltEnterHabZone	0		  # Halt when planet enters habitable zone? (default: 0 = no, 1 = yes)
 sRadioHeatModel		schaefer          # Radiogenic heating model (default: none = RadHeat; schaefer = BSE composition)

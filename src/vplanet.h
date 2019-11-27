@@ -798,6 +798,8 @@ struct BODY {
 	int bCO2InAtmosphere;     /**< Is CO2 present in the atmopshere? */
 	int iRadioHeatModel;			/**< Which Radiogenic Heating model to use */
 	int iMagmOcAtmModel;			/**< Which Atmopsheric Flux model to use */
+	int bOptManQuasiSol;			/**< Solidify mantle inst. when melt frac = 0.4 at surf */
+
 	/* Primary variables */
 	double dPotTemp;          /**< Potential Temp of the mantle [K] */
 	double dSurfTemp;         /**< Surface Temp of the planet [K] */

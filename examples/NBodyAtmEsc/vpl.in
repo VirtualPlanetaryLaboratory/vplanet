@@ -1,0 +1,26 @@
+# Primary input file for VPLANET
+sSystemName               PSR1257  # System Name
+bOverwrite                1               # Allow file overwrites?
+saBodyFiles               Pulsar.in A.in B.in C.in D.in $ #The solar system
+sIntegrationMethod        Runge
+
+# Input/Output Units
+sUnitMass                 Earth              # Options: gram, kg, Earth, Neptune, Jupiter, solar
+sUnitLength               AU              # Options: cm, m, km, Earth, Jupiter, solar, AU
+sUnitTime                 year            # Options: sec, day, year, Myr, Gyr
+sUnitAngle                deg             # Options: deg, rad
+
+# Input/Output
+bDoLog                    1               # Write a log file?
+iDigits                   5              # Maximum number of digits to right of decimal
+dMinValue                 1e-10           # Minimum value of eccentricity/obliquity
+
+# Evolution Parameters
+bDoForward                1               # Perform a forward evolution?
+bVarDt                    0               # Use variable timestepping?
+#dEta                      .1
+dTimeStep                 0.0005           # Timestep in years
+dStopTime                 1e5            # Stop time for evolution
+dOutputTime               10   # Output timesteps (assuming in body files)
+
+#CONFUZLING

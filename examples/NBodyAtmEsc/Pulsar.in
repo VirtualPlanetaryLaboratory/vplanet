@@ -1,29 +1,23 @@
 # Pulsar's parameters
 sName                     Pulsar               # Body's name
-saModules                 spinbody          # Modules to apply, exact spelling required
+saModules                 spinbody             # Modules to apply, exact spelling required
 
-saOutputOrder Time TotAngMom TotOrbEnergy
+saOutputOrder             Time TotAngMom TotOrbEnergy
 
 # Physical Properties
-dMass                     -466200.4662            # Mass, negative -> Earth masses
+dMass                     -466200.4662         # Mass, negative -> Earth masses
 dRadius                   6.6846e-8            # Radius, negative -> Earth radii
-dRotPeriod                1.97068e-10             # Rotation period, negative -> days
-dObliquity                0            # Obliquity (deg)
-dRadGyra                  0.5             # Radius of gyration (moment of inertia constant)
+dRotPeriod                1.97068e-10          # Rotation period, negative -> days
+dObliquity                0                    # Obliquity (deg)
+dRadGyra                  0.5                  # Radius of gyration (moment of inertia constant)
 
 # SpiNBody Properties
-#dPositionXSpiNBody              -4.49e5
-#dPositionYSpiNBody              0.0
-#dPositionZSpiNBody              0.0
-#dVelXSpiNBody                   0.0
-#dVelYSpiNBody                   -0.08959595749457543
-#dVelZSpiNBody                   0.0
-bUseOrbParams                    1
+bUseOrbParams             1
 
 # Orbital Properties
-dSemi                      0.0          # Semi-major axis, negative -> AU
-dEcc                       0.0          # Eccentricity
-dInc                       0.0          # Inclination
-dLongP                     0.0          # Longitude of pericenter
-dLongA                     0.0          # Longitude of ascending node
-dMeanA 0.0 # Mean Anomoly
+dSemi                     0.0                  # Semi-major axis, negative -> AU
+dEcc                      0.0                  # Eccentricity
+dInc                      0.0                  # Inclination
+dLongP                    0.0                  # Longitude of pericenter
+dLongA                    0.0                  # Longitude of ascending node
+dMeanA                    0.0                  # Mean Anomoly

@@ -1,7 +1,7 @@
 # Primary input file for VPLANET
 sSystemName               PSR1257         # System Name
 bOverwrite                1               # Allow file overwrites?
-saBodyFiles               Pulsar.in A.in B.in C.in D.in
+saBodyFiles               Pulsar.in A.in B.in C.in
 sIntegrationMethod        Runge
 
 # Input/Output Units
@@ -20,5 +20,5 @@ bDoForward                1              # Perform a forward evolution?
 bVarDt                    0              # Use variable timestepping?
 #dEta                      .1
 dTimeStep                 0.0005         # Timestep in years
-dStopTime                 1e5            # Stop time for evolution
-dOutputTime               10             # Output timesteps (assuming in body files)
+dStopTime                 1e4            # Stop time for evolution
+dOutputTime               1             # Output timesteps (assuming in body files)

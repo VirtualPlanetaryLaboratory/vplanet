@@ -8,8 +8,6 @@ saOutputOrder             Time TotAngMom TotOrbEnergy
 dMass                     -466200.4662         # Mass, negative -> Earth masses
 dRadius                   6.6846e-8            # Radius, negative -> Earth radii
 dRotPeriod                1.97068e-10          # Rotation period, negative -> days
-dObliquity                0                    # Obliquity (deg)
-dRadGyra                  0.5                  # Radius of gyration (moment of inertia constant)
 
 # SpiNBody Properties
 bUseOrbParams             1

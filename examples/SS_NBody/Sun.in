@@ -1,13 +1,14 @@
-# Planet a parameters
+# Sun's parameters
 sName                     Sun               # Body's name
 saModules                 spinbody          # Modules to apply, exact spelling required
 
 saOutputOrder Time DeltaT SemiMajorAxis Eccentricity SpiNBodyInc LongP SpiNBodyLongA MeanAnomaly TotAngMom TotOrbEnergy
+
 # Physical Properties
 dMass                     -333000.0            # Mass, negative -> Earth masses
 dRadius                   -1000.0            # Radius, negative -> Earth radii
 dRotPeriod                -10             # Rotation period, negative -> days
-dObliquity                23.5            # Obliquity (deg)
+dObliquity                7            # Obliquity (deg)
 dRadGyra                  0.5             # Radius of gyration (moment of inertia constant)
 
 # SpiNBody Properties

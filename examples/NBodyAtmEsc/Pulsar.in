@@ -1,13 +1,14 @@
-# Planet a parameters
-sName                     Sun               # Body's name
+# Pulsar's parameters
+sName                     Pulsar               # Body's name
 saModules                 spinbody          # Modules to apply, exact spelling required
 
-saOutputOrder Time DeltaT SemiMajorAxis Eccentricity SpiNBodyInc LongP SpiNBodyLongA MeanAnomaly TotAngMom TotOrbEnergy
+saOutputOrder Time TotAngMom TotOrbEnergy
+
 # Physical Properties
-dMass                     -333000.0            # Mass, negative -> Earth masses
-dRadius                   -1000.0            # Radius, negative -> Earth radii
-dRotPeriod                -10             # Rotation period, negative -> days
-dObliquity                23.5            # Obliquity (deg)
+dMass                     -466200.4662            # Mass, negative -> Earth masses
+dRadius                   6.6846e-8            # Radius, negative -> Earth radii
+dRotPeriod                1.97068e-10             # Rotation period, negative -> days
+dObliquity                0            # Obliquity (deg)
 dRadGyra                  0.5             # Radius of gyration (moment of inertia constant)
 
 # SpiNBody Properties

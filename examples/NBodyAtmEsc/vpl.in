@@ -1,7 +1,7 @@
 # Primary input file for VPLANET
 sSystemName               PSR1257  # System Name
 bOverwrite                1               # Allow file overwrites?
-saBodyFiles               Pulsar.in A.in B.in C.in D.in $ #The solar system
+saBodyFiles               Pulsar.in A.in B.in C.in D.in
 sIntegrationMethod        Runge
 
 # Input/Output Units

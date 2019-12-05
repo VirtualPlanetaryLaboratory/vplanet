@@ -1,0 +1,35 @@
+INFO: sUnitMass set in vpl.in, all bodies will use this unit.
+INFO: sUnitTime set in vpl.in, all bodies will use this unit.
+INFO: sUnitAngle set in vpl.in, all bodies will use this unit.
+INFO: sUnitLength set in vpl.in, all bodies will use this unit.
+INFO: sUnitTemp not set in file Sun.in, defaulting to Kelvin.
+INFO: sUnitTemp not set in file Earth.in, defaulting to kelvin.
+INFO: dMass < 0 in file Earth.in, units assumed to be Earth masses.
+INFO: dSemi < 0 in file Earth.in, units assumed to be AU.
+INFO: dRadius < 0 in file Earth.in, units assumed to be Earth radii.
+INFO: dSurfWaterMass < 0 in file Earth.in, units assumed to be Terrestrial Oceans (TO).
+INFO: dMinSurfWaterMass < 0 in file Earth.in, units assumed to be Terrestrial Oceans (TO).
+INFO: dSatXUVTime < 0 in file Sun.in, units assumed to be Gyr.
+INFO: dJeansTime not set for body Earth, defaulting to 3.16e+16 seconds.
+INFO: dWaterMassAtm < 0 in file Earth.in, units assumed to be Terrestrial Oceans.
+INFO: dCO2MassMOAtm < 0 in file Earth.in, units assumed to be Terrestrial Oceans.
+INFO: sOutFile not set, defaulting to Solarsystem.Sun.forward.
+INFO: sOutFile not set, defaulting to Solarsystem.Earth.forward.
+INFO: sIntegrationMethod not set, defaulting to Runge-Kutta4.
+INFO: No rotational information set in file Sun.in. Defaulting to dRotRate = 2*pi/day.
+INFO: No rotational information set in file Earth.in. Defaulting to dRotRate = 2*pi/day.
+INFO: dEnvelopeMass < dMinEnvelopeMass. No envelope evolution will be included.
+Input files read.
+INFO: Age set in one file, all bodies will have this age.
+All of Sun's modules verified.
+All of Earth's modules verified.
+Input files verified.
+Log file written.
+Earth's mantle starts to solidify after 1600.000000 years. 
+Earth: Switch to low-pressure treatment of solidus after 154700.000000 years. 
+Surface melt fraction of Earth's smaller than 0.4 after 869500.000000 years - mantle set to solidified. 
+Earth: All FeO in magma ocean oxidized to Fe2O3 after 869600.000000 years. 
+Earth's mantle solidified after 869600.000000 years. 
+HALT: Earth's mantle completely solidified after 869600.000000 years. 
+Log file updated.
+Simulation completed.

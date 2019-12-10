@@ -1327,6 +1327,7 @@ struct HALT {
   double dMinSemi;     /**< Halt at this Semi-major Axis */
   double dMinObl;      /**< Halt at this Obliquity */
   double dMaxEcc;      /**< Halt at this Eccentricity */
+  double dMaxMutualInc;/**< Halt at this mutual incliantion */
   double dMinEcc;      /**< Halt at this Eccentricity */
   int bPosDeDt;        /**< Halt if Eccentricity Derivative is Positive */
   int dMinIntEn;       /**< Halt at this Internal Power */
@@ -1453,7 +1454,12 @@ struct IO {
 
 	/* The following record whether an error message that should only be reported
 		 once has been printed. */
-	int bDeltaTimeMessage;  /**< Has the message for DeltaTime on the first timestep been printed? */
+  /*! Has the message for DeltaTime on the first timestep been printed? */
+	int bDeltaTimeMessage;
+  /*! Has the large mutual inclination message been printed? */
+  int bMutualIncMessage;
+  /*! Print warning message if mutual inc exceeds this value */
+  double dMaxMutualInc;
   int *baRocheMessage;    /**< Has the Roche lobe message been printed? */
 	int *baCassiniOneMessage;		/**< Has the CassiniOne message been printed? */
 	int *baCassiniTwoMessage;		/**< Has the CassiniTwo message been printed? */

@@ -24,6 +24,8 @@ int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
     iNumHalts++;
   if (halt->dMaxEcc < 1)
     iNumHalts++;
+  if (halt->dMaxMutualInc > 0)
+    iNumHalts++;
   if (halt->dMinSemi > 0)
     iNumHalts++;
   if (halt->dMinEcc > 0)
@@ -232,8 +234,18 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
 
     // Now add 1 to each iNumHalts
     for (iBody=1;iBody<control->Evolve.iNumBodies;iBody++) {
-      if (iBody != iHaltMaxEcc)
-	control->Halt[iBody].iNumHalts++;
+      if (iBody != iHaltMaxEcc) {
+	     control->Halt[iBody].iNumHalts++;
+     }
+    }
+  }
+
+  if (control->Halt[iBody].dMaxMutualInc > 0) {
+    if (control->Evolve.iNumBodies == 0) {
+      fprintf(stderr,
+        "ERROR: %s set, but only 1 body present.\n",
+        options[OPT_HALTMAXMUTUALINC].cName);
+      exit(EXIT_INPUT);
     }
   }
 
@@ -250,6 +262,16 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
       control->fnHalt[iBody][iHaltNow++] = &HaltMinObl;
     if (control->Halt[iBody].dMaxEcc < 1)
       control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxEcc;
+    if (control->Halt[iBody].dMaxMutualInc > 0) {
+      /* Note the different approach here. These fn live in their module file.
+         We set initially to DistOrb since it cannot be applied to the central
+         body. SpiNBody, however, can be, so if SpiNBody is set, change to that
+         halt function. */
+      control->fnHalt[iBody][iHaltNow++] = &fbHaltMaxMutualIncDistorb;
+      if (body[iBody].bSpiNBody) {
+        control->fnHalt[iBody][iHaltNow++] = &fbHaltMaxMutualIncSpiNBody;
+      }
+    }
     if (control->Halt[iBody].dMinSemi > 0)
       control->fnHalt[iBody][iHaltNow++] = &HaltMinSemi;
     if (control->Halt[iBody].dMinEcc > 0)

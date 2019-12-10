@@ -989,8 +989,7 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
       LineExit(infile->cIn,lTmp[0]);
     }
   } else {
-    if (control->Io.iVerbose >= VERBERR)
-      fprintf(stderr,"ERROR: Option %s is required in file %s.\n",options->cName,infile->cIn);
+    fprintf(stderr,"ERROR: Option %s is required in file %s.\n",options->cName,infile->cIn);
     exit(EXIT_INPUT);
   }
 

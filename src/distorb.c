@@ -879,6 +879,13 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         InitializeKeccDistOrbGR(body,update,iBody,body[iBody].iGravPerts);
       }
     }
+
+    /* If the mutual inclination of any object gets above MAXMUTUALINCRD4,
+       print a warning message. */
+    //control->Io.dMaxMutualInc = MAXMUTUALINCRD4 * PI/180.;
+    control->Io.dMaxMutualInc = 35*3.1415926535/180;
+    double dFoo = 35*3.1415926535/180;
+
   } else if (control->Evolve.iDistOrbModel == LL2) {
     VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
     control->fnPropsAux[iBody][iModule] = &PropsAuxDistOrb;
@@ -1022,6 +1029,10 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         /* q = s*cos(LongA) */
         InitializeQincDistOrbLL2(body,update,iBody,iPert);
     }
+
+    /* If the mutual inclination of any object gets above MAXMUTUALINCLL2,
+       print a warning message. */
+    control->Io.dMaxMutualInc = MAXMUTUALINCLL2 * PI/180;
 
     // if (body[iBody].bGRCorr) {
 //       fprintf(stderr,"ERROR: %s cannot be used in LL2 orbital solution.\n",options[OPT_GRCORR].cName);
@@ -1243,6 +1254,70 @@ int fniHaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,i
   return 0;
 }
 
+/**
+  Check the maximum allowed mutual inclination when DistOrb is active.
+
+@param body A pointer to the current BODY instance
+@param evolve A pointer to the integration EVOLVE instance
+@param halt A pointer to the HALT instance
+@param io A pointer to the IO instance
+@param update A pointer to the UPDATE instance
+@param iBody The current index in the BODY instance, irrelevant in this case
+  because mutual inclination is by definition a multi-body variable
+
+@return TRUE if one mutual incliantion in a system is larger than
+  dHaltMaxMutualInc, FALSE if not
+*/
+int fbHaltMaxMutualIncDistorb(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,int iBody) {
+
+  int jBody;
+
+  for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
+    for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
+      // 0 is to check for halt, not progress
+      if (fbCheckMaxMutualInc(body,evolve,halt,io,iBody,jBody,0)) {
+        return 1;
+      }
+    }
+  }
+
+  return 0;
+}
+
+/**
+  Check if mutual inclination exceeds the warning limit
+
+@param body A pointer to the current BODY instance
+@param evolve A pointer to the integration EVOLVE instance
+@param halt A pointer to the HALT instance
+@param io A pointer to the IO instance
+@param update A pointer to the UPDATE instance
+@param iBody The current index in the BODY instance, irrelevant in this case
+  because mutual inclination is by definition a multi-body variable
+
+@return TRUE if one mutual incliantion in a system is larger than
+  dHaltMaxMutualInc, FALSE if not
+*/
+int fbCheckMutualIncDistorb(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,int iBody) {
+
+  int jBody;
+
+  for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+    for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
+      // 1 is to check for halt, not progress
+      if (fbCheckMaxMutualInc(body,evolve,halt,io,iBody,jBody,1)) {
+        return 1;
+      }
+    }
+  }
+
+  return 0;
+}
+
+
+
 /************* DISTORB Outputs ******************/
 
 void WriteEigen(CONTROL *control, SYSTEM *system) {
@@ -1261,9 +1336,11 @@ void WriteEigen(CONTROL *control, SYSTEM *system) {
     finc = fopen(cIncEigFile,"a");
   }
 
-  fprintd(fecc,control->Evolve.dTime/fdUnitsTime(control->Units[1].iTime),control->Io.iSciNot,control->Io.iDigits);
+  fprintd(fecc,control->Evolve.dTime/fdUnitsTime(control->Units[1].iTime),
+      control->Io.iSciNot,control->Io.iDigits);
   fprintf(fecc," ");
-  fprintd(finc,control->Evolve.dTime/fdUnitsTime(control->Units[1].iTime),control->Io.iSciNot,control->Io.iDigits);
+  fprintd(finc,control->Evolve.dTime/fdUnitsTime(control->Units[1].iTime),
+      control->Io.iSciNot,control->Io.iDigits);
   fprintf(finc," ");
 
   for (iBody=1;iBody<(control->Evolve.iNumBodies);iBody++) {
@@ -5426,7 +5503,8 @@ double fndDistOrbRD4DpDt(BODY *body, SYSTEM *system, int *iaBody) {
     double sum = 0.0, dMu, y;
 
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
-    y = fabs(1-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-body[iaBody[0]].dKecc*body[iaBody[0]].dKecc);
+    y = fabs(1-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-body[iaBody[0]].dKecc
+        *body[iaBody[0]].dKecc);
     if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
       sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*fndDdisturbDHecc(body, system, iaBody)+body[iaBody[0]].dHecc*fndDdisturbDKecc(body, system, iaBody)) + 1.0/2.0*fndDdisturbDQinc(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUM*(y)));
     } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
@@ -5562,4 +5640,19 @@ solution.
 double fndDistOrbLL2DqDt(BODY *body, SYSTEM *system, int *iaBody) {
   /* Derivatives used by DistRot */
   return -system->daEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->daEigenValInc[0][iaBody[1]-1]/YEARSEC*sin(system->daEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->daEigenPhase[1][iaBody[1]-1]);
+}
+
+double fdInclination(BODY *body,int iBody) {
+  double dInclination;
+
+  dInclination = 2.*asin(sqrt(body[iBody].dPinc*body[iBody].dPinc+
+      body[iBody].dQinc*body[iBody].dQinc));
+  return dInclination;
+}
+
+double fdLongA(BODY *body,int iBody) {
+  double dLongA;
+
+  dLongA = atan2(body[iBody].dPinc, body[iBody].dQinc);
+  return dLongA;
 }

@@ -1273,8 +1273,8 @@ int fbHaltMaxMutualIncDistorb(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
 
   int jBody;
 
-  for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
-    for (jBody=iBody;jBody<evolve->iNumBodies;jBody++) {
+  for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
+    for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
       // 0 is to check for halt, not progress
       if (fbCheckMaxMutualInc(body,evolve,halt,io,iBody,jBody,0)) {
         return 1;
@@ -5503,7 +5503,8 @@ double fndDistOrbRD4DpDt(BODY *body, SYSTEM *system, int *iaBody) {
     double sum = 0.0, dMu, y;
 
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
-    y = fabs(1-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-body[iaBody[0]].dKecc*body[iaBody[0]].dKecc);
+    y = fabs(1-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-body[iaBody[0]].dKecc
+        *body[iaBody[0]].dKecc);
     if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
       sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*fndDdisturbDHecc(body, system, iaBody)+body[iaBody[0]].dHecc*fndDdisturbDKecc(body, system, iaBody)) + 1.0/2.0*fndDdisturbDQinc(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUM*(y)));
     } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
@@ -5639,4 +5640,19 @@ solution.
 double fndDistOrbLL2DqDt(BODY *body, SYSTEM *system, int *iaBody) {
   /* Derivatives used by DistRot */
   return -system->daEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->daEigenValInc[0][iaBody[1]-1]/YEARSEC*sin(system->daEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->daEigenPhase[1][iaBody[1]-1]);
+}
+
+double fdInclination(BODY *body,int iBody) {
+  double dInclination;
+
+  dInclination = 2.*asin(sqrt(body[iBody].dPinc*body[iBody].dPinc+
+      body[iBody].dQinc*body[iBody].dQinc));
+  return dInclination;
+}
+
+double fdLongA(BODY *body,int iBody) {
+  double dLongA;
+
+  dLongA = atan2(body[iBody].dPinc, body[iBody].dQinc);
+  return dLongA;
 }

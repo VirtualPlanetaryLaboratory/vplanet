@@ -263,10 +263,12 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
     if (control->Halt[iBody].dMaxEcc < 1)
       control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxEcc;
     if (control->Halt[iBody].dMaxMutualInc > 0) {
-      // Note the different approach here. These fn live in their module file
-      if (body[iBody].bDistOrb) {
-        control->fnHalt[iBody][iHaltNow++] = &fbHaltMaxMutualIncDistorb;
-      } else if (body[iBody].bSpiNBody) {
+      /* Note the different approach here. These fn live in their module file.
+         We set initially to DistOrb since it cannot be applied to the central
+         body. SpiNBody, however, can be, so if SpiNBody is set, change to that
+         halt function. */
+      control->fnHalt[iBody][iHaltNow++] = &fbHaltMaxMutualIncDistorb;
+      if (body[iBody].bSpiNBody) {
         control->fnHalt[iBody][iHaltNow++] = &fbHaltMaxMutualIncSpiNBody;
       }
     }

@@ -525,15 +525,16 @@ void CheckDuplication(FILES *files,OPTIONS *options,char cFile[],int iLine,int i
   int iFile;
 
   if (options->iMultiFile) {
-    fprintf(stderr,"ERROR: CheckDuplication called, but options.iMultiFile = %d\n",options->iMultiFile);
+    fprintf(stderr,"ERROR: CheckDuplication called, but options. iMultiFile = %d\n",options->iMultiFile);
     exit(EXIT_INPUT);
   }
 
   for (iFile=0;iFile<files->iNumInputs;iFile++) {
     if (options->iLine[iFile] >= 0 && memcmp(files->Infile[iFile].cIn,cFile,strlen(cFile)) != 0) {
       /* Found previously set location */
-      if (iVerbose >= VERBERR)
+      if (iVerbose >= VERBERR) {
         fprintf(stderr,"ERROR: Option %s found in multiple files\n",options->cName);
+      }
       fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,options->iLine[iFile]);
       fprintf(stderr,"\t%s, Line: %d\n",cFile,iLine);
       exit(EXIT_INPUT);
@@ -1592,7 +1593,7 @@ void ReadHaltMerge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
   Read in the maximum allowed mutual inclination. This parameter applies to both
   SpiNBbody and DistOrb. If set to 0, then the mutual inclination will not be
   calculated every timestep in HaltMaxMutualIncSpiNBody or
-  HaltMaxMutualIncDistorb.
+  HaltMaxMutualIncDistorb. This parameter can exist in any file, but only once.
 
 @param body A pointer to the current BODY instance
 @param control A pointer to the integration CONTROL instance
@@ -1605,22 +1606,24 @@ void ReadHaltMerge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
 void ReadHaltMaxMutualInc(BODY *body,CONTROL *control,FILES *files,
       OPTIONS *options,SYSTEM *system,int iFile) {
 
-  /* This parameter cannot exist in the primary file */
   int lTmp=-1;
   double dTmp;
 
-  CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,
-      control->Io.iVerbose);
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,
       control->Io.iVerbose);
   if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,
+        control->Io.iVerbose);
     // System-wide halt, so stored in body 0
-    control->Halt[0].dMaxMutualInc = dTmp;
+    control->Halt[0].dMaxMutualInc = dTmp*
+        fdUnitsAngle(control->Units[iFile].iAngle);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else {
+    /*
     if (iFile > 0) {
       control->Halt[0].dMaxMutualInc = options->dDefault;
     }
+    */
   }
 }
 

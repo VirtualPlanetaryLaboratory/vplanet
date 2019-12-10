@@ -10,12 +10,14 @@
 */
 
 /* Orbital model */
-#define LL2           1
-#define RD4           0
-#define TEENY				1e-20 // Already a dTINY in vplanet.h! XXX
-#define MAXECCDISTORB 0.6627434
-#define MAXMUTUALINCRD4 35 // Degrees
-#define MAXMUTUALINCLL2 10 // Degrees
+#define LL2              1
+#define RD4              0
+
+// Constants
+#define TEENY				     1e-20 // Already a dTINY in vplanet.h! XXX
+#define MAXECCDISTORB    0.6627434
+#define MAXMUTUALINCRD4  35 // Degrees
+#define MAXMUTUALINCLL2  10 // Degrees
 
 #define RADIX 2.0   //factor used by matrix solver in LL2 solution
 #define SWAP(g,h) {y = (g); (g) = (h); (h) = y;}
@@ -273,4 +275,6 @@ double fndDistOrbLL2DkDt(BODY*, SYSTEM*, int*);
 double fndDistOrbLL2DpDt(BODY*, SYSTEM*, int*);
 double fndDistOrbLL2DqDt(BODY*, SYSTEM*, int*);
 
+double fdInclination(BODY*,int);
+double fdLongA(BODY*,int);
 /* @endcond */

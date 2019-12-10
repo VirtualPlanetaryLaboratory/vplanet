@@ -343,6 +343,86 @@ double fdXUVFlux(BODY *body, int iBody) {
   return flux;
 }
 
+/**
+  Calculate the mutual or relative inclination of the orbital planes of iBody
+  and jBody.
+
+@param body A pointer to the current BODY instance
+@param iBody The index of the BODY struct for the 1st orbit
+@param jBody The index of the BODY struct for the 2nd orbit
+
+@return The mutual inclination
+*/
+
+double fdMutualInclination(BODY *body,int iBody,int jBody) {
+  double dInc1,dInc2,dLongA1,dLongA2;
+  double dMutualInc;
+
+  dInc1 = fdInclination(body,iBody);
+  dInc2 = fdInclination(body,jBody);
+  dLongA1 = fdLongA(body,iBody);
+  dLongA2 = fdLongA(body,iBody);
+
+  dMutualInc = acos( cos(dInc1)*cos(dInc2) + sin(dInc1)*sin(dInc2)*
+      cos(dLongA1 - dLongA2) );
+
+  return dMutualInc;
+}
+
+/**
+  Check the maximum allowed mutual inclination.
+
+@param body A pointer to the BODY instance
+@param evolve A pointer to the integration EVOLVE instance
+@param halt A pointer to the HALT instance
+@param io A pointer to the IO instance
+@param update A pointer to the UPDATE instance
+@param iBody The current index in the BODY instance, irrelevant in this case
+  because mutual inclination is by definition a multi-body variable
+@param iReason Was the subroutine called from CheckHalts (0) or CheckProgress
+  (1)?
+
+@return TRUE if the mutual incliantion is larger than dMaxMutualInc, FALSE
+  if not
+*/
+int fbCheckMaxMutualInc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,int iBody,
+    int jBody,int iReason) {
+
+  double dMutualInc,dMaxMutualInc;
+
+  if (iReason == 0) {
+    // Called to check halt
+    dMaxMutualInc = halt[0].dMaxMutualInc;
+  } else if (iReason == 1) {
+    // Called from CheckProgress
+    dMaxMutualInc = io->dMaxMutualInc;
+  }
+
+  dMutualInc = fdMutualInclination(body,iBody,jBody);
+
+  if (dMutualInc >= dMaxMutualInc) {
+    if (io->iVerbose >= VERBPROG) {
+      if (iReason == 0) {
+        // Called to check halt
+        printf("HALT: ");
+      } else if (iReason == 1) {
+        // Called from CheckProgress
+        printf("WARNING: ");
+      }
+      printf("Mutual Inclination[%s - %s] = ",body[iBody].cName,
+          body[jBody].cName);
+      fprintd(stdout,dMutualInc,io->iSciNot,io->iDigits);
+      printf(", > max = ");
+      fprintd(stdout,dMaxMutualInc,io->iSciNot,io->iDigits);
+      printf(" at %.2e years.\n",evolve->dTime/YEARSEC);
+    }
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+
 /*
  *
  * Multi-body matrix equations

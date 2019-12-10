@@ -124,6 +124,7 @@ void InitializeControl(CONTROL *control,MODULE *module) {
     control->Io.baCassiniTwoMessage[iBody] = 0;
   }
   control->Io.bDeltaTimeMessage = 0;
+  control->Io.bMutualIncMessage = 0;
 }
 
 /**

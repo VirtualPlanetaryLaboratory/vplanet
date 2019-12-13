@@ -291,6 +291,8 @@ def seasonal_maps(time, dir = '.', show = True):
         tempf = dirf+'/'+sysname+'.'+plname+'.SeasonalTemp.'+timestamp
         icef = dirf+'/'+sysname+'.'+plname+'.SeasonalIceBalance.'+timestamp
         check = 1
+    print(insolf,tempf,icef)
+    exit()
 
     if check == 0:
       raise StandardError('Climate data not found for time %f'%time)

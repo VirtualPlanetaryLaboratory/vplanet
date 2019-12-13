@@ -78,7 +78,7 @@
 #define OPT_SPINUPTOL       1923
 
 
-//#define OPT_LANDGEOM      1940
+#define OPT_LANDFRAC        1940
 #define OPT_HEATCAPLAND     1942
 #define OPT_HEATCAPWATER    1943
 #define OPT_FRZTSEAICE      1944

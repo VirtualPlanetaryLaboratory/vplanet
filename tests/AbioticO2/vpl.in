@@ -1,7 +1,7 @@
 sSystemName               AbioticO2
 iVerbose                  5
 bOverwrite                1
-saBodyFiles               star.in e.in
+saBodyFiles               star.in b.in e.in
 sUnitMass                 solar
 sUnitLength               AU
 sUnitTime                 YEARS

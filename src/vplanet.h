@@ -689,6 +689,7 @@ struct BODY {
   double **daIceSheetMat;    /**< Matrix used in ice sheet flow */
   double **daInvMSea;        /**< Inverted matrix in seasonal EBM */
   double *daLambdaSea;       /**< Diffusion terms in seasonal EBM matrix */
+	double dLandFrac;					 /**< Land fraction input by user */
   double *daLandFrac;        /**< Fraction of cell which is land */
   double **daMDiffSea;       /**< Diffusion only matrix in seasonal EBM */
   double **daMEulerCopySea;  /**< Temporary copy of Euler time step matrix (seasonal) */
@@ -1326,6 +1327,7 @@ struct HALT {
   double dMinSemi;     /**< Halt at this Semi-major Axis */
   double dMinObl;      /**< Halt at this Obliquity */
   double dMaxEcc;      /**< Halt at this Eccentricity */
+  double dMaxMutualInc;/**< Halt at this mutual incliantion */
   double dMinEcc;      /**< Halt at this Eccentricity */
   int bPosDeDt;        /**< Halt if Eccentricity Derivative is Positive */
   int dMinIntEn;       /**< Halt at this Internal Power */
@@ -1450,7 +1452,17 @@ struct IO {
 
   int bOverwrite;         /**< Allow files to be overwritten? */
 
+	/* The following record whether an error message that should only be reported
+		 once has been printed. */
+  /*! Has the message for DeltaTime on the first timestep been printed? */
+	int bDeltaTimeMessage;
+  /*! Has the large mutual inclination message been printed? */
+  int bMutualIncMessage;
+  /*! Print warning message if mutual inc exceeds this value */
+  double dMaxMutualInc;
   int *baRocheMessage;    /**< Has the Roche lobe message been printed? */
+	int *baCassiniOneMessage;		/**< Has the CassiniOne message been printed? */
+	int *baCassiniTwoMessage;		/**< Has the CassiniTwo message been printed? */
 };
 
 /* The CONTROL struct contains all the parameters that

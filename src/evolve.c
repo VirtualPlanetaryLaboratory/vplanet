@@ -43,8 +43,8 @@ void PropertiesAuxiliary(BODY *body,CONTROL *control,UPDATE *update) {
   }
 }
 
-void CalculateDerivatives(BODY *body,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,
-    int iNumBodies) {
+void CalculateDerivatives(BODY *body,SYSTEM *system,UPDATE *update,
+  fnUpdateVariable ***fnUpdate,int iNumBodies) {
   int iBody,iVar,iEqn;
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
@@ -60,6 +60,41 @@ void CalculateDerivatives(BODY *body,SYSTEM *system,UPDATE *update,fnUpdateVaria
   iBody = 0;
 }
 
+void CheckProgress(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update) {
+  int iBody,jBody;
+
+  if (control->Io.iVerbose >= VERBPROG && !control->Io.bMutualIncMessage
+      && control->Io.dMaxMutualInc > 0) {
+
+    // If made it here, more than 1 body must be present
+    if (body[1].bSpiNBody) {
+      // Calculate orbital elements
+      for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+        cart2osc(body,iBody);
+      }
+    }
+
+    // Skip central body
+    for (iBody=1;iBody<control->Evolve.iNumBodies;iBody++) {
+      for (jBody=iBody+1;jBody<control->Evolve.iNumBodies;jBody++) {
+        // 1 to check progress, not halt
+        if (fbCheckMaxMutualInc(body,&control->Evolve,control->Halt,
+              &control->Io,iBody,jBody,1)) {
+                /*
+        if (control->Io.iVerbose >= VERBPROG) {
+          printf("WARNING: Mutual inclination of %s and %s exceeds ",
+              body[iBody].cName,body[jBody].cName);
+          fprintd(stdout,control->Io.dMaxMutualInc,control->Io.iSciNot,
+              control->Io.iDigits);
+          printf(" at t = %.2e years.\n",control->Evolve.dTime);
+        }
+*/
+          control->Io.bMutualIncMessage = 1;
+        }
+      }
+    }
+  }
+}
 
 /*
  * Integration Control
@@ -508,10 +543,10 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
 
     /* Time for Output? */
     if (control->Evolve.dTime >= control->Io.dNextOutput) {
+      control->Evolve.nSteps += nSteps;
       WriteOutput(body,control,files,output,system,update,fnWrite,control->Evolve.dTime,control->Io.dOutputTime/control->Evolve.nSteps);
       // Timesteps are synchronized with the output time, so this statement is sufficient
       control->Io.dNextOutput += control->Io.dOutputTime;
-      control->Evolve.nSteps += nSteps;
       nSteps=0;
     }
 
@@ -523,6 +558,9 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
     if (control->Evolve.bFirstStep) {
       control->Evolve.bFirstStep = 0;
     }
+
+    // Any variables reached an interesting value?
+    CheckProgress(body,control,system,update);
   }
 
   if (control->Io.iVerbose >= VERBPROG)

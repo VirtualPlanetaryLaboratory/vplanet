@@ -10,7 +10,8 @@ def test_IceBelts():
     """Test ice belt formation with POISE."""
     # Remove old log file
     subprocess.run(['rm', 'icebelt.log'], cwd=cwd)
-    dir = 'SeasonalClimateFiles'
+    # Remove seasonal climate files
+    dir = cwd+'/SeasonalClimateFiles'
     subprocess.run(['rm','-r',dir])
     # Run vplanet
     subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
@@ -29,18 +30,23 @@ def test_IceBelts():
     assert np.isclose(output.log.final.earth.PeakInsol, 1069.614002)
 
     # Check Grid Output
-    for f in subprocess.check_output('echo '+dir+'/*.DailyInsol.*',shell=True).split():
-      f1 = re.split('\.',re.split('/',f.decode('ascii'))[-1])  #split apart output file
+#    for f in subprocess.check_output('ls '+dir+'/*.DailyInsol.*',shell=True).split():
+#      f1 = re.split('\.',re.split('/',f.decode('ascii'))[-1])  #split apart output file
 
-      if len(f1) == 4:
-        timestamp = f1[3]
-      elif len(f1) == 5:
-        timestamp = f1[3]+'.'+f1[4]
+#      print(f1)
+#
+#      if len(f1) == 4:
+#        timestamp = f1[3]
+#      elif len(f1) == 5:
+#        timestamp = f1[3]+'.'+f1[4]
 
-      time0 = np.float(timestamp)
+#      time0 = np.float(timestamp)
 
-    sysname = f1[0]
-    plname = f1[1]
+#    sysname = f1[0]
+#    plname = f1[1]
+    sysname='icebelt'
+    plname='earth'
+    timestamp='0'
     insolf = dir+'/'+sysname+'.'+plname+'.DailyInsol.'+timestamp
     tempf = dir+'/'+sysname+'.'+plname+'.SeasonalTemp.'+timestamp
     icef = dir+'/'+sysname+'.'+plname+'.SeasonalIceBalance.'+timestamp

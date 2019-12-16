@@ -1621,7 +1621,7 @@ void ReadHaltMaxMutualInc(BODY *body,CONTROL *control,FILES *files,
   } else {
     /*
     if (iFile > 0) {
-      control->Halt[0].dMaxMutualInc = options->dDefault;
+      control->Halt[iFile+1].dMaxMutualInc = options->dDefault;
     }
     */
   }

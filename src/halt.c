@@ -44,9 +44,14 @@ int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
 }
 
 void InitializeHalts(CONTROL *control,MODULE *module) {
-// Malloc memory for halt function pointers
+  // Malloc memory for halt function pointers
+  int iBody;
 
   control->fnHalt=malloc(control->Evolve.iNumBodies*sizeof(fnHaltModule*));
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    control->Halt[iBody].dMaxMutualInc = 0;
+  }
+
 
 }
 
@@ -240,7 +245,7 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
     }
   }
 
-  if (control->Halt[iBody].dMaxMutualInc > 0) {
+  if (control->Halt[0].dMaxMutualInc > 0) {
     if (control->Evolve.iNumBodies == 0) {
       fprintf(stderr,
         "ERROR: %s set, but only 1 body present.\n",

@@ -2339,7 +2339,7 @@ double fdDCO2MassSol(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdDCO2MassMOAtm(BODY *body, SYSTEM *system, int *iaBody) {
-  return - fdDWaterMassSol(body,system,iaBody);
+  return - fdDCO2MassSol(body,system,iaBody);
 }
 
 double fdDOxygenMassSol(BODY *body, SYSTEM *system, int *iaBody) {

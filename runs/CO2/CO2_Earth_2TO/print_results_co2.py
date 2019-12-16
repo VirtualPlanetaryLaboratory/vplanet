@@ -74,8 +74,12 @@ M_CO2_ini = M_CO2_mo[0]
 M_water_mo_left = M_water_mo[t_solid] - M_water_atm[t_solid]/TO # in TO
 M_CO2_mo_left = M_CO2_mo[t_solid] - M_CO2_atm[t_solid]  # in kg
 
+# print('M_CO2_ini, M_CO2_mo[t_solid], M_CO2_atm[t_solid], M_CO2_mo[t_solid]-M_CO2_atm[t_solid], M_CO2_mo_left, M_CO2_sol[t_solid]')
+# print( M_CO2_ini, M_CO2_mo[t_solid], M_CO2_atm[t_solid], M_CO2_mo[t_solid]-M_CO2_atm[t_solid], M_CO2_mo_left, M_CO2_sol[t_solid])
+
 M_water_out = M_water_ini - M_water_sol[t_solid] - M_water_mo_left # in TO
-M_CO2_out = M_CO2_ini - M_CO2_sol[t_solid] - M_CO2_mo_left # in MO
+M_CO2_out = M_CO2_ini - M_CO2_sol[t_solid] - M_CO2_mo_left # in kg
+
 
 
 dAveMolarMassAtm = (MuH2O*Press_H2O[t_solid] + MuO2*Press_O[t_solid] + MuCO2*Press_CO2[t_solid])/(Press_H2O[t_solid] + Press_O[t_solid] + Press_CO2[t_solid])

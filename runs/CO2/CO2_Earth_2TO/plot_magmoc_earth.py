@@ -271,4 +271,5 @@ else:
     ax.tick_params(labelsize=13)
 
 plt.subplots_adjust(left=0.05, right=0.99, top=0.93, bottom=0.07)
-plt.savefig('plot.png')
+# plt.savefig('plot.png')
+plt.show()

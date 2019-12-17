@@ -124,6 +124,9 @@ void InitializeControl(CONTROL *control,MODULE *module) {
     control->Io.baCassiniTwoMessage[iBody] = 0;
   }
   control->Io.bDeltaTimeMessage = 0;
+  control->Io.bMutualIncMessage = 0;
+  // Initialize this value, too. Probably need a whole new structure for CheckProgress
+  control->Io.dMaxMutualInc = 0;
 }
 
 /**

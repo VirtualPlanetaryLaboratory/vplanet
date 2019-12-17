@@ -32,26 +32,27 @@
 #define OPT_AGE			100
 #define OPT_ALBEDOGLOBAL	105
 
-#define OPT_BACK		110
+#define OPT_BACK		            110
 #define OPT_OUTFILE   	        120
 #define OPT_ETA                 130
-#define OPT_OUTPUTTIME  	140
-#define OPT_STOPTIME 	        150
-#define OPT_TIMESTEP	        160
-#define OPT_VARDT	        170
+#define OPT_OUTPUTTIME  	      140
+#define OPT_STOPTIME 	          150
+#define OPT_TIMESTEP	          160
+#define OPT_VARDT	              170
 #define OPT_BODYNAME            180
 
 #define OPT_COLOR               185
 
 #define OPT_DENSITY             190
 
-#define OPT_FORW		200
+#define OPT_FORW		            200
 
 #define OPT_HALTMAXECC          320
+#define OPT_HALTMAXMUTUALINC    322
 #define OPT_HALTMERGE           325
 #define OPT_HALTMINECC          330
 #define OPT_HALTMINOBL          335
-#define OPT_HALTMINSEMI		345
+#define OPT_HALTMINSEMI		      345
 #define OPT_HALTPOSDEDT         350
 
 #define OPT_HECC                360

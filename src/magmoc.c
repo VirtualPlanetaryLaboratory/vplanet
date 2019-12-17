@@ -961,6 +961,12 @@ void fndMeltFracMan(BODY *body, int iBody) {
 
   // get kinematic viscosity at surface
   body[iBody].dMeltFracSurf = (body[iBody].dPotTemp-BLOWPRESSURE)/600;
+  if (body[iBody].dMeltFracSurf > 1) {
+    body[iBody].dMeltFracSurf = 1;
+  } else if (body[iBody].dMeltFracSurf < 0) {
+    body[iBody].dMeltFracSurf = 0;
+  }
+  
   if (body[iBody].dMeltFracSurf > CRITMELTFRAC) {
     dEta_a = 0.00024 * exp(4600/(body[iBody].dPotTemp-1000)) / pow((1-(1-body[iBody].dMeltFracSurf)/(1-CRITMELTFRAC)),2.5);
     dEta_b = DYNVISCSOLID * exp(ACTIVENERGY/(RGAS*body[iBody].dPotTemp));

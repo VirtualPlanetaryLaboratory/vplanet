@@ -125,8 +125,8 @@ void ReadWaterMassAtm(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
   }
 }
 
-/* CO2 pressure */
-void ReadPressCO2Atm(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+/* CO2 Mass */
+void ReadCO2MassMOAtm(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
   double dTmp;
@@ -135,12 +135,14 @@ void ReadPressCO2Atm(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
   if (lTmp >= 0) {   //if line num of option ge 0
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0) {  //if input value lt 0
-      body[iFile-1].dPressCO2Atm = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      body[iFile-1].dCO2MassMOAtm = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    } else {
+      body[iFile-1].dCO2MassMOAtm = fdUnitsMass(dTmp);
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else {
     if (iFile > 0) {  //if line num not ge 0, then if iFile gt 0, then set default.
-      body[iFile-1].dPressCO2Atm = options->dDefault;
+      body[iFile-1].dCO2MassMOAtm = options->dDefault;
     }
   }
 }
@@ -334,6 +336,23 @@ void ReadMagmOcAtmModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       body[iFile-1].iMagmOcAtmModel = MAGMOC_GREY;
 }
 
+void ReadMantleQuasiSolid(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bOptManQuasiSol = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0) {
+      AssignDefaultInt(options,&body[iFile-1].bOptManQuasiSol,files->iNumInputs);
+    }
+  }
+}
+
 /* Initiatlize Input Options */
 // initialize input = tell code what he is reading in
 void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
@@ -364,15 +383,15 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
 
   /* CO2 */
 
-  sprintf(options[OPT_PRESSCO2ATM].cName,"dPressCO2Atm");
-  sprintf(options[OPT_PRESSCO2ATM].cDescr,"Initial CO2 pressure in the atmosphere");
-  sprintf(options[OPT_PRESSCO2ATM].cDefault,"0 bar");
-  options[OPT_PRESSCO2ATM].iType = 2;
-  options[OPT_PRESSCO2ATM].iMultiFile = 1;
-  options[OPT_PRESSCO2ATM].dNeg = 1e5; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
-  options[OPT_PRESSCO2ATM].dDefault = 0;
-  sprintf(options[OPT_PRESSCO2ATM].cNeg,"bar");
-  fnRead[OPT_PRESSCO2ATM] = &ReadPressCO2Atm;
+  sprintf(options[OPT_CO2MASSMOATM].cName,"dCO2MassMOAtm");
+  sprintf(options[OPT_CO2MASSMOATM].cDescr,"Initial CO2 mass in the system");
+  sprintf(options[OPT_CO2MASSMOATM].cDefault,"0 TO");
+  options[OPT_CO2MASSMOATM].iType = 2;
+  options[OPT_CO2MASSMOATM].iMultiFile = 1;
+  options[OPT_CO2MASSMOATM].dNeg = TOMASS; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
+  options[OPT_CO2MASSMOATM].dDefault = 0;
+  sprintf(options[OPT_CO2MASSMOATM].cNeg,"Terrestrial Oceans");
+  fnRead[OPT_CO2MASSMOATM] = &ReadCO2MassMOAtm;
 
   /* Temperature */
 
@@ -451,6 +470,13 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MAGMOCATMMODEL].iType = 3;
   options[OPT_MAGMOCATMMODEL].iMultiFile = 1;
   fnRead[OPT_MAGMOCATMMODEL] = &ReadMagmOcAtmModel;
+
+  sprintf(options[OPT_MANQUASISOL].cName,"bOptManQuasiSol");
+  sprintf(options[OPT_MANQUASISOL].cDescr,"Solidify when melt frac = 0.4?");
+  sprintf(options[OPT_MANQUASISOL].cDefault,"0");
+  options[OPT_MANQUASISOL].iType = 0;
+  options[OPT_MANQUASISOL].iMultiFile = 1;
+  fnRead[OPT_MANQUASISOL] = &ReadMantleQuasiSolid;
 }
 
 // Don't change this
@@ -483,7 +509,7 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   body[iBody].dPressOxygenAtm  = 0;
 
   // CO2
-  body[iBody].dCO2MassMOAtm    = body[iBody].dPressCO2Atm * 4*PI*pow(body[iBody].dRadius,2)/body[iBody].dGravAccelSurf; // initial CO2 mass in MO&Atm is equal to inital CO2 mass in atmosphere
+  body[iBody].dPressCO2Atm     = body[iBody].dCO2MassMOAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2)); // initial CO2 mass in MO&Atm is equal to inital CO2 mass in atmosphere
   body[iBody].dCO2MassSol      = 0; // initial water mass in solid = 0
   if (body[iBody].dCO2MassMOAtm < 1) {
     body[iBody].bCO2InAtmosphere = 0;
@@ -1272,14 +1298,65 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     }
   }
 
-  /* Treat mantle as solidified when melt fraction at surface smaller than 0.4 */
+  /* Treat mantle as solidified when melt fraction at surface smaller than 0.4
+   * Set mantle completely solid & water into atm.
+   */
   // /* When planet desiccated and T_surf below 1000K treat mantle as solidified */
   // if ((!body[iBody].bManQuasiSol) && (body[iBody].bPlanetDesiccated) && (body[iBody].dSurfTemp <= 1000)) {
-  if ((!body[iBody].bManQuasiSol) && (body[iBody].dMeltFracSurf < CRITMELTFRAC)) {
+  if (body[iBody].bOptManQuasiSol && (!body[iBody].bManQuasiSol) && (body[iBody].dMeltFracSurf < CRITMELTFRAC)) {
+    double dOxygenMassMO;
+    double dDeltaWaterMass;
+    double dDeltaCO2Mass;
+
+    body[iBody].bManQuasiSol = 1;
+
+    body[iBody].dManMeltDensity = 4200;
+    body[iBody].dSolidRadius    = body[iBody].dRadius;
+
+    dDeltaWaterMass = WATERPARTCOEFF*body[iBody].dWaterFracMelt*(body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+    body[iBody].dWaterMassSol   = body[iBody].dWaterMassSol   + dDeltaWaterMass;
+    body[iBody].dWaterMassMOAtm = body[iBody].dWaterMassMOAtm - dDeltaWaterMass;
+
+    dDeltaCO2Mass = CO2PARTCOEFF*body[iBody].dCO2FracMelt*(body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+    body[iBody].dCO2MassSol   = body[iBody].dCO2MassSol   + dDeltaCO2Mass;
+    body[iBody].dCO2MassMOAtm = body[iBody].dCO2MassMOAtm - dDeltaCO2Mass;
+
+    if (!body[iBody].bAllFeOOxid) {
+      body[iBody].dOxygenMassAtm = 0;
+      body[iBody].dOxygenMassSol = body[iBody].dOxygenMassSol + body[iBody].dOxygenMassMOAtm;
+    } else {
+      dOxygenMassMO = body[iBody].dFracFe2O3Man * MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) * (body[iBody].dMassMagmOcLiq + body[iBody].dMassMagmOcCry);
+      body[iBody].dOxygenMassSol = body[iBody].dOxygenMassSol   + dOxygenMassMO;
+      body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassMOAtm - dOxygenMassMO;
+    }
+
+    body[iBody].dPressWaterAtm  = body[iBody].dWaterMassMOAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
+    body[iBody].dPressCO2Atm    = body[iBody].dCO2MassMOAtm   * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
+    body[iBody].dPressOxygenAtm = body[iBody].dOxygenMassAtm  * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
+
+
+    /*
+     * When mantle solidified:
+     * Stop updating PotTemp, SurfTemp, SolidRadius, WaterMassSol, OxygenMassSol
+     * But continue to update WaterMassMOAtm, OxygenMassMOAtm, HydrogenMassSpace, OxygenMassSpace
+     */
+    // SetDerivTiny(fnUpdate,iBody,update[iBody].iPotTemp      ,update[iBody].iPotTempMagmOc      );
+    // SetDerivTiny(fnUpdate,iBody,update[iBody].iSurfTemp     ,update[iBody].iSurfTempMagmOc     );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iSolidRadius  ,update[iBody].iSolidRadiusMagmOc  );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iWaterMassSol ,update[iBody].iWaterMassSolMagmOc );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iOxygenMassSol,update[iBody].iOxygenMassSolMagmOc);
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iCO2MassSol   ,update[iBody].iCO2MassSolMagmOc   );
+    SetDerivTiny(fnUpdate,iBody,update[iBody].iCO2MassMOAtm ,update[iBody].iCO2MassMOAtmMagmOc );
+
+
+    if (io->iVerbose >= VERBPROG) {
+      printf("Surface melt fraction of %s's smaller than 0.4 after %f years - mantle set to solidified. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+      // printf("%s's atmosphere desiccated & surface temperature below 1000K after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+    }
+  } else if ((!body[iBody].bOptManQuasiSol) && (!body[iBody].bManQuasiSol) && (body[iBody].dMeltFracSurf < CRITMELTFRAC)){
     body[iBody].bManQuasiSol = 1;
     if (io->iVerbose >= VERBPROG) {
-      printf("Surface melt fraction of %s's smaller than 0.4 after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
-      // printf("%s's atmosphere desiccated & surface temperature below 1000K after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+      printf("Surface melt fraction of %s's smaller than 0.4 after %f years \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
   }
 
@@ -1867,6 +1944,7 @@ void WriteTidalPower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   }
 }
 
+/* XXX in output.c as WriteOrbSemi
 void WriteSemiMajorAxis(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dSemi;
   if (output->bDoNeg[iBody]) {
@@ -1877,6 +1955,7 @@ void WriteSemiMajorAxis(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     fsUnitsLength(units->iLength,cUnit);
   }
 }
+*/
 
 void WriteHZInnerEdge(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dHZInnerEdge;
@@ -2073,6 +2152,7 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALPOWER].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_TIDALPOWER] = &WriteTidalPower;
 
+/* In output.c as WriteOrbSemi
   sprintf(output[OUT_SEMIMAJORAXIS].cName,"SemiMajorAxis");
   sprintf(output[OUT_SEMIMAJORAXIS].cDescr,"Semi Major Axis of the planet's orbit");
   sprintf(output[OUT_SEMIMAJORAXIS].cNeg,"AU");
@@ -2081,6 +2161,7 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SEMIMAJORAXIS].iNum = 1;
   output[OUT_SEMIMAJORAXIS].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_SEMIMAJORAXIS] = &WriteSemiMajorAxis;
+*/
 
   sprintf(output[OUT_HZINNEREDGE].cName,"HZInnerEdge");
   sprintf(output[OUT_HZINNEREDGE].cDescr,"Inner Edge of the Habitable Zone (Runaway Greenhouse)");
@@ -2258,7 +2339,7 @@ double fdDCO2MassSol(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdDCO2MassMOAtm(BODY *body, SYSTEM *system, int *iaBody) {
-  return - fdDWaterMassSol(body,system,iaBody);
+  return - fdDCO2MassSol(body,system,iaBody);
 }
 
 double fdDOxygenMassSol(BODY *body, SYSTEM *system, int *iaBody) {

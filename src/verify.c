@@ -5,13 +5,6 @@
   @date May 7 2014
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <assert.h>
-#include <ctype.h>
-#include <string.h>
-#include <unistd.h>
 #include "vplanet.h"
 
 /*
@@ -847,7 +840,10 @@ void VerifyAge(BODY *body,CONTROL *control,OPTIONS *options) {
    prepared for integration.
  */
 
-void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,fnIntegrate *fnOneStep,fnUpdateVariable ****fnUpdate) {
+void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,
+    OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,
+    fnIntegrate *fnOneStep,fnUpdateVariable ****fnUpdate) {
+
   int iBody,iModule;
 
   VerifyAge(body,control,options);
@@ -910,6 +906,17 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIO
     }
   }
 
-  // Finally, initialize angular momentum and energy prior to logging/integration
+  // Initialize angular momentum and energy prior to logging/integration
   InitializeConstants(body,update,control,system,options);
+
+  // Set next output time so logging does not contain a memory leak
+  //control->Io.dNextOutput = control->Evolve.dTime + control->Io.dOutputTime;
+
+  // Finally, initialize derivative values -- this avoids leaks while logging
+  PropertiesAuxiliary(body,control,system,update);
+  CalculateDerivatives(body,system,update,*fnUpdate,control->Evolve.iNumBodies);
+
+  control->Evolve.dTime=0;
+  control->Evolve.nSteps=0;
+  control->Io.dNextOutput = control->Evolve.dTime + control->Io.dOutputTime;
 }

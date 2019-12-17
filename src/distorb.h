@@ -22,6 +22,9 @@
 #define B(iIndexJ) dAxRatio,iIndexJ,1.5
 #define C(iIndexJ) dAxRatio,iIndexJ,2.5
 
+/* For semi-major axis functions */
+#define LAPLNUM 	      26
+
 // A -> s = 1/2
 // B -> s = 3/2
 // C -> s = 5/2

@@ -18,16 +18,9 @@ def test_TidalEarth():
     # Check
     assert np.isclose(output.log.final.tidalearth.TMan, 2799.517833)
     assert np.isclose(output.log.final.tidalearth.TCore, 5500.224551)
-<<<<<<< HEAD
-    assert np.isclose(output.log.final.tidalearth.PowerEqtide, 0.005250)
-    assert np.isclose(output.log.final.tidalearth.Eccentricity, 0.498425)
-    assert np.isclose(output.log.final.tidalearth.SemiMajorAxis, 7.468143e+09)
-=======
     assert np.isclose(output.log.final.tidalearth.PowerEqtide, 0.005337)
     assert np.isclose(output.log.final.tidalearth.Eccentricity, 0.490441)
     assert np.isclose(output.log.final.tidalearth.SemiMajorAxis, 7.409421e+09)
->>>>>>> a45095dc8e0b53eba999c90f3556ce5713085cea
-
 
 if __name__ == "__main__":
     test_TidalEarth()

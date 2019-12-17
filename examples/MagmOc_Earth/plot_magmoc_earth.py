@@ -221,7 +221,7 @@ else:
     ax.tick_params(labelsize=13)
 
 plt.show()
-
+# plt.savefig('plot_05.png')
 
 # r_core = np.zeros(n_time)+r_c
 #

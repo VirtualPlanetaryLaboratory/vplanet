@@ -9,11 +9,6 @@
 
 */
 
-#include <stdio.h>
-#include <math.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
 #include "vplanet.h"
 
 void BodyCopyFlare(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {

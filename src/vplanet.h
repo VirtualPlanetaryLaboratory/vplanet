@@ -6,9 +6,26 @@
 */
 
 
+#include <assert.h>
+#include <ctype.h>
+#include <float.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <unistd.h>
+#include <xmmintrin.h>
+
 /*! Top-level declarations */
 
-/* How many modules are available? */
+/* Implemented Moduules
+  The number is a bit value that can be used to uniquely identify the modules
+  that have been applied to a specific body. The value is stored in
+  module.iModuleBitSum.
+ */
 #define EQTIDE        2
 #define RADHEAT       4
 #define ATMESC        8
@@ -24,276 +41,95 @@
 #define DISTRES       8192
 #define MAGMOC        16384
 
-/********************
- * ADJUST AS NEEDED *       XXX And fix sometime!
- ********************/
-
-// XXX Obsolete?
-// Note: not obsolete! needed for new module
-// Otherwise,segfaults
-// Increased from 1900->2100 for binary
-/* Module limits:
- * EQTIDE: 1000 - 1100
- * RADHEAT: 1100 - 1200
- * ATMESC: 1200 - 1300
- * DISTORB: 1300 - 1400
- * DISTROT: 1400 - 1500
- * STELLAR: 1500 - 1600
- * SPINBODY: 1600 - 1700
- * THERMINT: 1700 - 1900
- * POISE: 1900 - 2000
- * FLARE: 2000 - 2100
- * BINARY: 2100 - 2200
- * GALHABIT: 2200 - 2300
- * MAGMOC: 2300 - 2400
- */
-#define MODULEOPTEND        2400
-#define MODULEOUTEND        2400
-
 /* Fundamental constants; Some of these are taken from the IAU working
  group on Fundamental constants, as described in Prsa et al. 2016. */
-
-#define BIGG          6.67428e-11  // From Luzum et al., 2011; value recommended by IAU NSFA in Prsa et al. 2016
-#define PI            M_PI    // Quick fix -- prolly should change throughout
-
-#define KGAUSS        0.01720209895
-#define S0            0 //-0.422e-6     //delta S0 from Armstrong 2014-used in central torque calculation
-
-#define EPS           1e-10       // Precision for difference of doubles to be effectively 0
-
 /* Units: Calculations are done in SI */
-#define cLIGHT        299792458.0
-#define MEARTH        5.972186e24 // Prsa et al. 2016
-#define MSUN          1.988416e30 // Prsa et al. 2016
-#define AUM          1.49597870700e11  // XXX Change to AUM, Exact m/AU per 31 AUG 2012 IAU resolution B2
-//#define AUM          1.49598e11  // Old AUM intended to keep tests passing
-#define AUPC          206265.0   // AU in a parsec
-#define RSUN          6.957e8     // Prsa et al. 2016
+#define BIGG          6.67428e-11  // From Luzum et al., 2011; value recommended
+                                   // by IAU NSFA in Prsa et al. 2016
+#define PI            M_PI         // Quick fix
+#define KGAUSS        0.01720209895     // Gauss' Gravitational Constamt
+#define EPS           1e-10       // Precision for difference of doubles to be effectively 0
+#define AUM           1.49597870700e11  // Exact m/AU per 31 AUG 2012 IAU resolution B2
+#define AUPC          206265.0   // AU per parsec
+#define LIGHTSPEED    299792458.0 // Speed of light
+#define MEARTH        5.972186e24 // Earth's mass; Prsa et al. 2016
+#define MSUN          1.988416e30 // Sun's mass; Prsa et al. 2016
+#define RSUN          6.957e8     // Sun's radius; Prsa et al. 2016
 #define YEARSEC       3.15576e7   // Seconds per year
 #define DAYSEC        86400       // Seconds per day
-#define REARTH        6.3781e6    // Equatorial; Prsa et al. 2016
-#define RJUP          7.1492e7    // Equatorial; Prsa et al. 2016
-#define RNEP          2.4764e7    // Neptune's Radius (ref?)
-#define MNEP          1.0244e26   // Neptune's Mass (ref?)
+#define REARTH        6.3781e6    // Earth's Equatorial Radius; Prsa et al. 2016
+#define RJUP          7.1492e7    // Jupiter's Equatorial Radius; Prsa et al. 2016
+#define RNEP          2.4764e7    // Neptune's Radius
+#define MNEP          1.0244e26   // Neptune's Mass
 #define RHOEARTH      5515        // Earth's Density
 #define eEARTH        0.016710219 // Earth's Eccentricity
-#define MJUP          1.898130e27 // Prsa et al. 2016
-#define YEARDAY       365.25      // Days per year (more precise??)
-#define MSAT          5.6851e26   // Saturns' Mass (ref?)
+#define MJUP          1.898130e27 // Jupiter's mass; Prsa et al. 2016
+#define YEARDAY       365.25      // Days per year
+#define MSAT          5.6851e26   // Saturns' Mass
 #define DEGRAD        0.017453292519444445 // Degrees per radian
 #define TOMASS        1.39e21     // Mass of one terrestrial ocean in kg (TO)
 #define ATOMMASS      1.660538921e-27 // Atomic Mass
 #define SIGMA         5.670367e-8 // Stefan-Boltzmann Constant
-#define LFICE         3.34e5      // ???
-#define RHOICE        916.7       //density of ice kg/m^3
-#define MOCEAN        1.4e21      //mass of earth ocean in kg (ref?)
-#define a1ICE         3.615e-13   //coeff of ice deformability at T<263K (Pa^-3 s^-1 - ref?)
-#define a2ICE         1.733e3     //coeff of ice deformability at T>=263K (Pa^-3 s^-1 - ref?)
-#define Q1ICE         6e4         //energy in ice deformation at T<263K (J/mol)
-#define Q2ICE         13.9e4      //energy in ice deformation at T>=263 (J/mol)
 #define RGAS          8.3144598   //gas constant in J K^-1 mol^-1
-#define nGLEN         3.0         //Glen's law coefficient
-#define RHOSED        2390        //sediment density from Huybers&Tziperman08
-#define RHOH2O        1000        // Density of liquid water
-#define SEDPHI        (22.0*PI/180.0)  //angle of internal friction (sediment)
-
-#define SEDH          10      //depth of sediment layer (m)
-#define SEDD0         7.9e-7  //reference deformation rate for sediment (s^-1)
-#define SEDMU         3e9     //reference viscosity for sediment (Pa s)
-#define RHOBROCK      3370
-#define BROCKTIME     5000  //relaxation timescale for bedrock
-
 #define KBOLTZ        1.38064852e-23 // Boltzmann constant, J/K
-#define ALPHA_STRUCT  0.6         // Structural constant for spherical mass distribution potential energy (E_pot = -ALPHA*BIGG*M^2/R)
-
-/* Exit Status */
-
-#define EXIT_EXE      1
-#define EXIT_INPUT    2
-#define EXIT_UNITS    3
-#define EXIT_WRITE    4
-#define EXIT_INT      5
-#define EXIT_OUTPUT   6
-
-/* Verbosity Level */
-
-#define VERBERR       1
-#define VERBPROG      2
-#define VERBINPUT     3
-#define VERBUNITS     4
-#define VERBALL       5
-
-/* File Limits */
-
-#define OPTLEN        24    /* Maximum length of an option */
-#define OPTDESCR      128   /* Number of characters in option description */
-#define OPTLONDESCR   2048  /* Number of characters in option long description */
-#define OUTLEN        48    /* Maximum number of characters in an output column header */
-#define LINE          256   /* Maximum number of characters in a line */
-#define OUTDESCR      256   /* Number of characters in output description */
-#define OUTLONDESCR   2048  /* Number of characters in output long description */
-#define NAMELEN       100
-
-#define MAXFILES      128    /* Maximum number of input files */
-#define MAXARRAY      128    /* Maximum number of options in
-			     * an option array */
-#define NUMOPT	      1000  /* Number of options that could be
-			     * in MODULE */
-#define MAXLINES      256   /* Maximum Number of Lines in an
-			     * input file */
-
-/* 0 => Not input by user, verify assigns default */
-#define EULER         1
-#define RUNGEKUTTA    2
-
-/* Indices for variables in the update struct. These are the primary
-   variables. */
-#define VSEMI              1001 // Semi-major axis
-#define VECC               1002 // Eccentricity
-#define VROT               1003 // Rotational Frequency
-#define VOBL               1004 // Obliquity
-#define VRADIUS            1005 // Radius
-#define VMASS              1006 // Mass
-#define VRADGYRA           1007 // Radius of Gyration
-
-// RADHEAT
-#define VNUM26ALMAN        1100 // 26Al in Mantle
-#define VNUM26ALCORE       1105 // 26Al in Core
-#define VNUM40KMAN         1110 // 40K in Mantle
-#define VNUM40KCORE        1115 // 40K in Core
-#define VNUM232THMAN       1120 // 232Th in Mantle
-#define VNUM232THCORE      1125 // 232Th in Core
-#define VNUM235UMAN        1130 // 235U in Mantle
-#define VNUM235UCORE       1135 // 235U in Core
-#define VNUM238UMAN        1140 // 238U in Mantle
-#define VNUM238UCORE       1145 // 238U in Core
-
-// THERMINT
-#define VTMAN              1201 // Mantle Temperature
-#define VTCORE             1202 // Core Temperature
-
-//DistOrb
-#define VHECC              1301 // Poincare's h
-#define VKECC              1302 // Poincare's k
-#define VPINC              1303 // Poincare's p
-#define VQINC              1304 // Poincare's q
-
-//DISTROT
-#define VXOBL              1401 // Detrick's X
-#define VYOBL              1402 // Detrick's Y
-#define VZOBL              1403 // Detrick's Z
-#define VDYNELLIP          1404 // Dynamical Ellipticity
-
-/* Semi-major axis functions in DistOrb */
-#define LAPLNUM 	      26
-
-//SPINBODY 1600-1700
-#define VVELX              1601 // Cartesian X Velocity
-#define VVELY              1602 // Cartesian Y Velocity
-#define VVELZ              1603 // Cartesian Z Velocity
-#define VPOSITIONX         1604 // Cartesian X Position
-#define VPOSITIONY         1605 // Cartesian Y Position
-#define VPOSITIONZ         1606 // Cartesian Z Position
-
-// ATMESC
-#define VSURFACEWATERMASS  1202 // Surface Water Mass
-#define VENVELOPEMASS      1203 // Envelope Mass
-#define VOXYGENMASS        1204 // Atmospheric Oxygen Mass
-#define VOXYGENMANTLEMASS  1205 // Mantle Oxygen Mass
-
-// STELLAR
-#define VLUMINOSITY        1502 // Luminosity
-#define VTEMPERATURE       1503 // Temperature
-#define VLOSTANGMOM        1504 // Lost Angular Momentum
-#define VLOSTENG           1505 // Lost Energy
-
-// POISE
-#define VICEMASS           1851 // Ice Mass
-
-// BINARY: 2000-2999, inclusive
-// Primary variables that control CBP's cylindrical positions, velocities
-#define VCBPR              2000
-#define VCBPPHI            2010
-#define VCBPZ              2020
-#define VCBPRDOT           2030
-#define VCBPPHIDOT         2040
-#define VCBPZDOT           2050
-
-// FLARE
-#define VLXUV              1901 // XUV Luminosity from Flares
-
-//GALHABIT
-#define VECCX           2201
-#define VECCY           2202
-#define VECCZ           2203
-#define VANGMX          2204
-#define VANGMY          2205
-#define VANGMZ          2206
-
-//DISTRES
-#define VMEANL          2301
-
-//MAGMOC
-/* HERE
- * define primary variables
- * give them a number
- */
-#define VWATERMASSMOATM    2302
-#define VWATERMASSSOL      2303
-#define VSURFTEMP          2304
-#define VPOTTEMP           2305
-#define VSOLIDRADIUS       2306
-#define VOXYGENMASSMOATM   2307
-#define VOXYGENMASSSOL     2308
-#define VHYDROGENMASSSPACE 2309
-#define VOXYGENMASSSPACE   2310
-#define VCO2MASSMOATM      2311
-#define VCO2MASSSOL        2312
-
-/* Now define the structs */
-
-#define MAXSPECIES       100
+#define ALPHA_STRUCT  0.6         // Structural constant for spherical mass
+                                  //distribution potential energy (E_pot = -ALPHA*BIGG*M^2/R)
 
 /* Do not change these declarations */
 extern const double dHUGE;
 extern const double dTINY;
 /* Do not change these declarations */
 
+// IO limits for files, lines, and names
+#define OPTLEN        24    /* Maximum length of an option */
+#define OPTDESCR      128   /* Number of characters in option description */
+#define OPTLONDESCR   2048  /* Number of characters in option long description */
+#define LINE          256   /* Maximum number of characters in a line */
+#define NAMELEN       100
+#define MAXFILES      128    /* Maximum number of input files */
+#define MAXARRAY      128    /* Maximum number of options in
+			                        * an option array */
+#define NUMOPT	      1000  /* Number of options that could be
+			                       * in MODULE */
+#define MAXLINES      256   /* Maximum Number of Lines in an
+			                       * input file */
+#define OUTLEN        48    /* Maximum number of characters in an output column header */
+#define OUTDESCR      256   /* Number of characters in output description */
+#define OUTLONDESCR   2048  /* Number of characters in output long description */
+
+
 /* Forward declaration of structs.
 This is necessary in order to add pointers to structs into typedef'd functions */
 
-typedef struct PHOTOCHEM PHOTOCHEM;
 typedef struct BODY BODY;
-typedef struct SYSTEM SYSTEM;
-typedef struct UPDATE UPDATE;
-typedef struct HALT HALT;
-typedef struct UNITS UNITS;
-typedef struct EVOLVE EVOLVE;
-typedef struct IO IO;
 typedef struct CONTROL CONTROL;
-typedef struct INFILE INFILE;
-typedef struct OUTFILE OUTFILE;
+typedef struct EVOLVE EVOLVE;
 typedef struct FILES FILES;
-typedef struct OPTIONS OPTIONS;
-typedef struct OUTPUT OUTPUT;
+typedef struct HALT HALT;
+typedef struct INFILE INFILE;
+typedef struct IO IO;
 typedef struct MODULE MODULE;
+typedef struct OPTIONS OPTIONS;
+typedef struct OUTFILE OUTFILE;
+typedef struct OUTPUT OUTPUT;
+typedef struct SYSTEM SYSTEM;
+typedef struct UNITS UNITS;
+typedef struct UPDATE UPDATE;
 typedef struct VERIFY VERIFY;
 
-struct PHOTOCHEM {
-  double dInitTimeStep;
-  double dMaxSteps;
-};
-
-/*! \brief BODY contains all the physical parameters for every body.
- *         Members are broken into chunks by module.
+/*! \brief BODY contains all the physical parameters for every object in the system.
  */
 struct BODY {
-  char cName[NAMELEN];   /**< Body's Name */
-  int iBodyType;         /**< Body's type: 0 for planet, 1 for star */
-  /**< Type of object: 0=star, 1=rocky planet, 2 = giant */
-  char iType;
-
   /* Body Properties */
+  char cName[NAMELEN];   /**< Body's Name */
+  char cColor[OPTLEN];   /**< Body color (for plotting) */
+
+  int bMantle;           /**< Is there a mantle? */
+  int bOcean;            /**< Is there an ocean? */
+  int bEnv;              /**< Is there an envelope? */
+
+  int iBodyType;         /**< Type of object: 0=star, 1=rocky planet, 2 = giant */
+
   double dAge;           /**< Body's Age */
   double dMass;		       /**< Body's Mass */
   double dRadius;	       /**< Radius of body */
@@ -306,12 +142,6 @@ struct BODY {
   double dRotPer;        /**< Body's Rotation Period */
   double dRotVel;        /**< Body's Rotational Velocity */
   double dRadGyra;       /**< Body's Radius of Gyration */
-  char cColor[OPTLEN];   /**< Body color (for plotting) */
-  double *daSED;         /**< Body's spectral energy distribution by wavelength N/I */
-
-  int bMantle;           /**< Is there a mantle? */
-  int bOcean;            /**< Is there an ocean? */
-  int bEnv;              /**< Is there an envelope? */
 
   /* Orbital Properties. By convention, these are stored in the
    * second element in the BODY array and, if using binary
@@ -321,6 +151,76 @@ struct BODY {
   double dMeanMotion;    /**< Body's Mean Motion */
   double dOrbPeriod;     /**< Body's Orbital Period */
   double dEccSq;         /**< Eccentricity squared */
+
+  /* ATMESC Parameters */
+  int bAtmEsc;           /**< Apply Module ATMESC? */
+  int bInstantO2Sink;    /**< Is oxygen absorbed instantaneously at the surface? */
+  int bRunaway;          /**< Is the planet experiencing a runaway greenhouse? */
+  int bCalcFXUV;         /**< Does incidenx XUV flow need to be calculated every
+                              time step? */
+  int bEnvelopeLostMessage; /**< Has the envelope lost message been printed? */
+  int bIgnoreRocheLobe;  	/**< Ignore Roche lobe overflow? */
+	int bUseEnergyLimited; 	/**< Use energy-limited escape */
+  int bUseBondiLimited;		/**< Use Bondi-limited H mass loss */
+  int bUseRRLimited; 			/**< Use radiation/recombination-limited H mass loss */
+  int bAtmEscAuto; 				/**< Transition H escape regime depending on physics */
+	int bAutoThermTemp;			/**< Calculate thermal temperature from environemnt? */
+
+  int iWaterLossModel;   /**< Water Loss and Oxygen Buildup Model */
+  int iAtmXAbsEffH2OModel;  /**< Water X-ray/XUV absorption efficiency evolution model */
+  int iPlanetRadiusModel;   /**< Planet Radius model. */
+  int iWaterEscapeRegime;   /**< Track water escape regime */
+  int iHEscapeRegime; /**< Tracks H escape regime */
+
+  double dSurfaceWaterMass;     /**< Surface water mass */
+  double dMinSurfaceWaterMass;  /**< Minimum surface water to avoid a halt */
+  double dOxygenMass;           /**< Atmospheric oxygen mass */
+  double dOxygenMantleMass;     /**< Mass of oxygen in the mantle */
+  double dEnvelopeMass;         /**< Envelope mass */
+  double dMinEnvelopeMass;      /**< Minimum envelope mass to avoid a halt */
+  double dXFrac;                /**< XUV radius in units of planet's radius */
+  double dAtmXAbsEffH;          /**< Effective XUV absorpation efficiency for hydrogen */
+  double dAtmXAbsEffH2O;        /**< Effective XUV absorpation efficiency for water */
+  double dRGDuration;           /**< Duration of runaway greenhouse phase */
+  double dKTide;                /**< Tidal enhancement factor for mass loss */
+  double dMDotWater;            /**< Water mass loss rate */
+  double dFHRef;                /**< Reference hydrogen escape value */
+  double dOxygenEta;            /**< Factor for drag of oxygen by hydrogen */
+  double dCrossoverMass;        /**< Atomic mass at which drag begins */
+  double dFHDiffLim;    /**< Diffusion-limited H escape rate */
+  double dRadXUV;       /**< XUV Radius in Lehmer-Catling model */
+  double dRadSolid;     /**< Solid planet radius in Lehmer-Catling model */
+  double dPresSurf;     /**< Surface Pressure in Lehmer-Catling model */
+  double dPresXUV;      /**< Pressure at XUV radius in Lehmer-Catling model */
+  double dScaleHeight;  /**< Scale Height used in Lehmer-Catling model */
+  double dThermTemp;    /**< Thermosphere's temperature in Lehmer-Catling model */
+  double dAtmGasConst;  /**< Atmosphere's gas constant in Lehmer-Catling model */
+  double dFXUV;         /**< XUV Flux at planet's atmosphere */
+  double dJeansTime;    /**< Jeans timescale for atmospheric escape */
+  double dFlowTemp;     /**< Temperature of the hydrodynamic flow */
+  double dRocheRadius; 	/**< Radius of the Roche lobe */
+  double dBondiRadius;	/**< Bondi (Sonic) Radius */
+  double dEnvMassDt; /**< Time derivative of H envelope mass */
+
+  /* BINARY parameters */
+  int bBinary;           /**< Apply BINARY module? */
+  double dR0;            /**< Guiding Radius,initially equal to dSemi */
+  double dCBPR;          /**< CBP orbital radius */
+  double dCBPZ;          /**< CBP height above/below the orbital plane */
+  double dCBPPhi;        /**< CBP azimuthal angle in orbital plane */
+  double dCBPRDot;       /**< CBP radial orbital velocity */
+  double dCBPZDot;       /**< CBP z orbital velocity */
+  double dCBPPhiDot;     /**< CBP phi angular orbital velocity */
+  double dFreeEcc;       /**< CBP's free eccentricity */
+  double dFreeInc;       /**< CBP's free inclination, or binary's inclination */
+  double dInc;           /**< Orbital inclication */
+  double dLL13N0;        /**< CBP's Mean motion defined in LL13 eqn 12 */
+  double dLL13K0;        /**< CBP's radial epicyclic frequency defined in LL13 eqn 26 */
+  double dLL13V0;        /**< CBP's vertical epicyclic frequency defined in LL13 eqn 36 */
+  double dLL13PhiAB;     /**< Binary's initial mean anomaly */
+  double dCBPM0;         /**< CBP's initial mean anomaly */
+  double dCBPZeta;       /**< CBP's z oscillation angle (see LL13 eqn 35) */
+  double dCBPPsi;        /**< CBP's R, phi oscillation phase angle (see LL13 eqn 27) */
 
   /* SPINBODY parameters */
   int bSpiNBody;         /**< Has module SPINBODY been implemented */
@@ -373,26 +273,6 @@ struct BODY {
   double dRPeri;         /**< Pericenter distance */
   double dRApo;          /**< Apocenter distance */
 
-  /* BINARY parameters */
-  int bBinary;           /** Apply BINARY module? */
-  double dR0;            /**< Guiding Radius,initially equal to dSemi */
-  double dCBPR;          /** < CBP orbital radius */
-  double dCBPZ;          /** < CBP height above/below the orbital plane */
-  double dCBPPhi;        /** < CBP azimuthal angle in orbital plane */
-  double dCBPRDot;       /** < CBP radial orbital velocity */
-  double dCBPZDot;       /** < CBP z orbital velocity */
-  double dCBPPhiDot;     /** < CBP phi angular orbital velocity */
-  double dFreeEcc;       /**< CBP's free eccentricity */
-  double dFreeInc;       /**< CBP's free inclination, or binary's inclination */
-  double dInc;           /**< Orbital inclication */
-  double dLL13N0;        /**< CBP's Mean motion defined in LL13 eqn 12 */
-  double dLL13K0;        /**< CBP's radial epicyclic frequency defined in LL13 eqn 26 */
-  double dLL13V0;        /**< CBP's vertical epicyclic frequency defined in LL13 eqn 36 */
-  double dLL13PhiAB;     /**< Binary's initial mean anomaly */
-  double dCBPM0;         /**< CBP's initial mean anomaly */
-  double dCBPZeta;       /**< CBP's z oscillation angle (see LL13 eqn 35) */
-  double dCBPPsi;        /**< CBP's R, phi oscillation phase angle (see LL13 eqn 27) */
-
   /* DISTROT parameters */
   int bDistRot;
   double dPrecA;         /**< Precession angle */
@@ -429,12 +309,7 @@ struct BODY {
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
   int bTideLock;         /**< Is a body tidally locked? */
-	double dLockTime;			 /**< Time when body tidally-locked */
-/*
-	int bOceanTides;
-  int bEnvTides;
-  int bMantleTides;
-*/
+  double dLockTime;	 /**< Time when body tidally-locked */
   int bUseTidalRadius;   /**< Set a fixed tidal radius? */
   double dTidalRadius;   /**< Radius used by tidal evoltion equations (CPL only currently) */
   int iTidePerts;        /**< Number of Tidal Perturbers */
@@ -443,7 +318,7 @@ struct BODY {
   double dK2Man;         /**< Mantle k2 love number */
   double dK2Ocean;       /**< Ocean's Love Number */
   double dK2Env;         /**< Envelope's Love Number */
-  double dTidalQMan;
+  double dTidalQMan;     /**< Tidal Q of the Mantle */
   double dTidalQOcean;   /**< Body's Ocean Component to Tidal Q */
   double dTidalQEnv;     /**< Body's Envelope Component to Tidal Q */
   double dImK2Man;       /**< Mantle Im(k2) love number */
@@ -452,7 +327,6 @@ struct BODY {
   double dImK2Env;       /**< Envelope Component to Imaginary part of Love's K_2 */
   double dTidalQ;	 /**< Body's Tidal Q */
   double dTidalTau;      /**< Body's Tidal Time Lag */
-  //double dTidePower;   deprecated to allow communication with thermint
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */
   double *dTidalChi;     /**< As Defined in \cite HellerEtal2011 */
   double **dTidalF;      /**< As Defined in \cite HellerEtal2011 */
@@ -545,6 +419,7 @@ struct BODY {
   double dViscUMan;        /**< Viscosity UMTBL */
   double dViscLMan;        /**< Viscosity LMTBL */
   double dViscMMan;        /**< Viscosity Mid (ave) mantle */
+  double dDynamViscos;      /**< Dynamic viscosity of the mantle */
   double dViscJumpMan;     /**< Viscosity Jump UM to LM */
   double dShmodUMan;       /**< Shear modulus UMTBL */
   double dShmodLMan;       /**< Shear modulus LMTBL */
@@ -633,47 +508,6 @@ struct BODY {
   double dAdJumpC2CMB;     /**< adiabatic temp jump from ave core to CMB */
   double dElecCondCore;    /**< electrical conductivity of core */
 
-	double dDynamViscos;
-
-  /* ATMESC Parameters */
-  int bAtmEsc;           /**< Apply Module ATMESC? */
-  double dSurfaceWaterMass;
-  double dMinSurfaceWaterMass;
-  double dOxygenMass;
-  double dOxygenMantleMass;
-  double dEnvelopeMass;
-  double dMinEnvelopeMass;
-  double dXFrac;
-  double dAtmXAbsEffH;
-  double dAtmXAbsEffH2O;
-  int iWaterLossModel;
-  int iAtmXAbsEffH2OModel;
-  int iPlanetRadiusModel;
-  int bInstantO2Sink;
-  double dRGDuration;
-  double dKTide;
-  double dMDotWater;
-  double dFHRef;
-  double dOxygenEta;
-  double dCrossoverMass;
-  int bRunaway;
-  int iWaterEscapeRegime;
-  double dFHDiffLim;
-  double dRadXUV;       //lehmer var
-  double dRadSolid;     //lehmer var
-  double dPresSurf;     //lehmer var
-  double dPresXUV;      //lehmer var
-  double dScaleHeight;  //lehmer var
-  double dThermTemp;    //lehmer var
-  double dAtmGasConst;  //lehmer var
-  double dFXUV;         //lehmer var
-  double dJeansTime;
-  double dFlowTemp;
-  int bCalcFXUV;
-	int bEnvelopeLostMessage; /**< Has the envelope lost message been printed? */
-	int bRocheMessage; /** Has the Roche lobe message been printed? */
-	int bIgnoreRocheLobe; /** Ignore Roche lobe overflow? */
-
   /* STELLAR Parameters */
   int bStellar;
   double dLuminosity;
@@ -690,54 +524,7 @@ struct BODY {
   double dLostAngMom;    /**< Angular momemntum lost to space via magnetic braking */
   double dLostEng;       /**< Energy lost to space, i.e. via stellar contraction */
   int bRossbyCut;       /**< Whether or not to shut off magnetic braking for Ro>ROSSBYCRIT */
-	int bEvolveRG;				/**< Whether or not to evolve radius of gyration? Defaults to 0 */
-
-  /* PHOTOCHEM Parameters
-  PHOTOCHEM Photochem;   // Properties for PHOTOCHEM module N/I
-  double dNumAtmLayers;
-  double dNumAtmMolecules;
-  char saMoleculeList[MAXSPECIES][NAMELEN];
-  double **daAtmConcentrations; // TBA: OceanConcentration, IntConcentration
-  double dTropoHeight;
-  double dAtmHeight;
-  double dInsolation;   // Orbit-averaged Insolation
-  double dSurfPressure;
-  //double dSurfAlbedo;   // Bolometric, ultimately will be array
-  int iResolveSeasons;  // ISEASON in PHOTOCHEM.f
-  double dPhotoZenithAngle;
-  int iVaryZenithAngle; // IZYO2 in PHOTOCHEM.f
-  int iHiResGrid;       // LGRID in PHOTOCHEM.f (default = 0, but if hi res., must change INO and IO2)
-  int iOxyAbsCoeffApprox; // IO2 in PHOTOCHEM.f
-  int iNitroAbsCoeffApprox; // INO in PHOTOCHEM.f
-  double dJacobianPerturbFact; // EPSJ
-  int bLightning;
-  double dLightningAmount;
-  int iAerScattering; // How do aerosols scatter? Mie or fractal. Must read files -- talk to Giada
-  int iMaxNumReactions; // Total number of reactions possible for input species list
-  int iMaxWavelengthBin; // Maximum number of wavelength bins -- not all species are created equal
-  int iNumPhotolysisRx; // Number of photochemical reactions
-  int iNumPhotoSpecies;
-  int iNumAqueousSpecies; // Species that dissolve in rain --- must read file
-  int iML; // =12; Shawn doesn't know what these are
-  int iML1; // =ML+1
-  int iML2; // =2*ML
-  double daAtmTempProfile;
-  double daAtmPressProfile;
-  double ***daParticleInfo; // First three dimensions are aerosol species, layer, and property, where property = number density, fall velocity, radius
-
-  double daEddyDiffProfile;
-
-  int bAtmSulfur;
-  int bAtmHydrogen;
-  int bAtmOxygen;
-  int bAtmCarbon;
-  int bAtmNitrogen;
-  int bAtmChlorine;
-
-  // CLIMA Parameters
-  double dArgonPressure;
-  double dClimaZenithAngle;
-  */
+  int bEvolveRG;				/**< Whether or not to evolve radius of gyration? Defaults to 0 */
 
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
@@ -903,6 +690,7 @@ struct BODY {
   double **daIceSheetMat;    /**< Matrix used in ice sheet flow */
   double **daInvMSea;        /**< Inverted matrix in seasonal EBM */
   double *daLambdaSea;       /**< Diffusion terms in seasonal EBM matrix */
+	double dLandFrac;					 /**< Land fraction input by user */
   double *daLandFrac;        /**< Fraction of cell which is land */
   double **daMDiffSea;       /**< Diffusion only matrix in seasonal EBM */
   double **daMEulerCopySea;  /**< Temporary copy of Euler time step matrix (seasonal) */
@@ -1010,6 +798,8 @@ struct BODY {
 	int bCO2InAtmosphere;     /**< Is CO2 present in the atmopshere? */
 	int iRadioHeatModel;			/**< Which Radiogenic Heating model to use */
 	int iMagmOcAtmModel;			/**< Which Atmopsheric Flux model to use */
+	int bOptManQuasiSol;			/**< Solidify mantle inst. when melt frac = 0.4 at surf */
+
 	/* Primary variables */
 	double dPotTemp;          /**< Potential Temp of the mantle [K] */
 	double dSurfTemp;         /**< Surface Temp of the planet [K] */
@@ -1719,7 +1509,7 @@ struct EVOLVE {
   int bFirstStep;        /**< Has the First Dtep Been Taken? */
   int iNumBodies;        /**< Number of Bodies to be Integrated */
   int iOneStep;          /**< Integration Method number */
-  double dCurrentDt;
+  double dCurrentDt;     /**< Current timestep */
 
   // These are to store midpoint derivative info in RK4.
   BODY *tmpBody;         /**< Temporary BODY struct */
@@ -1753,8 +1543,9 @@ struct EVOLVE {
  * control program flow. */
 
 struct IO {
-  int iVerbose;           /**< Verbosity Level. 0=none; 1=error; 2=progress; 3=input; 4=units; 5=all */
-  double dOutputTime;	  /**< Integration Output Interval */
+  int iVerbose;          /**< Verbosity Level. 0=none; 1=error; 2=progress; 3=input; 4=units; 5=all */
+  double dOutputTime;	   /**< Integration Output Interval */
+  double dNextOutput;    /**< Time of next output */
 
   int bLog;               /**< Write Log File? */
 
@@ -1763,6 +1554,13 @@ struct IO {
   int iSciNot;            /**< Crossover Decade to Switch between Standard and Scientific Notation */
 
   int bOverwrite;         /**< Allow files to be overwritten? */
+
+	/* The following record whether an error message that should only be reported
+		 once has been printed. */
+	int bDeltaTimeMessage;  /**< Has the message for DeltaTime on the first timestep been printed? */
+  int *baRocheMessage;    /**< Has the Roche lobe message been printed? */
+	int *baCassiniOneMessage;		/**< Has the CassiniOne message been printed? */
+	int *baCassiniTwoMessage;		/**< Has the CassiniTwo message been printed? */
 };
 
 /* The CONTROL struct contains all the parameters that
@@ -1785,7 +1583,7 @@ struct CONTROL {
   IO Io;
   UNITS *Units;
 
-	char sGitVersion[64];
+  char sGitVersion[64];
 
   /* Move to BODY */
   int *iMassRad;           /**< Mass-Radius Relationship */
@@ -1809,6 +1607,35 @@ struct CONTROL {
   int bOrbiters; /**< Does this simulation have orbiting bodies? */
 
 };
+
+
+/************ FILE INFO *******************/
+
+/* Modules read in and write out over a range of integers. The largest integer
+depends on the total number of modules available. */
+
+/********************
+ * ADJUST AS NEEDED *
+ ********************/
+
+/* Module limits:
+ * EQTIDE: 1000 - 1100
+ * RADHEAT: 1100 - 1200
+ * ATMESC: 1200 - 1300
+ * DISTORB: 1300 - 1400
+ * DISTROT: 1400 - 1500
+ * STELLAR: 1500 - 1600
+ * SPINBODY: 1600 - 1700
+ * THERMINT: 1700 - 1900
+ * POISE: 1900 - 2000
+ * FLARE: 2000 - 2100
+ * BINARY: 2100 - 2200
+ * GALHABIT: 2200 - 2300
+ * MAGMOC: 2300 - 2400
+ */
+// These need to be set to the largest previous limit
+#define MODULEOPTEND        2400
+#define MODULEOUTEND        2400
 
 /* The INFILE struct contains all the information
  * regarding the files that read in. */
@@ -1844,7 +1671,7 @@ struct OUTFILE {
 /* The FILES struct contains all the information
  * regarding every file. */
 
-struct FILES{
+struct FILES {
   char cExe[LINE];             /**< Name of Executable */
   OUTFILE *Outfile;            /**< Output File Name for Forward Integration */
   char cLog[NAMELEN];          /**< Log File Name */
@@ -1855,7 +1682,7 @@ struct FILES{
 /* The OPTIONS struct contains all the information
  * regarding the options, including their file data. */
 
-struct OPTIONS{
+struct OPTIONS {
   char cName[OPTLEN];          /**< Option Name */
   char cDescr[OPTDESCR];       /**< Brief Description of Option */
   char cLongDescr[OPTLONDESCR];/**< Long Description of Option */
@@ -2217,9 +2044,6 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
  * Other Header Files - These are primarily for function declarations
  */
 
-#include <assert.h>
-#include <time.h>
-#include <float.h>
 /* Top-level files */
 #include "body.h"
 #include "control.h"

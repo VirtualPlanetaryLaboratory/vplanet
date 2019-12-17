@@ -2,17 +2,19 @@ VPLanet Examples
 ================
 
 This subdirectory contains examples of numerous ways to use `VPLanet`. A brief
-description of each is provided below, arranged by topic [with modules listed in brackets]. Click on the directory to see scripts,
-plots, and more description of the physics. Use these scripts to reproduce published figures, or as a starting point to begin your own fundamental research. The simulations used to generate these figures are `validated with continuous integration <../tests>`_ with the identical (or representative, in the case of parameter sweeps) initial conditions. Looking for something not present? E-mail Rory Barnes, rory@astro.washington.edu, to inquire if that functionality is available and validated.
+description of each is provided below, arranged by topic [with modules listed in brackets]. Click on the directory to see VPLanet input files, Python scripts,
+plots, and more description of the physics. Use these VPLanet input files and Python scripts to reproduce published figures, or as a starting point to begin your own fundamental research. The simulations used to generate these figures are `validated with continuous integration <../tests>`_ with the identical (or representative, in the case of parameter sweeps) initial conditions. Looking for something not present? E-mail Rory Barnes, rory@astro.washington.edu, to inquire if that functionality is available and validated.
 
-Note that to run the scripts and generate the figures in the subdirectories, you must install `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_.
+It is optional to install vplot and you can run VPLanet with installing vplot. However, to run the Python scripts and generate the figures in the subdirectories, you must install `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_.
 
 **Atmospheres**
 ===============
 
 `AbioticO2 <AbioticO2>`_: Production of abiotic oxygen on terrestrial worlds due to water photolyzation and hydrogen escape. [AtmEsc, STELLAR]
 
-`AtmEscKepler-36 <AtMescKepler-36>`_: The loss of a hydrogen envelope due to stellar XUV flux. [AtmEsc, STELLAR]
+`AtmEscKepler-36 <AtMescKepler-36>`_: Energy-limited hydrogen envelope loss due to stellar XUV flux. [AtmEsc, STELLAR]
+
+`AtmEscRegimes <AtmEscRegimes>`_: Hydrogen envelope loss due to Roche lobe overflow, radiation-recombination-limited escape, energy-limited escape, and "automatic" loss in which the local environment sets the escape rate. [AtmEsc, STELLAR]
 
 `EarthClimate <EarthClimate>`_: Energy balance climate model of Earth over one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
 
@@ -34,7 +36,7 @@ Note that to run the scripts and generate the figures in the subdirectories, you
 
 `TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a low mass star and tidally heated. [EqTide, RadHeat, ThermInt]
 
-`VenusInterior <VenusInterior>`_: Thermal and magnetic evolution of Venus' interior (stagnant lid). [RadHeat, ThermInt]
+`VenusApproxInterior <VenusInterior>`_: Thermal and magnetic evolution of Venus' interior (stagnant lid). [RadHeat, ThermInt]
 
 **Orbital Dynamics**
 ====================

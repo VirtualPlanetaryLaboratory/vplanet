@@ -2,6 +2,7 @@
   @file spinbody.c
   @brief Subroutines that control the integration of the N Body simulation
   @author Hayden Smotherman ([smotherh](https://github.com/smotherh/))
+  
   @date Feb 21 2017
 */
 
@@ -11,9 +12,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "vplanet.h"
-#include "options.h"
-#include "output.h"
-
 
 void BodyCopySpiNBody(BODY *dest,BODY *src,int iFoo,int iNumBodies,int iBody) {
   int jBody, iGravPerts;

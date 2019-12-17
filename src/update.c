@@ -5,13 +5,6 @@
   @date A long, long time ago
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <assert.h>
-#include <ctype.h>
-#include <string.h>
-#include <unistd.h>
 #include "vplanet.h"
 
 void InitializeUpdateBodyPerts(CONTROL *control,UPDATE *update,int iBody) {

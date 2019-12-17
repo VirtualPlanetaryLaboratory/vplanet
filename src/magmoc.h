@@ -106,7 +106,8 @@
 #define OPT_HALTALLPLANETSDESICC  2319
 #define OPT_RADIOHEATMODEL        2320
 #define OPT_MAGMOCATMMODEL        2321
-#define OPT_PRESSCO2ATM           2322
+#define OPT_CO2MASSMOATM          2322
+#define OPT_MANQUASISOL           2323
 
 void AddModuleMagmOc(MODULE*,int,int);
 void BodyCopyMagmOc(BODY*,BODY*,int,int,int);
@@ -116,7 +117,7 @@ void HelpOptionsMagmOc(OPTIONS*);
 void InitializeOptionsMagmOc(OPTIONS*,fnReadOption[]);
 void ReadMassFracFeOIni(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int) ;
 void ReadWaterMassAtm(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadPressCO2Atm(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadCO2MassMOAtm(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadSurfTemp(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadManMeltDensity(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadOptionsMagmOc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
@@ -175,7 +176,7 @@ void FinalizeUpdateOxygenMassSpace(BODY*,UPDATE*,int*,int,int,int);
 #define OUT_WATERFRACMELT      2325
 #define OUT_RADIOPOWER         2326
 #define OUT_TIDALPOWER         2327
-#define OUT_SEMIMAJORAXIS      2328
+//#define OUT_SEMIMAJORAXIS      2328
 #define OUT_HZINNEREDGE        2329
 #define OUT_MELTFRACTION       2330
 #define OUT_CO2MASSMOATM       2331

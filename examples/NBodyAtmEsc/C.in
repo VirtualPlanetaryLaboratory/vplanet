@@ -4,16 +4,16 @@ saModules                 spinbody       # Modules to apply, exact spelling requ
 
 saOutputOrder Time SemiMajorAxis Eccentricity SpiNBodyInc LongP SpiNBodyLongA MeanAnomaly
 # Physical Properties
-dMass                     -3.9           # Mass, negative -> Earth masses
+dMass                     -3.873         # Mass, negative -> Earth masses
 dRadius                   -1.0           # Radius, negative -> Earth radii
 
 # SpiNBody Properties
 bUseOrbParams                    1
 
 # Orbital Properties
-dSemi                     -0.46         # Semi-major axis, negative -> AU
+dSemi                     -0.46604         # Semi-major axis, negative -> AU
 dEcc                       0.0252       # Eccentricity
 dInc                       47           # Inclination (deg)
 dLongP                     108.3        # Longitude of pericenter (deg)
-dLongA                     0            # Longitude of ascending node (deg)
-dMeanA                     357.51716    # Mean Anomoly (deg)
+dLongA                     3.26         # Longitude of ascending node (deg)
+dMeanA                     3.66         # Mean Anomoly (deg)

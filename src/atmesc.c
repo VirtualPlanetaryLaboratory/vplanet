@@ -1533,31 +1533,31 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp / body[iBody].dGravAccel;
     body[iBody].dPresSurf = fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel, body[iBody].dRadSolid);
     body[iBody].dRadXUV = fdLehmerRadius(body,iBody);
-  } else {
+  } else  {
     int iCol,bError = 0;
     for (iCol=0;iCol<files->Outfile[iBody].iNumCols;iCol++) {
       if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_PLANETRADXUV].cName,strlen(output[OUT_PLANETRADXUV].cName)) == 0) {
         /* Match! */
-        fprintf(stderr,"ERROR: Cannot output %s for body %s while using AtmEsc's LOPEZ12 model.\n",
-            output[OUT_PLANETRADXUV].cName,body[iBody].cName);
+        fprintf(stderr,"ERROR: Output option %s only allowed with AtmEsc's LEHMER17 model.\n",
+            output[OUT_PLANETRADXUV].cName);
         bError=1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_RADSOLID].cName,strlen(output[OUT_RADSOLID].cName)) == 0) {
         /* Match! */
-        fprintf(stderr,"ERROR: Cannot output %s for body %s while using AtmEsc's LOPEZ12 model.\n",
-            output[OUT_RADSOLID].cName,body[iBody].cName);
+        fprintf(stderr,"ERROR: Output option %s only allowed with AtmEsc's LEHMER17 model.\n",
+            output[OUT_RADSOLID].cName);
         bError=1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_SCALEHEIGHT].cName,strlen(output[OUT_SCALEHEIGHT].cName)) == 0) {
         /* Match! */
-        fprintf(stderr,"ERROR: Cannot output %s for body %s while using AtmEsc's LOPEZ12 model.\n",
-            output[OUT_SCALEHEIGHT].cName,body[iBody].cName);
+        fprintf(stderr,"ERROR: Output option %s only allowed with AtmEsc's LEHMER17 model.\n",
+            output[OUT_SCALEHEIGHT].cName);
         bError=1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],output[OUT_PRESSURF].cName,strlen(output[OUT_PRESSURF].cName)) == 0) {
         /* Match! */
-        fprintf(stderr,"ERROR: Cannot output %s for body %s while using AtmEsc's LOPEZ12 model.\n",
-            output[OUT_PRESSURF].cName,body[iBody].cName);
+        fprintf(stderr,"ERROR: Output option %s only allowed with AtmEsc's LEHMER17 model.\n",
+            output[OUT_PRESSURF].cName);
         bError=1;
       }
     }
@@ -1571,6 +1571,8 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     body[iBody].dScaleHeight = -1;
     body[iBody].dPresSurf = -1;
   }
+  // XXX Should include additional checks for PROXCEN and NONE
+
 
   if (body[iBody].dSurfaceWaterMass > 0) {
     VerifySurfaceWaterMass(body,options,update,body[iBody].dAge,iBody);

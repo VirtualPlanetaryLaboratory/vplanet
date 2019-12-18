@@ -965,15 +965,13 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
       if (body[iBody].bOcean) {
         // they better have defined k2Ocean, tidalqocean, dSurfaceWaterMass
         // XXX Use option.cName instead of, e.g. bOceanTides
-        if (!(options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1)) {
+        if (options[OPT_TIDALQOCEAN].iLine[iBody+1] == -1) {
           fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_TIDALQOCEAN].cName);
           exit(EXIT_INPUT);
-        }
-        else if (!(options[OPT_SURFACEWATERMASS].iLine[iBody+1] > -1)) {
+        } else if (options[OPT_SURFACEWATERMASS].iLine[iBody+1] == -1) {
           fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_SURFACEWATERMASS].cName);
           exit(EXIT_INPUT);
-        }
-        else if (!(options[OPT_K2OCEAN].iLine[iBody+1] > -1)) {
+        } else if (options[OPT_K2OCEAN].iLine[iBody+1] == -1) {
           fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_K2OCEAN].cName);
           exit(EXIT_INPUT);
         }
@@ -982,18 +980,20 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
       // there is not an envelope!!
       if (!(body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass)) {
         body[iBody].bEnv = 0;
-      }
-      else {
+      } else {
         body[iBody].bEnv = 1;
         body[iBody].dImK2Env = body[iBody].dK2Env / body[iBody].dTidalQEnv;
       }
       // what about an ocean?
-      if (!(body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
+      if (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass) {
         body[iBody].bOcean = 0;
-      }
-      else {
-        body[iBody].bOcean = 1;
-        body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
+      } else {
+        // Only activate ocean if user indicated they wanted to
+        if (options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1 &&
+            options[OPT_K2OCEAN].iLine[iBody+1] > -1) {
+          body[iBody].bOcean = 1;
+          body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
+        }
       }
 
       // there's definitely at least gonna be some rock...
@@ -1008,16 +1008,14 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
         body[iBody].dK2 = body[iBody].dK2Env;
         body[iBody].dImK2Env = body[iBody].dK2Env / body[iBody].dTidalQEnv;
         body[iBody].dImK2 = body[iBody].dImK2Env;
-      }
-      else {
+      } else {
         if (body[iBody].bOcean && (body[iBody].dTidalQ != body[iBody].dTidalQOcean)) {
           fprintf(stderr,"Using dTidalQOcean for %s.\n",body[iBody].cName);
           body[iBody].dTidalQ = body[iBody].dTidalQOcean;
           body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
           body[iBody].dImK2 = body[iBody].dImK2Ocean;
           body[iBody].dK2 = body[iBody].dK2Ocean;
-        }
-        else if (!body[iBody].bEnv && !body[iBody].bOcean && (body[iBody].dTidalQ != body[iBody].dTidalQMan) && (iBody != 0)){
+        } else if (!body[iBody].bEnv && !body[iBody].bOcean && (body[iBody].dTidalQ != body[iBody].dTidalQMan) && (iBody != 0)){
           fprintf(stderr,"Using dTidalQMan for %s.\n",body[iBody].cName);
           // now we just use dTidalQMan and dK2Man
           body[iBody].dImK2Man = body[iBody].dK2Man / body[iBody].dTidalQMan;
@@ -1025,12 +1023,11 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
           body[iBody].dK2 = body[iBody].dK2Man;
           body[iBody].dImK2 = body[iBody].dImK2Man;
         }
-    }
+      }
       // Using tidal radus
-      if(body[iBody].bUseTidalRadius)
-      {
+      if (body[iBody].bUseTidalRadius) {
         // If any tidal radius option is set, the other must be set as well!
-        if(!((options[OPT_TIDALRADIUS].iLine[iBody+1] > -1) && (options[OPT_TIDALRADIUS].iLine[iBody+1] > -1)))
+        if (!((options[OPT_TIDALRADIUS].iLine[iBody+1] > -1) && (options[OPT_TIDALRADIUS].iLine[iBody+1] > -1)))
         {
           fprintf(stderr,"ERROR: if bTidalRadius == 1, must set %s.\n",options[OPT_TIDALRADIUS].cName);
           exit(EXIT_INPUT);

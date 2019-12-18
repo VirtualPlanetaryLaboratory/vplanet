@@ -17,6 +17,7 @@
 #define ATMESC_RRLIM            6           /**< Flag: Radiation/recombination-limited escape */
 #define ATMESC_BALLISTIC        7           /**< Flag: Ballistic escape regime */
 #define ATMESC_NONE             8           /**< Flag: No atmospheric escape */
+// XXX Change to LOPEZ12
 #define ATMESC_LOP12            9           /**< Flag: Lopez (2012) gaseous planet radius model */
 #define ATMESC_PROXCENB         10           /**< Flag: Proxima Centauri b gaseous planet radius model */
 #define ATMESC_LEHMER17         11           /**< Flag: Lehmer & Catling (2017) planet radius model */

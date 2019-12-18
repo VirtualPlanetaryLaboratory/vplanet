@@ -145,7 +145,7 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 
  void WriteBodyInc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
    if (body[iBody].bDistOrb) {
-     *dTmp = 2.*asin(sqrt(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc));
+     *dTmp = fdInclination(body,iBody);
    } else {
      *dTmp = body[iBody].dInc;
    }
@@ -229,7 +229,7 @@ void WriteKecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
  void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
    if (body[iBody].bDistOrb) {
-     *dTmp = atan2(body[iBody].dPinc, body[iBody].dQinc);
+     *dTmp = fdLongA(body,iBody);
    } else {
      *dTmp = body[iBody].dLongA;
    }

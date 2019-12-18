@@ -2,7 +2,7 @@
   @file spinbody.c
   @brief Subroutines that control the integration of the N Body simulation
   @author Hayden Smotherman ([smotherh](https://github.com/smotherh/))
-  
+
   @date Feb 21 2017
 */
 
@@ -455,6 +455,45 @@ void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
 }
 
 //========================== End Verify Functions ==============================
+
+//========================== Start Halt Functions ==============================
+
+/**
+  Check the maximum allowed mutual inclination.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+
+@return TRUE if one mutual incliantion in a system is larger than
+  dHaltMaxMutualInc, FALSE if not
+*/
+int fbHaltMaxMutualIncSpiNBody(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,int iBody) {
+
+  int jBody;
+
+  // Calculate orbital elements
+  for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+    cart2osc(body,iBody);
+  }
+
+  for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+    for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
+      // 0 is to check for halt, not progress
+      if (fbCheckMaxMutualInc(body,evolve,halt,io,iBody,jBody,0)) {
+        return 1;
+      }
+    }
+  }
+
+  return 0;
+}
+
+//========================== Start Halt Functions ==============================
 
 //========================== Coordinate Changes ================================
 void OrbElems2Helio(BODY *body, int iBody) {

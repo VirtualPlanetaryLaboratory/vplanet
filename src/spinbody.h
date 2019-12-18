@@ -86,6 +86,8 @@ void WriteInclinationSpinBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
 void WriteLongASpinBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]);
 void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]);
 
+int fbHaltMaxMutualIncSpiNBody(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+
 // Coordinate Changes
 void OrbElems2Helio(BODY *body, int iBody);
 void Helio2Bary(BODY *body, int iNumBodies, int iBody);

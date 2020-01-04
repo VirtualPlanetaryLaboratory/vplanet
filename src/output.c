@@ -115,6 +115,9 @@ void WriteHecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
   strcpy(cUnit,"");
 }
 
+/************* HABITABLE ZONE LIMITS ***********/
+
+
 void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   /* This output is unusual in that it depends on the presence of other bodies
@@ -137,6 +140,111 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength,cUnit);
   }
+}
+
+void WriteHZLimitRecentVenus(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double *dHZLimits;
+
+  // Get limits
+  dHZLimits = malloc(6*sizeof(double));
+  if (body[iBody].iHZModel == HZ_MODEL_KOPPARAPU)
+    fdHabitableZoneKopparapu2013(body[iBody].dLuminosity,body[iBody].dTemperature,dHZLimits);
+
+  // Recent Venus limit is index 0
+  *dTmp = dHZLimits[0];
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+
+  free(dHZLimits);
+}
+
+void WriteHZLimitRunawayGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double *dHZLimits;
+
+  // Get limits
+  dHZLimits = malloc(6*sizeof(double));
+  if (body[iBody].iHZModel == HZ_MODEL_KOPPARAPU)
+    fdHabitableZoneKopparapu2013(body[iBody].dLuminosity,body[iBody].dTemperature,dHZLimits);
+
+  // Runaway greenhouse limit is index 1
+  *dTmp = dHZLimits[1];
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+
+  free(dHZLimits);
+}
+
+void WriteHZLimitMoistGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double *dHZLimits;
+
+  // Get limits
+  dHZLimits = malloc(6*sizeof(double));
+  if (body[iBody].iHZModel == HZ_MODEL_KOPPARAPU)
+    fdHabitableZoneKopparapu2013(body[iBody].dLuminosity,body[iBody].dTemperature,dHZLimits);
+
+  // Moist greenhouse limit is index 2
+  *dTmp = dHZLimits[2];
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+
+  free(dHZLimits);
+}
+
+void WriteHZLimitMaxGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double *dHZLimits;
+
+  // Get limits
+  dHZLimits = malloc(6*sizeof(double));
+  if (body[iBody].iHZModel == HZ_MODEL_KOPPARAPU)
+    fdHabitableZoneKopparapu2013(body[iBody].dLuminosity,body[iBody].dTemperature,dHZLimits);
+
+  // Maximum greenhouse limit is index 3
+  *dTmp = dHZLimits[3];
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+
+  free(dHZLimits);
+}
+
+void WriteHZLimitEarlyMars(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  double *dHZLimits;
+
+  // Get limits
+  dHZLimits = malloc(6*sizeof(double));
+  if (body[iBody].iHZModel == HZ_MODEL_KOPPARAPU)
+    fdHabitableZoneKopparapu2013(body[iBody].dLuminosity,body[iBody].dTemperature,dHZLimits);
+
+  // Early Mars limit is index 4
+  *dTmp = dHZLimits[4];
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+
+  free(dHZLimits);
 }
 
 /*
@@ -1018,6 +1126,50 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_K2MAN].iModuleBit = THERMINT + EQTIDE;
   fnWrite[OUT_K2MAN] = &WriteK2Man;
 
+  sprintf(output[OUT_HZLIMRECVENUS].cName,"HZLimRecVenus");
+  sprintf(output[OUT_HZLIMRECVENUS].cDescr,"Recent Venus Habitable Zone Limit");
+  sprintf(output[OUT_HZLIMRECVENUS].cNeg,"RSUN");
+  output[OUT_HZLIMRECVENUS].bNeg = 1;
+  output[OUT_HZLIMRECVENUS].dNeg = 1./RSUN;
+  output[OUT_HZLIMRECVENUS].iNum = 1;
+  output[OUT_HZLIMRECVENUS].iModuleBit = STELLAR;
+  fnWrite[OUT_HZLIMRECVENUS] = &WriteHZLimitRecentVenus;
+
+  sprintf(output[OUT_HZLIMRUNAWAY].cName,"HZLimRunaway");
+  sprintf(output[OUT_HZLIMRUNAWAY].cDescr,"Runaway Greenhouse Habitable Zone Limit");
+  sprintf(output[OUT_HZLIMRUNAWAY].cNeg,"RSUN");
+  output[OUT_HZLIMRUNAWAY].bNeg = 1;
+  output[OUT_HZLIMRUNAWAY].dNeg = 1./RSUN;
+  output[OUT_HZLIMRUNAWAY].iNum = 1;
+  output[OUT_HZLIMRUNAWAY].iModuleBit = STELLAR;
+  fnWrite[OUT_HZLIMRUNAWAY] = &WriteHZLimitRunawayGreenhouse;
+
+  sprintf(output[OUT_HZLIMMOIST].cName,"HZLimMoistGreenhouse");
+  sprintf(output[OUT_HZLIMMOIST].cDescr,"Moist Greenhouse Habitable Zone Limit");
+  sprintf(output[OUT_HZLIMMOIST].cNeg,"RSUN");
+  output[OUT_HZLIMMOIST].bNeg = 1;
+  output[OUT_HZLIMMOIST].dNeg = 1./RSUN;
+  output[OUT_HZLIMMOIST].iNum = 1;
+  output[OUT_HZLIMMOIST].iModuleBit = STELLAR;
+  fnWrite[OUT_HZLIMMOIST] = &WriteHZLimitMoistGreenhouse;
+
+  sprintf(output[OUT_HZLIMMAX].cName,"HZLimMaxGreenhouse");
+  sprintf(output[OUT_HZLIMMAX].cDescr,"Maximum Greenhouse Habitable Zone Limit");
+  sprintf(output[OUT_HZLIMMAX].cNeg,"RSUN");
+  output[OUT_HZLIMMAX].bNeg = 1;
+  output[OUT_HZLIMMAX].dNeg = 1./RSUN;
+  output[OUT_HZLIMMAX].iNum = 1;
+  output[OUT_HZLIMMAX].iModuleBit = STELLAR;
+  fnWrite[OUT_HZLIMMAX] = &WriteHZLimitMaxGreenhouse;
+
+  sprintf(output[OUT_HZLIMEARLYMARS].cName,"HZLimEarlyMars");
+  sprintf(output[OUT_HZLIMEARLYMARS].cDescr,"Early Mars Habitable Zone Limit");
+  sprintf(output[OUT_HZLIMEARLYMARS].cNeg,"RSUN");
+  output[OUT_HZLIMEARLYMARS].bNeg = 1;
+  output[OUT_HZLIMEARLYMARS].dNeg = 1./RSUN;
+  output[OUT_HZLIMEARLYMARS].iNum = 1;
+  output[OUT_HZLIMEARLYMARS].iModuleBit = STELLAR;
+  fnWrite[OUT_HZLIMEARLYMARS] = &WriteHZLimitEarlyMars;
 
   sprintf(output[OUT_KECC].cName,"KEcc");
   sprintf(output[OUT_KECC].cDescr,"Poincare's k (=e*cos(varpi)");

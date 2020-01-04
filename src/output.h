@@ -29,11 +29,6 @@
 #define VERBUNITS     4
 #define VERBALL       5
 
-/* File Limits */
-#define OUTLEN        48    /* Maximum number of characters in an output column header */
-#define OUTDESCR      256   /* Number of characters in output description */
-#define OUTLONDESCR   2048  /* Number of characters in output long description */
-
 /* General Outuput 0-999 */
 /* System properties 0-499, body properties 500-999 */
 #define OUTSTART                0
@@ -84,11 +79,15 @@
 
 #define OUT_HECC                600
 #define OUT_HZLIMITDRYRUNAWAY   602
+#define OUT_HZLIMRECVENUS       604 /**< Recent Venus HZ Limit */
+#define OUT_HZLIMRUNAWAY        605 /**< Recent Venus HZ Limit */
+#define OUT_HZLIMMOIST          606 /**< Recent Venus HZ Limit */
+#define OUT_HZLIMMAX            607 /**< Recent Venus HZ Limit */
+#define OUT_HZLIMEARLYMARS      608 /**< Recent Venus HZ Limit */
+#define OUT_INSTELLATION        609
 
-#define OUT_INSTELLATION        604
-
-#define OUT_KECC                605
-#define OUT_ORBECC		          610
+#define OUT_KECC                610
+#define OUT_ORBECC		          615
 #define OUT_ORBEN		            620
 #define OUT_ORBMEANMOTION	      630
 #define OUT_ORBPER	           	640

@@ -78,7 +78,7 @@
 #define OUT_VISCUMAN            595   //Viscosity UMTBL
 
 #define OUT_HECC                600
-#define OUT_HZLIMITDRYRUNAWAY   602
+#define OUT_HZLIMDRYRUNAWAY     602
 #define OUT_HZLIMRECVENUS       604 /**< Recent Venus HZ Limit */
 #define OUT_HZLIMRUNAWAY        605 /**< Recent Venus HZ Limit */
 #define OUT_HZLIMMOIST          606 /**< Recent Venus HZ Limit */

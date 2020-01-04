@@ -1300,20 +1300,23 @@ double fdBaraffe(int iParam, double A, double M, int iOrder, int *iError) {
 }
 
 /** Compute habitable zone limits from Kopparapu et al. (2013). Works with
-    STELLAR and BINARY.
+    any number of stars.
 
-@param dLuminosity Bolometric luminosity
-@param dTeff Effective temperature
-@param daHZLimit A pointer to a 6-dimensional array
+@param body An array of BODY structs
+@param iNumBodies Total number of bodies in a system
+@param daHZLimit A pointer to the array corresponding with the 6 limits
 
 */
 
-void fdHabitableZoneKopparapu2013(double dLuminosity,double dTeff,
-        double *daHZLimit) {
+void fdHabitableZoneKopparapu2013(BODY *body,int iNumBodies,
+      double daHZLimit[6]) {
+
   int iLimit;
-  double dT_star,dSeff[6];
+  double dT_star,dLuminosity,dSeff[6];
   double dSeffSun[6],dCoeffA[6],dCoeffB[6],dCoeffC[6],dCoeffD[6];
 
+  // Caculate total system luminosity
+  dLuminosity = fdLuminosityTotal(body,iNumBodies);
   // Luminosity must be expressed in solar units
   dLuminosity /= LSUN;
 
@@ -1352,7 +1355,8 @@ void fdHabitableZoneKopparapu2013(double dLuminosity,double dTeff,
   dCoeffD[4] = -4.3896e-16;
   dCoeffD[5] = -3.8282e-16;
 
-  dT_star = dTeff - 5700;
+  // Assume central body's effective temperature? XXX Better way?
+  dT_star = body[0].dTemperature - 5700;
 
   for (iLimit=0;iLimit<6;iLimit++) {
     dSeff[iLimit] = dSeffSun[iLimit] + dCoeffA[iLimit]*dT_star + dCoeffB[iLimit]*

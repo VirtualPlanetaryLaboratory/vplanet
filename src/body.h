@@ -106,7 +106,7 @@ void BodyCopy(BODY*,BODY*,EVOLVE*);
 void CalcXYZobl(BODY*,int);
 double CalcDynEllipEq(BODY*,int);
 
-void fdHabitableZoneKopparapu2013(double,double,double*);
+void fdHabitableZoneKopparapu2013(BODY*,int,double[6]);
 
 // RB: Move
 

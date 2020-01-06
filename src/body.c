@@ -1298,3 +1298,71 @@ double fdBaraffe(int iParam, double A, double M, int iOrder, int *iError) {
       return 0;
   }
 }
+
+/** Compute habitable zone limits from Kopparapu et al. (2013). Works with
+    any number of stars.
+
+@param body An array of BODY structs
+@param iNumBodies Total number of bodies in a system
+@param daHZLimit A pointer to the array corresponding with the 6 limits
+
+*/
+
+void fdHabitableZoneKopparapu2013(BODY *body,int iNumBodies,
+      double daHZLimit[6]) {
+
+  int iLimit;
+  double dT_star,dLuminosity,dSeff[6];
+  double dSeffSun[6],dCoeffA[6],dCoeffB[6],dCoeffC[6],dCoeffD[6];
+
+  // Caculate total system luminosity
+  dLuminosity = fdLuminosityTotal(body,iNumBodies);
+  // Luminosity must be expressed in solar units
+  dLuminosity /= LSUN;
+
+  dSeffSun[0] = 1.7763;
+  dSeffSun[1] = 1.0385;
+  dSeffSun[2] = 1.0146;
+  dSeffSun[3] = 0.3507;
+  dSeffSun[4] = 0.2946;
+  dSeffSun[5] = 0.2484;
+
+  dCoeffA[0] = 1.4335e-4;
+  dCoeffA[1] = 1.2456e-4;
+  dCoeffA[2] = 8.1884e-5;
+  dCoeffA[3] = 5.9578e-5;
+  dCoeffA[4] = 4.9952e-5;
+  dCoeffA[5] = 4.2588e-5;
+
+  dCoeffB[0] = 3.3954e-9;
+  dCoeffB[1] = 1.4612e-8;
+  dCoeffB[2] = 1.9394e-9;
+  dCoeffB[3] = 1.6707e-9;
+  dCoeffB[4] = 1.3893e-9;
+  dCoeffB[5] = 1.1963e-9;
+
+  dCoeffC[0] = -7.6364e-12;
+  dCoeffC[1] = -7.6345e-12;
+  dCoeffC[2] = -4.3618e-12;
+  dCoeffC[3] = -3.0058e-12;
+  dCoeffC[4] = -2.5331e-12;
+  dCoeffC[5] = -2.1709e-12;
+
+  dCoeffD[0] = -1.1950e-15;
+  dCoeffD[1] = -1.7511E-15;
+  dCoeffD[2] = -6.8260e-16;
+  dCoeffD[3] = -5.1925e-16;
+  dCoeffD[4] = -4.3896e-16;
+  dCoeffD[5] = -3.8282e-16;
+
+  // Assume central body's effective temperature? XXX Better way?
+  dT_star = body[0].dTemperature - 5700;
+
+  for (iLimit=0;iLimit<6;iLimit++) {
+    dSeff[iLimit] = dSeffSun[iLimit] + dCoeffA[iLimit]*dT_star + dCoeffB[iLimit]*
+        dT_star*dT_star + dCoeffC[iLimit]*pow(dT_star,3) + dCoeffD[iLimit]
+        *pow(dT_star,4);
+    // Limits are in AU, convert to meters
+    daHZLimit[iLimit] = pow(dLuminosity/dSeff[iLimit],0.5)*AUM;
+  }
+}

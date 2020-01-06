@@ -3123,7 +3123,7 @@ void ForceEcc(BODY *body, EVOLVE  *evolve, int iBody) {
   A = body[iBody].dEccAmp;
   C = body[iBody].dEcc0;
 
-  body[iBody].dEcc = (A*sin(2*PI*evolve->dTime/P))+C;
+  body[iBody].dEcc = (0.5*A*sin(2*PI*evolve->dTime/P))+C;
   CalcHK(body,iBody);
 }
 

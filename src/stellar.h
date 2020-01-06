@@ -69,12 +69,6 @@
 #define OUT_ROSSBYNUMBER        1514
 #define OUT_DROTPERDTSTELLAR    1515
 
-#define OUT_HZLIMRECVENUS       1520 /**< Recent Venus HZ Limit */
-#define OUT_HZLIMRUNAWAY        1522 /**< Recent Venus HZ Limit */
-#define OUT_HZLIMMOIST          1524 /**< Recent Venus HZ Limit */
-#define OUT_HZLIMMAX            1526 /**< Recent Venus HZ Limit */
-#define OUT_HZLIMEARLYMARS      1528 /**< Recent Venus HZ Limit */
-
 /* @cond DOXYGEN_OVERRIDE */
 
 void InitializeControlStellar(CONTROL*);
@@ -142,7 +136,6 @@ double fdDRotRateDtMagBrake(BODY*,SYSTEM*,int*);
 double fdTemperature(BODY*,SYSTEM*,int*);
 double fdTemperatureFunctionBaraffe(double, double);
 double fdTemperatureFunctionProximaCen(double,double);
-void fdHabitableZoneKopparapu2013(double,double,double*);
 double fdDJDtMagBrakingStellar(BODY*,SYSTEM*,int*);
 double fdDRadiusDtStellar(BODY*,SYSTEM*,int*);
 double fdDRadGyraDtStellar(BODY*,SYSTEM*,int*);

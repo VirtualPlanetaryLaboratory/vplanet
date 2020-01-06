@@ -615,3 +615,16 @@ double fndUpdateSpiNBodyCoords(BODY *body,EVOLVE *evolve) {
   // TODO: Should this function be *void*?
   return 0;
 }
+
+double fdLuminosityTotal(BODY *body,int iNumBodies) {
+  int iBody;
+  double dLumTot = 0;
+
+  for (iBody=0;iBody<iNumBodies;iBody++) {
+    if (body[iBody].bStellar) {
+      dLumTot += body[iBody].dLuminosity;
+    }
+  }
+
+  return dLumTot;
+}

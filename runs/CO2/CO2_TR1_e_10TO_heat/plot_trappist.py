@@ -6,10 +6,10 @@
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot  as plt
-import seaborn as sns
+# import seaborn as sns
 from time import time
 
-sns.set_style("whitegrid")
+# sns.set_style("whitegrid")
 plt.close('all')
 
 clock = int(time())

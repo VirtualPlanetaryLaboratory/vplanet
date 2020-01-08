@@ -6,10 +6,10 @@
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot  as plt
-import seaborn as sns
+# import seaborn as sns
 from time import time
 
-sns.set_style("whitegrid")
+# sns.set_style("whitegrid")
 plt.close('all')
 
 clock = int(time())
@@ -28,7 +28,7 @@ cmap=plt.get_cmap('nipy_spectral')
 N_Planet = 4
 
 # 40-K abundance (in Earth abundances)
-K40 = 1
+K40 = 1000
 
 # read data
 if N_Planet == 4:
@@ -36,7 +36,7 @@ if N_Planet == 4:
     data = np.loadtxt("Trappist1.e.forward")
     R_N_Planet = 0.913
     M_N_Planet = 0.766
-    Ecc = 0.005
+    Ecc = 0.1
     Name_Planet = 'Trappist-1 e'
     Name_Folder = 'Trappist-1_e'
 elif N_Planet == 5:
@@ -181,20 +181,20 @@ for i in range(n_time):
 # print('-------------------------------------------------------------------')
 # print('-------------------------------------------------------------------')
 
-if (atm_des == 1) and (man_sol == 0):
-    T_Solid = time[n_t_desicc]/1e6
-    T_Desicc = time[n_t_desicc]/1e6
-elif (atm_des == 0) and (man_sol == 0) and (esc_stop == 0):
-    T_Solid = time[n_time-1]/1e6
-    T_Desicc = time[n_time-1]/1e6
-else:
-    T_Solid = time[n_t_solid]/1e6
-    if (atm_des==1):
-        T_Desicc = time[n_t_desicc]/1e6
-    elif (esc_stop==1):
-        T_Desicc = time[n_t_habit]/1e6
-    else:
-        T_Desicc = time[n_time-1]/1e6
+# if (atm_des == 1) and (man_sol == 0):
+#     T_Solid = time[n_t_desicc]/1e6
+#     T_Desicc = time[n_t_desicc]/1e6
+# elif (atm_des == 0) and (man_sol == 0) and (esc_stop == 0):
+#     T_Solid = time[n_time-1]/1e6
+#     T_Desicc = time[n_time-1]/1e6
+# else:
+#     T_Solid = time[n_t_solid]/1e6
+#     if (atm_des==1):
+#         T_Desicc = time[n_t_desicc]/1e6
+#     elif (esc_stop==1):
+#         T_Desicc = time[n_t_habit]/1e6
+#     else:
+#         T_Desicc = time[n_time-1]/1e6
 ### Plot ###
 
 fig = plt.figure(num=None, figsize=(15, 9), dpi=300, facecolor='w', edgecolor='k')
@@ -204,8 +204,8 @@ fig.suptitle(''+str(Name_Planet)+': $M^{ini}_{H_2O} = $ '+str(M_water_mo[0])+' T
 ax1 = fig.add_subplot(331)
 ax1.plot(time*10**-6, Tpot, label='$T_p$', color=cmap(0))
 ax1.plot(time*10**-6, Tsurf, label='$T_{surf}$', linestyle='--', color=cmap(220))
-ax1.axvline(x=T_Solid,linestyle='--', color=cmap(20))
-ax1.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
+# ax1.axvline(x=T_Solid,linestyle='--', color=cmap(20))
+# ax1.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
 ax1.legend(loc='best', frameon=True)
 ax1.set_ylabel('Temperature (K)')
 ax1.set_xscale('log')
@@ -214,8 +214,8 @@ ax1.set_xscale('log')
 # --- Solidification Radius --- #
 ax2 = fig.add_subplot(332, sharex=ax1)
 ax2.plot(time*10**-6, r_sol/R_N_Planet, label='$r_s$', color=cmap(0))
-ax2.axvline(x=T_Solid,linestyle='--', color=cmap(20))
-ax2.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
+# ax2.axvline(x=T_Solid,linestyle='--', color=cmap(20))
+# ax2.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
 ax2.set_ylim([0.5,1])
 ax2.set_ylabel('Solidification radius ($r_p$)')
 
@@ -224,8 +224,8 @@ ax3 = fig.add_subplot(333, sharex=ax1)
 ax3.plot(time*10**-6, M_water_mo-M_water_atm/TO, label='magma ocean', color=cmap(0))
 ax3.plot(time*10**-6, M_water_atm/TO, label='atmosphere', color=cmap(220))
 ax3.plot(time*10**-6, M_water_sol, label='solid', color=cmap(70))
-ax3.axvline(x=T_Solid,linestyle='--', color=cmap(20))
-ax3.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
+# ax3.axvline(x=T_Solid,linestyle='--', color=cmap(20))
+# ax3.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
 ax3.set_ylim([0.001*M_water_mo[0],M_water_mo[0]])
 ax3.legend(loc='best', frameon=True)
 ax3.set_ylabel('Water Mass (TO)')
@@ -236,8 +236,8 @@ ax4 = fig.add_subplot(334, sharex=ax1)
 ax4.plot(time*10**-6, Press_H2O, label='$H_2O$', color=cmap(0))
 ax4.plot(time*10**-6, Press_O, label='$O$', color=cmap(220))
 ax4.plot(time*10**-6, Press_CO2, label='$CO_2$', color=cmap(100))
-ax4.axvline(x=T_Solid,linestyle='--', color=cmap(20))
-ax4.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
+# ax4.axvline(x=T_Solid,linestyle='--', color=cmap(20))
+# ax4.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
 ax4.legend(loc='best', frameon=True)
 ax4.set_ylabel('Atmospheric pressure (bar)')
 ax4.set_yscale('log')
@@ -247,8 +247,8 @@ ax5 = fig.add_subplot(335, sharex=ax1)
 ax5.plot(time*10**-6, Frac_H2O, label='$H_2O$', color=cmap(0))
 ax5.plot(time*10**-6, Frac_Fe2O3, label='$Fe_2O_3$', color=cmap(220))
 ax5.plot(time*10**-6, Frac_CO2, label='$CO_2$', color=cmap(100))
-ax5.axvline(x=T_Solid,linestyle='--', color=cmap(20))
-ax5.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
+# ax5.axvline(x=T_Solid,linestyle='--', color=cmap(20))
+# ax5.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
 ax5.legend(loc='best', frameon=True)
 ax5.set_ylabel('Mass frac in magma ocean')
 # ax5.set_yscale('log')
@@ -259,8 +259,8 @@ ax6 = fig.add_subplot(336, sharex=ax1)
 ax6.plot(time*10**-6, M_O_mo-M_O_atm, label='magma ocean', color=cmap(0))
 ax6.plot(time*10**-6, M_O_atm, label='atmosphere', color=cmap(220))
 ax6.plot(time*10**-6, M_O_sol, label='solid', color=cmap(70))
-ax6.axvline(x=T_Solid,linestyle='--', color=cmap(20))
-ax6.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
+# ax6.axvline(x=T_Solid,linestyle='--', color=cmap(20))
+# ax6.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
 ax6.legend(loc='best', frameon=True)
 ax6.set_ylabel('Oxygen Mass (kg)')
 ax6.set_yscale('log')
@@ -271,8 +271,8 @@ ax6.set_ylim([1e-3*xup,xup])
 ax7 = fig.add_subplot(337, sharex=ax1)
 ax7.plot(time*10**-6, NetFluxAtmo, color=cmap(0))
 ax7.set_ylabel('Atmospheric net flux ($W/m^2$)')
-ax7.axvline(x=T_Solid,linestyle='--', color=cmap(20))
-ax7.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
+# ax7.axvline(x=T_Solid,linestyle='--', color=cmap(20))
+# ax7.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
 ax7.set_yscale('log')
 ax7.set_xlabel('Time (Myrs)')
 
@@ -280,8 +280,8 @@ ax7.set_xlabel('Time (Myrs)')
 ax8 = fig.add_subplot(338, sharex=ax1)
 ax8.plot(time*10**-6, RadioHeat, color=cmap(0), label='Radiogenic')
 ax8.plot(time*10**-6, TidalHeat, color=cmap(220), label='Tidal')
-ax8.axvline(x=T_Solid,linestyle='--', color=cmap(20))
-ax8.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
+# ax8.axvline(x=T_Solid,linestyle='--', color=cmap(20))
+# ax8.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
 ax8.legend(loc='best', frameon=True)
 ax8.set_ylabel('Mantle Heating Power (TW)')
 ax8.set_yscale('log')
@@ -293,8 +293,8 @@ ax9.plot(time*10**-6, M_CO2_mo-M_CO2_atm, label='magma ocean', color=cmap(0))
 ax9.plot(time*10**-6, M_CO2_atm, label='atmosphere', color=cmap(220))
 ax9.plot(time*10**-6, M_CO2_sol, label='solid', color=cmap(70))
 # ax9.plot(time*10**-6, M_CO2_sol+M_CO2_mo, label='total', color=cmap(100))
-ax9.axvline(x=T_Solid,linestyle='--', color=cmap(20))
-ax9.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
+# ax9.axvline(x=T_Solid,linestyle='--', color=cmap(20))
+# ax9.axvline(x=T_Desicc,linestyle='--', color=cmap(140))
 ax9.legend(loc='best', frameon=True)
 ax9.set_ylabel('$CO_2$ Mass (kg)')
 ax9.set_yscale('log')

@@ -23,7 +23,7 @@ individual = 0
 log_plot = 1
 Initial_water = 1
 # read data
-data = np.loadtxt("GJ_eps03_100TO_grey.forward")
+data = np.loadtxt("GJ_eps03_200TO_petit.forward")
 
 time        = data[:,0]  # time (yr)
 Tpot        = data[:,1]  # Potential temp magma ocean (K)
@@ -128,7 +128,7 @@ ax1.plot(time*10**-6, Tsurf, label='$T_{surf}$', color=cmap(220), linestyle='--'
 ax1.legend(loc='best', frameon=True)
 ax1.set_ylabel('Temperature (K)')
 ax1.set_xscale('log')
-ax1.set_xlim([1e-3,1e2])
+ax1.set_xlim([1e-3,time[n_time-1]*1e-6])
 
 ax2 = fig.add_subplot(332, sharex=ax1)
 ax2.plot(time*10**-6, r_sol/1.15, label='$r_s$', color=cmap(0))
@@ -241,7 +241,7 @@ ax9.set_ylabel('Ratio of atoms gained (%)')
 
 
 plt.subplots_adjust(left=0.05, right=0.99, top=0.93, bottom=0.07)
-plt.savefig('Results_GJ1132b.png')
+plt.savefig('plot.png')
 
 # plt.show()
 

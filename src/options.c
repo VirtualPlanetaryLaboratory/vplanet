@@ -524,8 +524,8 @@ void UpdateFoundOptionMulti(INFILE *input,OPTIONS *options,int *iLine,int iNumLi
 void CheckDuplication(FILES *files,OPTIONS *options,char cFile[],int iLine,int iVerbose) {
   int iFile;
 
-  if (options->iMultiFile) {
-    fprintf(stderr,"ERROR: CheckDuplication called, but options. iMultiFile = %d\n",options->iMultiFile);
+  if (options->bMultiFile) {
+    fprintf(stderr,"ERROR: CheckDuplication called, but options. bMultiFile = %d\n",options->bMultiFile);
     exit(EXIT_INPUT);
   }
 
@@ -1081,10 +1081,12 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
 void AssignDefaultDouble(OPTIONS *options,double *dOption,int iNumFiles) {
   int iFile;
 
-  for (iFile=0;iFile<iNumFiles;iFile++)
-    if (options->iLine[iFile] != -1)
-      /* Options already input in other file */
+  for (iFile=0;iFile<iNumFiles;iFile++) {
+    if (options->iLine[iFile] != -1 && !options->bMultiFile) {
+      /* Options already input in other file and can only be set once */
       return;
+    }
+  }
 
   /* If made it here, not input already, so assign default */
   *dOption = options->dDefault;
@@ -1093,10 +1095,12 @@ void AssignDefaultDouble(OPTIONS *options,double *dOption,int iNumFiles) {
 void AssignDefaultInt(OPTIONS *options,int *iOption,int iNumFiles) {
   int iFile;
 
-  for (iFile=0;iFile<iNumFiles;iFile++)
-    if (options->iLine[iFile] != -1)
-      /* Options already input in other file */
+  for (iFile=0;iFile<iNumFiles;iFile++) {
+    if (options->iLine[iFile] != -1 && !options->bMultiFile) {
+      /* Options already input in other file and can only be set once */
       return;
+    }
+  }
 
   /* If made it here, not input already, so assign default */
   *iOption = atoi(options->cDefault);
@@ -1105,10 +1109,12 @@ void AssignDefaultInt(OPTIONS *options,int *iOption,int iNumFiles) {
 void AssignDefaultString(OPTIONS *options,char cOption[],int iNumFiles) {
   int iFile;
 
-  for (iFile=0;iFile<iNumFiles;iFile++)
-    if (options->iLine[iFile] != -1)
-      /* Options already input in other file */
+  for (iFile=0;iFile<iNumFiles;iFile++) {
+    if (options->iLine[iFile] != -1 && !options->bMultiFile) {
+      /* Options already input in other file and can only be set once */
       return;
+    }
+  }
 
   /* If made it here, not input already, so assign default */
   strcpy(cOption,options->cDefault);
@@ -3032,6 +3038,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ALBEDOGLOBAL].cDescr,"Globally averaged albedo");
   sprintf(options[OPT_ALBEDOGLOBAL].cDefault,"0.3");
   options[OPT_ALBEDOGLOBAL].dDefault = 0;
+  options[OPT_ALBEDOGLOBAL].bMultiFile = 1;
   options[OPT_ALBEDOGLOBAL].iType = 2;
   options[OPT_ALBEDOGLOBAL].iModuleBit = 0;
   options[OPT_ALBEDOGLOBAL].bNeg = 0;
@@ -3057,7 +3064,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OUTFILE].cDescr,"Name of Output File");
   sprintf(options[OPT_OUTFILE].cDefault,"cSystemName.backward");
   options[OPT_OUTFILE].iType = 3;
-  options[OPT_OUTFILE].iMultiFile = 1;
+  options[OPT_OUTFILE].bMultiFile = 1;
   options[OPT_OUTFILE].iModuleBit = 0;
   options[OPT_OUTFILE].bNeg = 0;
   options[OPT_OUTFILE].iFileType = 2;
@@ -3175,7 +3182,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_GRCORR].cDefault,"0");
   options[OPT_GRCORR].dDefault = 0;
   options[OPT_GRCORR].iType = 0;
-  options[OPT_GRCORR].iMultiFile = 1;
+  options[OPT_GRCORR].bMultiFile = 1;
   options[OPT_GRCORR].iModuleBit = DISTORB + DISTROT + SPINBODY;
   options[OPT_GRCORR].bNeg = 0;
   options[OPT_GRCORR].iFileType = 1;
@@ -3245,7 +3252,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMINOBL].cDefault,"-1 degrees");
   options[OPT_HALTMINOBL].dDefault = -DEGRAD;
   options[OPT_HALTMINOBL].iType = 2;
-  options[OPT_HALTMINOBL].iMultiFile = 1;
+  options[OPT_HALTMINOBL].bMultiFile = 1;
   options[OPT_HALTMINOBL].iModuleBit = EQTIDE + SPINBODY + DISTORB;
   options[OPT_HALTMINOBL].bNeg = 0;
   options[OPT_HALTMINOBL].iFileType = 2;
@@ -3348,7 +3355,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LONGP].cDefault,"0");
   options[OPT_LONGP].dDefault = 0.0;
   options[OPT_LONGP].iType = 2;
-  options[OPT_LONGP].iMultiFile = 1;
+  options[OPT_LONGP].bMultiFile = 1;
 //   options[OPT_LONGP].dNeg = DEGRAD;
 //   sprintf(options[OPT_LONGP].cNeg,"Degrees");
   options[OPT_LONGP].iModuleBit = DISTORB + SPINBODY;
@@ -3361,7 +3368,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LUMINOSITY].cDefault,"0");
   options[OPT_LUMINOSITY].dDefault = 0;
   options[OPT_LUMINOSITY].iType = 0;
-  options[OPT_LUMINOSITY].iMultiFile = 1;
+  options[OPT_LUMINOSITY].bMultiFile = 1;
   options[OPT_LUMINOSITY].dNeg = LSUN;
   sprintf(options[OPT_LUMINOSITY].cNeg,"Solar Luminosity (LSUN)");
   fnRead[OPT_LUMINOSITY] = &ReadLuminosity;
@@ -3429,7 +3436,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OUTPUTORDER].iModuleBit = 0;
   options[OPT_OUTPUTORDER].bNeg = 0;
   options[OPT_OUTPUTORDER].iFileType = 1;
-  options[OPT_OUTPUTORDER].iMultiFile = 1;
+  options[OPT_OUTPUTORDER].bMultiFile = 1;
 
   sprintf(options[OPT_GRIDOUTPUT].cName,"saGridOutput");
   sprintf(options[OPT_GRIDOUTPUT].cDescr,"Gridded Output Parameter(s)");
@@ -3437,7 +3444,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_GRIDOUTPUT].iType = 14;
   options[OPT_GRIDOUTPUT].iModuleBit = POISE;
   options[OPT_GRIDOUTPUT].bNeg = 0;
-  options[OPT_GRIDOUTPUT].iMultiFile = 1;
+  options[OPT_GRIDOUTPUT].bMultiFile = 1;
   options[OPT_GRIDOUTPUT].iFileType = 1;
 
   sprintf(options[OPT_OUTSCINOT].cName,"iSciNot");
@@ -3504,6 +3511,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ORBSEMI].dDefault = AUM;
   options[OPT_ORBSEMI].iType = 2;
   options[OPT_ORBSEMI].dNeg = AUM;
+  options[OPT_ORBSEMI].bMultiFile = 1;
   sprintf(options[OPT_ORBSEMI].cNeg,"AU");
   options[OPT_ORBSEMI].iModuleBit = 0;
   options[OPT_ORBSEMI].bNeg = 1;
@@ -3515,7 +3523,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_INC].cDefault,"0");
   options[OPT_INC].dDefault = 0.0;
   options[OPT_INC].iType = 2;
-  options[OPT_INC].iMultiFile = 1;
+  options[OPT_INC].bMultiFile = 1;
 //   options[OPT_INC].dNeg = DEGRAD;
 //   sprintf(options[OPT_INC].cNeg,"Degrees");
   options[OPT_INC].iModuleBit = DISTORB + SPINBODY;
@@ -3528,7 +3536,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ARGP].cDefault,"0");
   options[OPT_ARGP].dDefault = 0.0;
   options[OPT_ARGP].iType = 2;
-  options[OPT_ARGP].iMultiFile = 1;
+  options[OPT_ARGP].bMultiFile = 1;
 //   options[OPT_ARGP].dNeg = DEGRAD;
 //   sprintf(options[OPT_ARGP].cNeg,"Degrees");
   options[OPT_ARGP].iModuleBit = DISTORB + SPINBODY + POISE;
@@ -3545,7 +3553,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PRECA].cDefault,"0");
   options[OPT_PRECA].dDefault = 0.0;
   options[OPT_PRECA].iType = 2;
-  options[OPT_PRECA].iMultiFile = 1;
+  options[OPT_PRECA].bMultiFile = 1;
 //   options[OPT_LONGA].dNeg = DEGRAD;
 //   sprintf(options[OPT_LONGA].cNeg,"Degrees");
   options[OPT_PRECA].iModuleBit = SPINBODY + DISTROT + POISE;
@@ -3558,7 +3566,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LONGA].cDefault,"0");
   options[OPT_LONGA].dDefault = 0.0;
   options[OPT_LONGA].iType = 2;
-  options[OPT_LONGA].iMultiFile = 1;
+  options[OPT_LONGA].bMultiFile = 1;
 //   options[OPT_LONGA].dNeg = DEGRAD;
 //   sprintf(options[OPT_LONGA].cNeg,"Degrees");
   options[OPT_LONGA].iModuleBit = SPINBODY + DISTROT + POISE;
@@ -3571,7 +3579,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DYNELLIP].cDefault,"0.00328");
   options[OPT_DYNELLIP].dDefault = 0.00328;
   options[OPT_DYNELLIP].iType = 2;
-  options[OPT_DYNELLIP].iMultiFile = 1;
+  options[OPT_DYNELLIP].bMultiFile = 1;
   options[OPT_DYNELLIP].iModuleBit = SPINBODY + DISTROT + THERMINT;
   options[OPT_DYNELLIP].bNeg = 0;
   options[OPT_DYNELLIP].iFileType = 1;
@@ -3582,7 +3590,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CALCDYNELLIP].cDefault,"0");
   options[OPT_CALCDYNELLIP].dDefault = 0;
   options[OPT_CALCDYNELLIP].iType = 0;
-  options[OPT_CALCDYNELLIP].iMultiFile = 1;
+  options[OPT_CALCDYNELLIP].bMultiFile = 1;
   options[OPT_CALCDYNELLIP].iModuleBit = SPINBODY + DISTROT + THERMINT;
   options[OPT_CALCDYNELLIP].bNeg = 0;
   options[OPT_CALCDYNELLIP].iFileType = 1;
@@ -3593,7 +3601,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SURFACEWATERMASS].cDefault,"0");
   options[OPT_SURFACEWATERMASS].dDefault = 0;
   options[OPT_SURFACEWATERMASS].iType = 2;
-  options[OPT_SURFACEWATERMASS].iMultiFile = 1;
+  options[OPT_SURFACEWATERMASS].bMultiFile = 1;
   options[OPT_SURFACEWATERMASS].dNeg = TOMASS;
   sprintf(options[OPT_SURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
   fnRead[OPT_SURFACEWATERMASS] = &ReadSurfaceWaterMass;
@@ -3604,6 +3612,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MINSURFACEWATERMASS].dDefault = 1.e-5*TOMASS;
   options[OPT_MINSURFACEWATERMASS].iType = 2;
   options[OPT_MINSURFACEWATERMASS].dNeg = TOMASS;
+  options[OPT_MINSURFACEWATERMASS].bMultiFile = 1;
   sprintf(options[OPT_MINSURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
   fnRead[OPT_MINSURFACEWATERMASS] = &ReadMinSurfaceWaterMass;
 
@@ -3612,7 +3621,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ENVELOPEMASS].cDefault,"0");
   options[OPT_ENVELOPEMASS].dDefault = 0;
   options[OPT_ENVELOPEMASS].iType = 2;
-  options[OPT_ENVELOPEMASS].iMultiFile = 1;
+  options[OPT_ENVELOPEMASS].bMultiFile = 1;
   options[OPT_ENVELOPEMASS].dNeg = MEARTH;
   sprintf(options[OPT_ENVELOPEMASS].cNeg,"Earth");
   fnRead[OPT_ENVELOPEMASS] = &ReadEnvelopeMass;
@@ -3637,7 +3646,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MASS].cDefault,"1 Earth Mass");
   options[OPT_MASS].dDefault = MEARTH;
   options[OPT_MASS].iType = 2;
-  options[OPT_MASS].iMultiFile = 1;
+  options[OPT_MASS].bMultiFile = 1;
   options[OPT_MASS].dNeg = MEARTH;
   sprintf(options[OPT_MASS].cNeg,"Earth masses");
   options[OPT_MASS].iModuleBit = 0;
@@ -3650,7 +3659,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_BODYTYPE].cDefault,"0 Planet");
   options[OPT_BODYTYPE].dDefault = 0;
   options[OPT_BODYTYPE].iType = 1;
-  options[OPT_BODYTYPE].iMultiFile = 1;
+  options[OPT_BODYTYPE].bMultiFile = 1;
   options[OPT_BODYTYPE].iModuleBit = 0;
   options[OPT_BODYTYPE].bNeg = 0;
   options[OPT_BODYTYPE].iFileType = 1;
@@ -3660,7 +3669,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MASSRAD].cDescr,"Mass-Radius Relationship for Central Body: GS99 RH00 BO06 Sotin07 ");
   sprintf(options[OPT_MASSRAD].cDefault,"None");
   options[OPT_MASSRAD].iType = 3;
-  options[OPT_MASSRAD].iMultiFile = 1;
+  options[OPT_MASSRAD].bMultiFile = 1;
   options[OPT_MASSRAD].iModuleBit = SPINBODY + DISTROT + POISE + STELLAR + BINARY + EQTIDE;
   options[OPT_MASSRAD].bNeg = 0;
   options[OPT_MASSRAD].iFileType = 1;
@@ -3671,7 +3680,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OBL].cDefault,"0");
   options[OPT_OBL].dDefault = 0;
   options[OPT_OBL].iType = 2;
-  options[OPT_OBL].iMultiFile = 1;
+  options[OPT_OBL].bMultiFile = 1;
   options[OPT_OBL].iModuleBit = SPINBODY + DISTROT + POISE + BINARY + EQTIDE;
   options[OPT_OBL].bNeg = 0;
   options[OPT_OBL].iFileType = 1;
@@ -3682,7 +3691,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_RADIUS].cDefault,"1 Earth Radius");
   options[OPT_RADIUS].dDefault = REARTH;
   options[OPT_RADIUS].iType = 2;
-  options[OPT_RADIUS].iMultiFile = 1;
+  options[OPT_RADIUS].bMultiFile = 1;
   options[OPT_RADIUS].dNeg = REARTH;
   sprintf(options[OPT_RADIUS].cNeg,"Earth radii");
   options[OPT_RADIUS].iModuleBit = 0;
@@ -3695,7 +3704,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_RG].cDefault,"0.5");
   options[OPT_RG].dDefault = 0.5;
   options[OPT_RG].iType = 2;
-  options[OPT_RG].iMultiFile = 1;
+  options[OPT_RG].bMultiFile = 1;
   options[OPT_RG].iModuleBit = 0;
   options[OPT_RG].bNeg = 0;
   options[OPT_RG].iFileType = 1;
@@ -3706,7 +3715,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ROTPER].cDefault,"1 Day");
   options[OPT_ROTPER].dDefault = DAYSEC;
   options[OPT_ROTPER].iType = 2;
-  options[OPT_ROTPER].iMultiFile = 1;
+  options[OPT_ROTPER].bMultiFile = 1;
   options[OPT_ROTPER].dNeg = DAYSEC;
   sprintf(options[OPT_ROTPER].cNeg,"Days");
   options[OPT_ROTPER].iModuleBit = 0;
@@ -3719,7 +3728,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ROTRATE].cDefault,"2*pi/day");
   options[OPT_ROTRATE].dDefault = 2*PI/DAYSEC;
   options[OPT_ROTRATE].iType = 2;
-  options[OPT_ROTRATE].iMultiFile = 1;
+  options[OPT_ROTRATE].bMultiFile = 1;
   options[OPT_ROTRATE].dNeg = 1./DAYSEC;
   sprintf(options[OPT_ROTRATE].cNeg,"/Day");
   options[OPT_ROTRATE].iModuleBit = 0;
@@ -3732,7 +3741,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ROTVEL].cDefault,"0");
   options[OPT_ROTVEL].dDefault = 0;
   options[OPT_ROTVEL].iType = 2;
-  options[OPT_ROTVEL].iMultiFile = 1;
+  options[OPT_ROTVEL].bMultiFile = 1;
   options[OPT_ROTVEL].dNeg = 1e5;
   sprintf(options[OPT_ROTVEL].cNeg,"km/s");
   options[OPT_ROTVEL].iModuleBit = 0;
@@ -3805,7 +3814,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCUMAN].cDefault,"0");
   options[OPT_VISCUMAN].dDefault = 0;
   options[OPT_VISCUMAN].iType = 2;
-  options[OPT_VISCUMAN].iMultiFile = 1;
+  options[OPT_VISCUMAN].bMultiFile = 1;
 //   options[OPT_VISCUMAN].bNeg = 0;
 options[OPT_VISCUMAN].bNeg = 0;
   options[OPT_VISCUMAN].iModuleBit = THERMINT + DISTROT;
@@ -3870,7 +3879,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
     memset(options[iOpt].cName,'\0',OPTLEN);
     sprintf(options[iOpt].cName,"null");
     options[iOpt].iLine = malloc(MAXFILES*sizeof(int));
-    options[iOpt].iMultiFile=0;
+    options[iOpt].bMultiFile=0;
     options[iOpt].iMultiIn=0;
     options[iOpt].iType = -1;
     memset(options[iOpt].cDescr,'\0',OPTDESCR);

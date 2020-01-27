@@ -136,7 +136,7 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DYNELLIP].cDefault,"0.00328");
   options[OPT_DYNELLIP].dDefault = 0.00328;
   options[OPT_DYNELLIP].iType = 2;
-  options[OPT_DYNELLIP].iMultiFile = 1;
+  options[OPT_DYNELLIP].bMultiFile = 1;
   fnRead[OPT_DYNELLIP] = &ReadDynEllip;
 
   sprintf(options[OPT_CALCDYNELLIP].cName,"bCalcDynEllip");
@@ -144,7 +144,7 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CALCDYNELLIP].cDefault,"0");
   options[OPT_CALCDYNELLIP].dDefault = 0;
   options[OPT_CALCDYNELLIP].iType = 0;
-  options[OPT_CALCDYNELLIP].iMultiFile = 1;
+  options[OPT_CALCDYNELLIP].bMultiFile = 1;
   fnRead[OPT_CALCDYNELLIP] = &ReadCalcDynEllip;
 
     sprintf(options[OPT_FORCEPRECRATE].cName,"bForcePrecRate");
@@ -152,15 +152,15 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FORCEPRECRATE].cDefault,"0");
   options[OPT_FORCEPRECRATE].dDefault = 0;
   options[OPT_FORCEPRECRATE].iType = 0;
-  options[OPT_FORCEPRECRATE].iMultiFile = 1;
+  options[OPT_FORCEPRECRATE].bMultiFile = 1;
   fnRead[OPT_FORCEPRECRATE] = &ReadForcePrecRate;
 
   sprintf(options[OPT_PRECRATE].cName,"dPrecRate");
   sprintf(options[OPT_PRECRATE].cDescr,"Fixed rate of axial precession (rad/s)");
-  sprintf(options[OPT_PRECRATE].cDefault,"7.7261e-12");
+  sprintf(options[OPT_PRECRATE].cDefault,"7.7261e-12"); // XXX What valule is this?
   options[OPT_PRECRATE].dDefault = 7.7261e-12;
   options[OPT_PRECRATE].iType = 2;
-  options[OPT_PRECRATE].iMultiFile = 1;
+  options[OPT_PRECRATE].bMultiFile = 1;
   fnRead[OPT_PRECRATE] = &ReadPrecRate;
 
   sprintf(options[OPT_SPECMOMINERTIA].cName,"dSpecMomInertia");
@@ -168,7 +168,7 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SPECMOMINERTIA].cDefault,"0.33");
   options[OPT_SPECMOMINERTIA].dDefault = 0.33;
   options[OPT_SPECMOMINERTIA].iType = 2;
-  options[OPT_SPECMOMINERTIA].iMultiFile = 1;
+  options[OPT_SPECMOMINERTIA].bMultiFile = 1;
   fnRead[OPT_SPECMOMINERTIA] = &ReadSpecMomInertia;
 
 
@@ -177,7 +177,7 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_READORBITDATA].cDefault,"0");
   options[OPT_READORBITDATA].dDefault = 0;
   options[OPT_READORBITDATA].iType = 0;
-  options[OPT_READORBITDATA].iMultiFile = 1;
+  options[OPT_READORBITDATA].bMultiFile = 1;
   fnRead[OPT_READORBITDATA] = &ReadOrbitData;
 
   sprintf(options[OPT_FILEORBITDATA].cName,"sFileOrbitData");

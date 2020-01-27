@@ -1593,7 +1593,7 @@ struct OPTIONS {
   char cDefault[OPTDESCR];     /**< Description of Default Value */
   double dDefault;             /**< Default Value */
   int iModuleBit;              /**< Bitwise sum of modules permitted to read option */
-  int iMultiFile;              /**< Option Permitted in Multiple Inpute Files?  (b?) */
+  int bMultiFile;              /**< Option Permitted in Multiple Input Files? */
   int iMultiIn;
   int *iLine;                  /**< Option's Line number in Input File */
   char *iFile;

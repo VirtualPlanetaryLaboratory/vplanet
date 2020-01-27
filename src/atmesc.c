@@ -719,7 +719,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_XFRAC].cDefault,"1");
   options[OPT_XFRAC].dDefault = 1.0;
   options[OPT_XFRAC].iType = 2;
-  options[OPT_XFRAC].iMultiFile = 1;
+  options[OPT_XFRAC].bMultiFile = 1;
   fnRead[OPT_XFRAC] = &ReadXFrac;
   sprintf(options[OPT_XFRAC].cLongDescr,
     "Ratio of the planet's XUV radius to its total radius. The XUV radius is\n"
@@ -733,7 +733,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH].cDefault,"0.15");
   options[OPT_ATMXABSEFFH].dDefault = 0.15;
   options[OPT_ATMXABSEFFH].iType = 2;
-  options[OPT_ATMXABSEFFH].iMultiFile = 1;
+  options[OPT_ATMXABSEFFH].bMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH] = &ReadAtmXAbsEffH;
   sprintf(options[OPT_XFRAC].cLongDescr,
     "XUV absoprtion efficiency parameter, epsilon_{XUV}, in Eq. (A1) in\n"
@@ -745,7 +745,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH2O].cDefault,"0.30");
   options[OPT_ATMXABSEFFH2O].dDefault = 0.15;
   options[OPT_ATMXABSEFFH2O].iType = 2;
-  options[OPT_ATMXABSEFFH2O].iMultiFile = 1;
+  options[OPT_ATMXABSEFFH2O].bMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2O] = &ReadAtmXAbsEffH2O;
   sprintf(options[OPT_XFRAC].cLongDescr,
     "XUV absoprtion efficiency parameter for water vapor as defined in\n"
@@ -757,7 +757,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDefault,"NONE");
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cValues,"BOLMONT16 NONE");
   options[OPT_ATMXABSEFFH2OMODEL].iType = 3;
-  options[OPT_ATMXABSEFFH2OMODEL].iMultiFile = 1;
+  options[OPT_ATMXABSEFFH2OMODEL].bMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2OMODEL] = &ReadAtmXAbsEffH2OModel;
   sprintf(options[OPT_XFRAC].cLongDescr,
     "If BOLMONT16 is selected, then the value of %s will follow the model of\n"
@@ -770,7 +770,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OXYGENMASS].cDefault,"0");
   options[OPT_OXYGENMASS].dDefault = 0;
   options[OPT_OXYGENMASS].iType = 2;
-  options[OPT_OXYGENMASS].iMultiFile = 1;
+  options[OPT_OXYGENMASS].bMultiFile = 1;
   fnRead[OPT_OXYGENMASS] = &ReadOxygenMass;
   // No LongDescr needed
 
@@ -779,7 +779,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OXYGENMANTLEMASS].cDefault,"0");
   options[OPT_OXYGENMANTLEMASS].dDefault = 0;
   options[OPT_OXYGENMANTLEMASS].iType = 2;
-  options[OPT_OXYGENMANTLEMASS].iMultiFile = 1;
+  options[OPT_OXYGENMANTLEMASS].bMultiFile = 1;
   fnRead[OPT_OXYGENMANTLEMASS] = &ReadOxygenMantleMass;
   // No LongDescr needed
 
@@ -788,7 +788,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_WATERLOSSMODEL].cDefault,"LBEXACT");
   sprintf(options[OPT_WATERLOSSMODEL].cValues,"LB15 LBEXACT TIAN");
   options[OPT_WATERLOSSMODEL].iType = 3;
-  options[OPT_WATERLOSSMODEL].iMultiFile = 1;
+  options[OPT_WATERLOSSMODEL].bMultiFile = 1;
   fnRead[OPT_WATERLOSSMODEL] = &ReadWaterLossModel;
   sprintf(options[OPT_XFRAC].cLongDescr,
     "The water loss rate will be determined by the selected model.\n"
@@ -800,7 +800,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PLANETRADIUSMODEL].cDefault,"NONE");
   sprintf(options[OPT_PLANETRADIUSMODEL].cValues,"LOPEZ12 PROXCENB LEHMER17 NONE.");
   options[OPT_PLANETRADIUSMODEL].iType = 3;
-  options[OPT_PLANETRADIUSMODEL].iMultiFile = 1;
+  options[OPT_PLANETRADIUSMODEL].bMultiFile = 1;
   fnRead[OPT_PLANETRADIUSMODEL] = &ReadPlanetRadiusModel;
   sprintf(options[OPT_XFRAC].cLongDescr,
     "If LOPEZ12 is selected, the planet radius will follow the model in\n"
@@ -813,7 +813,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_INSTANTO2SINK].cDescr,"Is oxygen absorbed instantaneously at the surface?");
   sprintf(options[OPT_INSTANTO2SINK].cDefault,"0");
   options[OPT_INSTANTO2SINK].iType = 0;
-  options[OPT_INSTANTO2SINK].iMultiFile = 1;
+  options[OPT_INSTANTO2SINK].bMultiFile = 1;
   fnRead[OPT_INSTANTO2SINK] = &ReadInstantO2Sink;
   sprintf(options[OPT_XFRAC].cLongDescr,
     "If set to 1, then all oxygen released by photolysis is immediately\n"
@@ -824,7 +824,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_BONDILIMITED].cDescr,"Use Bondi-limited escape for H envelope?");
   sprintf(options[OPT_BONDILIMITED].cDefault,"0");
   options[OPT_BONDILIMITED].iType = 0;
-  options[OPT_BONDILIMITED].iMultiFile = 1;
+  options[OPT_BONDILIMITED].bMultiFile = 1;
   fnRead[OPT_BONDILIMITED] = &ReadBondiLimited;
   sprintf(options[OPT_BONDILIMITED].cLongDescr,
     "Force the atmospheric erosion of a H envelope to be Bondi-limited where the\n"
@@ -838,7 +838,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ENERGYLIMITED].cDescr,"Use energy-limited escape for H envelope?");
   sprintf(options[OPT_ENERGYLIMITED].cDefault,"0");
   options[OPT_ENERGYLIMITED].iType = 0;
-  options[OPT_ENERGYLIMITED].iMultiFile = 1;
+  options[OPT_ENERGYLIMITED].bMultiFile = 1;
   fnRead[OPT_ENERGYLIMITED] = &ReadEnergyLimited;
   sprintf(options[OPT_ENERGYLIMITED].cLongDescr,
     "Force the atmospheric erosion of a H envelope to be energy-limited, i.e. the\n"
@@ -850,7 +850,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_RRLIMITED].cDescr,"Use radiation/recombination-limited escape for H envelope?");
   sprintf(options[OPT_RRLIMITED].cDefault,"0");
   options[OPT_RRLIMITED].iType = 0;
-  options[OPT_RRLIMITED].iMultiFile = 1;
+  options[OPT_RRLIMITED].bMultiFile = 1;
   fnRead[OPT_RRLIMITED] = &ReadRRLimited;
   sprintf(options[OPT_RRLIMITED].cLongDescr,
     "Force the atmospheric erosion of a H envelope to be radiation/recombination-limited, i.e. the\n"
@@ -862,7 +862,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMESCAUTO].cDescr,"Let atmesc determine H envelope escape regime?");
   sprintf(options[OPT_ATMESCAUTO].cDefault,"0");
   options[OPT_ATMESCAUTO].iType = 0;
-  options[OPT_ATMESCAUTO].iMultiFile = 1;
+  options[OPT_ATMESCAUTO].bMultiFile = 1;
   fnRead[OPT_ATMESCAUTO] = &ReadAtmEscAuto;
   sprintf(options[OPT_ATMESCAUTO].cLongDescr,
     "Let AtmEsc determine the proper atmospheric escape regime for an eroding H envelope.\n"
@@ -878,11 +878,13 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTDESICCATED].cDescr,"Halt at Desiccation?");
   sprintf(options[OPT_HALTDESICCATED].cDefault,"0");
   options[OPT_HALTDESICCATED].iType = 0;
+  options[OPT_HALTDESICCATED].bMultiFile = 1;
   fnRead[OPT_HALTDESICCATED] = &ReadHaltMinSurfaceWaterMass;
 
   sprintf(options[OPT_HALTENVELOPEGONE].cName,"bHaltEnvelopeGone");
   sprintf(options[OPT_HALTENVELOPEGONE].cDescr,"Halt When Envelope Evaporates?");
   sprintf(options[OPT_HALTENVELOPEGONE].cDefault,"0");
+  options[OPT_HALTENVELOPEGONE].bMultiFile = 1;
   options[OPT_HALTENVELOPEGONE].iType = 0;
   fnRead[OPT_HALTENVELOPEGONE] = &ReadHaltMinEnvelopeMass;
 
@@ -891,7 +893,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_THERMTEMP].cDefault,"880");
   options[OPT_THERMTEMP].dDefault = 880;
   options[OPT_THERMTEMP].iType = 2;
-  options[OPT_THERMTEMP].iMultiFile = 1;
+  options[OPT_THERMTEMP].bMultiFile = 1;
   fnRead[OPT_THERMTEMP] = &ReadThermTemp;
   sprintf(options[OPT_THERMTEMP].cLongDescr,
     "The thermal temperature of a planet heated by radiation from the primary.\n"
@@ -906,7 +908,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLOWTEMP].cDefault,"400");
   options[OPT_FLOWTEMP].dDefault = 400;
   options[OPT_FLOWTEMP].iType = 2;
-  options[OPT_FLOWTEMP].iMultiFile = 1;
+  options[OPT_FLOWTEMP].bMultiFile = 1;
   fnRead[OPT_FLOWTEMP] = &ReadFlowTemp;
 
   sprintf(options[OPT_JEANSTIME].cName,"dJeansTime");
@@ -914,7 +916,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_JEANSTIME].cDefault,"1 Gyr");
   options[OPT_JEANSTIME].dDefault = 1.e9 * YEARSEC;
   options[OPT_JEANSTIME].iType = 0;
-  options[OPT_JEANSTIME].iMultiFile = 1;
+  options[OPT_JEANSTIME].bMultiFile = 1;
   options[OPT_JEANSTIME].dNeg = 1.e9 * YEARSEC;
   sprintf(options[OPT_JEANSTIME].cNeg,"Gyr");
   fnRead[OPT_JEANSTIME] = &ReadJeansTime;
@@ -924,7 +926,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PRESXUV].cDefault,"5 Pa");
   options[OPT_PRESXUV].dDefault = 5.0;
   options[OPT_PRESXUV].iType = 2;
-  options[OPT_PRESXUV].iMultiFile = 1;
+  options[OPT_PRESXUV].bMultiFile = 1;
   fnRead[OPT_PRESXUV] = &ReadPresXUV;
 
   sprintf(options[OPT_ATMGASCONST].cName,"dAtmGasConst");
@@ -932,13 +934,13 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMGASCONST].cDefault,"4124");
   options[OPT_ATMGASCONST].dDefault = 4124.0;
   options[OPT_ATMGASCONST].iType = 2;
-  options[OPT_ATMGASCONST].iMultiFile = 1;
+  options[OPT_ATMGASCONST].bMultiFile = 1;
   fnRead[OPT_ATMGASCONST] = &ReadAtmGasConst;
 
   sprintf(options[OPT_FXUV].cName,"dFXUV");
   sprintf(options[OPT_FXUV].cDescr,"XUV flux at the body's orbit");
   options[OPT_FXUV].iType = 2;
-  options[OPT_FXUV].iMultiFile = 1;
+  options[OPT_FXUV].bMultiFile = 1;
   fnRead[OPT_FXUV] = &ReadFXUV;
 }
 

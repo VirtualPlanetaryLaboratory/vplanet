@@ -1355,7 +1355,8 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBMEANMOTION].bNeg = 1;
   output[OUT_ORBMEANMOTION].dNeg = DAYSEC;
   output[OUT_ORBMEANMOTION].iNum = 1;
-  output[OUT_ORBMEANMOTION].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY;
+  output[OUT_ORBMEANMOTION].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY +
+                                         ATMESC + POISE;
   fnWrite[OUT_ORBMEANMOTION] = &WriteOrbMeanMotion;
 
   sprintf(output[OUT_ORBPER].cName,"OrbPeriod");
@@ -1364,7 +1365,8 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBPER].bNeg = 1;
   output[OUT_ORBPER].dNeg = 1./DAYSEC;
   output[OUT_ORBPER].iNum = 1;
-  output[OUT_ORBPER].iModuleBit = EQTIDE + DISTORB + BINARY;
+  output[OUT_ORBPER].iModuleBit = EQTIDE + DISTORB + BINARY + POISE + SPINBODY +
+                                  ATMESC;
   fnWrite[OUT_ORBPER] = &WriteOrbPeriod;
 
   sprintf(output[OUT_ORBSEMI].cName,"SemiMajorAxis");
@@ -1373,7 +1375,8 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBSEMI].bNeg = 1;
   output[OUT_ORBSEMI].dNeg = 1./AUM;
   output[OUT_ORBSEMI].iNum = 1;
-  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT + POISE + SPINBODY;
+  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT + POISE
+                                   + SPINBODY + ATMESC;
   fnWrite[OUT_ORBSEMI] = &WriteOrbSemi;
 
   /*

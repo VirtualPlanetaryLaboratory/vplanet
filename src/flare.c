@@ -223,7 +223,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREYINT].cDefault,"20.9 (Proxima)");
   options[OPT_FLAREYINT].dDefault = 20.9;
   options[OPT_FLAREYINT].iType = 2;
-  options[OPT_FLAREYINT].iMultiFile = 1;
+  options[OPT_FLAREYINT].bMultiFile = 1;
   fnRead[OPT_FLAREYINT] = &ReadFlareYInt;
 
   sprintf(options[OPT_FLARESLOPE].cName,"dFlareSlope");
@@ -231,7 +231,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLARESLOPE].cDefault,"-0.68 (Proxima)");
   options[OPT_FLARESLOPE].dDefault = 20.9;
   options[OPT_FLARESLOPE].iType = 2;
-  options[OPT_FLARESLOPE].iMultiFile = 1;
+  options[OPT_FLARESLOPE].bMultiFile = 1;
   fnRead[OPT_FLARESLOPE] = &ReadFlareSlope;
 
   sprintf(options[OPT_FLAREC].cName,"dFlareC");
@@ -239,7 +239,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREC].cDefault,"1.08");
   options[OPT_FLAREC].dDefault = 1.08;
   options[OPT_FLAREC].iType = 2;
-  options[OPT_FLAREC].iMultiFile = 1;
+  options[OPT_FLAREC].bMultiFile = 1;
   fnRead[OPT_FLAREC] = &ReadFlareC;
 
   sprintf(options[OPT_FLAREK].cName,"dFlareK");
@@ -247,7 +247,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREK].cDefault,"-4.4");
   options[OPT_FLAREK].dDefault = -4.4;
   options[OPT_FLAREK].iType = 2;
-  options[OPT_FLAREK].iMultiFile = 1;
+  options[OPT_FLAREK].bMultiFile = 1;
   fnRead[OPT_FLAREK] = &ReadFlareK;
 
   sprintf(options[OPT_FLAREVISWIDTH].cName,"dFlareVisWidth");
@@ -255,7 +255,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREVISWIDTH].cDefault,"3000 Angstroms");
   options[OPT_FLAREVISWIDTH].dDefault = 3e-7;
   options[OPT_FLAREVISWIDTH].iType = 2;
-  options[OPT_FLAREVISWIDTH].iMultiFile = 1;
+  options[OPT_FLAREVISWIDTH].bMultiFile = 1;
   options[OPT_FLAREVISWIDTH].dNeg = 1e-10;
   sprintf(options[OPT_FLAREVISWIDTH].cNeg,"Angstroms");
   fnRead[OPT_FLAREVISWIDTH] = &ReadFlareVisWidth;
@@ -265,7 +265,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREXUVWIDTH].cDefault,"1000 Angstroms");
   options[OPT_FLAREXUVWIDTH].dDefault = 1e-7;
   options[OPT_FLAREXUVWIDTH].iType = 2;
-  options[OPT_FLAREXUVWIDTH].iMultiFile = 1;
+  options[OPT_FLAREXUVWIDTH].bMultiFile = 1;
   options[OPT_FLAREXUVWIDTH].dNeg = 1e-10;
   sprintf(options[OPT_FLAREXUVWIDTH].cNeg,"Angstroms");
   fnRead[OPT_FLAREXUVWIDTH] = &ReadFlareXUVWidth;
@@ -275,7 +275,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREMINENERGY].cDefault,"10^29 ergs");
   options[OPT_FLAREMINENERGY].dDefault = 1e22;
   options[OPT_FLAREMINENERGY].iType = 2;
-  options[OPT_FLAREMINENERGY].iMultiFile = 1;
+  options[OPT_FLAREMINENERGY].bMultiFile = 1;
   options[OPT_FLAREMINENERGY].dNeg = 1e-7;
   sprintf(options[OPT_FLAREMINENERGY].cNeg,"ergs");
   fnRead[OPT_FLAREMINENERGY] = &ReadFlareMinEnergy;
@@ -285,7 +285,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREMAXENERGY].cDefault,"10^33 ergs");
   options[OPT_FLAREMAXENERGY].dDefault = 1e26;
   options[OPT_FLAREMAXENERGY].iType = 2;
-  options[OPT_FLAREMAXENERGY].iMultiFile = 1;
+  options[OPT_FLAREMAXENERGY].bMultiFile = 1;
   options[OPT_FLAREMAXENERGY].dNeg = 1e-7;
   sprintf(options[OPT_FLAREMAXENERGY].cNeg,"ergs");
   fnRead[OPT_FLAREMAXENERGY] = &ReadFlareMaxEnergy;

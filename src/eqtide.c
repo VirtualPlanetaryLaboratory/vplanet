@@ -1635,7 +1635,8 @@ void FinalizeUpdateSemiEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 /* Double Synchronous? */
 
 /* How is this handled for multi-planet systems? XXX */
-int HaltDblSync(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltDblSync(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   /* Forbidden if iNumBodies > 2 XXX Add to VerifyHalts */
 
   /* dMeanMotion set by call to TidalProperties in Evolve() */
@@ -1653,7 +1654,8 @@ int HaltDblSync(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int i
 }
 
 /* Tide-locked? */
-int HaltTideLock(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltTideLock(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   /* Forbidden for body 0 if iNumBodies > 2 XXX Add to VerifyHalts*/
 
   if ((body[iBody].dRotRate == body[iBody].dMeanMotion) && halt->bTideLock) {
@@ -1673,7 +1675,8 @@ int HaltTideLock(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int 
 }
 
 /* Synchronous Rotation? */
-int HaltSyncRot(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltSyncRot(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   /* Forbidden for body 0 if iNumBodies > 2 XXX Add to VerifyHalts */
 
   if (halt->bSync && (body[iBody].dRotRate == body[iBody].dMeanMotion)) {

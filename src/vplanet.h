@@ -1477,7 +1477,8 @@ typedef void (*fnForceBehaviorModule)(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */
 
-typedef int (*fnHaltModule)(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+typedef int (*fnHaltModule)(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,
+							int);
 
 struct CONTROL {
   EVOLVE Evolve;

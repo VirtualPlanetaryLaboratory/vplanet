@@ -44,5 +44,6 @@ double fdRadiusStarDt(BODY*,int);
 double fdSemiTidalLockBinEqSt(BODY*,int,int);
 double fndUpdateSpiNBodyCoords(BODY*,EVOLVE*);
 
+void fdMergePlanet(BODY*,UPDATE*,fnUpdateVariable***,int);
 
 /* @endcond */

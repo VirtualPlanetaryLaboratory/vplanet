@@ -1,6 +1,6 @@
 # Primary input file to demonstrate coupling between AtmEsc and EqTide with
 # water present
-sSystemName               Trappist1
+sSystemName               WaterCTL
 iVerbose                  5
 bOverwrite                1
 

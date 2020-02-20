@@ -6,9 +6,9 @@ dRadGyra        0.5        # Radius of gyration (moment of inertia constant)
 
 
 # EQTIDE Parameters
-dTidalQ        1.0e6      # Tidal phase lag
+dTidalTau      -0.01      # Tidal time lag, negative => seconds
 dK2            0.5        # Love number of degree 2
-sTideModel     p2         # Tidal model, p2=CPL, t8=CTL
+sTideModel     t8         # Tidal model, p2=CPL, t8=CTL
 saTidePerts    b          # Body name(s) of tidal perturbers
 
 sStellarModel  none

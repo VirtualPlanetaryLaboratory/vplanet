@@ -7,6 +7,14 @@ dMass               -1.017         # Mass, negative -> Earth masses
 dRadius             -1.121         # Radius, negative -> Earth radii
 dRadGyra	          0.5
 
+# Rotational Properties
+dRotPeriod          -1              # Negative => days
+dObliquity          23.5
+
+# Orbital Properties
+dSemi               -0.01154775    # Semi-major axis, negative -> AU
+dEcc                0.0062         # Eccentricity
+
 # AtmEsc Properties
 dXFrac              1.0
 dSurfWaterMass      -10.0
@@ -15,17 +23,11 @@ sWaterLossModel     lbexact
 sAtmXAbsEffH2OModel bolmont16
 bInstantO2Sink      0
 
-dRotPeriod          -1            # Negative => days
-
-# Orbital Properties
-dSemi               -0.01154775    # Semi-major axis, negative -> AU
-dEcc                0.0062         # Eccentricity
-
 # EQTIDE Parameters
-dTidalQ             100     # Tidal Q
+dTidalTau           -63     # Tidal time lag, negative => seconds
 dK2                 0.299   # Love number of degree 2 (Yoder 1995)
 saTidePerts	        star
-dMaxLockDiff        0.1
+dMaxLockDiff        0.01
 
-saOutputOrder  Time -SurfWaterMass -OxygenMass -SemiMajorAxis -DeccDtEqtide $
-               -EccTimeEqtide -RotPer
+saOutputOrder  Time -SurfWaterMass -OxygenMass -SemiMajorAxis Eccentricity $
+               -RotPer Obliquity

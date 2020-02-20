@@ -1,9 +1,9 @@
-# auto
-sName		    auto        	      # Body's name
-saModules 	atmesc eqtide      # Active modules
+# Bondi
+sName		    bondi     	        # Body's name
+saModules 	atmesc eqtide       # Active modules
 
 # Physical Parameters
-dMass		           -2 	        # Mass, negative -> Earth masses
+dMass		           -2.0	        # Mass, negative -> Earth masses
 sPlanetRadiusModel lopez12      # Mass-radius model
 dRadGyra	         0.4	        # Radius of gyration; ang. mom. coeff.
 dAge               1.0e6        # Age [yr]
@@ -13,8 +13,8 @@ dRotPeriod         -0.5         # Rotation period (days)
 dObliquity          45          # Obliquity
 
 # Orbital Parameters
-dEcc            0.20            # Eccentricity
-dSemi           -0.1            # Semi-major axis [AU]
+dEcc            0.2            # Eccentricity
+dSemi           -0.05            # Semi-major axis [AU]
 
 # ATMESC Parameters
 dXFrac                  1.0     # X-Ray/XUV absorption radius in planet radii
@@ -22,13 +22,14 @@ dAtmXAbsEffH            0.1     # H X-ray/XUV absorption efficiency (epsilon)
 dEnvelopeMass           -1.0    # Initial H envelope mass, negative -> Earth Mass
 bHaltEnvelopeGone       0	      # Halt when H enevlope evaporated?
 dJeansTime		          -12.0   # Time when flow transitions to ballistic escape (Gyr)
-bAtmEscAuto             1       # Should atmesc decide the escape regime?
+bUseBondiLimited        1       # Is the flow Bondi-limited?
 
 # EqTide Parameters
-dTidalQEnv          1e5
-dK2Env              0.5
+dTidalTau           -0.1
+dK2                 0.5
 saTidePerts	        star
 dMaxLockDiff        0.01
+bHaltMerge          1
 
 saOutputOrder 	Time -Mass -EnvelopeMass -PlanetRadius $
                 -SemiMajorAxis Eccentricity -RotPer Obliquity

@@ -168,11 +168,20 @@ int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
 
   /* Sometimes integration overshoots and dSemi becomes NaN -> merger */
   if (body[iBody].dSemi != body[iBody].dSemi) {
-    if (io->iVerbose > VERBPROG)
-      printf("HALT: Merge at %.2e years!\n",evolve->dTime/YEARSEC);
-      printf("Numerical merger: body %d's dSemi became a NaN! Try decreasing dEta by a factor of 10.\n",iBody);
-
-    return 1;
+    if (halt->bMerge) {
+      if (io->iVerbose > VERBPROG) {
+        printf("HALT: Merge at %.2e years!\n",evolve->dTime/YEARSEC);
+        printf("Numerical merger: %s's dSemi became a NaN! Try decreasing dEta by "
+               "a factor of 10.\n",body[iBody].cName);
+      }
+      return 1;
+    } else {
+      if (io->iVerbose > VERBPROG) {
+        printf("Bodies %s and %s merged at %.2e years!\n",body[0].cName,
+        body[iBody].cName,evolve->dTime/YEARSEC);
+      }
+      fdMergePlanet(body,update,fnUpdate,iBody);
+    }
   }
 
   // Is iBody not using binary?

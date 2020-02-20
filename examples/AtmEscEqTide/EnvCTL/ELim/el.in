@@ -1,0 +1,35 @@
+# energy-limited
+sName		el        	            # Body's name
+saModules 	atmesc eqtide       # Active modules
+
+# Physical Parameters
+dMass		           -2.0         # Mass, negative -> Earth masses
+sPlanetRadiusModel lopez12      # Mass-radius model
+dRadGyra	         0.4	        # Radius of gyration; ang. mom. coeff.
+dAge               1.0e6        # Age [yr]
+
+# Rotational Parameters
+dRotPeriod         -0.5         # Rotation period (days)
+dObliquity          45          # Obliquity
+
+# Orbital Parameters
+dEcc            0.2             # Eccentricity
+dSemi           -0.1            # Semi-major axis [AU]
+
+# AtmEsc Parameters
+dXFrac                  1.0     # X-Ray/XUV absorption radius in planet radii
+dAtmXAbsEffH            0.1     # H X-ray/XUV absorption efficiency (epsilon)
+dEnvelopeMass           -1.0    # Initial H envelope mass, negative -> Earth Mass
+bHaltEnvelopeGone       0	      # Halt when H envelope evaporated?
+dJeansTime		          -12.0   # Time when flow transitions to ballistic escape (Gyr)
+bUseEnergyLimited       1       # Is the flow energy-limited?
+
+# EqTide Parameters
+dTidalTau           -0.1
+dK2                 0.5
+saTidePerts	        star
+dMaxLockDiff        0.01
+bHaltMerge          1
+
+saOutputOrder 	Time -Mass -EnvelopeMass -PlanetRadius $
+                -SemiMajorAxis Eccentricity -RotPer Obliquity

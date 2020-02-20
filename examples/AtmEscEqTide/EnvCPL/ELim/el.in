@@ -29,6 +29,7 @@ dTidalQEnv          1e5
 dK2Env              0.5
 saTidePerts	        star
 dMaxLockDiff        0.01
+bHaltMerge          1
 
 saOutputOrder 	Time -Mass -EnvelopeMass -PlanetRadius $
                 -SemiMajorAxis Eccentricity -RotPer Obliquity

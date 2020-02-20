@@ -4,10 +4,7 @@ iVerbose                  5
 bOverwrite                1
 
 saBodyFiles               star.in $ # The star
-                          bondi.in $ # Planet in Roche lobe overflow
-                          rr.in $ # Radiation-recombination-limited 
-                          el.in $ # Energy-limited
-                          auto.in # Automatic mass loss
+                          rr.in  # Radiation-recombination-limited
 
 sUnitMass                 solar
 sUnitLength               AU
@@ -21,5 +18,5 @@ dMinValue                 1e-10
 bDoForward                1
 bVarDt                    1
 dEta                      0.01
-dStopTime                 1e9
-dOutputTime               1e5
+dStopTime                 1e8
+dOutputTime               1e3

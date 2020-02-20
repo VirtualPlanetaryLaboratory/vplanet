@@ -14,7 +14,7 @@ dLuminosity    -5e-4      # Negative => solar units
 dSatXUVFrac    1e-3       # With no evolution, L_XUV = dLuminosity * dSatXUVFrac
 
 # EQTIDE Parameters
-dTidalQ        1.0e6      # Tidal phase lag
+dTidalTau        -0.01      # Tidal time lag (sec)
 dK2            0.5        # Love number of degree 2
-sTideModel     p2         # Tidal model, p2=CPL, t8=CTL
-saTidePerts    el rr bondi auto          # Body name(s) of tidal perturbers
+sTideModel     t8         # Tidal model, p2=CPL, t8=CTL
+saTidePerts    bondi          # Body name(s) of tidal perturbers

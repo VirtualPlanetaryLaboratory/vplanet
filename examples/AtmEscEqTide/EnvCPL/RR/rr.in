@@ -14,7 +14,7 @@ dObliquity          45          # Obliquity
 
 # Orbital Parameters
 dEcc            0.2            # Eccentricity
-dSemi           -0.1            # Semi-major axis [AU]
+dSemi           -0.05            # Semi-major axis [AU]
 
 # ATMESC Parameters
 dXFrac                  1.0     # X-Ray/XUV absorption radius in planet radii
@@ -29,7 +29,7 @@ dTidalQEnv          1e5
 dK2Env              0.5
 saTidePerts	        star
 dMaxLockDiff        0.01
-bHaltMerge          0
+bHaltMerge          1
 
 saOutputOrder 	Time -Mass -EnvelopeMass -PlanetRadius $
                 -SemiMajorAxis Eccentricity -RotPer Obliquity

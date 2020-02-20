@@ -654,4 +654,5 @@ void fdMergePlanet(BODY *body,UPDATE *update,fnUpdateVariable ***fnUpdate,
   // Add orbiter's mass to central body
   body[0].dMass += body[iBody].dMass;
   body[iBody].dMass = 0;
+  body[iBody].dSemi = body[0].dRadius;
 }

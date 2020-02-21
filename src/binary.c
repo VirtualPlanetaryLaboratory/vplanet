@@ -355,7 +355,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FREEECC].cDefault,"0.0");
   options[OPT_FREEECC].dDefault = 0.0;
   options[OPT_FREEECC].iType = 2;
-  options[OPT_FREEECC].iMultiFile = 1;
+  options[OPT_FREEECC].bMultiFile = 1;
   fnRead[OPT_FREEECC] = &ReadFreeEcc;
 
   sprintf(options[OPT_FREEINC].cName,"dFreeInc");
@@ -363,7 +363,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FREEINC].cDefault,"0.0 degrees");
   options[OPT_FREEINC].dDefault = 0.0;
   options[OPT_FREEINC].iType = 2;
-  options[OPT_FREEINC].iMultiFile = 1;
+  options[OPT_FREEINC].bMultiFile = 1;
   fnRead[OPT_FREEINC] = &ReadFreeInc;
 
   sprintf(options[OPT_LL13PHIAB].cName,"dLL13PhiAB");
@@ -371,7 +371,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13PHIAB].cDefault,"0.0 degrees");
   options[OPT_LL13PHIAB].dDefault = 0.0;
   options[OPT_LL13PHIAB].iType = 2;
-  options[OPT_LL13PHIAB].iMultiFile = 1;
+  options[OPT_LL13PHIAB].bMultiFile = 1;
   fnRead[OPT_LL13PHIAB] = &ReadLL13PhiAB;
 
   sprintf(options[OPT_CBPM0].cName,"dCBPM0");
@@ -379,7 +379,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CBPM0].cDefault,"0.0 degrees");
   options[OPT_CBPM0].dDefault = 0.0;
   options[OPT_CBPM0].iType = 2;
-  options[OPT_CBPM0].iMultiFile = 1;
+  options[OPT_CBPM0].bMultiFile = 1;
   fnRead[OPT_CBPM0] = &ReadCBPM0;
 
   sprintf(options[OPT_CBPZETA].cName,"dCBPZeta");
@@ -387,7 +387,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CBPZETA].cDefault,"0.0 degrees");
   options[OPT_CBPZETA].dDefault = 0.0;
   options[OPT_CBPZETA].iType = 2;
-  options[OPT_CBPZETA].iMultiFile = 1;
+  options[OPT_CBPZETA].bMultiFile = 1;
   fnRead[OPT_CBPZETA] = &ReadCBPZeta;
 
   sprintf(options[OPT_CBPPSI].cName,"dCBPPsi");
@@ -395,7 +395,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CBPPSI].cDefault,"0.0 degrees");
   options[OPT_CBPPSI].dDefault = 0.0;
   options[OPT_CBPPSI].iType = 2;
-  options[OPT_CBPPSI].iMultiFile = 1;
+  options[OPT_CBPPSI].bMultiFile = 1;
   fnRead[OPT_CBPPSI] = &ReadCBPPsi;
 
   /* Note: One should never actually set LL13 values as they are ALWAYS
@@ -409,7 +409,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13N0].cDefault,"1 /yr");
   options[OPT_LL13N0].dDefault = 1./YEARSEC;
   options[OPT_LL13N0].iType = 2;
-  options[OPT_LL13N0].iMultiFile = 1;
+  options[OPT_LL13N0].bMultiFile = 1;
   options[OPT_LL13N0].dNeg = 1./YEARSEC;
   sprintf(options[OPT_LL13N0].cNeg,"/Year");
   fnRead[OPT_LL13N0] = &ReadLL13N0;
@@ -419,7 +419,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13K0].cDefault,"1 /yr");
   options[OPT_LL13K0].dDefault = 1./YEARSEC;
   options[OPT_LL13K0].iType = 2;
-  options[OPT_LL13K0].iMultiFile = 1;
+  options[OPT_LL13K0].bMultiFile = 1;
   options[OPT_LL13K0].dNeg = 1./YEARSEC;
   sprintf(options[OPT_LL13K0].cNeg,"/Year");
   fnRead[OPT_LL13K0] = &ReadLL13K0;
@@ -429,7 +429,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13V0].cDefault,"1 /yr");
   options[OPT_LL13V0].dDefault = 1./YEARSEC;
   options[OPT_LL13V0].iType = 2;
-  options[OPT_LL13V0].iMultiFile = 1;
+  options[OPT_LL13V0].bMultiFile = 1;
   options[OPT_LL13V0].dNeg = 1./YEARSEC;
   sprintf(options[OPT_LL13V0].cNeg,"/Year");
   fnRead[OPT_LL13V0] = &ReadLL13V0;

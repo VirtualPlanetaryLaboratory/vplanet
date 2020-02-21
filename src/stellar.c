@@ -291,7 +291,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SATXUVFRAC].cDefault,"1e-3");
   options[OPT_SATXUVFRAC].dDefault = 1.e-3;
   options[OPT_SATXUVFRAC].iType = 0;
-  options[OPT_SATXUVFRAC].iMultiFile = 1;
+  options[OPT_SATXUVFRAC].bMultiFile = 1;
   fnRead[OPT_SATXUVFRAC] = &ReadSatXUVFrac;
   sprintf(options[OPT_SATXUVFRAC].cLongDescr,
     "After formation stars emit a nearly constant amount of XUV radiation\n"
@@ -304,7 +304,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SATXUVTIME].cDefault,"0.1 Gyr");
   options[OPT_SATXUVTIME].dDefault = 1.e8 * YEARSEC;
   options[OPT_SATXUVTIME].iType = 0;
-  options[OPT_SATXUVTIME].iMultiFile = 1;
+  options[OPT_SATXUVTIME].bMultiFile = 1;
   options[OPT_SATXUVTIME].dNeg = 1e9*YEARSEC;
   sprintf(options[OPT_SATXUVTIME].cNeg,"Gyr");
   fnRead[OPT_SATXUVTIME] = &ReadSatXUVTime;
@@ -316,7 +316,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_XUVBETA].cDefault,"1.23");
   options[OPT_XUVBETA].dDefault = 1.23;
   options[OPT_XUVBETA].iType = 0;
-  options[OPT_XUVBETA].iMultiFile = 1;
+  options[OPT_XUVBETA].bMultiFile = 1;
   fnRead[OPT_XUVBETA] = &ReadXUVBeta;
   sprintf(options[OPT_XUVBETA].cLongDescr,
     "After the \"saturation\" phase, the ratio of the XUV to total luminosity\n"
@@ -328,7 +328,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_STELLARMODEL].cDefault,"BARAFFE");
   sprintf(options[OPT_STELLARMODEL].cValues,"BARAFFE PROXIMA NONE");
   options[OPT_STELLARMODEL].iType = 3;
-  options[OPT_STELLARMODEL].iMultiFile = 1;
+  options[OPT_STELLARMODEL].bMultiFile = 1;
   fnRead[OPT_STELLARMODEL] = &ReadStellarModel;
   sprintf(options[OPT_STELLARMODEL].cLongDescr,
     "If BARAFFE is selected, luminosity, effective temperature, radius, and\n"
@@ -342,7 +342,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MAGBRAKINGMODEL].cDefault,"REINERS");
   sprintf(options[OPT_MAGBRAKINGMODEL].cValues,"REINERS, SKUMANICH, MATT, NONE");
   options[OPT_MAGBRAKINGMODEL].iType = 3;
-  options[OPT_MAGBRAKINGMODEL].iMultiFile = 1;
+  options[OPT_MAGBRAKINGMODEL].bMultiFile = 1;
   fnRead[OPT_MAGBRAKINGMODEL] = &ReadMagBrakingModel;
   sprintf(options[OPT_STELLARMODEL].cLongDescr,
     "If REINERS is selected, the stellar magnetic braking model of\n"
@@ -356,7 +356,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_WINDMODEL].cDescr,"Wind Angular Momentum Loss Model");
   sprintf(options[OPT_WINDMODEL].cDefault,"REINERS");
   options[OPT_WINDMODEL].iType = 3;
-  options[OPT_WINDMODEL].iMultiFile = 1;
+  options[OPT_WINDMODEL].bMultiFile = 1;
   fnRead[OPT_WINDMODEL] = &ReadWindModel;
   sprintf(options[OPT_WINDMODEL].cLongDescr,
     "If REINERS is selected, the stellar wind model of Reiners and Mohanty\n"
@@ -368,7 +368,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_XUVMODEL].cDefault,"RIBAS");
   sprintf(options[OPT_XUVMODEL].cValues, "RIBAS REINERS NONE");
   options[OPT_XUVMODEL].iType = 3;
-  options[OPT_XUVMODEL].iMultiFile = 1;
+  options[OPT_XUVMODEL].bMultiFile = 1;
   options[OPT_XUVMODEL].iModuleBit = STELLAR;
   fnRead[OPT_XUVMODEL] = &ReadXUVModel;
   sprintf(options[OPT_XUVMODEL].cLongDescr,
@@ -385,7 +385,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HZMODEL].cDescr,"Habitable Zone Model: Kopparapu13");
   sprintf(options[OPT_HZMODEL].cDefault,"Kopparapu13");
   options[OPT_HZMODEL].iType = 3;
-  options[OPT_HZMODEL].iMultiFile = 1;
+  options[OPT_HZMODEL].bMultiFile = 1;
   fnRead[OPT_HZMODEL] = &ReadHZModel;
   sprintf(options[OPT_HZMODEL].cLongDescr,
     "If KOPPARAPU13 is selected then the Recent Venus, Runaway Greenhouse,\n"
@@ -398,7 +398,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TEMPERATURE].cDefault,"TSUN");
   options[OPT_TEMPERATURE].dDefault = TSUN;
   options[OPT_TEMPERATURE].iType = 0;
-  options[OPT_TEMPERATURE].iMultiFile = 1;
+  options[OPT_TEMPERATURE].bMultiFile = 1;
   fnRead[OPT_TEMPERATURE] = &ReadTemperature;
 
   sprintf(options[OPT_HALTENDBARAFFEFGRID].cName,"bHaltEndBaraffeGrid");
@@ -416,7 +416,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ROSSBYCUT].cDescr,"Terminate magnetic braking when Rossby number > 2.08?");
   sprintf(options[OPT_ROSSBYCUT].cDefault,"0");
   options[OPT_ROSSBYCUT].iType = 0;
-  options[OPT_ROSSBYCUT].iMultiFile = 1;
+  options[OPT_ROSSBYCUT].bMultiFile = 1;
   options[OPT_ROSSBYCUT].iModuleBit = STELLAR;
   fnRead[OPT_ROSSBYCUT] = &ReadRossbyCut;
   sprintf(options[OPT_ROSSBYCUT].cLongDescr,
@@ -429,7 +429,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_EVOVLERG].cDescr,"Evolve stellar radius of gyration?");
   sprintf(options[OPT_EVOVLERG].cDefault,"1");
   options[OPT_EVOVLERG].iType = 0;
-  options[OPT_EVOVLERG].iMultiFile = 1;
+  options[OPT_EVOVLERG].bMultiFile = 1;
   options[OPT_EVOVLERG].iModuleBit = STELLAR;
   fnRead[OPT_EVOVLERG] = &ReadEvolveRG;
   sprintf(options[OPT_EVOVLERG].cLongDescr,

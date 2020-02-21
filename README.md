@@ -53,7 +53,7 @@ undergoing plate tectonics or stagnant lid evolution.
 
 ### Resources
 
-The [examples/](examples) directory contains input files and scripts for generating the figures in [Barnes et al. (2019)](https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract) and all subsequent module descriptions. The [Manual/](Manual) directory contains the pdf of [Barnes et al. (2019)](https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract), which describes the physics of each module, validates the software against observations and/or past results, and uses figures from the [examples/](examples) directory.
+The [examples/](examples) directory contains input files and scripts for generating the figures in [Barnes et al. (2020)](https://ui.adsabs.harvard.edu/abs/2020PASP..132b4502B/abstract) and all subsequent module descriptions. The [Manual/](Manual) directory contains the pdf of [Barnes et al. (2020)](https://ui.adsabs.harvard.edu/abs/2020PASP..132b4502B/abstract), which describes the physics of each module, validates the software against observations and/or past results, and uses figures from the [examples/](examples) directory.
 
 An ecosystem of support software is also publicly available. In this repo, [vspace/](vspace) contains scripts to generate input files for a parameter space sweep. [bigplanet/](bigplanet) contains scripts to store large datasets in HDF5 format and quickly calculate summary properties from an integration, such as change in surface temperature. In a separate repository is [vplot](https://github.com/VirtualPlanetaryLaboratory/vplot), which consists of both a command line tool to quickly plot the evolution of a system, and also matplotlib functions to generate publication-worthy figures. Finally, we recommend using [approxposterior](https://github.com/dflemin3/approxposterior) to quickly obtain posterior distributions of model parameters.
 
@@ -79,7 +79,7 @@ If you'd like to stay up to date on `VPLanet` by joining the e-mail list, please
 
 ### Acknowledgments
 
-If you use this code to generate results used in any publication or conference contribution, please cite [Barnes, R. et al. (2019), PASP, accepted](https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract).
+If you use this code to generate results used in any publication or conference contribution, please cite [Barnes, R. et al. (2020), PASP, 132, 24502](https://ui.adsabs.harvard.edu/abs/2020PASP..132b4502B/abstract).
 
 `VPLanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, 80NSSC17K048, and 13-13NAI7_0024. We also acknowledge support from the University of Washington and the Carnegie Institute for Science.
 

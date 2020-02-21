@@ -23,6 +23,9 @@ dEnvelopeMass           -1.0    # Initial H envelope mass, negative -> Earth Mas
 bHaltEnvelopeGone       0	      # Halt when H enevlope evaporated?
 dJeansTime		          -12.0   # Time when flow transitions to ballistic escape (Gyr)
 bUseRRLimited           1       # Is the flow radiation/recombination-limited?
+bUseEnergyLimited       0
+bUseBondiLimited        0
+bAtmEscAuto             0
 
 # EqTide Parameters
 dTidalQEnv          1e5

@@ -9,8 +9,8 @@ dRadGyra	         0.4	        # Radius of gyration; ang. mom. coeff.
 dAge               1.0e6        # Age [yr]
 
 # Rotational Parameters
-dRotPeriod         -0.5         # Rotation period (days)
-dObliquity          45          # Obliquity
+dRotPeriod         -1         # Rotation period (days)
+dObliquity          23.5          # Obliquity
 
 # Orbital Parameters
 dEcc            0.2             # Eccentricity
@@ -23,6 +23,9 @@ dEnvelopeMass           -1.0    # Initial H envelope mass, negative -> Earth Mas
 bHaltEnvelopeGone       0	      # Halt when H envelope evaporated?
 dJeansTime		          -12.0   # Time when flow transitions to ballistic escape (Gyr)
 bUseEnergyLimited       1       # Is the flow energy-limited?
+bUseRRLimited           0       # Is the flow radiation/recombination-limited?
+bUseBondiLimited        0
+bAtmEscAuto             0
 
 # EqTide Parameters
 dTidalQEnv          1e5

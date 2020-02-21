@@ -123,16 +123,15 @@ timeelim = cplelim.el.Time/1e6
 timerr = cplrr.rr.Time/1e6
 
 ## Upper left: Envelope Mass ##
-axes[0,0].plot(timeauto, cplauto.auto.EnvelopeMass,color='k',label='Auto')
-axes[0,0].plot(timebondi, cplbondi.bondi.EnvelopeMass, color=vpl.colors.red,label='Bondi')
-axes[0,0].plot(timeelim, cplelim.el.EnvelopeMass,color=vpl.colors.dark_blue,label='E-Lim')
-axes[0,0].plot(timerr, cplrr.rr.EnvelopeMass, color=vpl.colors.pale_blue,label='RR-Lim')
+axes[0,0].plot(timeauto, cplauto.auto.EnvelopeMass,color='k')
+axes[0,0].plot(timebondi, cplbondi.bondi.EnvelopeMass, color=vpl.colors.red)
+axes[0,0].plot(timeelim, cplelim.el.EnvelopeMass,color=vpl.colors.dark_blue)
+axes[0,0].plot(timerr, cplrr.rr.EnvelopeMass, color=vpl.colors.pale_blue)
 # Format
-axes[0,0].set_ylim(-0.02, 1.02)
+axes[0,0].set_ylim(-0.02, 1.1)
 axes[0,0].set_ylabel(r"Envelope Mass (M$_\oplus$)")
 axes[0,0].set_xlabel('Time (Myr)')
 axes[0,0].set_xlim(0,1)
-axes[0,0].legend(loc="upper right", fontsize=12, ncol=1)
 
 ## Upper right: Radius  ##
 axes[0,1].plot(timeauto, cplauto.auto.PlanetRadius, color='k')
@@ -151,7 +150,7 @@ axes[1,0].plot(timebondi, cplbondi.bondi.SemiMajorAxis, color=vpl.colors.red)
 axes[1,0].plot(timeelim, cplelim.el.SemiMajorAxis, color=vpl.colors.dark_blue)
 axes[1,0].plot(timerr, cplrr.rr.SemiMajorAxis, color=vpl.colors.pale_blue)
 # Format
-axes[1,0].set_ylim(0,0.11)
+axes[1,0].set_ylim(0.0949,0.101)
 axes[1,0].set_ylabel('Semi-Major Axis (AU)')
 axes[1,0].set_xlabel('Time (Myr)')
 axes[1,0].set_xlim(0,1)
@@ -162,7 +161,7 @@ axes[1,1].plot(timebondi, cplbondi.bondi.Eccentricity, color=vpl.colors.red)
 axes[1,1].plot(timeelim, cplelim.el.Eccentricity, color=vpl.colors.dark_blue)
 axes[1,1].plot(timerr, cplrr.rr.Eccentricity, color=vpl.colors.pale_blue)
 # Format
-axes[1,1].set_ylim(0, 0.2)
+axes[1,1].set_ylim(0.05, 0.21)
 axes[1,1].set_ylabel('Eccentricity')
 axes[1,1].set_xlabel('Time (Myr)')
 axes[1,1].set_xlim(0,1)
@@ -174,22 +173,23 @@ axes[2,0].plot(timeelim, cplelim.el.RotPer, color=vpl.colors.dark_blue)
 axes[2,0].plot(timerr, cplrr.rr.RotPer,color=vpl.colors.pale_blue)
 # Format
 axes[2,0].set_xlabel("Time (yr)")
-axes[2,0].set_ylim(0,10)
+axes[2,0].set_ylim(0,12)
 axes[2,0].set_ylabel('Rotation Period (days)')
 axes[2,0].set_xlabel('Time (Myr)')
 axes[2,0].set_xlim(0,1)
 
 ## Lower right: Obliquity ##
-axes[2,1].plot(timeauto, cplauto.auto.Obliquity, color='k')
-axes[2,1].plot(timebondi, cplbondi.bondi.Obliquity,color=vpl.colors.red)
-axes[2,1].plot(timeelim, cplelim.el.Obliquity, color=vpl.colors.dark_blue)
-axes[2,1].plot(timerr, cplrr.rr.Obliquity,color=vpl.colors.pale_blue)
+axes[2,1].plot(timeauto, cplauto.auto.Obliquity, color='k',label='Auto')
+axes[2,1].plot(timebondi, cplbondi.bondi.Obliquity,color=vpl.colors.red,label='Bondi')
+axes[2,1].plot(timeelim, cplelim.el.Obliquity, color=vpl.colors.dark_blue,label='E-Lim')
+axes[2,1].plot(timerr, cplrr.rr.Obliquity,color=vpl.colors.pale_blue,label='RR-Lim')
 # Format
 axes[2,1].set_xlabel("Time (yr)")
-axes[2,1].set_ylim(-0.05,45)
+axes[2,1].set_ylim(-1,100)
 axes[2,1].set_ylabel('Obliquity (degrees)')
 axes[2,1].set_xlabel('Time (Myr)')
 axes[2,1].set_xlim(0,1)
+axes[2,1].legend(loc="upper right", fontsize=8, ncol=1)
 
 for ax in axes.flatten():
     # Set rasterization

@@ -833,7 +833,11 @@ void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
         *dTmp = body[iBody].dK2Man/body[iBody].dImK2Man;
       }
     } else {
-      *dTmp = body[iBody].dK2/body[iBody].dImK2;
+      if (body[iBody].bMantle) {
+        *dTmp = -body[iBody].dK2Man/body[iBody].dImK2Man;
+      } else {
+        *dTmp = -body[iBody].dK2/body[iBody].dImK2;
+      }
     }
   }
 

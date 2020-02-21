@@ -547,7 +547,7 @@ void VerifyImK2Env(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
 
     // Everything OK, set dImK2Env
     // Defining this here is OK until we have a real envelope model
-    body[iBody].dImK2Env = body[iBody].dK2Env/body[iBody].dTidalQEnv;
+    body[iBody].dImK2Env = -body[iBody].dK2Env/body[iBody].dTidalQEnv;
 
   } else {
     // Set dImK2Env to 0, i.e. no Dissipation
@@ -589,7 +589,7 @@ void VerifyImK2Ocean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 
     // Everything OK, set dImK2Ocean
     // Defining this here is OK until we have a real ocean model
-    body[iBody].dImK2Ocean = body[iBody].dK2Ocean/body[iBody].dTidalQOcean;
+    body[iBody].dImK2Ocean = -body[iBody].dK2Ocean/body[iBody].dTidalQOcean;
 
   } else {
     // Set dImK2Ocean to 0, i.e. no Dissipation
@@ -630,7 +630,7 @@ void VerifyImK2Mantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       body[iBody].dK2Man = fdK2Man(body,iBody);
       body[iBody].dImK2Man = fdImK2Man(body,iBody);
     } else {
-      body[iBody].dImK2Man = body[iBody].dK2Man/body[iBody].dTidalQMan;
+      body[iBody].dImK2Man = -body[iBody].dK2Man/body[iBody].dTidalQMan;
       body[iBody].dShmodUMan = 1; // Set to avoid division by zero in log file
       body[iBody].dDynamViscos = 1; // Also used in log file
       body[iBody].dStiffness = 1; // Ditto

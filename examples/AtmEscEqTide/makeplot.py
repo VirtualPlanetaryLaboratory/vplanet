@@ -17,7 +17,7 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('Options are: pdf, png')
     exit(1)
 
-mpl.rcParams['figure.figsize'] = (6.5,8)
+mpl.rcParams['figure.figsize'] = (6.5,6)
 mpl.rcParams['font.size'] = 10.0
 
 ### First figure: water photolysis escape ###
@@ -35,28 +35,28 @@ cpl = vpl.GetOutput("./WaterCPL")
 ctl = vpl.GetOutput("./WaterCTL")
 
 # Plot
-fig, axes = plt.subplots(nrows=3, ncols=2)
+fig, axes = plt.subplots(nrows=2, ncols=2)
 
-time = cpl.b.Time/1e6
+time = cpl.b.Time/1e9
 
 ## Upper left: Water Mass ##
-axes[0,0].plot(time, cpl.b.SurfWaterMass,color='k')
-axes[0,0].plot(time, ctl.b.SurfWaterMass, color=vpl.colors.red)
+axes[0,0].plot(time, cpl.b.SurfWaterMass,color='k',label='CPL')
+axes[0,0].plot(time, ctl.b.SurfWaterMass, color=vpl.colors.red,label='CTL')
 # Format
 axes[0,0].set_ylim(-0.02, 10)
 axes[0,0].set_ylabel("Water Mass (Earth Oceans)")
 axes[0,0].set_xlabel('Time (Gyr)')
 axes[0,0].set_xlim(0,100)
+axes[0,0].legend(loc="upper right", fontsize=12, ncol=1)
 
 ## Upper right: Oxygen mass  ##
 axes[0,1].plot(time, cpl.b.OxygenMass, color='k')
 axes[0,1].plot(time, ctl.b.OxygenMass, color=vpl.colors.red)
 # Format
-axes[0,1].set_ylim(0,2000)
+axes[0,1].set_ylim(0,2100)
 axes[0,1].set_ylabel('Oxygen Pressure (bars)')
 axes[0,1].set_xlabel('Time (Gyr)')
 axes[0,1].set_xlim(0,100)
-#axes[0,1].legend(loc="upper left", framealpha=0, fontsize=12, ncol=1)
 
 ## Middle left: semi-major axis ##
 axes[1,0].plot(time, cpl.b.SemiMajorAxis, color='k')
@@ -74,29 +74,6 @@ axes[1,1].set_ylim(0, 0.1)
 axes[1,1].set_ylabel('Eccentricity')
 axes[1,1].set_xlabel('Time (Gyr)')
 axes[1,1].set_xlim(0,100)
-
-time = cpl.b.Time/1e6
-
-## Lower left: Rotation Period ##
-axes[2,0].plot(time, cpl.b.RotPer, color='k')
-axes[2,0].plot(time, ctl.b.RotPer,color=vpl.colors.red)
-# Format
-axes[2,0].set_xlabel("Time (yr)")
-axes[2,0].set_ylim(0.5,2)
-axes[2,0].set_ylabel('Rotation Period (days)')
-axes[2,0].set_xlabel('Time (kyr)')
-axes[2,0].set_xlim(0,100)
-
-## Lower right: Obliquity ##
-axes[2,1].plot(time, cpl.b.Obliquity, color='k')
-axes[2,1].plot(time, ctl.b.Obliquity,color=vpl.colors.red)
-# Format
-axes[2,1].set_xlabel("Time (yr)")
-axes[2,1].set_ylim(-0.05,45)
-axes[2,1].set_ylabel('Obliquity (degrees)')
-axes[2,1].set_xlabel('Time (kyr)')
-axes[2,1].set_xlim(0,100)
-
 
 for ax in axes.flatten():
 

@@ -27,6 +27,10 @@ bAtmEscAuto             1       # Should atmesc decide the escape regime?
 # EqTide Parameters
 dTidalQEnv          1e5
 dK2Env              0.5
+bMantleTides        1
+bUseOuterTidalQ     1
+dTidalQMantle       100
+dK2Mantle           0.3
 saTidePerts	        star
 dMaxLockDiff        0.01
 bHaltMerge          1

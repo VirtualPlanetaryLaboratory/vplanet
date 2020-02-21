@@ -772,10 +772,12 @@ void VerifyMantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int 
   // XXX This is broken, user should be able to set mantle properties w/o thermint
   if (body[iBody].bThermint) {
     body[iBody].bMantle = 1;
-  } else {
+  }
+/* See above
+  else {
     body[iBody].bMantle = 0;
   }
-
+*/
 }
 
 void VerifyOcean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody) {

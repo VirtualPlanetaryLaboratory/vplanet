@@ -45,6 +45,7 @@
 #define OPT_MANTLETIDES         1057
 #define OPT_TIDALQMANTLE        1058
 #define OPT_K2MANTLE            1059
+#define OPT_USEOUTERTIDALQ      1060
 
 /* Halt Functions */
 #define EQTIDEHALTSYSEND       5

@@ -46,7 +46,7 @@ axes[0,0].plot(time, ctl.b.SurfWaterMass, color=vpl.colors.red,label='CTL')
 axes[0,0].set_ylim(-0.02, 10)
 axes[0,0].set_ylabel("Water Mass (Earth Oceans)")
 axes[0,0].set_xlabel('Time (Gyr)')
-axes[0,0].set_xlim(0,100)
+axes[0,0].set_xlim(0,1)
 axes[0,0].legend(loc="upper right", fontsize=12, ncol=1)
 
 ## Upper right: Oxygen mass  ##
@@ -56,31 +56,26 @@ axes[0,1].plot(time, ctl.b.OxygenMass, color=vpl.colors.red)
 axes[0,1].set_ylim(0,2100)
 axes[0,1].set_ylabel('Oxygen Pressure (bars)')
 axes[0,1].set_xlabel('Time (Gyr)')
-axes[0,1].set_xlim(0,100)
+axes[0,1].set_xlim(0,1)
 
-## Middle left: semi-major axis ##
+## Lower left: semi-major axis ##
 axes[1,0].plot(time, cpl.b.SemiMajorAxis, color='k')
 axes[1,0].plot(time, ctl.b.SemiMajorAxis, color=vpl.colors.red)
 # Format
 axes[1,0].set_ylabel('Semi-Major Axis (AU)')
 axes[1,0].set_xlabel('Time (Gyr)')
-axes[1,0].set_xlim(0,100)
+axes[1,0].set_xlim(0,1)
 
-## Middle Right: Eccentricity ##
+## Lower Right: Eccentricity ##
 axes[1,1].plot(time, cpl.b.Eccentricity, color='k')
 axes[1,1].plot(time, ctl.b.Eccentricity, color=vpl.colors.red)
 # Format
 axes[1,1].set_ylim(0, 0.1)
 axes[1,1].set_ylabel('Eccentricity')
 axes[1,1].set_xlabel('Time (Gyr)')
-axes[1,1].set_xlim(0,100)
+axes[1,1].set_xlim(0,1)
 
 for ax in axes.flatten():
-
-    # Format x axis
-    ax.set_xlim(time[1],time.max())
-    #ax.set_xscale("log")
-
     # Set rasterization
     ax.set_rasterization_zorder(0)
 
@@ -93,7 +88,125 @@ if (sys.argv[1] == 'pdf'):
 if (sys.argv[1] == 'png'):
     plt.savefig('AtmEscEqTideWater.png', bbox_inches="tight", dpi=200)
 
+#exit()
+
+
+### Second figure: Envelope loss with CPL ###
+
+# Run simulations
+os.chdir('EnvCPL/auto')
+subprocess.call(['vplanet', 'vpl.in'])
+
+os.chdir('../Bondi')
+subprocess.call(['vplanet', 'vpl.in'])
+
+os.chdir('../ELim')
+subprocess.call(['vplanet', 'vpl.in'])
+
+os.chdir('../RR')
+subprocess.call(['vplanet', 'vpl.in'])
+
+os.chdir('../..')
+
+# Load data
+cplauto = vpl.GetOutput("./EnvCPL/Auto")
+cplbondi = vpl.GetOutput("./EnvCPL/Bondi")
+cplelim = vpl.GetOutput("./EnvCPL/ELim")
+cplrr = vpl.GetOutput("./EnvCPL/RR")
+
+# Plot
+fig, axes = plt.subplots(nrows=3, ncols=2)
+
+timeauto = cplauto.auto.Time/1e6
+timebondi = cplbondi.bondi.Time/1e6
+timeelim = cplelim.el.Time/1e6
+timerr = cplrr.rr.Time/1e6
+
+## Upper left: Envelope Mass ##
+axes[0,0].plot(timeauto, cplauto.auto.EnvelopeMass,color='k',label='Auto')
+axes[0,0].plot(timebondi, cplbondi.bondi.EnvelopeMass, color=vpl.colors.red,label='Bondi')
+axes[0,0].plot(timeelim, cplelim.el.EnvelopeMass,color=vpl.colors.dark_blue,label='E-Lim')
+axes[0,0].plot(timerr, cplrr.rr.EnvelopeMass, color=vpl.colors.pale_blue,label='RR-Lim')
+# Format
+axes[0,0].set_ylim(-0.02, 1.02)
+axes[0,0].set_ylabel(r"Envelope Mass (M$_\oplus$)")
+axes[0,0].set_xlabel('Time (Myr)')
+axes[0,0].set_xlim(0,1)
+axes[0,0].legend(loc="upper right", fontsize=12, ncol=1)
+
+## Upper right: Radius  ##
+axes[0,1].plot(timeauto, cplauto.auto.PlanetRadius, color='k')
+axes[0,1].plot(timebondi, cplbondi.bondi.PlanetRadius, color=vpl.colors.red)
+axes[0,1].plot(timeelim, cplelim.el.PlanetRadius, color=vpl.colors.dark_blue)
+axes[0,1].plot(timerr, cplrr.rr.PlanetRadius, color=vpl.colors.pale_blue)
+# Format
+axes[0,1].set_ylim(0,35)
+axes[0,1].set_ylabel(r'Radius (R$_\oplus$)')
+axes[0,1].set_xlabel('Time (Myr)')
+axes[0,1].set_xlim(0,1)
+
+## Middle left: semi-major axis ##
+axes[1,0].plot(timeauto, cplauto.auto.SemiMajorAxis, color='k')
+axes[1,0].plot(timebondi, cplbondi.bondi.SemiMajorAxis, color=vpl.colors.red)
+axes[1,0].plot(timeelim, cplelim.el.SemiMajorAxis, color=vpl.colors.dark_blue)
+axes[1,0].plot(timerr, cplrr.rr.SemiMajorAxis, color=vpl.colors.pale_blue)
+# Format
+axes[1,0].set_ylim(0,0.11)
+axes[1,0].set_ylabel('Semi-Major Axis (AU)')
+axes[1,0].set_xlabel('Time (Myr)')
+axes[1,0].set_xlim(0,1)
+
+## Middle Right: Eccentricity ##
+axes[1,1].plot(timeauto, cplauto.auto.Eccentricity, color='k')
+axes[1,1].plot(timebondi, cplbondi.bondi.Eccentricity, color=vpl.colors.red)
+axes[1,1].plot(timeelim, cplelim.el.Eccentricity, color=vpl.colors.dark_blue)
+axes[1,1].plot(timerr, cplrr.rr.Eccentricity, color=vpl.colors.pale_blue)
+# Format
+axes[1,1].set_ylim(0, 0.2)
+axes[1,1].set_ylabel('Eccentricity')
+axes[1,1].set_xlabel('Time (Myr)')
+axes[1,1].set_xlim(0,1)
+
+## Lower left: Rotation Period ##
+axes[2,0].plot(timeauto, cplauto.auto.RotPer, color='k')
+axes[2,0].plot(timebondi, cplbondi.bondi.RotPer,color=vpl.colors.red)
+axes[2,0].plot(timeelim, cplelim.el.RotPer, color=vpl.colors.dark_blue)
+axes[2,0].plot(timerr, cplrr.rr.RotPer,color=vpl.colors.pale_blue)
+# Format
+axes[2,0].set_xlabel("Time (yr)")
+axes[2,0].set_ylim(0,10)
+axes[2,0].set_ylabel('Rotation Period (days)')
+axes[2,0].set_xlabel('Time (Myr)')
+axes[2,0].set_xlim(0,1)
+
+## Lower right: Obliquity ##
+axes[2,1].plot(timeauto, cplauto.auto.Obliquity, color='k')
+axes[2,1].plot(timebondi, cplbondi.bondi.Obliquity,color=vpl.colors.red)
+axes[2,1].plot(timeelim, cplelim.el.Obliquity, color=vpl.colors.dark_blue)
+axes[2,1].plot(timerr, cplrr.rr.Obliquity,color=vpl.colors.pale_blue)
+# Format
+axes[2,1].set_xlabel("Time (yr)")
+axes[2,1].set_ylim(-0.05,45)
+axes[2,1].set_ylabel('Obliquity (degrees)')
+axes[2,1].set_xlabel('Time (Myr)')
+axes[2,1].set_xlim(0,1)
+
+for ax in axes.flatten():
+    # Set rasterization
+    ax.set_rasterization_zorder(0)
+
+fig.tight_layout()
+#fig.subplots_adjust(wspace=0.25)
+#fig.subplots_adjust(hspace=0.05)
+
+if (sys.argv[1] == 'pdf'):
+    plt.savefig('Lopez12CPL.pdf', bbox_inches="tight", dpi=200)
+if (sys.argv[1] == 'png'):
+    plt.savefig('Lopez12CPL.png', bbox_inches="tight", dpi=200)
+
 exit()
+
+
 
 ### Second figure: Zoom-in on Bondi-limited escape ###
 

@@ -613,6 +613,15 @@ double fdThermalTemp(BODY *body,int iBody) {
 
 double fdImK2Total(BODY *body,int iBody) {
 
+  if (body[iBody].bUseOuterTidalQ) {
+    if (body[iBody].bEnv) {
+      return body[iBody].dImK2Env;
+    }
+    if (body[iBody].bOcean) {
+      return body[iBody].dImK2Ocean;
+    }
+    return body[iBody].dImK2Man;
+  }
   if (body[iBody].bMantle || body[iBody].bOcean || body[iBody].bEnv) {
     return body[iBody].dImK2Man + body[iBody].dImK2Ocean + body[iBody].dImK2Env;
   } else {

@@ -2,9 +2,9 @@
 sName               b              # Body's name
 saModules           eqtide atmesc  # Modules to apply, exact spelling required
 
-# Physical Properties (from Grimm et al. [2018])
-dMass               -1.017         # Mass, negative -> Earth masses
-dRadius             -1.121         # Radius, negative -> Earth radii
+# Physical Properties
+dMass               -1         # Mass, negative -> Earth masses
+dRadius             -1         # Radius, negative -> Earth radii
 dRadGyra	          0.5
 
 # Rotational Properties
@@ -12,12 +12,12 @@ dRotPeriod          -1              # Negative => days
 dObliquity          23.5
 
 # Orbital Properties
-dSemi               -0.01154775    # Semi-major axis, negative -> AU
-dEcc                0.0062         # Eccentricity
+dSemi               -0.025    # Semi-major axis, negative -> AU
+dEcc                0.1         # Eccentricity
 
 # AtmEsc Properties
 dXFrac              1.0
-dSurfWaterMass      -10.0
+dSurfWaterMass      -9.0
 dEnvelopeMass       0.0
 sWaterLossModel     lbexact
 sAtmXAbsEffH2OModel bolmont16

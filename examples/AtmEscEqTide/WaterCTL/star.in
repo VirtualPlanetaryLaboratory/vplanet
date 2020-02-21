@@ -1,6 +1,6 @@
 sName	          star
 saModules	      stellar eqtide
-dMass           0.089
+dMass           0.1
 dAge            1e6
 dRadGyra        0.5        # Radius of gyration (moment of inertia constant)
 
@@ -13,7 +13,7 @@ saTidePerts    b          # Body name(s) of tidal perturbers
 
 sStellarModel  none
 sXUVModel      none
-dLuminosity    -5e-4      # Negative => solar units
+dLuminosity    -1e-3      # Negative => solar units
 dSatXUVFrac    1e-3       # With no evolution, L_XUV = dLuminosity * dSatXUVFrac
 
 saOutputOrder   Time -Luminosity -LXUVTot

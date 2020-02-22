@@ -105,9 +105,10 @@ void FinalizeUpdateKeccDistOrb(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdatePincDistOrb(BODY*,UPDATE*,int*,int,int,int);
 void FinalizeUpdateQincDistOrb(BODY*,UPDATE*,int*,int,int,int);
 
-int fniHaltCloseEnc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int fniHaltHillStab(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int fbHaltMaxMutualIncDistorb(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fniHaltCloseEnc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);
+int fniHaltHillStab(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);
+int fbHaltMaxMutualIncDistorb(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,
+      fnUpdateVariable***,int);
 
 int fbCheckMutualIncDistorb(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
 

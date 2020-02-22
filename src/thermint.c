@@ -1614,7 +1614,8 @@ void fvFinalizeUpdateTCoreThermint(BODY *body,UPDATE*update,int *iEqn,int iVar,i
   @param iBody Index of body
 */
 /* Minimum TMan */
-int fbHaltMinTMan(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltMinTMan(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   if (body[iBody].dTMan < halt->dMinTMan) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's TMan =  ",body[iBody].cName);
@@ -1637,7 +1638,8 @@ int fbHaltMinTMan(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int
   @param update Update struct
   @param iBody Index of body
 */
-int fbHaltMinTCore(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltMinTCore(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   if (body[iBody].dTCore < halt->dMinTCore) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's TCore =  ",body[iBody].cName);

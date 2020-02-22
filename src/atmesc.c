@@ -1873,7 +1873,8 @@ Checks for surface desiccation and halts if necessary.
 @param update A pointer to the UPDATE instance
 @param iBody The current BODY number
 */
-int fbHaltSurfaceDesiccated(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltSurfaceDesiccated(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+    UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
   if (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass) {
     if (io->iVerbose >= VERBPROG) {
@@ -1896,7 +1897,8 @@ Checks for envelope evaporation and halts if necessary.
 @param update A pointer to the UPDATE instance
 @param iBody The current BODY number
 */
-int fbHaltEnvelopeGone(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltEnvelopeGone(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
   if (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) {
     if (io->iVerbose >= VERBPROG) {

@@ -1633,10 +1633,13 @@ void ForceBehaviorEqtideAtmesc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,
   // We think there is an envelope, but there isn't!
   if (body[iBody].bEnv && (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass)) {
     if (io->iVerbose >= VERBPROG) {
-      fprintf(stderr,"Envelope lost at t = %.2e years!\n",evolve->dTime/YEARSEC);
+      fprintf(stderr,"%s's envelope lost at t = %.2e years!\n",
+          body[iBody].cName,evolve->dTime/YEARSEC);
     }
     body[iBody].bEnv = 0;
     body[iBody].dImK2Env = 0;
+    // Adjust Im(k_2)
+    body[iBody].dImK2 = fdImK2Total(body,iBody);
   }
 
   // We think there's an ocean, but there isn't!!
@@ -1646,6 +1649,8 @@ void ForceBehaviorEqtideAtmesc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,
     }
     body[iBody].bOcean = 0;
     body[iBody].dImK2Ocean = 0;
+    // Adjust Im(k_2)
+    body[iBody].dImK2 = fdImK2Total(body,iBody);
   }
 
   /* Old way, in which Q is set by top layer. need a switch for this.

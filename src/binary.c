@@ -801,7 +801,8 @@ void FinalizeUpdateCBPPhiDotBinary(BODY *body,UPDATE*update,int *iEqn,int iVar,i
 
 /** If the CBP's dSemi is less than the Holman stability limit, it's unstable and
     integration ends */
-int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
   double a_crit = fndHolmanStability(body);
 
@@ -821,7 +822,8 @@ int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *upd
 }
 
 /** If the secondary enters the roche lobe of the primary, HALT! */
-int fbHaltRocheLobe(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltRocheLobe(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
 
   double r_crit = fndRocheLobe(body);
 

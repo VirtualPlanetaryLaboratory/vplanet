@@ -1174,7 +1174,8 @@ void VerifyHaltDistOrb(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
   }
 }
 
-int fniHaltHillStab(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fniHaltHillStab(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   int iPert, jBody;
   double mu1, mu2, alpha, gamma1, gamma2, delta, crit, hill;
 
@@ -1218,7 +1219,8 @@ int fniHaltHillStab(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,i
   return 0;
 }
 
-int fniHaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fniHaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   int iPert, jBody;
   double dDR;
 
@@ -1269,7 +1271,7 @@ int fniHaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,i
   dHaltMaxMutualInc, FALSE if not
 */
 int fbHaltMaxMutualIncDistorb(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
-      UPDATE *update,int iBody) {
+      UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
   int jBody;
 

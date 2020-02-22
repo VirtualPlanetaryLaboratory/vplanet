@@ -1080,7 +1080,8 @@ void FinalizeUpdateAngMZGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,in
 /***************** GALHABIT Halts *****************/
 
 /* disruption? */
-int HaltDisrupt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltDisrupt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
 
   if (body[iBody].iDisrupt == 1) {
     if (io->iVerbose >= VERBPROG) {
@@ -1094,7 +1095,8 @@ int HaltDisrupt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int i
 }
 
 /* bad impulse? */
-int HaltBadImpulse(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltBadImpulse(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
 
   if (body[iBody].iBadImpulse == 1) {
     if (io->iVerbose >= VERBPROG) {

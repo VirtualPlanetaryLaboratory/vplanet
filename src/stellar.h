@@ -81,7 +81,8 @@ void HelpOptionsStellar(OPTIONS*);
 void InitializeOptionsStellar(OPTIONS*,fnReadOption[]);
 void ReadOptionsStellar(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
-int fbHaltEndBaraffeGrid(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltEndBaraffeGrid(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,
+      int);
 void CountHaltsStellar(HALT*,int*);
 
 /* Verify Functions */

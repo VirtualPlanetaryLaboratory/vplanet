@@ -823,7 +823,22 @@ void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   if (body[iBody].bThermint && body[iBody].bEqtide && !body[iBody].bOcean && !body[iBody].bEnv) {
     *dTmp = body[iBody].dTidalQMan;
   } else {
-    *dTmp = body[iBody].dTidalQ;
+    //*dTmp = body[iBody].dTidalQ;
+    if (body[iBody].bUseOuterTidalQ) {
+      if (body[iBody].bEnv) {
+        *dTmp = body[iBody].dK2Env/body[iBody].dImK2Env;
+      } else if (body[iBody].bOcean) {
+        *dTmp = body[iBody].dK2Ocean/body[iBody].dImK2Ocean;
+      } else {
+        *dTmp = body[iBody].dK2Man/body[iBody].dImK2Man;
+      }
+    } else {
+      if (body[iBody].bMantle) {
+        *dTmp = -body[iBody].dK2Man/body[iBody].dImK2Man;
+      } else {
+        *dTmp = -body[iBody].dK2/body[iBody].dImK2;
+      }
+    }
   }
 
   strcpy(cUnit,"");

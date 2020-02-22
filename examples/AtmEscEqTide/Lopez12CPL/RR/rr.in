@@ -1,9 +1,9 @@
-# auto
-sName		    auto        	      # Body's name
-saModules 	atmesc eqtide      # Active modules
+# RR
+sName		    rr        	        # Body's name
+saModules 	atmesc eqtide       # Active modules
 
 # Physical Parameters
-dMass		           -2 	        # Mass, negative -> Earth masses
+dMass		           -2.0         # Mass, negative -> Earth masses
 sPlanetRadiusModel lopez12      # Mass-radius model
 dRadGyra	         0.4	        # Radius of gyration; ang. mom. coeff.
 dAge               1.0e6        # Age [yr]
@@ -13,16 +13,19 @@ dRotPeriod         -0.5         # Rotation period (days)
 dObliquity          45          # Obliquity
 
 # Orbital Parameters
-dEcc            0.20            # Eccentricity
+dEcc            0.2            # Eccentricity
 dSemi           -0.1            # Semi-major axis [AU]
 
 # ATMESC Parameters
 dXFrac                  1.0     # X-Ray/XUV absorption radius in planet radii
-dAtmXAbsEffH            0.1     # H X-ray/XUV absorption efficiency (epsilon)
+dAtmXAbsEffH            0.99     # H X-ray/XUV absorption efficiency (epsilon)
 dEnvelopeMass           -1.0    # Initial H envelope mass, negative -> Earth Mass
 bHaltEnvelopeGone       0	      # Halt when H enevlope evaporated?
 dJeansTime		          -12.0   # Time when flow transitions to ballistic escape (Gyr)
-bAtmEscAuto             1       # Should atmesc decide the escape regime?
+bUseRRLimited           1       # Is the flow radiation/recombination-limited?
+bUseEnergyLimited       0
+bUseBondiLimited        0
+bAtmEscAuto             0
 
 # EqTide Parameters
 dTidalQEnv          1e5

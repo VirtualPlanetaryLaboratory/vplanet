@@ -1,10 +1,10 @@
-sSystemName               EnvCPL
+sSystemName               Lopez12CPL
 
-iVerbose                  5
+iVerbose                  0
 bOverwrite                1
 
 saBodyFiles               star.in $ # The star
-                          rr.in  # Radiation-recombination-limited
+                          bondi.in  # Planet in Roche lobe overflow
 
 sUnitMass                 solar
 sUnitLength               AU

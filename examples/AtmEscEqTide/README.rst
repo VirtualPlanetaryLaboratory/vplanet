@@ -15,7 +15,7 @@ CPL.
 **Author**            Rory Barnes
 **Modules**           AtmEsc
                       EqTide
-**Approx. runtime**   20 seconds
+**Approx. runtime**   10 seconds
 ===================   ============
 
 To run this example
@@ -44,9 +44,13 @@ Expected output
     :width: 600px
     :align: center
 
-    Evolution of a planets losing a hydrogen envelope while tidally evolving. In
+    Evolution of planets losing a hydrogen envelope, as modeled by Lopez
+    et al. (2012), while tidally evolving according to the CPL model. In
     this case, H loss can proceed via Roche lobe overflow (Bondi-limited escape),
-    radiation-recombination-limited escape, energy-limited escape. The "Auto"
-    mode self-consistently tracks escape through these regimes. Note that the
+    radiation-recombination-limited escape, or energy-limited escape. The "Auto"
+    mode self-consistently tracks escape through these regimes, see `AtmEscRegimes 
+    <../AtmEscRegimes>`_ for more details. Note that the
     escape efficiency parameter has been set artificially large (0.99) to reveal
-    some mass loss over 1 Myr. 
+    some mass loss over 1 Myr. The .in files for this figure are in the `Lopez12CPL
+    <Lopez12CPL>`_ directory.
+    

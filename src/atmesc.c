@@ -1174,20 +1174,17 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
       if(fbRRCriticalFlux(body,iBody)) {
           // Switch regime, derivatives
           if (io->iVerbose >= VERBPROG) {
-            printf("Switching from energy-limited to RR-limited escape at t = %.4lf Myr.\n",
-              evolve->dTime/(1e6*YEARSEC));
+            fvAtmEscRegimeChangeOutput(body[iBody].iHEscapeRegime,ATMESC_RRLIM,evolve->dTime/(1e6*YEARSEC));
           }
           body[iBody].iHEscapeRegime = ATMESC_RRLIM;
           fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtRRLimited;
           fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtRRLimited;
         }
-
       // Is the flux Bondi-limited?
       if(fbBondiCriticalDmDt(body, iBody)) {
         // Switch regime, derivatives
         if (io->iVerbose >= VERBPROG) {
-          printf("Switching from energy-limited to Bondi-limited escape at t = %.4lf Myr.\n",
-            evolve->dTime/(1e6*YEARSEC));
+          fvAtmEscRegimeChangeOutput(body[iBody].iHEscapeRegime,ATMESC_BONDILIM,evolve->dTime/(1e6*YEARSEC));
         }
         body[iBody].iHEscapeRegime = ATMESC_BONDILIM;
         fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtBondiLimited;
@@ -1200,8 +1197,7 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
       if(!fbRRCriticalFlux(body,iBody)) {
           // Switch regime, derivatives
           if (io->iVerbose >= VERBPROG) {
-            printf("Switching from RR-limited to energy-limited escape at t = %.4lf Myr.\n",
-              evolve->dTime/(1e6*YEARSEC));
+            fvAtmEscRegimeChangeOutput(body[iBody].iHEscapeRegime,ATMESC_ELIM,evolve->dTime/(1e6*YEARSEC));
           }
           body[iBody].iHEscapeRegime = ATMESC_ELIM;
           fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
@@ -1212,8 +1208,7 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
       if(fbBondiCriticalDmDt(body, iBody)) {
         // Switch regime, derivatives
         if (io->iVerbose >= VERBPROG) {
-          printf("Switching from RR-limited to Bondi-limited escape at t = %.4lf Myr.\n",
-            evolve->dTime/(1e6*YEARSEC));
+          fvAtmEscRegimeChangeOutput(body[iBody].iHEscapeRegime,ATMESC_BONDILIM,evolve->dTime/(1e6*YEARSEC));
         }
         body[iBody].iHEscapeRegime = ATMESC_BONDILIM;
         fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtBondiLimited;
@@ -1228,8 +1223,7 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
         if(fbRRCriticalFlux(body,iBody)) {
           // Switch regime, derivatives
           if (io->iVerbose >= VERBPROG) {
-            printf("Switching from Bondi-limited to RR-limited escape at t = %.4lf Myr.\n",
-              evolve->dTime/(1e6*YEARSEC));
+            fvAtmEscRegimeChangeOutput(body[iBody].iHEscapeRegime,ATMESC_RRLIM,evolve->dTime/(1e6*YEARSEC));
           }
           body[iBody].iHEscapeRegime = ATMESC_RRLIM;
           fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtRRLimited;
@@ -1239,8 +1233,7 @@ void fnForceBehaviorAtmEsc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
         else {
           // Switch regime, derivatives
           if (io->iVerbose >= VERBPROG) {
-            printf("Switching from Bondi-limited to energy-limited escape at t = %.4lf Myr.\n",
-              evolve->dTime/(1e6*YEARSEC));
+            fvAtmEscRegimeChangeOutput(body[iBody].iHEscapeRegime,ATMESC_ELIM,evolve->dTime/(1e6*YEARSEC));
           }
           body[iBody].iHEscapeRegime = ATMESC_ELIM;
           fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
@@ -3329,5 +3322,76 @@ int fbBondiCriticalDmDt(BODY *body, int iBody) {
   else {
     return 0;
   }
+}
 
+/**
+ Determine correct print statement to identify atmospheric escape regime change
+ string
+
+ @param iRegimeOld int previoius atmospheric escape regime
+ @param iRegimeNew int new atmospheric escape regime
+ @param dTime double time when regime change occurs
+
+ @return None
+*/
+void fvAtmEscRegimeChangeOutput(int iRegimeOld, int iRegimeNew, double dTime) {
+
+  // Define strings to represent atmospheric escape regime name
+  char saBondi[] = "Bondi-Limited Escape";
+  char saEnergy[] = "Energy-Limited Escape";
+  char saRR[] = "Radiation/Recombination-Limited Escape";
+  char saNone[] = "No Escape";
+
+  // Initially energy-limited escape
+  if(iRegimeOld == ATMESC_ELIM) {
+    if(iRegimeNew == ATMESC_RRLIM) {
+      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n",saEnergy,saRR,dTime);
+    }
+    else if (iRegimeNew == ATMESC_BONDILIM) {
+      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n",saEnergy,saBondi,dTime);
+    }
+    else if (iRegimeNew == ATMESC_NONE) {
+      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n",saEnergy,saNone,dTime);
+    }
+  }
+  // Initially RR-limited escape
+  else if (iRegimeOld == ATMESC_RRLIM) {
+    if(iRegimeNew == ATMESC_ELIM) {
+      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n",saRR,saEnergy,dTime);
+    }
+    else if (iRegimeNew == ATMESC_BONDILIM) {
+      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n",saRR,saBondi,dTime);
+    }
+    else if (iRegimeNew == ATMESC_NONE) {
+      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n",saRR,saNone,dTime);
+    }
+  }
+  // Initially Bondi-limited escape
+  else if (iRegimeOld == ATMESC_BONDILIM) {
+    if(iRegimeNew == ATMESC_ELIM) {
+      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n",saBondi,saEnergy,dTime);
+    }
+    else if (iRegimeNew == ATMESC_RRLIM) {
+      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n",saBondi,saRR,dTime);
+    }
+    else if (iRegimeNew == ATMESC_NONE) {
+      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n",saBondi,saNone,dTime);
+    }
+  }
+  // Initially None
+  else if (iRegimeOld == ATMESC_NONE) {
+    if(iRegimeNew == ATMESC_ELIM) {
+      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n",saNone,saEnergy,dTime);
+    }
+    else if (iRegimeNew == ATMESC_RRLIM) {
+      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n",saNone,saRR,dTime);
+    }
+    else if (iRegimeNew == ATMESC_BONDILIM) {
+      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n",saNone,saBondi,dTime);
+    }
+  }
+  else {
+    fprintf(stderr,"ERROR: unknown initial atmospheric escape regime: %d\n",iRegimeOld);
+    exit(1);
+  }
 }

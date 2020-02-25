@@ -5,7 +5,7 @@ This subdirectory contains examples of numerous ways to use `VPLanet`. A brief
 description of each is provided below, arranged by topic [with modules listed in brackets]. Click on the directory to see VPLanet input files, Python scripts,
 plots, and more description of the physics. Use these VPLanet input files and Python scripts to reproduce published figures, or as a starting point to begin your own fundamental research. The simulations used to generate these figures are `validated with continuous integration <../tests>`_ with the identical (or representative, in the case of parameter sweeps) initial conditions. Looking for something not present? E-mail Rory Barnes, rory@astro.washington.edu, to inquire if that functionality is available and validated.
 
-It is optional to install vplot and you can run VPLanet with installing vplot. However, to run the Python scripts and generate the figures in the subdirectories, you must install `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_.
+To run the Python scripts and generate the figures in the subdirectories, you must install `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_. Note, however, that you can run VPLanet with installing vplot and use your preferred method to visualize the output. 
 
 **Atmospheres**
 ===============
@@ -16,7 +16,7 @@ It is optional to install vplot and you can run VPLanet with installing vplot. H
 
 `AtmEscRegimes <AtmEscRegimes>`_: Hydrogen envelope loss due to Roche lobe overflow, radiation-recombination-limited escape, energy-limited escape, and "automatic" loss in which the local environment sets the escape rate. [AtmEsc, STELLAR]
 
-`AtmEscEqTide <AtmEscEqTide>`_:" Coupled atmospheric escape and tidal evolution. Includes water loss with CPL or CTL, as well as hydrogen escape via energy-limited, radiation-recombination-limited, Bondi-limited, and automatic models coupled to the CPL tidal model. [AtmEsc, EqTide, STELLAR]
+`AtmEscEqTide <AtmEscEqTide>`_: Coupled atmospheric escape and tidal evolution. Includes water loss with CPL or CTL, as well as hydrogen escape via energy-limited, radiation-recombination-limited, Bondi-limited, and automatic models coupled to the CPL tidal model. [AtmEsc, EqTide, STELLAR]
 
 `EarthClimate <EarthClimate>`_: Energy balance climate model of Earth over one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
 
@@ -87,4 +87,4 @@ It is optional to install vplot and you can run VPLanet with installing vplot. H
 
 `TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTL equilibrium tide models. [EqTide]
 
-`AtmEscEqTide <AtmEscEqTide>`_:" Coupled atmospheric escape and tidal evolution. Includes water loss with CPL or CTL, as well as hydrogen escape via energy-limited, radiation-recombination-limited, Bondi-limited, and automatic models coupled to the CPL tidal model. [AtmEsc, EqTide, STELLAR]
+`AtmEscEqTide <AtmEscEqTide>`_: Coupled atmospheric escape and tidal evolution. Includes water loss with CPL or CTL, as well as hydrogen escape via energy-limited, radiation-recombination-limited, Bondi-limited, and automatic models coupled to the CPL tidal model. [AtmEsc, EqTide, STELLAR]

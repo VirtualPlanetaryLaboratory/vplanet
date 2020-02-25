@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import vplot as vpl
 import sys
 import scipy.signal as sig
+import subprocess
 
 # Check correct number of arguments
 if (len(sys.argv) != 2):
@@ -14,6 +15,7 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('Options are: pdf, png')
     exit(1)
 
+subprocess.call(['vplanet', 'vpl.in'])
 out = vpl.GetOutput()
 
 time = out.TGstar.Time/1e3
@@ -37,7 +39,6 @@ plt.ylabel('Rotation Period (days)')
 plt.subplot(3,2,4)
 plt.plot(time,out.TGb.DynEllip,color='k',label='b')
 plt.plot(time,out.TGc.DynEllip,color=vpl.colors.red,label='c')
-plt.xlabel('Time (10$^6$ yr)')
 plt.ylabel('Dynamical Ellipticity')
 plt.legend(loc="upper right", fontsize=12, ncol=1)
 

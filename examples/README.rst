@@ -31,7 +31,7 @@ STELLAR]
 
 `IceBelts <IceBelts>`_: Formation of equatorial ice belts on planets with high obliquity.
 
-`MiniNeptuneEvap <MiniNeptuneEvap>`_: Removal of an mini-Neptune's isothermal hydrogen atmosphere by high energy radiation and/or Roche lobe overflow.
+`MiniNeptuneEvap <MiniNeptuneEvap>`_: Removal of a mini-Neptune's isothermal hydrogen atmosphere by high energy radiation and/or Roche lobe overflow.
 
 **Galactic Effects**
 ====================

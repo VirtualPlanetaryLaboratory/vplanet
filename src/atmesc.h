@@ -166,6 +166,7 @@ double fdBondiLimitedDmDt(BODY*,int);
 int fbRRCriticalFlux(BODY*,int);
 int fbBondiCriticalDmDt(BODY*,int);
 double fdRRCriticalFlux(BODY*,int);
+void fvAtmEscRegimeChangeOutput(int,int,double);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY*,SYSTEM*,UPDATE*,int,int);

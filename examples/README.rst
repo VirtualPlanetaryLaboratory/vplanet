@@ -59,7 +59,7 @@ To run the Python scripts and generate the figures in the subdirectories, you mu
 
 `IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity according to equilibrium tide theory. [EqTide, VSPACE]
 
-`CassiniMulti <CassiniMulti>`_: Tidal damping of the two planets orbiting Teegarden's Star into a Cassini states. [EqTide, DistOrb, DistRot, STELLAR]
+`CassiniMulti <CassiniMulti>`_: Tidal damping of the two planets orbiting Teegarden's Star into Cassini states. [EqTide, DistOrb, DistRot, STELLAR]
 
 **Stars**
 =========
@@ -79,7 +79,7 @@ To run the Python scripts and generate the figures in the subdirectories, you mu
 
 `CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [Distorb, DistRot, EqTide]
 
-`CassiniMulti <CassiniMulti>`_: Tidal damping of the two planets orbiting Teegarden's Star into a Cassini states. [EqTide, DistOrb, DistRot, STELLAR]
+`CassiniMulti <CassiniMulti>`_: Tidal damping of the two planets orbiting Teegarden's Star into Cassini states. [EqTide, DistOrb, DistRot, STELLAR]
 
 `IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity according to equilibrium tide theory. [EqTide, VSPACE]
 

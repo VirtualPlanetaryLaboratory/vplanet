@@ -5,7 +5,7 @@ This subdirectory contains examples of numerous ways to use `VPLanet`. A brief
 description of each is provided below, arranged by topic [with modules listed in brackets]. Click on the directory to see VPLanet input files, Python scripts,
 plots, and more description of the physics. Use these VPLanet input files and Python scripts to reproduce published figures, or as a starting point to begin your own fundamental research. The simulations used to generate these figures are `validated with continuous integration <../tests>`_ with the identical (or representative, in the case of parameter sweeps) initial conditions. Looking for something not present? E-mail Rory Barnes, rory@astro.washington.edu, to inquire if that functionality is available and validated.
 
-To run the Python scripts and generate the figures in the subdirectories, you must install `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_. Note, however, that you can run VPLanet with installing vplot and use your preferred method to visualize the output. 
+To run the Python scripts and generate the figures in the subdirectories, you must install `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_. Note, however, that you can run VPLanet with installing vplot and use your preferred method to visualize the output.
 
 **Atmospheres**
 ===============
@@ -16,15 +16,22 @@ To run the Python scripts and generate the figures in the subdirectories, you mu
 
 `AtmEscRegimes <AtmEscRegimes>`_: Hydrogen envelope loss due to Roche lobe overflow, radiation-recombination-limited escape, energy-limited escape, and "automatic" loss in which the local environment sets the escape rate. [AtmEsc, STELLAR]
 
-`AtmEscEqTide <AtmEscEqTide>`_: Coupled atmospheric escape and tidal evolution. Includes water loss with CPL or CTL, as well as hydrogen escape via energy-limited, radiation-recombination-limited, Bondi-limited, and automatic models coupled to the CPL tidal model. [AtmEsc, EqTide, STELLAR]
+`HLossTides <HLossTides>`_: Coupled atmospheric escape and tidal evolution for
+the CPL tidal model with hydrogen escape via energy-limited,
+radiation-recombination-limited, Bondi-limited, and automatic models. [AtmEsc,
+EqTide, STELLAR]
 
 `EarthClimate <EarthClimate>`_: Energy balance climate model of Earth over one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
 
 `VenusWaterLoss <VenusWaterLoss>`_: Water loss from Venus due to water photolyzation and hydrogen escape. [AtmEsc, STELLAR]
 
+`WaterLossTides <WaterLossTides>`_: Evolution of a planet losing water from
+photolysis and hydrogen escape while it tidally evolves. [AtmEsc, EqTide,
+STELLAR]
+
 `IceBelts <IceBelts>`_: Formation of equatorial ice belts on planets with high obliquity.
 
-`MiniNeptuneEvap <MiniNeptuneEvap>`_: Removal of an mini-Neptune's isothermal hydrogen atmosphere by high energy radiation and/or Roche lobe overflow.  
+`MiniNeptuneEvap <MiniNeptuneEvap>`_: Removal of an mini-Neptune's isothermal hydrogen atmosphere by high energy radiation and/or Roche lobe overflow.
 
 **Galactic Effects**
 ====================
@@ -89,4 +96,11 @@ To run the Python scripts and generate the figures in the subdirectories, you mu
 
 `TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTL equilibrium tide models. [EqTide]
 
-`AtmEscEqTide <AtmEscEqTide>`_: Coupled atmospheric escape and tidal evolution. Includes water loss with CPL or CTL, as well as hydrogen escape via energy-limited, radiation-recombination-limited, Bondi-limited, and automatic models coupled to the CPL tidal model. [AtmEsc, EqTide, STELLAR]
+`HLossTides <HLossTides>`_: Coupled atmospheric escape and tidal evolution for
+the CPL tidal model with hydrogen escape via energy-limited,
+radiation-recombination-limited, Bondi-limited, and automatic models. [AtmEsc,
+EqTide, STELLAR]
+
+`WaterLossTides <WaterLossTides>`_: Evolution of a planet losing water from
+photolysis and hydrogen escape while it tidally evolves. [AtmEsc, EqTide,
+STELLAR]

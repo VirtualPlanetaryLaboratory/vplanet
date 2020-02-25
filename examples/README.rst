@@ -22,6 +22,10 @@ To run the Python scripts and generate the figures in the subdirectories, you mu
 
 `VenusWaterLoss <VenusWaterLoss>`_: Water loss from Venus due to water photolyzation and hydrogen escape. [AtmEsc, STELLAR]
 
+`IceBelts <IceBelts>`_: Formation of equatorial ice belts on planets with high obliquity.
+
+`MiniNeptuneEvap <MiniNeptuneEvap>`_: Removal of an mini-Neptune's isothermal hydrogen atmosphere by high energy radiation and/or Roche lobe overflow.  
+
 **Galactic Effects**
 ====================
 

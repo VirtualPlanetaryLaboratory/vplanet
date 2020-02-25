@@ -16,6 +16,8 @@ It is optional to install vplot and you can run VPLanet with installing vplot. H
 
 `AtmEscRegimes <AtmEscRegimes>`_: Hydrogen envelope loss due to Roche lobe overflow, radiation-recombination-limited escape, energy-limited escape, and "automatic" loss in which the local environment sets the escape rate. [AtmEsc, STELLAR]
 
+`AtmEscEqTide <AtmEscEqTide>`_:" Coupled atmospheric escape and tidal evolution. Includes water loss with CPL or CTL, as well as hydrogen escape via energy-limited, radiation-recombination-limited, Bondi-limited, and automatic models coupled to the CPL tidal model. [AtmEsc, EqTide, STELLAR]
+
 `EarthClimate <EarthClimate>`_: Energy balance climate model of Earth over one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
 
 `VenusWaterLoss <VenusWaterLoss>`_: Water loss from Venus due to water photolyzation and hydrogen escape. [AtmEsc, STELLAR]
@@ -57,6 +59,8 @@ It is optional to install vplot and you can run VPLanet with installing vplot. H
 
 `IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity according to equilibrium tide theory. [EqTide, VSPACE]
 
+`CassiniMulti <CassiniMulti>`_: Tidal damping of the two planets orbiting Teegarden's Star into a Cassini states. [EqTide, DistOrb, DistRot, STELLAR]
+
 **Stars**
 =========
 
@@ -75,8 +79,12 @@ It is optional to install vplot and you can run VPLanet with installing vplot. H
 
 `CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [Distorb, DistRot, EqTide]
 
+`CassiniMulti <CassiniMulti>`_: Tidal damping of the two planets orbiting Teegarden's Star into a Cassini states. [EqTide, DistOrb, DistRot, STELLAR]
+
 `IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity according to equilibrium tide theory. [EqTide, VSPACE]
 
 `TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a low mass star and tidally heated. [EqTide, RadHeat, ThermInt]
 
 `TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTL equilibrium tide models. [EqTide]
+
+`AtmEscEqTide <AtmEscEqTide>`_:" Coupled atmospheric escape and tidal evolution. Includes water loss with CPL or CTL, as well as hydrogen escape via energy-limited, radiation-recombination-limited, Bondi-limited, and automatic models coupled to the CPL tidal model. [AtmEsc, EqTide, STELLAR]

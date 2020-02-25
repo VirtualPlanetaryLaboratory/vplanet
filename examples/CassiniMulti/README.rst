@@ -14,7 +14,7 @@ Both planets damp into a "Cassini state."
 **Modules**           EqTide
                       DistOrb
                       DistRot
-                      Stellar
+                      STELLAR
 **Approx. runtime**   2 minutes
 ===================   ============
 

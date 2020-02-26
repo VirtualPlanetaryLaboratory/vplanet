@@ -2370,8 +2370,10 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
       }
     }
 
-    if (!ok)
-      DoubleLineExit(files->Infile[iFile].cIn,files->Infile[iFile].cIn,lTmp[0],options[OPT_MODULES].iLine[iFile]);
+    if (!ok) {
+      DoubleLineExit(files->Infile[iFile].cIn,files->Infile[iFile].cIn,lTmp[0],
+          options[OPT_MODULES].iLine[iFile]);
+    }
 
     files->Outfile[iFile-1].iNumCols = iNumIndices;
     /*

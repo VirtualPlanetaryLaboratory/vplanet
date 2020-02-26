@@ -13,7 +13,9 @@ Formation on an ice belt on a terretrial planet with high obliquity
 **Approx. runtime**   15 Seconds
 ===================   ============
 
-This example validates **VPLanet**'s 1-D climate model by reproducing Figure 2 of  `Rose et. al (2017) <https://iopscience.iop.org/article/10.3847/1538-4357/aa8306/meta#apjaa8306s2>`_.
+This example validates **VPLanet**'s 1-D climate model by reproducing Figure 2
+of  `Rose et. al (2017)
+<https://iopscience.iop.org/article/10.3847/1538-4357/aa8306/meta#apjaa8306s2>`_.
 
 
 To run this example
@@ -38,8 +40,8 @@ over the course of the simulation the equator is colder than the poles, promotin
 ice formation. The annual average insolation (2nd panel) shows the amount
 of solar radiation reaching the surface: over the course of the simulation,
 the ice belt forms because the equator receives *less* solar radiation than the poles.
-Albedo (3rd panel) shows the reflectiveness of the planet’s surface (ice is
-more reflective than water and land). Ice sheet height (4th panel), shows that
+Albedo (3rd panel) shows the reflectiveness of the planet a the top of the
+atmosphere (TOA). Ice sheet height (4th panel), shows that
 the ice sheet grows in height to approx 200m.  The bedrock height (5th panel)
 shows that as the ice sheet grows in height, it compresses the bedrock downward,
 i.e. the values are negative.

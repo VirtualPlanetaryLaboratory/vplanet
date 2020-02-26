@@ -187,7 +187,7 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
     plt.title('Bedrock height [m]')
     plt.ylim(-90,90)
     plt.yticks([-60,-30,0,30,60])
-    plt.xlabel('Time [years]')
+    plt.xlabel('Time [years]',fontsize=20)
     if xrange:
       plt.xlim(xrange)
     plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
@@ -202,7 +202,7 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
     pos = ax5.figbox.get_points()
     c = plt.contourf(body.Time,lats,insol.T,cmap='plasma')
     plt.ylabel('Latitude')
-    plt.title(r'Annual average insolation [w/m$^2$]')
+    plt.title(r'Annual average insolation [W/m$^2$]')
     plt.ylim(-90,90)
     plt.yticks([-60,-30,0,30,60])
     if xrange:
@@ -291,8 +291,8 @@ def seasonal_maps(time, dir = '.', show = True):
         tempf = dirf+'/'+sysname+'.'+plname+'.SeasonalTemp.'+timestamp
         icef = dirf+'/'+sysname+'.'+plname+'.SeasonalIceBalance.'+timestamp
         check = 1
-    print(insolf,tempf,icef)
-    exit()
+    #print(insolf,tempf,icef)
+    #exit()
 
     if check == 0:
       raise StandardError('Climate data not found for time %f'%time)
@@ -342,27 +342,30 @@ def seasonal_maps(time, dir = '.', show = True):
     #fig.suptitle('Time = %f, Obl = %f, Ecc = %f, LongP = %f'%(time,obl,ecc,longp),fontsize=20)
     plt.subplot(1,3,1)
     fig.subplots_adjust(wspace=0.3)
-    plt.title(r'Insolation [W/m$^2$] (1 orbit)',fontsize=12)
+    plt.title(r'Insolation [W/m$^2$]',fontsize=12)
     c1=plt.contourf(np.arange(np.shape(insol)[1]),lats,insol,cmap='plasma')
     plt.colorbar(c1)
     plt.ylim(lats[0],lats[-1])
+    plt.xlabel('Time (days)')
     plt.ylabel('Latitude (degrees)')
 
     scale = 4*np.shape(insol)[1]/np.shape(temp)[1]
     plt.subplot(1,3,2)
     c2=plt.contourf(np.arange(np.shape(temp)[1])*scale,lats,temp,cmap='plasma')
-    plt.title(r'Surface Temp [$^{\circ}$C] (1 orbit)',fontsize=12)
+    plt.title(r'Surface Temp [$^{\circ}$C]',fontsize=12)
     plt.colorbar(c2)
     plt.ylim(lats[0],lats[-1])
     plt.ylabel('Latitude (degrees)')
+    plt.xlabel('Time (days)')
     plt.xlim(0,np.shape(temp)[1]*scale/4.)
 
     scale = np.shape(insol)[1]/np.shape(ice)[1]
     plt.subplot(1,3,3)
     c3=plt.contourf(np.arange(np.shape(ice)[1])*scale,lats,ice,cmap='Blues_r')
-    plt.title(r'Ice balance [kg/m$^2$/s] (1 orbit)',fontsize=12)
+    plt.title(r'Ice balance [kg/m$^2$/s]',fontsize=12)
     plt.colorbar(c3)
     plt.ylim(lats[0],lats[-1])
+    plt.xlabel('Time (days)')
     plt.ylabel('Latitude (degrees)')
 
     if (sys.argv[1] == 'pdf'):
@@ -376,5 +379,7 @@ def seasonal_maps(time, dir = '.', show = True):
 
 
 #makes the plots
+print("Making evolution plot.")
 clim_evol('earth',show=False)
+print("Making seasonal plot.")
 seasonal_maps(0,show=False)

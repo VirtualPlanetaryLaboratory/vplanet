@@ -1,5 +1,5 @@
 # Proxima b's parameters
-sName		    b			   # Body's name
+sName		    LC17ELim			   # Body's name
 saModules 	atmesc
 
 # Physical Properties
@@ -17,8 +17,11 @@ bHaltSurfaceDesiccated    0               # Halt when dry?
 bHaltEnvelopeGone         0               # Halt when evaporated?
 dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
 dMinEnvelopeMass          -1.e-5
-sPlanetRadiusModel        proximacenb
 bUseEnergyLimited         1               # Is the flow energy-limited?
+
+sPlanetRadiusModel        Lehmer
+dThermTemp               880
+dAtmGasConst             4157
 
 #Output
 saOutputOrder Time -Radius -SurfWaterMass -EnvelopeMass -OxygenMass -PlanetRadius $

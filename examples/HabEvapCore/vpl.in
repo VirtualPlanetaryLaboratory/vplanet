@@ -1,4 +1,4 @@
-# Example primary input file for VPLANET
+# Example primary input file for VPLanet
 sSystemName	  proxima		 # System Name
 iVerbose	    5			     # Verbosity level
 bOverwrite	  1			     # Allow file overwrites?
@@ -8,8 +8,13 @@ bOverwrite	  1			     # Allow file overwrites?
 # s=string. An "a" indicates an array and multiple arguments are allowed/expected.
 
 # List of "body files" that contain body-specific parameters
-saBodyFiles	    star.in $	  # The star
-		            b.in  	    # Planet b
+saBodyFiles	    star.in $	        # The star
+		            proxcenelim.in $ 	# Radius model: Prox Cen b; AtmEsc model: Energy-limited
+		            proxcenrrlim.in $ # Radius model: Prox Cen b; AtmEsc model: RR-limited
+		            proxcenauto.in  $	# Radius model: Prox Cen b; AtmEsc model: AtmEscAuto
+		            lc17elim.in  $    # Radius model: LehmerCatling17; AtmEsc model: Energy-limited
+                lc17rrlim.in $ 	  # Radius model: LehmerCatling17; AtmEsc model: RR-limited
+                lc17auto.in   	  # Radius model: LehmerCatling17; AtmEsc model: RR-limited
 
 # Array options can continue to the next line with a terminating "$". The $ can be
 # at the end of the string or not. Comments are allowed afterwards.

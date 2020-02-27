@@ -30,7 +30,7 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     exit(1)
 
 # Run simulation
-#subprocess.call(['vplanet', '-q', 'vpl.in'])
+subprocess.call(['vplanet', '-q', 'vpl.in'])
 
 # Make object for each simulation set to hold data
 prox = vpl.GetOutput()

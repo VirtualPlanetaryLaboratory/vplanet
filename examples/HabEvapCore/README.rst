@@ -1,27 +1,26 @@
-Tidal/Atmospheric/Internal Evolution of Proxima b into a "Habitable Evaporated Core."
+Proxima Centauri b as a "Habitable Evaporated Core."
 =====================================================================================
 
 Overview
 --------
 
-Each subdirectory contains a simulation of the long-term tidal evolution of Proxima Centauri b.
-In cpl, we model tidal evolution with eqtide and the stellar evolution of the host star using stellar.
-In no_ocean, we generalize the cpl runs by additionally simulating the planetary thermal interior by including radheat
-and thermint.  In ocean, we generalize the ocean case by modeling the tidal impact of liquid surface oceans.
-Finally, in env_ocean, we generalize the ocean case by modeling the tidal impact and atmospheric escape on
-Proxima Centauri b if it initially formed with an extended hydrogen envelope. These simulations
-reproduce Figure 25 from Barnes et al. (2016).
-
+A planet orbiting the habitable zone of a low mass star, e.g. Proxima Centauri b,
+can lose a hydrogen envelope during the pre-main sequence. If the core is
+volatile rich, then it may become habitable, but only if the water isn't
+photolyzed and permanently lost via hydrogen escape. This example demonstrates
+this process for 6 different assumptions: two different radius models and three
+different escape models. The envelope radius may evolve according to a modified
+version of the Lopez et al. (2012) radius tracks (ProxCenB) and the isothermal
+model of Lehmer & Catling (2017). When a hydrogen envelope is present, the H may
+escapes via energy-limited, radiation-recombination-limited, Roche lobe overflow,
+and an automatic mode that determines the regime based on the environment.
 
 ===================   ============
-**Date**              8/17/2018
-**Author**            David Fleming
+**Date**              02/26/2020
+**Author**            Rory Barnes
 **Modules**           atmesc
-                      eqtide
-                      radheat
                       stellar
-                      thermint
-**Approx. runtime**   3 minutes
+**Approx. runtime**   10 seconds
 ===================   ============
 
 To run this example
@@ -29,11 +28,8 @@ To run this example
 
 .. code-block:: bash
 
-    vplanet vpl.in
 
-Repeat process for each sub-directory: HEC/cpl, HEC/no_ocean, HEC/ocean, HEC/env_ocean.
-
-Once the simulations are finished, run
+To run the simulations and make the plot:
 
 .. code-block:: bash
 
@@ -47,8 +43,15 @@ Expected output
    :width: 600px
    :align: center
 
-   Evolution of the orbital, tidal and atmospheric properties of Proxima Centauri b for the “CPL” case in light blue, “No Ocean” case in
-   red, “Ocean” case in dark blue, and the “Envelope” case in orange, with the dashed line for clarity. See Barnes et al. (2016), Section 4.6
-   for a detailed description of the initial conditions. The grey shaded region indicates when the planet is in the habitable zone.
-   Top left: Surface Flux. Top right: Tidal Q. Middle left: Orbital Eccentricity. Middle right: Semi-major Axis.
-   Bottom left: Envelope Mass. Bottom right: Surface Water Mass.
+   Sample evolution of Proxima b if it is a habitable evaporated core. Top left:
+   The ratio of the XUV luminosity to the total luminosity. The early constant
+   stage is known as the "satured" phase, which is here set to be 100 Myr. Top
+   right: Comparison of the habitable zone (HZ) with the current orbit of
+   Proxima b. The star evolves according to a modified track from Baraffe et al.
+   (2016) that matches observations (ProxCen). Middle left: The envelope mass.
+   For the ProxCenB radius model, AtmEscAuto selects the energy-limited (E-Lim)
+   model, so the dark blue is behind the orange line for this panel and the
+   subsequent panels. Middle right: Radius of the planet. The water layer is
+   assumed to have no thickness. Bottom left: The amount of water on the surface
+   in units of Earth oceans (TO). Bottom right: The maximum oxygen pressure that
+   can accumulate in the atmosphere from water photolysis and hydrogen escape.

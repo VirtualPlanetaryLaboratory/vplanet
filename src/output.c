@@ -1126,7 +1126,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HZLIMDRYRUNAWAY].bNeg = 1;
   output[OUT_HZLIMDRYRUNAWAY].dNeg = 1/AUM;
   output[OUT_HZLIMDRYRUNAWAY].iNum = 1;
-  output[OUT_HZLIMDRYRUNAWAY].iModuleBit = STELLAR + BINARY + SPINBODY;
+  output[OUT_HZLIMDRYRUNAWAY].iModuleBit = 1;
   fnWrite[OUT_HZLIMDRYRUNAWAY] = &WriteHZLimitDryRunaway;
 
   sprintf(output[OUT_HZLIMRECVENUS].cName,"HZLimRecVenus");
@@ -1135,7 +1135,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HZLIMRECVENUS].bNeg = 1;
   output[OUT_HZLIMRECVENUS].dNeg = 1./AUM;
   output[OUT_HZLIMRECVENUS].iNum = 1;
-  output[OUT_HZLIMRECVENUS].iModuleBit = STELLAR + BINARY + SPINBODY;
+  output[OUT_HZLIMRECVENUS].iModuleBit = 1;
   fnWrite[OUT_HZLIMRECVENUS] = &WriteHZLimitRecentVenus;
 
   sprintf(output[OUT_HZLIMRUNAWAY].cName,"HZLimRunaway");
@@ -1144,7 +1144,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HZLIMRUNAWAY].bNeg = 1;
   output[OUT_HZLIMRUNAWAY].dNeg = 1./AUM;
   output[OUT_HZLIMRUNAWAY].iNum = 1;
-  output[OUT_HZLIMRUNAWAY].iModuleBit = STELLAR + BINARY + SPINBODY;
+  output[OUT_HZLIMRUNAWAY].iModuleBit = 1;
   fnWrite[OUT_HZLIMRUNAWAY] = &WriteHZLimitRunawayGreenhouse;
 
   sprintf(output[OUT_HZLIMMOIST].cName,"HZLimMoistGreenhouse");
@@ -1153,7 +1153,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HZLIMMOIST].bNeg = 1;
   output[OUT_HZLIMMOIST].dNeg = 1./AUM;
   output[OUT_HZLIMMOIST].iNum = 1;
-  output[OUT_HZLIMMOIST].iModuleBit = STELLAR + BINARY + SPINBODY;
+  output[OUT_HZLIMMOIST].iModuleBit = 1;
   fnWrite[OUT_HZLIMMOIST] = &WriteHZLimitMoistGreenhouse;
 
   sprintf(output[OUT_HZLIMMAX].cName,"HZLimMaxGreenhouse");
@@ -1162,7 +1162,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HZLIMMAX].bNeg = 1;
   output[OUT_HZLIMMAX].dNeg = 1./AUM;
   output[OUT_HZLIMMAX].iNum = 1;
-  output[OUT_HZLIMMAX].iModuleBit = STELLAR + BINARY + SPINBODY;
+  output[OUT_HZLIMMAX].iModuleBit = 1;
   fnWrite[OUT_HZLIMMAX] = &WriteHZLimitMaxGreenhouse;
 
   sprintf(output[OUT_HZLIMEARLYMARS].cName,"HZLimEarlyMars");
@@ -1171,9 +1171,8 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HZLIMEARLYMARS].bNeg = 1;
   output[OUT_HZLIMEARLYMARS].dNeg = 1./AUM;
   output[OUT_HZLIMEARLYMARS].iNum = 1;
-  output[OUT_HZLIMEARLYMARS].iModuleBit = STELLAR + BINARY + SPINBODY;
+  output[OUT_HZLIMEARLYMARS].iModuleBit = 1;
   fnWrite[OUT_HZLIMEARLYMARS] = &WriteHZLimitEarlyMars;
-
 
   /*
    * I

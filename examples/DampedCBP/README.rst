@@ -1,23 +1,21 @@
-Orbital Evolution of the Circumbinary Planet Kepler-16 b
-=========
+Coupled Stellar-Tidal Evolution of Binary Orbits
+================================================
 
 Overview
 --------
 
-The orbital evolution of circumbinary planets, which varies as the host stars positions change.
+This example examines the coupled stellar-tidal evolution of binary orbits. This figure,
+adapted from Graham et al. in prep, demonstrates how the early transfer of angular
+momentum from the stellar spins into the orbit expands the binary orbit. This expansion
+can destabilize any circumbinary planets that tend to orbit near the dynamical
+stability limit, also known as the critical semi-major axis.
 
 ===================   ============
-**Date**              07/24/18
+**Date**              02/28/20
 **Author**            David Fleming
-**Modules**           BINARY
-**Approx. runtime**   24 seconds
+**Modules**           EQTIDE STELLAR
+**Approx. runtime**   5 minutes
 ===================   ============
-
-
-The orbital evolution of Kepler-16 b, a circumbinary planet, is shown in this example
-using the semi-analytic model of `Leung & Lee (2013) <https://ui.adsabs.harvard.edu/abs/2013ApJ...763..107L/abstract>`_, see their Fig. 5. The orbit is non-Keplerian
-due to the changing positions of the host stars.
-
 
 To run this example
 -------------------
@@ -31,13 +29,14 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: CircumbinaryOrbit.png
+.. figure:: dampedCBP.png
    :width: 600px
    :align: center
 
-   Orbital evolution of circumbinary planet Kepler-16b according to
-   **VPLanet**'s **BINARY** module.  Perturbations from the central binary
-   force orbital eccentricity and inclination oscillations for the planet
-   (top left and right panels, respectively) and cause appreciable precession
-   of the longitudes of the periapse and ascending node (bottom left and right
-   panels, respectively).
+   Critical semi-major axis (top), orbital period (middle), and orbital
+   eccentricity (bottom) vs. time for four solar twin stellar binaries undergoing
+   coupled stellar-tidal evolution. This simulation explores how an evolving
+   radius of gyration (Dynamic r_g) can supply additional angular momentum to
+   the binary orbit vs the constant (Static) r_g case, further expanding the
+   binary orbit, potentially destabilizing and CBPs that may orbit near the
+   dynamical stability limit. 

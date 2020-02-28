@@ -1,0 +1,46 @@
+# Primary input file for VPLANET
+sSystemName	STEEP_ctl_rg_off		# System Name
+iVerbose	5			# Verbosity level
+bOverwrite	1			# Allow file overwrites?
+
+# All space after a # is ignored, as is white space
+# The first lowercase letter(s) denote the cast: b=boolean, i=int, d=double,
+# s=string. An "a" indicates an array and multiple arguments are allowed/expected.
+
+# List of "body files" that contain body-specific parameters
+saBodyFiles	primary.in $	# The primary star
+		secondary.in #$ 	# The secondary star
+#In order to remove the planet during a simulation, remove the "$" sign that goes after "secondary.in"
+#Also you must completely remove the line of "cbp.in", the line that is below "secondary.in"
+                
+
+# Array options can continue to the next line with a terminating "$". The $ can be 
+# at the end of the string or not. Comments are allowed afterwards.
+
+# Input/Output Units
+sUnitMass	solar		# Options: gram, kg, Earth, Neptune, Jupiter, solar
+sUnitLength	aU		# Options: cm, m, km, Earth, Jupiter, solar, AU 	
+sUnitTime	YEARS		# Options: sec, day, year, Myr, Gyr
+sUnitAngle	d		# Options: deg, rad
+sUnitTemp       K
+
+# Units specified in the primary input file are propagated into the bodies. Otherwise
+# specifiy units on a per body basis in the body files.
+# Most string arguments can be in any case and need only be unambiguous.
+
+# Input/Output
+bDoLog		1		# Write a log file?
+iDigits		6		# Maximum number of digits to right of decimal
+dMinValue	1e-10		# Minimum value of eccentricity/obliquity
+
+# Option names must be exact in spelling and case.
+
+# Evolution Parameters
+bDoForward	1		# Perform a forward evolution?
+bVarDt		1		# Use variable timestepping?
+dEta		0.001		# Coefficient for variable timestepping
+dStopTime	5.0e9   	# Stop time for evolution
+dOutputTime	1.0e4		# Output timesteps (assuming in body files)
+
+# Some options are only permitted in the primary file, some are forbidden. 
+# That should really be documented!

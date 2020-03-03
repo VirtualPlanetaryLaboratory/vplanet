@@ -233,9 +233,9 @@ void fvRead235UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void fvInitializeOptionsRadheat(OPTIONS*,fnReadOption[]);
 void fvReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
-int fbHaltMin40KPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int fbHaltMin232ThPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int fbHaltMin238UPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltMin40KPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);
+int fbHaltMin232ThPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);
+int fbHaltMin238UPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);
 //void CountHaltsRadheat(HALT*,int*);
 
 /* Verify Functions */

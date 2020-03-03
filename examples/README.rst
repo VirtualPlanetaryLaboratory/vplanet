@@ -5,7 +5,7 @@ This subdirectory contains examples of numerous ways to use `VPLanet`. A brief
 description of each is provided below, arranged by topic [with modules listed in brackets]. Click on the directory to see VPLanet input files, Python scripts,
 plots, and more description of the physics. Use these VPLanet input files and Python scripts to reproduce published figures, or as a starting point to begin your own fundamental research. The simulations used to generate these figures are `validated with continuous integration <../tests>`_ with the identical (or representative, in the case of parameter sweeps) initial conditions. Looking for something not present? E-mail Rory Barnes, rory@astro.washington.edu, to inquire if that functionality is available and validated.
 
-It is optional to install vplot and you can run VPLanet with installing vplot. However, to run the Python scripts and generate the figures in the subdirectories, you must install `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_.
+To run the Python scripts and generate the figures in the subdirectories, you must install `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_. Note, however, that you can run VPLanet with installing vplot and use your preferred method to visualize the output.
 
 **Atmospheres**
 ===============
@@ -18,7 +18,22 @@ It is optional to install vplot and you can run VPLanet with installing vplot. H
 
 `EarthClimate <EarthClimate>`_: Energy balance climate model of Earth over one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
 
+`HabEvapCores <HabEvapCores>`_: Transition of Proxima b from a mini-Neptune to a habitable evaporated core via hydrogen loss. [AtmEsc, STELLAR]
+
+`HLossTides <HLossTides>`_: Coupled atmospheric escape and tidal evolution for
+the CPL tidal model with hydrogen escape via energy-limited,
+radiation-recombination-limited, Bondi-limited, and automatic models. [AtmEsc,
+EqTide, STELLAR]
+
+`IceBelts <IceBelts>`_: Formation of equatorial ice belts on planets with high obliquity.
+
+`MiniNeptuneEvap <MiniNeptuneEvap>`_: Removal of a mini-Neptune's isothermal hydrogen atmosphere by high energy radiation and/or Roche lobe overflow.
+
 `VenusWaterLoss <VenusWaterLoss>`_: Water loss from Venus due to water photolyzation and hydrogen escape. [AtmEsc, STELLAR]
+
+`WaterLossTides <WaterLossTides>`_: Evolution of a planet losing water from
+photolysis and hydrogen escape while it tidally evolves. [AtmEsc, EqTide,
+STELLAR]
 
 **Galactic Effects**
 ====================
@@ -45,6 +60,8 @@ It is optional to install vplot and you can run VPLanet with installing vplot. H
 
 `CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [Distorb, DistRot, EqTide]
 
+`CassiniMulti <CassiniMulti>`_: Tidal damping of the two planets orbiting Teegarden's Star into Cassini states. [EqTide, DistOrb, DistRot, STELLAR]
+
 `ChaoticResonances <ChaoticResonances>`_: N-body integration of a planetary system in a chaotic eccentricity-inclination mean motion resonance. [SpiNBody]
 
 `CircumbinaryOrbit <CircumbinaryOrbit>`_: Orbital evolution of a circumbinary planet. [BINARY]
@@ -54,8 +71,6 @@ It is optional to install vplot and you can run VPLanet with installing vplot. H
 `SSDistOrbDistRot <SSDistOrbDistRot>`_: Evolution of the Solar System planets' orbital and rotational angular momenta from approximate models. [DistOrb, DistRot]
 
 `TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a low mass star and tidally heated. [EqTide, RadHeat, ThermInt]
-
-`IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity according to equilibrium tide theory. [EqTide, VSPACE]
 
 **Stars**
 =========
@@ -75,8 +90,19 @@ It is optional to install vplot and you can run VPLanet with installing vplot. H
 
 `CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [Distorb, DistRot, EqTide]
 
+`CassiniMulti <CassiniMulti>`_: Tidal damping of the two planets orbiting Teegarden's Star into Cassini states. [EqTide, DistOrb, DistRot, STELLAR]
+
+`HLossTides <HLossTides>`_: Coupled atmospheric escape and tidal evolution for
+the CPL tidal model with hydrogen escape via energy-limited,
+radiation-recombination-limited, Bondi-limited, and automatic models. [AtmEsc,
+EqTide, STELLAR]
+
 `IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity according to equilibrium tide theory. [EqTide, VSPACE]
 
 `TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a low mass star and tidally heated. [EqTide, RadHeat, ThermInt]
 
 `TideLock <TideLock>`_: Tidal locking of habitable planets with the CPL and CTL equilibrium tide models. [EqTide]
+
+`WaterLossTides <WaterLossTides>`_: Evolution of a planet losing water from
+photolysis and hydrogen escape while it tidally evolves. [AtmEsc, EqTide,
+STELLAR]

@@ -557,7 +557,7 @@ void ReadEqtideMantleTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      body[iFile-1].bMantle = 0; // Default to no ocean tides
+      body[iFile-1].bMantle = 0; // Default to no ocean tides XXX
 }
 
 // Use fixed tidal radius?
@@ -573,7 +573,23 @@ void ReadUseTidalRadius(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if(iFile > 0)
-      body[iFile-1].bUseTidalRadius = 0; // Default to no
+      body[iFile-1].bUseTidalRadius = 0; // Default to no XXX
+}
+
+// Use outer layer's tidal Q for the body's Q?
+void ReadUseOuterTidalQ(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if(lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bUseOuterTidalQ = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if(iFile > 0)
+      body[iFile-1].bUseOuterTidalQ = 0; // Default to no XXX
 }
 
 // Include effects of envelope tides?
@@ -690,13 +706,26 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_MANTLETIDES].bMultiFile = 1;
   fnRead[OPT_MANTLETIDES] = &ReadEqtideMantleTides;
 
-
   sprintf(options[OPT_USETIDALRADIUS].cName,"bUseTidalRadius");
   sprintf(options[OPT_USETIDALRADIUS].cDescr,"Fix radius used for CPL tidal equations");
   sprintf(options[OPT_USETIDALRADIUS].cDefault,"0");
   options[OPT_USETIDALRADIUS].iType = 0;
   options[OPT_USETIDALRADIUS].bMultiFile = 1;
   fnRead[OPT_USETIDALRADIUS] = &ReadUseTidalRadius;
+
+  sprintf(options[OPT_USEOUTERTIDALQ].cName,"bUseOuterTidalQ");
+  sprintf(options[OPT_USEOUTERTIDALQ].cDescr,"User outermost layer's tidal Q as "
+        "body's total tidal Q?");
+  sprintf(options[OPT_USEOUTERTIDALQ].cDefault,"0");
+  options[OPT_USEOUTERTIDALQ].iType = 0;
+  options[OPT_USEOUTERTIDALQ].bMultiFile = 1;
+  fnRead[OPT_USEOUTERTIDALQ] = &ReadUseOuterTidalQ;
+  sprintf(options[OPT_USEOUTERTIDALQ].cLongDescr,
+    "The total tidal Q of a body can be computed either as the sum of "
+    "contributions of all layers (mantle, ocean, envelope), or as the tidal Q "
+    "of the outer most layer. When %s is set to 0, the tidal Q is the sum, "
+    "when set to 1, it is the outer layer's (envelope, then ocean, then mantle) "
+    "value.\n",options[OPT_USEOUTERTIDALQ].cName);
 
   sprintf(options[OPT_ENVTIDES].cName,"bEnvTides");
   sprintf(options[OPT_ENVTIDES].cDescr,"Include effects of gaseous envelope tides");
@@ -1635,7 +1664,8 @@ void FinalizeUpdateSemiEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 /* Double Synchronous? */
 
 /* How is this handled for multi-planet systems? XXX */
-int HaltDblSync(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltDblSync(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   /* Forbidden if iNumBodies > 2 XXX Add to VerifyHalts */
 
   /* dMeanMotion set by call to TidalProperties in Evolve() */
@@ -1653,7 +1683,8 @@ int HaltDblSync(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int i
 }
 
 /* Tide-locked? */
-int HaltTideLock(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltTideLock(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   /* Forbidden for body 0 if iNumBodies > 2 XXX Add to VerifyHalts*/
 
   if ((body[iBody].dRotRate == body[iBody].dMeanMotion) && halt->bTideLock) {
@@ -1673,7 +1704,8 @@ int HaltTideLock(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int 
 }
 
 /* Synchronous Rotation? */
-int HaltSyncRot(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltSyncRot(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   /* Forbidden for body 0 if iNumBodies > 2 XXX Add to VerifyHalts */
 
   if (halt->bSync && (body[iBody].dRotRate == body[iBody].dMeanMotion)) {
@@ -2404,14 +2436,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALQENV].iNum = 1;
   output[OUT_TIDALQENV].iModuleBit = EQTIDE;
   fnWrite[OUT_TIDALQENV] = WriteTidalQEnv;
-/*
-  sprintf(output[OUT_TIDALQ].cName,"TidalQ");
-  sprintf(output[OUT_TIDALQ].cDescr,"Tidal Q");
-  output[OUT_TIDALQ].bNeg = 0;
-  output[OUT_TIDALQ].iNum = 1;
-  output[OUT_TIDALQ].iModuleBit = EQTIDE;
-  fnWrite[OUT_TIDALQ] = WriteTidalQ;
-*/
+
   sprintf(output[OUT_DSEMIDTEQTIDE].cName,"DsemiDtEqtide");
   sprintf(output[OUT_DSEMIDTEQTIDE].cDescr,"Total da/dt in EQTIDE");
   sprintf(output[OUT_DSEMIDTEQTIDE].cNeg,"AU/Gyr");

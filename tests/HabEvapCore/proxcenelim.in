@@ -1,0 +1,25 @@
+# Proxima b's parameters
+sName		    ProxCenELim			   # Body's name
+saModules 	atmesc
+
+# Physical Properties
+dMass		-1.27  			 # Mass, negative -> Earth masses
+
+# Orbital Properties
+dEcc            0.1		   # Eccentricity
+dSemi           0.0485	 # Semi-major axis, negative -> AU
+
+# ATMESC Properties
+dXFrac                    1.0             # X-Ray/XUV absorption radius (fraction of planet radius)
+dSurfWaterMass            -1.5            # Initial surface water (Earth oceans)
+dEnvelopeMass             -0.001          # Initial envelope mass (Earth masses)
+bHaltSurfaceDesiccated    0               # Halt when dry?
+bHaltEnvelopeGone         0               # Halt when evaporated?
+dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
+dMinEnvelopeMass          -1.e-5
+sPlanetRadiusModel        proximacenb
+bUseEnergyLimited         1               # Is the flow energy-limited?
+
+#Output
+saOutputOrder Time -Radius -SurfWaterMass -EnvelopeMass -OxygenMass -PlanetRadius $
+      -HZLimRunaway -HZlimMaxGreenhouse

@@ -628,3 +628,31 @@ double fdLuminosityTotal(BODY *body,int iNumBodies) {
 
   return dLumTot;
 }
+
+/**
+  Handle a merge by zeroing out lost planet's derivatives, and adding its mass
+  to the central body.
+
+@param body A pointer to the current BODY instance
+@param update A pointer to the UPDATE struct
+@param iBody The index of the BODY struct for the lost planet
+
+@return The mutual inclination
+*/
+
+void fdMergePlanet(BODY *body,UPDATE *update,fnUpdateVariable ***fnUpdate,
+      int iBody) {
+  int iVar,iEqn;
+
+  // Reset derivatives for merged body to dTINY
+  for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
+    for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
+      fnUpdate[iBody][iVar][iEqn] = fndUpdateFunctionTiny;
+    }
+  }
+
+  // Add orbiter's mass to central body
+  body[0].dMass += body[iBody].dMass;
+  body[iBody].dMass = 0;
+  body[iBody].dSemi = body[0].dRadius;
+}

@@ -823,7 +823,22 @@ void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
   if (body[iBody].bThermint && body[iBody].bEqtide && !body[iBody].bOcean && !body[iBody].bEnv) {
     *dTmp = body[iBody].dTidalQMan;
   } else {
-    *dTmp = body[iBody].dTidalQ;
+    //*dTmp = body[iBody].dTidalQ;
+    if (body[iBody].bUseOuterTidalQ) {
+      if (body[iBody].bEnv) {
+        *dTmp = body[iBody].dK2Env/body[iBody].dImK2Env;
+      } else if (body[iBody].bOcean) {
+        *dTmp = body[iBody].dK2Ocean/body[iBody].dImK2Ocean;
+      } else {
+        *dTmp = body[iBody].dK2Man/body[iBody].dImK2Man;
+      }
+    } else {
+      if (body[iBody].bMantle) {
+        *dTmp = -body[iBody].dK2Man/body[iBody].dImK2Man;
+      } else {
+        *dTmp = -body[iBody].dK2/body[iBody].dImK2;
+      }
+    }
   }
 
   strcpy(cUnit,"");
@@ -1111,7 +1126,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HZLIMDRYRUNAWAY].bNeg = 1;
   output[OUT_HZLIMDRYRUNAWAY].dNeg = 1/AUM;
   output[OUT_HZLIMDRYRUNAWAY].iNum = 1;
-  output[OUT_HZLIMDRYRUNAWAY].iModuleBit = STELLAR + BINARY + SPINBODY;
+  output[OUT_HZLIMDRYRUNAWAY].iModuleBit = 1;
   fnWrite[OUT_HZLIMDRYRUNAWAY] = &WriteHZLimitDryRunaway;
 
   sprintf(output[OUT_HZLIMRECVENUS].cName,"HZLimRecVenus");
@@ -1120,7 +1135,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HZLIMRECVENUS].bNeg = 1;
   output[OUT_HZLIMRECVENUS].dNeg = 1./AUM;
   output[OUT_HZLIMRECVENUS].iNum = 1;
-  output[OUT_HZLIMRECVENUS].iModuleBit = STELLAR + BINARY + SPINBODY;
+  output[OUT_HZLIMRECVENUS].iModuleBit = 1;
   fnWrite[OUT_HZLIMRECVENUS] = &WriteHZLimitRecentVenus;
 
   sprintf(output[OUT_HZLIMRUNAWAY].cName,"HZLimRunaway");
@@ -1129,7 +1144,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HZLIMRUNAWAY].bNeg = 1;
   output[OUT_HZLIMRUNAWAY].dNeg = 1./AUM;
   output[OUT_HZLIMRUNAWAY].iNum = 1;
-  output[OUT_HZLIMRUNAWAY].iModuleBit = STELLAR + BINARY + SPINBODY;
+  output[OUT_HZLIMRUNAWAY].iModuleBit = 1;
   fnWrite[OUT_HZLIMRUNAWAY] = &WriteHZLimitRunawayGreenhouse;
 
   sprintf(output[OUT_HZLIMMOIST].cName,"HZLimMoistGreenhouse");
@@ -1138,7 +1153,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HZLIMMOIST].bNeg = 1;
   output[OUT_HZLIMMOIST].dNeg = 1./AUM;
   output[OUT_HZLIMMOIST].iNum = 1;
-  output[OUT_HZLIMMOIST].iModuleBit = STELLAR + BINARY + SPINBODY;
+  output[OUT_HZLIMMOIST].iModuleBit = 1;
   fnWrite[OUT_HZLIMMOIST] = &WriteHZLimitMoistGreenhouse;
 
   sprintf(output[OUT_HZLIMMAX].cName,"HZLimMaxGreenhouse");
@@ -1147,7 +1162,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HZLIMMAX].bNeg = 1;
   output[OUT_HZLIMMAX].dNeg = 1./AUM;
   output[OUT_HZLIMMAX].iNum = 1;
-  output[OUT_HZLIMMAX].iModuleBit = STELLAR + BINARY + SPINBODY;
+  output[OUT_HZLIMMAX].iModuleBit = 1;
   fnWrite[OUT_HZLIMMAX] = &WriteHZLimitMaxGreenhouse;
 
   sprintf(output[OUT_HZLIMEARLYMARS].cName,"HZLimEarlyMars");
@@ -1156,9 +1171,8 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HZLIMEARLYMARS].bNeg = 1;
   output[OUT_HZLIMEARLYMARS].dNeg = 1./AUM;
   output[OUT_HZLIMEARLYMARS].iNum = 1;
-  output[OUT_HZLIMEARLYMARS].iModuleBit = STELLAR + BINARY + SPINBODY;
+  output[OUT_HZLIMEARLYMARS].iModuleBit = 1;
   fnWrite[OUT_HZLIMEARLYMARS] = &WriteHZLimitEarlyMars;
-
 
   /*
    * I
@@ -1355,7 +1369,8 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBMEANMOTION].bNeg = 1;
   output[OUT_ORBMEANMOTION].dNeg = DAYSEC;
   output[OUT_ORBMEANMOTION].iNum = 1;
-  output[OUT_ORBMEANMOTION].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY;
+  output[OUT_ORBMEANMOTION].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY +
+                                         ATMESC + POISE;
   fnWrite[OUT_ORBMEANMOTION] = &WriteOrbMeanMotion;
 
   sprintf(output[OUT_ORBPER].cName,"OrbPeriod");
@@ -1364,7 +1379,8 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBPER].bNeg = 1;
   output[OUT_ORBPER].dNeg = 1./DAYSEC;
   output[OUT_ORBPER].iNum = 1;
-  output[OUT_ORBPER].iModuleBit = EQTIDE + DISTORB + BINARY;
+  output[OUT_ORBPER].iModuleBit = EQTIDE + DISTORB + BINARY + POISE + SPINBODY +
+                                  ATMESC;
   fnWrite[OUT_ORBPER] = &WriteOrbPeriod;
 
   sprintf(output[OUT_ORBSEMI].cName,"SemiMajorAxis");
@@ -1373,7 +1389,8 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBSEMI].bNeg = 1;
   output[OUT_ORBSEMI].dNeg = 1./AUM;
   output[OUT_ORBSEMI].iNum = 1;
-  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT + POISE + SPINBODY;
+  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT + POISE
+                                   + SPINBODY + ATMESC;
   fnWrite[OUT_ORBSEMI] = &WriteOrbSemi;
 
   /*

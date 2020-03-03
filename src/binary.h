@@ -81,8 +81,10 @@ void ReadHaltHolmanUnstable(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadHaltRocheLobe(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
 /* Halt Functions */
-int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody);
-int fbHaltRocheLobe(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody);
+int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+    UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody);
+int fbHaltRocheLobe(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+    fnUpdateVariable ***fnUpdate,int iBody);
 void VerifyHaltBinary(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int *iHalt);
 void CountHaltsBinary(HALT*,int*);
 

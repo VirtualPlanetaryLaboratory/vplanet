@@ -472,7 +472,7 @@ void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   dHaltMaxMutualInc, FALSE if not
 */
 int fbHaltMaxMutualIncSpiNBody(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
-      UPDATE *update,int iBody) {
+      UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
   int jBody;
 

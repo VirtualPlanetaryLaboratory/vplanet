@@ -157,6 +157,10 @@
 #define OUT_TEMPMAXLAND      1956
 #define OUT_TEMPMAXWATER     1957
 #define OUT_PEAKINSOL        1958
+#define OUT_NORTHICECAP      1959
+#define OUT_SOUTHICECAP      1960
+#define OUT_ICEBELT          1961
+#define OUT_ICEFREE          1962
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -228,7 +232,11 @@ void PoiseIceSheets(BODY*,EVOLVE*,int);
 void SeaIce(BODY*,int);
 void MatrixSeasonal(BODY*,int);
 void SourceFSeas(BODY*,int,int);
-void Snowball(BODY*,int);
+void Snowball(BODY*,int); // XXX Should change to int fbSnowball
+int fbIceBelt(BODY*,int);
+int fbSouthIceCap(BODY*,int);
+int fbNorthIceCap(BODY*,int);
+int fbIceFree(BODY*,int);
 
 double IceMassBalance(BODY*,int,int);
 

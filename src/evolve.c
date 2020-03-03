@@ -529,7 +529,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
     fdGetUpdateInfo(body,control,system,update,fnUpdate);
 
     /* Halt? */
-    if (fbCheckHalt(body,control,update)) {
+    if (fbCheckHalt(body,control,update,fnUpdate)) {
       fdGetUpdateInfo(body,control,system,update,fnUpdate);
       WriteOutput(body,control,files,output,system,update,fnWrite,control->Evolve.dTime,control->Io.dOutputTime/control->Evolve.nSteps);
       return;

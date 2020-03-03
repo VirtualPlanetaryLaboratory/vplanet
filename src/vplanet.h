@@ -311,6 +311,7 @@ struct BODY {
   int bTideLock;         /**< Is a body tidally locked? */
   double dLockTime;	 /**< Time when body tidally-locked */
   int bUseTidalRadius;   /**< Set a fixed tidal radius? */
+	int bUseOuterTidalQ;   /**< Set total Q to outer layer's value? */
   double dTidalRadius;   /**< Radius used by tidal evoltion equations (CPL only currently) */
   int iTidePerts;        /**< Number of Tidal Perturbers */
   int *iaTidePerts;      /**< Body #'s of Tidal Perturbers */
@@ -1477,7 +1478,8 @@ typedef void (*fnForceBehaviorModule)(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */
 
-typedef int (*fnHaltModule)(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+typedef int (*fnHaltModule)(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,
+							int);
 
 struct CONTROL {
   EVOLVE Evolve;

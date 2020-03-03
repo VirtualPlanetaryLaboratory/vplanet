@@ -66,8 +66,9 @@ void ReadOptionsAtmEsc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int
 #define ATMESCHALTSYSEND       5  /**< Start of AtmEsc halting functions */
 #define ATMESCHALTBODYEND      5  /**< End of AtmEsc halting functions */
 
-int fbHaltSurfaceDesiccated(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int fbHaltEnvelopeGone(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltSurfaceDesiccated(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,
+      int);
+int fbHaltEnvelopeGone(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);
 void CountHaltsAtmEsc(HALT*,int*);
 
 /* Verify Functions */
@@ -165,6 +166,7 @@ double fdBondiLimitedDmDt(BODY*,int);
 int fbRRCriticalFlux(BODY*,int);
 int fbBondiCriticalDmDt(BODY*,int);
 double fdRRCriticalFlux(BODY*,int);
+void fvAtmEscRegimeChangeOutput(int,int,double);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY*,SYSTEM*,UPDATE*,int,int);

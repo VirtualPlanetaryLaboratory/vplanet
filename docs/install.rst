@@ -28,6 +28,15 @@ select zip, and download it into your preferred directory. Then type
 Currently, the installer doesn't add the VPLanet executable to your :code:`PATH` variable, so
 you'll have to `do it manually <https://stackoverflow.com/questions/14637979/how-to-permanently-set-path-on-linux-unix>`_.
 
+If you are running macOS Catalina or later, you may need to force the operating
+system to set the location of C libraries:
+
+.. code-block:: bash
+
+   export CPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include
+
+Thanks to Chris Colose for identifying this issue.
+
 Windows 10 Installation
 --------------------
 

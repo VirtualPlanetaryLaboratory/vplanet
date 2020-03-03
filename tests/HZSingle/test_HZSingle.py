@@ -16,11 +16,11 @@ def test_HZSingle():
     output = GetOutput(path=cwd)
 
     # Check
-    assert np.isclose(output.log.final.a.HZLimRecVenus, 6.038467e+09)
-    assert np.isclose(output.log.final.a.HZLimEarlyMars, 1.669770e+10)
-    assert np.isclose(output.log.final.a.HZLimRunaway, 7.949225e+09)
-    assert np.isclose(output.log.final.a.HZLimMoistGreenhouse, 7.989892e+09)
-    assert np.isclose(output.log.final.a.HZLimMaxGreenhouse, 1.531054e+10)
+    assert np.isclose(output.log.initial.a.HZLimRecVenus, 2.879712e+10)
+    assert np.isclose(output.log.initial.a.HZLimEarlyMars, 7.969376e+10)
+    assert np.isclose(output.log.initial.a.HZLimRunaway, 3.790332e+10)
+    assert np.isclose(output.log.initial.a.HZLimMoistGreenhouse, 3.810337e+10)
+    assert np.isclose(output.log.initial.a.HZLimMaxGreenhouse, 7.307316e+10)
 
 
 if __name__ == "__main__":

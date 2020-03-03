@@ -15,7 +15,9 @@ os.chdir('tests')
 print('done.')
 
 tot_fail = 0
+tot_test = 0
 for sub in subdir:
+    tot_test += 1
     sys.stdout.write(sub)
     sys.stdout.flush()
     os.chdir(sub)
@@ -37,4 +39,4 @@ sys.stdout.write('Done! ')
 if (tot_fail == 0):
     print('VPLanet is mem-check-clean!')
 else:
-    print(repr(tot_fail)+' tests failed.')
+    print(repr(tot_fail)+'/'+repr(tot_test)+' test(s) failed.')

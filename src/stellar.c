@@ -267,7 +267,8 @@ void ReadEvolveRG(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
 
 /* Halts */
 
-void ReadHaltEndBaraffeGrid(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void ReadHaltEndBaraffeGrid(BODY *body,CONTROL *control,FILES *files,
+      OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
   int bTmp;
@@ -822,7 +823,8 @@ void FinalizeUpdateSemiStellar(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
 
 /***************** STELLAR Halts *****************/
 
-int fbHaltEndBaraffeGrid(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltEndBaraffeGrid(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   if (body[iBody].iStellarModel == STELLAR_MODEL_CONST) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s reached the edge of the luminosity grid at ", body[iBody].cName);

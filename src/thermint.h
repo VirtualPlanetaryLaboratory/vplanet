@@ -278,8 +278,8 @@ void fvReadOptionsThermint(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[]
 #define THERMINTHALTSYSEND       6
 #define THERMINTHALTBODYEND      6
 
-int fbHaltMinTMan(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);  /**< syntax now is same as fnHaltModule in vplanet.h    */
-int fbHaltMinTCore(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltMinTMan(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);  /**< syntax now is same as fnHaltModule in vplanet.h    */
+int fbHaltMinTCore(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);
 void fvCountHaltsThermint(HALT*,int*);
 
 /* Verify Functions */

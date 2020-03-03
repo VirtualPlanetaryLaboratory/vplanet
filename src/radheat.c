@@ -2867,7 +2867,8 @@ void fvFinalizeUpdate235UNumCrustRadheat(BODY *body,UPDATE*update,int *iEqn,int 
    @param update Update struct
    @param iBody Index of body
 */
-int fbHaltMin40KPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltMin40KPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+  UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
   if (fd40KPower(update,iBody) < halt->dMin40KPower) {
     if (io->iVerbose >= VERBPROG) {
@@ -2891,7 +2892,8 @@ int fbHaltMin40KPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update
    @param update Update struct
    @param iBody Index of body
 */
-int fbHaltMin232ThPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltMin232ThPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+    UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
   if (fd232ThPower(update,iBody) < halt->dMin232ThPower) {
     if (io->iVerbose >= VERBPROG) {
@@ -2915,7 +2917,8 @@ int fbHaltMin232ThPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *upda
    @param update Update struct
    @param iBody Index of body
 */
-int fbHaltMin238UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltMin238UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
   if (fd238UPower(update,iBody) < halt->dMin238UPower) {
     if (io->iVerbose >= VERBPROG) {
@@ -2939,7 +2942,8 @@ int fbHaltMin238UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *updat
    @param update Update struct
    @param iBody Index of body
 */
-int fbHaltMin235UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltMin235UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
   if (fd235UPower(update,iBody) < halt->dMin235UPower) {
     if (io->iVerbose >= VERBPROG) {
@@ -2963,7 +2967,8 @@ int fbHaltMin235UPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *updat
    @param update Update struct
    @param iBody Index of body
 */
-int fbHaltMinRadPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltMinRadPower(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   int iFoo;
   iFoo = fdRadPowerTotal(body,iBody);
 

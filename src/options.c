@@ -35,11 +35,14 @@ int CheckComment(char cLine[],int iLen) {
 
   for (iPos=0;iPos<iLen;iPos++) {
     if (!isspace(cLine[iPos])) {
-      if (cLine[iPos] == 35) // # is ASCII code 35
-      return 1;
-    } else
-      return 0;
+      if (cLine[iPos] == 35) {// # is ASCII code 35
+        return 1;
+      } else {
+        return 0;
+      }
+    }
   }
+
   return 0;
 }
 
@@ -58,7 +61,8 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
   memset(cWord,'\0',OPTLEN);
 
   while(fgets(cTmp,LINE,fp) != NULL) {
-    if (!CheckComment(cTmp,iLen)) {
+    // XXX Should iLen be LINE? This may be why many spaces before # doesn't work
+    if (!CheckComment(cTmp,LINE)) {
       sscanf(cTmp,"%s",cWord);
       // XXX Add check for comments embedded in the option here
       if (memcmp(cWord,cOption,iLen+1) == 0) {
@@ -276,8 +280,8 @@ void AddOptionStringArray(char cFile[],char cOption[],char saInput[MAXARRAY][OPT
       (*iNumLines)++;
     } else {
       if (iVerbose >= VERBINPUT) {
-	fprintf(stderr,"WARNING: Trailing $ found without a subsequent valid line for option %s in file %s.\n",cOption,cFile);
-	bContinue=0;
+	       fprintf(stderr,"WARNING: Trailing $ found without a subsequent valid line for option %s in file %s.\n",cOption,cFile);
+	       bContinue=0;
       }
     }
   }

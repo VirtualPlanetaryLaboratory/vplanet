@@ -10,7 +10,7 @@ bOverwrite	  1			     # Allow file overwrites?
 # List of "body files" that contain body-specific parameters
 saBodyFiles	    star.in $	        # The star
 		            proxcenelim.in $ 	# Radius model: Prox Cen b; AtmEsc model: Energy-limited
-		            proxcenrrlim.in $ # Radius model: Prox Cen b; AtmEsc model: RR-limited
+                proxcenrrlim.in $ # Radius model: Prox Cen b; AtmEsc model: RR-limited
 		            proxcenauto.in  $	# Radius model: Prox Cen b; AtmEsc model: AtmEscAuto
 		            lc17elim.in  $    # Radius model: LehmerCatling17; AtmEsc model: Energy-limited
                 lc17rrlim.in $ 	  # Radius model: LehmerCatling17; AtmEsc model: RR-limited

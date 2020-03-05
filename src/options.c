@@ -2826,7 +2826,25 @@ void ReadSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
       body[iFile-1].dSurfaceWaterMass = options->dDefault;
 }
 
-/* Tidal Q */
+void ReadTemperature(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dTemperature = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dTemperature = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dTemperature = options->dDefault;
+}
+
+/* Tidal Q -- must be in options because it is relevant for thermint */
 
 void ReadTidalQ(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
@@ -2847,6 +2865,24 @@ void ReadTidalQ(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
   } else {
     if (iFile > 0)
       body[iFile-1].dTidalQ = options->dDefault;
+  }
+}
+
+// Use outer layer's tidal Q for the body's Q?
+void ReadUseOuterTidalQ(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if(lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bUseOuterTidalQ = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0) {
+      body[iFile-1].bUseOuterTidalQ = 0; // Default to no XXX
+    }
   }
 }
 
@@ -3800,6 +3836,28 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_UNITTEMP].bNeg = 0;
   options[OPT_UNITTEMP].iType = 3;
   options[OPT_UNITTEMP].iFileType = 2;
+
+  sprintf(options[OPT_TEMPERATURE].cName,"dTemperature");
+  sprintf(options[OPT_TEMPERATURE].cDescr,"Initial effective temperature");
+  sprintf(options[OPT_TEMPERATURE].cDefault,"TSUN");
+  options[OPT_TEMPERATURE].dDefault = TSUN;
+  options[OPT_TEMPERATURE].iType = 0;
+  options[OPT_TEMPERATURE].bMultiFile = 1;
+  fnRead[OPT_TEMPERATURE] = &ReadTemperature;
+
+  sprintf(options[OPT_USEOUTERTIDALQ].cName,"bUseOuterTidalQ");
+  sprintf(options[OPT_USEOUTERTIDALQ].cDescr,"User outermost layer's tidal Q as "
+        "body's total tidal Q?");
+  sprintf(options[OPT_USEOUTERTIDALQ].cDefault,"0");
+  options[OPT_USEOUTERTIDALQ].iType = 0;
+  options[OPT_USEOUTERTIDALQ].bMultiFile = 1;
+  fnRead[OPT_USEOUTERTIDALQ] = &ReadUseOuterTidalQ;
+  sprintf(options[OPT_USEOUTERTIDALQ].cLongDescr,
+    "The total tidal Q of a body can be computed either as the sum of "
+    "contributions of all layers (mantle, ocean, envelope), or as the tidal Q "
+    "of the outer most layer. When %s is set to 0, the tidal Q is the sum, "
+    "when set to 1, it is the outer layer's (envelope, then ocean, then mantle) "
+    "value.\n",options[OPT_USEOUTERTIDALQ].cName);
 
   /*
    *

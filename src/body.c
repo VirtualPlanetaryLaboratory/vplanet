@@ -8,9 +8,9 @@
   @date May 7 2014
 
   This file contains subroutines that describe physical properties of
-  any body. This include conversions between the option parameter (a property
+  any body. This includes conversions between the option parameter (a property
   that may be used at input) and the system parameter (the property in the BODY
-  struct that is always up-to-date). If unsure between here and orbit.c, put
+  struct that is always up-to-date). If unsure between here and system.c, put
   here. Also includes mathemtatical relationships.
 
 */
@@ -475,6 +475,7 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dShmodUMan=src[iBody].dShmodUMan;
     dest[iBody].dStiffness=src[iBody].dStiffness;
     dest[iBody].dImK2ManOrbModel = src[iBody].dImK2ManOrbModel;
+    dest[iBody].bUseOuterTidalQ = src[iBody].bUseOuterTidalQ;
 
     if (iBody > 0) {
       dest[iBody].dHecc = src[iBody].dHecc;
@@ -1318,7 +1319,7 @@ double fdBaraffe(int iParam, double A, double M, int iOrder, int *iError) {
 */
 
 void fdHabitableZoneKopparapu2013(BODY *body,int iNumBodies,
-      double daHZLimit[6]) {
+      double *daHZLimit) {
 
   int iLimit;
   double dT_star,dLuminosity,dSeff[6];

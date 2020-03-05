@@ -1,0 +1,28 @@
+# Parameters from Leung & Lee (2013)
+sName		secondary		              # Body's name
+saModules binary eqtide stellar   # Modules
+
+# Physical Parameters
+iBodyType       1               # 1 -> Star
+dMass		        0.1             # Mass, negative -> Earth masses
+dRotPeriod      -4.0            # Rotation period (-1 -> days)
+dAge		        1.0e6           # Initial age (yr)
+
+# EQTIDE Parameters
+dTidalTau		    3.17e-9         # Tidal time lag (yr)
+dK2		          0.5		          # Love number of degree 2
+dMaxLockDiff    0.01            # Fractional diff between Prot, Porb before forcing tidal locking
+saTidePerts	    primary	        # Body name(s) of tidal perturbers
+
+# Orbital parameters for EQTIDE and BINARY
+dEcc		        0.3             # Binary orbital eccentricity
+dOrbPeriod	    -7.5		        # Binary orbital Period [d]
+dLongP          0.0             # Binary longitude of pericenter [deg]
+dLL13PhiAB      0.0             # Initial binary mean anomaly [deg]
+
+# STELLAR Parameters
+sStellarModel baraffe           # Use Baraffe+2015 stellar evolution models
+sMagBrakingModel matt           # Use Matt+2015 magnetic braking model
+
+# Ignore outputs for primary star
+saOutputOrder Time -TotEn -TotAngMom -Semim Ecce -OrbPer -CriticalSemiMajorAxis

@@ -1,20 +1,13 @@
 """
-This script produces the STEEP evolution figure from Graham et al., in prep.
-
-David P. Fleming, University of Washington, 2020
+xxx
 """
 
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-from matplotlib.ticker import FormatStrFormatter
 import numpy as np
 import vplot as vpl
 import sys
-import os
-import subprocess
 
-#Typical plot parameters that make for pretty plots
-mpl.rcParams['font.size'] = 15.0
 
 # Check correct number of arguments
 if (len(sys.argv) != 2):
@@ -26,72 +19,85 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('Options are: pdf, png')
     exit(1)
 
-# Loop over directories to run simulations
-dataDirs = ["CPL_RG", "CPL_RG_OFF",
-        "CTL_RG", "CTL_RG_OFF"]
-dirPath = os.path.dirname(os.path.realpath(__file__))
 
-for dir in dataDirs:
-    os.chdir(os.path.join(dirPath,dir))
+#Typical plot parameters that make for pretty plots
+mpl.rcParams['figure.figsize'] = (36,27)
+mpl.rcParams['font.size'] = 21.0
 
-    # Run simulation
-    subprocess.call(['vplanet', 'vpl.in'])
+# Load data
+output = vpl.GetOutput()
 
+# Extract data
+time = output.cbp.Time
+ecc_cbp = output.cbp.Eccentricity
+a_cbp = output.cbp.CBPR #Semi-major axis of the cbp
+instell_cbp = output.cbp.Instellation # Incident stellar radiation on the cbp
+sol_const = 1361 #Solar Constant, average incident flux the Earth receives [W/m^2]
+instell_cbp_Earth = instell_cbp / sol_const #Instellation of cpb in Earth units
 
-# Plot
-fig, axes = plt.subplots(ncols=1, nrows=3, sharex=True, figsize=(8, 18))
+a_crit = output.secondary.CriticalSemiMajorAxis
 
-labels = [r"CPL, Dynamic $r_g$", r"CPL, Static $r_g$",
-          r"CTL, Dynamic $r_g$", r"CTL, Static $r_g$"]
+#Plot
+fig, axes = plt.subplots(ncols=1, nrows=3, sharey=False)
+fig.set_size_inches(16,22)
 
-colors = [vpl.colors.red, vpl.colors.purple,
-          vpl.colors.orange, vpl.colors.pale_blue]
+# Each line gets it own color
+planet_color = vpl.colors.pale_blue
+acrit_color = "k" #black
+a_critMax_color = vpl.colors.orange
 
-#Extracting and plotting the data from each folder
-for ii in range(len(dataDirs)):
-    # Load data
-    output = vpl.GetOutput(os.path.join(dirPath,dataDirs[ii]))
+##Plotting the insolation of the cbp on the top panel##
+axes[0].plot(time, instell_cbp_Earth, lw=4,
+             color = planet_color, ls = "-",
+             label = "CBP")
 
-    # Extract data
-    time = output.secondary.Time
-    a_crit = output.secondary.CriticalSemiMajorAxis
-    orbP = output.secondary.OrbPeriod
-    ecc = output.secondary.Eccentricity
+#Format
+axes[0].set_xscale("log")
+axes[0].set_xlabel("Time [yr]", fontsize = 35)
+axes[0].set_xlim(1e+6, time.max())
+axes[0].set_ylim(ymin=0.45, ymax = 0.9)
+axes[0].set_ylabel("Instellation " + "[Earth Units]", fontsize = 35)
+axes[0].tick_params(axis = 'both', which = 'major', labelsize = 28, width=3, length=9)
+axes[0].set_rasterization_zorder(0)
 
-    # Top: Critical semi-major axis
-    axes[0].plot(time, a_crit, lw=4, label=labels[ii], color = colors[ii])
+##Plotting the semi-major axis of the cbp and a_crit on the middle panel##
+axes[1].plot(time, a_cbp, lw=4,
+             color = planet_color, ls = "-",
+             label = "CBP") #Semi-major axis of the cbp
+axes[1].plot(time, a_crit, lw=4,
+             color = acrit_color, ls = "-",
+             label = r"$a_{crit}$") #a_crit
+axes[1].axhline(max(a_crit), lw = 6,
+                color = a_critMax_color, ls = "--",
+                label = r"$a_{crit, max}$") #Maximum a_crit
 
-    # Format
-    axes[0].set_ylabel("Critical Semi-Major Axis [au]", fontsize=20)
-    axes[0].set_ylim(ymin=0.145, ymax=0.36)
-    axes[0].set_yticks([0.05*i + 0.15 for i in range(5)])
-    axes[0].yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-    axes[0].legend(loc ="upper left", ncol=2, framealpha=0)
+#Format
+axes[1].set_xscale("log")
+axes[1].set_xlabel("Time [yr]", fontsize = 35)
+axes[1].set_xlim(1e+6, time.max())
+axes[1].set_ylim(0.157, 0.3)
+axes[1].set_ylabel("Semi-Major Axis [AU]", fontsize = 35)
+axes[1].set_yticks([0.02*i + 0.16 for i in range(8)])
+axes[1].tick_params(axis = 'both', which = 'major', labelsize = 28, width=3, length=9)
+axes[1].set_rasterization_zorder(0)
+axes[1].legend(loc = "lower left", framealpha=0, ncol=3, fontsize=30)
 
-    # Mid: orbital period
-    axes[1].plot(time, orbP, lw=4, label=labels[ii], color = colors[ii])
+##Plotting the free eccentricity of the cbp##
+axes[2].plot(time, ecc_cbp, lw=4,
+             color = planet_color, ls = "-",
+             label = r"$e_{free}$")
 
-    # Format
-    axes[1].set_ylabel("Orbital Period [d]", fontsize=20)
-    axes[1].set_ylim(ymin=4.25, ymax=8)
-
-    # Bottom: binary eccentricity
-    axes[2].plot(time, ecc, lw=4, label=labels[ii], color = colors[ii])
-
-    # Format
-    axes[2].set_ylabel("Eccentricity", fontsize=20)
-    axes[2].set_ylim(ymin=-0.01, ymax=0.32)
-    axes[2].set_xlabel("Time [yr]", fontsize=20)
-
-
-# Standardize formating
-for ax in axes:
-    ax.set_xscale("log")
-    ax.set_xlim(1e5, time.max())
-    ax.set_rasterization_zorder(0)
+#Format
+axes[2].set_xscale("log")
+axes[2].set_xlabel("Time [yr]", fontsize = 35)
+axes[2].set_xlim(1e+6, time.max())
+axes[2].set_ylim(0.037, 0.16)
+axes[2].set_ylabel("Eccentricity", fontsize = 35)
+axes[2].tick_params(axis = 'both', which = 'major', labelsize = 28, width=3, length=9)
+axes[2].set_rasterization_zorder(0)
 
 fig.tight_layout()
 if (sys.argv[1] == 'pdf'):
-    plt.savefig('steep.pdf', bbox_inches="tight", dpi=200)
+    plt.savefig('HabitableCBP.pdf', bbox_inches="tight", dpi=200)
 if (sys.argv[1] == 'png'):
-    plt.savefig('steep.png', bbox_inches="tight", dpi=200)
+    plt.savefig('HabitableCBP.png', bbox_inches="tight")

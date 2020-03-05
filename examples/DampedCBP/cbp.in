@@ -1,0 +1,23 @@
+# Parameters from Leung & Lee (2013)
+sName		        cbp		            # Body's name
+saModules       binary            # Modules
+
+# Physical Properties
+iBodyType       0                 # Type of body 0 -> Planet
+dMass		        -2.98 	          # Mass, negative -> Earth masses
+dRadius		      -1.0		          #Planet Radius, negative -> Earth Radii
+
+# Binary Properties
+dFreeEcc		          0.0         # Free Eccentricity
+dFreeInc              0.25        # Free Inclination [deg]
+bHaltHolmanUnstable   1           # End simulation if the CBP goes within the critical stability limit
+
+# Orbital Properties
+dSemi           0.26               # CBP semi-major axis [AU]
+dLongP          0.0                # CBP longitude of pericenter [deg]
+dCBPM0          0.0                # CBP mean anomaly [deg]
+dCBPPsi         0.0                # CBP R, Phi oscillation offset phase angle [deg]
+dCBPZeta        0.0                # CBP Z oscillation offset phase angle [deg]
+
+# Outputs
+saOutputOrder Time CBPR CBPZ ArgP LongA Eccentricity Inc LongP CBPInsol -Instellation

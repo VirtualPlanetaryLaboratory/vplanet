@@ -1,0 +1,26 @@
+# The host star: SunLikeStar A
+# Parameters from Leung & Lee (2013)
+sName		primary		# Body's name
+saModules eqtide stellar
+#Place "binary" before "eqtide" to turn on cbp
+
+# Physical Parameters
+iBodyType       1               # 1 -> Star
+dMass		0.30                # Mass, negative -> Earth masses
+dRotPeriod      -0.5            # Rotation period (-1 -> days)
+bEvolveRG       1
+dRadGyra        0.27
+dAge		1.0e6
+
+# EQTIDE Parameters
+dTidalTau         3.17e-9
+dK2		0.5		         # Love number of degree 2
+dMaxLockDiff    0.01
+sTideModel      t8		   # Tidal model, p2=CPL, t8=CTL
+saTidePerts	secondary	# Body name(s) of tidal perturbers
+
+# STELLAR Parameters
+sStellarModel baraffe
+sMagBrakingModel matt
+
+saOutputOrder	Time HZLimRunaway HZLimMaxGreenhouse -CriticalSemiMajorAxis RadGyra -SurfEnFluxTotal

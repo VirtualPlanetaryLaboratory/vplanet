@@ -1237,7 +1237,7 @@ void ReadDoBackward(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 
 void ReadOutFile(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
-  char cTmp[OPTLEN];
+  char cTmp[NAMELEN];
 
   AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {

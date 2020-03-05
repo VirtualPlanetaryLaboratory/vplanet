@@ -25,9 +25,9 @@ the CPL tidal model with hydrogen escape via energy-limited,
 radiation-recombination-limited, Bondi-limited, and automatic models. [AtmEsc,
 EqTide, STELLAR]
 
-`IceBelts <IceBelts>`_: Formation of equatorial ice belts on planets with high obliquity.
+`IceBelts <IceBelts>`_: Formation of equatorial ice belts on planets with high obliquity. [POISE]
 
-`MiniNeptuneEvap <MiniNeptuneEvap>`_: Removal of a mini-Neptune's isothermal hydrogen atmosphere by high energy radiation and/or Roche lobe overflow.
+`MiniNeptuneEvap <MiniNeptuneEvap>`_: Removal of a mini-Neptune's isothermal hydrogen atmosphere by high energy radiation and/or Roche lobe overflow. [AtmEsc, STELLAR]
 
 `VenusWaterLoss <VenusWaterLoss>`_: Water loss from Venus due to water photolyzation and hydrogen escape. [AtmEsc, STELLAR]
 
@@ -56,9 +56,9 @@ STELLAR]
 **Orbital Dynamics**
 ====================
 
-`ApseLock <ApseLock>`_: Evolution of a tidally-damped two-planet system into a state in which the major axes circulate with the same frequency. [Distorb, EqTide]
+`ApseLock <ApseLock>`_: Evolution of a tidally-damped two-planet system into a state in which the major axes circulate with the same frequency. [DistOrb, EqTide]
 
-`CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [Distorb, DistRot, EqTide]
+`CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [DistOrb, DistRot, EqTide]
 
 `CassiniMulti <CassiniMulti>`_: Tidal damping of the two planets orbiting Teegarden's Star into Cassini states. [EqTide, DistOrb, DistRot, STELLAR]
 
@@ -84,11 +84,11 @@ STELLAR]
 **Tidal Effects**
 =================
 
-`ApseLock <ApseLock>`_: Evolution of a tidally-damped two-planet system into a state in which the major axes circulate with the same frequency. [Distorb, EqTide]
+`ApseLock <ApseLock>`_: Evolution of a tidally-damped two-planet system into a state in which the major axes circulate with the same frequency. [DistOrb, EqTide]
 
 `BinaryTides <BinaryTides>`_: Coupled stellar and tidal evolution of short-period binary stars. [EqTide, STELLAR]
 
-`CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [Distorb, DistRot, EqTide]
+`CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [DistOrb, DistRot, EqTide]
 
 `CassiniMulti <CassiniMulti>`_: Tidal damping of the two planets orbiting Teegarden's Star into Cassini states. [EqTide, DistOrb, DistRot, STELLAR]
 

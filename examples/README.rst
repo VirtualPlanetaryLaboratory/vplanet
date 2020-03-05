@@ -25,9 +25,9 @@ the CPL tidal model with hydrogen escape via energy-limited,
 radiation-recombination-limited, Bondi-limited, and automatic models. [AtmEsc,
 EqTide, STELLAR]
 
-`IceBelts <IceBelts>`_: Formation of equatorial ice belts on planets with high obliquity.
+`IceBelts <IceBelts>`_: Formation of equatorial ice belts on planets with high obliquity. [POISE]
 
-`MiniNeptuneEvap <MiniNeptuneEvap>`_: Removal of a mini-Neptune's isothermal hydrogen atmosphere by high energy radiation and/or Roche lobe overflow.
+`MiniNeptuneEvap <MiniNeptuneEvap>`_: Removal of a mini-Neptune's isothermal hydrogen atmosphere by high energy radiation and/or Roche lobe overflow. [AtmEsc, STELLAR]
 
 `VenusWaterLoss <VenusWaterLoss>`_: Water loss from Venus due to water photolyzation and hydrogen escape. [AtmEsc, STELLAR]
 

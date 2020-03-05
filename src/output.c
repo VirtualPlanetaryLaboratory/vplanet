@@ -148,17 +148,28 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,
 void WriteHZLimitRecentVenus(BODY *body,CONTROL *control,OUTPUT *output,
     SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,
     char cUnit[]) {
+  int iLim;
+  double *daHZLimits; // Array of HZ limits
 
-  double daHZLimits[6]; // Array of HZ limits
+/*  for (iLim=0;iLim<6;iLim++) {
+    daHZLimits[iLim] = 0;
+  }
+  */
+  daHZLimits = malloc(6*sizeof(double));
+  for (iLim=0;iLim<6;iLim++) {
+      daHZLimits[iLim] = 0;
+    }
 
   // Get limits
   fdHabitableZoneKopparapu2013(body,control->Evolve.iNumBodies,daHZLimits);
+
 
   // RB: Make all these limits #define's, e.g. HZRECVENUS
   if (daHZLimits[0] > 0) {
     *dTmp = daHZLimits[0];
   } else { //Means no stars inside body's orbit
-    *dTmp = 1;
+    *dTmp = -1;
+    free(daHZLimits);
     return;
   }
 
@@ -171,13 +182,16 @@ void WriteHZLimitRecentVenus(BODY *body,CONTROL *control,OUTPUT *output,
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength,cUnit);
   }
+  free(daHZLimits);
 }
 
 void WriteHZLimitRunawayGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,
     SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,
     char cUnit[]) {
 
-  double daHZLimits[6]; // Array of HZ limits
+  double *daHZLimits; // Array of HZ limits
+  daHZLimits = malloc(6*sizeof(double));
+
 
   // Get limits
   fdHabitableZoneKopparapu2013(body,control->Evolve.iNumBodies,daHZLimits);
@@ -185,7 +199,8 @@ void WriteHZLimitRunawayGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,
   if (daHZLimits[0] > 0) {
     *dTmp = daHZLimits[0];
   } else { //Means no stars inside body's orbit
-    *dTmp = 1;
+    *dTmp = -1;
+    free(daHZLimits);
     return;
   }
 
@@ -198,13 +213,15 @@ void WriteHZLimitRunawayGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength,cUnit);
   }
+  free(daHZLimits);
 }
 
 void WriteHZLimitMoistGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,
   SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,
   char cUnit[]) {
 
-  double daHZLimits[6]; // Array of HZ limits
+  double *daHZLimits; // Array of HZ limits
+  daHZLimits=malloc(6*sizeof(double));
 
   // Get limits
   fdHabitableZoneKopparapu2013(body,control->Evolve.iNumBodies,daHZLimits);
@@ -212,7 +229,8 @@ void WriteHZLimitMoistGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,
   if (daHZLimits[0] > 0) {
     *dTmp = daHZLimits[0];
   } else { //Means no stars inside body's orbit
-    *dTmp = 1;
+    *dTmp = -1;
+    free(daHZLimits);
     return;
   }
 
@@ -225,13 +243,15 @@ void WriteHZLimitMoistGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength,cUnit);
   }
+  free(daHZLimits);
 }
 
 void WriteHZLimitMaxGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,
   SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,
   char cUnit[]) {
 
-  double daHZLimits[6]; // Array of HZ limits
+  double *daHZLimits; // Array of HZ limits
+  daHZLimits=malloc(6*sizeof(double));
 
   // Get limits
   fdHabitableZoneKopparapu2013(body,control->Evolve.iNumBodies,daHZLimits);
@@ -239,7 +259,8 @@ void WriteHZLimitMaxGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,
   if (daHZLimits[0] > 0) {
     *dTmp = daHZLimits[0];
   } else { //Means no stars inside body's orbit
-    *dTmp = 1;
+    *dTmp = -1;
+    free(daHZLimits);
     return;
   }
 
@@ -252,13 +273,15 @@ void WriteHZLimitMaxGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength,cUnit);
   }
+  free(daHZLimits);
 }
 
 void WriteHZLimitEarlyMars(BODY *body,CONTROL *control,OUTPUT *output,
     SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,
     char cUnit[]) {
 
-  double daHZLimits[6]; // Array of HZ limits
+  double *daHZLimits; // Array of HZ limits
+  daHZLimits=malloc(6*sizeof(double));
 
   // Get limits
   fdHabitableZoneKopparapu2013(body,control->Evolve.iNumBodies,daHZLimits);
@@ -266,7 +289,8 @@ void WriteHZLimitEarlyMars(BODY *body,CONTROL *control,OUTPUT *output,
   if (daHZLimits[0] > 0) {
     *dTmp = daHZLimits[0];
   } else { //Means no stars inside body's orbit
-    *dTmp = 1;
+    *dTmp = -1;
+    free(daHZLimits);
     return;
   }
 
@@ -279,6 +303,7 @@ void WriteHZLimitEarlyMars(BODY *body,CONTROL *control,OUTPUT *output,
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength,cUnit);
   }
+  free(daHZLimits);
 }
 
 /*
@@ -820,25 +845,30 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 
 void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if (body[iBody].bThermint && body[iBody].bEqtide && !body[iBody].bOcean && !body[iBody].bEnv) {
-    *dTmp = body[iBody].dTidalQMan;
-  } else {
-    //*dTmp = body[iBody].dTidalQ;
-    if (body[iBody].bUseOuterTidalQ) {
-      if (body[iBody].bEnv) {
-        *dTmp = body[iBody].dK2Env/body[iBody].dImK2Env;
-      } else if (body[iBody].bOcean) {
-        *dTmp = body[iBody].dK2Ocean/body[iBody].dImK2Ocean;
-      } else {
-        *dTmp = body[iBody].dK2Man/body[iBody].dImK2Man;
-      }
+  if (body[iBody].bEqtide) {
+    if (body[iBody].bThermint && !body[iBody].bOcean && !body[iBody].bEnv) {
+      *dTmp = body[iBody].dTidalQMan;
     } else {
-      if (body[iBody].bMantle) {
-        *dTmp = -body[iBody].dK2Man/body[iBody].dImK2Man;
+      //*dTmp = body[iBody].dTidalQ;
+      if (body[iBody].bUseOuterTidalQ) {
+        if (body[iBody].bEnv) {
+          *dTmp = body[iBody].dK2Env/body[iBody].dImK2Env;
+        } else if (body[iBody].bOcean) {
+          *dTmp = body[iBody].dK2Ocean/body[iBody].dImK2Ocean;
+        } else {
+          *dTmp = body[iBody].dK2Man/body[iBody].dImK2Man;
+        }
       } else {
-        *dTmp = -body[iBody].dK2/body[iBody].dImK2;
+        if (body[iBody].bMantle) {
+          *dTmp = -body[iBody].dK2Man/body[iBody].dImK2Man;
+        } else {
+          *dTmp = -body[iBody].dK2/body[iBody].dImK2;
+        }
       }
     }
+  } else {
+    // If EqTide not called, return -1
+    *dTmp = -1;
   }
 
   strcpy(cUnit,"");
@@ -1878,8 +1908,7 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
       if (output[iOut].iNum > 0) {
 	       if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
 	         //Useful for debugging
-	         //printf("%d %d\n",iBody,iOut);
-	         //fflush(stdout);
+	         //fprintf(stderr,"%d %d\n",iBody,iOut);
 	         WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
 	       }
       }

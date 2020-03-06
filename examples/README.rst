@@ -66,6 +66,8 @@ STELLAR]
 
 `CircumbinaryOrbit <CircumbinaryOrbit>`_: Orbital evolution of a circumbinary planet. [BINARY]
 
+`DampedCBP <DampedCBP>`_: Evolution of planet orbiting a tidally evolving binary star. [BINARY, EqTide, STELLAR]
+
 `EarthClimate <EarthClimate>`_: Earth's climate through one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
 
 `SSDistOrbDistRot <SSDistOrbDistRot>`_: Evolution of the Solar System planets' orbital and rotational angular momenta from approximate models. [DistOrb, DistRot]
@@ -78,6 +80,8 @@ STELLAR]
 `BinaryTides <BinaryTides>`_: Coupled stellar and tidal evolution of short-period binary stars. [EqTide, STELLAR]
 
 `MagneticBraking <MagneticBraking>`_: Rotational evolution of stars under different magnetic braking assumptions. [STELLAR]
+
+`STEEP <STEEP>`_: Tidal evolution of a binary star, including the instability radius for circumbinary planets. [EqTide, STELLAR]
 
 `StellarEvol <StellarEvol>`_: Pre-main sequence and main sequence evolution of stellar properties. [STELLAR]
 
@@ -92,12 +96,17 @@ STELLAR]
 
 `CassiniMulti <CassiniMulti>`_: Tidal damping of the two planets orbiting Teegarden's Star into Cassini states. [EqTide, DistOrb, DistRot, STELLAR]
 
+`DampedCBP <DampedCBP>`_: Evolution of planet orbiting a tidally evolving binary star. [BINARY, EqTide, STELLAR]
+
 `HLossTides <HLossTides>`_: Coupled atmospheric escape and tidal evolution for
 the CPL tidal model with hydrogen escape via energy-limited,
 radiation-recombination-limited, Bondi-limited, and automatic models. [AtmEsc,
 EqTide, STELLAR]
 
 `IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity according to equilibrium tide theory. [EqTide, VSPACE]
+
+`STEEP <STEEP>`_: Tidal evolution of a binary star, including the instability radius for circumbinary planets. [EqTide, STELLAR]
+
 
 `TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a low mass star and tidally heated. [EqTide, RadHeat, ThermInt]
 

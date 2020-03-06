@@ -1,4 +1,4 @@
-ml# Primary input file for VPLANET
+# Primary input file for VPLANET
 sSystemName	TGard		# System Name
 iVerbose	5					# Verbosity level
 bOverwrite	1				# Allow file overwrites?

@@ -576,22 +576,6 @@ void ReadUseTidalRadius(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       body[iFile-1].bUseTidalRadius = 0; // Default to no XXX
 }
 
-// Use outer layer's tidal Q for the body's Q?
-void ReadUseOuterTidalQ(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  int bTmp;
-
-  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
-  if(lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    body[iFile-1].bUseOuterTidalQ = bTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if(iFile > 0)
-      body[iFile-1].bUseOuterTidalQ = 0; // Default to no XXX
-}
-
 // Include effects of envelope tides?
 void ReadEqtideEnvTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
@@ -712,20 +696,6 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_USETIDALRADIUS].iType = 0;
   options[OPT_USETIDALRADIUS].bMultiFile = 1;
   fnRead[OPT_USETIDALRADIUS] = &ReadUseTidalRadius;
-
-  sprintf(options[OPT_USEOUTERTIDALQ].cName,"bUseOuterTidalQ");
-  sprintf(options[OPT_USEOUTERTIDALQ].cDescr,"User outermost layer's tidal Q as "
-        "body's total tidal Q?");
-  sprintf(options[OPT_USEOUTERTIDALQ].cDefault,"0");
-  options[OPT_USEOUTERTIDALQ].iType = 0;
-  options[OPT_USEOUTERTIDALQ].bMultiFile = 1;
-  fnRead[OPT_USEOUTERTIDALQ] = &ReadUseOuterTidalQ;
-  sprintf(options[OPT_USEOUTERTIDALQ].cLongDescr,
-    "The total tidal Q of a body can be computed either as the sum of "
-    "contributions of all layers (mantle, ocean, envelope), or as the tidal Q "
-    "of the outer most layer. When %s is set to 0, the tidal Q is the sum, "
-    "when set to 1, it is the outer layer's (envelope, then ocean, then mantle) "
-    "value.\n",options[OPT_USEOUTERTIDALQ].cName);
 
   sprintf(options[OPT_ENVTIDES].cName,"bEnvTides");
   sprintf(options[OPT_ENVTIDES].cDescr,"Include effects of gaseous envelope tides");

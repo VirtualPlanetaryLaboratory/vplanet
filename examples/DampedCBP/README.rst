@@ -1,19 +1,19 @@
-Habitable Zone Circumbinary Planet Dynamics
-===========================================
+Evolution of a Planet Orbiting a Short-Period Binary
+=============================================================================
 
 Overview
 --------
 
-This example shows 5 Gyrs of the orbital evolution of a circumbinary planet
-orbiting within the habitable zone of a tidally-interacting 0.5 Msun - 0.1 Msun
-stellar binary. The orbit of the circumbinary planet secularly evolves as the
+This example shows 5 Gyrs of the orbital evolution of a hypothetical potentially 
+habitrable circumbinary planet orbiting a tidally-interacting 0.5 Msun - 0.1 Msun
+stellar binary. The orbit of the circumbinary planet (CBP) secularly evolves as the
 orbit of the central binary evolves due to tides. This case was initially explored
 by Graham et al., in prep.
 
 ===================   ============
 **Date**              03/04/20
 **Authors**           David Fleming, David E. Graham
-**Modules**           BINARY EQTIDE STELLAR
+**Modules**           BINARY EqTide STELLAR
 **Approx. runtime**   45 minutes
 ===================   ============
 
@@ -41,5 +41,5 @@ Expected output
    During this period, the CBP experiences larger instellation fluctations, likely
    impacting its climate. As the binary's orbit circularizes, the CBP's mean
    orbital eccentricity and the amplitude of the eccentricities oscillations
-   both decay. Note that the early the expanding binary orbit nearly destabilizes
+   both decay. Note that the early expansion of the binary orbit nearly destabilizes
    the CBP.

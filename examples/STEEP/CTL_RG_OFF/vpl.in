@@ -1,5 +1,5 @@
-# Example primary input file for VPLANET
-sSystemName	bin_eq_st			# System Name
+# Primary input file for VPLANET
+sSystemName	STEEP_ctl_rg_off		# System Name
 iVerbose	5			# Verbosity level
 bOverwrite	1			# Allow file overwrites?
 
@@ -9,8 +9,10 @@ bOverwrite	1			# Allow file overwrites?
 
 # List of "body files" that contain body-specific parameters
 saBodyFiles	primary.in $	# The primary star
-		secondary.in $ 	# The secondary star
-                cbp.in
+		secondary.in #$ 	# The secondary star
+#In order to remove the planet during a simulation, remove the "$" sign that goes after "secondary.in"
+#Also you must completely remove the line of "cbp.in", the line that is below "secondary.in"
+
 
 # Array options can continue to the next line with a terminating "$". The $ can be
 # at the end of the string or not. Comments are allowed afterwards.
@@ -36,10 +38,9 @@ dMinValue	1e-10		# Minimum value of eccentricity/obliquity
 # Evolution Parameters
 bDoForward	1		# Perform a forward evolution?
 bVarDt		1		# Use variable timestepping?
-dEta		0.1		# Coefficient for variable timestepping
-#dTimeStep	100
-dStopTime	1.0e2   	# Stop time for evolution
-dOutputTime	1.0e2		# Output timesteps (assuming in body files)
+dEta		0.001		# Coefficient for variable timestepping
+dStopTime	3.0e9   	# Stop time for evolution
+dOutputTime	1.0e5		# Output timesteps (assuming in body files)
 
 # Some options are only permitted in the primary file, some are forbidden.
 # That should really be documented!

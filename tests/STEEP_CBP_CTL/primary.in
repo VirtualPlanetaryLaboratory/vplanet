@@ -1,0 +1,23 @@
+# Primary star
+sName		primary		              # Body's name
+saModules binary eqtide stellar
+
+# Physical Parameters
+iBodyType        1               # 1 -> Star
+dMass		         1.0             # Mass (solar)
+dRotPeriod       -0.5            # Rotation period (- -> days)
+dAge		         1.0e6           # Initial age
+
+# EQTIDE Parameters
+dTidalTau        -0.1            # Tidal time lag (- -> seconds)
+dK2		           0.5		         # Love number of degree 2
+dMaxLockDiff     0.01            # Maximum different between Porb, Prot before forcing tidal locking
+sTideModel       t8		           # Tidal model, p2=CPL, t8=CTL
+saTidePerts	     secondary	     # Body name(s) of tidal perturbers
+
+# STELLAR Parameters
+sStellarModel    baraffe         # Stellar evolution model
+sMagBrakingModel matt            # Magnetic braking model
+
+# Output
+saOutputOrder	Time -Radius -RotPer -RotRate -LostAngMom RadGyra -SurfEnFluxTotal -CriticalSemiMajorAxis

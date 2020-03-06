@@ -1,0 +1,28 @@
+# Secondary star
+sName		secondary		            # Body's name
+saModules binary eqtide stellar
+
+# Physical Parameters
+iBodyType       1               # 1 -> Star
+dMass		        1.0             # Mass (solar)
+dRotPeriod      -0.5            # Rotation period (- -> days)
+dAge		        1.0e6           # Initial age
+
+# Binary Parameters
+dEcc		        0.15           # Binary eccentricity
+dOrbPeriod	    -4.0		       # Binary Orbital Period Days
+dLongP         0.0             # Binary longitude of pericenter [deg]
+dLL13PhiAB     0.0             # Initial binary mean anomaly [deg]
+
+# EQTIDE Parameters
+dTidalTau       -0.1            # Tidal time lag (- -> seconds)
+dK2		          0.5		          # Love number of degree 2
+dMaxLockDiff    0.01            # Maximum different between Porb, Prot before forcing tidal locking
+saTidePerts	    primary	        # Body name(s) of tidal perturbers
+
+# Stellar param
+sStellarModel baraffe           # Stellar evolution model
+sMagBrakingModel matt           # Magnetic braking model
+
+# Output
+saOutputOrder	Time -TotEn -TotAngMom -Semim -Radius -RotPer Ecce -OrbPer RadGyra -SurfEnFluxTotal -CriticalSemiMajorAxis

@@ -35,5 +35,4 @@ script:
     - py.test -v -s tests
 
 after_success:
-    - make coverage
     - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then source .ci/build-docs.sh; fi

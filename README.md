@@ -1,10 +1,9 @@
 <p align="center">
-<img width = "450" src="https://github.comVPLanetLogo.png?raw=true"/>
-  <br>
-  <br>
+  <img width = "250" src="VPLanetLogo.png?raw=true"/>
 </p>
 
-# VPLanet: The Virtual Planet Simulator
+<h1 align="center">VPLanet: The Virtual Planet Simulator</h1>
+
 <p align="center">
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet"><img src="https://img.shields.io/badge/read-the_docs-blue.svg?style=flat"></a>
   <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract"><img src="https://img.shields.io/badge/read-the_paper-7d93c7.svg?style=flat"/></a>

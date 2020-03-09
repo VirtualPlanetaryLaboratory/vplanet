@@ -1,5 +1,5 @@
 <p align="center">
-<img width = "450" src="https://github.comVPLanetLogo.png?raw=true"/>
+<img width = "450" src="VPLanetLogo.png?raw=true"/>
   <br>
   <br>
 </p>

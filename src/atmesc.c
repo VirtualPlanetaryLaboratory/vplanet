@@ -72,6 +72,7 @@ void BodyCopyAtmEsc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].bAtmEscAuto = src[iBody].bAtmEscAuto;
   dest[iBody].dEnvMassDt = src[iBody].dEnvMassDt;
   dest[iBody].bAutoThermTemp = src[iBody].bAutoThermTemp;
+  dest[iBody].bStopWaterLossInHZ = src[iBody].bStopWaterLossInHZ;
 }
 
 /**************** ATMESC options ********************/
@@ -1368,7 +1369,7 @@ void fnPropsAuxAtmEsc(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,
   body[iBody].dFHDiffLim = BDIFF * g * ATOMMASS * (QOH - 1.) / (KBOLTZ * body[iBody].dFlowTemp * (1. + XO / (1. - XO)));
 
   // Is water escaping?
-  if (!fbDoesWaterEscape(body, iBody)) {
+  if (!fbDoesWaterEscape(body,evolve,io,iBody)) {
 
     body[iBody].dOxygenEta = 0;
     body[iBody].dCrossoverMass = 0;
@@ -3069,7 +3070,7 @@ Computes whether or not water is escaping.
 @param body A pointer to the current BODY instance
 @param iBody The current BODY index
 */
-int fbDoesWaterEscape(BODY *body, int iBody) {
+int fbDoesWaterEscape(BODY *body, EVOLVE *evolve, IO *io, int iBody) {
   // TODO: The checks below need to be moved. Ideally we'd
   // just remove this equation from the matrix if the
   // escape conditions are not met.
@@ -3083,15 +3084,19 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
     return 0;
   }
 
-  // 2. Check if planet is beyond RG limit; otherwise, assume the
-  // cold trap prevents water loss.
+  // 2. Check if planet is beyond RG limit; if user requested water loss to stop
+  // (the cold trap prevents water loss) then water does not escape.
   // NOTE: The RG flux limit below is calculated based on body zero's
   // spectrum! The Kopparapu+14 limit is for a single star only. This
   // approximation for a binary is only valid if the two stars have
   // similar spectral types, or if body zero dominates the flux.
-  else if (fdInstellation(body, iBody) < fdHZRG14(body,iBody)) {
+  if (fdInstellation(body, iBody) < fdHZRG14(body,iBody)) {
     if (body[iBody].dRGDuration == 0.) {
       body[iBody].dRGDuration = body[iBody].dAge;
+      if (io->iVerbose > VERBPROG) {
+        printf("%s enters the habitable zone at %.2lf Myr.\n",body[iBody].cName,
+            evolve->dTime/(YEARSEC*1e6));
+      }
     }
     // Only stop water loss if user requested, which is default
     if (body[iBody].bStopWaterLossInHZ) {
@@ -3100,11 +3105,11 @@ int fbDoesWaterEscape(BODY *body, int iBody) {
   }
 
   // 3. Is there still water to be lost?
-  else if (body[iBody].dSurfaceWaterMass <= 0)
+  if (body[iBody].dSurfaceWaterMass <= 0)
     return 0;
 
   // 4. Are we in the ballistic (Jeans) escape limit?
-  else if (body[iBody].dAge > body[iBody].dJeansTime) {
+  if (body[iBody].dAge > body[iBody].dJeansTime) {
     return 0;
   }
 

@@ -157,7 +157,7 @@ double fdDOxygenMassDt(BODY*,SYSTEM*,int*);
 double fdDOxygenMantleMassDt(BODY*,SYSTEM*,int*);
 double fdAtomicOxygenMixingRatio(double,double);
 double fdInsolation(BODY*,int,int);
-int fbDoesWaterEscape(BODY*,int);
+int fbDoesWaterEscape(BODY*,EVOLVE*,IO*,int);
 double fdPlanetRadius(BODY*,SYSTEM*,int*);
 double fdXUVEfficiencyBolmont2016(double);
 double fdBondiRadius(BODY*,int);

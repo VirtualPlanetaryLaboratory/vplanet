@@ -50,7 +50,7 @@
 #define OPT_ENERGYLIMITED       1232 /**< Whether or not to use energy-limited escape */
 #define OPT_RRLIMITED           1233 /**< Whether or not to use radiation/recombination-limited escape */
 #define OPT_ATMESCAUTO          1234 /**< Whether or not to let atmesc determine escape regime */
-
+#define OPT_STOPWATERLOSSINHZ   1235 /**< Stop water loss once planet reaches HZ? */
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -157,7 +157,7 @@ double fdDOxygenMassDt(BODY*,SYSTEM*,int*);
 double fdDOxygenMantleMassDt(BODY*,SYSTEM*,int*);
 double fdAtomicOxygenMixingRatio(double,double);
 double fdInsolation(BODY*,int,int);
-int fbDoesWaterEscape(BODY*,int);
+int fbDoesWaterEscape(BODY*,EVOLVE*,IO*,int);
 double fdPlanetRadius(BODY*,SYSTEM*,int*);
 double fdXUVEfficiencyBolmont2016(double);
 double fdBondiRadius(BODY*,int);

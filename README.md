@@ -1,9 +1,6 @@
 <p align="center">
-<img width = "250" src="VPLanetLogo.png?raw=true"/>
-  <br>
-  <br>
+  <img width = "250" src="VPLanetLogo.png?raw=true"/>
 </p>
-
 
 <h1 align="center">VPLanet: The Virtual Planet Simulator</h1>
 

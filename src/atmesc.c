@@ -851,7 +851,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
     "removed from the atmosphere. This mimics rapid surface oxidation.\n"
   );
 
-  sprintf(options[OPT_STOPWATERLOSSINHZ].cName,"bStopWaterLossinHZ");
+  sprintf(options[OPT_STOPWATERLOSSINHZ].cName,"bStopWaterLossInHZ");
   sprintf(options[OPT_STOPWATERLOSSINHZ].cDescr,"Stop water photolysis and H escape in the HZ?");
   sprintf(options[OPT_STOPWATERLOSSINHZ].cDefault,"1");
   options[OPT_STOPWATERLOSSINHZ].iType = 0;

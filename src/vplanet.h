@@ -1465,6 +1465,7 @@ struct IO {
   int *baRocheMessage;    /**< Has the Roche lobe message been printed? */
 	int *baCassiniOneMessage;		/**< Has the CassiniOne message been printed? */
 	int *baCassiniTwoMessage;		/**< Has the CassiniTwo message been printed? */
+  int *baEnterHZMessage;    /**< Has the Entering the HZ message been printed? */
 };
 
 /* The CONTROL struct contains all the parameters that

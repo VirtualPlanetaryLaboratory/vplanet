@@ -3093,9 +3093,10 @@ int fbDoesWaterEscape(BODY *body, EVOLVE *evolve, IO *io, int iBody) {
   if (fdInstellation(body, iBody) < fdHZRG14(body,iBody)) {
     if (body[iBody].dRGDuration == 0.) {
       body[iBody].dRGDuration = body[iBody].dAge;
-      if (io->iVerbose > VERBPROG) {
+      if (io->iVerbose > VERBPROG && !io->baEnterHZMessage[iBody]) {
         printf("%s enters the habitable zone at %.2lf Myr.\n",body[iBody].cName,
             evolve->dTime/(YEARSEC*1e6));
+        io->baEnterHZMessage[iBody] = 1;
       }
     }
     // Only stop water loss if user requested, which is default

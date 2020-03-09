@@ -1,3 +1,9 @@
+<p align="center">
+<img width = "450" src="https://github.comVPLanetLogo.png?raw=true"/>
+  <br>
+  <br>
+</p>
+
 # VPLanet: The Virtual Planet Simulator
 <p align="center">
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet"><img src="https://img.shields.io/badge/read-the_docs-blue.svg?style=flat"></a>

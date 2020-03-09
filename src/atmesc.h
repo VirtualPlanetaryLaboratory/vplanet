@@ -50,7 +50,7 @@
 #define OPT_ENERGYLIMITED       1232 /**< Whether or not to use energy-limited escape */
 #define OPT_RRLIMITED           1233 /**< Whether or not to use radiation/recombination-limited escape */
 #define OPT_ATMESCAUTO          1234 /**< Whether or not to let atmesc determine escape regime */
-
+#define OPT_STOPWATERLOSSINHZ   1235 /**< Stop water loss once planet reaches HZ? */
 
 /* @cond DOXYGEN_OVERRIDE */
 

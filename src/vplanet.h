@@ -165,6 +165,7 @@ struct BODY {
   int bUseRRLimited; 			/**< Use radiation/recombination-limited H mass loss */
   int bAtmEscAuto; 				/**< Transition H escape regime depending on physics */
 	int bAutoThermTemp;			/**< Calculate thermal temperature from environemnt? */
+  int bStopWaterLossInHZ; /**< Stop water loss once planet enters habitable zone? */
 
   int iWaterLossModel;   /**< Water Loss and Oxygen Buildup Model */
   int iAtmXAbsEffH2OModel;  /**< Water X-ray/XUV absorption efficiency evolution model */

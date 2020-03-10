@@ -3,8 +3,15 @@ sName                     A       # Body's name
 saModules                 AtmEsc      # Modules to apply, exact spelling required
 
 # Physical Properties
-dMass                     -0.019        # Mass, negative -> Earth masses
+dMass                     -1.02        # Mass, negative -> Earth masses
 #dRadius                   -0.383        # Radius, negative -> Earth radii
+#dAge                      5e4
+dEnvelopeMass             -1
+
+# Orbital Properties
+dSemi                     -0.18850      # Semi-major axis, negative -> AU
+dEcc                       0.0          # Eccentricity
+
 
 #AtmEsc Parameters
 dXFrac                    1.0
@@ -12,7 +19,6 @@ dSurfWaterMass            0
 bHaltEnvelopeGone         0
 sPlanetRadiusModel        lopez
 dAtmXAbsEffH              0.1
-dSemi                     -0.18850      # Semi-major axis, negative -> AU
-dEcc                       0.0          # Eccentricity
-dEnvelopeMass             -0.0081818
-saOutputOrder             Time -EnvelopeMass Radius -Mass
+bUseEnergyLimited       1       # Is the flow energy-limited?
+
+saOutputOrder             Time -EnvelopeMass -PlanetRadius -Mass

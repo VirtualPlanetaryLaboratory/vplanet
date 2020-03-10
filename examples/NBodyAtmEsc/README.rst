@@ -1,41 +1,47 @@
-N-body Orbital Evolution of the Solar System
+Coupling Atmospheric Escape and N-Body Evolution: Application to PSR1257+12
 ============
 
 Overview
 --------
 
-Orbital evolution from an N-body model.
+Coupled atmospheric and orbital evolution of the PSR1257+12 pulsar planetary
+system. This example connects the energy-limited escape/Lopez et al. (2012)
+envelope model to the N-Body module SpiNBody.
 
 ===================   ============
-**Date**              10/30/18
-**Author**            Hayden Smotherman
-**Modules**           SpiNBody
-**Approx. runtime**   20 min (VPLanet)
-                      10 Min (HNBody)
+**Date**              03/10/2020
+**Author**            Rory Barnes
+**Modules**           AtmEsc SpiNBody
+**Approx. runtime**   XX min
 ===================   ============
 
-This example uses SpiNBody to model the orbits of the solar system planets and compares
-the results to a similar simulation run by :code:`HNBody` v1.0.10 (`Rauch & Hamilton 2002 <https://ui.adsabs.harvard.edu/abs/2002DDA....33.0802R/abstract>`_). The output files for
-hnbody are generated using the :code:`HNBody` input script :code:`SpiNBody_Comparison.hnb`.
+The orbital parameters are taken from `Konacki & Wolszczan (2003)
+https://ui.adsabs.harvard.edu/abs/2003ApJ...591L.147K/abstract`. The properties
+of the pulsar from XXX. The luminosity of the pulsar is assumed to be 0.001
+L_sun, with all flux emitted in the XUV. These assumptions are consistent with
+YYY. The initial envelope mass of planet A is 1 Earth mass, while the core mass
+is 0.02 Earth masses `Konacki & Wolszczan (2003)
+https://ui.adsabs.harvard.edu/abs/2003ApJ...591L.147K/abstract`. While such an
+initial composition seems unlikely, the large mass loss allows for the coupling
+to be apparent in a simulation that requires ~1 hour to complete. Mass loss for
+the B and C companions can occur of billion year timescales, see `AtmescOnly.`
+
 
 To run this example
 -------------------
 
 .. code-block:: bash
 
-    # Run the Solar System example
-    vplanet vpl.in
-    # Run hnbody
-    hnbody ss.hnb
-    # Make the plots
     python makeplot.py <pdf | png>
 
 Expected output
 ---------------
 
-.. figure:: SS_NBody.png
+.. figure:: NBodyAtmEsc.png
    :width: 600px
    :align: center
 
-Evolution of Earth's slowly varying orbital elements in a Solar System simulation over the next
-100,000 years. Black is **VPLanet** results; red is :code:`HNBody`. The lower right panel shows the energy and angular   momentum conservation for **VPLanet** only.
+**Top left**: Envelope mass of planet A. **Top right**: Radius of planet A.
+**Bottom left**: Eccentricity evolution of all planets. **Bottom right**:
+Inclination evolution of all planets. Note the second and third eccentricity
+cycles are lower than the first, which is due to A's mass loss.

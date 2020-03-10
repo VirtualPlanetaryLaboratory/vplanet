@@ -14,4 +14,4 @@ dAtmXAbsEffH              0.1
 dSemi                     -0.35952
 dEcc                       0.0186
 dEnvelopeMass             -0.81818
-saOutputOrder             Time -EnvelopeMass Radius -Mass
+saOutputOrder             Time -EnvelopeMass -PlanetRadius -Mass

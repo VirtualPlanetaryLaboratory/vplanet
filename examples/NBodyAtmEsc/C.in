@@ -10,6 +10,7 @@ dRadius                   -1.0           # Radius, negative -> Earth radii
 bUseOrbParams                    1
 
 # Orbital Properties
+dSemi                     -0.46604
 dEcc                       0.0252       # Eccentricity
 dInc                       47           # Inclination (deg)
 dLongP                     108.3        # Longitude of pericenter (deg)
@@ -22,7 +23,6 @@ dSurfWaterMass            0
 bHaltEnvelopeGone         0
 sPlanetRadiusModel        lopez
 dAtmXAbsEffH              0.1
-dSemi                     -0.46604
 dEnvelopeMass             -0.81818
-saOutputOrder Time -EnvelopeMass Radius -Mass SemiMajorAxis$
+saOutputOrder Time -EnvelopeMass -PlanetRadius -Mass SemiMajorAxis$
               Eccentricity SpiNBodyInc LongP SpiNBodyLongA MeanAnomaly

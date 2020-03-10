@@ -6,6 +6,7 @@ saModules                 AtmEsc      # Modules to apply, exact spelling require
 dMass                     -0.019        # Mass, negative -> Earth masses
 #dRadius                   -0.383        # Radius, negative -> Earth radii
 
+#AtmEsc Parameters
 dXFrac                    1.0
 dSurfWaterMass            0
 bHaltEnvelopeGone         0

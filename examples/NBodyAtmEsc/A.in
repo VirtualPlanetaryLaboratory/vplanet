@@ -1,0 +1,29 @@
+# Planet a parameters
+sName                     A       # Body's name
+saModules                 spinbody AtmEsc      # Modules to apply, exact spelling required
+
+# Physical Properties
+dMass                     -0.019        # Mass, negative -> Earth masses
+dRadius                   -0.383        # Radius, negative -> Earth radii
+
+# SpiNBody Properties
+bUseOrbParams                    1
+
+# Orbital Properties
+dEcc                       0.0          # Eccentricity
+dInc                       50           # Inclination
+dLongP                     0            # Longitude of pericenter
+dLongA                     0            # Longitude of ascending node
+dMeanA                     14.25        # Mean Anomaly
+
+# AtmEsc Properties
+dXFrac                    1.0
+dSurfWaterMass            0
+bHaltEnvelopeGone         0
+sPlanetRadiusModel        lopez
+dAtmXAbsEffH              0.1
+dSemi                     -0.18850      # Semi-major axis, negative -> AU
+dEnvelopeMass             -0.0081818
+
+saOutputOrder Time SemiMajorAxis Eccentricity SpiNBodyInc LongP SpiNBodyLongA$
+              MeanAnomaly -EnvelopeMass Radius -Mass

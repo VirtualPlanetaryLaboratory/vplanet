@@ -29,7 +29,7 @@ print("Running NBody.")
 
 os.chdir("..")
 print("Running VPLanet.")
-#subp.call(['vplanet','vpl.in'])
+subp.call(['vplanet','vpl.in'])
 
 output = vpl.GetOutput()
 

@@ -29,6 +29,9 @@ EqTide, STELLAR]
 
 `MiniNeptuneEvap <MiniNeptuneEvap>`_: Removal of a mini-Neptune's isothermal hydrogen atmosphere by high energy radiation and/or Roche lobe overflow. [AtmEsc, STELLAR]
 
+`NBodyAtmEsc <NBodyAtmEsc>`_: Coupled envelope loss and N-Body evolution in the
+pulsar planet system PSR1257+12.
+
 `VenusWaterLoss <VenusWaterLoss>`_: Water loss from Venus due to water photolyzation and hydrogen escape. [AtmEsc, STELLAR]
 
 `WaterLossTides <WaterLossTides>`_: Evolution of a planet losing water from
@@ -69,6 +72,9 @@ STELLAR]
 `DampedCBP <DampedCBP>`_: Evolution of planet orbiting a tidally evolving binary star. [BINARY, EqTide, STELLAR]
 
 `EarthClimate <EarthClimate>`_: Earth's climate through one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
+
+`NBodyAtmEsc <NBodyAtmEsc>`_: Coupled envelope loss and N-Body evolution in the
+pulsar planet system PSR1257+12.
 
 `SSDistOrbDistRot <SSDistOrbDistRot>`_: Evolution of the Solar System planets' orbital and rotational angular momenta from approximate models. [DistOrb, DistRot]
 

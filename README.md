@@ -50,4 +50,6 @@ If you'd like to stay up to date on vplanet by joining the e-mail list, please s
 
 `vplanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, and 13-13NAI7_0024. We also acknowledge support from the University of Washington and the Carnegie Institute for Science.
 
+Note that this README is not maintained.
+
 Enjoy!

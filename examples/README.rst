@@ -7,7 +7,7 @@ plots, and more description of the physics. Use these VPLanet input files and Py
 
 To run the Python scripts and generate the figures in the subdirectories, you must install `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_. Note, however, that you can run VPLanet with installing vplot and use your preferred method to visualize the output.
 
-**Atmospheres**
+**Atmospheric Escape**
 ===============
 
 `AbioticO2 <AbioticO2>`_: Production of abiotic oxygen on terrestrial worlds due to water photolyzation and hydrogen escape. [AtmEsc, STELLAR]
@@ -16,8 +16,6 @@ To run the Python scripts and generate the figures in the subdirectories, you mu
 
 `AtmEscRegimes <AtmEscRegimes>`_: Hydrogen envelope loss due to Roche lobe overflow, radiation-recombination-limited escape, energy-limited escape, and "automatic" loss in which the local environment sets the escape rate. [AtmEsc, STELLAR]
 
-`EarthClimate <EarthClimate>`_: Energy balance climate model of Earth over one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
-
 `HabEvapCores <HabEvapCores>`_: Transition of Proxima b from a mini-Neptune to a habitable evaporated core via hydrogen loss. [AtmEsc, STELLAR]
 
 `HLossTides <HLossTides>`_: Coupled atmospheric escape and tidal evolution for
@@ -25,18 +23,23 @@ the CPL tidal model with hydrogen escape via energy-limited,
 radiation-recombination-limited, Bondi-limited, and automatic models. [AtmEsc,
 EqTide, STELLAR]
 
-`IceBelts <IceBelts>`_: Formation of equatorial ice belts on planets with high obliquity. [POISE]
-
 `MiniNeptuneEvap <MiniNeptuneEvap>`_: Removal of a mini-Neptune's isothermal hydrogen atmosphere by high energy radiation and/or Roche lobe overflow. [AtmEsc, STELLAR]
 
 `NBodyAtmEsc <NBodyAtmEsc>`_: Coupled envelope loss and N-Body evolution in the
-pulsar planet system PSR1257+12.
+pulsar planet system PSR1257+12. [AtmEsc, SpiNBody]
 
 `VenusWaterLoss <VenusWaterLoss>`_: Water loss from Venus due to water photolyzation and hydrogen escape. [AtmEsc, STELLAR]
 
 `WaterLossTides <WaterLossTides>`_: Evolution of a planet losing water from
 photolysis and hydrogen escape while it tidally evolves. [AtmEsc, EqTide,
 STELLAR]
+
+**Climate**
+===========
+
+`EarthClimate <EarthClimate>`_: Energy balance climate model of Earth over one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
+
+`IceBelts <IceBelts>`_: Formation of equatorial ice belts on planets with high obliquity. [POISE]
 
 **Galactic Effects**
 ====================
@@ -74,7 +77,7 @@ STELLAR]
 `EarthClimate <EarthClimate>`_: Earth's climate through one year, as well as ice sheet growth and retreat on long timescales due to orbital and rotational forcings, i.e. Milankovitch Cycles. [DistOrb, DistRot, POISE]
 
 `NBodyAtmEsc <NBodyAtmEsc>`_: Coupled envelope loss and N-Body evolution in the
-pulsar planet system PSR1257+12.
+pulsar planet system PSR1257+12. [AtmEsc, SpiNBody]
 
 `SSDistOrbDistRot <SSDistOrbDistRot>`_: Evolution of the Solar System planets' orbital and rotational angular momenta from approximate models. [DistOrb, DistRot]
 

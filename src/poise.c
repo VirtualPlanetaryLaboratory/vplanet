@@ -3028,7 +3028,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_NORTHICECAPLAND].iModuleBit = POISE;
   fnWrite[OUT_NORTHICECAPLAND] = &WriteNorthIceCapLand;
 
-  sprintf(output[OUT_NORTHICECAPSEA].cName,"NorthIceCapLandSea");
+  sprintf(output[OUT_NORTHICECAPSEA].cName,"NorthIceCapSea");
   sprintf(output[OUT_NORTHICECAPSEA].cDescr,
       "Does the planet have a northern polar sea ice cap");
   output[OUT_NORTHICECAPSEA].bNeg = 0;
@@ -3175,7 +3175,8 @@ Is a specific latitude's sea component covered in ice?
 @param iBody Body in question
 */
 double fbIceLatSea(BODY *body,int iBody,int iLat) {
-  if (body[iBody].daSeaIceHeight[iLat] > 0) {
+  if (body[iBody].daSeaIceHeight[iLat] > 0 ||
+      body[iBody].daTempMaxWater[iLat] < body[iBody].dFrzTSeaIce) {
     return 1;
   }
 
@@ -3313,7 +3314,7 @@ int fbNorthIceCapLand(BODY *body, int iBody) {
   int iLat, iNum=0;
 
   // Check for ice at north pole; no ice at +90 => No ice cap
-  if (fbIceLatLand(body,iBody,0)) {
+  if (!fbIceLatLand(body,iBody,0)) {
     return 0;
   }
 
@@ -3337,7 +3338,7 @@ int fbNorthIceCapSea(BODY *body, int iBody) {
   int iLat, iNum=0;
 
   // Check for ice at north pole; no ice at +90 => No ice cap
-  if (fbIceLatSea(body,iBody,0)) {
+  if (!fbIceLatSea(body,iBody,0)) {
     return 0;
   }
 
@@ -3361,7 +3362,7 @@ int fbSouthIceCapLand(BODY *body, int iBody) {
   int iLat, iNum=0;
 
   // Check for ice at south pole; no ice at -90 => No ice cap
-  if (fbIceLatLand(body,iBody,body[iBody].iNumLats-1)) {
+  if (!fbIceLatLand(body,iBody,body[iBody].iNumLats-1)) {
     return 0;
   }
 
@@ -3385,7 +3386,7 @@ int fbSouthIceCapSea(BODY *body, int iBody) {
   int iLat, iNum=0;
 
   // Check for ice at south pole; no ice at -90 => No ice cap
-  if (fbIceLatSea(body,iBody,body[iBody].iNumLats-1)) {
+  if (!fbIceLatSea(body,iBody,body[iBody].iNumLats-1)) {
     return 0;
   }
 

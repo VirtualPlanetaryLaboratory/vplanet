@@ -22,7 +22,7 @@ L_sun, which is about 3 times larger than the X-ray luminosity found by
 `Pavlov etal. (2007) <https://ui.adsabs.harvard.edu/abs/2007ApJ...664.1072P/abstract>`_.
 The initial envelope mass of planet A is 1 Earth mass, with a core mass
 of 0.02 Earth masses, which is the currently observed value `Konacki & Wolszczan
- (2003) <https://ui.adsabs.harvard.edu/abs/2003ApJ...591L.147K/abstract>`_. While such an
+(2003) <https://ui.adsabs.harvard.edu/abs/2003ApJ...591L.147K/abstract>`_. While such an
 initial composition seems unlikely, the large mass loss allows for the coupling
 to be apparent in a simulation that requires ~1 hour to complete. Mass loss for
 the B and C companions can occur of billion year timescales, see the

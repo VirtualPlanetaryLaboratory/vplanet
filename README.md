@@ -88,8 +88,6 @@ If you use this code to generate results used in any publication or conference c
 
 `VPLanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, 80NSSC17K048, and 13-13NAI7_0024. We also acknowledge support from the University of Washington and the Carnegie Institute for Science.
 
-Note that this README is not maintained.
-
 Enjoy!
 
 

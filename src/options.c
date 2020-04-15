@@ -3767,6 +3767,11 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_COSOBL].bNeg = 0;
   options[OPT_COSOBL].iFileType = 1;
   fnRead[OPT_COSOBL] = &ReadCosObl;
+  sprintf(options[OPT_COSOBL].cLongDescr,
+    "Planet formation simulations predict that an isotropic distribution of\n"
+    "rotational angular momentum vectors is a typical outcome. This result is\n"
+    "identical to a uniform distribution in cosine obliquity. Use this option\n"
+    "to sample a realistic distribution of initial obliquities.\n");
 
   sprintf(options[OPT_RADIUS].cName,"dRadius");
   sprintf(options[OPT_RADIUS].cDescr,"Radius");

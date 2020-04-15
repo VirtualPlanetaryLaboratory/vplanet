@@ -8,7 +8,7 @@ dRadius			-1.20  		# Radius, negative -> Earth radii
 # >L This is a guess from a source graph (Damasso 2018)
 dRotPeriod	-1.0  		# Rotation period, negative -> days
 # >L yet another straight up guess.
-dObliquity	30.0      # Obliquity (degrees)
+dCosObl	    0.8660254037919214      # Cosine of Obliquity (30 deg)
 dRadGyra		0.4       # Radius of gyration (unitless)
 
 # Orbital Properties

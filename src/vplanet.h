@@ -138,6 +138,7 @@ struct BODY {
   double dK2;		         /**< Body's Total Love number */
   double dImK2;          /**< Imaginary part of Love's k_2 (total) */
   double dObliquity;     /**< Body's Obliquity */
+  double dCosObl;        /**< Cosine of body's obliquity */
   double dRotRate;       /**< Body's Rotation Rate */
   double dRotPer;        /**< Body's Rotation Period */
   double dRotVel;        /**< Body's Rotational Velocity */

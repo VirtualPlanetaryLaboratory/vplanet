@@ -227,7 +227,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DFCRIT].cDefault,"0.1");
   options[OPT_DFCRIT].dDefault = 0.1;
   options[OPT_DFCRIT].iType = 2;
-  options[OPT_DFCRIT].iMultiFile = 0;
+  options[OPT_DFCRIT].bMultiFile = 0;
   fnRead[OPT_DFCRIT] = &ReadDfCrit;
 
   sprintf(options[OPT_INVPLANE].cName,"bInvPlane");
@@ -235,7 +235,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_INVPLANE].cDefault,"0");
   options[OPT_INVPLANE].dDefault = 0;
   options[OPT_INVPLANE].iType = 0;
-  options[OPT_INVPLANE].iMultiFile = 0;
+  options[OPT_INVPLANE].bMultiFile = 0;
   fnRead[OPT_INVPLANE] = &ReadInvPlane;
 
   sprintf(options[OPT_ORBITMODEL].cName,"sOrbitModel");
@@ -250,7 +250,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ORMAXECC].cDefault,"0");
   options[OPT_ORMAXECC].dDefault = 0;
   options[OPT_ORMAXECC].iType = 0;
-  options[OPT_ORMAXECC].iMultiFile = 0;
+  options[OPT_ORMAXECC].bMultiFile = 0;
   fnRead[OPT_ORMAXECC] = &ReadOverrideMaxEcc;
 
   sprintf(options[OPT_HALTHILLSTAB].cName,"bHaltHillStab");
@@ -258,7 +258,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTHILLSTAB].cDefault,"0");
   options[OPT_HALTHILLSTAB].dDefault = 0;
   options[OPT_HALTHILLSTAB].iType = 0;
-  options[OPT_HALTHILLSTAB].iMultiFile = 0;
+  options[OPT_HALTHILLSTAB].bMultiFile = 0;
   fnRead[OPT_HALTHILLSTAB] = &ReadHaltHillStab;
 
   sprintf(options[OPT_HALTCLOSEENC].cName,"bHaltCloseEnc");
@@ -266,7 +266,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTCLOSEENC].cDefault,"0");
   options[OPT_HALTCLOSEENC].dDefault = 0;
   options[OPT_HALTCLOSEENC].iType = 0;
-  options[OPT_HALTCLOSEENC].iMultiFile = 0;
+  options[OPT_HALTCLOSEENC].bMultiFile = 0;
   fnRead[OPT_HALTCLOSEENC] = &ReadHaltCloseEnc;
 
   sprintf(options[OPT_EIGENSET].cName,"bEigenSet");
@@ -274,7 +274,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_EIGENSET].cDefault,"0");
   options[OPT_EIGENSET].dDefault = 0;
   options[OPT_EIGENSET].iType = 0;
-  options[OPT_EIGENSET].iMultiFile = 0;
+  options[OPT_EIGENSET].bMultiFile = 0;
   fnRead[OPT_EIGENSET] = &ReadEigenSet;
 
   sprintf(options[OPT_EIGENVALUE].cName,"dEigenvalue");
@@ -282,7 +282,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_EIGENVALUE].cDefault,"0");
   options[OPT_EIGENVALUE].dDefault = 0;
   options[OPT_EIGENVALUE].iType = 0;
-  options[OPT_EIGENVALUE].iMultiFile = 0;
+  options[OPT_EIGENVALUE].bMultiFile = 0;
   fnRead[OPT_EIGENVALUE] = &ReadEigenvalue;
 
   sprintf(options[OPT_EIGENVECTOR].cName,"dEigenvector");
@@ -290,7 +290,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_EIGENVECTOR].cDefault,"0");
   options[OPT_EIGENVECTOR].dDefault = 0;
   options[OPT_EIGENVECTOR].iType = 0;
-  options[OPT_EIGENVECTOR].iMultiFile = 0;
+  options[OPT_EIGENVECTOR].bMultiFile = 0;
   fnRead[OPT_EIGENVECTOR] = &ReadEigenvector;
 
   sprintf(options[OPT_OUTPUTLAPL].cName,"bOutputLapl");
@@ -298,7 +298,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OUTPUTLAPL].cDefault,"0");
   options[OPT_OUTPUTLAPL].dDefault = 0;
   options[OPT_OUTPUTLAPL].iType = 0;
-  options[OPT_OUTPUTLAPL].iMultiFile = 0;
+  options[OPT_OUTPUTLAPL].bMultiFile = 0;
   fnRead[OPT_OUTPUTLAPL] = &ReadOutputLapl;
 
   sprintf(options[OPT_OUTPUTEIGEN].cName,"bOutputEigen");
@@ -306,7 +306,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OUTPUTEIGEN].cDefault,"0");
   options[OPT_OUTPUTEIGEN].dDefault = 0;
   options[OPT_OUTPUTEIGEN].iType = 0;
-  options[OPT_OUTPUTEIGEN].iMultiFile = 0;
+  options[OPT_OUTPUTEIGEN].bMultiFile = 0;
   fnRead[OPT_OUTPUTEIGEN] = &ReadOutputEigen;
 }
 
@@ -1174,7 +1174,8 @@ void VerifyHaltDistOrb(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
   }
 }
 
-int fniHaltHillStab(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fniHaltHillStab(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   int iPert, jBody;
   double mu1, mu2, alpha, gamma1, gamma2, delta, crit, hill;
 
@@ -1218,7 +1219,8 @@ int fniHaltHillStab(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,i
   return 0;
 }
 
-int fniHaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fniHaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   int iPert, jBody;
   double dDR;
 
@@ -1269,7 +1271,7 @@ int fniHaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,i
   dHaltMaxMutualInc, FALSE if not
 */
 int fbHaltMaxMutualIncDistorb(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
-      UPDATE *update,int iBody) {
+      UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
   int jBody;
 

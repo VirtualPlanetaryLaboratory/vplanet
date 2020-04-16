@@ -199,7 +199,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_POSITIONXSPINBODY].cDefault,"0");
   options[OPT_POSITIONXSPINBODY].dDefault = 0.0;
   options[OPT_POSITIONXSPINBODY].iType = 2;
-  options[OPT_POSITIONXSPINBODY].iMultiFile = 1;
+  options[OPT_POSITIONXSPINBODY].bMultiFile = 1;
   fnRead[OPT_POSITIONXSPINBODY] = &ReadPositionX;
 
   sprintf(options[OPT_POSITIONYSPINBODY].cName,"dPositionYSpiNBody");
@@ -207,7 +207,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_POSITIONYSPINBODY].cDefault,"0");
   options[OPT_POSITIONYSPINBODY].dDefault = 0.0;
   options[OPT_POSITIONYSPINBODY].iType = 2;
-  options[OPT_POSITIONYSPINBODY].iMultiFile = 1;
+  options[OPT_POSITIONYSPINBODY].bMultiFile = 1;
   fnRead[OPT_POSITIONYSPINBODY] = &ReadPositionY;
 
   sprintf(options[OPT_POSITIONZSPINBODY].cName,"dPositionZSpiNBody");
@@ -215,7 +215,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_POSITIONZSPINBODY].cDefault,"0");
   options[OPT_POSITIONZSPINBODY].dDefault = 0.0;
   options[OPT_POSITIONZSPINBODY].iType = 2;
-  options[OPT_POSITIONZSPINBODY].iMultiFile = 1;
+  options[OPT_POSITIONZSPINBODY].bMultiFile = 1;
   fnRead[OPT_POSITIONZSPINBODY] = &ReadPositionZ;
 
   sprintf(options[OPT_VELXSPINBODY].cName,"dVelXSpiNBody");
@@ -223,7 +223,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VELXSPINBODY].cDefault,"0");
   options[OPT_VELXSPINBODY].dDefault = 0.0;
   options[OPT_VELXSPINBODY].iType = 2;
-  options[OPT_VELXSPINBODY].iMultiFile = 1;
+  options[OPT_VELXSPINBODY].bMultiFile = 1;
   fnRead[OPT_VELXSPINBODY] = &ReadVelX;
 
   sprintf(options[OPT_VELYSPINBODY].cName,"dVelYSpiNBody");
@@ -231,7 +231,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VELYSPINBODY].cDefault,"0");
   options[OPT_VELYSPINBODY].dDefault = 0.0;
   options[OPT_VELYSPINBODY].iType = 2;
-  options[OPT_VELYSPINBODY].iMultiFile = 1;
+  options[OPT_VELYSPINBODY].bMultiFile = 1;
   fnRead[OPT_VELYSPINBODY] = &ReadVelY;
 
   sprintf(options[OPT_VELZSPINBODY].cName,"dVelZSpiNBody");
@@ -239,7 +239,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VELZSPINBODY].cDefault,"0");
   options[OPT_VELZSPINBODY].dDefault = 0.0;
   options[OPT_VELZSPINBODY].iType = 2;
-  options[OPT_VELZSPINBODY].iMultiFile = 1;
+  options[OPT_VELZSPINBODY].bMultiFile = 1;
   fnRead[OPT_VELZSPINBODY] = &ReadVelZ;
 
   sprintf(options[OPT_MEANA].cName,"dMeanA");
@@ -247,7 +247,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MEANA].cDefault,"0.0");
   options[OPT_MEANA].dDefault = 0.0;
   options[OPT_MEANA].iType = 2;
-  options[OPT_MEANA].iMultiFile = 1;
+  options[OPT_MEANA].bMultiFile = 1;
   fnRead[OPT_MEANA] = &ReadMeanA;
 
   sprintf(options[OPT_USEORBPARAMS].cName,"bUseOrbParams");
@@ -255,7 +255,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_USEORBPARAMS].cDefault,"0");
   options[OPT_USEORBPARAMS].dDefault = 0;
   options[OPT_USEORBPARAMS].iType = 0;
-  options[OPT_USEORBPARAMS].iMultiFile = 1;
+  options[OPT_USEORBPARAMS].bMultiFile = 1;
   fnRead[OPT_USEORBPARAMS] = &ReadUseOrbParams;
 }
 
@@ -472,7 +472,7 @@ void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   dHaltMaxMutualInc, FALSE if not
 */
 int fbHaltMaxMutualIncSpiNBody(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
-      UPDATE *update,int iBody) {
+      UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
   int jBody;
 

@@ -557,7 +557,7 @@ void ReadEqtideMantleTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      body[iFile-1].bMantle = 0; // Default to no ocean tides
+      body[iFile-1].bMantle = 0; // Default to no ocean tides XXX
 }
 
 // Use fixed tidal radius?
@@ -573,7 +573,7 @@ void ReadUseTidalRadius(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if(iFile > 0)
-      body[iFile-1].bUseTidalRadius = 0; // Default to no
+      body[iFile-1].bUseTidalRadius = 0; // Default to no XXX
 }
 
 // Include effects of envelope tides?
@@ -604,14 +604,14 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_FIXORBIT].cDescr,"Fix Orbital Elements?");
   sprintf(options[OPT_FIXORBIT].cDefault,"0");
   options[OPT_FIXORBIT].iType = 0;
-  options[OPT_FIXORBIT].iMultiFile = 1;
+  options[OPT_FIXORBIT].bMultiFile = 1;
   fnRead[OPT_FIXORBIT] = &ReadFixOrbit;
 
   sprintf(options[OPT_FORCEEQSPIN].cName,"bForceEqSpin");
   sprintf(options[OPT_FORCEEQSPIN].cDescr,"Force Spin Rate to Equilibrium?");
   sprintf(options[OPT_FORCEEQSPIN].cDefault,"0");
   options[OPT_FORCEEQSPIN].iType = 0;
-  options[OPT_FORCEEQSPIN].iMultiFile = 1;
+  options[OPT_FORCEEQSPIN].bMultiFile = 1;
   fnRead[OPT_FORCEEQSPIN] = &ReadForceEqSpin;
 
   sprintf(options[OPT_HALTDBLSYNC].cName,"bHaltDblSync");
@@ -624,7 +624,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_HALTTIDELOCK].cDescr,"Halt if Tide-Locked?");
   sprintf(options[OPT_HALTTIDELOCK].cDefault,"0");
   options[OPT_HALTTIDELOCK].iType = 0;
-  options[OPT_HALTTIDELOCK].iMultiFile = 1;
+  options[OPT_HALTTIDELOCK].bMultiFile = 1;
   fnRead[OPT_HALTTIDELOCK] = &ReadHaltTideLock;
 
   sprintf(options[OPT_TIDALRADIUS].cName,"dTidalRadius");
@@ -632,16 +632,16 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_TIDALRADIUS].cDefault,"1 Earth Radius");
   options[OPT_TIDALRADIUS].dDefault = REARTH;
   options[OPT_TIDALRADIUS].iType = 2;
-  options[OPT_TIDALRADIUS].iMultiFile = 1;
+  options[OPT_TIDALRADIUS].bMultiFile = 1;
   options[OPT_TIDALRADIUS].dNeg = REARTH;
   sprintf(options[OPT_TIDALRADIUS].cNeg,"Earth radii");
   fnRead[OPT_TIDALRADIUS] = &ReadTidalRadius;
 
   sprintf(options[OPT_HALTSYNCROT].cName,"bHaltSyncRot");
-  sprintf(options[OPT_HALTSYNCROT].cDescr,"Halt if Secondary's rotation becomes syncrhonous?");
+  sprintf(options[OPT_HALTSYNCROT].cDescr,"Halt if the rotation becomes syncrhonous?");
   sprintf(options[OPT_HALTSYNCROT].cDefault,"0");
   options[OPT_HALTSYNCROT].iType = 0;
-  options[OPT_HALTSYNCROT].iMultiFile = 1;
+  options[OPT_HALTSYNCROT].bMultiFile = 1;
   fnRead[OPT_HALTSYNCROT] = &ReadHaltSyncRot;
 
   sprintf(options[OPT_K2].cName,"dK2");
@@ -649,7 +649,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_K2].cDefault,"1");
   options[OPT_K2].dDefault = 1;
   options[OPT_K2].iType = 2;
-  options[OPT_K2].iMultiFile = 1;
+  options[OPT_K2].bMultiFile = 1;
   fnRead[OPT_K2] = &ReadK2;
 
   sprintf(options[OPT_K2OCEAN].cName,"dK2Ocean");
@@ -657,7 +657,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_K2OCEAN].cDefault,"0.05");
   options[OPT_K2OCEAN].dDefault = 0.01;
   options[OPT_K2OCEAN].iType = 2;
-  options[OPT_K2OCEAN].iMultiFile = 1;
+  options[OPT_K2OCEAN].bMultiFile = 1;
   fnRead[OPT_K2OCEAN] = &ReadK2Ocean;
 
   sprintf(options[OPT_K2ENV].cName,"dK2Env");
@@ -665,7 +665,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_K2ENV].cDefault,"0.01");
   options[OPT_K2ENV].dDefault = 0.01;
   options[OPT_K2ENV].iType = 2;
-  options[OPT_K2ENV].iMultiFile = 1;
+  options[OPT_K2ENV].bMultiFile = 1;
   fnRead[OPT_K2ENV] = &ReadK2Env;
 
   sprintf(options[OPT_MAXLOCKDIFF].cName,"dMaxLockDiff");
@@ -673,36 +673,35 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_MAXLOCKDIFF].cDefault,"0");
   options[OPT_MAXLOCKDIFF].dDefault = 0;
   options[OPT_MAXLOCKDIFF].iType = 2;
-  options[OPT_MAXLOCKDIFF].iMultiFile = 1;
+  options[OPT_MAXLOCKDIFF].bMultiFile = 1;
   fnRead[OPT_MAXLOCKDIFF] = &ReadMaxLockDiff;
 
   sprintf(options[OPT_OCEANTIDES].cName,"bOceanTides");
   sprintf(options[OPT_OCEANTIDES].cDescr,"Include effects of ocean tides");
   sprintf(options[OPT_OCEANTIDES].cDefault,"0");
   options[OPT_OCEANTIDES].iType = 0;
-  options[OPT_OCEANTIDES].iMultiFile = 1;
+  options[OPT_OCEANTIDES].bMultiFile = 1;
   fnRead[OPT_OCEANTIDES] = &ReadEqtideOceanTides;
 
   sprintf(options[OPT_MANTLETIDES].cName,"bMantleTides");
   sprintf(options[OPT_MANTLETIDES].cDescr,"Include effects of mantle tides");
   sprintf(options[OPT_MANTLETIDES].cDefault,"0");
   options[OPT_MANTLETIDES].iType = 0;
-  options[OPT_MANTLETIDES].iMultiFile = 1;
+  options[OPT_MANTLETIDES].bMultiFile = 1;
   fnRead[OPT_MANTLETIDES] = &ReadEqtideMantleTides;
-
 
   sprintf(options[OPT_USETIDALRADIUS].cName,"bUseTidalRadius");
   sprintf(options[OPT_USETIDALRADIUS].cDescr,"Fix radius used for CPL tidal equations");
   sprintf(options[OPT_USETIDALRADIUS].cDefault,"0");
   options[OPT_USETIDALRADIUS].iType = 0;
-  options[OPT_USETIDALRADIUS].iMultiFile = 1;
+  options[OPT_USETIDALRADIUS].bMultiFile = 1;
   fnRead[OPT_USETIDALRADIUS] = &ReadUseTidalRadius;
 
   sprintf(options[OPT_ENVTIDES].cName,"bEnvTides");
   sprintf(options[OPT_ENVTIDES].cDescr,"Include effects of gaseous envelope tides");
   sprintf(options[OPT_ENVTIDES].cDefault,"0");
   options[OPT_ENVTIDES].iType = 0;
-  options[OPT_ENVTIDES].iMultiFile = 1;
+  options[OPT_ENVTIDES].bMultiFile = 1;
   fnRead[OPT_ENVTIDES] = &ReadEqtideEnvTides;
 
   sprintf(options[OPT_SYNCECC].cName,"dSyncEcc");
@@ -710,7 +709,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_SYNCECC].cDefault,"0");
   options[OPT_SYNCECC].dDefault = 0;
   options[OPT_SYNCECC].iType = 2;
-  options[OPT_SYNCECC].iMultiFile = 1;
+  options[OPT_SYNCECC].bMultiFile = 1;
   fnRead[OPT_SYNCECC] = &ReadSyncEcc;
 
   sprintf(options[OPT_TIDALQ].cName,"dTidalQ");
@@ -718,7 +717,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_TIDALQ].cDefault,"1e6");
   options[OPT_TIDALQ].dDefault = 1e6;
   options[OPT_TIDALQ].iType = 2;
-  options[OPT_TIDALQ].iMultiFile = 1;
+  options[OPT_TIDALQ].bMultiFile = 1;
   fnRead[OPT_TIDALQ] = &ReadTidalQ;
 
   sprintf(options[OPT_TIDALQOCEAN].cName,"dTidalQOcean");
@@ -726,7 +725,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_TIDALQOCEAN].cDefault,"12");
   options[OPT_TIDALQOCEAN].dDefault = 12;
   options[OPT_TIDALQOCEAN].iType = 2;
-  options[OPT_TIDALQOCEAN].iMultiFile = 1;
+  options[OPT_TIDALQOCEAN].bMultiFile = 1;
   fnRead[OPT_TIDALQOCEAN] = &ReadTidalQOcean;
 
   sprintf(options[OPT_TIDALQENV].cName,"dTidalQEnv");
@@ -734,7 +733,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_TIDALQENV].cDefault,"1.0e4");
   options[OPT_TIDALQENV].dDefault = 1.0e4;
   options[OPT_TIDALQENV].iType = 2;
-  options[OPT_TIDALQENV].iMultiFile = 1;
+  options[OPT_TIDALQENV].bMultiFile = 1;
   fnRead[OPT_TIDALQENV] = &ReadTidalQEnv;
 
   sprintf(options[OPT_TIDALTAU].cName,"dTidalTau");
@@ -742,7 +741,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_TIDALTAU].cDefault,"1 Second");
   options[OPT_TIDALTAU].dDefault = 1;
   options[OPT_TIDALTAU].iType = 2;
-  options[OPT_TIDALTAU].iMultiFile = 1;
+  options[OPT_TIDALTAU].bMultiFile = 1;
   options[OPT_TIDALTAU].dNeg = 1;
   sprintf(options[OPT_TIDALTAU].cNeg,"Seconds");
   fnRead[OPT_TIDALTAU] = &ReadTidalTau;
@@ -763,6 +762,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_OCEANTIDES].cDescr,"Include tidal dissapation due to oceans?");
   sprintf(options[OPT_OCEANTIDES].cDefault,"0");
   options[OPT_OCEANTIDES].iType = 0;
+  options[OPT_OCEANTIDES].bMultiFile = 1;
   fnRead[OPT_OCEANTIDES] = &ReadEqtideOceanTides;
 
   sprintf(options[OPT_TIDALQMANTLE].cName,"dTidalQMantle");
@@ -770,7 +770,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_TIDALQMANTLE].cDefault,"100");
   options[OPT_TIDALQMANTLE].dDefault = 100;
   options[OPT_TIDALQMANTLE].iType = 2;
-  options[OPT_TIDALQMANTLE].iMultiFile = 1;
+  options[OPT_TIDALQMANTLE].bMultiFile = 1;
   fnRead[OPT_TIDALQMANTLE] = &ReadTidalQMantle;
 
   sprintf(options[OPT_K2MANTLE].cName,"dK2Mantle");
@@ -778,7 +778,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_K2MANTLE].cDefault,"0.01");
   options[OPT_K2MANTLE].dDefault = 0.01;
   options[OPT_K2MANTLE].iType = 2;
-  options[OPT_K2MANTLE].iMultiFile = 1;
+  options[OPT_K2MANTLE].bMultiFile = 1;
   fnRead[OPT_K2MANTLE] = &ReadK2Mantle;
 
 }
@@ -1634,7 +1634,8 @@ void FinalizeUpdateSemiEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 /* Double Synchronous? */
 
 /* How is this handled for multi-planet systems? XXX */
-int HaltDblSync(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltDblSync(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   /* Forbidden if iNumBodies > 2 XXX Add to VerifyHalts */
 
   /* dMeanMotion set by call to TidalProperties in Evolve() */
@@ -1652,7 +1653,8 @@ int HaltDblSync(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int i
 }
 
 /* Tide-locked? */
-int HaltTideLock(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltTideLock(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   /* Forbidden for body 0 if iNumBodies > 2 XXX Add to VerifyHalts*/
 
   if ((body[iBody].dRotRate == body[iBody].dMeanMotion) && halt->bTideLock) {
@@ -1672,7 +1674,8 @@ int HaltTideLock(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int 
 }
 
 /* Synchronous Rotation? */
-int HaltSyncRot(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltSyncRot(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   /* Forbidden for body 0 if iNumBodies > 2 XXX Add to VerifyHalts */
 
   if (halt->bSync && (body[iBody].dRotRate == body[iBody].dMeanMotion)) {
@@ -2403,14 +2406,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALQENV].iNum = 1;
   output[OUT_TIDALQENV].iModuleBit = EQTIDE;
   fnWrite[OUT_TIDALQENV] = WriteTidalQEnv;
-/*
-  sprintf(output[OUT_TIDALQ].cName,"TidalQ");
-  sprintf(output[OUT_TIDALQ].cDescr,"Tidal Q");
-  output[OUT_TIDALQ].bNeg = 0;
-  output[OUT_TIDALQ].iNum = 1;
-  output[OUT_TIDALQ].iModuleBit = EQTIDE;
-  fnWrite[OUT_TIDALQ] = WriteTidalQ;
-*/
+
   sprintf(output[OUT_DSEMIDTEQTIDE].cName,"DsemiDtEqtide");
   sprintf(output[OUT_DSEMIDTEQTIDE].cDescr,"Total da/dt in EQTIDE");
   sprintf(output[OUT_DSEMIDTEQTIDE].cNeg,"AU/Gyr");

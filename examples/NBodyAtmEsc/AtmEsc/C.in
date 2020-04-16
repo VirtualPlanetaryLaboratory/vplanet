@@ -1,0 +1,17 @@
+# Planet a parameters
+sName                     C              # Body's name
+saModules                 atmesc       # Modules to apply, exact spelling required
+
+# Physical Properties
+dMass                     -3.873         # Mass, negative -> Earth masses
+dRadius                   -1.0           # Radius, negative -> Earth radii
+
+dXFrac                    1.0
+dSurfWaterMass            0
+bHaltEnvelopeGone         0
+sPlanetRadiusModel        lopez
+dAtmXAbsEffH              0.1
+dSemi                     -0.46604
+dEcc                       0.0252
+dEnvelopeMass             -0.81818
+saOutputOrder             Time -EnvelopeMass -PlanetRadius -Mass

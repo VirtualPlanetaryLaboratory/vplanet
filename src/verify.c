@@ -474,6 +474,23 @@ void VerifyMassRad(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int
  *
  */
 
+void VerifyObliquity(BODY *body,OPTIONS *options,int iBody,int iVerbose) {
+
+  if (options[OPT_COSOBL].iLine[iBody+1] > -1) {
+    // Cos(obl) entered for this body
+    if (options[OPT_OBL].iLine[iBody+1] > -1) {
+      if (iVerbose > VERBINPUT) {
+        fprintf(stderr,"ERROR: Cannot set %s and %s.\n",options[OPT_OBL].cName,
+          options[OPT_COSOBL].cName);
+      }
+      DoubleLineExit(options[OPT_OBL].cFile[iBody+1],
+          options[OPT_COSOBL].cFile[iBody+1],
+          options[OPT_OBL].iLine[iBody+1],options[OPT_COSOBL].iLine[iBody+1]);
+    }
+    body[iBody].dObliquity = acos(body[iBody].dCosObl);
+  }
+}
+
 void VerifyRotationGeneral(BODY *body,OPTIONS *options,char cFile[],int iBody,int iVerbose) {
   /* Add 1, as this information could not have been set in primary input */
   int iFileNum = iBody+1;
@@ -511,6 +528,8 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,char cFile[],int iBody,in
     body[iBody].dRotRate = fdPerToFreq(body[iBody].dRotPer);
   if (options[OPT_ROTVEL].iLine[iFileNum] >= 0)
     body[iBody].dRotRate = fdRadiusRotVelToFreq(body[iBody].dRotVel,body[iBody].dRadius);
+
+  VerifyObliquity(body,options,iBody,iVerbose);
 }
 
 void VerifyImK2Env(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iBody) {
@@ -547,7 +566,7 @@ void VerifyImK2Env(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
 
     // Everything OK, set dImK2Env
     // Defining this here is OK until we have a real envelope model
-    body[iBody].dImK2Env = body[iBody].dK2Env/body[iBody].dTidalQEnv;
+    body[iBody].dImK2Env = -body[iBody].dK2Env/body[iBody].dTidalQEnv;
 
   } else {
     // Set dImK2Env to 0, i.e. no Dissipation
@@ -589,7 +608,7 @@ void VerifyImK2Ocean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
 
     // Everything OK, set dImK2Ocean
     // Defining this here is OK until we have a real ocean model
-    body[iBody].dImK2Ocean = body[iBody].dK2Ocean/body[iBody].dTidalQOcean;
+    body[iBody].dImK2Ocean = -body[iBody].dK2Ocean/body[iBody].dTidalQOcean;
 
   } else {
     // Set dImK2Ocean to 0, i.e. no Dissipation
@@ -630,7 +649,7 @@ void VerifyImK2Mantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       body[iBody].dK2Man = fdK2Man(body,iBody);
       body[iBody].dImK2Man = fdImK2Man(body,iBody);
     } else {
-      body[iBody].dImK2Man = body[iBody].dK2Man/body[iBody].dTidalQMan;
+      body[iBody].dImK2Man = -body[iBody].dK2Man/body[iBody].dTidalQMan;
       body[iBody].dShmodUMan = 1; // Set to avoid division by zero in log file
       body[iBody].dDynamViscos = 1; // Also used in log file
       body[iBody].dStiffness = 1; // Ditto
@@ -772,10 +791,12 @@ void VerifyMantle(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int 
   // XXX This is broken, user should be able to set mantle properties w/o thermint
   if (body[iBody].bThermint) {
     body[iBody].bMantle = 1;
-  } else {
+  }
+/* See above
+  else {
     body[iBody].bMantle = 0;
   }
-
+*/
 }
 
 void VerifyOcean(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,int iBody) {
@@ -899,7 +920,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,
     }
   }
 
-  // Verify multi-mpdule parameters
+  // Verify multi-module parameters
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     if (body[iBody].bEqtide) {
       VerifyImK2(body,control,files,options,system,update,iBody);

@@ -800,7 +800,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LATCELLNUM].cDefault,"50");
   options[OPT_LATCELLNUM].dDefault = 50;
   options[OPT_LATCELLNUM].iType = 1;
-  options[OPT_LATCELLNUM].iMultiFile = 1;
+  options[OPT_LATCELLNUM].bMultiFile = 1;
   fnRead[OPT_LATCELLNUM] = &ReadLatCellNum;
 
   sprintf(options[OPT_PLANCKA].cName,"dPlanckA");
@@ -808,7 +808,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PLANCKA].cDefault,"203.3");
   options[OPT_PLANCKA].dDefault = 203.3;
   options[OPT_PLANCKA].iType = 2;
-  options[OPT_PLANCKA].iMultiFile = 1;
+  options[OPT_PLANCKA].bMultiFile = 1;
   fnRead[OPT_PLANCKA] = &ReadPlanckA;
 
   sprintf(options[OPT_PLANCKB].cName,"dPlanckB");
@@ -816,7 +816,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PLANCKB].cDefault,"2.09");
   options[OPT_PLANCKB].dDefault = 2.09;
   options[OPT_PLANCKB].iType = 2;
-  options[OPT_PLANCKB].iMultiFile = 1;
+  options[OPT_PLANCKB].bMultiFile = 1;
   fnRead[OPT_PLANCKB] = &ReadPlanckB;
 
   sprintf(options[OPT_ICEALBEDO].cName,"dIceAlbedo");
@@ -824,7 +824,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ICEALBEDO].cDefault,"0.6");
   options[OPT_ICEALBEDO].dDefault = 0.6;
   options[OPT_ICEALBEDO].iType = 2;
-  options[OPT_ICEALBEDO].iMultiFile = 1;
+  options[OPT_ICEALBEDO].bMultiFile = 1;
   fnRead[OPT_ICEALBEDO] = &ReadIceAlbedo;
 
   sprintf(options[OPT_SURFALBEDO].cName,"dSurfAlbedo");
@@ -832,7 +832,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SURFALBEDO].cDefault,"0.3");
   options[OPT_SURFALBEDO].dDefault = 0.3;
   options[OPT_SURFALBEDO].iType = 2;
-  options[OPT_SURFALBEDO].iMultiFile = 1;
+  options[OPT_SURFALBEDO].bMultiFile = 1;
   fnRead[OPT_SURFALBEDO] = &ReadSurfAlbedo;
 
   sprintf(options[OPT_TGLOBALEST].cName,"dTGlobalInit");
@@ -840,7 +840,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TGLOBALEST].cDefault,"14.85");
   options[OPT_TGLOBALEST].dDefault = 14.85;
   options[OPT_TGLOBALEST].iType = 2;
-  options[OPT_TGLOBALEST].iMultiFile = 1;
+  options[OPT_TGLOBALEST].bMultiFile = 1;
   fnRead[OPT_TGLOBALEST] = &ReadTGlobalInit;
 
   sprintf(options[OPT_PCO2].cName,"dpCO2");
@@ -848,7 +848,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PCO2].cDefault,"3.3e-4");
   options[OPT_PCO2].dDefault = 3.3e-4;
   options[OPT_PCO2].iType = 2;
-  options[OPT_PCO2].iMultiFile = 1;
+  options[OPT_PCO2].bMultiFile = 1;
   fnRead[OPT_PCO2] = &ReadPCO2;
 
   sprintf(options[OPT_CALCAB].cName,"bCalcAB");
@@ -856,7 +856,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CALCAB].cDefault,"0");
   options[OPT_CALCAB].dDefault = 0;
   options[OPT_CALCAB].iType = 0;
-  options[OPT_CALCAB].iMultiFile = 1;
+  options[OPT_CALCAB].bMultiFile = 1;
   fnRead[OPT_CALCAB] = &ReadCalcAB;
 
   sprintf(options[OPT_DIFFUSION].cName,"dDiffusion");
@@ -864,7 +864,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DIFFUSION].cDefault,"0.44");
   options[OPT_DIFFUSION].dDefault = 0.44;
   options[OPT_DIFFUSION].iType = 2;
-  options[OPT_DIFFUSION].iMultiFile = 1;
+  options[OPT_DIFFUSION].bMultiFile = 1;
   fnRead[OPT_DIFFUSION] = &ReadDiffusion;
 
   sprintf(options[OPT_HADLEY].cName,"bHadley");
@@ -872,7 +872,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HADLEY].cDefault,"0");
   options[OPT_HADLEY].dDefault = 0;
   options[OPT_HADLEY].iType = 0;
-  options[OPT_HADLEY].iMultiFile = 1;
+  options[OPT_HADLEY].bMultiFile = 1;
   fnRead[OPT_HADLEY] = &ReadHadley;
 
   sprintf(options[OPT_COLDSTART].cName,"bColdStart");
@@ -880,7 +880,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_COLDSTART].cDefault,"0");
   options[OPT_COLDSTART].dDefault = 0;
   options[OPT_COLDSTART].iType = 0;
-  options[OPT_COLDSTART].iMultiFile = 1;
+  options[OPT_COLDSTART].bMultiFile = 1;
   fnRead[OPT_COLDSTART] = &ReadColdStart;
 
   sprintf(options[OPT_FIXICELAT].cName,"dFixIceLat");
@@ -888,7 +888,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FIXICELAT].cDefault,"None");
   options[OPT_FIXICELAT].dDefault = 0;
   options[OPT_FIXICELAT].iType = 2;
-  options[OPT_FIXICELAT].iMultiFile = 1;
+  options[OPT_FIXICELAT].bMultiFile = 1;
   fnRead[OPT_FIXICELAT] = &ReadFixIceLat;
 
   sprintf(options[OPT_ALBEDOZA].cName,"bAlbedoZA");
@@ -896,7 +896,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ALBEDOZA].cDefault,"0");
   options[OPT_ALBEDOZA].dDefault = 0;
   options[OPT_ALBEDOZA].iType = 0;
-  options[OPT_ALBEDOZA].iMultiFile = 1;
+  options[OPT_ALBEDOZA].bMultiFile = 1;
   fnRead[OPT_ALBEDOZA] = &ReadAlbedoZA;
 
   sprintf(options[OPT_MEPDIFF].cName,"bMEPDiff");
@@ -904,7 +904,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MEPDIFF].cDefault,"0");
   options[OPT_MEPDIFF].dDefault = 0;
   options[OPT_MEPDIFF].iType = 0;
-  options[OPT_MEPDIFF].iMultiFile = 1;
+  options[OPT_MEPDIFF].bMultiFile = 1;
   fnRead[OPT_MEPDIFF] = &ReadMEPDiff;
 
   sprintf(options[OPT_HEATCAPANN].cName,"dHeatCapAnn");
@@ -912,7 +912,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HEATCAPANN].cDefault,"0.2");
   options[OPT_HEATCAPANN].dDefault = 0.2;
   options[OPT_HEATCAPANN].iType = 2;
-  options[OPT_HEATCAPANN].iMultiFile = 1;
+  options[OPT_HEATCAPANN].bMultiFile = 1;
   fnRead[OPT_HEATCAPANN] = &ReadHeatCapAnn;
 
   sprintf(options[OPT_ICEDEPRATE].cName,"dIceDepRate");
@@ -920,7 +920,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ICEDEPRATE].cDefault,"2.9e-5");
   options[OPT_ICEDEPRATE].dDefault = 2.9e-5;
   options[OPT_ICEDEPRATE].iType = 2;
-  options[OPT_ICEDEPRATE].iMultiFile = 1;
+  options[OPT_ICEDEPRATE].bMultiFile = 1;
   fnRead[OPT_ICEDEPRATE] = &ReadIceDepRate;
 
   sprintf(options[OPT_ICESHEETS].cName,"bIceSheets");
@@ -928,7 +928,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ICESHEETS].cDefault,"0");
   options[OPT_ICESHEETS].dDefault = 0;
   options[OPT_ICESHEETS].iType = 0;
-  options[OPT_ICESHEETS].iMultiFile = 1;
+  options[OPT_ICESHEETS].bMultiFile = 1;
   fnRead[OPT_ICESHEETS] = &ReadIceSheets;
 
   sprintf(options[OPT_INITICELAT].cName,"dInitIceLat");
@@ -936,7 +936,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_INITICELAT].cDefault,"90");
   options[OPT_INITICELAT].dDefault = 90.0;
   options[OPT_INITICELAT].iType = 2;
-  options[OPT_INITICELAT].iMultiFile = 1;
+  options[OPT_INITICELAT].bMultiFile = 1;
   fnRead[OPT_INITICELAT] = &ReadInitIceLat;
 
   sprintf(options[OPT_INITICEHEIGHT].cName,"dInitIceHeight");
@@ -944,7 +944,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_INITICEHEIGHT].cDefault,"50");
   options[OPT_INITICEHEIGHT].dDefault = 50.0;
   options[OPT_INITICEHEIGHT].iType = 2;
-  options[OPT_INITICEHEIGHT].iMultiFile = 1;
+  options[OPT_INITICEHEIGHT].bMultiFile = 1;
   fnRead[OPT_INITICEHEIGHT] = &ReadInitIceHeight;
 
   sprintf(options[OPT_CLIMATEMODEL].cName,"bClimateModel");
@@ -952,7 +952,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CLIMATEMODEL].cDefault,"ann");
   options[OPT_CLIMATEMODEL].dDefault = ANN;
   options[OPT_CLIMATEMODEL].iType = 1;
-  options[OPT_CLIMATEMODEL].iMultiFile = 1;
+  options[OPT_CLIMATEMODEL].bMultiFile = 1;
   fnRead[OPT_CLIMATEMODEL] = &ReadClimateModel;
 
   sprintf(options[OPT_OLRMODEL].cName,"iOLRModel");
@@ -960,7 +960,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OLRMODEL].cDefault,"sms09");
   options[OPT_OLRMODEL].dDefault = SMS09;
   options[OPT_OLRMODEL].iType = 1;
-  options[OPT_OLRMODEL].iMultiFile = 1;
+  options[OPT_OLRMODEL].bMultiFile = 1;
   fnRead[OPT_OLRMODEL] = &ReadOLRModel;
 
   sprintf(options[OPT_SKIPSEASENABLED].cName,"bSkipSeasEnabled");
@@ -968,7 +968,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SKIPSEASENABLED].cDefault,"0");
   options[OPT_SKIPSEASENABLED].dDefault = 0;
   options[OPT_SKIPSEASENABLED].iType = 0;
-  options[OPT_SKIPSEASENABLED].iMultiFile = 1;
+  options[OPT_SKIPSEASENABLED].bMultiFile = 1;
   fnRead[OPT_SKIPSEASENABLED] = &ReadSkipSeasEnabled;
 
   sprintf(options[OPT_HEATCAPLAND].cName,"dHeatCapLand");
@@ -976,7 +976,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HEATCAPLAND].cDefault,"1.42e7");
   options[OPT_HEATCAPLAND].dDefault = 1.42e7;
   options[OPT_HEATCAPLAND].iType = 2;
-  options[OPT_HEATCAPLAND].iMultiFile = 1;
+  options[OPT_HEATCAPLAND].bMultiFile = 1;
   fnRead[OPT_HEATCAPLAND] = &ReadHeatCapLand;
 
   sprintf(options[OPT_HEATCAPWATER].cName,"dHeatCapWater");
@@ -984,7 +984,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HEATCAPWATER].cDefault,"4.2e6");
   options[OPT_HEATCAPWATER].dDefault = 4.2e6;
   options[OPT_HEATCAPWATER].iType = 2;
-  options[OPT_HEATCAPWATER].iMultiFile = 1;
+  options[OPT_HEATCAPWATER].bMultiFile = 1;
   fnRead[OPT_HEATCAPWATER] = &ReadHeatCapWater;
 
   sprintf(options[OPT_MIXINGDEPTH].cName,"dMixingDepth");
@@ -992,7 +992,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MIXINGDEPTH].cDefault,"70");
   options[OPT_MIXINGDEPTH].dDefault = 70.;
   options[OPT_MIXINGDEPTH].iType = 2;
-  options[OPT_MIXINGDEPTH].iMultiFile = 1;
+  options[OPT_MIXINGDEPTH].bMultiFile = 1;
   fnRead[OPT_MIXINGDEPTH] = &ReadMixingDepth;
 
   sprintf(options[OPT_FRZTSEAICE].cName,"dFrzTSeaIce");
@@ -1000,7 +1000,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FRZTSEAICE].cDefault,"-2");
   options[OPT_FRZTSEAICE].dDefault = -2.;
   options[OPT_FRZTSEAICE].iType = 2;
-  options[OPT_FRZTSEAICE].iMultiFile = 1;
+  options[OPT_FRZTSEAICE].bMultiFile = 1;
   fnRead[OPT_FRZTSEAICE] = &ReadFrzTSeaIce;
 
   sprintf(options[OPT_NULANDWATER].cName,"dNuLandWater");
@@ -1008,7 +1008,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_NULANDWATER].cDefault,"0.81");
   options[OPT_NULANDWATER].dDefault = 0.81;
   options[OPT_NULANDWATER].iType = 2;
-  options[OPT_NULANDWATER].iMultiFile = 1;
+  options[OPT_NULANDWATER].bMultiFile = 1;
   fnRead[OPT_NULANDWATER] = &ReadNuLandWater;
 
   sprintf(options[OPT_LANDFRAC].cName,"dLandFrac");
@@ -1016,7 +1016,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LANDFRAC].cDefault,"0.34");
   options[OPT_LANDFRAC].dDefault = 0.34;
   options[OPT_LANDFRAC].iType = 2;
-  options[OPT_LANDFRAC].iMultiFile = 1;
+  options[OPT_LANDFRAC].bMultiFile = 1;
   fnRead[OPT_LANDFRAC] = &ReadLandFrac;
 
   sprintf(options[OPT_NSTEPINYEAR].cName,"iNStepInYear");
@@ -1024,7 +1024,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_NSTEPINYEAR].cDefault,"60");
   options[OPT_NSTEPINYEAR].dDefault = 60;
   options[OPT_NSTEPINYEAR].iType = 1;
-  options[OPT_NSTEPINYEAR].iMultiFile = 1;
+  options[OPT_NSTEPINYEAR].bMultiFile = 1;
   fnRead[OPT_NSTEPINYEAR] = &ReadNStepInYear;
 
   sprintf(options[OPT_NUMYEARS].cName,"iNumYears");
@@ -1032,7 +1032,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_NUMYEARS].cDefault,"10");
   options[OPT_NUMYEARS].dDefault = 10;
   options[OPT_NUMYEARS].iType = 1;
-  options[OPT_NUMYEARS].iMultiFile = 1;
+  options[OPT_NUMYEARS].bMultiFile = 1;
   fnRead[OPT_NUMYEARS] = &ReadNumYears;
 
   sprintf(options[OPT_SEAICEMODEL].cName,"bSeaIceModel");
@@ -1040,7 +1040,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SEAICEMODEL].cDefault,"1");
   options[OPT_SEAICEMODEL].dDefault = 1;
   options[OPT_SEAICEMODEL].iType = 0;
-  options[OPT_SEAICEMODEL].iMultiFile = 1;
+  options[OPT_SEAICEMODEL].bMultiFile = 1;
   fnRead[OPT_SEAICEMODEL] = &ReadSeaIceModel;
 
   sprintf(options[OPT_ICECONDUCT].cName,"dSeaIceConduct");
@@ -1048,7 +1048,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ICECONDUCT].cDefault,"2");
   options[OPT_ICECONDUCT].dDefault = 2.;
   options[OPT_ICECONDUCT].iType = 2;
-  options[OPT_ICECONDUCT].iMultiFile = 1;
+  options[OPT_ICECONDUCT].bMultiFile = 1;
   fnRead[OPT_ICECONDUCT] = &ReadSeaIceConduct;
 
   sprintf(options[OPT_ALBEDOLAND].cName,"dAlbedoLand");
@@ -1056,7 +1056,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ALBEDOLAND].cDefault,"0.363");
   options[OPT_ALBEDOLAND].dDefault = 0.363;
   options[OPT_ALBEDOLAND].iType = 2;
-  options[OPT_ALBEDOLAND].iMultiFile = 1;
+  options[OPT_ALBEDOLAND].bMultiFile = 1;
   fnRead[OPT_ALBEDOLAND] = &ReadAlbedoLand;
 
   sprintf(options[OPT_ALBEDOWATER].cName,"dAlbedoWater");
@@ -1064,7 +1064,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ALBEDOWATER].cDefault,"0.263");
   options[OPT_ALBEDOWATER].dDefault = 0.263;
   options[OPT_ALBEDOWATER].iType = 2;
-  options[OPT_ALBEDOWATER].iMultiFile = 1;
+  options[OPT_ALBEDOWATER].bMultiFile = 1;
   fnRead[OPT_ALBEDOWATER] = &ReadAlbedoWater;
 
   sprintf(options[OPT_ICEDT].cName,"iIceDt");
@@ -1072,7 +1072,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ICEDT].cDefault,"5");
   options[OPT_ICEDT].dDefault = 5;
   options[OPT_ICEDT].iType = 1;
-  options[OPT_ICEDT].iMultiFile = 1;
+  options[OPT_ICEDT].bMultiFile = 1;
   fnRead[OPT_ICEDT] = &ReadIceDt;
 
   sprintf(options[OPT_RERUNSEAS].cName,"iReRunSeas");
@@ -1080,7 +1080,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_RERUNSEAS].cDefault,"500");
   options[OPT_RERUNSEAS].dDefault = 5;
   options[OPT_RERUNSEAS].iType = 1;
-  options[OPT_RERUNSEAS].iMultiFile = 1;
+  options[OPT_RERUNSEAS].bMultiFile = 1;
   fnRead[OPT_RERUNSEAS] = &ReadReRunSeas;
 
   sprintf(options[OPT_GEOGRAPHY].cName,"iGeography");
@@ -1088,7 +1088,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_GEOGRAPHY].cDefault,"uni3");
   options[OPT_GEOGRAPHY].dDefault = UNIFORM3;
   options[OPT_GEOGRAPHY].iType = 1;
-  options[OPT_GEOGRAPHY].iMultiFile = 1;
+  options[OPT_GEOGRAPHY].bMultiFile = 1;
   fnRead[OPT_GEOGRAPHY] = &ReadGeography;
 
   sprintf(options[OPT_SEASOUTPUTTIME].cName,"dSeasOutputTime");
@@ -1096,7 +1096,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SEASOUTPUTTIME].cDefault,"0");
   options[OPT_SEASOUTPUTTIME].dDefault = 0;
   options[OPT_SEASOUTPUTTIME].iType = 2;
-  options[OPT_SEASOUTPUTTIME].iMultiFile = 1;
+  options[OPT_SEASOUTPUTTIME].bMultiFile = 1;
   fnRead[OPT_SEASOUTPUTTIME] = &ReadSeasOutputTime;
 
   sprintf(options[OPT_FORCEOBLIQ].cName,"bForceObliq");
@@ -1104,7 +1104,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FORCEOBLIQ].cDefault,"0");
   options[OPT_FORCEOBLIQ].dDefault = 0;
   options[OPT_FORCEOBLIQ].iType = 2;
-  options[OPT_FORCEOBLIQ].iMultiFile = 1;
+  options[OPT_FORCEOBLIQ].bMultiFile = 1;
   fnRead[OPT_FORCEOBLIQ] = &ReadForceObliq;
 
   sprintf(options[OPT_DIFFROT].cName,"bDiffRot");
@@ -1112,7 +1112,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DIFFROT].cDefault,"0");
   options[OPT_DIFFROT].dDefault = 0;
   options[OPT_DIFFROT].iType = 2;
-  options[OPT_DIFFROT].iMultiFile = 1;
+  options[OPT_DIFFROT].bMultiFile = 1;
   fnRead[OPT_DIFFROT] = &ReadDiffRot;
 
   sprintf(options[OPT_OBLIQAMP].cName,"dObliqAmp");
@@ -1120,7 +1120,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OBLIQAMP].cDefault,"50");
   options[OPT_OBLIQAMP].dDefault = 50;
   options[OPT_OBLIQAMP].iType = 2;
-  options[OPT_OBLIQAMP].iMultiFile = 1;
+  options[OPT_OBLIQAMP].bMultiFile = 1;
   fnRead[OPT_OBLIQAMP] = &ReadObliqAmp;
 
   sprintf(options[OPT_OBLIQPER].cName,"dObliqPer");
@@ -1128,7 +1128,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OBLIQPER].cDefault,"50000");
   options[OPT_OBLIQPER].dDefault = 50000;
   options[OPT_OBLIQPER].iType = 2;
-  options[OPT_OBLIQPER].iMultiFile = 1;
+  options[OPT_OBLIQPER].bMultiFile = 1;
   fnRead[OPT_OBLIQPER] = &ReadObliqPer;
 
   sprintf(options[OPT_FORCEECC].cName,"bForceEcc");
@@ -1136,7 +1136,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FORCEECC].cDefault,"0");
   options[OPT_FORCEECC].dDefault = 0;
   options[OPT_FORCEECC].iType = 2;
-  options[OPT_FORCEECC].iMultiFile = 1;
+  options[OPT_FORCEECC].bMultiFile = 1;
   fnRead[OPT_FORCEECC] = &ReadForceEcc;
 
   sprintf(options[OPT_ECCAMP].cName,"dEccAmp");
@@ -1144,7 +1144,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ECCAMP].cDefault,"0.1");
   options[OPT_ECCAMP].dDefault = 0.1;
   options[OPT_ECCAMP].iType = 2;
-  options[OPT_ECCAMP].iMultiFile = 1;
+  options[OPT_ECCAMP].bMultiFile = 1;
   fnRead[OPT_ECCAMP] = &ReadEccAmp;
 
   sprintf(options[OPT_ECCPER].cName,"dEccPer");
@@ -1152,7 +1152,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ECCPER].cDefault,"50000");
   options[OPT_ECCPER].dDefault = 50000;
   options[OPT_ECCPER].iType = 2;
-  options[OPT_ECCPER].iMultiFile = 1;
+  options[OPT_ECCPER].bMultiFile = 1;
   fnRead[OPT_ECCPER] = &ReadEccPer;
 
   sprintf(options[OPT_ACCUMODE].cName,"bAccuracyMode");
@@ -1160,7 +1160,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ACCUMODE].cDefault,"0");
   options[OPT_ACCUMODE].dDefault = 0;
   options[OPT_ACCUMODE].iType = 2;
-  options[OPT_ACCUMODE].iMultiFile = 1;
+  options[OPT_ACCUMODE].bMultiFile = 1;
   fnRead[OPT_ACCUMODE] = &ReadAccuracyMode;
 
   sprintf(options[OPT_ELEVFB].cName,"bElevFB");
@@ -1168,7 +1168,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ELEVFB].cDefault,"0");
   options[OPT_ELEVFB].dDefault = 0;
   options[OPT_ELEVFB].iType = 2;
-  options[OPT_ELEVFB].iMultiFile = 1;
+  options[OPT_ELEVFB].bMultiFile = 1;
   fnRead[OPT_ELEVFB] = &ReadElevFB;
 
   sprintf(options[OPT_LAPSER].cName,"dLapseR");
@@ -1176,7 +1176,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LAPSER].cDefault,"9.8e-3 C/m");
   options[OPT_LAPSER].dDefault = 9.8e-3;
   options[OPT_LAPSER].iType = 2;
-  options[OPT_LAPSER].iMultiFile = 1;
+  options[OPT_LAPSER].bMultiFile = 1;
   fnRead[OPT_LAPSER] = &ReadLapseR;
 
   sprintf(options[OPT_REFHEIGHT].cName,"dRefHeight");
@@ -1184,7 +1184,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_REFHEIGHT].cDefault,"1000 m");
   options[OPT_REFHEIGHT].dDefault = 1000.0;
   options[OPT_REFHEIGHT].iType = 2;
-  options[OPT_REFHEIGHT].iMultiFile = 1;
+  options[OPT_REFHEIGHT].bMultiFile = 1;
   fnRead[OPT_REFHEIGHT] = &ReadRefHeight;
 
   sprintf(options[OPT_ABLATEFF].cName,"dAblateFF");
@@ -1192,7 +1192,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ABLATEFF].cDefault,"2.3");
   options[OPT_ABLATEFF].dDefault = 2.3;
   options[OPT_ABLATEFF].iType = 2;
-  options[OPT_ABLATEFF].iMultiFile = 1;
+  options[OPT_ABLATEFF].bMultiFile = 1;
   fnRead[OPT_ABLATEFF] = &ReadAblateFF;
 
   sprintf(options[OPT_SPINUPTOL].cName,"dSpinUpTol");
@@ -1200,7 +1200,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SPINUPTOL].cDefault,"0.1 deg C");
   options[OPT_SPINUPTOL].dDefault = 0.1;
   options[OPT_SPINUPTOL].iType = 2;
-  options[OPT_SPINUPTOL].iMultiFile = 1;
+  options[OPT_SPINUPTOL].bMultiFile = 1;
   fnRead[OPT_SPINUPTOL] = &ReadSpinUpTol;
 
 }
@@ -1921,16 +1921,83 @@ void WriteTGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
 void WriteAlbedoGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get AlbedoGlobal */
   *dTmp = body[iBody].dAlbedoGlobal;
+  strcpy(cUnit,"");
 }
 
-void WriteSnowball(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteSnowball(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get snowball status */
   *dTmp = (double)body[iBody].bSnowball;
+  strcpy(cUnit,"");
+}
+
+void WriteNorthIceCapLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = (double)fbNorthIceCapLand(body,iBody);
+  strcpy(cUnit,"");
+}
+
+void WriteNorthIceCapSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = (double)fbNorthIceCapSea(body,iBody);
+  strcpy(cUnit,"");
+}
+
+void WriteSouthIceCapLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = (double)fbSouthIceCapLand(body,iBody);
+  strcpy(cUnit,"");
+}
+
+void WriteSouthIceCapSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = (double)fbSouthIceCapSea(body,iBody);
+  strcpy(cUnit,"");
+}
+
+void WriteIceBeltLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = (double)fbIceBeltLand(body,iBody);
+  strcpy(cUnit,"");
+}
+
+void WriteIceBeltSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = (double)fbIceBeltSea(body,iBody);
+  strcpy(cUnit,"");
+}
+
+void WriteSnowballLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = (double)fbSnowballLand(body,iBody);
+  strcpy(cUnit,"");
+}
+
+void WriteSnowballSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = (double)fbSnowballSea(body,iBody);
+  strcpy(cUnit,"");
+}
+
+void WriteIceFree(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  *dTmp = (double)fbIceFree(body,iBody);
+  strcpy(cUnit,"");
 }
 
 void WriteSkipSeas(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   /* Get AlbedoGlobal */
   *dTmp = body[iBody].bSkipSeas;
+  strcpy(cUnit,"");
 }
 
 void WriteTempLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -2063,6 +2130,7 @@ void WriteAlbedoLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
   } else if (body[iBody].bClimateModel == SEA) {
     *dTmp = body[iBody].daAlbedoAvg[body[iBody].iWriteLat];
   }
+  strcpy(cUnit,"");
 }
 
 void WriteAlbedoLandLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -2071,6 +2139,7 @@ void WriteAlbedoLandLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
   } else if (body[iBody].bClimateModel == SEA) {
     *dTmp = body[iBody].daAlbedoAvgL[body[iBody].iWriteLat];
   }
+  strcpy(cUnit,"");
 }
 
 void WriteAlbedoWaterLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -2079,6 +2148,7 @@ void WriteAlbedoWaterLat(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
   } else if (body[iBody].bClimateModel == SEA) {
     *dTmp = body[iBody].daAlbedoAvgW[body[iBody].iWriteLat];
   }
+  strcpy(cUnit,"");
 }
 
 void WriteFluxInGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -2926,7 +2996,8 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_ENERGYRESW] = &WriteEnergyResW;
 
   sprintf(output[OUT_SKIPSEAS].cName,"SkipSeas");
-  sprintf(output[OUT_SKIPSEAS].cDescr,"Is Seasonal model skipped due to RGH or snowball?");
+  sprintf(output[OUT_SKIPSEAS].cDescr,
+      "Is Seasonal model skipped due to RGH or snowball?");
   output[OUT_SKIPSEAS].bNeg = 0;
   output[OUT_SKIPSEAS].iNum = 1;
   output[OUT_SKIPSEAS].iModuleBit = POISE;
@@ -2948,6 +3019,73 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_AREAICECOV].iNum = 1;
   output[OUT_AREAICECOV].iModuleBit = POISE;
   fnWrite[OUT_AREAICECOV] = &WriteAreaIceCov;
+
+  sprintf(output[OUT_NORTHICECAPLAND].cName,"NorthIceCapLand");
+  sprintf(output[OUT_NORTHICECAPLAND].cDescr,
+      "Does the planet have a northern polar ice cap on land?");
+  output[OUT_NORTHICECAPLAND].bNeg = 0;
+  output[OUT_NORTHICECAPLAND].iNum = 1;
+  output[OUT_NORTHICECAPLAND].iModuleBit = POISE;
+  fnWrite[OUT_NORTHICECAPLAND] = &WriteNorthIceCapLand;
+
+  sprintf(output[OUT_NORTHICECAPSEA].cName,"NorthIceCapSea");
+  sprintf(output[OUT_NORTHICECAPSEA].cDescr,
+      "Does the planet have a northern polar sea ice cap");
+  output[OUT_NORTHICECAPSEA].bNeg = 0;
+  output[OUT_NORTHICECAPSEA].iNum = 1;
+  output[OUT_NORTHICECAPSEA].iModuleBit = POISE;
+  fnWrite[OUT_NORTHICECAPSEA] = &WriteNorthIceCapSea;
+
+  sprintf(output[OUT_SOUTHICECAPLAND].cName,"SouthIceCapLand");
+  sprintf(output[OUT_SOUTHICECAPLAND].cDescr,
+      "Does the planet have a southern polar ice cap on land?");
+  output[OUT_SOUTHICECAPLAND].bNeg = 0;
+  output[OUT_SOUTHICECAPLAND].iNum = 1;
+  output[OUT_SOUTHICECAPLAND].iModuleBit = POISE;
+  fnWrite[OUT_SOUTHICECAPLAND] = &WriteSouthIceCapLand;
+
+  sprintf(output[OUT_SOUTHICECAPSEA].cName,"SouthIceCapSea");
+  sprintf(output[OUT_SOUTHICECAPSEA].cDescr,
+      "Does the planet have a southern polar sea ice cap?");
+  output[OUT_SOUTHICECAPSEA].bNeg = 0;
+  output[OUT_SOUTHICECAPSEA].iNum = 1;
+  output[OUT_SOUTHICECAPSEA].iModuleBit = POISE;
+  fnWrite[OUT_SOUTHICECAPSEA] = &WriteSouthIceCapSea;
+
+  sprintf(output[OUT_ICEBELTLAND].cName,"IceBeltLand");
+  sprintf(output[OUT_ICEBELTLAND].cDescr,"Does the planet have a land ice belt?");
+  output[OUT_ICEBELTLAND].bNeg = 0;
+  output[OUT_ICEBELTLAND].iNum = 1;
+  output[OUT_ICEBELTLAND].iModuleBit = POISE;
+  fnWrite[OUT_ICEBELTLAND] = &WriteIceBeltLand;
+
+  sprintf(output[OUT_ICEBELTSEA].cName,"IceBeltSea");
+  sprintf(output[OUT_ICEBELTSEA].cDescr,"Does the planet have a sea ice belt?");
+  output[OUT_ICEBELTSEA].bNeg = 0;
+  output[OUT_ICEBELTSEA].iNum = 1;
+  output[OUT_ICEBELTSEA].iModuleBit = POISE;
+  fnWrite[OUT_ICEBELTSEA] = &WriteIceBeltSea;
+
+  sprintf(output[OUT_SNOWBALLLAND].cName,"SnowballLand");
+  sprintf(output[OUT_SNOWBALLLAND].cDescr,"Is all land covered in ice?");
+  output[OUT_SNOWBALLLAND].bNeg = 0;
+  output[OUT_SNOWBALLLAND].iNum = 1;
+  output[OUT_SNOWBALLLAND].iModuleBit = POISE;
+  fnWrite[OUT_SNOWBALLLAND] = &WriteSnowballLand;
+
+  sprintf(output[OUT_SNOWBALLSEA].cName,"SnowballSea");
+  sprintf(output[OUT_SNOWBALLSEA].cDescr,"Is all sea covered in ice?");
+  output[OUT_SNOWBALLSEA].bNeg = 0;
+  output[OUT_SNOWBALLSEA].iNum = 1;
+  output[OUT_SNOWBALLSEA].iModuleBit = POISE;
+  fnWrite[OUT_SNOWBALLSEA] = &WriteSnowballSea;
+
+  sprintf(output[OUT_ICEFREE].cName,"IceFree");
+  sprintf(output[OUT_ICEFREE].cDescr,"Is the planet free of sea and land ice?");
+  output[OUT_ICEFREE].bNeg = 0;
+  output[OUT_ICEFREE].iNum = 1;
+  output[OUT_ICEFREE].iModuleBit = POISE;
+  fnWrite[OUT_ICEFREE] = &WriteIceFree;
 }
 
 /************ POISE Logging Functions **************/
@@ -3031,10 +3169,71 @@ double BasalFlow(BODY *body, int iBody, int iLat){
 }
 
 /**
+Is a specific latitude's sea component covered in ice?
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+*/
+double fbIceLatSea(BODY *body,int iBody,int iLat) {
+  if (body[iBody].daSeaIceHeight[iLat] > 0 ||
+      body[iBody].daTempMaxWater[iLat] < body[iBody].dFrzTSeaIce) {
+    return 1;
+  }
+
+  return 0;
+}
+
+/**
+Is a specific latitude's sea component covered in ice?
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+*/
+double fbIceLatLand(BODY *body,int iBody,int iLat) {
+  if (body[iBody].daIceHeight[iLat] > 0) {
+    return 1;
+  } else if (body[iBody].daIceHeight[iLat] == 0 &&
+      body[iBody].daTempMaxLand[iLat] < 0) {
+    return 1;
+  }
+
+  return 0;
+}
+
+/**
+Determines if planet has no surface ice
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@return 1 for no sea or land ice free, 0 for ice
+
+*/
+int fbIceFree(BODY *body, int iBody) {
+  int iLat, bSea, bLand, iNum=0;
+
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+    bSea = fbIceLatSea(body,iBody,iLat);
+    bLand = fbIceLatLand(body,iBody,iLat);
+    if (bSea && bLand) {
+      iNum++;
+    }
+  }
+
+  if (iNum == body[iBody].iNumLats) {
+    return 1;
+  }
+
+  return 0;
+}
+
+/**
 Determines if planet has entered snowball state
 
 @param body Struct containing all body information and variables
 @param iBody Body in question
+
+XXX This should really be removed or modified in order to be consistent with
+other ice coverage functions!!!! XXX
 */
 void Snowball(BODY *body, int iBody) {
   int iLat, iNum=0;
@@ -3056,6 +3255,234 @@ void Snowball(BODY *body, int iBody) {
     body[iBody].bSnowball = 0;
   }
 }
+
+/**
+Is all the land on the planet covered in ice?
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+*/
+int fbSnowballLand(BODY *body,int iBody) {
+  int iLat, iNum=0;
+
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+    if (fbIceLatLand(body,iBody,iLat)) {
+      iNum++;
+    }
+  }
+
+  if (iNum == body[iBody].iNumLats) {
+    return 1;
+  }
+
+  return 0;
+
+}
+
+/**
+Are the planet's seas all ice-covered?
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+*/
+int fbSnowballSea(BODY *body,int iBody) {
+  int iLat, iNum=0;
+
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+    if (fbIceLatSea(body,iBody,iLat)) {
+      iNum++;
+    }
+  }
+
+  if (iNum == body[iBody].iNumLats) {
+    return 1;
+  }
+
+  return 0;
+}
+
+
+
+/**
+Determines if planet has a northern polar ice cap on land
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@return 1 for northern polar ice cap, 0 for ice free north pole
+*/
+int fbNorthIceCapLand(BODY *body, int iBody) {
+  int iLat, iNum=0;
+
+  // Check for ice at north pole; no ice at +90 => No ice cap
+  if (!fbIceLatLand(body,iBody,0)) {
+    return 0;
+  }
+
+  // Icy north pole; does ice extend to other pole?
+  if (fbSnowballLand(body,iBody)) {
+    return 0;
+  }
+
+  // If made it here, must be a northern polar cap
+  return 1;
+}
+
+/**
+Determines if planet has a northern polar see ice cap
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@return 1 for northern polar ice cap, 0 for ice free north pole
+*/
+int fbNorthIceCapSea(BODY *body, int iBody) {
+  int iLat, iNum=0;
+
+  // Check for ice at north pole; no ice at +90 => No ice cap
+  if (!fbIceLatSea(body,iBody,0)) {
+    return 0;
+  }
+
+  // Icy north pole; does ice extend to other pole?
+  if (fbSnowballSea(body,iBody)) {
+    return 0;
+  }
+
+  // If made it here, must be a northern polar cap
+  return 1;
+}
+
+/**
+Determines if planet has a southern polar ice cap on land
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@return 1 for southern polar ice cap, 0 for ice free south pole
+*/
+int fbSouthIceCapLand(BODY *body, int iBody) {
+  int iLat, iNum=0;
+
+  // Check for ice at south pole; no ice at -90 => No ice cap
+  if (!fbIceLatLand(body,iBody,body[iBody].iNumLats-1)) {
+    return 0;
+  }
+
+  // Icy south pole; does ice extend to other pole?
+  if (fbSnowballLand(body,iBody)) {
+    return 0;
+  }
+
+  // If made it here, must be a southern polar cap
+  return 1;
+}
+
+/**
+Determines if planet has a southern polar sea ice cap
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@return 1 for southern polar ice cap, 0 for ice free south pole
+*/
+int fbSouthIceCapSea(BODY *body, int iBody) {
+  int iLat, iNum=0;
+
+  // Check for ice at south pole; no ice at -90 => No ice cap
+  if (!fbIceLatSea(body,iBody,body[iBody].iNumLats-1)) {
+    return 0;
+  }
+
+  // Icy south pole; does ice extend to other pole?
+  if (fbSnowballSea(body,iBody)) {
+    return 0;
+  }
+
+  // If made it here, must be a southern polar cap
+  return 1;
+}
+
+
+
+/**
+Determines if planet has an equatorial ice belt on land
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@return 1 for ice belt, 0 for ice free equator
+*/
+int fbIceBeltLand(BODY *body, int iBody) {
+  int bSnowball,bNorthEdge,bSouthEdge,iLat,iEquator;
+
+  iEquator = (int)(body[iBody].iNumLats/2);
+
+  // Is equator ice free?
+  if (!fbIceLatLand(body,iBody,iEquator)) {
+    return 0;
+  }
+
+  // Ice at the equator, now search for ice belt
+  bNorthEdge = 0;
+  bSouthEdge = 0;
+  // Is there a northern edge to the ice sheet?
+  for (iLat=iEquator-1;iLat>=0;iLat--) {
+    if (!fbIceLatLand(body,iBody,iLat)) {
+      bNorthEdge = 1;
+      iLat=0; // exit loop
+    }
+  }
+  // Is there a southern edge to the ice sheet?
+  for (iLat=iEquator+1;iLat<body[iBody].iNumLats;iLat++) {
+    if (!fbIceLatLand(body,iBody,iLat)) {
+      bSouthEdge = 1;
+      iLat=body[iBody].iNumLats;
+    }
+  }
+  if (bNorthEdge && bSouthEdge) {
+    return 1;
+  }
+
+  return 0;
+}
+
+/**
+Determines if planet has an equatorial ice belt on land
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@return 1 for ice belt, 0 for ice free equator
+*/
+int fbIceBeltSea(BODY *body, int iBody) {
+  int bSnowball,bNorthEdge,bSouthEdge,iLat,iEquator;
+
+  iEquator = (int)(body[iBody].iNumLats/2);
+
+  // Is equator ice free?
+  if (!fbIceLatLand(body,iBody,iEquator)) {
+    return 0;
+  }
+
+  // Ice at the equator, now search for ice belt
+  bNorthEdge = 0;
+  bSouthEdge = 0;
+  // Is there a northern edge to the ice sheet?
+  for (iLat=iEquator-1;iLat>=0;iLat--) {
+    if (!fbIceLatSea(body,iBody,iLat)) {
+      bNorthEdge = 1;
+      iLat=0; // exit loop
+    }
+  }
+  // Is there a southern edge to the ice sheet?
+  for (iLat=iEquator+1;iLat<body[iBody].iNumLats;iLat++) {
+    if (!fbIceLatSea(body,iBody,iLat)) {
+      bSouthEdge = 1;
+      iLat=body[iBody].iNumLats;
+    }
+  }
+  if (bNorthEdge && bSouthEdge) {
+    return 1;
+  }
+
+  return 0;
+}
+
 
 /**
 Standard properties function for POISE. Updates auxiliary quantities
@@ -3123,7 +3550,7 @@ void ForceEcc(BODY *body, EVOLVE  *evolve, int iBody) {
   A = body[iBody].dEccAmp;
   C = body[iBody].dEcc0;
 
-  body[iBody].dEcc = (A*sin(2*PI*evolve->dTime/P))+C;
+  body[iBody].dEcc = (0.5*A*sin(2*PI*evolve->dTime/P))+C;
   CalcHK(body,iBody);
 }
 

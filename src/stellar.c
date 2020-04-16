@@ -214,24 +214,6 @@ void ReadHZModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
       body[iFile-1].iHZModel = HZ_MODEL_KOPPARAPU;
 }
 
-void ReadTemperature(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile-1].dTemperature = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
-    else
-      body[iFile-1].dTemperature = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dTemperature = options->dDefault;
-}
-
 void ReadRossbyCut(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
@@ -267,7 +249,8 @@ void ReadEvolveRG(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
 
 /* Halts */
 
-void ReadHaltEndBaraffeGrid(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void ReadHaltEndBaraffeGrid(BODY *body,CONTROL *control,FILES *files,
+      OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
   int bTmp;
@@ -291,7 +274,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SATXUVFRAC].cDefault,"1e-3");
   options[OPT_SATXUVFRAC].dDefault = 1.e-3;
   options[OPT_SATXUVFRAC].iType = 0;
-  options[OPT_SATXUVFRAC].iMultiFile = 1;
+  options[OPT_SATXUVFRAC].bMultiFile = 1;
   fnRead[OPT_SATXUVFRAC] = &ReadSatXUVFrac;
   sprintf(options[OPT_SATXUVFRAC].cLongDescr,
     "After formation stars emit a nearly constant amount of XUV radiation\n"
@@ -304,7 +287,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SATXUVTIME].cDefault,"0.1 Gyr");
   options[OPT_SATXUVTIME].dDefault = 1.e8 * YEARSEC;
   options[OPT_SATXUVTIME].iType = 0;
-  options[OPT_SATXUVTIME].iMultiFile = 1;
+  options[OPT_SATXUVTIME].bMultiFile = 1;
   options[OPT_SATXUVTIME].dNeg = 1e9*YEARSEC;
   sprintf(options[OPT_SATXUVTIME].cNeg,"Gyr");
   fnRead[OPT_SATXUVTIME] = &ReadSatXUVTime;
@@ -316,7 +299,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_XUVBETA].cDefault,"1.23");
   options[OPT_XUVBETA].dDefault = 1.23;
   options[OPT_XUVBETA].iType = 0;
-  options[OPT_XUVBETA].iMultiFile = 1;
+  options[OPT_XUVBETA].bMultiFile = 1;
   fnRead[OPT_XUVBETA] = &ReadXUVBeta;
   sprintf(options[OPT_XUVBETA].cLongDescr,
     "After the \"saturation\" phase, the ratio of the XUV to total luminosity\n"
@@ -328,7 +311,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_STELLARMODEL].cDefault,"BARAFFE");
   sprintf(options[OPT_STELLARMODEL].cValues,"BARAFFE PROXIMA NONE");
   options[OPT_STELLARMODEL].iType = 3;
-  options[OPT_STELLARMODEL].iMultiFile = 1;
+  options[OPT_STELLARMODEL].bMultiFile = 1;
   fnRead[OPT_STELLARMODEL] = &ReadStellarModel;
   sprintf(options[OPT_STELLARMODEL].cLongDescr,
     "If BARAFFE is selected, luminosity, effective temperature, radius, and\n"
@@ -342,7 +325,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MAGBRAKINGMODEL].cDefault,"REINERS");
   sprintf(options[OPT_MAGBRAKINGMODEL].cValues,"REINERS, SKUMANICH, MATT, NONE");
   options[OPT_MAGBRAKINGMODEL].iType = 3;
-  options[OPT_MAGBRAKINGMODEL].iMultiFile = 1;
+  options[OPT_MAGBRAKINGMODEL].bMultiFile = 1;
   fnRead[OPT_MAGBRAKINGMODEL] = &ReadMagBrakingModel;
   sprintf(options[OPT_STELLARMODEL].cLongDescr,
     "If REINERS is selected, the stellar magnetic braking model of\n"
@@ -356,7 +339,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_WINDMODEL].cDescr,"Wind Angular Momentum Loss Model");
   sprintf(options[OPT_WINDMODEL].cDefault,"REINERS");
   options[OPT_WINDMODEL].iType = 3;
-  options[OPT_WINDMODEL].iMultiFile = 1;
+  options[OPT_WINDMODEL].bMultiFile = 1;
   fnRead[OPT_WINDMODEL] = &ReadWindModel;
   sprintf(options[OPT_WINDMODEL].cLongDescr,
     "If REINERS is selected, the stellar wind model of Reiners and Mohanty\n"
@@ -368,7 +351,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_XUVMODEL].cDefault,"RIBAS");
   sprintf(options[OPT_XUVMODEL].cValues, "RIBAS REINERS NONE");
   options[OPT_XUVMODEL].iType = 3;
-  options[OPT_XUVMODEL].iMultiFile = 1;
+  options[OPT_XUVMODEL].bMultiFile = 1;
   options[OPT_XUVMODEL].iModuleBit = STELLAR;
   fnRead[OPT_XUVMODEL] = &ReadXUVModel;
   sprintf(options[OPT_XUVMODEL].cLongDescr,
@@ -385,21 +368,13 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HZMODEL].cDescr,"Habitable Zone Model: Kopparapu13");
   sprintf(options[OPT_HZMODEL].cDefault,"Kopparapu13");
   options[OPT_HZMODEL].iType = 3;
-  options[OPT_HZMODEL].iMultiFile = 1;
+  options[OPT_HZMODEL].bMultiFile = 1;
   fnRead[OPT_HZMODEL] = &ReadHZModel;
   sprintf(options[OPT_HZMODEL].cLongDescr,
     "If KOPPARAPU13 is selected then the Recent Venus, Runaway Greenhouse,\n"
     "Maximum Greenhouse, and Early Mars habitable zone limits will be\n"
     "calculated from Kopparapu, R. et al. (2013, ApJ, 765, 131)."
   );
-
-  sprintf(options[OPT_TEMPERATURE].cName,"dTemperature");
-  sprintf(options[OPT_TEMPERATURE].cDescr,"Initial effective temperature");
-  sprintf(options[OPT_TEMPERATURE].cDefault,"TSUN");
-  options[OPT_TEMPERATURE].dDefault = TSUN;
-  options[OPT_TEMPERATURE].iType = 0;
-  options[OPT_TEMPERATURE].iMultiFile = 1;
-  fnRead[OPT_TEMPERATURE] = &ReadTemperature;
 
   sprintf(options[OPT_HALTENDBARAFFEFGRID].cName,"bHaltEndBaraffeGrid");
   sprintf(options[OPT_HALTENDBARAFFEFGRID].cDescr,"Halt when we reach the end of the Baraffe+15 grid?");
@@ -416,7 +391,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ROSSBYCUT].cDescr,"Terminate magnetic braking when Rossby number > 2.08?");
   sprintf(options[OPT_ROSSBYCUT].cDefault,"0");
   options[OPT_ROSSBYCUT].iType = 0;
-  options[OPT_ROSSBYCUT].iMultiFile = 1;
+  options[OPT_ROSSBYCUT].bMultiFile = 1;
   options[OPT_ROSSBYCUT].iModuleBit = STELLAR;
   fnRead[OPT_ROSSBYCUT] = &ReadRossbyCut;
   sprintf(options[OPT_ROSSBYCUT].cLongDescr,
@@ -429,7 +404,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_EVOVLERG].cDescr,"Evolve stellar radius of gyration?");
   sprintf(options[OPT_EVOVLERG].cDefault,"1");
   options[OPT_EVOVLERG].iType = 0;
-  options[OPT_EVOVLERG].iMultiFile = 1;
+  options[OPT_EVOVLERG].bMultiFile = 1;
   options[OPT_EVOVLERG].iModuleBit = STELLAR;
   fnRead[OPT_EVOVLERG] = &ReadEvolveRG;
   sprintf(options[OPT_EVOVLERG].cLongDescr,
@@ -822,7 +797,8 @@ void FinalizeUpdateSemiStellar(BODY *body,UPDATE *update,int *iEqn,int iVar,int 
 
 /***************** STELLAR Halts *****************/
 
-int fbHaltEndBaraffeGrid(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltEndBaraffeGrid(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   if (body[iBody].iStellarModel == STELLAR_MODEL_CONST) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s reached the edge of the luminosity grid at ", body[iBody].cName);
@@ -846,110 +822,7 @@ void VerifyHaltStellar(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
 
 /************* STELLAR Outputs ******************/
 
-void WriteHZLimitRecentVenus(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  double *dHZLimits;
 
-  // Get limits
-  dHZLimits = malloc(6*sizeof(double));
-  if (body[iBody].iHZModel == HZ_MODEL_KOPPARAPU)
-    fdHabitableZoneKopparapu2013(body[iBody].dLuminosity,body[iBody].dTemperature,dHZLimits);
-
-  // Recent Venus limit is index 0
-  *dTmp = dHZLimits[0];
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsLength(units->iLength);
-    fsUnitsLength(units->iLength,cUnit);
-  }
-
-  free(dHZLimits);
-}
-
-void WriteHZLimitRunawayGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  double *dHZLimits;
-
-  // Get limits
-  dHZLimits = malloc(6*sizeof(double));
-  if (body[iBody].iHZModel == HZ_MODEL_KOPPARAPU)
-    fdHabitableZoneKopparapu2013(body[iBody].dLuminosity,body[iBody].dTemperature,dHZLimits);
-
-  // Runaway greenhouse limit is index 1
-  *dTmp = dHZLimits[1];
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsLength(units->iLength);
-    fsUnitsLength(units->iLength,cUnit);
-  }
-
-  free(dHZLimits);
-}
-
-void WriteHZLimitMoistGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  double *dHZLimits;
-
-  // Get limits
-  dHZLimits = malloc(6*sizeof(double));
-  if (body[iBody].iHZModel == HZ_MODEL_KOPPARAPU)
-    fdHabitableZoneKopparapu2013(body[iBody].dLuminosity,body[iBody].dTemperature,dHZLimits);
-
-  // Moist greenhouse limit is index 2
-  *dTmp = dHZLimits[2];
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsLength(units->iLength);
-    fsUnitsLength(units->iLength,cUnit);
-  }
-
-  free(dHZLimits);
-}
-
-void WriteHZLimitMaxGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  double *dHZLimits;
-
-  // Get limits
-  dHZLimits = malloc(6*sizeof(double));
-  if (body[iBody].iHZModel == HZ_MODEL_KOPPARAPU)
-    fdHabitableZoneKopparapu2013(body[iBody].dLuminosity,body[iBody].dTemperature,dHZLimits);
-
-  // Maximum greenhouse limit is index 3
-  *dTmp = dHZLimits[3];
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsLength(units->iLength);
-    fsUnitsLength(units->iLength,cUnit);
-  }
-
-  free(dHZLimits);
-}
-
-void WriteHZLimitEarlyMars(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  double *dHZLimits;
-
-  // Get limits
-  dHZLimits = malloc(6*sizeof(double));
-  if (body[iBody].iHZModel == HZ_MODEL_KOPPARAPU)
-    fdHabitableZoneKopparapu2013(body[iBody].dLuminosity,body[iBody].dTemperature,dHZLimits);
-
-  // Early Mars limit is index 4
-  *dTmp = dHZLimits[4];
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsLength(units->iLength);
-    fsUnitsLength(units->iLength,cUnit);
-  }
-
-  free(dHZLimits);
-}
 
 void WriteLuminosity(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dLuminosity;
@@ -1010,51 +883,6 @@ void WriteDRotPerDtStellar(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sy
 }
 
 void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
-
-  sprintf(output[OUT_HZLIMRECVENUS].cName,"HZLimRecVenus");
-  sprintf(output[OUT_HZLIMRECVENUS].cDescr,"Recent Venus Habitable Zone Limit");
-  sprintf(output[OUT_HZLIMRECVENUS].cNeg,"RSUN");
-  output[OUT_HZLIMRECVENUS].bNeg = 1;
-  output[OUT_HZLIMRECVENUS].dNeg = 1./RSUN;
-  output[OUT_HZLIMRECVENUS].iNum = 1;
-  output[OUT_HZLIMRECVENUS].iModuleBit = STELLAR;
-  fnWrite[OUT_HZLIMRECVENUS] = &WriteHZLimitRecentVenus;
-
-  sprintf(output[OUT_HZLIMRUNAWAY].cName,"HZLimRunaway");
-  sprintf(output[OUT_HZLIMRUNAWAY].cDescr,"Runaway Greenhouse Habitable Zone Limit");
-  sprintf(output[OUT_HZLIMRUNAWAY].cNeg,"RSUN");
-  output[OUT_HZLIMRUNAWAY].bNeg = 1;
-  output[OUT_HZLIMRUNAWAY].dNeg = 1./RSUN;
-  output[OUT_HZLIMRUNAWAY].iNum = 1;
-  output[OUT_HZLIMRUNAWAY].iModuleBit = STELLAR;
-  fnWrite[OUT_HZLIMRUNAWAY] = &WriteHZLimitRunawayGreenhouse;
-
-  sprintf(output[OUT_HZLIMMOIST].cName,"HZLimMoistGreenhouse");
-  sprintf(output[OUT_HZLIMMOIST].cDescr,"Moist Greenhouse Habitable Zone Limit");
-  sprintf(output[OUT_HZLIMMOIST].cNeg,"RSUN");
-  output[OUT_HZLIMMOIST].bNeg = 1;
-  output[OUT_HZLIMMOIST].dNeg = 1./RSUN;
-  output[OUT_HZLIMMOIST].iNum = 1;
-  output[OUT_HZLIMMOIST].iModuleBit = STELLAR;
-  fnWrite[OUT_HZLIMMOIST] = &WriteHZLimitMoistGreenhouse;
-
-  sprintf(output[OUT_HZLIMMAX].cName,"HZLimMaxGreenhouse");
-  sprintf(output[OUT_HZLIMMAX].cDescr,"Maximum Greenhouse Habitable Zone Limit");
-  sprintf(output[OUT_HZLIMMAX].cNeg,"RSUN");
-  output[OUT_HZLIMMAX].bNeg = 1;
-  output[OUT_HZLIMMAX].dNeg = 1./RSUN;
-  output[OUT_HZLIMMAX].iNum = 1;
-  output[OUT_HZLIMMAX].iModuleBit = STELLAR;
-  fnWrite[OUT_HZLIMMAX] = &WriteHZLimitMaxGreenhouse;
-
-  sprintf(output[OUT_HZLIMEARLYMARS].cName,"HZLimEarlyMars");
-  sprintf(output[OUT_HZLIMEARLYMARS].cDescr,"Early Mars Habitable Zone Limit");
-  sprintf(output[OUT_HZLIMEARLYMARS].cNeg,"RSUN");
-  output[OUT_HZLIMEARLYMARS].bNeg = 1;
-  output[OUT_HZLIMEARLYMARS].dNeg = 1./RSUN;
-  output[OUT_HZLIMEARLYMARS].iNum = 1;
-  output[OUT_HZLIMEARLYMARS].iModuleBit = STELLAR;
-  fnWrite[OUT_HZLIMEARLYMARS] = &WriteHZLimitEarlyMars;
 
   sprintf(output[OUT_LUMINOSITY].cName,"Luminosity");
   sprintf(output[OUT_LUMINOSITY].cDescr,"Luminosity");
@@ -1627,57 +1455,4 @@ double fdSurfEnFluxStellar(BODY *body,SYSTEM *system,UPDATE *update,int iBody,in
   // This is silly, but necessary!
   // RORY: I don't think so! -- This function should be set to ReturnOutputZero
   return 0;
-}
-
-// Habitable zone limits from Kopparapu et al. (2013)
-void fdHabitableZoneKopparapu2013(double dLuminosity,double dTeff,double *daHZLimit) {
-  int i;
-  double tstar,seff[6];
-  double seffsun[6],a[6],b[6],c[6],d[6];
-
-  // Luminosity must be expressed in solar units
-  dLuminosity /= LSUN;
-
-  seffsun[0] = 1.7763;
-  seffsun[1] = 1.0385;
-  seffsun[2] = 1.0146;
-  seffsun[3] = 0.3507;
-  seffsun[4] = 0.2946;
-  seffsun[5] = 0.2484;
-
-  a[0] = 1.4335e-4;
-  a[1] = 1.2456e-4;
-  a[2] = 8.1884e-5;
-  a[3] = 5.9578e-5;
-  a[4] = 4.9952e-5;
-  a[5] = 4.2588e-5;
-
-  b[0] = 3.3954e-9;
-  b[1] = 1.4612e-8;
-  b[2] = 1.9394e-9;
-  b[3] = 1.6707e-9;
-  b[4] = 1.3893e-9;
-  b[5] = 1.1963e-9;
-
-  c[0] = -7.6364e-12;
-  c[1] = -7.6345e-12;
-  c[2] = -4.3618e-12;
-  c[3] = -3.0058e-12;
-  c[4] = -2.5331e-12;
-  c[5] = -2.1709e-12;
-
-  d[0] = -1.1950e-15;
-  d[1] = -1.7511E-15;
-  d[2] = -6.8260e-16;
-  d[3] = -5.1925e-16;
-  d[4] = -4.3896e-16;
-  d[5] = -3.8282e-16;
-
-  tstar = dTeff - 5700;
-
-  for (i=0;i<6;i++) {
-    seff[i] = seffsun[i] + a[i]*tstar + b[i]*tstar*tstar + c[i]*pow(tstar,3) + d[i]*pow(tstar,4);
-    // Limits are in AU, convert to meters
-    daHZLimit[i] = pow(dLuminosity/seff[i],0.5)*AUM;
-  }
 }

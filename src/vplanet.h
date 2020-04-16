@@ -138,6 +138,7 @@ struct BODY {
   double dK2;		         /**< Body's Total Love number */
   double dImK2;          /**< Imaginary part of Love's k_2 (total) */
   double dObliquity;     /**< Body's Obliquity */
+  double dCosObl;        /**< Cosine of body's obliquity */
   double dRotRate;       /**< Body's Rotation Rate */
   double dRotPer;        /**< Body's Rotation Period */
   double dRotVel;        /**< Body's Rotational Velocity */
@@ -165,6 +166,7 @@ struct BODY {
   int bUseRRLimited; 			/**< Use radiation/recombination-limited H mass loss */
   int bAtmEscAuto; 				/**< Transition H escape regime depending on physics */
 	int bAutoThermTemp;			/**< Calculate thermal temperature from environemnt? */
+  int bStopWaterLossInHZ; /**< Stop water loss once planet enters habitable zone? */
 
   int iWaterLossModel;   /**< Water Loss and Oxygen Buildup Model */
   int iAtmXAbsEffH2OModel;  /**< Water X-ray/XUV absorption efficiency evolution model */
@@ -311,6 +313,7 @@ struct BODY {
   int bTideLock;         /**< Is a body tidally locked? */
   double dLockTime;	 /**< Time when body tidally-locked */
   int bUseTidalRadius;   /**< Set a fixed tidal radius? */
+	int bUseOuterTidalQ;   /**< Set total Q to outer layer's value? */
   double dTidalRadius;   /**< Radius used by tidal evoltion equations (CPL only currently) */
   int iTidePerts;        /**< Number of Tidal Perturbers */
   int *iaTidePerts;      /**< Body #'s of Tidal Perturbers */
@@ -1567,6 +1570,7 @@ struct IO {
   int *baRocheMessage;    /**< Has the Roche lobe message been printed? */
 	int *baCassiniOneMessage;		/**< Has the CassiniOne message been printed? */
 	int *baCassiniTwoMessage;		/**< Has the CassiniTwo message been printed? */
+  int *baEnterHZMessage;    /**< Has the Entering the HZ message been printed? */
 };
 
 /* The CONTROL struct contains all the parameters that
@@ -1581,7 +1585,8 @@ typedef void (*fnForceBehaviorModule)(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */
 
-typedef int (*fnHaltModule)(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+typedef int (*fnHaltModule)(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,
+							int);
 
 struct CONTROL {
   EVOLVE Evolve;
@@ -1697,7 +1702,7 @@ struct OPTIONS {
   char cDefault[OPTDESCR];     /**< Description of Default Value */
   double dDefault;             /**< Default Value */
   int iModuleBit;              /**< Bitwise sum of modules permitted to read option */
-  int iMultiFile;              /**< Option Permitted in Multiple Inpute Files?  (b?) */
+  int bMultiFile;              /**< Option Permitted in Multiple Input Files? */
   int iMultiIn;
   int *iLine;                  /**< Option's Line number in Input File */
   char *iFile;

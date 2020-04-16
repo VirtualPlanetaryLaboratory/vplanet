@@ -81,10 +81,10 @@
 #define OPT_GRCORR              564
 #define OPT_LUMINOSITY          575 /**< (Initial) luminosity */
 #define OPT_TIDALQ              577
+#define OPT_USEOUTERTIDALQ      579
 
-#define OPT_OBL	                640
 #define OPT_OUTDIGITS           570
-#define OPT_OUTPUTORDER		580
+#define OPT_OUTPUTORDER		      580
 #define OPT_GRIDOUTPUT          585
 #define OPT_OUTSCINOT	        590
 #define OPT_OVERWRITE           595
@@ -95,13 +95,16 @@
 #define OPT_PRILUM	        615
 
 #define OPT_VISCUMAN            630   //Viscosity UMTBL
-
+#define OPT_OBL	                640
+#define OPT_COSOBL              645
 #define OPT_RADIUS              650
 #define OPT_RG		        655
 
 #define OPT_ROTPER	        660
 #define OPT_ROTRATE	        665
 #define OPT_ROTVEL              680
+
+#define OPT_TEMPERATURE         690 /**< Effective temperature (initial) */
 
 #define OPT_XOBL                700
 #define OPT_YOBL                710

@@ -363,7 +363,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FEO].cDescr,"Initial Mass Fraction of FeO in the mantle"); //description that will be shown for vplanet -h
   sprintf(options[OPT_FEO].cDefault,"BSE Earth: 0.0788"); //comment what the default value will be
   options[OPT_FEO].iType = 2; //type of the variable: double??
-  options[OPT_FEO].iMultiFile = 1; //can it be used in multiple files? 1 = yes
+  options[OPT_FEO].bMultiFile = 1; //can it be used in multiple files? 1 = yes
   options[OPT_FEO].dNeg = 1; //is there a unit other than the SI unit? factor to convert between both units
   options[OPT_FEO].dDefault = 0.0788; // default value
   sprintf(options[OPT_FEO].cNeg,"no unit"); // specify unit (for help)
@@ -375,7 +375,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_WATERMASSATM].cDescr,"Initial Water Mass in the atmosphere");
   sprintf(options[OPT_WATERMASSATM].cDefault,"1 Terrestrial Ocean");
   options[OPT_WATERMASSATM].iType = 2;
-  options[OPT_WATERMASSATM].iMultiFile = 1;
+  options[OPT_WATERMASSATM].bMultiFile = 1;
   options[OPT_WATERMASSATM].dNeg = TOMASS; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
   options[OPT_WATERMASSATM].dDefault = 1;
   sprintf(options[OPT_WATERMASSATM].cNeg,"Terrestrial Oceans");
@@ -387,7 +387,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CO2MASSMOATM].cDescr,"Initial CO2 mass in the system");
   sprintf(options[OPT_CO2MASSMOATM].cDefault,"0 TO");
   options[OPT_CO2MASSMOATM].iType = 2;
-  options[OPT_CO2MASSMOATM].iMultiFile = 1;
+  options[OPT_CO2MASSMOATM].bMultiFile = 1;
   options[OPT_CO2MASSMOATM].dNeg = TOMASS; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
   options[OPT_CO2MASSMOATM].dDefault = 0;
   sprintf(options[OPT_CO2MASSMOATM].cNeg,"Terrestrial Oceans");
@@ -399,7 +399,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SURFTEMP].cDescr,"Initial surface temp");
   sprintf(options[OPT_SURFTEMP].cDefault,"4000 K");
   options[OPT_SURFTEMP].iType = 2;
-  options[OPT_SURFTEMP].iMultiFile = 1;
+  options[OPT_SURFTEMP].bMultiFile = 1;
   options[OPT_SURFTEMP].dNeg = 1;
   options[OPT_SURFTEMP].dDefault = 4000;
   sprintf(options[OPT_SURFTEMP].cNeg,"Kelvin");
@@ -411,7 +411,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MANMELTDENSITY].cDescr,"Density of the molten mantle");
   sprintf(options[OPT_MANMELTDENSITY].cDefault,"4000 kg/m^3");
   options[OPT_MANMELTDENSITY].iType = 2;
-  options[OPT_MANMELTDENSITY].iMultiFile = 1;
+  options[OPT_MANMELTDENSITY].bMultiFile = 1;
   options[OPT_MANMELTDENSITY].dNeg = 1;
   options[OPT_MANMELTDENSITY].dDefault = 4000;
   sprintf(options[OPT_MANMELTDENSITY].cNeg,"kg/m^3");
@@ -461,21 +461,21 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_RADIOHEATMODEL].cDescr,"Radiogenic heating model");
   sprintf(options[OPT_RADIOHEATMODEL].cDefault,"NONE");
   options[OPT_RADIOHEATMODEL].iType = 3;
-  options[OPT_RADIOHEATMODEL].iMultiFile = 1;
+  options[OPT_RADIOHEATMODEL].bMultiFile = 1;
   fnRead[OPT_RADIOHEATMODEL] = &ReadRadioHeatModel;
 
   sprintf(options[OPT_MAGMOCATMMODEL].cName,"sMagmOcAtmModel");
   sprintf(options[OPT_MAGMOCATMMODEL].cDescr,"Atmospheric flux model");
   sprintf(options[OPT_MAGMOCATMMODEL].cDefault,"GREY");
   options[OPT_MAGMOCATMMODEL].iType = 3;
-  options[OPT_MAGMOCATMMODEL].iMultiFile = 1;
+  options[OPT_MAGMOCATMMODEL].bMultiFile = 1;
   fnRead[OPT_MAGMOCATMMODEL] = &ReadMagmOcAtmModel;
 
   sprintf(options[OPT_MANQUASISOL].cName,"bOptManQuasiSol");
   sprintf(options[OPT_MANQUASISOL].cDescr,"Solidify when melt frac = 0.4?");
   sprintf(options[OPT_MANQUASISOL].cDefault,"0");
   options[OPT_MANQUASISOL].iType = 0;
-  options[OPT_MANQUASISOL].iMultiFile = 1;
+  options[OPT_MANQUASISOL].bMultiFile = 1;
   fnRead[OPT_MANQUASISOL] = &ReadMantleQuasiSolid;
 }
 
@@ -966,7 +966,7 @@ void fndMeltFracMan(BODY *body, int iBody) {
   } else if (body[iBody].dMeltFracSurf < 0) {
     body[iBody].dMeltFracSurf = 0;
   }
-  
+
   if (body[iBody].dMeltFracSurf > CRITMELTFRAC) {
     dEta_a = 0.00024 * exp(4600/(body[iBody].dPotTemp-1000)) / pow((1-(1-body[iBody].dMeltFracSurf)/(1-CRITMELTFRAC)),2.5);
     dEta_b = DYNVISCSOLID * exp(ACTIVENERGY/(RGAS*body[iBody].dPotTemp));
@@ -1623,7 +1623,8 @@ void InitializeUpdateMagmOc(BODY *body,UPDATE *update,int iBody) {
 /*
  * Checks if mantle soldified
  */
-int fbHaltMantleSolidified(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltMantleSolidified(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   if (body[iBody].bManSolid) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's mantle completely solidified after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
@@ -1633,7 +1634,8 @@ int fbHaltMantleSolidified(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *u
   return 0;
 }
 
-int fbHaltMantleMeltFracLow(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltMantleMeltFracLow(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+    UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   if (body[iBody].bManQuasiSol) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's mantle mostly solidified after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
@@ -1643,7 +1645,8 @@ int fbHaltMantleMeltFracLow(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *
   return 0;
 }
 
-int fbHaltAtmDesiSurfCool(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltAtmDesiSurfCool(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+    UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   if (body[iBody].bPlanetDesiccated) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's atmosphere desiccated after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
@@ -1653,7 +1656,8 @@ int fbHaltAtmDesiSurfCool(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *up
   return 0;
 }
 
-int fbHaltEnterHabZone(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltEnterHabZone(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+    UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   if (body[iBody].bEscapeStop) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s enters habitable zone after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
@@ -1663,7 +1667,8 @@ int fbHaltEnterHabZone(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *updat
   return 0;
 }
 
-int fbHaltAllPlanetsSolid(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltAllPlanetsSolid(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+    UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   double dCountSolid = 0;
   int iBodyTemp;
 
@@ -1683,7 +1688,8 @@ int fbHaltAllPlanetsSolid(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *up
   return 0;
 }
 
-int fbHaltAllPlanetsDesicc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltAllPlanetsDesicc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+    UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   double dCountSolid = 0;
   int iBodyTemp;
 

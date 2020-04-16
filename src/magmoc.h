@@ -126,12 +126,17 @@ void ReadOptionsMagmOc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int
 #define MAGMOCHALTSYSEND       5
 #define MAGMOCHALTBODYEND      5
 
-int fbHaltMantleSolidified(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int fbHaltMantleMeltFracLow(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int fbHaltAtmDesiSurfCool(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int fbHaltEnterHabZone(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int fbHaltAllPlanetsSolid(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int fbHaltAllPlanetsDesicc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltMantleSolidified(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,
+    int);
+int fbHaltMantleMeltFracLow(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,
+    int);
+int fbHaltAtmDesiSurfCool(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,
+    int);
+int fbHaltEnterHabZone(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);
+int fbHaltAllPlanetsSolid(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,
+    int);
+int fbHaltAllPlanetsDesicc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,
+    int);
 void CountHaltsMagmOc(HALT*,int*);
 
 /* Verify Functions */

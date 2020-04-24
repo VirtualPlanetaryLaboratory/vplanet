@@ -17,7 +17,7 @@
   <img src = "https://img.shields.io/badge/coverage-73%25-red.svg?style=flat">
 </p>
 
-### NOTE: Documentation is currently down. Apologies for any inconvenience.
+### NOTE: Documentation is currently down. Apologies for any inconvenience. You can type `vplanet -h` or `vplanet -H` to access the onboard help until this issue is resolved.
 
 ### Overview
 

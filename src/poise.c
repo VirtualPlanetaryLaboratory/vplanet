@@ -1784,8 +1784,8 @@ void VerifyAstro(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVer
     } else {
       body[iBody].dObliq0 = body[iBody].dObliquity;
     }
-    if (body[iBody].dObliqAmp*DEGRAD > body[iBody].dObliq0) {
-        fprintf(stderr,"ERROR: %s > %s is not allowed.\n", options[OPT_OBLIQAMP].cName,options[OPT_OBL].cName);
+    if (body[iBody].dObliqAmp*DEGRAD > 2*body[iBody].dObliq0) {
+        fprintf(stderr,"ERROR: %s > (2 x %s) is not allowed.\n", options[OPT_OBLIQAMP].cName,options[OPT_OBL].cName);
         DoubleLineExit(cFile,cFile,options[OPT_OBLIQAMP].iLine[iBody + 1],options[OPT_OBL].iLine[iBody + 1]);
     }
   }
@@ -1797,9 +1797,17 @@ void VerifyAstro(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVer
     } else {
       body[iBody].dEcc0 = body[iBody].dEcc;
     }
-    if (body[iBody].dEccAmp > body[iBody].dEcc) {
-        fprintf(stderr,"ERROR: %s > %s is not allowed.\n", options[OPT_ECCAMP].cName,options[OPT_ORBECC].cName);
+    if (body[iBody].dEccAmp > 2*body[iBody].dEcc) {
+        fprintf(stderr,"ERROR: %s > (2 x %s) is not allowed.\n", options[OPT_ECCAMP].cName,options[OPT_ORBECC].cName);
         DoubleLineExit(cFile,cFile,options[OPT_ECCAMP].iLine[iBody + 1],options[OPT_ORBECC].iLine[iBody + 1]);
+    }
+    if (body[iBody].dEcc + 0.5*body[iBody].dEccAmp >= 1) {
+      if (iVerbose >= VERBERR) {
+        fprintf(stderr,"ERROR: The sum of %s and %s must be less than 1.",
+            options[OPT_ECCAMP].cName,options[OPT_ORBECC].cName);
+        }
+      DoubleLineExit(cFile,cFile,options[OPT_ECCAMP].iLine[iBody + 1],
+          options[OPT_ORBECC].iLine[iBody + 1]);
     }
   }
 }

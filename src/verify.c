@@ -474,6 +474,23 @@ void VerifyMassRad(BODY *body,CONTROL *control,OPTIONS *options,char cFile[],int
  *
  */
 
+void VerifyObliquity(BODY *body,OPTIONS *options,int iBody,int iVerbose) {
+
+  if (options[OPT_COSOBL].iLine[iBody+1] > -1) {
+    // Cos(obl) entered for this body
+    if (options[OPT_OBL].iLine[iBody+1] > -1) {
+      if (iVerbose > VERBINPUT) {
+        fprintf(stderr,"ERROR: Cannot set %s and %s.\n",options[OPT_OBL].cName,
+          options[OPT_COSOBL].cName);
+      }
+      DoubleLineExit(options[OPT_OBL].cFile[iBody+1],
+          options[OPT_COSOBL].cFile[iBody+1],
+          options[OPT_OBL].iLine[iBody+1],options[OPT_COSOBL].iLine[iBody+1]);
+    }
+    body[iBody].dObliquity = acos(body[iBody].dCosObl);
+  }
+}
+
 void VerifyRotationGeneral(BODY *body,OPTIONS *options,char cFile[],int iBody,int iVerbose) {
   /* Add 1, as this information could not have been set in primary input */
   int iFileNum = iBody+1;
@@ -511,6 +528,8 @@ void VerifyRotationGeneral(BODY *body,OPTIONS *options,char cFile[],int iBody,in
     body[iBody].dRotRate = fdPerToFreq(body[iBody].dRotPer);
   if (options[OPT_ROTVEL].iLine[iFileNum] >= 0)
     body[iBody].dRotRate = fdRadiusRotVelToFreq(body[iBody].dRotVel,body[iBody].dRadius);
+
+  VerifyObliquity(body,options,iBody,iVerbose);
 }
 
 void VerifyImK2Env(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iBody) {
@@ -901,7 +920,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,
     }
   }
 
-  // Verify multi-mpdule parameters
+  // Verify multi-module parameters
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     if (body[iBody].bEqtide) {
       VerifyImK2(body,control,files,options,system,update,iBody);

@@ -35,4 +35,5 @@ script:
     - py.test -v -s tests
 
 after_success:
-    - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then source .ci/build-docs.sh; fi
+    #- if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then source .ci/build-docs.sh; fi
+    - if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi

@@ -1777,7 +1777,7 @@ void VerifyAstro(BODY *body, OPTIONS *options, char cFile[], int iBody, int iVer
     }
   }
   if (body[iBody].bForceObliq == 1) {
-    if (body[iBody].bDistRot == 1) {
+    if (body[iBody].bDistRot == 1) { // XXX Can't reference other modules here!
       if (iVerbose >= VERBERR)
         fprintf(stderr,"ERROR: Cannot set %s == 1 when using DistRot in File:%s\n", options[OPT_FORCEOBLIQ].cName, cFile);
       exit(EXIT_INPUT);
@@ -3222,16 +3222,13 @@ int fbIceFree(BODY *body, int iBody) {
   for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
     bSea = fbIceLatSea(body,iBody,iLat);
     bLand = fbIceLatLand(body,iBody,iLat);
-    if (bSea && bLand) {
-      iNum++;
+    if (bSea || bLand) {
+      return 0;
     }
   }
 
-  if (iNum == body[iBody].iNumLats) {
-    return 1;
-  }
-
-  return 0;
+  // No ice found
+  return 1;
 }
 
 /**

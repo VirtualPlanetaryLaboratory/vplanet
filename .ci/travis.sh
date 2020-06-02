@@ -16,7 +16,7 @@ fi
 #conda info -a
 
 # Install docs stuff
-pip install sphinx==1.8.4
+pip install sphinx==2.3.1
 pip install breathe
 pip install sphinxcontrib-bibtex
 

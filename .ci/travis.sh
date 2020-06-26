@@ -17,7 +17,7 @@ fi
 
 # Install docs stuff
 pip install sphinx==2.3.1
-pip install breathe
+pip install breathe==4.14.1
 pip install sphinxcontrib-bibtex
 
 # Install vplot

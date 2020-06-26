@@ -803,13 +803,11 @@ void ReadMinIceSheetHeight(BODY *body,CONTROL *control,FILES *files,
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (dTmp <= 0) {
-      if (control->Io.iVerbose >= VERBPROG) {
-        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
-      }
-      LineExit(files->Infile[iFile-1].cIn,options[OPT_MINICEHEIGHT].iLine[iFile-1]);
+    if (dTmp < 0) {
+      body[iFile-1].dMinIceHeight = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    } else {
+      body[iFile-1].dMinIceHeight = dTmp*fdUnitsLength(control->Units[iFile].iTime);
     }
-    body[iFile-1].dMinIceHeight = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
@@ -1231,6 +1229,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MINICEHEIGHT].dDefault = 0.001;
   options[OPT_MINICEHEIGHT].iType = 2;
   options[OPT_MINICEHEIGHT].bMultiFile = 1;
+  options[OPT_MINICEHEIGHT].dNeg = 1;   // Convert to SI
+  sprintf(options[OPT_MINICEHEIGHT].cNeg,"meters");
   fnRead[OPT_MINICEHEIGHT] = &ReadMinIceSheetHeight;
   sprintf(options[OPT_MINICEHEIGHT].cLongDescr,
     "The minimum thickness of permanent ice in a latitude bin for it to be "
@@ -3219,7 +3219,7 @@ Is a specific latitude's sea component covered in ice?
 @param iBody Body in question
 */
 double fbIceLatSea(BODY *body,int iBody,int iLat) {
-  if (body[iBody].daSeaIceHeight[iLat] > 0 ||
+  if (body[iBody].daSeaIceHeight[iLat] >= body[iBody].dMinIceHeight ||
       body[iBody].daTempMaxWater[iLat] < body[iBody].dFrzTSeaIce) {
     return 1;
   }
@@ -3234,9 +3234,9 @@ Is a specific latitude's sea component covered in ice?
 @param iBody Body in question
 */
 double fbIceLatLand(BODY *body,int iBody,int iLat) {
-  if (body[iBody].daIceHeight[iLat] > 0) {
+  if (body[iBody].daIceHeight[iLat] >= body[iBody].dMinIceHeight) {
     return 1;
-  } else if (body[iBody].daIceHeight[iLat] == 0 &&
+  } else if (body[iBody].daIceHeight[iLat] == body[iBody].dMinIceHeight &&
       body[iBody].daTempMaxLand[iLat] < 0) {
     return 1;
   }
@@ -3281,7 +3281,7 @@ void Snowball(BODY *body, int iBody) {
 
   for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
     if (body[iBody].bSeaIceModel) {
-      if (body[iBody].daSeaIceHeight[iLat] > 0) {
+      if (body[iBody].daSeaIceHeight[iLat] >= body[iBody].dMinIceHeight) {
         iNum++;
       }
     } else {

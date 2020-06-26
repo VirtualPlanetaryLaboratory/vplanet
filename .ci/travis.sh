@@ -16,8 +16,8 @@ fi
 #conda info -a
 
 # Install docs stuff
-pip install sphinx==1.8.4
-pip install breathe
+pip install sphinx==2.3.1
+pip install breathe==4.14.1
 pip install sphinxcontrib-bibtex
 
 # Install vplot

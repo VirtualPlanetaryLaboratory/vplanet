@@ -607,6 +607,7 @@ struct BODY {
   double dTGlobalInit;       /**< Initial estimate of global surface temperature */
   double dTGlobalTmp;        /**< Mean global surface temp */
   int iWriteLat;             /**< Stores index of latitude to be written in write fxn */
+  double dMinIceHeight;      /**< Minimum ice thickness to count as icy */
 
   /* Arrays used by seasonal and annual */
   double *daAnnualInsol;     /**< Annually averaged insolation at each latitude */

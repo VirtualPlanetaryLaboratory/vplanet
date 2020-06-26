@@ -107,6 +107,7 @@
 #define OPT_FORCEECC        1967
 #define OPT_ECCAMP          1968
 #define OPT_ECCPER          1969
+#define OPT_MINICEHEIGHT    1970
 
 #define OPT_OLRMODEL    1998
 #define OPT_CLIMATEMODEL    1999

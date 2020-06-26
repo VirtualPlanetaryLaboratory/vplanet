@@ -2816,7 +2816,7 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
   dEqRate = fdEqRotRate(body,iBody,body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
 
   // Body wasn't tidally locked, but is it now?
-  if(!body[iBody].bTideLock) {
+  if (!body[iBody].bTideLock) {
 
     // If Peq(1-eps) < Prot < Peq(1+eps), it's locked!
     dDiff = fabs(body[iBody].dRotRate - dEqRate)/dEqRate;
@@ -2845,13 +2845,13 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
       // Recompute, sum up new derivatives using perturbed dRotRate
       dTmpDeriv = 0.0;
-      for(iEqn = 0; iEqn < update[iBody].iNumEqns[iVar]; iEqn++) {
+      for (iEqn = 0; iEqn < update[iBody].iNumEqns[iVar]; iEqn++) {
         update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
         dTmpDeriv += update[iBody].daDerivProc[iVar][iEqn];
       }
 
       // Is upper gradient pointing towards tidally locked state?
-      if(dTmpDeriv < 0.0) {
+      if (dTmpDeriv < 0.0) {
         // Case 2 < w_eq: -> Perturb Prot to w = w * (1 - 2eps)
         body[iBody].dRotRate = (1.0 - 2.0*evolve->dMaxLockDiff[iBody])*dEqRate;
 
@@ -2864,12 +2864,12 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
         // Recompute, sum up new derivatives using perturbed dRotRate
         dTmpDeriv = 0.0;
-        for(iEqn = 0; iEqn < update[iBody].iNumEqns[iVar]; iEqn++) {
+        for (iEqn = 0; iEqn < update[iBody].iNumEqns[iVar]; iEqn++) {
           update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
           dTmpDeriv += update[iBody].daDerivProc[iVar][iEqn];
         }
 
-          if(dTmpDeriv > 0.0) {
+          if (dTmpDeriv > 0.0) {
             // Gradient points toward tidally locked state -> Tidally locked!
             body[iBody].bTideLock = 1;
           }
@@ -2895,7 +2895,7 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
       // Reset derivatives
       dTmpDeriv = 0.0;
-      for(iEqn = 0; iEqn < update[iBody].iNumEqns[iVar]; iEqn++){
+      for (iEqn = 0; iEqn < update[iBody].iNumEqns[iVar]; iEqn++){
         update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
       }
     }
@@ -2911,7 +2911,7 @@ int fbTidalLock(BODY *body,EVOLVE *evolve,IO *io,int iBody,int iOrbiter, UPDATE 
 
 
   // Ok, so is it tidally locked?
-  if(body[iBody].bTideLock) {
+  if (body[iBody].bTideLock) {
     // Save time when body locked
     body[iBody].dLockTime = evolve->dTime;
 

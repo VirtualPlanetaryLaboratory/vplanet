@@ -811,7 +811,7 @@ void ReadMinIceSheetHeight(BODY *body,CONTROL *control,FILES *files,
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      body[iFile-1].dAlbedoWater = options->dDefault;
+      body[iFile-1].dMinIceHeight = options->dDefault;
 }
 
 void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {

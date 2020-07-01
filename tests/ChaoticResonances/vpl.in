@@ -1,4 +1,4 @@
-# Primary input file for VPLANET
+# Primary input file for VPLanet
 sSystemName               ChaosRes  # System Name
 bOverwrite                1               # Allow file overwrites?
 saBodyFiles               star.in $     # Host star

@@ -1,8 +1,8 @@
 #
-sSystemName               kepler36
-iVerbose                  0
+sSystemName               AtmEscKepler-36
+iVerbose                  5
 bOverwrite                1
-saBodyFiles               star.in p10.in
+saBodyFiles               star.in b.in c.in
 sUnitMass                 solar
 sUnitLength               AU
 sUnitTime                 YEARS

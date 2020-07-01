@@ -12,24 +12,41 @@
 
 */
 
+/* Exit Status */
+
+#define EXIT_EXE      1
+#define EXIT_INPUT    2
+#define EXIT_UNITS    3
+#define EXIT_WRITE    4
+#define EXIT_INT      5
+#define EXIT_OUTPUT   6
+
+/* Verbosity Level */
+
+#define VERBERR       1
+#define VERBPROG      2
+#define VERBINPUT     3
+#define VERBUNITS     4
+#define VERBALL       5
+
 /* General Outuput 0-999 */
 /* System properties 0-499, body properties 500-999 */
 #define OUTSTART                0
 #define OUTBODYSTART            500
 #define OUTEND                  1000
 
-#define OUT_AGE			160
-#define OUT_TIME		170
-#define OUT_TOTANGMOM		180
+#define OUT_AGE			            160
+#define OUT_TIME		            170
+#define OUT_TOTANGMOM		        180
 
-#define OUT_TOTENERGY		190
+#define OUT_TOTENERGY		        190
 
 #define OUT_POTENERGY           191
 #define OUT_KINENERGY           192
 #define OUT_TOTORBENERGY        193
 
-#define OUT_DT			200
-#define OUT_DENSITY			210
+#define OUT_DT			            200
+#define OUT_DENSITY			        210
 
 #define OUT_LONGP               300
 #define OUT_LXUVTOT             310
@@ -43,9 +60,9 @@
 
 #define OUT_RADIUS              520
 #define OUT_RADGYRA             521
-#define OUT_ROTANGMOM		530
+#define OUT_ROTANGMOM		        530
 #define OUT_ROTKINENERGY        535
-#define OUT_ROTVEL		540
+#define OUT_ROTVEL		          540
 #define OUT_BODYTYPE            545
 #define OUT_ROTRATE             550
 #define OUT_ROTPER              560
@@ -61,12 +78,16 @@
 #define OUT_VISCUMAN            595   //Viscosity UMTBL
 
 #define OUT_HECC                600
-#define OUT_HZLIMITDRYRUNAWAY   602
+#define OUT_HZLIMDRYRUNAWAY     602
+#define OUT_HZLIMRECVENUS       604 /**< Recent Venus HZ Limit */
+#define OUT_HZLIMRUNAWAY        605 /**< Recent Venus HZ Limit */
+#define OUT_HZLIMMOIST          606 /**< Recent Venus HZ Limit */
+#define OUT_HZLIMMAX            607 /**< Recent Venus HZ Limit */
+#define OUT_HZLIMEARLYMARS      608 /**< Recent Venus HZ Limit */
+#define OUT_INSTELLATION        609
 
-#define OUT_INSTELLATION        604
-
-#define OUT_KECC                605
-#define OUT_ORBECC		          610
+#define OUT_KECC                610
+#define OUT_ORBECC		          615
 #define OUT_ORBEN		            620
 #define OUT_ORBMEANMOTION	      630
 #define OUT_ORBPER	           	640
@@ -78,7 +99,6 @@
 #define OUT_INC                 663
 #define OUT_LONGA               664
 #define OUT_MEANL               665
-
 
 #define OUT_ORBKINENERGY        670
 #define OUT_ORBPOTENERGY        680

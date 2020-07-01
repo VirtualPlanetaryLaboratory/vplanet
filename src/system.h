@@ -29,8 +29,12 @@ int bPrimary(BODY*,int);
 void CalcHK(BODY*,int);
 void CalcPQ(BODY*,int);
 
+double fdMutualInclination(BODY*,int,int);
+int fbCheckMaxMutualInc(BODY*,EVOLVE*,HALT*,IO*,int,int,int);
+
 double fdInstellation(BODY*,int);
 double fdXUVFlux(BODY*,int);
+double fdLuminosityTotal(BODY*,int);
 
 /* Multi-body derivative equations */
 double fdSemiDtEqSt(BODY*,SYSTEM*,int*);
@@ -39,5 +43,7 @@ double fdJBrakingStarDt(BODY*,int);
 double fdRadiusStarDt(BODY*,int);
 double fdSemiTidalLockBinEqSt(BODY*,int,int);
 double fndUpdateSpiNBodyCoords(BODY*,EVOLVE*);
+
+void fdMergePlanet(BODY*,UPDATE*,fnUpdateVariable***,int);
 
 /* @endcond */

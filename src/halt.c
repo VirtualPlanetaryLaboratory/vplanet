@@ -10,9 +10,6 @@
 
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 #include "vplanet.h"
 
 int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
@@ -26,6 +23,8 @@ int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
   if (halt->dMinObl >= 0)
     iNumHalts++;
   if (halt->dMaxEcc < 1)
+    iNumHalts++;
+  if (halt->dMaxMutualInc > 0)
     iNumHalts++;
   if (halt->dMinSemi > 0)
     iNumHalts++;
@@ -45,15 +44,21 @@ int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
 }
 
 void InitializeHalts(CONTROL *control,MODULE *module) {
-// Malloc memory for halt function pointers
+  // Malloc memory for halt function pointers
+  int iBody;
 
   control->fnHalt=malloc(control->Evolve.iNumBodies*sizeof(fnHaltModule*));
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    control->Halt[iBody].dMaxMutualInc = 0;
+  }
+
 
 }
 
 /****************** HALTS *********************/
 
-int HaltMinObl(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltMinObl(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
 /* Halt simulation if body reaches minimum obliquity. */
   if (body[iBody].dObliquity < halt->dMinObl) {
     if (io->iVerbose >= VERBPROG) {
@@ -70,7 +75,8 @@ int HaltMinObl(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iB
 }
 
 /* Maximum Eccentricity? */
-int fniHaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fniHaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   // XXX is EccSq defined here
 /* Halt simulation if body reaches maximum orbital eccentricity. */
   if (sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)) >= halt->dMaxEcc) {
@@ -87,7 +93,8 @@ int fniHaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int
   return 0;
 }
 
-int HaltMinEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltMinEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
 /* Halt simulation if body reaches minimum eccentricity. */
   if (sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)) <= halt->dMinEcc) {
     if (io->iVerbose >= VERBPROG) {
@@ -103,7 +110,8 @@ int HaltMinEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iB
   return 0;
 }
 
-int HaltMinSemi(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltMinSemi(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+    fnUpdateVariable ***fnUpdate,int iBody) {
 /* Halt simulation if body reaches minimum Semi-Major Axis? */
   if (body[iBody].dSemi <= halt->dMinSemi) {
     if (io->iVerbose >= VERBPROG) {
@@ -137,7 +145,8 @@ int HaltMinIntEn(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int 
 */
 
 /* Positive de/dt? */
-int HaltPosDeccDt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltPosDeccDt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+  fnUpdateVariable ***fnUpdate,int iBody) {
 
   /* XXX This needs to be redone with Hecc and Kecc
   if (update[iBody].daDeriv[update[iBody].iEcc] > 0 && halt->bPosDeDt) {
@@ -153,54 +162,68 @@ int HaltPosDeccDt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int
   return 0;
 }
 
-int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltMerge(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+  fnUpdateVariable ***fnUpdate,int iBody) {
 /* Halt if two bodies, i.e. planet and star, merge? */
 
   /* Sometimes integration overshoots and dSemi becomes NaN -> merger */
-  if(body[iBody].dSemi != body[iBody].dSemi)
-  {
-    if (io->iVerbose > VERBPROG)
-      printf("HALT: Merge at %.2e years!\n",evolve->dTime/YEARSEC);
-      printf("Numerical merger: body %d's dSemi became a NaN! Try decreasing dEta by a factor of 10.\n",iBody);
-
-    return 1;
+  if (body[iBody].dSemi != body[iBody].dSemi) {
+    if (halt->bMerge) {
+      if (io->iVerbose > VERBPROG) {
+        printf("HALT: Merge at %.2e years!\n",evolve->dTime/YEARSEC);
+        printf("Numerical merger: %s's dSemi became a NaN! Try decreasing dEta by "
+               "a factor of 10.\n",body[iBody].cName);
+      }
+      return 1;
+    } else {
+      if (io->iVerbose > VERBPROG) {
+        printf("Bodies %s and %s merged at %.2e years!\n",body[0].cName,
+        body[iBody].cName,evolve->dTime/YEARSEC);
+      }
+      fdMergePlanet(body,update,fnUpdate,iBody);
+    }
   }
 
   // Is iBody not using binary?
-  if(body[iBody].bBinary == 0) {
-    if (body[iBody].dSemi*(1.-sqrt(body[iBody].dEccSq)) <= (body[0].dRadius + body[iBody].dRadius) && halt->bMerge) { /* Merge! */
-      if (io->iVerbose > VERBPROG)
-        printf("HALT: Merge at %.2e years!\n",evolve->dTime/YEARSEC);
+  if (!body[iBody].bBinary) {
+    if (body[iBody].dSemi*(1.-sqrt(body[iBody].dEccSq)) <= (body[0].dRadius + body[iBody].dRadius)) { /* Merge! */
+      if (halt->bMerge) {
+        if (io->iVerbose > VERBPROG) {
+          printf("HALT: Bodies %s and %s merged at %.2e years!\n",body[0].cName,
+          body[iBody].cName,evolve->dTime/YEARSEC);
+        }
+        return 1;
+      } else {
+        if (io->iVerbose > VERBPROG) {
+          printf("Bodies %s and %s merged at %.2e years!\n",body[0].cName,
+          body[iBody].cName,evolve->dTime/YEARSEC);
+        }
+        fdMergePlanet(body,update,fnUpdate,iBody);
+      }
+    }
 
+  // Check for merge when planet is using binary
+  // This also checks if stars merged, for simplicity
+  } else if (body[iBody].bBinary == 1 && body[iBody].iBodyType == 0) { // Using binary, is planet
+    double max_radius = max(body[0].dRadius,body[1].dRadius);
+    if ((body[iBody].dSemi*(1.-sqrt(body[iBody].dEccSq)) <= (body[1].dSemi + max_radius + body[iBody].dRadius)) && halt->bMerge) { /* Merge! */
+      if (io->iVerbose > VERBPROG) {
+        printf("HALT: Merge at %.2e years! %e,%d\n",evolve->dTime/YEARSEC,body[iBody].dEccSq,iBody);
+        printf("cbp.dSemi: %e, bin.dSemi: %e, max_radius: %e\n",body[iBody].dSemi/AUM,body[1].dSemi/AUM,max_radius/AUM);
+      }
+      return 1;
+    }
+  } else if (body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) {// Did binary merge?
+    // Merge if sum of radii greater than binary perihelion distance
+    if ((body[0].dRadius + body[1].dRadius >= (1.0 - body[1].dEcc)*body[1].dSemi) && halt->bMerge) {
+      if (io->iVerbose > VERBPROG) {
+        fprintf(stderr,"Binary merged at %.2e years!  Semimajor axis [km]: %e.\n",evolve->dTime/YEARSEC,body[iBody].dSemi);
+        fprintf(stderr,"Stellar radii [km]: %e, %e. \n",body[0].dRadius,body[1].dRadius);
+      }
       return 1;
     }
   }
-  // Check for merge when planet is using binary
-  // This also checks if stars merged, for simplicity
-  else if(body[iBody].bBinary == 1 && body[iBody].iBodyType == 0) { // Using binary, is planet
-    double max_radius = max(body[0].dRadius,body[1].dRadius);
-    if((body[iBody].dSemi*(1.-sqrt(body[iBody].dEccSq)) <= (body[1].dSemi + max_radius + body[iBody].dRadius)) && halt->bMerge) { /* Merge! */
-        if(io->iVerbose > VERBPROG)
-        {
-          printf("HALT: Merge at %.2e years! %e,%d\n",evolve->dTime/YEARSEC,body[iBody].dEccSq,iBody);
-          printf("cbp.dSemi: %e, bin.dSemi: %e, max_radius: %e\n",body[iBody].dSemi/AUM,body[1].dSemi/AUM,max_radius/AUM);
-        }
-        return 1;
-      }
-  }
-  else if(body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 1) // Did binary merge?
-  {
-      // Merge if sum of radii greater than binary perihelion distance
-      if((body[0].dRadius + body[1].dRadius >= (1.0 - body[1].dEcc)*body[1].dSemi) && halt->bMerge)
-      {
-          if(io->iVerbose > VERBPROG)
-          {
-            fprintf(stderr,"Binary merged at %.2e years!  Semimajor axis [km]: %e.\n",evolve->dTime/YEARSEC,body[iBody].dSemi);
-            fprintf(stderr,"Stellar radii [km]: %e, %e. \n",body[0].dRadius,body[1].dRadius);
-          }
-          return 1;
-      }
-  }
+
   return 0;
 }
 
@@ -240,8 +263,18 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
 
     // Now add 1 to each iNumHalts
     for (iBody=1;iBody<control->Evolve.iNumBodies;iBody++) {
-      if (iBody != iHaltMaxEcc)
-	control->Halt[iBody].iNumHalts++;
+      if (iBody != iHaltMaxEcc) {
+	     control->Halt[iBody].iNumHalts++;
+     }
+    }
+  }
+
+  if (control->Halt[0].dMaxMutualInc > 0) {
+    if (control->Evolve.iNumBodies == 0) {
+      fprintf(stderr,
+        "ERROR: %s set, but only 1 body present.\n",
+        options[OPT_HALTMAXMUTUALINC].cName);
+      exit(EXIT_INPUT);
     }
   }
 
@@ -258,6 +291,16 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
       control->fnHalt[iBody][iHaltNow++] = &HaltMinObl;
     if (control->Halt[iBody].dMaxEcc < 1)
       control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxEcc;
+    if (control->Halt[iBody].dMaxMutualInc > 0) {
+      /* Note the different approach here. These fn live in their module file.
+         We set initially to DistOrb since it cannot be applied to the central
+         body. SpiNBody, however, can be, so if SpiNBody is set, change to that
+         halt function. */
+      control->fnHalt[iBody][iHaltNow++] = &fbHaltMaxMutualIncDistorb;
+      if (body[iBody].bSpiNBody) {
+        control->fnHalt[iBody][iHaltNow++] = &fbHaltMaxMutualIncSpiNBody;
+      }
+    }
     if (control->Halt[iBody].dMinSemi > 0)
       control->fnHalt[iBody][iHaltNow++] = &HaltMinSemi;
     if (control->Halt[iBody].dMinEcc > 0)
@@ -277,8 +320,8 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
 
     if (iHaltMaxEcc) {
       if (iBody != iHaltMaxEcc) {
-	control->Halt[iBody].dMaxEcc = control->Halt[iHaltMaxEcc].dMaxEcc;
-	control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxEcc;
+	       control->Halt[iBody].dMaxEcc = control->Halt[iHaltMaxEcc].dMaxEcc;
+	       control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxEcc;
       }
     }
   }
@@ -286,18 +329,16 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
 
 /************** Check for Halts *********************/
 
-int fbCheckHalt(BODY *body,CONTROL *control,UPDATE *update) {
-/* Check to see if any body has a halt associated with it? */
+int fbCheckHalt(BODY *body,CONTROL *control,UPDATE *update,
+                fnUpdateVariable ***fnUpdate) {
   int iBody,iHalt;
-  //double dMeanMotion;
-
-  //dMeanMotion = fdSemiToMeanMotion(body[1].dSemi,(body[0].dMass+body[1].dMass));
 
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
     for (iHalt=0;iHalt<control->Halt[iBody].iNumHalts;iHalt++) {
-      //if (control->Halt[iBody].fnHalt(body,&control->Halt[iBody],update,&control->Evolve,&control->Io,iBody))
-      if (control->fnHalt[iBody][iHalt](body,&control->Evolve,&control->Halt[iBody],&control->Io,update,iBody))
+      if (control->fnHalt[iBody][iHalt](body,&control->Evolve,
+          &control->Halt[iBody],&control->Io,update,fnUpdate,iBody)) {
         return 1;
+      }
     }
   }
 

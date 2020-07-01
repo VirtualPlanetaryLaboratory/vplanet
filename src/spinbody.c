@@ -2,6 +2,7 @@
   @file spinbody.c
   @brief Subroutines that control the integration of the N Body simulation
   @author Hayden Smotherman ([smotherh](https://github.com/smotherh/))
+
   @date Feb 21 2017
 */
 
@@ -11,9 +12,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "vplanet.h"
-#include "options.h"
-#include "output.h"
-
 
 void BodyCopySpiNBody(BODY *dest,BODY *src,int iFoo,int iNumBodies,int iBody) {
   int jBody, iGravPerts;
@@ -201,7 +199,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_POSITIONXSPINBODY].cDefault,"0");
   options[OPT_POSITIONXSPINBODY].dDefault = 0.0;
   options[OPT_POSITIONXSPINBODY].iType = 2;
-  options[OPT_POSITIONXSPINBODY].iMultiFile = 1;
+  options[OPT_POSITIONXSPINBODY].bMultiFile = 1;
   fnRead[OPT_POSITIONXSPINBODY] = &ReadPositionX;
 
   sprintf(options[OPT_POSITIONYSPINBODY].cName,"dPositionYSpiNBody");
@@ -209,7 +207,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_POSITIONYSPINBODY].cDefault,"0");
   options[OPT_POSITIONYSPINBODY].dDefault = 0.0;
   options[OPT_POSITIONYSPINBODY].iType = 2;
-  options[OPT_POSITIONYSPINBODY].iMultiFile = 1;
+  options[OPT_POSITIONYSPINBODY].bMultiFile = 1;
   fnRead[OPT_POSITIONYSPINBODY] = &ReadPositionY;
 
   sprintf(options[OPT_POSITIONZSPINBODY].cName,"dPositionZSpiNBody");
@@ -217,7 +215,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_POSITIONZSPINBODY].cDefault,"0");
   options[OPT_POSITIONZSPINBODY].dDefault = 0.0;
   options[OPT_POSITIONZSPINBODY].iType = 2;
-  options[OPT_POSITIONZSPINBODY].iMultiFile = 1;
+  options[OPT_POSITIONZSPINBODY].bMultiFile = 1;
   fnRead[OPT_POSITIONZSPINBODY] = &ReadPositionZ;
 
   sprintf(options[OPT_VELXSPINBODY].cName,"dVelXSpiNBody");
@@ -225,7 +223,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VELXSPINBODY].cDefault,"0");
   options[OPT_VELXSPINBODY].dDefault = 0.0;
   options[OPT_VELXSPINBODY].iType = 2;
-  options[OPT_VELXSPINBODY].iMultiFile = 1;
+  options[OPT_VELXSPINBODY].bMultiFile = 1;
   fnRead[OPT_VELXSPINBODY] = &ReadVelX;
 
   sprintf(options[OPT_VELYSPINBODY].cName,"dVelYSpiNBody");
@@ -233,7 +231,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VELYSPINBODY].cDefault,"0");
   options[OPT_VELYSPINBODY].dDefault = 0.0;
   options[OPT_VELYSPINBODY].iType = 2;
-  options[OPT_VELYSPINBODY].iMultiFile = 1;
+  options[OPT_VELYSPINBODY].bMultiFile = 1;
   fnRead[OPT_VELYSPINBODY] = &ReadVelY;
 
   sprintf(options[OPT_VELZSPINBODY].cName,"dVelZSpiNBody");
@@ -241,7 +239,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VELZSPINBODY].cDefault,"0");
   options[OPT_VELZSPINBODY].dDefault = 0.0;
   options[OPT_VELZSPINBODY].iType = 2;
-  options[OPT_VELZSPINBODY].iMultiFile = 1;
+  options[OPT_VELZSPINBODY].bMultiFile = 1;
   fnRead[OPT_VELZSPINBODY] = &ReadVelZ;
 
   sprintf(options[OPT_MEANA].cName,"dMeanA");
@@ -249,7 +247,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MEANA].cDefault,"0.0");
   options[OPT_MEANA].dDefault = 0.0;
   options[OPT_MEANA].iType = 2;
-  options[OPT_MEANA].iMultiFile = 1;
+  options[OPT_MEANA].bMultiFile = 1;
   fnRead[OPT_MEANA] = &ReadMeanA;
 
   sprintf(options[OPT_USEORBPARAMS].cName,"bUseOrbParams");
@@ -257,7 +255,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_USEORBPARAMS].cDefault,"0");
   options[OPT_USEORBPARAMS].dDefault = 0;
   options[OPT_USEORBPARAMS].iType = 0;
-  options[OPT_USEORBPARAMS].iMultiFile = 1;
+  options[OPT_USEORBPARAMS].bMultiFile = 1;
   fnRead[OPT_USEORBPARAMS] = &ReadUseOrbParams;
 }
 
@@ -452,11 +450,50 @@ void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   //VerifyGM(body,control);
 
   control->fnForceBehavior[iBody][iModule]   = &fnForceBehaviorSpiNBody;
-  control->fnPropsAux[iBody][iModule]        = &PropertiesSpiNBody;
+  control->fnPropsAux[iBody][iModule]        = &PropsAuxSpiNBody;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopySpiNBody;
 }
 
 //========================== End Verify Functions ==============================
+
+//========================== Start Halt Functions ==============================
+
+/**
+  Check the maximum allowed mutual inclination.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+
+@return TRUE if one mutual incliantion in a system is larger than
+  dHaltMaxMutualInc, FALSE if not
+*/
+int fbHaltMaxMutualIncSpiNBody(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+
+  int jBody;
+
+  // Calculate orbital elements
+  for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+    cart2osc(body,iBody);
+  }
+
+  for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+    for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
+      // 0 is to check for halt, not progress
+      if (fbCheckMaxMutualInc(body,evolve,halt,io,iBody,jBody,0)) {
+        return 1;
+      }
+    }
+  }
+
+  return 0;
+}
+
+//========================== Start Halt Functions ==============================
 
 //========================== Coordinate Changes ================================
 void OrbElems2Helio(BODY *body, int iBody) {
@@ -875,7 +912,7 @@ void fnForceBehaviorSpiNBody(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYS
 
 }
 
-void PropertiesSpiNBody(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody) {
+void PropsAuxSpiNBody(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iBody) {
   int jBody,iNumBodies;
   double DistanceX,DistanceY,DistanceZ,Distance3;
 

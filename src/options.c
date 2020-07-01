@@ -6,12 +6,6 @@
   @date May 7 2014
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <assert.h>
-#include <ctype.h>
-#include <string.h>
 #include "vplanet.h"
 
 /*
@@ -41,11 +35,14 @@ int CheckComment(char cLine[],int iLen) {
 
   for (iPos=0;iPos<iLen;iPos++) {
     if (!isspace(cLine[iPos])) {
-      if (cLine[iPos] == 35) // # is ASCII code 35
-      return 1;
-    } else
-      return 0;
+      if (cLine[iPos] == 35) {// # is ASCII code 35
+        return 1;
+      } else {
+        return 0;
+      }
+    }
   }
+
   return 0;
 }
 
@@ -64,7 +61,8 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
   memset(cWord,'\0',OPTLEN);
 
   while(fgets(cTmp,LINE,fp) != NULL) {
-    if (!CheckComment(cTmp,iLen)) {
+    // XXX Should iLen be LINE? This may be why many spaces before # doesn't work
+    if (!CheckComment(cTmp,LINE)) {
       sscanf(cTmp,"%s",cWord);
       // XXX Add check for comments embedded in the option here
       if (memcmp(cWord,cOption,iLen+1) == 0) {
@@ -218,12 +216,12 @@ void GetWords(char cLine[],char cInput[MAXARRAY][OPTLEN],int *iNumWords,int *bCo
 
 void PrintDefault(char cName[],char cDefault[],char cFile[],int iVerbose,int iVerbThreshold) {
   if (iVerbose >= iVerbThreshold)
-    fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",cName,cFile,cDefault);
+    fprintf(stderr,"INFO: %s not set in file %s, defaulting to %s.\n",cName,cFile,cDefault);
 }
 
 double dNegativeDouble(OPTIONS options,char cFile[],int iVerbose) {
   if (iVerbose >= VERBUNITS)
-    fprintf(stderr,"WARNING: %s < 0 in file %s, units assumed to be %s.\n",options.cName,cFile,options.cNeg);
+    fprintf(stderr,"INFO: %s < 0 in file %s, units assumed to be %s.\n",options.cName,cFile,options.cNeg);
   return -options.dNeg;
 }
 
@@ -282,8 +280,8 @@ void AddOptionStringArray(char cFile[],char cOption[],char saInput[MAXARRAY][OPT
       (*iNumLines)++;
     } else {
       if (iVerbose >= VERBINPUT) {
-	fprintf(stderr,"WARNING: Trailing $ found without a subsequent valid line for option %s in file %s.\n",cOption,cFile);
-	bContinue=0;
+	       fprintf(stderr,"WARNING: Trailing $ found without a subsequent valid line for option %s in file %s.\n",cOption,cFile);
+	       bContinue=0;
       }
     }
   }
@@ -530,16 +528,17 @@ void UpdateFoundOptionMulti(INFILE *input,OPTIONS *options,int *iLine,int iNumLi
 void CheckDuplication(FILES *files,OPTIONS *options,char cFile[],int iLine,int iVerbose) {
   int iFile;
 
-  if (options->iMultiFile) {
-    fprintf(stderr,"ERROR: CheckDuplication called, but options.iMultiFile = %d\n",options->iMultiFile);
+  if (options->bMultiFile) {
+    fprintf(stderr,"ERROR: CheckDuplication called, but options. bMultiFile = %d\n",options->bMultiFile);
     exit(EXIT_INPUT);
   }
 
   for (iFile=0;iFile<files->iNumInputs;iFile++) {
     if (options->iLine[iFile] >= 0 && memcmp(files->Infile[iFile].cIn,cFile,strlen(cFile)) != 0) {
       /* Found previously set location */
-      if (iVerbose >= VERBERR)
+      if (iVerbose >= VERBERR) {
         fprintf(stderr,"ERROR: Option %s found in multiple files\n",options->cName);
+      }
       fprintf(stderr,"\t%s, Line: %d\n",files->Infile[iFile].cIn,options->iLine[iFile]);
       fprintf(stderr,"\t%s, Line: %d\n",cFile,iLine);
       exit(EXIT_INPUT);
@@ -566,7 +565,7 @@ void ReadVerbose(FILES *files,OPTIONS *options,int *iVerbose,int iFile) {
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     if (*iVerbose == VERBALL) {
-      fprintf(stderr,"WARNING: -v set at command line, but %s option set.\n",options->cName);
+      fprintf(stderr,"INFO: -v set at command line, but %s option set.\n",options->cName);
       fprintf(stderr,"\tiVerbose is set to %d.\n",VERBALL);
     } else if (*iVerbose == 0) {
       /*
@@ -623,7 +622,7 @@ void ReadUnitMass(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* This unit is propagated to all other files */
       /* Now assign the integer value */
       if (control->Io.iVerbose >= VERBINPUT)
-        fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+        fprintf(stderr,"INFO: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
       control->Units[iFile].iMass = iAssignMassUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
@@ -656,7 +655,7 @@ void ReadUnitMass(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       if (options->iLine[0] == -1) {
         /* No, assign default */
         if (control->Io.iVerbose >= VERBUNITS)
-          fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+          fprintf(stderr,"INFO: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
         control->Units[iFile].iMass = iAssignMassUnit(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
@@ -702,7 +701,7 @@ void ReadUnitTime(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* This unit is propagated to all other files */
       /* Now assign the integer value */
       if (control->Io.iVerbose >= VERBINPUT)
-        fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+        fprintf(stderr,"INFO: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
       control->Units[iFile].iTime = iAssignUnitTime(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
@@ -732,7 +731,7 @@ void ReadUnitTime(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       if (options->iLine[0] == -1) {
         /* No, assign default */
         if (control->Io.iVerbose >= VERBUNITS)
-          fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+          fprintf(stderr,"INFO: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
         control->Units[iFile].iTime = iAssignUnitTime(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
@@ -768,7 +767,7 @@ void ReadUnitAngle(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* This unit is propagated to all other files */
       /* Now assign the integer value */
       if (control->Io.iVerbose >= VERBINPUT)
-        fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+        fprintf(stderr,"INFO: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
       control->Units[iFile].iAngle = iAssignUnitAngle(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
@@ -798,7 +797,7 @@ void ReadUnitAngle(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       if (options->iLine[0] == -1) {
         /* No, assign default */
         if (control->Io.iVerbose >= VERBUNITS)
-          fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+          fprintf(stderr,"INFO: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
         control->Units[iFile].iAngle = iAssignUnitAngle(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
@@ -849,7 +848,7 @@ void ReadUnitLength(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* This unit is propagated to all other files */
       /* Now assign the integer value */
       if (control->Io.iVerbose >= VERBINPUT)
-        fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+        fprintf(stderr,"INFO: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
       control->Units[iFile].iLength = iAssignUnitLength(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
@@ -880,7 +879,7 @@ void ReadUnitLength(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       if (options->iLine[0] == -1) {
         /* No, assign default */
         if (control->Io.iVerbose >= VERBUNITS)
-          fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+          fprintf(stderr,"INFO: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
         control->Units[iFile].iLength = iAssignUnitLength(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
@@ -918,7 +917,7 @@ void ReadUnitTemp(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       /* This unit is propagated to all other files */
       /* Now assign the integer value */
       if (control->Io.iVerbose >= VERBINPUT)
-        fprintf(stderr,"WARNING: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
+        fprintf(stderr,"INFO: %s set in %s, all bodies will use this unit.\n",options->cName,files->Infile[iFile].cIn);
       control->Units[iFile].iTemp = iAssignTempUnit(cTmp,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
 
@@ -951,7 +950,7 @@ void ReadUnitTemp(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
       if (options->iLine[0] == -1) {
         /* No, assign default */
         if (control->Io.iVerbose >= VERBUNITS)
-          fprintf(stderr,"WARNING: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
+          fprintf(stderr,"INFO: %s not set in file %s, defaulting to %s.\n",options->cName,files->Infile[iFile].cIn,options->cDefault);
         control->Units[iFile].iTemp = iAssignTempUnit(options->cDefault,control->Io.iVerbose,files->Infile[iFile].cIn,options->cName,lTmp);
       }
       /* If assigned in primary, nothing to do, as assigned during primary read */
@@ -995,8 +994,7 @@ void ReadBodyFileNames(CONTROL *control,FILES *files,OPTIONS *options,INFILE *in
       LineExit(infile->cIn,lTmp[0]);
     }
   } else {
-    if (control->Io.iVerbose >= VERBERR)
-      fprintf(stderr,"ERROR: Option %s is required in file %s.\n",options->cName,infile->cIn);
+    fprintf(stderr,"ERROR: Option %s is required in file %s.\n",options->cName,infile->cIn);
     exit(EXIT_INPUT);
   }
 
@@ -1087,10 +1085,12 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
 void AssignDefaultDouble(OPTIONS *options,double *dOption,int iNumFiles) {
   int iFile;
 
-  for (iFile=0;iFile<iNumFiles;iFile++)
-    if (options->iLine[iFile] != -1)
-      /* Options already input in other file */
+  for (iFile=0;iFile<iNumFiles;iFile++) {
+    if (options->iLine[iFile] != -1 && !options->bMultiFile) {
+      /* Options already input in other file and can only be set once */
       return;
+    }
+  }
 
   /* If made it here, not input already, so assign default */
   *dOption = options->dDefault;
@@ -1099,10 +1099,12 @@ void AssignDefaultDouble(OPTIONS *options,double *dOption,int iNumFiles) {
 void AssignDefaultInt(OPTIONS *options,int *iOption,int iNumFiles) {
   int iFile;
 
-  for (iFile=0;iFile<iNumFiles;iFile++)
-    if (options->iLine[iFile] != -1)
-      /* Options already input in other file */
+  for (iFile=0;iFile<iNumFiles;iFile++) {
+    if (options->iLine[iFile] != -1 && !options->bMultiFile) {
+      /* Options already input in other file and can only be set once */
       return;
+    }
+  }
 
   /* If made it here, not input already, so assign default */
   *iOption = atoi(options->cDefault);
@@ -1111,10 +1113,12 @@ void AssignDefaultInt(OPTIONS *options,int *iOption,int iNumFiles) {
 void AssignDefaultString(OPTIONS *options,char cOption[],int iNumFiles) {
   int iFile;
 
-  for (iFile=0;iFile<iNumFiles;iFile++)
-    if (options->iLine[iFile] != -1)
-      /* Options already input in other file */
+  for (iFile=0;iFile<iNumFiles;iFile++) {
+    if (options->iLine[iFile] != -1 && !options->bMultiFile) {
+      /* Options already input in other file and can only be set once */
       return;
+    }
+  }
 
   /* If made it here, not input already, so assign default */
   strcpy(cOption,options->cDefault);
@@ -1233,7 +1237,7 @@ void ReadDoBackward(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 
 void ReadOutFile(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1;
-  char cTmp[OPTLEN];
+  char cTmp[NAMELEN];
 
   AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
@@ -1585,11 +1589,51 @@ void ReadHaltMerge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
 	 known by ReadOptionsGeneral. Therefore, we can assign it based on
 	 the "bModule" members of the body struct. */
       // XXX Russell -- Include galhabit?
-      if (body[iFile-1].bEqtide || body[iFile-1].bDistOrb || body[iFile-1].bBinary)
-	control->Halt[iFile-1].bMerge = 1;
-      else
-	control->Halt[iFile-1].bMerge = 0;
+      if (body[iFile-1].bEqtide || body[iFile-1].bDistOrb
+          || body[iFile-1].bBinary) {
+	           control->Halt[iFile-1].bMerge = 1;
+      } else {
+	           control->Halt[iFile-1].bMerge = 0;
+      }
     }
+  }
+}
+
+/**
+  Read in the maximum allowed mutual inclination. This parameter applies to both
+  SpiNBbody and DistOrb. If set to 0, then the mutual inclination will not be
+  calculated every timestep in HaltMaxMutualIncSpiNBody or
+  HaltMaxMutualIncDistorb. This parameter can exist in any file, but only once.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+
+void ReadHaltMaxMutualInc(BODY *body,CONTROL *control,FILES *files,
+      OPTIONS *options,SYSTEM *system,int iFile) {
+
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,
+      control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,
+        control->Io.iVerbose);
+    // System-wide halt, so stored in body 0
+    control->Halt[0].dMaxMutualInc = dTmp*
+        fdUnitsAngle(control->Units[iFile].iAngle);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    /*
+    if (iFile > 0) {
+      control->Halt[iFile+1].dMaxMutualInc = options->dDefault;
+    }
+    */
   }
 }
 
@@ -1952,6 +1996,25 @@ void ReadInc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *s
     }
 }
 
+void ReadLuminosity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dLuminosity = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dLuminosity = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      body[iFile-1].dLuminosity = options->dDefault;
+  }
+}
+
 /* LXUV -- currently unsupported */
 void ReadLXUV(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
@@ -1962,9 +2025,10 @@ void ReadLXUV(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
   if (lTmp >= 0) {
     fprintf(stderr,"ERROR: Option %s is not currently supported.\n",options->cName);
     exit(EXIT_INPUT);
-  } else
+  } else {
     if (iFile > 0)
       body[iFile-1].dLXUV = options->dDefault;
+    }
 }
 
 /*
@@ -2172,6 +2236,35 @@ void ReadObliquity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       body[iFile-1].dObliquity = options->dDefault;
 }
 
+/* cos(obliquity) */
+
+void ReadCosObl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
+    SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,
+      control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,
+        control->Io.iVerbose);
+    if (dTmp < -1 || dTmp > 1) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr,"ERROR: %s must be in the range [-1,1].\n",
+            options->cName);
+        }
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+    body[iFile-1].dCosObl = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0) {
+      body[iFile-1].dCosObl = options->dDefault;
+    }
+  }
+}
+
 /*
  * Output Order -- This one is special and takes different arguments
  */
@@ -2310,8 +2403,10 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
       }
     }
 
-    if (!ok)
-      DoubleLineExit(files->Infile[iFile].cIn,files->Infile[iFile].cIn,lTmp[0],options[OPT_MODULES].iLine[iFile]);
+    if (!ok) {
+      DoubleLineExit(files->Infile[iFile].cIn,files->Infile[iFile].cIn,lTmp[0],
+          options[OPT_MODULES].iLine[iFile]);
+    }
 
     files->Outfile[iFile-1].iNumCols = iNumIndices;
     /*
@@ -2460,7 +2555,7 @@ void ReadOverwrite(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
     CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (control->Io.bOverwrite > -1) {
       if (control->Io.iVerbose >= VERBERR)
-        fprintf(stderr,"WARNING: -f set at command line, and %s set (%s:%d). Overwrite authorized.\n",options->cName,files->Infile[iFile].cIn,lTmp);
+        fprintf(stderr,"INFO: -f set at command line, and %s set (%s:%d). Overwrite authorized.\n",options->cName,files->Infile[iFile].cIn,lTmp);
     } else {
       control->Io.bOverwrite = bTmp;
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -2760,6 +2855,65 @@ void ReadSurfaceWaterMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
       body[iFile-1].dSurfaceWaterMass = options->dDefault;
 }
 
+void ReadTemperature(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0)
+      body[iFile-1].dTemperature = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    else
+      body[iFile-1].dTemperature = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      body[iFile-1].dTemperature = options->dDefault;
+}
+
+/* Tidal Q -- must be in options because it is relevant for thermint */
+
+void ReadTidalQ(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in the primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR)
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+
+    body[iFile-1].dTidalQ = dTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0)
+      body[iFile-1].dTidalQ = options->dDefault;
+  }
+}
+
+// Use outer layer's tidal Q for the body's Q?
+void ReadUseOuterTidalQ(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
+  if(lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    body[iFile-1].bUseOuterTidalQ = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0) {
+      body[iFile-1].bUseOuterTidalQ = 0; // Default to no XXX
+    }
+  }
+}
 
 void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,SYSTEM *system,fnReadOption fnRead[]) {
   /* Now get all other options, if not in MODULE mode */
@@ -2773,6 +2927,8 @@ void ReadOptionsGeneral(BODY *body,CONTROL *control,FILES *files,MODULE *module,
     for (iOpt=100;iOpt<NUMOPT;iOpt++)
       /* OutputOrder is special */
       if (options[iOpt].iType != -1 && iOpt != OPT_OUTPUTORDER && iOpt != OPT_GRIDOUTPUT) {
+        //printf("%d\n",iOpt);
+        //fflush(stdout);
         fnRead[iOpt](body,control,files,&options[iOpt],system,iFile);
       }
   }
@@ -2953,6 +3109,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ALBEDOGLOBAL].cDescr,"Globally averaged albedo");
   sprintf(options[OPT_ALBEDOGLOBAL].cDefault,"0.3");
   options[OPT_ALBEDOGLOBAL].dDefault = 0;
+  options[OPT_ALBEDOGLOBAL].bMultiFile = 1;
   options[OPT_ALBEDOGLOBAL].iType = 2;
   options[OPT_ALBEDOGLOBAL].iModuleBit = 0;
   options[OPT_ALBEDOGLOBAL].bNeg = 0;
@@ -2978,7 +3135,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OUTFILE].cDescr,"Name of Output File");
   sprintf(options[OPT_OUTFILE].cDefault,"cSystemName.backward");
   options[OPT_OUTFILE].iType = 3;
-  options[OPT_OUTFILE].iMultiFile = 1;
+  options[OPT_OUTFILE].bMultiFile = 1;
   options[OPT_OUTFILE].iModuleBit = 0;
   options[OPT_OUTFILE].bNeg = 0;
   options[OPT_OUTFILE].iFileType = 2;
@@ -3096,7 +3253,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_GRCORR].cDefault,"0");
   options[OPT_GRCORR].dDefault = 0;
   options[OPT_GRCORR].iType = 0;
-  options[OPT_GRCORR].iMultiFile = 1;
+  options[OPT_GRCORR].bMultiFile = 1;
   options[OPT_GRCORR].iModuleBit = DISTORB + DISTROT + SPINBODY;
   options[OPT_GRCORR].bNeg = 0;
   options[OPT_GRCORR].iFileType = 1;
@@ -3108,9 +3265,9 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
    *
    */
 
-
   sprintf(options[OPT_HALTMAXECC].cName,"dHaltMaxEcc");
-  sprintf(options[OPT_HALTMAXECC].cDescr,"Maximum Eccentricity Value that Halts Integration");
+  sprintf(options[OPT_HALTMAXECC].cDescr,
+      "Maximum eccentricity value that halts ntegration");
   sprintf(options[OPT_HALTMAXECC].cDefault,"1");
   options[OPT_HALTMAXECC].dDefault = 1;
   options[OPT_HALTMAXECC].iType = 2;
@@ -3118,6 +3275,29 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HALTMAXECC].bNeg = 0;
   options[OPT_HALTMAXECC].iFileType = 2;
   fnRead[OPT_HALTMAXECC] = &ReadHaltMaxEcc;
+
+  sprintf(options[OPT_HALTMAXMUTUALINC].cName,"dHaltMaxMutualInc");
+  sprintf(options[OPT_HALTMAXMUTUALINC].cDescr,
+      "Maximum mutual inclination value that halts integration");
+  sprintf(options[OPT_HALTMAXMUTUALINC].cDefault,"0 [not checked]");
+  options[OPT_HALTMAXMUTUALINC].dDefault = 0;
+  options[OPT_HALTMAXMUTUALINC].iType = 2;
+  options[OPT_HALTMAXMUTUALINC].iModuleBit = SPINBODY + DISTORB;
+  options[OPT_HALTMAXMUTUALINC].bNeg = 0;
+  options[OPT_HALTMAXMUTUALINC].iFileType = 2;
+  fnRead[OPT_HALTMAXMUTUALINC] = &ReadHaltMaxMutualInc;
+  sprintf(options[OPT_HALTMAXMUTUALINC].cLongDescr,
+    "The execution halts when dHaltMaxMutualInc is reached. The mutual (or\n"
+    "relative) inclination is the value of the angle between the orbital\n"
+    "angular momentum vector of two bodies. If set to 0, then the mutual\n"
+    "inclination will not be checked every timestep for halts, i.e. the code\n"
+    "should run faster. For DistOrb calculations with the RD4 %s model,\n"
+    "mutual inclinations above %.2lf degrees, especially if the eccentricities\n"
+    "are significant, should be interpreted cautiously. For the DistOrb-%s\n"
+    "model, values above %.2lf degrees are suspect. SpiNBody is accurate for\n"
+    "any value.",options[OPT_ORBITMODEL].cName,((double)MAXMUTUALINCRD4),
+        options[OPT_ORBITMODEL].cName,((double)MAXMUTUALINCLL2)
+  );
 
   sprintf(options[OPT_HALTMERGE].cName,"bHaltMerge");
   sprintf(options[OPT_HALTMERGE].cDescr,"Halt at Merge");
@@ -3143,7 +3323,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMINOBL].cDefault,"-1 degrees");
   options[OPT_HALTMINOBL].dDefault = -DEGRAD;
   options[OPT_HALTMINOBL].iType = 2;
-  options[OPT_HALTMINOBL].iMultiFile = 1;
+  options[OPT_HALTMINOBL].bMultiFile = 1;
   options[OPT_HALTMINOBL].iModuleBit = EQTIDE + SPINBODY + DISTORB;
   options[OPT_HALTMINOBL].bNeg = 0;
   options[OPT_HALTMINOBL].iFileType = 2;
@@ -3246,13 +3426,23 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LONGP].cDefault,"0");
   options[OPT_LONGP].dDefault = 0.0;
   options[OPT_LONGP].iType = 2;
-  options[OPT_LONGP].iMultiFile = 1;
+  options[OPT_LONGP].bMultiFile = 1;
 //   options[OPT_LONGP].dNeg = DEGRAD;
 //   sprintf(options[OPT_LONGP].cNeg,"Degrees");
   options[OPT_LONGP].iModuleBit = DISTORB + SPINBODY;
   options[OPT_LONGP].bNeg = 0;
   options[OPT_LONGP].iFileType = 1;
   fnRead[OPT_LONGP] = &ReadLongP;
+
+  sprintf(options[OPT_LUMINOSITY].cName,"dLuminosity");
+  sprintf(options[OPT_LUMINOSITY].cDescr,"Initial Luminosity");
+  sprintf(options[OPT_LUMINOSITY].cDefault,"0");
+  options[OPT_LUMINOSITY].dDefault = 0;
+  options[OPT_LUMINOSITY].iType = 0;
+  options[OPT_LUMINOSITY].bMultiFile = 1;
+  options[OPT_LUMINOSITY].dNeg = LSUN;
+  sprintf(options[OPT_LUMINOSITY].cNeg,"Solar Luminosity (LSUN)");
+  fnRead[OPT_LUMINOSITY] = &ReadLuminosity;
 
   sprintf(options[OPT_LXUV].cName,"dLXUV");
   sprintf(options[OPT_LXUV].cDescr,"Total XUV Luminosity -- Unsupported!");
@@ -3317,7 +3507,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OUTPUTORDER].iModuleBit = 0;
   options[OPT_OUTPUTORDER].bNeg = 0;
   options[OPT_OUTPUTORDER].iFileType = 1;
-  options[OPT_OUTPUTORDER].iMultiFile = 1;
+  options[OPT_OUTPUTORDER].bMultiFile = 1;
 
   sprintf(options[OPT_GRIDOUTPUT].cName,"saGridOutput");
   sprintf(options[OPT_GRIDOUTPUT].cDescr,"Gridded Output Parameter(s)");
@@ -3325,7 +3515,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_GRIDOUTPUT].iType = 14;
   options[OPT_GRIDOUTPUT].iModuleBit = POISE;
   options[OPT_GRIDOUTPUT].bNeg = 0;
-  options[OPT_GRIDOUTPUT].iMultiFile = 1;
+  options[OPT_GRIDOUTPUT].bMultiFile = 1;
   options[OPT_GRIDOUTPUT].iFileType = 1;
 
   sprintf(options[OPT_OUTSCINOT].cName,"iSciNot");
@@ -3392,6 +3582,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ORBSEMI].dDefault = AUM;
   options[OPT_ORBSEMI].iType = 2;
   options[OPT_ORBSEMI].dNeg = AUM;
+  options[OPT_ORBSEMI].bMultiFile = 1;
   sprintf(options[OPT_ORBSEMI].cNeg,"AU");
   options[OPT_ORBSEMI].iModuleBit = 0;
   options[OPT_ORBSEMI].bNeg = 1;
@@ -3403,7 +3594,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_INC].cDefault,"0");
   options[OPT_INC].dDefault = 0.0;
   options[OPT_INC].iType = 2;
-  options[OPT_INC].iMultiFile = 1;
+  options[OPT_INC].bMultiFile = 1;
 //   options[OPT_INC].dNeg = DEGRAD;
 //   sprintf(options[OPT_INC].cNeg,"Degrees");
   options[OPT_INC].iModuleBit = DISTORB + SPINBODY;
@@ -3416,7 +3607,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ARGP].cDefault,"0");
   options[OPT_ARGP].dDefault = 0.0;
   options[OPT_ARGP].iType = 2;
-  options[OPT_ARGP].iMultiFile = 1;
+  options[OPT_ARGP].bMultiFile = 1;
 //   options[OPT_ARGP].dNeg = DEGRAD;
 //   sprintf(options[OPT_ARGP].cNeg,"Degrees");
   options[OPT_ARGP].iModuleBit = DISTORB + SPINBODY + POISE;
@@ -3433,7 +3624,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PRECA].cDefault,"0");
   options[OPT_PRECA].dDefault = 0.0;
   options[OPT_PRECA].iType = 2;
-  options[OPT_PRECA].iMultiFile = 1;
+  options[OPT_PRECA].bMultiFile = 1;
 //   options[OPT_LONGA].dNeg = DEGRAD;
 //   sprintf(options[OPT_LONGA].cNeg,"Degrees");
   options[OPT_PRECA].iModuleBit = SPINBODY + DISTROT + POISE;
@@ -3446,7 +3637,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LONGA].cDefault,"0");
   options[OPT_LONGA].dDefault = 0.0;
   options[OPT_LONGA].iType = 2;
-  options[OPT_LONGA].iMultiFile = 1;
+  options[OPT_LONGA].bMultiFile = 1;
 //   options[OPT_LONGA].dNeg = DEGRAD;
 //   sprintf(options[OPT_LONGA].cNeg,"Degrees");
   options[OPT_LONGA].iModuleBit = SPINBODY + DISTROT + POISE;
@@ -3459,7 +3650,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DYNELLIP].cDefault,"0.00328");
   options[OPT_DYNELLIP].dDefault = 0.00328;
   options[OPT_DYNELLIP].iType = 2;
-  options[OPT_DYNELLIP].iMultiFile = 1;
+  options[OPT_DYNELLIP].bMultiFile = 1;
   options[OPT_DYNELLIP].iModuleBit = SPINBODY + DISTROT + THERMINT;
   options[OPT_DYNELLIP].bNeg = 0;
   options[OPT_DYNELLIP].iFileType = 1;
@@ -3470,7 +3661,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CALCDYNELLIP].cDefault,"0");
   options[OPT_CALCDYNELLIP].dDefault = 0;
   options[OPT_CALCDYNELLIP].iType = 0;
-  options[OPT_CALCDYNELLIP].iMultiFile = 1;
+  options[OPT_CALCDYNELLIP].bMultiFile = 1;
   options[OPT_CALCDYNELLIP].iModuleBit = SPINBODY + DISTROT + THERMINT;
   options[OPT_CALCDYNELLIP].bNeg = 0;
   options[OPT_CALCDYNELLIP].iFileType = 1;
@@ -3481,7 +3672,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SURFACEWATERMASS].cDefault,"0");
   options[OPT_SURFACEWATERMASS].dDefault = 0;
   options[OPT_SURFACEWATERMASS].iType = 2;
-  options[OPT_SURFACEWATERMASS].iMultiFile = 1;
+  options[OPT_SURFACEWATERMASS].bMultiFile = 1;
   options[OPT_SURFACEWATERMASS].dNeg = TOMASS;
   sprintf(options[OPT_SURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
   fnRead[OPT_SURFACEWATERMASS] = &ReadSurfaceWaterMass;
@@ -3492,6 +3683,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MINSURFACEWATERMASS].dDefault = 1.e-5*TOMASS;
   options[OPT_MINSURFACEWATERMASS].iType = 2;
   options[OPT_MINSURFACEWATERMASS].dNeg = TOMASS;
+  options[OPT_MINSURFACEWATERMASS].bMultiFile = 1;
   sprintf(options[OPT_MINSURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
   fnRead[OPT_MINSURFACEWATERMASS] = &ReadMinSurfaceWaterMass;
 
@@ -3500,7 +3692,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ENVELOPEMASS].cDefault,"0");
   options[OPT_ENVELOPEMASS].dDefault = 0;
   options[OPT_ENVELOPEMASS].iType = 2;
-  options[OPT_ENVELOPEMASS].iMultiFile = 1;
+  options[OPT_ENVELOPEMASS].bMultiFile = 1;
   options[OPT_ENVELOPEMASS].dNeg = MEARTH;
   sprintf(options[OPT_ENVELOPEMASS].cNeg,"Earth");
   fnRead[OPT_ENVELOPEMASS] = &ReadEnvelopeMass;
@@ -3525,7 +3717,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MASS].cDefault,"1 Earth Mass");
   options[OPT_MASS].dDefault = MEARTH;
   options[OPT_MASS].iType = 2;
-  options[OPT_MASS].iMultiFile = 1;
+  options[OPT_MASS].bMultiFile = 1;
   options[OPT_MASS].dNeg = MEARTH;
   sprintf(options[OPT_MASS].cNeg,"Earth masses");
   options[OPT_MASS].iModuleBit = 0;
@@ -3538,7 +3730,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_BODYTYPE].cDefault,"0 Planet");
   options[OPT_BODYTYPE].dDefault = 0;
   options[OPT_BODYTYPE].iType = 1;
-  options[OPT_BODYTYPE].iMultiFile = 1;
+  options[OPT_BODYTYPE].bMultiFile = 1;
   options[OPT_BODYTYPE].iModuleBit = 0;
   options[OPT_BODYTYPE].bNeg = 0;
   options[OPT_BODYTYPE].iFileType = 1;
@@ -3548,7 +3740,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MASSRAD].cDescr,"Mass-Radius Relationship for Central Body: GS99 RH00 BO06 Sotin07 ");
   sprintf(options[OPT_MASSRAD].cDefault,"None");
   options[OPT_MASSRAD].iType = 3;
-  options[OPT_MASSRAD].iMultiFile = 1;
+  options[OPT_MASSRAD].bMultiFile = 1;
   options[OPT_MASSRAD].iModuleBit = SPINBODY + DISTROT + POISE + STELLAR + BINARY + EQTIDE;
   options[OPT_MASSRAD].bNeg = 0;
   options[OPT_MASSRAD].iFileType = 1;
@@ -3559,18 +3751,34 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OBL].cDefault,"0");
   options[OPT_OBL].dDefault = 0;
   options[OPT_OBL].iType = 2;
-  options[OPT_OBL].iMultiFile = 1;
+  options[OPT_OBL].bMultiFile = 1;
   options[OPT_OBL].iModuleBit = SPINBODY + DISTROT + POISE + BINARY + EQTIDE;
   options[OPT_OBL].bNeg = 0;
   options[OPT_OBL].iFileType = 1;
   fnRead[OPT_OBL] = &ReadObliquity;
+
+  sprintf(options[OPT_COSOBL].cName,"dCosObl");
+  sprintf(options[OPT_COSOBL].cDescr,"Coine of the Obliquity");
+  sprintf(options[OPT_COSOBL].cDefault,"0.5");
+  options[OPT_COSOBL].dDefault = 0.5;
+  options[OPT_COSOBL].iType = 2;
+  options[OPT_COSOBL].bMultiFile = 1;
+  options[OPT_COSOBL].iModuleBit = SPINBODY + DISTROT + POISE + BINARY + EQTIDE;
+  options[OPT_COSOBL].bNeg = 0;
+  options[OPT_COSOBL].iFileType = 1;
+  fnRead[OPT_COSOBL] = &ReadCosObl;
+  sprintf(options[OPT_COSOBL].cLongDescr,
+    "Planet formation simulations predict that an isotropic distribution of\n"
+    "rotational angular momentum vectors is a typical outcome. This result is\n"
+    "identical to a uniform distribution in cosine obliquity. Use this option\n"
+    "to sample a realistic distribution of initial obliquities.\n");
 
   sprintf(options[OPT_RADIUS].cName,"dRadius");
   sprintf(options[OPT_RADIUS].cDescr,"Radius");
   sprintf(options[OPT_RADIUS].cDefault,"1 Earth Radius");
   options[OPT_RADIUS].dDefault = REARTH;
   options[OPT_RADIUS].iType = 2;
-  options[OPT_RADIUS].iMultiFile = 1;
+  options[OPT_RADIUS].bMultiFile = 1;
   options[OPT_RADIUS].dNeg = REARTH;
   sprintf(options[OPT_RADIUS].cNeg,"Earth radii");
   options[OPT_RADIUS].iModuleBit = 0;
@@ -3583,7 +3791,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_RG].cDefault,"0.5");
   options[OPT_RG].dDefault = 0.5;
   options[OPT_RG].iType = 2;
-  options[OPT_RG].iMultiFile = 1;
+  options[OPT_RG].bMultiFile = 1;
   options[OPT_RG].iModuleBit = 0;
   options[OPT_RG].bNeg = 0;
   options[OPT_RG].iFileType = 1;
@@ -3594,7 +3802,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ROTPER].cDefault,"1 Day");
   options[OPT_ROTPER].dDefault = DAYSEC;
   options[OPT_ROTPER].iType = 2;
-  options[OPT_ROTPER].iMultiFile = 1;
+  options[OPT_ROTPER].bMultiFile = 1;
   options[OPT_ROTPER].dNeg = DAYSEC;
   sprintf(options[OPT_ROTPER].cNeg,"Days");
   options[OPT_ROTPER].iModuleBit = 0;
@@ -3607,7 +3815,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ROTRATE].cDefault,"2*pi/day");
   options[OPT_ROTRATE].dDefault = 2*PI/DAYSEC;
   options[OPT_ROTRATE].iType = 2;
-  options[OPT_ROTRATE].iMultiFile = 1;
+  options[OPT_ROTRATE].bMultiFile = 1;
   options[OPT_ROTRATE].dNeg = 1./DAYSEC;
   sprintf(options[OPT_ROTRATE].cNeg,"/Day");
   options[OPT_ROTRATE].iModuleBit = 0;
@@ -3620,7 +3828,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ROTVEL].cDefault,"0");
   options[OPT_ROTVEL].dDefault = 0;
   options[OPT_ROTVEL].iType = 2;
-  options[OPT_ROTVEL].iMultiFile = 1;
+  options[OPT_ROTVEL].bMultiFile = 1;
   options[OPT_ROTVEL].dNeg = 1e5;
   sprintf(options[OPT_ROTVEL].cNeg,"km/s");
   options[OPT_ROTVEL].iModuleBit = 0;
@@ -3674,6 +3882,28 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_UNITTEMP].iType = 3;
   options[OPT_UNITTEMP].iFileType = 2;
 
+  sprintf(options[OPT_TEMPERATURE].cName,"dTemperature");
+  sprintf(options[OPT_TEMPERATURE].cDescr,"Initial effective temperature");
+  sprintf(options[OPT_TEMPERATURE].cDefault,"TSUN");
+  options[OPT_TEMPERATURE].dDefault = TSUN;
+  options[OPT_TEMPERATURE].iType = 0;
+  options[OPT_TEMPERATURE].bMultiFile = 1;
+  fnRead[OPT_TEMPERATURE] = &ReadTemperature;
+
+  sprintf(options[OPT_USEOUTERTIDALQ].cName,"bUseOuterTidalQ");
+  sprintf(options[OPT_USEOUTERTIDALQ].cDescr,"User outermost layer's tidal Q as "
+        "body's total tidal Q?");
+  sprintf(options[OPT_USEOUTERTIDALQ].cDefault,"0");
+  options[OPT_USEOUTERTIDALQ].iType = 0;
+  options[OPT_USEOUTERTIDALQ].bMultiFile = 1;
+  fnRead[OPT_USEOUTERTIDALQ] = &ReadUseOuterTidalQ;
+  sprintf(options[OPT_USEOUTERTIDALQ].cLongDescr,
+    "The total tidal Q of a body can be computed either as the sum of "
+    "contributions of all layers (mantle, ocean, envelope), or as the tidal Q "
+    "of the outer most layer. When %s is set to 0, the tidal Q is the sum, "
+    "when set to 1, it is the outer layer's (envelope, then ocean, then mantle) "
+    "value.\n",options[OPT_USEOUTERTIDALQ].cName);
+
   /*
    *
    *   V
@@ -3693,7 +3923,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCUMAN].cDefault,"0");
   options[OPT_VISCUMAN].dDefault = 0;
   options[OPT_VISCUMAN].iType = 2;
-  options[OPT_VISCUMAN].iMultiFile = 1;
+  options[OPT_VISCUMAN].bMultiFile = 1;
 //   options[OPT_VISCUMAN].bNeg = 0;
 options[OPT_VISCUMAN].bNeg = 0;
   options[OPT_VISCUMAN].iModuleBit = THERMINT + DISTROT;
@@ -3758,7 +3988,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
     memset(options[iOpt].cName,'\0',OPTLEN);
     sprintf(options[iOpt].cName,"null");
     options[iOpt].iLine = malloc(MAXFILES*sizeof(int));
-    options[iOpt].iMultiFile=0;
+    options[iOpt].bMultiFile=0;
     options[iOpt].iMultiIn=0;
     options[iOpt].iType = -1;
     memset(options[iOpt].cDescr,'\0',OPTDESCR);

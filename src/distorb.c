@@ -15,8 +15,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "vplanet.h"
-#include "options.h"
-#include "output.h"
 
 void BodyCopyDistOrb(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
@@ -229,7 +227,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DFCRIT].cDefault,"0.1");
   options[OPT_DFCRIT].dDefault = 0.1;
   options[OPT_DFCRIT].iType = 2;
-  options[OPT_DFCRIT].iMultiFile = 0;
+  options[OPT_DFCRIT].bMultiFile = 0;
   fnRead[OPT_DFCRIT] = &ReadDfCrit;
 
   sprintf(options[OPT_INVPLANE].cName,"bInvPlane");
@@ -237,7 +235,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_INVPLANE].cDefault,"0");
   options[OPT_INVPLANE].dDefault = 0;
   options[OPT_INVPLANE].iType = 0;
-  options[OPT_INVPLANE].iMultiFile = 0;
+  options[OPT_INVPLANE].bMultiFile = 0;
   fnRead[OPT_INVPLANE] = &ReadInvPlane;
 
   sprintf(options[OPT_ORBITMODEL].cName,"sOrbitModel");
@@ -252,7 +250,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ORMAXECC].cDefault,"0");
   options[OPT_ORMAXECC].dDefault = 0;
   options[OPT_ORMAXECC].iType = 0;
-  options[OPT_ORMAXECC].iMultiFile = 0;
+  options[OPT_ORMAXECC].bMultiFile = 0;
   fnRead[OPT_ORMAXECC] = &ReadOverrideMaxEcc;
 
   sprintf(options[OPT_HALTHILLSTAB].cName,"bHaltHillStab");
@@ -260,7 +258,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTHILLSTAB].cDefault,"0");
   options[OPT_HALTHILLSTAB].dDefault = 0;
   options[OPT_HALTHILLSTAB].iType = 0;
-  options[OPT_HALTHILLSTAB].iMultiFile = 0;
+  options[OPT_HALTHILLSTAB].bMultiFile = 0;
   fnRead[OPT_HALTHILLSTAB] = &ReadHaltHillStab;
 
   sprintf(options[OPT_HALTCLOSEENC].cName,"bHaltCloseEnc");
@@ -268,7 +266,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTCLOSEENC].cDefault,"0");
   options[OPT_HALTCLOSEENC].dDefault = 0;
   options[OPT_HALTCLOSEENC].iType = 0;
-  options[OPT_HALTCLOSEENC].iMultiFile = 0;
+  options[OPT_HALTCLOSEENC].bMultiFile = 0;
   fnRead[OPT_HALTCLOSEENC] = &ReadHaltCloseEnc;
 
   sprintf(options[OPT_EIGENSET].cName,"bEigenSet");
@@ -276,7 +274,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_EIGENSET].cDefault,"0");
   options[OPT_EIGENSET].dDefault = 0;
   options[OPT_EIGENSET].iType = 0;
-  options[OPT_EIGENSET].iMultiFile = 0;
+  options[OPT_EIGENSET].bMultiFile = 0;
   fnRead[OPT_EIGENSET] = &ReadEigenSet;
 
   sprintf(options[OPT_EIGENVALUE].cName,"dEigenvalue");
@@ -284,7 +282,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_EIGENVALUE].cDefault,"0");
   options[OPT_EIGENVALUE].dDefault = 0;
   options[OPT_EIGENVALUE].iType = 0;
-  options[OPT_EIGENVALUE].iMultiFile = 0;
+  options[OPT_EIGENVALUE].bMultiFile = 0;
   fnRead[OPT_EIGENVALUE] = &ReadEigenvalue;
 
   sprintf(options[OPT_EIGENVECTOR].cName,"dEigenvector");
@@ -292,7 +290,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_EIGENVECTOR].cDefault,"0");
   options[OPT_EIGENVECTOR].dDefault = 0;
   options[OPT_EIGENVECTOR].iType = 0;
-  options[OPT_EIGENVECTOR].iMultiFile = 0;
+  options[OPT_EIGENVECTOR].bMultiFile = 0;
   fnRead[OPT_EIGENVECTOR] = &ReadEigenvector;
 
   sprintf(options[OPT_OUTPUTLAPL].cName,"bOutputLapl");
@@ -300,7 +298,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OUTPUTLAPL].cDefault,"0");
   options[OPT_OUTPUTLAPL].dDefault = 0;
   options[OPT_OUTPUTLAPL].iType = 0;
-  options[OPT_OUTPUTLAPL].iMultiFile = 0;
+  options[OPT_OUTPUTLAPL].bMultiFile = 0;
   fnRead[OPT_OUTPUTLAPL] = &ReadOutputLapl;
 
   sprintf(options[OPT_OUTPUTEIGEN].cName,"bOutputEigen");
@@ -308,7 +306,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OUTPUTEIGEN].cDefault,"0");
   options[OPT_OUTPUTEIGEN].dDefault = 0;
   options[OPT_OUTPUTEIGEN].iType = 0;
-  options[OPT_OUTPUTEIGEN].iMultiFile = 0;
+  options[OPT_OUTPUTEIGEN].bMultiFile = 0;
   fnRead[OPT_OUTPUTEIGEN] = &ReadOutputEigen;
 }
 
@@ -382,7 +380,7 @@ void VerifyOrbitModel(CONTROL *control,FILES *files,OPTIONS *options) {
       control->Evolve.iDistOrbModel = RD4;
     }
     if (control->Io.iVerbose >= VERBINPUT)
-      fprintf(stderr,"WARNING: %s not set in any file, defaulting to %s.\n",options[OPT_ORBITMODEL].cName,options[OPT_ORBITMODEL].cDefault);
+      fprintf(stderr,"INFO: %s not set in any file, defaulting to %s.\n",options[OPT_ORBITMODEL].cName,options[OPT_ORBITMODEL].cDefault);
 
     /* Chicanery. Since I only want this set once, I will
        make it seem like the user set it. */
@@ -703,6 +701,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 //   VerifyStabilityHalts(control,files,options);
 
   body[iBody].dMeanA = 0.0;
+  body[iBody].dEccSq = body[iBody].dEcc*body[iBody].dEcc;
 
   if (control->Evolve.iDistOrbModel == RD4) {
     /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
@@ -865,11 +864,11 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       }
       if (iBody == control->Evolve.iNumBodies-1) {
         if (control->bInvPlane) {
-	  /* Must initialize dMeanA to prevent memory corruption. This
-	     parameter has no real meaning in DistOrb runs, but inv_plave
-	     requires it. I will set it to zero for each body. --RKB */
-	  for (kBody=0;kBody<control->Evolve.iNumBodies;kBody++)
-	    body[kBody].dMeanA = 0;
+	        /* Must initialize dMeanA to prevent memory corruption. This
+	           parameter has no real meaning in DistOrb runs, but inv_plave
+	           requires it. I will set it to zero for each body. --RKB */
+	        for (kBody=0;kBody<control->Evolve.iNumBodies;kBody++)
+	          body[kBody].dMeanA = 0;
           inv_plane(body, system, control->Evolve.iNumBodies);
         }
       }
@@ -880,6 +879,13 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         InitializeKeccDistOrbGR(body,update,iBody,body[iBody].iGravPerts);
       }
     }
+
+    /* If the mutual inclination of any object gets above MAXMUTUALINCRD4,
+       print a warning message. */
+    //control->Io.dMaxMutualInc = MAXMUTUALINCRD4 * PI/180.;
+    control->Io.dMaxMutualInc = 35*3.1415926535/180;
+    double dFoo = 35*3.1415926535/180;
+
   } else if (control->Evolve.iDistOrbModel == LL2) {
     VerifyPericenter(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
     control->fnPropsAux[iBody][iModule] = &PropsAuxDistOrb;
@@ -1024,6 +1030,10 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
         InitializeQincDistOrbLL2(body,update,iBody,iPert);
     }
 
+    /* If the mutual inclination of any object gets above MAXMUTUALINCLL2,
+       print a warning message. */
+    control->Io.dMaxMutualInc = MAXMUTUALINCLL2 * PI/180;
+
     // if (body[iBody].bGRCorr) {
 //       fprintf(stderr,"ERROR: %s cannot be used in LL2 orbital solution.\n",options[OPT_GRCORR].cName);
 //       LineExit(files->Infile[iBody+1].cIn,options[OPT_GRCORR].iLine[iBody+1]);
@@ -1164,7 +1174,8 @@ void VerifyHaltDistOrb(BODY *body,CONTROL *control,OPTIONS *options,int iBody,in
   }
 }
 
-int fniHaltHillStab(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fniHaltHillStab(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   int iPert, jBody;
   double mu1, mu2, alpha, gamma1, gamma2, delta, crit, hill;
 
@@ -1208,7 +1219,8 @@ int fniHaltHillStab(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,i
   return 0;
 }
 
-int fniHaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fniHaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   int iPert, jBody;
   double dDR;
 
@@ -1244,10 +1256,74 @@ int fniHaltCloseEnc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,i
   return 0;
 }
 
+/**
+  Check the maximum allowed mutual inclination when DistOrb is active.
+
+@param body A pointer to the current BODY instance
+@param evolve A pointer to the integration EVOLVE instance
+@param halt A pointer to the HALT instance
+@param io A pointer to the IO instance
+@param update A pointer to the UPDATE instance
+@param iBody The current index in the BODY instance, irrelevant in this case
+  because mutual inclination is by definition a multi-body variable
+
+@return TRUE if one mutual incliantion in a system is larger than
+  dHaltMaxMutualInc, FALSE if not
+*/
+int fbHaltMaxMutualIncDistorb(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
+
+  int jBody;
+
+  for (iBody=1;iBody<evolve->iNumBodies;iBody++) {
+    for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
+      // 0 is to check for halt, not progress
+      if (fbCheckMaxMutualInc(body,evolve,halt,io,iBody,jBody,0)) {
+        return 1;
+      }
+    }
+  }
+
+  return 0;
+}
+
+/**
+  Check if mutual inclination exceeds the warning limit
+
+@param body A pointer to the current BODY instance
+@param evolve A pointer to the integration EVOLVE instance
+@param halt A pointer to the HALT instance
+@param io A pointer to the IO instance
+@param update A pointer to the UPDATE instance
+@param iBody The current index in the BODY instance, irrelevant in this case
+  because mutual inclination is by definition a multi-body variable
+
+@return TRUE if one mutual incliantion in a system is larger than
+  dHaltMaxMutualInc, FALSE if not
+*/
+int fbCheckMutualIncDistorb(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,int iBody) {
+
+  int jBody;
+
+  for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+    for (jBody=iBody+1;jBody<evolve->iNumBodies;jBody++) {
+      // 1 is to check for halt, not progress
+      if (fbCheckMaxMutualInc(body,evolve,halt,io,iBody,jBody,1)) {
+        return 1;
+      }
+    }
+  }
+
+  return 0;
+}
+
+
+
 /************* DISTORB Outputs ******************/
 
 void WriteEigen(CONTROL *control, SYSTEM *system) {
-  char cEccEigFile[NAMELEN], cIncEigFile[NAMELEN];
+  char cEccEigFile[2*NAMELEN], cIncEigFile[2*NAMELEN];
   int iBody;
   FILE *fecc, *finc;
 
@@ -1262,9 +1338,11 @@ void WriteEigen(CONTROL *control, SYSTEM *system) {
     finc = fopen(cIncEigFile,"a");
   }
 
-  fprintd(fecc,control->Evolve.dTime/fdUnitsTime(control->Units[1].iTime),control->Io.iSciNot,control->Io.iDigits);
+  fprintd(fecc,control->Evolve.dTime/fdUnitsTime(control->Units[1].iTime),
+      control->Io.iSciNot,control->Io.iDigits);
   fprintf(fecc," ");
-  fprintd(finc,control->Evolve.dTime/fdUnitsTime(control->Units[1].iTime),control->Io.iSciNot,control->Io.iDigits);
+  fprintd(finc,control->Evolve.dTime/fdUnitsTime(control->Units[1].iTime),
+      control->Io.iSciNot,control->Io.iDigits);
   fprintf(finc," ");
 
   for (iBody=1;iBody<(control->Evolve.iNumBodies);iBody++) {
@@ -1305,9 +1383,15 @@ void WriteBodyDSincDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+    if (body[iBody].dPinc !=0 && body[iBody].dQinc != 0 &&
+      *(update[iBody].padDPincDtDistOrb[iPert]) != 0 &&
+      *(update[iBody].padDQincDtDistOrb[iPert]) ) {
     dDeriv += 1./sqrt(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*(body[iBody].dPinc*(*(update[iBody].padDPincDtDistOrb[iPert]))+body[iBody].dQinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
-
+    } else {
+      dDeriv = 0;
+    }
+  }
   *dTmp = dDeriv;
 
   if (output->bDoNeg[iBody]) {
@@ -1347,9 +1431,15 @@ void WriteBodyDLongADtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
-    dDeriv += 1./(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*(body[iBody].dQinc*(*(update[iBody].padDPincDtDistOrb[iPert]))-body[iBody].dPinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
-
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+    if (body[iBody].dPinc !=0 && body[iBody].dQinc != 0 &&
+      *(update[iBody].padDPincDtDistOrb[iPert]) != 0 &&
+      *(update[iBody].padDQincDtDistOrb[iPert]) ) {
+        dDeriv += 1./(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc)*(body[iBody].dQinc*(*(update[iBody].padDPincDtDistOrb[iPert]))-body[iBody].dPinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
+    } else {
+      dDeriv = 0;
+    }
+  }
   *dTmp = dDeriv;
 
   if (output->bDoNeg[iBody]) {
@@ -1363,15 +1453,26 @@ void WriteBodyDLongADtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM 
   }
 }
 
-void WriteBodyDIncDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteBodyDIncDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM
+    *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   double dDeriv;
   int iPert;
 
   /* Ensure that we don't overwrite derivative */
   dDeriv=0;
-  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++)
-    dDeriv += 2./sqrt((1-(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc))*(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc))*(body[iBody].dPinc*(*(update[iBody].padDPincDtDistOrb[iPert]))+body[iBody].dQinc*(*(update[iBody].padDQincDtDistOrb[iPert])));
-
+  for (iPert=0;iPert<body[iBody].iGravPerts;iPert++) {
+    if (body[iBody].dPinc !=0 && body[iBody].dQinc != 0 &&
+      *(update[iBody].padDPincDtDistOrb[iPert]) != 0 &&
+      *(update[iBody].padDQincDtDistOrb[iPert]) ) {
+        dDeriv += 2./sqrt((1-(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*
+          body[iBody].dQinc))*(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc
+          *body[iBody].dQinc))*(body[iBody].dPinc*
+          (*(update[iBody].padDPincDtDistOrb[iPert]))+body[iBody].dQinc*
+          (*(update[iBody].padDQincDtDistOrb[iPert])));
+    } else {
+      dDeriv = 0;
+    }
+  }
   *dTmp = dDeriv;
 
   if (output->bDoNeg[iBody]) {
@@ -1669,7 +1770,7 @@ void AddModuleDistOrb(CONTROL *control,MODULE *module,int iBody,int iModule) {
 }
 
 /************* DistOrb Functions ************/
-void PropsAuxDistOrb(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxDistOrb(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   /* Conflict XXX -- Hopefully this is wrong as there should be no calls to Pizza in DISTORB
   if (body[iBody].bPoise) {
     body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
@@ -1789,8 +1890,8 @@ double fndGRCorrMatrix(BODY *body, int jBody, int kBody) {
   n = KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN/(body[jBody].dSemi/AUM*\
     body[jBody].dSemi/AUM*body[jBody].dSemi/AUM));
   if (jBody == kBody) {
-    GRC = 3*n*n*n*body[jBody].dSemi/AUM*body[jBody].dSemi/AUM/(cLIGHT/AUM*DAYSEC*\
-      cLIGHT/AUM*DAYSEC* (1.0-body[jBody].dHecc*body[jBody].dHecc-\
+    GRC = 3*n*n*n*body[jBody].dSemi/AUM*body[jBody].dSemi/AUM/(LIGHTSPEED/AUM*DAYSEC*\
+      LIGHTSPEED/AUM*DAYSEC* (1.0-body[jBody].dHecc*body[jBody].dHecc-\
       body[jBody].dKecc*body[jBody].dKecc));
     return GRC*365.25;
 
@@ -5316,7 +5417,7 @@ double fndApsidalGRCorrection(BODY *body, int *iaBody) {
   double n;
   n = KGAUSS*sqrt((body[0].dMass+body[iaBody[0]].dMass)/MSUN/(body[iaBody[0]].dSemi/AUM*\
     body[iaBody[0]].dSemi/AUM*body[iaBody[0]].dSemi/AUM));
-  return 3*n*n*n*body[iaBody[0]].dSemi/AUM*body[iaBody[0]].dSemi/AUM/(cLIGHT/AUM*DAYSEC*cLIGHT/AUM*DAYSEC*(1.0-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-body[iaBody[0]].dKecc*body[iaBody[0]].dKecc))/DAYSEC;
+  return 3*n*n*n*body[iaBody[0]].dSemi/AUM*body[iaBody[0]].dSemi/AUM/(LIGHTSPEED/AUM*DAYSEC*LIGHTSPEED/AUM*DAYSEC*(1.0-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-body[iaBody[0]].dKecc*body[iaBody[0]].dKecc))/DAYSEC;
 }
 
 /**
@@ -5404,7 +5505,8 @@ double fndDistOrbRD4DpDt(BODY *body, SYSTEM *system, int *iaBody) {
     double sum = 0.0, dMu, y;
 
     dMu = KGAUSS*KGAUSS*(body[0].dMass+body[iaBody[0]].dMass)/MSUN;
-    y = fabs(1-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-body[iaBody[0]].dKecc*body[iaBody[0]].dKecc);
+    y = fabs(1-body[iaBody[0]].dHecc*body[iaBody[0]].dHecc-body[iaBody[0]].dKecc
+        *body[iaBody[0]].dKecc);
     if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
       sum += ( body[iaBody[0]].dPinc*(-body[iaBody[0]].dKecc*fndDdisturbDHecc(body, system, iaBody)+body[iaBody[0]].dHecc*fndDdisturbDKecc(body, system, iaBody)) + 1.0/2.0*fndDdisturbDQinc(body, system, iaBody) )/(2*sqrt(dMu*body[iaBody[0]].dSemi/AUM*(y)));
     } else if (body[iaBody[0]].dSemi > body[iaBody[1]].dSemi) {
@@ -5540,4 +5642,19 @@ solution.
 double fndDistOrbLL2DqDt(BODY *body, SYSTEM *system, int *iaBody) {
   /* Derivatives used by DistRot */
   return -system->daEigenVecInc[iaBody[0]-1][iaBody[1]-1]*system->daEigenValInc[0][iaBody[1]-1]/YEARSEC*sin(system->daEigenValInc[0][iaBody[1]-1]/YEARSEC*body[iaBody[0]].dAge+system->daEigenPhase[1][iaBody[1]-1]);
+}
+
+double fdInclination(BODY *body,int iBody) {
+  double dInclination;
+
+  dInclination = 2.*asin(sqrt(body[iBody].dPinc*body[iBody].dPinc+
+      body[iBody].dQinc*body[iBody].dQinc));
+  return dInclination;
+}
+
+double fdLongA(BODY *body,int iBody) {
+  double dLongA;
+
+  dLongA = atan2(body[iBody].dPinc, body[iBody].dQinc);
+  return dLongA;
 }

@@ -5,11 +5,6 @@
   @date June 1 2015
 */
 
-#include <stdio.h>
-#include <math.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
 #include "vplanet.h"
 
 /**
@@ -960,7 +955,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TSURF].cDescr,"Initial Surface Temperature");
   sprintf(options[OPT_TSURF].cDefault,"300 K");
   options[OPT_TSURF].iType = 2;
-  options[OPT_TSURF].iMultiFile = 1;
+  options[OPT_TSURF].bMultiFile = 1;
   options[OPT_TSURF].dNeg = 1;  //Not sure about this??
   options[OPT_TSURF].dDefault = TSURF;
   sprintf(options[OPT_TSURF].cNeg,"Default=300");
@@ -971,7 +966,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TMAN].cDescr,"Initial Mantle Temperature");
   sprintf(options[OPT_TMAN].cDefault,"3000 K");
   options[OPT_TMAN].iType = 2;
-  options[OPT_TMAN].iMultiFile = 1;
+  options[OPT_TMAN].bMultiFile = 1;
   options[OPT_TMAN].dNeg = 3000.0;  //Not sure about this??
   options[OPT_TMAN].dDefault = 3000.0;
   sprintf(options[OPT_TMAN].cNeg,"Default=3000");
@@ -982,7 +977,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TCORE].cDescr,"Initial Core Temperature");
   sprintf(options[OPT_TCORE].cDefault,"6000 K");
   options[OPT_TCORE].iType = 2;
-  options[OPT_TCORE].iMultiFile = 1;
+  options[OPT_TCORE].bMultiFile = 1;
   options[OPT_TCORE].dNeg = 6000.0;  //Not sure about this??
   options[OPT_TCORE].dDefault = 6000.0;
   sprintf(options[OPT_TCORE].cNeg,"Default=6000");
@@ -993,7 +988,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCJUMPMAN].cDescr,"ViscJumpMan");
   sprintf(options[OPT_VISCJUMPMAN].cDefault,"VISCJUMPMAN");
   options[OPT_VISCJUMPMAN].iType = 2;
-  options[OPT_VISCJUMPMAN].iMultiFile = 1;
+  options[OPT_VISCJUMPMAN].bMultiFile = 1;
   options[OPT_VISCJUMPMAN].dNeg = VISCJUMPMAN;
   options[OPT_VISCJUMPMAN].dDefault = VISCJUMPMAN;
   sprintf(options[OPT_VISCJUMPMAN].cNeg,"Default");
@@ -1004,7 +999,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCREF].cDescr,"ViscRef");
   sprintf(options[OPT_VISCREF].cDefault,"1");
   options[OPT_VISCREF].iType = 2;
-  options[OPT_VISCREF].iMultiFile = 1;
+  options[OPT_VISCREF].bMultiFile = 1;
   options[OPT_VISCREF].dNeg = VISCREF;
   options[OPT_VISCREF].dDefault = VISCREF;
   sprintf(options[OPT_VISCREF].cNeg,"Default value in thermint.h");
@@ -1015,7 +1010,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TREFLIND].cDescr,"TrefLind");
   sprintf(options[OPT_TREFLIND].cDefault,"Value in thermint.h");
   options[OPT_TREFLIND].iType = 2;
-  options[OPT_TREFLIND].iMultiFile = 1;
+  options[OPT_TREFLIND].bMultiFile = 1;
   options[OPT_TREFLIND].dNeg = 1;
   options[OPT_TREFLIND].dDefault = TREFLIND;
   sprintf(options[OPT_TREFLIND].cNeg,"Default in thermint.h");
@@ -1026,7 +1021,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DTCHIREF].cDescr,"DTChiRef");
   sprintf(options[OPT_DTCHIREF].cDefault,"Value in thermint.h");
   options[OPT_DTCHIREF].iType = 2;
-  options[OPT_DTCHIREF].iMultiFile = 1;
+  options[OPT_DTCHIREF].bMultiFile = 1;
   options[OPT_DTCHIREF].dNeg = 1;
   options[OPT_DTCHIREF].dDefault = DTCHIREF;
   sprintf(options[OPT_DTCHIREF].cNeg,"Default in thermint.h");
@@ -1037,7 +1032,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ERUPTEFF].cDescr,"Melt Eruption Efficiency");
   sprintf(options[OPT_ERUPTEFF].cDefault,"ERUPTEFF");
   options[OPT_ERUPTEFF].iType = 2;
-  options[OPT_ERUPTEFF].iMultiFile = 1;
+  options[OPT_ERUPTEFF].bMultiFile = 1;
   options[OPT_ERUPTEFF].dNeg = ERUPTEFF;
   options[OPT_ERUPTEFF].dDefault = ERUPTEFF;
   sprintf(options[OPT_ERUPTEFF].cNeg,"Default is ERUPTEFF");
@@ -1048,7 +1043,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCMELTPHIS].cDescr,"Viscosity Melt Factor Phi star");
   sprintf(options[OPT_VISCMELTPHIS].cDefault,"Default is VISCMELTPHIS");
   options[OPT_VISCMELTPHIS].iType = 2;
-  options[OPT_VISCMELTPHIS].iMultiFile = 1;
+  options[OPT_VISCMELTPHIS].bMultiFile = 1;
   options[OPT_VISCMELTPHIS].dNeg = VISCMELTPHIS;
   options[OPT_VISCMELTPHIS].dDefault = VISCMELTPHIS;
   sprintf(options[OPT_VISCMELTPHIS].cNeg,"Default is VISCMELTPHIS");
@@ -1059,7 +1054,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCMELTXI].cDescr,"Viscosity Melt Factor Xi");
   sprintf(options[OPT_VISCMELTXI].cDefault,"Default is VISCMELTXI");
   options[OPT_VISCMELTXI].iType = 2;
-  options[OPT_VISCMELTXI].iMultiFile = 1;
+  options[OPT_VISCMELTXI].bMultiFile = 1;
   options[OPT_VISCMELTXI].dNeg = VISCMELTXI;
   options[OPT_VISCMELTXI].dDefault = VISCMELTXI;
   sprintf(options[OPT_VISCMELTXI].cNeg,"Default is VISCMELTXI");
@@ -1070,7 +1065,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCMELTGAMMA].cDescr,"Viscosity Melt Factor Gamma");
   sprintf(options[OPT_VISCMELTGAMMA].cDefault,"Default is VISCMELTGAMMA");
   options[OPT_VISCMELTGAMMA].iType = 2;
-  options[OPT_VISCMELTGAMMA].iMultiFile = 1;
+  options[OPT_VISCMELTGAMMA].bMultiFile = 1;
   options[OPT_VISCMELTGAMMA].dNeg = VISCMELTGAMMA;
   options[OPT_VISCMELTGAMMA].dDefault = VISCMELTGAMMA;
   sprintf(options[OPT_VISCMELTGAMMA].cNeg,"Default is VISCMELTGAMMA");
@@ -1081,7 +1076,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCMELTDELTA].cDescr,"Viscosity Melt Factor Delta");
   sprintf(options[OPT_VISCMELTDELTA].cDefault,"Default is VISCMELTDELTA");
   options[OPT_VISCMELTDELTA].iType = 2;
-  options[OPT_VISCMELTDELTA].iMultiFile = 1;
+  options[OPT_VISCMELTDELTA].bMultiFile = 1;
   options[OPT_VISCMELTDELTA].dNeg = VISCMELTDELTA;
   options[OPT_VISCMELTDELTA].dDefault = VISCMELTDELTA;
   sprintf(options[OPT_VISCMELTDELTA].cNeg,"Default is VISCMELTDELTA");
@@ -1092,7 +1087,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCMELTB].cDescr,"Viscosity Melt Factor B");
   sprintf(options[OPT_VISCMELTB].cDefault,"Default is VISCMELTB");
   options[OPT_VISCMELTB].iType = 2;
-  options[OPT_VISCMELTB].iMultiFile = 1;
+  options[OPT_VISCMELTB].bMultiFile = 1;
   options[OPT_VISCMELTB].dNeg = VISCMELTB;
   options[OPT_VISCMELTB].dDefault = VISCMELTB;
   sprintf(options[OPT_VISCMELTB].cNeg,"Default is VISCMELTB");
@@ -1103,7 +1098,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MELTFACTORLMAN].cDescr,"Lower Mantle Viscosity Melt Factor");
   sprintf(options[OPT_MELTFACTORLMAN].cDefault,"%f",MELTFACTORLMAN);
   options[OPT_MELTFACTORLMAN].iType = 2;
-  options[OPT_MELTFACTORLMAN].iMultiFile = 1;
+  options[OPT_MELTFACTORLMAN].bMultiFile = 1;
   // XXX Rory doesn't think negative options should be allowed here
   //options[OPT_MELTFACTORLMAN].dNeg = MELTFACTORLMAN;
   options[OPT_MELTFACTORLMAN].dDefault = MELTFACTORLMAN;
@@ -1115,7 +1110,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MELTFACTORUMAN].cDescr,"Upper Mantle Viscosity Melt Factor");
   sprintf(options[OPT_MELTFACTORUMAN].cDefault,"%f",MELTFACTORUMAN);
   options[OPT_MELTFACTORUMAN].iType = 2;
-  options[OPT_MELTFACTORUMAN].iMultiFile = 1;
+  options[OPT_MELTFACTORUMAN].bMultiFile = 1;
   options[OPT_MELTFACTORUMAN].dNeg = MELTFACTORUMAN;
   options[OPT_MELTFACTORUMAN].dDefault = MELTFACTORUMAN;
   sprintf(options[OPT_MELTFACTORUMAN].cNeg,"Default is MELTFACTORUMAN");
@@ -1126,7 +1121,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FIXMELTFACTORUMAN].cDescr,"Fix Viscosity Melt Factor");
   sprintf(options[OPT_FIXMELTFACTORUMAN].cDefault,"Default is FIXMELTFACTORUMAN");
   options[OPT_FIXMELTFACTORUMAN].iType = 2;
-  options[OPT_FIXMELTFACTORUMAN].iMultiFile = 1;
+  options[OPT_FIXMELTFACTORUMAN].bMultiFile = 1;
   options[OPT_FIXMELTFACTORUMAN].dNeg = FIXMELTFACTORUMAN;
   options[OPT_FIXMELTFACTORUMAN].dDefault = FIXMELTFACTORUMAN;
   sprintf(options[OPT_FIXMELTFACTORUMAN].cNeg,"Default is FIXMELTFACTORUMAN");
@@ -1137,7 +1132,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_STAGLID].cDescr,"Stagnant Lid Switch");
   sprintf(options[OPT_STAGLID].cDefault,"Default is STAGLID");
   options[OPT_STAGLID].iType = 2;
-  options[OPT_STAGLID].iMultiFile = 1;
+  options[OPT_STAGLID].bMultiFile = 1;
   options[OPT_STAGLID].dNeg = STAGLID;
   options[OPT_STAGLID].dDefault = STAGLID;
   sprintf(options[OPT_STAGLID].cNeg,"Default is STAGLID");
@@ -1148,7 +1143,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MANHFLOWPREF].cDescr,"Mantle HFlow Prefix");
   sprintf(options[OPT_MANHFLOWPREF].cDefault,"Default is MANHFLOWPREF");
   options[OPT_MANHFLOWPREF].iType = 2;
-  options[OPT_MANHFLOWPREF].iMultiFile = 1;
+  options[OPT_MANHFLOWPREF].bMultiFile = 1;
   options[OPT_MANHFLOWPREF].dNeg = MANHFLOWPREF;
   options[OPT_MANHFLOWPREF].dDefault = MANHFLOWPREF;
   sprintf(options[OPT_MANHFLOWPREF].cNeg,"Default is MANHFLOWPREF");
@@ -1159,7 +1154,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MAGMOMCOEF].cDescr,"Magnetic Moment Coefficient");
   sprintf(options[OPT_MAGMOMCOEF].cDefault,"Default is MAGMOMCOEF");
   options[OPT_MAGMOMCOEF].iType = 2;
-  options[OPT_MAGMOMCOEF].iMultiFile = 1;
+  options[OPT_MAGMOMCOEF].bMultiFile = 1;
   options[OPT_MAGMOMCOEF].dNeg = MAGMOMCOEF;
   options[OPT_MAGMOMCOEF].dDefault = MAGMOMCOEF;
   sprintf(options[OPT_MAGMOMCOEF].cNeg,"Default is MAGMOMCOEF");
@@ -1170,7 +1165,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PRESSWIND].cDescr,"Stellar Wind Pressure at body");
   sprintf(options[OPT_PRESSWIND].cDefault,"Default is EPRESSWIND");
   options[OPT_PRESSWIND].iType = 2;
-  options[OPT_PRESSWIND].iMultiFile = 1;
+  options[OPT_PRESSWIND].bMultiFile = 1;
   options[OPT_PRESSWIND].dNeg = EPRESSWIND;
   options[OPT_PRESSWIND].dDefault = EPRESSWIND;
   sprintf(options[OPT_PRESSWIND].cNeg,"Default is EPRESSWIND");
@@ -1181,7 +1176,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMINTMAN].cDescr,"Halt at Minimum Mantle Temperature");
   sprintf(options[OPT_HALTMINTMAN].cDefault,"0 K");
   options[OPT_HALTMINTMAN].iType = 2;
-  options[OPT_HALTMINTMAN].iMultiFile = 1;
+  options[OPT_HALTMINTMAN].bMultiFile = 1;
   options[OPT_HALTMINTMAN].dNeg = 1;
   options[OPT_HALTMINTMAN].dDefault = 0;
   sprintf(options[OPT_HALTMINTMAN].cNeg,"0");
@@ -1192,7 +1187,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMINTCORE].cDescr,"Halt at Minimum Core Temperature");
   sprintf(options[OPT_HALTMINTCORE].cDefault,"0 K");
   options[OPT_HALTMINTCORE].iType = 2;
-  options[OPT_HALTMINTCORE].iMultiFile = 1;
+  options[OPT_HALTMINTCORE].bMultiFile = 1;
   options[OPT_HALTMINTCORE].dNeg = 1;
   options[OPT_HALTMINTCORE].dDefault = 0;
   sprintf(options[OPT_HALTMINTCORE].cNeg,"0");
@@ -1204,7 +1199,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ACTVISCMAN].cDescr,"Mantle viscosity activation energy");
   sprintf(options[OPT_ACTVISCMAN].cDefault,"Default is ACTVISCMAN");
   options[OPT_ACTVISCMAN].iType = 2;
-  options[OPT_ACTVISCMAN].iMultiFile = 1;
+  options[OPT_ACTVISCMAN].bMultiFile = 1;
   options[OPT_ACTVISCMAN].dNeg = ACTVISCMAN;
   options[OPT_ACTVISCMAN].dDefault = ACTVISCMAN;
   sprintf(options[OPT_ACTVISCMAN].cNeg,"Default is ACTVISCMAN");
@@ -1215,7 +1210,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SHMODREF].cDescr,"Reference kinematic mantle shear modulus");
   sprintf(options[OPT_SHMODREF].cDefault,"Default is SHMODREF");
   options[OPT_SHMODREF].iType = 2;
-  options[OPT_SHMODREF].iMultiFile = 1;
+  options[OPT_SHMODREF].bMultiFile = 1;
   options[OPT_SHMODREF].dNeg = SHMODREF;
   options[OPT_SHMODREF].dDefault = SHMODREF;
   sprintf(options[OPT_SHMODREF].cNeg,"Default is SHMODREF");
@@ -1226,7 +1221,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_STIFFNESS].cDescr,"Effective stiffness of mantle");
   sprintf(options[OPT_STIFFNESS].cDefault,"Default is STIFFNESS");
   options[OPT_STIFFNESS].iType = 2;
-  options[OPT_STIFFNESS].iMultiFile = 1;
+  options[OPT_STIFFNESS].bMultiFile = 1;
   options[OPT_STIFFNESS].dNeg = STIFFNESS;
   options[OPT_STIFFNESS].dDefault = STIFFNESS;
   sprintf(options[OPT_STIFFNESS].cNeg,"Default is STIFFNESS");
@@ -1237,7 +1232,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DLIND].cDescr,"Lindemann's law length scale for iron liquidus");
   sprintf(options[OPT_DLIND].cDefault,"Default is DLIND");
   options[OPT_DLIND].iType = 2;
-  options[OPT_DLIND].iMultiFile = 1;
+  options[OPT_DLIND].bMultiFile = 1;
   options[OPT_DLIND].dNeg = DLIND;
   options[OPT_DLIND].dDefault = DLIND;
   sprintf(options[OPT_DLIND].cNeg,"Default is DLIND");
@@ -1248,7 +1243,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DADCORE].cDescr,"Liq iron core adiabatic length scale");
   sprintf(options[OPT_DADCORE].cDefault,"Default is DADCORE");
   options[OPT_DADCORE].iType = 2;
-  options[OPT_DADCORE].iMultiFile = 1;
+  options[OPT_DADCORE].bMultiFile = 1;
   options[OPT_DADCORE].dNeg = DADCORE;
   options[OPT_DADCORE].dDefault = DADCORE;
   sprintf(options[OPT_DADCORE].cNeg,"Default is DADCORE");
@@ -1259,7 +1254,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ADJUMPM2UM].cDescr,"Adiabatic temp jump from ave mantle to UM");
   sprintf(options[OPT_ADJUMPM2UM].cDefault,"Default is ADJUMPM2UM");
   options[OPT_ADJUMPM2UM].iType = 2;
-  options[OPT_ADJUMPM2UM].iMultiFile = 1;
+  options[OPT_ADJUMPM2UM].bMultiFile = 1;
   options[OPT_ADJUMPM2UM].dNeg = ADJUMPM2UM;
   options[OPT_ADJUMPM2UM].dDefault = ADJUMPM2UM;
   sprintf(options[OPT_ADJUMPM2UM].cNeg,"Default is ADJUMPM2UM");
@@ -1270,7 +1265,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ADJUMPM2LM].cDescr,"Adiabatic temp jump from ave mantle to LM");
   sprintf(options[OPT_ADJUMPM2LM].cDefault,"Default is ADJUMPM2LM");
   options[OPT_ADJUMPM2LM].iType = 2;
-  options[OPT_ADJUMPM2LM].iMultiFile = 1;
+  options[OPT_ADJUMPM2LM].bMultiFile = 1;
   options[OPT_ADJUMPM2LM].dNeg = ADJUMPM2LM;
   options[OPT_ADJUMPM2LM].dDefault = ADJUMPM2LM;
   sprintf(options[OPT_ADJUMPM2LM].cNeg,"Default is ADJUMPM2LM");
@@ -1281,7 +1276,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ADJUMPC2CMB].cDescr,"Adiabatic temp jump from ave core to CMB");
   sprintf(options[OPT_ADJUMPC2CMB].cDefault,"Default is ADJUMPC2CMB");
   options[OPT_ADJUMPC2CMB].iType = 2;
-  options[OPT_ADJUMPC2CMB].iMultiFile = 1;
+  options[OPT_ADJUMPC2CMB].bMultiFile = 1;
   options[OPT_ADJUMPC2CMB].dNeg = ADJUMPC2CMB;
   options[OPT_ADJUMPC2CMB].dDefault = ADJUMPC2CMB;
   sprintf(options[OPT_ADJUMPC2CMB].cNeg,"Default is ADJUMPC2CMB");
@@ -1292,7 +1287,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ELECCONDCORE].cDescr,"Electrical conductivity of core");
   sprintf(options[OPT_ELECCONDCORE].cDefault,"Default is ELECCONDCORE");
   options[OPT_ELECCONDCORE].iType = 2;
-  options[OPT_ELECCONDCORE].iMultiFile = 1;
+  options[OPT_ELECCONDCORE].bMultiFile = 1;
   options[OPT_ELECCONDCORE].dNeg = ELECCONDCORE;
   options[OPT_ELECCONDCORE].dDefault = ELECCONDCORE;
   sprintf(options[OPT_ELECCONDCORE].cNeg,"Default is ELECCONDCORE");
@@ -1303,7 +1298,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_IMK2MANORBMODEL].cDescr,"ImK2Man model to use in orbital equations (1=ImK2(T), 2=k2/Q(T)");
   sprintf(options[OPT_IMK2MANORBMODEL].cDefault,"Default is IMK2MANORBMODEL");
   options[OPT_IMK2MANORBMODEL].iType = 2;
-  options[OPT_IMK2MANORBMODEL].iMultiFile = 1;
+  options[OPT_IMK2MANORBMODEL].bMultiFile = 1;
   options[OPT_IMK2MANORBMODEL].dNeg = IMK2MANORBMODEL;
   options[OPT_IMK2MANORBMODEL].dDefault = IMK2MANORBMODEL;
   sprintf(options[OPT_IMK2MANORBMODEL].cNeg,"Default is IMK2MANORBMODEL");
@@ -1412,7 +1407,7 @@ void fvVerifyTCore(BODY *body,OPTIONS *options,SYSTEM *system,UPDATE *update,dou
   @param iBody Index of body
 */
 
-void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void fvPropsAuxThermint(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   /* Scalar Properties */
   body[iBody].dTUMan=fdTUMan(body,iBody);
   body[iBody].dTLMan=fdTLMan(body,iBody);
@@ -1619,7 +1614,8 @@ void fvFinalizeUpdateTCoreThermint(BODY *body,UPDATE*update,int *iEqn,int iVar,i
   @param iBody Index of body
 */
 /* Minimum TMan */
-int fbHaltMinTMan(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltMinTMan(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   if (body[iBody].dTMan < halt->dMinTMan) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's TMan =  ",body[iBody].cName);
@@ -1642,7 +1638,8 @@ int fbHaltMinTMan(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int
   @param update Update struct
   @param iBody Index of body
 */
-int fbHaltMinTCore(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltMinTCore(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
   if (body[iBody].dTCore < halt->dMinTCore) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: %s's TCore =  ",body[iBody].cName);

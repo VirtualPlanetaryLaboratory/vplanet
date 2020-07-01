@@ -13,11 +13,11 @@ if ! command -v conda > /dev/null; then
 fi
 
 # Display some info
-conda info -a
+#conda info -a
 
 # Install docs stuff
-pip install sphinx==1.8.4
-pip install breathe
+pip install sphinx==2.3.1
+pip install breathe==4.14.1
 pip install sphinxcontrib-bibtex
 
 # Install vplot
@@ -26,5 +26,5 @@ pip install git+git://github.com/VirtualPlanetaryLaboratory/vplot.git
 # Build vplanet
 export PATH="$TRAVIS_BUILD_DIR:$PATH"
 cd $TRAVIS_BUILD_DIR
-gcc-4.8 -o vplanet src/*.c -lm -DGITVERSION=\"Travis-CI\"
+gcc-4.8 -o vplanet src/*.c -lm -O3 -DGITVERSION=\"Travis-CI\"
 sudo mv vplanet /usr/local/bin/vplanet

@@ -67,7 +67,7 @@ void VerifyPerturbersSpiNBody(BODY *body,int iNumBodies,int iBody);
 void VerifySpiNBody(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule);
 
 void fnForceBehaviorSpiNBody(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule);
-void PropertiesSpiNBody(BODY *body, EVOLVE *evolve, UPDATE *update, int iBody);
+void PropsAuxSpiNBody(BODY *body, EVOLVE *evolve, IO*, UPDATE *update, int iBody);
 
 void FinalizeUpdateVelXSpiNBody(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo);
 void FinalizeUpdateVelYSpiNBody(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo);
@@ -85,6 +85,9 @@ void WriteVelZ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 void WriteInclinationSpinBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]);
 void WriteLongASpinBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]);
 void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]);
+
+int fbHaltMaxMutualIncSpiNBody(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,
+      fnUpdateVariable***,int);
 
 // Coordinate Changes
 void OrbElems2Helio(BODY *body, int iBody);

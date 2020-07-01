@@ -233,9 +233,9 @@ void fvRead235UNumCrust(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void fvInitializeOptionsRadheat(OPTIONS*,fnReadOption[]);
 void fvReadOptionsRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
-int fbHaltMin40KPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int fbHaltMin232ThPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int fbHaltMin238UPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltMin40KPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);
+int fbHaltMin232ThPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);
+int fbHaltMin238UPower(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);
 //void CountHaltsRadheat(HALT*,int*);
 
 /* Verify Functions */
@@ -251,7 +251,7 @@ void fvVerify232Th(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
 void fvVerify238U(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
 void fvVerify235U(BODY*,OPTIONS*,SYSTEM*,UPDATE*,double,int);
 
-void fvPropsAuxRadheat(BODY*,EVOLVE*,UPDATE*,int);
+void fvPropsAuxRadheat(BODY*,EVOLVE*,IO*,UPDATE*,int);
 void fvForceBehaviorRadheat(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void fvRadheatExit(FILES*,char*,int);
 void fvVerifyRadheat(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);

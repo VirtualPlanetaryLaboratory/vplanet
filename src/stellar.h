@@ -36,10 +36,8 @@
 #define OPTSTARTSTELLAR         1500 /**< Start of Stellar options */
 #define OPTENDSTELLAR           1600 /**< End of Stellar options */
 
-#define OPT_LUMINOSITY          1510 /**< (Initial) luminosity */
 #define OPT_SATXUVFRAC          1511 /**< Saturation XUV luminosity fraction */
 #define OPT_STELLARMODEL        1512 /**< Luminosity evolution model */
-#define OPT_TEMPERATURE         1513 /**< Stellar effective temperature (initial) */
 #define OPT_WINDMODEL           1514 /**< Wind model */
 #define OPT_XUVMODEL            1515 /**< XUV evol model */
 #define OPT_HALTENDBARAFFEFGRID 1516 /**< Halt when we reach the end of the Baraffe grid? */
@@ -70,12 +68,6 @@
 #define OUT_ROSSBYNUMBER        1514
 #define OUT_DROTPERDTSTELLAR    1515
 
-#define OUT_HZLIMRECVENUS       1520 /**< Recent Venus HZ Limit */
-#define OUT_HZLIMRUNAWAY        1522 /**< Recent Venus HZ Limit */
-#define OUT_HZLIMMOIST          1524 /**< Recent Venus HZ Limit */
-#define OUT_HZLIMMAX            1526 /**< Recent Venus HZ Limit */
-#define OUT_HZLIMEARLYMARS      1528 /**< Recent Venus HZ Limit */
-
 /* @cond DOXYGEN_OVERRIDE */
 
 void InitializeControlStellar(CONTROL*);
@@ -88,14 +80,15 @@ void HelpOptionsStellar(OPTIONS*);
 void InitializeOptionsStellar(OPTIONS*,fnReadOption[]);
 void ReadOptionsStellar(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
-int fbHaltEndBaraffeGrid(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fbHaltEndBaraffeGrid(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,
+      int);
 void CountHaltsStellar(HALT*,int*);
 
 /* Verify Functions */
 void VerifyStellar(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
 void VerifyRotationStellar(BODY*,CONTROL*,OPTIONS*,char[],int);
 void InitializeVplanetStellar(CONTROL*,MODULE*);
-void fnPropertiesStellar(BODY*,EVOLVE*,UPDATE*,int);
+void fnPropsAuxStellar(BODY*,EVOLVE*,IO*,UPDATE*,int);
 void VerifyHaltStellar(BODY*,CONTROL*,OPTIONS*,int,int*);
 void VerifyRotationStellar(BODY*,CONTROL*,OPTIONS*,char[],int);
 
@@ -143,7 +136,6 @@ double fdDRotRateDtMagBrake(BODY*,SYSTEM*,int*);
 double fdTemperature(BODY*,SYSTEM*,int*);
 double fdTemperatureFunctionBaraffe(double, double);
 double fdTemperatureFunctionProximaCen(double,double);
-void fdHabitableZoneKopparapu2013(double,double,double*);
 double fdDJDtMagBrakingStellar(BODY*,SYSTEM*,int*);
 double fdDRadiusDtStellar(BODY*,SYSTEM*,int*);
 double fdDRadGyraDtStellar(BODY*,SYSTEM*,int*);

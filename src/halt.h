@@ -17,9 +17,9 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
-int fbCheckHalt(BODY*,CONTROL*,UPDATE*);
+int fbCheckHalt(BODY*,CONTROL*,UPDATE*,fnUpdateVariable***);
 void InitializeHalts(CONTROL*,MODULE*);
 void VerifyHalts(BODY*,CONTROL*,MODULE*,OPTIONS*);
-int fniHaltMaxEcc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int fniHaltMaxEcc(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);
 
 /* @endcond */

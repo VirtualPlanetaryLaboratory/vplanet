@@ -37,7 +37,6 @@
 #define OPT_TIDEMODEL           1040
 #define OPT_TIDEPERTS           1042
 #define OPT_TIDALTAU            1045
-#define OPT_TIDALQ              1050
 #define OPT_TIDALQOCEAN         1051
 #define OPT_OCEANTIDES          1052
 #define OPT_TIDALQENV           1053
@@ -128,11 +127,8 @@ void InitializeSemiEqtide(BODY*,UPDATE*,int);
 /* Options Functions */
 void HelpOptionsEqtide(OPTIONS*);
 void ReadDiscreteRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltDblSync(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadFixOrbit(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadForceEqSpin(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltTideLock(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadHaltSyncRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadK2(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadK2Ocean(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadK2Env(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
@@ -149,10 +145,15 @@ void ReadOptionsEqtide(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int
 void ReadEqtideOceanTides(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadEqtideEnvTides(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadUseTidalRadius(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltTideLock(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltSyncRot(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadHaltDblSync(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
-int HaltDblSync(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int HaltTideLock(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
-int HaltSyncRot(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+int HaltDblSync(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);
+int HaltTideLock(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);
+int HaltSyncRot(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,int);
+
+
 void CountHaltsEqtide(HALT*,int*);
 void VerifyHaltEqtide(BODY*,CONTROL*,OPTIONS*,int,int*);
 void InitializeHaltEqtide(HALT*,MODULE*,int,int*,int*);
@@ -228,7 +229,7 @@ double fdTidePower(BODY*,int,int);
 double fdSurfEnFluxEqtide(BODY*,SYSTEM*,UPDATE*,int,int);
 void ForceBehaviorEqtide(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 
-void PropsAuxEqtide(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxEqtide(BODY*,EVOLVE*,IO*,UPDATE*,int);
 
 /******************** CPL Functions ********************/
 
@@ -238,7 +239,7 @@ void fdCPLZ(BODY*,double,double,int,int);
 double fdGammaRot(double,double,int*);
 double fdGammaOrb(double,double,int*);
 double fdCPLTidePower(BODY*,int);
-void PropsAuxCPL(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxCPL(BODY*,EVOLVE*,IO*,UPDATE*,int);
 
 /* Equilibrium parameters */
 double fdCPLEqSpinRate(double,double,int);
@@ -273,7 +274,7 @@ double fdCTLF4(double);
 double fdCTLBeta(double);
 double fdCTLF5(double);
 double fdCTLTidePower(BODY*,int);
-void PropsAuxCTL(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxCTL(BODY*,EVOLVE*,IO*,UPDATE*,int);
 double fdSurfEnFluxOcean(BODY*,int);
 double fdTidePowerOcean(BODY*,int);
 
@@ -296,7 +297,7 @@ double fdCTLDoblDt(BODY*,int*);
 
 /******************** DB15 Functions ********************/
 double fdPowerEqtideDB15(BODY*,int);
-void PropsAuxDB15(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxDB15(BODY*,EVOLVE*,IO*,UPDATE*,int);
 
 
 double fdDB15DsemiDt(BODY*,SYSTEM*,int*);

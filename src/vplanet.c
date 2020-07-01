@@ -5,13 +5,7 @@
   @date May 7 2014
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <assert.h>
-#include <string.h>
 #include "vplanet.h"
-#include <sys/time.h>
 
 /*
 #ifdef DEBUG
@@ -19,8 +13,6 @@
 #include <fenv.h>
 #endif
 */
-
-#include <xmmintrin.h>
 
 /* Do not change these values */
 const double dHUGE = DBL_MAX; // This is the largest possible double value according to <float.h>
@@ -37,10 +29,12 @@ int main(int argc,char *argv[]) {
 
   struct timeval start, end;
 
+  /* Fix CPU time calculation someday
   gettimeofday(&start, NULL);
 
-//  time_t dStartTime;
-  //dStartTime = time(NULL);
+  time_t dStartTime;
+  dStartTime = time(NULL);
+  */
 
   int iOption,iVerbose,iQuiet,iOverwrite;
   OPTIONS *options;
@@ -56,6 +50,12 @@ int main(int argc,char *argv[]) {
   fnWriteOutput fnWrite[MODULEOUTEND];
   fnUpdateVariable ***fnUpdate;
   fnIntegrate fnOneStep;
+
+  #ifdef GITVERSION
+  strcpy(control.sGitVersion,GITVERSION);
+  #else
+  strcpy(control.sGitVersion,"Unknown");
+  #endif
 
   /** Must initialize all options and outputs for all modules
      independent of what is selected. This allows a complete
@@ -77,7 +77,7 @@ int main(int argc,char *argv[]) {
   strcpy(files.cExe,argv[0]);
 
   if (argc == 1) {
-    fprintf(stderr,"ERROR: Incorrect number of arguments. Usage: %s [-verbose] [-help] file [file].\n",argv[0]);
+    fprintf(stderr,"Usage: %s [-v, -verbose] [-q, -quiet] [-h, -help] [-H, -Help] <file>\n",argv[0]);
     exit(EXIT_EXE);
   }
 
@@ -102,9 +102,9 @@ int main(int argc,char *argv[]) {
       iOverwrite=iOption;
     }
     if (memcmp(argv[iOption],"-h",2) == 0)
-      Help(options,output,files.cExe);
+      Help(options,output,files.cExe,0);
     if (memcmp(argv[iOption],"-H",2) == 0)
-      LongHelp(options,output,files.cExe);
+      Help(options,output,files.cExe,1);
   }
 
   if (iQuiet != -1 && iVerbose != -1) {
@@ -152,7 +152,7 @@ int main(int argc,char *argv[]) {
     }
   }
 
-  gettimeofday(&end, NULL);
+  //gettimeofday(&end, NULL);
 
   if (control.Io.iVerbose >= VERBPROG) {
     printf("Simulation completed.\n");

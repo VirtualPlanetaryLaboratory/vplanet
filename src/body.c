@@ -8,19 +8,13 @@
   @date May 7 2014
 
   This file contains subroutines that describe physical properties of
-  any body. This include conversions between the option parameter (a property
+  any body. This includes conversions between the option parameter (a property
   that may be used at input) and the system parameter (the property in the BODY
-  struct that is always up-to-date). If unsure between here and orbit.c, put
+  struct that is always up-to-date). If unsure between here and system.c, put
   here. Also includes mathemtatical relationships.
 
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <assert.h>
-#include <ctype.h>
-#include <string.h>
 #include "vplanet.h"
 
 /*
@@ -364,6 +358,10 @@ double fdMassToRad_Sotin07(double dMass) {
     return pow(dMass/MEARTH,0.272)*REARTH;
 }
 
+double fdMassToRad_LehmerCatling17(double dMass) {
+    return 1.3*pow(dMass,0.27);
+}
+
 /**
   Terrestrial planet mass-radius relationship from Sotin et al 2007, Icarus,
   191, 337-351.
@@ -433,6 +431,7 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
      Module-specific parameters belong in the fnBodyCopy subroutines. */
 
   for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
+    strcpy(dest[iBody].cName,src[iBody].cName);
     dest[iBody].iBodyType = src[iBody].iBodyType;
     dest[iBody].dMass = src[iBody].dMass;
     dest[iBody].dRadius = src[iBody].dRadius;
@@ -447,6 +446,8 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dObliquity = src[iBody].dObliquity;
     dest[iBody].dLostAngMom = src[iBody].dLostAngMom;
     dest[iBody].dLostEng = src[iBody].dLostEng;
+    dest[iBody].dAlbedoGlobal = src[iBody].dAlbedoGlobal;
+
     dest[iBody].bBinary = src[iBody].bBinary;
     dest[iBody].bDistOrb = src[iBody].bDistOrb;
     dest[iBody].bDistRot = src[iBody].bDistRot;
@@ -473,6 +474,8 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     //   (eqtide + !thermint) bodies
     dest[iBody].dShmodUMan=src[iBody].dShmodUMan;
     dest[iBody].dStiffness=src[iBody].dStiffness;
+    dest[iBody].dImK2ManOrbModel = src[iBody].dImK2ManOrbModel;
+    dest[iBody].bUseOuterTidalQ = src[iBody].bUseOuterTidalQ;
 
     if (iBody > 0) {
       dest[iBody].dHecc = src[iBody].dHecc;
@@ -519,18 +522,24 @@ void CalcXYZobl(BODY *body, int iBody) {
    */
 double CalcDynEllipEq(BODY *body, int iBody) {
   double J2Earth = 1.08262668e-3, J2Venus = 4.56e-6, CEarth = 8.034e37;
-  double nuEarth, EdEarth, EdVenus, dTmp, dDynEllip;
+  double nuEarth, EdEarth, EdVenus, dTmp, dDynEllip, dJ2;
 
-  EdEarth = J2Earth*MEARTH*pow(REARTH,2)/CEarth;
-  EdVenus = J2Venus/0.336;
+  // EdEarth = J2Earth*MEARTH*pow(REARTH,2)/CEarth;
+  // EdVenus = J2Venus/0.336;
   nuEarth = 2*PI/(DAYSEC);
 
-  dTmp = EdEarth*MEARTH/(pow(nuEarth,2)*pow(REARTH,3));
+  dJ2 = J2Earth*pow(body[iBody].dRotRate/nuEarth,2)*pow(body[iBody].dRadius/REARTH,3)*MEARTH/body[iBody].dMass;
 
-  dDynEllip = dTmp*pow(body[iBody].dRotRate,2)*pow(body[iBody].dRadius,3)/body[iBody].dMass;
+  if (dJ2 < J2Venus) dJ2 = J2Venus;
 
-  if (dDynEllip < EdVenus)
-    dDynEllip = EdVenus;
+  dDynEllip = dJ2/body[iBody].dSpecMomInertia;
+
+  // dTmp = EdEarth*MEARTH/(pow(nuEarth,2)*pow(REARTH,3));
+  //
+  // dDynEllip = dTmp*pow(body[iBody].dRotRate,2)*pow(body[iBody].dRadius,3)/body[iBody].dMass;
+
+  // if (dDynEllip < EdVenus)
+  //   dDynEllip = EdVenus;
 
   return dDynEllip;
 }
@@ -546,13 +555,25 @@ double CalcDynEllipEq(BODY *body, int iBody) {
    @param dPresSurf pressure at surface due to envelope
    @param dRadXUV radius from center of planet where optical depth of XUV is unity
    */
-double fdLehmerRadius(double dRadSurf, double dPresXUV, double dScaleHeight, double dPresSurf) {
-	double dRadXUV;
+double fdLehmerRadius(BODY *body,int iBody) {
+	double dRadXUV,dRoche;
 
-	dRadXUV = dRadSurf * dRadSurf / (dScaleHeight * log(dPresXUV/dPresSurf) + dRadSurf);
-	if (dRadXUV <= dRadSurf) {
-		dRadXUV = dRadSurf;
+	dRadXUV = body[iBody].dRadSolid * body[iBody].dRadSolid / (body[iBody].dScaleHeight
+    * log(body[iBody].dPresXUV/body[iBody].dPresSurf) + body[iBody].dRadSolid);
+  dRoche=fdRocheRadius(body,iBody);
+    //printf("%lf %lf %lf %lf %lf\n",body[iBody].dPresXUV,body[iBody].dPresSurf,body[iBody].dGravAccel,body[iBody].dEnvelopeMass,dRadXUV);
+  if (dRadXUV <= 0) {
+    dRadXUV = dRoche;
+  }
+  if (dRadXUV > dRoche) {
+    dRadXUV = dRoche;
+  }
+	if (dRadXUV < body[iBody].dRadSolid) {
+		dRadXUV = body[iBody].dRadSolid;
 	}
+  if (body[iBody].dEnvelopeMass == 0) {
+    dRadXUV = body[iBody].dRadSolid;
+  }
   return dRadXUV;
 }
 
@@ -571,11 +592,37 @@ double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
 	double dPresSurf;
 
 	dPresSurf = dGravAccel * dMassEnv / (4 * PI * dRadSurf * dRadSurf); // [kg/ms2]
+//  if (dPresSurf < 0)
+//    printf("%lf %lf %lf %lf\n",dGravAccel,dRadSurf,dMassEnv,dPresSurf);
   return dPresSurf;
+}
+
+/**
+  Thermal temperature of an object heated by the radiation of its primary.
+
+  @param dFlux Incident flux on the body
+  @param dTemp Thermal temperature
+  */
+double fdThermalTemp(BODY *body,int iBody) {
+  double dFlux,dTemp;
+
+  dFlux = body[0].dLuminosity*(1-body[iBody].dAlbedoGlobal)/(4*PI*body[iBody].dSemi*body[iBody].dSemi);
+  dTemp = pow(dFlux/SIGMA,0.25);
+
+  return dTemp;
 }
 
 double fdImK2Total(BODY *body,int iBody) {
 
+  if (body[iBody].bUseOuterTidalQ) {
+    if (body[iBody].bEnv) {
+      return body[iBody].dImK2Env;
+    }
+    if (body[iBody].bOcean) {
+      return body[iBody].dImK2Ocean;
+    }
+    return body[iBody].dImK2Man;
+  }
   if (body[iBody].bMantle || body[iBody].bOcean || body[iBody].bEnv) {
     return body[iBody].dImK2Man + body[iBody].dImK2Ocean + body[iBody].dImK2Env;
   } else {
@@ -925,7 +972,7 @@ double fdProximaCenBRadius(double C, double A, double M){
   XXX What are the arguments?
 
 */
-double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int iMetal){
+double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int iMetal) {
 	int m, c, f, t, z;
 	double dm, dc, df, dt;
 	double R000,R001,R010,R011,R100,R101,R110,R111;
@@ -977,7 +1024,7 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int 
 		for (f = 0; f < FLUXLEN-1; f++)
 			if (dFlux < daLopezFlux[f+1]) break;
 	}
-	if (dAgeYears < daLopezAge[0]){
+	if (dAgeYears < daLopezAge[0]) {
 		/* Out of bounds, assuming it's OK to use min val */
 		dAgeYears = daLopezAge[0];
 		t = 0;
@@ -1259,5 +1306,73 @@ double fdBaraffe(int iParam, double A, double M, int iOrder, int *iError) {
   } else {
       *iError = STELLAR_ERR_FILE;
       return 0;
+  }
+}
+
+/** Compute habitable zone limits from Kopparapu et al. (2013). Works with
+    any number of stars.
+
+@param body An array of BODY structs
+@param iNumBodies Total number of bodies in a system
+@param daHZLimit A pointer to the array corresponding with the 6 limits
+
+*/
+
+void fdHabitableZoneKopparapu2013(BODY *body,int iNumBodies,
+      double *daHZLimit) {
+
+  int iLimit;
+  double dT_star,dLuminosity,dSeff[6];
+  double dSeffSun[6],dCoeffA[6],dCoeffB[6],dCoeffC[6],dCoeffD[6];
+
+  // Caculate total system luminosity
+  dLuminosity = fdLuminosityTotal(body,iNumBodies);
+  // Luminosity must be expressed in solar units
+  dLuminosity /= LSUN;
+
+  dSeffSun[0] = 1.7763;
+  dSeffSun[1] = 1.0385;
+  dSeffSun[2] = 1.0146;
+  dSeffSun[3] = 0.3507;
+  dSeffSun[4] = 0.2946;
+  dSeffSun[5] = 0.2484;
+
+  dCoeffA[0] = 1.4335e-4;
+  dCoeffA[1] = 1.2456e-4;
+  dCoeffA[2] = 8.1884e-5;
+  dCoeffA[3] = 5.9578e-5;
+  dCoeffA[4] = 4.9952e-5;
+  dCoeffA[5] = 4.2588e-5;
+
+  dCoeffB[0] = 3.3954e-9;
+  dCoeffB[1] = 1.4612e-8;
+  dCoeffB[2] = 1.9394e-9;
+  dCoeffB[3] = 1.6707e-9;
+  dCoeffB[4] = 1.3893e-9;
+  dCoeffB[5] = 1.1963e-9;
+
+  dCoeffC[0] = -7.6364e-12;
+  dCoeffC[1] = -7.6345e-12;
+  dCoeffC[2] = -4.3618e-12;
+  dCoeffC[3] = -3.0058e-12;
+  dCoeffC[4] = -2.5331e-12;
+  dCoeffC[5] = -2.1709e-12;
+
+  dCoeffD[0] = -1.1950e-15;
+  dCoeffD[1] = -1.7511E-15;
+  dCoeffD[2] = -6.8260e-16;
+  dCoeffD[3] = -5.1925e-16;
+  dCoeffD[4] = -4.3896e-16;
+  dCoeffD[5] = -3.8282e-16;
+
+  // Assume central body's effective temperature? XXX Better way?
+  dT_star = body[0].dTemperature - 5700;
+
+  for (iLimit=0;iLimit<6;iLimit++) {
+    dSeff[iLimit] = dSeffSun[iLimit] + dCoeffA[iLimit]*dT_star + dCoeffB[iLimit]*
+        dT_star*dT_star + dCoeffC[iLimit]*pow(dT_star,3) + dCoeffD[iLimit]
+        *pow(dT_star,4);
+    // Limits are in AU, convert to meters
+    daHZLimit[iLimit] = pow(dLuminosity/dSeff[iLimit],0.5)*AUM;
   }
 }

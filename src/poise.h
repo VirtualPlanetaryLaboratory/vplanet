@@ -9,6 +9,9 @@
 
 */
 
+#include <stdio.h>
+#include <stdlib.h>
+
 /* Climate model */
 #define ANN         0
 #define SEA         1
@@ -25,6 +28,26 @@
 /* Land Geography */
 #define UNIFORM3    0
 #define MODERN      1
+
+// Constants for the ice model
+#define LFICE         3.34e5      // ???
+#define RHOICE        916.7       //density of ice I
+#define MOCEAN        1.4e21      //mass of earth ocean in kg (ref?)
+#define a1ICE         3.615e-13   //coeff of ice deformability at T<263K (Pa^-3 s^-1 - ref?)
+#define a2ICE         1.733e3     //coeff of ice deformability at T>=263K (Pa^-3 s^-1 - ref?)
+#define Q1ICE         6e4         //energy in ice deformation at T<263K (J/mol)
+#define Q2ICE         13.9e4      //energy in ice deformation at T>=263 (J/mol)
+
+// Constant for the lithospheric model
+#define nGLEN         3.0         //Glen's law coefficient
+#define RHOSED        2390        //sediment density from Huybers&Tziperman08
+#define RHOH2O        1000        // Density of liquid water
+#define SEDPHI        (22.0*PI/180.0)  //angle of internal friction (sediment)
+#define SEDH          10      //depth of sediment layer (m)
+#define SEDD0         7.9e-7  //reference deformation rate for sediment (s^-1)
+#define SEDMU         3e9     //reference viscosity for sediment (Pa s)
+#define RHOBROCK      3370
+#define BROCKTIME     5000  //relaxation timescale for bedrock
 
 /* Options Info */
 #define OPTSTARTPOISE       1900 /* Start of POISE options */
@@ -55,7 +78,7 @@
 #define OPT_SPINUPTOL       1923
 
 
-//#define OPT_LANDGEOM      1940
+#define OPT_LANDFRAC        1940
 #define OPT_HEATCAPLAND     1942
 #define OPT_HEATCAPWATER    1943
 #define OPT_FRZTSEAICE      1944
@@ -84,6 +107,7 @@
 #define OPT_FORCEECC        1967
 #define OPT_ECCAMP          1968
 #define OPT_ECCPER          1969
+#define OPT_MINICEHEIGHT    1970
 
 #define OPT_OLRMODEL    1998
 #define OPT_CLIMATEMODEL    1999
@@ -134,6 +158,15 @@
 #define OUT_TEMPMAXLAND      1956
 #define OUT_TEMPMAXWATER     1957
 #define OUT_PEAKINSOL        1958
+#define OUT_NORTHICECAPLAND  1959
+#define OUT_NORTHICECAPSEA   1960
+#define OUT_SOUTHICECAPLAND  1961
+#define OUT_SOUTHICECAPSEA   1962
+#define OUT_ICEBELTLAND      1963
+#define OUT_ICEBELTSEA       1964
+#define OUT_SNOWBALLLAND     1965
+#define OUT_SNOWBALLSEA      1966
+#define OUT_ICEFREE          1967
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -186,7 +219,7 @@ void LogPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*);
 void LogBodyPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,int);
 
 /* Poise Functions */
-void PropertiesPoise(BODY*,EVOLVE*,UPDATE*,int);
+void PropsAuxPoise(BODY*,EVOLVE*,IO*,UPDATE*,int);
 void ForceBehaviorPoise(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
 void AlbedoAnnual(BODY*,int);
 void AlbedoSeasonal(BODY*,int,int);
@@ -205,7 +238,16 @@ void PoiseIceSheets(BODY*,EVOLVE*,int);
 void SeaIce(BODY*,int);
 void MatrixSeasonal(BODY*,int);
 void SourceFSeas(BODY*,int,int);
-void Snowball(BODY*,int);
+void Snowball(BODY*,int); // XXX Should change to int fbSnowball
+int fbIceBeltLand(BODY*,int);
+int fbIceBeltSea(BODY*,int);
+int fbSouthIceCapLand(BODY*,int);
+int fbSouthIceCapSea(BODY*,int);
+int fbNorthIceCapLand(BODY*,int);
+int fbNorthIceCapSea(BODY*,int);
+int fbSnowballLand(BODY*,int);
+int fbSnowballSea(BODY*,int);
+int fbIceFree(BODY*,int);
 
 double IceMassBalance(BODY*,int,int);
 

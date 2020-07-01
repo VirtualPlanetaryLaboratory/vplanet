@@ -1,0 +1,15 @@
+sSystemName   tilted
+iVerbose      5                  #how much do you want vplanet to yell at you?
+iDigits       6                  #how many digits do you want in your numbers?
+bOverwrite    1                  #overwrite old files
+sUnitMass     solar              #mass unit used for input
+sUnitLength   au                 #length unit used for input
+sUnitTime     y                  #time unit
+sUnitAngle    d                  #angle unit
+bDoLog        1                  #create log file
+saBodyFiles   sun.in earth.in    #you must list all input files here (except vpl.in)
+bDoForward    1                  #integrate forward in time
+bVarDt        1                  #use variable time stepping (not relevant to poise)
+dEta          0.1                #how much to scale variable time step
+dStopTime     1e3
+dOutputTime   1e3

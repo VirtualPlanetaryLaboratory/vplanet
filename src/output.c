@@ -5,14 +5,7 @@
   @date May 7 2014
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <assert.h>
-#include <ctype.h>
-#include <string.h>
 #include "vplanet.h"
-#include "output.h"
 
 /* Individual WriteOutput functions */
 
@@ -76,10 +69,19 @@ void WriteCriticalSemi(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void WriteDeltaTime(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if (control->Evolve.dTime > 0 || control->Evolve.nSteps == 0)
-    *dTmp = control->Io.dOutputTime/control->Evolve.nSteps;
-  else
-    *dTmp = 0;
+  if (control->Evolve.bVarDt) {
+    if (control->Evolve.dTime > 0) {
+      *dTmp = control->Io.dOutputTime/control->Evolve.nSteps;
+    } else {
+      if (control->Io.iVerbose >= VERBINPUT && !control->Io.bDeltaTimeMessage) {
+        fprintf(stderr,"INFO: DeltaTime output for first step is defined to be 0 when bVarDt = 1.\n");
+        control->Io.bDeltaTimeMessage = 1;
+      }
+      *dTmp = 0;
+    }
+  } else {
+    *dTmp = control->Evolve.dTimeStep;
+  }
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -113,22 +115,28 @@ void WriteHecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
   strcpy(cUnit,"");
 }
 
-void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+/************* HABITABLE ZONE LIMITS ***********/
 
+void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,
+      SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,
+      char cUnit[]) {
+
+  double dLuminosity;
+  int jBody;
   /* This output is unusual in that it depends on the presence of other bodies
      in the system, namely (a) star(s). This should also only return a
      sensible value if body 0 uses module STELLAR, or else dLuminosty is
      not defined. As a hack, the will return -1 for invalid cases. */
 
-  if (iBody == 0 || body[iBody].iBodyType == 1) // Star
-    *dTmp = -1;
-  else if (body[0].bStellar) { // Planet and body 0 uses module STELLAR
-    *dTmp = pow(body[0].dLuminosity*(1-body[iBody].dAlbedoGlobal)/(16*PI*DRYRGFLUX*(1-body[iBody].dEcc*body[iBody].dEcc)),0.5);
+  dLuminosity = fdLuminosityTotal(body,control->Evolve.iNumBodies);
+  if (dLuminosity > 0) { // Planet exterior to star(s)
+     *dTmp = pow(body[0].dLuminosity*(1-body[iBody].dAlbedoGlobal)/(16*PI*
+        DRYRGFLUX*(1-body[iBody].dEcc*body[iBody].dEcc)),0.5);
   } else { // Planet, but body 0 does not use STELLAR
     *dTmp = -1;
   }
 
-    if (output->bDoNeg[iBody]) {
+  if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
@@ -137,13 +145,174 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
   }
 }
 
+void WriteHZLimitRecentVenus(BODY *body,CONTROL *control,OUTPUT *output,
+    SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,
+    char cUnit[]) {
+  int iLim;
+  double *daHZLimits; // Array of HZ limits
+
+/*  for (iLim=0;iLim<6;iLim++) {
+    daHZLimits[iLim] = 0;
+  }
+  */
+  daHZLimits = malloc(6*sizeof(double));
+  for (iLim=0;iLim<6;iLim++) {
+      daHZLimits[iLim] = 0;
+    }
+
+  // Get limits
+  fdHabitableZoneKopparapu2013(body,control->Evolve.iNumBodies,daHZLimits);
+
+
+  // RB: Make all these limits #define's, e.g. HZRECVENUS
+  if (daHZLimits[0] > 0) {
+    *dTmp = daHZLimits[0];
+  } else { //Means no stars inside body's orbit
+    *dTmp = -1;
+    free(daHZLimits);
+    return;
+  }
+
+  // Recent Venus limit is index 0
+  *dTmp = daHZLimits[0];
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+  free(daHZLimits);
+}
+
+void WriteHZLimitRunawayGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,
+    SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,
+    char cUnit[]) {
+
+  double *daHZLimits; // Array of HZ limits
+  daHZLimits = malloc(6*sizeof(double));
+
+
+  // Get limits
+  fdHabitableZoneKopparapu2013(body,control->Evolve.iNumBodies,daHZLimits);
+
+  if (daHZLimits[0] > 0) {
+    *dTmp = daHZLimits[0];
+  } else { //Means no stars inside body's orbit
+    *dTmp = -1;
+    free(daHZLimits);
+    return;
+  }
+
+  // Runaway greenhouse limit is index 1
+  *dTmp = daHZLimits[1];
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+  free(daHZLimits);
+}
+
+void WriteHZLimitMoistGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,
+  SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,
+  char cUnit[]) {
+
+  double *daHZLimits; // Array of HZ limits
+  daHZLimits=malloc(6*sizeof(double));
+
+  // Get limits
+  fdHabitableZoneKopparapu2013(body,control->Evolve.iNumBodies,daHZLimits);
+
+  if (daHZLimits[0] > 0) {
+    *dTmp = daHZLimits[0];
+  } else { //Means no stars inside body's orbit
+    *dTmp = -1;
+    free(daHZLimits);
+    return;
+  }
+
+  // Moist greenhouse limit is index 2
+  *dTmp = daHZLimits[2];
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+  free(daHZLimits);
+}
+
+void WriteHZLimitMaxGreenhouse(BODY *body,CONTROL *control,OUTPUT *output,
+  SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,
+  char cUnit[]) {
+
+  double *daHZLimits; // Array of HZ limits
+  daHZLimits=malloc(6*sizeof(double));
+
+  // Get limits
+  fdHabitableZoneKopparapu2013(body,control->Evolve.iNumBodies,daHZLimits);
+
+  if (daHZLimits[0] > 0) {
+    *dTmp = daHZLimits[0];
+  } else { //Means no stars inside body's orbit
+    *dTmp = -1;
+    free(daHZLimits);
+    return;
+  }
+
+  // Maximum greenhouse limit is index 3
+  *dTmp = daHZLimits[3];
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+  free(daHZLimits);
+}
+
+void WriteHZLimitEarlyMars(BODY *body,CONTROL *control,OUTPUT *output,
+    SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,
+    char cUnit[]) {
+
+  double *daHZLimits; // Array of HZ limits
+  daHZLimits=malloc(6*sizeof(double));
+
+  // Get limits
+  fdHabitableZoneKopparapu2013(body,control->Evolve.iNumBodies,daHZLimits);
+
+  if (daHZLimits[0] > 0) {
+    *dTmp = daHZLimits[0];
+  } else { //Means no stars inside body's orbit
+    *dTmp = -1;
+    free(daHZLimits);
+    return;
+  }
+
+  // Early Mars limit is index 4
+  *dTmp = daHZLimits[4];
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+  free(daHZLimits);
+}
+
 /*
  * I
  */
 
  void WriteBodyInc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
    if (body[iBody].bDistOrb) {
-     *dTmp = 2.*asin(sqrt(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc));
+     *dTmp = fdInclination(body,iBody);
    } else {
      *dTmp = body[iBody].dInc;
    }
@@ -163,7 +332,16 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
    //if (body[iBody].bSpiNBody)
     //Bary2OrbElems(body,control->Evolve.iNumBodies);
 
-   *dTmp = fdInstellation(body,iBody);
+   // Must take care since only bodies orbiting a star can have an instellation
+   if (iBody == 0) {
+     *dTmp = -1;
+   } else {
+     if (body[0].bStellar) {
+       *dTmp = fdInstellation(body,iBody);
+     } else {
+       *dTmp = -1;
+     }
+   }
 
    if (output->bDoNeg[iBody]) {
      *dTmp *= output->dNeg;
@@ -181,21 +359,29 @@ void WriteHZLimitDryRunaway(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 
 void WriteK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   // This is calculated during PropsAux
-  *dTmp = body[iBody].dK2Man;
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else { }
+  if (body[iBody].bEqtide) {
+    *dTmp = body[iBody].dK2Man;
+    if (output->bDoNeg[iBody]) {
+      *dTmp *= output->dNeg;
+      strcpy(cUnit,output->cNeg);
+    }
+  } else {
+    *dTmp=-1;
+  }
 }
 
 void WriteImK2Man(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  *dTmp = body[iBody].dImK2Man;
-  strcpy(cUnit,"");
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else { }
+  if (body[iBody].bEqtide) {
+    *dTmp = body[iBody].dImK2Man;
+    strcpy(cUnit,"");
+    if (output->bDoNeg[iBody]) {
+      *dTmp *= output->dNeg;
+      strcpy(cUnit,output->cNeg);
+    }
+  } else {
+    *dTmp = -1;
+  }
 }
 
 void WriteKecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -210,7 +396,7 @@ void WriteKecc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *
 
  void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
    if (body[iBody].bDistOrb) {
-     *dTmp = atan2(body[iBody].dPinc, body[iBody].dQinc);
+     *dTmp = fdLongA(body,iBody);
    } else {
      *dTmp = body[iBody].dLongA;
    }
@@ -294,10 +480,12 @@ void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
 
   *dTmp=0;
 
-  if (body[iBody].bFlare)
+  if (body[iBody].bFlare) {
     *dTmp += fdLXUVFlare(body,control->Evolve.dTimeStep,iBody);
-  if (body[iBody].bStellar)
+  }
+  if (body[iBody].bStellar) {
     *dTmp += body[iBody].dLXUV;
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -305,6 +493,10 @@ void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
     fsUnitsEnergyFlux(units,cUnit);
+  }
+
+  if (!body[iBody].bFlare && !body[iBody].bStellar) {
+    *dTmp = -1;
   }
 }
 
@@ -407,7 +599,7 @@ void WriteOrbEcc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
     else
       *dTmp = -1;
   }
-  sprintf(cUnit,"");
+  sprintf(cUnit,"%s","");
 }
 
 void WriteLostEng(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -531,7 +723,7 @@ void WriteRadius(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 
 void WriteRadGyra(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dRadGyra;
-  sprintf(cUnit,"");
+  sprintf(cUnit,"%s","");
 }
 
 void WriteRotAngMom(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -653,10 +845,30 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 
 void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  if (body[iBody].bThermint && !body[iBody].bOcean && !body[iBody].bEnv) {
-    *dTmp = body[iBody].dTidalQMan;
+  if (body[iBody].bEqtide) {
+    if (body[iBody].bThermint && !body[iBody].bOcean && !body[iBody].bEnv) {
+      *dTmp = body[iBody].dTidalQMan;
+    } else {
+      //*dTmp = body[iBody].dTidalQ;
+      if (body[iBody].bUseOuterTidalQ) {
+        if (body[iBody].bEnv) {
+          *dTmp = body[iBody].dK2Env/body[iBody].dImK2Env;
+        } else if (body[iBody].bOcean) {
+          *dTmp = body[iBody].dK2Ocean/body[iBody].dImK2Ocean;
+        } else {
+          *dTmp = body[iBody].dK2Man/body[iBody].dImK2Man;
+        }
+      } else {
+        if (body[iBody].bMantle) {
+          *dTmp = -body[iBody].dK2Man/body[iBody].dImK2Man;
+        } else {
+          *dTmp = -body[iBody].dK2/body[iBody].dImK2;
+        }
+      }
+    }
   } else {
-    *dTmp = body[iBody].dTidalQ;
+    // If EqTide not called, return -1
+    *dTmp = -1;
   }
 
   strcpy(cUnit,"");
@@ -666,8 +878,11 @@ void WriteTidalQ(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 void WriteTidalQMantle(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   // Updated every timestep by PropsAuxEqtideThermint
-  *dTmp = body[iBody].dTidalQMan;
-
+  if (body[iBody].bEqtide) {
+    *dTmp = body[iBody].dTidalQMan;
+  } else {
+    *dTmp = -1;
+  }
   strcpy(cUnit,"");
 }
 
@@ -792,8 +1007,11 @@ void WriteTotOrbEnergy(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *sys
 void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
   // ImK2 should always be up to date
-  *dTmp = body[iBody].dImK2;
-
+  if (body[iBody].bEqtide) {
+    *dTmp = body[iBody].dImK2;
+  } else {
+    *dTmp = -1;
+  }
   strcpy(cUnit,"");
 }
 
@@ -932,13 +1150,59 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HECC].iModuleBit = EQTIDE + DISTORB;
   fnWrite[OUT_HECC] = &WriteHecc;
 
-  sprintf(output[OUT_HZLIMITDRYRUNAWAY].cName,"HZLimitDryRunaway");
-  sprintf(output[OUT_HZLIMITDRYRUNAWAY].cDescr,"Semi-major axis of Dry Runaway HZ Limit");
-  output[OUT_HZLIMITDRYRUNAWAY].bNeg = 1;
-  output[OUT_HZLIMITDRYRUNAWAY].dNeg = 1/AUM;
-  output[OUT_HZLIMITDRYRUNAWAY].iNum = 1;
-  output[OUT_HZLIMITDRYRUNAWAY].iModuleBit = 1;
-  fnWrite[OUT_HZLIMITDRYRUNAWAY] = &WriteHZLimitDryRunaway;
+  sprintf(output[OUT_HZLIMDRYRUNAWAY].cName,"HZLimitDryRunaway");
+  sprintf(output[OUT_HZLIMDRYRUNAWAY].cDescr,"Semi-major axis of Dry Runaway HZ Limit");
+  sprintf(output[OUT_HZLIMDRYRUNAWAY].cNeg,"AU");
+  output[OUT_HZLIMDRYRUNAWAY].bNeg = 1;
+  output[OUT_HZLIMDRYRUNAWAY].dNeg = 1/AUM;
+  output[OUT_HZLIMDRYRUNAWAY].iNum = 1;
+  output[OUT_HZLIMDRYRUNAWAY].iModuleBit = 1;
+  fnWrite[OUT_HZLIMDRYRUNAWAY] = &WriteHZLimitDryRunaway;
+
+  sprintf(output[OUT_HZLIMRECVENUS].cName,"HZLimRecVenus");
+  sprintf(output[OUT_HZLIMRECVENUS].cDescr,"Recent Venus Habitable Zone Limit");
+  sprintf(output[OUT_HZLIMRECVENUS].cNeg,"AU");
+  output[OUT_HZLIMRECVENUS].bNeg = 1;
+  output[OUT_HZLIMRECVENUS].dNeg = 1./AUM;
+  output[OUT_HZLIMRECVENUS].iNum = 1;
+  output[OUT_HZLIMRECVENUS].iModuleBit = 1;
+  fnWrite[OUT_HZLIMRECVENUS] = &WriteHZLimitRecentVenus;
+
+  sprintf(output[OUT_HZLIMRUNAWAY].cName,"HZLimRunaway");
+  sprintf(output[OUT_HZLIMRUNAWAY].cDescr,"Runaway Greenhouse Habitable Zone Limit");
+  sprintf(output[OUT_HZLIMRUNAWAY].cNeg,"AU");
+  output[OUT_HZLIMRUNAWAY].bNeg = 1;
+  output[OUT_HZLIMRUNAWAY].dNeg = 1./AUM;
+  output[OUT_HZLIMRUNAWAY].iNum = 1;
+  output[OUT_HZLIMRUNAWAY].iModuleBit = 1;
+  fnWrite[OUT_HZLIMRUNAWAY] = &WriteHZLimitRunawayGreenhouse;
+
+  sprintf(output[OUT_HZLIMMOIST].cName,"HZLimMoistGreenhouse");
+  sprintf(output[OUT_HZLIMMOIST].cDescr,"Moist Greenhouse Habitable Zone Limit");
+  sprintf(output[OUT_HZLIMMOIST].cNeg,"AU");
+  output[OUT_HZLIMMOIST].bNeg = 1;
+  output[OUT_HZLIMMOIST].dNeg = 1./AUM;
+  output[OUT_HZLIMMOIST].iNum = 1;
+  output[OUT_HZLIMMOIST].iModuleBit = 1;
+  fnWrite[OUT_HZLIMMOIST] = &WriteHZLimitMoistGreenhouse;
+
+  sprintf(output[OUT_HZLIMMAX].cName,"HZLimMaxGreenhouse");
+  sprintf(output[OUT_HZLIMMAX].cDescr,"Maximum Greenhouse Habitable Zone Limit");
+  sprintf(output[OUT_HZLIMMAX].cNeg,"AU");
+  output[OUT_HZLIMMAX].bNeg = 1;
+  output[OUT_HZLIMMAX].dNeg = 1./AUM;
+  output[OUT_HZLIMMAX].iNum = 1;
+  output[OUT_HZLIMMAX].iModuleBit = 1;
+  fnWrite[OUT_HZLIMMAX] = &WriteHZLimitMaxGreenhouse;
+
+  sprintf(output[OUT_HZLIMEARLYMARS].cName,"HZLimEarlyMars");
+  sprintf(output[OUT_HZLIMEARLYMARS].cDescr,"Early Mars Habitable Zone Limit");
+  sprintf(output[OUT_HZLIMEARLYMARS].cNeg,"AUM");
+  output[OUT_HZLIMEARLYMARS].bNeg = 1;
+  output[OUT_HZLIMEARLYMARS].dNeg = 1./AUM;
+  output[OUT_HZLIMEARLYMARS].iNum = 1;
+  output[OUT_HZLIMEARLYMARS].iModuleBit = 1;
+  fnWrite[OUT_HZLIMEARLYMARS] = &WriteHZLimitEarlyMars;
 
   /*
    * I
@@ -986,7 +1250,6 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_K2MAN].iNum = 1;
   output[OUT_K2MAN].iModuleBit = THERMINT + EQTIDE;
   fnWrite[OUT_K2MAN] = &WriteK2Man;
-
 
   sprintf(output[OUT_KECC].cName,"KEcc");
   sprintf(output[OUT_KECC].cDescr,"Poincare's k (=e*cos(varpi)");
@@ -1136,7 +1399,8 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBMEANMOTION].bNeg = 1;
   output[OUT_ORBMEANMOTION].dNeg = DAYSEC;
   output[OUT_ORBMEANMOTION].iNum = 1;
-  output[OUT_ORBMEANMOTION].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY;
+  output[OUT_ORBMEANMOTION].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY +
+                                         ATMESC + POISE;
   fnWrite[OUT_ORBMEANMOTION] = &WriteOrbMeanMotion;
 
   sprintf(output[OUT_ORBPER].cName,"OrbPeriod");
@@ -1145,7 +1409,8 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBPER].bNeg = 1;
   output[OUT_ORBPER].dNeg = 1./DAYSEC;
   output[OUT_ORBPER].iNum = 1;
-  output[OUT_ORBPER].iModuleBit = EQTIDE + DISTORB + BINARY;
+  output[OUT_ORBPER].iModuleBit = EQTIDE + DISTORB + BINARY + POISE + SPINBODY +
+                                  ATMESC;
   fnWrite[OUT_ORBPER] = &WriteOrbPeriod;
 
   sprintf(output[OUT_ORBSEMI].cName,"SemiMajorAxis");
@@ -1154,7 +1419,8 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ORBSEMI].bNeg = 1;
   output[OUT_ORBSEMI].dNeg = 1./AUM;
   output[OUT_ORBSEMI].iNum = 1;
-  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT + POISE + SPINBODY;
+  output[OUT_ORBSEMI].iModuleBit = EQTIDE + DISTORB + BINARY + GALHABIT + POISE
+                                   + SPINBODY + ATMESC;
   fnWrite[OUT_ORBSEMI] = &WriteOrbSemi;
 
   /*
@@ -1577,7 +1843,7 @@ void LogOptions(CONTROL *control,FILES *files,MODULE *module,SYSTEM *system,FILE
 
   fprintf(fp,"-------- Log file %s -------\n\n",files->cLog);
   fprintf(fp,"Executable: %s\n",files->cExe);
-  fprintf(fp,"Version: %s\n", GITVERSION);
+  fprintf(fp,"Version: %s\n", control->sGitVersion);
   fprintf(fp,"System Name: %s\n",system->cName);
   fprintf(fp,"Primary Input File: %s\n",files->Infile[0].cIn);
   for (iFile=1;iFile<files->iNumInputs;iFile++)
@@ -1607,13 +1873,17 @@ void LogOptions(CONTROL *control,FILES *files,MODULE *module,SYSTEM *system,FILE
   }
 }
 
-void LogSystem(BODY *body,CONTROL *control,MODULE *module,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
+void LogSystem(BODY *body,CONTROL *control,MODULE *module,OUTPUT *output,
+    SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
   int iOut,iModule;
 
   fprintf(fp,"SYSTEM PROPERTIES ----\n");
 
   for (iOut=OUTSTART;iOut<OUTBODYSTART;iOut++) {
     if (output[iOut].iNum > 0) {
+      //Useful for debugging
+      //printf("%d\n",iOut);
+      //fflush(stdout);
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,0);
     }
   }
@@ -1637,10 +1907,8 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       if (output[iOut].iNum > 0) {
 	       if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
-	          /* Useful for debugging
-	           printf("%d %d\n",iBody,iOut);
-	           fflush(stdout);
-             */
+	         //Useful for debugging
+	         //fprintf(stderr,"%d %d\n",iBody,iOut);
 	         WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
 	       }
       }
@@ -1667,8 +1935,6 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   if (iEnd == 0) {
     sprintf(cTime,"Input");
     fp=fopen(files->cLog,"w");
-    control->Evolve.dTime=0;
-    control->Evolve.nSteps=0;
   } else if (iEnd == 1) {
     sprintf(cTime,"Final");
     fp=fopen(files->cLog,"a");
@@ -1706,7 +1972,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
   int iBody,iCol,iOut,iSubOut,iExtra=0,iGrid,iLat,jBody,j;
   double dCol[NUMOPT],*dTmp,dGrid[NUMOPT];
   FILE *fp;
-  char cUnit[OPTLEN], cPoiseGrid[NAMELEN], cLaplaceFunc[NAMELEN];
+  char cUnit[OPTLEN], cPoiseGrid[3*NAMELEN], cLaplaceFunc[3*NAMELEN];
 
   /* Write out all data columns for each body. As some data may span more than
      1 column, we search the input list sequentially, adding iExtra to the
@@ -1742,6 +2008,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
     if (files->Outfile[iBody].iNumCols > 0) {
       fp = fopen(files->Outfile[iBody].cOut,"a");
       for (iCol=0;iCol<files->Outfile[iBody].iNumCols+iExtra;iCol++) {
+          //printf("%d %d\n",iBody,iCol);
+          //fflush(stdout);
 	        fprintd(fp,dCol[iCol],control->Io.iSciNot,control->Io.iDigits);
 	        fprintf(fp," ");
       }

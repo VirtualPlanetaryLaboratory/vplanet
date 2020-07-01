@@ -18,11 +18,6 @@
 
 */
 
-#include <stdio.h>
-#include <math.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
 #include "vplanet.h"
 
 /** Copy body properties from src to dest for cbp */
@@ -360,7 +355,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FREEECC].cDefault,"0.0");
   options[OPT_FREEECC].dDefault = 0.0;
   options[OPT_FREEECC].iType = 2;
-  options[OPT_FREEECC].iMultiFile = 1;
+  options[OPT_FREEECC].bMultiFile = 1;
   fnRead[OPT_FREEECC] = &ReadFreeEcc;
 
   sprintf(options[OPT_FREEINC].cName,"dFreeInc");
@@ -368,7 +363,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FREEINC].cDefault,"0.0 degrees");
   options[OPT_FREEINC].dDefault = 0.0;
   options[OPT_FREEINC].iType = 2;
-  options[OPT_FREEINC].iMultiFile = 1;
+  options[OPT_FREEINC].bMultiFile = 1;
   fnRead[OPT_FREEINC] = &ReadFreeInc;
 
   sprintf(options[OPT_LL13PHIAB].cName,"dLL13PhiAB");
@@ -376,7 +371,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13PHIAB].cDefault,"0.0 degrees");
   options[OPT_LL13PHIAB].dDefault = 0.0;
   options[OPT_LL13PHIAB].iType = 2;
-  options[OPT_LL13PHIAB].iMultiFile = 1;
+  options[OPT_LL13PHIAB].bMultiFile = 1;
   fnRead[OPT_LL13PHIAB] = &ReadLL13PhiAB;
 
   sprintf(options[OPT_CBPM0].cName,"dCBPM0");
@@ -384,7 +379,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CBPM0].cDefault,"0.0 degrees");
   options[OPT_CBPM0].dDefault = 0.0;
   options[OPT_CBPM0].iType = 2;
-  options[OPT_CBPM0].iMultiFile = 1;
+  options[OPT_CBPM0].bMultiFile = 1;
   fnRead[OPT_CBPM0] = &ReadCBPM0;
 
   sprintf(options[OPT_CBPZETA].cName,"dCBPZeta");
@@ -392,7 +387,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CBPZETA].cDefault,"0.0 degrees");
   options[OPT_CBPZETA].dDefault = 0.0;
   options[OPT_CBPZETA].iType = 2;
-  options[OPT_CBPZETA].iMultiFile = 1;
+  options[OPT_CBPZETA].bMultiFile = 1;
   fnRead[OPT_CBPZETA] = &ReadCBPZeta;
 
   sprintf(options[OPT_CBPPSI].cName,"dCBPPsi");
@@ -400,7 +395,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CBPPSI].cDefault,"0.0 degrees");
   options[OPT_CBPPSI].dDefault = 0.0;
   options[OPT_CBPPSI].iType = 2;
-  options[OPT_CBPPSI].iMultiFile = 1;
+  options[OPT_CBPPSI].bMultiFile = 1;
   fnRead[OPT_CBPPSI] = &ReadCBPPsi;
 
   /* Note: One should never actually set LL13 values as they are ALWAYS
@@ -414,7 +409,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13N0].cDefault,"1 /yr");
   options[OPT_LL13N0].dDefault = 1./YEARSEC;
   options[OPT_LL13N0].iType = 2;
-  options[OPT_LL13N0].iMultiFile = 1;
+  options[OPT_LL13N0].bMultiFile = 1;
   options[OPT_LL13N0].dNeg = 1./YEARSEC;
   sprintf(options[OPT_LL13N0].cNeg,"/Year");
   fnRead[OPT_LL13N0] = &ReadLL13N0;
@@ -424,7 +419,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13K0].cDefault,"1 /yr");
   options[OPT_LL13K0].dDefault = 1./YEARSEC;
   options[OPT_LL13K0].iType = 2;
-  options[OPT_LL13K0].iMultiFile = 1;
+  options[OPT_LL13K0].bMultiFile = 1;
   options[OPT_LL13K0].dNeg = 1./YEARSEC;
   sprintf(options[OPT_LL13K0].cNeg,"/Year");
   fnRead[OPT_LL13K0] = &ReadLL13K0;
@@ -434,7 +429,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13V0].cDefault,"1 /yr");
   options[OPT_LL13V0].dDefault = 1./YEARSEC;
   options[OPT_LL13V0].iType = 2;
-  options[OPT_LL13V0].iMultiFile = 1;
+  options[OPT_LL13V0].bMultiFile = 1;
   options[OPT_LL13V0].dNeg = 1./YEARSEC;
   sprintf(options[OPT_LL13V0].cNeg,"/Year");
   fnRead[OPT_LL13V0] = &ReadLL13V0;
@@ -534,7 +529,7 @@ void VerifyCBPPhiDot(BODY *body,OPTIONS *options,UPDATE *update,double dAge,int 
   update[iBody].pdCBPPhiDotBinary = &update[iBody].daDerivProc[update[iBody].iCBPPhiDot][0];
 }
 
-void fnPropertiesBinary(BODY *body, EVOLVE *evolve,UPDATE *update, int iBody){
+void fnPropsAuxBinary(BODY *body, EVOLVE *evolve,IO *io, UPDATE *update, int iBody){
 
   if(body[iBody].iBodyType == 0) { // CBP
     // If not including eqns in the matrix, compute main variables on the fly!
@@ -737,7 +732,7 @@ void VerifyBinary(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
 
   // Other things that must be set
   control->fnForceBehavior[iBody][iModule] = &fnForceBehaviorBinary;
-  control->fnPropsAux[iBody][iModule] = &fnPropertiesBinary;
+  control->fnPropsAux[iBody][iModule] = &fnPropsAuxBinary;
   control->Evolve.fnBodyCopy[iBody][iModule] = &BodyCopyBinary;
 }
 
@@ -806,7 +801,8 @@ void FinalizeUpdateCBPPhiDotBinary(BODY *body,UPDATE*update,int *iEqn,int iVar,i
 
 /** If the CBP's dSemi is less than the Holman stability limit, it's unstable and
     integration ends */
-int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,
+      UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
 
   double a_crit = fndHolmanStability(body);
 
@@ -826,7 +822,8 @@ int fbHaltHolmanUnstable(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *upd
 }
 
 /** If the secondary enters the roche lobe of the primary, HALT! */
-int fbHaltRocheLobe(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int fbHaltRocheLobe(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
 
   double r_crit = fndRocheLobe(body);
 
@@ -885,6 +882,92 @@ void WriteFreeIncBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
     fsUnitsAngle(units->iAngle,cUnit);
   }
 }
+
+/** Write the binary primary star radial position */
+void WriteBinPriRBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Compute current binary true anomaly
+  double meanAnomaly = body[1].dMeanMotion*body[0].dAge + body[1].dLL13PhiAB;
+  double eccAnomaly = fndMeanToEccentric(meanAnomaly,body[1].dEcc); // Solve Kepler's equation
+  double trueAnomaly = fndEccToTrue(eccAnomaly,body[1].dEcc);
+
+  // Compute binary separation
+  double radius = body[1].dSemi * (1.0 - body[1].dEcc*body[1].dEcc);
+  radius /= (1.0 + body[1].dEcc*cos(trueAnomaly-body[1].dLongP));
+
+  // Radial position of each star (- accounts for 180 deg phase offset)
+  double dInvMass = 1.0/(body[0].dMass+body[1].dMass);
+
+  *dTmp = body[1].dMass*radius*dInvMass;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
+/** Write the binary secondary star radial position */
+void WriteBinSecRBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Compute current binary true anomaly
+  double meanAnomaly = body[1].dMeanMotion*body[1].dAge + body[1].dLL13PhiAB;
+  double eccAnomaly = fndMeanToEccentric(meanAnomaly,body[1].dEcc); // Solve Kepler's equation
+  double trueAnomaly = fndEccToTrue(eccAnomaly,body[1].dEcc);
+
+  // Compute binary separation
+  double radius = body[1].dSemi * (1.0 - body[1].dEcc*body[1].dEcc);
+  radius /= (1.0 + body[1].dEcc*cos(trueAnomaly-body[1].dLongP));
+
+  // Radial position of each star (- accounts for 180 deg phase offset)
+  double dInvMass = 1.0/(body[0].dMass+body[1].dMass);
+
+  *dTmp = body[0].dMass*radius*dInvMass;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength,cUnit);
+  }
+}
+
+
+void WriteBinPriPhiBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Compute current binary true anomaly
+  double meanAnomaly = body[1].dMeanMotion*body[0].dAge + body[1].dLL13PhiAB;
+  double eccAnomaly = fndMeanToEccentric(meanAnomaly,body[1].dEcc); // Solve Kepler's equation
+
+  *dTmp = fndEccToTrue(eccAnomaly,body[1].dEcc);
+  if(output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
+
+void WriteBinSecPhiBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+
+  // Compute current binary true anomaly
+  double meanAnomaly = body[1].dMeanMotion*body[1].dAge + body[1].dLL13PhiAB;
+  double eccAnomaly = fndMeanToEccentric(meanAnomaly,body[1].dEcc); // Solve Kepler's equation
+
+  // Secondary is PI radians away from primary
+  *dTmp = fndEccToTrue(eccAnomaly,body[1].dEcc) + PI;
+  if(output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
 
 void WriteCBPPhiBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   if(body[iBody].iBodyType == 0) {
@@ -1066,6 +1149,24 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_CBPPHI].iModuleBit = BINARY;
   fnWrite[OUT_CBPPHI] = &WriteCBPPhiBinary;
 
+  sprintf(output[OUT_BINPRIPHI].cName,"BinPriPhi");
+  sprintf(output[OUT_BINPRIPHI].cDescr,"Binary primary star azimuthal angle");
+  sprintf(output[OUT_BINPRIPHI].cNeg,"Deg");
+  output[OUT_BINPRIPHI].bNeg = 1;
+  output[OUT_BINPRIPHI].dNeg = 1.0/DEGRAD;
+  output[OUT_BINPRIPHI].iNum = 1;
+  output[OUT_BINPRIPHI].iModuleBit = BINARY;
+  fnWrite[OUT_BINPRIPHI] = &WriteBinPriPhiBinary;
+
+  sprintf(output[OUT_BINSECPHI].cName,"BinSecPhi");
+  sprintf(output[OUT_BINSECPHI].cDescr,"Binary secondary star azimuthal angle");
+  sprintf(output[OUT_BINSECPHI].cNeg,"Deg");
+  output[OUT_BINSECPHI].bNeg = 1;
+  output[OUT_BINSECPHI].dNeg = 1.0/DEGRAD;
+  output[OUT_BINSECPHI].iNum = 1;
+  output[OUT_BINSECPHI].iModuleBit = BINARY;
+  fnWrite[OUT_BINSECPHI] = &WriteBinSecPhiBinary;
+
   sprintf(output[OUT_LL13N0].cName,"LL13N0");
   sprintf(output[OUT_LL13N0].cDescr,"Leung+Lee 2013 Mean Motion");
   sprintf(output[OUT_LL13N0].cNeg,"1/year");
@@ -1101,6 +1202,24 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_CBPR].iNum = 1;
   output[OUT_CBPR].iModuleBit = BINARY;
   fnWrite[OUT_CBPR] = &WriteCBPRBinary;
+
+  sprintf(output[OUT_BINPRIR].cName,"BinPriR");
+  sprintf(output[OUT_BINPRIR].cDescr,"Radial position of binary primary star");
+  output[OUT_BINPRIR].bNeg = 1;
+  sprintf(output[OUT_BINPRIR].cNeg,"AU");
+  output[OUT_BINPRIR].dNeg = 1.0/AUM;
+  output[OUT_BINPRIR].iNum = 1;
+  output[OUT_BINPRIR].iModuleBit = BINARY;
+  fnWrite[OUT_BINPRIR] = &WriteBinPriRBinary;
+
+  sprintf(output[OUT_BINSECR].cName,"BinSecR");
+  sprintf(output[OUT_BINSECR].cDescr,"Radial position of binary secondary star");
+  output[OUT_BINSECR].bNeg = 1;
+  sprintf(output[OUT_BINSECR].cNeg,"AU");
+  output[OUT_BINSECR].dNeg = 1.0/AUM;
+  output[OUT_BINSECR].iNum = 1;
+  output[OUT_BINSECR].iModuleBit = BINARY;
+  fnWrite[OUT_BINSECR] = &WriteBinSecRBinary;
 
   sprintf(output[OUT_CBPR0].cName,"R0");
   sprintf(output[OUT_CBPR0].cDescr,"CBP's Orbital Guiding Center Radius");
@@ -1174,6 +1293,9 @@ void LogBodyBinary(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
   for (iOut=OUTSTARTBINARY;iOut<OUTENDBINARY;iOut++) {
     if (output[iOut].iNum > 0) {
+      //Useful for debugging
+      //printf("%d\n",iOut);
+      //fflush(stdout);
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
     }
   }
@@ -1434,8 +1556,12 @@ double fndComputeArgPeri(BODY *body, int iBody) {
   }
 }
 
-/** Convert mean anomaly M to eccentric anomaly E
-    by solving kepler equation using Newton's Method
+/**
+Solves kepler's equation via Newton's method
+
+@param M double, Mean anomaly
+@param e, eccentricity
+*/
 double fndMeanToEccentric(double M, double e) {
   // Make sure M in [0,2pi)
   M = fmod(M,2.0*PI);
@@ -1471,36 +1597,7 @@ double fndMeanToEccentric(double M, double e) {
 
   return E;
 }
-*/
 
-/**
-Solves kepler's equation for one body
-
-@param M double, Mean anomaly
-@param e, eccentricity
-*/
-double fndMeanToEccentric(double M, double e) {
-  double di1, di2, di3, fi, fi1, fi2, fi3, dEccA;
-  if(M) {
-    dEccA = 0;
-  } else {
-    dEccA = M + fiSign(sin(M))*0.85*e;
-    di3 = 1.0;
-
-    while (di3 > 1e-10) {
-      fi = dEccA - e*sin(dEccA) - M;
-      fi1 = 1.0 - e*cos(dEccA);
-      fi2 = e*sin(dEccA);
-      fi3 = e*cos(dEccA);
-      di1 = -fi/fi1;
-      di2 = -fi/(fi1+0.5*di1*fi2);
-      di3 = -fi/(fi1+0.5*di2*fi2+1./6.*di2*di2*fi3);
-      dEccA += di3;
-    }
-  }
-
-  return dEccA;
-}
 
 /** Convert eccentric anomaly to true anomaly */
 double fndEccToTrue(double E, double e) {
@@ -1822,7 +1919,8 @@ double fndDMk(int k, BODY * body, int iBody) {
 /** Computes the CBP orbital radius */
 double fndCBPRBinary(BODY *body,SYSTEM *system,int *iaBody) {
 
-  int iBody = iaBody[0], k;
+  int iBody = iaBody[0];
+  int k;
 
   double dPsi = body[iBody].dCBPPsi;
   double dTime = body[iBody].dAge; // Time == Age of the body
@@ -2073,14 +2171,18 @@ double fndApproxEqTemp(BODY *body, int iBody, double dAlbedo) {
     planet averaged over the binary orbit relative to Earth's
     where F_Earth = 1361 W/m^2 */
 double fndApproxInsol(BODY *body, int iBody) {
-  // Compute the approximate flux
-  double flux = fndFluxApproxBinary(body,iBody);
+  // Compute the approximate flux if the stars have luminosities
+  if (body[0].dLuminosity > 0 && body[1].dLuminosity > 0) {
+    double flux = fndFluxApproxBinary(body,iBody);
 
-  return flux/FLUX_EARTH;
+    return flux/FLUX_EARTH;
+  } else {
+    return -1;
+  }
 }
 
 /** Dumps out a bunch of values to see if they agree with LL13 */
-void fnvbinaryDebug(BODY * body) {
+void fnvBinaryDebug(BODY * body) {
 
   fprintf(stderr,"binary debug information:\n");
   fprintf(stderr,"r0: %lf.\n",body[2].dR0/AUM);

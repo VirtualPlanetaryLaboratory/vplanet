@@ -17,8 +17,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "vplanet.h"
-#include "options.h"
-#include "output.h"
 
 void BodyCopyGalHabit(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
     dest[iBody].dPeriQ = src[iBody].dPeriQ;
@@ -459,7 +457,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_GALACDENSITY].cDefault,"0.102"); //need to find updated value
   options[OPT_GALACDENSITY].dDefault = 0.102;
   options[OPT_GALACDENSITY].iType = 2;
-  options[OPT_GALACDENSITY].iMultiFile = 0;
+  options[OPT_GALACDENSITY].bMultiFile = 0;
   fnRead[OPT_GALACDENSITY] = &ReadGalacDensity;
 
   sprintf(options[OPT_RANDSEED].cName,"iRandSeed");
@@ -467,7 +465,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_RANDSEED].cDefault,"42");
   options[OPT_RANDSEED].dDefault = 42;
   options[OPT_RANDSEED].iType = 1;
-  options[OPT_RANDSEED].iMultiFile = 0;
+  options[OPT_RANDSEED].bMultiFile = 0;
   fnRead[OPT_RANDSEED] = &ReadRandSeed;
 
   sprintf(options[OPT_ENCOUNTERRAD].cName,"dEncounterRad");
@@ -475,7 +473,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ENCOUNTERRAD].cDefault,"206265 AU");
   options[OPT_ENCOUNTERRAD].dDefault = 206265.0*AUM;
   options[OPT_ENCOUNTERRAD].iType = 2;
-  options[OPT_ENCOUNTERRAD].iMultiFile = 0;
+  options[OPT_ENCOUNTERRAD].bMultiFile = 0;
   fnRead[OPT_ENCOUNTERRAD] = &ReadEncounterRad;
 
   sprintf(options[OPT_RFORM].cName,"dRForm");
@@ -483,7 +481,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_RFORM].cDefault,"4.5 kpc");
   options[OPT_RFORM].dDefault = 4.5;
   options[OPT_RFORM].iType = 2;
-  options[OPT_RFORM].iMultiFile = 0;
+  options[OPT_RFORM].bMultiFile = 0;
   fnRead[OPT_RFORM] = &ReadRForm;
 
   sprintf(options[OPT_TMIGRATION].cName,"dTMigration");
@@ -491,7 +489,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TMIGRATION].cDefault,"3 Gy");
   options[OPT_TMIGRATION].dDefault = 3e9*YEARSEC;
   options[OPT_TMIGRATION].iType = 2;
-  options[OPT_TMIGRATION].iMultiFile = 0;
+  options[OPT_TMIGRATION].bMultiFile = 0;
   options[OPT_TMIGRATION].dNeg = YEARSEC;
   sprintf(options[OPT_TMIGRATION].cNeg,"Years");
   fnRead[OPT_TMIGRATION] = &ReadTMigration;
@@ -501,7 +499,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_RADIALMIGR].cDefault,"0");
   options[OPT_RADIALMIGR].dDefault = 0;
   options[OPT_RADIALMIGR].iType = 0;
-  options[OPT_RADIALMIGR].iMultiFile = 0;
+  options[OPT_RADIALMIGR].bMultiFile = 0;
   fnRead[OPT_RADIALMIGR] = &ReadRadialMigr;
 
   sprintf(options[OPT_GASDENSITY].cName,"dGasDensity");
@@ -509,7 +507,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_GASDENSITY].cDefault,"0.05 Msun pc^3");
   options[OPT_GASDENSITY].dDefault = 0.05;
   options[OPT_GASDENSITY].iType = 2;
-  options[OPT_GASDENSITY].iMultiFile = 0;
+  options[OPT_GASDENSITY].bMultiFile = 0;
   fnRead[OPT_GASDENSITY] = &ReadGasDensity;
 
   sprintf(options[OPT_DMDENSITY].cName,"dDMDensity");
@@ -517,7 +515,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DMDENSITY].cDefault,"0.01 Msun pc^3");
   options[OPT_DMDENSITY].dDefault = 0.01;
   options[OPT_DMDENSITY].iType = 2;
-  options[OPT_DMDENSITY].iMultiFile = 0;
+  options[OPT_DMDENSITY].bMultiFile = 0;
   fnRead[OPT_DMDENSITY] = &ReadDMDensity;
 
   sprintf(options[OPT_STARSCALEL].cName,"dStarScaleL");
@@ -525,7 +523,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_STARSCALEL].cDefault,"2.4 kpc");
   options[OPT_STARSCALEL].dDefault = 2.4;
   options[OPT_STARSCALEL].iType = 2;
-  options[OPT_STARSCALEL].iMultiFile = 0;
+  options[OPT_STARSCALEL].bMultiFile = 0;
   fnRead[OPT_STARSCALEL] = &ReadStarScaleL;
 
 
@@ -534,7 +532,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_STELLARENC].cDefault,"1");
   options[OPT_STELLARENC].dDefault = 1;
   options[OPT_STELLARENC].iType = 0;
-  options[OPT_STELLARENC].iMultiFile = 0;
+  options[OPT_STELLARENC].bMultiFile = 0;
   fnRead[OPT_STELLARENC] = &ReadStellarEnc;
 
   sprintf(options[OPT_OUTPUTENC].cName,"bOutputEnc");
@@ -542,7 +540,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OUTPUTENC].cDefault,"0");
   options[OPT_OUTPUTENC].dDefault = 0;
   options[OPT_OUTPUTENC].iType = 0;
-  options[OPT_OUTPUTENC].iMultiFile = 0;
+  options[OPT_OUTPUTENC].bMultiFile = 0;
   fnRead[OPT_OUTPUTENC] = &ReadOutputEnc;
 
   sprintf(options[OPT_TIMEEVOLVELDISP].cName,"bTimeEvolVelDisp");
@@ -550,7 +548,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TIMEEVOLVELDISP].cDefault,"1");
   options[OPT_TIMEEVOLVELDISP].dDefault = 1;
   options[OPT_TIMEEVOLVELDISP].iType = 0;
-  options[OPT_TIMEEVOLVELDISP].iMultiFile = 0;
+  options[OPT_TIMEEVOLVELDISP].bMultiFile = 0;
   fnRead[OPT_TIMEEVOLVELDISP] = &ReadTimeEvolVelDisp;
 
   sprintf(options[OPT_HOSTBINARY].cName,"bHostBinary");
@@ -558,7 +556,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBINARY].cDefault,"0");
   options[OPT_HOSTBINARY].dDefault = 0;
   options[OPT_HOSTBINARY].iType = 0;
-  options[OPT_HOSTBINARY].iMultiFile = 0;
+  options[OPT_HOSTBINARY].bMultiFile = 0;
   fnRead[OPT_HOSTBINARY] = &ReadHostBinary;
 
   sprintf(options[OPT_GALACTIDES].cName,"bGalacTides");
@@ -566,7 +564,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_GALACTIDES].cDefault,"1");
   options[OPT_GALACTIDES].dDefault = 1;
   options[OPT_GALACTIDES].iType = 0;
-  options[OPT_GALACTIDES].iMultiFile = 0;
+  options[OPT_GALACTIDES].bMultiFile = 0;
   fnRead[OPT_GALACTIDES] = &ReadGalacTides;
 
   sprintf(options[OPT_MINALLOWED].cName,"dMinAllowed");
@@ -574,7 +572,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MINALLOWED].cDefault,"1 AU");
   options[OPT_MINALLOWED].dDefault = AUM;
   options[OPT_MINALLOWED].iType = 2;
-  options[OPT_MINALLOWED].iMultiFile = 0;
+  options[OPT_MINALLOWED].bMultiFile = 0;
   options[OPT_MINALLOWED].dNeg = AUM;
   sprintf(options[OPT_MINALLOWED].cNeg,"AU");
   fnRead[OPT_MINALLOWED] = &ReadMinAllowed;
@@ -584,7 +582,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBINECC].cDefault,"0.51");
   options[OPT_HOSTBINECC].dDefault = 0.51;
   options[OPT_HOSTBINECC].iType = 2;
-  options[OPT_HOSTBINECC].iMultiFile = 0;
+  options[OPT_HOSTBINECC].bMultiFile = 0;
   fnRead[OPT_HOSTBINECC] = &ReadHostBinEcc;
 
   sprintf(options[OPT_HOSTBINSEMI].cName,"dHostBinSemi");
@@ -592,7 +590,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBINSEMI].cDefault,"17.57 AU");
   options[OPT_HOSTBINSEMI].dDefault = 17.57*AUM;
   options[OPT_HOSTBINSEMI].iType = 2;
-  options[OPT_HOSTBINSEMI].iMultiFile = 0;
+  options[OPT_HOSTBINSEMI].bMultiFile = 0;
   options[OPT_HOSTBINSEMI].dNeg = AUM;
   sprintf(options[OPT_HOSTBINSEMI].cNeg,"AU");
   fnRead[OPT_HOSTBINSEMI] = &ReadHostBinSemi;
@@ -602,7 +600,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBININC].cDefault,"60.0");
   options[OPT_HOSTBININC].dDefault = 60.0*DEGRAD;
   options[OPT_HOSTBININC].iType = 2;
-  options[OPT_HOSTBININC].iMultiFile = 0;
+  options[OPT_HOSTBININC].bMultiFile = 0;
   fnRead[OPT_HOSTBININC] = &ReadHostBinInc;
 
   sprintf(options[OPT_HOSTBINARGP].cName,"dHostBinArgP");
@@ -610,7 +608,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBINARGP].cDefault,"0.0");
   options[OPT_HOSTBINARGP].dDefault = 0.0;
   options[OPT_HOSTBINARGP].iType = 2;
-  options[OPT_HOSTBINARGP].iMultiFile = 0;
+  options[OPT_HOSTBINARGP].bMultiFile = 0;
   fnRead[OPT_HOSTBINARGP] = &ReadHostBinArgP;
 
   sprintf(options[OPT_HOSTBINLONGA].cName,"dHostBinLongA");
@@ -618,7 +616,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBINLONGA].cDefault,"0.0");
   options[OPT_HOSTBINLONGA].dDefault = 0.0;
   options[OPT_HOSTBINLONGA].iType = 2;
-  options[OPT_HOSTBINLONGA].iMultiFile = 0;
+  options[OPT_HOSTBINLONGA].bMultiFile = 0;
   fnRead[OPT_HOSTBINLONGA] = &ReadHostBinLongA;
 
   sprintf(options[OPT_HOSTBINMASS1].cName,"dHostBinMass1");
@@ -626,7 +624,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBINMASS1].cDefault,"1.1 Msun");
   options[OPT_HOSTBINMASS1].dDefault = 1.1*MSUN;
   options[OPT_HOSTBINMASS1].iType = 2;
-  options[OPT_HOSTBINMASS1].iMultiFile = 0;
+  options[OPT_HOSTBINMASS1].bMultiFile = 0;
   fnRead[OPT_HOSTBINMASS1] = &ReadHostBinMass1;
 }
 
@@ -805,7 +803,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
   int i, iEqn;
   int n;
   double dSigma, dDMR, dStarR, dGasR, dCurrentAge;
-  char cOut[NAMELEN];
+  char cOut[3*NAMELEN];
   FILE *fOut;
 
   srand(system->iSeed);
@@ -910,7 +908,7 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     body[iBody].daRelativeVel = malloc(3*sizeof(double));
 
 
-    control->fnPropsAux[iBody][iModule] = &PropertiesGalHabit;
+    control->fnPropsAux[iBody][iModule] = &PropsAuxGalHabit;
 
     iEqn = 0;
     if (body[iBody].bGalacTides) {
@@ -1082,7 +1080,8 @@ void FinalizeUpdateAngMZGalHabit(BODY *body,UPDATE *update,int *iEqn,int iVar,in
 /***************** GALHABIT Halts *****************/
 
 /* disruption? */
-int HaltDisrupt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltDisrupt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
 
   if (body[iBody].iDisrupt == 1) {
     if (io->iVerbose >= VERBPROG) {
@@ -1096,7 +1095,8 @@ int HaltDisrupt(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int i
 }
 
 /* bad impulse? */
-int HaltBadImpulse(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
+int HaltBadImpulse(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
+      fnUpdateVariable ***fnUpdate,int iBody) {
 
   if (body[iBody].iBadImpulse == 1) {
     if (io->iVerbose >= VERBPROG) {
@@ -1481,7 +1481,7 @@ void AddModuleGalHabit(CONTROL *control,MODULE *module,int iBody,int iModule) {
 }
 
 /************* GALHABIT Functions ***********/
-void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
+void PropsAuxGalHabit(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   double sinw, cosw, cosw_alt, sign, dMu, dL;
 
   /* calculate osculating elements */
@@ -1536,7 +1536,7 @@ void PropertiesGalHabit(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
 void ForceBehaviorGalHabit(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
   double dp, dkzi, dVMax, dCurrentAge, dMeanATmp, C;
   double sinw, cosw, cosw_alt, sign;
-  char cOut[NAMELEN];
+  char cOut[3*NAMELEN];
   int idr;
   FILE *fOut;
 

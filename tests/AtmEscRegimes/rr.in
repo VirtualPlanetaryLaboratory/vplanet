@@ -1,0 +1,32 @@
+# RR
+sName		rr        	            # Body's name
+saModules 	atmesc              # Active modules
+
+# Physical Parameters
+dMass		           -1 	        # Mass, negative -> Earth masses
+dRadius            4.264e-5     # Radius [AU]
+dRadGyra	         0.4	        # Radius of gyration; ang. mom. coeff.
+dAge               1.0e6        # Age [yr]
+dFXUV              0.001        # Incoming XUV flux in W/m^2
+
+# Orbital Parameters
+dEcc            0.00            # Eccentricity
+dSemi           -0.1            # Semi-major axis [AU]
+
+# ATMESC Parameters
+dXFrac                  1.0     # X-Ray/XUV absorption radius in planet radii
+dAtmXAbsEffH            0.15    # H X-ray/XUV absorption efficiency (epsilon)
+dSurfWaterMass   	      0.0     # Initial water mass, negative -> Earth oceans
+dEnvelopeMass           -0.1    # Initial H envelope mass, negative -> Earth Mass
+bInstantO2Sink          0       # Is Oxygen instantly absorbed by the surface?
+bUseBondiLimited        0       # Is the flow Bondi-limited?
+bHaltSurfaceDesiccated  0 	    # Halt when dry?
+bHaltEnvelopeGone       0	      # Halt when H enevlope evaporated?
+sWaterLossModel         lbexact # Luger & Barnes (2015) model
+dMinSurfWaterMass      	-1.e-5  # Planet is desiccated when water content drops below this (Earth oceans)
+dJeansTime		          -12.0   # Time when flow transitions to ballistic escape (Gyr)
+bUseEnergyLimited       0       # Is the flow energy-limited?
+bUseRRLimited           1       # Is the flow radiation/recombination-limited?
+bAtmEscAuto             0       # Should atmesc decide the escape regime?
+
+saOutputOrder 	Time -Mass -EnvelopeMass -BondiRadius -RocheRadius DEnvMassDt -RRCriticalFlux # Output options

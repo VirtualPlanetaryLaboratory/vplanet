@@ -1,7 +1,7 @@
-sSystemName               trappist1
+sSystemName               AbioticO2
 iVerbose                  5
 bOverwrite                1
-saBodyFiles               star.in e.in
+saBodyFiles               star.in b.in e.in
 sUnitMass                 solar
 sUnitLength               AU
 sUnitTime                 YEARS
@@ -12,5 +12,5 @@ dMinValue                 1e-10
 bDoForward                1
 bVarDt                    1
 dEta                      0.01
-dStopTime                 5e9
-dOutputTime               5e9
+dStopTime                 1e8
+dOutputTime               1e7

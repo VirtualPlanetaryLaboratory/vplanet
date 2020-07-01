@@ -9,7 +9,7 @@
   @date May 2014
 
 */
-#define NUM_THREADS 1
+#define NUM_THREADS 4
 
 #include "vplanet.h"
 
@@ -376,6 +376,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   }
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
+    iNumVars = update[iBody].iNumVars;
     for (iVar=0;iVar<iNumVars;iVar++) {
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
         // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
@@ -410,6 +411,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   }
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
+    iNumVars = update[iBody].iNumVars;
     for (iVar=0;iVar<iNumVars;iVar++) {
 
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){
@@ -446,6 +448,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   }
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
+    iNumVars = update[iBody].iNumVars;
     for (iVar=0;iVar<iNumVars;iVar++) {
 
       if (update[iBody].iaType[iVar][0] == 0 || update[iBody].iaType[iVar][0] == 3 || update[iBody].iaType[iVar][0] == 10){

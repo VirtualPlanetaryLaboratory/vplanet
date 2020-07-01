@@ -81,7 +81,7 @@ extern const double dTINY;
 /* Do not change these declarations */
 
 // IO limits for files, lines, and names
-#define OPTLEN        24    /* Maximum length of an option */
+#define OPTLEN        48    /* Maximum length of an option */
 #define OPTDESCR      128   /* Number of characters in option description */
 #define OPTLONDESCR   2048  /* Number of characters in option long description */
 #define LINE          256   /* Maximum number of characters in a line */

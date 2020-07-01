@@ -47,6 +47,9 @@ opt:
 cpp:
 	g++ -o vplanet src/*.c -lm -O3 -fopenmp -fpermissive -w -DGITVERSION=\"$(GITVERSION)\"
 
+parallel:
+	gcc -o vplanet src/*.c -lm -O3 -fopenmp -DGITVERSION=\"$(GITVERSION)\"
+
 profile:
 	-gcc -pg -o vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 

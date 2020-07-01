@@ -343,7 +343,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
     //int thread_num = omp_get_thread_num();
     //int cpu_num = sched_getcpu();
     //printf("Thread %3d is running on CPU %3d\n", thread_num, cpu_num); 
-    float daDerivVar;
+    double daDerivVar;
     iNumVars = update[iBody].iNumVars;
     for (iVar=0;iVar<iNumVars;iVar++) {
       daDerivVar = 0;
@@ -380,7 +380,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   #pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars,iNumEqns,iVar,iEqn)
   for (iBody=0;iBody<iNumBodies;iBody++) {
     iNumVars = update[iBody].iNumVars;
-    float daDerivVar;
+    double daDerivVar;
     for (iVar=0;iVar<iNumVars;iVar++) {
       daDerivVar = 0;
       iNumEqns = update[iBody].iNumEqns[iVar];
@@ -416,7 +416,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   #pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars,iNumEqns,iVar,iEqn)
   for (iBody=0;iBody<iNumBodies;iBody++) {
     iNumVars = update[iBody].iNumVars;
-    float daDerivVar;
+    double daDerivVar;
     for (iVar=0;iVar<iNumVars;iVar++) {
       daDerivVar = 0;
       iNumEqns = update[iBody].iNumEqns[iVar];
@@ -450,7 +450,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
 
   #pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars,iNumEqns,iVar,iEqn)
   for (iBody=0;iBody<iNumBodies;iBody++) {
-    float daDerivVar;
+    double daDerivVar;
     iNumVars = update[iBody].iNumVars;
     for (iVar=0;iVar<iNumVars;iVar++) {
       daDerivVar = 0;

@@ -760,7 +760,7 @@ int fiGetLowerBoundProximaCen(double dVal, const double *daArr, int iDim){
 
   XXX What are these arguments?
 */
-double fdProximaCenBiLinear(int iALEN, double const data_lo[iALEN], double const data_hi[iALEN], int xi, int yi, double dx, double dy) {
+double fdProximaCenBiLinear(int iALEN, double const data_lo[PROXIMACEN_ALEN], double const data_hi[PROXIMACEN_ALEN], int xi, int yi, double dx, double dy) {
 	double C0, C1, C;
 	if (dx == 0) {
 	  C0 = data_lo[xi];
@@ -782,7 +782,7 @@ For use with `fdProximaCenStellar()` to interpolate stellar properties
 
   XXX What are these arguments?
 */
-double fdProximaCenInterpolate(int iALEN, int iMLEN, double const xarr[iALEN], double const yarr[iMLEN], double const data_lo[iALEN], double const data_hi[iALEN], double A, double M, int *iError){
+double fdProximaCenInterpolate(int iALEN, int iMLEN, double const xarr[PROXIMACEN_ALEN], double const yarr[PROXIMACEN_MLEN], double const data_lo[PROXIMACEN_ALEN], double const data_hi[PROXIMACEN_ALEN], double A, double M, int *iError){
   double dx,dy;
   int xi,yi;
   int dxi,dyi;
@@ -1126,7 +1126,7 @@ int fiGetLowerBound(double val, const double *arr, int dim){
 
   XXX What are the arguments?
 */
-double fdBaraffeBiLinear(int iMLEN, int iALEN, double const data[iMLEN][iALEN], int xi, int yi, double dx, double dy) {
+double fdBaraffeBiLinear(int iMLEN, int iALEN, double const data[STELLAR_BAR_MLEN][STELLAR_BAR_ALEN], int xi, int yi, double dx, double dy) {
 	// Linearly interpolate over data, given indices of lower bounds on grid xi, yi
 	// and normalized distances to the interpolation point dx, dy.
 	double C0, C1, C;
@@ -1149,7 +1149,7 @@ double fdBaraffeBiLinear(int iMLEN, int iALEN, double const data[iMLEN][iALEN], 
 
   XXX What are the arguments?
 */
-double fdBaraffeBiCubic(int iMLEN, int iALEN, double const data[iMLEN][iALEN], int xi, int yi, double dx, double dy) {
+double fdBaraffeBiCubic(int iMLEN, int iALEN, double const data[STELLAR_BAR_MLEN][STELLAR_BAR_ALEN], int xi, int yi, double dx, double dy) {
 	double dvCoeff[16];
 	int j,k;
 	int ijkn = 0;
@@ -1200,7 +1200,7 @@ double fdBaraffeBiCubic(int iMLEN, int iALEN, double const data[iMLEN][iALEN], i
   XXX What are the arguments?
 
 */
-double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[iMLEN], double const yarr[iALEN], double const data[iMLEN][iALEN], double M, double A, int iOrder, int *iError){
+double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[STELLAR_BAR_MLEN], double const yarr[STELLAR_BAR_ALEN], double const data[STELLAR_BAR_MLEN][STELLAR_BAR_ALEN], double M, double A, int iOrder, int *iError){
 	double dx, dy;
 	int xi,yi;
 	int dxi, dyi;

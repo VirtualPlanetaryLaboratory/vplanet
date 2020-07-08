@@ -3423,8 +3423,9 @@ Determines if planet has a southern polar sea ice cap
 @param iBody Body in question
 @return 1 for southern polar ice cap, 0 for ice free south pole
 */
-int fbSouthIceCapSea(BODY *body, int iBody) {
-  int iLat, iNum=0;
+void fvSouthIceCapSea(BODY *body,int iBody,int *iLatIceEdge,
+      double *dLatIceEdge) {
+  int iLat, iNum=0,bCap;
 
   // Check for ice at south pole; no ice at -90 => No ice cap
   if (!fbIceLatSea(body,iBody,body[iBody].iNumLats-1)) {
@@ -3437,7 +3438,14 @@ int fbSouthIceCapSea(BODY *body, int iBody) {
   }
 
   // If made it here, must be a southern polar cap
-  return 1;
+  bCap = 1;
+  // Now find ice cap extent
+  for (iLat=body[iBody].iNumLats-1;iLat--) {
+    if (!fbIceLatSea(body,iBody,body[iBody].iNumLats-1)) {
+      // Found edge!
+      *iLatIceEdge=iLat;
+      *dLatIceEdge = -2*iLat/body[iBody].iNumLats * M_PI;
+  }
 }
 
 /**
@@ -3449,6 +3457,36 @@ Determines if planet has an equatorial ice belt on land
 */
 int fbIceBeltLand(BODY *body, int iBody) {
   int bSnowball,bNorthEdge,bSouthEdge,iLat,iEquator;
+
+  // If IceFree or Snowball, no icebelt
+  if (fbSnowballLand(body,iBody)) {
+    return 0;
+  }
+  if (fbIceFreeLan(body,iBody)) {
+    return 0;
+  }
+
+  // Does the planet have a NP Ice cap
+  if (fbNorthIceCapLand(body,iBody)) {
+    bNorthCap = 1;
+  } else {
+    bNorthCap = 0;
+  }
+
+  // Does the planet have a SP Ice cap
+  if (fbSouthIceCapLand(body,iBody)) {
+    bSouthCap = 1;
+  } else {
+    bSouthCap = 0;
+  }
+
+  if (bNorthCap) {
+
+  }
+
+  // Now start at NP and search for ice belt
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+
 
   iEquator = (int)(body[iBody].iNumLats/2);
 

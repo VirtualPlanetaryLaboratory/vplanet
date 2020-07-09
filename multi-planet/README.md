@@ -1,16 +1,6 @@
-# Multi-Planet: using multiproccesing with Vplanet
+# Multi-Planet: Multicore Simulations with VPLanet
 
-This program, dubbed 'Multi-Planet' works in conjuction with the Vplanet code found [here on Github](https://github.com/VirtualPlanetaryLaboratory/vplanet).
-
-## Installation of Multi-Planet
-
-Multi-planet will work if installed like so:
-
-```
-git clone https://github.com/caitlyn-wilhelm/vplanet-multiprocess
-```
-
-This assumes you already have Vplanet installed and are familiar with the vspace functionality.
+Use Multi-Planet to run a large number of simulations with more than one core. `Multi-planet` is designed to work with `vspace`.
 
 ## Multi-Planet Formatting
 

@@ -44,6 +44,12 @@ opt:
 	@echo 'bash:    echo '"'"'export PATH=$$PATH:$(CURDIR)'"'"' >> ~/.bashrc'
 	@echo "=========================================================================================================="
 
+cpp:
+	g++ -o vplanet src/*.c -lm -O3 -fopenmp -fpermissive -w -DGITVERSION=\"$(GITVERSION)\"
+
+parallel:
+	gcc -o vplanet src/*.c -lm -O3 -fopenmp -DGITVERSION=\"$(GITVERSION)\"
+
 profile:
 	-gcc -pg -o vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 
@@ -51,7 +57,7 @@ optprof:
 	-gcc -pg -o vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
 
 sanitize:
-	-gcc -g -fsanitize=address -o vplanet src/*.c -DGITVERSION=\"$(GITVERSION)\"
+	-gcc -g -fsanitize=address -o vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 
 test:
 	-gcc -o vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"

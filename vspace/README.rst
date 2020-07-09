@@ -1,6 +1,6 @@
 VSPACE
 ------
-A quick way to generate a parameter space for ``VPLanet``.
+``VSPACE`` is a tool to build input files for a parameter sweep. With ``VSPACE`` you can quickly and easily build input files with specific parameters with a specific type of distribution. In "Grid Mode" you can build input files in which the initial conditions have regular spacings within specified limits and with either linear or logarithmic spacings. In "Random Mode" the distributions of options can be uniform, Gaussian, sine, or cosine. Non-uniform distributions can be easily truncated, if necessary. 
 
 Installation
 ============
@@ -41,7 +41,6 @@ options you wish to change, in the following format:
     
 Notice that each file is given a separate line starting with ``file``. All options below
 that up to the next instance of ``file`` will belong to the previous entry. 
-
 Finally, it is advisable to provide a prefix for the generated directories: 
 
     trialname <some descriptive name for your simulations>

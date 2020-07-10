@@ -239,15 +239,15 @@ void SeaIce(BODY*,int);
 void MatrixSeasonal(BODY*,int);
 void SourceFSeas(BODY*,int,int);
 void Snowball(BODY*,int); // XXX Should change to int fbSnowball
-int fbIceBeltLand(BODY*,int);
-int fbIceBeltSea(BODY*,int);
-int fbSouthIceCapLand(BODY*,int);
-int fbSouthIceCapSea(BODY*,int);
-int fbNorthIceCapLand(BODY*,int);
-int fbNorthIceCapSea(BODY*,int);
 int fbSnowballLand(BODY*,int);
 int fbSnowballSea(BODY*,int);
 int fbIceFree(BODY*,int);
+void fvNorthIceCapLand(BODY*,int,double*,int*,int*);
+void fvNorthIceCapSea(BODY*,int,double*,int*,int*);
+void fvSouthIceCapLand(BODY*,int,double*,int*,int*);
+void fvSouthIceCapSea(BODY*,int,double*,int*,int*);
+void fvIceBeltLand(BODY*,int,double*,double*,int*,int*,int*);
+void fvIceBeltSea(BODY*,int,double*,double*,int*,int*,int*);
 
 double IceMassBalance(BODY*,int,int);
 

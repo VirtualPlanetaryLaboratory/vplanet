@@ -1977,43 +1977,64 @@ void WriteSnowball(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 
 void WriteNorthIceCapLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  int iFoo,bCap;
+  double dFoo;
 
-  *dTmp = (double)fbNorthIceCapLand(body,iBody);
+  fvNorthIceCapLand(body,iBody,&dFoo,&iFoo,&bCap);
+
+  *dTmp = (double)bCap;
   strcpy(cUnit,"");
 }
 
 void WriteNorthIceCapSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  int iFoo,bCap;
+  double dFoo;
 
-  *dTmp = (double)fbNorthIceCapSea(body,iBody);
+  fvNorthIceCapSea(body,iBody,&dFoo,&iFoo,&bCap);
+  *dTmp = (double)bCap;
   strcpy(cUnit,"");
 }
 
 void WriteSouthIceCapLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  int iFoo,bCap;
+  double dFoo;
 
-  *dTmp = (double)fbSouthIceCapLand(body,iBody);
+  fvSouthIceCapLand(body,iBody,&dFoo,&iFoo,&bCap);
+  *dTmp = (double)bCap;
   strcpy(cUnit,"");
 }
 
 void WriteSouthIceCapSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  int iFoo,bCap;
+  double dFoo;
 
-  *dTmp = (double)fbSouthIceCapSea(body,iBody);
+  fvSouthIceCapSea(body,iBody,&dFoo,&iFoo,&bCap);
+  *dTmp = (double)bCap;
   strcpy(cUnit,"");
 }
 
 void WriteIceBeltLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  int iFoo,iBar,bBelt;
+  double dFoo,dBar;
 
-  *dTmp = (double)fbIceBeltLand(body,iBody);
+  fvIceBeltLand(body,iBody,&dFoo,&dBar,&iFoo,&iBar,&bBelt);
+
+  *dTmp = (double)bBelt;
   strcpy(cUnit,"");
 }
 
 void WriteIceBeltSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  int iFoo,iBar,bBelt;
+  double dFoo,dBar;
 
-  *dTmp = (double)fbIceBeltSea(body,iBody);
+  fvIceBeltSea(body,iBody,&dFoo,&dBar,&iFoo,&iBar,&bBelt);
+
+  *dTmp = (double)bBelt;
   strcpy(cUnit,"");
 }
 
@@ -3213,6 +3234,39 @@ double BasalFlow(BODY *body, int iBody, int iLat){
 }
 
 /**
+If a test for a belt is false, assign these values to the referenced
+parameters.
+
+@param dLatIceEdgeNorth Northern latitude of ice edge
+@param dLatIceEdgeSouth Southern latitude of ice edge
+@param iLatIceEdgeNorth Index of northern ice edge latitude
+@param iLatIceEdgeNorth Index of southern ice edge latitude
+@param bBelt Boolean for ice belt presence
+*/
+void fvNoIceBelt(double *dLatIceEdgeNorth,double *dLatIceEdgeSouth,
+      int *iLatIceEdgeNorth,int *iLatIceEdgeSouth,int *bBelt) {
+  *iLatIceEdgeNorth = 0;
+  *iLatIceEdgeSouth = 0;
+  *dLatIceEdgeNorth = 100;
+  *dLatIceEdgeSouth = 100;
+  *bBelt = 0;
+}
+
+/**
+If a test for a cap  is false, assign these values to the referenced
+parameters.
+
+@param dLatIceEdge Latitude of ice edge
+@param iLatIceEdge Index of ice edge latitude
+@param bBoolean Boolean for ice cap presence
+*/
+void fvNoIceCap(double *dLatIceEdge,int *iLatIceEdge,int *bCap) {
+  *iLatIceEdge = 0;
+  *dLatIceEdge = 100;
+  *bCap = 0;
+}
+
+/**
 Is a specific latitude's sea component covered in ice?
 
 @param body Struct containing all body information and variables
@@ -3259,6 +3313,48 @@ int fbIceFree(BODY *body, int iBody) {
     bSea = fbIceLatSea(body,iBody,iLat);
     bLand = fbIceLatLand(body,iBody,iLat);
     if (bSea || bLand) {
+      return 0;
+    }
+  }
+
+  // No ice found
+  return 1;
+}
+
+/**
+Determines if planet has no sland ice
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@return 1 for no sea or land ice free, 0 for ice
+
+*/
+int fbIceFreeLand(BODY *body, int iBody) {
+  int iLat;
+
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+    if (fbIceLatLand(body,iBody,iLat)) {
+      return 0;
+    }
+  }
+
+  // No ice found
+  return 1;
+}
+
+/**
+Determines if planet has no sea ice
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@return 1 for no sea or land ice free, 0 for ice
+
+*/
+int fbIceFreeSea(BODY *body, int iBody) {
+  int iLat;
+
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+    if (fbIceLatSea(body,iBody,iLat)) {
       return 0;
     }
   }
@@ -3342,78 +3438,111 @@ int fbSnowballSea(BODY *body,int iBody) {
   return 0;
 }
 
-
-
 /**
-Determines if planet has a northern polar ice cap on land
+Determine if planet has a northern polar ice cap on land and the extent of the
+cap.
 
 @param body Struct containing all body information and variables
 @param iBody Body in question
-@return 1 for northern polar ice cap, 0 for ice free north pole
+@param iLatIceEdge Index of ice edge latitude
+@param dLatIceEdge Latitude of ice edge
+@param bCap 1 for northern polar ice cap, 0 for ice free north pole
 */
-int fbNorthIceCapLand(BODY *body, int iBody) {
+void fvNorthIceCapLand(BODY *body,int iBody,double *dLatIceEdge,
+      int *iLatIceEdge,int *bCap) {
   int iLat, iNum=0;
 
   // Check for ice at north pole; no ice at +90 => No ice cap
   if (!fbIceLatLand(body,iBody,0)) {
-    return 0;
+    fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
   }
 
   // Icy north pole; does ice extend to other pole?
   if (fbSnowballLand(body,iBody)) {
-    return 0;
+    fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
   }
 
   // If made it here, must be a northern polar cap
-  return 1;
+  *bCap = 1;
+  // Now find ice cap extent
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+    if (!fbIceLatLand(body,iBody,body[iBody].iNumLats-1)) {
+      // Found edge!
+      *iLatIceEdge=iLat;
+      *dLatIceEdge = iLat/body[iBody].iNumLats * PI;
+    }
+  }
 }
 
 /**
-Determines if planet has a northern polar see ice cap
+Determines if planet has a northern polar sea ice cap and the extent of the cap.
 
 @param body Struct containing all body information and variables
 @param iBody Body in question
-@return 1 for northern polar ice cap, 0 for ice free north pole
+@param iLatIceEdge Index of ice edge latitude
+@param dLatIceEdge Latitude of ice edge
+@param bCap 1 for northern polar ice cap, 0 for ice free north pole
 */
-int fbNorthIceCapSea(BODY *body, int iBody) {
+void fvNorthIceCapSea(BODY *body, int iBody,double *dLatIceEdge,
+      int *iLatIceEdge,int *bCap) {
   int iLat, iNum=0;
 
   // Check for ice at north pole; no ice at +90 => No ice cap
   if (!fbIceLatSea(body,iBody,0)) {
-    return 0;
+    fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
   }
 
   // Icy north pole; does ice extend to other pole?
   if (fbSnowballSea(body,iBody)) {
-    return 0;
+    fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
   }
 
   // If made it here, must be a northern polar cap
-  return 1;
+  *bCap = 1;
+  // Now find ice cap extent
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+    if (!fbIceLatSea(body,iBody,body[iBody].iNumLats-1)) {
+      // Found edge!
+      *iLatIceEdge=iLat;
+      *dLatIceEdge = iLat/body[iBody].iNumLats * PI;
+    }
+  }
 }
 
 /**
-Determines if planet has a southern polar ice cap on land
+Determines if planet has a southern polar ice cap on land and the extent of the
+cap.
 
 @param body Struct containing all body information and variables
 @param iBody Body in question
-@return 1 for southern polar ice cap, 0 for ice free south pole
+@param iLatIceEdge Index of ice edge latitude
+@param dLatIceEdge Latitude of ice edge
+@param bCap 1 for northern polar ice cap, 0 for ice free north pole
 */
-int fbSouthIceCapLand(BODY *body, int iBody) {
+void fvSouthIceCapLand(BODY *body,int iBody,double *dLatIceEdge,
+      int *iLatIceEdge,int *bCap) {
   int iLat, iNum=0;
 
   // Check for ice at south pole; no ice at -90 => No ice cap
   if (!fbIceLatLand(body,iBody,body[iBody].iNumLats-1)) {
-    return 0;
+    fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
   }
 
   // Icy south pole; does ice extend to other pole?
   if (fbSnowballLand(body,iBody)) {
-    return 0;
+    fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
   }
 
   // If made it here, must be a southern polar cap
-  return 1;
+  *bCap = 1;
+  // Now find ice cap extent
+  for (iLat=body[iBody].iNumLats-1;iLat>0;iLat--) {
+    if (!fbIceLatSea(body,iBody,body[iBody].iNumLats-1)) {
+      // Found edge!
+      *iLatIceEdge=iLat;
+      *dLatIceEdge = -(body[iBody].iNumLats-iLat-1)/body[iBody].iNumLats * PI;
+    }
+  }
 }
 
 /**
@@ -3421,30 +3550,33 @@ Determines if planet has a southern polar sea ice cap
 
 @param body Struct containing all body information and variables
 @param iBody Body in question
-@return 1 for southern polar ice cap, 0 for ice free south pole
+@param iLatIceEdge Index of ice edge latitude
+@param dLatIceEdge Latitude of ice edge
+@param bCap 1 for northern polar ice cap, 0 for ice free north pole
 */
-void fvSouthIceCapSea(BODY *body,int iBody,int *iLatIceEdge,
-      double *dLatIceEdge) {
-  int iLat, iNum=0,bCap;
+void fvSouthIceCapSea(BODY *body,int iBody,double *dLatIceEdge,
+      int *iLatIceEdge,int *bCap) {
+  int iLat, iNum=0;
 
   // Check for ice at south pole; no ice at -90 => No ice cap
   if (!fbIceLatSea(body,iBody,body[iBody].iNumLats-1)) {
-    return 0;
+    fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
   }
 
   // Icy south pole; does ice extend to other pole?
   if (fbSnowballSea(body,iBody)) {
-    return 0;
+    fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
   }
 
   // If made it here, must be a southern polar cap
-  bCap = 1;
+  *bCap = 1;
   // Now find ice cap extent
-  for (iLat=body[iBody].iNumLats-1;iLat--) {
+  for (iLat=body[iBody].iNumLats-1;iLat<0;iLat--) {
     if (!fbIceLatSea(body,iBody,body[iBody].iNumLats-1)) {
       // Found edge!
       *iLatIceEdge=iLat;
-      *dLatIceEdge = -2*iLat/body[iBody].iNumLats * M_PI;
+      *dLatIceEdge = -(body[iBody].iNumLats-iLat-1)/body[iBody].iNumLats * PI;
+    }
   }
 }
 
@@ -3453,43 +3585,200 @@ Determines if planet has an equatorial ice belt on land
 
 @param body Struct containing all body information and variables
 @param iBody Body in question
-@return 1 for ice belt, 0 for ice free equator
+@param iLatIceEdgeNorth Index of northern ice edge latitude
+@param iLatIceEdgeSouth Index of southern ice edge latitude
+@param dLatIceEdgeNorth Latitude of northern ice edge
+@param dLatIceEdgeSouth Latitude of southern ice edge
+@param bBelt 1 for northern polar ice cap, 0 for ice free north pole
 */
-int fbIceBeltLand(BODY *body, int iBody) {
-  int bSnowball,bNorthEdge,bSouthEdge,iLat,iEquator;
+void fvIceBeltLand(BODY *body,int iBody,double *dLatIceEdgeNorth,
+      double *dLatIceEdgeSouth,int *iLatIceEdgeNorth,int *iLatIceEdgeSouth,
+      int *bBelt) {
+  int bCapNorth,bCapSouth,bIce;
+  int iLat,iEquator,iLatStart,iLatEnd,iLatCapNorth,iLatCapSouth;
+  double dLatCapNorth,dLatCapSouth;
 
-  // If IceFree or Snowball, no icebelt
+  // If IceFree or Snowball, no ice belt
   if (fbSnowballLand(body,iBody)) {
-    return 0;
+    fvNoIceBelt(dLatIceEdgeNorth,dLatIceEdgeSouth,iLatIceEdgeNorth,
+        iLatIceEdgeSouth,bBelt);
   }
-  if (fbIceFreeLan(body,iBody)) {
-    return 0;
+  if (fbIceFreeLand(body,iBody)) {
+    fvNoIceBelt(dLatIceEdgeNorth,dLatIceEdgeSouth,iLatIceEdgeNorth,
+        iLatIceEdgeSouth,bBelt);
   }
 
-  // Does the planet have a NP Ice cap
-  if (fbNorthIceCapLand(body,iBody)) {
-    bNorthCap = 1;
+  // If made it here, belt is possible, so let's look!
+  *iLatIceEdgeNorth=0;
+  *iLatIceEdgeSouth=0;
+  iEquator = (int)(body[iBody].iNumLats/2);
+
+  // Get parameters for Northern Ice Cap
+  fvNorthIceCapLand(body,iBody,&dLatCapNorth,&iLatCapNorth,&bCapNorth);
+  fvSouthIceCapLand(body,iBody,&dLatCapSouth,&iLatCapSouth,&bCapSouth);
+
+  // Assign starting and ending latitudes for belt search
+  if (bCapNorth) {
+    iLatStart = iLatCapNorth;
   } else {
-    bNorthCap = 0;
+    iLatStart = 0;
   }
 
-  // Does the planet have a SP Ice cap
-  if (fbSouthIceCapLand(body,iBody)) {
-    bSouthCap = 1;
+  // Assign starting and ending latitudes for belt search
+  if (bCapSouth) {
+    iLatEnd = iLatCapSouth;
   } else {
-    bSouthCap = 0;
-  }
-
-  if (bNorthCap) {
-
+    iLatEnd = body[iBody].iNumLats;
   }
 
   // Now start at NP and search for ice belt
-  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+  bIce=0; // Start at ice free latitutde
+  for (iLat=iLatStart;iLat<iLatEnd;iLat++) {
+    if (!bIce && fbIceLatLand(body,iBody,iLat)) {
+      // Found northern edge of ice belt!
+      *iLatIceEdgeNorth=iLat;
+      // Are we above or below equator?
+      if (iLat < iEquator) {
+        // Northern hemisphere
+        *dLatIceEdgeNorth = iLat/body[iBody].iNumLats * PI;
+      } else if (iLat < iEquator) {
+        // Southern hemisphere
+        *dLatIceEdgeNorth = -(body[iBody].iNumLats-iLat-1)/body[iBody].iNumLats * PI;
+      } else {
+        // Equator
+        *dLatIceEdgeNorth = 0;
+      }
+      // Now into ice belt
+      bIce = 1;
+    }
 
+    if (bIce && !fbIceLatLand(body,iBody,iLat)) {
+      // Found southern edge of ice belt!
+      *iLatIceEdgeSouth=iLat;
+      // Are we above or below equator?
+      if (iLat < iEquator) {
+        // Northern hemisphere
+        *dLatIceEdgeSouth = iLat/body[iBody].iNumLats * PI;
+      } else if (iLat < iEquator) {
+        // Southern hemisphere
+        *dLatIceEdgeSouth = -(body[iBody].iNumLats-iLat-1)/body[iBody].iNumLats * PI;
+      } else {
+        // Equator
+        *dLatIceEdgeSouth = 0;
+      }
+    }
+  }
 
+  // Was a belt found?
+  if (*iLatIceEdgeNorth != 0 && *iLatIceEdgeSouth != 0) {
+    *bBelt = 1;
+  } else {
+    fvNoIceBelt(dLatIceEdgeNorth,dLatIceEdgeSouth,iLatIceEdgeNorth,
+        iLatIceEdgeSouth,bBelt);
+  }
+}
+
+/**
+Determines if planet has an equatorial ice belt on sea
+
+@param body Struct containing all body information and variables
+@param iBody Body in question
+@param iLatIceEdgeNorth Index of northern ice edge latitude
+@param iLatIceEdgeSouth Index of southern ice edge latitude
+@param dLatIceEdgeNorth Latitude of northern ice edge
+@param dLatIceEdgeSouth Latitude of southern ice edge
+@param bBelt 1 for northern polar ice cap, 0 for ice free north pole
+*/
+void fvIceBeltSea(BODY *body,int iBody,double *dLatIceEdgeNorth,
+      double *dLatIceEdgeSouth,int *iLatIceEdgeNorth,int *iLatIceEdgeSouth,
+      int *bBelt) {
+  int bCapNorth,bCapSouth,bIce;
+  int iLat,iEquator,iLatStart,iLatEnd,iLatCapNorth,iLatCapSouth;
+  double dLatCapNorth,dLatCapSouth;
+
+  // If IceFree or Snowball, no ice belt
+  if (fbSnowballSea(body,iBody)) {
+    fvNoIceBelt(dLatIceEdgeNorth,dLatIceEdgeSouth,iLatIceEdgeNorth,
+        iLatIceEdgeSouth,bBelt);
+  }
+  if (fbIceFreeSea(body,iBody)) {
+    fvNoIceBelt(dLatIceEdgeNorth,dLatIceEdgeSouth,iLatIceEdgeNorth,
+        iLatIceEdgeSouth,bBelt);
+  }
+
+  // If made it here, belt is possible, so let's look!
+  *iLatIceEdgeNorth=0;
+  *iLatIceEdgeSouth=0;
   iEquator = (int)(body[iBody].iNumLats/2);
 
+  // Get parameters for Northern Ice Cap
+  fvNorthIceCapSea(body,iBody,&dLatCapNorth,&iLatCapNorth,&bCapNorth);
+  fvSouthIceCapSea(body,iBody,&dLatCapSouth,&iLatCapSouth,&bCapSouth);
+
+  // Assign starting and ending latitudes for belt search
+  if (bCapNorth) {
+    iLatStart = iLatCapNorth;
+  } else {
+    iLatStart = 0;
+  }
+
+  // Assign starting and ending latitudes for belt search
+  if (bCapSouth) {
+    iLatEnd = iLatCapSouth;
+  } else {
+    iLatEnd = body[iBody].iNumLats;
+  }
+
+  // Now start at NP and search for ice belt
+  bIce=0; // Start at ice free latitutde
+  for (iLat=iLatStart;iLat<iLatEnd;iLat++) {
+    if (!bIce && fbIceLatSea(body,iBody,iLat)) {
+      // Found northern edge of ice belt!
+      *iLatIceEdgeNorth=iLat;
+      // Are we above or below equator?
+      if (iLat < iEquator) {
+        // Northern hemisphere
+        *dLatIceEdgeNorth = iLat/body[iBody].iNumLats * PI;
+      } else if (iLat < iEquator) {
+        // Southern hemisphere
+        *dLatIceEdgeNorth = -(body[iBody].iNumLats-iLat-1)/body[iBody].iNumLats * PI;
+      } else {
+        // Equator
+        *dLatIceEdgeNorth = 0;
+      }
+      // Now into ice belt
+      bIce = 1;
+    }
+
+    if (bIce && !fbIceLatSea(body,iBody,iLat)) {
+      // Found southern edge of ice belt!
+      *iLatIceEdgeSouth=iLat;
+      // Are we above or below equator?
+      if (iLat < iEquator) {
+        // Northern hemisphere
+        *dLatIceEdgeSouth = iLat/body[iBody].iNumLats * PI;
+      } else if (iLat < iEquator) {
+        // Southern hemisphere
+        *dLatIceEdgeSouth = -(body[iBody].iNumLats-iLat-1)/body[iBody].iNumLats * PI;
+      } else {
+        // Equator
+        *dLatIceEdgeSouth = 0;
+      }
+    }
+  }
+
+  // Was a belt found?
+  if (*iLatIceEdgeNorth != 0 && *iLatIceEdgeSouth != 0) {
+    *bBelt = 1;
+  } else {
+    fvNoIceBelt(dLatIceEdgeNorth,dLatIceEdgeSouth,iLatIceEdgeNorth,
+        iLatIceEdgeSouth,bBelt);
+  }
+}
+
+
+
+/*
   // Is equator ice free?
   if (!fbIceLatLand(body,iBody,iEquator)) {
     return 0;
@@ -3518,6 +3807,7 @@ int fbIceBeltLand(BODY *body, int iBody) {
 
   return 0;
 }
+*/
 
 /**
 Determines if planet has an equatorial ice belt on land
@@ -3526,6 +3816,7 @@ Determines if planet has an equatorial ice belt on land
 @param iBody Body in question
 @return 1 for ice belt, 0 for ice free equator
 */
+/*
 int fbIceBeltSea(BODY *body, int iBody) {
   int bSnowball,bNorthEdge,bSouthEdge,iLat,iEquator;
 
@@ -3559,7 +3850,7 @@ int fbIceBeltSea(BODY *body, int iBody) {
 
   return 0;
 }
-
+*/
 
 /**
 Standard properties function for POISE. Updates auxiliary quantities

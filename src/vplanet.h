@@ -617,7 +617,7 @@ struct BODY {
   double *daFlux;            /**< Meridional surface heat flux */
   double *daFluxIn;          /**< Incoming surface flux (insolation) */
   double *daFluxOut;         /**< Outgoing surface flux (longwave) */
-  double *daLats;            /**< Latitude of each cell (centered) */
+  double *daLats;            /**< Latitude of each cell (centered); South Pole is 0 */
   double *daPeakInsol;       /**< Annually averaged insolation at each latitude */
   double *daTGrad;           /**< Gradient of temperature (meridional) */
 

@@ -3297,7 +3297,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_NORTHICECAPLATLAND].iNum = 1;
   output[OUT_NORTHICECAPLATLAND].iModuleBit = POISE;
   fnWrite[OUT_NORTHICECAPLATLAND] = &WriteIceCapNorthLatLand;
-  sprintf(output[OUT_NORTHICECAPLATLAND].cDescr,
+  sprintf(output[OUT_NORTHICECAPLATLAND].cLongDescr,
     "If a northern land ice cap is present, return the latitude of its "
     "southern edge. If not present, return +100 degrees.");
 
@@ -3308,7 +3308,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_NORTHICECAPLATSEA].iNum = 1;
   output[OUT_NORTHICECAPLATSEA].iModuleBit = POISE;
   fnWrite[OUT_NORTHICECAPLATSEA] = &WriteIceCapNorthLatSea;
-  sprintf(output[OUT_NORTHICECAPLATSEA].cDescr,
+  sprintf(output[OUT_NORTHICECAPLATSEA].cLongDescr,
     "If a northern sea ice cap is present, return the latitude of its "
     "southern edge. If not present, return +100 degrees.");
 
@@ -3319,7 +3319,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SOUTHICECAPLATLAND].iNum = 1;
   output[OUT_SOUTHICECAPLATLAND].iModuleBit = POISE;
   fnWrite[OUT_SOUTHICECAPLATLAND] = &WriteIceCapSouthLatLand;
-  sprintf(output[OUT_SOUTHICECAPLATLAND].cDescr,
+  sprintf(output[OUT_SOUTHICECAPLATLAND].cLongDescr,
     "If a southern land ice cap is present, return the latitude of its "
     "northern edge. If not present, return -100 degrees.");
 
@@ -3330,7 +3330,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SOUTHICECAPLATSEA].iNum = 1;
   output[OUT_SOUTHICECAPLATSEA].iModuleBit = POISE;
   fnWrite[OUT_SOUTHICECAPLATSEA] = &WriteIceCapSouthLatLand;
-  sprintf(output[OUT_SOUTHICECAPLATSEA].cDescr,
+  sprintf(output[OUT_SOUTHICECAPLATSEA].cLongDescr,
     "If a southern sea ice cap is present, return the latitude of its "
     "northern edge. If not present, return -100 degrees.");
 
@@ -3341,7 +3341,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_NORTHICEBELTLATLAND].iNum = 1;
   output[OUT_NORTHICEBELTLATLAND].iModuleBit = POISE;
   fnWrite[OUT_NORTHICEBELTLATLAND] = &WriteIceBeltNorthLatLand;
-  sprintf(output[OUT_NORTHICEBELTLATLAND].cDescr,
+  sprintf(output[OUT_NORTHICEBELTLATLAND].cLongDescr,
     "If a land ice belt is present, return the latitude of its northern edge. "
     "If not present, return 0. Note that some ice belts may in fact have a "
     "northern edge at the equator.");
@@ -3353,7 +3353,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_NORTHICEBELTLATSEA].iNum = 1;
   output[OUT_NORTHICEBELTLATSEA].iModuleBit = POISE;
   fnWrite[OUT_NORTHICEBELTLATSEA] = &WriteIceBeltNorthLatSea;
-  sprintf(output[OUT_NORTHICEBELTLATSEA].cDescr,
+  sprintf(output[OUT_NORTHICEBELTLATSEA].cLongDescr,
     "If a sea ice belt is present, return the latitude of its northern edge. "
     "If not present, return 0. Note that some ice belts may in fact have a "
     "northern edge at the equator.");
@@ -3365,7 +3365,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SOUTHICEBELTLATLAND].iNum = 1;
   output[OUT_SOUTHICEBELTLATLAND].iModuleBit = POISE;
   fnWrite[OUT_SOUTHICEBELTLATLAND] = &WriteIceBeltSouthLatLand;
-  sprintf(output[OUT_SOUTHICEBELTLATLAND].cDescr,
+  sprintf(output[OUT_SOUTHICEBELTLATLAND].cLongDescr,
     "If a land ice belt is present, return the latitude of its southern edge. "
     "If not present, return 0. Note that some ice belts may in fact have a "
     "southern edge at the equator.");
@@ -3377,7 +3377,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SOUTHICEBELTLATSEA].iNum = 1;
   output[OUT_SOUTHICEBELTLATSEA].iModuleBit = POISE;
   fnWrite[OUT_SOUTHICEBELTLATSEA] = &WriteIceBeltSouthLatSea;
-  sprintf(output[OUT_SOUTHICEBELTLATSEA].cDescr,
+  sprintf(output[OUT_SOUTHICEBELTLATSEA].cLongDescr,
     "If a sea ice belt is present, return the latitude of its southern edge. "
     "If not present, return 0. Note that some ice belts may in fact have a "
     "southern edge at the equator.");
@@ -3683,7 +3683,7 @@ void fvNorthIceCapLand(BODY *body,int iBody,double *dLatIceEdge,
   int iLat, iNum=0;
 
   // Check for ice at north pole; no ice at +90 => No ice cap
-  if (!fbIceLatLand(body,iBody,0)) {
+  if (!fbIceLatLand(body,iBody,body[iBody].iNumLats-1)) {
     // Assign values for no cap
     fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
     return;
@@ -3699,13 +3699,17 @@ void fvNorthIceCapLand(BODY *body,int iBody,double *dLatIceEdge,
   // If made it here, must be a northern polar cap
   *bCap = 1;
   // Now find ice cap extent
-  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+  for (iLat=body[iBody].iNumLats-1;iLat>=0;iLat--) {
     if (!fbIceLatLand(body,iBody,iLat)) {
       // Found edge!
-      *iLatIceEdge=iLat;
-      *dLatIceEdge = iLat/body[iBody].iNumLats * PI;
+      *iLatIceEdge = iLat;
+      *dLatIceEdge = body[iBody].daLats[iLat];
+      return;
     }
   }
+
+  fprintf(stderr,"ERROR: Failure in fvNorthIceCapLand.\n");
+  exit(EXIT_INT);
 }
 
 /**
@@ -3722,7 +3726,7 @@ void fvNorthIceCapSea(BODY *body, int iBody,double *dLatIceEdge,
   int iLat, iNum=0;
 
   // Check for ice at north pole; no ice at +90 => No ice cap
-  if (!fbIceLatSea(body,iBody,0)) {
+  if (!fbIceLatSea(body,iBody,body[iBody].iNumLats-1)) {
     // Assign values for no cap
     fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
     return;
@@ -3738,13 +3742,17 @@ void fvNorthIceCapSea(BODY *body, int iBody,double *dLatIceEdge,
   // If made it here, must be a northern polar cap
   *bCap = 1;
   // Now find ice cap extent
-  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+  for (iLat=body[iBody].iNumLats-1;iLat>=0;iLat--) {
     if (!fbIceLatSea(body,iBody,iLat)) {
       // Found edge!
-      *iLatIceEdge=iLat;
-      *dLatIceEdge = iLat/body[iBody].iNumLats * PI;
+      *iLatIceEdge = iLat;
+      *dLatIceEdge = body[iBody].daLats[iLat];
+      return;
     }
   }
+
+  fprintf(stderr,"ERROR: Failure in fvNorthIceCapSea.\n");
+  exit(EXIT_INT);
 }
 
 /**
@@ -3762,7 +3770,7 @@ void fvSouthIceCapLand(BODY *body,int iBody,double *dLatIceEdge,
   int iLat, iNum=0;
 
   // Check for ice at south pole; no ice at -90 => No ice cap
-  if (!fbIceLatLand(body,iBody,body[iBody].iNumLats-1)) {
+  if (!fbIceLatLand(body,iBody,0)) {
     // Assign values for no cap
     fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
     return;
@@ -3778,13 +3786,17 @@ void fvSouthIceCapLand(BODY *body,int iBody,double *dLatIceEdge,
   // If made it here, must be a southern polar cap
   *bCap = 1;
   // Now find ice cap extent
-  for (iLat=body[iBody].iNumLats-1;iLat>0;iLat--) {
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
     if (!fbIceLatSea(body,iBody,iLat)) {
       // Found edge!
-      *iLatIceEdge=iLat;
-      *dLatIceEdge = -(body[iBody].iNumLats-iLat-1)/body[iBody].iNumLats * PI;
+      *iLatIceEdge = iLat;
+      *dLatIceEdge = body[iBody].daLats[iLat];
+      return;
     }
   }
+
+  fprintf(stderr,"ERROR: Failure in fvSouthIceCapLand.\n");
+  exit(EXIT_INT);
 }
 
 /**
@@ -3801,7 +3813,7 @@ void fvSouthIceCapSea(BODY *body,int iBody,double *dLatIceEdge,
   int iLat, iNum=0;
 
   // Check for ice at south pole; no ice at -90 => No ice cap
-  if (!fbIceLatSea(body,iBody,body[iBody].iNumLats-1)) {
+  if (!fbIceLatSea(body,iBody,0)) {
     // Assign values for no cap
     fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
     return;
@@ -3817,13 +3829,17 @@ void fvSouthIceCapSea(BODY *body,int iBody,double *dLatIceEdge,
   // If made it here, must be a southern polar cap
   *bCap = 1;
   // Now find ice cap extent
-  for (iLat=body[iBody].iNumLats-1;iLat<0;iLat--) {
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
     if (!fbIceLatSea(body,iBody,iLat)) {
       // Found edge!
-      *iLatIceEdge=iLat;
-      *dLatIceEdge = -(body[iBody].iNumLats-iLat-1)/body[iBody].iNumLats * PI;
+      *iLatIceEdge = iLat;
+      *dLatIceEdge = body[iBody].daLats[iLat];
+      return;
     }
   }
+
+  fprintf(stderr,"ERROR: Failure in fvSouthIceCapSea.\n");
+  exit(EXIT_INT);
 }
 
 /**
@@ -3840,7 +3856,7 @@ Determines if planet has an equatorial ice belt on land
 void fvIceBeltLand(BODY *body,int iBody,double *dLatIceEdgeNorth,
       double *dLatIceEdgeSouth,int *iLatIceEdgeNorth,int *iLatIceEdgeSouth,
       int *bBelt) {
-  int bCapNorth,bCapSouth,bIce;
+  int bCapNorth,bCapSouth,iIce;
   int iLat,iEquator,iLatStart,iLatEnd,iLatCapNorth,iLatCapSouth;
   double dLatCapNorth,dLatCapSouth;
 
@@ -3868,54 +3884,34 @@ void fvIceBeltLand(BODY *body,int iBody,double *dLatIceEdgeNorth,
   fvSouthIceCapLand(body,iBody,&dLatCapSouth,&iLatCapSouth,&bCapSouth);
 
   // Assign starting and ending latitudes for belt search
-  if (bCapNorth) {
-    iLatStart = iLatCapNorth;
+  if (bCapSouth) {
+    iLatStart = iLatCapSouth;
   } else {
     iLatStart = 0;
   }
-
-  // Assign starting and ending latitudes for belt search
-  if (bCapSouth) {
-    iLatEnd = iLatCapSouth;
+  if (bCapNorth) {
+    iLatEnd = iLatCapNorth+1; // Add 1 so as to check final latitude in for loop
   } else {
     iLatEnd = body[iBody].iNumLats;
   }
 
   // Now start at NP and search for ice belt
-  bIce=0; // Start at ice free latitutde
+  iIce=0; // Start at ice free latitutde
   for (iLat=iLatStart;iLat<iLatEnd;iLat++) {
-    if (!bIce && fbIceLatLand(body,iBody,iLat)) {
-      // Found northern edge of ice belt!
-      *iLatIceEdgeNorth=iLat;
-      // Are we above or below equator?
-      if (iLat < iEquator) {
-        // Northern hemisphere
-        *dLatIceEdgeNorth = iLat/body[iBody].iNumLats * PI;
-      } else if (iLat < iEquator) {
-        // Southern hemisphere
-        *dLatIceEdgeNorth = -(body[iBody].iNumLats-iLat-1)/body[iBody].iNumLats * PI;
-      } else {
-        // Equator
-        *dLatIceEdgeNorth = 0;
-      }
+    if (iIce == 0 && fbIceLatLand(body,iBody,iLat)) {
+      // Found southern edge of ice belt!
+      *iLatIceEdgeSouth = iLat;
+      *dLatIceEdgeSouth = body[iBody].daLats[iLat];
       // Now into ice belt
-      bIce = 1;
+      iIce = 1;
     }
 
-    if (bIce && !fbIceLatLand(body,iBody,iLat)) {
+    if (iIce == 1 && !fbIceLatLand(body,iBody,iLat)) {
       // Found southern edge of ice belt!
-      *iLatIceEdgeSouth=iLat;
-      // Are we above or below equator?
-      if (iLat < iEquator) {
-        // Northern hemisphere
-        *dLatIceEdgeSouth = iLat/body[iBody].iNumLats * PI;
-      } else if (iLat < iEquator) {
-        // Southern hemisphere
-        *dLatIceEdgeSouth = -(body[iBody].iNumLats-iLat-1)/body[iBody].iNumLats * PI;
-      } else {
-        // Equator
-        *dLatIceEdgeSouth = 0;
-      }
+      *iLatIceEdgeNorth = iLat;
+      *dLatIceEdgeNorth = body[iBody].daLats[iLat];
+      // No longer search for ice belt
+      iIce = -1;
     }
   }
 
@@ -4116,6 +4112,8 @@ Standard properties function for POISE. Updates auxiliary quantities
 @param evolve Struct containing evolve information and variables
 @param update Struct containing update information and variables
 @param iBody Body in question
+
+XXX References to other modules are forbidden in this file!
 */
 void PropsAuxPoise(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   if (body[iBody].bEqtide && body[iBody].bCalcDynEllip) {

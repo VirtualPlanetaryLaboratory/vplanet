@@ -3454,12 +3454,16 @@ void fvNorthIceCapLand(BODY *body,int iBody,double *dLatIceEdge,
 
   // Check for ice at north pole; no ice at +90 => No ice cap
   if (!fbIceLatLand(body,iBody,0)) {
+    // Assign values for no cap
     fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
+    return;
   }
 
   // Icy north pole; does ice extend to other pole?
   if (fbSnowballLand(body,iBody)) {
+    // Assign values for no cap
     fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
+    return;
   }
 
   // If made it here, must be a northern polar cap
@@ -3489,12 +3493,16 @@ void fvNorthIceCapSea(BODY *body, int iBody,double *dLatIceEdge,
 
   // Check for ice at north pole; no ice at +90 => No ice cap
   if (!fbIceLatSea(body,iBody,0)) {
+    // Assign values for no cap
     fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
+    return;
   }
 
   // Icy north pole; does ice extend to other pole?
   if (fbSnowballSea(body,iBody)) {
+    // Assign values for no cap
     fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
+    return;
   }
 
   // If made it here, must be a northern polar cap
@@ -3525,12 +3533,16 @@ void fvSouthIceCapLand(BODY *body,int iBody,double *dLatIceEdge,
 
   // Check for ice at south pole; no ice at -90 => No ice cap
   if (!fbIceLatLand(body,iBody,body[iBody].iNumLats-1)) {
+    // Assign values for no cap
     fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
+    return;
   }
 
   // Icy south pole; does ice extend to other pole?
   if (fbSnowballLand(body,iBody)) {
+    // Assign values for no cap
     fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
+    return;
   }
 
   // If made it here, must be a southern polar cap
@@ -3560,12 +3572,16 @@ void fvSouthIceCapSea(BODY *body,int iBody,double *dLatIceEdge,
 
   // Check for ice at south pole; no ice at -90 => No ice cap
   if (!fbIceLatSea(body,iBody,body[iBody].iNumLats-1)) {
+    // Assign values for no cap
     fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
+    return;
   }
 
   // Icy south pole; does ice extend to other pole?
   if (fbSnowballSea(body,iBody)) {
+    // Assign values for no cap
     fvNoIceCap(dLatIceEdge,iLatIceEdge,bCap);
+    return;
   }
 
   // If made it here, must be a southern polar cap
@@ -3600,12 +3616,16 @@ void fvIceBeltLand(BODY *body,int iBody,double *dLatIceEdgeNorth,
 
   // If IceFree or Snowball, no ice belt
   if (fbSnowballLand(body,iBody)) {
+    // Assign values for no belt
     fvNoIceBelt(dLatIceEdgeNorth,dLatIceEdgeSouth,iLatIceEdgeNorth,
         iLatIceEdgeSouth,bBelt);
+    return;
   }
   if (fbIceFreeLand(body,iBody)) {
+    // Assign values for no belt
     fvNoIceBelt(dLatIceEdgeNorth,dLatIceEdgeSouth,iLatIceEdgeNorth,
         iLatIceEdgeSouth,bBelt);
+    return;
   }
 
   // If made it here, belt is possible, so let's look!
@@ -3673,6 +3693,7 @@ void fvIceBeltLand(BODY *body,int iBody,double *dLatIceEdgeNorth,
   if (*iLatIceEdgeNorth != 0 && *iLatIceEdgeSouth != 0) {
     *bBelt = 1;
   } else {
+    // Assign values for no belt
     fvNoIceBelt(dLatIceEdgeNorth,dLatIceEdgeSouth,iLatIceEdgeNorth,
         iLatIceEdgeSouth,bBelt);
   }
@@ -3698,12 +3719,16 @@ void fvIceBeltSea(BODY *body,int iBody,double *dLatIceEdgeNorth,
 
   // If IceFree or Snowball, no ice belt
   if (fbSnowballSea(body,iBody)) {
+    // Assign values for no belt
     fvNoIceBelt(dLatIceEdgeNorth,dLatIceEdgeSouth,iLatIceEdgeNorth,
         iLatIceEdgeSouth,bBelt);
+    return;
   }
   if (fbIceFreeSea(body,iBody)) {
+    // Assign values for no belt
     fvNoIceBelt(dLatIceEdgeNorth,dLatIceEdgeSouth,iLatIceEdgeNorth,
         iLatIceEdgeSouth,bBelt);
+    return;
   }
 
   // If made it here, belt is possible, so let's look!
@@ -3771,6 +3796,7 @@ void fvIceBeltSea(BODY *body,int iBody,double *dLatIceEdgeNorth,
   if (*iLatIceEdgeNorth != 0 && *iLatIceEdgeSouth != 0) {
     *bBelt = 1;
   } else {
+    // Assign values for no belt
     fvNoIceBelt(dLatIceEdgeNorth,dLatIceEdgeSouth,iLatIceEdgeNorth,
         iLatIceEdgeSouth,bBelt);
   }

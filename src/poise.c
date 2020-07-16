@@ -3470,7 +3470,7 @@ void fvNorthIceCapLand(BODY *body,int iBody,double *dLatIceEdge,
   *bCap = 1;
   // Now find ice cap extent
   for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-    if (!fbIceLatLand(body,iBody,body[iBody].iNumLats-1)) {
+    if (!fbIceLatLand(body,iBody,iLat)) {
       // Found edge!
       *iLatIceEdge=iLat;
       *dLatIceEdge = iLat/body[iBody].iNumLats * PI;
@@ -3509,7 +3509,7 @@ void fvNorthIceCapSea(BODY *body, int iBody,double *dLatIceEdge,
   *bCap = 1;
   // Now find ice cap extent
   for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-    if (!fbIceLatSea(body,iBody,body[iBody].iNumLats-1)) {
+    if (!fbIceLatSea(body,iBody,iLat)) {
       // Found edge!
       *iLatIceEdge=iLat;
       *dLatIceEdge = iLat/body[iBody].iNumLats * PI;
@@ -3549,7 +3549,7 @@ void fvSouthIceCapLand(BODY *body,int iBody,double *dLatIceEdge,
   *bCap = 1;
   // Now find ice cap extent
   for (iLat=body[iBody].iNumLats-1;iLat>0;iLat--) {
-    if (!fbIceLatSea(body,iBody,body[iBody].iNumLats-1)) {
+    if (!fbIceLatSea(body,iBody,iLat)) {
       // Found edge!
       *iLatIceEdge=iLat;
       *dLatIceEdge = -(body[iBody].iNumLats-iLat-1)/body[iBody].iNumLats * PI;
@@ -3588,7 +3588,7 @@ void fvSouthIceCapSea(BODY *body,int iBody,double *dLatIceEdge,
   *bCap = 1;
   // Now find ice cap extent
   for (iLat=body[iBody].iNumLats-1;iLat<0;iLat--) {
-    if (!fbIceLatSea(body,iBody,body[iBody].iNumLats-1)) {
+    if (!fbIceLatSea(body,iBody,iLat)) {
       // Found edge!
       *iLatIceEdge=iLat;
       *dLatIceEdge = -(body[iBody].iNumLats-iLat-1)/body[iBody].iNumLats * PI;

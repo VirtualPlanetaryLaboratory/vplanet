@@ -2,6 +2,8 @@
 
 Use Multi-Planet to run a large number of simulations with more than one core. `Multi-planet` is designed to work with `vspace`.
 
+NOTE: This script is still experimental!
+
 ## Multi-Planet Formatting
 
 There are two separate options for running Multi-Planet: A singular case or a list of cases given by the user. Regardless, there is a specific type of format for the files for Multi-Planet to run smoothly. In each case, there should be a vspace file named `vspace.in` like so:

@@ -1975,7 +1975,7 @@ void WriteSnowball(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   strcpy(cUnit,"");
 }
 
-void WriteNorthIceCapLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+void WriteIceCapNorthLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   int iFoo,bCap;
   double dFoo;
@@ -1986,7 +1986,24 @@ void WriteNorthIceCapLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
   strcpy(cUnit,"");
 }
 
-void WriteNorthIceCapSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+void WriteIceCapNorthLatLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  int iFoo,bFoo;
+  double dLat;
+
+  fvNorthIceCapLand(body,iBody,&dLat,&iFoo,&bFoo);
+
+  *dTmp = dLat;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
+void WriteIceCapNorthSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   int iFoo,bCap;
   double dFoo;
@@ -1996,7 +2013,24 @@ void WriteNorthIceCapSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
   strcpy(cUnit,"");
 }
 
-void WriteSouthIceCapLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+void WriteIceCapNorthLatSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  int iFoo,bFoo;
+  double dLat;
+
+  fvNorthIceCapSea(body,iBody,&dLat,&iFoo,&bFoo);
+
+  *dTmp = dLat;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
+void WriteIceCapSouthLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   int iFoo,bCap;
   double dFoo;
@@ -2006,7 +2040,24 @@ void WriteSouthIceCapLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *sys
   strcpy(cUnit,"");
 }
 
-void WriteSouthIceCapSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+void WriteIceCapSouthLatLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  int iFoo,bFoo;
+  double dLat;
+
+  fvSouthIceCapLand(body,iBody,&dLat,&iFoo,&bFoo);
+
+  *dTmp = dLat;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
+void WriteIceCapSouthSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   int iFoo,bCap;
   double dFoo;
@@ -2014,6 +2065,23 @@ void WriteSouthIceCapSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syst
   fvSouthIceCapSea(body,iBody,&dFoo,&iFoo,&bCap);
   *dTmp = (double)bCap;
   strcpy(cUnit,"");
+}
+
+void WriteIceCapSouthLatSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  int iFoo,bFoo;
+  double dLat;
+
+  fvSouthIceCapSea(body,iBody,&dLat,&iFoo,&bFoo);
+
+  *dTmp = dLat;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
 }
 
 void WriteIceBeltLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
@@ -2027,6 +2095,40 @@ void WriteIceBeltLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
   strcpy(cUnit,"");
 }
 
+void WriteIceBeltNorthLatLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  int iFoo,iBar,bFoo;
+  double dLat,dFoo;
+
+  fvIceBeltLand(body,iBody,&dLat,&dFoo,&iFoo,&iBar,&bFoo);
+
+  *dTmp = dLat;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
+void WriteIceBeltSouthLatLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  int iFoo,iBar,bFoo;
+  double dLat,dFoo;
+
+  fvIceBeltLand(body,iBody,&dFoo,&dLat,&iFoo,&iBar,&bFoo);
+
+  *dTmp = dLat;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
 void WriteIceBeltSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
     UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   int iFoo,iBar,bBelt;
@@ -2036,6 +2138,42 @@ void WriteIceBeltSea(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 
   *dTmp = (double)bBelt;
   strcpy(cUnit,"");
+}
+
+void WriteIceBeltNorthLatSea(BODY *body,CONTROL *control,OUTPUT *output,
+    SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,
+    char cUnit[]) {
+  int iFoo,iBar,bFoo;
+  double dLat,dFoo;
+
+  fvIceBeltSea(body,iBody,&dLat,&dFoo,&iFoo,&iBar,&bFoo);
+
+  *dTmp = dLat;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
+}
+
+void WriteIceBeltSouthLatSea(BODY *body,CONTROL *control,OUTPUT *output,
+    SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,
+    char cUnit[]) {
+  int iFoo,iBar,bFoo;
+  double dLat,dFoo;
+
+  fvIceBeltSea(body,iBody,&dFoo,&dLat,&iFoo,&iBar,&bFoo);
+
+  *dTmp = dLat;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle,cUnit);
+  }
 }
 
 void WriteSnowballLand(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
@@ -3085,37 +3223,37 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_AREAICECOV].iModuleBit = POISE;
   fnWrite[OUT_AREAICECOV] = &WriteAreaIceCov;
 
-  sprintf(output[OUT_NORTHICECAPLAND].cName,"NorthIceCapLand");
+  sprintf(output[OUT_NORTHICECAPLAND].cName,"IceCapNorthLand");
   sprintf(output[OUT_NORTHICECAPLAND].cDescr,
       "Does the planet have a northern polar ice cap on land?");
   output[OUT_NORTHICECAPLAND].bNeg = 0;
   output[OUT_NORTHICECAPLAND].iNum = 1;
   output[OUT_NORTHICECAPLAND].iModuleBit = POISE;
-  fnWrite[OUT_NORTHICECAPLAND] = &WriteNorthIceCapLand;
+  fnWrite[OUT_NORTHICECAPLAND] = &WriteIceCapNorthLand;
 
-  sprintf(output[OUT_NORTHICECAPSEA].cName,"NorthIceCapSea");
+  sprintf(output[OUT_NORTHICECAPSEA].cName,"IceCapNorthSea");
   sprintf(output[OUT_NORTHICECAPSEA].cDescr,
       "Does the planet have a northern polar sea ice cap");
   output[OUT_NORTHICECAPSEA].bNeg = 0;
   output[OUT_NORTHICECAPSEA].iNum = 1;
   output[OUT_NORTHICECAPSEA].iModuleBit = POISE;
-  fnWrite[OUT_NORTHICECAPSEA] = &WriteNorthIceCapSea;
+  fnWrite[OUT_NORTHICECAPSEA] = &WriteIceCapNorthSea;
 
-  sprintf(output[OUT_SOUTHICECAPLAND].cName,"SouthIceCapLand");
+  sprintf(output[OUT_SOUTHICECAPLAND].cName,"IceCapSouthLand");
   sprintf(output[OUT_SOUTHICECAPLAND].cDescr,
       "Does the planet have a southern polar ice cap on land?");
   output[OUT_SOUTHICECAPLAND].bNeg = 0;
   output[OUT_SOUTHICECAPLAND].iNum = 1;
   output[OUT_SOUTHICECAPLAND].iModuleBit = POISE;
-  fnWrite[OUT_SOUTHICECAPLAND] = &WriteSouthIceCapLand;
+  fnWrite[OUT_SOUTHICECAPLAND] = &WriteIceCapSouthLand;
 
-  sprintf(output[OUT_SOUTHICECAPSEA].cName,"SouthIceCapSea");
+  sprintf(output[OUT_SOUTHICECAPSEA].cName,"IceCapSouthSea");
   sprintf(output[OUT_SOUTHICECAPSEA].cDescr,
       "Does the planet have a southern polar sea ice cap?");
   output[OUT_SOUTHICECAPSEA].bNeg = 0;
   output[OUT_SOUTHICECAPSEA].iNum = 1;
   output[OUT_SOUTHICECAPSEA].iModuleBit = POISE;
-  fnWrite[OUT_SOUTHICECAPSEA] = &WriteSouthIceCapSea;
+  fnWrite[OUT_SOUTHICECAPSEA] = &WriteIceCapSouthSea;
 
   sprintf(output[OUT_ICEBELTLAND].cName,"IceBeltLand");
   sprintf(output[OUT_ICEBELTLAND].cDescr,"Does the planet have a land ice belt?");
@@ -3151,6 +3289,98 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ICEFREE].iNum = 1;
   output[OUT_ICEFREE].iModuleBit = POISE;
   fnWrite[OUT_ICEFREE] = &WriteIceFree;
+
+  sprintf(output[OUT_NORTHICECAPLATLAND].cName,"IceCapNorthLatLand");
+  sprintf(output[OUT_NORTHICECAPLATLAND].cDescr,
+    "Southernmost extent of northern land ice cap.");
+  output[OUT_NORTHICECAPLATLAND].bNeg = 0;
+  output[OUT_NORTHICECAPLATLAND].iNum = 1;
+  output[OUT_NORTHICECAPLATLAND].iModuleBit = POISE;
+  fnWrite[OUT_NORTHICECAPLATLAND] = &WriteIceCapNorthLatLand;
+  sprintf(output[OUT_NORTHICECAPLATLAND].cDescr,
+    "If a northern land ice cap is present, return the latitude of its "
+    "southern edge. If not present, return +100 degrees.");
+
+  sprintf(output[OUT_NORTHICECAPLATSEA].cName,"IceCapNorthLatSea");
+  sprintf(output[OUT_NORTHICECAPLATSEA].cDescr,
+    "Southernmost extent of northern sea ice cap.");
+  output[OUT_NORTHICECAPLATSEA].bNeg = 0;
+  output[OUT_NORTHICECAPLATSEA].iNum = 1;
+  output[OUT_NORTHICECAPLATSEA].iModuleBit = POISE;
+  fnWrite[OUT_NORTHICECAPLATSEA] = &WriteIceCapNorthLatSea;
+  sprintf(output[OUT_NORTHICECAPLATSEA].cDescr,
+    "If a northern sea ice cap is present, return the latitude of its "
+    "southern edge. If not present, return +100 degrees.");
+
+  sprintf(output[OUT_SOUTHICECAPLATLAND].cName,"IceCapSouthLatLand");
+  sprintf(output[OUT_SOUTHICECAPLATLAND].cDescr,
+    "Northernmost extent of southern land ice cap.");
+  output[OUT_SOUTHICECAPLATLAND].bNeg = 0;
+  output[OUT_SOUTHICECAPLATLAND].iNum = 1;
+  output[OUT_SOUTHICECAPLATLAND].iModuleBit = POISE;
+  fnWrite[OUT_SOUTHICECAPLATLAND] = &WriteIceCapSouthLatLand;
+  sprintf(output[OUT_SOUTHICECAPLATLAND].cDescr,
+    "If a southern land ice cap is present, return the latitude of its "
+    "northern edge. If not present, return -100 degrees.");
+
+  sprintf(output[OUT_SOUTHICECAPLATSEA].cName,"IceCapSouthLatSea");
+  sprintf(output[OUT_SOUTHICECAPLATSEA].cDescr,
+    "Northernmost extent of southern sea ice cap.");
+  output[OUT_SOUTHICECAPLATSEA].bNeg = 0;
+  output[OUT_SOUTHICECAPLATSEA].iNum = 1;
+  output[OUT_SOUTHICECAPLATSEA].iModuleBit = POISE;
+  fnWrite[OUT_SOUTHICECAPLATSEA] = &WriteIceCapSouthLatLand;
+  sprintf(output[OUT_SOUTHICECAPLATSEA].cDescr,
+    "If a southern sea ice cap is present, return the latitude of its "
+    "northern edge. If not present, return -100 degrees.");
+
+  sprintf(output[OUT_NORTHICEBELTLATLAND].cName,"IceBeltNorthLatLand");
+  sprintf(output[OUT_NORTHICEBELTLATLAND].cDescr,
+    "Northernmost extent of land ice belt.");
+  output[OUT_NORTHICEBELTLATLAND].bNeg = 0;
+  output[OUT_NORTHICEBELTLATLAND].iNum = 1;
+  output[OUT_NORTHICEBELTLATLAND].iModuleBit = POISE;
+  fnWrite[OUT_NORTHICEBELTLATLAND] = &WriteIceBeltNorthLatLand;
+  sprintf(output[OUT_NORTHICEBELTLATLAND].cDescr,
+    "If a land ice belt is present, return the latitude of its northern edge. "
+    "If not present, return 0. Note that some ice belts may in fact have a "
+    "northern edge at the equator.");
+
+  sprintf(output[OUT_NORTHICEBELTLATSEA].cName,"IceBeltNorthLatSea");
+  sprintf(output[OUT_NORTHICEBELTLATSEA].cDescr,
+      "Northernmost extent of sea ice belt.");
+  output[OUT_NORTHICEBELTLATSEA].bNeg = 0;
+  output[OUT_NORTHICEBELTLATSEA].iNum = 1;
+  output[OUT_NORTHICEBELTLATSEA].iModuleBit = POISE;
+  fnWrite[OUT_NORTHICEBELTLATSEA] = &WriteIceBeltNorthLatSea;
+  sprintf(output[OUT_NORTHICEBELTLATSEA].cDescr,
+    "If a sea ice belt is present, return the latitude of its northern edge. "
+    "If not present, return 0. Note that some ice belts may in fact have a "
+    "northern edge at the equator.");
+
+  sprintf(output[OUT_SOUTHICEBELTLATLAND].cName,"IceBeltSouthLatLand");
+  sprintf(output[OUT_SOUTHICEBELTLATLAND].cDescr,
+    "Southernmost extent of land ice belt.");
+  output[OUT_SOUTHICEBELTLATLAND].bNeg = 0;
+  output[OUT_SOUTHICEBELTLATLAND].iNum = 1;
+  output[OUT_SOUTHICEBELTLATLAND].iModuleBit = POISE;
+  fnWrite[OUT_SOUTHICEBELTLATLAND] = &WriteIceBeltSouthLatLand;
+  sprintf(output[OUT_SOUTHICEBELTLATLAND].cDescr,
+    "If a land ice belt is present, return the latitude of its southern edge. "
+    "If not present, return 0. Note that some ice belts may in fact have a "
+    "southern edge at the equator.");
+
+  sprintf(output[OUT_SOUTHICEBELTLATSEA].cName,"IceBeltSouthLatSea");
+  sprintf(output[OUT_SOUTHICEBELTLATSEA].cDescr,
+    "Southernmost extent of sea ice belt.");
+  output[OUT_SOUTHICEBELTLATSEA].bNeg = 0;
+  output[OUT_SOUTHICEBELTLATSEA].iNum = 1;
+  output[OUT_SOUTHICEBELTLATSEA].iModuleBit = POISE;
+  fnWrite[OUT_SOUTHICEBELTLATSEA] = &WriteIceBeltSouthLatSea;
+  sprintf(output[OUT_SOUTHICEBELTLATSEA].cDescr,
+    "If a sea ice belt is present, return the latitude of its southern edge. "
+    "If not present, return 0. Note that some ice belts may in fact have a "
+    "southern edge at the equator.");
 }
 
 /************ POISE Logging Functions **************/

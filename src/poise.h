@@ -167,6 +167,14 @@
 #define OUT_SNOWBALLLAND     1965
 #define OUT_SNOWBALLSEA      1966
 #define OUT_ICEFREE          1967
+#define OUT_NORTHICECAPLATLAND  1968
+#define OUT_NORTHICECAPLATSEA   1969
+#define OUT_SOUTHICECAPLATLAND  1970
+#define OUT_SOUTHICECAPLATSEA   1971
+#define OUT_NORTHICEBELTLATLAND 1972
+#define OUT_NORTHICEBELTLATSEA  1973
+#define OUT_SOUTHICEBELTLATLAND 1974
+#define OUT_SOUTHICEBELTLATSEA  1975
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -239,15 +247,15 @@ void SeaIce(BODY*,int);
 void MatrixSeasonal(BODY*,int);
 void SourceFSeas(BODY*,int,int);
 void Snowball(BODY*,int); // XXX Should change to int fbSnowball
-int fbIceBeltLand(BODY*,int);
-int fbIceBeltSea(BODY*,int);
-int fbSouthIceCapLand(BODY*,int);
-int fbSouthIceCapSea(BODY*,int);
-int fbNorthIceCapLand(BODY*,int);
-int fbNorthIceCapSea(BODY*,int);
 int fbSnowballLand(BODY*,int);
 int fbSnowballSea(BODY*,int);
 int fbIceFree(BODY*,int);
+void fvNorthIceCapLand(BODY*,int,double*,int*,int*);
+void fvNorthIceCapSea(BODY*,int,double*,int*,int*);
+void fvSouthIceCapLand(BODY*,int,double*,int*,int*);
+void fvSouthIceCapSea(BODY*,int,double*,int*,int*);
+void fvIceBeltLand(BODY*,int,double*,double*,int*,int*,int*);
+void fvIceBeltSea(BODY*,int,double*,double*,int*,int*,int*);
 
 double IceMassBalance(BODY*,int,int);
 

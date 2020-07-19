@@ -13,19 +13,16 @@ import pdb
 # --------------------------------------------------------------------
 
 
-def get_VSPACE(vspace_name, project_dir):
-    os.chdir(project_dir)
+def get_VSPACE(vspace_name):
     vsf = open(vspace_name, 'r')
     vspace_all = vsf.readlines()
     check = vspace_all[3]
     destLine = vspace_all[1]
-    destfolder = project_dir + destLine.strip().split(None, 1)[1]
+    destfolder = destLine.strip().split(None, 1)[1]
 
     if "samplemode" in check:
-        os.system('vspace ' + vspace_name)
         typ = "MC"
     else:
-        os.system('vspace ' + vspace_name)
         typ = "NM"
 
     vsf.close()
@@ -190,11 +187,10 @@ def multiProcess(srcDir, cores, vspaceName,typ):
 
 
 def main():
-    case_dir = sys.argv[1]
+    vspaceName = sys.argv[1]
     cores = int(sys.argv[2])
-    vspaceName = "vspace.in"
 
-    dirName = get_VSPACE(vspaceName, case_dir)
+    dirName = get_VSPACE(vspaceName)
     dir = dirName[0]
     typ = dirName[1]
     print(dir)

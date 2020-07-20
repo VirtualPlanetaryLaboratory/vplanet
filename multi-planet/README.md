@@ -4,31 +4,16 @@ Use Multi-Planet to run a large number of simulations with more than one core. `
 
 NOTE: This script is still experimental!
 
-## Multi-Planet Formatting
+## Multi-Planet Setup
 
-There are two separate options for running Multi-Planet: A singular case or a list of cases given by the user. Regardless, there is a specific type of format for the files for Multi-Planet to run smoothly. In each case, there should be a vspace file named `vspace.in` like so:
-
-![Formatting Guide Image](https://github.com/caitlyn-wilhelm/vplanet-multiprocess/blob/master/docs/format_guide.png)
-
-## Singular Case with Muli-Planet
-
-Using the singular case option with multi_planet is simple. Just run this line of code on the command line:
-
+Prior to running Multi-planet, it must be added to your $PATH. To do so, navigate to the multi-planet directory and type the following command on the command line:
 ```
-python multi_process.py [Case_Name] [Number of Cores]
+python setup.py
 ```
 
-### Multiple Cases with Multi-planet
-
-Let's say you have a list of cases to run. Inside the `vplanet/multiprocess` repo, there is file titled `multi_list.txt`. List the same arguments you would use for the singular case like so:
+##Running Multi-planet
+To run Multi-Planet on a large number of simulations, first type  `vspace <input file>` to create the simulation folders that Multi-Planet will run. Afterwards, type the following:
 ```
-[Path to Case A] [Number of Cores]
-[Path to Case B] [Number of Cores]
-[Path to Case C] [Number of Cores]
+multi-planet <input file> <number of cores>
 ```
-
-After setting up the `multi_list.txt` file correctly, run the following line in the command line:
-
-```
-./wrapper.sh
-```
+where `<input file>` is the same for `vspace` and `multi-planet`.

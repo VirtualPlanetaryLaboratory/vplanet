@@ -28,12 +28,13 @@ connected them both to EqTide.
 **Thomas Quinn** assisted in the development of DistOrb, DistRot, and GalHabit. He
 also found many bugs with valgrind and address-sanitizer.
 
+**Caitlyn Wilhelm** added forced eccentricity and obliquity oscillations to
+POISE, and assisted in debugging it. She also built the multi-planet script.
+
+
 **Diego McDonald** added the Lehmer-Catling model to AtmEsc.
 
 **Benjamin Guyer** assisted in the coupling of EqTide and ThermInt.
-
-**Caitlyn Wilhelm** added forced eccentricity and obliquity oscillations to
-POISE, and assisted in debugging it.
 
 **Rodolfo Garcia** assisted in AtmEsc and ThermInt development.
 

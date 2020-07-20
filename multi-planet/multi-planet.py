@@ -13,71 +13,14 @@ import pdb
 # --------------------------------------------------------------------
 
 
-def get_VSPACE(vspace_name, project_dir):
-    os.chdir(project_dir)
+def get_VSPACE(vspace_name):
     vsf = open(vspace_name, 'r')
     vspace_all = vsf.readlines()
-    check = vspace_all[3]
     destLine = vspace_all[1]
-    destfolder = project_dir + destLine.strip().split(None, 1)[1]
-
-    if "samplemode" in check:
-        os.system('vspace ' + vspace_name)
-        typ = "MC"
-    else:
-        os.system('vspace ' + vspace_name)
-        typ = "NM"
+    destfolder = destLine.strip().split(None, 1)[1]
 
     vsf.close()
-    return [destfolder, typ]
-
-# --------------------------------------------------------------------
-
-
-def rand_dist(folder_name, vspace_file):
-    vspace = open(vspace_file, "r")
-
-    for line in vspace:
-        line.strip().split('/n')
-
-        if line.startswith('seed '):
-            seedline = line.split()
-            seed = seedline[1]
-            np.random.seed(int(seed))
-
-    # get number of files
-    files = sub.check_output(
-        "find %s -maxdepth 1 -mindepth 1 -type d" % folder_name, shell=True).split()
-    for f in files:
-        os.chdir(f.decode('UTF-8'))
-        earth = open('earth.in', "r+")
-
-        for line in earth:
-            line.strip().split('/n')
-
-            if line.startswith('dEcc '):
-                eccline = line.split()
-                ecc = float(eccline[1])
-                rng = 1 - ecc
-
-                if rng < ecc:
-                    EccAmp = str(np.random.uniform(
-                        low=np.float(0.01), high=np.float(rng)))
-                else:
-                    EccAmp = str(np.random.uniform(
-                        low=np.float(0.01), high=np.float(ecc)))
-                texteamp = "dEccAmp      " + EccAmp + "\n"
-
-            if line.startswith('dObliquity'):
-                oblline = line.split()
-                ObliqAmp = str(np.random.uniform(
-                    low=np.float(5), high=np.float(oblline[1])))
-                textoblamp = "dObliqAmp      " + ObliqAmp + "\n"
-
-        earth.write(textoblamp + "\n")
-        earth.write(texteamp + "\n")
-        earth.close()
-        os.chdir("../../")
+    return destfolder
 
 # --------------------------------------------------------------------
 
@@ -137,10 +80,10 @@ def vDirMerge(srcDir, cores=1):
 # --------------------------------------------------------------------
 
 
-def run_vplanet(folder_name, vspace_name, typ):
+def run_vplanet(folder_name, vspace_name):
     final = '---- FINAL SYSTEM PROPERTIES ----'
-    if typ == "MC":
-        rand_dist(folder_name, vspace_name)
+    #if typ == "MC":
+        #rand_dist(folder_name, vspace_name)
     # get number of files
     files = sub.check_output("find %s -maxdepth 1 -mindepth 1 -type d" % folder_name, shell=True).split()
 
@@ -165,7 +108,7 @@ def run_vplanet(folder_name, vspace_name, typ):
 # --------------------------------------------------------------------
 
 
-def multiProcess(srcDir, cores, vspaceName,typ):
+def multiProcess(srcDir, cores, vspaceName):
     print(srcDir, cores)
 
     # Define an output queue
@@ -175,7 +118,7 @@ def multiProcess(srcDir, cores, vspaceName,typ):
     processes = []
     for i in range(1, cores + 1):
         coreDir = srcDir + "_c" + str(i)
-        m = mp.Process(target=run_vplanet, args=(coreDir,vspaceName,typ))
+        m = mp.Process(target=run_vplanet, args=(coreDir,vspaceName))
         processes.append(m)
 
     # Run processes
@@ -190,22 +133,17 @@ def multiProcess(srcDir, cores, vspaceName,typ):
 
 
 def main():
-    case_dir = sys.argv[1]
+    vspaceName = sys.argv[1]
     cores = int(sys.argv[2])
-    vspaceName = "vspace.in"
 
-    dirName = get_VSPACE(vspaceName, case_dir)
-    dir = dirName[0]
-    typ = dirName[1]
-    print(dir)
-    print(typ)
+    dir = get_VSPACE(vspaceName)
 
     vDirSplit(dir, cores)
 
     if cores > 1:
-        multiProcess(dir, cores, vspaceName, typ)
+        multiProcess(dir, cores, vspaceName)
     else:
-        run_vplanet(dir, vspaceName, typ)
+        run_vplanet(dir, vspaceName)
 
     vDirMerge(dir, cores)
 

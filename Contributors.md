@@ -20,7 +20,8 @@ integration and calculating code coverage.
 of STELLAR, AtmEsc, and EqTide. He also wrote BigPlanet.
 
 **Hayden Smotherman** wrote SpiNBody and has contributed to various subroutines
-that have signficantly increased the efficiency of the executable.
+that have signficantly increased the efficiency of the executable. He also added OpenMP
+functionality for multithreading.
 
 **Peter Driscoll** developed the ThermInt module, contributed to RadHeat, and
 connected them both to EqTide.
@@ -31,13 +32,12 @@ also found many bugs with valgrind and address-sanitizer.
 **Caitlyn Wilhelm** added forced eccentricity and obliquity oscillations to
 POISE, and assisted in debugging it. She also built the multi-planet script.
 
-
-**Diego McDonald** added the Lehmer-Catling model to AtmEsc.
-
-**Benjamin Guyer** assisted in the coupling of EqTide and ThermInt.
-
 **Rodolfo Garcia** assisted in AtmEsc and ThermInt development.
 
 **Patrick Barth** assisted in AtmEsc development.
 
 **Pramod Gupta** ported VPLanet to Windows 10.
+
+**Diego McDonald** added the Lehmer-Catling model to AtmEsc.
+
+**Benjamin Guyer** assisted in the coupling of EqTide and ThermInt.

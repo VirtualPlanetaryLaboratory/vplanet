@@ -3787,7 +3787,7 @@ void fvSouthIceCapLand(BODY *body,int iBody,double *dLatIceEdge,
   *bCap = 1;
   // Now find ice cap extent
   for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-    if (!fbIceLatSea(body,iBody,iLat)) {
+    if (!fbIceLatLand(body,iBody,iLat)) {
       // Found edge!
       *iLatIceEdge = iLat;
       *dLatIceEdge = body[iBody].daLats[iLat];

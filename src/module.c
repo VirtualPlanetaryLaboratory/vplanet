@@ -1013,6 +1013,7 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
       if (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass) {
         body[iBody].bOcean = 0;
       } else {
+/*
 // MAGMOC HERE
         if (!body[iBody].bMagmOc) {
           // This is probably a terrible fix. To merge MagmOc we need a better
@@ -1028,6 +1029,17 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
           body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
         }
 // ENDS HERE
+*/
+// Rory's trial
+        if (!body[iBody].bMagmOc) {
+          // Only activate ocean if user indicated they wanted to
+          if (options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1 &&
+              options[OPT_K2OCEAN].iLine[iBody+1] > -1) {
+            body[iBody].bOcean = 1;
+            body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
+          }
+        }
+// Rory's trial ends here.
       }
 
       // there's definitely at least gonna be some rock...

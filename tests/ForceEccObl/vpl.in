@@ -11,5 +11,5 @@ saBodyFiles   sun.in earth.in    #you must list all input files here (except vpl
 bDoForward    1                  #integrate forward in time
 bVarDt        1                  #use variable time stepping (not relevant to poise)
 dEta          0.1                #how much to scale variable time step
-dStopTime   1e3
-dOutputTime 1e3
+dStopTime     1e3
+dOutputTime   1e3

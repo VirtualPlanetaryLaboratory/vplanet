@@ -81,7 +81,7 @@ extern const double dTINY;
 /* Do not change these declarations */
 
 // IO limits for files, lines, and names
-#define OPTLEN        24    /* Maximum length of an option */
+#define OPTLEN        48    /* Maximum length of an option */
 #define OPTDESCR      128   /* Number of characters in option description */
 #define OPTLONDESCR   2048  /* Number of characters in option long description */
 #define LINE          256   /* Maximum number of characters in a line */
@@ -608,6 +608,7 @@ struct BODY {
   double dTGlobalInit;       /**< Initial estimate of global surface temperature */
   double dTGlobalTmp;        /**< Mean global surface temp */
   int iWriteLat;             /**< Stores index of latitude to be written in write fxn */
+  double dMinIceHeight;      /**< Minimum ice thickness to count as icy */
 
   /* Arrays used by seasonal and annual */
   double *daAnnualInsol;     /**< Annually averaged insolation at each latitude */
@@ -617,7 +618,7 @@ struct BODY {
   double *daFlux;            /**< Meridional surface heat flux */
   double *daFluxIn;          /**< Incoming surface flux (insolation) */
   double *daFluxOut;         /**< Outgoing surface flux (longwave) */
-  double *daLats;            /**< Latitude of each cell (centered) */
+  double *daLats;            /**< Latitude of each cell (centered); South Pole is 0 */
   double *daPeakInsol;       /**< Annually averaged insolation at each latitude */
   double *daTGrad;           /**< Gradient of temperature (meridional) */
 

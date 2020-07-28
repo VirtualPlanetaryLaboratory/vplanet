@@ -126,7 +126,7 @@ for i in range(len(lines)):
     if values[2][0] == 'n':
       values[2] = values[2][1:]
       if np.float(values[2]).is_integer():
-        array = np.linspace(np.float(values[0]),np.float(values[1]),np.float(values[2]))
+        array = np.linspace(np.float(values[0]),np.float(values[1]),int(values[2]))
       else:
         raise IOError("Attempt to iterate over '%s' for '%s', but number of points provided not an integer value"%(name,flist[fnum-1]))
 

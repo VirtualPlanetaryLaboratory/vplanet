@@ -2320,6 +2320,8 @@ double fdDSurfTemp(BODY *body, SYSTEM *system, int *iaBody) {
   dWaterPart = WATERHEATCAP * (body[iaBody[0]].dPressWaterAtm + body[iaBody[0]].dPressOxygenAtm) / body[iaBody[0]].dGravAccelSurf;
   dManPart   = SILICATEHEATCAP * body[iaBody[0]].dManMeltDensity / (3*pow(body[iaBody[0]].dRadius,2));
   dTempPart  = pow(body[iaBody[0]].dRadius,3) - pow(dTBL,3);
+  // dTempPart  = pow(body[iaBody[0]].dRadius,3) - pow((body[iaBody[0]].dRadius-dTBL),3);
+  // dTempPart  = pow(body[iaBody[0]].dRadius,3) - pow((body[iaBody[0]].dRadius-body[iaBody[0]].dSolidRadius),3);
   return dFluxPart / (dWaterPart + dManPart * dTempPart);
 }
 

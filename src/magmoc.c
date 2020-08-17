@@ -683,47 +683,6 @@ double fndPhysPressCO2(BODY *body, double dPhysPressCO2, int iBody) {
 }
 
 /**
-Oxygen equilibrium between magma ocean and atmosphere
-Will be used in PropsAuxMagmOc to find its root with fndBisection
-
-@param body A pointer to the current BODY instance
-@param dDelFrac delta mass fraction of Fe2O3 in magmoc
-@param iBody The current BODY number
-
-@return 0 if oxygen in atm and mo are in equilibrium
-*/
-// double fndOxygenEquiManAtm(BODY *body, double dFracFe2O3, int iBody) {
-//
-//   double dChem, dA, dB, dC;
-//   double dPressOxygen, dOxyFugFactor;
-//
-//   dOxyFugFactor = MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) * body[iBody].dManMeltDensity*body[iBody].dGravAccelSurf * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3))/(3*pow(body[iBody].dRadius,2));
-//   dPressOxygen = dOxyFugFactor * (body[iBody].dOxygenMassMOAtm * 2*MOLWEIGHTFEO15/MOLWEIGHTOXYGEN \
-//                  * 3/(4*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3))) \
-//                  - dFracFe2O3 );
-//   if (dPressOxygen <= 0) {
-//     dPressOxygen = 1e-15;
-//   }
-//
-//   dChem = 11492/body[iBody].dPotTemp - 6.675 \
-//           - 2.243 * MASSFRACAL2O3               * body[iBody].dAveMolarMassMan / MOLWEIGHTAL2O3 \
-//           - 1.828 * body[iBody].dMassFracFeOIni * body[iBody].dAveMolarMassMan / MOLWEIGHTFEO   \
-//           + 3.201 * MASSFRACCAO                 * body[iBody].dAveMolarMassMan / MOLWEIGHTCAO   \
-//           + 5.854 * MASSFRACNA2O                * body[iBody].dAveMolarMassMan / MOLWEIGHTNA2O  \
-//           + 6.215 * MASSFRACK2O                 * body[iBody].dAveMolarMassMan / MOLWEIGHTK2O   \
-//           - 3.36  * (1 - 1673/body[iBody].dPotTemp - log(body[iBody].dPotTemp/1673));
-//   dA    = - 7.01e-7  / body[iBody].dPotTemp;
-//   dB    = - 1.54e-10 * (body[iBody].dPotTemp-1673) / body[iBody].dPotTemp;
-//   dC    =   3.85e-17 / body[iBody].dPotTemp;
-//
-//   return 0.196 * log(dPressOxygen) + dChem \
-//           + dA * (body[iBody].dPressWaterAtm + dPressOxygen) \
-//           + dB * (body[iBody].dPotTemp-1673) * (body[iBody].dPressWaterAtm + dPressOxygen) \
-//           + dC * pow((body[iBody].dPressWaterAtm + dPressOxygen),2) \
-//           - log( (2*dFracFe2O3/MOLWEIGHTFEO15) / (body[iBody].dMassFracFeOIni/MOLWEIGHTFEO - dFracFe2O3/MOLWEIGHTFEO15) );
-// }
-
-/**
 Radiogenic heating used in Schaefer et al. (2016)
 Earth like composition
 
@@ -870,45 +829,6 @@ void fndFe2O3MassFracOxyMass(BODY *body, int iBody) {
     body[iBody].dOxygenMassAtm = 0; //fmax(0,body[iBody].dOxygenMassMOAtm - dOxygenMassMO);
   }
   if (body[iBody].dOxygenMassAtm < 0) {body[iBody].dOxygenMassAtm = 0;}
-  // ---------------
-  // if ((body[iBody].dFracFe2O3Man/body[iBody].dMassFracFeOIni) < 0.3 && (!body[iBody].bManSolid) && (!body[iBody].bCalcFugacity)) { // X < 0.3 -> assuming no O2 buildup in atm
-  //   dFracFe2O3New = dUpperBound;
-  // } else if (body[iBody].bAllFeOOxid) { // all FeO oxidized to Fe2O3
-  //   dFracFe2O3New = dMagmOcFull;
-  // } else if (body[iBody].bManSolid || (dFracFe2O3Max <= 0)) {
-  //   dFracFe2O3New = body[iBody].dFracFe2O3Man;
-  // } else {
-  //   body[iBody].bCalcFugacity = 1;
-  //   if (fndOxygenEquiManAtm(body,body[iBody].dFracFe2O3Man,iBody) <= 0) { // oxygen flow only into mantle, no outgasing from oxidized Fe2O3
-  //     dFracFe2O3New = body[iBody].dFracFe2O3Man;
-  //   } else if (fndOxygenEquiManAtm(body,dUpperBound,iBody) >= 0) {
-  //     dFracFe2O3New = dUpperBound;
-  //   } else {
-  //     dFracFe2O3New = fndBisection(fndOxygenEquiManAtm,body,body[iBody].dFracFe2O3Man,dUpperBound,0.01,iBody);
-  //   }
-  // }
-
-  // if (dFracFe2O3New < body[iBody].dFracFe2O3Man) {
-  //   dFracFe2O3New = body[iBody].dFracFe2O3Man;
-  // }
-
-  // if (dFracFe2O3New <= 0) {
-  //   dOxygenMassNew = body[iBody].dOxygenMassMOAtm;
-  // } else {
-  //   dOxygenMassNew = body[iBody].dMeltFraction * (dFracFe2O3Max - dFracFe2O3New) * MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) \
-  //                    * 4/3 * PI * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3));
-  //   // dOxygenMassNew = body[iBody].dOxygenMassMOAtm - body[iBody].dMeltFraction * dFracFe2O3New * MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) \
-  //   //                  * 4/3 * PI * body[iBody].dManMeltDensity * (pow(body[iBody].dRadius,3)-pow(body[iBody].dSolidRadius,3));
-  // }
-
-  // if (dOxygenMassNew < 0) {
-  //   body[iBody].dOxygenMassAtm = 0;
-  // } else if (dOxygenMassNew < body[iBody].dOxygenMassAtm) {
-  //   body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassAtm;
-  // } else {
-  //   body[iBody].dOxygenMassAtm = dOxygenMassNew;
-  // }
-  // body[iBody].dFracFe2O3Man = dFracFe2O3New;
 }
 
 /**
@@ -1230,18 +1150,10 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   }
 
   body[iBody].dPressOxygenAtm = body[iBody].dOxygenMassAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2));
-
-  // Only for debugging:
-  // double dTest;
-  // if (body[iBody].dPressCO2Atm > 9e8) {
-  //   dTest = 1;
-  // }
 }
 
 
-/* Only updated every full step. Use for check of different behaviors and force parameters to a value,
-e.g. if all the hydrogen is lost to space (= no more water in atmosphere) -> set albedo to pure rock
-*/
+/* Only updated every full step. Use for check of different behaviors and force parameters to a value */
 void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM *system,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody,int iModule) {
 
   /* Mantle starts to solidify */
@@ -1375,14 +1287,6 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
       printf("%s enters habitable zone after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
   }
-
-  /* Albedo Rock or Water Vapor? */
-  // if (body[iBody].dAlbedo == ALBEDOWATERATMOS && body[iBody].dPressWaterAtm < 1) {
-  //   body[iBody].dAlbedo = ALBEDOROCK;
-  //   if (io->iVerbose >= VERBPROG) {
-  //     printf("%s's atmosphere desiccated, albedo set to 0.3. \n",body[iBody].cName);
-  //   }
-  // }
 
   /*
    * For multiple planet systems
@@ -1956,19 +1860,6 @@ void WriteTidalPower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   }
 }
 
-/* XXX in output.c as WriteOrbSemi
-void WriteSemiMajorAxis(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  *dTmp = body[iBody].dSemi;
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else {
-    *dTmp /= fdUnitsLength(units->iLength);
-    fsUnitsLength(units->iLength,cUnit);
-  }
-}
-*/
-
 void WriteHZInnerEdge(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
   *dTmp = body[iBody].dHZInnerEdge;
   if (output->bDoNeg[iBody]) {
@@ -2163,17 +2054,6 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALPOWER].iNum = 1;
   output[OUT_TIDALPOWER].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_TIDALPOWER] = &WriteTidalPower;
-
-/* In output.c as WriteOrbSemi
-  sprintf(output[OUT_SEMIMAJORAXIS].cName,"SemiMajorAxis");
-  sprintf(output[OUT_SEMIMAJORAXIS].cDescr,"Semi Major Axis of the planet's orbit");
-  sprintf(output[OUT_SEMIMAJORAXIS].cNeg,"AU");
-  output[OUT_SEMIMAJORAXIS].bNeg = 1;
-  output[OUT_SEMIMAJORAXIS].dNeg = 1/AUM; // division factor to get from SI to desired unit
-  output[OUT_SEMIMAJORAXIS].iNum = 1;
-  output[OUT_SEMIMAJORAXIS].iModuleBit = MAGMOC; //name of module
-  fnWrite[OUT_SEMIMAJORAXIS] = &WriteSemiMajorAxis;
-*/
 
   sprintf(output[OUT_HZINNEREDGE].cName,"HZInnerEdge");
   sprintf(output[OUT_HZINNEREDGE].cDescr,"Inner Edge of the Habitable Zone (Runaway Greenhouse)");

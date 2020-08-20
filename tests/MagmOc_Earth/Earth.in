@@ -1,23 +1,24 @@
 # Planet a parameters
-sName         GJ1132b                     # Body's name
+sName         Earth                     # Body's name
 saModules     magmoc, atmesc                      # Modules to apply, exact spelling required
 cColor        13aed5
 
 # Physical Properties
-dMass         -1.62                       # Mass, negative -> Earth masses
-dRadius       -1.15                       # Radius, negative -> Earth radii
+dMass         -1                       # Mass, negative -> Earth masses
+dRadius       -1                       # Radius, negative -> Earth radii
 
 # MAGMOC Properties
 dMassFracFeOIni		0.0788		  # Initial mass fraction of FeO in the mantle (default: 0.0788)
-dWaterMassAtm		-135		  # Initial water mass in the system (neg: terrestrial oceans, default: -1)
+dWaterMassAtm		-5		  # Initial water mass in the system (neg: terrestrial oceans, default: -1)
 dSurfTemp		4000		  # Initial surface temperature (default: 4000K)
 dManMeltDensity		4000		  # Mantle melt density (default: 4000kg/m^3)
 bHaltMantleSolidified 	1		  # Halt when mantle solidified? (default: 0 = no, 1 = yes)
-bHaltMantleMeltFracLow  1                 # Halt when melt fraction smaller than 0.4 at surface? (default: 0 = no, 1 = yes)
+bHaltMantleMeltFracLow  1     		  # Halt when melt fraction smaller than 0.4 at surface? (default: 0 = no, 1 = yes)
 bHaltAtmDesiSurfCool    1                 # Halt when atmosphere desiccated? (default: 0 = no, 1 = yes)
-bHaltEnterHabZone       0                 # Halt when planet enters habitable zone? (default: 0 = no, 1 = yes)
+bHaltEnterHabZone	0		  # Halt when planet enters habitable zone? (default: 0 = no, 1 = yes)
 sRadioHeatModel		schaefer          # Radiogenic heating model (default: none = RadHeat; schaefer = BSE composition)
-sMagmOcAtmModel 	petit		  # Atmospheric net flux model (default: grey; petit only for GJ1132b-H2O)
+sMagmOcAtmModel 	grey		  # Atmospheric net flux model (default: grey; petit only for GJ1132b-H2O)
+bOptManQuasiSol		1
 
 # ATMESC Properties
 dXFrac                    1.0             # X-Ray/XUV absorption radius (fraction of planet radius)
@@ -33,8 +34,8 @@ sAtmXAbsEffH2OModel       none
 dAtmXAbsEffH2O 		  0.3
 
 # Orbital Properties
-dSemi         -0.0154                     # Semi-major axis, negative -> AU
-dEcc          0.0                         # Eccentricity
+dSemi         -1                     # Semi-major axis, negative -> AU
+dEcc          0.017                         # Eccentricity
 
 # Output
-saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -PressWaterAtm -PressOxygenAtm -HydrogenMassSpace -OxygenMassSpace FracFe2O3Man NetFluxAtmo WaterFracMelt MeltFraction
+saOutputOrder Time -PotTemp -SurfTemp -SolidRadius -WaterMassMOAtm -WaterMassSol -OxygenMassMOAtm -OxygenMassSol -HydrogenMassSpace -OxygenMassSpace -CO2MassMOAtm -CO2MassSol

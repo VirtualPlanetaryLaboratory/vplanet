@@ -4,7 +4,7 @@ Magma ocean evolution on GJ1132b
 Overview
 --------
 
-Thermal and volatile evolution of GJ1132b's mantle and atmosphere
+Thermal and volatile evolution of GJ1132b's mantle and atmosphere.
 
 ===================   ============
 **Date**              02/18/19

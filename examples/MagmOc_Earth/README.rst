@@ -1,39 +1,38 @@
-Magma ocean evolution on GJ1132b
+Validate MagmOc against `Hamano et al. (2013) <https://doi.org/10.1038/nature12163>`_
 ===========
 
 Overview
 --------
 
-Thermal and volatile evolution of GJ1132b's mantle and atmosphere
+Simulation of the magma ocean and atmosphere evolution for Earth containing 5TO
+water compared to results presented by
+`Hamano et al. (2013) <https://doi.org/10.1038/nature12163>`_
+(Fig. 1).
 
-===================   ============
-**Date**              02/18/19
-**Author**            Patrick Barth
-**Modules**           magmoc
-                      stellar?
-**Approx. runtime**   30 minutes
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/magmoc/examples/MagmOc>`_
-===================   ============
+=============================   ===============
+**Date**                        03/30/20
+**Author**                      Patrick Barth
+**Planet name**                 Earth
+**Initial water content**       5 TO
+**XUV absorption efficiency**   0.3
+**Atmospheric flux model**      `grey atmosphere <https://doi.org/10.1016/j.epsl.2008.03.062>`_
+**Modules**                     magmoc, stellar, atmesc
+**Approx. runtime**             1 minute
+**Source code**                 `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/magmoc3/examples/MagmOc_Earth>`_
+=============================   ===============
 
-During the early stages of their life, terrestrial exoplanets are likely to have had completely molten mantles, so-called magma oceans. 
-These magma oceans can play an important role in the evolution of volatiles in the planets' atmospheres. 
-I.e. they influence the amount of water and oxygen left after the solidification of the magma ocean. 
-Thus, magma oceans determine the habitability of rocky planets.
-
-
-To run this example
+To run this case:
 -------------------
 
 .. code-block:: bash
 
     vplanet vpl.in
-    vplot
+    python plot_magmoc_earth_hamano.py
 
 
 Expected output
 ---------------
 
-.. figure:: XXX.pdf
+.. figure:: Earth_5TO_Hamano.png
    :width: 600px
    :align: center
-

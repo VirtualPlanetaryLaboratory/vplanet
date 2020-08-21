@@ -92,12 +92,17 @@
 #define VMEANL          2301
 
 //MAGMOC
-#define VWATERMASSMOATM 2310
-#define VWATERMASSSOL   2311
-#define VSURFTEMP       2312
-#define VPOTTEMP        2313
-#define VSOLIDRADIUS    2314
-
+#define VWATERMASSMOATM    2302
+#define VWATERMASSSOL      2303
+#define VSURFTEMP          2304
+#define VPOTTEMP           2305
+#define VSOLIDRADIUS       2306
+#define VOXYGENMASSMOATM   2307
+#define VOXYGENMASSSOL     2308
+#define VHYDROGENMASSSPACE 2309
+#define VOXYGENMASSSPACE   2310
+#define VCO2MASSMOATM      2311
+#define VCO2MASSSOL        2312
 
 void InitializeUpdateBodyPerts(CONTROL*,UPDATE*,int);
 void InitializeUpdateTmpBody(BODY*,CONTROL*,MODULE*,UPDATE*,int);

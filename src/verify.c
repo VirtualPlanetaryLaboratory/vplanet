@@ -934,7 +934,7 @@ void VerifyOptions(BODY *body,CONTROL *control,FILES *files,MODULE *module,
   //control->Io.dNextOutput = control->Evolve.dTime + control->Io.dOutputTime;
 
   // Finally, initialize derivative values -- this avoids leaks while logging
-  PropertiesAuxiliary(body,control,update);
+  PropertiesAuxiliary(body,control,system,update);
   CalculateDerivatives(body,system,update,*fnUpdate,control->Evolve.iNumBodies);
 
   control->Evolve.dTime=0;

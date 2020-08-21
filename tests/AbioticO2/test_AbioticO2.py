@@ -36,6 +36,5 @@ def test_AbioticO2():
     assert np.isclose(output.log.final.e.AtmXAbsEffH2O, 0.051776)
     assert np.isclose(output.log.final.e.Instellation, 3053.257033)
 
-
 if __name__ == "__main__":
     test_AbioticO2()

@@ -23,6 +23,12 @@ the CPL tidal model with hydrogen escape via energy-limited,
 radiation-recombination-limited, Bondi-limited, and automatic models. [AtmEsc,
 EqTide, STELLAR]
 
+`MagmOc_Earth <MagmOc_Earth>`_: Earth's magma evolution after the Moon-forming impact. [AtmEsc, MagmOc, Stellar]
+
+`MagmOc_GJ1132b <MagmOc_GJ1132b>`_: GJ 1132 b's magma evolution, assuming no tidal or radiogenic heating. [AtmEsc, MagmOc, Stellar]
+
+`MagmOc_Trappist1g <MagmOc_Trappist1g>`_: Trappist-1 g's magma evolution, including tidal and radiogenic heating. [AtmEsc, EqTide, MagmOc, RadHeat, Stellar]
+
 `MiniNeptuneEvap <MiniNeptuneEvap>`_: Removal of a mini-Neptune's isothermal hydrogen atmosphere by high energy radiation and/or Roche lobe overflow. [AtmEsc, STELLAR]
 
 `NBodyAtmEsc <NBodyAtmEsc>`_: Coupled envelope loss and N-Body evolution in the

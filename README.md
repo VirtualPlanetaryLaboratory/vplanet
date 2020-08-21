@@ -28,16 +28,16 @@ To get started, ensure you have clang/gcc installed and follow the [QuickStart G
 `VPLanet` currently consists of 12 functioning "modules," each containing a set of equations
 that models a specifc physical process:
 
-**AtmEsc**: Thermal escape of an atmosphere, including water photolyzation, hydrogen
-escape, oxygen escape, and oxygen build-up.
+**AtmEsc**: Roche lobe overflow and thermal escape (energy-limited and radiation-recombination-limited) of an atmosphere, including water photolyzation, hydrogen
+escape, oxygen escape, and oxygen build-up. 
 
-**Binary**: Orbital evolution of a circumbinary planet.
+**Binary**: Orbital evolution of a single circumbinary planet.
 
 **DistOrb**: 2nd and 4th order semi-analytic models of orbital evolution outside
 of resonance.
 
 **DistRot**: Evolution of a world's rotational axis due to orbital evolution and
-the stellar torque (including shape evolution as a function of rotational frequency).
+the stellar torque.
 
 **EqTide**: Tidal evolution in the equilibrium tide framework.
 
@@ -53,7 +53,7 @@ compression/rebound.
 
 **SpiNBody**: N-body integrator for the evolution of a system of massive particles.
 
-**Stellar**: Stellar luminosity, temperature, radius, and mass concentration.
+**Stellar**: Evolution of a star's bolometeric and XUV luminosity, temperature, radius, and mass concentration. Also includes magnetic braking and stellar wind spin-down.
 
 **ThermInt**: Thermal interior evolution, including magnetic fields, for planets
 undergoing plate tectonics or stagnant lid evolution.

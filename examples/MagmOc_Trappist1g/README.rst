@@ -6,14 +6,14 @@ Overview
 
 Thermal and volatile evolution of Trappist-1 g's mantle and atmosphere
 
-===================             ============
-**Date**                        08/21/20
-**Author**                      Patrick Barth
-**Planet name**                 Trappist-1 g
-**Initial water content**       2 TO
-**Modules**                     magmoc, atmesc, radheat, eqtide, stellar
-**Approx. runtime**             1 minute
-===================             ============
+=========================   ========================================
+**Date**                    08/21/20
+**Author**                  Patrick Barth
+**Planet name**             Trappist-1 g
+**Initial water content**   2 TO
+**Modules**                 magmoc, atmesc, radheat, eqtide, stellar
+**Approx. runtime**         1 minute
+=========================   ========================================
 
 We simulate the magma ocean evolution for Trappist-1 g with an initial water
 inventory of 2 terrestrial oceans. We couple in radiogenic and tidal heating of

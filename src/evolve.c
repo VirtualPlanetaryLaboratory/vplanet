@@ -24,7 +24,7 @@ void PropsAuxGeneral(BODY *body,CONTROL *control) {
   }
 }
 
-void PropertiesAuxiliary(BODY *body,CONTROL *control,UPDATE *update) {
+void PropertiesAuxiliary(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update) {
 /* Evaluate single and multi-module auxialliary functions to update parameters
  * of interest such as mean motion.
  */
@@ -391,7 +391,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   }
 
   /* First midpoint derivative.*/
-  PropertiesAuxiliary(evolve->tmpBody,control,update);
+  PropertiesAuxiliary(evolve->tmpBody,control,system,update);
 
   fdGetUpdateInfo(evolve->tmpBody,control,system,evolve->tmpUpdate,fnUpdate);
 
@@ -428,7 +428,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   }
 
   /* Second midpoint derivative */
-  PropertiesAuxiliary(evolve->tmpBody,control,update);
+  PropertiesAuxiliary(evolve->tmpBody,control,system,update);
 
   fdGetUpdateInfo(evolve->tmpBody,control,system,evolve->tmpUpdate,fnUpdate);
 
@@ -465,7 +465,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
   }
 
   /* Full step derivative */
-  PropertiesAuxiliary(evolve->tmpBody,control,update);
+  PropertiesAuxiliary(evolve->tmpBody,control,system,update);
 
   fdGetUpdateInfo(evolve->tmpBody,control,system,evolve->tmpUpdate,fnUpdate);
 
@@ -521,7 +521,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
   else
     iDir=-1;
 
-  PropertiesAuxiliary(body,control,update);
+  PropertiesAuxiliary(body,control,system,update);
   control->Io.dNextOutput = control->Evolve.dTime + control->Io.dOutputTime;
 
   // Get derivatives at start, useful for logging
@@ -587,7 +587,7 @@ void Evolve(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *outp
 
     /* Get auxiliary properties for next step -- first call
        was prior to loop. */
-    PropertiesAuxiliary(body,control,update);
+    PropertiesAuxiliary(body,control,system,update);
 
     // If control->Evolve.bFirstStep hasn't been switched off by now, do so.
     if (control->Evolve.bFirstStep) {

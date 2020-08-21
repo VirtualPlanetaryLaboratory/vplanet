@@ -46,7 +46,11 @@ dEruptEff        0.2
 dViscJumpMan     2.0
 dTrefLind       5600
 dImK2ManOrbModel   2
+<<<<<<< HEAD
+dShModRef        1e6
+=======
 dShModRef        1e5 #1e6
+>>>>>>> a45095dc8e0b53eba999c90f3556ce5713085cea
 dStiffness       1.71e13  #3e13
 
 saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $

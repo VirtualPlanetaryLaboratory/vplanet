@@ -9,11 +9,11 @@
   <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract"><img src="https://img.shields.io/badge/read-the_paper-7d93c7.svg?style=flat"/></a>
   <a href="http://ascl.net/1811.017"><img src="https://img.shields.io/badge/ascl-1811.017-blue.svg?colorB=262255" alt="ascl:1811.017" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-purple.svg"/></a>
-  <a href="examples"><img src="https://img.shields.io/badge/examples-30-darkblue.svg"/></a> 
+  <a href="examples"><img src="https://img.shields.io/badge/examples-33-darkblue.svg"/></a> 
   <img src = "https://img.shields.io/badge/platform-Linux_|%20macOS_|%20Windows10-darkgreen.svg?style=flat"><br>
   <a href="https://travis-ci.com/VirtualPlanetaryLaboratory/vplanet"><img src="https://travis-ci.com/VirtualPlanetaryLaboratory/vplanet.svg?token=jABaFLLgJNHTWSqkT7CM&branch=master"></a>
-  <a href="tests"><img src = "https://img.shields.io/badge/tests-36-darkorange.svg?style=flat"></a>
-  <img src = "https://img.shields.io/badge/memcheck-clean-green.svg?style=flat">
+  <a href="tests"><img src = "https://img.shields.io/badge/tests-39-darkorange.svg?style=flat"></a>
+  <img src = "https://img.shields.io/badge/memcheck-dirty-red.svg?style=flat">
   <img src = "https://img.shields.io/badge/coverage-73%25-red.svg?style=flat">
 </p>
 
@@ -25,7 +25,7 @@ To get started, ensure you have clang/gcc installed and follow the [QuickStart G
 
 ### Modules
 
-`VPLanet` currently consists of 11 functioning "modules," each containing a set of equations
+`VPLanet` currently consists of 12 functioning "modules," each containing a set of equations
 that models a specifc physical process:
 
 **AtmEsc**: Thermal escape of an atmosphere, including water photolyzation, hydrogen
@@ -43,6 +43,8 @@ the stellar torque (including shape evolution as a function of rotational freque
 
 **GalHabit**: Evolution of a wide orbit due to the galactic tide and impulses from
 passing stars (including radial migration).
+
+**MagmOc**: Thermal and geochemical evolution of a magma ocean.
 
 **POISE**: Energy balance climate model including dynamic ice sheets and lithospheric
 compression/rebound.

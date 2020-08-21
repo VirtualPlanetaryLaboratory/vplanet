@@ -9,14 +9,14 @@ water compared to results presented by
 `Hamano et al. (2013) <https://doi.org/10.1038/nature12163>`_
 (Fig. 1).
 
-=============================   ===============
-**Date**                        08/21/20
-**Author**                      Patrick Barth
-**Planet name**                 Earth
-**Initial water content**       5 TO
-**Modules**                     magmoc, stellar, atmesc
-**Approx. runtime**             1 minute
-=============================   ===============
+=========================   =======================
+**Date**                    08/21/20
+**Author**                  Patrick Barth
+**Planet name**             Earth
+**Initial water content**   5 TO
+**Modules**                 magmoc, stellar, atmesc
+**Approx. runtime**         1 minute
+=========================   =======================
 
 To run this case:
 -------------------

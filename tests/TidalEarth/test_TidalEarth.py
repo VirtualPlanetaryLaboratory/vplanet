@@ -22,6 +22,5 @@ def test_TidalEarth():
     assert np.isclose(output.log.final.tidalearth.Eccentricity, 0.490441)
     assert np.isclose(output.log.final.tidalearth.SemiMajorAxis, 7.409421e+09)
 
-
 if __name__ == "__main__":
     test_TidalEarth()

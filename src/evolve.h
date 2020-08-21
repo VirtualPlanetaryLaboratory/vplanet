@@ -16,7 +16,7 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
-void PropertiesAuxiliary(BODY*,CONTROL*,UPDATE*);
+void PropertiesAuxiliary(BODY*,CONTROL*,SYSTEM*,UPDATE*);
 void fdGetUpdateInfo(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***);
 double fdGetTimeStep(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***);
 void CalculateDerivatives(BODY*,SYSTEM*,UPDATE*,fnUpdateVariable***,int);

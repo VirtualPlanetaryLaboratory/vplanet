@@ -4032,4 +4032,5 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
   InitializeOptionsBinary(options,fnRead);
   InitializeOptionsGalHabit(options,fnRead);
   InitializeOptionsSpiNBody(options,fnRead);
+  InitializeOptionsMagmOc(options,fnRead);
 }

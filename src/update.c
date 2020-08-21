@@ -124,11 +124,22 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
     update[iBody].iNumVelX = 0;
     update[iBody].iNumVelY = 0;
     update[iBody].iNumVelZ = 0;
+
+    /* HERE
+     * set update of primary variables pointer to 0 ??
+     */
     update[iBody].iNumWaterMassMOAtm = 0;
     update[iBody].iNumWaterMassSol = 0;
     update[iBody].iNumSurfTemp = 0;
     update[iBody].iNumPotTemp = 0;
     update[iBody].iNumSolidRadius = 0;
+    update[iBody].iNumOxygenMassMOAtm = 0;
+    update[iBody].iNumOxygenMassSol = 0;
+    update[iBody].iNumHydrogenMassSpace = 0;
+    update[iBody].iNumOxygenMassSpace = 0;
+    update[iBody].iNumCO2MassMOAtm = 0;
+    update[iBody].iNumCO2MassSol = 0;
+
     update[iBody].iNumLostAngMom=0;
     update[iBody].iNumLostEng=0;
     update[iBody].iNumVars=0;
@@ -347,25 +358,27 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-
+    /* HERE MAGMOC
+     * copy that for every primary variable
+     */
     update[iBody].iWaterMassMOAtm = -1;
     if (update[iBody].iNumWaterMassMOAtm) {
-      update[iBody].iWaterMassMOAtm = iVar;
-      update[iBody].iaVar[iVar] = VWATERMASSMOATM;
-      update[iBody].iNumEqns[iVar] = update[iBody].iNumWaterMassMOAtm;
-      update[iBody].pdVar[iVar] = &body[iBody].dWaterMassMOAtm;
+      update[iBody].iWaterMassMOAtm  = iVar;
+      update[iBody].iaVar[iVar]      = VWATERMASSMOATM;
+      update[iBody].iNumEqns[iVar]   = update[iBody].iNumWaterMassMOAtm;
+      update[iBody].pdVar[iVar]      = &body[iBody].dWaterMassMOAtm;
       update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(int));
-      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(int*));
-      update[iBody].iaType[iVar] = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(int));
-      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(int));
+      update[iBody].iaBody[iVar]     = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(int*));
+      update[iBody].iaType[iVar]     = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(int));
+      update[iBody].iaModule[iVar]   = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(int));
 
       if (control->Evolve.iOneStep == RUNGEKUTTA) {
-        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dWaterMassMOAtm;
-        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar]       = &control->Evolve.tmpBody[iBody].dWaterMassMOAtm;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar]  = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(int));
         control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(double));
-          control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(int));
-          control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(int));
-        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(int*));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar]    = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar]  = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar]      = malloc(update[iBody].iNumWaterMassMOAtm*sizeof(int*));
       }
 
       iEqn=0;
@@ -376,25 +389,25 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-
+    /* until HERE */
     update[iBody].iWaterMassSol = -1;
     if (update[iBody].iNumWaterMassSol) {
-      update[iBody].iWaterMassSol = iVar;
-      update[iBody].iaVar[iVar] = VWATERMASSSOL;
-      update[iBody].iNumEqns[iVar] = update[iBody].iNumWaterMassSol;
-      update[iBody].pdVar[iVar] = &body[iBody].dWaterMassSol;
+      update[iBody].iWaterMassSol    = iVar;
+      update[iBody].iaVar[iVar]      = VWATERMASSSOL;
+      update[iBody].iNumEqns[iVar]   = update[iBody].iNumWaterMassSol;
+      update[iBody].pdVar[iVar]      = &body[iBody].dWaterMassSol;
       update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumWaterMassSol*sizeof(int));
-      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumWaterMassSol*sizeof(int*));
-      update[iBody].iaType[iVar] = malloc(update[iBody].iNumWaterMassSol*sizeof(int));
-      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumWaterMassSol*sizeof(int));
+      update[iBody].iaBody[iVar]     = malloc(update[iBody].iNumWaterMassSol*sizeof(int*));
+      update[iBody].iaType[iVar]     = malloc(update[iBody].iNumWaterMassSol*sizeof(int));
+      update[iBody].iaModule[iVar]   = malloc(update[iBody].iNumWaterMassSol*sizeof(int));
 
       if (control->Evolve.iOneStep == RUNGEKUTTA) {
-        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dWaterMassSol;
-        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumWaterMassSol*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar]       = &control->Evolve.tmpBody[iBody].dWaterMassSol;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar]  = malloc(update[iBody].iNumWaterMassSol*sizeof(int));
         control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumWaterMassSol*sizeof(double));
-          control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumWaterMassSol*sizeof(int));
-          control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumWaterMassSol*sizeof(int));
-        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumWaterMassSol*sizeof(int*));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar]    = malloc(update[iBody].iNumWaterMassSol*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar]  = malloc(update[iBody].iNumWaterMassSol*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar]      = malloc(update[iBody].iNumWaterMassSol*sizeof(int*));
       }
 
       iEqn=0;
@@ -408,22 +421,22 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
 
     update[iBody].iSurfTemp = -1;
     if (update[iBody].iNumSurfTemp) {
-      update[iBody].iSurfTemp = iVar;
-      update[iBody].iaVar[iVar] = VSURFTEMP;
-      update[iBody].iNumEqns[iVar] = update[iBody].iNumSurfTemp;
-      update[iBody].pdVar[iVar] = &body[iBody].dSurfTemp;
+      update[iBody].iSurfTemp        = iVar;
+      update[iBody].iaVar[iVar]      = VSURFTEMP;
+      update[iBody].iNumEqns[iVar]   = update[iBody].iNumSurfTemp;
+      update[iBody].pdVar[iVar]      = &body[iBody].dSurfTemp;
       update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumSurfTemp*sizeof(int));
-      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumSurfTemp*sizeof(int*));
-      update[iBody].iaType[iVar] = malloc(update[iBody].iNumSurfTemp*sizeof(int));
-      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumSurfTemp*sizeof(int));
+      update[iBody].iaBody[iVar]     = malloc(update[iBody].iNumSurfTemp*sizeof(int*));
+      update[iBody].iaType[iVar]     = malloc(update[iBody].iNumSurfTemp*sizeof(int));
+      update[iBody].iaModule[iVar]   = malloc(update[iBody].iNumSurfTemp*sizeof(int));
 
       if (control->Evolve.iOneStep == RUNGEKUTTA) {
-        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dSurfTemp;
-        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumSurfTemp*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar]       = &control->Evolve.tmpBody[iBody].dSurfTemp;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar]  = malloc(update[iBody].iNumSurfTemp*sizeof(int));
         control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumSurfTemp*sizeof(double));
-          control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumSurfTemp*sizeof(int));
-          control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumSurfTemp*sizeof(int));
-        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumSurfTemp*sizeof(int*));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar]    = malloc(update[iBody].iNumSurfTemp*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar]  = malloc(update[iBody].iNumSurfTemp*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar]      = malloc(update[iBody].iNumSurfTemp*sizeof(int*));
       }
 
       iEqn=0;
@@ -435,24 +448,53 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iVar++;
     }
 
-    update[iBody].iPotTemp = -1;
-    if (update[iBody].iNumPotTemp) {
-      update[iBody].iPotTemp = iVar;
-      update[iBody].iaVar[iVar] = VPOTTEMP;
-      update[iBody].iNumEqns[iVar] = update[iBody].iNumPotTemp;
-      update[iBody].pdVar[iVar] = &body[iBody].dPotTemp;
-      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumPotTemp*sizeof(int));
-      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumPotTemp*sizeof(int*));
-      update[iBody].iaType[iVar] = malloc(update[iBody].iNumPotTemp*sizeof(int));
-      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumPotTemp*sizeof(int));
+    update[iBody].iSolidRadius = -1;
+    if (update[iBody].iNumSolidRadius) {
+      update[iBody].iSolidRadius     = iVar;
+      update[iBody].iaVar[iVar]      = VSOLIDRADIUS;
+      update[iBody].iNumEqns[iVar]   = update[iBody].iNumSolidRadius;
+      update[iBody].pdVar[iVar]      = &body[iBody].dSolidRadius;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumSolidRadius*sizeof(int));
+      update[iBody].iaBody[iVar]     = malloc(update[iBody].iNumSolidRadius*sizeof(int*));
+      update[iBody].iaType[iVar]     = malloc(update[iBody].iNumSolidRadius*sizeof(int));
+      update[iBody].iaModule[iVar]   = malloc(update[iBody].iNumSolidRadius*sizeof(int));
 
       if (control->Evolve.iOneStep == RUNGEKUTTA) {
-        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dPotTemp;
-        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumPotTemp*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar]       = &control->Evolve.tmpBody[iBody].dSolidRadius;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar]  = malloc(update[iBody].iNumSolidRadius*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumSolidRadius*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar]    = malloc(update[iBody].iNumSolidRadius*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar]  = malloc(update[iBody].iNumSolidRadius*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar]      = malloc(update[iBody].iNumSolidRadius*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdateSolidRadius[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
+    update[iBody].iPotTemp = -1;
+    if (update[iBody].iNumPotTemp) {
+      update[iBody].iPotTemp         = iVar;
+      update[iBody].iaVar[iVar]      = VPOTTEMP;
+      update[iBody].iNumEqns[iVar]   = update[iBody].iNumPotTemp;
+      update[iBody].pdVar[iVar]      = &body[iBody].dPotTemp;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumPotTemp*sizeof(int));
+      update[iBody].iaBody[iVar]     = malloc(update[iBody].iNumPotTemp*sizeof(int*));
+      update[iBody].iaType[iVar]     = malloc(update[iBody].iNumPotTemp*sizeof(int));
+      update[iBody].iaModule[iVar]   = malloc(update[iBody].iNumPotTemp*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar]       = &control->Evolve.tmpBody[iBody].dPotTemp;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar]  = malloc(update[iBody].iNumPotTemp*sizeof(int));
         control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumPotTemp*sizeof(double));
-          control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumPotTemp*sizeof(int));
-          control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumPotTemp*sizeof(int));
-        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumPotTemp*sizeof(int*));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar]    = malloc(update[iBody].iNumPotTemp*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar]  = malloc(update[iBody].iNumPotTemp*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar]      = malloc(update[iBody].iNumPotTemp*sizeof(int*));
       }
 
       iEqn=0;
@@ -464,34 +506,182 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       iVar++;
     }
 
-    update[iBody].iSolidRadius = -1;
-    if (update[iBody].iNumSolidRadius) {
-      update[iBody].iSolidRadius = iVar;
-      update[iBody].iaVar[iVar] = VSOLIDRADIUS;
-      update[iBody].iNumEqns[iVar] = update[iBody].iNumSolidRadius;
-      update[iBody].pdVar[iVar] = &body[iBody].dSolidRadius;
-      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumSolidRadius*sizeof(int));
-      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumSolidRadius*sizeof(int*));
-      update[iBody].iaType[iVar] = malloc(update[iBody].iNumSolidRadius*sizeof(int));
-      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumSolidRadius*sizeof(int));
+    update[iBody].iOxygenMassMOAtm = -1;
+    if (update[iBody].iNumOxygenMassMOAtm) {
+      update[iBody].iOxygenMassMOAtm = iVar;
+      update[iBody].iaVar[iVar]      = VOXYGENMASSMOATM;
+      update[iBody].iNumEqns[iVar]   = update[iBody].iNumOxygenMassMOAtm;
+      update[iBody].pdVar[iVar]      = &body[iBody].dOxygenMassMOAtm;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumOxygenMassMOAtm*sizeof(int));
+      update[iBody].iaBody[iVar]     = malloc(update[iBody].iNumOxygenMassMOAtm*sizeof(int*));
+      update[iBody].iaType[iVar]     = malloc(update[iBody].iNumOxygenMassMOAtm*sizeof(int));
+      update[iBody].iaModule[iVar]   = malloc(update[iBody].iNumOxygenMassMOAtm*sizeof(int));
 
       if (control->Evolve.iOneStep == RUNGEKUTTA) {
-        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dSolidRadius;
-        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumSolidRadius*sizeof(int));
-        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumSolidRadius*sizeof(double));
-          control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumSolidRadius*sizeof(int));
-          control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumSolidRadius*sizeof(int));
-        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumSolidRadius*sizeof(int*));
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar]       = &control->Evolve.tmpBody[iBody].dOxygenMassMOAtm;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar]  = malloc(update[iBody].iNumOxygenMassMOAtm*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumOxygenMassMOAtm*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar]    = malloc(update[iBody].iNumOxygenMassMOAtm*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar]  = malloc(update[iBody].iNumOxygenMassMOAtm*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar]      = malloc(update[iBody].iNumOxygenMassMOAtm*sizeof(int*));
       }
 
       iEqn=0;
       for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
-        module->fnFinalizeUpdateSolidRadius[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+        module->fnFinalizeUpdateOxygenMassMOAtm[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
 
       (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
+    /* until HERE */
+    update[iBody].iOxygenMassSol = -1;
+    if (update[iBody].iNumOxygenMassSol) {
+      update[iBody].iOxygenMassSol   = iVar;
+      update[iBody].iaVar[iVar]      = VOXYGENMASSSOL;
+      update[iBody].iNumEqns[iVar]   = update[iBody].iNumOxygenMassSol;
+      update[iBody].pdVar[iVar]      = &body[iBody].dOxygenMassSol;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumOxygenMassSol*sizeof(int));
+      update[iBody].iaBody[iVar]     = malloc(update[iBody].iNumOxygenMassSol*sizeof(int*));
+      update[iBody].iaType[iVar]     = malloc(update[iBody].iNumOxygenMassSol*sizeof(int));
+      update[iBody].iaModule[iVar]   = malloc(update[iBody].iNumOxygenMassSol*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar]       = &control->Evolve.tmpBody[iBody].dOxygenMassSol;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar]  = malloc(update[iBody].iNumOxygenMassSol*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumOxygenMassSol*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar]    = malloc(update[iBody].iNumOxygenMassSol*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar]  = malloc(update[iBody].iNumOxygenMassSol*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar]      = malloc(update[iBody].iNumOxygenMassSol*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdateOxygenMassSol[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
+    update[iBody].iHydrogenMassSpace = -1;
+    if (update[iBody].iNumHydrogenMassSpace) {
+      update[iBody].iHydrogenMassSpace   = iVar;
+      update[iBody].iaVar[iVar]      = VHYDROGENMASSSPACE;
+      update[iBody].iNumEqns[iVar]   = update[iBody].iNumHydrogenMassSpace;
+      update[iBody].pdVar[iVar]      = &body[iBody].dHydrogenMassSpace;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumHydrogenMassSpace*sizeof(int));
+      update[iBody].iaBody[iVar]     = malloc(update[iBody].iNumHydrogenMassSpace*sizeof(int*));
+      update[iBody].iaType[iVar]     = malloc(update[iBody].iNumHydrogenMassSpace*sizeof(int));
+      update[iBody].iaModule[iVar]   = malloc(update[iBody].iNumHydrogenMassSpace*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar]       = &control->Evolve.tmpBody[iBody].dHydrogenMassSpace;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar]  = malloc(update[iBody].iNumHydrogenMassSpace*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumHydrogenMassSpace*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar]    = malloc(update[iBody].iNumHydrogenMassSpace*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar]  = malloc(update[iBody].iNumHydrogenMassSpace*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar]      = malloc(update[iBody].iNumHydrogenMassSpace*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdateHydrogenMassSpace[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
+    update[iBody].iOxygenMassSpace = -1;
+    if (update[iBody].iNumOxygenMassSpace) {
+      update[iBody].iOxygenMassSpace   = iVar;
+      update[iBody].iaVar[iVar]      = VOXYGENMASSSPACE;
+      update[iBody].iNumEqns[iVar]   = update[iBody].iNumOxygenMassSpace;
+      update[iBody].pdVar[iVar]      = &body[iBody].dOxygenMassSpace;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumOxygenMassSpace*sizeof(int));
+      update[iBody].iaBody[iVar]     = malloc(update[iBody].iNumOxygenMassSpace*sizeof(int*));
+      update[iBody].iaType[iVar]     = malloc(update[iBody].iNumOxygenMassSpace*sizeof(int));
+      update[iBody].iaModule[iVar]   = malloc(update[iBody].iNumOxygenMassSpace*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar]       = &control->Evolve.tmpBody[iBody].dOxygenMassSpace;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar]  = malloc(update[iBody].iNumOxygenMassSpace*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumOxygenMassSpace*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar]    = malloc(update[iBody].iNumOxygenMassSpace*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar]  = malloc(update[iBody].iNumOxygenMassSpace*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar]      = malloc(update[iBody].iNumOxygenMassSpace*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdateOxygenMassSpace[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+
+    update[iBody].iCO2MassMOAtm = -1;
+    if (update[iBody].iNumCO2MassMOAtm) {
+      update[iBody].iCO2MassMOAtm  = iVar;
+      update[iBody].iaVar[iVar]      = VCO2MASSMOATM;
+      update[iBody].iNumEqns[iVar]   = update[iBody].iNumCO2MassMOAtm;
+      update[iBody].pdVar[iVar]      = &body[iBody].dCO2MassMOAtm;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int));
+      update[iBody].iaBody[iVar]     = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int*));
+      update[iBody].iaType[iVar]     = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int));
+      update[iBody].iaModule[iVar]   = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar]       = &control->Evolve.tmpBody[iBody].dCO2MassMOAtm;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar]  = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar]    = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar]  = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar]      = malloc(update[iBody].iNumCO2MassMOAtm*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdateCO2MassMOAtm[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+    
+    update[iBody].iCO2MassSol = -1;
+    if (update[iBody].iNumCO2MassSol) {
+      update[iBody].iCO2MassSol    = iVar;
+      update[iBody].iaVar[iVar]      = VCO2MASSSOL;
+      update[iBody].iNumEqns[iVar]   = update[iBody].iNumCO2MassSol;
+      update[iBody].pdVar[iVar]      = &body[iBody].dCO2MassSol;
+      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumCO2MassSol*sizeof(int));
+      update[iBody].iaBody[iVar]     = malloc(update[iBody].iNumCO2MassSol*sizeof(int*));
+      update[iBody].iaType[iVar]     = malloc(update[iBody].iNumCO2MassSol*sizeof(int));
+      update[iBody].iaModule[iVar]   = malloc(update[iBody].iNumCO2MassSol*sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar]       = &control->Evolve.tmpBody[iBody].dCO2MassSol;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar]  = malloc(update[iBody].iNumCO2MassSol*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumCO2MassSol*sizeof(double));
+          control->Evolve.tmpUpdate[iBody].iaType[iVar]    = malloc(update[iBody].iNumCO2MassSol*sizeof(int));
+          control->Evolve.tmpUpdate[iBody].iaModule[iVar]  = malloc(update[iBody].iNumCO2MassSol*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar]      = malloc(update[iBody].iNumCO2MassSol*sizeof(int*));
+      }
+
+      iEqn=0;
+      for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+        module->fnFinalizeUpdateCO2MassSol[iBody][iModule](body,update,&iEqn,iVar,iBody,iFoo);
+
+      (*fnUpdate)[iBody][iVar]=malloc(iEqn*sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
+      iVar++;
+    }
+    /* HERE
+     * End of MagmOc variables
+     */
 
     /* 26Al Core */
     update[iBody].i26AlCore = -1;

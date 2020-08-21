@@ -19,6 +19,8 @@ behavior. This quality control ensures that as changes are made to the code base
 the outcomes of the simulations match expectations. Each check here corresponds
 to a figure in the `examples <../examples>`_ directory, so if the tests are passing, 
 then all figures should be reproduced by **VPLanet**.
+<<<<<<< HEAD
+=======
 
 To check for memory issues with valgrind, run
 
@@ -27,3 +29,4 @@ To check for memory issues with valgrind, run
   python valgrind.py
   
 which will test each directory, creating a file called *.valgrind that contains the output.
+>>>>>>> a45095dc8e0b53eba999c90f3556ce5713085cea

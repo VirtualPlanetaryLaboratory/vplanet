@@ -59,6 +59,12 @@ STELLAR]
 
 `IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity according to equilibrium tide theory. [EqTide, VSPACE]
 
+`MagmOc_Earth <MagmOc_Earth>`_: Earth's magma evolution after the Moon-forming impact. [AtmEsc, MagmOc, Stellar]
+
+`MagmOc_GJ1132b <MagmOc_GJ1132b>`_: GJ 1132 b's magma evolution, assuming no tidal or radiogenic heating. [AtmEsc, MagmOc, Stellar]
+
+`MagmOc_Trappist1g <MagmOc_Trappist1g>`_: Trappist-1 g's magma evolution, including tidal and radiogenic heating. [AtmEsc, EqTide, MagmOc, RadHeat, Stellar]
+
 `RadHeat <RadHeat>`_: Radiogenic heating evolution in Earth's core, mantle, and crust. [RadHeat]
 
 `TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a low mass star and tidally heated. [EqTide, RadHeat, ThermInt]
@@ -120,8 +126,9 @@ EqTide, STELLAR]
 
 `IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity according to equilibrium tide theory. [EqTide, VSPACE]
 
-`STEEP <STEEP>`_: Tidal evolution of a binary star, including the instability radius for circumbinary planets. [EqTide, STELLAR]
+`MagmOc_Trappist1g <MagmOc_Trappist1g>`_: Trappist-1 g's magma evolution, including tidal and radiogenic heating. [AtmEsc, EqTide, MagmOc, RadHeat, Stellar]
 
+`STEEP <STEEP>`_: Tidal evolution of a binary star, including the instability radius for circumbinary planets. [EqTide, STELLAR]
 
 `TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a low mass star and tidally heated. [EqTide, RadHeat, ThermInt]
 

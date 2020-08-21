@@ -30,3 +30,12 @@ Expected output
 .. figure:: Results_GJ1132b.png
    :width: 600px
    :align: center
+
+Evolution of various planetary parameters for the magma ocean evolution on
+GJ1132b with an initial water inventory of 100 terrestrial oceans, using the grey
+atmosphere model.
+Anti-clockwise from top left: Mantle and surface temperature; water masses in the
+different reservoirs; atmospheric pressures; atmospheric net cooling flux;
+melt fraction of the magma ocean (not including solidified mantle); mass fraction
+of water and Fe2O3 in the melt; oxygen mass in different reservoirs; solidification
+radius of the magma ocean.

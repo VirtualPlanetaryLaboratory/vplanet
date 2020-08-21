@@ -36,3 +36,10 @@ Expected output
 .. figure:: Earth_5TO_Hamano.png
    :width: 600px
    :align: center
+
+Evolution of atmospheric pressure (top), mantle temperature (middle, white line),
+cumulate and melt fraction (middle, black and grey areas), and water content in
+the different reservoirs (atmospere - red, magma ocean - green, solid - blue),
+for Earth with an initial water reservoir of 5 terrestrial oceans.
+The red arrows indicate the catastrophic outgassing of water into the atmosphere
+when the melt fraction of the mantle decreases rapidly.

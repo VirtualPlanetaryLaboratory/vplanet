@@ -6,13 +6,14 @@ Overview
 
 Thermal and volatile evolution of GJ1132b's mantle and atmosphere.
 
-===================   ============
-**Date**              02/18/19
-**Author**            Patrick Barth
-**Modules**           magmoc, atmesc, stellar
-**Approx. runtime**   3 minutes
-**Source code**       `GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/magmoc/examples/MagmOc_GJ1132b>`_
-===================   ============
+===================             ============
+**Date**                        08/21/20
+**Author**                      Patrick Barth
+**Planet name**                 GJ1132b
+**Initial water content**       100 TO
+**Modules**                     magmoc, atmesc, stellar
+**Approx. runtime**             3 minutes
+===================             ============
 
 
 To run this example

@@ -26,6 +26,8 @@ functionality for multithreading.
 **Peter Driscoll** developed the ThermInt module, contributed to RadHeat, and
 connected them both to EqTide.
 
+**Patrick Barth** developed the MagmOc module. He also assisted in AtmEsc development.
+
 **Thomas Quinn** assisted in the development of DistOrb, DistRot, and GalHabit. He
 also found many bugs with valgrind and address-sanitizer.
 
@@ -34,7 +36,7 @@ POISE, and assisted in debugging it. She also built the multi-planet script.
 
 **Rodolfo Garcia** assisted in AtmEsc and ThermInt development.
 
-**Patrick Barth** assisted in AtmEsc development.
+**Ludmila Carone** assisted in the development of the MagmOc module.
 
 **Pramod Gupta** ported VPLanet to Windows 10.
 

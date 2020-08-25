@@ -46,11 +46,11 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
 
 
   if orbit == True:
-    fig = plt.figure(figsize=(16,13))
+    fig = plt.figure(figsize=(9,6.5))
   else:
-    fig = plt.figure(figsize=(10*nfiles,15))
+    fig = plt.figure(figsize=(6.5*nfiles,9))
 
-  fig.subplots_adjust(wspace=0.3,top=0.9)
+  fig.subplots_adjust(wspace=0.5,hspace=0.5)
 
 
   for ii in np.arange(nfiles):
@@ -106,11 +106,6 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
 
     esinv = ecc*np.sin(longp)*np.sin(obl*np.pi/180.)
 
-    #titlestr = []
-    #titlestr.append(r'$a = %f, pCO_2 = %f$'%(semi,pco2))
-    #titlestr.append(r'$e_0 = %f, i_0 = %f^{\circ}, \psi_0 = %f^{\circ}, P_{rot} = %f$ d'%(ecc[0],inc[0],obl[0],P))
-    fig.subplots_adjust(wspace=0.3)
-
     lats = np.unique(body.Latitude)
     nlats = len(lats)
     ntimes = len(body.Time)
@@ -124,18 +119,19 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
     pos = ax1.figbox.get_points()
     #norm = mplcol.Normalize(vmin = -44,vmax = 15)
     c = plt.contourf(body.Time,lats,temp.T,cmap='plasma')
-    plt.ylabel('Latitude')
-    plt.title(r'Surface Temp [$^{\circ}$C]')
+    plt.ylabel('Latitude', fontsize = 10)
+    plt.title(r'Surface Temp [$^{\circ}$C]', fontsize = 12)
     plt.ylim(-90,90)
-    plt.yticks([-60,-30,0,30,60])
+    plt.yticks([-60,-30,0,30,60], fontsize = 9)
+    plt.xticks(fontsize = 9)
     if xrange == False:
       left = 0
     else:
       left = xrange[0]
-    #plt.text(left,140,'\n'.join(titlestr),fontsize=20)
     if xrange:
       plt.xlim(xrange)
-    plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
+    cbar = plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
+    plt.setp(cbar.ax.yaxis.get_ticklabels(), fontsize = 9)
 
     # plot albedo
     alb = np.reshape(body.AlbedoLat,(ntimes,nlats))
@@ -144,15 +140,16 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
     else:
       ax2 = plt.subplot(5,nfiles,ii+2*nfiles+1)
     pos = ax2.figbox.get_points()
-   # norm = mplcol.Normalize(vmin = 0.312,vmax = 0.6 )
     c = plt.contourf(body.Time,lats,alb.T,cmap = 'Blues_r')
-    plt.ylabel('Latitude')
-    plt.title('Albedo (TOA)')
+    plt.ylabel('Latitude', fontsize = 10)
+    plt.title('Albedo [TOA]', fontsize = 12)
     plt.ylim(-90,90)
-    plt.yticks([-60,-30,0,30,60])
+    plt.yticks([-60,-30,0,30,60], fontsize = 9)
+    plt.xticks(fontsize = 9)
     if xrange:
       plt.xlim(xrange)
-    plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
+    cbar = plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
+    plt.setp(cbar.ax.yaxis.get_ticklabels(), fontsize = 9)
 
 
     # plot ice height
@@ -163,16 +160,15 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
       ax3 = plt.subplot(5,nfiles,ii+3*nfiles+1)
     pos = ax3.figbox.get_points()
     c = plt.contourf(body.Time,lats,ice.T,cmap='Blues_r')
-    plt.ylabel('Latitude')
-    plt.title('Ice sheet height [m]')
+    plt.ylabel('Latitude', fontsize = 10)
+    plt.title('Ice sheet height [m]', fontsize = 12)
     plt.ylim(-90,90)
-  #   plt.xlim(0,2e6)
-    plt.yticks([-60,-30,0,30,60])
+    plt.yticks([-60,-30,0,30,60], fontsize = 9)
+    plt.xticks(fontsize = 9)
     if xrange:
       plt.xlim(xrange)
-    plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
-    # ax3p = ax3.twinx()
-  #   plt.plot(body.Time,esinv,linestyle = 'solid',marker='None',color='salmon',linewidth=2)
+    cbar = plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
+    plt.setp(cbar.ax.yaxis.get_ticklabels(), fontsize = 9)
 
 
     # plot bedrock
@@ -183,14 +179,16 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
       ax4 = plt.subplot(5,nfiles,ii+4*nfiles+1)
     pos = ax4.figbox.get_points()
     c = plt.contourf(body.Time,lats,brock.T,cmap='Reds_r')
-    plt.ylabel('Latitude')
-    plt.title('Bedrock height [m]')
+    plt.ylabel('Latitude', fontsize = 10)
+    plt.title('Bedrock height [m]', fontsize = 12)
     plt.ylim(-90,90)
-    plt.yticks([-60,-30,0,30,60])
-    plt.xlabel('Time [years]',fontsize=20)
+    plt.yticks([-60,-30,0,30,60], fontsize = 9)
+    plt.xlabel('Time [years]',fontsize = 10)
+    plt.xticks(fontsize = 9)
     if xrange:
       plt.xlim(xrange)
-    plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
+    cbar = plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
+    plt.setp(cbar.ax.yaxis.get_ticklabels(), fontsize = 9)
 
 
     # plot insolation
@@ -201,34 +199,45 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
       ax5 = plt.subplot(5,nfiles,ii+nfiles+1)
     pos = ax5.figbox.get_points()
     c = plt.contourf(body.Time,lats,insol.T,cmap='plasma')
-    plt.ylabel('Latitude')
-    plt.title(r'Annual average insolation [W/m$^2$]')
+    plt.ylabel('Latitude', fontsize = 10)
+    plt.title(r'Annual average insolation [W/m$^2$]', fontsize = 12)
     plt.ylim(-90,90)
-    plt.yticks([-60,-30,0,30,60])
+    plt.yticks([-60,-30,0,30,60], fontsize = 9)
+    plt.xticks(fontsize = 9)
     if xrange:
       plt.xlim(xrange)
-    plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
+    cbar = plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
+    plt.setp(cbar.ax.yaxis.get_ticklabels(), fontsize = 9)
 
     if orbit == True:
       #obliquity
       plt.subplot(4,2,4)
       plt.plot(body.Time,obl,linestyle = 'solid',marker='None',color='darkblue',linewidth =2)
-      plt.ylabel('Obliquity')
+      plt.ylabel(r'Obliquity [$^\circ$]', fontsize = 10)
+      plt.yticks(fontsize = 9)
+      plt.title(r'Obliquity [$^\circ$]', fontsize = 12 )
+      plt.xticks(fontsize = 9)
       if xrange:
         plt.xlim(xrange)
 
       #eccentricity
       plt.subplot(4,2,6)
       plt.plot(body.Time,ecc,linestyle = 'solid',marker='None',color='darkorchid',linewidth =2)
-      plt.ylabel('Eccentricity')
+      plt.title('Eccentricity', fontsize = 12)
+      plt.ylabel('Eccentricity', fontsize = 10)
+      plt.xticks(fontsize = 9)
+      plt.yticks(fontsize = 9)
       if xrange:
         plt.xlim(xrange)
 
       #e sin(obl) sin varpi
       plt.subplot(4,2,8)
       plt.plot(body.Time,esinv,linestyle = 'solid',marker='None',color='salmon',linewidth=2)
-      plt.ylabel('COPP')
-      plt.xlabel('Time [years]')
+      plt.ylabel('COPP', fontsize = 10)
+      plt.title('COPP', fontsize = 12)
+      plt.xlabel('Time [years]', fontsize = 10)
+      plt.xticks(fontsize = 9)
+      plt.yticks(fontsize = 9)
       if xrange:
         plt.xlim(xrange)
 
@@ -338,35 +347,45 @@ def seasonal_maps(time, dir = '.', show = True):
         except:
           longp = 0
 
-    fig = plt.figure(figsize=(16,6))
-    #fig.suptitle('Time = %f, Obl = %f, Ecc = %f, LongP = %f'%(time,obl,ecc,longp),fontsize=20)
+    fig = plt.figure(figsize=(9,3.5))
     plt.subplot(1,3,1)
-    fig.subplots_adjust(wspace=0.3)
+    fig.subplots_adjust(wspace=0.5)
+
     plt.title(r'Insolation [W/m$^2$]',fontsize=12)
-    c1=plt.contourf(np.arange(np.shape(insol)[1]),lats,insol,cmap='plasma')
-    plt.colorbar(c1)
+    c1 = plt.contourf(np.arange(np.shape(insol)[1]),lats,insol,cmap='plasma')
+    cbar = plt.colorbar(c1)
     plt.ylim(lats[0],lats[-1])
-    plt.xlabel('Time (days)')
-    plt.ylabel('Latitude (degrees)')
+    plt.xlabel('Time [days]', fontsize = 10)
+    plt.ylabel('Latitude [degrees]', fontsize = 10)
+    plt.xticks(fontsize = 9)
+    plt.yticks(fontsize = 9)
+    plt.setp(cbar.ax.yaxis.get_ticklabels(), fontsize = 9)
 
     scale = 4*np.shape(insol)[1]/np.shape(temp)[1]
     plt.subplot(1,3,2)
-    c2=plt.contourf(np.arange(np.shape(temp)[1])*scale,lats,temp,cmap='plasma')
+    c2 = plt.contourf(np.arange(np.shape(temp)[1])*scale,lats,temp,cmap='plasma')
     plt.title(r'Surface Temp [$^{\circ}$C]',fontsize=12)
-    plt.colorbar(c2)
+    cbar = plt.colorbar(c2)
     plt.ylim(lats[0],lats[-1])
-    plt.ylabel('Latitude (degrees)')
-    plt.xlabel('Time (days)')
+    plt.ylabel('Latitude [degrees]', fontsize = 10)
+    plt.xlabel('Time [days]', fontsize = 10)
     plt.xlim(0,np.shape(temp)[1]*scale/4.)
+    plt.xticks(fontsize = 9)
+    plt.yticks(fontsize = 9)
+    plt.setp(cbar.ax.yaxis.get_ticklabels(), fontsize = 9)
+
 
     scale = np.shape(insol)[1]/np.shape(ice)[1]
     plt.subplot(1,3,3)
-    c3=plt.contourf(np.arange(np.shape(ice)[1])*scale,lats,ice,cmap='Blues_r')
+    c3 = plt.contourf(np.arange(np.shape(ice)[1])*scale,lats,ice,cmap='Blues_r')
     plt.title(r'Ice balance [kg/m$^2$/s]',fontsize=12)
-    plt.colorbar(c3)
+    cbar = plt.colorbar(c3)
+    plt.setp(cbar.ax.yaxis.get_ticklabels(), fontsize = 9)
     plt.ylim(lats[0],lats[-1])
-    plt.xlabel('Time (days)')
-    plt.ylabel('Latitude (degrees)')
+    plt.xlabel('Time [days]', fontsize = 10)
+    plt.ylabel('Latitude [degrees]', fontsize = 10)
+    plt.xticks(fontsize = 9)
+    plt.yticks(fontsize = 9)
 
     if (sys.argv[1] == 'pdf'):
         plt.savefig('IceBeltSeasonal.pdf', dpi=300)

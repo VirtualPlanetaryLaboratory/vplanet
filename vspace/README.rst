@@ -1,18 +1,28 @@
 VSPACE
 ------
-``VSPACE`` is a tool to build input files for a parameter sweep. With ``VSPACE`` you can quickly and easily build input files with specific parameters with a specific type of distribution. In "Grid Mode" you can build input files in which the initial conditions have regular spacings within specified limits and with either linear or logarithmic spacings. In "Random Mode" the distributions of options can be uniform, Gaussian, sine, or cosine. Non-uniform distributions can be easily truncated, if necessary. 
+``VSPACE`` is a tool to build input files for a parameter sweep with ``VPLanet``. 
+
+Overview
+========
+With ``VSPACE`` you can quickly and easily build input files with specific parameters with a specific type of distribution. In "Grid Mode" you can build input files in which the initial conditions have regular spacings within specified limits and with either linear or logarithmic spacings. In "Random Mode" the distributions of options can be **uniform, Gaussian, sine,** or **cosine**. Non-uniform distributions can be easily truncated, if necessary. Histograms of the initia
 
 Installation
 ============
 Navigate to the vspace directory and run ``python setup.py``. All this does is put some 
 path info in your shell files.
 
-Examples
-========
-Run vspace on the command line by typing:
+Running VSPACE
+==============
+Run ``VSPACE`` on the command line by typing:
+
+.. code-block:: bash
 
     vspace <input file>
 
+where the input file contains a set of instructions to build the simulations.
+
+The Input File
+==============
 An input file is necessary. Take a look at the ``input`` file in the examples directory. 
 This file will contain a list of files to be copied (from some source directory to a 
 destination directory) and all the ``VPLanet`` options you wish to change or add to each file. 

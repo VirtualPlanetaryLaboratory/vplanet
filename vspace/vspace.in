@@ -1,0 +1,11 @@
+srcfolder  ../../examples/IoHeat
+destfolder test
+trialname  trial_
+
+file   jupiter.in
+
+file   io.in
+dEcc  [0.001,0.005,n5] ecc
+dObliquity [0,10,n5] obl
+
+file   vpl.in

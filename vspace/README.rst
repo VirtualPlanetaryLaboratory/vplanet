@@ -8,14 +8,14 @@ With ``VSPACE`` you can quickly and easily build input files with specific
 parameters with a specific type of distribution. In **Grid Mode** you can build
 input files in which the initial conditions have regular spacings within specified
 limits and with either linear or logarithmic spacings. In **Random Mode** the
-distributions are random, but can be **uniform, Gaussian** or uniform in *sine**
+distributions are random, but can be **uniform, Gaussian** or uniform in **sine**
 or **cosine**. Non-uniform distributions can be easily truncated, if necessary.
 Histograms of the initial conditions will also be built. After generating the
-trials, use the `_multi-planet <../multi-planet>`_ script to run.
+trials, use the `multi-planet <../multi-planet>`_ script to run.
 
 Installation
 ============
-Navigate to the vspace directory and run ``python setup.py``. This command places
+Navigate to the vspace directory (this directory) and run ``python setup.py``. This command places
 some path info in your shell files.
 
 Running VSPACE
@@ -33,16 +33,15 @@ of each varied parameter in the trial subdirectories.
 
 The Input File
 ==============
-The input file contains a list of files to be copied (from some source directory to a
-destination directory) and all the ``VPLanet`` options you wish to change or add to each file.
-An example input file, called ``vspace.in``, is included in this directory, its
-lines are described below and is based off the `<../examples/IoHeat> IoHeat example`.
+The input file contains a list of template files and all the ``VPLanet`` options to vary.
+An example input file, called ``vspace.in``, is included in this directory and its
+lines are described below and is based off the `IoHeat example <../examples/IoHeat>`_.
 
 The first line is
 
     srcfolder <path-to-template-files>
 
-This provides ``VSPACE`` with the location of a directory that contains template
+This provides ``VSPACE`` with the location of a directory that contains the template
 ``VPLanet`` input files, such as vpl.in, star.in, etc. The format of the input files
 is slightly different when used with ``VSPACE`` as described below.
 
@@ -50,24 +49,26 @@ The next line is
 
     destfolder <path-to-output>
 
-which is where your suite of initial conditions will live. **NOTE**: ``VSPACE``
+which is the name of a subdirectory that will contain all the initial conditions for the parameter sweep. **NOTE**: ``VSPACE``
 will overwrite previously generated files!
 
 The next line is
 
     trialname  <prefix>
 
-which is a prefix for each case in the parameter sweep. The trialname defaults
-to ``default`` if this command is not included.
+which specifies the prefix for subdirectories of the the parameter sweep. The prefix defaults
+to "default" if this command is not included.
 
 With these top-level commands executed, the remaining lines describe how the
-individual parameters are to be varied, and what the names of the trial directories
-will be. In the example ``vspace.in`` file, these lines are
+individual parameters are to be varied, and completes the names of the trial directories. 
+In the example ``vspace.in`` file, these lines are
 
     file   jupiter.in
 
-    file   io.in
+    file   io.in 
+    
     dEcc  [0.001,0.005,n5] ecc
+
     dObliquity [0,10,n5] obl
 
     file   vpl.in
@@ -75,8 +76,11 @@ will be. In the example ``vspace.in`` file, these lines are
 The general syntax for these lines are:
 
     file <name>
+    
     <option> <sampling rules> <identifier>
+
     <option> <sampling rules> <identifier>
+
     ...
 
 where <name> is the name of the input file. The next lines describe how individual
@@ -88,16 +92,17 @@ prefix in the destfolder subdirectories. ``VSPACE`` will vary all parameters lis
 after a "file" command until it reaches the next "file" command or the end of the
 file.
 
-This example case would create directories with names like
+This example will create subdirectories with names like
 
     test/trial_ecc0obl0
 
 with files jupiter.in, io.in, and vpl.in that would be identical to those files
 in the srcfolder **except** dEcc and dObliquity would have values that follow the
-sampling rules in io.in.
+sampling rules in io.in. The numbers after each <identifier> uniquely identifies the
+subdirectory.
 
 Once the directories have been created, they can all be executed with a single command
-using the `_multi-planet <../multi-planet>`_ script.
+using the `multi-planet <../multi-planet>`_ script.
 
 You can additionally remove options from a source file with the following command:
 
@@ -117,7 +122,7 @@ will allow you to generate trials that are randomly distributed.
 **GRID MODE:**
 ``VSPACE`` allows for 3 submodes to generate trials that explore a gridded parameter
 space, i.e even spacing. These submodes are **explicit**, **linear**, and
-**logarithmic**. Each follows the following syntax:
+**logarithmic**. Each adheres the following syntax:
 
     <option> [start, end, spacing] <identifier>
 
@@ -142,14 +147,7 @@ previous example could be rewritten as
 
 which would generate 11 trials, equally spaced, from 1 to 2, i.e. every 0.1.
 
-**Logarithmic Submode**: To change the spacing to be logarithmic, use "l" instead
-of "n":
-
-    dSemi  [1, 1000, l10]  a
-
-which would generate ten trials, logarithmically spaced, from 1 to 1000.
-
-**Pro Tips**: Minus options are allowed, but if you are providing the spacing,
+Negative values are allowed, but if you are providing the spacing,
 rather than using the "n" or "l" option, either provide a negative spacing or
 swap the start and end values. For example:
 
@@ -164,10 +162,17 @@ whether a minus option causes ``VPLanet`` to change the units, so make sure you 
 ``vplanet -h``. If you use negative values for a parameter that has alternate
 units for a negative option, the outcome will most likely be wrong!
 
-As described above, you can vary more than one parameter at a time. While this
+**Logarithmic Submode**: To change the spacing to be logarithmic, use "l" instead
+of "n":
+
+    dSemi  [1, 1000, l10]  a
+
+which would generate ten trials, logarithmically spaced, from 1 to 1000.
+
+**Pro Tip**: As described above, you can vary more than one parameter at a time. While this
 can be very useful, **you have the power to generate a large number of files very
-quickly**. Use this wisely: test with small numbers first to ensure that files end
-up in the correct locations and that initial conditions are indeed output with
+quickly**. Use this feature wisely: test with small numbers first to ensure that files appear
+in the correct locations and that initial conditions are indeed output with
 the desired values (check the histograms).
 
 **RANDOM MODE:**
@@ -204,20 +209,20 @@ for example, dEcc should not be < 0 or > 1. You can provide cutoffs with 4th and
 
     dEcc  [0.1, 0.01, g, min0.0, max1.0]  e
 
-You do not need to provide both min and max, if you need only one, and the order does
+You do not need to provide both min and max if you need only one, and the order does
 not matter.
 
 **Sine and Cosine Submodes**: For angles, you may want to sample the sine or cosine
 of the angle uniformly, rather than sampling the angle itself uniformly. You can
 accomplish this with ``s`` or ``c``, for sine and cosine respectively:
 
-    <option name> [<low angle>, <high angle>, s] <prefix>
-    <option name> [<low angle>, <high angle>, c] <prefix>
+    <option> [<low angle>, <high angle>, s] <prefix>
+    
+    <option> [<low angle>, <high angle>, c] <prefix>
 
 Note that <low angle> and <high angle> should be the min and max values of the ANGLE,
-not the sine or cosine of the angle. ``VSPACE`` does the conversion to and from
-trig output and angle. **NOTE**: The units of the angle can be either radians or degrees, but
-must be consistent with your source ``vpl.in`` file -- ``VSPACE`` determines the unit from
+not the sine or cosine of the angle. **NOTE**: The units of the angle can be either radians or degrees, but
+must be consistent with your primary input file, usually ``vpl.in`` -- ``VSPACE`` determines the unit from
 this file.
 
 Template Files

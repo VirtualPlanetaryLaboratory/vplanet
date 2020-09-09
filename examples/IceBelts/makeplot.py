@@ -46,7 +46,7 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
 
 
   if orbit == True:
-    fig = plt.figure(figsize=(9,6.5))
+    fig = plt.figure(figsize=(6.5,9))
   else:
     fig = plt.figure(figsize=(6.5*nfiles,9))
 

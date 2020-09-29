@@ -22,7 +22,7 @@ def test_mp_checkpoint():
         #runs vspace
         sub.run(['python','../../vspace/vspace/vspace.py','mp_checkpoint_test'],cwd=cwd)
         #runs mp checkpoint
-        sub.run(['multi-planet','mp_checkpoint_test',cores],cwd=cwd)
+        sub.run(['python', '../../multi-planet/multi-planet.py','mp_checkpoint_test',cores],cwd=cwd)
         #gets list of folders
         folders = sorted([f.path for f in os.scandir(dir) if f.is_dir()])
 

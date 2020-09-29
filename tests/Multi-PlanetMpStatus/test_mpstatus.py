@@ -21,10 +21,10 @@ def test_mpstatus():
         #runs vspace
         sub.run(['python','../../vspace/vspace/vspace.py','mp_status'],cwd=cwd)
         #runs mp checkpoint
-        sub.run(['multi-planet','mp_status',cores],cwd=cwd)
+        sub.run([sub.run(['python', '../../multi-planet/multi-planet.py','mp_status',cores],cwd=cwd)
 
         #runs mpstatus
-        sub.run(['mpstatus'],cwd=cwd)
+        sub.run([sub.run(['python', '../../multi-planet/mp_status.py'],cwd=cwd)
 
         #gets list of folders
         folders = sorted([f.path for f in os.scandir(dir) if f.is_dir()])

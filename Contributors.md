@@ -6,25 +6,26 @@ expertise. This file records who is responsible for which aspects of the code.
 **Rory Barnes** is the lead developer who conceived the project,
 implemented the matrices and vectors of function pointers, designed
 the I/O scheme, and maintains this repository. He also wrote most of the top-level files, such as vplanet.h,
-control.c, body.c, evolve.c, etc. He wrote most of EqTide and RadHeat.
-He can be reached at rory@astro.washington.edu.
+control.c, etc. He also developed EqTide and RadHeat. He can be reached at rory@astro.washington.edu.
 
-**Russell Deitrick** wrote the DistOrb, DistRot, GalHabit and POISE modules, as
+**Russell Deitrick** devevloped the DistOrb, DistRot, GalHabit and POISE modules, as
 well as VSPACE.
 
-**Rodrigo Luger** wrote the AtmEsc and STELLAR modules, as well as the accompanying
+**Rodrigo Luger** developed the AtmEsc and STELLAR modules, as well as the accompanying
 VPLOT resource. He also designed this repository, including setting up the continuous
 integration and calculating code coverage.
 
-**David Fleming** wrote the BINARY module and has contributed to the development
+**David Fleming** developed the BINARY module and has contributed to the development
 of STELLAR, AtmEsc, and EqTide. He also wrote BigPlanet.
 
-**Hayden Smotherman** wrote SpiNBody and has contributed to various subroutines
+**Hayden Smotherman** developed SpiNBody and has contributed to various subroutines
 that have signficantly increased the efficiency of the executable. He also added OpenMP
 functionality for multithreading.
 
 **Peter Driscoll** developed the ThermInt module, contributed to RadHeat, and
 connected them both to EqTide.
+
+**Patrick Barth** developed the MagmOc module. He also assisted in AtmEsc development.
 
 **Thomas Quinn** assisted in the development of DistOrb, DistRot, and GalHabit. He
 also found many bugs with valgrind and address-sanitizer.
@@ -34,7 +35,7 @@ POISE, and assisted in debugging it. She also built the multi-planet script.
 
 **Rodolfo Garcia** assisted in AtmEsc and ThermInt development.
 
-**Patrick Barth** assisted in AtmEsc development.
+**Ludmila Carone** assisted in the development of the MagmOc module.
 
 **Pramod Gupta** ported VPLanet to Windows 10.
 

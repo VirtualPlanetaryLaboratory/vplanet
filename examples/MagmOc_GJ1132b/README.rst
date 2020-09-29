@@ -1,17 +1,17 @@
-Magma ocean evolution on GJ1132b
+Magma ocean evolution on GJ 1132 b
 ===========
 
 Overview
 --------
 
-Thermal and volatile evolution of GJ1132b's mantle and atmosphere.
+Thermal and volatile evolution of GJ 1132 b's mantle and atmosphere during its magma ocean phase. 
 
 =========================   =======================
 **Date**                    08/21/20
 **Author**                  Patrick Barth
-**Planet name**             GJ1132b
+**Planet name**             GJ 1132 b
 **Initial water content**   100 TO
-**Modules**                 magmoc, atmesc, stellar
+**Modules**                 AtmEsc, MagmOc, STELLAR
 **Approx. runtime**         3 minutes
 =========================   =======================
 
@@ -32,10 +32,10 @@ Expected output
    :width: 600px
    :align: center
 
-Evolution of various planetary parameters for the magma ocean evolution on
-GJ1132b with an initial water inventory of 100 terrestrial oceans, using the grey
+Evolution of various planetary parameters for the magma ocean evolution of
+GJ 1132 b with an initial water inventory that is 100 that of the modern Earth. The planet radiatively cools with VPLanet's grey
 atmosphere model.
-Anti-clockwise from top left: Mantle and surface temperature; water masses in the
+Counter-clockwise from top left: Mantle and surface temperature; water masses in the
 different reservoirs; atmospheric pressures; atmospheric net cooling flux;
 melt fraction of the magma ocean (not including solidified mantle); mass fraction
 of water and Fe2O3 in the melt; oxygen mass in different reservoirs; solidification

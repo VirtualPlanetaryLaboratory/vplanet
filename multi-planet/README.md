@@ -15,6 +15,7 @@ To run Multi-Planet on a large number of simulations, first type  `vspace <input
 ```
 multi-planet <input file> <number of cores>
 ```
+
 where `<input file>` is the same for `vspace` and `multi-planet`.
 
 

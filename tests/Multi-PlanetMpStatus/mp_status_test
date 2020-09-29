@@ -1,0 +1,10 @@
+srcfolder  .
+destfolder MP_Status
+trialname  semi_
+
+file   earth.in
+dSemi [1, 2, n3] a
+
+file sun.in
+
+file vpl.in

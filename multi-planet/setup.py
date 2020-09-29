@@ -13,7 +13,7 @@ home = os.path.expanduser('~')
 # Command we're adding to the user profile
 path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'bin')
 pythonpath = os.path.join(os.path.dirname(os.path.realpath(__file__)))
-cmd = '\n\n# Added by Multi-Planet 0.0.1 setup script\nexport PATH=%s:$PATH\nexport PYTHONPATH=${PYTHONPATH}:%s' % (path, pythonpath)
+cmd = '\n\n# Added by Multi-Planet 0.1.0 setup script\nexport PATH=%s:$PATH\nexport PYTHONPATH=${PYTHONPATH}:%s' % (path, pythonpath)
 
 # Setup success?
 success = False

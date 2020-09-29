@@ -3504,7 +3504,7 @@ Is a specific latitude's sea component covered in ice?
 */
 double fbIceLatSea(BODY *body,int iBody,int iLat) {
   if (body[iBody].daSeaIceHeight[iLat] >= body[iBody].dMinIceHeight ||
-      body[iBody].daTempMaxWater[iLat] < body[iBody].dFrzTSeaIce) {
+        body[iBody].daTempMaxWater[iLat] < body[iBody].dFrzTSeaIce) {
     return 1;
   }
 
@@ -3512,16 +3512,14 @@ double fbIceLatSea(BODY *body,int iBody,int iLat) {
 }
 
 /**
-Is a specific latitude's sea component covered in ice?
+Is a specific latitude's land component covered in ice?
 
 @param body Struct containing all body information and variables
 @param iBody Body in question
 */
 double fbIceLatLand(BODY *body,int iBody,int iLat) {
-  if (body[iBody].daIceHeight[iLat] >= body[iBody].dMinIceHeight) {
-    return 1;
-  } else if (body[iBody].daIceHeight[iLat] == body[iBody].dMinIceHeight &&
-      body[iBody].daTempMaxLand[iLat] < 0) {
+  if (body[iBody].daIceHeight[iLat] >= body[iBody].dMinIceHeight ||
+        body[iBody].daTempMaxLand[iLat] < 0) {
     return 1;
   }
 

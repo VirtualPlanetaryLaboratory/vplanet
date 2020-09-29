@@ -4,7 +4,6 @@ import sys
 import subprocess as sb
 import numpy as np
 import re
-from IPython.core.debugger import Tracer
 import vspace_hyak
 import itertools as it
 import matplotlib.pyplot as plt

@@ -12,13 +12,13 @@ def test_mp_parallel():
         warnings.warn("There is only 1 core on the machine",stacklevel=3)
     else:
         #removes checkpoint_file
-        cp = cwd+'/.multi-planet-cp'
+        cp = cwd+'/.multi-planet'
         sub.run(['rm', cp],cwd=cwd)
         #removes the folders from when vspace is ran
         dir = cwd+'/MP_Parallel'
         sub.run(['rm', '-rf', dir],cwd=cwd)
         #runs vspace
-        sub.run(['vspace','mp_parallel_test'],cwd=cwd)
+        sub.run(['python','../../vspace/vspace/vspace.py','mp_parallel_test'],cwd=cwd)
         #runs parallel
         sub.run(['multi-planet','mp_parallel_test',cores],cwd=cwd)
 

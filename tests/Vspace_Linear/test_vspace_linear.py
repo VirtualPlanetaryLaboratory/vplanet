@@ -9,7 +9,7 @@ def test_vspace_linear():
     # removes the files created when vspace is ran
     sub.run(['rm', '-rf', dir],cwd=cwd)
     # runs vspace
-    sub.run(['vspace','vspace_linear'],cwd=cwd)
+    sub.run(['python','../../vspace/vspace/vspace.py','vspace_linear'],cwd=cwd)
     # Grab the output
     folders = sorted([f.path for f in os.scandir(dir) if f.is_dir()])
     semi = []
@@ -23,7 +23,7 @@ def test_vspace_linear():
         os.chdir('../')
     for i in range(len(semi)):
         semi[i] = float(semi[i])
-        
+
     assert np.isclose(semi[0], 1.0)
     assert np.isclose(semi[1], 1.1)
     assert np.isclose(semi[2], 1.2)

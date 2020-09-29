@@ -1,0 +1,6 @@
+srcfolder  .
+destfolder Log_Test
+trialname  semi_
+
+file   earth.in
+dSemi [1, 1000, l10] a

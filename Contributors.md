@@ -42,3 +42,5 @@ POISE, and assisted in debugging it. She also built the multi-planet script.
 **Diego McDonald** added the Lehmer-Catling model to AtmEsc.
 
 **Benjamin Guyer** assisted in the coupling of EqTide and ThermInt.
+
+**Lyan Guez** contributed to the development of the mpstatus script.

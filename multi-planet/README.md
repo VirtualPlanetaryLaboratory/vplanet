@@ -1,6 +1,6 @@
-# Multi-Planet: Multicore Simulations with VPLanet
+# Multi-Planet: Multi-core Simulations with VPLanet
 
-Use `multi-planet` to run a large number of simulations on one ore more cores. `multi-planet` is designed to work with [vspace](../vspace>). The included script `mpstatus` provides the current status of the simulations. Note that `multi-planet` cannot be used to run simulations across multiple computers.
+Use `multi-planet` to run a large number of simulations on one or more cores. `multi-planet` is designed to work with [vspace](../vspace>). The included script `mpstatus` can provide the current status of the simulations. Note that `multi-planet` cannot be used to run simulations across multiple computers.
 
 ## Multi-Planet Setup
 
@@ -12,17 +12,17 @@ python setup.py
 
 This command also places `mpstatus` in your PATH.
 
-## Running Multi-planet
+## Running Multi-Planet
 
 To run `multi-planet` on a large number of simulations, first run `vspace` to create the simulation folders that `multi-planet` will run. The syntax for `multi-planet` is:
 ```
 multi-planet <input file> <number of cores>
 ```
-where <input file> **must be the same file** used with `vspace`.
+where the "input file" **must be the same file** used with `vspace`.
 
 Should your run be interrupted for whatever reason, just run `multi-planet` again and it should restart where it left off. 
 
-## Checking the status of Multi-planet
+## Checking the status of the Multi-Planet Simulations
 
 To check the status of your simulations, type 
 ```

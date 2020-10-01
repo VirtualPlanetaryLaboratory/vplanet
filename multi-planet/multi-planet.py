@@ -27,7 +27,7 @@ def parallel_run_planet(input_file, cores):
 
 
     #initalizes the checkpoint file
-    checkpoint_file = os.getcwd() + '/' + '.multi-planet'
+    checkpoint_file = os.getcwd() + '/' + '.' + folder_name
 
     #checks if the files doesn't exist and if so then it creates it
     if os.path.isfile(checkpoint_file) == False:
@@ -154,7 +154,7 @@ def par_worker(checkpoint_file, lock, sims):
 
         with open('vplanet_log','a+') as vplf:
             vplanet = sub.Popen("vplanet vpl.in", shell=True, stdout=sub.PIPE, stderr=sub.PIPE, universal_newlines=True)
-
+            return_code = vplanet.poll()
             for line in vplanet.stderr:
                 vplf.write(line)
 
@@ -168,16 +168,23 @@ def par_worker(checkpoint_file, lock, sims):
             for newline in f:
                 datalist.append(newline.strip().split())
 
-        for l in datalist:
-            if l[0] == folder:
-                l[1] = '1'
-                break
+        if return_code is None:
+            for l in datalist:
+                if l[0] == folder:
+                    l[1] = '1'
+                    break
+
+            print(folder, "completed")
+        else:
+            for l in datalist:
+                if l[0] == folder:
+                    l[1] = '-1'
+                    break
+            print("\t" + folder, "failed")
 
         with open(checkpoint_file, 'w') as f:
             for newline in datalist:
                 f.writelines(' '.join(newline)+'\n')
-
-        print("\t" + folder, "is done!")
         lock.release()
 
         os.chdir("../../")

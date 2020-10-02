@@ -239,7 +239,7 @@ if numvars == 0:
   for i in range(fnum):
     #read in file to be copied
     try:
-      fIn = open(os.path.join(src,flist[i]),'r',encoding='cp1252')
+      fIn = open(os.path.join(src,flist[i]),'r')
     except IOError:
       print("%s is not a valid file name. Please reenter." % (os.path.join(src,flist[i])))
 
@@ -316,7 +316,7 @@ elif numvars >= 1:
       for i in range(fnum):
         #read in file to be copied
         try:
-          fIn = open(os.path.join(src,flist[i]),'r',encoding='cp1252')
+          fIn = open(os.path.join(src,flist[i]),'r')
         except IOError:
           print("%s is not a valid file name. Please reenter." % (os.path.join(src,flist[i])))
 
@@ -395,7 +395,7 @@ elif numvars >= 1:
       for i in range(fnum):
         #read in file to be copied
         try:
-          fIn = open(os.path.join(src,flist[i]),'r',encoding='cp1252')
+          fIn = open(os.path.join(src,flist[i]),'r')
         except IOError:
           print("%s is not a valid file name. Please reenter." % (os.path.join(src,flist[i])))
 

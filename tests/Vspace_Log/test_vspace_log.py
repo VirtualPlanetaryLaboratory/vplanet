@@ -10,7 +10,7 @@ def test_vspace_log():
     # Removes the files created when vspace is ran
     sub.run(['rm', '-rf', dir],cwd=cwd)
     # Runs vspace
-    sub.run(['python','../../vspace/vspace/vspace.py','vspace_log'],cwd=cwd)
+    sub.run(['python','../../vspace/vspace/vspace.py','vspace.in'],cwd=cwd)
     # Grab the output
     folders = sorted([f.path for f in os.scandir(dir) if f.is_dir()])
     semi = []

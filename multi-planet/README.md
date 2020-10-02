@@ -20,15 +20,16 @@ multi-planet <input file> <number of cores>
 ```
 where the "input file" **must be the same file** used with `vspace`.
 
-Should your run be interrupted for whatever reason, just run `multi-planet` again and it should restart where it left off. 
+Should your run be interrupted for whatever reason, just run `multi-planet` again and it should restart where it left off.
 
 ## Checking the status of the Multi-Planet Simulations
 
-To check the status of your simulations, type 
+To check the status of your simulations, type
 ```
-mpstatus 
+mpstatus <input file>
 ```
-in the directory that is currently running `multi-planet`. The following will be printed to the command line:
+where the "input file" **must be the same file** used with `vspace` and `multi-planet`.
+The following will be printed to the command line:
 
 ```
 --Multi-Planet Status--

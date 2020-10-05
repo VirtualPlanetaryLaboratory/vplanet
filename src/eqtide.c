@@ -3242,6 +3242,8 @@ void fiaCPLEpsilon(double dRotRate,double dMeanMotion,double dObliquity,int *iEp
 
   if (dObliquity > PI/2) {
     dRotRate = -dRotRate;
+  } else if (bFloatComparison(dObliquity,PI/2)) {
+    dRotRate = 0;
   }
 
   iEpsilon[0]=fiSign(2*dRotRate-2*dMeanMotion);

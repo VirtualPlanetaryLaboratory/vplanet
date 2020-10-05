@@ -3240,11 +3240,13 @@ double fdGammaOrb(double dEccSq,double dPsi,int *epsilon) {
 void fiaCPLEpsilon(double dRotRate,double dMeanMotion,double dObliquity,int *iEpsilon) {
   // Note: fiSign reurns 0 if the argument is < EPS, see vplanet.h
 
+  /* This needs to be added back in! XXX
   if (dObliquity > PI/2) {
     dRotRate = -dRotRate;
   } else if (bFloatComparison(dObliquity,PI/2)) {
     dRotRate = 0;
   }
+  */
 
   iEpsilon[0]=fiSign(2*dRotRate-2*dMeanMotion);
   iEpsilon[1]=fiSign(2*dRotRate-3*dMeanMotion);

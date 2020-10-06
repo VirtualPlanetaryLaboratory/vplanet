@@ -2992,7 +2992,7 @@ void PropsAuxCPL(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
     if (evolve->bForceEqSpin[iBody])
       body[iBody].dRotRate = fdEqRotRate(body,iBody,body[iOrbiter].dMeanMotion,body[iOrbiter].dEccSq,evolve->iEqtideModel,evolve->bDiscreteRot);
 
-    fiaCPLEpsilon(body[iBody].dRotRate,body[iOrbiter].dMeanMotion,body[iBody].iTidalEpsilon[iIndex]);
+    fiaCPLEpsilon(body[iBody].dRotRate,body[iOrbiter].dMeanMotion,body[iOrbiter].dObliquity,body[iBody].iTidalEpsilon[iIndex]);
     fdCPLZ(body,body[iOrbiter].dMeanMotion,body[iOrbiter].dSemi,iBody,iIndex);
     fdaChi(body,body[iOrbiter].dMeanMotion,body[iOrbiter].dSemi,iBody,iIndex);
 
@@ -3237,8 +3237,16 @@ double fdGammaOrb(double dEccSq,double dPsi,int *epsilon) {
     return 4*epsilon[0] + dEccSq*(-20*epsilon[0] + 147./2*epsilon[1] + 0.5*epsilon[2] - 3*epsilon[5]) - 4*sin(dPsi)*sin(dPsi)*(epsilon[0]-epsilon[8]);
 }
 
-void fiaCPLEpsilon(double dRotRate,double dMeanMotion,int *iEpsilon) {
+void fiaCPLEpsilon(double dRotRate,double dMeanMotion,double dObliquity,int *iEpsilon) {
   // Note: fiSign reurns 0 if the argument is < EPS, see vplanet.h
+
+  /* This needs to be added back in! XXX
+  if (dObliquity > PI/2) {
+    dRotRate = -dRotRate;
+  } else if (bFloatComparison(dObliquity,PI/2)) {
+    dRotRate = 0;
+  }
+  */
 
   iEpsilon[0]=fiSign(2*dRotRate-2*dMeanMotion);
   iEpsilon[1]=fiSign(2*dRotRate-3*dMeanMotion);
@@ -3273,7 +3281,7 @@ double fdCPLTidePowerEq(double dTidalZ,double dEccSq,double dMeanMotion,double d
 
   dRotRateEq = fdCPLEqRotRate(dMeanMotion,dEccSq,bDiscrete);
 
-  fiaCPLEpsilon(dRotRateEq,dMeanMotion,iEpsilon);
+  fiaCPLEpsilon(dRotRateEq,dMeanMotion,dObliquity,iEpsilon);
 
   dGammaRot = fdGammaRot(dEccSq,dObliquity,iEpsilon);
   dGammaOrb = fdGammaOrb(dEccSq,dObliquity,iEpsilon);

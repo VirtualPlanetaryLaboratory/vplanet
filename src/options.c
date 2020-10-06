@@ -2272,7 +2272,7 @@ void ReadCosObl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
 
 void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output,int iFile,int iVerbose) {
   int i,j,count,iLen,iNumIndices=0,bNeg[MAXARRAY],ok=1,iNumGrid=0;
-  int k,iOut,*lTmp;
+  int k,iOut,*lTmp,iCol,jCol;
   char saTmp[MAXARRAY][OPTLEN],cTmp[OPTLEN],cOption[MAXARRAY][OPTLEN],cOut[OPTLEN];
   int iLen1,iLen2;
 
@@ -2408,6 +2408,31 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
           options[OPT_MODULES].iLine[iFile]);
     }
 
+    /* Check for duplicate columns, which is not allowed becaue it would be
+       incompatible with BigPlanet's employment of Pandas data frames. */
+    if (iNumIndices > 0) {
+      ok = 1;
+      for (iCol=0;iCol<iNumIndices;iCol++) {
+        for (jCol=iCol+1;jCol<iNumIndices;jCol++) {
+          iLen1=strlen(files->Outfile[iFile-1].caCol[iCol]);
+          iLen2=strlen(files->Outfile[iFile-1].caCol[jCol]);
+          /* Check for perfect match */
+          if ( (iLen1 == iLen2) && (memcmp(files->Outfile[iFile-1].caCol[iCol],
+              files->Outfile[iFile-1].caCol[jCol],
+              strlen(files->Outfile[iFile-1].caCol[iCol])) == 0) ) {
+            fprintf(stderr,"ERROR: Output option %s selected twice, which is "
+                "not allowed.\n",files->Outfile[iFile-1].caCol[iCol]);
+            ok=0;
+          }
+        }
+      }
+
+      if (!ok) {
+        LineExit(files->Infile[iFile].cIn,lTmp[0]);
+      }
+    }
+
+    // All checks pass, update structs
     files->Outfile[iFile-1].iNumCols = iNumIndices;
     /*
     files->Outfile[iFile-1].iNumCols = iNumIndices-iNumGrid;

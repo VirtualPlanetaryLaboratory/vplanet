@@ -2,7 +2,10 @@ sudo: required
 
 dist: trusty
 
-language: c
+language: cpp
+
+compiler:
+    - gcc
 
 addons:
     apt:
@@ -21,7 +24,7 @@ matrix:
 install:
     #- git lfs pull
     - source .ci/travis.sh
-    - pip install coveralls
+    - pip install --user cpp-coveralls
 
 cache:
     directories:
@@ -34,8 +37,9 @@ git:
 
 script:
     - py.test -v -s tests
+    - ./configure --enable-gcov && make && make check
 
 after_success:
     #- if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then source .ci/build-docs.sh; fi
     #- if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi
-    - coveralls
+    - coveralls --exclude lib --exclude tests --gcov-options '\-lp'

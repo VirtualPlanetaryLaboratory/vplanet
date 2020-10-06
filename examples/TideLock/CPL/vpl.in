@@ -1,0 +1,22 @@
+sSystemName               gl581
+
+iVerbose                  0
+bOverwrite                1
+
+saBodyFiles               gl581.in $ # The star
+                          d.in 	    # planet d
+
+sUnitMass                 solar
+sUnitLength               AU
+sUnitTime                 YEARS
+sUnitAngle                d
+
+bDoLog                    1
+iDigits                   6
+dMinValue                 1e-10
+
+bDoForward                1
+bVarDt                    1
+dEta                      0.01
+dStopTime                 1e9
+dOutputTime               1e5

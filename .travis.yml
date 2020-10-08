@@ -22,6 +22,8 @@ install:
     #- git lfs pull
     - source .ci/travis.sh
     - pip install coveralls
+    - pip install cpp-coveralls
+
 
 cache:
     directories:
@@ -33,7 +35,7 @@ git:
     lfs_skip_smudge: true
 
 script:
-    - py.test -v -s tests
+    - pytest -v tests --cov=src
 
 after_success:
     #- if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then source .ci/build-docs.sh; fi

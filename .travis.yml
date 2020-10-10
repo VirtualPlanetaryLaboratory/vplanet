@@ -36,10 +36,9 @@ git:
     lfs_skip_smudge: true
 
 script:
-    #- pytest -v tests
     - make coverage
+    - pytest -v tests/Vspace_* --cov=/vplanet/vspace/vspace/ 
+    - pytest -v tests/Multi-Planet* --cov=/vplanet/multiplanet/
 after_success:
-    #- if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then source .ci/build-docs.sh; fi
     #- if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi
     - coveralls
-    #- bash <(curl -s https://codecov.io/bash) -v

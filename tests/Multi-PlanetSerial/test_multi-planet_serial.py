@@ -7,7 +7,7 @@ import multiprocessing as mp
 
 def test_mp_serial():
     #removes checkpoint_file
-    checkpoint = cwd+'/.multi-planet'
+    checkpoint = cwd+'/.MP_Serial'
     sub.run(['rm', checkpoint],cwd=cwd)
     #removes the folders from when vspace is ran
     dir = cwd+'/MP_Serial'

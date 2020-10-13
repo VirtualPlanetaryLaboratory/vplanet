@@ -4,6 +4,9 @@ dist: trusty
 
 language: c
 
+complier:
+    gcc
+
 addons:
     apt:
         sources:
@@ -21,6 +24,7 @@ matrix:
 install:
     #- git lfs pull
     - source .ci/travis.sh
+    - pip install coveralls
 
 cache:
     directories:
@@ -32,8 +36,8 @@ git:
     lfs_skip_smudge: true
 
 script:
-    - py.test -v -s tests
+    - make coverage
 
 after_success:
-    #- if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then source .ci/build-docs.sh; fi
     - if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi
+    - coveralls

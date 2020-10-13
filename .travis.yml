@@ -37,8 +37,7 @@ git:
 
 script:
     - make coverage
-    - pytest -v tests/Vspace_* --cov=/vplanet/vspace/vspace/ 
-    - pytest -v tests/Multi-Planet* --cov=/vplanet/multiplanet/
+
 after_success:
-    #- if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi
+    - if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi
     - coveralls

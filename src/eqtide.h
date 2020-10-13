@@ -234,7 +234,7 @@ void PropsAuxEqtide(BODY*,EVOLVE*,IO*,UPDATE*,int);
 /******************** CPL Functions ********************/
 
 /* Auxiliary parameters */
-void fiaCPLEpsilon(double,double,int*);
+void fiaCPLEpsilon(double,double,double,int*);
 void fdCPLZ(BODY*,double,double,int,int);
 double fdGammaRot(double,double,int*);
 double fdGammaOrb(double,double,int*);

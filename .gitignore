@@ -16,6 +16,7 @@
 *.Ecc.Eigen
 *.Inc.Eigen
 SeasonalClimateFiles
+
 #files created from running tests
 tests/Multi-PlanetCheckpoint/MP_Checkpoint/
 tests/Multi-PlanetCheckpoint/.MP_Checkpoint
@@ -28,6 +29,7 @@ tests/Multi-PlanetSerial/.MP_Serial
 tests/Vspace_Explicit/Explict_Test/
 tests/Vspace_Linear/Linear_Test/
 tests/Vspace_Log/Log_Test/
+
 # Aux files / build info / garbage
 merge-from-public.sh
 merge-from-private.sh

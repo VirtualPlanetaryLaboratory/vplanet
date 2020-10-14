@@ -1,0 +1,6 @@
+srcfolder  .
+destfolder Linear_Test
+trialname  semi_
+
+file   earth.in
+dSemi [1, 2, n11] a

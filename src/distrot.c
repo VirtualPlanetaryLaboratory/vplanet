@@ -173,18 +173,33 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
 
 
   sprintf(options[OPT_READORBITDATA].cName,"bReadOrbitData");
-  sprintf(options[OPT_READORBITDATA].cDescr,"Read in orbital data and use with distrot");
+  sprintf(options[OPT_READORBITDATA].cDescr,"Read in orbital data for use with distrot?");
   sprintf(options[OPT_READORBITDATA].cDefault,"0");
   options[OPT_READORBITDATA].dDefault = 0;
   options[OPT_READORBITDATA].iType = 0;
   options[OPT_READORBITDATA].bMultiFile = 1;
   fnRead[OPT_READORBITDATA] = &ReadOrbitData;
+  sprintf(options[OPT_READORBITDATA].cLongDescr,
+    "Rather than calculate orbital evolution with DistOrb or SpiNBody, users \n"
+    // Note that options[OPT_FILEORBITDATA].cName hasn't been defined yet
+    "may read in a previously run simulation. See sFileOrbitData for more \n"
+    "information.\n"
+  );
 
   sprintf(options[OPT_FILEORBITDATA].cName,"sFileOrbitData");
   sprintf(options[OPT_FILEORBITDATA].cDescr,"Name of file containing orbit time series");
-  sprintf(options[OPT_FILEORBITDATA].cDefault,"myass.ass");
+  sprintf(options[OPT_FILEORBITDATA].cDefault,"orbit.txt");
   options[OPT_FILEORBITDATA].iType = 3;
   fnRead[OPT_FILEORBITDATA] = &ReadFileOrbitData;
+  sprintf(options[OPT_FILEORBITDATA].cLongDescr,
+    "The file should have the following format: Time SemiMajorAxis \n"
+    "Eccentricity Inclination ArgPericenter LongAscNode MeanAnomaly. The \n"
+    "units will be assumed to be the same as defined for the simulation.\n"
+    "If using this feature, the integration must used a fixed timestep \n"
+    "(%s = 0), and the timestep (%s) must equal the cadence in the file.\n"
+    "See %s for more information.\n",options[OPT_VARDT].cName,
+    options[OPT_TIMESTEP].cName,options[OPT_READORBITDATA].cName
+  );
 }
 
 void ReadOptionsDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {

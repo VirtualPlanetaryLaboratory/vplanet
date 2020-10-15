@@ -46,24 +46,16 @@ dEruptEff        0.2
 dViscJumpMan     2.0
 dTrefLind       5600
 dImK2ManOrbModel   2
-<<<<<<< HEAD
-dShModRef        1e6
-=======
 dShModRef        1e5  #1e6
->>>>>>> a45095dc8e0b53eba999c90f3556ce5713085cea
 dStiffness       1.71e13  #3e13
 
 saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
     -HflowUMan -HflowMeltMan -RadPowerMan -RadPowerCore -RadPowerCrust $
-    -HflowCMB -HflowSecMan -HflowMeltMan $
+    -HflowCMB -HflowSecMan $
     -TDotMan -TDotCore -TJumpLMan -TJumpUMan -RIC -RayleighMan -ViscUMan -ViscLMan $
     -MeltMassFluxMan FMeltUMan $
     -MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad $
     -BLUMan -BLLMan $
-     PowerEqtide K2 ImK2 SemiMajorAxis Eccentricity ShmodUMan MeanMotion ViscUManArr $
+     K2 ImK2 SemiMajorAxis Eccentricity ShmodUMan MeanMotion ViscUManArr $
      ChiOC ChiIC MassChiOC MassChiIC MassOC MassIC $
     -RadPowerTotal SurfEnFluxEqtide -PowerEqtide TideLock
-    
-#saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
-#      -PowerEqtide TidalQ ImK2 K2 TidalQMan K2Man $
-#      -SemiMajorAxis Eccentricity -dSemiDt -dEccDtE

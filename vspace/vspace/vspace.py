@@ -4,7 +4,6 @@ import sys
 import subprocess as sb
 import numpy as np
 import re
-from IPython.core.debugger import Tracer
 import vspace_hyak
 import itertools as it
 import matplotlib.pyplot as plt
@@ -18,7 +17,7 @@ def SearchAngleUnit(src,flist):
   return angUnit
 
 if len(sys.argv) < 2:
-  raise IOError("Must enter an input file name")
+  raise OSError("Must enter an input file name")
 else:
   inputf = sys.argv[1]
 
@@ -26,6 +25,7 @@ try:
   f = open(inputf,'r')
 except IOError:
   print ("%s is not a valid file name. Please reenter." %inputf)
+
 
 lines = f.readlines()
 f.close()
@@ -135,12 +135,12 @@ for i in range(len(lines)):
       values[2] = values[2][1:]
       if np.float(values[0]) < 0:
         if np.float(values[2]).is_integer():
-          array = -np.logspace(np.log10(-np.float(values[0])),np.log10(-np.float(values[1])),np.float(values[2]))
+          array = -np.logspace(np.log10(-np.float(values[0])),np.log10(-np.float(values[1])),int(values[2]))
         else:
           raise IOError("Attempt to iterate over '%s' for '%s', but number of points provided not an integer value"%(name,flist[fnum-1]))
       else:
         if np.float(values[2]).is_integer():
-          array = np.logspace(np.log10(np.float(values[0])),np.log10(np.float(values[1])),np.float(values[2]))
+          array = np.logspace(np.log10(np.float(values[0])),np.log10(np.float(values[1])),int(values[2]))
         else:
           raise IOError("Attempt to iterate over '%s' for '%s', but number of points provided not an integer value"%(name,flist[fnum-1]))
 

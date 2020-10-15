@@ -1,0 +1,6 @@
+srcfolder  .
+destfolder Explict_Test
+trialname  semi_
+
+file   earth.in
+dSemi [1, 2, 0.1] a

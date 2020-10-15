@@ -510,6 +510,8 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   body[iBody].dFracFe2O3Man    = 0;
   body[iBody].dPressOxygenAtm  = 0;
   body[iBody].dTransDepthSol   = body[iBody].dRadius - pow((pow(body[iBody].dRadius,2) - 2*body[iBody].dRadius*dTransPressSol/(body[iBody].dManMeltDensity*body[iBody].dGravAccelSurf)),0.5);
+  body[iBody].dHydrogenMassSpace = 0;
+  body[iBody].dOxygenMassSpace = 0;
 
   // CO2
   body[iBody].dPressCO2Atm     = body[iBody].dCO2MassMOAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2)); // initial CO2 mass in MO&Atm is equal to inital CO2 mass in atmosphere
@@ -1040,6 +1042,9 @@ void fndWaterFracMelt(BODY *body, int iBody) {
       // get average molar mass
       // dAveMolarMassAtm = body[iBody].dPartialPressCO2Atm * MOLWEIGHTCO2 / body[iBody].dPressCO2Atm;
     }
+  } else { // No CO2 in atmosphere
+    body[iBody].dPartialPressCO2Atm = 0;
+    body[iBody].dPressCO2Atm        = 0;
   }
 
   if (body[iBody].dPressCO2Atm > 0) {
@@ -2160,6 +2165,8 @@ void LogBodyMagmOc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
   for (iOut=OUTSTARTMAGMOC;iOut<OUTENDMAGMOC;iOut++) {
     if (output[iOut].iNum > 0) {
+      //Useful for debugging
+      //fprintf(stderr,"%d %d\n",iBody,iOut);
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
     }
   }

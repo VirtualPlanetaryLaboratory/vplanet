@@ -1042,6 +1042,9 @@ void fndWaterFracMelt(BODY *body, int iBody) {
       // get average molar mass
       // dAveMolarMassAtm = body[iBody].dPartialPressCO2Atm * MOLWEIGHTCO2 / body[iBody].dPressCO2Atm;
     }
+  } else { // No CO2 in atmosphere
+    body[iBody].dPartialPressCO2Atm = 0;
+    body[iBody].dPressCO2Atm        = 0;
   }
 
   if (body[iBody].dPressCO2Atm > 0) {

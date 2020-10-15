@@ -61,11 +61,11 @@ sanitize:
 
 test:
 	-gcc -o vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
-	-pytest
+	-py.test
 
 coverage:
 	-mkdir -p gcov && cd gcov && gcc -coverage -o ../vplanet ../src/*.c -lm
-	-pytest
+	-py.test
 	-cd gcov && lcov --capture --directory . --output-file coverage.info && genhtml coverage.info --output-directory html
 
 docs:

@@ -35,9 +35,10 @@ git:
     # https://github.com/travis-ci/travis-ci/issues/8787#issuecomment-394202791
     lfs_skip_smudge: true
 
-script:
-    - make coverage
+# script:
+#     - make coverage
 
 after_success:
+    - make coverage
     - coveralls --verbose
     - if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi

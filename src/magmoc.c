@@ -492,21 +492,30 @@ void ReadOptionsMagmOc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 
 // Initilaization of variables
 void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+  double dSolidRadiusLocalLow,dSolidRadiusLocalHigh;
+
   // primary variables: HARD CODED INITIAL VALUES
   body[iBody].dPotTemp         = body[iBody].dSurfTemp; // initial potential temp = initial surface temp
-  body[iBody].dSolidRadius     = body[iBody].dRadius * RADCOREEARTH / REARTH; // initial solid. rad. = core radius
+  body[iBody].dCoreRadius      = body[iBody].dRadius * RADCOREEARTH / REARTH; // same relative core radius as Earth
   body[iBody].dWaterMassMOAtm  = body[iBody].dWaterMassAtm; // initial water mass in MO&Atm is equal to inital Water mass in atmosphere
   body[iBody].dWaterMassSol    = 0; // initial water mass in solid = 0
   body[iBody].dOxygenMassMOAtm = 0; // initial oxygen mass in MO&Atm = 0
   body[iBody].dOxygenMassSol   = 0; // initial oxygen mass in solid = 0
+  body[iBody].dGravAccelSurf   = BIGG * body[iBody].dMass / pow(body[iBody].dRadius,2);
+
+  dSolidRadiusLocalLow  = body[iBody].dRadius - ( (BLOWPRESSURE-body[iBody].dPotTemp)  / (body[iBody].dGravAccelSurf*(body[iBody].dPotTemp*THERMALEXPANCOEFF/SILICATEHEATCAP - ALOWPRESSURE*body[iBody].dManMeltDensity)));
+  dSolidRadiusLocalHigh = body[iBody].dRadius - ( (BHIGHPRESSURE-body[iBody].dPotTemp) / (body[iBody].dGravAccelSurf*(body[iBody].dPotTemp*THERMALEXPANCOEFF/SILICATEHEATCAP - AHIGHPRESSURE*body[iBody].dManMeltDensity)));
+  body[iBody].dSolidRadius = fmin(dSolidRadiusLocalLow,dSolidRadiusLocalHigh);
+
+  if (body[iBody].dSolidRadius < body[iBody].dCoreRadius) {
+    body[iBody].dSolidRadius = body[iBody].dCoreRadius;
+  }
 
   // other variables
   double dTransPressSol = 5.19964e9; // pressure at which to swith from low to high pressure treatment of solidus (Hirschmann, 2000) in Pa
-  body[iBody].dCoreRadius      = body[iBody].dRadius * RADCOREEARTH / REARTH; // same relative core radius as Earth
   body[iBody].dPrefactorA      = AHIGHPRESSURE;
   body[iBody].dPrefactorB      = BHIGHPRESSURE;
   body[iBody].dAlbedo          = ALBEDOWATERATMOS;
-  body[iBody].dGravAccelSurf   = BIGG * body[iBody].dMass / pow(body[iBody].dRadius,2);
   body[iBody].dFracFe2O3Man    = 0;
   body[iBody].dPressOxygenAtm  = 0;
   body[iBody].dTransDepthSol   = body[iBody].dRadius - pow((pow(body[iBody].dRadius,2) - 2*body[iBody].dRadius*dTransPressSol/(body[iBody].dManMeltDensity*body[iBody].dGravAccelSurf)),0.5);

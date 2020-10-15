@@ -2166,7 +2166,7 @@ void LogBodyMagmOc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
   for (iOut=OUTSTARTMAGMOC;iOut<OUTENDMAGMOC;iOut++) {
     if (output[iOut].iNum > 0) {
       //Useful for debugging
-      fprintf(stderr,"%d %d\n",iBody,iOut);
+      //fprintf(stderr,"%d %d\n",iBody,iOut);
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
     }
   }

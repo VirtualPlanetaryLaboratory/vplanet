@@ -493,7 +493,7 @@ void ReadOptionsMagmOc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 // Initilaization of variables
 void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
   // primary variables: HARD CODED INITIAL VALUES
-  body[iBody].dPotTemp         = body[iBody].dSurfTemp+1; // initial potential temp = initial surface temp
+  body[iBody].dPotTemp         = body[iBody].dSurfTemp; // initial potential temp = initial surface temp
   body[iBody].dSolidRadius     = body[iBody].dRadius * RADCOREEARTH / REARTH; // initial solid. rad. = core radius
   body[iBody].dWaterMassMOAtm  = body[iBody].dWaterMassAtm; // initial water mass in MO&Atm is equal to inital Water mass in atmosphere
   body[iBody].dWaterMassSol    = 0; // initial water mass in solid = 0
@@ -736,7 +736,7 @@ From Elkins-Tanton (2008) & Carone et al. (2014)
 double fndNetFluxAtmGrey(BODY *body, int iBody) {
 
 
-  if ((body[iBody].dSurfTemp <= 1800) && (body[iBody].dSurfTemp >= 600) && (body[iBody].dPressWaterAtm >= PRESSWATERMIN)) {
+  if ((body[iBody].dPotTemp <= 1800) && (body[iBody].dPotTemp >= 600) && (body[iBody].dPressWaterAtm >= PRESSWATERMIN)) {
     double dOLR = 280; // Outgoing Longwave Radiation, Runaway Greenhouse (W/m^2)
     double dASR = pow(body[iBody].dEffTempAtm,4) * SIGMA; // Absorbed Stellar Radiation (W/m^2)
 
@@ -747,7 +747,7 @@ double fndNetFluxAtmGrey(BODY *body, int iBody) {
     dOptDep = body[iBody].dPartialPressWaterAtm * pow((0.75*ABSORPCOEFFH2O/body[iBody].dGravAccelSurf/REFPRESSUREOPACITY),0.5) \
               + body[iBody].dPartialPressCO2Atm * pow((0.75*ABSORPCOEFFCO2/body[iBody].dGravAccelSurf/REFPRESSUREOPACITY),0.5);
 
-    return 2 / (2 + dOptDep) * SIGMA * (pow(body[iBody].dSurfTemp,4) - pow(body[iBody].dEffTempAtm,4));
+    return 2 / (2 + dOptDep) * SIGMA * (pow(body[iBody].dPotTemp,4) - pow(body[iBody].dEffTempAtm,4));
   }
 }
 
@@ -770,11 +770,11 @@ double fndNetFluxAtmPetit(BODY *body, double dTime, int iBody) {
   double dOLR = 280; // Outgoing Longwave Radiation, Runaway Greenhouse (W/m^2)
   double dASR = pow(body[iBody].dEffTempAtm,4) * SIGMA; // Absorbed Stellar Radiation (W/m^2)
 
-  if ((body[iBody].dSurfTemp <= 1800) && (body[iBody].dSurfTemp >= 600) && (body[iBody].dPressWaterAtm >= PRESSWATERMIN)) {
+  if ((body[iBody].dPotTemp <= 1800) && (body[iBody].dPotTemp >= 600) && (body[iBody].dPressWaterAtm >= PRESSWATERMIN)) {
     return dOLR - dASR;
   } else {
     dLogP  = log10(body[iBody].dPressWaterAtm/1e5);
-    dTsurf = body[iBody].dSurfTemp;
+    dTsurf = body[iBody].dPotTemp;
 
     dLogF_ms = -8.03520391e-02 + 3.08508158e-03*dTsurf - 6.96356770e-01*dLogP - 3.09084067e-07*pow(dTsurf,2) \
            + 2.38672208e-08*pow(dTsurf,2)*dLogP - 2.58853235e-08*pow(dTsurf,2)*pow(dLogP,2) - 3.60631795e-01*pow(dLogP,2) \
@@ -920,12 +920,12 @@ void fndMeltFracMan(BODY *body, int iBody) {
     body[iBody].dMeltFraction = 0;
   }
   // END of melt_fraction(): returns Melt fraction and Kinematic viscosity
-  body[iBody].dManHeatFlux = THERMALCONDUC * pow(fabs(body[iBody].dPotTemp-body[iBody].dSurfTemp),1.33) \
-                             * pow((THERMALEXPANCOEFF*body[iBody].dGravAccelSurf/(CRITRAYLEIGHNO*THERMALDIFFUS*body[iBody].dKinemViscos)),0.33);
-
-  if (body[iBody].dPotTemp < body[iBody].dSurfTemp) {
-    body[iBody].dManHeatFlux = - body[iBody].dManHeatFlux;
-  }
+  // body[iBody].dManHeatFlux = THERMALCONDUC * pow(fabs(body[iBody].dPotTemp-body[iBody].dSurfTemp),1.33) \
+  //                            * pow((THERMALEXPANCOEFF*body[iBody].dGravAccelSurf/(CRITRAYLEIGHNO*THERMALDIFFUS*body[iBody].dKinemViscos)),0.33);
+  //
+  // if (body[iBody].dPotTemp < body[iBody].dSurfTemp) {
+  //   body[iBody].dManHeatFlux = - body[iBody].dManHeatFlux;
+  // }
 
   // if (body[iBody].dPotTemp > body[iBody].dSurfTemp) {
   //   body[iBody].dManHeatFlux = body[iBody].dManHeatFlux;
@@ -1068,7 +1068,7 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   double dCurrentStepNum  = evolve->nSteps;
   double dAveMolarMassAtm;
 
-  body[iBody].dSurfTemp = body[iBody].dPotTemp;
+  // body[iBody].dSurfTemp = body[iBody].dPotTemp;
 
   /*
    * No negative masses!

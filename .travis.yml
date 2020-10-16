@@ -37,11 +37,11 @@ git:
 
 script:
     - |
-    if [ "$TRAVIS_BRANCH" = "master" ]; then
+     if [ "$TRAVIS_BRANCH" = "master" ]; then
         make coverage;
-    else;
+     else;
         pytest -v -s tests;
-    fi
+     fi
 
 
 after_success:

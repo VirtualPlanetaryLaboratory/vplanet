@@ -36,7 +36,8 @@ git:
     lfs_skip_smudge: true
 
 script:
-    - make coverage
+    - if [ "$TRAVIS_BRANCH" = "master" ]; then make coverage; else; pytest -v -s tests; fi
+
 
 after_success:
     - if [ "$TRAVIS_BRANCH" = "master" ]; then coveralls --verbose; fi

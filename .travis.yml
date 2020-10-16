@@ -36,8 +36,8 @@ git:
     lfs_skip_smudge: true
 
 script:
-    - if [ "$TRAVIS_BRANCH" = "master" ]; then make coverage; fi
+    - make coverage
 
 after_success:
-    - if [ "$TRAVIS_BRANCH" = "master" ]; then coveralls --verbose; fi
+    - coveralls --verbose
     - if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi

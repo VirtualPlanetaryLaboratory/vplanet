@@ -36,10 +36,10 @@ git:
     lfs_skip_smudge: true
 
 script:
-    - if [ "$TRAVIS_PULL_REQUEST_BRANCH" = "master" ]; then make coverage; fi
-    - if [ "$TRAVIS_PULL_REQUEST_BRANCH" = "" ]; then py.test; fi
+    - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then make coverage; fi
+    - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then py.test; fi
 
 
 after_success:
-    - if [ "$TRAVIS_PULL_REQUEST_BRANCH" = "master" ]; then coveralls --verbose; fi
-    - if [ "$TRAVIS_PULL_REQUEST_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi
+    - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then coveralls --verbose; fi
+    - if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then source .ci/build-docs.sh; fi

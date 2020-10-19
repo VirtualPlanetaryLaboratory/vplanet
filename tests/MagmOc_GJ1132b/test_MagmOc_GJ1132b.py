@@ -16,17 +16,17 @@ def test_MagmOcGJ1132b():
     output = GetOutput(path=cwd)
 
     # Primary Variables: GJ1132b -- checks MagmOc parameters
-    assert np.isclose(output.log.final.GJ1132b.PotTemp, 3546.506520)
-    assert np.isclose(output.log.final.GJ1132b.SurfTemp, 3544.050059)
-    assert np.isclose(output.log.final.GJ1132b.SolidRadius, 0.671686)
-    assert np.isclose(output.log.final.GJ1132b.WaterMassMOAtm, 99.569302)
-    assert np.isclose(output.log.final.GJ1132b.WaterMassSol, 0.061907)
-    assert np.isclose(output.log.final.GJ1132b.OxygenMassMOAtm, 4.187362e+18)
-    assert np.isclose(output.log.final.GJ1132b.OxygenMassSol, 2.039860e+17)
-    assert np.isclose(output.log.final.GJ1132b.HydrogenMassSpace, 5.736134e+19)
-    assert np.isclose(output.log.final.GJ1132b.OxygenMassSpace, 4.508560e+20)
-    assert np.isclose(output.log.final.GJ1132b.CO2MassMOAtm, 1.749861e-296)
-    assert np.isclose(output.log.final.GJ1132b.CO2MassSol, 1.749861e-296)
+    assert np.isclose(output.log.final.GJ1132b.PotTemp, 3358.229436)
+    assert np.isclose(output.log.final.GJ1132b.SurfTemp, 4000.000000)
+    assert np.isclose(output.log.final.GJ1132b.SolidRadius, 0.750604)
+    assert np.isclose(output.log.final.GJ1132b.WaterMassMOAtm, 99.456333)
+    assert np.isclose(output.log.final.GJ1132b.WaterMassSol, 0.174876)
+    assert np.isclose(output.log.final.GJ1132b.OxygenMassMOAtm, 3.946430e+18)
+    assert np.isclose(output.log.final.GJ1132b.OxygenMassSol, 4.449172e+17)
+    assert np.isclose(output.log.final.GJ1132b.HydrogenMassSpace, 5.736131e+19)
+    assert np.isclose(output.log.final.GJ1132b.OxygenMassSpace, 4.508558e+20)
+    assert np.isclose(output.log.final.GJ1132b.CO2MassMOAtm, 1.748940e-296)
+    assert np.isclose(output.log.final.GJ1132b.CO2MassSol, 1.748940e-296)
 
 
 if __name__ == "__main__":

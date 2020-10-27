@@ -41,4 +41,4 @@ script:
 
 after_success:
     - coveralls --verbose
-    #- if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi
+    - if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi

@@ -37,10 +37,8 @@ git:
     lfs_skip_smudge: true
 
 script:
-    - mkdir -p gcov && cd gcov && gcc -coverage -o ../vplanet ../src/*.c -lm
-    - pytest
-    - cd gcov && lcov --capture --directory . --output-file coverage.info && genhtml coverage.info --output-directory html
+    - make coverage
 
 after_success:
     - coveralls --verbose
-    - if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi
+    #- if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi

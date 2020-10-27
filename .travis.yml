@@ -26,6 +26,7 @@ install:
     - source .ci/travis.sh
     - pip install coveralls
 
+
 cache:
     directories:
         - $HOME/miniconda
@@ -36,7 +37,9 @@ git:
     lfs_skip_smudge: true
 
 script:
-    - make coverage
+    - mkdir -p gcov && cd gcov && gcc -coverage -o ../vplanet ../src/*.c -lm
+    - pytest
+    - cd gcov && lcov --capture --directory . --output-file coverage.info && genhtml coverage.info --output-directory html
 
 after_success:
     - coveralls --verbose

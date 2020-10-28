@@ -139,8 +139,8 @@ fig.suptitle(''+str(Name_Planet)+': $M^{ini}_{H_2O} = $ '+str(M_water_mo[0])+' T
 # --- Temperature --- #
 ax1 = fig.add_subplot(421)
 ax1.plot(time*10**-6, Tpot, label='$T_p$', color=cmap(0))
-ax1.plot(time*10**-6, Tsurf, label='$T_{surf}$', linestyle='--', color=cmap(220))
-ax1.legend(loc='best', frameon=True)
+# ax1.plot(time*10**-6, Tsurf, label='$T_{surf}$', linestyle='--', color=cmap(220))
+# ax1.legend(loc='best', frameon=True)
 ax1.set_ylabel('Temperature (K)')
 ax1.set_xscale('log')
 

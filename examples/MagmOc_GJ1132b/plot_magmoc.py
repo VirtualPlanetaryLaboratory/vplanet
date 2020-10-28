@@ -71,8 +71,8 @@ fig.suptitle('GJ1132b: Initial water content '+str(M_water_mo[0])+' TO + grey at
 
 ax1 = fig.add_subplot(421)
 ax1.plot(time*10**-6, Tpot,  label='$T_p$',      color=cmap(0))
-ax1.plot(time*10**-6, Tsurf, label='$T_{surf}$', color=cmap(220), linestyle='--')
-ax1.legend(loc='best', frameon=True)
+# ax1.plot(time*10**-6, Tsurf, label='$T_{surf}$', color=cmap(220), linestyle='--')
+# ax1.legend(loc='best', frameon=True)
 ax1.set_ylabel('Temperature (K)')
 ax1.set_xscale('log')
 ax1.set_xlim([1e-3,time[i_end]*1e-6])

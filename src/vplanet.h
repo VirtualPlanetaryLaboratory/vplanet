@@ -824,6 +824,7 @@ struct BODY {
 	/* Other variables Thermal model */
 	double dGravAccelSurf;    /**< Graviational acceleration at the surface [m/s^2] */
 	double dSolidRadiusLocal; /**< Local variable for solidification radius of the mantle [m] */
+	double dTransDepthSol;    /**< Depth of transition from low to high pressure solidus [Pa] */
   double dPrefactorA;       /**< Prefactor for linear solidus */
   double dPrefactorB;       /**< Prefactor for linear solidus */
   double dMeltFraction;     /**< Melt fraction of the mantle */

@@ -25,6 +25,7 @@ int main(int argc,char *argv[]) {
 #ifdef DEBUG
   //  feenableexcept(FE_INVALID | FE_OVERFLOW);
   _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
+  _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_OVERFLOW);
 #endif
 
   struct timeval start, end;

@@ -13,7 +13,7 @@
   <img src = "https://img.shields.io/badge/platform-Linux_|%20macOS_|%20Windows10-darkgreen.svg?style=flat"><br>
   <a href="https://travis-ci.com/VirtualPlanetaryLaboratory/vplanet"><img src="https://travis-ci.com/VirtualPlanetaryLaboratory/vplanet.svg?token=jABaFLLgJNHTWSqkT7CM&branch=master"></a>
   <a href="tests"><img src = "https://img.shields.io/badge/tests-46-darkorange.svg?style=flat"></a>
-  <img src = "https://img.shields.io/badge/memcheck-dirty-red.svg?style=flat">
+  <img src = "https://img.shields.io/badge/memcheck-clean-green.svg?style=flat">
   <img src = "https://img.shields.io/badge/coverage-77%25-red.svg?style=flat">
 </p>
 

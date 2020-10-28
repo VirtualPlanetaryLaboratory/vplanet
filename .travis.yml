@@ -26,7 +26,6 @@ install:
     - source .ci/travis.sh
     - pip install coveralls
 
-
 cache:
     directories:
         - $HOME/miniconda

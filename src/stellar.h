@@ -61,9 +61,9 @@
 #define OUTENDSTELLAR           1600
 
 /* Body Properties due to stellar evol */
-#define OUT_LUMINOSITY	        1510
-#define OUT_LXUV	              1511
-#define OUT_TEMPERATURE	        1512
+#define OUT_LUMINOSITY          1510
+#define OUT_LXUV                1511
+#define OUT_TEMPERATURE         1512
 #define OUT_LXUVFRAC            1513
 #define OUT_ROSSBYNUMBER        1514
 #define OUT_DROTPERDTSTELLAR    1515

@@ -280,8 +280,8 @@ void AddOptionStringArray(char cFile[],char cOption[],char saInput[MAXARRAY][OPT
       (*iNumLines)++;
     } else {
       if (iVerbose >= VERBINPUT) {
-	       fprintf(stderr,"WARNING: Trailing $ found without a subsequent valid line for option %s in file %s.\n",cOption,cFile);
-	       bContinue=0;
+         fprintf(stderr,"WARNING: Trailing $ found without a subsequent valid line for option %s in file %s.\n",cOption,cFile);
+         bContinue=0;
       }
     }
   }
@@ -415,19 +415,19 @@ int iGetNumLines(char cFile[]) {
     bReturn=0;
     for (iChar=0;iChar<LINE && cLine[iChar] != '\0';iChar++) {
       if (cLine[iChar] == 35) { // 35 is ASCII code for #
-	bComment = 1;
+  bComment = 1;
       }
       // Maybe unnecessary with the second conditional in the loop initialization?
       if (cLine[iChar] == 10) { // 10 is ASCII code for line feed
-	bReturn = 1;
+  bReturn = 1;
       }
 
     }
 
     if (!bReturn && !bComment) {
       if (iChar >= LINE) {
-	fprintf(stderr,"ERROR: Line %s:%d is longer than allowed (%d characters).\n",cFile,iNumLines,LINE);
-	bFileOK = 0;
+  fprintf(stderr,"ERROR: Line %s:%d is longer than allowed (%d characters).\n",cFile,iNumLines,LINE);
+  bFileOK = 0;
       }
     }
   }
@@ -1585,15 +1585,15 @@ void ReadHaltMerge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       control->Halt[iFile-1].bMerge = 0;
     if (iFile > 1) {
       /* HaltMerge is unusual in that its default value depends on the body's
-	 modules. These are set in ReadInitialOptions, so they are always
-	 known by ReadOptionsGeneral. Therefore, we can assign it based on
-	 the "bModule" members of the body struct. */
+   modules. These are set in ReadInitialOptions, so they are always
+   known by ReadOptionsGeneral. Therefore, we can assign it based on
+   the "bModule" members of the body struct. */
       // XXX Russell -- Include galhabit?
       if (body[iFile-1].bEqtide || body[iFile-1].bDistOrb
           || body[iFile-1].bBinary) {
-	           control->Halt[iFile-1].bMerge = 1;
+             control->Halt[iFile-1].bMerge = 1;
       } else {
-	           control->Halt[iFile-1].bMerge = 0;
+             control->Halt[iFile-1].bMerge = 0;
       }
     }
   }
@@ -2322,7 +2322,7 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
           count = 1;
           iOut = j;
           if (output[j].bGrid == 1)
-	    // Exit!
+      // Exit!
             iNumGrid += 1;
           j = MODULEOUTEND; /* Poor man's break! */
         } else {
@@ -2337,7 +2337,7 @@ void ReadOutputOrder(FILES *files,MODULE *module,OPTIONS *options,OUTPUT *output
             count++;
             iOut = j;
             if (output[j].bGrid == 1)
-	      // Exit!
+        // Exit!
               iNumGrid += 1;
           }
         }

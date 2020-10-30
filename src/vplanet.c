@@ -148,7 +148,7 @@ int main(int argc,char *argv[]) {
     if (control.Io.bLog) {
       WriteLog(body,&control,&files,&module,options,output,&system,update,fnUpdate,fnWrite,1);
       if (control.Io.iVerbose >= VERBPROG)
-	      printf("Log file updated.\n");
+        printf("Log file updated.\n");
     }
   }
 

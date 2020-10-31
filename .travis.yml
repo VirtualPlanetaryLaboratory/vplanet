@@ -39,5 +39,5 @@ script:
     - make coverage
 
 after_success:
-    - coveralls --verbose
+    - coveralls --verbose 
     - if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi

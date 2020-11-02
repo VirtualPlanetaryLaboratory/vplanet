@@ -13,6 +13,7 @@ Variables names should have the following prefixes:
 
       b    = Boolean
       i    = Integer
+      l    = Line Number
       d    = Double
       s    = String
       ba   = Boolean Array
@@ -22,25 +23,42 @@ Variables names should have the following prefixes:
       pb   = Pointer to Boolean
       pi   = Pointer to Integer
       pd   = Pointer to Double
-      pab  = Pointer to Boolean Array
-      pai  = Pointer to Integer Array
-      pad  = Pointer to Double Array
-      fnp  = Function Pointer
+      pba  = Pointer to Boolean Array
+      pia  = Pointer to Integer Array
+      pda  = Pointer to Double Array
+      fp   = Function Pointer
+      fpa  = Function Pointer Array
 
-
-Function names should have the following prefixes:
+Function names should have the following,
 
 .. code-block:: C
 
-    none   = Void function
-    fnb    = Boolean Function (returns 0 or 1)
-    fni    = Integer Function (returns int)
-    fnd    = Double Function (returns double)
-    fns    = String function (returns char[])
-    fnba   = Boolean Array Function
-    fnia   = Integer Array Function
-    fnda   = Double Array Function
-    fnsa   = String Array Function (returns char[][])
+    fv   = Void function
+    fb    = Boolean Function (returns 0 or 1)
+    fi    = Integer Function (returns int)
+    fd    = Double Function (returns double)
+    fs    = String function (returns char[])
+    fba   = Boolean Array Function
+    fia   = Integer Array Function
+    fda   = Double Array Function
+    fsa   = String Array Function (returns char[][])
+
+EXCEPT the following when they have either a variable or module name after them:
+BodyCopy, PropsAux, ForceBehavior, CountHalts, Read, Write, AddModule, Verify,
+InitializeOptions, InitializeOutput, InitializeBody, InitializeUpdate,
+InitializeControl, InitializeHalts, InitializeModule, InitializeConstants
+
+C Code formatting
+~~~~~~~~~~~~~~~~~
+
+1. Use no tab characters and indent blocks by 2 spaces.
+2. All conditional blocks should have a { at the end of the line.
+3. The closing } is on the line following the conditional block.
+4. No single line conditionals shall not be surrounded by {}.
+5. All functions shall return a variable, never an algebraic expression.
+6. All lines shall be less than 80 characters.
+7. For expressions that span multiple lines, the second and following lines
+shall be indented twice (4 spaces).
 
 Comments
 --------
@@ -166,13 +184,15 @@ for the XUV radius fraction in :code:`atmesc`:
 .. code-block:: C
       :linenos:
 
-      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,
+        control->Io.iVerbose);
       if (lTmp >= 0) {
-            NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-            if (dTmp < 0) {
-                if (control->Io.iVerbose >= VERBERR)
-    	           fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
-                LineExit(files->Infile[iFile].cIn,lTmp);
+        NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,
+          control->Io.iVerbose);
+        if (dTmp < 0) {
+          if (control->Io.iVerbose >= VERBERR)
+    	    fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+          LineExit(files->Infile[iFile].cIn,lTmp);
         }
         body[iFile-1].dXFrac = dTmp;
         UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -187,32 +207,38 @@ mark each line:
 .. code-block:: C
       :linenos:
 
-      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,
+        control->Io.iVerbose);
       if (lTmp >= 0) {
-            NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-            if (dTmp < 0) {
-                if (control->Io.iVerbose >= VERBERR) // LCOV_EXCL_LINE
-    	           fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName); // LCOV_EXCL_LINE
-                LineExit(files->Infile[iFile].cIn,lTmp); // LCOV_EXCL_LINE
+        NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,
+          control->Io.iVerbose);
+        if (dTmp < 0) {
+          if (control->Io.iVerbose >= VERBERR) // LCOV_EXCL_LINE
+    	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName); // LCOV_EXCL_LINE
+            LineExit(files->Infile[iFile].cIn,lTmp); // LCOV_EXCL_LINE
+          }
+          body[iFile-1].dXFrac = dTmp;
+          UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
         }
-        body[iFile-1].dXFrac = dTmp;
-        UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
       }
 
-or use a block:
+Not however, that line 8 exceeds 80 characters. In this case it is better to
+ignore a block of lines:
 
 .. code-block:: C
       :linenos:
 
-      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,
+        control->Io.iVerbose);
       if (lTmp >= 0) {
-            NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-            if (dTmp < 0) {
-                // LCOV_EXCL_START
-                if (control->Io.iVerbose >= VERBERR)
-    	           fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
-                LineExit(files->Infile[iFile].cIn,lTmp);
-                // LCOV_EXCL_STOP
+        NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,
+          control->Io.iVerbose);
+        if (dTmp < 0) {
+          // LCOV_EXCL_START
+          if (control->Io.iVerbose >= VERBERR)
+    	    fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+          LineExit(files->Infile[iFile].cIn,lTmp);
+          // LCOV_EXCL_STOP
         }
         body[iFile-1].dXFrac = dTmp;
         UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -225,6 +251,5 @@ Miscellaneous
     - Do not use the word `test` in any file/folder names *unless* you want it to
       be part of the unit tests, as the unit tester collects and attempts to run
       any file with `test` in it.
-    - Use spaces, not tabs, when indenting!
     - Do not use the pound sign "#" in comments, as this refers to a link in **Doxygen**.
     - Use the PEP 8 guide for python scripts: https://www.python.org/dev/peps/pep-0008/

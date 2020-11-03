@@ -38,7 +38,7 @@ Melt_frac   = data[:,14] # atmospheric net flux (W/m^2)
 n_time = len(time)
 t_sol = time[n_time-1]
 
-time        = np.append(time,2e6)
+time        = np.append(time,4e6)
 Tpot        = np.append(Tpot,Tpot[n_time-1])
 Tsurf       = np.append(Tsurf,Tsurf[n_time-1])
 r_sol       = np.append(r_sol,r_sol[n_time-1])
@@ -94,7 +94,7 @@ ax1.set_ylabel('Temperature\n(K)',rotation=270,va='bottom')
 ax1.set_xscale('log')
 ax1.set_xlim([0.001,2])
 ax1.set_ylim([1300,3200])
-ax1.plot(time*10**-6, Tsurf, label='$T_{surf}$', color='white', linewidth=5)
+ax1.plot(time*10**-6, Tpot, label='$T_{surf}$', color='white', linewidth=5)
 ax1.axvline(x=t_sol*1e-6,linestyle='--', color='lightgray',linewidth=2)
 
 ax11.fill_between(time*10**-6, V_sol, color=cmap(0))
@@ -136,18 +136,18 @@ ax3.text(0.0012, 0.03,'Atmosphere',   color=cmap(220), fontsize='16')
 ax3.text(2.05, 5,'Total',  va='center', color=cmap(0), fontsize='16')
 
 ax4.text(2, 1550,'MO Solidification', ha='right',  color=cmap(0), fontsize='16')
-ax4.text(0.03, 700,'Atmosphere',   color=cmap(0), fontsize='16')
-ax4.plot([0.25,0.5],[700,300],linewidth=1,color=cmap(0))
+ax4.text(0.03, 900,'Atmosphere',   color=cmap(0), fontsize='16')
+ax4.plot([0.25,0.5],[850,400],linewidth=1,color=cmap(0))
 
-ax11.text(0.05, 0.2,'Temperature',   color='white', fontsize='16')
-ax11.text(0.002, 0.4, 'Melts', fontsize='16', bbox={'facecolor':'white', 'pad':5})
+ax11.text(0.02, 0.2,'Temperature',   color='white', fontsize='16')
+ax11.text(0.002, 0.5, 'Melts', fontsize='16', bbox={'facecolor':'white', 'pad':5})
 ax11.text(0.2, 0.6, 'Cumulates', fontsize='16', bbox={'facecolor':'white', 'pad':5})
 
 bbox_props = dict(boxstyle="rarrow", fc="firebrick", ec="darkred", lw=2)
-t = ax4.text(0.25, 100, "ou", ha="center", va="center", rotation=90, color='firebrick',
+t = ax4.text(0.25, 150, "ou", ha="center", va="center", rotation=90, color='firebrick',
             size=15,
             bbox=bbox_props)
-t2 = ax4.text(0.1, -150, "ou", ha="center", va="center", rotation=90, color='firebrick',
+t2 = ax4.text(0.1, -50, "ou", ha="center", va="center", rotation=90, color='firebrick',
             size=15,
             bbox=bbox_props)
 

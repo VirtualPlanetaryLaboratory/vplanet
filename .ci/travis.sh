@@ -23,8 +23,6 @@ pip install sphinxcontrib-bibtex
 # Install vplot
 pip install git+git://github.com/VirtualPlanetaryLaboratory/vplot.git
 
-# Install coverage
-pip install coveralls
 
 # Build vplanet
 export PATH="$TRAVIS_BUILD_DIR:$PATH"

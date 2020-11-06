@@ -24,6 +24,7 @@ matrix:
 install:
     #- git lfs pull
     - source .ci/travis.sh
+    - pip install coveralls
 
 cache:
     directories:

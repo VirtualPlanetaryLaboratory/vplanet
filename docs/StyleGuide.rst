@@ -32,15 +32,38 @@ Function names should have the following prefixes:
 
 .. code-block:: C
 
-    none   = Void function
-    fnb    = Boolean Function (returns 0 or 1)
-    fni    = Integer Function (returns int)
-    fnd    = Double Function (returns double)
-    fns    = String function (returns char[])
-    fnba   = Boolean Array Function
-    fnia   = Integer Array Function
-    fnda   = Double Array Function
-    fnsa   = String Array Function (returns char[][])
+    fv   = Void function
+    fb    = Boolean Function (returns 0 or 1)
+    fi    = Integer Function (returns int)
+    fd    = Double Function (returns double)
+    fs    = String function (returns char[])
+    fba   = Boolean Array Function
+    fia   = Integer Array Function
+    fda   = Double Array Function
+    fsa   = String Array Function (returns char[][])
+
+EXCEPT the following when they have either a variable or module name after them:
+BodyCopy, PropsAux, ForceBehavior, CountHalts, Read, Write, AddModule, Verify,
+InitializeOptions, InitializeOutput, InitializeBody, InitializeUpdate,
+InitializeControl, InitializeHalts, InitializeModule, InitializeConstants
+
+C Code formatting
+~~~~~~~~~~~~~~~~~
+
+1. Use no tab characters and indent blocks by 2 spaces.
+2. All conditional blocks should have a { at the end of the line.
+3. The closing } is on the line following the conditional block.
+4. Single line conditionals must be surrounded by {}.
+5. All functions shall return a variable, never an algebraic expression.
+6. All lines shall be less than 80 characters.
+7. For expressions that span multiple lines, the second and following lines
+shall be indented twice (4 spaces).
+8. Lines that continue to the next must end with a "\" in C files.
+9. If a conditional statement extends to multiple lines, subsequent lines must
+be indented thrice (6 spaces), so as not to appear to belong to the condtional
+block.
+10. Variable cannot be assigned a value at declaration.
+11. No unused variables in a function.
 
 Comments
 --------

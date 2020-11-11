@@ -24,7 +24,7 @@ matrix:
 install:
     #- git lfs pull
     - source .ci/travis.sh
-    - pip install -U coveralls
+    - pip install coveralls
 
 cache:
     directories:
@@ -39,5 +39,5 @@ script:
     - make coverage
 
 after_success:
-    - coveralls --coveralls_yaml
+    - coveralls --coveralls_yaml .coveralls.yml
     - if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi

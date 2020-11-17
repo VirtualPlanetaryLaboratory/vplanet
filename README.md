@@ -83,7 +83,8 @@ Additional `VPLanet` examples can be found at the following GitHub pages:
 [David Fleming](https://github.com/dflemin3) <br />
 [Héctor Martínez-Rodríguez](https://github.com/hector-mr)<br />
 [Juliette Becker](https://github.com/jxcbecker)<br />
-[Patrick Barth](https://github.com/pbfeu)
+[Patrick Barth](https://github.com/pbfeu)<br />
+[David Graham](https://github.com/dglezg7)
 
 If you believe you have encountered a bug, please raise an issue using the [Issues](https://github.com/VirtualPlanetaryLaboratory/vplanet/issues) tab at the top of this page.
 

@@ -821,6 +821,7 @@ struct BODY {
 	double dWaterMassAtm;     /**< Water mass in the atmosphere [kg] */
   double dManMeltDensity;   /**< Density of the molten mantle [km/m^3] */
 	double dMassFracFeOIni;   /**< Initial FeO mass fraction in the mantle */
+	double dWaterPartCoeff;   /**< Water partition coefficient between melt and solid */
 	/* Other variables Thermal model */
 	double dGravAccelSurf;    /**< Graviational acceleration at the surface [m/s^2] */
 	double dSolidRadiusLocal; /**< Local variable for solidification radius of the mantle [m] */

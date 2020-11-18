@@ -193,6 +193,27 @@ void ReadManMeltDensity(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       body[iFile-1].dManMeltDensity = options->dDefault;
 }
 
+/* Water partition coefficient */
+
+void ReadWaterPartCoeff(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) {  //if input value lt 0
+      body[iFile-1].dWaterPartCoeff = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    } else {
+      body[iFile-1].dWaterPartCoeff = dTmp;
+    }
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dWaterPartCoeff = options->dDefault;
+}
+
 /*
  * Read halt options
  */
@@ -417,6 +438,18 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MANMELTDENSITY].dDefault = 4000;
   sprintf(options[OPT_MANMELTDENSITY].cNeg,"kg/m^3");
   fnRead[OPT_MANMELTDENSITY] = &ReadManMeltDensity;
+
+  /* Water partition coefficient */
+
+  sprintf(options[OPT_WATERPARTCOEFF].cName,"dWaterPartCoeff");
+  sprintf(options[OPT_WATERPARTCOEFF].cDescr,"Water partition coefficient between melt and solid");
+  sprintf(options[OPT_WATERPARTCOEFF].cDefault,"0.01");
+  options[OPT_WATERPARTCOEFF].iType = 2;
+  options[OPT_WATERPARTCOEFF].bMultiFile = 1;
+  options[OPT_WATERPARTCOEFF].dNeg = 1;
+  options[OPT_WATERPARTCOEFF].dDefault = 0.01;
+  sprintf(options[OPT_WATERPARTCOEFF].cNeg,"no unit");
+  fnRead[OPT_WATERPARTCOEFF] = &ReadWaterPartCoeff;
 
   /* Halts */
 

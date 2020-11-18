@@ -66,7 +66,7 @@ test:
 coverage:
 	-mkdir -p gcov && cd gcov && gcc -coverage -o ../vplanet ../src/*.c -lm
 	-pytest
-	-cd gcov && lcov --capture --directory . --output-file coverage.info && genhtml coverage.info --output-directory html
+	-cd gcov && lcov --capture --directory . --output-file coverage.info
 
 docs:
 	-make -C docs html && echo 'Documentation available at `docs/.build/html/index.html`.'

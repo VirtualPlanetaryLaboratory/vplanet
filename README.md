@@ -22,7 +22,7 @@
 
 `VPLanet` is software to simulate planetary system evolution, with a focus on habitability. Physical models, typically consisting of ordinary differential equations, are coupled together to simulate evolution, from planetary cores to passing stars, for the age of a system. We strive for full transparency and reproducibility in our software, and this repository contains 1) the [source code](src), 2) [extensive documentation](https://VirtualPlanetaryLaboratory.github.io/vplanet), 3) [the scripts and files to generate published figures](examples), and 4) [scripts to validate the current release](tests). We can't claim we found aliens with closed source software!
 
-To get started, ensure you have clang/gcc installed and follow the [Installation Guide](https://virtualplanetarylaboratory.github.io/vplanet/quickstart.html).
+To get started, ensure you have clang/gcc installed and follow the [Installation Guide](https://virtualplanetarylaboratory.github.io/vplanet/quickstart.html). To stay up to date on this repository, [follow it on twitter](https://twitter.com/VPLanetCode).
 
 ### Modules
 
@@ -83,7 +83,8 @@ Additional `VPLanet` examples can be found at the following GitHub pages:
 [David Fleming](https://github.com/dflemin3) <br />
 [Héctor Martínez-Rodríguez](https://github.com/hector-mr)<br />
 [Juliette Becker](https://github.com/jxcbecker)<br />
-[Patrick Barth](https://github.com/pbfeu)
+[Patrick Barth](https://github.com/pbfeu)<br />
+[David Graham](https://github.com/dglezg7)
 
 If you believe you have encountered a bug, please raise an issue using the [Issues](https://github.com/VirtualPlanetaryLaboratory/vplanet/issues) tab at the top of this page.
 

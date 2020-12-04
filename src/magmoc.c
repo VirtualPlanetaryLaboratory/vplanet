@@ -33,9 +33,16 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dWaterMassAtm         = src[iBody].dWaterMassAtm;
   dest[iBody].dManMeltDensity       = src[iBody].dManMeltDensity;
   dest[iBody].dMassFracFeOIni       = src[iBody].dMassFracFeOIni;
+<<<<<<< HEAD
   /* Other variables Thermal model */
   dest[iBody].dGravAccelSurf        = src[iBody].dGravAccelSurf;
   dest[iBody].dSolidRadiusLocal     = src[iBody].dSolidRadiusLocal;
+=======
+	/* Other variables Thermal model */
+	dest[iBody].dGravAccelSurf        = src[iBody].dGravAccelSurf;
+	dest[iBody].dSolidRadiusLocal     = src[iBody].dSolidRadiusLocal;
+  dest[iBody].dTransDepthSol        = src[iBody].dTransDepthSol;
+>>>>>>> 5178eefb4937aa0d5eee0b7fb0d1255346c26b7f
   dest[iBody].dPrefactorA           = src[iBody].dPrefactorA;
   dest[iBody].dPrefactorB           = src[iBody].dPrefactorB;
   dest[iBody].dMeltFraction         = src[iBody].dMeltFraction;
@@ -491,22 +498,35 @@ void ReadOptionsMagmOc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
 
 // Initilaization of variables
 void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+  double dSolidRadiusLocalLow,dSolidRadiusLocalHigh;
+
   // primary variables: HARD CODED INITIAL VALUES
   body[iBody].dPotTemp         = body[iBody].dSurfTemp; // initial potential temp = initial surface temp
-  body[iBody].dSolidRadius     = body[iBody].dRadius * RADCOREEARTH / REARTH; // initial solid. rad. = core radius
+  body[iBody].dCoreRadius      = body[iBody].dRadius * RADCOREEARTH / REARTH; // same relative core radius as Earth
   body[iBody].dWaterMassMOAtm  = body[iBody].dWaterMassAtm; // initial water mass in MO&Atm is equal to inital Water mass in atmosphere
   body[iBody].dWaterMassSol    = 0; // initial water mass in solid = 0
   body[iBody].dOxygenMassMOAtm = 0; // initial oxygen mass in MO&Atm = 0
   body[iBody].dOxygenMassSol   = 0; // initial oxygen mass in solid = 0
+  body[iBody].dGravAccelSurf   = BIGG * body[iBody].dMass / pow(body[iBody].dRadius,2);
+
+  dSolidRadiusLocalLow  = body[iBody].dRadius - ( (BLOWPRESSURE-body[iBody].dPotTemp)  / (body[iBody].dGravAccelSurf*(body[iBody].dPotTemp*THERMALEXPANCOEFF/SILICATEHEATCAP - ALOWPRESSURE*body[iBody].dManMeltDensity)));
+  dSolidRadiusLocalHigh = body[iBody].dRadius - ( (BHIGHPRESSURE-body[iBody].dPotTemp) / (body[iBody].dGravAccelSurf*(body[iBody].dPotTemp*THERMALEXPANCOEFF/SILICATEHEATCAP - AHIGHPRESSURE*body[iBody].dManMeltDensity)));
+  body[iBody].dSolidRadius = fmin(dSolidRadiusLocalLow,dSolidRadiusLocalHigh);
+
+  if (body[iBody].dSolidRadius < body[iBody].dCoreRadius) {
+    body[iBody].dSolidRadius = body[iBody].dCoreRadius;
+  }
 
   // other variables
-  body[iBody].dCoreRadius      = body[iBody].dRadius * RADCOREEARTH / REARTH; // same relative core radius as Earth
+  double dTransPressSol = 5.19964e9; // pressure at which to swith from low to high pressure treatment of solidus (Hirschmann, 2000) in Pa
   body[iBody].dPrefactorA      = AHIGHPRESSURE;
   body[iBody].dPrefactorB      = BHIGHPRESSURE;
   body[iBody].dAlbedo          = ALBEDOWATERATMOS;
-  body[iBody].dGravAccelSurf   = BIGG * body[iBody].dMass / pow(body[iBody].dRadius,2);
   body[iBody].dFracFe2O3Man    = 0;
   body[iBody].dPressOxygenAtm  = 0;
+  body[iBody].dTransDepthSol   = body[iBody].dRadius - pow((pow(body[iBody].dRadius,2) - 2*body[iBody].dRadius*dTransPressSol/(body[iBody].dManMeltDensity*body[iBody].dGravAccelSurf)),0.5);
+  body[iBody].dHydrogenMassSpace = 0;
+  body[iBody].dOxygenMassSpace = 0;
 
   // CO2
   body[iBody].dPressCO2Atm     = body[iBody].dCO2MassMOAtm * body[iBody].dGravAccelSurf / (4*PI*pow(body[iBody].dRadius,2)); // initial CO2 mass in MO&Atm is equal to inital CO2 mass in atmosphere
@@ -733,7 +753,7 @@ From Elkins-Tanton (2008) & Carone et al. (2014)
 double fndNetFluxAtmGrey(BODY *body, int iBody) {
 
 
-  if ((body[iBody].dSurfTemp <= 1800) && (body[iBody].dSurfTemp >= 600) && (body[iBody].dPressWaterAtm >= PRESSWATERMIN)) {
+  if ((body[iBody].dPotTemp <= 1800) && (body[iBody].dPotTemp >= 600) && (body[iBody].dPressWaterAtm >= PRESSWATERMIN)) {
     double dOLR = 280; // Outgoing Longwave Radiation, Runaway Greenhouse (W/m^2)
     double dASR = pow(body[iBody].dEffTempAtm,4) * SIGMA; // Absorbed Stellar Radiation (W/m^2)
 
@@ -744,7 +764,7 @@ double fndNetFluxAtmGrey(BODY *body, int iBody) {
     dOptDep = body[iBody].dPartialPressWaterAtm * pow((0.75*ABSORPCOEFFH2O/body[iBody].dGravAccelSurf/REFPRESSUREOPACITY),0.5) \
               + body[iBody].dPartialPressCO2Atm * pow((0.75*ABSORPCOEFFCO2/body[iBody].dGravAccelSurf/REFPRESSUREOPACITY),0.5);
 
-    return 2 / (2 + dOptDep) * SIGMA * (pow(body[iBody].dSurfTemp,4) - pow(body[iBody].dEffTempAtm,4));
+    return 2 / (2 + dOptDep) * SIGMA * (pow(body[iBody].dPotTemp,4) - pow(body[iBody].dEffTempAtm,4));
   }
 }
 
@@ -767,11 +787,11 @@ double fndNetFluxAtmPetit(BODY *body, double dTime, int iBody) {
   double dOLR = 280; // Outgoing Longwave Radiation, Runaway Greenhouse (W/m^2)
   double dASR = pow(body[iBody].dEffTempAtm,4) * SIGMA; // Absorbed Stellar Radiation (W/m^2)
 
-  if ((body[iBody].dSurfTemp <= 1800) && (body[iBody].dSurfTemp >= 600) && (body[iBody].dPressWaterAtm >= PRESSWATERMIN)) {
+  if ((body[iBody].dPotTemp <= 1800) && (body[iBody].dPotTemp >= 600) && (body[iBody].dPressWaterAtm >= PRESSWATERMIN)) {
     return dOLR - dASR;
   } else {
     dLogP  = log10(body[iBody].dPressWaterAtm/1e5);
-    dTsurf = body[iBody].dSurfTemp;
+    dTsurf = body[iBody].dPotTemp;
 
     dLogF_ms = -8.03520391e-02 + 3.08508158e-03*dTsurf - 6.96356770e-01*dLogP - 3.09084067e-07*pow(dTsurf,2) \
            + 2.38672208e-08*pow(dTsurf,2)*dLogP - 2.58853235e-08*pow(dTsurf,2)*pow(dLogP,2) - 3.60631795e-01*pow(dLogP,2) \
@@ -844,14 +864,16 @@ Function mantle_flux() in functions_rk.py
 */
 void fndMeltFracMan(BODY *body, int iBody) {
   double daRadius[101];      // radius
-  double daTrad[101];        // radius dep. temperature
-  double daMelt_frac_r[101]; // radius dep. melt_frac
+  double daTrad[100];        // radius dep. temperature
+  double daMelt_frac_r[100]; // radius dep. melt_frac
   double dMelt_frac_surf;    // melt frac at surface
   double dMelt_vol;         // melt volume
   double dA, dB;             // prefactors for linear solidus
   double dTsol;             // solidus temperature
   double dEta_a;            // liquid viscosity
   double dEta_b;            // solid viscosity
+  double dSolidRadiusLocalLow, dSolidRadiusLocalHigh; // local solidus radius for
+                                                      // high & low pressure
   int iItr;
 
   dMelt_vol = 0;
@@ -861,7 +883,7 @@ void fndMeltFracMan(BODY *body, int iBody) {
   }
 
   for (iItr=0; iItr<100; iItr=iItr+1){
-    if (body[iBody].dRadius-daRadius[iItr] < 1e5) {
+    if ((body[iBody].dRadius-daRadius[iItr]) < body[iBody].dTransDepthSol) {
       dA = ALOWPRESSURE;
       dB = BLOWPRESSURE;
     } else {
@@ -895,7 +917,9 @@ void fndMeltFracMan(BODY *body, int iBody) {
     body[iBody].dKinemViscos = DYNVISCSOLID * exp(ACTIVENERGY/(RGAS*body[iBody].dPotTemp)) / body[iBody].dManMeltDensity;
   }
 
-  body[iBody].dSolidRadiusLocal = body[iBody].dRadius - ( (body[iBody].dPrefactorB-body[iBody].dPotTemp) / (body[iBody].dGravAccelSurf*(body[iBody].dPotTemp*THERMALEXPANCOEFF/SILICATEHEATCAP - body[iBody].dPrefactorA*body[iBody].dManMeltDensity)));
+  dSolidRadiusLocalLow  = body[iBody].dRadius - ( (BLOWPRESSURE-body[iBody].dPotTemp) / (body[iBody].dGravAccelSurf*(body[iBody].dPotTemp*THERMALEXPANCOEFF/SILICATEHEATCAP - ALOWPRESSURE*body[iBody].dManMeltDensity)));
+  dSolidRadiusLocalHigh = body[iBody].dRadius - ( (BHIGHPRESSURE-body[iBody].dPotTemp) / (body[iBody].dGravAccelSurf*(body[iBody].dPotTemp*THERMALEXPANCOEFF/SILICATEHEATCAP - AHIGHPRESSURE*body[iBody].dManMeltDensity)));
+  body[iBody].dSolidRadiusLocal = fmin(dSolidRadiusLocalLow,dSolidRadiusLocalHigh);
 
   if (body[iBody].dSolidRadiusLocal < body[iBody].dCoreRadius) {
     body[iBody].dSolidRadiusLocal = body[iBody].dCoreRadius;
@@ -913,13 +937,18 @@ void fndMeltFracMan(BODY *body, int iBody) {
     body[iBody].dMeltFraction = 0;
   }
   // END of melt_fraction(): returns Melt fraction and Kinematic viscosity
+  // body[iBody].dManHeatFlux = THERMALCONDUC * pow(fabs(body[iBody].dPotTemp-body[iBody].dSurfTemp),1.33) \
+  //                            * pow((THERMALEXPANCOEFF*body[iBody].dGravAccelSurf/(CRITRAYLEIGHNO*THERMALDIFFUS*body[iBody].dKinemViscos)),0.33);
+  //
+  // if (body[iBody].dPotTemp < body[iBody].dSurfTemp) {
+  //   body[iBody].dManHeatFlux = - body[iBody].dManHeatFlux;
+  // }
 
-  if (body[iBody].dPotTemp > body[iBody].dSurfTemp) {
-    body[iBody].dManHeatFlux = THERMALCONDUC * pow((body[iBody].dPotTemp-body[iBody].dSurfTemp),1.33) \
-                               * pow((THERMALEXPANCOEFF*body[iBody].dGravAccelSurf/(CRITRAYLEIGHNO*THERMALDIFFUS*body[iBody].dKinemViscos)),0.33);
-  } else {
-    body[iBody].dManHeatFlux = THERMALCONDUC * body[iBody].dPotTemp * THERMALEXPANCOEFF * body[iBody].dGravAccelSurf / SILICATEHEATCAP;
-  }
+  // if (body[iBody].dPotTemp > body[iBody].dSurfTemp) {
+  //   body[iBody].dManHeatFlux = body[iBody].dManHeatFlux;
+  // } else {
+  //   body[iBody].dManHeatFlux = THERMALCONDUC * body[iBody].dPotTemp * THERMALEXPANCOEFF * body[iBody].dGravAccelSurf / SILICATEHEATCAP;
+  // }
   // END of mantle_flux(): return mantle heat flux
 }
 
@@ -1028,6 +1057,9 @@ void fndWaterFracMelt(BODY *body, int iBody) {
       // get average molar mass
       // dAveMolarMassAtm = body[iBody].dPartialPressCO2Atm * MOLWEIGHTCO2 / body[iBody].dPressCO2Atm;
     }
+  } else { // No CO2 in atmosphere
+    body[iBody].dPartialPressCO2Atm = 0;
+    body[iBody].dPressCO2Atm        = 0;
   }
 
   if (body[iBody].dPressCO2Atm > 0) {
@@ -1055,6 +1087,8 @@ void PropsAuxMagmOc(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   double dCurrentTimeStep = evolve->dTimeStep;
   double dCurrentStepNum  = evolve->nSteps;
   double dAveMolarMassAtm;
+
+  // body[iBody].dSurfTemp = body[iBody].dPotTemp;
 
   /*
    * No negative masses!
@@ -1165,7 +1199,7 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
   }
 
   /* Switch from high to low pressure regime of the solidus */
-  if ( !body[iBody].bLowPressSol && (body[iBody].dRadius-body[iBody].dSolidRadius) < 1e5) {
+  if ( !body[iBody].bLowPressSol && (body[iBody].dRadius-body[iBody].dSolidRadius) < body[iBody].dTransDepthSol) {
     body[iBody].dPrefactorA  = ALOWPRESSURE;
     body[iBody].dPrefactorB  = BLOWPRESSURE;
     body[iBody].bLowPressSol = 1;
@@ -1185,7 +1219,7 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
   /* Mantle solidified */
   if ((!body[iBody].bManSolid) && (body[iBody].dSolidRadius >= (0.9999 * body[iBody].dRadius))) {
     body[iBody].bManSolid       = 1;
-    body[iBody].dManMeltDensity = 4200;
+    // body[iBody].dManMeltDensity = 4200;
     body[iBody].dSolidRadius    = body[iBody].dRadius;
     /*
      * When mantle solidified:
@@ -1228,7 +1262,7 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
 
     body[iBody].bManQuasiSol = 1;
 
-    body[iBody].dManMeltDensity = 4200;
+    // body[iBody].dManMeltDensity = 4200;
     body[iBody].dSolidRadius    = body[iBody].dRadius;
 
     dDeltaWaterMass = WATERPARTCOEFF*body[iBody].dWaterFracMelt*(body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
@@ -2146,6 +2180,8 @@ void LogBodyMagmOc(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
   for (iOut=OUTSTARTMAGMOC;iOut<OUTENDMAGMOC;iOut++) {
     if (output[iOut].iNum > 0) {
+      //Useful for debugging
+      //fprintf(stderr,"%d %d\n",iBody,iOut);
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
     }
   }
@@ -2187,22 +2223,32 @@ void AddModuleMagmOc(MODULE *module,int iBody,int iModule) {
 double fdDPotTemp(BODY *body, SYSTEM *system, int *iaBody) {
   double dRadioPart,dManFluxPart,dRsolPart,dFusionPart;
   dRadioPart   = (body[iaBody[0]].dRadioHeat + body[iaBody[0]].dTidalHeat) / (4 * PI);
-  dManFluxPart = pow(body[iaBody[0]].dRadius,2) * body[iaBody[0]].dManHeatFlux;
-  dRsolPart    = body[iaBody[0]].dManMeltDensity * SILICATEHEATCAP * (pow(body[iaBody[0]].dRadius,3) - pow(body[iaBody[0]].dSolidRadius,3)) / 3;
+  // dManFluxPart = pow(body[iaBody[0]].dRadius,2) * body[iaBody[0]].dManHeatFlux;
+  dManFluxPart = pow(body[iaBody[0]].dRadius,2) * body[iaBody[0]].dNetFluxAtmo;
+  dRsolPart    = body[iaBody[0]].dManMeltDensity * EPSILONMANTLE * SILICATEHEATCAP * (pow(body[iaBody[0]].dRadius,3) - pow(body[iaBody[0]].dCoreRadius,3)) / 3;
   dFusionPart  = body[iaBody[0]].dManMeltDensity * HEATFUSIONSILICATE * pow(body[iaBody[0]].dSolidRadius,2) * body[iaBody[0]].dFactorDerivative;
   return (dRadioPart - dManFluxPart)/(dRsolPart - dFusionPart);
 }
 
 double fdDSurfTemp(BODY *body, SYSTEM *system, int *iaBody) {
-  double dFluxPart,dWaterPart,dManPart,dTempPart,dTBL;
-  dTBL       = (body[iaBody[0]].dPotTemp-body[iaBody[0]].dSurfTemp) * THERMALCONDUC / body[iaBody[0]].dManHeatFlux;
-  dFluxPart  = body[iaBody[0]].dManHeatFlux - body[iaBody[0]].dNetFluxAtmo;
-  dWaterPart = WATERHEATCAP * (body[iaBody[0]].dPressWaterAtm + body[iaBody[0]].dPressOxygenAtm) / body[iaBody[0]].dGravAccelSurf;
-  dManPart   = SILICATEHEATCAP * body[iaBody[0]].dManMeltDensity / (3*pow(body[iaBody[0]].dRadius,2));
-  dTempPart  = pow(body[iaBody[0]].dRadius,3) - pow(dTBL,3);
+  double dFluxPart,dWaterPart,dManPart,dTempPart,dTBL,dReturn;
+  // dTBL       = fabs((body[iaBody[0]].dPotTemp-body[iaBody[0]].dSurfTemp) * THERMALCONDUC / body[iaBody[0]].dManHeatFlux);
+  // dTBL       = (body[iaBody[0]].dPotTemp-body[iaBody[0]].dSurfTemp) * THERMALCONDUC / body[iaBody[0]].dManHeatFlux;
+  // if (dTBL>(body[iaBody[0]].dRadius-body[iaBody[0]].dSolidRadius)) {
+  //   dTBL = body[iaBody[0]].dRadius-body[iaBody[0]].dSolidRadius;
+  // }
+  // dFluxPart  = body[iaBody[0]].dManHeatFlux - body[iaBody[0]].dNetFluxAtmo;
+  // dWaterPart = WATERHEATCAP * (body[iaBody[0]].dPressWaterAtm + body[iaBody[0]].dPressOxygenAtm) / body[iaBody[0]].dGravAccelSurf;
+  // dManPart   = SILICATEHEATCAP * body[iaBody[0]].dManMeltDensity / (3*pow(body[iaBody[0]].dRadius,2));
   // dTempPart  = pow(body[iaBody[0]].dRadius,3) - pow((body[iaBody[0]].dRadius-dTBL),3);
-  // dTempPart  = pow(body[iaBody[0]].dRadius,3) - pow((body[iaBody[0]].dRadius-body[iaBody[0]].dSolidRadius),3);
-  return dFluxPart / (dWaterPart + dManPart * dTempPart);
+  // // dTempPart  = pow(body[iaBody[0]].dRadius,3) - pow(dTBL,3);
+  // // dTempPart  = 3*pow(body[iaBody[0]].dRadius,2)*dTBL;
+  // // dTempPart  = pow(body[iaBody[0]].dRadius,3) - pow((body[iaBody[0]].dRadius-body[iaBody[0]].dSolidRadius),3);
+
+  // dReturn    = dFluxPart / (dWaterPart + dManPart * dTempPart);
+  dReturn    = 0;
+
+  return dReturn;
 }
 
 double fdDSolidRadius(BODY *body, SYSTEM *system, int *iaBody) {

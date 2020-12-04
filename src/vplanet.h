@@ -820,10 +820,18 @@ struct BODY {
   double dCoreRadius;       /**< Core radius of the planet [m] */
   double dWaterMassAtm;     /**< Water mass in the atmosphere [kg] */
   double dManMeltDensity;   /**< Density of the molten mantle [km/m^3] */
+<<<<<<< HEAD
   double dMassFracFeOIni;   /**< Initial FeO mass fraction in the mantle */
   /* Other variables Thermal model */
   double dGravAccelSurf;    /**< Graviational acceleration at the surface [m/s^2] */
   double dSolidRadiusLocal; /**< Local variable for solidification radius of the mantle [m] */
+=======
+	double dMassFracFeOIni;   /**< Initial FeO mass fraction in the mantle */
+	/* Other variables Thermal model */
+	double dGravAccelSurf;    /**< Graviational acceleration at the surface [m/s^2] */
+	double dSolidRadiusLocal; /**< Local variable for solidification radius of the mantle [m] */
+	double dTransDepthSol;    /**< Depth of transition from low to high pressure solidus [Pa] */
+>>>>>>> 5178eefb4937aa0d5eee0b7fb0d1255346c26b7f
   double dPrefactorA;       /**< Prefactor for linear solidus */
   double dPrefactorB;       /**< Prefactor for linear solidus */
   double dMeltFraction;     /**< Melt fraction of the mantle */

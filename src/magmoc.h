@@ -28,7 +28,8 @@
 #define AVOGADROCONST             6.022e23 //particle per mol
 #define FRACCO2MELTMIN            0.0005 //minimal fraction of CO2 in the melt
 #define FRACCO2MELTMAX            0.0025 //maximal fraction of CO2 in the melt (=1e4 bar)
-#define TIMESTEPCORRECTION        1e2
+#define TIMESTEPCORRECTION        1e2    //
+#define EPSILONMANTLE             1.19   //factor between average and potential mantle temperature
 
 #define MAGMOC_NONE               0
 #define MAGMOC_SCHAEFER           1

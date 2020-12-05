@@ -33,16 +33,10 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dWaterMassAtm         = src[iBody].dWaterMassAtm;
   dest[iBody].dManMeltDensity       = src[iBody].dManMeltDensity;
   dest[iBody].dMassFracFeOIni       = src[iBody].dMassFracFeOIni;
-<<<<<<< HEAD
-  /* Other variables Thermal model */
-  dest[iBody].dGravAccelSurf        = src[iBody].dGravAccelSurf;
-  dest[iBody].dSolidRadiusLocal     = src[iBody].dSolidRadiusLocal;
-=======
 	/* Other variables Thermal model */
 	dest[iBody].dGravAccelSurf        = src[iBody].dGravAccelSurf;
 	dest[iBody].dSolidRadiusLocal     = src[iBody].dSolidRadiusLocal;
   dest[iBody].dTransDepthSol        = src[iBody].dTransDepthSol;
->>>>>>> 5178eefb4937aa0d5eee0b7fb0d1255346c26b7f
   dest[iBody].dPrefactorA           = src[iBody].dPrefactorA;
   dest[iBody].dPrefactorB           = src[iBody].dPrefactorB;
   dest[iBody].dMeltFraction         = src[iBody].dMeltFraction;

@@ -264,7 +264,7 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
     // Now add 1 to each iNumHalts
     for (iBody=1;iBody<control->Evolve.iNumBodies;iBody++) {
       if (iBody != iHaltMaxEcc) {
-	     control->Halt[iBody].iNumHalts++;
+       control->Halt[iBody].iNumHalts++;
      }
     }
   }
@@ -320,8 +320,8 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
 
     if (iHaltMaxEcc) {
       if (iBody != iHaltMaxEcc) {
-	       control->Halt[iBody].dMaxEcc = control->Halt[iHaltMaxEcc].dMaxEcc;
-	       control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxEcc;
+         control->Halt[iBody].dMaxEcc = control->Halt[iHaltMaxEcc].dMaxEcc;
+         control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxEcc;
       }
     }
   }

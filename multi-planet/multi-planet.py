@@ -6,6 +6,7 @@ import math
 import mmap
 from concurrent.futures import ProcessPoolExecutor
 import time
+import argparse
 
 # --------------------------------------------------------------------
 
@@ -20,7 +21,8 @@ def parallel_run_planet(input_file, cores):
             raise IOError("Name of destination folder not provided in file '%s'. Use syntax 'destfolder <foldername>'"%inputf)
 
     if os.path.isdir(folder_name) == False:
-        raise Exception("Vspace must be ran prior to running Multi-Planet")
+        print("ERROR: Folder", folder_name, "does not exist in the current directory.")
+        exit()
 
     #gets the list of sims
     sims = sorted([f.path for f in os.scandir(folder_name) if f.is_dir()])
@@ -65,10 +67,11 @@ def parallel_run_planet(input_file, cores):
             with open(vp, 'r') as vpl:
                 content = [line.strip().split() for line in vpl.readlines()]
                 for line in content:
-                    if line[0] == 'dStopTime':
-                        stoptime = line[1]
-                    if line[0] == 'dOutputTime':
-                        ouputtime = line[1]
+                    if line:
+                        if line[0] == 'dStopTime':
+                            stoptime = line[1]
+                        if line[0] == 'dOutputTime':
+                            ouputtime = line[1]
             expected_line_num = float(stoptime)/float(ouputtime)
 
             fd = [f for f in os.listdir(sim_dir) if f.endswith('foward')]
@@ -178,15 +181,12 @@ def par_worker(checkpoint_file, lock, sims):
         os.chdir("../../")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-      raise Exception("Must enter an input file name and number of cores")
-    else:
-        par_input = sys.argv[1]
-        cores = int(sys.argv[2])
 
-    if cores > mp.cpu_count():
-        raise Exception("Error: the maximum number of cores is %s" %mp.cpu_count())
-
+    max_cores = mp.cpu_count()
+    parser = argparse.ArgumentParser(description="Using multi-processing to run a large number of simulations")
+    parser.add_argument("InputFile", help="name of the vspace file")
+    parser.add_argument("-c","--cores",type=int,default=max_cores,help="The total number of processors used")
+    args = parser.parse_args()
 
     try:
         if sys.version_info >= (3, 0):
@@ -198,7 +198,7 @@ if __name__ == "__main__":
 
     parallel_time = 0
     start = time.perf_counter()
-    parallel_run_planet(par_input, cores)
+    parallel_run_planet(args.InputFile,args.cores)
     parallel_time += time.perf_counter() - start
 
     print('Duration: {:.2f} ms'.format(parallel_time*1000))

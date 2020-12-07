@@ -196,7 +196,7 @@ void ReadFixOrbit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     if (iFile > 0)
       /* Set to default */
 //       AssignDefaultInt(options,&control->Evolve.bFixOrbit[iFile-1],files->iNumInputs);
-			control->Evolve.bFixOrbit[iFile-1] = 0;
+      control->Evolve.bFixOrbit[iFile-1] = 0;
 }
 
 /* Force Equilibrium Spin Rate? */
@@ -1191,25 +1191,25 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
 
     if (body[iBody].bEqtide) {
       if (body[iBody].iTidePerts > 0) {
-	       for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
-	          bFound[iPert] = 0;
-	          for (iBodyPert=0;iBodyPert<iNumBodies;iBodyPert++) {
-	             if (iBodyPert != iBody) {
-	                if (strncmp(body[iBody].saTidePerts[iPert],body[iBodyPert].cName,sizeof(body[iBody].saTidePerts[iPert])) == 0) {
-		                 /* This parameter contains the body # of the "iPert-th"
-		                    tidal perturber */
-		                 body[iBody].iaTidePerts[iPert]=iBodyPert;
-		                 bFound[iPert]=1;
+         for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
+            bFound[iPert] = 0;
+            for (iBodyPert=0;iBodyPert<iNumBodies;iBodyPert++) {
+               if (iBodyPert != iBody) {
+                  if (strncmp(body[iBody].saTidePerts[iPert],body[iBodyPert].cName,sizeof(body[iBody].saTidePerts[iPert])) == 0) {
+                     /* This parameter contains the body # of the "iPert-th"
+                        tidal perturber */
+                     body[iBody].iaTidePerts[iPert]=iBodyPert;
+                     bFound[iPert]=1;
 
                      // Was eqtide set for the perturbed body?
                      if (!body[iBodyPert].bEqtide) {
                        fprintf(stderr,"ERROR: %s tidally perturbs %s, but module EQTIDE was not selected for body %s.\n",body[iBody].cName,body[iBodyPert].cName,body[iBodyPert].cName);
                        DoubleLineExit(options[OPT_TIDEPERTS].cFile[iBody+1],options[OPT_MODULES].cFile[iBodyPert+1],options[OPT_TIDEPERTS].iLine[iBody+1],options[OPT_MODULES].iLine[iBodyPert+1]);
                      }
-	                }
-	             }
-	          }
-	       }
+                  }
+               }
+            }
+         }
       }
 
       /* Were all tidal perturbers identified? */
@@ -1253,17 +1253,17 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
     ok=0;
     if (body[iBody].bEqtide) {
       for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
-	       for (iBodyPert=0;iBodyPert<body[body[iBody].iaTidePerts[iPert]].iTidePerts;iBodyPert++) {
-	          if (iBody == body[body[iBody].iaTidePerts[iPert]].iaTidePerts[iBodyPert])
-	           /* Match */
-	            ok=1;
-	}
-	if (!ok) {
-	  fprintf(stderr,"ERROR: %s tidally perturbs %s, but %s does NOT tidally perturb %s\n",body[iBody].cName,body[body[iBody].iaTidePerts[iPert]].cName,body[body[iBody].iaTidePerts[iPert]].cName,body[iBody].cName);
-	  fprintf(stderr,"\tFile: %s, Line: %d\n",files->Infile[iBody+1].cIn,options[OPT_TIDEPERTS].iLine[iBody+1]);
-	  fprintf(stderr,"\tFile: %s, Line: %d\n",files->Infile[body[iBody].iaTidePerts[iPert]+1].cIn,options[OPT_TIDEPERTS].iLine[iPert+1]);
-	  exit(EXIT_INPUT);
-	}
+         for (iBodyPert=0;iBodyPert<body[body[iBody].iaTidePerts[iPert]].iTidePerts;iBodyPert++) {
+            if (iBody == body[body[iBody].iaTidePerts[iPert]].iaTidePerts[iBodyPert])
+             /* Match */
+              ok=1;
+  }
+  if (!ok) {
+    fprintf(stderr,"ERROR: %s tidally perturbs %s, but %s does NOT tidally perturb %s\n",body[iBody].cName,body[body[iBody].iaTidePerts[iPert]].cName,body[body[iBody].iaTidePerts[iPert]].cName,body[iBody].cName);
+    fprintf(stderr,"\tFile: %s, Line: %d\n",files->Infile[iBody+1].cIn,options[OPT_TIDEPERTS].iLine[iBody+1]);
+    fprintf(stderr,"\tFile: %s, Line: %d\n",files->Infile[body[iBody].iaTidePerts[iPert]+1].cIn,options[OPT_TIDEPERTS].iLine[iPert+1]);
+    exit(EXIT_INPUT);
+  }
       }
     }
   }
@@ -3141,9 +3141,9 @@ void ForceBehaviorEqtide(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM 
       evolve->bForceEqSpin[iBody] = fbTidalLock(body,evolve,io,iBody,iOrbiter,update,fnUpdate,system);
       // If so, reset the function pointer to return dTINY for dDRotRateDt
       /* The index of iaRotEqtide must be zero, as locking is only possible
-	 if there is one tidal perturber */
+   if there is one tidal perturber */
       if (evolve->bForceEqSpin[iBody])
-	     SetDerivTiny(fnUpdate,iBody,update[iBody].iRot,update[iBody].iaRotEqtide[0]);
+       SetDerivTiny(fnUpdate,iBody,update[iBody].iRot,update[iBody].iaRotEqtide[0]);
     }
   }
 

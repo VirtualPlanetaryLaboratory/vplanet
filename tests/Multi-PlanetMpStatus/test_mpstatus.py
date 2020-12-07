@@ -21,7 +21,7 @@ def test_mpstatus():
         #runs vspace
         sub.run(['python','../../vspace/vspace/vspace.py','vspace.in'],cwd=cwd)
         #runs mp checkpoint
-        sub.run(['python', '../../multi-planet/multi-planet.py','vspace.in',cores],cwd=cwd)
+        sub.run(['python', '../../multi-planet/multi-planet.py','vspace.in','-c',cores],cwd=cwd)
         #runs mpstatus
         sub.run(['python', '../../multi-planet/mpstatus.py'],cwd=cwd)
 

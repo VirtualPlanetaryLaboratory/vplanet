@@ -1251,9 +1251,9 @@ void fvReadHalt40KPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
   if (lTmp >= 0) {
       NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
       if (dTmp < 0)
-	control->Halt[iFile-1].dMin40KPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+  control->Halt[iFile-1].dMin40KPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
       else
-	control->Halt[iFile-1].dMin40KPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+  control->Halt[iFile-1].dMin40KPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
 
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
@@ -1279,9 +1279,9 @@ void fvReadHalt235UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
   if (lTmp >= 0) {
       NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
       if (dTmp < 0)
-	control->Halt[iFile-1].dMin235UPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+  control->Halt[iFile-1].dMin235UPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
       else
-	control->Halt[iFile-1].dMin235UPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+  control->Halt[iFile-1].dMin235UPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
 
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
@@ -1307,9 +1307,9 @@ void fvReadHalt238UPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
   if (lTmp >= 0) {
       NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
       if (dTmp < 0)
-	control->Halt[iFile-1].dMin238UPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+  control->Halt[iFile-1].dMin238UPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
       else
-	control->Halt[iFile-1].dMin238UPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+  control->Halt[iFile-1].dMin238UPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
 
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
@@ -1335,9 +1335,9 @@ void fvReadHalt232ThPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
   if (lTmp >= 0) {
       NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
       if (dTmp < 0)
-	control->Halt[iFile-1].dMin232ThPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+  control->Halt[iFile-1].dMin232ThPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
       else
-	control->Halt[iFile-1].dMin232ThPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+  control->Halt[iFile-1].dMin232ThPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
 
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
@@ -1363,9 +1363,9 @@ void fvReadHaltRadPower(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
   if (lTmp >= 0) {
       NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
       if (dTmp < 0)
-	control->Halt[iFile-1].dMinRadPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+  control->Halt[iFile-1].dMinRadPower = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
       else
-	control->Halt[iFile-1].dMinRadPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
+  control->Halt[iFile-1].dMinRadPower = dTmp*fdUnitsPower(control->Units[iFile].iTime,control->Units[iFile].iMass,control->Units[iFile].iLength);
 
       UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else

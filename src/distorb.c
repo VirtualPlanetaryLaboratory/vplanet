@@ -864,11 +864,11 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
       }
       if (iBody == control->Evolve.iNumBodies-1) {
         if (control->bInvPlane) {
-	        /* Must initialize dMeanA to prevent memory corruption. This
-	           parameter has no real meaning in DistOrb runs, but inv_plave
-	           requires it. I will set it to zero for each body. --RKB */
-	        for (kBody=0;kBody<control->Evolve.iNumBodies;kBody++)
-	          body[kBody].dMeanA = 0;
+          /* Must initialize dMeanA to prevent memory corruption. This
+             parameter has no real meaning in DistOrb runs, but inv_plave
+             requires it. I will set it to zero for each body. --RKB */
+          for (kBody=0;kBody<control->Evolve.iNumBodies;kBody++)
+            body[kBody].dMeanA = 0;
           inv_plane(body, system, control->Evolve.iNumBodies);
         }
       }
@@ -2472,8 +2472,8 @@ void RecalcLaplace(BODY *body,EVOLVE *evolve,SYSTEM *system,int iVerbose) {
               system->fnLaplaceDeriv[j][0](alpha1, 0);
 
               system->daAlpha0[0][system->iaLaplaceN[iBody][jBody]][j] = alpha1;
-	      // if (iVerbose > VERBPROG)
-// // 		printf("Laplace function %d recalculated for bodies (%d, %d) at %f years\n",j+1,iBody,jBody,evolve->dTime/YEARSEC);
+        // if (iVerbose > VERBPROG)
+// //     printf("Laplace function %d recalculated for bodies (%d, %d) at %f years\n",j+1,iBody,jBody,evolve->dTime/YEARSEC);
         }
       }
     }

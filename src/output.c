@@ -1796,7 +1796,7 @@ void LogOutputOrder(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYST
           strcat(cCol[iCol+iSubOut+iExtra],cTmp);
         }
         iExtra += (output[iOut].iNum-1);
-	free(dTmp);
+  free(dTmp);
       }
 
     }
@@ -1906,11 +1906,11 @@ void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *out
     fprintf(fp,"Color: %s\n", body[iBody].cColor);
     for (iOut=OUTBODYSTART;iOut<OUTEND;iOut++) {
       if (output[iOut].iNum > 0) {
-	       if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
-	         //Useful for debugging
-	         //fprintf(stderr,"%d %d\n",iBody,iOut);
-	         WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
-	       }
+         if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
+           //Useful for debugging
+           //fprintf(stderr,"%d %d\n",iBody,iOut);
+           WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,iBody);
+         }
       }
     }
     LogBodyRelations(control,fp,iBody);
@@ -1997,8 +1997,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
             for (iSubOut=0;iSubOut<output[iOut].iNum;iSubOut++)
               dCol[iCol+iSubOut+iExtra]=dTmp[iSubOut];
             iExtra += (output[iOut].iNum-1);
-	          free(dTmp);
-	          dTmp = NULL;
+            free(dTmp);
+            dTmp = NULL;
           }
         }
       }
@@ -2010,8 +2010,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
       for (iCol=0;iCol<files->Outfile[iBody].iNumCols+iExtra;iCol++) {
           //printf("%d %d\n",iBody,iCol);
           //fflush(stdout);
-	        fprintd(fp,dCol[iCol],control->Io.iSciNot,control->Io.iDigits);
-	        fprintf(fp," ");
+          fprintd(fp,dCol[iCol],control->Io.iSciNot,control->Io.iDigits);
+          fprintf(fp," ");
       }
       fprintf(fp,"\n");
       fclose(fp);
@@ -2041,8 +2041,8 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
             WriteDailyInsol(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
             WriteSeasonalTemp(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
             WriteSeasonalIceBalance(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-	          WriteSeasonalFluxes(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-	          WritePlanckB(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+            WriteSeasonalFluxes(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+            WritePlanckB(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
 
             if (body[iBody].dSeasOutputTime != 0) {
               body[iBody].dSeasNextOutput = body[iBody].dSeasOutputTime;
@@ -2059,7 +2059,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
             WriteSeasonalTemp(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
             WriteSeasonalIceBalance(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
             WriteSeasonalFluxes(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
-	          WritePlanckB(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
+            WritePlanckB(body,control,&output[iOut],system,&control->Units[iBody],update,iBody,dTmp,cUnit);
 
             body[iBody].dSeasNextOutput = control->Evolve.dTime + body[iBody].dSeasOutputTime;
           }

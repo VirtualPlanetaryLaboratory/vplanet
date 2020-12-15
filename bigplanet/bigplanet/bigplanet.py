@@ -1,13 +1,9 @@
 import numpy as np
 import os
 import sys
-import pandas as pd
 import h5py
-import pickle
 import multiprocessing as mp
 import argparse
-from mpi4py import MPI
-import hdfdict
 
 __all__ = ["PrintKeys",
            "ExtractColumn",
@@ -17,8 +13,6 @@ __all__ = ["PrintKeys",
 """
 Code for command line call of bigplanet
 """
-
-
 
 def GetDir(input_file):
     """ Give it input file and returns name of folder where simulations are located. """
@@ -237,22 +231,13 @@ def ProcessForwardfile(forwardfile, data, body, OutputOrder):
 
     return data
 
-def CreateHDF5(dic, h5filename, cores):
+def CreateHDF5(all_data, h5filename, cores):
     """
     ....
     """
-    with h5py.File(h5filename, 'w') as h5file:
-        recursively_save_dict_contents_to_group(h5file, '/', dic)
-
-def recursively_save_dict_contents_to_group(h5file, path, dic):
-    """
-    ....
-    """
-    for key, item in dic.items():
-        if isinstance(item, dict):
-            recursively_save_dict_contents_to_group(h5file, path + key + '/', item)
-        else:
-            h5file[path + key] = item
+    with h5py.File(h5filename, 'w') as h:
+        for k, v in all_data.items():
+            h.create_dataset(k, data=np.array(v,dtype='S'),compression = 'gzip')
 
 """
 Code for Bigplanet Module
@@ -423,7 +408,6 @@ def CreateMatrix(xaxis,yaxis,zarray):
     ----------
     xaxis : nump array
         the numpy array of unique values of the xaxis
-
         Example:
             xasis = ExtractUniqueValues(data,'earth_Obliquity_forward')
     yaxis : numpy array
@@ -447,7 +431,7 @@ def CreateMatrix(xaxis,yaxis,zarray):
     xnum = len(xaxis)
     ynum = len(yaxis)
 
-    zmatrix = np.reshape(zarray, (xnum, ynum))
+    zmatrix = np.reshape(zarray, (ynum, xnum))
     zmatrix = np.flipud(zmatrix)
     zmatrix = rotate90Clockwise(zmatrix)
     zmatrix = np.flipud(zmatrix)

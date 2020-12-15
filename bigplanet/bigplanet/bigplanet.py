@@ -274,7 +274,7 @@ def ExtractColumn(hf,k):
         the name of the column that is to be extracted
         Example:
             k = 'earth_Obliquity_final'
-        The syntax of the column names is body_variable_saggregation
+        The syntax of the column names is body_variable_aggregation
         the lists of aggregations (and how to call them) is as follows:
 
             forward file data (forward), initial data (initial),

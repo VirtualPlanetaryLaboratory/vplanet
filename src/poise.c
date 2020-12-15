@@ -506,7 +506,8 @@ void ReadOLRModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,\
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,\
                     control->Io.iVerbose);
-    //CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    //CheckDuplication(files,options,files->Infile[iFile].cIn,
+    // lTmp,control->Io.iVerbose);
     if (!memcmp(sLower(cTmp),"wk97",3)) {
       body[iFile-1].iOLRModel = WK97;
     } else if (!memcmp(sLower(cTmp),"hm16",3)) {
@@ -6221,7 +6222,7 @@ void AlbedoTOAsms09(BODY *body, double zenith, int iBody, int iLat) {
                                    (body[iBody].dIceAlbedo -\
                                    body[iBody].dAlbedoLand) *\
                                    tanh((body[iBody].daTempLand[iLat] +\
-                                   5.15)/5.15) + 0.04 * (3 * sin(zenith) *\
+                                   5.15)/5.15)+ 0.04 * (3 * sin(zenith) *\
                                    sin(zenith)-1.);
 
   body[iBody].daAlbedoWater[iLat] = 0.5 * (body[iBody].dIceAlbedo +\

@@ -62,9 +62,8 @@ setup(name = 'bigplanet',
       packages = ['bigplanet'],
       install_requires = [
                           'numpy',
-                          'matplotlib >= 1.4.0',
-                          'pandas',
-                          'sklearn'
+                          'h5py',
+                          'argparse'
                           ],
       include_package_data = True,
       zip_safe = False)

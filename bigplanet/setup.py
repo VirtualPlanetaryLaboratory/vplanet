@@ -60,6 +60,11 @@ setup(name = 'bigplanet',
       author_email = 'dflemin3@uw.edu',
       license = 'MIT',
       packages = ['bigplanet'],
+      entry_points = {
+          'console_scripts': [
+               'bigplanet = bigplanet.bigplanet:main'
+          ],
+      },
       install_requires = [
                           'numpy',
                           'h5py',

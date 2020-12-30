@@ -1,14 +1,20 @@
-import numpy as np
 import os
-import sys
-import h5py
 import multiprocessing as mp
+import sys
+import subprocess as sub
+import mmap
 import argparse
+import h5py
+import numpy as np
+from collections import OrderedDict
+import csv
 
 __all__ = ["PrintKeys",
            "ExtractColumn",
            "ExtractUniqueValues",
-           "CreateMatrix"]
+           "CreateMatrix",
+           "PrintDictData",
+           "WriteOutput"]
 
 """
 Code for command line call of bigplanet
@@ -47,8 +53,84 @@ def GetSims(folder_name):
     sims = sorted([f.path for f in os.scandir(folder_name) if f.is_dir()])
     return sims
 
-def GetData(sims, cores, infiles):
-    """ """
+def parallel_run_planet(input_file, cores):
+    # gets the folder name with all the sims
+    folder_name, infiles = GetDir(input_file)
+    #gets the list of sims
+    sims = sorted([f.path for f in os.scandir(folder_name) if f.is_dir()])
+
+    #initalizes the checkpoint file
+    checkpoint_file = os.getcwd() + '/' + '.' + folder_name
+
+    #checks if the files doesn't exist and if so then it creates it
+    if os.path.isfile(checkpoint_file) == False:
+        with open(checkpoint_file,'w') as cp:
+            cp.write('Vspace File: ' + os.getcwd() + '/' + input_file + '\n')
+            cp.write('Total Number of Simulations: '+ str(len(sims)) + '\n')
+            for f in range(len(sims)):
+                cp.write(sims[f] + " " + "-1 \n")
+            cp.write('THE END \n')
+
+    #if it does exist, it checks for any 0's (sims that didn't complete) and
+    #changes them to -1 to be re-ran
+    else:
+        #print(': multi-planet checkpoint file already exists!')
+        #print('Checking if checkpoint file is corrupt...')
+
+        sub.run(['rm', checkpoint_file])
+        #restarts the checkpoint file from scratch
+        with open(checkpoint_file,'w') as cp:
+            cp.write('Vspace File: ' + os.getcwd() + '/' + input_file + '\n')
+            cp.write('Total Number of Simulations: '+ str(len(sims)) + '\n')
+            for f in range(len(sims)):
+                cp.write(sims[f] + " " + "-1 \n")
+            cp.write('THE END \n')
+
+        datalist = []
+
+        with open(checkpoint_file, 'r') as f:
+            for newline in f:
+                datalist.append(newline.strip().split())
+
+        for i in range(len(sims)):
+            sim_dir = sims[i]
+            vp = os.path.join(sim_dir, 'vpl.in')
+            with open(vp, 'r') as vpl:
+                content = [line.strip().split() for line in vpl.readlines()]
+                for line in content:
+                    if line:
+                        if line[0] == 'dStopTime':
+                            stoptime = line[1]
+                        if line[0] == 'dOutputTime':
+                            ouputtime = line[1]
+            expected_line_num = float(stoptime)/float(ouputtime)
+
+            fd = [f for f in os.listdir(sim_dir) if f.endswith('foward')]
+            if len(fd) == 0:
+                for l in datalist:
+                    if l[0] == sim_dir:
+                        l[1] = '-1'
+            else:
+                fd = os.path.join(sim_dir, fd[0])
+                with open(fd, 'r') as f:
+                    buf = mmap.mmap(f.fileno(),0)
+                    lines = 0
+                    readline = buf.readline
+                    while readline():
+                        lines += 1
+                    last = readline[-1]
+                    if last == stoptime and lines == expected_line_num:
+                        for l in datalist:
+                            if l[0] == sim_dir:
+                                l[1] = '1'
+                    else:
+                        for l in datalist:
+                            if l[0] == sim_dir:
+                                l[1] = '-1'
+
+        with open(checkpoint_file, 'w') as f:
+            for newline in datalist:
+                f.writelines(' '.join(newline)+'\n')
 
     #get logfile name
     path_vpl = os.path.join(sims[0],'vpl.in')
@@ -58,42 +140,43 @@ def GetData(sims, cores, infiles):
         for line in content:
             if line:
                 if line[0] == 'sSystemName':
-                    logfile_Name = line[1]
+                    system_name = line[1]
 
-    logfile = logfile_Name + ".log"
+    logfile = system_name + ".log"
 
-    log_data = {}
+    lock = mp.Lock()
+    workers = []
+    for i in range(cores):
+        workers.append(mp.Process(target=par_worker, args=(checkpoint_file,infiles,system_name,logfile,lock)))
+    for w in workers:
+        w.start()
+    for w in workers:
+        w.join()
 
-    print(sims)
+    master_file = folder_name + '.hdf5'
+    filelist = []
 
-    # Process the *.log file
-    for i in range(len(sims)):
-        path_log = os.path.join(sims[i], logfile)
-        log_data = ProcessLogFile(path_log, log_data)
+    for i in sims:
+        single_folder = i.split('/')[-1]
+        HDF5_File = single_folder + '.hdf5'
+        HDF5_path = i + '/' + HDF5_File
+        filelist.append(HDF5_path)
 
-        # Process all the *.in files
-        # for file in os.listdir(sims[i]):
-        #     if file.endswith('.in'):
-        #         path_in = os.path.join(sims[i], file)
-        #         ProcessInfile(path_in, file, in_data)
-        #         # print(os.path.join(sims[i], file)
+    data = OrderedDict()
 
+    for f in filelist:
+        data[f] = load(f)
 
-        for file in infiles:
-            if file == 'vpl.in':
-                continue
-            else:
-                body = file.split('.')[0]
-                output = body + "_OutputOrder"
-                if output in log_data:
-                    OutputOrder = log_data[output]
-                    forward_name = logfile_Name + '.' + body + '.forward'
-                    path_forward = os.path.join(sims[i],forward_name)
-                    print('Forward File: ',path_forward)
-                    log_data = ProcessForwardfile(path_forward, log_data, body, OutputOrder)
+    save(master_file, merge_data(data))
 
-    PrintDictData(log_data)
-    return log_data
+    i = filelist[0]
+    print(i)
+
+    with h5py.File(i,'r') as filename:
+        with h5py.File(master_file,'r+') as master_W:
+            for k in filename.keys():
+                units = filename[k].attrs.get('Units')
+                master_W[k].attrs['Units'] = units
 
 def ProcessLogFile(logfile, data):
     print('Log file: ', logfile)
@@ -161,19 +244,6 @@ def ProcessLogFile(logfile, data):
 
     return data
 
-def PrintDictData(data):
-    """Proceses through dictionary and prints keys and first 6 values."""
-
-    for k, v in data.items():
-
-        if 'OutputOrder' in k:
-            print(k, ':', v[:])
-        else:
-            print(k, ':', v[0])
-            print(v[1:])
-
-        print()
-
 def ProcessInfile(infile, file, data):
     with open(infile, 'r') as inf:
         content = [line.strip() for line in inf.readlines()]
@@ -199,14 +269,6 @@ def ProcessInfile(infile, file, data):
             if (fv_param == 'saOutputOrder' or fv_param == 'saGridOutput') and fv_value[-1] == '$':
                 cont = True
 
-    #get the .in files data
-    #if .in files have any overlap ignore duplicates
-    #get .foward name
-    #get .foward data
-    #if .foward files have any overlap ignore orginal
-
-    #return data
-
 def ProcessForwardfile(forwardfile, data, body, OutputOrder):
 
     header = []
@@ -231,13 +293,150 @@ def ProcessForwardfile(forwardfile, data, body, OutputOrder):
 
     return data
 
-def CreateHDF5(all_data, h5filename, cores):
+def CreateHDF5(data, system_name,infiles,logfile,h5filename):
     """
     ....
     """
+    data = ProcessLogFile(logfile, data)
+    for file in infiles:
+        if file == 'vpl.in':
+            continue
+        else:
+            body = file.split('.')[0]
+            output = body + "_OutputOrder"
+            if output in data:
+                OutputOrder = data[output]
+                forward_name = system_name + '.' + body + '.forward'
+                data = ProcessForwardfile(forward_name, data, body, OutputOrder)
+
     with h5py.File(h5filename, 'w') as h:
-        for k, v in all_data.items():
-            h.create_dataset(k, data=np.array(v,dtype='S'),compression = 'gzip')
+        for k, v in data.items():
+            if len(v) == 2:
+                v_attr = v[0]
+                v_value = [v[1]]
+            else:
+                v_value = v
+                v_attr = ''
+
+            h.create_dataset(k, data=np.array(v_value,dtype='S'),compression = 'gzip')
+            h[k].attrs['Units'] = v_attr
+
+def merge_data(data_list):
+
+    """Merge dictionaries with data.
+
+    Keyword arguments:
+    data_list -- the dictionary with data dictionaries
+    """
+
+    data = None
+
+    for f in data_list:
+        if not data:
+            data = data_list[f]
+        else:
+            for key in data_list[f]:
+                data[key] = np.append(data[key], data_list[f][key], axis=0)
+
+
+    return data
+
+def load(filename):
+
+    """Load hdf5 file to data dictionary and return it.
+
+    Keyword arguments:
+    filename -- the full path to hdf5 file
+    """
+
+    with h5py.File(filename, 'r') as f:
+
+        data = {}
+
+        for key in f:
+            data[key] = f[key][...]
+
+    return data
+
+def save(filename, data):
+
+    """Create hdf5 file with given data.
+
+    Keyword arguments:
+    filename -- the full path to hdf5 file
+    data -- dictionary with data
+    """
+
+    with h5py.File(filename, 'w') as f:
+
+        for key in data:
+            f.create_dataset(key, data[key].shape, dtype=data[key].dtype,compression='gzip')[...] = data[key]
+
+## parallel worker to run vplanet ##
+def par_worker(checkpoint_file,infiles,system_name,logfile,lock):
+
+    while True:
+
+        lock.acquire()
+        datalist = []
+        data = {}
+
+        with open(checkpoint_file, 'r') as f:
+            for newline in f:
+                datalist.append(newline.strip().split())
+
+        folder = ''
+
+        for l in datalist:
+            if l[1] == '-1':
+                folder = l[0]
+                l[1] = '0'
+                break
+
+        if not folder:
+            lock.release()
+            return
+
+        with open(checkpoint_file, 'w') as f:
+            for newline in datalist:
+                f.writelines(' '.join(newline)+'\n')
+
+        lock.release()
+
+        os.chdir(folder)
+
+        lock.acquire()
+        datalist = []
+
+        with open(checkpoint_file, 'r') as f:
+            for newline in f:
+                datalist.append(newline.strip().split())
+
+        single_folder = folder.split('/')[-1]
+        HDF5_File = single_folder + '.hdf5'
+
+        if os.path.isfile(HDF5_File) == False:
+
+            CreateHDF5(data, system_name, infiles, logfile, HDF5_File)
+            for l in datalist:
+                if l[0] == folder:
+                    l[1] = '1'
+                    break
+        else:
+            for l in datalist:
+                if l[0] == folder:
+                    l[1] = '1'
+                    break
+
+        with open(checkpoint_file, 'w') as f:
+            for newline in datalist:
+                f.writelines(' '.join(newline)+'\n')
+
+
+        lock.release()
+
+        os.chdir("../../")
+
 
 """
 Code for Bigplanet Module
@@ -342,7 +541,6 @@ def ExtractColumn(hf,k):
 
     elif aggreg == 'initial' or aggreg == 'final':
         data = [d.decode() for d in hf[k]]
-        del data[0]
         data = [float(i) for i in data]
 
     else:
@@ -350,6 +548,38 @@ def ExtractColumn(hf,k):
         exit()
 
     return data
+
+def ExtractUnits(hf,k):
+    """
+    Returns all the data for a single key (column) in a given HDF5 file.
+
+    Parameters
+    ----------
+    hf : File
+        The HDF5 where the data is stored.
+        Example:
+            HDF5_File = h5py.File(filename, 'r')
+    k : str
+        the name of the column that is to be extracted
+        Example:
+            k = 'earth_Obliquity_final'
+        The syntax of the column names is body_variable_aggregation
+        the lists of aggregations (and how to call them) is as follows:
+
+            forward file data (forward), initial data (initial),
+            final data (final), Output Order List (OutputOrder)
+
+            Note: The following statistics only will work with forward data
+            mean (mean), mode (mode), standard deviation (stddev),
+            min (min), max (max), gemoetric mean (geomean)
+
+    Returns
+    -------
+    units : string
+        A string value of the units
+    """
+    return hf[k].attrs.get('Units')
+
 
 def ArgumentParser(hf,k):
     forward = k.rpartition('_')[0] + '_forward'
@@ -386,8 +616,6 @@ def ExtractUniqueValues(hf,k):
 
     """
 
-
-
     if len(hf[k].shape) != 1:
         data = HFD5Decoder(hf,k)
         data.flatten()
@@ -423,9 +651,6 @@ def CreateMatrix(xaxis,yaxis,zarray):
     -------
     zmatrix : numpy array
         zarray in the shape of (xaxis,yaxis)
-
-
-
     """
 
     xnum = len(xaxis)
@@ -450,21 +675,89 @@ def rotate90Clockwise(A):
 
     return A
 
+def PrintDictData(data):
+    """Proceses through dictionary and prints keys and first 6 values."""
+
+    for k, v in data.items():
+
+        print(k, ':', v[:])
+        print()
+
+def WriteOutput(inputfile, columns,file="bigplanet.out",delim=" ",header=False,ulysses=False):
+    """
+    Writes an Output file in csv format
+
+    Parameters
+    ----------
+    input file : HDF5 file
+        the HDF5 file where the data is stored
+        Example:
+            HDF5_File = h5py.File(filename, 'r')
+    columns : list of strings
+        a list of variables that are to be written to the csv file
+        Example:
+            columns = ['earth_Obliquity_final','earth_Instellation_final']
+    file : string
+        the name of the output file
+        Default is Bigplanet.out
+        Example:
+            file="bigplanet.out"
+    delim : string
+        the delimiter for the output file
+        Example:
+            delim = ","
+    header : boolean
+        if True, headers are put on the first line of the output
+        Default is False
+    ulysses : boolean
+        True/False boolean determing if the output file will be in VR Ulysses format
+        If True, the output file will have headers, and be named 'User.csv'
+    """
+    export = []
+    units = []
+    for i in columns:
+        export.append(ExtractColumn(inputfile,i))
+        units.append(ExtractUnits(inputfile,i))
+
+    export = np.array(export)
+
+    if ulysses == True:
+        delim = ','
+        header = True
+        file = 'User.csv'
+
+    if delim == "":
+        print('ERROR: Delimiter cannot be empty')
+        exit()
+
+    with open(file, "w", newline="") as f:
+        if header == True:
+            for count,i in enumerate(columns):
+                f.write(i + '[' + units[count] + ']')
+                if columns[-1] != i:
+                    f.write(delim)
+
+            f.write("\n")
+
+        icol, irow = export.shape
+        for i in range(irow):
+            for j in range(icol):
+                f.write(str(export[j][i]))
+                if j < icol - 1:
+                    f.write(delim)
+            f.write("\n")
+
+def main():
+    max_cores = mp.cpu_count()
+    parser = argparse.ArgumentParser(description="Extract data from Vplanet simulations")
+    parser.add_argument("InputFile", help="Name of the vspace input file")
+    parser.add_argument("-c","--cores", type=int,default=max_cores,help="Number of processors used")
+    args = parser.parse_args()
+
+    parallel_run_planet(args.InputFile,args.cores)
+
 
 
 if __name__ == "__main__":
 
-    max_cores = mp.cpu_count()
-    parser = argparse.ArgumentParser(description="Extract data from Vplanet simulations")
-    parser.add_argument("inputfile", help="Name of the vspace file")
-    parser.add_argument("-c","--cores", type=int,default=max_cores,help="Number of processors used")
-    args = parser.parse_args()
-
-
-    dir, infiles = GetDir(args.inputfile)
-    sims = GetSims(dir)
-    full_data = GetData(sims, args.cores, infiles)
-
-    h5filename = dir + '.hdf5'
-
-    CreateHDF5(full_data,h5filename,args.cores)
+    main()

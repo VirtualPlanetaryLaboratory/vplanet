@@ -37,76 +37,76 @@
 #define EPOWERMAN26AL     2.0944e15            /**< [W] Default mantle power from 26Al if all 26Mg from 26Al decay */
 /* Core */
 #define EMASSCORE26AL     1e-2*(EMASSMAN26AL)  /**< [kg]  Default core mass of 26Al */
-#define ENUMCORE26AL	  1e-2*(ENUMMAN26AL)   /**< [num] Default core number of 26Al atoms */
-#define EPOWERCORE26AL	  1e-2*(EPOWERMAN26AL) /**< [W] Default core power from 26Al if all 26Mg from 26Al decay */
+#define ENUMCORE26AL      1e-2*(ENUMMAN26AL)   /**< [num] Default core number of 26Al atoms */
+#define EPOWERCORE26AL    1e-2*(EPOWERMAN26AL) /**< [W] Default core power from 26Al if all 26Mg from 26Al decay */
 
 /* 40K */
 #define ENERGY40K        2.13371243669e-13      /**< [J] Decay energy of Potassium-40 */
-#define MASS40K		 39.96399848*ATOMMASS	/**< [kg] Mass of a 40K atom */
-#define HALFLIFE40K	 5.736527e+16		/**< [s] Half-life of 40K */
+#define MASS40K          39.96399848*ATOMMASS  /**< [kg] Mass of a 40K atom */
+#define HALFLIFE40K      5.736527e+16    /**< [s] Half-life of 40K */
 /* Mantle */
-#define EMASSMAN40K	 6.45089e+17		/**< [kg]  Default mantle mass of 40K */
-#define ENUMMAN40K	 9.72110e+42		/**< [num] Default mantle number of 40K atoms */
-#define EPOWERMAN40K	 3.61578e+13		/**< [W] Default mantle power from 40K decay */
+#define EMASSMAN40K      6.45089e+17    /**< [kg]  Default mantle mass of 40K */
+#define ENUMMAN40K       9.72110e+42    /**< [num] Default mantle number of 40K atoms */
+#define EPOWERMAN40K     3.61578e+13    /**< [W] Default mantle power from 40K decay */
 /* Core */
-#define EMASSCORE40K	 6.04046e+17		/**< [kg]  Default core mass of 40K */
-#define ENUMCORE40K	 9.10261e+42		/**< [num] Default core number of 40K atoms */
-#define EPOWERCORE40K	 3.38573e+13		/**< [W] Default core power from 40K decay */
+#define EMASSCORE40K     6.04046e+17    /**< [kg]  Default core mass of 40K */
+#define ENUMCORE40K      9.10261e+42    /**< [num] Default core number of 40K atoms */
+#define EPOWERCORE40K    3.38573e+13    /**< [W] Default core power from 40K decay */
 /* Crust (assuming crustal mass constant) */
-#define EMASSCRUST40K	 2.47738e+17		/**< [kg]  Default crust mass of 40K */
-#define ENUMCRUST40K	 3.73326e+42		/**< [num] Default crust number of 40K atoms */
-#define EPOWERCRUST40K	 1.38859e+13		/**< [W] Default crust power from 40K decay */
+#define EMASSCRUST40K    2.47738e+17    /**< [kg]  Default crust mass of 40K */
+#define ENUMCRUST40K     3.73326e+42    /**< [num] Default crust number of 40K atoms */
+#define EPOWERCRUST40K   1.38859e+13    /**< [W] Default crust power from 40K decay */
 
 /* 232TH */
 #define ENERGY232TH      6.833606619959e-12     /**< [J] Decay energy of 232Th */
-#define MASS232TH	 232.0377*ATOMMASS	/**< [kg] Mass of a 232Th atom */
-#define HALFLIFE232TH	 6.3752726e+17		/**< [s] Half-life of 232Th */
+#define MASS232TH        232.0377*ATOMMASS  /**< [kg] Mass of a 232Th atom */
+#define HALFLIFE232TH    6.3752726e+17    /**< [s] Half-life of 232Th */
 /* Mantle */
-#define EMASSMAN232TH	 2.34211e+17		/**< [kg]  Default mantle mass of 232Th */
-#define ENUMMAN232TH	 6.07873e+41		/**< [num] Default mantle number of 232Th atoms */
-#define EPOWERMAN232TH	 6.51575e+12		/**< [W] Default mantle power from 232Th decay */
+#define EMASSMAN232TH    2.34211e+17    /**< [kg]  Default mantle mass of 232Th */
+#define ENUMMAN232TH     6.07873e+41    /**< [num] Default mantle number of 232Th atoms */
+#define EPOWERMAN232TH   6.51575e+12    /**< [W] Default mantle power from 232Th decay */
 /* Core */
-#define EMASSCORE232TH	 5.22682e+15		/**< [kg]  Default core mass of 232Th */
-#define ENUMCORE232TH	 1.35657e+40		/**< [num] Default core number of 232Th atoms */
-#define EPOWERCORE232TH	 1.45410e+11		/**< [W] Default core power from 232Th decay */
+#define EMASSCORE232TH   5.22682e+15    /**< [kg]  Default core mass of 232Th */
+#define ENUMCORE232TH    1.35657e+40    /**< [num] Default core number of 232Th atoms */
+#define EPOWERCORE232TH  1.45410e+11    /**< [W] Default core power from 232Th decay */
 /* Crust (assuming crustal mass constant) */
-#define EMASSCRUST232TH	 1.37667e+17		/**< [kg]  Default crust mass of 232Th */
-#define ENUMCRUST232TH	 3.57304e+41		/**< [num] Default crust number of 232Th atoms */
-#define EPOWERCRUST232TH 3.82991e+12		/**< [W] Default crust power from 232Th decay */
+#define EMASSCRUST232TH  1.37667e+17    /**< [kg]  Default crust mass of 232Th */
+#define ENUMCRUST232TH   3.57304e+41    /**< [num] Default crust number of 232Th atoms */
+#define EPOWERCRUST232TH 3.82991e+12    /**< [W] Default crust power from 232Th decay */
 
 /* 238U */
 #define ENERGY238U       8.28293620554e-12      /**< [J] Decay energy of 238U */
-#define MASS238U         238.050788268*ATOMMASS	/**< [kg] Mass of a 238U atom */
-#define HALFLIFE238U     2.0359742e+17  	/**< [s] Half-life of 238U */
+#define MASS238U         238.050788268*ATOMMASS  /**< [kg] Mass of a 238U atom */
+#define HALFLIFE238U     2.0359742e+17    /**< [s] Half-life of 238U */
 /* Mantle */
-#define EMASSMAN238U     1.13378e+17      	/**< [kg]  Default mantle mass of 238U */
-#define ENUMMAN238U	 2.86829e+41    	/**< [num] Default mantle number of 238U atoms */
-#define EPOWERMAN238U	 1.16691e+13    	/**< [W] Default mantle power from 238U decay */
+#define EMASSMAN238U     1.13378e+17        /**< [kg]  Default mantle mass of 238U */
+#define ENUMMAN238U      2.86829e+41      /**< [num] Default mantle number of 238U atoms */
+#define EPOWERMAN238U    1.16691e+13      /**< [W] Default mantle power from 238U decay */
 /* Core */
-#define EMASSCORE238U    1.16964e+15  		/**< [kg]  Default core mass of 238U */
-#define ENUMCORE238U	 2.95900e+39		/**< [num] Default core number of 238U atoms */
-#define EPOWERCORE238U	 1.20381e+11   		/**< [W] Default core power from 238U decay */
+#define EMASSCORE238U    1.16964e+15      /**< [kg]  Default core mass of 238U */
+#define ENUMCORE238U     2.95900e+39    /**< [num] Default core number of 238U atoms */
+#define EPOWERCORE238U   1.20381e+11       /**< [W] Default core power from 238U decay */
 /* Crust (assuming crustal mass constant) */
-#define EMASSCRUST238U   5.01582e+16  		/**< [kg]  Default crust mass of 238U */
-#define ENUMCRUST238U	 1.26893e+41 		/**< [num] Default crust number of 238U atoms */
-#define EPOWERCRUST238U	 5.16237e+12 		/**< [W] Default crust power from 238U decay */
+#define EMASSCRUST238U   5.01582e+16      /**< [kg]  Default crust mass of 238U */
+#define ENUMCRUST238U    1.26893e+41     /**< [num] Default crust number of 238U atoms */
+#define EPOWERCRUST238U  5.16237e+12     /**< [W] Default crust power from 238U decay */
 
 /* 235U */
 #define HALFLIFE235U     3.2038174e+16          /**< [J] Decay energy of 235U */
-#define MASS235U         235.0439299*ATOMMASS	/**< [kg] Mass of a 235U atom */
-#define ENERGY235U       6.55516e-12    	/**< [s] Half-life of 235U */
+#define MASS235U         235.0439299*ATOMMASS  /**< [kg] Mass of a 235U atom */
+#define ENERGY235U       6.55516e-12      /**< [s] Half-life of 235U */
 /* Mantle */
-#define EMASSMAN235U     3.86253e+16  		/**< [kg]  Default mantle mass of 235U */
-#define ENUMMAN235U	 9.89663e+40 		/**< [num] Default mantle number of 235U atoms */
-#define EPOWERMAN235U	 2.02490e+13  		/**< [W] Default mantle power from 235U decay */
+#define EMASSMAN235U     3.86253e+16      /**< [kg]  Default mantle mass of 235U */
+#define ENUMMAN235U      9.89663e+40     /**< [num] Default mantle number of 235U atoms */
+#define EPOWERMAN235U    2.02490e+13      /**< [W] Default mantle power from 235U decay */
 /* Core */
-#define EMASSCORE235U    9.56785e+14  		/**< [kg]  Default core mass of 235U */
-#define ENUMCORE235U	 2.45149e+39		/**< [num] Default core number of 235U atoms */
-#define EPOWERCORE235U	 5.01586e+11  		/**< [W] Default core power from 235U decay */
+#define EMASSCORE235U    9.56785e+14      /**< [kg]  Default core mass of 235U */
+#define ENUMCORE235U     2.45149e+39    /**< [num] Default core number of 235U atoms */
+#define EPOWERCORE235U   5.01586e+11      /**< [W] Default core power from 235U decay */
 /* Crust (assuming crustal mass constant) */
-#define EMASSCRUST235U   1.98184e+16  		/**< [kg]  Default crust mass of 235U */
-#define ENUMCRUST235U    5.07789e+40		/**< [num] Default crust number of 235U atoms */
-#define EPOWERCRUST235U  1.03896e+13  		/**< [W] Default crust power from 235U decay */
+#define EMASSCRUST235U   1.98184e+16      /**< [kg]  Default crust mass of 235U */
+#define ENUMCRUST235U    5.07789e+40    /**< [num] Default crust number of 235U atoms */
+#define EPOWERCRUST235U  1.03896e+13      /**< [W] Default crust power from 235U decay */
 
 /* Continental Crust Mass Earth today */
 /* Note we don't define an oceanic crust reservoir (bc it's recycled and therefore part of the convecting mantle) so "crust" really means "continental crust". */
@@ -179,7 +179,7 @@ void fvBodyCopyRadheat(BODY*,BODY*,int,int,int);
 #define OPT_HALT40KPOWER           1190
 #define OPT_HALTMIN87RBPOWER       1191
 #define OPT_HALT232THPOWER         1192
-#define OPT_HALT238UPOWER	   1193
+#define OPT_HALT238UPOWER          1193
 #define OPT_HALT235UPOWER          1194
 #define OPT_HALTRADPOWER           1195
 
@@ -295,27 +295,27 @@ void fvVerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 #define OUTENDRADHEAT           1200
 
 /* Body Properties due to radiogenic heating */
-#define OUT_26ALPOWERMAN	1110
+#define OUT_26ALPOWERMAN        1110
 #define OUT_26ALPOWERCORE       1111
-#define OUT_26ALENFLUX	        1112
-#define OUT_26ALDPOWERDT	1113
+#define OUT_26ALENFLUX          1112
+#define OUT_26ALDPOWERDT        1113
 #define OUT_26ALDNUMDT          1114
 #define OUT_26ALPOWERTIME       1115
-#define OUT_26ALMASSMAN	        1116
-#define OUT_26ALMASSCORE	1117
+#define OUT_26ALMASSMAN         1116
+#define OUT_26ALMASSCORE        1117
 #define OUT_26ALNUMMAN          1118
 #define OUT_26ALNUMCORE         1119
 #define OUT_26ALTIME            1120
 #define OUT_26ALPOWERTOT        1121
 
-#define OUT_40KPOWERMAN	        1125
+#define OUT_40KPOWERMAN         1125
 #define OUT_40KPOWERCORE        1126
-#define OUT_40KENFLUX	        1127
-#define OUT_40KDPOWERDT	        1128
+#define OUT_40KENFLUX           1127
+#define OUT_40KDPOWERDT         1128
 #define OUT_40KDNUMDT           1129
 #define OUT_40KPOWERTIME        1130
-#define OUT_40KMASSMAN	        1131
-#define OUT_40KMASSCORE	        1132
+#define OUT_40KMASSMAN          1131
+#define OUT_40KMASSCORE         1132
 #define OUT_40KNUMMAN           1133
 #define OUT_40KNUMCORE          1134
 #define OUT_40KTIME             1135
@@ -328,8 +328,8 @@ void fvVerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 #define OUT_232THPOWERCORE      1141
 #define OUT_232THENFLUX         1142
 #define OUT_232THPOWERDT        1143
-#define OUT_232THDNUMDT	        1144
-#define OUT_232THPOWERTIME	1145
+#define OUT_232THDNUMDT         1144
+#define OUT_232THPOWERTIME      1145
 #define OUT_232THMASSMAN        1146
 #define OUT_232THMASSCORE       1147
 #define OUT_232THNUMMAN         1148
@@ -342,11 +342,11 @@ void fvVerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 
 #define OUT_238UPOWERMAN        1155
 #define OUT_238UPOWERCORE       1156
-#define OUT_238UENFLUX	        1157
-#define OUT_D238UPOWERDT	1158
-#define OUT_238UDNUMDT	        1159
-#define OUT_238UPOWERTIME	1160
-#define OUT_238UMASSMAN	        1161
+#define OUT_238UENFLUX          1157
+#define OUT_D238UPOWERDT        1158
+#define OUT_238UDNUMDT          1159
+#define OUT_238UPOWERTIME       1160
+#define OUT_238UMASSMAN         1161
 #define OUT_238UMASSCORE        1162
 #define OUT_238UNUMMAN          1163
 #define OUT_238UNUMCORE         1164
@@ -358,11 +358,11 @@ void fvVerifyHaltRadheat(BODY*,CONTROL*,OPTIONS*,int,int*);
 
 #define OUT_235UPOWERMAN        1170
 #define OUT_235UPOWERCORE       1171
-#define OUT_235UENFLUX	        1172
-#define OUT_D235UPOWERDT	1174
-#define OUT_235UDNUMDT	        1175
-#define OUT_235UPOWERTIME	1176
-#define OUT_235UMASSMAN	        1178
+#define OUT_235UENFLUX          1172
+#define OUT_D235UPOWERDT        1174
+#define OUT_235UDNUMDT          1175
+#define OUT_235UPOWERTIME       1176
+#define OUT_235UMASSMAN         1178
 #define OUT_235UMASSCORE        1179
 #define OUT_235UNUMMAN          1180
 #define OUT_235UNUMCORE         1181

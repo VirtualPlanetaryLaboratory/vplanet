@@ -47,8 +47,9 @@ variable known as a key (ExtractColumn), Extract the units of a particular key v
 create a Matrix based on two keys (CreateMatrix) and writing out a list of keys
 to a csv file (WriteOutput).
 
-.. note:: Keys using the following format for naming: body_variable_aggregation
+.. note::
 
+	  Keys using the following format for naming: body_variable_aggregation
 
 
 **PrintKeys**
@@ -65,7 +66,7 @@ where *HDF5_File* is the name of the HDF5 file, which is used like so:
 .. code-block:: python
 
     HDF5_File = h5py.File(filename, 'r')
-    
+
 
 
 **ExtractColumn**
@@ -76,12 +77,12 @@ HDF5 file. It takes the following arguments:
 .. code-block:: python
 
     ExtractColumn(HDF5_File,Key)
-    
+
 where:
 
-*HDF5_File* is the name of the HDF5 file 
+*HDF5_File* is the name of the HDF5 file
 
-*Key* is the name of the particular variable you are extracting the units from. 
+*Key* is the name of the particular variable you are extracting the units from.
 
 See the `Understanding Keys`_ Section for an indepth look at the types of key options available.
 
@@ -98,9 +99,9 @@ HDF5 file. It takes the following arguments:
 
 where:
 
-*HDF5_File* is the name of the HDF5 file 
+*HDF5_File* is the name of the HDF5 file
 
-*Key* is the name of the particular variable you are extracting the units from. 
+*Key* is the name of the particular variable you are extracting the units from.
 
 See the `Understanding Keys`_ Section for an indepth look at the types of key options available.
 
@@ -119,7 +120,7 @@ where:
 
 *HDF5_File* is the name of the HDF5 file
 
-*Key* is the name of the particular variable you are extracting the units from. 
+*Key* is the name of the particular variable you are extracting the units from.
 
 
 
@@ -175,7 +176,9 @@ Keys are the bread and butter of BigPlanet. The keys, as briefly mentioned above
 are the names of the various variables that BigPlanet has extracted from the forward file
 and the log file that are generated when VPLanet finishes compiling.
 
-.. note:: Keys using the following format for naming: body_variable_aggregation
+.. note::
+
+	  Keys using the following format for naming: body_variable_aggregation
 
 Below is a table of all the various aggregations available at this time:
 
@@ -201,10 +204,14 @@ Below is a table of all the various aggregations available at this time:
      - returns a nested list of the *forward* values of the particular
        parameter for every simulation
      - body_variable_forward
-     
-   
-   
-.. warning:: The following aggregations will **only** work with parameters that are from the *forward* file. If you attempt to use it with a value that is **NOT** in the forward file, it will produce an error
+
+
+.. warning::
+
+  The following aggregations will **only** work with parameters that are from the *forward* file.
+  If you attempt to use it with a value that is **NOT** in the forward file, it will produce an error
+
+
 
  .. list-table::
     :widths: auto

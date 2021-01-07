@@ -16,7 +16,7 @@
   <a href="tests"><img src = "https://img.shields.io/badge/tests-46-darkorange.svg?style=flat"></a>
   <img src = "https://img.shields.io/badge/memcheck-clean-green.svg?style=flat">
   <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">
-  <img src="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet/branch/dev/graph/badge.svg?token=3LFJQO1M6H"/>
+  <img src="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet/branch/master/graph/badge.svg?token=3LFJQO1M6H"/>
   </a>
 </p>
 

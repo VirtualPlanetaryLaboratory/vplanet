@@ -4,6 +4,10 @@
 
 <h1 align="center">VPLanet: The Virtual Planet Simulator</h1>
 
+
+### The First VPLanet Developers Conference will take place the week of June 7th, 2021! More details soon.
+<br>
+
 <p align="center">
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet"><img src="https://img.shields.io/badge/read-the_docs-blue.svg?style=flat"></a>
   <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract"><img src="https://img.shields.io/badge/read-the_paper-7d93c7.svg?style=flat"/></a>

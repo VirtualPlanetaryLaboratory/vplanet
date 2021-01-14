@@ -7,8 +7,8 @@ import warnings
 import h5py
 import multiprocessing as mp
 import sys
-import bigplanet.bigplanet as bp
-
+sys.path.append('../../bigplanet/bigplanet')
+import bigplanet as bp
 
 def test_bpstats():
     #gets the number of cores on the machine

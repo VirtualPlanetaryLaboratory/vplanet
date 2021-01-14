@@ -6,10 +6,9 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 import warnings
 import h5py
 import multiprocessing as mp
-import sys
+from bigplanet.bigplanet import ExtractColumn
 
-sys.path.insert(0,'../../bigplanet/bigplanet/')
-import bigplanet as bp
+
 
 def test_bpextract():
     sub.run(['python','setup.py','install'],cwd = '../../bigplanet/')
@@ -37,8 +36,8 @@ def test_bpextract():
         #reads in the hdf5 file
         file = h5py.File((dir + '.hdf5'),'r')
 
-        earth_Instellation_final = bp.ExtractColumn(file,'earth_Instellation_final')
-        sun_RotPer_initial = bp.ExtractColumn(file,'sun_RotPer_initial')
+        earth_Instellation_final = ExtractColumn(file,'earth_Instellation_final')
+        sun_RotPer_initial = ExtractColumn(file,'sun_RotPer_initial')
 
         for i in range(len(earth_Instellation_final)):
             assert np.isclose(earth_Instellation_final[0],1367.635318)

@@ -7,10 +7,7 @@ import warnings
 import h5py
 import multiprocessing as mp
 import sys
-
-sys.path.insert(0,'../../bigplanet/bigplanet/')
-import bigplanet as bp
-
+from bigplanet.bigplanet import ExtractColumn
 
 def test_bpstats():
     #gets the number of cores on the machine
@@ -37,11 +34,11 @@ def test_bpstats():
         #reads in the hdf5 file
         file = h5py.File((dir + '.hdf5'),'r')
 
-        earth_RIC_min = bp.ExtractColumn(file,'earth_RIC_min')
-        earth_235UNumMan_max = bp.ExtractColumn(file,'earth_235UNumMan_max')
-        earth_TCMB_mean = bp.ExtractColumn(file,'earth_TCMB_mean')
-        earth_FMeltUMan_geomean = bp.ExtractColumn(file,'earth_FMeltUMan_geomean')
-        earth_BLUMan_stddev = bp.ExtractColumn(file,'earth_BLUMan_stddev')
+        earth_RIC_min = ExtractColumn(file,'earth_RIC_min')
+        earth_235UNumMan_max = ExtractColumn(file,'earth_235UNumMan_max')
+        earth_TCMB_mean = ExtractColumn(file,'earth_TCMB_mean')
+        earth_FMeltUMan_geomean = ExtractColumn(file,'earth_FMeltUMan_geomean')
+        earth_BLUMan_stddev = ExtractColumn(file,'earth_BLUMan_stddev')
 
         for i in range(len(earth_RIC_min)):
             assert np.isclose(earth_RIC_min[i],0)

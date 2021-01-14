@@ -6,7 +6,7 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 import warnings
 import h5py
 import multiprocessing as mp
-from bigplanet.bigplanet import ExtractColumn
+from ..bigplanet.bigplanet import ExtractColumn
 
 
 

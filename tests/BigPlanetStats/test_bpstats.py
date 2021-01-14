@@ -7,7 +7,7 @@ import warnings
 import h5py
 import multiprocessing as mp
 import sys
-from bigplanet.bigplanet import ExtractColumn
+from ..bigplanet.bigplanet import ExtractColumn
 
 def test_bpstats():
     #gets the number of cores on the machine

@@ -8,6 +8,8 @@ import h5py
 import numpy as np
 from collections import OrderedDict
 import csv
+import pandas as pd
+from scipy import stats
 
 __all__ = ["PrintKeys",
            "ExtractColumn",
@@ -33,9 +35,6 @@ def GetDir(input_file):
 
                 if line[0] == 'file':
                     infiles.append(line[1])
-
-    print(infiles)
-    print(folder_name)
     if folder_name is None:
         raise IOError("Name of destination folder not provided in file '%s'."
                       "Use syntax 'destfolder <foldername>'"%inputf)
@@ -57,10 +56,9 @@ def parallel_run_planet(input_file, cores):
     # gets the folder name with all the sims
     folder_name, infiles = GetDir(input_file)
     #gets the list of sims
-    sims = sorted([f.path for f in os.scandir(folder_name) if f.is_dir()])
-
+    sims = GetSims(folder_name)
     #initalizes the checkpoint file
-    checkpoint_file = os.getcwd() + '/' + '.' + folder_name
+    checkpoint_file = os.getcwd() + '/' + '.' + folder_name + '_hdf5'
 
     #checks if the files doesn't exist and if so then it creates it
     if os.path.isfile(checkpoint_file) == False:
@@ -74,9 +72,6 @@ def parallel_run_planet(input_file, cores):
     #if it does exist, it checks for any 0's (sims that didn't complete) and
     #changes them to -1 to be re-ran
     else:
-        #print(': multi-planet checkpoint file already exists!')
-        #print('Checking if checkpoint file is corrupt...')
-
         sub.run(['rm', checkpoint_file])
         #restarts the checkpoint file from scratch
         with open(checkpoint_file,'w') as cp:
@@ -170,7 +165,6 @@ def parallel_run_planet(input_file, cores):
     save(master_file, merge_data(data))
 
     i = filelist[0]
-    print(i)
 
     with h5py.File(i,'r') as filename:
         with h5py.File(master_file,'r+') as master_W:
@@ -179,7 +173,6 @@ def parallel_run_planet(input_file, cores):
                 master_W[k].attrs['Units'] = units
 
 def ProcessLogFile(logfile, data):
-    print('Log file: ', logfile)
     prop = ''
     body = 'system'
 
@@ -223,8 +216,6 @@ def ProcessLogFile(logfile, data):
                 data[key_name] = [units, fv_value]
 
         if (line.startswith('Output Order') or line.startswith('Grid Output Order')) and len(line[line.find(':'):]) > 1:
-            # print(body)
-
             parm_key = line[:line.find(':')].replace(' ', '')
             params = line[line.find(':') + 1:].strip().split()
             key_name = body + '_' + parm_key
@@ -255,7 +246,6 @@ def ProcessInfile(infile, file, data):
                 continue
 
             tmp_line = line[:line.find('#')].strip()
-            #print(tmp_line)
 
             if cont:
                 fv_value = fv_value.append(tmp_line.split())
@@ -264,7 +254,6 @@ def ProcessInfile(infile, file, data):
 
             fv_param = tmp_line.split()[0]
             fv_value = tmp_line.split()[1:]
-            # print(file, fv_param, fv_value)
 
             if (fv_param == 'saOutputOrder' or fv_param == 'saGridOutput') and fv_value[-1] == '$':
                 cont = True
@@ -293,21 +282,75 @@ def ProcessForwardfile(forwardfile, data, body, OutputOrder):
 
     return data
 
+def ProcessClimatefile(climatefile, data, body, GridOutputOrder):
+
+    header = []
+
+    for i in GridOutputOrder:
+        header.append([i][0][0])
+
+
+    with open(climatefile, 'r') as f:
+        content = [line.strip().split() for line in f.readlines()]
+
+        for row in content:
+             sorted = [[content[j][i] for j in range(len(content))] for i in range(len(content[0]))]
+
+        for i,row in enumerate(sorted):
+            key_name = body + '_' + header[i] + '_climate'
+
+            if key_name in data:
+                data[key_name].append(row)
+
+            else:
+                data[key_name] = [row]
+
+    return data
+
+def ProcessSeasonalClimatefile(prefix, data, body, name):
+    file = list(csv.reader(open('SeasonalClimateFiles/' + prefix + '.' + name + '.0')))
+    key_name = body + '_' + name
+    if key_name in data:
+        data[key_name].append(file)
+    else:
+        data[key_name] = [file]
+    return data
+
 def CreateHDF5(data, system_name,infiles,logfile,h5filename):
     """
     ....
     """
+    print("Processing Log File...")
     data = ProcessLogFile(logfile, data)
     for file in infiles:
         if file == 'vpl.in':
             continue
         else:
             body = file.split('.')[0]
-            output = body + "_OutputOrder"
-            if output in data:
-                OutputOrder = data[output]
+            outputorder = body + "_OutputOrder"
+            gridoutputorder = body + "_GridOutputOrder"
+
+            if outputorder in data:
+                OutputOrder = data[outputorder]
                 forward_name = system_name + '.' + body + '.forward'
+                print("Processing Forward File...")
                 data = ProcessForwardfile(forward_name, data, body, OutputOrder)
+
+            if gridoutputorder in data:
+                GridOutputOrder = data[gridoutputorder]
+                climate_name = system_name + '.' + body + '.Climate'
+                print("Processing Climate File...")
+                data = ProcessClimatefile(climate_name, data, body, GridOutputOrder)
+                prefix = system_name + '.' + body
+                print("Processing Seasonal Climate Files...")
+                name = ['DailyInsol','PlanckB','SeasonalDivF','SeasonalFIn',
+                        'SeasonalFMerid','SeasonalFOut','SeasonalIceBalance',
+                        'SeasonalTemp']
+                for i in range(len(name)):
+                    data = ProcessSeasonalClimatefile(prefix,data,body,name[i])
+                #data = ProcessSeasonalClimatefile(prefix,data,body,'DailyInsol')
+                #data = ProcessSeasonalClimatefile(prefix,data,body,'PlanckB')
+                print()
 
     with h5py.File(h5filename, 'w') as h:
         for k, v in data.items():
@@ -579,7 +622,6 @@ def ExtractUnits(hf,k):
         A string value of the units
     """
     return hf[k].attrs.get('Units')
-
 
 def ArgumentParser(hf,k):
     forward = k.rpartition('_')[0] + '_forward'

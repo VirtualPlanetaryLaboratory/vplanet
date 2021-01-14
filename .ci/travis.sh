@@ -23,8 +23,8 @@ pip install sphinxcontrib-bibtex
 # Install vplot
 pip install git+git://github.com/VirtualPlanetaryLaboratory/vplot.git
 
-#Install BigPlanet
-python bigplanet/setup.py install
+#install BigPlanet
+pip install h5py
 
 # Build vplanet
 export PATH="$TRAVIS_BUILD_DIR:$PATH"

@@ -6,10 +6,9 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 import warnings
 import h5py
 import multiprocessing as mp
-import bigplanet as bp
+from ../../bigplanet/bigplanet/bigplanet import ExtractColumn
 
 def test_bpstats():
-    sub.run(['python','setup.py','install'],cwd = '../../bigplanet/')
     #gets the number of cores on the machine
     cores = str(mp.cpu_count())
     if cores == 1:

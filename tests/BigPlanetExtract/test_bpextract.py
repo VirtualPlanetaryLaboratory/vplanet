@@ -6,7 +6,10 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 import warnings
 import h5py
 import multiprocessing as mp
-from ../../bigplanet/bigplanet/bigplanet import ExtractColumn
+import sys
+
+sys.path.insert(0,'../../bigplanet/bigplanet/')
+import bigplanet as bp
 
 def test_bpextract():
     sub.run(['python','setup.py','install'],cwd = '../../bigplanet/')

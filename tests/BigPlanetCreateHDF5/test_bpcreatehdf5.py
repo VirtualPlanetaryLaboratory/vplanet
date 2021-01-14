@@ -5,6 +5,10 @@ import os
 cwd = os.path.dirname(os.path.realpath(__file__))
 import multiprocessing as mp
 import warnings
+import sys
+
+sys.path.insert(0,'../../bigplanet/bigplanet/')
+import bigplanet as bp
 
 def test_bpcreatehdf5():
     #gets the number of cores on the machine

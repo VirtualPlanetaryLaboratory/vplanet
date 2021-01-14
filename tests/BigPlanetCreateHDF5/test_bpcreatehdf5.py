@@ -8,6 +8,7 @@ import warnings
 import bigplanet as bp
 
 def test_bpcreatehdf5():
+    sub.run(['python','setup.py','install'],cwd = '../../bigplanet/')
     #gets the number of cores on the machine
     cores = str(mp.cpu_count())
     if cores == 1:

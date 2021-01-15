@@ -7,7 +7,6 @@ import warnings
 import h5py
 import multiprocessing as mp
 import sys
-sys.path.append('../../bigplanet/bigplanet')
 import bigplanet as bp
 
 def test_bpextract():

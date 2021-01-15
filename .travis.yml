@@ -1,10 +1,8 @@
-sudo: required
-
 dist: trusty
 
 language: c
 
-complier:
+compiler:
     gcc
 
 addons:
@@ -38,5 +36,5 @@ script:
     - make coverage
 
 after_success:
-    - bash <(curl -s https://codecov.io/bash) -v
     - if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi
+    - bash <(curl -s https://codecov.io/bash)

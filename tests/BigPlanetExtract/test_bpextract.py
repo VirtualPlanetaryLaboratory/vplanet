@@ -10,7 +10,6 @@ import sys
 import bigplanet as bp
 
 def test_bpextract():
-    sub.run(['python','setup.py','install'],cwd = '../../bigplanet/')
     #gets the number of cores on the machine
     cores = str(mp.cpu_count())
     if cores == 1:

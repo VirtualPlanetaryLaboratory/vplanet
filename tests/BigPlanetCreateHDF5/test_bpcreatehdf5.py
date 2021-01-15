@@ -21,6 +21,7 @@ def test_bpcreatehdf5():
         #removes the folders from when vspace is ran
         dir = cwd+'/BP_CreateHDF5'
         sub.run(['rm', '-rf', dir],cwd=cwd)
+        sub.run(['rm', '-rf', (dir + '.hdf5')],cwd=cwd)
         #runs vspace
         sub.run(['python','../../vspace/vspace/vspace.py','vspace.in'],cwd=cwd)
         #runs multi-planet
@@ -31,7 +32,7 @@ def test_bpcreatehdf5():
         #gets list of folders
         folders = sorted([f.path for f in os.scandir(dir) if f.is_dir()])
         #checks if the hdf5 files exist
-        assert os.path.isfile('BP_CreateHDF5.hdf5') == True
+        assert os.path.isfile((dir + '.hdf5')) == True
         for i in range(len(folders)):
             os.chdir(folders[i])
             split = folders[i].split('/')[-1]

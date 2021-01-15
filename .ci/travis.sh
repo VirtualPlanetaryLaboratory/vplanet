@@ -25,9 +25,9 @@ pip install git+git://github.com/VirtualPlanetaryLaboratory/vplot.git
 
 #install BigPlanet
 pip install h5py
-cd ../bigplanet/
+cd bigplanet/
 python setup.py install
-cd ../.ci/
+cd ../
 
 # Build vplanet
 export PATH="$TRAVIS_BUILD_DIR:$PATH"

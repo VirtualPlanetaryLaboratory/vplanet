@@ -15,7 +15,7 @@ def test_mp_serial():
     #runs vspace
     sub.run(['python','../../vspace/vspace/vspace.py','vspace.in'],cwd=cwd)
     #runs serial
-    sub.run(['python', '../../multi-planet/multi-planet.py','vspace.in','1'],cwd=cwd)
+    sub.run(['python', '../../multi-planet/multi-planet.py','vspace.in','-c','1'],cwd=cwd)
 
     folders = sorted([f.path for f in os.scandir(dir) if f.is_dir()])
 

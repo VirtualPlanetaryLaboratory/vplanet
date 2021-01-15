@@ -16,9 +16,9 @@ which also places `mpstatus` in your PATH.
 
 To run `multi-planet` on a large number of simulations, first run `vspace` to create the simulation folders. Then, in that same directory, type:
 ```
-multi-planet <input file> <number of cores>
+multi-planet <input file> -c [number of cores]
 ```
-where the "input file" **must be the same file** used with `vspace`.
+where the "input file" **must be the same file** used with `vspace`. You can specify the number of cores, but the default is the maximum number of cores.
 
 Should your run be interrupted for whatever reason, just run `multi-planet` again and it should restart where it left off.
 

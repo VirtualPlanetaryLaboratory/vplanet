@@ -229,24 +229,29 @@ void LogBodyPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,i
 /* Poise Functions */
 void PropsAuxPoise(BODY*,EVOLVE*,IO*,UPDATE*,int);
 void ForceBehaviorPoise(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
-void AlbedoAnnual(BODY*,int);
-void AlbedoSeasonal(BODY*,int,int);
-void AnnualInsolation(BODY*,int);
-double dOLRdTwk97(BODY*,int,int,int);
-double OLRwk97(BODY*,int,int,int);
-double dOLRdThm16(BODY*,int,int,int);
-double OLRhm16(BODY*,int,int,int);
-double dOLRdTsms09(BODY*,int,int,int);
-double OLRsms09(BODY*,int,int,int);
-void AreaIceCovered(BODY*,int);
+void fvAlbedoAnnual(BODY*,int);
+void fvAlbedoSeasonal(BODY*,int,int);
+void fvAnnualInsolation(BODY*,int);
+double fdOLRdTwk97(BODY*,int,int,int);
+double fdOLRwk97(BODY*,int,int,int);
+double fdOLRdThm16(BODY*,int,int,int);
+double fdOLRhm16(BODY*,int,int,int);
+double fdOLRdTsms09(BODY*,int,int,int);
+double fdOLRsms09(BODY*,int,int,int);
+void fvAreaIceCovered(BODY*,int);
 
 void PoiseAnnual(BODY*,int);
 void PoiseSeasonal(BODY*,int);
 void PoiseIceSheets(BODY*,EVOLVE*,int);
-void SeaIce(BODY*,int);
-void MatrixSeasonal(BODY*,int);
-void SourceFSeas(BODY*,int,int);
-void Snowball(BODY*,int); // XXX Should change to int fbSnowball
+void fvSeaIce(BODY*,int);
+void fvMatrixSeasonal(BODY*,int);
+void fvMatrixInvertSeasonal(BODY*,int);
+void fvTempGradientAnn(BODY*,double,int);
+void fvTempGradientSea(BODY*,double, int);
+void fvMatrixAnnual(BODY*,int);
+
+void fvSourceFSeas(BODY*,int,int);
+void fvSnowball(BODY*,int); // XXX Should change to int fbSnowball
 int fbSnowballLand(BODY*,int);
 int fbSnowballSea(BODY*,int);
 int fbIceFree(BODY*,int);
@@ -256,10 +261,21 @@ void fvSouthIceCapLand(BODY*,int,double*,int*,int*);
 void fvSouthIceCapSea(BODY*,int,double*,int*,int*);
 void fvIceBeltLand(BODY*,int,double*,double*,int*,int*,int*);
 void fvIceBeltSea(BODY*,int,double*,double*,int*,int*,int*);
+void fvPrecessionExplicit(BODY*,EVOLVE*,int);
+void fvPropsAuxPoise(BODY*,EVOLVE*,IO*,UPDATE*,int);
+void fvForceObliq(BODY*,EVOLVE*,int);
+void fvForceEcc(BODY*,EVOLVE*,int);
+void fvDailyInsolation(BODY*, int,int);
+void fvAlbedoTOAhm16(BODY*, double,int,int);
 
-double IceMassBalance(BODY*,int,int);
+
+
+double fdIceMassBalance(BODY*,int,int);
 
 double fdPoiseDIceMassDtDepMelt(BODY*,SYSTEM*,int*);
 double fdPoiseDIceMassDtFlow(BODY*,SYSTEM*,int*);
+
+double fdEccTrueAnomaly(double,double);
+double fdAlbedoTOA350(double,double,double,double);
 
 /* @endcond */

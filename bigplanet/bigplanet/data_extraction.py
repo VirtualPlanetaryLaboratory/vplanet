@@ -1546,9 +1546,9 @@ def reduce_dimensions(x, y, z, shape, dims=(-1,), reduce_func = np.nanmean):
     # 2) Apply some function over axes to reduce dimension to 2 for plotting
     # 3) Apply squeeze to remove extra dimension, e.g. (5, 4, 1) -> (5, 4)
     # Call mean so dimensions compress properly for x, y
-    x = np.squeeze(np.apply_over_axes(np.mean,x.reshape(shape),axes=dims))
-    y = np.squeeze(np.apply_over_axes(np.mean,y.reshape(shape),axes=dims))
-    z = np.squeeze(np.apply_over_axes(reduce_func,z.reshape(shape),axes=dims))
+    x = np.squeeze(np.apply_over_axes(np.mean,x.values.reshape(shape),axes=dims))
+    y = np.squeeze(np.apply_over_axes(np.mean,y.values.reshape(shape),axes=dims))
+    z = np.squeeze(np.apply_over_axes(reduce_func,z.values.reshape(shape),axes=dims))
 
     return x, y, z
 # End function

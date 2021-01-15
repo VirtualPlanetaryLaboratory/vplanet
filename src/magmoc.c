@@ -29,8 +29,8 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dCO2MassMOAtm         = src[iBody].dCO2MassMOAtm;
   dest[iBody].dCO2MassSol           = src[iBody].dCO2MassSol;
   /* Input variables */
-	dest[iBody].dCoreRadius           = src[iBody].dCoreRadius;
-	dest[iBody].dWaterMassAtm         = src[iBody].dWaterMassAtm;
+  dest[iBody].dCoreRadius           = src[iBody].dCoreRadius;
+  dest[iBody].dWaterMassAtm         = src[iBody].dWaterMassAtm;
   dest[iBody].dManMeltDensity       = src[iBody].dManMeltDensity;
   dest[iBody].dMassFracFeOIni       = src[iBody].dMassFracFeOIni;
 	/* Other variables Thermal model */
@@ -42,24 +42,24 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dMeltFraction         = src[iBody].dMeltFraction;
   dest[iBody].dMeltFracSurf         = src[iBody].dMeltFracSurf;
   dest[iBody].dKinemViscos          = src[iBody].dKinemViscos;
-	dest[iBody].dFactorDerivative     = src[iBody].dFactorDerivative;
-	dest[iBody].dManHeatFlux          = src[iBody].dManHeatFlux;
-	dest[iBody].dRadioHeat            = src[iBody].dRadioHeat;
+  dest[iBody].dFactorDerivative     = src[iBody].dFactorDerivative;
+  dest[iBody].dManHeatFlux          = src[iBody].dManHeatFlux;
+  dest[iBody].dRadioHeat            = src[iBody].dRadioHeat;
   dest[iBody].dTidalHeat            = src[iBody].dTidalHeat;
-	dest[iBody].dNetFluxAtmo          = src[iBody].dNetFluxAtmo;
-	dest[iBody].dAlbedo			 		      = src[iBody].dAlbedo;
-	/* Other variables Volatile model */
-	dest[iBody].dPressWaterAtm        = src[iBody].dPressWaterAtm;
+  dest[iBody].dNetFluxAtmo          = src[iBody].dNetFluxAtmo;
+  dest[iBody].dAlbedo                 = src[iBody].dAlbedo;
+  /* Other variables Volatile model */
+  dest[iBody].dPressWaterAtm        = src[iBody].dPressWaterAtm;
   dest[iBody].dPartialPressWaterAtm = src[iBody].dPartialPressWaterAtm;
   dest[iBody].dPressOxygenAtm       = src[iBody].dPressOxygenAtm;
   dest[iBody].dPressCO2Atm          = src[iBody].dPressCO2Atm;
   dest[iBody].dPartialPressCO2Atm   = src[iBody].dPartialPressCO2Atm;
-	dest[iBody].dMassMagmOcLiq 	      = src[iBody].dMassMagmOcLiq;
-	dest[iBody].dMassMagmOcCry 	      = src[iBody].dMassMagmOcCry;
-	dest[iBody].dWaterFracMelt        = src[iBody].dWaterFracMelt;
+  dest[iBody].dMassMagmOcLiq         = src[iBody].dMassMagmOcLiq;
+  dest[iBody].dMassMagmOcCry         = src[iBody].dMassMagmOcCry;
+  dest[iBody].dWaterFracMelt        = src[iBody].dWaterFracMelt;
   dest[iBody].dCO2FracMelt          = src[iBody].dCO2FracMelt;
-	dest[iBody].dFracFe2O3Man         = src[iBody].dFracFe2O3Man;
-	dest[iBody].dOxygenMassAtm        = src[iBody].dOxygenMassAtm;
+  dest[iBody].dFracFe2O3Man         = src[iBody].dFracFe2O3Man;
+  dest[iBody].dOxygenMassAtm        = src[iBody].dOxygenMassAtm;
   dest[iBody].dAveMolarMassMan      = src[iBody].dAveMolarMassMan;
   /* Connection to AtmEsc */
   dest[iBody].dWaterMassEsc         = src[iBody].dWaterMassEsc;

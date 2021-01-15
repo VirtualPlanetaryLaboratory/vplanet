@@ -49,8 +49,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.coverage',
               'sphinx.ext.mathjax',
               'breathe',
-              'matplotlib.sphinxext.plot_directive',
-              'sphinxcontrib.bibtex']
+              'matplotlib.sphinxext.plot_directive']
+              #'sphinxcontrib.bibtex']
 
 plot_include_source = False
 plot_html_show_source_link = False

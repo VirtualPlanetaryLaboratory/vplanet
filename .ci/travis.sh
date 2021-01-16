@@ -27,6 +27,12 @@ pip install coverage==4.5.4
 # Install vplot
 pip install git+git://github.com/VirtualPlanetaryLaboratory/vplot.git
 
+#install BigPlanet
+pip install h5py
+cd bigplanet/
+python setup.py install
+cd ../
+
 # Build vplanet
 export PATH="$TRAVIS_BUILD_DIR:$PATH"
 cd $TRAVIS_BUILD_DIR

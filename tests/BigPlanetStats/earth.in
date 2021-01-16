@@ -1,0 +1,55 @@
+# Earthlike parameters
+sName		earth			# Body's name
+saModules 	radheat thermint
+
+# Physical Properties
+dMass		-1.5  			# Mass, negative -> Earth masses
+dRadius		-1.0  			# Radius, negative -> Earth radii
+dRotPeriod	-1.0  			# Rotation period, negative -> days
+dObliquity	30
+dRadGyra	0.5
+# Orbital Properties
+dEcc            0.01		# Eccentricity
+dSemi           -1		# Semi-major axis, negative -> AU
+
+
+# RADHEAT Parameters
+# *Num* are in numbers of atoms, negative -> Earth vals
+### 40K
+d40KPowerMan      -1
+d40KPowerCore     -1
+d40KPowerCrust    -1
+### 232Th
+d232ThPowerMan	  -1
+d232ThPowerCore	  -1
+d232ThPowerCrust  -1
+### 235U
+d235UPowerMan     -1
+d235UPowerCore	  -1
+d235UPowerCrust	  -1
+### 238U
+d238UPowerMan	  -1
+d238UPowerCore	  -1
+d238UPowerCrust	  -1
+
+### THERMINT inputs.
+dTMan          3000
+dTCore         6000
+#dViscJumpMan     2.40
+
+saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
+    -HflowUMan -HflowMeltMan -RadPowerMan -RadPowerCore -RadPowerCrust $
+    -HflowCMB -HflowSecMan $
+    -TDotMan -TDotCore -TJumpLMan -TJumpUMan -RIC -RayleighMan -ViscUMan -ViscLMan $
+    -MeltMassFluxMan -FMeltUMan $
+    -MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad $
+    -BLUMan -BLLMan $
+    -238UPowerMan -238UNumMan -238UMassMan -238UPowerCore -238UNumCore -238UMassCore $
+    -238UPowerCrust -238UNumCrust -238UMassCrust $
+    -235UPowerMan -235UNumMan -235UMassMan -235UPowerCore -235UNumCore -235UMassCore $
+    -235UPowerCrust -235UNumCrust -235UMassCrust $
+    -232ThPowerMan -232ThNumMan -232ThMassMan -232ThPowerCore -232ThNumCore -232ThMassCore $
+    -232ThPowerCrust -232ThNumCrust -232ThMassCrust $
+    -40KPowerMan -40KNumMan -40KMassMan -40KPowerCore -40KNumCore -40KMassCore $
+    -40KPowerCrust -40KNumCrust -40KMassCrust ChiOC ChiIC MassChiOC MassChiIC MassOC MassIC $
+    -RadPowerTotal

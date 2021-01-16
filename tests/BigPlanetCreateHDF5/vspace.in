@@ -1,0 +1,10 @@
+srcfolder  .
+destfolder BP_CreateHDF5
+trialname  semi_
+
+file   earth.in
+dSemi [1, 2, n2] a
+
+file sun.in
+
+file vpl.in

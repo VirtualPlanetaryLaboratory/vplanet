@@ -584,9 +584,9 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
     body[iBody].dSolidRadius = body[iBody].dCoreRadius;
   }
 
-  if (body[iBody].dDepthMO < 9e8) {
-    body[iBody].dSolidRadius = body[iBody].dRadius - body[iBody].dDepthMO;
-  }
+  // if (body[iBody].dDepthMO < 9e8) {
+  //   body[iBody].dSolidRadius = body[iBody].dRadius - body[iBody].dDepthMO;
+  // }
 
   // other variables
   double dTransPressSol = 5.19964e9; // pressure at which to swith from low to high pressure treatment of solidus (Hirschmann, 2000) in Pa
@@ -730,6 +730,11 @@ double fndWaterMassMOTime(BODY *body, double dFrac, int iBody) {
                     + ( 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf ) * pow((dFrac/3.44e-8),1/0.74) \
                     - body[iBody].dWaterMassMOAtm );
 }
+// return 1e-19 * (  WATERPARTCOEFF*dFrac*body[iBody].dMassMagmOcCry \
+//                   + dFrac*body[iBody].dMassMagmOcLiq \
+//                   + ( 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf ) * pow((dFrac/3.44e-8),1/0.74) \
+//                   - body[iBody].dWaterMassMOAtm );
+// }
 
 /**
 Mass of CO2 in the mo+atm system to get the water frac in the magmoc

@@ -12,8 +12,6 @@ dMassFracFeOIni		0.0788		  # Initial mass fraction of FeO in the mantle (default
 dWaterMassAtm		-5		  # Initial water mass in the system (neg: terrestrial oceans, default: -1)
 dSurfTemp		4000		  # Initial surface temperature (default: 4000K)
 dManMeltDensity		4000		  # Mantle melt density (default: 4000kg/m^3)
-dWaterPartCoeff   0.01      # Water partition coefficient between melt and solid (default: 0.01)
-dDepthMO		-1e6		  # Initial Magma Ocean depth (negative: km, default: core radius, write -1e6)
 bHaltMantleSolidified 	1		  # Halt when mantle solidified? (default: 0 = no, 1 = yes)
 bHaltMantleMeltFracLow  1     		  # Halt when melt fraction smaller than 0.4 at surface? (default: 0 = no, 1 = yes)
 bHaltAtmDesiSurfCool    1                 # Halt when atmosphere desiccated? (default: 0 = no, 1 = yes)

@@ -42,7 +42,7 @@ void ReadSatXUVFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
+        fprintf(stderr,"ERROR: %s must be greater than 0.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dSatXUVFrac = dTmp;
@@ -80,7 +80,7 @@ void ReadXUVBeta(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+        fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dXUVBeta = dTmp;
@@ -106,7 +106,7 @@ void ReadStellarModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
       body[iFile-1].iStellarModel = STELLAR_MODEL_PROXIMACEN;
     } else {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are BARAFFE, PROXIMACEN, or NONE.\n",options->cName,cTmp);
+        fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are BARAFFE, PROXIMACEN, or NONE.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -133,7 +133,7 @@ void ReadMagBrakingModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *optio
       body[iFile-1].iMagBrakingModel = STELLAR_DJDT_MA15;
     } else {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are REINERS, SKUMANICH, MATT, or NONE.\n",options->cName,cTmp);
+        fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are REINERS, SKUMANICH, MATT, or NONE.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -156,7 +156,7 @@ void ReadWindModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
       body[iFile-1].iWindModel = STELLAR_MODEL_NONE;
     } else {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are REINERS or NONE.\n",options->cName,cTmp);
+        fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are REINERS or NONE.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -179,11 +179,11 @@ void ReadXUVModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
       body[iFile-1].iXUVModel = STELLAR_MODEL_NONE;
     } else if (!memcmp(sLower(cTmp),"re",2)) {
       if (control->Io.iVerbose >= VERBINPUT)
-	      fprintf(stderr,"WARNING: The REINERS XUV model has serious issues. The recommended model is RIBAS.\n");
+        fprintf(stderr,"WARNING: The REINERS XUV model has serious issues. The recommended model is RIBAS.\n");
       body[iFile-1].iXUVModel = STELLAR_MODEL_REINERS;
     } else {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are RIBAS, REINERS or NONE.\n",options->cName,cTmp);
+        fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are RIBAS, REINERS or NONE.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -205,7 +205,7 @@ void ReadHZModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
       // We should add more!
     } else {
       if (control->Io.iVerbose >= VERBERR)
-	fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are KOPPARAPU13.\n",options->cName,cTmp);
+  fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are KOPPARAPU13.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);

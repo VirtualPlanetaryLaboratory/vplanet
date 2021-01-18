@@ -282,7 +282,7 @@ void ReadWaterLossModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       body[iFile-1].iWaterLossModel = ATMESC_TIAN;
     } else {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are LB15, LBEXACT, or TIAN.\n",options->cName,cTmp);
+        fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are LB15, LBEXACT, or TIAN.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -315,7 +315,7 @@ void ReadAtmXAbsEffH2OModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *op
       body[iFile-1].iAtmXAbsEffH2OModel = ATMESC_NONE;
     } else {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are BOLMONT16 or NONE.\n",options->cName,cTmp);
+        fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are BOLMONT16 or NONE.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -353,7 +353,7 @@ void ReadPlanetRadiusModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
     }
      else {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are LOPEZ12, PROXCENB, LEHMER17 or NONE.\n",options->cName,cTmp);
+        fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are LOPEZ12, PROXCENB, LEHMER17 or NONE.\n",options->cName,cTmp);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -542,7 +542,7 @@ void ReadXFrac(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM 
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0 || dTmp > 1) {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: %s must lie in the range [0,1].\n",options->cName);
+        fprintf(stderr,"ERROR: %s must lie in the range [0,1].\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dXFrac = dTmp;
@@ -572,7 +572,7 @@ void ReadAtmXAbsEffH(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0 || dTmp > 1) {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: %s must be in the range [0,1].\n",options->cName);
+        fprintf(stderr,"ERROR: %s must be in the range [0,1].\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dAtmXAbsEffH = dTmp;
@@ -602,7 +602,7 @@ void ReadAtmXAbsEffH2O(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0 || dTmp > 1) {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: %s must be in the rane [0,1].\n",options->cName);
+        fprintf(stderr,"ERROR: %s must be in the rane [0,1].\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dAtmXAbsEffH2O = dTmp;
@@ -634,7 +634,7 @@ void ReadOxygenMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+        fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dOxygenMass = dTmp;
@@ -664,7 +664,7 @@ void ReadOxygenMantleMass(BODY *body,CONTROL *control,FILES *files,OPTIONS *opti
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+        fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
       LineExit(files->Infile[iFile].cIn,lTmp);
     }
     body[iFile-1].dOxygenMantleMass = dTmp;
@@ -2968,7 +2968,7 @@ The rate of change of the envelope mass given energy-limited escape.
 double fdDEnvelopeMassDt(BODY *body,SYSTEM *system,int *iaBody) {
 
   double dMassDt = dTINY;
-	dMassDt =  -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH
+  dMassDt =  -body[iaBody[0]].dFHRef * (body[iaBody[0]].dAtmXAbsEffH
     / body[iaBody[0]].dAtmXAbsEffH2O) * (4 * ATOMMASS * PI
     * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius
     * body[iaBody[0]].dXFrac * body[iaBody[0]].dXFrac);
@@ -3170,7 +3170,7 @@ double fdHZRG14(BODY *body,int iBody) {
   double d[3] = {-1.713e-15, -1.931e-15, -2.084e-15};
 
   for (i=0;i<3;i++) {
-  	seff[i] = seffsun[i] + a[i]*tstar + b[i]*tstar*tstar + c[i]*pow(tstar,3) + d[i]*pow(tstar,4);
+    seff[i] = seffsun[i] + a[i]*tstar + b[i]*tstar*tstar + c[i]*pow(tstar,3) + d[i]*pow(tstar,4);
   }
 
   fvLinearFit(daLogMP,seff,3,daCoeffs);
@@ -3243,24 +3243,24 @@ Performs a really simple linear least-squares fit on data.
 
 // should be in another file. control?
 void fvLinearFit(double *x, double *y, int iLen, double *daCoeffs){
-	// Simple least squares linear regression, y(x) = mx + b
-	// from http://en.wikipedia.org/wiki/Simple_linear_regression
-	double num = 0, den = 0;
-	double xavg = 0,yavg = 0;
-	double m,b;
-	int i;
-	for (i=0;i<iLen;i++){
-		xavg += x[i];
-		yavg += y[i];
-	}
-	xavg /= iLen;
-	yavg /= iLen;
-	for (i=0;i<iLen;i++){
-		num += (x[i]-xavg)*(y[i]-yavg);
-		den += (x[i]-xavg)*(x[i]-xavg);
-	}
-	daCoeffs[0] = num/den;									// Slope
-	daCoeffs[1] = yavg-daCoeffs[0]*xavg;		// Intercept
+  // Simple least squares linear regression, y(x) = mx + b
+  // from http://en.wikipedia.org/wiki/Simple_linear_regression
+  double num = 0, den = 0;
+  double xavg = 0,yavg = 0;
+  double m,b;
+  int i;
+  for (i=0;i<iLen;i++){
+    xavg += x[i];
+    yavg += y[i];
+  }
+  xavg /= iLen;
+  yavg /= iLen;
+  for (i=0;i<iLen;i++){
+    num += (x[i]-xavg)*(y[i]-yavg);
+    den += (x[i]-xavg)*(x[i]-xavg);
+  }
+  daCoeffs[0] = num/den;                  // Slope
+  daCoeffs[1] = yavg-daCoeffs[0]*xavg;    // Intercept
 }
 
 /**

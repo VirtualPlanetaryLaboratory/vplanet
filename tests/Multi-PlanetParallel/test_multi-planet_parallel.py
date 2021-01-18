@@ -20,7 +20,7 @@ def test_mp_parallel():
         #runs vspace
         sub.run(['python','../../vspace/vspace/vspace.py','vspace.in'],cwd=cwd)
         #runs parallel
-        sub.run(['python', '../../multi-planet/multi-planet.py','vspace.in',cores],cwd=cwd)
+        sub.run(['python', '../../multi-planet/multi-planet.py','vspace.in','-c',cores],cwd=cwd)
 
         folders = sorted([f.path for f in os.scandir(dir) if f.is_dir()])
 

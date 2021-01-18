@@ -295,9 +295,9 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     /* Now identify which files contained the two offending options */
     for (iFile=0;iFile<files->iNumInputs;iFile++) {
       if (options[OPT_BACK].iLine[iFile] > 0)
-	iFile1=iFile; // Error of multiple occurences checked in Read
+  iFile1=iFile; // Error of multiple occurences checked in Read
       if (options[OPT_FORW].iLine[iFile] > 0)
-	iFile2=iFile; // Error of multiple occurences checked in Read
+  iFile2=iFile; // Error of multiple occurences checked in Read
     }
     DoubleLineExit(options[OPT_BACK].cFile[iFile1],options[OPT_FORW].cFile[iFile2],options[OPT_BACK].iLine[iFile1],options[OPT_FORW].iLine[iFile2]);
   }
@@ -386,9 +386,9 @@ void VerifyIntegration(BODY *body,CONTROL *control,FILES *files,OPTIONS *options
     /* Now identify which files contained the two offending options */
     for (iFile=0;iFile<files->iNumInputs;iFile++) {
       if (options[OPT_STOPTIME].iLine[iFile] > 0)
-	iFile1=iFile; // Error of multiple occurences checked in Read
+  iFile1=iFile; // Error of multiple occurences checked in Read
       if (options[OPT_OUTPUTTIME].iLine[iFile] > 0)
-	iFile2=iFile; // Error of multiple occurences checked in Read
+  iFile2=iFile; // Error of multiple occurences checked in Read
     }
     DoubleLineExit(options[OPT_STOPTIME].cFile[iFile1],options[OPT_STOPTIME].cFile[iFile2],options[OPT_STOPTIME].iLine[iFile1],options[OPT_OUTPUTTIME].iLine[iFile2]);
   }

@@ -2,31 +2,21 @@ import os
 import multiprocessing as mp
 import sys
 import subprocess as sub
-import math
 import mmap
-from concurrent.futures import ProcessPoolExecutor
-import time
 import argparse
+import h5py
+import numpy as np
+from bigplanet import CreateHDF5,merge_data,load,save
+from collections import OrderedDict
 
 # --------------------------------------------------------------------
 
 ## parallel implementation of running vplanet over a directory ##
-def parallel_run_planet(input_file, cores):
+def parallel_run_planet(input_file, cores,bigplanet):
     # gets the folder name with all the sims
-    with open(input_file, 'r') as vsf:
-        vspace_all = vsf.readlines()
-        dest_line = vspace_all[1]
-        folder_name = dest_line.strip().split(None, 1)[1]
-        if folder_name is None:
-            raise IOError("Name of destination folder not provided in file '%s'. Use syntax 'destfolder <foldername>'"%inputf)
-
-    if os.path.isdir(folder_name) == False:
-        print("ERROR: Folder", folder_name, "does not exist in the current directory.")
-        exit()
-
+    folder_name, infiles = GetDir(input_file)
     #gets the list of sims
     sims = sorted([f.path for f in os.scandir(folder_name) if f.is_dir()])
-
 
     #initalizes the checkpoint file
     checkpoint_file = os.getcwd() + '/' + '.' + folder_name
@@ -101,23 +91,87 @@ def parallel_run_planet(input_file, cores):
             for newline in datalist:
                 f.writelines(' '.join(newline)+'\n')
 
+    #get logfile name
+    path_vpl = os.path.join(sims[0],'vpl.in')
+    with open(path_vpl, 'r') as vpl:
+        content = [line.strip().split() for line in vpl.readlines()]
+
+        for line in content:
+            if line:
+                if line[0] == 'sSystemName':
+                    system_name = line[1]
+
+    logfile = system_name + ".log"
+
     lock = mp.Lock()
     workers = []
     for i in range(cores):
-        workers.append(mp.Process(target=par_worker, args=(checkpoint_file, lock, sims)))
+        workers.append(mp.Process(target=par_worker, args=(checkpoint_file,infiles,system_name,logfile,bigplanet,lock)))
     for w in workers:
         w.start()
     for w in workers:
         w.join()
 
+    if bigplanet == True:
+        print("Creating Master hdf5 file...")
+        master_file = folder_name + '.hdf5'
+        filelist = []
+
+        for i in sims:
+            single_folder = i.split('/')[-1]
+            HDF5_File = single_folder + '.hdf5'
+            HDF5_path = i + '/' + HDF5_File
+            filelist.append(HDF5_path)
+
+        data = OrderedDict()
+
+        for f in filelist:
+            data[f] = load(f)
+
+        save(master_file, merge_data(data))
+
+        i = filelist[0]
+
+        with h5py.File(i,'r') as filename:
+            with h5py.File(master_file,'r+') as master_W:
+                for k in filename.keys():
+                    units = filename[k].attrs.get('Units')
+                    master_W[k].attrs['Units'] = units
+
+def GetDir(input_file):
+    """ Give it input file and returns name of folder where simulations are located. """
+    infiles = []
+    # gets the folder name with all the sims
+    with open(input_file, 'r') as vpl:
+        content = [line.strip().split() for line in vpl.readlines()]
+        for line in content:
+            if line:
+                if line[0] == 'destfolder':
+                    folder_name = line[1]
+
+                if line[0] == 'file':
+                    infiles.append(line[1])
+
+    if folder_name is None:
+        print("Name of destination folder not provided in file '%s'."
+                      "Use syntax 'destfolder <foldername>'"%inputf)
+
+
+    if os.path.isdir(folder_name) == False:
+        print("ERROR: Folder", folder_name, "does not exist in the current directory.")
+        exit()
+
+    return folder_name, infiles
+
 
 ## parallel worker to run vplanet ##
-def par_worker(checkpoint_file, lock, sims):
+def par_worker(checkpoint_file,infiles,system_name,logfile,bigplanet,lock):
 
     while True:
 
         lock.acquire()
         datalist = []
+        data = {}
 
         with open(checkpoint_file, 'r') as f:
             for newline in f:
@@ -143,6 +197,7 @@ def par_worker(checkpoint_file, lock, sims):
 
         os.chdir(folder)
 
+        #runs vplanet on folder and writes the output to the log file
         with open('vplanet_log','a+') as vplf:
             vplanet = sub.Popen("vplanet vpl.in", shell=True, stdout=sub.PIPE, stderr=sub.PIPE, universal_newlines=True)
             return_code = vplanet.poll()
@@ -164,8 +219,12 @@ def par_worker(checkpoint_file, lock, sims):
                 if l[0] == folder:
                     l[1] = '1'
                     break
-
-            print(folder, "completed")
+            print("Simulation ", folder, "completed")
+            if bigplanet == True:
+                print("Creating HDF5 File...")
+                single_folder = folder.split('/')[-1]
+                HDF5_File = single_folder + '.hdf5'
+                CreateHDF5(data, system_name, infiles, logfile, HDF5_File)
         else:
             for l in datalist:
                 if l[0] == folder:
@@ -176,9 +235,13 @@ def par_worker(checkpoint_file, lock, sims):
         with open(checkpoint_file, 'w') as f:
             for newline in datalist:
                 f.writelines(' '.join(newline)+'\n')
+
+
         lock.release()
 
         os.chdir("../../")
+
+
 
 if __name__ == "__main__":
 
@@ -186,6 +249,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Using multi-processing to run a large number of simulations")
     parser.add_argument("InputFile", help="name of the vspace file")
     parser.add_argument("-c","--cores",type=int,default=max_cores,help="The total number of processors used")
+    parser.add_argument("-bp","--bigplanet",type=bool,default=False,help="Runs bigplanet and creates the HDF5 files alongside running mutlt-planet")
     args = parser.parse_args()
 
     try:
@@ -196,9 +260,4 @@ if __name__ == "__main__":
     except OSError:
         raise Exception("Unable to call VPLANET. Is it in your PATH?")
 
-    parallel_time = 0
-    start = time.perf_counter()
-    parallel_run_planet(args.InputFile,args.cores)
-    parallel_time += time.perf_counter() - start
-
-    print('Duration: {:.2f} ms'.format(parallel_time*1000))
+    parallel_run_planet(args.InputFile,args.cores,args.bigplanet)

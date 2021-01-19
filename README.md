@@ -4,6 +4,9 @@
 
 <h1 align="center">VPLanet: The Virtual Planet Simulator</h1>
 
+
+<h2 align="center">The First VPLanet Developers Conference will take place the week of June 7th, 2021! More details soon.</h1>
+
 <p align="center">
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet"><img src="https://img.shields.io/badge/read-the_docs-blue.svg?style=flat"></a>
   <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract"><img src="https://img.shields.io/badge/read-the_paper-7d93c7.svg?style=flat"/></a>
@@ -16,7 +19,7 @@
   <a href="tests"><img src = "https://img.shields.io/badge/tests-46-darkorange.svg?style=flat"></a>
   <img src = "https://img.shields.io/badge/memcheck-clean-green.svg?style=flat">
   <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">
-  <img src="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet/branch/dev/graph/badge.svg?token=3LFJQO1M6H"/>
+  <img src="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet/branch/master/graph/badge.svg?token=3LFJQO1M6H"/>
   </a>
 </p>
 
@@ -71,7 +74,7 @@ An ecosystem of support software is also publicly available. In this repo, [vspa
 
 ### Code Integrity
 
-Behind the scenes, the VPLanet team maintains code integrity through [continuous integration](https://travis-ci.org), in which numerous scientific and numerical tests are validated at every commit. Check the "build" badge above for the current status. See the [tests/](tests) directory for the validation checks that the current build passes. The "coverage" badge shows the percentage of the code (by line number) that is currently tested. Additionally, we use [valgrind](http://valgrind.org) and [addresssanitizer](https://github.com/google/sanitizers/wiki/AddressSanitizer) to periodically search for memory issues like use of uninitialized memory, accessing memory beyond array bounds, etc. The "memcheck" badge shows the current status of the master branch, either clean (no errors) or dirty. If dirty, check the [Issues](https://github.com/VirtualPlanetaryLaboratory/vplanet/issues) for more information about the current status. Note that all releases are clean. We are committed to maintaining a stable tool for scientists to analyze any planetary system.  
+Behind the scenes, the VPLanet team maintains code integrity through [continuous integration](https://travis-ci.org), in which numerous scientific and numerical tests are validated at every commit. Check the "build" badge above for the current status. See the [tests/](tests) directory for the validation checks that the current build passes. The "coverage" badge shows the percentage of the code (by line number) that is currently tested by <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">Codecov</a> at every commit. Additionally, we use [valgrind](http://valgrind.org) and [addresssanitizer](https://github.com/google/sanitizers/wiki/AddressSanitizer) to periodically search for memory issues like use of uninitialized memory, accessing memory beyond array bounds, etc. The "memcheck" badge shows the current status of the master branch, either clean (no errors) or dirty. If dirty, check the [Issues](https://github.com/VirtualPlanetaryLaboratory/vplanet/issues) for more information about the current status. Note that all releases are clean. We are committed to maintaining a stable tool for scientists to analyze any planetary system.  
 
 
 ### Community

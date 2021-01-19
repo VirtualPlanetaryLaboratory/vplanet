@@ -247,9 +247,9 @@ if __name__ == "__main__":
 
     max_cores = mp.cpu_count()
     parser = argparse.ArgumentParser(description="Using multi-processing to run a large number of simulations")
-    parser.add_argument("InputFile", help="name of the vspace file")
     parser.add_argument("-c","--cores",type=int,default=max_cores,help="The total number of processors used")
     parser.add_argument("-bp","--bigplanet",type=bool,default=False,help="Runs bigplanet and creates the HDF5 files alongside running mutlt-planet")
+    parser.add_argument("InputFile", help="name of the vspace file")
     args = parser.parse_args()
 
     try:

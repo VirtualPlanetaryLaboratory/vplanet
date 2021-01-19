@@ -2,10 +2,6 @@ BigPlanet
 -----
 A suite of data analysis and extraction routines for ``VPLanet``.
 
-Overview
-========
-
-
 Installation
 ============
 Navigate to the BigPlanet directory (this directory) and run the ``setup`` script
@@ -25,7 +21,7 @@ has completed, simply run the following command in the in the command line:
 
 .. code-block:: bash
 
-    bigplanet <input file> --c [number of cores]
+    bigplanet -c [number of cores] <input file>
 
 where the input file is the same file used to run vspace and multi-planet. There
 is an optional argument which is the number of processors used. The default number
@@ -122,6 +118,19 @@ where:
 
 *Key* is the name of the particular variable you are extracting the units from.
 
+**CreateHDF5File**
+
+CreateHDF5File is a function that creates an HDF5 file from the input file that is passed
+to the function. This is mainly used if you forgot to run bigplanet or want to run all
+the code for bigplanet in module format
+
+.. code-block:: python
+
+    CreateHDF5File(inputfile)
+
+where:
+
+*inputfile* is the same file used to run vspace and multi-planet
 
 
 **CreateMatrix**
@@ -180,6 +189,7 @@ and the log file that are generated when VPLanet finishes compiling.
 
 	  Keys using the following format for naming: body_variable_aggregation
 
+
 Below is a table of all the various aggregations available at this time:
 
 .. list-table::
@@ -204,12 +214,19 @@ Below is a table of all the various aggregations available at this time:
      - returns a nested list of the *forward* values of the particular
        parameter for every simulation
      - body_variable_forward
+   * - Climate
+     - if the Poise Module was used in the simulations, the climate options
+       returns a nested list of the *climate* values of the particular
+       parameter for every simulation
+     - body_variable_climate
 
 
 .. warning::
 
-  The following aggregations will **only** work with parameters that are from the *forward* file.
-  If you attempt to use it with a value that is **NOT** in the forward file, it will produce an error
+    The following aggregations will **only** work with parameters that are
+    from the *forward* file.
+    If you attempt to use it with a value that is **NOT** in the forward file,
+    it will produce an error.
 
 
 

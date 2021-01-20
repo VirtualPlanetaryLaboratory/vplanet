@@ -783,7 +783,7 @@ def WriteOutput(inputfile, columns,file="bigplanet.out",delim=" ",header=False,u
                     f.write(delim)
             f.write("\n")
 
-def CreateHDF5File(InputFile)
+def CreateHDF5File(InputFile):
     max_cores = mp.cpu_count()
     parallel_run_planet(InputFile,max_cores)
 
@@ -792,7 +792,7 @@ def main():
     parser = argparse.ArgumentParser(description="Extract data from Vplanet simulations")
     parser.add_argument("-c","--cores", type=int,default=max_cores,help="Number of processors used")
     parser.add_argument("InputFile", help="Name of the vspace input file")
-    
+
     args = parser.parse_args()
 
     parallel_run_planet(args.InputFile,args.cores)

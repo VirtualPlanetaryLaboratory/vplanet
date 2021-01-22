@@ -191,3 +191,5 @@ vpl.colors.darkblue.
   plt.contour(TCore_uiq,TMan_uniq,SurfFLuxTot_Zaxis,colors = vpl.colors.orange)
 
 This should produce the following plot:
+
+.. figure:: parametersweep.png

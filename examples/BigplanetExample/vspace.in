@@ -1,0 +1,12 @@
+srcfolder  /Users/rory/src/vplanet-private/examples/EarthInterior
+destfolder ParameterSweep
+trialname test
+
+file   sun.in
+
+file   earth.in
+
+dTMan [2500, 3500, n10] tman
+dTCore [5500, 6500, n10] tcore
+
+file   vpl.in

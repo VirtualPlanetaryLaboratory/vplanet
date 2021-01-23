@@ -5,23 +5,25 @@ Parameter sweeps are a very common use of VPLanet software, and the team has
 developed a set of python and command line tools to facilitate their completion 
 and analysis. In brief, :code:`vspace` builds a set of initial conditions, 
 :code:`multi-planet` performs the simulations, and :code:`bigplanet` compresses the data
-and streamlines plot generaration. The following guide explains how to use these
+and streamlines analysis. The following guide explains how to use these
 tools with an example based on Earth's internal thermal evolution. 
 
 
 .. note::
 
-    You need to install `vspace`, `multi-planet`, and `bigplanet` as
+    You need to install :code:`vspace`, :code:`multi-planet`, and :code:`bigplanet` as
     described in their folders.
 
 
 Initializing Parameter Sweeps with :code:`vspace`
 ------------------------
 
-The first step is to create a vspace file, which is typically called `vspace.in`.
-As described in more detail in :code:`vspace`'s `documentation <../vspace>`_, this file 
+The first step is to create an input file for vspace, which is typically called `vspace.in`.
+As described in more detail in :code:`vspace`'s `documentation 
+<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/vspace>`_, this file 
 modifies template files (we use the .in files from `examples/EarthInterior 
-<../examples/EarthInterior>`_) and then builds a directory structure with each 
+<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/EarthInterior>`_) 
+and then builds a directory structure with each 
 folder containing the .in files for a specific simulation. In this guide we vary 
 Tman (initial mantle temperature) and Tcore (initial core temperature).
 
@@ -73,8 +75,9 @@ command line:
 The optional argument -c (or --cores) tells multi-planet the number of cores to run. 
 There is another optional argument that creates the HDF5 Files for Bigplanet 
 directly after the simulation completes, but we are going to leave it at the default 
-setting, which is false. See the `multi-planet documentation <../multi-planet>`_ for
-more informaiton.
+setting, which is false. See the :code:`multi-planet` `documentation 
+<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/multi-planet>`_ for
+more informaition.
 
 .. note::
 
@@ -168,7 +171,8 @@ This method extracts a particular column from the HDF5 file, returning an array
 in which each element corresponds to the final value of the surface energy flux. 
 The second argument to this method is called a "key" and describes a parameter of 
 interest. To learn more about keys, consult the `bigplanet documentation 
-<../bigplanet>`_. In brief, the key syntax is "body_variable_aggregation", in
+<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/multi-planet>`_. 
+In brief, the key syntax is "body_variable_aggregation", in
 which aggregation is some property of a body's variable, e.g. the final value.
 
 Next we want to grab the x and y values for our plot. This step is a bit complicated
@@ -225,5 +229,5 @@ ExtractUniqueValues)
 
 *header* adds the names and units for each column (default is False)
 
-*ulysses* makes the file compatable with `VR Ulysses <https://www.vrulysses.com/>`_(default is False)
+*ulysses* makes the file compatable with `VR Ulysses <https://www.vrulysses.com/>`_ (default is False)
 

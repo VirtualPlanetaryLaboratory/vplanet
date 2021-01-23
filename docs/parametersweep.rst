@@ -3,29 +3,29 @@ Parameter Sweep Guide
 
 Parameter sweeps are a very common use of VPLanet software, and the team has
 developed a set of python and command line tools to facilitate their completion 
-and analysis. In brief, `vspace` builds a set of initial conditions, 
-`multi-planet` performs the simulations, and `bigplanet` compresses the data
+and analysis. In brief, :code:`vspace` builds a set of initial conditions, 
+:code:`multi-planet` performs the simulations, and :code:`bigplanet` compresses the data
 and streamlines plot generaration. The following guide explains how to use these
 tools with an example based on Earth's internal thermal evolution. 
 
 
-.. note
+.. note::
 
     You need to install `vspace`, `multi-planet`, and `bigplanet` as
     described in their folders.
 
 
-Initializing files with vspace
+Initializing Parameter Sweeps with :code:`vspace`
 ------------------------
 
 The first step is to create a vspace file, which is typically called `vspace.in`.
-As described in more detail in `vspace`'s `documentation <../vspace>`_, this file 
+As described in more detail in :code:`vspace`'s `documentation <../vspace>`_, this file 
 modifies template files (we use the .in files from `examples/EarthInterior 
 <../examples/EarthInterior>`_) and then builds a directory structure with each 
 folder containing the .in files for a specific simulation. In this guide we vary 
 Tman (initial mantle temperature) and Tcore (initial core temperature).
 
-Here’s the input file for vspace:
+Here’s the input file for :code:`vspace`:
 
 .. code-block:: bash
 
@@ -42,7 +42,7 @@ Here’s the input file for vspace:
 
     file   vpl.in
 
-This file directs vspace to vary dTMan from 2500 to 3500 in 10 steps and dTCore 
+This file directs :code:`vspace` to vary dTMan from 2500 to 3500 in 10 steps and dTCore 
 from 5500 to 6500 in 10 steps. The directories will be built in a folder called
 ParameterSweep and the individual folders will be called tmanNtcoreN, where the
 Ns are integers that ensure unique folder names. Because both dTMan and dTCore 
@@ -59,7 +59,7 @@ inside of it, each with their own sun.in, earth.in and vpl.in with the
 parameters from the EarthInteror example, but with the dTMan and dTCore changed
 based on the vspace file. Now we are ready to run multi-planet.
 
-Running simulations with multi-planet 
+Running Simulations with :code:`multi-planet` 
 -------------------------
 
 multi-planet is the command line tool to run the simulations created with vspace
@@ -76,12 +76,12 @@ directly after the simulation completes, but we are going to leave it at the def
 setting, which is false. See the `multi-planet documentation <../multi-planet>`_ for
 more informaiton.
 
-.. note
+.. note::
 
     The default number of cores multi-planet will use is the maximum number of 
     cores on the machine. 
 
-Checking progress with mpstatus 
+Checking progress with :code:`mpstatus` 
 -------------------------
 
 This example is quick to run (about 2 minutes), but for longer simulations it is often
@@ -109,7 +109,7 @@ of data. Storing, analyzing, and plotting these data can be tedious as each outp
 from each directory must be opened and read in sequentially. To streamline this process,
 use bigplanet.
 
-Compressing Data with BigPlanet
+Compressing Data with :code:`bigplanet`
 -------------------------------
 
 The bigplanet command compresses your parameter sweep data into an HDF5 file in which
@@ -129,12 +129,12 @@ that shares the same name as the destfolder from the vspace file, but with ".hdf
 appended, e.g. ParameterSweep.hdf5. Now that the HDF5 file exists we can create a 
 plot of the data we extracted.
 
-.. note
+.. note::
 
     The default number of cores bigplanet will use is the maximum number of 
     cores on the machine. 
 
-Extracting Data with the Bigplanet Module
+Extracting Data with the :code:`bigplanet` Module
 ------------------------------
 
 With your data compressed, you need to access it later. To accomplish this goal,
@@ -198,9 +198,32 @@ readable:
 
 .. code-block:: python
 
-  plt.contour(TCore_uinq,TMan_uniq,SurfFLuxTot_Zaxis,colors = vpl.colors.pale_blue)
+  plt.contour(TCore_uniq,TMan_uniq,SurfFLuxTot_Zaxis,colors = vpl.colors.pale_blue)
 
 
 This should produce the following plot:
 
 .. figure:: parametersweep.png
+
+Finally, the :code:`bigplanet` module also facilitates the creation of files of meta-data
+for your parameter sweep with the "WriteOutput" method:
+
+.. code-block:: python
+
+    WriteOutput(inputfile, columns, file="bigplanet.out", delim=" ", header=False, ulysses=False)
+
+where:
+
+*inputfile* is the name of the HDF5 file
+
+*columns* is the list of keys you are extracting (Use the same format as ExtractColumn, ExtractUnits and
+ExtractUniqueValues)
+
+*File* is the name of the output file
+
+*delim* is the delimiter for the output file (the default is spaces)
+
+*header* adds the names and units for each column (default is False)
+
+*ulysses* makes the file compatable with `VR Ulysses <https://www.vrulysses.com/>`_(default is False)
+

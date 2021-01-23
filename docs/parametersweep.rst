@@ -31,9 +31,9 @@ Here’s the input file for :code:`vspace`:
 
 .. code-block:: bash
 
-    srcfolder ~/vplanet/examples/EarthInterior
+    srcfolder /home/username/vplanet/examples/EarthInterior
     destfolder ParameterSweep
-    trialname test
+    trialname test_
 
     file   sun.in
 
@@ -64,7 +64,7 @@ based on the vspace file. Now we are ready to run multi-planet.
 Running Simulations with :code:`multi-planet` 
 -------------------------
 
-multi-planet is the command line tool to run the simulations created with vspace
+:code:`multi-planet` is the command line tool to run the simulations created with vspace
 across the processors on your computer. To run, type the following in the 
 command line:
 

@@ -360,7 +360,6 @@ def CreateHDF5(data, system_name, infiles, logfile, quiet, h5filename):
             h.create_dataset(k, data=np.array(v_value,dtype='S'),compression = 'gzip')
             h[k].attrs['Units'] = v_attr
 
-
 def merge_data(data_list):
 
     """Merge dictionaries with data.
@@ -503,7 +502,7 @@ def CreateMasterHDF5(folder_name, sims):
 
     for i in filelist:
         sub.run(['rm', i])
-    sub.run(['rm','.' + folder_name + '.hdf5'])
+    sub.run(['rm','.' + folder_name + '_hdf5'])
 
 
 """
@@ -711,7 +710,7 @@ def ExtractUniqueValues(hf,k):
     unique = np.unique(data)
     return unique
 
-def CreateMatrix(xaxis,yaxis,zarray, orientation):
+def CreateMatrix(xaxis,yaxis,zarray, orientation=1):
     """
     Creates a Matrix for Contour Plotting of Data. Run ExtractUniqueValue()
     prior to CreateMatrix() to get the ticks for the xaxis and yaxis

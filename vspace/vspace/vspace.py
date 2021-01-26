@@ -57,11 +57,12 @@ for i in range(len(lines)):
   elif lines[i].split()[0] == 'srcfolder':
     src = lines[i].split()[1]
     if '~' in src:
-        os.path.expanduser(src)
+        src = os.path.expanduser(src)
+
   elif lines[i].split()[0] == 'destfolder':
     dest = lines[i].split()[1]
     if '~' in dest:
-        os.path.expanduser(dest)
+        dest = os.path.expanduser(dest)
     if os.path.isdir(dest) == True and forced == True:
         sub.run(['rm', '-rf', dest])
         if os.path.isfile(dest + '.hdf5') == True:

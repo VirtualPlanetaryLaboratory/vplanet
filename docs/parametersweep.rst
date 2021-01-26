@@ -69,8 +69,8 @@ data (including any :code:`multi-planet` and :code:`bigplanet` files!). Now we a
 
 .. note::
 
-    :code:`vspace` automatically creates histograms of the options you varied so you
-    can confirm the initial conditions. These png files are located in destfolder.
+    If you randomly generate initial conditions, i.e. Monte Carlo, then :code:`vspace` automatically creates histograms of the 
+    options you varied so you can confirm the initial conditions. These png files are located in destfolder.
 
 Running Simulations with :code:`multi-planet` 
 -------------------------

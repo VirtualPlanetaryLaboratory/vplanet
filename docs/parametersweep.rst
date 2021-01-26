@@ -1,7 +1,7 @@
 Parameter Sweep Guide
 ===================
 
-Parameter sweeps are a very common use of VPLanet software, and the team has
+Parameter sweeps are a very common use of VPLanet, and the team has
 developed a set of python and command line tools to facilitate their completion 
 and analysis. In brief, :code:`vspace` builds a set of initial conditions, 
 :code:`multi-planet` performs the simulations, and :code:`bigplanet` compresses the data
@@ -52,16 +52,16 @@ This file directs :code:`vspace` to vary initial core temperature from 5500 to 6
 initial potassium-40 power from 50 - 150% of Earth's nominal initial amount (see the VPLanet paper 
 for more details). The directories will be built in a folder called
 ParameterSweep and the individual folders will be called test_tcore?K?, where the
-to create 10 evenly spaced values for each (other options are available), and the total number of 
+"n" tells :code:`vspace` to create 10 evenly spaced values for each (other distributions are available), so the total number of 
 simulations will be 100.
 
 To build the files, run the following command in the command line:
 
 .. code-block:: bash
 
-    vspace [-q, -f]vspace.in
+    vspace [-q, -f] vspace.in
 
-This command will create the folder, ParameterSweep with 100 folders
+This command will create the folder ParameterSweep, with 100 folders
 inside of it, each with their own sun.in, earth.in and vpl.in with the
 parameters from the EarthInteror example, but with dTCore and d40KPowerCore changed
 based on the vspace file. Use -q to suppress output and -f to force :code:`vspace` to overwrite previous
@@ -88,14 +88,14 @@ There is another optional argument that creates the HDF5 Files for :code:`bigpla
 directly after the simulation completes, but we are going to leave it at the default 
 setting, which is false. See the :code:`multi-planet` `documentation 
 <https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/multi-planet>`_ for
-more informaition.
+more information. Use the -q option to suppress output to the terminal.
 
 .. note::
 
     The default number of cores :code:`multi-planet` will use is the maximum number of 
     cores on the machine. 
 
-Checking :code:`multi-planet` progress with :code:`mpstatus` 
+Checking :code:`multi-planet` Progress with :code:`mpstatus` 
 -------------------------
 
 This example is quick to run (~1 minute, depending on the number of cores), but for 
@@ -129,7 +129,7 @@ Compressing Data with :code:`bigplanet`
 
 The :code:`bigplanet` command compresses your parameter sweep data into an HDF5 file in which
 specific data can be efficiently extracted. **Although compression can take some time,
-plotting with a :code:`bigplanet` file can be orders of magnitude faster because the script will 
+plotting with a** :code:`bigplanet` **file can be orders of magnitude faster because the script will 
 not need to open files and each directory!**
 To compress the data, type the following command in the terminal (after multi-planet 
 finishes):
@@ -137,23 +137,25 @@ finishes):
 
 .. code-block:: bash
 
-    bigplanet -c <num_cores> vspace.in
+    bigplanet -c <num_cores> [-q] vspace.in
 
 The bigplanet arguments work identically to :code:`multi-planet`’s with the user able to
-specify the number of processors :code:`bigplanet` can use. This will create an HDF5 file 
+specify the number of processors :code:`bigplanet` can use. This will create an `HDF5 
+<https://en.wikipedia.org/wiki/Hierarchical_Data_Format>`_ file 
 that shares the same name as the destfolder from the :code:`vspace` file, but with ".hdf5" 
-appended, e.g. ParameterSweep.hdf5. 
+appended, e.g. ParameterSweep.hdf5. This file will now replace the directory structure 
+created by :code:`vspace`. Use the -q option to suppress output to the terminal.
 
 .. note::
 
-    The default number of cores bigplanet will use is the maximum number of 
+    The default number of cores :code:`bigplanet` will use is the maximum number of 
     cores on the machine. 
 
-Checking :code:`bigplanet` progress with :code:`bpstatus` 
+Checking :code:`bigplanet` Progress with :code:`bpstatus` 
 -------------------------
 
 For large data sets, :code:`bigplanet` may take several hours or more to complete. To check the 
-status, use :code:`bpstatus`, which follows the same syntax as :code:`mpstatus` above.
+status, use :code:`bpstatus`, which employs the same syntax as :code:`mpstatus` above.
 
 Extracting and Plotting with :code:`bigplanet`
 ------------------------------
@@ -172,8 +174,8 @@ this:
 
   data = bp.HDF5File(‘ParameterSweep.hdf5’)
 
-This loads in the necessary modules and reads in the HDF5 file as HDF5_file. Now we are
-ready to import the data we want to graph, which are the initial values of TCore, 
+This loads in the necessary modules and reads in the HDF5 file as data. Now we are
+ready to extract the data we want to graph, which are the initial values of TCore, 
 final values of potassium-40 power, and final values of the inner core radius. Let's
 start with inner core radius, grabbing its final values and its units:
 
@@ -182,8 +184,8 @@ start with inner core radius, grabbing its final values and its units:
     RIC = bp.ExtractColumn(data,'earth_RIC_final')
     RIC_units = bp.ExtractUnits(data,'earth_RIC_final')
 
-Extract column returns an array in which each element corresponds to the final
-value of the surface energy flux for each simulation. The first argument is the HDF5
+ExtractColumn returns an array in which each element corresponds to the final
+value of the inner core radius for each simulation. The first argument is the HDF5
 file, the second argument is called a "key" and describes a parameter of 
 interest. To learn more about keys, consult the `bigplanet documentation 
 <https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/multi-planet>`_. 
@@ -191,11 +193,11 @@ In brief, the key syntax is "body_variable_aggregation", in
 which aggregation is some property of a body's variable, e.g. the final value. The 
 second line returns the units of the key.
 
-Next we want to grab the x and y values for our plot. This step is a bit complicated
-because a specific value of x and/or y can be repeated multiple times. In other words,
+Next we want to grab the *x* and *y* values for our contour plot. This step is a bit complicated
+because a specific value of *x* and/or *y* can be repeated multiple times. In other words,
 if we just extracted every value from every simulation and placed it in an array, the
 arrays would be multi-valued and the plot could not be built.  To obtain the values 
-needed for the plot (and their units), use the ``ExtractUniqueValues`` function, like so:
+needed for the plot, use the ``ExtractUniqueValues`` function, like so:
 
 .. code-block:: python
 
@@ -206,7 +208,7 @@ needed for the plot (and their units), use the ``ExtractUniqueValues`` function,
     K40_units = bp.ExtractUnits(data,'earth_40KPowerCore_final')
 
 Now we have the values we need for our plot, but the inner core radius is currently
-stored as an array, not a matrix, so we're still not ready to plot. With BigPlanet you 
+stored as an array, not a matrix, so we're still not ready to plot. With :code:`bigplanet` you 
 can easily transform an array into the appropriately shaped matrix with the ``CreateMatrix``
 function: 
 
@@ -214,7 +216,7 @@ function:
 
   RIC_Matrix = bp.CreateMatrix(TCore_uniq,K40_uniq,RIC)
 
-This method takes 3 arguments, the x-axis vector, the y-axis vector, and the array 
+This method takes 3 arguments, the *x*-axis vector, the *y*-axis vector, and the array 
 that must be converted into a 2D matrix.
 
 Now we're ready to plot using :code:`vplot` and :code:`matplotlib.` We won't show the lines of code here,
@@ -230,7 +232,7 @@ Creating Meta-Data Files with :code:`bigplanet`
 
 Finally, it's often convenient to write out ASCII files in which each line contains the meta-data
 for your parameter sweep, e.g. the initial eccentricity, the final semi-major axis, and the maximum
-inclination. :code:`bigplanet` facilitates the creation of these files with the "WriteOutput" method:
+inclination. :code:`bigplanet` facilitates the creation of these files with the ``WriteOutput`` method:
 
 .. code-block:: python
 

@@ -41,6 +41,9 @@ tests/BigPlanetStats/BP_Stats/
 tests/BigPlanetStats/.BP_Stats
 tests/BigPlanetStats/.BP_Stats_hdf5
 tests/BigPlanetStats/BP_Stats.hdf5
+examples/ParameterSweep/ParameterSweep/
+
+
 
 # Examples
 examples/ParameterSweep/ParameterSweep/

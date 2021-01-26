@@ -8,26 +8,28 @@ import os
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-HDF5_File = h5.File('ParameterSweep.hdf5', 'r')
+data = h5.File('ParameterSweep.hdf5', 'r')
 
-RIC = bp.ExtractColumn(HDF5_File,'earth_RIC_final')
-RIC_units = bp.ExtractUnits(HDF5_File,'earth_RIC_final')
+RIC = bp.ExtractColumn(data,'earth_RIC_final')
+RIC_units = bp.ExtractUnits(data,'earth_RIC_final')
 
-TMan_uniq = bp.ExtractUniqueValues(HDF5_File,'earth_TMan_initial')
-TMan_units = bp.ExtractUniqueValues(HDF5_File,'earth_TMan_initial')
+TCore_uniq = bp.ExtractUniqueValues(data,'earth_TCore_initial')
+TCore_units = bp.ExtractUnits(data,'earth_TCore_initial')
 
-TCore_uniq = bp.ExtractUniqueValues(HDF5_File,'earth_TCore_initial')
-TCore_units = bp.ExtractUniqueValues(HDF5_File,'earth_TMan_initial')
+K40_uniq = bp.ExtractUniqueValues(data,'earth_40KPowerCore_final')
+K40_units = bp.ExtractUnits(data,'earth_40KPowerCore_final')
 
-RIC_Matrix = bp.CreateMatrix(TMan_uniq,TCore_uniq,RIC)
+RIC_Matrix = bp.CreateMatrix(TCore_uniq,K40_uniq,RIC)
 
-contours = [1000,1100,1200,1300,1400]
-xlabel = 'Initial Mantle Temperature ('+repr(TMan_units)+')'
-ylabel = 'Initial Core Temperature ('+repr(TCore_units)+')'
-title = 'Final Inner Core Radius ('+repr(RIC_units)+')'
+#print(RIC_Matrix)
 
-plt.xlim(2500, 3500)
-plt.ylim(5500, 6500)
+contours = [0,500,1000,1500,2000,2500]
+xlabel = 'Initial Core Temperature ('+TCore_units+')'
+ylabel = 'Current Potassium-40 Power ('+K40_units+')'
+title = 'Final Inner Core Radius ('+RIC_units+')'
+
+#plt.xlim(2500, 3500)
+#plt.ylim(0, 0.5)
 
 plt.xlabel(xlabel,fontsize=20)
 plt.ylabel(ylabel,fontsize=20)
@@ -35,9 +37,13 @@ plt.title(title,fontsize=20)
 
 plt.tick_params(axis='both', labelsize=20)
 
-plt.contour(TMan_uniq,TCore_uniq,RIC_Matrix,colors = vpl.colors.pale_blue,levels=contours)
+cont = plt.contour(TCore_uniq,K40_uniq,RIC_Matrix,colors = vpl.colors.pale_blue,levels=contours)
+plt.clabel(cont,fmt="%.0f",fontsize=15)
 
-plt.show()
-plt.close()
+cont = plt.contour(TCore_uniq,K40_uniq,RIC_Matrix,levels=[1221])
+plt.clabel(cont,fmt="%.0f",fontsize=15)
+
+#plt.show()
+#plt.close()
 
 plt.savefig('BigPlanetExample.png')

@@ -7,8 +7,8 @@ and analysis. In brief, :code:`vspace` builds a set of initial conditions,
 :code:`multi-planet` performs the simulations, and :code:`bigplanet` compresses the data
 and streamlines analysis. The following guide explains how to use these
 tools with an example based on Earth's internal thermal evolution. Files for the example
-presented here can be found in `examples/BigPlanetExample 
-<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/BigPlanetExample>`_
+presented here can be found in `examples/ParameterSweep 
+<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/ParameterSweepe>`_
 in which we examine the current radius of Earth's inner core as a function of the initial
 core temperature and the current amount of radiogenic heating from potassium-40.
 

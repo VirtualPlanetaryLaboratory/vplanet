@@ -7,6 +7,8 @@ import re
 import vspace_hyak
 import itertools as it
 import matplotlib.pyplot as plt
+import subprocess as sub
+import argparse
 
 def SearchAngleUnit(src,flist):
   for fcurr in flist:
@@ -16,10 +18,13 @@ def SearchAngleUnit(src,flist):
 
   return angUnit
 
-if len(sys.argv) < 2:
-  raise OSError("Must enter an input file name")
-else:
-  inputf = sys.argv[1]
+
+parser = argparse.ArgumentParser(description="Create Vplanet parameter sweep")
+parser.add_argument("-f","--force", action="store_true", help="forces override of vspace file creation")
+parser.add_argument("InputFile",type = str, help="Name of the vspace input file")
+args = parser.parse_args()
+inputf = args.InputFile
+forced = args.force
 
 try:
   f = open(inputf,'r')
@@ -51,8 +56,37 @@ for i in range(len(lines)):
     pass  #nothing on this line
   elif lines[i].split()[0] == 'srcfolder':
     src = lines[i].split()[1]
+    if '~' in src:
+        os.path.expanduser(src)
   elif lines[i].split()[0] == 'destfolder':
     dest = lines[i].split()[1]
+    if '~' in dest:
+        os.path.expanduser(dest)
+    if os.path.isdir(dest) == True and forced == True:
+        sub.run(['rm', '-rf', dest])
+        if os.path.isfile(dest + '.hdf5') == True:
+            sub.run(['rm', dest + '.hdf5'])
+        if os.path.isfile('.'+ dest + '_hdf5') == True:
+            sub.run(['rm', '.'+ dest + '_hdf5'])
+        if os.path.isfile('.'+ dest) == True:
+            sub.run(['rm', '.'+ dest])
+    if os.path.isdir(dest) == True:
+        reply = None
+        question = "Destination Folder already exists. Would you like to override it?"
+        while reply not in ('y','n'):
+            reply = str(input(question+' (y/n): ')).lower().strip()
+            if reply[:1] == 'y':
+                sub.run(['rm', '-rf', dest])
+                if os.path.isfile(dest + '.hdf5') == True:
+                    sub.run(['rm', dest + '.hdf5'])
+                if os.path.isfile('.'+ dest + '_hdf5') == True:
+                    sub.run(['rm', '.'+ dest + '_hdf5'])
+                if os.path.isfile('.'+ dest) == True:
+                    sub.run(['rm', '.'+ dest])
+            if reply[:1] == 'n':
+                exit()
+
+
   elif lines[i].split()[0] == 'trialname':
     trial = lines[i].split()[1]
   elif lines[i].split()[0] == 'samplemode':

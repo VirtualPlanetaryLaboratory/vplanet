@@ -1,6 +1,9 @@
 BigPlanet
 -----
-A suite of data analysis and extraction routines for ``VPLanet``.
+A suite of data analysis and extraction routines for ``VPLanet`` designed to be used
+with `vspace <../vspace>`_ and `multi-planet <../multi-planet>`_ scripts. It can also
+generate files for use with the `VR Ulysses virtual reality data explorer
+<https://www.vrulysses.com>`_.
 
 Installation
 ============
@@ -10,14 +13,17 @@ BigPlanet to be run from the command line (see running bigplanet section below)
 
 Running BigPlanet
 =================
-BigPlanet has two primary uses: the command line to generate the HDF5 file, and
-the module that is imported into python scripts for data extraction. These are explained in
+BigPlanet has two primary uses: 1) a command line tool to generate an `HDF5
+<https://en.wikipedia.org/wiki/Hierarchical_Data_Format>`_  file that stores
+and the data in a compressed format, and 2) a python module that enables data
+extraction and plotting from the HDF5 file.  These are explained in
 detail below.
 
 Command Line Usage
 ==================
-Using BigPlanet on the command line is relatively straight forward. After a simulation
-has completed, simply run the following command in the in the command line:
+Using BigPlanet on the command line is relatively straight forward. After a suite of
+simulations (set up with `vspace <../vspace>`_) has completed, simply run the following
+command in the in the command line:
 
 .. code-block:: bash
 
@@ -37,12 +43,12 @@ import BigPlanet as a module:
 
     import bigplanet as bp
 
-This allows us to use the various functions that are outlined in detail below, such as
-print all the names of the variables in the HDF5 file (PrintKeys), extract a particular
-variable known as a key (ExtractColumn), Extract the units of a particular key value
-(ExtractUnits),extract unique values in a particular key (ExtractUniqueValues),
-create a Matrix based on two keys (CreateMatrix) and writing out a list of keys
-to a csv file (WriteOutput).
+This allows you to use the various functions that are outlined in detail below, such as
+print all the names of the variables (the "keys") in the HDF5 file (PrintKeys), extract a particular
+variable from its key (ExtractColumn), extract the units of a particular key value
+(ExtractUnits), extract unique values in a particular key (ExtractUniqueValues),
+create a matrix based on two keys (CreateMatrix), and write out a list of keys
+to a file (WriteOutput).
 
 
 .. note::
@@ -52,7 +58,7 @@ to a csv file (WriteOutput).
 
 **PrintKeys**
 
-PrintKeys is a simple function that prints out all available keys. Keys, as mentioned above,
+PrintKeys, as the name suggests, simply that prints all available keys. Keys, as mentioned above,
 are the names of various variables that can be extracted. It takes in the following arguments:
 
 .. code-block:: python

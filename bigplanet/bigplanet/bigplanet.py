@@ -305,10 +305,24 @@ def ProcessClimatefile(climatefile, data, body, GridOutputOrder):
 def ProcessSeasonalClimatefile(prefix, data, body, name):
     file = list(csv.reader(open('SeasonalClimateFiles/' + prefix + '.' + name + '.0')))
     key_name = body + '_' + name
-    if key_name in data:
-        data[key_name].append(file)
+    units = ''
+    if (name == 'DailyInsol' or name == 'SeasonalFIn' or
+    name == 'SeasonalFOut'or name == 'SeasonalDivF'):
+        units = 'W/m^2'
+    if name == 'PlanckB':
+        units = 'W/m^2/K'
+    if name == 'SeasonalIceBalance':
+        units = 'kg/m^2/s'
+    if name == 'SeasonalTemp':
+        units = 'deg C'
+    if name == 'SeasonalFMerid':
+        units = 'W'
+
+    if key_name not in data:
+        data[key_name]= [units, file]
     else:
-        data[key_name] = [file]
+        data[key_name].append(file)
+
     return data
 
 def CreateHDF5(data, system_name, infiles, logfile, quiet, h5filename):
@@ -346,8 +360,8 @@ def CreateHDF5(data, system_name, infiles, logfile, quiet, h5filename):
 
     with h5py.File(h5filename, 'w') as h:
         for k, v in data.items():
-            #print("Key:",k)
-            #print("Length of Value:",len(v))
+            print("Key:",k)
+            print("Length of Value:",len(v))
             if len(v) == 2:
                 v_attr = v[0]
                 v_value = [v[1]]
@@ -355,8 +369,8 @@ def CreateHDF5(data, system_name, infiles, logfile, quiet, h5filename):
             else:
                 v_value = v[0]
                 v_attr = ''
-            #print("Units:",v_attr)
-            #print()
+            print("Units:",v_attr)
+            print()
             h.create_dataset(k, data=np.array(v_value,dtype='S'),compression = 'gzip')
             h[k].attrs['Units'] = v_attr
 

@@ -33,6 +33,8 @@ void BodyCopyMagmOc(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dWaterMassAtm         = src[iBody].dWaterMassAtm;
   dest[iBody].dManMeltDensity       = src[iBody].dManMeltDensity;
   dest[iBody].dMassFracFeOIni       = src[iBody].dMassFracFeOIni;
+  dest[iBody].dWaterPartCoeff       = src[iBody].dWaterPartCoeff;
+  dest[iBody].dDepthMO              = src[iBody].dDepthMO;
 	/* Other variables Thermal model */
 	dest[iBody].dGravAccelSurf        = src[iBody].dGravAccelSurf;
 	dest[iBody].dSolidRadiusLocal     = src[iBody].dSolidRadiusLocal;
@@ -188,9 +190,11 @@ void ReadManMeltDensity(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       body[iFile-1].dManMeltDensity = dTmp;
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
-      body[iFile-1].dManMeltDensity = options->dDefault;
+  } else {
+      if (iFile > 0) { //if line num not ge 0, then if iFile gt 0, then set default.
+        body[iFile-1].dManMeltDensity = options->dDefault;
+      }
+  }
 }
 
 /* Water partition coefficient */
@@ -209,9 +213,33 @@ void ReadWaterPartCoeff(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       body[iFile-1].dWaterPartCoeff = dTmp;
     }
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-      if (iFile > 0)  //if line num not ge 0, then if iFile gt 0, then set default.
-      body[iFile-1].dWaterPartCoeff = options->dDefault;
+  } else {
+      if (iFile > 0) { //if line num not ge 0, then if iFile gt 0, then set default.
+        body[iFile-1].dWaterPartCoeff = options->dDefault;
+      }
+  }
+}
+
+/* Magma Ocean Depth */
+void ReadDepthMO(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp=-1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {   //if line num of option ge 0
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    if (dTmp < 0) {  //if input value lt 0
+      body[iFile-1].dDepthMO = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+    } else {
+      body[iFile-1].dDepthMO = dTmp;
+    }
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else {
+    if (iFile > 0) {  //if line num not ge 0, then if iFile gt 0, then set default.
+      body[iFile-1].dDepthMO = options->dDefault;
+    }
+  }
 }
 
 /*
@@ -451,6 +479,18 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_WATERPARTCOEFF].cNeg,"no unit");
   fnRead[OPT_WATERPARTCOEFF] = &ReadWaterPartCoeff;
 
+  /* Magma Ocean Depth */
+
+  sprintf(options[OPT_DEPTHMO].cName,"dDepthMO");
+  sprintf(options[OPT_DEPTHMO].cDescr,"Initial depth of the magma ocean");
+  sprintf(options[OPT_DEPTHMO].cDefault,"core radius");
+  options[OPT_DEPTHMO].iType = 2;
+  options[OPT_DEPTHMO].bMultiFile = 1;
+  options[OPT_DEPTHMO].dNeg = 1e3;
+  options[OPT_DEPTHMO].dDefault = 1e6;
+  sprintf(options[OPT_DEPTHMO].cNeg,"km");
+  fnRead[OPT_DEPTHMO] = &ReadDepthMO;
+
   /* Halts */
 
   sprintf(options[OPT_HALTMANTLESOLIDIFIED].cName,"bHaltMantleSolidified");
@@ -543,6 +583,10 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   if (body[iBody].dSolidRadius < body[iBody].dCoreRadius) {
     body[iBody].dSolidRadius = body[iBody].dCoreRadius;
   }
+
+  // if (body[iBody].dDepthMO < 9e8) {
+  //   body[iBody].dSolidRadius = body[iBody].dRadius - body[iBody].dDepthMO;
+  // }
 
   // other variables
   double dTransPressSol = 5.19964e9; // pressure at which to swith from low to high pressure treatment of solidus (Hirschmann, 2000) in Pa
@@ -681,11 +725,16 @@ Will be used in PropsAuxMagmOc to find its root with fndBisection
 @return Water mass for a given dFrac - actual water mass in mo+atm
 */
 double fndWaterMassMOTime(BODY *body, double dFrac, int iBody) {
-  return 1e-19 * (  WATERPARTCOEFF*dFrac*body[iBody].dMassMagmOcCry \
+  return 1e-19 * (  body[iBody].dWaterPartCoeff*dFrac*body[iBody].dMassMagmOcCry \
                     + dFrac*body[iBody].dMassMagmOcLiq \
                     + ( 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf ) * pow((dFrac/3.44e-8),1/0.74) \
                     - body[iBody].dWaterMassMOAtm );
 }
+// return 1e-19 * (  WATERPARTCOEFF*dFrac*body[iBody].dMassMagmOcCry \
+//                   + dFrac*body[iBody].dMassMagmOcLiq \
+//                   + ( 4*PI*pow(body[iBody].dRadius,2) / body[iBody].dGravAccelSurf ) * pow((dFrac/3.44e-8),1/0.74) \
+//                   - body[iBody].dWaterMassMOAtm );
+// }
 
 /**
 Mass of CO2 in the mo+atm system to get the water frac in the magmoc
@@ -1292,7 +1341,8 @@ void fnForceBehaviorMagmOc(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     // body[iBody].dManMeltDensity = 4200;
     body[iBody].dSolidRadius    = body[iBody].dRadius;
 
-    dDeltaWaterMass = WATERPARTCOEFF*body[iBody].dWaterFracMelt*(body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+    dDeltaWaterMass = body[iBody].dWaterPartCoeff*body[iBody].dWaterFracMelt*(body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+    // dDeltaWaterMass = WATERPARTCOEFF*body[iBody].dWaterFracMelt*(body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
     body[iBody].dWaterMassSol   = body[iBody].dWaterMassSol   + dDeltaWaterMass;
     body[iBody].dWaterMassMOAtm = body[iBody].dWaterMassMOAtm - dDeltaWaterMass;
 
@@ -2291,7 +2341,8 @@ double fdDSolidRadius(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdDWaterMassSol(BODY *body, SYSTEM *system, int *iaBody) {
-  return 4*PI*body[iaBody[0]].dManMeltDensity*WATERPARTCOEFF*body[iaBody[0]].dWaterFracMelt*pow(body[iaBody[0]].dSolidRadius,2)*fdDSolidRadius(body,system,iaBody);
+  return 4*PI*body[iaBody[0]].dManMeltDensity*body[iaBody[0]].dWaterPartCoeff*body[iaBody[0]].dWaterFracMelt*pow(body[iaBody[0]].dSolidRadius,2)*fdDSolidRadius(body,system,iaBody);
+  // return 4*PI*body[iaBody[0]].dManMeltDensity*WATERPARTCOEFF*body[iaBody[0]].dWaterFracMelt*pow(body[iaBody[0]].dSolidRadius,2)*fdDSolidRadius(body,system,iaBody);
 }
 
 double fdDWaterMassMOAtm(BODY *body, SYSTEM *system, int *iaBody) {

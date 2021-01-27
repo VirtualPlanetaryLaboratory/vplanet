@@ -843,9 +843,9 @@ def CreateHDF5File(InputFile):
 def main():
     max_cores = mp.cpu_count()
     parser = argparse.ArgumentParser(description="Extract data from Vplanet simulations")
+    parser.add_argument("InputFile", help="Name of the vspace input file")
     parser.add_argument("-c","--cores", type=int, default=max_cores, help="Number of processors used")
     parser.add_argument("-q","--quiet", action="store_true", help="no output for bigplanet")
-    parser.add_argument("InputFile", help="Name of the vspace input file")
 
     args = parser.parse_args()
 

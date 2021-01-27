@@ -1,0 +1,12 @@
+srcfolder  ~/vplanet-private/examples/EarthInterior
+destfolder ParameterSweep
+trialname test_
+
+file   sun.in
+
+file   earth.in
+
+dTCore [5500, 6500, n10] tcore
+d40KPowerCore [-1.5, -0.5, n10] K
+
+file   vpl.in

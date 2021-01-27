@@ -1,195 +1,256 @@
 Parameter Sweep Guide
 ===================
 
-Parameter sweeps are a very common use of the Vplanet software. A Parameter sweep
-ultizes vspace, multi-planet and bigplanet in conjunction to run a multitude of
-simulations.
+Parameter sweeps are a very common use of VPLanet, and the team has
+developed a set of python and command line tools to facilitate their completion
+and analysis. In brief, :code:`vspace` builds a set of initial conditions,
+:code:`multi-planet` performs the simulations, and :code:`bigplanet` compresses the data
+and streamlines analysis. The following guide explains how to use these
+tools with an example based on Earth's internal thermal evolution. Files for the example
+presented here can be found in `examples/ParameterSweep
+<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/ParameterSweepe>`_
+in which we examine the current radius of Earth's inner core as a function of the initial
+core temperature and the current amount of radiogenic heating from potassium-40.
 
-The following guide will show you how to do the entire process from setting up
-the vspace file to create a contour plot using bigplanet’s HDF5 data structure.
+
+.. note::
+
+    You need to install :code:`vplot`, :code:`vspace`, :code:`multi-planet`, and :code:`bigplanet` to
+    reproduce this example.
 
 
-Vspace File Setup
+Initializing Parameter Sweeps with :code:`vspace`
 ------------------------
 
-The first thing to run a parameter sweep is to create a vspace file. In this
-guide we are going to run a vspace using the Earth Interior in the example
-folder as a template, but have two following parameters be sweeped: Tman and
-Tcore, which are a part of the Thermint module and control the temperature of
-the mantle and the core of the planet.
+The first step is to create an input file for :code:`vspace`, which is typically called `vspace.in`.
+As described in more detail in :code:`vspace`'s `documentation
+<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/vspace>`_, this file
+modifies template files (here we use the .in files from `examples/EarthInterior
+<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/EarthInterior>`_)
+and then builds a directory structure with each
+folder containing the .in files for a specific simulation. In this guide we vary
+dTCore (initial core temperature) and d40KPowerCore (initial radiogenic power from potassium-40).
 
-Here’s what the vspace file, called paramexample should look like:
+Here’s the input file for :code:`vspace`:
 
 .. code-block:: bash
 
     srcfolder ~/vplanet/examples/EarthInterior
-
     destfolder ParameterSweep
-
-    trialname test
-
+    trialname test_
 
     file   sun.in
 
-
     file   earth.in
 
-    dTMan [2500, 3500, n10] tman
-
-    dTCore [5500,6500, n10] tcore
-
+    dTCore [5500, 6500, n10] tcore
+    d40KPowerCore [-1.5, -0.5, n10] K
 
     file   vpl.in
 
-Where:
-srcfolder is the folder vspace uses as a template. Anything changed in the
-file section will be overwritten
-Destfolder is the name of the folder where the simulations will be held
-Trialname is the name of each folder (in this case the first folder will be
-named test_tman0_tcore0 because we are changing both the Tman and Tcore
-variables for each simulation
-
-We include each of the files by using ``file inputfilename`` regardless of
-whether or not they are being changed. This is good practice to note what all
-the input files are for the given simulation.
-
-dTMan is the temperature of the mantle, and it will change from 2500 to 3500
-and the interval will be 10, as noted with the n10
-dTCore is the temperature of the core, and it will change from 5500 to 6500 and
-the interval will be 10, as noted with the n10.
-
-Because both dTMan and dTCore have an interval of 10, the total number of
+This file directs :code:`vspace` to vary initial core temperature from 5500 to 6500 in 10 steps and
+initial potassium-40 power from 50 - 150% of Earth's nominal initial amount (see the VPLanet paper
+for more details). The directories will be built in a folder called
+ParameterSweep and the individual folders will be called test_tcore?K?, where the
+"n" tells :code:`vspace` to create 10 evenly spaced values for each (other distributions are available), so the total number of
 simulations will be 100.
 
-Once the vspace file is complete, run the following command in the command line:
+To build the files, run the following command in the command line:
 
 .. code-block:: bash
 
-    vspace paramexample
+    vspace [-q, -f] vspace.in
 
-This command will create the folder, ParameterSweepExample with 100 folders
+This command will create the folder ParameterSweep, with 100 folders
 inside of it, each with their own sun.in, earth.in and vpl.in with the
-parameters from the EarthInteror example (with the dTMan and dTCore changed
-based on the vspace file). Now we are ready to run multi-planet
+parameters from the EarthInteror example, but with dTCore and d40KPowerCore changed
+based on the vspace file. Use -q to suppress output and -f to force :code:`vspace` to overwrite previous
+data (including any :code:`multi-planet` and :code:`bigplanet` files!). Now we are ready to run the parameter sweep.
 
-Multi-planet Guide
+.. note::
+
+    If you randomly generate initial conditions, i.e. Monte Carlo, then :code:`vspace` automatically creates histograms of the
+    options you varied so you can confirm the initial conditions. These png files are located in destfolder.
+
+Running Simulations with :code:`multi-planet`
 -------------------------
 
-The next step is to use multi-planet, another tool of vplanet, to run the
-simulations in a quick and efficient manner, by utilizing multiple processors
-on a machine. To run using multi-planet, type the following in the command line:
+:code:`multi-planet` is the command line tool to run the simulations created with :code:`vspace`
+across the processors on your computer. To run, type the following in the
+command line:
 
 .. code-block:: bash
 
-    multi-planet -c 4 paramexample
+    multi-planet -c <num_cores> [-q] vspace.in
 
-This uses the optional argument -c or --cores to tell multi-planet the number
-of cores to run. The default is the maximum number of cores on the machine,
-but for this example we are going to use 4 cores. There is another optional
-argument that creates the HDF5 Files for Bigplanet directly after the
-simulation completes, but we are going to leave it at the default setting,
-which is false.
+The optional argument -c (or --cores) tells :code:`multi-planet` the number of cores to run.
+There is another optional argument that creates the HDF5 Files for :code:`bigplanet`
+directly after the simulation completes, but we are going to leave it at the default
+setting, which is false. See the :code:`multi-planet` `documentation
+<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/multi-planet>`_ for
+more information. Use the -q option to suppress output to the terminal.
 
-Even though this example is rather quick to run (each simulation in the
-parameter sweep only takes 1 second to run), for longer simulations there may
-be a time where you want to check the status of multi-planet. The command
-mpstatus does exactly this. Type the following command below:
+.. note::
+
+    The default number of cores :code:`multi-planet` will use is the maximum number of
+    cores on the machine.
+
+Checking :code:`multi-planet` Progress with :code:`mpstatus`
+-------------------------
+
+This example is quick to run (~1 minute, depending on the number of cores), but for
+longer simulations it is often
+helpful to know how far along the parameter sweep is. The command :code:`mpstatus` returns the
+current state of the :code:`multi-planet` process. To check the current status, type the
+following command:
 
 .. code-block:: bash
 
-    mpstatus paramexample
+    mpstatus vspace.in
 
-This command shows the status of the multi-planet that is running with that
-particular input file, paramexample. It should output the following to the
-terminal:
+This command returns output like the following to the terminal:
 
 .. code-block:: bash
 
       --Multi-Planet Status--
-    Number of Simulations completed:
-    Number of Simulations in progress:
-    Number of Simulations remaining:
+    Number of Simulations completed: 35
+    Number of Simulations in progress: 6
+    Number of Simulations remaining: 59
 
-But with the proper numbers shown. Now that Multi-planet is complete, let's
-extract the data using Bigplanet.
+But with the proper numbers shown.
 
-Bigplanet Usage Guide
+After :code:`multi-planet` completes, you may have a large number of directories with gigabytes
+of data. Storing, analyzing, and plotting these data can be tedious as each output file
+from each directory must be opened and read in sequentially. To streamline this process,
+use :code:`bigplanet`.
+
+Compressing Data with :code:`bigplanet`
 -------------------------------
 
-The last (and final) step is to use bigplanet to extract all the data needed
-in HDF5 format for easy access. To do so, type the following command in the
-terminal after multi-planet finishes:
+The :code:`bigplanet` command compresses your parameter sweep data into an HDF5 file in which
+specific data can be efficiently extracted. **Although compression can take some time,
+plotting with a** :code:`bigplanet` **file can be orders of magnitude faster because the script will
+not need to open files and each directory!**
+To compress the data, type the following command in the terminal (after multi-planet
+finishes):
 
 
 .. code-block:: bash
 
-    bigplanet -c 4 paramexample
+    bigplanet -c <num_cores> [-q] vspace.in
 
-The bigplanet arguments work identical to multi-planet’s with the user able to
-specify the number of processors bigplanet can use. In this example we are
-going to use 4 cores. This will create an HDF5 file that shares the same name
-as the destfolder from the vspace file which was ParameterSweep in the example.
-Now that the HDF5 file exists we can create a plot of the data we extracted.
+The bigplanet arguments work identically to :code:`multi-planet`’s with the user able to
+specify the number of processors :code:`bigplanet` can use. This will create an `HDF5
+<https://en.wikipedia.org/wiki/Hierarchical_Data_Format>`_ file
+that shares the same name as the destfolder from the :code:`vspace` file, but with ".hdf5"
+appended, e.g. ParameterSweep.hdf5. This file will now replace the directory structure
+created by :code:`vspace`. Use the -q option to suppress output to the terminal.
 
-BIgplanet Module
-++++++++++++++
+.. note::
 
-Bigplanet is multipurpose, as it also is a module that can be imported into
-python scripts for extraction of data from the HDF5 files. To start we are
-going to import bigplanet (and the other needed modules) and load in the HDF5
-file:
+    The default number of cores :code:`bigplanet` will use is the maximum number of
+    cores on the machine.
+
+Checking :code:`bigplanet` Progress with :code:`bpstatus`
+-------------------------
+
+For large data sets, :code:`bigplanet` may take several hours or more to complete. To check the
+status, use :code:`bpstatus`, which employs the same syntax as :code:`mpstatus` above.
+
+Extracting and Plotting with :code:`bigplanet`
+------------------------------
+
+After you have compressed your data, you need to access it. To accomplish this goal,
+:code:`bigplanet` is also a python module that can be imported into python scripts for the
+extraction of data from the HDF5 file. For our example, final inner core radius as a function of
+current potassium-40 abundance in the core and the initial core temerature, the script looks like
+this:
 
 .. code-block:: python
 
   import bigplanet as bp
-  import h5py as h5
   import matplotlib.pyplot as plt
   import vplot as vpl
 
-  HDF5_file = h5.File(‘ParameterSweep.hdf5’, ‘r’)
+  data = bp.HDF5File(‘ParameterSweep.hdf5’)
 
-This loads in the modules and reads in the HDF5 files as HDF5_file. Now to
-import the data we want to graph, which is the TCore and the TMan variables we
-changed in the vspace file.
-
-.. code-block:: python
-
-  TCore = bp.ExtractColumn(HDF5_File,'earth_TCore_initial')
-  TMan = bp.ExtractColumn(HDF5_File,'earth_TMan_initial')
-
-  SurfFLuxTot = bp.ExtractColumn(HDF5_File,'earth_SurfEnFluxTotal_initial')
-
-The first method we called, ``bp.ExtractColumns``, extracts the particular column
-from the HDF5 file. We want the initial Tcore and TMan, which are found in the
-earth portion of the earth.log file.
-We also grab the SurfFLuxTot as that will be our z variable for the contour
-plot later on.
-
-Next we want to grab the Unique Values from our x and y axis to make the contour
-plot. We do that by calling the ``ExtractUniqueValues`` function, like so:
+This loads in the necessary modules and reads in the HDF5 file as data. Now we are
+ready to extract the data we want to graph, which are the initial values of TCore,
+final values of potassium-40 power, and final values of the inner core radius. Let's
+start with inner core radius, grabbing its final values and its units:
 
 .. code-block:: python
 
-  TCore_uiq = bp.ExtractUniqueValues(HDF5_File,'earth_TCore_initial')
-  TMan_uniq = bp.ExtractUniqueValues(HDF5_File,'earth_TMan_initial')
+    RIC = bp.ExtractColumn(data,'earth_RIC_final')
+    RIC_units = bp.ExtractUnits(data,'earth_RIC_final')
 
-Once that is done, we need to create a 2D matrix from the shape of TCore, and
-Tman using the data from SurfEnFluxTotal. This easily can be done by calling
-the ``CreateMatrix`` function, which takes in the xaxis,yaxis and the zarray we
-want to be converted into a 2d matrix.
+ExtractColumn returns an array in which each element corresponds to the final
+value of the inner core radius for each simulation. The first argument is the HDF5
+file, the second argument is called a "key" and describes a parameter of
+interest. To learn more about keys, consult the `bigplanet documentation
+<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/multi-planet>`_.
+In brief, the key syntax is "body_variable_aggregation", in
+which aggregation is some property of a body's variable, e.g. the final value. The
+second line returns the units of the key.
+
+Next we want to grab the *x* and *y* values for our contour plot. This step is a bit complicated
+because a specific value of *x* and/or *y* can be repeated multiple times. In other words,
+if we just extracted every value from every simulation and placed it in an array, the
+arrays would be multi-valued and the plot could not be built.  To obtain the values
+needed for the plot, use the ``ExtractUniqueValues`` function, like so:
 
 .. code-block:: python
 
-  SurfFLuxTot_Zaxis = bp.CreateMatrix(TCore_uiq,TMan_uniq,SurfFLuxTot)
+    TCore_uniq = bp.ExtractUniqueValues(data,'earth_TCore_initial')
+    TCore_units = bp.ExtractUnits(data,'earth_TCore_initial')
 
-And finally we can plot the data with the ``plt.contour`` command. Let’s use the
-VPLanet official colors of blue. We can do that by setting the colors to be
-vpl.colors.darkblue.
+    K40_uniq = bp.ExtractUniqueValues(data,'earth_40KPowerCore_final')
+    K40_units = bp.ExtractUnits(data,'earth_40KPowerCore_final')
+
+Now we have the values we need for our plot, but the inner core radius is currently
+stored as an array, not a matrix, so we're still not ready to plot. With :code:`bigplanet` you
+can easily transform an array into the appropriately shaped matrix with the ``CreateMatrix``
+function:
 
 .. code-block:: python
 
-  plt.contour(TCore_uiq,TMan_uniq,SurfFLuxTot_Zaxis,colors = vpl.colors.orange)
+  RIC_Matrix = bp.CreateMatrix(TCore_uniq,K40_uniq,RIC)
 
-This should produce the following plot:
+This method takes 3 arguments, the *x*-axis vector, the *y*-axis vector, and the array
+that must be converted into a 2D matrix.
 
-.. figure:: parametersweep.png
+Now we're ready to plot using :code:`vplot` and :code:`matplotlib.` We won't show the lines of code here,
+but remember this example is included in `examples/BigPlanetExample
+<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/BigPlanetExample>`_.
+Ultimately, you will obtain the following plot, which includes a black curve for the current value
+of Earth's inner core radius.
+
+.. figure:: BigPlanetExample.png
+
+Creating Meta-Data Files with :code:`bigplanet`
+----------------------------
+
+Finally, it's often convenient to write out ASCII files in which each line contains the meta-data
+for your parameter sweep, e.g. the initial eccentricity, the final semi-major axis, and the maximum
+inclination. :code:`bigplanet` facilitates the creation of these files with the ``WriteOutput`` method:
+
+.. code-block:: python
+
+    WriteOutput(inputfile, columns, file="bigplanet.out", delim=" ", header=False, ulysses=False)
+
+where:
+
+*inputfile* is the name of the HDF5 file
+
+*columns* is the list of keys you are extracting, i.e. the output from calls to ExtractColumn
+
+*File* is the name of the output file
+
+*delim* is the delimiter for the output file (the default is spaces)
+
+*header* adds the names and units for each column (default is False)
+
+*ulysses* makes the file compatable with `VR Ulysses <https://www.vrulysses.com/>`_ (default is False)
+
+
+You are now ready to efficiently explore your parameter space!

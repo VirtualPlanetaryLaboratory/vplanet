@@ -2,10 +2,6 @@ BigPlanet
 -----
 A suite of data analysis and extraction routines for ``VPLanet``.
 
-Overview
-========
-
-
 Installation
 ============
 Navigate to the BigPlanet directory (this directory) and run the ``setup`` script
@@ -25,11 +21,12 @@ has completed, simply run the following command in the in the command line:
 
 .. code-block:: bash
 
-    bigplanet <input file> --c [number of cores]
+    bigplanet <input file> -c [number of cores] -q
 
-where the input file is the same file used to run vspace and multi-planet. There
-is an optional argument which is the number of processors used. The default number
-of processors is the maximum number on the machine.
+where the input file is the same file used to run vspace and multi-planet.
+There are two optional arguments:
+:code:`-c` : the number of processors used
+:code:`-q` : quiet mode (nothing is printed to the command line)
 
 Module Usage
 ============
@@ -47,9 +44,10 @@ variable known as a key (ExtractColumn), Extract the units of a particular key v
 create a Matrix based on two keys (CreateMatrix) and writing out a list of keys
 to a csv file (WriteOutput).
 
+
 .. note::
 
-	  Keys using the following format for naming: body_variable_aggregation
+    Keys using the following format for naming: body_variable_aggregation
 
 
 **PrintKeys**
@@ -176,9 +174,11 @@ Keys are the bread and butter of BigPlanet. The keys, as briefly mentioned above
 are the names of the various variables that BigPlanet has extracted from the forward file
 and the log file that are generated when VPLanet finishes compiling.
 
+
 .. note::
 
 	  Keys using the following format for naming: body_variable_aggregation
+
 
 Below is a table of all the various aggregations available at this time:
 
@@ -208,8 +208,8 @@ Below is a table of all the various aggregations available at this time:
 
 .. warning::
 
-  The following aggregations will **only** work with parameters that are from the *forward* file.
-  If you attempt to use it with a value that is **NOT** in the forward file, it will produce an error
+    The following aggregations will **only** work with parameters that are from the *forward* file.
+    If you attempt to use it with a value that is **NOT** in the forward file, it will produce an error
 
 
 

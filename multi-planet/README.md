@@ -16,9 +16,10 @@ which also places `mpstatus` in your PATH.
 
 To run `multi-planet` on a large number of simulations, first run `vspace` to create the simulation folders. Then, in that same directory, type:
 ```
-multi-planet <input file> -c [number of cores]
+multi-planet -q -bp <input file> -c [number of cores]
 ```
-where the "input file" **must be the same file** used with `vspace`. You can specify the number of cores, but the default is the maximum number of cores.
+Where the "input file" **must be the same file** used with `vspace`. You can specify the number of cores, but the default is the maximum number of cores. 
+There are two optional arguments for multi-planet: `-q` means there will be no output in the command line and `-bp` means that bigplanet will be ran in conjuction with multi-planet. Read a more in-depth guide of `bigplanet` [documentation](https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/bigplanet) for more information.
 
 Should your run be interrupted for whatever reason, just run `multi-planet` again and it should restart where it left off.
 

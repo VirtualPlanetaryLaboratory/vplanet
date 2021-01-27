@@ -17,26 +17,21 @@ print('done.')
 tot_fail = 0
 tot_test = 0
 for sub in subdir:
+    tot_test += 1
+    sys.stdout.write(sub)
+    sys.stdout.flush()
     os.chdir(sub)
-    if not os.path.exists("vspace.in"):     # Ignore vspace and multi-planet
-        tot_test += 1
-        sys.stdout.write(sub)
-        sys.stdout.flush()
-        fout = sub+'.valgrind'
-        cmd='valgrind --track-origins=yes ../../vplanet vpl.in >& '+fout
-        subprocess.run(cmd, shell=True)
-        f = open(fout, "r")
-        last_line = f.readlines()[-1]
-        f.close()
-        words = last_line.split()
-        n_errors = int(words[3])
-        if n_errors > 0:
-            tot_fail += 1
-            print(': '+repr(n_errors)+' error(s)')
-            sys.stdout.flush()
-        else:
-            print(": No errors")
-            sys.stdout.flush()
+    fout = sub+'.valgrind'
+    cmd='valgrind --track-origins=yes ../../vplanet vpl.in >& '+fout
+    subprocess.run(cmd, shell=True)
+    f = open(fout, "r")
+    last_line = f.readlines()[-1]
+    f.close()
+    words = last_line.split()
+    n_errors = int(words[3])
+    if n_errors > 0:
+        tot_fail += 1
+    print(': '+repr(n_errors)+' error(s)')
     os.chdir('..')
 
 sys.stdout.write('Done! ')

@@ -53,4 +53,4 @@ saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
     -232ThPowerCrust -232ThNumCrust -232ThMassCrust $
     -40KPowerMan -40KNumMan -40KMassMan -40KPowerCore -40KNumCore -40KMassCore $
     -40KPowerCrust -40KNumCrust -40KMassCrust ChiOC ChiIC MassChiOC MassChiIC MassOC MassIC $
-    -RadPowerTotal
+    -RadPowerTotal -SurfEnFluxTotal

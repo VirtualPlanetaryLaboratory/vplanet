@@ -20,6 +20,7 @@ systems with habitable worlds.
    examples
    src
    vplot
+   parametersweep
    developers
    GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet>
 

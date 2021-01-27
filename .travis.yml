@@ -2,6 +2,9 @@ dist: trusty
 
 language: c
 
+compiler:
+    gcc
+
 addons:
     apt:
         sources:
@@ -30,7 +33,8 @@ git:
     lfs_skip_smudge: true
 
 script:
-    - py.test -v -s tests
+    - make coverage
 
 after_success:
-    - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then source .ci/build-docs.sh; fi
+    - source .ci/build-docs.sh
+    - bash <(curl -s https://codecov.io/bash)

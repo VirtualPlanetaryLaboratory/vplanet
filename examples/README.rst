@@ -3,9 +3,13 @@ VPLanet Examples
 
 This subdirectory contains examples of numerous ways to use `VPLanet`. A brief
 description of each is provided below, arranged by topic [with modules listed in brackets]. Click on the directory to see VPLanet input files, python scripts,
-plots, and more description of the physics. Use these VPLanet input files and python scripts to reproduce published figures, or as a starting point to begin your own fundamental research. The simulations used to generate these figures are `validated with continuous integration <../tests>`_ with the identical (or representative, in the case of parameter sweeps) initial conditions. Looking for something not present? E-mail Rory Barnes, rory@astro.washington.edu, to inquire if that functionality is available and validated.
+plots, and more description of the physics. Use these VPLanet input files and python scripts to reproduce published figures, or as a starting point to begin your own fundamental research. The simulations used to generate these figures are `validated with continuous integration <../tests>`_ with the identical, or representative, initial conditions (except for ParameterSweep, which is an example of how to survey a set of initial conditions). Looking for something not present? E-mail Rory Barnes, rory@astro.washington.edu, to inquire if that functionality is available and validated.
 
 To run the python scripts and generate the figures in the subdirectories, **you must install** `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_. Note, however, that you can run VPLanet with installing vplot and use your preferred method to visualize the output.
+
+**General**
+==========
+`ParameterSweep <ParameterSweep>`_: Example of how to use the included tools to generate, run, and visualize a parameter sweep. [vpsace, multi-planet, bigplanet]
 
 **Atmospheric Escape**
 ===============

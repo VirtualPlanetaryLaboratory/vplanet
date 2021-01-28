@@ -27,7 +27,11 @@ command in the in the command line:
 
 .. code-block:: bash
 
+<<<<<<< HEAD
+    bigplanet -c [number of cores] <input file>
+=======
     bigplanet <input file> -c [number of cores] -q
+>>>>>>> b86e522894269fa774de08845318d2a3777432fb
 
 where the input file is the same file used to run vspace and multi-planet.
 There are two optional arguments:
@@ -126,6 +130,19 @@ where:
 
 *Key* is the name of the particular variable you are extracting the units from.
 
+**CreateHDF5File**
+
+CreateHDF5File is a function that creates an HDF5 file from the input file that is passed
+to the function. This is mainly used if you forgot to run bigplanet or want to run all
+the code for bigplanet in module format
+
+.. code-block:: python
+
+    CreateHDF5File(inputfile)
+
+where:
+
+*inputfile* is the same file used to run vspace and multi-planet
 
 
 **CreateMatrix**
@@ -210,12 +227,19 @@ Below is a table of all the various aggregations available at this time:
      - returns a nested list of the *forward* values of the particular
        parameter for every simulation
      - body_variable_forward
+   * - Climate
+     - if the Poise Module was used in the simulations, the climate options
+       returns a nested list of the *climate* values of the particular
+       parameter for every simulation
+     - body_variable_climate
 
 
 .. warning::
 
-    The following aggregations will **only** work with parameters that are from the *forward* file.
-    If you attempt to use it with a value that is **NOT** in the forward file, it will produce an error
+    The following aggregations will **only** work with parameters that are
+    from the *forward* file.
+    If you attempt to use it with a value that is **NOT** in the forward file,
+    it will produce an error.
 
 
 

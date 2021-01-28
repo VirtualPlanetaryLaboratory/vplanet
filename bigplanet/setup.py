@@ -62,7 +62,8 @@ setup(name = 'bigplanet',
       packages = ['bigplanet'],
       entry_points = {
           'console_scripts': [
-               'bigplanet = bigplanet.bigplanet:main'
+               'bigplanet = bigplanet.bigplanet:main',
+               'bpstatus = bigplanet.bpstatus:main'
           ],
       },
       install_requires = [

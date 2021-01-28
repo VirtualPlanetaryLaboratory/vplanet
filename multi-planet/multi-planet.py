@@ -6,13 +6,13 @@ import mmap
 import argparse
 import h5py
 import numpy as np
-from bigplanet import CreateHDF5,merge_data,load,save
+from bigplanet import CreateHDF5,merge_data,load,save,CreateMasterHDF5
 from collections import OrderedDict
 
 # --------------------------------------------------------------------
 
 ## parallel implementation of running vplanet over a directory ##
-def parallel_run_planet(input_file, cores,bigplanet):
+def parallel_run_planet(input_file, cores, quiet, bigplanet):
     # gets the folder name with all the sims
     folder_name, infiles = GetDir(input_file)
     #gets the list of sims
@@ -33,8 +33,9 @@ def parallel_run_planet(input_file, cores,bigplanet):
     #if it does exist, it checks for any 0's (sims that didn't complete) and
     #changes them to -1 to be re-ran
     else:
-        print('WARNING: multi-planet checkpoint file already exists!')
-        print('Checking if checkpoint file is corrupt...')
+        if quiet == False:
+            print('WARNING: multi-planet checkpoint file already exists!')
+            print('Checking if checkpoint file is corrupt...')
 
         sub.run(['rm', checkpoint_file])
         #restarts the checkpoint file from scratch
@@ -106,37 +107,14 @@ def parallel_run_planet(input_file, cores,bigplanet):
     lock = mp.Lock()
     workers = []
     for i in range(cores):
-        workers.append(mp.Process(target=par_worker, args=(checkpoint_file,infiles,system_name,logfile,bigplanet,lock)))
+        workers.append(mp.Process(target=par_worker, args=(checkpoint_file,infiles,system_name,logfile,quiet,bigplanet,lock)))
     for w in workers:
         w.start()
     for w in workers:
         w.join()
 
     if bigplanet == True:
-        print("Creating Master hdf5 file...")
-        master_file = folder_name + '.hdf5'
-        filelist = []
-
-        for i in sims:
-            single_folder = i.split('/')[-1]
-            HDF5_File = single_folder + '.hdf5'
-            HDF5_path = i + '/' + HDF5_File
-            filelist.append(HDF5_path)
-
-        data = OrderedDict()
-
-        for f in filelist:
-            data[f] = load(f)
-
-        save(master_file, merge_data(data))
-
-        i = filelist[0]
-
-        with h5py.File(i,'r') as filename:
-            with h5py.File(master_file,'r+') as master_W:
-                for k in filename.keys():
-                    units = filename[k].attrs.get('Units')
-                    master_W[k].attrs['Units'] = units
+        CreateMasterHDF5(folder_name,sims)
 
 def GetDir(input_file):
     """ Give it input file and returns name of folder where simulations are located. """
@@ -165,7 +143,7 @@ def GetDir(input_file):
 
 
 ## parallel worker to run vplanet ##
-def par_worker(checkpoint_file,infiles,system_name,logfile,bigplanet,lock):
+def par_worker(checkpoint_file,infiles,system_name,logfile,quiet,bigplanet,lock):
 
     while True:
 
@@ -219,18 +197,20 @@ def par_worker(checkpoint_file,infiles,system_name,logfile,bigplanet,lock):
                 if l[0] == folder:
                     l[1] = '1'
                     break
-            print("Simulation ", folder, "completed")
+            if quiet == False:
+                print(folder, "completed")
             if bigplanet == True:
-                print("Creating HDF5 File...")
                 single_folder = folder.split('/')[-1]
                 HDF5_File = single_folder + '.hdf5'
-                CreateHDF5(data, system_name, infiles, logfile, HDF5_File)
+                data = {}
+                CreateHDF5(data, system_name, infiles, logfile, quiet, HDF5_File)
         else:
             for l in datalist:
                 if l[0] == folder:
                     l[1] = '-1'
                     break
-            print("\t" + folder, "failed")
+            if quiet == False:
+                print(folder, "failed")
 
         with open(checkpoint_file, 'w') as f:
             for newline in datalist:
@@ -247,9 +227,10 @@ if __name__ == "__main__":
 
     max_cores = mp.cpu_count()
     parser = argparse.ArgumentParser(description="Using multi-processing to run a large number of simulations")
+    parser.add_argument("-c","--cores", type=int, default=max_cores, help="The total number of processors used")
+    parser.add_argument("-q","--quiet", action="store_true", help="no output for multi-planet")
+    parser.add_argument("-bp","--bigplanet", action="store_true" ,help="Runs bigplanet and creates the HDF5 files alongside running mutlt-planet")
     parser.add_argument("InputFile", help="name of the vspace file")
-    parser.add_argument("-c","--cores",type=int,default=max_cores,help="The total number of processors used")
-    parser.add_argument("-bp","--bigplanet",type=bool,default=False,help="Runs bigplanet and creates the HDF5 files alongside running mutlt-planet")
     args = parser.parse_args()
 
     try:
@@ -260,4 +241,4 @@ if __name__ == "__main__":
     except OSError:
         raise Exception("Unable to call VPLANET. Is it in your PATH?")
 
-    parallel_run_planet(args.InputFile,args.cores,args.bigplanet)
+    parallel_run_planet(args.InputFile,args.cores,args.quiet,args.bigplanet)

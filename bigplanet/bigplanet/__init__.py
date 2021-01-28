@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@author: dflemin3 2017
+@author: cwilhelm 2020
 
 bigplanet package init file.
 
@@ -9,8 +9,8 @@ bigplanet package init file.
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-__version__ = "0.21"
-__author__ = "David Fleming (dflemin3@uw.edu)"
-__copyright__ = "Copyright 2017 David P. Fleming"
+__version__ = "1.0"
+__author__ = "Caitlyn Wilhelm (cwilhelm@uw.edu)"
+__copyright__ = "Copyright 2020  Caitlyn Wilhelm"
 
 from .bigplanet import *

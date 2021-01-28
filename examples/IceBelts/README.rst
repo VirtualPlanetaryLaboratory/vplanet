@@ -4,7 +4,7 @@ Ice Belt Formation on High Obliquity Planets
 Overview
 --------
 
-Formation on an ice belt on a terretrial planet with high obliquity
+Formation on an ice belt on a terrestrial planet with high obliquity
 
 ===================   ============
 **Date**              10/16/19

@@ -10,9 +10,9 @@ temperature) and d40KPowerCore (initial radiogenic power from potassium-40).
 
 
 ===================   ============
-**Date**              1/26/2020
+**Date**              1/26/2021
 **Author**            Caitlyn Wilhelm
-**Modules**           THERMINT
+**Modules**           ThermInt, vspace, multi-planet, bigplanet
 **Approx. runtime**   160 Seconds
 ===================   ============
 
@@ -31,6 +31,6 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: ParameterSweep.png
+.. figure:: ../../docs/ParameterSweep.png
    :width: 600px
    :align: center

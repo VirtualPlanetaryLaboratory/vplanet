@@ -31,6 +31,6 @@ To run this example
 Expected output
 ---------------
 
-.. figure:: ../../docs/ParameterSweep.png
+.. figure:: ../../docs/BigplanetExample.png
    :width: 600px
    :align: center

@@ -36,5 +36,5 @@ script:
     - make coverage
 
 after_success:
-    - source .ci/build-docs.sh
+    - if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi
     - bash <(curl -s https://codecov.io/bash)

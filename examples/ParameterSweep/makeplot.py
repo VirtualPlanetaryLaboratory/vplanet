@@ -4,11 +4,12 @@ import bigplanet as bp
 import h5py as h5
 import matplotlib.pyplot as plt
 import vplot as vpl
+import sys
 import os
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-data = h5.File('ParameterSweep.hdf5', 'r')
+data = bp.HDF5File('ParameterSweep.hdf5')
 
 RIC = bp.ExtractColumn(data,'earth_RIC_final')
 RIC_units = bp.ExtractUnits(data,'earth_RIC_final')
@@ -43,7 +44,7 @@ plt.clabel(cont,fmt="%.0f",fontsize=15)
 cont = plt.contour(TCore_uniq,K40_uniq,RIC_Matrix,levels=[1221])
 plt.clabel(cont,fmt="%.0f",fontsize=15)
 
-#plt.show()
-#plt.close()
-
-plt.savefig('BigPlanetExample.png')
+if (sys.argv[1] == 'pdf'):
+    plt.savefig('ParameterSweep.pdf', dpi=300)
+if (sys.argv[1] == 'png'):
+    plt.savefig('ParameterSweep.png', dpi=300)

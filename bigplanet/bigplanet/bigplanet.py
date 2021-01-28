@@ -360,8 +360,8 @@ def CreateHDF5(data, system_name, infiles, logfile, quiet, h5filename):
 
     with h5py.File(h5filename, 'w') as h:
         for k, v in data.items():
-            print("Key:",k)
-            print("Length of Value:",len(v))
+            #print("Key:",k)
+            #print("Length of Value:",len(v))
             if len(v) == 2:
                 v_attr = v[0]
                 v_value = [v[1]]
@@ -369,8 +369,8 @@ def CreateHDF5(data, system_name, infiles, logfile, quiet, h5filename):
             else:
                 v_value = v[0]
                 v_attr = ''
-            print("Units:",v_attr)
-            print()
+            #print("Units:",v_attr)
+            #print()
             h.create_dataset(k, data=np.array(v_value,dtype='S'),compression = 'gzip')
             h[k].attrs['Units'] = v_attr
 

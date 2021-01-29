@@ -216,8 +216,8 @@ function:
 
   RIC_Matrix = bp.CreateMatrix(TCore_uniq,K40_uniq,RIC)
 
-This method takes 3 arguments, the *x*-axis vector, the *y*-axis vector, and the array
-that must be converted into a 2D matrix.
+This method takes 3 arguments and 1 optional argument, the *x*-axis vector, the *y*-axis vector, the array
+that must be converted into a 2D matrix and an optional orientation argument.
 
 Now we're ready to plot using :code:`vplot` and :code:`matplotlib.` We won't show the lines of code here,
 but remember this example is included in `examples/BigPlanetExample

@@ -33,11 +33,6 @@ def test_bpcreatehdf5():
         folders = sorted([f.path for f in os.scandir(dir) if f.is_dir()])
         #checks if the hdf5 files exist
         assert os.path.isfile((dir + '.hdf5')) == True
-        for i in range(len(folders)):
-            os.chdir(folders[i])
-            split = folders[i].split('/')[-1]
-            assert os.path.isfile(split + '.hdf5') == True
-            os.chdir('../')
 
 if __name__ == "__main__":
     test_bpcreatehdf5()

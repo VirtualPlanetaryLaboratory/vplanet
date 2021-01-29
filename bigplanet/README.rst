@@ -153,7 +153,7 @@ arguments:
 
 .. code-block:: python
 
-    CreateMatrix(xaxis,yaxis,zarray)
+    CreateMatrix(xaxis,yaxis,zarray,orientation=1)
 
 where:
 
@@ -162,6 +162,9 @@ where:
 *yaxis* is the ExtractUniqueValues() of the column you want the xaxis to be
 
 *zarray* is the ExtractColumn() of what you want the zaxis to be
+
+*orientation* is the orientation of the data based on a 4 quadrant grid.
+The default is 1, or bottom left corner.
 
 
 

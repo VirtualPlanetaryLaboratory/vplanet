@@ -163,8 +163,8 @@ where:
 
 *zarray* is the ExtractColumn() of what you want the zaxis to be
 
-*orientation* is the orientation of the data based on a 4 quadrant grid.
-The default is 1, or bottom left corner.
+*orientation* is the orientation of the data based on a 4 quadrant grid that
+goes counter clockwise in 90 degree interments. The default is 1, or bottom left corner.
 
 
 

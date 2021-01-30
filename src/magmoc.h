@@ -109,6 +109,8 @@
 #define OPT_MAGMOCATMMODEL        2321
 #define OPT_CO2MASSMOATM          2322
 #define OPT_MANQUASISOL           2323
+#define OPT_WATERPARTCOEFF        2324
+#define OPT_DEPTHMO               2325
 
 void AddModuleMagmOc(MODULE*,int,int);
 void BodyCopyMagmOc(BODY*,BODY*,int,int,int);
@@ -121,6 +123,8 @@ void ReadWaterMassAtm(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadCO2MassMOAtm(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadSurfTemp(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadManMeltDensity(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadWaterPartCoeff(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadDepthMO(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 void ReadOptionsMagmOc(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
 
 /* Halt Functions */

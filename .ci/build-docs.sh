@@ -4,7 +4,7 @@
 # Make the docs
 cd $TRAVIS_BUILD_DIR/docs
 make html
-python scoreboard.py
+#python scoreboard.py
 cp sphinx_rtd_theme/static/css/theme.css .build/html/_static/css/theme.css
 
 # Begin

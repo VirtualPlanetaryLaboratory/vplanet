@@ -2,10 +2,14 @@ VPLanet Examples
 ================
 
 This subdirectory contains examples of numerous ways to use `VPLanet`. A brief
-description of each is provided below, arranged by topic [with modules listed in brackets]. Click on the directory to see VPLanet input files, Python scripts,
-plots, and more description of the physics. Use these VPLanet input files and Python scripts to reproduce published figures, or as a starting point to begin your own fundamental research. The simulations used to generate these figures are `validated with continuous integration <../tests>`_ with the identical (or representative, in the case of parameter sweeps) initial conditions. Looking for something not present? E-mail Rory Barnes, rory@astro.washington.edu, to inquire if that functionality is available and validated.
+description of each is provided below, arranged by topic [with modules listed in brackets]. Click on the directory to see VPLanet input files, python scripts,
+plots, and more description of the physics. Use these VPLanet input files and python scripts to reproduce published figures, or as a starting point to begin your own fundamental research. The simulations used to generate these figures are `validated with continuous integration <../tests>`_ with the identical, or representative, initial conditions (except for ParameterSweep, which is an example of how to survey a set of initial conditions). Looking for something not present? E-mail Rory Barnes, rory@astro.washington.edu, to inquire if that functionality is available and validated.
 
-To run the Python scripts and generate the figures in the subdirectories, you must install `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_. Note, however, that you can run VPLanet with installing vplot and use your preferred method to visualize the output.
+To run the python scripts and generate the figures in the subdirectories, **you must install** `vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_. Note, however, that you can run VPLanet with installing vplot and use your preferred method to visualize the output.
+
+**General**
+==========
+`ParameterSweep <ParameterSweep>`_: Example of how to use the included tools to generate, run, and visualize a parameter sweep. [vpsace, multi-planet, bigplanet]
 
 **Atmospheric Escape**
 ===============
@@ -22,6 +26,12 @@ To run the Python scripts and generate the figures in the subdirectories, you mu
 the CPL tidal model with hydrogen escape via energy-limited,
 radiation-recombination-limited, Bondi-limited, and automatic models. [AtmEsc,
 EqTide, STELLAR]
+
+`MagmOc_Earth <MagmOc_Earth>`_: Earth's magma ocean evolution, ignoring tidal or radiogenic heating. [AtmEsc, MagmOc, Stellar]
+
+`MagmOc_GJ1132b <MagmOc_GJ1132b>`_: GJ 1132 b's magma ocean evolution, ignoring tidal or radiogenic heating. [AtmEsc, MagmOc, Stellar]
+
+`MagmOc_Trappist1g <MagmOc_Trappist1g>`_: Trappist-1 g's magma ocean evolution, including tidal and radiogenic heating. [AtmEsc, EqTide, MagmOc, RadHeat, Stellar]
 
 `MiniNeptuneEvap <MiniNeptuneEvap>`_: Removal of a mini-Neptune's isothermal hydrogen atmosphere by high energy radiation and/or Roche lobe overflow. [AtmEsc, STELLAR]
 
@@ -53,6 +63,12 @@ STELLAR]
 
 `IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity according to equilibrium tide theory. [EqTide, VSPACE]
 
+`MagmOc_Earth <MagmOc_Earth>`_: Earth's magma ocean evolution, ignoring tidal or radiogenic heating. [AtmEsc, MagmOc, Stellar]
+
+`MagmOc_GJ1132b <MagmOc_GJ1132b>`_: GJ 1132 b's magma ocean evolution, ignoring tidal or radiogenic heating. [AtmEsc, MagmOc, Stellar]
+
+`MagmOc_Trappist1g <MagmOc_Trappist1g>`_: Trappist-1 g's magma ocean evolution, including tidal and radiogenic heating. [AtmEsc, EqTide, MagmOc, RadHeat, Stellar]
+
 `RadHeat <RadHeat>`_: Radiogenic heating evolution in Earth's core, mantle, and crust. [RadHeat]
 
 `TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a low mass star and tidally heated. [EqTide, RadHeat, ThermInt]
@@ -66,9 +82,9 @@ STELLAR]
 
 `CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [DistOrb, DistRot, EqTide]
 
-`CassiniMulti <CassiniMulti>`_: Tidal damping of the two planets orbiting Teegarden's Star into Cassini states. [EqTide, DistOrb, DistRot, STELLAR]
+`CassiniMulti <CassiniMulti>`_: Tidal damping of the two planets orbiting Teegarden's Star into Cassini states. [DistOrb, DistRot, EqTide, STELLAR]
 
-`ChaoticResonances <ChaoticResonances>`_: N-body integration of a planetary system in a chaotic eccentricity-inclination mean motion resonance. [SpiNBody]
+`ChaoticResonances <ChaoticResonances>`_: Direct, first-principles calculation of a planetary system in a chaotic eccentricity-inclination mean motion resonance. [SpiNBody]
 
 `CircumbinaryOrbit <CircumbinaryOrbit>`_: Orbital evolution of a circumbinary planet. [BINARY]
 
@@ -80,6 +96,8 @@ STELLAR]
 pulsar planet system PSR1257+12. [AtmEsc, SpiNBody]
 
 `SSDistOrbDistRot <SSDistOrbDistRot>`_: Evolution of the Solar System planets' orbital and rotational angular momenta from approximate models. [DistOrb, DistRot]
+
+`SS_NBody <SS_NBody>`_: Direct, first-principles calculation of the Solar System's Planets [SpiNBody]
 
 `TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a low mass star and tidally heated. [EqTide, RadHeat, ThermInt]
 
@@ -103,7 +121,7 @@ pulsar planet system PSR1257+12. [AtmEsc, SpiNBody]
 
 `CassiniStates <CassiniStates>`_: Decay of a body's obliquity to a constant value due to perturbations from other bodies and tidal damping. [DistOrb, DistRot, EqTide]
 
-`CassiniMulti <CassiniMulti>`_: Tidal damping of the two planets orbiting Teegarden's Star into Cassini states. [EqTide, DistOrb, DistRot, STELLAR]
+`CassiniMulti <CassiniMulti>`_: Tidal damping of the two planets orbiting Teegarden's Star into Cassini states. [DistOrb, DistRot, EqTide, STELLAR]
 
 `DampedCBP <DampedCBP>`_: Evolution of planet orbiting a tidally evolving binary star. [BINARY, EqTide, STELLAR]
 
@@ -114,8 +132,9 @@ EqTide, STELLAR]
 
 `IoHeat <IoHeat>`_: Tidal heating of Io as a function of eccentricity and obliquity according to equilibrium tide theory. [EqTide, VSPACE]
 
-`STEEP <STEEP>`_: Tidal evolution of a binary star, including the instability radius for circumbinary planets. [EqTide, STELLAR]
+`MagmOc_Trappist1g <MagmOc_Trappist1g>`_: Trappist-1 g's magma ocean evolution, including tidal and radiogenic heating. [AtmEsc, EqTide, MagmOc, RadHeat, Stellar]
 
+`STEEP <STEEP>`_: Tidal evolution of a binary star, including the instability radius for circumbinary planets. [EqTide, STELLAR]
 
 `TidalEarth <TidalEarth>`_: Coupled internal/orbital/tidal evolution of Earth if it were in the habitable zone of a low mass star and tidally heated. [EqTide, RadHeat, ThermInt]
 

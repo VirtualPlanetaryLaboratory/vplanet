@@ -17,7 +17,7 @@
 *.Inc.Eigen
 SeasonalClimateFiles
 *.hdf5
-.*
+
 
 #files created from running tests
 tests/Multi-PlanetCheckpoint/MP_Checkpoint/
@@ -34,8 +34,6 @@ tests/BigPlanetStats/BP_Stats/
 
 # Examples
 examples/ParameterSweep/ParameterSweep/
-
-
 
 # Aux files / build info / garbage
 merge-from-public.sh

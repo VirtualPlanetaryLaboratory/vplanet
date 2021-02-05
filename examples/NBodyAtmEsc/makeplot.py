@@ -31,7 +31,7 @@ os.chdir("..")
 print("Running VPLanet.")
 subp.call(['vplanet','vpl.in'])
 
-output = vpl.GetOutput()
+output = vpl.get_output()
 
 # Plot
 fig, axes = plt.subplots(nrows=2, ncols=2)

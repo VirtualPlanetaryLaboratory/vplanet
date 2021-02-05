@@ -12,8 +12,8 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('ERROR: Unknown file format: '+sys.argv[1])
     print('Options are: pdf, png')
     exit(1)
-out = vplot.GetOutput()
-out2 = vplot.GetOutput('tides_only')
+out = vplot.get_output()
+out2 = vplot.get_output('tides_only')
 
 plt.figure(figsize=(8.5,6))
 q = out.comp.SemiMajorAxis*(1-out.comp.Eccentricity)

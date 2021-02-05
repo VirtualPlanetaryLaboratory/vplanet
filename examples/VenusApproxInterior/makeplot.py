@@ -19,7 +19,7 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png' and sys.argv[1] != '-n'):
     print('Options are: pdf, png')
     exit(1)
 
-out = vplot.GetOutput()
+out = vplot.get_output()
 # Print final state
 #print('Final: t=%.3f TUMan=%.1f TMan=%.1f TCMB=%.1f HflowUMan=%.1f HflowMeltMan=%.1f HflowCMB=%.1f RadPowerMan=%.1f RadPowerCore=%.1f FMeltUMan=%.2f MeltMassFlux=%.1e ViscUMan=%.1e ViscLMan=%.1e MagMom=%.1f RIC=%.1f'%(out.venus.Time[-1],out.venus.TUMan[-1],out.venus.TMan[-1],out.venus.TCMB[-1],out.venus.HflowUMan[-1],out.venus.HflowMeltMan[-1],out.venus.HflowCMB[-1],out.venus.RadPowerMan[-1],out.venus.RadPowerCore[-1],out.venus.FMeltUMan[-1],out.venus.MeltMassFluxMan[-1],out.venus.ViscUMan[-1],out.venus.ViscLMan[-1],out.venus.MagMom[-1],out.venus.RIC[-1]))
 

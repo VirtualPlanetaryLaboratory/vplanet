@@ -78,7 +78,7 @@ def run(envmass, mass):
     write_in(envmass, mass)
     subprocess.call(['vplanet', 'vpl.in'])
     #exit()
-    output = vpl.GetOutput()
+    output = vpl.get_output()
     envmassfinal = np.zeros(len(output.bodies) - 1)
     for i, body in enumerate(output.bodies[1:]):
         envmassfinal[i] = body.EnvelopeMass[-1]

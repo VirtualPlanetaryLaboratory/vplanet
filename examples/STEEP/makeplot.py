@@ -50,7 +50,7 @@ colors = [vpl.colors.red, vpl.colors.purple,
 #Extracting and plotting the data from each folder
 for ii in range(len(dataDirs)):
     # Load data
-    output = vpl.GetOutput(os.path.join(dirPath,dataDirs[ii]))
+    output = vpl.get_output(os.path.join(dirPath,dataDirs[ii]))
 
     # Extract data
     time = output.secondary.Time

@@ -44,8 +44,8 @@ for dir in dirs:
 os.chdir(dir_path)
 
 # Load data
-regimes = vpl.GetOutput("./Regimes")
-bondi = vpl.GetOutput("./Bondi")
+regimes = vpl.get_output("./Regimes")
+bondi = vpl.get_output("./Bondi")
 
 ### First figure: Comparative atmospheric escape ###
 

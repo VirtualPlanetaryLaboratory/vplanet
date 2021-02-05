@@ -16,7 +16,7 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     exit(1)
 
 subprocess.call(['vplanet', 'vpl.in'])
-out = vpl.GetOutput()
+out = vpl.get_output()
 
 time = out.TGstar.Time/1e3
 

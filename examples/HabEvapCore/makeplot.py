@@ -33,7 +33,7 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
 subprocess.call(['vplanet', '-q', 'vpl.in'])
 
 # Make object for each simulation set to hold data
-prox = vpl.GetOutput()
+prox = vpl.get_output()
 
 # Time grid same for all simulations
 time = prox.ProxCenELim.Time/1e6

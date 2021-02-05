@@ -38,8 +38,8 @@ for dir in dirs:
 os.chdir(dir_path)
 
 # Load data
-lc17 = vpl.GetOutput("./LehmerCatling17")
-dyn = vpl.GetOutput("./Dynamic")
+lc17 = vpl.get_output("./LehmerCatling17")
+dyn = vpl.get_output("./Dynamic")
 
 ### First figure: Comparative atmospheric escape ###
 

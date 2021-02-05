@@ -17,7 +17,7 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('Options are: pdf, png')
     exit(1)
 
-output = vpl.GetOutput()
+output = vpl.get_output()
 time = output.sun.Age
 planets = output.bodies[1:]
 N = len(planets)

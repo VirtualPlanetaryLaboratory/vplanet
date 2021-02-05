@@ -16,7 +16,7 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('Options are: pdf, png')
     exit(1)
 
-out = vplot.GetOutput()
+out = vplot.get_output()
 
 fig = plt.figure(figsize=(8.5,6))
 plt.subplot(2,2,1)

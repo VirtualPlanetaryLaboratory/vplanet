@@ -68,7 +68,7 @@ def HZLims(M):
 
     # Run
     subprocess.call(['vplanet', 'vpl.in'])
-    output = vpl.GetOutput()
+    output = vpl.get_output()
     return output.bodies[0].HZLimRecVenus[-1], \
         output.bodies[0].HZLimRunaway[-1], \
         output.bodies[0].HZLimMaxGreenhouse[-1], \
@@ -98,7 +98,7 @@ def run(mass, semi):
     """Run vplanet and collect the output."""
     write_in(mass, semi)
     subprocess.call(['vplanet', 'vpl.in'])
-    output = vpl.GetOutput()
+    output = vpl.get_output()
     water = np.zeros(len(output.bodies) - 1)
     o2 = np.zeros(len(output.bodies) - 1)
     for i, body in enumerate(output.bodies[1:]):

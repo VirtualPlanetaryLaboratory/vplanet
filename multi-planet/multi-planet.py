@@ -23,74 +23,12 @@ def parallel_run_planet(input_file, cores, quiet, bigplanet):
 
     #checks if the files doesn't exist and if so then it creates it
     if os.path.isfile(checkpoint_file) == False:
-        with open(checkpoint_file,'w') as cp:
-            cp.write('Vspace File: ' + os.getcwd() + '/' + input_file + '\n')
-            cp.write('Total Number of Simulations: '+ str(len(sims)) + '\n')
-            for f in range(len(sims)):
-                cp.write(sims[f] + " " + "-1 \n")
-            cp.write('THE END \n')
+        CreateCP(checkpoint_file,input_file,quiet,sims)
 
     #if it does exist, it checks for any 0's (sims that didn't complete) and
     #changes them to -1 to be re-ran
     else:
-        if quiet == False:
-            print('WARNING: multi-planet checkpoint file already exists!')
-            print('Checking if checkpoint file is corrupt...')
-
-        sub.run(['rm', checkpoint_file])
-        #restarts the checkpoint file from scratch
-        with open(checkpoint_file,'w') as cp:
-            cp.write('Vspace File: ' + os.getcwd() + '/' + input_file + '\n')
-            cp.write('Total Number of Simulations: '+ str(len(sims)) + '\n')
-            for f in range(len(sims)):
-                cp.write(sims[f] + " " + "-1 \n")
-            cp.write('THE END \n')
-
-        datalist = []
-
-        with open(checkpoint_file, 'r') as f:
-            for newline in f:
-                datalist.append(newline.strip().split())
-
-        for i in range(len(sims)):
-            sim_dir = sims[i]
-            vp = os.path.join(sim_dir, 'vpl.in')
-            with open(vp, 'r') as vpl:
-                content = [line.strip().split() for line in vpl.readlines()]
-                for line in content:
-                    if line:
-                        if line[0] == 'dStopTime':
-                            stoptime = line[1]
-                        if line[0] == 'dOutputTime':
-                            ouputtime = line[1]
-            expected_line_num = float(stoptime)/float(ouputtime)
-
-            fd = [f for f in os.listdir(sim_dir) if f.endswith('foward')]
-            if len(fd) == 0:
-                for l in datalist:
-                    if l[0] == sim_dir:
-                        l[1] = '-1'
-            else:
-                fd = os.path.join(sim_dir, fd[0])
-                with open(fd, 'r') as f:
-                    buf = mmap.mmap(f.fileno(),0)
-                    lines = 0
-                    readline = buf.readline
-                    while readline():
-                        lines += 1
-                    last = readline[-1]
-                    if last == stoptime and lines == expected_line_num:
-                        for l in datalist:
-                            if l[0] == sim_dir:
-                                l[1] = '1'
-                    else:
-                        for l in datalist:
-                            if l[0] == sim_dir:
-                                l[1] = '-1'
-
-        with open(checkpoint_file, 'w') as f:
-            for newline in datalist:
-                f.writelines(' '.join(newline)+'\n')
+        ReCreateCP(checkpoint_file,input_file,quiet,sims)
 
     #get logfile name
     path_vpl = os.path.join(sims[0],'vpl.in')
@@ -141,6 +79,31 @@ def GetDir(input_file):
 
     return folder_name, infiles
 
+def CreateCP(checkpoint_file,input_file,quiet,sims):
+    with open(checkpoint_file,'w') as cp:
+        cp.write('Vspace File: ' + os.getcwd() + '/' + input_file + '\n')
+        cp.write('Total Number of Simulations: '+ str(len(sims)) + '\n')
+        for f in range(len(sims)):
+            cp.write(sims[f] + " " + "-1 \n")
+        cp.write('THE END \n')
+
+def ReCreateCP(checkpoint_file,input_file,quiet,sims):
+    if quiet == False:
+        print('WARNING: multi-planet checkpoint file already exists!')
+        print('Checking if checkpoint file is corrupt...')
+
+    datalist = []
+
+    with open(checkpoint_file, 'r') as f:
+        for newline in f:
+            datalist.append(newline.strip().split())
+            for l in datalist:
+                if l[1] == '0':
+                    l[1] = '-1'
+
+    with open(checkpoint_file, 'w') as f:
+        for newline in datalist:
+            f.writelines(' '.join(newline)+'\n')
 
 ## parallel worker to run vplanet ##
 def par_worker(checkpoint_file,infiles,system_name,logfile,quiet,bigplanet,lock):

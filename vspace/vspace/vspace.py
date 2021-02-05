@@ -73,7 +73,7 @@ for i in range(len(lines)):
             sub.run(['rm', '.'+ dest])
     if os.path.isdir(dest) == True:
         reply = None
-        question = "Destination Folder already exists. Would you like to override it?"
+        question = "Destination Folder " + dest + " already exists. Would you like to override it? \nWARNING: This will delete " + dest + ", as well as any checkpoint files and HDF5 files if applicable."
         while reply not in ('y','n'):
             reply = str(input(question+' (y/n): ')).lower().strip()
             if reply[:1] == 'y':

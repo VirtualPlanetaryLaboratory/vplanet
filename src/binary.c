@@ -357,6 +357,10 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_FREEECC].iType = 2;
   options[OPT_FREEECC].bMultiFile = 1;
   fnRead[OPT_FREEECC] = &ReadFreeEcc;
+  sprintf(options[OPT_FREEECC].cLongDescr,
+    "The free eccentricity of a circumbinary planet with the BINARY module.\n"
+    "Must be in the range [0,1)."
+  )
 
   sprintf(options[OPT_FREEINC].cName,"dFreeInc");
   sprintf(options[OPT_FREEINC].cDescr,"Circumbinary planet free inclination");
@@ -365,9 +369,14 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_FREEINC].iType = 2;
   options[OPT_FREEINC].bMultiFile = 1;
   fnRead[OPT_FREEINC] = &ReadFreeInc;
+  sprintf(options[OPT_FREEINC].cLongDescr,
+    "The free inclination of a circumbinary planet with the BINARY module.\n"
+    "Must be in the range [0,pi)."
+  )
 
   sprintf(options[OPT_LL13PHIAB].cName,"dLL13PhiAB");
-  sprintf(options[OPT_LL13PHIAB].cDescr,"Binary Initial Mean Anomaly");
+  sprintf(options[OPT_LL13PHIAB].cDescr,"Binary Initial Mean Anomaly for use
+      in the BINARY module");
   sprintf(options[OPT_LL13PHIAB].cDefault,"0.0 degrees");
   options[OPT_LL13PHIAB].dDefault = 0.0;
   options[OPT_LL13PHIAB].iType = 2;
@@ -375,7 +384,8 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_LL13PHIAB] = &ReadLL13PhiAB;
 
   sprintf(options[OPT_CBPM0].cName,"dCBPM0");
-  sprintf(options[OPT_CBPM0].cDescr,"Circumbinary planet initial mean anomaly");
+  sprintf(options[OPT_CBPM0].cDescr,"Circumbinary planet initial mean anomaly
+      for use in the BINARY module");
   sprintf(options[OPT_CBPM0].cDefault,"0.0 degrees");
   options[OPT_CBPM0].dDefault = 0.0;
   options[OPT_CBPM0].iType = 2;

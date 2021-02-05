@@ -360,7 +360,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FREEECC].cLongDescr,
     "The free eccentricity of a circumbinary planet with the BINARY module.\n"
     "Must be in the range [0,1)."
-  )
+  );
 
   sprintf(options[OPT_FREEINC].cName,"dFreeInc");
   sprintf(options[OPT_FREEINC].cDescr,"Circumbinary planet free inclination");
@@ -372,11 +372,11 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FREEINC].cLongDescr,
     "The free inclination of a circumbinary planet with the BINARY module.\n"
     "Must be in the range [0,pi)."
-  )
+  );
 
   sprintf(options[OPT_LL13PHIAB].cName,"dLL13PhiAB");
-  sprintf(options[OPT_LL13PHIAB].cDescr,"Binary Initial Mean Anomaly for use
-      in the BINARY module");
+  sprintf(options[OPT_LL13PHIAB].cDescr,
+    "Binary Initial Mean Anomaly for use in the BINARY module");
   sprintf(options[OPT_LL13PHIAB].cDefault,"0.0 degrees");
   options[OPT_LL13PHIAB].dDefault = 0.0;
   options[OPT_LL13PHIAB].iType = 2;
@@ -384,8 +384,8 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_LL13PHIAB] = &ReadLL13PhiAB;
 
   sprintf(options[OPT_CBPM0].cName,"dCBPM0");
-  sprintf(options[OPT_CBPM0].cDescr,"Circumbinary planet initial mean anomaly
-      for use in the BINARY module");
+  sprintf(options[OPT_CBPM0].cDescr,
+    "Circumbinary planet initial mean anomaly for use in the BINARY module");
   sprintf(options[OPT_CBPM0].cDefault,"0.0 degrees");
   options[OPT_CBPM0].dDefault = 0.0;
   options[OPT_CBPM0].iType = 2;
@@ -1135,14 +1135,14 @@ void WriteCBPInsol(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 
 void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_FREEECC].cName,"FreeEcc");
-  sprintf(output[OUT_FREEECC].cDescr,"CBP's Free Eccentricity in Binary");
+  sprintf(output[OUT_FREEECC].cDescr,"CBP's Free Eccentricity in BINARY");
   output[OUT_FREEECC].bNeg = 0;
   output[OUT_FREEECC].iNum = 1;
   output[OUT_FREEECC].iModuleBit = BINARY;
   fnWrite[OUT_FREEECC] = &WriteFreeEccBinary;
 
   sprintf(output[OUT_FREEINC].cName,"FreeInc");
-  sprintf(output[OUT_FREEINC].cDescr,"CBP's Free Inclination in Binary");
+  sprintf(output[OUT_FREEINC].cDescr,"CBP's Free Inclination in BINARY");
   sprintf(output[OUT_FREEINC].cNeg,"Deg");
   output[OUT_FREEINC].bNeg = 1;
   output[OUT_FREEINC].dNeg = 1./DEGRAD;
@@ -1160,7 +1160,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_CBPPHI] = &WriteCBPPhiBinary;
 
   sprintf(output[OUT_BINPRIPHI].cName,"BinPriPhi");
-  sprintf(output[OUT_BINPRIPHI].cDescr,"Binary primary star azimuthal angle");
+  sprintf(output[OUT_BINPRIPHI].cDescr,"Binary primary star azimuthal angle in BINARY");
   sprintf(output[OUT_BINPRIPHI].cNeg,"Deg");
   output[OUT_BINPRIPHI].bNeg = 1;
   output[OUT_BINPRIPHI].dNeg = 1.0/DEGRAD;
@@ -1169,7 +1169,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_BINPRIPHI] = &WriteBinPriPhiBinary;
 
   sprintf(output[OUT_BINSECPHI].cName,"BinSecPhi");
-  sprintf(output[OUT_BINSECPHI].cDescr,"Binary secondary star azimuthal angle");
+  sprintf(output[OUT_BINSECPHI].cDescr,"Binary secondary star azimuthal angle in BINARY");
   sprintf(output[OUT_BINSECPHI].cNeg,"Deg");
   output[OUT_BINSECPHI].bNeg = 1;
   output[OUT_BINSECPHI].dNeg = 1.0/DEGRAD;

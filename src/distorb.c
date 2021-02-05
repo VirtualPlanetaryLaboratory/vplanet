@@ -223,15 +223,24 @@ void ReadOrbitModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 
 void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DFCRIT].cName,"dDfcrit");
-  sprintf(options[OPT_DFCRIT].cDescr,"Tolerance parameter for recalculating semi- functions");
+  sprintf(options[OPT_DFCRIT].cDescr,"Tolerance parameter for recalculating
+    semi- functions");
   sprintf(options[OPT_DFCRIT].cDefault,"0.1");
   options[OPT_DFCRIT].dDefault = 0.1;
   options[OPT_DFCRIT].iType = 2;
   options[OPT_DFCRIT].bMultiFile = 0;
   fnRead[OPT_DFCRIT] = &ReadDfCrit;
+  sprintf(options[OPT_DFCRIT].cLongDescr,
+    "When running DISTORB with other modules that modify the semi-major axis,\n"
+    "set his argument to be the maximum relative change in the Laplace\n"
+    "coefficients before recalculating the values. Setting this value to be\n"
+    "low can cause the simulation to run very slowly, with negligible gain in\n"
+    "accuracy."
+  );
 
   sprintf(options[OPT_INVPLANE].cName,"bInvPlane");
-  sprintf(options[OPT_INVPLANE].cDescr,"Convert input coordinates to invariable plane coordinates");
+  sprintf(options[OPT_INVPLANE].cDescr,
+    "Convert input coordinates to invariable plane coordinates");
   sprintf(options[OPT_INVPLANE].cDefault,"0");
   options[OPT_INVPLANE].dDefault = 0;
   options[OPT_INVPLANE].iType = 0;
@@ -239,28 +248,43 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_INVPLANE] = &ReadInvPlane;
 
   sprintf(options[OPT_ORBITMODEL].cName,"sOrbitModel");
-  sprintf(options[OPT_ORBITMODEL].cDescr,"Orbit Model: ll2 [laplace-lagrange (eigen), 2nd order] rd4 [direct dist-fxn, 4th order]");
+  sprintf(options[OPT_ORBITMODEL].cDescr,"Orbit Model: LL2 [2nd order] RD4 [4th order]");
   sprintf(options[OPT_ORBITMODEL].cDefault,"rd4");
   options[OPT_ORBITMODEL].dDefault = RD4;
   options[OPT_ORBITMODEL].iType = 1;
   fnRead[OPT_ORBITMODEL] = &ReadOrbitModel;
+  sprintf(options[OPT_ORBITMODEL].cLongDescr,
+    "The secular orbital evolution model used with DistOrb. Option LL2 is the\n"
+    "Laplace-Lagrange (eigenvalue) solution that is valid for small values of\n"
+    "of eccentricity (<0.1) and inclination (<10 deg). The RD4 method is a 4th\n"
+    "order solution of the distrubing function that is accurante up to e ~ 0.3\n"
+    "and i ~ 30 deg. Note, however that setting both parameters to moderate\n"
+    "values can still cause inaccurate evolution. Unless %s is set, this model\n"
+    "will halt if the eccentricity exceeds ~0.69, at which point the solution\n"
+    "does not converge.",options[OPT_ORMAXECC].cName
+  );
 
   sprintf(options[OPT_ORMAXECC].cName,"bOverrideMaxEcc");
-  sprintf(options[OPT_ORMAXECC].cDescr,"Override default maximum eccentricity in DistOrb (MaxEcc = MAXORBDISTORB)");
+  sprintf(options[OPT_ORMAXECC].cDescr,"Override default maximum eccentricity (MAXORBDISTORB) in DistOrb?");
   sprintf(options[OPT_ORMAXECC].cDefault,"0");
   options[OPT_ORMAXECC].dDefault = 0;
   options[OPT_ORMAXECC].iType = 0;
   options[OPT_ORMAXECC].bMultiFile = 0;
   fnRead[OPT_ORMAXECC] = &ReadOverrideMaxEcc;
+  sprintf(options[OPT_ORBITMODEL].cLongDescr,
+    "If RD4 is selected for %s, the code will halt if an eccentricity reaches\n"
+    "~0.69 unless this flag is set to true.",options[OPT_ORBITMODEL].cName
+  );
 
   sprintf(options[OPT_HALTHILLSTAB].cName,"bHaltHillStab");
-  sprintf(options[OPT_HALTHILLSTAB].cDescr,"Enforce Hill stability criterion (halt if failed)");
+  sprintf(options[OPT_HALTHILLSTAB].cDescr,"Halt if Hill unstable?");
   sprintf(options[OPT_HALTHILLSTAB].cDefault,"0");
   options[OPT_HALTHILLSTAB].dDefault = 0;
   options[OPT_HALTHILLSTAB].iType = 0;
   options[OPT_HALTHILLSTAB].bMultiFile = 0;
   fnRead[OPT_HALTHILLSTAB] = &ReadHaltHillStab;
 
+  //XXX What does this option do?
   sprintf(options[OPT_HALTCLOSEENC].cName,"bHaltCloseEnc");
   sprintf(options[OPT_HALTCLOSEENC].cDescr,"Halt if orbits get too close");
   sprintf(options[OPT_HALTCLOSEENC].cDefault,"0");
@@ -269,14 +293,16 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HALTCLOSEENC].bMultiFile = 0;
   fnRead[OPT_HALTCLOSEENC] = &ReadHaltCloseEnc;
 
+  //XXX What does this option do?
   sprintf(options[OPT_EIGENSET].cName,"bEigenSet");
-  sprintf(options[OPT_EIGENSET].cDescr,"Set this to provide eigenvalues/vectors at input");
+  sprintf(options[OPT_EIGENSET].cDescr,"Read in eigenvalues/vectors?");
   sprintf(options[OPT_EIGENSET].cDefault,"0");
   options[OPT_EIGENSET].dDefault = 0;
   options[OPT_EIGENSET].iType = 0;
   options[OPT_EIGENSET].bMultiFile = 0;
   fnRead[OPT_EIGENSET] = &ReadEigenSet;
 
+  //XXX What does this option do?
   sprintf(options[OPT_EIGENVALUE].cName,"dEigenvalue");
   sprintf(options[OPT_EIGENVALUE].cDescr,"Set this to provide eigenvalues/vectors at input");
   sprintf(options[OPT_EIGENVALUE].cDefault,"0");
@@ -293,6 +319,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_EIGENVECTOR].bMultiFile = 0;
   fnRead[OPT_EIGENVECTOR] = &ReadEigenvector;
 
+  //XXX What does this option do?
   sprintf(options[OPT_OUTPUTLAPL].cName,"bOutputLapl");
   sprintf(options[OPT_OUTPUTLAPL].cDescr,"Output Laplace functions and related data");
   sprintf(options[OPT_OUTPUTLAPL].cDefault,"0");
@@ -301,6 +328,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OUTPUTLAPL].bMultiFile = 0;
   fnRead[OPT_OUTPUTLAPL] = &ReadOutputLapl;
 
+  //XXX What does this option do?
   sprintf(options[OPT_OUTPUTEIGEN].cName,"bOutputEigen");
   sprintf(options[OPT_OUTPUTEIGEN].cDescr,"Output Eigenvalues");
   sprintf(options[OPT_OUTPUTEIGEN].cDefault,"0");

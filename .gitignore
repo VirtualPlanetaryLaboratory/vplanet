@@ -17,7 +17,6 @@
 *.Inc.Eigen
 SeasonalClimateFiles
 *.hdf5
-.*
 
 #files created from running tests
 tests/Multi-PlanetCheckpoint/MP_Checkpoint/

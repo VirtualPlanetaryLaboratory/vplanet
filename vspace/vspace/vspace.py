@@ -187,13 +187,20 @@ for i in range(len(lines)):
           for ll in np.arange(len(array)):
             while array[ll] < min_cutoff:
               array[ll] = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=1)
+          del min_cutoff
         elif 'min_cutoff' not in vars() and 'max_cutoff' in vars():
           for ll in np.arange(len(array)):
             while array[ll] > max_cutoff:
               array[ll] = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=1)
+          del max_cutoff
         elif 'min_cutoff' in vars() and 'max_cutoff' in vars():
           for ll in np.arange(len(array)):
             while array[ll] < min_cutoff or array[ll] > max_cutoff:
+              array[ll] = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=1)
+          del max_cutoff
+          del min_cutoff
+        elif 'min_cutoff' not in vars() and 'max_cutoff' not in vars():
+          for ll in np.arange(len(array)):
               array[ll] = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=1)
       else:
         raise IOError("Attempt to draw from a random distribution in grid mode for '%s' for '%s'"%(name,flist[fnum-1]))

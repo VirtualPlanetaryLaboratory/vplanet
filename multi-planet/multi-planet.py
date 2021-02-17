@@ -12,7 +12,7 @@ from collections import OrderedDict
 # --------------------------------------------------------------------
 
 ## parallel implementation of running vplanet over a directory ##
-def parallel_run_planet(input_file, cores, quiet, bigplanet):
+def parallel_run_planet(input_file, cores, quiet, bigplanet,email):
     # gets the folder name with all the sims
     folder_name, infiles = GetDir(input_file)
     #gets the list of sims
@@ -53,6 +53,15 @@ def parallel_run_planet(input_file, cores, quiet, bigplanet):
 
     if bigplanet == True:
         CreateMasterHDF5(folder_name,sims)
+
+    if email is not None:
+        SendMail(email, folder_name)
+
+def SendMail(email,destfolder):
+    Title = "Multi-Planet has finished for " + destfolder
+    Body = "Please log into your computer to verify the results. This is an auto-generated message."
+    message = "echo " + Body + " | " + 'mail -s ' + '"'+ Title + '" ' + email
+    sub.Popen(message , shell=True)
 
 def GetDir(input_file):
     """ Give it input file and returns name of folder where simulations are located. """
@@ -191,8 +200,9 @@ if __name__ == "__main__":
     max_cores = mp.cpu_count()
     parser = argparse.ArgumentParser(description="Using multi-processing to run a large number of simulations")
     parser.add_argument("-c","--cores", type=int, default=max_cores, help="The total number of processors used")
-    parser.add_argument("-q","--quiet", action="store_true", help="no output for multi-planet")
+    parser.add_argument("-q","--quiet", action="store_true", help="No command line output for multi-planet")
     parser.add_argument("-bp","--bigplanet", action="store_true" ,help="Runs bigplanet and creates the HDF5 files alongside running mutlt-planet")
+    parser.add_argument("-m","--email",type=str, help="Mails user when multi-planet is completed")
     parser.add_argument("InputFile", help="name of the vspace file")
     args = parser.parse_args()
 
@@ -204,4 +214,4 @@ if __name__ == "__main__":
     except OSError:
         raise Exception("Unable to call VPLANET. Is it in your PATH?")
 
-    parallel_run_planet(args.InputFile,args.cores,args.quiet,args.bigplanet)
+    parallel_run_planet(args.InputFile,args.cores,args.quiet,args.bigplanet,args.email)

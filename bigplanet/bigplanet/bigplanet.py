@@ -47,7 +47,7 @@ def GetSims(folder_name):
     sims = sorted([f.path for f in os.scandir(folder_name) if f.is_dir()])
     return sims
 
-def parallel_run_planet(input_file, cores,quiet):
+def parallel_run_planet(input_file, cores,quiet,email):
     # gets the folder name with all the sims
     folder_name, infiles = GetDir(input_file)
     #gets the list of sims
@@ -87,6 +87,14 @@ def parallel_run_planet(input_file, cores,quiet):
 
     CreateMasterHDF5(folder_name,sims)
 
+    if email is not None:
+        SendMail(email, folder_name)
+
+def SendMail(email,destfolder):
+    Title = "Bigplanet has finished for " + destfolder
+    Body = "Please log into your computer to verify the results. This is an auto-generated message."
+    message = "echo " + Body + " | " + 'mail -s ' + '"'+ Title + '" ' + email
+    sub.Popen(message , shell=True)
 
 def CreateCP(checkpoint_file,input_file,quiet,sims):
     with open(checkpoint_file,'w') as cp:
@@ -832,10 +840,11 @@ def main():
     parser.add_argument("InputFile", help="Name of the vspace input file")
     parser.add_argument("-c","--cores", type=int, default=max_cores, help="Number of processors used")
     parser.add_argument("-q","--quiet", action="store_true", help="no output for bigplanet")
+    parser.add_argument("-m","--email",type=str, help="Mails user when bigplanet is complete")
 
     args = parser.parse_args()
 
-    parallel_run_planet(args.InputFile, args.cores, args.quiet)
+    parallel_run_planet(args.InputFile, args.cores, args.quiet,args.email))
 
 
 

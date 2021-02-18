@@ -27,16 +27,13 @@ command in the in the command line:
 
 .. code-block:: bash
 
-<<<<<<< HEAD
-    bigplanet -c [number of cores] <input file>
-=======
-    bigplanet <input file> -c [number of cores] -q
->>>>>>> b86e522894269fa774de08845318d2a3777432fb
+    bigplanet <input file> -c [number of cores] -q -m [email]
 
 where the input file is the same file used to run vspace and multi-planet.
-There are two optional arguments:
+There are three optional arguments:
 :code:`-c` : the number of processors used
 :code:`-q` : quiet mode (nothing is printed to the command line)
+:code:`-m` : emails the user when Bigplanet is complete
 
 Module Usage
 ============

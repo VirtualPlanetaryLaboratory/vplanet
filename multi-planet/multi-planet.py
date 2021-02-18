@@ -12,7 +12,7 @@ from collections import OrderedDict
 # --------------------------------------------------------------------
 
 ## parallel implementation of running vplanet over a directory ##
-def parallel_run_planet(input_file, cores, quiet, bigplanet):
+def parallel_run_planet(input_file, cores, quiet, bigplanet,email):
     # gets the folder name with all the sims
     folder_name, infiles = GetDir(input_file)
     #gets the list of sims
@@ -23,74 +23,12 @@ def parallel_run_planet(input_file, cores, quiet, bigplanet):
 
     #checks if the files doesn't exist and if so then it creates it
     if os.path.isfile(checkpoint_file) == False:
-        with open(checkpoint_file,'w') as cp:
-            cp.write('Vspace File: ' + os.getcwd() + '/' + input_file + '\n')
-            cp.write('Total Number of Simulations: '+ str(len(sims)) + '\n')
-            for f in range(len(sims)):
-                cp.write(sims[f] + " " + "-1 \n")
-            cp.write('THE END \n')
+        CreateCP(checkpoint_file,input_file,quiet,sims)
 
     #if it does exist, it checks for any 0's (sims that didn't complete) and
     #changes them to -1 to be re-ran
     else:
-        if quiet == False:
-            print('WARNING: multi-planet checkpoint file already exists!')
-            print('Checking if checkpoint file is corrupt...')
-
-        sub.run(['rm', checkpoint_file])
-        #restarts the checkpoint file from scratch
-        with open(checkpoint_file,'w') as cp:
-            cp.write('Vspace File: ' + os.getcwd() + '/' + input_file + '\n')
-            cp.write('Total Number of Simulations: '+ str(len(sims)) + '\n')
-            for f in range(len(sims)):
-                cp.write(sims[f] + " " + "-1 \n")
-            cp.write('THE END \n')
-
-        datalist = []
-
-        with open(checkpoint_file, 'r') as f:
-            for newline in f:
-                datalist.append(newline.strip().split())
-
-        for i in range(len(sims)):
-            sim_dir = sims[i]
-            vp = os.path.join(sim_dir, 'vpl.in')
-            with open(vp, 'r') as vpl:
-                content = [line.strip().split() for line in vpl.readlines()]
-                for line in content:
-                    if line:
-                        if line[0] == 'dStopTime':
-                            stoptime = line[1]
-                        if line[0] == 'dOutputTime':
-                            ouputtime = line[1]
-            expected_line_num = float(stoptime)/float(ouputtime)
-
-            fd = [f for f in os.listdir(sim_dir) if f.endswith('foward')]
-            if len(fd) == 0:
-                for l in datalist:
-                    if l[0] == sim_dir:
-                        l[1] = '-1'
-            else:
-                fd = os.path.join(sim_dir, fd[0])
-                with open(fd, 'r') as f:
-                    buf = mmap.mmap(f.fileno(),0)
-                    lines = 0
-                    readline = buf.readline
-                    while readline():
-                        lines += 1
-                    last = readline[-1]
-                    if last == stoptime and lines == expected_line_num:
-                        for l in datalist:
-                            if l[0] == sim_dir:
-                                l[1] = '1'
-                    else:
-                        for l in datalist:
-                            if l[0] == sim_dir:
-                                l[1] = '-1'
-
-        with open(checkpoint_file, 'w') as f:
-            for newline in datalist:
-                f.writelines(' '.join(newline)+'\n')
+        ReCreateCP(checkpoint_file,input_file,quiet,sims)
 
     #get logfile name
     path_vpl = os.path.join(sims[0],'vpl.in')
@@ -115,6 +53,15 @@ def parallel_run_planet(input_file, cores, quiet, bigplanet):
 
     if bigplanet == True:
         CreateMasterHDF5(folder_name,sims)
+
+    if email is not None:
+        SendMail(email, folder_name)
+
+def SendMail(email,destfolder):
+    Title = "Multi-Planet has finished for " + destfolder
+    Body = "Please log into your computer to verify the results. This is an auto-generated message."
+    message = "echo " + Body + " | " + 'mail -s ' + '"'+ Title + '" ' + email
+    sub.Popen(message , shell=True)
 
 def GetDir(input_file):
     """ Give it input file and returns name of folder where simulations are located. """
@@ -141,6 +88,31 @@ def GetDir(input_file):
 
     return folder_name, infiles
 
+def CreateCP(checkpoint_file,input_file,quiet,sims):
+    with open(checkpoint_file,'w') as cp:
+        cp.write('Vspace File: ' + os.getcwd() + '/' + input_file + '\n')
+        cp.write('Total Number of Simulations: '+ str(len(sims)) + '\n')
+        for f in range(len(sims)):
+            cp.write(sims[f] + " " + "-1 \n")
+        cp.write('THE END \n')
+
+def ReCreateCP(checkpoint_file,input_file,quiet,sims):
+    if quiet == False:
+        print('WARNING: multi-planet checkpoint file already exists!')
+        print('Checking if checkpoint file is corrupt...')
+
+    datalist = []
+
+    with open(checkpoint_file, 'r') as f:
+        for newline in f:
+            datalist.append(newline.strip().split())
+            for l in datalist:
+                if l[1] == '0':
+                    l[1] = '-1'
+
+    with open(checkpoint_file, 'w') as f:
+        for newline in datalist:
+            f.writelines(' '.join(newline)+'\n')
 
 ## parallel worker to run vplanet ##
 def par_worker(checkpoint_file,infiles,system_name,logfile,quiet,bigplanet,lock):
@@ -228,8 +200,9 @@ if __name__ == "__main__":
     max_cores = mp.cpu_count()
     parser = argparse.ArgumentParser(description="Using multi-processing to run a large number of simulations")
     parser.add_argument("-c","--cores", type=int, default=max_cores, help="The total number of processors used")
-    parser.add_argument("-q","--quiet", action="store_true", help="no output for multi-planet")
+    parser.add_argument("-q","--quiet", action="store_true", help="No command line output for multi-planet")
     parser.add_argument("-bp","--bigplanet", action="store_true" ,help="Runs bigplanet and creates the HDF5 files alongside running mutlt-planet")
+    parser.add_argument("-m","--email",type=str, help="Mails user when multi-planet is completed")
     parser.add_argument("InputFile", help="name of the vspace file")
     args = parser.parse_args()
 
@@ -241,4 +214,4 @@ if __name__ == "__main__":
     except OSError:
         raise Exception("Unable to call VPLANET. Is it in your PATH?")
 
-    parallel_run_planet(args.InputFile,args.cores,args.quiet,args.bigplanet)
+    parallel_run_planet(args.InputFile,args.cores,args.quiet,args.bigplanet,args.email)

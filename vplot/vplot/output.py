@@ -42,7 +42,7 @@ class Output(object):
 class Body(object):
     """A class containing the parameter arrays of a body in a ``vplanet`` run.
 
-    These are populated from either a ``.forward``, a ``.backward``, or a 
+    These are populated from either a ``.forward``, a ``.backward``, or a
     ``.Climate`` file.
 
     """
@@ -285,16 +285,16 @@ def get_arrays(log):
     return output
 
 
-def get_output(path=".", sysname=None):
+def GetOutput(path=".", sysname=None):
     """Parse all of the output from a :py:obj:`vplanet` run.
-    
+
     Args:
         sysname (str, optional): System name. This is determined automatically,
-            unless there are multiple runs in the same :py:obj:`path`. Defaults 
+            unless there are multiple runs in the same :py:obj:`path`. Defaults
             to None.
-        path (str, optional): Path to the directory containing the results of 
+        path (str, optional): Path to the directory containing the results of
             the :py:obj:`vplanet` run. Defaults to the current directory.
-    
+
     Returns:
         A :py:class:`Output` instance containing all the information from the
         ``.log``, ``.forward``, and ``.backward`` output files.

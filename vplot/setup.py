@@ -27,7 +27,7 @@ setup(
     author_email="rodluger@gmail.edu",
     license="MIT",
     packages=["vplot"],
-    install_requires=["numpy", "matplotlib >= 3.1.1"],
+    install_requires=["numpy", "matplotlib","astropy"],
     include_package_data=True,
     package_data={},
     cmdclass={},

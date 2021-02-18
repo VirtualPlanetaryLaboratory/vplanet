@@ -73,7 +73,7 @@ for i in range(len(lines)):
             sub.run(['rm', '.'+ dest])
     if os.path.isdir(dest) == True:
         reply = None
-        question = "Destination Folder already exists. Would you like to override it?"
+        question = "Destination Folder " + dest + " already exists. Would you like to override it? \nWARNING: This will delete " + dest + ", as well as any checkpoint files and HDF5 files if applicable."
         while reply not in ('y','n'):
             reply = str(input(question+' (y/n): ')).lower().strip()
             if reply[:1] == 'y':
@@ -187,13 +187,20 @@ for i in range(len(lines)):
           for ll in np.arange(len(array)):
             while array[ll] < min_cutoff:
               array[ll] = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=1)
+          del min_cutoff
         elif 'min_cutoff' not in vars() and 'max_cutoff' in vars():
           for ll in np.arange(len(array)):
             while array[ll] > max_cutoff:
               array[ll] = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=1)
+          del max_cutoff
         elif 'min_cutoff' in vars() and 'max_cutoff' in vars():
           for ll in np.arange(len(array)):
             while array[ll] < min_cutoff or array[ll] > max_cutoff:
+              array[ll] = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=1)
+          del max_cutoff
+          del min_cutoff
+        elif 'min_cutoff' not in vars() and 'max_cutoff' not in vars():
+          for ll in np.arange(len(array)):
               array[ll] = np.random.normal(loc=np.float(values[0]),scale=np.float(values[1]),size=1)
       else:
         raise IOError("Attempt to draw from a random distribution in grid mode for '%s' for '%s'"%(name,flist[fnum-1]))

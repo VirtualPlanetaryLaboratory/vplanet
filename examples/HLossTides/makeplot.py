@@ -40,10 +40,10 @@ subprocess.call(['vplanet', 'vpl.in'])
 os.chdir('../..')
 
 # Load data
-cplauto = vpl.get_output("./Lopez12CPL/Auto")
-cplbondi = vpl.get_output("./Lopez12CPL/Bondi")
-cplelim = vpl.get_output("./Lopez12CPL/ELim")
-cplrr = vpl.get_output("./Lopez12CPL/RR")
+cplauto = vpl.GetOutput("./Lopez12CPL/Auto")
+cplbondi = vpl.GetOutput("./Lopez12CPL/Bondi")
+cplelim = vpl.GetOutput("./Lopez12CPL/ELim")
+cplrr = vpl.GetOutput("./Lopez12CPL/RR")
 
 # Plot
 fig, axes = plt.subplots(nrows=3, ncols=2)

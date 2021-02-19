@@ -33,8 +33,8 @@ subprocess.call(['vplanet', 'vpl.in'])
 os.chdir('..')
 
 # Load data
-cpl = vpl.get_output("./WaterCPL")
-ctl = vpl.get_output("./WaterCTL")
+cpl = vpl.GetOutput("./WaterCPL")
+ctl = vpl.GetOutput("./WaterCTL")
 
 # Plot
 fig, axes = plt.subplots(nrows=2, ncols=2)

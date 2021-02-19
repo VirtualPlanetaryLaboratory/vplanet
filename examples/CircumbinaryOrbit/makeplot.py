@@ -29,7 +29,7 @@ mpl.rcParams['figure.figsize'] = (10,8)
 mpl.rcParams['font.size'] = 18.0
 
 # Load data
-output = vpl.get_output()
+output = vpl.GetOutput()
 
 # Extract data
 time = output.cbp.Time

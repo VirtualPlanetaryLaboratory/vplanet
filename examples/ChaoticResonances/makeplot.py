@@ -24,7 +24,7 @@ mpl.rcParams['figure.figsize'] = (10,8)
 mpl.rcParams['font.size'] = 16.0
 
 # Load data
-output = vpl.get_output()
+output = vpl.GetOutput()
 
 # Extract data
 time = output.star.Time/1.0e6 # Scale to Myr

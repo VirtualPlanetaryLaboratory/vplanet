@@ -48,7 +48,7 @@ def ReadHNBody(FileName):
     planet.a = planet.a
     return planet
 
-SS = vpl.get_output()
+SS = vpl.GetOutput()
 
 hnEarth = ReadHNBody('plan3.dat')
 hnEarth.Mass = 1.

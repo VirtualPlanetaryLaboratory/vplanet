@@ -19,7 +19,7 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('Options are: pdf, png')
     exit(1)
 
-out = vplot.get_output()
+out = vplot.GetOutput()
 # Print final state
 #print('Final: t=%.3f TUMan=%f TMan=%f TCMB=%f TCore=%f HflowUMan=%.1f HflowCMB=%.1f RadPowerTotal=%f RadPowerMan=%.1f RadPowerCore=%.1f MagMom=%f RIC=%f'%(out.earth.Time[-1],out.earth.TUMan[-1],out.earth.TMan[-1],out.earth.TCMB[-1],out.earth.TCore[-1],out.earth.HflowUMan[-1],out.earth.HflowCMB[-1],out.earth.RadPowerTotal[-1],out.earth.RadPowerMan[-1],out.earth.RadPowerCore[-1],out.earth.MagMom[-1],out.earth.RIC[-1]))
 

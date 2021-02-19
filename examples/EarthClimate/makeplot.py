@@ -49,7 +49,7 @@ def comp2huybers(plname,dir='.',xrange=False,show=True):
   fig.subplots_adjust(wspace=0.3,top=0.9,hspace=0.2)
 
   for ii in np.arange(nfiles):
-    out = vplot.get_output(dir[ii])
+    out = vplot.GetOutput(dir[ii])
     #pdb.set_trace()
 
     ctmp = 0
@@ -278,7 +278,7 @@ def seasonal_maps(time, dir = '.', show = True):
     temp = np.loadtxt(tempf,unpack=True)
     ice = np.loadtxt(icef,unpack=True)
     fluxo = np.loadtxt(planckbf,unpack=True)
-    output = vplot.get_output(dir)
+    output = vplot.GetOutput(dir)
     ctmp = 0
     for p in range(len(output.bodies)):
       if output.bodies[p].name == plname:

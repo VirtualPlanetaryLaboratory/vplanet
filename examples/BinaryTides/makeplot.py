@@ -30,7 +30,7 @@ mpl.rcParams['font.size'] = 18.0
 
 
 # Load data
-output = vpl.get_output()
+output = vpl.GetOutput()
 time = output.primary.Time
 
 # Extract important quantities

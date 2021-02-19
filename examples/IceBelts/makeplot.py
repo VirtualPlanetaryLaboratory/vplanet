@@ -54,7 +54,7 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
 
 
   for ii in np.arange(nfiles):
-    out = vpl.get_output(dir[ii])
+    out = vpl.GetOutput(dir[ii])
 
     ctmp = 0
     for p in range(len(out.bodies)):
@@ -309,7 +309,7 @@ def seasonal_maps(time, dir = '.', show = True):
     insol = np.loadtxt(insolf,unpack=True)
     temp = np.loadtxt(tempf,unpack=True)
     ice = np.loadtxt(icef,unpack=True)
-    output = vpl.get_output(dir)
+    output = vpl.GetOutput(dir)
 
     ctmp = 0
     for p in range(len(output.bodies)):

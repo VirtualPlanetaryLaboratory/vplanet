@@ -57,7 +57,7 @@ def run(masses):
     """Run vplanet and collect the output."""
     write_in(masses)
     subprocess.call(['vplanet', 'vpl.in'])
-    output = vpl.get_output()
+    output = vpl.GetOutput()
     time = output.bodies[0].Time
     radius = [output.bodies[n].Radius for n in range(len(masses))]
     temp = [output.bodies[n].Temperature for n in range(len(masses))]

@@ -17,7 +17,7 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
 plt.rcParams["text.usetex"]=True
 plt.rcParams["text.latex.unicode"]=True
 
-out = vplot.get_output()
+out = vplot.GetOutput()
 
 fig = plt.figure(figsize=(8.5,8))
 fig.subplots_adjust(hspace=0.1)
@@ -236,7 +236,7 @@ laskar_wo = np.array([23.5,15,22,31.5,28.5,23.,26.5,28.,22.,21,30.5])
 laskar_time_w = np.array([0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1.0])
 laskar_w = np.array([23.5,22.5,23.25,23.75,23.5,22.75,23.,23.5,23.5,23.25,23.25,23.25,23.5,24.,23.5,22.75,23,23.5,23.5,23.,22.5])
 
-out2 = vplot.get_output('womoon')
+out2 = vplot.GetOutput('womoon')
 # plt.rcParams["mathtext."]
 tm, oblm, pAm, precf = np.loadtxt('marshnb/solarsys.Mars.backward',unpack = True)
 tm1, em1, incm1, argpm1, longam1, oblm1, pAm1, precf1 = np.loadtxt('marsvpl/solarsys.Mars.backward',unpack = True)

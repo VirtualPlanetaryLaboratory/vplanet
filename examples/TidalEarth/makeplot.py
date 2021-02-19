@@ -31,7 +31,7 @@ for dir in dirs:
 
 os.chdir(dir_path)
 # load data
-outputs = [vplot.get_output(str(os.path.join(dir_path,dir))) for dir in dirs]
+outputs = [vplot.GetOutput(str(os.path.join(dir_path,dir))) for dir in dirs]
 out0 = outputs[0]
 out1 = outputs[1]
 out2 = outputs[2]

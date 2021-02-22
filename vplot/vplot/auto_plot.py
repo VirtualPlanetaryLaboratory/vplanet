@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from . import logger
-from .output import get_output
+from .output import GetOutput
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -15,14 +15,14 @@ def auto_plot(
     **kwargs
 ):
     """Automatically plot the results of a :py:obj:`vplanet` run.
-    
+
     Args:
         sysname (str, optional): System name. This is determined automatically,
-            unless there are multiple runs in the same :py:obj:`path`. Defaults 
+            unless there are multiple runs in the same :py:obj:`path`. Defaults
             to None.
-        path (str, optional): Path to the directory containing the results of 
+        path (str, optional): Path to the directory containing the results of
             the :py:obj:`vplanet` run. Defaults to the current directory.
-        group (str, optional): How to group plots. Options are "param" 
+        group (str, optional): How to group plots. Options are "param"
             (one plot per parameter), "type" (one plot per physical type, such
             as angle, length, etc.), or "none" (one plot per column in the output
             file). Defaults to "param".
@@ -34,9 +34,9 @@ def auto_plot(
             to ``[]``, in which case all available parameters are plotted.
         show (bool, optional): Show the plots? Defaults to True. If False,
             returns the figures instead.
-        kwargs (optional): Extra keyword arguments passed directly to 
+        kwargs (optional): Extra keyword arguments passed directly to
             :py:class:`vplot.VPLOTFigure`.
-    
+
     Returns:
         If :py:obj:`show` is False, returns a list of figures.
     """
@@ -64,7 +64,7 @@ def auto_plot(
     param_names = [param for param in params if param.lower() != "time"]
 
     # Grab the output
-    output = get_output(sysname=sysname, path=path)
+    output = GetOutput(sysname=sysname, path=path)
 
     # Grab all params
     params = []

@@ -549,7 +549,7 @@ void fsUnitsLength(int iType,char cUnit[]) {
   else if (iType == 5)
     sprintf(cUnit,"Jupiter");
   else if (iType == 6)
-    sprintf(cUnit,"AU");
+    sprintf(cUnit,"au");
   else {
     fprintf(stderr,"ERROR: Unknown iUnitLength %d.\n",iType);
     exit(EXIT_UNITS);

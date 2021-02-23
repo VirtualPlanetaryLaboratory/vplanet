@@ -2584,7 +2584,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_PLANETRADIUS].cName,"PlanetRadius");
   sprintf(output[OUT_PLANETRADIUS].cDescr,"Planet radius");
-  sprintf(output[OUT_PLANETRADIUS].cNeg,"Earth radii");
+  sprintf(output[OUT_PLANETRADIUS].cNeg,"Rearth");
   output[OUT_PLANETRADIUS].bNeg = 1;
   output[OUT_PLANETRADIUS].dNeg = 1./REARTH;
   output[OUT_PLANETRADIUS].iNum = 1;
@@ -2641,7 +2641,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_ENVELOPEMASS].cName,"EnvelopeMass");
   sprintf(output[OUT_ENVELOPEMASS].cDescr,"Envelope mass");
-  sprintf(output[OUT_ENVELOPEMASS].cNeg,"Earth");
+  sprintf(output[OUT_ENVELOPEMASS].cNeg,"Mearth");
   output[OUT_ENVELOPEMASS].bNeg = 1;
   output[OUT_ENVELOPEMASS].dNeg = 1./MEARTH;
   output[OUT_ENVELOPEMASS].iNum = 1;
@@ -2650,7 +2650,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_PLANETRADXUV].cName,"RadXUV");
   sprintf(output[OUT_PLANETRADXUV].cDescr,"XUV radius separating hydro. dyn. escape and equilibrium");
-  sprintf(output[OUT_PLANETRADXUV].cNeg,"Earth Radii");
+  sprintf(output[OUT_PLANETRADXUV].cNeg,"Rearth");
   output[OUT_PLANETRADXUV].bNeg = 1;
   output[OUT_PLANETRADXUV].dNeg = 1./REARTH;
   output[OUT_PLANETRADXUV].iNum = 1;
@@ -2660,7 +2660,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_BONDIRADIUS].cName,"BondiRadius");
   sprintf(output[OUT_BONDIRADIUS].cDescr,"Bondi Radius");
   output[OUT_BONDIRADIUS].bNeg = 1;
-  sprintf(output[OUT_BONDIRADIUS].cNeg,"Earth Radii");
+  sprintf(output[OUT_BONDIRADIUS].cNeg,"Rearth");
   output[OUT_BONDIRADIUS].dNeg = 1./REARTH;
   output[OUT_BONDIRADIUS].iNum = 1;
   output[OUT_BONDIRADIUS].iModuleBit = ATMESC;
@@ -2669,7 +2669,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_ROCHERADIUS].cName,"RocheRadius");
   sprintf(output[OUT_ROCHERADIUS].cDescr,"Roche Lobe Radius");
   output[OUT_ROCHERADIUS].bNeg = 1;
-  sprintf(output[OUT_ROCHERADIUS].cNeg,"Earth Radii");
+  sprintf(output[OUT_ROCHERADIUS].cNeg,"Rearth");
   output[OUT_ROCHERADIUS].dNeg = 1./REARTH;
   output[OUT_ROCHERADIUS].iNum = 1;
   output[OUT_ROCHERADIUS].iModuleBit = ATMESC;
@@ -2677,7 +2677,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_DENVMASSDT].cName,"DEnvMassDt");
   sprintf(output[OUT_DENVMASSDT].cDescr,"Envelope Mass Loss Rate");
-  sprintf(output[OUT_DENVMASSDT].cNeg,"Earth Masses/Myr");
+  sprintf(output[OUT_DENVMASSDT].cNeg,"Mearth/Myr");
   output[OUT_DENVMASSDT].bNeg = 1;
   output[OUT_DENVMASSDT].dNeg = (YEARSEC*1e6)/MEARTH;
   output[OUT_DENVMASSDT].iNum = 1;
@@ -2724,14 +2724,14 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_ATMGASCONST].cDescr,"Atmospheric gas constant");
   sprintf(output[OUT_ATMGASCONST].cNeg,"J / K kg");
   output[OUT_ATMGASCONST].bNeg = 1;
-  output[OUT_ATMGASCONST].dNeg = 1;
+  output[OUT_ATMGASCONST].dNeg = 1; // Shouldn't default be Earth? XXX
   output[OUT_ATMGASCONST].iNum = 1;
   output[OUT_ATMGASCONST].iModuleBit = ATMESC;
   fnWrite[OUT_ATMGASCONST] = &WriteAtmGasConst;
 
   sprintf(output[OUT_RADSOLID].cName,"RadSolid");
   sprintf(output[OUT_RADSOLID].cDescr,"Radius to the solid surface");
-  sprintf(output[OUT_RADSOLID].cNeg,"Earth Radii");
+  sprintf(output[OUT_RADSOLID].cNeg,"Rearth");
   output[OUT_RADSOLID].bNeg = 1;
   output[OUT_RADSOLID].dNeg = 1./REARTH;
   output[OUT_RADSOLID].iNum = 1;

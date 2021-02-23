@@ -2394,7 +2394,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TIDALRADIUS].cName,"TidalRadius");
   sprintf(output[OUT_TIDALRADIUS].cDescr,"Tidal Radius");
   output[OUT_TIDALRADIUS].bNeg = 1;
-  sprintf(output[OUT_TIDALRADIUS].cNeg,"Earth");
+  sprintf(output[OUT_TIDALRADIUS].cNeg,"Rearth");
   output[OUT_TIDALRADIUS].dNeg = 1./REARTH;
   output[OUT_TIDALRADIUS].iNum = 1;
   output[OUT_TIDALRADIUS].iModuleBit = EQTIDE;

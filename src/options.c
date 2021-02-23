@@ -3412,6 +3412,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
    *
    */
 
+/* Someday...
+
   sprintf(options[OPT_KECC].cName,"dKecc");
   sprintf(options[OPT_KECC].cDescr,"Poincare's k -- Unsuppoted!");
   sprintf(options[OPT_KECC].cDefault,"-1");
@@ -3421,6 +3423,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_KECC].bNeg = 0;
   options[OPT_KECC].iFileType = 1;
   fnRead[OPT_KECC] = &ReadKecc;
+
+*/
 
   /*
    *
@@ -3452,8 +3456,6 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_LONGP].dDefault = 0.0;
   options[OPT_LONGP].iType = 2;
   options[OPT_LONGP].bMultiFile = 1;
-//   options[OPT_LONGP].dNeg = DEGRAD;
-//   sprintf(options[OPT_LONGP].cNeg,"Degrees");
   options[OPT_LONGP].iModuleBit = DISTORB + SPINBODY;
   options[OPT_LONGP].bNeg = 0;
   options[OPT_LONGP].iFileType = 1;
@@ -3466,7 +3468,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_LUMINOSITY].iType = 0;
   options[OPT_LUMINOSITY].bMultiFile = 1;
   options[OPT_LUMINOSITY].dNeg = LSUN;
-  sprintf(options[OPT_LUMINOSITY].cNeg,"Solar Luminosity (LSUN)");
+  sprintf(options[OPT_LUMINOSITY].cNeg,"LSUN");
   fnRead[OPT_LUMINOSITY] = &ReadLuminosity;
 
   sprintf(options[OPT_LXUV].cName,"dLXUV");
@@ -3719,7 +3721,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ENVELOPEMASS].iType = 2;
   options[OPT_ENVELOPEMASS].bMultiFile = 1;
   options[OPT_ENVELOPEMASS].dNeg = MEARTH;
-  sprintf(options[OPT_ENVELOPEMASS].cNeg,"Earth");
+  sprintf(options[OPT_ENVELOPEMASS].cNeg,"Mearth");
   fnRead[OPT_ENVELOPEMASS] = &ReadEnvelopeMass;
 
   sprintf(options[OPT_MINENVELOPEMASS].cName,"dMinEnvelopeMass");
@@ -3728,7 +3730,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MINENVELOPEMASS].dDefault = 1.e-8*MEARTH;
   options[OPT_MINENVELOPEMASS].iType = 2;
   options[OPT_MINENVELOPEMASS].dNeg = MEARTH;
-  sprintf(options[OPT_MINENVELOPEMASS].cNeg,"Earth");
+  sprintf(options[OPT_MINENVELOPEMASS].cNeg,"Mearth");
   fnRead[OPT_MINENVELOPEMASS] = &ReadMinEnvelopeMass;
 
   /*
@@ -3744,7 +3746,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MASS].iType = 2;
   options[OPT_MASS].bMultiFile = 1;
   options[OPT_MASS].dNeg = MEARTH;
-  sprintf(options[OPT_MASS].cNeg,"Earth masses");
+  sprintf(options[OPT_MASS].cNeg,"Mearth");
   options[OPT_MASS].iModuleBit = 0;
   options[OPT_MASS].bNeg = 1;
   options[OPT_MASS].iFileType = 1;
@@ -3805,7 +3807,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_RADIUS].iType = 2;
   options[OPT_RADIUS].bMultiFile = 1;
   options[OPT_RADIUS].dNeg = REARTH;
-  sprintf(options[OPT_RADIUS].cNeg,"Earth radii");
+  sprintf(options[OPT_RADIUS].cNeg,"Rearth");
   options[OPT_RADIUS].iModuleBit = 0;
   options[OPT_RADIUS].bNeg = 1;
   options[OPT_RADIUS].iFileType = 1;
@@ -3961,6 +3963,8 @@ options[OPT_VISCUMAN].bNeg = 0;
    *
    */
 
+/* Someday...
+
   sprintf(options[OPT_XOBL].cName,"dXobl");
   sprintf(options[OPT_XOBL].cDescr,"Deitrick's X -- Unsupported!");
   sprintf(options[OPT_XOBL].cDefault,"-1");
@@ -3971,11 +3975,11 @@ options[OPT_VISCUMAN].bNeg = 0;
   options[OPT_XOBL].iFileType = 1;
   fnRead[OPT_XOBL] = &ReadXobl;
 
-  /*
+  / *
    *
    * Y
    *
-   */
+   * /
 
   sprintf(options[OPT_YOBL].cName,"dYobl");
   sprintf(options[OPT_YOBL].cDescr,"Deitrick's Y -- Unsupported!");
@@ -3987,11 +3991,11 @@ options[OPT_VISCUMAN].bNeg = 0;
   options[OPT_YOBL].iFileType = 1;
   fnRead[OPT_YOBL] = &ReadYobl;
 
-  /*
+  / *
    *
    * Z
    *
-   */
+   * /
 
   sprintf(options[OPT_ZOBL].cName,"dZobl");
   sprintf(options[OPT_ZOBL].cDescr,"Deitrick's Z -- Unsupported!");
@@ -4002,6 +4006,7 @@ options[OPT_VISCUMAN].bNeg = 0;
   options[OPT_ZOBL].bNeg = 0;
   options[OPT_ZOBL].iFileType = 1;
   fnRead[OPT_ZOBL] = &ReadZobl;
+*/
 
 }
 

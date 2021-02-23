@@ -1132,9 +1132,9 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_DENSITY].cName,"Density");
   sprintf(output[OUT_DENSITY].cDescr,"Average Density");
-  sprintf(output[OUT_DENSITY].cNeg,"solar");
+  sprintf(output[OUT_DENSITY].cNeg,"EarthDensity");
   output[OUT_DENSITY].bNeg = 1;
-  output[OUT_DENSITY].dNeg = 1./1420;  // kg/m^3
+  output[OUT_DENSITY].dNeg = 3*REARTH*REARTH*REARTH/(4*PI*MEARTH);  // kg/m^3
   output[OUT_DENSITY].iNum = 1;
   output[OUT_DENSITY].iModuleBit = 1;
   fnWrite[OUT_DENSITY] = &WriteDensity;
@@ -1143,12 +1143,15 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
    * H
    */
 
+/* Someday...
   sprintf(output[OUT_HECC].cName,"HEcc");
   sprintf(output[OUT_HECC].cDescr,"Poincare's h (=e*sin(varpi)");
   output[OUT_HECC].bNeg = 0;
   output[OUT_HECC].iNum = 1;
   output[OUT_HECC].iModuleBit = EQTIDE + DISTORB;
   fnWrite[OUT_HECC] = &WriteHecc;
+
+*/
 
   sprintf(output[OUT_HZLIMDRYRUNAWAY].cName,"HZLimitDryRunaway");
   sprintf(output[OUT_HZLIMDRYRUNAWAY].cDescr,"Semi-major axis of Dry Runaway HZ Limit");
@@ -1251,12 +1254,14 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_K2MAN].iModuleBit = THERMINT + EQTIDE;
   fnWrite[OUT_K2MAN] = &WriteK2Man;
 
+/* Someday...
   sprintf(output[OUT_KECC].cName,"KEcc");
   sprintf(output[OUT_KECC].cDescr,"Poincare's k (=e*cos(varpi)");
   output[OUT_KECC].bNeg = 0;
   output[OUT_KECC].iNum = 1;
   output[OUT_KECC].iModuleBit = EQTIDE + DISTORB;
   fnWrite[OUT_KECC] = &WriteKecc;
+*/
 
   /*
    * L
@@ -1304,7 +1309,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_MASS].cName,"Mass");
   sprintf(output[OUT_MASS].cDescr,"Mass");
-  sprintf(output[OUT_MASS].cNeg,"Earth");
+  sprintf(output[OUT_MASS].cNeg,"Mearth");
   output[OUT_MASS].bNeg = 1;
   output[OUT_MASS].dNeg = 1./MEARTH;
   output[OUT_MASS].iNum = 1;
@@ -1336,7 +1341,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_ORBANGMOM].cName,"OrbAngMom");
   sprintf(output[OUT_ORBANGMOM].cDescr,"Orbital Angular Momentum");
-  sprintf(output[OUT_ORBANGMOM].cNeg,"kgm^2/s");
+  sprintf(output[OUT_ORBANGMOM].cNeg,"kg*m^2/s");
   output[OUT_ORBANGMOM].bNeg = 1;
   output[OUT_ORBANGMOM].iNum = 1;
   output[OUT_ORBANGMOM].dNeg = 1.0;
@@ -1386,7 +1391,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_LOSTANGMOM].cName,"LostAngMom");
   sprintf(output[OUT_LOSTANGMOM].cDescr,"Lost Angular Momentum due to Magnetic Braking");
-  sprintf(output[OUT_LOSTANGMOM].cNeg,"kgm^2/s");
+  sprintf(output[OUT_LOSTANGMOM].cNeg,"kg*m^2/s");
   output[OUT_LOSTANGMOM].bNeg = 1;
   output[OUT_LOSTANGMOM].iNum = 1;
   output[OUT_LOSTANGMOM].dNeg = 1.0;
@@ -1430,8 +1435,8 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_RADIUS].cName,"Radius");
   sprintf(output[OUT_RADIUS].cDescr,"Radius");
   output[OUT_RADIUS].bNeg = 1;
-  sprintf(output[OUT_RADIUS].cNeg,"Solar");
-  output[OUT_RADIUS].dNeg = 1./RSUN;
+  sprintf(output[OUT_RADIUS].cNeg,"Rearth");
+  output[OUT_RADIUS].dNeg = 1./REARTH;
   output[OUT_RADIUS].iNum = 1;
   output[OUT_RADIUS].iModuleBit = 1;
   fnWrite[OUT_RADIUS] = &WriteRadius;
@@ -1445,7 +1450,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_ROTANGMOM].cName,"RotAngMom");
   sprintf(output[OUT_ROTANGMOM].cDescr,"Rotational Angular Momentum");
-  sprintf(output[OUT_ROTANGMOM].cNeg,"kgm^2/s");
+  sprintf(output[OUT_ROTANGMOM].cNeg,"kg*m^2/s");
   output[OUT_ROTANGMOM].bNeg = 1;
   output[OUT_ROTANGMOM].iNum = 1;
   output[OUT_ROTANGMOM].dNeg = 1.0;
@@ -1486,6 +1491,12 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ROTVEL].iModuleBit = EQTIDE + DISTORB + STELLAR;
   fnWrite[OUT_ROTVEL] = &WriteRotVel;
 
+  /*
+  *
+  * S
+  *
+  */
+
   sprintf(output[OUT_SURFENFLUX].cName,"SurfEnFluxTotal");
   sprintf(output[OUT_SURFENFLUX].cDescr,"Total Surface Energy Flux");
   sprintf(output[OUT_SURFENFLUX].cNeg,"W/m^2");
@@ -1507,7 +1518,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_TOTANGMOM].cName,"TotAngMom");
   sprintf(output[OUT_TOTANGMOM].cDescr,"Total Angular Momentum");
-  sprintf(output[OUT_TOTANGMOM].cNeg,"kgm^2/s");
+  sprintf(output[OUT_TOTANGMOM].cNeg,"kg*m^2/s");
   output[OUT_TOTANGMOM].bNeg = 1;
   output[OUT_TOTANGMOM].iNum = 1;
   output[OUT_TOTANGMOM].dNeg = 1.0;

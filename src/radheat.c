@@ -4783,7 +4783,7 @@ void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_40KDPOWERDT].cDescr,"Time Rate of Change of 40K Power Generation");
   sprintf(output[OUT_40KDPOWERDT].cNeg,"TW/Gyr");
   output[OUT_40KDPOWERDT].bNeg = 1;
-  output[OUT_40KDPOWERDT].dNeg = 1e9/1e12; /* XXX */
+  output[OUT_40KDPOWERDT].dNeg = 1e9/1e12; /* :) */
   output[OUT_40KDPOWERDT].iNum = 1;
   output[OUT_40KDPOWERDT].iModuleBit = RADHEAT;
   fnWrite[OUT_40KDPOWERDT] = &fvWriteD40KPowerDt;
@@ -4937,7 +4937,7 @@ void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_232THMASSMAN].cName,"232ThMassMan");
   sprintf(output[OUT_232THMASSMAN].cDescr,"Total Mass of 232Th");
-  sprintf(output[OUT_232THMASSMAN].cNeg,"Earth Masses");
+  sprintf(output[OUT_232THMASSMAN].cNeg,"Mearth");
   output[OUT_232THMASSMAN].bNeg = 1;
   output[OUT_232THMASSMAN].dNeg = 1./MEARTH;
   output[OUT_232THMASSMAN].iNum = 1;
@@ -4965,7 +4965,7 @@ void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_232THMASSCORE].cName,"232ThMassCore");
   sprintf(output[OUT_232THMASSCORE].cDescr,"Total Mass of 232Th");
-  sprintf(output[OUT_232THMASSCORE].cNeg,"Earth Masses");
+  sprintf(output[OUT_232THMASSCORE].cNeg,"Mearth");
   output[OUT_232THMASSCORE].bNeg = 1;
   output[OUT_232THMASSCORE].dNeg = 1./MEARTH;
   output[OUT_232THMASSCORE].iNum = 1;
@@ -5059,7 +5059,7 @@ void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_238UMASSMAN].cName,"238UMassMan");
   sprintf(output[OUT_238UMASSMAN].cDescr,"Total Mass of 238U");
-  sprintf(output[OUT_238UMASSMAN].cNeg,"Earth Masses");
+  sprintf(output[OUT_238UMASSMAN].cNeg,"Mearth");
   output[OUT_238UMASSMAN].bNeg = 1;
   output[OUT_238UMASSMAN].dNeg = 1./MEARTH;
   output[OUT_238UMASSMAN].iNum = 1;
@@ -5087,7 +5087,7 @@ void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_238UMASSCORE].cName,"238UMassCore");
   sprintf(output[OUT_238UMASSCORE].cDescr,"Total Core Mass of 238U");
-  sprintf(output[OUT_238UMASSCORE].cNeg,"Earth Masses");
+  sprintf(output[OUT_238UMASSCORE].cNeg,"Mearth");
   output[OUT_238UMASSCORE].bNeg = 1;
   output[OUT_238UMASSCORE].dNeg = 1./MEARTH;
   output[OUT_238UMASSCORE].iNum = 1;
@@ -5115,7 +5115,7 @@ void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_238UMASSCRUST].cName,"238UMassCrust");
   sprintf(output[OUT_238UMASSCRUST].cDescr,"Total Crust Mass of 238U");
-  sprintf(output[OUT_238UMASSCRUST].cNeg,"Earth Masses");
+  sprintf(output[OUT_238UMASSCRUST].cNeg,"Mearth");
   output[OUT_238UMASSCRUST].bNeg = 1;
   output[OUT_238UMASSCRUST].dNeg = 1./MEARTH;
   output[OUT_238UMASSCRUST].iNum = 1;
@@ -5181,7 +5181,7 @@ void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_235UMASSMAN].cName,"235UMassMan");
   sprintf(output[OUT_235UMASSMAN].cDescr,"Total Mass of 235U");
-  sprintf(output[OUT_235UMASSMAN].cNeg,"Earth Masses");
+  sprintf(output[OUT_235UMASSMAN].cNeg,"Mearth");
   output[OUT_235UMASSMAN].bNeg = 1;
   output[OUT_235UMASSMAN].dNeg = 1./MEARTH;
   output[OUT_235UMASSMAN].iNum = 1;
@@ -5209,7 +5209,7 @@ void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_235UMASSCORE].cName,"235UMassCore");
   sprintf(output[OUT_235UMASSCORE].cDescr,"Total Core Mass of 235U");
-  sprintf(output[OUT_235UMASSCORE].cNeg,"Earth Masses");
+  sprintf(output[OUT_235UMASSCORE].cNeg,"Mearth");
   output[OUT_235UMASSCORE].bNeg = 1;
   output[OUT_235UMASSCORE].dNeg = 1./MEARTH;
   output[OUT_235UMASSCORE].iNum = 1;

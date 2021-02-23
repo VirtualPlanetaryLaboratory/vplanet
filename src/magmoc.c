@@ -2013,7 +2013,7 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_SOLIDRADIUS].cName,"SolidRadius");
   sprintf(output[OUT_SOLIDRADIUS].cDescr,"Solidification radius of the mantle");
-  sprintf(output[OUT_SOLIDRADIUS].cNeg,"Earth radii");
+  sprintf(output[OUT_SOLIDRADIUS].cNeg,"Rearth");
   output[OUT_SOLIDRADIUS].bNeg = 1;
   output[OUT_SOLIDRADIUS].dNeg = 1/REARTH; // division factor to get from SI to desired unit
   output[OUT_SOLIDRADIUS].iNum = 1;

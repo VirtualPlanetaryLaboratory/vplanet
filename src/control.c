@@ -543,11 +543,11 @@ void fsUnitsLength(int iType,char cUnit[]) {
   else if (iType == 2)
     sprintf(cUnit,"km");
   else if (iType == 3)
-    sprintf(cUnit,"solar");
+    sprintf(cUnit,"Rsun");
   else if (iType == 4)
-    sprintf(cUnit,"Earth");
+    sprintf(cUnit,"Rearth");
   else if (iType == 5)
-    sprintf(cUnit,"Jupiter");
+    sprintf(cUnit,"Rjupiter");
   else if (iType == 6)
     sprintf(cUnit,"au");
   else {
@@ -616,13 +616,11 @@ void fsUnitsMass(int iType,char cUnit[]) {
   else if (iType == 1)
     sprintf(cUnit,"gm");
   else if (iType == 2)
-    sprintf(cUnit,"solar");
+    sprintf(cUnit,"Msun");
   else if (iType == 3)
-    sprintf(cUnit,"Earth");
+    sprintf(cUnit,"Mearth");
   else if (iType == 4)
-    sprintf(cUnit,"Jupiter");
-  else if (iType == 5)
-    sprintf(cUnit,"Neptune");
+    sprintf(cUnit,"Mjupiter");
   else {
     fprintf(stderr,"ERROR: Unknown iUnitMass: %d.\n",iType);
     exit(EXIT_UNITS);

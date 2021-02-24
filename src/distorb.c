@@ -223,15 +223,15 @@ void ReadOrbitModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 
 void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DFCRIT].cName,"dDfcrit");
-  sprintf(options[OPT_DFCRIT].cDescr,"Tolerance parameter for recalculating
-    semi- functions");
+  sprintf(options[OPT_DFCRIT].cDescr,
+    "Tolerance parameter for recalculating semi-major axis functions");
   sprintf(options[OPT_DFCRIT].cDefault,"0.1");
   options[OPT_DFCRIT].dDefault = 0.1;
   options[OPT_DFCRIT].iType = 2;
   options[OPT_DFCRIT].bMultiFile = 0;
   fnRead[OPT_DFCRIT] = &ReadDfCrit;
   sprintf(options[OPT_DFCRIT].cLongDescr,
-    "When running DISTORB with other modules that modify the semi-major axis,\n"
+    "When running DistOrb with other modules that modify the semi-major axis,\n"
     "set his argument to be the maximum relative change in the Laplace\n"
     "coefficients before recalculating the values. Setting this value to be\n"
     "low can cause the simulation to run very slowly, with negligible gain in\n"
@@ -283,6 +283,10 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HALTHILLSTAB].iType = 0;
   options[OPT_HALTHILLSTAB].bMultiFile = 0;
   fnRead[OPT_HALTHILLSTAB] = &ReadHaltHillStab;
+  sprintf(options[OPT_HALTHILLSTAB].cLongDescr,
+    "If two planets come within the Hill stability criterion, the code will"
+    "halt if this parameter is set"
+  );
 
   //XXX What does this option do?
   sprintf(options[OPT_HALTCLOSEENC].cName,"bHaltCloseEnc");
@@ -295,7 +299,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
 
   //XXX What does this option do?
   sprintf(options[OPT_EIGENSET].cName,"bEigenSet");
-  sprintf(options[OPT_EIGENSET].cDescr,"Read in eigenvalues/vectors?");
+  sprintf(options[OPT_EIGENSET].cDescr,"Read in eigenvalues/vectors for DistOrb?");
   sprintf(options[OPT_EIGENSET].cDefault,"0");
   options[OPT_EIGENSET].dDefault = 0;
   options[OPT_EIGENSET].iType = 0;
@@ -311,6 +315,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_EIGENVALUE].bMultiFile = 0;
   fnRead[OPT_EIGENVALUE] = &ReadEigenvalue;
 
+  // Should this be a Boolean? XXX
   sprintf(options[OPT_EIGENVECTOR].cName,"dEigenvector");
   sprintf(options[OPT_EIGENVECTOR].cDescr,"Set this to provide eigenvalues/vectors at input");
   sprintf(options[OPT_EIGENVECTOR].cDefault,"0");
@@ -1645,8 +1650,12 @@ void WriteBodyDQincDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
 
 void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
+  // XXX Many of these should be moved to OutputGeneral as they apply to both
+  // DistOrb and SpiNBody
+
   sprintf(output[OUT_DECCDTDISTORB].cName,"DEccDtDistOrb");
-  sprintf(output[OUT_DECCDTDISTORB].cDescr,"Body's decc/dt in DistOrb");
+  sprintf(output[OUT_DECCDTDISTORB].cDescr,
+    "Body's eccentricity derivative in DistOrb");
   sprintf(output[OUT_DECCDTDISTORB].cNeg,"1/year");
   output[OUT_DECCDTDISTORB].bNeg = 1;
   output[OUT_DECCDTDISTORB].dNeg = YEARSEC;
@@ -1654,7 +1663,8 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DECCDTDISTORB] = &WriteBodyDEccDtDistOrb;
 
   sprintf(output[OUT_DSINCDTDISTORB].cName,"DSincDtDistOrb");
-  sprintf(output[OUT_DSINCDTDISTORB].cDescr,"Body's dsin(.5*Inc)/dt in DistOrb");
+  sprintf(output[OUT_DSINCDTDISTORB].cDescr,
+    "Body's sin(Inc/2) derivative in DistOrb");
   sprintf(output[OUT_DSINCDTDISTORB].cNeg,"1/year");
   output[OUT_DSINCDTDISTORB].bNeg = 1;
   output[OUT_DSINCDTDISTORB].dNeg = YEARSEC;
@@ -1663,7 +1673,8 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DSINCDTDISTORB] = &WriteBodyDSincDtDistOrb;
 
   sprintf(output[OUT_DINCDTDISTORB].cName,"DIncDtDistOrb");
-  sprintf(output[OUT_DINCDTDISTORB].cDescr,"Body's dInc/dt in DistOrb");
+  sprintf(output[OUT_DINCDTDISTORB].cDescr,
+    "Body's inclination derivative in DistOrb");
   sprintf(output[OUT_DINCDTDISTORB].cNeg,"deg/year");
   output[OUT_DINCDTDISTORB].bNeg = 1;
   output[OUT_DINCDTDISTORB].dNeg = YEARSEC/DEGRAD;
@@ -1672,7 +1683,8 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DINCDTDISTORB] = &WriteBodyDIncDtDistOrb;
 
   sprintf(output[OUT_DLONGPDTDISTORB].cName,"DLongPDtDistOrb");
-  sprintf(output[OUT_DLONGPDTDISTORB].cDescr,"Body's dvarpi/dt in DistOrb");
+  sprintf(output[OUT_DLONGPDTDISTORB].cDescr,
+    "Body's longitude of pericenter derivative in DistOrb");
   sprintf(output[OUT_DLONGPDTDISTORB].cNeg,"deg/yr");
   output[OUT_DLONGPDTDISTORB].bNeg = 1;
   output[OUT_DLONGPDTDISTORB].dNeg = YEARSEC/DEGRAD;
@@ -1681,7 +1693,8 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DLONGPDTDISTORB] = &WriteBodyDLongPDtDistOrb;
 
   sprintf(output[OUT_DLONGADTDISTORB].cName,"DLongADtDistOrb");
-  sprintf(output[OUT_DLONGADTDISTORB].cDescr,"Body's dOmega/dt in DistOrb");
+  sprintf(output[OUT_DLONGADTDISTORB].cDescr,
+    "Body's longitude of ascending node derivative in DistOrb");
   sprintf(output[OUT_DLONGADTDISTORB].cNeg,"deg/yr");
   output[OUT_DLONGADTDISTORB].bNeg = 1;
   output[OUT_DLONGADTDISTORB].dNeg = YEARSEC/DEGRAD;
@@ -1690,25 +1703,25 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DLONGADTDISTORB] = &WriteBodyDLongADtDistOrb;
 
   sprintf(output[OUT_SINC].cName,"Sinc");
-  sprintf(output[OUT_SINC].cDescr,"Body's sin(1/2*Inclination) in DistOrb");
+  sprintf(output[OUT_SINC].cDescr,"Body's sin(Inc/2) in DistOrb");
   output[OUT_SINC].iNum = 1;
   output[OUT_SINC].iModuleBit = DISTORB;
   fnWrite[OUT_SINC] = &WriteBodySinc;
 
   sprintf(output[OUT_PINC].cName,"Pinc");
-  sprintf(output[OUT_PINC].cDescr,"Body's p = s*sin(Omega) in DistOrb");
+  sprintf(output[OUT_PINC].cDescr,"Body's Poincare p in DistOrb");
   output[OUT_PINC].iNum = 1;
   output[OUT_PINC].iModuleBit = DISTORB;
   fnWrite[OUT_PINC] = &WriteBodyPinc;
 
   sprintf(output[OUT_QINC].cName,"Qinc");
-  sprintf(output[OUT_QINC].cDescr,"Body's q = s* cos(Omega) in DistOrb");
+  sprintf(output[OUT_QINC].cDescr,"Body's Poincare q in DistOrb");
   output[OUT_QINC].iNum = 1;
   output[OUT_QINC].iModuleBit = DISTORB;
   fnWrite[OUT_QINC] = &WriteBodyQinc;
 
   sprintf(output[OUT_DHECCDTDISTORB].cName,"DHeccDtDistOrb");
-  sprintf(output[OUT_DHECCDTDISTORB].cDescr,"Body's dh/dt in DistOrb");
+  sprintf(output[OUT_DHECCDTDISTORB].cDescr,"Body's Poincare h derivative in DistOrb");
   sprintf(output[OUT_DHECCDTDISTORB].cNeg,"1/year");
   output[OUT_DHECCDTDISTORB].bNeg = 1;
   output[OUT_DHECCDTDISTORB].dNeg = YEARSEC;
@@ -1717,7 +1730,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DHECCDTDISTORB] = &WriteBodyDHeccDtDistOrb;
 
   sprintf(output[OUT_DKECCDTDISTORB].cName,"DKeccDtDistOrb");
-  sprintf(output[OUT_DKECCDTDISTORB].cDescr,"Body's dk/dt in DistOrb");
+  sprintf(output[OUT_DKECCDTDISTORB].cDescr,"Body's Poincare k in DistOrb");
   sprintf(output[OUT_DKECCDTDISTORB].cNeg,"1/year");
   output[OUT_DKECCDTDISTORB].bNeg = 1;
   output[OUT_DKECCDTDISTORB].dNeg = YEARSEC;
@@ -1726,7 +1739,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DKECCDTDISTORB] = &WriteBodyDKeccDtDistOrb;
 
   sprintf(output[OUT_DPINCDTDISTORB].cName,"DPincDtDistOrb");
-  sprintf(output[OUT_DPINCDTDISTORB].cDescr,"Body's dp/dt in DistOrb");
+  sprintf(output[OUT_DPINCDTDISTORB].cDescr,"Body's Poincare p in DistOrb");
   sprintf(output[OUT_DPINCDTDISTORB].cNeg,"1/year");
   output[OUT_DPINCDTDISTORB].bNeg = 1;
   output[OUT_DPINCDTDISTORB].dNeg = YEARSEC;
@@ -1735,7 +1748,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DPINCDTDISTORB] = &WriteBodyDPincDtDistOrb;
 
   sprintf(output[OUT_DQINCDTDISTORB].cName,"DQincDtDistOrb");
-  sprintf(output[OUT_DQINCDTDISTORB].cDescr,"Body's dq/dt in DistOrb");
+  sprintf(output[OUT_DQINCDTDISTORB].cDescr,"Body's Poincare q in DistOrb");
   sprintf(output[OUT_DQINCDTDISTORB].cNeg,"1/year");
   output[OUT_DQINCDTDISTORB].bNeg = 1;
   output[OUT_DQINCDTDISTORB].dNeg = YEARSEC;

@@ -415,8 +415,8 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
    */
 
   sprintf(options[OPT_LL13N0].cName,"dLL13N0");
-  sprintf(options[OPT_LL13N0].cDescr,"Lee+Leung 2013 Mean Motion");
-  sprintf(options[OPT_LL13N0].cDefault,"1 /yr");
+  sprintf(options[OPT_LL13N0].cDescr,"Lee+Leung 2013 Mean Motion -- for testing ONLY");
+  sprintf(options[OPT_LL13N0].cDefault,"1/yr");
   options[OPT_LL13N0].dDefault = 1./YEARSEC;
   options[OPT_LL13N0].iType = 2;
   options[OPT_LL13N0].bMultiFile = 1;
@@ -425,8 +425,8 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_LL13N0] = &ReadLL13N0;
 
   sprintf(options[OPT_LL13K0].cName,"dLL13K0");
-  sprintf(options[OPT_LL13K0].cDescr,"Lee+Leung 2013 Radial Epicyclic Frequency");
-  sprintf(options[OPT_LL13K0].cDefault,"1 /yr");
+  sprintf(options[OPT_LL13K0].cDescr,"Lee+Leung 2013 Radial Epicyclic Frequency -- for testing ONLY");
+  sprintf(options[OPT_LL13K0].cDefault,"1/yr");
   options[OPT_LL13K0].dDefault = 1./YEARSEC;
   options[OPT_LL13K0].iType = 2;
   options[OPT_LL13K0].bMultiFile = 1;
@@ -435,8 +435,8 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_LL13K0] = &ReadLL13K0;
 
   sprintf(options[OPT_LL13V0].cName,"dLL13V0");
-  sprintf(options[OPT_LL13V0].cDescr,"Lee+Leung 2013 Radial Epicyclic Frequency");
-  sprintf(options[OPT_LL13V0].cDefault,"1 /yr");
+  sprintf(options[OPT_LL13V0].cDescr,"Lee+Leung 2013 Radial Epicyclic Frequency -- for testing ONLY");
+  sprintf(options[OPT_LL13V0].cDefault,"1/yr");
   options[OPT_LL13V0].dDefault = 1./YEARSEC;
   options[OPT_LL13V0].iType = 2;
   options[OPT_LL13V0].bMultiFile = 1;
@@ -451,7 +451,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_HALTHOLMAN] = &ReadHaltHolmanUnstable;
 
   sprintf(options[OPT_HALTROCHELOBE].cName,"bHaltRocheLobe");
-  sprintf(options[OPT_HALTROCHELOBE].cDescr,"Halt roche lobe crossing occurs?");
+  sprintf(options[OPT_HALTROCHELOBE].cDescr,"Halt when Roche lobe crossing occurs?");
   sprintf(options[OPT_HALTROCHELOBE].cDefault,"0");
   options[OPT_HALTROCHELOBE].iType = 0;
   fnRead[OPT_HALTROCHELOBE] = &ReadHaltRocheLobe;
@@ -1151,7 +1151,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FREEINC] = &WriteFreeIncBinary;
 
   sprintf(output[OUT_CBPPHI].cName,"CBPPhi");
-  sprintf(output[OUT_CBPPHI].cDescr,"CBP Orbital Azimuthal Angle");
+  sprintf(output[OUT_CBPPHI].cDescr,"CBP Orbital Azimuthal Angle in BINARY");
   sprintf(output[OUT_CBPPHI].cNeg,"Deg");
   output[OUT_CBPPHI].bNeg = 1;
   output[OUT_CBPPHI].dNeg = 1.0/DEGRAD;
@@ -1178,7 +1178,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_BINSECPHI] = &WriteBinSecPhiBinary;
 
   sprintf(output[OUT_LL13N0].cName,"LL13N0");
-  sprintf(output[OUT_LL13N0].cDescr,"Leung+Lee 2013 Mean Motion");
+  sprintf(output[OUT_LL13N0].cDescr,"CBP Mean Motion in BINARY");
   sprintf(output[OUT_LL13N0].cNeg,"1/year");
   output[OUT_LL13N0].bNeg = 1;
   output[OUT_LL13N0].dNeg = 1./YEARSEC;
@@ -1196,7 +1196,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_LL13K0] = &WriteLL13K0Binary;
 
   sprintf(output[OUT_LL13V0].cName,"LL13V0");
-  sprintf(output[OUT_LL13V0].cDescr,"Leung+Lee 2013 vertical epicyclic frequency");
+  sprintf(output[OUT_LL13V0].cDescr,"CBP vertical epicyclic frequency in BINARY");
   sprintf(output[OUT_LL13V0].cNeg,"1/year");
   output[OUT_LL13V0].bNeg = 1;
   output[OUT_LL13V0].dNeg = 1./YEARSEC;
@@ -1205,7 +1205,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_LL13V0] = &WriteLL13V0Binary;
 
   sprintf(output[OUT_CBPR].cName,"CBPR");
-  sprintf(output[OUT_CBPR].cDescr,"CBP's Orbital Radius");
+  sprintf(output[OUT_CBPR].cDescr,"CBP's Orbital Radius in BINARY");
   output[OUT_CBPR].bNeg = 1;
   sprintf(output[OUT_CBPR].cNeg,"AU");
   output[OUT_CBPR].dNeg = 1.0/AUM;
@@ -1214,7 +1214,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_CBPR] = &WriteCBPRBinary;
 
   sprintf(output[OUT_BINPRIR].cName,"BinPriR");
-  sprintf(output[OUT_BINPRIR].cDescr,"Radial position of binary primary star");
+  sprintf(output[OUT_BINPRIR].cDescr,"Radial position of binary primary star for module BINARY");
   output[OUT_BINPRIR].bNeg = 1;
   sprintf(output[OUT_BINPRIR].cNeg,"AU");
   output[OUT_BINPRIR].dNeg = 1.0/AUM;
@@ -1223,7 +1223,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_BINPRIR] = &WriteBinPriRBinary;
 
   sprintf(output[OUT_BINSECR].cName,"BinSecR");
-  sprintf(output[OUT_BINSECR].cDescr,"Radial position of binary secondary star");
+  sprintf(output[OUT_BINSECR].cDescr,"Radial position of binary secondary star for module BINARY");
   output[OUT_BINSECR].bNeg = 1;
   sprintf(output[OUT_BINSECR].cNeg,"AU");
   output[OUT_BINSECR].dNeg = 1.0/AUM;
@@ -1232,7 +1232,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_BINSECR] = &WriteBinSecRBinary;
 
   sprintf(output[OUT_CBPR0].cName,"R0");
-  sprintf(output[OUT_CBPR0].cDescr,"CBP's Orbital Guiding Center Radius");
+  sprintf(output[OUT_CBPR0].cDescr,"CBP's Orbital Guiding Center Radius in BINARY");
   output[OUT_CBPR0].bNeg = 1;
   sprintf(output[OUT_CBPR0].cNeg,"AU");
   output[OUT_CBPR0].dNeg = 1.0/AUM;
@@ -1241,7 +1241,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_CBPR0] = &WriteCBPR0Binary;
 
   sprintf(output[OUT_CBPZ].cName,"CBPZ");
-  sprintf(output[OUT_CBPZ].cDescr,"CBP's Orbital Cylindrical Height Out of the Orbital Plane");
+  sprintf(output[OUT_CBPZ].cDescr,"CBP's Orbital Cylindrical Height Out of the Orbital Plane in BINARY");
   output[OUT_CBPZ].bNeg = 1;
   sprintf(output[OUT_CBPZ].cNeg,"AU");
   output[OUT_CBPZ].dNeg = 1.0/AUM;
@@ -1250,7 +1250,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_CBPZ] = &WriteCBPZBinary;
 
   sprintf(output[OUT_CBPRDOT].cName,"CBPRDot");
-  sprintf(output[OUT_CBPRDOT].cDescr,"CBP's Radial Orbital Velocity");
+  sprintf(output[OUT_CBPRDOT].cDescr,"CBP's Radial Orbital Velocity in BINARY");
   sprintf(output[OUT_CBPRDOT].cNeg,"/day");
   output[OUT_CBPRDOT].bNeg = 0;
   output[OUT_CBPRDOT].dNeg = DAYSEC;
@@ -1259,7 +1259,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_CBPRDOT] = &WriteCBPRDotBinary;
 
   sprintf(output[OUT_CBPZDOT].cName,"CBPZDot");
-  sprintf(output[OUT_CBPZDOT].cDescr,"CBP's Z Orbital Velocity");
+  sprintf(output[OUT_CBPZDOT].cDescr,"CBP's Z Orbital Velocity in BINARY");
   sprintf(output[OUT_CBPZDOT].cNeg,"/day");
   output[OUT_CBPZDOT].bNeg = 0;
   output[OUT_CBPZDOT].dNeg = DAYSEC;
@@ -1268,7 +1268,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_CBPZDOT] = &WriteCBPZDotBinary;
 
   sprintf(output[OUT_CBPPHIDOT].cName,"CBPPhiDot");
-  sprintf(output[OUT_CBPPHIDOT].cDescr,"CBP's Phi Angular Orbital Velocity");
+  sprintf(output[OUT_CBPPHIDOT].cDescr,"CBP's Phi Angular Orbital Velocity in BINARY");
   sprintf(output[OUT_CBPPHIDOT].cNeg,"/day");
   output[OUT_CBPPHIDOT].bNeg = 0;
   output[OUT_CBPPHIDOT].dNeg = DAYSEC;
@@ -1277,7 +1277,7 @@ void InitializeOutputBinary(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_CBPPHIDOT] = &WriteCBPPhiDotBinary;
 
   sprintf(output[OUT_CBPINSOL].cName,"CBPInsol");
-  sprintf(output[OUT_CBPINSOL].cDescr,"CBP's binary orbit-averaged Insolation");
+  sprintf(output[OUT_CBPINSOL].cDescr,"CBP's binary Orbit-Averaged Insolation in BINARY");
   output[OUT_CBPINSOL].bNeg = 0;
   output[OUT_CBPINSOL].iNum = 1;
   output[OUT_CBPINSOL].iModuleBit = BINARY;

@@ -145,11 +145,18 @@ void ReadHaltCloseEnc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     control->Halt[iFile-1].bCloseEnc = options->dDefault;
 }
 
+/* For LL2 (eigenvalue) solution only, we could add these option to let the
+user specify the eigenvalues instead of calculating them from scratch. This is
+useful if you want to use, for example, an N-body code to compute frequencies
+that are accurate to higher orders. One could conceivably fake the higher order
+evolution using only the LL2 solution by doing this.
+
+
 void ReadEigenSet(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1,bTmp;
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
-    /* Option was found */
+    / * Option was found * /
     body[iFile-1].bEigenSet = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
@@ -158,7 +165,7 @@ void ReadEigenSet(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
 }
 
 void ReadEigenvalue(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in the primary file */
+  / * This parameter cannot exist in the primary file * /
   int lTmp=-1;
   double dTmp;
 
@@ -176,7 +183,7 @@ void ReadEigenvalue(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 }
 
 void ReadEigenvector(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in the primary file */
+  / * This parameter cannot exist in the primary file * /
   int lTmp=-1;
   double dTmp;
 
@@ -190,6 +197,7 @@ void ReadEigenvector(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     if (iFile > 0)
       body[iFile-1].dEigenvector = options->dDefault;
 }
+*/
 
 void ReadOrbitModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
@@ -288,7 +296,6 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
     "halt if this parameter is set"
   );
 
-  //XXX What does this option do?
   sprintf(options[OPT_HALTCLOSEENC].cName,"bHaltCloseEnc");
   sprintf(options[OPT_HALTCLOSEENC].cDescr,"Halt if orbits get too close");
   sprintf(options[OPT_HALTCLOSEENC].cDefault,"0");
@@ -296,8 +303,17 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HALTCLOSEENC].iType = 0;
   options[OPT_HALTCLOSEENC].bMultiFile = 0;
   fnRead[OPT_HALTCLOSEENC] = &ReadHaltCloseEnc;
+  sprintf(options[OPT_HALTCLOSEENC].cLongDescr,
+    "Halt the code if the apocenter of an interior planets is less than 4 "
+    "mutual Hill radii from the pericenter of an outer planet."
+  );
 
-  //XXX What does this option do?
+  /* For LL2 (eigenvalue) solution only, we could add these option to let the
+  user specify the eigenvalues instead of calculating them from scratch. This is
+  useful if you want to use, for example, an N-body code to compute frequencies
+  that are accurate to higher orders. One could conceivably fake the higher order
+  evolution using only the LL2 solution by doing this.
+
   sprintf(options[OPT_EIGENSET].cName,"bEigenSet");
   sprintf(options[OPT_EIGENSET].cDescr,"Read in eigenvalues/vectors for DistOrb?");
   sprintf(options[OPT_EIGENSET].cDefault,"0");
@@ -306,7 +322,6 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_EIGENSET].bMultiFile = 0;
   fnRead[OPT_EIGENSET] = &ReadEigenSet;
 
-  //XXX What does this option do?
   sprintf(options[OPT_EIGENVALUE].cName,"dEigenvalue");
   sprintf(options[OPT_EIGENVALUE].cDescr,"Set this to provide eigenvalues/vectors at input");
   sprintf(options[OPT_EIGENVALUE].cDefault,"0");
@@ -315,7 +330,6 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_EIGENVALUE].bMultiFile = 0;
   fnRead[OPT_EIGENVALUE] = &ReadEigenvalue;
 
-  // Should this be a Boolean? XXX
   sprintf(options[OPT_EIGENVECTOR].cName,"dEigenvector");
   sprintf(options[OPT_EIGENVECTOR].cDescr,"Set this to provide eigenvalues/vectors at input");
   sprintf(options[OPT_EIGENVECTOR].cDefault,"0");
@@ -323,24 +337,34 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_EIGENVECTOR].iType = 0;
   options[OPT_EIGENVECTOR].bMultiFile = 0;
   fnRead[OPT_EIGENVECTOR] = &ReadEigenvector;
+*/
 
-  //XXX What does this option do?
   sprintf(options[OPT_OUTPUTLAPL].cName,"bOutputLapl");
-  sprintf(options[OPT_OUTPUTLAPL].cDescr,"Output Laplace functions and related data");
+  sprintf(options[OPT_OUTPUTLAPL].cDescr,"Output Laplace functions and related data?");
   sprintf(options[OPT_OUTPUTLAPL].cDefault,"0");
   options[OPT_OUTPUTLAPL].dDefault = 0;
   options[OPT_OUTPUTLAPL].iType = 0;
   options[OPT_OUTPUTLAPL].bMultiFile = 0;
   fnRead[OPT_OUTPUTLAPL] = &ReadOutputLapl;
+  sprintf(options[OPT_OUTPUTLAPL].cLongDescr,
+    "Write files that contain the Laplace coefficients and their derivatives in "
+    "DistOrb. This file can be used to check that they are recomputed "
+    "frequently enough when damping (e.g. EqTide) is included."
+  );
 
-  //XXX What does this option do?
   sprintf(options[OPT_OUTPUTEIGEN].cName,"bOutputEigen");
-  sprintf(options[OPT_OUTPUTEIGEN].cDescr,"Output Eigenvalues");
+  sprintf(options[OPT_OUTPUTEIGEN].cDescr,"Output Eigenvalues?");
   sprintf(options[OPT_OUTPUTEIGEN].cDefault,"0");
   options[OPT_OUTPUTEIGEN].dDefault = 0;
   options[OPT_OUTPUTEIGEN].iType = 0;
   options[OPT_OUTPUTEIGEN].bMultiFile = 0;
   fnRead[OPT_OUTPUTEIGEN] = &ReadOutputEigen;
+  sprintf(options[OPT_OUTPUTLAPL].cLongDescr,
+    "Write special files that contain the eigenvalues and eigenvectors of the "
+    "system with DistOrb. In the LL2 solution, these are already computed. In "
+    "the RD4 solution, they are computed at time of output. These can be "
+    "useful for interpretating results."
+  );
 }
 
 void ReadOptionsDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {

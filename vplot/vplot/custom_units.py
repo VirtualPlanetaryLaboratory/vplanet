@@ -11,6 +11,7 @@ custom_units = [
     u.def_unit("LSUN",u.Lsun), #Alias for L_sun
     u.def_unit("ergs",u.erg), #Alias for erg
     u.def_unit("TO", 1.39e21 * u.kg),  # Terrestrial ocean
+    u.def_unit('orbit'),
     u.def_unit("F/F_Earth", u.Unit("")),  # TODO: Unit in Binary
 ]
 

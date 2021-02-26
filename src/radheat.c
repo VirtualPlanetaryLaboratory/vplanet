@@ -1451,7 +1451,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_40KMASSMAN].bMultiFile = 1;
   options[OPT_40KMASSMAN].dNeg = EMASSMAN40K;
   options[OPT_40KMASSMAN].dDefault = 0;
-  sprintf(options[OPT_40KMASSMAN].cNeg,"Earth Masses");
+  sprintf(options[OPT_40KMASSMAN].cNeg,"Mearth");
   fnRead[OPT_40KMASSMAN] = &fvRead40KMassMan;
 
   sprintf(options[OPT_40KMASSCORE].cName,"d40KMassCore");

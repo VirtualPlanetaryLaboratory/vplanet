@@ -347,8 +347,8 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OUTPUTLAPL].bMultiFile = 0;
   fnRead[OPT_OUTPUTLAPL] = &ReadOutputLapl;
   sprintf(options[OPT_OUTPUTLAPL].cLongDescr,
-    "Write files that contain the Laplace coefficients and their derivatives in "
-    "DistOrb. This file can be used to check that they are recomputed "
+    "Write files that contain the Laplace coefficients and their derivatives\n"
+    "in DistOrb. This file can be used to check that they are recomputed \n"
     "frequently enough when damping (e.g. EqTide) is included."
   );
 
@@ -360,9 +360,9 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OUTPUTEIGEN].bMultiFile = 0;
   fnRead[OPT_OUTPUTEIGEN] = &ReadOutputEigen;
   sprintf(options[OPT_OUTPUTLAPL].cLongDescr,
-    "Write special files that contain the eigenvalues and eigenvectors of the "
-    "system with DistOrb. In the LL2 solution, these are already computed. In "
-    "the RD4 solution, they are computed at time of output. These can be "
+    "Write special files that contain the eigenvalues and eigenvectors of the\n"
+    "system with DistOrb. In the LL2 solution, these are already computed. In\n"
+    "the RD4 solution, they are computed at time of output. These can be\n"
     "useful for interpretating results."
   );
 }

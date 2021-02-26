@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot  as plt
+import sys
 
 plt.close('all')
 
@@ -131,4 +132,10 @@ ax8.set_xlabel('Time (Myrs)')
 
 
 plt.subplots_adjust(left=0.1, right=0.95, top=0.93, bottom=0.05, wspace=0.25)
-plt.savefig('Results_GJ1132b.png')
+
+if (sys.argv[1] == 'pdf'):
+    plt.savefig('MagmOC_GJ1132b.pdf')
+if (sys.argv[1] == 'png'):
+    plt.savefig('MagmOC_GJ1132b.png')
+
+#plt.savefig('Results_GJ1132b.png')

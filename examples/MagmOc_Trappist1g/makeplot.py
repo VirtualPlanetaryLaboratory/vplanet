@@ -8,6 +8,7 @@ import matplotlib as mpl
 import matplotlib.pyplot  as plt
 import seaborn as sns
 from time import time
+import sys
 
 plt.close('all')
 
@@ -207,4 +208,8 @@ ax8.set_xlabel('Time (Myrs)')
 
 
 plt.subplots_adjust(left=0.1, right=0.95, top=0.93, bottom=0.05, wspace=0.25)
-plt.savefig('Trappist1g_2TO.png')
+if (sys.argv[1] == 'pdf'):
+    plt.savefig('MagmOC_Trappist1g.pdf')
+if (sys.argv[1] == 'png'):
+    plt.savefig('MagmOC_Trappist1g.png')
+# plt.savefig('Trappist1g_2TO.png')

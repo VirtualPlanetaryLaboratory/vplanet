@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot  as plt
 import matplotlib.gridspec as gridspec
+import sys
+
 
 plt.close('all')
 # Set style for plot #
@@ -157,5 +159,11 @@ bc = t2.get_bbox_patch()
 bc.set_boxstyle("rarrow", pad=0.3)
 
 plt.subplots_adjust(left=0.18, right=0.86, top=0.95, bottom=0.1, hspace=0)
-plt.savefig('Earth_5TO_Hamano.png')
+
+if (sys.argv[1] == 'pdf'):
+    plt.savefig('MagmOC_Earth.pdf')
+if (sys.argv[1] == 'png'):
+    plt.savefig('MagmOC_Earth.png')
+
+# plt.savefig('Earth_5TO_Hamano.png')
 # plt.savefig('Earth_5TO_Hamano.eps', format='eps')

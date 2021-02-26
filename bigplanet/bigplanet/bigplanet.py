@@ -174,6 +174,8 @@ def ProcessLogFile(logfile, data):
         if line.startswith('('):
             fv_param = line[1:line.find(')')].strip()
             units = line[line.find('[')+1:line.find(']')].strip()
+            units =  line.rpartition('[')[2]
+            units  = units.rpartition(']')[0]
 
             if not units:
                 units = 'nd'

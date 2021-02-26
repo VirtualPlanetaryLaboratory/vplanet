@@ -17,9 +17,13 @@ def get_param_unit(param, file, line):
 
     Returns an `astropy.units` unit.
     """
-    match = re.search(r"\[(.*?)\]", param)
+    #change match top find the second to last string in line
+    string = param.rpartition('[')[2]
+    string = string.rpartition(']')[0]
+    match = string
+
     if match:
-        unit_str = match.groups()[0]
+        unit_str = match
 
         with warnings.catch_warnings(record=True) as w:
             try:
@@ -145,7 +149,7 @@ class Log(object):
         """
         Container for the information in the header of the log file,
         an instance of :py:class:`LogStage`.
-        
+
         """
         return self._header
 

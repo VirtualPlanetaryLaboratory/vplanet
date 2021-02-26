@@ -21,7 +21,7 @@ mpl.rcParams['figure.figsize'] = (6.5,6)
 mpl.rcParams['font.size'] = 10.0
 
 # Run simulations
-os.chdir('Lopez12CPL/auto')
+os.chdir('Lopez12CPL/Auto')
 print('Running Lopez12CPL-Auto.')
 subprocess.call(['vplanet', 'vpl.in'])
 

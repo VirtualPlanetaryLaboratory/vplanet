@@ -599,6 +599,16 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_DISCRETEROT].cDefault,"1");
   options[OPT_DISCRETEROT].iType = 0;
   fnRead[OPT_DISCRETEROT] = &ReadDiscreteRot;
+  sprintf(options[OPT_DISCRETEROT].cLongDescr,
+    "In the CPL model of EqTide, this option toggles between two ways in \n"
+    "which the rotation rate behaves once it has damped to equilibrium. \n"
+    "The rigorous model only has two states: 1:1 and 3:2 frequency ratios, \n"
+    "but this is due to truncation in the solution; the equilibrium value \n"
+    "is a continuous function of eccentricity. If this option is set to 1, \n"
+    "then only the 1:1 and 3:2 states are availeble, with a boundary at \n"
+    "e = sqrt(1/19); if set to 0, the rotation rate is (1+9.5e^2) times the \n"
+    "mean motion."
+  );
 
   sprintf(options[OPT_FIXORBIT].cName,"bFixOrbit");
   sprintf(options[OPT_FIXORBIT].cDescr,"Fix Orbital Elements?");
@@ -606,13 +616,46 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_FIXORBIT].iType = 0;
   options[OPT_FIXORBIT].bMultiFile = 1;
   fnRead[OPT_FIXORBIT] = &ReadFixOrbit;
+  sprintf(options[OPT_FIXORBIT].cLongDescr,
+    "In EqTide, setting this value to 1 holds the eccentricity and semi-major \n"
+    "axis fixed during the evolution. This option can be helpful for testing \n"
+    "or for faking planet-planet perturbations that maintain an eccentricity. \n"
+    "(Although a bFixEcc option would probably be better!)\n"
+  );
 
-  sprintf(options[OPT_FORCEEQSPIN].cName,"bForceEqSpin");
+  sprintf(options[OPT_MAXLOCKDIFF].cName,"dMaxLockDiff");
+  sprintf(options[OPT_FORCEEQSPIN].cName,"bForceEqSpin"); // for LongDescr
+  sprintf(options[OPT_MAXLOCKDIFF].cDescr,
+    "Maximum relative difference between spin and equilibrium spin rates to force equilibrium rate");
+  sprintf(options[OPT_MAXLOCKDIFF].cDefault,"0");
+  options[OPT_MAXLOCKDIFF].dDefault = 0;
+  options[OPT_MAXLOCKDIFF].iType = 2;
+  options[OPT_MAXLOCKDIFF].bMultiFile = 1;
+  fnRead[OPT_MAXLOCKDIFF] = &ReadMaxLockDiff;
+  sprintf(options[OPT_MAXLOCKDIFF].cLongDescr,
+    "In EqTide, this is the maximum relative difference between the actual \n"
+    "spin rate and the equilibrium spin rate without tidal locking. See %s \n"
+    "for more information. %s must be set to 1 to enable this option.",
+  );
+
+  // cName defined above
   sprintf(options[OPT_FORCEEQSPIN].cDescr,"Force Spin Rate to Equilibrium?");
   sprintf(options[OPT_FORCEEQSPIN].cDefault,"0");
   options[OPT_FORCEEQSPIN].iType = 0;
   options[OPT_FORCEEQSPIN].bMultiFile = 1;
   fnRead[OPT_FORCEEQSPIN] = &ReadForceEqSpin;
+  sprintf(options[OPT_FORCEEQSPIN].cLongDescr,
+    "Set this option to 1 to force the rotation rate to the equilibrium \n"
+    "tidal value in EqTide. If set to 0, the rotation rate may \"bounce\" \n"
+    "back and forth across the equilibrium value due to numerical issues. \n"
+    "Setting to 0 may result in a simulation that requires orders of \n"
+    "magnitude more computational time. The threshold to force the equilibrium \n"
+    "value is set by %s, but the rotation rate will only be fixed if the \n"
+    "derivative on the other side of the equilibrium value send the spin rate \n"
+    "toward equilibrium. This latter functionality enables pre-MS stars to \n"
+    "not tidally lock if the torque due to contraction exceeds the tidal \n"
+    "torque.",options[OPT_MAXLOCKDIFF].cName
+  );
 
   sprintf(options[OPT_HALTDBLSYNC].cName,"bHaltDblSync");
   sprintf(options[OPT_HALTDBLSYNC].cDescr,"Halt at Double Synchronous State?");
@@ -634,7 +677,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_TIDALRADIUS].iType = 2;
   options[OPT_TIDALRADIUS].bMultiFile = 1;
   options[OPT_TIDALRADIUS].dNeg = REARTH;
-  sprintf(options[OPT_TIDALRADIUS].cNeg,"Earth radii");
+  sprintf(options[OPT_TIDALRADIUS].cNeg,"Rearth");
   fnRead[OPT_TIDALRADIUS] = &ReadTidalRadius;
 
   sprintf(options[OPT_HALTSYNCROT].cName,"bHaltSyncRot");
@@ -668,37 +711,30 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   options[OPT_K2ENV].bMultiFile = 1;
   fnRead[OPT_K2ENV] = &ReadK2Env;
 
-  sprintf(options[OPT_MAXLOCKDIFF].cName,"dMaxLockDiff");
-  sprintf(options[OPT_MAXLOCKDIFF].cDescr,"Maximum relative difference between spin and equilibrium spin rates to force equilibrium spin rate");
-  sprintf(options[OPT_MAXLOCKDIFF].cDefault,"0");
-  options[OPT_MAXLOCKDIFF].dDefault = 0;
-  options[OPT_MAXLOCKDIFF].iType = 2;
-  options[OPT_MAXLOCKDIFF].bMultiFile = 1;
-  fnRead[OPT_MAXLOCKDIFF] = &ReadMaxLockDiff;
-
   sprintf(options[OPT_OCEANTIDES].cName,"bOceanTides");
-  sprintf(options[OPT_OCEANTIDES].cDescr,"Include effects of ocean tides");
+  sprintf(options[OPT_OCEANTIDES].cDescr,"Include effects of ocean tides?");
   sprintf(options[OPT_OCEANTIDES].cDefault,"0");
   options[OPT_OCEANTIDES].iType = 0;
   options[OPT_OCEANTIDES].bMultiFile = 1;
   fnRead[OPT_OCEANTIDES] = &ReadEqtideOceanTides;
 
   sprintf(options[OPT_MANTLETIDES].cName,"bMantleTides");
-  sprintf(options[OPT_MANTLETIDES].cDescr,"Include effects of mantle tides");
+  sprintf(options[OPT_MANTLETIDES].cDescr,"Include effects of mantle tides?");
   sprintf(options[OPT_MANTLETIDES].cDefault,"0");
   options[OPT_MANTLETIDES].iType = 0;
   options[OPT_MANTLETIDES].bMultiFile = 1;
   fnRead[OPT_MANTLETIDES] = &ReadEqtideMantleTides;
 
+  // XXX What does this do?
   sprintf(options[OPT_USETIDALRADIUS].cName,"bUseTidalRadius");
-  sprintf(options[OPT_USETIDALRADIUS].cDescr,"Fix radius used for CPL tidal equations");
+  sprintf(options[OPT_USETIDALRADIUS].cDescr,"Fix radius used for CPL tidal equations?");
   sprintf(options[OPT_USETIDALRADIUS].cDefault,"0");
   options[OPT_USETIDALRADIUS].iType = 0;
   options[OPT_USETIDALRADIUS].bMultiFile = 1;
   fnRead[OPT_USETIDALRADIUS] = &ReadUseTidalRadius;
 
   sprintf(options[OPT_ENVTIDES].cName,"bEnvTides");
-  sprintf(options[OPT_ENVTIDES].cDescr,"Include effects of gaseous envelope tides");
+  sprintf(options[OPT_ENVTIDES].cDescr,"Include effects of gaseous envelope tides?");
   sprintf(options[OPT_ENVTIDES].cDefault,"0");
   options[OPT_ENVTIDES].iType = 0;
   options[OPT_ENVTIDES].bMultiFile = 1;
@@ -747,7 +783,8 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   fnRead[OPT_TIDALTAU] = &ReadTidalTau;
 
   sprintf(options[OPT_TIDEMODEL].cName,"sTideModel");
-  sprintf(options[OPT_TIDEMODEL].cDescr,"Tidal Model: p2 [constant-phase-lag, 2nd order] t8 [constant-time-lag, 8th order]");
+  sprintf(options[OPT_TIDEMODEL].cDescr,
+    "Tidal Model: p2 [constant-phase-lag, 2nd order] t8 [constant-time-lag, 8th order]");
   sprintf(options[OPT_TIDEMODEL].cDefault,"p2");
   options[OPT_TIDEMODEL].iType = 3;
   fnRead[OPT_TIDEMODEL] = &ReadTideModel;

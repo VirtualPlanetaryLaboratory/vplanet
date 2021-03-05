@@ -421,6 +421,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
 
   /* Water */
 
+  // XXX This probably overlaps with dSurfWaterMass in AtmEsc
   sprintf(options[OPT_WATERMASSATM].cName,"dWaterMassAtm");
   sprintf(options[OPT_WATERMASSATM].cDescr,"Initial Water Mass in the atmosphere");
   sprintf(options[OPT_WATERMASSATM].cDefault,"1 Terrestrial Ocean");
@@ -428,7 +429,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_WATERMASSATM].bMultiFile = 1;
   options[OPT_WATERMASSATM].dNeg = TOMASS; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
   options[OPT_WATERMASSATM].dDefault = 1;
-  sprintf(options[OPT_WATERMASSATM].cNeg,"Terrestrial Oceans");
+  sprintf(options[OPT_WATERMASSATM].cNeg,"TO");
   fnRead[OPT_WATERMASSATM] = &ReadWaterMassAtm;
 
   /* CO2 */
@@ -440,7 +441,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_CO2MASSMOATM].bMultiFile = 1;
   options[OPT_CO2MASSMOATM].dNeg = TOMASS; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
   options[OPT_CO2MASSMOATM].dDefault = 0;
-  sprintf(options[OPT_CO2MASSMOATM].cNeg,"Terrestrial Oceans");
+  sprintf(options[OPT_CO2MASSMOATM].cNeg,"TO");
   fnRead[OPT_CO2MASSMOATM] = &ReadCO2MassMOAtm;
 
   /* Temperature */
@@ -470,7 +471,8 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   /* Water partition coefficient */
 
   sprintf(options[OPT_WATERPARTCOEFF].cName,"dWaterPartCoeff");
-  sprintf(options[OPT_WATERPARTCOEFF].cDescr,"Water partition coefficient between melt and solid");
+  sprintf(options[OPT_WATERPARTCOEFF].cDescr,
+    "Water partition coefficient between melt and solid");
   sprintf(options[OPT_WATERPARTCOEFF].cDefault,"0.01");
   options[OPT_WATERPARTCOEFF].iType = 2;
   options[OPT_WATERPARTCOEFF].bMultiFile = 1;
@@ -500,31 +502,37 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_HALTMANTLESOLIDIFIED] = &ReadHaltMantleSolidified;
 
   sprintf(options[OPT_HALTMANTLEMELTFRACLOW].cName,"bHaltMantleMeltFracLow");
-  sprintf(options[OPT_HALTMANTLEMELTFRACLOW].cDescr,"Halt when mantle mostly solidified?");
+  sprintf(options[OPT_HALTMANTLEMELTFRACLOW].cDescr,
+    "Halt when mantle mostly solidified?");
   sprintf(options[OPT_HALTMANTLEMELTFRACLOW].cDefault,"0");
   options[OPT_HALTMANTLEMELTFRACLOW].iType = 0;
   fnRead[OPT_HALTMANTLEMELTFRACLOW] = &ReadHaltMantleMeltFracLow;
 
   sprintf(options[OPT_HALTATMDESISRUFCOOL].cName,"bHaltAtmDesiSurfCool");
-  sprintf(options[OPT_HALTATMDESISRUFCOOL].cDescr,"Halt when atmosphere desiccated and surface below 1000K?");
+  sprintf(options[OPT_HALTATMDESISRUFCOOL].cDescr,
+    "Halt when atmosphere desiccated and surface below 1000K?");
   sprintf(options[OPT_HALTATMDESISRUFCOOL].cDefault,"0");
   options[OPT_HALTATMDESISRUFCOOL].iType = 0;
   fnRead[OPT_HALTATMDESISRUFCOOL] = &ReadHaltAtmDesiSurfCool;
 
   sprintf(options[OPT_HALTENTERHABZONE].cName,"bHaltEnterHabZone");
-  sprintf(options[OPT_HALTENTERHABZONE].cDescr,"Halt when planet enters habitable zone?");
+  sprintf(options[OPT_HALTENTERHABZONE].cDescr,
+    "Halt when planet enters habitable zone?");
   sprintf(options[OPT_HALTENTERHABZONE].cDefault,"0");
   options[OPT_HALTENTERHABZONE].iType = 0;
   fnRead[OPT_HALTENTERHABZONE] = &ReadHaltEnterHabZone;
 
   sprintf(options[OPT_HALTALLPLANETSSOLID].cName,"bHaltAllPlanetsSolid");
-  sprintf(options[OPT_HALTALLPLANETSSOLID].cDescr,"Halt when all planets solidified?");
+  sprintf(options[OPT_HALTALLPLANETSSOLID].cDescr,
+    "Halt when all planets solidified?");
   sprintf(options[OPT_HALTALLPLANETSSOLID].cDefault,"0");
   options[OPT_HALTALLPLANETSSOLID].iType = 0;
   fnRead[OPT_HALTALLPLANETSSOLID] = &ReadHaltAllPlanetsSolid;
 
+  // XXX Overlap with bHaltSurfaceDesiccated in AtmEsc
   sprintf(options[OPT_HALTALLPLANETSDESICC].cName,"bHaltAllPlanetsDesicc");
-  sprintf(options[OPT_HALTALLPLANETSDESICC].cDescr,"Halt when all planets desiccated?");
+  sprintf(options[OPT_HALTALLPLANETSDESICC].cDescr,
+    "Halt when all planets desiccated?");
   sprintf(options[OPT_HALTALLPLANETSDESICC].cDefault,"0");
   options[OPT_HALTALLPLANETSDESICC].iType = 0;
   fnRead[OPT_HALTALLPLANETSDESICC] = &ReadHaltAllPlanetsDesicc;
@@ -539,7 +547,8 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_RADIOHEATMODEL] = &ReadRadioHeatModel;
 
   sprintf(options[OPT_MAGMOCATMMODEL].cName,"sMagmOcAtmModel");
-  sprintf(options[OPT_MAGMOCATMMODEL].cDescr,"Atmospheric flux model");
+  sprintf(options[OPT_MAGMOCATMMODEL].cDescr,
+    "Atmospheric flux model: Grey or Petit");
   sprintf(options[OPT_MAGMOCATMMODEL].cDefault,"GREY");
   options[OPT_MAGMOCATMMODEL].iType = 3;
   options[OPT_MAGMOCATMMODEL].bMultiFile = 1;
@@ -2013,7 +2022,7 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_SOLIDRADIUS].cName,"SolidRadius");
   sprintf(output[OUT_SOLIDRADIUS].cDescr,"Solidification radius of the mantle");
-  sprintf(output[OUT_SOLIDRADIUS].cNeg,"Earth radii");
+  sprintf(output[OUT_SOLIDRADIUS].cNeg,"Rearth");
   output[OUT_SOLIDRADIUS].bNeg = 1;
   output[OUT_SOLIDRADIUS].dNeg = 1/REARTH; // division factor to get from SI to desired unit
   output[OUT_SOLIDRADIUS].iNum = 1;
@@ -2021,7 +2030,8 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_SOLIDRADIUS] = &WriteSolidRadius;
 
   sprintf(output[OUT_WATERMASSMOATM].cName,"WaterMassMOAtm");
-  sprintf(output[OUT_WATERMASSMOATM].cDescr,"Water mass in magma ocean and atmosphere");
+  sprintf(output[OUT_WATERMASSMOATM].cDescr,
+    "Water mass in magma ocean and atmosphere");
   sprintf(output[OUT_WATERMASSMOATM].cNeg,"TO");
   output[OUT_WATERMASSMOATM].bNeg = 1;
   output[OUT_WATERMASSMOATM].dNeg = 1/TOMASS; // division factor to get from SI to desired unit
@@ -2148,6 +2158,7 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_CO2FRACMELT].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_CO2FRACMELT] = &WriteCO2FracMelt;
 
+  // XXX Overlap with RadPowerMan from thermint
   sprintf(output[OUT_RADIOPOWER].cName,"RadioPower");
   sprintf(output[OUT_RADIOPOWER].cDescr,"Power from radiogenic heating in the mantle");
   sprintf(output[OUT_RADIOPOWER].cNeg,"TW");
@@ -2157,6 +2168,7 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_RADIOPOWER].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_RADIOPOWER] = &WriteRadioPower;
 
+  // XXX Overlap with PowerTidal from Eqtide
   sprintf(output[OUT_TIDALPOWER].cName,"TidalPower");
   sprintf(output[OUT_TIDALPOWER].cDescr,"Power from tidal heating in the mantle");
   sprintf(output[OUT_TIDALPOWER].cNeg,"TW");
@@ -2166,6 +2178,7 @@ void InitializeOutputMagmOc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALPOWER].iModuleBit = MAGMOC; //name of module
   fnWrite[OUT_TIDALPOWER] = &WriteTidalPower;
 
+  // XXX Overlap with HZ outputs in output.c
   sprintf(output[OUT_HZINNEREDGE].cName,"HZInnerEdge");
   sprintf(output[OUT_HZINNEREDGE].cDescr,"Inner Edge of the Habitable Zone (Runaway Greenhouse)");
   sprintf(output[OUT_HZINNEREDGE].cNeg,"AU");

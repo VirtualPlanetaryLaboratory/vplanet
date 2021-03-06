@@ -3175,6 +3175,10 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ETA].bNeg = 0;
   options[OPT_ETA].iFileType = 2;
   fnRead[OPT_ETA] = &ReadEta;
+  sprintf(options[OPT_ETA].cLongDescr,
+    "The timestep will be set to %s times the smallest instantaneous timescale, \n"
+    "i.e. min(x/(dx/dt) where x represents the primary variables."
+  );
 
   sprintf(options[OPT_OUTPUTTIME].cName,"dOutputTime");
   sprintf(options[OPT_OUTPUTTIME].cDescr,"Output Interval");
@@ -3245,7 +3249,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
    */
 
   sprintf(options[OPT_COLOR].cName,"cColor");
-  sprintf(options[OPT_COLOR].cDescr,"Body Color");
+  sprintf(options[OPT_COLOR].cDescr,
+    "Hexadecimal color code for the body to be used in vplot");
   sprintf(options[OPT_COLOR].cDefault,"000000");
   options[OPT_COLOR].iType = 2;
   options[OPT_COLOR].iModuleBit = 0;
@@ -3334,7 +3339,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_HALTMERGE] = &ReadHaltMerge;
 
   sprintf(options[OPT_HALTMINECC].cName,"dHaltMinEcc");
-  sprintf(options[OPT_HALTMINECC].cDescr,"Minimum Eccentricity Value that Halts Integration");
+  sprintf(options[OPT_HALTMINECC].cDescr,
+    "Minimum Eccentricity Value that Halts Integration");
   sprintf(options[OPT_HALTMINECC].cDefault,"-1");
   options[OPT_HALTMINECC].dDefault = -1;
   options[OPT_HALTMINECC].iType = 2;
@@ -3344,7 +3350,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_HALTMINECC] = &ReadHaltMinEcc;
 
   sprintf(options[OPT_HALTMINOBL].cName,"dHaltMinObl");
-  sprintf(options[OPT_HALTMINOBL].cDescr,"Minimum Obliquity Value that Halts Integration");
+  sprintf(options[OPT_HALTMINOBL].cDescr,
+    "Minimum Obliquity Value that Halts Integration");
   sprintf(options[OPT_HALTMINOBL].cDefault,"-1 degrees");
   options[OPT_HALTMINOBL].dDefault = -DEGRAD;
   options[OPT_HALTMINOBL].iType = 2;
@@ -3355,7 +3362,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_HALTMINOBL] = &ReadHaltMinObl;
 
   sprintf(options[OPT_HALTMINSEMI].cName,"dHaltMinSemi");
-  sprintf(options[OPT_HALTMINSEMI].cDescr,"Minimum Semi-Major Axis Value that Halts Integration");
+  sprintf(options[OPT_HALTMINSEMI].cDescr,
+    "Minimum Semi-Major Axis Value that Halts Integration");
   sprintf(options[OPT_HALTMINSEMI].cDefault,"0");
   options[OPT_HALTMINSEMI].dDefault = 0;
   options[OPT_HALTMINSEMI].iType = 2;
@@ -3398,7 +3406,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
    */
 
   sprintf(options[OPT_INTEGRATIONMETHOD].cName,"sIntegrationMethod");
-  sprintf(options[OPT_INTEGRATIONMETHOD].cDescr,"Integration Method: Euler, Runge-Kutta4 (Default = Runge-Kutta4)");
+  sprintf(options[OPT_INTEGRATIONMETHOD].cDescr,
+    "Integration Method: Euler, Runge-Kutta4 (Default = Runge-Kutta4)");
   sprintf(options[OPT_INTEGRATIONMETHOD].cDefault,"Runge-Kutta4");
   options[OPT_INTEGRATIONMETHOD].iType=4;
   options[OPT_INTEGRATIONMETHOD].iModuleBit = 0;
@@ -3486,7 +3495,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
    */
 
   sprintf(options[OPT_MINVALUE].cName,"dMinValue");
-  sprintf(options[OPT_MINVALUE].cDescr,"Minimum Non-Zero Value of Eccentricity and Obliquities");
+  sprintf(options[OPT_MINVALUE].cDescr,
+    "Minimum Non-Zero Value of Eccentricity and Obliquities");
   sprintf(options[OPT_MINVALUE].cDefault,"0");
   options[OPT_MINVALUE].dDefault = 0;
   options[OPT_MINVALUE].iType = 2;
@@ -3503,6 +3513,10 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MODULES].bNeg = 0;
   options[OPT_MODULES].iFileType = 0;
   options[OPT_MODULES].iType = 4;
+  sprintf(options[OPT_MODULES].cLongDescr,
+    "List of names of modules to be applied to the body. Spelling must be "
+    "exact, but any capitalization works"
+  );
 
   /*
    *
@@ -3524,6 +3538,10 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OUTDIGITS].bNeg = 0;
   options[OPT_OUTDIGITS].iFileType = 2;
   fnRead[OPT_OUTDIGITS] = &ReadDigits;
+  sprintf(options[OPT_OUTDIGITS].cLongDescr,
+    "For all floating point output, print this many number of digits after "
+    "the decimal point"
+  );
 
   sprintf(options[OPT_OUTPUTORDER].cName,"saOutputOrder");
   sprintf(options[OPT_OUTPUTORDER].cDescr,"Output Parameter(s)");

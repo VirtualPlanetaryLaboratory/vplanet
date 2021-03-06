@@ -2211,7 +2211,7 @@ void WriteGammaOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   *dTmp=-1;
 
   /* Negative option? */
-  strcat(cUnit,"cgs");
+  strcat(cUnit,"sec");
 }
 
 void WriteGammaRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
@@ -2223,7 +2223,7 @@ void WriteGammaRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   *dTmp = -1;
 
   /* Negative option? */
-  strcat(cUnit,"cgs");
+  strcat(cUnit,"sec");
 }
 
 /* dflemin3: moved to output.c

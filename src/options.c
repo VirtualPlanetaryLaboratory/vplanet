@@ -3830,7 +3830,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_RADIUS] = &ReadRadius;
 
   sprintf(options[OPT_RG].cName,"dRadGyra");
-  sprintf(options[OPT_RG].cDescr,"Radius of Gyration");
+  sprintf(options[OPT_RG].cDescr,
+    "Radius of Gyration; moment of inertia constant");
   sprintf(options[OPT_RG].cDefault,"0.5");
   options[OPT_RG].dDefault = 0.5;
   options[OPT_RG].iType = 2;
@@ -3927,25 +3928,26 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_TEMPERATURE].cName,"dTemperature");
   sprintf(options[OPT_TEMPERATURE].cDescr,"Initial effective temperature");
-  sprintf(options[OPT_TEMPERATURE].cDefault,"TSUN");
+  sprintf(options[OPT_TEMPERATURE].cDefault,
+    "Solar effective temperature (5778 K)");
   options[OPT_TEMPERATURE].dDefault = TSUN;
   options[OPT_TEMPERATURE].iType = 0;
   options[OPT_TEMPERATURE].bMultiFile = 1;
   fnRead[OPT_TEMPERATURE] = &ReadTemperature;
 
   sprintf(options[OPT_USEOUTERTIDALQ].cName,"bUseOuterTidalQ");
-  sprintf(options[OPT_USEOUTERTIDALQ].cDescr,"User outermost layer's tidal Q as "
-        "body's total tidal Q?");
+  sprintf(options[OPT_USEOUTERTIDALQ].cDescr,
+    "User outermost layer's tidal Q as body's total tidal Q?");
   sprintf(options[OPT_USEOUTERTIDALQ].cDefault,"0");
   options[OPT_USEOUTERTIDALQ].iType = 0;
   options[OPT_USEOUTERTIDALQ].bMultiFile = 1;
   fnRead[OPT_USEOUTERTIDALQ] = &ReadUseOuterTidalQ;
   sprintf(options[OPT_USEOUTERTIDALQ].cLongDescr,
-    "The total tidal Q of a body can be computed either as the sum of "
-    "contributions of all layers (mantle, ocean, envelope), or as the tidal Q "
-    "of the outer most layer. When %s is set to 0, the tidal Q is the sum, "
-    "when set to 1, it is the outer layer's (envelope, then ocean, then mantle) "
-    "value.\n",options[OPT_USEOUTERTIDALQ].cName);
+    "The total tidal Q of a body can be computed either as the sum of\n"
+    "contributions of all layers (mantle, ocean, envelope), or as the tidal Q\n"
+    "of the outer most layer. When %s is set to 0, the tidal Q is the sum,\n"
+    "when set to 1, it is the outer layer's (envelope, then ocean, then\n"
+    "mantle) value.\n",options[OPT_USEOUTERTIDALQ].cName);
 
   /*
    *
@@ -3954,12 +3956,18 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
    */
 
   sprintf(options[OPT_VERBOSE].cName,"iVerbose");
-  sprintf(options[OPT_VERBOSE].cDescr,"Verbosity Level: 1-5");
+  sprintf(options[OPT_VERBOSE].cDescr,"Verbosity Level: 0-5");
   sprintf(options[OPT_VERBOSE].cDefault,"3");
   options[OPT_VERBOSE].iModuleBit = 0;
   options[OPT_VERBOSE].bNeg = 0;
   options[OPT_VERBOSE].iType = 1;
   options[OPT_VERBOSE].iFileType = 2;
+  sprintf(options[OPT_VERBOSE].cLongDescr,
+    "Set how much text is written to the screen. 0 = no output, 1 = only\n"
+    "errors, 2 = progress updates, 3 = statements about input choices,  4 =\n"
+    "information about unit choices, 5 = all possible output. Note that levels\n"
+    "0 and 5 can be set at execution with the -q and -v options, respectively."
+  );
 
   sprintf(options[OPT_VISCUMAN].cName,"dViscUMan");
   sprintf(options[OPT_VISCUMAN].cDescr,"Upper mantle viscosity");

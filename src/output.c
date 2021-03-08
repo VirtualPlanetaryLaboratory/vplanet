@@ -1109,13 +1109,19 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
    */
 
   sprintf(output[OUT_CRITSEMI].cName,"CriticalSemiMajorAxis");
-  sprintf(output[OUT_CRITSEMI].cDescr,"Holman & Wiegert (1999) P-type Critical Semi-major Axis");
+  sprintf(output[OUT_CRITSEMI].cDescr,
+    "Holman & Wiegert (1999) P-type Critical Semi-major Axis");
   sprintf(output[OUT_CRITSEMI].cNeg,"AU");
   output[OUT_CRITSEMI].bNeg = 1;
   output[OUT_CRITSEMI].dNeg = 1./AUM;
   output[OUT_CRITSEMI].iNum = 1;
   output[OUT_CRITSEMI].iModuleBit = BINARY + EQTIDE + STELLAR;
   fnWrite[OUT_CRITSEMI] = &WriteCriticalSemi;
+  sprintf(output[OUT_CRITSEMI].cLongDescr,
+    "For a circumbinary planet, semi-major axes below a critical value result\n"
+    "in unstable orbits. This output parameter prints the instantaneous\n"
+    "value of that critical distance."
+  );
 
   /*
    * D
@@ -1132,7 +1138,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_DENSITY].cName,"Density");
   sprintf(output[OUT_DENSITY].cDescr,"Average Density");
-  sprintf(output[OUT_DENSITY].cNeg,"solar");
+  sprintf(output[OUT_DENSITY].cNeg,"solar density (1420 kg/m^3)");
   output[OUT_DENSITY].bNeg = 1;
   output[OUT_DENSITY].dNeg = 1./1420;  // kg/m^3
   output[OUT_DENSITY].iNum = 1;
@@ -1151,58 +1157,88 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_HECC] = &WriteHecc;
 
   sprintf(output[OUT_HZLIMDRYRUNAWAY].cName,"HZLimitDryRunaway");
-  sprintf(output[OUT_HZLIMDRYRUNAWAY].cDescr,"Semi-major axis of Dry Runaway HZ Limit");
+  sprintf(output[OUT_HZLIMDRYRUNAWAY].cDescr,
+    "Semi-major axis of Dry Runaway HZ Limit");
   sprintf(output[OUT_HZLIMDRYRUNAWAY].cNeg,"AU");
   output[OUT_HZLIMDRYRUNAWAY].bNeg = 1;
   output[OUT_HZLIMDRYRUNAWAY].dNeg = 1/AUM;
   output[OUT_HZLIMDRYRUNAWAY].iNum = 1;
   output[OUT_HZLIMDRYRUNAWAY].iModuleBit = 1;
   fnWrite[OUT_HZLIMDRYRUNAWAY] = &WriteHZLimitDryRunaway;
+  sprintf(output[OUT_HZLIMDRYRUNAWAY].cLongDescr,
+    "Minimum distance where a \"dry\" planet can be habitable, following Abe\n"
+    "et al. (2011), or ~415 W/m^2 net instellation."
+  );
 
   sprintf(output[OUT_HZLIMRECVENUS].cName,"HZLimRecVenus");
-  sprintf(output[OUT_HZLIMRECVENUS].cDescr,"Recent Venus Habitable Zone Limit");
+  sprintf(output[OUT_HZLIMRECVENUS].cDescr,"Recent Venus HZ Limit");
   sprintf(output[OUT_HZLIMRECVENUS].cNeg,"AU");
   output[OUT_HZLIMRECVENUS].bNeg = 1;
   output[OUT_HZLIMRECVENUS].dNeg = 1./AUM;
   output[OUT_HZLIMRECVENUS].iNum = 1;
   output[OUT_HZLIMRECVENUS].iModuleBit = 1;
   fnWrite[OUT_HZLIMRECVENUS] = &WriteHZLimitRecentVenus;
+  sprintf(output[OUT_HZLIMRECVENUS].cLongDescr,
+    "Recent Venus habitable zone limit from Kopparapu et al. (2013). The value\n"
+    "is determined by the total luminosity and average effective temperature\n"
+    "of all interior bodies."
+  );
 
   sprintf(output[OUT_HZLIMRUNAWAY].cName,"HZLimRunaway");
-  sprintf(output[OUT_HZLIMRUNAWAY].cDescr,"Runaway Greenhouse Habitable Zone Limit");
+  sprintf(output[OUT_HZLIMRUNAWAY].cDescr,"Runaway Greenhouse HZ Limit");
   sprintf(output[OUT_HZLIMRUNAWAY].cNeg,"AU");
   output[OUT_HZLIMRUNAWAY].bNeg = 1;
   output[OUT_HZLIMRUNAWAY].dNeg = 1./AUM;
   output[OUT_HZLIMRUNAWAY].iNum = 1;
   output[OUT_HZLIMRUNAWAY].iModuleBit = 1;
   fnWrite[OUT_HZLIMRUNAWAY] = &WriteHZLimitRunawayGreenhouse;
+  sprintf(output[OUT_HZLIMRUNAWAY].cLongDescr,
+    "Runaway greenhouse habitable zone limit from Kopparapu et al. (2013).\n"
+    "The value is determined by the total luminosity and average effective\n"
+    "temperature of all interior bodies."
+  );
 
   sprintf(output[OUT_HZLIMMOIST].cName,"HZLimMoistGreenhouse");
-  sprintf(output[OUT_HZLIMMOIST].cDescr,"Moist Greenhouse Habitable Zone Limit");
+  sprintf(output[OUT_HZLIMMOIST].cDescr,"Moist Greenhouse HZ Limit");
   sprintf(output[OUT_HZLIMMOIST].cNeg,"AU");
   output[OUT_HZLIMMOIST].bNeg = 1;
   output[OUT_HZLIMMOIST].dNeg = 1./AUM;
   output[OUT_HZLIMMOIST].iNum = 1;
   output[OUT_HZLIMMOIST].iModuleBit = 1;
   fnWrite[OUT_HZLIMMOIST] = &WriteHZLimitMoistGreenhouse;
+  sprintf(output[OUT_HZLIMMOIST].cLongDescr,
+    "Moist greenhouse habitable zone limit from Kopparapu et al. (2013).\n"
+    "The value is determined by the total luminosity and average effective\n"
+    "temperature of all interior bodies."
+  );
 
   sprintf(output[OUT_HZLIMMAX].cName,"HZLimMaxGreenhouse");
-  sprintf(output[OUT_HZLIMMAX].cDescr,"Maximum Greenhouse Habitable Zone Limit");
+  sprintf(output[OUT_HZLIMMAX].cDescr,"Maximum Greenhouse HZ Limit");
   sprintf(output[OUT_HZLIMMAX].cNeg,"AU");
   output[OUT_HZLIMMAX].bNeg = 1;
   output[OUT_HZLIMMAX].dNeg = 1./AUM;
   output[OUT_HZLIMMAX].iNum = 1;
   output[OUT_HZLIMMAX].iModuleBit = 1;
   fnWrite[OUT_HZLIMMAX] = &WriteHZLimitMaxGreenhouse;
+  sprintf(output[OUT_HZLIMMAX].cLongDescr,
+    "Maximum greenhouse habitable zone limit from Kopparapu et al. (2013).\n"
+    "The value is determined by the total luminosity and average effective\n"
+    "temperature of all interior bodies."
+  );
 
   sprintf(output[OUT_HZLIMEARLYMARS].cName,"HZLimEarlyMars");
-  sprintf(output[OUT_HZLIMEARLYMARS].cDescr,"Early Mars Habitable Zone Limit");
+  sprintf(output[OUT_HZLIMEARLYMARS].cDescr,"Early Mars HZ Limit");
   sprintf(output[OUT_HZLIMEARLYMARS].cNeg,"AUM");
   output[OUT_HZLIMEARLYMARS].bNeg = 1;
   output[OUT_HZLIMEARLYMARS].dNeg = 1./AUM;
   output[OUT_HZLIMEARLYMARS].iNum = 1;
   output[OUT_HZLIMEARLYMARS].iModuleBit = 1;
   fnWrite[OUT_HZLIMEARLYMARS] = &WriteHZLimitEarlyMars;
+  sprintf(output[OUT_HZLIMEARLYMARS].cLongDescr,
+    "Early Mars habitable zone limit from Kopparapu et al. (2013). The value\n"
+    "is determined by the total luminosity and average effective temperature\n"
+    "of all interior bodies."
+  );
 
   /*
    * I
@@ -1236,6 +1272,9 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_INSTELLATION].iNum = 1;
   output[OUT_INSTELLATION].iModuleBit = 1;
   fnWrite[OUT_INSTELLATION] = &WriteInstellation;
+  sprintf(output[OUT_INSTELLATION].cLongDescr,
+    "Total instellation on a planet from all luminous, interior bodies."
+  );
 
   /*
    * K
@@ -1297,6 +1336,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LXUVTOT].iNum = 1;
   output[OUT_LXUVTOT].iModuleBit = STELLAR + ATMESC;
   fnWrite[OUT_LXUVTOT] = &WriteLXUVTot;
+  // XXX Is this also from all luminous, interior bodies?
 
   /*
    * M
@@ -1333,6 +1373,11 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PRECA].iNum = 1;
   output[OUT_PRECA].iModuleBit = EQTIDE + DISTROT + POISE;
   fnWrite[OUT_PRECA] = &WriteBodyPrecA;
+  sprintf(output[OUT_PRECA].cLongDescr,
+    "The precession angle is orthogonal to the obliquity and is measured from\n"
+    "the vernal equinox. This angle is a \"dog-leg\" angle as shown in Fig. 30\n"
+    "of Barnes et al. (2020)."
+  );
 
   sprintf(output[OUT_ORBANGMOM].cName,"OrbAngMom");
   sprintf(output[OUT_ORBANGMOM].cDescr,"Orbital Angular Momentum");
@@ -1437,7 +1482,8 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_RADIUS] = &WriteRadius;
 
   sprintf(output[OUT_RADGYRA].cName,"RadGyra");
-  sprintf(output[OUT_RADGYRA].cDescr,"Radius of Gyration");
+  sprintf(output[OUT_RADGYRA].cDescr,
+    "Radius of Gyration/Moment of Inertia Constant");
   output[OUT_RADGYRA].bNeg = 0;
   output[OUT_RADGYRA].iNum = 1;
   output[OUT_RADGYRA].iModuleBit = 1;

@@ -985,58 +985,70 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
 
    /* ViscJumpMan */
   sprintf(options[OPT_VISCJUMPMAN].cName,"dViscJumpMan");
-  sprintf(options[OPT_VISCJUMPMAN].cDescr,"ViscJumpMan");
-  sprintf(options[OPT_VISCJUMPMAN].cDefault,"VISCJUMPMAN");
+  sprintf(options[OPT_VISCJUMPMAN].cDescr,
+    "Viscosity jump from upper to lower mantle");
+  sprintf(options[OPT_VISCJUMPMAN].cDefault,"2.4 (VISCJUMPMAN in thermint.h)");
   options[OPT_VISCJUMPMAN].iType = 2;
   options[OPT_VISCJUMPMAN].bMultiFile = 1;
   options[OPT_VISCJUMPMAN].dNeg = VISCJUMPMAN;
   options[OPT_VISCJUMPMAN].dDefault = VISCJUMPMAN;
   sprintf(options[OPT_VISCJUMPMAN].cNeg,"Default");
   fnRead[OPT_VISCJUMPMAN] = &fvReadViscJumpMan;
+  // Needs a LongDescr
+
 
   /* ViscRef */
   sprintf(options[OPT_VISCREF].cName,"dViscRef");
-  sprintf(options[OPT_VISCREF].cDescr,"ViscRef");
-  sprintf(options[OPT_VISCREF].cDefault,"1");
+  sprintf(options[OPT_VISCREF].cDescr,"Reference kinematic mantle viscosity");
+  sprintf(options[OPT_VISCREF].cDefault,"6e7 (VISCREF in thermint.h)");
   options[OPT_VISCREF].iType = 2;
   options[OPT_VISCREF].bMultiFile = 1;
   options[OPT_VISCREF].dNeg = VISCREF;
   options[OPT_VISCREF].dDefault = VISCREF;
   sprintf(options[OPT_VISCREF].cNeg,"Default value in thermint.h");
   fnRead[OPT_VISCREF] = &fvReadViscRef;
+  // Needs a LongDescr
+
 
   /* TrefLind */
   sprintf(options[OPT_TREFLIND].cName,"dTrefLind");
-  sprintf(options[OPT_TREFLIND].cDescr,"TrefLind");
-  sprintf(options[OPT_TREFLIND].cDefault,"Value in thermint.h");
+  sprintf(options[OPT_TREFLIND].cDescr,"Lindemann's law reference temperature");
+  sprintf(options[OPT_TREFLIND].cDefault,"5451.6 K ");
   options[OPT_TREFLIND].iType = 2;
   options[OPT_TREFLIND].bMultiFile = 1;
-  options[OPT_TREFLIND].dNeg = 1;
+  options[OPT_TREFLIND].dNeg = 1; //XXX If negative, is really expressed in terms of TREFLIND??
   options[OPT_TREFLIND].dDefault = TREFLIND;
   sprintf(options[OPT_TREFLIND].cNeg,"Default in thermint.h");
   fnRead[OPT_TREFLIND] = &fvReadTrefLind;
+  sprintf(options[OPT_TREFLIND].cLongDescr,
+    "Lindemann's law reference temperature, also called T_Fe0 in Driscoll &\n"
+    "Bercovici (2015), see their Eq. A23. Default value is set to TREFLIND,\n"
+    "which is defined in thermint.h)"
+  );
 
   /* DTChiRef */
   sprintf(options[OPT_DTCHIREF].cName,"dDTChiRef");
-  sprintf(options[OPT_DTCHIREF].cDescr,"DTChiRef");
-  sprintf(options[OPT_DTCHIREF].cDefault,"Value in thermint.h");
+  sprintf(options[OPT_DTCHIREF].cDescr,"Core reference liquidus depression");
+  sprintf(options[OPT_DTCHIREF].cDefault,"0 (DTCHIREF in thermint.h)");
   options[OPT_DTCHIREF].iType = 2;
   options[OPT_DTCHIREF].bMultiFile = 1;
   options[OPT_DTCHIREF].dNeg = 1;
   options[OPT_DTCHIREF].dDefault = DTCHIREF;
   sprintf(options[OPT_DTCHIREF].cNeg,"Default in thermint.h");
   fnRead[OPT_DTCHIREF] = &fvReadDTChiRef;
+  // Needs a LongDescr
 
   /* EruptEff */
   sprintf(options[OPT_ERUPTEFF].cName,"dEruptEff");
   sprintf(options[OPT_ERUPTEFF].cDescr,"Melt Eruption Efficiency");
-  sprintf(options[OPT_ERUPTEFF].cDefault,"ERUPTEFF");
+  sprintf(options[OPT_ERUPTEFF].cDefault,"0.1 (ERUPTEFF in thermint.h)");
   options[OPT_ERUPTEFF].iType = 2;
   options[OPT_ERUPTEFF].bMultiFile = 1;
-  options[OPT_ERUPTEFF].dNeg = ERUPTEFF;
+  options[OPT_ERUPTEFF].dNeg = ERUPTEFF; //XXX
   options[OPT_ERUPTEFF].dDefault = ERUPTEFF;
   sprintf(options[OPT_ERUPTEFF].cNeg,"Default is ERUPTEFF");
   fnRead[OPT_ERUPTEFF] = &fvReadEruptEff;
+  // Needs a LongDescr
 
   /* ViscMeltPhis */
   sprintf(options[OPT_VISCMELTPHIS].cName,"dViscMeltPhis");
@@ -1044,10 +1056,14 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCMELTPHIS].cDefault,"Default is VISCMELTPHIS");
   options[OPT_VISCMELTPHIS].iType = 2;
   options[OPT_VISCMELTPHIS].bMultiFile = 1;
-  options[OPT_VISCMELTPHIS].dNeg = VISCMELTPHIS;
+  options[OPT_VISCMELTPHIS].dNeg = VISCMELTPHIS; //XXX
   options[OPT_VISCMELTPHIS].dDefault = VISCMELTPHIS;
   sprintf(options[OPT_VISCMELTPHIS].cNeg,"Default is VISCMELTPHIS");
   fnRead[OPT_VISCMELTPHIS] = &fvReadViscMeltPhis;
+  sprintf(options[OPT_VISCMELTPHIS].cLongDescr,
+    "Viscosity-melt reduction coefficient, \"phi*\" in Eq. 8 of Driscoll &\n"
+    "Bercovici (2015)."
+  );
 
   /* ViscMeltXi */
   sprintf(options[OPT_VISCMELTXI].cName,"dViscMeltXi");

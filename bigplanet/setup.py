@@ -55,16 +55,23 @@ setup(name = 'bigplanet',
                       'Programming Language :: Python :: 2',
                       'Topic :: Scientific/Engineering :: Astronomy',
                     ],
-      url = 'https://bitbucket.org/bitbucket_vpl/vplanet/bigplanet/',
-      author = 'David Fleming',
-      author_email = 'dflemin3@uw.edu',
+      url = 'https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/bigplanet',
+      author = 'Caitlyn Wilhelm',
+      author_email = 'cwilhelm@uw.edu',
       license = 'MIT',
       packages = ['bigplanet'],
+      entry_points = {
+          'console_scripts': [
+               'bigplanet = bigplanet.bigplanet:main',
+               'bpstatus = bigplanet.bpstatus:main'
+          ],
+      },
       install_requires = [
                           'numpy',
-                          'matplotlib >= 1.4.0',
+                          'h5py',
+                          'argparse',
                           'pandas',
-                          'sklearn'
+                          'scipy'
                           ],
       include_package_data = True,
       zip_safe = False)

@@ -10,7 +10,7 @@ def test_MagmOcTrappist1g():
     # Remove old log file
     subprocess.run(['rm', 'Trappist1.log'], cwd=cwd)
     # Run vplanet
-    subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
+    subprocess.run(['../../vplanet', 'vpl.in', '-q'], cwd=cwd)
 
     # Grab the output
     output = GetOutput(path=cwd)

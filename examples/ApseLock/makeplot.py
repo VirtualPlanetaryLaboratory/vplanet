@@ -23,6 +23,10 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('Options are: pdf, png')
     exit(1)
 
+# Runs vplanet 
+subprocess.call(['vplanet', 'vpl.in'])
+
+
 #Typical plot parameters that make for pretty plot
 mpl.rcParams['figure.figsize'] = (10,8)
 mpl.rcParams['font.size'] = 16.0

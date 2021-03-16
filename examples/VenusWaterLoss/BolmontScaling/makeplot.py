@@ -4,6 +4,7 @@ import matplotlib.pyplot as pl
 import numpy as np
 import vplot as vpl
 import sys
+import subprocess
 
 pl.rcParams.update({'font.size': 16})
 
@@ -16,6 +17,8 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('ERROR: Unknown file format: '+sys.argv[1])
     print('Options are: pdf, png')
     exit(1)
+
+subprocess.call(['vplanet', 'vpl.in'])
 
 output = vpl.GetOutput()
 time = output.sun.Age

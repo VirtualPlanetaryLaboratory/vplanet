@@ -26,12 +26,7 @@ simulations (set up with `vspace <../vspace>`_) has completed, simply run the fo
 command in the in the command line:
 
 .. code-block:: bash
-
-<<<<<<< HEAD
-    bigplanet -c [number of cores] <input file>
-=======
     bigplanet <input file> -c [number of cores] -q
->>>>>>> b86e522894269fa774de08845318d2a3777432fb
 
 where the input file is the same file used to run vspace and multi-planet.
 There are two optional arguments:

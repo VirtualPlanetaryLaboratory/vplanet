@@ -43,11 +43,11 @@ def _get_array_info(array, max_label_length=40):
 
 class VPLOTFigure(Figure):
     """A ``vplot`` figure object, a subclass of :py:class:`matplotlib.figure.Figure`.
-    
+
     This class adds certain functionality to the default ``matplotlib`` figure
     object, in particular the ability to recognize when ``vplanet`` quantities
     are plotted. When showing / drawing / saving the figure, this class will
-    automatically label the axes and/or add a legend with the appropriate 
+    automatically label the axes and/or add a legend with the appropriate
     parameter names, types, units, and corresponding ``vplanet`` body. All of
     these can be overridden by setting the axes or legend labels explcitly.
 
@@ -60,8 +60,8 @@ class VPLOTFigure(Figure):
             name instead. Default 40.
         mpl_units (bool, optional): Enable matplotlib units functionality? Default
             is True. This allows quantities of the same physical type but different
-            units (such as ``yr`` and ``Gyr``) to be plotted on the same axis; 
-            this class will handle unit conversions as needed. An error will be 
+            units (such as ``yr`` and ``Gyr``) to be plotted on the same axis;
+            this class will handle unit conversions as needed. An error will be
             raised if the unit conversion fails.
         xlog (bool, optional): Set the x axis scale to be logarithmic? Default False.
         ylog (bool, optional): Set the y axis scale to be logarithmic? Default False.
@@ -339,6 +339,8 @@ class VPLOTFigure(Figure):
             self._format_axes()
             self._update_on_draw = False
         super().draw(*args, **kwargs)
+
+
 
 
 # HACK: Override `Figure` so this will work seamlessly in the background

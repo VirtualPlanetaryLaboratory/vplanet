@@ -27,7 +27,6 @@ To run this example
 
 .. code-block:: bash
 
-    vplanet vpl.in
     python makeplot.py <pdf | png>
 
 
@@ -44,4 +43,4 @@ Orbital eccentricity evolution is given by the red solid line, the orbital
 period by the purple dashed line, and the ratio of stellar rotation rate to
 binary mean motion (Omega/n) evolution is given by the blue dot-dashed curve.
 The binary's evolution is very similar to that of an identical system
-presented in Figure 1 of `Zahn and Bouchet (1989) <https://ui.adsabs.harvard.edu/abs/1989A%26A...223..112Z/abstract>`_. 
+presented in Figure 1 of `Zahn and Bouchet (1989) <https://ui.adsabs.harvard.edu/abs/1989A%26A...223..112Z/abstract>`_.

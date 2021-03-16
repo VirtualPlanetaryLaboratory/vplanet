@@ -44,14 +44,8 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
     raise Exception("Error: cannot plot multiple files when orbit = True")
 
 
-
-  if orbit == True:
-    fig = plt.figure(figsize=(6.5,9))
-  else:
-    fig = plt.figure(figsize=(6.5*nfiles,9))
-
-  fig.subplots_adjust(wspace=0.5,hspace=0.5)
-
+  fig = plt.figure(figsize=(9,8))
+  fig.subplots_adjust(wspace=0.5,hspace = 0.5)
 
   for ii in np.arange(nfiles):
     out = vpl.GetOutput(dir[ii])
@@ -112,22 +106,14 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
 
     # plot temperature
     temp = np.reshape(body.TempLat,(ntimes,nlats))
-    if orbit == True:
-      ax1 = plt.subplot(4,2,1)
-    else:
-      ax1 = plt.subplot(5,nfiles,ii+1)
+    ax1 = plt.subplot(4,2,1)
     pos = ax1.figbox.get_points()
-    #norm = mplcol.Normalize(vmin = -44,vmax = 15)
     c = plt.contourf(body.Time,lats,temp.T,cmap='plasma')
     plt.ylabel(r'Latitude [$^\circ$]', fontsize = 10)
     plt.title(r'Surface Temp [$^{\circ}$C]', fontsize = 12)
-    plt.ylim(-90,90)
+    plt.ylim(-85,85)
     plt.yticks([-60,-30,0,30,60], fontsize = 9)
     plt.xticks(fontsize = 9)
-    if xrange == False:
-      left = 0
-    else:
-      left = xrange[0]
     if xrange:
       plt.xlim(xrange)
     cbar = plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
@@ -135,15 +121,12 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
 
     # plot albedo
     alb = np.reshape(body.AlbedoLat,(ntimes,nlats))
-    if orbit == True:
-      ax2 = plt.subplot(4,2,3)
-    else:
-      ax2 = plt.subplot(5,nfiles,ii+2*nfiles+1)
+    ax2 = plt.subplot(4,2,3)
     pos = ax2.figbox.get_points()
     c = plt.contourf(body.Time,lats,alb.T,cmap = 'Blues_r')
     plt.ylabel(r'Latitude [$^\circ$]', fontsize = 10)
     plt.title('Albedo [TOA]', fontsize = 12)
-    plt.ylim(-90,90)
+    plt.ylim(-85,85)
     plt.yticks([-60,-30,0,30,60], fontsize = 9)
     plt.xticks(fontsize = 9)
     if xrange:
@@ -154,15 +137,12 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
 
     # plot ice height
     ice = np.reshape(body.IceHeight,(ntimes,nlats))
-    if orbit == True:
-      ax3 = plt.subplot(4,2,5)
-    else:
-      ax3 = plt.subplot(5,nfiles,ii+3*nfiles+1)
+    ax3 = plt.subplot(4,2,5)
     pos = ax3.figbox.get_points()
     c = plt.contourf(body.Time,lats,ice.T,cmap='Blues_r')
     plt.ylabel(r'Latitude [$^\circ$]', fontsize = 10)
     plt.title('Ice sheet height [m]', fontsize = 12)
-    plt.ylim(-90,90)
+    plt.ylim(-85,85)
     plt.yticks([-60,-30,0,30,60], fontsize = 9)
     plt.xticks(fontsize = 9)
     if xrange:
@@ -173,15 +153,12 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
 
     # plot bedrock
     brock = np.reshape(body.BedrockH,(ntimes,nlats))
-    if orbit == True:
-      ax4 = plt.subplot(4,2,7)
-    else:
-      ax4 = plt.subplot(5,nfiles,ii+4*nfiles+1)
+    ax4 = plt.subplot(4,2,7)
     pos = ax4.figbox.get_points()
     c = plt.contourf(body.Time,lats,brock.T,cmap='Reds_r')
     plt.ylabel(r'Latitude [$^\circ$]', fontsize = 10)
     plt.title('Bedrock height [m]', fontsize = 12)
-    plt.ylim(-90,90)
+    plt.ylim(-85,85)
     plt.yticks([-60,-30,0,30,60], fontsize = 9)
     plt.xlabel('Time [years]',fontsize = 10)
     plt.xticks(fontsize = 9)
@@ -190,56 +167,20 @@ def clim_evol(plname,dir='.',xrange=False,orbit=False,show=True):
     cbar = plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
     plt.setp(cbar.ax.yaxis.get_ticklabels(), fontsize = 9)
 
-
     # plot insolation
     insol = np.reshape(body.AnnInsol,(ntimes,nlats))
-    if orbit == True:
-      ax5 = plt.subplot(4,2,2)
-    else:
-      ax5 = plt.subplot(5,nfiles,ii+nfiles+1)
+    ax5 = plt.subplot(4,2,2)
     pos = ax5.figbox.get_points()
     c = plt.contourf(body.Time,lats,insol.T,cmap='plasma')
     plt.ylabel(r'Latitude [$^\circ$]', fontsize = 10)
-    plt.title(r'Annual average insolation [W/m$^2$]', fontsize = 12)
-    plt.ylim(-90,90)
+    plt.title(r'Annual average instellation [W/m$^2$]', fontsize = 12)
+    plt.ylim(-85,85)
     plt.yticks([-60,-30,0,30,60], fontsize = 9)
     plt.xticks(fontsize = 9)
     if xrange:
       plt.xlim(xrange)
     cbar = plt.colorbar(c,cax=plt.axes([pos[1,0]+0.01,pos[0,1],0.01,pos[1,1]-pos[0,1]]))
     plt.setp(cbar.ax.yaxis.get_ticklabels(), fontsize = 9)
-
-    if orbit == True:
-      #obliquity
-      plt.subplot(4,2,4)
-      plt.plot(body.Time,obl,linestyle = 'solid',marker='None',color='darkblue',linewidth =2)
-      plt.ylabel(r'Obliquity [$^\circ$]', fontsize = 10)
-      plt.yticks(fontsize = 9)
-      plt.title(r'Obliquity [$^\circ$]', fontsize = 12 )
-      plt.xticks(fontsize = 9)
-      if xrange:
-        plt.xlim(xrange)
-
-      #eccentricity
-      plt.subplot(4,2,6)
-      plt.plot(body.Time,ecc,linestyle = 'solid',marker='None',color='darkorchid',linewidth =2)
-      plt.title('Eccentricity', fontsize = 12)
-      plt.ylabel('Eccentricity', fontsize = 10)
-      plt.xticks(fontsize = 9)
-      plt.yticks(fontsize = 9)
-      if xrange:
-        plt.xlim(xrange)
-
-      #e sin(obl) sin varpi
-      plt.subplot(4,2,8)
-      plt.plot(body.Time,esinv,linestyle = 'solid',marker='None',color='salmon',linewidth=2)
-      plt.ylabel('COPP', fontsize = 10)
-      plt.title('COPP', fontsize = 12)
-      plt.xlabel('Time [years]', fontsize = 10)
-      plt.xticks(fontsize = 9)
-      plt.yticks(fontsize = 9)
-      if xrange:
-        plt.xlim(xrange)
 
     if dir[ii] == '.':
       dir[ii] = 'cwd'
@@ -396,9 +337,9 @@ def seasonal_maps(time, dir = '.', show = True):
     else:
         plt.close()
 
+#Runs VPLANET
+subprocess.call(['vplanet', 'vpl.in'])
 
 #makes the plots
-print("Making evolution plot.")
 clim_evol('earth',show=False)
-print("Making seasonal plot.")
 seasonal_maps(0,show=False)

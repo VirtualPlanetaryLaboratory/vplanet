@@ -9,10 +9,14 @@ import matplotlib.pyplot  as plt
 import seaborn as sns
 from time import time
 import sys
+import subprocess
 
 plt.close('all')
 
 clock = int(time())
+
+#Runs VPLANET
+subprocess.call(['vplanet', 'vpl.in'])
 
 # Set style for plot #
 mpl.rcParams['lines.linewidth'] = 2
@@ -133,7 +137,7 @@ else:
     elif (esc_stop==1):
         T_Desicc = time[n_t_habit]/1e6
 ### Plot ###
-
+plt.style.use('../../vplot/vplot/style/vplot.mplstyle')
 fig = plt.figure(num=None, figsize=(10, 12), dpi=300, facecolor='w', edgecolor='k')
 fig.suptitle(''+str(Name_Planet)+': $M^{ini}_{H_2O} = $ '+str(M_water_mo[0])+' TO, $e = $'+str(Ecc)+', Abundance of $^{40}K =$'+str(K40)+' $\\times$ Earth', fontsize=16, fontweight='bold')
 

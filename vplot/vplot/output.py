@@ -142,12 +142,15 @@ def get_params(outputorder, file, body=None):
             outputorder = outputorder.replace(unit, unit.replace(" ", ""))
 
     # Populate the params
-    outputorder = outputorder.split()
+    outputorder = outputorder.split(']')
+    outputorder = [i for i in outputorder if i]
     params = []
     for j, param in enumerate(outputorder):
-
         # Get the name and units
-        name, unit_str = re.search(r"(.*?)\[(.*?)\]", param).groups()
+        string = param.partition('[')
+        unit = string[2]
+        name = string[0].strip()
+        unit_str = unit.partition(']')[0]
 
         # If the param name starts with a number,
         # add an underscore so we can make it a
@@ -175,7 +178,8 @@ def get_params(outputorder, file, body=None):
         # Grab the array in the fwfile/bwfile
         array = []
         for line in file:
-            array.append(float(line.split()[j]))
+            if line:
+                array.append(float(line.split()[j]))
 
         # Give it units and `tags`
         array = Quantity(np.array(array) * unit)

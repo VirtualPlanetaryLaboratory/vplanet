@@ -1390,7 +1390,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_26ALMASSMAN].bMultiFile = 1;
   options[OPT_26ALMASSMAN].dNeg = MEARTH;
   options[OPT_26ALMASSMAN].dDefault = 0;
-  sprintf(options[OPT_26ALMASSMAN].cNeg,"Earth Masses");
+  sprintf(options[OPT_26ALMASSMAN].cNeg,"Mearth");
   fnRead[OPT_26ALMASSMAN] = &fvRead26AlMassMan;
 
   sprintf(options[OPT_26ALMASSCORE].cName,"d26AlMassCore");
@@ -1400,7 +1400,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_26ALMASSCORE].bMultiFile = 1;
   options[OPT_26ALMASSCORE].dNeg = MEARTH;
   options[OPT_26ALMASSCORE].dDefault = 0;
-  sprintf(options[OPT_26ALMASSCORE].cNeg,"Earth Masses");
+  sprintf(options[OPT_26ALMASSCORE].cNeg,"Mearth");
   fnRead[OPT_26ALMASSCORE] = &fvRead26AlMassCore;
 
   sprintf(options[OPT_26ALNUMMAN].cName,"d26AlNumMan");
@@ -1461,7 +1461,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_40KMASSCORE].bMultiFile = 1;
   options[OPT_40KMASSCORE].dNeg = EMASSCORE40K;
   options[OPT_40KMASSCORE].dDefault = 0;
-  sprintf(options[OPT_40KMASSCORE].cNeg,"Earth Masses");
+  sprintf(options[OPT_40KMASSCORE].cNeg,"Mearth");
   fnRead[OPT_40KMASSCORE] = &fvRead40KMassCore;
 
   sprintf(options[OPT_40KMASSCRUST].cName,"d40KMassCrust");
@@ -1471,7 +1471,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_40KMASSCRUST].bMultiFile = 1;
   options[OPT_40KMASSCRUST].dNeg = EMASSCRUST40K;
   options[OPT_40KMASSCRUST].dDefault = 0;
-  sprintf(options[OPT_40KMASSCRUST].cNeg,"Earth Masses");
+  sprintf(options[OPT_40KMASSCRUST].cNeg,"Mearth");
   fnRead[OPT_40KMASSCRUST] = &fvRead40KMassCrust;
 
   sprintf(options[OPT_40KNUMMAN].cName,"d40KNumMan");
@@ -1542,7 +1542,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_232THMASSMAN].bMultiFile = 1;
   options[OPT_232THMASSMAN].dNeg = EMASSMAN232TH;
   options[OPT_232THMASSMAN].dDefault = 0;
-  sprintf(options[OPT_232THMASSMAN].cNeg,"Earth Masses");
+  sprintf(options[OPT_232THMASSMAN].cNeg,"Mearth");
   fnRead[OPT_232THMASSMAN] = &fvRead232ThMassMan;
 
   sprintf(options[OPT_232THNUMMAN].cName,"d232ThNumMan");
@@ -1572,7 +1572,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_232THMASSCORE].bMultiFile = 1;
   options[OPT_232THMASSCORE].dNeg = EMASSCORE232TH;
   options[OPT_232THMASSCORE].dDefault = 0;
-  sprintf(options[OPT_232THMASSCORE].cNeg,"Earth Masses");
+  sprintf(options[OPT_232THMASSCORE].cNeg,"Mearth");
   fnRead[OPT_232THMASSCORE] = &fvRead232ThMassCore;
 
   sprintf(options[OPT_232THNUMCORE].cName,"d232ThNumCore");
@@ -1602,7 +1602,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_232THMASSCRUST].bMultiFile = 1;
   options[OPT_232THMASSCRUST].dNeg = EMASSCRUST232TH;
   options[OPT_232THMASSCRUST].dDefault = 0;
-  sprintf(options[OPT_232THMASSCRUST].cNeg,"Earth Masses");
+  sprintf(options[OPT_232THMASSCRUST].cNeg,"Mearth");
   fnRead[OPT_232THMASSCRUST] = &fvRead232ThMassCrust;
 
   sprintf(options[OPT_232THNUMCRUST].cName,"d232ThNumCrust");
@@ -1633,7 +1633,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_238UMASSMAN].bMultiFile = 1;
   options[OPT_238UMASSMAN].dNeg = EMASSMAN238U;
   options[OPT_238UMASSMAN].dDefault = 0;
-  sprintf(options[OPT_238UMASSMAN].cNeg,"Earth Masses");
+  sprintf(options[OPT_238UMASSMAN].cNeg,"Mearth");
   fnRead[OPT_238UMASSMAN] = &fvRead238UMassMan;
 
   sprintf(options[OPT_238UNUMMAN].cName,"d238UNumMan");
@@ -1664,7 +1664,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_238UMASSCORE].bMultiFile = 1;
   options[OPT_238UMASSCORE].dNeg = EMASSCORE238U;
   options[OPT_238UMASSCORE].dDefault = 0;
-  sprintf(options[OPT_238UMASSCORE].cNeg,"Earth Masses");
+  sprintf(options[OPT_238UMASSCORE].cNeg,"Mearth");
   fnRead[OPT_238UMASSCORE] = &fvRead238UMassCore;
 
   sprintf(options[OPT_238UNUMCORE].cName,"d238UNumCore");
@@ -1695,7 +1695,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_238UMASSCRUST].bMultiFile = 1;
   options[OPT_238UMASSCRUST].dNeg = EMASSCRUST238U;
   options[OPT_238UMASSCRUST].dDefault = 0;
-  sprintf(options[OPT_238UMASSCRUST].cNeg,"Earth Masses");
+  sprintf(options[OPT_238UMASSCRUST].cNeg,"Mearth");
   fnRead[OPT_238UMASSCRUST] = &fvRead238UMassCrust;
 
   sprintf(options[OPT_238UNUMCRUST].cName,"d238UNumCrust");
@@ -1727,7 +1727,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_235UMASSMAN].bMultiFile = 1;
   options[OPT_235UMASSMAN].dNeg = EMASSMAN235U;
   options[OPT_235UMASSMAN].dDefault = 0;
-  sprintf(options[OPT_235UMASSMAN].cNeg,"Earth Masses");
+  sprintf(options[OPT_235UMASSMAN].cNeg,"Mearth");
   fnRead[OPT_235UMASSMAN] = &fvRead235UMassMan;
 
   sprintf(options[OPT_235UNUMMAN].cName,"d235UNumMan");  //PED
@@ -1757,7 +1757,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_235UMASSCORE].bMultiFile = 1;
   options[OPT_235UMASSCORE].dNeg = EMASSCORE235U;
   options[OPT_235UMASSCORE].dDefault = 0;
-  sprintf(options[OPT_235UMASSCORE].cNeg,"Earth Masses");
+  sprintf(options[OPT_235UMASSCORE].cNeg,"Mearth");
   fnRead[OPT_235UMASSCORE] = &fvRead235UMassCore;
 
   sprintf(options[OPT_235UNUMCORE].cName,"d235UNumCore");
@@ -1787,7 +1787,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_235UMASSCRUST].bMultiFile = 1;
   options[OPT_235UMASSCRUST].dNeg = EMASSCRUST235U;
   options[OPT_235UMASSCRUST].dDefault = 0;
-  sprintf(options[OPT_235UMASSCRUST].cNeg,"Earth Masses");
+  sprintf(options[OPT_235UMASSCRUST].cNeg,"Mearth");
   fnRead[OPT_235UMASSCRUST] = &fvRead235UMassCrust;
 
   sprintf(options[OPT_235UNUMCRUST].cName,"d235UNumCrust");
@@ -4716,7 +4716,7 @@ void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_26ALMASSMAN].cName,"26AlMassMan");
   sprintf(output[OUT_26ALMASSMAN].cDescr,"Mass of Mantle in 26Al");
-  sprintf(output[OUT_26ALMASSMAN].cNeg,"Earth Masses");
+  sprintf(output[OUT_26ALMASSMAN].cNeg,"Mearth");
   output[OUT_26ALMASSMAN].bNeg = 1;
   output[OUT_26ALMASSMAN].dNeg = 1./MEARTH;  //[EMass/kg]
   output[OUT_26ALMASSMAN].iNum = 1;
@@ -4744,7 +4744,7 @@ void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_26ALMASSCORE].cName,"26AlMassCore");
   sprintf(output[OUT_26ALMASSCORE].cDescr,"Mass of core in 26Al");
-  sprintf(output[OUT_26ALMASSCORE].cNeg,"Earth Masses");
+  sprintf(output[OUT_26ALMASSCORE].cNeg,"Mearth");
   output[OUT_26ALMASSCORE].bNeg = 1;
   output[OUT_26ALMASSCORE].dNeg = 1./MEARTH;
   output[OUT_26ALMASSCORE].iNum = 1;
@@ -4817,7 +4817,7 @@ void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_40KMASSMAN].cName,"40KMassMan");
   sprintf(output[OUT_40KMASSMAN].cDescr,"Total Mass of 40K");
-  sprintf(output[OUT_40KMASSMAN].cNeg,"Earth Masses");
+  sprintf(output[OUT_40KMASSMAN].cNeg,"Mearth");
   output[OUT_40KMASSMAN].bNeg = 1;
   output[OUT_40KMASSMAN].dNeg = 1./MEARTH;
   output[OUT_40KMASSMAN].iNum = 1;
@@ -4845,7 +4845,7 @@ void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_40KMASSCORE].cName,"40KMassCore");
   sprintf(output[OUT_40KMASSCORE].cDescr,"Total Core Mass of 40K");
-  sprintf(output[OUT_40KMASSCORE].cNeg,"Earth Masses");
+  sprintf(output[OUT_40KMASSCORE].cNeg,"Mearth");
   output[OUT_40KMASSCORE].bNeg = 1;
   output[OUT_40KMASSCORE].dNeg = 1./MEARTH;
   output[OUT_40KMASSCORE].iNum = 1;
@@ -4873,7 +4873,7 @@ void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_40KMASSCRUST].cName,"40KMassCrust");
   sprintf(output[OUT_40KMASSCRUST].cDescr,"Total Crust Mass of 40K");
-  sprintf(output[OUT_40KMASSCRUST].cNeg,"Earth Masses");
+  sprintf(output[OUT_40KMASSCRUST].cNeg,"Mearth");
   output[OUT_40KMASSCRUST].bNeg = 1;
   output[OUT_40KMASSCRUST].dNeg = 1./MEARTH;
   output[OUT_40KMASSCRUST].iNum = 1;
@@ -4993,7 +4993,7 @@ void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_232THMASSCRUST].cName,"232ThMassCrust");
   sprintf(output[OUT_232THMASSCRUST].cDescr,"Total Mass of 232Th");
-  sprintf(output[OUT_232THMASSCRUST].cNeg,"Earth Masses");
+  sprintf(output[OUT_232THMASSCRUST].cNeg,"Mearth");
   output[OUT_232THMASSCRUST].bNeg = 1;
   output[OUT_232THMASSCRUST].dNeg = 1./MEARTH;
   output[OUT_232THMASSCRUST].iNum = 1;
@@ -5237,7 +5237,7 @@ void fvInitializeOutputRadheat(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_235UMASSCRUST].cName,"235UMassCrust");
   sprintf(output[OUT_235UMASSCRUST].cDescr,"Total Crust Mass of 235U");
-  sprintf(output[OUT_235UMASSCRUST].cNeg,"Earth Masses");
+  sprintf(output[OUT_235UMASSCRUST].cNeg,"Mearth");
   output[OUT_235UMASSCRUST].bNeg = 1;
   output[OUT_235UMASSCRUST].dNeg = 1./MEARTH;
   output[OUT_235UMASSCRUST].iNum = 1;

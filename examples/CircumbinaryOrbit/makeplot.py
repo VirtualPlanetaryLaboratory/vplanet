@@ -12,6 +12,7 @@ import matplotlib as mpl
 import numpy as np
 import vplot as vpl
 import sys
+import subprocess
 
 
 # Check correct number of arguments
@@ -23,6 +24,9 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('ERROR: Unknown file format: '+sys.argv[1])
     print('Options are: pdf, png')
     exit(1)
+
+#Runs VPLANET
+subprocess.call(['vplanet', 'vpl.in'])
 
 #Typical plot parameters that make for pretty plot
 mpl.rcParams['figure.figsize'] = (10,8)
@@ -39,6 +43,7 @@ varpi = output.cbp.LongP
 inc = output.cbp.Inc
 
 # Plot
+plt.style.use('../../vplot/vplot/style/vplot.mplstyle')
 fig, axes = plt.subplots(nrows=2, ncols=2, sharex=True)
 color = "k"
 

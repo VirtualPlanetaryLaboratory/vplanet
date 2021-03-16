@@ -18,7 +18,7 @@ path = os.path.join(
 )
 
 
-def test_autplot():
+def test_autoplot():
     figs = vpl.auto_plot(path, show=False)
 
     # TODO: run tests here

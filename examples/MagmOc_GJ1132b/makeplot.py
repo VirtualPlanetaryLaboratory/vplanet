@@ -15,6 +15,10 @@ mpl.rcParams['legend.fontsize']  = 13
 mpl.rcParams['axes.titleweight'] = 'bold'
 #########################################
 
+
+#Runs VPLANET
+subprocess.call(['vplanet', 'vpl.in'])
+
 cmap=plt.get_cmap('nipy_spectral')
 
 # read data
@@ -66,6 +70,7 @@ print('Fe2O3 mass frac in mantle     = ',Frac_Fe2O3[n_time-1])
 print('###################')
 
 ### Plot ###
+plt.style.use('../../vplot/vplot/style/vplot.mplstyle')
 
 fig = plt.figure(num=None, figsize=(10, 12), dpi=300, facecolor='w', edgecolor='k')
 fig.suptitle('GJ1132b: Initial water content '+str(M_water_mo[0])+' TO + grey atmosphere', fontsize=16, fontweight='bold')

@@ -1,24 +1,169 @@
-figure.figsize: 6.4, 4.4
-axes.labelsize: 12
-axes.titlesize: 14
-xtick.labelsize: 10
-ytick.labelsize: 10
-legend.fontsize: 10
+# LINES
+lines.linewidth               : 2.0               # line width in points
+lines.linestyle               : -                 # solid line
+lines.marker                  : None              # the default marker
+lines.markeredgewidth         : 0.5               # the line width around the marker symbol
+lines.markersize              : 5                 # markersize, in points
+lines.dash_joinstyle          : round             # miter|round|bevel
+lines.dash_capstyle           : butt              # butt|round|projecting
+lines.solid_joinstyle         : round             # miter|round|bevel
+lines.solid_capstyle          : projecting        # butt|round|projecting
+lines.antialiased             : True              # render lines in antialiased (no jaggies)
 
-grid.linewidth: 0.8
-lines.linewidth: 1.4
-patch.linewidth: 0.24
-lines.markersize: 5.6
-lines.markeredgewidth: 0
+# MARKERS
+markers.fillstyle             : full
 
-xtick.major.width: 0.8
-ytick.major.width: 0.8
-xtick.minor.width: 0.4
-ytick.minor.width: 0.4
+# FONT
+font.family                   : serif
+font.style                    : normal
+font.variant                  : normal
+font.weight                   : normal
+font.stretch                  : normal
+font.size                     : 12.0
+font.serif                    : Palatino Linotype, DejaVu Serif
+font.sans-serif               : DejaVu Sans, Lucida Grande, Verdana, Geneva, Lucid, Arial, Helvetica, Avant Garde, sans-serif
+font.cursive                  : Apple Chancery, Textile, Zapf Chancery, Sand, Script MT, Felipa, cursive
+font.fantasy                  : Comic Sans MS, Chicago, Charcoal, ImpactWestern, Humor Sans, fantasy
+font.monospace                : DejaVu Sans Mono, Andale Mono, Nimbus Mono L, Courier New, Courier, Fixed, Terminal, monospace
+text.color                    : k
 
-xtick.major.pad: 5.6
-ytick.major.pad: 5.6
+# LATEX
+text.usetex                   : True
+text.latex.preamble           :
+text.hinting                  : auto
+text.hinting_factor           : 8
+text.antialiased              : True
+mathtext.cal                  : cursive
+mathtext.rm                   : serif
+mathtext.tt                   : monospace
+mathtext.it                   : serif:italic
+mathtext.bf                   : serif:bold
+mathtext.sf                   : sans\-serif
+mathtext.fontset              : cm                # Should be 'cm' (Computer Modern), 'stix', 'stixsans' or 'custom'
+mathtext.fallback             : cm
+mathtext.default              : it                # The default font to use for math. Can be any of the LaTeX font names
 
-text.usetex: False
-font.family: stixgeneral
-mathtext.fontset: stix
+# AXES
+#axes.hold                     : True
+axes.facecolor                : w
+axes.edgecolor                : k
+axes.linewidth                : 1.0
+axes.grid                     : False
+axes.grid.which               : major
+axes.grid.axis                : both
+axes.titlesize                : 24
+axes.titleweight              : normal
+axes.labelsize                : large
+axes.labelpad                 : 3.0
+axes.labelweight              : normal
+axes.labelcolor               : k
+axes.axisbelow                : False
+axes.formatter.limits         : -6, 6             # use scientific notation if log10 of the axis range is smaller than the first or larger than the second
+axes.formatter.use_locale     : False
+axes.formatter.use_mathtext   : True
+axes.formatter.useoffset      : False
+axes.unicode_minus            : True
+#axes.prop_cycle               : cycler('color', 'bgrcmyk')
+axes.xmargin                  : 0
+axes.ymargin                  : 0.1
+axes.spines.bottom            : True
+axes.spines.left              : True
+axes.spines.right             : True
+axes.spines.top               : True
+
+# TICKS
+xtick.major.size              : 4
+xtick.minor.size              : 2
+xtick.minor.visible           : False
+xtick.major.width             : 0.5
+xtick.minor.width             : 0.5
+xtick.major.pad               : 4
+xtick.minor.pad               : 4
+xtick.color                   : k
+xtick.labelsize               : large
+xtick.direction               : in                # in, out, or inout
+
+ytick.major.size              : 4
+ytick.minor.size              : 2
+ytick.minor.visible           : False
+ytick.major.width             : 0.5
+ytick.minor.width             : 0.5
+ytick.major.pad               : 4
+ytick.minor.pad               : 4
+ytick.color                   : k
+ytick.labelsize               : large
+ytick.direction               : in
+
+# GRIDS
+grid.color                    : w
+grid.linestyle                : :
+grid.linewidth                : 0.5
+grid.alpha                    : 0.1
+
+# LEGEND
+legend.fancybox               : False
+legend.loc                    : upper right
+legend.numpoints              : 2
+legend.fontsize               : large
+legend.borderpad              : 0.4
+legend.markerscale            : 1.0
+legend.labelspacing           : 0.5
+legend.handlelength           : 2.
+legend.handleheight           : 0.7
+legend.handletextpad          : 0.8
+legend.borderaxespad          : 0.5
+legend.columnspacing          : 2.
+legend.shadow                 : False
+legend.frameon                : True
+legend.framealpha             : 0.5
+legend.scatterpoints          : 1
+legend.facecolor              : inherit
+legend.edgecolor              : inherit
+
+# FIGURE
+figure.titlesize              : 28
+figure.titleweight            : normal
+figure.figsize                : 12, 8
+figure.dpi                    : 80
+figure.facecolor              : 1.0
+figure.edgecolor              : w
+figure.autolayout             : False
+figure.frameon                : True
+figure.subplot.left           : 0.125
+figure.subplot.right          : 0.9
+figure.subplot.bottom         : 0.1
+figure.subplot.top            : 0.9
+figure.subplot.wspace         : 0.2
+figure.subplot.hspace         : 0.3
+
+# IMAGES
+image.aspect                  : equal             # equal | auto | a number
+image.interpolation           : bilinear          # see help(imshow) for options
+image.cmap                    : magma
+image.lut                     : 256
+image.origin                  : lower
+image.resample                : False
+image.composite_image         : True
+
+# CONTOUR PLOTS
+contour.negative_linestyle    : dashed
+contour.corner_mask           : True
+
+# ERRORBARS
+errorbar.capsize              : 3
+
+# SAVING FIGURES
+savefig.dpi                   : 100
+savefig.facecolor             : w
+savefig.edgecolor             : w
+savefig.format                : pdf
+savefig.bbox                  : tight
+savefig.pad_inches            : 0.1
+savefig.transparent           : False
+# savefig.frameon               : True
+savefig.orientation           : portrait
+
+pdf.compression               : 6
+pdf.fonttype                  : 3                 # Output Type 3 (Type3) or Type 42 (TrueType)
+pdf.inheritcolor              : False
+pdf.use14corefonts            : False

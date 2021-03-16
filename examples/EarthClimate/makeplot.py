@@ -387,6 +387,9 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('Options are: pdf, png')
     exit(1)
 
+#Runs VPLANET
+subprocess.call(['vplanet', 'vpl.in'])
+
 # Make plots
 comp2huybers('Earth',show=False)
 seasonal_maps(0,show=False)

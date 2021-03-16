@@ -3,7 +3,8 @@ import matplotlib as mpl
 import matplotlib.pyplot  as plt
 import matplotlib.gridspec as gridspec
 import sys
-
+import matplotlib.ticker as mticker
+import subprocess
 
 plt.close('all')
 # Set style for plot #
@@ -14,6 +15,10 @@ mpl.rcParams['xtick.labelsize'] = 12
 mpl.rcParams['ytick.labelsize'] = 12
 mpl.rcParams['legend.fontsize'] = 15
 ######################
+
+#Runs VPLANET
+subprocess.call(['vplanet', 'vpl.in'])
+
 
 cmap=plt.get_cmap('nipy_spectral')
 
@@ -126,7 +131,13 @@ ax3.plot(time*10**-6, M_water_sol, label='Solid mantle', color=cmap(60))
 ax3.axvline(x=t_sol*1e-6,linestyle='--', color='lightgray',linewidth=2)
 ax3.set_ylim([0.001,10])
 ax3.set_xlim([0.001,2])
-ax3.set_xticklabels([1,1e-3,1e-2,1e-1,1])
+
+label_format = '{:,.0f}'
+ax3.xaxis.set_major_locator(mticker.MaxNLocator(3))
+ticks_loc = [1,1e-3,1e-2,1e-1,1]
+ax3.xaxis.set_major_locator(mticker.FixedLocator(ticks_loc))
+ax3.set_xticklabels([label_format.format(x) for x in ticks_loc])
+
 ax3.set_xscale('log')
 ax3.set_yscale('log')
 ax3.set_xlabel('Time (Myr)')

@@ -46,6 +46,7 @@ cplelim = vpl.GetOutput("./Lopez12CPL/ELim")
 cplrr = vpl.GetOutput("./Lopez12CPL/RR")
 
 # Plot
+plt.style.use('../../vplot/vplot/style/vplot.mplstyle')
 fig, axes = plt.subplots(nrows=3, ncols=2)
 
 timeauto = cplauto.auto.Time/1e6

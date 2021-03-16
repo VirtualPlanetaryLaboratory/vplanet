@@ -44,6 +44,7 @@ dyn = vpl.GetOutput("./Dynamic")
 ### First figure: Comparative atmospheric escape ###
 
 # Plot
+plt.style.use('../../vplot/vplot/style/vplot.mplstyle')
 fig, axes = plt.subplots(nrows=4, ncols=3, sharex=True, figsize=(16,11))
 
 time = lc17.star.Time

@@ -20,6 +20,8 @@ out = vpl.GetOutput()
 
 time = out.TGstar.Time/1e3
 
+plt.style.use('../../vplot/vplot/style/vplot.mplstyle')
+
 fig = plt.figure(figsize=(6.5,8))
 plt.subplot(3,2,1)
 plt.plot(time,out.TGb.Obliquity,color='k')

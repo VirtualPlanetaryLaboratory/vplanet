@@ -10,10 +10,11 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 import sys
-import vplot as vpl
 import pandas as pd
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
+import vplot as vpl
+import subprocess
 
 mpl.rcParams['figure.figsize'] = (9,8)
 mpl.rcParams['font.size'] = 18.0
@@ -27,6 +28,9 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('ERROR: Unknown file format: '+sys.argv[1])
     print('Options are: pdf, png')
     exit(1)
+
+# Runs VPLANET
+subprocess.call(['vplanet', 'vpl.in'])
 
 ### Magnetic braking validation figure ###
 
@@ -95,7 +99,7 @@ ax.scatter(mcq["Mass"], mcq["Prot"], color="r", s=2, edgecolor=None, zorder=0, a
 ax.scatter([1.0], [26.3], marker="*", color="C0", s=100, edgecolor=None, zorder=20)
 
 # Format
-ax.set_xlabel(r"Stellar Mass [$M_{\odot}$]")
+ax.set_xlabel("Stellar Mass [$M_{\odot}$]")
 ax.set_ylabel("Rotation Period [d]")
 ax.set_xlim(0.1, 1.025)
 ax.set_ylim(0.1, 60)

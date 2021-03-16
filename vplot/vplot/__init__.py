@@ -19,6 +19,11 @@ formatter = logging.Formatter("%(levelname)s:%(message)s")
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
+# copy mplstyle sheet to correct location
+#import shutil as sh
+#file = 'style/vplot.mplstyle'
+#location = os.path.expanduser('~/.config/matplotlib/mpl_configdir/stylelib')
+#sh.copy(file,location)
 
 # Override matplotlib.figure.Figure
 from . import figure
@@ -33,7 +38,7 @@ from .figure import VPLOTFigure
 from .log import Log, LogBody, LogStage
 from .output import GetOutput, Output, Body
 from .auto_plot import auto_plot
-
+from .plot import colors, make_pretty, plot
 
 # User-facing stuff
 __all__ = [
@@ -45,4 +50,7 @@ __all__ = [
     "Output",
     "Body",
     "VPLOTFigure",
+    "colors",
+    "make_pretty"
+    "plot"
 ]

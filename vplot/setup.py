@@ -29,7 +29,7 @@ setup(
     packages=["vplot"],
     install_requires=["numpy", "matplotlib","astropy"],
     include_package_data=True,
-    package_data={},
+    package_data={'vplot':['vplot/style/vplot.mplstyle']},
     cmdclass={},
     scripts=["bin/vplot"],
     zip_safe=False,

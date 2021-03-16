@@ -21,7 +21,6 @@ To run this case:
 
 .. code-block:: bash
 
-    vplanet vpl.in
     python makeplot.py
 
 

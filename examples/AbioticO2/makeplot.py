@@ -41,7 +41,7 @@ sSystemName               system
 iVerbose                  0
 bOverwrite                1
 saBodyFiles               star.in %s
-sUnitMass                 Msun
+sUnitMass                 solar
 sUnitLength               AU
 sUnitTime                 YEARS
 sUnitAngle                d

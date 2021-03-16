@@ -1,0 +1,15 @@
+Metadata-Version: 1.1
+Name: vplot
+Version: 0.4.0
+Summary: plotting tools for vplanet
+Home-page: https://github.com/VirtualPlanetaryLaboratory/vplot/
+Author: Rodrigo Luger
+Author-email: rodluger@gmail.edu
+License: MIT
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Scientific/Engineering :: Astronomy

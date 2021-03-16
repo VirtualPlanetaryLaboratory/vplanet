@@ -7,6 +7,4 @@ Information for **VPLanet** developers.
    :maxdepth: 1
 
    Style Guide <StyleGuide>
-   Bugs and Issues <bugs>
-   To Do List <todo>
-   Writing Tests, Bug Reports, and Examples <tests>
+   Writing Tests and Examples <tests>

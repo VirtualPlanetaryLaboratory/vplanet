@@ -33,7 +33,7 @@ tests/BigPlanetStats/BP_Stats/
 
 # Examples
 examples/ParameterSweep/ParameterSweep/
-
+examples/IoHeat/data/
 
 
 # Aux files / build info / garbage

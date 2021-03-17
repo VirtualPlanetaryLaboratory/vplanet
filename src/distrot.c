@@ -1155,7 +1155,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_DYOBLDTDISTROT].cName,"DYoblDtDistRot");
   sprintf(output[OUT_DYOBLDTDISTROT].cDescr,"Body's dYobl/dt in DistRot");
-  sprintf(output[OUT_DYOBLDTDISTROT].cNeg,"1/yr");
+  sprintf(output[OUT_DYOBLDTDISTROT].cNeg,"1/year");
   output[OUT_DYOBLDTDISTROT].bNeg = 1;
   output[OUT_DYOBLDTDISTROT].dNeg = YEARSEC;
   output[OUT_DYOBLDTDISTROT].iNum = 1;
@@ -1164,7 +1164,7 @@ void InitializeOutputDistRot(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_DZOBLDTDISTROT].cName,"DZoblDtDistRot");
   sprintf(output[OUT_DZOBLDTDISTROT].cDescr,"Body's dZobl/dt in DistRot");
-  sprintf(output[OUT_DZOBLDTDISTROT].cNeg,"1/yr");
+  sprintf(output[OUT_DZOBLDTDISTROT].cNeg,"1/year");
   output[OUT_DZOBLDTDISTROT].bNeg = 1;
   output[OUT_DZOBLDTDISTROT].dNeg = YEARSEC;
   output[OUT_DZOBLDTDISTROT].iNum = 1;

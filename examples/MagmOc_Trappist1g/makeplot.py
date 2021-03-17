@@ -8,10 +8,15 @@ import matplotlib as mpl
 import matplotlib.pyplot  as plt
 import seaborn as sns
 from time import time
+import sys
+import subprocess
 
 plt.close('all')
 
 clock = int(time())
+
+#Runs VPLANET
+subprocess.call(['vplanet', 'vpl.in'])
 
 # Set style for plot #
 mpl.rcParams['lines.linewidth'] = 2
@@ -132,7 +137,7 @@ else:
     elif (esc_stop==1):
         T_Desicc = time[n_t_habit]/1e6
 ### Plot ###
-
+plt.style.use('../../vplot/vplot/style/vplot.mplstyle')
 fig = plt.figure(num=None, figsize=(10, 12), dpi=300, facecolor='w', edgecolor='k')
 fig.suptitle(''+str(Name_Planet)+': $M^{ini}_{H_2O} = $ '+str(M_water_mo[0])+' TO, $e = $'+str(Ecc)+', Abundance of $^{40}K =$'+str(K40)+' $\\times$ Earth', fontsize=16, fontweight='bold')
 
@@ -207,4 +212,8 @@ ax8.set_xlabel('Time (Myrs)')
 
 
 plt.subplots_adjust(left=0.1, right=0.95, top=0.93, bottom=0.05, wspace=0.25)
-plt.savefig('Trappist1g_2TO.png')
+if (sys.argv[1] == 'pdf'):
+    plt.savefig('MagmOC_Trappist1g.pdf')
+if (sys.argv[1] == 'png'):
+    plt.savefig('MagmOC_Trappist1g.png')
+# plt.savefig('Trappist1g_2TO.png')

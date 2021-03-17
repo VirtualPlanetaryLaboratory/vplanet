@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot  as plt
+import sys
 
 plt.close('all')
 
@@ -13,6 +14,10 @@ mpl.rcParams['ytick.labelsize']  = 12
 mpl.rcParams['legend.fontsize']  = 13
 mpl.rcParams['axes.titleweight'] = 'bold'
 #########################################
+
+
+#Runs VPLANET
+subprocess.call(['vplanet', 'vpl.in'])
 
 cmap=plt.get_cmap('nipy_spectral')
 
@@ -65,6 +70,7 @@ print('Fe2O3 mass frac in mantle     = ',Frac_Fe2O3[n_time-1])
 print('###################')
 
 ### Plot ###
+plt.style.use('../../vplot/vplot/style/vplot.mplstyle')
 
 fig = plt.figure(num=None, figsize=(10, 12), dpi=300, facecolor='w', edgecolor='k')
 fig.suptitle('GJ1132b: Initial water content '+str(M_water_mo[0])+' TO + grey atmosphere', fontsize=16, fontweight='bold')
@@ -131,4 +137,10 @@ ax8.set_xlabel('Time (Myrs)')
 
 
 plt.subplots_adjust(left=0.1, right=0.95, top=0.93, bottom=0.05, wspace=0.25)
-plt.savefig('Results_GJ1132b.png')
+
+if (sys.argv[1] == 'pdf'):
+    plt.savefig('MagmOC_GJ1132b.pdf')
+if (sys.argv[1] == 'png'):
+    plt.savefig('MagmOC_GJ1132b.png')
+
+#plt.savefig('Results_GJ1132b.png')

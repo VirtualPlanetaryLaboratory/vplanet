@@ -835,7 +835,7 @@ void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]) {
   //Output example for dPositionX variable
   sprintf(output[OUT_POSITIONXSPINBODY].cName,"PositionXSpiNBody");
   sprintf(output[OUT_POSITIONXSPINBODY].cDescr,"Body's x position in SpiNBody");
-  sprintf(output[OUT_POSITIONXSPINBODY].cNeg," ");
+  //sprintf(output[OUT_POSITIONXSPINBODY].cNeg," ");
   output[OUT_POSITIONXSPINBODY].bNeg = 0;
   //output[OUT_POSITIONXSPINBODY].dNeg = 1;
   output[OUT_POSITIONXSPINBODY].iNum = 1;
@@ -844,7 +844,7 @@ void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_POSITIONYSPINBODY].cName,"PositionYSpiNBody");
   sprintf(output[OUT_POSITIONYSPINBODY].cDescr,"Body's y position in SpiNBody");
-  sprintf(output[OUT_POSITIONYSPINBODY].cNeg," ");
+  //sprintf(output[OUT_POSITIONYSPINBODY].cNeg," ");
   output[OUT_POSITIONYSPINBODY].bNeg = 0;
   //output[OUT_POSITIONYSPINBODY].dNeg = 1;
   output[OUT_POSITIONYSPINBODY].iNum = 1;
@@ -853,7 +853,7 @@ void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_POSITIONZSPINBODY].cName,"PositionZSpiNBody");
   sprintf(output[OUT_POSITIONZSPINBODY].cDescr,"Body's z position in SpiNBody");
-  sprintf(output[OUT_POSITIONZSPINBODY].cNeg," ");
+  //sprintf(output[OUT_POSITIONZSPINBODY].cNeg," ");
   output[OUT_POSITIONZSPINBODY].bNeg = 0;
   //output[OUT_POSITIONZSPINBODY].dNeg = 1;
   output[OUT_POSITIONZSPINBODY].iNum = 1;
@@ -862,7 +862,7 @@ void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_VELXSPINBODY].cName,"VelXSpiNBody");
   sprintf(output[OUT_VELXSPINBODY].cDescr,"Body's x velocity in SpiNBody");
-  sprintf(output[OUT_VELXSPINBODY].cNeg," ");
+  //sprintf(output[OUT_VELXSPINBODY].cNeg," ");
   output[OUT_VELXSPINBODY].bNeg = 0;
   //output[OUT_VELXSPINBODY].dNeg = 1;
   output[OUT_VELXSPINBODY].iNum = 1;
@@ -871,7 +871,7 @@ void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_VELYSPINBODY].cName,"VelYSpiNBody");
   sprintf(output[OUT_VELYSPINBODY].cDescr,"Body's y velocity in SpiNBody");
-  sprintf(output[OUT_VELYSPINBODY].cNeg," ");
+  //sprintf(output[OUT_VELYSPINBODY].cNeg," ");
   output[OUT_VELYSPINBODY].bNeg = 0;
   //output[OUT_VELYSPINBODY].dNeg = 1;
   output[OUT_VELYSPINBODY].iNum = 1;
@@ -880,7 +880,7 @@ void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_VELZSPINBODY].cName,"VelZSpiNBody");
   sprintf(output[OUT_VELZSPINBODY].cDescr,"Body's z velocity in SpiNBody");
-  sprintf(output[OUT_VELZSPINBODY].cNeg," ");
+  //sprintf(output[OUT_VELZSPINBODY].cNeg," ");
   output[OUT_VELZSPINBODY].bNeg = 0;
   //output[OUT_VELZSPINBODY].dNeg = 1;
   output[OUT_VELZSPINBODY].iNum = 1;

@@ -14,8 +14,8 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('Options are: pdf, png')
     exit(1)
 
-plt.rcParams["text.usetex"]=True
-plt.rcParams["text.latex.unicode"]=True
+#plt.rcParams["text.usetex"]=True
+#plt.rcParams["text.latex.unicode"]=True
 
 out = vplot.GetOutput()
 

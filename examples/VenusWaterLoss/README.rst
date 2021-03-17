@@ -26,7 +26,6 @@ To run this example
 
 .. code-block:: bash
 
-    vplanet vpl.in
     python makeplot.py <pdf | png>
 
 
@@ -48,7 +47,6 @@ To create the Bolmont scaling relationship figure
 .. code-block:: bash
 
    cd BolmontScaling
-   vplanet vpl.in
    python makeplot.py <pdf | png>
 
 .. figure:: BolmontScaling.png

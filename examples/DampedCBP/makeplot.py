@@ -7,7 +7,7 @@ import matplotlib as mpl
 import numpy as np
 import vplot as vpl
 import sys
-
+import subprocess
 
 # Check correct number of arguments
 if (len(sys.argv) != 2):
@@ -19,8 +19,11 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('Options are: pdf, png')
     exit(1)
 
+#Runs VPLANET
+subprocess.call(['vplanet', 'vpl.in'])
 
 #Typical plot parameters that make for pretty plots
+plt.style.use('../../vplot/vplot/style/vplot.mplstyle')
 mpl.rcParams['figure.figsize'] = (36,27)
 mpl.rcParams['font.size'] = 21.0
 

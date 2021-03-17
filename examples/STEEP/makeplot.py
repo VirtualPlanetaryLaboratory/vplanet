@@ -26,16 +26,21 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('Options are: pdf, png')
     exit(1)
 
-# Loop over directories to run simulations
+# Run the simulations
+dir_path = os.path.dirname(os.path.realpath(__file__))
 dataDirs = ["CPL_RG", "CPL_RG_OFF",
         "CTL_RG", "CTL_RG_OFF"]
-dirPath = os.path.dirname(os.path.realpath(__file__))
 
+# Run simulations
 for dir in dataDirs:
-    os.chdir(os.path.join(dirPath,dir))
+    print ("Running "+dir+".")
+    os.chdir(os.path.join(dir_path,dir))
 
     # Run simulation
     subprocess.call(['vplanet', 'vpl.in'])
+# Return to top-level directory
+os.chdir(dir_path)
+
 
 
 # Plot
@@ -50,7 +55,7 @@ colors = [vpl.colors.red, vpl.colors.purple,
 #Extracting and plotting the data from each folder
 for ii in range(len(dataDirs)):
     # Load data
-    output = vpl.GetOutput(os.path.join(dirPath,dataDirs[ii]))
+    output = vpl.GetOutput(os.path.join(dir_path,dataDirs[ii]))
 
     # Extract data
     time = output.secondary.Time

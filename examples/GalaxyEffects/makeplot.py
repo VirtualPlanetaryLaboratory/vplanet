@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import vplot
 import sys
+import subprocess
 
 # Check correct number of arguments
 if (len(sys.argv) != 2):
@@ -12,8 +13,28 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('ERROR: Unknown file format: '+sys.argv[1])
     print('Options are: pdf, png')
     exit(1)
+
+#Runs VPLANET
+print("Running Main Example")
+subprocess.call(['vplanet', 'vpl.in'])
+# Run the simulations
+dir_path = os.path.dirname(os.path.realpath(__file__))
+dirs = ["tides_only"]
+
+# Run simulations
+for dir in dirs:
+    print ("Running "+dir+".")
+    os.chdir(os.path.join(dir_path,dir))
+
+    # Run simulation
+    subprocess.call(['vplanet', 'vpl.in'])
+# Return to top-level directory
+os.chdir(dir_path)
+
 out = vplot.GetOutput()
 out2 = vplot.GetOutput('tides_only')
+
+plt.style.use('../../vplot/vplot/style/vplot.mplstyle')
 
 plt.figure(figsize=(8.5,6))
 q = out.comp.SemiMajorAxis*(1-out.comp.Eccentricity)
@@ -27,6 +48,7 @@ plt.plot(out2.comp.Time/1e9,q,'-',c=vplot.colors.pale_blue,label='Perihelion (ti
 plt.legend(loc='lower right', ncol=2, fontsize=10)
 plt.ylabel('Distance (au)')
 plt.xlabel('Time (Gyr)')
+plt.yscale('log')
 plt.ylim(10,2e4)
 
 if (sys.argv[1] == 'pdf'):

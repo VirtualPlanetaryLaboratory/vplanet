@@ -23,10 +23,6 @@ pip install sphinxcontrib-bibtex
 # Install coverage stuff
 pip install coverage==4.5.4
 
-
-# Install vplot
-pip install git+git://github.com/VirtualPlanetaryLaboratory/vplot.git
-
 #install BigPlanet
 pip install h5py
 cd bigplanet/

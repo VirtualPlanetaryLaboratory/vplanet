@@ -6,6 +6,7 @@ import string
 import subprocess as subp
 import matplotlib.pyplot as plt
 import vplot as vpl
+import os
 
 # Check correct number of arguments
 if (len(sys.argv) != 2):
@@ -29,13 +30,38 @@ dirs=result.split()
 
 # Dirs contains array of directories to run
 
+# Run the simulations
+dir_path = os.path.dirname(os.path.realpath(__file__))
+#dataDirs = ["CPL_RG", "CPL_RG_OFF",
+#        "CTL_RG", "CTL_RG_OFF"]
+
+# # Run simulations
+# for dir in dataDirs:
+#     print ("Running "+dir+".")
+#     os.chdir(os.path.join(dir_path,dir))
+#
+#     # Run simulation
+#     subprocess.call(['vplanet', 'vpl.in'])
+# # Return to top-level directory
+# os.chdir(dir_path)
+
+
+
 iEcc=0
 iObl=0
 
 for dir in dirs:
     if dir != "0":  # WTF?
-        cmd = "cd "+dir+"; vplanet vpl.in >& output"
-        subp.call(cmd, shell=True)
+        print ("Running "+dir+".")
+        os.chdir(os.path.join(dir_path,dir))
+        # Run simulation
+        subp.call(['vplanet', '-q', 'vpl.in'])
+        os.chdir(dir_path)
+
+        #cmd = "cd "+dir+"; /home/caitlyn/vplanet-private/vplanet vpl.in >& output"
+        #print(cmd)
+        #exit()
+        #subp.call(cmd, shell=True)
         # At this point the log file has been generated
 
         logfile=dir+'/ioheat.log'
@@ -62,7 +88,6 @@ for dir in dirs:
         # New line in ecc
             iEcc += 1
             iObl = 0
-
 # Arrays ecc,obl,heat now contain the data to make the figure
 
 plt.xlabel('Eccentricity',fontsize=20)

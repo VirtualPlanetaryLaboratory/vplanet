@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import vplot
 import scipy.signal as sig
+import subprocess
 #plt.rcParams["text.usetex"]=True
 #plt.rcParams["text.latex.unicode"]=True
 plt.rcParams.update({'font.size':16,'legend.fontsize':15})
@@ -18,6 +19,9 @@ if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
     print('ERROR: Unknown file format: '+sys.argv[1])
     print('Options are: pdf, png')
     exit(1)
+
+#Runs VPLANET
+subprocess.call(['vplanet', 'vpl.in'])
 
 out = vplot.GetOutput()
 # Print final state

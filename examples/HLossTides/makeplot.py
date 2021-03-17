@@ -21,7 +21,7 @@ mpl.rcParams['figure.figsize'] = (6.5,6)
 mpl.rcParams['font.size'] = 10.0
 
 # Run simulations
-os.chdir('Lopez12CPL/auto')
+os.chdir('Lopez12CPL/Auto')
 print('Running Lopez12CPL-Auto.')
 subprocess.call(['vplanet', 'vpl.in'])
 
@@ -46,6 +46,7 @@ cplelim = vpl.GetOutput("./Lopez12CPL/ELim")
 cplrr = vpl.GetOutput("./Lopez12CPL/RR")
 
 # Plot
+plt.style.use('../../vplot/vplot/style/vplot.mplstyle')
 fig, axes = plt.subplots(nrows=3, ncols=2)
 
 timeauto = cplauto.auto.Time/1e6

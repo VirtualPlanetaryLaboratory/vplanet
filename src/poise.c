@@ -3843,7 +3843,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_LATITUDE].cName,"Latitude");
   sprintf(output[OUT_LATITUDE].cDescr,"Latitude.");
-  sprintf(output[OUT_LATITUDE].cNeg,"Degrees");
+  sprintf(output[OUT_LATITUDE].cNeg,"deg");
   output[OUT_LATITUDE].bNeg = 1;
   output[OUT_LATITUDE].dNeg = 1/DEGRAD;
   output[OUT_LATITUDE].iNum = 1;

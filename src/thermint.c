@@ -1058,7 +1058,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCMELTPHIS].bMultiFile = 1;
   options[OPT_VISCMELTPHIS].dNeg = VISCMELTPHIS; //XXX
   options[OPT_VISCMELTPHIS].dDefault = VISCMELTPHIS;
-  sprintf(options[OPT_VISCMELTPHIS].cNeg,"Default is VISCMELTPHIS");
+  sprintf(options[OPT_VISCMELTPHIS].cNeg,"VISCMELTPHIS units");
   fnRead[OPT_VISCMELTPHIS] = &fvReadViscMeltPhis;
   sprintf(options[OPT_VISCMELTPHIS].cLongDescr,
     "Viscosity-melt reduction coefficient, \"phi*\" in Eq. 8 of Driscoll &\n"
@@ -1075,6 +1075,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCMELTXI].dDefault = VISCMELTXI;
   sprintf(options[OPT_VISCMELTXI].cNeg,"Default is VISCMELTXI");
   fnRead[OPT_VISCMELTXI] = &fvReadViscMeltXi;
+  // Needs a LongDescr
 
   /* ViscMeltGamma */
   sprintf(options[OPT_VISCMELTGAMMA].cName,"dViscMeltGamma");
@@ -1086,6 +1087,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCMELTGAMMA].dDefault = VISCMELTGAMMA;
   sprintf(options[OPT_VISCMELTGAMMA].cNeg,"Default is VISCMELTGAMMA");
   fnRead[OPT_VISCMELTGAMMA] = &fvReadViscMeltGamma;
+  // Needs a LongDescr
 
   /* ViscMeltDelta */
   sprintf(options[OPT_VISCMELTDELTA].cName,"dViscMeltDelta");
@@ -1097,6 +1099,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCMELTDELTA].dDefault = VISCMELTDELTA;
   sprintf(options[OPT_VISCMELTDELTA].cNeg,"Default is VISCMELTDELTA");
   fnRead[OPT_VISCMELTDELTA] = &fvReadViscMeltDelta;
+  // Needs a LongDescr
 
   /* ViscMeltB */
   sprintf(options[OPT_VISCMELTB].cName,"dViscMeltB");
@@ -1108,6 +1111,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_VISCMELTB].dDefault = VISCMELTB;
   sprintf(options[OPT_VISCMELTB].cNeg,"Default is VISCMELTB");
   fnRead[OPT_VISCMELTB] = &fvReadViscMeltB;
+  // Needs a LongDescr
 
   /* MeltfactorLMan XXX Added by Rory -- Check!*/
   sprintf(options[OPT_MELTFACTORLMAN].cName,"dMeltfactorLMan");
@@ -1120,6 +1124,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MELTFACTORLMAN].dDefault = MELTFACTORLMAN;
   //sprintf(options[OPT_MELTFACTORLMAN].cNeg,"Default is MELTFACTORLMAN");
   fnRead[OPT_MELTFACTORLMAN] = &fvReadMeltfactorLMan;
+  // Needs a LongDescr
 
   /* MeltfactorUMan */
   sprintf(options[OPT_MELTFACTORUMAN].cName,"dMeltfactorUMan");
@@ -1131,6 +1136,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MELTFACTORUMAN].dDefault = MELTFACTORUMAN;
   sprintf(options[OPT_MELTFACTORUMAN].cNeg,"Default is MELTFACTORUMAN");
   fnRead[OPT_MELTFACTORUMAN] = &fvReadMeltfactorUMan;
+  // Needs a LongDescr
 
   /* FixMeltfactorUMan */
   sprintf(options[OPT_FIXMELTFACTORUMAN].cName,"dFixMeltfactorUMan");
@@ -1142,10 +1148,14 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_FIXMELTFACTORUMAN].dDefault = FIXMELTFACTORUMAN;
   sprintf(options[OPT_FIXMELTFACTORUMAN].cNeg,"Default is FIXMELTFACTORUMAN");
   fnRead[OPT_FIXMELTFACTORUMAN] = &fvReadFixMeltfactorUMan;
+  // Needs a LongDescr
 
   /* StagLid */
+  /* RB: I don't understand this. STAGLID is 0 in thermint.h, so isn't the default
+    not to use staglid? I'd also prefer to see this change to sThermalMode
+    with options pt, sl, and auto. XXX */
   sprintf(options[OPT_STAGLID].cName,"dStagLid");
-  sprintf(options[OPT_STAGLID].cDescr,"Stagnant Lid Switch");
+  sprintf(options[OPT_STAGLID].cDescr,"Use Stagnant Lid Model");
   sprintf(options[OPT_STAGLID].cDefault,"Default is STAGLID");
   options[OPT_STAGLID].iType = 2;
   options[OPT_STAGLID].bMultiFile = 1;
@@ -1164,6 +1174,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MANHFLOWPREF].dDefault = MANHFLOWPREF;
   sprintf(options[OPT_MANHFLOWPREF].cNeg,"Default is MANHFLOWPREF");
   fnRead[OPT_MANHFLOWPREF] = &fvReadManHFlowPref;
+  // Needs a LongDescr
 
    /* MagMomCoef */
   sprintf(options[OPT_MAGMOMCOEF].cName,"dMagMomCoef");
@@ -1175,6 +1186,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MAGMOMCOEF].dDefault = MAGMOMCOEF;
   sprintf(options[OPT_MAGMOMCOEF].cNeg,"Default is MAGMOMCOEF");
   fnRead[OPT_MAGMOMCOEF] = &fvReadMagMomCoef;
+  // Needs a LongDescr
 
   /* PresSWind */
   sprintf(options[OPT_PRESSWIND].cName,"dPresSWind");
@@ -1220,6 +1232,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ACTVISCMAN].dDefault = ACTVISCMAN;
   sprintf(options[OPT_ACTVISCMAN].cNeg,"Default is ACTVISCMAN");
   fnRead[OPT_ACTVISCMAN] = &fvReadActViscMan;
+  // Needs a LongDescr
 
   /* ShModRef */
   sprintf(options[OPT_SHMODREF].cName,"dShModRef");
@@ -1231,6 +1244,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_SHMODREF].dDefault = SHMODREF;
   sprintf(options[OPT_SHMODREF].cNeg,"Default is SHMODREF");
   fnRead[OPT_SHMODREF] = &fvReadShModRef;
+  // Needs a LongDescr
 
   /* Stiffness */
   sprintf(options[OPT_STIFFNESS].cName,"dStiffness");
@@ -1253,6 +1267,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_DLIND].dDefault = DLIND;
   sprintf(options[OPT_DLIND].cNeg,"Default is DLIND");
   fnRead[OPT_DLIND] = &fvReadDLind;
+  // Needs a LongDescr
 
   /* DAdCore */
   sprintf(options[OPT_DADCORE].cName,"dDAdCore");
@@ -1264,6 +1279,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_DADCORE].dDefault = DADCORE;
   sprintf(options[OPT_DADCORE].cNeg,"Default is DADCORE");
   fnRead[OPT_DADCORE] = &fvReadDAdCore;
+  // Needs a LongDescr
 
   /* AdJumpM2UM */
   sprintf(options[OPT_ADJUMPM2UM].cName,"dAdJumpM2UM");
@@ -1275,6 +1291,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ADJUMPM2UM].dDefault = ADJUMPM2UM;
   sprintf(options[OPT_ADJUMPM2UM].cNeg,"Default is ADJUMPM2UM");
   fnRead[OPT_ADJUMPM2UM] = &fvReadAdJumpM2UM;
+  // Needs a LongDescr
 
   /* AdJumpM2LM */
   sprintf(options[OPT_ADJUMPM2LM].cName,"dAdJumpM2LM");
@@ -1286,6 +1303,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ADJUMPM2LM].dDefault = ADJUMPM2LM;
   sprintf(options[OPT_ADJUMPM2LM].cNeg,"Default is ADJUMPM2LM");
   fnRead[OPT_ADJUMPM2LM] = &fvReadAdJumpM2LM;
+  // Needs a LongDescr
 
   /* AdJumpC2CMB */
   sprintf(options[OPT_ADJUMPC2CMB].cName,"dAdJumpC2CMB");
@@ -1319,7 +1337,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_IMK2MANORBMODEL].dDefault = IMK2MANORBMODEL;
   sprintf(options[OPT_IMK2MANORBMODEL].cNeg,"Default is IMK2MANORBMODEL");
   fnRead[OPT_IMK2MANORBMODEL] = &fvReadImK2ManOrbModel;
-  /* End vemcee parameters */
+  // Needs a LongDescr -- XXX I'm not sure what this does! RB
 }
 /**
   Read options in thermint
@@ -3088,6 +3106,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SIGNTJUMPLMAN].iNum = 1;
   output[OUT_SIGNTJUMPLMAN].iModuleBit = THERMINT;
   fnWrite[OUT_SIGNTJUMPLMAN] = &fvWriteSignTJumpLMan;
+  // Needs a LongDescr
 
   sprintf(output[OUT_TCMB].cName,"TCMB");
   sprintf(output[OUT_TCMB].cDescr,"CMB Temperature");
@@ -3125,6 +3144,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_VISCUMANARR].iNum = 1;
   output[OUT_VISCUMANARR].iModuleBit = THERMINT;
   fnWrite[OUT_VISCUMANARR] = &fvWriteViscUManArr;
+  // Needs a LongDescr
 
   /* ViscLMan */
   sprintf(output[OUT_VISCLMAN].cName,"ViscLMan");
@@ -3154,6 +3174,8 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_VISCJUMPMAN].iNum = 1;
   output[OUT_VISCJUMPMAN].iModuleBit = THERMINT;
   fnWrite[OUT_VISCJUMPMAN] = &fvWriteViscJumpMan;
+  // Needs a LongDescr
+
   /* BLUMan */
   sprintf(output[OUT_BLUMAN].cName,"BLUMan");
   sprintf(output[OUT_BLUMAN].cDescr,"Boundary Layer Thickness Upper Mantle");
@@ -3163,6 +3185,8 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BLUMAN].iNum = 1;
   output[OUT_BLUMAN].iModuleBit = THERMINT;
   fnWrite[OUT_BLUMAN] = &fvWriteBLUMan;
+  // Needs a LongDescr
+
   /* BLLMan */
   sprintf(output[OUT_BLLMAN].cName,"BLLMan");
   sprintf(output[OUT_BLLMAN].cDescr,"Boundary Layer Thickness Lower Mantle");
@@ -3172,6 +3196,8 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BLLMAN].iNum = 1;
   output[OUT_BLLMAN].iModuleBit = THERMINT;
   fnWrite[OUT_BLLMAN] = &fvWriteBLLMan;
+  // Needs a LongDescr
+
   /* ShmodUMan */
   sprintf(output[OUT_SHMODUMAN].cName,"ShmodUMan");
   sprintf(output[OUT_SHMODUMAN].cDescr,"Shear Modulus Upper Mantle");
@@ -3181,6 +3207,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SHMODUMAN].iNum = 1;
   output[OUT_SHMODUMAN].iModuleBit = THERMINT;
   fnWrite[OUT_SHMODUMAN] = &fvWriteShmodUMan;
+
   /* FMeltUMan */
   sprintf(output[OUT_FMELTUMAN].cName,"FMeltUMan");
   sprintf(output[OUT_FMELTUMAN].cDescr,"Melt Fraction Upper Mantle");
@@ -3190,6 +3217,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_FMELTUMAN].iNum = 1;
   output[OUT_FMELTUMAN].iModuleBit = THERMINT;
   fnWrite[OUT_FMELTUMAN] = &fvWriteFMeltUMan;
+
   /* FMeltLMan */
   sprintf(output[OUT_FMELTLMAN].cName,"FMeltLMan");
   sprintf(output[OUT_FMELTLMAN].cDescr,"Melt Fraction Lower Mantle");
@@ -3199,6 +3227,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_FMELTLMAN].iNum = 1;
   output[OUT_FMELTLMAN].iModuleBit = THERMINT;
   fnWrite[OUT_FMELTLMAN] = &fvWriteFMeltLMan;
+
   /* MeltfactorUMan */
   sprintf(output[OUT_MELTFACTORUMAN].cName,"MeltfactorUMan");
   sprintf(output[OUT_MELTFACTORUMAN].cDescr,"Melt Factor Upper Mantle");
@@ -3208,6 +3237,8 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MELTFACTORUMAN].iNum = 1;
   output[OUT_MELTFACTORUMAN].iModuleBit = THERMINT;
   fnWrite[OUT_MELTFACTORUMAN] = &fvWriteMeltfactorUMan;
+  // Needs a LongDescr
+
   /* MeltfactorLMan */
   sprintf(output[OUT_MELTFACTORLMAN].cName,"MeltfactorLMan");
   sprintf(output[OUT_MELTFACTORLMAN].cDescr,"Melt Factor Lower Mantle");
@@ -3217,33 +3248,38 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MELTFACTORLMAN].iNum = 1;
   output[OUT_MELTFACTORLMAN].iModuleBit = THERMINT;
   fnWrite[OUT_MELTFACTORLMAN] = &fvWriteMeltfactorLMan;
+  // Needs a LongDescr
+
   /* DepthMeltMan */
   sprintf(output[OUT_DEPTHMELTMAN].cName,"DepthMeltMan");
-  sprintf(output[OUT_DEPTHMELTMAN].cDescr,"Depth to base of UM Melt Region");
+  sprintf(output[OUT_DEPTHMELTMAN].cDescr,"Depth to base of Upper Mantle Melt Region");
   sprintf(output[OUT_DEPTHMELTMAN].cNeg,"m");
   output[OUT_DEPTHMELTMAN].bNeg = 1;
   output[OUT_DEPTHMELTMAN].dNeg = 1;
   output[OUT_DEPTHMELTMAN].iNum = 1;
   output[OUT_DEPTHMELTMAN].iModuleBit = THERMINT;
   fnWrite[OUT_DEPTHMELTMAN] = &fvWriteDepthMeltMan;
+
   /* TDepthMeltMan */
   sprintf(output[OUT_TDEPTHMELTMAN].cName,"TDepthMeltMan");
-  sprintf(output[OUT_TDEPTHMELTMAN].cDescr,"Temp at base of UM Melt Region");
+  sprintf(output[OUT_TDEPTHMELTMAN].cDescr,"Temp at base of Upper Mantle Melt Region");
   sprintf(output[OUT_TDEPTHMELTMAN].cNeg,"K");
   output[OUT_TDEPTHMELTMAN].bNeg = 1;
   output[OUT_TDEPTHMELTMAN].dNeg = 1;
   output[OUT_TDEPTHMELTMAN].iNum = 1;
   output[OUT_TDEPTHMELTMAN].iModuleBit = THERMINT;
   fnWrite[OUT_TDEPTHMELTMAN] = &fvWriteTDepthMeltMan;
+
   /* TJumpMeltMan */
   sprintf(output[OUT_TJUMPMELTMAN].cName,"TJumpMeltMan");
-  sprintf(output[OUT_TJUMPMELTMAN].cDescr,"Temp Jump across UM Melt Region");
+  sprintf(output[OUT_TJUMPMELTMAN].cDescr,"Temp Jump across Upper Mantle Melt Region");
   sprintf(output[OUT_TJUMPMELTMAN].cNeg,"K");
   output[OUT_TJUMPMELTMAN].bNeg = 1;
   output[OUT_TJUMPMELTMAN].dNeg = 1;
   output[OUT_TJUMPMELTMAN].iNum = 1;
   output[OUT_TJUMPMELTMAN].iModuleBit = THERMINT;
   fnWrite[OUT_TJUMPMELTMAN] = &fvWriteTJumpMeltMan;
+
   /* MeltMassFluxMan */
   sprintf(output[OUT_MELTMASSFLUXMAN].cName,"MeltMassFluxMan");
   sprintf(output[OUT_MELTMASSFLUXMAN].cDescr,"Mantle Melt Mass Flux");
@@ -3263,6 +3299,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_ERUPTEFF].iNum = 1;
   output[OUT_ERUPTEFF].iModuleBit = THERMINT;
   fnWrite[OUT_ERUPTEFF] = &fvWriteEruptEff;
+
   /* RayleighMan */
   sprintf(output[OUT_RAYLEIGHMAN].cName,"RayleighMan");
   sprintf(output[OUT_RAYLEIGHMAN].cDescr,"Mantle Rayleigh Number");
@@ -3283,6 +3320,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_RIC].iNum = 1;
   output[OUT_RIC].iModuleBit = THERMINT;
   fnWrite[OUT_RIC] = &fvWriteRIC;
+
   /* DRICDTCMB */
   sprintf(output[OUT_DRICDTCMB].cName,"DRICDTCMB");
   sprintf(output[OUT_DRICDTCMB].cDescr,"d(R_ic)/d(T_cmb)");
@@ -3312,6 +3350,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_CHIOC].iNum = 1;
   output[OUT_CHIOC].iModuleBit = THERMINT;
   fnWrite[OUT_CHIOC] = &fvWriteChiOC;
+
   /* ChiIC */
   sprintf(output[OUT_CHIIC].cName,"ChiIC");
   sprintf(output[OUT_CHIIC].cDescr,"Light Element Concentration in Inner Core");
@@ -3321,6 +3360,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_CHIIC].iNum = 1;
   output[OUT_CHIIC].iModuleBit = THERMINT;
   fnWrite[OUT_CHIIC] = &fvWriteChiIC;
+
   /* MassOC */
   sprintf(output[OUT_MASSOC].cName,"MassOC");
   sprintf(output[OUT_MASSOC].cDescr,"Mass of Outer Core");
@@ -3330,6 +3370,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MASSOC].iNum = 1;
   output[OUT_MASSOC].iModuleBit = THERMINT;
   fnWrite[OUT_MASSOC] = &fvWriteMassOC;
+
   /* MassIC */
   sprintf(output[OUT_MASSIC].cName,"MassIC");
   sprintf(output[OUT_MASSIC].cDescr,"Mass of Inner Core");
@@ -3339,6 +3380,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MASSIC].iNum = 1;
   output[OUT_MASSIC].iModuleBit = THERMINT;
   fnWrite[OUT_MASSIC] = &fvWriteMassIC;
+
   /* MassChiOC */
   sprintf(output[OUT_MASSCHIOC].cName,"MassChiOC");
   sprintf(output[OUT_MASSCHIOC].cDescr,"Mass of Chi in Outer Core");
@@ -3348,6 +3390,8 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MASSCHIOC].iNum = 1;
   output[OUT_MASSCHIOC].iModuleBit = THERMINT;
   fnWrite[OUT_MASSCHIOC] = &fvWriteMassChiOC;
+  // Needs a LongDescr
+
   /* MassChiIC */
   sprintf(output[OUT_MASSCHIIC].cName,"MassChiIC");
   sprintf(output[OUT_MASSCHIIC].cDescr,"Mass of Chi in Inner Core");
@@ -3357,6 +3401,8 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MASSCHIIC].iNum = 1;
   output[OUT_MASSCHIIC].iModuleBit = THERMINT;
   fnWrite[OUT_MASSCHIIC] = &fvWriteMassChiIC;
+  // Needs a LongDescr
+
   /* DTChi */
   sprintf(output[OUT_DTCHI].cName,"DTChi");
   sprintf(output[OUT_DTCHI].cDescr,"Core Liquidus Depression");
@@ -3366,6 +3412,8 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_DTCHI].iNum = 1;
   output[OUT_DTCHI].iModuleBit = THERMINT;
   fnWrite[OUT_DTCHI] = &fvWriteDTChi;
+  // Needs a LongDescr
+
   /* CoreBuoyTherm */
   sprintf(output[OUT_COREBUOYTHERM].cName,"CoreBuoyTherm");
   sprintf(output[OUT_COREBUOYTHERM].cDescr,"Core Thermal Buoyancy Flux");
@@ -3375,6 +3423,8 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_COREBUOYTHERM].iNum = 1;
   output[OUT_COREBUOYTHERM].iModuleBit = THERMINT;
   fnWrite[OUT_COREBUOYTHERM] = &fvWriteCoreBuoyTherm;
+  // Needs a LongDescr
+
   /* CoreBuoyCompo */
   sprintf(output[OUT_COREBUOYCOMPO].cName,"CoreBuoyCompo");
   sprintf(output[OUT_COREBUOYCOMPO].cDescr,"Core Compositional Buoyancy Flux");
@@ -3384,6 +3434,8 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_COREBUOYCOMPO].iNum = 1;
   output[OUT_COREBUOYCOMPO].iModuleBit = THERMINT;
   fnWrite[OUT_COREBUOYCOMPO] = &fvWriteCoreBuoyCompo;
+  // Needs a LongDescr
+
   /* CoreBuoyTotal */
   sprintf(output[OUT_COREBUOYTOTAL].cName,"CoreBuoyTotal");
   sprintf(output[OUT_COREBUOYTOTAL].cDescr,"Core Total Buoyancy Flux");
@@ -3393,6 +3445,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_COREBUOYTOTAL].iNum = 1;
   output[OUT_COREBUOYTOTAL].iModuleBit = THERMINT;
   fnWrite[OUT_COREBUOYTOTAL] = &fvWriteCoreBuoyTotal;
+
   /* GravICB */
   sprintf(output[OUT_GRAVICB].cName,"GravICB");
   sprintf(output[OUT_GRAVICB].cDescr,"ICB Gravity");
@@ -3402,6 +3455,8 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_GRAVICB].iNum = 1;
   output[OUT_GRAVICB].iModuleBit = THERMINT;
   fnWrite[OUT_GRAVICB] = &fvWriteGravICB;
+  // Needs a LongDescr
+
   /* MagMom */
   sprintf(output[OUT_MAGMOM].cName,"MagMom");
   sprintf(output[OUT_MAGMOM].cDescr,"Core Magnetic Moment");
@@ -3411,6 +3466,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_MAGMOM].iNum = 1;
   output[OUT_MAGMOM].iModuleBit = THERMINT;
   fnWrite[OUT_MAGMOM] = &fvWriteMagMom;
+
   /* RICDot */
   sprintf(output[OUT_RICDOT].cName,"RICDot");
   sprintf(output[OUT_RICDOT].cDescr,"Inner Core growth rate");
@@ -3420,6 +3476,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_RICDOT].iNum = 1;
   output[OUT_RICDOT].iModuleBit = THERMINT;
   fnWrite[OUT_RICDOT] = &fvWriteRICDot;
+
   /* PresSWind */
   sprintf(output[OUT_PRESSWIND].cName,"PresSWind");
   sprintf(output[OUT_PRESSWIND].cDescr,"Stellar wind pressure at body");
@@ -3429,6 +3486,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_PRESSWIND].iNum = 1;
   output[OUT_PRESSWIND].iModuleBit = THERMINT;
   fnWrite[OUT_PRESSWIND] = &fvWritePresSWind;
+
   /* MagPauseRad */
   sprintf(output[OUT_MAGPAUSERAD].cName,"MagPauseRad");
   sprintf(output[OUT_MAGPAUSERAD].cDescr,"Magnetopause Radius");
@@ -3449,6 +3507,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLUXUMAN].iNum = 1;
   output[OUT_HFLUXUMAN].iModuleBit = THERMINT;
   fnWrite[OUT_HFLUXUMAN] = &fvWriteHfluxUMan;
+
   /* HFluxLMan */
   sprintf(output[OUT_HFLUXLMAN].cName,"HfluxLMan");
   sprintf(output[OUT_HFLUXLMAN].cDescr,"Heat Flux Lower Mantle");
@@ -3458,6 +3517,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLUXLMAN].iNum = 1;
   output[OUT_HFLUXLMAN].iModuleBit = THERMINT;
   fnWrite[OUT_HFLUXLMAN] = &fvWriteHfluxLMan;
+
   /* HFluxCMB */
   sprintf(output[OUT_HFLUXCMB].cName,"HfluxCMB");
   sprintf(output[OUT_HFLUXCMB].cDescr,"Heat Flux Core-Mantle Boundary");
@@ -3467,6 +3527,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLUXCMB].iNum = 1;
   output[OUT_HFLUXCMB].iModuleBit = THERMINT;
   fnWrite[OUT_HFLUXCMB] = &fvWriteHfluxCMB;
+
   /* HfluxCMBAd */
   sprintf(output[OUT_HFLUXCMBAD].cName,"HfluxCMBAd");
   sprintf(output[OUT_HFLUXCMBAD].cDescr,"Adiabatic Heat Flux Core-Mantle Boundary");
@@ -3476,24 +3537,30 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLUXCMBAD].iNum = 1;
   output[OUT_HFLUXCMBAD].iModuleBit = THERMINT;
   fnWrite[OUT_HFLUXCMBAD] = &fvWriteHfluxCMBAd;
+  // Needs a LongDescr
+
   /* HfluxCMBConv */
   sprintf(output[OUT_HFLUXCMBCONV].cName,"HfluxCMBConv");
-  sprintf(output[OUT_HFLUXCMBCONV].cDescr,"Super-Adiabatic (convective) Heat Flux Core-Mantle Boundary");
+  sprintf(output[OUT_HFLUXCMBCONV].cDescr,
+    "Super-Adiabatic (convective) Heat Flux Core-Mantle Boundary");
   sprintf(output[OUT_HFLUXCMBCONV].cNeg,"W/m^2");
   output[OUT_HFLUXCMBCONV].bNeg = 1;
   output[OUT_HFLUXCMBCONV].dNeg = 1;
   output[OUT_HFLUXCMBCONV].iNum = 1;
   output[OUT_HFLUXCMBCONV].iModuleBit = THERMINT;
   fnWrite[OUT_HFLUXCMBCONV] = &fvWriteHfluxCMBConv;
+
   /* ThermConductOC */
   sprintf(output[OUT_THERMCONDUCTOC].cName,"ThermConductOC");
-  sprintf(output[OUT_THERMCONDUCTOC].cDescr,"Thermal Conductivity OC");
+  sprintf(output[OUT_THERMCONDUCTOC].cDescr,
+    "Thermal Conductivity of the Outer Core");
   sprintf(output[OUT_THERMCONDUCTOC].cNeg,"W/m/K");
   output[OUT_THERMCONDUCTOC].bNeg = 1;
   output[OUT_THERMCONDUCTOC].dNeg = 1;
   output[OUT_THERMCONDUCTOC].iNum = 1;
   output[OUT_THERMCONDUCTOC].iModuleBit = THERMINT;
   fnWrite[OUT_THERMCONDUCTOC] = &fvWriteThermConductOC;
+
   /* HflowUMan */
   sprintf(output[OUT_HFLOWUMAN].cName,"HflowUMan");
   sprintf(output[OUT_HFLOWUMAN].cDescr,"Heat Flow Upper Mantle");
@@ -3503,6 +3570,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLOWUMAN].iNum = 1;
   output[OUT_HFLOWUMAN].iModuleBit = THERMINT;
   fnWrite[OUT_HFLOWUMAN] = &fvWriteHflowUMan;
+
   /* HFlowLMan */
   sprintf(output[OUT_HFLOWLMAN].cName,"HflowLMan");
   sprintf(output[OUT_HFLOWLMAN].cDescr,"Heat Flow Lower Mantle");
@@ -3512,6 +3580,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLOWLMAN].iNum = 1;
   output[OUT_HFLOWLMAN].iModuleBit = THERMINT;
   fnWrite[OUT_HFLOWLMAN] = &fvWriteHflowLMan;
+
   /* HFlowCMB */
   sprintf(output[OUT_HFLOWCMB].cName,"HflowCMB");
   sprintf(output[OUT_HFLOWCMB].cDescr,"Heat Flow Core-Mantle Boundary");
@@ -3521,6 +3590,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLOWCMB].iNum = 1;
   output[OUT_HFLOWCMB].iModuleBit = THERMINT;
   fnWrite[OUT_HFLOWCMB] = &fvWriteHflowCMB;
+
   /* HflowLatentMan */
   sprintf(output[OUT_HFLOWLATENTMAN].cName,"HflowLatentMan");
   sprintf(output[OUT_HFLOWLATENTMAN].cDescr,"Latent Heat Flow Mantle");
@@ -3530,6 +3600,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLOWLATENTMAN].iNum = 1;
   output[OUT_HFLOWLATENTMAN].iModuleBit = THERMINT;
   fnWrite[OUT_HFLOWLATENTMAN] = &fvWriteHflowLatentMan;
+
   /* HflowMeltMan */
   sprintf(output[OUT_HFLOWMELTMAN].cName,"HflowMeltMan");
   sprintf(output[OUT_HFLOWMELTMAN].cDescr,"Melt Heat Flow Mantle");
@@ -3549,6 +3620,8 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLOWSECMAN].iNum = 1;
   output[OUT_HFLOWSECMAN].iModuleBit = THERMINT;
   fnWrite[OUT_HFLOWSECMAN] = &fvWriteHflowSecMan;
+  // Needs a LongDescr
+
   /* HFlowSurf */
   sprintf(output[OUT_HFLOWSURF].cName,"HflowSurf");
   sprintf(output[OUT_HFLOWSURF].cDescr,"Heat Flow Surface Total");
@@ -3558,7 +3631,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLOWSURF].iNum = 1;
   output[OUT_HFLOWSURF].iModuleBit = THERMINT;
   fnWrite[OUT_HFLOWSURF] = &fvWriteHflowSurf;
-
+  // Is this redundant with SurfEnFluxTotal? XXX
 
   /* HFlowLatentIC */
   sprintf(output[OUT_HFLOWLATENTIC].cName,"HflowLatentIC");
@@ -3569,6 +3642,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_HFLOWLATENTIC].iNum = 1;
   output[OUT_HFLOWLATENTIC].iModuleBit = THERMINT;
   fnWrite[OUT_HFLOWLATENTIC] = &fvWriteHflowLatentIC;
+
   /* PowerGravIC */
   sprintf(output[OUT_POWERGRAVIC].cName,"PowerGravIC");
   sprintf(output[OUT_POWERGRAVIC].cDescr,"Gravitational Power Release at ICB");
@@ -3588,6 +3662,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TDOTMAN].iNum = 1;
   output[OUT_TDOTMAN].iModuleBit = THERMINT;
   fnWrite[OUT_TDOTMAN] = &fvWriteTDotMan;
+
   /* TDotCore */
   sprintf(output[OUT_TDOTCORE].cName,"TDotCore");
   sprintf(output[OUT_TDOTCORE].cDescr,"Change in Core Temperature");
@@ -3597,6 +3672,7 @@ void fvInitializeOutputThermint(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TDOTCORE].iNum = 1;
   output[OUT_TDOTCORE].iModuleBit = THERMINT;
   fnWrite[OUT_TDOTCORE] = &fvWriteTDotCore;
+  
   /* Constants */
   /* TrefLind */
   sprintf(output[OUT_TREFLIND].cName,"TrefLind");

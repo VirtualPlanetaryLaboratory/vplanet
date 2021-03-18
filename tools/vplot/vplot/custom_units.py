@@ -21,7 +21,7 @@ custom_units = [
     u.def_unit("EMAGPAUSERAD"),
     u.def_unit("EMAGMOM"),
     u.def_unit("Initial Primordial Earth Number"),
-    u.def_unit("gm",u.g),
+    u.def_unit("gm",u.G),
     u.def_unit("F/F_Earth", u.Unit("")),  # TODO: Unit in Binary
 ]
 

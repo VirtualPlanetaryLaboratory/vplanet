@@ -1128,7 +1128,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_READORBITOBLDATA].cDefault,"0");
   options[OPT_READORBITOBLDATA].dDefault = 0;
   options[OPT_READORBITOBLDATA].iType = 0;
-  options[OPT_READORBITOBLDATA].iMultiFile = 1;
+  options[OPT_READORBITOBLDATA].bMultiFile = 1;
   fnRead[OPT_READORBITOBLDATA] = &ReadOrbitOblData;
 
   sprintf(options[OPT_FILEORBITOBLDATA].cName,"sFileOrbitOblData");

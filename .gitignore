@@ -78,7 +78,7 @@ docs/help.rst
 # The executable
 vplanet
 
-# Module-specific
+# Tool-specific
 bigplanet/bigplanet/vabc.py
 bigplanet/bigplanet/big_ml.py
 bigplanet/bigplanet/bootstrap_utils.py
@@ -88,3 +88,4 @@ proximacenstellar.py
 sandbox
 todo
 misc
+vplot/

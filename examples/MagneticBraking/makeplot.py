@@ -10,6 +10,10 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 import sys
+try:
+    import vplot as vpl
+except:
+    print('Cannot import vplot. Please install vplot.')
 import pandas as pd
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D

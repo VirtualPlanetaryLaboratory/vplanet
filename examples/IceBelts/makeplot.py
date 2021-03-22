@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import vplot as vpl
+try:
+    import vplot as vpl
+except:
+    print('Cannot import vplot. Please install vplot.')
 from matplotlib import ticker
 import os
 import subprocess

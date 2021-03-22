@@ -5,8 +5,10 @@ import sys
 import string
 import subprocess as subp
 import matplotlib.pyplot as plt
-import vplot as vpl
-import os
+try:
+    import vplot as vpl
+except:
+    print('Cannot import vplot. Please install vplot.')
 
 # Check correct number of arguments
 if (len(sys.argv) != 2):

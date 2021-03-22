@@ -5,6 +5,10 @@ import matplotlib.gridspec as gridspec
 import sys
 import matplotlib.ticker as mticker
 import subprocess
+try:
+    import vplot as vpl
+except:
+    print('Cannot import vplot. Please install vplot.')
 
 plt.close('all')
 # Set style for plot #

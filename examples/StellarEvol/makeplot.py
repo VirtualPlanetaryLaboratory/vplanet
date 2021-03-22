@@ -1,7 +1,10 @@
 """Stellar evolution validation figure."""
 import numpy as np
 import subprocess
-import vplot as vpl
+try:
+    import vplot as vpl
+except:
+    print('Cannot import vplot. Please install vplot.')
 import matplotlib.pyplot as pl
 cmap = pl.get_cmap('inferno')
 import sys

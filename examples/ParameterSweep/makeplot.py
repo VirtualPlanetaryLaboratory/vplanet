@@ -1,9 +1,16 @@
 #!/usr/bin/env python
 
-import bigplanet as bp
 import h5py as h5
 import matplotlib.pyplot as plt
-import vplot as vpl
+try:
+    import vplot as vpl
+except:
+    print('Cannot import vplot. Please install vplot.')
+
+try:
+    import bigplanet as bp
+except:
+    print('Cannot import bigplanet. Please install bigplanet.')
 import sys
 import os
 

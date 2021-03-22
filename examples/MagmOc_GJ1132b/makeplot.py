@@ -2,6 +2,10 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot  as plt
 import sys
+try:
+    import vplot as vpl
+except:
+    print('Cannot import vplot. Please install vplot.')
 
 plt.close('all')
 

@@ -10,8 +10,10 @@ David P. Fleming, University of Washington, 2019
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
-import vplot as vpl
-import sys
+try:
+    import vplot as vpl
+except:
+    print('Cannot import vplot. Please install vplot.')import sys
 import os
 import subprocess
 

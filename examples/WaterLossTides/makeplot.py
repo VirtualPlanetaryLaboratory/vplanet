@@ -1,7 +1,10 @@
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
-import vplot as vpl
+try:
+    import vplot as vpl
+except:
+    print('Cannot import vplot. Please install vplot.')
 import sys
 import os
 import subprocess

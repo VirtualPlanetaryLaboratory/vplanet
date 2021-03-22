@@ -1,7 +1,10 @@
 """Reproduce Figure 7 in Luger and Barnes (2015)."""
 import numpy as np
 import subprocess
-import vplot as vpl
+try:
+    import vplot as vpl
+except:
+    print('Cannot import vplot. Please install vplot.')
 from tqdm import tqdm
 import matplotlib.pyplot as pl
 import matplotlib.colors as colors

@@ -1,9 +1,12 @@
 """Reproduce Figure 3 in Lopez and Fortney (2013)."""
 import numpy as np
 import subprocess
-import vplot as vpl
-from tqdm import tqdm
 import matplotlib.pyplot as pl
+try:
+    import vplot as vpl
+except:
+    print('Cannot import vplot. Please install vplot.')
+from tqdm import tqdm
 import sys
 cmap = pl.get_cmap('plasma')
 

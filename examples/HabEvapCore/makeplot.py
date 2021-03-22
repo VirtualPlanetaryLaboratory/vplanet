@@ -13,7 +13,10 @@ Date: Oct. 21st, 2018
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import vplot as vpl
+try:
+    import vplot as vpl
+except:
+    print('Cannot import vplot. Please install vplot.')
 import numpy as np
 import sys
 import os

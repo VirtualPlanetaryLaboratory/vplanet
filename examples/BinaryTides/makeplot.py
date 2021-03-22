@@ -9,9 +9,12 @@ from __future__ import division, print_function, absolute_import, \
     unicode_literals
 import numpy as np
 import os
-import vplot as vpl
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+try:
+    import vplot as vpl
+except:
+    print('Cannot import vplot. Please install vplot.')
 import sys
 import subprocess
 

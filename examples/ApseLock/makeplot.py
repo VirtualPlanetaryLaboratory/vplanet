@@ -10,7 +10,10 @@ from __future__ import division, print_function
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
-import vplot as vpl
+try:
+    import vplot as vpl
+except:
+    print('Cannot import vplot. Please install vplot.')
 import sys
 
 # Check correct number of arguments

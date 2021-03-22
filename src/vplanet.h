@@ -81,18 +81,18 @@ extern const double dTINY;
 /* Do not change these declarations */
 
 // IO limits for files, lines, and names
-#define OPTLEN        24    /* Maximum length of an option */
+#define OPTLEN        48    /* Maximum length of an option */
 #define OPTDESCR      128   /* Number of characters in option description */
 #define OPTLONDESCR   2048  /* Number of characters in option long description */
 #define LINE          256   /* Maximum number of characters in a line */
 #define NAMELEN       100
 #define MAXFILES      128    /* Maximum number of input files */
 #define MAXARRAY      128    /* Maximum number of options in
-			                        * an option array */
-#define NUMOPT	      1000  /* Number of options that could be
-			                       * in MODULE */
+                              * an option array */
+#define NUMOPT        1000  /* Number of options that could be
+                             * in MODULE */
 #define MAXLINES      256   /* Maximum Number of Lines in an
-			                       * input file */
+                             * input file */
 #define OUTLEN        48    /* Maximum number of characters in an output column header */
 #define OUTDESCR      256   /* Number of characters in output description */
 #define OUTLONDESCR   2048  /* Number of characters in output long description */
@@ -131,13 +131,14 @@ struct BODY {
   int iBodyType;         /**< Type of object: 0=star, 1=rocky planet, 2 = giant */
 
   double dAge;           /**< Body's Age */
-  double dMass;		       /**< Body's Mass */
-  double dRadius;	       /**< Radius of body */
+  double dMass;           /**< Body's Mass */
+  double dRadius;         /**< Radius of body */
   double dDensity;       /**< Bulk density of body*/
   double dGravAccel;     /**< Body's gravitational acceleration */
-  double dK2;		         /**< Body's Total Love number */
+  double dK2;             /**< Body's Total Love number */
   double dImK2;          /**< Imaginary part of Love's k_2 (total) */
   double dObliquity;     /**< Body's Obliquity */
+  double dCosObl;        /**< Cosine of body's obliquity */
   double dRotRate;       /**< Body's Rotation Rate */
   double dRotPer;        /**< Body's Rotation Period */
   double dRotVel;        /**< Body's Rotational Velocity */
@@ -159,8 +160,13 @@ struct BODY {
   int bCalcFXUV;         /**< Does incidenx XUV flow need to be calculated every
                               time step? */
   int bEnvelopeLostMessage; /**< Has the envelope lost message been printed? */
-  int bRocheMessage;     /**< Has the Roche lobe message been printed? */
-  int bIgnoreRocheLobe;  /**< Ignore Roche lobe overflow? */
+  int bIgnoreRocheLobe;    /**< Ignore Roche lobe overflow? */
+  int bUseEnergyLimited;   /**< Use energy-limited escape */
+  int bUseBondiLimited;    /**< Use Bondi-limited H mass loss */
+  int bUseRRLimited;       /**< Use radiation/recombination-limited H mass loss */
+  int bAtmEscAuto;         /**< Transition H escape regime depending on physics */
+  int bAutoThermTemp;      /**< Calculate thermal temperature from environemnt? */
+  int bStopWaterLossInHZ; /**< Stop water loss once planet enters habitable zone? */
 
   int iWaterLossModel;   /**< Water Loss and Oxygen Buildup Model */
   int iAtmXAbsEffH2OModel;  /**< Water X-ray/XUV absorption efficiency evolution model */
@@ -194,12 +200,8 @@ struct BODY {
   double dFXUV;         /**< XUV Flux at planet's atmosphere */
   double dJeansTime;    /**< Jeans timescale for atmospheric escape */
   double dFlowTemp;     /**< Temperature of the hydrodynamic flow */
-  double dRocheRadius; 	/**< Radius of the Roche lobe */
-  double dBondiRadius;	/**< Bondi (Sonic) Radius */
-  int bUseEnergyLimited; /**< Use energy-limited escape */
-  int bUseBondiLimited;		/**< Use Bondi-limited H mass loss */
-  int bUseRRLimited; /**< Use radiation/recombination-limited H mass loss */
-  int bAtmEscAuto; /**< Transition H escape regime depending on physics */
+  double dRocheRadius;   /**< Radius of the Roche lobe */
+  double dBondiRadius;  /**< Bondi (Sonic) Radius */
   double dEnvMassDt; /**< Time derivative of H envelope mass */
 
   /* BINARY parameters */
@@ -309,8 +311,9 @@ struct BODY {
   /* EQTIDE Parameters */
   int bEqtide;           /**< Apply Module EQTIDE? */
   int bTideLock;         /**< Is a body tidally locked? */
-  double dLockTime;	 /**< Time when body tidally-locked */
+  double dLockTime;   /**< Time when body tidally-locked */
   int bUseTidalRadius;   /**< Set a fixed tidal radius? */
+  int bUseOuterTidalQ;   /**< Set total Q to outer layer's value? */
   double dTidalRadius;   /**< Radius used by tidal evoltion equations (CPL only currently) */
   int iTidePerts;        /**< Number of Tidal Perturbers */
   int *iaTidePerts;      /**< Body #'s of Tidal Perturbers */
@@ -325,7 +328,7 @@ struct BODY {
   double dImK2ManOrbModel;    /**< Mantle Im(k2) model for DB15 orbital eqns */
   double dImK2Ocean;     /**< Envelope Component to Imaginary part of Love's K_2 */
   double dImK2Env;       /**< Envelope Component to Imaginary part of Love's K_2 */
-  double dTidalQ;	 /**< Body's Tidal Q */
+  double dTidalQ;   /**< Body's Tidal Q */
   double dTidalTau;      /**< Body's Tidal Time Lag */
   double *dTidalZ;       /**< As Defined in \cite HellerEtal2011 */
   double *dTidalChi;     /**< As Defined in \cite HellerEtal2011 */
@@ -419,6 +422,7 @@ struct BODY {
   double dViscUMan;        /**< Viscosity UMTBL */
   double dViscLMan;        /**< Viscosity LMTBL */
   double dViscMMan;        /**< Viscosity Mid (ave) mantle */
+  double dDynamViscos;      /**< Dynamic viscosity of the mantle */
   double dViscJumpMan;     /**< Viscosity Jump UM to LM */
   double dShmodUMan;       /**< Shear modulus UMTBL */
   double dShmodLMan;       /**< Shear modulus LMTBL */
@@ -523,7 +527,7 @@ struct BODY {
   double dLostAngMom;    /**< Angular momemntum lost to space via magnetic braking */
   double dLostEng;       /**< Energy lost to space, i.e. via stellar contraction */
   int bRossbyCut;       /**< Whether or not to shut off magnetic braking for Ro>ROSSBYCRIT */
-  int bEvolveRG;				/**< Whether or not to evolve radius of gyration? Defaults to 0 */
+  int bEvolveRG;        /**< Whether or not to evolve radius of gyration? Defaults to 0 */
 
   /* POISE parameters */
   int bPoise;                /**< Apply POISE module? */
@@ -589,10 +593,8 @@ struct BODY {
   double dPrecA0;            /**< Initial pA value used when distrot is not called */
   int bReadOrbitOblData;    /**< Use orbit and obliquity data from file rather than distrot */
   char cFileOrbitOblData[NAMELEN];  /**< read orbital and obliquity data from this file (distorb=0) */
-
   double *daOblSeries; /**< time series for obliquity data */
   double *daPrecASeries; /**< time series for obliquity data */
-  
   double dRefHeight;         /**< Ref height of "surface" in elevation feedback */
   int iReRunSeas;            /**< When to rerun EBM in ice sheet model */
   double dSeaIceConduct;     /**< Conductivity of sea ice */
@@ -610,6 +612,7 @@ struct BODY {
   double dTGlobalInit;       /**< Initial estimate of global surface temperature */
   double dTGlobalTmp;        /**< Mean global surface temp */
   int iWriteLat;             /**< Stores index of latitude to be written in write fxn */
+  double dMinIceHeight;      /**< Minimum ice thickness to count as icy */
 
   /* Arrays used by seasonal and annual */
   double *daAnnualInsol;     /**< Annually averaged insolation at each latitude */
@@ -619,7 +622,7 @@ struct BODY {
   double *daFlux;            /**< Meridional surface heat flux */
   double *daFluxIn;          /**< Incoming surface flux (insolation) */
   double *daFluxOut;         /**< Outgoing surface flux (longwave) */
-  double *daLats;            /**< Latitude of each cell (centered) */
+  double *daLats;            /**< Latitude of each cell (centered); South Pole is 0 */
   double *daPeakInsol;       /**< Annually averaged insolation at each latitude */
   double *daTGrad;           /**< Gradient of temperature (meridional) */
 
@@ -695,6 +698,7 @@ struct BODY {
   double **daIceSheetMat;    /**< Matrix used in ice sheet flow */
   double **daInvMSea;        /**< Inverted matrix in seasonal EBM */
   double *daLambdaSea;       /**< Diffusion terms in seasonal EBM matrix */
+  double dLandFrac;           /**< Land fraction input by user */
   double *daLandFrac;        /**< Fraction of cell which is land */
   double **daMDiffSea;       /**< Diffusion only matrix in seasonal EBM */
   double **daMEulerCopySea;  /**< Temporary copy of Euler time step matrix (seasonal) */
@@ -785,19 +789,77 @@ struct BODY {
   double dMeanL;            /**< Body's mean longitude */
 
   //MAGMOC
+  /* HERE
+   * declare all variables used
+   */
   int bMagmOc;              /**< Use magmoc model */
-  double dFeO;              /**< FeO in the magma ocean */
-  double dWaterMassAtm;     /**< Water mass in the atmosphere */
-  double dWaterMassMOAtm;   /**< Water mass in magma ocean and atmosphere */
-  double dSurfTemp;         /**< Surface Temp of the planet */
-  double dManMeltDensity;   /**< Density of the molten mantle */
-  double dPotTemp;          /**< Potential Temp of the mantle */
-  double dWaterMassSol;     /**< Water mass in the solidified mantle */
-  double dSolidRadius;      /**< Solidification radius of the mantle */
+  int bManSolid;            /**< Mantle solidified */
+  int bAllFeOOxid;           /**< All FeO in manlte oxidized to Fe2O3 */
+  int bLowPressSol;         /**< Switch to low pressure treatment of solidus */
+  int bManStartSol;         /**< Mantle starts to solidify */
+  int bCalcFugacity;        /**< Need to calc oxygen fugacity */
+  int bPlanetDesiccated;    /**< Atmosphere desiccated */
+  int bManQuasiSol;         /**< Atmosphere desiccated & T_surf below 1000K */
+  int bMagmOcHaltSolid;      /**< Mantle solidifed or atm desiccated */
+  int bMagmOcHaltDesicc;    /**< Atm desiccated or escape stopped*/
+  int bEscapeStop;          /**< Atmospheric escaped stopped */
+  int bCO2InAtmosphere;     /**< Is CO2 present in the atmopshere? */
+  int iRadioHeatModel;      /**< Which Radiogenic Heating model to use */
+  int iMagmOcAtmModel;      /**< Which Atmopsheric Flux model to use */
+  int bOptManQuasiSol;      /**< Solidify mantle inst. when melt frac = 0.4 at surf */
+
+  /* Primary variables */
+  double dPotTemp;          /**< Potential Temp of the mantle [K] */
+  double dSurfTemp;         /**< Surface Temp of the planet [K] */
+  double dSolidRadius;      /**< Solidification radius of the mantle [m] */
+  double dWaterMassMOAtm;   /**< Water mass in magma ocean and atmosphere [kg] */
+  double dWaterMassSol;     /**< Water mass in the solidified mantle [kg] */
+  double dOxygenMassMOAtm;  /**< Water mass in magma ocean and atmosphere [kg] */
+  double dOxygenMassSol;    /**< Water mass in the solidified mantle [kg] */
+  double dHydrogenMassSpace;/**< Mass of hydrogen that is lost to space */
+  double dOxygenMassSpace;  /**< Mass of oxygen that is lost to space */
+  double dCO2MassMOAtm;     /**< Mass of CO2 in magma ocean and atmosphere [kg] */
+  double dCO2MassSol;       /**< Mass of CO2 in solidified mantle [kg] */
+  /* Input variables */
+  double dCoreRadius;       /**< Core radius of the planet [m] */
+  double dWaterMassAtm;     /**< Water mass in the atmosphere [kg] */
+  double dManMeltDensity;   /**< Density of the molten mantle [km/m^3] */
+	double dMassFracFeOIni;   /**< Initial FeO mass fraction in the mantle */
+	double dWaterPartCoeff;   /**< Water partition coefficient between melt and solid */
+	double dDepthMO;          /**< Initial depth of Magma Ocean [km] */
+	/* Other variables Thermal model */
+	double dGravAccelSurf;    /**< Graviational acceleration at the surface [m/s^2] */
+	double dSolidRadiusLocal; /**< Local variable for solidification radius of the mantle [m] */
+	double dTransDepthSol;    /**< Depth of transition from low to high pressure solidus [Pa] */
   double dPrefactorA;       /**< Prefactor for linear solidus */
   double dPrefactorB;       /**< Prefactor for linear solidus */
   double dMeltFraction;     /**< Melt fraction of the mantle */
-  double dDynamViscos;      /**< Dynamic viscosity of the mantle */
+  double dMeltFracSurf;     /**< Melt fraction at the surface */
+  double dKinemViscos;      /**< Kinematic viscosity of the mantle [m/s^2] */
+  double dFactorDerivative; /**< Factor to calculate the derivatives of Tpot and Rsol */
+  double dManHeatFlux;      /**< Mantle heat flux [W/m^2] */
+  double dRadioHeat;        /**< Radiogenic heating rate GET FROM RADHEAT [W/kg] */
+  double dTidalHeat;        /**< Tidal heating rate GET FROM EQTIDE [W/kg] */
+  double dNetFluxAtmo;      /**< Net atmospheric flux OLR-ASR [W/m^2] */
+  double dAlbedo;            /**< Albedo of the planet */
+  double dEffTempAtm;       /**< Effective temperature of the planet's atmosphere */
+  /* Other variables Volatile model */
+  double dPressWaterAtm;    /**< Water pressure in atmosphere [Pa] */
+  double dPartialPressWaterAtm; /**< Partial Water pressure in atmosphere [Pa] */
+  double dPressCO2Atm;      /**< CO2 pressure in atmosphere [Pa] */
+  double dPartialPressCO2Atm;   /**< Partial CO2 pressure in atmosphere [Pa] */
+  double dPressOxygenAtm;   /**< Oxygen pressure in atmosphere [Pa] */
+  double dMassMagmOcLiq;     /**< liquid mass of magma ocean [kg] */
+  double dMassMagmOcCry;     /**< crystal mass of magma ocean [kg] */
+  double dWaterFracMelt;    /**< Mass fraction of water in the magma ocean */
+  double dCO2FracMelt;      /**< Mass fraction of CO2 in the magma ocean */
+  double dFracFe2O3Man;     /**< Mass fraction of Fe2O3 in the mantle */
+  double dOxygenMassAtm;    /**< Oxygen mass in the atmosphere [kg] */
+  double dAveMolarMassMan;  /**< Average molar mass of the mantle */
+  /* Variables for the connection between magmoc and atmesc */
+  double dWaterMassEsc;     /**< Water mass escaped per time */
+  double dOxygenMassEsc;    /**< Oxygen mass escaped per time */
+  double dHZInnerEdge;      /**< Inner edge of habitable zone (runaway) */
 };
 
 /* SYSTEM contains properties of the system that pertain to
@@ -807,7 +869,7 @@ struct BODY {
 typedef double (*fnLaplaceFunction)(double,int);
 
 struct SYSTEM {
-  char cName[NAMELEN];	 /**< System's Name */
+  char cName[NAMELEN];   /**< System's Name */
 
   double dTotAngMomInit; /**< System's Initial Angular Momentum */
   double dTotAngMom;     /**< System's Current Angular Momentum */
@@ -963,6 +1025,9 @@ struct UPDATE {
   /* Next comes the identifiers for the module that modifies a variable */
 
   /* MAGMOC parameters */
+  /* HERE
+   * again for primary variables
+   */
   int iWaterMassMOAtm;
   int iNumWaterMassMOAtm;
   int iWaterMassSol;
@@ -973,18 +1038,54 @@ struct UPDATE {
   int iNumPotTemp;
   int iSolidRadius;
   int iNumSolidRadius;
+  int iOxygenMassMOAtm;
+  int iNumOxygenMassMOAtm;
+  int iOxygenMassSol;
+  int iNumOxygenMassSol;
+  int iOxygenMassSpace;
+  int iNumOxygenMassSpace;
+  int iHydrogenMassSpace;
+  int iNumHydrogenMassSpace;
+  int iCO2MassMOAtm;
+  int iNumCO2MassMOAtm;
+  int iCO2MassSol;
+  int iNumCO2MassSol;
+
+  int iWaterMassMOAtmMagmOc;
+  int iWaterMassSolMagmOc;
+  int iSurfTempMagmOc;
+  int iPotTempMagmOc;
+  int iSolidRadiusMagmOc;
+  int iOxygenMassMOAtmMagmOc;
+  int iOxygenMassSolMagmOc;
+  int iOxygenMassSpaceMagmOc;
+  int iHydrogenMassSpaceMagmOc;
+  int iCO2MassMOAtmMagmOc;
+  int iCO2MassSolMagmOc;
 
   double dWaterMassMOAtm;
   double dWaterMassSol;
   double dSurfTemp;
   double dPotTemp;
   double dSolidRadius;
+  double dOxygenMassMOAtm;
+  double dOxygenMassSol;
+  double dHyrdogenMassSpace;
+  double dOxygenMassSpace;
+  double dCO2MassMOAtm;
+  double dCO2MassSol;
 
   double *pdDWaterMassMOAtm;
   double *pdDWaterMassSol;
   double *pdDSurfTemp;
   double *pdDPotTemp;
   double *pdDSolidRadius;
+  double *pdDOxygenMassMOAtm;
+  double *pdDOxygenMassSol;
+  double *pdDHydrogenMassSpace;
+  double *pdDOxygenMassSpace;
+  double *pdDCO2MassMOAtm;
+  double *pdDCO2MassSol;
 
   /* SPINBODY parameters */
   int iVelX;
@@ -1128,6 +1229,7 @@ struct UPDATE {
   int iNumTCore;       /**< Number of Equations Affecting TCore */
   double dTDotCore;    /**< TCore time Derivative */
   double *pdTDotCore;
+  // double dDynamViscos;
 
   /* DISTORB */
   /* Number of eqns to modify a parameter */
@@ -1332,6 +1434,7 @@ struct HALT {
   double dMinSemi;     /**< Halt at this Semi-major Axis */
   double dMinObl;      /**< Halt at this Obliquity */
   double dMaxEcc;      /**< Halt at this Eccentricity */
+  double dMaxMutualInc;/**< Halt at this mutual incliantion */
   double dMinEcc;      /**< Halt at this Eccentricity */
   int bPosDeDt;        /**< Halt if Eccentricity Derivative is Positive */
   int dMinIntEn;       /**< Halt at this Internal Power */
@@ -1371,6 +1474,14 @@ struct HALT {
   /* BINARY */
   int bHaltHolmanUnstable; /** if CBP.dSemi < holman_crit_a, CBP dynamically unstable -> halt */
   int bHaltRocheLobe;      /** if secondary enters the Roche lobe of the primary, HALT! */
+
+  /* MAGMOC */
+  int bHaltMantleSolidified;    /**< Halt if mantle completely solidified */
+  int bHaltMantleMeltFracLow;   /**< Halt if melt fraction drops below 0.4 at surface */
+  int bHaltAtmDesiSurfCool;     /**< Halt if atmosphere desiccated & T_surf below 1000K */
+  int bHaltEnterHabZone;        /**< Halt if palenet enters Habitable Zone*/
+  int bHaltAllPlanetsSolid;      /**< Halt if all planets solidified (for multiplanet system) */
+  int bHaltAllPlanetsDesicc;    /**< Halt if all planets desiccated (for multiplanet system) */
 };
 
 /* Units. These can be different for different bodies. If set
@@ -1397,20 +1508,20 @@ typedef void (*fnBodyCopyModule)(BODY*,BODY*,int,int,int);
 
 /* Integration parameters */
 struct EVOLVE {
-  int bDoForward;	 /**< Perform Forward Integration? */
-  int bDoBackward;	 /**< Perform Backward Integration? */
+  int bDoForward;   /**< Perform Forward Integration? */
+  int bDoBackward;   /**< Perform Backward Integration? */
   int iDir;              /**< 1=forward, -1=backward */
   double dTime;          /**< Integration Time */
   double dEta;           /**< Variable Timestep Coefficient */
-  double dStopTime;	 /**< Integration Stop Time */
-  double dTimeStep;	 /**< Integration Time step */
+  double dStopTime;   /**< Integration Stop Time */
+  double dTimeStep;   /**< Integration Time step */
   int bVarDt;            /**< Use Variable Timestep? */
   int nSteps;            /**< Total Number of Steps */
   double dMinValue;      /**< Minimum Value for Eccentricity and Obliquity to be Integrated */
   int bFirstStep;        /**< Has the First Dtep Been Taken? */
   int iNumBodies;        /**< Number of Bodies to be Integrated */
   int iOneStep;          /**< Integration Method number */
-  double dCurrentDt;
+  double dCurrentDt;     /**< Current timestep */
 
   // These are to store midpoint derivative info in RK4.
   BODY *tmpBody;         /**< Temporary BODY struct */
@@ -1422,7 +1533,7 @@ struct EVOLVE {
 
   /* EQTIDE */
   int iEqtideModel;      /**< EQTIDE Model number */
-  int bDiscreteRot;	 /**< Use Discrete Rotation Model (CPL)? */
+  int bDiscreteRot;   /**< Use Discrete Rotation Model (CPL)? */
   int *bForceEqSpin;     /**< Force Rotation Rate to be Equilibrium? */
   int *bFixOrbit;        /**< Fix Orbit? */
   double *dMaxLockDiff;  /**< Fractional Difference from Tidal Equilibrium Rate to Force Equilibrium. */
@@ -1444,8 +1555,9 @@ struct EVOLVE {
  * control program flow. */
 
 struct IO {
-  int iVerbose;           /**< Verbosity Level. 0=none; 1=error; 2=progress; 3=input; 4=units; 5=all */
-  double dOutputTime;	  /**< Integration Output Interval */
+  int iVerbose;          /**< Verbosity Level. 0=none; 1=error; 2=progress; 3=input; 4=units; 5=all */
+  double dOutputTime;     /**< Integration Output Interval */
+  double dNextOutput;    /**< Time of next output */
 
   int bLog;               /**< Write Log File? */
 
@@ -1454,6 +1566,19 @@ struct IO {
   int iSciNot;            /**< Crossover Decade to Switch between Standard and Scientific Notation */
 
   int bOverwrite;         /**< Allow files to be overwritten? */
+
+  /* The following record whether an error message that should only be reported
+     once has been printed. */
+  /*! Has the message for DeltaTime on the first timestep been printed? */
+  int bDeltaTimeMessage;
+  /*! Has the large mutual inclination message been printed? */
+  int bMutualIncMessage;
+  /*! Print warning message if mutual inc exceeds this value */
+  double dMaxMutualInc;
+  int *baRocheMessage;    /**< Has the Roche lobe message been printed? */
+  int *baCassiniOneMessage;    /**< Has the CassiniOne message been printed? */
+  int *baCassiniTwoMessage;    /**< Has the CassiniTwo message been printed? */
+  int *baEnterHZMessage;    /**< Has the Entering the HZ message been printed? */
 };
 
 /* The CONTROL struct contains all the parameters that
@@ -1468,7 +1593,8 @@ typedef void (*fnForceBehaviorModule)(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,
 /* HALT struct contains all stopping conditions, other than reaching the end
    of the integration. */
 
-typedef int (*fnHaltModule)(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,int);
+typedef int (*fnHaltModule)(BODY*,EVOLVE*,HALT*,IO*,UPDATE*,fnUpdateVariable***,
+              int);
 
 struct CONTROL {
   EVOLVE Evolve;
@@ -1564,7 +1690,7 @@ struct OUTFILE {
 /* The FILES struct contains all the information
  * regarding every file. */
 
-struct FILES{
+struct FILES {
   char cExe[LINE];             /**< Name of Executable */
   OUTFILE *Outfile;            /**< Output File Name for Forward Integration */
   char cLog[NAMELEN];          /**< Log File Name */
@@ -1575,7 +1701,7 @@ struct FILES{
 /* The OPTIONS struct contains all the information
  * regarding the options, including their file data. */
 
-struct OPTIONS{
+struct OPTIONS {
   char cName[OPTLEN];          /**< Option Name */
   char cDescr[OPTDESCR];       /**< Brief Description of Option */
   char cLongDescr[OPTLONDESCR];/**< Long Description of Option */
@@ -1584,7 +1710,7 @@ struct OPTIONS{
   char cDefault[OPTDESCR];     /**< Description of Default Value */
   double dDefault;             /**< Default Value */
   int iModuleBit;              /**< Bitwise sum of modules permitted to read option */
-  int iMultiFile;              /**< Option Permitted in Multiple Inpute Files?  (b?) */
+  int bMultiFile;              /**< Option Permitted in Multiple Input Files? */
   int iMultiIn;
   int *iLine;                  /**< Option's Line number in Input File */
   char *iFile;
@@ -1708,11 +1834,20 @@ typedef void (*fnFinalizeUpdateAngMZModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateMeanLModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLostAngMomModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateLostEngModule)(BODY*,UPDATE*,int*,int,int,int);
+/* HERE
+ * declare Finalize Update for primary parameters
+ */
 typedef void (*fnFinalizeUpdateWaterMassMOAtmModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateWaterMassSolModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSurfTempModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdatePotTempModule)(BODY*,UPDATE*,int*,int,int,int);
 typedef void (*fnFinalizeUpdateSolidRadiusModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateOxygenMassMOAtmModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateOxygenMassSolModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateHydrogenMassSpaceModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateOxygenMassSpaceModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCO2MassMOAtmModule)(BODY*,UPDATE*,int*,int,int,int);
+typedef void (*fnFinalizeUpdateCO2MassSolModule)(BODY*,UPDATE*,int*,int,int,int);
 
 typedef void (*fnReadOptionsModule)(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption*,int);
 typedef void (*fnVerifyModule)(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);
@@ -1887,11 +2022,20 @@ struct MODULE {
   fnFinalizeUpdateLXUVModule **fnFinalizeUpdateLXUV;
 
   /*! Function pointers to finalize magmoc functions */
+  /* HERE
+   * Finalize Update for primary variables
+   */
   fnFinalizeUpdateWaterMassMOAtmModule **fnFinalizeUpdateWaterMassMOAtm;
   fnFinalizeUpdateWaterMassSolModule **fnFinalizeUpdateWaterMassSol;
   fnFinalizeUpdateSurfTempModule **fnFinalizeUpdateSurfTemp;
   fnFinalizeUpdatePotTempModule **fnFinalizeUpdatePotTemp;
   fnFinalizeUpdateSolidRadiusModule **fnFinalizeUpdateSolidRadius;
+  fnFinalizeUpdateOxygenMassMOAtmModule **fnFinalizeUpdateOxygenMassMOAtm;
+  fnFinalizeUpdateOxygenMassSolModule **fnFinalizeUpdateOxygenMassSol;
+  fnFinalizeUpdateHydrogenMassSpaceModule **fnFinalizeUpdateHydrogenMassSpace;
+  fnFinalizeUpdateOxygenMassSpaceModule **fnFinalizeUpdateOxygenMassSpace;
+  fnFinalizeUpdateCO2MassMOAtmModule **fnFinalizeUpdateCO2MassMOAtm;
+  fnFinalizeUpdateCO2MassSolModule **fnFinalizeUpdateCO2MassSol;
 
   /*! These functions log module-specific data. */
   fnLogBodyModule **fnLogBody;
@@ -1944,3 +2088,4 @@ typedef void (*fnIntegrate)(BODY*,CONTROL*,SYSTEM*,UPDATE*,fnUpdateVariable***,d
 #include "flare.h"
 #include "galhabit.h"
 #include "spinbody.h"
+#include "magmoc.h"

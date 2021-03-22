@@ -1,12 +1,8 @@
-/**
+**
    @file poise.h
-
    @brief Subroutines that control the energy balance model for climate
-
    @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
-
    @date Sep 10 2015
-
 */
 
 #include <stdio.h>
@@ -76,11 +72,11 @@
 #define OPT_SKIPSEASENABLED 1921
 #define OPT_DIFFROT         1922
 #define OPT_SPINUPTOL       1923
-#define OPT_READORBITOBLDATA         1924
-#define OPT_FILEORBITOBLDATA         1925
+#define OPT_READORBITOBLDATA  1924
+#define OPT_FILEORBITOBLDATA  1925
 
 
-//#define OPT_LANDGEOM      1940
+#define OPT_LANDFRAC        1940
 #define OPT_HEATCAPLAND     1942
 #define OPT_HEATCAPWATER    1943
 #define OPT_FRZTSEAICE      1944
@@ -109,6 +105,7 @@
 #define OPT_FORCEECC        1967
 #define OPT_ECCAMP          1968
 #define OPT_ECCPER          1969
+#define OPT_MINICEHEIGHT    1970
 
 #define OPT_OLRMODEL    1998
 #define OPT_CLIMATEMODEL    1999
@@ -159,6 +156,23 @@
 #define OUT_TEMPMAXLAND      1956
 #define OUT_TEMPMAXWATER     1957
 #define OUT_PEAKINSOL        1958
+#define OUT_NORTHICECAPLAND  1959
+#define OUT_NORTHICECAPSEA   1960
+#define OUT_SOUTHICECAPLAND  1961
+#define OUT_SOUTHICECAPSEA   1962
+#define OUT_ICEBELTLAND      1963
+#define OUT_ICEBELTSEA       1964
+#define OUT_SNOWBALLLAND     1965
+#define OUT_SNOWBALLSEA      1966
+#define OUT_ICEFREE          1967
+#define OUT_NORTHICECAPLATLAND  1968
+#define OUT_NORTHICECAPLATSEA   1969
+#define OUT_SOUTHICECAPLATLAND  1970
+#define OUT_SOUTHICECAPLATSEA   1971
+#define OUT_NORTHICEBELTLATLAND 1972
+#define OUT_NORTHICEBELTLATSEA  1973
+#define OUT_SOUTHICEBELTLATLAND 1974
+#define OUT_SOUTHICEBELTLATSEA  1975
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -215,28 +229,53 @@ void LogBodyPoise(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UPDATE*,fnWriteOutput[],FILE*,i
 /* Poise Functions */
 void PropsAuxPoise(BODY*,EVOLVE*,IO*,UPDATE*,int);
 void ForceBehaviorPoise(BODY*,MODULE*,EVOLVE*,IO*,SYSTEM*,UPDATE*,fnUpdateVariable***,int,int);
-void AlbedoAnnual(BODY*,int);
-void AlbedoSeasonal(BODY*,int,int);
-void AnnualInsolation(BODY*,int);
-double dOLRdTwk97(BODY*,int,int,int);
-double OLRwk97(BODY*,int,int,int);
-double dOLRdThm16(BODY*,int,int,int);
-double OLRhm16(BODY*,int,int,int);
-double dOLRdTsms09(BODY*,int,int,int);
-double OLRsms09(BODY*,int,int,int);
-void AreaIceCovered(BODY*,int);
+void fvAlbedoAnnual(BODY*,int);
+void fvAlbedoSeasonal(BODY*,int,int);
+void fvAnnualInsolation(BODY*,int);
+double fdOLRdTwk97(BODY*,int,int,int);
+double fdOLRwk97(BODY*,int,int,int);
+double fdOLRdThm16(BODY*,int,int,int);
+double fdOLRhm16(BODY*,int,int,int);
+double fdOLRdTsms09(BODY*,int,int,int);
+double fdOLRsms09(BODY*,int,int,int);
+void fvAreaIceCovered(BODY*,int);
 
 void PoiseAnnual(BODY*,int);
 void PoiseSeasonal(BODY*,int);
 void PoiseIceSheets(BODY*,EVOLVE*,int);
-void SeaIce(BODY*,int);
-void MatrixSeasonal(BODY*,int);
-void SourceFSeas(BODY*,int,int);
-void Snowball(BODY*,int);
+void fvSeaIce(BODY*,int);
+void fvMatrixSeasonal(BODY*,int);
+void fvMatrixInvertSeasonal(BODY*,int);
+void fvTempGradientAnn(BODY*,double,int);
+void fvTempGradientSea(BODY*,double, int);
+void fvMatrixAnnual(BODY*,int);
 
-double IceMassBalance(BODY*,int,int);
+void fvSourceFSeas(BODY*,int,int);
+void fvSnowball(BODY*,int); // XXX Should change to int fbSnowball
+int fbSnowballLand(BODY*,int);
+int fbSnowballSea(BODY*,int);
+int fbIceFree(BODY*,int);
+void fvNorthIceCapLand(BODY*,int,double*,int*,int*);
+void fvNorthIceCapSea(BODY*,int,double*,int*,int*);
+void fvSouthIceCapLand(BODY*,int,double*,int*,int*);
+void fvSouthIceCapSea(BODY*,int,double*,int*,int*);
+void fvIceBeltLand(BODY*,int,double*,double*,int*,int*,int*);
+void fvIceBeltSea(BODY*,int,double*,double*,int*,int*,int*);
+void fvPrecessionExplicit(BODY*,EVOLVE*,int);
+void fvPropsAuxPoise(BODY*,EVOLVE*,IO*,UPDATE*,int);
+void fvForceObliq(BODY*,EVOLVE*,int);
+void fvForceEcc(BODY*,EVOLVE*,int);
+void fvDailyInsolation(BODY*, int,int);
+void fvAlbedoTOAhm16(BODY*, double,int,int);
+
+
+
+double fdIceMassBalance(BODY*,int,int);
 
 double fdPoiseDIceMassDtDepMelt(BODY*,SYSTEM*,int*);
 double fdPoiseDIceMassDtFlow(BODY*,SYSTEM*,int*);
+
+double fdEccTrueAnomaly(double,double);
+double fdAlbedoTOA350(double,double,double,double);
 
 /* @endcond */

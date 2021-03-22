@@ -1,4 +1,4 @@
-**
+/*
    @file poise.h
    @brief Subroutines that control the energy balance model for climate
    @author Russell Deitrick ([deitrr](https://github.com/deitrr/))

@@ -591,6 +591,10 @@ struct BODY {
   double dPlanckA;           /**< Constant term in Blackbody linear approximation */
   double dPlanckB;           /**< Linear coeff in Blackbody linear approx (sensitivity) */
   double dPrecA0;            /**< Initial pA value used when distrot is not called */
+  int bReadOrbitOblData;    /**< Use orbit and obliquity data from file rather than distrot */
+  char cFileOrbitOblData[NAMELEN];  /**< read orbital and obliquity data from this file (distorb=0) */
+  double *daOblSeries; /**< time series for obliquity data */
+  double *daPrecASeries; /**< time series for obliquity data */
   double dRefHeight;         /**< Ref height of "surface" in elevation feedback */
   int iReRunSeas;            /**< When to rerun EBM in ice sheet model */
   double dSeaIceConduct;     /**< Conductivity of sea ice */

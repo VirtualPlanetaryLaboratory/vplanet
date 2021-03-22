@@ -1,4 +1,4 @@
-Writing Tests, Bug Reports, and Examples
+Writing Tests and Examples
 ========================================
 
 .. contents:: :local:
@@ -56,66 +56,6 @@ values.
 All modules should have unit tests, and ideally all module couplings as well.
 To get a sense of what's being tested and what's not, take a look at the
 :doc:`coverage` section.
-
-
-Writing Bug Reports
--------------------
-
-Bug reports live in the :code:`bugs/` directory in the top-level repo folder,
-and there should be one directory per bug. Each directory should contain the
-input files needed to reproduce the bug and a Python script called :code:`bug.py`
-that raises an :code:`AssertionError` if the bug is present (or no error if
-it's fixed). Here's an example of a test script that checks whether VPLANET
-is causing a segfault when running a specific case:
-
-
-.. code-block:: python
-
-    import subprocess
-
-    # Run vplanet (it will segfault)
-    try:
-        subprocess.check_output(['vplanet', 'vpl.in', '-q'])
-    except subprocess.CalledProcessError:
-        raise AssertionError("This bug is still present.")
-
-
-Bug reports should also have a :code:`README.rst` file describing what's going
-on:
-
-
-.. code-block:: rest
-
-    satideperts
-    ===========
-
-    ===================   ============
-    **Issue**             `#10 <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/issues/10>`_
-    **Date**              06/28/18
-    **Author**            Rodrigo Luger
-    ===================   ============
-
-    If EqTide is present in any of the body .in files, but *not in the primary* .in file,
-    a segfault occurs.
-
-    Long description
-    ----------------
-
-    If EQTIDE is present in the primary file, things run fine, even if saTidePerts is not
-    set, in which case an informative error is raised. But even if saTidePerts is set in two separate bodies
-    (neither of which is the primary), a segfault still occurs. Something in the code implicitly expects the star to always
-    have EQTIDE present (and saTidePerts set), so we need to add a check for that.
-
-
-    Suggested fix
-    -------------
-
-    Not sure yet.
-
-
-Please follow this structure when writing your bug reports. Note that every bug
-should be linked to a specific **Issue** on the github page.
-Take a look at the stuff in the :code:`bugs/` directory for more examples.
 
 
 Writing Examples

@@ -13,10 +13,31 @@
 
 void BodyCopyPoise(BODY *dest,BODY *src,int iTideModel,int iNumBodies,\
     int iBody) {
+            dest[iBody].bReadOrbitOblData = src[iBody].bReadOrbitOblData;
 }
 
 void InitializeUpdateTmpBodyPoise(BODY *body,CONTROL *control,UPDATE *update,\
    int iBody) {
+   if (body[iBody].bReadOrbitOblData) {
+    int iLine;
+
+    control->Evolve.tmpBody[iBody].daSemiSeries = \
+    malloc(body[iBody].iNLines*sizeof(double));
+    control->Evolve.tmpBody[iBody].daHeccSeries = \
+    malloc(body[iBody].iNLines*sizeof(double));
+    control->Evolve.tmpBody[iBody].daKeccSeries = \
+    malloc(body[iBody].iNLines*sizeof(double));
+
+
+    for (iLine=0;iLine<body[iBody].iNLines;iLine++) {
+      control->Evolve.tmpBody[iBody].daSemiSeries[iLine] = 
+      body[iBody].daSemiSeries[iLine];
+      control->Evolve.tmpBody[iBody].daHeccSeries[iLine] = \
+      body[iBody].daHeccSeries[iLine];
+      control->Evolve.tmpBody[iBody].daKeccSeries[iLine] = \
+      body[iBody].daKeccSeries[iLine];
+    }
+  } 
 }
 
 /**************** POISE options ********************/
@@ -35,6 +56,39 @@ void ReadLatCellNum(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,\
   } else {
     AssignDefaultInt(options,&body[iFile-1].iNumLats,files->iNumInputs);
   }
+}
+
+void ReadOrbitOblData(BODY *body,CONTROL *control,FILES *files,\
+     OPTIONS *options, SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,\
+     &lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,\
+        control->Io.iVerbose);
+    /* Option was found */
+    body[iFile-1].bReadOrbitOblData = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    body[iFile-1].bReadOrbitOblData = options->dDefault;
+}
+
+void ReadFileOrbitOblData(BODY *body,CONTROL *control,FILES *files,\
+     OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,\
+     control->Io.iVerbose);
+  if (lTmp >= 0) {
+    /* Cannot exist in primary input file -- Each body has an output file */
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,\
+        control->Io.iVerbose);
+    strcpy(body[iFile-1].cFileOrbitOblData,cTmp);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      strcpy(body[iFile-1].cFileOrbitOblData,options->cDefault);
 }
 
 void ReadPlanckA(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,\
@@ -1067,6 +1121,22 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_LATCELLNUM].iType = 1;
   options[OPT_LATCELLNUM].bMultiFile = 1;
   fnRead[OPT_LATCELLNUM] = &ReadLatCellNum;
+  
+  sprintf(options[OPT_READORBITOBLDATA].cName,"bReadOrbitOblData");
+  sprintf(options[OPT_READORBITOBLDATA].cDescr,"Read in orbital and obliquity \
+    data and use with poise");
+  sprintf(options[OPT_READORBITOBLDATA].cDefault,"0");
+  options[OPT_READORBITOBLDATA].dDefault = 0;
+  options[OPT_READORBITOBLDATA].iType = 0;
+  options[OPT_READORBITOBLDATA].bMultiFile = 1;
+  fnRead[OPT_READORBITOBLDATA] = &ReadOrbitOblData;
+
+  sprintf(options[OPT_FILEORBITOBLDATA].cName,"sFileOrbitOblData");
+  sprintf(options[OPT_FILEORBITOBLDATA].cDescr,"Name of file containing orbit\
+    and obliquity time series");
+  sprintf(options[OPT_FILEORBITOBLDATA].cDefault,"Obl_data.txt");
+  options[OPT_FILEORBITOBLDATA].iType = 3;
+  fnRead[OPT_FILEORBITOBLDATA] = &ReadFileOrbitOblData;
 
   sprintf(options[OPT_PLANCKA].cName,"dPlanckA");
   sprintf(options[OPT_PLANCKA].cDescr,"Constant 'A' used in OLR calculation");
@@ -1654,6 +1724,102 @@ void VerifyOLR(BODY *body, OPTIONS *options, char cFile[], int iBody, \
       exit(EXIT_INPUT);
       // LCOV_EXCL_STOP
     }
+  }
+}
+
+void VerifyOrbitOblData(BODY *body,CONTROL *control,OPTIONS *options,\
+       int iBody){
+  int iNLines, iLine, c;
+  double dttmp, datmp, detmp, ditmp, daptmp, dlatmp, dmatmp, dobltmp,dprecatmp;
+  FILE *fileorb;
+
+  if (body[iBody].bReadOrbitOblData) {
+    if (options[OPT_FILEORBITOBLDATA].iLine[iBody+1] == -1) {
+      fprintf(stderr,"ERROR: Must set %s if using %s for file %s\n",\
+        options[OPT_FILEORBITOBLDATA].cName,\
+        options[OPT_READORBITOBLDATA].cName,body[iBody].cName);
+      exit(EXIT_INPUT);
+    } else {
+      fileorb = fopen(body[iBody].cFileOrbitOblData,"r");
+      if (fileorb == NULL) {
+        printf("ERROR: File %s not found.\n", body[iBody].cFileOrbitOblData);
+        exit(EXIT_INPUT);
+      }
+      iNLines = 0;
+      while ((c = getc(fileorb)) != EOF) {
+        if (c == '\n') iNLines++;              //add 1 for each new line
+      }
+      rewind(fileorb);
+
+      body[iBody].iNLines = iNLines;
+      body[iBody].daTimeSeries = malloc(iNLines*sizeof(double));
+      body[iBody].daSemiSeries = malloc(iNLines*sizeof(double));
+      body[iBody].daEccSeries = malloc(iNLines*sizeof(double));
+      body[iBody].daArgPSeries = malloc(iNLines*sizeof(double));
+      body[iBody].daLongASeries = malloc(iNLines*sizeof(double));
+      body[iBody].daOblSeries = malloc(iNLines*sizeof(double));
+      body[iBody].daPrecASeries = malloc(iNLines*sizeof(double));
+      
+      body[iBody].daHeccSeries = malloc(iNLines*sizeof(double));
+      body[iBody].daKeccSeries = malloc(iNLines*sizeof(double));
+      
+      printf("file open\n");
+      
+      iLine = 0;
+      while (feof(fileorb) == 0) {
+        fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf", &dttmp, &datmp, &detmp,\
+          &daptmp, &dlatmp, &dobltmp, &dprecatmp);
+        
+        body[iBody].daTimeSeries[iLine] = \
+          dttmp*fdUnitsTime(control->Units[iBody+1].iTime); 
+        body[iBody].daSemiSeries[iLine] = \
+          datmp*fdUnitsLength(control->Units[iBody+1].iLength);
+        body[iBody].daEccSeries[iLine] = detmp;
+        
+        if (control->Units[iBody+1].iAngle == 0) {
+          body[iBody].daArgPSeries[iLine] = daptmp;
+          body[iBody].daLongASeries[iLine] = dlatmp;
+          body[iBody].daOblSeries[iLine] = dobltmp;
+          body[iBody].daPrecASeries[iLine] = dprecatmp;
+        } else {
+          body[iBody].daArgPSeries[iLine] = daptmp*DEGRAD;
+          body[iBody].daLongASeries[iLine] = dlatmp*DEGRAD;
+          body[iBody].daOblSeries[iLine] = dobltmp*DEGRAD;
+          body[iBody].daPrecASeries[iLine] = dprecatmp*DEGRAD;
+        }
+        body[iBody].daHeccSeries[iLine] = body[iBody].daEccSeries[iLine]*\
+            sin(body[iBody].daArgPSeries[iLine]+\
+            body[iBody].daLongASeries[iLine]);
+        body[iBody].daKeccSeries[iLine] = body[iBody].daEccSeries[iLine]*\
+            cos(body[iBody].daArgPSeries[iLine]+\
+            body[iBody].daLongASeries[iLine]);
+        
+        iLine++;
+      }
+      fclose(fileorb);
+      
+    }
+    body[iBody].iCurrentStep = 0;
+    if (control->Evolve.bVarDt) {
+      fprintf(stderr,"ERROR: Cannot use variable time step (%s = 1) if %s = 1\n",options[OPT_VARDT].cName,options[OPT_READORBITDATA].cName);
+      exit(EXIT_INPUT);
+    }
+    if (control->Evolve.bDoForward) {
+      if (body[iBody].daTimeSeries[1] != control->Evolve.dTimeStep) {
+        fprintf(stderr,"ERROR: Time step size (%s = 1) must match orbital data if %s = 1\n",options[OPT_TIMESTEP].cName,options[OPT_READORBITDATA].cName);
+        exit(EXIT_INPUT);
+      }
+    } else if (control->Evolve.bDoBackward) {
+      if (body[iBody].daTimeSeries[1] != -1*control->Evolve.dTimeStep) {
+        fprintf(stderr,"ERROR: Time step size (%s = 1) must match orbital data if %s = 1\n",options[OPT_TIMESTEP].cName,options[OPT_READORBITDATA].cName);
+        exit(EXIT_INPUT);
+      }
+    }
+    if (iNLines < (control->Evolve.dStopTime/control->Evolve.dTimeStep+1) ) {
+      fprintf(stderr,"ERROR: Input orbit data must at least as long as vplanet integration (%f years)\n",control->Evolve.dStopTime/YEARSEC);
+      exit(EXIT_INPUT);
+    }
+
   }
 }
 
@@ -2356,6 +2522,7 @@ void VerifyPoise(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,\
                control->Io.iVerbose);
   VerifyAstro(body,options,files->Infile[iBody+1].cIn,iBody,\
               control->Io.iVerbose);
+  VerifyOrbitOblData(body, control, options, iBody);
   VerifyOLR(body,options,files->Infile[iBody+1].cIn,iBody,\
             control->Io.iVerbose);
   VerifyDiffusion(body,options,files->Infile[iBody+1].cIn,iBody,\
@@ -4273,6 +4440,21 @@ void AddModulePoise(CONTROL *control,MODULE *module,int iBody,int iModule) {
 }
 
 /************* POISE Functions ***********/
+void UpdateOrbitOblData(BODY *body, EVOLVE *evolve, int iBody) {
+  body[iBody].dSemi = body[iBody].daSemiSeries[body[iBody].iCurrentStep];
+  body[iBody].dEcc = body[iBody].daEccSeries[body[iBody].iCurrentStep];
+  body[iBody].dArgP = body[iBody].daArgPSeries[body[iBody].iCurrentStep];
+  body[iBody].dLongA = body[iBody].daLongASeries[body[iBody].iCurrentStep];
+  body[iBody].dObliquity = body[iBody].daOblSeries[body[iBody].iCurrentStep];
+  body[iBody].dPrecA = body[iBody].daPrecASeries[body[iBody].iCurrentStep];
+  
+  body[iBody].dXobl = sin(body[iBody].dObliquity)*cos(body[iBody].dPrecA);
+  body[iBody].dYobl = sin(body[iBody].dObliquity)*sin(body[iBody].dPrecA);
+  body[iBody].dZobl = cos(body[iBody].dObliquity);
+  
+  body[iBody].dHecc = body[iBody].daHeccSeries[body[iBody].iCurrentStep];
+  body[iBody].dKecc = body[iBody].daKeccSeries[body[iBody].iCurrentStep];
+}
 
 /**
 Calculates flow at base of ice sheet
@@ -5074,6 +5256,10 @@ void ForceBehaviorPoise(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,\
     if (body[iBody].bForceEcc) {
 
       fvForceEcc(body,evolve,iBody);
+    }
+    if (body[iBody].bReadOrbitOblData) {
+      UpdateOrbitOblData(body,evolve,iBody);
+      body[iBody].iCurrentStep++;
     }
   }
 

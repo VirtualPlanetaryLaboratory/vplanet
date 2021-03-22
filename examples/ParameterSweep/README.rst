@@ -4,7 +4,7 @@ Parameter Sweep Example
 Overview
 --------
 
-Example using :code:`vspace`,:code:`multi-planet`, and :code:`bigplanet` in
+Example using :code:`vspace`, :code:`multi-planet`, and :code:`bigplanet` in
 conjunction by exploring the THERMINT parameters of dTCore (initial core
 temperature) and d40KPowerCore (initial radiogenic power from potassium-40).
 

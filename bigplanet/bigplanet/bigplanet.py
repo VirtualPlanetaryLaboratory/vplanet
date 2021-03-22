@@ -844,7 +844,7 @@ def main():
 
     args = parser.parse_args()
 
-    parallel_run_planet(args.InputFile, args.cores, args.quiet,args.email))
+    parallel_run_planet(args.InputFile, args.cores, args.quiet,args.email)
 
 
 

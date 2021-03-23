@@ -255,6 +255,12 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       // Properties
       printf("%s\n",options->cName);
       printf("==================  ====================================\n");
+      if (!memcmp(options->cLongDescr,"null",4)) {
+          printf("\n**Overview**\n");
+          printf("%s\n",options->cLongDescr);
+        }
+      else
+        printf("**Description**     %s\n", options->cDescr);
       printf("**Type**            ");
       if (options->iType == 0) printf("Bool\n");
       else if (options->iType == 1) printf("Int\n");
@@ -276,12 +282,12 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       if (memcmp(options->cValues,"null",4)) {
         printf("**Allowed values**  %s\n", options->cValues);
       }
-      printf("**Description**     %s\n", options->cDescr);
-      // Long description
-      if (memcmp(options->cLongDescr,"null",4)) {
-          printf("\n**Overview**\n");
-          printf("%s\n",options->cLongDescr);
-      }
+      // printf("**Description**     %s\n", options->cDescr);
+      // // Long description
+      // if (!memcmp(options->cLongDescr,"null",4)) {
+      //     printf("\n**Overview**\n");
+      //     printf("%s\n",options->cLongDescr);
+      // }
       printf("==================  ====================================\n\n");
     }
   }

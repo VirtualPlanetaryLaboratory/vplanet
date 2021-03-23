@@ -62,7 +62,7 @@ Module Lookup
 proc = subprocess.Popen(['vplanet', '-H'], stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE)
 output = str(proc.stdout.read())
-output = output.split("\\n")
+output = output.split("\n")[7:-1]
 
 with open('help.rst', 'w') as f:
     print(module_info, file=f)

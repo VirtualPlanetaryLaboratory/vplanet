@@ -74,4 +74,4 @@ with open('help.rst', 'w') as f:
     print("", file=f)
     print("", file=f)
     for line in output:
-        print(line, file=f)
+        print(line + "\n", file=f)

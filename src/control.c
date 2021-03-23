@@ -256,7 +256,7 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       printf("%s\n",options->cName);
       printf("==================  ====================================\n");
       if (memcmp(options->cLongDescr,"null",4)) {
-          printf("\n**Overview**\n");
+          printf("**Overview**\n");
           printf("%s\n",options->cLongDescr);
       } else {
         printf("**Description**     %s\n", options->cDescr);
@@ -311,7 +311,7 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
       printf("========================  ====================================\n");
       // Long description
       if (memcmp(output->cLongDescr,"null",4)) {
-          printf("\n**Overview**\n");
+          printf("**Overview**\n");
           printf("%s\n",output->cLongDescr);
       } else {
         printf("**Description**           %s\n", output->cDescr);

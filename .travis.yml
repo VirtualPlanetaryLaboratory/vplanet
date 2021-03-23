@@ -38,5 +38,5 @@ script:
 after_success:
     #- if [ "$TRAVIS_BRANCH" = "master" ]; then source .ci/build-docs.sh; fi
     - if [ "$TRAVIS_BRANCH" = "master" ]; then bash <(curl -s https://codecov.io/bash); fi
-    source .ci/build-docs.sh
+    - source .ci/build-docs.sh
     #bash <(curl -s https://codecov.io/bash);

@@ -279,7 +279,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SATXUVFRAC].cLongDescr,
     "After formation stars emit a nearly constant amount of XUV radiation\n"
     "for a time called the \"saturated\" phase. This parameter sets that value\n"
-    "relative to the total (bolometric) luminosity. Must lie in range [0,1]."
+    "relative to the total (bolometric) luminosity. Must lie in range [0,1].\n"
   );
 
   sprintf(options[OPT_SATXUVTIME].cName,"dSatXUVTime");
@@ -292,7 +292,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SATXUVTIME].cNeg,"Gyr");
   fnRead[OPT_SATXUVTIME] = &ReadSatXUVTime;
   sprintf(options[OPT_SATXUVTIME].cLongDescr,
-    "The time a star will remain in its \"saturated\" phase.");
+    "The time a star will remain in its \"saturated\" phase.\n");
 
   sprintf(options[OPT_XUVBETA].cName,"dXUVBeta");
   sprintf(options[OPT_XUVBETA].cDescr,"XUV decay power law exponent");
@@ -303,7 +303,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_XUVBETA] = &ReadXUVBeta;
   sprintf(options[OPT_XUVBETA].cLongDescr,
     "After the \"saturation\" phase, the ratio of the XUV to total luminosity\n"
-    "will follow a power law followinfg this exponent. Units are gigayears."
+    "will follow a power law followinfg this exponent. Units are gigayears.\n"
   );
 
   sprintf(options[OPT_STELLARMODEL].cName,"sStellarModel");
@@ -343,7 +343,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_WINDMODEL] = &ReadWindModel;
   sprintf(options[OPT_WINDMODEL].cLongDescr,
     "If REINERS is selected, the stellar wind model of Reiners and Mohanty\n"
-    "(2012, ApJ, 746, 43) is used to modify the rotation rate."
+    "(2012, ApJ, 746, 43) is used to modify the rotation rate.\n"
   );
 
   sprintf(options[OPT_XUVMODEL].cName,"sXUVModel");
@@ -361,7 +361,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
       "while setting it to REINERS will use the empirical relations of\n"
       "Reiners, Schussler and Passegger (2014, ApJ, 794, 144). Please note that\n"
       "the latter model has not been fully vetted. Users may also set this\n"
-      "parameter to NONE, in which case the XUV luminosity will remain constant."
+      "parameter to NONE, in which case the XUV luminosity will remain constant.\n"
   );
 
   sprintf(options[OPT_HZMODEL].cName,"sHZModel");
@@ -373,7 +373,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HZMODEL].cLongDescr,
     "If KOPPARAPU13 is selected then the Recent Venus, Runaway Greenhouse,\n"
     "Maximum Greenhouse, and Early Mars habitable zone limits will be\n"
-    "calculated from Kopparapu, R. et al. (2013, ApJ, 765, 131)."
+    "calculated from Kopparapu, R. et al. (2013, ApJ, 765, 131).\n"
   );
 
   sprintf(options[OPT_HALTENDBARAFFEFGRID].cName,"bHaltEndBaraffeGrid");
@@ -384,7 +384,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTENDBARAFFEFGRID].cLongDescr,
     "The BARRAFFE stellar model will only compute parameters until the end of\n"
     "the main sequence. Setting this flag to 1 will halt the code if the end\n"
-    "of the model grid is reached."
+    "of the model grid is reached.\n"
   );
 
   sprintf(options[OPT_ROSSBYCUT].cName,"bRossbyCut");
@@ -397,7 +397,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ROSSBYCUT].cLongDescr,
     "Van Saders, J. et al. (2019, ApJ, 872, 128) find that when the stellar\n"
     "Rossby number exceeds 2.08, then the magnetic braking is quenched. This\n"
-    "flag enforces that behavior."
+    "flag enforces that behavior.\n"
   );
 
   sprintf(options[OPT_EVOVLERG].cName,"bEvolveRG");
@@ -409,7 +409,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_EVOVLERG] = &ReadEvolveRG;
   sprintf(options[OPT_EVOVLERG].cLongDescr,
     "Set this flag to 0 to ignore the role of mass concentration in stellar\n"
-    "evolution. Only useful for testing purposes."
+    "evolution. Only useful for testing purposes.\n"
   );
 
 }

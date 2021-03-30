@@ -15,19 +15,23 @@ try:
 except:
     print('Cannot import vplot. Please install vplot.')
 import sys
+import argparse
+import os
+import subprocess
 
-# Check correct number of arguments
-if (len(sys.argv) != 2):
-    print('ERROR: Incorrect number of arguments.')
-    print('Usage: '+sys.argv[0]+' <pdf | png>')
-    exit(1)
-if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
-    print('ERROR: Unknown file format: '+sys.argv[1])
-    print('Options are: pdf, png')
-    exit(1)
+parser = argparse.ArgumentParser()
+parser.add_argument("fileformat", choices=["png","pdf"],type=str.lower, help="file format for the plot")
+parser.add_argument("-r","--rerun", action="store_true", help="reruns a vplanet simulation")
 
-# Runs vplanet 
-subprocess.call(['vplanet', 'vpl.in'])
+args = parser.parse_args()
+
+
+# Runs vplanet
+outputfiles = ["corot7.b.forward","corot7.c.forward","corot7.log","corot7.star.forward"]
+
+for file in outputfiles:
+    if os.path.isfile(file) == False or args.rerun:
+        subprocess.call(['vplanet', 'vpl.in'])
 
 
 #Typical plot parameters that make for pretty plot
@@ -95,7 +99,7 @@ for ax in axes.flatten():
     ax.set_rasterization_zorder(0)
 
     # Set tick locations
-    ax.set_xticklabels(["0", "2", "4", "6", "8", "10"])
+    #ax.set_xticklabels(["0", "2", "4", "6", "8", "10"])
     ax.set_xticks([0, 2, 4, 6, 8, 10])
 
 # Show late-term ecc damping

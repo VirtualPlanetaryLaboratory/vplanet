@@ -7311,7 +7311,7 @@ Construct matrix that evolves the ice sheet flow + net balance
 void IceSheetTriDiag(BODY *body, int iBody) {
   double bTmp;
   int iLat, iNumLats;
-  iNumLats= body[iBody].iNumLats;
+  iNumLats = body[iBody].iNumLats;
 
   bTmp = body[iBody].daIceSheetMat[0][0];
   body[iBody].daIceHeight[0] = body[iBody].daIcePropsTmp[0]/bTmp;

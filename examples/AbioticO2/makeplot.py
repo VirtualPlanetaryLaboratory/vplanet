@@ -5,10 +5,13 @@ try:
     import vplot as vpl
 except:
     print('Cannot import vplot. Please install vplot.')
+
 from tqdm import tqdm
 import matplotlib.pyplot as pl
 import matplotlib.colors as colors
 import sys
+import argparse
+
 cmap = pl.get_cmap('plasma')
 
 

@@ -37,7 +37,7 @@
 #define OPT_HOSTBINARGP        2254
 #define OPT_HOSTBINLONGA       2255
 #define OPT_HOSTBINMASS1       2256
-#define OPT_MINALLOWED         2257
+#define OPT_MINSTELLARAPPROACH 2257
 #define OPT_GALACTIDES         2258
 
 /* Output Functinos */

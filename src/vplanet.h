@@ -778,7 +778,7 @@ struct BODY {
   double dLongATmp;         /**< Long asc node in the host binary reference plane */
   double dIncTmp;           /**< Inclination in the host binary reference plane */
   double dCosArgP;          /**< Cosine of arg pericenter */
-  double dMinAllowed;       /**< minimum allowed close approach of body to host */
+  double dMinStellarApproach;       /**< minimum allowed close approach of body to host */
   double dMassInterior;     /**< Total mass of bodies interior to body */
   int iBadImpulse;          /**< Was there a bad impulse? */
 

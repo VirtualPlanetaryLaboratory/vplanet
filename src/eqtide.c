@@ -630,6 +630,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_TIDALRADIUS].cName,"dTidalRadius");
   sprintf(options[OPT_TIDALRADIUS].cDescr,"Eqtide Tidal Radius");
   sprintf(options[OPT_TIDALRADIUS].cDefault,"1 Earth Radius");
+  sprintf(options[OPT_TIDALRADIUS].cUnits,"length");
   options[OPT_TIDALRADIUS].dDefault = REARTH;
   options[OPT_TIDALRADIUS].iType = 2;
   options[OPT_TIDALRADIUS].bMultiFile = 1;
@@ -739,6 +740,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_TIDALTAU].cName,"dTidalTau");
   sprintf(options[OPT_TIDALTAU].cDescr,"Tidal Time Lag");
   sprintf(options[OPT_TIDALTAU].cDefault,"1 Second");
+  sprintf(options[OPT_TIDALTAU].cUnits,"time");
   options[OPT_TIDALTAU].dDefault = 1;
   options[OPT_TIDALTAU].iType = 2;
   options[OPT_TIDALTAU].bMultiFile = 1;
@@ -2393,8 +2395,8 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_TIDALRADIUS].cName,"TidalRadius");
   sprintf(output[OUT_TIDALRADIUS].cDescr,"Tidal Radius");
-  output[OUT_TIDALRADIUS].bNeg = 1;
   sprintf(output[OUT_TIDALRADIUS].cNeg,"Rearth");
+  output[OUT_TIDALRADIUS].bNeg = 1;
   output[OUT_TIDALRADIUS].dNeg = 1./REARTH;
   output[OUT_TIDALRADIUS].iNum = 1;
   output[OUT_TIDALRADIUS].iModuleBit = EQTIDE;
@@ -2433,7 +2435,6 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_DORBPERDTEQTIDE].cName,"DOrbPerDtEqtide");
   sprintf(output[OUT_DORBPERDTEQTIDE].cDescr,"Total dOrbPer/dt in EQTIDE");
-  sprintf(output[OUT_DORBPERDTEQTIDE].cNeg,"days/Gyr");
   output[OUT_DORBPERDTEQTIDE].bNeg = 1;
   output[OUT_DORBPERDTEQTIDE].dNeg = YEARSEC*1e9/DAYSEC;
   output[OUT_DORBPERDTEQTIDE].iNum = 1;

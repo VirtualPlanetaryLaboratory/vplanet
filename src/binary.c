@@ -361,6 +361,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FREEINC].cName,"dFreeInc");
   sprintf(options[OPT_FREEINC].cDescr,"Circumbinary planet free inclination");
   sprintf(options[OPT_FREEINC].cDefault,"0.0 degrees");
+  sprintf(options[OPT_FREEINC].cUnits,"angle");
   options[OPT_FREEINC].dDefault = 0.0;
   options[OPT_FREEINC].iType = 2;
   options[OPT_FREEINC].bMultiFile = 1;
@@ -369,6 +370,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13PHIAB].cName,"dLL13PhiAB");
   sprintf(options[OPT_LL13PHIAB].cDescr,"Binary Initial Mean Anomaly");
   sprintf(options[OPT_LL13PHIAB].cDefault,"0.0 degrees");
+  sprintf(options[OPT_LL13PHIAB].cUnits,"angle");
   options[OPT_LL13PHIAB].dDefault = 0.0;
   options[OPT_LL13PHIAB].iType = 2;
   options[OPT_LL13PHIAB].bMultiFile = 1;
@@ -377,6 +379,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CBPM0].cName,"dCBPM0");
   sprintf(options[OPT_CBPM0].cDescr,"Circumbinary planet initial mean anomaly");
   sprintf(options[OPT_CBPM0].cDefault,"0.0 degrees");
+  sprintf(options[OPT_CBPM0].cUnits,"angle");
   options[OPT_CBPM0].dDefault = 0.0;
   options[OPT_CBPM0].iType = 2;
   options[OPT_CBPM0].bMultiFile = 1;
@@ -385,6 +388,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CBPZETA].cName,"dCBPZeta");
   sprintf(options[OPT_CBPZETA].cDescr,"Circumbinary planet initial z oscillation phase angle");
   sprintf(options[OPT_CBPZETA].cDefault,"0.0 degrees");
+  sprintf(options[OPT_CBPZETA].cUnits,"angle");
   options[OPT_CBPZETA].dDefault = 0.0;
   options[OPT_CBPZETA].iType = 2;
   options[OPT_CBPZETA].bMultiFile = 1;
@@ -393,6 +397,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CBPPSI].cName,"dCBPPsi");
   sprintf(options[OPT_CBPPSI].cDescr,"Circumbinary planet initial R, phi oscillation phase angle");
   sprintf(options[OPT_CBPPSI].cDefault,"0.0 degrees");
+  sprintf(options[OPT_CBPPSI].cUnits,"angle");
   options[OPT_CBPPSI].dDefault = 0.0;
   options[OPT_CBPPSI].iType = 2;
   options[OPT_CBPPSI].bMultiFile = 1;
@@ -407,6 +412,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13N0].cName,"dLL13N0");
   sprintf(options[OPT_LL13N0].cDescr,"Lee+Leung 2013 Mean Motion");
   sprintf(options[OPT_LL13N0].cDefault,"1 /yr");
+  sprintf(options[OPT_LL13N0].cUnits,"frequency");
   options[OPT_LL13N0].dDefault = 1./YEARSEC;
   options[OPT_LL13N0].iType = 2;
   options[OPT_LL13N0].bMultiFile = 1;
@@ -417,6 +423,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13K0].cName,"dLL13K0");
   sprintf(options[OPT_LL13K0].cDescr,"Lee+Leung 2013 Radial Epicyclic Frequency");
   sprintf(options[OPT_LL13K0].cDefault,"1 /yr");
+  sprintf(options[OPT_LL13K0].cUnits,"frequency");
   options[OPT_LL13K0].dDefault = 1./YEARSEC;
   options[OPT_LL13K0].iType = 2;
   options[OPT_LL13K0].bMultiFile = 1;
@@ -427,6 +434,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13V0].cName,"dLL13V0");
   sprintf(options[OPT_LL13V0].cDescr,"Lee+Leung 2013 Radial Epicyclic Frequency");
   sprintf(options[OPT_LL13V0].cDefault,"1 /yr");
+  sprintf(options[OPT_LL13V0].cUnits,"frequency");
   options[OPT_LL13V0].dDefault = 1./YEARSEC;
   options[OPT_LL13V0].iType = 2;
   options[OPT_LL13V0].bMultiFile = 1;

@@ -1106,6 +1106,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TGLOBALEST].cDescr,"Estimate of initial global"\
                                          " temperature");
   sprintf(options[OPT_TGLOBALEST].cDefault,"14.85");
+  sprintf(options[OPT_TGLOBALEST].cUnits,"temperature");
   options[OPT_TGLOBALEST].dDefault = 14.85;
   options[OPT_TGLOBALEST].iType = 2;
   options[OPT_TGLOBALEST].bMultiFile = 1;
@@ -1183,6 +1184,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HEATCAPANN].cDescr,"Surface heat capacity in annual"\
                                          " model");
   sprintf(options[OPT_HEATCAPANN].cDefault,"0.2");
+  sprintf(options[OPT_HEATCAPANN].cUnits,"xxx");
   options[OPT_HEATCAPANN].dDefault = 0.2;
   options[OPT_HEATCAPANN].iType = 2;
   options[OPT_HEATCAPANN].bMultiFile = 1;
@@ -1192,6 +1194,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ICEDEPRATE].cDescr,"Deposition rate of ice/snow to form"\
                                          " ice sheets");
   sprintf(options[OPT_ICEDEPRATE].cDefault,"2.9e-5");
+  sprintf(options[OPT_ICEDEPRATE].cUnits,"xxx");
   options[OPT_ICEDEPRATE].dDefault = 2.9e-5;
   options[OPT_ICEDEPRATE].iType = 2;
   options[OPT_ICEDEPRATE].bMultiFile = 1;
@@ -1208,6 +1211,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_INITICELAT].cName,"dInitIceLat");
   sprintf(options[OPT_INITICELAT].cDescr,"Sets initial ice sheet latitude");
   sprintf(options[OPT_INITICELAT].cDefault,"90");
+  sprintf(options[OPT_INITICELAT].cUnits,"xxx");
   options[OPT_INITICELAT].dDefault = 90.0;
   options[OPT_INITICELAT].iType = 2;
   options[OPT_INITICELAT].bMultiFile = 1;
@@ -1215,7 +1219,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_INITICEHEIGHT].cName,"dInitIceHeight");
   sprintf(options[OPT_INITICEHEIGHT].cDescr,"Sets initial ice sheet height");
-  sprintf(options[OPT_INITICEHEIGHT].cDefault,"50");
+  sprintf(options[OPT_INITICEHEIGHT].cDefault,"50"); // XXX 50 what?
+  sprintf(options[OPT_INITICEHEIGHT].cUnits,"xxx");
   options[OPT_INITICEHEIGHT].dDefault = 50.0;
   options[OPT_INITICEHEIGHT].iType = 2;
   options[OPT_INITICEHEIGHT].bMultiFile = 1;
@@ -1249,7 +1254,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HEATCAPLAND].cName,"dHeatCapLand");
   sprintf(options[OPT_HEATCAPLAND].cDescr,"Land heat capacity in seasonal"\
                                           " model");
-  sprintf(options[OPT_HEATCAPLAND].cDefault,"1.42e7");
+  sprintf(options[OPT_HEATCAPLAND].cDefault,"1.42e7"); // XXX What units?
+  sprintf(options[OPT_HEATCAPLAND].cUnits,"energy/temperature");
   options[OPT_HEATCAPLAND].dDefault = 1.42e7;
   options[OPT_HEATCAPLAND].iType = 2;
   options[OPT_HEATCAPLAND].bMultiFile = 1;
@@ -1258,7 +1264,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HEATCAPWATER].cName,"dHeatCapWater");
   sprintf(options[OPT_HEATCAPWATER].cDescr,"Water heat capacity per meter in" \
                                            " seasonal model");
-  sprintf(options[OPT_HEATCAPWATER].cDefault,"4.2e6");
+  sprintf(options[OPT_HEATCAPWATER].cDefault,"4.2e6"); // XXX What units
+  sprintf(options[OPT_HEATCAPWATER].cUnits,"energy/temperature");
   options[OPT_HEATCAPWATER].dDefault = 4.2e6;
   options[OPT_HEATCAPWATER].iType = 2;
   options[OPT_HEATCAPWATER].bMultiFile = 1;
@@ -1267,7 +1274,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MIXINGDEPTH].cName,"dMixingDepth");
   sprintf(options[OPT_MIXINGDEPTH].cDescr,"Mixing depth of ocean in seasonal"\
                                           " model");
-  sprintf(options[OPT_MIXINGDEPTH].cDefault,"70");
+  sprintf(options[OPT_MIXINGDEPTH].cDefault,"70"); // XXX What units?
+  sprintf(options[OPT_MIXINGDEPTH].cUnits,"xxx");
   options[OPT_MIXINGDEPTH].dDefault = 70.;
   options[OPT_MIXINGDEPTH].iType = 2;
   options[OPT_MIXINGDEPTH].bMultiFile = 1;
@@ -1276,7 +1284,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FRZTSEAICE].cName,"dFrzTSeaIce");
   sprintf(options[OPT_FRZTSEAICE].cDescr,"Temp of sea ice formation in"\
                                          " seasonal model");
-  sprintf(options[OPT_FRZTSEAICE].cDefault,"-2");
+  sprintf(options[OPT_FRZTSEAICE].cDefault,"-2 deg C");
+  sprintf(options[OPT_FRZTSEAICE].cUnits,"temperature");
   options[OPT_FRZTSEAICE].dDefault = -2.;
   options[OPT_FRZTSEAICE].iType = 2;
   options[OPT_FRZTSEAICE].bMultiFile = 1;
@@ -1285,7 +1294,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_NULANDWATER].cName,"dNuLandWater");
   sprintf(options[OPT_NULANDWATER].cDescr,"Coefficient of land-ocean heat"\
                                           " flux");
-  sprintf(options[OPT_NULANDWATER].cDefault,"0.81");
+  sprintf(options[OPT_NULANDWATER].cDefault,"0.81"); // XXX What units?
+  sprintf(options[OPT_NULANDWATER].cUnits,"xxx");
   options[OPT_NULANDWATER].dDefault = 0.81;
   options[OPT_NULANDWATER].iType = 2;
   options[OPT_NULANDWATER].bMultiFile = 1;
@@ -1407,7 +1417,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_OBLIQAMP].cName,"dObliqAmp");
   sprintf(options[OPT_OBLIQAMP].cDescr,"Amplitude of forced obliquity oscill");
-  sprintf(options[OPT_OBLIQAMP].cDefault,"50");
+  sprintf(options[OPT_OBLIQAMP].cDefault,"50 deg");
+  sprintf(options[OPT_OBLIQAMP].cUnits,"angle");
   options[OPT_OBLIQAMP].dDefault = 50;
   options[OPT_OBLIQAMP].iType = 2;
   options[OPT_OBLIQAMP].bMultiFile = 1;
@@ -1415,7 +1426,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_OBLIQPER].cName,"dObliqPer");
   sprintf(options[OPT_OBLIQPER].cDescr,"Period of forced obliquity oscill");
-  sprintf(options[OPT_OBLIQPER].cDefault,"50000");
+  sprintf(options[OPT_OBLIQPER].cDefault,"50000"); // XXX What units?
+  sprintf(options[OPT_OBLIQPER].cUnits,"time");
   options[OPT_OBLIQPER].dDefault = 50000;
   options[OPT_OBLIQPER].iType = 2;
   options[OPT_OBLIQPER].bMultiFile = 1;
@@ -1441,7 +1453,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_ECCPER].cName,"dEccPer");
   sprintf(options[OPT_ECCPER].cDescr,"Period of forced eccentricity oscill");
-  sprintf(options[OPT_ECCPER].cDefault,"50000");
+  sprintf(options[OPT_ECCPER].cDefault,"50000"); // XXX What units?
+  sprintf(options[OPT_ECCPER].cUnits,"time");
   options[OPT_ECCPER].dDefault = 50000;
   options[OPT_ECCPER].iType = 2;
   options[OPT_ECCPER].bMultiFile = 1;
@@ -1468,6 +1481,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LAPSER].cDescr,"Dry adiabatic lapse rate (for elev"\
                                      " feedback)");
   sprintf(options[OPT_LAPSER].cDefault,"9.8e-3 C/m");
+  sprintf(options[OPT_LAPSER].cUnits,"temperature/length");
   options[OPT_LAPSER].dDefault = 9.8e-3;
   options[OPT_LAPSER].iType = 2;
   options[OPT_LAPSER].bMultiFile = 1;
@@ -1477,6 +1491,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_REFHEIGHT].cDescr,"Reference height of atmos temp (for"\
                                         " elev feedback)");
   sprintf(options[OPT_REFHEIGHT].cDefault,"1000 m");
+  sprintf(options[OPT_REFHEIGHT].cUnits,"length");
   options[OPT_REFHEIGHT].dDefault = 1000.0;
   options[OPT_REFHEIGHT].iType = 2;
   options[OPT_REFHEIGHT].bMultiFile = 1;
@@ -1493,6 +1508,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SPINUPTOL].cName,"dSpinUpTol");
   sprintf(options[OPT_SPINUPTOL].cDescr,"Tolerance for spin up phase");
   sprintf(options[OPT_SPINUPTOL].cDefault,"0.1 deg C");
+  sprintf(options[OPT_SPINUPTOL].cUnits,"temperature");
   options[OPT_SPINUPTOL].dDefault = 0.1;
   options[OPT_SPINUPTOL].iType = 2;
   options[OPT_SPINUPTOL].bMultiFile = 1;
@@ -1502,7 +1518,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MINICEHEIGHT].cDescr,"Minimum ice sheet height for a"\
                                            " latitude to be considered"\
                                            " ice-covered");
-  sprintf(options[OPT_MINICEHEIGHT].cDefault,"0.001");
+  sprintf(options[OPT_MINICEHEIGHT].cDefault,"0.001"); // What units? XXX
+  sprintf(options[OPT_MINICEHEIGHT].cUnits,"length");
   options[OPT_MINICEHEIGHT].dDefault = 0.001;
   options[OPT_MINICEHEIGHT].iType = 2;
   options[OPT_MINICEHEIGHT].bMultiFile = 1;

@@ -4031,7 +4031,7 @@ void InitializeOptions(OPTIONS *options,fnReadOption *fnRead) {
     sprintf(options[iOpt].cValues,"null");
     memset(options[iOpt].cNeg,'\0',OPTDESCR);
     sprintf(options[iOpt].cNeg,"null");
-    memset(options[iOpt].cUnits,\0',OUTDESCR);
+    memset(options[iOpt].cUnits,'\0',OUTDESCR);
     options[iOpt].dDefault = NAN;
     options[iOpt].iModuleBit = 0;
     options[iOpt].bNeg = 0;

@@ -2180,8 +2180,9 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
     sprintf(output[iOut].cLongDescr,"null");
     memset(output[iOut].cNeg,'\0',OUTDESCR);
     sprintf(output[iOut].cNeg,"null");
-    for (iBody=0;iBody<MAXFILES;iBody++)
-        output[iOut].bDoNeg[iBody] = 0;
+    for (iBody=0;iBody<MAXFILES;iBody++) {
+      output[iOut].bDoNeg[iBody] = 0;
+    }
   }
 
 

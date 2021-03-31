@@ -285,6 +285,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SATXUVTIME].cName,"dSatXUVTime");
   sprintf(options[OPT_SATXUVTIME].cDescr,"XUV saturation time");
   sprintf(options[OPT_SATXUVTIME].cDefault,"0.1 Gyr");
+  sprintf(options[OPT_SATXUVTIME].cUnits,"time");
   options[OPT_SATXUVTIME].dDefault = 1.e8 * YEARSEC;
   options[OPT_SATXUVTIME].iType = 0;
   options[OPT_SATXUVTIME].bMultiFile = 1;
@@ -389,7 +390,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_ROSSBYCUT].cName,"bRossbyCut");
   sprintf(options[OPT_ROSSBYCUT].cDescr,"Terminate magnetic braking when Rossby number > 2.08?");
-  sprintf(options[OPT_ROSSBYCUT].cDefault,"0");
+  sprintf(options[OPT_ROSSBYCUT].cDefault,"0"); // XXX Units?
   options[OPT_ROSSBYCUT].iType = 0;
   options[OPT_ROSSBYCUT].bMultiFile = 1;
   options[OPT_ROSSBYCUT].iModuleBit = STELLAR;

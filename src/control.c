@@ -253,14 +253,31 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       // Header
 
       // Properties
-      printf("%s\n",options->cName);
-      printf("==================  ====================================\n");
+      printf("+------------------------------------------------------+\n");
+      printf("| %s",options->cName);
+      int i;
+
+      printf("The length of the string is %s\n",strlen(options->cName));
+      for(i = 0; i<(68 - strlen(options->cName)); ++i);
+      {
+        printf(" ");
+      }
+      printf(" |\n");
+
+      printf("+-----------------+------------------------------------+\n");
+      if (memcmp(options->cLongDescr,"null",4)) {
+        printf("| Overview    | %s                                 |\n",options->cLongDescr);
+      }else {
+        printf("| Description | %s                            |\n", options->cDescr);
+      }
+      printf("+-----------------+------------------------------------+\n");
       printf("**Type**            ");
       if (options->iType == 0) printf("Bool\n");
       else if (options->iType == 1) printf("Int\n");
       else if (options->iType == 2) printf("Double\n");
       else if (options->iType == 3) printf("String\n");
       else if (options->iType >= 4) printf("Array\n");
+
       if (options->bNeg == 1)
           printf("**Custom unit**     %s\n", options->cNeg);
       else
@@ -301,8 +318,16 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
       // ** Long help **
 
       // Properties
+      printf("+------------------------------------------------------+\n");
       printf("%s\n",output->cName);
-      printf("========================  ====================================\n");
+      printf("+-----------------+------------------------------------+\n");
+      // Long description
+      if (memcmp(output->cLongDescr,"null",4)) {
+          printf("\n**Overview**\n");
+          printf("%s\n",output->cLongDescr);
+      } else {
+        printf("**Description**           %s\n", output->cDescr);
+      }
       if (output->bNeg == 1)
         printf("**Custom unit**           %s\n", output->cNeg);
       else

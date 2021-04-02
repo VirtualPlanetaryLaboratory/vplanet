@@ -253,53 +253,85 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       // Header
 
       // Properties
-      printf("+------------------------------------------------------+\n");
+      printf("+========================================================+\n");
       printf("| %s",options->cName);
       int i;
-
-      printf("The length of the string is %s\n",strlen(options->cName));
-      for(i = 0; i<(68 - strlen(options->cName)); ++i);
-      {
+      for(i = 0; i<(54 - strlen(options->cName)); i++){
         printf(" ");
       }
       printf(" |\n");
+      printf("+=================+======================================+\n");
 
-      printf("+-----------------+------------------------------------+\n");
-      if (memcmp(options->cLongDescr,"null",4)) {
-        printf("| Overview    | %s                                 |\n",options->cLongDescr);
-      }else {
-        printf("| Description | %s                            |\n", options->cDescr);
+
+      // if (memcmp(options->cLongDescr,"null",4)) {
+      //   printf("| Overview        |");
+      //   printf("%s                                 |\n",options->cLongDescr);
+      // }else {
+      //   printf("| Description     | %s                            |\n", options->cDescr);
+      // }
+      // printf("+-----------------+--------------------------------------+\n");
+
+      int typelen;
+      char *typestr;
+      if (options->iType == 0) typestr = "Bool";
+      else if (options->iType == 1) typestr = "Int";
+      else if (options->iType == 2) typestr = "Double";
+      else if (options->iType == 3) typestr = "String";
+      else if (options->iType >= 4) typestr = "Array";
+      printf("| Type            | %s",typestr);
+      for(typelen = 0; typelen<(36 - strlen(typestr)); typelen++){
+        printf(" ");
       }
-      printf("+-----------------+------------------------------------+\n");
-      printf("**Type**            ");
-      if (options->iType == 0) printf("Bool\n");
-      else if (options->iType == 1) printf("Int\n");
-      else if (options->iType == 2) printf("Double\n");
-      else if (options->iType == 3) printf("String\n");
-      else if (options->iType >= 4) printf("Array\n");
+      printf(" |\n");
+      printf("+-----------------+--------------------------------------+\n");
 
-      if (options->bNeg == 1)
-          printf("**Custom unit**     %s\n", options->cNeg);
-      else
-          printf("**Custom unit**     \n");
-      printf("**Modules**         ");
-      if (options->iModuleBit) PrintModuleList(stdout, options->iModuleBit);
-      else printf("ALL");
-      printf("\n");
-      printf("**Files**           ");
+      if (options->bNeg == 1){
+        printf("| Custom unit     | %s", options->cNeg);
+        int unitlen;
+        for(unitlen = 0; unitlen<(36 - strlen(options->cNeg)); unitlen++){
+          printf(" ");
+        }
+        printf(" |\n");
+      } else printf("| Custom unit     | nd                                   |\n");
+      printf("+-----------------+--------------------------------------+\n");
+
+      if (options->iModuleBit){
+        printf("| Modules         | ");
+        PrintModuleList(stdout, options->iModuleBit);
+        printf(" |\n");
+      } else printf("| Modules         | ALL                                  |\n");
+      printf("+-----------------+--------------------------------------+\n");
+
+      printf("| Files           | ");
       PrintFileTypes(options->iFileType);
-      printf("\n");
-      printf("**Default value**   %s\n", options->cDefault);
+      printf(" |\n");
+      printf("+-----------------+--------------------------------------+\n");
+
+      printf("|Default value    | %s", options->cDefault);
+      int valuelen;
+      printf(strlen(options->cDefault));
+      //for(valuelen = 0; valuelen<(36 - strlen(options->cDefault)); valuelen++){
+        //printf(" ");
+      //}
+      printf(" |\n");
+      printf("+-----------------+--------------------------------------+\n");
+
       if (memcmp(options->cValues,"null",4)) {
-        printf("**Allowed values**  %s\n", options->cValues);
-      }
-      printf("**Description**     %s\n", options->cDescr);
+        printf("| Allowed values   | %s", options->cValues);
+        int alvalen;
+        for(alvalen = 0; alvalen<(36 - strlen(options->cValues)); alvalen++){
+          printf(" ");
+        }
+        printf(" |\n");
+        printf("+-----------------+--------------------------------------+\n");
+      } else printf("\n");
+
+      // printf("**Description**     %s\n", options->cDescr);
       // Long description
-      if (memcmp(options->cLongDescr,"null",4)) {
-          printf("\n**Overview**\n");
-          printf("%s\n",options->cLongDescr);
-      }
-      printf("==================  ====================================\n\n");
+      // if (memcmp(options->cLongDescr,"null",4)) {
+          // printf("\n**Overview**\n");
+          // printf("%s\n",options->cLongDescr);
+      //}
     }
   }
 }

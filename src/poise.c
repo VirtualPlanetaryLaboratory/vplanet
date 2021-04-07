@@ -30,14 +30,14 @@ void InitializeUpdateTmpBodyPoise(BODY *body,CONTROL *control,UPDATE *update,\
 
 
     for (iLine=0;iLine<body[iBody].iNLines;iLine++) {
-      control->Evolve.tmpBody[iBody].daSemiSeries[iLine] = 
+      control->Evolve.tmpBody[iBody].daSemiSeries[iLine] =
       body[iBody].daSemiSeries[iLine];
       control->Evolve.tmpBody[iBody].daHeccSeries[iLine] = \
       body[iBody].daHeccSeries[iLine];
       control->Evolve.tmpBody[iBody].daKeccSeries[iLine] = \
       body[iBody].daKeccSeries[iLine];
     }
-  } 
+  }
 }
 
 /**************** POISE options ********************/
@@ -1121,7 +1121,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_LATCELLNUM].iType = 1;
   options[OPT_LATCELLNUM].bMultiFile = 1;
   fnRead[OPT_LATCELLNUM] = &ReadLatCellNum;
-  
+
   sprintf(options[OPT_READORBITOBLDATA].cName,"bReadOrbitOblData");
   sprintf(options[OPT_READORBITOBLDATA].cDescr,"Read in orbital and obliquity \
     data and use with poise");
@@ -1579,11 +1579,11 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MINICEHEIGHT].cNeg,"meters");
   fnRead[OPT_MINICEHEIGHT] = &ReadMinIceSheetHeight;
   sprintf(options[OPT_MINICEHEIGHT].cLongDescr,
-    "The minimum thickness of permanent ice in a latitude bin for it to be"\
-    " labeled ice-covered. In some cases, such as rapid thawing, a latitude"\
-    " can have a very low value of ice height, primarily for numerical"\
-    " reasons. Parameter forces unphysically small values of the ice height"\
-    " to be ignored."
+    "The minimum thickness of permanent ice in a latitude bin for it to be\n"
+    "labeled ice-covered. In some cases, such as rapid thawing, a latituden\n"
+    "can have a very low value of ice height, primarily for numerical\n"
+    "reasons. Parameter forces unphysically small values of the ice height\n"
+    "to be ignored.\n"
   );
 }
 
@@ -1759,23 +1759,23 @@ void VerifyOrbitOblData(BODY *body,CONTROL *control,OPTIONS *options,\
       body[iBody].daLongASeries = malloc(iNLines*sizeof(double));
       body[iBody].daOblSeries = malloc(iNLines*sizeof(double));
       body[iBody].daPrecASeries = malloc(iNLines*sizeof(double));
-      
+
       body[iBody].daHeccSeries = malloc(iNLines*sizeof(double));
       body[iBody].daKeccSeries = malloc(iNLines*sizeof(double));
-      
+
       printf("file open\n");
-      
+
       iLine = 0;
       while (feof(fileorb) == 0) {
         fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf", &dttmp, &datmp, &detmp,\
           &daptmp, &dlatmp, &dobltmp, &dprecatmp);
-        
+
         body[iBody].daTimeSeries[iLine] = \
-          dttmp*fdUnitsTime(control->Units[iBody+1].iTime); 
+          dttmp*fdUnitsTime(control->Units[iBody+1].iTime);
         body[iBody].daSemiSeries[iLine] = \
           datmp*fdUnitsLength(control->Units[iBody+1].iLength);
         body[iBody].daEccSeries[iLine] = detmp;
-        
+
         if (control->Units[iBody+1].iAngle == 0) {
           body[iBody].daArgPSeries[iLine] = daptmp;
           body[iBody].daLongASeries[iLine] = dlatmp;
@@ -1793,11 +1793,11 @@ void VerifyOrbitOblData(BODY *body,CONTROL *control,OPTIONS *options,\
         body[iBody].daKeccSeries[iLine] = body[iBody].daEccSeries[iLine]*\
             cos(body[iBody].daArgPSeries[iLine]+\
             body[iBody].daLongASeries[iLine]);
-        
+
         iLine++;
       }
       fclose(fileorb);
-      
+
     }
     body[iBody].iCurrentStep = 0;
     if (control->Evolve.bVarDt) {
@@ -4296,9 +4296,9 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_NORTHICECAPLATLAND].iNum = 1;
   output[OUT_NORTHICECAPLATLAND].iModuleBit = POISE;
   fnWrite[OUT_NORTHICECAPLATLAND] = &WriteIceCapNorthLatLand;
-  sprintf(output[OUT_NORTHICECAPLATLAND].cLongDescr,\
-    "If a northern land ice cap is present, return the latitude of its "\
-    "southern edge. If not present, return +100 degrees.");
+  sprintf(output[OUT_NORTHICECAPLATLAND].cLongDescr,
+    "If a northern land ice cap is present, return the latitude of its\n"
+    "southern edge. If not present, return +100 degrees.\n");
 
   sprintf(output[OUT_NORTHICECAPLATSEA].cName,"IceCapNorthLatSea");
   sprintf(output[OUT_NORTHICECAPLATSEA].cDescr,
@@ -4308,8 +4308,8 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_NORTHICECAPLATSEA].iModuleBit = POISE;
   fnWrite[OUT_NORTHICECAPLATSEA] = &WriteIceCapNorthLatSea;
   sprintf(output[OUT_NORTHICECAPLATSEA].cLongDescr,
-    "If a northern sea ice cap is present, return the latitude of its "\
-    "southern edge. If not present, return +100 degrees.");
+    "If a northern sea ice cap is present, return the latitude of its\n"
+    "southern edge. If not present, return +100 degrees.\n");
 
   sprintf(output[OUT_SOUTHICECAPLATLAND].cName,"IceCapSouthLatLand");
   sprintf(output[OUT_SOUTHICECAPLATLAND].cDescr,
@@ -4318,9 +4318,9 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SOUTHICECAPLATLAND].iNum = 1;
   output[OUT_SOUTHICECAPLATLAND].iModuleBit = POISE;
   fnWrite[OUT_SOUTHICECAPLATLAND] = &WriteIceCapSouthLatLand;
-  sprintf(output[OUT_SOUTHICECAPLATLAND].cLongDescr,
-    "If a southern land ice cap is present, return the latitude of its "\
-    "northern edge. If not present, return -100 degrees.");
+  sprintf(output[OUT_SOUTHICECAPLATSEA].cLongDescr,
+    "If a southern sea ice cap is present, return the latitude of its\n"
+    "northern edge. If not present, return -100 degrees.\n");
 
   sprintf(output[OUT_SOUTHICECAPLATSEA].cName,"IceCapSouthLatSea");
   sprintf(output[OUT_SOUTHICECAPLATSEA].cDescr,
@@ -4328,10 +4328,10 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SOUTHICECAPLATSEA].bNeg = 0;
   output[OUT_SOUTHICECAPLATSEA].iNum = 1;
   output[OUT_SOUTHICECAPLATSEA].iModuleBit = POISE;
-  fnWrite[OUT_SOUTHICECAPLATSEA] = &WriteIceCapSouthLatLand;
+  fnWrite[OUT_SOUTHICECAPLATSEA] = &WriteIceCapSouthLatSea;
   sprintf(output[OUT_SOUTHICECAPLATSEA].cLongDescr,
-    "If a southern sea ice cap is present, return the latitude of its "\
-    "northern edge. If not present, return -100 degrees.");
+    "If a southern sea ice cap is present, return the latitude of its\n"
+    "northern edge. If not present, return -100 degrees.\n");
 
   sprintf(output[OUT_NORTHICEBELTLATLAND].cName,"IceBeltNorthLatLand");
   sprintf(output[OUT_NORTHICEBELTLATLAND].cDescr,
@@ -4341,9 +4341,9 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_NORTHICEBELTLATLAND].iModuleBit = POISE;
   fnWrite[OUT_NORTHICEBELTLATLAND] = &WriteIceBeltNorthLatLand;
   sprintf(output[OUT_NORTHICEBELTLATLAND].cLongDescr,
-    "If a land ice belt is present, return the latitude of its northern edge. "
-    "If not present, return 0. Note that some ice belts may in fact have a "
-    "northern edge at the equator.");
+    "If a land ice belt is present, return the latitude of its northern edge.\n"
+    "If not present, return 0. Note that some ice belts may in fact have a\n"
+    "northern edge at the equator.\n");
 
   sprintf(output[OUT_NORTHICEBELTLATSEA].cName,"IceBeltNorthLatSea");
   sprintf(output[OUT_NORTHICEBELTLATSEA].cDescr,
@@ -4353,9 +4353,9 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_NORTHICEBELTLATSEA].iModuleBit = POISE;
   fnWrite[OUT_NORTHICEBELTLATSEA] = &WriteIceBeltNorthLatSea;
   sprintf(output[OUT_NORTHICEBELTLATSEA].cLongDescr,
-    "If a sea ice belt is present, return the latitude of its northern edge. "
-    "If not present, return 0. Note that some ice belts may in fact have a "
-    "northern edge at the equator.");
+    "If a sea ice belt is present, return the latitude of its northern edge.\n"
+    "If not present, return 0. Note that some ice belts may in fact have a\n"
+    "northern edge at the equator.\n");
 
   sprintf(output[OUT_SOUTHICEBELTLATLAND].cName,"IceBeltSouthLatLand");
   sprintf(output[OUT_SOUTHICEBELTLATLAND].cDescr,
@@ -4365,9 +4365,9 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SOUTHICEBELTLATLAND].iModuleBit = POISE;
   fnWrite[OUT_SOUTHICEBELTLATLAND] = &WriteIceBeltSouthLatLand;
   sprintf(output[OUT_SOUTHICEBELTLATLAND].cLongDescr,
-    "If a land ice belt is present, return the latitude of its southern edge. "
-    "If not present, return 0. Note that some ice belts may in fact have a "
-    "southern edge at the equator.");
+    "If a land ice belt is present, return the latitude of its southern edge.\n"
+    "If not present, return 0. Note that some ice belts may in fact have a\n"
+    "southern edge at the equator.\n");
 
   sprintf(output[OUT_SOUTHICEBELTLATSEA].cName,"IceBeltSouthLatSea");
   sprintf(output[OUT_SOUTHICEBELTLATSEA].cDescr,
@@ -4377,9 +4377,9 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_SOUTHICEBELTLATSEA].iModuleBit = POISE;
   fnWrite[OUT_SOUTHICEBELTLATSEA] = &WriteIceBeltSouthLatSea;
   sprintf(output[OUT_SOUTHICEBELTLATSEA].cLongDescr,
-    "If a sea ice belt is present, return the latitude of its southern edge. "
-    "If not present, return 0. Note that some ice belts may in fact have a "
-    "southern edge at the equator.");
+    "If a sea ice belt is present, return the latitude of its southern edge.\n"
+    "If not present, return 0. Note that some ice belts may in fact have a\n"
+    "southern edge at the equator.\n");
 }
 
 /************ POISE Logging Functions **************/
@@ -4447,11 +4447,11 @@ void UpdateOrbitOblData(BODY *body, EVOLVE *evolve, int iBody) {
   body[iBody].dLongA = body[iBody].daLongASeries[body[iBody].iCurrentStep];
   body[iBody].dObliquity = body[iBody].daOblSeries[body[iBody].iCurrentStep];
   body[iBody].dPrecA = body[iBody].daPrecASeries[body[iBody].iCurrentStep];
-  
+
   body[iBody].dXobl = sin(body[iBody].dObliquity)*cos(body[iBody].dPrecA);
   body[iBody].dYobl = sin(body[iBody].dObliquity)*sin(body[iBody].dPrecA);
   body[iBody].dZobl = cos(body[iBody].dObliquity);
-  
+
   body[iBody].dHecc = body[iBody].daHeccSeries[body[iBody].iCurrentStep];
   body[iBody].dKecc = body[iBody].daKeccSeries[body[iBody].iCurrentStep];
 }

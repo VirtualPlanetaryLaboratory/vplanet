@@ -756,7 +756,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
     "Ratio of the planet's XUV radius to its total radius. The XUV radius is\n"
     "defined to be the distance between the center of the planet and the\n"
     "absorbing layer, defined to be where the optical depth is 1. Should be\n"
-    "in the range (0,1]."
+    "in the range (0,1].\n"
   );
 
   sprintf(options[OPT_ATMXABSEFFH].cName,"dAtmXAbsEffH");
@@ -768,7 +768,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_ATMXABSEFFH] = &ReadAtmXAbsEffH;
   sprintf(options[OPT_ATMXABSEFFH].cLongDescr,
     "XUV absoprtion efficiency parameter, epsilon_{XUV}, in Eq. (A1) in\n"
-    "Barnes et al. (2019). Must lie in the range [0,1]."
+    "Barnes et al. (2019). Must lie in the range [0,1].\n"
   );
 
   sprintf(options[OPT_ATMXABSEFFH2O].cName,"dAtmXAbsEffH2O");
@@ -780,7 +780,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_ATMXABSEFFH2O] = &ReadAtmXAbsEffH2O;
   sprintf(options[OPT_ATMXABSEFFH2O].cLongDescr,
     "XUV absoprtion efficiency parameter for water vapor as defined in\n"
-    "Luger & Barnes (2015, AsBio, 15, 57). Must lie in range [0,1]."
+    "Luger & Barnes (2015, AsBio, 15, 57). Must lie in range [0,1].\n"
   );
 
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cName,"sAtmXAbsEffH2OModel");
@@ -793,7 +793,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cLongDescr,
     "If BOLMONT16 is selected, then the value of %s will follow the model of\n"
     "Bolmont et al. (2017, MNRAS, 464, 3728). NONE will not change the input\n"
-    "value for %s.",options[OPT_ATMXABSEFFH2O].cName,options[OPT_ATMXABSEFFH2O].cName
+    "value for %s.\n",options[OPT_ATMXABSEFFH2O].cName,options[OPT_ATMXABSEFFH2O].cName
   );
 
   sprintf(options[OPT_OXYGENMASS].cName,"dOxygenMass");

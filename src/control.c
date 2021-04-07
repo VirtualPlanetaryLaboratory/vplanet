@@ -255,6 +255,12 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       // Properties
       printf("%s\n",options->cName);
       printf("==================  ====================================\n");
+      if (memcmp(options->cLongDescr,"null",4)) {
+          printf("**Overview**\n");
+          printf("%s\n",options->cLongDescr);
+      } else {
+        printf("**Description**     %s\n", options->cDescr);
+      }
       printf("**Type**            ");
       if (options->iType == 0) printf("Bool\n");
       else if (options->iType == 1) printf("Int\n");
@@ -276,12 +282,12 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       if (memcmp(options->cValues,"null",4)) {
         printf("**Allowed values**  %s\n", options->cValues);
       }
-      printf("**Description**     %s\n", options->cDescr);
-      // Long description
-      if (memcmp(options->cLongDescr,"null",4)) {
-          printf("\n**Overview**\n");
-          printf("%s\n",options->cLongDescr);
-      }
+      // printf("**Description**     %s\n", options->cDescr);
+      // // Long description
+      // if (memcmp(options->cLongDescr,"null",4)) {
+      //     printf("\n**Overview**\n");
+      //     printf("%s\n",options->cLongDescr);
+      //}
       printf("==================  ====================================\n\n");
     }
   }
@@ -303,6 +309,13 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
       // Properties
       printf("%s\n",output->cName);
       printf("========================  ====================================\n");
+      // Long description
+      if (memcmp(output->cLongDescr,"null",4)) {
+          printf("**Overview**\n");
+          printf("%s\n",output->cLongDescr);
+      } else {
+        printf("**Description**           %s\n", output->cDescr);
+      }
       if (output->bNeg == 1)
         printf("**Custom unit**           %s\n", output->cNeg);
       else
@@ -314,12 +327,7 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
         printf("ALL");
       }
       printf("\n");
-      printf("**Description**           %s\n", output->cDescr);
       printf("========================  ====================================\n\n");
-        // Long description
-      if (memcmp(output->cLongDescr,"null",4)) {
-        printf("%s\n\n",output->cLongDescr);
-      }
     }
   }
 }
@@ -409,6 +417,7 @@ void Help(OPTIONS *options,OUTPUT *output,char exe[],int bLong) {
     printf("Format: [Negative forces units] Name -- Description [Negative unit]\n\n");
   }
   printf("These options follow the argument %s.\n",options[OPT_OUTPUTORDER].cName);
+  printf("\n");
   HelpOutput(output,bLong);
 
   exit(0);

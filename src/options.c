@@ -3320,7 +3320,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
     "mutual inclinations above %.2lf degrees, especially if the eccentricities\n"
     "are significant, should be interpreted cautiously. For the DistOrb-%s\n"
     "model, values above %.2lf degrees are suspect. SpiNBody is accurate for\n"
-    "any value.",options[OPT_ORBITMODEL].cName,((double)MAXMUTUALINCRD4),
+    "any value.\n",options[OPT_ORBITMODEL].cName,((double)MAXMUTUALINCRD4),
         options[OPT_ORBITMODEL].cName,((double)MAXMUTUALINCLL2)
   );
 

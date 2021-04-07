@@ -46,10 +46,6 @@
 #define OUT_TOTORBENERGY        193
 
 #define OUT_DT                  200
-#define OUT_DENSITY             210 // XXX Move to >500
-
-#define OUT_LONGP               300 // XXX Move to >500
-#define OUT_LXUVTOT             310 // XXX Move to >500
 
 #define OUT_MASS                500
 #define OUT_OBL                 510
@@ -66,6 +62,7 @@
 #define OUT_BODYTYPE            545
 #define OUT_ROTRATE             550
 #define OUT_ROTPER              560
+#define OUT_DENSITY             570
 
 #define OUT_SURFENFLUX          580
 #define OUT_TIDALQ              581
@@ -99,6 +96,9 @@
 #define OUT_INC                 663
 #define OUT_LONGA               664
 #define OUT_MEANL               665
+#define OUT_LONGP               667
+
+#define OUT_LXUVTOT             668
 
 #define OUT_ORBKINENERGY        670
 #define OUT_ORBPOTENERGY        680

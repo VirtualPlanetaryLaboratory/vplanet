@@ -30,6 +30,7 @@ def test_StellarEvol():
     assert np.isclose(output.log.final.b.Radius, 0.902638, rtol=1.0e-4)
     assert np.isclose(output.log.final.b.LostAngMom, 5.086001e+43, rtol=1.0e-4)
     assert np.isclose(output.log.final.b.RotPer, 3.075721, rtol=1.0e-4)
+    assert np.isclose(output.log.final.b.Density, 1916.956602)
 
     #assert np.isclose(output.log.final.a.HZLimRecVenus, 6.038467e+09)
     #assert np.isclose(output.log.final.a.HZLimEarlyMars, 1.669770e+10)

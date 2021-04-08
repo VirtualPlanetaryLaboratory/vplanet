@@ -3121,18 +3121,20 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_AGE].cName,"dAge");
   sprintf(options[OPT_AGE].cDescr,"System Age");
   sprintf(options[OPT_AGE].cDefault,"0");
+  sprintf(options[OPT_AGE].cNeg,"Gyr");
+  sprintf(options[OPT_JEANSTIME].cDimension,"time");
   options[OPT_AGE].dDefault = 0;
   options[OPT_AGE].iType = 2;
   options[OPT_AGE].iModuleBit = 0;
   options[OPT_AGE].bNeg = 1;
   options[OPT_AGE].dNeg = 1e9*YEARSEC;
-  sprintf(options[OPT_AGE].cNeg,"Gyr");
   options[OPT_AGE].iFileType = 2;
   fnRead[OPT_AGE] = &ReadAge;
 
   sprintf(options[OPT_ALBEDOGLOBAL].cName,"dAlbedoGlobal");
   sprintf(options[OPT_ALBEDOGLOBAL].cDescr,"Globally averaged albedo");
   sprintf(options[OPT_ALBEDOGLOBAL].cDefault,"0.3");
+  sprintf(options[OPT_ALBEDOGLOBAL].cDimension,"nd");
   options[OPT_ALBEDOGLOBAL].dDefault = 0;
   options[OPT_ALBEDOGLOBAL].bMultiFile = 1;
   options[OPT_ALBEDOGLOBAL].iType = 2;
@@ -3169,6 +3171,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ETA].cName,"dEta");
   sprintf(options[OPT_ETA].cDescr,"Variable Time Step Coefficient");
   sprintf(options[OPT_ETA].cDefault,"1");
+  sprintf(options[OPT_ETA].cDimension,"nd");
   options[OPT_ETA].dDefault = 1;
   options[OPT_ETA].iType = 2;
   options[OPT_ETA].iModuleBit = 0;
@@ -3179,36 +3182,39 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OUTPUTTIME].cName,"dOutputTime");
   sprintf(options[OPT_OUTPUTTIME].cDescr,"Output Interval");
   sprintf(options[OPT_OUTPUTTIME].cDefault,"1 year");
+  sprintf(options[OPT_OUTPUTTIME].cNeg,"Years");
+  sprintf(options[OPT_OUTPUTTIME].cDimension,"time");
   options[OPT_OUTPUTTIME].dDefault = YEARSEC;
   options[OPT_OUTPUTTIME].iType = 2;
   options[OPT_OUTPUTTIME].iModuleBit = 0;
   options[OPT_OUTPUTTIME].bNeg = 1;
   options[OPT_OUTPUTTIME].dNeg = YEARSEC;
-  sprintf(options[OPT_OUTPUTTIME].cNeg,"Years");
   options[OPT_OUTPUTTIME].iFileType = 2;
   fnRead[OPT_OUTPUTTIME] = &ReadOutputTime;
 
   sprintf(options[OPT_STOPTIME].cName,"dStopTime");
   sprintf(options[OPT_STOPTIME].cDescr,"Integration Stop Time");
   sprintf(options[OPT_STOPTIME].cDefault,"10 years");
+  sprintf(options[OPT_STOPTIME].cNeg,"Years");
+  sprintf(options[OPT_OUTPUTTIME].cDimension,"time");
   options[OPT_STOPTIME].dDefault = 10*YEARSEC;
   options[OPT_STOPTIME].iType = 2;
   options[OPT_STOPTIME].iModuleBit = 0;
   options[OPT_STOPTIME].bNeg = 1;
   options[OPT_STOPTIME].dNeg = YEARSEC;
-  sprintf(options[OPT_STOPTIME].cNeg,"Years");
   options[OPT_STOPTIME].iFileType = 2;
   fnRead[OPT_STOPTIME] = &ReadStopTime;
 
   sprintf(options[OPT_TIMESTEP].cName,"dTimeStep");
   sprintf(options[OPT_TIMESTEP].cDescr,"Integration Timestep");
   sprintf(options[OPT_TIMESTEP].cDefault,"1 year");
+  sprintf(options[OPT_TIMESTEP].cNeg,"Years");
+  sprintf(options[OPT_TIMESTEP].cDimension,"time");
   options[OPT_TIMESTEP].dDefault = YEARSEC;
   options[OPT_TIMESTEP].iType = 2;
   options[OPT_TIMESTEP].iModuleBit = 0;
   options[OPT_TIMESTEP].bNeg = 0;
   options[OPT_TIMESTEP].dNeg = YEARSEC;
-  sprintf(options[OPT_TIMESTEP].cNeg,"Years");
   options[OPT_TIMESTEP].iFileType = 2;
   fnRead[OPT_TIMESTEP] = &ReadTimeStep;
 
@@ -3294,6 +3300,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMAXECC].cDescr,
       "Maximum eccentricity value that halts ntegration");
   sprintf(options[OPT_HALTMAXECC].cDefault,"1");
+  sprintf(options[OPT_HALTMAXECC].cDimension,"nd");
   options[OPT_HALTMAXECC].dDefault = 1;
   options[OPT_HALTMAXECC].iType = 2;
   options[OPT_HALTMAXECC].iModuleBit = EQTIDE + DISTORB;
@@ -3305,6 +3312,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMAXMUTUALINC].cDescr,
       "Maximum mutual inclination value that halts integration");
   sprintf(options[OPT_HALTMAXMUTUALINC].cDefault,"0 [not checked]");
+  sprintf(options[OPT_HALTMAXMUTUALINC].cDimension,"angle");
   options[OPT_HALTMAXMUTUALINC].dDefault = 0;
   options[OPT_HALTMAXMUTUALINC].iType = 2;
   options[OPT_HALTMAXMUTUALINC].iModuleBit = SPINBODY + DISTORB;
@@ -3336,6 +3344,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMINECC].cName,"dHaltMinEcc");
   sprintf(options[OPT_HALTMINECC].cDescr,"Minimum Eccentricity Value that Halts Integration");
   sprintf(options[OPT_HALTMINECC].cDefault,"-1");
+  sprintf(options[OPT_HALTMINECC].cDimension,"nd");
   options[OPT_HALTMINECC].dDefault = -1;
   options[OPT_HALTMINECC].iType = 2;
   options[OPT_HALTMINECC].iModuleBit = EQTIDE + SPINBODY + DISTORB;
@@ -3346,6 +3355,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMINOBL].cName,"dHaltMinObl");
   sprintf(options[OPT_HALTMINOBL].cDescr,"Minimum Obliquity Value that Halts Integration");
   sprintf(options[OPT_HALTMINOBL].cDefault,"-1 degrees");
+  sprintf(options[OPT_HALTMINOBL].cDimension,"angle");
   options[OPT_HALTMINOBL].dDefault = -DEGRAD;
   options[OPT_HALTMINOBL].iType = 2;
   options[OPT_HALTMINOBL].bMultiFile = 1;
@@ -3357,10 +3367,11 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMINSEMI].cName,"dHaltMinSemi");
   sprintf(options[OPT_HALTMINSEMI].cDescr,"Minimum Semi-Major Axis Value that Halts Integration");
   sprintf(options[OPT_HALTMINSEMI].cDefault,"0");
+  sprintf(options[OPT_HALTMINSEMI].cNeg,"au");
+  sprintf(options[OPT_HALTMINSEMI].cDimension,"length");
   options[OPT_HALTMINSEMI].dDefault = 0;
   options[OPT_HALTMINSEMI].iType = 2;
   options[OPT_HALTMINSEMI].dNeg = AUM;
-  sprintf(options[OPT_HALTMINSEMI].cNeg,"AU");
   options[OPT_HALTMINSEMI].iModuleBit = EQTIDE + SPINBODY;
   options[OPT_HALTMINSEMI].bNeg = 1;
   options[OPT_HALTMINSEMI].iFileType = 2;
@@ -3369,6 +3380,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTPOSDEDT].cName,"bHaltPosDeDt");
   sprintf(options[OPT_HALTPOSDEDT].cDescr,"Halt if de/dt > 0?");
   sprintf(options[OPT_HALTPOSDEDT].cDefault,"0");
+  sprintf(options[OPT_HALTPOSDEDT].cDimension,"time^-1");
   options[OPT_HALTPOSDEDT].iType= 0;
   options[OPT_HALTPOSDEDT].iModuleBit = EQTIDE + SPINBODY + DISTORB;
   options[OPT_HALTPOSDEDT].bNeg = 0;
@@ -3384,6 +3396,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HECC].cName,"dHecc");
   sprintf(options[OPT_HECC].cDescr,"Poincare's h -- Unsupported!");
   sprintf(options[OPT_HECC].cDefault,"-1");
+  sprintf(options[OPT_HECC].cDimension,"nd");
   options[OPT_HECC].dDefault = -1;
   options[OPT_HECC].iType = 2;
   options[OPT_HECC].iModuleBit = DISTORB + SPINBODY;
@@ -3443,7 +3456,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_LOGFILE].cName,"sLogFile");
   sprintf(options[OPT_LOGFILE].cDescr,"Log File Name");
-  sprintf(options[OPT_LOGFILE].cDefault,"tide.log");
+
   options[OPT_LOGFILE].iType = 3;
   options[OPT_LOGFILE].iModuleBit = 0;
   options[OPT_LOGFILE].bNeg = 0;
@@ -3453,6 +3466,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LONGP].cName,"dLongP");
   sprintf(options[OPT_LONGP].cDescr,"Longitude of pericenter of planet's orbit");
   sprintf(options[OPT_LONGP].cDefault,"0");
+  sprintf(options[OPT_LONGP].cDimension,"angle");
   options[OPT_LONGP].dDefault = 0.0;
   options[OPT_LONGP].iType = 2;
   options[OPT_LONGP].bMultiFile = 1;
@@ -3464,16 +3478,18 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LUMINOSITY].cName,"dLuminosity");
   sprintf(options[OPT_LUMINOSITY].cDescr,"Initial Luminosity");
   sprintf(options[OPT_LUMINOSITY].cDefault,"0");
+  sprintf(options[OPT_LUMINOSITY].cNeg,"LSUN");
+  sprintf(options[OPT_LUMINOSITY].cDimension,"energy/time");
   options[OPT_LUMINOSITY].dDefault = 0;
   options[OPT_LUMINOSITY].iType = 0;
   options[OPT_LUMINOSITY].bMultiFile = 1;
   options[OPT_LUMINOSITY].dNeg = LSUN;
-  sprintf(options[OPT_LUMINOSITY].cNeg,"LSUN");
   fnRead[OPT_LUMINOSITY] = &ReadLuminosity;
 
   sprintf(options[OPT_LXUV].cName,"dLXUV");
   sprintf(options[OPT_LXUV].cDescr,"Total XUV Luminosity -- Unsupported!");
   sprintf(options[OPT_LXUV].cDefault,"-1");
+  sprintf(options[OPT_LXUV].cDimension,"energy/time");
   options[OPT_LXUV].dDefault = -1;
   options[OPT_LXUV].iType = 2;
   options[OPT_LXUV].iModuleBit = STELLAR;
@@ -3490,6 +3506,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MINVALUE].cName,"dMinValue");
   sprintf(options[OPT_MINVALUE].cDescr,"Minimum Non-Zero Value of Eccentricity and Obliquities");
   sprintf(options[OPT_MINVALUE].cDefault,"0");
+  sprintf(options[OPT_MINVALUE].cDimension,"nd");
   options[OPT_MINVALUE].dDefault = 0;
   options[OPT_MINVALUE].iType = 2;
   options[OPT_MINVALUE].iModuleBit = EQTIDE + SPINBODY + DISTORB + POISE + DISTROT;
@@ -3572,6 +3589,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ORBECC].cName,"dEcc");
   sprintf(options[OPT_ORBECC].cDescr,"Orbital Eccentricity");
   sprintf(options[OPT_ORBECC].cDefault,"0");
+  sprintf(options[OPT_ORBECC].cDimension,"nd");
   options[OPT_ORBECC].dDefault = 0;
   options[OPT_ORBECC].iType = 2;
   options[OPT_ORBECC].iModuleBit = 0;
@@ -3582,10 +3600,11 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ORBMEANMOTION].cName,"dMeanMotion");
   sprintf(options[OPT_ORBMEANMOTION].cDescr,"Orbital Mean Motion");
   sprintf(options[OPT_ORBMEANMOTION].cDefault,"1 /yr");
+  sprintf(options[OPT_ORBMEANMOTION].cNeg,"/Year");
+  sprintf(options[OPT_ORBMEANMOTION].cDimension,"time^-1");
   options[OPT_ORBMEANMOTION].dDefault = 1./YEARSEC;
   options[OPT_ORBMEANMOTION].iType = 2;
   options[OPT_ORBMEANMOTION].dNeg = 1./YEARSEC;
-  sprintf(options[OPT_ORBMEANMOTION].cNeg,"/Year");
   options[OPT_ORBMEANMOTION].iModuleBit = 0;
   options[OPT_ORBMEANMOTION].bNeg = 1;
   options[OPT_ORBMEANMOTION].iFileType = 1;
@@ -3594,10 +3613,11 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ORBPER].cName,"dOrbPeriod");
   sprintf(options[OPT_ORBPER].cDescr,"Orbital Period");
   sprintf(options[OPT_ORBPER].cDefault,"1 year");
+  sprintf(options[OPT_ORBPER].cNeg,"Days");
+  sprintf(options[OPT_ORBPER].cDimension,"time");
   options[OPT_ORBPER].dDefault = YEARSEC;
   options[OPT_ORBPER].iType = 2;
   options[OPT_ORBPER].dNeg = DAYSEC;
-  sprintf(options[OPT_ORBPER].cNeg,"Days");
   options[OPT_ORBPER].iModuleBit = 0;
   options[OPT_ORBPER].bNeg = 1;
   options[OPT_ORBPER].iFileType = 1;
@@ -3606,11 +3626,12 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ORBSEMI].cName,"dSemi");
   sprintf(options[OPT_ORBSEMI].cDescr,"Semi-Major Axis");
   sprintf(options[OPT_ORBSEMI].cDefault,"1 AU");
+  sprintf(options[OPT_ORBSEMI].cNeg,"AU");
+  sprintf(options[OPT_ORBSEMI].cDimension,"length");
   options[OPT_ORBSEMI].dDefault = AUM;
   options[OPT_ORBSEMI].iType = 2;
   options[OPT_ORBSEMI].dNeg = AUM;
   options[OPT_ORBSEMI].bMultiFile = 1;
-  sprintf(options[OPT_ORBSEMI].cNeg,"AU");
   options[OPT_ORBSEMI].iModuleBit = 0;
   options[OPT_ORBSEMI].bNeg = 1;
   options[OPT_ORBSEMI].iFileType = 1;
@@ -3619,11 +3640,12 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_INC].cName,"dInc");
   sprintf(options[OPT_INC].cDescr,"Inclination of planet's orbital plane");
   sprintf(options[OPT_INC].cDefault,"0");
+  sprintf(options[OPT_INC].cNeg,"Degrees");
+  sprintf(options[OPT_INC].cDimension,"angle");
   options[OPT_INC].dDefault = 0.0;
   options[OPT_INC].iType = 2;
   options[OPT_INC].bMultiFile = 1;
-//   options[OPT_INC].dNeg = DEGRAD;
-//   sprintf(options[OPT_INC].cNeg,"Degrees");
+  options[OPT_INC].dNeg = DEGRAD;
   options[OPT_INC].iModuleBit = DISTORB + SPINBODY;
   options[OPT_INC].bNeg = 0;
   options[OPT_INC].iFileType = 1;
@@ -3632,11 +3654,12 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ARGP].cName,"dArgP");
   sprintf(options[OPT_ARGP].cDescr,"Argument of pericenter of planet's orbit");
   sprintf(options[OPT_ARGP].cDefault,"0");
+  sprintf(options[OPT_ARGP].cNeg,"Degrees");
+  sprintf(options[OPT_ARGP].cDimension,"angle");
   options[OPT_ARGP].dDefault = 0.0;
   options[OPT_ARGP].iType = 2;
   options[OPT_ARGP].bMultiFile = 1;
-//   options[OPT_ARGP].dNeg = DEGRAD;
-//   sprintf(options[OPT_ARGP].cNeg,"Degrees");
+  options[OPT_ARGP].dNeg = DEGRAD;
   options[OPT_ARGP].iModuleBit = DISTORB + SPINBODY + POISE;
   options[OPT_ARGP].bNeg = 0;
   options[OPT_ARGP].iFileType = 1;
@@ -3649,11 +3672,12 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PRECA].cName,"dPrecA");
   sprintf(options[OPT_PRECA].cDescr,"Planet's precession angle");
   sprintf(options[OPT_PRECA].cDefault,"0");
+  sprintf(options[OPT_LONGA].cNeg,"Degrees");
+  sprintf(options[OPT_LONGA].cDimension,"angle");
   options[OPT_PRECA].dDefault = 0.0;
   options[OPT_PRECA].iType = 2;
   options[OPT_PRECA].bMultiFile = 1;
-//   options[OPT_LONGA].dNeg = DEGRAD;
-//   sprintf(options[OPT_LONGA].cNeg,"Degrees");
+  options[OPT_LONGA].dNeg = DEGRAD;
   options[OPT_PRECA].iModuleBit = SPINBODY + DISTROT + POISE;
   options[OPT_PRECA].bNeg = 0;
   options[OPT_PRECA].iFileType = 1;
@@ -3662,11 +3686,12 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LONGA].cName,"dLongA");
   sprintf(options[OPT_LONGA].cDescr,"Longitude of ascending node of planet's orbital plane");
   sprintf(options[OPT_LONGA].cDefault,"0");
+  sprintf(options[OPT_LONGA].cNeg,"Degrees");
+  sprintf(options[OPT_LONGA].cDimension,"angle");
   options[OPT_LONGA].dDefault = 0.0;
   options[OPT_LONGA].iType = 2;
   options[OPT_LONGA].bMultiFile = 1;
-//   options[OPT_LONGA].dNeg = DEGRAD;
-//   sprintf(options[OPT_LONGA].cNeg,"Degrees");
+  options[OPT_LONGA].dNeg = DEGRAD;
   options[OPT_LONGA].iModuleBit = SPINBODY + DISTROT + POISE;
   options[OPT_LONGA].bNeg = 0;
   options[OPT_LONGA].iFileType = 1;
@@ -3675,6 +3700,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DYNELLIP].cName,"dDynEllip");
   sprintf(options[OPT_DYNELLIP].cDescr,"Planet's dynamical ellipticity");
   sprintf(options[OPT_DYNELLIP].cDefault,"0.00328");
+  sprintf(options[OPT_DYNELLIP].cDimension,"nd");
   options[OPT_DYNELLIP].dDefault = 0.00328;
   options[OPT_DYNELLIP].iType = 2;
   options[OPT_DYNELLIP].bMultiFile = 1;
@@ -3697,40 +3723,44 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SURFACEWATERMASS].cName,"dSurfWaterMass");
   sprintf(options[OPT_SURFACEWATERMASS].cDescr,"Initial Surface Water Mass");
   sprintf(options[OPT_SURFACEWATERMASS].cDefault,"0");
+  sprintf(options[OPT_SURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
+  sprintf(options[OPT_SURFACEWATERMASS].cDimension,"mass");
   options[OPT_SURFACEWATERMASS].dDefault = 0;
   options[OPT_SURFACEWATERMASS].iType = 2;
   options[OPT_SURFACEWATERMASS].bMultiFile = 1;
   options[OPT_SURFACEWATERMASS].dNeg = TOMASS;
-  sprintf(options[OPT_SURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
   fnRead[OPT_SURFACEWATERMASS] = &ReadSurfaceWaterMass;
 
   sprintf(options[OPT_MINSURFACEWATERMASS].cName,"dMinSurfWaterMass");
   sprintf(options[OPT_MINSURFACEWATERMASS].cDescr,"Minimum Surface Water Mass");
   sprintf(options[OPT_MINSURFACEWATERMASS].cDefault,"1.e-5 TO");
+  sprintf(options[OPT_MINSURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
+  sprintf(options[OPT_MINSURFACEWATERMASS].cDimension,"mass");
   options[OPT_MINSURFACEWATERMASS].dDefault = 1.e-5*TOMASS;
   options[OPT_MINSURFACEWATERMASS].iType = 2;
   options[OPT_MINSURFACEWATERMASS].dNeg = TOMASS;
   options[OPT_MINSURFACEWATERMASS].bMultiFile = 1;
-  sprintf(options[OPT_MINSURFACEWATERMASS].cNeg,"Terrestrial Oceans (TO)");
   fnRead[OPT_MINSURFACEWATERMASS] = &ReadMinSurfaceWaterMass;
 
   sprintf(options[OPT_ENVELOPEMASS].cName,"dEnvelopeMass");
   sprintf(options[OPT_ENVELOPEMASS].cDescr,"Initial Envelope Mass");
   sprintf(options[OPT_ENVELOPEMASS].cDefault,"0");
+  sprintf(options[OPT_ENVELOPEMASS].cNeg,"Mearth");
+  sprintf(options[OPT_ENVELOPEMASS].cDimension,"mass");
   options[OPT_ENVELOPEMASS].dDefault = 0;
   options[OPT_ENVELOPEMASS].iType = 2;
   options[OPT_ENVELOPEMASS].bMultiFile = 1;
   options[OPT_ENVELOPEMASS].dNeg = MEARTH;
-  sprintf(options[OPT_ENVELOPEMASS].cNeg,"Mearth");
   fnRead[OPT_ENVELOPEMASS] = &ReadEnvelopeMass;
 
   sprintf(options[OPT_MINENVELOPEMASS].cName,"dMinEnvelopeMass");
   sprintf(options[OPT_MINENVELOPEMASS].cDescr,"Minimum Envelope Mass");
   sprintf(options[OPT_MINENVELOPEMASS].cDefault,"1.e-8 Earth");
+  sprintf(options[OPT_MINENVELOPEMASS].cNeg,"Mearth");
+  sprintf(options[OPT_MINENVELOPEMASS].cDimension,"mass");
   options[OPT_MINENVELOPEMASS].dDefault = 1.e-8*MEARTH;
   options[OPT_MINENVELOPEMASS].iType = 2;
   options[OPT_MINENVELOPEMASS].dNeg = MEARTH;
-  sprintf(options[OPT_MINENVELOPEMASS].cNeg,"Mearth");
   fnRead[OPT_MINENVELOPEMASS] = &ReadMinEnvelopeMass;
 
   /*
@@ -3742,11 +3772,12 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MASS].cName,"dMass");
   sprintf(options[OPT_MASS].cDescr,"Mass");
   sprintf(options[OPT_MASS].cDefault,"1 Earth Mass");
+  sprintf(options[OPT_MASS].cNeg,"Mearth");
+  sprintf(options[OPT_MASS].cDimension,"mass");
   options[OPT_MASS].dDefault = MEARTH;
   options[OPT_MASS].iType = 2;
   options[OPT_MASS].bMultiFile = 1;
   options[OPT_MASS].dNeg = MEARTH;
-  sprintf(options[OPT_MASS].cNeg,"Mearth");
   options[OPT_MASS].iModuleBit = 0;
   options[OPT_MASS].bNeg = 1;
   options[OPT_MASS].iFileType = 1;
@@ -3776,6 +3807,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OBL].cName,"dObliquity");
   sprintf(options[OPT_OBL].cDescr,"Obliquity");
   sprintf(options[OPT_OBL].cDefault,"0");
+  sprintf(options[OPT_OBL].cDimension,"angle");
   options[OPT_OBL].dDefault = 0;
   options[OPT_OBL].iType = 2;
   options[OPT_OBL].bMultiFile = 1;
@@ -3787,6 +3819,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_COSOBL].cName,"dCosObl");
   sprintf(options[OPT_COSOBL].cDescr,"Coine of the Obliquity");
   sprintf(options[OPT_COSOBL].cDefault,"0.5");
+  sprintf(options[OPT_COSOBL].cDimension,"nd");
   options[OPT_COSOBL].dDefault = 0.5;
   options[OPT_COSOBL].iType = 2;
   options[OPT_COSOBL].bMultiFile = 1;
@@ -3803,11 +3836,12 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_RADIUS].cName,"dRadius");
   sprintf(options[OPT_RADIUS].cDescr,"Radius");
   sprintf(options[OPT_RADIUS].cDefault,"1 Earth Radius");
+  sprintf(options[OPT_RADIUS].cNeg,"Rearth");
+  sprintf(options[OPT_RADIUS].cDimension,"length");
   options[OPT_RADIUS].dDefault = REARTH;
   options[OPT_RADIUS].iType = 2;
   options[OPT_RADIUS].bMultiFile = 1;
   options[OPT_RADIUS].dNeg = REARTH;
-  sprintf(options[OPT_RADIUS].cNeg,"Rearth");
   options[OPT_RADIUS].iModuleBit = 0;
   options[OPT_RADIUS].bNeg = 1;
   options[OPT_RADIUS].iFileType = 1;
@@ -3816,6 +3850,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_RG].cName,"dRadGyra");
   sprintf(options[OPT_RG].cDescr,"Radius of Gyration");
   sprintf(options[OPT_RG].cDefault,"0.5");
+  sprintf(options[OPT_RG].cDimension,"nd");
   options[OPT_RG].dDefault = 0.5;
   options[OPT_RG].iType = 2;
   options[OPT_RG].bMultiFile = 1;
@@ -3827,11 +3862,12 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ROTPER].cName,"dRotPeriod");
   sprintf(options[OPT_ROTPER].cDescr,"Rotation Period");
   sprintf(options[OPT_ROTPER].cDefault,"1 Day");
+  sprintf(options[OPT_ROTPER].cNeg,"Days");
+  sprintf(options[OPT_ROTPER].cDimension,"time");
   options[OPT_ROTPER].dDefault = DAYSEC;
   options[OPT_ROTPER].iType = 2;
   options[OPT_ROTPER].bMultiFile = 1;
   options[OPT_ROTPER].dNeg = DAYSEC;
-  sprintf(options[OPT_ROTPER].cNeg,"Days");
   options[OPT_ROTPER].iModuleBit = 0;
   options[OPT_ROTPER].bNeg = 1;
   options[OPT_ROTPER].iFileType = 1;
@@ -3840,11 +3876,12 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ROTRATE].cName,"dRotRate");
   sprintf(options[OPT_ROTRATE].cDescr,"Rotational Angular Frequency");
   sprintf(options[OPT_ROTRATE].cDefault,"2*pi/day");
+  sprintf(options[OPT_ROTRATE].cNeg,"/Day");
+  sprintf(options[OPT_ROTRATE].cDimension,"time^-1");
   options[OPT_ROTRATE].dDefault = 2*PI/DAYSEC;
   options[OPT_ROTRATE].iType = 2;
   options[OPT_ROTRATE].bMultiFile = 1;
   options[OPT_ROTRATE].dNeg = 1./DAYSEC;
-  sprintf(options[OPT_ROTRATE].cNeg,"/Day");
   options[OPT_ROTRATE].iModuleBit = 0;
   options[OPT_ROTRATE].bNeg = 1;
   options[OPT_ROTRATE].iFileType = 1;
@@ -3853,11 +3890,12 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ROTVEL].cName,"dRotVel");
   sprintf(options[OPT_ROTVEL].cDescr,"Rotational Velocity");
   sprintf(options[OPT_ROTVEL].cDefault,"0");
+  sprintf(options[OPT_ROTVEL].cNeg,"km/s");
+  sprintf(options[OPT_ROTVEL].cDimension,"mass/time");
   options[OPT_ROTVEL].dDefault = 0;
   options[OPT_ROTVEL].iType = 2;
   options[OPT_ROTVEL].bMultiFile = 1;
   options[OPT_ROTVEL].dNeg = 1e5;
-  sprintf(options[OPT_ROTVEL].cNeg,"km/s");
   options[OPT_ROTVEL].iModuleBit = 0;
   options[OPT_ROTVEL].bNeg = 1;
   options[OPT_ROTVEL].iFileType = 1;
@@ -3912,6 +3950,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TEMPERATURE].cName,"dTemperature");
   sprintf(options[OPT_TEMPERATURE].cDescr,"Initial effective temperature");
   sprintf(options[OPT_TEMPERATURE].cDefault,"TSUN");
+  sprintf(options[OPT_TEMPERATURE].cDimension,"temperature");
   options[OPT_TEMPERATURE].dDefault = TSUN;
   options[OPT_TEMPERATURE].iType = 0;
   options[OPT_TEMPERATURE].bMultiFile = 1;
@@ -3948,11 +3987,11 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCUMAN].cName,"dViscUMan");
   sprintf(options[OPT_VISCUMAN].cDescr,"Upper mantle viscosity");
   sprintf(options[OPT_VISCUMAN].cDefault,"0");
+  sprintf(options[OPT_VISCUMAN].cDimension,"length^2/time");
   options[OPT_VISCUMAN].dDefault = 0;
   options[OPT_VISCUMAN].iType = 2;
   options[OPT_VISCUMAN].bMultiFile = 1;
-//   options[OPT_VISCUMAN].bNeg = 0;
-options[OPT_VISCUMAN].bNeg = 0;
+  options[OPT_VISCUMAN].bNeg = 0;
   options[OPT_VISCUMAN].iModuleBit = THERMINT + DISTROT;
   fnRead[OPT_VISCUMAN] = &ReadViscUMan;
   options[OPT_VISCUMAN].iFileType = 1;

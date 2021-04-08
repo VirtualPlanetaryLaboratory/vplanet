@@ -954,7 +954,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TSURF].cName,"dTSurf");
   sprintf(options[OPT_TSURF].cDescr,"Initial Surface Temperature");
   sprintf(options[OPT_TSURF].cDefault,"300 K");
-  sprintf(options[OPT_TSURF].cUnits,"temperature");
+  sprintf(options[OPT_TSURF].cDimension,"temperature");
   options[OPT_TSURF].iType = 2;
   options[OPT_TSURF].bMultiFile = 1;
   options[OPT_TSURF].dNeg = 1;  //Not sure about this??
@@ -966,7 +966,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TMAN].cName,"dTMan");
   sprintf(options[OPT_TMAN].cDescr,"Initial Mantle Temperature");
   sprintf(options[OPT_TMAN].cDefault,"3000 K");
-  sprintf(options[OPT_TMAN].cUnits,"temperature");
+  sprintf(options[OPT_TMAN].cDimension,"temperature");
   options[OPT_TMAN].iType = 2;
   options[OPT_TMAN].bMultiFile = 1;
   options[OPT_TMAN].dNeg = 3000.0;  //Not sure about this??
@@ -978,7 +978,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TCORE].cName,"dTCore");
   sprintf(options[OPT_TCORE].cDescr,"Initial Core Temperature");
   sprintf(options[OPT_TCORE].cDefault,"6000 K");
-  sprintf(options[OPT_TCORE].cUnits,"temperature");
+  sprintf(options[OPT_TCORE].cDimension,"temperature");
   options[OPT_TCORE].iType = 2;
   options[OPT_TCORE].bMultiFile = 1;
   options[OPT_TCORE].dNeg = 6000.0;  //Not sure about this??
@@ -1167,7 +1167,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PRESSWIND].cName,"dPresSWind");
   sprintf(options[OPT_PRESSWIND].cDescr,"Stellar Wind Pressure at body");
   sprintf(options[OPT_PRESSWIND].cDefault,"Default is EPRESSWIND");
-  sprintf(options[OPT_PRESSWIND].cUnits,"pressure");
+  sprintf(options[OPT_PRESSWIND].cDimension,"pressure");
   options[OPT_PRESSWIND].iType = 2;
   options[OPT_PRESSWIND].bMultiFile = 1;
   options[OPT_PRESSWIND].dNeg = EPRESSWIND;
@@ -1179,7 +1179,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMINTMAN].cName,"dHaltMinTMan");
   sprintf(options[OPT_HALTMINTMAN].cDescr,"Halt at Minimum Mantle Temperature");
   sprintf(options[OPT_HALTMINTMAN].cDefault,"0 K");
-  sprintf(options[OPT_HALTMINTMAN].cUnits,"temperature");
+  sprintf(options[OPT_HALTMINTMAN].cDimension,"temperature");
   options[OPT_HALTMINTMAN].iType = 2;
   options[OPT_HALTMINTMAN].bMultiFile = 1;
   options[OPT_HALTMINTMAN].dNeg = 1;
@@ -1191,7 +1191,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMINTCORE].cName,"dHaltMinTCore");
   sprintf(options[OPT_HALTMINTCORE].cDescr,"Halt at Minimum Core Temperature");
   sprintf(options[OPT_HALTMINTCORE].cDefault,"0 K");
-  sprintf(options[OPT_HALTMINTCORE].cUnits,"temperature");
+  sprintf(options[OPT_HALTMINTCORE].cDimension,"temperature");
   options[OPT_HALTMINTCORE].iType = 2;
   options[OPT_HALTMINTCORE].bMultiFile = 1;
   options[OPT_HALTMINTCORE].dNeg = 1;
@@ -1204,7 +1204,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ACTVISCMAN].cName,"dActViscMan");
   sprintf(options[OPT_ACTVISCMAN].cDescr,"Mantle viscosity activation energy");
   sprintf(options[OPT_ACTVISCMAN].cDefault,"Default is ACTVISCMAN");
-  sprintf(options[OPT_ACTVISCMAN].cUnits,"xxx");
+  sprintf(options[OPT_ACTVISCMAN].cDimension,"xxx");
   options[OPT_ACTVISCMAN].iType = 2;
   options[OPT_ACTVISCMAN].bMultiFile = 1;
   options[OPT_ACTVISCMAN].dNeg = ACTVISCMAN;
@@ -1227,7 +1227,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_STIFFNESS].cName,"dStiffness");
   sprintf(options[OPT_STIFFNESS].cDescr,"Effective stiffness of mantle");
   sprintf(options[OPT_STIFFNESS].cDefault,"Default is STIFFNESS");
-  sprintf(options[OPT_STIFFNESS].cUnits,"xxx");
+  sprintf(options[OPT_STIFFNESS].cDimension,"xxx");
   options[OPT_STIFFNESS].iType = 2;
   options[OPT_STIFFNESS].bMultiFile = 1;
   options[OPT_STIFFNESS].dNeg = STIFFNESS;
@@ -1294,7 +1294,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ELECCONDCORE].cName,"dElecCondCore");
   sprintf(options[OPT_ELECCONDCORE].cDescr,"Electrical conductivity of core");
   sprintf(options[OPT_ELECCONDCORE].cDefault,"Default is ELECCONDCORE");
-  sprintf(options[OPT_ELECCONDCORE].cUnits,"xxx");
+  sprintf(options[OPT_ELECCONDCORE].cDimension,"xxx");
   options[OPT_ELECCONDCORE].iType = 2;
   options[OPT_ELECCONDCORE].bMultiFile = 1;
   options[OPT_ELECCONDCORE].dNeg = ELECCONDCORE;

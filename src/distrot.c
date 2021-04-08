@@ -158,7 +158,7 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PRECRATE].cName,"dPrecRate");
   sprintf(options[OPT_PRECRATE].cDescr,"Fixed rate of axial precession (rad/s)");
   sprintf(options[OPT_PRECRATE].cDefault,"7.7261e-12"); // XXX What valule is this?
-  sprintf(options[OPT_PRECRATE].cUnits,"angle/time");
+  sprintf(options[OPT_PRECRATE].cDimension,"angle/time");
   options[OPT_PRECRATE].dDefault = 7.7261e-12;
   options[OPT_PRECRATE].iType = 2;
   options[OPT_PRECRATE].bMultiFile = 1;

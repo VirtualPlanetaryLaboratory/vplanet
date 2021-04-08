@@ -273,7 +273,7 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       PrintFileTypes(options->iFileType);
       printf("\n");
       printf("**Default value**   %s\n", options->cDefault);
-      printf("**Unit Type**       %s\n", options->cUnits);
+      printf("**Dimension(s)**    %s\n", options->cDimension);
       if (memcmp(options->cValues,"null",4)) {
         printf("**Allowed values**  %s\n", options->cValues);
       }

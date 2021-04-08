@@ -1704,7 +1704,7 @@ struct OPTIONS {
   char cValues[OPTDESCR];      /**< Description of permitted values / ranges */
   int iType;                   /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for array. */
   char cDefault[OPTDESCR];     /**< Description of Default Value */
-  char cUnits[OPTDESCR];       /**< Units for the options */
+  char cDimension[OPTDESCR];   /**< Qualitative description of the option */
   double dDefault;             /**< Default Value */
   int iModuleBit;              /**< Bitwise sum of modules permitted to read option */
   int bMultiFile;              /**< Option Permitted in Multiple Input Files? */

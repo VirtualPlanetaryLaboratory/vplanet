@@ -455,7 +455,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_GALACDENSITY].cName,"dGalacDensity");
   sprintf(options[OPT_GALACDENSITY].cDescr,"Density of galactic environment");
   sprintf(options[OPT_GALACDENSITY].cDefault,"0.102"); //need to find updated value
-  sprintf(options[OPT_GALACDENSITY].cUnits,"mass/length^3");
+  sprintf(options[OPT_GALACDENSITY].cDimension,"mass/length^3");
   options[OPT_GALACDENSITY].dDefault = 0.102;
   options[OPT_GALACDENSITY].iType = 2;
   options[OPT_GALACDENSITY].bMultiFile = 0;
@@ -472,7 +472,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ENCOUNTERRAD].cName,"dEncounterRad");
   sprintf(options[OPT_ENCOUNTERRAD].cDescr,"Radius at which stellar encounters occur");
   sprintf(options[OPT_ENCOUNTERRAD].cDefault,"206265 AU");
-  sprintf(options[OPT_ENCOUNTERRAD].cUnits,"length");
+  sprintf(options[OPT_ENCOUNTERRAD].cDimension,"length");
   options[OPT_ENCOUNTERRAD].dDefault = 206265.0*AUM;
   options[OPT_ENCOUNTERRAD].iType = 2;
   options[OPT_ENCOUNTERRAD].bMultiFile = 0;
@@ -481,7 +481,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_RFORM].cName,"dRForm");
   sprintf(options[OPT_RFORM].cDescr,"Galactic formation radius");
   sprintf(options[OPT_RFORM].cDefault,"4.5 kpc");
-  sprintf(options[OPT_RFORM].cUnits,"length");
+  sprintf(options[OPT_RFORM].cDimension,"length");
   options[OPT_RFORM].dDefault = 4.5;
   options[OPT_RFORM].iType = 2;
   options[OPT_RFORM].bMultiFile = 0;
@@ -490,7 +490,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TMIGRATION].cName,"dTMigration");
   sprintf(options[OPT_TMIGRATION].cDescr,"Time of radial migration");
   sprintf(options[OPT_TMIGRATION].cDefault,"3 Gy");
-  sprintf(options[OPT_TMIGRATION].cUnits,"time");
+  sprintf(options[OPT_TMIGRATION].cDimension,"time");
   options[OPT_TMIGRATION].dDefault = 3e9*YEARSEC;
   options[OPT_TMIGRATION].iType = 2;
   options[OPT_TMIGRATION].bMultiFile = 0;
@@ -509,7 +509,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_GASDENSITY].cName,"dGasDensity");
   sprintf(options[OPT_GASDENSITY].cDescr,"Local ISM density");
   sprintf(options[OPT_GASDENSITY].cDefault,"0.05 Msun pc^3");
-  sprintf(options[OPT_GASDENSITY].cUnits,"mass/length^3");
+  sprintf(options[OPT_GASDENSITY].cDimension,"mass/length^3");
   options[OPT_GASDENSITY].dDefault = 0.05;
   options[OPT_GASDENSITY].iType = 2;
   options[OPT_GASDENSITY].bMultiFile = 0;
@@ -518,7 +518,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DMDENSITY].cName,"dDMDensity");
   sprintf(options[OPT_DMDENSITY].cDescr,"Local dark matter density");
   sprintf(options[OPT_DMDENSITY].cDefault,"0.01 Msun pc^3");
-  sprintf(options[OPT_DMDENSITY].cUnits,"mass/length^3");
+  sprintf(options[OPT_DMDENSITY].cDimension,"mass/length^3");
   options[OPT_DMDENSITY].dDefault = 0.01;
   options[OPT_DMDENSITY].iType = 2;
   options[OPT_DMDENSITY].bMultiFile = 0;
@@ -527,7 +527,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_STARSCALEL].cName,"dStarScaleL");
   sprintf(options[OPT_STARSCALEL].cDescr,"Stellar radial scale length in MW");
   sprintf(options[OPT_STARSCALEL].cDefault,"2.4 kpc");
-  sprintf(options[OPT_STARSCALEL].cUnits,"length");
+  sprintf(options[OPT_STARSCALEL].cDimension,"length");
   options[OPT_STARSCALEL].dDefault = 2.4;
   options[OPT_STARSCALEL].iType = 2;
   options[OPT_STARSCALEL].bMultiFile = 0;
@@ -553,7 +553,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TIMEEVOLVELDISP].cName,"bTimeEvolVelDisp");
   sprintf(options[OPT_TIMEEVOLVELDISP].cDescr,"Scale velocity dispersion of stars with sqrt(t)?");
   sprintf(options[OPT_TIMEEVOLVELDISP].cDefault,"1");
-  sprintf(options[OPT_TIMEEVOLVELDISP].cUnits,"length/time");
+  sprintf(options[OPT_TIMEEVOLVELDISP].cDimension,"length/time");
   options[OPT_TIMEEVOLVELDISP].dDefault = 1;
   options[OPT_TIMEEVOLVELDISP].iType = 0;
   options[OPT_TIMEEVOLVELDISP].bMultiFile = 0;
@@ -578,7 +578,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MINSTELLARAPPROACH].cName,"dMinStellarApproach");
   sprintf(options[OPT_MINSTELLARAPPROACH].cDescr,"Minimum close approach distance to primary");
   sprintf(options[OPT_MINSTELLARAPPROACH].cDefault,"1 AU");
-  sprintf(options[OPT_MINSTELLARAPPROACH].cUnits,"length");
+  sprintf(options[OPT_MINSTELLARAPPROACH].cDimension,"length");
   options[OPT_MINSTELLARAPPROACH].dDefault = AUM;
   options[OPT_MINSTELLARAPPROACH].iType = 2;
   options[OPT_MINSTELLARAPPROACH].bMultiFile = 0;
@@ -597,7 +597,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBINSEMI].cName,"dHostBinSemi");
   sprintf(options[OPT_HOSTBINSEMI].cDescr,"Semi-major of host binary");
   sprintf(options[OPT_HOSTBINSEMI].cDefault,"17.57 AU");
-  sprintf(options[OPT_HOSTBINSEMI].cUnits,"length");
+  sprintf(options[OPT_HOSTBINSEMI].cDimension,"length");
   options[OPT_HOSTBINSEMI].dDefault = 17.57*AUM;
   options[OPT_HOSTBINSEMI].iType = 2;
   options[OPT_HOSTBINSEMI].bMultiFile = 0;
@@ -608,7 +608,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBININC].cName,"dHostBinInc");
   sprintf(options[OPT_HOSTBININC].cDescr,"inclination of host binary");
   sprintf(options[OPT_HOSTBININC].cDefault,"60.0 deg");
-  sprintf(options[OPT_HOSTBININC].cUnits,"angle");
+  sprintf(options[OPT_HOSTBININC].cDimension,"angle");
   options[OPT_HOSTBININC].dDefault = 60.0*DEGRAD;
   options[OPT_HOSTBININC].iType = 2;
   options[OPT_HOSTBININC].bMultiFile = 0;
@@ -617,7 +617,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBINARGP].cName,"dHostBinArgP");
   sprintf(options[OPT_HOSTBINARGP].cDescr,"Arg periapse of host binary");
   sprintf(options[OPT_HOSTBINARGP].cDefault,"0.0");
-  sprintf(options[OPT_HOSTBINARGP].cUnits,"angle");
+  sprintf(options[OPT_HOSTBINARGP].cDimension,"angle");
   options[OPT_HOSTBINARGP].dDefault = 0.0;
   options[OPT_HOSTBINARGP].iType = 2;
   options[OPT_HOSTBINARGP].bMultiFile = 0;
@@ -626,7 +626,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBINLONGA].cName,"dHostBinLongA");
   sprintf(options[OPT_HOSTBINLONGA].cDescr,"Long of ascending node of host binary");
   sprintf(options[OPT_HOSTBINLONGA].cDefault,"0.0");
-  sprintf(options[OPT_HOSTBINLONGA].cUnits,"angle");
+  sprintf(options[OPT_HOSTBINLONGA].cDimension,"angle");
   options[OPT_HOSTBINLONGA].dDefault = 0.0;
   options[OPT_HOSTBINLONGA].iType = 2;
   options[OPT_HOSTBINLONGA].bMultiFile = 0;
@@ -635,7 +635,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBINMASS1].cName,"dHostBinMass1");
   sprintf(options[OPT_HOSTBINMASS1].cDescr,"mass of larger host binary star");
   sprintf(options[OPT_HOSTBINMASS1].cDefault,"1.1 Msun");
-  sprintf(options[OPT_HOSTBINMASS1].cUnits,"mass");
+  sprintf(options[OPT_HOSTBINMASS1].cDimension,"mass");
   options[OPT_HOSTBINMASS1].dDefault = 1.1*MSUN;
   options[OPT_HOSTBINMASS1].iType = 2;
   options[OPT_HOSTBINMASS1].bMultiFile = 0;

@@ -799,7 +799,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OXYGENMASS].cName,"dOxygenMass");
   sprintf(options[OPT_OXYGENMASS].cDescr,"The initial oxygen mass in the atmosphere.");
   sprintf(options[OPT_OXYGENMASS].cDefault,"0");
-  sprintf(options[OPT_OXYGENMASS].cUnits,"mass");
+  sprintf(options[OPT_OXYGENMASS].cDimension,"mass");
   options[OPT_OXYGENMASS].dDefault = 0;
   options[OPT_OXYGENMASS].iType = 2;
   options[OPT_OXYGENMASS].bMultiFile = 1;
@@ -809,7 +809,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OXYGENMANTLEMASS].cName,"dOxygenMantleMass");
   sprintf(options[OPT_OXYGENMANTLEMASS].cDescr,"Initial Oxygen Mass in the Mantle");
   sprintf(options[OPT_OXYGENMANTLEMASS].cDefault,"0");
-  sprintf(options[OPT_OXYGENMANTLEMASS].cUnits,"mass");
+  sprintf(options[OPT_OXYGENMANTLEMASS].cDimension,"mass");
   options[OPT_OXYGENMANTLEMASS].dDefault = 0;
   options[OPT_OXYGENMANTLEMASS].iType = 2;
   options[OPT_OXYGENMANTLEMASS].bMultiFile = 1;
@@ -936,7 +936,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_THERMTEMP].cName,"dThermTemp");
   sprintf(options[OPT_THERMTEMP].cDescr,"Thermosphere temperature");
   sprintf(options[OPT_THERMTEMP].cDefault,"400");
-  sprintf(options[OPT_THERMTEMP].cUnits,"temperature");
+  sprintf(options[OPT_THERMTEMP].cDimension,"temperature");
   options[OPT_THERMTEMP].dDefault = 400;
   options[OPT_THERMTEMP].iType = 2;
   options[OPT_THERMTEMP].bMultiFile = 1;
@@ -952,7 +952,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLOWTEMP].cName,"dFlowTemp");
   sprintf(options[OPT_FLOWTEMP].cDescr,"Temperature of the hydrodynamic flow");
   sprintf(options[OPT_FLOWTEMP].cDefault,"400");
-  sprintf(options[OPT_FLOWTEMP].cUnits,"temperature");
+  sprintf(options[OPT_FLOWTEMP].cDimension,"temperature");
   options[OPT_FLOWTEMP].dDefault = 400;
   options[OPT_FLOWTEMP].iType = 2;
   options[OPT_FLOWTEMP].bMultiFile = 1;
@@ -961,7 +961,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_JEANSTIME].cName,"dJeansTime");
   sprintf(options[OPT_JEANSTIME].cDescr,"Time at which flow transitions to Jeans escape");
   sprintf(options[OPT_JEANSTIME].cDefault,"1 Gyr");
-  sprintf(options[OPT_JEANSTIME].cUnits,"time");
+  sprintf(options[OPT_JEANSTIME].cDimension,"time");
   options[OPT_JEANSTIME].dDefault = 1.e9 * YEARSEC;
   options[OPT_JEANSTIME].iType = 0;
   options[OPT_JEANSTIME].bMultiFile = 1;
@@ -972,7 +972,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PRESXUV].cName,"dPresXUV");
   sprintf(options[OPT_PRESXUV].cDescr,"Pressure at base of thermosphere");
   sprintf(options[OPT_PRESXUV].cDefault,"5 Pa");
-  sprintf(options[OPT_PRESXUV].cUnits,"pressure");
+  sprintf(options[OPT_PRESXUV].cDimension,"pressure");
   options[OPT_PRESXUV].dDefault = 5.0;
   options[OPT_PRESXUV].iType = 2;
   options[OPT_PRESXUV].bMultiFile = 1;
@@ -981,7 +981,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMGASCONST].cName,"dAtmGasConst");
   sprintf(options[OPT_ATMGASCONST].cDescr,"Atmospheric Gas Constant");
   sprintf(options[OPT_ATMGASCONST].cDefault,"4124");
-  sprintf(options[OPT_ATMGASCONST].cUnits,"xxx");
+  sprintf(options[OPT_ATMGASCONST].cDimension,"xxx");
   options[OPT_ATMGASCONST].dDefault = 4124.0;
   options[OPT_ATMGASCONST].iType = 2;
   options[OPT_ATMGASCONST].bMultiFile = 1;
@@ -989,7 +989,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_FXUV].cName,"dFXUV");
   sprintf(options[OPT_FXUV].cDescr,"XUV flux at the body's orbit");
-  sprintf(options[OPT_FXUV].cUnits,"energyflux");
+  sprintf(options[OPT_FXUV].cDimension,"energyflux");
   options[OPT_FXUV].iType = 2;
   options[OPT_FXUV].bMultiFile = 1;
   fnRead[OPT_FXUV] = &ReadFXUV;

@@ -285,7 +285,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SATXUVTIME].cName,"dSatXUVTime");
   sprintf(options[OPT_SATXUVTIME].cDescr,"XUV saturation time");
   sprintf(options[OPT_SATXUVTIME].cDefault,"0.1 Gyr");
-  sprintf(options[OPT_SATXUVTIME].cUnits,"time");
+  sprintf(options[OPT_SATXUVTIME].cDimension,"time");
   options[OPT_SATXUVTIME].dDefault = 1.e8 * YEARSEC;
   options[OPT_SATXUVTIME].iType = 0;
   options[OPT_SATXUVTIME].bMultiFile = 1;

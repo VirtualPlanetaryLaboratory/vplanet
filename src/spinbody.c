@@ -197,7 +197,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_POSITIONXSPINBODY].cName,"dPositionXSpiNBody");
   sprintf(options[OPT_POSITIONXSPINBODY].cDescr,"X position of the body");
   sprintf(options[OPT_POSITIONXSPINBODY].cDefault,"0");
-  sprintf(options[OPT_POSITIONXSPINBODY].cUnits,"length");
+  sprintf(options[OPT_POSITIONXSPINBODY].cDimension,"length");
   options[OPT_POSITIONXSPINBODY].dDefault = 0.0;
   options[OPT_POSITIONXSPINBODY].iType = 2;
   options[OPT_POSITIONXSPINBODY].bMultiFile = 1;
@@ -206,7 +206,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_POSITIONYSPINBODY].cName,"dPositionYSpiNBody");
   sprintf(options[OPT_POSITIONYSPINBODY].cDescr,"Y position of the body");
   sprintf(options[OPT_POSITIONYSPINBODY].cDefault,"0");
-  sprintf(options[OPT_POSITIONYSPINBODY].cUnits,"length");
+  sprintf(options[OPT_POSITIONYSPINBODY].cDimension,"length");
   options[OPT_POSITIONYSPINBODY].dDefault = 0.0;
   options[OPT_POSITIONYSPINBODY].iType = 2;
   options[OPT_POSITIONYSPINBODY].bMultiFile = 1;
@@ -215,7 +215,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_POSITIONZSPINBODY].cName,"dPositionZSpiNBody");
   sprintf(options[OPT_POSITIONZSPINBODY].cDescr,"Z position of the body");
   sprintf(options[OPT_POSITIONZSPINBODY].cDefault,"0");
-  sprintf(options[OPT_POSITIONZSPINBODY].cUnits,"length");
+  sprintf(options[OPT_POSITIONZSPINBODY].cDimension,"length");
   options[OPT_POSITIONZSPINBODY].dDefault = 0.0;
   options[OPT_POSITIONZSPINBODY].iType = 2;
   options[OPT_POSITIONZSPINBODY].bMultiFile = 1;
@@ -224,7 +224,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VELXSPINBODY].cName,"dVelXSpiNBody");
   sprintf(options[OPT_VELXSPINBODY].cDescr,"X velocity of the body");
   sprintf(options[OPT_VELXSPINBODY].cDefault,"0");
-  sprintf(options[OPT_VELXSPINBODY].cUnits,"length/time");
+  sprintf(options[OPT_VELXSPINBODY].cDimension,"length/time");
   options[OPT_VELXSPINBODY].dDefault = 0.0;
   options[OPT_VELXSPINBODY].iType = 2;
   options[OPT_VELXSPINBODY].bMultiFile = 1;
@@ -233,7 +233,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VELYSPINBODY].cName,"dVelYSpiNBody");
   sprintf(options[OPT_VELYSPINBODY].cDescr,"Y velocity of the body");
   sprintf(options[OPT_VELYSPINBODY].cDefault,"0");
-  sprintf(options[OPT_VELYSPINBODY].cUnits,"length/time");
+  sprintf(options[OPT_VELYSPINBODY].cDimension,"length/time");
   options[OPT_VELYSPINBODY].dDefault = 0.0;
   options[OPT_VELYSPINBODY].iType = 2;
   options[OPT_VELYSPINBODY].bMultiFile = 1;
@@ -242,7 +242,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VELZSPINBODY].cName,"dVelZSpiNBody");
   sprintf(options[OPT_VELZSPINBODY].cDescr,"Z velocity of the body");
   sprintf(options[OPT_VELZSPINBODY].cDefault,"0");
-  sprintf(options[OPT_VELZSPINBODY].cUnits,"length/time");
+  sprintf(options[OPT_VELZSPINBODY].cDimension,"length/time");
   options[OPT_VELZSPINBODY].dDefault = 0.0;
   options[OPT_VELZSPINBODY].iType = 2;
   options[OPT_VELZSPINBODY].bMultiFile = 1;
@@ -251,7 +251,7 @@ void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MEANA].cName,"dMeanA");
   sprintf(options[OPT_MEANA].cDescr,"Mean anomaly");
   sprintf(options[OPT_MEANA].cDefault,"0.0");
-  sprintf(options[OPT_MEANA].cUnits,"angle");
+  sprintf(options[OPT_MEANA].cDimension,"angle");
   options[OPT_MEANA].dDefault = 0.0;
   options[OPT_MEANA].iType = 2;
   options[OPT_MEANA].bMultiFile = 1;

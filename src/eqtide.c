@@ -630,7 +630,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_TIDALRADIUS].cName,"dTidalRadius");
   sprintf(options[OPT_TIDALRADIUS].cDescr,"Eqtide Tidal Radius");
   sprintf(options[OPT_TIDALRADIUS].cDefault,"1 Earth Radius");
-  sprintf(options[OPT_TIDALRADIUS].cUnits,"length");
+  sprintf(options[OPT_TIDALRADIUS].cDimension,"length");
   options[OPT_TIDALRADIUS].dDefault = REARTH;
   options[OPT_TIDALRADIUS].iType = 2;
   options[OPT_TIDALRADIUS].bMultiFile = 1;
@@ -740,7 +740,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_TIDALTAU].cName,"dTidalTau");
   sprintf(options[OPT_TIDALTAU].cDescr,"Tidal Time Lag");
   sprintf(options[OPT_TIDALTAU].cDefault,"1 Second");
-  sprintf(options[OPT_TIDALTAU].cUnits,"time");
+  sprintf(options[OPT_TIDALTAU].cDimension,"time");
   options[OPT_TIDALTAU].dDefault = 1;
   options[OPT_TIDALTAU].iType = 2;
   options[OPT_TIDALTAU].bMultiFile = 1;

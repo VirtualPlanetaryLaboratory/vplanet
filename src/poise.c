@@ -1274,8 +1274,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MIXINGDEPTH].cName,"dMixingDepth");
   sprintf(options[OPT_MIXINGDEPTH].cDescr,"Mixing depth of ocean in seasonal"\
                                           " model");
-  sprintf(options[OPT_MIXINGDEPTH].cDefault,"70"); // XXX What units?
-  sprintf(options[OPT_MIXINGDEPTH].cDimension,"xxx");
+  sprintf(options[OPT_MIXINGDEPTH].cDefault,"70"); // meters
+  sprintf(options[OPT_MIXINGDEPTH].cDimension,"length");
   options[OPT_MIXINGDEPTH].dDefault = 70.;
   options[OPT_MIXINGDEPTH].iType = 2;
   options[OPT_MIXINGDEPTH].bMultiFile = 1;
@@ -1294,8 +1294,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_NULANDWATER].cName,"dNuLandWater");
   sprintf(options[OPT_NULANDWATER].cDescr,"Coefficient of land-ocean heat"\
                                           " flux");
-  sprintf(options[OPT_NULANDWATER].cDefault,"0.81"); // XXX What units?
-  sprintf(options[OPT_NULANDWATER].cDimension,"xxx");
+  sprintf(options[OPT_NULANDWATER].cDefault,"0.81");
+  sprintf(options[OPT_NULANDWATER].cDimension,"energy/length^2");
   options[OPT_NULANDWATER].dDefault = 0.81;
   options[OPT_NULANDWATER].iType = 2;
   options[OPT_NULANDWATER].bMultiFile = 1;

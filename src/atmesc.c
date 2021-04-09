@@ -981,7 +981,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMGASCONST].cName,"dAtmGasConst");
   sprintf(options[OPT_ATMGASCONST].cDescr,"Atmospheric Gas Constant");
   sprintf(options[OPT_ATMGASCONST].cDefault,"4124");
-  sprintf(options[OPT_ATMGASCONST].cDimension,"xxx");
+  sprintf(options[OPT_ATMGASCONST].cDimension,"energy/temperature/mass");
   options[OPT_ATMGASCONST].dDefault = 4124.0;
   options[OPT_ATMGASCONST].iType = 2;
   options[OPT_ATMGASCONST].bMultiFile = 1;

@@ -1704,7 +1704,12 @@ struct OPTIONS {
   char cValues[OPTDESCR];      /**< Description of permitted values / ranges */
   int iType;                   /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for array. */
   char cDefault[OPTDESCR];     /**< Description of Default Value */
-  char cDimension[OPTDESCR];   /**< Qualitative description of the option */
+  /** Qualitative description of the option, included for connection wtih
+      bigplanet. Options are: time, length, mass, angle, energy, pressure,
+      amperes. Units may be combined with standard mathematical operations, e.g.
+      energy/time, or mass*length/time^2.
+   */
+  char cDimension[OPTDESCR];
   double dDefault;             /**< Default Value */
   int iModuleBit;              /**< Bitwise sum of modules permitted to read option */
   int bMultiFile;              /**< Option Permitted in Multiple Input Files? */

@@ -147,8 +147,8 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_CALCDYNELLIP].bMultiFile = 1;
   fnRead[OPT_CALCDYNELLIP] = &ReadCalcDynEllip;
 
-    sprintf(options[OPT_FORCEPRECRATE].cName,"bForcePrecRate");
-  sprintf(options[OPT_FORCEPRECRATE].cDescr,"Set the axial precession to a fixed rate");
+  sprintf(options[OPT_FORCEPRECRATE].cName,"bForcePrecRate");
+  sprintf(options[OPT_FORCEPRECRATE].cDescr,"Set the axial precession to a fixed rate?");
   sprintf(options[OPT_FORCEPRECRATE].cDefault,"0");
   options[OPT_FORCEPRECRATE].dDefault = 0;
   options[OPT_FORCEPRECRATE].iType = 0;
@@ -156,12 +156,18 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_FORCEPRECRATE] = &ReadForcePrecRate;
 
   sprintf(options[OPT_PRECRATE].cName,"dPrecRate");
-  sprintf(options[OPT_PRECRATE].cDescr,"Fixed rate of axial precession (rad/s)");
-  sprintf(options[OPT_PRECRATE].cDefault,"7.7261e-12"); // XXX What valule is this?
+  sprintf(options[OPT_PRECRATE].cDescr,"Fixed rate of axial precession (angle/s)");
+  sprintf(options[OPT_PRECRATE].cDefault,"7.7261e-12");
+  sprintf(options[OPT_PRECRATE].cDimension,"angle/time");
   options[OPT_PRECRATE].dDefault = 7.7261e-12;
   options[OPT_PRECRATE].iType = 2;
   options[OPT_PRECRATE].bMultiFile = 1;
   fnRead[OPT_PRECRATE] = &ReadPrecRate;
+  sprintf(options[OPT_READORBITDATA].cLongDescr,
+    "Value of the body's axial precession frequency if %s is set to 1.\n"
+    "Default value is the modern Earth's value as driven by the Moon.",
+    options[OPT_FORCEPRECRATE].cName    
+  );
 
   sprintf(options[OPT_SPECMOMINERTIA].cName,"dSpecMomInertia");
   sprintf(options[OPT_SPECMOMINERTIA].cDescr,"Specific moment of inertia of polar axis");
@@ -493,7 +499,8 @@ void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
 
     if (body[iBody].bReadOrbitData) {
       //body[iBody].dPrecA -= body[iBody].daLongASeries[0]; //needed to account possibly different reference location for dPrecA and dLongA
-      system->daLOrb = malloc(3*sizeof(double)); //XXX need to add warning about cassini options in this case! this value will not be calculated correctly, since I don't provide orbit data for all planets
+      //XXX need to add warning about cassini options in this case! this value will not be calculated correctly, since I don't provide orbit data for all planets
+      system->daLOrb = malloc(3*sizeof(double));
       body[iBody].daLOrb = malloc(3*sizeof(double));
       body[iBody].daLOrbTmp = malloc(3*sizeof(double));
     }

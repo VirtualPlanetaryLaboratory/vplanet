@@ -93,7 +93,7 @@ void sort_output(OUTPUT *output, int sorted[]) {
 void InitializeControl(CONTROL *control,MODULE *module) {
   int iBody,iModule;
 
-  control->bOutputLapl=0; // XXX This should become part of EVOLVE -- RUSSELL
+  control->bOutputLapl=0; 
 
   control->iMassRad = malloc(control->Evolve.iNumBodies*sizeof(int));
   control->fnForceBehavior = malloc(control->Evolve.iNumBodies*sizeof(fnForceBehaviorModule*));

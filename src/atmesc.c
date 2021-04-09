@@ -1617,7 +1617,7 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     body[iBody].dScaleHeight = -1;
     body[iBody].dPresSurf = -1;
   }
-  // XXX Should include additional checks for PROXCEN and NONE
+  // Should there be additional checks for PROXCEN and NONE???
 
 
   if (body[iBody].dSurfaceWaterMass > 0) {

@@ -1092,7 +1092,6 @@ void VerifyCTL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
 void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,int iBody,int iModule) {
   int iPert,iTideFile,iCol,iFile;
 
-  //XXX Is dEccSq set here?
   // Body 0 has no orbit parameters see VerifyOrbitEqtide().
   if (iBody != 0 && body[iBody].dEccSq > (2./19) && control->Evolve.bDiscreteRot) {
     if (control->Io.iVerbose >= VERBINPUT)
@@ -1127,7 +1126,6 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
         }
       }
     }
-    /* XXX Should re-"null" the outputs */
   }
 
   /* Everything OK, assign Updates */
@@ -1440,8 +1438,6 @@ void AssignEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
   }
 }
 
-// XXX What is this function about? Why is it only for CTL?
-
 void NullEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   int iPert;
 
@@ -1449,7 +1445,6 @@ void NullEqtideDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVari
 
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
 
-    // CTL Model Variables
     // Xobl
     fnUpdate[iBody][update[iBody].iXobl][update[iBody].iaXoblEqtide[iPert]] = &fndUpdateFunctionTiny;
     // Yobl
@@ -1573,10 +1568,6 @@ void FinalizeUpdateKeccEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 void FinalizeUpdateXoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
 
-  /* Change iTidePerts to iNumBodies XXX */
-  // XXX - I don't think so 4/11/16
-  // This is definitely broken. The debugger cant dematerialize the variable 07/07/16
-
   update[iBody].padDXoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
   update[iBody].iaXoblEqtide = malloc(body[iBody].iTidePerts*sizeof(int));
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
@@ -1588,8 +1579,6 @@ void FinalizeUpdateXoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 void FinalizeUpdateYoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
 
-  /* Change iTidePerts to iNumBodies XXX */
-
   update[iBody].padDYoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
   update[iBody].iaYoblEqtide = malloc(body[iBody].iTidePerts*sizeof(int));
   for (iPert=0;iPert<body[iBody].iTidePerts;iPert++) {
@@ -1600,8 +1589,6 @@ void FinalizeUpdateYoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 
 void FinalizeUpdateZoblEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int iBody,int iFoo) {
   int iPert;
-
-  /* Change iTidePerts to iNumBodies XXX */
 
   update[iBody].padDZoblDtEqtide = malloc(body[iBody].iTidePerts*sizeof(double*));
   update[iBody].iaZoblEqtide = malloc(body[iBody].iTidePerts*sizeof(int));
@@ -1633,10 +1620,8 @@ void FinalizeUpdateSemiEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 
 /* Double Synchronous? */
 
-/* How is this handled for multi-planet systems? XXX */
 int HaltDblSync(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
       fnUpdateVariable ***fnUpdate,int iBody) {
-  /* Forbidden if iNumBodies > 2 XXX Add to VerifyHalts */
 
   /* dMeanMotion set by call to TidalProperties in Evolve() */
   if (halt->bDblSync && (body[0].dRotRate == body[1].dMeanMotion) && (body[1].dRotRate == body[1].dMeanMotion)) {
@@ -1655,7 +1640,6 @@ int HaltDblSync(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
 /* Tide-locked? */
 int HaltTideLock(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
       fnUpdateVariable ***fnUpdate,int iBody) {
-  /* Forbidden for body 0 if iNumBodies > 2 XXX Add to VerifyHalts*/
 
   if ((body[iBody].dRotRate == body[iBody].dMeanMotion) && halt->bTideLock) {
     // Tidally locked!
@@ -1676,7 +1660,6 @@ int HaltTideLock(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
 /* Synchronous Rotation? */
 int HaltSyncRot(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
       fnUpdateVariable ***fnUpdate,int iBody) {
-  /* Forbidden for body 0 if iNumBodies > 2 XXX Add to VerifyHalts */
 
   if (halt->bSync && (body[iBody].dRotRate == body[iBody].dMeanMotion)) {
     if (io->iVerbose >= VERBPROG) {
@@ -1737,7 +1720,9 @@ void VerifyHaltEqtide(BODY *body,CONTROL *control,OPTIONS *options,int iBody,int
  */
 
 void WriteBodyDsemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* XXX Broken  int iPert;
+  /*  Broken
+
+    int iPert;
 
   if (iBody == 0)
     iPert=1;
@@ -1764,7 +1749,9 @@ void WriteBodyDsemiDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
 }
 
 void WriteBodyDeccDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  /* XXX Broken -- needs to be changed after switch to Hecc + Kecc  int iPert;
+  /* Broken
+
+  needs to be changed after switch to Hecc + Kecc  int iPert;
 
   if (iBody == 0)
     iPert=1;
@@ -1834,7 +1821,7 @@ void WriteDOblDtEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system
 
 void WriteTidalQOcean(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  /* Return -1 if dImK2Ocean is 0. There may be a better way to do this. XXX */
+  /* Return -1 if dImK2Ocean is 0. There may be a better way to do this. */
   if (body[iBody].dImK2Ocean > 0)
     *dTmp = body[iBody].dK2Ocean/body[iBody].dImK2Ocean;
   else
@@ -1845,7 +1832,7 @@ void WriteTidalQOcean(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
 
 void WriteTidalQEnv(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  /* Return -1 if dImK2Env is 0. There may be a better way to do this. XXX */
+  /* Return -1 if dImK2Env is 0. There may be a better way to do this. */
   if (body[iBody].dImK2Env > 0)
     *dTmp = body[iBody].dK2Env/body[iBody].dImK2Env;
   else
@@ -2200,13 +2187,41 @@ void WriteEqRotRateDiscrete(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
   }
 }
 
+void WriteEqTidePower(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,
+    UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+  int iOrbiter;
+
+  if (!bPrimary(body,iBody))
+    iOrbiter = iBody;
+  else
+    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
+    iOrbiter = body[iBody].iaTidePerts[0];
+
+  if(control->Evolve.iEqtideModel == CPL) {
+    *dTmp = fdCPLTidePowerEq(body[iBody].dTidalZ[iOrbiter],body[iBody].dEccSq,
+        body[iBody].dMeanMotion,body[iBody].dObliquity,
+        control->Evolve.bDiscreteRot);
+  } else {
+    // XXX Add CTL functions
+    *dTmp = -1;
+  }
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit,output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime,cUnit);
+  }
+}
+
 /*
  * G
  */
 
 void WriteGammaOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  /* Broken XXX */
+  /* Broken */
   //*dTmp = fdGammaOrb(body[iBody].dEccSq,body[iBody].dObliquity,body[iBody].iTidalEpsilon[0]);
   *dTmp=-1;
 
@@ -2216,7 +2231,8 @@ void WriteGammaOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 
 void WriteGammaRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  /* XXX Broken
+  /*
+  Broken
 
   *dTmp = fdGammaRot(body[1].dEccSq,body[iBody].dObliquity,body[iBody].iTidalEpsilon[0]);
   */
@@ -2225,15 +2241,6 @@ void WriteGammaRot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
   /* Negative option? */
   strcat(cUnit,"sec");
 }
-
-/* dflemin3: moved to output.c
-void WriteImK2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-
-  *dTmp = body[iBody].dImK2;
-
-  strcpy(cUnit,"");
-}
-*/
 
 void WriteK2Ocean(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
@@ -2252,7 +2259,10 @@ void WriteK2Env(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS 
 
 void WriteOblTimescaleEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
 
-  /* XXX Need to change after switch to [XYZ]obl
+  /* Broken
+
+
+  Need to change after switch to [XYZ]obl
   *dTmp = fdTimescaleMulti(body[iBody].dObliquity,*(update[iBody].padDoblDtEqtide),body[iBody].iTidePerts);
 
   if (output->bDoNeg[iBody]) {
@@ -2344,18 +2354,6 @@ void WriteTideLock(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
 }
 
 void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
-
-  /* TidalPowMan */
-  /* Deprecated! XXX
-  sprintf(output[OUT_TIDALPOWMAN].cName,"TidalPowMan");
-  sprintf(output[OUT_TIDALPOWMAN].cDescr,"Tidal Power Mantle");
-  sprintf(output[OUT_TIDALPOWMAN].cNeg,"TW");
-  output[OUT_TIDALPOWMAN].bNeg = 1;
-  output[OUT_TIDALPOWMAN].dNeg = 1e-12;
-  output[OUT_TIDALPOWMAN].iNum = 1;
-  output[OUT_TIDALPOWMAN].iModuleBit = THERMINT;
-  fnWrite[OUT_TIDALPOWMAN] = &fvWriteTidalPowMan;
-*/
 
   sprintf(output[OUT_BODYDSEMIDTEQTIDE].cName,"BodyDsemiDtEqtide");
   sprintf(output[OUT_BODYDSEMIDTEQTIDE].cDescr,"Body's Contribution to dSemi/dt in EQTIDE");
@@ -2568,6 +2566,16 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_EQROTRATEDISCRETE].iModuleBit = EQTIDE;
   fnWrite[OUT_EQROTRATEDISCRETE] = &WriteEqRotRateDiscrete;
 
+  sprintf(output[OUT_EQTIDEPOWER].cName,"EqTidePower");
+  sprintf(output[OUT_EQTIDEPOWER].cDescr,"Equilibrium Power from Tides");
+  sprintf(output[OUT_EQTIDEPOWER].cNeg,"/day");
+  output[OUT_EQTIDEPOWER].bNeg = 1;
+  output[OUT_EQTIDEPOWER].dNeg = DAYSEC;
+  output[OUT_EQTIDEPOWER].iNum = 1;
+  output[OUT_EQTIDEPOWER].iModuleBit = EQTIDE;
+  fnWrite[OUT_EQTIDEPOWER] = &WriteEqTidePower;
+
+
   /*
    * G
    */
@@ -2726,8 +2734,6 @@ void LogOptionsEqtide(CONTROL *control, FILE *fp) {
 void LogEqtide(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite[],FILE *fp) {
   int iOut;
 
-  /* Cant this be cut? XXX */
-
   fprintf(fp,"\n----- EQTIDE PARAMETERS ------\n");
   for (iOut=OUTSTARTEQTIDE;iOut<OUTBODYSTARTEQTIDE;iOut++) {
     if (output[iOut].iNum > 0)
@@ -2794,13 +2800,14 @@ void AddModuleEqtide(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
 double fdEqRotRate(BODY *body, int iBody, double dMeanMotion,double dEccSq ,int iTideModel,int bDiscreteRot) {
 
-  if (iTideModel == CPL || iTideModel == DB15) { // XXX Does DB15 = CPL for tidally locked rotation?
+  if (iTideModel == CPL || iTideModel == DB15) { // Does DB15 = CPL for tidally locked rotation?
     return fdCPLEqRotRate(dEccSq,dMeanMotion,bDiscreteRot);
   } else if (iTideModel == CTL) {
     return fdCTLEqRotRate(dEccSq,body[iBody].dObliquity,dMeanMotion);
   }
   /* Whoops! */
   assert(0);
+  return dMeanMotion;
 }
 
 void fdaChi(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
@@ -3149,6 +3156,7 @@ void ForceBehaviorEqtide(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM 
 
   /* If small enough, set some quantities to zero */
   /* Generalize! fnPropsAuxMinMax? */
+  // XXX Move this to ForceBehavior General?
   if (evolve->dMinValue > 0) {
     if (body[iBody].dEcc < evolve->dMinValue) {
       body[iBody].dHecc = 0;
@@ -3167,8 +3175,6 @@ void ForceBehaviorEqtide(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM 
  ************************ CPL Functions ******************
 */
 
-/* XXX Add intermediate parameters! They will be optimized away */
-
 /* Auxiliary Parameters */
 
 /* This is a member of output->fnSurfEnFlux, so must have appropriate
@@ -3186,7 +3192,8 @@ double fdCPLTidePower(BODY *body,int iBody) {
       iOrbiter = iBody;
     iIndex = body[iBody].iaTidePerts[iPert];
 
-    // XXX RB: Does this work with DF's changes to da/dt with the synchronous case?
+    // Does this work with DF's changes to da/dt with the synchronous case?
+    // See Fleming et al., 2018
     dOrbPow += -body[iBody].dTidalZ[iIndex]/8 * (4*body[iBody].iTidalEpsilon[iIndex][0]
        + body[iOrbiter].dEccSq*(-20*body[iBody].iTidalEpsilon[iIndex][0] +
        147./2*body[iBody].iTidalEpsilon[iIndex][1] +
@@ -3202,11 +3209,6 @@ double fdCPLTidePower(BODY *body,int iBody) {
       (-2*body[iBody].iTidalEpsilon[iIndex][0] +
       body[iBody].iTidalEpsilon[iIndex][8] +
       body[iBody].iTidalEpsilon[iIndex][9]));
-    /*
-    printf("%lf\n",dOrbPow);
-    printf("%lf\n",dRotPow);
-    fflush(stdout);
-    */
   }
 
   return dOrbPow + dRotPow;
@@ -3214,8 +3216,9 @@ double fdCPLTidePower(BODY *body,int iBody) {
 
 /* Tidal Power due to Ocean Tides */
 double fdTidePowerOcean(BODY *body, int iBody) {
+  // Broken
+
   // Total CPL Tide Power = Ocean + Man contributions
-  // XXX This looks broken now
   //return fdCPLTidePower(body,iBody) - fdTidePower(body,iBody);
   //fprintf(stderr,"ERROR: fdTidePowerOcean called, but it's broken.");
   return -1;
@@ -3223,8 +3226,9 @@ double fdTidePowerOcean(BODY *body, int iBody) {
 
 /* Surface Energy Flux due to Ocean Tides */
 double fdSurfEnFluxOcean(BODY *body,int iBody) {
+  // Broken!
+
   // Total Ocean Tide power / surface area of body
-  // XXX Broken!
   //return fdTidePowerOcean(body,iBody)/(4.0*PI*body[iBody].dRadius*body[iBody].dRadius);
   return -1;
 }
@@ -3422,9 +3426,8 @@ double fdCPLDrotrateDt(BODY *body,SYSTEM *system,int *iaBody) {
   else
     iOrbiter = iB0;
 
-  /* Note if tidally locked, ForceBehavior should fix the rotation
-     rate and override this derivative. XXX This derivative should
-     be removed from the update matrix in that case*/
+  /* Note if tidally locked, ForceBehavior fixes the rotation
+     rate and sets the function pointer to dTINY. */
 
   return -body[iB0].dTidalZ[iB1]/(8*body[iB0].dMass*body[iB0].dRadGyra*body[iB0].dRadGyra*body[iB0].dTidalRadius*body[iB0].dTidalRadius*body[iOrbiter].dMeanMotion)*(4*body[iB0].iTidalEpsilon[iB1][0] + body[iOrbiter].dEccSq*(-20*body[iB0].iTidalEpsilon[iB1][0] + 49*body[iB0].iTidalEpsilon[iB1][1] + body[iB0].iTidalEpsilon[iB1][2]) + 2*sin(body[iB0].dObliquity)*sin(body[iB0].dObliquity)*(-2*body[iB0].iTidalEpsilon[iB1][0]+body[iB0].iTidalEpsilon[iB1][8]+body[iB0].iTidalEpsilon[iB1][9]));
 }
@@ -3668,27 +3671,13 @@ double fdCTLDoblDt(BODY *body ,int *iaBody) {
   @param iBody Body index
   @param iModule Module index
 */
-void fvInitializeBodyThermint(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
+//void fvInitializeBodyThermint(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
 
-/* XXX This should probably be cut. Initialize is for allocating. The whole typedef
+/* This should probably be cut. Initialize is for allocating. The whole typedef
 should be changed, and then a new initialize typedef created for this stuff */
 
-  /* A non-eqtide run requires this to be 0 to start. If eqtide is called,
-     then the value will be updated in PropsAuxMultiEqtideThermint. */
 
-  body[iBody].dTidalPowMan = 0;
-
-  /* XXX -- Is this OK to initalize these values to 0. Otherwise there can
-     be a memory link. The connection between dK2, dK2Man, and dImk2Man
-     really needs to be improved. */
-  //body[iBody].dK2Man = fdK2Man(body,iBody);
-
-/*
-  body[iBody].dK2Man = 0;
-  body[iBody].dImk2Man = 0;
-*/
-}
-
+//
 /*
 void fvWritePowerEqtideDB15(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
     *dTmp = fdPowerEqtideDB15(body,iBody);

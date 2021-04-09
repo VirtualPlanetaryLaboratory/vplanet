@@ -2418,7 +2418,7 @@ void WriteTGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,\
     /* Units already in Celsius (POISE uses Celsius) */
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
   }
 }
@@ -2708,7 +2708,7 @@ void WriteTempLat(BODY *body,CONTROL *control,OUTPUT *output,\
 
   } else {
 
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
 
   }
@@ -2735,7 +2735,7 @@ void WriteTempMinLat(BODY *body,CONTROL *control,OUTPUT *output,\
 
   } else {
 
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
 
   }
@@ -2761,7 +2761,7 @@ void WriteTempMaxLat(BODY *body,CONTROL *control,OUTPUT *output,\
 
   } else {
 
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
 
   }
@@ -2787,7 +2787,7 @@ void WriteTempMaxLand(BODY *body,CONTROL *control,OUTPUT *output,\
 
   } else {
 
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
 
   }
@@ -2811,7 +2811,7 @@ void WriteTempMaxWater(BODY *body,CONTROL *control,OUTPUT *output,\
     /* Units already in Celsius (POISE uses Celsius) */
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
   }
 }
@@ -2833,7 +2833,7 @@ void WriteTempLandLat(BODY *body,CONTROL *control,OUTPUT *output,\
     /* Units already in Celsius (POISE uses Celsius) */
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
   }
 }
@@ -2856,7 +2856,7 @@ void WriteTempWaterLat(BODY *body,CONTROL *control,OUTPUT *output,\
     /* Units already in Celsius (POISE uses Celsius) */
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
   }
 }

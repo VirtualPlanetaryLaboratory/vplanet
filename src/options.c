@@ -889,11 +889,11 @@ void ReadUnitLength(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
 
 int iAssignTempUnit(char cTmp[],int iVerbose,char cFile[],char cName[],int iLine) {
   if (memcmp(sLower(cTmp),"k",1) == 0)
-    return 0;
+    return KELVIN;
   else if (memcmp(sLower(cTmp),"c",1) == 0)
-    return 1;
+    return CELSIUS;
   else if (memcmp(sLower(cTmp),"f",1) == 0)
-    return 2;
+    return FARENHEIT;
   else {
     if (iVerbose >= VERBERR)
       fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are: K, C, F.\n",cName,cTmp);

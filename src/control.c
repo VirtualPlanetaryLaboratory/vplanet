@@ -309,7 +309,7 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
 
       printf("|Default value    | %s", options->cDefault);
       int valuelen;
-      printf(strlen(options->cDefault));
+      //printf("%d\n",strlen(options->cDefault));
       //for(valuelen = 0; valuelen<(36 - strlen(options->cDefault)); valuelen++){
         //printf(" ");
       //}
@@ -818,40 +818,40 @@ double fdUnitsEnergyFlux(int iTime,int iMass,int iLength) {
 }
 
 double fdUnitsTemp(double dTemp,int iOldType,int iNewType) {
-  if (iOldType == 0) {
-    if (iNewType == 1) {
+  if (iOldType == KELVIN) {
+    if (iNewType == CELSIUS) {
       /* Kelvin -> Celsius */
       return dTemp - 273;
-    } else if (iNewType == 2) {
+    } else if (iNewType == FARENHEIT) {
       /* Kelvin to Farenheit */
       return (dTemp - 273)*1.8 + 32;
-    } else if (iNewType == 0) {
+    } else if (iNewType == KELVIN) {
       return dTemp;
     } else {
       fprintf(stderr,"ERROR: Unknown Temperature type %d.\n",iNewType);
       exit(EXIT_UNITS);
     }
-  } else if (iOldType == 1) {
-    if (iNewType == 0) {
+  } else if (iOldType == CELSIUS) {
+    if (iNewType == KELVIN) {
       /* Celsius -> Kelvin */
       return dTemp + 273;
-    } else if (iNewType == 2) {
+    } else if (iNewType == FARENHEIT) {
       /* Celsius -> Farenheit */
       return (1.8*dTemp) + 32;
-    } else if (iNewType == 1) {
+    } else if (iNewType == CELSIUS) {
       return dTemp;
     } else {
       fprintf(stderr,"ERROR: Unknown Temperature type %d.\n",iNewType);
       exit(EXIT_UNITS);
     }
-  } else if (iOldType == 2) {
-    if (iNewType == 0) {
+  } else if (iOldType == FARENHEIT) {
+    if (iNewType == KELVIN) {
       /* Farenheit -> Kelvin */
       return 5/9*(dTemp - 32) + 273;
-    } else if (iNewType == 1) {
+    } else if (iNewType == CELSIUS) {
       /* Farenheit -> Celsius */
       return 5/9*(dTemp - 32);
-    } else if (iNewType == 2) {
+    } else if (iNewType == FARENHEIT) {
       return dTemp;
     } else {
       fprintf(stderr,"ERROR: Unknown Temperature type %d.\n",iNewType);

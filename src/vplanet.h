@@ -75,6 +75,11 @@
 #define ALPHA_STRUCT  0.6         // Structural constant for spherical mass
                                   //distribution potential energy (E_pot = -ALPHA*BIGG*M^2/R)
 
+// Temperature macros
+#define KELVIN        0
+#define CELSIUS       1
+#define FARENHEIT     2
+
 /* Do not change these declarations */
 extern const double dHUGE;
 extern const double dTINY;

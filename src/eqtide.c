@@ -3654,54 +3654,6 @@ double fdCTLDoblDt(BODY *body ,int *iaBody) {
  ********************** DB15 Functions ************************
 */
 
-
-
-
-
-/* ************************ From ThermInt *********************************** */
-
-// This stuff should all get the "DB15" suffix
-
-/**
-  Initialize values in body struct.
-
-  @param body Body struct
-  @param control Control struct
-  @param update Update struct
-  @param iBody Body index
-  @param iModule Module index
-*/
-//void fvInitializeBodyThermint(BODY *body,CONTROL *control,UPDATE *update,int iBody,int iModule) {
-
-/* This should probably be cut. Initialize is for allocating. The whole typedef
-should be changed, and then a new initialize typedef created for this stuff */
-
-
-//
-/*
-void fvWritePowerEqtideDB15(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-    *dTmp = fdPowerEqtideDB15(body,iBody);
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
-  } else { }
-}
-*/
-//*/
-
-/* Heat Flows */
-/**
-  Function compute tidal power in solid mantle
-
-  Currently this assumes only the orbital frequency is important. The function
-  must be modified to permit non-tidally-locked rotation.
-
-  @param body Body struct
-  @param iBody Index of body
-
-  @return Tidal power in solid mantle
-
-*/
 double fdPowerEqtideDB15(BODY *body,int iBody) {
 
   // Power is only dissipated in planets

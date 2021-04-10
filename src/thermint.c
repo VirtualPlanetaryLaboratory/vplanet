@@ -3681,7 +3681,6 @@ void fvAddModuleThermint(CONTROL *control,MODULE *module,int iBody,int iModule) 
   module->fnVerifyHalt[iBody][iModule]          = &fvVerifyHaltThermint;
   module->fnVerifyHalt[iBody][iModule]          = &fvVerifyHaltThermint;
 
-  //module->fnInitializeBody[iBody][iModule]      = &fvInitializeBodyThermint;
   module->fnInitializeUpdate[iBody][iModule]    = &fvInitializeUpdateThermint;
   module->fnInitializeOutput[iBody][iModule]    = &fvInitializeOutputThermint;
 

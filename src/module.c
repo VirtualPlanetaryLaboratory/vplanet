@@ -736,18 +736,30 @@ void VerifyModuleMultiRadheatThermint(BODY *body,UPDATE *update,CONTROL *control
 }
 
 void VerifyModuleMultiEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
-  int iEqtide;
 
       // Initialize mantle tidal power
       body[iBody].dTidalPowMan = 0;
 
+      //XXX Does this if-then need to be here!?
       if (body[iBody].bEqtide && body[iBody].bThermint) {
+          if (options[OPT_TIDALQ].iLine[iBody+1] != -1) {
+            if (control->Io.iVerbose >= VERBINPUT) {
+              fprintf(stderr,"INFO: Option %s set, but module ThermInt also selected. The tidal Q will be calculated by Thermint.\n",
+                options[OPT_TIDALQ].cName);
+            }
+          }
+
+          if (options[OPT_K2].iLine[iBody+1] != -1) {
+            if (control->Io.iVerbose >= VERBINPUT) {
+              fprintf(stderr,"INFO: Option %s set, but module ThermInt also selected. ",
+                options[OPT_K2].cName);
+              fprintf(stderr,"The Love number k_2 will be calculated by Thermint.\n");
+            }
+          }
+        }
+
         control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
       }
-/*
-    }
-  }
-*/
 }
 
 void VerifyModuleMultiEqtideDistOrb(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {

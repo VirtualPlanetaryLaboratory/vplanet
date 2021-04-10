@@ -29,11 +29,6 @@ void InitializeControlEqtide(CONTROL *control,int iBody) {
 void BodyCopyEqtide(BODY *dest,BODY *src,int iTideModel,int iNumBodies,int iBody) {
   int iIndex,iPert;
 
-  /* XXX Lines from ThermInt. Should be incorporated into new DB15 model
-  dest[iBody].dK2Man=src[iBody].dK2Man;
-  dest[iBody].dImk2Man=src[iBody].dImk2Man;
-  dest[iBody].dTidalPowMan=src[iBody].dTidalPowMan; */
-
   dest[iBody].dTidalPowMan=src[iBody].dTidalPowMan;
 
   dest[iBody].iTidePerts = src[iBody].iTidePerts;
@@ -557,7 +552,7 @@ void ReadEqtideMantleTides(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      body[iFile-1].bMantle = 0; // Default to no ocean tides XXX
+      body[iFile-1].bMantle = atoi(options->cDefault);
 }
 
 // Use fixed tidal radius?
@@ -573,7 +568,7 @@ void ReadUseTidalRadius(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if(iFile > 0)
-      body[iFile-1].bUseTidalRadius = 0; // Default to no XXX
+      body[iFile-1].bUseTidalRadius = atoi(options->cDefault);
 }
 
 // Include effects of envelope tides?
@@ -1623,9 +1618,14 @@ void FinalizeUpdateSemiEqtide(BODY *body,UPDATE *update,int *iEqn,int iVar,int i
 int HaltDblSync(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
       fnUpdateVariable ***fnUpdate,int iBody) {
 
-  /* dMeanMotion set by call to TidalProperties in Evolve() */
+  /* dMeanMotion set by call to TidalProperties in Evolve()
+  Note that the two doubles can only equal each other if ForceBehaviorEqtide
+  forces the planets to the tidal locking values. This conditional
+  therefore ensures that the bTidalLock flag was selected and has been flipped
+  to true. This distinction is important because two stars can pass through
+  they double synchronous state by chance, about 1 in (10^16)^4 chance, so
+  the conditional prevents this numerical artefact. */
   if (halt->bDblSync && (body[0].dRotRate == body[1].dMeanMotion) && (body[1].dRotRate == body[1].dMeanMotion)) {
-    /* XXX Check bForceEqSpin, too? */
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: Double Synchronous at ");
       fprintd(stdout,evolve->dTime/YEARSEC,io->iSciNot,io->iDigits);
@@ -3722,24 +3722,6 @@ double fdDB15DKeccDt(BODY *body,SYSTEM *system,int *iaBody) {
 void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,UPDATE *update,int iBody,int iModule) {
   int iPert,iIndex;
 
-  // XXX Do these checks need to be here? DB15 no longer requires ThermInt to be set
-  if (body[iBody].bThermint) { // Tidal properties calculate from mantle material
-
-    if (options[OPT_TIDALQ].iLine[iBody+1] != -1) {
-      if (control->Io.iVerbose >= VERBINPUT) {
-        fprintf(stderr,"INFO: Option %s set, but module ThermInt also selected. The tidal Q will be calculated by Thermint.\n",
-          options[OPT_TIDALQ].cName);
-      }
-    }
-
-    if (options[OPT_K2].iLine[iBody+1] != -1) {
-      if (control->Io.iVerbose >= VERBINPUT) {
-        fprintf(stderr,"INFO: Option %s set, but module ThermInt also selected. ",
-          options[OPT_K2].cName);
-        fprintf(stderr,"The Love number k_2 will be calculated by Thermint.\n");
-      }
-    }
-  } else {
     // k_2 and (Q || tau) must be set
     if (options[OPT_K2].iLine[iBody+1] == -1) {
       if (control->Io.iVerbose >= VERBINPUT) {
@@ -3757,7 +3739,7 @@ void VerifyDB15(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT
         LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
       }
     }
-  }
+
 
   /* Everything OK, assign Updates */
 

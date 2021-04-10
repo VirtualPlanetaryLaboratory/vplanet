@@ -756,7 +756,6 @@ void VerifyModuleMultiEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,
               fprintf(stderr,"The Love number k_2 will be calculated by Thermint.\n");
             }
           }
-        }
 
         control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
       }

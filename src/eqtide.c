@@ -3169,6 +3169,7 @@ void ForceBehaviorEqtide(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTEM 
     */
   }
 
+
 }
 
 /*
@@ -3244,7 +3245,7 @@ double fdGammaOrb(double dEccSq,double dPsi,int *epsilon) {
 void fiaCPLEpsilon(double dRotRate,double dMeanMotion,double dObliquity,int *iEpsilon) {
   // Note: fiSign reurns 0 if the argument is < EPS, see vplanet.h
 
-  /* This needs to be added back in! XXX
+  /* This needs to be added back in with the retrograde branch! XXX
   if (dObliquity > PI/2) {
     dRotRate = -dRotRate;
   } else if (bFloatComparison(dObliquity,PI/2)) {
@@ -3275,7 +3276,6 @@ void fdCPLZ(BODY *body,double dMeanMotion,double dSemi,int iBody,int iPert) {
 
 double fdCPLTidePowerEq(double dTidalZ,double dEccSq,double dMeanMotion,double dObliquity,int bDiscrete) {
   /* Heller, Leconte  Barnes 2011, Eq. 13 */
-  /* Needs to be added to InitializeOutput, etc XXX */
   double dGammaOrb,dGammaRot,dRotRateEq;
   int *iEpsilon;
 

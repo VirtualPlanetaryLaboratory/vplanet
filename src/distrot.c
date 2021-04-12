@@ -166,7 +166,7 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_READORBITDATA].cLongDescr,
     "Value of the body's axial precession frequency if %s is set to 1.\n"
     "Default value is the modern Earth's value as driven by the Moon.",
-    options[OPT_FORCEPRECRATE].cName    
+    options[OPT_FORCEPRECRATE].cName
   );
 
   sprintf(options[OPT_SPECMOMINERTIA].cName,"dSpecMomInertia");
@@ -498,8 +498,11 @@ void VerifyDistRot(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     VerifyDynEllip(body,control,options,files->Infile[iBody+1].cIn,iBody,control->Io.iVerbose);
 
     if (body[iBody].bReadOrbitData) {
-      //body[iBody].dPrecA -= body[iBody].daLongASeries[0]; //needed to account possibly different reference location for dPrecA and dLongA
-      //XXX need to add warning about cassini options in this case! this value will not be calculated correctly, since I don't provide orbit data for all planets
+      if (control->Io.iVerbose >= VERBINPUT) {
+        fprintf(stderr,"WARNING: When reading in using %s to calculate\n"
+          "rotational evolution, Cassini parameters may not be correct.",
+          options[OPT_READORBITDATA].cName);
+      }
       system->daLOrb = malloc(3*sizeof(double));
       body[iBody].daLOrb = malloc(3*sizeof(double));
       body[iBody].daLOrbTmp = malloc(3*sizeof(double));

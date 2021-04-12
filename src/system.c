@@ -478,6 +478,13 @@ void angularmom(BODY *body, double *AngMom, int iNumBodies) {
 
   rxptmp = malloc(3*sizeof(double));
 
+  if (body[iBody].bSpiNBody) {
+    fprintf(stderr,"ERROR: Function angularmom called with module SpiNBody. \n"
+            "This function has only been verified for DistOrb.\n"
+    );
+    exit(EXIT_INT);
+  }
+
   osc2cart(body, iNumBodies);
   astro2bary(body, iNumBodies);
 
@@ -487,7 +494,8 @@ void angularmom(BODY *body, double *AngMom, int iNumBodies) {
   for (iBody=0;iBody<iNumBodies;iBody++) {
     cross(body[iBody].daCartPos, body[iBody].daCartVel, rxptmp);
     for (i=0;i<3;i++) {
-      // XXX Why divide by MSUN and not stellar mass?
+      // Note the MSUN because DistOrb is defined in MSUN units.
+      // This may not work for SpiNBody
       AngMom[i] += body[iBody].dMass/MSUN*rxptmp[i];
     }
   }
@@ -620,7 +628,7 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
   /* Loop below calculates true anomaly at equinox for planets with DistRot enabled.
      This angle is invariant under rotations. */
   for (iBody=1;iBody<iNumBodies;iBody++) {
-    if (body[iBody].bDistRot) { // XXX No mention of other modules is allowed!!
+    if (body[iBody].bDistRot) {
       body[iBody].dTrueApA = 2*PI - (body[iBody].dPrecA+body[iBody].dLongP);
       while (body[iBody].dTrueApA<0) {
         body[iBody].dTrueApA += 2*PI;

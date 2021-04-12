@@ -870,7 +870,8 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     system->daGSBinMag[12] = 13.0;
 
     system->daEncounterRateMV = malloc(13*sizeof(double));
-    CalcEncounterRate(system);  //need to update this, most likely XXX
+    // Russell noted that this may need to updated
+    CalcEncounterRate(system);
     system->dDeltaTEnc = 0.0;
     //system->dMinAllowed = 40.0*AUM; //set to 40 au for now...
     system->dLastEncTime = 0.0;
@@ -879,18 +880,6 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     NextEncounterTime(system,&control->Evolve,0);
 
   }
-
-
-//
-//   GetStarMass(system);
-//   GetStarVelocity(system);
-//   GetStarPosition(system);
-//   testrand(system);
-
-  // for (i=0;i<=10;i++) {
-//     n = (int)((double)rand()*20/RAND_MAX)-3;
-//     printf("%d\n",n);
-//   }
 
   if (iBody >= 1) {
     if (system->bOutputEnc) {
@@ -1634,7 +1623,8 @@ void ForceBehaviorGalHabit(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     /* then move the orbiter, get all distances/velocities, check for disruption */
     AdvanceMA(body,system,iBody);
     body[iBody].dSinc = sin(0.5*body[iBody].dInc);
-    osc2cart(body,evolve->iNumBodies); //maybe need to convert to barycentric? XXX
+    //Russell noted we may need to convert to barycentric?     
+    osc2cart(body,evolve->iNumBodies);
 
     /* next calculate impact parameter */
     CalcImpactParam(body,system,iBody);

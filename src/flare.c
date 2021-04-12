@@ -428,11 +428,7 @@ void InitializeOutputFlare(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LXUVFLARE].iModuleBit = FLARE;
   fnWrite[OUT_LXUVFLARE] = &WriteLXUVFlare;
 }
-/* XXX I think this approach is defunct
-void FinalizeOutputFunctionFlare(OUTPUT *output,int iBody,int iModule) {
-  output[OUT_LXUVTOT].fnOutput[iBody][iModule] = &fdLXUVFlare;
-}
-*/
+
 
 /************ FLARE Logging Functions **************/
 
@@ -481,9 +477,7 @@ void AddModuleFlare(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->fnFinalizeUpdateLXUV[iBody][iModule] = &FinalizeUpdateLXUVFlare;
 
-  /* XXX I think this approach to multi-module outputs is defunct
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionFlare;
-  */
+
 }
 
 /************* FLARE Functions ************/
@@ -510,7 +504,6 @@ double fdLXUVFlare(BODY *body,double dDeltaTime,int iBody) {
   double dLogEMin,dLogEMax,dFreqMin,dFreqMax,dWidth,dArea;
   double dEpsVis,dEpsXUV,dLXUVFlare;
 
-  // XXX Need global variable ERGSJOULES
   dLogEMin = log10(body[iBody].dFlareMinEnergy*1e7);
   dLogEMax = log10(body[iBody].dFlareMaxEnergy*1e7);
   dWidth = dLogEMax - dLogEMin;

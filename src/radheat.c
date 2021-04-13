@@ -1419,6 +1419,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_26ALNUMCORE].cName,"d26AlNumCore");
   sprintf(options[OPT_26ALNUMCORE].cDescr,"Initial Core Number of 26Al Atoms");
   sprintf(options[OPT_26ALNUMCORE].cDefault,"0");
+  sprintf(options[OPT_26ALNUMCORE].cDimension,"nd");
   options[OPT_26ALNUMCORE].iType = 2;
   options[OPT_26ALNUMCORE].bMultiFile = 1;
   options[OPT_26ALNUMCORE].dNeg = ENUMCORE26AL;
@@ -1485,6 +1486,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_40KNUMMAN].cName,"d40KNumMan");
   sprintf(options[OPT_40KNUMMAN].cDescr,"Initial Mantle Number of 40K Atoms");
   sprintf(options[OPT_40KNUMMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_40KNUMMAN].cDimension,"nd");
   options[OPT_40KNUMMAN].iType = 2;
   options[OPT_40KNUMMAN].bMultiFile = 1;
   options[OPT_40KNUMMAN].dNeg = ENUMMAN40K;
@@ -1495,6 +1497,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_40KNUMCORE].cName,"d40KNumCore");
   sprintf(options[OPT_40KNUMCORE].cDescr,"Initial Core Number of 40K Atoms");
   sprintf(options[OPT_40KNUMCORE].cDefault,"Primordial Earth");
+  sprintf(options[OPT_40KNUMCORE].cDimension,"nd");
   options[OPT_40KNUMCORE].iType = 2;
   options[OPT_40KNUMCORE].bMultiFile = 1;
   options[OPT_40KNUMCORE].dNeg = ENUMCORE40K;
@@ -1505,6 +1508,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_40KNUMCRUST].cName,"d40KNumCrust");
   sprintf(options[OPT_40KNUMCRUST].cDescr,"Initial Crust Number of 40K Atoms");
   sprintf(options[OPT_40KNUMCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_40KNUMCRUST].cDimension,"nd");
   options[OPT_40KNUMCRUST].iType = 2;
   options[OPT_40KNUMCRUST].bMultiFile = 1;
   options[OPT_40KNUMCRUST].dNeg = ENUMCRUST40K;
@@ -1560,6 +1564,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_232THNUMMAN].cName,"d232ThNumMan");
   sprintf(options[OPT_232THNUMMAN].cDescr,"Initial Number of 232Th Atoms");
   sprintf(options[OPT_232THNUMMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_232THNUMMAN].cDimension,"nd");
   options[OPT_232THNUMMAN].iType = 2;
   options[OPT_232THNUMMAN].bMultiFile = 1;
   options[OPT_232THNUMMAN].dNeg = ENUMMAN232TH;
@@ -1592,6 +1597,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_232THNUMCORE].cName,"d232ThNumCore");
   sprintf(options[OPT_232THNUMCORE].cDescr,"Initial Core Number of 232Th Atoms");
   sprintf(options[OPT_232THNUMCORE].cDefault,"Primordial Earth");
+  sprintf(options[OPT_232THNUMCORE].cDimension,"nd");
   options[OPT_232THNUMCORE].iType = 2;
   options[OPT_232THNUMCORE].bMultiFile = 1;
   options[OPT_232THNUMCORE].dNeg = ENUMCORE232TH;
@@ -1625,6 +1631,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_232THNUMCRUST].cName,"d232ThNumCrust");
   sprintf(options[OPT_232THNUMCRUST].cDescr,"Initial Crust Number of 232Th Atoms");
   sprintf(options[OPT_232THNUMCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_232THNUMCRUST].cDimension,"nd");
   options[OPT_232THNUMCRUST].iType = 2;
   options[OPT_232THNUMCRUST].bMultiFile = 1;
   options[OPT_232THNUMCRUST].dNeg = ENUMCRUST232TH;
@@ -1658,6 +1665,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_238UNUMMAN].cName,"d238UNumMan");
   sprintf(options[OPT_238UNUMMAN].cDescr,"Initial Number of 238U Atoms");
   sprintf(options[OPT_238UNUMMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_238UNUMMAN].cDimension,"nd");
   options[OPT_238UNUMMAN].dDefault = 0;
   options[OPT_238UNUMMAN].iType = 2;
   options[OPT_238UNUMMAN].bMultiFile = 1;
@@ -1691,6 +1699,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_238UNUMCORE].cName,"d238UNumCore");
   sprintf(options[OPT_238UNUMCORE].cDescr,"Initial Core Number of 238U Atoms");
   sprintf(options[OPT_238UNUMCORE].cDefault,"Primordial Earth");
+  sprintf(options[OPT_238UNUMCORE].cDimension,"nd");
   options[OPT_238UNUMCORE].dDefault = 0;
   options[OPT_238UNUMCORE].iType = 2;
   options[OPT_238UNUMCORE].bMultiFile = 1;
@@ -1724,6 +1733,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_238UNUMCRUST].cName,"d238UNumCrust");
   sprintf(options[OPT_238UNUMCRUST].cDescr,"Initial Crust Number of 238U Atoms");
   sprintf(options[OPT_238UNUMCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_238UNUMCRUST].cDimension,"nd");
   options[OPT_238UNUMCRUST].dDefault = 0;
   options[OPT_238UNUMCRUST].iType = 2;
   options[OPT_238UNUMCRUST].bMultiFile = 1;
@@ -1747,6 +1757,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_235UMASSMAN].cName,"d235UMassMan");  //PED
   sprintf(options[OPT_235UMASSMAN].cDescr,"Initial Mass of 235U");
   sprintf(options[OPT_235UMASSMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_235UMASSMAN].cDimension,"nd");
   options[OPT_235UMASSMAN].iType = 2;
   options[OPT_235UMASSMAN].bMultiFile = 1;
   options[OPT_235UMASSMAN].dNeg = EMASSMAN235U;
@@ -1757,6 +1768,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_235UNUMMAN].cName,"d235UNumMan");  //PED
   sprintf(options[OPT_235UNUMMAN].cDescr,"Initial Number of 235U Atoms");
   sprintf(options[OPT_235UNUMMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_235UNUMMAN].cDimension,"nd");
   options[OPT_235UNUMMAN].iType = 2;
   options[OPT_235UNUMMAN].bMultiFile = 1;
   options[OPT_235UNUMMAN].dNeg = ENUMMAN235U;
@@ -1789,6 +1801,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_235UNUMCORE].cName,"d235UNumCore");
   sprintf(options[OPT_235UNUMCORE].cDescr,"Initial Core Number of 235U Atoms");
   sprintf(options[OPT_235UNUMCORE].cDefault,"Primordial Earth");
+  sprintf(options[OPT_235UNUMCORE].cDimension,"nd");
   options[OPT_235UNUMCORE].iType = 2;
   options[OPT_235UNUMCORE].bMultiFile = 1;
   options[OPT_235UNUMCORE].dNeg = ENUMCORE235U;
@@ -1821,6 +1834,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_235UNUMCRUST].cName,"d235UNumCrust");
   sprintf(options[OPT_235UNUMCRUST].cDescr,"Initial Crust Number of 235U Atoms");
   sprintf(options[OPT_235UNUMCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_235UNUMCRUST].cDimension,"nd");
   options[OPT_235UNUMCRUST].iType = 2;
   options[OPT_235UNUMCRUST].bMultiFile = 1;
   options[OPT_235UNUMCRUST].dNeg = ENUMCRUST235U;

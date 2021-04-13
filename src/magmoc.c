@@ -412,6 +412,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FEO].cName,"dMassFracFeOIni"); //name of the variable
   sprintf(options[OPT_FEO].cDescr,"Initial Mass Fraction of FeO in the mantle"); //description that will be shown for vplanet -h
   sprintf(options[OPT_FEO].cDefault,"BSE Earth: 0.0788"); //comment what the default value will be
+  sprintf(options[OPT_FEO].cDimension,"nd");
   options[OPT_FEO].iType = 2; //type of the variable: double??
   options[OPT_FEO].bMultiFile = 1; //can it be used in multiple files? 1 = yes
   options[OPT_FEO].dNeg = 1; //is there a unit other than the SI unit? factor to convert between both units
@@ -476,6 +477,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_WATERPARTCOEFF].cName,"dWaterPartCoeff");
   sprintf(options[OPT_WATERPARTCOEFF].cDescr,"Water partition coefficient between melt and solid");
   sprintf(options[OPT_WATERPARTCOEFF].cDefault,"0.01");
+  sprintf(options[OPT_WATERPARTCOEFF].cDimension,"nd");
   options[OPT_WATERPARTCOEFF].iType = 2;
   options[OPT_WATERPARTCOEFF].bMultiFile = 1;
   options[OPT_WATERPARTCOEFF].dNeg = 1;

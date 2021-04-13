@@ -412,7 +412,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13N0].cName,"dLL13N0");
   sprintf(options[OPT_LL13N0].cDescr,"Lee+Leung 2013 Mean Motion");
   sprintf(options[OPT_LL13N0].cDefault,"1 /yr");
-  sprintf(options[OPT_LL13N0].cDimension,"frequency");
+  sprintf(options[OPT_LL13N0].cDimension,"time^-1");
   options[OPT_LL13N0].dDefault = 1./YEARSEC;
   options[OPT_LL13N0].iType = 2;
   options[OPT_LL13N0].bMultiFile = 1;
@@ -423,7 +423,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13K0].cName,"dLL13K0");
   sprintf(options[OPT_LL13K0].cDescr,"Lee+Leung 2013 Radial Epicyclic Frequency");
   sprintf(options[OPT_LL13K0].cDefault,"1 /yr");
-  sprintf(options[OPT_LL13K0].cDimension,"frequency");
+  sprintf(options[OPT_LL13K0].cDimension,"time^-1");
   options[OPT_LL13K0].dDefault = 1./YEARSEC;
   options[OPT_LL13K0].iType = 2;
   options[OPT_LL13K0].bMultiFile = 1;
@@ -434,7 +434,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LL13V0].cName,"dLL13V0");
   sprintf(options[OPT_LL13V0].cDescr,"Lee+Leung 2013 Radial Epicyclic Frequency");
   sprintf(options[OPT_LL13V0].cDefault,"1 /yr");
-  sprintf(options[OPT_LL13V0].cDimension,"frequency");
+  sprintf(options[OPT_LL13V0].cDimension,"time^-1");
   options[OPT_LL13V0].dDefault = 1./YEARSEC;
   options[OPT_LL13V0].iType = 2;
   options[OPT_LL13V0].bMultiFile = 1;

@@ -1147,6 +1147,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_STAGLID].cName,"dStagLid");
   sprintf(options[OPT_STAGLID].cDescr,"Stagnant Lid Switch");
   sprintf(options[OPT_STAGLID].cDefault,"Default is STAGLID");
+  sprintf(options[OPT_STAGLID].cDimension,"nd");
   options[OPT_STAGLID].iType = 2;
   options[OPT_STAGLID].bMultiFile = 1;
   options[OPT_STAGLID].dNeg = STAGLID;
@@ -1327,6 +1328,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_IMK2MANORBMODEL].cName,"dImK2ManOrbModel");
   sprintf(options[OPT_IMK2MANORBMODEL].cDescr,"ImK2Man model to use in orbital equations (1=ImK2(T), 2=k2/Q(T)");
   sprintf(options[OPT_IMK2MANORBMODEL].cDefault,"Default is IMK2MANORBMODEL");
+  sprintf(options[OPT_IMK2MANORBMODEL].cDimension,"nd");
   options[OPT_IMK2MANORBMODEL].iType = 2;
   options[OPT_IMK2MANORBMODEL].bMultiFile = 1;
   options[OPT_IMK2MANORBMODEL].dNeg = IMK2MANORBMODEL;

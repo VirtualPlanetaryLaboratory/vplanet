@@ -589,6 +589,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBINECC].cName,"dHostBinEcc");
   sprintf(options[OPT_HOSTBINECC].cDescr,"eccentricity of host binary");
   sprintf(options[OPT_HOSTBINECC].cDefault,"0.51");
+  sprintf(options[OPT_HOSTBINECC].cDimension,"nd");
   options[OPT_HOSTBINECC].dDefault = 0.51;
   options[OPT_HOSTBINECC].iType = 2;
   options[OPT_HOSTBINECC].bMultiFile = 0;

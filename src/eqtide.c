@@ -648,6 +648,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_K2].cName,"dK2");
   sprintf(options[OPT_K2].cDescr,"Love Number of Degree 2");
   sprintf(options[OPT_K2].cDefault,"1");
+  sprintf(options[OPT_K2].cDimension,"nd");
   options[OPT_K2].dDefault = 1;
   options[OPT_K2].iType = 2;
   options[OPT_K2].bMultiFile = 1;
@@ -656,6 +657,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_K2OCEAN].cName,"dK2Ocean");
   sprintf(options[OPT_K2OCEAN].cDescr,"Ocean's Love Number of Degree 2");
   sprintf(options[OPT_K2OCEAN].cDefault,"0.05");
+  sprintf(options[OPT_K2OCEAN].cDimension,"nd");
   options[OPT_K2OCEAN].dDefault = 0.01;
   options[OPT_K2OCEAN].iType = 2;
   options[OPT_K2OCEAN].bMultiFile = 1;
@@ -664,6 +666,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_K2ENV].cName,"dK2Env");
   sprintf(options[OPT_K2ENV].cDescr,"Envelope's Love Number of Degree 2");
   sprintf(options[OPT_K2ENV].cDefault,"0.01");
+  sprintf(options[OPT_K2ENV].cDimension,"nd");
   options[OPT_K2ENV].dDefault = 0.01;
   options[OPT_K2ENV].iType = 2;
   options[OPT_K2ENV].bMultiFile = 1;
@@ -672,6 +675,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_MAXLOCKDIFF].cName,"dMaxLockDiff");
   sprintf(options[OPT_MAXLOCKDIFF].cDescr,"Maximum relative difference between spin and equilibrium spin rates to force equilibrium spin rate");
   sprintf(options[OPT_MAXLOCKDIFF].cDefault,"0");
+  sprintf(options[OPT_MAXLOCKDIFF].cDimension,"nd");
   options[OPT_MAXLOCKDIFF].dDefault = 0;
   options[OPT_MAXLOCKDIFF].iType = 2;
   options[OPT_MAXLOCKDIFF].bMultiFile = 1;
@@ -708,6 +712,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_SYNCECC].cName,"dSyncEcc");
   sprintf(options[OPT_SYNCECC].cDescr,"Minimum Eccentricity for Non-Synchronous Rotation");
   sprintf(options[OPT_SYNCECC].cDefault,"0");
+  sprintf(options[OPT_SYNCECC].cDimension,"nd");
   options[OPT_SYNCECC].dDefault = 0;
   options[OPT_SYNCECC].iType = 2;
   options[OPT_SYNCECC].bMultiFile = 1;
@@ -716,6 +721,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_TIDALQ].cName,"dTidalQ");
   sprintf(options[OPT_TIDALQ].cDescr,"Tidal Quality Factor");
   sprintf(options[OPT_TIDALQ].cDefault,"1e6");
+  sprintf(options[OPT_TIDALQ].cDimension,"nd");
   options[OPT_TIDALQ].dDefault = 1e6;
   options[OPT_TIDALQ].iType = 2;
   options[OPT_TIDALQ].bMultiFile = 1;
@@ -724,6 +730,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_TIDALQOCEAN].cName,"dTidalQOcean");
   sprintf(options[OPT_TIDALQOCEAN].cDescr,"Ocean Tidal Quality Factor");
   sprintf(options[OPT_TIDALQOCEAN].cDefault,"12");
+  sprintf(options[OPT_TIDALQOCEAN].cDimension,"nd");
   options[OPT_TIDALQOCEAN].dDefault = 12;
   options[OPT_TIDALQOCEAN].iType = 2;
   options[OPT_TIDALQOCEAN].bMultiFile = 1;
@@ -732,6 +739,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_TIDALQENV].cName,"dTidalQEnv");
   sprintf(options[OPT_TIDALQENV].cDescr,"Envelope Tidal Quality Factor");
   sprintf(options[OPT_TIDALQENV].cDefault,"1.0e4");
+  sprintf(options[OPT_TIDALQENV].cDimension,"nd");
   options[OPT_TIDALQENV].dDefault = 1.0e4;
   options[OPT_TIDALQENV].iType = 2;
   options[OPT_TIDALQENV].bMultiFile = 1;
@@ -770,6 +778,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_TIDALQMANTLE].cName,"dTidalQMantle");
   sprintf(options[OPT_TIDALQMANTLE].cDescr,"Tidal Q of Mantle");
   sprintf(options[OPT_TIDALQMANTLE].cDefault,"100");
+  sprintf(options[OPT_TIDALQMANTLE].cDimension,"nd");
   options[OPT_TIDALQMANTLE].dDefault = 100;
   options[OPT_TIDALQMANTLE].iType = 2;
   options[OPT_TIDALQMANTLE].bMultiFile = 1;
@@ -778,6 +787,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_K2MANTLE].cName,"dK2Mantle");
   sprintf(options[OPT_K2MANTLE].cDescr,"Mantle's Love Number of Degree 2");
   sprintf(options[OPT_K2MANTLE].cDefault,"0.01");
+  sprintf(options[OPT_K2MANTLE].cDimension,"nd");
   options[OPT_K2MANTLE].dDefault = 0.01;
   options[OPT_K2MANTLE].iType = 2;
   options[OPT_K2MANTLE].bMultiFile = 1;

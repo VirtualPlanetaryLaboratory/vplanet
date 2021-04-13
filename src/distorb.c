@@ -225,6 +225,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DFCRIT].cName,"dDfcrit");
   sprintf(options[OPT_DFCRIT].cDescr,"Tolerance parameter for recalculating semi- functions");
   sprintf(options[OPT_DFCRIT].cDefault,"0.1");
+  sprintf(options[OPT_DFCRIT].cDimension,"nd");
   options[OPT_DFCRIT].dDefault = 0.1;
   options[OPT_DFCRIT].iType = 2;
   options[OPT_DFCRIT].bMultiFile = 0;
@@ -280,6 +281,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_EIGENVALUE].cName,"dEigenvalue");
   sprintf(options[OPT_EIGENVALUE].cDescr,"Set this to provide eigenvalues/vectors at input");
   sprintf(options[OPT_EIGENVALUE].cDefault,"0");
+  sprintf(options[OPT_EIGENVALUE].cDimension,"nd");
   options[OPT_EIGENVALUE].dDefault = 0;
   options[OPT_EIGENVALUE].iType = 0;
   options[OPT_EIGENVALUE].bMultiFile = 0;
@@ -288,6 +290,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_EIGENVECTOR].cName,"dEigenvector");
   sprintf(options[OPT_EIGENVECTOR].cDescr,"Set this to provide eigenvalues/vectors at input");
   sprintf(options[OPT_EIGENVECTOR].cDefault,"0");
+  sprintf(options[OPT_EIGENVECTOR].cDimension,"nd");
   options[OPT_EIGENVECTOR].dDefault = 0;
   options[OPT_EIGENVECTOR].iType = 0;
   options[OPT_EIGENVECTOR].bMultiFile = 0;

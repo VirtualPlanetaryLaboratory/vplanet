@@ -261,7 +261,7 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       else if (options->iType == 2) printf("Double\n");
       else if (options->iType == 3) printf("String\n");
       else if (options->iType >= 4) printf("Array\n");
-      if (options->bNeg == 1)
+      if (options->dNeg != 0)
           printf("**Custom unit**     %s\n", options->cNeg);
       else
           printf("**Custom unit**     \n");

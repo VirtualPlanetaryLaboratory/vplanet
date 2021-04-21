@@ -3122,7 +3122,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_AGE].cDescr,"System Age");
   sprintf(options[OPT_AGE].cDefault,"0");
   sprintf(options[OPT_AGE].cNeg,"Gyr");
-  sprintf(options[OPT_JEANSTIME].cDimension,"time");
+  sprintf(options[OPT_AGE].cDimension,"time");
   options[OPT_AGE].dDefault = 0;
   options[OPT_AGE].iType = 2;
   options[OPT_AGE].iModuleBit = 0;
@@ -3196,7 +3196,7 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_STOPTIME].cDescr,"Integration Stop Time");
   sprintf(options[OPT_STOPTIME].cDefault,"10 years");
   sprintf(options[OPT_STOPTIME].cNeg,"Years");
-  sprintf(options[OPT_OUTPUTTIME].cDimension,"time");
+  sprintf(options[OPT_STOPTIME].cDimension,"time");
   options[OPT_STOPTIME].dDefault = 10*YEARSEC;
   options[OPT_STOPTIME].iType = 2;
   options[OPT_STOPTIME].iModuleBit = 0;
@@ -3672,12 +3672,12 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PRECA].cName,"dPrecA");
   sprintf(options[OPT_PRECA].cDescr,"Planet's precession angle");
   sprintf(options[OPT_PRECA].cDefault,"0");
-  sprintf(options[OPT_LONGA].cNeg,"Degrees");
-  sprintf(options[OPT_LONGA].cDimension,"angle");
+  sprintf(options[OPT_PRECA].cNeg,"Degrees");
+  sprintf(options[OPT_PRECA].cDimension,"angle");
   options[OPT_PRECA].dDefault = 0.0;
   options[OPT_PRECA].iType = 2;
   options[OPT_PRECA].bMultiFile = 1;
-  options[OPT_LONGA].dNeg = DEGRAD;
+  options[OPT_PRECA].dNeg = DEGRAD;
   options[OPT_PRECA].iModuleBit = SPINBODY + DISTROT + POISE;
   options[OPT_PRECA].bNeg = 0;
   options[OPT_PRECA].iFileType = 1;

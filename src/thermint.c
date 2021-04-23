@@ -995,7 +995,10 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCJUMPMAN].cNeg,"Default");
   fnRead[OPT_VISCJUMPMAN] = &fvReadViscJumpMan;
   // Needs a LongDescr
-
+  sprintf(options[OPT_VISCJUMPMAN].cLongDescr,
+	  "Numerical factor that is used to get the lower mantle thermal boundary &\n"
+	  "viscosity visc_UMan from the upper mantle viscosity visc_LM by &\n"
+	  "visc_LM=ViscJumpMan*visc_UM.  See eq (163) in Barnes et al (2020).");
 
   /* ViscRef */
   sprintf(options[OPT_VISCREF].cName,"dViscRef");
@@ -1008,7 +1011,9 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCREF].cNeg,"Default value in thermint.h");
   fnRead[OPT_VISCREF] = &fvReadViscRef;
   // Needs a LongDescr
-
+  sprintf(options[OPT_VISCREF].cLongDescr,
+	  "Coefficient in front of viscosity equation &\n"
+	  "see eq (159) in Barnes et al. (2020).");
 
   /* TrefLind */
   sprintf(options[OPT_TREFLIND].cName,"dTrefLind");
@@ -1037,7 +1042,10 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DTCHIREF].cNeg,"Default in thermint.h");
   fnRead[OPT_DTCHIREF] = &fvReadDTChiRef;
   // Needs a LongDescr
-
+  sprintf(options[OPT_DTCHIREF].cLongDescr,
+	  "Core liquidus (melting temperature) depression due to the presence &\n"
+	  "of light elements in the core.  See eq (175) in Barnes et al (2020).");
+  
   /* EruptEff */
   sprintf(options[OPT_ERUPTEFF].cName,"dEruptEff");
   sprintf(options[OPT_ERUPTEFF].cDescr,"Melt Eruption Efficiency");
@@ -1049,7 +1057,10 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ERUPTEFF].cNeg,"Default is ERUPTEFF");
   fnRead[OPT_ERUPTEFF] = &fvReadEruptEff;
   // Needs a LongDescr
-
+  sprintf(options[OPT_ERUPTEFF].cLongDescr,
+	  "Fraction of heat in mantle melt that escapes to the surface. &\n"
+	  "See eq (187) in Barnes et al (2020).");
+  
   /* ViscMeltPhis */
   sprintf(options[OPT_VISCMELTPHIS].cName,"dViscMeltPhis");
   sprintf(options[OPT_VISCMELTPHIS].cDescr,"Viscosity Melt Factor Phi star");
@@ -1076,7 +1087,11 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCMELTXI].cNeg,"Default is VISCMELTXI");
   fnRead[OPT_VISCMELTXI] = &fvReadViscMeltXi;
   // Needs a LongDescr
-
+  sprintf(options[OPT_VISCMELTXI].cLongDescr,
+	  "Constant used to compute the reduction in mantle viscosity &\n"
+	  "due to the presence of melt.  See eq (162) in Barnes et al (2020) &\n"
+	  "and Costa et al (2009) for values for different materials.");
+  
   /* ViscMeltGamma */
   sprintf(options[OPT_VISCMELTGAMMA].cName,"dViscMeltGamma");
   sprintf(options[OPT_VISCMELTGAMMA].cDescr,"Viscosity Melt Factor Gamma");
@@ -1088,7 +1103,11 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCMELTGAMMA].cNeg,"Default is VISCMELTGAMMA");
   fnRead[OPT_VISCMELTGAMMA] = &fvReadViscMeltGamma;
   // Needs a LongDescr
-
+  sprintf(options[OPT_VISCMELTGAMMA].cLongDescr,
+	  "Constant used to compute the reduction in mantle viscosity &\n"
+	  "due to the presence of melt.  See eq (162) in Barnes et al (2020) &\n"
+	  "and Costa et al (2009) for values for different materials.");
+  
   /* ViscMeltDelta */
   sprintf(options[OPT_VISCMELTDELTA].cName,"dViscMeltDelta");
   sprintf(options[OPT_VISCMELTDELTA].cDescr,"Viscosity Melt Factor Delta");
@@ -1100,6 +1119,10 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCMELTDELTA].cNeg,"Default is VISCMELTDELTA");
   fnRead[OPT_VISCMELTDELTA] = &fvReadViscMeltDelta;
   // Needs a LongDescr
+  sprintf(options[OPT_VISCMELTDELTA].cLongDescr,
+  	  "Constant used to compute the reduction in mantle viscosity &\n"
+	  "due to the presence of melt.  See eq (161) in Barnes et al (2020) &\n"
+	  "and Costa et al (2009) for values for different materials.");
 
   /* ViscMeltB */
   sprintf(options[OPT_VISCMELTB].cName,"dViscMeltB");
@@ -1112,6 +1135,10 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCMELTB].cNeg,"Default is VISCMELTB");
   fnRead[OPT_VISCMELTB] = &fvReadViscMeltB;
   // Needs a LongDescr
+  sprintf(options[OPT_VISCMELTB].cLongDescr,  
+  	  "Constant used to compute the reduction in mantle viscosity &\n"
+	  "due to the presence of melt.  See eq (161) in Barnes et al (2020) &\n"
+	  "and Costa et al (2009) for values for different materials.");
 
   /* MeltfactorLMan XXX Added by Rory -- Check!*/
   sprintf(options[OPT_MELTFACTORLMAN].cName,"dMeltfactorLMan");
@@ -1125,7 +1152,12 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   //sprintf(options[OPT_MELTFACTORLMAN].cNeg,"Default is MELTFACTORLMAN");
   fnRead[OPT_MELTFACTORLMAN] = &fvReadMeltfactorLMan;
   // Needs a LongDescr
-
+  sprintf(options[OPT_MELTFACTORLMAN].cLongDescr,
+	  "Use to fix the lower mantle viscosity melt factor, defined as &\n"
+	  "epsilon_phase in eq (159,160) of Barnes et al (2020).  Note that &\n"
+	  "this is an option.  Default behavior is to compute this factor from &\n"
+	  "the local temperature.");
+  
   /* MeltfactorUMan */
   sprintf(options[OPT_MELTFACTORUMAN].cName,"dMeltfactorUMan");
   sprintf(options[OPT_MELTFACTORUMAN].cDescr,"Upper Mantle Viscosity Melt Factor");
@@ -1137,6 +1169,11 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MELTFACTORUMAN].cNeg,"Default is MELTFACTORUMAN");
   fnRead[OPT_MELTFACTORUMAN] = &fvReadMeltfactorUMan;
   // Needs a LongDescr
+  sprintf(options[OPT_MELTFACTORUMAN].cLongDescr,
+	  "Use to fix the upper mantle viscosity melt factor, defined as &\n"
+	  "epsilon_phase in eq (159,160) of Barnes et al (2020).  Note that &\n"
+	  "this is an option.  Default behavior is to compute this factor from &\n"
+	  "the local temperature.");
 
   /* FixMeltfactorUMan */
   sprintf(options[OPT_FIXMELTFACTORUMAN].cName,"dFixMeltfactorUMan");
@@ -1149,19 +1186,26 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FIXMELTFACTORUMAN].cNeg,"Default is FIXMELTFACTORUMAN");
   fnRead[OPT_FIXMELTFACTORUMAN] = &fvReadFixMeltfactorUMan;
   // Needs a LongDescr
-
+  sprintf(options[OPT_FIXMELTFACTORUMAN].cDescr,
+	  "Boolean: 1 tells the code to used a fixed upper mantle viscosity melt &\n"
+	  "factor, 0 tells the code to compute it from the local temperature (default).");
+  
   /* StagLid */
   /* RB: I don't understand this. STAGLID is 0 in thermint.h, so isn't the default
     not to use staglid? I'd also prefer to see this change to sThermalMode
     with options pt, sl, and auto. XXX */
+  /* PD(4/23/21): The default value of StagLid is STAGLID=0, which means
+     the planet is not in a stagnant lid so a mobile lid cooling model is
+     used.  I changed the cDefault and cNeg below.  I don't think there is a
+     negative value option here, right?  Should a negative value print a warning? */
   sprintf(options[OPT_STAGLID].cName,"dStagLid");
   sprintf(options[OPT_STAGLID].cDescr,"Use Stagnant Lid Model");
-  sprintf(options[OPT_STAGLID].cDefault,"Default is STAGLID");
+  sprintf(options[OPT_STAGLID].cDefault,"Default is mobile lid");
   options[OPT_STAGLID].iType = 2;
   options[OPT_STAGLID].bMultiFile = 1;
   options[OPT_STAGLID].dNeg = STAGLID;
   options[OPT_STAGLID].dDefault = STAGLID;
-  sprintf(options[OPT_STAGLID].cNeg,"Default is STAGLID");
+  sprintf(options[OPT_STAGLID].cNeg,"No negative behavior");
   fnRead[OPT_STAGLID] = &fvReadStagLid;
 
   /* ManHFlowPref */

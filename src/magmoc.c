@@ -412,6 +412,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FEO].cName,"dMassFracFeOIni"); //name of the variable
   sprintf(options[OPT_FEO].cDescr,"Initial Mass Fraction of FeO in the mantle"); //description that will be shown for vplanet -h
   sprintf(options[OPT_FEO].cDefault,"BSE Earth: 0.0788"); //comment what the default value will be
+  sprintf(options[OPT_FEO].cDimension,"nd");
   options[OPT_FEO].iType = 2; //type of the variable: double??
   options[OPT_FEO].bMultiFile = 1; //can it be used in multiple files? 1 = yes
   options[OPT_FEO].dNeg = 1; //is there a unit other than the SI unit? factor to convert between both units
@@ -424,6 +425,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_WATERMASSATM].cName,"dWaterMassAtm");
   sprintf(options[OPT_WATERMASSATM].cDescr,"Initial Water Mass in the atmosphere");
   sprintf(options[OPT_WATERMASSATM].cDefault,"1 Terrestrial Ocean");
+  sprintf(options[OPT_WATERMASSATM].cDimension,"mass");
   options[OPT_WATERMASSATM].iType = 2;
   options[OPT_WATERMASSATM].bMultiFile = 1;
   options[OPT_WATERMASSATM].dNeg = TOMASS; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
@@ -436,6 +438,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CO2MASSMOATM].cName,"dCO2MassMOAtm");
   sprintf(options[OPT_CO2MASSMOATM].cDescr,"Initial CO2 mass in the system");
   sprintf(options[OPT_CO2MASSMOATM].cDefault,"0 TO");
+  sprintf(options[OPT_CO2MASSMOATM].cDimension,"mass");
   options[OPT_CO2MASSMOATM].iType = 2;
   options[OPT_CO2MASSMOATM].bMultiFile = 1;
   options[OPT_CO2MASSMOATM].dNeg = TOMASS; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
@@ -448,6 +451,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SURFTEMP].cName,"dSurfTemp");
   sprintf(options[OPT_SURFTEMP].cDescr,"Initial surface temp");
   sprintf(options[OPT_SURFTEMP].cDefault,"4000 K");
+  sprintf(options[OPT_SURFTEMP].cDimension,"temperature");
   options[OPT_SURFTEMP].iType = 2;
   options[OPT_SURFTEMP].bMultiFile = 1;
   options[OPT_SURFTEMP].dNeg = 1;
@@ -460,6 +464,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MANMELTDENSITY].cName,"dManMeltDensity");
   sprintf(options[OPT_MANMELTDENSITY].cDescr,"Density of the molten mantle");
   sprintf(options[OPT_MANMELTDENSITY].cDefault,"4000 kg/m^3");
+  sprintf(options[OPT_MANMELTDENSITY].cDimension,"mass/length^3");
   options[OPT_MANMELTDENSITY].iType = 2;
   options[OPT_MANMELTDENSITY].bMultiFile = 1;
   options[OPT_MANMELTDENSITY].dNeg = 1;
@@ -472,6 +477,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_WATERPARTCOEFF].cName,"dWaterPartCoeff");
   sprintf(options[OPT_WATERPARTCOEFF].cDescr,"Water partition coefficient between melt and solid");
   sprintf(options[OPT_WATERPARTCOEFF].cDefault,"0.01");
+  sprintf(options[OPT_WATERPARTCOEFF].cDimension,"nd");
   options[OPT_WATERPARTCOEFF].iType = 2;
   options[OPT_WATERPARTCOEFF].bMultiFile = 1;
   options[OPT_WATERPARTCOEFF].dNeg = 1;
@@ -484,6 +490,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DEPTHMO].cName,"dDepthMO");
   sprintf(options[OPT_DEPTHMO].cDescr,"Initial depth of the magma ocean");
   sprintf(options[OPT_DEPTHMO].cDefault,"core radius");
+  sprintf(options[OPT_DEPTHMO].cDimension,"length");
   options[OPT_DEPTHMO].iType = 2;
   options[OPT_DEPTHMO].bMultiFile = 1;
   options[OPT_DEPTHMO].dNeg = 1e3;

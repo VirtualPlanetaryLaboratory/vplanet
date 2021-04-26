@@ -17,7 +17,7 @@ def test_CassiniMulti():
 
     # Check
     # Star
-    assert np.isclose(output.log.final.TGstar.Radius, 0.878726)
+    assert np.isclose(output.log.final.TGstar.Radius, 95.848284)
     assert np.isclose(output.log.final.TGstar.RadGyra, 0.445942)
     assert np.isclose(output.log.final.TGstar.RotVel, 296.385042)
     assert np.isclose(output.log.final.TGstar.EqRotRate, 1.407733e-05)

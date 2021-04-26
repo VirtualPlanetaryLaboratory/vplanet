@@ -134,6 +134,7 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DYNELLIP].cName,"dDynEllip");
   sprintf(options[OPT_DYNELLIP].cDescr,"Planet's dynamical ellipticity");
   sprintf(options[OPT_DYNELLIP].cDefault,"0.00328");
+  sprintf(options[OPT_DYNELLIP].cDimension,"nd");
   options[OPT_DYNELLIP].dDefault = 0.00328;
   options[OPT_DYNELLIP].iType = 2;
   options[OPT_DYNELLIP].bMultiFile = 1;
@@ -172,6 +173,7 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SPECMOMINERTIA].cName,"dSpecMomInertia");
   sprintf(options[OPT_SPECMOMINERTIA].cDescr,"Specific moment of inertia of polar axis");
   sprintf(options[OPT_SPECMOMINERTIA].cDefault,"0.33");
+  sprintf(options[OPT_SPECMOMINERTIA].cDimension,"nd");
   options[OPT_SPECMOMINERTIA].dDefault = 0.33;
   options[OPT_SPECMOMINERTIA].iType = 2;
   options[OPT_SPECMOMINERTIA].bMultiFile = 1;

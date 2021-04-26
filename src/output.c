@@ -1137,15 +1137,12 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
    * H
    */
 
-/* Someday...
   sprintf(output[OUT_HECC].cName,"HEcc");
   sprintf(output[OUT_HECC].cDescr,"Poincare's h (=e*sin(varpi)");
   output[OUT_HECC].bNeg = 0;
   output[OUT_HECC].iNum = 1;
   output[OUT_HECC].iModuleBit = EQTIDE + DISTORB;
   fnWrite[OUT_HECC] = &WriteHecc;
-
-*/
 
   sprintf(output[OUT_HZLIMDRYRUNAWAY].cName,"HZLimitDryRunaway");
   sprintf(output[OUT_HZLIMDRYRUNAWAY].cDescr,"Semi-major axis of Dry Runaway HZ Limit");
@@ -1248,14 +1245,12 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_K2MAN].iModuleBit = THERMINT + EQTIDE;
   fnWrite[OUT_K2MAN] = &WriteK2Man;
 
-/* Someday...
   sprintf(output[OUT_KECC].cName,"KEcc");
   sprintf(output[OUT_KECC].cDescr,"Poincare's k (=e*cos(varpi)");
   output[OUT_KECC].bNeg = 0;
   output[OUT_KECC].iNum = 1;
   output[OUT_KECC].iModuleBit = EQTIDE + DISTORB;
   fnWrite[OUT_KECC] = &WriteKecc;
-*/
 
   /*
    * L
@@ -2165,8 +2160,9 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
     sprintf(output[iOut].cLongDescr,"null");
     memset(output[iOut].cNeg,'\0',OUTDESCR);
     sprintf(output[iOut].cNeg,"null");
-    for (iBody=0;iBody<MAXFILES;iBody++)
-        output[iOut].bDoNeg[iBody] = 0;
+    for (iBody=0;iBody<MAXFILES;iBody++) {
+      output[iOut].bDoNeg[iBody] = 0;
+    }
   }
 
 

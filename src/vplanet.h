@@ -783,7 +783,7 @@ struct BODY {
   double dLongATmp;         /**< Long asc node in the host binary reference plane */
   double dIncTmp;           /**< Inclination in the host binary reference plane */
   double dCosArgP;          /**< Cosine of arg pericenter */
-  double dMinAllowed;       /**< minimum allowed close approach of body to host */
+  double dMinStellarApproach;       /**< minimum allowed close approach of body to host */
   double dMassInterior;     /**< Total mass of bodies interior to body */
   int iBadImpulse;          /**< Was there a bad impulse? */
 
@@ -1706,10 +1706,15 @@ struct OPTIONS {
   char cName[OPTLEN];          /**< Option Name */
   char cDescr[OPTDESCR];       /**< Brief Description of Option */
   char cLongDescr[OPTLONDESCR];/**< Long Description of Option */
-  char cDimension[OPTDESCR];   //XXX This is the line to remove in conflict!
   char cValues[OPTDESCR];      /**< Description of permitted values / ranges */
   int iType;                   /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for array. */
   char cDefault[OPTDESCR];     /**< Description of Default Value */
+  /** Qualitative description of the option, included for connection wtih
+      bigplanet. Options are: time, length, mass, angle, energy, pressure,
+      amperes. Units may be combined with standard mathematical operations, e.g.
+      energy/time, or mass*length/time^2.
+   */
+  char cDimension[OPTDESCR];
   double dDefault;             /**< Default Value */
   int iModuleBit;              /**< Bitwise sum of modules permitted to read option */
   int bMultiFile;              /**< Option Permitted in Multiple Input Files? */

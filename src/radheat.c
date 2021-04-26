@@ -1385,7 +1385,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   /* 26Al */
   sprintf(options[OPT_26ALMASSMAN].cName,"d26AlMassMan");
   sprintf(options[OPT_26ALMASSMAN].cDescr,"Initial Mantle Mass of 26Al");
-  sprintf(options[OPT_26ALMASSMAN].cDefault,"Primordial Earth: 0");
+  sprintf(options[OPT_26ALMASSMAN].cDefault,"0");
+  sprintf(options[OPT_26ALMASSMAN].cDimension,"mass");
   options[OPT_26ALMASSMAN].iType = 2;
   options[OPT_26ALMASSMAN].bMultiFile = 1;
   options[OPT_26ALMASSMAN].dNeg = MEARTH;
@@ -1395,7 +1396,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_26ALMASSCORE].cName,"d26AlMassCore");
   sprintf(options[OPT_26ALMASSCORE].cDescr,"Initial Core Mass of 26Al");
-  sprintf(options[OPT_26ALMASSCORE].cDefault,"Primordial Earth: 0");
+  sprintf(options[OPT_26ALMASSCORE].cDefault,"0");
+  sprintf(options[OPT_26ALMASSCORE].cDimension,"mass");
   options[OPT_26ALMASSCORE].iType = 2;
   options[OPT_26ALMASSCORE].bMultiFile = 1;
   options[OPT_26ALMASSCORE].dNeg = MEARTH;
@@ -1405,7 +1407,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_26ALNUMMAN].cName,"d26AlNumMan");
   sprintf(options[OPT_26ALNUMMAN].cDescr,"Initial Mantle Number of 26Al Atoms");
-  sprintf(options[OPT_26ALNUMMAN].cDefault,"Primordial Earth: 0");
+  sprintf(options[OPT_26ALNUMMAN].cDefault,"0");
+  sprintf(options[OPT_26ALNUMMAN].cDimension,"mass");
   options[OPT_26ALNUMMAN].iType = 2;
   options[OPT_26ALNUMMAN].bMultiFile = 1;
   options[OPT_26ALNUMMAN].dNeg = ENUMMAN26AL;
@@ -1415,7 +1418,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_26ALNUMCORE].cName,"d26AlNumCore");
   sprintf(options[OPT_26ALNUMCORE].cDescr,"Initial Core Number of 26Al Atoms");
-  sprintf(options[OPT_26ALNUMCORE].cDefault,"Primordial Earth: 0");
+  sprintf(options[OPT_26ALNUMCORE].cDefault,"0");
+  sprintf(options[OPT_26ALNUMCORE].cDimension,"nd");
   options[OPT_26ALNUMCORE].iType = 2;
   options[OPT_26ALNUMCORE].bMultiFile = 1;
   options[OPT_26ALNUMCORE].dNeg = ENUMCORE26AL;
@@ -1425,7 +1429,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_26ALPOWERMAN].cName,"d26AlPowerMan");
   sprintf(options[OPT_26ALPOWERMAN].cDescr,"Initial Mantle Power Production from 26Al Atoms");
-  sprintf(options[OPT_26ALPOWERMAN].cDefault,"Primordial Earth: 0 TW");
+  sprintf(options[OPT_26ALPOWERMAN].cDefault,"0");
+  sprintf(options[OPT_26ALPOWERMAN].cDimension,"energy/time");
   options[OPT_26ALPOWERMAN].iType = 2;
   options[OPT_26ALPOWERMAN].bMultiFile = 1;
   options[OPT_26ALPOWERMAN].dNeg = EPOWERMAN26AL;  //Earth's POWER of 26Al
@@ -1435,7 +1440,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_26ALPOWERCORE].cName,"d26AlPowerCore");
   sprintf(options[OPT_26ALPOWERCORE].cDescr,"Initial Core Power Production from 26Al Atoms");
-  sprintf(options[OPT_26ALPOWERCORE].cDefault,"Primordial Earth: 0 TW");
+  sprintf(options[OPT_26ALPOWERCORE].cDefault,"0");
+  sprintf(options[OPT_26ALPOWERCORE].cDimension,"energy/time");
   options[OPT_26ALPOWERCORE].iType = 2;
   options[OPT_26ALPOWERCORE].bMultiFile = 1;
   options[OPT_26ALPOWERCORE].dNeg = EPOWERCORE26AL;  //Earth's POWER of 26Al
@@ -1446,373 +1452,411 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   /* 40K */
   sprintf(options[OPT_40KMASSMAN].cName,"d40KMassMan");
   sprintf(options[OPT_40KMASSMAN].cDescr,"Initial Mantle Mass of 40K");
-  sprintf(options[OPT_40KMASSMAN].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_40KMASSMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_40KMASSMAN].cDimension,"mass");
   options[OPT_40KMASSMAN].iType = 2;
   options[OPT_40KMASSMAN].bMultiFile = 1;
   options[OPT_40KMASSMAN].dNeg = EMASSMAN40K;
-  options[OPT_40KMASSMAN].dDefault = 0;
-  sprintf(options[OPT_40KMASSMAN].cNeg,"Mearth");
+  options[OPT_40KMASSMAN].dDefault = EMASSMAN40K;
+  sprintf(options[OPT_40KMASSMAN].cNeg,"Primordial Earth Units");
   fnRead[OPT_40KMASSMAN] = &fvRead40KMassMan;
 
   sprintf(options[OPT_40KMASSCORE].cName,"d40KMassCore");
   sprintf(options[OPT_40KMASSCORE].cDescr,"Initial Core Mass of 40K");
-  sprintf(options[OPT_40KMASSCORE].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_40KMASSCORE].cDefault,"Primordial Earth Units");
+  sprintf(options[OPT_40KMASSCORE].cDimension,"mass");
   options[OPT_40KMASSCORE].iType = 2;
   options[OPT_40KMASSCORE].bMultiFile = 1;
   options[OPT_40KMASSCORE].dNeg = EMASSCORE40K;
-  options[OPT_40KMASSCORE].dDefault = 0;
-  sprintf(options[OPT_40KMASSCORE].cNeg,"Mearth");
+  options[OPT_40KMASSCORE].dDefault = EMASSCORE40K;
+  sprintf(options[OPT_40KMASSCORE].cNeg,"Primordial Earth");
   fnRead[OPT_40KMASSCORE] = &fvRead40KMassCore;
 
   sprintf(options[OPT_40KMASSCRUST].cName,"d40KMassCrust");
   sprintf(options[OPT_40KMASSCRUST].cDescr,"Initial Crust Mass of 40K");
-  sprintf(options[OPT_40KMASSCRUST].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_40KMASSCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_40KMASSCRUST].cDimension,"mass");
   options[OPT_40KMASSCRUST].iType = 2;
   options[OPT_40KMASSCRUST].bMultiFile = 1;
   options[OPT_40KMASSCRUST].dNeg = EMASSCRUST40K;
-  options[OPT_40KMASSCRUST].dDefault = 0;
-  sprintf(options[OPT_40KMASSCRUST].cNeg,"Mearth");
+  options[OPT_40KMASSCRUST].dDefault = EMASSCRUST40K;
+  sprintf(options[OPT_40KMASSCRUST].cNeg,"Primordial Earth Units");
   fnRead[OPT_40KMASSCRUST] = &fvRead40KMassCrust;
 
   sprintf(options[OPT_40KNUMMAN].cName,"d40KNumMan");
   sprintf(options[OPT_40KNUMMAN].cDescr,"Initial Mantle Number of 40K Atoms");
-  sprintf(options[OPT_40KNUMMAN].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_40KNUMMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_40KNUMMAN].cDimension,"nd");
   options[OPT_40KNUMMAN].iType = 2;
   options[OPT_40KNUMMAN].bMultiFile = 1;
   options[OPT_40KNUMMAN].dNeg = ENUMMAN40K;
-  options[OPT_40KNUMMAN].dDefault = 0;
-  sprintf(options[OPT_40KNUMMAN].cNeg,"Primordial Earth 40K Number");
+  options[OPT_40KNUMMAN].dDefault = ENUMMAN40K;
+  sprintf(options[OPT_40KNUMMAN].cNeg,"Primordial Earth Units");
   fnRead[OPT_40KNUMMAN] = &fvRead40KNumMan;
 
   sprintf(options[OPT_40KNUMCORE].cName,"d40KNumCore");
   sprintf(options[OPT_40KNUMCORE].cDescr,"Initial Core Number of 40K Atoms");
-  sprintf(options[OPT_40KNUMCORE].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_40KNUMCORE].cDefault,"Primordial Earth");
+  sprintf(options[OPT_40KNUMCORE].cDimension,"nd");
   options[OPT_40KNUMCORE].iType = 2;
   options[OPT_40KNUMCORE].bMultiFile = 1;
   options[OPT_40KNUMCORE].dNeg = ENUMCORE40K;
-  options[OPT_40KNUMCORE].dDefault = 0;
-  sprintf(options[OPT_40KNUMCORE].cNeg,"Primordial Earth 40K Number");
+  options[OPT_40KNUMCORE].dDefault = ENUMCORE40K;
+  sprintf(options[OPT_40KNUMCORE].cNeg,"Primordial Earth Units");
   fnRead[OPT_40KNUMCORE] = &fvRead40KNumCore;
 
   sprintf(options[OPT_40KNUMCRUST].cName,"d40KNumCrust");
   sprintf(options[OPT_40KNUMCRUST].cDescr,"Initial Crust Number of 40K Atoms");
-  sprintf(options[OPT_40KNUMCRUST].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_40KNUMCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_40KNUMCRUST].cDimension,"nd");
   options[OPT_40KNUMCRUST].iType = 2;
   options[OPT_40KNUMCRUST].bMultiFile = 1;
   options[OPT_40KNUMCRUST].dNeg = ENUMCRUST40K;
-  options[OPT_40KNUMCRUST].dDefault = 0;
-  sprintf(options[OPT_40KNUMCRUST].cNeg,"Primordial Earth 40K Number");
+  options[OPT_40KNUMCRUST].dDefault = ENUMCRUST40K;
+  sprintf(options[OPT_40KNUMCRUST].cNeg,"Primordial Earth Units");
   fnRead[OPT_40KNUMCRUST] = &fvRead40KNumCrust;
 
   sprintf(options[OPT_40KPOWERMAN].cName,"d40KPowerMan");
   sprintf(options[OPT_40KPOWERMAN].cDescr,"Initial Mantle Power Production from 40K Atoms");
-  sprintf(options[OPT_40KPOWERMAN].cDefault,"Primordial Earth: xx TW");
+  sprintf(options[OPT_40KPOWERMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_40KPOWERMAN].cDimension,"energy/time");
   options[OPT_40KPOWERMAN].iType = 2;
   options[OPT_40KPOWERMAN].bMultiFile = 1;
   options[OPT_40KPOWERMAN].dNeg = EPOWERMAN40K;  //Earth's POWER of 40K
-  options[OPT_40KPOWERMAN].dDefault = 0;
-  sprintf(options[OPT_40KPOWERMAN].cNeg,"TW");
+  options[OPT_40KPOWERMAN].dDefault = EPOWERMAN40K;
+  sprintf(options[OPT_40KPOWERMAN].cNeg,"Primordial Earth Units");
   fnRead[OPT_40KPOWERMAN] = &fvRead40KPowerMan;
 
   sprintf(options[OPT_40KPOWERCORE].cName,"d40KPowerCore");
   sprintf(options[OPT_40KPOWERCORE].cDescr,"Initial Core Power Production from 40K Atoms");
-  sprintf(options[OPT_40KPOWERCORE].cDefault,"Primordial Earth: xx TW");
+  sprintf(options[OPT_40KPOWERCORE].cDefault,"Primordial Earth");
+  sprintf(options[OPT_40KPOWERCORE].cDimension,"energy/time");
   options[OPT_40KPOWERCORE].iType = 2;
   options[OPT_40KPOWERCORE].bMultiFile = 1;
   options[OPT_40KPOWERCORE].dNeg = EPOWERCORE40K;  //Earth's POWER of 40K
-  options[OPT_40KPOWERCORE].dDefault = 0;
-  sprintf(options[OPT_40KPOWERCORE].cNeg,"TW");
+  options[OPT_40KPOWERCORE].dDefault = EPOWERCORE40K;
+  sprintf(options[OPT_40KPOWERCORE].cNeg,"Primordial Earth Units");
   fnRead[OPT_40KPOWERCORE] = &fvRead40KPowerCore;
 
   sprintf(options[OPT_40KPOWERCRUST].cName,"d40KPowerCrust");
   sprintf(options[OPT_40KPOWERCRUST].cDescr,"Initial Crust Power Production from 40K Atoms");
-  sprintf(options[OPT_40KPOWERCRUST].cDefault,"Primordial Earth: xx TW");
+  sprintf(options[OPT_40KPOWERCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_40KPOWERCRUST].cDimension,"energy/time");
   options[OPT_40KPOWERCRUST].iType = 2;
   options[OPT_40KPOWERCRUST].bMultiFile = 1;
   options[OPT_40KPOWERCRUST].dNeg = EPOWERCRUST40K;  //Earth's POWER of 40K
-  options[OPT_40KPOWERCRUST].dDefault = 0;
-  sprintf(options[OPT_40KPOWERCRUST].cNeg,"TW");
+  options[OPT_40KPOWERCRUST].dDefault = EPOWERCRUST40K;
+  sprintf(options[OPT_40KPOWERCRUST].cNeg,"Primordial Earth Units");
   fnRead[OPT_40KPOWERCRUST] = &fvRead40KPowerCrust;
 
   /* 232Th */
   sprintf(options[OPT_232THMASSMAN].cName,"d232ThMassMan");
   sprintf(options[OPT_232THMASSMAN].cDescr,"Initial Mass of 232Th");
-  sprintf(options[OPT_232THMASSMAN].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_232THMASSMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_232THMASSMAN].cDimension,"mass");
   options[OPT_232THMASSMAN].iType = 2;
   options[OPT_232THMASSMAN].bMultiFile = 1;
   options[OPT_232THMASSMAN].dNeg = EMASSMAN232TH;
-  options[OPT_232THMASSMAN].dDefault = 0;
-  sprintf(options[OPT_232THMASSMAN].cNeg,"Mearth");
+  options[OPT_232THMASSMAN].dDefault = EMASSMAN232TH;
+  sprintf(options[OPT_232THMASSMAN].cNeg,"Primordial Earth Units");
   fnRead[OPT_232THMASSMAN] = &fvRead232ThMassMan;
 
   sprintf(options[OPT_232THNUMMAN].cName,"d232ThNumMan");
   sprintf(options[OPT_232THNUMMAN].cDescr,"Initial Number of 232Th Atoms");
-  sprintf(options[OPT_232THNUMMAN].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_232THNUMMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_232THNUMMAN].cDimension,"nd");
   options[OPT_232THNUMMAN].iType = 2;
   options[OPT_232THNUMMAN].bMultiFile = 1;
   options[OPT_232THNUMMAN].dNeg = ENUMMAN232TH;
-  options[OPT_232THNUMMAN].dDefault = 0;
-  sprintf(options[OPT_232THNUMMAN].cNeg,"Primordial Earth 232Th Number");
+  options[OPT_232THNUMMAN].dDefault = ENUMMAN232TH;
+  sprintf(options[OPT_232THNUMMAN].cNeg,"Primordial Earth Units");
   fnRead[OPT_232THNUMMAN] = &fvRead232ThNumMan;
 
   sprintf(options[OPT_232THPOWERMAN].cName,"d232ThPowerMan");
   sprintf(options[OPT_232THPOWERMAN].cDescr,"Initial Power Production from 232Th Atoms");
-  sprintf(options[OPT_232THPOWERMAN].cDefault,"Primordial Earth: xx TW");
+  sprintf(options[OPT_232THPOWERMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_232THPOWERMAN].cDimension,"energy/time");
   options[OPT_232THPOWERMAN].iType = 2;
   options[OPT_232THPOWERMAN].bMultiFile = 1;
   options[OPT_232THPOWERMAN].dNeg = EPOWERMAN232TH;  //1e12*1e-7; // cgs
-  options[OPT_232THPOWERMAN].dDefault = 0;
-  sprintf(options[OPT_232THPOWERMAN].cNeg,"TW");
+  options[OPT_232THPOWERMAN].dDefault = EPOWERMAN232TH;
+  sprintf(options[OPT_232THPOWERMAN].cNeg,"Primordial Earth Units");
   fnRead[OPT_232THPOWERMAN] = &fvRead232ThPowerMan;
 
   sprintf(options[OPT_232THMASSCORE].cName,"d232ThMassCore");
   sprintf(options[OPT_232THMASSCORE].cDescr,"Initial Core Mass of 232Th");
-  sprintf(options[OPT_232THMASSCORE].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_232THMASSCORE].cDefault,"Primordial Earth");
+  sprintf(options[OPT_232THMASSCORE].cDimension,"mass");
   options[OPT_232THMASSCORE].iType = 2;
   options[OPT_232THMASSCORE].bMultiFile = 1;
   options[OPT_232THMASSCORE].dNeg = EMASSCORE232TH;
-  options[OPT_232THMASSCORE].dDefault = 0;
-  sprintf(options[OPT_232THMASSCORE].cNeg,"Mearth");
+  options[OPT_232THMASSCORE].dDefault = EMASSCORE232TH;
+  sprintf(options[OPT_232THMASSCORE].cNeg,"Primordial Earth Units");
   fnRead[OPT_232THMASSCORE] = &fvRead232ThMassCore;
 
   sprintf(options[OPT_232THNUMCORE].cName,"d232ThNumCore");
   sprintf(options[OPT_232THNUMCORE].cDescr,"Initial Core Number of 232Th Atoms");
-  sprintf(options[OPT_232THNUMCORE].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_232THNUMCORE].cDefault,"Primordial Earth");
+  sprintf(options[OPT_232THNUMCORE].cDimension,"nd");
   options[OPT_232THNUMCORE].iType = 2;
   options[OPT_232THNUMCORE].bMultiFile = 1;
   options[OPT_232THNUMCORE].dNeg = ENUMCORE232TH;
-  options[OPT_232THNUMCORE].dDefault = 0;
-  sprintf(options[OPT_232THNUMCORE].cNeg,"Primordial Earth 232Th Number");
+  options[OPT_232THNUMCORE].dDefault = ENUMCORE232TH;
+  sprintf(options[OPT_232THNUMCORE].cNeg,"Primordial Earth Units");
   fnRead[OPT_232THNUMCORE] = &fvRead232ThNumCore;
 
   sprintf(options[OPT_232THPOWERCORE].cName,"d232ThPowerCore");
-  sprintf(options[OPT_232THPOWERCORE].cDescr,"Initial Core Power Production from 232Th Atoms");
-  sprintf(options[OPT_232THPOWERCORE].cDefault,"Primordial Earth: xx TW");
+  sprintf(options[OPT_232THPOWERCORE].cDescr,
+      "Initial Core Power Production from 232Th Atoms");
+  sprintf(options[OPT_232THPOWERCORE].cDefault,"Primordial Earth");
+  sprintf(options[OPT_232THPOWERCORE].cDimension,"energy/time");
   options[OPT_232THPOWERCORE].iType = 2;
   options[OPT_232THPOWERCORE].bMultiFile = 1;
   options[OPT_232THPOWERCORE].dNeg = EPOWERCORE232TH;  //1e12*1e-7; // cgs
-  options[OPT_232THPOWERCORE].dDefault = 0;
-  sprintf(options[OPT_232THPOWERCORE].cNeg,"TW");
+  options[OPT_232THPOWERCORE].dDefault = EPOWERCORE232TH;
+  sprintf(options[OPT_232THPOWERCORE].cNeg,"Primordial Earth Units");
   fnRead[OPT_232THPOWERCORE] = &fvRead232ThPowerCore;
 
   sprintf(options[OPT_232THMASSCRUST].cName,"d232ThMassCrust");
   sprintf(options[OPT_232THMASSCRUST].cDescr,"Initial Crust Mass of 232Th");
-  sprintf(options[OPT_232THMASSCRUST].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_232THMASSCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_232THMASSCRUST].cDimension,"mass");
   options[OPT_232THMASSCRUST].iType = 2;
   options[OPT_232THMASSCRUST].bMultiFile = 1;
   options[OPT_232THMASSCRUST].dNeg = EMASSCRUST232TH;
-  options[OPT_232THMASSCRUST].dDefault = 0;
-  sprintf(options[OPT_232THMASSCRUST].cNeg,"Mearth");
+  options[OPT_232THMASSCRUST].dDefault = EMASSCRUST232TH;
+  sprintf(options[OPT_232THMASSCRUST].cNeg,"Primordial Earth Units");
   fnRead[OPT_232THMASSCRUST] = &fvRead232ThMassCrust;
 
   sprintf(options[OPT_232THNUMCRUST].cName,"d232ThNumCrust");
   sprintf(options[OPT_232THNUMCRUST].cDescr,"Initial Crust Number of 232Th Atoms");
-  sprintf(options[OPT_232THNUMCRUST].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_232THNUMCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_232THNUMCRUST].cDimension,"nd");
   options[OPT_232THNUMCRUST].iType = 2;
   options[OPT_232THNUMCRUST].bMultiFile = 1;
   options[OPT_232THNUMCRUST].dNeg = ENUMCRUST232TH;
-  options[OPT_232THNUMCRUST].dDefault = 0;
-  sprintf(options[OPT_232THNUMCRUST].cNeg,"Primordial Earth 232Th Number");
+  options[OPT_232THNUMCRUST].dDefault = ENUMCRUST232TH;
+  sprintf(options[OPT_232THNUMCRUST].cNeg,"Primordial Earth Units");
   fnRead[OPT_232THNUMCRUST] = &fvRead232ThNumCrust;
 
   sprintf(options[OPT_232THPOWERCRUST].cName,"d232ThPowerCrust");
   sprintf(options[OPT_232THPOWERCRUST].cDescr,"Initial Crust Power Production from 232Th Atoms");
-  sprintf(options[OPT_232THPOWERCRUST].cDefault,"Primordial Earth: xx TW");
+  sprintf(options[OPT_232THPOWERCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_232THPOWERCRUST].cDimension,"energy/time");
   options[OPT_232THPOWERCRUST].iType = 2;
   options[OPT_232THPOWERCRUST].bMultiFile = 1;
   options[OPT_232THPOWERCRUST].dNeg = EPOWERCRUST232TH;  //1e12*1e-7; // cgs
-  options[OPT_232THPOWERCRUST].dDefault = 0;
-  sprintf(options[OPT_232THPOWERCRUST].cNeg,"TW");
+  options[OPT_232THPOWERCRUST].dDefault = EPOWERCRUST232TH;
+  sprintf(options[OPT_232THPOWERCRUST].cNeg,"Primordial Earth Units");
   fnRead[OPT_232THPOWERCRUST] = &fvRead232ThPowerCrust;
 
   /* 238U*/
   sprintf(options[OPT_238UMASSMAN].cName,"d238UMassMan");
   sprintf(options[OPT_238UMASSMAN].cDescr,"Initial Mass of 238U");
-  sprintf(options[OPT_238UMASSMAN].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_238UMASSMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_238UMASSMAN].cDimension,"mass");
   options[OPT_238UMASSMAN].iType = 2;
   options[OPT_238UMASSMAN].bMultiFile = 1;
   options[OPT_238UMASSMAN].dNeg = EMASSMAN238U;
-  options[OPT_238UMASSMAN].dDefault = 0;
-  sprintf(options[OPT_238UMASSMAN].cNeg,"Mearth");
+  options[OPT_238UMASSMAN].dDefault = EMASSMAN238U;
+  sprintf(options[OPT_238UMASSMAN].cNeg,"Primordial Earth Units");
   fnRead[OPT_238UMASSMAN] = &fvRead238UMassMan;
 
   sprintf(options[OPT_238UNUMMAN].cName,"d238UNumMan");
   sprintf(options[OPT_238UNUMMAN].cDescr,"Initial Number of 238U Atoms");
-  sprintf(options[OPT_238UNUMMAN].cDefault,"1");
+  sprintf(options[OPT_238UNUMMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_238UNUMMAN].cDimension,"nd");
   options[OPT_238UNUMMAN].dDefault = 0;
   options[OPT_238UNUMMAN].iType = 2;
   options[OPT_238UNUMMAN].bMultiFile = 1;
   options[OPT_238UNUMMAN].dNeg = ENUMMAN238U;
-  options[OPT_238UNUMMAN].dDefault = 0;
-  sprintf(options[OPT_238UNUMMAN].cNeg,"Primordial Earth 238U Number");
+  options[OPT_238UNUMMAN].dDefault = ENUMMAN238U;
+  sprintf(options[OPT_238UNUMMAN].cNeg,"Primordial Earth Units");
   fnRead[OPT_238UNUMMAN] = &fvRead238UNumMan;
 
   sprintf(options[OPT_238UPOWERMAN].cName,"d238UPowerMan");  //section added PED
   sprintf(options[OPT_238UPOWERMAN].cDescr,"Initial Power Production from 238U Atoms");
-  sprintf(options[OPT_238UPOWERMAN].cDefault,"Primordial Earth: xx TW");
+  sprintf(options[OPT_238UPOWERMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_238UPOWERMAN].cDimension,"energy/time");
   options[OPT_238UPOWERMAN].iType = 2;
   options[OPT_238UPOWERMAN].bMultiFile = 1;
   options[OPT_238UPOWERMAN].dNeg = EPOWERMAN238U;   //1e12*1e-7; // cgs
-  options[OPT_238UPOWERMAN].dDefault = 0;
-  sprintf(options[OPT_238UPOWERMAN].cNeg,"TW");
+  options[OPT_238UPOWERMAN].dDefault = EPOWERMAN238U;
+  sprintf(options[OPT_238UPOWERMAN].cNeg,"Primordial Earth Units");
   fnRead[OPT_238UPOWERMAN] = &fvRead238UPowerMan;
 
   sprintf(options[OPT_238UMASSCORE].cName,"d238UMassCore");
   sprintf(options[OPT_238UMASSCORE].cDescr,"Initial Core Mass of 238U");
-  sprintf(options[OPT_238UMASSCORE].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_238UMASSCORE].cDefault,"Primordial Earth");
+  sprintf(options[OPT_238UMASSCORE].cDimension,"mass");
   options[OPT_238UMASSCORE].iType = 2;
   options[OPT_238UMASSCORE].bMultiFile = 1;
   options[OPT_238UMASSCORE].dNeg = EMASSCORE238U;
-  options[OPT_238UMASSCORE].dDefault = 0;
-  sprintf(options[OPT_238UMASSCORE].cNeg,"Mearth");
+  options[OPT_238UMASSCORE].dDefault = EMASSCORE238U;
+  sprintf(options[OPT_238UMASSCORE].cNeg,"Primordial Earth Units");
   fnRead[OPT_238UMASSCORE] = &fvRead238UMassCore;
 
   sprintf(options[OPT_238UNUMCORE].cName,"d238UNumCore");
   sprintf(options[OPT_238UNUMCORE].cDescr,"Initial Core Number of 238U Atoms");
-  sprintf(options[OPT_238UNUMCORE].cDefault,"1");
+  sprintf(options[OPT_238UNUMCORE].cDefault,"Primordial Earth");
+  sprintf(options[OPT_238UNUMCORE].cDimension,"nd");
   options[OPT_238UNUMCORE].dDefault = 0;
   options[OPT_238UNUMCORE].iType = 2;
   options[OPT_238UNUMCORE].bMultiFile = 1;
   options[OPT_238UNUMCORE].dNeg = ENUMCORE238U;
-  options[OPT_238UNUMCORE].dDefault = 0;
-  sprintf(options[OPT_238UNUMCORE].cNeg,"Primordial Earth 238U Number");
+  options[OPT_238UNUMCORE].dDefault = ENUMCORE238U;
+  sprintf(options[OPT_238UNUMCORE].cNeg,"Primordial Earth Units");
   fnRead[OPT_238UNUMCORE] = &fvRead238UNumCore;
 
   sprintf(options[OPT_238UPOWERCORE].cName,"d238UPowerCore");  //section added PED
   sprintf(options[OPT_238UPOWERCORE].cDescr,"Initial Core Power Production from 238U Atoms");
-  sprintf(options[OPT_238UPOWERCORE].cDefault,"Primordial Earth: xx TW");
+  sprintf(options[OPT_238UPOWERCORE].cDefault,"Primordial Earth");
+  sprintf(options[OPT_238UPOWERCORE].cDimension,"energy/time");
   options[OPT_238UPOWERCORE].iType = 2;
   options[OPT_238UPOWERCORE].bMultiFile = 1;
   options[OPT_238UPOWERCORE].dNeg = EPOWERCORE238U;   //1e12*1e-7; // cgs
-  options[OPT_238UPOWERCORE].dDefault = 0;
-  sprintf(options[OPT_238UPOWERCORE].cNeg,"TW");
+  options[OPT_238UPOWERCORE].dDefault = EPOWERCORE238U;
+  sprintf(options[OPT_238UPOWERCORE].cNeg,"Primordial Earth Units");
   fnRead[OPT_238UPOWERCORE] = &fvRead238UPowerCore;
 
   sprintf(options[OPT_238UMASSCRUST].cName,"d238UMassCrust");
   sprintf(options[OPT_238UMASSCRUST].cDescr,"Initial Crust Mass of 238U");
-  sprintf(options[OPT_238UMASSCRUST].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_238UMASSCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_238UMASSCRUST].cDimension,"mass");
   options[OPT_238UMASSCRUST].iType = 2;
   options[OPT_238UMASSCRUST].bMultiFile = 1;
   options[OPT_238UMASSCRUST].dNeg = EMASSCRUST238U;
-  options[OPT_238UMASSCRUST].dDefault = 0;
-  sprintf(options[OPT_238UMASSCRUST].cNeg,"Mearth");
+  options[OPT_238UMASSCRUST].dDefault = EMASSCRUST238U;
+  sprintf(options[OPT_238UMASSCRUST].cNeg,"Primordial Earth Units");
   fnRead[OPT_238UMASSCRUST] = &fvRead238UMassCrust;
 
   sprintf(options[OPT_238UNUMCRUST].cName,"d238UNumCrust");
   sprintf(options[OPT_238UNUMCRUST].cDescr,"Initial Crust Number of 238U Atoms");
-  sprintf(options[OPT_238UNUMCRUST].cDefault,"1");
+  sprintf(options[OPT_238UNUMCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_238UNUMCRUST].cDimension,"nd");
   options[OPT_238UNUMCRUST].dDefault = 0;
   options[OPT_238UNUMCRUST].iType = 2;
   options[OPT_238UNUMCRUST].bMultiFile = 1;
   options[OPT_238UNUMCRUST].dNeg = ENUMCRUST238U;
-  options[OPT_238UNUMCRUST].dDefault = 0;
-  sprintf(options[OPT_238UNUMCRUST].cNeg,"Primordial Earth 238U Number");
+  options[OPT_238UNUMCRUST].dDefault = ENUMCRUST238U;
+  sprintf(options[OPT_238UNUMCRUST].cNeg,"Primordial Earth Units");
   fnRead[OPT_238UNUMCRUST] = &fvRead238UNumCrust;
 
   sprintf(options[OPT_238UPOWERCRUST].cName,"d238UPowerCrust");  //section added PED
   sprintf(options[OPT_238UPOWERCRUST].cDescr,"Initial Crust Power Production from 238U Atoms");
-  sprintf(options[OPT_238UPOWERCRUST].cDefault,"Primordial Earth: xx TW");
+  sprintf(options[OPT_238UPOWERCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_238UPOWERCRUST].cDimension,"energy/time");
   options[OPT_238UPOWERCRUST].iType = 2;
   options[OPT_238UPOWERCRUST].bMultiFile = 1;
   options[OPT_238UPOWERCRUST].dNeg = EPOWERCRUST238U;   //1e12*1e-7; // cgs
-  options[OPT_238UPOWERCRUST].dDefault = 0;
-  sprintf(options[OPT_238UPOWERCRUST].cNeg,"TW");
+  options[OPT_238UPOWERCRUST].dDefault = EPOWERCRUST238U;
+  sprintf(options[OPT_238UPOWERCRUST].cNeg,"Primordial Earth Units");
   fnRead[OPT_238UPOWERCRUST] = &fvRead238UPowerCrust;
 
   /* 235U */
   sprintf(options[OPT_235UMASSMAN].cName,"d235UMassMan");  //PED
   sprintf(options[OPT_235UMASSMAN].cDescr,"Initial Mass of 235U");
-  sprintf(options[OPT_235UMASSMAN].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_235UMASSMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_235UMASSMAN].cDimension,"nd");
   options[OPT_235UMASSMAN].iType = 2;
   options[OPT_235UMASSMAN].bMultiFile = 1;
   options[OPT_235UMASSMAN].dNeg = EMASSMAN235U;
-  options[OPT_235UMASSMAN].dDefault = 0;
-  sprintf(options[OPT_235UMASSMAN].cNeg,"Mearth");
+  options[OPT_235UMASSMAN].dDefault = EMASSMAN235U;
+  sprintf(options[OPT_235UMASSMAN].cNeg,"Primordial Earth Units");
   fnRead[OPT_235UMASSMAN] = &fvRead235UMassMan;
 
   sprintf(options[OPT_235UNUMMAN].cName,"d235UNumMan");  //PED
   sprintf(options[OPT_235UNUMMAN].cDescr,"Initial Number of 235U Atoms");
-  sprintf(options[OPT_235UNUMMAN].cDefault,"1");
+  sprintf(options[OPT_235UNUMMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_235UNUMMAN].cDimension,"nd");
   options[OPT_235UNUMMAN].iType = 2;
   options[OPT_235UNUMMAN].bMultiFile = 1;
   options[OPT_235UNUMMAN].dNeg = ENUMMAN235U;
-  options[OPT_235UNUMMAN].dDefault = 0;
-  sprintf(options[OPT_235UNUMMAN].cNeg,"Primordial Earth 235U Numer");
+  options[OPT_235UNUMMAN].dDefault = ENUMMAN235U;
+  sprintf(options[OPT_235UNUMMAN].cNeg,"Primordial Earth Units");
   fnRead[OPT_235UNUMMAN] = &fvRead235UNumMan;
 
   sprintf(options[OPT_235UPOWERMAN].cName,"d235UPowerMan");  //section added PED
   sprintf(options[OPT_235UPOWERMAN].cDescr,"Initial Power Production from 235U Atoms");
-  sprintf(options[OPT_235UPOWERMAN].cDefault,"Primordial Earth: xx TW");
+  sprintf(options[OPT_235UPOWERMAN].cDefault,"Primordial Earth");
+  sprintf(options[OPT_235UPOWERMAN].cDimension,"energy/time");
   options[OPT_235UPOWERMAN].iType = 2;
   options[OPT_235UPOWERMAN].bMultiFile = 1;
   options[OPT_235UPOWERMAN].dNeg = EPOWERMAN235U;
-  options[OPT_235UPOWERMAN].dDefault = 0;
-  sprintf(options[OPT_235UPOWERMAN].cNeg,"TW");
+  options[OPT_235UPOWERMAN].dDefault = EPOWERMAN235U;
+  sprintf(options[OPT_235UPOWERMAN].cNeg,"Primoridal Earth Units");
   fnRead[OPT_235UPOWERMAN] = &fvRead235UPowerMan;
 
   sprintf(options[OPT_235UMASSCORE].cName,"d235UMassCore");
   sprintf(options[OPT_235UMASSCORE].cDescr,"Initial Core Mass of 235U");
-  sprintf(options[OPT_235UMASSCORE].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_235UMASSCORE].cDefault,"Primordial Earth");
+  sprintf(options[OPT_235UMASSCORE].cDimension,"mass");
   options[OPT_235UMASSCORE].iType = 2;
   options[OPT_235UMASSCORE].bMultiFile = 1;
   options[OPT_235UMASSCORE].dNeg = EMASSCORE235U;
-  options[OPT_235UMASSCORE].dDefault = 0;
-  sprintf(options[OPT_235UMASSCORE].cNeg,"Mearth");
+  options[OPT_235UMASSCORE].dDefault = EMASSCORE235U;
+  sprintf(options[OPT_235UMASSCORE].cNeg,"Primordial Earth Units");
   fnRead[OPT_235UMASSCORE] = &fvRead235UMassCore;
 
   sprintf(options[OPT_235UNUMCORE].cName,"d235UNumCore");
   sprintf(options[OPT_235UNUMCORE].cDescr,"Initial Core Number of 235U Atoms");
-  sprintf(options[OPT_235UNUMCORE].cDefault,"1");
+  sprintf(options[OPT_235UNUMCORE].cDefault,"Primordial Earth");
+  sprintf(options[OPT_235UNUMCORE].cDimension,"nd");
   options[OPT_235UNUMCORE].iType = 2;
   options[OPT_235UNUMCORE].bMultiFile = 1;
   options[OPT_235UNUMCORE].dNeg = ENUMCORE235U;
-  options[OPT_235UNUMCORE].dDefault = 0;
-  sprintf(options[OPT_235UNUMCORE].cNeg,"Primordial Earth 235U Numer");
+  options[OPT_235UNUMCORE].dDefault = ENUMCORE235U;
+  sprintf(options[OPT_235UNUMCORE].cNeg,"Primordial Earth Units");
   fnRead[OPT_235UNUMCORE] = &fvRead235UNumCore;
 
   sprintf(options[OPT_235UPOWERCORE].cName,"d235UPowerCore");  //section added PED
   sprintf(options[OPT_235UPOWERCORE].cDescr,"Initial Core Power Production from 235U Atoms");
-  sprintf(options[OPT_235UPOWERCORE].cDefault,"Primordial Earth: xx TW");
+  sprintf(options[OPT_235UPOWERCORE].cDefault,"Primordial Earth");
+  sprintf(options[OPT_235UPOWERCORE].cDimension,"energy/time");
   options[OPT_235UPOWERCORE].iType = 2;
   options[OPT_235UPOWERCORE].bMultiFile = 1;
   options[OPT_235UPOWERCORE].dNeg = EPOWERCORE235U;
-  options[OPT_235UPOWERCORE].dDefault = 0;
-  sprintf(options[OPT_235UPOWERCORE].cNeg,"TW");
+  options[OPT_235UPOWERCORE].dDefault = EPOWERCORE235U;
+  sprintf(options[OPT_235UPOWERCORE].cNeg,"Primordial Earth Units");
   fnRead[OPT_235UPOWERCORE] = &fvRead235UPowerCore;
 
   sprintf(options[OPT_235UMASSCRUST].cName,"d235UMassCrust");
   sprintf(options[OPT_235UMASSCRUST].cDescr,"Initial Crust Mass of 235U");
-  sprintf(options[OPT_235UMASSCRUST].cDefault,"Primordial Earth: xxx");
+  sprintf(options[OPT_235UMASSCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_235UMASSCRUST].cDimension,"mass");
   options[OPT_235UMASSCRUST].iType = 2;
   options[OPT_235UMASSCRUST].bMultiFile = 1;
   options[OPT_235UMASSCRUST].dNeg = EMASSCRUST235U;
-  options[OPT_235UMASSCRUST].dDefault = 0;
-  sprintf(options[OPT_235UMASSCRUST].cNeg,"Mearth");
+  options[OPT_235UMASSCRUST].dDefault = EMASSCRUST235U;
+  sprintf(options[OPT_235UMASSCRUST].cNeg,"Primordial Earth Units");
   fnRead[OPT_235UMASSCRUST] = &fvRead235UMassCrust;
 
   sprintf(options[OPT_235UNUMCRUST].cName,"d235UNumCrust");
   sprintf(options[OPT_235UNUMCRUST].cDescr,"Initial Crust Number of 235U Atoms");
-  sprintf(options[OPT_235UNUMCRUST].cDefault,"1");
+  sprintf(options[OPT_235UNUMCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_235UNUMCRUST].cDimension,"nd");
   options[OPT_235UNUMCRUST].iType = 2;
   options[OPT_235UNUMCRUST].bMultiFile = 1;
   options[OPT_235UNUMCRUST].dNeg = ENUMCRUST235U;
-  options[OPT_235UNUMCRUST].dDefault = 0;
-  sprintf(options[OPT_235UNUMCRUST].cNeg,"Primordial Earth 235U Numer");
+  options[OPT_235UNUMCRUST].dDefault = ENUMCRUST235U;
+  sprintf(options[OPT_235UNUMCRUST].cNeg,"Primordial Earth Units");
   fnRead[OPT_235UNUMCRUST] = &fvRead235UNumCrust;
 
   sprintf(options[OPT_235UPOWERCRUST].cName,"d235UPowerCrust");  //section added PED
   sprintf(options[OPT_235UPOWERCRUST].cDescr,"Initial Crust Power Production from 235U Atoms");
-  sprintf(options[OPT_235UPOWERCRUST].cDefault,"Primordial Earth: xx TW");
+  sprintf(options[OPT_235UPOWERCRUST].cDefault,"Primordial Earth");
+  sprintf(options[OPT_235UPOWERCRUST].cDimension,"energy/time");
   options[OPT_235UPOWERCRUST].iType = 2;
   options[OPT_235UPOWERCRUST].bMultiFile = 1;
   options[OPT_235UPOWERCRUST].dNeg = EPOWERCRUST235U;
-  options[OPT_235UPOWERCRUST].dDefault = 0;
-  sprintf(options[OPT_235UPOWERCRUST].cNeg,"TW");
+  options[OPT_235UPOWERCRUST].dDefault = EPOWERCRUST235U;
+  sprintf(options[OPT_235UPOWERCRUST].cNeg,"Primordial Earth Units");
   fnRead[OPT_235UPOWERCRUST] = &fvRead235UPowerCrust;
 
   sprintf(options[OPT_HALT40KPOWER].cName,"dHalt40KPower");
   sprintf(options[OPT_HALT40KPOWER].cDescr,"Minimum 40K Power");
   sprintf(options[OPT_HALT40KPOWER].cDefault,"0");
+  sprintf(options[OPT_HALT40KPOWER].cDimension,"energy/time");
   options[OPT_HALT40KPOWER].iType = 2;
   options[OPT_HALT40KPOWER].bMultiFile = 1;
   options[OPT_HALT40KPOWER].dNeg = 1e12; // TW
@@ -1823,6 +1867,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALT232THPOWER].cName,"dHalt232ThPower");
   sprintf(options[OPT_HALT232THPOWER].cDescr,"Minimum 232Th Power");
   sprintf(options[OPT_HALT232THPOWER].cDefault,"0");
+  sprintf(options[OPT_HALT232THPOWER].cDimension,"energy/time");
   options[OPT_HALT232THPOWER].iType = 2;
   options[OPT_HALT232THPOWER].bMultiFile = 1;
   options[OPT_HALT232THPOWER].dNeg = 1e12; // TW
@@ -1833,6 +1878,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALT235UPOWER].cName,"dHalt235UPower");
   sprintf(options[OPT_HALT235UPOWER].cDescr,"Minimum 235U Power");
   sprintf(options[OPT_HALT235UPOWER].cDefault,"0");
+  sprintf(options[OPT_HALT235UPOWER].cDimension,"energy/time");
   options[OPT_HALT235UPOWER].iType = 2;
   options[OPT_HALT235UPOWER].bMultiFile = 1;
   options[OPT_HALT235UPOWER].dNeg = 1e12; // TW
@@ -1843,6 +1889,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALT238UPOWER].cName,"dHalt238UPower");
   sprintf(options[OPT_HALT238UPOWER].cDescr,"Minimum 238U Power");
   sprintf(options[OPT_HALT238UPOWER].cDefault,"0");
+  sprintf(options[OPT_HALT238UPOWER].cDimension,"energy/time");
   options[OPT_HALT238UPOWER].iType = 2;
   options[OPT_HALT238UPOWER].bMultiFile = 1;
   options[OPT_HALT238UPOWER].dNeg = 1e12; // TW
@@ -1853,6 +1900,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTRADPOWER].cName,"dHaltRadPower");
   sprintf(options[OPT_HALTRADPOWER].cDescr,"Minimum Total Radgiogenic Power");
   sprintf(options[OPT_HALTRADPOWER].cDefault,"0");
+  sprintf(options[OPT_HALTRADPOWER].cDimension,"energy/time");
   options[OPT_HALTRADPOWER].iType = 2;
   options[OPT_HALTRADPOWER].bMultiFile = 1;
   options[OPT_HALTRADPOWER].dNeg = 1e12; // TW

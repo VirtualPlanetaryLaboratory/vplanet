@@ -51,8 +51,6 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
   char cWord[OPTLEN],cTmp[LINE];
   FILE *fp;
 
-  /* XXX Need to add a check for a carriage return on each line */
-
   iLen=strlen(cOption);
 
   fp=fopen(cFile,"r");
@@ -61,10 +59,8 @@ void GetLine(char cFile[],char cOption[],char cLine[],int *iLine,int iVerbose) {
   memset(cWord,'\0',OPTLEN);
 
   while(fgets(cTmp,LINE,fp) != NULL) {
-    // XXX Should iLen be LINE? This may be why many spaces before # doesn't work
     if (!CheckComment(cTmp,LINE)) {
       sscanf(cTmp,"%s",cWord);
-      // XXX Add check for comments embedded in the option here
       if (memcmp(cWord,cOption,iLen+1) == 0) {
         /* Parameter Found! */
         if (bDone) {
@@ -1045,7 +1041,6 @@ void ReadInitialOptions(BODY **body,CONTROL *control,FILES *files,MODULE *module
  /* Is iVerbose set in primary input? */
   ReadVerbose(files,&options[OPT_VERBOSE],&control->Io.iVerbose,0);
 
-  // XXX From ReadInitialOptions,iin this location
   /* Now we can search through files for all options. First we scan the files for Verbosity */
   /* We have to initialize other input files first */
   for (iFile=1;iFile<files->iNumInputs;iFile++) {
@@ -1426,7 +1421,6 @@ void ReadDigits(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM
     control->Io.iDigits = iTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
-    // XXX Don't we need to check if it was found in another file already??
     AssignDefaultInt(options,&control->Io.iDigits,files->iNumInputs);
 }
 
@@ -1588,7 +1582,6 @@ void ReadHaltMerge(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYS
    modules. These are set in ReadInitialOptions, so they are always
    known by ReadOptionsGeneral. Therefore, we can assign it based on
    the "bModule" members of the body struct. */
-      // XXX Russell -- Include galhabit?
       if (body[iFile-1].bEqtide || body[iFile-1].bDistOrb
           || body[iFile-1].bBinary) {
              control->Halt[iFile-1].bMerge = 1;
@@ -1746,7 +1739,7 @@ void ReadHaltPosDeDt(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
  *
  */
 
-/* Hecc -- currently this is not supported. XXX */
+/* Hecc -- currently this is not supported. */
 void ReadHecc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;
@@ -1798,7 +1791,7 @@ void ReadIntegrationMethod(BODY *body,CONTROL *control,FILES *files,OPTIONS *opt
  *
  */
 
-/* Kecc -- currently unsupported. XXX */
+/* Kecc -- currently unsupported. */
 void ReadKecc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;
@@ -2070,7 +2063,6 @@ void ReadMassRad(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTE
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (memcmp(sLower(cTmp),"r",1) == 0) {
       /* Reid & Hawley 2000 */
-      // XXX Should change number to #define'd variables!
       control->iMassRad[iFile-1]=REIDHAWLEY;
     } else if (memcmp(sLower(cTmp),"g",1) == 0) {
       /* Gorda and Svenchnikov 1999 */
@@ -2935,7 +2927,7 @@ void ReadUseOuterTidalQ(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else {
     if (iFile > 0) {
-      body[iFile-1].bUseOuterTidalQ = 0; // Default to no XXX
+      body[iFile-1].bUseOuterTidalQ = 0; // Default to no
     }
   }
 }
@@ -3004,7 +2996,7 @@ void ReadOptionsModules(BODY *body,CONTROL *control,FILES *files,MODULE *module,
  *
  */
 
-/* Xobl -- currently this is not supported. XXX */
+/* Xobl -- currently this is not supported. */
 void ReadXobl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;
@@ -3025,7 +3017,7 @@ void ReadXobl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
  *
  */
 
-/* Yobl -- currently this is not supported. XXX */
+/* Yobl -- currently this is not supported.  */
 void ReadYobl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;
@@ -3046,7 +3038,7 @@ void ReadYobl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *
  *
  */
 
-/* Zobl -- currently this is not supported. XXX */
+/* Zobl -- currently this is not supported.  */
 void ReadZobl(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in the primary file */
   int lTmp=-1;

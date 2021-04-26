@@ -828,12 +828,6 @@ void WriteSurfaceEnergyFlux(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *s
       *dTmp += fdSurfEnFluxRadTotal(body,system,update,iBody,iBody);
   }
 
-  /* This is the old way
-  *dTmp=0;
-  for (iModule=0;iModule<control->Evolve.iNumModules[iBody];iModule++)
-    // Only module reference in file, can this be changed? XXX
-    *dTmp += output->fnOutput[iBody][iModule](body,system,update,iBody,control->Evolve.iEqtideModel);
-    */
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
@@ -1627,8 +1621,8 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
 }
 
-// XXX MKS Units?
-void CGSUnits(UNITS *units) {
+//  Units?
+void UnitsSI(UNITS *units) {
   units->iTime = 0;
   units->iLength = 0;
   units->iMass = 0;
@@ -1644,7 +1638,7 @@ void WriteLogEntry(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPD
 
   cUnit[0]='\0';
   dTmp=malloc(output->iNum*sizeof(double));
-  CGSUnits(&units);
+  UnitsSI(&units);
   fnWrite(body,control,output,system,&units,update,iBody,dTmp,cUnit);
 
   fprintf(fp,"(%s) %s [%s]: ",output->cName,output->cDescr,cUnit);
@@ -1660,7 +1654,7 @@ void LogUnits(FILE *fp) {
   /* Mass Units */
   UNITS units;
 
-  CGSUnits(&units);
+  UnitsSI(&units);
 
   fprintf(fp,"Mass Units: ");
   if (units.iMass == 0) {
@@ -1866,11 +1860,6 @@ void LogOptions(CONTROL *control,FILES *files,MODULE *module,SYSTEM *system,FILE
     fprintf(fp,"No");
   fprintf(fp,"\n");
 
-  /* Log modules XXX?
-  for (iModule=0;iModule<module->iNumModules;iModule++)
-    module->fnLogOptions[iModule](control,fp);
-  */
-
   LogUnits(fp);
 
   fprintf(fp,"\n------- FORMATTING -----\n");
@@ -1898,11 +1887,6 @@ void LogSystem(BODY *body,CONTROL *control,MODULE *module,OUTPUT *output,
       WriteLogEntry(body,control,&output[iOut],system,update,fnWrite[iOut],fp,0);
     }
   }
-
-  /* Log modules? XXX
-  for (iModule=0;iModule<module->iNumModules;iModule++)
-    module->fnLog[iModule](control,output,body,system,update,fnWrite,fp);
- */
 }
 
 void LogBody(BODY *body,CONTROL *control,FILES *files,MODULE *module,OUTPUT *output,SYSTEM *system,fnWriteOutput fnWrite[],FILE *fp,UPDATE *update) {
@@ -2087,6 +2071,7 @@ void WriteOutput(BODY *body,CONTROL *control,FILES *files,OUTPUT *output,SYSTEM 
     }
   }
 
+  // Laplace Coefficients for the RD4 Solution in DistOrb
   if (control->bOutputLapl) {
       for (iBody=1;iBody<(control->Evolve.iNumBodies-1);iBody++) {
         if (body[iBody].bDistOrb && body[iBody].bEqtide) {
@@ -2187,17 +2172,6 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   InitializeOutputGeneral(output,fnWrite);
 
-  /* How can I do this without the developer needing to modify output.c??? I want the code to know about all possible output options so it can flag ouput parameters that do not apply to any uploaded module. XXXX*/
-
-  /*
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    output[iOut].bDoNeg[iBody] = 0;
-    Initialize modules
-    for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
-      module->fnInitializeOutput[iBody][iModule](output,fnWrite);
-  }
-  */
-
   /************************
    * ADD NEW MODULES HERE *
    ************************/
@@ -2215,4 +2189,13 @@ void InitializeOutput(OUTPUT *output,fnWriteOutput fnWrite[]) {
   InitializeOutputGalHabit(output,fnWrite);
   InitializeOutputSpiNBody(output, fnWrite);
   InitializeOutputMagmOc(output, fnWrite);
+
+  /* Why doesn't that code look like this?
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    output[iOut].bDoNeg[iBody] = 0;
+    Initialize modules
+    for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
+      module->fnInitializeOutput[iBody][iModule](output,fnWrite);
+  }
+  */
 }

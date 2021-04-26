@@ -740,7 +740,6 @@ void VerifyModuleMultiEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,
       // Initialize mantle tidal power
       body[iBody].dTidalPowMan = 0;
 
-      //XXX Does this if-then need to be here!?
       if (body[iBody].bEqtide && body[iBody].bThermint) {
           if (options[OPT_TIDALQ].iLine[iBody+1] != -1) {
             if (control->Io.iVerbose >= VERBINPUT) {
@@ -912,13 +911,16 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
         // they better have defined k2Ocean, tidalqocean, dSurfaceWaterMass
         // XXX Use option.cName instead of, e.g. bOceanTides
         if (options[OPT_TIDALQOCEAN].iLine[iBody+1] == -1) {
-          fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_TIDALQOCEAN].cName);
+          fprintf(stderr, "ERROR: if %s == 1, must specify %s.\n",
+              options[OPT_OCEANTIDES].cName,options[OPT_TIDALQOCEAN].cName);
           exit(EXIT_INPUT);
         } else if (options[OPT_SURFACEWATERMASS].iLine[iBody+1] == -1) {
-          fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_SURFACEWATERMASS].cName);
+          fprintf(stderr, "ERROR: if %s == 1, must specify %s.\n",
+              options[OPT_OCEANTIDES].cName,options[OPT_SURFACEWATERMASS].cName);
           exit(EXIT_INPUT);
         } else if (options[OPT_K2OCEAN].iLine[iBody+1] == -1) {
-          fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_K2OCEAN].cName);
+          fprintf(stderr, "ERROR: if %s == 1, must specify %s.\n",
+              options[OPT_OCEANTIDES].cName,options[OPT_K2OCEAN].cName);
           exit(EXIT_INPUT);
         }
       }
@@ -1424,21 +1426,6 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int 
 
   body[iBody].dImK2 = fdImK2Total(body,iBody);
 }
-
-/** Calculate auxiliary properties if AtmEsc, EqTide and ThermInt are called. At present
-  this funciton only needs to calculate Im(k_2), possibly including the effects
-  of an ocean and envelope.
-void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  XXX Is this necessary?
-
-}
-*/
-
-/* This does not seem to be necessary XXX Russell
-void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
-  body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
-}
-*/
 
 void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   body[iBody].dRadPowerCore = fdRadPowerCore(update,iBody);

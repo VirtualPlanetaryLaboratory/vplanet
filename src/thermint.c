@@ -953,80 +953,80 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   /* TSurf */
   sprintf(options[OPT_TSURF].cName,"dTSurf");
   sprintf(options[OPT_TSURF].cDescr,"Initial Surface Temperature");
-  sprintf(options[OPT_TSURF].cDefault,"300 K");
+  sprintf(options[OPT_TSURF].cDefault,"%f",TSURF);
   options[OPT_TSURF].iType = 2;
   options[OPT_TSURF].bMultiFile = 1;
   options[OPT_TSURF].dNeg = 1;  //Not sure about this??
   options[OPT_TSURF].dDefault = TSURF;
-  sprintf(options[OPT_TSURF].cNeg,"Default=300");
+  sprintf(options[OPT_TSURF].cNeg,"No negative behavior");
   fnRead[OPT_TSURF] = &fvReadTSurf;
 
   /* TMan */
   sprintf(options[OPT_TMAN].cName,"dTMan");
   sprintf(options[OPT_TMAN].cDescr,"Initial Mantle Temperature");
-  sprintf(options[OPT_TMAN].cDefault,"3000 K");
+  sprintf(options[OPT_TMAN].cDefault,"%f",TMAN);
   options[OPT_TMAN].iType = 2;
   options[OPT_TMAN].bMultiFile = 1;
   options[OPT_TMAN].dNeg = 3000.0;  //Not sure about this??
   options[OPT_TMAN].dDefault = 3000.0;
-  sprintf(options[OPT_TMAN].cNeg,"Default=3000");
+  sprintf(options[OPT_TMAN].cNeg,"No negative behavior");
   fnRead[OPT_TMAN] = &fvReadTMan;
 
    /* TCore */
   sprintf(options[OPT_TCORE].cName,"dTCore");
   sprintf(options[OPT_TCORE].cDescr,"Initial Core Temperature");
-  sprintf(options[OPT_TCORE].cDefault,"6000 K");
+  sprintf(options[OPT_TCORE].cDefault,"%f",TCORE);
   options[OPT_TCORE].iType = 2;
   options[OPT_TCORE].bMultiFile = 1;
   options[OPT_TCORE].dNeg = 6000.0;  //Not sure about this??
   options[OPT_TCORE].dDefault = 6000.0;
-  sprintf(options[OPT_TCORE].cNeg,"Default=6000");
+  sprintf(options[OPT_TCORE].cNeg,"No negative behavior");
   fnRead[OPT_TCORE] = &fvReadTCore;
 
    /* ViscJumpMan */
   sprintf(options[OPT_VISCJUMPMAN].cName,"dViscJumpMan");
   sprintf(options[OPT_VISCJUMPMAN].cDescr,
     "Viscosity jump from upper to lower mantle");
-  sprintf(options[OPT_VISCJUMPMAN].cDefault,"2.4 (VISCJUMPMAN in thermint.h)");
+  sprintf(options[OPT_VISCJUMPMAN].cDefault,"%f",VISCJUMPMAN);
   options[OPT_VISCJUMPMAN].iType = 2;
   options[OPT_VISCJUMPMAN].bMultiFile = 1;
   options[OPT_VISCJUMPMAN].dNeg = VISCJUMPMAN;
   options[OPT_VISCJUMPMAN].dDefault = VISCJUMPMAN;
-  sprintf(options[OPT_VISCJUMPMAN].cNeg,"Default");
+  sprintf(options[OPT_VISCJUMPMAN].cNeg,"No negative behavior");
   fnRead[OPT_VISCJUMPMAN] = &fvReadViscJumpMan;
   // Needs a LongDescr
   sprintf(options[OPT_VISCJUMPMAN].cLongDescr,
-	  "Numerical factor that is used to get the lower mantle thermal boundary &\n"
-	  "viscosity visc_UMan from the upper mantle viscosity visc_LM by &\n"
+	  "Numerical factor that is used to get the lower mantle thermal boundary \n"
+	  "viscosity visc_UMan from the upper mantle viscosity visc_LM by \n"
 	  "visc_LM=ViscJumpMan*visc_UM.  See eq (163) in Barnes et al (2020).");
 
   /* ViscRef */
   sprintf(options[OPT_VISCREF].cName,"dViscRef");
   sprintf(options[OPT_VISCREF].cDescr,"Reference kinematic mantle viscosity");
-  sprintf(options[OPT_VISCREF].cDefault,"6e7 (VISCREF in thermint.h)");
+  sprintf(options[OPT_VISCREF].cDefault,"%f",VISCREF);
   options[OPT_VISCREF].iType = 2;
   options[OPT_VISCREF].bMultiFile = 1;
   options[OPT_VISCREF].dNeg = VISCREF;
   options[OPT_VISCREF].dDefault = VISCREF;
-  sprintf(options[OPT_VISCREF].cNeg,"Default value in thermint.h");
+  sprintf(options[OPT_VISCREF].cNeg,"No negative behavior");
   fnRead[OPT_VISCREF] = &fvReadViscRef;
   // Needs a LongDescr
   sprintf(options[OPT_VISCREF].cLongDescr,
-	  "Coefficient in front of viscosity equation &\n"
+	  "Coefficient in front of viscosity equation \n"
 	  "see eq (159) in Barnes et al. (2020).");
 
   /* TrefLind */
   sprintf(options[OPT_TREFLIND].cName,"dTrefLind");
   sprintf(options[OPT_TREFLIND].cDescr,"Lindemann's law reference temperature");
-  sprintf(options[OPT_TREFLIND].cDefault,"5451.6 K ");
+  sprintf(options[OPT_TREFLIND].cDefault,"%f",TREFLIND );
   options[OPT_TREFLIND].iType = 2;
   options[OPT_TREFLIND].bMultiFile = 1;
   options[OPT_TREFLIND].dNeg = 1; //XXX If negative, is really expressed in terms of TREFLIND??
   options[OPT_TREFLIND].dDefault = TREFLIND;
-  sprintf(options[OPT_TREFLIND].cNeg,"Default in thermint.h");
+  sprintf(options[OPT_TREFLIND].cNeg,"No negative behavior");
   fnRead[OPT_TREFLIND] = &fvReadTrefLind;
   sprintf(options[OPT_TREFLIND].cLongDescr,
-    "Lindemann's law reference temperature, also called T_Fe0 in Driscoll &\n"
+    "Lindemann's law reference temperature, also called T_Fe0 in Driscoll \n"
     "Bercovici (2015), see their Eq. A23. Default value is set to TREFLIND,\n"
     "which is defined in thermint.h)"
   );
@@ -1034,110 +1034,110 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   /* DTChiRef */
   sprintf(options[OPT_DTCHIREF].cName,"dDTChiRef");
   sprintf(options[OPT_DTCHIREF].cDescr,"Core reference liquidus depression");
-  sprintf(options[OPT_DTCHIREF].cDefault,"0 (DTCHIREF in thermint.h)");
+  sprintf(options[OPT_DTCHIREF].cDefault,"%f",DTCHIREF);
   options[OPT_DTCHIREF].iType = 2;
   options[OPT_DTCHIREF].bMultiFile = 1;
   options[OPT_DTCHIREF].dNeg = 1;
   options[OPT_DTCHIREF].dDefault = DTCHIREF;
-  sprintf(options[OPT_DTCHIREF].cNeg,"Default in thermint.h");
+  sprintf(options[OPT_DTCHIREF].cNeg,"No negative behavior");
   fnRead[OPT_DTCHIREF] = &fvReadDTChiRef;
   // Needs a LongDescr
   sprintf(options[OPT_DTCHIREF].cLongDescr,
-	  "Core liquidus (melting temperature) depression due to the presence &\n"
+	  "Core liquidus (melting temperature) depression due to the presence \n"
 	  "of light elements in the core.  See eq (175) in Barnes et al (2020).");
   
   /* EruptEff */
   sprintf(options[OPT_ERUPTEFF].cName,"dEruptEff");
   sprintf(options[OPT_ERUPTEFF].cDescr,"Melt Eruption Efficiency");
-  sprintf(options[OPT_ERUPTEFF].cDefault,"0.1 (ERUPTEFF in thermint.h)");
+  sprintf(options[OPT_ERUPTEFF].cDefault,"%f",ERUPTEFF);
   options[OPT_ERUPTEFF].iType = 2;
   options[OPT_ERUPTEFF].bMultiFile = 1;
   options[OPT_ERUPTEFF].dNeg = ERUPTEFF; //XXX
   options[OPT_ERUPTEFF].dDefault = ERUPTEFF;
-  sprintf(options[OPT_ERUPTEFF].cNeg,"Default is ERUPTEFF");
+  sprintf(options[OPT_ERUPTEFF].cNeg,"No negative behavior");
   fnRead[OPT_ERUPTEFF] = &fvReadEruptEff;
   // Needs a LongDescr
   sprintf(options[OPT_ERUPTEFF].cLongDescr,
-	  "Fraction of heat in mantle melt that escapes to the surface. &\n"
+	  "Fraction of heat in mantle melt that escapes to the surface. \n"
 	  "See eq (187) in Barnes et al (2020).");
   
   /* ViscMeltPhis */
   sprintf(options[OPT_VISCMELTPHIS].cName,"dViscMeltPhis");
   sprintf(options[OPT_VISCMELTPHIS].cDescr,"Viscosity Melt Factor Phi star");
-  sprintf(options[OPT_VISCMELTPHIS].cDefault,"Default is VISCMELTPHIS");
+  sprintf(options[OPT_VISCMELTPHIS].cDefault,"%f",VISCMELTPHIS);
   options[OPT_VISCMELTPHIS].iType = 2;
   options[OPT_VISCMELTPHIS].bMultiFile = 1;
   options[OPT_VISCMELTPHIS].dNeg = VISCMELTPHIS; //XXX
   options[OPT_VISCMELTPHIS].dDefault = VISCMELTPHIS;
-  sprintf(options[OPT_VISCMELTPHIS].cNeg,"VISCMELTPHIS units");
+  sprintf(options[OPT_VISCMELTPHIS].cNeg,"No negative behavior");
   fnRead[OPT_VISCMELTPHIS] = &fvReadViscMeltPhis;
   sprintf(options[OPT_VISCMELTPHIS].cLongDescr,
-    "Viscosity-melt reduction coefficient, \"phi*\" in Eq. 8 of Driscoll &\n"
+    "Viscosity-melt reduction coefficient, \"phi*\" in Eq. 8 of Driscoll \n"
     "Bercovici (2015)."
   );
 
   /* ViscMeltXi */
   sprintf(options[OPT_VISCMELTXI].cName,"dViscMeltXi");
   sprintf(options[OPT_VISCMELTXI].cDescr,"Viscosity Melt Factor Xi");
-  sprintf(options[OPT_VISCMELTXI].cDefault,"Default is VISCMELTXI");
+  sprintf(options[OPT_VISCMELTXI].cDefault,"%f",VISCMELTXI);
   options[OPT_VISCMELTXI].iType = 2;
   options[OPT_VISCMELTXI].bMultiFile = 1;
   options[OPT_VISCMELTXI].dNeg = VISCMELTXI;
   options[OPT_VISCMELTXI].dDefault = VISCMELTXI;
-  sprintf(options[OPT_VISCMELTXI].cNeg,"Default is VISCMELTXI");
+  sprintf(options[OPT_VISCMELTXI].cNeg,"No negative behavior");
   fnRead[OPT_VISCMELTXI] = &fvReadViscMeltXi;
   // Needs a LongDescr
   sprintf(options[OPT_VISCMELTXI].cLongDescr,
-	  "Constant used to compute the reduction in mantle viscosity &\n"
-	  "due to the presence of melt.  See eq (162) in Barnes et al (2020) &\n"
+	  "Constant used to compute the reduction in mantle viscosity \n"
+	  "due to the presence of melt.  See eq (162) in Barnes et al (2020) \n"
 	  "and Costa et al (2009) for values for different materials.");
   
   /* ViscMeltGamma */
   sprintf(options[OPT_VISCMELTGAMMA].cName,"dViscMeltGamma");
   sprintf(options[OPT_VISCMELTGAMMA].cDescr,"Viscosity Melt Factor Gamma");
-  sprintf(options[OPT_VISCMELTGAMMA].cDefault,"Default is VISCMELTGAMMA");
+  sprintf(options[OPT_VISCMELTGAMMA].cDefault,"%f",VISCMELTGAMMA);
   options[OPT_VISCMELTGAMMA].iType = 2;
   options[OPT_VISCMELTGAMMA].bMultiFile = 1;
   options[OPT_VISCMELTGAMMA].dNeg = VISCMELTGAMMA;
   options[OPT_VISCMELTGAMMA].dDefault = VISCMELTGAMMA;
-  sprintf(options[OPT_VISCMELTGAMMA].cNeg,"Default is VISCMELTGAMMA");
+  sprintf(options[OPT_VISCMELTGAMMA].cNeg,"No negative behavior");
   fnRead[OPT_VISCMELTGAMMA] = &fvReadViscMeltGamma;
   // Needs a LongDescr
   sprintf(options[OPT_VISCMELTGAMMA].cLongDescr,
-	  "Constant used to compute the reduction in mantle viscosity &\n"
-	  "due to the presence of melt.  See eq (162) in Barnes et al (2020) &\n"
+	  "Constant used to compute the reduction in mantle viscosity \n"
+	  "due to the presence of melt.  See eq (162) in Barnes et al (2020) \n"
 	  "and Costa et al (2009) for values for different materials.");
   
   /* ViscMeltDelta */
   sprintf(options[OPT_VISCMELTDELTA].cName,"dViscMeltDelta");
   sprintf(options[OPT_VISCMELTDELTA].cDescr,"Viscosity Melt Factor Delta");
-  sprintf(options[OPT_VISCMELTDELTA].cDefault,"Default is VISCMELTDELTA");
+  sprintf(options[OPT_VISCMELTDELTA].cDefault,"%f",VISCMELTDELTA);
   options[OPT_VISCMELTDELTA].iType = 2;
   options[OPT_VISCMELTDELTA].bMultiFile = 1;
   options[OPT_VISCMELTDELTA].dNeg = VISCMELTDELTA;
   options[OPT_VISCMELTDELTA].dDefault = VISCMELTDELTA;
-  sprintf(options[OPT_VISCMELTDELTA].cNeg,"Default is VISCMELTDELTA");
+  sprintf(options[OPT_VISCMELTDELTA].cNeg,"No negative behavior");
   fnRead[OPT_VISCMELTDELTA] = &fvReadViscMeltDelta;
   // Needs a LongDescr
   sprintf(options[OPT_VISCMELTDELTA].cLongDescr,
-  	  "Constant used to compute the reduction in mantle viscosity &\n"
-	  "due to the presence of melt.  See eq (161) in Barnes et al (2020) &\n"
+  	  "Constant used to compute the reduction in mantle viscosity \n"
+	  "due to the presence of melt.  See eq (161) in Barnes et al (2020) \n"
 	  "and Costa et al (2009) for values for different materials.");
 
   /* ViscMeltB */
   sprintf(options[OPT_VISCMELTB].cName,"dViscMeltB");
   sprintf(options[OPT_VISCMELTB].cDescr,"Viscosity Melt Factor B");
-  sprintf(options[OPT_VISCMELTB].cDefault,"Default is VISCMELTB");
+  sprintf(options[OPT_VISCMELTB].cDefault,"%f",VISCMELTB);
   options[OPT_VISCMELTB].iType = 2;
   options[OPT_VISCMELTB].bMultiFile = 1;
   options[OPT_VISCMELTB].dNeg = VISCMELTB;
   options[OPT_VISCMELTB].dDefault = VISCMELTB;
-  sprintf(options[OPT_VISCMELTB].cNeg,"Default is VISCMELTB");
+  sprintf(options[OPT_VISCMELTB].cNeg,"No negative behavior");
   fnRead[OPT_VISCMELTB] = &fvReadViscMeltB;
   // Needs a LongDescr
   sprintf(options[OPT_VISCMELTB].cLongDescr,  
-  	  "Constant used to compute the reduction in mantle viscosity &\n"
-	  "due to the presence of melt.  See eq (161) in Barnes et al (2020) &\n"
+  	  "Constant used to compute the reduction in mantle viscosity \n"
+	  "due to the presence of melt.  See eq (161) in Barnes et al (2020) \n"
 	  "and Costa et al (2009) for values for different materials.");
 
   /* MeltfactorLMan XXX Added by Rory -- Check!*/
@@ -1153,9 +1153,9 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_MELTFACTORLMAN] = &fvReadMeltfactorLMan;
   // Needs a LongDescr
   sprintf(options[OPT_MELTFACTORLMAN].cLongDescr,
-	  "Use to fix the lower mantle viscosity melt factor, defined as &\n"
-	  "epsilon_phase in eq (159,160) of Barnes et al (2020).  Note that &\n"
-	  "this is an option.  Default behavior is to compute this factor from &\n"
+	  "Use to fix the lower mantle viscosity melt factor, defined as \n"
+	  "epsilon_phase in eq (159,160) of Barnes et al (2020).  Note that \n"
+	  "this is an option.  Default behavior is to compute this factor from \n"
 	  "the local temperature.");
   
   /* MeltfactorUMan */
@@ -1166,28 +1166,28 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MELTFACTORUMAN].bMultiFile = 1;
   options[OPT_MELTFACTORUMAN].dNeg = MELTFACTORUMAN;
   options[OPT_MELTFACTORUMAN].dDefault = MELTFACTORUMAN;
-  sprintf(options[OPT_MELTFACTORUMAN].cNeg,"Default is MELTFACTORUMAN");
+  sprintf(options[OPT_MELTFACTORUMAN].cNeg,"No negative behavior");
   fnRead[OPT_MELTFACTORUMAN] = &fvReadMeltfactorUMan;
   // Needs a LongDescr
   sprintf(options[OPT_MELTFACTORUMAN].cLongDescr,
-	  "Use to fix the upper mantle viscosity melt factor, defined as &\n"
-	  "epsilon_phase in eq (159,160) of Barnes et al (2020).  Note that &\n"
-	  "this is an option.  Default behavior is to compute this factor from &\n"
+	  "Use to fix the upper mantle viscosity melt factor, defined as \n"
+	  "epsilon_phase in eq (159,160) of Barnes et al (2020).  Note that \n"
+	  "this is an option.  Default behavior is to compute this factor from \n"
 	  "the local temperature.");
 
   /* FixMeltfactorUMan */
   sprintf(options[OPT_FIXMELTFACTORUMAN].cName,"dFixMeltfactorUMan");
   sprintf(options[OPT_FIXMELTFACTORUMAN].cDescr,"Fix Viscosity Melt Factor");
-  sprintf(options[OPT_FIXMELTFACTORUMAN].cDefault,"Default is FIXMELTFACTORUMAN");
+  sprintf(options[OPT_FIXMELTFACTORUMAN].cDefault,"%f",FIXMELTFACTORUMAN);
   options[OPT_FIXMELTFACTORUMAN].iType = 2;
   options[OPT_FIXMELTFACTORUMAN].bMultiFile = 1;
   options[OPT_FIXMELTFACTORUMAN].dNeg = FIXMELTFACTORUMAN;
   options[OPT_FIXMELTFACTORUMAN].dDefault = FIXMELTFACTORUMAN;
-  sprintf(options[OPT_FIXMELTFACTORUMAN].cNeg,"Default is FIXMELTFACTORUMAN");
+  sprintf(options[OPT_FIXMELTFACTORUMAN].cNeg,"No negative behavior");
   fnRead[OPT_FIXMELTFACTORUMAN] = &fvReadFixMeltfactorUMan;
   // Needs a LongDescr
-  sprintf(options[OPT_FIXMELTFACTORUMAN].cDescr,
-	  "Boolean: 1 tells the code to used a fixed upper mantle viscosity melt &\n"
+  sprintf(options[OPT_FIXMELTFACTORUMAN].cLongDescr,
+	  "Boolean: 1 tells the code to used a fixed upper mantle viscosity melt \n"
 	  "factor, 0 tells the code to compute it from the local temperature (default).");
   
   /* StagLid */
@@ -1200,7 +1200,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
      negative value option here, right?  Should a negative value print a warning? */
   sprintf(options[OPT_STAGLID].cName,"dStagLid");
   sprintf(options[OPT_STAGLID].cDescr,"Use Stagnant Lid Model");
-  sprintf(options[OPT_STAGLID].cDefault,"Default is mobile lid");
+  sprintf(options[OPT_STAGLID].cDefault,"%f",STAGLID);
   options[OPT_STAGLID].iType = 2;
   options[OPT_STAGLID].bMultiFile = 1;
   options[OPT_STAGLID].dNeg = STAGLID;
@@ -1211,36 +1211,43 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   /* ManHFlowPref */
   sprintf(options[OPT_MANHFLOWPREF].cName,"dManHFlowPref");
   sprintf(options[OPT_MANHFLOWPREF].cDescr,"Mantle HFlow Prefix");
-  sprintf(options[OPT_MANHFLOWPREF].cDefault,"Default is MANHFLOWPREF");
+  sprintf(options[OPT_MANHFLOWPREF].cDefault,"%f",MANHFLOWPREF);
   options[OPT_MANHFLOWPREF].iType = 2;
   options[OPT_MANHFLOWPREF].bMultiFile = 1;
   options[OPT_MANHFLOWPREF].dNeg = MANHFLOWPREF;
   options[OPT_MANHFLOWPREF].dDefault = MANHFLOWPREF;
-  sprintf(options[OPT_MANHFLOWPREF].cNeg,"Default is MANHFLOWPREF");
+  sprintf(options[OPT_MANHFLOWPREF].cNeg,"No negative behavior");
   fnRead[OPT_MANHFLOWPREF] = &fvReadManHFlowPref;
   // Needs a LongDescr
-
+  sprintf(options[OPT_MANHFLOWPREF].cLongDescr,
+	  "Coefficient in front of HflowUMan, value can be anything. \n"
+	  "If StagLid>0 then ManHFlowPref=HFLOWREDUCTSTAG.  \n"
+	  "Otherwise default behavior is 1.");
+  
    /* MagMomCoef */
   sprintf(options[OPT_MAGMOMCOEF].cName,"dMagMomCoef");
   sprintf(options[OPT_MAGMOMCOEF].cDescr,"Magnetic Moment Coefficient");
-  sprintf(options[OPT_MAGMOMCOEF].cDefault,"Default is MAGMOMCOEF");
+  sprintf(options[OPT_MAGMOMCOEF].cDefault,"%f",MAGMOMCOEF);
   options[OPT_MAGMOMCOEF].iType = 2;
   options[OPT_MAGMOMCOEF].bMultiFile = 1;
   options[OPT_MAGMOMCOEF].dNeg = MAGMOMCOEF;
   options[OPT_MAGMOMCOEF].dDefault = MAGMOMCOEF;
-  sprintf(options[OPT_MAGMOMCOEF].cNeg,"Default is MAGMOMCOEF");
+  sprintf(options[OPT_MAGMOMCOEF].cNeg,"No negative behavior");
   fnRead[OPT_MAGMOMCOEF] = &fvReadMagMomCoef;
   // Needs a LongDescr
-
+  sprintf(options[OPT_MAGMOMCOEF].cLongDescr,
+	  "Coefficient in front of magnetic moment scaling law, \n"
+	  "gamma_d in eq (192) in Barnes et al (2020).");
+  
   /* PresSWind */
   sprintf(options[OPT_PRESSWIND].cName,"dPresSWind");
   sprintf(options[OPT_PRESSWIND].cDescr,"Stellar Wind Pressure at body");
-  sprintf(options[OPT_PRESSWIND].cDefault,"Default is EPRESSWIND");
+  sprintf(options[OPT_PRESSWIND].cDefault,"%f",EPRESSWIND);
   options[OPT_PRESSWIND].iType = 2;
   options[OPT_PRESSWIND].bMultiFile = 1;
   options[OPT_PRESSWIND].dNeg = EPRESSWIND;
   options[OPT_PRESSWIND].dDefault = EPRESSWIND;
-  sprintf(options[OPT_PRESSWIND].cNeg,"Default is EPRESSWIND");
+  sprintf(options[OPT_PRESSWIND].cNeg,"No negative behavior");
   fnRead[OPT_PRESSWIND] = &fvReadPresSWind;
 
   /* Halt at Minimum Mantle Temperature */
@@ -1251,7 +1258,7 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HALTMINTMAN].bMultiFile = 1;
   options[OPT_HALTMINTMAN].dNeg = 1;
   options[OPT_HALTMINTMAN].dDefault = 0;
-  sprintf(options[OPT_HALTMINTMAN].cNeg,"0");
+  sprintf(options[OPT_HALTMINTMAN].cNeg,"No negative behavior");
   fnRead[OPT_HALTMINTMAN] = &fvReadHaltMinTMan;
 
   /* Halt at Minimum Core Temperature */
@@ -1262,126 +1269,153 @@ void fvInitializeOptionsThermint(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HALTMINTCORE].bMultiFile = 1;
   options[OPT_HALTMINTCORE].dNeg = 1;
   options[OPT_HALTMINTCORE].dDefault = 0;
-  sprintf(options[OPT_HALTMINTCORE].cNeg,"0");
+  sprintf(options[OPT_HALTMINTCORE].cNeg,"No negative behavior");
   fnRead[OPT_HALTMINTCORE] = &fvReadHaltMinTCore;
 
   /* Begin vemcee parameters */
   /* ActViscMan */
   sprintf(options[OPT_ACTVISCMAN].cName,"dActViscMan");
   sprintf(options[OPT_ACTVISCMAN].cDescr,"Mantle viscosity activation energy");
-  sprintf(options[OPT_ACTVISCMAN].cDefault,"Default is ACTVISCMAN");
+  sprintf(options[OPT_ACTVISCMAN].cDefault,"%f",ACTVISCMAN);
   options[OPT_ACTVISCMAN].iType = 2;
   options[OPT_ACTVISCMAN].bMultiFile = 1;
   options[OPT_ACTVISCMAN].dNeg = ACTVISCMAN;
   options[OPT_ACTVISCMAN].dDefault = ACTVISCMAN;
-  sprintf(options[OPT_ACTVISCMAN].cNeg,"Default is ACTVISCMAN");
+  sprintf(options[OPT_ACTVISCMAN].cNeg,"No negative behavior");
   fnRead[OPT_ACTVISCMAN] = &fvReadActViscMan;
   // Needs a LongDescr
-
+  sprintf(options[OPT_ACTVISCMAN].cLongDescr,
+	  "Mantle viscosity activation energy, E_nu in \n"
+	  "eq (159) of Barnes et al (2020).  Physically it is\n"
+	  "a measure of how sensitive viscosity is to temperature.");
+  
   /* ShModRef */
   sprintf(options[OPT_SHMODREF].cName,"dShModRef");
   sprintf(options[OPT_SHMODREF].cDescr,"Reference kinematic mantle shear modulus");
-  sprintf(options[OPT_SHMODREF].cDefault,"Default is SHMODREF");
+  sprintf(options[OPT_SHMODREF].cDefault,"%f",SHMODREF);
   options[OPT_SHMODREF].iType = 2;
   options[OPT_SHMODREF].bMultiFile = 1;
   options[OPT_SHMODREF].dNeg = SHMODREF;
   options[OPT_SHMODREF].dDefault = SHMODREF;
-  sprintf(options[OPT_SHMODREF].cNeg,"Default is SHMODREF");
+  sprintf(options[OPT_SHMODREF].cNeg,"No negative behavior");
   fnRead[OPT_SHMODREF] = &fvReadShModRef;
   // Needs a LongDescr
-
+  sprintf(options[OPT_SHMODREF].cLongDescr,
+	  "Reference kinematic mantle shear modulus coefficient, mu_ref\n"
+	  "in eq (160) of Barnes et al (2020).  Analogous to reference \n"
+	  "viscosity ViscRef.");
+  
   /* Stiffness */
   sprintf(options[OPT_STIFFNESS].cName,"dStiffness");
   sprintf(options[OPT_STIFFNESS].cDescr,"Effective stiffness of mantle");
-  sprintf(options[OPT_STIFFNESS].cDefault,"Default is STIFFNESS");
+  sprintf(options[OPT_STIFFNESS].cDefault,"%f",STIFFNESS);
   options[OPT_STIFFNESS].iType = 2;
   options[OPT_STIFFNESS].bMultiFile = 1;
   options[OPT_STIFFNESS].dNeg = STIFFNESS;
   options[OPT_STIFFNESS].dDefault = STIFFNESS;
-  sprintf(options[OPT_STIFFNESS].cNeg,"Default is STIFFNESS");
+  sprintf(options[OPT_STIFFNESS].cNeg,"No negative behavior");
   fnRead[OPT_STIFFNESS] = &fvReadStiffness;
 
   /* DLind */
   sprintf(options[OPT_DLIND].cName,"dDLind");
   sprintf(options[OPT_DLIND].cDescr,"Lindemann's law length scale for iron liquidus");
-  sprintf(options[OPT_DLIND].cDefault,"Default is DLIND");
+  sprintf(options[OPT_DLIND].cDefault,"%f",DLIND);
   options[OPT_DLIND].iType = 2;
   options[OPT_DLIND].bMultiFile = 1;
   options[OPT_DLIND].dNeg = DLIND;
   options[OPT_DLIND].dDefault = DLIND;
-  sprintf(options[OPT_DLIND].cNeg,"Default is DLIND");
+  sprintf(options[OPT_DLIND].cNeg,"No negative behavior");
   fnRead[OPT_DLIND] = &fvReadDLind;
   // Needs a LongDescr
-
+  sprintf(options[OPT_DLIND].cLongDescr,
+	  "Length scale for core iron liquidus (Lindemann's law), D_Fe \n"
+	  "in eq (175) of Barnes et al (2020).  It determines the \n"
+	  "curvature of the core iron liquidus as a function of radius \n"
+	  "so that smaller values cause the iron liquidus to drop faster \n"
+	  "with radius.");
+  
   /* DAdCore */
   sprintf(options[OPT_DADCORE].cName,"dDAdCore");
   sprintf(options[OPT_DADCORE].cDescr,"Liq iron core adiabatic length scale");
-  sprintf(options[OPT_DADCORE].cDefault,"Default is DADCORE");
+  sprintf(options[OPT_DADCORE].cDefault,"%f",DADCORE);
   options[OPT_DADCORE].iType = 2;
   options[OPT_DADCORE].bMultiFile = 1;
   options[OPT_DADCORE].dNeg = DADCORE;
   options[OPT_DADCORE].dDefault = DADCORE;
-  sprintf(options[OPT_DADCORE].cNeg,"Default is DADCORE");
+  sprintf(options[OPT_DADCORE].cNeg,"No negative behavior");
   fnRead[OPT_DADCORE] = &fvReadDAdCore;
   // Needs a LongDescr
-
+  sprintf(options[OPT_DADCORE].cLongDescr,
+	  "Length scale for core iron adiabatic temperature profile, D_N \n"
+	  "in eq (174) of Barnes et al (2020).  It determines the \n"
+	  "curvature of the core iron adiabat as a function of radius \n"
+	  "so that smaller values cause the core adiabat to drop faster \n"
+	  "with radius.");
+  
   /* AdJumpM2UM */
   sprintf(options[OPT_ADJUMPM2UM].cName,"dAdJumpM2UM");
   sprintf(options[OPT_ADJUMPM2UM].cDescr,"Adiabatic temp jump from ave mantle to UM");
-  sprintf(options[OPT_ADJUMPM2UM].cDefault,"Default is ADJUMPM2UM");
+  sprintf(options[OPT_ADJUMPM2UM].cDefault,"%f",ADJUMPM2UM);
   options[OPT_ADJUMPM2UM].iType = 2;
   options[OPT_ADJUMPM2UM].bMultiFile = 1;
   options[OPT_ADJUMPM2UM].dNeg = ADJUMPM2UM;
   options[OPT_ADJUMPM2UM].dDefault = ADJUMPM2UM;
-  sprintf(options[OPT_ADJUMPM2UM].cNeg,"Default is ADJUMPM2UM");
+  sprintf(options[OPT_ADJUMPM2UM].cNeg,"No negative behavior");
   fnRead[OPT_ADJUMPM2UM] = &fvReadAdJumpM2UM;
   // Needs a LongDescr
-
+  sprintf(options[OPT_ADJUMPM2UM].cLongDescr,
+	  "Constant used to relate TUMan to TMan (TUMan=AdJumpM2UM*TMan),\n"
+	  "eta_UM below eq (8) in Driscoll & Bercovici (2014).");
+  
   /* AdJumpM2LM */
   sprintf(options[OPT_ADJUMPM2LM].cName,"dAdJumpM2LM");
   sprintf(options[OPT_ADJUMPM2LM].cDescr,"Adiabatic temp jump from ave mantle to LM");
-  sprintf(options[OPT_ADJUMPM2LM].cDefault,"Default is ADJUMPM2LM");
+  sprintf(options[OPT_ADJUMPM2LM].cDefault,"%f",ADJUMPM2LM);
   options[OPT_ADJUMPM2LM].iType = 2;
   options[OPT_ADJUMPM2LM].bMultiFile = 1;
   options[OPT_ADJUMPM2LM].dNeg = ADJUMPM2LM;
   options[OPT_ADJUMPM2LM].dDefault = ADJUMPM2LM;
-  sprintf(options[OPT_ADJUMPM2LM].cNeg,"Default is ADJUMPM2LM");
+  sprintf(options[OPT_ADJUMPM2LM].cNeg,"No negative behavior");
   fnRead[OPT_ADJUMPM2LM] = &fvReadAdJumpM2LM;
   // Needs a LongDescr
-
+  sprintf(options[OPT_ADJUMPM2LM].cLongDescr,
+	  "Constant used to relate TLMan to TMan (TLMan=AdJumpM2LM*TMan),\n"
+	  "analogous to AdJumpM2UM.");
+  
   /* AdJumpC2CMB */
   sprintf(options[OPT_ADJUMPC2CMB].cName,"dAdJumpC2CMB");
   sprintf(options[OPT_ADJUMPC2CMB].cDescr,"Adiabatic temp jump from ave core to CMB");
-  sprintf(options[OPT_ADJUMPC2CMB].cDefault,"Default is ADJUMPC2CMB");
+  sprintf(options[OPT_ADJUMPC2CMB].cDefault,"%f",ADJUMPC2CMB);
   options[OPT_ADJUMPC2CMB].iType = 2;
   options[OPT_ADJUMPC2CMB].bMultiFile = 1;
   options[OPT_ADJUMPC2CMB].dNeg = ADJUMPC2CMB;
   options[OPT_ADJUMPC2CMB].dDefault = ADJUMPC2CMB;
-  sprintf(options[OPT_ADJUMPC2CMB].cNeg,"Default is ADJUMPC2CMB");
+  sprintf(options[OPT_ADJUMPC2CMB].cNeg,"No negative behavior");
   fnRead[OPT_ADJUMPC2CMB] = &fvReadAdJumpC2CMB;
 
   /* ElecCondCore */
   sprintf(options[OPT_ELECCONDCORE].cName,"dElecCondCore");
   sprintf(options[OPT_ELECCONDCORE].cDescr,"Electrical conductivity of core");
-  sprintf(options[OPT_ELECCONDCORE].cDefault,"Default is ELECCONDCORE");
+  sprintf(options[OPT_ELECCONDCORE].cDefault,"%f",ELECCONDCORE);
   options[OPT_ELECCONDCORE].iType = 2;
   options[OPT_ELECCONDCORE].bMultiFile = 1;
   options[OPT_ELECCONDCORE].dNeg = ELECCONDCORE;
   options[OPT_ELECCONDCORE].dDefault = ELECCONDCORE;
-  sprintf(options[OPT_ELECCONDCORE].cNeg,"Default is ELECCONDCORE");
+  sprintf(options[OPT_ELECCONDCORE].cNeg,"No negative behavior");
   fnRead[OPT_ELECCONDCORE] = &fvReadElecCondCore;
 
   /* ImK2ManOrbModel */
   sprintf(options[OPT_IMK2MANORBMODEL].cName,"dImK2ManOrbModel");
   sprintf(options[OPT_IMK2MANORBMODEL].cDescr,"ImK2Man model to use in orbital equations (1=ImK2(T), 2=k2/Q(T)");
-  sprintf(options[OPT_IMK2MANORBMODEL].cDefault,"Default is IMK2MANORBMODEL");
+  sprintf(options[OPT_IMK2MANORBMODEL].cDefault,"%f",IMK2MANORBMODEL);
   options[OPT_IMK2MANORBMODEL].iType = 2;
   options[OPT_IMK2MANORBMODEL].bMultiFile = 1;
   options[OPT_IMK2MANORBMODEL].dNeg = IMK2MANORBMODEL;
   options[OPT_IMK2MANORBMODEL].dDefault = IMK2MANORBMODEL;
-  sprintf(options[OPT_IMK2MANORBMODEL].cNeg,"Default is IMK2MANORBMODEL");
+  sprintf(options[OPT_IMK2MANORBMODEL].cNeg,"No negative behavior");
   fnRead[OPT_IMK2MANORBMODEL] = &fvReadImK2ManOrbModel;
   // Needs a LongDescr -- XXX I'm not sure what this does! RB
+  // PD(4/26/21): I don't know what this does either!  Presumably its a switch to use different tidal heating models?
 }
 /**
   Read options in thermint

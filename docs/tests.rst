@@ -1,11 +1,17 @@
-Writing Tests, Bug Reports, and Examples
-========================================
+Writing Tests and Examples
+==========================
 
 .. contents:: :local:
 
 
-Writing Tests
--------------
+Unit Tests
+----------
+
+VPLanet includes "unit tests" to maintain code results as the project grows.
+These tests are short versions of the examples that run in a few seconds, which
+is sufficient time to ensure that integration is accurate. Unit tests are also
+used to track the amount of the code that is executed over the sum of all tests,
+further enabling confidence in the code's accuracy.
 
 Test scripts live in the :code:`tests/` directory in the top-level repo folder.
 Tests are executed automatically on Travis using :code:`py.test`, which will
@@ -17,8 +23,8 @@ the output is equal to (or very close to) a benchmarked value.
 
 To write a test, create a directory in :code:`tests/` with a descriptive name
 (such as the modules it's meant to test or a specific application of the code).
-Inside, add the :code:`.in` files needed to run the test and create a Python
-file :code:`test_<TEST_NAME>.py`. This file should have this basic structure:
+Include the :code:`.in` files needed to run the test and create a Python
+file :code:`test_<TEST_NAME>.py`. This file should follow this basic structure:
 
 .. code-block:: python
 
@@ -53,76 +59,18 @@ eccentricity (from the log file) is zero; that the final system energy
 the star's luminosity (from the forward file) is equal to some array of
 values.
 
-All modules should have unit tests, and ideally all module couplings as well.
-To get a sense of what's being tested and what's not, take a look at the
-:doc:`coverage` section.
-
-
-Writing Bug Reports
--------------------
-
-Bug reports live in the :code:`bugs/` directory in the top-level repo folder,
-and there should be one directory per bug. Each directory should contain the
-input files needed to reproduce the bug and a Python script called :code:`bug.py`
-that raises an :code:`AssertionError` if the bug is present (or no error if
-it's fixed). Here's an example of a test script that checks whether VPLANET
-is causing a segfault when running a specific case:
-
-
-.. code-block:: python
-
-    import subprocess
-
-    # Run vplanet (it will segfault)
-    try:
-        subprocess.check_output(['vplanet', 'vpl.in', '-q'])
-    except subprocess.CalledProcessError:
-        raise AssertionError("This bug is still present.")
-
-
-Bug reports should also have a :code:`README.rst` file describing what's going
-on:
-
-
-.. code-block:: rest
-
-    satideperts
-    ===========
-
-    ===================   ============
-    **Issue**             `#10 <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/issues/10>`_
-    **Date**              06/28/18
-    **Author**            Rodrigo Luger
-    ===================   ============
-
-    If EqTide is present in any of the body .in files, but *not in the primary* .in file,
-    a segfault occurs.
-
-    Long description
-    ----------------
-
-    If EQTIDE is present in the primary file, things run fine, even if saTidePerts is not
-    set, in which case an informative error is raised. But even if saTidePerts is set in two separate bodies
-    (neither of which is the primary), a segfault still occurs. Something in the code implicitly expects the star to always
-    have EQTIDE present (and saTidePerts set), so we need to add a check for that.
-
-
-    Suggested fix
-    -------------
-
-    Not sure yet.
-
-
-Please follow this structure when writing your bug reports. Note that every bug
-should be linked to a specific **Issue** on the github page.
-Take a look at the stuff in the :code:`bugs/` directory for more examples.
-
+These unit tests not only ensure new modification don't break parts of the code
+that already work. In addition, they are used to compute the fraction of the code
+that is verified with `CodeCov <https://app.codecov.io/gh/VirtualPlanetaryLaboratory/vplanet>`
+Thus, to approach (and someday maintain) 100% verification requires all new
+features to include a unit test. Finally, unit tests are valuable for ensuring
+that no memory issues are present through periodic valgrind tests.
 
 Writing Examples
 ----------------
 
 Examples live in the :code:`examples/` directory in the top-level repo folder, and,
-just like bug reports, there should be one aptly-named folder per example. Include
+just like tests, there should be one aptly-named folder per example. Include
 the input files needed to run the example and a :code:`README.rst` file that
 describes the example and its expected output in detail:
 
@@ -152,8 +100,7 @@ describes the example and its expected output in detail:
 
     .. code-block:: bash
 
-        vplanet vpl.in
-        vplot
+        python makeplot.py
 
 
     Expected output
@@ -166,6 +113,9 @@ describes the example and its expected output in detail:
        :align: center
 
        FIGURE CAPTION
+
+:note:
+  All example figures are generated by the same command: python makplot.py. 
 
 
 When creating an example, run it to figure out the approximate

@@ -194,6 +194,9 @@ void ReadUseOrbParams(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
 void InitializeOptionsSpiNBody(OPTIONS *options,fnReadOption fnRead[]) {
   int iOpt,iFile;
 
+
+  // XXX All of these should be deprecated so that it doesn't matter if the user
+  // calls DistOrb or SpiNBody
   sprintf(options[OPT_POSITIONXSPINBODY].cName,"dPositionXSpiNBody");
   sprintf(options[OPT_POSITIONXSPINBODY].cDescr,"X position of the body");
   sprintf(options[OPT_POSITIONXSPINBODY].cDefault,"0");
@@ -840,6 +843,8 @@ void WriteLongASpinBody(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *syste
 
 void InitializeOutputSpiNBody(OUTPUT *output,fnWriteOutput fnWrite[]) {
   //Output example for dPositionX variable
+  // XXX All of these should be deprecated so that it doesn't matter if the user
+  // calls DistOrb or SpiNBody
   sprintf(output[OUT_POSITIONXSPINBODY].cName,"PositionXSpiNBody");
   sprintf(output[OUT_POSITIONXSPINBODY].cDescr,"Body's x position in SpiNBody");
   //sprintf(output[OUT_POSITIONXSPINBODY].cNeg," ");

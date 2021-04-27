@@ -914,7 +914,7 @@ void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_LXUV] = &WriteLXUV;
 
   sprintf(output[OUT_LXUVFRAC].cName,"LXUVFrac");
-  sprintf(output[OUT_LXUVFRAC].cDescr,"X-ray/XUV Luminosity Fraction");
+  sprintf(output[OUT_LXUVFRAC].cDescr,"Fraction of luminosity in XUV");
   output[OUT_LXUVFRAC].bNeg = 0;
   output[OUT_LXUVFRAC].iNum = 1;
   output[OUT_LXUVFRAC].iModuleBit = STELLAR;

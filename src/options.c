@@ -3170,6 +3170,11 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_ETA].bNeg = 0;
   options[OPT_ETA].iFileType = 2;
   fnRead[OPT_ETA] = &ReadEta;
+  sprintf(options[OPT_ETA].cLongDescr,
+    "The timestep will be set to %s times the smallest instantaneous timescale, \n"
+    "i.e. min(x/(dx/dt) where x represents the primary variables.",
+    options[OPT_ETA].cName
+  );
 
   sprintf(options[OPT_OUTPUTTIME].cName,"dOutputTime");
   sprintf(options[OPT_OUTPUTTIME].cDescr,"Output Interval");
@@ -3243,7 +3248,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
    */
 
   sprintf(options[OPT_COLOR].cName,"cColor");
-  sprintf(options[OPT_COLOR].cDescr,"Body Color");
+  sprintf(options[OPT_COLOR].cDescr,
+    "Hexadecimal color code for the body to be used in vplot");
   sprintf(options[OPT_COLOR].cDefault,"000000");
   options[OPT_COLOR].iType = 2;
   options[OPT_COLOR].iModuleBit = 0;
@@ -3334,7 +3340,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_HALTMERGE] = &ReadHaltMerge;
 
   sprintf(options[OPT_HALTMINECC].cName,"dHaltMinEcc");
-  sprintf(options[OPT_HALTMINECC].cDescr,"Minimum Eccentricity Value that Halts Integration");
+  sprintf(options[OPT_HALTMINECC].cDescr,
+    "Minimum Eccentricity Value that Halts Integration");
   sprintf(options[OPT_HALTMINECC].cDefault,"-1");
   sprintf(options[OPT_HALTMINECC].cDimension,"nd");
   options[OPT_HALTMINECC].dDefault = -1;
@@ -3345,7 +3352,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_HALTMINECC] = &ReadHaltMinEcc;
 
   sprintf(options[OPT_HALTMINOBL].cName,"dHaltMinObl");
-  sprintf(options[OPT_HALTMINOBL].cDescr,"Minimum Obliquity Value that Halts Integration");
+  sprintf(options[OPT_HALTMINOBL].cDescr,
+    "Minimum Obliquity Value that Halts Integration");
   sprintf(options[OPT_HALTMINOBL].cDefault,"-1 degrees");
   sprintf(options[OPT_HALTMINOBL].cDimension,"angle");
   options[OPT_HALTMINOBL].dDefault = -DEGRAD;
@@ -3357,7 +3365,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_HALTMINOBL] = &ReadHaltMinObl;
 
   sprintf(options[OPT_HALTMINSEMI].cName,"dHaltMinSemi");
-  sprintf(options[OPT_HALTMINSEMI].cDescr,"Minimum Semi-Major Axis Value that Halts Integration");
+  sprintf(options[OPT_HALTMINSEMI].cDescr,
+    "Minimum Semi-Major Axis Value that Halts Integration");
   sprintf(options[OPT_HALTMINSEMI].cDefault,"0");
   sprintf(options[OPT_HALTMINSEMI].cNeg,"au");
   sprintf(options[OPT_HALTMINSEMI].cDimension,"length");
@@ -3403,7 +3412,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
    */
 
   sprintf(options[OPT_INTEGRATIONMETHOD].cName,"sIntegrationMethod");
-  sprintf(options[OPT_INTEGRATIONMETHOD].cDescr,"Integration Method: Euler, Runge-Kutta4 (Default = Runge-Kutta4)");
+  sprintf(options[OPT_INTEGRATIONMETHOD].cDescr,
+    "Integration Method: Euler, Runge-Kutta4 (Default = Runge-Kutta4)");
   sprintf(options[OPT_INTEGRATIONMETHOD].cDefault,"Runge-Kutta4");
   options[OPT_INTEGRATIONMETHOD].iType=4;
   options[OPT_INTEGRATIONMETHOD].iModuleBit = 0;
@@ -3496,7 +3506,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
    */
 
   sprintf(options[OPT_MINVALUE].cName,"dMinValue");
-  sprintf(options[OPT_MINVALUE].cDescr,"Minimum Non-Zero Value of Eccentricity and Obliquities");
+  sprintf(options[OPT_MINVALUE].cDescr,
+    "Minimum Non-Zero Value of Eccentricity and Obliquities");
   sprintf(options[OPT_MINVALUE].cDefault,"0");
   sprintf(options[OPT_MINVALUE].cDimension,"nd");
   options[OPT_MINVALUE].dDefault = 0;
@@ -3514,6 +3525,10 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_MODULES].bNeg = 0;
   options[OPT_MODULES].iFileType = 0;
   options[OPT_MODULES].iType = 4;
+  sprintf(options[OPT_MODULES].cLongDescr,
+    "List of names of modules to be applied to the body. Spelling must be "
+    "exact, but any capitalization works"
+  );
 
   /*
    *
@@ -3535,6 +3550,10 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_OUTDIGITS].bNeg = 0;
   options[OPT_OUTDIGITS].iFileType = 2;
   fnRead[OPT_OUTDIGITS] = &ReadDigits;
+  sprintf(options[OPT_OUTDIGITS].cLongDescr,
+    "For all floating point output, print this many number of digits after "
+    "the decimal point"
+  );
 
   sprintf(options[OPT_OUTPUTORDER].cName,"saOutputOrder");
   sprintf(options[OPT_OUTPUTORDER].cDescr,"Output Parameter(s)");
@@ -3840,7 +3859,8 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_RADIUS] = &ReadRadius;
 
   sprintf(options[OPT_RG].cName,"dRadGyra");
-  sprintf(options[OPT_RG].cDescr,"Radius of Gyration");
+  sprintf(options[OPT_RG].cDescr,
+    "Radius of Gyration; moment of inertia constant");
   sprintf(options[OPT_RG].cDefault,"0.5");
   sprintf(options[OPT_RG].cDimension,"nd");
   options[OPT_RG].dDefault = 0.5;
@@ -3949,18 +3969,18 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_TEMPERATURE] = &ReadTemperature;
 
   sprintf(options[OPT_USEOUTERTIDALQ].cName,"bUseOuterTidalQ");
-  sprintf(options[OPT_USEOUTERTIDALQ].cDescr,"User outermost layer's tidal Q as "
-        "body's total tidal Q?");
+  sprintf(options[OPT_USEOUTERTIDALQ].cDescr,
+    "User outermost layer's tidal Q as body's total tidal Q?");
   sprintf(options[OPT_USEOUTERTIDALQ].cDefault,"0");
   options[OPT_USEOUTERTIDALQ].iType = 0;
   options[OPT_USEOUTERTIDALQ].bMultiFile = 1;
   fnRead[OPT_USEOUTERTIDALQ] = &ReadUseOuterTidalQ;
   sprintf(options[OPT_USEOUTERTIDALQ].cLongDescr,
-    "The total tidal Q of a body can be computed either as the sum of "
-    "contributions of all layers (mantle, ocean, envelope), or as the tidal Q "
-    "of the outer most layer. When %s is set to 0, the tidal Q is the sum, "
-    "when set to 1, it is the outer layer's (envelope, then ocean, then mantle) "
-    "value.\n",options[OPT_USEOUTERTIDALQ].cName);
+    "The total tidal Q of a body can be computed either as the sum of\n"
+    "contributions of all layers (mantle, ocean, envelope), or as the tidal Q\n"
+    "of the outer most layer. When %s is set to 0, the tidal Q is the sum,\n"
+    "when set to 1, it is the outer layer's (envelope, then ocean, then\n"
+    "mantle) value.\n",options[OPT_USEOUTERTIDALQ].cName);
 
   /*
    *
@@ -3969,12 +3989,18 @@ void InitializeOptionsGeneral(OPTIONS *options,fnReadOption fnRead[]) {
    */
 
   sprintf(options[OPT_VERBOSE].cName,"iVerbose");
-  sprintf(options[OPT_VERBOSE].cDescr,"Verbosity Level: 1-5");
+  sprintf(options[OPT_VERBOSE].cDescr,"Verbosity Level: 0-5");
   sprintf(options[OPT_VERBOSE].cDefault,"3");
   options[OPT_VERBOSE].iModuleBit = 0;
   options[OPT_VERBOSE].bNeg = 0;
   options[OPT_VERBOSE].iType = 1;
   options[OPT_VERBOSE].iFileType = 2;
+  sprintf(options[OPT_VERBOSE].cLongDescr,
+    "Set how much text is written to the screen. 0 = no output, 1 = only\n"
+    "errors, 2 = progress updates, 3 = statements about input choices,  4 =\n"
+    "information about unit choices, 5 = all possible output. Note that levels\n"
+    "0 and 5 can be set at execution with the -q and -v options, respectively."
+  );
 
   sprintf(options[OPT_VISCUMAN].cName,"dViscUMan");
   sprintf(options[OPT_VISCUMAN].cDescr,"Upper mantle viscosity");

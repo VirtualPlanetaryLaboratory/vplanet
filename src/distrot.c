@@ -147,6 +147,14 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_CALCDYNELLIP].iType = 0;
   options[OPT_CALCDYNELLIP].bMultiFile = 1;
   fnRead[OPT_CALCDYNELLIP] = &ReadCalcDynEllip;
+  sprintf(options[OPT_CALCDYNELLIP].cLongDescr,
+    "In DistRot, set this to 1 to force the equilibrium shape (dynamical \n"
+    "ellipticity) to be calculated based on the current rotation rate and \n"
+    "hydrostatic equilibrium. Note that once the planet's rotation period \n"
+    "exceeds 13 days, then the dynamical ellipticity will be held fixed \n"
+    "to match Venus' value. This calculation does not include tides. Setting \n"
+    "this to 1 overrides %s.",options[OPT_DYNELLIP].cName // XXX Check this!
+  );
 
   sprintf(options[OPT_FORCEPRECRATE].cName,"bForcePrecRate");
   sprintf(options[OPT_FORCEPRECRATE].cDescr,"Set the axial precession to a fixed rate?");
@@ -155,6 +163,10 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_FORCEPRECRATE].iType = 0;
   options[OPT_FORCEPRECRATE].bMultiFile = 1;
   fnRead[OPT_FORCEPRECRATE] = &ReadForcePrecRate;
+  sprintf(options[OPT_FORCEPRECRATE].cLongDescr,
+    "In DisRot, set the axial precession rate to a fixed value. This option \n"
+    "can mimic the forcing of a natural satellite, or be used for testing."
+  );
 
   sprintf(options[OPT_PRECRATE].cName,"dPrecRate");
   sprintf(options[OPT_PRECRATE].cDescr,"Fixed rate of axial precession (angle/s)");
@@ -179,21 +191,6 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_SPECMOMINERTIA].bMultiFile = 1;
   fnRead[OPT_SPECMOMINERTIA] = &ReadSpecMomInertia;
 
-
-  sprintf(options[OPT_READORBITDATA].cName,"bReadOrbitData");
-  sprintf(options[OPT_READORBITDATA].cDescr,"Read in orbital data for use with distrot?");
-  sprintf(options[OPT_READORBITDATA].cDefault,"0");
-  options[OPT_READORBITDATA].dDefault = 0;
-  options[OPT_READORBITDATA].iType = 0;
-  options[OPT_READORBITDATA].bMultiFile = 1;
-  fnRead[OPT_READORBITDATA] = &ReadOrbitData;
-  sprintf(options[OPT_READORBITDATA].cLongDescr,
-    "Rather than calculate orbital evolution with DistOrb or SpiNBody, users \n"
-    // Note that options[OPT_FILEORBITDATA].cName hasn't been defined yet
-    "may read in a previously run simulation. See sFileOrbitData for more \n"
-    "information.\n"
-  );
-
   sprintf(options[OPT_FILEORBITDATA].cName,"sFileOrbitData");
   sprintf(options[OPT_FILEORBITDATA].cDescr,"Name of file containing orbit time series");
   sprintf(options[OPT_FILEORBITDATA].cDefault,"orbit.txt");
@@ -205,8 +202,21 @@ void InitializeOptionsDistRot(OPTIONS *options,fnReadOption fnRead[]) {
     "units will be assumed to be the same as defined for the simulation.\n"
     "If using this feature, the integration must used a fixed timestep \n"
     "(%s = 0), and the timestep (%s) must equal the cadence in the file.\n"
-    "See %s for more information.\n",options[OPT_VARDT].cName,
+    "See %s for more information.",options[OPT_VARDT].cName,
     options[OPT_TIMESTEP].cName,options[OPT_READORBITDATA].cName
+  );
+
+  sprintf(options[OPT_READORBITDATA].cName,"bReadOrbitData");
+  sprintf(options[OPT_READORBITDATA].cDescr,"Read in orbital data for use with distrot?");
+  sprintf(options[OPT_READORBITDATA].cDefault,"0");
+  options[OPT_READORBITDATA].dDefault = 0;
+  options[OPT_READORBITDATA].iType = 0;
+  options[OPT_READORBITDATA].bMultiFile = 1;
+  fnRead[OPT_READORBITDATA] = &ReadOrbitData;
+  sprintf(options[OPT_READORBITDATA].cLongDescr,
+    "Rather than calculate orbital evolution with DistOrb or SpiNBody, users \n"
+    "may read in a previously run simulation. See %s for more \n"
+    "information.",options[OPT_FILEORBITDATA].cName
   );
 }
 

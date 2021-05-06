@@ -1668,6 +1668,7 @@ void UnitsSI(UNITS *units) {
   units->iLength = 0;
   units->iMass = 0;
   units->iAngle = 0;
+  units->iTemp = 0;
 }
 
 void WriteLogEntry(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDATE *update,fnWriteOutput fnWrite,FILE *fp,int iBody) {

@@ -1,5 +1,5 @@
-VPLanet Contributors
-====================
+Authors
+=======
 
 `VPLanet` has been developed by a team of scientists with a broad range of
 expertise. The following list give the names and contributions of all

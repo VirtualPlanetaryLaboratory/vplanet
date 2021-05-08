@@ -1643,19 +1643,19 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_TIDALQMAN] = WriteTidalQMantle;
 
   sprintf(output[OUT_XOBL].cName,"Xobl");
-  sprintf(output[OUT_XOBL].cDescr,"Body's sin(obl)*cos(pA)");
+  sprintf(output[OUT_XOBL].cDescr,"Body's sin(obliquity)*cos(precession angle)");
   output[OUT_XOBL].iNum = 1;
   output[OUT_XOBL].iModuleBit = EQTIDE + DISTROT;
   fnWrite[OUT_XOBL] = &WriteXobl;
 
   sprintf(output[OUT_YOBL].cName,"Yobl");
-  sprintf(output[OUT_YOBL].cDescr,"Body's sin(obl)*sin(pA)");
+  sprintf(output[OUT_YOBL].cDescr,"Body's sin(obliquity)*sin(precession angle)");
   output[OUT_YOBL].iNum = 1;
   output[OUT_YOBL].iModuleBit = EQTIDE + DISTROT;
   fnWrite[OUT_YOBL] = &WriteYobl;
 
   sprintf(output[OUT_ZOBL].cName,"Zobl");
-  sprintf(output[OUT_ZOBL].cDescr,"Body's cos(obl)");
+  sprintf(output[OUT_ZOBL].cDescr,"Body's cos(obliquity)");
   output[OUT_ZOBL].iNum = 1;
   output[OUT_ZOBL].iModuleBit = EQTIDE + DISTROT;
   fnWrite[OUT_ZOBL] = &WriteZobl;

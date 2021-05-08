@@ -2,7 +2,7 @@ Other VPLanet Repositories
 ==========================
 
 In addition to the examples presented in this repository, additional examples
-can be found in the repositories:
+can be found at the GitHub sites:
 
 `Rory Barnes <https://github.com/RoryBarnes>`
 `Patrick Barth <https://github.com/pbfeu>`

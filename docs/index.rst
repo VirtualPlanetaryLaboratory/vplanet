@@ -16,13 +16,7 @@ are available in separate repositories.
    src
    vplot
    parametersweep
-   guide
-   contributors
+   developers
+   authors
    repos
    GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet>
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :doc:`zzreferences`

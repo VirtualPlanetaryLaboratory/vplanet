@@ -1,13 +1,9 @@
 BigPlanet
 -----
-A suite of data analysis and extraction routines for ``VPLanet`` designed to be used 
-with `vspace <../vspace>`_ and `multi-planet <../multi-planet>`_ scripts. It can also 
+A suite of data analysis and extraction routines for ``VPLanet`` designed to be used
+with `vspace <../vspace>`_ and `multi-planet <../multi-planet>`_ scripts. It can also
 generate files for use with the `VR Ulysses virtual reality data explorer
 <https://www.vrulysses.com>`_.
-
-Overview
-========
-
 
 Installation
 ============
@@ -17,25 +13,27 @@ BigPlanet to be run from the command line (see running bigplanet section below)
 
 Running BigPlanet
 =================
-BigPlanet has two primary uses: 1) a command line tool to generate an `HDF5 
+BigPlanet has two primary uses: 1) a command line tool to generate an `HDF5
 <https://en.wikipedia.org/wiki/Hierarchical_Data_Format>`_  file that stores
-and the data in a compressed format, and 2) a python module that enables data 
+and the data in a compressed format, and 2) a python module that enables data
 extraction and plotting from the HDF5 file.  These are explained in
 detail below.
 
 Command Line Usage
 ==================
-Using BigPlanet on the command line is relatively straight forward. After a suite of 
-simulations (set up with `vspace <../vspace>`_) has completed, simply run the following 
+Using BigPlanet on the command line is relatively straight forward. After a suite of
+simulations (set up with `vspace <../vspace>`_) has completed, simply run the following
 command in the in the command line:
 
 .. code-block:: bash
 
-    bigplanet <input file> --c [number of cores]
+    bigplanet <input file> -c [number of cores] -q -m [email]
 
-where the input file is the same file used to run vspace and multi-planet. There
-is an optional argument which is the number of processors used. **The default number
-of processors is the maximum number on the machine.**
+where the input file is the same file used to run vspace and multi-planet.
+There are three optional arguments:
+:code:`-c` : the number of processors used
+:code:`-q` : quiet mode (nothing is printed to the command line)
+:code:`-m` : emails the user when Bigplanet is complete
 
 Module Usage
 ============
@@ -53,10 +51,10 @@ variable from its key (ExtractColumn), extract the units of a particular key val
 create a matrix based on two keys (CreateMatrix), and write out a list of keys
 to a file (WriteOutput).
 
-Keys use the following format for naming: body_variable_aggregation, where "body" is the name of the
-body in its infile (i.e., the argument to sName), "variable" is the name of an input or output
-option, and "aggregation" is a description of the variable, such as min, max, or final (see 
-Understanding Keys below).
+
+.. note::
+
+    Keys using the following format for naming: body_variable_aggregation
 
 
 **PrintKeys**
@@ -129,6 +127,19 @@ where:
 
 *Key* is the name of the particular variable you are extracting the units from.
 
+**CreateHDF5File**
+
+CreateHDF5File is a function that creates an HDF5 file from the input file that is passed
+to the function. This is mainly used if you forgot to run bigplanet or want to run all
+the code for bigplanet in module format
+
+.. code-block:: python
+
+    CreateHDF5File(inputfile)
+
+where:
+
+*inputfile* is the same file used to run vspace and multi-planet
 
 
 **CreateMatrix**
@@ -139,7 +150,7 @@ arguments:
 
 .. code-block:: python
 
-    CreateMatrix(xaxis,yaxis,zarray)
+    CreateMatrix(xaxis,yaxis,zarray,orientation=1)
 
 where:
 
@@ -148,6 +159,9 @@ where:
 *yaxis* is the ExtractUniqueValues() of the column you want the xaxis to be
 
 *zarray* is the ExtractColumn() of what you want the zaxis to be
+
+*orientation* is the orientation of the data based on a 4 quadrant grid that
+goes counter clockwise in 90 degree interments. The default is 1, or bottom left corner.
 
 
 
@@ -183,9 +197,11 @@ Keys are the bread and butter of BigPlanet. The keys, as briefly mentioned above
 are the names of the various variables that BigPlanet has extracted from the forward file
 and the log file that are generated when VPLanet finishes compiling.
 
+
 .. note::
 
 	  Keys using the following format for naming: body_variable_aggregation
+
 
 Below is a table of all the various aggregations available at this time:
 
@@ -211,12 +227,19 @@ Below is a table of all the various aggregations available at this time:
      - returns a nested list of the *forward* values of the particular
        parameter for every simulation
      - body_variable_forward
+   * - Climate
+     - if the Poise Module was used in the simulations, the climate options
+       returns a nested list of the *climate* values of the particular
+       parameter for every simulation
+     - body_variable_climate
 
 
 .. warning::
 
-  The following aggregations will **only** work with parameters that are from the *forward* file.
-  If you attempt to use it with a value that is **NOT** in the forward file, it will produce an error
+    The following aggregations will **only** work with parameters that are
+    from the *forward* file.
+    If you attempt to use it with a value that is **NOT** in the forward file,
+    it will produce an error.
 
 
 

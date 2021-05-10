@@ -13,7 +13,6 @@ Variables names should have the following prefixes:
 
       b    = Boolean
       i    = Integer
-      l    = Line Number
       d    = Double
       s    = String
       ba   = Boolean Array
@@ -23,13 +22,13 @@ Variables names should have the following prefixes:
       pb   = Pointer to Boolean
       pi   = Pointer to Integer
       pd   = Pointer to Double
-      pba  = Pointer to Boolean Array
-      pia  = Pointer to Integer Array
-      pda  = Pointer to Double Array
-      fp   = Function Pointer
-      fpa  = Function Pointer Array
+      pab  = Pointer to Boolean Array
+      pai  = Pointer to Integer Array
+      pad  = Pointer to Double Array
+      fnp  = Function Pointer
 
-Function names should have the following,
+
+Function names should have the following prefixes:
 
 .. code-block:: C
 
@@ -190,15 +189,13 @@ for the XUV radius fraction in :code:`atmesc`:
 .. code-block:: C
       :linenos:
 
-      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,
-        control->Io.iVerbose);
+      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
       if (lTmp >= 0) {
-        NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,
-          control->Io.iVerbose);
-        if (dTmp < 0) {
-          if (control->Io.iVerbose >= VERBERR)
-    	    fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
-          LineExit(files->Infile[iFile].cIn,lTmp);
+            NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+            if (dTmp < 0) {
+                if (control->Io.iVerbose >= VERBERR)
+    	           fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+                LineExit(files->Infile[iFile].cIn,lTmp);
         }
         body[iFile-1].dXFrac = dTmp;
         UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -213,38 +210,32 @@ mark each line:
 .. code-block:: C
       :linenos:
 
-      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,
-        control->Io.iVerbose);
+      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
       if (lTmp >= 0) {
-        NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,
-          control->Io.iVerbose);
-        if (dTmp < 0) {
-          if (control->Io.iVerbose >= VERBERR) // LCOV_EXCL_LINE
-    	      fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName); // LCOV_EXCL_LINE
-            LineExit(files->Infile[iFile].cIn,lTmp); // LCOV_EXCL_LINE
-          }
-          body[iFile-1].dXFrac = dTmp;
-          UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+            NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+            if (dTmp < 0) {
+                if (control->Io.iVerbose >= VERBERR) // LCOV_EXCL_LINE
+    	           fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName); // LCOV_EXCL_LINE
+                LineExit(files->Infile[iFile].cIn,lTmp); // LCOV_EXCL_LINE
         }
+        body[iFile-1].dXFrac = dTmp;
+        UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
       }
 
-Not however, that line 8 exceeds 80 characters. In this case it is better to
-ignore a block of lines:
+or use a block:
 
 .. code-block:: C
       :linenos:
 
-      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,
-        control->Io.iVerbose);
+      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
       if (lTmp >= 0) {
-        NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,
-          control->Io.iVerbose);
-        if (dTmp < 0) {
-          // LCOV_EXCL_START
-          if (control->Io.iVerbose >= VERBERR)
-    	    fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
-          LineExit(files->Infile[iFile].cIn,lTmp);
-          // LCOV_EXCL_STOP
+            NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+            if (dTmp < 0) {
+                // LCOV_EXCL_START
+                if (control->Io.iVerbose >= VERBERR)
+    	           fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+                LineExit(files->Infile[iFile].cIn,lTmp);
+                // LCOV_EXCL_STOP
         }
         body[iFile-1].dXFrac = dTmp;
         UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -257,5 +248,6 @@ Miscellaneous
     - Do not use the word `test` in any file/folder names *unless* you want it to
       be part of the unit tests, as the unit tester collects and attempts to run
       any file with `test` in it.
+    - Use spaces, not tabs, when indenting!
     - Do not use the pound sign "#" in comments, as this refers to a link in **Doxygen**.
     - Use the PEP 8 guide for python scripts: https://www.python.org/dev/peps/pep-0008/

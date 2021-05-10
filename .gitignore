@@ -16,31 +16,25 @@
 *.Ecc.Eigen
 *.Inc.Eigen
 SeasonalClimateFiles
+*.hdf5
 
 #files created from running tests
 tests/Multi-PlanetCheckpoint/MP_Checkpoint/
-tests/Multi-PlanetCheckpoint/.MP_Checkpoint
 tests/Multi-PlanetMpStatus/MP_Status/
-tests/Multi-PlanetMpStatus/.MP_Status
 tests/Multi-PlanetParallel/MP_Parallel/
-tests/Multi-PlanetParallel/.MP_Parallel
 tests/Multi-PlanetSerial/MP_Serial/
-tests/Multi-PlanetSerial/.MP_Serial
 tests/Vspace_Explicit/Explict_Test/
 tests/Vspace_Linear/Linear_Test/
 tests/Vspace_Log/Log_Test/
 tests/BigPlanetCreateHDF5/BP_CreateHDF5/
-tests/BigPlanetCreateHDF5/.BP_CreateHDF5
-tests/BigPlanetCreateHDF5/.BP_CreateHDF5_hdf5
-tests/BigPlanetCreateHDF5/BP_CreateHDF5.hdf5
 tests/BigPlanetExtract/BP_Extract/
-tests/BigPlanetExtract/.BP_Extract
-tests/BigPlanetExtract/.BP_Extract
-tests/BigPlanetExtract/BP_Extract.hdf5
 tests/BigPlanetStats/BP_Stats/
-tests/BigPlanetStats/.BP_Stats
-tests/BigPlanetStats/.BP_Stats_hdf5
-tests/BigPlanetStats/BP_Stats.hdf5
+
+
+# Examples
+examples/ParameterSweep/ParameterSweep/
+
+
 
 # Aux files / build info / garbage
 merge-from-public.sh

@@ -62,14 +62,16 @@ setup(name = 'bigplanet',
       packages = ['bigplanet'],
       entry_points = {
           'console_scripts': [
-               'bigplanet = bigplanet.bigplanet:main'
+               'bigplanet = bigplanet.bigplanet:main',
+               'bpstatus = bigplanet.bpstatus:main'
           ],
       },
       install_requires = [
                           'numpy',
                           'h5py',
                           'argparse',
-                          'pandas'
+                          'pandas',
+                          'scipy'
                           ],
       include_package_data = True,
       zip_safe = False)

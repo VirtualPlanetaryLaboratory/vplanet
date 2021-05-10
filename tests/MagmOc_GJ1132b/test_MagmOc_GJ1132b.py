@@ -10,7 +10,7 @@ def test_MagmOcGJ1132b():
     # Remove old log file
     subprocess.run(['rm', 'GJ1132.log'], cwd=cwd)
     # Run vplanet
-    subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
+    subprocess.run(['../../vplanet', 'vpl.in', '-q'], cwd=cwd)
 
     # Grab the output
     output = GetOutput(path=cwd)

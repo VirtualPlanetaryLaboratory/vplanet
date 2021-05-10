@@ -12,6 +12,7 @@ import pandas as pd
 from scipy import stats
 
 
+
 """
 Code for command line call of bigplanet
 """
@@ -46,7 +47,7 @@ def GetSims(folder_name):
     sims = sorted([f.path for f in os.scandir(folder_name) if f.is_dir()])
     return sims
 
-def parallel_run_planet(input_file, cores):
+def parallel_run_planet(input_file, cores,quiet,email):
     # gets the folder name with all the sims
     folder_name, infiles = GetDir(input_file)
     #gets the list of sims
@@ -56,70 +57,12 @@ def parallel_run_planet(input_file, cores):
 
     #checks if the files doesn't exist and if so then it creates it
     if os.path.isfile(checkpoint_file) == False:
-        with open(checkpoint_file,'w') as cp:
-            cp.write('Vspace File: ' + os.getcwd() + '/' + input_file + '\n')
-            cp.write('Total Number of Simulations: '+ str(len(sims)) + '\n')
-            for f in range(len(sims)):
-                cp.write(sims[f] + " " + "-1 \n")
-            cp.write('THE END \n')
+        CreateCP(checkpoint_file,input_file,quiet,sims)
 
     #if it does exist, it checks for any 0's (sims that didn't complete) and
     #changes them to -1 to be re-ran
     else:
-        sub.run(['rm', checkpoint_file])
-        #restarts the checkpoint file from scratch
-        with open(checkpoint_file,'w') as cp:
-            cp.write('Vspace File: ' + os.getcwd() + '/' + input_file + '\n')
-            cp.write('Total Number of Simulations: '+ str(len(sims)) + '\n')
-            for f in range(len(sims)):
-                cp.write(sims[f] + " " + "-1 \n")
-            cp.write('THE END \n')
-
-        datalist = []
-
-        with open(checkpoint_file, 'r') as f:
-            for newline in f:
-                datalist.append(newline.strip().split())
-
-        for i in range(len(sims)):
-            sim_dir = sims[i]
-            vp = os.path.join(sim_dir, 'vpl.in')
-            with open(vp, 'r') as vpl:
-                content = [line.strip().split() for line in vpl.readlines()]
-                for line in content:
-                    if line:
-                        if line[0] == 'dStopTime':
-                            stoptime = line[1]
-                        if line[0] == 'dOutputTime':
-                            ouputtime = line[1]
-            expected_line_num = float(stoptime)/float(ouputtime)
-
-            fd = [f for f in os.listdir(sim_dir) if f.endswith('foward')]
-            if len(fd) == 0:
-                for l in datalist:
-                    if l[0] == sim_dir:
-                        l[1] = '-1'
-            else:
-                fd = os.path.join(sim_dir, fd[0])
-                with open(fd, 'r') as f:
-                    buf = mmap.mmap(f.fileno(),0)
-                    lines = 0
-                    readline = buf.readline
-                    while readline():
-                        lines += 1
-                    last = readline[-1]
-                    if last == stoptime and lines == expected_line_num:
-                        for l in datalist:
-                            if l[0] == sim_dir:
-                                l[1] = '1'
-                    else:
-                        for l in datalist:
-                            if l[0] == sim_dir:
-                                l[1] = '-1'
-
-        with open(checkpoint_file, 'w') as f:
-            for newline in datalist:
-                f.writelines(' '.join(newline)+'\n')
+        ReCreateCP(checkpoint_file,input_file,quiet,sims)
 
     #get logfile name
     path_vpl = os.path.join(sims[0],'vpl.in')
@@ -136,35 +79,50 @@ def parallel_run_planet(input_file, cores):
     lock = mp.Lock()
     workers = []
     for i in range(cores):
-        workers.append(mp.Process(target=par_worker, args=(checkpoint_file,infiles,system_name,logfile,lock)))
+        workers.append(mp.Process(target=par_worker, args=(checkpoint_file,infiles,system_name,logfile,quiet,lock)))
     for w in workers:
         w.start()
     for w in workers:
         w.join()
 
-    master_file = folder_name + '.hdf5'
-    filelist = []
+    CreateMasterHDF5(folder_name,sims)
 
-    for i in sims:
-        single_folder = i.split('/')[-1]
-        HDF5_File = single_folder + '.hdf5'
-        HDF5_path = i + '/' + HDF5_File
-        filelist.append(HDF5_path)
+    if email is not None:
+        SendMail(email, folder_name)
 
-    data = OrderedDict()
+def SendMail(email,destfolder):
+    Title = "Bigplanet has finished for " + destfolder
+    Body = "Please log into your computer to verify the results. This is an auto-generated message."
+    message = "echo " + Body + " | " + 'mail -s ' + '"'+ Title + '" ' + email
+    sub.Popen(message , shell=True)
 
-    for f in filelist:
-        data[f] = load(f)
+def CreateCP(checkpoint_file,input_file,quiet,sims):
+    with open(checkpoint_file,'w') as cp:
+        cp.write('Vspace File: ' + os.getcwd() + '/' + input_file + '\n')
+        cp.write('Total Number of Simulations: '+ str(len(sims)) + '\n')
+        for f in range(len(sims)):
+            cp.write(sims[f] + " " + "-1 \n")
+        cp.write('THE END \n')
 
-    save(master_file, merge_data(data))
 
-    i = filelist[0]
+def ReCreateCP(checkpoint_file,input_file,quiet,sims):
+    if quiet == False:
+        print('WARNING: multi-planet checkpoint file already exists!')
+        print('Checking if checkpoint file is corrupt...')
 
-    with h5py.File(i,'r') as filename:
-        with h5py.File(master_file,'r+') as master_W:
-            for k in filename.keys():
-                units = filename[k].attrs.get('Units')
-                master_W[k].attrs['Units'] = units
+    datalist = []
+
+    with open(checkpoint_file, 'r') as f:
+        for newline in f:
+            datalist.append(newline.strip().split())
+            for l in datalist:
+                if l[1] == '0':
+                    l[1] = '-1'
+
+    with open(checkpoint_file, 'w') as f:
+        for newline in datalist:
+            f.writelines(' '.join(newline)+'\n')
+
 
 def ProcessLogFile(logfile, data):
     prop = ''
@@ -209,20 +167,53 @@ def ProcessLogFile(logfile, data):
             else:
                 data[key_name] = [units, fv_value]
 
-        if (line.startswith('Output Order') or line.startswith('Grid Output Order')) and len(line[line.find(':'):]) > 1:
+        if line.startswith('Output Order') and len(line[line.find(':'):]) > 1:
             parm_key = line[:line.find(':')].replace(' ', '')
-            params = line[line.find(':') + 1:].strip().split()
+            params = line[line.find(':') + 1:].strip().split(']')
             key_name = body + '_' + parm_key
             out_params = []
 
             for i in params:
-                var = i[:i.find('[')]
-                units = i[i.find('[') + 1:i.find(']')].strip()
+                var = i[:i.find('[')].strip()
+                units = i[i.find('[') + 1:]
 
                 if not units:
                     units = 'nd'
 
+                if var == '':
+                    continue
                 out_params.append([var, units])
+
+                key_name_forward = body + '_' + var + '_forward'
+
+                if key_name_forward not in data:
+                    data[key_name_forward] = [units]
+
+            if key_name not in data:
+                data[key_name] = out_params
+
+        if line.startswith('Grid Output Order') and len(line[line.find(':'):]) > 1:
+            parm_key = line[:line.find(':')].replace(' ', '')
+            params = line[line.find(':') + 1:].strip().split(']')
+            key_name = body + '_' + parm_key
+            out_params = []
+
+            for i in params:
+                var = i[:i.find('[')].strip()
+                units = i[i.find('[') + 1:]
+
+                if not units:
+                    units = 'nd'
+
+                if var == '':
+                    continue
+
+                out_params.append([var, units])
+
+                key_name_climate = body + '_' + var + '_climate'
+
+                if key_name_climate not in data:
+                    data[key_name_climate] = [units]
 
             if key_name not in data:
                 data[key_name] = out_params
@@ -267,12 +258,7 @@ def ProcessForwardfile(forwardfile, data, body, OutputOrder):
 
         for i,row in enumerate(sorted):
             key_name = body + '_' + header[i] + '_forward'
-
-            if key_name in data:
-                data[key_name].append(row)
-
-            else:
-                data[key_name] = [row]
+            data[key_name].append(row)
 
     return data
 
@@ -292,29 +278,40 @@ def ProcessClimatefile(climatefile, data, body, GridOutputOrder):
 
         for i,row in enumerate(sorted):
             key_name = body + '_' + header[i] + '_climate'
-
-            if key_name in data:
-                data[key_name].append(row)
-
-            else:
-                data[key_name] = [row]
+            data[key_name].append(row)
 
     return data
 
 def ProcessSeasonalClimatefile(prefix, data, body, name):
     file = list(csv.reader(open('SeasonalClimateFiles/' + prefix + '.' + name + '.0')))
     key_name = body + '_' + name
-    if key_name in data:
-        data[key_name].append(file)
+    units = ''
+    if (name == 'DailyInsol' or name == 'SeasonalFIn' or
+    name == 'SeasonalFOut'or name == 'SeasonalDivF'):
+        units = 'W/m^2'
+    if name == 'PlanckB':
+        units = 'W/m^2/K'
+    if name == 'SeasonalIceBalance':
+        units = 'kg/m^2/s'
+    if name == 'SeasonalTemp':
+        units = 'deg C'
+    if name == 'SeasonalFMerid':
+        units = 'W'
+
+    if key_name not in data:
+        data[key_name]= [units, file]
     else:
-        data[key_name] = [file]
+        data[key_name].append(file)
+
     return data
 
-def CreateHDF5(data, system_name,infiles,logfile,h5filename):
+def CreateHDF5(data, system_name, infiles, logfile, quiet, h5filename):
     """
     ....
     """
-    print("Processing Log File...")
+    if quiet == False:
+        print('Creating',h5filename)
+
     data = ProcessLogFile(logfile, data)
     for file in infiles:
         if file == 'vpl.in':
@@ -327,34 +324,33 @@ def CreateHDF5(data, system_name,infiles,logfile,h5filename):
             if outputorder in data:
                 OutputOrder = data[outputorder]
                 forward_name = system_name + '.' + body + '.forward'
-                print("Processing Forward File...")
                 data = ProcessForwardfile(forward_name, data, body, OutputOrder)
+
 
             if gridoutputorder in data:
                 GridOutputOrder = data[gridoutputorder]
                 climate_name = system_name + '.' + body + '.Climate'
-                print("Processing Climate File...")
                 data = ProcessClimatefile(climate_name, data, body, GridOutputOrder)
                 prefix = system_name + '.' + body
-                print("Processing Seasonal Climate Files...")
                 name = ['DailyInsol','PlanckB','SeasonalDivF','SeasonalFIn',
                         'SeasonalFMerid','SeasonalFOut','SeasonalIceBalance',
                         'SeasonalTemp']
                 for i in range(len(name)):
                     data = ProcessSeasonalClimatefile(prefix,data,body,name[i])
-                #data = ProcessSeasonalClimatefile(prefix,data,body,'DailyInsol')
-                #data = ProcessSeasonalClimatefile(prefix,data,body,'PlanckB')
-                print()
 
     with h5py.File(h5filename, 'w') as h:
         for k, v in data.items():
+            #print("Key:",k)
+            #print("Length of Value:",len(v))
             if len(v) == 2:
                 v_attr = v[0]
                 v_value = [v[1]]
-            else:
-                v_value = v
-                v_attr = ''
 
+            else:
+                v_value = v[0]
+                v_attr = ''
+            #print("Units:",v_attr)
+            #print()
             h.create_dataset(k, data=np.array(v_value,dtype='S'),compression = 'gzip')
             h[k].attrs['Units'] = v_attr
 
@@ -410,7 +406,7 @@ def save(filename, data):
             f.create_dataset(key, data[key].shape, dtype=data[key].dtype,compression='gzip')[...] = data[key]
 
 ## parallel worker to run vplanet ##
-def par_worker(checkpoint_file,infiles,system_name,logfile,lock):
+def par_worker(checkpoint_file,infiles,system_name,logfile,quiet,lock):
 
     while True:
 
@@ -454,7 +450,7 @@ def par_worker(checkpoint_file,infiles,system_name,logfile,lock):
 
         if os.path.isfile(HDF5_File) == False:
 
-            CreateHDF5(data, system_name, infiles, logfile, HDF5_File)
+            CreateHDF5(data, system_name, infiles, logfile, quiet, HDF5_File)
             for l in datalist:
                 if l[0] == folder:
                     l[1] = '1'
@@ -474,10 +470,41 @@ def par_worker(checkpoint_file,infiles,system_name,logfile,lock):
 
         os.chdir("../../")
 
+def CreateMasterHDF5(folder_name, sims):
+    master_file = folder_name + '.hdf5'
+    filelist = []
+    for i in sims:
+        single_folder = i.split('/')[-1]
+        HDF5_File = single_folder + '.hdf5'
+        HDF5_path = i + '/' + HDF5_File
+        filelist.append(HDF5_path)
+
+    data = OrderedDict()
+
+    for f in filelist:
+        data[f] = load(f)
+
+    save(master_file, merge_data(data))
+
+    i = filelist[0]
+
+    with h5py.File(i,'r') as filename:
+        with h5py.File(master_file,'r+') as master_W:
+            for k in filename.keys():
+                units = filename[k].attrs.get('Units')
+                master_W[k].attrs['Units'] = units
+
+    for i in filelist:
+        sub.run(['rm', i])
+    sub.run(['rm','.' + folder_name + '_hdf5'])
+
 
 """
 Code for Bigplanet Module
 """
+
+def HDF5File(hf):
+    return h5py.File(hf,'r')
 
 def PrintKeys(hf):
     """
@@ -494,7 +521,22 @@ def PrintKeys(hf):
 
     for k in hf.keys():
         print("Key:", k)
-    print()
+
+        body = k.split("_")[0]
+        variable = k.split("_")[1]
+
+        if variable == "OutputOrder" or variable == "GridOutputOrder":
+            continue
+        else:
+            aggregation = k.split("_")[2]
+
+            if aggregation == 'forward' or aggregation =='climate':
+                print("Key: " + body + '_'+ variable + '_min')
+                print("Key: " + body + '_'+ variable + '_max')
+                print("Key: " + body + '_'+ variable + '_mean')
+                print("Key: " + body + '_'+ variable + '_mode')
+                print("Key: " + body + '_'+ variable + '_geomean')
+                print("Key: " + body + '_'+ variable + '_stddev')
 
 def ExtractColumn(hf,k):
     """
@@ -528,61 +570,59 @@ def ExtractColumn(hf,k):
 
     """
 
-    body = k.split('_')[0]
-    variable = k.split('_')[1]
-    aggreg = k.split('_')[2]
+    body = k.split("_")[0]
+    var = k.split("_")[1]
 
-    if aggreg == 'forward':
-        d = hf.get(k)
-        data = HFD5Decoder(hf,k)
-
-    elif aggreg == 'OutputOrder':
+    if var == 'OutputOrder' or var == 'GridOutputOrder':
         d = hf.get(k)
         data = [v.decode() for d in hf[k] for v in d]
         shape = hf[k].shape
         data = np.reshape(data,(shape))
-
-    elif aggreg == 'mean':
-        data = ArgumentParser(hf,k)
-        data = np.mean(data, axis=1)
-
-    elif aggreg == 'stddev':
-        data = ArgumentParser(hf,k)
-        data = np.std(data, axis=1)
-
-
-    elif aggreg == 'min':
-        data = ArgumentParser(hf,k)
-        data = np.amin(data,axis=1)
-
-
-    elif aggreg == 'max':
-        data = ArgumentParser(hf,k)
-        data = np.amax(data,axis=1)
-
-
-    elif aggreg == '_mode':
-        data = ArgumentParser(hf,k)
-        data = stats.mode(data)
-        data = data[0]
-
-
-    elif aggreg == 'geomean':
-        data = ArgumentParser(hf,k)
-        data = stats.gmean(data, axis=1)
-
-
-    elif aggreg == 'rms':
-        data = ArgumentParser(hf,k)
-        #Calculate root mean squared here?
-
-    elif aggreg == 'initial' or aggreg == 'final':
-        data = [d.decode() for d in hf[k]]
-        data = [float(i) for i in data]
-
     else:
-        print('ERROR: Uknown aggregation option: ', aggreg)
-        exit()
+        aggreg = k.split("_")[2]
+
+        if aggreg == 'forward':
+            d = hf.get(k)
+            data = HFD5Decoder(hf,k)
+
+        elif aggreg == 'mean':
+            data = ArgumentParser(hf,k)
+            data = np.mean(data, axis=1)
+
+        elif aggreg == 'stddev':
+            data = ArgumentParser(hf,k)
+            data = np.std(data, axis=1)
+
+        elif aggreg == 'min':
+            data = ArgumentParser(hf,k)
+            data = np.amin(data,axis=1)
+
+        elif aggreg == 'max':
+            data = ArgumentParser(hf,k)
+            data = np.amax(data,axis=1)
+
+        elif aggreg == 'mode':
+            data = ArgumentParser(hf,k)
+            data = stats.mode(data)
+            data = data[0]
+
+
+        elif aggreg == 'geomean':
+            data = ArgumentParser(hf,k)
+            data = stats.gmean(data, axis=1)
+
+
+        elif aggreg == 'rms':
+            data = ArgumentParser(hf,k)
+            #Calculate root mean squared here?
+
+        elif aggreg == 'initial' or aggreg == 'final':
+            data = [d.decode() for d in hf[k]]
+            data = [float(i) for i in data]
+
+        else:
+            print('ERROR: Uknown aggregation option: ', aggreg)
+            exit()
 
     return data
 
@@ -615,6 +655,7 @@ def ExtractUnits(hf,k):
     units : string
         A string value of the units
     """
+
     return hf[k].attrs.get('Units')
 
 def ArgumentParser(hf,k):
@@ -663,7 +704,7 @@ def ExtractUniqueValues(hf,k):
     unique = np.unique(data)
     return unique
 
-def CreateMatrix(xaxis,yaxis,zarray):
+def CreateMatrix(xaxis,yaxis,zarray, orientation=1):
     """
     Creates a Matrix for Contour Plotting of Data. Run ExtractUniqueValue()
     prior to CreateMatrix() to get the ticks for the xaxis and yaxis
@@ -692,9 +733,15 @@ def CreateMatrix(xaxis,yaxis,zarray):
     xnum = len(xaxis)
     ynum = len(yaxis)
 
+    if xnum * ynum != len(zarray):
+        print("ERROR: Cannot reshape",zarray,"into shape("+xnum+","+ynum+")")
+
     zmatrix = np.reshape(zarray, (ynum, xnum))
     zmatrix = np.flipud(zmatrix)
-    zmatrix = rotate90Clockwise(zmatrix)
+
+    for i in range(0,orientation):
+        zmatrix = rotate90Clockwise(zmatrix)
+
     zmatrix = np.flipud(zmatrix)
 
     return zmatrix
@@ -783,14 +830,21 @@ def WriteOutput(inputfile, columns,file="bigplanet.out",delim=" ",header=False,u
                     f.write(delim)
             f.write("\n")
 
+def CreateHDF5File(InputFile):
+    max_cores = mp.cpu_count()
+    parallel_run_planet(InputFile,max_cores)
+
 def main():
     max_cores = mp.cpu_count()
     parser = argparse.ArgumentParser(description="Extract data from Vplanet simulations")
     parser.add_argument("InputFile", help="Name of the vspace input file")
-    parser.add_argument("-c","--cores", type=int,default=max_cores,help="Number of processors used")
+    parser.add_argument("-c","--cores", type=int, default=max_cores, help="Number of processors used")
+    parser.add_argument("-q","--quiet", action="store_true", help="no output for bigplanet")
+    parser.add_argument("-m","--email",type=str, help="Mails user when bigplanet is complete")
+
     args = parser.parse_args()
 
-    parallel_run_planet(args.InputFile,args.cores)
+    parallel_run_planet(args.InputFile, args.cores, args.quiet,args.email)
 
 
 

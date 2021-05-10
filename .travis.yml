@@ -36,6 +36,7 @@ script:
     # DEBUG - py.test
     - cd tests
     - vplanet
+    - python -c "import vplanet; vplanet.core.run('vplanet', '-h')"
     - more -100 /home/travis/miniconda/bin/vplanet
 
 after_success:

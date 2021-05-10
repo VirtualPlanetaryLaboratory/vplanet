@@ -34,11 +34,9 @@ git:
 
 script:
     # DEBUG - py.test
-    - cd tests/AbioticO2/
-    - python test_AbioticO2.py
-    - ls -lahtr tests/AbioticO2/
-    - which vplanet
-    - vplanet -h
+    - cd tests
+    - vplanet
+    - more -100 /home/travis/miniconda/bin/vplanet
 
 after_success:
     - source .ci/build-docs.sh

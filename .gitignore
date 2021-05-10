@@ -30,6 +30,7 @@ tests/BigPlanetCreateHDF5/BP_CreateHDF5/
 tests/BigPlanetExtract/BP_Extract/
 tests/BigPlanetStats/BP_Stats/
 
+coverage.info
 
 # Examples
 examples/ParameterSweep/ParameterSweep/

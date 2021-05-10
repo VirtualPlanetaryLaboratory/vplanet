@@ -33,12 +33,6 @@ macros = [
 ]
 if sys.platform.startswith("win"):
     macros += [("VPLANET_ON_WINDOWS", 1)]
-    macros += [
-        (
-            "VPLANET_VERSION",
-            r"\"{}\"".format(open("VERSION", "r").read().split("\n")[0].strip()),
-        )
-    ]
 
 ext_modules = [
     Extension(

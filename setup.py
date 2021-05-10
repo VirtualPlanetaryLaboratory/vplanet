@@ -59,10 +59,7 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT",
     packages=find_packages(),
-    install_requires=[
-        "vplot>=0.3.3",
-        "bigplanet @ git+https://github.com/VirtualPlanetaryLaboratory/bigplanet@master#egg=bigplanet",
-    ],
+    install_requires=["vplot>=0.3.3"],
     ext_modules=ext_modules,
     cmdclass=cmdclass,
     include_package_data=True,

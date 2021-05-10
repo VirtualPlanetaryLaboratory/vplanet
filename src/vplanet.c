@@ -170,22 +170,25 @@ int main(int argc,char *argv[]) {
 
 #ifdef VPLANET_PYTHON_INTERFACE
 
-#ifndef VPLANET_VERSION
-#define VPLANET_VERSION "0.0.0"
-#endif
-
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
+// Get the code version, passed in as a macro
+#ifndef VPLANET_VERSION
+#define VPLANET_VERSION_STRING "0.0.0"
+#else
+#ifdef VPLANET_ON_WINDOWS
+// Silly Windows needs some extra love
+#define STRINGIFY(X) #X
+#define VPLANET_VERSION_STRING STRINGIFY(VPLANET_VERSION)
+#else
+#define VPLANET_VERSION_STRING VPLANET_VERSION
+#endif
+#endif
+
 static PyObject* vplanet_core_version(PyObject *self, PyObject *args)
 {
-#ifdef VPLANET_ON_WINDOWS
-    // TODO: It's surprisingly challenging to pass
-    // in a string on the command line with MSVC!!!
-    const char* version = "0.0.0";
-#else
-    const char* version = VPLANET_VERSION;
-#endif
+    const char* version = VPLANET_VERSION_STRING;
     PyObject* pVersion = PyBytes_FromString(version);
     Py_INCREF(pVersion);
     return pVersion;

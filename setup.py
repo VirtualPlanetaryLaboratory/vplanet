@@ -24,20 +24,19 @@ class BuildExt(build_ext):
         build_ext.build_extensions(self)
 
 
-macros = [("VPLANET_PYTHON_INTERFACE", 1)]
+macros = [
+    ("VPLANET_PYTHON_INTERFACE", 1),
+    (
+        "VPLANET_VERSION",
+        '"{}"'.format(open("VERSION", "r").read().split("\n")[0].strip()),
+    ),
+]
 if sys.platform.startswith("win"):
     macros += [("VPLANET_ON_WINDOWS", 1)]
     macros += [
         (
             "VPLANET_VERSION",
             r"\"{}\"".format(open("VERSION", "r").read().split("\n")[0].strip()),
-        )
-    ]
-else:
-    macros += [
-        (
-            "VPLANET_VERSION",
-            '"{}"'.format(open("VERSION", "r").read().split("\n")[0].strip()),
         )
     ]
 

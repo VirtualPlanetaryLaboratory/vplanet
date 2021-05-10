@@ -8,16 +8,15 @@ class BuildExt(build_ext):
     """A custom build extension for adding compiler-specific options."""
 
     def build_extensions(self):
-        ct = self.compiler.compiler_type
+        ct = self.compiler.compiler_type  # msvc or unix
         for ext in self.extensions:
-            if ct != "msvc":
-                ext.extra_compile_args = [
-                    "-Wno-unused-variable",
-                    "-Wno-missing-braces",
-                    "-Wno-strict-prototypes",
-                    "-Wno-sign-compare",
-                    "-Wno-comment",
-                ]
+            ext.extra_compile_args = [
+                "-Wno-unused-variable",
+                "-Wno-missing-braces",
+                "-Wno-strict-prototypes",
+                "-Wno-sign-compare",
+                "-Wno-comment",
+            ]
         build_ext.build_extensions(self)
 
 

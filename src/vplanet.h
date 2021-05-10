@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <time.h>
-#include <unistd.h>
+//#include <unistd.h>
 #include <xmmintrin.h>
 
 /*! Top-level declarations */

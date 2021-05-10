@@ -28,7 +28,7 @@ int main(int argc,char *argv[]) {
   _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_OVERFLOW);
 #endif
 
-  struct timeval start, end;
+  //struct timeval start, end;
 
   /* Fix CPU time calculation someday
   gettimeofday(&start, NULL);

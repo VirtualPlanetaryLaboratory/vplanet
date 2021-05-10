@@ -10,6 +10,7 @@ def _entry_point():
     VPLANET command line script entry point.
 
     """
+    print(sys.argv)  # DEBUG
     return core.run(*sys.argv)
 
 

@@ -13,5 +13,4 @@ __version__ = "0.21"
 __author__ = "David Fleming (dflemin3@uw.edu)"
 __copyright__ = "Copyright 2017 David P. Fleming"
 
-from .bigplot import *
-from .data_extraction import *
+from .bigplanet import *

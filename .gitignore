@@ -76,7 +76,7 @@ docs/bugs.rst
 docs/help.rst
 
 # The executable
-vplanet
+bin/vplanet
 
 # Module-specific
 bigplanet/bigplanet/vabc.py

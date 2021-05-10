@@ -33,7 +33,12 @@ git:
     lfs_skip_smudge: true
 
 script:
-    - py.test
+    # DEBUG - py.test
+    - ls -lahtr tests/AbioticO2/
+    - python tests/AbioticO2/test_AbioticO2.py
+    - ls -lahtr tests/AbioticO2/
+    - which vplanet
+    - vplanet -h
 
 after_success:
     - source .ci/build-docs.sh

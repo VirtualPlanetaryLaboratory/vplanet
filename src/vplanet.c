@@ -179,7 +179,13 @@ int main(int argc,char *argv[]) {
 
 static PyObject* vplanet_core_version(PyObject *self, PyObject *args)
 {
+#ifdef VPLANET_ON_WINDOWS
+    // TODO: It's surprisingly challenging to pass
+    // in a string on the command line with MSVC!!!
+    const char* version = "0.0.0";
+#else
     const char* version = VPLANET_VERSION;
+#endif
     PyObject* pVersion = PyBytes_FromString(version);
     Py_INCREF(pVersion);
     return pVersion;

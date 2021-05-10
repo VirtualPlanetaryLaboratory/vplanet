@@ -86,7 +86,7 @@ jobs:
         if: github.repository == 'VirtualPlanetaryLaboratory/vplanet-private'
         with:
           user: __token__
-          password: ${{ secrets.pypi_password }}
+          password: ${{ secrets.test_pypi_password }}
           repository_url: https://test.pypi.org/legacy/
 
       # On vplanet (public): publish on PyPI for real

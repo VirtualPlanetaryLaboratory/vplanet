@@ -9,6 +9,7 @@ class BuildExt(build_ext):
 
     def build_extensions(self):
         ct = self.compiler.compiler_type  # msvc or unix
+        # TODO: We need to tweak things for windows
         for ext in self.extensions:
             ext.extra_compile_args = [
                 "-Wno-unused-variable",
@@ -51,8 +52,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "vplot>=0.3.3",
-        "bigplanet@git+https://github.com/VirtualPlanetaryLaboratory/bigplanet",  # TODO: Version this!
-        # TODO: vspace and multi-planet do not have proper python install scripts!
+        "bigplanet @ git+https://github.com/VirtualPlanetaryLaboratory/bigplanet",
     ],
     ext_modules=ext_modules,
     cmdclass=cmdclass,

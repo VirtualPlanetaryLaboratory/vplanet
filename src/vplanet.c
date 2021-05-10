@@ -21,7 +21,7 @@ const double dTINY = 1./DBL_MAX; // This is the smallest possibled double value 
 
 /*! \brief Main function. All the magic happens here!
  */
-int main(int argc,char *argv[]) {
+int main_impl(int argc,char *argv[]) {
 #ifdef DEBUG
   //  feenableexcept(FE_INVALID | FE_OVERFLOW);
   _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
@@ -164,6 +164,10 @@ int main(int argc,char *argv[]) {
 }
 
 
+int main(int argc,char *argv[]) {
+  main_impl(argc, argv);
+}
+
 /*
   --- PYTHON INTERFACE ---
 */
@@ -207,7 +211,7 @@ static PyObject* vplanet_core_run(PyObject *self, PyObject *args)
     }
 
     // Run vplanet
-    main(argc, &argv);
+    main_impl(argc, &argv);
 
     // Return None
     Py_INCREF(Py_None);

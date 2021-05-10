@@ -19,7 +19,10 @@ const double dHUGE = DBL_MAX; // This is the largest possible double value accor
 const double dTINY = 1./DBL_MAX; // This is the smallest possibled double value according to <float.h>
 /* Do not change these values */
 
-/*! \brief Main function. All the magic happens here!
+/*! 
+Actual implementation of the main function; called from in `int main()` below.
+We need this wrapper so we can call `main_impl` from Python (see below).
+
  */
 int main_impl(int argc,char *argv[]) {
 #ifdef DEBUG

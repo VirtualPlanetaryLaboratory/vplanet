@@ -33,11 +33,7 @@ git:
     lfs_skip_smudge: true
 
 script:
-    # DEBUG - py.test
-    - cd tests
-    - vplanet
-    - python -c "import vplanet; vplanet.core.run('vplanet', '-h')"
-    - more -100 /home/travis/miniconda/bin/vplanet
+    - py.test
 
 after_success:
     - source .ci/build-docs.sh

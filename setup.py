@@ -11,14 +11,7 @@ class BuildExt(build_ext):
         ct = self.compiler.compiler_type  # msvc or unix
         for ext in self.extensions:
             if ct == "msvc":
-                ext.extra_compile_args = [
-                    "/EHsc",
-                    "/Wno-unused-variable",
-                    "/Wno-missing-braces",
-                    "/Wno-strict-prototypes",
-                    "/Wno-sign-compare",
-                    "/Wno-comment",
-                ]
+                ext.extra_compile_args = ["/EHsc"]
             else:
                 ext.extra_compile_args = [
                     "-Wno-unused-variable",

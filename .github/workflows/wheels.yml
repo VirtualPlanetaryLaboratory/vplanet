@@ -3,8 +3,6 @@ on:
   release:
     types:
       - published
-  push: # TODO: Remove this line for production!
-    branches: [pip] 
 
 jobs:
   build_wheels:

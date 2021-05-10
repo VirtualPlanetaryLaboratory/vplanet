@@ -19,6 +19,10 @@
 //#include <unistd.h>
 #include <xmmintrin.h>
 
+#ifndef M_PI
+    #define M_PI 3.14159265358979323846
+#endif
+
 /*! Top-level declarations */
 
 /* Implemented Moduules

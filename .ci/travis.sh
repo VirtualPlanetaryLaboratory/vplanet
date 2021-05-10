@@ -29,10 +29,6 @@ cd bigplanet/
 python setup.py install
 cd ../
 
-# Build vplanet
-# NOTE: For coverage support, do
-#
-#     CFLAGS="-coverage" python setup.py build_ext --inplace
-#     python setup.py develop 
-#
-python -m pip install .
+# Build vplanet with coverage support
+CFLAGS="-coverage" python setup.py build_ext --inplace
+python setup.py develop

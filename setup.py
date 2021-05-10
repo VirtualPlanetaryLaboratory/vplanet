@@ -30,7 +30,7 @@ if sys.platform.startswith("win"):
     macros += [
         (
             "VPLANET_VERSION",
-            r"\"{}\"".format(open("VERSION", "r").read().split("\n")[0].strip()),
+            '"{}"'.format(open("VERSION", "r").read().split("\n")[0].strip()),
         )
     ]
 else:

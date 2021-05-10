@@ -37,4 +37,4 @@ script:
 
 after_success:
     - source .ci/build-docs.sh
-    #- bash <(curl -s https://codecov.io/bash)
+    - bash <(curl -s https://codecov.io/bash)

@@ -9,15 +9,24 @@ class BuildExt(build_ext):
 
     def build_extensions(self):
         ct = self.compiler.compiler_type  # msvc or unix
-        # TODO: We need to tweak things for windows
         for ext in self.extensions:
-            ext.extra_compile_args = [
-                "-Wno-unused-variable",
-                "-Wno-missing-braces",
-                "-Wno-strict-prototypes",
-                "-Wno-sign-compare",
-                "-Wno-comment",
-            ]
+            if ct == "msvc":
+                ext.extra_compile_args = [
+                    "/EHsc",
+                    "/Wno-unused-variable",
+                    "/Wno-missing-braces",
+                    "/Wno-strict-prototypes",
+                    "/Wno-sign-compare",
+                    "/Wno-comment",
+                ]
+            else:
+                ext.extra_compile_args = [
+                    "-Wno-unused-variable",
+                    "-Wno-missing-braces",
+                    "-Wno-strict-prototypes",
+                    "-Wno-sign-compare",
+                    "-Wno-comment",
+                ]
         build_ext.build_extensions(self)
 
 
@@ -52,7 +61,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "vplot>=0.3.3",
-        "bigplanet @ git+https://github.com/VirtualPlanetaryLaboratory/bigplanet",
+        "bigplanet @ git+https://github.com/VirtualPlanetaryLaboratory/bigplanet@master#egg=bigplanet",
     ],
     ext_modules=ext_modules,
     cmdclass=cmdclass,

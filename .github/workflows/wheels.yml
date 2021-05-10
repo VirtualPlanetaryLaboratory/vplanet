@@ -75,15 +75,23 @@ jobs:
   upload_pypi:
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.event.action == 'published'
     steps:
       - uses: actions/download-artifact@v2
         with:
           name: artifact
           path: dist
 
+      # On vplanet-private: push to TEST PyPI server
       - uses: pypa/gh-action-pypi-publish@master
+        if: github.repository == 'VirtualPlanetaryLaboratory/vplanet-private'
         with:
           user: __token__
           password: ${{ secrets.pypi_password }}
-          repository_url: https://test.pypi.org/legacy/ # TODO: Remove this line for production!
+          repository_url: https://test.pypi.org/legacy/
+
+      # On vplanet (public): publish on PyPI for real
+      - uses: pypa/gh-action-pypi-publish@master
+        if: github.event_name == 'release' && github.event.action == 'published' && github.repository == 'VirtualPlanetaryLaboratory/vplanet'
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}

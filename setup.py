@@ -52,7 +52,7 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT",
     packages=find_packages(),
-    install_requires=["vplot>=0.3.3"],
+    install_requires=["vplot>=0.3.5"],
     ext_modules=ext_modules,
     cmdclass=cmdclass,
     include_package_data=True,

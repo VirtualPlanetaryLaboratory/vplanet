@@ -2,6 +2,7 @@ from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 from distutils.ccompiler import new_compiler
 from glob import glob
+import sys
 
 
 class BuildExt(build_ext):
@@ -23,19 +24,23 @@ class BuildExt(build_ext):
         build_ext.build_extensions(self)
 
 
+macros = [
+    ("VPLANET_PYTHON_INTERFACE", 1),
+    (
+        "VPLANET_VERSION",
+        '"{}"'.format(open("VERSION", "r").read().split("\n")[0].strip()),
+    ),
+]
+if sys.platform.startswith("win"):
+    macros += [("VPLANET_ON_WINDOWS", 1)]
+
 ext_modules = [
     Extension(
         "vplanet.vplanet_core",
         glob("src/*.c"),
         include_dirs=["src"],
         language="c",
-        define_macros=[
-            ("VPLANET_PYTHON_INTERFACE", 1),
-            (
-                "VPLANET_VERSION",
-                '"{}"'.format(open("VERSION", "r").read().split("\n")[0].strip()),
-            ),
-        ],
+        define_macros=macros,
     )
 ]
 cmdclass = {"build_ext": BuildExt}

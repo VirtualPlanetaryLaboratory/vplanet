@@ -179,7 +179,7 @@ int main(int argc,char *argv[]) {
 
 static PyObject* vplanet_core_version(PyObject *self, PyObject *args)
 {
-    const char version[] = VPLANET_VERSION;
+    const char* version = VPLANET_VERSION;
     PyObject* pVersion = PyBytes_FromString(version);
     return pVersion;
 }

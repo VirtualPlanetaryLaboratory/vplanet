@@ -1185,7 +1185,7 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
 
 void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *update,int iNumBodies,int iBody) {
   int iPert,iBodyPert,iVar,ok;
-  int bFound[iNumBodies];
+  int *bFound = malloc(iNumBodies);
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
 
@@ -1246,6 +1246,8 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
         exit(EXIT_INPUT);
     }
   }
+
+  free(bFound);
 
   /* All entries to saTidePerts are known bodies, does each point to the other?
      Exomoon ready! */

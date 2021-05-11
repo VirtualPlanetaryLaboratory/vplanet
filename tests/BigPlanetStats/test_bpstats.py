@@ -33,9 +33,7 @@ def test_bpstats():
         # runs multi-planet
         sub.run(["multi-planet", "vspace.in"], cwd=cwd)
         # runs bigplanet
-        sub.run(
-            ["python", "../../bigplanet/bigplanet/bigplanet.py", "vspace.in"], cwd=cwd
-        )
+        sub.run(["bigplanet", "vspace.in"], cwd=cwd)
 
         # reads in the hdf5 file
         file = h5py.File((dir + ".hdf5"), "r")
@@ -64,14 +62,4 @@ def test_bpstats():
 
 
 if __name__ == "__main__":
-    sub.run(
-        [
-            "python -m",
-            "../../bigplanet/bigplanet/bigplanet.py",
-            "vspace.in",
-            "-c",
-            cores,
-        ],
-        cwd=cwd,
-    )
     test_bpstats()

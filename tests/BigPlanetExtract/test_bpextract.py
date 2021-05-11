@@ -36,14 +36,7 @@ def test_bpextract():
         )
         # runs bigplanet
         sub.run(
-            [
-                "python",
-                "../../bigplanet/bigplanet/bigplanet.py",
-                "vspace.in",
-                "-c",
-                cores,
-            ],
-            cwd=cwd,
+            ["bigplanet", "vspace.in", "-c", cores,], cwd=cwd,
         )
 
         # reads in the hdf5 file

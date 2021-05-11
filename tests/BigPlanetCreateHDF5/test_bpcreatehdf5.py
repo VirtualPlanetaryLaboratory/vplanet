@@ -35,14 +35,7 @@ def test_bpcreatehdf5():
         )
         # runs bigplanet
         sub.run(
-            [
-                "python",
-                "../../bigplanet/bigplanet/bigplanet.py",
-                "vspace.in",
-                "-c",
-                cores,
-            ],
-            cwd=cwd,
+            ["bigplanet", "vspace.in", "-c", cores,], cwd=cwd,
         )
 
         # gets list of folders

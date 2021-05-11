@@ -427,7 +427,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_WATERMASSATM].iType = 2;
   options[OPT_WATERMASSATM].bMultiFile = 1;
   options[OPT_WATERMASSATM].dNeg = TOMASS; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
-  options[OPT_WATERMASSATM].dDefault = 1;
+  options[OPT_WATERMASSATM].dDefault = TOMASS;
   sprintf(options[OPT_WATERMASSATM].cNeg,"Terrestrial Oceans");
   fnRead[OPT_WATERMASSATM] = &ReadWaterMassAtm;
 
@@ -487,7 +487,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_DEPTHMO].iType = 2;
   options[OPT_DEPTHMO].bMultiFile = 1;
   options[OPT_DEPTHMO].dNeg = 1e3;
-  options[OPT_DEPTHMO].dDefault = 1e6;
+  options[OPT_DEPTHMO].dDefault = 1e9;
   sprintf(options[OPT_DEPTHMO].cNeg,"km");
   fnRead[OPT_DEPTHMO] = &ReadDepthMO;
 
@@ -580,13 +580,13 @@ void InitializeBodyMagmOc(BODY *body,CONTROL *control,UPDATE *update,int iBody,i
   dSolidRadiusLocalHigh = body[iBody].dRadius - ( (BHIGHPRESSURE-body[iBody].dPotTemp) / (body[iBody].dGravAccelSurf*(body[iBody].dPotTemp*THERMALEXPANCOEFF/SILICATEHEATCAP - AHIGHPRESSURE*body[iBody].dManMeltDensity)));
   body[iBody].dSolidRadius = fmin(dSolidRadiusLocalLow,dSolidRadiusLocalHigh);
 
+  if (body[iBody].dDepthMO < 9e8) {
+    body[iBody].dSolidRadius = body[iBody].dRadius - body[iBody].dDepthMO;
+  }
+
   if (body[iBody].dSolidRadius < body[iBody].dCoreRadius) {
     body[iBody].dSolidRadius = body[iBody].dCoreRadius;
   }
-
-  // if (body[iBody].dDepthMO < 9e8) {
-  //   body[iBody].dSolidRadius = body[iBody].dRadius - body[iBody].dDepthMO;
-  // }
 
   // other variables
   double dTransPressSol = 5.19964e9; // pressure at which to swith from low to high pressure treatment of solidus (Hirschmann, 2000) in Pa

@@ -4,7 +4,7 @@ import subprocess
 
 
 __version__ = core.version().decode("utf-8")
-__all__ = ["run", "VPLANETError"]
+__all__ = ["run", "help", "VPLANETError"]
 
 
 class VPLANETError(RuntimeError):
@@ -48,3 +48,27 @@ def run(infile="vpl.in", verbose=False, quiet=False, spawn=True):
             raise VPLANETError("Error running VPLANET.")
     else:
         core.run(*args)
+
+
+class VPLANETHelp:
+    """
+    VPLANET help message wrapper.
+    
+    """
+
+    def __init__(self):
+        self._help = subprocess.check_output(["vplanet", "-h"]).decode("utf-8")
+
+    def __repr__(self):
+        return self._help
+
+    def __str__(self):
+        return self._help
+
+
+def help():
+    """
+    Display the VPLANET help message.
+
+    """
+    return VPLANETHelp()

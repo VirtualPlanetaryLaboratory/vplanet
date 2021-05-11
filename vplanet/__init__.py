@@ -1,8 +1,14 @@
 from . import vplanet_core as core
 import sys
+import subprocess
 
 
 __version__ = core.version().decode("utf-8")
+__all__ = ["run", "VPLANETError"]
+
+
+class VPLANETError(RuntimeError):
+    pass
 
 
 def _entry_point():
@@ -13,7 +19,7 @@ def _entry_point():
     return core.run(*sys.argv)
 
 
-def run(infile="vpl.in", verbose=False, quiet=False):
+def run(infile="vpl.in", verbose=False, quiet=False, spawn=True):
     """
     User-friendly interface to `core.run`.
 
@@ -21,12 +27,24 @@ def run(infile="vpl.in", verbose=False, quiet=False):
     https://stackoverflow.com/questions/1439533/how-to-catch-exit-in-embedded-c-module-from-python-code
 
     We need to change the way vplanet exits on error in order to
-    return to the Python interpreter when it terminates.
+    return to the Python interpreter when it terminates. The current
+    hack is to spawn a subprocess (if `spawn=True`) so we don't
+    terminate the current Python session.
 
     """
-    args = []
+    args = ["vplanet", infile]
     if verbose:
         args += ["-v"]
     if quiet:
         args += ["-q"]
-    core.run("vplanet", infile, *args)
+
+    if spawn:
+        error = False
+        try:
+            subprocess.check_output(args)
+        except subprocess.CalledProcessError as e:
+            error = True
+        if error:
+            raise VPLANETError("Error running VPLANET.")
+    else:
+        core.run(*args)

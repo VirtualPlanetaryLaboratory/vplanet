@@ -20,7 +20,7 @@ def test_mp_parallel():
         dir = cwd + "/MP_Parallel"
         sub.run(["rm", "-rf", dir], cwd=cwd)
         # runs vspace
-        sub.run(["python", "../../vspace/vspace/vspace.py", "vspace.in"], cwd=cwd)
+        sub.run(["vspace", "vspace.in"], cwd=cwd)
         # runs parallel
         sub.run(["multi-planet", "vspace.in", "-c", cores], cwd=cwd)
 

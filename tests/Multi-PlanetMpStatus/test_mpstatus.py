@@ -21,7 +21,7 @@ def test_mpstatus():
         dir = cwd + "/MP_Status"
         sub.run(["rm", "-rf", dir], cwd=cwd)
         # runs vspace
-        sub.run(["python", "../../vspace/vspace/vspace.py", "vspace.in"], cwd=cwd)
+        sub.run(["vspace", "vspace.in"], cwd=cwd)
         # runs mp checkpoint
         sub.run(["multi-planet", "vspace.in", "-c", cores], cwd=cwd)
         # runs mpstatus

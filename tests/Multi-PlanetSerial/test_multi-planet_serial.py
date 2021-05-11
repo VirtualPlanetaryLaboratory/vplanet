@@ -15,7 +15,7 @@ def test_mp_serial():
     dir = cwd + "/MP_Serial"
     sub.run(["rm", "-rf", dir], cwd=cwd)
     # runs vspace
-    sub.run(["python", "../../vspace/vspace/vspace.py", "vspace.in"], cwd=cwd)
+    sub.run(["vspace", "vspace.in"], cwd=cwd)
     # runs serial
     sub.run(["multi-planet", "vspace.in", "-c", "1"], cwd=cwd)
 

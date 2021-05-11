@@ -29,7 +29,7 @@ def test_bpstats():
         sub.run(["rm", "-rf", dir], cwd=cwd)
         sub.run(["rm", "-rf", (dir + ".hdf5")], cwd=cwd)
         # runs vspace
-        sub.run(["python", "../../vspace/vspace/vspace.py", "vspace.in"], cwd=cwd)
+        sub.run(["vspace", "vspace.in"], cwd=cwd)
         # runs multi-planet
         sub.run(["multi-planet", "vspace.in"], cwd=cwd)
         # runs bigplanet

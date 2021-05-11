@@ -2,26 +2,27 @@ from vplot import GetOutput
 import subprocess as sub
 import numpy as np
 import os
+
 cwd = os.path.dirname(os.path.realpath(__file__))
 
 
 def test_vspace_log():
-    dir = cwd+'/Log_Test'
+    dir = cwd + "/Log_Test"
     # Removes the files created when vspace is ran
-    sub.run(['rm', '-rf', dir],cwd=cwd)
+    sub.run(["rm", "-rf", dir], cwd=cwd)
     # Runs vspace
-    sub.run(['python','../../vspace/vspace/vspace.py','vspace.in'],cwd=cwd)
+    sub.run(["vspace", "vspace.in"], cwd=cwd)
     # Grab the output
     folders = sorted([f.path for f in os.scandir(dir) if f.is_dir()])
     semi = []
     for i in range(len(folders)):
         os.chdir(folders[i])
-        with open('earth.in', 'r') as f:
+        with open("earth.in", "r") as f:
             for newline in f:
                 if newline.startswith("dSemi"):
                     newline = newline.strip().split()
                     semi.append(newline[1])
-        os.chdir('../')
+        os.chdir("../")
     for i in range(len(semi)):
         semi[i] = float(semi[i])
 
@@ -35,6 +36,7 @@ def test_vspace_log():
     assert np.isclose(semi[7], 215.443469)
     assert np.isclose(semi[8], 464.15888336)
     assert np.isclose(semi[9], 1000.0)
+
 
 if __name__ == "__main__":
     test_vspace_log()

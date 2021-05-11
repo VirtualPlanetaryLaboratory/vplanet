@@ -46,4 +46,4 @@ jobs:
         if: always()
         with:
           files: junit/test-*.xml
-          comment_on_pr: false
+          comment_mode: off

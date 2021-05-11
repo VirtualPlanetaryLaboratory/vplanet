@@ -61,7 +61,7 @@ setup(
         "vplot>=0.3.5",
         "multiplanet>=1.0.0",
         "bigplanet>=1.0.0",
-        "vspace>=1.0.0",
+        "vspace>=1.0.1",
     ],
     ext_modules=ext_modules,
     cmdclass=cmdclass,

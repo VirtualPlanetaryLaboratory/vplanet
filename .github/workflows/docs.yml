@@ -27,7 +27,7 @@ jobs:
           python -m pip install -e .
 
       - name: Build
-        id: install
+        id: build
         if: steps.install.outcome == 'success'
         shell: bash -l {0}
         run: |
@@ -37,6 +37,7 @@ jobs:
           touch .build/html/.nojekyll
 
       - uses: JamesIves/github-pages-deploy-action@4.1.2
+        if: steps.build.outcome == 'success'
         with:
           branch: gh-pages
           folder: docs/.build/html

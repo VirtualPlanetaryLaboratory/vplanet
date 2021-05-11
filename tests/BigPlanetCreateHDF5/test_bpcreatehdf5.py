@@ -43,7 +43,9 @@ def test_bpcreatehdf5():
         )
 
         # gets list of folders
-        folders = sorted([f.path for f in os.scandir(dir) if f.is_dir()])
+        folders = sorted(
+            [f.path for f in os.scandir(cwd + "/BP_CreateHDF5") if f.is_dir()]
+        )
 
         # checks if the hdf5 files exist
         assert os.path.isfile((dir + ".hdf5")) == True

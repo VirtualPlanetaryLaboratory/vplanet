@@ -1,14 +1,12 @@
-name: tests
+name: docs
 
 on:
   push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+    branches: [master, pip] # TODO: Remove pip
 
 jobs:
   tests:
-    name: "Run tests"
+    name: "Build docs"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -28,22 +26,18 @@ jobs:
           python -m pip install -U pip
           python -m pip install -e .
 
-      - name: Run tests
+      - name: Build
+        id: install
         if: steps.install.outcome == 'success'
         shell: bash -l {0}
-        run: python -m pytest -v tests --junitxml=junit/test-results.xml
-
-      - name: Get unique id
-        id: unique-id
-        env:
-          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
         run: |
-          export JOB_ID=`echo $STRATEGY_CONTEXT | md5sum`
-          echo "::set-output name=id::$JOB_ID"
+          cd docs
+          make html
+          cp sphinx_rtd_theme/static/css/theme.css .build/html/_static/css/theme.css
+          touch .build/html/.nojekyll
 
-      - name: Publish unit test results
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        if: always()
+      - uses: JamesIves/github-pages-deploy-action@4.1.2
         with:
-          files: junit/test-*.xml
-          comment_on_pr: false
+          branch: gh-pages
+          folder: docs/.build/html
+          dry-run: true

@@ -2,12 +2,16 @@ name: docs
 
 on:
   push:
-    branches: [master, pip] # TODO: Remove pip
+    branches: [master]
+  pull_request:
+    branches: [master]
 
 jobs:
   tests:
     name: "Build docs"
     runs-on: ubuntu-latest
+    # NOTE: Skip docs generation by placing "no-docs" in the commit message
+    if: "!contains(github.event.head_commit.message, 'no-docs')"
     steps:
       - uses: actions/checkout@v2
 
@@ -38,9 +42,10 @@ jobs:
           cp sphinx_rtd_theme/static/css/theme.css .build/html/_static/css/theme.css
           touch .build/html/.nojekyll
 
-      - uses: JamesIves/github-pages-deploy-action@4.1.2
-        if: steps.build.outcome == 'success'
+      - name: Publish
+        uses: JamesIves/github-pages-deploy-action@4.1.2
+        # NOTE: Triggered only when the PR is *merged* (event_name == 'push')
+        if: steps.build.outcome == 'success' && github.event_name == 'push'
         with:
           branch: gh-pages
           folder: docs/.build/html
-          dry-run: true

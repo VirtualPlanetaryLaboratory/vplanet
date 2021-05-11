@@ -23,6 +23,8 @@ jobs:
         if: steps.setup_python.outcome == 'success'
         shell: bash -l {0}
         run: |
+          sudo apt-get install -y doxygen
+          sudo apt-get install -y doxygen-doc
           python -m pip install -U pip
           python -m pip install -e .
 

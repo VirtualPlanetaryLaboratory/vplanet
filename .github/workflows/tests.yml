@@ -43,7 +43,13 @@ jobs:
 
       - name: Publish unit test results
         uses: EnricoMi/publish-unit-test-result-action@v1
-        if: always()
+        if: steps.install.outcome == 'success'
         with:
           files: junit/test-*.xml
           comment_mode: off
+
+      - name: Publish coverage
+        if: steps.install.outcome == 'success'
+        shell: bash -l {0}
+        run: |
+          bash <(curl -s https://codecov.io/bash)

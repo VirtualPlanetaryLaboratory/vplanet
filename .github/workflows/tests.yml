@@ -31,7 +31,7 @@ jobs:
       - name: Run tests
         if: steps.install.outcome == 'success'
         shell: bash -l {0}
-        run: python -m pytest -vs tests --junitxml=junit/test-results.xml
+        run: python -m pytest -v tests --junitxml=junit/test-results.xml
 
       - name: Get unique id
         id: unique-id
@@ -43,10 +43,10 @@ jobs:
 
       - name: Publish unit test results
         uses: EnricoMi/publish-unit-test-result-action@v1
-        if: steps.install.outcome == 'success'
+        if: always()
         with:
           files: junit/test-*.xml
-          comment_mode: off
+          comment_mode: update last
 
       - name: Publish coverage
         if: steps.install.outcome == 'success'

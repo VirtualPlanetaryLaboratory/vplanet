@@ -3,8 +3,8 @@ name: docs
 on:
   push:
     branches: [master]
-  #pull_request:
-  #  branches: [master] TODO enable this
+  pull_request:
+    branches: [master] TODO enable this
 
 jobs:
   tests:

@@ -23,12 +23,6 @@ pip install sphinxcontrib-bibtex
 # Install coverage stuff
 pip install coverage==4.5.4
 
-#install BigPlanet
-pip install h5py
-cd bigplanet/
-python setup.py install
-cd ../
-
 # Build vplanet with coverage support
 CFLAGS="-coverage" python setup.py build_ext --inplace
 python setup.py develop

@@ -12,7 +12,6 @@ import pytest
 cwd = os.path.dirname(os.path.realpath(__file__))
 
 
-# @pytest.mark.skip(reason="stalled")
 def test_bpstats():
     # gets the number of cores on the machine
     cores = mp.cpu_count()
@@ -31,7 +30,7 @@ def test_bpstats():
         # runs vspace
         sub.run(["python", "../../vspace/vspace/vspace.py", "vspace.in"], cwd=cwd)
         # runs multi-planet
-        sub.run(["python", "../../multi-planet/multi-planet.py", "vspace.in"], cwd=cwd)
+        sub.run(["multi-planet", "vspace.in"], cwd=cwd)
         # runs bigplanet
         sub.run(
             ["python", "../../bigplanet/bigplanet/bigplanet.py", "vspace.in"], cwd=cwd

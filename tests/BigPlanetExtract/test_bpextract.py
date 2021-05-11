@@ -12,7 +12,6 @@ import pytest
 cwd = os.path.dirname(os.path.realpath(__file__))
 
 
-# @pytest.mark.skip(reason="stalled")
 def test_bpextract():
     # gets the number of cores on the machine
     cores = str(mp.cpu_count())
@@ -32,8 +31,7 @@ def test_bpextract():
         sub.run(["python", "../../vspace/vspace/vspace.py", "vspace.in"], cwd=cwd)
         # runs multi-planet
         sub.run(
-            ["python", "../../multi-planet/multi-planet.py", "vspace.in", "-c", cores],
-            cwd=cwd,
+            ["multi-planet", "vspace.in", "-c", cores], cwd=cwd,
         )
         # runs bigplanet
         sub.run(

@@ -6,6 +6,7 @@ import multiprocessing as mp
 import warnings
 import sys
 import pytest
+import shutil
 
 
 cwd = os.path.dirname(os.path.realpath(__file__))
@@ -18,20 +19,24 @@ def test_bpcreatehdf5():
         warnings.warn("There is only 1 core on the machine", stacklevel=3)
     else:
         # removes checkpoint files
-        cp = cwd + "/.BP_CreateHDF5"
-        sub.run(["rm", cp], cwd=cwd)
-        cp_hdf5 = cwd + "/.BP_CreateHDF5_hdf5"
-        sub.run(["rm", cp_hdf5], cwd=cwd)
         # removes the folders from when vspace is ran
-        dir = cwd + "/BP_CreateHDF5"
-        sub.run(["rm", "-rf", dir], cwd=cwd)
-        sub.run(["rm", "-rf", (dir + ".hdf5")], cwd=cwd)
+        for path in [
+            cwd + "/.BP_CreateHDF5",
+            cwd + "/.BP_CreateHDF5_hdf5",
+            cwd + "/BP_CreateHDF5",
+            cwd + "/BP_CreateHDF5.hdf5",
+        ]:
+            if os.path.exists(path):
+                shutil.rmtree(path)
+
         # runs vspace
         sub.run(["vspace", "vspace.in"], cwd=cwd)
+
         # runs multi-planet
         sub.run(
             ["multi-planet", "vspace.in", "-c", cores], cwd=cwd,
         )
+
         # runs bigplanet
         sub.run(
             ["bigplanet", "vspace.in", "-c", cores,], cwd=cwd,
@@ -39,6 +44,7 @@ def test_bpcreatehdf5():
 
         # gets list of folders
         folders = sorted([f.path for f in os.scandir(dir) if f.is_dir()])
+
         # checks if the hdf5 files exist
         assert os.path.isfile((dir + ".hdf5")) == True
 

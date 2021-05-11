@@ -3,15 +3,13 @@ name: docs
 on:
   push:
     branches: [master]
-  pull_request:
-    branches: [master]
+  #pull_request:
+  #  branches: [master] TODO enable this
 
 jobs:
   tests:
     name: "Build docs"
     runs-on: ubuntu-latest
-    # NOTE: Skip docs generation by placing "no-docs" in the commit message
-    if: "!contains(github.event.head_commit.message, 'no-docs')"
     steps:
       - uses: actions/checkout@v2
 

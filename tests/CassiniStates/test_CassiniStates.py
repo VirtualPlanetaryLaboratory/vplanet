@@ -1,42 +1,28 @@
-from vplot import GetOutput
-import subprocess
-import numpy as np
-import os
-cwd = os.path.dirname(os.path.realpath(__file__))
+from benchmark import Benchmark, benchmark
+import astropy.units as u
+import pytest
 
 
-def test_CassiniStates():
-    """Test the coupling between eqtide, distorb and distrot."""
-    # Remove old log file
-    subprocess.run(['rm', 'CassiniStates.log'], cwd=cwd)
-    # Run vplanet
-    subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
-
-    # Grab the output
-    output = GetOutput(path=cwd)
-
-    # Check
-    # Primary Variables
-    assert np.isclose(output.log.final.b.Xobl, -0.706488)
-    assert np.isclose(output.log.final.b.Yobl, 0.046974)
-    assert np.isclose(output.log.final.b.Zobl, 0.706164)
-    assert np.isclose(output.log.final.b.HEcc, -0.062959)
-    assert np.isclose(output.log.final.b.KEcc, 0.010774)
-    assert np.isclose(output.log.final.b.RotRate, 7.270645e-05)
-    assert np.isclose(output.log.final.b.SemiMajorAxis, 1.869973e+10)
-
-    # Other checks
-    assert np.isclose(output.log.final.b.Inc, 0.008680)
-    assert np.isclose(output.log.final.b.ArgP, 4.733145)
-    assert np.isclose(output.log.final.b.LongA, 0.148731)
-    assert np.isclose(output.log.final.b.Obliquity, 0.786733)
-    assert np.isclose(output.log.final.b.PrecA, 3.075203)
-    assert np.isclose(output.log.final.b.RotAngMom, 4.415998e+33)
-    assert np.isclose(output.log.final.b.RotKinEnergy, 1.605358e+29)
-    assert np.isclose(output.log.final.c.Inc, 8.069275e-05)
-    assert np.isclose(output.log.final.c.ArgP, 4.653590)
-    assert np.isclose(output.log.final.c.LongA, 1.580510)
-
-
-if __name__ == "__main__":
-    test_CassiniStates()
+@benchmark(
+    {
+        "log.final.b.Xobl": {"value": -0.706488},
+        "log.final.b.Yobl": {"value": 0.046974},
+        "log.final.b.Zobl": {"value": 0.706164},
+        "log.final.b.HEcc": {"value": -0.062959},
+        "log.final.b.KEcc": {"value": 0.010774},
+        "log.final.b.RotRate": {"value": 7.270645e-05, "unit": 1 / u.s},
+        "log.final.b.SemiMajorAxis": {"value": 1.869973e10, "unit": u.m},
+        "log.final.b.Inc": {"value": 0.008680, "unit": u.rad},
+        "log.final.b.ArgP": {"value": 4.733145, "unit": u.rad},
+        "log.final.b.LongA": {"value": 0.148731, "unit": u.rad},
+        "log.final.b.Obliquity": {"value": 0.786733, "unit": u.rad},
+        "log.final.b.PrecA": {"value": 3.075203, "unit": u.rad},
+        "log.final.b.RotAngMom": {"value": 4.415998e33, "unit": u.kg * u.m ** 2 / u.s},
+        "log.final.b.RotKinEnergy": {"value": 1.605358e29, "unit": u.J},
+        "log.final.c.Inc": {"value": 8.069275e-05, "unit": u.rad},
+        "log.final.c.ArgP": {"value": 4.653590, "unit": u.rad},
+        "log.final.c.LongA": {"value": 1.580510, "unit": u.rad},
+    }
+)
+class TestCassiniStates(Benchmark):
+    pass

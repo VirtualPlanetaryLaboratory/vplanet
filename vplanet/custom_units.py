@@ -3,6 +3,9 @@ import astropy.units as u
 
 # Aliases
 custom_units = [
+    #
+    # Unitful quantities:
+    #
     u.def_unit("sec", u.second),  # Alias for second
     u.def_unit("years", u.year),  # Alias for year
     u.def_unit("days", u.day),  # Alias for day
@@ -10,8 +13,15 @@ custom_units = [
     u.def_unit("ergs", u.erg),  # Alias for erg
     u.def_unit("TO", 1.39e21 * u.kg),  # Terrestrial ocean
     u.def_unit("LSUN", 3.846e26 * u.W),  # Solar luminosity
-    u.def_unit("F/F_Earth", u.Unit("")),  # TODO: Unit in Binary
-    u.def_unit("Earth Radii", u.Rearth),
+    u.def_unit("Earth Radii", u.Rearth),  # Alias for earth radius
+    u.def_unit("Earth Masses", u.Mearth),  # Alias for earth mass
+    #
+    # Non-standard quantities we'll interpret as unitless:
+    #
+    u.def_unit("F/F_Earth", u.Unit("")),
+    u.def_unit("Initial Primordial Earth Number", u.Unit("")),
+    u.def_unit("EMAGMOM", u.Unit("")),
+    u.def_unit("EMAGPAUSERAD", u.Unit("")),
 ]
 
 # Register the units

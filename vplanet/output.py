@@ -260,6 +260,7 @@ def get_arrays(log, units=True):
                 logger.error(
                     "Unable to obtain grid output parameters from %s." % body.climfile
                 )
+                body._gridparams = []
         else:
             body._gridparams = []
 

@@ -3,6 +3,7 @@ import numpy as np
 import os
 import glob
 import pytest
+import shutil
 
 
 # Set to False to keep .log, .forward, etc files
@@ -19,6 +20,9 @@ def vplanet_output(request):
             glob.glob(f"{path}/*.log")
             + glob.glob(f"{path}/*.forward")
             + glob.glob(f"{path}/*.backward")
+            + glob.glob(f"{path}/*.Climate")
         ):
             os.remove(file)
+        for directory in glob.glob(f"{path}/SeasonalClimateFiles"):
+            shutil.rmtree(directory)
     return output

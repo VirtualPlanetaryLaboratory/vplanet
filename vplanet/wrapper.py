@@ -16,22 +16,6 @@ class VPLANETError(RuntimeError):
     pass
 
 
-class VPLANETHelp:
-    """
-    VPLANET help message wrapper.
-    
-    """
-
-    def __init__(self):
-        self._help = subprocess.check_output(["vplanet", "-h"]).decode("utf-8")
-
-    def __repr__(self):
-        return self._help
-
-    def __str__(self):
-        return self._help
-
-
 def _entry_point():
     """
     ``vplanet`` command line script entry point.
@@ -108,9 +92,7 @@ def run(infile="vpl.in", verbose=False, quiet=False, clobber=False, units=True):
     return output
 
 
-def help():
-    """
-    Display the VPLANET help message.
+def help(verbose=False):
+    from .vplanet_help import VPLANETHelp
 
-    """
-    return VPLANETHelp()
+    return VPLANETHelp(verbose=verbose)

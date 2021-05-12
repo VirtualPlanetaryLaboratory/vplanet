@@ -58,11 +58,12 @@ setup(
     license="MIT",
     packages=["vplanet"],
     install_requires=[
-        "astropy>=4.2.1",
         "vplot>=0.3.5",  # TODO: Upgrade me
         "multiplanet>=1.0.0",
         "bigplanet>=1.0.0",
         "vspace>=1.0.2",
+        "astropy>=4.2.1",
+        "tqdm",
     ],
     ext_modules=ext_modules,
     cmdclass=cmdclass,

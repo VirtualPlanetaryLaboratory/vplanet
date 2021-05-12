@@ -58,7 +58,8 @@ setup(
     license="MIT",
     packages=["vplanet"],
     install_requires=[
-        "vplot>=0.3.5",
+        "astropy>=4.2.1",
+        "vplot>=0.3.5",  # TODO: Upgrade me
         "multiplanet>=1.0.0",
         "bigplanet>=1.0.0",
         "vspace>=1.0.2",
@@ -67,5 +68,5 @@ setup(
     cmdclass=cmdclass,
     include_package_data=True,
     zip_safe=False,
-    entry_points={"console_scripts": ["vplanet=vplanet:_entry_point"]},
+    entry_points={"console_scripts": ["vplanet=vplanet.wrapper:_entry_point"]},
 )

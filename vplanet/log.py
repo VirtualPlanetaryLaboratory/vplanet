@@ -74,7 +74,7 @@ def get_param_name(param, file, line):
         return param
 
 
-def get_param_value(val, unit, file, line):
+def get_param_value(val, unit, file, line, units=True):
     """
     Grab the parameter value from a line in the log file.
 
@@ -102,15 +102,23 @@ def get_param_value(val, unit, file, line):
             # Return unprocessed string
             return val
     elif all([c in float_chars for c in val]):
-        try:
-            val = Quantity(float(val) * unit)
-        except ValueError:
-            logger.error(
-                "Error processing line {} of {}: ".format(line, file)
-                + "Cannot interpret value as float."
-            )
-            # Return unprocessed string
-            return val
+
+        if units:
+
+            try:
+                val = Quantity(float(val) * unit)
+            except ValueError:
+                logger.error(
+                    "Error processing line {} of {}: ".format(line, file)
+                    + "Cannot interpret value as float."
+                )
+                # Return unprocessed string
+                return val
+
+        else:
+
+            val = float(val)
+
     elif (val.lower() == "true") or (val.lower() == "yes"):
         val = True
     elif (val.lower() == "false") or (val.lower() == "no"):
@@ -218,7 +226,7 @@ class LogBody(object):
         return [key for key in keys if not key.startswith("_")]
 
 
-def get_log(path=".", sysname=None, ext="log"):
+def get_log(path=".", sysname=None, ext="log", units=True):
     """
 
     """
@@ -295,7 +303,7 @@ def get_log(path=".", sysname=None, ext="log"):
             name_and_unit, value = line.split(":")
             unit = get_param_unit(name_and_unit, lf, i)
             name = get_param_name(name_and_unit, lf, i)
-            value = get_param_value(value, unit, lf, i)
+            value = get_param_value(value, unit, lf, i, units=units)
             setattr(log.header, name, value)
         except Exception as e:
             raise ValueError("Error processing line {} of {}: ".format(i, lf) + str(e))
@@ -311,7 +319,7 @@ def get_log(path=".", sysname=None, ext="log"):
                 name_and_unit, value = line.split(":")
                 unit = get_param_unit(name_and_unit, lf, i)
                 name = get_param_name(name_and_unit, lf, i)
-                value = get_param_value(value, unit, lf, i)
+                value = get_param_value(value, unit, lf, i, units=units)
                 setattr(getattr(log.initial, body), name, value)
             except Exception as e:
                 raise ValueError(
@@ -343,7 +351,7 @@ def get_log(path=".", sysname=None, ext="log"):
                 name_and_unit, value = line.split(":")
                 unit = get_param_unit(name_and_unit, lf, i)
                 name = get_param_name(name_and_unit, lf, i)
-                value = get_param_value(value, unit, lf, i)
+                value = get_param_value(value, unit, lf, i, units=units)
                 setattr(getattr(log.final, body), name, value)
             except Exception as e:
                 raise ValueError(

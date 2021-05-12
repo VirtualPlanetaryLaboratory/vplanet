@@ -286,7 +286,7 @@ def get_output(path=".", sysname=None, units=True):
         ``.log``, ``.forward``, and ``.backward`` output files.
     """
     # Get the log file and the arrays
-    log = get_log(sysname=sysname, path=path)
+    log = get_log(sysname=sysname, path=path, units=units)
     output = get_arrays(log, units=units)
 
     for body in output.bodies:

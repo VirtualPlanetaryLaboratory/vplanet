@@ -15,3 +15,8 @@ custom_units = [
 
 # Register the units
 u.add_enabled_units(custom_units)
+
+# Make them available as regular units
+for unit in custom_units:
+    name = unit.name.replace("/", "_")
+    setattr(u, name, unit)

@@ -72,7 +72,7 @@ def run(infile="vpl.in", verbose=False, quiet=False, clobber=False, units=True):
     with open(infile, "r") as f:
         lines = f.readlines()
         for line in lines:
-            match = re.match("sSystemName[ \t\n]+(.*?)$", line)
+            match = re.match("sSystemName[ \t\n]+(.*?)[ \t\n#]", line)
             if match:
                 if len(match.groups()):
                     sysname = match.groups()[0]
@@ -95,7 +95,7 @@ def run(infile="vpl.in", verbose=False, quiet=False, clobber=False, units=True):
         # Spawn `vplanet` as a subprocess
         error = False
         try:
-            subprocess.check_output(args)
+            subprocess.check_output(args, cwd=path)
         except subprocess.CalledProcessError as e:
             error = True
         if error:

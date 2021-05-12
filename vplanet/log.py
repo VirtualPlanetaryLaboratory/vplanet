@@ -17,9 +17,9 @@ def get_param_unit(param, file, line):
 
     Returns an `astropy.units` unit.
     """
-    match = re.search(r"\[(.*?)\]", param)
-    if match:
-        unit_str = match.groups()[0]
+    groups = re.findall(r"\[(.*?)\]", param)
+    if len(groups):
+        unit_str = groups[-1]
 
         with warnings.catch_warnings(record=True) as w:
             try:
@@ -28,7 +28,7 @@ def get_param_unit(param, file, line):
             except ValueError:
                 logger.error(
                     "Error processing line {} of {}: ".format(line, file)
-                    + "Cannot interpret unit."
+                    + "Cannot interpret unit `{}`.".format(unit_str)
                 )
                 unit = u.Unit("")
             except AssertionError:

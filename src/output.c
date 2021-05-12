@@ -1336,7 +1336,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_ORBANGMOM].cName,"OrbAngMom");
   sprintf(output[OUT_ORBANGMOM].cDescr,"Orbital Angular Momentum");
-  sprintf(output[OUT_ORBANGMOM].cNeg,"kgm^2/s");
+  sprintf(output[OUT_ORBANGMOM].cNeg,"kg*m^2/s");
   output[OUT_ORBANGMOM].bNeg = 1;
   output[OUT_ORBANGMOM].iNum = 1;
   output[OUT_ORBANGMOM].dNeg = 1.0;
@@ -1386,7 +1386,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_LOSTANGMOM].cName,"LostAngMom");
   sprintf(output[OUT_LOSTANGMOM].cDescr,"Lost Angular Momentum due to Magnetic Braking");
-  sprintf(output[OUT_LOSTANGMOM].cNeg,"kgm^2/s");
+  sprintf(output[OUT_LOSTANGMOM].cNeg,"kg*m^2/s");
   output[OUT_LOSTANGMOM].bNeg = 1;
   output[OUT_LOSTANGMOM].iNum = 1;
   output[OUT_LOSTANGMOM].dNeg = 1.0;
@@ -1445,7 +1445,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_ROTANGMOM].cName,"RotAngMom");
   sprintf(output[OUT_ROTANGMOM].cDescr,"Rotational Angular Momentum");
-  sprintf(output[OUT_ROTANGMOM].cNeg,"kgm^2/s");
+  sprintf(output[OUT_ROTANGMOM].cNeg,"kg*m^2/s");
   output[OUT_ROTANGMOM].bNeg = 1;
   output[OUT_ROTANGMOM].iNum = 1;
   output[OUT_ROTANGMOM].dNeg = 1.0;
@@ -1507,7 +1507,7 @@ void InitializeOutputGeneral(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_TOTANGMOM].cName,"TotAngMom");
   sprintf(output[OUT_TOTANGMOM].cDescr,"Total Angular Momentum");
-  sprintf(output[OUT_TOTANGMOM].cNeg,"kgm^2/s");
+  sprintf(output[OUT_TOTANGMOM].cNeg,"kg*m^2/s");
   output[OUT_TOTANGMOM].bNeg = 1;
   output[OUT_TOTANGMOM].iNum = 1;
   output[OUT_TOTANGMOM].dNeg = 1.0;

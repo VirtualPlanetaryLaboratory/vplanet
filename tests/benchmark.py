@@ -14,9 +14,19 @@ def recursive_getattr(obj, attr, *args):
 
 class Benchmark:
     def test_benchmark(self, vplanet_output, param, value, unit, param_options):
-        assert np.isclose(
-            recursive_getattr(vplanet_output, param), value * unit, **param_options
-        )
+        # The value returned by vplanet
+        output_value = recursive_getattr(vplanet_output, param)
+
+        # Are we comparing a specific index of an array?
+        index = param_options.pop("index", None)
+        if index is not None:
+            output_value = output_value[index]
+
+        # The expected value
+        benchmark_value = value * unit
+
+        # Check
+        assert np.allclose(output_value, benchmark_value, **param_options)
 
 
 def benchmark(args_dict):

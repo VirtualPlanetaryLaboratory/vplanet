@@ -11,6 +11,7 @@ custom_units = [
     u.def_unit("TO", 1.39e21 * u.kg),  # Terrestrial ocean
     u.def_unit("LSUN", 3.846e26 * u.W),  # Solar luminosity
     u.def_unit("F/F_Earth", u.Unit("")),  # TODO: Unit in Binary
+    u.def_unit("Earth Radii", u.Rearth),
 ]
 
 # Register the units
@@ -18,5 +19,5 @@ u.add_enabled_units(custom_units)
 
 # Make them available as regular units
 for unit in custom_units:
-    name = unit.name.replace("/", "_")
+    name = unit.name.replace("/", "_").replace(" ", "")
     setattr(u, name, unit)

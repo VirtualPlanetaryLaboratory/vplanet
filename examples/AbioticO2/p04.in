@@ -3,7 +3,7 @@ sName p04
 saModules                 atmesc
 dXFrac                    1.0
 dSurfWaterMass            -10.0
-dSemi                     0.47740
+dSemi                     0.04587
 dEcc                      0.
 dEnvelopeMass             0.0
 dMass                     -1.0

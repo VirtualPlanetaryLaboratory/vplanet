@@ -5,6 +5,9 @@ from .vplanet_core import version
 
 __version__ = version().decode("utf-8")
 
+# Grab the help info
+
+
 # Import the main interface
 from .wrapper import run, help, VPLANETError
 

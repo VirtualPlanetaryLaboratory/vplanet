@@ -22,6 +22,7 @@ def get_param_unit(param, file, line):
         unit_str = groups[-1]
 
         with warnings.catch_warnings(record=True) as w:
+            unit = u.Unit("")
             try:
                 unit = u.Unit(unit_str)
                 assert len(w) == 0
@@ -30,13 +31,11 @@ def get_param_unit(param, file, line):
                     "Error processing line {} of {}: ".format(line, file)
                     + "Cannot interpret unit `{}`.".format(unit_str)
                 )
-                unit = u.Unit("")
             except AssertionError:
                 logger.warn(
                     "Error processing line {} of {}: ".format(line, file)
                     + str(w[0].message)
                 )
-                unit = u.Unit("")
 
         return unit
     else:

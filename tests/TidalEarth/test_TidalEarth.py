@@ -1,26 +1,23 @@
-from vplot import GetOutput
-import subprocess
-import numpy as np
-import os
-cwd = os.path.dirname(os.path.realpath(__file__))
+from benchmark import Benchmark, benchmark
+import astropy.units as u
+import pytest
 
 
-def test_TidalEarth():
-    """Test the coupling between radheat, thermint, and eqtide."""
-    # Remove old log file
-    subprocess.run(['rm', 'tidalearth.log'], cwd=cwd)
-    # Run vplanet
-    subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
-
-    # Grab the output
-    output = GetOutput(path=cwd)
+@benchmark(
+    {
+        "log.final.tidalearth.TMan": {"value": 2799.517833, "unit":u.K},
+        "log.final.tidalearth.TCore": {"value": 5500.224551, "unit":u.K},
+        "log.final.tidalearth.PowerEqtide": {"value": 0.005337, "unit": u.km*u.m**2 / u.sec**3},
+        "log.final.tidalearth.Eccentricity": {"value":  0.490441},
+        "log.final.tidalearth.SemiMajorAxis": {"value": 7.409421e+09, "unit": u.m},
+    }
+)
+class TestTidalEarth(Benchmark):
+    pass
 
     # Check
-    assert np.isclose(output.log.final.tidalearth.TMan, 2799.517833)
-    assert np.isclose(output.log.final.tidalearth.TCore, 5500.224551)
-    assert np.isclose(output.log.final.tidalearth.PowerEqtide, 0.005337)
-    assert np.isclose(output.log.final.tidalearth.Eccentricity, 0.490441)
-    assert np.isclose(output.log.final.tidalearth.SemiMajorAxis, 7.409421e+09)
-
-if __name__ == "__main__":
-    test_TidalEarth()
+    # assert np.isclose(output.log.final.tidalearth.TMan, 2799.517833)
+    # assert np.isclose(output.log.final.tidalearth.TCore, 5500.224551)
+    # assert np.isclose(output.log.final.tidalearth.PowerEqtide, 0.005337)
+    # assert np.isclose(output.log.final.tidalearth.Eccentricity, 0.490441)
+    # assert np.isclose(output.log.final.tidalearth.SemiMajorAxis, 7.409421e+09)

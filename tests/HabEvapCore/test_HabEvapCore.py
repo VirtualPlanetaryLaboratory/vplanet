@@ -2,7 +2,7 @@ from benchmark import Benchmark, benchmark
 import astropy.units as u
 import pytest
 
-benchmark(
+@benchmark(
     {
         "log.final.star.LXUVStellar": {"value": 4.988314e+21, "unit": u.kg * u.m**2 / u.sec**3},
 

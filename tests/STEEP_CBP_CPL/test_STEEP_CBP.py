@@ -1,28 +1,27 @@
-from vplot import GetOutput
-import subprocess
-import numpy as np
-import os
-cwd = os.path.dirname(os.path.realpath(__file__))
+from benchmark import Benchmark, benchmark
+import astropy.units as u
+import pytest
 
 
-def test_SteepCBPCPL():
-    """Test STEEP effect on a circumbinary planet (Fleming et al., 2018, ApJ, 858, 86)."""
-    # Remove old log file
-    subprocess.run(['rm', 'STEEP_CPL.log'], cwd=cwd)
-    # Run vplanet
-    subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
+@benchmark(
+    {
+        "log.final.cbp.FreeEcc": {"value": 0.030000},
+        "log.final.cbp.Eccentricity": {"value": 0.030249},
+        "log.final.cbp.SemiMajorAxis": {"value": 1.052219e+11, "unit": u.m},
 
-    # Grab the output
-    output = GetOutput(path=cwd)
+        "log.final.secondary.Eccentricity": {"value": 0.194791},
+        "log.final.secondary.SemiMajorAxis": {"value": 0.072294, "unit": u.au},
+        "log.final.secondary.CriticalSemiMajorAxis": {"value": 0.211427, "unit": u.au},
+
+    }
+)
+class TestSteepCBPCPL(Benchmark):
+    pass
 
     # Run our comparisons
-    assert np.isclose(output.log.final.cbp.FreeEcc, 0.030000)
-    assert np.isclose(output.log.final.cbp.Eccentricity, 0.030249)
-    assert np.isclose(output.log.final.cbp.SemiMajorAxis, 1.052219e+11)
-    assert np.isclose(output.log.final.secondary.Eccentricity, 0.194791)
-    assert np.isclose(output.log.final.secondary.SemiMajorAxis, 0.072294)
-    assert np.isclose(output.log.final.secondary.CriticalSemiMajorAxis, 0.211427)
-
-
-if __name__ == "__main__":
-    test_SteepCBPCPL()
+    # assert np.isclose(output.log.final.cbp.FreeEcc, 0.030000)
+    # assert np.isclose(output.log.final.cbp.Eccentricity, 0.030249)
+    # assert np.isclose(output.log.final.cbp.SemiMajorAxis, 1.052219e+11)
+    # assert np.isclose(output.log.final.secondary.Eccentricity, 0.194791)
+    # assert np.isclose(output.log.final.secondary.SemiMajorAxis, 0.072294)
+    # assert np.isclose(output.log.final.secondary.CriticalSemiMajorAxis, 0.211427)

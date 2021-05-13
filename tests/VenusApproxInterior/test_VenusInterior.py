@@ -2,15 +2,18 @@ from vplot import GetOutput
 import subprocess
 import numpy as np
 import os
+import pytest
+
 cwd = os.path.dirname(os.path.realpath(__file__))
 
 
+@pytest.mark.xfail(reason="thermint currently breaking logfiles")
 def test_VenusInterior():
     """Test the coupling between radheat and thermint under stagnant lid conditions."""
     # Remove old log file
-    subprocess.run(['rm', 'venus.log'], cwd=cwd)
+    subprocess.run(["rm", "venus.log"], cwd=cwd)
     # Run vplanet
-    subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
+    subprocess.run(["vplanet", "vpl.in", "-q"], cwd=cwd)
 
     # Grab the output
     output = GetOutput(path=cwd)

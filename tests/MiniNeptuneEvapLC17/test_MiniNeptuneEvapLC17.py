@@ -1,29 +1,28 @@
-from vplot import GetOutput
-import subprocess
-import numpy as np
-import os
-cwd = os.path.dirname(os.path.realpath(__file__))
+from benchmark import Benchmark, benchmark
+import astropy.units as u
+import pytest
 
 
-def test_LehmerCatling17():
-    """Test hydrogen envelope loss with the Lehmer & Catling (2017) model."""
-    # Remove old log file
-    subprocess.run(['rm', 'lc17.log'], cwd=cwd)
-    # Run vplanet
-    subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
+@benchmark(
+    {
+        "log.final.planet.EnvelopeMass": {"value": 0.029770, "unit":u.Mearth},
+        "log.final.planet.DEnvMassDt": {"value": -4.923106e+08, "unit":u.kg/u.sec},
 
-    # Grab the output
-    output = GetOutput(path=cwd)
+        "log.final.planet.Radius": {"value": 2.821863e+07, "unit": u.m},
+        "log.final.planet.Mass": {"value":  1.969770, "unit": u.Mearth},
+        "log.final.planet.ScaleHeight": {"value": 273.737851, "unit": u.km},
+        "log.final.planet.PresSurf": {"value": 3.267509, "unit": u.GPa},
+    }
+)
+class TestMiniNeptuneEvapLC17(Benchmark):
+    pass
 
-    # Check Primary Variables
-    assert np.isclose(output.log.final.planet.EnvelopeMass, 0.029770)
-    assert np.isclose(output.log.final.planet.DEnvMassDt, -4.923106e+08)
-
-    # Check other variables
-    assert np.isclose(output.log.final.planet.Radius, 2.821863e+07)
-    assert np.isclose(output.log.final.planet.Mass, 1.969770)
-    assert np.isclose(output.log.final.planet.ScaleHeight, 273.737851)
-    assert np.isclose(output.log.final.planet.PresSurf, 3.267509)
-
-if __name__ == "__main__":
-    test_LehmerCatling17()
+    # # Check Primary Variables
+    # assert np.isclose(output.log.final.planet.EnvelopeMass, 0.029770)
+    # assert np.isclose(output.log.final.planet.DEnvMassDt, -4.923106e+08)
+    #
+    # # Check other variables
+    # assert np.isclose(output.log.final.planet.Radius, 2.821863e+07)
+    # assert np.isclose(output.log.final.planet.Mass, 1.969770)
+    # assert np.isclose(output.log.final.planet.ScaleHeight, 273.737851)
+    # assert np.isclose(output.log.final.planet.PresSurf, 3.267509)

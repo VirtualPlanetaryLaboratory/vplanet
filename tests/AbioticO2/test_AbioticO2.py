@@ -15,7 +15,7 @@ import astropy.units as u
         "log.final.e.OxygenMass": {"value": 420.619083, "unit": u.bar},
         "log.final.e.FXUV": {"value": 3.053257, "unit": u.W / u.m ** 2},
         "log.final.e.AtmXAbsEffH2O": {"value": 0.051776},
-        "log.final.e.Instellation": {"value": 3053.257033, "unit": u.F_F_Earth},
+        "log.final.e.Instellation": {"value": 3053.257033, "unit": u.kg / u.sec ** 3},
     }
 )
 class TestAbioticO2(Benchmark):

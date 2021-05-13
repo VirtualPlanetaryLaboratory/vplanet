@@ -15,6 +15,7 @@ custom_units = [
     u.def_unit("LSUN", 3.846e26 * u.W),  # Solar luminosity
     u.def_unit("Earth Radii", u.Rearth),  # Alias for earth radius
     u.def_unit("Earth Masses", u.Mearth),  # Alias for earth mass
+    u.def_unit("Degrees", u.deg),  # Alias for degrees
     #
     # Non-standard quantities we'll interpret as unitless:
     #

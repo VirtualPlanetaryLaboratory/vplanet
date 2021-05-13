@@ -1,14 +1,16 @@
 """Reproduce Figure 3 in Lopez and Fortney (2013)."""
-from get_args import get_args
 import vplanet
 import vplot
 import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import pathlib
+import sys
 
-# Path to this directory
-path = pathlib.Path(__file__).parents[0]
+# Path hacks
+path = pathlib.Path(__file__).parents[0].absolute()
+sys.path.insert(1, str(path.parents[0]))
+from get_args import get_args
 
 # Star input file template
 star = """#

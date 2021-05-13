@@ -4,16 +4,18 @@ dynamics of CoRoT-7b and c, using VPLANET's STELLAR, EQTIDE, and DISTORB modules
 
 David P. Fleming, University of Washington, 2018
 """
-from get_args import get_args
 import vplanet
 import vplot
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 import pathlib
+import sys
 
-# Path to this directory
-path = pathlib.Path(__file__).parents[0]
+# Path hacks
+path = pathlib.Path(__file__).parents[0].absolute()
+sys.path.insert(1, str(path.parents[0]))
+from get_args import get_args
 
 # Typical plot parameters that make for pretty plot
 mpl.rcParams["figure.figsize"] = (10, 8)
@@ -113,4 +115,4 @@ inset2.set_xlabel("Time [Myr]", fontsize=12)
 
 # Save the figure
 ext = get_args().ext
-fig.savefig(f"ApseLock.{ext}", bbox_inches="tight", dpi=600)
+fig.savefig(path / f"ApseLock.{ext}", bbox_inches="tight", dpi=600)

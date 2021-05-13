@@ -6,16 +6,21 @@ custom_units = [
     #
     # Unitful quantities:
     #
-    u.def_unit("sec", u.second),  # Alias for second
-    u.def_unit("years", u.year),  # Alias for year
-    u.def_unit("days", u.day),  # Alias for day
-    u.def_unit("bars", u.bar),  # Alias for bar
-    u.def_unit("ergs", u.erg),  # Alias for erg
     u.def_unit("TO", 1.39e21 * u.kg),  # Terrestrial ocean
     u.def_unit("LSUN", 3.846e26 * u.W),  # Solar luminosity
-    u.def_unit("Earth Radii", u.Rearth),  # Alias for earth radius
-    u.def_unit("Earth Masses", u.Mearth),  # Alias for earth mass
-    u.def_unit("Degrees", u.deg),  # Alias for degrees
+    #
+    # Aliases that need to be standardized in VPLANET:
+    #
+    u.def_unit("sec", u.second),
+    u.def_unit("years", u.year),
+    u.def_unit("days", u.day),
+    u.def_unit("bars", u.bar),
+    u.def_unit("ergs", u.erg),
+    u.def_unit("Earth Radii", u.Rearth),
+    u.def_unit("Earth radii", u.Rearth),
+    u.def_unit("Earthradii", u.Rearth),
+    u.def_unit("Earth Masses", u.Mearth),
+    u.def_unit("Degrees", u.deg),
     #
     # Non-standard quantities we'll interpret as unitless:
     #

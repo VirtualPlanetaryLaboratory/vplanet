@@ -1,23 +1,18 @@
-from vplot import GetOutput
-import subprocess
-import numpy as np
-import os
-cwd = os.path.dirname(os.path.realpath(__file__))
+from benchmark import Benchmark, benchmark
+import astropy.units as u
+import pytest
 
 
-def test_VenusWaterLoss():
-    """Test the loss of water on Venus."""
-    # Remove old log file
-    subprocess.run(['rm', 'solarsystem.log'], cwd=cwd)
-    # Run vplanet
-    subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
+@benchmark(
+    {
+        "log.final.sun.LXUVStellar": {"value": 0.000427, "unit":u.lsun},
+        "log.final.venus.SurfWaterMass": {"value": 0.099247, "unit": u.TO},
 
-    # Grab the output
-    output = GetOutput(path=cwd)
+    }
+)
+class TestVenusWaterLoss(Benchmark):
+    pass
 
-    # Check
-    assert np.isclose(output.log.final.sun.LXUVStellar, 0.000427)
-    assert np.isclose(output.log.final.venus.SurfWaterMass, 0.919493, rtol=1e-4)
-
-if __name__ == "__main__":
-    test_VenusWaterLoss()
+    # # Check
+    # assert np.isclose(output.log.final.sun.LXUVStellar, 0.000427)
+    # assert np.isclose(output.log.final.venus.SurfWaterMass, 0.919493, rtol=1e-4)

@@ -8,8 +8,6 @@
 // XXX Check for duplications in vplanet.h!
 
 // GLOBAL VARIABLE INDEXES
-#define TMAN             20                    /**< Index of TMAN (mantle temperature) global variable */
-#define TCORE            21                    /**< Index of TCORE (core temperature) global variable */
 #define TSURF  300.0                           /**< [K] Surface temperature (constant).  This should be set globally! */
 // UNITS CONSTANTS
 #define KM               1e3                   /**< [m] m in 1 km */

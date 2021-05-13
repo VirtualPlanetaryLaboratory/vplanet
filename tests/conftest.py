@@ -13,7 +13,7 @@ sys.path.insert(1, os.path.abspath(os.path.dirname(__file__)))
 CLEAN_OUTPUTS = False
 
 
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(scope="module")
 def vplanet_output(request):
     path = os.path.abspath(os.path.dirname(request.fspath))
     infile = os.path.join(path, "vpl.in")

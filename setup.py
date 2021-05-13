@@ -63,6 +63,7 @@ setup(
         "bigplanet>=1.0.0",
         "vspace>=1.0.2",
         "astropy>=4.2.1",
+        "numpy>=1.19.4",
         "tqdm",
     ],
     ext_modules=ext_modules,

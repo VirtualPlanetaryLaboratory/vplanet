@@ -1,10 +1,15 @@
 Parameter Sweep Example
 =======================
 
+.. warning::
+
+    This example is currently broken! See
+    `this issue <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/issues/299>`_.
+
 Overview
 --------
 
-Example using :code:`vspace`, :code:`multi-planet`, and :code:`bigplanet` in
+Example using :code:`vspace`, :code:`multiplanet`, and :code:`bigplanet` in
 conjunction by exploring the THERMINT parameters of dTCore (initial core
 temperature) and d40KPowerCore (initial radiogenic power from potassium-40).
 

@@ -26,7 +26,6 @@ To run this example
 
 .. code-block:: bash
 
-    vplanet vpl.in
     python makeplot.py <pdf | png>
 
 
@@ -41,15 +40,6 @@ Evolution of the surface water content (left) and amount of oxygen absorbed
 by the surface (right) as a function of time for three different initial
 surface water inventories. The vertical dashed line is the `Watson et al.
 (1981) <https://ui.adsabs.harvard.edu/abs/1981Icar...48..150W/abstract>`_ timescale for the desiccation of Venus.
-
-To create the Bolmont scaling relationship figure
--------------------
-
-.. code-block:: bash
-
-   cd BolmontScaling
-   vplanet vpl.in
-   python makeplot.py <pdf | png>
 
 .. figure:: BolmontScaling.png
    :width: 600px

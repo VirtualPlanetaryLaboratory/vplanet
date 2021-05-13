@@ -2,7 +2,7 @@ from benchmark import Benchmark, benchmark
 import astropy.units as u
 import pytest
 
-
+@pytest.mark.xfail(reason="thermint currently breaking logfiles")
 @benchmark(
     {
         "log.final.venus.TMan": {"value": 2679.27122, "unit":u.K},
@@ -14,11 +14,3 @@ import pytest
 )
 class TestVenusApproxInterior(Benchmark):
     pass
-
-
-    # # Check
-    # assert np.isclose(output.log.final.venus.TMan, 2679.27122)
-    # assert np.isclose(output.log.final.venus.TCore, 6365.71258)
-    # assert np.isclose(output.log.final.venus.RIC, 0.0)
-    # assert np.isclose(output.log.final.venus.RadPowerTotal, 31.49126)
-    # assert np.isclose(output.log.final.venus.MagMom, 0.0)

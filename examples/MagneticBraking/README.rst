@@ -27,7 +27,6 @@ To run this example
 
 .. code-block:: bash
 
-    vplanet vpl.in
     python makeplot.py <pdf | png>
 
 

@@ -623,6 +623,7 @@ void InitializeOptionsEqtide(OPTIONS *options,fnReadOption fnRead[]){
   sprintf(options[OPT_MAXLOCKDIFF].cDescr,
     "Maximum relative difference between spin and equilibrium spin rates to force equilibrium rate");
   sprintf(options[OPT_MAXLOCKDIFF].cDefault,"0");
+  sprintf(options[OPT_MAXLOCKDIFF].cDimension,"nd");
   options[OPT_MAXLOCKDIFF].dDefault = 0;
   options[OPT_MAXLOCKDIFF].iType = 2;
   options[OPT_MAXLOCKDIFF].bMultiFile = 1;

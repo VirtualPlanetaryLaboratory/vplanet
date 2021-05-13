@@ -353,6 +353,7 @@ void InitializeOptionsBinary(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FREEECC].cName,"dFreeEcc");
   sprintf(options[OPT_FREEECC].cDescr,"Circumbinary planet free eccentricity");
   sprintf(options[OPT_FREEECC].cDefault,"0.0");
+  sprintf(options[OPT_FREEECC].cDimension,"nd");
   options[OPT_FREEECC].dDefault = 0.0;
   options[OPT_FREEECC].iType = 2;
   options[OPT_FREEECC].bMultiFile = 1;

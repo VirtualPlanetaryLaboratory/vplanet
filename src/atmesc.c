@@ -748,6 +748,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_XFRAC].cName,"dXFrac");
   sprintf(options[OPT_XFRAC].cDescr,"Fraction of planet radius in X-ray/UV");
   sprintf(options[OPT_XFRAC].cDefault,"1");
+  sprintf(options[OPT_XFRAC].cDimension,"nd");
   options[OPT_XFRAC].dDefault = 1.0;
   options[OPT_XFRAC].iType = 2;
   options[OPT_XFRAC].bMultiFile = 1;
@@ -762,6 +763,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH].cName,"dAtmXAbsEffH");
   sprintf(options[OPT_ATMXABSEFFH].cDescr,"Hydrogen X-ray/UV absorption efficiency (epsilon)");
   sprintf(options[OPT_ATMXABSEFFH].cDefault,"0.15");
+  sprintf(options[OPT_ATMXABSEFFH].cDimension,"nd");
   options[OPT_ATMXABSEFFH].dDefault = 0.15;
   options[OPT_ATMXABSEFFH].iType = 2;
   options[OPT_ATMXABSEFFH].bMultiFile = 1;
@@ -774,6 +776,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH2O].cName,"dAtmXAbsEffH2O");
   sprintf(options[OPT_ATMXABSEFFH2O].cDescr,"Water X-ray/UV absorption efficiency (epsilon)");
   sprintf(options[OPT_ATMXABSEFFH2O].cDefault,"0.30");
+  sprintf(options[OPT_ATMXABSEFFH2O].cDimension,"nd");
   options[OPT_ATMXABSEFFH2O].dDefault = 0.15;
   options[OPT_ATMXABSEFFH2O].iType = 2;
   options[OPT_ATMXABSEFFH2O].bMultiFile = 1;
@@ -787,6 +790,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDescr,"Water X-ray/XUV absorption efficiency evolution model");
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDefault,"NONE");
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cValues,"BOLMONT16 NONE");
+  sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDimension,"nd");
   options[OPT_ATMXABSEFFH2OMODEL].iType = 3;
   options[OPT_ATMXABSEFFH2OMODEL].bMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2OMODEL] = &ReadAtmXAbsEffH2OModel;
@@ -820,6 +824,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_WATERLOSSMODEL].cDescr,"Water loss and oxygen buildup model");
   sprintf(options[OPT_WATERLOSSMODEL].cDefault,"LBEXACT");
   sprintf(options[OPT_WATERLOSSMODEL].cValues,"LB15 LBEXACT TIAN");
+  sprintf(options[OPT_WATERLOSSMODEL].cDimension,"nd");
   options[OPT_WATERLOSSMODEL].iType = 3;
   options[OPT_WATERLOSSMODEL].bMultiFile = 1;
   fnRead[OPT_WATERLOSSMODEL] = &ReadWaterLossModel;

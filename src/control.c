@@ -285,15 +285,25 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       printf(" |\n");
       printf("+-----------------+--------------------------------------+\n");
 
-      if (options->bNeg == 1){
+      if (options->iType == 2) {
+        printf("| Dimension(s)    | %s", options->cDimension);
+        int dimlen;
+        for(dimlen = 0; dimlen<(36 - strlen(options->cDimension)); dimlen++){
+          printf(" ");
+      }
+      printf(" |\n");
+      printf("+-----------------+--------------------------------------+\n");
+    }
+
+      if (options->bNeg != 0){
         printf("| Custom unit     | %s", options->cNeg);
         int unitlen;
         for(unitlen = 0; unitlen<(36 - strlen(options->cNeg)); unitlen++){
           printf(" ");
         }
         printf(" |\n");
-      } else printf("| Custom unit     | nd                                   |\n");
-      printf("+-----------------+--------------------------------------+\n");
+        printf("+-----------------+--------------------------------------+\n");
+      }
 
       if (options->iModuleBit){
         printf("| Modules         | ");
@@ -307,12 +317,12 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       printf(" |\n");
       printf("+-----------------+--------------------------------------+\n");
 
-      printf("|Default value    | %s", options->cDefault);
+      printf("| Default value   | %s", options->cDefault);
       int valuelen;
-      //printf("%d\n",strlen(options->cDefault));
-      //for(valuelen = 0; valuelen<(36 - strlen(options->cDefault)); valuelen++){
-        //printf(" ");
-      //}
+      int strlenvalue = strlen(options->cDefault);
+      for(valuelen = 0; valuelen<(36 - strlenvalue); valuelen++){
+        printf(" ");
+      }
       printf(" |\n");
       printf("+-----------------+--------------------------------------+\n");
 
@@ -350,33 +360,40 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
       // ** Long help **
 
       // Properties
-      printf("+------------------------------------------------------+\n");
-      printf("%s\n",output->cName);
-      printf("+-----------------+------------------------------------+\n");
+      printf("+========================================================+\n");
+      printf("| %s",output->cName);
+      int i;
+      for(i = 0; i<(54 - strlen(output->cName)); i++){
+        printf(" ");
+      }
+      printf(" |\n");
+      printf("+=================+======================================+\n");
+
       // Long description
-      if (memcmp(output->cLongDescr,"null",4)) {
-          printf("\n**Overview**\n");
-          printf("%s\n",output->cLongDescr);
-      } else {
-        printf("**Description**           %s\n", output->cDescr);
+      // if (memcmp(output->cLongDescr,"null",4)) {
+      //     printf("\n**Overview**\n");
+      //     printf("%s\n",output->cLongDescr);
+      // } else {
+      //   printf("**Description**           %s\n", output->cDescr);
+      // }
+
+      if (output->bNeg != 0){
+        printf("| Custom unit     | %s", output->cNeg);
+        int unitlen;
+        for(unitlen = 0; unitlen<(36 - strlen(output->cNeg)); unitlen++){
+          printf(" ");
+        }
+        printf(" |\n");
+        printf("+-----------------+--------------------------------------+\n");
       }
-      if (output->bNeg == 1)
-        printf("**Custom unit**           %s\n", output->cNeg);
-      else
-        printf("**Custom unit**     \n");
-      printf("**Modules**               ");
-      if (output->iModuleBit) {
+
+      if (output->iModuleBit){
+        printf("| Modules         | ");
         PrintModuleList(stdout, output->iModuleBit);
-      } else {
-        printf("ALL");
-      }
+        printf(" |\n");
+      } else printf("| Modules         | ALL                                  |\n");
+      printf("+-----------------+--------------------------------------+\n");
       printf("\n");
-      printf("**Description**           %s\n", output->cDescr);
-      printf("========================  ====================================\n\n");
-        // Long description
-      if (memcmp(output->cLongDescr,"null",4)) {
-        printf("%s\n\n",output->cLongDescr);
-      }
     }
   }
 }

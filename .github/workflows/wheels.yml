@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-python@v2
         name: Install Python
         with:
-          python-version: "3.7"
+          python-version: "3.8"
 
       - uses: ilammy/msvc-dev-cmd@v1
 
@@ -61,7 +61,7 @@ jobs:
       - uses: actions/setup-python@v2
         name: Install Python
         with:
-          python-version: "3.7"
+          python-version: "3.8"
 
       - name: Build sdist
         run: python setup.py sdist
@@ -79,15 +79,7 @@ jobs:
           name: artifact
           path: dist
 
-      # On vplanet-private: push to TEST PyPI server
-      - uses: pypa/gh-action-pypi-publish@master
-        if: github.repository == 'VirtualPlanetaryLaboratory/vplanet-private'
-        with:
-          user: __token__
-          password: ${{ secrets.test_pypi_secret }}
-          repository_url: https://test.pypi.org/legacy/
-
-      # On vplanet (public): publish on PyPI for real
+      # Only push to PyPI if we're on the public repo!
       - uses: pypa/gh-action-pypi-publish@master
         if: github.event_name == 'release' && github.event.action == 'published' && github.repository == 'VirtualPlanetaryLaboratory/vplanet'
         with:

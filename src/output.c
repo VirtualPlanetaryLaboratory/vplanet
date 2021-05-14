@@ -99,7 +99,7 @@ void WriteDensity(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     *dTmp *= output->dNeg;
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp *= pow(fdUnitsLength(units->iLength),3)/fdUnitsMass(units->iLength);
+    *dTmp *= pow(fdUnitsLength(units->iLength),3)/fdUnitsMass(units->iMass);
     fsUnitsDensity(units,cUnit);
   }
 }

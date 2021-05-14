@@ -1237,7 +1237,7 @@ void VerifyCPL(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT 
 
 void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *update,int iNumBodies,int iBody) {
   int iPert,iBodyPert,iVar,ok;
-  int bFound[iNumBodies];
+  int *bFound = malloc(iNumBodies);
 
   for (iBody=0;iBody<iNumBodies;iBody++) {
 
@@ -1298,6 +1298,8 @@ void VerifyPerturbersEqtide(BODY *body,FILES *files,OPTIONS *options,UPDATE *upd
         exit(EXIT_INPUT);
     }
   }
+
+  free(bFound);
 
   /* All entries to saTidePerts are known bodies, does each point to the other?
      Exomoon ready! */
@@ -2424,8 +2426,8 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BODYDSEMIDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_BODYDSEMIDTEQTIDE] = &WriteBodyDsemiDtEqtide;
   sprintf(output[OUT_BODYDSEMIDTEQTIDE].cDescr,
-    "In EqTide, the total change in semi-major axis is due to dissipation in \n"
-    "both bodies. This output parameter returns the change due to current \n"
+    "In EqTide, the total change in semi-major axis is due to dissipation in "
+    "both bodies. This output parameter returns the change due to current "
     "body."
   );
 
@@ -2439,7 +2441,7 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_BODYDECCDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_BODYDECCDTEQTIDE] = &WriteBodyDeccDtEqtide;
   sprintf(output[OUT_BODYDECCDTEQTIDE].cDescr,
-    "In EqTide, the total change in eccentricity is due to towrues on both \n"
+    "In EqTide, the total change in eccentricity is due to towrues on both "
     "bodies. This output parameter returns the change due to current body."
   );
 
@@ -2469,8 +2471,8 @@ void InitializeOutputEqtide(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_TIDALRADIUS].iModuleBit = EQTIDE;
   fnWrite[OUT_TIDALRADIUS] = &WriteTidalRadius;
   sprintf(output[OUT_TIDALRADIUS].cDescr,
-    "In EqTide, the value of the radius that enters the tidal evolution \n"
-    "equations. This parameter is distinct from others, such as the radius \n"
+    "In EqTide, the value of the radius that enters the tidal evolution "
+    "equations. This parameter is distinct from others, such as the radius "
     "of XUV absorption or a pressure level in an atmosphere."
   );
 

@@ -29,7 +29,6 @@ To run this example
 
 .. code-block:: bash
 
-   vspace vspace.in
    python makeplot.py <pdf | png>
 
 
@@ -46,4 +45,4 @@ observed eccentricity, and the horizontal line is the expected obliquity if Io
 is in a Cassini state `(Bills & Ray 2000)
 <https://ui.adsabs.harvard.edu/abs/2000JGR...10529277B/abstract>`_. The orange
 shaded region corresponds to the observed value of 1.5-3 W/m^2 `(Veeder et al.
-2012) <https://ui.adsabs.harvard.edu/abs/2012Icar..219..701V/abstract>`_.
+1)    <https://ui.adsabs.harvard.edu/abs/2012Icar..219..701V/abstract>`_.

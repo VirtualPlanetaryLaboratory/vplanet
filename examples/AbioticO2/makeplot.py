@@ -1,20 +1,19 @@
 """Reproduce Figure 7 in Luger and Barnes (2015)."""
+import vplanet
+import vplot
 import numpy as np
-import subprocess
-try:
-    import vplot as vpl
-except:
-    print('Cannot import vplot. Please install vplot.')
-
 from tqdm import tqdm
-import matplotlib.pyplot as pl
+import matplotlib.pyplot as plt
 import matplotlib.colors as colors
+import pathlib
 import sys
-import argparse
 
-cmap = pl.get_cmap('plasma')
+# Path hacks
+path = pathlib.Path(__file__).parents[0].absolute()
+sys.path.insert(1, str(path.parents[0]))
+from get_args import get_args
 
-
+# Star input file template
 star = """#
 sName	                  star
 saModules	              stellar
@@ -26,6 +25,7 @@ dSatXUVTime               -1
 saOutputOrder HZLimRecVenus HZLimRunaway HZLimMaxGreenhouse HZLimEarlyMars
 """
 
+# Planet input file template
 planet = """#
 sName p%02d
 saModules                 atmesc
@@ -42,6 +42,7 @@ bInstantO2Sink            0
 saOutputOrder Time -SurfWaterMass -OxygenMass
 """
 
+# System input file template
 system = """#
 sSystemName               system
 iVerbose                  0
@@ -64,79 +65,70 @@ dOutputTime               1e9
 
 def HZLims(M):
     """Get the four HZ lims in AU for a star of mass `M`."""
-    # Write the vpl.in file
-    with open("vpl.in", "w") as file:
+    # Write the vplot.in file
+    with open(path / "vplot.in", "w") as file:
         print(system % "", file=file)
 
     # Write the star file
-    with open("star.in", "w") as file:
-        print(star % M, file=file)
+    with open(path / "star.in", "w") as file:
+        print(star % M.value, file=file)
 
     # Run
-    subprocess.call(['vplanet', 'vpl.in'])
-    output = vpl.GetOutput()
-    return output.bodies[0].HZLimRecVenus[-1], \
-        output.bodies[0].HZLimRunaway[-1], \
-        output.bodies[0].HZLimMaxGreenhouse[-1], \
+    output = vplanet.run(path / "vplot.in", clobber=True)
+    return (
+        output.bodies[0].HZLimRecVenus[-1],
+        output.bodies[0].HZLimRunaway[-1],
+        output.bodies[0].HZLimMaxGreenhouse[-1],
         output.bodies[0].HZLimEarlyMars[-1],
+    )
 
 
 def write_in(mass, semi):
     """Write the .in files to disk."""
     nfiles = len(semi)
 
-    # Write the vpl.in file
-    with open("vpl.in", "w") as file:
+    # Write the vplot.in file
+    with open(path / "vplot.in", "w") as file:
         filenames = " ".join(["p%02d.in" % n for n in range(nfiles)])
         print(system % filenames, file=file)
 
     # Write the star file
-    with open("star.in", "w") as file:
-        print(star % mass, file=file)
+    with open(path / "star.in", "w") as file:
+        print(star % mass.value, file=file)
 
     # Write each planet file
     for n in range(nfiles):
-        with open("p%02d.in" % n, "w") as file:
-            print(planet % (n, semi[n]), file=file)
+        with open(path / ("p%02d.in" % n), "w") as file:
+            print(planet % (n, semi[n].value), file=file)
 
 
 def run(mass, semi):
     """Run vplanet and collect the output."""
     write_in(mass, semi)
-    subprocess.call(['vplanet', 'vpl.in'])
-    output = vpl.GetOutput()
-    water = np.zeros(len(output.bodies) - 1)
-    o2 = np.zeros(len(output.bodies) - 1)
+    output = vplanet.run(path / "vplot.in", clobber=True)
+    water = vplanet.Quantity(np.zeros(len(output.bodies) - 1), unit="TO")
+    o2 = vplanet.Quantity(np.zeros(len(output.bodies) - 1), unit="bars")
+    initial_water = vplanet.Quantity(10.0, unit="TO")
     for i, body in enumerate(output.bodies[1:]):
-        water[i] = 10 - body.SurfWaterMass[-1]
+        water[i] = initial_water - body.SurfWaterMass[-1]
         o2[i] = body.OxygenMass[-1]
     return water, o2
 
 
-# Check correct number of arguments
-if (len(sys.argv) != 2):
-    print('ERROR: Incorrect number of arguments.')
-    print('Usage: '+sys.argv[0]+' <pdf | png>')
-    exit(1)
-if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
-    print('ERROR: Unknown file format: '+sys.argv[1])
-    print('Options are: pdf, png')
-    exit(1)
-
 # The variables we're iterating over
-mass = np.linspace(0.08, 0.6, 60)
-hzpos = np.linspace(0, 1, 60)
+mass = vplanet.Quantity(np.linspace(0.08, 0.6, 60), unit="M_sun")
+hzpos = vplanet.Quantity(np.linspace(0, 1, 60))
 
 # The variables we're plotting
-water = np.zeros((len(mass), len(hzpos)))
-o2 = np.zeros((len(mass), len(hzpos)))
-rv = np.zeros(len(mass))
-rg = np.zeros(len(mass))
-mg = np.zeros(len(mass))
-em = np.zeros(len(mass))
+water = vplanet.Quantity(np.zeros((len(mass), len(hzpos))), unit="TO")
+o2 = vplanet.Quantity(np.zeros((len(mass), len(hzpos))), unit="bars")
+rv = vplanet.Quantity(np.zeros(len(mass)), unit="AU")
+rg = vplanet.Quantity(np.zeros(len(mass)), unit="AU")
+mg = vplanet.Quantity(np.zeros(len(mass)), unit="AU")
+em = vplanet.Quantity(np.zeros(len(mass)), unit="AU")
 
 # Create the figure
-fig, ax = pl.subplots(1, 2, figsize=(12, 4))
+fig, ax = plt.subplots(1, 2, figsize=(12, 4))
 fig.subplots_adjust(bottom=0.15)
 
 # Loop over stellar mass
@@ -151,34 +143,47 @@ for i, m in tqdm(enumerate(mass), total=len(mass)):
     water[i, 40:60], o2[i, 40:60] = run(m, semi[40:60])
 
 # Enforce some minima for plotting
-water[water < 0.1] = 0.1
-o2[o2 < 1] = 1
+min_water = vplanet.Quantity(0.1, unit="TO")
+min_o2 = vplanet.Quantity(1, unit="bars")
+water[water < min_water] = min_water
+o2[o2 < min_o2] = min_o2
 
 # Plot water
-im1 = ax[0].imshow(water, cmap=cmap, aspect='auto',
-                   extent=(0, 1, 0.08, 0.6),
-                   norm=colors.LogNorm(vmin=0.1, vmax=10))
+im1 = ax[0].imshow(
+    water.value,
+    cmap=plt.get_cmap("plasma"),
+    aspect="auto",
+    extent=(0, 1, 0.08, 0.6),
+    norm=colors.LogNorm(vmin=0.1, vmax=10),
+)
 cb1 = fig.colorbar(im1, ax=ax[0], ticks=[0.1, 1, 10])
-cb1.ax.set_yticklabels(['0.1', '1', '10'])
+cb1.ax.set_yticklabels(["0.1", "1", "10"])
 
 # Plot oxygen
-im2 = ax[1].imshow(o2, cmap=cmap, aspect='auto',
-                   extent=(0, 1, 0.08, 0.6),
-                   norm=colors.LogNorm(vmin=1, vmax=5000))
+im2 = ax[1].imshow(
+    o2.value,
+    cmap=plt.get_cmap("plasma"),
+    aspect="auto",
+    extent=(0, 1, 0.08, 0.6),
+    norm=colors.LogNorm(vmin=1, vmax=5000),
+)
 cb2 = fig.colorbar(im2, ax=ax[1], ticks=[1, 10, 100, 1000, 5000])
-cb2.ax.set_yticklabels(['1', '10', '100', '1000', '5000'])
+cb2.ax.set_yticklabels(["1", "10", "100", "1000", "5000"])
 
+# HZ limits
 for n in [0, 1]:
-    ax[n].plot((rg - rv) / (em - rv), mass, 'w--')
-    ax[n].plot((mg - rv) / (em - rv), mass, 'w--')
-    ax[n].set_xlabel('Position in Habitable Zone', fontsize=18)
+    ax[n].plot((rg - rv) / (em - rv), mass, "w--", label="RG")
+    ax[n].plot((mg - rv) / (em - rv), mass, "w--", label="MG")
+    ax[n].set_xlabel("Position in Habitable Zone", fontsize=18)
     ax[n].set_xticks((0, 0.25, 0.5, 0.75, 1.0))
     ax[n].set_xticklabels(("RV", "25%", "50%", "75%", "EM"))
-ax[0].set_ylabel(r'Stellar Mass ($\mathrm{M}_\odot$)', fontsize=18)
+
+# Labels
+ax[0].set_ylabel(r"Stellar Mass ($\mathrm{M}_\odot$)", fontsize=18)
 ax[0].set_title("Water Lost (Earth Oceans)", fontsize=18)
+ax[1].set_ylabel(r"Stellar Mass ($\mathrm{M}_\odot$)", fontsize=18)
 ax[1].set_title(r"$\mathrm{O}_2$ Accumulation (bar)", fontsize=18)
 
-if (sys.argv[1] == 'pdf'):
-    fig.savefig('AbioticO2.pdf')
-if (sys.argv[1] == 'png'):
-    fig.savefig('AbioticO2.png')
+# Save
+ext = get_args().ext
+fig.savefig(path / f"AbioticO2.{ext}")

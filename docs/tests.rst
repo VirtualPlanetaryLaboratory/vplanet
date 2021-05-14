@@ -28,30 +28,22 @@ file :code:`test_<TEST_NAME>.py`. This file should follow this basic structure:
 
 .. code-block:: python
 
-    from vplot import GetOutput
-    import subprocess
+    import vplanet
     import numpy as np
-    import os
-    cwd = os.path.dirname(os.path.realpath(__file__))
+    import pathlib
 
+    # Path to this directory
+    path = pathlib.Path(__file__).parents[0].absolute()
 
     def test_something():
         """Brief description of what we're testing."""
-        # Run vplanet in the test directory
-        subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
-
-        # Grab the output from the test direcetory
-        output = GetOutput(path=cwd)
+        # Run vplanet
+        output = vplanet.run(path / "vpl.in")
 
         # Run our comparisons
         assert np.isclose(output.log.final.planet.Eccentricity, 0)
-        assert np.isclose(output.log.final.system.TotEnergy,
-                          output.log.initial.system.TotEnergy)
-        assert np.allclose(output.star.Luminosity,
-                           np.array([0.0672752 , 0.0672752 , 0.0080845...]))
-
-    if __name__ == "__main__":
-        test_something()
+        assert np.isclose(output.log.final.system.TotEnergy, output.log.initial.system.TotEnergy)
+        assert np.allclose(output.star.Luminosity, np.array([0.0672752 , 0.0672752 , 0.0080845...]))
 
 In the example above, we're checking three things: that the final planet
 eccentricity (from the log file) is zero; that the final system energy

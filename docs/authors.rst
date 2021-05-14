@@ -42,6 +42,9 @@ multi-planet script.
 
 **Ludmila Carone** assisted in the development of the MagmOc module.
 
+**Billy Quarles** enabled POISE to read in previously computed orbital and rotational
+data.
+
 **Pramod Gupta** ported VPLanet to Windows 10.
 
 **Diego McDonald** added the Lehmer-Catling model to AtmEsc.

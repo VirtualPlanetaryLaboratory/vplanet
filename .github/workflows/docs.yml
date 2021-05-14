@@ -1,0 +1,51 @@
+name: docs
+
+on:
+  push:
+    branches:
+      - master
+  #pull_request: TODO: Enable me
+  #  branches:
+  #    - master
+
+jobs:
+  tests:
+    name: "Build docs"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        id: setup_python
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: vplanet
+          environment-file: environment.yml
+
+      - name: Install
+        id: install
+        if: steps.setup_python.outcome == 'success'
+        shell: bash -l {0}
+        run: |
+          sudo apt-get install -y doxygen
+          sudo apt-get install -y doxygen-doc
+          python -m pip install -U pip
+          python -m pip install -e .
+
+      - name: Build
+        id: build
+        if: steps.install.outcome == 'success'
+        shell: bash -l {0}
+        run: |
+          cd docs
+          make html
+          cp sphinx_rtd_theme/static/css/theme.css .build/html/_static/css/theme.css
+          touch .build/html/.nojekyll
+
+      - name: Publish
+        uses: JamesIves/github-pages-deploy-action@4.1.2
+        # NOTE: Triggered only when the PR is *merged* (event_name == 'push')
+        if: steps.build.outcome == 'success' && github.event_name == 'push'
+        with:
+          branch: gh-pages
+          folder: docs/.build/html

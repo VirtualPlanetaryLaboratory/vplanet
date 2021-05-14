@@ -16,8 +16,17 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <time.h>
-#include <unistd.h>
 #include <xmmintrin.h>
+
+// Windows-specific
+#ifdef VPLANET_ON_WINDOWS
+#define unlink        _unlink
+#else
+#include <unistd.h>
+#endif
+#ifndef M_PI
+#define M_PI          3.14159265358979323846
+#endif
 
 /*! Top-level declarations */
 

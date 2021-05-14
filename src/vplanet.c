@@ -19,16 +19,19 @@ const double dHUGE = DBL_MAX; // This is the largest possible double value accor
 const double dTINY = 1./DBL_MAX; // This is the smallest possibled double value according to <float.h>
 /* Do not change these values */
 
-/*! \brief Main function. All the magic happens here!
+/*! 
+Actual implementation of the main function; called from in `int main()` below.
+We need this wrapper so we can call `main_impl` from Python.
+
  */
-int main(int argc,char *argv[]) {
+int main_impl(int argc,char *argv[]) {
 #ifdef DEBUG
   //  feenableexcept(FE_INVALID | FE_OVERFLOW);
   _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
   _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_OVERFLOW);
 #endif
 
-  struct timeval start, end;
+  //struct timeval start, end;
 
   /* Fix CPU time calculation someday
   gettimeofday(&start, NULL);
@@ -161,4 +164,9 @@ int main(int argc,char *argv[]) {
   }
   exit(0);
 
+}
+
+
+int main(int argc,char *argv[]) {
+  main_impl(argc, argv);
 }

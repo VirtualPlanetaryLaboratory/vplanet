@@ -229,7 +229,10 @@ double fdRotVel(double dRadius,double dRotRate) {
  @return Body's bulk density
 */
 double fdSphereDensity(double dMass,double dRadius) {
-  return 4*PI*dMass/pow(dRadius,3)/3;
+  double dDensity;
+
+  dDensity = 3*dMass/(4*PI*pow(dRadius,3));
+  return dDensity;
 }
 
 /*

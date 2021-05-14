@@ -1,61 +1,53 @@
-import numpy as np
+import vplanet
+import vplot
 import matplotlib.pyplot as plt
-try:
-    import vplot as vpl
-except:
-    print('Cannot import vplot. Please install vplot.')
+import matplotlib as mpl
+import numpy as np
+import pathlib
 import sys
-import subprocess
 
-# Check correct number of arguments
-if (len(sys.argv) != 2):
-    print('ERROR: Incorrect number of arguments.')
-    print('Usage: '+sys.argv[0]+' <pdf | png>')
-    exit(1)
-if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
-    print('ERROR: Unknown file format: '+sys.argv[1])
-    print('Options are: pdf, png')
-    exit(1)
+# Path hacks
+path = pathlib.Path(__file__).parents[0].absolute()
+sys.path.insert(1, str(path.parents[0]))
+from get_args import get_args
 
-#Runs VPLANET
-print("Running Main Example")
-subprocess.call(['vplanet', 'vpl.in'])
-# Run the simulations
-dir_path = os.path.dirname(os.path.realpath(__file__))
-dirs = ["tides_only"]
+# Run vplanet
+out = vplanet.run(path / "vpl.in")
+out2 = vplanet.run(path / "tides_only" / "vpl.in")
 
-# Run simulations
-for dir in dirs:
-    print ("Running "+dir+".")
-    os.chdir(os.path.join(dir_path,dir))
+plt.figure(figsize=(8.5, 6))
+q = out.comp.SemiMajorAxis * (1 - out.comp.Eccentricity)
+plt.semilogy(
+    out.comp.Time / 1e9,
+    out.comp.SemiMajorAxis,
+    "k--",
+    zorder=100,
+    label="Semi-major axis (with encounters)",
+)
+plt.plot(out.comp.Time / 1e9, q, "k-", zorder=100, label="Perihelion (with encounters)")
 
-    # Run simulation
-    subprocess.call(['vplanet', 'vpl.in'])
-# Return to top-level directory
-os.chdir(dir_path)
+q = out2.comp.SemiMajorAxis * (1 - out2.comp.Eccentricity)
+plt.semilogy(
+    out2.comp.Time / 1e9,
+    out2.comp.SemiMajorAxis,
+    "--",
+    c=vplot.colors.pale_blue,
+    label="Semi-major axis (tide only)",
+)
+plt.plot(
+    out2.comp.Time / 1e9,
+    q,
+    "-",
+    c=vplot.colors.pale_blue,
+    label="Perihelion (tide only)",
+)
 
-out = vplot.GetOutput()
-out2 = vplot.GetOutput('tides_only')
+plt.legend(loc="lower right", ncol=2, fontsize=10)
+plt.ylabel("Distance (au)")
+plt.xlabel("Time (Gyr)")
+plt.ylim(10, 2e4)
 
-plt.style.use('../../vplot/vplot/style/vplot.mplstyle')
+# Save the figure
+ext = get_args().ext
+plt.savefig(path / f"GalaxyEffects.{ext}")
 
-plt.figure(figsize=(8.5,6))
-q = out.comp.SemiMajorAxis*(1-out.comp.Eccentricity)
-plt.semilogy(out.comp.Time/1e9,out.comp.SemiMajorAxis,'k--',zorder=100,label='Semi-major axis (with encounters)')
-plt.plot(out.comp.Time/1e9,q,'k-',zorder=100,label='Perihelion (with encounters)')
-
-q = out2.comp.SemiMajorAxis*(1-out2.comp.Eccentricity)
-plt.semilogy(out2.comp.Time/1e9,out2.comp.SemiMajorAxis,'--',c=vplot.colors.pale_blue,label='Semi-major axis (tide only)')
-plt.plot(out2.comp.Time/1e9,q,'-',c=vplot.colors.pale_blue,label='Perihelion (tide only)')
-
-plt.legend(loc='lower right', ncol=2, fontsize=10)
-plt.ylabel('Distance (au)')
-plt.xlabel('Time (Gyr)')
-plt.yscale('log')
-plt.ylim(10,2e4)
-
-if (sys.argv[1] == 'pdf'):
-    plt.savefig('GalaxyEffects.pdf')
-if (sys.argv[1] == 'png'):
-    plt.savefig('GalaxyEffects.png')
-plt.close()

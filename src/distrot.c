@@ -1,12 +1,8 @@
 /**
    @file distrot.c
-
    @brief Subroutines that control the integration of the obliquity model.
-
    @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
-
    @date July 7 2015
-
 */
 
 /* lines where something like iBody == 0 occurs
@@ -1383,7 +1379,6 @@ void RotateVector(double *v1, double *v2, double theta, int axis) {
 
 /**
 Correction to axial precession rate for eccentricity (and possible additional effects)
-
 @param body Struct containing all body information and variables
 @param iBody Body in question
 @return Correction to precession rate
@@ -1395,7 +1390,6 @@ double fndCentralTorqueSfac(BODY *body, int iBody) {
 
 /**
 Natural axial precession rate due to host star (alpha*cos(obliquity))
-
 @param body Struct containing all body information and variables
 @param iBody Body in question
 @return Axial precession rate (rad/sec)
@@ -1408,7 +1402,6 @@ double fndCentralTorqueR(BODY *body, int iBody) {
 
 /**
 C(p,q) function in obliquity evol equations if RD4 orbital model is used
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1428,7 +1421,6 @@ double fndObliquityCRD4(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 A(p,q) function in obliquity evol equations if RD4 orbital model is used
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1449,7 +1441,6 @@ double fndObliquityARD4(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 B(p,q) function in obliquity evol equations if RD4 orbital model is used
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1470,7 +1461,6 @@ double fndObliquityBRD4(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 C(p,q) function in obliquity evol equations if LL2 orbital model is used
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1482,7 +1472,6 @@ double fndObliquityCLL2(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 A(p,q) function in obliquity evol equations if LL2 orbital model is used
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1494,7 +1483,6 @@ double fndObliquityALL2(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 B(p,q) function in obliquity evol equations if LL2 orbital model is used
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1506,7 +1494,6 @@ double fndObliquityBLL2(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 C(p,q) function in obliquity evol equations if external orbital data is used
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1518,7 +1505,6 @@ double fndObliquityCExt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 A(p,q) function in obliquity evol equations if external orbital data is used
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1530,7 +1516,6 @@ double fndObliquityAExt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 B(p,q) function in obliquity evol equations if external orbital data is used
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1544,7 +1529,6 @@ double fndObliquityBExt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 GR correction to axial precession rate
-
 @param body Struct containing all body information and variables
 @param iaBody Array containing indices of bodies associated with interaction
 @return Correction to axial precession rate d(PrecA)/dt
@@ -1555,7 +1539,6 @@ double fndAxialGRCorrection(BODY *body, int *iaBody) {
 
 /**
 GR correction to derivative of x = sin(obliquity)*cos(preca)
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1567,7 +1550,6 @@ double fndAxialGRDxDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 GR correction to derivative of y = sin(obliquity)*sin(preca)
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1581,7 +1563,6 @@ double fndAxialGRDyDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 Derivative of y = sin(obliquity)*sin(preca) when RD4 orbital model is used
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1606,7 +1587,6 @@ double fndDistRotRD4DyDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 Derivative of x = sin(obliquity)*cos(preca) when RD4 orbital model is used
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1631,7 +1611,6 @@ double fndDistRotRD4DxDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 Derivative of z = cos(obliquity) when RD4 orbital model is used
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1651,7 +1630,6 @@ double fndDistRotRD4DzDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 Derivative of y = sin(obliquity)*sin(preca) when LL2 orbital model is used
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1672,7 +1650,6 @@ double fndDistRotLL2DyDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 Derivative of x = sin(obliquity)*cos(preca) when LL2 orbital model is used
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1693,7 +1670,6 @@ double fndDistRotLL2DxDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 Derivative of z = cos(obliquity) when LL2 orbital model is used
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1705,7 +1681,6 @@ double fndDistRotLL2DzDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 Derivative of dynamical ellipticity when coupled to eqtide and thermint
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1718,7 +1693,6 @@ double fndDistRotDDynEllipDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 Derivative of x = sin(obliquity)*cos(preca) when orbital data is input from external model
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1734,7 +1708,6 @@ double fndDistRotExtDxDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 Derivative of y = sin(obliquity)*sin(preca) when orbital data is input from external model
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -1750,7 +1723,6 @@ double fndDistRotExtDyDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /**
 Derivative of z = cos(obliquity) when orbital data is input from external model
-
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction

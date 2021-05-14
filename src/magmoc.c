@@ -430,7 +430,7 @@ void InitializeOptionsMagmOc(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_WATERMASSATM].iType = 2;
   options[OPT_WATERMASSATM].bMultiFile = 1;
   options[OPT_WATERMASSATM].dNeg = TOMASS; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
-  options[OPT_WATERMASSATM].dDefault = 1;
+  options[OPT_WATERMASSATM].dDefault = TOMASS;
   sprintf(options[OPT_WATERMASSATM].cNeg,"TO");
   fnRead[OPT_WATERMASSATM] = &ReadWaterMassAtm;
 

@@ -58,7 +58,7 @@ setup(
     license="MIT",
     packages=["vplanet"],
     install_requires=[
-        "vplot>=1.0.0",
+        "vplot>=1.0.1",
         "multiplanet>=1.0.0",
         "bigplanet>=1.0.0",
         "vspace>=1.0.2",

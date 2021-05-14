@@ -248,11 +248,9 @@ double fdGetTimeStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
                      }
                    }
                 }
-               // SpiNBody timestep: semi-temporary hack XXX
-             // dt = r^2/v^2
-             // r: Position vector
-             // v: Velocity vector
-             // Inefficient?
+               /* SpiNBody timestep: As x,y,z can cross over 0, the usual
+                  x/(dx/dt) timstep doesn't work. This version compares the orbital
+                  radius to velocity. Probably room for improvement here. */
              } else if (update[iBody].iaType[iVar][iEqn] == 7) {
                if ( (control->Evolve.bSpiNBodyDistOrb==0) || (control->Evolve.bUsingSpiNBody==1) ) {
                  update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](body,system,update[iBody].iaBody[iVar][iEqn]);
@@ -322,7 +320,6 @@ void EulerStep(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,fnUpdat
     for (iVar=0;iVar<update[iBody].iNumVars;iVar++) {
       for (iEqn=0;iEqn<update[iBody].iNumEqns[iVar];iEqn++) {
         if (update[iBody].iaType[iVar][iEqn] == 0)
-          /* XXX This looks broken */
           *(update[iBody].pdVar[iVar]) = update[iBody].daDerivProc[iVar][iEqn];
         else {
           /* Update the parameter in the BODY struct! Be careful! */
@@ -367,9 +364,7 @@ void RungeKutta4Step(BODY *body,CONTROL *control,SYSTEM *system,UPDATE *update,f
       daDerivVar = 0;
       iNumEqns = update[iBody].iNumEqns[iVar];
       for (iEqn=0;iEqn<iNumEqns;iEqn++) {
-        // XXX Set update.dDxDtModule here?
         daDerivVar += iDir*evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
-        //evolve->daTmpVal[0][iBody][iVar] += (*dDt)*iDir*evolve->tmpUpdate[iBody].daDeriv[iVar][iEqn];
       }
       evolve->daDeriv[0][iBody][iVar] = daDerivVar;
     }

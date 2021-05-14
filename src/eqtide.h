@@ -87,6 +87,7 @@
 #define OUT_EQROTPERCONT        1070
 #define OUT_EQROTPER            1072
 #define OUT_EQROTRATE           1074
+#define OUT_EQTIDEPOWER         1074
 
 #define OUT_GAMMAROT            1078
 #define OUT_GAMMAORB            1080

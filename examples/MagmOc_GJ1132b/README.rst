@@ -4,7 +4,7 @@ Magma ocean evolution on GJ 1132 b
 Overview
 --------
 
-Thermal and volatile evolution of GJ 1132 b's mantle and atmosphere during its magma ocean phase. 
+Thermal and volatile evolution of GJ 1132 b's mantle and atmosphere during its magma ocean phase.
 
 =========================   =======================
 **Date**                    08/21/20

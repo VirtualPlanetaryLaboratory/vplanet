@@ -29,8 +29,13 @@ int bPrimary(BODY*,int);
 void CalcHK(BODY*,int);
 void CalcPQ(BODY*,int);
 
+void inv_plane(BODY*,SYSTEM*,int);
 double fdMutualInclination(BODY*,int,int);
 int fbCheckMaxMutualInc(BODY*,EVOLVE*,HALT*,IO*,int,int,int);
+void kepler_eqn(BODY*, int);
+void cross(double*,double*,double*);
+void osc2cart(BODY*, int);
+void cart2osc(BODY*, int);
 
 double fdInstellation(BODY*,int);
 double fdXUVFlux(BODY*,int);

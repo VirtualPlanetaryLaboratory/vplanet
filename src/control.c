@@ -93,7 +93,7 @@ void sort_output(OUTPUT *output, int sorted[]) {
 void InitializeControl(CONTROL *control,MODULE *module) {
   int iBody,iModule;
 
-  control->bOutputLapl=0; // XXX This should become part of EVOLVE -- RUSSELL
+  control->bOutputLapl=0;
 
   control->iMassRad = malloc(control->Evolve.iNumBodies*sizeof(int));
   control->fnForceBehavior = malloc(control->Evolve.iNumBodies*sizeof(fnForceBehaviorModule*));
@@ -253,36 +253,95 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       // Header
 
       // Properties
-      printf("%s\n",options->cName);
-      printf("==================  ====================================\n");
-      printf("**Type**            ");
-      if (options->iType == 0) printf("Bool\n");
-      else if (options->iType == 1) printf("Int\n");
-      else if (options->iType == 2) printf("Double\n");
-      else if (options->iType == 3) printf("String\n");
-      else if (options->iType >= 4) printf("Array\n");
-      if (options->bNeg == 1)
-          printf("**Custom unit**     %s\n", options->cNeg);
-      else
-          printf("**Custom unit**     \n");
-      printf("**Modules**         ");
-      if (options->iModuleBit) PrintModuleList(stdout, options->iModuleBit);
-      else printf("ALL");
-      printf("\n");
-      printf("**Files**           ");
+      printf("+========================================================+\n");
+      printf("| %s",options->cName);
+      int i;
+      for(i = 0; i<(54 - strlen(options->cName)); i++){
+        printf(" ");
+      }
+      printf(" |\n");
+      printf("+=================+======================================+\n");
+
+
+      // if (memcmp(options->cLongDescr,"null",4)) {
+      //   printf("| Overview        |");
+      //   printf("%s                                 |\n",options->cLongDescr);
+      // }else {
+      //   printf("| Description     | %s                            |\n", options->cDescr);
+      // }
+      // printf("+-----------------+--------------------------------------+\n");
+
+      int typelen;
+      char *typestr;
+      if (options->iType == 0) typestr = "Bool";
+      else if (options->iType == 1) typestr = "Int";
+      else if (options->iType == 2) typestr = "Double";
+      else if (options->iType == 3) typestr = "String";
+      else if (options->iType >= 4) typestr = "Array";
+      printf("| Type            | %s",typestr);
+      for(typelen = 0; typelen<(36 - strlen(typestr)); typelen++){
+        printf(" ");
+      }
+      printf(" |\n");
+      printf("+-----------------+--------------------------------------+\n");
+
+      if (options->iType == 2) {
+        printf("| Dimension(s)    | %s", options->cDimension);
+        int dimlen;
+        for(dimlen = 0; dimlen<(36 - strlen(options->cDimension)); dimlen++){
+          printf(" ");
+      }
+      printf(" |\n");
+      printf("+-----------------+--------------------------------------+\n");
+    }
+
+      if (options->bNeg != 0){
+        printf("| Custom unit     | %s", options->cNeg);
+        int unitlen;
+        for(unitlen = 0; unitlen<(36 - strlen(options->cNeg)); unitlen++){
+          printf(" ");
+        }
+        printf(" |\n");
+        printf("+-----------------+--------------------------------------+\n");
+      }
+
+      if (options->iModuleBit){
+        printf("| Modules         | ");
+        PrintModuleList(stdout, options->iModuleBit);
+        printf(" |\n");
+      } else printf("| Modules         | ALL                                  |\n");
+      printf("+-----------------+--------------------------------------+\n");
+
+      printf("| Files           | ");
       PrintFileTypes(options->iFileType);
-      printf("\n");
-      printf("**Default value**   %s\n", options->cDefault);
+      printf(" |\n");
+      printf("+-----------------+--------------------------------------+\n");
+
+      printf("| Default value   | %s", options->cDefault);
+      int valuelen;
+      int strlenvalue = strlen(options->cDefault);
+      for(valuelen = 0; valuelen<(36 - strlenvalue); valuelen++){
+        printf(" ");
+      }
+      printf(" |\n");
+      printf("+-----------------+--------------------------------------+\n");
+
       if (memcmp(options->cValues,"null",4)) {
-        printf("**Allowed values**  %s\n", options->cValues);
-      }
-      printf("**Description**     %s\n", options->cDescr);
+        printf("| Allowed values   | %s", options->cValues);
+        int alvalen;
+        for(alvalen = 0; alvalen<(36 - strlen(options->cValues)); alvalen++){
+          printf(" ");
+        }
+        printf(" |\n");
+        printf("+-----------------+--------------------------------------+\n");
+      } else printf("\n");
+
+      // printf("**Description**     %s\n", options->cDescr);
       // Long description
-      if (memcmp(options->cLongDescr,"null",4)) {
-          printf("\n**Overview**\n");
-          printf("%s\n",options->cLongDescr);
-      }
-      printf("==================  ====================================\n\n");
+      // if (memcmp(options->cLongDescr,"null",4)) {
+          // printf("\n**Overview**\n");
+          // printf("%s\n",options->cLongDescr);
+      //}
     }
   }
 }
@@ -301,25 +360,40 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
       // ** Long help **
 
       // Properties
-      printf("%s\n",output->cName);
-      printf("========================  ====================================\n");
-      if (output->bNeg == 1)
-        printf("**Custom unit**           %s\n", output->cNeg);
-      else
-        printf("**Custom unit**     \n");
-      printf("**Modules**               ");
-      if (output->iModuleBit) {
+      printf("+========================================================+\n");
+      printf("| %s",output->cName);
+      int i;
+      for(i = 0; i<(54 - strlen(output->cName)); i++){
+        printf(" ");
+      }
+      printf(" |\n");
+      printf("+=================+======================================+\n");
+
+      // Long description
+      // if (memcmp(output->cLongDescr,"null",4)) {
+      //     printf("\n**Overview**\n");
+      //     printf("%s\n",output->cLongDescr);
+      // } else {
+      //   printf("**Description**           %s\n", output->cDescr);
+      // }
+
+      if (output->bNeg != 0){
+        printf("| Custom unit     | %s", output->cNeg);
+        int unitlen;
+        for(unitlen = 0; unitlen<(36 - strlen(output->cNeg)); unitlen++){
+          printf(" ");
+        }
+        printf(" |\n");
+        printf("+-----------------+--------------------------------------+\n");
+      }
+
+      if (output->iModuleBit){
+        printf("| Modules         | ");
         PrintModuleList(stdout, output->iModuleBit);
-      } else {
-        printf("ALL");
-      }
+        printf(" |\n");
+      } else printf("| Modules         | ALL                                  |\n");
+      printf("+-----------------+--------------------------------------+\n");
       printf("\n");
-      printf("**Description**           %s\n", output->cDescr);
-      printf("========================  ====================================\n\n");
-        // Long description
-      if (memcmp(output->cLongDescr,"null",4)) {
-        printf("%s\n\n",output->cLongDescr);
-      }
     }
   }
 }
@@ -543,13 +617,13 @@ void fsUnitsLength(int iType,char cUnit[]) {
   else if (iType == 2)
     sprintf(cUnit,"km");
   else if (iType == 3)
-    sprintf(cUnit,"solar");
+    sprintf(cUnit,"Rsun");
   else if (iType == 4)
-    sprintf(cUnit,"Earth");
+    sprintf(cUnit,"Rearth");
   else if (iType == 5)
-    sprintf(cUnit,"Jupiter");
+    sprintf(cUnit,"Rjupiter");
   else if (iType == 6)
-    sprintf(cUnit,"AU");
+    sprintf(cUnit,"au");
   else {
     fprintf(stderr,"ERROR: Unknown iUnitLength %d.\n",iType);
     exit(EXIT_UNITS);
@@ -616,13 +690,11 @@ void fsUnitsMass(int iType,char cUnit[]) {
   else if (iType == 1)
     sprintf(cUnit,"gm");
   else if (iType == 2)
-    sprintf(cUnit,"solar");
+    sprintf(cUnit,"Msun");
   else if (iType == 3)
-    sprintf(cUnit,"Earth");
+    sprintf(cUnit,"Mearth");
   else if (iType == 4)
-    sprintf(cUnit,"Jupiter");
-  else if (iType == 5)
-    sprintf(cUnit,"Neptune");
+    sprintf(cUnit,"Mjupiter");
   else {
     fprintf(stderr,"ERROR: Unknown iUnitMass: %d.\n",iType);
     exit(EXIT_UNITS);
@@ -763,40 +835,40 @@ double fdUnitsEnergyFlux(int iTime,int iMass,int iLength) {
 }
 
 double fdUnitsTemp(double dTemp,int iOldType,int iNewType) {
-  if (iOldType == 0) {
-    if (iNewType == 1) {
+  if (iOldType == KELVIN) {
+    if (iNewType == CELSIUS) {
       /* Kelvin -> Celsius */
       return dTemp - 273;
-    } else if (iNewType == 2) {
+    } else if (iNewType == FARENHEIT) {
       /* Kelvin to Farenheit */
       return (dTemp - 273)*1.8 + 32;
-    } else if (iNewType == 0) {
+    } else if (iNewType == KELVIN) {
       return dTemp;
     } else {
       fprintf(stderr,"ERROR: Unknown Temperature type %d.\n",iNewType);
       exit(EXIT_UNITS);
     }
-  } else if (iOldType == 1) {
-    if (iNewType == 0) {
+  } else if (iOldType == CELSIUS) {
+    if (iNewType == KELVIN) {
       /* Celsius -> Kelvin */
       return dTemp + 273;
-    } else if (iNewType == 2) {
+    } else if (iNewType == FARENHEIT) {
       /* Celsius -> Farenheit */
       return (1.8*dTemp) + 32;
-    } else if (iNewType == 1) {
+    } else if (iNewType == CELSIUS) {
       return dTemp;
     } else {
       fprintf(stderr,"ERROR: Unknown Temperature type %d.\n",iNewType);
       exit(EXIT_UNITS);
     }
-  } else if (iOldType == 2) {
-    if (iNewType == 0) {
+  } else if (iOldType == FARENHEIT) {
+    if (iNewType == KELVIN) {
       /* Farenheit -> Kelvin */
       return 5/9*(dTemp - 32) + 273;
-    } else if (iNewType == 1) {
+    } else if (iNewType == CELSIUS) {
       /* Farenheit -> Celsius */
       return 5/9*(dTemp - 32);
-    } else if (iNewType == 2) {
+    } else if (iNewType == FARENHEIT) {
       return dTemp;
     } else {
       fprintf(stderr,"ERROR: Unknown Temperature type %d.\n",iNewType);

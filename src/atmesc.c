@@ -748,6 +748,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_XFRAC].cName,"dXFrac");
   sprintf(options[OPT_XFRAC].cDescr,"Fraction of planet radius in X-ray/UV");
   sprintf(options[OPT_XFRAC].cDefault,"1");
+  sprintf(options[OPT_XFRAC].cDimension,"nd");
   options[OPT_XFRAC].dDefault = 1.0;
   options[OPT_XFRAC].iType = 2;
   options[OPT_XFRAC].bMultiFile = 1;
@@ -762,6 +763,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH].cName,"dAtmXAbsEffH");
   sprintf(options[OPT_ATMXABSEFFH].cDescr,"Hydrogen X-ray/UV absorption efficiency (epsilon)");
   sprintf(options[OPT_ATMXABSEFFH].cDefault,"0.15");
+  sprintf(options[OPT_ATMXABSEFFH].cDimension,"nd");
   options[OPT_ATMXABSEFFH].dDefault = 0.15;
   options[OPT_ATMXABSEFFH].iType = 2;
   options[OPT_ATMXABSEFFH].bMultiFile = 1;
@@ -774,6 +776,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH2O].cName,"dAtmXAbsEffH2O");
   sprintf(options[OPT_ATMXABSEFFH2O].cDescr,"Water X-ray/UV absorption efficiency (epsilon)");
   sprintf(options[OPT_ATMXABSEFFH2O].cDefault,"0.30");
+  sprintf(options[OPT_ATMXABSEFFH2O].cDimension,"nd");
   options[OPT_ATMXABSEFFH2O].dDefault = 0.15;
   options[OPT_ATMXABSEFFH2O].iType = 2;
   options[OPT_ATMXABSEFFH2O].bMultiFile = 1;
@@ -787,6 +790,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDescr,"Water X-ray/XUV absorption efficiency evolution model");
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDefault,"NONE");
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cValues,"BOLMONT16 NONE");
+  sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDimension,"nd");
   options[OPT_ATMXABSEFFH2OMODEL].iType = 3;
   options[OPT_ATMXABSEFFH2OMODEL].bMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2OMODEL] = &ReadAtmXAbsEffH2OModel;
@@ -799,6 +803,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OXYGENMASS].cName,"dOxygenMass");
   sprintf(options[OPT_OXYGENMASS].cDescr,"The initial oxygen mass in the atmosphere.");
   sprintf(options[OPT_OXYGENMASS].cDefault,"0");
+  sprintf(options[OPT_OXYGENMASS].cDimension,"mass");
   options[OPT_OXYGENMASS].dDefault = 0;
   options[OPT_OXYGENMASS].iType = 2;
   options[OPT_OXYGENMASS].bMultiFile = 1;
@@ -808,6 +813,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_OXYGENMANTLEMASS].cName,"dOxygenMantleMass");
   sprintf(options[OPT_OXYGENMANTLEMASS].cDescr,"Initial Oxygen Mass in the Mantle");
   sprintf(options[OPT_OXYGENMANTLEMASS].cDefault,"0");
+  sprintf(options[OPT_OXYGENMANTLEMASS].cDimension,"mass");
   options[OPT_OXYGENMANTLEMASS].dDefault = 0;
   options[OPT_OXYGENMANTLEMASS].iType = 2;
   options[OPT_OXYGENMANTLEMASS].bMultiFile = 1;
@@ -818,6 +824,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_WATERLOSSMODEL].cDescr,"Water loss and oxygen buildup model");
   sprintf(options[OPT_WATERLOSSMODEL].cDefault,"LBEXACT");
   sprintf(options[OPT_WATERLOSSMODEL].cValues,"LB15 LBEXACT TIAN");
+  sprintf(options[OPT_WATERLOSSMODEL].cDimension,"nd");
   options[OPT_WATERLOSSMODEL].iType = 3;
   options[OPT_WATERLOSSMODEL].bMultiFile = 1;
   fnRead[OPT_WATERLOSSMODEL] = &ReadWaterLossModel;
@@ -934,6 +941,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_THERMTEMP].cName,"dThermTemp");
   sprintf(options[OPT_THERMTEMP].cDescr,"Thermosphere temperature");
   sprintf(options[OPT_THERMTEMP].cDefault,"400");
+  sprintf(options[OPT_THERMTEMP].cDimension,"temperature");
   options[OPT_THERMTEMP].dDefault = 400;
   options[OPT_THERMTEMP].iType = 2;
   options[OPT_THERMTEMP].bMultiFile = 1;
@@ -949,6 +957,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLOWTEMP].cName,"dFlowTemp");
   sprintf(options[OPT_FLOWTEMP].cDescr,"Temperature of the hydrodynamic flow");
   sprintf(options[OPT_FLOWTEMP].cDefault,"400");
+  sprintf(options[OPT_FLOWTEMP].cDimension,"temperature");
   options[OPT_FLOWTEMP].dDefault = 400;
   options[OPT_FLOWTEMP].iType = 2;
   options[OPT_FLOWTEMP].bMultiFile = 1;
@@ -957,6 +966,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_JEANSTIME].cName,"dJeansTime");
   sprintf(options[OPT_JEANSTIME].cDescr,"Time at which flow transitions to Jeans escape");
   sprintf(options[OPT_JEANSTIME].cDefault,"1 Gyr");
+  sprintf(options[OPT_JEANSTIME].cDimension,"time");
   options[OPT_JEANSTIME].dDefault = 1.e9 * YEARSEC;
   options[OPT_JEANSTIME].iType = 0;
   options[OPT_JEANSTIME].bMultiFile = 1;
@@ -967,6 +977,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PRESXUV].cName,"dPresXUV");
   sprintf(options[OPT_PRESXUV].cDescr,"Pressure at base of thermosphere");
   sprintf(options[OPT_PRESXUV].cDefault,"5 Pa");
+  sprintf(options[OPT_PRESXUV].cDimension,"pressure");
   options[OPT_PRESXUV].dDefault = 5.0;
   options[OPT_PRESXUV].iType = 2;
   options[OPT_PRESXUV].bMultiFile = 1;
@@ -975,6 +986,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMGASCONST].cName,"dAtmGasConst");
   sprintf(options[OPT_ATMGASCONST].cDescr,"Atmospheric Gas Constant");
   sprintf(options[OPT_ATMGASCONST].cDefault,"4124");
+  sprintf(options[OPT_ATMGASCONST].cDimension,"energy/temperature/mass");
   options[OPT_ATMGASCONST].dDefault = 4124.0;
   options[OPT_ATMGASCONST].iType = 2;
   options[OPT_ATMGASCONST].bMultiFile = 1;
@@ -982,6 +994,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_FXUV].cName,"dFXUV");
   sprintf(options[OPT_FXUV].cDescr,"XUV flux at the body's orbit");
+  sprintf(options[OPT_FXUV].cDimension,"energyflux");
   options[OPT_FXUV].iType = 2;
   options[OPT_FXUV].bMultiFile = 1;
   fnRead[OPT_FXUV] = &ReadFXUV;
@@ -1469,7 +1482,6 @@ void AssignAtmEscDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVa
   if (body[iBody].dEnvelopeMass > 0) {
     // Set derivative depending on regime
     // Energy-limited (or if, transition start as energy-limited)
-    // XXX pick regime if bAtmEscAuto before force behavior? -- do I know FXUV now?
     if(body[iBody].bUseEnergyLimited || body[iBody].bAtmEscAuto) {
       body[iBody].iHEscapeRegime = ATMESC_ELIM;
       fnUpdate[iBody][update[iBody].iEnvelopeMass][0]     = &fdDEnvelopeMassDt;
@@ -1610,7 +1622,7 @@ void VerifyAtmEsc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTP
     body[iBody].dScaleHeight = -1;
     body[iBody].dPresSurf = -1;
   }
-  // XXX Should include additional checks for PROXCEN and NONE
+  // Should there be additional checks for PROXCEN and NONE???
 
 
   if (body[iBody].dSurfaceWaterMass > 0) {
@@ -2286,8 +2298,8 @@ void WriteThermTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UN
    *dTmp *= output->dNeg;
    strcpy(cUnit,output->cNeg);
  } else {
-  //*dTmp /= fdUnitsTemp(*dTmp,0,units->iTemp);
-  // Only K allowed until units can be converted XXX
+   // System units are Kelvins
+  *dTmp = fdUnitsTemp(*dTmp,KELVIN,units->iTemp);
   fsUnitsTemp(0,cUnit);
  }
 }
@@ -2312,8 +2324,8 @@ void WriteFlowTemp(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNI
    *dTmp *= output->dNeg;
    strcpy(cUnit,output->cNeg);
  } else {
-   // *dTmp /= fdUnitsTemp(*dTmp,0,units->iTemp);
-   // Only K allowed until units can be converted XXX
+   // System units are Kelvins
+   *dTmp = fdUnitsTemp(*dTmp,KELVIN,units->iTemp);
    fsUnitsTemp(units->iTemp,cUnit);
  }
 }
@@ -2584,7 +2596,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_PLANETRADIUS].cName,"PlanetRadius");
   sprintf(output[OUT_PLANETRADIUS].cDescr,"Planet radius");
-  sprintf(output[OUT_PLANETRADIUS].cNeg,"Earth radii");
+  sprintf(output[OUT_PLANETRADIUS].cNeg,"Rearth");
   output[OUT_PLANETRADIUS].bNeg = 1;
   output[OUT_PLANETRADIUS].dNeg = 1./REARTH;
   output[OUT_PLANETRADIUS].iNum = 1;
@@ -2641,7 +2653,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_ENVELOPEMASS].cName,"EnvelopeMass");
   sprintf(output[OUT_ENVELOPEMASS].cDescr,"Envelope mass");
-  sprintf(output[OUT_ENVELOPEMASS].cNeg,"Earth");
+  sprintf(output[OUT_ENVELOPEMASS].cNeg,"Mearth");
   output[OUT_ENVELOPEMASS].bNeg = 1;
   output[OUT_ENVELOPEMASS].dNeg = 1./MEARTH;
   output[OUT_ENVELOPEMASS].iNum = 1;
@@ -2650,7 +2662,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_PLANETRADXUV].cName,"RadXUV");
   sprintf(output[OUT_PLANETRADXUV].cDescr,"XUV radius separating hydro. dyn. escape and equilibrium");
-  sprintf(output[OUT_PLANETRADXUV].cNeg,"Earth Radii");
+  sprintf(output[OUT_PLANETRADXUV].cNeg,"Rearth");
   output[OUT_PLANETRADXUV].bNeg = 1;
   output[OUT_PLANETRADXUV].dNeg = 1./REARTH;
   output[OUT_PLANETRADXUV].iNum = 1;
@@ -2660,7 +2672,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_BONDIRADIUS].cName,"BondiRadius");
   sprintf(output[OUT_BONDIRADIUS].cDescr,"Bondi Radius");
   output[OUT_BONDIRADIUS].bNeg = 1;
-  sprintf(output[OUT_BONDIRADIUS].cNeg,"Earth Radii");
+  sprintf(output[OUT_BONDIRADIUS].cNeg,"Rearth");
   output[OUT_BONDIRADIUS].dNeg = 1./REARTH;
   output[OUT_BONDIRADIUS].iNum = 1;
   output[OUT_BONDIRADIUS].iModuleBit = ATMESC;
@@ -2669,7 +2681,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_ROCHERADIUS].cName,"RocheRadius");
   sprintf(output[OUT_ROCHERADIUS].cDescr,"Roche Lobe Radius");
   output[OUT_ROCHERADIUS].bNeg = 1;
-  sprintf(output[OUT_ROCHERADIUS].cNeg,"Earth Radii");
+  sprintf(output[OUT_ROCHERADIUS].cNeg,"Rearth");
   output[OUT_ROCHERADIUS].dNeg = 1./REARTH;
   output[OUT_ROCHERADIUS].iNum = 1;
   output[OUT_ROCHERADIUS].iModuleBit = ATMESC;
@@ -2677,7 +2689,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_DENVMASSDT].cName,"DEnvMassDt");
   sprintf(output[OUT_DENVMASSDT].cDescr,"Envelope Mass Loss Rate");
-  sprintf(output[OUT_DENVMASSDT].cNeg,"Earth Masses/Myr");
+  sprintf(output[OUT_DENVMASSDT].cNeg,"Mearth/Myr");
   output[OUT_DENVMASSDT].bNeg = 1;
   output[OUT_DENVMASSDT].dNeg = (YEARSEC*1e6)/MEARTH;
   output[OUT_DENVMASSDT].iNum = 1;
@@ -2731,7 +2743,7 @@ void InitializeOutputAtmEsc(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_RADSOLID].cName,"RadSolid");
   sprintf(output[OUT_RADSOLID].cDescr,"Radius to the solid surface");
-  sprintf(output[OUT_RADSOLID].cNeg,"Earth Radii");
+  sprintf(output[OUT_RADSOLID].cNeg,"Rearth");
   output[OUT_RADSOLID].bNeg = 1;
   output[OUT_RADSOLID].dNeg = 1./REARTH;
   output[OUT_RADSOLID].iNum = 1;

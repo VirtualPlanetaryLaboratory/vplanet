@@ -444,7 +444,9 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
     dest[iBody].dZobl = src[iBody].dZobl;
     dest[iBody].dRotRate = src[iBody].dRotRate;
     dest[iBody].dAge = src[iBody].dAge;
-    dest[iBody].dEcc = src[iBody].dEcc; // XXX iBody=0 could be in galhabit?
+    // iBody=0 could be in galhabit, so dEcc is overloaded
+    // If every run DistOrb w/GalHabit, there could be trouble
+    dest[iBody].dEcc = src[iBody].dEcc;
     dest[iBody].dPrecA = src[iBody].dPrecA;
     dest[iBody].dObliquity = src[iBody].dObliquity;
     dest[iBody].dLostAngMom = src[iBody].dLostAngMom;
@@ -678,7 +680,7 @@ double fdImK2Man(BODY *body,int iBody) {
 }
 
 /** Calculate total k_2 and Im(k_2) for a body. This value depends on which tidal
-  model is called, and it the properties depend on the internal properties.  XXX Cut?
+  model is called, and it the properties depend on the internal properties.
 void AssignTidalProperties(BODY *body,EVOLVE *evolve,int iBody) {
   if (body[iBody].bThermint) {
     // The planet's tidal response depends on mantle properties
@@ -761,7 +763,7 @@ int fiGetLowerBoundProximaCen(double dVal, const double *daArr, int iDim){
   linearly interpolates over data, given indices of lower bounds on grid xi, yi
   and normalized distances to the interpolation point dx, dy.
 
-  XXX What are these arguments?
+ What are these arguments?
 */
 double fdProximaCenBiLinear(int iALEN, double const data_lo[PROXIMACEN_ALEN], double const data_hi[PROXIMACEN_ALEN], int xi, int yi, double dx, double dy) {
   double C0, C1, C;
@@ -783,7 +785,7 @@ double fdProximaCenBiLinear(int iALEN, double const data_lo[PROXIMACEN_ALEN], do
 For use with `fdProximaCenStellar()` to interpolate stellar properties
 (temperature, radius, luminosity) from a grid.
 
-  XXX What are these arguments?
+  What are these arguments?
 */
 double fdProximaCenInterpolate(int iALEN, int iMLEN, double const xarr[PROXIMACEN_ALEN], double const yarr[PROXIMACEN_MLEN], double const data_lo[PROXIMACEN_ALEN], double const data_hi[PROXIMACEN_ALEN], double A, double M, int *iError){
   double dx,dy;
@@ -856,7 +858,7 @@ DATA FROM Boyajian+12; SECOND ROW FROM Demory+09 (direct measurements)
 # 0.19      0.1410 ± 0.0070   0.00155 ± 0.00002     3054 ± 79     0.118           2.83E−04
                               0.00165 ± 0.00015     3098 ± 56     0.123 ± 0.006
 
-  XXX What are these arguments?
+  What are these arguments?
 
 */
 double fdProximaCenStellar(int iParam, double A, double M, int *iError) {
@@ -910,7 +912,7 @@ int fiGetLowerBoundProximaCenB(double dVal, const double *daArr, int iDim){
   For use with `fdProximaCenBRadius()` to interpolate the radius of
   Proxima Cen b from a grid, assuming it has a gaseous composition
 
-  XXX What are the arguments?
+  What are the arguments?
 */
 double fdProximaCenBLinear(int xi, int yi, double dx, double dy) {
   // Linearly interpolate over data, given indices of lower bounds on grid xi, yi
@@ -939,7 +941,7 @@ Here I'm assuming a mass of 1.27 MEARTH and a solid body radius of 1.074 REARTH.
 I'm using the Lopez+12 grids from Luger et al. (2015)
 and smoothing over sharp (presumably) numerical features.
 
-  XXX What are the arguments?
+  What are the arguments?
 */
 double fdProximaCenBRadius(double C, double A, double M){
   double dx, dy;
@@ -972,7 +974,7 @@ double fdProximaCenBRadius(double C, double A, double M){
 /**
   Planet radius evolution from the Lopez et al. (2012) evolution grids.
 
-  XXX What are the arguments?
+  What are the arguments?
 
 */
 double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int iMetal) {
@@ -1101,7 +1103,7 @@ void fvMatrixVectorMult(const int mat[16][16], const double *vec, double *result
 /**
   Helper function for interpolating Baraffe grid
 
-  XXX What are the arguments?
+  What are the arguments?
 
 */
 int fiGetLowerBound(double val, const double *arr, int dim){
@@ -1127,7 +1129,7 @@ int fiGetLowerBound(double val, const double *arr, int dim){
 /**
   Helper function for interpolating Baraffe grid
 
-  XXX What are the arguments?
+  What are the arguments?
 */
 double fdBaraffeBiLinear(int iMLEN, int iALEN, double const data[STELLAR_BAR_MLEN][STELLAR_BAR_ALEN], int xi, int yi, double dx, double dy) {
   // Linearly interpolate over data, given indices of lower bounds on grid xi, yi
@@ -1150,7 +1152,7 @@ double fdBaraffeBiLinear(int iMLEN, int iALEN, double const data[STELLAR_BAR_MLE
 /**
   Helper function for interpolating Baraffe grid
 
-  XXX What are the arguments?
+  What are the arguments?
 */
 double fdBaraffeBiCubic(int iMLEN, int iALEN, double const data[STELLAR_BAR_MLEN][STELLAR_BAR_ALEN], int xi, int yi, double dx, double dy) {
   double dvCoeff[16];
@@ -1200,7 +1202,7 @@ double fdBaraffeBiCubic(int iMLEN, int iALEN, double const data[STELLAR_BAR_MLEN
 /**
   Helper function for interpolating Baraffe grid
 
-  XXX What are the arguments?
+  What are the arguments?
 
 */
 double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[STELLAR_BAR_MLEN], double const yarr[STELLAR_BAR_ALEN], double const data[STELLAR_BAR_MLEN][STELLAR_BAR_ALEN], double M, double A, int iOrder, int *iError){
@@ -1289,7 +1291,7 @@ double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[STELLAR_BAR_
   Returns the stellar T, L, or R by interpolating over the Baraffe grid
   using either a bilinear (iOrder = 1) or a bicubic (iOrder = 3) interpolation.
 
-  XXX What are the arguments?
+  What are the arguments?
 */
 double fdBaraffe(int iParam, double A, double M, int iOrder, int *iError) {
   double res;
@@ -1368,7 +1370,7 @@ void fdHabitableZoneKopparapu2013(BODY *body,int iNumBodies,
   dCoeffD[4] = -4.3896e-16;
   dCoeffD[5] = -3.8282e-16;
 
-  // Assume central body's effective temperature? XXX Better way?
+  // Assume central body's effective temperature? Is there a Better way?
   dT_star = body[0].dTemperature - 5700;
 
   for (iLimit=0;iLimit<6;iLimit++) {

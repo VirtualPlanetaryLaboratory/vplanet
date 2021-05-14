@@ -32,10 +32,6 @@ int fiNumHalts(HALT *halt,MODULE *module,int iBody) {
     iNumHalts++;
   if (halt->bPosDeDt)
     iNumHalts++;
-/* XXX not implemented yet.
-  if (halt->dMinIntEn > 0)
-    iNumHalts++;
-*/
 
   for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
     module->fnCountHalts[iBody][iModule](halt,&iNumHalts);
@@ -77,8 +73,7 @@ int HaltMinObl(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
 /* Maximum Eccentricity? */
 int fniHaltMaxEcc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
       fnUpdateVariable ***fnUpdate,int iBody) {
-  // XXX is EccSq defined here
-/* Halt simulation if body reaches maximum orbital eccentricity. */
+  /* Halt simulation if body reaches maximum orbital eccentricity. */
   if (sqrt(pow(body[iBody].dHecc,2)+pow(body[iBody].dKecc,2)) >= halt->dMaxEcc) {
     if (io->iVerbose >= VERBPROG) {
       printf("HALT: e[%d] = ",iBody);
@@ -127,7 +122,7 @@ int HaltMinSemi(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,
   return 0;
 }
 
-/* Minimum Internal Power? XXX Rewrite with radheat and thermint written
+/* Minimum Internal Power? Rewrite with radheat and thermint written
 int HaltMinIntEn(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
   if (body[iBody].dIntEn <= halt->dMinIntEn) {
     if (io->iVerbose >= VERBPROG) {
@@ -307,7 +302,7 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
       control->fnHalt[iBody][iHaltNow++] = &HaltMinEcc;
     if (control->Halt[iBody].bPosDeDt)
       control->fnHalt[iBody][iHaltNow++] = &HaltPosDeccDt;
-    /* XXX Should be changed with thermint completed
+    /* Should be changed with thermint completed
        if (control->Halt[iBody].dMinIntEn > 0)
        control->fnHalt[iBody][iHaltNow++] = &HaltMinIntEn;
     */
@@ -315,17 +310,14 @@ void VerifyHalts(BODY *body,CONTROL *control,MODULE *module,OPTIONS *options) {
     for (iModule=0;iModule<module->iNumModules[iBody];iModule++)
       module->fnVerifyHalt[iBody][iModule](body,control,options,iBody,&iHaltNow);
 
-    /* XXX This needs to become VerifyMultiBodyHalts, as should only
-     be applied if DISTORB called. This problem is hard! */
-
-    if (iHaltMaxEcc) {
-      if (iBody != iHaltMaxEcc) {
-         control->Halt[iBody].dMaxEcc = control->Halt[iHaltMaxEcc].dMaxEcc;
-         control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxEcc;
-      }
-    }
-  }
-}
+       if (iHaltMaxEcc) {
+         if (iBody != iHaltMaxEcc) {
+           control->Halt[iBody].dMaxEcc = control->Halt[iHaltMaxEcc].dMaxEcc;
+           control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxEcc;
+       }
+     }
+   }
+ }
 
 /************** Check for Halts *********************/
 

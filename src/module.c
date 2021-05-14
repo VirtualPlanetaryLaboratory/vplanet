@@ -736,108 +736,28 @@ void VerifyModuleMultiRadheatThermint(BODY *body,UPDATE *update,CONTROL *control
 }
 
 void VerifyModuleMultiEqtideThermint(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
-  int iEqtide;
 
-  /* I think all this is deprecated
-  // Eqtide, not thermint
-  if (body[iBody].bEqtide) {
-    if (!body[iBody].bThermint) {
-       Eqtide called, but not thermint. Make sure that bOceanTides=0 and
-         check if dTidalQOcean and dK2Ocean are set. These should only be set if THERMINT
-         selected.
-      if (body[iBody].bOceanTides) {
-        if (control->Io.iVerbose >= VERBINPUT)
-          fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_OCEANTIDES].cName);
-        LineExit(files->Infile[iBody+1].cIn,options[OPT_OCEANTIDES].iLine[iBody+1]);
-      }
-      if (options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1) {
-        if (control->Io.iVerbose >= VERBINPUT)
-          fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_TIDALQOCEAN].cName);
-        LineExit(files->Infile[iBody+1].cIn,options[OPT_TIDALQOCEAN].iLine[iBody+1]);
-      }
-      if (options[OPT_K2OCEAN].iLine[iBody+1] > -1) {
-        if (control->Io.iVerbose >= VERBINPUT)
-          fprintf(stderr,"ERROR: %s set, but module THERMINT not selected.\n",options[OPT_K2OCEAN].cName);
-        LineExit(files->Infile[iBody+1].cIn,options[OPT_K2OCEAN].iLine[iBody+1]);
-      }
+      // Initialize mantle tidal power
+      body[iBody].dTidalPowMan = 0;
 
-      // Set Im(k_2) here
-      body[iBody].dImK2=body[iBody].dK2/body[iBody].dTidalQ;
-
-      // No ocean contribution if not using thermint (still assign a default value)
-      // XXX No! Use input values David
-      body[iBody].dImK2Ocean = 1.0/30.0;
-      body[iBody].dK2Ocean = 1.0;
-      body[iBody].dTidalQOcean = 30.0;
-
-      This should now be deprecated
-      // Now set the "Man" functions as the WriteTidalQ uses them
-      // This ensures that the write function works
-      body[iBody].dImK2Man = body[iBody].dImK2;
-      body[iBody].dK2Man = body[iBody].dK2;
-
-    } else { // Thermint and Eqtide called
-
-      // If dTidalQ or K2 set, ignore/warn user as thermint computes these
-      if (options[OPT_TIDALQ].iLine[iBody+1] > -1) {
-        if (control->Io.iVerbose >= VERBINPUT)
-          fprintf(stderr,"WARNING: %s set, but module THERMINT computes it.  Inputted value ignored.\n",options[OPT_TIDALQ].cName);
-      }
-      if (options[OPT_K2].iLine[iBody+1] > -1) {
-        if (control->Io.iVerbose >= VERBINPUT)
-          fprintf(stderr,"WARNING: %s set, but module THERMINT computes it.  Inputted value ignored.\n",options[OPT_K2].cName);
-      }
-
-       When Thermint and Eqtide are called together, care must be taken as
-         Im(k_2) must be known in order to calculate TidalZ. As the individual
-         module PropsAux are called prior to PropsAuxMulti, we must call the
-         "PropsAuxEqtide" function after Im(k_2) is called. Thus, we replace
-         "PropsAuxEqtide" with PropsAuxNULL and call "PropsAuxEqtide" in
-         PropsAuxEqtideThermint.
-
-      // If using ocean tides...
-      //Convert Q_ocean -> Im(k2)_ocean
-      if(body[iBody].bOceanTides)
-      {
-        // Make sure both dK2Ocean AND dTidalQOcean are set, otherwise exit
-        if(!(options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1 && options[OPT_K2OCEAN].iLine[iBody+1] > -1))
-        {
-          fprintf(stderr,"ERROR: %s and/or %s not set.\n",options[OPT_OCEANTIDES].cName,options[OPT_K2OCEAN].cName);
-          fprintf(stderr,"Must both be set when using EQTIDE and THERMINT with bOceanTides == True.\n");
-          exit(EXIT_INPUT);
-        }
-
-        // Otherwise, we're good! set ImK2 for the ocean component
-        body[iBody].dImK2Ocean = body[iBody].dK2Ocean/body[iBody].dTidalQOcean;
-      }
-      // If you're not using bOceanTides and Ocean params are set, exit
-      else
-      {
-        if(options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1 || options[OPT_K2OCEAN].iLine[iBody+1] > -1)
-        {
-          if (control->Io.iVerbose >= VERBINPUT)
-          {
-            fprintf(stderr,"ERROR: %s or %s set, but bOceanTides == 0.\n",options[OPT_TIDALQOCEAN].cName,options[OPT_K2OCEAN].cName);
-            exit(EXIT_INPUT);
-          }
-        }
-
-        // No ocean contribution
-        body[iBody].dImK2Ocean = 0.0;
-        body[iBody].dK2Ocean = 0.0;
-        body[iBody].dTidalQOcean = -1.0;
-      }
-
-      iEqtide = fiGetModuleIntEqtide(module,iBody);
-      control->fnPropsAux[iBody][iEqtide] = &PropsAuxNULL;
-      */
       if (body[iBody].bEqtide && body[iBody].bThermint) {
+          if (options[OPT_TIDALQ].iLine[iBody+1] != -1) {
+            if (control->Io.iVerbose >= VERBINPUT) {
+              fprintf(stderr,"INFO: Option %s set, but module ThermInt also selected. The tidal Q will be calculated by Thermint.\n",
+                options[OPT_TIDALQ].cName);
+            }
+          }
+
+          if (options[OPT_K2].iLine[iBody+1] != -1) {
+            if (control->Io.iVerbose >= VERBINPUT) {
+              fprintf(stderr,"INFO: Option %s set, but module ThermInt also selected. ",
+                options[OPT_K2].cName);
+              fprintf(stderr,"The Love number k_2 will be calculated by Thermint.\n");
+            }
+          }
+
         control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxEqtideThermint;
       }
-/*
-    }
-  }
-*/
 }
 
 void VerifyModuleMultiEqtideDistOrb(BODY *body,UPDATE *update,CONTROL *control,FILES *files,MODULE *module,OPTIONS *options,int iBody,int *iModuleProps,int *iModuleForce) {
@@ -991,13 +911,16 @@ void VerifyModuleMultiAtmescEqtide(BODY *body,UPDATE *update,CONTROL *control,FI
         // they better have defined k2Ocean, tidalqocean, dSurfaceWaterMass
         // XXX Use option.cName instead of, e.g. bOceanTides
         if (options[OPT_TIDALQOCEAN].iLine[iBody+1] == -1) {
-          fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_TIDALQOCEAN].cName);
+          fprintf(stderr, "ERROR: if %s == 1, must specify %s.\n",
+              options[OPT_OCEANTIDES].cName,options[OPT_TIDALQOCEAN].cName);
           exit(EXIT_INPUT);
         } else if (options[OPT_SURFACEWATERMASS].iLine[iBody+1] == -1) {
-          fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_SURFACEWATERMASS].cName);
+          fprintf(stderr, "ERROR: if %s == 1, must specify %s.\n",
+              options[OPT_OCEANTIDES].cName,options[OPT_SURFACEWATERMASS].cName);
           exit(EXIT_INPUT);
         } else if (options[OPT_K2OCEAN].iLine[iBody+1] == -1) {
-          fprintf(stderr, "ERROR: if bOceanTides == 1, must specify %s.\n",options[OPT_K2OCEAN].cName);
+          fprintf(stderr, "ERROR: if %s == 1, must specify %s.\n",
+              options[OPT_OCEANTIDES].cName,options[OPT_K2OCEAN].cName);
           exit(EXIT_INPUT);
         }
       }
@@ -1503,21 +1426,6 @@ void PropsAuxEqtideThermint(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int 
 
   body[iBody].dImK2 = fdImK2Total(body,iBody);
 }
-
-/** Calculate auxiliary properties if AtmEsc, EqTide and ThermInt are called. At present
-  this funciton only needs to calculate Im(k_2), possibly including the effects
-  of an ocean and envelope.
-void PropsAuxAtmescEqtideThermint(BODY *body,EVOLVE *evolve,UPDATE *update,int iBody) {
-  XXX Is this necessary?
-
-}
-*/
-
-/* This does not seem to be necessary XXX Russell
-void PropertiesDistOrbDistRot(BODY *body,UPDATE *update,int iBody) {
-  body[iBody].dEccSq = body[iBody].dHecc*body[iBody].dHecc + body[iBody].dKecc*body[iBody].dKecc;
-}
-*/
 
 void PropsAuxRadheatThermint(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
   body[iBody].dRadPowerCore = fdRadPowerCore(update,iBody);

@@ -560,7 +560,8 @@ void ReadOLRModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,\
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,\
                     control->Io.iVerbose);
-    //CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
+    //CheckDuplication(files,options,files->Infile[iFile].cIn,
+    // lTmp,control->Io.iVerbose);
     if (!memcmp(sLower(cTmp),"wk97",3)) {
       body[iFile-1].iOLRModel = WK97;
     } else if (!memcmp(sLower(cTmp),"hm16",3)) {
@@ -1141,6 +1142,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PLANCKA].cName,"dPlanckA");
   sprintf(options[OPT_PLANCKA].cDescr,"Constant 'A' used in OLR calculation");
   sprintf(options[OPT_PLANCKA].cDefault,"203.3");
+  sprintf(options[OPT_PLANCKA].cDimension,"nd");
   options[OPT_PLANCKA].dDefault = 203.3;
   options[OPT_PLANCKA].iType = 2;
   options[OPT_PLANCKA].bMultiFile = 1;
@@ -1150,6 +1152,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PLANCKB].cDescr,"Sensitivity 'B' used in"\
                                       " OLR calculation");
   sprintf(options[OPT_PLANCKB].cDefault,"2.09");
+  sprintf(options[OPT_PLANCKB].cDimension,"nd");
   options[OPT_PLANCKB].dDefault = 2.09;
   options[OPT_PLANCKB].iType = 2;
   options[OPT_PLANCKB].bMultiFile = 1;
@@ -1158,6 +1161,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ICEALBEDO].cName,"dIceAlbedo");
   sprintf(options[OPT_ICEALBEDO].cDescr,"Albedo of ice");
   sprintf(options[OPT_ICEALBEDO].cDefault,"0.6");
+  sprintf(options[OPT_ICEALBEDO].cDimension,"nd");
   options[OPT_ICEALBEDO].dDefault = 0.6;
   options[OPT_ICEALBEDO].iType = 2;
   options[OPT_ICEALBEDO].bMultiFile = 1;
@@ -1166,6 +1170,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SURFALBEDO].cName,"dSurfAlbedo");
   sprintf(options[OPT_SURFALBEDO].cDescr,"Albedo of (ice-free) surface");
   sprintf(options[OPT_SURFALBEDO].cDefault,"0.3");
+  sprintf(options[OPT_SURFALBEDO].cDimension,"nd");
   options[OPT_SURFALBEDO].dDefault = 0.3;
   options[OPT_SURFALBEDO].iType = 2;
   options[OPT_SURFALBEDO].bMultiFile = 1;
@@ -1175,6 +1180,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TGLOBALEST].cDescr,"Estimate of initial global"\
                                          " temperature");
   sprintf(options[OPT_TGLOBALEST].cDefault,"14.85");
+  sprintf(options[OPT_TGLOBALEST].cDimension,"temperature");
   options[OPT_TGLOBALEST].dDefault = 14.85;
   options[OPT_TGLOBALEST].iType = 2;
   options[OPT_TGLOBALEST].bMultiFile = 1;
@@ -1183,6 +1189,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_PCO2].cName,"dpCO2");
   sprintf(options[OPT_PCO2].cDescr,"Partial pressure of CO2 in atmosphere");
   sprintf(options[OPT_PCO2].cDefault,"3.3e-4");
+  sprintf(options[OPT_PCO2].cDimension,"nd");
   options[OPT_PCO2].dDefault = 3.3e-4;
   options[OPT_PCO2].iType = 2;
   options[OPT_PCO2].bMultiFile = 1;
@@ -1192,6 +1199,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_CALCAB].cDescr,"Calculate A and B in OLR function, from"\
                                      " (T & pCO2)");
   sprintf(options[OPT_CALCAB].cDefault,"0");
+  sprintf(options[OPT_CALCAB].cDimension,"nd");
   options[OPT_CALCAB].dDefault = 0;
   options[OPT_CALCAB].iType = 0;
   options[OPT_CALCAB].bMultiFile = 1;
@@ -1200,6 +1208,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DIFFUSION].cName,"dDiffusion");
   sprintf(options[OPT_DIFFUSION].cDescr,"Heat diffusion coefficient");
   sprintf(options[OPT_DIFFUSION].cDefault,"0.44");
+  sprintf(options[OPT_DIFFUSION].cDimension,"nd");
   options[OPT_DIFFUSION].dDefault = 0.44;
   options[OPT_DIFFUSION].iType = 2;
   options[OPT_DIFFUSION].bMultiFile = 1;
@@ -1226,6 +1235,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FIXICELAT].cDescr,"Fixes ice line latitude to a set"\
                                         " value");
   sprintf(options[OPT_FIXICELAT].cDefault,"None");
+  sprintf(options[OPT_FIXICELAT].cDimension,"nd");
   options[OPT_FIXICELAT].dDefault = 0;
   options[OPT_FIXICELAT].iType = 2;
   options[OPT_FIXICELAT].bMultiFile = 1;
@@ -1252,6 +1262,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HEATCAPANN].cDescr,"Surface heat capacity in annual"\
                                          " model");
   sprintf(options[OPT_HEATCAPANN].cDefault,"0.2");
+  sprintf(options[OPT_HEATCAPANN].cDimension,"xxx");
   options[OPT_HEATCAPANN].dDefault = 0.2;
   options[OPT_HEATCAPANN].iType = 2;
   options[OPT_HEATCAPANN].bMultiFile = 1;
@@ -1261,6 +1272,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ICEDEPRATE].cDescr,"Deposition rate of ice/snow to form"\
                                          " ice sheets");
   sprintf(options[OPT_ICEDEPRATE].cDefault,"2.9e-5");
+  sprintf(options[OPT_ICEDEPRATE].cDimension,"xxx");
   options[OPT_ICEDEPRATE].dDefault = 2.9e-5;
   options[OPT_ICEDEPRATE].iType = 2;
   options[OPT_ICEDEPRATE].bMultiFile = 1;
@@ -1277,6 +1289,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_INITICELAT].cName,"dInitIceLat");
   sprintf(options[OPT_INITICELAT].cDescr,"Sets initial ice sheet latitude");
   sprintf(options[OPT_INITICELAT].cDefault,"90");
+  sprintf(options[OPT_INITICELAT].cDimension,"xxx");
   options[OPT_INITICELAT].dDefault = 90.0;
   options[OPT_INITICELAT].iType = 2;
   options[OPT_INITICELAT].bMultiFile = 1;
@@ -1284,7 +1297,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_INITICEHEIGHT].cName,"dInitIceHeight");
   sprintf(options[OPT_INITICEHEIGHT].cDescr,"Sets initial ice sheet height");
-  sprintf(options[OPT_INITICEHEIGHT].cDefault,"50");
+  sprintf(options[OPT_INITICEHEIGHT].cDefault,"50"); // XXX 50 what?
+  sprintf(options[OPT_INITICEHEIGHT].cDimension,"xxx");
   options[OPT_INITICEHEIGHT].dDefault = 50.0;
   options[OPT_INITICEHEIGHT].iType = 2;
   options[OPT_INITICEHEIGHT].bMultiFile = 1;
@@ -1318,7 +1332,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HEATCAPLAND].cName,"dHeatCapLand");
   sprintf(options[OPT_HEATCAPLAND].cDescr,"Land heat capacity in seasonal"\
                                           " model");
-  sprintf(options[OPT_HEATCAPLAND].cDefault,"1.42e7");
+  sprintf(options[OPT_HEATCAPLAND].cDefault,"1.42e7"); // XXX What units?
+  sprintf(options[OPT_HEATCAPLAND].cDimension,"energy/temperature");
   options[OPT_HEATCAPLAND].dDefault = 1.42e7;
   options[OPT_HEATCAPLAND].iType = 2;
   options[OPT_HEATCAPLAND].bMultiFile = 1;
@@ -1327,7 +1342,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HEATCAPWATER].cName,"dHeatCapWater");
   sprintf(options[OPT_HEATCAPWATER].cDescr,"Water heat capacity per meter in" \
                                            " seasonal model");
-  sprintf(options[OPT_HEATCAPWATER].cDefault,"4.2e6");
+  sprintf(options[OPT_HEATCAPWATER].cDefault,"4.2e6"); // XXX What units
+  sprintf(options[OPT_HEATCAPWATER].cDimension,"energy/temperature");
   options[OPT_HEATCAPWATER].dDefault = 4.2e6;
   options[OPT_HEATCAPWATER].iType = 2;
   options[OPT_HEATCAPWATER].bMultiFile = 1;
@@ -1336,7 +1352,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MIXINGDEPTH].cName,"dMixingDepth");
   sprintf(options[OPT_MIXINGDEPTH].cDescr,"Mixing depth of ocean in seasonal"\
                                           " model");
-  sprintf(options[OPT_MIXINGDEPTH].cDefault,"70");
+  sprintf(options[OPT_MIXINGDEPTH].cDefault,"70"); // meters
+  sprintf(options[OPT_MIXINGDEPTH].cDimension,"length");
   options[OPT_MIXINGDEPTH].dDefault = 70.;
   options[OPT_MIXINGDEPTH].iType = 2;
   options[OPT_MIXINGDEPTH].bMultiFile = 1;
@@ -1345,7 +1362,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FRZTSEAICE].cName,"dFrzTSeaIce");
   sprintf(options[OPT_FRZTSEAICE].cDescr,"Temp of sea ice formation in"\
                                          " seasonal model");
-  sprintf(options[OPT_FRZTSEAICE].cDefault,"-2");
+  sprintf(options[OPT_FRZTSEAICE].cDefault,"-2 deg C");
+  sprintf(options[OPT_FRZTSEAICE].cDimension,"temperature");
   options[OPT_FRZTSEAICE].dDefault = -2.;
   options[OPT_FRZTSEAICE].iType = 2;
   options[OPT_FRZTSEAICE].bMultiFile = 1;
@@ -1355,6 +1373,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_NULANDWATER].cDescr,"Coefficient of land-ocean heat"\
                                           " flux");
   sprintf(options[OPT_NULANDWATER].cDefault,"0.81");
+  sprintf(options[OPT_NULANDWATER].cDimension,"energy/length^2");
   options[OPT_NULANDWATER].dDefault = 0.81;
   options[OPT_NULANDWATER].iType = 2;
   options[OPT_NULANDWATER].bMultiFile = 1;
@@ -1364,6 +1383,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LANDFRAC].cDescr,"Fraction of land on the planetary"\
                                        " surface");
   sprintf(options[OPT_LANDFRAC].cDefault,"0.34");
+  sprintf(options[OPT_LANDFRAC].cDimension,"nd");
   options[OPT_LANDFRAC].dDefault = 0.34;
   options[OPT_LANDFRAC].iType = 2;
   options[OPT_LANDFRAC].bMultiFile = 1;
@@ -1399,6 +1419,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ICECONDUCT].cName,"dSeaIceConduct");
   sprintf(options[OPT_ICECONDUCT].cDescr,"Heat conductivity of sea ice");
   sprintf(options[OPT_ICECONDUCT].cDefault,"2");
+  sprintf(options[OPT_ICECONDUCT].cDimension,"nd");
   options[OPT_ICECONDUCT].dDefault = 2.;
   options[OPT_ICECONDUCT].iType = 2;
   options[OPT_ICECONDUCT].bMultiFile = 1;
@@ -1407,6 +1428,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ALBEDOLAND].cName,"dAlbedoLand");
   sprintf(options[OPT_ALBEDOLAND].cDescr,"albedo of dry land");
   sprintf(options[OPT_ALBEDOLAND].cDefault,"0.363");
+  sprintf(options[OPT_ALBEDOLAND].cDimension,"nd");
   options[OPT_ALBEDOLAND].dDefault = 0.363;
   options[OPT_ALBEDOLAND].iType = 2;
   options[OPT_ALBEDOLAND].bMultiFile = 1;
@@ -1415,6 +1437,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ALBEDOWATER].cName,"dAlbedoWater");
   sprintf(options[OPT_ALBEDOWATER].cDescr,"albedo of open water");
   sprintf(options[OPT_ALBEDOWATER].cDefault,"0.263");
+  sprintf(options[OPT_ALBEDOWATER].cDimension,"nd");
   options[OPT_ALBEDOWATER].dDefault = 0.263;
   options[OPT_ALBEDOWATER].iType = 2;
   options[OPT_ALBEDOWATER].bMultiFile = 1;
@@ -1451,6 +1474,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SEASOUTPUTTIME].cDescr,"Output interval for seasonal"\
                                              " parameters");
   sprintf(options[OPT_SEASOUTPUTTIME].cDefault,"0");
+  sprintf(options[OPT_SEASOUTPUTTIME].cDimension,"nd");
   options[OPT_SEASOUTPUTTIME].dDefault = 0;
   options[OPT_SEASOUTPUTTIME].iType = 2;
   options[OPT_SEASOUTPUTTIME].bMultiFile = 1;
@@ -1476,7 +1500,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_OBLIQAMP].cName,"dObliqAmp");
   sprintf(options[OPT_OBLIQAMP].cDescr,"Amplitude of forced obliquity oscill");
-  sprintf(options[OPT_OBLIQAMP].cDefault,"50");
+  sprintf(options[OPT_OBLIQAMP].cDefault,"50 deg");
+  sprintf(options[OPT_OBLIQAMP].cDimension,"angle");
   options[OPT_OBLIQAMP].dDefault = 50;
   options[OPT_OBLIQAMP].iType = 2;
   options[OPT_OBLIQAMP].bMultiFile = 1;
@@ -1484,7 +1509,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_OBLIQPER].cName,"dObliqPer");
   sprintf(options[OPT_OBLIQPER].cDescr,"Period of forced obliquity oscill");
-  sprintf(options[OPT_OBLIQPER].cDefault,"50000");
+  sprintf(options[OPT_OBLIQPER].cDefault,"50000"); // XXX What units?
+  sprintf(options[OPT_OBLIQPER].cDimension,"time");
   options[OPT_OBLIQPER].dDefault = 50000;
   options[OPT_OBLIQPER].iType = 2;
   options[OPT_OBLIQPER].bMultiFile = 1;
@@ -1503,6 +1529,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ECCAMP].cDescr,"Amplitude of forced eccentricity"\
                                      " oscill");
   sprintf(options[OPT_ECCAMP].cDefault,"0.1");
+  sprintf(options[OPT_ECCAMP].cDimension,"nd");
   options[OPT_ECCAMP].dDefault = 0.1;
   options[OPT_ECCAMP].iType = 2;
   options[OPT_ECCAMP].bMultiFile = 1;
@@ -1510,7 +1537,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_ECCPER].cName,"dEccPer");
   sprintf(options[OPT_ECCPER].cDescr,"Period of forced eccentricity oscill");
-  sprintf(options[OPT_ECCPER].cDefault,"50000");
+  sprintf(options[OPT_ECCPER].cDefault,"50000"); // XXX What units?
+  sprintf(options[OPT_ECCPER].cDimension,"time");
   options[OPT_ECCPER].dDefault = 50000;
   options[OPT_ECCPER].iType = 2;
   options[OPT_ECCPER].bMultiFile = 1;
@@ -1537,6 +1565,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_LAPSER].cDescr,"Dry adiabatic lapse rate (for elev"\
                                      " feedback)");
   sprintf(options[OPT_LAPSER].cDefault,"9.8e-3 C/m");
+  sprintf(options[OPT_LAPSER].cDimension,"temperature/length");
   options[OPT_LAPSER].dDefault = 9.8e-3;
   options[OPT_LAPSER].iType = 2;
   options[OPT_LAPSER].bMultiFile = 1;
@@ -1546,6 +1575,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_REFHEIGHT].cDescr,"Reference height of atmos temp (for"\
                                         " elev feedback)");
   sprintf(options[OPT_REFHEIGHT].cDefault,"1000 m");
+  sprintf(options[OPT_REFHEIGHT].cDimension,"length");
   options[OPT_REFHEIGHT].dDefault = 1000.0;
   options[OPT_REFHEIGHT].iType = 2;
   options[OPT_REFHEIGHT].bMultiFile = 1;
@@ -1554,6 +1584,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ABLATEFF].cName,"dAblateFF");
   sprintf(options[OPT_ABLATEFF].cDescr,"Ice ablation fudge factor");
   sprintf(options[OPT_ABLATEFF].cDefault,"2.3");
+  sprintf(options[OPT_ABLATEFF].cDimension,"nd");
   options[OPT_ABLATEFF].dDefault = 2.3;
   options[OPT_ABLATEFF].iType = 2;
   options[OPT_ABLATEFF].bMultiFile = 1;
@@ -1562,6 +1593,7 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SPINUPTOL].cName,"dSpinUpTol");
   sprintf(options[OPT_SPINUPTOL].cDescr,"Tolerance for spin up phase");
   sprintf(options[OPT_SPINUPTOL].cDefault,"0.1 deg C");
+  sprintf(options[OPT_SPINUPTOL].cDimension,"temperature");
   options[OPT_SPINUPTOL].dDefault = 0.1;
   options[OPT_SPINUPTOL].iType = 2;
   options[OPT_SPINUPTOL].bMultiFile = 1;
@@ -1571,7 +1603,8 @@ void InitializeOptionsPoise(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_MINICEHEIGHT].cDescr,"Minimum ice sheet height for a"\
                                            " latitude to be considered"\
                                            " ice-covered");
-  sprintf(options[OPT_MINICEHEIGHT].cDefault,"0.001");
+  sprintf(options[OPT_MINICEHEIGHT].cDefault,"0.001"); // What units? XXX
+  sprintf(options[OPT_MINICEHEIGHT].cDimension,"length");
   options[OPT_MINICEHEIGHT].dDefault = 0.001;
   options[OPT_MINICEHEIGHT].iType = 2;
   options[OPT_MINICEHEIGHT].bMultiFile = 1;
@@ -2584,7 +2617,7 @@ void WriteTGlobal(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,\
     /* Units already in Celsius (POISE uses Celsius) */
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
   }
 }
@@ -2874,7 +2907,7 @@ void WriteTempLat(BODY *body,CONTROL *control,OUTPUT *output,\
 
   } else {
 
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
 
   }
@@ -2901,7 +2934,7 @@ void WriteTempMinLat(BODY *body,CONTROL *control,OUTPUT *output,\
 
   } else {
 
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
 
   }
@@ -2927,7 +2960,7 @@ void WriteTempMaxLat(BODY *body,CONTROL *control,OUTPUT *output,\
 
   } else {
 
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
 
   }
@@ -2953,7 +2986,7 @@ void WriteTempMaxLand(BODY *body,CONTROL *control,OUTPUT *output,\
 
   } else {
 
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
 
   }
@@ -2977,7 +3010,7 @@ void WriteTempMaxWater(BODY *body,CONTROL *control,OUTPUT *output,\
     /* Units already in Celsius (POISE uses Celsius) */
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
   }
 }
@@ -2999,7 +3032,7 @@ void WriteTempLandLat(BODY *body,CONTROL *control,OUTPUT *output,\
     /* Units already in Celsius (POISE uses Celsius) */
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
   }
 }
@@ -3022,7 +3055,7 @@ void WriteTempWaterLat(BODY *body,CONTROL *control,OUTPUT *output,\
     /* Units already in Celsius (POISE uses Celsius) */
     strcpy(cUnit,output->cNeg);
   } else {
-    *dTmp = fdUnitsTemp(*dTmp, 1, 0);
+    *dTmp = fdUnitsTemp(*dTmp, CELSIUS, KELVIN);
     fsUnitsTime(0,cUnit);
   }
 }
@@ -4009,7 +4042,7 @@ void InitializeOutputPoise(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_LATITUDE].cName,"Latitude");
   sprintf(output[OUT_LATITUDE].cDescr,"Latitude.");
-  sprintf(output[OUT_LATITUDE].cNeg,"Degrees");
+  sprintf(output[OUT_LATITUDE].cNeg,"deg");
   output[OUT_LATITUDE].bNeg = 1;
   output[OUT_LATITUDE].dNeg = 1/DEGRAD;
   output[OUT_LATITUDE].iNum = 1;
@@ -6407,7 +6440,7 @@ void AlbedoTOAsms09(BODY *body, double zenith, int iBody, int iLat) {
                                    (body[iBody].dIceAlbedo -\
                                    body[iBody].dAlbedoLand) *\
                                    tanh((body[iBody].daTempLand[iLat] +\
-                                   5.15)/5.15) + 0.04 * (3 * sin(zenith) *\
+                                   5.15)/5.15)+ 0.04 * (3 * sin(zenith) *\
                                    sin(zenith)-1.);
 
   body[iBody].daAlbedoWater[iLat] = 0.5 * (body[iBody].dIceAlbedo +\
@@ -7496,7 +7529,7 @@ Construct matrix that evolves the ice sheet flow + net balance
 void IceSheetTriDiag(BODY *body, int iBody) {
   double bTmp;
   int iLat, iNumLats;
-  iNumLats= body[iBody].iNumLats;
+  iNumLats = body[iBody].iNumLats;
 
   bTmp = body[iBody].daIceSheetMat[0][0];
   body[iBody].daIceHeight[0] = body[iBody].daIcePropsTmp[0]/bTmp;

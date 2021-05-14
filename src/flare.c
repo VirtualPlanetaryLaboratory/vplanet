@@ -221,6 +221,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREYINT].cName,"dFlareYInt");
   sprintf(options[OPT_FLAREYINT].cDescr,"Y-Intercept for Flare Frequency");
   sprintf(options[OPT_FLAREYINT].cDefault,"20.9 (Proxima)");
+  sprintf(options[OPT_FLAREYINT].cDimension,"nd");
   options[OPT_FLAREYINT].dDefault = 20.9;
   options[OPT_FLAREYINT].iType = 2;
   options[OPT_FLAREYINT].bMultiFile = 1;
@@ -229,6 +230,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLARESLOPE].cName,"dFlareSlope");
   sprintf(options[OPT_FLARESLOPE].cDescr,"Slope for Flare Frequency");
   sprintf(options[OPT_FLARESLOPE].cDefault,"-0.68 (Proxima)");
+  sprintf(options[OPT_FLARESLOPE].cDimension,"nd");
   options[OPT_FLARESLOPE].dDefault = 20.9;
   options[OPT_FLARESLOPE].iType = 2;
   options[OPT_FLARESLOPE].bMultiFile = 1;
@@ -237,6 +239,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREC].cName,"dFlareC");
   sprintf(options[OPT_FLAREC].cDescr,"10^c for U-XUV Flare Relation");
   sprintf(options[OPT_FLAREC].cDefault,"1.08");
+  sprintf(options[OPT_FLAREC].cDimension,"nd");
   options[OPT_FLAREC].dDefault = 1.08;
   options[OPT_FLAREC].iType = 2;
   options[OPT_FLAREC].bMultiFile = 1;
@@ -245,6 +248,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREK].cName,"dFlareK");
   sprintf(options[OPT_FLAREK].cDescr,"E^k for U-XUV Flare Relation");
   sprintf(options[OPT_FLAREK].cDefault,"-4.4");
+  sprintf(options[OPT_FLAREK].cDimension,"nd");
   options[OPT_FLAREK].dDefault = -4.4;
   options[OPT_FLAREK].iType = 2;
   options[OPT_FLAREK].bMultiFile = 1;
@@ -253,6 +257,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREVISWIDTH].cName,"dFlareVisWidth");
   sprintf(options[OPT_FLAREVISWIDTH].cDescr,"Width of Visible Band for Flare Relation");
   sprintf(options[OPT_FLAREVISWIDTH].cDefault,"3000 Angstroms");
+  sprintf(options[OPT_FLAREVISWIDTH].cDimension,"nd");
   options[OPT_FLAREVISWIDTH].dDefault = 3e-7;
   options[OPT_FLAREVISWIDTH].iType = 2;
   options[OPT_FLAREVISWIDTH].bMultiFile = 1;
@@ -263,6 +268,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREXUVWIDTH].cName,"dFlareXUVWidth");
   sprintf(options[OPT_FLAREXUVWIDTH].cDescr,"Width of XUV for Flare Relation");
   sprintf(options[OPT_FLAREXUVWIDTH].cDefault,"1000 Angstroms");
+  sprintf(options[OPT_FLAREXUVWIDTH].cDimension,"nd");
   options[OPT_FLAREXUVWIDTH].dDefault = 1e-7;
   options[OPT_FLAREXUVWIDTH].iType = 2;
   options[OPT_FLAREXUVWIDTH].bMultiFile = 1;
@@ -273,6 +279,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREMINENERGY].cName,"dFlareMinEnergy");
   sprintf(options[OPT_FLAREMINENERGY].cDescr,"Minimum Flare Energy to Consider");
   sprintf(options[OPT_FLAREMINENERGY].cDefault,"10^29 ergs");
+  sprintf(options[OPT_FLAREMINENERGY].cDimension,"nd");
   options[OPT_FLAREMINENERGY].dDefault = 1e22;
   options[OPT_FLAREMINENERGY].iType = 2;
   options[OPT_FLAREMINENERGY].bMultiFile = 1;
@@ -283,6 +290,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREMAXENERGY].cName,"dFlareMaxEnergy");
   sprintf(options[OPT_FLAREMAXENERGY].cDescr,"Maximum Flare Energy to Consider");
   sprintf(options[OPT_FLAREMAXENERGY].cDefault,"10^33 ergs");
+  sprintf(options[OPT_FLAREMAXENERGY].cDimension,"nd");
   options[OPT_FLAREMAXENERGY].dDefault = 1e26;
   options[OPT_FLAREMAXENERGY].iType = 2;
   options[OPT_FLAREMAXENERGY].bMultiFile = 1;
@@ -428,11 +436,7 @@ void InitializeOutputFlare(OUTPUT *output,fnWriteOutput fnWrite[]) {
   output[OUT_LXUVFLARE].iModuleBit = FLARE;
   fnWrite[OUT_LXUVFLARE] = &WriteLXUVFlare;
 }
-/* XXX I think this approach is defunct
-void FinalizeOutputFunctionFlare(OUTPUT *output,int iBody,int iModule) {
-  output[OUT_LXUVTOT].fnOutput[iBody][iModule] = &fdLXUVFlare;
-}
-*/
+
 
 /************ FLARE Logging Functions **************/
 
@@ -481,9 +485,7 @@ void AddModuleFlare(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
   module->fnFinalizeUpdateLXUV[iBody][iModule] = &FinalizeUpdateLXUVFlare;
 
-  /* XXX I think this approach to multi-module outputs is defunct
-  module->fnFinalizeOutputFunction[iBody][iModule] = &FinalizeOutputFunctionFlare;
-  */
+
 }
 
 /************* FLARE Functions ************/
@@ -510,7 +512,6 @@ double fdLXUVFlare(BODY *body,double dDeltaTime,int iBody) {
   double dLogEMin,dLogEMax,dFreqMin,dFreqMax,dWidth,dArea;
   double dEpsVis,dEpsXUV,dLXUVFlare;
 
-  // XXX Need global variable ERGSJOULES
   dLogEMin = log10(body[iBody].dFlareMinEnergy*1e7);
   dLogEMax = log10(body[iBody].dFlareMaxEnergy*1e7);
   dWidth = dLogEMax - dLogEMin;

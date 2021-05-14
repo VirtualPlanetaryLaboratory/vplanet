@@ -145,11 +145,18 @@ void ReadHaltCloseEnc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
     control->Halt[iFile-1].bCloseEnc = options->dDefault;
 }
 
+/* For LL2 (eigenvalue) solution only, we could add these option to let the
+user specify the eigenvalues instead of calculating them from scratch. This is
+useful if you want to use, for example, an N-body code to compute frequencies
+that are accurate to higher orders. One could conceivably fake the higher order
+evolution using only the LL2 solution by doing this.
+
+
 void ReadEigenSet(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   int lTmp=-1,bTmp;
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
-    /* Option was found */
+    / * Option was found * /
     body[iFile-1].bEigenSet = bTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
@@ -158,7 +165,7 @@ void ReadEigenSet(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
 }
 
 void ReadEigenvalue(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in the primary file */
+  / * This parameter cannot exist in the primary file * /
   int lTmp=-1;
   double dTmp;
 
@@ -176,7 +183,7 @@ void ReadEigenvalue(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 }
 
 void ReadEigenvector(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in the primary file */
+  / * This parameter cannot exist in the primary file * /
   int lTmp=-1;
   double dTmp;
 
@@ -190,6 +197,7 @@ void ReadEigenvector(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
     if (iFile > 0)
       body[iFile-1].dEigenvector = options->dDefault;
 }
+*/
 
 void ReadOrbitModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter can exist in any file, but only once */
@@ -223,15 +231,25 @@ void ReadOrbitModel(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
 
 void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DFCRIT].cName,"dDfcrit");
-  sprintf(options[OPT_DFCRIT].cDescr,"Tolerance parameter for recalculating semi- functions");
+  sprintf(options[OPT_DFCRIT].cDescr,
+    "Tolerance parameter for recalculating semi-major axis functions");
   sprintf(options[OPT_DFCRIT].cDefault,"0.1");
+  sprintf(options[OPT_DFCRIT].cDimension,"nd");
   options[OPT_DFCRIT].dDefault = 0.1;
   options[OPT_DFCRIT].iType = 2;
   options[OPT_DFCRIT].bMultiFile = 0;
   fnRead[OPT_DFCRIT] = &ReadDfCrit;
+  sprintf(options[OPT_DFCRIT].cLongDescr,
+    "When running DistOrb with other modules that modify the semi-major axis,\n"
+    "set his argument to be the maximum relative change in the Laplace\n"
+    "coefficients before recalculating the values. Setting this value to be\n"
+    "low can cause the simulation to run very slowly, with negligible gain in\n"
+    "accuracy."
+  );
 
   sprintf(options[OPT_INVPLANE].cName,"bInvPlane");
-  sprintf(options[OPT_INVPLANE].cDescr,"Convert input coordinates to invariable plane coordinates");
+  sprintf(options[OPT_INVPLANE].cDescr,
+    "Convert input coordinates to invariable plane coordinates");
   sprintf(options[OPT_INVPLANE].cDefault,"0");
   options[OPT_INVPLANE].dDefault = 0;
   options[OPT_INVPLANE].iType = 0;
@@ -239,27 +257,45 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   fnRead[OPT_INVPLANE] = &ReadInvPlane;
 
   sprintf(options[OPT_ORBITMODEL].cName,"sOrbitModel");
-  sprintf(options[OPT_ORBITMODEL].cDescr,"Orbit Model: ll2 [laplace-lagrange (eigen), 2nd order] rd4 [direct dist-fxn, 4th order]");
+  sprintf(options[OPT_ORBITMODEL].cDescr,"Orbit Model: LL2 [2nd order] RD4 [4th order]");
   sprintf(options[OPT_ORBITMODEL].cDefault,"rd4");
   options[OPT_ORBITMODEL].dDefault = RD4;
   options[OPT_ORBITMODEL].iType = 1;
   fnRead[OPT_ORBITMODEL] = &ReadOrbitModel;
+  sprintf(options[OPT_ORBITMODEL].cLongDescr,
+    "The secular orbital evolution model used with DistOrb. Option LL2 is the\n"
+    "Laplace-Lagrange (eigenvalue) solution that is valid for small values of\n"
+    "of eccentricity (<0.1) and inclination (<10 deg). The RD4 method is a 4th\n"
+    "order solution of the distrubing function that is accurante up to e ~ 0.3\n"
+    "and i ~ 30 deg. Note, however that setting both parameters to moderate\n"
+    "values can still cause inaccurate evolution. Unless %s is set, this model\n"
+    "will halt if the eccentricity exceeds ~0.69, at which point the solution\n"
+    "does not converge.",options[OPT_ORMAXECC].cName
+  );
 
   sprintf(options[OPT_ORMAXECC].cName,"bOverrideMaxEcc");
-  sprintf(options[OPT_ORMAXECC].cDescr,"Override default maximum eccentricity in DistOrb (MaxEcc = MAXORBDISTORB)");
+  sprintf(options[OPT_ORMAXECC].cDescr,"Override default maximum eccentricity (MAXORBDISTORB) in DistOrb?");
   sprintf(options[OPT_ORMAXECC].cDefault,"0");
   options[OPT_ORMAXECC].dDefault = 0;
   options[OPT_ORMAXECC].iType = 0;
   options[OPT_ORMAXECC].bMultiFile = 0;
   fnRead[OPT_ORMAXECC] = &ReadOverrideMaxEcc;
+  sprintf(options[OPT_ORBITMODEL].cLongDescr,
+    "If RD4 is selected for %s, the code will halt if an eccentricity reaches\n"
+    "~0.69 unless this flag is set to true.",options[OPT_ORBITMODEL].cName
+  );
 
   sprintf(options[OPT_HALTHILLSTAB].cName,"bHaltHillStab");
-  sprintf(options[OPT_HALTHILLSTAB].cDescr,"Enforce Hill stability criterion (halt if failed)");
+  sprintf(options[OPT_HALTHILLSTAB].cDescr,"Halt if Hill unstable?");
   sprintf(options[OPT_HALTHILLSTAB].cDefault,"0");
   options[OPT_HALTHILLSTAB].dDefault = 0;
   options[OPT_HALTHILLSTAB].iType = 0;
   options[OPT_HALTHILLSTAB].bMultiFile = 0;
   fnRead[OPT_HALTHILLSTAB] = &ReadHaltHillStab;
+  sprintf(options[OPT_HALTHILLSTAB].cLongDescr,
+    "If two planets come within the Hill stability criterion, the code will"
+    "halt if this parameter is set"
+  );
 
   sprintf(options[OPT_HALTCLOSEENC].cName,"bHaltCloseEnc");
   sprintf(options[OPT_HALTCLOSEENC].cDescr,"Halt if orbits get too close");
@@ -268,9 +304,19 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_HALTCLOSEENC].iType = 0;
   options[OPT_HALTCLOSEENC].bMultiFile = 0;
   fnRead[OPT_HALTCLOSEENC] = &ReadHaltCloseEnc;
+  sprintf(options[OPT_HALTCLOSEENC].cLongDescr,
+    "Halt the code if the apocenter of an interior planets is less than 4 "
+    "mutual Hill radii from the pericenter of an outer planet."
+  );
+
+  /* For LL2 (eigenvalue) solution only, we could add these option to let the
+  user specify the eigenvalues instead of calculating them from scratch. This is
+  useful if you want to use, for example, an N-body code to compute frequencies
+  that are accurate to higher orders. One could conceivably fake the higher order
+  evolution using only the LL2 solution by doing this.
 
   sprintf(options[OPT_EIGENSET].cName,"bEigenSet");
-  sprintf(options[OPT_EIGENSET].cDescr,"Set this to provide eigenvalues/vectors at input");
+  sprintf(options[OPT_EIGENSET].cDescr,"Read in eigenvalues/vectors for DistOrb?");
   sprintf(options[OPT_EIGENSET].cDefault,"0");
   options[OPT_EIGENSET].dDefault = 0;
   options[OPT_EIGENSET].iType = 0;
@@ -280,6 +326,7 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_EIGENVALUE].cName,"dEigenvalue");
   sprintf(options[OPT_EIGENVALUE].cDescr,"Set this to provide eigenvalues/vectors at input");
   sprintf(options[OPT_EIGENVALUE].cDefault,"0");
+  sprintf(options[OPT_EIGENVALUE].cDimension,"nd");
   options[OPT_EIGENVALUE].dDefault = 0;
   options[OPT_EIGENVALUE].iType = 0;
   options[OPT_EIGENVALUE].bMultiFile = 0;
@@ -288,26 +335,39 @@ void InitializeOptionsDistOrb(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_EIGENVECTOR].cName,"dEigenvector");
   sprintf(options[OPT_EIGENVECTOR].cDescr,"Set this to provide eigenvalues/vectors at input");
   sprintf(options[OPT_EIGENVECTOR].cDefault,"0");
+  sprintf(options[OPT_EIGENVECTOR].cDimension,"nd");
   options[OPT_EIGENVECTOR].dDefault = 0;
   options[OPT_EIGENVECTOR].iType = 0;
   options[OPT_EIGENVECTOR].bMultiFile = 0;
   fnRead[OPT_EIGENVECTOR] = &ReadEigenvector;
+*/
 
   sprintf(options[OPT_OUTPUTLAPL].cName,"bOutputLapl");
-  sprintf(options[OPT_OUTPUTLAPL].cDescr,"Output Laplace functions and related data");
+  sprintf(options[OPT_OUTPUTLAPL].cDescr,"Output Laplace functions and related data?");
   sprintf(options[OPT_OUTPUTLAPL].cDefault,"0");
   options[OPT_OUTPUTLAPL].dDefault = 0;
   options[OPT_OUTPUTLAPL].iType = 0;
   options[OPT_OUTPUTLAPL].bMultiFile = 0;
   fnRead[OPT_OUTPUTLAPL] = &ReadOutputLapl;
+  sprintf(options[OPT_OUTPUTLAPL].cLongDescr,
+    "Write files that contain the Laplace coefficients and their derivatives\n"
+    "in DistOrb. This file can be used to check that they are recomputed \n"
+    "frequently enough when damping (e.g. EqTide) is included."
+  );
 
   sprintf(options[OPT_OUTPUTEIGEN].cName,"bOutputEigen");
-  sprintf(options[OPT_OUTPUTEIGEN].cDescr,"Output Eigenvalues");
+  sprintf(options[OPT_OUTPUTEIGEN].cDescr,"Output Eigenvalues?");
   sprintf(options[OPT_OUTPUTEIGEN].cDefault,"0");
   options[OPT_OUTPUTEIGEN].dDefault = 0;
   options[OPT_OUTPUTEIGEN].iType = 0;
   options[OPT_OUTPUTEIGEN].bMultiFile = 0;
   fnRead[OPT_OUTPUTEIGEN] = &ReadOutputEigen;
+  sprintf(options[OPT_OUTPUTLAPL].cLongDescr,
+    "Write special files that contain the eigenvalues and eigenvectors of the\n"
+    "system with DistOrb. In the LL2 solution, these are already computed. In\n"
+    "the RD4 solution, they are computed at time of output. These can be\n"
+    "useful for interpretating results."
+  );
 }
 
 void ReadOptionsDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -894,7 +954,7 @@ void VerifyDistOrb(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUT
     CalcPQ(body,iBody);
 
     if (body[iBody].bEigenSet == 1) {
-      /* XXX really stupid hack */
+      /* This should be improved. It's not really clear what this code does. */
       system->daEigenValEcc = malloc(2*sizeof(double*));
       system->daEigenValInc = malloc(2*sizeof(double*));
       system->daEigenVecEcc = malloc((control->Evolve.iNumBodies-1)*sizeof(double*));
@@ -1617,8 +1677,12 @@ void WriteBodyDQincDtDistOrb(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *
 
 void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
+  // XXX Many of these should be moved to OutputGeneral as they apply to both
+  // DistOrb and SpiNBody
+
   sprintf(output[OUT_DECCDTDISTORB].cName,"DEccDtDistOrb");
-  sprintf(output[OUT_DECCDTDISTORB].cDescr,"Body's decc/dt in DistOrb");
+  sprintf(output[OUT_DECCDTDISTORB].cDescr,
+    "Body's eccentricity derivative in DistOrb");
   sprintf(output[OUT_DECCDTDISTORB].cNeg,"1/year");
   output[OUT_DECCDTDISTORB].bNeg = 1;
   output[OUT_DECCDTDISTORB].dNeg = YEARSEC;
@@ -1626,7 +1690,8 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DECCDTDISTORB] = &WriteBodyDEccDtDistOrb;
 
   sprintf(output[OUT_DSINCDTDISTORB].cName,"DSincDtDistOrb");
-  sprintf(output[OUT_DSINCDTDISTORB].cDescr,"Body's dsin(.5*Inc)/dt in DistOrb");
+  sprintf(output[OUT_DSINCDTDISTORB].cDescr,
+    "Body's sin(Inc/2) derivative in DistOrb");
   sprintf(output[OUT_DSINCDTDISTORB].cNeg,"1/year");
   output[OUT_DSINCDTDISTORB].bNeg = 1;
   output[OUT_DSINCDTDISTORB].dNeg = YEARSEC;
@@ -1635,7 +1700,8 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DSINCDTDISTORB] = &WriteBodyDSincDtDistOrb;
 
   sprintf(output[OUT_DINCDTDISTORB].cName,"DIncDtDistOrb");
-  sprintf(output[OUT_DINCDTDISTORB].cDescr,"Body's dInc/dt in DistOrb");
+  sprintf(output[OUT_DINCDTDISTORB].cDescr,
+    "Body's inclination derivative in DistOrb");
   sprintf(output[OUT_DINCDTDISTORB].cNeg,"deg/year");
   output[OUT_DINCDTDISTORB].bNeg = 1;
   output[OUT_DINCDTDISTORB].dNeg = YEARSEC/DEGRAD;
@@ -1644,7 +1710,8 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DINCDTDISTORB] = &WriteBodyDIncDtDistOrb;
 
   sprintf(output[OUT_DLONGPDTDISTORB].cName,"DLongPDtDistOrb");
-  sprintf(output[OUT_DLONGPDTDISTORB].cDescr,"Body's dvarpi/dt in DistOrb");
+  sprintf(output[OUT_DLONGPDTDISTORB].cDescr,
+    "Body's longitude of pericenter derivative in DistOrb");
   sprintf(output[OUT_DLONGPDTDISTORB].cNeg,"deg/yr");
   output[OUT_DLONGPDTDISTORB].bNeg = 1;
   output[OUT_DLONGPDTDISTORB].dNeg = YEARSEC/DEGRAD;
@@ -1653,7 +1720,8 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DLONGPDTDISTORB] = &WriteBodyDLongPDtDistOrb;
 
   sprintf(output[OUT_DLONGADTDISTORB].cName,"DLongADtDistOrb");
-  sprintf(output[OUT_DLONGADTDISTORB].cDescr,"Body's dOmega/dt in DistOrb");
+  sprintf(output[OUT_DLONGADTDISTORB].cDescr,
+    "Body's longitude of ascending node derivative in DistOrb");
   sprintf(output[OUT_DLONGADTDISTORB].cNeg,"deg/yr");
   output[OUT_DLONGADTDISTORB].bNeg = 1;
   output[OUT_DLONGADTDISTORB].dNeg = YEARSEC/DEGRAD;
@@ -1662,25 +1730,25 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DLONGADTDISTORB] = &WriteBodyDLongADtDistOrb;
 
   sprintf(output[OUT_SINC].cName,"Sinc");
-  sprintf(output[OUT_SINC].cDescr,"Body's sin(1/2*Inclination) in DistOrb");
+  sprintf(output[OUT_SINC].cDescr,"Body's sin(Inc/2) in DistOrb");
   output[OUT_SINC].iNum = 1;
   output[OUT_SINC].iModuleBit = DISTORB;
   fnWrite[OUT_SINC] = &WriteBodySinc;
 
   sprintf(output[OUT_PINC].cName,"Pinc");
-  sprintf(output[OUT_PINC].cDescr,"Body's p = s*sin(Omega) in DistOrb");
+  sprintf(output[OUT_PINC].cDescr,"Body's Poincare p in DistOrb");
   output[OUT_PINC].iNum = 1;
   output[OUT_PINC].iModuleBit = DISTORB;
   fnWrite[OUT_PINC] = &WriteBodyPinc;
 
   sprintf(output[OUT_QINC].cName,"Qinc");
-  sprintf(output[OUT_QINC].cDescr,"Body's q = s* cos(Omega) in DistOrb");
+  sprintf(output[OUT_QINC].cDescr,"Body's Poincare q in DistOrb");
   output[OUT_QINC].iNum = 1;
   output[OUT_QINC].iModuleBit = DISTORB;
   fnWrite[OUT_QINC] = &WriteBodyQinc;
 
   sprintf(output[OUT_DHECCDTDISTORB].cName,"DHeccDtDistOrb");
-  sprintf(output[OUT_DHECCDTDISTORB].cDescr,"Body's dh/dt in DistOrb");
+  sprintf(output[OUT_DHECCDTDISTORB].cDescr,"Body's Poincare h derivative in DistOrb");
   sprintf(output[OUT_DHECCDTDISTORB].cNeg,"1/year");
   output[OUT_DHECCDTDISTORB].bNeg = 1;
   output[OUT_DHECCDTDISTORB].dNeg = YEARSEC;
@@ -1689,7 +1757,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DHECCDTDISTORB] = &WriteBodyDHeccDtDistOrb;
 
   sprintf(output[OUT_DKECCDTDISTORB].cName,"DKeccDtDistOrb");
-  sprintf(output[OUT_DKECCDTDISTORB].cDescr,"Body's dk/dt in DistOrb");
+  sprintf(output[OUT_DKECCDTDISTORB].cDescr,"Body's Poincare k in DistOrb");
   sprintf(output[OUT_DKECCDTDISTORB].cNeg,"1/year");
   output[OUT_DKECCDTDISTORB].bNeg = 1;
   output[OUT_DKECCDTDISTORB].dNeg = YEARSEC;
@@ -1698,7 +1766,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DKECCDTDISTORB] = &WriteBodyDKeccDtDistOrb;
 
   sprintf(output[OUT_DPINCDTDISTORB].cName,"DPincDtDistOrb");
-  sprintf(output[OUT_DPINCDTDISTORB].cDescr,"Body's dp/dt in DistOrb");
+  sprintf(output[OUT_DPINCDTDISTORB].cDescr,"Body's Poincare p in DistOrb");
   sprintf(output[OUT_DPINCDTDISTORB].cNeg,"1/year");
   output[OUT_DPINCDTDISTORB].bNeg = 1;
   output[OUT_DPINCDTDISTORB].dNeg = YEARSEC;
@@ -1707,7 +1775,7 @@ void InitializeOutputDistOrb(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DPINCDTDISTORB] = &WriteBodyDPincDtDistOrb;
 
   sprintf(output[OUT_DQINCDTDISTORB].cName,"DQincDtDistOrb");
-  sprintf(output[OUT_DQINCDTDISTORB].cDescr,"Body's dq/dt in DistOrb");
+  sprintf(output[OUT_DQINCDTDISTORB].cDescr,"Body's Poincare q in DistOrb");
   sprintf(output[OUT_DQINCDTDISTORB].cNeg,"1/year");
   output[OUT_DQINCDTDISTORB].bNeg = 1;
   output[OUT_DQINCDTDISTORB].dNeg = YEARSEC;
@@ -1771,12 +1839,6 @@ void AddModuleDistOrb(CONTROL *control,MODULE *module,int iBody,int iModule) {
 
 /************* DistOrb Functions ************/
 void PropsAuxDistOrb(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
-  /* Conflict XXX -- Hopefully this is wrong as there should be no calls to Pizza in DISTORB
-  if (body[iBody].bPoise) {
-    body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
-    body[iBody].dEcc = sqrt(body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc);
-  }
-*/
   body[iBody].dLongP = atan2(body[iBody].dHecc,body[iBody].dKecc);
   body[iBody].dEcc = sqrt(body[iBody].dHecc*body[iBody].dHecc+body[iBody].dKecc*body[iBody].dKecc);
   body[iBody].dSinc = sqrt(body[iBody].dPinc*body[iBody].dPinc+body[iBody].dQinc*body[iBody].dQinc);
@@ -2649,126 +2711,6 @@ double fndVyi(BODY *body, int iBody) {
   return v;
 }
 
-/**
-Solves kepler's equation for one body
-
-@param body Struct containing all body information and variables
-@param iBody Index of body in question
-*/
-void kepler_eqn(BODY *body, int iBody) {
-  double di1, di2, di3, fi, fi1, fi2, fi3;
-  if (body[iBody].dMeanA == 0) {
-    body[iBody].dEccA = 0;
-  } else {
-    body[iBody].dEccA = body[iBody].dMeanA + fiSign(sin(body[iBody].dMeanA))*0.85*body[iBody].dEcc;
-    di3 = 1.0;
-
-    while (di3 > 1e-15) {
-      fi = body[iBody].dEccA - body[iBody].dEcc*sin(body[iBody].dEccA) - body[iBody].dMeanA;
-      fi1 = 1.0 - body[iBody].dEcc*cos(body[iBody].dEccA);
-      fi2 = body[iBody].dEcc*sin(body[iBody].dEccA);
-      fi3 = body[iBody].dEcc*cos(body[iBody].dEccA);
-      di1 = -fi/fi1;
-      di2 = -fi/(fi1+0.5*di1*fi2);
-      di3 = -fi/(fi1+0.5*di2*fi2+1./6.*di2*di2*fi3);
-      body[iBody].dEccA += di3;
-    }
-  }
-}
-
-/**
-Converts osculating orbital elements to Cartesian coordinates (in au & au/day)
-
-@param body Struct containing all body information and variables
-@param iNumBodies Number of bodies in the system (star & planets)
-*/
-void osc2cart(BODY *body, int iNumBodies) {
-  int iBody;
-  double xtmp, ytmp, vxtmp, vytmp;
-
-  for (iBody=0;iBody<iNumBodies;iBody++) {
-    body[iBody].daCartPos = malloc(3*sizeof(double));
-    body[iBody].daCartVel = malloc(3*sizeof(double));
-
-    if (iBody == 0) {
-      body[iBody].daCartPos[0] = 0;
-      body[iBody].daCartPos[1] = 0;
-      body[iBody].daCartPos[2] = 0;
-
-      body[iBody].daCartVel[0] = 0;
-      body[iBody].daCartVel[1] = 0;
-      body[iBody].daCartVel[2] = 0;
-    } else {
-      kepler_eqn(body, iBody);
-      xtmp = fndXinit(body, iBody);
-      ytmp = fndYinit(body, iBody);
-      vxtmp = fndVxi(body, iBody);
-      vytmp = fndVyi(body, iBody);
-
-      body[iBody].daCartPos[0] = xtmp*(fndXangle1(body,iBody))+ytmp*(fndXangle2(body,iBody));
-      body[iBody].daCartPos[1] = xtmp*(fndYangle1(body,iBody))+ytmp*(fndYangle2(body,iBody));
-      body[iBody].daCartPos[2] = xtmp*(fndZangle1(body,iBody))+ytmp*(fndZangle2(body,iBody));
-
-      body[iBody].daCartVel[0] = vxtmp*(fndXangle1(body,iBody))+vytmp*(fndXangle2(body,iBody));
-      body[iBody].daCartVel[1] = vxtmp*(fndYangle1(body,iBody))+vytmp*(fndYangle2(body,iBody));
-      body[iBody].daCartVel[2] = vxtmp*(fndZangle1(body,iBody))+vytmp*(fndZangle2(body,iBody));
-    }
-  }
-}
-
-/**
-Converts astrocentric Cartesian coordinates to barycentric
-
-@param body Struct containing all body information and variables
-@param iNumBodies Number of bodies in the system (star & planets)
-*/
-void astro2bary(BODY *body, int iNumBodies) {
-  int i, iBody;
-  double *xcom, *vcom, mtotal;
-  xcom = malloc(3*sizeof(double));
-  vcom = malloc(3*sizeof(double));
-  mtotal = 0;
-  for (iBody=0;iBody<iNumBodies;iBody++) mtotal += body[iBody].dMass;
-
-  for (i=0;i<3;i++) {
-    xcom[i] = 0;
-    vcom[i] = 0;
-    for (iBody=1;iBody<iNumBodies;iBody++) {
-      xcom[i] += (body[iBody].dMass*body[iBody].daCartPos[i]/mtotal);
-      vcom[i] += (body[iBody].dMass*body[iBody].daCartVel[i]/mtotal);
-    }
-  }
-
-  for (i=0;i<3;i++) {
-    for (iBody=0;iBody<iNumBodies;iBody++) {
-      body[iBody].daCartPos[i] -= xcom[i];
-      body[iBody].daCartVel[i] -= vcom[i];
-    }
-  }
-
-  free(xcom);
-  free(vcom);
-}
-
-/**
-Converts barycentric Cartesian coordinates to astrocentric
-
-@param body Struct containing all body information and variables
-@param iNumBodies Number of bodies in the system (star & planets)
-*/
-void bary2astro(BODY *body, int iNumBodies) {
-  int i, iBody;
-  double xtmp, vtmp;
-
-  for (i=0;i<3;i++) {
-    xtmp = body[0].daCartPos[i];
-    vtmp = body[0].daCartVel[i];
-    for (iBody=0;iBody<iNumBodies;iBody++) {
-      body[iBody].daCartPos[i] -= xtmp;
-      body[iBody].daCartVel[i] -= vtmp;
-    }
-  }
-}
 
 /**
 Calculates cross product of vectors
@@ -2781,192 +2723,6 @@ void cross(double *a, double *b, double *c) {
   c[0] = a[1]*b[2] - b[1]*a[2];
   c[1] = a[2]*b[0] - b[2]*a[0];
   c[2] = a[0]*b[1] - b[0]*a[1];
-}
-
-/**
-Calculates angular momentum vector of planetary system
-
-@param body Struct containing all body information and variables
-@param AngMom Resulting angular momentum vector
-@param iNumBodies Number of bodies in the system (star & planets)
-*/
-void angularmom(BODY *body, double *AngMom, int iNumBodies) {
-  double *rxptmp;
-  int i, iBody;
-
-  rxptmp = malloc(3*sizeof(double));
-
-  osc2cart(body, iNumBodies);
-  astro2bary(body, iNumBodies);
-
-  for (i=0;i<3;i++)
-    AngMom[i]=0;
-
-  for (iBody=0;iBody<iNumBodies;iBody++) {
-    cross(body[iBody].daCartPos, body[iBody].daCartVel, rxptmp);
-    for (i=0;i<3;i++) {
-      // XXX Why divide by MSUN and not stellar mass?
-      AngMom[i] += body[iBody].dMass/MSUN*rxptmp[i];
-    }
-  }
-  free(rxptmp);
-}
-
-/**
-Rotate coordinates into invariable plane
-
-@param body Struct containing all body information and variables
-@param system Struct containing system information
-@param iNumBodies Number of bodies in the system (star & planets)
-*/
-void rotate_inv(BODY *body, SYSTEM *system, int iNumBodies) {
-  double *xtmp, *vtmp;
-  int iBody;
-  xtmp = malloc(3*sizeof(double));
-  vtmp = malloc(3*sizeof(double));
-
-  for (iBody=0;iBody<iNumBodies;iBody++) {
-    xtmp[0] = body[iBody].daCartPos[0]*cos(system->dThetaInvP)+body[iBody].daCartPos[1]*sin(system->dThetaInvP);
-    xtmp[1] = -body[iBody].daCartPos[0]*sin(system->dThetaInvP)+body[iBody].daCartPos[1]*cos(system->dThetaInvP);
-    xtmp[2] = body[iBody].daCartPos[2];
-    vtmp[0] = body[iBody].daCartVel[0]*cos(system->dThetaInvP)+body[iBody].daCartVel[1]*sin(system->dThetaInvP);
-    vtmp[1] = -body[iBody].daCartVel[0]*sin(system->dThetaInvP)+body[iBody].daCartVel[1]*cos(system->dThetaInvP);
-    vtmp[2] = body[iBody].daCartVel[2];
-
-    body[iBody].daCartPos[0] = xtmp[0]*cos(system->dPhiInvP)-xtmp[2]*sin(system->dPhiInvP);
-    body[iBody].daCartPos[1] = xtmp[1];
-    body[iBody].daCartPos[2] = xtmp[0]*sin(system->dPhiInvP)+xtmp[2]*cos(system->dPhiInvP);
-    body[iBody].daCartVel[0] = vtmp[0]*cos(system->dPhiInvP)-vtmp[2]*sin(system->dPhiInvP);
-    body[iBody].daCartVel[1] = vtmp[1];
-    body[iBody].daCartVel[2] = vtmp[0]*sin(system->dPhiInvP)+vtmp[2]*cos(system->dPhiInvP);
-  }
-
-  free(xtmp);
-  free(vtmp);
-}
-
-/**
-Calculates the magnitude of a vector
-
-@param vector Any vector you what the magnitude of
-@return The magnitude of vector
-*/
-double normv(double *vector) {
-  return sqrt(vector[0]*vector[0]+vector[1]*vector[1]+vector[2]*vector[2]);
-}
-
-/**
-Converts Cartesian coordinates (in au & au/day) to osculating orbital elements
-
-@param body Struct containing all body information and variables
-@param iNumBodies Number of bodies in the system (star & planets)
-*/
-void cart2osc(BODY *body, int iNumBodies) {
-  int iBody;
-  double r, vsq, rdot, mu, *h, hsq, sinwf, coswf, sinf, cosf, sinw, cosw, cosE, f;
-
-  h = malloc(3*sizeof(double));
-
-  for (iBody=1;iBody<iNumBodies;iBody++) {
-    r = normv(body[iBody].daCartPos);
-    vsq = normv(body[iBody].daCartVel)*normv(body[iBody].daCartVel);
-    rdot = (body[iBody].daCartPos[0]*body[iBody].daCartVel[0]+body[iBody].daCartPos[1]*body[iBody].daCartVel[1]+\
-            body[iBody].daCartPos[2]*body[iBody].daCartVel[2])/r;
-    mu = KGAUSS*KGAUSS*(body[0].dMass+body[iBody].dMass)/MSUN;
-    cross(body[iBody].daCartPos, body[iBody].daCartVel, h);
-    hsq = normv(h)*normv(h);
-
-    body[iBody].dSemi = pow((2.0/r - vsq/mu),-1)*AUM;
-    if (body[iBody].dEcc != 0) {
-      body[iBody].dEcc = sqrt(1.0 - hsq/(mu*body[iBody].dSemi/AUM));
-    }
-
-    body[iBody].dSinc = sin(0.5 * acos(h[2]/normv(h)));
-    body[iBody].dLongA = atan2(h[0],-h[1]);
-    if (body[iBody].dLongA < 0) body[iBody].dLongA += 2.0*PI;
-    sinwf = body[iBody].daCartPos[2] / (r*2.*body[iBody].dSinc*sqrt(1.0-body[iBody].dSinc*body[iBody].dSinc));
-    coswf = (body[iBody].daCartPos[0]/r + sin(body[iBody].dLongA)*sinwf*(1.0-2.*body[iBody].dSinc*body[iBody].dSinc))/cos(body[iBody].dLongA);
-
-    sinf = body[iBody].dSemi/AUM*(1.0-body[iBody].dEcc*body[iBody].dEcc)*rdot/(normv(h)*body[iBody].dEcc);
-    cosf = (body[iBody].dSemi/AUM*(1.0-body[iBody].dEcc*body[iBody].dEcc)/r - 1.0)/body[iBody].dEcc;
-
-    if (body[iBody].dEcc != 0) {
-      sinw = sinwf*cosf - coswf*sinf;
-      cosw = sinwf*sinf + coswf*cosf;
-      body[iBody].dArgP = atan2(sinw,cosw);
-      body[iBody].dLongP = atan2(sinw, cosw) + body[iBody].dLongA;
-      if (body[iBody].dLongP >= 2.*PI) {
-        body[iBody].dLongP -= 2.*PI;
-      } else if (body[iBody].dLongP < 0.0) {
-        body[iBody].dLongP += 2.*PI;
-      }
-      if (body[iBody].dArgP >= 2.*PI) {
-        body[iBody].dArgP -= 2.*PI;
-      } else if (body[iBody].dArgP < 0.0) {
-        body[iBody].dArgP += 2.*PI;
-      }
-    }
-
-    f = atan2(sinf, cosf);
-    if (f >= 2.*PI) {
-      f -= 2.*PI;
-    } else if (f < 0.0) {
-      f += 2.*PI;
-    }
-    cosE = (cos(f)+body[iBody].dEcc) / (1.0+body[iBody].dEcc*cos(f));
-    if (f <= PI) body[iBody].dEccA = acos(cosE);
-    if (f > PI) body[iBody].dEccA = 2.*PI - acos(cosE);
-
-    body[iBody].dMeanA = body[iBody].dEccA - body[iBody].dEcc*sin(body[iBody].dEccA);
-    if (body[iBody].dMeanA < 0) body[iBody].dMeanA += 2*PI;
-    if (body[iBody].dMeanA >= 2*PI) body[iBody].dMeanA -= 2*PI;
-  }
-  free(h);
-}
-
-/**
-Calculates coordinates of planetary system with respect to invariable plane
-
-@param body Struct containing all body information and variables
-@param system Struct containing system information
-@param iNumBodies Number of bodies in the system (star & planets)
-*/
-void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
-  int iBody;
-  double AngMom[3] = {0.0,0.0,0.0}; /* locally allocates this memory */
-
-  /* Loop below calculates true anomaly at equinox for planets with DistRot enabled.
-     This angle is invariant under rotations. */
-  for (iBody=1;iBody<iNumBodies;iBody++) {
-    if (body[iBody].bDistRot) { // XXX No mention of other modules is allowed!!
-      body[iBody].dTrueApA = 2*PI - (body[iBody].dPrecA+body[iBody].dLongP);
-      while (body[iBody].dTrueApA<0) {
-        body[iBody].dTrueApA += 2*PI;
-      }
-    }
-  }
-
-  angularmom(body, AngMom, iNumBodies);
-  system->dThetaInvP = atan2(AngMom[1],AngMom[0]);
-  system->dPhiInvP = atan2(sqrt(AngMom[0]*AngMom[0]+AngMom[1]*AngMom[1]),AngMom[2]);
-
-  rotate_inv(body, system, iNumBodies);
-  bary2astro(body, iNumBodies);
-  cart2osc(body, iNumBodies);
-
-  /* Loop below recalculates precession param for planets with DistRot enabled.*/
-  for (iBody=1;iBody<iNumBodies;iBody++) {
-    if (body[iBody].bDistRot) {
-      body[iBody].dPrecA = 2*PI - (body[iBody].dTrueApA+body[iBody].dLongP);
-      while (body[iBody].dPrecA<0) {
-        body[iBody].dPrecA += 2*PI;
-      }
-      CalcXYZobl(body, iBody);
-    }
-    CalcHK(body, iBody);
-    CalcPQ(body, iBody);
-  }
-
 }
 
 

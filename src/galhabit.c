@@ -296,7 +296,7 @@ void ReadHostBinSemi(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,S
       body[iFile-1].dHostBinSemi = options->dDefault;
 }
 
-void ReadMinAllowed(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void ReadMinStellarApproach(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
   double dTmp;
@@ -305,13 +305,13 @@ void ReadMinAllowed(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0)
-      body[iFile-1].dMinAllowed = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      body[iFile-1].dMinStellarApproach = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
     else
-      body[iFile-1].dMinAllowed = dTmp*fdUnitsLength(control->Units[iFile].iLength);
+      body[iFile-1].dMinStellarApproach = dTmp*fdUnitsLength(control->Units[iFile].iLength);
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     if (iFile > 0)
-      body[iFile-1].dMinAllowed = options->dDefault;
+      body[iFile-1].dMinStellarApproach = options->dDefault;
 }
 
 void ReadHostBinEcc(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
@@ -455,6 +455,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_GALACDENSITY].cName,"dGalacDensity");
   sprintf(options[OPT_GALACDENSITY].cDescr,"Density of galactic environment");
   sprintf(options[OPT_GALACDENSITY].cDefault,"0.102"); //need to find updated value
+  sprintf(options[OPT_GALACDENSITY].cDimension,"mass/length^3");
   options[OPT_GALACDENSITY].dDefault = 0.102;
   options[OPT_GALACDENSITY].iType = 2;
   options[OPT_GALACDENSITY].bMultiFile = 0;
@@ -471,6 +472,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_ENCOUNTERRAD].cName,"dEncounterRad");
   sprintf(options[OPT_ENCOUNTERRAD].cDescr,"Radius at which stellar encounters occur");
   sprintf(options[OPT_ENCOUNTERRAD].cDefault,"206265 AU");
+  sprintf(options[OPT_ENCOUNTERRAD].cDimension,"length");
   options[OPT_ENCOUNTERRAD].dDefault = 206265.0*AUM;
   options[OPT_ENCOUNTERRAD].iType = 2;
   options[OPT_ENCOUNTERRAD].bMultiFile = 0;
@@ -479,6 +481,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_RFORM].cName,"dRForm");
   sprintf(options[OPT_RFORM].cDescr,"Galactic formation radius");
   sprintf(options[OPT_RFORM].cDefault,"4.5 kpc");
+  sprintf(options[OPT_RFORM].cDimension,"length");
   options[OPT_RFORM].dDefault = 4.5;
   options[OPT_RFORM].iType = 2;
   options[OPT_RFORM].bMultiFile = 0;
@@ -487,6 +490,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TMIGRATION].cName,"dTMigration");
   sprintf(options[OPT_TMIGRATION].cDescr,"Time of radial migration");
   sprintf(options[OPT_TMIGRATION].cDefault,"3 Gy");
+  sprintf(options[OPT_TMIGRATION].cDimension,"time");
   options[OPT_TMIGRATION].dDefault = 3e9*YEARSEC;
   options[OPT_TMIGRATION].iType = 2;
   options[OPT_TMIGRATION].bMultiFile = 0;
@@ -505,6 +509,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_GASDENSITY].cName,"dGasDensity");
   sprintf(options[OPT_GASDENSITY].cDescr,"Local ISM density");
   sprintf(options[OPT_GASDENSITY].cDefault,"0.05 Msun pc^3");
+  sprintf(options[OPT_GASDENSITY].cDimension,"mass/length^3");
   options[OPT_GASDENSITY].dDefault = 0.05;
   options[OPT_GASDENSITY].iType = 2;
   options[OPT_GASDENSITY].bMultiFile = 0;
@@ -513,6 +518,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_DMDENSITY].cName,"dDMDensity");
   sprintf(options[OPT_DMDENSITY].cDescr,"Local dark matter density");
   sprintf(options[OPT_DMDENSITY].cDefault,"0.01 Msun pc^3");
+  sprintf(options[OPT_DMDENSITY].cDimension,"mass/length^3");
   options[OPT_DMDENSITY].dDefault = 0.01;
   options[OPT_DMDENSITY].iType = 2;
   options[OPT_DMDENSITY].bMultiFile = 0;
@@ -521,6 +527,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_STARSCALEL].cName,"dStarScaleL");
   sprintf(options[OPT_STARSCALEL].cDescr,"Stellar radial scale length in MW");
   sprintf(options[OPT_STARSCALEL].cDefault,"2.4 kpc");
+  sprintf(options[OPT_STARSCALEL].cDimension,"length");
   options[OPT_STARSCALEL].dDefault = 2.4;
   options[OPT_STARSCALEL].iType = 2;
   options[OPT_STARSCALEL].bMultiFile = 0;
@@ -546,6 +553,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_TIMEEVOLVELDISP].cName,"bTimeEvolVelDisp");
   sprintf(options[OPT_TIMEEVOLVELDISP].cDescr,"Scale velocity dispersion of stars with sqrt(t)?");
   sprintf(options[OPT_TIMEEVOLVELDISP].cDefault,"1");
+  sprintf(options[OPT_TIMEEVOLVELDISP].cDimension,"length/time");
   options[OPT_TIMEEVOLVELDISP].dDefault = 1;
   options[OPT_TIMEEVOLVELDISP].iType = 0;
   options[OPT_TIMEEVOLVELDISP].bMultiFile = 0;
@@ -567,19 +575,21 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   options[OPT_GALACTIDES].bMultiFile = 0;
   fnRead[OPT_GALACTIDES] = &ReadGalacTides;
 
-  sprintf(options[OPT_MINALLOWED].cName,"dMinAllowed");
-  sprintf(options[OPT_MINALLOWED].cDescr,"Minimum close approach distance to primary");
-  sprintf(options[OPT_MINALLOWED].cDefault,"1 AU");
-  options[OPT_MINALLOWED].dDefault = AUM;
-  options[OPT_MINALLOWED].iType = 2;
-  options[OPT_MINALLOWED].bMultiFile = 0;
-  options[OPT_MINALLOWED].dNeg = AUM;
-  sprintf(options[OPT_MINALLOWED].cNeg,"AU");
-  fnRead[OPT_MINALLOWED] = &ReadMinAllowed;
+  sprintf(options[OPT_MINSTELLARAPPROACH].cName,"dMinStellarApproach");
+  sprintf(options[OPT_MINSTELLARAPPROACH].cDescr,"Minimum close approach distance to primary");
+  sprintf(options[OPT_MINSTELLARAPPROACH].cDefault,"1 AU");
+  sprintf(options[OPT_MINSTELLARAPPROACH].cDimension,"length");
+  options[OPT_MINSTELLARAPPROACH].dDefault = AUM;
+  options[OPT_MINSTELLARAPPROACH].iType = 2;
+  options[OPT_MINSTELLARAPPROACH].bMultiFile = 0;
+  options[OPT_MINSTELLARAPPROACH].dNeg = AUM;
+  sprintf(options[OPT_MINSTELLARAPPROACH].cNeg,"AU");
+  fnRead[OPT_MINSTELLARAPPROACH] = &ReadMinStellarApproach;
 
   sprintf(options[OPT_HOSTBINECC].cName,"dHostBinEcc");
   sprintf(options[OPT_HOSTBINECC].cDescr,"eccentricity of host binary");
   sprintf(options[OPT_HOSTBINECC].cDefault,"0.51");
+  sprintf(options[OPT_HOSTBINECC].cDimension,"nd");
   options[OPT_HOSTBINECC].dDefault = 0.51;
   options[OPT_HOSTBINECC].iType = 2;
   options[OPT_HOSTBINECC].bMultiFile = 0;
@@ -588,6 +598,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBINSEMI].cName,"dHostBinSemi");
   sprintf(options[OPT_HOSTBINSEMI].cDescr,"Semi-major of host binary");
   sprintf(options[OPT_HOSTBINSEMI].cDefault,"17.57 AU");
+  sprintf(options[OPT_HOSTBINSEMI].cDimension,"length");
   options[OPT_HOSTBINSEMI].dDefault = 17.57*AUM;
   options[OPT_HOSTBINSEMI].iType = 2;
   options[OPT_HOSTBINSEMI].bMultiFile = 0;
@@ -597,7 +608,8 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_HOSTBININC].cName,"dHostBinInc");
   sprintf(options[OPT_HOSTBININC].cDescr,"inclination of host binary");
-  sprintf(options[OPT_HOSTBININC].cDefault,"60.0");
+  sprintf(options[OPT_HOSTBININC].cDefault,"60.0 deg");
+  sprintf(options[OPT_HOSTBININC].cDimension,"angle");
   options[OPT_HOSTBININC].dDefault = 60.0*DEGRAD;
   options[OPT_HOSTBININC].iType = 2;
   options[OPT_HOSTBININC].bMultiFile = 0;
@@ -606,6 +618,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBINARGP].cName,"dHostBinArgP");
   sprintf(options[OPT_HOSTBINARGP].cDescr,"Arg periapse of host binary");
   sprintf(options[OPT_HOSTBINARGP].cDefault,"0.0");
+  sprintf(options[OPT_HOSTBINARGP].cDimension,"angle");
   options[OPT_HOSTBINARGP].dDefault = 0.0;
   options[OPT_HOSTBINARGP].iType = 2;
   options[OPT_HOSTBINARGP].bMultiFile = 0;
@@ -614,6 +627,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBINLONGA].cName,"dHostBinLongA");
   sprintf(options[OPT_HOSTBINLONGA].cDescr,"Long of ascending node of host binary");
   sprintf(options[OPT_HOSTBINLONGA].cDefault,"0.0");
+  sprintf(options[OPT_HOSTBINLONGA].cDimension,"angle");
   options[OPT_HOSTBINLONGA].dDefault = 0.0;
   options[OPT_HOSTBINLONGA].iType = 2;
   options[OPT_HOSTBINLONGA].bMultiFile = 0;
@@ -622,6 +636,7 @@ void InitializeOptionsGalHabit(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_HOSTBINMASS1].cName,"dHostBinMass1");
   sprintf(options[OPT_HOSTBINMASS1].cDescr,"mass of larger host binary star");
   sprintf(options[OPT_HOSTBINMASS1].cDefault,"1.1 Msun");
+  sprintf(options[OPT_HOSTBINMASS1].cDimension,"mass");
   options[OPT_HOSTBINMASS1].dDefault = 1.1*MSUN;
   options[OPT_HOSTBINMASS1].iType = 2;
   options[OPT_HOSTBINMASS1].bMultiFile = 0;
@@ -870,7 +885,8 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     system->daGSBinMag[12] = 13.0;
 
     system->daEncounterRateMV = malloc(13*sizeof(double));
-    CalcEncounterRate(system);  //need to update this, most likely XXX
+    // Russell noted that this may need to updated
+    CalcEncounterRate(system);
     system->dDeltaTEnc = 0.0;
     //system->dMinAllowed = 40.0*AUM; //set to 40 au for now...
     system->dLastEncTime = 0.0;
@@ -879,18 +895,6 @@ void VerifyGalHabit(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OU
     NextEncounterTime(system,&control->Evolve,0);
 
   }
-
-
-//
-//   GetStarMass(system);
-//   GetStarVelocity(system);
-//   GetStarPosition(system);
-//   testrand(system);
-
-  // for (i=0;i<=10;i++) {
-//     n = (int)((double)rand()*20/RAND_MAX)-3;
-//     printf("%d\n",n);
-//   }
 
   if (iBody >= 1) {
     if (system->bOutputEnc) {
@@ -1634,7 +1638,8 @@ void ForceBehaviorGalHabit(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     /* then move the orbiter, get all distances/velocities, check for disruption */
     AdvanceMA(body,system,iBody);
     body[iBody].dSinc = sin(0.5*body[iBody].dInc);
-    osc2cart(body,evolve->iNumBodies); //maybe need to convert to barycentric? XXX
+    //Russell noted we may need to convert to barycentric?     
+    osc2cart(body,evolve->iNumBodies);
 
     /* next calculate impact parameter */
     CalcImpactParam(body,system,iBody);
@@ -1874,7 +1879,7 @@ int fniCheck_disrupt(BODY* body, SYSTEM *system, int iBody) {
   apo = body[iBody].dSemi*(1.0+body[iBody].dEcc);
   peri = body[iBody].dSemi*(1.0-body[iBody].dEcc);
 
-  if (peri < body[iBody].dMinAllowed) {
+  if (peri < body[iBody].dMinStellarApproach) {
     return 1;
   } else if (apo > system->dEncounterRad) {
     return 1;

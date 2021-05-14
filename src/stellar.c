@@ -272,6 +272,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SATXUVFRAC].cName,"dSatXUVFrac");
   sprintf(options[OPT_SATXUVFRAC].cDescr,"Saturated XUV luminosity fraction");
   sprintf(options[OPT_SATXUVFRAC].cDefault,"1e-3");
+  sprintf(options[OPT_SATXUVFRAC].cDimension,"nd");
   options[OPT_SATXUVFRAC].dDefault = 1.e-3;
   options[OPT_SATXUVFRAC].iType = 0;
   options[OPT_SATXUVFRAC].bMultiFile = 1;
@@ -285,6 +286,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_SATXUVTIME].cName,"dSatXUVTime");
   sprintf(options[OPT_SATXUVTIME].cDescr,"XUV saturation time");
   sprintf(options[OPT_SATXUVTIME].cDefault,"0.1 Gyr");
+  sprintf(options[OPT_SATXUVTIME].cDimension,"time");
   options[OPT_SATXUVTIME].dDefault = 1.e8 * YEARSEC;
   options[OPT_SATXUVTIME].iType = 0;
   options[OPT_SATXUVTIME].bMultiFile = 1;
@@ -297,6 +299,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_XUVBETA].cName,"dXUVBeta");
   sprintf(options[OPT_XUVBETA].cDescr,"XUV decay power law exponent");
   sprintf(options[OPT_XUVBETA].cDefault,"1.23");
+  sprintf(options[OPT_XUVBETA].cDimension,"nd");
   options[OPT_XUVBETA].dDefault = 1.23;
   options[OPT_XUVBETA].iType = 0;
   options[OPT_XUVBETA].bMultiFile = 1;
@@ -389,7 +392,7 @@ void InitializeOptionsStellar(OPTIONS *options,fnReadOption fnRead[]) {
 
   sprintf(options[OPT_ROSSBYCUT].cName,"bRossbyCut");
   sprintf(options[OPT_ROSSBYCUT].cDescr,"Terminate magnetic braking when Rossby number > 2.08?");
-  sprintf(options[OPT_ROSSBYCUT].cDefault,"0");
+  sprintf(options[OPT_ROSSBYCUT].cDefault,"0"); // XXX Units?
   options[OPT_ROSSBYCUT].iType = 0;
   options[OPT_ROSSBYCUT].bMultiFile = 1;
   options[OPT_ROSSBYCUT].iModuleBit = STELLAR;
@@ -911,7 +914,7 @@ void InitializeOutputStellar(OUTPUT *output,fnWriteOutput fnWrite[]) {
   fnWrite[OUT_LXUV] = &WriteLXUV;
 
   sprintf(output[OUT_LXUVFRAC].cName,"LXUVFrac");
-  sprintf(output[OUT_LXUVFRAC].cDescr,"X-ray/XUV Luminosity Fraction");
+  sprintf(output[OUT_LXUVFRAC].cDescr,"Fraction of luminosity in XUV");
   output[OUT_LXUVFRAC].bNeg = 0;
   output[OUT_LXUVFRAC].iNum = 1;
   output[OUT_LXUVFRAC].iModuleBit = STELLAR;

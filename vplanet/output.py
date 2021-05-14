@@ -80,7 +80,11 @@ def get_param_descriptions():
     description = {}
     for out in stroutput:
         if out.startswith("[-]"):
-            n, d, _ = re.search(r"\[-\](.*) -- (.*). \[(.*)\]", out).groups()
+            try:
+                n, d, _ = re.search(r"\[-\](.*) -- (.*). \[(.*)\]", out).groups()
+            except AttributeError:
+                breakpoint()
+                pass
             description.update({n: d})
         else:
             n, d = re.search("(.*) -- (.*).", out).groups()

@@ -1,8 +1,12 @@
-/*
+/**
    @file poise.h
+
    @brief Subroutines that control the energy balance model for climate
+
    @author Russell Deitrick ([deitrr](https://github.com/deitrr/))
+
    @date Sep 10 2015
+
 */
 
 #include <stdio.h>
@@ -72,8 +76,6 @@
 #define OPT_SKIPSEASENABLED 1921
 #define OPT_DIFFROT         1922
 #define OPT_SPINUPTOL       1923
-#define OPT_READORBITOBLDATA  1924
-#define OPT_FILEORBITOBLDATA  1925
 
 
 #define OPT_LANDFRAC        1940
@@ -184,8 +186,6 @@ void InitializeUpdateTmpBodyPoise(BODY*,CONTROL*,UPDATE*,int);
 void HelpOptionsPoise(OPTIONS*);
 void InitializeOptionsPoise(OPTIONS*,fnReadOption[]);
 void ReadOptionsPoise(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,fnReadOption[],int);
-void ReadOrbitOblData(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
-void ReadFileOrbitOblData(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
 /* Verify Functions */
 void VerifyPoise(BODY*,CONTROL*,FILES*,OPTIONS*,OUTPUT*,SYSTEM*,UPDATE*,int,int);

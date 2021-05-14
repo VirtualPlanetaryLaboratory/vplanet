@@ -14,7 +14,7 @@ import pytest
         },
         "log.final.TGstar.RadGyra": {"value": 0.445942},
         "log.final.TGstar.RotVel": {"value": 296.385042, "unit": u.m / u.s},
-        "log.final.TGstar.EqRotRate": {"value": 1.407733e-05, "unit": 1 / u.s},
+        "log.final.TGstar.EqRotRateDiscrete": {"value": 1.407733e-05, "unit": 1 / u.s},
         "log.final.TGstar.LXUVStellar": {"value": 1.880010e22, "unit": u.W},
         "log.final.TGb.Instellation": {"value": 1.058375e05, "unit": u.kg / u.s ** 3},
         "log.final.TGb.Yobl": {"value": -0.149030},

@@ -83,11 +83,17 @@ def get_param_descriptions():
             try:
                 n, d, _ = re.search(r"\[-\](.*) -- (.*). \[(.*)\]", out).groups()
             except AttributeError:
-                breakpoint()
-                pass
+                raise ValueError(
+                    "Error parsing the following line in the log file: {}".format(out)
+                )
             description.update({n: d})
         else:
-            n, d = re.search("(.*) -- (.*).", out).groups()
+            try:
+                n, d = re.search("(.*) -- (.*).", out).groups()
+            except AttributeError:
+                raise ValueError(
+                    "Error parsing the following line in the log file: {}".format(out)
+                )
             description.update({n: d})
 
     # Format the entries a bit

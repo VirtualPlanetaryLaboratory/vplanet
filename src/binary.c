@@ -552,7 +552,7 @@ void fnPropsAuxBinary(BODY *body, EVOLVE *evolve,IO *io, UPDATE *update, int iBo
 
   if(body[iBody].iBodyType == 0) { // CBP
     // If not including eqns in the matrix, compute main variables on the fly!
-    SYSTEM * system; // dummy variable
+    SYSTEM * system = NULL; // dummy variable
     int iaBody[1] = {iBody}; //  Pick out CBP
     body[iBody].dCBPR = fndCBPRBinary(body,system,iaBody);
     body[iBody].dCBPZ = fndCBPZBinary(body,system,iaBody);
@@ -2109,7 +2109,7 @@ double fndFluxExactBinary(BODY *body, int iBody, double L0, double L1) {
   // Define/init all variables
   int i;
   int iaBody[] = {iBody};
-  SYSTEM * system;
+  SYSTEM * system = NULL; // dummy 
   double period = 2.0*PI/body[iBody].dMeanMotion; // Period of CBP orbit
   double flux = 0.0;
   double step = period/FLUX_INT_MAX;

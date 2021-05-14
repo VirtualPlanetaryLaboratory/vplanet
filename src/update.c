@@ -56,8 +56,9 @@ void UpdateCopy(UPDATE *dest,UPDATE *src,int iNumBodies) {
 }
 
 void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,fnUpdateVariable ****fnUpdate) {
-  int iBody,iBodyPert,iVar,iEqn,iModule,iLat,iFoo;
+  int iBody,iBodyPert,iVar,iEqn,iModule,iLat;
   int iNum,iSubStep;
+  int iFoo=0; // Dummy variable needed for some typedef'd functions
 
   // Allocate the firt dimension of the Update matrix to be the number of bodies
   *fnUpdate=malloc(control->Evolve.iNumBodies*sizeof(fnUpdateVariable**));
@@ -650,7 +651,7 @@ void InitializeUpdate(BODY*body,CONTROL *control,MODULE *module,UPDATE *update,f
       update[iBody].daDerivProc[iVar]=malloc(iEqn*sizeof(double));
       iVar++;
     }
-    
+
     update[iBody].iCO2MassSol = -1;
     if (update[iBody].iNumCO2MassSol) {
       update[iBody].iCO2MassSol    = iVar;

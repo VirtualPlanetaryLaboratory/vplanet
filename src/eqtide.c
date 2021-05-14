@@ -928,6 +928,7 @@ int fiTideFile(int *iLine,int iNumFiles) {
   }
 
   assert(0);
+  return 0; // To avoid compiler warnings
 }
 
 /* In the following, iBody is the current body number that is getting assigned,
@@ -3196,6 +3197,8 @@ double fdTidePower(BODY *body,int iBody,int iTideModel) {
 
   /* Whoops! */
   assert(0);
+
+  return 0; // To avoid compiler warnings
 }
 
 /* This is part of output[OUT_SURFENFLUX].fnOutput */
@@ -3387,10 +3390,8 @@ double fdCPLTidePowerEq(double dTidalZ,double dEccSq,double dMeanMotion,double d
   dGammaRot = fdGammaRot(dEccSq,dObliquity,iEpsilon);
   dGammaOrb = fdGammaOrb(dEccSq,dObliquity,iEpsilon);
 
-  /* return z/8 * ((om/dN)*grot - gorb); */
-  return dTidalZ/8 * ((1+9.5*dEccSq)*dGammaRot - dGammaOrb);
-
   free(iEpsilon);
+  return dTidalZ/8 * ((1+9.5*dEccSq)*dGammaRot - dGammaOrb);
 }
 
 double fdCPLEqRotRateCont(double dMeanMotion,double dEccSq) {

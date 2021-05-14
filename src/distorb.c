@@ -1915,6 +1915,10 @@ double fndABmatrix(BODY *body, int j, int jBody, int kBody) {
   } else if (body[jBody].dSemi < body[kBody].dSemi) {
     alpha = body[jBody].dSemi/body[kBody].dSemi;  //external perturber
     abar = alpha;
+  } else {
+    fprintf(stderr,"ERROR: Body %s and body %s have the same semi-major axis.\n",\
+            body[kBody].cName,body[jBody].cName);
+    exit(EXIT_INT);
   }
 
   n = KGAUSS*sqrt((body[0].dMass+body[jBody].dMass)/MSUN/(body[jBody].dSemi/AUM*\

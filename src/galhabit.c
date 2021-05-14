@@ -1638,7 +1638,7 @@ void ForceBehaviorGalHabit(BODY *body,MODULE *module,EVOLVE *evolve,IO *io,SYSTE
     /* then move the orbiter, get all distances/velocities, check for disruption */
     AdvanceMA(body,system,iBody);
     body[iBody].dSinc = sin(0.5*body[iBody].dInc);
-    //Russell noted we may need to convert to barycentric?     
+    //Russell noted we may need to convert to barycentric?
     osc2cart(body,evolve->iNumBodies);
 
     /* next calculate impact parameter */
@@ -1992,25 +1992,22 @@ double fndNsMinus6to15(double dMagV) {
 double fndMag2mass(double dMagV) {
   double dlogMass;
 
-  // if (dMagV > 0) {
-//     dlogMass = -0.0928*dMagV + 0.448;
-//   } else if (dMagV == -4) {
-//     dlogMass = -0.18708664335714442;
-//   } else {
-//     dlogMass = -0.271*dMagV + 0.448;
-//   }
   if (dMagV > 10 && dMagV < 15) {
-    dlogMass = 1e-3*(0.3 + 1.87*dMagV + 7.614*pow(dMagV,2) - 1.698*pow(dMagV,3) +\
-                      0.06096*pow(dMagV,4));
+    dlogMass = 1e-3*(0.3 + 1.87*dMagV + 7.614*pow(dMagV,2) - 1.698*pow(dMagV,3)\
+                     + 0.06096*pow(dMagV,4));
   } else if (dMagV >= 15) {
     dlogMass = 1e-3*(0.3 + 1.87*15 + 7.614*pow(15,2) - 1.698*pow(15,3) +\
                       0.06096*pow(15,4));
   } else if (dMagV <= 10 && dMagV >= -5.7) {
-    dlogMass = 0.477 - 0.135*dMagV + 1.228e-2*pow(dMagV,2) - 6.734e-4*pow(dMagV,3);
+    dlogMass = 0.477 - 0.135*dMagV + 1.228e-2*pow(dMagV,2) - 6.734e-4*\
+               pow(dMagV,3);
   } else if (dMagV < -5.7 && dMagV >= -6.7) {
     dlogMass = log10(0.9); //white dwarfs
   } else if (dMagV < -6.7) {
     dlogMass = log10(4.0); //giants
+  } else {
+    fprintf(stderr,"ERROR: Unknown object in galhabit.c:fndMag2mass.\n");
+    exit(EXIT_INT);
   }
 
   return pow(10.0,dlogMass);
@@ -2074,30 +2071,6 @@ void VelocityDisp(SYSTEM* system) {
 
   dMagV = system->dPassingStarMagV;
 
-  // if (dMagV == -4) {
-//     dSigma = 36.6;
-//   } else if ((dMagV <= -2) && (dMagV != -4)) {
-//     dSigma = 8.5;
-//   } else if ((dMagV > -2) && (dMagV <= 0)) {
-//     dSigma = 11.4;
-//   } else if ((dMagV > 0) && (dMagV <= 2)) {
-//     dSigma = 13.7;
-//   } else if ((dMagV > 2) && (dMagV <= 3)) {
-//     dSigma = 16.8;
-//   } else if ((dMagV > 3) && (dMagV <= 4)) {
-//     dSigma = 20.9;
-//   } else if ((dMagV > 4) && (dMagV <= 5)) {
-//     dSigma = 22.6;
-//   } else if ((dMagV > 5) && (dMagV <= 6)) {
-//     dSigma = 24.0;
-//   } else if ((dMagV > 6) && (dMagV <= 7)) {
-//     dSigma = 25.0;
-//   } else if ((dMagV > 7) && (dMagV <= 9)) {
-//     dSigma = 24.7;
-//   } else if ((dMagV > 9) && (dMagV <= 15)) {
-//     dSigma = 24.1;
-//   }
-
   if (dMagV >= -5.7 && dMagV <= -0.2) {
     dSigma = 14.7;
   } else if (dMagV > -0.2 && dMagV <= 1.3) {
@@ -2124,6 +2097,9 @@ void VelocityDisp(SYSTEM* system) {
     dSigma = 63.4;  //white dwarfs
   } else if (dMagV < -6.7) {
     dSigma = 41.0;  //giants
+  } else {
+    fprintf(stderr,"ERROR: Unknown object in galhabit.c:VelocityDisp.\n");
+    exit(EXIT_INT);
   }
 
   system->dPassingStarSigma = system->dScalingFVelDisp*dSigma;
@@ -2160,6 +2136,9 @@ void VelocityApex(SYSTEM* system) {
     dVel = 38.3; //white dwarfs
   } else if (dMagV < -6.7) {
     dVel = 21.0;  //giants
+  } else {
+    fprintf(stderr,"ERROR: Unknown object in galhabit.c:VelocityApex.\n");
+    exit(EXIT_INT);
   }
 
   dVel *= 1000.0;
@@ -2192,20 +2171,6 @@ void GetRelativeVelocity(SYSTEM* system) {
 
 double fndNearbyStarDist(double dMagV) {
   double dNs, w;
-
-//   if (dMagV <= -5.0) {
-//     dNs = 0.0;
-//   } else if (dMagV == -4.0) {
-//     //white dwarf hack
-//     dNs = 0.008;
-//   } else if (dMagV > 19.0) {
-//     dNs = 0.0;
-//   } else if (dMagV > 15.0) {
-//     dNs = nsMinus6to15(15.0);
-//   } else {
-//     dNs = nsMinus6to15(dMagV);
-//   }
-//   above, Heisler distribution, below Garcia-Sanchez distribution
 
   if (dMagV >= -5.7 && dMagV <= -0.2) {
     w = (5.7-0.2);
@@ -2244,7 +2209,12 @@ double fndNearbyStarDist(double dMagV) {
     dNs = 3.0;  //white dwarfs
   } else if (dMagV < -6.7) {
     dNs = 0.43;  //giants
+  } else {
+    fprintf(stderr,"ERROR: Unknown object in galhabit.c:fndNearbyStarDist.\n");
+    exit(EXIT_INT);
   }
+
+
   return dNs/1000; //divide by 1000 to get number/pc^3
 }
 
@@ -2277,7 +2247,11 @@ double fndNearbyStarFrEnc(SYSTEM* system, double dMagV) {
     dFs = system->daEncounterRateMV[1];  //white dwarfs
   } else if (dMagV < -6.7) {
     dFs = system->daEncounterRateMV[0];  //giants
+  } else {
+    fprintf(stderr,"ERROR: Unknown object in galhabit.c:fndNearbyStarFrEnc.\n");
+    exit(EXIT_INT);
   }
+
   return dFs;
 }
 

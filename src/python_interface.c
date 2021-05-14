@@ -24,6 +24,8 @@
 #endif
 #endif
 
+int main_impl(int,const char *(*)[9]);
+
 static PyObject* vplanet_core_version(PyObject *self, PyObject *args)
 {
     const char* version = VPLANET_VERSION_STRING;
@@ -38,8 +40,8 @@ static PyObject* vplanet_core_run(PyObject *self, PyObject *args)
     // Get the options (built-in max of 9)
     int argc = PyTuple_GET_SIZE(args);
     const char *argv[9];
-    if (!PyArg_ParseTuple(args, "|sssssssss", &argv[0], &argv[1], &argv[2], 
-                                              &argv[3], &argv[4], &argv[5], 
+    if (!PyArg_ParseTuple(args, "|sssssssss", &argv[0], &argv[1], &argv[2],
+                                              &argv[3], &argv[4], &argv[5],
                                               &argv[6], &argv[7], &argv[8])) {
       return NULL;
     }

@@ -1978,6 +1978,9 @@ void WriteLog(BODY *body,CONTROL *control,FILES *files,MODULE *module,OPTIONS *o
   } else if (iEnd == -1) {
     sprintf(cTime,"Initial");
     fp=fopen(files->cLog,"w");
+  } else {
+    fprintf(stderr,"ERROR: Unknown cTime in output.c:WriteLog.\n");
+    exit(EXIT_INPUT);
   }
 
   if (!iEnd) {

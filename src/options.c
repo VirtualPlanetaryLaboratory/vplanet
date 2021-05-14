@@ -599,6 +599,8 @@ int iAssignMassUnit(char cTmp[],int iVerbose,char cFile[],char cName[],int iLine
 
   /* Whoops! */
   assert(0);
+
+  return 0; // To avoid compiler warnings
 }
 
 void ReadUnitMass(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
@@ -678,6 +680,8 @@ int iAssignUnitTime(char cTmp[],int iVerbose,char cFile[],char cName[], int iLin
 
   /* Whoops! */
   assert(0);
+
+  return 0; // To avoid compiler warnings
 }
 
 
@@ -748,6 +752,8 @@ int iAssignUnitAngle(char cTmp[],int iVerbose,char cFile[],char cName[], int iLi
 
   /* Whoops! */
   assert(0);
+
+  return 0; // To avoid compiler warnings
 }
 
 void ReadUnitAngle(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
@@ -824,6 +830,8 @@ int iAssignUnitLength(char cTmp[],int iVerbose,char cFile[],char cName[], int iL
 
   /* Whoops! */
   assert(0);
+
+  return 0; // To avoid compiler warnings
 }
 
 void ReadUnitLength(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {
@@ -896,6 +904,8 @@ int iAssignTempUnit(char cTmp[],int iVerbose,char cFile[],char cName[],int iLine
     LineExit(cFile,iLine);
   }
   assert(0);
+
+  return 0; // To avoid compiler warnings
 }
 
 void ReadUnitTemp(CONTROL *control,FILES *files,OPTIONS *options,int iFile) {

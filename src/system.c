@@ -478,7 +478,7 @@ void angularmom(BODY *body, double *AngMom, int iNumBodies) {
 
   rxptmp = malloc(3*sizeof(double));
 
-  if (body[iBody].bSpiNBody) {
+  if (body[0].bSpiNBody) {
     fprintf(stderr,"ERROR: Function angularmom called with module SpiNBody. \n"
             "This function has only been verified for DistOrb.\n"
     );
@@ -712,6 +712,9 @@ int fbCheckMaxMutualInc(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,int iBody,
   } else if (iReason == 1) {
     // Called from CheckProgress
     dMaxMutualInc = io->dMaxMutualInc;
+  } else {
+    fprintf(stderr,"ERROR: Unknown value for iReason in system.c:fbCheckMaxMutualInc.\n");
+    exit(EXIT_INT);
   }
 
   dMutualInc = fdMutualInclination(body,iBody,jBody);
@@ -768,7 +771,7 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody)
   double mu = body[0].dMass*body[1].dMass/M;
   double dMeanMotion = body[1].dMeanMotion;
   double J = mu*sqrt(BIGG*M*body[1].dSemi*(1.0-body[1].dEcc*body[1].dEcc)); // Orbital angular momentum
-  SYSTEM *system; // Dummy system struct
+  SYSTEM *system = NULL; // Dummy system struct
   int iaBody[1] = {0};
 
   // Both tidally locked

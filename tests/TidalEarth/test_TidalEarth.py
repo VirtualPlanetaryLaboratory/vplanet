@@ -3,7 +3,6 @@ import astropy.units as u
 import pytest
 
 
-@pytest.mark.xfail(reason="thermint currently breaking logfiles")
 @benchmark(
     {
         "log.final.tidalearth.TMan": {"value": 2799.517833, "unit": u.K},

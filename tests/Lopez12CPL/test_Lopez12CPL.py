@@ -11,9 +11,6 @@ import pytest
         "log.final.auto.EnvelopeMass": {
             "value": 0.411359,
             "unit": u.Mearth,
-            "marks": pytest.mark.xfail(
-                reason="EnvelopeMass has units of `Earth`, which is ambiguous."
-            ),
         },  # should be earth masses but is currently dimentionless?
         "log.final.auto.PlanetRadius": {
             "value": 25.560564,
@@ -26,9 +23,6 @@ import pytest
         "log.final.bondi.EnvelopeMass": {
             "value": 0.0,
             "unit": u.Mearth,
-            "marks": pytest.mark.xfail(
-                reason="EnvelopeMass has units of `Earth`, which is ambiguous."
-            ),
         },  # should be earth masses but is currently dimentionless?
         "log.final.bondi.PlanetRadius": {
             "value": 1.000000,
@@ -41,9 +35,6 @@ import pytest
         "log.final.el.EnvelopeMass": {
             "value": 0.986370,
             "unit": u.Mearth,
-            "marks": pytest.mark.xfail(
-                reason="EnvelopeMass has units of `Earth`, which is ambiguous."
-            ),
         },  # should be earth masses but is currently dimentionless?},
         "log.final.el.PlanetRadius": {
             "value": 32.683276,
@@ -59,9 +50,6 @@ import pytest
         "log.final.rr.EnvelopeMass": {
             "value": 0.999399,
             "unit": u.Mearth,
-            "marks": pytest.mark.xfail(
-                reason="EnvelopeMass has units of `Earth`, which is ambiguous."
-            ),
         },  # should be earth masses but is currently dimentionless?},
         "log.final.rr.PlanetRadius": {
             "value": 32.861293,

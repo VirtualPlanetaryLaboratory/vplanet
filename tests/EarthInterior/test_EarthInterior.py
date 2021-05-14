@@ -3,7 +3,6 @@ import astropy.units as u
 import pytest
 
 
-@pytest.mark.xfail(reason="THERMINT is spitting out garbage in the logfile!")
 @benchmark(
     {
         "earth.TMan": {"index": -1, "value": 2257.8509, "unit": u.K},

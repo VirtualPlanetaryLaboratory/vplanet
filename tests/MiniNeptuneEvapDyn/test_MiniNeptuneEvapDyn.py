@@ -5,13 +5,7 @@ import pytest
 
 @benchmark(
     {
-        "log.final.planet.EnvelopeMass": {
-            "value": 0.032361,
-            "unit": u.Mearth,
-            "marks": pytest.mark.xfail(
-                reason="EnvelopeMass has units of `Earth`, which is ambiguous."
-            ),
-        },
+        "log.final.planet.EnvelopeMass": {"value": 0.032361, "unit": u.Mearth,},
         "log.final.planet.DEnvMassDt": {"value": -4.568120e09, "unit": u.kg / u.sec},
         "log.final.planet.RadXUV": {"value": 29.425995, "unit": u.Rearth},
         "log.final.planet.RocheRadius": {"value": 29.425995, "unit": u.Rearth},

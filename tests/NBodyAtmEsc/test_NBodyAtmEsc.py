@@ -7,13 +7,7 @@ import pytest
     {
         "log.final.Pulsar.PositionXSpiNBody": {"value": 1.72523e05},
         "log.final.Pulsar.VelZSpiNBody": {"value": 0.10003},
-        "log.final.A.EnvelopeMass": {
-            "value": 0.99913,
-            "unit": u.Mearth,
-            "marks": pytest.mark.xfail(
-                reason="EnvelopeMass has units of `Earth`, which is ambiguous."
-            ),
-        },
+        "log.final.A.EnvelopeMass": {"value": 0.99913, "unit": u.Mearth,},
         "log.final.A.PlanetRadius": {"value": 59.80530, "unit": u.Rearth,},
         "log.final.A.ArgP": {"value": 2.52340, "unit": u.rad},
         "log.final.A.PositionXSpiNBody": {"value": 2.61203e10},

@@ -3,7 +3,6 @@ import astropy.units as u
 import pytest
 
 
-@pytest.mark.xfail(reason="thermint currently breaking logfiles")
 @benchmark(
     {
         "log.final.venus.TMan": {"value": 2679.27122, "unit": u.K},

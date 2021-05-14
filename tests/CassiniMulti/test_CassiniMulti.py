@@ -5,13 +5,7 @@ import pytest
 
 @benchmark(
     {
-        "log.final.TGstar.Radius": {
-            "value": 0.878726,
-            "unit": u.Rsun,
-            "marks": pytest.mark.xfail(
-                reason="Radius has units of `Solar`, which is ambiguous."
-            ),
-        },
+        "log.final.TGstar.Radius": {"value": 0.878726, "unit": u.Rsun,},
         "log.final.TGstar.RadGyra": {"value": 0.445942},
         "log.final.TGstar.RotVel": {"value": 296.385042, "unit": u.m / u.s},
         "log.final.TGstar.EqRotRateDiscrete": {"value": 1.407733e-05, "unit": 1 / u.s},

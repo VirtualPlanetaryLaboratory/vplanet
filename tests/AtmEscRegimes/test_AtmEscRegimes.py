@@ -15,20 +15,8 @@ import pytest
         "log.final.bondi.RocheRadius": {"value": 44.88505, "unit": u.Rearth},
         # Ensure final H envelope and planetary mass are correct
         # That is, the H envelope should have been entirely lost!
-        "log.final.bondi.EnvelopeMass": {
-            "value": 0.0,
-            "unit": u.Mearth,
-            "marks": pytest.mark.xfail(
-                reason="EnvelopeMass has units of `Earth`, which is ambiguous."
-            ),
-        },
-        "log.final.bondi.Mass": {
-            "value": 7.0,
-            "unit": u.Mearth,
-            "marks": pytest.mark.xfail(
-                reason="Mass has units of `Earth`, which is ambiguous."
-            ),
-        },
+        "log.final.bondi.EnvelopeMass": {"value": 0.0, "unit": u.Mearth,},
+        "log.final.bondi.Mass": {"value": 7.0, "unit": u.Mearth,},
         # Test RR-limited formalism
         # Make sure RR-limited escape is selected
         "log.initial.rr.HEscapeRegime": {"value": 6},

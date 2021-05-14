@@ -8,14 +8,7 @@ import numpy as np
     {
         "log.final.a.Luminosity": {"value": 0.002445, "unit": u.LSUN},
         "log.final.a.Temperature": {"value": 2992.330343, "unit": u.K},
-        "log.final.a.Radius": {
-            "value": 0.184359,
-            "unit": u.Rsun,
-            "rtol": 1e-4,
-            "marks": pytest.mark.xfail(
-                reason="Radius has units of `Solar`, which is ambiguous."
-            ),
-        },
+        "log.final.a.Radius": {"value": 0.184359, "unit": u.Rsun, "rtol": 1e-4,},
         "log.final.a.LostAngMom": {
             "value": 9.438825e41,
             "unit": u.kg * u.m ** 2 / u.sec,
@@ -24,14 +17,7 @@ import numpy as np
         "log.final.a.RotPer": {"value": 0.299254, "unit": u.days},
         "log.final.b.Luminosity": {"value": 0.689088, "unit": u.LSUN, "rtol": 1e-4,},
         "log.final.b.Temperature": {"value": 5539.190016, "unit": u.K},
-        "log.final.b.Radius": {
-            "value": 0.902638,
-            "unit": u.Rsun,
-            "rtol": 1e-4,
-            "marks": pytest.mark.xfail(
-                reason="Radius has units of `Solar`, which is ambiguous."
-            ),
-        },
+        "log.final.b.Radius": {"value": 0.902638, "unit": u.Rsun, "rtol": 1e-4,},
         "log.final.b.LostAngMom": {
             "value": 5.086001e43,
             "unit": u.kg * u.m ** 2 / u.sec,

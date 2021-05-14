@@ -1726,7 +1726,7 @@ void fvInitializeUpdateThermint(BODY *body,UPDATE *update,int iBody) {
   @param iFoo
 */
 void fvFinalizeUpdateTManThermint(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
-  update[iBody].iaModule[iVar][*iEqn] = TMAN;
+  update[iBody].iaModule[iVar][*iEqn] = THERMINT;
   update[iBody].iNumTMan = (*iEqn)++;
 }
 /**
@@ -1740,7 +1740,7 @@ void fvFinalizeUpdateTManThermint(BODY *body,UPDATE*update,int *iEqn,int iVar,in
   @param iFoo
 */
 void fvFinalizeUpdateTCoreThermint(BODY *body,UPDATE*update,int *iEqn,int iVar,int iBody,int iFoo) {
-  update[iBody].iaModule[iVar][*iEqn] = TCORE;
+  update[iBody].iaModule[iVar][*iEqn] = THERMINT;
   update[iBody].iNumTCore = (*iEqn)++;
 }
 

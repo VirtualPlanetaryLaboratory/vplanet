@@ -49,14 +49,14 @@ cmdclass = {"build_ext": BuildExt}
 # Vplanet suite of tools
 vplanet_suite = [
     "vplot>=1.0.2",
-    "multiplanet>=1.0.0",
     "vspace>=1.0.2",
 ]
 
-# NOTE: bigplanet requires python>=3.7
+# NOTE: bigplanet & multiplanet require python>=3.7
 # If we're on python3.6, don't install it
 if sys.version_info >= (3, 7):
-    vplanet_suite += "bigplanet>=1.0.0"
+    vplanet_suite += ["bigplanet>=1.0.0"]
+    vplanet_suite += ["multiplanet>=1.0.0"]
 
 setup(
     name="vplanet",

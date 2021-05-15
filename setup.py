@@ -5,6 +5,10 @@ from glob import glob
 import sys
 
 
+# Read current code version
+VERSION = open("VERSION", "r").read().split("\n")[0].strip()
+
+
 class BuildExt(build_ext):
     """A custom build extension for adding compiler-specific options."""
 
@@ -26,10 +30,7 @@ class BuildExt(build_ext):
 
 macros = [
     ("VPLANET_PYTHON_INTERFACE", 1),
-    (
-        "VPLANET_VERSION",
-        '"{}"'.format(open("VERSION", "r").read().split("\n")[0].strip()),
-    ),
+    ("VPLANET_VERSION", '"{}"'.format(VERSION),),
 ]
 if sys.platform.startswith("win"):
     macros += [("VPLANET_ON_WINDOWS", 1)]
@@ -55,14 +56,14 @@ vplanet_suite = [
 
 # NOTE: bigplanet requires python>=3.7
 py_version = "{}.{}".format(sys.version_info.major, sys.version_info.minor)
-if py_version >= 3.7:
+if float(py_version) >= 3.7:
     vplanet_suite += "bigplanet>=1.0.0"
 
 setup(
     name="vplanet",
     author="Rory Barnes",
     author_email="rkb9@uw.edu",
-    version=open("VERSION", "r").read().split("\n")[0].strip(),
+    version=VERSION,
     url="https://github.com/VirtualPlanetaryLaboratory/vplanet",
     description="The virtual planet simulator",
     long_description=open("README.md", "r").read(),

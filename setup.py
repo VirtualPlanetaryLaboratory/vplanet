@@ -62,7 +62,7 @@ setup(
         "multiplanet>=1.0.0",
         "bigplanet>=1.0.0",
         "vspace>=1.0.2",
-        "astropy>=4.2.1",
+        "astropy>=4.1",
         "numpy>=1.19.4",
         "tqdm",
     ],

@@ -48,15 +48,14 @@ cmdclass = {"build_ext": BuildExt}
 
 # Vplanet suite of tools
 vplanet_suite = [
-    "vplot>=1.0.1",
+    "vplot>=1.0.2",
     "multiplanet>=1.0.0",
-    "bigplanet>=1.0.0",
     "vspace>=1.0.2",
 ]
 
 # NOTE: bigplanet requires python>=3.7
-py_version = "{}.{}".format(sys.version_info.major, sys.version_info.minor)
-if float(py_version) >= 3.7:
+# If we're on python3.6, don't install it
+if sys.version_info >= (3, 7):
     vplanet_suite += "bigplanet>=1.0.0"
 
 setup(
@@ -71,6 +70,7 @@ setup(
     license="MIT",
     packages=["vplanet"],
     install_requires=vplanet_suite + ["astropy>=4.1", "numpy>=1.19.4", "tqdm",],
+    python_requires=">=3.6",
     ext_modules=ext_modules,
     cmdclass=cmdclass,
     include_package_data=True,

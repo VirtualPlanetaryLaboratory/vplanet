@@ -638,7 +638,7 @@ void ReadInitIceLat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,\
 void ReadInitIceHeight(BODY *body,CONTROL *control,FILES *files,\
                        OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
-  int lTmp=-1;
+  int lTmp=1;
   double dTmp;
 
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,\

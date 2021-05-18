@@ -1,6 +1,11 @@
 N-body Orbital Evolution of the Solar System
 ============
 
+.. warning::
+
+    This example is currently broken. Check out
+    `this issue <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/issues/300>`_.
+
 Overview
 --------
 

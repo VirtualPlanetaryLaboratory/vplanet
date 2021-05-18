@@ -1,26 +1,22 @@
-from vplot import GetOutput
-import subprocess
-import numpy as np
-import os
-cwd = os.path.dirname(os.path.realpath(__file__))
+from benchmark import Benchmark, benchmark
+import astropy.units as u
+import pytest
 
 
-def test_IoHeat():
-    """Test module eqtide, and simulations with no integrations."""
-    # Remove old log file
-    subprocess.run(['rm', 'ioheat.log'], cwd=cwd)
-    # Run vplanet
-    subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
-
-    # Grab the output
-    output = GetOutput(path=cwd)
-
-    # Run our comparisons
-    assert np.isclose(output.log.initial.io.PowerEqtide, 9.380954e+13)
-    assert np.isclose(output.log.initial.io.SurfEnFluxEqtide, 2.243481)
-    assert np.isclose(output.log.initial.io.DsemiDtEqtide, -1.671102e-09)
-    assert np.isclose(output.log.initial.io.DeccDtEqtide, -8.503575e-16)
-    assert np.isclose(output.log.initial.io.DOblDtEqtide, -3.792877e-13)
-
-if __name__ == "__main__":
-    test_IoHeat()
+@benchmark(
+    {
+        "log.initial.io.PowerEqtide": {
+            "value": 9.380954e13,
+            "unit": u.kg * u.m ** 2 / u.sec ** 3,
+        },
+        "log.initial.io.SurfEnFluxEqtide": {
+            "value": 2.243481,
+            "unit": u.kg * u.m ** 2 / u.sec ** 2 / (u.m ** 2 * u.sec),
+        },
+        "log.initial.io.DsemiDtEqtide": {"value": -1.671102e-09, "unit": u.m / u.sec},
+        "log.initial.io.DeccDtEqtide": {"value": -8.503575e-16, "unit": 1 / u.sec},
+        "log.initial.io.DOblDtEqtide": {"value": -3.792877e-13, "unit": u.rad / u.sec},
+    }
+)
+class TestIoHeat(Benchmark):
+    pass

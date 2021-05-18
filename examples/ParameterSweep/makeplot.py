@@ -1,50 +1,65 @@
 #!/usr/bin/env python
-
+import vplanet
+import vplot
 import bigplanet as bp
-import h5py as h5
 import matplotlib.pyplot as plt
-import vplot as vpl
+import matplotlib as mpl
+import numpy as np
+import pathlib
 import sys
-import os
+import subprocess
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+# Path hacks
+path = pathlib.Path(__file__).parents[0].absolute()
+sys.path.insert(1, str(path.parents[0]))
+from get_args import get_args
 
-data = bp.HDF5File('ParameterSweep.hdf5')
+# Run vspace
+if not (path / "ParameterSweep").exists():
+    subprocess.check_output(["vspace", "vspace.in"], cwd=path)
 
-RIC = bp.ExtractColumn(data,'earth_RIC_final')
-RIC_units = bp.ExtractUnits(data,'earth_RIC_final')
+# Run multi-planet
+if not (path / ".ParameterSweep").exists():
+    subprocess.check_output(["multi-planet", "vspace.in"], cwd=path)
 
-TCore_uniq = bp.ExtractUniqueValues(data,'earth_TCore_initial')
-TCore_units = bp.ExtractUnits(data,'earth_TCore_initial')
+# Run bigplanet
+if not (path / ".ParameterSweep_BPL").exists():
+    subprocess.check_output(["bigplanet", "vspace.in"], cwd=path)
 
-K40_uniq = bp.ExtractUniqueValues(data,'earth_40KPowerCore_final')
-K40_units = bp.ExtractUnits(data,'earth_40KPowerCore_final')
+# TODO: This doesn't work with current version of bigplanet!
+data = bp.HDF5File(path / "ParameterSweep.hdf5")
 
-RIC_Matrix = bp.CreateMatrix(TCore_uniq,K40_uniq,RIC)
+RIC = bp.ExtractColumn(data, "earth_RIC_final")
+RIC_units = bp.ExtractUnits(data, "earth_RIC_final")
 
-#print(RIC_Matrix)
+TCore_uniq = bp.ExtractUniqueValues(data, "earth_TCore_initial")
+TCore_units = bp.ExtractUnits(data, "earth_TCore_initial")
 
-contours = [0,500,1000,1500,2000,2500]
-xlabel = 'Initial Core Temperature ('+TCore_units+')'
-ylabel = 'Current Potassium-40 Power ('+K40_units+')'
-title = 'Final Inner Core Radius ('+RIC_units+')'
+K40_uniq = bp.ExtractUniqueValues(data, "earth_40KPowerCore_final")
+K40_units = bp.ExtractUnits(data, "earth_40KPowerCore_final")
 
-#plt.xlim(2500, 3500)
-#plt.ylim(0, 0.5)
+RIC_Matrix = bp.CreateMatrix(TCore_uniq, K40_uniq, RIC)
 
-plt.xlabel(xlabel,fontsize=20)
-plt.ylabel(ylabel,fontsize=20)
-plt.title(title,fontsize=20)
+contours = [0, 500, 1000, 1500, 2000, 2500]
+xlabel = "Initial Core Temperature (" + TCore_units + ")"
+ylabel = "Current Potassium-40 Power (" + K40_units + ")"
+title = "Final Inner Core Radius (" + RIC_units + ")"
 
-plt.tick_params(axis='both', labelsize=20)
+plt.xlabel(xlabel, fontsize=20)
+plt.ylabel(ylabel, fontsize=20)
+plt.title(title, fontsize=20)
 
-cont = plt.contour(TCore_uniq,K40_uniq,RIC_Matrix,colors = vpl.colors.pale_blue,levels=contours)
-plt.clabel(cont,fmt="%.0f",fontsize=15)
+plt.tick_params(axis="both", labelsize=20)
 
-cont = plt.contour(TCore_uniq,K40_uniq,RIC_Matrix,levels=[1221])
-plt.clabel(cont,fmt="%.0f",fontsize=15)
+cont = plt.contour(
+    TCore_uniq, K40_uniq, RIC_Matrix, colors=vpl.colors.pale_blue, levels=contours
+)
+plt.clabel(cont, fmt="%.0f", fontsize=15)
 
-if (sys.argv[1] == 'pdf'):
-    plt.savefig('ParameterSweep.pdf', dpi=300)
-if (sys.argv[1] == 'png'):
-    plt.savefig('ParameterSweep.png', dpi=300)
+cont = plt.contour(TCore_uniq, K40_uniq, RIC_Matrix, levels=[1221])
+plt.clabel(cont, fmt="%.0f", fontsize=15)
+
+# Save the figure
+ext = get_args().ext
+fig.savefig(path / f"ParameterSweep.{ext}", dpi=300)
+

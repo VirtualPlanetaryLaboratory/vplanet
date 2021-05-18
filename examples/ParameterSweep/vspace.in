@@ -1,4 +1,4 @@
-srcfolder  ~/vplanet-private/examples/EarthInterior
+srcfolder  ../EarthInterior
 destfolder ParameterSweep
 trialname test_
 

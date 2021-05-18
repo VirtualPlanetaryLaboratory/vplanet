@@ -1,4 +1,4 @@
-Magma Ocean Evolution of Earth 
+Magma Ocean Evolution of Earth
 ===========
 
 Overview
@@ -12,7 +12,7 @@ This result approximately reproduces Fig. 1 in `Hamano et al. (2013) <https://do
 **Author**                  Patrick Barth
 **Planet name**             Earth
 **Initial water content**   5 TO
-**Modules**                 AtmEsc, MagmOc, STELLAR 
+**Modules**                 AtmEsc, MagmOc, STELLAR
 **Approx. runtime**         1 minute
 =========================   =======================
 
@@ -21,8 +21,7 @@ To run this case:
 
 .. code-block:: bash
 
-    vplanet vpl.in
-    python plot_magmoc_earth_hamano.py
+    python makeplot.py
 
 
 Expected output

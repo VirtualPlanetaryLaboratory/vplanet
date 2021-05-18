@@ -1,29 +1,17 @@
-from vplot import GetOutput
-import subprocess
-import numpy as np
-import os
-cwd = os.path.dirname(os.path.realpath(__file__))
+from benchmark import Benchmark, benchmark
+import astropy.units as u
+import pytest
 
 
-def test_MiniNeptuneEvapDyn():
-    """Test hydrogen envelope loss with the Lehmer & Catling (2017) model."""
-    # Remove old log file
-    subprocess.run(['rm', 'dynamic.log'], cwd=cwd)
-    # Run vplanet
-    subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
-
-    # Grab the output
-    output = GetOutput(path=cwd)
-
-    # Check Primary Variables
-    assert np.isclose(output.log.final.planet.EnvelopeMass, 0.032361)
-    assert np.isclose(output.log.final.planet.DEnvMassDt, -4.568120e+09)
-
-    # Check other variables
-    assert np.isclose(output.log.final.planet.RadXUV, 29.425995)
-    assert np.isclose(output.log.final.planet.RocheRadius, 29.425995)
-    assert np.isclose(output.log.final.planet.ScaleHeight, 401.210931)
-    assert np.isclose(output.log.final.planet.PresSurf, 3.551934)
-
-if __name__ == "__main__":
-    test_MiniNeptuneEvapDyn()
+@benchmark(
+    {
+        "log.final.planet.EnvelopeMass": {"value": 0.032361, "unit": u.Mearth,},
+        "log.final.planet.DEnvMassDt": {"value": -4.568120e09, "unit": u.kg / u.sec},
+        "log.final.planet.RadXUV": {"value": 29.425995, "unit": u.Rearth},
+        "log.final.planet.RocheRadius": {"value": 29.425995, "unit": u.Rearth},
+        "log.final.planet.ScaleHeight": {"value": 401.210931, "unit": u.km},
+        "log.final.planet.PresSurf": {"value": 3.551934, "unit": u.GPa},
+    }
+)
+class TestMiniNeptuneEvapDyn(Benchmark):
+    pass

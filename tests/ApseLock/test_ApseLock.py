@@ -1,38 +1,22 @@
-from vplot import GetOutput
-import subprocess
-import numpy as np
-import os
-cwd = os.path.dirname(os.path.realpath(__file__))
+from benchmark import Benchmark, benchmark
+import astropy.units as u
 
 
-def test_ApseLock():
-    """Test module Eqtide-Distorb coupling."""
-    # Remove old log file
-    subprocess.run(['rm', 'ApseLock.log'], cwd=cwd)
-    # Run vplanet
-    subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
-
-    # Grab the output
-    output = GetOutput(path=cwd)
-
-    # Checks
-    # Primary Variables
-    assert np.isclose(output.log.final.b.HEcc, -0.042671)
-    assert np.isclose(output.log.final.b.KEcc, -0.069231)
-    assert np.isclose(output.log.final.b.DHEccDtEqtide, 2.269581e-15)
-    assert np.isclose(output.log.final.b.DKEccDtEqtide, 3.682246e-15)
-    assert np.isclose(output.log.final.b.DHeccDtDistOrb, -2.488505e-11)
-    assert np.isclose(output.log.final.b.DKeccDtDistOrb, -1.344098e-11)
-    assert np.isclose(output.log.final.c.SemiMajorAxis, 6.911428e+09)
-
-    # Other Checks
-    assert np.isclose(output.log.final.b.Eccentricity, 0.081326)
-    assert np.isclose(output.log.final.b.ArgP, 3.693953)
-    assert np.isclose(output.log.final.b.SemiMajorAxis, 2.812439e+09)
-    assert np.isclose(output.log.final.c.Eccentricity, 0.193811)
-    assert np.isclose(output.log.final.c.ArgP, 5.015526)
-    assert np.isclose(output.log.final.c.SemiMajorAxis, 6.911428e+09)
-
-
-if __name__ == "__main__":
-    test_ApseLock()
+@benchmark(
+    {
+        "log.final.b.HEcc": {"value": -0.042671},
+        "log.final.b.KEcc": {"value": -0.069231},
+        "log.final.b.DHEccDtEqtide": {"value": 2.269581e-15, "unit": 1 / u.year},
+        "log.final.b.DKEccDtEqtide": {"value": 3.682246e-15, "unit": 1 / u.year},
+        "log.final.b.DHeccDtDistOrb": {"value": -2.488505e-11, "unit": 1 / u.year},
+        "log.final.b.DKeccDtDistOrb": {"value": -1.344098e-11, "unit": 1 / u.year},
+        "log.final.c.SemiMajorAxis": {"value": 6.911428e09, "unit": u.m},
+        "log.final.b.Eccentricity": {"value": 0.081326},
+        "log.final.b.ArgP": {"value": 3.693953, "unit": u.rad},
+        "log.final.b.SemiMajorAxis": {"value": 2.812439e09, "unit": u.m},
+        "log.final.c.Eccentricity": {"value": 0.193811},
+        "log.final.c.ArgP": {"value": 5.015526, "unit": u.rad},
+    }
+)
+class TestApseLock(Benchmark):
+    pass

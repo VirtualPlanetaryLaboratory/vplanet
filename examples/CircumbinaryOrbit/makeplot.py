@@ -4,32 +4,25 @@ dynamics of Kepler-16b, using VPLANET's binary module
 
 David P. Fleming, University of Washington, 2018
 """
-
-from __future__ import division, print_function
-
+import vplanet
+import vplot
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
-import vplot as vpl
+import pathlib
 import sys
 
+# Path hacks
+path = pathlib.Path(__file__).parents[0].absolute()
+sys.path.insert(1, str(path.parents[0]))
+from get_args import get_args
 
-# Check correct number of arguments
-if (len(sys.argv) != 2):
-    print('ERROR: Incorrect number of arguments.')
-    print('Usage: '+sys.argv[0]+' <pdf | png>')
-    exit(1)
-if (sys.argv[1] != 'pdf' and sys.argv[1] != 'png'):
-    print('ERROR: Unknown file format: '+sys.argv[1])
-    print('Options are: pdf, png')
-    exit(1)
+# Typical plot parameters that make for pretty plot
+mpl.rcParams["figure.figsize"] = (10, 8)
+mpl.rcParams["font.size"] = 18.0
 
-#Typical plot parameters that make for pretty plot
-mpl.rcParams['figure.figsize'] = (10,8)
-mpl.rcParams['font.size'] = 18.0
-
-# Load data
-output = vpl.GetOutput()
+# Run vplanet
+output = vplanet.run(path / "vpl.in", units=False)
 
 # Extract data
 time = output.cbp.Time
@@ -43,45 +36,39 @@ fig, axes = plt.subplots(nrows=2, ncols=2, sharex=True)
 color = "k"
 
 ## Upper left: eccentricity ##
-axes[0,0].plot(time, ecc, color=color, zorder=-1)
+axes[0, 0].plot(time, ecc, color=color, zorder=-1)
 
 # Format
-axes[0,0].set_xlim(time.min(),time.max())
-axes[0,0].set_ylabel("Eccentricity")
+axes[0, 0].set_xlim(time.min(), time.max())
+axes[0, 0].set_ylabel("Eccentricity")
 
 ## Upper left: inclination ##
-axes[0,1].plot(time, inc, color=color, zorder=-1)
+axes[0, 1].plot(time, inc, color=color, zorder=-1)
 
 # Format
-axes[0,1].set_xlim(time.min(),time.max())
-axes[0,1].set_ylabel("Inclination [$^{\circ}$]")
+axes[0, 1].set_xlim(time.min(), time.max())
+axes[0, 1].set_ylabel("Inclination [$^{\circ}$]")
 
 ## Lower left: Longitude of periapse ##
-axes[1,0].scatter(time, varpi, color=color, s=10, zorder=-1)
+axes[1, 0].scatter(time, varpi, color=color, s=10, zorder=-1)
 
 # Format
-axes[1,0].set_xlim(time.min(),time.max())
-axes[1,0].set_ylim(0,360)
-axes[1,0].set_xlabel("Time [yr]")
-axes[1,0].set_ylabel("Longitude of Periapsis [$^{\circ}$]")
+axes[1, 0].set_xlim(time.min(), time.max())
+axes[1, 0].set_ylim(0, 360)
+axes[1, 0].set_xlabel("Time [yr]")
+axes[1, 0].set_ylabel("Longitude of Periapsis [$^{\circ}$]")
 
 ## Lower right: Longitude of the ascending node ##
-axes[1,1].scatter(time, longa, color=color, s=10, zorder=-1)
+axes[1, 1].scatter(time, longa, color=color, s=10, zorder=-1)
 
 # Format
-axes[1,1].set_xlim(time.min(),time.max())
-axes[1,1].set_ylim(0,360)
-axes[1,1].set_xlabel("Time [yr]")
-axes[1,1].set_ylabel("Longitude of\n Ascending Node [$^{\circ}$]")
-
-fig.tight_layout()
-fig.subplots_adjust(wspace=0.4)
-fig.subplots_adjust(hspace=0.05)
-
+axes[1, 1].set_xlim(time.min(), time.max())
+axes[1, 1].set_ylim(0, 360)
+axes[1, 1].set_xlabel("Time [yr]")
+axes[1, 1].set_ylabel("Longitude of\n Ascending Node [$^{\circ}$]")
 for ax in axes.flatten():
     ax.set_rasterization_zorder(0)
 
-if (sys.argv[1] == 'pdf'):
-    plt.savefig('CircumbinaryOrbit.pdf', bbox_inches="tight", dpi=600)
-if (sys.argv[1] == 'png'):
-    plt.savefig('CircumbinaryOrbit.png', bbox_inches="tight", dpi=600)
+# Save the figure
+ext = get_args().ext
+fig.savefig(path / f"CircumbinaryOrbit.{ext}", bbox_inches="tight", dpi=600)

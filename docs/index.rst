@@ -16,6 +16,7 @@ are available in separate repositories.
    src
    vplot
    parametersweep
+   tutorials
    developers
    authors
    repos

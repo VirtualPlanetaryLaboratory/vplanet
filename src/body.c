@@ -32,10 +32,11 @@
 int fiSign(double dValue) {
   int iSign;
 
-  if (fabs(dValue) > EPS) // EPS set in vplanet.h
-    iSign = (int)(dValue/fabs(dValue));
-  else
+  if (fabs(dValue) > EPS) { // EPS set in vplanet.h
+    iSign = (int)(dValue / fabs(dValue));
+  } else {
     iSign = 0;
+}
 
   return iSign;
 }
@@ -48,8 +49,8 @@ int fiSign(double dValue) {
 
   @return The time derivative of the rotational frequency
 */
-double fdDPerDt(double dRotRate,double dDrotrateDt) {
-    return -2*PI*dDrotrateDt/(dRotRate*dRotRate);
+double fdDPerDt(double dRotRate, double dDrotrateDt) {
+  return -2 * PI * dDrotrateDt / (dRotRate * dRotRate);
 }
 
 /**
@@ -62,11 +63,12 @@ double fdDPerDt(double dRotRate,double dDrotrateDt) {
   @return The timescale of the variable's change: |x/(dx/dt)|. If the
   derivative is 0, return 0.
 */
-double fdTimescale(double dVar,double dDeriv) {
-  if (dDeriv != 0)
-    return fabs(dVar/dDeriv);
-  else
+double fdTimescale(double dVar, double dDeriv) {
+  if (dDeriv != 0) {
+    return fabs(dVar / dDeriv);
+  } else {
     return 0;
+}
 }
 
 /**
@@ -81,15 +83,16 @@ controlled by multiple processes.
 
 @return The timescale of the variable's change: |x/Sum(dx/dt)|
 */
-double fdTimescaleMulti(double dVar,double *dDeriv,int iNum) {
+double fdTimescaleMulti(double dVar, double *dDeriv, int iNum) {
   double dTime;
   int iPert;
 
-  dTime=0;
-  for (iPert=0;iPert<iNum;iPert++) {
-    if (dDeriv[iPert] != 0)
+  dTime = 0;
+  for (iPert = 0; iPert < iNum; iPert++) {
+    if (dDeriv[iPert] != 0) {
       dTime += dDeriv[iPert]; // Note that here dTime is actullay the rate
-    dTime = fabs(dVar/dTime);
+}
+    dTime = fabs(dVar / dTime);
   }
   return dTime;
 }
@@ -101,7 +104,7 @@ double fdTimescaleMulti(double dVar,double *dDeriv,int iNum) {
  @return The period
 */
 double fdFreqToPer(double dFreq) {
-  return 2*PI/dFreq;
+  return 2 * PI / dFreq;
 }
 
 /**
@@ -111,7 +114,7 @@ double fdFreqToPer(double dFreq) {
   @return The frequency
 */
 double fdPerToFreq(double dPeriod) {
-  return 2*PI/dPeriod;
+  return 2 * PI / dPeriod;
 }
 
 /*
@@ -129,7 +132,7 @@ double fdPerToFreq(double dPeriod) {
 double fdBodyPotEnergy(double dMass, double dRadius) {
   /* ALPHA_STRUCT  is structural constant for spherical mass distribution
      potential energy (E_pot = -ALPHA*BIGG*M^2/R = 0.6), see vplanet.h. */
-  return -ALPHA_STRUCT*BIGG*dMass*dMass/dRadius;
+  return -ALPHA_STRUCT * BIGG * dMass * dMass / dRadius;
 }
 
 /**
@@ -142,8 +145,8 @@ double fdBodyPotEnergy(double dMass, double dRadius) {
 
   @return Body's rotational angular momentum
 */
-double fdRotAngMom(double dRadGyra,double dMass,double dRad,double dOmega) {
-  return dRadGyra*dRadGyra*dMass*dRad*dRad*dOmega;
+double fdRotAngMom(double dRadGyra, double dMass, double dRad, double dOmega) {
+  return dRadGyra * dRadGyra * dMass * dRad * dRad * dOmega;
 }
 
 /**
@@ -156,8 +159,10 @@ double fdRotAngMom(double dRadGyra,double dMass,double dRad,double dOmega) {
 
   @return Body's rotational jinetic energy
 */
-double fdRotKinEnergy(double dMass,double dRadius,double dRadGyra,double dOmega) {
-  return 0.5*dRadGyra*dRadGyra*dMass*dRadius*dRadius*dOmega*dOmega;
+double fdRotKinEnergy(double dMass, double dRadius, double dRadGyra,
+                      double dOmega) {
+  return 0.5 * dRadGyra * dRadGyra * dMass * dRadius * dRadius * dOmega *
+         dOmega;
 }
 
 /**
@@ -168,8 +173,8 @@ double fdRotKinEnergy(double dMass,double dRadius,double dRadGyra,double dOmega)
 
   @return Body's rotational velocity
 */
-double fdRadiusFreqToRotVel(double dRadius,double dFreq) {
-  return dRadius*dFreq;
+double fdRadiusFreqToRotVel(double dRadius, double dFreq) {
+  return dRadius * dFreq;
 }
 
 /**
@@ -180,8 +185,8 @@ double fdRadiusFreqToRotVel(double dRadius,double dFreq) {
 
   @return Body's rotational frequency
 */
-double fdRadiusRotVelToFreq(double dRotVel,double dRadius){
-  return dRotVel/dRadius;
+double fdRadiusRotVelToFreq(double dRotVel, double dRadius) {
+  return dRotVel / dRadius;
 }
 
 /**
@@ -192,8 +197,8 @@ double fdRadiusRotVelToFreq(double dRotVel,double dRadius){
 
   @return Body's Radius
 */
-double fdDensityMassToRadius(double dDensity,double dMass) {
-  return pow( (3*dDensity/(4*PI*dMass)), (1./3) );
+double fdDensityMassToRadius(double dDensity, double dMass) {
+  return pow((3 * dDensity / (4 * PI * dMass)), (1. / 3));
 }
 
 /**
@@ -204,8 +209,8 @@ double fdDensityMassToRadius(double dDensity,double dMass) {
 
   @return Body's mass
 */
-double fdMassFromRadiusDensity(double dRadius,double dDensity){
-  return 4*PI*pow(dRadius,3)/(3*dDensity);
+double fdMassFromRadiusDensity(double dRadius, double dDensity) {
+  return 4 * PI * pow(dRadius, 3) / (3 * dDensity);
 }
 
 /**
@@ -216,8 +221,8 @@ double fdMassFromRadiusDensity(double dRadius,double dDensity){
 
   @return Body's rotational velocity
 */
-double fdRotVel(double dRadius,double dRotRate) {
-  return dRadius*dRotRate;
+double fdRotVel(double dRadius, double dRotRate) {
+  return dRadius * dRotRate;
 }
 
 /**
@@ -228,10 +233,10 @@ double fdRotVel(double dRadius,double dRotRate) {
 
  @return Body's bulk density
 */
-double fdSphereDensity(double dMass,double dRadius) {
+double fdSphereDensity(double dMass, double dRadius) {
   double dDensity;
 
-  dDensity = 3*dMass/(4*PI*pow(dRadius,3));
+  dDensity = 3 * dMass / (4 * PI * pow(dRadius, 3));
   return dDensity;
 }
 
@@ -250,12 +255,12 @@ double fdSphereDensity(double dMass,double dRadius) {
   @return Stellar Mass
 */
 double fdRadToMass_ReidHawley(double dRadius) {
-  double x,y;
+  double x, y;
 
-    x = log10(dRadius/RSUN);
-    y = 0.1277 + 2.185*x + 3.135*x*x + 1.9031*x*x*x;
+  x = log10(dRadius / RSUN);
+  y = 0.1277 + 2.185 * x + 3.135 * x * x + 1.9031 * x * x * x;
 
-    return pow(10,y)*MSUN;
+  return pow(10, y) * MSUN;
 }
 
 /**
@@ -269,12 +274,12 @@ double fdRadToMass_ReidHawley(double dRadius) {
   @return Stellar Radius
 */
 double fdMassToRad_ReidHawley(double dMass) {
-  double x,y;
+  double x, y;
 
-  x = log10(dMass/MSUN);
-  y = 0.1424 + 1.568*x - 0.2342*x*x - 0.5581*x*x*x;
+  x = log10(dMass / MSUN);
+  y = 0.1424 + 1.568 * x - 0.2342 * x * x - 0.5581 * x * x * x;
 
-  return pow(10,y)*RSUN;
+  return pow(10, y) * RSUN;
 }
 
 /**
@@ -285,12 +290,13 @@ double fdMassToRad_ReidHawley(double dMass) {
   @return Stellar radius
 */
 double fdMassToRad_GordaSvech99(double dMass) {
-  dMass = log10(dMass/MSUN);
+  dMass = log10(dMass / MSUN);
 
-  if (dMass > 0.14)
-    return pow(10,(0.096 + 0.652*log10(dMass)))*RSUN;
-  else
-    return pow(10,(0.1 + 1.03*log10(dMass)))*RSUN;
+  if (dMass > 0.14) {
+    return pow(10, (0.096 + 0.652 * log10(dMass))) * RSUN;
+  } else {
+    return pow(10, (0.1 + 1.03 * log10(dMass))) * RSUN;
+}
 }
 
 /**
@@ -304,12 +310,12 @@ double fdMassToRad_GordaSvech99(double dMass) {
   @return Stellar mass
 */
 double fdRadToMass_GordaSvech99(double dRadius) {
-    double x,y;
+  double x, y;
 
-    x = log10(dRadius/RSUN);
-    y = -0.09709 + 0.9709*x - 2.502e-5*x*x - 1.34e-5*x*x*x;
+  x = log10(dRadius / RSUN);
+  y = -0.09709 + 0.9709 * x - 2.502e-5 * x * x - 1.34e-5 * x * x * x;
 
-    return pow(10,y);
+  return pow(10, y);
 }
 
 
@@ -323,12 +329,12 @@ double fdRadToMass_GordaSvech99(double dRadius) {
   @return Stellar radius
 */
 double fdMassToRad_BaylessOrosz06(double dMass) {
-    double dRadius;
+  double dRadius;
 
-    dMass = dMass/MSUN;
-    dRadius = 0.0324 + 0.9343*dMass + 0.0374*dMass*dMass;
+  dMass   = dMass / MSUN;
+  dRadius = 0.0324 + 0.9343 * dMass + 0.0374 * dMass * dMass;
 
-    return dRadius*RSUN;
+  return dRadius * RSUN;
 }
 
 /**
@@ -341,12 +347,13 @@ double fdMassToRad_BaylessOrosz06(double dMass) {
   @return Stellar masss
 */
 double fdRadToMass_BaylessOrosz06(double dRadius) {
-    double dMass;
+  double dMass;
 
-    dRadius = dRadius/RSUN;
-    dMass = -0.03477 + 1.07146*dRadius - 8.171*dRadius*dRadius -0.0412*dRadius*dRadius*dRadius;
+  dRadius = dRadius / RSUN;
+  dMass   = -0.03477 + 1.07146 * dRadius - 8.171 * dRadius * dRadius -
+          0.0412 * dRadius * dRadius * dRadius;
 
-    return dMass*MSUN;
+  return dMass * MSUN;
 }
 
 
@@ -358,11 +365,11 @@ double fdRadToMass_BaylessOrosz06(double dRadius) {
   @return Planetary radius
 */
 double fdMassToRad_Sotin07(double dMass) {
-    return pow(dMass/MEARTH,0.272)*REARTH;
+  return pow(dMass / MEARTH, 0.272) * REARTH;
 }
 
 double fdMassToRad_LehmerCatling17(double dMass) {
-    return 1.3*pow(dMass,0.27);
+  return 1.3 * pow(dMass, 0.27);
 }
 
 /**
@@ -373,7 +380,7 @@ double fdMassToRad_LehmerCatling17(double dMass) {
   @return Planetary mass
 */
 double fdRadToMass_Sotin07(double dRadius) {
-    return pow(dRadius/REARTH,3.6765)*MEARTH;
+  return pow(dRadius / REARTH, 3.6765) * MEARTH;
 }
 
 /**
@@ -384,27 +391,28 @@ double fdRadToMass_Sotin07(double dRadius) {
 
  @return Body's radius as provided by appropriate relationship
 */
-double fdMassToRad(double dMass,int iRelation) {
+double fdMassToRad(double dMass, int iRelation) {
 
-  if (iRelation == REIDHAWLEY)
+  if (iRelation == REIDHAWLEY) {
     return fdMassToRad_ReidHawley(dMass);
-  else if (iRelation == GORDASVECH99)
+  } else if (iRelation == GORDASVECH99) {
     return fdMassToRad_GordaSvech99(dMass);
-  else if (iRelation == BAYLESSOROSZ06)
+  } else if (iRelation == BAYLESSOROSZ06) {
     return fdMassToRad_BaylessOrosz06(dMass);
-  else if (iRelation == SOTIN07)
+  } else if (iRelation == SOTIN07) {
     return fdMassToRad_Sotin07(dMass);
+}
 
   /* Need to add more! */
 
   /* Whoops! */
-  fprintf(stderr,"ERROR: Unknown mass-radius relationship.\n");
-  fprintf(stderr,"Mass: %.3e, Relationship: %d\n",dMass,iRelation);
+  fprintf(stderr, "ERROR: Unknown mass-radius relationship.\n");
+  fprintf(stderr, "Mass: %.3e, Relationship: %d\n", dMass, iRelation);
   exit(EXIT_UNITS);
 }
 
 // Assign mass from radius and published relationship
-double fdRadToMass(double dMass,int iRelation) {
+double fdRadToMass(double dMass, int iRelation) {
 
   if (iRelation == REIDHAWLEY) {
     return fdRadToMass_ReidHawley(dMass);
@@ -416,7 +424,7 @@ double fdRadToMass(double dMass,int iRelation) {
     return fdRadToMass_Sotin07(dMass);
   } else {
     /* Whoops! */
-    fprintf(stderr,"ERROR: Unknown mass-radius relation.\n");
+    fprintf(stderr, "ERROR: Unknown mass-radius relation.\n");
     exit(EXIT_UNITS);
   }
 }
@@ -427,71 +435,73 @@ double fdRadToMass(double dMass,int iRelation) {
  @param dest Struct to receive the src
  @param src Struct that contains original information
  */
-void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
-  int iBody,iModule;
+void BodyCopy(BODY *dest, BODY *src, EVOLVE *evolve) {
+  int iBody, iModule;
 
   /* This subroutine only includes parameters needed for more than 1 module,
      Module-specific parameters belong in the fnBodyCopy subroutines. */
 
-  for (iBody=0;iBody<evolve->iNumBodies;iBody++) {
-    strcpy(dest[iBody].cName,src[iBody].cName);
+  for (iBody = 0; iBody < evolve->iNumBodies; iBody++) {
+    strcpy(dest[iBody].cName, src[iBody].cName);
     dest[iBody].iBodyType = src[iBody].iBodyType;
-    dest[iBody].dMass = src[iBody].dMass;
-    dest[iBody].dRadius = src[iBody].dRadius;
-    dest[iBody].dRadGyra = src[iBody].dRadGyra;
-    dest[iBody].dXobl = src[iBody].dXobl;
-    dest[iBody].dYobl = src[iBody].dYobl;
-    dest[iBody].dZobl = src[iBody].dZobl;
-    dest[iBody].dRotRate = src[iBody].dRotRate;
-    dest[iBody].dAge = src[iBody].dAge;
+    dest[iBody].dMass     = src[iBody].dMass;
+    dest[iBody].dRadius   = src[iBody].dRadius;
+    dest[iBody].dRadGyra  = src[iBody].dRadGyra;
+    dest[iBody].dXobl     = src[iBody].dXobl;
+    dest[iBody].dYobl     = src[iBody].dYobl;
+    dest[iBody].dZobl     = src[iBody].dZobl;
+    dest[iBody].dRotRate  = src[iBody].dRotRate;
+    dest[iBody].dAge      = src[iBody].dAge;
     // iBody=0 could be in galhabit, so dEcc is overloaded
     // If every run DistOrb w/GalHabit, there could be trouble
-    dest[iBody].dEcc = src[iBody].dEcc;
-    dest[iBody].dPrecA = src[iBody].dPrecA;
-    dest[iBody].dObliquity = src[iBody].dObliquity;
-    dest[iBody].dLostAngMom = src[iBody].dLostAngMom;
-    dest[iBody].dLostEng = src[iBody].dLostEng;
+    dest[iBody].dEcc          = src[iBody].dEcc;
+    dest[iBody].dPrecA        = src[iBody].dPrecA;
+    dest[iBody].dObliquity    = src[iBody].dObliquity;
+    dest[iBody].dLostAngMom   = src[iBody].dLostAngMom;
+    dest[iBody].dLostEng      = src[iBody].dLostEng;
     dest[iBody].dAlbedoGlobal = src[iBody].dAlbedoGlobal;
 
-    dest[iBody].bBinary = src[iBody].bBinary;
-    dest[iBody].bDistOrb = src[iBody].bDistOrb;
-    dest[iBody].bDistRot = src[iBody].bDistRot;
-    dest[iBody].bEqtide = src[iBody].bEqtide;
-    dest[iBody].bFlare = src[iBody].bFlare;
+    dest[iBody].bBinary   = src[iBody].bBinary;
+    dest[iBody].bDistOrb  = src[iBody].bDistOrb;
+    dest[iBody].bDistRot  = src[iBody].bDistRot;
+    dest[iBody].bEqtide   = src[iBody].bEqtide;
+    dest[iBody].bFlare    = src[iBody].bFlare;
     dest[iBody].bGalHabit = src[iBody].bGalHabit;
-    dest[iBody].bPoise = src[iBody].bPoise;
-    dest[iBody].bStellar = src[iBody].bStellar;
+    dest[iBody].bPoise    = src[iBody].bPoise;
+    dest[iBody].bStellar  = src[iBody].bStellar;
     dest[iBody].bThermint = src[iBody].bThermint;
-    dest[iBody].bRadheat = src[iBody].bRadheat;
+    dest[iBody].bRadheat  = src[iBody].bRadheat;
     dest[iBody].bSpiNBody = src[iBody].bSpiNBody;
 
     dest[iBody].bMantle = src[iBody].bMantle;
-    dest[iBody].bOcean = src[iBody].bOcean;
-    dest[iBody].bEnv = src[iBody].bEnv;
+    dest[iBody].bOcean  = src[iBody].bOcean;
+    dest[iBody].bEnv    = src[iBody].bEnv;
 
     //dest[iBody].dLXUV = src[iBody].dLXUV;
 
     // Im(k_2) properties
-    dest[iBody].dK2Man = src[iBody].dK2Man;
+    dest[iBody].dK2Man     = src[iBody].dK2Man;
     dest[iBody].dTidalQMan = src[iBody].dTidalQMan;
-    dest[iBody].dImK2Man = src[iBody].dImK2Man;
+    dest[iBody].dImK2Man   = src[iBody].dImK2Man;
     // These copies are needed to avoid floating point exceptions in
     //   (eqtide + !thermint) bodies
-    dest[iBody].dShmodUMan=src[iBody].dShmodUMan;
-    dest[iBody].dStiffness=src[iBody].dStiffness;
+    dest[iBody].dShmodUMan       = src[iBody].dShmodUMan;
+    dest[iBody].dStiffness       = src[iBody].dStiffness;
     dest[iBody].dImK2ManOrbModel = src[iBody].dImK2ManOrbModel;
-    dest[iBody].bUseOuterTidalQ = src[iBody].bUseOuterTidalQ;
+    dest[iBody].bUseOuterTidalQ  = src[iBody].bUseOuterTidalQ;
 
     if (iBody > 0) {
-      dest[iBody].dHecc = src[iBody].dHecc;
-      dest[iBody].dKecc = src[iBody].dKecc;
-      dest[iBody].dSemi = src[iBody].dSemi;
-      dest[iBody].dRadius = src[iBody].dRadius;
+      dest[iBody].dHecc       = src[iBody].dHecc;
+      dest[iBody].dKecc       = src[iBody].dKecc;
+      dest[iBody].dSemi       = src[iBody].dSemi;
+      dest[iBody].dRadius     = src[iBody].dRadius;
       dest[iBody].dMeanMotion = src[iBody].dMeanMotion;
     }
     /* Copy module-specific properties */
-    for (iModule=0;iModule<evolve->iNumModules[iBody];iModule++)
-      evolve->fnBodyCopy[iBody][iModule](dest,src,evolve->iEqtideModel,evolve->iNumBodies,iBody);
+    for (iModule = 0; iModule < evolve->iNumModules[iBody]; iModule++) {
+      evolve->fnBodyCopy[iBody][iModule](dest, src, evolve->iEqtideModel,
+                                         evolve->iNumBodies, iBody);
+}
   }
 }
 
@@ -503,8 +513,8 @@ void BodyCopy(BODY *dest,BODY *src,EVOLVE *evolve) {
   is to be calculated.
   */
 void CalcXYZobl(BODY *body, int iBody) {
-  body[iBody].dXobl = sin(body[iBody].dObliquity)*cos(body[iBody].dPrecA);
-  body[iBody].dYobl = sin(body[iBody].dObliquity)*sin(body[iBody].dPrecA);
+  body[iBody].dXobl = sin(body[iBody].dObliquity) * cos(body[iBody].dPrecA);
+  body[iBody].dYobl = sin(body[iBody].dObliquity) * sin(body[iBody].dPrecA);
   body[iBody].dZobl = cos(body[iBody].dObliquity);
 }
 
@@ -531,13 +541,16 @@ double CalcDynEllipEq(BODY *body, int iBody) {
 
   // EdEarth = J2Earth*MEARTH*pow(REARTH,2)/CEarth;
   // EdVenus = J2Venus/0.336;
-  nuEarth = 2*PI/(DAYSEC);
+  nuEarth = 2 * PI / (DAYSEC);
 
-  dJ2 = J2Earth*pow(body[iBody].dRotRate/nuEarth,2)*pow(body[iBody].dRadius/REARTH,3)*MEARTH/body[iBody].dMass;
+  dJ2 = J2Earth * pow(body[iBody].dRotRate / nuEarth, 2) *
+        pow(body[iBody].dRadius / REARTH, 3) * MEARTH / body[iBody].dMass;
 
-  if (dJ2 < J2Venus) dJ2 = J2Venus;
+  if (dJ2 < J2Venus) {
+    dJ2 = J2Venus;
+}
 
-  dDynEllip = dJ2/body[iBody].dSpecMomInertia;
+  dDynEllip = dJ2 / body[iBody].dSpecMomInertia;
 
   // dTmp = EdEarth*MEARTH/(pow(nuEarth,2)*pow(REARTH,3));
   //
@@ -560,13 +573,15 @@ double CalcDynEllipEq(BODY *body, int iBody) {
    @param dPresSurf pressure at surface due to envelope
    @param dRadXUV radius from center of planet where optical depth of XUV is unity
    */
-double fdLehmerRadius(BODY *body,int iBody) {
-  double dRadXUV,dRoche;
+double fdLehmerRadius(BODY *body, int iBody) {
+  double dRadXUV, dRoche;
 
-  dRadXUV = body[iBody].dRadSolid * body[iBody].dRadSolid / (body[iBody].dScaleHeight
-    * log(body[iBody].dPresXUV/body[iBody].dPresSurf) + body[iBody].dRadSolid);
-  dRoche=fdRocheRadius(body,iBody);
-    //printf("%lf %lf %lf %lf %lf\n",body[iBody].dPresXUV,body[iBody].dPresSurf,body[iBody].dGravAccel,body[iBody].dEnvelopeMass,dRadXUV);
+  dRadXUV = body[iBody].dRadSolid * body[iBody].dRadSolid /
+            (body[iBody].dScaleHeight *
+                   log(body[iBody].dPresXUV / body[iBody].dPresSurf) +
+             body[iBody].dRadSolid);
+  dRoche = fdRocheRadius(body, iBody);
+  //printf("%lf %lf %lf %lf %lf\n",body[iBody].dPresXUV,body[iBody].dPresSurf,body[iBody].dGravAccel,body[iBody].dEnvelopeMass,dRadXUV);
   if (dRadXUV <= 0) {
     dRadXUV = dRoche;
   }
@@ -596,9 +611,10 @@ double fdLehmerRadius(BODY *body,int iBody) {
 double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
   double dPresSurf;
 
-  dPresSurf = dGravAccel * dMassEnv / (4 * PI * dRadSurf * dRadSurf); // [kg/ms2]
-//  if (dPresSurf < 0)
-//    printf("%lf %lf %lf %lf\n",dGravAccel,dRadSurf,dMassEnv,dPresSurf);
+  dPresSurf =
+        dGravAccel * dMassEnv / (4 * PI * dRadSurf * dRadSurf); // [kg/ms2]
+  //  if (dPresSurf < 0)
+  //    printf("%lf %lf %lf %lf\n",dGravAccel,dRadSurf,dMassEnv,dPresSurf);
   return dPresSurf;
 }
 
@@ -608,16 +624,17 @@ double fdLehmerPres(double dMassEnv, double dGravAccel, double dRadSurf) {
   @param dFlux Incident flux on the body
   @param dTemp Thermal temperature
   */
-double fdThermalTemp(BODY *body,int iBody) {
-  double dFlux,dTemp;
+double fdThermalTemp(BODY *body, int iBody) {
+  double dFlux, dTemp;
 
-  dFlux = body[0].dLuminosity*(1-body[iBody].dAlbedoGlobal)/(4*PI*body[iBody].dSemi*body[iBody].dSemi);
-  dTemp = pow(dFlux/SIGMA,0.25);
+  dFlux = body[0].dLuminosity * (1 - body[iBody].dAlbedoGlobal) /
+          (4 * PI * body[iBody].dSemi * body[iBody].dSemi);
+  dTemp = pow(dFlux / SIGMA, 0.25);
 
   return dTemp;
 }
 
-double fdImK2Total(BODY *body,int iBody) {
+double fdImK2Total(BODY *body, int iBody) {
 
   if (body[iBody].bUseOuterTidalQ) {
     if (body[iBody].bEnv) {
@@ -631,7 +648,7 @@ double fdImK2Total(BODY *body,int iBody) {
   if (body[iBody].bMantle || body[iBody].bOcean || body[iBody].bEnv) {
     return body[iBody].dImK2Man + body[iBody].dImK2Ocean + body[iBody].dImK2Env;
   } else {
-    return -body[iBody].dK2/body[iBody].dTidalQ;
+    return -body[iBody].dK2 / body[iBody].dTidalQ;
   }
 }
 
@@ -643,21 +660,24 @@ double fdImK2Total(BODY *body,int iBody) {
 
   @return Upper mantle k2 Love number
 */
-double fdK2Man(BODY *body,int iBody) {
+double fdK2Man(BODY *body, int iBody) {
   //  return 1.5/(1+9.5*body[iBody].dShmodUMan/(STIFFNESS));
-    return 1.5/(1+9.5*body[iBody].dShmodUMan/body[iBody].dStiffness);
+  return 1.5 / (1 + 9.5 * body[iBody].dShmodUMan / body[iBody].dStiffness);
 }
 
-double fdTidalQMan(BODY *body,int iBody) {
+double fdTidalQMan(BODY *body, int iBody) {
   double ShmodUManArr;
-  ShmodUManArr = body[iBody].dShmodUMan*body[iBody].dMeltfactorUMan;
+  ShmodUManArr = body[iBody].dShmodUMan * body[iBody].dMeltfactorUMan;
   //return body[iBody].dDynamViscos*body[iBody].dMeanMotion/ShmodUManArr;
-  return body[iBody].dDynamViscos*body[iBody].dMeanMotion/body[iBody].dShmodUMan;
+  return body[iBody].dDynamViscos * body[iBody].dMeanMotion /
+         body[iBody].dShmodUMan;
 }
 
-double fdImK2ManThermint(BODY *body,int iBody) {
-  double dDenom2 = pow(1.5*body[iBody].dTidalQMan/body[iBody].dK2Man,2.);
-  double imk2 = -(57./4)*body[iBody].dDynamViscos*body[iBody].dMeanMotion/((body[iBody].dStiffness)*(1.0+dDenom2));
+double fdImK2ManThermint(BODY *body, int iBody) {
+  double dDenom2 = pow(1.5 * body[iBody].dTidalQMan / body[iBody].dK2Man, 2.);
+  double imk2    = -(57. / 4) * body[iBody].dDynamViscos *
+                body[iBody].dMeanMotion /
+                ((body[iBody].dStiffness) * (1.0 + dDenom2));
   return imk2;
 }
 
@@ -669,11 +689,11 @@ double fdImK2ManThermint(BODY *body,int iBody) {
 
   @return Imaginary component of k2 Love number
 */
-double fdImK2Man(BODY *body,int iBody) {
+double fdImK2Man(BODY *body, int iBody) {
 
   if (body[iBody].bThermint) {
-    body[iBody].dK2 = fdK2Man(body,iBody);
-    return fdImK2ManThermint(body,iBody);
+    body[iBody].dK2 = fdK2Man(body, iBody);
+    return fdImK2ManThermint(body, iBody);
   } else {
     return body[iBody].dImK2Man;
   }
@@ -720,11 +740,11 @@ void AssignTidalProperties(BODY *body,EVOLVE *evolve,int iBody) {
 
   @return Heat flow of secular mantle cooling
 */
-double fdHflowSecMan(BODY *body,EVOLVE *evolve,int iBody) {
+double fdHflowSecMan(BODY *body, EVOLVE *evolve, int iBody) {
   double dHflowSecMan = 0;
 
   if (body[iBody].bThermint) {
-    dHflowSecMan += fdPowerThermint(body,iBody);
+    dHflowSecMan += fdPowerThermint(body, iBody);
     //dHflowSecMan += fdHflowSecManThermint(body,iBody);
   }
   if (body[iBody].bEqtide) {
@@ -734,8 +754,6 @@ double fdHflowSecMan(BODY *body,EVOLVE *evolve,int iBody) {
   // Should add RadHeat here
   return dHflowSecMan;
 }
-
-
 
 
 /**
@@ -749,10 +767,12 @@ double fdHflowSecMan(BODY *body,EVOLVE *evolve,int iBody) {
 
   @return iIndex
 */
-int fiGetLowerBoundProximaCen(double dVal, const double *daArr, int iDim){
+int fiGetLowerBoundProximaCen(double dVal, const double *daArr, int iDim) {
   int iIndex;
-  for (iIndex=0;iIndex<iDim-2;iIndex++){
-    if (dVal < daArr[iIndex+1]) break;
+  for (iIndex = 0; iIndex < iDim - 2; iIndex++) {
+    if (dVal < daArr[iIndex + 1]) {
+      break;
+}
   }
   return iIndex;
 }
@@ -765,19 +785,22 @@ int fiGetLowerBoundProximaCen(double dVal, const double *daArr, int iDim){
 
  What are these arguments?
 */
-double fdProximaCenBiLinear(int iALEN, double const data_lo[PROXIMACEN_ALEN], double const data_hi[PROXIMACEN_ALEN], int xi, int yi, double dx, double dy) {
+double fdProximaCenBiLinear(int iALEN, double const data_lo[PROXIMACEN_ALEN],
+                            double const data_hi[PROXIMACEN_ALEN], int xi,
+                            int yi, double dx, double dy) {
   double C0, C1, C;
   if (dx == 0) {
     C0 = data_lo[xi];
     C1 = data_hi[xi];
   } else {
-    C0 = data_lo[xi]*(1-dx) + data_lo[xi+1]*dx;
-    C1 = data_hi[xi]*(1-dx) + data_hi[xi+1]*dx;
+    C0 = data_lo[xi] * (1 - dx) + data_lo[xi + 1] * dx;
+    C1 = data_hi[xi] * (1 - dx) + data_hi[xi + 1] * dx;
   }
-  if (dy == 0)
+  if (dy == 0) {
     C = C0;
-  else
-    C = C0*(1-dy) + C1*dy;
+  } else {
+    C = C0 * (1 - dy) + C1 * dy;
+}
   return C;
 }
 
@@ -787,16 +810,25 @@ For use with `fdProximaCenStellar()` to interpolate stellar properties
 
   What are these arguments?
 */
-double fdProximaCenInterpolate(int iALEN, int iMLEN, double const xarr[PROXIMACEN_ALEN], double const yarr[PROXIMACEN_MLEN], double const data_lo[PROXIMACEN_ALEN], double const data_hi[PROXIMACEN_ALEN], double A, double M, int *iError){
-  double dx,dy;
-  int xi,yi;
-  int dxi,dyi;
+double fdProximaCenInterpolate(int iALEN, int iMLEN,
+                               double const xarr[PROXIMACEN_ALEN],
+                               double const yarr[PROXIMACEN_MLEN],
+                               double const data_lo[PROXIMACEN_ALEN],
+                               double const data_hi[PROXIMACEN_ALEN], double A,
+                               double M, int *iError) {
+  double dx, dy;
+  int xi, yi;
+  int dxi, dyi;
   double result = 0;
 
   // Let's enforce a minimum age of 0.001 GYR and a maximum age of 10.0 GYR
   // NOTE: This results in a constant luminosity at times beyond this range.
-  if (A < 0.001) A = 0.001;
-  if (A > 10.00) A = 10.00;
+  if (A < 0.001) {
+    A = 0.001;
+}
+  if (A > 10.00) {
+    A = 10.00;
+}
 
   // Bounds on mass
   if (M < 0.1) {
@@ -808,8 +840,8 @@ double fdProximaCenInterpolate(int iALEN, int iMLEN, double const xarr[PROXIMACE
   }
 
   // Get the lower bound
-  xi = fiGetLowerBoundProximaCen(log10(A),xarr,iALEN);
-  yi = fiGetLowerBoundProximaCen(M,yarr,iMLEN);
+  xi = fiGetLowerBoundProximaCen(log10(A), xarr, iALEN);
+  yi = fiGetLowerBoundProximaCen(M, yarr, iMLEN);
 
   // Paranoia check (REMOVE)
   if (yi < 0) {
@@ -821,11 +853,11 @@ double fdProximaCenInterpolate(int iALEN, int iMLEN, double const xarr[PROXIMACE
   }
 
   // Normalized distance to grid points
-  dx = (log10(A)-xarr[xi]) / (xarr[xi + 1] - xarr[xi]);
-  dy = (M-yarr[yi]) / (yarr[yi + 1] - yarr[yi]);
+  dx = (log10(A) - xarr[xi]) / (xarr[xi + 1] - xarr[xi]);
+  dy = (M - yarr[yi]) / (yarr[yi + 1] - yarr[yi]);
 
   // Calculate
-  result = fdProximaCenBiLinear(iALEN,data_lo,data_hi,xi,yi,dx,dy);
+  result = fdProximaCenBiLinear(iALEN, data_lo, data_hi, xi, yi, dx, dy);
   if (isnan(result)) {
     *iError = PROXIMACEN_ERROR;
     return 0;
@@ -866,27 +898,38 @@ double fdProximaCenStellar(int iParam, double A, double M, int *iError) {
   double dLum, dRad;
 
   if (iParam == PROXIMACEN_T) {
-      // Get fudged luminosity
-      dLum = fdProximaCenInterpolate(PROXIMACEN_ALEN, PROXIMACEN_MLEN, PROXIMACEN_AARR, PROXIMACEN_MARR, PROXIMACEN_LOGL_LO, PROXIMACEN_LOGL_HI, A / (1.e9 * YEARSEC), M / MSUN, iError);
-      dLum = LSUN * pow(10., dLum * PROXIMACEN_FUDGE);
-      // Get radius
-      dRad = fdProximaCenInterpolate(PROXIMACEN_ALEN, PROXIMACEN_MLEN, PROXIMACEN_AARR, PROXIMACEN_MARR, PROXIMACEN_LOGR_LO, PROXIMACEN_LOGR_HI, A / (1.e9 * YEARSEC), M / MSUN, iError);
-      dRad = RSUN * pow(10., dRad);
-      // Compute self-consistent temperature
-      res = pow(dLum / (4 * PI * dRad * dRad * SIGMA), 0.25);
-      return res;
+    // Get fudged luminosity
+    dLum = fdProximaCenInterpolate(PROXIMACEN_ALEN, PROXIMACEN_MLEN,
+                                   PROXIMACEN_AARR, PROXIMACEN_MARR,
+                                   PROXIMACEN_LOGL_LO, PROXIMACEN_LOGL_HI,
+                                   A / (1.e9 * YEARSEC), M / MSUN, iError);
+    dLum = LSUN * pow(10., dLum * PROXIMACEN_FUDGE);
+    // Get radius
+    dRad = fdProximaCenInterpolate(PROXIMACEN_ALEN, PROXIMACEN_MLEN,
+                                   PROXIMACEN_AARR, PROXIMACEN_MARR,
+                                   PROXIMACEN_LOGR_LO, PROXIMACEN_LOGR_HI,
+                                   A / (1.e9 * YEARSEC), M / MSUN, iError);
+    dRad = RSUN * pow(10., dRad);
+    // Compute self-consistent temperature
+    res = pow(dLum / (4 * PI * dRad * dRad * SIGMA), 0.25);
+    return res;
   } else if (iParam == PROXIMACEN_L) {
-      res = fdProximaCenInterpolate(PROXIMACEN_ALEN, PROXIMACEN_MLEN, PROXIMACEN_AARR, PROXIMACEN_MARR, PROXIMACEN_LOGL_LO, PROXIMACEN_LOGL_HI, A / (1.e9 * YEARSEC), M / MSUN, iError);
-      return LSUN * pow(10., res * PROXIMACEN_FUDGE);
+    res = fdProximaCenInterpolate(PROXIMACEN_ALEN, PROXIMACEN_MLEN,
+                                  PROXIMACEN_AARR, PROXIMACEN_MARR,
+                                  PROXIMACEN_LOGL_LO, PROXIMACEN_LOGL_HI,
+                                  A / (1.e9 * YEARSEC), M / MSUN, iError);
+    return LSUN * pow(10., res * PROXIMACEN_FUDGE);
   } else if (iParam == PROXIMACEN_R) {
-      res = fdProximaCenInterpolate(PROXIMACEN_ALEN, PROXIMACEN_MLEN, PROXIMACEN_AARR, PROXIMACEN_MARR, PROXIMACEN_LOGR_LO, PROXIMACEN_LOGR_HI, A / (1.e9 * YEARSEC), M / MSUN, iError);
-      return RSUN * pow(10., res);
+    res = fdProximaCenInterpolate(PROXIMACEN_ALEN, PROXIMACEN_MLEN,
+                                  PROXIMACEN_AARR, PROXIMACEN_MARR,
+                                  PROXIMACEN_LOGR_LO, PROXIMACEN_LOGR_HI,
+                                  A / (1.e9 * YEARSEC), M / MSUN, iError);
+    return RSUN * pow(10., res);
   } else {
-      *iError = PROXIMACEN_ERROR;
-      return 0;
+    *iError = PROXIMACEN_ERROR;
+    return 0;
   }
 }
-
 
 
 /**
@@ -900,10 +943,12 @@ Proxima Cen b from a grid, assuming it has a gaseous composition
 
 @return iIndex
 */
-int fiGetLowerBoundProximaCenB(double dVal, const double *daArr, int iDim){
+int fiGetLowerBoundProximaCenB(double dVal, const double *daArr, int iDim) {
   int iIndex;
-  for (iIndex=0;iIndex<iDim-2;iIndex++){
-    if (dVal < daArr[iIndex+1]) break;
+  for (iIndex = 0; iIndex < iDim - 2; iIndex++) {
+    if (dVal < daArr[iIndex + 1]) {
+      break;
+}
   }
   return iIndex;
 }
@@ -920,15 +965,18 @@ double fdProximaCenBLinear(int xi, int yi, double dx, double dy) {
   double C0, C1, C;
   if (dx == 0) {
     C0 = daProxCenBRadius[xi][yi];
-    C1 = daProxCenBRadius[xi][yi+1];
+    C1 = daProxCenBRadius[xi][yi + 1];
   } else {
-    C0 = daProxCenBRadius[xi][yi]*(1-dx) + daProxCenBRadius[xi+1][yi]*dx;
-    C1 = daProxCenBRadius[xi][yi+1]*(1-dx) + daProxCenBRadius[xi+1][yi+1]*dx;
+    C0 = daProxCenBRadius[xi][yi] * (1 - dx) +
+         daProxCenBRadius[xi + 1][yi] * dx;
+    C1 = daProxCenBRadius[xi][yi + 1] * (1 - dx) +
+         daProxCenBRadius[xi + 1][yi + 1] * dx;
   }
-  if (dy == 0)
+  if (dy == 0) {
     C = C0;
-  else
-    C = C0*(1-dy) + C1*dy;
+  } else {
+    C = C0 * (1 - dy) + C1 * dy;
+}
 
   return C;
 }
@@ -943,21 +991,28 @@ and smoothing over sharp (presumably) numerical features.
 
   What are the arguments?
 */
-double fdProximaCenBRadius(double C, double A, double M){
+double fdProximaCenBRadius(double C, double A, double M) {
   double dx, dy;
   int xi, yi;
 
   // Let's enforce a minimum age of 0.001 GYR and a maximum age of 10.0 GYR
   A /= YEARSEC;
-  if (A < 1e7) A = 1e7;
-  if (A > 1e10) A = 1e10;
+  if (A < 1e7) {
+    A = 1e7;
+}
+  if (A > 1e10) {
+    A = 1e10;
+}
 
   // If the planet is rocky, use the Sotin+07 relation
-  if (C < 0.00001)
+  if (C < 0.00001) {
     return fdMassToRad_Sotin07(M);
+}
 
   // Let's enforce the bounds for the composition as well
-  if (C > 0.01) C = 0.01;
+  if (C > 0.01) {
+    C = 0.01;
+}
 
   // Get the lower bounds
   xi = fiGetLowerBoundProximaCenB(C, daProxCenBComp, PROXCENBCOMPLEN);
@@ -968,7 +1023,7 @@ double fdProximaCenBRadius(double C, double A, double M){
   dy = (A - daProxCenBAge[yi]) / (daProxCenBAge[yi + 1] - daProxCenBAge[yi]);
 
   // Calculate
-  return fdProximaCenBLinear(xi,yi,dx,dy) * REARTH;
+  return fdProximaCenBLinear(xi, yi, dx, dy) * REARTH;
 }
 
 /**
@@ -977,94 +1032,115 @@ double fdProximaCenBRadius(double C, double A, double M){
   What are the arguments?
 
 */
-double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int iMetal) {
+double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge,
+                     int iMetal) {
   int m, c, f, t, z;
   double dm, dc, df, dt;
-  double R000,R001,R010,R011,R100,R101,R110,R111;
-  double R00,R10,R01,R11;
-  double R0,R1;
-  double dMassEarth = dMass/MEARTH;
-  double dAgeYears = dAge/YEARSEC;
+  double R000, R001, R010, R011, R100, R101, R110, R111;
+  double R00, R10, R01, R11;
+  double R0, R1;
+  double dMassEarth = dMass / MEARTH;
+  double dAgeYears  = dAge / YEARSEC;
 
   /* We're not going to bother interpolating between metallicities. */
   z = iMetal;
 
   // Add a small tolerance
-  if ((dMassEarth/daLopezMass[0] < 1)) {
-        /* Out of bounds, assuming it's OK to use min val */
-        dMassEarth = daLopezMass[0];
-        m = 0;
-    } else if ((dMassEarth/daLopezMass[MASSLEN-1] > 1)) {
-        /* Out of bounds, assuming it's OK to use max val */
-        dMassEarth = daLopezMass[MASSLEN-1];
-        m = MASSLEN-1;
+  if ((dMassEarth / daLopezMass[0] < 1)) {
+    /* Out of bounds, assuming it's OK to use min val */
+    dMassEarth = daLopezMass[0];
+    m          = 0;
+  } else if ((dMassEarth / daLopezMass[MASSLEN - 1] > 1)) {
+    /* Out of bounds, assuming it's OK to use max val */
+    dMassEarth = daLopezMass[MASSLEN - 1];
+    m          = MASSLEN - 1;
   } else {
     /* Get index just below desired mass */
-    for (m = 0; m < MASSLEN-1; m++)
-      if (dMassEarth < daLopezMass[m+1]) break;
+    for (m = 0; m < MASSLEN - 1; m++) {
+      if (dMassEarth < daLopezMass[m + 1]) {
+        break;
+}
+}
   }
-  if (dComp < daLopezComp[0]){
+  if (dComp < daLopezComp[0]) {
     /* Out of bounds, assuming it's OK to use min val */
     dComp = daLopezComp[0];
-    c = 0;
-  } else if (dComp >= daLopezComp[COMPLEN-1]){
-        /* Out of bounds, assuming it's OK to use max val */
-    dComp = daLopezComp[COMPLEN-1];
-    c = COMPLEN - 1;
+    c     = 0;
+  } else if (dComp >= daLopezComp[COMPLEN - 1]) {
+    /* Out of bounds, assuming it's OK to use max val */
+    dComp = daLopezComp[COMPLEN - 1];
+    c     = COMPLEN - 1;
   } else {
     /* Get index just below desired composition */
-    for (c = 0; c < COMPLEN-1; c++)
-      if (dComp < daLopezComp[c+1]) break;
+    for (c = 0; c < COMPLEN - 1; c++) {
+      if (dComp < daLopezComp[c + 1]) {
+        break;
+}
+}
   }
-  if (dFlux < daLopezFlux[0]){
+  if (dFlux < daLopezFlux[0]) {
     /* Out of bounds, assuming it's OK to use min val */
     dFlux = daLopezFlux[0];
-    f = 0;
-  } else if (dFlux >= daLopezFlux[FLUXLEN-1]){
+    f     = 0;
+  } else if (dFlux >= daLopezFlux[FLUXLEN - 1]) {
     /* Out of bounds, assuming it's OK to use max val */
-    dFlux = daLopezFlux[FLUXLEN-1];
-    f = FLUXLEN - 1;
+    dFlux = daLopezFlux[FLUXLEN - 1];
+    f     = FLUXLEN - 1;
   } else {
     /* Get index just below desired composition */
-    for (f = 0; f < FLUXLEN-1; f++)
-      if (dFlux < daLopezFlux[f+1]) break;
+    for (f = 0; f < FLUXLEN - 1; f++) {
+      if (dFlux < daLopezFlux[f + 1]) {
+        break;
+}
+}
   }
   if (dAgeYears < daLopezAge[0]) {
     /* Out of bounds, assuming it's OK to use min val */
     dAgeYears = daLopezAge[0];
-    t = 0;
-  } else if (dAgeYears >= daLopezAge[TIMELEN-1]){
+    t         = 0;
+  } else if (dAgeYears >= daLopezAge[TIMELEN - 1]) {
     /* Out of bounds, assuming it's OK to use max val */
-    dAgeYears = daLopezAge[TIMELEN-1];
-    t = TIMELEN - 1;
+    dAgeYears = daLopezAge[TIMELEN - 1];
+    t         = TIMELEN - 1;
   } else {
     /* Get index just below desired time */
-    for (t = 0; t < TIMELEN-1; t++)
-      if (dAgeYears < daLopezAge[t+1]) break;
+    for (t = 0; t < TIMELEN - 1; t++) {
+      if (dAgeYears < daLopezAge[t + 1]) {
+        break;
+}
+}
   }
   /* We now have the coordinates below our desired point.
    * Let's use them to do a simple tetralinear interpolation.
    * Adapted from the method described in
    * http://en.wikipedia.org/wiki/Trilinear_interpolation */
-  dm = (dMassEarth - daLopezMass[m])/(daLopezMass[m+1] - daLopezMass[m]);
-  dc = (dComp - daLopezComp[c])/(daLopezComp[c+1] - daLopezComp[c]);
-  df = (dFlux - daLopezFlux[f])/(daLopezFlux[f+1] - daLopezFlux[f]);
-  dt = (dAgeYears - daLopezAge[t])/(daLopezAge[t+1] - daLopezAge[t]);
-  R000 = daLopezRadius[m][c][f][z][t]*(1-dm) + daLopezRadius[m+1][c][f][z][t]*dm;
-  R001 = daLopezRadius[m][c][f][z][t+1]*(1-dm) + daLopezRadius[m+1][c][f][z][t+1]*dm;
-  R010 = daLopezRadius[m][c][f+1][z][t]*(1-dm) + daLopezRadius[m+1][c][f+1][z][t]*dm;
-  R011 = daLopezRadius[m][c][f+1][z][t+1]*(1-dm) + daLopezRadius[m+1][c][f+1][z][t+1]*dm;
-  R100 = daLopezRadius[m][c+1][f][z][t]*(1-dm) + daLopezRadius[m+1][c+1][f][z][t]*dm;
-  R101 = daLopezRadius[m][c+1][f][z][t+1]*(1-dm) + daLopezRadius[m+1][c+1][f][z][t+1]*dm;
-  R110 = daLopezRadius[m][c+1][f+1][z][t]*(1-dm) + daLopezRadius[m+1][c+1][f+1][z][t]*dm;
-  R111 = daLopezRadius[m][c+1][f+1][z][t+1]*(1-dm) + daLopezRadius[m+1][c+1][f+1][z][t+1]*dm;
-  R00 = R000*(1-dc) + R100*dc;
-  R10 = R010*(1-dc) + R110*dc;
-  R01 = R001*(1-dc) + R101*dc;
-  R11 = R011*(1-dc) + R111*dc;
-  R0 = R00*(1-df) + R10*df;
-  R1 = R01*(1-df) + R11*df;
-  return (R0*(1-dt) + R1*dt)*REARTH;
+  dm   = (dMassEarth - daLopezMass[m]) / (daLopezMass[m + 1] - daLopezMass[m]);
+  dc   = (dComp - daLopezComp[c]) / (daLopezComp[c + 1] - daLopezComp[c]);
+  df   = (dFlux - daLopezFlux[f]) / (daLopezFlux[f + 1] - daLopezFlux[f]);
+  dt   = (dAgeYears - daLopezAge[t]) / (daLopezAge[t + 1] - daLopezAge[t]);
+  R000 = daLopezRadius[m][c][f][z][t] * (1 - dm) +
+         daLopezRadius[m + 1][c][f][z][t] * dm;
+  R001 = daLopezRadius[m][c][f][z][t + 1] * (1 - dm) +
+         daLopezRadius[m + 1][c][f][z][t + 1] * dm;
+  R010 = daLopezRadius[m][c][f + 1][z][t] * (1 - dm) +
+         daLopezRadius[m + 1][c][f + 1][z][t] * dm;
+  R011 = daLopezRadius[m][c][f + 1][z][t + 1] * (1 - dm) +
+         daLopezRadius[m + 1][c][f + 1][z][t + 1] * dm;
+  R100 = daLopezRadius[m][c + 1][f][z][t] * (1 - dm) +
+         daLopezRadius[m + 1][c + 1][f][z][t] * dm;
+  R101 = daLopezRadius[m][c + 1][f][z][t + 1] * (1 - dm) +
+         daLopezRadius[m + 1][c + 1][f][z][t + 1] * dm;
+  R110 = daLopezRadius[m][c + 1][f + 1][z][t] * (1 - dm) +
+         daLopezRadius[m + 1][c + 1][f + 1][z][t] * dm;
+  R111 = daLopezRadius[m][c + 1][f + 1][z][t + 1] * (1 - dm) +
+         daLopezRadius[m + 1][c + 1][f + 1][z][t + 1] * dm;
+  R00 = R000 * (1 - dc) + R100 * dc;
+  R10 = R010 * (1 - dc) + R110 * dc;
+  R01 = R001 * (1 - dc) + R101 * dc;
+  R11 = R011 * (1 - dc) + R111 * dc;
+  R0  = R00 * (1 - df) + R10 * df;
+  R1  = R01 * (1 - df) + R11 * df;
+  return (R0 * (1 - dt) + R1 * dt) * REARTH;
 }
 
 /**
@@ -1075,10 +1151,10 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge, int 
   @param res dot product
   @return dot product of arrays x and y
 */
-double fdDotProduct(const int *x, const double *y){
+double fdDotProduct(const int *x, const double *y) {
   double res = 0.0;
   int i;
-  for (i = 0; i < 16; i++){
+  for (i = 0; i < 16; i++) {
     res += x[i] * y[i];
   }
   return res;
@@ -1092,10 +1168,11 @@ double fdDotProduct(const int *x, const double *y){
   @param result Resultant vector
 
 */
-void fvMatrixVectorMult(const int mat[16][16], const double *vec, double *result){
+void fvMatrixVectorMult(const int mat[16][16], const double *vec,
+                        double *result) {
   // in matrix form: result = mat * vec;
   int i;
-  for (i = 0; i < 16; i++){
+  for (i = 0; i < 16; i++) {
     result[i] = fdDotProduct(mat[i], vec);
   }
 }
@@ -1106,24 +1183,27 @@ void fvMatrixVectorMult(const int mat[16][16], const double *vec, double *result
   What are the arguments?
 
 */
-int fiGetLowerBound(double val, const double *arr, int dim){
+int fiGetLowerBound(double val, const double *arr, int dim) {
   int i;
-  if (val < arr[0]){
+  if (val < arr[0]) {
     return STELLAR_ERR_OUTOFBOUNDS_LO;
-  } else if (val > arr[dim-1]) {
+  } else if (val > arr[dim - 1]) {
     return STELLAR_ERR_OUTOFBOUNDS_HI;
   } else {
-      for (i=0;i<dim-2;i++){
-        if (val < arr[i+1]) break;
-      }
+    for (i = 0; i < dim - 2; i++) {
+      if (val < arr[i + 1]) {
+        break;
+}
+    }
   }
   // Check to see if i-1, i, i+1 and i+2 are all valid indices
-  if (i == 0)
+  if (i == 0) {
     return STELLAR_ERR_OUTOFBOUNDS_LO;
-  else if (i>=dim-2)
+  } else if (i >= dim - 2) {
     return STELLAR_ERR_OUTOFBOUNDS_HI;
-  else
+  } else {
     return i;
+}
 }
 
 /**
@@ -1131,21 +1211,24 @@ int fiGetLowerBound(double val, const double *arr, int dim){
 
   What are the arguments?
 */
-double fdBaraffeBiLinear(int iMLEN, int iALEN, double const data[STELLAR_BAR_MLEN][STELLAR_BAR_ALEN], int xi, int yi, double dx, double dy) {
+double fdBaraffeBiLinear(int iMLEN, int iALEN,
+                         double const data[STELLAR_BAR_MLEN][STELLAR_BAR_ALEN],
+                         int xi, int yi, double dx, double dy) {
   // Linearly interpolate over data, given indices of lower bounds on grid xi, yi
   // and normalized distances to the interpolation point dx, dy.
   double C0, C1, C;
   if (dx == 0) {
     C0 = data[xi][yi];
-    C1 = data[xi][yi+1];
+    C1 = data[xi][yi + 1];
   } else {
-    C0 = data[xi][yi]*(1-dx) + data[xi+1][yi]*dx;
-    C1 = data[xi][yi+1]*(1-dx) + data[xi+1][yi+1]*dx;
+    C0 = data[xi][yi] * (1 - dx) + data[xi + 1][yi] * dx;
+    C1 = data[xi][yi + 1] * (1 - dx) + data[xi + 1][yi + 1] * dx;
   }
-  if (dy == 0)
+  if (dy == 0) {
     C = C0;
-  else
-    C = C0*(1-dy) + C1*dy;
+  } else {
+    C = C0 * (1 - dy) + C1 * dy;
+}
   return C;
 }
 
@@ -1154,45 +1237,50 @@ double fdBaraffeBiLinear(int iMLEN, int iALEN, double const data[STELLAR_BAR_MLE
 
   What are the arguments?
 */
-double fdBaraffeBiCubic(int iMLEN, int iALEN, double const data[STELLAR_BAR_MLEN][STELLAR_BAR_ALEN], int xi, int yi, double dx, double dy) {
+double fdBaraffeBiCubic(int iMLEN, int iALEN,
+                        double const data[STELLAR_BAR_MLEN][STELLAR_BAR_ALEN],
+                        int xi, int yi, double dx, double dy) {
   double dvCoeff[16];
-  int j,k;
-  int ijkn = 0;
-  double dypow = 1;
+  int j, k;
+  int ijkn      = 0;
+  double dypow  = 1;
   double result = 0;
 
   // Linear algebra time!
   // Adapted from http://en.wikipedia.org/wiki/Bicubic_interpolation
-  double dvDeriv[16] = {
-                    // values of the function at each corner
-                    data[xi][yi],
-                    data[xi+1][yi],
-                    data[xi][yi+1],
-                    data[xi+1][yi+1],
+  double dvDeriv[16] = {// values of the function at each corner
+                        data[xi][yi], data[xi + 1][yi], data[xi][yi + 1],
+                        data[xi + 1][yi + 1],
 
-                    // values of df/dx at each corner.
-                    0.5*(data[xi+1][yi]-data[xi-1][yi]),
-                    0.5*(data[xi+2][yi]-data[xi][yi]),
-                    0.5*(data[xi+1][yi+1]-data[xi-1][yi+1]),
-                    0.5*(data[xi+2][yi+1]-data[xi][yi+1]),
+                        // values of df/dx at each corner.
+                        0.5 * (data[xi + 1][yi] - data[xi - 1][yi]),
+                        0.5 * (data[xi + 2][yi] - data[xi][yi]),
+                        0.5 * (data[xi + 1][yi + 1] - data[xi - 1][yi + 1]),
+                        0.5 * (data[xi + 2][yi + 1] - data[xi][yi + 1]),
 
-                    // values of df/dy at each corner.
-                    0.5*(data[xi][yi+1]-data[xi][yi-1]),
-                    0.5*(data[xi+1][yi+1]-data[xi+1][yi-1]),
-                    0.5*(data[xi][yi+2]-data[xi][yi]),
-                    0.5*(data[xi+1][yi+2]-data[xi+1][yi]),
+                        // values of df/dy at each corner.
+                        0.5 * (data[xi][yi + 1] - data[xi][yi - 1]),
+                        0.5 * (data[xi + 1][yi + 1] - data[xi + 1][yi - 1]),
+                        0.5 * (data[xi][yi + 2] - data[xi][yi]),
+                        0.5 * (data[xi + 1][yi + 2] - data[xi + 1][yi]),
 
-                    // values of d2f/dxdy at each corner.
-                    0.25*(data[xi+1][yi+1]-data[xi-1][yi+1]-data[xi+1][yi-1]+data[xi-1][yi-1]),
-                    0.25*(data[xi+2][yi+1]-data[xi][yi+1]-data[xi+2][yi-1]+data[xi][yi-1]),
-                    0.25*(data[xi+1][yi+2]-data[xi-1][yi+2]-data[xi+1][yi]+data[xi-1][yi]),
-                    0.25*(data[xi+2][yi+2]-data[xi][yi+2]-data[xi+2][yi]+data[xi][yi])
-                    };
+                        // values of d2f/dxdy at each corner.
+                        0.25 * (data[xi + 1][yi + 1] - data[xi - 1][yi + 1] -
+                                data[xi + 1][yi - 1] + data[xi - 1][yi - 1]),
+                        0.25 * (data[xi + 2][yi + 1] - data[xi][yi + 1] -
+                                data[xi + 2][yi - 1] + data[xi][yi - 1]),
+                        0.25 * (data[xi + 1][yi + 2] - data[xi - 1][yi + 2] -
+                                data[xi + 1][yi] + data[xi - 1][yi]),
+                        0.25 * (data[xi + 2][yi + 2] - data[xi][yi + 2] -
+                                data[xi + 2][yi] + data[xi][yi])};
 
-  fvMatrixVectorMult(STELLAR_BICUBIC_MATRIX,dvDeriv,dvCoeff);
+  fvMatrixVectorMult(STELLAR_BICUBIC_MATRIX, dvDeriv, dvCoeff);
   dypow = 1;
-  for(j = 0; j < 4; ++j) {
-    result += dypow*(dvCoeff[ijkn] + dx*(dvCoeff[ijkn+1] + dx*(dvCoeff[ijkn+2] + dx*dvCoeff[ijkn+3])));
+  for (j = 0; j < 4; ++j) {
+    result +=
+          dypow * (dvCoeff[ijkn] +
+                   dx * (dvCoeff[ijkn + 1] +
+                         dx * (dvCoeff[ijkn + 2] + dx * dvCoeff[ijkn + 3])));
     ijkn += 4;
     dypow *= dy;
   }
@@ -1205,9 +1293,13 @@ double fdBaraffeBiCubic(int iMLEN, int iALEN, double const data[STELLAR_BAR_MLEN
   What are the arguments?
 
 */
-double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[STELLAR_BAR_MLEN], double const yarr[STELLAR_BAR_ALEN], double const data[STELLAR_BAR_MLEN][STELLAR_BAR_ALEN], double M, double A, int iOrder, int *iError){
+double
+fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[STELLAR_BAR_MLEN],
+                     double const yarr[STELLAR_BAR_ALEN],
+                     double const data[STELLAR_BAR_MLEN][STELLAR_BAR_ALEN],
+                     double M, double A, int iOrder, int *iError) {
   double dx, dy;
-  int xi,yi;
+  int xi, yi;
   int dxi, dyi;
   double result = 0;
 
@@ -1216,12 +1308,14 @@ double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[STELLAR_BAR_
   // is not realistic. Shouldn't be an issue for most planet evolution calculations,
   // since planets typically form after this time, but this issue needs to be
   // revisited eventually.
-  if (A < 0.001) A = 0.001;
+  if (A < 0.001) {
+    A = 0.001;
+}
 
   // Get bounds on grid
   *iError = 0;
-  xi = fiGetLowerBound(M,xarr,iMLEN);
-  yi = fiGetLowerBound(A,yarr,iALEN);
+  xi      = fiGetLowerBound(M, xarr, iMLEN);
+  yi      = fiGetLowerBound(A, yarr, iALEN);
 
   if (xi < 0) {
     *iError = xi;
@@ -1232,32 +1326,32 @@ double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[STELLAR_BAR_
   }
 
   // Normalized distance to grid points
-  dx = (M-xarr[xi])/(xarr[xi+1]-xarr[xi]);
-  dy = (A-yarr[yi])/(yarr[yi+1]-yarr[yi]);
+  dx = (M - xarr[xi]) / (xarr[xi + 1] - xarr[xi]);
+  dy = (A - yarr[yi]) / (yarr[yi + 1] - yarr[yi]);
 
   if (iOrder == 1) {
-    result = fdBaraffeBiLinear(iMLEN,iALEN,data,xi,yi,dx,dy);
+    result = fdBaraffeBiLinear(iMLEN, iALEN, data, xi, yi, dx, dy);
     if (isnan(result)) {
       *iError = STELLAR_ERR_ISNAN;
       return 0;
     }
     return result;
   } else if (iOrder == 3) {
-    result = fdBaraffeBiCubic(iMLEN,iALEN,data,xi,yi,dx,dy);
+    result = fdBaraffeBiCubic(iMLEN, iALEN, data, xi, yi, dx, dy);
     if (isnan(result)) {
       // Maybe we can still linearly interpolate. Let's check:
-      if (dx == 0){
-        for (dyi = 0; dyi<2; dyi++){
-          if (isnan(data[xi][yi+dyi])){
+      if (dx == 0) {
+        for (dyi = 0; dyi < 2; dyi++) {
+          if (isnan(data[xi][yi + dyi])) {
             // Hopeless; you're bounded by
             // a NaN on at least one side
             *iError = STELLAR_ERR_ISNAN;
             return 0;
           }
         }
-      } else if (dy == 0){
-        for (dxi = 0; dxi<2; dxi++){
-          if (isnan(data[xi+dxi][yi])){
+      } else if (dy == 0) {
+        for (dxi = 0; dxi < 2; dxi++) {
+          if (isnan(data[xi + dxi][yi])) {
             // Hopeless; you're bounded by
             // a NaN on at least one side
             *iError = STELLAR_ERR_ISNAN;
@@ -1265,9 +1359,9 @@ double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[STELLAR_BAR_
           }
         }
       } else {
-        for (dxi = 0; dxi<2; dxi++){
-          for (dyi = 0; dyi<2; dyi++){
-            if (isnan(data[xi+dxi][yi+dyi])){
+        for (dxi = 0; dxi < 2; dxi++) {
+          for (dyi = 0; dyi < 2; dyi++) {
+            if (isnan(data[xi + dxi][yi + dyi])) {
               // Hopeless; you're bounded by
               // a NaN on at least one side
               *iError = STELLAR_ERR_ISNAN;
@@ -1278,7 +1372,7 @@ double fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[STELLAR_BAR_
       }
       // We're good! A linear interpolation will save the day.
       *iError = STELLAR_ERR_LINEAR;
-      return fdBaraffeBiLinear(iMLEN,iALEN,data,xi,yi,dx,dy);
+      return fdBaraffeBiLinear(iMLEN, iALEN, data, xi, yi, dx, dy);
     }
     return result;
   } else {
@@ -1297,20 +1391,28 @@ double fdBaraffe(int iParam, double A, double M, int iOrder, int *iError) {
   double res;
 
   if (iParam == STELLAR_T) {
-      res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN, STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_LOGT, M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
-      return pow(10., res);
+    res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN,
+                               STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_LOGT,
+                               M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
+    return pow(10., res);
   } else if (iParam == STELLAR_L) {
-      res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN, STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_LOGL, M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
-      return LSUN * pow(10., res);
+    res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN,
+                               STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_LOGL,
+                               M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
+    return LSUN * pow(10., res);
   } else if (iParam == STELLAR_R) {
-      res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN, STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_RADIUS, M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
-      return RSUN * res;
+    res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN,
+                               STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_RADIUS,
+                               M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
+    return RSUN * res;
   } else if (iParam == STELLAR_RG) {
-      res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN, STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_RG, M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
-      return res;
+    res = fdBaraffeInterpolate(STELLAR_BAR_MLEN, STELLAR_BAR_ALEN,
+                               STELLAR_BAR_MARR, STELLAR_BAR_AARR, DATA_RG,
+                               M / MSUN, A / (1.e9 * YEARSEC), iOrder, iError);
+    return res;
   } else {
-      *iError = STELLAR_ERR_FILE;
-      return 0;
+    *iError = STELLAR_ERR_FILE;
+    return 0;
   }
 }
 
@@ -1323,15 +1425,15 @@ double fdBaraffe(int iParam, double A, double M, int iOrder, int *iError) {
 
 */
 
-void fdHabitableZoneKopparapu2013(BODY *body,int iNumBodies,
-      double *daHZLimit) {
+void fdHabitableZoneKopparapu2013(BODY *body, int iNumBodies,
+                                  double *daHZLimit) {
 
   int iLimit;
-  double dT_star,dLuminosity,dSeff[6];
-  double dSeffSun[6],dCoeffA[6],dCoeffB[6],dCoeffC[6],dCoeffD[6];
+  double dT_star, dLuminosity, dSeff[6];
+  double dSeffSun[6], dCoeffA[6], dCoeffB[6], dCoeffC[6], dCoeffD[6];
 
   // Caculate total system luminosity
-  dLuminosity = fdLuminosityTotal(body,iNumBodies);
+  dLuminosity = fdLuminosityTotal(body, iNumBodies);
   // Luminosity must be expressed in solar units
   dLuminosity /= LSUN;
 
@@ -1373,11 +1475,12 @@ void fdHabitableZoneKopparapu2013(BODY *body,int iNumBodies,
   // Assume central body's effective temperature? Is there a Better way?
   dT_star = body[0].dTemperature - 5700;
 
-  for (iLimit=0;iLimit<6;iLimit++) {
-    dSeff[iLimit] = dSeffSun[iLimit] + dCoeffA[iLimit]*dT_star + dCoeffB[iLimit]*
-        dT_star*dT_star + dCoeffC[iLimit]*pow(dT_star,3) + dCoeffD[iLimit]
-        *pow(dT_star,4);
+  for (iLimit = 0; iLimit < 6; iLimit++) {
+    dSeff[iLimit] = dSeffSun[iLimit] + dCoeffA[iLimit] * dT_star +
+                    dCoeffB[iLimit] * dT_star * dT_star +
+                    dCoeffC[iLimit] * pow(dT_star, 3) +
+                    dCoeffD[iLimit] * pow(dT_star, 4);
     // Limits are in AU, convert to meters
-    daHZLimit[iLimit] = pow(dLuminosity/dSeff[iLimit],0.5)*AUM;
+    daHZLimit[iLimit] = pow(dLuminosity / dSeff[iLimit], 0.5) * AUM;
   }
 }

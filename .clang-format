@@ -1,0 +1,41 @@
+# Format Style Options - Created with Clang Power Tools
+---
+AlignConsecutiveAssignments: true
+AlignConsecutiveBitFields: false
+AlignOperands: true
+AlignTrailingComments: true
+AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortEnumsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+BasedOnStyle: LLVM
+BinPackArguments: true
+BraceWrapping: 
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: true
+  BeforeCatch: true
+  BeforeElse: true
+  IndentBraces: true
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+BreakBeforeBinaryOperators: None
+BreakBeforeBraces: Attach
+BreakStringLiterals: true
+ColumnLimit: 80
+ContinuationIndentWidth: 6
+ExperimentalAutoDetectBinPacking: true
+MaxEmptyLinesToKeep: 2
+ReflowComments: false
+UseTab: Never
+...

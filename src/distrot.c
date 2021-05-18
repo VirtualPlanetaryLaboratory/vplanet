@@ -79,7 +79,7 @@ void ReadForcePrecRate(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     body[iFile - 1].bForcePrecRate = options->dDefault;
-}
+  }
 }
 
 void ReadPrecRate(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -99,7 +99,7 @@ void ReadPrecRate(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     AssignDefaultDouble(options, &body[iFile - 1].dPrecRate, files->iNumInputs);
-}
+  }
 }
 
 void ReadSpecMomInertia(BODY *body, CONTROL *control, FILES *files,
@@ -118,7 +118,7 @@ void ReadSpecMomInertia(BODY *body, CONTROL *control, FILES *files,
   } else {
     AssignDefaultDouble(options, &body[iFile - 1].dSpecMomInertia,
                         files->iNumInputs);
-}
+  }
 }
 
 void ReadOrbitData(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -134,7 +134,7 @@ void ReadOrbitData(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     body[iFile - 1].bReadOrbitData = options->dDefault;
-}
+  }
 }
 
 void ReadFileOrbitData(BODY *body, CONTROL *control, FILES *files,
@@ -153,7 +153,7 @@ void ReadFileOrbitData(BODY *body, CONTROL *control, FILES *files,
   } else if (iFile > 0) {
     //       sprintf(body[iFile-1].cFileOrbitData,"%s",options[OPT_FILEORBITDATA].cDefault);
     strcpy(body[iFile - 1].cFileOrbitData, options->cDefault);
-}
+  }
 }
 
 void InitializeOptionsDistRot(OPTIONS *options, fnReadOption fnRead[]) {
@@ -279,9 +279,11 @@ void ReadOptionsDistRot(BODY *body, CONTROL *control, FILES *files,
    iPert counts the number of bodies perturbing iBody, and iBodyPert is the
    body number of the current perturbing body. */
 
-/* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond
-   to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and
-   iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
+/* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1
+   correspond to all perturbing planets, iPert = iGravPerts corresponds to the
+   stellar torque, and
+   iPert = iGravPerts+1 to the stellar general relativistic correction, if
+   applied */
 
 void InitializeXoblDistRot(BODY *body, UPDATE *update, int iBody, int iPert) {
   update[iBody]
@@ -414,8 +416,8 @@ void VerifyOrbitData(BODY *body, CONTROL *control, OPTIONS *options,
       iNLines = 0;
       while ((c = getc(fileorb)) != EOF) {
         if (c == '\n') {
-          iNLines++; //add 1 for each new line
-}
+          iNLines++; // add 1 for each new line
+        }
       }
       rewind(fileorb);
 
@@ -509,7 +511,10 @@ void AssignDistRotDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
                               fnUpdateVariable ***fnUpdate, int iBody) {
   int i, j = 0, iPert = 0, jBody = 0;
 
-  /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
+  /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1
+   * correspond to all perturbing planets, iPert = iGravPerts corresponds to the
+   * stellar torque, and iPert = iGravPerts+1 to the stellar general
+   * relativistic correction, if applied */
 
   if (iBody >= 1) {
     if (body[iBody].bReadOrbitData) {
@@ -537,7 +542,8 @@ void AssignDistRotDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
           fnUpdate[iBody][update[iBody].iZobl]
                   [update[iBody].iaZoblDistRot[iPert]] = &fndDistRotRD4DzDt;
         }
-        /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
+        /* Body updates for stellar torque, treating star as "perturber" (only
+         * needed for x and y -> pA) */
         /* x = sin(obl)*cos(pA) */
         fnUpdate[iBody][update[iBody].iXobl]
                 [update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] =
@@ -563,7 +569,8 @@ void AssignDistRotDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
           fnUpdate[iBody][update[iBody].iZobl]
                   [update[iBody].iaZoblDistRot[iPert]] = &fndDistRotLL2DzDt;
         }
-        /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
+        /* Body updates for stellar torque, treating star as "perturber" (only
+         * needed for x and y -> pA) */
         /* x = sin(obl)*cos(pA) */
         fnUpdate[iBody][update[iBody].iXobl]
                 [update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] =
@@ -591,7 +598,10 @@ void NullDistRotDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
                             fnUpdateVariable ***fnUpdate, int iBody) {
   int i, j = 0, iPert = 0, jBody = 0;
 
-  /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
+  /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1
+   * correspond to all perturbing planets, iPert = iGravPerts corresponds to the
+   * stellar torque, and iPert = iGravPerts+1 to the stellar general
+   * relativistic correction, if applied */
 
   if (iBody >= 1) {
     if (body[iBody].bReadOrbitData) {
@@ -619,7 +629,8 @@ void NullDistRotDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
           fnUpdate[iBody][update[iBody].iZobl]
                   [update[iBody].iaZoblDistRot[iPert]] = &fndUpdateFunctionTiny;
         }
-        /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
+        /* Body updates for stellar torque, treating star as "perturber" (only
+         * needed for x and y -> pA) */
         /* x = sin(obl)*cos(pA) */
         fnUpdate[iBody][update[iBody].iXobl]
                 [update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] =
@@ -645,7 +656,8 @@ void NullDistRotDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
           fnUpdate[iBody][update[iBody].iZobl]
                   [update[iBody].iaZoblDistRot[iPert]] = &fndUpdateFunctionTiny;
         }
-        /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
+        /* Body updates for stellar torque, treating star as "perturber" (only
+         * needed for x and y -> pA) */
         /* x = sin(obl)*cos(pA) */
         fnUpdate[iBody][update[iBody].iXobl]
                 [update[iBody].iaXoblDistRot[body[iBody].iGravPerts]] =
@@ -676,7 +688,10 @@ void VerifyDistRot(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
   VerifyOrbitData(body, control, options, iBody);
 
-  /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
+  /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1
+   * correspond to all perturbing planets, iPert = iGravPerts corresponds to the
+   * stellar torque, and iPert = iGravPerts+1 to the stellar general
+   * relativistic correction, if applied */
 
   if (iBody >= 1) {
     control->fnPropsAux[iBody][iModule] = &PropsAuxDistRot;
@@ -720,7 +735,8 @@ void VerifyDistRot(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
           /* z = cos(obl) */
           InitializeZoblDistRot(body, update, iBody, iPert);
         }
-        /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
+        /* Body updates for stellar torque, treating star as "perturber" (only
+         * needed for x and y -> pA) */
         /* x = sin(obl)*cos(pA) */
         InitializeXoblDistRotStar(body, update, iBody, body[iBody].iGravPerts);
 
@@ -739,7 +755,8 @@ void VerifyDistRot(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
           /* z = cos(obl) */
           InitializeZoblDistRot(body, update, iBody, iPert);
         }
-        /* Body updates for stellar torque, treating star as "perturber" (only needed for x and y -> pA) */
+        /* Body updates for stellar torque, treating star as "perturber" (only
+         * needed for x and y -> pA) */
         /* x = sin(obl)*cos(pA) */
         InitializeXoblDistRotStar(body, update, iBody, body[iBody].iGravPerts);
 
@@ -772,17 +789,17 @@ void InitializeUpdateDistRot(BODY *body, UPDATE *update, int iBody) {
 
     if (update[iBody].iNumXobl == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumXobl += body[iBody].iGravPerts + 1;
 
     if (update[iBody].iNumYobl == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumYobl += body[iBody].iGravPerts + 1;
 
     if (update[iBody].iNumZobl == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumZobl += body[iBody].iGravPerts;
 
     if (body[iBody].bGRCorr) {
@@ -799,7 +816,10 @@ void FinalizeUpdateXoblDistRot(BODY *body, UPDATE *update, int *iEqn, int iVar,
                                int iBody, int iFoo) {
   int iPert;
 
-  /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
+  /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1
+   * correspond to all perturbing planets, iPert = iGravPerts corresponds to the
+   * stellar torque, and iPert = iGravPerts+1 to the stellar general
+   * relativistic correction, if applied */
 
   if (body[iBody].bGRCorr) {
     update[iBody].padDXoblDtDistRot =
@@ -826,7 +846,10 @@ void FinalizeUpdateYoblDistRot(BODY *body, UPDATE *update, int *iEqn, int iVar,
                                int iBody, int iFoo) {
   int iPert;
 
-  /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar torque, and iPert = iGravPerts+1 to the stellar general relativistic correction, if applied */
+  /* The indexing gets REEAAALLY confusing here. iPert = 0 to iGravPerts-1
+   * correspond to all perturbing planets, iPert = iGravPerts corresponds to the
+   * stellar torque, and iPert = iGravPerts+1 to the stellar general
+   * relativistic correction, if applied */
 
   if (body[iBody].bGRCorr) {
     update[iBody].padDYoblDtDistRot =
@@ -912,7 +935,7 @@ void WriteBodyDOblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
     dDeriv += dObldx * (*(update[iBody].padDXoblDtDistRot[iPert])) +
               dObldy * (*(update[iBody].padDYoblDtDistRot[iPert])) +
               dObldz * (*(update[iBody].padDZoblDtDistRot[iPert]));
-}
+  }
 
   *dTmp = dDeriv;
 
@@ -964,7 +987,7 @@ void WriteOblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
     dDeriv += dObldx * (*(update[iBody].padDXoblDtDistRot[iPert])) +
               dObldy * (*(update[iBody].padDYoblDtDistRot[iPert])) +
               dObldz * (*(update[iBody].padDZoblDtDistRot[iPert]));
-}
+  }
 
   *dTmp = fabs(PI / dDeriv);
 
@@ -1001,7 +1024,7 @@ void WritePrecATimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
   for (iPert = 0; iPert <= body[iBody].iGravPerts; iPert++) {
     dDeriv += dpAdx * (*(update[iBody].padDXoblDtDistRot[iPert])) +
               dpAdy * (*(update[iBody].padDYoblDtDistRot[iPert]));
-}
+  }
 
   *dTmp = fabs(2 * PI / dDeriv);
 
@@ -1038,7 +1061,7 @@ void WriteBodyDPrecADtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
   for (iPert = 0; iPert <= body[iBody].iGravPerts; iPert++) {
     dDeriv += dpAdx * (*(update[iBody].padDXoblDtDistRot[iPert])) +
               dpAdy * (*(update[iBody].padDYoblDtDistRot[iPert]));
-}
+  }
 
   *dTmp = dDeriv;
 
@@ -1063,7 +1086,7 @@ void WriteBodyDXoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
   dDeriv = 0;
   for (iPert = 0; iPert <= body[iBody].iGravPerts; iPert++) {
     dDeriv += *(update[iBody].padDXoblDtDistRot[iPert]);
-}
+  }
 
   *dTmp = dDeriv;
 
@@ -1086,7 +1109,7 @@ void WriteBodyDYoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
   dDeriv = 0;
   for (iPert = 0; iPert <= body[iBody].iGravPerts; iPert++) {
     dDeriv += *(update[iBody].padDYoblDtDistRot[iPert]);
-}
+  }
 
   *dTmp = dDeriv;
 
@@ -1109,7 +1132,7 @@ void WriteBodyDZoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
   dDeriv = 0;
   for (iPert = 0; iPert < body[iBody].iGravPerts; iPert++) {
     dDeriv += *(update[iBody].padDZoblDtDistRot[iPert]);
-}
+  }
 
   *dTmp = dDeriv;
 
@@ -1132,7 +1155,7 @@ void WriteXoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
   dDeriv = 0;
   for (iPert = 0; iPert <= body[iBody].iGravPerts; iPert++) {
     dDeriv += *(update[iBody].padDXoblDtDistRot[iPert]);
-}
+  }
 
   *dTmp = fabs(1. / dDeriv);
 
@@ -1155,7 +1178,7 @@ void WriteYoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
   dDeriv = 0;
   for (iPert = 0; iPert <= body[iBody].iGravPerts; iPert++) {
     dDeriv += *(update[iBody].padDYoblDtDistRot[iPert]);
-}
+  }
 
   *dTmp = fabs(1. / dDeriv);
 
@@ -1178,7 +1201,7 @@ void WriteZoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
   dDeriv = 0;
   for (iPert = 0; iPert < body[iBody].iGravPerts; iPert++) {
     dDeriv += *(update[iBody].padDZoblDtDistRot[iPert]);
-}
+  }
 
   *dTmp = fabs(1. / dDeriv);
 
@@ -1216,10 +1239,10 @@ void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
     inc = 2 * asin(sqrt((body[jBody].dPinc * body[jBody].dPinc) +
                         (body[jBody].dQinc * body[jBody].dQinc)));
 
-    //rotate about x by inc angle
+    // rotate about x by inc angle
     RotateVector(body[jBody].daLOrb, body[jBody].daLOrbTmp, inc, 0);
     longa = atan2(body[jBody].dPinc, body[jBody].dQinc);
-    //rotate about z by Omega
+    // rotate about z by Omega
     RotateVector(body[jBody].daLOrbTmp, body[jBody].daLOrb, longa, 2);
     for (i = 0; i < 3; i++) {
       system->daLOrb[i] += body[jBody].daLOrb[i];
@@ -1314,10 +1337,10 @@ void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
     inc = 2 * asin(sqrt((body[jBody].dPinc * body[jBody].dPinc) +
                         (body[jBody].dQinc * body[jBody].dQinc)));
 
-    //rotate about x by inc angle
+    // rotate about x by inc angle
     RotateVector(body[jBody].daLOrb, body[jBody].daLOrbTmp, inc, 0);
     longa = atan2(body[jBody].dPinc, body[jBody].dQinc);
-    //rotate about z by Omega
+    // rotate about z by Omega
     RotateVector(body[jBody].daLOrbTmp, body[jBody].daLOrb, longa, 2);
     for (i = 0; i < 3; i++) {
       system->daLOrb[i] += body[jBody].daLOrb[i];
@@ -1398,7 +1421,7 @@ void WriteDynEllip(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     *dTmp = body[iBody].dDynEllip;
   } else {
     *dTmp = -1;
-}
+  }
   sprintf(cUnit, "%s", "");
 }
 
@@ -1558,7 +1581,7 @@ void LogDistRot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     if (output[iOut].iNum > 0) {
       WriteLogEntry(body, control, &output[iOut], system, update, fnWrite[iOut],
                     fp, 0);
-}
+    }
   }
 }
 
@@ -1572,7 +1595,7 @@ void LogBodyDistRot(BODY *body, CONTROL *control, OUTPUT *output,
     if (output[iOut].iNum > 0) {
       WriteLogEntry(body, control, &output[iOut], system, update, fnWrite[iOut],
                     fp, iBody);
-}
+    }
   }
 }
 
@@ -1637,7 +1660,8 @@ void UpdateOrbitData(BODY *body, EVOLVE *evolve, int iBody) {
 void PropsAuxDistRot(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                      int iBody) {
   // if (body[iBody].bForcePrecRate) {
-  //     body[iBody].dObliquity = atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
+  //     body[iBody].dObliquity =
+  //     atan2(sqrt(body[iBody].dXobl*body[iBody].dXobl+body[iBody].dYobl*body[iBody].dYobl),body[iBody].dZobl);
   //     body[iBody].dPrecA = atan2(body[iBody].dYobl,body[iBody].dXobl);
   //   }
 
@@ -1679,7 +1703,8 @@ void RotateVector(double *v1, double *v2, double theta, int axis) {
 /* Equations used to calculate obliquity/spin evolution */
 
 /**
-Correction to axial precession rate for eccentricity (and possible additional effects)
+Correction to axial precession rate for eccentricity (and possible additional
+effects)
 @param body Struct containing all body information and variables
 @param iBody Body in question
 @return Correction to precession rate
@@ -1886,7 +1911,8 @@ double fndAxialGRDyDt(BODY *body, SYSTEM *system, int *iaBody) {
   return -body[iaBody[0]].dXobl * fndAxialGRCorrection(body, iaBody);
 }
 
-//--------------Obliquity/spin evolution--------------------------------------------------------------
+//--------------Obliquity/spin
+//evolution--------------------------------------------------------------
 
 /**
 Derivative of y = sin(obliquity)*sin(preca) when RD4 orbital model is used
@@ -2028,7 +2054,8 @@ double fndDistRotDDynEllipDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 /**
-Derivative of x = sin(obliquity)*cos(preca) when orbital data is input from external model
+Derivative of x = sin(obliquity)*cos(preca) when orbital data is input from
+external model
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction
@@ -2045,7 +2072,8 @@ double fndDistRotExtDxDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 /**
-Derivative of y = sin(obliquity)*sin(preca) when orbital data is input from external model
+Derivative of y = sin(obliquity)*sin(preca) when orbital data is input from
+external model
 @param body Struct containing all body information and variables
 @param system Struct containing system information
 @param iaBody Array containing indices of bodies associated with interaction

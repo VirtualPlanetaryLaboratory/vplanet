@@ -26,7 +26,7 @@ int strcicmp(char const *a, char const *b) {
     int d = tolower(*a) - tolower(*b);
     if (d != 0 || !*a) {
       return d;
-}
+    }
   }
 }
 
@@ -138,7 +138,8 @@ void InitializeControl(CONTROL *control, MODULE *module) {
   }
   control->Io.bDeltaTimeMessage = 0;
   control->Io.bMutualIncMessage = 0;
-  // Initialize this value, too. Probably need a whole new structure for CheckProgress
+  // Initialize this value, too. Probably need a whole new structure for
+  // CheckProgress
   control->Io.dMaxMutualInc = 0;
 }
 
@@ -219,7 +220,7 @@ void PrintFileTypes(int iFileType) {
     printf("Body Only");
   } else if (iFileType == 2) {
     printf("Any");
-}
+  }
 }
 
 void WriteHelpOption(OPTIONS *options, int bLong) {
@@ -245,12 +246,12 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
         printf("String");
       } else if (options->iType >= 4) {
         printf("Array");
-}
+      }
       printf(") -- %s ", options->cDescr);
 
       if (options->dNeg != 0) {
         printf(" [Negative = %s] ", options->cNeg);
-}
+      }
 
       // allowed modules
       printf("{Modules = ");
@@ -258,7 +259,7 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
         PrintModuleList(stdout, options->iModuleBit);
       } else {
         printf("ALL");
-}
+      }
       printf("} ");
 
       // allowed input files
@@ -291,7 +292,8 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       //       printf(" %s")
       //     }
       // }else {
-      //     printf("| Description     | %s                            |\n", options->cDescr);
+      //     printf("| Description     | %s                            |\n",
+      //     options->cDescr);
       //   }
       //   printf("+-----------------+--------------------------------------+\n");
 
@@ -351,16 +353,16 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
         printf(" |\n");
       } else {
         printf("| Modules         | ALL                                  |\n");
-}
+      }
       printf("+-----------------+--------------------------------------+\n");
 
-      //File List
+      // File List
       printf("| Files           | ");
       PrintFileTypes(options->iFileType);
       printf(" |\n");
       printf("+-----------------+--------------------------------------+\n");
 
-      //Default Value
+      // Default Value
       printf("| Default value   | %s", options->cDefault);
       int valuelen;
       char valuelenchar = strlen(options->cDefault);
@@ -382,7 +384,7 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
                "\n");
       } else {
         printf("\n");
-}
+      }
     }
   }
 }
@@ -393,11 +395,11 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
       // ** Short help **
       if (output->bNeg == 1) {
         printf("[-]");
-}
+      }
       printf("%s -- %s.", output->cName, output->cDescr);
       if (output->bNeg == 1) {
         printf(" [Negative = %s]", output->cNeg);
-}
+      }
       printf("\n");
     } else {
       // ** Long help **
@@ -438,7 +440,7 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
         printf(" |\n");
       } else {
         printf("| Modules         | ALL                                  |\n");
-}
+      }
       printf("+-----------------+--------------------------------------+\n\n");
 
       // printf("\n");
@@ -488,7 +490,7 @@ void Help(OPTIONS *options, OUTPUT *output, char exe[], int bLong) {
   int i;
   for (i = 0; i < sz; i++) {
     printf("-");
-}
+  }
   printf("\n\n");
 
   printf("Lead Developer: Rory Barnes\n\n");
@@ -573,7 +575,7 @@ char *sLower(char cString[]) {
   int iPos;
   for (iPos = 0; cString[iPos]; iPos++) {
     cString[iPos] = tolower(cString[iPos]);
-}
+  }
 
   return cString;
 }
@@ -586,107 +588,107 @@ void fprintd(FILE *fp, double x, int iExp, int iDig) {
   if ((fabs(x) > dMax || fabs(x) < dMin) && x != 0) {
     if (iDig == 0) {
       fprintf(fp, "%.0e", x);
-}
+    }
     if (iDig == 1) {
       fprintf(fp, "%.1e", x);
-}
+    }
     if (iDig == 2) {
       fprintf(fp, "%.2e", x);
-}
+    }
     if (iDig == 3) {
       fprintf(fp, "%.3e", x);
-}
+    }
     if (iDig == 4) {
       fprintf(fp, "%.4e", x);
-}
+    }
     if (iDig == 5) {
       fprintf(fp, "%.5e", x);
-}
+    }
     if (iDig == 6) {
       fprintf(fp, "%.6e", x);
-}
+    }
     if (iDig == 7) {
       fprintf(fp, "%.7e", x);
-}
+    }
     if (iDig == 8) {
       fprintf(fp, "%.8e", x);
-}
+    }
     if (iDig == 9) {
       fprintf(fp, "%.9e", x);
-}
+    }
     if (iDig == 10) {
       fprintf(fp, "%.10e", x);
-}
+    }
     if (iDig == 11) {
       fprintf(fp, "%.11e", x);
-}
+    }
     if (iDig == 12) {
       fprintf(fp, "%.12e", x);
-}
+    }
     if (iDig == 13) {
       fprintf(fp, "%.13e", x);
-}
+    }
     if (iDig == 14) {
       fprintf(fp, "%.14e", x);
-}
+    }
     if (iDig == 15) {
       fprintf(fp, "%.15e", x);
-}
+    }
     if (iDig == 16) {
       fprintf(fp, "%.16e", x);
-}
+    }
   } else {
     if (iDig == 0) {
       fprintf(fp, "%.0lf", x);
-}
+    }
     if (iDig == 1) {
       fprintf(fp, "%.1lf", x);
-}
+    }
     if (iDig == 2) {
       fprintf(fp, "%.2lf", x);
-}
+    }
     if (iDig == 3) {
       fprintf(fp, "%.3lf", x);
-}
+    }
     if (iDig == 4) {
       fprintf(fp, "%.4lf", x);
-}
+    }
     if (iDig == 5) {
       fprintf(fp, "%.5lf", x);
-}
+    }
     if (iDig == 6) {
       fprintf(fp, "%.6lf", x);
-}
+    }
     if (iDig == 7) {
       fprintf(fp, "%.7lf", x);
-}
+    }
     if (iDig == 8) {
       fprintf(fp, "%.8lf", x);
-}
+    }
     if (iDig == 9) {
       fprintf(fp, "%.9lf", x);
-}
+    }
     if (iDig == 10) {
       fprintf(fp, "%.10lf", x);
-}
+    }
     if (iDig == 11) {
       fprintf(fp, "%.11lf", x);
-}
+    }
     if (iDig == 12) {
       fprintf(fp, "%.12lf", x);
-}
+    }
     if (iDig == 13) {
       fprintf(fp, "%.13lf", x);
-}
+    }
     if (iDig == 14) {
       fprintf(fp, "%.14lf", x);
-}
+    }
     if (iDig == 15) {
       fprintf(fp, "%.15lf", x);
-}
+    }
     if (iDig == 16) {
       fprintf(fp, "%.16lf", x);
-}
+    }
   }
 }
 
@@ -1025,7 +1027,7 @@ void InfileCopy(INFILE *dest, INFILE *src) {
   strcpy(dest->cIn, src->cIn);
   for (iLine = 0; iLine < src->iNumLines; iLine++) {
     dest->bLineOK[iLine] = src->bLineOK[iLine];
-}
+  }
 
   /* PHOTOCHEM fields
   strcpy(dest->cSpecies,src->cSpecies);

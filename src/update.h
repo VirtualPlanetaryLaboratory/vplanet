@@ -33,19 +33,19 @@
 #define VTMAN 1201  // Mantle Temperature
 #define VTCORE 1202 // Core Temperature
 
-//DistOrb
+// DistOrb
 #define VHECC 1301 // Poincare's h
 #define VKECC 1302 // Poincare's k
 #define VPINC 1303 // Poincare's p
 #define VQINC 1304 // Poincare's q
 
-//DISTROT
+// DISTROT
 #define VXOBL 1401     // Detrick's X
 #define VYOBL 1402     // Detrick's Y
 #define VZOBL 1403     // Detrick's Z
 #define VDYNELLIP 1404 // Dynamical Ellipticity
 
-//SPINBODY 1600-1700
+// SPINBODY 1600-1700
 #define VVELX 1601      // Cartesian X Velocity
 #define VVELY 1602      // Cartesian Y Velocity
 #define VVELZ 1603      // Cartesian Z Velocity
@@ -80,7 +80,7 @@
 // FLARE
 #define VLXUV 1901 // XUV Luminosity from Flares
 
-//GALHABIT
+// GALHABIT
 #define VECCX 2201
 #define VECCY 2202
 #define VECCZ 2203
@@ -88,10 +88,10 @@
 #define VANGMY 2205
 #define VANGMZ 2206
 
-//DISTRES
+// DISTRES
 #define VMEANL 2301
 
-//MAGMOC
+// MAGMOC
 #define VWATERMASSMOATM 2302
 #define VWATERMASSSOL 2303
 #define VSURFTEMP 2304

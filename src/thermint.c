@@ -48,7 +48,8 @@ void fvBodyCopyThermint(BODY *dest, BODY *src, int foo, int iNumBodies,
   dest[iBody].dViscMMan      = src[iBody].dViscMMan;
   dest[iBody].dBLUMan        = src[iBody].dBLUMan;
   dest[iBody].dBLLMan        = src[iBody].dBLLMan;
-  // dShmodUMan in body.c:BodyCopy to avoid floating point exceptions with other modules
+  // dShmodUMan in body.c:BodyCopy to avoid floating point exceptions with other
+  // modules
   dest[iBody].dTsolUMan          = src[iBody].dTsolUMan;
   dest[iBody].dTsolLMan          = src[iBody].dTsolLMan;
   dest[iBody].dTliqUMan          = src[iBody].dTliqUMan;
@@ -132,22 +133,22 @@ void fvReadTSurf(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dTSurf =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
       body[iFile - 1].dTSurf =
             fdUnitsTemp(dTmp, control->Units[iFile].iTemp, 0);
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dTSurf = options->dDefault;
-}
+  }
 }
 /**
   Read mantle temperature from input file
@@ -166,21 +167,21 @@ void fvReadTMan(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dTMan =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
       body[iFile - 1].dTMan = fdUnitsTemp(dTmp, control->Units[iFile].iTemp, 0);
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dTMan = options->dDefault;
-}
+  }
 }
 /**
   Read core temperature from input file
@@ -199,22 +200,22 @@ void fvReadTCore(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dTCore =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
       body[iFile - 1].dTCore =
             fdUnitsTemp(dTmp, control->Units[iFile].iTemp, 0);
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dTCore = options->dDefault;
-}
+  }
 }
 /**
   Read viscosity jump across mantle from input file
@@ -232,21 +233,21 @@ void fvReadViscJumpMan(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dViscJumpMan =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dViscJumpMan = dTmp; //no units.
-}
+      body[iFile - 1].dViscJumpMan = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dViscJumpMan = options->dDefault;
-}
+  }
 }
 /**
   Read reference viscosity from input file
@@ -264,21 +265,21 @@ void fvReadViscRef(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dViscRef =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dViscRef = dTmp; //no units.
-}
+      body[iFile - 1].dViscRef = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dViscRef = options->dDefault;
-}
+  }
 }
 /**
   Read reference Lindemann (core liquidus) temperature from input file
@@ -296,21 +297,21 @@ void fvReadTrefLind(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dTrefLind =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dTrefLind = dTmp; //no units.
-}
+      body[iFile - 1].dTrefLind = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dTrefLind = options->dDefault;
-}
+  }
 }
 /**
   Read core liquidus light element depression from input file
@@ -328,21 +329,21 @@ void fvReadDTChiRef(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dDTChiRef =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dDTChiRef = dTmp; //no units.
-}
+      body[iFile - 1].dDTChiRef = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dDTChiRef = options->dDefault;
-}
+  }
 }
 /**
   Read melt eruption efficiency from input file
@@ -360,21 +361,21 @@ void fvReadEruptEff(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dEruptEff =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dEruptEff = dTmp; //no units.
-}
+      body[iFile - 1].dEruptEff = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dEruptEff = options->dDefault;
-}
+  }
 }
 /**
   Read melt viscosity reduction "Phi^star" parameter from input file
@@ -392,21 +393,21 @@ void fvReadViscMeltPhis(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dViscMeltPhis =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dViscMeltPhis = dTmp; //no units.
-}
+      body[iFile - 1].dViscMeltPhis = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dViscMeltPhis = options->dDefault;
-}
+  }
 }
 /**
   Read melt viscosity reduction "Xi" parameter from input file
@@ -424,21 +425,21 @@ void fvReadViscMeltXi(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dViscMeltXi =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dViscMeltXi = dTmp; //no units.
-}
+      body[iFile - 1].dViscMeltXi = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dViscMeltXi = options->dDefault;
-}
+  }
 }
 /**
   Read melt viscosity reduction "Gamma" parameter from input file
@@ -456,21 +457,21 @@ void fvReadViscMeltGamma(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dViscMeltGamma =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dViscMeltGamma = dTmp; //no units.
-}
+      body[iFile - 1].dViscMeltGamma = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dViscMeltGamma = options->dDefault;
-}
+  }
 }
 /**
   Read melt viscosity reduction "delta" parameter from input file
@@ -488,21 +489,21 @@ void fvReadViscMeltDelta(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dViscMeltDelta =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dViscMeltDelta = dTmp; //no units.
-}
+      body[iFile - 1].dViscMeltDelta = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dViscMeltDelta = options->dDefault;
-}
+  }
 }
 /**
   Read melt viscosity reduction "B" parameter from input file
@@ -520,24 +521,25 @@ void fvReadViscMeltB(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dViscMeltB =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dViscMeltB = dTmp; //no units.
-}
+      body[iFile - 1].dViscMeltB = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dViscMeltB = options->dDefault;
-}
+  }
 }
 /**
-  Read boolean option to fix upper mantle melt viscosity reduction from input file
+  Read boolean option to fix upper mantle melt viscosity reduction from input
+  file
 
   @param body Body struct
   @param control Control struct
@@ -552,21 +554,21 @@ void fvReadFixMeltfactorUMan(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dFixMeltfactorUMan =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dFixMeltfactorUMan = dTmp; //no units.
-}
+      body[iFile - 1].dFixMeltfactorUMan = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dFixMeltfactorUMan = options->dDefault;
-}
+  }
 }
 /**
   Read fixed lower mantle melt viscosity reduction from input file
@@ -585,7 +587,7 @@ void fvReadMeltfactorLMan(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
     if (dTmp < 0) { // XXX Rory doesn't think negatives options allowed
@@ -593,13 +595,13 @@ void fvReadMeltfactorLMan(BODY *body, CONTROL *control, FILES *files,
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dMeltfactorLMan = dTmp; //no units.
-}
+      body[iFile - 1].dMeltfactorLMan = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dMeltfactorLMan = options->dDefault;
-}
+  }
 }
 /**
   Read fixed upper mantle melt viscosity reduction from input file
@@ -618,21 +620,21 @@ void fvReadMeltfactorUMan(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dMeltfactorUMan =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dMeltfactorUMan = dTmp; //no units.
-}
+      body[iFile - 1].dMeltfactorUMan = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dMeltfactorUMan = options->dDefault;
-}
+  }
 }
 /**
   Read option to fix stagnant lid mantle heat flow from input file
@@ -650,21 +652,21 @@ void fvReadStagLid(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dStagLid =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dStagLid = dTmp; //no units.
-}
+      body[iFile - 1].dStagLid = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dStagLid = options->dDefault;
-}
+  }
 }
 /**
   Read mantle surface heat flow prefix coefficient from input file
@@ -682,26 +684,27 @@ void fvReadManHFlowPref(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dManHFlowPref =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dManHFlowPref = dTmp; //no units.
-}
+      body[iFile - 1].dManHFlowPref = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     if (body[iFile - 1].dStagLid ==
-        0) { //if StagLid=0 then use plate tectonic default
+        0) { // if StagLid=0 then use plate tectonic default
       body[iFile - 1].dManHFlowPref = options->dDefault;
-}
-    if (body[iFile - 1].dStagLid > 0) { //if StagLid>0 then use staglid default.
+    }
+    if (body[iFile - 1].dStagLid > 0) { // if StagLid>0 then use staglid
+                                        // default.
       body[iFile - 1].dManHFlowPref = HFLOWREDUCTSTAG;
-}
+    }
   }
 }
 /**
@@ -721,21 +724,21 @@ void fvReadMagMomCoef(BODY *body, CONTROL *control, FILES *files,
 
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dMagMomCoef =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dMagMomCoef = dTmp; //no units.
-}
+      body[iFile - 1].dMagMomCoef = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dMagMomCoef = options->dDefault;
-}
+  }
 }
 /**
   Read solar wind pressure at body from input file
@@ -753,21 +756,21 @@ void fvReadPresSWind(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dPresSWind =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dPresSWind = dTmp; //no units.
-}
+      body[iFile - 1].dPresSWind = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dPresSWind = options->dDefault;
-}
+  }
 }
 /**
   Read minimum mantle temperature to halt from input file
@@ -797,12 +800,12 @@ void fvReadHaltMinTMan(BODY *body, CONTROL *control, FILES *files,
     } else {
       control->Halt[iFile - 1].dMinTMan =
             fdUnitsTemp(dTmp, control->Units[iFile].iTemp, 0);
-}
+    }
 
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     control->Halt[iFile - 1].dMinTMan = options->dDefault;
-}
+  }
 }
 /**
   Read minimum core temperature to halt from input file
@@ -832,12 +835,12 @@ void fvReadHaltMinTCore(BODY *body, CONTROL *control, FILES *files,
     } else {
       control->Halt[iFile - 1].dMinTCore =
             fdUnitsTemp(dTmp, control->Units[iFile].iTemp, 0);
-}
+    }
 
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     control->Halt[iFile - 1].dMinTCore = options->dDefault;
-}
+  }
 }
 /* Begin vemcee parameters */
 /**
@@ -856,21 +859,21 @@ void fvReadActViscMan(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dActViscMan =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dActViscMan = dTmp; //no units.
-}
+      body[iFile - 1].dActViscMan = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dActViscMan = options->dDefault;
-}
+  }
 }
 /**
   Read mantle reference shear modulus from input file
@@ -888,19 +891,19 @@ void fvReadShModRef(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dShModRef =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dShModRef = dTmp; //no units.
-}
+      body[iFile - 1].dShModRef = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dShModRef = options->dDefault;
   }
 }
@@ -920,21 +923,21 @@ void fvReadStiffness(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dStiffness =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dStiffness = dTmp; //no units.
-}
+      body[iFile - 1].dStiffness = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dStiffness = options->dDefault;
-}
+  }
 }
 /**
   Read Lindemann law (core liquidus) length scale "D" from input file
@@ -952,21 +955,21 @@ void fvReadDLind(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dDLind =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dDLind = dTmp; //no units.
-}
+      body[iFile - 1].dDLind = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dDLind = options->dDefault;
-}
+  }
 }
 /**
   Read core adiabatic profile length scale "D" from input file
@@ -984,24 +987,25 @@ void fvReadDAdCore(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dDAdCore =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dDAdCore = dTmp; //no units.
-}
+      body[iFile - 1].dDAdCore = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dDAdCore = options->dDefault;
-}
+  }
 }
 /**
-  Read adiabatic temperature jump from average mantle to upper mantle from input file
+  Read adiabatic temperature jump from average mantle to upper mantle from input
+  file
 
   @param body Body struct
   @param control Control struct
@@ -1016,24 +1020,25 @@ void fvReadAdJumpM2UM(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dAdJumpM2UM =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dAdJumpM2UM = dTmp; //no units.
-}
+      body[iFile - 1].dAdJumpM2UM = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dAdJumpM2UM = options->dDefault;
-}
+  }
 }
 /**
-  Read adiabatic temperature jump from average mantle to lower mantle from input file
+  Read adiabatic temperature jump from average mantle to lower mantle from input
+  file
 
   @param body Body struct
   @param control Control struct
@@ -1048,24 +1053,25 @@ void fvReadAdJumpM2LM(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dAdJumpM2LM =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dAdJumpM2LM = dTmp; //no units.
-}
+      body[iFile - 1].dAdJumpM2LM = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dAdJumpM2LM = options->dDefault;
-}
+  }
 }
 /**
-  Read adiabatic temperature jump from average core to core-mantle boundary from input file
+  Read adiabatic temperature jump from average core to core-mantle boundary from
+  input file
 
   @param body Body struct
   @param control Control struct
@@ -1080,21 +1086,21 @@ void fvReadAdJumpC2CMB(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dAdJumpC2CMB =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dAdJumpC2CMB = dTmp; //no units.
-}
+      body[iFile - 1].dAdJumpC2CMB = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dAdJumpC2CMB = options->dDefault;
-}
+  }
 }
 /**
   Read electrical conductivity at top of core from input file
@@ -1112,21 +1118,21 @@ void fvReadElecCondCore(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dElecCondCore =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dElecCondCore = dTmp; //no units.
-}
+      body[iFile - 1].dElecCondCore = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dElecCondCore = options->dDefault;
-}
+  }
 }
 
 /**
@@ -1145,21 +1151,21 @@ void fvReadImK2ManOrbModel(BODY *body, CONTROL *control, FILES *files,
   double dTmp;
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dImK2ManOrbModel =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dImK2ManOrbModel = dTmp; //no units.
-}
+      body[iFile - 1].dImK2ManOrbModel = dTmp; // no units.
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dImK2ManOrbModel = options->dDefault;
-}
+  }
 }
 
 /* End vemcee parameters */
@@ -1182,7 +1188,7 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_TSURF].cDimension, "temperature");
   options[OPT_TSURF].iType      = 2;
   options[OPT_TSURF].bMultiFile = 1;
-  options[OPT_TSURF].dNeg       = 1; //Not sure about this??
+  options[OPT_TSURF].dNeg       = 1; // Not sure about this??
   options[OPT_TSURF].dDefault   = TSURF;
   sprintf(options[OPT_TSURF].cNeg, "No negative behavior");
   fnRead[OPT_TSURF] = &fvReadTSurf;
@@ -1194,7 +1200,7 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_TMAN].cDimension, "temperature");
   options[OPT_TMAN].iType      = 2;
   options[OPT_TMAN].bMultiFile = 1;
-  options[OPT_TMAN].dNeg       = 3000.0; //Not sure about this??
+  options[OPT_TMAN].dNeg       = 3000.0; // Not sure about this??
   options[OPT_TMAN].dDefault   = 3000.0;
   sprintf(options[OPT_TMAN].cNeg, "No negative behavior");
   fnRead[OPT_TMAN] = &fvReadTMan;
@@ -1206,7 +1212,7 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_TCORE].cDimension, "temperature");
   options[OPT_TCORE].iType      = 2;
   options[OPT_TCORE].bMultiFile = 1;
-  options[OPT_TCORE].dNeg       = 6000.0; //Not sure about this??
+  options[OPT_TCORE].dNeg       = 6000.0; // Not sure about this??
   options[OPT_TCORE].dDefault   = 6000.0;
   sprintf(options[OPT_TCORE].cNeg, "No negative behavior");
   fnRead[OPT_TCORE] = &fvReadTCore;
@@ -1253,7 +1259,7 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_TREFLIND].iType      = 2;
   options[OPT_TREFLIND].bMultiFile = 1;
   options[OPT_TREFLIND].dNeg =
-        1; //XXX If negative, is really expressed in terms of TREFLIND??
+        1; // XXX If negative, is really expressed in terms of TREFLIND??
   options[OPT_TREFLIND].dDefault = TREFLIND;
   sprintf(options[OPT_TREFLIND].cNeg, "No negative behavior");
   fnRead[OPT_TREFLIND] = &fvReadTrefLind;
@@ -1288,7 +1294,7 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_ERUPTEFF].cDimension, "nd");
   options[OPT_ERUPTEFF].iType      = 2;
   options[OPT_ERUPTEFF].bMultiFile = 1;
-  options[OPT_ERUPTEFF].dNeg       = ERUPTEFF; //XXX
+  options[OPT_ERUPTEFF].dNeg       = ERUPTEFF; // XXX
   options[OPT_ERUPTEFF].dDefault   = ERUPTEFF;
   sprintf(options[OPT_ERUPTEFF].cNeg, "No negative behavior");
   fnRead[OPT_ERUPTEFF] = &fvReadEruptEff;
@@ -1304,7 +1310,7 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_VISCMELTPHIS].cDimension, "nd");
   options[OPT_VISCMELTPHIS].iType      = 2;
   options[OPT_VISCMELTPHIS].bMultiFile = 1;
-  options[OPT_VISCMELTPHIS].dNeg       = VISCMELTPHIS; //XXX
+  options[OPT_VISCMELTPHIS].dNeg       = VISCMELTPHIS; // XXX
   options[OPT_VISCMELTPHIS].dDefault   = VISCMELTPHIS;
   sprintf(options[OPT_VISCMELTPHIS].cNeg, "No negative behavior");
   fnRead[OPT_VISCMELTPHIS] = &fvReadViscMeltPhis;
@@ -1390,9 +1396,9 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_MELTFACTORLMAN].iType      = 2;
   options[OPT_MELTFACTORLMAN].bMultiFile = 1;
   // XXX Rory doesn't think negative options should be allowed here
-  //options[OPT_MELTFACTORLMAN].dNeg = MELTFACTORLMAN;
+  // options[OPT_MELTFACTORLMAN].dNeg = MELTFACTORLMAN;
   options[OPT_MELTFACTORLMAN].dDefault = MELTFACTORLMAN;
-  //sprintf(options[OPT_MELTFACTORLMAN].cNeg,"Default is MELTFACTORLMAN");
+  // sprintf(options[OPT_MELTFACTORLMAN].cNeg,"Default is MELTFACTORLMAN");
   fnRead[OPT_MELTFACTORLMAN] = &fvReadMeltfactorLMan;
   // Needs a LongDescr
   sprintf(
@@ -1442,13 +1448,14 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
           "(default).");
 
   /* StagLid */
-  /* RB: I don't understand this. STAGLID is 0 in thermint.h, so isn't the default
-    not to use staglid? I'd also prefer to see this change to sThermalMode
-    with options pt, sl, and auto. XXX */
+  /* RB: I don't understand this. STAGLID is 0 in thermint.h, so isn't the
+    default not to use staglid? I'd also prefer to see this change to
+    sThermalMode with options pt, sl, and auto. XXX */
   /* PD(4/23/21): The default value of StagLid is STAGLID=0, which means
      the planet is not in a stagnant lid so a mobile lid cooling model is
      used.  I changed the cDefault and cNeg below.  I don't think there is a
-     negative value option here, right?  Should a negative value print a warning? */
+     negative value option here, right?  Should a negative value print a
+     warning? */
   sprintf(options[OPT_STAGLID].cName, "dStagLid");
   sprintf(options[OPT_STAGLID].cDescr, "Stagnant Lid Switch");
   sprintf(options[OPT_STAGLID].cDefault, "Default is STAGLID");
@@ -1689,7 +1696,8 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_IMK2MANORBMODEL].cNeg, "No negative behavior");
   fnRead[OPT_IMK2MANORBMODEL] = &fvReadImK2ManOrbModel;
   // Needs a LongDescr -- XXX I'm not sure what this does! RB
-  // PD(4/26/21): I don't know what this does either!  Presumably its a switch to use different tidal heating models?
+  // PD(4/26/21): I don't know what this does either!  Presumably its a switch
+  // to use different tidal heating models?
 }
 /**
   Read options in thermint
@@ -1710,7 +1718,7 @@ void fvReadOptionsThermint(BODY *body, CONTROL *control, FILES *files,
   for (iOpt = OPTSTARTTHERMINT; iOpt < OPTENDTHERMINT; iOpt++) {
     if (options[iOpt].iType != -1) {
       fnRead[iOpt](body, control, files, &options[iOpt], system, iBody + 1);
-}
+    }
   }
 }
 
@@ -1729,13 +1737,18 @@ void fvAssignTMan(BODY *body, OPTIONS *options, double dAge, int iBody) {
   /* Mantle */
   /*    if (options[OPT_TMAN].iLine[iBody+1] >= 0) {
         body[iBody].d40KNumMan=body[iBody].d40KMassMan/(MASS40K);
-        printf("40KMassMan set, body[iBody].d40KNumMan=%e, ENUMMAN40K=%e\n",body[iBody].d40KNumMan,ENUMMAN40K);
+        printf("40KMassMan set, body[iBody].d40KNumMan=%e,
+    ENUMMAN40K=%e\n",body[iBody].d40KNumMan,ENUMMAN40K);
     }
-    body[iBody].dTMan = fd40KConstant(body[iBody].d40KNumMan,dAge);  //Get the constant given num and age.
+    body[iBody].dTMan = fd40KConstant(body[iBody].d40KNumMan,dAge);  //Get the
+    constant given num and age.
     */
 }
 /**
-  Verify TMan. In update struct, iaType=1 for differential equation evolution, iNumBodies=1, iaBody is number of bodies affected by this variable (1), pdTDotMan points towards derivative, fnUpdate points towards derivative (fdTDotMan).
+  Verify TMan. In update struct, iaType=1 for differential equation evolution,
+  iNumBodies=1, iaBody is number of bodies affected by this variable (1),
+  pdTDotMan points towards derivative, fnUpdate points towards derivative
+  (fdTDotMan).
 
   @param body Body struct
   @param options Options struct
@@ -1750,12 +1763,13 @@ void fvVerifyTMan(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
   //  AssignTMan(body,options,dAge,iBody);
   /* Mantle */
   update[iBody].iaType[update[iBody].iTMan][0] =
-        1; //iaType=0 for prescribed evolution, =1 for differential evolution (normal)
+        1; // iaType=0 for prescribed evolution, =1 for differential evolution
+           // (normal)
   update[iBody].iNumBodies[update[iBody].iTMan][0] = 1;
-  update[iBody].iaBody[update[iBody].iTMan][0]     = malloc(
-        update[iBody].iNumBodies[update[iBody].iTMan][0] *
-        sizeof(
-              int)); //iaBody is the number of bodies that are affected by this variable.
+  update[iBody].iaBody[update[iBody].iTMan][0] =
+        malloc(update[iBody].iNumBodies[update[iBody].iTMan][0] *
+               sizeof(int)); // iaBody is the number of bodies that are affected
+                             // by this variable.
   update[iBody].iaBody[update[iBody].iTMan][0][0] = iBody;
   update[iBody].pdTDotMan = &update[iBody].daDerivProc[update[iBody].iTMan][0];
 
@@ -1763,7 +1777,12 @@ void fvVerifyTMan(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
   update[iBody].daDerivProc[update[iBody].iTMan][0] = 0;
 }
 /**
-  Verify TCore. In update struct, iaType=1 for differential equation evolution, iNumBodies=1, iaBody is number of bodies affected by this variable (1), pdTDotCore points towards derivative, fnUpdate points towards derivative (fdTDotCore).  Initialize parameters that dDTCoreDt depends on in body struct: dRIC, dHfluxCMBConv, dRICDot, dGravICB, dCoreBuoyTherm, dCoreBuoyCompo, update. daDerivProc.
+  Verify TCore. In update struct, iaType=1 for differential equation evolution,
+  iNumBodies=1, iaBody is number of bodies affected by this variable (1),
+  pdTDotCore points towards derivative, fnUpdate points towards derivative
+  (fdTDotCore).  Initialize parameters that dDTCoreDt depends on in body struct:
+  dRIC, dHfluxCMBConv, dRICDot, dGravICB, dCoreBuoyTherm, dCoreBuoyCompo,
+  update. daDerivProc.
 
   @param body Body struct
   @param options Options struct
@@ -1777,12 +1796,13 @@ void fvVerifyTCore(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
   //  AssignTCore(body,options,dAge,iBody);
   /* Core */
   update[iBody].iaType[update[iBody].iTCore][0] =
-        1; //iaType=0 for prescribed evolution, =1 for differential evolution (normal)
+        1; // iaType=0 for prescribed evolution, =1 for differential evolution
+           // (normal)
   update[iBody].iNumBodies[update[iBody].iTCore][0] = 1;
-  update[iBody].iaBody[update[iBody].iTCore][0]     = malloc(
-        update[iBody].iNumBodies[update[iBody].iTCore][0] *
-        sizeof(
-              int)); //iaBody is the number of bodies that are affected by this variable.
+  update[iBody].iaBody[update[iBody].iTCore][0] =
+        malloc(update[iBody].iNumBodies[update[iBody].iTCore][0] *
+               sizeof(int)); // iaBody is the number of bodies that are affected
+                             // by this variable.
   update[iBody].iaBody[update[iBody].iTCore][0][0] = iBody;
   update[iBody].pdTDotCore =
         &update[iBody].daDerivProc[update[iBody].iTCore][0];
@@ -1799,7 +1819,9 @@ void fvVerifyTCore(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
 
 /******************  AUX PROPS  ***************************/
 /**
-  Set auxiliary properties in body.  This includes all thermint parameters that are not computed by a time derivative (that is everything except TMan and TCore).
+  Set auxiliary properties in body.  This includes all thermint parameters that
+  are not computed by a time derivative (that is everything except TMan and
+  TCore).
 
   @param body Body struct
   @param evolve Evolve struct
@@ -1823,12 +1845,12 @@ void fvPropsAuxThermint(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   //  body[iBody].dViscJumpMan=fdViscJumpMan(body,iBody);
   if (body[iBody].dMeltfactorUMan == 0) {
     body[iBody].dMeltfactorUMan =
-          1.; //initialize to avoid fvvisc=visc/meltfactor crash.
-}
+          1.; // initialize to avoid fvvisc=visc/meltfactor crash.
+  }
   if (body[iBody].dMeltfactorLMan == 0) {
     body[iBody].dMeltfactorLMan =
-          1.; //initialize to avoid fvvisc=visc/meltfactor crash.
-}
+          1.; // initialize to avoid fvvisc=visc/meltfactor crash.
+  }
   /* Loop through melt calculation once to get dependence of visc on melt. */
   int i = 0, nloop = 2;
   for (i = 0; i < nloop; i++) {
@@ -1847,7 +1869,9 @@ void fvPropsAuxThermint(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
     body[iBody].dViscLMan       = fdViscLMan(body, iBody);
     body[iBody].dShmodUMan      = fdShmodUMan(body, iBody);
 
-    //printf("%d TUMan=%.4f BLUMan=%.5e TsolUMan=%.4f FMeltUMan=%.4f MeltfactorUMan=%e ViscUMan=%e ShmodUMan=%e ImK2=%e TidalPowMan=%e\n",i,body[iBody].dTUMan,body[iBody].dBLUMan,body[iBody].dTsolUMan,body[iBody].dFMeltUMan,body[iBody].dMeltfactorUMan,body[iBody].dViscUMan,body[iBody].dShmodUMan,body[iBody].dImK2,body[iBody].dTidalPowMan);
+    // printf("%d TUMan=%.4f BLUMan=%.5e TsolUMan=%.4f FMeltUMan=%.4f
+    // MeltfactorUMan=%e ViscUMan=%e ShmodUMan=%e ImK2=%e
+    // TidalPowMan=%e\n",i,body[iBody].dTUMan,body[iBody].dBLUMan,body[iBody].dTsolUMan,body[iBody].dFMeltUMan,body[iBody].dMeltfactorUMan,body[iBody].dViscUMan,body[iBody].dShmodUMan,body[iBody].dImK2,body[iBody].dTidalPowMan);
   }
   body[iBody].dDepthMeltMan    = fdDepthMeltMan(body, iBody);
   body[iBody].dTDepthMeltMan   = fdTDepthMeltMan(body, iBody);
@@ -1900,7 +1924,8 @@ void fvPropsAuxThermint(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   body[iBody].dMagPauseRad    = fdMagPauseRad(body, iBody);
 }
 /**
-  Enforce limits to fundamental parameters: if TMan or TCore < 0.5 then set it to 0 (i.e. removes negatives).
+  Enforce limits to fundamental parameters: if TMan or TCore < 0.5 then set it
+  to 0 (i.e. removes negatives).
 
   @param body Body struct
   @param evolve Evolve struct
@@ -1918,10 +1943,10 @@ void fvForceBehaviorThermint(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
   // XXX Reset fnUpdate functions to SetDerivTiny?
   if (body[iBody].dTMan < 0.5) {
     body[iBody].dTMan = 0;
-}
+  }
   if (body[iBody].dTCore < 0.5) {
     body[iBody].dTCore = 0;
-}
+  }
 }
 
 void fvAssignThermintDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
@@ -1937,7 +1962,8 @@ void fvNullThermintDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
 }
 
 /**
-  Verify thermint. Calls VerifyTMan, VerifyTCore, ForceBehaviorThermint, PropsAuxThermint, BodyCopyThermint.
+  Verify thermint. Calls VerifyTMan, VerifyTCore, ForceBehaviorThermint,
+  PropsAuxThermint, BodyCopyThermint.
 
   @param body Body struct
   @param control Control struct
@@ -1956,9 +1982,9 @@ void fvVerifyThermint(BODY *body, CONTROL *control, FILES *files,
   body[iBody].bMantle = 1;
 
   fvVerifyTMan(body, options, system, update, body[iBody].dAge,
-               iBody); //Verify Man.
+               iBody); // Verify Man.
   fvVerifyTCore(body, options, system, update, body[iBody].dAge,
-                iBody); //Verify Core.
+                iBody); // Verify Core.
 
   control->fnForceBehavior[iBody][iModule]   = &fvForceBehaviorThermint;
   control->fnPropsAux[iBody][iModule]        = &fvPropsAuxThermint;
@@ -1981,7 +2007,7 @@ void fvInitializeUpdateThermint(BODY *body, UPDATE *update, int iBody) {
   */
   if (body[iBody].dTMan > 0) {
     update[iBody].iNumVars++;
-    update[iBody].iNumTMan++; //Why is iNumTMan incremented here and below?
+    update[iBody].iNumTMan++; // Why is iNumTMan incremented here and below?
   }
   if (body[iBody].dTCore > 0) {
     update[iBody].iNumVars++;
@@ -2082,10 +2108,10 @@ int fbHaltMinTCore(BODY *body, EVOLVE *evolve, HALT *halt, IO *io,
 void fvCountHaltsThermint(HALT *halt, int *iNumHalts) {
   if (halt->dMinTMan >= 0) {
     (*iNumHalts)++;
-}
+  }
   if (halt->dMinTCore >= 0) {
     (*iNumHalts)++;
-}
+  }
 }
 /**
   Verify halts.
@@ -2100,10 +2126,10 @@ void fvVerifyHaltThermint(BODY *body, CONTROL *control, OPTIONS *options,
                           int iBody, int *iHalt) {
   if (control->Halt[iBody].dMinTMan >= 0) {
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMinTMan;
-}
+  }
   if (control->Halt[iBody].dMinTCore >= 0) {
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltMinTCore;
-}
+  }
 }
 
 /************* THERMINT Outputs ******************/
@@ -2132,7 +2158,8 @@ void fvWriteTMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    /*      *dTmp /= fdUnitsTemp(body[iBody].dTman,0,units->iTemp);  //set "iOldType" to 0, second input var, arbitarily.
+    /*      *dTmp /= fdUnitsTemp(body[iBody].dTman,0,units->iTemp);  //set
+    "iOldType" to 0, second input var, arbitarily.
     fsUnitsTemp(units->iTemp,cUnit);
       */
   }
@@ -3551,8 +3578,10 @@ void fvWriteTDotMan(BODY *body, CONTROL *control, OUTPUT *output,
     strcpy(cUnit, output->cNeg);
   } else {
     /*
-      *dTmp /= fdUnitsTemp(body[iBody].dTman,0,units->iTemp)/fdUnitsTime(units->iTime);
-      fsUnitsTempRate(units->iTemp,cUnit);  // only handles Temp/s, need to add yr and Gyr options.
+      *dTmp /=
+      fdUnitsTemp(body[iBody].dTman,0,units->iTemp)/fdUnitsTime(units->iTime);
+      fsUnitsTempRate(units->iTemp,cUnit);  // only handles Temp/s, need to add
+      yr and Gyr options.
       */
   }
 }
@@ -3579,8 +3608,10 @@ void fvWriteTDotCore(BODY *body, CONTROL *control, OUTPUT *output,
     strcpy(cUnit, output->cNeg);
   } else {
     /*
-      *dTmp /= fdUnitsTemp(body[iBody].dTman,0,units->iTemp)/fdUnitsTime(units->iTime);
-      fsUnitsTempRate(units->iTemp,cUnit);  // only handles Temp/s, need to add yr and Gyr options.
+      *dTmp /=
+      fdUnitsTemp(body[iBody].dTman,0,units->iTemp)/fdUnitsTime(units->iTime);
+      fsUnitsTempRate(units->iTemp,cUnit);  // only handles Temp/s, need to add
+      yr and Gyr options.
       */
   }
 }
@@ -3610,7 +3641,8 @@ void fvWriteTrefLind(BODY *body, CONTROL *control, OUTPUT *output,
 }
 
 /**
-  Initialize output, set variable names, descriptions, default units, default scalings, and write functions.
+  Initialize output, set variable names, descriptions, default units, default
+  scalings, and write functions.
 
   @param output Output struct
   @param fnWrite fnWriteOutput
@@ -3757,7 +3789,7 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_BLUMAN].cDescr, "Boundary Layer Thickness Upper Mantle");
   sprintf(output[OUT_BLUMAN].cNeg, "km");
   output[OUT_BLUMAN].bNeg       = 1;
-  output[OUT_BLUMAN].dNeg       = 1e-3; //KM;
+  output[OUT_BLUMAN].dNeg       = 1e-3; // KM;
   output[OUT_BLUMAN].iNum       = 1;
   output[OUT_BLUMAN].iModuleBit = THERMINT;
   fnWrite[OUT_BLUMAN]           = &fvWriteBLUMan;
@@ -4280,7 +4312,8 @@ void fvLogOptionsThermint(CONTROL *control, FILE *fp) {
   */
 }
 
-//PED: this would be for global rad heat parameters, but this is blank bc rad is only relevant to each individual body.
+// PED: this would be for global rad heat parameters, but this is blank bc rad
+// is only relevant to each individual body.
 /**
   Log of thermint
 
@@ -4327,15 +4360,27 @@ void fvLogBodyThermint(BODY *body, CONTROL *control, OUTPUT *output,
     }
   }
   /* Write out some global constants.
-  fprintf(fp,"EMASS=%e EMASSMAN=%e ERMAN=%e ERCORE=%e EDMAN=%e EVOL=%e EVOLCORE=%e EVOLMAN=%e\n",EMASS,EMASSMAN,ERMAN,ERCORE,EDMAN,EVOL,EVOLCORE,EVOLMAN);
-  fprintf(fp,"EDENS=%e EDENSMAN=%e EDENSCORE=%e EDENSOC=%e EDENSIC=%e STIFFNESS=%e\n",EDENS,EDENSMAN,EDENSCORE,EDENSOC,EDENSIC,STIFFNESS);
-  fprintf(fp,"THERMEXPANMAN=%e THERMCONDUMAN=%e THERMCONDLMAN=%e THERMDIFFUMAN=%e cube(EDMAN)=%e\n",THERMEXPANMAN,THERMCONDUMAN,THERMCONDLMAN,THERMDIFFUMAN,cube(EDMAN));
-  fprintf(fp,"TrefLind=%e ViscRef=%e VISCJUMPMAN=%e \n",body[iBody].dTrefLind,body[iBody].dViscRef,VISCJUMPMAN);
-  fprintf(fp,"DTCHIREF=%e CHI_OC_E=%e PARTITION=%e CHI_IC_E=%e EMASSOC_CHI=%e EMASSIC_CHI=%e EMASSCORE_CHI=%e\n",body[iBody].dDTChiRef,CHI_OC_E,PARTITION_CHI_CORE,CHI_IC_E,EMASSOC_CHI,EMASSIC_CHI,EMASSCORE_CHI);
-  fprintf(fp,"body.ViscMeltB=%e Delta=%e Gamma=%e Xi=%e Phis=%e \n",body[iBody].dViscMeltB,body[iBody].dViscMeltDelta,body[iBody].dViscMeltGamma,body[iBody].dViscMeltXi,body[iBody].dViscMeltPhis);
-  fprintf(fp,"body.dFixMeltfactorUMan=%f .dMeltfactorUMan=%e \n",body[iBody].dFixMeltfactorUMan,body[iBody].dMeltfactorUMan);
-  fprintf(fp,"body.dStagLid=%f dManHFlowPref=%f \n",body[iBody].dStagLid,body[iBody].dManHFlowPref);
-  fprintf(fp,"body.dMagMomCoef=%f body.dPresSWind=%e body.dTSurf=%f \n",body[iBody].dMagMomCoef,body[iBody].dPresSWind,body[iBody].dTSurf);
+  fprintf(fp,"EMASS=%e EMASSMAN=%e ERMAN=%e ERCORE=%e EDMAN=%e EVOL=%e
+  EVOLCORE=%e
+  EVOLMAN=%e\n",EMASS,EMASSMAN,ERMAN,ERCORE,EDMAN,EVOL,EVOLCORE,EVOLMAN);
+  fprintf(fp,"EDENS=%e EDENSMAN=%e EDENSCORE=%e EDENSOC=%e EDENSIC=%e
+  STIFFNESS=%e\n",EDENS,EDENSMAN,EDENSCORE,EDENSOC,EDENSIC,STIFFNESS);
+  fprintf(fp,"THERMEXPANMAN=%e THERMCONDUMAN=%e THERMCONDLMAN=%e
+  THERMDIFFUMAN=%e
+  cube(EDMAN)=%e\n",THERMEXPANMAN,THERMCONDUMAN,THERMCONDLMAN,THERMDIFFUMAN,cube(EDMAN));
+  fprintf(fp,"TrefLind=%e ViscRef=%e VISCJUMPMAN=%e
+  \n",body[iBody].dTrefLind,body[iBody].dViscRef,VISCJUMPMAN);
+  fprintf(fp,"DTCHIREF=%e CHI_OC_E=%e PARTITION=%e CHI_IC_E=%e EMASSOC_CHI=%e
+  EMASSIC_CHI=%e
+  EMASSCORE_CHI=%e\n",body[iBody].dDTChiRef,CHI_OC_E,PARTITION_CHI_CORE,CHI_IC_E,EMASSOC_CHI,EMASSIC_CHI,EMASSCORE_CHI);
+  fprintf(fp,"body.ViscMeltB=%e Delta=%e Gamma=%e Xi=%e Phis=%e
+  \n",body[iBody].dViscMeltB,body[iBody].dViscMeltDelta,body[iBody].dViscMeltGamma,body[iBody].dViscMeltXi,body[iBody].dViscMeltPhis);
+  fprintf(fp,"body.dFixMeltfactorUMan=%f .dMeltfactorUMan=%e
+  \n",body[iBody].dFixMeltfactorUMan,body[iBody].dMeltfactorUMan);
+  fprintf(fp,"body.dStagLid=%f dManHFlowPref=%f
+  \n",body[iBody].dStagLid,body[iBody].dManHFlowPref);
+  fprintf(fp,"body.dMagMomCoef=%f body.dPresSWind=%e body.dTSurf=%f
+  \n",body[iBody].dMagMomCoef,body[iBody].dPresSWind,body[iBody].dTSurf);
   */
 }
 /**
@@ -4487,7 +4532,7 @@ double fdViscUMan(BODY *body, int iBody) {
 */
 double fdViscLMan(BODY *body, int iBody) {
   return body[iBody].dViscUManArr * body[iBody].dViscJumpMan /
-         body[iBody].dMeltfactorLMan; //w/ meltfactorLMan
+         body[iBody].dMeltfactorLMan; // w/ meltfactorLMan
 }
 /**
   Function compute full mid-mantle viscosity
@@ -4520,8 +4565,10 @@ double fdViscJumpMan(BODY *body, int iBody) {
   @return Upper mantle thermal boundary layer thickness
 */
 double fdBLUMan(BODY *body, int iBody) {
-  //  return (EDMAN)*pow((RACRIT)*body[iBody].dViscUMan*(THERMDIFFUMAN)/((THERMEXPANMAN)*(GRAVLMAN)*body[iBody].dTJumpLMan*cube(EDMAN)),(CONVEXPON));
-  //  return (EDMAN)*pow((RACRIT)*body[iBody].dViscUMan*(THERMDIFFUMAN)/((THERMEXPANMAN)*(GRAVUMAN)*body[iBody].dTJumpUMan*cube(EDMAN)),(CONVEXPON));
+  //  return
+  //  (EDMAN)*pow((RACRIT)*body[iBody].dViscUMan*(THERMDIFFUMAN)/((THERMEXPANMAN)*(GRAVLMAN)*body[iBody].dTJumpLMan*cube(EDMAN)),(CONVEXPON));
+  //  return
+  //  (EDMAN)*pow((RACRIT)*body[iBody].dViscUMan*(THERMDIFFUMAN)/((THERMEXPANMAN)*(GRAVUMAN)*body[iBody].dTJumpUMan*cube(EDMAN)),(CONVEXPON));
   return pow((RACRIT)*body[iBody].dViscUMan * (THERMDIFFUMAN) /
                    ((THERMEXPANMAN) * (GRAVUMAN)*body[iBody].dTJumpUMan),
              (CONVEXPON));
@@ -4575,7 +4622,7 @@ double fdTsolUMan(BODY *body, int iBody) {
 double fdTsolLMan(BODY *body, int iBody) {
   return fdSolidusMan(
         ERADIUS - ERCORE -
-        body[iBody].dBLLMan); //Solidus fn of depth: z_LM=R-R_c-delta_LM
+        body[iBody].dBLLMan); // Solidus fn of depth: z_LM=R-R_c-delta_LM
 }
 /**
   Function compute liquidus at bottom of upper mantle thermal boundary layer
@@ -4587,7 +4634,7 @@ double fdTsolLMan(BODY *body, int iBody) {
 */
 double fdTliqUMan(BODY *body, int iBody) {
   return body[iBody].dTsolUMan +
-         DTLIQMAN; //approx constant offset btwn sol and liq.
+         DTLIQMAN; // approx constant offset btwn sol and liq.
 }
 /**
   Function compute liquidus at top of lower mantle thermal boundary layer
@@ -4599,7 +4646,7 @@ double fdTliqUMan(BODY *body, int iBody) {
 */
 double fdTliqLMan(BODY *body, int iBody) {
   return body[iBody].dTsolLMan +
-         DTLIQMAN; //approx constant offset btwn sol and liq.
+         DTLIQMAN; // approx constant offset btwn sol and liq.
 }
 /**
   Function compute upper mantle melt fraction
@@ -4612,8 +4659,8 @@ double fdTliqLMan(BODY *body, int iBody) {
 double fdFMeltUMan(BODY *body, int iBody) {
   double fmelt = (body[iBody].dTUMan - body[iBody].dTsolUMan) /
                  (body[iBody].dTliqUMan - body[iBody].dTsolUMan);
-  double fmelt2 = min(fmelt, 1.0);  //require fmelt<1
-  fmelt2        = max(fmelt2, 0.0); //require fmelt>0
+  double fmelt2 = min(fmelt, 1.0);  // require fmelt<1
+  fmelt2        = max(fmelt2, 0.0); // require fmelt>0
   return fmelt2;
 }
 /**
@@ -4627,14 +4674,15 @@ double fdFMeltUMan(BODY *body, int iBody) {
 double fdFMeltLMan(BODY *body, int iBody) {
   double fmelt = (body[iBody].dTLMan - body[iBody].dTsolLMan) /
                  (body[iBody].dTliqLMan - body[iBody].dTsolLMan);
-  double fmelt2 = min(fmelt, 1.0);  //require fmelt<1
-  fmelt2        = max(fmelt2, 0.0); //require fmelt>0
-  double min1   = min(1.0, 2.0);    //test min
-  double max1   = max(1.0, 2.0);    //test max
+  double fmelt2 = min(fmelt, 1.0);  // require fmelt<1
+  fmelt2        = max(fmelt2, 0.0); // require fmelt>0
+  double min1   = min(1.0, 2.0);    // test min
+  double max1   = max(1.0, 2.0);    // test max
   return fmelt2;
 }
 /**
-  Function compute upper mantle viscosity reduction factor due to melt.  If dFixMeltfactorUMan=1 then return dMeltfactorUMan.  Else compute it.
+  Function compute upper mantle viscosity reduction factor due to melt.  If
+  dFixMeltfactorUMan=1 then return dMeltfactorUMan.  Else compute it.
 
   @param body Body struct
   @param iBody Index of body
@@ -4642,11 +4690,12 @@ double fdFMeltLMan(BODY *body, int iBody) {
   @return Upper mantle viscosity reduction factor due to melt
 */
 double fdMeltfactorUMan(BODY *body, int iBody) {
-  /* Melt factor used in viscosity and shmod.  For fmelt=1, this should give 1.20428. */
+  /* Melt factor used in viscosity and shmod.  For fmelt=1, this should
+   * give 1.20428. */
   if (body[iBody].dFixMeltfactorUMan ==
-      1) { //if FixMeltFactorUMan=1 then return the initialized value.
+      1) { // if FixMeltFactorUMan=1 then return the initialized value.
     return body[iBody].dMeltfactorUMan;
-  } else { //if FixMeltFactorUMan not =1 then compute it.
+  } else { // if FixMeltFactorUMan not =1 then compute it.
     double bigphi = body[iBody].dFMeltUMan / body[iBody].dViscMeltPhis;
     double bigf   = (1.0 - body[iBody].dViscMeltXi) *
                   erf(sqrt(PI) / (2.0 * (1.0 - body[iBody].dViscMeltXi)) *
@@ -4657,7 +4706,8 @@ double fdMeltfactorUMan(BODY *body, int iBody) {
   }
 }
 /**
-  Function compute lower mantle viscosity reduction factor due to melt.  Always compute it.  Only applied if ViscJumpMan is not set.
+  Function compute lower mantle viscosity reduction factor due to melt.  Always
+  compute it.  Only applied if ViscJumpMan is not set.
 
   @param body Body struct
   @param iBody Index of body
@@ -4665,7 +4715,8 @@ double fdMeltfactorUMan(BODY *body, int iBody) {
   @return Lower mantle viscosity reduction factor due to melt
 */
 double fdMeltfactorLMan(BODY *body, int iBody) {
-  /* Melt factor used in viscosity and shmod.  For fmelt=1, this should give 1.20428. */
+  /* Melt factor used in viscosity and shmod.  For fmelt=1, this should
+   * give 1.20428. */
   double bigphi = body[iBody].dFMeltLMan / body[iBody].dViscMeltPhis;
   double bigf   = (1.0 - body[iBody].dViscMeltXi) *
                 erf(sqrt(PI) / (2.0 * (1.0 - body[iBody].dViscMeltXi)) *
@@ -4675,7 +4726,8 @@ double fdMeltfactorLMan(BODY *body, int iBody) {
          pow(1.0 - bigf, meltexp);
 }
 /**
-  Function compute depth of upper mantle melting.  Use cubic root to find intersection of mantle adiabat and solidus.
+  Function compute depth of upper mantle melting.  Use cubic root to find
+  intersection of mantle adiabat and solidus.
 
   @param body Body struct
   @param iBody Index of body
@@ -4683,18 +4735,17 @@ double fdMeltfactorLMan(BODY *body, int iBody) {
   @return Depth of upper mantle melting
 */
 double fdDepthMeltMan(BODY *body, int iBody) {
-  //    double guess1=body[iBody].dBLUMan;  //lower bound of depth to bottom of UM melt layer.
-  //    double guess2=1.445e6;  //(EDMAN)/2.0;  //mid-mantle= upper bound to depth of melt layer.
-  //    double tol=10.0;  //root resolution is +/- 10 m?
-  //    int nmax=100;  //nmax iterations of root.
-  int type = 0; //types: 0=UMan, 1=LMan, 2=ICN
+  //    double guess1=body[iBody].dBLUMan;  //lower bound of depth to bottom of
+  //    UM melt layer. double guess2=1.445e6;  //(EDMAN)/2.0;  //mid-mantle=
+  //    upper bound to depth of melt layer. double tol=10.0;  //root resolution
+  //    is +/- 10 m? int nmax=100;  //nmax iterations of root.
+  int type = 0; // types: 0=UMan, 1=LMan, 2=ICN
   //    return root(type,body,iBody,guess1,guess2,tol,nmax);
   double depthmeltman = cubicroot(type, body, iBody);
-  if (depthmeltman <
-      body[iBody]
-            .dBLUMan) { //if solidus intersects adiabat within UMTBL then recompute it.
-    depthmeltman =
-          cubicroot(1, body, iBody); //type=1 to find intersection within UMTBL.
+  if (depthmeltman < body[iBody].dBLUMan) { // if solidus intersects adiabat
+                                            // within UMTBL then recompute it.
+    depthmeltman = cubicroot(
+          1, body, iBody); // type=1 to find intersection within UMTBL.
   }
   return depthmeltman;
 }
@@ -4707,14 +4758,16 @@ double fdDepthMeltMan(BODY *body, int iBody) {
   @return solidus temperature at depth of upper mantle melting
 */
 double fdTDepthMeltMan(BODY *body, int iBody) {
-  if (body[iBody].dDepthMeltMan == 0) { //if no melt layer found.
+  if (body[iBody].dDepthMeltMan == 0) { // if no melt layer found.
     return 0;
-  } else { //if yes melt layer found.
+  } else { // if yes melt layer found.
     return fdSolidusMan(body[iBody].dDepthMeltMan);
   }
 }
 /**
-  Function compute temperature jump across upper mantle melt region, excluding the adiabatic component (i.e. just the advective component): TDepthMeltMan-TSURF-ADGRADMAN*DepthMeltMan
+  Function compute temperature jump across upper mantle melt region, excluding
+  the adiabatic component (i.e. just the advective component):
+  TDepthMeltMan-TSURF-ADGRADMAN*DepthMeltMan
 
   @param body Body struct
   @param iBody Index of body
@@ -4724,10 +4777,12 @@ double fdTDepthMeltMan(BODY *body, int iBody) {
 double fdTJumpMeltMan(BODY *body, int iBody) {
   return body[iBody].dTDepthMeltMan - body[iBody].dTSurf -
          (ADGRADMAN)*body[iBody]
-               .dDepthMeltMan; //Temp jump across entire UM melt region.
+               .dDepthMeltMan; // Temp jump across entire UM melt region.
 }
 /**
-  Function compute mantle Rayleigh number, where temperature jump is the total convective temperature jump across mantle (UMan+LMan) and viscosity is ViscMMan.
+  Function compute mantle Rayleigh number, where temperature jump is the total
+  convective temperature jump across mantle (UMan+LMan) and viscosity is
+  ViscMMan.
 
   @param body Body struct
   @param iBody Index of body
@@ -4738,7 +4793,8 @@ double fdRayleighMan(BODY *body, int iBody) {
   return body[iBody].dSignTJumpUMan * (THERMEXPANMAN) * (GRAVUMAN) *
          (body[iBody].dTJumpUMan + body[iBody].dTJumpLMan) * pow(EDMAN, 3.) /
          ((THERMDIFFUMAN)*body[iBody]
-                .dViscMMan); //Mantle Rayleigh number defined in terms of ViscMMan and SignTJumpUMan.
+                .dViscMMan); // Mantle Rayleigh number defined in terms of
+                             // ViscMMan and SignTJumpUMan.
 }
 /**
   Function compute upper mantle dynamic viscosity: ViscUMan*EDENSMAN.
@@ -4818,7 +4874,8 @@ double fdChiIC(BODY *body, int iBody) {
   @return Light element mass in outer core
 */
 double fdMassChiOC(BODY *body, int iBody) {
-  //  return EMASSCORE_CHI/( PARTITION_CHI_CORE*body[iBody].dMassIC/body[iBody].dMassOC + 1. );
+  //  return EMASSCORE_CHI/(
+  //  PARTITION_CHI_CORE*body[iBody].dMassIC/body[iBody].dMassOC + 1. );
   return body[iBody].dMassOC * body[iBody].dChiOC;
 }
 /**
@@ -4858,32 +4915,33 @@ double fdRIC(BODY *body, int iBody) {
   double dRIC;
   /* NEW VERSION with light element liquidus depression  */
   double T_fe_cen = body[iBody].dTrefLind -
-                    (body[iBody].dDTChi); //Liquidus at center of core.
+                    (body[iBody].dDTChi); // Liquidus at center of core.
   double T_fe_cmb = (body[iBody].dTrefLind) *
                           exp(-2. * (1. - 1. / (3. * (GRUNEISEN))) *
                               pow((ERCORE) / (body[iBody].dDLind), 2.0)) -
-                    (body[iBody].dDTChi); //Liquidus@CMB
+                    (body[iBody].dDTChi); // Liquidus@CMB
   double numerator = 1. + pow((body[iBody].dDAdCore) / (ERCORE), 2.) *
                                 log(body[iBody].dTCMB / T_fe_cen);
   if ((T_fe_cmb / T_fe_cen) < 0) {
-    return 0; //for debugging only!
+    return 0; // for debugging only!
   }
   double denom = 1. + pow((body[iBody].dDAdCore) / (ERCORE), 2.0) *
                             log(T_fe_cmb / T_fe_cen);
   double denom2 = 1. - 2. * (1 - 1. / (3. * (GRUNEISEN))) *
                              pow(body[iBody].dDAdCore / body[iBody].dDLind, 2);
-  if ((numerator / denom) > 0.) { //IC exists
+  if ((numerator / denom) > 0.) { // IC exists
     dRIC = (ERCORE)*sqrt(numerator / denom);
   } else {
-    dRIC = 0; //no IC.
+    dRIC = 0; // no IC.
   }
   if (dRIC > ERCORE) {
     dRIC = ERCORE;
-}
+  }
   return dRIC;
 }
 /**
-  Function compute thermal conductivity at top of outer core: ElecCondCore*LORENTZNUM*TCMB
+  Function compute thermal conductivity at top of outer core:
+  ElecCondCore*LORENTZNUM*TCMB
 
   @param body Body struct
   @param iBody Index of body
@@ -4894,7 +4952,8 @@ double fdThermConductOC(BODY *body, int iBody) {
   return (body[iBody].dElecCondCore) * (LORENTZNUM)*body[iBody].dTCMB;
 }
 /**
-  Function compute adiabatic heat flux at top of outer core: ThermConductOC*TCMB*ERCORE/DAdCore^2
+  Function compute adiabatic heat flux at top of outer core:
+  ThermConductOC*TCMB*ERCORE/DAdCore^2
 
   @param body Body struct
   @param iBody Index of body
@@ -4906,7 +4965,8 @@ double fdHfluxCMBAd(BODY *body, int iBody) {
          pow(body[iBody].dDAdCore, 2.);
 }
 /**
-  Function compute convective heat flux at top of outer core: HfluxCMB-HfluxCMBAd
+  Function compute convective heat flux at top of outer core:
+  HfluxCMB-HfluxCMBAd
 
   @param body Body struct
   @param iBody Index of body
@@ -5009,8 +5069,8 @@ double fdMagMom(BODY *body, int iBody) {
   @return Solar wind pressure
 */
 double fdPresSWind(BODY *body, int iBody) {
-  return body[iBody]
-        .dPresSWind; //Place holder for a proper equation later.       //(EPRESSWIND);
+  return body[iBody].dPresSWind; // Place holder for a proper equation later.
+                                 // //(EPRESSWIND);
 }
 /**
   Function compute magnetopause stand-off radius from center of planet
@@ -5052,7 +5112,8 @@ double fdHfluxLMan(BODY *body, int iBody) {
          body[iBody].dBLLMan;
 }
 /**
-  Function compute heat flux across core-mantle boundary: same as across lower mantle
+  Function compute heat flux across core-mantle boundary: same as across lower
+  mantle
 
   @param body Body struct
   @param iBody Index of body
@@ -5120,8 +5181,8 @@ double fdHflowLatentMan(BODY *body, UPDATE *update, int iBody) {
   // During the first WriteLog, pdTDotMan is not yet initialized! XXX
 
   HflowLatentMan = (-DVLIQDTEMP) * (*(update[iBody].pdTDotMan)) * (EDENSMAN) *
-                   (SPECLATENTMAN);        //which structure has dTDotMan??
-  HflowLatentMan = max(HflowLatentMan, 0); //ensure positive.
+                   (SPECLATENTMAN);        // which structure has dTDotMan??
+  HflowLatentMan = max(HflowLatentMan, 0); // ensure positive.
   return HflowLatentMan;
 }
 /**
@@ -5133,9 +5194,9 @@ double fdHflowLatentMan(BODY *body, UPDATE *update, int iBody) {
   @return Mass flux of mantle melt
 */
 double fdMeltMassFluxMan(BODY *body, int iBody) {
-  //Should crustmass be an ODE?  Or aux prop?
+  // Should crustmass be an ODE?  Or aux prop?
   return 1.16 * (THERMDIFFUMAN) * (EAREASURF) / body[iBody].dBLUMan *
-         (EDENSMAN)*body[iBody].dFMeltUMan; //DB15 (31)  =dot(M)_melt
+         (EDENSMAN)*body[iBody].dFMeltUMan; // DB15 (31)  =dot(M)_melt
 }
 /**
   Function compute heat flow of erupted mantle melt
@@ -5146,8 +5207,10 @@ double fdMeltMassFluxMan(BODY *body, int iBody) {
   @return Heat flow of erupted mantle melt
 */
 double fdHflowMeltMan(BODY *body, int iBody) {
-  //  return body[iBody].dEruptEff*body[iBody].dMeltMassFluxMan*((SPECLATENTMAN)+(SPECHEATMAN)*body[iBody].dTJumpMeltMan);
-  // PD: only specific heat lost contributes to mantle heat balance (latent heat comes from melting)
+  //  return
+  //  body[iBody].dEruptEff*body[iBody].dMeltMassFluxMan*((SPECLATENTMAN)+(SPECHEATMAN)*body[iBody].dTJumpMeltMan);
+  // PD: only specific heat lost contributes to mantle heat balance (latent heat
+  // comes from melting)
   return body[iBody].dEruptEff * body[iBody].dMeltMassFluxMan *
          ((SPECHEATMAN)*body[iBody].dTJumpMeltMan);
 }
@@ -5162,7 +5225,8 @@ double fdHflowMeltMan(BODY *body, int iBody) {
 */
 /*
 double fdHflowSecMan(BODY *body,int iBody) {
-  return body[iBody].dHflowUMan+body[iBody].dHflowMeltMan-body[iBody].dHflowLMan-body[iBody].dHflowLatentMan-body[iBody].dTidalPowMan-body[iBody].dRadPowerMan;
+  return
+body[iBody].dHflowUMan+body[iBody].dHflowMeltMan-body[iBody].dHflowLMan-body[iBody].dHflowLatentMan-body[iBody].dTidalPowMan-body[iBody].dRadPowerMan;
 }
 */
 
@@ -5187,20 +5251,20 @@ double fdHfluxSurf(BODY *body, int iBody) {
   @return Derivative of RIC wrt TCMB if IC exists.  Otherwise zero.
 */
 double fdDRICDTCMB(BODY *body, int iBody) { //=d(R_ic)/d(T_cmb)
-  if (body[iBody].dRIC > 0) {               //If IC exists.
+  if (body[iBody].dRIC > 0) {               // If IC exists.
     /* Old Version: from DB14 equations */
     double T_fe_cen = body[iBody].dTrefLind -
-                      (body[iBody].dDTChi); //Liquidus at center of core.
+                      (body[iBody].dDTChi); // Liquidus at center of core.
     double T_fe_cmb = (body[iBody].dTrefLind) *
                             exp(-2. * (1. - 1. / (3. * (GRUNEISEN))) *
                                 pow((ERCORE) / (body[iBody].dDLind), 2.0)) -
-                      (body[iBody].dDTChi); //Liquidus@CMB
+                      (body[iBody].dDTChi); // Liquidus@CMB
     double denom = pow((body[iBody].dDAdCore) / (ERCORE), 2.) *
                          log(T_fe_cmb / T_fe_cen) +
                    1.;
     return (1. / 2) * pow((body[iBody].dDAdCore), 2.) / body[iBody].dRIC /
-           body[iBody].dTCMB / denom; //NOTES 3/16/16 -5-
-  } else {                            //If no IC.
+           body[iBody].dTCMB / denom; // NOTES 3/16/16 -5-
+  } else {                            // If no IC.
     return 0;
   }
 }
@@ -5214,19 +5278,19 @@ double fdDRICDTCMB(BODY *body, int iBody) { //=d(R_ic)/d(T_cmb)
   @return Time derivative of IC mass if IC exists.  Otherwise zero.
 */
 double fdMassICDot(BODY *body, UPDATE *update, int iBody) {
-  if (body[iBody].dRIC > 0) { //If IC exists.
+  if (body[iBody].dRIC > 0) { // If IC exists.
     double areaic = 4.0 * PI * pow(body[iBody].dRIC, 2.0);
     return areaic * (EDENSIC) * (*(update[iBody].pdTDotCore)) /
-           (body[iBody].dAdJumpC2CMB) * body[iBody].dDRICDTCMB; //DB14 (31)
-  } else {                                                      //If no IC.
+           (body[iBody].dAdJumpC2CMB) * body[iBody].dDRICDTCMB; // DB14 (31)
+  } else {                                                      // If no IC.
     return 0;
   }
 }
 
 
-//XXX RadPowerMan should be moved to RadHeat
+// XXX RadPowerMan should be moved to RadHeat
 double fdPowerThermint(BODY *body, int iBody) {
-  //double fdHflowSecManThermint(BODY *body,int iBody) {
+  // double fdHflowSecManThermint(BODY *body,int iBody) {
   return body[iBody].dHflowUMan + body[iBody].dHflowMeltMan -
          body[iBody].dHflowLMan - body[iBody].dHflowLatentMan -
          body[iBody].dRadPowerMan;
@@ -5242,9 +5306,9 @@ double fdPowerThermint(BODY *body, int iBody) {
   @return Latent heat flow from inner core solidification
 */
 double fdHflowLatentIC(BODY *body, UPDATE *update, int iBody) {
-  if (body[iBody].dRIC > 0) {                        //If IC exists.
-    return body[iBody].dMassICDot * (SPECLATENTICB); //DB14 (26)
-  } else {                                           //If no IC.
+  if (body[iBody].dRIC > 0) {                        // If IC exists.
+    return body[iBody].dMassICDot * (SPECLATENTICB); // DB14 (26)
+  } else {                                           // If no IC.
     return 0;
   }
 }
@@ -5258,9 +5322,9 @@ double fdHflowLatentIC(BODY *body, UPDATE *update, int iBody) {
   @return Gravitational energy release from inner core solidification
 */
 double fdPowerGravIC(BODY *body, UPDATE *update, int iBody) {
-  if (body[iBody].dRIC > 0) {                        //If IC exists.
-    return body[iBody].dMassICDot * (SPECPOWGRAVIC); //DB14 (26)
-  } else {                                           //If no IC.
+  if (body[iBody].dRIC > 0) {                        // If IC exists.
+    return body[iBody].dMassICDot * (SPECPOWGRAVIC); // DB14 (26)
+  } else {                                           // If no IC.
     return 0;
   }
 }
@@ -5331,20 +5395,20 @@ double cube(double x) {
 */
 double root(int type, BODY *body, int iBody, double guess1, double guess2,
             double tol, int nmax) {
-  double mid     = 0.0; //current midpoint or root.
-  double fmid    = 0.0; //current value of f(mid).
-  double fguess1 = 0.0; //current value of f(guess1).
+  double mid     = 0.0; // current midpoint or root.
+  double fmid    = 0.0; // current value of f(mid).
+  double fguess1 = 0.0; // current value of f(guess1).
   int count      = 0.0;
   while (count <= nmax) {
-    mid = (guess1 + guess2) / 2.0; //bisection method from wikipedia.
-    if (type == 0) {               //use fdSolTempDiffMan
-      fmid    = fdSolTempDiffMan(mid, body, iBody);    //function at mid.
-      fguess1 = fdSolTempDiffMan(guess1, body, iBody); //function at guess1.
+    mid = (guess1 + guess2) / 2.0; // bisection method from wikipedia.
+    if (type == 0) {               // use fdSolTempDiffMan
+      fmid    = fdSolTempDiffMan(mid, body, iBody);    // function at mid.
+      fguess1 = fdSolTempDiffMan(guess1, body, iBody); // function at guess1.
     }
-    if (fmid == 0 || (guess2 - guess1) / 2.0 <= tol) { //solution found.
+    if (fmid == 0 || (guess2 - guess1) / 2.0 <= tol) { // solution found.
       return mid;
     }
-    count++; //increment count by 1.
+    count++; // increment count by 1.
     if (fmid / fabs(fmid) == fguess1 / fabs(fguess1)) {
       guess2 = mid;
     } else {
@@ -5355,7 +5419,8 @@ double root(int type, BODY *body, int iBody, double guess1, double guess2,
   return 0;
 }
 /**
-  Function compute cubic roots of intersection between mantle adiabat and solidus.
+  Function compute cubic roots of intersection between mantle adiabat and
+  solidus.
 
   @param type Type of root to compute
   @param body Body struct
@@ -5364,37 +5429,37 @@ double root(int type, BODY *body, int iBody, double guess1, double guess2,
   @return Depth to solidus-adiabat intersection (melt layer)
 */
 double cubicroot(int type, BODY *body, int iBody) {
-  double a = 0, b = 0, c = 0, d = 0; //coefficients of cubic polynomial.
-  if (type ==
-      0) { //type=0 is melt intersection in adiabatic part of mantle, away from TBL's.
+  double a = 0, b = 0, c = 0, d = 0; // coefficients of cubic polynomial.
+  if (type == 0) { // type=0 is melt intersection in adiabatic part of mantle,
+                   // away from TBL's.
     a = ASOLIDUS;
     b = BSOLIDUS;
     c = CSOLIDUS + ADGRADMAN;
     d = DSOLIDUS - body[iBody].dTUMan -
         (ADGRADMAN) * ((ERMAN)-body[iBody].dBLUMan);
   }
-  if (type == 1) { //type=1 is melt intersection within UM TBL.
+  if (type == 1) { // type=1 is melt intersection within UM TBL.
     a = ASOLIDUS;
     b = BSOLIDUS;
     c = CSOLIDUS + body[iBody].dTJumpUMan / body[iBody].dBLUMan;
     d = DSOLIDUS - body[iBody].dTSurf -
         body[iBody].dTJumpUMan / body[iBody].dBLUMan * (ERMAN);
   }
-  double delta0 = pow(b, 2.0) - 3.0 * a * c; //cubic root component (wikip)
+  double delta0 = pow(b, 2.0) - 3.0 * a * c; // cubic root component (wikip)
   double delta1 = 2.0 * cube(b) - 9.0 * a * b * c +
-                  27.0 * pow(a, 2.0) * d; //cubic root component (wikip)
+                  27.0 * pow(a, 2.0) * d; // cubic root component (wikip)
   if ((pow(delta1, 2.0) - 4.0 * cube(delta0)) < 0) {
     //        printf("imaginary cubic root!\n");
     //        exit(1);
-    return 0; //imaginary root implies no intersection, no melt layer?
+    return 0; // imaginary root implies no intersection, no melt layer?
   }
   double croot =
         pow((delta1 + sqrt(pow(delta1, 2.0) - 4.0 * cube(delta0))) / 2.0,
-            1. / 3); //cubic root component (wikip)
+            1. / 3); // cubic root component (wikip)
   double root =
         -1.0 / (3.0 * a) *
-        (b + croot + delta0 / croot); //real cubic root, radius of layer.
-  return ERMAN - root;                //Return depth.
+        (b + croot + delta0 / croot); // real cubic root, radius of layer.
+  return ERMAN - root;                // Return depth.
 }
 /**
   Function compute mantle solidus at a given depth
@@ -5404,7 +5469,7 @@ double cubicroot(int type, BODY *body, int iBody) {
   @return Mantle solidus temperature at this depth
 */
 double fdSolidusMan(double depth) {
-  double r     = (ERMAN)-depth; //radius to bottom of region.
+  double r     = (ERMAN)-depth; // radius to bottom of region.
   double aterm = (ASOLIDUS)*pow(r, 3.);
   double bterm = (BSOLIDUS)*pow(r, 2.);
   double cterm = (CSOLIDUS)*r;
@@ -5412,7 +5477,8 @@ double fdSolidusMan(double depth) {
          (DSOLIDUS);
 }
 /**
-  Function compute temperature difference between solidus and geotherm at a given depth
+  Function compute temperature difference between solidus and geotherm at a
+  given depth
 
   @param depth
   @param body Body struct
@@ -5420,17 +5486,19 @@ double fdSolidusMan(double depth) {
 
   @return Temperature difference between solidus and geotherm at a given depth
 */
-double fdSolTempDiffMan(
-      double depth, BODY *body,
-      int iBody) { //Given a depth and BODY, return the difference between the solidus and geotherm at that depth.
+double
+fdSolTempDiffMan(double depth, BODY *body,
+                 int iBody) { // Given a depth and BODY, return the difference
+                              // between the solidus and geotherm at that depth.
   double solidus  = fdSolidusMan(depth);
   double geotherm = body[iBody].dTSurf +
                     body[iBody].dSignTJumpUMan * body[iBody].dTJumpUMan *
-                          erf(2.0 * depth / body[iBody].dBLUMan); //DB14 (16)
+                          erf(2.0 * depth / body[iBody].dBLUMan); // DB14 (16)
   return solidus - geotherm;
 }
 /**
-  Function compute surface energy flux including crustal radiogenic power: hflowUMan+RadPowerCrust
+  Function compute surface energy flux including crustal radiogenic power:
+  hflowUMan+RadPowerCrust
 
   @param body Body struct
   @param update Update struct
@@ -5448,7 +5516,8 @@ double fdSurfEnFlux(BODY *body, SYSTEM *system, UPDATE *update, int iBody,
      heating from the core and mantle, but not the crust, which is not
      part of thermint. */
 
-  // PD: SurfEnFlux should be Total surface power/area.  HflowUMan contains all of mantle, +crust makes it total.
+  // PD: SurfEnFlux should be Total surface power/area.  HflowUMan contains all
+  // of mantle, +crust makes it total.
   return (body[iBody].dHflowUMan + body[iBody].dRadPowerCrust) /
          (4 * PI * body[iBody].dRadius * body[iBody].dRadius);
 }

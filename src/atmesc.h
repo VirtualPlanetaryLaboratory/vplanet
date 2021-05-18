@@ -11,8 +11,10 @@
 #define ATMESC_LB15                                                            \
   0 /**< Flag: Luger and Barnes (2015) atmospheric escape formulae */
 #define ATMESC_LBEXACT                                                         \
-  1 /**< Flag: Luger and Barnes (2015) atmospheric escape formulae w/ updated oxygen mixing ratio calculations */
-#define ATMESC_TIAN 2 /**< Flag: Tian (2015) atmospheric escape formulae flag */
+  1 /**< Flag: Luger and Barnes (2015) atmospheric escape formulae w/ updated  \
+       oxygen mixing ratio calculations */
+#define ATMESC_TIAN 2 /**< Flag: Tian (2015) atmospheric escape formulae flag  \
+                       */
 #define ATMESC_ELIM 3 /**< Flag: Energy-limited escape */
 #define ATMESC_DIFFLIM 4   /**< Flag: Diffusion-limited escape */
 #define ATMESC_BONDILIM 5  /**< Flag: Bondi-limited escape */
@@ -43,7 +45,8 @@
 #define OPT_WATERLOSSMODEL 1219 /**< Oxygen buildup / water loss model */
 #define OPT_PLANETRADIUSMODEL                                                  \
   1220                         /**< Gaseous planet radius model (for atmesc) */
-#define OPT_INSTANTO2SINK 1221 /**< Gaseous planet radius model (for atmesc) */
+#define OPT_INSTANTO2SINK 1221 /**< Gaseous planet radius model (for atmesc)   \
+                                */
 #define OPT_ATMXABSEFFH2O 1222 /**< Water Absorption efficiency (epsilon) */
 #define OPT_OXYGENMANTLEMASS 1223 /**< Initial oxygen mass in mantle */
 #define OPT_THERMTEMP 1224        /**< thermosphere temperature */
@@ -55,7 +58,8 @@
 #define OPT_JEANSTIME                                                          \
   1229 /**< Time at which flow becomes ballistic (Jeans escape) */
 #define OPT_FLOWTEMP 1230     /**< Flow temperature */
-#define OPT_BONDILIMITED 1231 /**< Whether or not to use Bondi-limited escape */
+#define OPT_BONDILIMITED 1231 /**< Whether or not to use Bondi-limited escape  \
+                               */
 #define OPT_ENERGYLIMITED                                                      \
   1232 /**< Whether or not to use energy-limited escape */
 #define OPT_RRLIMITED                                                          \
@@ -125,17 +129,21 @@ void FinalizeUpdateMassAtmEsc(BODY *, UPDATE *, int *, int, int, int);
 #define OUT_ETAO 1215 /**< Luger & Barnes (2015) oxygen eta parameter */
 #define OUT_PLANETRADIUS                                                       \
   1216 /**< Planet radius (for the Lehmer & Catling 2017 model) */
-#define OUT_OXYGENMANTLEMASS 1217 /**< Mass of oxygen absorbed by the mantle */
+#define OUT_OXYGENMANTLEMASS 1217 /**< Mass of oxygen absorbed by the mantle   \
+                                   */
 #define OUT_PLANETRADXUV                                                       \
-  1218 /**< Effective planet radius in the XUV (for the Lehmer & Catling 2017 model) */
+  1218 /**< Effective planet radius in the XUV (for the Lehmer & Catling 2017  \
+          model) */
 #define OUT_RADSOLID                                                           \
   1219 /**< Solid radius (for the Lehmer & Catling 2017 model) */
 #define OUT_PRESXUV                                                            \
-  1220 /**< Pressure at the effective XUV absporption level (for the Lehmer & Catling 2017 model) */
+  1220 /**< Pressure at the effective XUV absporption level (for the Lehmer &  \
+          Catling 2017 model) */
 #define OUT_SCALEHEIGHT                                                        \
   1221 /**< Atmospheric scale height (for the Lehmer & Catling 2017 model) */
 #define OUT_THERMTEMP                                                          \
-  1222 /**< Temperature of the thermosphere (for the Lehmer & Catling 2017 model) */
+  1222 /**< Temperature of the thermosphere (for the Lehmer & Catling 2017     \
+          model) */
 #define OUT_ATMGASCONST                                                        \
   1223 /**< Gas constant (for the Lehmer & Catling 2017 model) */
 #define OUT_PRESSURF                                                           \

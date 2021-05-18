@@ -80,10 +80,10 @@
 #define TOMASS 1.39e21              // Mass of one terrestrial ocean in kg (TO)
 #define ATOMMASS 1.660538921e-27    // Atomic Mass
 #define SIGMA 5.670367e-8           // Stefan-Boltzmann Constant
-#define RGAS 8.3144598              //gas constant in J K^-1 mol^-1
+#define RGAS 8.3144598              // gas constant in J K^-1 mol^-1
 #define KBOLTZ 1.38064852e-23       // Boltzmann constant, J/K
 #define ALPHA_STRUCT                                                           \
-  0.6   // Structural constant for spherical mass                              \
+  0.6 // Structural constant for spherical mass                              \
         //distribution potential energy (E_pot = -ALPHA*BIGG*M^2/R)
 
 // Temperature macros
@@ -104,21 +104,23 @@ extern const double dTINY;
 #define NAMELEN 100
 #define MAXFILES 128 /* Maximum number of input files */
 #define MAXARRAY                                                               \
-  128 /* Maximum number of options in
-                              * an option array */
+  128 /* Maximum number of options in                                          \
+       * an option array */
 #define NUMOPT                                                                 \
-  1000 /* Number of options that could be
-                             * in MODULE */
+  1000 /* Number of options that could be                                      \
+        * in MODULE */
 #define MAXLINES                                                               \
-  256             /* Maximum Number of Lines in an
-                             * input file */
-#define OUTLEN 48 /* Maximum number of characters in an output column header */
+  256             /* Maximum Number of Lines in an                             \
+                   * input file */
+#define OUTLEN 48 /* Maximum number of characters in an output column header   \
+                   */
 #define OUTDESCR 256     /* Number of characters in output description */
 #define OUTLONDESCR 2048 /* Number of characters in output long description */
 
 
 /* Forward declaration of structs.
-This is necessary in order to add pointers to structs into typedef'd functions */
+This is necessary in order to add pointers to structs into typedef'd functions
+*/
 
 typedef struct BODY BODY;
 typedef struct CONTROL CONTROL;
@@ -136,7 +138,8 @@ typedef struct UNITS UNITS;
 typedef struct UPDATE UPDATE;
 typedef struct VERIFY VERIFY;
 
-/*! \brief BODY contains all the physical parameters for every object in the system.
+/*! \brief BODY contains all the physical parameters for every object in the
+ * system.
  */
 struct BODY {
   /* Body Properties */
@@ -185,13 +188,15 @@ struct BODY {
   int bUseRRLimited;  /**< Use radiation/recombination-limited H mass loss */
   int bAtmEscAuto;    /**< Transition H escape regime depending on physics */
   int bAutoThermTemp; /**< Calculate thermal temperature from environemnt? */
-  int bStopWaterLossInHZ; /**< Stop water loss once planet enters habitable zone? */
+  int bStopWaterLossInHZ; /**< Stop water loss once planet enters habitable
+                             zone? */
 
-  int iWaterLossModel; /**< Water Loss and Oxygen Buildup Model */
-  int iAtmXAbsEffH2OModel; /**< Water X-ray/XUV absorption efficiency evolution model */
-  int iPlanetRadiusModel; /**< Planet Radius model. */
-  int iWaterEscapeRegime; /**< Track water escape regime */
-  int iHEscapeRegime;     /**< Tracks H escape regime */
+  int iWaterLossModel;     /**< Water Loss and Oxygen Buildup Model */
+  int iAtmXAbsEffH2OModel; /**< Water X-ray/XUV absorption efficiency evolution
+                              model */
+  int iPlanetRadiusModel;  /**< Planet Radius model. */
+  int iWaterEscapeRegime;  /**< Track water escape regime */
+  int iHEscapeRegime;      /**< Tracks H escape regime */
 
   double dSurfaceWaterMass;    /**< Surface water mass */
   double dMinSurfaceWaterMass; /**< Minimum surface water to avoid a halt */
@@ -238,8 +243,8 @@ struct BODY {
   double dLL13N0;    /**< CBP's Mean motion defined in LL13 eqn 12 */
   double
         dLL13K0; /**< CBP's radial epicyclic frequency defined in LL13 eqn 26 */
-  double
-        dLL13V0; /**< CBP's vertical epicyclic frequency defined in LL13 eqn 36 */
+  double dLL13V0; /**< CBP's vertical epicyclic frequency defined in LL13 eqn 36
+                   */
   double dLL13PhiAB; /**< Binary's initial mean anomaly */
   double dCBPM0;     /**< CBP's initial mean anomaly */
   double dCBPZeta;   /**< CBP's z oscillation angle (see LL13 eqn 35) */
@@ -258,17 +263,18 @@ struct BODY {
   double *dDistanceX;   /**< X Distance between two bodies */
   double *dDistanceY;   /**< Y Distance between two bodies */
   double *dDistanceZ;   /**< Z Distance between two bodies */
-  double *
-        dHCartPos; /**< Heliocentric Cartesian Position used for orbital element calculations */
-  double *
-        dHCartVel; /**< Heliocentric Cartesian Velocity used for orbital element calculations */
-  double *
-        dBCartPos; /**< Barycentric Cartesian Position used for orbital element calculations */
-  double *
-        dBCartVel; /**< Barycentric Cartesian Velocity used for orbital element calculations */
-  double dGM;             /**< GM for the star */
-  double dMu;             /**< G(M+m) */
-  int iGravPertsSpiNBody; /**< Number of bodies that are orbitally relevent (equal to for evolve->iNumBodies) */
+  double *dHCartPos;    /**< Heliocentric Cartesian Position used for orbital
+                           element calculations */
+  double *dHCartVel;    /**< Heliocentric Cartesian Velocity used for orbital
+                           element calculations */
+  double *dBCartPos;    /**< Barycentric Cartesian Position used for orbital
+                           element calculations */
+  double *dBCartVel;    /**< Barycentric Cartesian Velocity used for orbital
+                           element calculations */
+  double dGM;           /**< GM for the star */
+  double dMu;           /**< G(M+m) */
+  int iGravPertsSpiNBody; /**< Number of bodies that are orbitally relevent
+                             (equal to for evolve->iNumBodies) */
 
   /* DISTORB parameters */
   int bDistOrb;  /**< Has module DISTORB been implemented */
@@ -283,13 +289,14 @@ struct BODY {
   double dMeanA; /**< Mean anomaly (only used for inv plane calculation) */
   double dTrueL; /**< True longitude (only used for insolation calculation */
   double dEccA;  /**< Eccentric anomaly (only used for inv plane calculation) */
-  double *
-        daCartPos; /**< Cartesian position of body (only used for inv plane calc) */
-  double *
-        daCartVel; /**< Cartesian velocity of body (only used for inv plane calc) */
-  int iGravPerts;   /**< Number of bodies which perturb the body */
-  int *iaGravPerts; /**< Which bodies are perturbers of the body */
-  int iEigFreqs; /**< Number of eigenfrequencies that control the body's motion */
+  double *daCartPos; /**< Cartesian position of body (only used for inv plane
+                        calc) */
+  double *daCartVel; /**< Cartesian velocity of body (only used for inv plane
+                        calc) */
+  int iGravPerts;    /**< Number of bodies which perturb the body */
+  int *iaGravPerts;  /**< Which bodies are perturbers of the body */
+  int iEigFreqs; /**< Number of eigenfrequencies that control the body's motion
+                  */
   int *iaEigFreqs; /**< Indices of eigenfrequencies */
   int bGRCorr; /**< Use general relativistic correction in DistOrb+DistRot?*/
   int iDistOrbModel; /**< Which orbital model to use (RD4 or LL2) */
@@ -306,9 +313,9 @@ struct BODY {
 
   /* DISTROT parameters */
   int bDistRot;
-  double dPrecA; /**< Precession angle */
-  double
-        dTrueApA; /**< True anomaly at equinox (used for invariable plane conversion) */
+  double dPrecA;      /**< Precession angle */
+  double dTrueApA;    /**< True anomaly at equinox (used for invariable plane
+                         conversion) */
   double dDynEllip;   /**< Dynamical ellipticity */
   double dYobl;       /**< sin(obliq)*sin(preca) */
   double dXobl;       /**< sin(obliq)*cos(preca) */
@@ -317,28 +324,29 @@ struct BODY {
   double *daLRotTmp;  /**< Temp copy of spin angular momentum vector */
   int bForcePrecRate; /**< Set precession rate to a fixed value */
   double dPrecRate;   /**< Value to set fixed precession rate to */
-  int bCalcDynEllip; /**< Calc dyn ellipticity from spin, radius, mass, inertia? */
+  int bCalcDynEllip; /**< Calc dyn ellipticity from spin, radius, mass, inertia?
+                      */
   int bRelaxDynEllip; /**< shape of planet relaxes when spun down */
   int bReadOrbitData; /**< Use orbit data from file rather than distorb */
-  char cFileOrbitData
-        [NAMELEN];       /**< read orbital data from this file (distorb=0) */
-  double *daTimeSeries;  /**< time series for orbital data */
-  double *daSemiSeries;  /**< time series for orbital data */
-  double *daEccSeries;   /**< time series for orbital data */
-  double *daIncSeries;   /**< time series for orbital data */
-  double *daArgPSeries;  /**< time series for orbital data */
-  double *daLongASeries; /**< time series for orbital data */
-  double *daMeanASeries; /**< time series for orbital data */
-  int iCurrentStep;      /**< index for time series arrays */
-  double *daHeccSeries;  /**< time series for orbital data */
-  double *daKeccSeries;  /**< time series for orbital data */
-  double *daPincSeries;  /**< time series for orbital data */
-  double *daQincSeries;  /**< time series for orbital data */
-  double dPdot;          /**< inclination derivative used for obliquity evol */
-  double dQdot;          /**< inclination derivative used for obliquity evol */
-  int iNLines;           /**< Number of lines of orbital data file */
-  double
-        dSpecMomInertia; /**< C/M/R^2 used for dynamical ellipticity calculation */
+  char cFileOrbitData[NAMELEN]; /**< read orbital data from this file
+                                   (distorb=0) */
+  double *daTimeSeries;         /**< time series for orbital data */
+  double *daSemiSeries;         /**< time series for orbital data */
+  double *daEccSeries;          /**< time series for orbital data */
+  double *daIncSeries;          /**< time series for orbital data */
+  double *daArgPSeries;         /**< time series for orbital data */
+  double *daLongASeries;        /**< time series for orbital data */
+  double *daMeanASeries;        /**< time series for orbital data */
+  int iCurrentStep;             /**< index for time series arrays */
+  double *daHeccSeries;         /**< time series for orbital data */
+  double *daKeccSeries;         /**< time series for orbital data */
+  double *daPincSeries;         /**< time series for orbital data */
+  double *daQincSeries;         /**< time series for orbital data */
+  double dPdot;           /**< inclination derivative used for obliquity evol */
+  double dQdot;           /**< inclination derivative used for obliquity evol */
+  int iNLines;            /**< Number of lines of orbital data file */
+  double dSpecMomInertia; /**< C/M/R^2 used for dynamical ellipticity
+                             calculation */
 
   /* EQTIDE Parameters */
   int bEqtide;         /**< Apply Module EQTIDE? */
@@ -346,10 +354,10 @@ struct BODY {
   double dLockTime;    /**< Time when body tidally-locked */
   int bUseTidalRadius; /**< Set a fixed tidal radius? */
   int bUseOuterTidalQ; /**< Set total Q to outer layer's value? */
-  double
-        dTidalRadius; /**< Radius used by tidal evoltion equations (CPL only currently) */
-  int iTidePerts;                      /**< Number of Tidal Perturbers */
-  int *iaTidePerts;                    /**< Body #'s of Tidal Perturbers */
+  double dTidalRadius; /**< Radius used by tidal evoltion equations (CPL only
+                          currently) */
+  int iTidePerts;      /**< Number of Tidal Perturbers */
+  int *iaTidePerts;    /**< Body #'s of Tidal Perturbers */
   char saTidePerts[MAXARRAY][NAMELEN]; /**< Names of Tidal Perturbers */
   double dK2Man;                       /**< Mantle k2 love number */
   double dK2Ocean;                     /**< Ocean's Love Number */
@@ -518,16 +526,16 @@ struct BODY {
   double dCoreBuoyCompo;  /**< Core Compositional buoyancy flux */
   double dCoreBuoyTotal;  /**< Core total (therm+compo) buoyancy flux */
   double dGravICB;        /**< Gravity at ICB */
-  double
-        dDensAnomICB; /**< Density anomaly across ICB (Delta rho_chi in DB14). */
-  double dRICDot;     /**< Inner core growth rate */
+  double dDensAnomICB; /**< Density anomaly across ICB (Delta rho_chi in DB14).
+                        */
+  double dRICDot;      /**< Inner core growth rate */
   /* Magnetic Field */
-  double dMagMom; /**< Core Dynamo Magnetic Moment scaling law. */
-  double
-        dMagMomCoef; /**< Dynamo magnetic moment scaling law dipolarity coefficient (gamma_d in DB14) */
-  double dPresSWind; /**< Stellar wind pressure at planets orbit. */
-  double
-        dMagPauseRad; /**< Magnetopause stand-off radius from center of planet */
+  double dMagMom;      /**< Core Dynamo Magnetic Moment scaling law. */
+  double dMagMomCoef;  /**< Dynamo magnetic moment scaling law dipolarity
+                          coefficient (gamma_d in DB14) */
+  double dPresSWind;   /**< Stellar wind pressure at planets orbit. */
+  double dMagPauseRad; /**< Magnetopause stand-off radius from center of planet
+                        */
   /* Constants */
   double dViscRatioMan; /**< Viscosity Ratio Man */
   double dEruptEff;     /**< Mantle melt eruption efficiency */
@@ -560,33 +568,35 @@ struct BODY {
   int iXUVModel;
   double dLXUV; // Not really a STELLAR parameter
   double iHZModel;
-  double
-        dLostAngMom; /**< Angular momemntum lost to space via magnetic braking */
-  double dLostEng;   /**< Energy lost to space, i.e. via stellar contraction */
-  int bRossbyCut; /**< Whether or not to shut off magnetic braking for Ro>ROSSBYCRIT */
-  int bEvolveRG; /**< Whether or not to evolve radius of gyration? Defaults to 0 */
+  double dLostAngMom; /**< Angular momemntum lost to space via magnetic braking
+                       */
+  double dLostEng;    /**< Energy lost to space, i.e. via stellar contraction */
+  int bRossbyCut;     /**< Whether or not to shut off magnetic braking for
+                         Ro>ROSSBYCRIT */
+  int bEvolveRG; /**< Whether or not to evolve radius of gyration? Defaults to 0
+                  */
 
   /* POISE parameters */
   int bPoise; /**< Apply POISE module? */
 
   double dAblateFF;  /**< Scaling factor for ice ablation rate */
   int bAccuracyMode; /**< This forces EBM to re-invert matrix every time step */
-  double dAlbedoGlobal; /**< Global average albedo (Bond albedo) */
-  double
-        dAlbedoGlobalTmp; /**< A copy of global average albedo (sometimes needed) */
-  double dAlbedoLand;     /**< Sets base albedo of land (sea model) */
-  double dAlbedoWater; /**< Sets base albedo of water (sea model) */
-  int bAlbedoZA;       /**< Use albedo based on zenith angle (ann model) */
-  double dAreaIceCov;  /**< Tracks area of surface covered in permanent ice*/
-  double dAstroDist;   /**< Distance between primary and planet */
-  int bCalcAB;         /**< Calc A and B from Williams & Kasting 1997 */
-  int bClimateModel;   /**< Which EBM to be used (ann or sea) */
-  int bColdStart;    /**< Start from global glaciation (snowball) conditions */
-  double dCw_dt;     /**< Heat capacity of water / EBM time step */
-  double dDiffCoeff; /**< Diffusion coefficient set by user */
-  int bDiffRot;      /**< Adjust heat diffusion for rotation rate */
-  int bElevFB;       /**< Apply elevation feedback to ice ablation */
-  double dFixIceLat; /**< Fixes ice line latitude to user set value */
+  double dAlbedoGlobal;    /**< Global average albedo (Bond albedo) */
+  double dAlbedoGlobalTmp; /**< A copy of global average albedo (sometimes
+                              needed) */
+  double dAlbedoLand;      /**< Sets base albedo of land (sea model) */
+  double dAlbedoWater;     /**< Sets base albedo of water (sea model) */
+  int bAlbedoZA;           /**< Use albedo based on zenith angle (ann model) */
+  double dAreaIceCov; /**< Tracks area of surface covered in permanent ice*/
+  double dAstroDist;  /**< Distance between primary and planet */
+  int bCalcAB;        /**< Calc A and B from Williams & Kasting 1997 */
+  int bClimateModel;  /**< Which EBM to be used (ann or sea) */
+  int bColdStart;     /**< Start from global glaciation (snowball) conditions */
+  double dCw_dt;      /**< Heat capacity of water / EBM time step */
+  double dDiffCoeff;  /**< Diffusion coefficient set by user */
+  int bDiffRot;       /**< Adjust heat diffusion for rotation rate */
+  int bElevFB;        /**< Apply elevation feedback to ice ablation */
+  double dFixIceLat;  /**< Fixes ice line latitude to user set value */
   double dFluxInGlobal;     /**< Global mean of incoming flux */
   double dFluxInGlobalTmp;  /**< Copy of global mean incoming flux */
   double dFluxOutGlobal;    /**< Global mean of outgoing flux */
@@ -611,11 +621,11 @@ struct BODY {
   double dLapseR; /**< Lapse rate used for elevation feedback of ice sheet */
   double dLatentHeatIce; /**< Latent heat of fusion of ice over mixing depth*/
   double dLatFHeatCp;    /**< Latent heat of ice/heat capacity */
-  int bMEPDiff; /**< Compute diff from maximum entropy prod (D = B/4) */
-  double
-        dMixingDepth; /**< Depth of mixing layer of ocean (for thermal inertia)*/
-  int iNDays;         /**< Number of days in planet's year/orbit */
-  int iNStepInYear;   /**< Number of time steps in a year/orbit */
+  int bMEPDiff;        /**< Compute diff from maximum entropy prod (D = B/4) */
+  double dMixingDepth; /**< Depth of mixing layer of ocean (for thermal
+                          inertia)*/
+  int iNDays;          /**< Number of days in planet's year/orbit */
+  int iNStepInYear;    /**< Number of time steps in a year/orbit */
   double dNuLandWater; /**< Land-ocean interaction term */
   int iNumLats;        /**< Number of latitude cells */
   int iNumYears;       /**< Number of orbits!!! to run seasonal model */
@@ -696,10 +706,10 @@ struct BODY {
   double *daBedrockH;     /**< Height of bedrock (can be negative) */
   double *daBedrockHEq;   /**< Equilibrium height of bedrock */
   double *daDeclination;  /**< Daily solar declination */
-  double *
-        daDeltaTempL; /**< Keeps track of temp change on land for energy check */
-  double *
-        daDeltaTempW; /**< Keeps track of temp change on water for energy check */
+  double *daDeltaTempL; /**< Keeps track of temp change on land for energy check
+                         */
+  double *daDeltaTempW; /**< Keeps track of temp change on water for energy
+                           check */
   double *daDIceHeightDy;  /**< Gradient of ice height */
   double *daDiffusionSea;  /**< Diffusion coefficient for seasonal model */
   double *daDivFluxAvg;    /**< Divergence of flux averaged over orbit */
@@ -728,21 +738,21 @@ struct BODY {
   double *daIceFlow;          /**< Flow of ice */
   double *daIceFlowAvg;       /**< Average flow of ice over orbit */
   double *daIceFlowMid;       /**< Flow of ice at boundaries of grid points */
-  double *daIceGamTmp;    /**< Temporary variable used in ice sheet matrix */
-  double *daIceHeight;    /**< Height of ice sheet */
-  double *daIceMass;      /**< Ice mass per area */
-  double *daIceMassTmp;   /**< Temporary copy of ice mass per area */
-  double *daIcePropsTmp;  /**< Temporary array used in ice sheet matrix */
-  double *daIceSheetDiff; /**< Diffusion coefficient of ice sheet flow */
-  double **daIceSheetMat; /**< Matrix used in ice sheet flow */
-  double **daInvMSea;     /**< Inverted matrix in seasonal EBM */
-  double *daLambdaSea;    /**< Diffusion terms in seasonal EBM matrix */
-  double dLandFrac;       /**< Land fraction input by user */
-  double *daLandFrac;     /**< Fraction of cell which is land */
-  double **daMDiffSea;    /**< Diffusion only matrix in seasonal EBM */
-  double **
-        daMEulerCopySea; /**< Temporary copy of Euler time step matrix (seasonal) */
-  double **daMEulerSea; /**< Euler time step matrix in seasonal EBM */
+  double *daIceGamTmp;      /**< Temporary variable used in ice sheet matrix */
+  double *daIceHeight;      /**< Height of ice sheet */
+  double *daIceMass;        /**< Ice mass per area */
+  double *daIceMassTmp;     /**< Temporary copy of ice mass per area */
+  double *daIcePropsTmp;    /**< Temporary array used in ice sheet matrix */
+  double *daIceSheetDiff;   /**< Diffusion coefficient of ice sheet flow */
+  double **daIceSheetMat;   /**< Matrix used in ice sheet flow */
+  double **daInvMSea;       /**< Inverted matrix in seasonal EBM */
+  double *daLambdaSea;      /**< Diffusion terms in seasonal EBM matrix */
+  double dLandFrac;         /**< Land fraction input by user */
+  double *daLandFrac;       /**< Fraction of cell which is land */
+  double **daMDiffSea;      /**< Diffusion only matrix in seasonal EBM */
+  double **daMEulerCopySea; /**< Temporary copy of Euler time step matrix
+                               (seasonal) */
+  double **daMEulerSea;     /**< Euler time step matrix in seasonal EBM */
   double **daMInit;  /**< Temporary matrix used in constructing Euler matrix */
   double **daMLand;  /**< Land terms in seasonal matrix */
   double **daMWater; /**< Water terms in seasonal matrix */
@@ -824,14 +834,14 @@ struct BODY {
   double dLongATmp; /**< Long asc node in the host binary reference plane */
   double dIncTmp;   /**< Inclination in the host binary reference plane */
   double dCosArgP;  /**< Cosine of arg pericenter */
-  double
-        dMinStellarApproach; /**< minimum allowed close approach of body to host */
-  double dMassInterior;      /**< Total mass of bodies interior to body */
-  int iBadImpulse;           /**< Was there a bad impulse? */
+  double dMinStellarApproach; /**< minimum allowed close approach of body to
+                                 host */
+  double dMassInterior;       /**< Total mass of bodies interior to body */
+  int iBadImpulse;            /**< Was there a bad impulse? */
 
   double dMeanL; /**< Body's mean longitude */
 
-  //MAGMOC
+  // MAGMOC
   /* HERE
    * declare all variables used
    */
@@ -849,7 +859,8 @@ struct BODY {
   int bCO2InAtmosphere;  /**< Is CO2 present in the atmopshere? */
   int iRadioHeatModel;   /**< Which Radiogenic Heating model to use */
   int iMagmOcAtmModel;   /**< Which Atmopsheric Flux model to use */
-  int bOptManQuasiSol; /**< Solidify mantle inst. when melt frac = 0.4 at surf */
+  int bOptManQuasiSol;   /**< Solidify mantle inst. when melt frac = 0.4 at surf
+                          */
 
   /* Primary variables */
   double dPotTemp;         /**< Potential Temp of the mantle [K] */
@@ -868,24 +879,24 @@ struct BODY {
   double dWaterMassAtm;   /**< Water mass in the atmosphere [kg] */
   double dManMeltDensity; /**< Density of the molten mantle [km/m^3] */
   double dMassFracFeOIni; /**< Initial FeO mass fraction in the mantle */
-  double
-        dWaterPartCoeff; /**< Water partition coefficient between melt and solid */
-  double dDepthMO;       /**< Initial depth of Magma Ocean [km] */
+  double dWaterPartCoeff; /**< Water partition coefficient between melt and
+                             solid */
+  double dDepthMO;        /**< Initial depth of Magma Ocean [km] */
   /* Other variables Thermal model */
   double
         dGravAccelSurf; /**< Graviational acceleration at the surface [m/s^2] */
-  double
-        dSolidRadiusLocal; /**< Local variable for solidification radius of the mantle [m] */
-  double
-        dTransDepthSol; /**< Depth of transition from low to high pressure solidus [Pa] */
-  double dPrefactorA;   /**< Prefactor for linear solidus */
-  double dPrefactorB;   /**< Prefactor for linear solidus */
-  double dMeltFraction; /**< Melt fraction of the mantle */
-  double dMeltFracSurf; /**< Melt fraction at the surface */
-  double dKinemViscos;  /**< Kinematic viscosity of the mantle [m/s^2] */
-  double
-        dFactorDerivative; /**< Factor to calculate the derivatives of Tpot and Rsol */
-  double dManHeatFlux; /**< Mantle heat flux [W/m^2] */
+  double dSolidRadiusLocal; /**< Local variable for solidification radius of the
+                               mantle [m] */
+  double dTransDepthSol;    /**< Depth of transition from low to high pressure
+                               solidus [Pa] */
+  double dPrefactorA;       /**< Prefactor for linear solidus */
+  double dPrefactorB;       /**< Prefactor for linear solidus */
+  double dMeltFraction;     /**< Melt fraction of the mantle */
+  double dMeltFracSurf;     /**< Melt fraction at the surface */
+  double dKinemViscos;      /**< Kinematic viscosity of the mantle [m/s^2] */
+  double dFactorDerivative; /**< Factor to calculate the derivatives of Tpot and
+                               Rsol */
+  double dManHeatFlux;      /**< Mantle heat flux [W/m^2] */
   double dRadioHeat;   /**< Radiogenic heating rate GET FROM RADHEAT [W/kg] */
   double dTidalHeat;   /**< Tidal heating rate GET FROM EQTIDE [W/kg] */
   double dNetFluxAtmo; /**< Net atmospheric flux OLR-ASR [W/m^2] */
@@ -929,22 +940,22 @@ struct SYSTEM {
         *fnLaplaceDeriv; /**< Pointers to semi-major axis derivatives */
   double ***daLaplaceC;  /**< Values of semi-major axis functions */
   double ***daLaplaceD;  /**< Values of semi-major axis derivatives */
-  double ***
-        daAlpha0; /**< Semi-major axis ratio at the time LaplaceC is determined */
+  double ***daAlpha0;    /**< Semi-major axis ratio at the time LaplaceC is
+                            determined */
   int **iaLaplaceN; /**< Indices for dmLaplaceC corresponding to iBody, jBody */
   double dDfcrit; /**< Semi-maj functions will be updated based on this value */
   double
         dThetaInvP; /**< Azimuthal angle of inv plane relative to input plane */
   double dPhiInvP;  /**< Altitude angle of inv plane relative to input plane */
-  double **
-        daEigenValEcc; /**< Matrix of eccentricity Eigenvalues in Laplace-Lagrange */
-  double **
-        daEigenValInc; /**< Matrix of inclination Eigenvalues in Laplace-Lagrange */
-  double **
-        daEigenVecEcc; /**< Matrix of eccentricity Eigenvectors in Laplace-Lagrange */
-  double **
-        daEigenVecInc; /**< Matrix of inclination Eigenvectors in Laplace-Lagrange */
-  double **daEigenPhase; /**< Phase angles used in Laplace-Lagrange solution */
+  double **daEigenValEcc; /**< Matrix of eccentricity Eigenvalues in
+                             Laplace-Lagrange */
+  double **daEigenValInc; /**< Matrix of inclination Eigenvalues in
+                             Laplace-Lagrange */
+  double **daEigenVecEcc; /**< Matrix of eccentricity Eigenvectors in
+                             Laplace-Lagrange */
+  double **daEigenVecInc; /**< Matrix of inclination Eigenvectors in
+                             Laplace-Lagrange */
+  double **daEigenPhase;  /**< Phase angles used in Laplace-Lagrange solution */
   double **daA;     /**< Matrix used for finding eigenvalues for eccentricity */
   double **daB;     /**< Matrix used for finding eigenvalues for inclination */
   double *daAsoln;  /**< RHS of eigenvalue problem for ecc */
@@ -986,45 +997,49 @@ struct SYSTEM {
   int bRadialMigr;             /**< use radial migration */
   double dScalingFTot;         /**< scaling factor for radial migration */
   double dScalingFStars;       /**< scaling factor for radial migration */
-  double
-        dScalingFVelDisp; /**< scaling factor for radial migration (velocity disp) */
-  double dGasDensity;     /**< density of local ism */
-  double dDMDensity;      /**< density of local dark matter */
-  double dStarScaleL;     /**< scale length of stellar disk */
-  double dVelDispSolar;   /**< Velocity dispersion in solar neighborhood */
-  double dHostApexVelMag; /**< Magnitude of host star apex velocity */
-  double *daHostApexVel;  /**< Host star apex velocity vector */
+  double dScalingFVelDisp; /**< scaling factor for radial migration (velocity
+                              disp) */
+  double dGasDensity;      /**< density of local ism */
+  double dDMDensity;       /**< density of local dark matter */
+  double dStarScaleL;      /**< scale length of stellar disk */
+  double dVelDispSolar;    /**< Velocity dispersion in solar neighborhood */
+  double dHostApexVelMag;  /**< Magnitude of host star apex velocity */
+  double *daHostApexVel;   /**< Host star apex velocity vector */
   double *daRelativeVel;  /**< Relative velocity b/w passing star and orbiter */
   double *daRelativePos;  /**< Distance b/w passing star and orbiter */
-  double
-        dRelativeVelRad; /**< Radial component of velocity b/w passing star & orbiter */
-  double
-        dRelativeVelMag; /**< Magnitude relative velocity b/w passing star & orbiter */
+  double dRelativeVelRad; /**< Radial component of velocity b/w passing star &
+                             orbiter */
+  double dRelativeVelMag; /**< Magnitude relative velocity b/w passing star &
+                             orbiter */
   double *daGSNumberDens; /**< Number density of stars in solar neighborhood */
   double *daGSBinMag;     /**< Magnitude bins of stars in solar neighborhood */
   double *daEncounterRateMV; /**< Encounter rate of passing stars */
   int iSeed;                 /**< RNG seed for stellar encounters */
   double dGalaxyAge;         /**< present day age of galaxy */
   int bStellarEnc;           /**< model stellar encounters? */
-  int bTimeEvolVelDisp; /**< scale velocity dispersion of passing stars w/ sqrt(t)?*/
+  int bTimeEvolVelDisp;      /**< scale velocity dispersion of passing stars w/
+                                sqrt(t)?*/
   int bOutputEnc; /**< output stell encounter info (beware large output!) */
   double dEncDT;  /**< time b/w stell encounter impulses on primary/2ndary */
   double dTStart; /**< time that encounter begins relative to time step */
 
-  int **iaResIndex; /**< j values for resonance (-1 deactivates the resonance) */
+  int **iaResIndex; /**< j values for resonance (-1 deactivates the resonance)
+                     */
   int *iaResOrder;  /**< order of resonance */
-  int bResAvg; /**< Average over resonant arguments (suitable for circulation) */
-  double **
-        daLibrFreq2; /**< Libration frequency of exact resonance via linear theory */
-  double **daCircFreq; /**< Circulation frequency of near resonance */
+  int bResAvg; /**< Average over resonant arguments (suitable for circulation)
+                */
+  double **daLibrFreq2; /**< Libration frequency of exact resonance via linear
+                           theory */
+  double **daCircFreq;  /**< Circulation frequency of near resonance */
   double **daDistCos; /**< Cosine prefactors of disturbing fxn resonant terms */
   double **daDistSin; /**< Sine prefactors of disturbing fxn resonant terms */
-  double **
-        daDistSec; /**< Pyth sum of prefactors of disturbing fxn resonant terms */
+  double **daDistSec; /**< Pyth sum of prefactors of disturbing fxn resonant
+                         terms */
 };
 
 /*
- * Updates: Struct that contains all the variables to be updated and the functions to be called to be updated, fnUpdate.
+ * Updates: Struct that contains all the variables to be updated and the
+ * functions to be called to be updated, fnUpdate.
  */
 
 struct UPDATE {
@@ -1040,9 +1055,12 @@ struct UPDATE {
       with a Type 0 variable must account for  the evolution with
       dTimeStep.
   */
-  int **iaType; /**< Variable type affecting timestep (0 = explicit function of age, 1 = normal quantity with time derivative, 2 = polar/sinusoidal quantity with time derivative, 3 = sinusoidal quantity with explicit function of age) */
-  double *
-        daDeriv; /**< Array of Total Derivative Values for each Primary Variable */
+  int **iaType; /**< Variable type affecting timestep (0 = explicit function of
+                   age, 1 = normal quantity with time derivative, 2 =
+                   polar/sinusoidal quantity with time derivative, 3 =
+                   sinusoidal quantity with explicit function of age) */
+  double *daDeriv;      /**< Array of Total Derivative Values for each Primary
+                           Variable */
   double **daDerivProc; /**< Array of Derivative Values Due to a Process */
   double *dVar;
   double dZero; /**< Sometimes you need a pointer to zero */
@@ -1177,15 +1195,24 @@ struct UPDATE {
   double *pdDPositionZ;
 
   /* EQTIDE */
-  //  int iEccEqtide;       /**< equation number Corresponding to EQTIDE's Change to Eccentricity */
-  int iHeccEqtide; /**< equation number Corresponding to EQTIDE's Change to Poincare's h */
-  int iKeccEqtide; /**< equation number Corresponding to EQTIDE's Change to Poincare's k */
-  int *iaXoblEqtide; /**< Equation numbers Corresponding to EQTIDE's Change to Laskar's X */
-  int *iaYoblEqtide; /**< Equation numbers Corresponding to EQTIDE's Change to Laskar's Y */
-  int *iaZoblEqtide; /**< Equation numbers Corresponding to EQTIDE's Change to Laskar's Z */
-  int *iaRotEqtide; /**< Equation numbers Corresponding to EQTIDE's Change to Rotation Rate */
-  int iSemiEqtide; /**< equation number Corresponding to EQTIDE's Change to Semi-major Axis */
-  int iLostEngEqtide; /**< equation number Corresponding to EQTIDE's lost energy [tidal heating] */
+  //  int iEccEqtide;       /**< equation number Corresponding to EQTIDE's
+  //  Change to Eccentricity */
+  int iHeccEqtide;    /**< equation number Corresponding to EQTIDE's Change to
+                         Poincare's h */
+  int iKeccEqtide;    /**< equation number Corresponding to EQTIDE's Change to
+                         Poincare's k */
+  int *iaXoblEqtide;  /**< Equation numbers Corresponding to EQTIDE's Change to
+                         Laskar's X */
+  int *iaYoblEqtide;  /**< Equation numbers Corresponding to EQTIDE's Change to
+                         Laskar's Y */
+  int *iaZoblEqtide;  /**< Equation numbers Corresponding to EQTIDE's Change to
+                         Laskar's Z */
+  int *iaRotEqtide;   /**< Equation numbers Corresponding to EQTIDE's Change to
+                         Rotation Rate */
+  int iSemiEqtide;    /**< equation number Corresponding to EQTIDE's Change to
+                         Semi-major Axis */
+  int iLostEngEqtide; /**< equation number Corresponding to EQTIDE's lost energy
+                         [tidal heating] */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       semi-major axis' derivative due to EQTIDE. */
@@ -1299,18 +1326,22 @@ struct UPDATE {
   int iNumPinc; /**< Number of Equations Affecting p = s*sin(longa) */
   int iNumQinc; /**< Number of Equations Affecting q = s*cos(longa) */
 
-  int iHecc;       /**< Variable number Corresponding to h = e*sin(longp) */
-  double dDHeccDt; /**< Total h Derivative */
-  int iKecc;       /**< Variable number Corresponding to k = e*cos(longp) */
-  double dDKeccDt; /**< Total k Derivative */
-  int iPinc;       /**< Variable number Corresponding to p = s*sin(longa) */
-  double dDPincDt; /**< Total p Derivative */
-  int iQinc;       /**< Variable number Corresponding to q = s*cos(longa) */
-  double dDQincDt; /**< Total q Derivative */
-  int *iaHeccDistOrb; /**< equation number Corresponding to DistOrb's change to h = e*sin(longp) */
-  int *iaKeccDistOrb; /**< Equation numbers Corresponding to DistOrb's change to k = e*cos(longp) */
-  int *iaPincDistOrb; /**< Equation numbers Corresponding to DistOrb's change to  p = s*sin(longa) */
-  int *iaQincDistOrb; /**< Equation numbers Corresponding to DistOrb's change to  q = s*cos(longa) */
+  int iHecc;          /**< Variable number Corresponding to h = e*sin(longp) */
+  double dDHeccDt;    /**< Total h Derivative */
+  int iKecc;          /**< Variable number Corresponding to k = e*cos(longp) */
+  double dDKeccDt;    /**< Total k Derivative */
+  int iPinc;          /**< Variable number Corresponding to p = s*sin(longa) */
+  double dDPincDt;    /**< Total p Derivative */
+  int iQinc;          /**< Variable number Corresponding to q = s*cos(longa) */
+  double dDQincDt;    /**< Total q Derivative */
+  int *iaHeccDistOrb; /**< equation number Corresponding to DistOrb's change to
+                         h = e*sin(longp) */
+  int *iaKeccDistOrb; /**< Equation numbers Corresponding to DistOrb's change to
+                         k = e*cos(longp) */
+  int *iaPincDistOrb; /**< Equation numbers Corresponding to DistOrb's change to
+                         p = s*sin(longa) */
+  int *iaQincDistOrb; /**< Equation numbers Corresponding to DistOrb's change to
+                         q = s*cos(longa) */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       h = e*sin(varpi) derivative due to DistOrb. */
@@ -1342,9 +1373,12 @@ struct UPDATE {
   double dDZoblDt; /**< Total z Derivative */
   int iDynEllip; /**< variable number Corresponding to dynamical ellipticity */
   double dDDynEllipDt; /**< Dynamical Ellipticity Derivative */
-  int *iaXoblDistRot; /**< equation number Corresponding to DistRot's change to x = sin(obl)*cos(pA) */
-  int *iaYoblDistRot; /**< Equation numbers Corresponding to DistRot's change to y = sin(obl)*sin(pA) */
-  int *iaZoblDistRot; /**< Equation numbers Corresponding to DistRot's change to z = cos(obl) */
+  int *iaXoblDistRot;  /**< equation number Corresponding to DistRot's change to
+                          x = sin(obl)*cos(pA) */
+  int *iaYoblDistRot; /**< Equation numbers Corresponding to DistRot's change to
+                         y = sin(obl)*sin(pA) */
+  int *iaZoblDistRot; /**< Equation numbers Corresponding to DistRot's change to
+                         z = cos(obl) */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       xi = sin(obliq)*sin(pA) derivative due to DISTROT. */
@@ -1410,14 +1444,18 @@ struct UPDATE {
   double **padDAngMZDtGalHabit;
 
   /* ATMESC */
-  int iSurfaceWaterMass; /**< variable number Corresponding to the surface water mass */
-  int iNumSurfaceWaterMass; /**< Number of Equations Affecting surface water [1] */
+  int iSurfaceWaterMass; /**< variable number Corresponding to the surface water
+                            mass */
+  int iNumSurfaceWaterMass; /**< Number of Equations Affecting surface water [1]
+                             */
   int iEnvelopeMass; /**< variable number Corresponding to the envelope mass */
   int iNumEnvelopeMass; /**< Number of Equations Affecting envelope mass [1] */
   int iOxygenMass;      /**< variable number Corresponding to the oxygen mass */
   int iNumOxygenMass;   /**< Number of Equations Affecting oxygen [1] */
-  int iOxygenMantleMass; /**< variable number Corresponding to the oxygen mass in the mantle */
-  int iNumOxygenMantleMass; /**< Number of Equations Affecting oxygen mantle mass [1] */
+  int iOxygenMantleMass; /**< variable number Corresponding to the oxygen mass
+                            in the mantle */
+  int iNumOxygenMantleMass; /**< Number of Equations Affecting oxygen mantle
+                               mass [1] */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       derivative of these variables due to ATMESC. */
@@ -1431,16 +1469,25 @@ struct UPDATE {
   /* BINARY */
   int iCBPR; /**< variable number Corresponding to the CBP's orbital radius */
   int iNumCBPR; /**< Number of Equations Affecting CBP orbital radius [1] */
-  int iCBPZ; /**< variable number corresponding to the CBP's cylindrical Z positions */
-  int iNumCBPZ; /**< Number of Equations Affecting CBP cylindrical Z position [1] */
-  int iCBPPhi; /**< variable number Corresponding to the CBP's orbital azimuthal angle */
-  int iNumCBPPhi; /**< NUmber of equations Affecting CBP orbital azimuthal angle [1] */
-  int iCBPRDot; /**< variable number Corresponding to the CBP's radial velocity */
+  int iCBPZ;    /**< variable number corresponding to the CBP's cylindrical Z
+                   positions */
+  int iNumCBPZ; /**< Number of Equations Affecting CBP cylindrical Z position
+                   [1] */
+  int iCBPPhi; /**< variable number Corresponding to the CBP's orbital azimuthal
+                  angle */
+  int iNumCBPPhi; /**< NUmber of equations Affecting CBP orbital azimuthal angle
+                     [1] */
+  int iCBPRDot; /**< variable number Corresponding to the CBP's radial velocity
+                 */
   int iNumCBPRDot; /**< Number of equations affecting CBP radial velocity [1] */
-  int iCBPZDot; /** < variable number Corresponding to the CBP's Z orbital velocity */
-  int iNumCBPZDot; /**< Number of equations affecting CBP z orbital velocity [1] */
-  int iCBPPhiDot; /** < variable number Corresponding to the CBP's Phi orbital angular velocity */
-  int iNumCBPPhiDot; /**< Number of equations affecting CBP phi orbital velocity [1] */
+  int iCBPZDot;    /** < variable number Corresponding to the CBP's Z orbital
+                      velocity */
+  int iNumCBPZDot; /**< Number of equations affecting CBP z orbital velocity [1]
+                    */
+  int iCBPPhiDot;  /** < variable number Corresponding to the CBP's Phi orbital
+                      angular velocity */
+  int iNumCBPPhiDot; /**< Number of equations affecting CBP phi orbital velocity
+                        [1] */
 
   /* Points to the element in UPDATE's daDerivProc matrix that contains the
    * derivative of these variables due to BINARY. */
@@ -1458,12 +1505,17 @@ struct UPDATE {
   int iNumTemperature;
 
   int iRotStellar; /**< iEqn number for the evolution of rotation in STELLAR */
-  int iLostAngMom; /**< iEqn number for the evolution of lost angular momentum */
-  int iLostAngMomStellar; /**< iEqn number for the evolution of lost angular momentum in STELLAR */
-  int iNumLostAngMom; /**< Number of Equations Affecting lost angular momentum [1] */
-  int iLostEng;       /**< iEqn number for the evolution of lost energy */
-  int iLostEngStellar; /**< iEqn number for the evolution of lost energy in STELLAR */
-  int iNumLostEng; /**< Number of Equations Affecting lost angular momentum [1] */
+  int iLostAngMom; /**< iEqn number for the evolution of lost angular momentum
+                    */
+  int iLostAngMomStellar; /**< iEqn number for the evolution of lost angular
+                             momentum in STELLAR */
+  int iNumLostAngMom;  /**< Number of Equations Affecting lost angular momentum
+                          [1] */
+  int iLostEng;        /**< iEqn number for the evolution of lost energy */
+  int iLostEngStellar; /**< iEqn number for the evolution of lost energy in
+                          STELLAR */
+  int iNumLostEng; /**< Number of Equations Affecting lost angular momentum [1]
+                    */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       function that returns these variables due to STELLAR evolution. */
@@ -1481,7 +1533,8 @@ struct UPDATE {
   double *pdDLXUVFlareDt;
 
   /* EQTIDE + STELLAR */
-  int iSemiEqSt; /**< equation number Corresponding to EQ+ST's Change to Semi-major Axis */
+  int iSemiEqSt; /**< equation number Corresponding to EQ+ST's Change to
+                    Semi-major Axis */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
      semi-major axis derivatives due to EQTIDE+STELLAR. */
@@ -1516,32 +1569,44 @@ struct HALT {
   int bEnvelopeGone;      /**< Halt if evaporated?*/
 
   /* STELLAR */
-  int bEndBaraffeGrid; /***< Halt if we reached the end of the luminosity grid? */
+  int bEndBaraffeGrid; /***< Halt if we reached the end of the luminosity grid?
+                        */
 
   /* THERMINT */
   double dMinTMan;  /**< Halt at this TMan */
   double dMinTCore; /**< Halt at this TCore */
 
   /* DISTORB */
-  int bOverrideMaxEcc; /**< 1 = tells DistOrb not to halt at maximum eccentricity = 0.6627434 */
-  int bHillStab; /**< halt if 2 planets fail Hill stability crit (technically valid for only 2 planets)*/
-  int bCloseEnc; /**< halt if any planet pair has orbits too close (crudely comparing inner's apocenter and outer's pericenter)*/
+  int bOverrideMaxEcc; /**< 1 = tells DistOrb not to halt at maximum
+                          eccentricity = 0.6627434 */
+  int bHillStab; /**< halt if 2 planets fail Hill stability crit (technically
+                    valid for only 2 planets)*/
+  int bCloseEnc; /**< halt if any planet pair has orbits too close (crudely
+                    comparing inner's apocenter and outer's pericenter)*/
 
   /* POISE */
-  int bHaltMinIceDt; /**< Halt if ice flow time-step falls below a minimum value */
-  int iMinIceDt; /**< Halt if ice flow time-step falls below this value (number of orbital periods)*/
+  int bHaltMinIceDt; /**< Halt if ice flow time-step falls below a minimum value
+                      */
+  int iMinIceDt; /**< Halt if ice flow time-step falls below this value (number
+                    of orbital periods)*/
 
   /* BINARY */
-  int bHaltHolmanUnstable; /** if CBP.dSemi < holman_crit_a, CBP dynamically unstable -> halt */
-  int bHaltRocheLobe; /** if secondary enters the Roche lobe of the primary, HALT! */
+  int bHaltHolmanUnstable; /** if CBP.dSemi < holman_crit_a, CBP dynamically
+                              unstable -> halt */
+  int bHaltRocheLobe; /** if secondary enters the Roche lobe of the primary,
+                         HALT! */
 
   /* MAGMOC */
-  int bHaltMantleSolidified; /**< Halt if mantle completely solidified */
-  int bHaltMantleMeltFracLow; /**< Halt if melt fraction drops below 0.4 at surface */
-  int bHaltAtmDesiSurfCool; /**< Halt if atmosphere desiccated & T_surf below 1000K */
-  int bHaltEnterHabZone; /**< Halt if palenet enters Habitable Zone*/
-  int bHaltAllPlanetsSolid; /**< Halt if all planets solidified (for multiplanet system) */
-  int bHaltAllPlanetsDesicc; /**< Halt if all planets desiccated (for multiplanet system) */
+  int bHaltMantleSolidified;  /**< Halt if mantle completely solidified */
+  int bHaltMantleMeltFracLow; /**< Halt if melt fraction drops below 0.4 at
+                                 surface */
+  int bHaltAtmDesiSurfCool;   /**< Halt if atmosphere desiccated & T_surf below
+                                 1000K */
+  int bHaltEnterHabZone;      /**< Halt if palenet enters Habitable Zone*/
+  int bHaltAllPlanetsSolid; /**< Halt if all planets solidified (for multiplanet
+                               system) */
+  int bHaltAllPlanetsDesicc; /**< Halt if all planets desiccated (for
+                                multiplanet system) */
 };
 
 /* Units. These can be different for different bodies. If set
@@ -1568,17 +1633,17 @@ typedef void (*fnBodyCopyModule)(BODY *, BODY *, int, int, int);
 
 /* Integration parameters */
 struct EVOLVE {
-  int bDoForward;   /**< Perform Forward Integration? */
-  int bDoBackward;  /**< Perform Backward Integration? */
-  int iDir;         /**< 1=forward, -1=backward */
-  double dTime;     /**< Integration Time */
-  double dEta;      /**< Variable Timestep Coefficient */
-  double dStopTime; /**< Integration Stop Time */
-  double dTimeStep; /**< Integration Time step */
-  int bVarDt;       /**< Use Variable Timestep? */
-  int nSteps;       /**< Total Number of Steps */
-  double
-        dMinValue; /**< Minimum Value for Eccentricity and Obliquity to be Integrated */
+  int bDoForward;    /**< Perform Forward Integration? */
+  int bDoBackward;   /**< Perform Backward Integration? */
+  int iDir;          /**< 1=forward, -1=backward */
+  double dTime;      /**< Integration Time */
+  double dEta;       /**< Variable Timestep Coefficient */
+  double dStopTime;  /**< Integration Stop Time */
+  double dTimeStep;  /**< Integration Time step */
+  int bVarDt;        /**< Use Variable Timestep? */
+  int nSteps;        /**< Total Number of Steps */
+  double dMinValue;  /**< Minimum Value for Eccentricity and Obliquity to be
+                        Integrated */
   int bFirstStep;    /**< Has the First Dtep Been Taken? */
   int iNumBodies;    /**< Number of Bodies to be Integrated */
   int iOneStep;      /**< Integration Method number */
@@ -1587,19 +1652,20 @@ struct EVOLVE {
   // These are to store midpoint derivative info in RK4.
   BODY *tmpBody;     /**< Temporary BODY struct */
   UPDATE *tmpUpdate; /**< Temporary UPDATE struct */
-  double ***
-        daDeriv; /**< The Matrix of Time Derivatives. First dimension is Body #, second is the Primary variable number, third is the equation number.  */
+  double ***daDeriv; /**< The Matrix of Time Derivatives. First dimension is
+                        Body #, second is the Primary variable number, third is
+                        the equation number.  */
 
   // Module-specific parameters
   int *iNumModules; /**< Number of Modules per Primary Variable */
 
   /* EQTIDE */
-  int iEqtideModel;  /**< EQTIDE Model number */
-  int bDiscreteRot;  /**< Use Discrete Rotation Model (CPL)? */
-  int *bForceEqSpin; /**< Force Rotation Rate to be Equilibrium? */
-  int *bFixOrbit;    /**< Fix Orbit? */
-  double *
-        dMaxLockDiff; /**< Fractional Difference from Tidal Equilibrium Rate to Force Equilibrium. */
+  int iEqtideModel;     /**< EQTIDE Model number */
+  int bDiscreteRot;     /**< Use Discrete Rotation Model (CPL)? */
+  int *bForceEqSpin;    /**< Force Rotation Rate to be Equilibrium? */
+  int *bFixOrbit;       /**< Fix Orbit? */
+  double *dMaxLockDiff; /**< Fractional Difference from Tidal Equilibrium Rate
+                           to Force Equilibrium. */
   double *dSyncEcc;
 
   /* RADHEAT */
@@ -1618,7 +1684,8 @@ struct EVOLVE {
  * control program flow. */
 
 struct IO {
-  int iVerbose; /**< Verbosity Level. 0=none; 1=error; 2=progress; 3=input; 4=units; 5=all */
+  int iVerbose; /**< Verbosity Level. 0=none; 1=error; 2=progress; 3=input;
+                   4=units; 5=all */
   double dOutputTime; /**< Integration Output Interval */
   double dNextOutput; /**< Time of next output */
 
@@ -1626,7 +1693,8 @@ struct IO {
 
   /* Output Notation */
   int iDigits; /**< Number of Digits After Decimal */
-  int iSciNot; /**< Crossover Decade to Switch between Standard and Scientific Notation */
+  int iSciNot; /**< Crossover Decade to Switch between Standard and Scientific
+                  Notation */
 
   int bOverwrite; /**< Allow files to be overwritten? */
 
@@ -1681,16 +1749,19 @@ struct CONTROL {
 
   fnPropsAuxModule *
         *fnPropsAux; /**< Function Pointers to Auxiliary Properties */
-  fnPropsAuxModule **
-        fnPropsAuxMulti; /**< Function pointers to Auxiliary Properties for multi-module interdependancies. */
-  int *iNumMultiProps;   /**< Number of Multi-module PropsAux functions */
+  fnPropsAuxModule *
+        *fnPropsAuxMulti; /**< Function pointers to Auxiliary Properties for
+                             multi-module interdependancies. */
+  int *iNumMultiProps;    /**< Number of Multi-module PropsAux functions */
 
   /* Things for DistOrb */
   double dAngNum; /**< Value used in calculating timestep from angle variable */
-  int bSemiMajChange; /**< 1 if semi-major axis can change (DistOrb will recalc Laplace coeff functions) */
-  int bInvPlane; /**< 1 = change input coordinates to invariable plane coordinate */
-  int bOutputLapl;  /**< 1 = output laplace functions and related data */
-  int bOutputEigen; /**< Output eigen values? */
+  int bSemiMajChange; /**< 1 if semi-major axis can change (DistOrb will recalc
+                         Laplace coeff functions) */
+  int bInvPlane;      /**< 1 = change input coordinates to invariable plane
+                         coordinate */
+  int bOutputLapl;    /**< 1 = output laplace functions and related data */
+  int bOutputEigen;   /**< Output eigen values? */
 
   int bOrbiters; /**< Does this simulation have orbiting bodies? */
 };
@@ -1773,7 +1844,8 @@ struct OPTIONS {
   char cDescr[OPTDESCR];        /**< Brief Description of Option */
   char cLongDescr[OPTLONDESCR]; /**< Long Description of Option */
   char cValues[OPTDESCR];       /**< Description of permitted values / ranges */
-  int iType; /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for array. */
+  int iType; /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for
+                array. */
   char cDefault[OPTDESCR]; /**< Description of Default Value */
   /** Qualitative description of the option, included for connection wtih
       bigplanet. Options are: time, length, mass, angle, energy, pressure,
@@ -1790,7 +1862,8 @@ struct OPTIONS {
   char cFile[MAXFILES][OPTLEN]; /**< File Name Where Set */
   int bNeg;                     /**< Is There a Negative Option? */
   char cNeg[OPTDESCR];          /**< Description of Negative Unit Conversion */
-  int iFileType; /**< What type of file can option be in? 0 = primary only, 1 = body file only, 2 = any file */
+  int iFileType; /**< What type of file can option be in? 0 = primary only, 1 =
+                    body file only, 2 = any file */
   double dNeg;   /**< Conversion Factor to System Units */
 };
 
@@ -1801,7 +1874,8 @@ struct OPTIONS {
 
  typedef double (*fnOutputModule)(BODY*,SYSTEM*,UPDATE*,int,int); */
 
-/* GRIDOUTPUT will be part of OPTIONS, and contains data for latitudinal parameters in POISE */
+/* GRIDOUTPUT will be part of OPTIONS, and contains data for latitudinal
+ * parameters in POISE */
 // typedef struct {
 //   char cName[OPTLEN];    /**< Output Name */
 //   char cDescr[LINE];     /**< Output Description */
@@ -1828,7 +1902,8 @@ struct OUTPUT {
   int iNum;            /**< Number of Columns for Output */
   int bGrid; /**< Is output quantity gridded (e.g. a function of latitude)? */
 
-  //   GRIDOUTPUT *GridOutput;     /**< Output for latitudinal climate params, etc */
+  //   GRIDOUTPUT *GridOutput;     /**< Output for latitudinal climate params,
+  //   etc */
 };
 
 typedef void (*fnReadOption)(BODY *, CONTROL *, FILES *, OPTIONS *, SYSTEM *,
@@ -1849,8 +1924,8 @@ typedef void (*fnInitializeUpdateModule)(BODY *, UPDATE *, int);
 typedef void (*fnInitializeUpdateTmpBodyModule)(BODY *, CONTROL *, UPDATE *,
                                                 int);
 
-//All primary variables need a FinalizeUpdate function
-//typedef void (*fnFinalizeUpdateEccModule)(BODY*,UPDATE*,int*,int,int);
+// All primary variables need a FinalizeUpdate function
+// typedef void (*fnFinalizeUpdateEccModule)(BODY*,UPDATE*,int*,int,int);
 typedef void (*fnFinalizeUpdateVelXModule)(BODY *, UPDATE *, int *, int, int,
                                            int);
 typedef void (*fnFinalizeUpdateVelYModule)(BODY *, UPDATE *, int *, int, int,
@@ -1910,7 +1985,7 @@ typedef void (*fnFinalizeUpdateEnvelopeMassModule)(BODY *, UPDATE *, int *, int,
 typedef void (*fnFinalizeUpdateHeccModule)(BODY *, UPDATE *, int *, int, int,
                                            int);
 typedef void (*fnFinalizeUpdateIceMassModule)(BODY *, UPDATE *, int *, int, int,
-                                              int); //deprecated
+                                              int); // deprecated
 typedef void (*fnFinalizeUpdateKeccModule)(BODY *, UPDATE *, int *, int, int,
                                            int);
 typedef void (*fnFinalizeUpdateLuminosityModule)(BODY *, UPDATE *, int *, int,

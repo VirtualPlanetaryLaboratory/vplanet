@@ -25,7 +25,7 @@ void InitializeUpdateTmpBody(BODY *body, CONTROL *control, MODULE *module,
   for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
     module->fnInitializeUpdateTmpBody[iBody][iModule](body, control, update,
                                                       iBody);
-}
+  }
 }
 
 void UpdateCopy(UPDATE *dest, UPDATE *src, int iNumBodies) {
@@ -55,7 +55,7 @@ void UpdateCopy(UPDATE *dest, UPDATE *src, int iNumBodies) {
         for (iPert = 0; iPert < src[iBody].iNumBodies[iVar][iEqn]; iPert++) {
           dest[iBody].iaBody[iVar][iEqn][iPert] =
                 src[iBody].iaBody[iVar][iEqn][iPert];
-}
+        }
       }
     }
   }
@@ -76,7 +76,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
     update[iBody].dZero = 0;
 
     // Assume no modules to start
-    //update[iBody].iNumEcc=0;
+    // update[iBody].iNumEcc=0;
     update[iBody].iNum26AlMan          = 0;
     update[iBody].iNum26AlCore         = 0;
     update[iBody].iNum40KMan           = 0;
@@ -156,7 +156,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
        assigned so we can malloc the update struct. */
     for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
       module->fnInitializeUpdate[iBody][iModule](body, update, iBody);
-}
+    }
 
     // Initialize multi-module equations
     InitializeUpdateMulti(body, control, module, update, fnUpdate, iBody);
@@ -199,7 +199,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
     for (iSubStep = 0; iSubStep < 4; iSubStep++) {
       control->Evolve.daDeriv[iSubStep][iBody] =
             malloc(update[iBody].iNumVars * sizeof(double));
-}
+    }
 
     /* Now we malloc some pointers, and perform some initializations for the
        UPDATE struct based on the primary variables required for each's
@@ -240,7 +240,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateVelX[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -280,7 +280,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateVelY[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -320,7 +320,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateVelZ[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -361,7 +361,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdatePositionX[iBody][iModule](body, update, &iEqn,
                                                           iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -402,7 +402,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdatePositionY[iBody][iModule](body, update, &iEqn,
                                                           iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -443,7 +443,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdatePositionZ[iBody][iModule](body, update, &iEqn,
                                                           iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -486,7 +486,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateWaterMassMOAtm[iBody][iModule](
               body, update, &iEqn, iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -527,7 +527,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateWaterMassSol[iBody][iModule](
               body, update, &iEqn, iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -568,7 +568,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateSurfTemp[iBody][iModule](body, update, &iEqn,
                                                          iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -609,7 +609,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateSolidRadius[iBody][iModule](body, update, &iEqn,
                                                             iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -650,7 +650,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdatePotTemp[iBody][iModule](body, update, &iEqn,
                                                         iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -691,7 +691,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateOxygenMassMOAtm[iBody][iModule](
               body, update, &iEqn, iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -732,7 +732,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateOxygenMassSol[iBody][iModule](
               body, update, &iEqn, iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -773,7 +773,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateHydrogenMassSpace[iBody][iModule](
               body, update, &iEqn, iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -814,7 +814,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateOxygenMassSpace[iBody][iModule](
               body, update, &iEqn, iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -855,7 +855,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateCO2MassMOAtm[iBody][iModule](
               body, update, &iEqn, iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -896,7 +896,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateCO2MassSol[iBody][iModule](body, update, &iEqn,
                                                            iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -941,7 +941,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdate26AlNumCore[iBody][iModule](body, update, &iEqn,
                                                             iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -983,7 +983,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdate26AlNumMan[iBody][iModule](body, update, &iEqn,
                                                            iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1025,7 +1025,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdate40KNumCore[iBody][iModule](body, update, &iEqn,
                                                            iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1067,7 +1067,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdate40KNumMan[iBody][iModule](body, update, &iEqn,
                                                           iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1109,7 +1109,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdate40KNumCrust[iBody][iModule](body, update, &iEqn,
                                                             iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1151,7 +1151,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdate232ThNumCore[iBody][iModule](
               body, update, &iEqn, iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1193,7 +1193,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdate232ThNumMan[iBody][iModule](body, update, &iEqn,
                                                             iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1235,7 +1235,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdate232ThNumCrust[iBody][iModule](
               body, update, &iEqn, iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1277,7 +1277,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdate235UNumCore[iBody][iModule](body, update, &iEqn,
                                                             iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1319,7 +1319,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdate235UNumMan[iBody][iModule](body, update, &iEqn,
                                                            iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1361,7 +1361,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdate235UNumCrust[iBody][iModule](
               body, update, &iEqn, iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1403,7 +1403,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdate238UNumCore[iBody][iModule](body, update, &iEqn,
                                                             iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1445,7 +1445,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdate238UNumMan[iBody][iModule](body, update, &iEqn,
                                                            iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1487,7 +1487,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdate238UNumCrust[iBody][iModule](
               body, update, &iEqn, iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1529,7 +1529,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateEnvelopeMass[iBody][iModule](
               body, update, &iEqn, iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1577,7 +1577,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateDynEllip[iBody][iModule](body, update, &iEqn,
                                                          iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1618,7 +1618,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateHecc[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1659,7 +1659,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateKecc[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1701,7 +1701,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateLuminosity[iBody][iModule](body, update, &iEqn,
                                                            iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1716,18 +1716,25 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       update[iBody].iaVar[iVar] = VOBL;
       update[iBody].iNumEqns[iVar] = update[iBody].iNumObl;
       update[iBody].pdVar[iVar] = &body[iBody].dObliquity;
-      update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumObl*sizeof(int));
-      update[iBody].iaBody[iVar] = malloc(update[iBody].iNumObl*sizeof(int*));
-      update[iBody].iaType[iVar] = malloc(update[iBody].iNumObl*sizeof(int));
-      update[iBody].iaModule[iVar] = malloc(update[iBody].iNumObl*sizeof(int));
+      update[iBody].iNumBodies[iVar] =
+    malloc(update[iBody].iNumObl*sizeof(int)); update[iBody].iaBody[iVar] =
+    malloc(update[iBody].iNumObl*sizeof(int*)); update[iBody].iaType[iVar] =
+    malloc(update[iBody].iNumObl*sizeof(int)); update[iBody].iaModule[iVar] =
+    malloc(update[iBody].iNumObl*sizeof(int));
 
       if (control->Evolve.iOneStep == RUNGEKUTTA) {
-        control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].dObliquity;
-        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumObl*sizeof(int));
-        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumObl*sizeof(double));
-        control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumObl*sizeof(int));
-        control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumObl*sizeof(int));
-        control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumObl*sizeof(int*));
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] =
+    &control->Evolve.tmpBody[iBody].dObliquity;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] =
+    malloc(update[iBody].iNumObl*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] =
+    malloc(update[iBody].iNumObl*sizeof(double));
+        control->Evolve.tmpUpdate[iBody].iaType[iVar] =
+    malloc(update[iBody].iNumObl*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaModule[iVar] =
+    malloc(update[iBody].iNumObl*sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] =
+    malloc(update[iBody].iNumObl*sizeof(int*));
       }
 
       iEqn=0;
@@ -1774,7 +1781,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdatePinc[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1815,7 +1822,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateQinc[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1857,7 +1864,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateRadius[iBody][iModule](body, update, &iEqn,
                                                        iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1898,7 +1905,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateMass[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1939,7 +1946,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateRot[iBody][iModule](body, update, &iEqn, iVar,
                                                     iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -1980,7 +1987,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateSemi[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       // Add multi-module dSemi eqns here
       FinalizeUpdateMultiEqStSemi(body, update, &iEqn, iVar, iBody, iFoo,
@@ -2026,7 +2033,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateSurfaceWaterMass[iBody][iModule](
               body, update, &iEqn, iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2068,7 +2075,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateOxygenMass[iBody][iModule](body, update, &iEqn,
                                                            iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2110,7 +2117,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateOxygenMantleMass[iBody][iModule](
               body, update, &iEqn, iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2152,7 +2159,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateTemperature[iBody][iModule](body, update, &iEqn,
                                                             iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2194,7 +2201,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateRadGyra[iBody][iModule](body, update, &iEqn,
                                                         iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2236,7 +2243,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateTCore[iBody][iModule](body, update, &iEqn, iVar,
                                                       iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2277,7 +2284,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateTMan[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2319,7 +2326,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateXobl[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2361,7 +2368,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateYobl[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2403,7 +2410,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateZobl[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2446,7 +2453,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateCBPR[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2488,7 +2495,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateCBPZ[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2531,7 +2538,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateCBPPhi[iBody][iModule](body, update, &iEqn,
                                                        iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2574,7 +2581,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateCBPRDot[iBody][iModule](body, update, &iEqn,
                                                         iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2617,7 +2624,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateCBPZDot[iBody][iModule](body, update, &iEqn,
                                                         iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2660,7 +2667,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateCBPPhiDot[iBody][iModule](body, update, &iEqn,
                                                           iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2670,9 +2677,10 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
     // POISE's ice mass
     //    update[iBody].iIceMass = -1;
     //     if (update[iBody].iNumIceMass) {
-    //       /* XXX hack to get ice sheets working, since since these don't get malloced until verify */
-    //       control->Evolve.tmpBody[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
-    //       body[iBody].daIceMass = malloc(body[iBody].iNumLats*sizeof(double));
+    //       /* XXX hack to get ice sheets working, since since these don't get
+    //       malloced until verify */ control->Evolve.tmpBody[iBody].daIceMass =
+    //       malloc(body[iBody].iNumLats*sizeof(double)); body[iBody].daIceMass
+    //       = malloc(body[iBody].iNumLats*sizeof(double));
     //
     //       update[iBody].iIceMass = iVar;
     //       control->Evolve.tmpUpdate[iBody].iIceMass = iVar;
@@ -2681,19 +2689,29 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
     //         update[iBody].iaVar[iVar] = VICEMASS;
     //         update[iBody].iNumEqns[iVar] = update[iBody].iNumIceMass;
     //         update[iBody].pdVar[iVar] = &body[iBody].daIceMass[iLat];
-    //         update[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
-    //         update[iBody].iaBody[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int*));
-    //         update[iBody].iaType[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
-    //         update[iBody].iaModule[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
+    //         update[iBody].iNumBodies[iVar] =
+    //         malloc(update[iBody].iNumIceMass*sizeof(int));
+    //         update[iBody].iaBody[iVar] =
+    //         malloc(update[iBody].iNumIceMass*sizeof(int*));
+    //         update[iBody].iaType[iVar] =
+    //         malloc(update[iBody].iNumIceMass*sizeof(int));
+    //         update[iBody].iaModule[iVar] =
+    //         malloc(update[iBody].iNumIceMass*sizeof(int));
     //
     //         if (control->Evolve.iOneStep == RUNGEKUTTA) {
     //
-    //           control->Evolve.tmpUpdate[iBody].pdVar[iVar] = &control->Evolve.tmpBody[iBody].daIceMass[iLat];
-    //           control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
-    //           control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] = malloc(update[iBody].iNumIceMass*sizeof(double));
-    //           control->Evolve.tmpUpdate[iBody].iaType[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
-    //           control->Evolve.tmpUpdate[iBody].iaModule[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int));
-    //           control->Evolve.tmpUpdate[iBody].iaBody[iVar] = malloc(update[iBody].iNumIceMass*sizeof(int*));
+    //           control->Evolve.tmpUpdate[iBody].pdVar[iVar] =
+    //           &control->Evolve.tmpBody[iBody].daIceMass[iLat];
+    //           control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] =
+    //           malloc(update[iBody].iNumIceMass*sizeof(int));
+    //           control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] =
+    //           malloc(update[iBody].iNumIceMass*sizeof(double));
+    //           control->Evolve.tmpUpdate[iBody].iaType[iVar] =
+    //           malloc(update[iBody].iNumIceMass*sizeof(int));
+    //           control->Evolve.tmpUpdate[iBody].iaModule[iVar] =
+    //           malloc(update[iBody].iNumIceMass*sizeof(int));
+    //           control->Evolve.tmpUpdate[iBody].iaBody[iVar] =
+    //           malloc(update[iBody].iNumIceMass*sizeof(int*));
     //         }
     //
     //         iEqn=0;
@@ -2741,7 +2759,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateEccX[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2782,7 +2800,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateEccY[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2823,7 +2841,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateEccZ[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2865,7 +2883,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateAngMX[iBody][iModule](body, update, &iEqn, iVar,
                                                       iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2907,7 +2925,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateAngMY[iBody][iModule](body, update, &iEqn, iVar,
                                                       iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2949,7 +2967,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateAngMZ[iBody][iModule](body, update, &iEqn, iVar,
                                                       iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -2960,7 +2978,8 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
     /* This one is tricky because it is an auxiliary property
        of STELLAR, but a primary variable of FLARE. */
 
-    // Rodrigo: TODO TODO TODO: This will not work, since it will overwrite dLXUV in body[iBody]!!!
+    // Rodrigo: TODO TODO TODO: This will not work, since it will overwrite
+    // dLXUV in body[iBody]!!!
 
     update[iBody].iLXUV = -1;
     if (update[iBody].iNumLXUV) {
@@ -2996,7 +3015,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateLXUV[iBody][iModule](body, update, &iEqn, iVar,
                                                      iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -3038,7 +3057,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateLostAngMom[iBody][iModule](body, update, &iEqn,
                                                            iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
@@ -3080,7 +3099,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateLostEng[iBody][iModule](body, update, &iEqn,
                                                         iVar, iBody, iFoo);
-}
+      }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
       update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));

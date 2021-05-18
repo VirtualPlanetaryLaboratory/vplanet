@@ -1,8 +1,8 @@
 /**
   @file evolve.h
 
-  @brief This file contains all the core VPLANET integration routines including the
-         timestepping algorithm and the Runge-Kutta Integration scheme.
+  @brief This file contains all the core VPLANET integration routines including
+  the timestepping algorithm and the Runge-Kutta Integration scheme.
 
   @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
 

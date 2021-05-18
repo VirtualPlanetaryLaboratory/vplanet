@@ -8,12 +8,14 @@
 #define LSUN 3.846e26 /**< Solar luminosity (W) */
 #define TSUN 5778.    /**< Solar TEff (K) */
 #define RM12OMEGACRIT                                                          \
-  8.56e-6 /**< Critical angular velocity (1/s) from Reiners & Mohanty (2012) */
+  8.56e-6 /**< Critical angular velocity (1/s) from Reiners & Mohanty (2012)   \
+           */
 #define RM12OMEGACRITFULLYCONVEC                                               \
-  1.82e-6 /**< Critical angular velocity (1/s) for fully convective stars, Reiners & Mohanty (2012) */
+  1.82e-6 /**< Critical angular velocity (1/s) for fully convective stars,     \
+             Reiners & Mohanty (2012) */
 #define RM12CONST                                                              \
-  (2.66e3 *                                                                    \
-   46.416) /**< dJ/dt constant [(kg^5 m^-10 s^-3)^1/3] from Reiners & Mohanty (2012) */
+  (2.66e3 * 46.416) /**< dJ/dt constant [(kg^5 m^-10 s^-3)^1/3] from Reiners & \
+                       Mohanty (2012) */
 #define SK72CONST                                                              \
   5.0e-25 /**< dJ/dt constant from Skumanich 1972 (Repetto+2014) */
 #define MATT15T0 6.3e23     /**< Matt+2015 T0 constant in Joules */
@@ -23,7 +25,8 @@
 #define MATT15OMEGASUN                                                         \
   2.6e-6 /**< Matt+2015 solar angular rotation frequency in s^-1 */
 #define ROSSBYCRIT                                                             \
-  2.08 /**< Critical Rossby number above which magnetic braking shuts off according to van Saders+2018 */
+  2.08 /**< Critical Rossby number above which magnetic braking shuts off      \
+          according to van Saders+2018 */
 #define STELLAR_MODEL_NONE 0
 #define STELLAR_MODEL_BARAFFE 1
 #define STELLAR_MODEL_REINERS 2

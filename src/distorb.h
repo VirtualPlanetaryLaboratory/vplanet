@@ -19,7 +19,7 @@
 #define MAXMUTUALINCRD4 35 // Degrees
 #define MAXMUTUALINCLL2 10 // Degrees
 
-#define RADIX 2.0 //factor used by matrix solver in LL2 solution
+#define RADIX 2.0 // factor used by matrix solver in LL2 solution
 #define SWAP(g, h)                                                             \
   {                                                                            \
     y   = (g);                                                                 \

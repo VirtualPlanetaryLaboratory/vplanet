@@ -36,7 +36,7 @@ int fiSign(double dValue) {
     iSign = (int)(dValue / fabs(dValue));
   } else {
     iSign = 0;
-}
+  }
 
   return iSign;
 }
@@ -68,7 +68,7 @@ double fdTimescale(double dVar, double dDeriv) {
     return fabs(dVar / dDeriv);
   } else {
     return 0;
-}
+  }
 }
 
 /**
@@ -91,7 +91,7 @@ double fdTimescaleMulti(double dVar, double *dDeriv, int iNum) {
   for (iPert = 0; iPert < iNum; iPert++) {
     if (dDeriv[iPert] != 0) {
       dTime += dDeriv[iPert]; // Note that here dTime is actullay the rate
-}
+    }
     dTime = fabs(dVar / dTime);
   }
   return dTime;
@@ -296,7 +296,7 @@ double fdMassToRad_GordaSvech99(double dMass) {
     return pow(10, (0.096 + 0.652 * log10(dMass))) * RSUN;
   } else {
     return pow(10, (0.1 + 1.03 * log10(dMass))) * RSUN;
-}
+  }
 }
 
 /**
@@ -401,7 +401,7 @@ double fdMassToRad(double dMass, int iRelation) {
     return fdMassToRad_BaylessOrosz06(dMass);
   } else if (iRelation == SOTIN07) {
     return fdMassToRad_Sotin07(dMass);
-}
+  }
 
   /* Need to add more! */
 
@@ -477,7 +477,7 @@ void BodyCopy(BODY *dest, BODY *src, EVOLVE *evolve) {
     dest[iBody].bOcean  = src[iBody].bOcean;
     dest[iBody].bEnv    = src[iBody].bEnv;
 
-    //dest[iBody].dLXUV = src[iBody].dLXUV;
+    // dest[iBody].dLXUV = src[iBody].dLXUV;
 
     // Im(k_2) properties
     dest[iBody].dK2Man     = src[iBody].dK2Man;
@@ -501,7 +501,7 @@ void BodyCopy(BODY *dest, BODY *src, EVOLVE *evolve) {
     for (iModule = 0; iModule < evolve->iNumModules[iBody]; iModule++) {
       evolve->fnBodyCopy[iBody][iModule](dest, src, evolve->iEqtideModel,
                                          evolve->iNumBodies, iBody);
-}
+    }
   }
 }
 
@@ -548,13 +548,14 @@ double CalcDynEllipEq(BODY *body, int iBody) {
 
   if (dJ2 < J2Venus) {
     dJ2 = J2Venus;
-}
+  }
 
   dDynEllip = dJ2 / body[iBody].dSpecMomInertia;
 
   // dTmp = EdEarth*MEARTH/(pow(nuEarth,2)*pow(REARTH,3));
   //
-  // dDynEllip = dTmp*pow(body[iBody].dRotRate,2)*pow(body[iBody].dRadius,3)/body[iBody].dMass;
+  // dDynEllip =
+  // dTmp*pow(body[iBody].dRotRate,2)*pow(body[iBody].dRadius,3)/body[iBody].dMass;
 
   // if (dDynEllip < EdVenus)
   //   dDynEllip = EdVenus;
@@ -563,15 +564,16 @@ double CalcDynEllipEq(BODY *body, int iBody) {
 }
 
 /**
-  Lehmer+ (2017)'s model for the radius of a planet where it's losing its atmopshere
-   due to XUV radiation.
+  Lehmer+ (2017)'s model for the radius of a planet where it's losing its
+  atmopshere due to XUV radiation.
 
    @param dMassEnv Envelope's mass
    @param dGravAccel Body's gravitational acceleration
    @param dRadSurf Surface Radius of rocky core
    @param dScaleHeight Atmospheric scale height
    @param dPresSurf pressure at surface due to envelope
-   @param dRadXUV radius from center of planet where optical depth of XUV is unity
+   @param dRadXUV radius from center of planet where optical depth of XUV is
+  unity
    */
 double fdLehmerRadius(BODY *body, int iBody) {
   double dRadXUV, dRoche;
@@ -581,7 +583,8 @@ double fdLehmerRadius(BODY *body, int iBody) {
                    log(body[iBody].dPresXUV / body[iBody].dPresSurf) +
              body[iBody].dRadSolid);
   dRoche = fdRocheRadius(body, iBody);
-  //printf("%lf %lf %lf %lf %lf\n",body[iBody].dPresXUV,body[iBody].dPresSurf,body[iBody].dGravAccel,body[iBody].dEnvelopeMass,dRadXUV);
+  // printf("%lf %lf %lf %lf
+  // %lf\n",body[iBody].dPresXUV,body[iBody].dPresSurf,body[iBody].dGravAccel,body[iBody].dEnvelopeMass,dRadXUV);
   if (dRadXUV <= 0) {
     dRadXUV = dRoche;
   }
@@ -598,8 +601,8 @@ double fdLehmerRadius(BODY *body, int iBody) {
 }
 
 /**
-  Lehmer+ (2017)'s model for the pressure of a planet where it's losing its atmopshere
-   due to XUV radiation.
+  Lehmer+ (2017)'s model for the pressure of a planet where it's losing its
+  atmopshere due to XUV radiation.
 
    @param dMassEnv Envelope's mass
    @param dGravAccel Body's gravitational acceleration
@@ -668,7 +671,7 @@ double fdK2Man(BODY *body, int iBody) {
 double fdTidalQMan(BODY *body, int iBody) {
   double ShmodUManArr;
   ShmodUManArr = body[iBody].dShmodUMan * body[iBody].dMeltfactorUMan;
-  //return body[iBody].dDynamViscos*body[iBody].dMeanMotion/ShmodUManArr;
+  // return body[iBody].dDynamViscos*body[iBody].dMeanMotion/ShmodUManArr;
   return body[iBody].dDynamViscos * body[iBody].dMeanMotion /
          body[iBody].dShmodUMan;
 }
@@ -699,8 +702,8 @@ double fdImK2Man(BODY *body, int iBody) {
   }
 }
 
-/** Calculate total k_2 and Im(k_2) for a body. This value depends on which tidal
-  model is called, and it the properties depend on the internal properties.
+/** Calculate total k_2 and Im(k_2) for a body. This value depends on which
+tidal model is called, and it the properties depend on the internal properties.
 void AssignTidalProperties(BODY *body,EVOLVE *evolve,int iBody) {
   if (body[iBody].bThermint) {
     // The planet's tidal response depends on mantle properties
@@ -727,7 +730,8 @@ void AssignTidalProperties(BODY *body,EVOLVE *evolve,int iBody) {
   // Sanity checks: enforce upper bound
   if (body[iBody].dK2 > 1.5) {
     body[iBody].dK2 = 1.5;
-    fprintf(stderr,"WARNING: body[%d].dK2 > 1.5 at time %.5e years.\n",iBody,evolve->dTime/YEARSEC);
+    fprintf(stderr,"WARNING: body[%d].dK2 > 1.5 at time %.5e
+years.\n",iBody,evolve->dTime/YEARSEC);
   }
 }
 */
@@ -745,10 +749,11 @@ double fdHflowSecMan(BODY *body, EVOLVE *evolve, int iBody) {
 
   if (body[iBody].bThermint) {
     dHflowSecMan += fdPowerThermint(body, iBody);
-    //dHflowSecMan += fdHflowSecManThermint(body,iBody);
+    // dHflowSecMan += fdHflowSecManThermint(body,iBody);
   }
   if (body[iBody].bEqtide) {
-    //dHflowSecMan -= fdTidePower(body,iBody,evolve->iEqtideModel); // formerly dTidalPowerMan
+    // dHflowSecMan -= fdTidePower(body,iBody,evolve->iEqtideModel); // formerly
+    // dTidalPowerMan
     dHflowSecMan -= body[iBody].dTidalPowMan;
   }
   // Should add RadHeat here
@@ -772,7 +777,7 @@ int fiGetLowerBoundProximaCen(double dVal, const double *daArr, int iDim) {
   for (iIndex = 0; iIndex < iDim - 2; iIndex++) {
     if (dVal < daArr[iIndex + 1]) {
       break;
-}
+    }
   }
   return iIndex;
 }
@@ -800,7 +805,7 @@ double fdProximaCenBiLinear(int iALEN, double const data_lo[PROXIMACEN_ALEN],
     C = C0;
   } else {
     C = C0 * (1 - dy) + C1 * dy;
-}
+  }
   return C;
 }
 
@@ -825,10 +830,10 @@ double fdProximaCenInterpolate(int iALEN, int iMLEN,
   // NOTE: This results in a constant luminosity at times beyond this range.
   if (A < 0.001) {
     A = 0.001;
-}
+  }
   if (A > 10.00) {
     A = 10.00;
-}
+  }
 
   // Bounds on mass
   if (M < 0.1) {
@@ -886,9 +891,9 @@ quantities (L, R, and T) match within less than 1 sigma.
 
 DATA FROM Boyajian+12; SECOND ROW FROM Demory+09 (direct measurements)
 
-# Fe/H      Radius            Luminosity            Teff          Mass            Lx/Lbol
-# 0.19      0.1410 ± 0.0070   0.00155 ± 0.00002     3054 ± 79     0.118           2.83E−04
-                              0.00165 ± 0.00015     3098 ± 56     0.123 ± 0.006
+# Fe/H      Radius            Luminosity            Teff          Mass Lx/Lbol
+# 0.19      0.1410 ± 0.0070   0.00155 ± 0.00002     3054 ± 79
+0.118           2.83E−04 0.00165 ± 0.00015     3098 ± 56     0.123 ± 0.006
 
   What are these arguments?
 
@@ -948,7 +953,7 @@ int fiGetLowerBoundProximaCenB(double dVal, const double *daArr, int iDim) {
   for (iIndex = 0; iIndex < iDim - 2; iIndex++) {
     if (dVal < daArr[iIndex + 1]) {
       break;
-}
+    }
   }
   return iIndex;
 }
@@ -960,8 +965,8 @@ int fiGetLowerBoundProximaCenB(double dVal, const double *daArr, int iDim) {
   What are the arguments?
 */
 double fdProximaCenBLinear(int xi, int yi, double dx, double dy) {
-  // Linearly interpolate over data, given indices of lower bounds on grid xi, yi
-  // and normalized distances to the interpolation point dx, dy.
+  // Linearly interpolate over data, given indices of lower bounds on grid xi,
+  // yi and normalized distances to the interpolation point dx, dy.
   double C0, C1, C;
   if (dx == 0) {
     C0 = daProxCenBRadius[xi][yi];
@@ -976,7 +981,7 @@ double fdProximaCenBLinear(int xi, int yi, double dx, double dy) {
     C = C0;
   } else {
     C = C0 * (1 - dy) + C1 * dy;
-}
+  }
 
   return C;
 }
@@ -999,20 +1004,20 @@ double fdProximaCenBRadius(double C, double A, double M) {
   A /= YEARSEC;
   if (A < 1e7) {
     A = 1e7;
-}
+  }
   if (A > 1e10) {
     A = 1e10;
-}
+  }
 
   // If the planet is rocky, use the Sotin+07 relation
   if (C < 0.00001) {
     return fdMassToRad_Sotin07(M);
-}
+  }
 
   // Let's enforce the bounds for the composition as well
   if (C > 0.01) {
     C = 0.01;
-}
+  }
 
   // Get the lower bounds
   xi = fiGetLowerBoundProximaCenB(C, daProxCenBComp, PROXCENBCOMPLEN);
@@ -1059,8 +1064,8 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge,
     for (m = 0; m < MASSLEN - 1; m++) {
       if (dMassEarth < daLopezMass[m + 1]) {
         break;
-}
-}
+      }
+    }
   }
   if (dComp < daLopezComp[0]) {
     /* Out of bounds, assuming it's OK to use min val */
@@ -1075,8 +1080,8 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge,
     for (c = 0; c < COMPLEN - 1; c++) {
       if (dComp < daLopezComp[c + 1]) {
         break;
-}
-}
+      }
+    }
   }
   if (dFlux < daLopezFlux[0]) {
     /* Out of bounds, assuming it's OK to use min val */
@@ -1091,8 +1096,8 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge,
     for (f = 0; f < FLUXLEN - 1; f++) {
       if (dFlux < daLopezFlux[f + 1]) {
         break;
-}
-}
+      }
+    }
   }
   if (dAgeYears < daLopezAge[0]) {
     /* Out of bounds, assuming it's OK to use min val */
@@ -1107,8 +1112,8 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge,
     for (t = 0; t < TIMELEN - 1; t++) {
       if (dAgeYears < daLopezAge[t + 1]) {
         break;
-}
-}
+      }
+    }
   }
   /* We now have the coordinates below our desired point.
    * Let's use them to do a simple tetralinear interpolation.
@@ -1193,7 +1198,7 @@ int fiGetLowerBound(double val, const double *arr, int dim) {
     for (i = 0; i < dim - 2; i++) {
       if (val < arr[i + 1]) {
         break;
-}
+      }
     }
   }
   // Check to see if i-1, i, i+1 and i+2 are all valid indices
@@ -1203,7 +1208,7 @@ int fiGetLowerBound(double val, const double *arr, int dim) {
     return STELLAR_ERR_OUTOFBOUNDS_HI;
   } else {
     return i;
-}
+  }
 }
 
 /**
@@ -1214,8 +1219,8 @@ int fiGetLowerBound(double val, const double *arr, int dim) {
 double fdBaraffeBiLinear(int iMLEN, int iALEN,
                          double const data[STELLAR_BAR_MLEN][STELLAR_BAR_ALEN],
                          int xi, int yi, double dx, double dy) {
-  // Linearly interpolate over data, given indices of lower bounds on grid xi, yi
-  // and normalized distances to the interpolation point dx, dy.
+  // Linearly interpolate over data, given indices of lower bounds on grid xi,
+  // yi and normalized distances to the interpolation point dx, dy.
   double C0, C1, C;
   if (dx == 0) {
     C0 = data[xi][yi];
@@ -1228,7 +1233,7 @@ double fdBaraffeBiLinear(int iMLEN, int iALEN,
     C = C0;
   } else {
     C = C0 * (1 - dy) + C1 * dy;
-}
+  }
   return C;
 }
 
@@ -1304,13 +1309,13 @@ fdBaraffeInterpolate(int iMLEN, int iALEN, double const xarr[STELLAR_BAR_MLEN],
   double result = 0;
 
   // Let's enforce a minimum age of 0.001 GYR
-  // NOTE: This results in a constant luminosity at times earlier than this, which
-  // is not realistic. Shouldn't be an issue for most planet evolution calculations,
-  // since planets typically form after this time, but this issue needs to be
-  // revisited eventually.
+  // NOTE: This results in a constant luminosity at times earlier than this,
+  // which is not realistic. Shouldn't be an issue for most planet evolution
+  // calculations, since planets typically form after this time, but this issue
+  // needs to be revisited eventually.
   if (A < 0.001) {
     A = 0.001;
-}
+  }
 
   // Get bounds on grid
   *iError = 0;

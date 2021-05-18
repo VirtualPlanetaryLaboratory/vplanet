@@ -9,7 +9,8 @@
 
 // GLOBAL VARIABLE INDEXES
 #define TSURF                                                                  \
-  300.0 /**< [K] Surface temperature (constant).  This should be set globally! */
+  300.0 /**< [K] Surface temperature (constant).  This should be set globally! \
+         */
 // UNITS CONSTANTS
 #define KM 1e3 /**< [m] m in 1 km */
 // FUNDAMENTAL CONSTANTS
@@ -28,7 +29,8 @@
 #define EMASSFRACCRUST                                                         \
   (1 - EMASSFRACMAN - EMASSFRACCORE -                                          \
    EMASSFRACOCEAN) /**< [nd] Mass fraction of Earth's crust */
-#define EMASSCRUST (EMASSFRACCRUST * EMASS) /**< [kg] Mass Earth crust today. */
+#define EMASSCRUST (EMASSFRACCRUST * EMASS) /**< [kg] Mass Earth crust today.  \
+                                             */
 
 // INTERNAL STRUCTURE E
 #define ERADIUS (6371.0 * KM) /**< [m] Radius of Earth */
@@ -40,7 +42,8 @@
 #define EDOC                                                                   \
   (ERCORE - ERICB) /**< [m] Earth's present day core shell thickness */
 #define EVOL                                                                   \
-  ((4.0) / (3) * PI * ERADIUS * ERADIUS * ERADIUS) /**< [m^3] Volume of Earth */
+  ((4.0) / (3) * PI * ERADIUS * ERADIUS * ERADIUS) /**< [m^3] Volume of Earth  \
+                                                    */
 #define EVOLIC                                                                 \
   ((4.0) / (3) * PI * ERICB * ERICB *                                          \
    ERICB) /**< [m^3] Volume of Earth's present-day inner core */
@@ -66,7 +69,8 @@
 #define EDENSIC                                                                \
   ((EMASSIC) / (EVOLIC)) /**< [kg/m^3] Density of Earth's inner core */
 #define DENSANOMICB                                                            \
-  700.0 /**< [kg/m^3] Density difference of Earth's outer core light elements */
+  700.0 /**< [kg/m^3] Density difference of Earth's outer core light elements  \
+         */
 // Gravity
 #define GRAVSURF 9.8  /**< [m/s2] Earth's surface gravity */
 #define GRAVUMAN 10.5 /**< [m/s2] Earth's upper mantle gravity */
@@ -103,18 +107,23 @@
 #define STAGLID                                                                \
   0. /**< [nd] Switch to turn stagnant lid on.  (def=0, ie mobile lid) */
 #define MANHFLOWPREF                                                           \
-  1. /**< [nd] Upper mantle heat flow prefix. mobile lid=1. staglid=HFLOWREDUCTSTAG */
+  1. /**< [nd] Upper mantle heat flow prefix. mobile lid=1.                    \
+        staglid=HFLOWREDUCTSTAG */
 /* VISCOSITY PROPERTIES */
 #define ACTVISCMAN 3e5  /**< [J/mol] Mantle viscosity activation energy */
 #define ACTSHMODMAN 2e5 /**< [J/mol] Mantle shear modulus activation energy */
 #define STIFFNESS                                                              \
-  1.71e13 /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100) */
+  1.71e13 /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3,       \
+             Q=100) */
 #define SHMODREF 1e6       /**< [Pa] Reference kinematic mantle shear modulus */
 #define VISCREF 6e7        /**< [m^2/s] Reference kinematic mantle viscosity */
-#define DYNAMVISCREF 1.5e9 /**< [m^2/s] Reference kinematic mantle viscosity */
-#define VISCJUMPMAN 2.40 /**< [nd] Viscosity jump from upper to lower mantle */
+#define DYNAMVISCREF 1.5e9 /**< [m^2/s] Reference kinematic mantle viscosity   \
+                            */
+#define VISCJUMPMAN 2.40   /**< [nd] Viscosity jump from upper to lower mantle \
+                            */
 #define FIXVISCJUMPMAN                                                         \
-  0 /**< [nd] (default) Option to fix viscjumpulm. if =0 then viscLM is computed from TLMan. */
+  0 /**< [nd] (default) Option to fix viscjumpulm. if =0 then viscLM is        \
+       computed from TLMan. */
 #define VISCJUMPMMAN                                                           \
   10. /**< [nd] Viscosity jump from upper to average (mid) mantle */
 #define VISCMELTB                                                              \
@@ -128,26 +137,29 @@
 #define VISCMELTXI                                                             \
   5e-4 /**< [nd] Viscosity-melt reduction coefficient "Xi" (DB15 eq 9) */
 #define MELTFACTORLMAN                                                         \
-  1.0 /**< [nd] (Default) Viscosity-melt reduction factor "epsilon_phase" XXX Added by Rory -- Check! */
+  1.0 /**< [nd] (Default) Viscosity-melt reduction factor "epsilon_phase" XXX  \
+         Added by Rory -- Check! */
 #define MELTFACTORUMAN                                                         \
   1.0 /**< [nd] (Default) Viscosity-melt reduction factor "epsilon_phase" */
 #define FIXMELTFACTORUMAN                                                      \
   0.0 /**< [nd] (Default) Switch to fix MeltfactorUMan to a constant value */
 /* MELTING CONSTANTS */
 #define ASOLIDUS                                                               \
-  (-1.160e-16) /**< [K/m^3] Mantle solidus coefficient Tsol(r)=A*r^3+B*r^2+C*r+D */
+  (-1.160e-16)               /**< [K/m^3] Mantle solidus coefficient           \
+                                Tsol(r)=A*r^3+B*r^2+C*r+D */
 #define BSOLIDUS (+1.708e-9) /**< [K/m^2] Solidus B coefficient */
 #define CSOLIDUS (-9.074e-3) /**< [K/m] Solidus C coefficient */
 #define DSOLIDUS (+1.993e4)  /**< [K] Solidus D coefficient */
 #define DTLIQMAN                                                               \
   (+500.0) /**< [K] Mantle liquidus offset, T_liq=T_sol+DTLIQMAN */
 #define DLIND                                                                  \
-  (7000.0 *                                                                    \
-   KM) /**< [m] Lindemann's law length scale for iron liquidus "D_Fe" (DB15 A23) */
+  (7000.0 * KM) /**< [m] Lindemann's law length scale for iron liquidus "D_Fe" \
+                   (DB15 A23) */
 #define TREFLIND                                                               \
   5451.6 /**< [K] Lindemann's law reference temp. "T_Fe0" (DB15 A23) */
 #define DVLIQDTEMP                                                             \
-  8e17 /**< [m^3/K] Approximation of change in mantle liquid volume with T_m, DV_liq/DT  (DB15) */
+  8e17 /**< [m^3/K] Approximation of change in mantle liquid volume with T_m,  \
+          DV_liq/DT  (DB15) */
 #define ERUPTEFF                                                               \
   0.1 /**< [nd] (Default) Mantle melt heat loss eruption efficiency */
 /* Continental Crust */
@@ -156,13 +168,14 @@
   (0.412 * (EAREASURF)) /**< [m2] =41.2% of Earth surface (Taylor 95) */
 #define ECRUSTDEPTH                                                            \
   ((EMASSCRUST) /                                                              \
-   ((ECRUSTDENSITY) *                                                          \
-    (ECRUSTAREA))) /**< [m] Average depth of continental crust today ~ 36 km (Taylor 95) */
+   ((ECRUSTDENSITY) * (ECRUSTAREA))) /**< [m] Average depth of continental     \
+                                        crust today ~ 36 km (Taylor 95) */
 #define CRUSTACCRFRAC                                                          \
-  0.015 /**< [nd] Constant fraction of oceanic crust accreted onto continent */
+  0.015 /**< [nd] Constant fraction of oceanic crust accreted onto continent   \
+         */
 #define CRUSTINSOFACT                                                          \
-  ((65.) /                                                                     \
-   (94.)) /**< [nd] Reduction in heat conducted through contintental crust compared to oceanic crust (Jaupart 07, table 3) */
+  ((65.) / (94.)) /**< [nd] Reduction in heat conducted through contintental   \
+                     crust compared to oceanic crust (Jaupart 07, table 3) */
 /* CORE CHEMISTRY */
 #define DTCHIREF 0.0 /**< [K] Core reference liquidus depression */
 #define CHI_OC_E                                                               \
@@ -170,8 +183,9 @@
 #define PARTITION_CHI_CORE                                                     \
   1e-2 /**< [nd] Core light element partition coefficent */
 #define CHI_IC_E                                                               \
-  (CHI_OC_E *                                                                  \
-   PARTITION_CHI_CORE) //PARTITION_CHI_CORE*CHI_OC_E /**< [nd] Inner core light element concentration in Earth  (CHI_IC_E=partition*CHI_OC_E) */
+  (CHI_OC_E * PARTITION_CHI_CORE) // PARTITION_CHI_CORE*CHI_OC_E /**< [nd] Inner
+                                  // core light element concentration in Earth
+                                  // (CHI_IC_E=partition*CHI_OC_E) */
 #define EMASSOC_CHI                                                            \
   (CHI_OC_E *                                                                  \
    EMASSOC) /**< [kg] Mass of light elements (Chi) in Earth's outer core */
@@ -179,41 +193,47 @@
   (CHI_IC_E *                                                                  \
    EMASSIC) /**< [kg] Mass of light elements (Chi) in Earth's inner core */
 #define EMASSCORE_CHI                                                          \
-  (EMASSOC_CHI +                                                               \
-   EMASSIC_CHI) /**< [kg] Total core light element mass of Earth (conserved) */
+  (EMASSOC_CHI + EMASSIC_CHI) /**< [kg] Total core light element mass of Earth \
+                                 (conserved) */
 /* ADIABATIC PROPERTIES */
 #define ADGRADMAN                                                              \
-  ((0.5) /                                                                     \
-   (KM)) /**< [K/m] mantle linear adiabatic gradient =0.5K/km  (DB15 eq A18) */
+  ((0.5) / (KM)) /**< [K/m] mantle linear adiabatic gradient =0.5K/km  (DB15   \
+                    eq A18) */
 #define DADCORE                                                                \
   (6340.0 * KM) /**< [m] liq iron core adiabatic length scale (DB15 eq A22) */
 #define GRUNEISEN 1.3 /**< [nd] Core gruneisen parameter */
 #define ADJUMPM2UM                                                             \
-  0.7 /**< [nd] Adiabatic temperature jump from average to upper mantle "epsilon_UM" */
+  0.7 /**< [nd] Adiabatic temperature jump from average to upper mantle        \
+         "epsilon_UM" */
 #define ADJUMPM2LM                                                             \
-  1.3 /**< [nd] Adiabatic temperature jump from average to lower mantle "epsilon_LM" */
+  1.3 /**< [nd] Adiabatic temperature jump from average to lower mantle        \
+         "epsilon_LM" */
 #define ADJUMPC2CMB                                                            \
-  0.8 /**< [nd] Adiabatic temperature jump from average core to CMB "epsilon_c" */
+  0.8 /**< [nd] Adiabatic temperature jump from average core to CMB            \
+         "epsilon_c" */
 /* MAGNETIC DYNAMO PROPERTIES */
 #define MAGPERM (4 * PI * 1e-7) /**< [H/m] Magnetic permeability constant */
 #define MAGMOMCOEF                                                             \
-  0.155 /**< [nd] Saturation constant for fast rotating dipolar dynamos (OC2006) */
+  0.155 /**< [nd] Saturation constant for fast rotating dipolar dynamos        \
+           (OC2006) */
 #define ELECCONDCORE 10e5 /**< [S/m] Electrical conductivity of core  */
 #define LORENTZNUM                                                             \
-  2.5e-8 /**< [W Ohm/K] Lorentz number, relates thermal and electrical conductivity */
+  2.5e-8 /**< [W Ohm/K] Lorentz number, relates thermal and electrical         \
+            conductivity */
 #define EMAGMOM 80e21 /**< [Am^2] Earth's present day magnetic moment */
 #define EPRESSWIND                                                             \
-  2.6761e-9 /**< [N/m^2] Earth's solar wind pressure: Psw=m_proton*n_sw*v_sw^2 (DB13) */
+  2.6761e-9 /**< [N/m^2] Earth's solar wind pressure: Psw=m_proton*n_sw*v_sw^2 \
+               (DB13) */
 #define EMAGPAUSERAD                                                           \
   (9.103 * (ERADIUS)) /**< [m] Earth's magnetopause radius (DB13) */
 #define IMK2MANORBMODEL                                                        \
   1 /**< [nd] Option for ImK2 model to use in orbital equations */
 
-//void InitializeControlThermint(CONTROL*);
+// void InitializeControlThermint(CONTROL*);
 void fvAddModuleThermint(CONTROL *, MODULE *, int, int);
 void fvBodyCopyThermint(BODY *, BODY *, int, int, int);
 void fvInitializeBodyThermint(BODY *, CONTROL *, UPDATE *, int, int);
-//void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
+// void InitializeUpdateTmpBodyThermint(BODY*,CONTROL*,UPDATE*,int);
 
 /* Options Info */
 
@@ -236,10 +256,14 @@ void fvInitializeBodyThermint(BODY *, CONTROL *, UPDATE *, int, int);
   1719 /**< Temperature jump across lower mantle thermal boundary layer */
 #define OPT_VISCLMAN                                                           \
   1721 /**< Viscosity of lower mantle thermal boundary layer */
-#define OPT_SHMODUMAN 1722 /**< Shear modulus of upper mantle boundary layer */
-#define OPT_SHMODLMAN 1723 /**< Shear modulus of lower mantle boundary layer */
-#define OPT_FMELTUMAN 1724 /**< Melt fraction in upper mantle boundary layer */
-#define OPT_FMELTLMAN 1725 /**< Melt fraction in lower mantle boundary layer */
+#define OPT_SHMODUMAN 1722 /**< Shear modulus of upper mantle boundary layer   \
+                            */
+#define OPT_SHMODLMAN 1723 /**< Shear modulus of lower mantle boundary layer   \
+                            */
+#define OPT_FMELTUMAN 1724 /**< Melt fraction in upper mantle boundary layer   \
+                            */
+#define OPT_FMELTLMAN 1725 /**< Melt fraction in lower mantle boundary layer   \
+                            */
 #define OPT_MELTFACTORUMAN                                                     \
   1726 /**< Melt viscosity reduction factor in upper mantle */
 #define OPT_FIXMELTFACTORUMAN                                                  \
@@ -325,19 +349,25 @@ void fvInitializeBodyThermint(BODY *, CONTROL *, UPDATE *, int, int);
 /* New Parameters for vemcee */
 #define OPT_ACTVISCMAN                                                         \
   1800                    /**< [J/mol] Viscosity activation energy of mantle */
-#define OPT_SHMODREF 1801 /**< [Pa] Reference kinematic mantle shear modulus */
+#define OPT_SHMODREF 1801 /**< [Pa] Reference kinematic mantle shear modulus   \
+                           */
 #define OPT_STIFFNESS                                                          \
-  1802 /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100) */
+  1802 /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100)   \
+        */
 #define OPT_DLIND                                                              \
-  1803 /**< [m] Lindemann's law length scale for iron liquidus "D_Fe" (DB15 A23) */
+  1803 /**< [m] Lindemann's law length scale for iron liquidus "D_Fe" (DB15    \
+          A23) */
 #define OPT_DADCORE                                                            \
   1804 /**< [m] Liquid iron core adiabatic length scale (DB15 eq A22) */
 #define OPT_ADJUMPM2UM                                                         \
-  1805 /**< [nd] Adiabatic temperature jump from average mantle to base of upper mantle thermal boundary layer: "epsilon_UM" */
+  1805 /**< [nd] Adiabatic temperature jump from average mantle to base of     \
+          upper mantle thermal boundary layer: "epsilon_UM" */
 #define OPT_ADJUMPM2LM                                                         \
-  1806 /**< [nd] Adiabatic temperature jump from average mantle to top of lower mantle thermal boundary layer: "epsilon_LM" */
+  1806 /**< [nd] Adiabatic temperature jump from average mantle to top of      \
+          lower mantle thermal boundary layer: "epsilon_LM" */
 #define OPT_ADJUMPC2CMB                                                        \
-  1807 /**< [nd] Adiabatic temperature jump from average core to core-mantle boundary: "epsilon_c" */
+  1807 /**< [nd] Adiabatic temperature jump from average core to core-mantle   \
+          boundary: "epsilon_c" */
 #define OPT_ELECCONDCORE 1808 /**< [S/m] Electrical conductivity of core */
 #define OPT_IMK2MANORBMODEL                                                    \
   1809 /**< [nd] Option of ImK2 model to use in orbital equations */
@@ -400,9 +430,9 @@ void fvVerifyThermint(BODY *, CONTROL *, FILES *, OPTIONS *, OUTPUT *, SYSTEM *,
                       UPDATE *, int, int);
 void fvVerifyTMan(BODY *, OPTIONS *, SYSTEM *, UPDATE *, double, int);
 void fvVerifyTCore(BODY *, OPTIONS *, SYSTEM *, UPDATE *, double, int);
-//void fvVerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
-//void fvInitializeVplanetThermint(CONTROL*,MODULE*);
-//void fvVerifyHaltThermint(BODY*,CONTROL*,OPTIONS*,int,int*);
+// void fvVerifyRotationThermint(BODY*,CONTROL*,OPTIONS*,char[],int);
+// void fvInitializeVplanetThermint(CONTROL*,MODULE*);
+// void fvVerifyHaltThermint(BODY*,CONTROL*,OPTIONS*,int,int*);
 void fvAssignThermintDerivatives(BODY *, EVOLVE *, UPDATE *,
                                  fnUpdateVariable ***, int);
 void fvNullThermintDerivatives(BODY *, EVOLVE *, UPDATE *, fnUpdateVariable ***,
@@ -458,13 +488,15 @@ void fvForceBehaviorThermint(BODY *, MODULE *, EVOLVE *, IO *, SYSTEM *,
   1729 /**< [nd] Melt viscosity reduction factor in upper mantle */
 #define OUT_MELTFACTORLMAN                                                     \
   1730 /**< [nd] Melt viscosity reduction factor in lower mantle */
-#define OUT_DEPTHMELTMAN 1731 /**< [m] Depth to base of upper mantle melting */
+#define OUT_DEPTHMELTMAN 1731 /**< [m] Depth to base of upper mantle melting   \
+                               */
 #define OUT_TDEPTHMELTMAN                                                      \
   1732 /**< [K] Temperature at base of upper mantle melting */
 #define OUT_TJUMPMELTMAN                                                       \
   1733 /**< [K] Temperature jump across upper mantle melt region */
 #define OUT_MELTMASSFLUXMAN 1734 /**< [kg/s] Mantle melt mass flux */
-#define OUT_VISCUMANARR 1737 /**< [m^2/s] Arrhenius viscosity in upper mantle */
+#define OUT_VISCUMANARR 1737 /**< [m^2/s] Arrhenius viscosity in upper mantle  \
+                              */
 #define OUT_RAYLEIGHMAN 1738 /**< [nd] Mantle Rayleigh Number */
 #define OUT_VISCMMAN 1739    /**< [m^2/s] Viscosity of mid (average) mantle */
 /* Time Derivatives & Gradients */
@@ -484,15 +516,18 @@ void fvForceBehaviorThermint(BODY *, MODULE *, EVOLVE *, IO *, SYSTEM *,
   1746 /**< [W/m^2] Heat flux across core-mantle boundary and lower mantle */
 #define OUT_HFLOWCMB                                                           \
   1747 /**< [W] Heat flow across core-mantle boundary and lower mantle */
-#define OUT_HFLOWTIDALMAN 1748 /**< [W] Tidal dissipation heat flow in mantle */
-#define OUT_HFLOWTIDALCORE 1749 /**< [W] Tidal dissipation heat flow in core */
+#define OUT_HFLOWTIDALMAN 1748  /**< [W] Tidal dissipation heat flow in mantle \
+                                 */
+#define OUT_HFLOWTIDALCORE 1749 /**< [W] Tidal dissipation heat flow in core   \
+                                 */
 #define OUT_HFLOWLATENTMAN                                                     \
   1750 /**< [W] Latent heat flow from solidification of mantle */
 #define OUT_HFLOWMELTMAN 1751 /**< [W] Melt heat flow from mantle */
 #define OUT_HFLOWLATENTIC                                                      \
   1752 /**< [W] Latent heat flow from solidification of inner core */
 #define OUT_POWERGRAVIC                                                        \
-  1753 /**< [W] Gravitation power released from solidification of inner core */
+  1753 /**< [W] Gravitation power released from solidification of inner core   \
+        */
 #define OUT_HFLOWICB 1754    /**< [W] Heat flow across inner core boundary */
 #define OUT_HFLUXSURF 1760   /**< [W/m^2] Heat flux across surface of mantle */
 #define OUT_HFLOWSURF 1761   /**< [W] Heat flow across surface of mantle */
@@ -505,7 +540,8 @@ void fvForceBehaviorThermint(BODY *, MODULE *, EVOLVE *, IO *, SYSTEM *,
 #define OUT_RIC 1770 /**< [m] Inner core radius */
 #define OUT_DOC 1771 /**< [m] Outer core shell thickness */
 #define OUT_DRICDTCMB                                                          \
-  1772 /**< [m/K] Change in inner core radius with CMB temperature: d(R_ic)/d(T_cmb) */
+  1772 /**< [m/K] Change in inner core radius with CMB temperature:            \
+          d(R_ic)/d(T_cmb) */
 #define OUT_RICDOT                                                             \
   1773 /**< [m/s] Change in inner core radius with time: d(R_ic)/d(t) */
 #define OUT_CHIOC 1774 /**< [nd] Outer core light element concentration chi */
@@ -703,9 +739,9 @@ double fdTsolUMan(BODY *, int); /**< solidus temp at UMBL   */
 double fdTliqUMan(BODY *, int); /**< liquidus at UMBL   */
 double fdTsolLMan(BODY *, int);
 double fdTliqLMan(BODY *, int);
-double fdDepthMeltMan(
-      BODY *,
-      int); /**< depth to bottom of UM melt region (where solidus and geother intersect).   */
+double fdDepthMeltMan(BODY *,
+                      int); /**< depth to bottom of UM melt region (where
+                               solidus and geother intersect).   */
 double fdTDepthMeltMan(BODY *, int); /**< T at bottom of UM melt region.   */
 double fdSolTempDiffMan(
       double, BODY *,

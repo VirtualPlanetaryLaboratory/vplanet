@@ -9,7 +9,7 @@
 
 /*
  * Physical Relationships
-*/
+ */
 
 double fdMeanMotionToSemi(double dMass1, double dMass2, double dMeanMotion) {
   return pow((BIGG * (dMass1 + dMass2) / (dMeanMotion * dMeanMotion)),
@@ -40,14 +40,15 @@ double fdSemiToMeanMotion(double dSemi, double dMass) {
 double *fdOrbAngMom(BODY *body, CONTROL *control, int iBody) {
 
   double dMass,
-        mu; // Mass of central body or bodies if using binary and not secondary star
+        mu; // Mass of central body or bodies if using binary and not secondary
+            // star
 
   if (body[iBody].bSpiNBody) {
     // For SpiNBody, we just want to make L = m(r x v)
     // It is the responsibility of the caller to free this memory
     double *pdOrbMom = malloc(sizeof(double) * 3);
 
-    //Calculate the x, y, and z components of orb mom
+    // Calculate the x, y, and z components of orb mom
     pdOrbMom[0] =
           body[iBody].dMass * (body[iBody].dPositionY * body[iBody].dVelZ -
                                body[iBody].dPositionZ * body[iBody].dVelY);
@@ -91,7 +92,8 @@ double *fdOrbAngMom(BODY *body, CONTROL *control, int iBody) {
   }
 }
 
-/* Compute the total angular momentum in the system, including lost angular momentum */
+/* Compute the total angular momentum in the system, including lost angular
+ * momentum */
 double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
   double dTot = 0.0;
   // Added the vectorized components of total angular momentum for SpiNBody
@@ -107,15 +109,16 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
   }
 
   // Add all rotational, orbital angular momentum, angular momentum lost
-  //SpiNBody has direct x,y,z components for position and velocity
+  // SpiNBody has direct x,y,z components for position and velocity
   if (bUsingSpiNBody) {
     for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
       pdaTmp = fdOrbAngMom(body, control, iBody);
       for (i = 0; i < 3; i++) {
         daOrbTot[i] += pdaTmp[i];
       }
-      //dTot += fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
-      //dTot += body[iBody].dLostAngMom;
+      // dTot +=
+      // fdRotAngMom(body[iBody].dRadGyra,body[iBody].dMass,body[iBody].dRadius,body[iBody].dRotRate);
+      // dTot += body[iBody].dLostAngMom;
     }
     dTot += sqrt(daOrbTot[0] * daOrbTot[0] + daOrbTot[1] * daOrbTot[1] +
                  daOrbTot[2] * daOrbTot[2]);
@@ -140,16 +143,17 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
  *
  */
 
-/*! Compute orbital potential energy neglecting planet-planet potential energy */
+/*! Compute orbital potential energy neglecting planet-planet potential energy
+ */
 double fdOrbPotEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
-  double
-        dMass; // Mass of central body or bodies if using binary and not secondary star
+  double dMass; // Mass of central body or bodies if using binary and not
+                // secondary star
   int i;
   double PotEnergy = 0;
   double Distance  = dHUGE;
 
   if (body[iBody].bSpiNBody) {
-    //For SpiNBody, find the body-body distance then return the potential.
+    // For SpiNBody, find the body-body distance then return the potential.
     for (i = iBody + 1; i < control->Evolve.iNumBodies; i++) {
       Distance = sqrt((body[iBody].dPositionX - body[i].dPositionX) *
                             (body[iBody].dPositionX - body[i].dPositionX) +
@@ -188,7 +192,7 @@ double fdOrbKinEnergy(BODY *body, CONTROL *control, SYSTEM *system, int iBody) {
   double dOrbKinEnergy;
 
   if (body[iBody].bSpiNBody) {
-    //Energy is calculated in a barycentric reference frame.
+    // Energy is calculated in a barycentric reference frame.
     double Velocity2 = (body[iBody].dVelX) * (body[iBody].dVelX) +
                        (body[iBody].dVelY) * (body[iBody].dVelY) +
                        (body[iBody].dVelZ) * (body[iBody].dVelZ);
@@ -279,7 +283,7 @@ int bPrimary(BODY *body, int iBody) {
   for (iBodyPert = 0; iBodyPert < body[iBody].iTidePerts; iBodyPert++) {
     if (body[iBody].iaTidePerts[iBodyPert] < iBody) {
       bPrimary = 0;
-}
+    }
   }
 
   return bPrimary;
@@ -437,7 +441,7 @@ void astro2bary(BODY *body, int iNumBodies) {
   mtotal = 0;
   for (iBody = 0; iBody < iNumBodies; iBody++) {
     mtotal += body[iBody].dMass;
-}
+  }
 
   for (i = 0; i < 3; i++) {
     xcom[i] = 0;
@@ -503,7 +507,7 @@ void angularmom(BODY *body, double *AngMom, int iNumBodies) {
 
   for (i = 0; i < 3; i++) {
     AngMom[i] = 0;
-}
+  }
 
   for (iBody = 0; iBody < iNumBodies; iBody++) {
     cross(body[iBody].daCartPos, body[iBody].daCartVel, rxptmp);
@@ -601,7 +605,7 @@ void cart2osc(BODY *body, int iNumBodies) {
     body[iBody].dLongA = atan2(h[0], -h[1]);
     if (body[iBody].dLongA < 0) {
       body[iBody].dLongA += 2.0 * PI;
-}
+    }
     sinwf = body[iBody].daCartPos[2] /
             (r * 2. * body[iBody].dSinc *
              sqrt(1.0 - body[iBody].dSinc * body[iBody].dSinc));
@@ -644,19 +648,19 @@ void cart2osc(BODY *body, int iNumBodies) {
     cosE = (cos(f) + body[iBody].dEcc) / (1.0 + body[iBody].dEcc * cos(f));
     if (f <= PI) {
       body[iBody].dEccA = acos(cosE);
-}
+    }
     if (f > PI) {
       body[iBody].dEccA = 2. * PI - acos(cosE);
-}
+    }
 
     body[iBody].dMeanA =
           body[iBody].dEccA - body[iBody].dEcc * sin(body[iBody].dEccA);
     if (body[iBody].dMeanA < 0) {
       body[iBody].dMeanA += 2 * PI;
-}
+    }
     if (body[iBody].dMeanA >= 2 * PI) {
       body[iBody].dMeanA -= 2 * PI;
-}
+    }
   }
   free(h);
 }
@@ -672,8 +676,8 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
   int iBody;
   double AngMom[3] = {0.0, 0.0, 0.0}; /* locally allocates this memory */
 
-  /* Loop below calculates true anomaly at equinox for planets with DistRot enabled.
-     This angle is invariant under rotations. */
+  /* Loop below calculates true anomaly at equinox for planets with DistRot
+     enabled. This angle is invariant under rotations. */
   for (iBody = 1; iBody < iNumBodies; iBody++) {
     if (body[iBody].bDistRot) {
       body[iBody].dTrueApA = 2 * PI - (body[iBody].dPrecA + body[iBody].dLongP);
@@ -692,7 +696,8 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
   bary2astro(body, iNumBodies);
   cart2osc(body, iNumBodies);
 
-  /* Loop below recalculates precession param for planets with DistRot enabled.*/
+  /* Loop below recalculates precession param for planets with DistRot
+   * enabled.*/
   for (iBody = 1; iBody < iNumBodies; iBody++) {
     if (body[iBody].bDistRot) {
       body[iBody].dPrecA = 2 * PI - (body[iBody].dTrueApA + body[iBody].dLongP);
@@ -921,8 +926,8 @@ double fdSemiTidalLockEqSt(BODY *body, int iNumLocked, int iBody) {
   return adot;
 }
 
-/*! Compute change in binary semi-major axis when circular, tidally locked, w ~ n
- * when EQTIDE and STELLAR are active
+/*! Compute change in binary semi-major axis when circular, tidally locked, w ~
+ * n when EQTIDE and STELLAR are active
  */
 double fdSemiDtEqSt(BODY *body, SYSTEM *system, int *iaBody) {
   int iBody = iaBody[0]; // Secondary body

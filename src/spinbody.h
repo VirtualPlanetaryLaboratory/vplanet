@@ -5,7 +5,7 @@
   @date Feb 21 2017
 */
 
-//Option numbers
+// Option numbers
 #define OPTSTARTSPINBODY 1600
 #define OPTENDSPINBODY 1700
 
@@ -21,7 +21,7 @@
 
 #define OPT_USEORBPARAMS 1640
 
-//Output numbers
+// Output numbers
 #define OUTSTARTSPINBODY 1600
 #define OUTENDSPINBODY 1700
 #define OUTBODYSTARTSPINBODY 1610
@@ -141,7 +141,7 @@ void Bary2Helio(BODY *body, int iBody);
 // These functions are defined in distorb.c, but needed in SpiNBody
 // Relocate to system.c?
 
-void cross(double *r, double *v, double *h); //h = r X v
+void cross(double *r, double *v, double *h); // h = r X v
 void kepler_eqn(BODY *body, int iBody);
 double signf(double value);
 double xinit(BODY *body, int iBody);

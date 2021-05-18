@@ -15,13 +15,14 @@
  * Earth conversions are subjective. Different options are available
  * I assume Earth's mantle is 1.4e-4
  *
- * PD NOTE: Default Radiogenic concentrations are from my radheat.pro, where values are based on
- * Korenaga (2006), Arevalo (2009), Huang (2013).
- * ENERGY values are Rory's (from Wikipedia?).  They seem ok.
+ * PD NOTE: Default Radiogenic concentrations are from my radheat.pro, where
+ * values are based on Korenaga (2006), Arevalo (2009), Huang (2013). ENERGY
+ * values are Rory's (from Wikipedia?).  They seem ok.
  */
 
 // PD NOTE: NUM is the fundamental parameter, pow and mass should reflect num.
-// Changing the concentration requires changing all of these: pow, num, and mass.
+// Changing the concentration requires changing all of these: pow, num, and
+// mass.
 
 // Relations: P=p*M, [P]=W, [p]=W/kg, [M]=kg
 // M=N*m ,[N]=number, [m]=kg/1 atom
@@ -33,33 +34,39 @@
 #define HALFLIFE26AL 2.26267992e13     /**< [s] Half-life of 26Al */
 /* Mantle */
 #define EMASSMAN26AL 4.6e18   /**< [kg]  Default mantle mass of 26Al */
-#define ENUMMAN26AL 1.0654e41 /**< [num] Default mantle number of 26Al atoms */
+#define ENUMMAN26AL 1.0654e41 /**< [num] Default mantle number of 26Al atoms   \
+                               */
 #define EPOWERMAN26AL                                                          \
-  2.0944e15 /**< [W] Default mantle power from 26Al if all 26Mg from 26Al decay */
+  2.0944e15 /**< [W] Default mantle power from 26Al if all 26Mg from 26Al      \
+               decay */
 /* Core */
 #define EMASSCORE26AL                                                          \
   1e-2 * (EMASSMAN26AL) /**< [kg]  Default core mass of 26Al */
 #define ENUMCORE26AL                                                           \
   1e-2 * (ENUMMAN26AL) /**< [num] Default core number of 26Al atoms */
 #define EPOWERCORE26AL                                                         \
-  1e-2 *                                                                       \
-        (EPOWERMAN26AL) /**< [W] Default core power from 26Al if all 26Mg from 26Al decay */
+  1e-2 * (EPOWERMAN26AL) /**< [W] Default core power from 26Al if all 26Mg     \
+                            from 26Al decay */
 
 /* 40K */
 #define ENERGY40K 2.13371243669e-13    /**< [J] Decay energy of Potassium-40 */
 #define MASS40K 39.96399848 * ATOMMASS /**< [kg] Mass of a 40K atom */
 #define HALFLIFE40K 5.736527e+16       /**< [s] Half-life of 40K */
 /* Mantle */
-#define EMASSMAN40K 6.45089e+17 /**< [kg]  Default mantle mass of 40K */
-#define ENUMMAN40K 9.72110e+42  /**< [num] Default mantle number of 40K atoms */
-#define EPOWERMAN40K 3.61578e+13 /**< [W] Default mantle power from 40K decay */
+#define EMASSMAN40K 6.45089e+17  /**< [kg]  Default mantle mass of 40K */
+#define ENUMMAN40K 9.72110e+42   /**< [num] Default mantle number of 40K atoms \
+                                  */
+#define EPOWERMAN40K 3.61578e+13 /**< [W] Default mantle power from 40K decay  \
+                                  */
 /* Core */
 #define EMASSCORE40K 6.04046e+17  /**< [kg]  Default core mass of 40K */
 #define ENUMCORE40K 9.10261e+42   /**< [num] Default core number of 40K atoms */
-#define EPOWERCORE40K 3.38573e+13 /**< [W] Default core power from 40K decay */
+#define EPOWERCORE40K 3.38573e+13 /**< [W] Default core power from 40K decay   \
+                                   */
 /* Crust (assuming crustal mass constant) */
 #define EMASSCRUST40K 2.47738e+17 /**< [kg]  Default crust mass of 40K */
-#define ENUMCRUST40K 3.73326e+42 /**< [num] Default crust number of 40K atoms */
+#define ENUMCRUST40K 3.73326e+42  /**< [num] Default crust number of 40K atoms \
+                                   */
 #define EPOWERCRUST40K                                                         \
   1.38859e+13 /**< [W] Default crust power from 40K decay */
 
@@ -98,7 +105,8 @@
   1.16691e+13 /**< [W] Default mantle power from 238U decay */
 /* Core */
 #define EMASSCORE238U 1.16964e+15 /**< [kg]  Default core mass of 238U */
-#define ENUMCORE238U 2.95900e+39 /**< [num] Default core number of 238U atoms */
+#define ENUMCORE238U 2.95900e+39  /**< [num] Default core number of 238U atoms \
+                                   */
 #define EPOWERCORE238U                                                         \
   1.20381e+11 /**< [W] Default core power from 238U decay */
 /* Crust (assuming crustal mass constant) */
@@ -120,7 +128,8 @@
   2.02490e+13 /**< [W] Default mantle power from 235U decay */
 /* Core */
 #define EMASSCORE235U 9.56785e+14 /**< [kg]  Default core mass of 235U */
-#define ENUMCORE235U 2.45149e+39 /**< [num] Default core number of 235U atoms */
+#define ENUMCORE235U 2.45149e+39  /**< [num] Default core number of 235U atoms \
+                                   */
 #define EPOWERCORE235U                                                         \
   5.01586e+11 /**< [W] Default core power from 235U decay */
 /* Crust (assuming crustal mass constant) */
@@ -131,12 +140,15 @@
   1.03896e+13 /**< [W] Default crust power from 235U decay */
 
 /* Continental Crust Mass Earth today */
-/* Note we don't define an oceanic crust reservoir (bc it's recycled and therefore part of the convecting mantle) so "crust" really means "continental crust". */
+/* Note we don't define an oceanic crust reservoir (bc it's recycled and
+ * therefore part of the convecting mantle) so "crust" really means "continental
+ * crust". */
 #define EPOWERCRUSTTOTAL                                                       \
-  7e12 /**< [W] Earth's modern crustal radiogenic power, 7 TW (Jaupart et al 2007) */
+  7e12 /**< [W] Earth's modern crustal radiogenic power, 7 TW (Jaupart et al   \
+          2007) */
 #define ECRUSTRADPOWDEN                                                        \
-  (EPOWERCRUSTTOTAL) /                                                         \
-        (ECRUSTMASS) /**< [W/kg] Earth's modern crustal heat production density */
+  (EPOWERCRUSTTOTAL) / (ECRUSTMASS) /**< [W/kg] Earth's modern crustal heat    \
+                                       production density */
 
 void fvInitializeControlRadheat(CONTROL *, int);
 void fvInitializeBodyRadheat(BODY *, CONTROL *, UPDATE *, int, int);
@@ -266,7 +278,7 @@ int fbHaltMin232ThPower(BODY *, EVOLVE *, HALT *, IO *, UPDATE *,
                         fnUpdateVariable ***, int);
 int fbHaltMin238UPower(BODY *, EVOLVE *, HALT *, IO *, UPDATE *,
                        fnUpdateVariable ***, int);
-//void CountHaltsRadheat(HALT*,int*);
+// void CountHaltsRadheat(HALT*,int*);
 
 /* Verify Functions */
 void fvNotMassAndNum(OPTIONS *, int, int, int);

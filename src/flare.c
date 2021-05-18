@@ -22,7 +22,8 @@ void BodyCopyFlare(BODY *dest, BODY *src, int foo, int iNumBodies, int iBody) {
 
 
 /* Fake flare constant stuff Leaving in for now
-void ReadFlareConst(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void ReadFlareConst(BODY *body,CONTROL *control,FILES *files,OPTIONS
+*options,SYSTEM *system,int iFile) {
   // This parameter cannot exist in primary file
   int lTmp=-1;
   double dTmp;
@@ -31,7 +32,8 @@ void ReadFlareConst(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0)
-      body[iFile-1].dFlareConst = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      body[iFile-1].dFlareConst =
+dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
     else
       body[iFile-1].dFlareConst = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -40,7 +42,8 @@ void ReadFlareConst(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
       body[iFile-1].dFlareConst = options->dDefault;
 }
 
-void ReadFlareExp(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+void ReadFlareExp(BODY *body,CONTROL *control,FILES *files,OPTIONS
+*options,SYSTEM *system,int iFile) {
   // This parameter cannot exist in primary file
   int lTmp=-1;
   double dTmp;
@@ -49,7 +52,8 @@ void ReadFlareExp(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
   if (lTmp >= 0) {
     NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
     if (dTmp < 0)
-      body[iFile-1].dFlareExp = dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
+      body[iFile-1].dFlareExp =
+dTmp*dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose);
     else
       body[iFile-1].dFlareExp = dTmp;
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -74,7 +78,7 @@ void ReadFlareYInt(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dFlareYInt = options->dDefault;
-}
+  }
 }
 
 void ReadFlareSlope(BODY *body, CONTROL *control, FILES *files,
@@ -92,7 +96,7 @@ void ReadFlareSlope(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dFlareSlope = options->dDefault;
-}
+  }
 }
 
 void ReadFlareC(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -110,7 +114,7 @@ void ReadFlareC(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dFlareC = options->dDefault;
-}
+  }
 }
 
 void ReadFlareK(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -128,7 +132,7 @@ void ReadFlareK(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dFlareK = options->dDefault;
-}
+  }
 }
 
 void ReadFlareMinEnergy(BODY *body, CONTROL *control, FILES *files,
@@ -148,11 +152,11 @@ void ReadFlareMinEnergy(BODY *body, CONTROL *control, FILES *files,
                                    control->Io.iVerbose);
     } else {
       body[iFile - 1].dFlareMinEnergy = dTmp;
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dFlareMinEnergy = options->dDefault;
-}
+  }
 }
 
 void ReadFlareMaxEnergy(BODY *body, CONTROL *control, FILES *files,
@@ -172,11 +176,11 @@ void ReadFlareMaxEnergy(BODY *body, CONTROL *control, FILES *files,
                                    control->Io.iVerbose);
     } else {
       body[iFile - 1].dFlareMaxEnergy = dTmp;
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dFlareMaxEnergy = options->dDefault;
-}
+  }
 }
 
 void ReadFlareVisWidth(BODY *body, CONTROL *control, FILES *files,
@@ -196,11 +200,11 @@ void ReadFlareVisWidth(BODY *body, CONTROL *control, FILES *files,
                                    control->Io.iVerbose);
     } else {
       body[iFile - 1].dFlareVisWidth = dTmp;
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dFlareVisWidth = options->dDefault;
-}
+  }
 }
 
 void ReadFlareXUVWidth(BODY *body, CONTROL *control, FILES *files,
@@ -220,11 +224,11 @@ void ReadFlareXUVWidth(BODY *body, CONTROL *control, FILES *files,
                                    control->Io.iVerbose);
     } else {
       body[iFile - 1].dFlareXUVWidth = dTmp;
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dFlareXUVWidth = options->dDefault;
-}
+  }
 }
 
 /* Initiatlize Input Options */
@@ -345,7 +349,7 @@ void ReadOptionsFlare(BODY *body, CONTROL *control, FILES *files,
   for (iOpt = OPTSTARTFLARE; iOpt < OPTENDFLARE; iOpt++) {
     if (options[iOpt].iType != -1) {
       fnRead[iOpt](body, control, files, &options[iOpt], system, iBody + 1);
-}
+    }
   }
 }
 
@@ -365,7 +369,7 @@ void fnForceBehaviorFlare(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
     body[iBody].dLXUVFlare = 0;
   } else {
     body[iBody].dLXUVFlare = fdLXUVFlare(body, evolve->dTimeStep, iBody);
-}
+  }
 }
 
 void VerifyLXUVFlare(BODY *body, OPTIONS *options, UPDATE *update, int iBody) {
@@ -373,9 +377,11 @@ void VerifyLXUVFlare(BODY *body, OPTIONS *options, UPDATE *update, int iBody) {
   /* This may become useful once flare evolution is included
   update[iBody].iaType[update[iBody].iLXUV][0] = 1;
   update[iBody].iNumBodies[update[iBody].iLXUV][0]=1;
-  update[iBody].iaBody[update[iBody].iLXUV][0] = malloc(update[iBody].iNumBodies[update[iBody].iLXUV][0]*sizeof(int));
+  update[iBody].iaBody[update[iBody].iLXUV][0] =
+  malloc(update[iBody].iNumBodies[update[iBody].iLXUV][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iLXUV][0][0]=iBody;
-  update[iBody].pdDLXUVFlareDt = &update[iBody].daDerivProc[update[iBody].iLXUV][0];
+  update[iBody].pdDLXUVFlareDt =
+  &update[iBody].daDerivProc[update[iBody].iLXUV][0];
   */
 }
 
@@ -431,7 +437,8 @@ void InitializeModuleFlare(CONTROL *control, MODULE *module) {
 /**************** FLARE update ****************/
 
 void InitializeUpdateFlare(BODY *body, UPDATE *update, int iBody) {
-  /* STELLAR calculates LXUV from the star's properties, but FLARE calculates LXUV as a primary variable. It is the only possible update. */
+  /* STELLAR calculates LXUV from the star's properties, but FLARE calculates
+   * LXUV as a primary variable. It is the only possible update. */
 
   /* No primary variables for FLARE yet
   update[iBody].iNumVars++;
@@ -523,7 +530,7 @@ void LogBodyFlare(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     if (output[iOut].iNum > 0) {
       WriteLogEntry(body, control, &output[iOut], system, update, fnWrite[iOut],
                     fp, iBody);
-}
+    }
   }
 }
 
@@ -546,14 +553,15 @@ void AddModuleFlare(CONTROL *control, MODULE *module, int iBody, int iModule) {
 
 /* Fake Flare functions
 
-double fdLXUVFlare(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo) {
-  return  body[iBody].dFlareConst*exp(-body[iBody].dFlareExp*body[iBody].dAge);
+double fdLXUVFlare(BODY *body,SYSTEM *system,UPDATE *update,int iBody,int iFoo)
+{ return  body[iBody].dFlareConst*exp(-body[iBody].dFlareExp*body[iBody].dAge);
 }
 
 double fdDLXUVFlareDt(BODY *body,SYSTEM *system,int *iaBody) {
   // Placeholder for now. L_XUV = const*exp(-const*time)
 
-  return -body[iaBody[0]].dFlareConst*body[iaBody[0]].dFlareExp*exp(-body[iaBody[0]].dFlareExp*body[iaBody[0]].dAge);
+  return
+-body[iaBody[0]].dFlareConst*body[iaBody[0]].dFlareExp*exp(-body[iaBody[0]].dFlareExp*body[iaBody[0]].dAge);
 }
 
 */

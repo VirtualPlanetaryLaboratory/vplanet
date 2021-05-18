@@ -5,7 +5,7 @@
  * Subroutines that control the thermal evolution of the
  * magma ocean as well as the geochemistry.
  *
-*/
+ */
 
 #include "vplanet.h"
 #include <assert.h>
@@ -95,7 +95,7 @@ void ReadMassFracFeOIni(BODY *body, CONTROL *control, FILES *files,
 
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
     if (dTmp < 0) {
@@ -107,9 +107,9 @@ void ReadMassFracFeOIni(BODY *body, CONTROL *control, FILES *files,
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile >
-             0) { //if line num not ge 0, then if iFile gt 0, then set default.
+             0) { // if line num not ge 0, then if iFile gt 0, then set default.
     body[iFile - 1].dMassFracFeOIni = options->dDefault;
-}
+  }
 }
 
 /* Water */
@@ -121,10 +121,10 @@ void ReadWaterMassAtm(BODY *body, CONTROL *control, FILES *files,
 
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dWaterMassAtm =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
@@ -134,7 +134,7 @@ void ReadWaterMassAtm(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     if (iFile >
-        0) { //if line num not ge 0, then if iFile gt 0, then set default.
+        0) { // if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile - 1].dWaterMassAtm = options->dDefault;
     }
   }
@@ -149,10 +149,10 @@ void ReadCO2MassMOAtm(BODY *body, CONTROL *control, FILES *files,
 
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dCO2MassMOAtm =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
@@ -162,7 +162,7 @@ void ReadCO2MassMOAtm(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     if (iFile >
-        0) { //if line num not ge 0, then if iFile gt 0, then set default.
+        0) { // if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile - 1].dCO2MassMOAtm = options->dDefault;
     }
   }
@@ -178,11 +178,11 @@ void ReadSurfTemp(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
     // use build-in conversion file -> distorb.c e.g.
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dSurfTemp =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
@@ -193,7 +193,7 @@ void ReadSurfTemp(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     if (iFile >
-        0) { //if line num not ge 0, then if iFile gt 0, then set default.
+        0) { // if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile - 1].dSurfTemp = options->dDefault;
     }
   }
@@ -209,10 +209,10 @@ void ReadManMeltDensity(BODY *body, CONTROL *control, FILES *files,
 
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dManMeltDensity =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
@@ -222,7 +222,7 @@ void ReadManMeltDensity(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     if (iFile >
-        0) { //if line num not ge 0, then if iFile gt 0, then set default.
+        0) { // if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile - 1].dManMeltDensity = options->dDefault;
     }
   }
@@ -238,10 +238,10 @@ void ReadWaterPartCoeff(BODY *body, CONTROL *control, FILES *files,
 
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dWaterPartCoeff =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
@@ -251,7 +251,7 @@ void ReadWaterPartCoeff(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     if (iFile >
-        0) { //if line num not ge 0, then if iFile gt 0, then set default.
+        0) { // if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile - 1].dWaterPartCoeff = options->dDefault;
     }
   }
@@ -266,10 +266,10 @@ void ReadDepthMO(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) { //if line num of option ge 0
+  if (lTmp >= 0) { // if line num of option ge 0
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0) { //if input value lt 0
+    if (dTmp < 0) { // if input value lt 0
       body[iFile - 1].dDepthMO =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
@@ -279,7 +279,7 @@ void ReadDepthMO(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     if (iFile >
-        0) { //if line num not ge 0, then if iFile gt 0, then set default.
+        0) { // if line num not ge 0, then if iFile gt 0, then set default.
       body[iFile - 1].dDepthMO = options->dDefault;
     }
   }
@@ -308,7 +308,7 @@ void ReadHaltMantleSolidified(BODY *body, CONTROL *control, FILES *files,
     if (iFile > 0) {
       AssignDefaultInt(options, &control->Halt[iFile - 1].bHaltMantleSolidified,
                        files->iNumInputs);
-}
+    }
   }
 }
 
@@ -330,7 +330,7 @@ void ReadHaltMantleMeltFracLow(BODY *body, CONTROL *control, FILES *files,
       AssignDefaultInt(options,
                        &control->Halt[iFile - 1].bHaltMantleMeltFracLow,
                        files->iNumInputs);
-}
+    }
   }
 }
 
@@ -351,7 +351,7 @@ void ReadHaltAtmDesiSurfCool(BODY *body, CONTROL *control, FILES *files,
     if (iFile > 0) {
       AssignDefaultInt(options, &control->Halt[iFile - 1].bHaltAtmDesiSurfCool,
                        files->iNumInputs);
-}
+    }
   }
 }
 
@@ -372,7 +372,7 @@ void ReadHaltEnterHabZone(BODY *body, CONTROL *control, FILES *files,
     if (iFile > 0) {
       AssignDefaultInt(options, &control->Halt[iFile - 1].bHaltEnterHabZone,
                        files->iNumInputs);
-}
+    }
   }
 }
 
@@ -393,7 +393,7 @@ void ReadHaltAllPlanetsSolid(BODY *body, CONTROL *control, FILES *files,
     if (iFile > 0) {
       AssignDefaultInt(options, &control->Halt[iFile - 1].bHaltAllPlanetsSolid,
                        files->iNumInputs);
-}
+    }
   }
 }
 
@@ -414,7 +414,7 @@ void ReadHaltAllPlanetsDesicc(BODY *body, CONTROL *control, FILES *files,
     if (iFile > 0) {
       AssignDefaultInt(options, &control->Halt[iFile - 1].bHaltAllPlanetsDesicc,
                        files->iNumInputs);
-}
+    }
   }
 }
 
@@ -441,7 +441,7 @@ void ReadRadioHeatModel(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].iRadioHeatModel = MAGMOC_NONE;
-}
+  }
 }
 
 void ReadMagmOcAtmModel(BODY *body, CONTROL *control, FILES *files,
@@ -463,7 +463,7 @@ void ReadMagmOcAtmModel(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].iMagmOcAtmModel = MAGMOC_GREY;
-}
+  }
 }
 
 void ReadMantleQuasiSolid(BODY *body, CONTROL *control, FILES *files,
@@ -493,19 +493,20 @@ void InitializeOptionsMagmOc(OPTIONS *options, fnReadOption fnRead[]) {
 
   /* FeO */
 
-  sprintf(options[OPT_FEO].cName, "dMassFracFeOIni"); //name of the variable
-  sprintf(options[OPT_FEO].cDescr, "Initial Mass Fraction of FeO in the "
-                                   "mantle"); //description that will be shown for vplanet -h
+  sprintf(options[OPT_FEO].cName, "dMassFracFeOIni"); // name of the variable
+  sprintf(options[OPT_FEO].cDescr,
+          "Initial Mass Fraction of FeO in the "
+          "mantle"); // description that will be shown for vplanet -h
   sprintf(options[OPT_FEO].cDefault,
-          "BSE Earth: 0.0788"); //comment what the default value will be
+          "BSE Earth: 0.0788"); // comment what the default value will be
   sprintf(options[OPT_FEO].cDimension, "nd");
-  options[OPT_FEO].iType      = 2; //type of the variable: double??
-  options[OPT_FEO].bMultiFile = 1; //can it be used in multiple files? 1 = yes
-  options[OPT_FEO].dNeg =
-        1; //is there a unit other than the SI unit? factor to convert between both units
+  options[OPT_FEO].iType      = 2; // type of the variable: double??
+  options[OPT_FEO].bMultiFile = 1; // can it be used in multiple files? 1 = yes
+  options[OPT_FEO].dNeg = 1; // is there a unit other than the SI unit? factor
+                             // to convert between both units
   options[OPT_FEO].dDefault = 0.0788;        // default value
   sprintf(options[OPT_FEO].cNeg, "no unit"); // specify unit (for help)
-  fnRead[OPT_FEO] = &ReadMassFracFeOIni;     //link read function from above
+  fnRead[OPT_FEO] = &ReadMassFracFeOIni;     // link read function from above
 
   /* Water */
 
@@ -518,7 +519,8 @@ void InitializeOptionsMagmOc(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_WATERMASSATM].iType      = 2;
   options[OPT_WATERMASSATM].bMultiFile = 1;
   options[OPT_WATERMASSATM].dNeg =
-        TOMASS; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
+        TOMASS; // for input: factor to mulitply for SI - for output: divide
+                // (e.g. 1/TOMASS)
   options[OPT_WATERMASSATM].dDefault = TOMASS;
   sprintf(options[OPT_WATERMASSATM].cNeg, "TO");
   fnRead[OPT_WATERMASSATM] = &ReadWaterMassAtm;
@@ -532,7 +534,8 @@ void InitializeOptionsMagmOc(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_CO2MASSMOATM].iType      = 2;
   options[OPT_CO2MASSMOATM].bMultiFile = 1;
   options[OPT_CO2MASSMOATM].dNeg =
-        TOMASS; // for input: factor to mulitply for SI - for output: divide (e.g. 1/TOMASS)
+        TOMASS; // for input: factor to mulitply for SI - for output: divide
+                // (e.g. 1/TOMASS)
   options[OPT_CO2MASSMOATM].dDefault = 0;
   sprintf(options[OPT_CO2MASSMOATM].cNeg, "TO");
   fnRead[OPT_CO2MASSMOATM] = &ReadCO2MassMOAtm;
@@ -669,7 +672,7 @@ void ReadOptionsMagmOc(BODY *body, CONTROL *control, FILES *files,
   for (iOpt = OPTSTARTMAGMOC; iOpt < OPTENDMAGMOC; iOpt++) {
     if (options[iOpt].iType != -1) {
       fnRead[iOpt](body, control, files, &options[iOpt], system, iBody + 1);
-}
+    }
   }
 }
 
@@ -684,8 +687,8 @@ void InitializeBodyMagmOc(BODY *body, CONTROL *control, UPDATE *update,
   body[iBody].dCoreRadius = body[iBody].dRadius * RADCOREEARTH /
                             REARTH; // same relative core radius as Earth
   body[iBody].dWaterMassMOAtm =
-        body[iBody]
-              .dWaterMassAtm; // initial water mass in MO&Atm is equal to inital Water mass in atmosphere
+        body[iBody].dWaterMassAtm;  // initial water mass in MO&Atm is equal to
+                                    // inital Water mass in atmosphere
   body[iBody].dWaterMassSol    = 0; // initial water mass in solid = 0
   body[iBody].dOxygenMassMOAtm = 0; // initial oxygen mass in MO&Atm = 0
   body[iBody].dOxygenMassSol   = 0; // initial oxygen mass in solid = 0
@@ -716,7 +719,8 @@ void InitializeBodyMagmOc(BODY *body, CONTROL *control, UPDATE *update,
 
   // other variables
   double dTransPressSol =
-        5.19964e9; // pressure at which to swith from low to high pressure treatment of solidus (Hirschmann, 2000) in Pa
+        5.19964e9; // pressure at which to swith from low to high pressure
+                   // treatment of solidus (Hirschmann, 2000) in Pa
   body[iBody].dPrefactorA     = AHIGHPRESSURE;
   body[iBody].dPrefactorB     = BHIGHPRESSURE;
   body[iBody].dAlbedo         = ALBEDOWATERATMOS;
@@ -732,12 +736,13 @@ void InitializeBodyMagmOc(BODY *body, CONTROL *control, UPDATE *update,
   body[iBody].dOxygenMassSpace   = 0;
 
   // CO2
-  body[iBody].dPressCO2Atm =
-        body[iBody].dCO2MassMOAtm * body[iBody].dGravAccelSurf /
-        (4 * PI *
-         pow(body[iBody].dRadius,
-             2)); // initial CO2 mass in MO&Atm is equal to inital CO2 mass in atmosphere
-  body[iBody].dCO2MassSol = 0; // initial water mass in solid = 0
+  body[iBody].dPressCO2Atm = body[iBody].dCO2MassMOAtm *
+                             body[iBody].dGravAccelSurf /
+                             (4 * PI *
+                              pow(body[iBody].dRadius,
+                                  2)); // initial CO2 mass in MO&Atm is equal to
+                                       // inital CO2 mass in atmosphere
+  body[iBody].dCO2MassSol = 0;         // initial water mass in solid = 0
   if (body[iBody].dCO2MassMOAtm < 1) {
     body[iBody].bCO2InAtmosphere = 0;
   } else {
@@ -749,7 +754,8 @@ void InitializeBodyMagmOc(BODY *body, CONTROL *control, UPDATE *update,
          (pow(body[iBody].dRadius, 3) - pow(body[iBody].dCoreRadius, 3)));
 
 
-  // initialize water pressure in atmosphere to avoid deviding by 0. Use 1 % of initial water mass
+  // initialize water pressure in atmosphere to avoid deviding by 0. Use 1 % of
+  // initial water mass
   body[iBody].dPressWaterAtm = body[iBody].dWaterMassAtm *
                                body[iBody].dGravAccelSurf /
                                (4 * PI * pow(body[iBody].dRadius, 2));
@@ -1036,7 +1042,8 @@ Only for GJ1132b with 100% Water atmosphere
 double fndNetFluxAtmPetit(BODY *body, double dTime, int iBody) {
   double dLogP, dTsurf; // log10 of water pressure, surface temperature,
   double dLogF_ms, dLogF_pms,
-        dLogF; // log10 of atmospheric net flux (main sequence, pre-main sequence, acutal time)
+        dLogF; // log10 of atmospheric net flux (main sequence, pre-main
+               // sequence, acutal time)
   double dTimeMain = 1.647e8;
   double dFNetPetit;
 
@@ -1081,27 +1088,29 @@ double fndNetFluxAtmPetit(BODY *body, double dTime, int iBody) {
 }
 
 /**
-Calculation of Fe2O3 mass fraction in the m.o. and oxygen mass in the atmosphere.
-Used by Schaefer et al. (2016)
+Calculation of Fe2O3 mass fraction in the m.o. and oxygen mass in the
+atmosphere. Used by Schaefer et al. (2016)
 
 @param body A pointer to the current BODY instance
 @param iBody The current BODY number
 */
 void fndFe2O3MassFracOxyMass(BODY *body, int iBody) {
 
-  double
-        dFracFe2O3Max; // Max Fe2O3 mass fraction (all oxygen in MO+ATM in Fe2O3)
+  double dFracFe2O3Max; // Max Fe2O3 mass fraction (all oxygen in MO+ATM in
+                        // Fe2O3)
   // double dFracFe2O3New;     // New Fe2O3 mass fraction
   double dUpperBound; // Upper boundary for root finding of fndOxygenEquiManAtm
-  double
-        dMagmOcFull; // Upper boundary for root (dUpperBound too large -> too slow)
+  double dMagmOcFull; // Upper boundary for root (dUpperBound too large -> too
+                      // slow)
   double dOxygenMassNew; // New oxygen mass in atmosphere
   double dOxygenMassMO;  // Oxygen mass in magma ocean
 
-  // dFracFe2O3Max = body[iBody].dOxygenMassMOAtm * 2*MOLWEIGHTFEO15/MOLWEIGHTOXYGEN / body[iBody].dMassMagmOcLiq ;
-  // dMagmOcFull   = body[iBody].dMassFracFeOIni  *   MOLWEIGHTFEO15/MOLWEIGHTFEO - 1e-15;
+  // dFracFe2O3Max = body[iBody].dOxygenMassMOAtm *
+  // 2*MOLWEIGHTFEO15/MOLWEIGHTOXYGEN / body[iBody].dMassMagmOcLiq ; dMagmOcFull
+  // = body[iBody].dMassFracFeOIni  *   MOLWEIGHTFEO15/MOLWEIGHTFEO - 1e-15;
   // dUpperBound   = fmin(dFracFe2O3Max,dMagmOcFull);
-  /* Don't use fugacity but oxidize all FeO to Fe2O3 before building up O in atm */
+  /* Don't use fugacity but oxidize all FeO to Fe2O3 before building up O in atm
+   */
   if (body[iBody].bManSolid) {
     body[iBody].dFracFe2O3Man  = body[iBody].dFracFe2O3Man;
     body[iBody].dOxygenMassAtm = body[iBody].dOxygenMassMOAtm;
@@ -1118,9 +1127,10 @@ void fndFe2O3MassFracOxyMass(BODY *body, int iBody) {
     dMagmOcFull = body[iBody].dMassFracFeOIni * MOLWEIGHTFEO15 / MOLWEIGHTFEO;
     dUpperBound = fmin(dFracFe2O3Max, dMagmOcFull);
     body[iBody].dFracFe2O3Man = fmax(body[iBody].dFracFe2O3Man, dUpperBound);
-    // dOxygenMassMO = body[iBody].dFracFe2O3Man * MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) * body[iBody].dMassMagmOcLiq;
+    // dOxygenMassMO = body[iBody].dFracFe2O3Man *
+    // MOLWEIGHTOXYGEN/(2*MOLWEIGHTFEO15) * body[iBody].dMassMagmOcLiq;
     body[iBody].dOxygenMassAtm =
-          0; //fmax(0,body[iBody].dOxygenMassMOAtm - dOxygenMassMO);
+          0; // fmax(0,body[iBody].dOxygenMassMOAtm - dOxygenMassMO);
   }
   if (body[iBody].dOxygenMassAtm < 0) {
     body[iBody].dOxygenMassAtm = 0;
@@ -1242,7 +1252,8 @@ void fndMeltFracMan(BODY *body, int iBody) {
     body[iBody].dMeltFraction = 0;
   }
   // END of melt_fraction(): returns Melt fraction and Kinematic viscosity
-  // body[iBody].dManHeatFlux = THERMALCONDUC * pow(fabs(body[iBody].dPotTemp-body[iBody].dSurfTemp),1.33) \
+  // body[iBody].dManHeatFlux = THERMALCONDUC *
+  // pow(fabs(body[iBody].dPotTemp-body[iBody].dSurfTemp),1.33) \
   //                            * pow((THERMALEXPANCOEFF*body[iBody].dGravAccelSurf/(CRITRAYLEIGHNO*THERMALDIFFUS*body[iBody].dKinemViscos)),0.33);
   //
   // if (body[iBody].dPotTemp < body[iBody].dSurfTemp) {
@@ -1252,7 +1263,8 @@ void fndMeltFracMan(BODY *body, int iBody) {
   // if (body[iBody].dPotTemp > body[iBody].dSurfTemp) {
   //   body[iBody].dManHeatFlux = body[iBody].dManHeatFlux;
   // } else {
-  //   body[iBody].dManHeatFlux = THERMALCONDUC * body[iBody].dPotTemp * THERMALEXPANCOEFF * body[iBody].dGravAccelSurf / SILICATEHEATCAP;
+  //   body[iBody].dManHeatFlux = THERMALCONDUC * body[iBody].dPotTemp *
+  //   THERMALEXPANCOEFF * body[iBody].dGravAccelSurf / SILICATEHEATCAP;
   // }
   // END of mantle_flux(): return mantle heat flux
 }
@@ -1297,28 +1309,34 @@ void fndWaterFracMelt(BODY *body, int iBody) {
   // CO2 mass fraction in the magma ocean
   if (body[iBody].bCO2InAtmosphere) {
 
-    // dMassFracCO2Current = body[iBody].dCO2MassMOAtm / (body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+    // dMassFracCO2Current = body[iBody].dCO2MassMOAtm /
+    // (body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
     dMassFracCO2Current = body[iBody].dCO2FracMelt;
     if (dMassFracCO2Current <= 5e-4) {
       body[iBody].dCO2FracMelt        = dMassFracCO2Current;
       body[iBody].dPartialPressCO2Atm = 0;
       body[iBody].dPressCO2Atm        = 0;
       // if (body[iBody].dPressOxygenAtm + body[iBody].dPressWaterAtm > 1) {
-      //   dAveMolarMassAtm = (MOLWEIGHTWATER * body[iBody].dPressWaterAtm + 2*MOLWEIGHTOXYGEN * body[iBody].dPressOxygenAtm)/(body[iBody].dPressWaterAtm + body[iBody].dPressOxygenAtm);
+      //   dAveMolarMassAtm = (MOLWEIGHTWATER * body[iBody].dPressWaterAtm +
+      //   2*MOLWEIGHTOXYGEN *
+      //   body[iBody].dPressOxygenAtm)/(body[iBody].dPressWaterAtm +
+      //   body[iBody].dPressOxygenAtm);
       // }
     } else {
       dMassFracCO2Old = 0;
       iIteration      = 0;
 
       while (fabs(dMassFracCO2Current - dMassFracCO2Old) > 1e-7) {
-        // when mass of CO2 in m.o. and atm become similar, loop will not converge without following lines:
+        // when mass of CO2 in m.o. and atm become similar, loop will not
+        // converge without following lines:
         if (dMassFracCO2Current < 0) {
           dMassFracCO2Current = dMassFracCO2Current * (-1);
         }
 
         if (iIteration > 0) {
-          // dCO2MassMO = dMassFracCO2Current * (body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
-          // if (dCO2MassMO < 0.6 * body[iBody].dCO2MassMOAtm) {
+          // dCO2MassMO = dMassFracCO2Current * (body[iBody].dMassMagmOcCry +
+          // body[iBody].dMassMagmOcLiq); if (dCO2MassMO < 0.6 *
+          // body[iBody].dCO2MassMOAtm) {
           if (dMassFracCO2Current > dMassFracCO2Old) {
             dMassFracCO2Current = 1.1 * dMassFracCO2Old;
           } else {
@@ -1360,7 +1378,8 @@ void fndWaterFracMelt(BODY *body, int iBody) {
         if (dMassFracCO2Current < 0) {
           dMassFracCO2Current = 0;
         }
-        // after 1000 iterations: use middle between F_old and F_new to avoid endless loop
+        // after 1000 iterations: use middle between F_old and F_new to avoid
+        // endless loop
         if (iIteration > 1000) {
           dMassFracCO2Current = (dMassFracCO2Current + dMassFracCO2Old) / 2;
           if ((dMassFracCO2Current + dMassFracCO2Old) / dMassFracCO2Old < 0.1) {
@@ -1371,7 +1390,8 @@ void fndWaterFracMelt(BODY *body, int iBody) {
       }
       body[iBody].dCO2FracMelt = dMassFracCO2Current;
       // get average molar mass
-      // dAveMolarMassAtm = body[iBody].dPartialPressCO2Atm * MOLWEIGHTCO2 / body[iBody].dPressCO2Atm;
+      // dAveMolarMassAtm = body[iBody].dPartialPressCO2Atm * MOLWEIGHTCO2 /
+      // body[iBody].dPressCO2Atm;
     }
   } else { // No CO2 in atmosphere
     body[iBody].dPartialPressCO2Atm = 0;
@@ -1397,11 +1417,11 @@ void fndWaterFracMelt(BODY *body, int iBody) {
 }
 
 /* Auxs Props */
-/* auxiliarie parameters/variables that need to be calculated in order to calculate the primary variable
- * (or at least simplify reading/understanding of the code)
- * calculated every quarter step for Runge-Kutta
- * if needed in other parts of the code, or to be printed: body[iBody]!!! otherwise it will be deleted after the
- * end of this equation
+/* auxiliarie parameters/variables that need to be calculated in order to
+ * calculate the primary variable (or at least simplify reading/understanding of
+ * the code) calculated every quarter step for Runge-Kutta if needed in other
+ * parts of the code, or to be printed: body[iBody]!!! otherwise it will be
+ * deleted after the end of this equation
  */
 void PropsAuxMagmOc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                     int iBody) {
@@ -1447,7 +1467,9 @@ void PropsAuxMagmOc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
            (pow(body[iBody].dRadius, 3) - pow(body[iBody].dCoreRadius, 3)));
   } else if (body[iBody].bRadheat) {
     body[iBody].dRadioHeat = fdRadPowerMan(update, iBody);
-    // body[iBody].dRadioHeat = dPowerRadio / (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3))); // add here RADHEAT
+    // body[iBody].dRadioHeat = dPowerRadio /
+    // (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3)));
+    // // add here RADHEAT
   } else {
     body[iBody].dRadioHeat = 0;
   }
@@ -1457,7 +1479,9 @@ void PropsAuxMagmOc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
    */
   if (body[iBody].bEqtide) {
     body[iBody].dTidalHeat = fdTidePower(body, iBody, evolve->iEqtideModel);
-    // body[iBody].dTidalHeat = dTidalPower / (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3))); // add here RADHEAT
+    // body[iBody].dTidalHeat = dTidalPower /
+    // (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3)));
+    // // add here RADHEAT
   } else {
     body[iBody].dTidalHeat = 0;
   }
@@ -1549,7 +1573,8 @@ void PropsAuxMagmOc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
 }
 
 
-/* Only updated every full step. Use for check of different behaviors and force parameters to a value */
+/* Only updated every full step. Use for check of different behaviors and force
+ * parameters to a value */
 void fnForceBehaviorMagmOc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
                            SYSTEM *system, UPDATE *update,
                            fnUpdateVariable ***fnUpdate, int iBody,
@@ -1599,7 +1624,8 @@ void fnForceBehaviorMagmOc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
     /*
      * When mantle solidified:
      * Stop updating PotTemp, SurfTemp, SolidRadius, WaterMassSol, OxygenMassSol
-     * But continue to update WaterMassMOAtm, OxygenMassMOAtm, HydrogenMassSpace, OxygenMassSpace
+     * But continue to update WaterMassMOAtm, OxygenMassMOAtm,
+     * HydrogenMassSpace, OxygenMassSpace
      */
     SetDerivTiny(fnUpdate, iBody, update[iBody].iPotTemp,
                  update[iBody].iPotTempMagmOc);
@@ -1639,8 +1665,9 @@ void fnForceBehaviorMagmOc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
   /* Treat mantle as solidified when melt fraction at surface smaller than 0.4
    * Set mantle completely solid & water into atm.
    */
-  // /* When planet desiccated and T_surf below 1000K treat mantle as solidified */
-  // if ((!body[iBody].bManQuasiSol) && (body[iBody].bPlanetDesiccated) && (body[iBody].dSurfTemp <= 1000)) {
+  // /* When planet desiccated and T_surf below 1000K treat mantle as solidified
+  // */ if ((!body[iBody].bManQuasiSol) && (body[iBody].bPlanetDesiccated) &&
+  // (body[iBody].dSurfTemp <= 1000)) {
   if (body[iBody].bOptManQuasiSol && (!body[iBody].bManQuasiSol) &&
       (body[iBody].dMeltFracSurf < CRITMELTFRAC)) {
     double dOxygenMassMO;
@@ -1654,7 +1681,9 @@ void fnForceBehaviorMagmOc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
 
     dDeltaWaterMass = body[iBody].dWaterPartCoeff * body[iBody].dWaterFracMelt *
                       (body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
-    // dDeltaWaterMass = WATERPARTCOEFF*body[iBody].dWaterFracMelt*(body[iBody].dMassMagmOcCry + body[iBody].dMassMagmOcLiq);
+    // dDeltaWaterMass =
+    // WATERPARTCOEFF*body[iBody].dWaterFracMelt*(body[iBody].dMassMagmOcCry +
+    // body[iBody].dMassMagmOcLiq);
     body[iBody].dWaterMassSol   = body[iBody].dWaterMassSol + dDeltaWaterMass;
     body[iBody].dWaterMassMOAtm = body[iBody].dWaterMassMOAtm - dDeltaWaterMass;
 
@@ -1689,10 +1718,13 @@ void fnForceBehaviorMagmOc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
     /*
      * When mantle solidified:
      * Stop updating PotTemp, SurfTemp, SolidRadius, WaterMassSol, OxygenMassSol
-     * But continue to update WaterMassMOAtm, OxygenMassMOAtm, HydrogenMassSpace, OxygenMassSpace
+     * But continue to update WaterMassMOAtm, OxygenMassMOAtm,
+     * HydrogenMassSpace, OxygenMassSpace
      */
-    // SetDerivTiny(fnUpdate,iBody,update[iBody].iPotTemp      ,update[iBody].iPotTempMagmOc      );
-    // SetDerivTiny(fnUpdate,iBody,update[iBody].iSurfTemp     ,update[iBody].iSurfTempMagmOc     );
+    // SetDerivTiny(fnUpdate,iBody,update[iBody].iPotTemp
+    // ,update[iBody].iPotTempMagmOc      );
+    // SetDerivTiny(fnUpdate,iBody,update[iBody].iSurfTemp
+    // ,update[iBody].iSurfTempMagmOc     );
     SetDerivTiny(fnUpdate, iBody, update[iBody].iSolidRadius,
                  update[iBody].iSolidRadiusMagmOc);
     SetDerivTiny(fnUpdate, iBody, update[iBody].iWaterMassSol,
@@ -1709,7 +1741,8 @@ void fnForceBehaviorMagmOc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
       printf("Surface melt fraction of %s's smaller than 0.4 after %f years - "
              "mantle set to solidified. \n",
              body[iBody].cName, evolve->dTime / YEARSEC);
-      // printf("%s's atmosphere desiccated & surface temperature below 1000K after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
+      // printf("%s's atmosphere desiccated & surface temperature below 1000K
+      // after %f years. \n",body[iBody].cName,evolve->dTime/YEARSEC);
     }
   } else if ((!body[iBody].bOptManQuasiSol) && (!body[iBody].bManQuasiSol) &&
              (body[iBody].dMeltFracSurf < CRITMELTFRAC)) {
@@ -1966,57 +1999,57 @@ void InitializeUpdateMagmOc(BODY *body, UPDATE *update, int iBody) {
   if (iBody >= 0) {
     if (update[iBody].iNumPotTemp == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumPotTemp++;
 
     if (update[iBody].iNumSurfTemp == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumSurfTemp++;
 
     if (update[iBody].iNumSolidRadius == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumSolidRadius++;
 
     if (update[iBody].iNumWaterMassMOAtm == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumWaterMassMOAtm++;
 
     if (update[iBody].iNumWaterMassSol == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumWaterMassSol++;
 
     if (update[iBody].iNumCO2MassMOAtm == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumCO2MassMOAtm++;
 
     if (update[iBody].iNumCO2MassSol == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumCO2MassSol++;
 
     if (update[iBody].iNumOxygenMassMOAtm == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumOxygenMassMOAtm++;
 
     if (update[iBody].iNumOxygenMassSol == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumOxygenMassSol++;
 
     if (update[iBody].iNumOxygenMassSpace == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumOxygenMassSpace++;
 
     if (update[iBody].iNumHydrogenMassSpace == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumHydrogenMassSpace++;
   }
 }
@@ -2457,7 +2490,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_POTTEMP].dNeg =
         1; // division factor to get from SI to desired unit
   output[OUT_POTTEMP].iNum       = 1;
-  output[OUT_POTTEMP].iModuleBit = MAGMOC; //name of module
+  output[OUT_POTTEMP].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_POTTEMP]           = &WritePotTemp;
 
   sprintf(output[OUT_SURFTEMP].cName, "SurfTemp");
@@ -2467,7 +2500,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_SURFTEMP].dNeg =
         1; // division factor to get from SI to desired unit
   output[OUT_SURFTEMP].iNum       = 1;
-  output[OUT_SURFTEMP].iModuleBit = MAGMOC; //name of module
+  output[OUT_SURFTEMP].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_SURFTEMP]           = &WriteSurfTemp;
 
   sprintf(output[OUT_SOLIDRADIUS].cName, "SolidRadius");
@@ -2478,7 +2511,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_SOLIDRADIUS].dNeg =
         1 / REARTH; // division factor to get from SI to desired unit
   output[OUT_SOLIDRADIUS].iNum       = 1;
-  output[OUT_SOLIDRADIUS].iModuleBit = MAGMOC; //name of module
+  output[OUT_SOLIDRADIUS].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_SOLIDRADIUS]           = &WriteSolidRadius;
 
   sprintf(output[OUT_WATERMASSMOATM].cName, "WaterMassMOAtm");
@@ -2489,7 +2522,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_WATERMASSMOATM].dNeg =
         1 / TOMASS; // division factor to get from SI to desired unit
   output[OUT_WATERMASSMOATM].iNum       = 1;
-  output[OUT_WATERMASSMOATM].iModuleBit = MAGMOC; //name of module
+  output[OUT_WATERMASSMOATM].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_WATERMASSMOATM]           = &WriteWaterMassMOAtm;
 
   sprintf(output[OUT_WATERMASSSOL].cName, "WaterMassSol");
@@ -2499,7 +2532,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_WATERMASSSOL].dNeg =
         1 / TOMASS; // division factor to get from SI to desired unit
   output[OUT_WATERMASSSOL].iNum       = 1;
-  output[OUT_WATERMASSSOL].iModuleBit = MAGMOC; //name of module
+  output[OUT_WATERMASSSOL].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_WATERMASSSOL]           = &WriteWaterMassSol;
 
   sprintf(output[OUT_CO2MASSMOATM].cName, "CO2MassMOAtm");
@@ -2510,7 +2543,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_CO2MASSMOATM].dNeg =
         1; // division factor to get from SI to desired unit
   output[OUT_CO2MASSMOATM].iNum       = 1;
-  output[OUT_CO2MASSMOATM].iModuleBit = MAGMOC; //name of module
+  output[OUT_CO2MASSMOATM].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_CO2MASSMOATM]           = &WriteCO2MassMOAtm;
 
   sprintf(output[OUT_CO2MASSSOL].cName, "CO2MassSol");
@@ -2520,7 +2553,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_CO2MASSSOL].dNeg =
         1; // division factor to get from SI to desired unit
   output[OUT_CO2MASSSOL].iNum       = 1;
-  output[OUT_CO2MASSSOL].iModuleBit = MAGMOC; //name of module
+  output[OUT_CO2MASSSOL].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_CO2MASSSOL]           = &WriteCO2MassSol;
 
   sprintf(output[OUT_OXYGENMASSMOATM].cName, "OxygenMassMOAtm");
@@ -2531,7 +2564,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_OXYGENMASSMOATM].dNeg =
         1; // division factor to get from SI to desired unit
   output[OUT_OXYGENMASSMOATM].iNum       = 1;
-  output[OUT_OXYGENMASSMOATM].iModuleBit = MAGMOC; //name of module
+  output[OUT_OXYGENMASSMOATM].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_OXYGENMASSMOATM]           = &WriteOxygenMassMOAtm;
 
   sprintf(output[OUT_OXYGENMASSSOL].cName, "OxygenMassSol");
@@ -2541,7 +2574,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_OXYGENMASSSOL].dNeg =
         1; // division factor to get from SI to desired unit
   output[OUT_OXYGENMASSSOL].iNum       = 1;
-  output[OUT_OXYGENMASSSOL].iModuleBit = MAGMOC; //name of module
+  output[OUT_OXYGENMASSSOL].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_OXYGENMASSSOL]           = &WriteOxygenMassSol;
 
   sprintf(output[OUT_PRESSWATERATM].cName, "PressWaterAtm");
@@ -2551,7 +2584,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_PRESSWATERATM].dNeg =
         1 / 1e5; // division factor to get from SI to desired unit
   output[OUT_PRESSWATERATM].iNum       = 1;
-  output[OUT_PRESSWATERATM].iModuleBit = MAGMOC; //name of module
+  output[OUT_PRESSWATERATM].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_PRESSWATERATM]           = &WritePressWaterAtm;
 
   sprintf(output[OUT_PRESSCO2ATM].cName, "PressCO2Atm");
@@ -2561,7 +2594,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_PRESSCO2ATM].dNeg =
         1 / 1e5; // division factor to get from SI to desired unit
   output[OUT_PRESSCO2ATM].iNum       = 1;
-  output[OUT_PRESSCO2ATM].iModuleBit = MAGMOC; //name of module
+  output[OUT_PRESSCO2ATM].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_PRESSCO2ATM]           = &WritePressCO2Atm;
 
   sprintf(output[OUT_PRESSOXYGENATM].cName, "PressOxygenAtm");
@@ -2571,7 +2604,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_PRESSOXYGENATM].dNeg =
         1 / 1e5; // division factor to get from SI to desired unit
   output[OUT_PRESSOXYGENATM].iNum       = 1;
-  output[OUT_PRESSOXYGENATM].iModuleBit = MAGMOC; //name of module
+  output[OUT_PRESSOXYGENATM].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_PRESSOXYGENATM]           = &WritePressOxygenAtm;
 
   sprintf(output[OUT_HYDROGENMASSSPACE].cName, "HydrogenMassSpace");
@@ -2581,7 +2614,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_HYDROGENMASSSPACE].dNeg =
         1; // division factor to get from SI to desired unit
   output[OUT_HYDROGENMASSSPACE].iNum       = 1;
-  output[OUT_HYDROGENMASSSPACE].iModuleBit = MAGMOC; //name of module
+  output[OUT_HYDROGENMASSSPACE].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_HYDROGENMASSSPACE]           = &WriteHydrogenMassSpace;
 
   sprintf(output[OUT_OXYGENMASSSPACE].cName, "OxygenMassSpace");
@@ -2591,7 +2624,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_OXYGENMASSSPACE].dNeg =
         1; // division factor to get from SI to desired unit
   output[OUT_OXYGENMASSSPACE].iNum       = 1;
-  output[OUT_OXYGENMASSSPACE].iModuleBit = MAGMOC; //name of module
+  output[OUT_OXYGENMASSSPACE].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_OXYGENMASSSPACE]           = &WriteOxygenMassSpace;
 
   sprintf(output[OUT_FRACFE2O3MAN].cName, "FracFe2O3Man");
@@ -2599,7 +2632,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
           "Fe2O3 mass fraction in magma ocean");
   output[OUT_FRACFE2O3MAN].bNeg       = 1;
   output[OUT_FRACFE2O3MAN].iNum       = 1;
-  output[OUT_FRACFE2O3MAN].iModuleBit = MAGMOC; //name of module
+  output[OUT_FRACFE2O3MAN].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_FRACFE2O3MAN]           = &WriteFracFe2O3Man;
 
   sprintf(output[OUT_NETFLUXATMO].cName, "NetFluxAtmo");
@@ -2607,7 +2640,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_NETFLUXATMO].cNeg, "W/m^2");
   output[OUT_NETFLUXATMO].bNeg       = 1;
   output[OUT_NETFLUXATMO].iNum       = 1;
-  output[OUT_NETFLUXATMO].iModuleBit = MAGMOC; //name of module
+  output[OUT_NETFLUXATMO].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_NETFLUXATMO]           = &WriteNetFluxAtmo;
 
   sprintf(output[OUT_WATERFRACMELT].cName, "WaterFracMelt");
@@ -2615,14 +2648,14 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
           "water mass fraction in magma ocean");
   output[OUT_WATERFRACMELT].bNeg       = 1;
   output[OUT_WATERFRACMELT].iNum       = 1;
-  output[OUT_WATERFRACMELT].iModuleBit = MAGMOC; //name of module
+  output[OUT_WATERFRACMELT].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_WATERFRACMELT]           = &WriteWaterFracMelt;
 
   sprintf(output[OUT_CO2FRACMELT].cName, "CO2FracMelt");
   sprintf(output[OUT_CO2FRACMELT].cDescr, "CO2 mass fraction in magma ocean");
   output[OUT_CO2FRACMELT].bNeg       = 1;
   output[OUT_CO2FRACMELT].iNum       = 1;
-  output[OUT_CO2FRACMELT].iModuleBit = MAGMOC; //name of module
+  output[OUT_CO2FRACMELT].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_CO2FRACMELT]           = &WriteCO2FracMelt;
 
   // XXX Overlap with RadPowerMan from thermint
@@ -2633,7 +2666,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_RADIOPOWER].bNeg       = 1;
   output[OUT_RADIOPOWER].dNeg       = 1e-12;
   output[OUT_RADIOPOWER].iNum       = 1;
-  output[OUT_RADIOPOWER].iModuleBit = MAGMOC; //name of module
+  output[OUT_RADIOPOWER].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_RADIOPOWER]           = &WriteRadioPower;
 
   // XXX Overlap with PowerTidal from Eqtide
@@ -2644,7 +2677,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_TIDALPOWER].bNeg       = 1;
   output[OUT_TIDALPOWER].dNeg       = 1e-12;
   output[OUT_TIDALPOWER].iNum       = 1;
-  output[OUT_TIDALPOWER].iModuleBit = MAGMOC; //name of module
+  output[OUT_TIDALPOWER].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_TIDALPOWER]           = &WriteTidalPower;
 
   // XXX Overlap with HZ outputs in output.c
@@ -2656,14 +2689,14 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_HZINNEREDGE].dNeg =
         1 / AUM; // division factor to get from SI to desired unit
   output[OUT_HZINNEREDGE].iNum       = 1;
-  output[OUT_HZINNEREDGE].iModuleBit = MAGMOC; //name of module
+  output[OUT_HZINNEREDGE].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_HZINNEREDGE]           = &WriteHZInnerEdge;
 
   sprintf(output[OUT_MELTFRACTION].cName, "MeltFraction");
   sprintf(output[OUT_MELTFRACTION].cDescr, "Melt fraction of the magma ocean");
   output[OUT_MELTFRACTION].bNeg       = 1;
   output[OUT_MELTFRACTION].iNum       = 1;
-  output[OUT_MELTFRACTION].iModuleBit = MAGMOC; //name of module
+  output[OUT_MELTFRACTION].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_MELTFRACTION]           = &WriteMeltFraction;
 }
 
@@ -2740,7 +2773,8 @@ void FinalizeUpdateOxygenMassSpace(BODY *body, UPDATE *update, int *iEqn,
 void LogOptionsMagmOc(CONTROL *control, FILE *fp) {
 }
 
-//PED: this would be for global rad heat parameters, but this is blank bc rad is only relevant to each individual body.
+// PED: this would be for global rad heat parameters, but this is blank bc rad
+// is only relevant to each individual body.
 void LogMagmOc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UPDATE *update, fnWriteOutput fnWrite[], FILE *fp) {
 }
@@ -2753,8 +2787,8 @@ void LogBodyMagmOc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   for (iOut = OUTSTARTMAGMOC; iOut < OUTENDMAGMOC; iOut++) {
     if (output[iOut].iNum > 0) {
-      //Useful for debugging
-      //fprintf(stderr,"%d %d\n",iBody,iOut);
+      // Useful for debugging
+      // fprintf(stderr,"%d %d\n",iBody,iOut);
       WriteLogEntry(body, control, &output[iOut], system, update, fnWrite[iOut],
                     fp, iBody);
     }
@@ -2801,12 +2835,14 @@ void AddModuleMagmOc(MODULE *module, int iBody, int iModule) {
 }
 
 /************* MAGMOC Functions ************/
-/* real physic is happening here: calculation of the derivatives of the primary variables */
+/* real physic is happening here: calculation of the derivatives of the primary
+ * variables */
 double fdDPotTemp(BODY *body, SYSTEM *system, int *iaBody) {
   double dRadioPart, dManFluxPart, dRsolPart, dFusionPart;
   dRadioPart =
         (body[iaBody[0]].dRadioHeat + body[iaBody[0]].dTidalHeat) / (4 * PI);
-  // dManFluxPart = pow(body[iaBody[0]].dRadius,2) * body[iaBody[0]].dManHeatFlux;
+  // dManFluxPart = pow(body[iaBody[0]].dRadius,2) *
+  // body[iaBody[0]].dManHeatFlux;
   dManFluxPart = pow(body[iaBody[0]].dRadius, 2) * body[iaBody[0]].dNetFluxAtmo;
   dRsolPart    = body[iaBody[0]].dManMeltDensity * EPSILONMANTLE *
               SILICATEHEATCAP *
@@ -2821,18 +2857,23 @@ double fdDPotTemp(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fdDSurfTemp(BODY *body, SYSTEM *system, int *iaBody) {
   double dFluxPart, dWaterPart, dManPart, dTempPart, dTBL, dReturn;
-  // dTBL       = fabs((body[iaBody[0]].dPotTemp-body[iaBody[0]].dSurfTemp) * THERMALCONDUC / body[iaBody[0]].dManHeatFlux);
-  // dTBL       = (body[iaBody[0]].dPotTemp-body[iaBody[0]].dSurfTemp) * THERMALCONDUC / body[iaBody[0]].dManHeatFlux;
-  // if (dTBL>(body[iaBody[0]].dRadius-body[iaBody[0]].dSolidRadius)) {
+  // dTBL       = fabs((body[iaBody[0]].dPotTemp-body[iaBody[0]].dSurfTemp) *
+  // THERMALCONDUC / body[iaBody[0]].dManHeatFlux); dTBL       =
+  // (body[iaBody[0]].dPotTemp-body[iaBody[0]].dSurfTemp) * THERMALCONDUC /
+  // body[iaBody[0]].dManHeatFlux; if
+  // (dTBL>(body[iaBody[0]].dRadius-body[iaBody[0]].dSolidRadius)) {
   //   dTBL = body[iaBody[0]].dRadius-body[iaBody[0]].dSolidRadius;
   // }
   // dFluxPart  = body[iaBody[0]].dManHeatFlux - body[iaBody[0]].dNetFluxAtmo;
-  // dWaterPart = WATERHEATCAP * (body[iaBody[0]].dPressWaterAtm + body[iaBody[0]].dPressOxygenAtm) / body[iaBody[0]].dGravAccelSurf;
-  // dManPart   = SILICATEHEATCAP * body[iaBody[0]].dManMeltDensity / (3*pow(body[iaBody[0]].dRadius,2));
-  // dTempPart  = pow(body[iaBody[0]].dRadius,3) - pow((body[iaBody[0]].dRadius-dTBL),3);
+  // dWaterPart = WATERHEATCAP * (body[iaBody[0]].dPressWaterAtm +
+  // body[iaBody[0]].dPressOxygenAtm) / body[iaBody[0]].dGravAccelSurf; dManPart
+  // = SILICATEHEATCAP * body[iaBody[0]].dManMeltDensity /
+  // (3*pow(body[iaBody[0]].dRadius,2)); dTempPart  =
+  // pow(body[iaBody[0]].dRadius,3) - pow((body[iaBody[0]].dRadius-dTBL),3);
   // // dTempPart  = pow(body[iaBody[0]].dRadius,3) - pow(dTBL,3);
   // // dTempPart  = 3*pow(body[iaBody[0]].dRadius,2)*dTBL;
-  // // dTempPart  = pow(body[iaBody[0]].dRadius,3) - pow((body[iaBody[0]].dRadius-body[iaBody[0]].dSolidRadius),3);
+  // // dTempPart  = pow(body[iaBody[0]].dRadius,3) -
+  // pow((body[iaBody[0]].dRadius-body[iaBody[0]].dSolidRadius),3);
 
   // dReturn    = dFluxPart / (dWaterPart + dManPart * dTempPart);
   dReturn = 0;
@@ -2858,7 +2899,8 @@ double fdDWaterMassSol(BODY *body, SYSTEM *system, int *iaBody) {
          body[iaBody[0]].dWaterPartCoeff * body[iaBody[0]].dWaterFracMelt *
          pow(body[iaBody[0]].dSolidRadius, 2) *
          fdDSolidRadius(body, system, iaBody);
-  // return 4*PI*body[iaBody[0]].dManMeltDensity*WATERPARTCOEFF*body[iaBody[0]].dWaterFracMelt*pow(body[iaBody[0]].dSolidRadius,2)*fdDSolidRadius(body,system,iaBody);
+  // return
+  // 4*PI*body[iaBody[0]].dManMeltDensity*WATERPARTCOEFF*body[iaBody[0]].dWaterFracMelt*pow(body[iaBody[0]].dSolidRadius,2)*fdDSolidRadius(body,system,iaBody);
 }
 
 double fdDWaterMassMOAtm(BODY *body, SYSTEM *system, int *iaBody) {

@@ -1,8 +1,8 @@
 /**
   @file evolve.c
 
-  @brief This file contains all the core VPLANET integration routines including the
-         timestepping algorithm and the Runge-Kutta Integration scheme.
+  @brief This file contains all the core VPLANET integration routines including
+  the timestepping algorithm and the Runge-Kutta Integration scheme.
 
   @author Rory Barnes ([RoryBarnes](https://github.com/RoryBarnes/))
 
@@ -28,8 +28,8 @@ void PropsAuxGeneral(BODY *body, CONTROL *control) {
 void PropertiesAuxiliary(BODY *body, CONTROL *control, SYSTEM *system,
                          UPDATE *update) {
   /* Evaluate single and multi-module auxialliary functions to update parameters
- * of interest such as mean motion.
- */
+   * of interest such as mean motion.
+   */
   int iBody, iModule; // Dummy counter variables
 
   PropsAuxGeneral(body, control);
@@ -40,13 +40,13 @@ void PropertiesAuxiliary(BODY *body, CONTROL *control, SYSTEM *system,
     for (iModule = 0; iModule < control->Evolve.iNumModules[iBody]; iModule++) {
       control->fnPropsAux[iBody][iModule](body, &control->Evolve, &control->Io,
                                           update, iBody);
-}
+    }
 
     // Multi-module properties
     for (iModule = 0; iModule < control->iNumMultiProps[iBody]; iModule++) {
       control->fnPropsAuxMulti[iBody][iModule](body, &control->Evolve,
                                                &control->Io, update, iBody);
-}
+    }
   }
 }
 
@@ -110,7 +110,7 @@ void CheckProgress(BODY *body, CONTROL *control, SYSTEM *system,
 
 double AssignDt(double dMin, double dNextOutput, double dEta) {
   /* Compute the next timestep, dt, making sure it's not larger than the output
- * cadence */
+   * cadence */
 
   dMin = dEta * dMin;
   if (dNextOutput < dMin) {
@@ -129,7 +129,7 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
 
   int iBody, iVar, iEqn; // Dummy counting variables
   EVOLVE
-        integr; // Dummy EVOLVE struct so we don't have to dereference control a lot
+  integr; // Dummy EVOLVE struct so we don't have to dereference control a lot
   double dVarNow, dMinNow, dMin = dHUGE,
                            dVarTotal; // Intermediate storage variables
 
@@ -141,7 +141,8 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
     if (update[iBody].iNumVars > 0) {
       for (iVar = 0; iVar < update[iBody].iNumVars; iVar++) {
 
-        // The parameter does not require a derivative, but is calculated explicitly as a function of age.
+        // The parameter does not require a derivative, but is calculated
+        // explicitly as a function of age.
         /*
         printf("%d %d\n",iBody,iVar);
         fflush(stdout);
@@ -167,27 +168,27 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
                     fabs(dVarNow / ((dVarNow - dVarTotal) / integr.dTimeStep));
               if (dMinNow < dMin) {
                 dMin = dMinNow;
-}
+              }
             }
           }
-          /* Equations that are integrated in the matrix but are NOT allowed to dictate
-           timestepping.  These are derived quantities, like lost energy, that must
-           be integrated as primary variables to keep track of them properly, i.e.
-           lost energy depends on changing radii, which are integrated.  But in this
-           case, since they are derived quantities, they should NOT participate in
-           timestep selection - dflemin3
+          /* Equations that are integrated in the matrix but are NOT allowed to
+           dictate timestepping.  These are derived quantities, like lost
+           energy, that must be integrated as primary variables to keep track of
+           them properly, i.e. lost energy depends on changing radii, which are
+           integrated.  But in this case, since they are derived quantities,
+           they should NOT participate in timestep selection - dflemin3
          */
         } else if (update[iBody].iaType[iVar][0] == 5) {
-          //continue;
+          // continue;
           for (iEqn = 0; iEqn < update[iBody].iNumEqns[iVar]; iEqn++) {
             update[iBody].daDerivProc[iVar][iEqn] = fnUpdate[iBody][iVar][iEqn](
                   body, system, update[iBody].iaBody[iVar][iEqn]);
           }
-          /* Integration for binary, where parameters can be computed via derivatives,
-         or as an explicit function of age */
+          /* Integration for binary, where parameters can be computed via
+         derivatives, or as an explicit function of age */
         } else if (update[iBody].iaType[iVar][0] == 10) {
-          /* Equations not in matrix, computing things as explicit function of time,
-           so we set dMin to time until next output
+          /* Equations not in matrix, computing things as explicit function of
+           time, so we set dMin to time until next output
            Figure out time until next output */
           dMinNow = control->Io.dNextOutput;
           if (dMinNow < dMin) {
@@ -216,7 +217,7 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
               dMinNow = fabs(1.0 / ((dVarNow - dVarTotal) / integr.dTimeStep));
               if (dMinNow < dMin) {
                 dMin = dMinNow;
-}
+              }
             }
           }
           /* The parameter is a "polar/sinusoidal quantity" and
@@ -227,7 +228,8 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
               update[iBody].daDerivProc[iVar][iEqn] =
                     fnUpdate[iBody][iVar][iEqn](
                           body, system, update[iBody].iaBody[iVar][iEqn]);
-              //if (update[iBody].daDerivProc[iVar][iEqn] != 0 && *(update[iBody].pdVar[iVar]) != 0) {
+              // if (update[iBody].daDerivProc[iVar][iEqn] != 0 &&
+              // *(update[iBody].pdVar[iVar]) != 0) {
               if (update[iBody].daDerivProc[iVar][iEqn] != 0) {
                 /* ?Obl require special treatment because they can
                     overconstrain obliquity and PrecA */
@@ -237,7 +239,8 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
                   if (body[iBody].dObliquity != 0) {
                     dMinNow = fabs(sin(body[iBody].dObliquity) /
                                    update[iBody].daDerivProc[iVar][iEqn]);
-                  } else { // Obliquity is 0, so its evolution shouldn't impact the timestep
+                  } else { // Obliquity is 0, so its evolution shouldn't impact
+                           // the timestep
                     dMinNow = dHUGE;
                   }
                 } else if (iVar == update[iBody].iHecc ||
@@ -245,7 +248,8 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
                   if (body[iBody].dEcc != 0) {
                     dMinNow = fabs(body[iBody].dEcc /
                                    update[iBody].daDerivProc[iVar][iEqn]);
-                  } else { // Eccentricity is 0, so its evolution shouldn't impact the timestep
+                  } else { // Eccentricity is 0, so its evolution shouldn't
+                           // impact the timestep
                     dMinNow = dHUGE;
                   }
                 } else {
@@ -255,7 +259,8 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
                   dMin = dMinNow;
                 }
               }
-              // enforce a minimum step size for ice sheets, otherwise dDt -> 0 real fast
+              // enforce a minimum step size for ice sheets, otherwise dDt -> 0
+              // real fast
             } else if (update[iBody].iaType[iVar][iEqn] == 9) {
               update[iBody].daDerivProc[iVar][iEqn] =
                     fnUpdate[iBody][iVar][iEqn](
@@ -277,7 +282,8 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
                 }
               }
               /* SpiNBody timestep: As x,y,z can cross over 0, the usual
-                  x/(dx/dt) timstep doesn't work. This version compares the orbital
+                  x/(dx/dt) timstep doesn't work. This version compares the
+                 orbital
                   radius to velocity. Probably room for improvement here. */
             } else if (update[iBody].iaType[iVar][iEqn] == 7) {
               if ((control->Evolve.bSpiNBodyDistOrb == 0) ||
@@ -294,7 +300,7 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
                             body[iBody].dVelZ * body[iBody].dVelZ));
                 if (dMinNow < dMin) {
                   dMin = dMinNow;
-}
+                }
               }
             } else {
               // The parameter is controlled by a time derivative
@@ -308,7 +314,7 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
                                update[iBody].daDerivProc[iVar][iEqn]);
                 if (dMinNow < dMin) {
                   dMin = dMinNow;
-}
+                }
               }
             }
           } // for loop
@@ -324,13 +330,13 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
 void fdGetUpdateInfo(BODY *body, CONTROL *control, SYSTEM *system,
                      UPDATE *update, fnUpdateVariable ***fnUpdate) {
   /* Fills the Update arrays with the derivatives
- * or new values..
- */
+   * or new values..
+   */
 
   int iBody, iVar, iEqn, iNumBodies, iNumVars,
         iNumEqns; // Dummy counting variables
   EVOLVE
-        integr; // Dummy EVOLVE struct so we don't have to dereference control a lot
+  integr; // Dummy EVOLVE struct so we don't have to dereference control a lot
   double dVarNow, dMinNow, dMin = dHUGE,
                            dVarTotal; // Intermediate storage variables
 
@@ -354,7 +360,8 @@ void fdGetUpdateInfo(BODY *body, CONTROL *control, SYSTEM *system,
 
 void EulerStep(BODY *body, CONTROL *control, SYSTEM *system, UPDATE *update,
                fnUpdateVariable ***fnUpdate, double *dDt, int iDir) {
-  /* Compute and apply an Euler update step to a given parameter (x = dx/dt * dt) */
+  /* Compute and apply an Euler update step to a given parameter (x = dx/dt *
+   * dt) */
   int iBody, iVar, iEqn;
   double dFoo;
 
@@ -412,9 +419,9 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
 #pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars, iNumEqns,  \
                                                           iVar, iEqn)
   for (iBody = 0; iBody < iNumBodies; iBody++) {
-    //int thread_num = omp_get_thread_num();
-    //int cpu_num = sched_getcpu();
-    //printf("Thread %3d is running on CPU %3d\n", thread_num, cpu_num);
+    // int thread_num = omp_get_thread_num();
+    // int cpu_num = sched_getcpu();
+    // printf("Thread %3d is running on CPU %3d\n", thread_num, cpu_num);
     double daDerivVar;
     iNumVars = update[iBody].iNumVars;
     for (iVar = 0; iVar < iNumVars; iVar++) {
@@ -433,13 +440,15 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       if (update[iBody].iaType[iVar][0] == 0 ||
           update[iBody].iaType[iVar][0] == 3 ||
           update[iBody].iaType[iVar][0] == 10) {
-        // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
-        // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be
-        // evaluated with higher accuracy
+        // LUGER: Note that this is the VALUE of the variable getting passed,
+        // contrary to what the names suggest These values are updated in the
+        // tmpUpdate struct so that equations which are dependent upon them will
+        // be evaluated with higher accuracy
         *(evolve->tmpUpdate[iBody].pdVar[iVar]) =
               evolve->daDeriv[0][iBody][iVar];
       } else {
-        /* While we're in this loop, move each parameter to the midpoint of the timestep */
+        /* While we're in this loop, move each parameter to the midpoint of the
+         * timestep */
         *(evolve->tmpUpdate[iBody].pdVar[iVar]) =
               *(update[iBody].pdVar[iVar]) +
               0.5 * (*dDt) * evolve->daDeriv[0][iBody][iVar];
@@ -463,7 +472,8 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       iNumEqns   = update[iBody].iNumEqns[iVar];
       for (iEqn = 0; iEqn < iNumEqns; iEqn++) {
         daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
-        //evolve->daTmpVal[0][iBody][iVar] += (*dDt)*iDir*evolve->tmpUpdate[iBody].daDeriv[iVar][iEqn];
+        // evolve->daTmpVal[0][iBody][iVar] +=
+        // (*dDt)*iDir*evolve->tmpUpdate[iBody].daDeriv[iVar][iEqn];
       }
       evolve->daDeriv[1][iBody][iVar] = daDerivVar;
     }
@@ -476,9 +486,10 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       if (update[iBody].iaType[iVar][0] == 0 ||
           update[iBody].iaType[iVar][0] == 3 ||
           update[iBody].iaType[iVar][0] == 10) {
-        // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
-        // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be
-        // evaluated with higher accuracy
+        // LUGER: Note that this is the VALUE of the variable getting passed,
+        // contrary to what the names suggest These values are updated in the
+        // tmpUpdate struct so that equations which are dependent upon them will
+        // be evaluated with higher accuracy
         *(evolve->tmpUpdate[iBody].pdVar[iVar]) =
               evolve->daDeriv[1][iBody][iVar];
       } else {
@@ -507,7 +518,8 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       iNumEqns   = update[iBody].iNumEqns[iVar];
       for (iEqn = 0; iEqn < iNumEqns; iEqn++) {
         daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
-        //evolve->daTmpVal[0][iBody][iVar] += (*dDt)*iDir*evolve->tmpUpdate[iBody].daDeriv[iVar][iEqn];
+        // evolve->daTmpVal[0][iBody][iVar] +=
+        // (*dDt)*iDir*evolve->tmpUpdate[iBody].daDeriv[iVar][iEqn];
       }
       evolve->daDeriv[2][iBody][iVar] = daDerivVar;
     }
@@ -520,9 +532,10 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       if (update[iBody].iaType[iVar][0] == 0 ||
           update[iBody].iaType[iVar][0] == 3 ||
           update[iBody].iaType[iVar][0] == 10) {
-        // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
-        // These values are updated in the tmpUpdate struct so that equations which are dependent upon them will be
-        // evaluated with higher accuracy
+        // LUGER: Note that this is the VALUE of the variable getting passed,
+        // contrary to what the names suggest These values are updated in the
+        // tmpUpdate struct so that equations which are dependent upon them will
+        // be evaluated with higher accuracy
         *(evolve->tmpUpdate[iBody].pdVar[iVar]) =
               evolve->daDeriv[2][iBody][iVar];
       } else {
@@ -562,7 +575,8 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       }
     }
   }
-  /* Now do the update -- Note the pointer to the home of the actual variables!!! */
+  /* Now do the update -- Note the pointer to the home of the actual
+   * variables!!! */
   for (iBody = 0; iBody < iNumBodies; iBody++) {
     iNumVars = update[iBody].iNumVars;
     for (iVar = 0; iVar < iNumVars; iVar++) {
@@ -575,7 +589,8 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       if (update[iBody].iaType[iVar][0] == 0 ||
           update[iBody].iaType[iVar][0] == 3 ||
           update[iBody].iaType[iVar][0] == 10) {
-        // LUGER: Note that this is the VALUE of the variable getting passed, contrary to what the names suggest
+        // LUGER: Note that this is the VALUE of the variable getting passed,
+        // contrary to what the names suggest
         *(update[iBody].pdVar[iVar]) = evolve->daDeriv[0][iBody][iVar];
       } else {
         *(update[iBody].pdVar[iVar]) += update[iBody].daDeriv[iVar] * (*dDt);
@@ -603,7 +618,7 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     iDir = 1;
   } else {
     iDir = -1;
-}
+  }
 
   PropertiesAuxiliary(body, control, system, update);
   control->Io.dNextOutput = control->Evolve.dTime + control->Io.dOutputTime;
@@ -619,7 +634,7 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
                    control->Evolve.dEta);
   } else {
     dDt = control->Evolve.dTimeStep;
-}
+  }
 
   /* Write out initial conditions */
   WriteOutput(body, control, files, output, system, update, fnWrite,
@@ -641,17 +656,18 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     fnOneStep(body, control, system, update, fnUpdate, &dDt, iDir);
 
     for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
-      for (iModule = 0; iModule < control->Evolve.iNumModules[iBody]; iModule++) {
+      for (iModule = 0; iModule < control->Evolve.iNumModules[iBody];
+           iModule++) {
         control->fnForceBehavior[iBody][iModule](body, module, &control->Evolve,
                                                  &control->Io, system, update,
                                                  fnUpdate, iBody, iModule);
-}
+      }
 
       for (iModule = 0; iModule < control->iNumMultiForce[iBody]; iModule++) {
         control->fnForceBehaviorMulti[iBody][iModule](
               body, module, &control->Evolve, &control->Io, system, update,
               fnUpdate, iBody, iModule);
-}
+      }
     }
 
     fdGetUpdateInfo(body, control, system, update, fnUpdate);
@@ -667,7 +683,7 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 
     for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
       body[iBody].dAge += iDir * dDt;
-}
+    }
 
     control->Evolve.dTime += dDt;
     nSteps++;
@@ -678,7 +694,8 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
       WriteOutput(body, control, files, output, system, update, fnWrite,
                   control->Evolve.dTime,
                   control->Io.dOutputTime / control->Evolve.nSteps);
-      // Timesteps are synchronized with the output time, so this statement is sufficient
+      // Timesteps are synchronized with the output time, so this statement is
+      // sufficient
       control->Io.dNextOutput += control->Io.dOutputTime;
       nSteps = 0;
     }
@@ -698,6 +715,6 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 
   if (control->Io.iVerbose >= VERBPROG) {
     printf("Evolution completed.\n");
-}
+  }
   //     printf("%d\n",body[1].iBadImpulse);
 }

@@ -15,11 +15,10 @@
 */
 
 /* Do not change these values */
-const double dHUGE =
-      DBL_MAX; // This is the largest possible double value according to <float.h>
-const double dTINY =
-      1. /
-      DBL_MAX; // This is the smallest possibled double value according to <float.h>
+const double dHUGE = DBL_MAX;      // This is the largest possible double value
+                                   // according to <float.h>
+const double dTINY = 1. / DBL_MAX; // This is the smallest possibled double
+                                   // value according to <float.h>
 /* Do not change these values */
 
 /*!
@@ -34,7 +33,7 @@ int main_impl(int argc, char *argv[]) {
   _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_OVERFLOW);
 #endif
 
-  //struct timeval start, end;
+  // struct timeval start, end;
 
   /* Fix CPU time calculation someday
   gettimeofday(&start, NULL);
@@ -113,10 +112,10 @@ int main_impl(int argc, char *argv[]) {
     }
     if (memcmp(argv[iOption], "-h", 2) == 0) {
       Help(options, output, files.cExe, 0);
-}
+    }
     if (memcmp(argv[iOption], "-H", 2) == 0) {
       Help(options, output, files.cExe, 1);
-}
+    }
   }
 
   if (iQuiet != -1 && iVerbose != -1) {
@@ -128,7 +127,7 @@ int main_impl(int argc, char *argv[]) {
   for (iOption = 1; iOption < argc; iOption++) {
     if (iOption != iVerbose && iOption != iQuiet && iOption != iOverwrite) {
       strcpy(infile, argv[iOption]);
-}
+    }
   }
 
   /* Read input files */
@@ -137,7 +136,7 @@ int main_impl(int argc, char *argv[]) {
 
   if (control.Io.iVerbose >= VERBINPUT) {
     printf("Input files read.\n");
-}
+  }
 
   /* Check that user options are mutually compatible */
   VerifyOptions(body, &control, &files, &module, options, output, &system,
@@ -145,7 +144,7 @@ int main_impl(int argc, char *argv[]) {
 
   if (control.Io.iVerbose >= VERBINPUT) {
     printf("Input files verified.\n");
-}
+  }
 
   control.Evolve.dTime      = 0;
   control.Evolve.bFirstStep = 1;
@@ -155,7 +154,7 @@ int main_impl(int argc, char *argv[]) {
              fnUpdate, fnWrite, 0);
     if (control.Io.iVerbose >= VERBPROG) {
       printf("Log file written.\n");
-}
+    }
   }
 
   /* Perform evolution */
@@ -170,15 +169,16 @@ int main_impl(int argc, char *argv[]) {
                update, fnUpdate, fnWrite, 1);
       if (control.Io.iVerbose >= VERBPROG) {
         printf("Log file updated.\n");
-}
+      }
     }
   }
 
-  //gettimeofday(&end, NULL);
+  // gettimeofday(&end, NULL);
 
   if (control.Io.iVerbose >= VERBPROG) {
     printf("Simulation completed.\n");
-    //printf("Total time: %.4e [sec]\n", difftime(end.tv_usec,start.tv_usec)/1e6);
+    // printf("Total time: %.4e [sec]\n",
+    // difftime(end.tv_usec,start.tv_usec)/1e6);
   }
   exit(0);
 }

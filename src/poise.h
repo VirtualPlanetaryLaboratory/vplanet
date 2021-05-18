@@ -31,25 +31,25 @@
 
 // Constants for the ice model
 #define LFICE 3.34e5  // ???
-#define RHOICE 916.7  //density of ice I
-#define MOCEAN 1.4e21 //mass of earth ocean in kg (ref?)
+#define RHOICE 916.7  // density of ice I
+#define MOCEAN 1.4e21 // mass of earth ocean in kg (ref?)
 #define a1ICE                                                                  \
-  3.615e-13 //coeff of ice deformability at T<263K (Pa^-3 s^-1 - ref?)
+  3.615e-13 // coeff of ice deformability at T<263K (Pa^-3 s^-1 - ref?)
 #define a2ICE                                                                  \
-  1.733e3            //coeff of ice deformability at T>=263K (Pa^-3 s^-1 - ref?)
-#define Q1ICE 6e4    //energy in ice deformation at T<263K (J/mol)
-#define Q2ICE 13.9e4 //energy in ice deformation at T>=263 (J/mol)
+  1.733e3         // coeff of ice deformability at T>=263K (Pa^-3 s^-1 - ref?)
+#define Q1ICE 6e4 // energy in ice deformation at T<263K (J/mol)
+#define Q2ICE 13.9e4 // energy in ice deformation at T>=263 (J/mol)
 
 // Constant for the lithospheric model
-#define nGLEN 3.0                  //Glen's law coefficient
-#define RHOSED 2390                //sediment density from Huybers&Tziperman08
+#define nGLEN 3.0                  // Glen's law coefficient
+#define RHOSED 2390                // sediment density from Huybers&Tziperman08
 #define RHOH2O 1000                // Density of liquid water
-#define SEDPHI (22.0 * PI / 180.0) //angle of internal friction (sediment)
-#define SEDH 10                    //depth of sediment layer (m)
-#define SEDD0 7.9e-7 //reference deformation rate for sediment (s^-1)
-#define SEDMU 3e9    //reference viscosity for sediment (Pa s)
+#define SEDPHI (22.0 * PI / 180.0) // angle of internal friction (sediment)
+#define SEDH 10                    // depth of sediment layer (m)
+#define SEDD0 7.9e-7 // reference deformation rate for sediment (s^-1)
+#define SEDMU 3e9    // reference viscosity for sediment (Pa s)
 #define RHOBROCK 3370
-#define BROCKTIME 5000 //relaxation timescale for bedrock
+#define BROCKTIME 5000 // relaxation timescale for bedrock
 
 /* Options Info */
 #define OPTSTARTPOISE 1900 /* Start of POISE options */

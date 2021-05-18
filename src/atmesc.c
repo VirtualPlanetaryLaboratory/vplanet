@@ -7,13 +7,12 @@
 
     @par Description
     \rst
-        This module defines differential equations controlling the evolution
-        of planetary atmospheres under intense extreme ultraviolet (XUV)
-        stellar irradiation. The `atmesc <atmesc.html>`_ module implements energy-limited
-        and diffusion-limited escape for hydrogen/helium atmospheres and water
-        vapor atmospheres following
-        :cite:`Luger2015`, :cite:`LugerBarnes2015`, and :cite:`LehmerCatling17`.
-    \endrst
+   This module defines differential equations controlling the evolution
+   of planetary atmospheres under intense extreme ultraviolet (XUV)
+   stellar irradiation. The `atmesc <atmesc.html>`_ module implements
+   energy-limited and diffusion-limited escape for hydrogen/helium atmospheres
+   and water vapor atmospheres following :cite:`Luger2015`,
+   :cite:`LugerBarnes2015`, and :cite:`LehmerCatling17`. \endrst
 
 */
 
@@ -103,17 +102,17 @@ void ReadFXUV(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                                    control->Io.iVerbose);
     } else {
       body[iFile - 1].dFXUV = dTmp;
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dFXUV = options->dDefault;
-}
+  }
 }
 
 /**
 \rst
-Read the thermospheric temperature for the :cite:`LehmerCatling17` atmospheric escape model.
-\endrst
+Read the thermospheric temperature for the :cite:`LehmerCatling17` atmospheric
+escape model. \endrst
 
 @param body A pointer to the current BODY instance
 @param control A pointer to the integration CONTROL instance
@@ -138,7 +137,7 @@ void ReadThermTemp(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                                    control->Io.iVerbose);
     } else {
       body[iFile - 1].dThermTemp = dTmp;
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
     body[iFile - 1].bAutoThermTemp = 0;
   } else {
@@ -179,15 +178,16 @@ void ReadFlowTemp(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                                    control->Io.iVerbose);
     } else {
       body[iFile - 1].dFlowTemp = dTmp;
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dFlowTemp = options->dDefault;
-}
+  }
 }
 
 /**
-Read the atmospheric gas constant the Lehmer and Catling (2017) atmospheric escape model.
+Read the atmospheric gas constant the Lehmer and Catling (2017) atmospheric
+escape model.
 
 @param body A pointer to the current BODY instance
 @param control A pointer to the integration CONTROL instance
@@ -212,15 +212,16 @@ void ReadAtmGasConst(BODY *body, CONTROL *control, FILES *files,
                                    control->Io.iVerbose);
     } else {
       body[iFile - 1].dAtmGasConst = dTmp;
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dAtmGasConst = options->dDefault;
-}
+  }
 }
 
 /**
-Read the Jeans time, the time at which the flow transitions from hydrodynamic to ballistic.
+Read the Jeans time, the time at which the flow transitions from hydrodynamic
+to ballistic.
 
 @param body A pointer to the current BODY instance
 @param control A pointer to the integration CONTROL instance
@@ -247,7 +248,7 @@ void ReadJeansTime(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     } else {
       body[iFile - 1].dJeansTime =
             dTmp * fdUnitsTime(control->Units[iFile].iTime);
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     if (iFile > 0) {
@@ -262,7 +263,8 @@ void ReadJeansTime(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 }
 
 /**
-Read the effective XUV absorption pressure for the Lehmner and Catling (2017) model.
+Read the effective XUV absorption pressure for the Lehmner and Catling (2017)
+model.
 
 @param body A pointer to the current BODY instance
 @param control A pointer to the integration CONTROL instance
@@ -287,15 +289,16 @@ void ReadPresXUV(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                                    control->Io.iVerbose);
     } else {
       body[iFile - 1].dPresXUV = dTmp;
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dPresXUV = options->dDefault;
-}
+  }
 }
 
 /**
-Read the water loss model for the Luger and Barnes (2015) atmospheric escape model.
+Read the water loss model for the Luger and Barnes (2015) atmospheric escape
+model.
 
 @param body A pointer to the current BODY instance
 @param control A pointer to the integration CONTROL instance
@@ -327,17 +330,18 @@ void ReadWaterLossModel(BODY *body, CONTROL *control, FILES *files,
                 "ERROR: Unknown argument to %s: %s. Options are LB15, LBEXACT, "
                 "or TIAN.\n",
                 options->cName, cTmp);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].iWaterLossModel = ATMESC_LBEXACT;
-}
+  }
 }
 
 /**
-Read the XUV absorption efficiency model for the Luger and Barnes (2015) atmospheric escape model.
+Read the XUV absorption efficiency model for the Luger and Barnes (2015)
+atmospheric escape model.
 
 @param body A pointer to the current BODY instance
 @param control A pointer to the integration CONTROL instance
@@ -367,13 +371,13 @@ void ReadAtmXAbsEffH2OModel(BODY *body, CONTROL *control, FILES *files,
                 "ERROR: Unknown argument to %s: %s. Options are BOLMONT16 or "
                 "NONE.\n",
                 options->cName, cTmp);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].iAtmXAbsEffH2OModel = ATMESC_NONE;
-}
+  }
 }
 
 /**
@@ -411,17 +415,18 @@ void ReadPlanetRadiusModel(BODY *body, CONTROL *control, FILES *files,
                 "ERROR: Unknown argument to %s: %s. Options are LOPEZ12, "
                 "PROXCENB, LEHMER17 or NONE.\n",
                 options->cName, cTmp);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].iPlanetRadiusModel = ATMESC_NONE;
-}
+  }
 }
 
 /**
-Read the parameter that controls surface O2 sinks for the Luger and Barnes (2015) model.
+Read the parameter that controls surface O2 sinks for the Luger and Barnes
+(2015) model.
 
 @param body A pointer to the current BODY instance
 @param control A pointer to the integration CONTROL instance
@@ -446,7 +451,7 @@ void ReadInstantO2Sink(BODY *body, CONTROL *control, FILES *files,
   } else if (iFile > 0) {
     AssignDefaultInt(options, &body[iFile - 1].bInstantO2Sink,
                      files->iNumInputs);
-}
+  }
 }
 
 /**
@@ -482,7 +487,8 @@ void ReadStopWaterLossInHZ(BODY *body, CONTROL *control, FILES *files,
 
 
 /**
-Read the parameter that controls whether or not to limit envelope mass loss at the Bondi limit
+Read the parameter that controls whether or not to limit envelope mass loss at
+the Bondi limit
 
 @param body A pointer to the current BODY instance
 @param control A pointer to the integration CONTROL instance
@@ -507,7 +513,7 @@ void ReadBondiLimited(BODY *body, CONTROL *control, FILES *files,
   } else if (iFile > 0) {
     AssignDefaultInt(options, &body[iFile - 1].bUseBondiLimited,
                      files->iNumInputs);
-}
+  }
 }
 
 
@@ -538,12 +544,13 @@ void ReadEnergyLimited(BODY *body, CONTROL *control, FILES *files,
   } else if (iFile > 0) {
     AssignDefaultInt(options, &body[iFile - 1].bUseEnergyLimited,
                      files->iNumInputs);
-}
+  }
 }
 
 
 /**
-Read the parameter that controls whether or not to use radiation/recombination-limited escape
+Read the parameter that controls whether or not to use
+radiation/recombination-limited escape
 
 @param body A pointer to the current BODY instance
 @param control A pointer to the integration CONTROL instance
@@ -568,7 +575,7 @@ void ReadRRLimited(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   } else if (iFile > 0) {
     AssignDefaultInt(options, &body[iFile - 1].bUseRRLimited,
                      files->iNumInputs);
-}
+  }
 }
 
 /**
@@ -597,7 +604,7 @@ void ReadAtmEscAuto(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     AssignDefaultInt(options, &body[iFile - 1].bAtmEscAuto, files->iNumInputs);
-}
+  }
 }
 
 /**
@@ -625,14 +632,14 @@ void ReadXFrac(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must lie in the range [0,1].\n",
                 options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     body[iFile - 1].dXFrac = dTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dXFrac = options->dDefault;
-}
+  }
 }
 
 /**
@@ -660,14 +667,14 @@ void ReadAtmXAbsEffH(BODY *body, CONTROL *control, FILES *files,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be in the range [0,1].\n",
                 options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     body[iFile - 1].dAtmXAbsEffH = dTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dAtmXAbsEffH = options->dDefault;
-}
+  }
 }
 
 /**
@@ -695,14 +702,14 @@ void ReadAtmXAbsEffH2O(BODY *body, CONTROL *control, FILES *files,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be in the rane [0,1].\n",
                 options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     body[iFile - 1].dAtmXAbsEffH2O = dTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dAtmXAbsEffH2O = options->dDefault;
-}
+  }
 }
 
 // ReadEnvelopeMass is in options.c to avoid memory leaks in verifying envelope.
@@ -731,14 +738,14 @@ void ReadOxygenMass(BODY *body, CONTROL *control, FILES *files,
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be >= 0.\n", options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     body[iFile - 1].dOxygenMass = dTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dOxygenMass = options->dDefault;
-}
+  }
 }
 
 /**
@@ -765,20 +772,21 @@ void ReadOxygenMantleMass(BODY *body, CONTROL *control, FILES *files,
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be >= 0.\n", options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     body[iFile - 1].dOxygenMantleMass = dTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dOxygenMantleMass = options->dDefault;
-}
+  }
 }
 
 /* Halts */
 
 /**
-Read the parameter that controls whether the code halts when the planet is desiccated.
+Read the parameter that controls whether the code halts when the planet is
+desiccated.
 
 @param body A pointer to the current BODY instance
 @param control A pointer to the integration CONTROL instance
@@ -804,7 +812,7 @@ void ReadHaltMinSurfaceWaterMass(BODY *body, CONTROL *control, FILES *files,
     if (iFile > 0) {
       AssignDefaultInt(options, &control->Halt[iFile - 1].bSurfaceDesiccated,
                        files->iNumInputs);
-}
+    }
   }
 }
 
@@ -815,7 +823,8 @@ void ReadHaltMinSurfaceWaterMass(BODY *body, CONTROL *control, FILES *files,
   ocean. */
 
 /**
-Read the parameter that controls whether the code halts when the planet's envelope is fully evaporated.
+Read the parameter that controls whether the code halts when the planet's
+envelope is fully evaporated.
 
 @param body A pointer to the current BODY instance
 @param control A pointer to the integration CONTROL instance
@@ -841,11 +850,12 @@ void ReadHaltMinEnvelopeMass(BODY *body, CONTROL *control, FILES *files,
     if (iFile > 0) {
       AssignDefaultInt(options, &control->Halt[iFile - 1].bEnvelopeGone,
                        files->iNumInputs);
-}
+    }
   }
 }
 
-// ReadMinEnvelopeMass is in options.c to eliminate memory leak in verifying envelope
+// ReadMinEnvelopeMass is in options.c to eliminate memory leak in verifying
+// envelope
 
 /**
 Initialize the user options for the atmospheric escape model.
@@ -1146,7 +1156,8 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
 }
 
 /**
-Loops through the input files and reads all user options for the atmospheric escape model.
+Loops through the input files and reads all user options for the atmospheric
+escape model.
 
 @param body A pointer to the current BODY instance
 @param control A pointer to the integration CONTROL instance
@@ -1164,7 +1175,7 @@ void ReadOptionsAtmEsc(BODY *body, CONTROL *control, FILES *files,
   for (iOpt = OPTSTARTATMESC; iOpt < OPTENDATMESC; iOpt++) {
     if (options[iOpt].iType != -1) {
       fnRead[iOpt](body, control, files, &options[iOpt], system, iBody + 1);
-}
+    }
   }
 }
 
@@ -1301,13 +1312,14 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,
           body[iBody].dMass, body[iBody].dEnvelopeMass / body[iBody].dMass, 1.,
           body[iBody].dAge, 0);
 
-    // If there is no envelope and Lopez Radius specified, use Sotin+2007 radius!
+    // If there is no envelope and Lopez Radius specified, use Sotin+2007
+    // radius!
     if (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) {
       if (control->Io.iVerbose >= VERBINPUT) {
         printf("INFO: Lopez+2012 Radius model specified, but no envelope "
                "present. Using Sotin+2007 Mass-radius relation to compute "
                "planet's solid radius.\n");
-}
+      }
 
       // Set radius using Sotin+2007 model
       body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
@@ -1319,7 +1331,7 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,
         printf("INFO: Radius set for body %d, but this value will be computed "
                "from the grid.\n",
                iBody);
-}
+      }
     }
   } else if (body[iBody].iPlanetRadiusModel == ATMESC_PROXCENB) {
     body[iBody].dRadius =
@@ -1331,7 +1343,7 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,
         printf("INFO: Radius set for body %d, but this value will be computed "
                "from the grid.\n",
                iBody);
-}
+      }
     }
   }
 
@@ -1578,7 +1590,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   // The H2O XUV escape efficiency
   if (body[iBody].iAtmXAbsEffH2OModel == ATMESC_BOL16) {
     body[iBody].dAtmXAbsEffH2O = fdXUVEfficiencyBolmont2016(body[iBody].dFXUV);
-}
+  }
 
   // Reference hydrogen flux for the water loss
   body[iBody].dFHRef =
@@ -1681,7 +1693,8 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
             (4 * ATOMMASS * PI * body[iBody].dRadius * body[iBody].dRadius *
              body[iBody].dXFrac * body[iBody].dXFrac);
     } else {
-      // In the Tian model, oxygen escapes when it's the dominant species. I think this is wrong...
+      // In the Tian model, oxygen escapes when it's the dominant species. I
+      // think this is wrong...
       body[iBody].iWaterEscapeRegime = ATMESC_ELIM;
       body[iBody].dMDotWater =
             body[iBody].dFHRef *
@@ -1915,7 +1928,7 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   // conflicts don't exist, i.e. can't set energy and Bondi-limited escape!
   if (body[iBody].dEnvelopeMass > 0) {
 
-    //Ensure only 1 escape regime is set
+    // Ensure only 1 escape regime is set
     int iRegimeCounter = 0;
 
     if (body[iBody].bUseEnergyLimited) {
@@ -1957,7 +1970,8 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     VerifyMassAtmEsc(body, options, update, body[iBody].dAge, iBody);
     bAtmEsc = 1;
   } else {
-    // No H enevelope but Bondi Limited escape is set - warn user and use energy-limited escape
+    // No H enevelope but Bondi Limited escape is set - warn user and use
+    // energy-limited escape
     if (body[iBody].bUseBondiLimited || body[iBody].bUseRRLimited ||
         body[iBody].bAtmEscAuto) {
       if (control->Io.iVerbose >= VERBINPUT) {
@@ -1966,7 +1980,7 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                 "Bondi/Radiation-recombination-limited escape is set for body "
                 "%s!\n",
                 body[iBody].cName);
-}
+      }
       fprintf(stderr, "AtmEsc currently supports only energy-limited escape "
                       "for H20 loss calculations.");
     }
@@ -1980,7 +1994,7 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       fprintf(stderr, "ERROR: %s cannot be greater than %s in file %s.\n",
               options[OPT_ENVELOPEMASS].cName, options[OPT_MASS].cName,
               files->Infile[iBody + 1].cIn);
-}
+    }
     exit(EXIT_INPUT);
   }
 
@@ -1992,7 +2006,7 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
             "WARNING: AtmEsc called for body %s, but no atmosphere/water "
             "present!\n",
             body[iBody].cName);
-}
+  }
 
   // Radius evolution
   if (update[iBody].iNumRadius > 1) {
@@ -2001,7 +2015,7 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
             stderr,
             "ERROR: More than one module is trying to set dRadius for body %d!",
             iBody);
-}
+    }
     exit(EXIT_INPUT);
   }
 
@@ -2029,36 +2043,36 @@ void InitializeUpdateAtmEsc(BODY *body, UPDATE *update, int iBody) {
   if (body[iBody].dSurfaceWaterMass > 0) {
     if (update[iBody].iNumSurfaceWaterMass == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumSurfaceWaterMass++;
 
     if (update[iBody].iNumOxygenMass == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumOxygenMass++;
 
     if (update[iBody].iNumOxygenMantleMass == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumOxygenMantleMass++;
   }
 
   if (body[iBody].dEnvelopeMass > 0) {
     if (update[iBody].iNumEnvelopeMass == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumEnvelopeMass++;
 
     if (update[iBody].iNumMass == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumMass++;
   }
 
   if (body[iBody].dRadius > 0) {
     if (update[iBody].iNumRadius == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumRadius++;
   }
 }
@@ -2292,10 +2306,10 @@ Count the number of halting conditions.
 void CountHaltsAtmEsc(HALT *halt, int *iHalt) {
   if (halt->bSurfaceDesiccated) {
     (*iHalt)++;
-}
+  }
   if (halt->bEnvelopeGone) {
     (*iHalt)++;
-}
+  }
 }
 
 /**
@@ -2312,11 +2326,11 @@ void VerifyHaltAtmEsc(BODY *body, CONTROL *control, OPTIONS *options, int iBody,
 
   if (control->Halt[iBody].bSurfaceDesiccated) {
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltSurfaceDesiccated;
-}
+  }
 
   if (control->Halt[iBody].bEnvelopeGone) {
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltEnvelopeGone;
-}
+  }
 }
 
 /************* ATMESC Outputs ******************/
@@ -2737,7 +2751,7 @@ void WritePresXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     strcpy(cUnit, output->cNeg);
   } else {
     //*dTmp /= fdUnitsPressure(units->iLength);
-    //fsUnitsLength(units->iLength,cUnit);
+    // fsUnitsLength(units->iLength,cUnit);
   }
 }
 
@@ -3229,7 +3243,7 @@ void LogBodyAtmEsc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   for (iOut = OUTSTARTATMESC; iOut < OUTENDATMESC; iOut++) {
     if (output[iOut].iNum > 0) {
-      //fprintf(stderr,"%d\n",iOut);
+      // fprintf(stderr,"%d\n",iOut);
       WriteLogEntry(body, control, &output[iOut], system, update, fnWrite[iOut],
                     fp, iBody);
     }
@@ -3411,7 +3425,8 @@ double fdDEnvelopeMassDtBondiLimited(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 /**
-The rate of change of the envelope mass given raditation/recombination-limited escape.
+The rate of change of the envelope mass given raditation/recombination-limited
+escape.
 
 @param body A pointer to the current BODY instance
 @param system A pointer to the current SYSTEM instance
@@ -3477,14 +3492,14 @@ double fdPlanetRadius(BODY *body, SYSTEM *system, int *iaBody) {
       return foo;
     } else {
       return body[iaBody[0]].dRadius;
-}
+    }
   } else if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_PROXCENB) {
     return fdProximaCenBRadius(body[iaBody[0]].dEnvelopeMass /
                                      body[iaBody[0]].dMass,
                                body[iaBody[0]].dAge, body[iaBody[0]].dMass);
   } else {
     return body[iaBody[0]].dRadius;
-}
+  }
 }
 
 /************* ATMESC Helper Functions ************/
@@ -3506,7 +3521,7 @@ int fbDoesWaterEscape(BODY *body, EVOLVE *evolve, IO *io, int iBody) {
     if ((body[iBody].dRGDuration == 0.) &&
         (fdInstellation(body, iBody) < fdHZRG14(body, iBody))) {
       body[iBody].dRGDuration = body[iBody].dAge;
-}
+    }
     return 0;
   }
 
@@ -3534,7 +3549,7 @@ int fbDoesWaterEscape(BODY *body, EVOLVE *evolve, IO *io, int iBody) {
   // 3. Is there still water to be lost?
   if (body[iBody].dSurfaceWaterMass <= 0) {
     return 0;
-}
+  }
 
   // 4. Are we in the ballistic (Jeans) escape limit?
   if (body[iBody].dAge > body[iBody].dJeansTime) {
@@ -3562,7 +3577,7 @@ double fdAtomicOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
       return 1.;
     } else {
       return 0.;
-}
+    }
   }
 }
 
@@ -3570,7 +3585,8 @@ double fdAtomicOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
 Performs a simple log-linear fit to the Kopparapu et al. (2014) mass-dependent
 runaway greenhouse limit.
 
-\warning  Something is wrong with this linear fit in the first 5 Myr or so, as it diverges.
+\warning  Something is wrong with this linear fit in the first 5 Myr or so, as
+it diverges.
 
 @param dLuminosity The stellar luminosity
 @param dTeff The stellar effective temperature
@@ -3580,7 +3596,7 @@ runaway greenhouse limit.
 
 // Why isn't this in system.c?
 double fdHZRG14(BODY *body, int iBody) {
-  //double dLuminosity, double dTeff, double dEcc, double dPlanetMass) {
+  // double dLuminosity, double dTeff, double dEcc, double dPlanetMass) {
   // Do a simple log-linear fit to the Kopparapu+14 mass-dependent RG limit
   int i;
   double seff[3];
@@ -3770,7 +3786,8 @@ int fbRRCriticalFlux(BODY *body, int iBody) {
  @param body BODY struct
  @param iBody int body indentifier
 
- @return critical flux between radiation/recombination and Energy-limited regimes
+ @return critical flux between radiation/recombination and Energy-limited
+ regimes
 */
 double fdRRCriticalFlux(BODY *body, int iBody) {
 

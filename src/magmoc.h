@@ -5,32 +5,32 @@
  * This header file contains all the subroutines in
  * file magmoc.c.
  *
-*/
+ */
 
 
 /* Parameter */
 // mantle parameters
-#define SILICATEHEATCAP 1.2e3  //silicate heat capacity (J/kg/K)
-#define HEATFUSIONSILICATE 4e5 //heat of fusion of soliciates (J/kg)
-#define THERMALCONDUC 4.2      //thermal conductivity mantle (W/m/K)
-#define THERMALDIFFUS 1e-6     //thermal diffusivity mantle (m^2/s)
-#define CRITRAYLEIGHNO 1.1e3   //critical Rayleigh number
-#define THERMALEXPANCOEFF 2e-5 //thermal expansion coefficient (1/K)
-#define ALBEDOWATERATMOS 0.75  //albedo 100% water atmosphere
-#define ALBEDOROCK 0.3         //albedo bare rock
-#define WATERPARTCOEFF 0.01    //partition coeff. water between melt & solid
-#define CO2PARTCOEFF 0.002     //partition coeff. CO2 between melt & solid
-#define CRITMELTFRAC 0.4       //critical melt fraction
-#define DYNVISCLIQUID 0.01     //dynamic viscosity of liquid melt
-#define DYNVISCSOLID 3.8e9     //dynamic viscosity of solid
-#define ACTIVENERGY 3.5e5      //activation energy viscosity
-#define RADCOREEARTH 3.4e6     //core radius Earth (m)
-#define AVOGADROCONST 6.022e23 //particle per mol
-#define FRACCO2MELTMIN 0.0005  //minimal fraction of CO2 in the melt
-#define FRACCO2MELTMAX 0.0025  //maximal fraction of CO2 in the melt (=1e4 bar)
+#define SILICATEHEATCAP 1.2e3  // silicate heat capacity (J/kg/K)
+#define HEATFUSIONSILICATE 4e5 // heat of fusion of soliciates (J/kg)
+#define THERMALCONDUC 4.2      // thermal conductivity mantle (W/m/K)
+#define THERMALDIFFUS 1e-6     // thermal diffusivity mantle (m^2/s)
+#define CRITRAYLEIGHNO 1.1e3   // critical Rayleigh number
+#define THERMALEXPANCOEFF 2e-5 // thermal expansion coefficient (1/K)
+#define ALBEDOWATERATMOS 0.75  // albedo 100% water atmosphere
+#define ALBEDOROCK 0.3         // albedo bare rock
+#define WATERPARTCOEFF 0.01    // partition coeff. water between melt & solid
+#define CO2PARTCOEFF 0.002     // partition coeff. CO2 between melt & solid
+#define CRITMELTFRAC 0.4       // critical melt fraction
+#define DYNVISCLIQUID 0.01     // dynamic viscosity of liquid melt
+#define DYNVISCSOLID 3.8e9     // dynamic viscosity of solid
+#define ACTIVENERGY 3.5e5      // activation energy viscosity
+#define RADCOREEARTH 3.4e6     // core radius Earth (m)
+#define AVOGADROCONST 6.022e23 // particle per mol
+#define FRACCO2MELTMIN 0.0005  // minimal fraction of CO2 in the melt
+#define FRACCO2MELTMAX 0.0025  // maximal fraction of CO2 in the melt (=1e4 bar)
 #define TIMESTEPCORRECTION 1e2 //
 #define EPSILONMANTLE                                                          \
-  1.19 //factor between average and potential mantle temperature
+  1.19 // factor between average and potential mantle temperature
 
 #define MAGMOC_NONE 0
 #define MAGMOC_SCHAEFER 1
@@ -38,12 +38,12 @@
 #define MAGMOC_PETIT 3
 
 // molar masses [kg/mol]
-#define MOLWEIGHTWATER 18.01528e-3   //molar weight water
-#define MOLWEIGHTHYDROGEN 1.00794e-3 //molar weight hydrogen
-#define MOLWEIGHTOXYGEN 15.999e-3    //molar weight oxygen
-#define MOLWEIGHTFEO15 79.844e-3     //molar weight FeO_1.5
-#define MOLWEIGHTFEO 71.844e-3       //molar weight FeO
-#define MOLWEIGHTCO2 44.01e-3        //molar weight CO2
+#define MOLWEIGHTWATER 18.01528e-3   // molar weight water
+#define MOLWEIGHTHYDROGEN 1.00794e-3 // molar weight hydrogen
+#define MOLWEIGHTOXYGEN 15.999e-3    // molar weight oxygen
+#define MOLWEIGHTFEO15 79.844e-3     // molar weight FeO_1.5
+#define MOLWEIGHTFEO 71.844e-3       // molar weight FeO
+#define MOLWEIGHTCO2 44.01e-3        // molar weight CO2
 
 #define MOLWEIGHTAL2O3 0.10196
 #define MOLWEIGHTCAO 0.05608
@@ -55,9 +55,9 @@
 #define MOLWEIGHTP2O5 0.14194
 
 // prefactors for linear solidus (Hirschmann 2000)
-#define ALOWPRESSURE 1.0442e-7  //low pressure (K/Pa)
+#define ALOWPRESSURE 1.0442e-7  // low pressure (K/Pa)
 #define BLOWPRESSURE 1420       // (K)
-#define AHIGHPRESSURE 0.2653E-7 //high pressure (K/Pa)
+#define AHIGHPRESSURE 0.2653E-7 // high pressure (K/Pa)
 #define BHIGHPRESSURE 1825      // (K)
 
 // mantle composition (mole fractions)
@@ -85,12 +85,12 @@
 #define ABSORPCOEFFCO2                                                         \
   0.0001 // absorp. coeff. of CO2 at ref. press. (Nakajima+ 2012)
 #define REFPRESSUREOPACITY 101325 // reference pressure (Pa)
-#define WATERHEATCAP 3.2e3        //water heat capacity (J/kg/K)
+#define WATERHEATCAP 3.2e3        // water heat capacity (J/kg/K)
 #define PRESSWATERMIN                                                          \
   1e3 // minimal water pressure in atm (if smaller -> desiccated)
 
 // Atmospheric escape (double to ATMESC)
-#define ATMESCTHERMT 500 //average atmospheric temp. (K)
+#define ATMESCTHERMT 500 // average atmospheric temp. (K)
 #define ATMESCBDIFF                                                            \
   4.8e19 * pow(THERMT,                                                         \
                0.75)  // Binary diffusion coefficient of H through O (/m/s)

@@ -27,7 +27,7 @@ void BodyCopyDistOrb(BODY *dest, BODY *src, int iTideModel, int iNumBodies,
   //   dest[iBody].iaGravPerts = malloc(dest[iBody].iGravPerts*sizeof(int));
   for (iPert = 0; iPert < src[iBody].iGravPerts; iPert++) {
     dest[iBody].iaGravPerts[iPert] = src[iBody].iaGravPerts[iPert];
-}
+  }
 }
 
 void InitializeBodyDistOrb(BODY *body, CONTROL *control, UPDATE *update,
@@ -70,18 +70,18 @@ void ReadDfCrit(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be greater than or equal to 0.\n",
                 options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     system->dDfcrit = dTmp;
     if (system->dDfcrit > 1 && control->Io.iVerbose >= VERBALL) {
       fprintf(stderr, "WARNING: %s > 1 is not advised (%s:%d).\n",
               options->cName, files->Infile[iFile].cIn, lTmp);
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     AssignDefaultDouble(options, &system->dDfcrit, files->iNumInputs);
-}
+  }
 }
 
 
@@ -98,7 +98,7 @@ void ReadInvPlane(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     AssignDefaultInt(options, &control->bInvPlane, files->iNumInputs);
-}
+  }
 }
 
 void ReadOutputLapl(BODY *body, CONTROL *control, FILES *files,
@@ -114,7 +114,7 @@ void ReadOutputLapl(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     AssignDefaultInt(options, &control->bOutputLapl, files->iNumInputs);
-}
+  }
 }
 
 void ReadOutputEigen(BODY *body, CONTROL *control, FILES *files,
@@ -130,7 +130,7 @@ void ReadOutputEigen(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     AssignDefaultInt(options, &control->bOutputEigen, files->iNumInputs);
-}
+  }
 }
 
 void ReadOverrideMaxEcc(BODY *body, CONTROL *control, FILES *files,
@@ -144,7 +144,7 @@ void ReadOverrideMaxEcc(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     control->Halt[iFile - 1].bOverrideMaxEcc = options->dDefault;
-}
+  }
   //     AssignDefaultInt(options,&control->Halt[iFile-1].bOverrideMaxEcc,files->iNumInputs);
 }
 
@@ -161,7 +161,7 @@ void ReadHaltHillStab(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     control->Halt[iFile - 1].bHillStab = options->dDefault;
-}
+  }
 }
 
 void ReadHaltCloseEnc(BODY *body, CONTROL *control, FILES *files,
@@ -177,7 +177,7 @@ void ReadHaltCloseEnc(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     control->Halt[iFile - 1].bCloseEnc = options->dDefault;
-}
+  }
 }
 
 /* For LL2 (eigenvalue) solution only, we could add these option to let the
@@ -187,8 +187,8 @@ that are accurate to higher orders. One could conceivably fake the higher order
 evolution using only the LL2 solution by doing this.
 
 
-void ReadEigenSet(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  int lTmp=-1,bTmp;
+void ReadEigenSet(BODY *body,CONTROL *control,FILES *files,OPTIONS
+*options,SYSTEM *system,int iFile) { int lTmp=-1,bTmp;
   AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
     / * Option was found * /
@@ -196,13 +196,13 @@ void ReadEigenSet(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYST
     UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
   } else
     body[iFile-1].bEigenSet = options->dDefault;
-//     AssignDefaultInt(options,&control->Halt[iFile-1].bOverrideMaxEcc,files->iNumInputs);
+//
+AssignDefaultInt(options,&control->Halt[iFile-1].bOverrideMaxEcc,files->iNumInputs);
 }
 
-void ReadEigenvalue(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  / * This parameter cannot exist in the primary file * /
-  int lTmp=-1;
-  double dTmp;
+void ReadEigenvalue(BODY *body,CONTROL *control,FILES *files,OPTIONS
+*options,SYSTEM *system,int iFile) { / * This parameter cannot exist in the
+primary file * / int lTmp=-1; double dTmp;
 
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
@@ -217,10 +217,9 @@ void ReadEigenvalue(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SY
       body[iFile-1].dEigenvalue = options->dDefault;
 }
 
-void ReadEigenvector(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  / * This parameter cannot exist in the primary file * /
-  int lTmp=-1;
-  double dTmp;
+void ReadEigenvector(BODY *body,CONTROL *control,FILES *files,OPTIONS
+*options,SYSTEM *system,int iFile) { / * This parameter cannot exist in the
+primary file * / int lTmp=-1; double dTmp;
 
   AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
@@ -262,14 +261,14 @@ void ReadOrbitModel(BODY *body, CONTROL *control, FILES *files,
         fprintf(stderr,
                 "ERROR: Unknown argument to %s: %s. Options are ll2 or rd4.\n",
                 options->cName, cTmp);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     AssignDefaultInt(options, &control->Evolve.iDistOrbModel,
                      files->iNumInputs);
-}
+  }
 }
 
 
@@ -368,20 +367,20 @@ void InitializeOptionsDistOrb(OPTIONS *options, fnReadOption fnRead[]) {
   /* For LL2 (eigenvalue) solution only, we could add these option to let the
   user specify the eigenvalues instead of calculating them from scratch. This is
   useful if you want to use, for example, an N-body code to compute frequencies
-  that are accurate to higher orders. One could conceivably fake the higher order
-  evolution using only the LL2 solution by doing this.
+  that are accurate to higher orders. One could conceivably fake the higher
+  order evolution using only the LL2 solution by doing this.
 
   sprintf(options[OPT_EIGENSET].cName,"bEigenSet");
-  sprintf(options[OPT_EIGENSET].cDescr,"Read in eigenvalues/vectors for DistOrb?");
-  sprintf(options[OPT_EIGENSET].cDefault,"0");
+  sprintf(options[OPT_EIGENSET].cDescr,"Read in eigenvalues/vectors for
+  DistOrb?"); sprintf(options[OPT_EIGENSET].cDefault,"0");
   options[OPT_EIGENSET].dDefault = 0;
   options[OPT_EIGENSET].iType = 0;
   options[OPT_EIGENSET].bMultiFile = 0;
   fnRead[OPT_EIGENSET] = &ReadEigenSet;
 
   sprintf(options[OPT_EIGENVALUE].cName,"dEigenvalue");
-  sprintf(options[OPT_EIGENVALUE].cDescr,"Set this to provide eigenvalues/vectors at input");
-  sprintf(options[OPT_EIGENVALUE].cDefault,"0");
+  sprintf(options[OPT_EIGENVALUE].cDescr,"Set this to provide
+  eigenvalues/vectors at input"); sprintf(options[OPT_EIGENVALUE].cDefault,"0");
   sprintf(options[OPT_EIGENVALUE].cDimension,"nd");
   options[OPT_EIGENVALUE].dDefault = 0;
   options[OPT_EIGENVALUE].iType = 0;
@@ -389,7 +388,8 @@ void InitializeOptionsDistOrb(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_EIGENVALUE] = &ReadEigenvalue;
 
   sprintf(options[OPT_EIGENVECTOR].cName,"dEigenvector");
-  sprintf(options[OPT_EIGENVECTOR].cDescr,"Set this to provide eigenvalues/vectors at input");
+  sprintf(options[OPT_EIGENVECTOR].cDescr,"Set this to provide
+  eigenvalues/vectors at input");
   sprintf(options[OPT_EIGENVECTOR].cDefault,"0");
   sprintf(options[OPT_EIGENVECTOR].cDimension,"nd");
   options[OPT_EIGENVECTOR].dDefault = 0;
@@ -481,7 +481,7 @@ void VerifyOrbitModel(CONTROL *control, FILES *files, OPTIONS *options) {
   for (iFile = 0; iFile < files->iNumInputs; iFile++) {
     if (options[OPT_ORBITMODEL].iLine[iFile] >= 0) {
       iFound++;
-}
+    }
   }
 
   if (iFound > 1) {
@@ -492,7 +492,7 @@ void VerifyOrbitModel(CONTROL *control, FILES *files, OPTIONS *options) {
         if (options[OPT_ORBITMODEL].iLine[iFile] >= 0) {
           fprintf(stderr, "\tFile %s, Line: %d\n", files->Infile[0].cIn,
                   options[OPT_ORBITMODEL].iLine[iFile]);
-}
+        }
       }
     }
     exit(EXIT_INPUT);
@@ -508,7 +508,7 @@ void VerifyOrbitModel(CONTROL *control, FILES *files, OPTIONS *options) {
     if (control->Io.iVerbose >= VERBINPUT) {
       fprintf(stderr, "INFO: %s not set in any file, defaulting to %s.\n",
               options[OPT_ORBITMODEL].cName, options[OPT_ORBITMODEL].cDefault);
-}
+    }
 
     /* Chicanery. Since I only want this set once, I will
        make it seem like the user set it. */
@@ -525,12 +525,13 @@ void VerifyOrbitModel(CONTROL *control, FILES *files, OPTIONS *options) {
 
 void VerifyPericenter(BODY *body, CONTROL *control, OPTIONS *options,
                       char cFile[], int iBody, int iVerbose) {
-  /* First see if longitude of ascending node and longitude of pericenter and nothing else set, i.e. the user input the default parameters */
+  /* First see if longitude of ascending node and longitude of pericenter and
+   * nothing else set, i.e. the user input the default parameters */
   if (options[OPT_LONGA].iLine[iBody + 1] > -1 &&
       options[OPT_LONGP].iLine[iBody + 1] > -1 &&
       options[OPT_ARGP].iLine[iBody + 1] == -1) {
     return;
-}
+  }
 
   /* If none are set, raise error */
   if (options[OPT_LONGA].iLine[iBody + 1] == -1 &&
@@ -540,7 +541,7 @@ void VerifyPericenter(BODY *body, CONTROL *control, OPTIONS *options,
       fprintf(stderr, "ERROR: Must set two of %s, %s, and %s in File: %s.\n",
               options[OPT_LONGA].cName, options[OPT_LONGP].cName,
               options[OPT_ARGP].cName, cFile);
-}
+    }
     exit(EXIT_INPUT);
   }
 
@@ -555,7 +556,7 @@ void VerifyPericenter(BODY *body, CONTROL *control, OPTIONS *options,
       fprintf(stderr, "ERROR: Must set two of %s, %s, and %s in File: %s.\n",
               options[OPT_LONGA].cName, options[OPT_LONGP].cName,
               options[OPT_ARGP].cName, cFile);
-}
+    }
     exit(EXIT_INPUT);
   }
 
@@ -577,11 +578,11 @@ void VerifyPericenter(BODY *body, CONTROL *control, OPTIONS *options,
     if (options[OPT_LONGP].iLine[iBody + 1] > -1) {
       /* LONGA and LONGP were the only two set - Nothing to do */
       return;
-}
+    }
     if (options[OPT_ARGP].iLine[iBody + 1] > -1) {
       /* Must get radius from density */
       body[iBody].dLongP = fndCalcLongP(body[iBody].dLongA, body[iBody].dArgP);
-}
+    }
     return;
   }
 
@@ -591,11 +592,11 @@ void VerifyPericenter(BODY *body, CONTROL *control, OPTIONS *options,
     if (options[OPT_LONGA].iLine[iBody + 1] > -1) {
       /* LONGA and LONGP were the only two set - Nothing to do */
       return;
-}
+    }
     if (options[OPT_ARGP].iLine[iBody + 1] > -1) {
       /* Must get radius from density */
       body[iBody].dLongA = fndCalcLongA(body[iBody].dLongP, body[iBody].dArgP);
-}
+    }
     return;
   }
 }
@@ -605,8 +606,8 @@ void VerifyPericenter(BODY *body, CONTROL *control, OPTIONS *options,
    body number of the current perturbing body. */
 
 /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond
-   to all perturbing planets,  iPert = iGravPerts corresponds to the stellar general
-   relativistic correction, if applied. */
+   to all perturbing planets,  iPert = iGravPerts corresponds to the stellar
+   general relativistic correction, if applied. */
 
 void InitializeHeccDistOrbRD4(BODY *body, UPDATE *update, int iBody,
                               int iPert) {
@@ -892,8 +893,10 @@ void AssignDistOrbDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
   if (evolve->iDistOrbModel == RD4) {
     body[iBody].iGravPerts =
           evolve->iNumBodies -
-          2; //will need to change this for zero mass particles in future
-    /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
+          2; // will need to change this for zero mass particles in future
+    /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1
+     * correspond to all perturbing planets, iPert = iGravPerts corresponds to
+     * the stellar general relativistic correction, if applied */
 
     /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
     if (iBody >= 1) {
@@ -916,7 +919,8 @@ void AssignDistOrbDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
                 [update[iBody].iaQincDistOrb[iPert]] = &fndDistOrbRD4DqDt;
       }
       if (body[iBody].bGRCorr) {
-        /* Body updates for general relativistic correction, indexing star as a "perturber"*/
+        /* Body updates for general relativistic correction, indexing star as a
+         * "perturber"*/
         fnUpdate[iBody][update[iBody].iHecc]
                 [update[iBody].iaHeccDistOrb[body[iBody].iGravPerts]] =
                       &fndApsidalGRDhDt;
@@ -960,8 +964,10 @@ void NullDistOrbDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
   if (evolve->iDistOrbModel == RD4) {
     body[iBody].iGravPerts =
           evolve->iNumBodies -
-          2; //will need to change this for zero mass particles in future
-    /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
+          2; // will need to change this for zero mass particles in future
+    /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1
+     * correspond to all perturbing planets, iPert = iGravPerts corresponds to
+     * the stellar general relativistic correction, if applied */
 
     /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
     if (iBody >= 1) {
@@ -984,7 +990,8 @@ void NullDistOrbDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
                 [update[iBody].iaQincDistOrb[iPert]] = &fndUpdateFunctionTiny;
       }
       if (body[iBody].bGRCorr) {
-        /* Body updates for general relativistic correction, indexing star as a "perturber"*/
+        /* Body updates for general relativistic correction, indexing star as a
+         * "perturber"*/
         fnUpdate[iBody][update[iBody].iHecc]
                 [update[iBody].iaHeccDistOrb[body[iBody].iGravPerts]] =
                       &fndUpdateFunctionTiny;
@@ -1034,7 +1041,9 @@ void VerifyDistOrb(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   body[iBody].dEccSq = body[iBody].dEcc * body[iBody].dEcc;
 
   if (control->Evolve.iDistOrbModel == RD4) {
-    /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
+    /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1
+     * correspond to all perturbing planets, iPert = iGravPerts corresponds to
+     * the stellar general relativistic correction, if applied */
 
     /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
     if (iBody == 1) {
@@ -1174,7 +1183,7 @@ void VerifyDistOrb(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                        iBody, control->Io.iVerbose);
       body[iBody].iGravPerts =
             control->Evolve.iNumBodies -
-            2; //will need to change this for zero mass particles in future
+            2; // will need to change this for zero mass particles in future
 
       VerifyPerturbersDistOrbRD4(body, control->Evolve.iNumBodies, iBody);
       control->fnPropsAux[iBody][iModule] = &PropsAuxDistOrb;
@@ -1234,12 +1243,13 @@ void VerifyDistOrb(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
              requires it. I will set it to zero for each body. --RKB */
           for (kBody = 0; kBody < control->Evolve.iNumBodies; kBody++) {
             body[kBody].dMeanA = 0;
-}
+          }
           inv_plane(body, system, control->Evolve.iNumBodies);
         }
       }
       if (body[iBody].bGRCorr) {
-        /* Body updates for general relativistic correction, indexing star as a "perturber"*/
+        /* Body updates for general relativistic correction, indexing star as a
+         * "perturber"*/
         InitializeHeccDistOrbGR(body, update, iBody, body[iBody].iGravPerts);
 
         InitializeKeccDistOrbGR(body, update, iBody, body[iBody].iGravPerts);
@@ -1248,7 +1258,7 @@ void VerifyDistOrb(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
     /* If the mutual inclination of any object gets above MAXMUTUALINCRD4,
        print a warning message. */
-    //control->Io.dMaxMutualInc = MAXMUTUALINCRD4 * PI/180.;
+    // control->Io.dMaxMutualInc = MAXMUTUALINCRD4 * PI/180.;
     control->Io.dMaxMutualInc = 35 * 3.1415926535 / 180;
     double dFoo               = 35 * 3.1415926535 / 180;
 
@@ -1278,14 +1288,15 @@ void VerifyDistOrb(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       system->daEigenPhase[1]  = malloc(1 * sizeof(double));
 
       system->daEigenValEcc[0][0] = 0.0;
-      //system->daEigenValInc[0][0] = -0.000123627489;
+      // system->daEigenValInc[0][0] = -0.000123627489;
       system->daEigenValInc[0][0] = -0.000119874715;
       system->daEigenVecEcc[0][0] = 0.0;
-      //system->daEigenVecInc[0][0] = 0.00506143322;
+      // system->daEigenVecInc[0][0] = 0.00506143322;
       system->daEigenVecInc[0][0] = 0.0036367199;
 
       system->daEigenPhase[0][0] = 0.0;
-      //       system->daEigenPhase[1][0] = atan2(body[iBody].dHecc,body[iBody].dKecc);
+      //       system->daEigenPhase[1][0] =
+      //       atan2(body[iBody].dHecc,body[iBody].dKecc);
       system->daEigenPhase[1][0] = 2.6348951757;
 
     } else {
@@ -1448,7 +1459,8 @@ void VerifyDistOrb(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     control->Io.dMaxMutualInc = MAXMUTUALINCLL2 * PI / 180;
 
     // if (body[iBody].bGRCorr) {
-    //       fprintf(stderr,"ERROR: %s cannot be used in LL2 orbital solution.\n",options[OPT_GRCORR].cName);
+    //       fprintf(stderr,"ERROR: %s cannot be used in LL2 orbital
+    //       solution.\n",options[OPT_GRCORR].cName);
     //       LineExit(files->Infile[iBody+1].cIn,options[OPT_GRCORR].iLine[iBody+1]);
     //     }
   }
@@ -1463,22 +1475,22 @@ void InitializeUpdateDistOrb(BODY *body, UPDATE *update, int iBody) {
   if (iBody > 0) {
     if (update[iBody].iNumHecc == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumHecc += body[iBody].iGravPerts;
 
     if (update[iBody].iNumKecc == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumKecc += body[iBody].iGravPerts;
 
     if (update[iBody].iNumPinc == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumPinc += body[iBody].iGravPerts;
 
     if (update[iBody].iNumQinc == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumQinc += body[iBody].iGravPerts;
 
     if (body[iBody].bGRCorr) {
@@ -1492,7 +1504,9 @@ void InitializeUpdateDistOrb(BODY *body, UPDATE *update, int iBody) {
 
 void FinalizeUpdateHeccDistOrb(BODY *body, UPDATE *update, int *iEqn, int iVar,
                                int iBody, int iFoo) {
-  /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
+  /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1
+   * correspond to all perturbing planets, iPert = iGravPerts corresponds to the
+   * stellar general relativistic correction, if applied */
 
   int iPert;
 
@@ -1518,7 +1532,9 @@ void FinalizeUpdateHeccDistOrb(BODY *body, UPDATE *update, int *iEqn, int iVar,
 
 void FinalizeUpdateKeccDistOrb(BODY *body, UPDATE *update, int *iEqn, int iVar,
                                int iBody, int iFoo) {
-  /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1 correspond to all perturbing planets, iPert = iGravPerts corresponds to the stellar general relativistic correction, if applied */
+  /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1
+   * correspond to all perturbing planets, iPert = iGravPerts corresponds to the
+   * stellar general relativistic correction, if applied */
 
   int iPert;
 
@@ -1580,7 +1596,7 @@ void CountHaltsDistOrb(HALT *halt, int *iNumHalts) {
   /* halt for close encounters */
   if (halt->bHillStab || halt->bCloseEnc) {
     (*iNumHalts)++;
-}
+  }
 }
 
 void VerifyHaltDistOrb(BODY *body, CONTROL *control, OPTIONS *options,
@@ -1590,7 +1606,8 @@ void VerifyHaltDistOrb(BODY *body, CONTROL *control, OPTIONS *options,
   /* Mandatory halt for DistOrb */
   if (body[iBody].bDistOrb) {
     if (control->Halt[iBody].bOverrideMaxEcc == 0) {
-      /* If you don't override max ecc, and you HAVEN'T set it manually for this body, default to MAXECCDISTORB (== 0.6627434) */
+      /* If you don't override max ecc, and you HAVEN'T set it manually for this
+       * body, default to MAXECCDISTORB (== 0.6627434) */
       if (control->Halt[iBody].dMaxEcc == 1) {
         control->Halt[iBody].dMaxEcc       = MAXECCDISTORB;
         control->fnHalt[iBody][(*iHalt)++] = &fniHaltMaxEcc;
@@ -1612,14 +1629,15 @@ int fniHaltHillStab(BODY *body, EVOLVE *evolve, HALT *halt, IO *io,
 
   if (halt->bHillStab == 1) {
     for (iBody = 1; iBody < evolve->iNumBodies; iBody++) {
-      /* I have to loop over iBody here, ultimately because I want to have to set bHaltHillStab
-         only once, not in every file. There is no easy way to set bHillStab for one body and
-         distribute that to all others before the number of halts are counted. So, I just set it
-         once and check Hill stability for all planets during the one call of HaltHillStab(). */
+      /* I have to loop over iBody here, ultimately because I want to have to
+         set bHaltHillStab only once, not in every file. There is no easy way to
+         set bHillStab for one body and distribute that to all others before the
+         number of halts are counted. So, I just set it once and check Hill
+         stability for all planets during the one call of HaltHillStab(). */
       for (iPert = 0; iPert < body[iBody].iGravPerts; iPert++) {
         jBody = body[iBody].iaGravPerts[iPert];
         if (body[jBody].dSemi < body[iBody].dSemi) {
-          //jBody is the inner planet
+          // jBody is the inner planet
           mu1    = body[jBody].dMass / body[0].dMass;
           mu2    = body[iBody].dMass / body[0].dMass;
           gamma1 = sqrt(1 - (body[jBody].dHecc * body[jBody].dHecc +
@@ -1628,7 +1646,7 @@ int fniHaltHillStab(BODY *body, EVOLVE *evolve, HALT *halt, IO *io,
                              body[iBody].dKecc * body[iBody].dKecc));
           delta  = sqrt(body[iBody].dSemi / body[jBody].dSemi);
         } else if (body[jBody].dSemi > body[iBody].dSemi) {
-          //jBody is the outer planet
+          // jBody is the outer planet
           mu2    = body[jBody].dMass / body[0].dMass;
           mu1    = body[iBody].dMass / body[0].dMass;
           gamma2 = sqrt(1 - (body[jBody].dHecc * body[jBody].dHecc +
@@ -1667,7 +1685,7 @@ int fniHaltCloseEnc(BODY *body, EVOLVE *evolve, HALT *halt, IO *io,
       for (iPert = 0; iPert < body[iBody].iGravPerts; iPert++) {
         jBody = body[iBody].iaGravPerts[iPert];
         if (body[jBody].dSemi < body[iBody].dSemi) {
-          //comparing apocentre of inner planet with pericentre of outer
+          // comparing apocentre of inner planet with pericentre of outer
           dDR = fabs(body[iBody].dRPeri - body[jBody].dRApo);
           if (dDR < 4 * fndMutualHillRad(body, iBody, jBody)) {
             if (io->iVerbose >= VERBPROG) {
@@ -1678,7 +1696,7 @@ int fniHaltCloseEnc(BODY *body, EVOLVE *evolve, HALT *halt, IO *io,
             return 1;
           }
         } else if (body[jBody].dSemi > body[iBody].dSemi) {
-          //comparing apocentre of inner planet with pericentre of outer
+          // comparing apocentre of inner planet with pericentre of outer
           dDR = fabs(body[jBody].dRPeri - body[iBody].dRApo);
           if (dDR < 4 * fndMutualHillRad(body, iBody, jBody)) {
             if (io->iVerbose >= VERBPROG) {
@@ -1813,7 +1831,7 @@ void WriteBodyDEccDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
                    body[iBody].dKecc * body[iBody].dKecc) *
               (body[iBody].dHecc * (*(update[iBody].padDHeccDtDistOrb[iPert])) +
                body[iBody].dKecc * (*(update[iBody].padDKeccDtDistOrb[iPert])));
-}
+  }
 
   *dTmp = dDeriv;
 
@@ -1873,7 +1891,7 @@ void WriteBodyDLongPDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
                body[iBody].dKecc * body[iBody].dKecc) *
               (body[iBody].dKecc * (*(update[iBody].padDHeccDtDistOrb[iPert])) -
                body[iBody].dHecc * (*(update[iBody].padDKeccDtDistOrb[iPert])));
-}
+  }
 
   *dTmp = dDeriv;
 
@@ -1971,11 +1989,10 @@ void WriteBodySinc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 }
 
 /*
-void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
-  if (body[iBody].bDistOrb) {
-    *dTmp = atan2(body[iBody].dPinc, body[iBody].dQinc);
-  } else if (body[iBody].bGalHabit) {
-    *dTmp = body[iBody].dLongA;
+void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM
+*system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) { if
+(body[iBody].bDistOrb) { *dTmp = atan2(body[iBody].dPinc, body[iBody].dQinc); }
+else if (body[iBody].bGalHabit) { *dTmp = body[iBody].dLongA;
   }
 
   while (*dTmp < 0.0) {
@@ -2022,7 +2039,7 @@ void WriteBodyDHeccDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
   dDeriv = 0;
   for (iPert = 0; iPert < body[iBody].iGravPerts; iPert++) {
     dDeriv += *(update[iBody].padDHeccDtDistOrb[iPert]);
-}
+  }
 
   *dTmp = dDeriv;
 
@@ -2046,7 +2063,7 @@ void WriteBodyDKeccDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
   dDeriv = 0;
   for (iPert = 0; iPert < body[iBody].iGravPerts; iPert++) {
     dDeriv += *(update[iBody].padDKeccDtDistOrb[iPert]);
-}
+  }
 
   *dTmp = dDeriv;
 
@@ -2070,7 +2087,7 @@ void WriteBodyDPincDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
   dDeriv = 0;
   for (iPert = 0; iPert < body[iBody].iGravPerts; iPert++) {
     dDeriv += *(update[iBody].padDPincDtDistOrb[iPert]);
-}
+  }
 
   *dTmp = dDeriv;
 
@@ -2094,7 +2111,7 @@ void WriteBodyDQincDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
   dDeriv = 0;
   for (iPert = 0; iPert < body[iBody].iGravPerts; iPert++) {
     dDeriv += *(update[iBody].padDQincDtDistOrb[iPert]);
-}
+  }
 
   *dTmp = dDeriv;
 
@@ -2234,7 +2251,7 @@ void LogDistOrb(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     if (output[iOut].iNum > 0) {
       WriteLogEntry(body, control, &output[iOut], system, update, fnWrite[iOut],
                     fp, 0);
-}
+    }
   }
 }
 
@@ -2248,7 +2265,7 @@ void LogBodyDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
     if (output[iOut].iNum > 0) {
       WriteLogEntry(body, control, &output[iOut], system, update, fnWrite[iOut],
                     fp, iBody);
-}
+    }
   }
 }
 
@@ -2311,7 +2328,7 @@ unsigned long int fniFactorial(unsigned int n) {
     result = 1;
   } else {
     result = n * fniFactorial(n - 1);
-}
+  }
   return result;
 }
 
@@ -2360,10 +2377,10 @@ double fndABmatrix(BODY *body, int j, int jBody, int kBody) {
   double AB, alpha, abar, b, n;
 
   if (body[jBody].dSemi > body[kBody].dSemi) {
-    alpha = body[kBody].dSemi / body[jBody].dSemi; //internal perturber
+    alpha = body[kBody].dSemi / body[jBody].dSemi; // internal perturber
     abar  = 1.0;
   } else if (body[jBody].dSemi < body[kBody].dSemi) {
-    alpha = body[jBody].dSemi / body[kBody].dSemi; //external perturber
+    alpha = body[jBody].dSemi / body[kBody].dSemi; // external perturber
     abar  = alpha;
   } else {
     fprintf(stderr,
@@ -2379,7 +2396,7 @@ double fndABmatrix(BODY *body, int j, int jBody, int kBody) {
   b  = fndLaplaceCoeff(alpha, j, 1.5);
   AB = n / 4.0 * body[kBody].dMass / (body[0].dMass + body[jBody].dMass) *
        alpha * abar * b;
-  return AB * 365.25; //returns in units of rad/year
+  return AB * 365.25; // returns in units of rad/year
 }
 
 /**
@@ -2434,14 +2451,14 @@ void HessEigen(double **amat, int origsize, double real[], double imag[]) {
   int size, m, smallsub, k, j, iterations, i, mmin;
   double radic, ulcorner, lrcorner, hhvector, v, u, exshift, s, r, q, p, anorm,
         cond, value;
-  //s, r, q, and p are defined in numerical recipes eqns 11.6.23, 11.6.25
+  // s, r, q, and p are defined in numerical recipes eqns 11.6.23, 11.6.25
 
   anorm = fabs(amat[0][0]);
   for (i = 1; i <= origsize - 1; i++) {
     for (j = (i - 1); j <= origsize - 1; j++) {
       anorm += fabs(amat[i][j]);
-}
-}
+    }
+  }
 
   size    = origsize - 1;
   exshift = 0.0;
@@ -2453,11 +2470,11 @@ void HessEigen(double **amat, int origsize, double real[], double imag[]) {
             fabs(amat[smallsub][smallsub]);
         if (s == 0.0) {
           s = anorm;
-}
+        }
         cond = fabs(amat[smallsub][smallsub - 1]) + s;
         if ((float)cond == (float)s) {
           break;
-}
+        }
       }
       lrcorner = amat[size][size];
       if (smallsub == size) {
@@ -2476,7 +2493,7 @@ void HessEigen(double **amat, int origsize, double real[], double imag[]) {
             real[size - 1] = real[size] = lrcorner + radic;
             if (radic) {
               real[size] = lrcorner - hhvector / radic;
-}
+            }
             imag[size - 1] = imag[size] = 0.0;
           } else {
             real[size - 1] = real[size] = lrcorner + p;
@@ -2492,7 +2509,7 @@ void HessEigen(double **amat, int origsize, double real[], double imag[]) {
             exshift += lrcorner;
             for (i = 0; i <= size; i++) {
               amat[i][i] -= lrcorner;
-}
+            }
             s = fabs(amat[size][size - 1]) + fabs(amat[size - 1][size - 2]);
             ulcorner = lrcorner = 0.75 * s;
             hhvector            = -0.4375 * s * s;
@@ -2513,19 +2530,19 @@ void HessEigen(double **amat, int origsize, double real[], double imag[]) {
             r /= s;
             if (m == smallsub) {
               break;
-}
+            }
             u = fabs(amat[m][m - 1]) * (fabs(q) + fabs(r));
             v = fabs(p) * (fabs(amat[m - 1][m - 1]) + fabs(radic) +
                            fabs(amat[m + 1][m + 1]));
             if ((float)(u + v) == (float)v) {
               break;
-}
+            }
           }
           for (i = m + 2; i <= size; i++) {
             amat[i][i - 2] = 0.0;
             if (i != (m + 2)) {
               amat[i][i - 3] = 0.0;
-}
+            }
           }
           for (k = m; k <= size - 1; k++) {
             if (k != m) {
@@ -2534,7 +2551,7 @@ void HessEigen(double **amat, int origsize, double real[], double imag[]) {
               r = 0.0;
               if (k != (size - 1)) {
                 r = amat[k + 2][k - 1];
-}
+              }
               if ((lrcorner = fabs(p) + fabs(q) + fabs(r)) != 0.0) {
                 p /= lrcorner;
                 q /= lrcorner;
@@ -2547,10 +2564,10 @@ void HessEigen(double **amat, int origsize, double real[], double imag[]) {
               if (k == m) {
                 if (smallsub != m) {
                   amat[k][k - 1] = -amat[k][k - 1];
-}
+                }
               } else {
                 amat[k][k - 1] = -s * lrcorner;
-}
+              }
               p += s;
               lrcorner = p / s;
               ulcorner = q / s;
@@ -2799,7 +2816,7 @@ void LUSolve(double **lumat, double *soln, int *swap, int size) {
     }
     soln[i] =
           soln[i] -
-          sumj; //diagonals of L matrix are all = 1, so division is unnecessary
+          sumj; // diagonals of L matrix are all = 1, so division is unnecessary
   }
 
   for (i = (size - 1); i >= 0; i--) {
@@ -2904,8 +2921,9 @@ void SolveEigenVal(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   double parity;
   int j, k, count, i, iBody;
 
-  /*First pass through calculates matrices and eigenvalues. Each subsequent pass redefines the matrices
-      because they are destroyed by eigenvalue routines, then calculates eigenvectors. */
+  /*First pass through calculates matrices and eigenvalues. Each subsequent pass
+     redefines the matrices because they are destroyed by eigenvalue routines,
+     then calculates eigenvectors. */
   for (count = 0; count < (evolve->iNumBodies); count++) {
     /* Calculate the initial matrix */
     for (j = 0; j < (evolve->iNumBodies - 1); j++) {
@@ -2921,17 +2939,17 @@ void SolveEigenVal(BODY *body, EVOLVE *evolve, SYSTEM *system) {
       }
       if (body[j + 1].bGRCorr) {
         system->daA[j][j] += fndGRCorrMatrix(body, j + 1, j + 1);
-}
+      }
     }
 
     if (count == 0) {
-      BalanceMatrix(system->daA, (evolve->iNumBodies - 1)); //balance matrix
+      BalanceMatrix(system->daA, (evolve->iNumBodies - 1)); // balance matrix
       HessReduce(system->daA,
-                 (evolve->iNumBodies - 1)); //reduce to upper Hess form
+                 (evolve->iNumBodies - 1)); // reduce to upper Hess form
 
-      BalanceMatrix(system->daB, (evolve->iNumBodies - 1)); //balance matrix
+      BalanceMatrix(system->daB, (evolve->iNumBodies - 1)); // balance matrix
       HessReduce(system->daB,
-                 (evolve->iNumBodies - 1)); //reduce to upper Hess form
+                 (evolve->iNumBodies - 1)); // reduce to upper Hess form
 
       HessEigen(system->daA, (evolve->iNumBodies - 1), system->daEigenValEcc[0],
                 system->daEigenValEcc[1]);
@@ -3006,7 +3024,8 @@ void ScaleEigenVec(BODY *body, EVOLVE *evolve, SYSTEM *system) {
 }
 
 /**
-Recalculates Semi-major axis terms in case where RD4 solution is coupled to eqtide
+Recalculates Semi-major axis terms in case where RD4 solution is coupled to
+eqtide
 
 @param body Struct containing all body information and variables
 @param evolve Struct containing evolve information
@@ -3040,7 +3059,8 @@ void RecalcLaplace(BODY *body, EVOLVE *evolve, SYSTEM *system, int iVerbose) {
 
           system->daAlpha0[0][system->iaLaplaceN[iBody][jBody]][j] = alpha1;
           // if (iVerbose > VERBPROG)
-          // //     printf("Laplace function %d recalculated for bodies (%d, %d) at %f years\n",j+1,iBody,jBody,evolve->dTime/YEARSEC);
+          // //     printf("Laplace function %d recalculated for bodies (%d, %d)
+          // at %f years\n",j+1,iBody,jBody,evolve->dTime/YEARSEC);
         }
       }
     }
@@ -3089,7 +3109,8 @@ void RecalcEigenVals(BODY *body, EVOLVE *evolve, SYSTEM *system) {
         }
       }
     }
-    //     printf("Eigenvalues recalculated at %f years\n",evolve->dTime/YEARSEC);
+    //     printf("Eigenvalues recalculated at %f
+    //     years\n",evolve->dTime/YEARSEC);
   }
 }
 
@@ -3276,7 +3297,8 @@ Laplace coefficient used in disturbing function
 @return Laplace coefficient
 */
 double fndLaplaceCoeff(double dAxRatio, int iIndexJ, double dIndexS) {
-  /* Calculates Laplace coefficients via series form (M&D eqn 6.68) taking dAxRatio = ratio of semi-major axes and j and s as arguments */
+  /* Calculates Laplace coefficients via series form (M&D eqn 6.68) taking
+   * dAxRatio = ratio of semi-major axes and j and s as arguments */
   double fac = 1.0, sum = 1.0, term = 1.0;
   int k, n = 1;
   if (iIndexJ == 1) {
@@ -3284,7 +3306,7 @@ double fndLaplaceCoeff(double dAxRatio, int iIndexJ, double dIndexS) {
   } else {
     for (k = 1; k <= iIndexJ; k++) {
       fac *= (dIndexS + k - 1.0) / (k)*dAxRatio;
-}
+    }
   }
 
   while (term >= 1.0e-15 * sum) {
@@ -3312,7 +3334,8 @@ Derivative in d/d(alpha) of Laplace coefficient used in disturbing function
 */
 double fndDerivLaplaceCoeff(int iNthDeriv, double dAxRatio, int iIndexJ,
                             double dIndexS) {
-  /* Calculates nth order derivative of Laplace coefficient using a recursive scheme */
+  /* Calculates nth order derivative of Laplace coefficient using a recursive
+   * scheme */
   double result;
 
   if (iNthDeriv == 1) {
@@ -3339,7 +3362,7 @@ double fndDerivLaplaceCoeff(int iNthDeriv, double dAxRatio, int iIndexJ,
                         2 * (iNthDeriv - 1) *
                               fndDerivLaplaceCoeff(iNthDeriv - 2, dAxRatio,
                                                    iIndexJ, dIndexS + 1.));
-}
+  }
   return result;
 }
 
@@ -4370,8 +4393,10 @@ double fndDSemiF26Dalpha(double dAxRatio, int iIndexJ) {
 }
 
 
-//----------------Disturbing function h k p q----------------------------------------------
-//--------dR/dh-----------(inner body)------------------------------------------------------
+//----------------Disturbing function h k p
+//q----------------------------------------------
+//--------dR/dh-----------(inner
+//body)------------------------------------------------------
 
 /**
 Derivative in d/dh of disturbing function term
@@ -6475,7 +6500,8 @@ double fndDdisturbDQincPrime(BODY *body, SYSTEM *system, int *iaBody) {
   return y;
 }
 
-//--------Relativistic correction---------------------------------------------------------
+//--------Relativistic
+//correction---------------------------------------------------------
 
 /**
 Relativistic precession of periastron
@@ -6498,7 +6524,8 @@ double fndApsidalGRCorrection(BODY *body, int *iaBody) {
 }
 
 /**
-Relativistic correction to derivative of variable Hecc = e*sin(longp) in RD4 solution
+Relativistic correction to derivative of variable Hecc = e*sin(longp) in RD4
+solution
 
 @param body Struct containing all body information and variables
 @param system Struct containing system information
@@ -6510,7 +6537,8 @@ double fndApsidalGRDhDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 /**
-Relativistic correction to derivative of variable Kecc = e*sin(longp) in RD4 solution
+Relativistic correction to derivative of variable Kecc = e*sin(longp) in RD4
+solution
 
 @param body Struct containing all body information and variables
 @param system Struct containing system information
@@ -6521,7 +6549,8 @@ double fndApsidalGRDkDt(BODY *body, SYSTEM *system, int *iaBody) {
   return -body[iaBody[0]].dHecc * fndApsidalGRCorrection(body, iaBody);
 }
 
-//-------------------DistOrb's equations in h k p q (4th order direct integration RD4)--------------------
+//-------------------DistOrb's equations in h k p q (4th order direct
+//integration RD4)--------------------
 
 /**
 Derivative of variable Hecc = e*sin(longp) in RD4 solution
@@ -6533,7 +6562,7 @@ Derivative of variable Hecc = e*sin(longp) in RD4 solution
 */
 double fndDistOrbRD4DhDt(BODY *body, SYSTEM *system, int *iaBody) {
   double sum = 0.0, dMu, y;
-  //Here, iaBody[0] = body in question, iaBody[1] = perturber
+  // Here, iaBody[0] = body in question, iaBody[1] = perturber
 
   dMu = KGAUSS * KGAUSS * (body[0].dMass + body[iaBody[0]].dMass) / MSUN;
   y   = fabs(1 - body[iaBody[0]].dHecc * body[iaBody[0]].dHecc -
@@ -6670,9 +6699,11 @@ double fndDistOrbRD4DqDt(BODY *body, SYSTEM *system, int *iaBody) {
   return sum / DAYSEC;
 }
 
-//-------------------DistOrb's equations in h k p q (2nd order Laplace-Lagrange LL2)--------------------
+//-------------------DistOrb's equations in h k p q (2nd order Laplace-Lagrange
+//LL2)--------------------
 /**
-Value of variable Hecc = e*sin(longp) at time dAge, in the LL2 solution (not a derivative)
+Value of variable Hecc = e*sin(longp) at time dAge, in the LL2 solution (not a
+derivative)
 
 @param body Struct containing all body information and variables
 @param system Struct containing system information
@@ -6687,7 +6718,8 @@ double fndDistOrbLL2Hecc(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 /**
-Value of variable Kecc = e*cos(longp) at time dAge, in the LL2 solution (not a derivative)
+Value of variable Kecc = e*cos(longp) at time dAge, in the LL2 solution (not a
+derivative)
 
 @param body Struct containing all body information and variables
 @param system Struct containing system information
@@ -6769,8 +6801,8 @@ double fndDistOrbLL2DkDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 /**
-Provides derivative of variable Pinc = sin(inc/2)*sin(longa) to couple distrot to LL2
-solution.
+Provides derivative of variable Pinc = sin(inc/2)*sin(longa) to couple distrot
+to LL2 solution.
 
 @param body Struct containing all body information and variables
 @param system Struct containing system information
@@ -6787,8 +6819,8 @@ double fndDistOrbLL2DpDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 /**
-Provides derivative of variable Qinc = sin(inc/2)*cos(longa) to couple distrot to LL2
-solution.
+Provides derivative of variable Qinc = sin(inc/2)*cos(longa) to couple distrot
+to LL2 solution.
 
 @param body Struct containing all body information and variables
 @param system Struct containing system information

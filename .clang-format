@@ -12,7 +12,7 @@ AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
 BasedOnStyle: LLVM
 BinPackArguments: true
-BraceWrapping: 
+BraceWrapping:
   AfterCaseLabel: true
   AfterClass: true
   AfterControlStatement: true
@@ -36,6 +36,6 @@ ColumnLimit: 80
 ContinuationIndentWidth: 6
 ExperimentalAutoDetectBinPacking: true
 MaxEmptyLinesToKeep: 2
-ReflowComments: false
+ReflowComments: true
 UseTab: Never
 ...

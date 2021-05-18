@@ -20,29 +20,29 @@ int fiNumHalts(HALT *halt, MODULE *module, int iBody) {
   /* Multi-module halts */
   if (halt->bMerge) {
     iNumHalts++;
-}
+  }
   if (halt->dMinObl >= 0) {
     iNumHalts++;
-}
+  }
   if (halt->dMaxEcc < 1) {
     iNumHalts++;
-}
+  }
   if (halt->dMaxMutualInc > 0) {
     iNumHalts++;
-}
+  }
   if (halt->dMinSemi > 0) {
     iNumHalts++;
-}
+  }
   if (halt->dMinEcc > 0) {
     iNumHalts++;
-}
+  }
   if (halt->bPosDeDt) {
     iNumHalts++;
-}
+  }
 
   for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
     module->fnCountHalts[iBody][iModule](halt, &iNumHalts);
-}
+  }
 
   return iNumHalts;
 }
@@ -133,10 +133,9 @@ int HaltMinSemi(BODY *body, EVOLVE *evolve, HALT *halt, IO *io, UPDATE *update,
 }
 
 /* Minimum Internal Power? Rewrite with radheat and thermint written
-int HaltMinIntEn(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int iBody) {
-  if (body[iBody].dIntEn <= halt->dMinIntEn) {
-    if (io->iVerbose >= VERBPROG) {
-      printf("HALT: e = ");
+int HaltMinIntEn(BODY *body,EVOLVE *evolve,HALT *halt,IO *io,UPDATE *update,int
+iBody) { if (body[iBody].dIntEn <= halt->dMinIntEn) { if (io->iVerbose >=
+VERBPROG) { printf("HALT: e = ");
       fprintd(stdout,body[iBody].dIntEn,io->iSciNot,io->iDigits);
       printf(", < min e = ");
       fprintd(stdout,halt->dMinIntEn,io->iSciNot,io->iDigits);
@@ -251,7 +250,7 @@ int HaltMerge(BODY *body, EVOLVE *evolve, HALT *halt, IO *io, UPDATE *update,
 void VerifyHalts(BODY *body, CONTROL *control, MODULE *module,
                  OPTIONS *options) {
   /* Verify halt functions to ensure they are valid and make sense given the
- * enabled modules and the system architecture */
+   * enabled modules and the system architecture */
   int iBody, iModule, iHalt, iHalt0, iHaltNow; // Dummy counting variables
   int iHaltMaxEcc = 0; // Counts number of halt max eccentricity
   int iNumMaxEcc  = 0; // Counts number of max eccentricity occurences
@@ -313,13 +312,13 @@ void VerifyHalts(BODY *body, CONTROL *control, MODULE *module,
 
     if (control->Halt[iBody].bMerge) {
       control->fnHalt[iBody][iHaltNow++] = &HaltMerge;
-}
+    }
     if (control->Halt[iBody].dMinObl >= 0) {
       control->fnHalt[iBody][iHaltNow++] = &HaltMinObl;
-}
+    }
     if (control->Halt[iBody].dMaxEcc < 1) {
       control->fnHalt[iBody][iHaltNow++] = &fniHaltMaxEcc;
-}
+    }
     if (control->Halt[iBody].dMaxMutualInc > 0) {
       /* Note the different approach here. These fn live in their module file.
          We set initially to DistOrb since it cannot be applied to the central
@@ -332,13 +331,13 @@ void VerifyHalts(BODY *body, CONTROL *control, MODULE *module,
     }
     if (control->Halt[iBody].dMinSemi > 0) {
       control->fnHalt[iBody][iHaltNow++] = &HaltMinSemi;
-}
+    }
     if (control->Halt[iBody].dMinEcc > 0) {
       control->fnHalt[iBody][iHaltNow++] = &HaltMinEcc;
-}
+    }
     if (control->Halt[iBody].bPosDeDt) {
       control->fnHalt[iBody][iHaltNow++] = &HaltPosDeccDt;
-}
+    }
     /* Should be changed with thermint completed
        if (control->Halt[iBody].dMinIntEn > 0)
        control->fnHalt[iBody][iHaltNow++] = &HaltMinIntEn;
@@ -347,7 +346,7 @@ void VerifyHalts(BODY *body, CONTROL *control, MODULE *module,
     for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
       module->fnVerifyHalt[iBody][iModule](body, control, options, iBody,
                                            &iHaltNow);
-}
+    }
 
     if (iHaltMaxEcc) {
       if (iBody != iHaltMaxEcc) {

@@ -42,7 +42,8 @@ void WriteBodyType(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
  * C
  */
 
-/* Critical Semi-major Axis (Holman & Wiegert, 1999 for P-type circumbinary orbit) */
+/* Critical Semi-major Axis (Holman & Wiegert, 1999 for P-type circumbinary
+ * orbit) */
 void WriteCriticalSemi(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char cUnit[]) {
@@ -184,7 +185,7 @@ void WriteHZLimitRecentVenus(BODY *body, CONTROL *control, OUTPUT *output,
   // RB: Make all these limits #define's, e.g. HZRECVENUS
   if (daHZLimits[0] > 0) {
     *dTmp = daHZLimits[0];
-  } else { //Means no stars inside body's orbit
+  } else { // Means no stars inside body's orbit
     *dTmp = -1;
     free(daHZLimits);
     return;
@@ -215,7 +216,7 @@ void WriteHZLimitRunawayGreenhouse(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (daHZLimits[0] > 0) {
     *dTmp = daHZLimits[0];
-  } else { //Means no stars inside body's orbit
+  } else { // Means no stars inside body's orbit
     *dTmp = -1;
     free(daHZLimits);
     return;
@@ -245,7 +246,7 @@ void WriteHZLimitMoistGreenhouse(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (daHZLimits[0] > 0) {
     *dTmp = daHZLimits[0];
-  } else { //Means no stars inside body's orbit
+  } else { // Means no stars inside body's orbit
     *dTmp = -1;
     free(daHZLimits);
     return;
@@ -275,7 +276,7 @@ void WriteHZLimitMaxGreenhouse(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (daHZLimits[0] > 0) {
     *dTmp = daHZLimits[0];
-  } else { //Means no stars inside body's orbit
+  } else { // Means no stars inside body's orbit
     *dTmp = -1;
     free(daHZLimits);
     return;
@@ -305,7 +306,7 @@ void WriteHZLimitEarlyMars(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (daHZLimits[0] > 0) {
     *dTmp = daHZLimits[0];
-  } else { //Means no stars inside body's orbit
+  } else { // Means no stars inside body's orbit
     *dTmp = -1;
     free(daHZLimits);
     return;
@@ -350,8 +351,8 @@ void WriteInstellation(BODY *body, CONTROL *control, OUTPUT *output,
                        double *dTmp, char cUnit[]) {
 
   // Should have special case if bBinary=1
-  //if (body[iBody].bSpiNBody)
-  //Bary2OrbElems(body,control->Evolve.iNumBodies);
+  // if (body[iBody].bSpiNBody)
+  // Bary2OrbElems(body,control->Evolve.iNumBodies);
 
   // Must take care since only bodies orbiting a star can have an instellation
   if (iBody == 0) {
@@ -644,7 +645,7 @@ void WriteOrbEcc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
       *dTmp = sqrt(pow(body[iBody].dHecc, 2) + pow(body[iBody].dKecc, 2));
     } else {
       *dTmp = -1;
-}
+    }
   }
   sprintf(cUnit, "%s", "");
 }
@@ -688,7 +689,7 @@ void WriteOrbMeanMotion(BODY *body, CONTROL *control, OUTPUT *output,
       *dTmp = body[iBody].dMeanMotion;
     } else {
       *dTmp = -1;
-}
+    }
   } else { // doing binary
     if (iBody > 0) {
       *dTmp = body[iBody].dMeanMotion;
@@ -716,7 +717,7 @@ void WriteOrbPeriod(BODY *body, CONTROL *control, OUTPUT *output,
                              (body[0].dMass + body[iBody].dMass));
     } else {
       *dTmp = -1;
-}
+    }
   } else // Doing binary
   {
     if (body[iBody].iBodyType == 0) { // CBP
@@ -727,7 +728,7 @@ void WriteOrbPeriod(BODY *body, CONTROL *control, OUTPUT *output,
                              (body[0].dMass + body[iBody].dMass));
     } else {
       *dTmp = -1;
-}
+    }
   }
 
   if (output->bDoNeg[iBody]) {
@@ -748,15 +749,15 @@ void WriteOrbSemi(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
       *dTmp = body[iBody].dSemi;
     } else {
       *dTmp = -1;
-}
-  } else {                          // Doing binary
+    }
+  } else {                            // Doing binary
     if (body[iBody].iBodyType == 0) { // CBP
       *dTmp = body[iBody].dSemi;
     } else if (body[iBody].iBodyType == 1 && iBody == 1) { // Binary
       *dTmp = body[iBody].dSemi;
     } else {
       *dTmp = -1;
-}
+    }
   }
 
   if (output->bDoNeg[iBody]) {
@@ -868,9 +869,9 @@ void WriteRotVel(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   }
 }
 
-/** SurfaceEnergyFluc is complicated as it can be determined by thermint, radheat,
-and/or eqtide. Furthermore, eqtide is complicated by heat sources in the solid
-interior, ocean, and/envelope. */
+/** SurfaceEnergyFluc is complicated as it can be determined by thermint,
+radheat, and/or eqtide. Furthermore, eqtide is complicated by heat sources in
+the solid interior, ocean, and/envelope. */
 
 void WriteSurfaceEnergyFlux(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
@@ -890,14 +891,14 @@ void WriteSurfaceEnergyFlux(BODY *body, CONTROL *control, OUTPUT *output,
       bOcean = 0;
     } else {
       bOcean = 1;
-}
+    }
 
     // Same as ocean, but for envelope
     if (body[iBody].dTidalQEnv < 0) {
       bEnv = 0;
     } else {
       bEnv = 1;
-}
+    }
 
     if ((body[iBody].bOcean && bOcean) || (body[iBody].bEnv && bEnv)) {
       *dTmp += fdSurfEnFluxOcean(body, iBody);
@@ -910,10 +911,10 @@ void WriteSurfaceEnergyFlux(BODY *body, CONTROL *control, OUTPUT *output,
     if (body[iBody].bEqtide) {
       *dTmp += fdSurfEnFluxEqtide(body, system, update, iBody,
                                   control->Evolve.iEqtideModel);
-}
+    }
     if (body[iBody].bRadheat) {
       *dTmp += fdSurfEnFluxRadTotal(body, system, update, iBody, iBody);
-}
+    }
   }
 
   if (output->bDoNeg[iBody]) {
@@ -1088,7 +1089,7 @@ void WriteOrbPotEnergy(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp = fdOrbPotEnergy(body, control, system, iBody);
   } else {
     *dTmp = -1;
-}
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1668,10 +1669,10 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_ROTVEL]           = &WriteRotVel;
 
   /*
-  *
-  * S
-  *
-  */
+   *
+   * S
+   *
+   */
 
   sprintf(output[OUT_SURFENFLUX].cName, "SurfEnFluxTotal");
   sprintf(output[OUT_SURFENFLUX].cDescr, "Total Surface Energy Flux");
@@ -1908,7 +1909,7 @@ void LogIntegration(CONTROL *control, FILE *fp) {
     fprintf(fp, "Euler");
   } else if (control->Evolve.iOneStep == RUNGEKUTTA) {
     fprintf(fp, "Runge-Kutta4");
-}
+  }
   fprintf(fp, "\n");
 
   fprintf(fp, "Direction: ");
@@ -1916,7 +1917,7 @@ void LogIntegration(CONTROL *control, FILE *fp) {
     fprintf(fp, "Backward\n");
   } else {
     fprintf(fp, "Forward\n");
-}
+  }
 
   fprintf(fp, "Time Step: ");
   fprintd(fp, control->Evolve.dTimeStep, control->Io.iSciNot,
@@ -2005,7 +2006,7 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
   fprintf(fp, "Output Order:");
   for (iCol = 0; iCol < (files->Outfile[iBody].iNumCols + iExtra); iCol++) {
     fprintf(fp, " %s", cCol[iCol]);
-}
+  }
   fprintf(fp, "\n");
 }
 
@@ -2041,7 +2042,7 @@ void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
   fprintf(fp, "Grid Output Order:");
   for (iCol = 0; iCol < (files->Outfile[iBody].iNumGrid + iExtra); iCol++) {
     fprintf(fp, " %s", cCol[iCol]);
-}
+  }
   fprintf(fp, "\n");
 }
 
@@ -2056,13 +2057,13 @@ void LogOptions(CONTROL *control, FILES *files, MODULE *module, SYSTEM *system,
   fprintf(fp, "Primary Input File: %s\n", files->Infile[0].cIn);
   for (iFile = 1; iFile < files->iNumInputs; iFile++) {
     fprintf(fp, "Body File #%d: %s\n", iFile, files->Infile[iFile].cIn);
-}
+  }
   fprintf(fp, "Allow files to be overwitten: ");
   if (control->Io.bOverwrite) {
     fprintf(fp, "Yes");
   } else {
     fprintf(fp, "No");
-}
+  }
   fprintf(fp, "\n");
 
   LogUnits(fp);
@@ -2088,9 +2089,9 @@ void LogSystem(BODY *body, CONTROL *control, MODULE *module, OUTPUT *output,
 
   for (iOut = OUTSTART; iOut < OUTBODYSTART; iOut++) {
     if (output[iOut].iNum > 0) {
-      //Useful for debugging
-      //printf("%d\n",iOut);
-      //fflush(stdout);
+      // Useful for debugging
+      // printf("%d\n",iOut);
+      // fflush(stdout);
       WriteLogEntry(body, control, &output[iOut], system, update, fnWrite[iOut],
                     fp, 0);
     }
@@ -2112,8 +2113,8 @@ void LogBody(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     for (iOut = OUTBODYSTART; iOut < OUTEND; iOut++) {
       if (output[iOut].iNum > 0) {
         if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
-          //Useful for debugging
-          //fprintf(stderr,"%d %d\n",iBody,iOut);
+          // Useful for debugging
+          // fprintf(stderr,"%d %d\n",iBody,iOut);
           WriteLogEntry(body, control, &output[iOut], system, update,
                         fnWrite[iOut], fp, iBody);
         }
@@ -2124,7 +2125,7 @@ void LogBody(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
       module->fnLogBody[iBody][iModule](body, control, output, system, update,
                                         fnWrite, fp, iBody);
-}
+    }
 
     LogOutputOrder(body, control, files, output, system, update, fnWrite, fp,
                    iBody);
@@ -2164,7 +2165,7 @@ void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     fprintf(fp, "\n---- INITIAL ");
   } else {
     fprintf(fp, "\n\n\n---- FINAL ");
-}
+  }
 
   /* System Properties */
   LogSystem(body, control, module, output, system, update, fnWrite, fp);
@@ -2200,7 +2201,7 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
 
   for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
 
-    //Need to get orbital elements for SpiNBody in case they're being output
+    // Need to get orbital elements for SpiNBody in case they're being output
     if (body[iBody].bSpiNBody) {
       Bary2OrbElems(body, iBody);
     }
@@ -2216,7 +2217,7 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
                           &control->Units[iBody], update, iBody, dTmp, cUnit);
             for (iSubOut = 0; iSubOut < output[iOut].iNum; iSubOut++) {
               dCol[iCol + iSubOut + iExtra] = dTmp[iSubOut];
-}
+            }
             iExtra += (output[iOut].iNum - 1);
             free(dTmp);
             dTmp = NULL;
@@ -2229,8 +2230,8 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
     if (files->Outfile[iBody].iNumCols > 0) {
       fp = fopen(files->Outfile[iBody].cOut, "a");
       for (iCol = 0; iCol < files->Outfile[iBody].iNumCols + iExtra; iCol++) {
-        //printf("%d %d\n",iBody,iCol);
-        //fflush(stdout);
+        // printf("%d %d\n",iBody,iCol);
+        // fflush(stdout);
         fprintd(fp, dCol[iCol], control->Io.iSciNot, control->Io.iDigits);
         fprintf(fp, " ");
       }
@@ -2335,27 +2336,29 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
             }
             if (body[iBody].dSemi < body[jBody].dSemi) {
               for (j = 0; j < 26; j++) {
-                /* output alpha, laplace func, derivatives for each internal/external pair.
-                  external/internal pairs are duplicates and so not output. this can create a
-                  large amount of data for systems with lots of planets (78 columns/planet pair) */
+                /* output alpha, laplace func, derivatives for each
+                  internal/external pair. external/internal pairs are duplicates
+                  and so not output. this can create a
+                  large amount of data for systems with lots of planets (78
+                  columns/planet pair) */
                 fprintd(
                       fp,
                       system->daAlpha0[0][system->iaLaplaceN[iBody][jBody]][j],
-                      control->Io.iSciNot, control->Io.iDigits); //output alpha
+                      control->Io.iSciNot, control->Io.iDigits); // output alpha
                 fprintf(fp, " ");
 
                 fprintd(fp,
                         system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]]
                                           [j],
                         control->Io.iSciNot,
-                        control->Io.iDigits); //output LaplaceC
+                        control->Io.iDigits); // output LaplaceC
                 fprintf(fp, " ");
 
                 fprintd(fp,
                         system->daLaplaceD[0][system->iaLaplaceN[iBody][jBody]]
                                           [j],
                         control->Io.iSciNot,
-                        control->Io.iDigits); //output LaplaceD
+                        control->Io.iDigits); // output LaplaceD
                 fprintf(fp, " ");
               }
             }
@@ -2374,14 +2377,16 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
               fp = fopen(cLaplaceFunc, "w");
               if (body[iBody].dSemi < body[jBody].dSemi) {
                 for (j = 0; j < LAPLNUM; j++) {
-                  /* output alpha, laplace func, derivatives for each internal/external pair.
-                    external/internal pairs are duplicates and so not output. this can create a
-                    large amount of data for systems with lots of planets (78 columns/planet pair) */
+                  /* output alpha, laplace func, derivatives for each
+                    internal/external pair. external/internal pairs are
+                    duplicates and so not output. this can create a
+                    large amount of data for systems with lots of planets (78
+                    columns/planet pair) */
                   fprintd(fp,
                           system->daAlpha0[0][system->iaLaplaceN[iBody][jBody]]
                                           [j],
                           control->Io.iSciNot,
-                          control->Io.iDigits); //output alpha
+                          control->Io.iDigits); // output alpha
                   fprintf(fp, " ");
 
                   fprintd(
@@ -2389,7 +2394,7 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
                         system->daLaplaceC[0][system->iaLaplaceN[iBody][jBody]]
                                           [j],
                         control->Io.iSciNot,
-                        control->Io.iDigits); //output LaplaceC
+                        control->Io.iDigits); // output LaplaceC
                   fprintf(fp, " ");
 
                   fprintd(
@@ -2397,7 +2402,7 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
                         system->daLaplaceD[0][system->iaLaplaceN[iBody][jBody]]
                                           [j],
                         control->Io.iSciNot,
-                        control->Io.iDigits); //output LaplaceD
+                        control->Io.iDigits); // output LaplaceD
                   fprintf(fp, " ");
                 }
               }
@@ -2410,7 +2415,8 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
     }
   }
 
-  // Only check for DistOrb-specific output behavior if more than one body exists
+  // Only check for DistOrb-specific output behavior if more than one body
+  // exists
   if (control->Evolve.iNumBodies > 1) {
     if (body[1].bDistOrb) {
       if (control->bOutputEigen) {

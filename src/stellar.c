@@ -47,14 +47,14 @@ void ReadSatXUVFrac(BODY *body, CONTROL *control, FILES *files,
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be greater than 0.\n", options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     body[iFile - 1].dSatXUVFrac = dTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dSatXUVFrac = options->dDefault;
-}
+  }
 }
 
 void ReadSatXUVTime(BODY *body, CONTROL *control, FILES *files,
@@ -75,11 +75,11 @@ void ReadSatXUVTime(BODY *body, CONTROL *control, FILES *files,
     } else {
       body[iFile - 1].dSatXUVTime =
             dTmp * fdUnitsTime(control->Units[iFile].iTime);
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dSatXUVTime = options->dDefault;
-}
+  }
 }
 
 void ReadXUVBeta(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -96,14 +96,14 @@ void ReadXUVBeta(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be >= 0.\n", options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     body[iFile - 1].dXUVBeta = dTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dXUVBeta = options->dDefault;
-}
+  }
 }
 
 void ReadStellarModel(BODY *body, CONTROL *control, FILES *files,
@@ -129,13 +129,13 @@ void ReadStellarModel(BODY *body, CONTROL *control, FILES *files,
                 "ERROR: Unknown argument to %s: %s. Options are BARAFFE, "
                 "PROXIMACEN, or NONE.\n",
                 options->cName, cTmp);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].iStellarModel = STELLAR_MODEL_BARAFFE;
-}
+  }
 }
 
 void ReadMagBrakingModel(BODY *body, CONTROL *control, FILES *files,
@@ -163,14 +163,14 @@ void ReadMagBrakingModel(BODY *body, CONTROL *control, FILES *files,
                 "ERROR: Unknown argument to %s: %s. Options are REINERS, "
                 "SKUMANICH, MATT, or NONE.\n",
                 options->cName, cTmp);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].iMagBrakingModel =
           STELLAR_DJDT_RM12; // Default to Reiners & Mohanty 2012 model
-}
+  }
 }
 
 void ReadWindModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -194,13 +194,13 @@ void ReadWindModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                 "ERROR: Unknown argument to %s: %s. Options are REINERS or "
                 "NONE.\n",
                 options->cName, cTmp);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].iWindModel = STELLAR_MODEL_REINERS;
-}
+  }
 }
 
 void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -222,7 +222,7 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       if (control->Io.iVerbose >= VERBINPUT) {
         fprintf(stderr, "WARNING: The REINERS XUV model has serious issues. "
                         "The recommended model is RIBAS.\n");
-}
+      }
       body[iFile - 1].iXUVModel = STELLAR_MODEL_REINERS;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
@@ -230,13 +230,13 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                 "ERROR: Unknown argument to %s: %s. Options are RIBAS, REINERS "
                 "or NONE.\n",
                 options->cName, cTmp);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].iXUVModel = STELLAR_MODEL_RIBAS;
-}
+  }
 }
 
 void ReadHZModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -258,13 +258,13 @@ void ReadHZModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
         fprintf(stderr,
                 "ERROR: Unknown argument to %s: %s. Options are KOPPARAPU13.\n",
                 options->cName, cTmp);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].iHZModel = HZ_MODEL_KOPPARAPU;
-}
+  }
 }
 
 void ReadRossbyCut(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -283,7 +283,7 @@ void ReadRossbyCut(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   } else {
     if (iFile > 0) {
       body[iFile - 1].bRossbyCut = 0; // Default to NOT using Rossby cut model
-}
+    }
   }
 }
 
@@ -304,7 +304,7 @@ void ReadEvolveRG(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   } else {
     if (iFile > 0) {
       body[iFile - 1].bEvolveRG = 1; // Default to evolve RG
-}
+    }
   }
 }
 
@@ -327,7 +327,7 @@ void ReadHaltEndBaraffeGrid(BODY *body, CONTROL *control, FILES *files,
     if (iFile > 0) {
       AssignDefaultInt(options, &control->Halt[iFile - 1].bEndBaraffeGrid,
                        files->iNumInputs);
-}
+    }
   }
 }
 
@@ -500,7 +500,7 @@ void ReadOptionsStellar(BODY *body, CONTROL *control, FILES *files,
   for (iOpt = OPTSTARTSTELLAR; iOpt < OPTENDSTELLAR; iOpt++) {
     if (options[iOpt].iType != -1) {
       fnRead[iOpt](body, control, files, &options[iOpt], system, iBody + 1);
-}
+    }
   }
 }
 
@@ -574,7 +574,7 @@ void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,
         printf("INFO: Luminosity set for body %d, but this value will be "
                "computed from the grid.\n",
                iBody);
-}
+      }
     }
   } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
     body[iBody].dLuminosity =
@@ -585,7 +585,7 @@ void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,
         printf("INFO: Luminosity set for body %d, but this value will be "
                "computed from the grid.\n",
                iBody);
-}
+      }
     }
   } else if (body[iBody].iStellarModel == STELLAR_MODEL_NONE) {
     if (options[OPT_LUMINOSITY].iLine[iBody + 1] == -1) {
@@ -607,9 +607,9 @@ void VerifyLuminosity(BODY *body, CONTROL *control, OPTIONS *options,
   update[iBody].iaBody[update[iBody].iLuminosity][0][0] = iBody;
 
   update[iBody].pdLuminosityStellar =
-        &update[iBody].daDerivProc
-               [update[iBody].iLuminosity]
-               [0]; // NOTE: This points to the VALUE of the luminosity
+        &update[iBody].daDerivProc[update[iBody].iLuminosity]
+                                  [0]; // NOTE: This points to the VALUE of the
+                                       // luminosity
 }
 
 void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,
@@ -625,7 +625,7 @@ void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,
         printf("INFO: Radius set for body %d, but this value will be computed "
                "from the grid.\n",
                iBody);
-}
+      }
     }
   } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
     body[iBody].dRadius =
@@ -636,7 +636,7 @@ void VerifyRadius(BODY *body, CONTROL *control, OPTIONS *options,
         printf("INFO: Radius set for body %d, but this value will be computed "
                "from the grid.\n",
                iBody);
-}
+      }
     }
   }
 
@@ -662,12 +662,13 @@ void VerifyRadGyra(BODY *body, CONTROL *control, OPTIONS *options,
       body[iBody].dRadGyra =
             fdRadGyraFunctionBaraffe(body[iBody].dAge, body[iBody].dMass);
       if (options[OPT_RG].iLine[iBody + 1] >= 0) {
-        // User specified radius of gyration, but we're reading it from the grid!
+        // User specified radius of gyration, but we're reading it from the
+        // grid!
         if (control->Io.iVerbose >= VERBINPUT) {
           printf("INFO: Radius of Gyration set for body %d, but this value "
                  "will be computed from the grid.\n",
                  iBody);
-}
+        }
       }
     } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
       if (options[OPT_RG].iLine[iBody + 1] < 0) {
@@ -676,7 +677,7 @@ void VerifyRadGyra(BODY *body, CONTROL *control, OPTIONS *options,
           printf("ERROR: Must set radius of gyration for body %d when using "
                  "Proxima Cen stellar model.\n",
                  iBody);
-}
+        }
         exit(1);
       }
     }
@@ -688,9 +689,9 @@ void VerifyRadGyra(BODY *body, CONTROL *control, OPTIONS *options,
     update[iBody].iaBody[update[iBody].iRadGyra][0][0] = iBody;
 
     update[iBody].pdRadGyraStellar =
-          &update[iBody].daDerivProc
-                 [update[iBody].iRadGyra]
-                 [0]; // NOTE: This points to the VALUE of the radius of gyration
+          &update[iBody].daDerivProc[update[iBody].iRadGyra]
+                                    [0]; // NOTE: This points to the VALUE of
+                                         // the radius of gyration
   }
   // Not evolving RG, must be supplied by user
   else {
@@ -700,7 +701,7 @@ void VerifyRadGyra(BODY *body, CONTROL *control, OPTIONS *options,
         printf("ERROR: Must set radius of gyration for body %d when its "
                "bEvolveRG = 0.\n",
                iBody);
-}
+      }
       exit(1);
     }
   }
@@ -719,7 +720,7 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,
         printf("INFO: Temperature set for body %d, but this value will be "
                "computed from the grid.\n",
                iBody);
-}
+      }
     }
   } else if (body[iBody].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
     body[iBody].dTemperature =
@@ -730,7 +731,7 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,
         printf("INFO: Temperature set for body %d, but this value will be "
                "computed from the grid.\n",
                iBody);
-}
+      }
     }
   }
 
@@ -741,9 +742,9 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,
   update[iBody].iaBody[update[iBody].iTemperature][0][0] = iBody;
 
   update[iBody].pdTemperatureStellar =
-        &update[iBody].daDerivProc
-               [update[iBody].iTemperature]
-               [0]; // NOTE: This points to the VALUE of the temperature
+        &update[iBody].daDerivProc[update[iBody].iTemperature]
+                                  [0]; // NOTE: This points to the VALUE of the
+                                       // temperature
 }
 
 void fnPropsAuxStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
@@ -769,7 +770,7 @@ void fnPropsAuxStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
     // Take the lesser value
     if (dLXRay > dLXRaySat) {
       dLXRay = dLXRaySat;
-}
+    }
 
     // Sanz-Forcada et al. (2011), eqn (3)
     dLEUV = 1.e7 * pow(10., 4.80 + 0.860 * log10(dLXRay * 1.e-7));
@@ -821,7 +822,8 @@ void AssignStellarDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
         &fdTemperature; // NOTE: This points to the value of the Temperature!
   if (body[iBody].bEvolveRG) {
     fnUpdate[iBody][update[iBody].iRadGyra][0] =
-          &fdRadGyra; // NOTE: This points to the value of the Radius of Gyration!
+          &fdRadGyra; // NOTE: This points to the value of the Radius of
+                      // Gyration!
   }
 }
 
@@ -834,14 +836,17 @@ void NullStellarDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
   fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngStellar] =
         &fndUpdateFunctionTiny;
   fnUpdate[iBody][update[iBody].iLuminosity][0] =
-        &fndUpdateFunctionTiny; // NOTE: This points to the value of the Luminosity!
+        &fndUpdateFunctionTiny; // NOTE: This points to the value of the
+                                // Luminosity!
   fnUpdate[iBody][update[iBody].iRadius][0] =
         &fndUpdateFunctionTiny; // NOTE: This points to the value of the Radius!
   fnUpdate[iBody][update[iBody].iTemperature][0] =
-        &fndUpdateFunctionTiny; // NOTE: This points to the value of the Temperature!
+        &fndUpdateFunctionTiny; // NOTE: This points to the value of the
+                                // Temperature!
   if (body[iBody].bEvolveRG) {
     fnUpdate[iBody][update[iBody].iRadGyra][0] =
-          &fndUpdateFunctionTiny; // NOTE: This points to the value of the Radius of Gyration!
+          &fndUpdateFunctionTiny; // NOTE: This points to the value of the
+                                  // Radius of Gyration!
   }
 }
 
@@ -856,7 +861,7 @@ void VerifyStellar(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
               "ERROR: Looks like there's more than one equation trying to set "
               "dLuminosity for body %d!",
               iBody);
-}
+    }
     exit(EXIT_INPUT);
   }
   VerifyLuminosity(body, control, options, update, body[iBody].dAge, iBody);
@@ -867,7 +872,7 @@ void VerifyStellar(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
               "ERROR: Looks like there's more than one equation trying to set "
               "dRadius for body %d!",
               iBody);
-}
+    }
     exit(EXIT_INPUT);
   }
 
@@ -877,7 +882,7 @@ void VerifyStellar(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
               "ERROR: Looks like there's more than one equation trying to set "
               "dRadGyra for body %d!",
               iBody);
-}
+    }
     exit(EXIT_INPUT);
   }
 
@@ -891,7 +896,7 @@ void VerifyStellar(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
               "ERROR: Looks like there's more than one equation trying to set "
               "dTemperature for body %d!",
               iBody);
-}
+    }
     exit(EXIT_INPUT);
   }
   VerifyTemperature(body, control, options, update, body[iBody].dAge, iBody);
@@ -911,49 +916,50 @@ void InitializeModuleStellar(CONTROL *control, MODULE *module) {
 /**************** STELLAR update ****************/
 
 void InitializeUpdateStellar(BODY *body, UPDATE *update, int iBody) {
-  //if (body[iBody].dLuminosity > 0) {
+  // if (body[iBody].dLuminosity > 0) {
   if (update[iBody].iNumLuminosity == 0) {
     update[iBody].iNumVars++;
-}
+  }
   update[iBody].iNumLuminosity++;
   //}
 
   if (body[iBody].dRadius > 0) {
     if (update[iBody].iNumRadius == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumRadius++;
   }
 
   if (body[iBody].dRadGyra > 0 && body[iBody].bEvolveRG) {
     if (update[iBody].iNumRadGyra == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumRadGyra++;
   }
 
-  // NOTE: Rory and Rodrigo decided to ALWAYS track the rotation evolution of the star,
-  // so I'm not going to check whether dRotRate is zero here. If it is, it gets set
-  // to its default value, and we track angular momentum conservation from there.
+  // NOTE: Rory and Rodrigo decided to ALWAYS track the rotation evolution of
+  // the star, so I'm not going to check whether dRotRate is zero here. If it
+  // is, it gets set to its default value, and we track angular momentum
+  // conservation from there.
   if (update[iBody].iNumRot == 0) {
     update[iBody].iNumVars++;
-}
+  }
   update[iBody].iNumRot++;
 
   if (update[iBody].iNumLostAngMom == 0) {
     update[iBody].iNumVars++;
-}
+  }
   update[iBody].iNumLostAngMom++;
 
   if (update[iBody].iNumLostEng == 0) {
     update[iBody].iNumVars++;
-}
+  }
   update[iBody].iNumLostEng++;
 
   if (body[iBody].dTemperature > 0) {
     if (update[iBody].iNumTemperature == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumTemperature++;
   }
 }
@@ -1038,14 +1044,14 @@ int fbHaltEndBaraffeGrid(BODY *body, EVOLVE *evolve, HALT *halt, IO *io,
 void CountHaltsStellar(HALT *halt, int *iHalt) {
   if (halt->bEndBaraffeGrid) {
     (*iHalt)++;
-}
+  }
 }
 
 void VerifyHaltStellar(BODY *body, CONTROL *control, OPTIONS *options,
                        int iBody, int *iHalt) {
   if (control->Halt[iBody].bEndBaraffeGrid) {
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltEndBaraffeGrid;
-}
+  }
 }
 
 /************* STELLAR Outputs ******************/
@@ -1208,7 +1214,7 @@ void LogBodyStellar(BODY *body, CONTROL *control, OUTPUT *output,
     if (output[iOut].iNum > 0) {
       WriteLogEntry(body, control, &output[iOut], system, update, fnWrite[iOut],
                     fp, iBody);
-}
+    }
   }
 }
 
@@ -1251,7 +1257,7 @@ double fdLuminosity(BODY *body, SYSTEM *system, int *iaBody) {
       return foo;
     } else {
       body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
-}
+    }
   } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
     foo = fdLuminosityFunctionProximaCen(body[iaBody[0]].dAge,
                                          body[iaBody[0]].dMass);
@@ -1259,14 +1265,14 @@ double fdLuminosity(BODY *body, SYSTEM *system, int *iaBody) {
       return foo;
     } else {
       body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
-}
+    }
   }
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE ||
       body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST) {
     return body[iaBody[0]].dLuminosity;
   } else {
     return 0;
-}
+  }
 }
 
 double fdRadius(BODY *body, SYSTEM *system, int *iaBody) {
@@ -1277,7 +1283,7 @@ double fdRadius(BODY *body, SYSTEM *system, int *iaBody) {
       return foo;
     } else {
       body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
-}
+    }
   } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
     foo = fdRadiusFunctionProximaCen(body[iaBody[0]].dAge,
                                      body[iaBody[0]].dMass);
@@ -1285,14 +1291,14 @@ double fdRadius(BODY *body, SYSTEM *system, int *iaBody) {
       return foo;
     } else {
       body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
-}
+    }
   }
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE ||
       body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST) {
     return body[iaBody[0]].dRadius;
   } else {
     return 0;
-}
+  }
 }
 
 double fdTemperature(BODY *body, SYSTEM *system, int *iaBody) {
@@ -1304,7 +1310,7 @@ double fdTemperature(BODY *body, SYSTEM *system, int *iaBody) {
       return foo;
     } else {
       body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
-}
+    }
   } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
     foo = fdTemperatureFunctionProximaCen(body[iaBody[0]].dAge,
                                           body[iaBody[0]].dMass);
@@ -1312,14 +1318,14 @@ double fdTemperature(BODY *body, SYSTEM *system, int *iaBody) {
       return foo;
     } else {
       body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
-}
+    }
   }
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE ||
       body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST) {
     return body[iaBody[0]].dTemperature;
   } else {
     return 0;
-}
+  }
 }
 
 double fdRadGyra(BODY *body, SYSTEM *system, int *iaBody) {
@@ -1336,30 +1342,31 @@ double fdRadGyra(BODY *body, SYSTEM *system, int *iaBody) {
       return foo;
     } else {
       body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
-}
+    }
   } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
     foo = body[iaBody[0]].dRadGyra; // XXX Not implemented!
     if (!isnan(foo)) {
       return foo;
     } else {
       body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
-}
+    }
   }
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE ||
       body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST) {
     return body[iaBody[0]].dRadGyra;
   } else {
     return 0;
-}
+  }
 }
 
-/*! Compute the instataneous change in stellar radius according to the Baraffe models.
- * Valid for the Baraffe stellar models
+/*! Compute the instataneous change in stellar radius according to the Baraffe
+ * models. Valid for the Baraffe stellar models
  */
 double fdDRadiusDtStellar(BODY *body, SYSTEM *system, int *iaBody) {
-  // Note: Compute a very simple derivative. NOTE: This won't work if variables like the
-  // stellar mass are changing, too! Perhaps it's better to keep track of the previous
-  // values of the radius and compute the derivative from those? TODO: Check this.
+  // Note: Compute a very simple derivative. NOTE: This won't work if variables
+  // like the stellar mass are changing, too! Perhaps it's better to keep track
+  // of the previous values of the radius and compute the derivative from those?
+  // TODO: Check this.
 
   if (body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
     return dTINY;
@@ -1377,13 +1384,14 @@ double fdDRadiusDtStellar(BODY *body, SYSTEM *system, int *iaBody) {
   return (dRadPlus - dRadMinus) / (2. * eps);
 }
 
-/*! Compute the instataneous change in stellar radius according to the Baraffe models.
- * Valid for the Baraffe stellar models
+/*! Compute the instataneous change in stellar radius according to the Baraffe
+ * models. Valid for the Baraffe stellar models
  */
 double fdDRadGyraDtStellar(BODY *body, SYSTEM *system, int *iaBody) {
-  // Note: Compute a very simple derivative. NOTE: This won't work if variables like the
-  // stellar mass are changing, too! Perhaps it's better to keep track of the previous
-  // values of the radius of gyration and compute the derivative from those? TODO: Check this.
+  // Note: Compute a very simple derivative. NOTE: This won't work if variables
+  // like the stellar mass are changing, too! Perhaps it's better to keep track
+  // of the previous values of the radius of gyration and compute the derivative
+  // from those? TODO: Check this.
 
   // If not evolving RG or not using Baraffe+2015 models, ignore RG evolution
   if (body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE ||
@@ -1403,8 +1411,8 @@ double fdDRadGyraDtStellar(BODY *body, SYSTEM *system, int *iaBody) {
   return (dRGPlus - dRGMinus) / (2. * eps);
 }
 
-/*! Compute instataneous change in potential energy due to stellar radius evolution
- * Note that this energy is released as radiation
+/*! Compute instataneous change in potential energy due to stellar radius
+ * evolution Note that this energy is released as radiation
  */
 double fdDEDtPotConStellar(BODY *body, SYSTEM *system, int *iaBody) {
   int iBody = iaBody[0];
@@ -1416,11 +1424,12 @@ double fdDEDtPotConStellar(BODY *body, SYSTEM *system, int *iaBody) {
   dEdt = ALPHA_STRUCT * BIGG * body[iBody].dMass * body[iBody].dMass *
          dDRadiusDt / (body[iBody].dRadius * body[iBody].dRadius);
 
-  return -dEdt; // Negative because I want to store energy removed from system as positive quantity
+  return -dEdt; // Negative because I want to store energy removed from system
+                // as positive quantity
 }
 
-/*! Compute instataneous change in rotational energy due to stellar radius evolution
- * and considering angular momentum conservation
+/*! Compute instataneous change in rotational energy due to stellar radius
+ * evolution and considering angular momentum conservation
  */
 double fdDEDtRotConStellar(BODY *body, SYSTEM *system, int *iaBody) {
   int iBody = iaBody[0];
@@ -1453,7 +1462,8 @@ double fdDEDtRotRadGyraStellar(BODY *body, SYSTEM *system, int *iaBody) {
   return -dEdt; // If E_rot increases, energy un-lost, so negative sign
 }
 
-/*! Compute instataneous change in rotational energy due to stellar magnetic braking */
+/*! Compute instataneous change in rotational energy due to stellar magnetic
+ * braking */
 double fdDEDtRotBrakeStellar(BODY *body, SYSTEM *system, int *iaBody) {
   int iBody = iaBody[0];
   double dJDt, dEdt;
@@ -1511,7 +1521,7 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
       dOmegaCrit = RM12OMEGACRIT;
     } else {
       dOmegaCrit = RM12OMEGACRITFULLYCONVEC;
-}
+    }
     if (body[iaBody[0]].iWindModel == STELLAR_MODEL_REINERS) {
       if (body[iaBody[0]].dRotRate >= dOmegaCrit) {
         dDJDt = -RM12CONST * body[iaBody[0]].dRotRate *
@@ -1572,17 +1582,16 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
   }
 }
 
-/*! Compute the change in rotation rate when the radius of gyration changes via conservation
- * of angular momentum:
- * dw/dt = -2 dRG/dt * w/RG
+/*! Compute the change in rotation rate when the radius of gyration changes via
+ * conservation of angular momentum: dw/dt = -2 dRG/dt * w/RG
  */
 double fdDRotRateDtRadGyra(BODY *body, SYSTEM *system, int *iaBody) {
 
   double dDRGDt;
 
-  // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
-  // is likely locked to the disk rotation (Kevin Covey's suggestion).
-  // Also, only applies when you're using a stellar model!
+  // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the
+  // stellar rotation is likely locked to the disk rotation (Kevin Covey's
+  // suggestion). Also, only applies when you're using a stellar model!
   if (body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
     return dTINY;
   }
@@ -1601,9 +1610,9 @@ double fdDRotRateDtCon(BODY *body, SYSTEM *system, int *iaBody) {
 
   double dDRadiusDt;
 
-  // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the stellar rotation
-  // is likely locked to the disk rotation (Kevin Covey's suggestion).
-  // Also, only applies when you're using a stellar model!
+  // Note that we force dRotRate/dt = 0 in the first 1e6 years, since the
+  // stellar rotation is likely locked to the disk rotation (Kevin Covey's
+  // suggestion). Also, only applies when you're using a stellar model!
   if (body[iaBody[0]].iStellarModel != STELLAR_MODEL_BARAFFE) {
     return dTINY;
   }
@@ -1621,7 +1630,8 @@ double fdDRotRateDtMagBrake(BODY *body, SYSTEM *system, int *iaBody) {
 
   double dDJDt, dMomIn;
 
-  // Now, let's calculate dJ/dt due to magnetic braking.  Negative since star loses it
+  // Now, let's calculate dJ/dt due to magnetic braking.  Negative since star
+  // loses it
   dDJDt = -fdDJDtMagBrakingStellar(body, system, iaBody);
 
   // Calculate moment of inertia
@@ -1632,13 +1642,14 @@ double fdDRotRateDtMagBrake(BODY *body, SYSTEM *system, int *iaBody) {
   return dDJDt / dMomIn;
 }
 
-/*! Compute the change in rotation rate when the radius and total angular momentum
- * are changing.
+/*! Compute the change in rotation rate when the radius and total angular
+ * momentum are changing.
  */
 double fdDRotRateDt(BODY *body, SYSTEM *system, int *iaBody) {
 
-  // Contributions due to contraction, r_g changes, and magnetic braking via chain rule
-  // dw_net/dt = dw_contraction/dt + dw_mag_braking/dt + dw_rg_changes/dt
+  // Contributions due to contraction, r_g changes, and magnetic braking via
+  // chain rule dw_net/dt = dw_contraction/dt + dw_mag_braking/dt +
+  // dw_rg_changes/dt
   return fdDRotRateDtCon(body, system, iaBody) +
          fdDRotRateDtMagBrake(body, system, iaBody) +
          fdDRotRateDtRadGyra(body, system, iaBody);
@@ -1649,7 +1660,8 @@ double fdLuminosityFunctionBaraffe(double dAge, double dMass) {
   double L = fdBaraffe(STELLAR_L, dAge, dMass, 3, &iError);
   if ((iError == STELLAR_ERR_NONE) || (iError == STELLAR_ERR_LINEAR)) {
     return L;
-  } else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI || iError == STELLAR_ERR_ISNAN) {
+  } else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI ||
+             iError == STELLAR_ERR_ISNAN) {
     return NAN;
   } else {
     if (iError == STELLAR_ERR_OUTOFBOUNDS_LO) {
@@ -1661,7 +1673,7 @@ double fdLuminosityFunctionBaraffe(double dAge, double dMass) {
               "ERROR: Bad interpolation order in routine fdBaraffe().\n");
     } else {
       fprintf(stderr, "ERROR: Undefined error in fdBaraffe().\n");
-}
+    }
     exit(EXIT_INT);
   }
 }
@@ -1671,7 +1683,8 @@ double fdRadiusFunctionBaraffe(double dAge, double dMass) {
   double R = fdBaraffe(STELLAR_R, dAge, dMass, 3, &iError);
   if ((iError == STELLAR_ERR_NONE) || (iError == STELLAR_ERR_LINEAR)) {
     return R;
-  } else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI || iError == STELLAR_ERR_ISNAN) {
+  } else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI ||
+             iError == STELLAR_ERR_ISNAN) {
     return NAN;
   } else {
     if (iError == STELLAR_ERR_OUTOFBOUNDS_LO) {
@@ -1683,7 +1696,7 @@ double fdRadiusFunctionBaraffe(double dAge, double dMass) {
               "ERROR: Bad interpolation order in routine fdBaraffe().\n");
     } else {
       fprintf(stderr, "ERROR: Undefined error in fdBaraffe().\n");
-}
+    }
     exit(EXIT_INT);
   }
 }
@@ -1693,7 +1706,8 @@ double fdRadGyraFunctionBaraffe(double dAge, double dMass) {
   double rg = fdBaraffe(STELLAR_RG, dAge, dMass, 3, &iError);
   if ((iError == STELLAR_ERR_NONE) || (iError == STELLAR_ERR_LINEAR)) {
     return rg;
-  } else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI || iError == STELLAR_ERR_ISNAN) {
+  } else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI ||
+             iError == STELLAR_ERR_ISNAN) {
     return NAN;
   } else {
     if (iError == STELLAR_ERR_OUTOFBOUNDS_LO) {
@@ -1705,7 +1719,7 @@ double fdRadGyraFunctionBaraffe(double dAge, double dMass) {
               "ERROR: Bad interpolation order in routine fdBaraffe().\n");
     } else {
       fprintf(stderr, "ERROR: Undefined error in fdBaraffe().\n");
-}
+    }
     exit(EXIT_INT);
   }
 }
@@ -1715,7 +1729,8 @@ double fdTemperatureFunctionBaraffe(double dAge, double dMass) {
   double T = fdBaraffe(STELLAR_T, dAge, dMass, 3, &iError);
   if ((iError == STELLAR_ERR_NONE) || (iError == STELLAR_ERR_LINEAR)) {
     return T;
-  } else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI || iError == STELLAR_ERR_ISNAN) {
+  } else if (iError == STELLAR_ERR_OUTOFBOUNDS_HI ||
+             iError == STELLAR_ERR_ISNAN) {
     return NAN;
   } else {
     if (iError == STELLAR_ERR_OUTOFBOUNDS_LO) {
@@ -1727,7 +1742,7 @@ double fdTemperatureFunctionBaraffe(double dAge, double dMass) {
               "ERROR: Bad interpolation order in routine fdBaraffe().\n");
     } else {
       fprintf(stderr, "ERROR: Undefined error in fdBaraffe().\n");
-}
+    }
     exit(EXIT_INT);
   }
 }
@@ -1763,8 +1778,9 @@ double fdRadiusFunctionProximaCen(double dAge, double dMass) {
 }
 
 /* Compute the convective turnover timescale (in seconds) based on Equation 36
-   from Cranmer and Saar 2011.  This equation is valid for 3300 <= Teff <= 7000 K,
-   which pretty much brackets all stellar evolution models considered in stellar.
+   from Cranmer and Saar 2011.  This equation is valid for 3300 <= Teff <= 7000
+   K, which pretty much brackets all stellar evolution models considered in
+   stellar.
 */
 double fdCranmerSaar2011TauCZ(double Teff) {
   double tau =

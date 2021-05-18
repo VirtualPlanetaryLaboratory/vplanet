@@ -122,7 +122,7 @@ void VerifyDynEllip(BODY *body, CONTROL *control, OPTIONS *options,
                 "overridden.\n",
                 options[OPT_DYNELLIP].cName, cFile,
                 options[OPT_CALCDYNELLIP].cName, options[OPT_DYNELLIP].cName);
-}
+      }
     }
     body[iBody].dDynEllip = CalcDynEllipEq(body, iBody);
   }
@@ -182,19 +182,19 @@ void VerifyOrbit(BODY *body, CONTROL *control, FILES files, OPTIONS *options,
       options[OPT_ORBMEANMOTION].iLine[iFile] == -1 &&
       options[OPT_ORBPER].iLine[iFile] == -1) {
     dSemi = body[iBody].dSemi;
-}
+  }
 
   if (options[OPT_ORBSEMI].iLine[iFile] == -1 &&
       options[OPT_ORBMEANMOTION].iLine[iFile] > -1 &&
       options[OPT_ORBPER].iLine[iFile] == -1) {
     dMeanMotion = body[iBody].dMeanMotion;
-}
+  }
 
   if (options[OPT_ORBSEMI].iLine[iFile] == -1 &&
       options[OPT_ORBMEANMOTION].iLine[iFile] == -1 &&
       options[OPT_ORBPER].iLine[iFile] > -1) {
     dPeriod = body[iBody].dOrbPeriod;
-}
+  }
 
   /* Was Semi set and nothing else? */
   if (dSemi > 0 && dMeanMotion == 0 && dPeriod == 0) {
@@ -202,10 +202,10 @@ void VerifyOrbit(BODY *body, CONTROL *control, FILES files, OPTIONS *options,
       if (body[iBody].bBinary == 0) { // Not binary, regular single-star orbit
         body[iBody].dMeanMotion = fdSemiToMeanMotion(
               body[iBody].dSemi, body[0].dMass + body[iBody].dMass);
-      } else if (
-            body[iBody].bBinary &&
-            body[iBody].iBodyType ==
-                  0) { // Set mean motion for CBP (primary,iBody==0;planet,iBody > 1)
+      } else if (body[iBody].bBinary &&
+                 body[iBody].iBodyType ==
+                       0) { // Set mean motion for CBP
+                            // (primary,iBody==0;planet,iBody > 1)
         body[iBody].dMeanMotion = fdSemiToMeanMotion(
               body[iBody].dSemi,
               body[0].dMass + body[1].dMass + body[iBody].dMass);
@@ -256,14 +256,14 @@ void VerifyOrbit(BODY *body, CONTROL *control, FILES files, OPTIONS *options,
                       files.Infile[iFile].cIn,
                       options[OPT_ORBSEMI].iLine[iFile],
                       options[OPT_ORBMEANMOTION].iLine[iFile], iVerbose);
-}
+    }
 
     if (dPeriod > 0) {
       VerifyOrbitExit(options[OPT_ORBSEMI].cName, options[OPT_ORBPER].cName,
                       files.Infile[iFile].cIn, files.Infile[iFile].cIn,
                       options[OPT_ORBSEMI].iLine[iFile],
                       options[OPT_ORBPER].iLine[iFile], iVerbose);
-}
+    }
   }
 
   /* Were MeanMotion and OrbPeriod both set? */
@@ -272,7 +272,7 @@ void VerifyOrbit(BODY *body, CONTROL *control, FILES files, OPTIONS *options,
                     files.Infile[iFile].cIn, files.Infile[iFile].cIn,
                     options[OPT_ORBMEANMOTION].iLine[iFile],
                     options[OPT_ORBPER].iLine[iFile], iVerbose);
-}
+  }
 
   /* Only one option set */
 
@@ -283,36 +283,39 @@ void VerifyOrbit(BODY *body, CONTROL *control, FILES files, OPTIONS *options,
     } else if (body[iBody].bBinary && iBody == 1) { // binary
       body[iBody].dSemi =
             fdMeanMotionToSemi(body[0].dMass, body[1].dMass, dMeanMotion);
-    } else if (body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0) {
+    } else if (body[iBody].bBinary && body[iBody].iBodyType == 1 &&
+               iBody == 0) {
     } else {
       body[iBody].dSemi =
             fdMeanMotionToSemi(body[0].dMass, body[iBody].dMass, dMeanMotion);
-}
+    }
   }
   if (dPeriod > 0) {
     if (body[iBody].bBinary && body[iBody].iBodyType == 0) { // CBP
       body[iBody].dSemi = fdPeriodToSemi(
             dPeriod, (body[0].dMass + body[1].dMass + body[iBody].dMass));
     } else if (body[iBody].bBinary && body[iBody].iBodyType == 1 &&
-             iBody == 1) { // binary
+               iBody == 1) { // binary
       body[iBody].dSemi =
             fdPeriodToSemi(dPeriod, (body[0].dMass + body[iBody].dMass));
-    } else if (body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0) {
+    } else if (body[iBody].bBinary && body[iBody].iBodyType == 1 &&
+               iBody == 0) {
     } else {
       body[iBody].dSemi =
             fdPeriodToSemi(dPeriod, (body[0].dMass + body[iBody].dMass));
-}
+    }
   }
   if (dSemi > 0) {
     if (body[iBody].bBinary && body[iBody].iBodyType == 0) { // CBP
       body[iBody].dSemi = dSemi;
     } else if (body[iBody].bBinary && body[iBody].iBodyType == 1 &&
-             iBody == 1) { // binary
+               iBody == 1) { // binary
       body[iBody].dSemi = dSemi;
-    } else if (body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0) {
+    } else if (body[iBody].bBinary && body[iBody].iBodyType == 1 &&
+               iBody == 0) {
     } else {
       body[iBody].dSemi = dSemi;
-}
+    }
   }
   if (dMeanMotion == 0) {
     if (body[iBody].bBinary && body[iBody].iBodyType == 0) { // CBP
@@ -320,14 +323,15 @@ void VerifyOrbit(BODY *body, CONTROL *control, FILES files, OPTIONS *options,
             body[iBody].dSemi,
             body[0].dMass + body[1].dMass + body[iBody].dMass);
     } else if (body[iBody].bBinary && body[iBody].iBodyType == 1 &&
-             iBody == 1) { // Primary
+               iBody == 1) { // Primary
       body[iBody].dMeanMotion = fdSemiToMeanMotion(
             body[iBody].dSemi, body[0].dMass + body[1].dMass);
-    } else if (body[iBody].bBinary && body[iBody].iBodyType == 1 && iBody == 0) {
+    } else if (body[iBody].bBinary && body[iBody].iBodyType == 1 &&
+               iBody == 0) {
     } else {
       body[iBody].dMeanMotion = fdSemiToMeanMotion(
             body[iBody].dSemi, body[0].dMass + body[iBody].dMass);
-}
+    }
   }
 }
 
@@ -343,7 +347,7 @@ void IntegrationWarning(char cName1[], char cName2[], char cName3[],
     fprintf(stderr,
             "WARNING: %s set, but neither %s nor %s set (%s: Line %d).\n",
             cName1, cName2, cName3, cFile, iLine);
-}
+  }
   /* Backward file name */
 }
 
@@ -365,10 +369,10 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
     for (iFile = 0; iFile < files->iNumInputs; iFile++) {
       if (options[OPT_BACK].iLine[iFile] > 0) {
         iFile1 = iFile; // Error of multiple occurences checked in Read
-}
+      }
       if (options[OPT_FORW].iLine[iFile] > 0) {
         iFile2 = iFile; // Error of multiple occurences checked in Read
-}
+      }
     }
     DoubleLineExit(
           options[OPT_BACK].cFile[iFile1], options[OPT_FORW].cFile[iFile2],
@@ -384,7 +388,7 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr, "INFO: %s not set, defaulting to %s.\n",
                   options[OPT_OUTFILE].cName, files->Outfile[iFile - 1].cOut);
-}
+        }
       }
     }
     control->Evolve.iDir = -1;
@@ -399,7 +403,7 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr, "INFO: %s not set, defaulting to %s.\n",
                   options[OPT_OUTFILE].cName, files->Outfile[iFile - 1].cOut);
-}
+        }
       }
     }
     control->Evolve.iDir = 1;
@@ -413,7 +417,7 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
       }
       if (control->Io.iVerbose >= VERBINPUT) {
         fprintf(stderr, "WARNING: %s exists.\n", files->Outfile[iFile].cOut);
-}
+      }
       unlink(files->Outfile[iFile].cOut);
     }
   }
@@ -426,42 +430,42 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
                            options[OPT_FORW].cName,
                            options[OPT_ETA].cFile[iFile],
                            options[OPT_ETA].iLine[iFile], control->Io.iVerbose);
-}
+      }
 
       if (options[OPT_OUTPUTTIME].iLine[iFile] > -1) {
         IntegrationWarning(
               options[OPT_OUTPUTTIME].cName, options[OPT_BACK].cName,
               options[OPT_FORW].cName, options[OPT_OUTPUTTIME].cFile[iFile],
               options[OPT_OUTPUTTIME].iLine[iFile], control->Io.iVerbose);
-}
+      }
 
       if (options[OPT_STOPTIME].iLine[iFile] > -1) {
         IntegrationWarning(
               options[OPT_STOPTIME].cName, options[OPT_BACK].cName,
               options[OPT_FORW].cName, options[OPT_STOPTIME].cFile[iFile],
               options[OPT_STOPTIME].iLine[iFile], control->Io.iVerbose);
-}
+      }
 
       if (options[OPT_TIMESTEP].iLine[iFile] > -1) {
         IntegrationWarning(
               options[OPT_TIMESTEP].cName, options[OPT_BACK].cName,
               options[OPT_FORW].cName, options[OPT_TIMESTEP].cFile[iFile],
               options[OPT_TIMESTEP].iLine[iFile], control->Io.iVerbose);
-}
+      }
 
       if (options[OPT_VARDT].iLine[iFile] > -1) {
         IntegrationWarning(
               options[OPT_VARDT].cName, options[OPT_BACK].cName,
               options[OPT_FORW].cName, options[OPT_VARDT].cFile[iFile],
               options[OPT_VARDT].iLine[iFile], control->Io.iVerbose);
-}
+      }
 
       if (options[OPT_OUTPUTORDER].iLine[iFile] > -1) {
         IntegrationWarning(
               options[OPT_OUTPUTORDER].cName, options[OPT_BACK].cName,
               options[OPT_FORW].cName, options[OPT_OUTPUTORDER].cFile[iFile],
               options[OPT_OUTPUTORDER].iLine[iFile], control->Io.iVerbose);
-}
+      }
     }
   }
 
@@ -476,7 +480,7 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
       fprintf(stderr, "INFO: %s not set, defaulting to %s.\n",
               options[OPT_INTEGRATIONMETHOD].cName,
               options[OPT_INTEGRATIONMETHOD].cDefault);
-}
+    }
     if (memcmp(sLower(cTmp), "e", 1) == 0) {
       control->Evolve.iOneStep = EULER;
       *fnOneStep               = &EulerStep;
@@ -495,10 +499,10 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
     for (iFile = 0; iFile < files->iNumInputs; iFile++) {
       if (options[OPT_STOPTIME].iLine[iFile] > 0) {
         iFile1 = iFile; // Error of multiple occurences checked in Read
-}
+      }
       if (options[OPT_OUTPUTTIME].iLine[iFile] > 0) {
         iFile2 = iFile; // Error of multiple occurences checked in Read
-}
+      }
     }
     DoubleLineExit(options[OPT_STOPTIME].cFile[iFile1],
                    options[OPT_STOPTIME].cFile[iFile2],
@@ -521,13 +525,14 @@ void VerifyMassRad(BODY *body, CONTROL *control, OPTIONS *options, char cFile[],
 
   /* !!!!!! --- Mass and Radius ARE ALWAYS UPDATED AND CORRECT --- !!!!!! */
 
-  /* First see if mass and radius and nothing else set, i.e. the user input the default parameters */
+  /* First see if mass and radius and nothing else set, i.e. the user input the
+   * default parameters */
   if (options[OPT_MASS].iLine[iFile] > -1 &&
       options[OPT_RADIUS].iLine[iFile] > -1 &&
       options[OPT_DENSITY].iLine[iFile] == -1 &&
       options[OPT_MASSRAD].iLine[iFile] == -1) {
     return;
-}
+  }
 
   /* Was anything set> */
   if (options[OPT_MASS].iLine[iFile] == -1 &&
@@ -537,7 +542,7 @@ void VerifyMassRad(BODY *body, CONTROL *control, OPTIONS *options, char cFile[],
       fprintf(stderr, "ERROR: Must set at least one of %s, %s, and %s.\n",
               options[OPT_MASS].cName, options[OPT_RADIUS].cName,
               options[OPT_DENSITY].cName);
-}
+    }
     exit(EXIT_INPUT);
   }
 
@@ -563,7 +568,7 @@ void VerifyMassRad(BODY *body, CONTROL *control, OPTIONS *options, char cFile[],
                            options[OPT_MASS].iLine[iFile],
                            options[OPT_RADIUS].iLine[iFile],
                            options[OPT_MASSRAD].iLine[iFile], cFile, iVerbose);
-}
+    }
 
     if (options[OPT_RADIUS].iLine[iFile] > -1 &&
         options[OPT_DENSITY].iLine[iFile] > -1) {
@@ -572,7 +577,7 @@ void VerifyMassRad(BODY *body, CONTROL *control, OPTIONS *options, char cFile[],
                            options[OPT_MASS].iLine[iFile],
                            options[OPT_RADIUS].iLine[iFile],
                            options[OPT_DENSITY].iLine[iFile], cFile, iVerbose);
-}
+    }
 
     if (options[OPT_MASSRAD].iLine[iFile] > -1 &&
         options[OPT_DENSITY].iLine[iFile] > -1) {
@@ -581,22 +586,22 @@ void VerifyMassRad(BODY *body, CONTROL *control, OPTIONS *options, char cFile[],
                            options[OPT_MASS].iLine[iFile],
                            options[OPT_MASSRAD].iLine[iFile],
                            options[OPT_DENSITY].iLine[iFile], cFile, iVerbose);
-}
+    }
 
     /* Only Mass and something else set */
 
     if (options[OPT_RADIUS].iLine[iFile] > -1) {
       /* Mass and radius were the only two set - Nothing to do */
       return;
-}
+    }
     if (options[OPT_DENSITY].iLine[iFile] > -1) {
       /* Must get radius from density */
       body->dRadius = fdDensityMassToRadius(body->dDensity, body->dMass);
-}
+    }
     if (options[OPT_MASSRAD].iLine[iFile] > -1) {
       /* Must get radius from relationship */
       body->dRadius = fdMassToRad(body->dMass, control->iMassRad[iBody]);
-}
+    }
 
     return;
   }
@@ -610,18 +615,18 @@ void VerifyMassRad(BODY *body, CONTROL *control, OPTIONS *options, char cFile[],
                            options[OPT_MASS].iLine[iFile],
                            options[OPT_MASSRAD].iLine[iFile],
                            options[OPT_DENSITY].iLine[iFile], cFile, iVerbose);
-}
+    }
 
     /* Only Radius and something else set */
 
     if (options[OPT_MASSRAD].iLine[iFile] > -1) {
       /* Must get mass from relationship */
       body->dMass = fdRadToMass(body->dRadius, control->iMassRad[iBody]);
-}
+    }
     if (options[OPT_DENSITY].iLine[iFile] > -1) {
       /* Must get mass from density */
       body->dMass = fdMassFromRadiusDensity(body->dRadius, body->dDensity);
-}
+    }
   }
 }
 
@@ -663,13 +668,13 @@ void VerifyRotationGeneral(BODY *body, OPTIONS *options, char cFile[],
       VerifyBodyExit(options[OPT_ROTPER].cName, options[OPT_ROTRATE].cName,
                      cFile, options[OPT_ROTPER].iLine[iFileNum],
                      options[OPT_ROTRATE].iLine[iFileNum], iVerbose);
-}
+    }
 
     if (options[OPT_ROTVEL].iLine[iFileNum] >= 0) {
       VerifyBodyExit(options[OPT_ROTPER].cName, options[OPT_ROTVEL].cName,
                      cFile, options[iBody].iLine[iFileNum],
                      options[OPT_ROTVEL].iLine[iFileNum], iVerbose);
-}
+    }
   }
 
   if (options[OPT_ROTVEL].iLine[iFileNum] >= 0) {
@@ -678,7 +683,7 @@ void VerifyRotationGeneral(BODY *body, OPTIONS *options, char cFile[],
       VerifyBodyExit(options[OPT_ROTRATE].cName, options[OPT_ROTVEL].cName,
                      cFile, options[OPT_ROTRATE].iLine[iFileNum],
                      options[OPT_ROTVEL].iLine[iFileNum], iVerbose);
-}
+    }
   }
 
   if (options[OPT_ROTPER].iLine[iFileNum] == -1 &&
@@ -690,7 +695,7 @@ void VerifyRotationGeneral(BODY *body, OPTIONS *options, char cFile[],
               "INFO: No rotational information set in file %s. Defaulting to "
               "%s = %s.\n",
               cFile, options[OPT_ROTRATE].cName, options[OPT_ROTRATE].cDefault);
-}
+    }
     body[iBody].dRotRate = options[OPT_ROTRATE].dDefault;
     return;
   }
@@ -699,11 +704,11 @@ void VerifyRotationGeneral(BODY *body, OPTIONS *options, char cFile[],
 
   if (options[OPT_ROTPER].iLine[iFileNum] >= 0) {
     body[iBody].dRotRate = fdPerToFreq(body[iBody].dRotPer);
-}
+  }
   if (options[OPT_ROTVEL].iLine[iFileNum] >= 0) {
     body[iBody].dRotRate =
           fdRadiusRotVelToFreq(body[iBody].dRotVel, body[iBody].dRadius);
-}
+  }
 
   VerifyObliquity(body, options, iBody, iVerbose);
 }
@@ -881,13 +886,14 @@ void VerifyImK2Mantle(BODY *body, CONTROL *control, FILES *files,
 
 /**
 
-  Verify all input parameters related to tidal energy dissipation (Power) into all
-  regions of a planet. The parameter Im(k2) is set by the orbit and the internal
-  temperature in the layer, which is set by the tidal, secular, and radiogenic heating
-  rates. The heating is divided into layers: 1) Mantle, 2) Ocean, and 3) Envelope,
-  and may be calculated by the EqTide, RadHeat, and/or ThermInt modules. Those
-  modules in turn have different possibilities. By the end of this function, the
-  values of Im(k2) in all layers and the body as a whole are set. */
+  Verify all input parameters related to tidal energy dissipation (Power) into
+  all regions of a planet. The parameter Im(k2) is set by the orbit and the
+  internal temperature in the layer, which is set by the tidal, secular, and
+  radiogenic heating rates. The heating is divided into layers: 1) Mantle, 2)
+  Ocean, and 3) Envelope, and may be calculated by the EqTide, RadHeat, and/or
+  ThermInt modules. Those modules in turn have different possibilities. By the
+  end of this function, the values of Im(k2) in all layers and the body as a
+  whole are set. */
 void VerifyImK2(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                 SYSTEM *system, UPDATE *update, int iBody) {
 
@@ -903,7 +909,8 @@ void VerifyImK2(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
   VerifyImK2Mantle(body, control, files, options, system, update, iBody);
 
-  // fdImK2Total determines which layers set (if any), and returns appropriate Im(k_2)
+  // fdImK2Total determines which layers set (if any), and returns appropriate
+  // Im(k_2)
   body[iBody].dImK2 = fdImK2Total(body, iBody);
 
   if (control->Io.iVerbose > VERBPROG) {
@@ -942,15 +949,16 @@ void VerifyImK2(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       body[iBody].dImK2 = body[iBody].dImK2Env;
     }
     else {
-      if (body[iBody].bOcean && (body[iBody].dTidalQ != body[iBody].dTidalQOcean)) {
-        fprintf(stderr,"Using dTidalQOcean for %s.\n",body[iBody].cName);
-        body[iBody].dTidalQ = body[iBody].dTidalQOcean;
-        body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
-        body[iBody].dImK2 = body[iBody].dImK2Ocean;
+      if (body[iBody].bOcean && (body[iBody].dTidalQ !=
+  body[iBody].dTidalQOcean)) { fprintf(stderr,"Using dTidalQOcean for
+  %s.\n",body[iBody].cName); body[iBody].dTidalQ = body[iBody].dTidalQOcean;
+        body[iBody].dImK2Ocean = body[iBody].dK2Ocean /
+  body[iBody].dTidalQOcean; body[iBody].dImK2 = body[iBody].dImK2Ocean;
         body[iBody].dK2 = body[iBody].dK2Ocean;
       }
-      else if (!body[iBody].bEnv && !body[iBody].bOcean && (body[iBody].dTidalQ != body[iBody].dTidalQRock) && (iBody != 0)){
-        fprintf(stderr,"Using dTidalQRock for %s.\n",body[iBody].cName);
+      else if (!body[iBody].bEnv && !body[iBody].bOcean && (body[iBody].dTidalQ
+  != body[iBody].dTidalQRock) && (iBody != 0)){ fprintf(stderr,"Using
+  dTidalQRock for %s.\n",body[iBody].cName);
         // now we just use dTidalQRock and dK2Rock
         body[iBody].dImK2Rock = body[iBody].dK2Rock / body[iBody].dTidalQRock;
         body[iBody].dTidalQ = body[iBody].dTidalQRock;
@@ -1013,7 +1021,8 @@ void fnNullDerivatives(BODY *body, EVOLVE *evolve, MODULE *module,
 void VerifyMantle(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                   int iBody) {
 
-  // XXX This is broken, user should be able to set mantle properties w/o thermint
+  // XXX This is broken, user should be able to set mantle properties w/o
+  // thermint
   if (body[iBody].bThermint) {
     body[iBody].bMantle = 1;
   }
@@ -1088,8 +1097,8 @@ void VerifyAge(BODY *body, CONTROL *control, OPTIONS *options) {
 
  * Master Verify subroutine
 
-   This function validates the input options. After this function, the structs are
-   prepared for integration.
+   This function validates the input options. After this function, the structs
+ are prepared for integration.
  */
 
 void VerifyOptions(BODY *body, CONTROL *control, FILES *files, MODULE *module,
@@ -1169,7 +1178,7 @@ void VerifyOptions(BODY *body, CONTROL *control, FILES *files, MODULE *module,
   InitializeConstants(body, update, control, system, options);
 
   // Set next output time so logging does not contain a memory leak
-  //control->Io.dNextOutput = control->Evolve.dTime + control->Io.dOutputTime;
+  // control->Io.dNextOutput = control->Evolve.dTime + control->Io.dOutputTime;
 
   // Finally, initialize derivative values -- this avoids leaks while logging
   PropertiesAuxiliary(body, control, system, update);

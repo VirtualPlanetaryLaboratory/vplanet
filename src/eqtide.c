@@ -14,8 +14,9 @@
 
 void InitializeControlEqtide(CONTROL *control, int iBody) {
 
-  /* We only want to initialize these values once, but if the user fails to instantiate
-     eqtide for body 0, then the code segaults and fixing this is hard. So we just re-malloc.
+  /* We only want to initialize these values once, but if the user fails to
+     instantiate eqtide for body 0, then the code segaults and fixing this is
+     hard. So we just re-malloc.
      */
   control->Evolve.bForceEqSpin =
         malloc(control->Evolve.iNumBodies * sizeof(int));
@@ -75,7 +76,7 @@ void BodyCopyEqtide(BODY *dest, BODY *src, int iTideModel, int iNumBodies,
 
   for (iPert = 0; iPert < src[iBody].iTidePerts; iPert++) {
     dest[iBody].iaTidePerts[iPert] = src[iBody].iaTidePerts[iPert];
-}
+  }
 
   for (iPert = 0; iPert < iNumBodies; iPert++) {
     dest[iBody].daDoblDtEqtide[iPert] = src[iBody].daDoblDtEqtide[iPert];
@@ -85,12 +86,12 @@ void BodyCopyEqtide(BODY *dest, BODY *src, int iTideModel, int iNumBodies,
       for (iIndex = 0; iIndex < 10; iIndex++) {
         dest[iBody].iTidalEpsilon[iPert][iIndex] =
               src[iBody].iTidalEpsilon[iPert][iIndex];
-}
+      }
     }
     if (iTideModel == CTL) {
       for (iIndex = 0; iIndex < 5; iIndex++) {
         dest[iBody].dTidalF[iPert][iIndex] = src[iBody].dTidalF[iPert][iIndex];
-}
+      }
     }
   }
 }
@@ -122,7 +123,7 @@ void InitializeUpdateTmpBodyEqtide(BODY *body, CONTROL *control, UPDATE *update,
     for (iPert = 0; iPert < control->Evolve.iNumBodies; iPert++) {
       control->Evolve.tmpBody[iBody].iTidalEpsilon[iPert] =
             malloc(10 * sizeof(int));
-}
+    }
   }
 
   if (control->Evolve.iEqtideModel == CTL) {
@@ -133,7 +134,7 @@ void InitializeUpdateTmpBodyEqtide(BODY *body, CONTROL *control, UPDATE *update,
     for (iPert = 0; iPert < control->Evolve.iNumBodies; iPert++) {
       control->Evolve.tmpBody[iBody].dTidalF[iPert] =
             malloc(5 * sizeof(double));
-}
+    }
   }
 }
 
@@ -157,11 +158,11 @@ void ReadTidalQMantle(BODY *body, CONTROL *control, FILES *files,
                                    control->Io.iVerbose);
     } else {
       body[iFile - 1].dTidalQMan = dTmp;
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dTidalQMan = options->dDefault;
-}
+  }
 }
 
 /* */
@@ -185,7 +186,7 @@ void ReadDiscreteRot(BODY *body, CONTROL *control, FILES *files,
   } else {
     /* Set to default */
     AssignDefaultInt(options, &control->Evolve.bDiscreteRot, files->iNumInputs);
-}
+  }
 }
 
 /* Double Synchronous */
@@ -207,7 +208,7 @@ void ReadHaltDblSync(BODY *body, CONTROL *control, FILES *files,
     if (iFile > 0) {
       AssignDefaultInt(options, &control->Halt[iFile - 1].bDblSync,
                        files->iNumInputs);
-}
+    }
   }
 }
 
@@ -231,7 +232,7 @@ void ReadFixOrbit(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     /* Set to default */
     //       AssignDefaultInt(options,&control->Evolve.bFixOrbit[iFile-1],files->iNumInputs);
     control->Evolve.bFixOrbit[iFile - 1] = 0;
-}
+  }
 }
 
 /* Force Equilibrium Spin Rate? */
@@ -254,7 +255,7 @@ void ReadForceEqSpin(BODY *body, CONTROL *control, FILES *files,
     /* Set to default */
     AssignDefaultInt(options, &control->Evolve.bForceEqSpin[iFile - 1],
                      files->iNumInputs);
-}
+  }
 }
 
 /* Primary Tide-locked */
@@ -272,7 +273,7 @@ void ReadHaltTideLock(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     control->Halt[iFile - 1].bTideLock = atoi(options->cDefault);
-}
+  }
 }
 
 /* Halt when Synchronous Rotation */
@@ -294,7 +295,7 @@ void ReadHaltSyncRot(BODY *body, CONTROL *control, FILES *files,
   } else {
     if (iFile > 0) {
       control->Halt[iFile - 1].bSync = atoi(options->cDefault);
-}
+    }
   }
 }
 
@@ -313,14 +314,14 @@ void ReadK2(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be greater than 0.\n", options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     body[iFile - 1].dK2 = dTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dK2 = options->dDefault;
-}
+  }
 }
 
 void ReadTidalRadius(BODY *body, CONTROL *control, FILES *files,
@@ -341,11 +342,11 @@ void ReadTidalRadius(BODY *body, CONTROL *control, FILES *files,
     } else {
       body[iFile - 1].dTidalRadius =
             dTmp * fdUnitsLength(control->Units[iFile].iLength);
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dTidalRadius = options->dDefault;
-}
+  }
 }
 
 /* Love number of degree 2 for the ocean */
@@ -363,14 +364,14 @@ void ReadK2Ocean(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be greater than 0.\n", options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     body[iFile - 1].dK2Ocean = dTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dK2Ocean = options->dDefault;
-}
+  }
 }
 
 /* Love number of degree 2 for the gaseous envelope */
@@ -388,14 +389,14 @@ void ReadK2Env(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be greater than 0.\n", options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     body[iFile - 1].dK2Env = dTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dK2Env = options->dDefault;
-}
+  }
 }
 
 void ReadK2Mantle(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -412,14 +413,14 @@ void ReadK2Mantle(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be greater than 0.\n", options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     body[iFile - 1].dK2Man = dTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dK2Man = options->dDefault;
-}
+  }
 }
 
 /* Maximum allowable offset between primary's spin period and its
@@ -439,7 +440,7 @@ void ReadMaxLockDiff(BODY *body, CONTROL *control, FILES *files,
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be > 0.\n", options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     control->Evolve.dMaxLockDiff[iFile - 1] = dTmp;
@@ -447,7 +448,7 @@ void ReadMaxLockDiff(BODY *body, CONTROL *control, FILES *files,
   } else {
     if (iFile > 0) {
       control->Evolve.dMaxLockDiff[iFile - 1] = options->dDefault;
-}
+    }
   }
 }
 
@@ -468,7 +469,7 @@ void ReadSyncEcc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be in the range [0,1].\n",
                 options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     control->Evolve.dSyncEcc[iFile - 1] = dTmp;
@@ -476,7 +477,7 @@ void ReadSyncEcc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   } else {
     if (iFile > 0) {
       control->Evolve.dSyncEcc[iFile - 1] = options->dDefault;
-}
+    }
   }
 }
 
@@ -495,7 +496,7 @@ void ReadTidalQOcean(BODY *body, CONTROL *control, FILES *files,
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be greater than 0.\n", options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
 
@@ -504,7 +505,7 @@ void ReadTidalQOcean(BODY *body, CONTROL *control, FILES *files,
   } else {
     if (iFile > 0) {
       body[iFile - 1].dTidalQOcean = options->dDefault;
-}
+    }
   }
 }
 
@@ -523,7 +524,7 @@ void ReadTidalQEnv(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be greater than 0.\n", options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
 
@@ -532,7 +533,7 @@ void ReadTidalQEnv(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   } else {
     if (iFile > 0) {
       body[iFile - 1].dTidalQEnv = options->dDefault;
-}
+    }
   }
 }
 
@@ -557,12 +558,12 @@ void ReadTidalTau(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       /* Convert timestep to cgs */
       body[iFile - 1].dTidalTau =
             dTmp * fdUnitsTime(control->Units[iFile].iTime);
-}
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     if (iFile > 0) {
       body[iFile - 1].dTidalTau = options->dDefault;
-}
+    }
   }
 }
 
@@ -600,7 +601,7 @@ void ReadTideModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                 "ERROR: Unknown argument to %s: %s. Options are p2, t8 or "
                 "DB15.\n",
                 options->cName, cTmp);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
@@ -654,7 +655,7 @@ void ReadEqtideOceanTides(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].bOcean = 0; // Default to no ocean tides
-}
+  }
 }
 
 // Include effects of mantle tides?
@@ -673,7 +674,7 @@ void ReadEqtideMantleTides(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].bMantle = atoi(options->cDefault);
-}
+  }
 }
 
 // Use fixed tidal radius?
@@ -692,7 +693,7 @@ void ReadUseTidalRadius(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].bUseTidalRadius = atoi(options->cDefault);
-}
+  }
 }
 
 // Include effects of envelope tides?
@@ -711,7 +712,7 @@ void ReadEqtideEnvTides(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].bEnv = 0; // Default to no envelope tides
-}
+  }
 }
 
 void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
@@ -995,7 +996,7 @@ void ReadOptionsEqtide(BODY *body, CONTROL *control, FILES *files,
   for (iOpt = OPTSTARTEQTIDE; iOpt < OPTENDEQTIDE; iOpt++) {
     if (options[iOpt].iType != -1) {
       fnRead[iOpt](body, control, files, &options[iOpt], system, iBody + 1);
-}
+    }
   }
 }
 
@@ -1064,28 +1065,28 @@ void VerifyRotationEqtide(BODY *body, CONTROL *control, UPDATE *update,
             options[OPT_FORCEEQSPIN].cName, options[OPT_ROTPER].cName, cFile,
             options[OPT_FORCEEQSPIN].iLine[iBody + 1],
             options[OPT_ROTPER].iLine[iBody + 1], control->Io.iVerbose);
-}
+    }
 
     if (options[OPT_ROTRATE].iLine[iBody + 1] >= 0) {
       VerifyRotationEqtideWarning(
             options[OPT_FORCEEQSPIN].cName, options[OPT_ROTRATE].cName, cFile,
             options[OPT_FORCEEQSPIN].iLine[iBody + 1],
             options[OPT_ROTRATE].iLine[iBody + 1], control->Io.iVerbose);
-}
+    }
 
     if (options[OPT_ROTVEL].iLine[iBody + 1] >= 0) {
       VerifyRotationEqtideWarning(
             options[OPT_FORCEEQSPIN].cName, options[OPT_ROTVEL].cName, cFile,
             options[OPT_FORCEEQSPIN].iLine[iBody + 1],
             options[OPT_ROTVEL].iLine[iBody + 1], control->Io.iVerbose);
-}
+    }
 
     /* Done with warnings, do the assignment */
     if (bPrimary(body, iBody)) {
       iOrbiter = body[iBody].iaTidePerts[0];
     } else {
       iOrbiter = iBody;
-}
+    }
 
     dMeanMotion = fdSemiToMeanMotion(
           body[iOrbiter].dSemi,
@@ -1114,7 +1115,7 @@ int fiTideFile(int *iLine, int iNumFiles) {
   for (iFile = 0; iFile < iNumFiles; iFile++) {
     if (iLine[iFile] != -1) {
       return iFile;
-}
+    }
   }
 
   assert(0);
@@ -1274,7 +1275,7 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                 options[OPT_TIDALTAU].cFile[iBody + 1],
                 options[OPT_TIDALTAU].cName, body[iBody + 1].dTidalTau,
                 options[OPT_TIDALQ].cName);
-}
+      }
     } else {
       /* Tidal Tau was not set */
       if (control->Io.iVerbose >= VERBERR) {
@@ -1282,7 +1283,7 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                 "ERROR: Time lag model selected, but only %s was set in file "
                 "%s.\n",
                 options[OPT_TIDALQ].cName, files->Infile[iBody + 1].cIn);
-}
+      }
       exit(EXIT_INPUT);
     }
   }
@@ -1294,7 +1295,7 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                    options[OPT_TIDALTAU].iLine[iBody],
                    options[OPT_DISCRETEROT].iLine[iBody + 1],
                    control->Io.iVerbose);
-}
+  }
 
   /* Verify output contains no CPL-specific parameters */
 
@@ -1308,7 +1309,7 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
                   output[OUT_EQROTPERCONT].cName);
-}
+        }
         /* Must find file that declares tidel model */
         iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine, files->iNumInputs);
         DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],
@@ -1324,7 +1325,7 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
                   output[OUT_EQROTPERDISCRETE].cName);
-}
+        }
         /* Must find file that declares tidel model */
         iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine, files->iNumInputs);
         DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],
@@ -1340,7 +1341,7 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
                   output[OUT_EQROTRATECONT].cName);
-}
+        }
         /* Must find file that declares tidel model */
         iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine, files->iNumInputs);
         DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],
@@ -1356,7 +1357,7 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
                   output[OUT_EQROTRATEDISCRETE].cName);
-}
+        }
         /* Must find file that declares tidel model */
         iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine, files->iNumInputs);
         DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],
@@ -1371,7 +1372,7 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
                   output[OUT_GAMMAORB].cName);
-}
+        }
         /* Must find file that declares tidel model */
         iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine, files->iNumInputs);
         DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],
@@ -1386,7 +1387,7 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
                   output[OUT_GAMMAROT].cName);
-}
+        }
         /* Must find file that declares tidel model */
         iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine, files->iNumInputs);
         DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],
@@ -1401,7 +1402,7 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
                   output[OUT_TIDALQ].cName);
-}
+        }
         /* Must find file that declares tidel model */
         iTideFile = fiTideFile(options[OPT_TIDEMODEL].iLine, files->iNumInputs);
         DoubleLineExit(options[OPT_TIDEMODEL].cFile[iTideFile],
@@ -1450,7 +1451,7 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   body[iBody].dTidalBeta = malloc(control->Evolve.iNumBodies * sizeof(double));
   for (iPert = 0; iPert < control->Evolve.iNumBodies; iPert++) {
     body[iBody].dTidalF[iPert] = malloc(5 * sizeof(double));
-}
+  }
 
   control->fnPropsAux[iBody][iModule] = &PropsAuxCTL;
 
@@ -1478,7 +1479,7 @@ void VerifyCPL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
               "WARNING: Setting %s to 1 is not advised for eccentricities "
               "larger than %.3lf\n",
               options[OPT_DISCRETEROT].cName, pow(2. / 19, 0.5));
-}
+    }
   }
 
   /* CPL model, but tau's set? */
@@ -1494,7 +1495,7 @@ void VerifyCPL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                 options[OPT_TIDALTAU].cFile[iBody + 1],
                 options[OPT_TIDALQ].cName, body[iBody + 1].dTidalQ,
                 options[OPT_TIDALTAU].cName);
-}
+      }
     } else {
       /* Tidal Tau was not set */
       if (control->Io.iVerbose >= VERBERR) {
@@ -1502,7 +1503,7 @@ void VerifyCPL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                 "ERROR: Phase lag model selected, but only %s was set in file "
                 "%s.\n",
                 options[OPT_TIDALTAU].cName, files->Infile[iBody + 1].cIn);
-}
+      }
       exit(EXIT_INPUT);
     }
 
@@ -1518,7 +1519,7 @@ void VerifyCPL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                   stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
                   output[OUT_TIDALQ].cName);
-}
+          }
           /* Must find file that declares tidel model */
           iTideFile =
                 fiTideFile(options[OPT_TIDEMODEL].iLine, files->iNumInputs);
@@ -1569,7 +1570,7 @@ void VerifyCPL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
         malloc(control->Evolve.iNumBodies * sizeof(int *));
   for (iPert = 0; iPert < control->Evolve.iNumBodies; iPert++) {
     body[iBody].iTidalEpsilon[iPert] = malloc(10 * sizeof(int));
-}
+  }
   control->fnPropsAux[iBody][iModule] = &PropsAuxCPL;
 
   /* Now remove output options unique to CTL. This will prevent segmentation
@@ -1668,7 +1669,7 @@ void VerifyPerturbersEqtide(BODY *body, FILES *files, OPTIONS *options,
 
       if (!ok) {
         exit(EXIT_INPUT);
-}
+      }
     }
   }
 
@@ -1687,7 +1688,7 @@ void VerifyPerturbersEqtide(BODY *body, FILES *files, OPTIONS *options,
               body[body[iBody].iaTidePerts[iPert]].iaTidePerts[iBodyPert]) {
             /* Match */
             ok = 1;
-}
+          }
         }
         if (!ok) {
           fprintf(stderr,
@@ -1740,7 +1741,7 @@ int fiGetModuleIntEqtide(MODULE *module, int iBody) {
   for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
     if (module->iaModule[iBody][iModule] == EQTIDE) {
       return iModule;
-}
+    }
   }
 
   fprintf(stderr, "ERROR: Eqtide not found for body #%d.\n", iBody);
@@ -1754,7 +1755,7 @@ void VerifyTideModel(CONTROL *control, FILES *files, OPTIONS *options) {
   for (iFile = 0; iFile < files->iNumInputs; iFile++) {
     if (options[OPT_TIDEMODEL].iLine[iFile] >= 0) {
       iFound++;
-}
+    }
   }
 
   if (iFound > 1) {
@@ -1765,7 +1766,7 @@ void VerifyTideModel(CONTROL *control, FILES *files, OPTIONS *options) {
         if (options[OPT_TIDEMODEL].iLine[iFile] >= 0) {
           fprintf(stderr, "\tFile %s, Line: %d\n", files->Infile[0].cIn,
                   options[OPT_TIDEMODEL].iLine[iFile]);
-}
+        }
       }
     }
     exit(EXIT_INPUT);
@@ -1781,7 +1782,7 @@ void VerifyTideModel(CONTROL *control, FILES *files, OPTIONS *options) {
     if (control->Io.iVerbose >= VERBINPUT) {
       fprintf(stderr, "INFO: %s not set in any file, defaulting to %s.\n",
               options[OPT_TIDEMODEL].cName, options[OPT_TIDEMODEL].cDefault);
-}
+    }
 
     /* Chicanery. Since I only want this set once, I will
        make it seem like the user set it. */
@@ -1829,7 +1830,7 @@ void AssignEqtideDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
       } else {
         fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] =
               &fdCTLDrotrateDt;
-}
+      }
     }
 
     // CPL Module Derivatives
@@ -1852,7 +1853,7 @@ void AssignEqtideDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
       } else {
         fnUpdate[iBody][update[iBody].iRot][update[iBody].iaRotEqtide[iPert]] =
               &fdCPLDrotrateDt;
-}
+      }
     }
 
     // DB15 Derivatives
@@ -1979,11 +1980,11 @@ void VerifyEqtide(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   /* Verify input set correctly and assign update functions */
   if (control->Evolve.iEqtideModel == CTL) {
     VerifyCTL(body, control, files, options, output, update, iBody, iModule);
-}
+  }
 
   if (control->Evolve.iEqtideModel == CPL) {
     VerifyCPL(body, control, files, options, output, update, iBody, iModule);
-}
+  }
 
   if (control->Evolve.iEqtideModel == DB15) {
     // Note that DB15 requires ThermInt, so this function lives in module.c
@@ -2004,27 +2005,27 @@ void InitializeUpdateEqtide(BODY *body, UPDATE *update, int iBody) {
   /* All active bodies can have their obliquity and rotation tracked. */
   if (update[iBody].iNumXobl == 0) {
     update[iBody].iNumVars++;
-}
+  }
   update[iBody].iNumXobl += body[iBody].iTidePerts;
 
   if (update[iBody].iNumYobl == 0) {
     update[iBody].iNumVars++;
-}
+  }
   update[iBody].iNumYobl += body[iBody].iTidePerts;
 
   if (update[iBody].iNumZobl == 0) {
     update[iBody].iNumVars++;
-}
+  }
   update[iBody].iNumZobl += body[iBody].iTidePerts;
 
   if (update[iBody].iNumRot == 0) {
     update[iBody].iNumVars++;
-}
+  }
   update[iBody].iNumRot += body[iBody].iTidePerts;
 
   if (update[iBody].iNumLostEng == 0) {
     update[iBody].iNumVars++;
-}
+  }
   update[iBody].iNumLostEng++;
 
   /* Eqtide is complicated by the possibility that 1 body could be perturbed
@@ -2035,21 +2036,21 @@ void InitializeUpdateEqtide(BODY *body, UPDATE *update, int iBody) {
      is allowed. The addition of exomoons will make this more complicated.
   */
 
-  //if (!bPrimary(body,iBody)) {
+  // if (!bPrimary(body,iBody)) {
   if (iBody > 0) {
     if (update[iBody].iNumSemi == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumSemi++;
 
     if (update[iBody].iNumHecc == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumHecc++;
 
     if (update[iBody].iNumKecc == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumKecc++;
   }
 }
@@ -2202,13 +2203,13 @@ int HaltSyncRot(BODY *body, EVOLVE *evolve, HALT *halt, IO *io, UPDATE *update,
 void CountHaltsEqtide(HALT *halt, int *iNumHalts) {
   if (halt->bDblSync) {
     (*iNumHalts)++;
-}
+  }
   if (halt->bTideLock) {
     (*iNumHalts)++;
-}
+  }
   if (halt->bSync) {
     (*iNumHalts)++;
-}
+  }
 }
 
 void VerifyHaltEqtide(BODY *body, CONTROL *control, OPTIONS *options, int iBody,
@@ -2226,7 +2227,7 @@ void VerifyHaltEqtide(BODY *body, CONTROL *control, OPTIONS *options, int iBody,
       exit(EXIT_INPUT);
     } else {
       control->fnHalt[iBody][(*iHalt)++] = &HaltDblSync;
-}
+    }
   }
   if (control->Halt[iBody].bTideLock) {
     if (control->Evolve.iNumBodies > 2 && iBody == 0) {
@@ -2241,7 +2242,7 @@ void VerifyHaltEqtide(BODY *body, CONTROL *control, OPTIONS *options, int iBody,
       exit(EXIT_INPUT);
     } else {
       control->fnHalt[iBody][(*iHalt)++] = &HaltTideLock;
-}
+    }
   }
   if (control->Halt[iBody].bSync) {
     if (control->Evolve.iNumBodies > 2 && iBody == 0) {
@@ -2256,7 +2257,7 @@ void VerifyHaltEqtide(BODY *body, CONTROL *control, OPTIONS *options, int iBody,
       exit(EXIT_INPUT);
     } else {
       control->fnHalt[iBody][(*iHalt)++] = &HaltSyncRot;
-}
+    }
   }
 }
 
@@ -2282,9 +2283,11 @@ void WriteBodyDsemiDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
 
   if (control->Evolve.iEqtideModel == CPL)
-    *dTmp = fdCPLDsemiDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq);
+    *dTmp =
+  fdCPLDsemiDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq);
   else if (control->Evolve.iEqtideModel == CTL)
-    *dTmp = fdCTLDsemiDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq,body[iBody].dObliquity,body[iBody].dRotRate);
+    *dTmp =
+  fdCTLDsemiDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq,body[iBody].dObliquity,body[iBody].dRotRate);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2312,9 +2315,11 @@ void WriteBodyDeccDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
 
   if (control->Evolve.iEqtideModel == CPL)
-    *dTmp = fdCPLDeccDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq);
+    *dTmp =
+  fdCPLDeccDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq);
   else
-    *dTmp = fdCTLDeccDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq);
+    *dTmp =
+  fdCTLDeccDtBody(body[iBody],body[iPert].dMass,body[1].dSemi,body[1].dEccSq);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2364,7 +2369,7 @@ void WriteDOblDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
   dFoo = 0;
   for (iPert = 0; iPert < body[iBody].iTidePerts; iPert++) {
     dFoo += body[iBody].daDoblDtEqtide[body[iBody].iaTidePerts[iPert]];
-}
+  }
 
   *dTmp = dFoo;
 
@@ -2386,7 +2391,7 @@ void WriteTidalQOcean(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp = body[iBody].dK2Ocean / body[iBody].dImK2Ocean;
   } else {
     *dTmp = -1;
-}
+  }
 
   strcpy(cUnit, "");
 }
@@ -2400,7 +2405,7 @@ void WriteTidalQEnv(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp = body[iBody].dK2Env / body[iBody].dImK2Env;
   } else {
     *dTmp = -1;
-}
+  }
 
   strcpy(cUnit, "");
 }
@@ -2487,7 +2492,7 @@ void WriteDRotPerDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
   dDeriv = 0;
   for (iPert = 0; iPert < body[iBody].iTidePerts; iPert++) {
     dDeriv += *(update[iBody].padDrotDtEqtide[iPert]);
-}
+  }
 
   /* Multiply by dP/domega to get dP/dt */
   *dTmp = dDeriv * (-2 * PI / (body[iBody].dRotRate * body[iBody].dRotRate));
@@ -2509,7 +2514,7 @@ void WriteDRotRateDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
   dDeriv = 0;
   for (iPert = 0; iPert < body[iBody].iTidePerts; iPert++) {
     dDeriv += *(update[iBody].padDrotDtEqtide[iPert]);
-}
+  }
 
   *dTmp = dDeriv;
 
@@ -2569,7 +2574,7 @@ void WriteDXoblDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
   for (iPert = 0; iPert < body[iBody].iTidePerts; iPert++) {
     dDeriv +=
           (*(update[iBody].padDXoblDtEqtide[body[iBody].iaTidePerts[iPert]]));
-}
+  }
   *dTmp = dDeriv;
 
   if (output->bDoNeg[iBody]) {
@@ -2591,7 +2596,7 @@ void WriteDYoblDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
   for (iPert = 0; iPert < body[iBody].iTidePerts; iPert++) {
     dDeriv +=
           (*(update[iBody].padDYoblDtEqtide[body[iBody].iaTidePerts[iPert]]));
-}
+  }
   *dTmp = dDeriv;
 
   if (output->bDoNeg[iBody]) {
@@ -2613,7 +2618,7 @@ void WriteDZoblDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
   for (iPert = 0; iPert < body[iBody].iTidePerts; iPert++) {
     dDeriv +=
           (*(update[iBody].padDZoblDtEqtide[body[iBody].iaTidePerts[iPert]]));
-}
+  }
   *dTmp = dDeriv;
 
   if (output->bDoNeg[iBody]) {
@@ -2665,7 +2670,7 @@ void WriteEqRotPer(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   } else {
     // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
     iOrbiter = body[iBody].iaTidePerts[0];
-}
+  }
 
   *dTmp = fdFreqToPer(fdEqRotRate(
         body, iBody, body[iOrbiter].dMeanMotion, body[iOrbiter].dEccSq,
@@ -2690,7 +2695,7 @@ void WriteEqRotPerCont(BODY *body, CONTROL *control, OUTPUT *output,
   } else {
     // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
     iOrbiter = body[iBody].iaTidePerts[0];
-}
+  }
 
   // To CPL, or to CTL? That is the question
   if (control->Evolve.iEqtideModel == CPL) {
@@ -2700,7 +2705,7 @@ void WriteEqRotPerCont(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp = fdFreqToPer(fdCTLEqRotRate(body[iOrbiter].dMeanMotion,
                                        body[iBody].dObliquity,
                                        body[iOrbiter].dEccSq));
-}
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2721,7 +2726,7 @@ void WriteEqRotPerDiscrete(BODY *body, CONTROL *control, OUTPUT *output,
   } else {
     // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
     iOrbiter = body[iBody].iaTidePerts[0];
-}
+  }
 
   if (control->Evolve.iEqtideModel == CPL) {
     *dTmp = fdFreqToPer(fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,
@@ -2749,7 +2754,7 @@ void WriteEqRotRate(BODY *body, CONTROL *control, OUTPUT *output,
   } else {
     // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
     iOrbiter = body[iBody].iaTidePerts[0];
-}
+  }
 
   *dTmp = fdEqRotRate(body, iBody, body[iOrbiter].dMeanMotion,
                       body[iOrbiter].dEccSq, control->Evolve.iEqtideModel,
@@ -2774,7 +2779,7 @@ void WriteEqRotRateCont(BODY *body, CONTROL *control, OUTPUT *output,
   } else {
     // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
     iOrbiter = body[iBody].iaTidePerts[0];
-}
+  }
 
   // To CPL, or to CTL? That is the question
   if (control->Evolve.iEqtideModel == CPL) {
@@ -2783,7 +2788,7 @@ void WriteEqRotRateCont(BODY *body, CONTROL *control, OUTPUT *output,
   } else {
     *dTmp = fdCTLEqRotRate(body[iOrbiter].dMeanMotion, body[iBody].dObliquity,
                            body[iOrbiter].dEccSq);
-}
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2804,7 +2809,7 @@ void WriteEqRotRateDiscrete(BODY *body, CONTROL *control, OUTPUT *output,
   } else {
     // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
     iOrbiter = body[iBody].iaTidePerts[0];
-}
+  }
 
   if (control->Evolve.iEqtideModel == CPL) {
     *dTmp = fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,
@@ -2832,7 +2837,7 @@ void WriteEqTidePower(BODY *body, CONTROL *control, OUTPUT *output,
   } else {
     // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
     iOrbiter = body[iBody].iaTidePerts[0];
-}
+  }
 
   if (control->Evolve.iEqtideModel == CPL) {
     *dTmp = fdCPLTidePowerEq(body[iBody].dTidalZ[iOrbiter], body[iBody].dEccSq,
@@ -2861,7 +2866,8 @@ void WriteGammaOrb(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    char cUnit[]) {
 
   /* Broken */
-  //*dTmp = fdGammaOrb(body[iBody].dEccSq,body[iBody].dObliquity,body[iBody].iTidalEpsilon[0]);
+  //*dTmp =
+  //fdGammaOrb(body[iBody].dEccSq,body[iBody].dObliquity,body[iBody].iTidalEpsilon[0]);
   *dTmp = -1;
 
   /* Negative option? */
@@ -2875,7 +2881,8 @@ void WriteGammaRot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   /*
   Broken
 
-  *dTmp = fdGammaRot(body[1].dEccSq,body[iBody].dObliquity,body[iBody].iTidalEpsilon[0]);
+  *dTmp =
+  fdGammaRot(body[1].dEccSq,body[iBody].dObliquity,body[iBody].iTidalEpsilon[0]);
   */
   *dTmp = -1;
 
@@ -2909,7 +2916,8 @@ void WriteOblTimescaleEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
 
   Need to change after switch to [XYZ]obl
-  *dTmp = fdTimescaleMulti(body[iBody].dObliquity,*(update[iBody].padDoblDtEqtide),body[iBody].iTidePerts);
+  *dTmp =
+  fdTimescaleMulti(body[iBody].dObliquity,*(update[iBody].padDoblDtEqtide),body[iBody].iTidePerts);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3439,7 +3447,7 @@ void LogEqtide(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     if (output[iOut].iNum > 0) {
       WriteLogEntry(body, control, &output[iOut], system, update, fnWrite[iOut],
                     fp, 0);
-}
+    }
   }
 }
 
@@ -3454,7 +3462,7 @@ void LogBodyEqtide(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     iStart = OUTSTARTEQTIDE;
   } else {
     iStart = OUTBODYSTARTEQTIDE;
-}
+  }
 
   fprintf(fp, "----- EQTIDE PARAMETERS (%s)------\n", body[iBody].cName);
   for (iOut = iStart; iOut < OUTENDEQTIDE; iOut++) {
@@ -3468,7 +3476,7 @@ void LogBodyEqtide(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     fprintf(fp, " %s", body[body[iBody].iaTidePerts[iPert]].cName);
     if (iPert < body[iBody].iTidePerts - 1) {
       fprintf(fp, ",");
-}
+    }
   }
   fprintf(fp, "\n");
 }
@@ -3726,14 +3734,14 @@ void PropsAuxCPL(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
       iOrbiter = iBody;
     } else {
       iOrbiter = iIndex;
-}
+    }
 
     /* If tidally locked, assign equilibrium rotational frequency? */
     if (evolve->bForceEqSpin[iBody]) {
       body[iBody].dRotRate = fdEqRotRate(
             body, iBody, body[iOrbiter].dMeanMotion, body[iOrbiter].dEccSq,
             evolve->iEqtideModel, evolve->bDiscreteRot);
-}
+    }
 
     fiaCPLEpsilon(body[iBody].dRotRate, body[iOrbiter].dMeanMotion,
                   body[iOrbiter].dObliquity, body[iBody].iTidalEpsilon[iIndex]);
@@ -3744,7 +3752,7 @@ void PropsAuxCPL(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
 
     if (iBody > 0) {
       PropsAuxOrbiterCPL(body, update, iBody);
-}
+    }
   }
 
   for (iPert = 0; iPert < body[iBody].iTidePerts; iPert++) {
@@ -3858,7 +3866,7 @@ double fdSurfEnFluxEqtide(BODY *body, SYSTEM *foo, UPDATE *bar, int iBody,
 
   dPower = fdTidePower(body, iBody, iTideModel);
 
-  //printf("TidePower=%e\n",dPower);
+  // printf("TidePower=%e\n",dPower);
 
   return dPower / (4 * PI * body[iBody].dRadius * body[iBody].dRadius);
 }
@@ -3866,7 +3874,7 @@ double fdSurfEnFluxEqtide(BODY *body, SYSTEM *foo, UPDATE *bar, int iBody,
 /*
  * Alter the simulation in a specific way. Possibilities are
  * stored in the CONTROL struct.
-*/
+ */
 
 void ForceBehaviorEqtide(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
                          SYSTEM *system, UPDATE *update,
@@ -3879,7 +3887,7 @@ void ForceBehaviorEqtide(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
       iOrbiter = iBody;
     } else {
       iOrbiter = body[iBody].iaTidePerts[0];
-}
+    }
 
     // Is the star tidally locked now?
     /*
@@ -3909,7 +3917,7 @@ void ForceBehaviorEqtide(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
       if (evolve->bForceEqSpin[iBody]) {
         SetDerivTiny(fnUpdate, iBody, update[iBody].iRot,
                      update[iBody].iaRotEqtide[0]);
-}
+      }
     }
   }
 
@@ -3931,7 +3939,7 @@ void ForceBehaviorEqtide(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
 
 /*
  ************************ CPL Functions ******************
-*/
+ */
 
 /* Auxiliary Parameters */
 
@@ -3948,7 +3956,7 @@ double fdCPLTidePower(BODY *body, int iBody) {
       iOrbiter = body[iBody].iaTidePerts[iPert];
     } else {
       iOrbiter = iBody;
-}
+    }
     iIndex = body[iBody].iaTidePerts[iPert];
 
     // Does this work with DF's changes to da/dt with the synchronous case?
@@ -3984,8 +3992,8 @@ double fdTidePowerOcean(BODY *body, int iBody) {
   // Broken
 
   // Total CPL Tide Power = Ocean + Man contributions
-  //return fdCPLTidePower(body,iBody) - fdTidePower(body,iBody);
-  //fprintf(stderr,"ERROR: fdTidePowerOcean called, but it's broken.");
+  // return fdCPLTidePower(body,iBody) - fdTidePower(body,iBody);
+  // fprintf(stderr,"ERROR: fdTidePowerOcean called, but it's broken.");
   return -1;
 }
 
@@ -3994,7 +4002,8 @@ double fdSurfEnFluxOcean(BODY *body, int iBody) {
   // Broken!
 
   // Total Ocean Tide power / surface area of body
-  //return fdTidePowerOcean(body,iBody)/(4.0*PI*body[iBody].dRadius*body[iBody].dRadius);
+  // return
+  // fdTidePowerOcean(body,iBody)/(4.0*PI*body[iBody].dRadius*body[iBody].dRadius);
   return -1;
 }
 
@@ -4088,7 +4097,7 @@ double fdCPLEqRotRate(double dEccSq, double dMeanMotion, int bDiscrete) {
     return fdCPLEqRotRateDiscrete(dMeanMotion, dEccSq);
   } else {
     return fdCPLEqRotRateCont(dMeanMotion, dEccSq);
-}
+  }
 }
 
 /*
@@ -4102,8 +4111,8 @@ double fdCPLEqRotRate(double dEccSq, double dMeanMotion, int bDiscrete) {
 double fdCPLDsemiDt(BODY *body, SYSTEM *system, int *iaBody) {
   int iB0 = iaBody[0], iB1 = iaBody[1];
 
-  /* This routine should only be called for the orbiters. iaBody[0] = the orbiter,
-iaBody[0] = central body */
+  /* This routine should only be called for the orbiters. iaBody[0] = the
+orbiter, iaBody[0] = central body */
 
   double dSum;
 
@@ -4261,7 +4270,7 @@ double fdCPLDrotrateDt(BODY *body, SYSTEM *system, int *iaBody) {
     iOrbiter = iB1;
   } else {
     iOrbiter = iB0;
-}
+  }
 
   /* Note if tidally locked, ForceBehavior fixes the rotation
      rate and sets the function pointer to dTINY. */
@@ -4288,7 +4297,7 @@ double fdCPLDoblDt(BODY *body, int *iaBody) {
     iOrbiter = iB1;
   } else {
     iOrbiter = iB0;
-}
+  }
 
   return body[iB0].dTidalZ[iB1] * sin(body[iB0].dObliquity) /
          (4 * body[iB0].dMass * body[iB0].dRadGyra * body[iB0].dRadGyra *
@@ -4319,7 +4328,7 @@ double fdCPLDZoblDt(BODY *body, SYSTEM *system, int *iaBody) {
 
 /*
  ********************** CTL Functions ************************
-*/
+ */
 
 double fdCTLBeta(double dEcc) {
   return pow(1 - dEcc * dEcc, 0.5);
@@ -4366,7 +4375,7 @@ double fdCTLTidePower(BODY *body, int iBody) {
       iOrbiter = body[iBody].iaTidePerts[iPert];
     } else {
       iOrbiter = iBody;
-}
+    }
     iIndex = body[iBody].iaTidePerts[iPert];
 
     dPower += (body[iBody].dTidalF[iIndex][0] /
@@ -4459,7 +4468,8 @@ double fdCTLDKeccDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fdCTLDsemiDt(BODY *body, SYSTEM *system, int *iaBody) {
-  /* This routine should only be called for the orbiters. iaBody[0] = the orbiter, iaBody[1] = central body */
+  /* This routine should only be called for the orbiters. iaBody[0] = the
+   * orbiter, iaBody[1] = central body */
   double dSum = 0;
 
   // Contribution from orbiter
@@ -4529,7 +4539,7 @@ double fdCTLDrotrateDt(BODY *body, SYSTEM *system, int *iaBody) {
     iOrbiter = iB1;
   } else {
     iOrbiter = iB0;
-}
+  }
 
   double tmp = 2 * cos(body[iaBody[0]].dObliquity) * body[iB0].dTidalF[iB1][1] /
                pow(body[iB0].dTidalBeta[iB1], 12);
@@ -4557,7 +4567,7 @@ double fdCTLDoblDt(BODY *body, int *iaBody) {
     iOrbiter = iB1;
   } else {
     iOrbiter = iB0;
-}
+  }
 
   double tmp = (body[iB0].dTidalZ[iB1] * sin(body[iaBody[0]].dObliquity)) /
                (2 * body[iaBody[0]].dMass * body[iaBody[0]].dRadGyra *
@@ -4575,7 +4585,7 @@ double fdCTLDoblDt(BODY *body, int *iaBody) {
 
 /*
  ********************** DB15 Functions ************************
-*/
+ */
 
 double fdPowerEqtideDB15(BODY *body, int iBody) {
 
@@ -4588,7 +4598,7 @@ double fdPowerEqtideDB15(BODY *body, int iBody) {
              pow(body[0].dMass, 2.5) * pow(body[iBody].dRadius, 5) *
              body[iBody].dEccSq * pow(body[iBody].dSemi, -7.5);
 
-    //printf("PowerEqtideDB15=%e\n",dPower);
+    // printf("PowerEqtideDB15=%e\n",dPower);
     return dPower;
   } else {
     return 0;
@@ -4632,7 +4642,7 @@ double fdDB15DeccDt(BODY *body, UPDATE *update, int *iaBody) {
     }
     return 21 / 2. * imk2 * pow(body[iPert].dMass, 3. / 2) * pow(BIGG, 1. / 2) *
            pow(body[iBody].dRadius, 5) * body[iBody].dEcc / body[iBody].dMass /
-           pow(body[iBody].dSemi, 13. / 2); //DB15 (16)
+           pow(body[iBody].dSemi, 13. / 2); // DB15 (16)
   } else {
     return 0;
   }
@@ -4707,7 +4717,8 @@ void VerifyDB15(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
   control->fnPropsAux[iBody][iModule] = &PropsAuxDB15;
 
-  /* Note that the mantle k_2 and Im(k_2) are calculated in VerifyEqtideThermint.
-    This choice is made because they depend on mantle properties that are calculated
-    by Thermint, and all individual modules are verified before multi-modules are. */
+  /* Note that the mantle k_2 and Im(k_2) are calculated in
+    VerifyEqtideThermint. This choice is made because they depend on mantle
+    properties that are calculated by Thermint, and all individual modules are
+    verified before multi-modules are. */
 }

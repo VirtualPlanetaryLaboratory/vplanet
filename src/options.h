@@ -94,7 +94,7 @@
 #define OPT_CALCDYNELLIP 612
 #define OPT_PRILUM 615
 
-#define OPT_VISCUMAN 630 //Viscosity UMTBL
+#define OPT_VISCUMAN 630 // Viscosity UMTBL
 #define OPT_OBL 640
 #define OPT_COSOBL 645
 #define OPT_RADIUS 650

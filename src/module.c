@@ -85,7 +85,8 @@ void InitializeModule(BODY *body, CONTROL *control, MODULE *module) {
     // Allow parameters that require no module
     module->iBitSum[iBody] = 1;
 
-    // Set module numbers to -1. They will be changed in FinalizeModule() if appropriate
+    // Set module numbers to -1. They will be changed in FinalizeModule() if
+    // appropriate
     module->iaEqtide[iBody]        = -1;
     module->iaDistOrb[iBody]       = -1;
     module->iaDistRot[iBody]       = -1;
@@ -109,7 +110,8 @@ void InitializeModule(BODY *body, CONTROL *control, MODULE *module) {
         malloc(iNumBodies * sizeof(fnInitializeOutputModule *));
 
   // Finalize Primary Variable Functions
-  //module->fnFinalizeUpdateEcc = malloc(iNumBodies*sizeof(fnFinalizeUpdateEccModule));
+  // module->fnFinalizeUpdateEcc =
+  // malloc(iNumBodies*sizeof(fnFinalizeUpdateEccModule));
   module->fnFinalizeUpdate26AlNumCore =
         malloc(iNumBodies * sizeof(fnFinalizeUpdate26AlNumCoreModule));
   module->fnFinalizeUpdate26AlNumMan =
@@ -287,43 +289,43 @@ void FinalizeModule(BODY *body, CONTROL *control, MODULE *module, int iBody) {
 
   if (body[iBody].bEqtide) {
     iNumModules++;
-}
+  }
   if (body[iBody].bDistOrb) {
     iNumModules++;
-}
+  }
   if (body[iBody].bDistRot) {
     iNumModules++;
-}
+  }
   if (body[iBody].bRadheat) {
     iNumModules++;
-}
+  }
   if (body[iBody].bThermint) {
     iNumModules++;
-}
+  }
   if (body[iBody].bAtmEsc) {
     iNumModules++;
-}
+  }
   if (body[iBody].bStellar) {
     iNumModules++;
-}
+  }
   if (body[iBody].bPoise) {
     iNumModules++;
-}
+  }
   if (body[iBody].bBinary) {
     iNumModules++;
-}
+  }
   if (body[iBody].bFlare) {
     iNumModules++;
-}
+  }
   if (body[iBody].bGalHabit) {
     iNumModules++;
-}
+  }
   if (body[iBody].bSpiNBody) {
     iNumModules++;
-}
+  }
   if (body[iBody].bMagmOc) {
     iNumModules++;
-}
+  }
   if (body[iBody].bEqtide && body[iBody].bStellar) {
     iNumModuleMulti++;
   }
@@ -607,8 +609,8 @@ void AddModules(BODY *body, CONTROL *control, MODULE *module) {
   int iBody, iModule;
 
   /************************
-  * ADD NEW MODULES HERE *
-  ************************/
+   * ADD NEW MODULES HERE *
+   ************************/
 
   for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
     iModule = 0;
@@ -699,7 +701,7 @@ void ReadModules(BODY *body, CONTROL *control, FILES *files, MODULE *module,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: No modules input to option %s.\n",
                 options->cName);
-}
+      }
       LineExit(files->Infile[iFile].cIn, lTmp[0]);
     }
 
@@ -761,7 +763,7 @@ void ReadModules(BODY *body, CONTROL *control, FILES *files, MODULE *module,
         if (control->Io.iVerbose >= VERBERR) {
           fprintf(stderr, "ERROR: Unknown Module %s provided to %s.\n",
                   saTmp[iModule], options->cName);
-}
+        }
         LineExit(files->Infile[iFile].cIn, lTmp[0]);
       }
     }
@@ -774,7 +776,7 @@ void ReadModules(BODY *body, CONTROL *control, FILES *files, MODULE *module,
               "WARNING: %s not present in file %s. No evolution will occur for "
               "this body.\n",
               options->cName, files->Infile[iFile].cIn);
-}
+    }
   }
   free(lTmp);
 }
@@ -784,91 +786,91 @@ void PrintModuleList(FILE *file, int iBitSum) {
   if (iBitSum & ATMESC) {
     if (space) {
       fprintf(file, " ");
-}
+    }
     space = 1;
     fprintf(file, "AtmEsc");
   }
   if (iBitSum & BINARY) {
     if (space) {
       fprintf(file, " ");
-}
+    }
     space = 1;
     fprintf(file, "BINARY");
   }
   if (iBitSum & DISTORB) {
     if (space) {
       fprintf(file, " ");
-}
+    }
     space = 1;
     fprintf(file, "DistOrb");
   }
   if (iBitSum & DISTROT) {
     if (space) {
       fprintf(file, " ");
-}
+    }
     space = 1;
     fprintf(file, "DistRot");
   }
   if (iBitSum & EQTIDE) {
     if (space) {
       fprintf(file, " ");
-}
+    }
     space = 1;
     fprintf(file, "EqTide");
   }
   if (iBitSum & FLARE) {
     if (space) {
       fprintf(file, " ");
-}
+    }
     space = 1;
     fprintf(file, "FLARE");
   }
   if (iBitSum & GALHABIT) {
     if (space) {
       fprintf(file, " ");
-}
+    }
     space = 1;
     fprintf(file, "GalHabit");
   }
   if (iBitSum & MAGMOC) {
     if (space) {
       fprintf(file, " ");
-}
+    }
     space = 1;
     fprintf(file, "MagmOc");
   }
   if (iBitSum & POISE) {
     if (space) {
       fprintf(file, " ");
-}
+    }
     space = 1;
     fprintf(file, "POISE");
   }
   if (iBitSum & RADHEAT) {
     if (space) {
       fprintf(file, " ");
-}
+    }
     space = 1;
     fprintf(file, "RadHeat");
   }
   if (iBitSum & SPINBODY) {
     if (space) {
       fprintf(file, " ");
-}
+    }
     space = 1;
     fprintf(file, "SpiNBody");
   }
   if (iBitSum & STELLAR) {
     if (space) {
       fprintf(file, " ");
-}
+    }
     space = 1;
     fprintf(file, "STELLAR");
   }
   if (iBitSum & THERMINT) {
     if (space) {
       fprintf(file, " ");
-}
+    }
     space = 1;
     fprintf(file, "ThermInt");
   }
@@ -965,14 +967,14 @@ void VerifyModuleMultiRadheatThermint(BODY *body, UPDATE *update,
                 "WARNING: Module THERMINT selected for %s, but RADHEAT not "
                 "selected.\n",
                 body[iBody].cName);
-}
+      }
       body[iBody].dRadPowerCore  = 0.;
       body[iBody].dRadPowerCrust = 0.;
       body[iBody].dRadPowerMan   = 0.;
     } else {
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] =
             &PropsAuxRadheatThermint;
-}
+    }
   }
 }
 
@@ -1048,14 +1050,15 @@ void VerifyModuleMultiEqtideStellar(BODY *body, UPDATE *update,
   if (body[iBody].bEqtide) {
     if (body[iBody].bStellar) {
 
-      // Only call EQTIDE and STELLAR together for 1st 2 bodies for a binary star system
+      // Only call EQTIDE and STELLAR together for 1st 2 bodies for a binary
+      // star system
       if (iBody > 1) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr,
                   "ERROR: Can't call EQTIDE and STELLAR for body %d.  Only 0 "
                   "and 1 for a binary system!\n",
                   iBody);
-}
+        }
         exit(EXIT_INPUT);
       }
 
@@ -1065,7 +1068,7 @@ void VerifyModuleMultiEqtideStellar(BODY *body, UPDATE *update,
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr, "ERROR: If both stellar AND eqtide are set and iBody "
                           "> 0, MUST set iBodyType == 1 for stars\n");
-}
+        }
         exit(EXIT_INPUT);
       }
 
@@ -1075,7 +1078,7 @@ void VerifyModuleMultiEqtideStellar(BODY *body, UPDATE *update,
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr, "ERROR: If both stellar AND eqtide are set, body "
                           "cannot set bOceanTides or bEnvTides!\n");
-}
+        }
         LineExit(files->Infile[iBody + 1].cIn,
                  options[OPT_MODULES].iLine[iBody + 1]);
       }
@@ -1084,28 +1087,28 @@ void VerifyModuleMultiEqtideStellar(BODY *body, UPDATE *update,
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr, "ERROR: %s set, but this body is a star!.\n",
                   options[OPT_TIDALQOCEAN].cName);
-}
+        }
         exit(EXIT_INPUT);
       }
       if (options[OPT_K2OCEAN].iLine[iBody + 1] > -1) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr, "ERROR: %s set, but this body is a star!.\n",
                   options[OPT_K2OCEAN].cName);
-}
+        }
         exit(EXIT_INPUT);
       }
       if (options[OPT_TIDALQENV].iLine[iBody + 1] > -1) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr, "ERROR: %s set, but this body is a star!.\n",
                   options[OPT_TIDALQENV].cName);
-}
+        }
         exit(EXIT_INPUT);
       }
       if (options[OPT_K2ENV].iLine[iBody + 1] > -1) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr, "ERROR: %s set, but this body is a star!.\n",
                   options[OPT_K2ENV].cName);
-}
+        }
         exit(EXIT_INPUT);
       }
 
@@ -1145,11 +1148,12 @@ void VerifyModuleMultiAtmescEqtide(BODY *body, UPDATE *update, CONTROL *control,
                                    FILES *files, MODULE *module,
                                    OPTIONS *options, int iBody,
                                    int *iModuleProps, int *iModuleForce) {
-  /* Ensure that if using Lopez et al radius models, ATMESC uses Lopez et al radius for atmespheric escape
-   * while EQTIDE uses a "tidal radius" as it is likely that the radius of the envelope does not really
-   * impact tides since the tidal evolution has such a strong (r^5) radius dependent.  Effectively, we assume
-   * that the core/ocean size of stuff controls that evolution while the atmosphere contributes to the Tidal
-   * Q, k_2 and Im(k_2) for the world
+  /* Ensure that if using Lopez et al radius models, ATMESC uses Lopez et al
+   * radius for atmespheric escape while EQTIDE uses a "tidal radius" as it is
+   * likely that the radius of the envelope does not really impact tides since
+   * the tidal evolution has such a strong (r^5) radius dependent.  Effectively,
+   * we assume that the core/ocean size of stuff controls that evolution while
+   * the atmosphere contributes to the Tidal Q, k_2 and Im(k_2) for the world
    */
 
   // dImK2Env has no read options, so must initialize here!
@@ -1163,8 +1167,8 @@ void VerifyModuleMultiAtmescEqtide(BODY *body, UPDATE *update, CONTROL *control,
   }
 
   if (body[iBody].bEqtide) {
-    // CTL hack.  Pretty sure EQTIDE CTL is broken, but this will prevent additional hiccups
-    // Ignore everything after this
+    // CTL hack.  Pretty sure EQTIDE CTL is broken, but this will prevent
+    // additional hiccups Ignore everything after this
     if (control->Evolve.iEqtideModel == CTL) {
       body[iBody].dTidalRadius = body[iBody].dRadius;
       return;
@@ -1233,13 +1237,15 @@ void VerifyModuleMultiAtmescEqtide(BODY *body, UPDATE *update, CONTROL *control,
           // strategy for water reservoirs
           body[iBody].bOcean = 1;
         }
-        body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
+        body[iBody].dImK2Ocean = body[iBody].dK2Ocean /
+body[iBody].dTidalQOcean;
 // MASTER HERE
         // Only activate ocean if user indicated they wanted to
         if (options[OPT_TIDALQOCEAN].iLine[iBody+1] > -1 &&
             options[OPT_K2OCEAN].iLine[iBody+1] > -1) {
           body[iBody].bOcean = 1;
-          body[iBody].dImK2Ocean = body[iBody].dK2Ocean / body[iBody].dTidalQOcean;
+          body[iBody].dImK2Ocean = body[iBody].dK2Ocean /
+body[iBody].dTidalQOcean;
         }
 // ENDS HERE
 */
@@ -1302,7 +1308,8 @@ void VerifyModuleMultiAtmescEqtide(BODY *body, UPDATE *update, CONTROL *control,
 
       // Not using tidal radius
       else {
-        // Since no tidal radius specified, dRadius better be (or a radius evolution model or a mass radius relation)
+        // Since no tidal radius specified, dRadius better be (or a radius
+        // evolution model or a mass radius relation)
         if (!(options[OPT_RADIUS].iLine[iBody + 1] > -1) &&
             !(options[OPT_PLANETRADIUSMODEL].iLine[iBody + 1] > -1) &&
             !(options[OPT_MASSRAD].iLine[iBody + 1] > -1)) {
@@ -1329,7 +1336,8 @@ void VerifyModuleMultiAtmescEqtide(BODY *body, UPDATE *update, CONTROL *control,
       }
 
       // now we need to do verify steps to make sure everything is set:
-      // Sets behavior for changing between dTidalQEnv, dTidalQOcean, and dTidalQMan
+      // Sets behavior for changing between dTidalQEnv, dTidalQOcean, and
+      // dTidalQMan
       control->fnForceBehaviorMulti[iBody][(*iModuleForce)++] =
             &ForceBehaviorEqtideAtmesc;
 
@@ -1342,8 +1350,8 @@ void VerifyModuleMultiAtmescEqtide(BODY *body, UPDATE *update, CONTROL *control,
 
     // Not using ATMESC
     else {
-      // Using tidal radius without atmesc doesn't make sense, just need to set radius
-      // Ignore if using stellar with some radius relation
+      // Using tidal radius without atmesc doesn't make sense, just need to set
+      // radius Ignore if using stellar with some radius relation
       if (!(options[OPT_RADIUS].iLine[iBody + 1] > -1) &&
           !(options[OPT_MASSRAD].iLine[iBody + 1] > -1)) {
         fprintf(stderr, "ERROR: Using EQTIDE but neither %s or %s is set!\n",
@@ -1351,7 +1359,8 @@ void VerifyModuleMultiAtmescEqtide(BODY *body, UPDATE *update, CONTROL *control,
         exit(EXIT_INPUT);
       }
 
-      // If dTidalRadius or bUseTidalRadius set, ignore and warn user as they do nothing
+      // If dTidalRadius or bUseTidalRadius set, ignore and warn user as they do
+      // nothing
       if ((options[OPT_USETIDALRADIUS].iLine[iBody + 1] > -1) ||
           (options[OPT_TIDALRADIUS].iLine[iBody + 1] > -1)) {
         if (control->Io.iVerbose >= VERBINPUT) {
@@ -1375,8 +1384,8 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body, UPDATE *update,
                                            int *iModuleForce) {
 
   // If you're using alllll of these, include the force behavior!
-  // Also, you MUST have surface water information set if you're using bOceanTides
-  // Note: VerifyEqtideThermint handles all things oceans
+  // Also, you MUST have surface water information set if you're using
+  // bOceanTides Note: VerifyEqtideThermint handles all things oceans
 
   // dImK2Env has no ReadOption, so we must initialize it here.
 
@@ -1426,7 +1435,8 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body, UPDATE *update,
                 &ForceBehaviorAtmescEqtideThermint;
 
           // Switch PropAuxEqtideThermint -> PropsAuxAtmescEqtideThermint
-          // XXX Hack! This has been PropsAuxAtmescEqtideThermint, but I think it can be cut.
+          // XXX Hack! This has been PropsAuxAtmescEqtideThermint, but I think
+          // it can be cut.
           control->fnPropsAuxMulti[iBody][(*iModuleProps)++] =
                 &PropsAuxEqtideThermint;
         }
@@ -1471,12 +1481,13 @@ void VerifyModuleMultiFlareStellar(BODY *body, UPDATE *update, CONTROL *control,
     } else {
       control->fnPropsAuxMulti[iBody][(*iModuleProps)++] =
             &PropsAuxFlareStellar;
-}
+    }
   }
 }
 
 /*
- * Binary + Stellar coupling.  If using binary, only 1st 2 bodies (0, 1) can be stars
+ * Binary + Stellar coupling.  If using binary, only 1st 2 bodies (0, 1) can be
+ * stars
  */
 void VerifyModuleMultiBinaryStellar(BODY *body, UPDATE *update,
                                     CONTROL *control, FILES *files,
@@ -1496,7 +1507,8 @@ void VerifyModuleMultiBinaryStellar(BODY *body, UPDATE *update,
 }
 
 /*
- * Binary + Eqtide: If using both, only stars (iBodyType == 1, iBody <= 1) can use eqtide
+ * Binary + Eqtide: If using both, only stars (iBodyType == 1, iBody <= 1) can
+ * use eqtide
  */
 void VerifyModuleMultiBinaryEqtide(BODY *body, UPDATE *update, CONTROL *control,
                                    FILES *files, MODULE *module,
@@ -1539,7 +1551,8 @@ void VerifyModuleMultiSpiNBodyDistOrb(BODY *body, UPDATE *update,
 
       // This initializes Eqtide to be run with SpiNBody
       // if (body[iTmpBody].bEqtide) {
-      //  control->Evolve.bStepEqtide = 0; // Initialize Eqtide Step as not yet taken
+      //  control->Evolve.bStepEqtide = 0; // Initialize Eqtide Step as not yet
+      //  taken
       //}
       // Set Mean Longitude so that Mean Anomaly can be tracked through DistOrb
       body[iTmpBody].dMeanL = body[iTmpBody].dMeanA + body[iTmpBody].dLongP;
@@ -1585,7 +1598,7 @@ void VerifyModuleCompatability(BODY *body, CONTROL *control, FILES *files,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: Modules Binary and SpiNbody cannot be applied "
                         "to the same body.\n");
-}
+      }
       LineExit(files->Infile[iBody + 1].cIn,
                options[OPT_MODULES].iLine[iBody + 1]);
     }
@@ -1593,7 +1606,7 @@ void VerifyModuleCompatability(BODY *body, CONTROL *control, FILES *files,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: Modules Binary and Poise cannot be applied to "
                         "the same body.\n");
-}
+      }
       LineExit(files->Infile[iBody + 1].cIn,
                options[OPT_MODULES].iLine[iBody + 1]);
     }
@@ -1604,7 +1617,7 @@ void VerifyModuleCompatability(BODY *body, CONTROL *control, FILES *files,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: Modules AtmEsc and POISE cannot be applied to "
                         "the same body.\n");
-}
+      }
       LineExit(files->Infile[iBody + 1].cIn,
                options[OPT_MODULES].iLine[iBody + 1]);
     }
@@ -1616,7 +1629,7 @@ void VerifyModuleCompatability(BODY *body, CONTROL *control, FILES *files,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: Modules DistOrb and SpiNbody cannot be applied "
                         "to the same body.\n");
-}
+      }
       LineExit(files->Infile[iBody + 1].cIn,
                options[OPT_MODULES].iLine[iBody + 1]);
     }
@@ -1626,7 +1639,7 @@ void VerifyModuleCompatability(BODY *body, CONTROL *control, FILES *files,
   if (body[iBody].bGalHabit && module->iNumModules[iBody] > 1) {
     if (control->Io.iVerbose >= VERBERR) {
       fprintf(stderr, "ERROR: No other modules are permitted with GalHabit.\n");
-}
+    }
     LineExit(files->Infile[iBody + 1].cIn,
              options[OPT_MODULES].iLine[iBody + 1]);
   }
@@ -1637,7 +1650,7 @@ void VerifyModuleCompatability(BODY *body, CONTROL *control, FILES *files,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: Modules Stellar and AtmEsc cannot be applied "
                         "to the same body.\n");
-}
+      }
       LineExit(files->Infile[iBody + 1].cIn,
                options[OPT_MODULES].iLine[iBody + 1]);
     }
@@ -1645,7 +1658,7 @@ void VerifyModuleCompatability(BODY *body, CONTROL *control, FILES *files,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: Modules Stellar and DistOrb cannot be applied "
                         "to the same body.\n");
-}
+      }
       LineExit(files->Infile[iBody + 1].cIn,
                options[OPT_MODULES].iLine[iBody + 1]);
     }
@@ -1653,7 +1666,7 @@ void VerifyModuleCompatability(BODY *body, CONTROL *control, FILES *files,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: Modules Stellar and DistRot cannot be applied "
                         "to the same body.\n");
-}
+      }
       LineExit(files->Infile[iBody + 1].cIn,
                options[OPT_MODULES].iLine[iBody + 1]);
     }
@@ -1661,7 +1674,7 @@ void VerifyModuleCompatability(BODY *body, CONTROL *control, FILES *files,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: Modules Stellar and Poise cannot be applied to "
                         "the same body.\n");
-}
+      }
       LineExit(files->Infile[iBody + 1].cIn,
                options[OPT_MODULES].iLine[iBody + 1]);
     }
@@ -1669,22 +1682,21 @@ void VerifyModuleCompatability(BODY *body, CONTROL *control, FILES *files,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: Modules Stellar and RadHeat cannot be applied "
                         "to the same body.\n");
-}
+      }
       LineExit(files->Infile[iBody + 1].cIn,
                options[OPT_MODULES].iLine[iBody + 1]);
     }
-    /* This combo seems OK, and is necessary to calculate instellation. I'll leave it
-        commented for now.
-    if (body[iBody].bSpiNBody) {
-      if (control->Io.iVerbose >= VERBERR)
-        fprintf(stderr,"ERROR: Modules Stellar and SpiNBody cannot be applied to the same body.\n");
+    /* This combo seems OK, and is necessary to calculate instellation. I'll
+    leave it commented for now. if (body[iBody].bSpiNBody) { if
+    (control->Io.iVerbose >= VERBERR) fprintf(stderr,"ERROR: Modules Stellar and
+    SpiNBody cannot be applied to the same body.\n");
       LineExit(files->Infile[iBody+1].cIn,options[OPT_MODULES].iLine[iBody+1]);
     } */
     if (body[iBody].bThermint) {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: Modules Stellar and ThermInt cannot be applied "
                         "to the same body.\n");
-}
+      }
       LineExit(files->Infile[iBody + 1].cIn,
                options[OPT_MODULES].iLine[iBody + 1]);
     }
@@ -1696,7 +1708,7 @@ void VerifyModuleCompatability(BODY *body, CONTROL *control, FILES *files,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: Modules MagmOc and ThermInt cannot be applied "
                         "to the same body.\n");
-}
+      }
       LineExit(files->Infile[iBody + 1].cIn,
                options[OPT_MODULES].iLine[iBody + 1]);
     }
@@ -1773,7 +1785,7 @@ void VerifyModuleMulti(BODY *body, UPDATE *update, CONTROL *control,
   control->iNumMultiForce[iBody] = iNumMultiForce;
   if (control->Io.iVerbose >= VERBALL) {
     fprintf(stdout, "All of %s's modules verified.\n", body[iBody].cName);
-}
+  }
 }
 
 /*
@@ -1796,7 +1808,7 @@ void PropsAuxAtmescEqtide(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   // If bUseTidalRadius == 0, dTidalRadius <- dRadius
   if (!body[iBody].bUseTidalRadius) {
     body[iBody].dTidalRadius = body[iBody].dRadius;
-}
+  }
 }
 
 /** Calculate auxiliary properties if EqTide and ThermInt are called. At present
@@ -1843,7 +1855,8 @@ void PropsAuxEqtideStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
 void PropsAuxFlareStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                           int iBody) {
   SYSTEM system; // dummy for LXUVStellar
-  //body[iBody].dLXUV = fdLXUVStellar(body,&system,update,iBody,iBody) + body[iBody].dLXUVFlare;
+  // body[iBody].dLXUV = fdLXUVStellar(body,&system,update,iBody,iBody) +
+  // body[iBody].dLXUVFlare;
 }
 
 void PropsAuxMagmOcAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
@@ -1967,7 +1980,8 @@ void ForceBehaviorSpiNBodyDistOrb(BODY *body, MODULE *module, EVOLVE *evolve,
   }
 
   if (evolve->bUsingDistOrb && !(bOldUsingDistOrb)) {
-    // If using DistOrb now, but not earlier, then change derivatives to use DistOrb
+    // If using DistOrb now, but not earlier, then change derivatives to use
+    // DistOrb
     printf("Switching to DistOrb from SpiNBody at time %f years.\n",
            (evolve->dTime / YEARSEC));
 
@@ -1993,7 +2007,8 @@ void ForceBehaviorSpiNBodyDistOrb(BODY *body, MODULE *module, EVOLVE *evolve,
     }
 
   } else if (evolve->bUsingSpiNBody && !(bOldUsingSpiNBody)) {
-    // Else if using SpiNBody now, but not earlier, then change derivatives to use SpiNBody
+    // Else if using SpiNBody now, but not earlier, then change derivatives to
+    // use SpiNBody
     printf("Switching to SpiNBody from DistOrb at time %f years.\n",
            (evolve->dTime / YEARSEC));
 
@@ -2027,15 +2042,22 @@ void ForceBehaviorSpiNBodyDistOrb(BODY *body, MODULE *module, EVOLVE *evolve,
     //     // Null out all functions except EqTide
     //     for (iBody=0; iBody<evolve->iNumBodies; iBody++) {
     //
-    //       // If SpiNBody is running, DistOrb pointers must already be Nulled out
+    //       // If SpiNBody is running, DistOrb pointers must already be Nulled
+    //       out
     //
     //       // Null out SpiNBody function pointers
-    //       fnUpdate[iBody][update[iSpiNBody][iBody].iPositionX][0] = &fndUpdateFunctionTiny;
-    //       fnUpdate[iBody][update[iSpiNBody][iBody].iPositionY][0] = &fndUpdateFunctionTiny;
-    //       fnUpdate[iBody][update[iSpiNBody][iBody].iPositionZ][0] = &fndUpdateFunctionTiny;
-    //       fnUpdate[iBody][update[iSpiNBody][iBody].iVelX][0] = &fndUpdateFunctionTiny;
-    //       fnUpdate[iBody][update[iSpiNBody][iBody].iVelY][0] = &fndUpdateFunctionTiny;
-    //       fnUpdate[iBody][update[iSpiNBody][iBody].iVelZ][0] = &fndUpdateFunctionTiny;
+    //       fnUpdate[iBody][update[iSpiNBody][iBody].iPositionX][0] =
+    //       &fndUpdateFunctionTiny;
+    //       fnUpdate[iBody][update[iSpiNBody][iBody].iPositionY][0] =
+    //       &fndUpdateFunctionTiny;
+    //       fnUpdate[iBody][update[iSpiNBody][iBody].iPositionZ][0] =
+    //       &fndUpdateFunctionTiny;
+    //       fnUpdate[iBody][update[iSpiNBody][iBody].iVelX][0] =
+    //       &fndUpdateFunctionTiny;
+    //       fnUpdate[iBody][update[iSpiNBody][iBody].iVelY][0] =
+    //       &fndUpdateFunctionTiny;
+    //       fnUpdate[iBody][update[iSpiNBody][iBody].iVelZ][0] =
+    //       &fndUpdateFunctionTiny;
     //     }
     //
     //     dMinOrbPeriod = dHUGE;
@@ -2062,7 +2084,7 @@ void ForceBehaviorSpiNBodyAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve,
                                  fnUpdateVariable ***fnUpdate, int iBody,
                                  int iModule) {
 
-  //Need to get orbital elements for AtmEsc to use for escape
+  // Need to get orbital elements for AtmEsc to use for escape
   Bary2OrbElems(body, iBody);
 }
 
@@ -2112,15 +2134,15 @@ void ForceBehaviorEqtideAtmesc(BODY *body, MODULE *module, EVOLVE *evolve,
   for (iBody = 1; iBody<=evolve->iNumBodies-1; iBody++) {
 
     // We think there is an envelope, but there isnt!
-    if (body[iBody].bEnv && (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass)) {
-      if (io->iVerbose > VERBERR) {
+    if (body[iBody].bEnv && (body[iBody].dEnvelopeMass <=
+  body[iBody].dMinEnvelopeMass)) { if (io->iVerbose > VERBERR) {
         fprintf(stderr,"Envelope lost! Changing dTidalQ to:");
       }
       body[iBody].bEnv = 0;
 
       // is there an ocean? lets set tidalq to that!
-      if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass > body[iBody].dMinSurfaceWaterMass)) {
-        if (io->iVerbose > VERBERR) {
+      if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass >
+  body[iBody].dMinSurfaceWaterMass)) { if (io->iVerbose > VERBERR) {
           fprintf(stderr," dTidalQOcean,\n");
         }
         body[iBody].dTidalQ = body[iBody].dTidalQOcean;
@@ -2138,8 +2160,8 @@ void ForceBehaviorEqtideAtmesc(BODY *body, MODULE *module, EVOLVE *evolve,
       }
     }
     // we think theres an ocean, but there isnt!!
-    else if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass)) {
-      if (io->iVerbose > VERBERR) {
+    else if (body[iBody].bOcean && (body[iBody].dSurfaceWaterMass <=
+  body[iBody].dMinSurfaceWaterMass)) { if (io->iVerbose > VERBERR) {
         fprintf(stderr,"Ocean Lost! Switching dTidalQ to: dTidalQRock.\n");
       }
       body[iBody].dTidalQ = body[iBody].dTidalQRock;
@@ -2151,9 +2173,9 @@ void ForceBehaviorEqtideAtmesc(BODY *body, MODULE *module, EVOLVE *evolve,
 */
 }
 
-/* XXX RB: I think this subroutine can be cut. We want a ForceBehaviorStellarEqtide
-that determines if a planet enters/exits a runaway greenhouse so as to turn on/off
-bOceanTides. */
+/* XXX RB: I think this subroutine can be cut. We want a
+ForceBehaviorStellarEqtide that determines if a planet enters/exits a runaway
+greenhouse so as to turn on/off bOceanTides. */
 void ForceBehaviorAtmescEqtideThermint(BODY *body, MODULE *module,
                                        EVOLVE *evolve, IO *io, SYSTEM *system,
                                        UPDATE *update,
@@ -2163,7 +2185,8 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body, MODULE *module,
   // Loop over non-star bodies
   // Keeps track of whether or not bOceanTides or bEnvTides were initially set
   // to ensure they don't get turned back on by force behavior
-  // If oceans or envelope weren't initially set to be modeled, their Q == -dHUGE
+  // If oceans or envelope weren't initially set to be modeled, their Q ==
+  // -dHUGE
   int bOceans = 0;
   int bEnv    = 0;
 
@@ -2171,7 +2194,7 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body, MODULE *module,
     // If body 1 is a star (iBodyType==1), pass
     if (iBody == 1 && body[iBody].iBodyType == 1) {
       continue;
-}
+    }
 
     // Ocean check
     if (body[iBody].dTidalQOcean < 0) {
@@ -2179,9 +2202,9 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body, MODULE *module,
     } else {
       bOceans = 1;
     }
-    /* But if in a runaway greenhouse, no ocean. Note that this is a bit of a fudge:
-      If the planet's surface temperature is between 70 and 100 C, then it could
-      have oceans *and* be in an RG. */
+    /* But if in a runaway greenhouse, no ocean. Note that this is a bit of a
+      fudge: If the planet's surface temperature is between 70 and 100 C, then
+      it could have oceans *and* be in an RG. */
     if (evolve->bFirstStep) {
       // RG -> no ocean tides
       if (fdInstellation(body, iBody) >= fdHZRG14(body, iBody)) {
@@ -2194,7 +2217,7 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body, MODULE *module,
       bEnv = 0;
     } else {
       bEnv = 1;
-}
+    }
 
     // Note: With these checks, only do anything if user intended to model them
     // i.e. if bOceanTides == 1 from initial conditions
@@ -2207,17 +2230,20 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body, MODULE *module,
                (body[iBody].dSurfaceWaterMass >
                 body[iBody].dMinSurfaceWaterMass) &&
                body[iBody].bRunaway) {
-      // Case: Water but it's in the atmosphere: RUNAWAY GREENHOUSE (this is when body actively loses water!)
+      // Case: Water but it's in the atmosphere: RUNAWAY GREENHOUSE (this is
+      // when body actively loses water!)
       body[iBody].bOcean = 0;
     } else if (bOceans &&
                (body[iBody].dSurfaceWaterMass >
                 body[iBody].dMinSurfaceWaterMass) &&
                !body[iBody].bRunaway) {
-      // Case: Water on the surface! (this is when body does NOT actively lose water!)
+      // Case: Water on the surface! (this is when body does NOT actively lose
+      // water!)
       body[iBody].bOcean = 1;
     }
 
-    // Check to see if the envelope is gone: when dEnvelopeMass <= dMinEnvelopeMass
+    // Check to see if the envelope is gone: when dEnvelopeMass <=
+    // dMinEnvelopeMass
     if (bEnv && (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass)) {
       body[iBody].bEnv = 0;
     }
@@ -2232,7 +2258,7 @@ void ForceBehaviorAtmescEqtideThermint(BODY *body, MODULE *module,
     if (body[iBody].bEnv ||
         (body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass)) {
       body[iBody].bOcean = 0;
-}
+    }
   }
 }
 
@@ -2249,7 +2275,7 @@ void InitializeUpdateEqStSemi(BODY *body, UPDATE *update, int iBody) {
       body[iBody].bEqtide && iBody == 1) {
     if (update[iBody].iNumSemi == 0) {
       update[iBody].iNumVars++;
-}
+    }
     update[iBody].iNumSemi++;
   }
 }

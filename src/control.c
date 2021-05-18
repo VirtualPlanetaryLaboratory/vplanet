@@ -262,15 +262,20 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       printf(" |\n");
       printf("+=================+======================================+\n");
 
+      // Long Description
+     //  if (memcmp(options->cLongDescr,"null",4)) {
+     //     printf("| Overview        |");
+     //     char descr = options->cLongDescr;
+     //     char * token = strtok(descr, " ");
+     //     while(token =! NULL){
+     //       printf(" %s")
+     //     }
+     // }else {
+     //     printf("| Description     | %s                            |\n", options->cDescr);
+     //   }
+     //   printf("+-----------------+--------------------------------------+\n");
 
-      // if (memcmp(options->cLongDescr,"null",4)) {
-      //   printf("| Overview        |");
-      //   printf("%s                                 |\n",options->cLongDescr);
-      // }else {
-      //   printf("| Description     | %s                            |\n", options->cDescr);
-      // }
-      // printf("+-----------------+--------------------------------------+\n");
-
+      // Type
       int typelen;
       char *typestr;
       if (options->iType == 0) typestr = "Bool";
@@ -282,13 +287,13 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
         fprintf(stderr,"ERROR: Unknown value for typestr in control.c:WriteHelpOption.\n");
         exit(EXIT_UNITS);
       }
-      printf("| Tyßpe            | %s",typestr);
+      printf("| Type            | %s",typestr);
       for(typelen = 0; typelen<(36 - strlen(typestr)); typelen++){
         printf(" ");
       }
-      printf(" |\n");
-      printf("+-----------------+--------------------------------------+\n");
+      printf(" |\n+-----------------+--------------------------------------+\n");
 
+      // Custom Unit
       if (options->bNeg == 1){
         printf("| Custom unit     | %s", options->cNeg);
         int unitlen;
@@ -296,9 +301,24 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
           printf(" ");
         }
         printf(" |\n");
-      } else printf("| Custom unit     | nd                                   |\n");
-      printf("+-----------------+--------------------------------------+\n");
+        printf("+-----------------+--------------------------------------+\n");
+      }
 
+
+      if (options->iType == 2){
+        printf("| Dimension(s)    | %s", options->cDimension);
+        int dimlen;
+        for(dimlen = 0; dimlen<(36 - strlen(options->cDimension)); dimlen++){
+          printf(" ");
+        }
+        printf(" |\n");
+        printf("+-----------------+--------------------------------------+\n");
+      }
+
+
+
+
+      // Module List
       if (options->iModuleBit){
         printf("| Modules         | ");
         PrintModuleList(stdout, options->iModuleBit);
@@ -306,36 +326,30 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       } else printf("| Modules         | ALL                                  |\n");
       printf("+-----------------+--------------------------------------+\n");
 
+      //File List
       printf("| Files           | ");
       PrintFileTypes(options->iFileType);
       printf(" |\n");
       printf("+-----------------+--------------------------------------+\n");
 
-      printf("|Default value    | %s", options->cDefault);
+      //Default Value
+      printf("| Default value   | %s", options->cDefault);
       int valuelen;
-      //printf("%d\n",strlen(options->cDefault));
-      //for(valuelen = 0; valuelen<(36 - strlen(options->cDefault)); valuelen++){
-        //printf(" ");
-      //}
-      printf(" |\n");
-      printf("+-----------------+--------------------------------------+\n");
+      char valuelenchar = strlen(options->cDefault);
+      for(valuelen = 0; valuelen<(36 - valuelenchar); valuelen++){
+        printf(" ");
+      }
+      printf(" |\n+-----------------+--------------------------------------+\n");
 
+      // Allowed Values
       if (memcmp(options->cValues,"null",4)) {
-        printf("| Allowed values   | %s", options->cValues);
+        printf("| Allowed values    | %s", options->cValues);
         int alvalen;
         for(alvalen = 0; alvalen<(36 - strlen(options->cValues)); alvalen++){
           printf(" ");
         }
-        printf(" |\n");
-        printf("+-----------------+--------------------------------------+\n");
+        printf(" |\n+-----------------+--------------------------------------+\n");
       } else printf("\n");
-
-      // printf("**Description**     %s\n", options->cDescr);
-      // Long description
-      // if (memcmp(options->cLongDescr,"null",4)) {
-          // printf("\n**Overview**\n");
-          // printf("%s\n",options->cLongDescr);
-      //}
     }
   }
 }
@@ -354,33 +368,49 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
       // ** Long help **
 
       // Properties
-      printf("+------------------------------------------------------+\n");
-      printf("%s\n",output->cName);
-      printf("+-----------------+------------------------------------+\n");
+      printf("+========================================================+\n");
+      printf("| %s",output->cName);
+      int i;
+      for(i = 0; i<(54 - strlen(output->cName)); i++){
+        printf(" ");
+      }
+      printf(" |\n");
+      printf("+=================+======================================+\n");
+
       // Long description
-      if (memcmp(output->cLongDescr,"null",4)) {
-          printf("\n**Overview**\n");
-          printf("%s\n",output->cLongDescr);
-      } else {
-        printf("**Description**           %s\n", output->cDescr);
+      // if (memcmp(output->cLongDescr,"null",4)) {
+      //     printf("\n**Overview**\n");
+      //     printf("%s\n",output->cLongDescr);
+      // } else {
+      //   printf("**Description**           %s\n", output->cDescr);
+      // }
+
+      // Negative Option
+      if (output->bNeg != 0){
+        printf("| Custom unit     | %s", output->cNeg);
+        int unitlen;
+        for(unitlen = 0; unitlen<(36 - strlen(output->cNeg)); unitlen++){
+          printf(" ");
+        }
+        printf(" |\n");
+        printf("+-----------------+--------------------------------------+\n");
       }
-      if (output->bNeg == 1)
-        printf("**Custom unit**           %s\n", output->cNeg);
-      else
-        printf("**Custom unit**     \n");
-      printf("**Modules**               ");
-      if (output->iModuleBit) {
+
+      // Module List
+      if (output->iModuleBit){
+        printf("| Modules         | ");
         PrintModuleList(stdout, output->iModuleBit);
-      } else {
-        printf("ALL");
-      }
-      printf("\n");
-      printf("**Description**           %s\n", output->cDescr);
-      printf("========================  ====================================\n\n");
-        // Long description
-      if (memcmp(output->cLongDescr,"null",4)) {
-        printf("%s\n\n",output->cLongDescr);
-      }
+        printf(" |\n");
+      } else printf("| Modules         | ALL                                  |\n");
+      printf("+-----------------+--------------------------------------+\n\n");
+
+      // printf("\n");
+      // printf("**Description**           %s\n", output->cDescr);
+      // printf("+-----------------+------------------------------------+\n");
+      //   // Long description
+      // if (memcmp(output->cLongDescr,"null",4)) {
+      //   printf("%s\n\n",output->cLongDescr);
+      // }
     }
   }
 }

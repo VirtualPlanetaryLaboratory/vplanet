@@ -2,7 +2,6 @@ name: vplanet
 channels:
   - defaults
 dependencies:
-  - python=3.8
   - numpy>=1.19.2
   - pip>=20.3.3
   - scipy>=1.5.2

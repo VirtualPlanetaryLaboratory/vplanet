@@ -8,8 +8,16 @@ on:
 
 jobs:
   tests:
-    name: "Run tests"
+    name: "Run tests on py${{ matrix.python-version }}"
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: "3.6"
+          - python-version: "3.7"
+          - python-version: "3.8"
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -21,6 +29,7 @@ jobs:
         with:
           activate-environment: vplanet
           environment-file: environment.yml
+          python-version: ${{ matrix.python-version }}
 
       - name: Install
         id: install

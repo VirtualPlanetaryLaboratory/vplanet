@@ -5,6 +5,10 @@ from glob import glob
 import sys
 
 
+# Read current code version
+VERSION = open("VERSION", "r").read().split("\n")[0].strip()
+
+
 class BuildExt(build_ext):
     """A custom build extension for adding compiler-specific options."""
 
@@ -26,10 +30,7 @@ class BuildExt(build_ext):
 
 macros = [
     ("VPLANET_PYTHON_INTERFACE", 1),
-    (
-        "VPLANET_VERSION",
-        '"{}"'.format(open("VERSION", "r").read().split("\n")[0].strip()),
-    ),
+    ("VPLANET_VERSION", '"{}"'.format(VERSION),),
 ]
 if sys.platform.startswith("win"):
     macros += [("VPLANET_ON_WINDOWS", 1)]
@@ -45,28 +46,31 @@ ext_modules = [
 ]
 cmdclass = {"build_ext": BuildExt}
 
+# Vplanet suite of tools
+vplanet_suite = [
+    "vplot>=1.0.2",
+    "vspace>=1.0.2",
+]
+
+# NOTE: bigplanet & multiplanet require python>=3.7
+# If we're on python3.6, don't install it
+if sys.version_info >= (3, 7):
+    vplanet_suite += ["bigplanet>=1.0.0"]
+    vplanet_suite += ["multiplanet>=1.0.0"]
 
 setup(
     name="vplanet",
     author="Rory Barnes",
     author_email="rkb9@uw.edu",
-    version=open("VERSION", "r").read().split("\n")[0].strip(),
+    version=VERSION,
     url="https://github.com/VirtualPlanetaryLaboratory/vplanet",
     description="The virtual planet simulator",
     long_description=open("README.md", "r").read(),
     long_description_content_type="text/markdown",
     license="MIT",
     packages=["vplanet"],
-    install_requires=[
-        "vplot>=1.0.1",
-        "multiplanet>=1.0.0",
-        "bigplanet>=1.0.0",
-        "vspace>=1.0.2",
-        "astropy>=4.2.1",
-#        "numpy>=1.19.4",
-        "numpy",
-        "tqdm",
-    ],
+    install_requires=vplanet_suite + ["astropy>=4.1", "numpy>=1.19.4", "tqdm",],
+    python_requires=">=3.6",
     ext_modules=ext_modules,
     cmdclass=cmdclass,
     include_package_data=True,

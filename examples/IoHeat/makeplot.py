@@ -23,7 +23,7 @@ obl = np.zeros(necc * nobl)
 heat = np.zeros(necc * nobl)
 
 # Run vspace
-# subprocess.check_output(["vspace", "vspace.in"], cwd=str(path))
+subprocess.check_output(["vspace", "vspace.in"], cwd=str(path))
 dirs = glob.glob(str(path / "data" / "io*"))
 
 # Run vplanet

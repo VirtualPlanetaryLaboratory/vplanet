@@ -74,7 +74,7 @@ declarations for the other primary variables:
 
 .. code-block:: bash
 
-  typedef void (*fnFinalizeUpdatePrimaryVariabletModule)(BODY *, UPDATE *,
+  typedef void (*fnFinalizeUpdatePrimaryVariableModule)(BODY *, UPDATE *,
                 int *, int, int, int);
 
 and add it to the MODULE struct:
@@ -102,6 +102,11 @@ variable to AtmEsc, add the following line to atmesc.h:
 .. code-block:: bash
 
   double fdDPrimaryVariableDt(BODY *, SYSTEM *, int *).
+
+:note::
+
+  All subroutines that return the derivative of a primary variable must have
+  the argument list of the example above.
 
 
 Initialization
@@ -172,12 +177,12 @@ variable.
 
 
 Next we need to add code to the module file for which this primary variable will
-be added, e.g. eqtide.c. First add a new verify function that continues the
+be added, e.g. eqtide.c. First add a new function that continues the
 initialization process:
 
 .. code-block:: bash
 
-  void VerifyPrimaryVariable(BODY *body, OPTIONS *options, UPDATE *update,
+  void InitializePrimaryVariable(BODY *body, OPTIONS *options, UPDATE *update,
                           double dAge, int iBody) {
 
     update[iBody].iaType[update[iBody].iPrimaryVariable][0]     = 1;
@@ -207,262 +212,71 @@ where "MODULE" is the name of the module to which you are adding the primary
 variable. The function fdDPrimaryVariableDt is a subroutine that return the
 derivative of the primary variable.
 
-
-
-
-Step 3: Working with the variable
-Calling your variable
-In this example, if you follow the example above your variable can be called like this:
-
-That is, it is part of the body struct and will be visible for every function within Module.src.
-
-PropsAuxModule
-After you have declared your variable, you can use it now in Module.src either
-in Module.c ->PropsAuxModule. In this example in magmoc.c -> PropsAuxMagmOc
-Variables modified here are available during every quarter step of Runge-Kutta numerical integration. If you use your variables to modify primary variables, these should usually go here.
-
-
-fndForceBehaviorModule
-
-Instead of Module.c->PropsAuxModule, you can also modify the variable in Module.c-> fnForceBehaviorModule. In this example in magmoc.c -> fnForceBehaviorMagmOC
-(Note the usage of the prefix ‘fn’, which stands for ‘function’ and follows in philosophy the naming of the variables.)
-
-
-
-Modifying your local variable
-
-Example 1:
-You can modify your variable either directly within fndForceBehaviorModule and/or PropsAuxModule or you can define your own function fnMyFunction. In this example, that is
-magmoc.src-> fndMagMOCtestUpdate, which is defined as a small independent function. In this case, we also call the structure EVOLVE outside of the module to get access to the internal simulation time and to define dMagMOCtest analytically.
-
-
-The function is called via:  in magmoc.c -> fnForceBehaviorMagmOC
-
-Example 2:
-
-Note that dMagMOCtest is not initialized here. In this example, this is because dMagMOCtest is initialized by reading in an input file at the beginning of the simulation. This function is called via:  in magmoc.c -> fnForceBehaviorMagmOC
-
-Input/Output of your local variable
-
-You can read in the initial value for your local variable and/or write the variable during your simulation to the output file and from the input file that are always needed with VPLANET. For this you have to define new read and write functions inside your module:
-
-Set pointer
-VPLANET operates with pointers. Thus, you also have to define a pointer if you want your variable to interact with routines inside and outside of the module (as in read,write). This is done in Module.h and in our case in magmoc.h
-
-
-
-You notice here that the module has a range of addresses reserved. So you need to choose one number within this range, which is not yet occupied. For OPT_VARIABLE (input) and OUT_VARIABLE (output).
-
-
-
-Write Function:
-In all modules you can find examples of write functions for variables. It is advisable to copy one of those and adapt it for your own needs. In this example:  magmoc.src-> WriteMagMOCtest
-
-
-
-dTmp  takes the value from your variable.
-Further you need to declare the function in Module.h. In this example in  magmoc.h like this:
-
-
-
-You need to call the read function in  Module.c -> InitializeOutputModule and tell it how you want to write the variable in Module.c. Again, we advise you to use similar functions of other modules and to adapt them to your needs. In this example in magmoc.c->InitializeOutputMagmOc
-
-
-
-
-Read Function:
-In all modules you can find examples of read functions for variables. It is advisable to copy one of those and adapt it for your own needs. In this example:  magmoc.src-> ReadMagMOCtest
-
-
-
-dTmp  takes the value from the input file.
-Further you need to declare the function in Module.h. In this example in  magmoc.h like this:
-
-
-
-The read function needs also to be called within the function InitializeOptionsModule. In this example it is in magmoc.c -> InitializeOptionsMagmOc
-
-Again, we advise to adapt usage from other similar variables.
-
-
-The read in file is in our case g.in and placed in the runs Folder. It calls the necessary modules, here e.g. magmoc:
-
-
-
-And specifies the start value for our example variable: dMagMOCtest
-
-
-
-Further, the file  g.in specifies which variables are written out:
-
-
-Please note the usage of the “$” sign. This is a ‘continue line’ statement here, because the string is otherwise truncated due its length.
-
-Step 4: Working with primary variables
-
-Here, we need more steps. You also need to modify update.h and update.c if you want to integrate your variable during the simulation.
-
-
-
-
-Define in structure update
-So far the variable has been declared as part Struct body. But now you also have to declare as part of Struct update. That is, the variable has to be declared twice in vplanet.h
-
-in
-Vplanet.h-> struc UPDATE
-Set pointer to iaVar (array to keep track of primary variables)
-
-
-In update.h you set again a pointer to a generic address for Vvariable, here VMAGMOCTEST that will be later set in iaVar. iaVar is an array that keeps track on which primary variable is associated with which module (accounting level)
-
-
-
-
-
-Further you have to declare in vplanet.h the iVariable and iNumVariable, here iMagMOCtest and iNumMagMOCtest
-
-
-Define structure
-In update.c->InitializeUpdate: Initialize here with 0, because we assume when we start that 0 modules are modifying these properties.)
-Important: Here you define a structure for your variable that take the general properties of your variable. This will become apparent in the next example.
-
-
-Tipp: “Just” copy another structure and adopt accordingly. We assume here that nothing is yet associated with iMagMOCtest. We set to -1 because iVar (needed at 2nd level to loop over all primary variables in Evolve.c can start at 0 already.)
-
-
-Careful: update.pdVar[ivar] instantly resets the actual variable you want to integrate.
-
-
-
-
-The variable dMagMOCtest is now passed over to -> Evolve via rungekutta numerical integration. Further, a function fnFinalizeUpdateMagMOCtest is called at the end of the initialization. Generally, fnFinalizeUpdateVariable has to be defined in module.c and module.h
-
-Caution! Make sure that your iVariable is not changed anywhere else. You need the assignment to the proper iVar to assess the value subsequently, everywhere else. Especially, when you want to integrate.
-
-
-Be also careful about iNumVarieble or here  iNumMagMOCtest
-
-In this example, it has to be defined in magmoc.c-> AddModuleMagmOc
-
-
-
-
-iaVar is needed in the engine “Evolve” and pointing to pdVar, which is defined in the local modules.
-
-
-CAREFUL: Verify <.> Initialize. Patrick has swapped this. Patrick has assumed initial values in initialize. Rory does it in Verify. He uses Initialize for memory allocation. Point out the differences in the documentation.
-
-fnFinalizeUpdate
-Declare  vplanet.h -> fnFinalizeUpdateMagMOCtestModule
-(pointer to pointer in struc module)
-
-And set in structure module
-
-The pointer to the pointer
-
-
-
-
-
-
-
-Set fnFinalizeUpdateMagMOCtest to set in magmoc.c -> AddModuleMagmOc and to point to function FinalizeUpdateMagMOCtest.
-
-
-
-
-Allocate necessary memory in module.c-> InitializeModule -> fnFinalizeUpdateVariable
-
-
-
-
-
-
-The same in module.c-> FinalizeModule -> fnFinalizeUpdateVariable
-
-
-
-
-
-
-Further:
- /* Initialize all module functions pointers to point to their respective NULL function. The modules that need actual function will replace them in AddModule. */
-
-Last but not least, define what the Finalize function is doing (which equation is called for the variable in the iEqn direction). Here:
-
-
-Note, here we introduce a new variable iVariableModule for bookkeeping. It is not the same as iVariable. This new variable has also to be declared in vplanet.h in the same place as iVariable and INumVariable.
-
-
-That is in structure declaration for Vplanet.h-> UPDATE:
-
-
-Q to Patrick: Why is in module.h->void PropsAuxMagmOcAtmEsc but not PropsAuxMagmOc. And why are these separate? And why is it not defined?
-Is there for the case that something needs to be done both to MagmOc and AtmEsc
-Test case:
-Can MagmOc be run by itself? For a planet far away from their star.
-Define derivative fdDVariable
-
-Your primary variable is integrated in evolve.c  Thus you need to formulate a derivative and associate it with your primary variable.
-
-
-
-You should define your derivative in module.c. Here a very simple example:  magmoc.c -> fdDMagMOCtest
-
-And of course also declare in module.h. Here  magmoc.c -> fdDMagMOCtest
-
-
-Caution: If you first started using the variable as a module specific variable, you have to make sure that the primary variable is changed via the derivative and not somewhere else - unless you really want this. E.g. when a certain threshold is reached. In that case, make sure that the interactions between the integration of the primary variable and functions in your module are consistent.
-
-Here, for example. The call to fndMagMOCtestUpdate has been removed.
-
-Then, assign the address of the derivative to the primary variable via iVariable. Here, to iMagMOCtest in
-magmoc.c->  AssignMagmOcDerivatives:
-
-
-
-You also have to define a VerifyVariable function in module.c In this example,
-magmoc.c -> VerifyMagMOCtest.
-
-
-This you will need before you start the actual integration. (Only for MagMOC for other this is actually Initialize) TBD
-
-This is called in module.c -> VerifyMagMOC-> VerifyMagMOCtest
-
-
-And one has to define: pdDMagMOCtest in Vplanet.h -> UPDATE:
-
-
-
-
-Remember!
-update[iBody].iMagMOCtest  = iVar (is a unique integer for every primary variable, if not set -1)
-Is iVar properly set? Why is address not associated
-fnUpdate[iBody][update[iBody].iMagMOCtest][0] = &fdDMagMOCtest
-(Check this print update[iBody].iMagMOCtest )
-Print fnUpdate[iBody][0][0] = is ok
-
-Further, you have to set iNumVariable (here iNumMagMOCtest) to make sure that the structure is actually filled in update.c.
-
-
- You can two derivates to fnUpdate[iBody][update[iBody].iMagMOCtest][1] = &fdDMagMOCtest ?! And you actually need to with a dynamical time step.
-
-You have to do this in your module e.g. in this example: magmoc.c -> InitializeUpdateMagmOc
-
-
-
-
-Q: Why is the last line not inside the if statement? In other words, the second variable is always increased by one and the first only of iNumMagMOCtest is 0.
-I NumVars - iNumVariable
-NumVars tells you that you need for the variable have a place in the matrix. However, you can have different equations that modify variable and fot bookkeeping that we have iNumMagMOCtest for example.
-
-Q: Difference between iBody in function ForceBehavour and iaBody in definition of primary variable derivatives
-iBody is generic counter for the body you are “working in” - iaBody is an array of all the bodies indices in the proper order . E.g. tides can affect multiple bodies.
-
-Look at VerifyEqTide!
-General note:
-We have three levels in the code where pointer are used to get from the top to the bottom dimension:
-
-Level 1 (top): The general infrastructure. Modules and simulation routine. (e.g. body & evolve)
-Level 2 (middle): The book-keeping level. Here an overview is kept of how many modules and primary variables there are. Checks are in place to ensure that modules are complete and do not interfere with each other. (e.g. iVar )
-Level 3 (bottom): The actual physics and calculation level. Here the variables and auxiliary variables and functions are defined.(e.g.  pdVar )
+Next add the following block of code to the InitializeUpdateMODULE function in
+the module's file:
+
+.. code-block:: bash
+
+  void InitializeUpdateMODULE(BODY *body, UPDATE *update, int iBody) {
+    ...
+    if (iBody > 0) {
+    if (update[iBody].iNumPrimaryVariable == 0) {
+      update[iBody].iNumVars++;
+    }
+    update[iBody].iNumPrimaryVariable++;
+    ...
+  }
+
+Then create the FinalizeUpdate function:
+
+.. code-block:: bash
+
+  void FinalizeUpdatePrimaryVariableMODULE(BODY *body, UPDATE *update,
+                                           int *iEqn, int iVar,int iBody,
+                                           int iFoo) {
+    update[iBody].iaModule[iVar][*iEqn] = MODULE_ID;
+    update[iBody].iPrimaryVariableMODULE = *iEqn;
+    (*iEqn)++;
+    }
+
+where MODULE_ID is the unique integer associated with the module you are
+upgrading.
+
+Then add the primary variable to the NullDerivatives function:
+
+.. code-block:: bash
+
+  void NullMODULEDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
+                             fnUpdateVariable ***fnUpdate, int iBody) {
+    ...
+    fnUpdate[iBody][update[iBody].iPrimaryVariable]
+            [update[iBody].iPrimaryVariableMODULE] = &fndUpdateFunctionTiny;
+    ...
+  }
+
+The final initialization step is to update the AddModule function:
+
+.. code-block:: bash
+
+  void AddModuleMODULE(CONTROL *control, MODULE *module, int iBody,
+                       int iModule) {
+    ...
+    module->fnFinalizeUpdatePrimaryVariable[iBody][iModule] =
+        &FinalizeUpdatePrimaryVariableMODULE;
+    ...
+  }
+
+Using the New Primary Variable
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+From here, you must add the particular functions that perform the mathematical
+calculations associated with the primary variable. At the bare minimum, you must
+add the fdDPrimaryVariableDt. Additionally, you may want to take advantage of
+the PropsAux function to compute any intermediary parameters that make it easier
+to understand the code. You may also need to update the ForceBehavior function.
+If your new variable depends on arrays of parameters, you may also need to add
+or update the InitializeBody, InitializeUpdate, InitializeTmpBody, and
+InitializeTmpUpdate functions. See eqtide.c or distorb.c for examples of how
+these functions work. And of course you'll probably want to add `options
+<option>` and `outputs <output>`. Finally, add `examples and tests <tests>` to
+show off your result and ensure that future upgrades don't destroy your work.

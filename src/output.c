@@ -2106,7 +2106,7 @@ void LogBody(BODY *body, CONTROL *control, FILES *files, MODULE *module,
   for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
     fprintf(fp, "\n----- BODY: %s ----\n", body[iBody].cName);
     fprintf(fp, "Active Modules: ");
-    PrintModuleList(fp, module->iBitSum[iBody]);
+    PrintModuleList(fp, module->iBitSum[iBody], 0);
     fprintf(fp, "\n");
     fprintf(fp, "Module Bit Sum: %d\n", module->iBitSum[iBody]);
     fprintf(fp, "Color: %s\n", body[iBody].cColor);

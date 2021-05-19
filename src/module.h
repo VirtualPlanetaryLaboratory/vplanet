@@ -18,7 +18,7 @@ void InitializeUpdateTmpBodyNULL(BODY *, CONTROL *, UPDATE *, int);
 void InitializeModuleNULL(CONTROL *, MODULE *);
 void PropsAuxNULL(BODY *, EVOLVE *, IO *, UPDATE *, int);
 
-void PrintModuleList(FILE *, int);
+void PrintModuleList(FILE *, int, int);
 
 double fndUpdateFunctionTiny(BODY *, SYSTEM *, int *);
 void SetDerivTiny(fnUpdateVariable ***, int, int, int);

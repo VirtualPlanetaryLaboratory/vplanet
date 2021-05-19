@@ -1,6 +1,7 @@
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
-from distutils.ccompiler import new_compiler
+from setuptools.command.develop import develop
+from distutils.command.clean import clean
 from glob import glob
 import sys
 
@@ -28,6 +29,17 @@ class BuildExt(build_ext):
         build_ext.build_extensions(self)
 
 
+class Develop(develop):
+    """Custom develop command that clears build cache before install."""
+
+    def run(self):
+        c = clean(self.distribution)
+        c.all = True
+        c.finalize_options()
+        c.run()
+        develop.run(self)
+
+
 macros = [
     ("VPLANET_PYTHON_INTERFACE", 1),
     ("VPLANET_VERSION", '"{}"'.format(VERSION),),
@@ -44,19 +56,15 @@ ext_modules = [
         define_macros=macros,
     )
 ]
-cmdclass = {"build_ext": BuildExt}
+cmdclass = {"build_ext": BuildExt, "develop": Develop}
 
 # Vplanet suite of tools
 vplanet_suite = [
     "vplot>=1.0.2",
     "vspace>=1.0.2",
+    "bigplanet>=1.0.1",
+    "multiplanet>=1.0.1",
 ]
-
-# NOTE: bigplanet & multiplanet require python>=3.7
-# If we're on python3.6, don't install it
-if sys.version_info >= (3, 7):
-    vplanet_suite += ["bigplanet>=1.0.0"]
-    vplanet_suite += ["multiplanet>=1.0.0"]
 
 setup(
     name="vplanet",
@@ -69,7 +77,7 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT",
     packages=["vplanet"],
-    install_requires=vplanet_suite + ["astropy>=4.1", "numpy>=1.19.4", "tqdm",],
+    install_requires=vplanet_suite + ["astropy>=3.0", "numpy", "tqdm",],
     python_requires=">=3.6",
     ext_modules=ext_modules,
     cmdclass=cmdclass,

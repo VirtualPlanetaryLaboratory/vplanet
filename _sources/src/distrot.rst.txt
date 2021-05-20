@@ -1,0 +1,14 @@
+distrot
+=======
+
+**Contents**
+
+.. contents:: :local:
+
+distrot.c
+---------
+.. autodoxygenfile:: distrot.c
+
+distrot.h
+---------
+.. autodoxygenfile:: distrot.h

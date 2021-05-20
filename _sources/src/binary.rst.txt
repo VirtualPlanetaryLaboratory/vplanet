@@ -1,0 +1,14 @@
+binary
+======
+
+**Contents**
+
+.. contents:: :local:
+
+binary.c
+--------
+.. autodoxygenfile:: binary.c
+
+binary.h
+--------
+.. autodoxygenfile:: binary.h

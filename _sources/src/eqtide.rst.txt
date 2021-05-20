@@ -1,0 +1,14 @@
+eqtide
+======
+
+**Contents**
+
+.. contents:: :local:
+
+eqtide.c
+--------
+.. autodoxygenfile:: eqtide.c
+
+eqtide.h
+--------
+.. autodoxygenfile:: eqtide.h

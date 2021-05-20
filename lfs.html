@@ -1,0 +1,279 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Using Git LFS &mdash; VPLanet 1.2.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="VPLanet 1.2.0
+ documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#input-file-structure">Input File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#output-file-structure">Output File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#input-options">Input Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#output-parameters">Output Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">VPLanet</a> &raquo;</li>
+      
+    
+      <li>Using Git LFS</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="using-git-lfs">
+<h1>Using Git LFS<a class="headerlink" href="#using-git-lfs" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>I just disabled Git LFS and returned the example png images to the
+git tree. As it turns out, LFS doesn’t seem like that good of a deal
+for us. More on this soon…</p>
+</div>
+<p>It’s bad practice to commit output with <strong>git</strong>, especially if the file is large
+and/or always changing. If for some reason you really need access to
+an output file (say, a large data file that you use as input in a simulation),
+this should be hosted externally somewhere permanent like <a class="reference external" href="https://zenodo.org">Zenodo</a>.</p>
+<p>However, if you <strong>really</strong> need to commit output, there’s an alternate, more
+practical solution: <a class="reference external" href="https://git-lfs.github.com/">Git Large File Storage (LFS)</a>. The idea here is
+to flag certain files or file types (such as images, videos, or <code class="code docutils literal notranslate"><span class="pre">.dat</span></code> files)
+to tell Git LFS to track them. Once you set that up, Git LFS works behind the scenes
+to treat these files separately whenever you change, commit, and push them to the
+remote. The files still appear on GitHub, they are still accessible by anyone who
+clones the repo, and are otherwise indistinguishable from other files, <strong>except</strong>
+they are not version-controlled! This is perfect for output files, which can always
+be reproduced from the code (which <strong>is</strong> version controlled), or for input data
+files that never change. Git LFS helps to keep your repository size small even
+when you commit large files and makes cloning/fetching faster since it can bundle all
+LFS files and download them as a single unit.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>For truly large files (50 MB or more) or for <strong>many</strong> intermediate output
+files, you should host them externally as mentioned above. Use LFS with care,
+since anyone who clones the repo will be forced to download all of your
+stuff!</p>
+</div>
+<p>The instructions for installing Git LFS and flagging files to be tracked using LFS
+are <a class="reference external" href="https://git-lfs.github.com/">here</a>. It’s actually <strong>really</strong> easy, but let
+me (<strong>&#64;rodluger</strong>) know if you have any questions. There’s also a pretty
+good <a class="reference external" href="https://www.atlassian.com/git/tutorials/git-lfs#clone-respository">tutorial on LFS here</a>.</p>
+<p>Currently, the repository is set to track all <code class="code docutils literal notranslate"><span class="pre">pdf</span></code> and <code class="code docutils literal notranslate"><span class="pre">png</span></code> files
+using LFS. You can see this in the <code class="code docutils literal notranslate"><span class="pre">.gitattributes</span></code> file at the top level
+of the repo. Note, however, that these files are also in the <code class="code docutils literal notranslate"><span class="pre">.gitignore</span></code>,
+so this forces you to think twice before committing output:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; git add image.png
+The following paths are ignored by one of your .gitignore files:
+image.png
+Use -f <span class="k">if</span> you really want to add them.
+</pre></div>
+</div>
+<p>If you really want to add the image, do</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; git add -f image.png
+</pre></div>
+</div>
+<p>You can verify that this file appears to behave like any regular file in the
+staging area:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; git status
+On branch dev
+Your branch is up-to-date with <span class="s1">&#39;origin/dev&#39;</span>.
+Changes to be committed:
+  <span class="o">(</span>use <span class="s2">&quot;git reset HEAD &lt;file&gt;...&quot;</span> to unstage<span class="o">)</span>
+
+    new file:   image.png
+</pre></div>
+</div>
+<p>but, sneakily, Git LFS is taking care of it in the background:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; git lfs status
+On branch dev
+Git LFS objects to be pushed to origin/dev:
+
+Git LFS objects to be committed:
+
+    docs/foo.png <span class="o">(</span>Git: e3b0c44<span class="o">)</span>
+
+Git LFS objects not staged <span class="k">for</span> commit:
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

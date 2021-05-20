@@ -1,0 +1,1092 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>binary &mdash; VPLanet 1.2.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="VPLanet 1.2.0
+ documentation" href="../index.html"/>
+        <link rel="up" title="C API" href="../src.html"/>
+        <link rel="next" title="distrot" href="distrot.html"/>
+        <link rel="prev" title="flare" href="flare.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#input-file-structure">Input File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#output-file-structure">Output File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#input-options">Input Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#output-parameters">Output Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">binary</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#binary-c">binary.c</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#binary-h">binary.h</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">VPLanet</a> &raquo;</li>
+      
+        <li><a href="../src.html">C API</a>&raquo;</li>
+      
+    
+      <li>binary</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="binary">
+<h1>binary<a class="headerlink" href="#binary" title="Permalink to this headline">¶</a></h1>
+<p><strong>Contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#binary-c" id="id3">binary.c</a></p></li>
+<li><p><a class="reference internal" href="#binary-h" id="id4">binary.h</a></p></li>
+</ul>
+</div>
+<div class="section" id="binary-c">
+<h2><a class="toc-backref" href="#id3">binary.c</a><a class="headerlink" href="#binary-c" title="Permalink to this headline">¶</a></h2>
+<p>Subroutines that control the integration of the circumbinary planet orbital dynamics module. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>David Fleming (<a class="reference external" href="https://github.com/dflemin3/">dflemin3</a>) </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>Jan 12 2016</p>
+</dd>
+<dt><strong>Description</strong></dt><dd><p><p>Module to model circumbinary planet dynamics.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>body 0 = primary star, body 1 = secondary star, body 2+ = CBP (circumbinary planet(s))</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <a href="#id1"><span class="problematic" id="id2">:cite:`Leung2013`</span></a> theory ONLY applies to the restricted 3 body approximation and hence the CBPs are not allowed to graviationally interact.</p>
+</div>
+ </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Functions</p>
+<dl class="function">
+<dt id="_CPPv414BodyCopyBinaryP4BODYP4BODYiii">
+<span id="_CPPv314BodyCopyBinaryP4BODYP4BODYiii"></span><span id="_CPPv214BodyCopyBinaryP4BODYP4BODYiii"></span><span id="BodyCopyBinary__BODYP.BODYP.i.i.i"></span><span class="target" id="binary_8c_1adf6974db415969211313777e37fc2a8c"></span>void <code class="sig-name descname">BodyCopyBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>dest</em>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>src</em>, int <em>foo</em>, int <em>iNumBodies</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414BodyCopyBinaryP4BODYP4BODYiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Copy body properties from src to dest for cbp </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420InitializeBodyBinaryP4BODYP7CONTROLP6UPDATEii">
+<span id="_CPPv320InitializeBodyBinaryP4BODYP7CONTROLP6UPDATEii"></span><span id="_CPPv220InitializeBodyBinaryP4BODYP7CONTROLP6UPDATEii"></span><span id="InitializeBodyBinary__BODYP.CONTROLP.UPDATEP.i.i"></span><span class="target" id="binary_8c_1a28f8ef06ee2fa3e61231203272a19ed1"></span>void <code class="sig-name descname">InitializeBodyBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, int <em>iModule</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420InitializeBodyBinaryP4BODYP7CONTROLP6UPDATEii" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Only use this function for malloc’ing stuff Since nothing has to be malloc’ed for binary, do nothing </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv429InitializeUpdateTmpBodyBinaryP4BODYP7CONTROLP6UPDATEi">
+<span id="_CPPv329InitializeUpdateTmpBodyBinaryP4BODYP7CONTROLP6UPDATEi"></span><span id="_CPPv229InitializeUpdateTmpBodyBinaryP4BODYP7CONTROLP6UPDATEi"></span><span id="InitializeUpdateTmpBodyBinary__BODYP.CONTROLP.UPDATEP.i"></span><span class="target" id="binary_8c_1a8debe3fde57751c521c2026f7c557902"></span>void <code class="sig-name descname">InitializeUpdateTmpBodyBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429InitializeUpdateTmpBodyBinaryP4BODYP7CONTROLP6UPDATEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>No need to allocate anything </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411ReadFreeEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv311ReadFreeEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv211ReadFreeEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFreeEcc__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="binary_8c_1a908bdd3e11b427c35a7e9c06c662617a"></span>void <code class="sig-name descname">ReadFreeEcc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411ReadFreeEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Free eccentricity, can’t be in primary file Note: Do error checking for negative values </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410ReadLL13N0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv310ReadLL13N0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv210ReadLL13N0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadLL13N0__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="binary_8c_1a2ae95a03bd0dde4631dab1d7747cb42d"></span>void <code class="sig-name descname">ReadLL13N0</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410ReadLL13N0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Lee + Leung 2013 Mean Motion N0 This parameter cannot exist in primary file </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410ReadLL13K0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv310ReadLL13K0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv210ReadLL13K0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadLL13K0__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="binary_8c_1a69073c012e1490a8767c7dee49951065"></span>void <code class="sig-name descname">ReadLL13K0</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410ReadLL13K0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Lee + Leung 2013 radial epicyclic frequency This parameter cannot exist in primary file </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410ReadLL13V0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv310ReadLL13V0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv210ReadLL13V0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadLL13V0__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="binary_8c_1a34bf2e696efddc12ef90807a7d90f6ef"></span>void <code class="sig-name descname">ReadLL13V0</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410ReadLL13V0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Lee + Leung 2013 vertical epicyclic frequency This parameter cannot exist in primary file </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411ReadFreeIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv311ReadFreeIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv211ReadFreeIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFreeInc__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="binary_8c_1a88b1a7de1867f4c1c8a4668780c958db"></span>void <code class="sig-name descname">ReadFreeInc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411ReadFreeIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This parameter cannot exist in the primary file Free inclination goes from 0 to 180 degrees </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413ReadLL13PhiABP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv313ReadLL13PhiABP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv213ReadLL13PhiABP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadLL13PhiAB__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="binary_8c_1ad8141e842dd38c655072f62c2cb37175"></span>void <code class="sig-name descname">ReadLL13PhiAB</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413ReadLL13PhiABP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This parameter cannot exist in the primary file PhiAB goes from [0,360) if in degrees </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49ReadCBPM0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv39ReadCBPM0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv29ReadCBPM0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadCBPM0__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="binary_8c_1aa5f9a87cb2f11df93dd10cf0a7e81739"></span>void <code class="sig-name descname">ReadCBPM0</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49ReadCBPM0P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This parameter cannot exist in the primary file CBPM0 goes from [0,360) if in degrees </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411ReadCBPZetaP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv311ReadCBPZetaP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv211ReadCBPZetaP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadCBPZeta__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="binary_8c_1a261ebba650939b75832cc070b2f0eb3f"></span>void <code class="sig-name descname">ReadCBPZeta</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411ReadCBPZetaP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This parameter cannot exist in the primary file. dCBPZeta goes from [0,360) if in degrees </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410ReadCBPPsiP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv310ReadCBPPsiP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv210ReadCBPPsiP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadCBPPsi__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="binary_8c_1a020ef2c7fa1e88e2aeae032c20b0221f"></span>void <code class="sig-name descname">ReadCBPPsi</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410ReadCBPPsiP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This parameter cannot exist in the primary file. dCBPPsi goes from [0,360) if in degrees </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv422ReadHaltHolmanUnstableP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv322ReadHaltHolmanUnstableP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv222ReadHaltHolmanUnstableP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHaltHolmanUnstable__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="binary_8c_1a71939dbcd596268669787cac270cc4e4"></span>void <code class="sig-name descname">ReadHaltHolmanUnstable</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422ReadHaltHolmanUnstableP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This parameter cannot exist in primary file </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417ReadHaltRocheLobeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv317ReadHaltRocheLobeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv217ReadHaltRocheLobeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHaltRocheLobe__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="binary_8c_1a6ef786c9c002069474ca83a1780558ac"></span>void <code class="sig-name descname">ReadHaltRocheLobe</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417ReadHaltRocheLobeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This parameter cannot exist in primary file </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423InitializeOptionsBinaryP7OPTIONSA_12fnReadOption">
+<span id="_CPPv323InitializeOptionsBinaryP7OPTIONSA_12fnReadOption"></span><span id="_CPPv223InitializeOptionsBinaryP7OPTIONSA_12fnReadOption"></span><span id="InitializeOptionsBinary__OPTIONSP.fnReadOptionA"></span><span class="target" id="binary_8c_1a12dc4c86e229b10d464a3a9a402fea84"></span>void <code class="sig-name descname">InitializeOptionsBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv412fnReadOption" title="fnReadOption">fnReadOption</a> <em>fnRead</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423InitializeOptionsBinaryP7OPTIONSA_12fnReadOption" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialization Options for BINARY </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417ReadOptionsBinaryP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMA_12fnReadOptioni">
+<span id="_CPPv317ReadOptionsBinaryP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMA_12fnReadOptioni"></span><span id="_CPPv217ReadOptionsBinaryP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMA_12fnReadOptioni"></span><span id="ReadOptionsBinary__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.fnReadOptionA.i"></span><span class="target" id="binary_8c_1a0a28af1fe1ac75a19dc4b8d73207d50b"></span>void <code class="sig-name descname">ReadOptionsBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv412fnReadOption" title="fnReadOption">fnReadOption</a> <em>fnRead</em>[], int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417ReadOptionsBinaryP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMA_12fnReadOptioni" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Read all BINARY input options. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410VerifyCBPRP4BODYP7OPTIONSP6UPDATEdi">
+<span id="_CPPv310VerifyCBPRP4BODYP7OPTIONSP6UPDATEdi"></span><span id="_CPPv210VerifyCBPRP4BODYP7OPTIONSP6UPDATEdi"></span><span id="VerifyCBPR__BODYP.OPTIONSP.UPDATEP.double.i"></span><span class="target" id="binary_8c_1acece6a3db3987795756bd14b048ec650"></span>void <code class="sig-name descname">VerifyCBPR</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, double <em>dAge</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410VerifyCBPRP4BODYP7OPTIONSP6UPDATEdi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410VerifyCBPZP4BODYP7OPTIONSP6UPDATEdi">
+<span id="_CPPv310VerifyCBPZP4BODYP7OPTIONSP6UPDATEdi"></span><span id="_CPPv210VerifyCBPZP4BODYP7OPTIONSP6UPDATEdi"></span><span id="VerifyCBPZ__BODYP.OPTIONSP.UPDATEP.double.i"></span><span class="target" id="binary_8c_1a7cb3c6a07acc167cfc579e3caec55072"></span>void <code class="sig-name descname">VerifyCBPZ</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, double <em>dAge</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410VerifyCBPZP4BODYP7OPTIONSP6UPDATEdi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412VerifyCBPPhiP4BODYP7OPTIONSP6UPDATEdi">
+<span id="_CPPv312VerifyCBPPhiP4BODYP7OPTIONSP6UPDATEdi"></span><span id="_CPPv212VerifyCBPPhiP4BODYP7OPTIONSP6UPDATEdi"></span><span id="VerifyCBPPhi__BODYP.OPTIONSP.UPDATEP.double.i"></span><span class="target" id="binary_8c_1abd91699efb4649c3f59f44daadbe3e1c"></span>void <code class="sig-name descname">VerifyCBPPhi</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, double <em>dAge</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412VerifyCBPPhiP4BODYP7OPTIONSP6UPDATEdi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413VerifyCBPRDotP4BODYP7OPTIONSP6UPDATEdi">
+<span id="_CPPv313VerifyCBPRDotP4BODYP7OPTIONSP6UPDATEdi"></span><span id="_CPPv213VerifyCBPRDotP4BODYP7OPTIONSP6UPDATEdi"></span><span id="VerifyCBPRDot__BODYP.OPTIONSP.UPDATEP.double.i"></span><span class="target" id="binary_8c_1a99c981f554b95dfd0fdf817a7a0c97ab"></span>void <code class="sig-name descname">VerifyCBPRDot</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, double <em>dAge</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413VerifyCBPRDotP4BODYP7OPTIONSP6UPDATEdi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413VerifyCBPZDotP4BODYP7OPTIONSP6UPDATEdi">
+<span id="_CPPv313VerifyCBPZDotP4BODYP7OPTIONSP6UPDATEdi"></span><span id="_CPPv213VerifyCBPZDotP4BODYP7OPTIONSP6UPDATEdi"></span><span id="VerifyCBPZDot__BODYP.OPTIONSP.UPDATEP.double.i"></span><span class="target" id="binary_8c_1aa97f68207468939eb7e7be5d27b78436"></span>void <code class="sig-name descname">VerifyCBPZDot</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, double <em>dAge</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413VerifyCBPZDotP4BODYP7OPTIONSP6UPDATEdi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415VerifyCBPPhiDotP4BODYP7OPTIONSP6UPDATEdi">
+<span id="_CPPv315VerifyCBPPhiDotP4BODYP7OPTIONSP6UPDATEdi"></span><span id="_CPPv215VerifyCBPPhiDotP4BODYP7OPTIONSP6UPDATEdi"></span><span id="VerifyCBPPhiDot__BODYP.OPTIONSP.UPDATEP.double.i"></span><span class="target" id="binary_8c_1abb53c73de23ba9fc5c50e7f128f38c76"></span>void <code class="sig-name descname">VerifyCBPPhiDot</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, double <em>dAge</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415VerifyCBPPhiDotP4BODYP7OPTIONSP6UPDATEdi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416fnPropsAuxBinaryP4BODYP6EVOLVEP2IOP6UPDATEi">
+<span id="_CPPv316fnPropsAuxBinaryP4BODYP6EVOLVEP2IOP6UPDATEi"></span><span id="_CPPv216fnPropsAuxBinaryP4BODYP6EVOLVEP2IOP6UPDATEi"></span><span id="fnPropsAuxBinary__BODYP.EVOLVEP.IOP.UPDATEP.i"></span><span class="target" id="binary_8c_1a45832dff4354129f995a1adad1e1b2e2"></span>void <code class="sig-name descname">fnPropsAuxBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO">IO</a> *<em>io</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fnPropsAuxBinaryP4BODYP6EVOLVEP2IOP6UPDATEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv421fnForceBehaviorBinaryP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii">
+<span id="_CPPv321fnForceBehaviorBinaryP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii"></span><span id="_CPPv221fnForceBehaviorBinaryP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii"></span><span id="fnForceBehaviorBinary__BODYP.MODULEP.EVOLVEP.IOP.SYSTEMP.UPDATEP.fnUpdateVariablePPP.i.i"></span><span class="target" id="binary_8c_1a56298cfa085a7b614aee29d2ce54d2f7"></span>void <code class="sig-name descname">fnForceBehaviorBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE">MODULE</a> *<em>module</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO">IO</a> *<em>io</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iBody</em>, int <em>iModule</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421fnForceBehaviorBinaryP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423AssignBinaryDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv323AssignBinaryDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv223AssignBinaryDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei"></span><span id="AssignBinaryDerivatives__BODYP.EVOLVEP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="binary_8c_1abf89998165df50261bfd3939698f0294"></span>void <code class="sig-name descname">AssignBinaryDerivatives</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423AssignBinaryDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv421NullBinaryDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv321NullBinaryDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv221NullBinaryDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei"></span><span id="NullBinaryDerivatives__BODYP.EVOLVEP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="binary_8c_1a5fb60e03813172ea99ef1a6f2f25b218"></span>void <code class="sig-name descname">NullBinaryDerivatives</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421NullBinaryDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412VerifyBinaryP4BODYP7CONTROLP5FILESP7OPTIONSP6OUTPUTP6SYSTEMP6UPDATEii">
+<span id="_CPPv312VerifyBinaryP4BODYP7CONTROLP5FILESP7OPTIONSP6OUTPUTP6SYSTEMP6UPDATEii"></span><span id="_CPPv212VerifyBinaryP4BODYP7CONTROLP5FILESP7OPTIONSP6OUTPUTP6SYSTEMP6UPDATEii"></span><span id="VerifyBinary__BODYP.CONTROLP.FILESP.OPTIONSP.OUTPUTP.SYSTEMP.UPDATEP.i.i"></span><span class="target" id="binary_8c_1a57881730a030dada617e9bd3858f0040"></span>void <code class="sig-name descname">VerifyBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, int <em>iModule</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412VerifyBinaryP4BODYP7CONTROLP5FILESP7OPTIONSP6OUTPUTP6SYSTEMP6UPDATEii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv422InitializeUpdateBinaryP4BODYP6UPDATEi">
+<span id="_CPPv322InitializeUpdateBinaryP4BODYP6UPDATEi"></span><span id="_CPPv222InitializeUpdateBinaryP4BODYP6UPDATEi"></span><span id="InitializeUpdateBinary__BODYP.UPDATEP.i"></span><span class="target" id="binary_8c_1abd277bc4eebea6a8ad9afb5338dba9d4"></span>void <code class="sig-name descname">InitializeUpdateBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422InitializeUpdateBinaryP4BODYP6UPDATEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv424FinalizeUpdateCBPRBinaryP4BODYP6UPDATEPiiii">
+<span id="_CPPv324FinalizeUpdateCBPRBinaryP4BODYP6UPDATEPiiii"></span><span id="_CPPv224FinalizeUpdateCBPRBinaryP4BODYP6UPDATEPiiii"></span><span id="FinalizeUpdateCBPRBinary__BODYP.UPDATEP.iP.i.i.i"></span><span class="target" id="binary_8c_1ae50113dc1fcabb2d74ce7f8640c10ab7"></span>void <code class="sig-name descname">FinalizeUpdateCBPRBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int *<em>iEqn</em>, int <em>iVar</em>, int <em>iBody</em>, int <em>iFoo</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424FinalizeUpdateCBPRBinaryP4BODYP6UPDATEPiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv424FinalizeUpdateCBPZBinaryP4BODYP6UPDATEPiiii">
+<span id="_CPPv324FinalizeUpdateCBPZBinaryP4BODYP6UPDATEPiiii"></span><span id="_CPPv224FinalizeUpdateCBPZBinaryP4BODYP6UPDATEPiiii"></span><span id="FinalizeUpdateCBPZBinary__BODYP.UPDATEP.iP.i.i.i"></span><span class="target" id="binary_8c_1a3921100f483d6d3e4b0f0b082a8d4910"></span>void <code class="sig-name descname">FinalizeUpdateCBPZBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int *<em>iEqn</em>, int <em>iVar</em>, int <em>iBody</em>, int <em>iFoo</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424FinalizeUpdateCBPZBinaryP4BODYP6UPDATEPiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv426FinalizeUpdateCBPPhiBinaryP4BODYP6UPDATEPiiii">
+<span id="_CPPv326FinalizeUpdateCBPPhiBinaryP4BODYP6UPDATEPiiii"></span><span id="_CPPv226FinalizeUpdateCBPPhiBinaryP4BODYP6UPDATEPiiii"></span><span id="FinalizeUpdateCBPPhiBinary__BODYP.UPDATEP.iP.i.i.i"></span><span class="target" id="binary_8c_1afc8765103e552bf381dce11c8e568730"></span>void <code class="sig-name descname">FinalizeUpdateCBPPhiBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int *<em>iEqn</em>, int <em>iVar</em>, int <em>iBody</em>, int <em>iFoo</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426FinalizeUpdateCBPPhiBinaryP4BODYP6UPDATEPiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv427FinalizeUpdateCBPRDotBinaryP4BODYP6UPDATEPiiii">
+<span id="_CPPv327FinalizeUpdateCBPRDotBinaryP4BODYP6UPDATEPiiii"></span><span id="_CPPv227FinalizeUpdateCBPRDotBinaryP4BODYP6UPDATEPiiii"></span><span id="FinalizeUpdateCBPRDotBinary__BODYP.UPDATEP.iP.i.i.i"></span><span class="target" id="binary_8c_1a5ad9787d15aefc8bae26d7cb24bdfe20"></span>void <code class="sig-name descname">FinalizeUpdateCBPRDotBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int *<em>iEqn</em>, int <em>iVar</em>, int <em>iBody</em>, int <em>iFoo</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427FinalizeUpdateCBPRDotBinaryP4BODYP6UPDATEPiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv427FinalizeUpdateCBPZDotBinaryP4BODYP6UPDATEPiiii">
+<span id="_CPPv327FinalizeUpdateCBPZDotBinaryP4BODYP6UPDATEPiiii"></span><span id="_CPPv227FinalizeUpdateCBPZDotBinaryP4BODYP6UPDATEPiiii"></span><span id="FinalizeUpdateCBPZDotBinary__BODYP.UPDATEP.iP.i.i.i"></span><span class="target" id="binary_8c_1ac5724ae64b5c6ff15010c69cc4650bea"></span>void <code class="sig-name descname">FinalizeUpdateCBPZDotBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int *<em>iEqn</em>, int <em>iVar</em>, int <em>iBody</em>, int <em>iFoo</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427FinalizeUpdateCBPZDotBinaryP4BODYP6UPDATEPiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv429FinalizeUpdateCBPPhiDotBinaryP4BODYP6UPDATEPiiii">
+<span id="_CPPv329FinalizeUpdateCBPPhiDotBinaryP4BODYP6UPDATEPiiii"></span><span id="_CPPv229FinalizeUpdateCBPPhiDotBinaryP4BODYP6UPDATEPiiii"></span><span id="FinalizeUpdateCBPPhiDotBinary__BODYP.UPDATEP.iP.i.i.i"></span><span class="target" id="binary_8c_1a2f3f57fa8d91c01379292731114efaaa"></span>void <code class="sig-name descname">FinalizeUpdateCBPPhiDotBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int *<em>iEqn</em>, int <em>iVar</em>, int <em>iBody</em>, int <em>iFoo</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429FinalizeUpdateCBPPhiDotBinaryP4BODYP6UPDATEPiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420fbHaltHolmanUnstableP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv320fbHaltHolmanUnstableP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv220fbHaltHolmanUnstableP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="fbHaltHolmanUnstable__BODYP.EVOLVEP.HALTP.IOP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="binary_8c_1a61c3463c925cd8335bbbc64bf57e0169"></span>int <code class="sig-name descname">fbHaltHolmanUnstable</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT">HALT</a> *<em>halt</em>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO">IO</a> *<em>io</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420fbHaltHolmanUnstableP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>If the CBP’s dSemi is less than the Holman stability limit, it’s unstable and integration ends </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415fbHaltRocheLobeP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv315fbHaltRocheLobeP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv215fbHaltRocheLobeP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="fbHaltRocheLobe__BODYP.EVOLVEP.HALTP.IOP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="binary_8c_1aad0e7c418b183b4aad4f98097100e57d"></span>int <code class="sig-name descname">fbHaltRocheLobe</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT">HALT</a> *<em>halt</em>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO">IO</a> *<em>io</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fbHaltRocheLobeP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>If the secondary enters the roche lobe of the primary, HALT! </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416CountHaltsBinaryP4HALTPi">
+<span id="_CPPv316CountHaltsBinaryP4HALTPi"></span><span id="_CPPv216CountHaltsBinaryP4HALTPi"></span><span id="CountHaltsBinary__HALTP.iP"></span><span class="target" id="binary_8c_1a33fbced3a0f6ba1c64315c1b04d0b2d0"></span>void <code class="sig-name descname">CountHaltsBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT">HALT</a> *<em>halt</em>, int *<em>iHalt</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416CountHaltsBinaryP4HALTPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416VerifyHaltBinaryP4BODYP7CONTROLP7OPTIONSiPi">
+<span id="_CPPv316VerifyHaltBinaryP4BODYP7CONTROLP7OPTIONSiPi"></span><span id="_CPPv216VerifyHaltBinaryP4BODYP7CONTROLP7OPTIONSiPi"></span><span id="VerifyHaltBinary__BODYP.CONTROLP.OPTIONSP.i.iP"></span><span class="target" id="binary_8c_1a69a9bb0ca3abc13228aaf702ce72ac79"></span>void <code class="sig-name descname">VerifyHaltBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, int <em>iBody</em>, int *<em>iHalt</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416VerifyHaltBinaryP4BODYP7CONTROLP7OPTIONSiPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418WriteFreeEccBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv318WriteFreeEccBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv218WriteFreeEccBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteFreeEccBinary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1a91f258910e964d6f5755a6c0c3893579"></span>void <code class="sig-name descname">WriteFreeEccBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418WriteFreeEccBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418WriteFreeIncBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv318WriteFreeIncBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv218WriteFreeIncBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteFreeIncBinary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1aebfea82b1d169b5e6ff29d28f27b9379"></span>void <code class="sig-name descname">WriteFreeIncBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418WriteFreeIncBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418WriteBinPriRBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv318WriteBinPriRBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv218WriteBinPriRBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteBinPriRBinary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1a1fe32918893ff2cb1633c1b623f47a67"></span>void <code class="sig-name descname">WriteBinPriRBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418WriteBinPriRBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Write the binary primary star radial position </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418WriteBinSecRBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv318WriteBinSecRBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv218WriteBinSecRBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteBinSecRBinary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1a5fcf313b9e80f23b62ca5f7bfd216a37"></span>void <code class="sig-name descname">WriteBinSecRBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418WriteBinSecRBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Write the binary secondary star radial position </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420WriteBinPriPhiBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv320WriteBinPriPhiBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv220WriteBinPriPhiBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteBinPriPhiBinary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1a7031fda12706b49b8143b76ad22d62d2"></span>void <code class="sig-name descname">WriteBinPriPhiBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420WriteBinPriPhiBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420WriteBinSecPhiBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv320WriteBinSecPhiBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv220WriteBinSecPhiBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteBinSecPhiBinary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1a726f6ef4b367679760518051546b928e"></span>void <code class="sig-name descname">WriteBinSecPhiBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420WriteBinSecPhiBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417WriteCBPPhiBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv317WriteCBPPhiBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv217WriteCBPPhiBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteCBPPhiBinary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1a545c1cb92274a6c3a9411d4d03a48c40"></span>void <code class="sig-name descname">WriteCBPPhiBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417WriteCBPPhiBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420WriteCBPPhiDotBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv320WriteCBPPhiDotBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv220WriteCBPPhiDotBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteCBPPhiDotBinary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1a52a339c7287aad3859f244045d55c9e9"></span>void <code class="sig-name descname">WriteCBPPhiDotBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420WriteCBPPhiDotBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417WriteLL13N0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv317WriteLL13N0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv217WriteLL13N0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteLL13N0Binary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1a6228ed2f022e402765ad0076eaa8a6ec"></span>void <code class="sig-name descname">WriteLL13N0Binary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417WriteLL13N0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417WriteLL13K0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv317WriteLL13K0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv217WriteLL13K0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteLL13K0Binary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1a9b04b8a473b5cb95bf9689039bc73476"></span>void <code class="sig-name descname">WriteLL13K0Binary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417WriteLL13K0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417WriteLL13V0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv317WriteLL13V0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv217WriteLL13V0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteLL13V0Binary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1ad86c204614ddce7a64331e04a16da35a"></span>void <code class="sig-name descname">WriteLL13V0Binary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417WriteLL13V0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415WriteCBPRBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv315WriteCBPRBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv215WriteCBPRBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteCBPRBinary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1ac26c9f27c1b35f595049e91a297429e8"></span>void <code class="sig-name descname">WriteCBPRBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415WriteCBPRBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Write the circumbinary planet orbital radius (CBPR) </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416WriteCBPR0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv316WriteCBPR0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv216WriteCBPR0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteCBPR0Binary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1a8ed4e014390a185e2d805e02366d32c8"></span>void <code class="sig-name descname">WriteCBPR0Binary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416WriteCBPR0BinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Write the circumbinary planet guiding radius (CBPR0) </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415WriteCBPZBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv315WriteCBPZBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv215WriteCBPZBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteCBPZBinary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1ab964c7cc7d5b52666018cbd5bb36a6cd"></span>void <code class="sig-name descname">WriteCBPZBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415WriteCBPZBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418WriteCBPRDotBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv318WriteCBPRDotBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv218WriteCBPRDotBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteCBPRDotBinary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1a41af5ce16c3fb58be5c84f8db83722b7"></span>void <code class="sig-name descname">WriteCBPRDotBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418WriteCBPRDotBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418WriteCBPZDotBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv318WriteCBPZDotBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv218WriteCBPZDotBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteCBPZDotBinary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1a1a650bf5ed663f11483f5020cb39cc48"></span>void <code class="sig-name descname">WriteCBPZDotBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418WriteCBPZDotBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413WriteCBPInsolP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv313WriteCBPInsolP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv213WriteCBPInsolP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteCBPInsol__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="binary_8c_1a12cfa5769ad5b4b9ae14e05e49b3f369"></span>void <code class="sig-name descname">WriteCBPInsol</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413WriteCBPInsolP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Write Earth-normalized insolation received by CBP averaged over 1 binary orbit assuming P_bin &lt;&lt; P_cbp </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv422InitializeOutputBinaryP6OUTPUTA_13fnWriteOutput">
+<span id="_CPPv322InitializeOutputBinaryP6OUTPUTA_13fnWriteOutput"></span><span id="_CPPv222InitializeOutputBinaryP6OUTPUTA_13fnWriteOutput"></span><span id="InitializeOutputBinary__OUTPUTP.fnWriteOutputA"></span><span class="target" id="binary_8c_1ad09d3b37c5a525129b2eb4b370fb1e9f"></span>void <code class="sig-name descname">InitializeOutputBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv413fnWriteOutput" title="fnWriteOutput">fnWriteOutput</a> <em>fnWrite</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422InitializeOutputBinaryP6OUTPUTA_13fnWriteOutput" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416LogOptionsBinaryP7CONTROLP4FILE">
+<span id="_CPPv316LogOptionsBinaryP7CONTROLP4FILE"></span><span id="_CPPv216LogOptionsBinaryP7CONTROLP4FILE"></span><span id="LogOptionsBinary__CONTROLP.FILEP"></span><span class="target" id="binary_8c_1a2c4505636afb1fb8f57eee6d2914f870"></span>void <code class="sig-name descname">LogOptionsBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, FILE *<em>fp</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416LogOptionsBinaryP7CONTROLP4FILE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49LogBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILE">
+<span id="_CPPv39LogBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILE"></span><span id="_CPPv29LogBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILE"></span><span id="LogBinary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UPDATEP.fnWriteOutputA.FILEP"></span><span class="target" id="binary_8c_1a4f70d8c56b828528464d69e49cf95064"></span>void <code class="sig-name descname">LogBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv413fnWriteOutput" title="fnWriteOutput">fnWriteOutput</a> <em>fnWrite</em>[], FILE *<em>fp</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49LogBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Anything here? Nope. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413LogBodyBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILEi">
+<span id="_CPPv313LogBodyBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILEi"></span><span id="_CPPv213LogBodyBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILEi"></span><span id="LogBodyBinary__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UPDATEP.fnWriteOutputA.FILEP.i"></span><span class="target" id="binary_8c_1a39319406197bd219c1a56c59d1a6fe65"></span>void <code class="sig-name descname">LogBodyBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv413fnWriteOutput" title="fnWriteOutput">fnWriteOutput</a> <em>fnWrite</em>[], FILE *<em>fp</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413LogBodyBinaryP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415AddModuleBinaryP7CONTROLP6MODULEii">
+<span id="_CPPv315AddModuleBinaryP7CONTROLP6MODULEii"></span><span id="_CPPv215AddModuleBinaryP7CONTROLP6MODULEii"></span><span id="AddModuleBinary__CONTROLP.MODULEP.i.i"></span><span class="target" id="binary_8c_1afde230731517883c27b778d625848c4f"></span>void <code class="sig-name descname">AddModuleBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE">MODULE</a> *<em>module</em>, int <em>iBody</em>, int <em>iModule</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415AddModuleBinaryP7CONTROLP6MODULEii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv46fndDotPdPd">
+<span id="_CPPv36fndDotPdPd"></span><span id="_CPPv26fndDotPdPd"></span><span id="fndDot__doubleP.doubleP"></span><span class="target" id="binary_8c_1af7d69728662b616f874e9f1eb5a3bc0f"></span>double <code class="sig-name descname">fndDot</code><span class="sig-paren">(</span>double *<em>a</em>, double *<em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46fndDotPdPd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>3D dot product </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48fniDeltaii">
+<span id="_CPPv38fniDeltaii"></span><span id="_CPPv28fniDeltaii"></span><span id="fniDelta__i.i"></span><span class="target" id="binary_8c_1a5dbbcca2e21c6c96b42175d1c46af310"></span>int <code class="sig-name descname">fniDelta</code><span class="sig-paren">(</span>int <em>i</em>, int <em>j</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48fniDeltaii" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Kronecker Delta </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415fnvCylToCartPosPdPd">
+<span id="_CPPv315fnvCylToCartPosPdPd"></span><span id="_CPPv215fnvCylToCartPosPdPd"></span><span id="fnvCylToCartPos__doubleP.doubleP"></span><span class="target" id="binary_8c_1a9e21c018df2c75ed66b065e2079cfe5d"></span>void <code class="sig-name descname">fnvCylToCartPos</code><span class="sig-paren">(</span>double *<em>daCylPos</em>, double *<em>dCartPos</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fnvCylToCartPosPdPd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert from cylindrical position coords to cartesian (3 dimensional) </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415fnvCylToCartVelPdPdPd">
+<span id="_CPPv315fnvCylToCartVelPdPdPd"></span><span id="_CPPv215fnvCylToCartVelPdPdPd"></span><span id="fnvCylToCartVel__doubleP.doubleP.doubleP"></span><span class="target" id="binary_8c_1abae33aa2ba5eb4aa342462b968dd07f1"></span>void <code class="sig-name descname">fnvCylToCartVel</code><span class="sig-paren">(</span>double *<em>daCylPos</em>, double *<em>daCylVel</em>, double *<em>dCartVel</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fnvCylToCartVelPdPdPd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert from cylindrical velocity coords to cartesian (3 dimensional) </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417fnvSpecificAngMomPdPdPd">
+<span id="_CPPv317fnvSpecificAngMomPdPdPd"></span><span id="_CPPv217fnvSpecificAngMomPdPdPd"></span><span id="fnvSpecificAngMom__doubleP.doubleP.doubleP"></span><span class="target" id="binary_8c_1ac3b9e057c876fc6087569b36e0043ddc"></span>void <code class="sig-name descname">fnvSpecificAngMom</code><span class="sig-paren">(</span>double *<em>r</em>, double *<em>v</em>, double *<em>h</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fnvSpecificAngMomPdPdPd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate specific angular momentum h = r x v in cartesian coords </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417fndSpecificOrbEngP4BODYi">
+<span id="_CPPv317fndSpecificOrbEngP4BODYi"></span><span id="_CPPv217fndSpecificOrbEngP4BODYi"></span><span id="fndSpecificOrbEng__BODYP.i"></span><span class="target" id="binary_8c_1aa60c3e683097ba4ec8fe84e4038a7bc7"></span>double <code class="sig-name descname">fndSpecificOrbEng</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndSpecificOrbEngP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate specific orbital energy eps = v^2/2 - mu/|r| </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv424fnvAssignOrbitalElementsP4BODYi">
+<span id="_CPPv324fnvAssignOrbitalElementsP4BODYi"></span><span id="_CPPv224fnvAssignOrbitalElementsP4BODYi"></span><span id="fnvAssignOrbitalElements__BODYP.i"></span><span class="target" id="binary_8c_1a4ea2e6578667cadd9e87a5345e9a6b47"></span>void <code class="sig-name descname">fnvAssignOrbitalElements</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424fnvAssignOrbitalElementsP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute and assign CBP’s orbital elements </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414fndComputeSemiP4BODYi">
+<span id="_CPPv314fndComputeSemiP4BODYi"></span><span id="_CPPv214fndComputeSemiP4BODYi"></span><span id="fndComputeSemi__BODYP.i"></span><span class="target" id="binary_8c_1a306f4e93040d324b62cfda57c77a1159"></span>double <code class="sig-name descname">fndComputeSemi</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fndComputeSemiP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute CBP’s semi-major axis a = -mu/(2*eps) </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413fndComputeEccP4BODYi">
+<span id="_CPPv313fndComputeEccP4BODYi"></span><span id="_CPPv213fndComputeEccP4BODYi"></span><span id="fndComputeEcc__BODYP.i"></span><span class="target" id="binary_8c_1af6655d1cfc1d83865cb968fc78fa3980"></span>double <code class="sig-name descname">fndComputeEcc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fndComputeEccP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute CBP’s orbital eccentricity e = sqrt(1 + 2*eps*h*h/(mu*mu)) </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413fndComputeIncP4BODYi">
+<span id="_CPPv313fndComputeIncP4BODYi"></span><span id="_CPPv213fndComputeIncP4BODYi"></span><span id="fndComputeInc__BODYP.i"></span><span class="target" id="binary_8c_1a70b6a09c577c8b3a3c4ebefa471e8c13"></span>double <code class="sig-name descname">fndComputeInc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fndComputeIncP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute CBP’s inclincation i = arccos(h_z/|h|) </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415fndComputeLongAP4BODYi">
+<span id="_CPPv315fndComputeLongAP4BODYi"></span><span id="_CPPv215fndComputeLongAP4BODYi"></span><span id="fndComputeLongA__BODYP.i"></span><span class="target" id="binary_8c_1aece6f25927d62c1d60175d1cb88a3341"></span>double <code class="sig-name descname">fndComputeLongA</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fndComputeLongAP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute a CBP’s longitude of ascending node See: <a class="reference external" href="https://en.wikipedia.org/wiki/Longitude_of_the_ascending_node">https://en.wikipedia.org/wiki/Longitude_of_the_ascending_node</a> </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419fnvComputeEccVectorP4BODYPdi">
+<span id="_CPPv319fnvComputeEccVectorP4BODYPdi"></span><span id="_CPPv219fnvComputeEccVectorP4BODYPdi"></span><span id="fnvComputeEccVector__BODYP.doubleP.i"></span><span class="target" id="binary_8c_1a8609e6df0d70804fc75a35230b1ea60e"></span>void <code class="sig-name descname">fnvComputeEccVector</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, double *<em>evec</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fnvComputeEccVectorP4BODYPdi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute a CBP’s eccentricity vector </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417fndComputeArgPeriP4BODYi">
+<span id="_CPPv317fndComputeArgPeriP4BODYi"></span><span id="_CPPv217fndComputeArgPeriP4BODYi"></span><span id="fndComputeArgPeri__BODYP.i"></span><span class="target" id="binary_8c_1ae2b87a83e0ea2a9bd77a3252c7357e14"></span>double <code class="sig-name descname">fndComputeArgPeri</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndComputeArgPeriP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute a CBP’s argument of pericenter </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fndMeanToEccentricdd">
+<span id="_CPPv318fndMeanToEccentricdd"></span><span id="_CPPv218fndMeanToEccentricdd"></span><span id="fndMeanToEccentric__double.double"></span><span class="target" id="binary_8c_1a464a02e81fc0b52bb0f5d352ac022550"></span>double <code class="sig-name descname">fndMeanToEccentric</code><span class="sig-paren">(</span>double <em>M</em>, double <em>e</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndMeanToEccentricdd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Solves kepler’s equation via Newton’s method</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">M</span></code>: double, Mean anomaly </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">e</span><span class="pre">eccentricity</span></code>: </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412fndEccToTruedd">
+<span id="_CPPv312fndEccToTruedd"></span><span id="_CPPv212fndEccToTruedd"></span><span id="fndEccToTrue__double.double"></span><span class="target" id="binary_8c_1a09af935f1eaf72953acab1a0bbc4100c"></span>double <code class="sig-name descname">fndEccToTrue</code><span class="sig-paren">(</span>double <em>E</em>, double <em>e</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fndEccToTruedd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert eccentric anomaly to true anomaly </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fndHolmanStabilityP4BODY">
+<span id="_CPPv318fndHolmanStabilityP4BODY"></span><span id="_CPPv218fndHolmanStabilityP4BODY"></span><span id="fndHolmanStability__BODYP"></span><span class="target" id="binary_8c_1a4c73e1164bd06b59ae24659b865ad180"></span>double <code class="sig-name descname">fndHolmanStability</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndHolmanStabilityP4BODY" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute the dynamical stability limit, a_crit, first computed by Holman and Wiegert 1999 that depends on binary dSemi, dEcc If CBP.dSemi &lt; a_crit, planet is unstable and system should halt </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412fndRocheLobeP4BODY">
+<span id="_CPPv312fndRocheLobeP4BODY"></span><span id="_CPPv212fndRocheLobeP4BODY"></span><span id="fndRocheLobe__BODYP"></span><span class="target" id="binary_8c_1a4e6340911bb88c3e7bfc8591be2858a9"></span>double <code class="sig-name descname">fndRocheLobe</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fndRocheLobeP4BODY" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute the roche lobe of the primary according to Egglton’s formula given in <a class="reference external" href="https://en.wikipedia.org/wiki/Roche_lobe">https://en.wikipedia.org/wiki/Roche_lobe</a> </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420fndBinaryMeanAnomalyddd">
+<span id="_CPPv320fndBinaryMeanAnomalyddd"></span><span id="_CPPv220fndBinaryMeanAnomalyddd"></span><span id="fndBinaryMeanAnomaly__double.double.double"></span><span class="target" id="binary_8c_1a3afceef2bd7af29f29220ee14b9c7610"></span>double <code class="sig-name descname">fndBinaryMeanAnomaly</code><span class="sig-paren">(</span>double <em>dMeanMotion</em>, double <em>dTime</em>, double <em>dPhi</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420fndBinaryMeanAnomalyddd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute the binary mean anomaly M = n*t + phi where phi is an arbitrary offset Note: When used with the binary, dPhi == dLL13PhiAB </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419fndMeanMotionBinaryP4BODYi">
+<span id="_CPPv319fndMeanMotionBinaryP4BODYi"></span><span id="_CPPv219fndMeanMotionBinaryP4BODYi"></span><span id="fndMeanMotionBinary__BODYP.i"></span><span class="target" id="binary_8c_1aa04f69734f3186cd5d454c7ca43da624"></span>double <code class="sig-name descname">fndMeanMotionBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fndMeanMotionBinaryP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 N0 </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fndEpiFreqKP4BODYi">
+<span id="_CPPv311fndEpiFreqKP4BODYi"></span><span id="_CPPv211fndEpiFreqKP4BODYi"></span><span id="fndEpiFreqK__BODYP.i"></span><span class="target" id="binary_8c_1a4dd160140381b52eff5eee6d0943685a"></span>double <code class="sig-name descname">fndEpiFreqK</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fndEpiFreqKP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 K0 </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fndEpiFreqVP4BODYi">
+<span id="_CPPv311fndEpiFreqVP4BODYi"></span><span id="_CPPv211fndEpiFreqVP4BODYi"></span><span id="fndEpiFreqV__BODYP.i"></span><span class="target" id="binary_8c_1a3fd8c8d2d065737ff17be833c6ecda14"></span>double <code class="sig-name descname">fndEpiFreqV</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fndEpiFreqVP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 V0 </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv47fndPhi0ddd">
+<span id="_CPPv37fndPhi0ddd"></span><span id="_CPPv27fndPhi0ddd"></span><span id="fndPhi0__double.double.double"></span><span class="target" id="binary_8c_1a322ac6de55250b23ad17cc1f8f94b716"></span>double <code class="sig-name descname">fndPhi0</code><span class="sig-paren">(</span>double <em>dTime</em>, double <em>dMeanMotion</em>, double <em>dVarPhi</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv47fndPhi0ddd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Circular (azimuthal) motion of the guiding center for a cbp: phi0 dVarPhi here is equal to dCBPM0, the initial CBP mean anomaly LL13 Eqn 20 </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv47fndPot0iidP4BODY">
+<span id="_CPPv37fndPot0iidP4BODY"></span><span id="_CPPv27fndPot0iidP4BODY"></span><span id="fndPot0__i.i.double.BODYP"></span><span class="target" id="binary_8c_1a2b0775dd13a01e9f0a655b3f86335324"></span>double <code class="sig-name descname">fndPot0</code><span class="sig-paren">(</span>int <em>j</em>, int <em>k</em>, double <em>R</em>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv47fndPot0iidP4BODY" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 Eqn 15: Binary potential component 0 </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49fndPot0dRiidP4BODY">
+<span id="_CPPv39fndPot0dRiidP4BODY"></span><span id="_CPPv29fndPot0dRiidP4BODY"></span><span id="fndPot0dR__i.i.double.BODYP"></span><span class="target" id="binary_8c_1ad1b09199d5f229dc312b096d842fd3f0"></span>double <code class="sig-name descname">fndPot0dR</code><span class="sig-paren">(</span>int <em>j</em>, int <em>k</em>, double <em>R</em>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49fndPot0dRiidP4BODY" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 Eqn 15: d/dR of binary potential component 0 </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv47fndPot1iidP4BODY">
+<span id="_CPPv37fndPot1iidP4BODY"></span><span id="_CPPv27fndPot1iidP4BODY"></span><span id="fndPot1__i.i.double.BODYP"></span><span class="target" id="binary_8c_1a825aa015cab74fcea1dfb15279c52955"></span>double <code class="sig-name descname">fndPot1</code><span class="sig-paren">(</span>int <em>j</em>, int <em>k</em>, double <em>R</em>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv47fndPot1iidP4BODY" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 eqn 16: Binary potential component 1 </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49fndPot1dRiidP4BODY">
+<span id="_CPPv39fndPot1dRiidP4BODY"></span><span id="_CPPv29fndPot1dRiidP4BODY"></span><span id="fndPot1dR__i.i.double.BODYP"></span><span class="target" id="binary_8c_1afb2c6d3e6ba14e177bb91aac00668fda"></span>double <code class="sig-name descname">fndPot1dR</code><span class="sig-paren">(</span>int <em>j</em>, int <em>k</em>, double <em>R</em>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49fndPot1dRiidP4BODY" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 eqn 16: d/dR of binary potential component 1 </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv44fndndP4BODY">
+<span id="_CPPv34fndndP4BODY"></span><span id="_CPPv24fndndP4BODY"></span><span id="fndn__double.BODYP"></span><span class="target" id="binary_8c_1af6aceaf690e9ccb93678c7ddd415d587"></span>double <code class="sig-name descname">fndn</code><span class="sig-paren">(</span>double <em>R</em>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv44fndndP4BODY" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 function defined in paragraph in between eqn 24 and 25 which is like the mean motion at R </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv45fndC0P4BODYi">
+<span id="_CPPv35fndC0P4BODYi"></span><span id="_CPPv25fndC0P4BODYi"></span><span id="fndC0__BODYP.i"></span><span class="target" id="binary_8c_1a09523c54b36c5f007c541b6ba7c12139"></span>double <code class="sig-name descname">fndC0</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv45fndC0P4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 C0 as defined in eqn 28 </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv46fndC0kiP4BODYi">
+<span id="_CPPv36fndC0kiP4BODYi"></span><span id="_CPPv26fndC0kiP4BODYi"></span><span id="fndC0k__i.BODYP.i"></span><span class="target" id="binary_8c_1a859324f877edec30946737f5d88d3f36"></span>double <code class="sig-name descname">fndC0k</code><span class="sig-paren">(</span>int <em>k</em>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46fndC0kiP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 C^0_k as defined by eqn 29 </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv46fndCPkiP4BODYi">
+<span id="_CPPv36fndCPkiP4BODYi"></span><span id="_CPPv26fndCPkiP4BODYi"></span><span id="fndCPk__i.BODYP.i"></span><span class="target" id="binary_8c_1af9107ec674cdb3b3857075a66c454287"></span>double <code class="sig-name descname">fndCPk</code><span class="sig-paren">(</span>int <em>k</em>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46fndCPkiP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 C^+_k as defined by eqn 30a (the + term) </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv46fndCMkiP4BODYi">
+<span id="_CPPv36fndCMkiP4BODYi"></span><span id="_CPPv26fndCMkiP4BODYi"></span><span id="fndCMk__i.BODYP.i"></span><span class="target" id="binary_8c_1a73f1b104d7f0adf79e2e3a98d0c6ea09"></span>double <code class="sig-name descname">fndCMk</code><span class="sig-paren">(</span>int <em>k</em>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46fndCMkiP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 C^-_k as defined by eqn 30b (the - term) </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv45fndD0P4BODYi">
+<span id="_CPPv35fndD0P4BODYi"></span><span id="_CPPv25fndD0P4BODYi"></span><span id="fndD0__BODYP.i"></span><span class="target" id="binary_8c_1ac2819e24565a0d408ab6328a695d1211"></span>double <code class="sig-name descname">fndD0</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv45fndD0P4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 D0 as defined by eqn 32 </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv46fndDk0iP4BODYi">
+<span id="_CPPv36fndDk0iP4BODYi"></span><span id="_CPPv26fndDk0iP4BODYi"></span><span id="fndDk0__i.BODYP.i"></span><span class="target" id="binary_8c_1af222ca77095ca4d6459f2edad04b72b9"></span>double <code class="sig-name descname">fndDk0</code><span class="sig-paren">(</span>int <em>k</em>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46fndDk0iP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 Dk0 as defined by eqn 33 </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv46fndDPkiP4BODYi">
+<span id="_CPPv36fndDPkiP4BODYi"></span><span id="_CPPv26fndDPkiP4BODYi"></span><span id="fndDPk__i.BODYP.i"></span><span class="target" id="binary_8c_1a47d6c17aa95154041c05b2a08e60bb88"></span>double <code class="sig-name descname">fndDPk</code><span class="sig-paren">(</span>int <em>k</em>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46fndDPkiP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 D+_k as defined by eqn 34a (the + term) </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv46fndDMkiP4BODYi">
+<span id="_CPPv36fndDMkiP4BODYi"></span><span id="_CPPv26fndDMkiP4BODYi"></span><span id="fndDMk__i.BODYP.i"></span><span class="target" id="binary_8c_1a2cbf6c3339d7ce52ca234f33ef98b6f3"></span>double <code class="sig-name descname">fndDMk</code><span class="sig-paren">(</span>int <em>k</em>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46fndDMkiP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>LL13 D-_k as defined by eqn 34b (the - term) </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413fndCBPRBinaryP4BODYP6SYSTEMPi">
+<span id="_CPPv313fndCBPRBinaryP4BODYP6SYSTEMPi"></span><span id="_CPPv213fndCBPRBinaryP4BODYP6SYSTEMPi"></span><span id="fndCBPRBinary__BODYP.SYSTEMP.iP"></span><span class="target" id="binary_8c_1af577181776f9318ee45ac33396597fb2"></span>double <code class="sig-name descname">fndCBPRBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fndCBPRBinaryP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Computes the CBP orbital radius </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415fndCBPPhiBinaryP4BODYP6SYSTEMPi">
+<span id="_CPPv315fndCBPPhiBinaryP4BODYP6SYSTEMPi"></span><span id="_CPPv215fndCBPPhiBinaryP4BODYP6SYSTEMPi"></span><span id="fndCBPPhiBinary__BODYP.SYSTEMP.iP"></span><span class="target" id="binary_8c_1a3df6e85a2d81e416a515cebbd8d4547a"></span>double <code class="sig-name descname">fndCBPPhiBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fndCBPPhiBinaryP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413fndCBPZBinaryP4BODYP6SYSTEMPi">
+<span id="_CPPv313fndCBPZBinaryP4BODYP6SYSTEMPi"></span><span id="_CPPv213fndCBPZBinaryP4BODYP6SYSTEMPi"></span><span id="fndCBPZBinary__BODYP.SYSTEMP.iP"></span><span class="target" id="binary_8c_1ade31fad0b8c7dd9baba63de6ddb33bb1"></span>double <code class="sig-name descname">fndCBPZBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fndCBPZBinaryP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416fndCBPRDotBinaryP4BODYP6SYSTEMPi">
+<span id="_CPPv316fndCBPRDotBinaryP4BODYP6SYSTEMPi"></span><span id="_CPPv216fndCBPRDotBinaryP4BODYP6SYSTEMPi"></span><span id="fndCBPRDotBinary__BODYP.SYSTEMP.iP"></span><span class="target" id="binary_8c_1ab00b00f9f30ee757f95c9b499995984b"></span>double <code class="sig-name descname">fndCBPRDotBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fndCBPRDotBinaryP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fndCBPPhiDotBinaryP4BODYP6SYSTEMPi">
+<span id="_CPPv318fndCBPPhiDotBinaryP4BODYP6SYSTEMPi"></span><span id="_CPPv218fndCBPPhiDotBinaryP4BODYP6SYSTEMPi"></span><span id="fndCBPPhiDotBinary__BODYP.SYSTEMP.iP"></span><span class="target" id="binary_8c_1a4b16e5f527fb59895185c44c5c3b5f29"></span>double <code class="sig-name descname">fndCBPPhiDotBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndCBPPhiDotBinaryP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416fndCBPZDotBinaryP4BODYP6SYSTEMPi">
+<span id="_CPPv316fndCBPZDotBinaryP4BODYP6SYSTEMPi"></span><span id="_CPPv216fndCBPZDotBinaryP4BODYP6SYSTEMPi"></span><span id="fndCBPZDotBinary__BODYP.SYSTEMP.iP"></span><span class="target" id="binary_8c_1af092f7fd89bfb76b092453cb8143c97a"></span>double <code class="sig-name descname">fndCBPZDotBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fndCBPZDotBinaryP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419fndFluxApproxBinaryP4BODYi">
+<span id="_CPPv319fndFluxApproxBinaryP4BODYi"></span><span id="_CPPv219fndFluxApproxBinaryP4BODYi"></span><span id="fndFluxApproxBinary__BODYP.i"></span><span class="target" id="binary_8c_1a12edf3cc365f9bcd241cc537e6fe7256"></span>double <code class="sig-name descname">fndFluxApproxBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fndFluxApproxBinaryP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute the approximate flux in the limit P_bin &lt;&lt; P_cbp received by the CBP from the 2 stars averaged over 1 binary orbit Assumes binary orb elements don’t vary much per orbit (safe assumption) </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fndFluxExactBinaryP4BODYidd">
+<span id="_CPPv318fndFluxExactBinaryP4BODYidd"></span><span id="_CPPv218fndFluxExactBinaryP4BODYidd"></span><span id="fndFluxExactBinary__BODYP.i.double.double"></span><span class="target" id="binary_8c_1a22b4607a04f9f53039ef0684c049363f"></span>double <code class="sig-name descname">fndFluxExactBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em>, double <em>L0</em>, double <em>L1</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndFluxExactBinaryP4BODYidd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute the exact flux (as close to exact as you want) received by the CBP from the 2 stars averaged over 1 CBP orbit Assumes binary orb elements don’t vary much over 1 CBP orbit Also assumes that 1 CBP orbit is approximately Keplerian </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415fndApproxEqTempP4BODYid">
+<span id="_CPPv315fndApproxEqTempP4BODYid"></span><span id="_CPPv215fndApproxEqTempP4BODYid"></span><span id="fndApproxEqTemp__BODYP.i.double"></span><span class="target" id="binary_8c_1a2cea1532d46e45a547c35c906e929084"></span>double <code class="sig-name descname">fndApproxEqTemp</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em>, double <em>dAlbedo</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fndApproxEqTempP4BODYid" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute the approximate equlibrirum temperature for a circumbinary planet averaged over the binary orbit </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414fndApproxInsolP4BODYi">
+<span id="_CPPv314fndApproxInsolP4BODYi"></span><span id="_CPPv214fndApproxInsolP4BODYi"></span><span id="fndApproxInsol__BODYP.i"></span><span class="target" id="binary_8c_1a24c49da1186f96c953d8172688531a93"></span>double <code class="sig-name descname">fndApproxInsol</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fndApproxInsolP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute the approximate insolation for a circumbinary planet averaged over the binary orbit relative to Earth’s where F_Earth = 1361 W/m^2 </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414fnvBinaryDebugP4BODY">
+<span id="_CPPv314fnvBinaryDebugP4BODY"></span><span id="_CPPv214fnvBinaryDebugP4BODY"></span><span id="fnvBinaryDebug__BODYP"></span><span class="target" id="binary_8c_1ab36070452cde76d63cf9c0311bf81f42"></span>void <code class="sig-name descname">fnvBinaryDebug</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fnvBinaryDebugP4BODY" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Dumps out a bunch of values to see if they agree with LL13 </p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="binary-h">
+<h2><a class="toc-backref" href="#id4">binary.h</a><a class="headerlink" href="#binary-h" title="Permalink to this headline">¶</a></h2>
+<p>Subroutines that control the integration of the circumbinary planet orbital dynamics module. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>David Fleming (<a class="reference external" href="https://github.com/dflemin3/">dflemin3</a>) </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>Jan 12 2016 </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Defines</p>
+<dl class="macro">
+<dt id="c.K_MAX">
+<span class="target" id="binary_8h_1a61a37eec7a9ecd05f38728a37f07bf95"></span><code class="sig-name descname">K_MAX</code><a class="headerlink" href="#c.K_MAX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.FLUX_INT_MAX">
+<span class="target" id="binary_8h_1ad39e5f6ed64ccfbf673557690fa2a723"></span><code class="sig-name descname">FLUX_INT_MAX</code><a class="headerlink" href="#c.FLUX_INT_MAX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.KEQNTOL">
+<span class="target" id="binary_8h_1aed6c691c88085eb1a571e38f1cb564e2"></span><code class="sig-name descname">KEQNTOL</code><a class="headerlink" href="#c.KEQNTOL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.MAX_KEPLER_ITERS">
+<span class="target" id="binary_8h_1a5e744e7906c7d2080000b60bd3bb5bde"></span><code class="sig-name descname">MAX_KEPLER_ITERS</code><a class="headerlink" href="#c.MAX_KEPLER_ITERS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.FLUX_EARTH">
+<span class="target" id="binary_8h_1abfe7c6e159c697b3485221713f2640d7"></span><code class="sig-name descname">FLUX_EARTH</code><a class="headerlink" href="#c.FLUX_EARTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPTSTARTBINARY">
+<span class="target" id="binary_8h_1ac0af71b5e8e1f8b1ef0455b625fd1042"></span><code class="sig-name descname">OPTSTARTBINARY</code><a class="headerlink" href="#c.OPTSTARTBINARY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPTENDBINARY">
+<span class="target" id="binary_8h_1a7b6c62d43082e3cdb12f2e272fd66755"></span><code class="sig-name descname">OPTENDBINARY</code><a class="headerlink" href="#c.OPTENDBINARY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_FREEECC">
+<span class="target" id="binary_8h_1aab4627f95cbf6e95ce03c5932d626755"></span><code class="sig-name descname">OPT_FREEECC</code><a class="headerlink" href="#c.OPT_FREEECC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_FREEINC">
+<span class="target" id="binary_8h_1af118d5bd403352004731de618f1df603"></span><code class="sig-name descname">OPT_FREEINC</code><a class="headerlink" href="#c.OPT_FREEINC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_LL13N0">
+<span class="target" id="binary_8h_1a0389f9d0f9bee8e0ab457b557d0ab068"></span><code class="sig-name descname">OPT_LL13N0</code><a class="headerlink" href="#c.OPT_LL13N0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_LL13K0">
+<span class="target" id="binary_8h_1a583044f8ff764d605338a5504b7ab50d"></span><code class="sig-name descname">OPT_LL13K0</code><a class="headerlink" href="#c.OPT_LL13K0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_LL13V0">
+<span class="target" id="binary_8h_1aed0aaffbd983167bf8636829433a74be"></span><code class="sig-name descname">OPT_LL13V0</code><a class="headerlink" href="#c.OPT_LL13V0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_LL13PHIAB">
+<span class="target" id="binary_8h_1a2aa206ba5d56d382295e84f5bcb30049"></span><code class="sig-name descname">OPT_LL13PHIAB</code><a class="headerlink" href="#c.OPT_LL13PHIAB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_CBPM0">
+<span class="target" id="binary_8h_1ab68ea337e8eefb3ab72a609b70a202bf"></span><code class="sig-name descname">OPT_CBPM0</code><a class="headerlink" href="#c.OPT_CBPM0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_CBPZETA">
+<span class="target" id="binary_8h_1ab7ccf382fc99f0f0d40c8652875ba8e0"></span><code class="sig-name descname">OPT_CBPZETA</code><a class="headerlink" href="#c.OPT_CBPZETA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_CBPPSI">
+<span class="target" id="binary_8h_1a21a6381cb5951f31cb6f38fdf8970db4"></span><code class="sig-name descname">OPT_CBPPSI</code><a class="headerlink" href="#c.OPT_CBPPSI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HALTHOLMAN">
+<span class="target" id="binary_8h_1a0b323c6e63a63ec7980d360c7a02053e"></span><code class="sig-name descname">OPT_HALTHOLMAN</code><a class="headerlink" href="#c.OPT_HALTHOLMAN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HALTROCHELOBE">
+<span class="target" id="binary_8h_1add8dcf87cbe55c22655f36f60e1a492c"></span><code class="sig-name descname">OPT_HALTROCHELOBE</code><a class="headerlink" href="#c.OPT_HALTROCHELOBE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUTSTARTBINARY">
+<span class="target" id="binary_8h_1aa290fbefd9b7bd79df08f710ca25bb01"></span><code class="sig-name descname">OUTSTARTBINARY</code><a class="headerlink" href="#c.OUTSTARTBINARY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUTENDBINARY">
+<span class="target" id="binary_8h_1adb9281a310f1332fb01c13ff2f50a806"></span><code class="sig-name descname">OUTENDBINARY</code><a class="headerlink" href="#c.OUTENDBINARY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_FREEECC">
+<span class="target" id="binary_8h_1ab0e1a9f360ef44e6a90f19a77c7da35e"></span><code class="sig-name descname">OUT_FREEECC</code><a class="headerlink" href="#c.OUT_FREEECC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_FREEINC">
+<span class="target" id="binary_8h_1a2e13776b39eea07e601944d95fba3c4f"></span><code class="sig-name descname">OUT_FREEINC</code><a class="headerlink" href="#c.OUT_FREEINC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_LL13N0">
+<span class="target" id="binary_8h_1abc6be323a4e4b25c63cf1b1493c812e9"></span><code class="sig-name descname">OUT_LL13N0</code><a class="headerlink" href="#c.OUT_LL13N0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_LL13K0">
+<span class="target" id="binary_8h_1a92ebd4e9a3c5d48b1305e49e7c8e92f7"></span><code class="sig-name descname">OUT_LL13K0</code><a class="headerlink" href="#c.OUT_LL13K0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_LL13V0">
+<span class="target" id="binary_8h_1a6d5308c5ead1ef5945c0cd901481ef9b"></span><code class="sig-name descname">OUT_LL13V0</code><a class="headerlink" href="#c.OUT_LL13V0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_CYLPOS">
+<span class="target" id="binary_8h_1aafba6a86fa5c4d6d7495224bc7eb1c28"></span><code class="sig-name descname">OUT_CYLPOS</code><a class="headerlink" href="#c.OUT_CYLPOS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_CBPR">
+<span class="target" id="binary_8h_1a0c740fa86ff1f19142e732819488ff73"></span><code class="sig-name descname">OUT_CBPR</code><a class="headerlink" href="#c.OUT_CBPR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_CBPZ">
+<span class="target" id="binary_8h_1a406c72fd786a6e450768d23c6ec5168b"></span><code class="sig-name descname">OUT_CBPZ</code><a class="headerlink" href="#c.OUT_CBPZ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_CBPPHI">
+<span class="target" id="binary_8h_1ab51f6cc8000b96a95e14cc0265588780"></span><code class="sig-name descname">OUT_CBPPHI</code><a class="headerlink" href="#c.OUT_CBPPHI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_CBPRDOT">
+<span class="target" id="binary_8h_1ae0b09ecf3f1158765df6dc9dc85d3cc7"></span><code class="sig-name descname">OUT_CBPRDOT</code><a class="headerlink" href="#c.OUT_CBPRDOT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_CBPZDOT">
+<span class="target" id="binary_8h_1afe55658bcba9d25c5be4eaff9924d832"></span><code class="sig-name descname">OUT_CBPZDOT</code><a class="headerlink" href="#c.OUT_CBPZDOT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_CBPPHIDOT">
+<span class="target" id="binary_8h_1ab9dc3ef3eeb5d1b0b9275f444c0a8756"></span><code class="sig-name descname">OUT_CBPPHIDOT</code><a class="headerlink" href="#c.OUT_CBPPHIDOT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_CBPR0">
+<span class="target" id="binary_8h_1aefcd376398f9534139aa54e409bd6c11"></span><code class="sig-name descname">OUT_CBPR0</code><a class="headerlink" href="#c.OUT_CBPR0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_CBPINSOL">
+<span class="target" id="binary_8h_1ad95a9b663fa2cf20bbd59aa63e092130"></span><code class="sig-name descname">OUT_CBPINSOL</code><a class="headerlink" href="#c.OUT_CBPINSOL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_BINPRIR">
+<span class="target" id="binary_8h_1a1a7726ed27416845988d4f5b54687604"></span><code class="sig-name descname">OUT_BINPRIR</code><a class="headerlink" href="#c.OUT_BINPRIR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_BINPRIPHI">
+<span class="target" id="binary_8h_1a6812ebace9aaaebe987364294d5f5996"></span><code class="sig-name descname">OUT_BINPRIPHI</code><a class="headerlink" href="#c.OUT_BINPRIPHI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_BINSECR">
+<span class="target" id="binary_8h_1a525adf68ceb27b43936196af10b13458"></span><code class="sig-name descname">OUT_BINSECR</code><a class="headerlink" href="#c.OUT_BINSECR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_BINSECPHI">
+<span class="target" id="binary_8h_1ad2f7bcf14690000b53343d21415d4b21"></span><code class="sig-name descname">OUT_BINSECPHI</code><a class="headerlink" href="#c.OUT_BINSECPHI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="distrot.html" class="btn btn-neutral float-right" title="distrot" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="flare.html" class="btn btn-neutral" title="flare" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

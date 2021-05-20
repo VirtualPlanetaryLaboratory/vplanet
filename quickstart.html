@@ -1,0 +1,690 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Quickstart &mdash; VPLanet 1.2.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="VPLanet 1.2.0
+ documentation" href="index.html"/>
+        <link rel="next" title="Modules and Options" href="help.html"/>
+        <link rel="prev" title="Installing VPLanet" href="install.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#very-quick-start">Very Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#downloading-the-code">Downloading the Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compiling-the-code">Compiling the Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-simple-example">A Simple Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-input-files">The Input Files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vpl-in">vpl.in</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sun-in">sun.in</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#venus-in">venus.in</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-code">Running the Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-output-files">The Output Files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#solarsystem-log">solarsystem.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#solarsystem-sun-forward">solarsystem.sun.forward</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#solarsystem-venus-forward">solarsystem.venus.forward</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting">Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#input-file-structure">Input File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#output-file-structure">Output File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#input-options">Input Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#output-parameters">Output Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">VPLanet</a> &raquo;</li>
+      
+    
+      <li>Quickstart</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#very-quick-start" id="id13">Very Quick Start</a></p></li>
+<li><p><a class="reference internal" href="#downloading-the-code" id="id14">Downloading the Code</a></p></li>
+<li><p><a class="reference internal" href="#compiling-the-code" id="id15">Compiling the Code</a></p></li>
+<li><p><a class="reference internal" href="#a-simple-example" id="id16">A Simple Example</a></p></li>
+<li><p><a class="reference internal" href="#the-input-files" id="id17">The Input Files</a></p>
+<ul>
+<li><p><a class="reference internal" href="#vpl-in" id="id18">vpl.in</a></p></li>
+<li><p><a class="reference internal" href="#sun-in" id="id19">sun.in</a></p></li>
+<li><p><a class="reference internal" href="#venus-in" id="id20">venus.in</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#running-the-code" id="id21">Running the Code</a></p></li>
+<li><p><a class="reference internal" href="#the-output-files" id="id22">The Output Files</a></p>
+<ul>
+<li><p><a class="reference internal" href="#solarsystem-log" id="id23">solarsystem.log</a></p></li>
+<li><p><a class="reference internal" href="#solarsystem-sun-forward" id="id24">solarsystem.sun.forward</a></p></li>
+<li><p><a class="reference internal" href="#solarsystem-venus-forward" id="id25">solarsystem.venus.forward</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#plotting" id="id26">Plotting</a></p></li>
+<li><p><a class="reference internal" href="#next-steps" id="id27">Next Steps</a></p></li>
+</ul>
+</div>
+<div class="section" id="very-quick-start">
+<h2><a class="toc-backref" href="#id13">Very Quick Start</a><a class="headerlink" href="#very-quick-start" title="Permalink to this headline">¶</a></h2>
+<p>To get started very quickly with one example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/VirtualPlanetaryLaboratory/vplanet.git
+<span class="nb">cd</span> vplanet
+make opt
+<span class="nb">cd</span> examples/VenusWaterLoss
+../../vplanet vpl.in
+</pre></div>
+</div>
+</div>
+<div class="section" id="downloading-the-code">
+<h2><a class="toc-backref" href="#id14">Downloading the Code</a><a class="headerlink" href="#downloading-the-code" title="Permalink to this headline">¶</a></h2>
+<p>There are two ways to download VPLanet: 1) cloning via GitHub, or 2) downloading
+the source of a specific release from GitHub.</p>
+<p>To clone from GitHub, navigate to the directory on your local computer in which
+you want to place <code class="code docutils literal notranslate"><span class="pre">vplanet</span></code> and type</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/VirtualPlanetaryLaboratory/vplanet.git
+</pre></div>
+</div>
+<p>This creates a sub-directory called vplanet that contains all the files in the
+repository.</p>
+<p>To build from the source code, point your web browser to <a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet/releases">releases</a>,
+select the release you want (we strongly recommend a version greater than or equal
+to 1.0.0). Place the downloaded file in the directory on your local computer in which
+you want to place <code class="code docutils literal notranslate"><span class="pre">vplanet</span></code> and type</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>unzip vplanet-x.x.x
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tar xvfz vplanet-x.x.x.tar.gz
+</pre></div>
+</div>
+<p>where “x.x.x” is the version number of the source you selected.</p>
+</div>
+<div class="section" id="compiling-the-code">
+<h2><a class="toc-backref" href="#id15">Compiling the Code</a><a class="headerlink" href="#compiling-the-code" title="Permalink to this headline">¶</a></h2>
+<p>Change your working directory to vplanet to build the executable. <code class="code docutils literal notranslate"><span class="pre">vplanet</span></code>
+is written in C, and the current version requires gcc. <code class="code docutils literal notranslate"><span class="pre">vplanet</span></code> has been
+developed on MacOS and Linux operating systems.</p>
+<p>In the top-level directory is a <cite>Makefile</cite> that will build the executable. Most
+users should use the optimized version:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make opt
+</pre></div>
+</div>
+<p>You should now have a file called vplanet in the directory.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We recommend you add <code class="code docutils literal notranslate"><span class="pre">vplanet</span></code> to your PATH variable.</p>
+</div>
+</div>
+<div class="section" id="a-simple-example">
+<h2><a class="toc-backref" href="#id16">A Simple Example</a><a class="headerlink" href="#a-simple-example" title="Permalink to this headline">¶</a></h2>
+<p>Let’s go over how to use <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> to simulate the evolution of
+a hypothetical ocean on the surface of early Venus. Isotopic evidence
+suggests Venus may have had a similar amount of water to Earth in the
+past <a href="#id1"><span class="problematic" id="id2">:cite:`Donahue1982`</span></a>, but because of vigorous hydrodynamic escape it probably lost all
+of it in the first few hundred Myr <a href="#id3"><span class="problematic" id="id4">:cite:`Hunten1973`</span></a>. Here we’re going to use the <a class="reference internal" href="src/stellar.html"><span class="doc">stellar</span></a>
+and <a class="reference internal" href="src/atmesc.html"><span class="doc">atmesc</span></a> modules of <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> to jointly model the evolution
+of the Sun and Venus.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This guide shows how to interpret the <a class="reference internal" href="examples/VenusWaterLoss.html"><span class="doc">VenusWaterLoss</span></a>
+example, but here we will only include one planet, whereas the example uses three.
+Modifying that example to match the input files shown below will generate the
+figure at the end of this guide.</p>
+</div>
+<p>The basic workflow for a <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> simulation is to create input
+(<code class="code docutils literal notranslate"><span class="pre">.in</span></code>) files with the pertinent system, star, and planet parameters
+and to call the executable directly from the command line. Let’s go over
+the three input files for this example.</p>
+</div>
+<div class="section" id="the-input-files">
+<h2><a class="toc-backref" href="#id17">The Input Files</a><a class="headerlink" href="#the-input-files" title="Permalink to this headline">¶</a></h2>
+<p>The first input file, which is called the “primary input file,” is for the system, which tells <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> what bodies
+are in the simulation and sets some configuration options. This file is usually
+called <code class="code docutils literal notranslate"><span class="pre">vpl.in</span></code>, but you can actually call it whatever you’d like:</p>
+<div class="section" id="vpl-in">
+<h3><a class="toc-backref" href="#id18">vpl.in</a><a class="headerlink" href="#vpl-in" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># General Options</span>
+sSystemName   solarsystem        <span class="c1"># System Name</span>
+iVerbose      <span class="m">5</span>                  <span class="c1"># Verbosity level</span>
+bOverwrite    <span class="m">1</span>                  <span class="c1"># Allow file overwrites?</span>
+saBodyFiles   sun.in $           <span class="c1"># List of all bodies in the system</span>
+              venus.in
+
+<span class="c1"># Input/Output Units</span>
+sUnitMass      solar             <span class="c1"># Options: gram, kg, Earth, Neptune, Jupiter, solar</span>
+sUnitLength    AU                <span class="c1"># Options: cm, m, km, Earth, Jupiter, solar, AU</span>
+sUnitTime      YEARS             <span class="c1"># Options: sec, day, year, Myr, Gyr</span>
+sUnitAngle     d                 <span class="c1"># Options: deg, rad</span>
+
+<span class="c1"># Input/Output</span>
+bDoLog         <span class="m">1</span>                 <span class="c1"># Write a log file?</span>
+iDigits        <span class="m">6</span>                 <span class="c1"># Maximum number of digits to right of decimal</span>
+dMinValue      1e-10             <span class="c1"># Minimum value of eccentricity/obliquity</span>
+
+<span class="c1"># Evolution Parameters</span>
+bDoForward    <span class="m">1</span>                  <span class="c1"># Perform a forward evolution?</span>
+bVarDt        <span class="m">1</span>                  <span class="c1"># Use variable timestepping?</span>
+dEta          <span class="m">0</span>.01               <span class="c1"># Coefficient for variable timestepping</span>
+dStopTime     <span class="m">4</span>.6e9              <span class="c1"># Stop time for evolution</span>
+dOutputTime   1e6                <span class="c1"># Output timesteps (assuming in body files)</span>
+</pre></div>
+</div>
+<p>First, the input parameters are specified with the name of the parameter
+(e.g., <code class="code docutils literal notranslate"><span class="pre">dEta</span></code> or <code class="code docutils literal notranslate"><span class="pre">dStopTime</span></code>) followed by one or more spaces (or tabs)
+and then the
+value of the parameter. Note that parameter names are case-sensitive! The leading
+lower case letter describes the type (cast) of parameter(s) to be provided: b = Boolean,
+i = integer, d = double precision, s = string. If an “a” is appended to one of
+these letters, then the input may be an “array,” i.e. multiple values can be
+input.</p>
+<p>The order of the input options is irrelevant, and white space is ignored. Comments
+can be specified anywhere with the pound (#) sign. Note that we divided the saBodyFiles
+inputs into two lines for ease of reading. <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> knows to look to the next line
+because we used the line continuation character <code class="code docutils literal notranslate"><span class="pre">$</span></code>. The # and $ signs are
+the only special characters in <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> input files.</p>
+<p>In this case, we set some fairly self-explanatory parameters. But here’s a
+line-by-line breakdown: We’re calling the
+system <code class="code docutils literal notranslate"><span class="pre">&quot;solarsystem&quot;</span></code> (our output files will have this prefix and any
+plots generated with vplot will have this title). We specified maximum verbosity (<code class="code docutils literal notranslate"><span class="pre">5</span></code>),
+so <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> will talk a LOT. We’re allowing output file overwrites,
+and we’re telling the code to expect two “body files”: <code class="code docutils literal notranslate"><span class="pre">sun.in</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">venus.in</span></code>, which we’ll create below. (Note that in
+<a class="reference internal" href="examples/VenusWaterLoss.html"><span class="doc">VenusWaterLoss</span></a>
+uses 3 planets, each representing a different amount of initial water content.)
+Next, we set the default units for I/O: solar masses, astronomical units, years,
+and degrees. Because we set them in the primary input file, the choices are
+propagated to the body files, but a user can specify units for each body.</p>
+<p>Next, we tell the code to generate a log file, set the
+output precision, and define a tolerance parameter. The final section is probably
+the most important: here we tell <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> what to <em>actually</em> do
+in the simulation. We want to evolve the system <em>forward</em> in time using
+variable (adaptive) timestepping with a coefficient <code class="code docutils literal notranslate"><span class="pre">dEta</span> <span class="pre">=</span> <span class="pre">0.01</span></code>. The
+smaller this coefficient, the higher the precision of the integration, but
+the slower it will run. We have found that values between 0.0001 and 0.1 work
+for most cases. We then specify how long to run the simulation for
+(the age of the solar system in our case) and how often to output (every
+million years).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To get a list of all allowed
+parameters, their type (Boolean, integer, etc), a brief description, their
+associated modules, the files they may appear in (primary or body), and if
+the units may be changed with a negative sign (see below), type <code class="code docutils literal notranslate"><span class="pre">vplanet</span> <span class="pre">-h</span></code>
+in a terminal. You may also view the “long help” with the -H option, but not
+all parameters have this functionality yet.</p>
+</div>
+<p>In <code class="code docutils literal notranslate"><span class="pre">vpl.in</span></code> we specified two additional input files with the saBodyFiles
+option, so let’s look at them next. Here’s <code class="code docutils literal notranslate"><span class="pre">sun.in</span></code>:</p>
+</div>
+<div class="section" id="sun-in">
+<h3><a class="toc-backref" href="#id19">sun.in</a><a class="headerlink" href="#sun-in" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Star&#39;s Parameters</span>
+sName           sun              <span class="c1"># Body&#39;s name</span>
+saModules       stellar          <span class="c1"># Modules to apply, exact spelling required</span>
+
+<span class="c1"># Physical Parameters</span>
+dMass           <span class="m">1</span>.00             <span class="c1"># Mass of the star in solar masses</span>
+dAge            5e7              <span class="c1"># Age in years at integration start</span>
+
+<span class="c1"># STELLAR Parameters</span>
+sStellarModel   baraffe          <span class="c1"># Stellar evolution model: `baraffe` or `none`</span>
+dSatXUVFrac     <span class="m">1</span>.e-3            <span class="c1"># XUV luminosity fractional saturation level</span>
+dSatXUVTime     1e8              <span class="c1"># XUV saturation timescale in years</span>
+
+<span class="c1"># These are the parameters that vplanet will output as arrays in the</span>
+<span class="c1"># `.forward` or `.backward` evolution files. Run `vplanet -h` for a list</span>
+<span class="c1"># of all options. Note that the - sign is a request for custom units.</span>
+saOutputOrder   Time -LXUVStellar
+</pre></div>
+</div>
+<p>As before, the parameter names are fairly self-explanatory. Note that we’re only
+setting a few, and those that are not specified assume their default values.
+Here we have a few differences with <a class="reference internal" href="examples/VenusWaterLoss.html"><span class="doc">VenusWaterLoss</span></a>:
+The example assigns a hexadecimal color that can be used for plotting with <cite>vplot</cite>, and
+uses the negative option for dSatXUVTime, which means the units are Gyr. For this
+guide, we’re running a shorter integration.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The units of some options can be changed by placing the minus sign (“-“)
+character in front of the value. This symbol tells
+<code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> to use the custom units for the parameter.
+We’ll see an example of this below. The onboard help
+provides information on the use of minus signs, but in general they are
+tailored to a Sun-Earth system.</p>
+</div>
+<p>We gave the star a name,
+told <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> we want to use the <code class="code docutils literal notranslate"><span class="pre">stellar</span></code> module to compute
+its evolution. We assigned the mass and age at time = 0, and
+set a few <code class="code docutils literal notranslate"><span class="pre">stellar</span></code>-specific properties. Specifically, we’re using the
+Baraffe et al. (2015) <a href="#id5"><span class="problematic" id="id6">:cite:`Baraffe15`</span></a> evolutionary tracks and the Ribas et al.
+(2005) <a href="#id7"><span class="problematic" id="id8">:cite:`Ribas05`</span></a> XUV evolution power law with a saturation level of
+<code class="code docutils literal notranslate"><span class="pre">1e-3</span></code> and timescale of 100 Myr. Note that <cite>“time”</cite> is different than
+<cite>“age”</cite> in that the former is the internal counter for the simulation,
+whereas the latter is the physical age of the star since some birth time. For a
+compete description of the modules, please consult the <span class="xref std std-doc">manual</span>.</p>
+<p>One of the most important <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> options is saOutputOrder, which is a list
+of all parameters to be output during the integration at a cadence defind be dOutputTime.
+In this case we requested two columns: time and the XUV luminosity. (The example
+outputs a few more parameters.) Unlike the option names, output names need only
+be unique, but it’s often easier to understand the output if the full name is provided.
+Similar to the options, however, some output parameters (usually those that are
+positive-definite) can be prepended with a minus sign to force the output into a
+customized unit. This information can also be found in the help file.</p>
+<p>Next up is the input file for the planet, Venus. This file is based off venus1.in
+in <a class="reference internal" href="examples/VenusWaterLoss.html"><span class="doc">VenusWaterLoss</span></a>.</p>
+</div>
+<div class="section" id="venus-in">
+<h3><a class="toc-backref" href="#id20">venus.in</a><a class="headerlink" href="#venus-in" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Planet&#39;s Parameters</span>
+sName            venus           <span class="c1"># Body&#39;s name</span>
+saModules        atmesc          <span class="c1"># Modules to apply, exact spelling required</span>
+saOutputOrder    Time $
+                 -SurfWaterMass $
+                 -OxygenMantleMass
+
+<span class="c1"># Physical Parameters</span>
+dMass         -0.815             <span class="c1"># Here, the - sign means Earth masses</span>
+dRadius       -0.9499            <span class="c1"># Here, the - sign means Earth radii</span>
+dSemi         <span class="m">0</span>.723              <span class="c1"># Semi-major axis</span>
+dEcc          <span class="m">0</span>.006772           <span class="c1"># Eccentricity</span>
+
+<span class="c1"># ATMESC Parameters</span>
+dSurfWaterMass       -1.0        <span class="c1"># Initial surface water in Earth oceans</span>
+sWaterLossModel      lbexact     <span class="c1"># Water loss model; Luger and Barnes (2015)</span>
+bInstantO2Sink       <span class="m">1</span>           <span class="c1"># O2 is absorbed instantly at the surface</span>
+sAtmXAbsEffH2OModel  bolmont16   <span class="c1"># XUV absorption efficiency model</span>
+</pre></div>
+</div>
+<p>This looks pretty similar to the previous one, but it’s worth noting
+a few things. Note that we appear to have given the planet a <strong>negative</strong>
+mass and radius! As we mentioned above, this actually tells
+<code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> we’re specifying these values using <em>different</em> units. Many
+parameters have an associated customized unit that overrides the default units
+specified in <code class="code docutils literal notranslate"><span class="pre">vpl.in</span></code>. In this case, dMass and dRadius have customized units
+of Earth masses and Earth radii, respectively.</p>
+<p>Finally, we set some <code class="code docutils literal notranslate"><span class="pre">atmesc</span></code>-specific parameters. We told the code
+to initialize the planet with one Earth ocean (the minus sign, again, indicates
+custom units) and to compute the water loss using the <code class="code docutils literal notranslate"><span class="pre">lbexact</span></code> model
+from Luger and Barnes (2015) <a href="#id9"><span class="problematic" id="id10">:cite:`LugerBarnes15`</span></a>. Oxygen will be absorbed
+at the surface instantly, and the XUV absorption efficiency will be calculated
+from the Bolmont et al. (2016) <a href="#id11"><span class="problematic" id="id12">:cite:`Bolmont16`</span></a> model.</p>
+</div>
+</div>
+<div class="section" id="running-the-code">
+<h2><a class="toc-backref" href="#id21">Running the Code</a><a class="headerlink" href="#running-the-code" title="Permalink to this headline">¶</a></h2>
+<p>We are now ready to run the code:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vplanet vpl.in
+</pre></div>
+</div>
+<p>Upon running this in a terminal, you should see all sorts of messages printed
+to the screen:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>INFO: sUnitMass <span class="nb">set</span> in vpl.in, all bodies will use this unit.
+INFO: sUnitTime <span class="nb">set</span> in vpl.in, all bodies will use this unit.
+INFO: sUnitAngle <span class="nb">set</span> in vpl.in, all bodies will use this unit.
+INFO: sUnitLength <span class="nb">set</span> in vpl.in, all bodies will use this unit.
+INFO: sUnitTemp not <span class="nb">set</span> in file sun.in, defaulting to Kelvin.
+INFO: sUnitTemp not <span class="nb">set</span> in file venus1.in, defaulting to kelvin.
+INFO: sUnitTemp not <span class="nb">set</span> in file venus2.in, defaulting to kelvin.
+INFO: sUnitTemp not <span class="nb">set</span> in file venus3.in, defaulting to kelvin.
+INFO: dRotPeriod &lt; <span class="m">0</span> in file sun.in, units assumed to be Days.
+INFO: dMass &lt; <span class="m">0</span> in file venus.in, units assumed to be Earth masses.
+INFO: dSemi &lt; <span class="m">0</span> in file venus.in, units assumed to be AU.
+INFO: dRadius &lt; <span class="m">0</span> in file venus.in, units assumed to be Earth radii.
+INFO: dRotPeriod &lt; <span class="m">0</span> in file venus.in, units assumed to be Days.
+INFO: dSurfWaterMass &lt; <span class="m">0</span> in file venus.in, units assumed to be Terrestrial Oceans <span class="o">(</span>TO<span class="o">)</span>.
+INFO: dMinSurfWaterMass &lt; <span class="m">0</span> in file venus.in, units assumed to be Terrestrial Oceans <span class="o">(</span>TO<span class="o">)</span>.
+INFO: dJeansTime not <span class="nb">set</span> <span class="k">for</span> body venus, defaulting to <span class="m">3</span>.16e+16 seconds.
+Input files read.
+INFO: Age <span class="nb">set</span> in one file, all bodies will have this age.
+INFO: sOutFile not set, defaulting to solarsystem.sun.forward.
+INFO: sOutFile not set, defaulting to solarsystem.venus.forward.
+INFO: sIntegrationMethod not set, defaulting to Runge-Kutta4.
+INFO: dEnvelopeMass &lt; dMinEnvelopeMass. No envelope evolution will be included.
+INFO: dEnvelopeMass &lt; dMinEnvelopeMass. No envelope evolution will be included.
+INFO: dEnvelopeMass &lt; dMinEnvelopeMass. No envelope evolution will be included.
+INFO: Radius of Gyration <span class="nb">set</span> <span class="k">for</span> body <span class="m">0</span>, but this value will be computed from the grid.
+All of sun<span class="s1">&#39;s modules verified.</span>
+<span class="s1">All of venus&#39;</span>s modules verified.
+Input files verified.
+Log file written.
+</pre></div>
+</div>
+<p>You can safely ignore most of this output: <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> is just being very
+verbose (as requested!) about what it’s about to do. It is, however, a good
+idea to peruse those messages to ensure you haven’t made any mistakes! If
+<code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> thinks you’re doing something dubious,
+it will output a WARNING and you should take care that you are comfortable with
+your options. If you’ve input options that are known to be
+incompatible, it will issue an ERROR, and provide you the file and lines numbers
+that contain the issue(s), and exit. Note that if you did run the examples/VenusWaterLoss
+case you will see more Venuses in the output.</p>
+<p>Things will go silent for a couple seconds, and then you’ll see:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Evolution completed.
+Log file updated.
+Simulation completed.
+</pre></div>
+</div>
+<p>The code is done running, and you should see several output files in the current directory.</p>
+</div>
+<div class="section" id="the-output-files">
+<h2><a class="toc-backref" href="#id22">The Output Files</a><a class="headerlink" href="#the-output-files" title="Permalink to this headline">¶</a></h2>
+<p>The log file records the details of the simulation and captures a snapshot of the
+system at the initial step and the final step of the evolution. Here’s a
+very condensed version of what you should see:</p>
+<div class="section" id="solarsystem-log">
+<h3><a class="toc-backref" href="#id23">solarsystem.log</a><a class="headerlink" href="#solarsystem-log" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Executable: vplanet
+Version: &lt;GITVERSION&gt;
+System Name: solarsystem
+Primary Input File: vpl.in
+Body File <span class="c1">#1: sun.in</span>
+...
+
+---- INITIAL SYSTEM PROPERTIES ----
+<span class="o">(</span>Age<span class="o">)</span> System Age <span class="o">[</span>sec<span class="o">]</span>: <span class="m">1</span>.577880e+15
+<span class="o">(</span>Time<span class="o">)</span> Simulation Time <span class="o">[</span>sec<span class="o">]</span>: <span class="m">0</span>.000000
+...
+----- BODY: sun ----
+Active Modules: STELLAR
+<span class="o">(</span>Mass<span class="o">)</span> Mass <span class="o">[</span>kg<span class="o">]</span>: <span class="m">1</span>.988416e+30
+...
+----- STELLAR PARAMETERS <span class="o">(</span>sun<span class="o">)</span>------
+<span class="o">(</span>LXUVStellar<span class="o">)</span> Base X-ray/XUV Luminosity <span class="o">[</span>LSUN<span class="o">]</span>: <span class="m">0</span>.000677
+Output Order: Time<span class="o">[</span>year<span class="o">]</span> LXUVStellar<span class="o">[</span>LSUN<span class="o">]</span>
+
+----- BODY: venus ----
+Active Modules: ATMESC
+<span class="o">(</span>Mass<span class="o">)</span> Mass <span class="o">[</span>kg<span class="o">]</span>: <span class="m">4</span>.867332e+24
+...
+----- ATMESC PARAMETERS <span class="o">(</span>venus<span class="o">)</span>------
+<span class="o">(</span>SurfWaterMass<span class="o">)</span> Surface Water Mass <span class="o">[</span>TO<span class="o">]</span>: <span class="m">1</span>.000000
+...
+Output Order: Time<span class="o">[</span>year<span class="o">]</span> SurfWaterMass<span class="o">[</span>TO<span class="o">]</span> OxygenMantleMass<span class="o">[</span>bars<span class="o">]</span>
+
+---- FINAL SYSTEM PROPERTIES ----
+<span class="o">(</span>Age<span class="o">)</span> System Age <span class="o">[</span>sec<span class="o">]</span>: <span class="m">1</span>.467428e+17
+<span class="o">(</span>Time<span class="o">)</span> Simulation Time <span class="o">[</span>sec<span class="o">]</span>: <span class="m">1</span>.451650e+17
+...
+----- BODY: sun ----
+Active Modules: STELLAR
+<span class="o">(</span>Mass<span class="o">)</span> Mass <span class="o">[</span>kg<span class="o">]</span>: <span class="m">1</span>.988416e+30
+...
+----- STELLAR PARAMETERS <span class="o">(</span>sun<span class="o">)</span>------
+<span class="o">(</span>LXUVFrac<span class="o">)</span> X-ray/XUV Luminosity Fraction <span class="o">[]</span>: <span class="m">8</span>.892684e-06
+...
+----- BODY: venus ----
+Active Modules: ATMESC
+<span class="o">(</span>Mass<span class="o">)</span> Mass <span class="o">[</span>kg<span class="o">]</span>: <span class="m">4</span>.867332e+24
+----- ATMESC PARAMETERS <span class="o">(</span>venus<span class="o">)</span>------
+<span class="o">(</span>SurfWaterMass<span class="o">)</span> Surface Water Mass <span class="o">[</span>TO<span class="o">]</span>: <span class="m">0</span>.000000
+<span class="o">(</span>OxygenMantleMass<span class="o">)</span> Mass of Oxygen in Mantle <span class="o">[</span>bars<span class="o">]</span>: <span class="m">199</span>.365415
+...
+</pre></div>
+</div>
+<p>Note that the log file list parameters in system units, SI. This choice allows
+you to be sure that all the calculations will proceed correctly. Also note that
+the log file contains the complete initial and final conditions. The first word
+in many of the log file lines is in parentheses, which indicates the parameter
+can be supplied to saOutputOrder.</p>
+<p>Next, we have the <strong>forward</strong> evolution files, one per body. The
+columns in these files correspond to names in the <code class="code docutils literal notranslate"><span class="pre">saOutputOrder</span></code>
+option in the corresponding input files. Recall that for the
+Sun, we requested that <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> output the timestamp
+and the XUV luminosity (in solar units since we used the minus sign):</p>
+</div>
+<div class="section" id="solarsystem-sun-forward">
+<h3><a class="toc-backref" href="#id24">solarsystem.sun.forward</a><a class="headerlink" href="#solarsystem-sun-forward" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">0</span>.000000     <span class="m">0</span>.000677
+<span class="m">1</span>.000000e+06 <span class="m">0</span>.000677
+<span class="m">2</span>.000000e+06 <span class="m">0</span>.000678
+<span class="m">3</span>.000000e+06 <span class="m">0</span>.000678
+<span class="m">4</span>.000000e+06 <span class="m">0</span>.000678
+...
+</pre></div>
+</div>
+<p>You can check the units in the log file if you’re unsure what they are. For the
+planet, we asked for the time, the amount of surface water (with a minus
+sign, indicating in units of Earth oceans), and the amount of oxygen absorbed by
+the mantle (with a minus sign, indicating units of bars):</p>
+</div>
+<div class="section" id="solarsystem-venus-forward">
+<h3><a class="toc-backref" href="#id25">solarsystem.venus.forward</a><a class="headerlink" href="#solarsystem-venus-forward" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">0</span>.000000     <span class="m">1</span>.000000 <span class="m">0</span>.000000
+<span class="m">1</span>.000000e+06 <span class="m">0</span>.978763 <span class="m">4</span>.238860
+<span class="m">2</span>.000000e+06 <span class="m">0</span>.957524 <span class="m">8</span>.477719
+<span class="m">3</span>.000000e+06 <span class="m">0</span>.936283 <span class="m">12</span>.716579
+<span class="m">4</span>.000000e+06 <span class="m">0</span>.915044 <span class="m">16</span>.955439
+...
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="plotting">
+<h2><a class="toc-backref" href="#id26">Plotting</a><a class="headerlink" href="#plotting" title="Permalink to this headline">¶</a></h2>
+<p>With the output generated, it is often convenient to plot the output. While any plotting
+package can be used, the VPLanet team has created a customized tool that enables
+both fast plotting of output, as well as tools to generate publication worthy figures.
+The <code class="code docutils literal notranslate"><span class="pre">vplot</span></code> tool (<a class="reference internal" href="vplot.html"><span class="doc">docs here</span></a>) can be used to easily visualize the results of
+any <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> simulation. If you run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vplot
+</pre></div>
+</div>
+<p>in a terminal, you should see the following plot appear:</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/quickstart.png"><img alt="_images/quickstart.png" src="_images/quickstart.png" style="width: 300px;" /></a>
+</div>
+<p>Here we see the evolution of the stellar XUV emission, which declines
+dramatically after the saturation timescale ends (top); the increase
+in the amount of oxygen in the planet’s mantle, which is absorbed from
+the oxygen released from the photolysis of water (center); and
+the desiccation of the planet’s surface, caused by the hydrodynamic escape of
+hydrogen to space. In this simulation, Venus loses all of its surface water
+in about 50 Myr.</p>
+</div>
+<div class="section" id="next-steps">
+<h2><a class="toc-backref" href="#id27">Next Steps</a><a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+<p>The above example describes one example, but <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> can simulate many
+more phenomena. Navigate to the <a class="reference internal" href="examples.html"><span class="doc">examples</span></a> directory to see the
+physics that are currently available. Each example provides instructions on how
+to generate output and a figure.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="help.html" class="btn btn-neutral float-right" title="Modules and Options" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="install.html" class="btn btn-neutral" title="Installing VPLanet" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

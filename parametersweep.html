@@ -1,0 +1,431 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Parameter Sweep Guide &mdash; VPLanet 1.2.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="VPLanet 1.2.0
+ documentation" href="index.html"/>
+        <link rel="next" title="For developers" href="developers.html"/>
+        <link rel="prev" title="VPLOT" href="vplot.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#input-file-structure">Input File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#output-file-structure">Output File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#input-options">Input Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#output-parameters">Output Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parameter Sweep Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#initializing-parameter-sweeps-with-vspace">Initializing Parameter Sweeps with <code class="code docutils literal notranslate"><span class="pre">vspace</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-simulations-with-multi-planet">Running Simulations with <code class="code docutils literal notranslate"><span class="pre">multi-planet</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#checking-multi-planet-progress-with-mpstatus">Checking <code class="code docutils literal notranslate"><span class="pre">multi-planet</span></code> Progress with <code class="code docutils literal notranslate"><span class="pre">mpstatus</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compressing-data-with-bigplanet">Compressing Data with <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#checking-bigplanet-progress-with-bpstatus">Checking <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code> Progress with <code class="code docutils literal notranslate"><span class="pre">bpstatus</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extracting-and-plotting-with-bigplanet">Extracting and Plotting with <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-meta-data-files-with-bigplanet">Creating Meta-Data Files with <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">VPLanet</a> &raquo;</li>
+      
+    
+      <li>Parameter Sweep Guide</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="parameter-sweep-guide">
+<h1>Parameter Sweep Guide<a class="headerlink" href="#parameter-sweep-guide" title="Permalink to this headline">¶</a></h1>
+<p>Parameter sweeps are a very common use of VPLanet, and the team has
+developed a set of python and command line tools to facilitate their completion
+and analysis. In brief, <code class="code docutils literal notranslate"><span class="pre">vspace</span></code> builds a set of initial conditions,
+<code class="code docutils literal notranslate"><span class="pre">multi-planet</span></code> performs the simulations, and <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code> compresses the data
+and streamlines analysis. The following guide explains how to use these
+tools with an example based on Earth’s internal thermal evolution. Files for the example
+presented here can be found in <a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/ParameterSweepe">examples/ParameterSweep</a>
+in which we examine the current radius of Earth’s inner core as a function of the initial
+core temperature and the current amount of radiogenic heating from potassium-40.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You need to install <code class="code docutils literal notranslate"><span class="pre">vplot</span></code>, <code class="code docutils literal notranslate"><span class="pre">vspace</span></code>, <code class="code docutils literal notranslate"><span class="pre">multi-planet</span></code>, and <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code> to
+reproduce this example.</p>
+</div>
+<div class="section" id="initializing-parameter-sweeps-with-vspace">
+<h2>Initializing Parameter Sweeps with <code class="code docutils literal notranslate"><span class="pre">vspace</span></code><a class="headerlink" href="#initializing-parameter-sweeps-with-vspace" title="Permalink to this headline">¶</a></h2>
+<p>The first step is to create an input file for <code class="code docutils literal notranslate"><span class="pre">vspace</span></code>, which is typically called <cite>vspace.in</cite>.
+As described in more detail in <code class="code docutils literal notranslate"><span class="pre">vspace</span></code>’s <a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/vspace">documentation</a>, this file
+modifies template files (here we use the .in files from <a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/EarthInterior">examples/EarthInterior</a>)
+and then builds a directory structure with each
+folder containing the .in files for a specific simulation. In this guide we vary
+dTCore (initial core temperature) and d40KPowerCore (initial radiogenic power from potassium-40).</p>
+<p>Here’s the input file for <code class="code docutils literal notranslate"><span class="pre">vspace</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>srcfolder ~/vplanet/examples/EarthInterior
+destfolder ParameterSweep
+trialname test_
+
+file   sun.in
+
+file   earth.in
+
+dTCore <span class="o">[</span><span class="m">5500</span>, <span class="m">6500</span>, n10<span class="o">]</span> tcore
+d40KPowerCore <span class="o">[</span>-1.5, -0.5, n10<span class="o">]</span> K
+
+file   vpl.in
+</pre></div>
+</div>
+<p>This file directs <code class="code docutils literal notranslate"><span class="pre">vspace</span></code> to vary initial core temperature from 5500 to 6500 in 10 steps and
+initial potassium-40 power from 50 - 150% of Earth’s nominal initial amount (see the VPLanet paper
+for more details). The directories will be built in a folder called
+ParameterSweep and the individual folders will be called test_tcore?K?, where the
+“n” tells <code class="code docutils literal notranslate"><span class="pre">vspace</span></code> to create 10 evenly spaced values for each (other distributions are available), so the total number of
+simulations will be 100.</p>
+<p>To build the files, run the following command in the command line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vspace <span class="o">[</span>-q, -f<span class="o">]</span> vspace.in
+</pre></div>
+</div>
+<p>This command will create the folder ParameterSweep, with 100 folders
+inside of it, each with their own sun.in, earth.in and vpl.in with the
+parameters from the EarthInteror example, but with dTCore and d40KPowerCore changed
+based on the vspace file. Use -q to suppress output and -f to force <code class="code docutils literal notranslate"><span class="pre">vspace</span></code> to overwrite previous
+data (including any <code class="code docutils literal notranslate"><span class="pre">multi-planet</span></code> and <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code> files!). Now we are ready to run the parameter sweep.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you randomly generate initial conditions, i.e. Monte Carlo, then <code class="code docutils literal notranslate"><span class="pre">vspace</span></code> automatically creates histograms of the
+options you varied so you can confirm the initial conditions. These png files are located in destfolder.</p>
+</div>
+</div>
+<div class="section" id="running-simulations-with-multi-planet">
+<h2>Running Simulations with <code class="code docutils literal notranslate"><span class="pre">multi-planet</span></code><a class="headerlink" href="#running-simulations-with-multi-planet" title="Permalink to this headline">¶</a></h2>
+<p><code class="code docutils literal notranslate"><span class="pre">multi-planet</span></code> is the command line tool to run the simulations created with <code class="code docutils literal notranslate"><span class="pre">vspace</span></code>
+across the processors on your computer. To run, type the following in the
+command line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>multi-planet -c &lt;num_cores&gt; <span class="o">[</span>-q<span class="o">]</span> vspace.in
+</pre></div>
+</div>
+<p>The optional argument -c (or –cores) tells <code class="code docutils literal notranslate"><span class="pre">multi-planet</span></code> the number of cores to run.
+There is another optional argument that creates the HDF5 Files for <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code>
+directly after the simulation completes, but we are going to leave it at the default
+setting, which is false. See the <code class="code docutils literal notranslate"><span class="pre">multi-planet</span></code> <a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/multi-planet">documentation</a> for
+more information. Use the -q option to suppress output to the terminal.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The default number of cores <code class="code docutils literal notranslate"><span class="pre">multi-planet</span></code> will use is the maximum number of
+cores on the machine.</p>
+</div>
+</div>
+<div class="section" id="checking-multi-planet-progress-with-mpstatus">
+<h2>Checking <code class="code docutils literal notranslate"><span class="pre">multi-planet</span></code> Progress with <code class="code docutils literal notranslate"><span class="pre">mpstatus</span></code><a class="headerlink" href="#checking-multi-planet-progress-with-mpstatus" title="Permalink to this headline">¶</a></h2>
+<p>This example is quick to run (~1 minute, depending on the number of cores), but for
+longer simulations it is often
+helpful to know how far along the parameter sweep is. The command <code class="code docutils literal notranslate"><span class="pre">mpstatus</span></code> returns the
+current state of the <code class="code docutils literal notranslate"><span class="pre">multi-planet</span></code> process. To check the current status, type the
+following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpstatus vspace.in
+</pre></div>
+</div>
+<p>This command returns output like the following to the terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>  --Multi-Planet Status--
+Number of Simulations completed: <span class="m">35</span>
+Number of Simulations in progress: <span class="m">6</span>
+Number of Simulations remaining: <span class="m">59</span>
+</pre></div>
+</div>
+<p>But with the proper numbers shown.</p>
+<p>After <code class="code docutils literal notranslate"><span class="pre">multi-planet</span></code> completes, you may have a large number of directories with gigabytes
+of data. Storing, analyzing, and plotting these data can be tedious as each output file
+from each directory must be opened and read in sequentially. To streamline this process,
+use <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code>.</p>
+</div>
+<div class="section" id="compressing-data-with-bigplanet">
+<h2>Compressing Data with <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code><a class="headerlink" href="#compressing-data-with-bigplanet" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code> command compresses your parameter sweep data into an HDF5 file in which
+specific data can be efficiently extracted. <strong>Although compression can take some time,
+plotting with a</strong> <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code> <strong>file can be orders of magnitude faster because the script will
+not need to open files and each directory!</strong>
+To compress the data, type the following command in the terminal (after multi-planet
+finishes):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bigplanet -c &lt;num_cores&gt; <span class="o">[</span>-q<span class="o">]</span> vspace.in
+</pre></div>
+</div>
+<p>The bigplanet arguments work identically to <code class="code docutils literal notranslate"><span class="pre">multi-planet</span></code>’s with the user able to
+specify the number of processors <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code> can use. This will create an <a class="reference external" href="https://en.wikipedia.org/wiki/Hierarchical_Data_Format">HDF5</a> file
+that shares the same name as the destfolder from the <code class="code docutils literal notranslate"><span class="pre">vspace</span></code> file, but with “.hdf5”
+appended, e.g. ParameterSweep.hdf5. This file will now replace the directory structure
+created by <code class="code docutils literal notranslate"><span class="pre">vspace</span></code>. Use the -q option to suppress output to the terminal.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The default number of cores <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code> will use is the maximum number of
+cores on the machine.</p>
+</div>
+</div>
+<div class="section" id="checking-bigplanet-progress-with-bpstatus">
+<h2>Checking <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code> Progress with <code class="code docutils literal notranslate"><span class="pre">bpstatus</span></code><a class="headerlink" href="#checking-bigplanet-progress-with-bpstatus" title="Permalink to this headline">¶</a></h2>
+<p>For large data sets, <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code> may take several hours or more to complete. To check the
+status, use <code class="code docutils literal notranslate"><span class="pre">bpstatus</span></code>, which employs the same syntax as <code class="code docutils literal notranslate"><span class="pre">mpstatus</span></code> above.</p>
+</div>
+<div class="section" id="extracting-and-plotting-with-bigplanet">
+<h2>Extracting and Plotting with <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code><a class="headerlink" href="#extracting-and-plotting-with-bigplanet" title="Permalink to this headline">¶</a></h2>
+<p>After you have compressed your data, you need to access it. To accomplish this goal,
+<code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code> is also a python module that can be imported into python scripts for the
+extraction of data from the HDF5 file. For our example, final inner core radius as a function of
+current potassium-40 abundance in the core and the initial core temerature, the script looks like
+this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>import bigplanet as bp
+import matplotlib.pyplot as plt
+import vplot as vpl
+
+data = bp.HDF5File(‘ParameterSweep.hdf5’)
+</pre></div>
+</div>
+<p>This loads in the necessary modules and reads in the HDF5 file as data. Now we are
+ready to extract the data we want to graph, which are the initial values of TCore,
+final values of potassium-40 power, and final values of the inner core radius. Let’s
+start with inner core radius, grabbing its final values and its units:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">RIC</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">ExtractColumn</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="s1">&#39;earth_RIC_final&#39;</span><span class="p">)</span>
+<span class="n">RIC_units</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">ExtractUnits</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="s1">&#39;earth_RIC_final&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>ExtractColumn returns an array in which each element corresponds to the final
+value of the inner core radius for each simulation. The first argument is the HDF5
+file, the second argument is called a “key” and describes a parameter of
+interest. To learn more about keys, consult the <a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/multi-planet">bigplanet documentation</a>.
+In brief, the key syntax is “body_variable_aggregation”, in
+which aggregation is some property of a body’s variable, e.g. the final value. The
+second line returns the units of the key.</p>
+<p>Next we want to grab the <em>x</em> and <em>y</em> values for our contour plot. This step is a bit complicated
+because a specific value of <em>x</em> and/or <em>y</em> can be repeated multiple times. In other words,
+if we just extracted every value from every simulation and placed it in an array, the
+arrays would be multi-valued and the plot could not be built.  To obtain the values
+needed for the plot, use the <code class="docutils literal notranslate"><span class="pre">ExtractUniqueValues</span></code> function, like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">TCore_uniq</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">ExtractUniqueValues</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="s1">&#39;earth_TCore_initial&#39;</span><span class="p">)</span>
+<span class="n">TCore_units</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">ExtractUnits</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="s1">&#39;earth_TCore_initial&#39;</span><span class="p">)</span>
+
+<span class="n">K40_uniq</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">ExtractUniqueValues</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="s1">&#39;earth_40KPowerCore_final&#39;</span><span class="p">)</span>
+<span class="n">K40_units</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">ExtractUnits</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="s1">&#39;earth_40KPowerCore_final&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we have the values we need for our plot, but the inner core radius is currently
+stored as an array, not a matrix, so we’re still not ready to plot. With <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code> you
+can easily transform an array into the appropriately shaped matrix with the <code class="docutils literal notranslate"><span class="pre">CreateMatrix</span></code>
+function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">RIC_Matrix</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">CreateMatrix</span><span class="p">(</span><span class="n">TCore_uniq</span><span class="p">,</span><span class="n">K40_uniq</span><span class="p">,</span><span class="n">RIC</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This method takes 3 arguments and 1 optional argument, the <em>x</em>-axis vector, the <em>y</em>-axis vector, the array
+that must be converted into a 2D matrix and an optional orientation argument.</p>
+<p>Now we’re ready to plot using <code class="code docutils literal notranslate"><span class="pre">vplot</span></code> and <code class="code docutils literal notranslate"><span class="pre">matplotlib.</span></code> We won’t show the lines of code here,
+but remember this example is included in <a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/BigPlanetExample">examples/BigPlanetExample</a>.
+Ultimately, you will obtain the following plot, which includes a black curve for the current value
+of Earth’s inner core radius.</p>
+<div class="figure align-default">
+<img alt="_images/BigPlanetExample1.png" src="_images/BigPlanetExample1.png" />
+</div>
+</div>
+<div class="section" id="creating-meta-data-files-with-bigplanet">
+<h2>Creating Meta-Data Files with <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code><a class="headerlink" href="#creating-meta-data-files-with-bigplanet" title="Permalink to this headline">¶</a></h2>
+<p>Finally, it’s often convenient to write out ASCII files in which each line contains the meta-data
+for your parameter sweep, e.g. the initial eccentricity, the final semi-major axis, and the maximum
+inclination. <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code> facilitates the creation of these files with the <code class="docutils literal notranslate"><span class="pre">WriteOutput</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">WriteOutput</span><span class="p">(</span><span class="n">inputfile</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="s2">&quot;bigplanet.out&quot;</span><span class="p">,</span> <span class="n">delim</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ulysses</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where:</p>
+<p><em>inputfile</em> is the name of the HDF5 file</p>
+<p><em>columns</em> is the list of keys you are extracting, i.e. the output from calls to ExtractColumn</p>
+<p><em>File</em> is the name of the output file</p>
+<p><em>delim</em> is the delimiter for the output file (the default is spaces)</p>
+<p><em>header</em> adds the names and units for each column (default is False)</p>
+<p><em>ulysses</em> makes the file compatable with <a class="reference external" href="https://www.vrulysses.com/">VR Ulysses</a> (default is False)</p>
+<p>You are now ready to efficiently explore your parameter space!</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="developers.html" class="btn btn-neutral float-right" title="For developers" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vplot.html" class="btn btn-neutral" title="VPLOT" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,1183 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>galhabit &mdash; VPLanet 1.2.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="VPLanet 1.2.0
+ documentation" href="../index.html"/>
+        <link rel="up" title="C API" href="../src.html"/>
+        <link rel="next" title="output" href="output.html"/>
+        <link rel="prev" title="magmoc" href="magmoc.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#input-file-structure">Input File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#output-file-structure">Output File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#input-options">Input Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#output-parameters">Output Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">galhabit</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#galhabit-c">galhabit.c</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#galhabit-h">galhabit.h</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">VPLanet</a> &raquo;</li>
+      
+        <li><a href="../src.html">C API</a>&raquo;</li>
+      
+    
+      <li>galhabit</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="galhabit">
+<h1>galhabit<a class="headerlink" href="#galhabit" title="Permalink to this headline">¶</a></h1>
+<p><strong>Contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#galhabit-c" id="id1">galhabit.c</a></p></li>
+<li><p><a class="reference internal" href="#galhabit-h" id="id2">galhabit.h</a></p></li>
+</ul>
+</div>
+<div class="section" id="galhabit-c">
+<h2><a class="toc-backref" href="#id1">galhabit.c</a><a class="headerlink" href="#galhabit-c" title="Permalink to this headline">¶</a></h2>
+<p>Subroutines that simulate the galactic habitat of a stellar system. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Russell Deitrick (<a class="reference external" href="https://github.com/deitrr/">deitrr</a>)</p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>July 7 2015 </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Functions</p>
+<dl class="function">
+<dt id="_CPPv416BodyCopyGalHabitP4BODYP4BODYiii">
+<span id="_CPPv316BodyCopyGalHabitP4BODYP4BODYiii"></span><span id="_CPPv216BodyCopyGalHabitP4BODYP4BODYiii"></span><span id="BodyCopyGalHabit__BODYP.BODYP.i.i.i"></span><span class="target" id="galhabit_8c_1a88d4a040440da6f24c69414b1247f88d"></span>void <code class="sig-name descname">BodyCopyGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>dest</em>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>src</em>, int <em>iTideModel</em>, int <em>iNumBodies</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416BodyCopyGalHabitP4BODYP4BODYiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416ReadGalacDensityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv316ReadGalacDensityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv216ReadGalacDensityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadGalacDensity__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a72fd36386b2ffc3dbb39b9eac16b0071"></span>void <code class="sig-name descname">ReadGalacDensity</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416ReadGalacDensityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49ReadRFormP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv39ReadRFormP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv29ReadRFormP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadRForm__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a520b5c8a3c9adf36cd134026c19221ef"></span>void <code class="sig-name descname">ReadRForm</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49ReadRFormP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadStarScaleLP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadStarScaleLP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadStarScaleLP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadStarScaleL__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1adda7510b56d88fff2d361601e704ef29"></span>void <code class="sig-name descname">ReadStarScaleL</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadStarScaleLP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadTMigrationP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadTMigrationP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadTMigrationP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadTMigration__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a063b1a36026bf568358f67c1f33e1466"></span>void <code class="sig-name descname">ReadTMigration</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadTMigrationP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadRadialMigrP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadRadialMigrP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadRadialMigrP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadRadialMigr__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a21d58fa7fa3b13defc46e0bc8ec0a4e0"></span>void <code class="sig-name descname">ReadRadialMigr</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadRadialMigrP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadGasDensityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadGasDensityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadGasDensityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadGasDensity__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a75249dcbc7ff96b4ccfd309875a65c28"></span>void <code class="sig-name descname">ReadGasDensity</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadGasDensityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413ReadDMDensityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv313ReadDMDensityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv213ReadDMDensityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadDMDensity__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a86a17726a3171329d442e4f550b74fe1"></span>void <code class="sig-name descname">ReadDMDensity</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413ReadDMDensityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412ReadRandSeedP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv312ReadRandSeedP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv212ReadRandSeedP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadRandSeed__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a9fb0e36417e1e8d94aa5919f38a813a7"></span>void <code class="sig-name descname">ReadRandSeed</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412ReadRandSeedP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416ReadEncounterRadP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv316ReadEncounterRadP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv216ReadEncounterRadP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadEncounterRad__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a61a9c83f41d4470b000bfb15fbd316c5"></span>void <code class="sig-name descname">ReadEncounterRad</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416ReadEncounterRadP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadStellarEncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadStellarEncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadStellarEncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadStellarEnc__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a7b6fe18d650cca04abc1214f95938eb3"></span>void <code class="sig-name descname">ReadStellarEnc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadStellarEncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413ReadOutputEncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv313ReadOutputEncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv213ReadOutputEncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadOutputEnc__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1adf26441fa1ca35e551463d1cde0a0db0"></span>void <code class="sig-name descname">ReadOutputEnc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413ReadOutputEncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419ReadTimeEvolVelDispP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv319ReadTimeEvolVelDispP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv219ReadTimeEvolVelDispP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadTimeEvolVelDisp__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a1adad29ec1d517699ca2496ffe4e51b7"></span>void <code class="sig-name descname">ReadTimeEvolVelDisp</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419ReadTimeEvolVelDispP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadHostBinaryP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadHostBinaryP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadHostBinaryP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHostBinary__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a06a66a265bbafe2309288428735e9c9d"></span>void <code class="sig-name descname">ReadHostBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadHostBinaryP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadGalacTidesP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadGalacTidesP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadGalacTidesP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadGalacTides__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a8600e3f1853f5288ed8bc92abee40c2e"></span>void <code class="sig-name descname">ReadGalacTides</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadGalacTidesP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415ReadHostBinSemiP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv315ReadHostBinSemiP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv215ReadHostBinSemiP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHostBinSemi__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1ab052ab130e0d3db028261275ea9e6ed2"></span>void <code class="sig-name descname">ReadHostBinSemi</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415ReadHostBinSemiP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadMinAllowedP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadMinAllowedP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadMinAllowedP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadMinAllowed__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a76e7ef67a5d81eca240b1f91abeeaca7"></span>void <code class="sig-name descname">ReadMinAllowed</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadMinAllowedP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadHostBinEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadHostBinEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadHostBinEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHostBinEcc__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1aaa42d0d39b4805b2ae8f0cdcc03cae7b"></span>void <code class="sig-name descname">ReadHostBinEcc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadHostBinEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415ReadHostBinArgPP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv315ReadHostBinArgPP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv215ReadHostBinArgPP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHostBinArgP__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a5187d7aecf08a569461831cdee293fab"></span>void <code class="sig-name descname">ReadHostBinArgP</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415ReadHostBinArgPP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416ReadHostBinLongAP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv316ReadHostBinLongAP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv216ReadHostBinLongAP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHostBinLongA__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a432e6f7c1904865c5eaba2869e4afcad"></span>void <code class="sig-name descname">ReadHostBinLongA</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416ReadHostBinLongAP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadHostBinIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadHostBinIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadHostBinIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHostBinInc__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a4e510402aab8a3152c0b1d200e7c0436"></span>void <code class="sig-name descname">ReadHostBinInc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadHostBinIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416ReadHostBinMass1P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv316ReadHostBinMass1P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv216ReadHostBinMass1P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHostBinMass1__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a832abb2dc72bfc42f89ce3a918470c57"></span>void <code class="sig-name descname">ReadHostBinMass1</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416ReadHostBinMass1P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv425InitializeOptionsGalHabitP7OPTIONSA_12fnReadOption">
+<span id="_CPPv325InitializeOptionsGalHabitP7OPTIONSA_12fnReadOption"></span><span id="_CPPv225InitializeOptionsGalHabitP7OPTIONSA_12fnReadOption"></span><span id="InitializeOptionsGalHabit__OPTIONSP.fnReadOptionA"></span><span class="target" id="galhabit_8c_1a9283a562eeecd62918f99d6c7cec5251"></span>void <code class="sig-name descname">InitializeOptionsGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv412fnReadOption" title="fnReadOption">fnReadOption</a> <em>fnRead</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv425InitializeOptionsGalHabitP7OPTIONSA_12fnReadOption" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419ReadOptionsGalHabitP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMA_12fnReadOptioni">
+<span id="_CPPv319ReadOptionsGalHabitP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMA_12fnReadOptioni"></span><span id="_CPPv219ReadOptionsGalHabitP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMA_12fnReadOptioni"></span><span id="ReadOptionsGalHabit__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.fnReadOptionA.i"></span><span class="target" id="galhabit_8c_1a89961d3bc92ca67648252b45deac5ca4"></span>void <code class="sig-name descname">ReadOptionsGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv412fnReadOption" title="fnReadOption">fnReadOption</a> <em>fnRead</em>[], int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419ReadOptionsGalHabitP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMA_12fnReadOptioni" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv422InitializeEccXGalHabitP4BODYP6UPDATEii">
+<span id="_CPPv322InitializeEccXGalHabitP4BODYP6UPDATEii"></span><span id="_CPPv222InitializeEccXGalHabitP4BODYP6UPDATEii"></span><span id="InitializeEccXGalHabit__BODYP.UPDATEP.i.i"></span><span class="target" id="galhabit_8c_1ab93ce97dcd3eb373e6d08461dffffd82"></span>void <code class="sig-name descname">InitializeEccXGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, int <em>iEqn</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422InitializeEccXGalHabitP4BODYP6UPDATEii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv422InitializeEccYGalHabitP4BODYP6UPDATEii">
+<span id="_CPPv322InitializeEccYGalHabitP4BODYP6UPDATEii"></span><span id="_CPPv222InitializeEccYGalHabitP4BODYP6UPDATEii"></span><span id="InitializeEccYGalHabit__BODYP.UPDATEP.i.i"></span><span class="target" id="galhabit_8c_1abefe141ebde69daccd63b2e44855511d"></span>void <code class="sig-name descname">InitializeEccYGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, int <em>iEqn</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422InitializeEccYGalHabitP4BODYP6UPDATEii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv422InitializeEccZGalHabitP4BODYP6UPDATEii">
+<span id="_CPPv322InitializeEccZGalHabitP4BODYP6UPDATEii"></span><span id="_CPPv222InitializeEccZGalHabitP4BODYP6UPDATEii"></span><span id="InitializeEccZGalHabit__BODYP.UPDATEP.i.i"></span><span class="target" id="galhabit_8c_1a1a6594be723454ed4002fadf610d3b69"></span>void <code class="sig-name descname">InitializeEccZGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, int <em>iEqn</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422InitializeEccZGalHabitP4BODYP6UPDATEii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423InitializeAngMXGalHabitP4BODYP6UPDATEii">
+<span id="_CPPv323InitializeAngMXGalHabitP4BODYP6UPDATEii"></span><span id="_CPPv223InitializeAngMXGalHabitP4BODYP6UPDATEii"></span><span id="InitializeAngMXGalHabit__BODYP.UPDATEP.i.i"></span><span class="target" id="galhabit_8c_1a7ee22ada4d3865efc96bfaea0a7dc2f5"></span>void <code class="sig-name descname">InitializeAngMXGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, int <em>iEqn</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423InitializeAngMXGalHabitP4BODYP6UPDATEii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423InitializeAngMYGalHabitP4BODYP6UPDATEii">
+<span id="_CPPv323InitializeAngMYGalHabitP4BODYP6UPDATEii"></span><span id="_CPPv223InitializeAngMYGalHabitP4BODYP6UPDATEii"></span><span id="InitializeAngMYGalHabit__BODYP.UPDATEP.i.i"></span><span class="target" id="galhabit_8c_1add6ea474790858b222b39cacf306464a"></span>void <code class="sig-name descname">InitializeAngMYGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, int <em>iEqn</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423InitializeAngMYGalHabitP4BODYP6UPDATEii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423InitializeAngMZGalHabitP4BODYP6UPDATEi">
+<span id="_CPPv323InitializeAngMZGalHabitP4BODYP6UPDATEi"></span><span id="_CPPv223InitializeAngMZGalHabitP4BODYP6UPDATEi"></span><span id="InitializeAngMZGalHabit__BODYP.UPDATEP.i"></span><span class="target" id="galhabit_8c_1a580fd2809c9b7c2cefde0e4c555375b7"></span>void <code class="sig-name descname">InitializeAngMZGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423InitializeAngMZGalHabitP4BODYP6UPDATEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417VerifyTidesBinaryP4BODYP7CONTROLP7OPTIONSA_cii">
+<span id="_CPPv317VerifyTidesBinaryP4BODYP7CONTROLP7OPTIONSA_cii"></span><span id="_CPPv217VerifyTidesBinaryP4BODYP7CONTROLP7OPTIONSA_cii"></span><span id="VerifyTidesBinary__BODYP.CONTROLP.OPTIONSP.cA.i.i"></span><span class="target" id="galhabit_8c_1aa286708aca61c9b023d5bfba3c444ac3"></span>void <code class="sig-name descname">VerifyTidesBinary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, char <em>cFile</em>[], int <em>iBody</em>, int <em>iVerbose</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417VerifyTidesBinaryP4BODYP7CONTROLP7OPTIONSA_cii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv425AssignGalHabitDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv325AssignGalHabitDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv225AssignGalHabitDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei"></span><span id="AssignGalHabitDerivatives__BODYP.EVOLVEP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="galhabit_8c_1ad3ad76beac806f8644019d54d9a19d1f"></span>void <code class="sig-name descname">AssignGalHabitDerivatives</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv425AssignGalHabitDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423NullGalHabitDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv323NullGalHabitDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv223NullGalHabitDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei"></span><span id="NullGalHabitDerivatives__BODYP.EVOLVEP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="galhabit_8c_1a42b5d31d0ea82a78704fa46f51abe881"></span>void <code class="sig-name descname">NullGalHabitDerivatives</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423NullGalHabitDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414VerifyGalHabitP4BODYP7CONTROLP5FILESP7OPTIONSP6OUTPUTP6SYSTEMP6UPDATEii">
+<span id="_CPPv314VerifyGalHabitP4BODYP7CONTROLP5FILESP7OPTIONSP6OUTPUTP6SYSTEMP6UPDATEii"></span><span id="_CPPv214VerifyGalHabitP4BODYP7CONTROLP5FILESP7OPTIONSP6OUTPUTP6SYSTEMP6UPDATEii"></span><span id="VerifyGalHabit__BODYP.CONTROLP.FILESP.OPTIONSP.OUTPUTP.SYSTEMP.UPDATEP.i.i"></span><span class="target" id="galhabit_8c_1af18cdd4850849f22d743ca119a18d36f"></span>void <code class="sig-name descname">VerifyGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, int <em>iModule</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414VerifyGalHabitP4BODYP7CONTROLP5FILESP7OPTIONSP6OUTPUTP6SYSTEMP6UPDATEii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv424InitializeUpdateGalHabitP4BODYP6UPDATEi">
+<span id="_CPPv324InitializeUpdateGalHabitP4BODYP6UPDATEi"></span><span id="_CPPv224InitializeUpdateGalHabitP4BODYP6UPDATEi"></span><span id="InitializeUpdateGalHabit__BODYP.UPDATEP.i"></span><span class="target" id="galhabit_8c_1aabee4a50c0da9b51203096e985f68b4d"></span>void <code class="sig-name descname">InitializeUpdateGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424InitializeUpdateGalHabitP4BODYP6UPDATEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv426FinalizeUpdateEccXGalHabitP4BODYP6UPDATEPiiii">
+<span id="_CPPv326FinalizeUpdateEccXGalHabitP4BODYP6UPDATEPiiii"></span><span id="_CPPv226FinalizeUpdateEccXGalHabitP4BODYP6UPDATEPiiii"></span><span id="FinalizeUpdateEccXGalHabit__BODYP.UPDATEP.iP.i.i.i"></span><span class="target" id="galhabit_8c_1a103c147b788fe926ac5a3a0630fd33ea"></span>void <code class="sig-name descname">FinalizeUpdateEccXGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int *<em>iEqn</em>, int <em>iVar</em>, int <em>iBody</em>, int <em>iFoo</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426FinalizeUpdateEccXGalHabitP4BODYP6UPDATEPiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv426FinalizeUpdateEccYGalHabitP4BODYP6UPDATEPiiii">
+<span id="_CPPv326FinalizeUpdateEccYGalHabitP4BODYP6UPDATEPiiii"></span><span id="_CPPv226FinalizeUpdateEccYGalHabitP4BODYP6UPDATEPiiii"></span><span id="FinalizeUpdateEccYGalHabit__BODYP.UPDATEP.iP.i.i.i"></span><span class="target" id="galhabit_8c_1a7a09e2af07d35bf2b97c7f2bc00e2f4e"></span>void <code class="sig-name descname">FinalizeUpdateEccYGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int *<em>iEqn</em>, int <em>iVar</em>, int <em>iBody</em>, int <em>iFoo</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426FinalizeUpdateEccYGalHabitP4BODYP6UPDATEPiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv426FinalizeUpdateEccZGalHabitP4BODYP6UPDATEPiiii">
+<span id="_CPPv326FinalizeUpdateEccZGalHabitP4BODYP6UPDATEPiiii"></span><span id="_CPPv226FinalizeUpdateEccZGalHabitP4BODYP6UPDATEPiiii"></span><span id="FinalizeUpdateEccZGalHabit__BODYP.UPDATEP.iP.i.i.i"></span><span class="target" id="galhabit_8c_1a02114ab2b9af8aea9f65170cd91b9d9b"></span>void <code class="sig-name descname">FinalizeUpdateEccZGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int *<em>iEqn</em>, int <em>iVar</em>, int <em>iBody</em>, int <em>iFoo</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426FinalizeUpdateEccZGalHabitP4BODYP6UPDATEPiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv427FinalizeUpdateAngMXGalHabitP4BODYP6UPDATEPiiii">
+<span id="_CPPv327FinalizeUpdateAngMXGalHabitP4BODYP6UPDATEPiiii"></span><span id="_CPPv227FinalizeUpdateAngMXGalHabitP4BODYP6UPDATEPiiii"></span><span id="FinalizeUpdateAngMXGalHabit__BODYP.UPDATEP.iP.i.i.i"></span><span class="target" id="galhabit_8c_1a8a9bf5e615e83c8103f15d0cddc8b595"></span>void <code class="sig-name descname">FinalizeUpdateAngMXGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int *<em>iEqn</em>, int <em>iVar</em>, int <em>iBody</em>, int <em>iFoo</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427FinalizeUpdateAngMXGalHabitP4BODYP6UPDATEPiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv427FinalizeUpdateAngMYGalHabitP4BODYP6UPDATEPiiii">
+<span id="_CPPv327FinalizeUpdateAngMYGalHabitP4BODYP6UPDATEPiiii"></span><span id="_CPPv227FinalizeUpdateAngMYGalHabitP4BODYP6UPDATEPiiii"></span><span id="FinalizeUpdateAngMYGalHabit__BODYP.UPDATEP.iP.i.i.i"></span><span class="target" id="galhabit_8c_1a4b6a0bd2802182b1c2d4697f971665c0"></span>void <code class="sig-name descname">FinalizeUpdateAngMYGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int *<em>iEqn</em>, int <em>iVar</em>, int <em>iBody</em>, int <em>iFoo</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427FinalizeUpdateAngMYGalHabitP4BODYP6UPDATEPiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv427FinalizeUpdateAngMZGalHabitP4BODYP6UPDATEPiiii">
+<span id="_CPPv327FinalizeUpdateAngMZGalHabitP4BODYP6UPDATEPiiii"></span><span id="_CPPv227FinalizeUpdateAngMZGalHabitP4BODYP6UPDATEPiiii"></span><span id="FinalizeUpdateAngMZGalHabit__BODYP.UPDATEP.iP.i.i.i"></span><span class="target" id="galhabit_8c_1ab16c3c1fafb552df2f716d432301d915"></span>void <code class="sig-name descname">FinalizeUpdateAngMZGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int *<em>iEqn</em>, int <em>iVar</em>, int <em>iBody</em>, int <em>iFoo</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427FinalizeUpdateAngMZGalHabitP4BODYP6UPDATEPiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411HaltDisruptP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv311HaltDisruptP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv211HaltDisruptP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="HaltDisrupt__BODYP.EVOLVEP.HALTP.IOP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="galhabit_8c_1aba7f5e84e7deb2ddb5528ab6962e392a"></span>int <code class="sig-name descname">HaltDisrupt</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT">HALT</a> *<em>halt</em>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO">IO</a> *<em>io</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411HaltDisruptP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414HaltBadImpulseP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv314HaltBadImpulseP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv214HaltBadImpulseP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="HaltBadImpulse__BODYP.EVOLVEP.HALTP.IOP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="galhabit_8c_1a5c698043640b32b936d5aa3364b68e30"></span>int <code class="sig-name descname">HaltBadImpulse</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT">HALT</a> *<em>halt</em>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO">IO</a> *<em>io</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414HaltBadImpulseP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418CountHaltsGalHabitP4HALTPi">
+<span id="_CPPv318CountHaltsGalHabitP4HALTPi"></span><span id="_CPPv218CountHaltsGalHabitP4HALTPi"></span><span id="CountHaltsGalHabit__HALTP.iP"></span><span class="target" id="galhabit_8c_1a94ff7af4f045c98a20763d2a89631165"></span>void <code class="sig-name descname">CountHaltsGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT">HALT</a> *<em>halt</em>, int *<em>iNumHalts</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418CountHaltsGalHabitP4HALTPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418VerifyHaltGalHabitP4BODYP7CONTROLP7OPTIONSiPi">
+<span id="_CPPv318VerifyHaltGalHabitP4BODYP7CONTROLP7OPTIONSiPi"></span><span id="_CPPv218VerifyHaltGalHabitP4BODYP7CONTROLP7OPTIONSiPi"></span><span id="VerifyHaltGalHabit__BODYP.CONTROLP.OPTIONSP.i.iP"></span><span class="target" id="galhabit_8c_1a51ce4b1e0ba6db9734f3ea34bf7e907e"></span>void <code class="sig-name descname">VerifyHaltGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, int <em>iBody</em>, int *<em>iHalt</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418VerifyHaltGalHabitP4BODYP7CONTROLP7OPTIONSiPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414WriteBodyPeriQP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv314WriteBodyPeriQP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv214WriteBodyPeriQP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteBodyPeriQ__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="galhabit_8c_1a0ab5234193ddf467be681149099a9356"></span>void <code class="sig-name descname">WriteBodyPeriQ</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414WriteBodyPeriQP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413WriteBodyEccXP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv313WriteBodyEccXP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv213WriteBodyEccXP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteBodyEccX__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="galhabit_8c_1adb5d6d0d2d01f1ada42594b7d99b5a75"></span>void <code class="sig-name descname">WriteBodyEccX</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413WriteBodyEccXP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413WriteBodyEccYP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv313WriteBodyEccYP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv213WriteBodyEccYP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteBodyEccY__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="galhabit_8c_1a8ed6801f4b8e3f8ac58586586e4e1e78"></span>void <code class="sig-name descname">WriteBodyEccY</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413WriteBodyEccYP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413WriteBodyEccZP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv313WriteBodyEccZP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv213WriteBodyEccZP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteBodyEccZ__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="galhabit_8c_1ae8df9b2a9284aa2e4cdd0544731f8ca2"></span>void <code class="sig-name descname">WriteBodyEccZ</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413WriteBodyEccZP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414WriteBodyAngMXP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv314WriteBodyAngMXP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv214WriteBodyAngMXP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteBodyAngMX__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="galhabit_8c_1ae19ef9402d422d06464a6d25653af184"></span>void <code class="sig-name descname">WriteBodyAngMX</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414WriteBodyAngMXP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414WriteBodyAngMYP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv314WriteBodyAngMYP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv214WriteBodyAngMYP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteBodyAngMY__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="galhabit_8c_1a82520dd2032d6d41b397fad826f42097"></span>void <code class="sig-name descname">WriteBodyAngMY</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414WriteBodyAngMYP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414WriteBodyAngMZP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv314WriteBodyAngMZP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv214WriteBodyAngMZP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteBodyAngMZ__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="galhabit_8c_1adeccb4f0cc62814d20ccf07520e474e4"></span>void <code class="sig-name descname">WriteBodyAngMZ</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414WriteBodyAngMZP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416WriteNEncountersP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv316WriteNEncountersP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv216WriteNEncountersP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteNEncounters__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="galhabit_8c_1a7d3cac67e4c91550cfc3dbcad8dbf086"></span>void <code class="sig-name descname">WriteNEncounters</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416WriteNEncountersP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416WriteNBadImpulseP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv316WriteNBadImpulseP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv216WriteNBadImpulseP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteNBadImpulse__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="galhabit_8c_1a1c6eaeb55c346ab153f2d4b6d478d05e"></span>void <code class="sig-name descname">WriteNBadImpulse</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416WriteNBadImpulseP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413WriteFVelDispP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv313WriteFVelDispP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv213WriteFVelDispP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteFVelDisp__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="galhabit_8c_1aea97b616cb6328c856b5f020bd8df9a8"></span>void <code class="sig-name descname">WriteFVelDisp</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413WriteFVelDispP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420WriteDEccDtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv320WriteDEccDtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv220WriteDEccDtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteDEccDtGalHTidal__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="galhabit_8c_1ac35c1f2795a4b6646eda51765f6249aa"></span>void <code class="sig-name descname">WriteDEccDtGalHTidal</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420WriteDEccDtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420WriteDIncDtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv320WriteDIncDtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv220WriteDIncDtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteDIncDtGalHTidal__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="galhabit_8c_1a37bf0e64729db974ef390f47fa507674"></span>void <code class="sig-name descname">WriteDIncDtGalHTidal</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420WriteDIncDtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv422WriteDLongADtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv322WriteDLongADtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv222WriteDLongADtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteDLongADtGalHTidal__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="galhabit_8c_1a3b423a8d639e88b28332f12e429a85bb"></span>void <code class="sig-name descname">WriteDLongADtGalHTidal</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422WriteDLongADtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv421WriteDArgPDtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv321WriteDArgPDtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv221WriteDArgPDtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteDArgPDtGalHTidal__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="galhabit_8c_1abb7ce01238fed9aad22a93da1914cfd2"></span>void <code class="sig-name descname">WriteDArgPDtGalHTidal</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421WriteDArgPDtGalHTidalP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv424InitializeOutputGalHabitP6OUTPUTA_13fnWriteOutput">
+<span id="_CPPv324InitializeOutputGalHabitP6OUTPUTA_13fnWriteOutput"></span><span id="_CPPv224InitializeOutputGalHabitP6OUTPUTA_13fnWriteOutput"></span><span id="InitializeOutputGalHabit__OUTPUTP.fnWriteOutputA"></span><span class="target" id="galhabit_8c_1aa7e83983d5461eaf00e78aecbfdb01e5"></span>void <code class="sig-name descname">InitializeOutputGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv413fnWriteOutput" title="fnWriteOutput">fnWriteOutput</a> <em>fnWrite</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424InitializeOutputGalHabitP6OUTPUTA_13fnWriteOutput" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418LogOptionsGalHabitP7CONTROLP4FILE">
+<span id="_CPPv318LogOptionsGalHabitP7CONTROLP4FILE"></span><span id="_CPPv218LogOptionsGalHabitP7CONTROLP4FILE"></span><span id="LogOptionsGalHabit__CONTROLP.FILEP"></span><span class="target" id="galhabit_8c_1a2123c233badbeb0911c1969d3ead153d"></span>void <code class="sig-name descname">LogOptionsGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, FILE *<em>fp</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418LogOptionsGalHabitP7CONTROLP4FILE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411LogGalHabitP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILE">
+<span id="_CPPv311LogGalHabitP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILE"></span><span id="_CPPv211LogGalHabitP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILE"></span><span id="LogGalHabit__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UPDATEP.fnWriteOutputA.FILEP"></span><span class="target" id="galhabit_8c_1a48d536882c9abbcdbaaea35f02a3185a"></span>void <code class="sig-name descname">LogGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv413fnWriteOutput" title="fnWriteOutput">fnWriteOutput</a> <em>fnWrite</em>[], FILE *<em>fp</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411LogGalHabitP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415LogBodyGalHabitP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILEi">
+<span id="_CPPv315LogBodyGalHabitP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILEi"></span><span id="_CPPv215LogBodyGalHabitP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILEi"></span><span id="LogBodyGalHabit__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UPDATEP.fnWriteOutputA.FILEP.i"></span><span class="target" id="galhabit_8c_1a8c79fcef931a31aea2ff2ce8a4c08755"></span>void <code class="sig-name descname">LogBodyGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv413fnWriteOutput" title="fnWriteOutput">fnWriteOutput</a> <em>fnWrite</em>[], FILE *<em>fp</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415LogBodyGalHabitP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417AddModuleGalHabitP7CONTROLP6MODULEii">
+<span id="_CPPv317AddModuleGalHabitP7CONTROLP6MODULEii"></span><span id="_CPPv217AddModuleGalHabitP7CONTROLP6MODULEii"></span><span id="AddModuleGalHabit__CONTROLP.MODULEP.i.i"></span><span class="target" id="galhabit_8c_1a1eb9f5fc690ca53e21dd366192044d4c"></span>void <code class="sig-name descname">AddModuleGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE">MODULE</a> *<em>module</em>, int <em>iBody</em>, int <em>iModule</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417AddModuleGalHabitP7CONTROLP6MODULEii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416PropsAuxGalHabitP4BODYP6EVOLVEP2IOP6UPDATEi">
+<span id="_CPPv316PropsAuxGalHabitP4BODYP6EVOLVEP2IOP6UPDATEi"></span><span id="_CPPv216PropsAuxGalHabitP4BODYP6EVOLVEP2IOP6UPDATEi"></span><span id="PropsAuxGalHabit__BODYP.EVOLVEP.IOP.UPDATEP.i"></span><span class="target" id="galhabit_8c_1aac4c17f1efc0bb5fe9feac6db59b9f54"></span>void <code class="sig-name descname">PropsAuxGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO">IO</a> *<em>io</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416PropsAuxGalHabitP4BODYP6EVOLVEP2IOP6UPDATEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv421ForceBehaviorGalHabitP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii">
+<span id="_CPPv321ForceBehaviorGalHabitP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii"></span><span id="_CPPv221ForceBehaviorGalHabitP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii"></span><span id="ForceBehaviorGalHabit__BODYP.MODULEP.EVOLVEP.IOP.SYSTEMP.UPDATEP.fnUpdateVariablePPP.i.i"></span><span class="target" id="galhabit_8c_1aa21093c5284cabe686722784cf98604e"></span>void <code class="sig-name descname">ForceBehaviorGalHabit</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE">MODULE</a> *<em>module</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO">IO</a> *<em>io</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iBody</em>, int <em>iModule</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421ForceBehaviorGalHabitP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv47Rot2BinP4BODYi">
+<span id="_CPPv37Rot2BinP4BODYi"></span><span id="_CPPv27Rot2BinP4BODYi"></span><span id="Rot2Bin__BODYP.i"></span><span class="target" id="galhabit_8c_1a36c77046c67def3b896ef63f5e24012d"></span>void <code class="sig-name descname">Rot2Bin</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv47Rot2BinP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410CalcEccVecP4BODYi">
+<span id="_CPPv310CalcEccVecP4BODYi"></span><span id="_CPPv210CalcEccVecP4BODYi"></span><span id="CalcEccVec__BODYP.i"></span><span class="target" id="galhabit_8c_1a3e04d06a3b45dfc78ddd2c72ed2671c4"></span>void <code class="sig-name descname">CalcEccVec</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410CalcEccVecP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411CalcAngMVecP4BODYi">
+<span id="_CPPv311CalcAngMVecP4BODYi"></span><span id="_CPPv211CalcAngMVecP4BODYi"></span><span id="CalcAngMVec__BODYP.i"></span><span class="target" id="galhabit_8c_1a4fe869d914674f23901d0d4b47e57173"></span>void <code class="sig-name descname">CalcAngMVec</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411CalcAngMVecP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416fniCheck_disruptP4BODYP6SYSTEMi">
+<span id="_CPPv316fniCheck_disruptP4BODYP6SYSTEMi"></span><span id="_CPPv216fniCheck_disruptP4BODYP6SYSTEMi"></span><span id="fniCheck_disrupt__BODYP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1ac3b5518ec0dd0bce1cd96235daaa1ec9"></span>int <code class="sig-name descname">fniCheck_disrupt</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fniCheck_disruptP4BODYP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416fndRandom_doublev">
+<span id="_CPPv316fndRandom_doublev"></span><span id="_CPPv216fndRandom_doublev"></span><span id="fndRandom_double"></span><span class="target" id="galhabit_8c_1ab98c9d643e7ce43592e588038da1ffa5"></span>double <code class="sig-name descname">fndRandom_double</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fndRandom_doublev" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413fniRandom_inti">
+<span id="_CPPv313fniRandom_inti"></span><span id="_CPPv213fniRandom_inti"></span><span id="fniRandom_int__i"></span><span class="target" id="galhabit_8c_1ab6bd33798a1f42933f7c59935974e896"></span>int <code class="sig-name descname">fniRandom_int</code><span class="sig-paren">(</span>int <em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fniRandom_inti" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fniCheck_drP4BODYP6EVOLVEP6SYSTEMi">
+<span id="_CPPv311fniCheck_drP4BODYP6EVOLVEP6SYSTEMi"></span><span id="_CPPv211fniCheck_drP4BODYP6EVOLVEP6SYSTEMi"></span><span id="fniCheck_dr__BODYP.EVOLVEP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1ae33e85d6d431633c62837ed557af47ff"></span>int <code class="sig-name descname">fniCheck_dr</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fniCheck_drP4BODYP6EVOLVEP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415GetStarVelocityP6SYSTEM">
+<span id="_CPPv315GetStarVelocityP6SYSTEM"></span><span id="_CPPv215GetStarVelocityP6SYSTEM"></span><span id="GetStarVelocity__SYSTEMP"></span><span class="target" id="galhabit_8c_1a94fdee6585c9659ae0390d80927bb158"></span>void <code class="sig-name descname">GetStarVelocity</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415GetStarVelocityP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415fndNsMinus6to15d">
+<span id="_CPPv315fndNsMinus6to15d"></span><span id="_CPPv215fndNsMinus6to15d"></span><span id="fndNsMinus6to15__double"></span><span class="target" id="galhabit_8c_1a83f5bfff87ff7326e345c8e0275a25e4"></span>double <code class="sig-name descname">fndNsMinus6to15</code><span class="sig-paren">(</span>double <em>dMagV</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fndNsMinus6to15d" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fndMag2massd">
+<span id="_CPPv311fndMag2massd"></span><span id="_CPPv211fndMag2massd"></span><span id="fndMag2mass__double"></span><span class="target" id="galhabit_8c_1a6f86f3bb7f97d464ec546ff33f858235"></span>double <code class="sig-name descname">fndMag2mass</code><span class="sig-paren">(</span>double <em>dMagV</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fndMag2massd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417CalcEncounterRateP6SYSTEM">
+<span id="_CPPv317CalcEncounterRateP6SYSTEM"></span><span id="_CPPv217CalcEncounterRateP6SYSTEM"></span><span id="CalcEncounterRate__SYSTEMP"></span><span class="target" id="galhabit_8c_1ae9175609997a05cbaab0b2b5adae7fd9"></span>void <code class="sig-name descname">CalcEncounterRate</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417CalcEncounterRateP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411GetStarMassP6SYSTEM">
+<span id="_CPPv311GetStarMassP6SYSTEM"></span><span id="_CPPv211GetStarMassP6SYSTEM"></span><span id="GetStarMass__SYSTEMP"></span><span class="target" id="galhabit_8c_1a616402e56adb6b0f06f26b99df33ef8d"></span>void <code class="sig-name descname">GetStarMass</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411GetStarMassP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420CalcMeanVelDispSolarP6SYSTEM">
+<span id="_CPPv320CalcMeanVelDispSolarP6SYSTEM"></span><span id="_CPPv220CalcMeanVelDispSolarP6SYSTEM"></span><span id="CalcMeanVelDispSolar__SYSTEMP"></span><span class="target" id="galhabit_8c_1ac57555ce2f7d4b40bb185891acdea739"></span>void <code class="sig-name descname">CalcMeanVelDispSolar</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420CalcMeanVelDispSolarP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412VelocityDispP6SYSTEM">
+<span id="_CPPv312VelocityDispP6SYSTEM"></span><span id="_CPPv212VelocityDispP6SYSTEM"></span><span id="VelocityDisp__SYSTEMP"></span><span class="target" id="galhabit_8c_1ac2929d0bde35d92822c9948fabb8162b"></span>void <code class="sig-name descname">VelocityDisp</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412VelocityDispP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412VelocityApexP6SYSTEM">
+<span id="_CPPv312VelocityApexP6SYSTEM"></span><span id="_CPPv212VelocityApexP6SYSTEM"></span><span id="VelocityApex__SYSTEMP"></span><span class="target" id="galhabit_8c_1a2d636f493a25fd1aee9552486d70f0c1"></span>void <code class="sig-name descname">VelocityApex</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412VelocityApexP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419GetRelativeVelocityP6SYSTEM">
+<span id="_CPPv319GetRelativeVelocityP6SYSTEM"></span><span id="_CPPv219GetRelativeVelocityP6SYSTEM"></span><span id="GetRelativeVelocity__SYSTEMP"></span><span class="target" id="galhabit_8c_1a9767d64be73784deeb726a1c6e928810"></span>void <code class="sig-name descname">GetRelativeVelocity</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419GetRelativeVelocityP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417fndNearbyStarDistd">
+<span id="_CPPv317fndNearbyStarDistd"></span><span id="_CPPv217fndNearbyStarDistd"></span><span id="fndNearbyStarDist__double"></span><span class="target" id="galhabit_8c_1a909c6c33ce41b84511fe26de4fd7107b"></span>double <code class="sig-name descname">fndNearbyStarDist</code><span class="sig-paren">(</span>double <em>dMagV</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndNearbyStarDistd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fndNearbyStarFrEncP6SYSTEMd">
+<span id="_CPPv318fndNearbyStarFrEncP6SYSTEMd"></span><span id="_CPPv218fndNearbyStarFrEncP6SYSTEMd"></span><span id="fndNearbyStarFrEnc__SYSTEMP.double"></span><span class="target" id="galhabit_8c_1ac0f96f22b1f59f5710fb3fe90c4aee69"></span>double <code class="sig-name descname">fndNearbyStarFrEnc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, double <em>dMagV</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndNearbyStarFrEncP6SYSTEMd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415GetStarPositionP6SYSTEM">
+<span id="_CPPv315GetStarPositionP6SYSTEM"></span><span id="_CPPv215GetStarPositionP6SYSTEM"></span><span id="GetStarPosition__SYSTEMP"></span><span class="target" id="galhabit_8c_1a8f14f03eb1f34b33f06c41553f98e3e7"></span>void <code class="sig-name descname">GetStarPosition</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415GetStarPositionP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415CalcImpactParamP4BODYP6SYSTEMi">
+<span id="_CPPv315CalcImpactParamP4BODYP6SYSTEMi"></span><span id="_CPPv215CalcImpactParamP4BODYP6SYSTEMi"></span><span id="CalcImpactParam__BODYP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a7de7f76f2725a020b3d69728b7974b3c"></span>void <code class="sig-name descname">CalcImpactParam</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415CalcImpactParamP4BODYP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411ApplyDeltaVP4BODYP6SYSTEMi">
+<span id="_CPPv311ApplyDeltaVP4BODYP6SYSTEMi"></span><span id="_CPPv211ApplyDeltaVP4BODYP6SYSTEMi"></span><span id="ApplyDeltaV__BODYP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1acfd3d03f5114c4a548d49a3357152360"></span>void <code class="sig-name descname">ApplyDeltaV</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411ApplyDeltaVP4BODYP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49AdvanceMAP4BODYP6SYSTEMi">
+<span id="_CPPv39AdvanceMAP4BODYP6SYSTEMi"></span><span id="_CPPv29AdvanceMAP4BODYP6SYSTEMi"></span><span id="AdvanceMA__BODYP.SYSTEMP.i"></span><span class="target" id="galhabit_8c_1a59320c2f2433ab2bdf980e6404682f67"></span>void <code class="sig-name descname">AdvanceMA</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49AdvanceMAP4BODYP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417NextEncounterTimeP6SYSTEMP6EVOLVEd">
+<span id="_CPPv317NextEncounterTimeP6SYSTEMP6EVOLVEd"></span><span id="_CPPv217NextEncounterTimeP6SYSTEMP6EVOLVEd"></span><span id="NextEncounterTime__SYSTEMP.EVOLVEP.double"></span><span class="target" id="galhabit_8c_1a7b935b8a44a344e01ba7594952939dbe"></span>void <code class="sig-name descname">NextEncounterTime</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, double <em>dTime</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417NextEncounterTimeP6SYSTEMP6EVOLVEd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48testrandP6SYSTEM">
+<span id="_CPPv38testrandP6SYSTEM"></span><span id="_CPPv28testrandP6SYSTEM"></span><span id="testrand__SYSTEMP"></span><span class="target" id="galhabit_8c_1a3c5c9e099f0a59aaa657bbdf12d51e17"></span>void <code class="sig-name descname">testrand</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48testrandP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420fndDarkMatterDensityP6SYSTEMd">
+<span id="_CPPv320fndDarkMatterDensityP6SYSTEMd"></span><span id="_CPPv220fndDarkMatterDensityP6SYSTEMd"></span><span id="fndDarkMatterDensity__SYSTEMP.double"></span><span class="target" id="galhabit_8c_1a3758f20ba88cbd45fbcf6fada33b8d02"></span>double <code class="sig-name descname">fndDarkMatterDensity</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, double <em>dRad</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420fndDarkMatterDensityP6SYSTEMd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413fndISMDensityP6SYSTEMd">
+<span id="_CPPv313fndISMDensityP6SYSTEMd"></span><span id="_CPPv213fndISMDensityP6SYSTEMd"></span><span id="fndISMDensity__SYSTEMP.double"></span><span class="target" id="galhabit_8c_1a167fd930eaf8b3d8881271ac2fffd93a"></span>double <code class="sig-name descname">fndISMDensity</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, double <em>dRad</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fndISMDensityP6SYSTEMd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48fndDexDJP4BODYi">
+<span id="_CPPv38fndDexDJP4BODYi"></span><span id="_CPPv28fndDexDJP4BODYi"></span><span id="fndDexDJ__BODYP.i"></span><span class="target" id="galhabit_8c_1a24822abde2e838a660b6742abb649203"></span>double <code class="sig-name descname">fndDexDJ</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48fndDexDJP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49fndDexDlad">
+<span id="_CPPv39fndDexDlad"></span><span id="_CPPv29fndDexDlad"></span><span id="fndDexDla__double"></span><span class="target" id="galhabit_8c_1a637931febd302d33e8b9b2ecb1a53332"></span>double <code class="sig-name descname">fndDexDla</code><span class="sig-paren">(</span>double <em>dEccY</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49fndDexDlad" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49fndDexDapP4BODYi">
+<span id="_CPPv39fndDexDapP4BODYi"></span><span id="_CPPv29fndDexDapP4BODYi"></span><span id="fndDexDap__BODYP.i"></span><span class="target" id="galhabit_8c_1a7f19e9d9b4f3ce16c7255ecef3a19bef"></span>double <code class="sig-name descname">fndDexDap</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49fndDexDapP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48fndDeyDJP4BODYi">
+<span id="_CPPv38fndDeyDJP4BODYi"></span><span id="_CPPv28fndDeyDJP4BODYi"></span><span id="fndDeyDJ__BODYP.i"></span><span class="target" id="galhabit_8c_1a7349bd524f49f55fe0abed71cb233b35"></span>double <code class="sig-name descname">fndDeyDJ</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48fndDeyDJP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49fndDeyDlad">
+<span id="_CPPv39fndDeyDlad"></span><span id="_CPPv29fndDeyDlad"></span><span id="fndDeyDla__double"></span><span class="target" id="galhabit_8c_1afc991e774711067f4d3ad525fd535aed"></span>double <code class="sig-name descname">fndDeyDla</code><span class="sig-paren">(</span>double <em>dEccX</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49fndDeyDlad" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49fndDeyDapP4BODYi">
+<span id="_CPPv39fndDeyDapP4BODYi"></span><span id="_CPPv29fndDeyDapP4BODYi"></span><span id="fndDeyDap__BODYP.i"></span><span class="target" id="galhabit_8c_1a1a343063dacdef50b4eb6a0b869c9aac"></span>double <code class="sig-name descname">fndDeyDap</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49fndDeyDapP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48fndDezDJP4BODYi">
+<span id="_CPPv38fndDezDJP4BODYi"></span><span id="_CPPv28fndDezDJP4BODYi"></span><span id="fndDezDJ__BODYP.i"></span><span class="target" id="galhabit_8c_1a80a9f4b235eaf25240a095ccf73a8462"></span>double <code class="sig-name descname">fndDezDJ</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48fndDezDJP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49fndDezDapddd">
+<span id="_CPPv39fndDezDapddd"></span><span id="_CPPv29fndDezDapddd"></span><span id="fndDezDap__double.double.double"></span><span class="target" id="galhabit_8c_1ac029d1dbde0e708f129ea4c323bed4c0"></span>double <code class="sig-name descname">fndDezDap</code><span class="sig-paren">(</span>double <em>dArgP</em>, double <em>dEcc</em>, double <em>dInc</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49fndDezDapddd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415fndGalHabitDJDtP4BODYP6SYSTEMPi">
+<span id="_CPPv315fndGalHabitDJDtP4BODYP6SYSTEMPi"></span><span id="_CPPv215fndGalHabitDJDtP4BODYP6SYSTEMPi"></span><span id="fndGalHabitDJDt__BODYP.SYSTEMP.iP"></span><span class="target" id="galhabit_8c_1a340038839bf8623782545d3cbf74b8fb"></span>double <code class="sig-name descname">fndGalHabitDJDt</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fndGalHabitDJDtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fndGalHabitDArgPDtP4BODYP6SYSTEMPi">
+<span id="_CPPv318fndGalHabitDArgPDtP4BODYP6SYSTEMPi"></span><span id="_CPPv218fndGalHabitDArgPDtP4BODYP6SYSTEMPi"></span><span id="fndGalHabitDArgPDt__BODYP.SYSTEMP.iP"></span><span class="target" id="galhabit_8c_1a937093066aac4c3afe482b919d389b44"></span>double <code class="sig-name descname">fndGalHabitDArgPDt</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndGalHabitDArgPDtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419fndGalHabitDLongADtP4BODYP6SYSTEMPi">
+<span id="_CPPv319fndGalHabitDLongADtP4BODYP6SYSTEMPi"></span><span id="_CPPv219fndGalHabitDLongADtP4BODYP6SYSTEMPi"></span><span id="fndGalHabitDLongADt__BODYP.SYSTEMP.iP"></span><span class="target" id="galhabit_8c_1ab154b5e6cf04a2fa295cc6f52d89859c"></span>double <code class="sig-name descname">fndGalHabitDLongADt</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fndGalHabitDLongADtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423fndGalHabitDEccXDtTidalP4BODYP6SYSTEMPi">
+<span id="_CPPv323fndGalHabitDEccXDtTidalP4BODYP6SYSTEMPi"></span><span id="_CPPv223fndGalHabitDEccXDtTidalP4BODYP6SYSTEMPi"></span><span id="fndGalHabitDEccXDtTidal__BODYP.SYSTEMP.iP"></span><span class="target" id="galhabit_8c_1a0204d67439a0a3c2b310d142c9775c6a"></span>double <code class="sig-name descname">fndGalHabitDEccXDtTidal</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423fndGalHabitDEccXDtTidalP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423fndGalHabitDEccYDtTidalP4BODYP6SYSTEMPi">
+<span id="_CPPv323fndGalHabitDEccYDtTidalP4BODYP6SYSTEMPi"></span><span id="_CPPv223fndGalHabitDEccYDtTidalP4BODYP6SYSTEMPi"></span><span id="fndGalHabitDEccYDtTidal__BODYP.SYSTEMP.iP"></span><span class="target" id="galhabit_8c_1ae42b8a71ff7c2b26aad1440073e31425"></span>double <code class="sig-name descname">fndGalHabitDEccYDtTidal</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423fndGalHabitDEccYDtTidalP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423fndGalHabitDEccZDtTidalP4BODYP6SYSTEMPi">
+<span id="_CPPv323fndGalHabitDEccZDtTidalP4BODYP6SYSTEMPi"></span><span id="_CPPv223fndGalHabitDEccZDtTidalP4BODYP6SYSTEMPi"></span><span id="fndGalHabitDEccZDtTidal__BODYP.SYSTEMP.iP"></span><span class="target" id="galhabit_8c_1a49f1413d5435eea98a1b89171b569280"></span>double <code class="sig-name descname">fndGalHabitDEccZDtTidal</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423fndGalHabitDEccZDtTidalP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv424fndGalHabitDAngMXDtTidalP4BODYP6SYSTEMPi">
+<span id="_CPPv324fndGalHabitDAngMXDtTidalP4BODYP6SYSTEMPi"></span><span id="_CPPv224fndGalHabitDAngMXDtTidalP4BODYP6SYSTEMPi"></span><span id="fndGalHabitDAngMXDtTidal__BODYP.SYSTEMP.iP"></span><span class="target" id="galhabit_8c_1adf78507131c2754249e255e450e66c2d"></span>double <code class="sig-name descname">fndGalHabitDAngMXDtTidal</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424fndGalHabitDAngMXDtTidalP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv424fndGalHabitDAngMYDtTidalP4BODYP6SYSTEMPi">
+<span id="_CPPv324fndGalHabitDAngMYDtTidalP4BODYP6SYSTEMPi"></span><span id="_CPPv224fndGalHabitDAngMYDtTidalP4BODYP6SYSTEMPi"></span><span id="fndGalHabitDAngMYDtTidal__BODYP.SYSTEMP.iP"></span><span class="target" id="galhabit_8c_1aa29d561403b2f47c9f783cd43c7f153f"></span>double <code class="sig-name descname">fndGalHabitDAngMYDtTidal</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424fndGalHabitDAngMYDtTidalP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv424fndGalHabitDAngMZDtTidalP4BODYP6SYSTEMPi">
+<span id="_CPPv324fndGalHabitDAngMZDtTidalP4BODYP6SYSTEMPi"></span><span id="_CPPv224fndGalHabitDAngMZDtTidalP4BODYP6SYSTEMPi"></span><span id="fndGalHabitDAngMZDtTidal__BODYP.SYSTEMP.iP"></span><span class="target" id="galhabit_8c_1abbf84e4c0f918751695ae7c15bab77fa"></span>double <code class="sig-name descname">fndGalHabitDAngMZDtTidal</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424fndGalHabitDAngMZDtTidalP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49fndQuadC2P4BODYPi">
+<span id="_CPPv39fndQuadC2P4BODYPi"></span><span id="_CPPv29fndQuadC2P4BODYPi"></span><span id="fndQuadC2__BODYP.iP"></span><span class="target" id="galhabit_8c_1aa8d5cc81a1f3812b872ba0827cbac618"></span>double <code class="sig-name descname">fndQuadC2</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49fndQuadC2P4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fndDQuadDEccXInnerP4BODYPi">
+<span id="_CPPv318fndDQuadDEccXInnerP4BODYPi"></span><span id="_CPPv218fndDQuadDEccXInnerP4BODYPi"></span><span id="fndDQuadDEccXInner__BODYP.iP"></span><span class="target" id="galhabit_8c_1a3e4aee5a0a93f5b5c8dbefa2616ba84e"></span>double <code class="sig-name descname">fndDQuadDEccXInner</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndDQuadDEccXInnerP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fndDQuadDEccYInnerP4BODYPi">
+<span id="_CPPv318fndDQuadDEccYInnerP4BODYPi"></span><span id="_CPPv218fndDQuadDEccYInnerP4BODYPi"></span><span id="fndDQuadDEccYInner__BODYP.iP"></span><span class="target" id="galhabit_8c_1ab391f07aedca8d38772d08777609e4d9"></span>double <code class="sig-name descname">fndDQuadDEccYInner</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndDQuadDEccYInnerP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fndDQuadDEccZInnerP4BODYPi">
+<span id="_CPPv318fndDQuadDEccZInnerP4BODYPi"></span><span id="_CPPv218fndDQuadDEccZInnerP4BODYPi"></span><span id="fndDQuadDEccZInner__BODYP.iP"></span><span class="target" id="galhabit_8c_1a42856a52b53d3da4edd5ad3f6cdeab72"></span>double <code class="sig-name descname">fndDQuadDEccZInner</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndDQuadDEccZInnerP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419fndDQuadDAngMXInnerP4BODYPi">
+<span id="_CPPv319fndDQuadDAngMXInnerP4BODYPi"></span><span id="_CPPv219fndDQuadDAngMXInnerP4BODYPi"></span><span id="fndDQuadDAngMXInner__BODYP.iP"></span><span class="target" id="galhabit_8c_1aa5c6351d0ba8ff6067a909bab465bf2a"></span>double <code class="sig-name descname">fndDQuadDAngMXInner</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fndDQuadDAngMXInnerP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419fndDQuadDAngMYInnerP4BODYPi">
+<span id="_CPPv319fndDQuadDAngMYInnerP4BODYPi"></span><span id="_CPPv219fndDQuadDAngMYInnerP4BODYPi"></span><span id="fndDQuadDAngMYInner__BODYP.iP"></span><span class="target" id="galhabit_8c_1af3c04ba8ece7eb34287a9ce741e16fc8"></span>double <code class="sig-name descname">fndDQuadDAngMYInner</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fndDQuadDAngMYInnerP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419fndDQuadDAngMZInnerP4BODYPi">
+<span id="_CPPv319fndDQuadDAngMZInnerP4BODYPi"></span><span id="_CPPv219fndDQuadDAngMZInnerP4BODYPi"></span><span id="fndDQuadDAngMZInner__BODYP.iP"></span><span class="target" id="galhabit_8c_1a6893f512218b01cdae8f3bebcc8c7ba9"></span>double <code class="sig-name descname">fndDQuadDAngMZInner</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fndDQuadDAngMZInnerP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419fndDQuadDAngMXOuterP4BODYPi">
+<span id="_CPPv319fndDQuadDAngMXOuterP4BODYPi"></span><span id="_CPPv219fndDQuadDAngMXOuterP4BODYPi"></span><span id="fndDQuadDAngMXOuter__BODYP.iP"></span><span class="target" id="galhabit_8c_1ac01e2ceb9ac722943faa6c6752ea30fd"></span>double <code class="sig-name descname">fndDQuadDAngMXOuter</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fndDQuadDAngMXOuterP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419fndDQuadDAngMYOuterP4BODYPi">
+<span id="_CPPv319fndDQuadDAngMYOuterP4BODYPi"></span><span id="_CPPv219fndDQuadDAngMYOuterP4BODYPi"></span><span id="fndDQuadDAngMYOuter__BODYP.iP"></span><span class="target" id="galhabit_8c_1a5c76ecc56c86b20472b80bed05e4a921"></span>double <code class="sig-name descname">fndDQuadDAngMYOuter</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fndDQuadDAngMYOuterP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419fndDQuadDAngMZOuterP4BODYPi">
+<span id="_CPPv319fndDQuadDAngMZOuterP4BODYPi"></span><span id="_CPPv219fndDQuadDAngMZOuterP4BODYPi"></span><span id="fndDQuadDAngMZOuter__BODYP.iP"></span><span class="target" id="galhabit_8c_1ac17742186b5a997d3389685f2d2c3865"></span>double <code class="sig-name descname">fndDQuadDAngMZOuter</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fndDQuadDAngMZOuterP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv421fndGalHabitDAngMXDtBVP4BODYP6SYSTEMPi">
+<span id="_CPPv321fndGalHabitDAngMXDtBVP4BODYP6SYSTEMPi"></span><span id="_CPPv221fndGalHabitDAngMXDtBVP4BODYP6SYSTEMPi"></span><span id="fndGalHabitDAngMXDtBV__BODYP.SYSTEMP.iP"></span><span class="target" id="galhabit_8c_1a1a818a212c7e634dcfb95d37ec98d33c"></span>double <code class="sig-name descname">fndGalHabitDAngMXDtBV</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421fndGalHabitDAngMXDtBVP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv421fndGalHabitDAngMYDtBVP4BODYP6SYSTEMPi">
+<span id="_CPPv321fndGalHabitDAngMYDtBVP4BODYP6SYSTEMPi"></span><span id="_CPPv221fndGalHabitDAngMYDtBVP4BODYP6SYSTEMPi"></span><span id="fndGalHabitDAngMYDtBV__BODYP.SYSTEMP.iP"></span><span class="target" id="galhabit_8c_1a43d95425c8f1d4d4a0f5cb5878b09d85"></span>double <code class="sig-name descname">fndGalHabitDAngMYDtBV</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421fndGalHabitDAngMYDtBVP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv421fndGalHabitDAngMZDtBVP4BODYP6SYSTEMPi">
+<span id="_CPPv321fndGalHabitDAngMZDtBVP4BODYP6SYSTEMPi"></span><span id="_CPPv221fndGalHabitDAngMZDtBVP4BODYP6SYSTEMPi"></span><span id="fndGalHabitDAngMZDtBV__BODYP.SYSTEMP.iP"></span><span class="target" id="galhabit_8c_1a4a60fe0c34235d98969b04cd40355a18"></span>double <code class="sig-name descname">fndGalHabitDAngMZDtBV</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421fndGalHabitDAngMZDtBVP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420fndGalHabitDEccXDtBVP4BODYP6SYSTEMPi">
+<span id="_CPPv320fndGalHabitDEccXDtBVP4BODYP6SYSTEMPi"></span><span id="_CPPv220fndGalHabitDEccXDtBVP4BODYP6SYSTEMPi"></span><span id="fndGalHabitDEccXDtBV__BODYP.SYSTEMP.iP"></span><span class="target" id="galhabit_8c_1a4a39b1d9b7a6e6431d12eb7cc5691f48"></span>double <code class="sig-name descname">fndGalHabitDEccXDtBV</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420fndGalHabitDEccXDtBVP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420fndGalHabitDEccYDtBVP4BODYP6SYSTEMPi">
+<span id="_CPPv320fndGalHabitDEccYDtBVP4BODYP6SYSTEMPi"></span><span id="_CPPv220fndGalHabitDEccYDtBVP4BODYP6SYSTEMPi"></span><span id="fndGalHabitDEccYDtBV__BODYP.SYSTEMP.iP"></span><span class="target" id="galhabit_8c_1add0599cc63f667de919ad98c033e04ae"></span>double <code class="sig-name descname">fndGalHabitDEccYDtBV</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420fndGalHabitDEccYDtBVP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420fndGalHabitDEccZDtBVP4BODYP6SYSTEMPi">
+<span id="_CPPv320fndGalHabitDEccZDtBVP4BODYP6SYSTEMPi"></span><span id="_CPPv220fndGalHabitDEccZDtBVP4BODYP6SYSTEMPi"></span><span id="fndGalHabitDEccZDtBV__BODYP.SYSTEMP.iP"></span><span class="target" id="galhabit_8c_1a974fb3d457de05f6692e6beb71500d22"></span>double <code class="sig-name descname">fndGalHabitDEccZDtBV</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420fndGalHabitDEccZDtBVP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48fndOctC3P4BODYPi">
+<span id="_CPPv38fndOctC3P4BODYPi"></span><span id="_CPPv28fndOctC3P4BODYPi"></span><span id="fndOctC3__BODYP.iP"></span><span class="target" id="galhabit_8c_1a3f7b65bd4fda28540a89e7f42df3661e"></span>double <code class="sig-name descname">fndOctC3</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48fndOctC3P4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417fndDOctDEccXInnerP4BODYPi">
+<span id="_CPPv317fndDOctDEccXInnerP4BODYPi"></span><span id="_CPPv217fndDOctDEccXInnerP4BODYPi"></span><span id="fndDOctDEccXInner__BODYP.iP"></span><span class="target" id="galhabit_8c_1a26ede44c88963413addd05665bb6978d"></span>double <code class="sig-name descname">fndDOctDEccXInner</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndDOctDEccXInnerP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417fndDOctDEccYInnerP4BODYPi">
+<span id="_CPPv317fndDOctDEccYInnerP4BODYPi"></span><span id="_CPPv217fndDOctDEccYInnerP4BODYPi"></span><span id="fndDOctDEccYInner__BODYP.iP"></span><span class="target" id="galhabit_8c_1ac4aa35140a726d4af3890ce0f5081846"></span>double <code class="sig-name descname">fndDOctDEccYInner</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndDOctDEccYInnerP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417fndDOctDEccZInnerP4BODYPi">
+<span id="_CPPv317fndDOctDEccZInnerP4BODYPi"></span><span id="_CPPv217fndDOctDEccZInnerP4BODYPi"></span><span id="fndDOctDEccZInner__BODYP.iP"></span><span class="target" id="galhabit_8c_1aaffb9d70582c2092fdbc153428a79eff"></span>double <code class="sig-name descname">fndDOctDEccZInner</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndDOctDEccZInnerP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fndDOctDAngMXInnerP4BODYPi">
+<span id="_CPPv318fndDOctDAngMXInnerP4BODYPi"></span><span id="_CPPv218fndDOctDAngMXInnerP4BODYPi"></span><span id="fndDOctDAngMXInner__BODYP.iP"></span><span class="target" id="galhabit_8c_1a183c8a4ca67d43121841d5619d2c4220"></span>double <code class="sig-name descname">fndDOctDAngMXInner</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndDOctDAngMXInnerP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fndDOctDAngMYInnerP4BODYPi">
+<span id="_CPPv318fndDOctDAngMYInnerP4BODYPi"></span><span id="_CPPv218fndDOctDAngMYInnerP4BODYPi"></span><span id="fndDOctDAngMYInner__BODYP.iP"></span><span class="target" id="galhabit_8c_1a88329684bf8ab61d55f279db17e5f5e6"></span>double <code class="sig-name descname">fndDOctDAngMYInner</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndDOctDAngMYInnerP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fndDOctDAngMZInnerP4BODYPi">
+<span id="_CPPv318fndDOctDAngMZInnerP4BODYPi"></span><span id="_CPPv218fndDOctDAngMZInnerP4BODYPi"></span><span id="fndDOctDAngMZInner__BODYP.iP"></span><span class="target" id="galhabit_8c_1a7992fd61c142361f60249ace24562e23"></span>double <code class="sig-name descname">fndDOctDAngMZInner</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndDOctDAngMZInnerP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417fndDOctDEccXOuterP4BODYPi">
+<span id="_CPPv317fndDOctDEccXOuterP4BODYPi"></span><span id="_CPPv217fndDOctDEccXOuterP4BODYPi"></span><span id="fndDOctDEccXOuter__BODYP.iP"></span><span class="target" id="galhabit_8c_1a2b7fd9a55d1051de891e3dba65308901"></span>double <code class="sig-name descname">fndDOctDEccXOuter</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndDOctDEccXOuterP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417fndDOctDEccYOuterP4BODYPi">
+<span id="_CPPv317fndDOctDEccYOuterP4BODYPi"></span><span id="_CPPv217fndDOctDEccYOuterP4BODYPi"></span><span id="fndDOctDEccYOuter__BODYP.iP"></span><span class="target" id="galhabit_8c_1a9409c480090e1bc8ba4075b91200ce54"></span>double <code class="sig-name descname">fndDOctDEccYOuter</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndDOctDEccYOuterP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417fndDOctDEccZOuterP4BODYPi">
+<span id="_CPPv317fndDOctDEccZOuterP4BODYPi"></span><span id="_CPPv217fndDOctDEccZOuterP4BODYPi"></span><span id="fndDOctDEccZOuter__BODYP.iP"></span><span class="target" id="galhabit_8c_1ac191d1ed1ce2223dd4e3232a4a0699b1"></span>double <code class="sig-name descname">fndDOctDEccZOuter</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndDOctDEccZOuterP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fndDOctDAngMXOuterP4BODYPi">
+<span id="_CPPv318fndDOctDAngMXOuterP4BODYPi"></span><span id="_CPPv218fndDOctDAngMXOuterP4BODYPi"></span><span id="fndDOctDAngMXOuter__BODYP.iP"></span><span class="target" id="galhabit_8c_1aadcced5a349b703c747e3fe63e7c1ef9"></span>double <code class="sig-name descname">fndDOctDAngMXOuter</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndDOctDAngMXOuterP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fndDOctDAngMYOuterP4BODYPi">
+<span id="_CPPv318fndDOctDAngMYOuterP4BODYPi"></span><span id="_CPPv218fndDOctDAngMYOuterP4BODYPi"></span><span id="fndDOctDAngMYOuter__BODYP.iP"></span><span class="target" id="galhabit_8c_1a9e96ceb3537e578780badbb54dc62629"></span>double <code class="sig-name descname">fndDOctDAngMYOuter</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndDOctDAngMYOuterP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fndDOctDAngMZOuterP4BODYPi">
+<span id="_CPPv318fndDOctDAngMZOuterP4BODYPi"></span><span id="_CPPv218fndDOctDAngMZOuterP4BODYPi"></span><span id="fndDOctDAngMZOuter__BODYP.iP"></span><span class="target" id="galhabit_8c_1aa75e7dfc76c399e4dc7770de30da76ca"></span>double <code class="sig-name descname">fndDOctDAngMZOuter</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndDOctDAngMZOuterP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+<div class="section" id="galhabit-h">
+<h2><a class="toc-backref" href="#id2">galhabit.h</a><a class="headerlink" href="#galhabit-h" title="Permalink to this headline">¶</a></h2>
+<p>Subroutines that simulate the galactic habitat of a stellar system. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Russell Deitrick (<a class="reference external" href="https://github.com/deitrr/">deitrr</a>)</p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>July 7 2015 </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Defines</p>
+<dl class="macro">
+<dt id="c.OPTSTARTGALHABIT">
+<span class="target" id="galhabit_8h_1a6392857093af652fbdfedc2df077d569"></span><code class="sig-name descname">OPTSTARTGALHABIT</code><a class="headerlink" href="#c.OPTSTARTGALHABIT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPTENDGALHABIT">
+<span class="target" id="galhabit_8h_1a6fe5aa9fa1fc01f89e35575ad412bfb5"></span><code class="sig-name descname">OPTENDGALHABIT</code><a class="headerlink" href="#c.OPTENDGALHABIT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_GALACDENSITY">
+<span class="target" id="galhabit_8h_1a10c41250cef5334b33d553e2d49c33ba"></span><code class="sig-name descname">OPT_GALACDENSITY</code><a class="headerlink" href="#c.OPT_GALACDENSITY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_RANDSEED">
+<span class="target" id="galhabit_8h_1a592f60ed05c349518d534fd21b517b16"></span><code class="sig-name descname">OPT_RANDSEED</code><a class="headerlink" href="#c.OPT_RANDSEED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_ENCOUNTERRAD">
+<span class="target" id="galhabit_8h_1a95b62956e48131b4b1eb97973f060878"></span><code class="sig-name descname">OPT_ENCOUNTERRAD</code><a class="headerlink" href="#c.OPT_ENCOUNTERRAD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_RFORM">
+<span class="target" id="galhabit_8h_1a308bea1b5367604037f9757d06a01341"></span><code class="sig-name descname">OPT_RFORM</code><a class="headerlink" href="#c.OPT_RFORM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_TMIGRATION">
+<span class="target" id="galhabit_8h_1aac506d4447ff2d88399db7b324982db3"></span><code class="sig-name descname">OPT_TMIGRATION</code><a class="headerlink" href="#c.OPT_TMIGRATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_RADIALMIGR">
+<span class="target" id="galhabit_8h_1ace4e6869aafde39b63c765261b26ec92"></span><code class="sig-name descname">OPT_RADIALMIGR</code><a class="headerlink" href="#c.OPT_RADIALMIGR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_GASDENSITY">
+<span class="target" id="galhabit_8h_1aa70b1cb2336ce5e28e1144fb91119e7b"></span><code class="sig-name descname">OPT_GASDENSITY</code><a class="headerlink" href="#c.OPT_GASDENSITY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_DMDENSITY">
+<span class="target" id="galhabit_8h_1a02f53c577cdfbfc0dc38872d0fa1990b"></span><code class="sig-name descname">OPT_DMDENSITY</code><a class="headerlink" href="#c.OPT_DMDENSITY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_STARSCALEL">
+<span class="target" id="galhabit_8h_1a9af7046936f4a7f8d3a9135e93d90752"></span><code class="sig-name descname">OPT_STARSCALEL</code><a class="headerlink" href="#c.OPT_STARSCALEL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_STELLARENC">
+<span class="target" id="galhabit_8h_1a9adee4358d77a497fec2c55dd7048ab1"></span><code class="sig-name descname">OPT_STELLARENC</code><a class="headerlink" href="#c.OPT_STELLARENC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_TIMEEVOLVELDISP">
+<span class="target" id="galhabit_8h_1a89919f14b9be35ff23d5216295a59306"></span><code class="sig-name descname">OPT_TIMEEVOLVELDISP</code><a class="headerlink" href="#c.OPT_TIMEEVOLVELDISP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_OUTPUTENC">
+<span class="target" id="galhabit_8h_1a4a688ec26fce987242a062dca0c33963"></span><code class="sig-name descname">OPT_OUTPUTENC</code><a class="headerlink" href="#c.OPT_OUTPUTENC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_PERIQ">
+<span class="target" id="galhabit_8h_1aa444657f5fbd7ba4c2be02521c9e69ae"></span><code class="sig-name descname">OPT_PERIQ</code><a class="headerlink" href="#c.OPT_PERIQ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HOSTBINARY">
+<span class="target" id="galhabit_8h_1a2e56efee6eae411e453266618fa2de05"></span><code class="sig-name descname">OPT_HOSTBINARY</code><a class="headerlink" href="#c.OPT_HOSTBINARY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HOSTBINSEMI">
+<span class="target" id="galhabit_8h_1aeaf544b6f08d5802da7936f279fda0c2"></span><code class="sig-name descname">OPT_HOSTBINSEMI</code><a class="headerlink" href="#c.OPT_HOSTBINSEMI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HOSTBINECC">
+<span class="target" id="galhabit_8h_1aa5e1723a3b3c02c6d6dd332c0e47723c"></span><code class="sig-name descname">OPT_HOSTBINECC</code><a class="headerlink" href="#c.OPT_HOSTBINECC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HOSTBININC">
+<span class="target" id="galhabit_8h_1a7bf95b94c5ace787a4a42ccfd6fedd16"></span><code class="sig-name descname">OPT_HOSTBININC</code><a class="headerlink" href="#c.OPT_HOSTBININC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HOSTBINARGP">
+<span class="target" id="galhabit_8h_1ac99cf9d7ad7dae9f39460b6b0a8d3d17"></span><code class="sig-name descname">OPT_HOSTBINARGP</code><a class="headerlink" href="#c.OPT_HOSTBINARGP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HOSTBINLONGA">
+<span class="target" id="galhabit_8h_1a153ca07e87808a62443c8bd3137824df"></span><code class="sig-name descname">OPT_HOSTBINLONGA</code><a class="headerlink" href="#c.OPT_HOSTBINLONGA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HOSTBINMASS1">
+<span class="target" id="galhabit_8h_1a693744a862dc117e047893d6bac1f404"></span><code class="sig-name descname">OPT_HOSTBINMASS1</code><a class="headerlink" href="#c.OPT_HOSTBINMASS1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_MINALLOWED">
+<span class="target" id="galhabit_8h_1a8081d3102a9901cb5c9f8fa1b152d1ec"></span><code class="sig-name descname">OPT_MINALLOWED</code><a class="headerlink" href="#c.OPT_MINALLOWED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_GALACTIDES">
+<span class="target" id="galhabit_8h_1a6e3bd0e75105874852e078b29c8ec403"></span><code class="sig-name descname">OPT_GALACTIDES</code><a class="headerlink" href="#c.OPT_GALACTIDES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUTSTARTGALHABIT">
+<span class="target" id="galhabit_8h_1a4666e2b03750ce358665bf631c4d9869"></span><code class="sig-name descname">OUTSTARTGALHABIT</code><a class="headerlink" href="#c.OUTSTARTGALHABIT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUTENDGALHABIT">
+<span class="target" id="galhabit_8h_1aeea9b9e82bcc5a051c72d554cec82e2e"></span><code class="sig-name descname">OUTENDGALHABIT</code><a class="headerlink" href="#c.OUTENDGALHABIT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUTBODYSTARTGALHABIT">
+<span class="target" id="galhabit_8h_1a4ca56f39e7f0633cf57578576fd7fe6e"></span><code class="sig-name descname">OUTBODYSTARTGALHABIT</code><a class="headerlink" href="#c.OUTBODYSTARTGALHABIT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_PERIQ">
+<span class="target" id="galhabit_8h_1ad3b4eb56533b9035d7dce56b6d2bc093"></span><code class="sig-name descname">OUT_PERIQ</code><a class="headerlink" href="#c.OUT_PERIQ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_NENCOUNTERS">
+<span class="target" id="galhabit_8h_1aa682ac55d3832a6b687e6e504e466dea"></span><code class="sig-name descname">OUT_NENCOUNTERS</code><a class="headerlink" href="#c.OUT_NENCOUNTERS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_FVELDISP">
+<span class="target" id="galhabit_8h_1a853d9f906762bae223fccad8f5c5e43e"></span><code class="sig-name descname">OUT_FVELDISP</code><a class="headerlink" href="#c.OUT_FVELDISP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_ECCX">
+<span class="target" id="galhabit_8h_1a0234b7efcf3d836ede397931d29b7268"></span><code class="sig-name descname">OUT_ECCX</code><a class="headerlink" href="#c.OUT_ECCX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_ECCY">
+<span class="target" id="galhabit_8h_1a5e1c1c2f520301451225be720a277e51"></span><code class="sig-name descname">OUT_ECCY</code><a class="headerlink" href="#c.OUT_ECCY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_ECCZ">
+<span class="target" id="galhabit_8h_1ac2b855a00772b17dde28234243901187"></span><code class="sig-name descname">OUT_ECCZ</code><a class="headerlink" href="#c.OUT_ECCZ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_ANGMX">
+<span class="target" id="galhabit_8h_1a9fc8a55e9da8cce2a2d0673177b601a2"></span><code class="sig-name descname">OUT_ANGMX</code><a class="headerlink" href="#c.OUT_ANGMX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_ANGMY">
+<span class="target" id="galhabit_8h_1a0cee8b7222c6952f26adc3fbe0531b4d"></span><code class="sig-name descname">OUT_ANGMY</code><a class="headerlink" href="#c.OUT_ANGMY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_ANGMZ">
+<span class="target" id="galhabit_8h_1ab9191f0d4e2c36d20898f613d52c7b5d"></span><code class="sig-name descname">OUT_ANGMZ</code><a class="headerlink" href="#c.OUT_ANGMZ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_NBADIMPULSE">
+<span class="target" id="galhabit_8h_1a6b8ef0373cebd06cad1681ab1df2b5b3"></span><code class="sig-name descname">OUT_NBADIMPULSE</code><a class="headerlink" href="#c.OUT_NBADIMPULSE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_DECCDTGALHTIDAL">
+<span class="target" id="galhabit_8h_1a3ad2f1c94467038d61b5d57344ccb01f"></span><code class="sig-name descname">OUT_DECCDTGALHTIDAL</code><a class="headerlink" href="#c.OUT_DECCDTGALHTIDAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_DINCDTGALHTIDAL">
+<span class="target" id="galhabit_8h_1a6330474787fea240fb6ae09255ffd0fd"></span><code class="sig-name descname">OUT_DINCDTGALHTIDAL</code><a class="headerlink" href="#c.OUT_DINCDTGALHTIDAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_DLONGADTGALHTIDAL">
+<span class="target" id="galhabit_8h_1a5ffe5362b0ddd8d619f556819aad0816"></span><code class="sig-name descname">OUT_DLONGADTGALHTIDAL</code><a class="headerlink" href="#c.OUT_DLONGADTGALHTIDAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_DARGPDTGALHTIDAL">
+<span class="target" id="galhabit_8h_1a711833858066a12aad85fcc037ecfa19"></span><code class="sig-name descname">OUT_DARGPDTGALHTIDAL</code><a class="headerlink" href="#c.OUT_DARGPDTGALHTIDAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="output.html" class="btn btn-neutral float-right" title="output" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="magmoc.html" class="btn btn-neutral" title="magmoc" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

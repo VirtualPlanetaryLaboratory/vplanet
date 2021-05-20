@@ -1,0 +1,14 @@
+stellar
+=======
+
+**Contents**
+
+.. contents:: :local:
+
+stellar.c
+---------
+.. autodoxygenfile:: stellar.c
+
+stellar.h
+---------
+.. autodoxygenfile:: stellar.h

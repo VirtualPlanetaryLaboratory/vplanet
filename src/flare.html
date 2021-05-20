@@ -1,0 +1,513 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>flare &mdash; VPLanet 1.2.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="VPLanet 1.2.0
+ documentation" href="../index.html"/>
+        <link rel="up" title="C API" href="../src.html"/>
+        <link rel="next" title="binary" href="binary.html"/>
+        <link rel="prev" title="poise" href="poise.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#input-file-structure">Input File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#output-file-structure">Output File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#input-options">Input Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#output-parameters">Output Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">flare</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#flare-c">flare.c</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#flare-h">flare.h</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">VPLanet</a> &raquo;</li>
+      
+        <li><a href="../src.html">C API</a>&raquo;</li>
+      
+    
+      <li>flare</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="flare">
+<h1>flare<a class="headerlink" href="#flare" title="Permalink to this headline">¶</a></h1>
+<p><strong>Contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#flare-c" id="id1">flare.c</a></p></li>
+<li><p><a class="reference internal" href="#flare-h" id="id2">flare.h</a></p></li>
+</ul>
+</div>
+<div class="section" id="flare-c">
+<h2><a class="toc-backref" href="#id1">flare.c</a><a class="headerlink" href="#flare-c" title="Permalink to this headline">¶</a></h2>
+<p>Subroutines that control the output of XUV flares. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Rory Barnes (<a class="reference external" href="https://github.com/RoryBarnes/">RoryBarnes</a>)</p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>Mar 25 2016 </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Functions</p>
+<dl class="function">
+<dt id="_CPPv413BodyCopyFlareP4BODYP4BODYiii">
+<span id="_CPPv313BodyCopyFlareP4BODYP4BODYiii"></span><span id="_CPPv213BodyCopyFlareP4BODYP4BODYiii"></span><span id="BodyCopyFlare__BODYP.BODYP.i.i.i"></span><span class="target" id="flare_8c_1a27633dbdf5a2b157a56e773add39da9a"></span>void <code class="sig-name descname">BodyCopyFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>dest</em>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>src</em>, int <em>foo</em>, int <em>iNumBodies</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413BodyCopyFlareP4BODYP4BODYiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413ReadFlareYIntP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv313ReadFlareYIntP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv213ReadFlareYIntP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFlareYInt__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="flare_8c_1a34e8b2a557447874857957294327de9f"></span>void <code class="sig-name descname">ReadFlareYInt</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413ReadFlareYIntP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadFlareSlopeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadFlareSlopeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadFlareSlopeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFlareSlope__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="flare_8c_1aa73d9acc1dd0c749f7c02e6f9ef58376"></span>void <code class="sig-name descname">ReadFlareSlope</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadFlareSlopeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410ReadFlareCP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv310ReadFlareCP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv210ReadFlareCP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFlareC__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="flare_8c_1aea918ab326b2e0d064839a5dc95632b9"></span>void <code class="sig-name descname">ReadFlareC</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410ReadFlareCP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410ReadFlareKP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv310ReadFlareKP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv210ReadFlareKP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFlareK__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="flare_8c_1a895f345b9b1f39adb9baa972d4e1f604"></span>void <code class="sig-name descname">ReadFlareK</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410ReadFlareKP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418ReadFlareMinEnergyP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv318ReadFlareMinEnergyP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv218ReadFlareMinEnergyP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFlareMinEnergy__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="flare_8c_1a14a009860dc5c73b554c8fada45d58e0"></span>void <code class="sig-name descname">ReadFlareMinEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418ReadFlareMinEnergyP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418ReadFlareMaxEnergyP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv318ReadFlareMaxEnergyP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv218ReadFlareMaxEnergyP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFlareMaxEnergy__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="flare_8c_1a4cc5315440380d2588723d3b4e54ce3d"></span>void <code class="sig-name descname">ReadFlareMaxEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418ReadFlareMaxEnergyP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417ReadFlareVisWidthP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv317ReadFlareVisWidthP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv217ReadFlareVisWidthP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFlareVisWidth__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="flare_8c_1a55c6a320fd8b53143d4657ab959f162c"></span>void <code class="sig-name descname">ReadFlareVisWidth</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417ReadFlareVisWidthP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417ReadFlareXUVWidthP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv317ReadFlareXUVWidthP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv217ReadFlareXUVWidthP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFlareXUVWidth__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="flare_8c_1ace3ad7f5515ea7bd6530bdf1b0d3cd0b"></span>void <code class="sig-name descname">ReadFlareXUVWidth</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417ReadFlareXUVWidthP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv422InitializeOptionsFlareP7OPTIONSA_12fnReadOption">
+<span id="_CPPv322InitializeOptionsFlareP7OPTIONSA_12fnReadOption"></span><span id="_CPPv222InitializeOptionsFlareP7OPTIONSA_12fnReadOption"></span><span id="InitializeOptionsFlare__OPTIONSP.fnReadOptionA"></span><span class="target" id="flare_8c_1a603d3a182e3bb8bb9f8d7103d05ff2c9"></span>void <code class="sig-name descname">InitializeOptionsFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv412fnReadOption" title="fnReadOption">fnReadOption</a> <em>fnRead</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422InitializeOptionsFlareP7OPTIONSA_12fnReadOption" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416ReadOptionsFlareP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMA_12fnReadOptioni">
+<span id="_CPPv316ReadOptionsFlareP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMA_12fnReadOptioni"></span><span id="_CPPv216ReadOptionsFlareP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMA_12fnReadOptioni"></span><span id="ReadOptionsFlare__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.fnReadOptionA.i"></span><span class="target" id="flare_8c_1a888b33a149bc8bc4b90cbbfe048917f9"></span>void <code class="sig-name descname">ReadOptionsFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv412fnReadOption" title="fnReadOption">fnReadOption</a> <em>fnRead</em>[], int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416ReadOptionsFlareP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMA_12fnReadOptioni" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413PropsAuxFlareP4BODYP6EVOLVEP2IOP6UPDATEi">
+<span id="_CPPv313PropsAuxFlareP4BODYP6EVOLVEP2IOP6UPDATEi"></span><span id="_CPPv213PropsAuxFlareP4BODYP6EVOLVEP2IOP6UPDATEi"></span><span id="PropsAuxFlare__BODYP.EVOLVEP.IOP.UPDATEP.i"></span><span class="target" id="flare_8c_1a69404f51586f1594dd6cfb70e497314d"></span>void <code class="sig-name descname">PropsAuxFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO">IO</a> *<em>io</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413PropsAuxFlareP4BODYP6EVOLVEP2IOP6UPDATEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420fnForceBehaviorFlareP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii">
+<span id="_CPPv320fnForceBehaviorFlareP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii"></span><span id="_CPPv220fnForceBehaviorFlareP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii"></span><span id="fnForceBehaviorFlare__BODYP.MODULEP.EVOLVEP.IOP.SYSTEMP.UPDATEP.fnUpdateVariablePPP.i.i"></span><span class="target" id="flare_8c_1a5f3f8e30cf4a1426198589f455ee2b3a"></span>void <code class="sig-name descname">fnForceBehaviorFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE">MODULE</a> *<em>module</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO">IO</a> *<em>io</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iBody</em>, int <em>iModule</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420fnForceBehaviorFlareP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415VerifyLXUVFlareP4BODYP7OPTIONSP6UPDATEi">
+<span id="_CPPv315VerifyLXUVFlareP4BODYP7OPTIONSP6UPDATEi"></span><span id="_CPPv215VerifyLXUVFlareP4BODYP7OPTIONSP6UPDATEi"></span><span id="VerifyLXUVFlare__BODYP.OPTIONSP.UPDATEP.i"></span><span class="target" id="flare_8c_1a9edbfd11e1e2d1fea2e382e291b98a15"></span>void <code class="sig-name descname">VerifyLXUVFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415VerifyLXUVFlareP4BODYP7OPTIONSP6UPDATEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv422AssignFlareDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv322AssignFlareDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv222AssignFlareDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei"></span><span id="AssignFlareDerivatives__BODYP.EVOLVEP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="flare_8c_1a1ca36bddb79a323131971b8604575c6d"></span>void <code class="sig-name descname">AssignFlareDerivatives</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422AssignFlareDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420NullFlareDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv320NullFlareDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv220NullFlareDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei"></span><span id="NullFlareDerivatives__BODYP.EVOLVEP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="flare_8c_1a238e061fa724606b8e4ae65130d4d0d0"></span>void <code class="sig-name descname">NullFlareDerivatives</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420NullFlareDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411VerifyFlareP4BODYP7CONTROLP5FILESP7OPTIONSP6OUTPUTP6SYSTEMP6UPDATEii">
+<span id="_CPPv311VerifyFlareP4BODYP7CONTROLP5FILESP7OPTIONSP6OUTPUTP6SYSTEMP6UPDATEii"></span><span id="_CPPv211VerifyFlareP4BODYP7CONTROLP5FILESP7OPTIONSP6OUTPUTP6SYSTEMP6UPDATEii"></span><span id="VerifyFlare__BODYP.CONTROLP.FILESP.OPTIONSP.OUTPUTP.SYSTEMP.UPDATEP.i.i"></span><span class="target" id="flare_8c_1a12505a2db23fc543e6573cd8ac414613"></span>void <code class="sig-name descname">VerifyFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, int <em>iModule</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411VerifyFlareP4BODYP7CONTROLP5FILESP7OPTIONSP6OUTPUTP6SYSTEMP6UPDATEii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv421InitializeModuleFlareP7CONTROLP6MODULE">
+<span id="_CPPv321InitializeModuleFlareP7CONTROLP6MODULE"></span><span id="_CPPv221InitializeModuleFlareP7CONTROLP6MODULE"></span><span id="InitializeModuleFlare__CONTROLP.MODULEP"></span><span class="target" id="flare_8c_1ab236f4afa826203abc564912f7765459"></span>void <code class="sig-name descname">InitializeModuleFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE">MODULE</a> *<em>module</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421InitializeModuleFlareP7CONTROLP6MODULE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv421InitializeUpdateFlareP4BODYP6UPDATEi">
+<span id="_CPPv321InitializeUpdateFlareP4BODYP6UPDATEi"></span><span id="_CPPv221InitializeUpdateFlareP4BODYP6UPDATEi"></span><span id="InitializeUpdateFlare__BODYP.UPDATEP.i"></span><span class="target" id="flare_8c_1a9da9836ec516fd0d0d50686521495a79"></span>void <code class="sig-name descname">InitializeUpdateFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421InitializeUpdateFlareP4BODYP6UPDATEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423FinalizeUpdateLXUVFlareP4BODYP6UPDATEPiiii">
+<span id="_CPPv323FinalizeUpdateLXUVFlareP4BODYP6UPDATEPiiii"></span><span id="_CPPv223FinalizeUpdateLXUVFlareP4BODYP6UPDATEPiiii"></span><span id="FinalizeUpdateLXUVFlare__BODYP.UPDATEP.iP.i.i.i"></span><span class="target" id="flare_8c_1ad00b01fcaa74b3293042fc0168692ccd"></span>void <code class="sig-name descname">FinalizeUpdateLXUVFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int *<em>iEqn</em>, int <em>iVar</em>, int <em>iBody</em>, int <em>iFoo</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423FinalizeUpdateLXUVFlareP4BODYP6UPDATEPiiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415CountHaltsFlareP4HALTPi">
+<span id="_CPPv315CountHaltsFlareP4HALTPi"></span><span id="_CPPv215CountHaltsFlareP4HALTPi"></span><span id="CountHaltsFlare__HALTP.iP"></span><span class="target" id="flare_8c_1a5867722925e004b2244c77a6c588b45c"></span>void <code class="sig-name descname">CountHaltsFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT">HALT</a> *<em>halt</em>, int *<em>iNumHalts</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415CountHaltsFlareP4HALTPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415VerifyHaltFlareP4BODYP7CONTROLP7OPTIONSiPi">
+<span id="_CPPv315VerifyHaltFlareP4BODYP7CONTROLP7OPTIONSiPi"></span><span id="_CPPv215VerifyHaltFlareP4BODYP7CONTROLP7OPTIONSiPi"></span><span id="VerifyHaltFlare__BODYP.CONTROLP.OPTIONSP.i.iP"></span><span class="target" id="flare_8c_1afbb44960cb07435fabf20818ecfc93c5"></span>void <code class="sig-name descname">VerifyHaltFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, int <em>iBody</em>, int *<em>iHalt</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415VerifyHaltFlareP4BODYP7CONTROLP7OPTIONSiPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414WriteLXUVFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv314WriteLXUVFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv214WriteLXUVFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteLXUVFlare__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="flare_8c_1a5e58f59ad40ac2f6b1facf7d9047c820"></span>void <code class="sig-name descname">WriteLXUVFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, int <em>iBody</em>, double *<em>dTmp</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414WriteLXUVFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv421InitializeOutputFlareP6OUTPUTA_13fnWriteOutput">
+<span id="_CPPv321InitializeOutputFlareP6OUTPUTA_13fnWriteOutput"></span><span id="_CPPv221InitializeOutputFlareP6OUTPUTA_13fnWriteOutput"></span><span id="InitializeOutputFlare__OUTPUTP.fnWriteOutputA"></span><span class="target" id="flare_8c_1abbfe0d311848eb3aa48aeb6ed965e504"></span>void <code class="sig-name descname">InitializeOutputFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv413fnWriteOutput" title="fnWriteOutput">fnWriteOutput</a> <em>fnWrite</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421InitializeOutputFlareP6OUTPUTA_13fnWriteOutput" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415LogOptionsFlareP7CONTROLP4FILE">
+<span id="_CPPv315LogOptionsFlareP7CONTROLP4FILE"></span><span id="_CPPv215LogOptionsFlareP7CONTROLP4FILE"></span><span id="LogOptionsFlare__CONTROLP.FILEP"></span><span class="target" id="flare_8c_1a114db0de1adcb1cc6371560b5f81bf3f"></span>void <code class="sig-name descname">LogOptionsFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, FILE *<em>fp</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415LogOptionsFlareP7CONTROLP4FILE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48LogFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILE">
+<span id="_CPPv38LogFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILE"></span><span id="_CPPv28LogFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILE"></span><span id="LogFlare__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UPDATEP.fnWriteOutputA.FILEP"></span><span class="target" id="flare_8c_1a8c0b648ef22510860d81ec06477f32d0"></span>void <code class="sig-name descname">LogFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv413fnWriteOutput" title="fnWriteOutput">fnWriteOutput</a> <em>fnWrite</em>[], FILE *<em>fp</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48LogFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412LogBodyFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILEi">
+<span id="_CPPv312LogBodyFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILEi"></span><span id="_CPPv212LogBodyFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILEi"></span><span id="LogBodyFlare__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UPDATEP.fnWriteOutputA.FILEP.i"></span><span class="target" id="flare_8c_1a13583289c4031f7c029dd01a5acd2bef"></span>void <code class="sig-name descname">LogBodyFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv413fnWriteOutput" title="fnWriteOutput">fnWriteOutput</a> <em>fnWrite</em>[], FILE *<em>fp</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412LogBodyFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414AddModuleFlareP7CONTROLP6MODULEii">
+<span id="_CPPv314AddModuleFlareP7CONTROLP6MODULEii"></span><span id="_CPPv214AddModuleFlareP7CONTROLP6MODULEii"></span><span id="AddModuleFlare__CONTROLP.MODULEP.i.i"></span><span class="target" id="flare_8c_1a5bbbd39da4603832046175fb9300d91f"></span>void <code class="sig-name descname">AddModuleFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE">MODULE</a> *<em>module</em>, int <em>iBody</em>, int <em>iModule</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414AddModuleFlareP7CONTROLP6MODULEii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416fdFlareFrequencyddd">
+<span id="_CPPv316fdFlareFrequencyddd"></span><span id="_CPPv216fdFlareFrequencyddd"></span><span id="fdFlareFrequency__double.double.double"></span><span class="target" id="flare_8c_1a2f4a723b57adfac9d4fc3b8dab268c64"></span>double <code class="sig-name descname">fdFlareFrequency</code><span class="sig-paren">(</span>double <em>dYInt</em>, double <em>dSlope</em>, double <em>dLogEnergy</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fdFlareFrequencyddd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fdLXUVFlareP4BODYdi">
+<span id="_CPPv311fdLXUVFlareP4BODYdi"></span><span id="_CPPv211fdLXUVFlareP4BODYdi"></span><span id="fdLXUVFlare__BODYP.double.i"></span><span class="target" id="flare_8c_1a0f21b9cd52d6fc5c4975a9d42926de00"></span>double <code class="sig-name descname">fdLXUVFlare</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, double <em>dDeltaTime</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdLXUVFlareP4BODYdi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+<div class="section" id="flare-h">
+<h2><a class="toc-backref" href="#id2">flare.h</a><a class="headerlink" href="#flare-h" title="Permalink to this headline">¶</a></h2>
+<p>Subroutines that control the output of XUV flares. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Rory Barnes (<a class="reference external" href="https://github.com/RoryBarnes/">RoryBarnes</a>)</p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>Mar 25 2016 </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Defines</p>
+<dl class="macro">
+<dt id="c.MINMASSFLARE">
+<span class="target" id="flare_8h_1a3aa48736ab2076ce4807ad86f1c6c17c"></span><code class="sig-name descname">MINMASSFLARE</code><a class="headerlink" href="#c.MINMASSFLARE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.MAXMASSFLARE">
+<span class="target" id="flare_8h_1a5b8a59aaf8630cbf3b5c880b0964bb4b"></span><code class="sig-name descname">MAXMASSFLARE</code><a class="headerlink" href="#c.MAXMASSFLARE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPTSTARTFLARE">
+<span class="target" id="flare_8h_1a713fe1cc7bb2e256e2ff69bddc1b2038"></span><code class="sig-name descname">OPTSTARTFLARE</code><a class="headerlink" href="#c.OPTSTARTFLARE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPTENDFLARE">
+<span class="target" id="flare_8h_1a8817ef1e4340877358fe9ebfdba48b41"></span><code class="sig-name descname">OPTENDFLARE</code><a class="headerlink" href="#c.OPTENDFLARE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_FLAREYINT">
+<span class="target" id="flare_8h_1a63d1cb23668204f3004d1164299cf6f9"></span><code class="sig-name descname">OPT_FLAREYINT</code><a class="headerlink" href="#c.OPT_FLAREYINT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_FLARESLOPE">
+<span class="target" id="flare_8h_1ad86919bcb61e5b34bb749d7f0c945557"></span><code class="sig-name descname">OPT_FLARESLOPE</code><a class="headerlink" href="#c.OPT_FLARESLOPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_FLAREC">
+<span class="target" id="flare_8h_1ac1a533d0e04c6d79c58d9f7cab74cb3f"></span><code class="sig-name descname">OPT_FLAREC</code><a class="headerlink" href="#c.OPT_FLAREC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_FLAREK">
+<span class="target" id="flare_8h_1a072d593ad6541c4396eeb0c3fb2c1fc8"></span><code class="sig-name descname">OPT_FLAREK</code><a class="headerlink" href="#c.OPT_FLAREK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_FLAREVISWIDTH">
+<span class="target" id="flare_8h_1a105c0f1ba03fa9015ae738acdfe194d4"></span><code class="sig-name descname">OPT_FLAREVISWIDTH</code><a class="headerlink" href="#c.OPT_FLAREVISWIDTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_FLAREXUVWIDTH">
+<span class="target" id="flare_8h_1adf7bc71e8c6089dbd9ed245569b7247b"></span><code class="sig-name descname">OPT_FLAREXUVWIDTH</code><a class="headerlink" href="#c.OPT_FLAREXUVWIDTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_FLAREMINENERGY">
+<span class="target" id="flare_8h_1af91f1078815a4006c9022cc7117b2346"></span><code class="sig-name descname">OPT_FLAREMINENERGY</code><a class="headerlink" href="#c.OPT_FLAREMINENERGY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_FLAREMAXENERGY">
+<span class="target" id="flare_8h_1aa9d2dd2a9f62cb937969f44c95b8685e"></span><code class="sig-name descname">OPT_FLAREMAXENERGY</code><a class="headerlink" href="#c.OPT_FLAREMAXENERGY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUTSTARTFLARE">
+<span class="target" id="flare_8h_1a2000d3344aaf9407c5f8e411ca2a8cca"></span><code class="sig-name descname">OUTSTARTFLARE</code><a class="headerlink" href="#c.OUTSTARTFLARE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUTENDFLARE">
+<span class="target" id="flare_8h_1a2f9393f98f3ef69c8879c8ad2e1bdb35"></span><code class="sig-name descname">OUTENDFLARE</code><a class="headerlink" href="#c.OUTENDFLARE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OUT_LXUVFLARE">
+<span class="target" id="flare_8h_1a75ef2ca73e2f7b62036ff7bd798d76a5"></span><code class="sig-name descname">OUT_LXUVFLARE</code><a class="headerlink" href="#c.OUT_LXUVFLARE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="binary.html" class="btn btn-neutral float-right" title="binary" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="poise.html" class="btn btn-neutral" title="poise" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

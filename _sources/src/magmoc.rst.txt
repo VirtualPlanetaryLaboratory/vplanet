@@ -1,0 +1,14 @@
+magmoc
+======
+
+**Contents**
+
+.. contents:: :local:
+
+magmoc.c
+--------
+.. autodoxygenfile:: magmoc.c
+
+magmoc.h
+--------
+.. autodoxygenfile:: magmoc.h

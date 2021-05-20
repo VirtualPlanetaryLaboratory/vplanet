@@ -1,0 +1,14 @@
+halt
+====
+
+**Contents**
+
+.. contents:: :local:
+
+halt.c
+------
+.. autodoxygenfile:: halt.c
+
+halt.h
+------
+.. autodoxygenfile:: halt.h

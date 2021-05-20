@@ -1,0 +1,469 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>system &mdash; VPLanet 1.2.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="VPLanet 1.2.0
+ documentation" href="../index.html"/>
+        <link rel="up" title="C API" href="../src.html"/>
+        <link rel="next" title="thermint" href="thermint.html"/>
+        <link rel="prev" title="output" href="output.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#input-file-structure">Input File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#output-file-structure">Output File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#input-options">Input Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#output-parameters">Output Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">system</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#system-c">system.c</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#system-h">system.h</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">VPLanet</a> &raquo;</li>
+      
+        <li><a href="../src.html">C API</a>&raquo;</li>
+      
+    
+      <li>system</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="system">
+<h1>system<a class="headerlink" href="#system" title="Permalink to this headline">¶</a></h1>
+<p><strong>Contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#system-c" id="id1">system.c</a></p></li>
+<li><p><a class="reference internal" href="#system-h" id="id2">system.h</a></p></li>
+</ul>
+</div>
+<div class="section" id="system-c">
+<h2><a class="toc-backref" href="#id1">system.c</a><a class="headerlink" href="#system-c" title="Permalink to this headline">¶</a></h2>
+<p>Subroutines that control system-wide properties. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Rory Barnes (<a class="reference external" href="https://github.com/RoryBarnes/">RoryBarnes</a>) </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>May 7 2014 </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Functions</p>
+<dl class="function">
+<dt id="_CPPv418fdMeanMotionToSemiddd">
+<span id="_CPPv318fdMeanMotionToSemiddd"></span><span id="_CPPv218fdMeanMotionToSemiddd"></span><span id="fdMeanMotionToSemi__double.double.double"></span><span class="target" id="system_8c_1a652ccbe5763d1f57d7f47dd0d7fc82f0"></span>double <code class="sig-name descname">fdMeanMotionToSemi</code><span class="sig-paren">(</span>double <em>dMass1</em>, double <em>dMass2</em>, double <em>dMeanMotion</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fdMeanMotionToSemiddd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414fdPeriodToSemidd">
+<span id="_CPPv314fdPeriodToSemidd"></span><span id="_CPPv214fdPeriodToSemidd"></span><span id="fdPeriodToSemi__double.double"></span><span class="target" id="system_8c_1a5737d8f7135ba357178a9fc2aca54249"></span>double <code class="sig-name descname">fdPeriodToSemi</code><span class="sig-paren">(</span>double <em>dPeriod</em>, double <em>dMass</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdPeriodToSemidd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414fdSemiToPerioddd">
+<span id="_CPPv314fdSemiToPerioddd"></span><span id="_CPPv214fdSemiToPerioddd"></span><span id="fdSemiToPeriod__double.double"></span><span class="target" id="system_8c_1a467addcfe4cbc268ddc31aaa571f4497"></span>double <code class="sig-name descname">fdSemiToPeriod</code><span class="sig-paren">(</span>double <em>dSemi</em>, double <em>dMass</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdSemiToPerioddd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418fdSemiToMeanMotiondd">
+<span id="_CPPv318fdSemiToMeanMotiondd"></span><span id="_CPPv218fdSemiToMeanMotiondd"></span><span id="fdSemiToMeanMotion__double.double"></span><span class="target" id="system_8c_1a8f0379df4796faeefc520c2e032032c0"></span>double <code class="sig-name descname">fdSemiToMeanMotion</code><span class="sig-paren">(</span>double <em>dSemi</em>, double <em>dMass</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fdSemiToMeanMotiondd" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fdOrbAngMomP4BODYP7CONTROLi">
+<span id="_CPPv311fdOrbAngMomP4BODYP7CONTROLi"></span><span id="_CPPv211fdOrbAngMomP4BODYP7CONTROLi"></span><span id="fdOrbAngMom__BODYP.CONTROLP.i"></span><span class="target" id="system_8c_1a4b74a1be591e844df499cc8650aba6f1"></span>double *<code class="sig-name descname">fdOrbAngMom</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdOrbAngMomP4BODYP7CONTROLi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute the orbital angular momentum of the iBodyth body as J = mu*sqrt(GMA(1-e^2)) for each orbiting body </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fdTotAngMomP4BODYP7CONTROLP6SYSTEM">
+<span id="_CPPv311fdTotAngMomP4BODYP7CONTROLP6SYSTEM"></span><span id="_CPPv211fdTotAngMomP4BODYP7CONTROLP6SYSTEM"></span><span id="fdTotAngMom__BODYP.CONTROLP.SYSTEMP"></span><span class="target" id="system_8c_1a49391392270b0484a6833e4103597a2b"></span>double <code class="sig-name descname">fdTotAngMom</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdTotAngMomP4BODYP7CONTROLP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414fdOrbPotEnergyP4BODYP7CONTROLP6SYSTEMi">
+<span id="_CPPv314fdOrbPotEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="_CPPv214fdOrbPotEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="fdOrbPotEnergy__BODYP.CONTROLP.SYSTEMP.i"></span><span class="target" id="system_8c_1ad60ea3745813bae1a26a28596fd7fdb1"></span>double <code class="sig-name descname">fdOrbPotEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdOrbPotEnergyP4BODYP7CONTROLP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute orbital potential energy neglecting planet-planet potential energy </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414fdOrbKinEnergyP4BODYP7CONTROLP6SYSTEMi">
+<span id="_CPPv314fdOrbKinEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="_CPPv214fdOrbKinEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="fdOrbKinEnergy__BODYP.CONTROLP.SYSTEMP.i"></span><span class="target" id="system_8c_1a32a202c88514d82b8bb92ebd2f40b2eb"></span>double <code class="sig-name descname">fdOrbKinEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdOrbKinEnergyP4BODYP7CONTROLP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute orbital kinetic energy of a body </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fdOrbEnergyP4BODYP7CONTROLP6SYSTEMi">
+<span id="_CPPv311fdOrbEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="_CPPv211fdOrbEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="fdOrbEnergy__BODYP.CONTROLP.SYSTEMP.i"></span><span class="target" id="system_8c_1a7dbd4df348d54fe76d9d4f6c1b278eb7"></span>double <code class="sig-name descname">fdOrbEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdOrbEnergyP4BODYP7CONTROLP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute total orbital energy for a given body </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fdKinEnergyP4BODYP7CONTROLP6SYSTEMi">
+<span id="_CPPv311fdKinEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="_CPPv211fdKinEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="fdKinEnergy__BODYP.CONTROLP.SYSTEMP.i"></span><span class="target" id="system_8c_1a1023b47e9ef12decde63be1c2895b0db"></span>double <code class="sig-name descname">fdKinEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdKinEnergyP4BODYP7CONTROLP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute total non-orbital kinetic energy of a body </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fdPotEnergyP4BODYP7CONTROLP6SYSTEMi">
+<span id="_CPPv311fdPotEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="_CPPv211fdPotEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="fdPotEnergy__BODYP.CONTROLP.SYSTEMP.i"></span><span class="target" id="system_8c_1a241c73f55fe57b67aec3cff68392e263"></span>double <code class="sig-name descname">fdPotEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdPotEnergyP4BODYP7CONTROLP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute a body’s non-orbital potential energy </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fdTotEnergyP4BODYP7CONTROLP6SYSTEM">
+<span id="_CPPv311fdTotEnergyP4BODYP7CONTROLP6SYSTEM"></span><span id="_CPPv211fdTotEnergyP4BODYP7CONTROLP6SYSTEM"></span><span id="fdTotEnergy__BODYP.CONTROLP.SYSTEMP"></span><span class="target" id="system_8c_1a1c966bef123495d082ddf0656e66510d"></span>double <code class="sig-name descname">fdTotEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdTotEnergyP4BODYP7CONTROLP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute the total energy in the entire system, include lost energy </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414fdTotOrbEnergyP4BODYP7CONTROLP6SYSTEM">
+<span id="_CPPv314fdTotOrbEnergyP4BODYP7CONTROLP6SYSTEM"></span><span id="_CPPv214fdTotOrbEnergyP4BODYP7CONTROLP6SYSTEM"></span><span id="fdTotOrbEnergy__BODYP.CONTROLP.SYSTEMP"></span><span class="target" id="system_8c_1ad093e7d86202e1c9ce9181f943b546b6"></span>double <code class="sig-name descname">fdTotOrbEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdTotOrbEnergyP4BODYP7CONTROLP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48bPrimaryP4BODYi">
+<span id="_CPPv38bPrimaryP4BODYi"></span><span id="_CPPv28bPrimaryP4BODYi"></span><span id="bPrimary__BODYP.i"></span><span class="target" id="system_8c_1a6c1deb2ac844af44481a1b4d296e10cb"></span>int <code class="sig-name descname">bPrimary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48bPrimaryP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv46CalcHKP4BODYi">
+<span id="_CPPv36CalcHKP4BODYi"></span><span id="_CPPv26CalcHKP4BODYi"></span><span id="CalcHK__BODYP.i"></span><span class="target" id="system_8c_1ab843a69fa03045c29a8aa36ba3fe0c66"></span>void <code class="sig-name descname">CalcHK</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46CalcHKP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv46CalcPQP4BODYi">
+<span id="_CPPv36CalcPQP4BODYi"></span><span id="_CPPv26CalcPQP4BODYi"></span><span id="CalcPQ__BODYP.i"></span><span class="target" id="system_8c_1ae361523a34ae3d332d848ce51454bb97"></span>void <code class="sig-name descname">CalcPQ</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46CalcPQP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414fdInstellationP4BODYi">
+<span id="_CPPv314fdInstellationP4BODYi"></span><span id="_CPPv214fdInstellationP4BODYi"></span><span id="fdInstellation__BODYP.i"></span><span class="target" id="system_8c_1a0ed05c10e06f36e935ba4b6e7e5cc65d"></span>double <code class="sig-name descname">fdInstellation</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdInstellationP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49fdXUVFluxP4BODYi">
+<span id="_CPPv39fdXUVFluxP4BODYi"></span><span id="_CPPv29fdXUVFluxP4BODYi"></span><span id="fdXUVFlux__BODYP.i"></span><span class="target" id="system_8c_1abc270f691a645877f42f6cc7a65b8563"></span>double <code class="sig-name descname">fdXUVFlux</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49fdXUVFluxP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute the XUV Flux.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code>: A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iBody</span></code>: The current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> index </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iXUV</span></code>: Integer describing the XUV model </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419fdMutualInclinationP4BODYii">
+<span id="_CPPv319fdMutualInclinationP4BODYii"></span><span id="_CPPv219fdMutualInclinationP4BODYii"></span><span id="fdMutualInclination__BODYP.i.i"></span><span class="target" id="system_8c_1aba69fb4de9439720f2ff4328d1e99ac9"></span>double <code class="sig-name descname">fdMutualInclination</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em>, int <em>jBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fdMutualInclinationP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculate the mutual or relative inclination of the orbital planes of iBody and jBody.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The mutual inclination </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code>: A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iBody</span></code>: The index of the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> struct for the 1st orbit </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jBody</span></code>: The index of the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> struct for the 2nd orbit</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419fbCheckMaxMutualIncP4BODYP6EVOLVEP4HALTP2IOiii">
+<span id="_CPPv319fbCheckMaxMutualIncP4BODYP6EVOLVEP4HALTP2IOiii"></span><span id="_CPPv219fbCheckMaxMutualIncP4BODYP6EVOLVEP4HALTP2IOiii"></span><span id="fbCheckMaxMutualInc__BODYP.EVOLVEP.HALTP.IOP.i.i.i"></span><span class="target" id="system_8c_1ac57d965ec518c71f0f2d87cc20a55b1e"></span>int <code class="sig-name descname">fbCheckMaxMutualInc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT">HALT</a> *<em>halt</em>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO">IO</a> *<em>io</em>, int <em>iBody</em>, int <em>jBody</em>, int <em>iReason</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fbCheckMaxMutualIncP4BODYP6EVOLVEP4HALTP2IOiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Check the maximum allowed mutual inclination.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>TRUE if the mutual incliantion is larger than dMaxMutualInc, FALSE if not </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">evolve</span></code>: A pointer to the integration <a class="reference internal" href="vplanet.html#struct_e_v_o_l_v_e"><span class="std std-ref">EVOLVE</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">halt</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_h_a_l_t"><span class="std std-ref">HALT</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">io</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_i_o"><span class="std std-ref">IO</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">update</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_u_p_d_a_t_e"><span class="std std-ref">UPDATE</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iBody</span></code>: The current index in the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance, irrelevant in this case because mutual inclination is by definition a multi-body variable </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iReason</span></code>: Was the subroutine called from CheckHalts (0) or CheckProgress (1)?</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419fdSemiTidalLockEqStP4BODYii">
+<span id="_CPPv319fdSemiTidalLockEqStP4BODYii"></span><span id="_CPPv219fdSemiTidalLockEqStP4BODYii"></span><span id="fdSemiTidalLockEqSt__BODYP.i.i"></span><span class="target" id="system_8c_1a582ba9fa37230c2b54065e38e9775a6e"></span>double <code class="sig-name descname">fdSemiTidalLockEqSt</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iNumLocked</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fdSemiTidalLockEqStP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute rate of change of semi-major axis for tidally locked star(s) if iNumLocked = 2, both are locked, otherwise, iBody gives body struct index for star that is tidally locked </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412fdSemiDtEqStP4BODYP6SYSTEMPi">
+<span id="_CPPv312fdSemiDtEqStP4BODYP6SYSTEMPi"></span><span id="_CPPv212fdSemiDtEqStP4BODYP6SYSTEMPi"></span><span id="fdSemiDtEqSt__BODYP.SYSTEMP.iP"></span><span class="target" id="system_8c_1ab24859bd6c063c0524225089c5610707"></span>double <code class="sig-name descname">fdSemiDtEqSt</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fdSemiDtEqStP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compute change in binary semi-major axis when circular, tidally locked, w ~ n when EQTIDE and STELLAR are active </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423fndUpdateSpiNBodyCoordsP4BODYP6EVOLVE">
+<span id="_CPPv323fndUpdateSpiNBodyCoordsP4BODYP6EVOLVE"></span><span id="_CPPv223fndUpdateSpiNBodyCoordsP4BODYP6EVOLVE"></span><span id="fndUpdateSpiNBodyCoords__BODYP.EVOLVEP"></span><span class="target" id="system_8c_1a7ff8af2ebfcb8b837a125084284f3334"></span>double <code class="sig-name descname">fndUpdateSpiNBodyCoords</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423fndUpdateSpiNBodyCoordsP4BODYP6EVOLVE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417fdLuminosityTotalP4BODYi">
+<span id="_CPPv317fdLuminosityTotalP4BODYi"></span><span id="_CPPv217fdLuminosityTotalP4BODYi"></span><span id="fdLuminosityTotal__BODYP.i"></span><span class="target" id="system_8c_1ab8e7be860eb403a75c625eb3d813b4ae"></span>double <code class="sig-name descname">fdLuminosityTotal</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iNumBodies</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fdLuminosityTotalP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv313fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv213fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei"></span><span id="fdMergePlanet__BODYP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="system_8c_1a3517be3fa4f1d4ccff3846d73c215f60"></span>void <code class="sig-name descname">fdMergePlanet</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Handle a merge by zeroing out lost planet’s derivatives, and adding its mass to the central body.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The mutual inclination </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code>: A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">update</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_u_p_d_a_t_e"><span class="std std-ref">UPDATE</span></a> struct </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iBody</span></code>: The index of the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> struct for the lost planet</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="system-h">
+<h2><a class="toc-backref" href="#id2">system.h</a><a class="headerlink" href="#system-h" title="Permalink to this headline">¶</a></h2>
+<p>Subroutines that control system-wide properties. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Rory Barnes (<a class="reference external" href="https://github.com/RoryBarnes/">RoryBarnes</a>) </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>May 7 2014 </p>
+</dd>
+</dl>
+</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="thermint.html" class="btn btn-neutral float-right" title="thermint" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="output.html" class="btn btn-neutral" title="output" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

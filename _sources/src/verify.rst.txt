@@ -1,0 +1,14 @@
+verify
+======
+
+**Contents**
+
+.. contents:: :local:
+
+verify.c
+--------
+.. autodoxygenfile:: verify.c
+
+verify.h
+--------
+.. autodoxygenfile:: verify.h

@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Writing Tests and Examples &mdash; VPLanet 1.2.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="VPLanet 1.2.0
+ documentation" href="index.html"/>
+        <link rel="up" title="For developers" href="developers.html"/>
+        <link rel="prev" title="VPLanet Style Guide" href="StyleGuide.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#input-file-structure">Input File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#output-file-structure">Output File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#input-options">Input Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#output-parameters">Output Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="developers.html">For developers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="StyleGuide.html">Style Guide</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Writing Tests and Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#writing-tests">Writing Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#writing-examples">Writing Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">VPLanet</a> &raquo;</li>
+      
+        <li><a href="developers.html">For developers</a>&raquo;</li>
+      
+    
+      <li>Writing Tests and Examples</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="writing-tests-and-examples">
+<h1>Writing Tests and Examples<a class="headerlink" href="#writing-tests-and-examples" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#writing-tests" id="id1">Writing Tests</a></p></li>
+<li><p><a class="reference internal" href="#writing-examples" id="id2">Writing Examples</a></p></li>
+</ul>
+</div>
+<div class="section" id="writing-tests">
+<h2><a class="toc-backref" href="#id1">Writing Tests</a><a class="headerlink" href="#writing-tests" title="Permalink to this headline">¶</a></h2>
+<p>Test scripts live in the <code class="code docutils literal notranslate"><span class="pre">tests/</span></code> directory in the top-level repo folder.
+Tests are executed automatically on Travis using <code class="code docutils literal notranslate"><span class="pre">py.test</span></code>, which will
+find all Python files with the word <code class="code docutils literal notranslate"><span class="pre">test</span></code> somewhere in their name (side note:
+if it’s not meant to be a test, don’t put <code class="code docutils literal notranslate"><span class="pre">test</span></code> in the file name!).
+The <code class="code docutils literal notranslate"><span class="pre">py.test</span></code> suite specifically checks for cases where an <code class="code docutils literal notranslate"><span class="pre">AssertionError</span></code>
+is raised, so in your tests you should use <code class="code docutils literal notranslate"><span class="pre">assert</span></code> statements to check whether
+the output is equal to (or very close to) a benchmarked value.</p>
+<p>To write a test, create a directory in <code class="code docutils literal notranslate"><span class="pre">tests/</span></code> with a descriptive name
+(such as the modules it’s meant to test or a specific application of the code).
+Inside, add the <code class="code docutils literal notranslate"><span class="pre">.in</span></code> files needed to run the test and create a Python
+file <code class="code docutils literal notranslate"><span class="pre">test_&lt;TEST_NAME&gt;.py</span></code>. This file should have this basic structure:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">vplot</span> <span class="kn">import</span> <span class="n">GetOutput</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">test_something</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Brief description of what we&#39;re testing.&quot;&quot;&quot;</span>
+    <span class="c1"># Run vplanet in the test directory</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s1">&#39;vplanet&#39;</span><span class="p">,</span> <span class="s1">&#39;vpl.in&#39;</span><span class="p">,</span> <span class="s1">&#39;-q&#39;</span><span class="p">],</span> <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">)</span>
+
+    <span class="c1"># Grab the output from the test direcetory</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">GetOutput</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">cwd</span><span class="p">)</span>
+
+    <span class="c1"># Run our comparisons</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">final</span><span class="o">.</span><span class="n">planet</span><span class="o">.</span><span class="n">Eccentricity</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">final</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">TotEnergy</span><span class="p">,</span>
+                      <span class="n">output</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">initial</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">TotEnergy</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">star</span><span class="o">.</span><span class="n">Luminosity</span><span class="p">,</span>
+                       <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0672752</span> <span class="p">,</span> <span class="mf">0.0672752</span> <span class="p">,</span> <span class="mf">0.0080845</span><span class="o">...</span><span class="p">]))</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">test_something</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In the example above, we’re checking three things: that the final planet
+eccentricity (from the log file) is zero; that the final system energy
+(from the log file) is equal to the initial system energy; and that
+the star’s luminosity (from the forward file) is equal to some array of
+values.</p>
+<p>All modules should have unit tests, and ideally all module couplings as well.
+To get a sense of what’s being tested and what’s not, take a look at the
+<span class="xref std std-doc">coverage</span> section.</p>
+</div>
+<div class="section" id="writing-examples">
+<h2><a class="toc-backref" href="#id2">Writing Examples</a><a class="headerlink" href="#writing-examples" title="Permalink to this headline">¶</a></h2>
+<p>Examples live in the <code class="code docutils literal notranslate"><span class="pre">examples/</span></code> directory in the top-level repo folder, and,
+just like bug reports, there should be one aptly-named folder per example. Include
+the input files needed to run the example and a <code class="code docutils literal notranslate"><span class="pre">README.rst</span></code> file that
+describes the example and its expected output in detail:</p>
+<div class="highlight-rest notranslate"><div class="highlight"><pre><span></span><span class="gh">Example name</span>
+<span class="gh">============</span>
+
+<span class="gh">Overview</span>
+<span class="gh">--------</span>
+
+===================   ============
+<span class="gs">**Date**</span>              MM/DD/YY
+<span class="gs">**Author**</span>            AUTHOR_NAME
+<span class="gs">**Modules**</span>           <span class="s">`MODULE1_NAME </span><span class="si">&lt;../src/MODULE1_NAME.html&gt;</span><span class="s">`_</span>
+                      <span class="s">`MODULE2_NAME </span><span class="si">&lt;../src/MODULE2_NAME.html&gt;</span><span class="s">`_</span>
+<span class="gs">**Approx. runtime**</span>   RUNTIME_IN_SECONDS
+<span class="gs">**Source code**</span>       <span class="s">`GitHub </span><span class="si">&lt;https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples/EXAMPLE_DIR_NAME&gt;</span><span class="s">`_</span>
+===================   ============
+
+DETAILED DESCRIPTION OF THE EXAMPLE
+
+<span class="gh">To run this example</span>
+<span class="gh">-------------------</span>
+
+EXACT INSTRUCTIONS TO REPRODUCE EXAMPLE
+
+<span class="p">..</span> <span class="ow">code-block</span><span class="p">::</span> <span class="k">bash</span>
+
+    vplanet vpl.in
+    vplot
+
+
+<span class="gh">Expected output</span>
+<span class="gh">---------------</span>
+
+FIGURES SHOWCASING THE EXAMPLE OUTPUT
+
+<span class="p">..</span> <span class="ow">figure</span><span class="p">::</span> UNIQUE_FIGURE_NAME.png
+   <span class="nc">:width:</span> 600px
+   <span class="nc">:align:</span> center
+
+   FIGURE CAPTION
+</pre></div>
+</div>
+<p>When creating an example, run it to figure out the approximate
+runtime (see above) and create <strong>low resolution PNG images</strong> (no more
+than about 800x800 pixels) with <strong>unique file names</strong> (so they don’t
+overwrite images from other examples when building the docs) in the
+example directory. To commit these images, you’ll need to <strong>force add them</strong>
+since <code class="code docutils literal notranslate"><span class="pre">png</span></code> files are in the <cite>.gitignore</cite> by default:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git add -f UNIQUE_FIGURE_NAME.png
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="StyleGuide.html" class="btn btn-neutral" title="VPLanet Style Guide" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

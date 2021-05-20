@@ -1,0 +1,14 @@
+options
+=======
+
+**Contents**
+
+.. contents:: :local:
+
+options.c
+---------
+.. autodoxygenfile:: options.c
+
+options.h
+---------
+.. autodoxygenfile:: options.h

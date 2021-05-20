@@ -1,0 +1,14 @@
+module
+======
+
+**Contents**
+
+.. contents:: :local:
+
+module.c
+--------
+.. autodoxygenfile:: module.c
+
+module.h
+--------
+.. autodoxygenfile:: module.h

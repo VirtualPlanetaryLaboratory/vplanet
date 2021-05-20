@@ -1,0 +1,39 @@
+C API
+=====
+
+Detailed documentation of C source code.
+
+.. note ::
+
+    The API documentation is still under development.
+    Some modules may not be very well documented yet!
+
+.. toctree::
+   :maxdepth: 1
+
+
+   src/halt
+   src/stellar
+   src/atmesc
+   src/module
+   src/verify
+   src/radheat
+   src/evolve
+   src/eqtide
+   src/update
+   src/vplanet
+   src/control
+   src/spinbody
+   src/body
+   src/distorb
+   src/poise
+   src/flare
+   src/binary
+   src/distrot
+   src/magmoc
+   src/galhabit
+   src/output
+   src/system
+   src/thermint
+   src/options
+

@@ -1,0 +1,14 @@
+spinbody
+========
+
+**Contents**
+
+.. contents:: :local:
+
+spinbody.c
+----------
+.. autodoxygenfile:: spinbody.c
+
+spinbody.h
+----------
+.. autodoxygenfile:: spinbody.h

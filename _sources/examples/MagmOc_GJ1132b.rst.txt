@@ -1,0 +1,1 @@
+.. include:: ../../examples/MagmOc_GJ1132b/README.rst

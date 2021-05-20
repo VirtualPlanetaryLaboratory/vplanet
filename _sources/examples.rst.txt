@@ -1,0 +1,60 @@
+Examples
+========
+
+A collection of example input files and scripts using **VPLanet** that
+showcase the various applications of the code. The source files for
+the examples below live in the :code:`examples` folder in the top-level
+directory of the :code:`VPLanet` repository.
+`View them on GitHub <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/tree/master/examples>`_.
+
+.. toctree::
+   :maxdepth: 1
+
+
+
+   examples/CassiniMulti
+   examples/CircumbinaryOrbit
+   examples/MagmOc_Earth
+   examples/MiniNeptuneEvap
+   examples/SS_NBody
+   examples/AtmEscKepler-36
+   examples/STEEP
+   examples/ParameterSweep
+   examples/VenusWaterLoss
+   examples/ChaoticResonances
+   examples/IceBelts
+   examples/RadHeat
+   examples/GalaxyEffects
+   examples/TidalEarth
+   examples/MagmOc_Trappist1g
+   examples/ApseLock
+   examples/VenusApproxInterior
+   examples/EarthClimate
+   examples/EarthInterior
+   examples/BinaryTides
+   examples/StellarEvol
+   examples/NBodyAtmEsc
+   examples/SSDistOrbDistRot
+   examples/MagmOc_GJ1132b
+   examples/HLossTides
+   examples/WaterLossTides
+   examples/DampedCBP
+   examples/HabEvapCore
+   examples/CassiniStates
+   examples/AtmEscRegimes
+   examples/MagneticBraking
+   examples/TideLock
+   examples/AbioticO2
+   examples/IoHeat
+
+
+Broken
+------
+
+Currently broken examples in need of your help!
+
+.. toctree::
+   :maxdepth: 1
+
+
+

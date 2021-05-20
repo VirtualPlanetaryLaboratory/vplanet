@@ -1,0 +1,14 @@
+output
+======
+
+**Contents**
+
+.. contents:: :local:
+
+output.c
+--------
+.. autodoxygenfile:: output.c
+
+output.h
+--------
+.. autodoxygenfile:: output.h

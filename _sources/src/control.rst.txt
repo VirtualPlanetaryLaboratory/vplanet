@@ -1,0 +1,14 @@
+control
+=======
+
+**Contents**
+
+.. contents:: :local:
+
+control.c
+---------
+.. autodoxygenfile:: control.c
+
+control.h
+---------
+.. autodoxygenfile:: control.h

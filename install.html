@@ -1,0 +1,274 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installing VPLanet &mdash; VPLanet 1.2.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="VPLanet 1.2.0
+ documentation" href="index.html"/>
+        <link rel="next" title="Quickstart" href="quickstart.html"/>
+        <link rel="prev" title="VPLanet Documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installing VPLanet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#linux-macos-installation">Linux/macOS Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#windows-10-installation">Windows 10 Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#input-file-structure">Input File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#output-file-structure">Output File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#input-options">Input Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#output-parameters">Output Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">VPLanet</a> &raquo;</li>
+      
+    
+      <li>Installing VPLanet</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installing-vplanet">
+<h1>Installing VPLanet<a class="headerlink" href="#installing-vplanet" title="Permalink to this headline">¶</a></h1>
+<p>There are two ways to install VPLanet: 1) cloning with git, or 2) downloading
+the repository with a zip file. VPLanet has been developed on macOS and Linux
+platforms, but can also run on Windows.</p>
+<div class="section" id="linux-macos-installation">
+<h2>Linux/macOS Installation<a class="headerlink" href="#linux-macos-installation" title="Permalink to this headline">¶</a></h2>
+<p>To install with git, open a terminal and run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/VirtualPlanetaryLaboratory/vplanet.git
+<span class="nb">cd</span> vplanet
+make opt
+</pre></div>
+</div>
+<p>To install via zip file, click the “Clone or Download” box on the VPLanet webpage,
+select zip, and download it into your preferred directory. Then type</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>unzip vplanet-master.zip
+<span class="nb">cd</span> vplanet-master
+make opt
+</pre></div>
+</div>
+<p>Currently, the installer doesn’t add the VPLanet executable to your <code class="code docutils literal notranslate"><span class="pre">PATH</span></code> variable, so
+you’ll have to <a class="reference external" href="https://stackoverflow.com/questions/14637979/how-to-permanently-set-path-on-linux-unix">do it manually</a>.</p>
+<p>If you are running macOS Catalina or later, you may need to force the operating
+system to set the location of C libraries:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">CPATH</span><span class="o">=</span>/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include
+</pre></div>
+</div>
+<p>Thanks to Chris Colose for identifying this issue.</p>
+</div>
+<div class="section" id="windows-10-installation">
+<h2>Windows 10 Installation<a class="headerlink" href="#windows-10-installation" title="Permalink to this headline">¶</a></h2>
+<p>You must first install <cite>cygwin &lt;https://www.cygwin.com&gt;</cite> and manually select
+every package that begins with “gcc.” Note that as of their v3.0.7, this option
+is not the default. Next click the “Clone or Download” box on the VPLanet webpage,
+select zip, and download it into your preferred directory.</p>
+<p>Next open the command window (DOS window; open with “cmd”) and navigate to the
+cygwin directory where you wish to place VPLanet, e.g.,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> c:<span class="se">\c</span>ygwin64<span class="se">\h</span>ome<span class="se">\r</span>ory<span class="se">\s</span>rc
+copy <span class="se">\U</span>sers<span class="se">\r</span>ory<span class="se">\D</span>ownloads<span class="se">\v</span>planet-master.zip .
+</pre></div>
+</div>
+<p>Then open a File Explorer window and navigate to the directory with the zip file,
+right click, and select “Extract All”, type in the destination directory, and
+click “Extract.”</p>
+<p>Next open a cygwin terminal window and type the following commands (substituting your username for “rory”):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /home/rory/src/vplanet-master/src
+gcc *.c -o vplanet
+</pre></div>
+</div>
+<p>This will create a file called ./vplanet.exe that can be run inside the cygwin terminal
+exactly as in the Linux and macOS instructions.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quickstart" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="VPLanet Documentation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

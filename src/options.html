@@ -1,0 +1,1285 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>options &mdash; VPLanet 1.2.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="VPLanet 1.2.0
+ documentation" href="../index.html"/>
+        <link rel="up" title="C API" href="../src.html"/>
+        <link rel="next" title="VPLOT" href="../vplot.html"/>
+        <link rel="prev" title="thermint" href="thermint.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#input-file-structure">Input File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#output-file-structure">Output File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#input-options">Input Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#output-parameters">Output Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#options-c">options.c</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#options-h">options.h</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">VPLanet</a> &raquo;</li>
+      
+        <li><a href="../src.html">C API</a>&raquo;</li>
+      
+    
+      <li>options</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="options">
+<h1>options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h1>
+<p><strong>Contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#options-c" id="id1">options.c</a></p></li>
+<li><p><a class="reference internal" href="#options-h" id="id2">options.h</a></p></li>
+</ul>
+</div>
+<div class="section" id="options-c">
+<h2><a class="toc-backref" href="#id1">options.c</a><a class="headerlink" href="#options-c" title="Permalink to this headline">¶</a></h2>
+<p>All subroutines necessary to read in all options. Also monitor input files for mistakes and log all option data. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Rory Barnes (<a class="reference external" href="https://github.com/RoryBarnes/">RoryBarnes</a>) </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>May 7 2014 </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Functions</p>
+<dl class="function">
+<dt id="_CPPv415NotPrimaryInputiA_cA_cii">
+<span id="_CPPv315NotPrimaryInputiA_cA_cii"></span><span id="_CPPv215NotPrimaryInputiA_cA_cii"></span><span id="NotPrimaryInput__i.cA.cA.i.i"></span><span class="target" id="options_8c_1a23b525d35d86b65e1911b1de265fa290"></span>void <code class="sig-name descname">NotPrimaryInput</code><span class="sig-paren">(</span>int <em>iFile</em>, char <em>cName</em>[], char <em>cFile</em>[], int <em>iLine</em>, int <em>iVerbose</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415NotPrimaryInputiA_cA_cii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412CheckCommentA_ci">
+<span id="_CPPv312CheckCommentA_ci"></span><span id="_CPPv212CheckCommentA_ci"></span><span id="CheckComment__cA.i"></span><span class="target" id="options_8c_1af82fca52369bd045fc948befc010328b"></span>int <code class="sig-name descname">CheckComment</code><span class="sig-paren">(</span>char <em>cLine</em>[], int <em>iLen</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412CheckCommentA_ci" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv47GetLineA_cA_cA_cPii">
+<span id="_CPPv37GetLineA_cA_cA_cPii"></span><span id="_CPPv27GetLineA_cA_cA_cPii"></span><span id="GetLine__cA.cA.cA.iP.i"></span><span class="target" id="options_8c_1a004d668456c3876f6af5698def323085"></span>void <code class="sig-name descname">GetLine</code><span class="sig-paren">(</span>char <em>cFile</em>[], char <em>cOption</em>[], char <em>cLine</em>[], int *<em>iLine</em>, int <em>iVerbose</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv47GetLineA_cA_cA_cPii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416GetNextValidLineA_ciA_cPi">
+<span id="_CPPv316GetNextValidLineA_ciA_cPi"></span><span id="_CPPv216GetNextValidLineA_ciA_cPi"></span><span id="GetNextValidLine__cA.i.cA.iP"></span><span class="target" id="options_8c_1a1ad9797971230416e890b5a6826296ef"></span>void <code class="sig-name descname">GetNextValidLine</code><span class="sig-paren">(</span>char <em>cFile</em>[], int <em>iStart</em>, char <em>cLine</em>[], int *<em>iLine</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416GetNextValidLineA_ciA_cPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv46GetPosA_c">
+<span id="_CPPv36GetPosA_c"></span><span id="_CPPv26GetPosA_c"></span><span id="GetPos__cA"></span><span class="target" id="options_8c_1ab71ff7275ab9a38c13794faecda38857"></span>int <code class="sig-name descname">GetPos</code><span class="sig-paren">(</span>char <em>cLine</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46GetPosA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48GetWordsA_cA8MAXARRAY_A6OPTLEN_cPiPi">
+<span id="_CPPv38GetWordsA_cA8MAXARRAY_A6OPTLEN_cPiPi"></span><span id="_CPPv28GetWordsA_cAMAXARRAY_AOPTLEN_cPiPi"></span><span id="GetWords__cA.cAA.iP.iP"></span><span class="target" id="options_8c_1a0ba242cd1df37c43235f6db20d5056a8"></span>void <code class="sig-name descname">GetWords</code><span class="sig-paren">(</span>char <em>cLine</em>[], char <em>cInput</em>[<em>MAXARRAY</em>][<em>OPTLEN</em>], int *<em>iNumWords</em>, int *<em>bContinue</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48GetWordsA_cA8MAXARRAY_A6OPTLEN_cPiPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412PrintDefaultA_cA_cA_cii">
+<span id="_CPPv312PrintDefaultA_cA_cA_cii"></span><span id="_CPPv212PrintDefaultA_cA_cA_cii"></span><span id="PrintDefault__cA.cA.cA.i.i"></span><span class="target" id="options_8c_1a316a687016c64e2d4164684068a84558"></span>void <code class="sig-name descname">PrintDefault</code><span class="sig-paren">(</span>char <em>cName</em>[], char <em>cDefault</em>[], char <em>cFile</em>[], int <em>iVerbose</em>, int <em>iVerbThreshold</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412PrintDefaultA_cA_cA_cii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415dNegativeDouble7OPTIONSA_ci">
+<span id="_CPPv315dNegativeDouble7OPTIONSA_ci"></span><span id="_CPPv215dNegativeDouble7OPTIONSA_ci"></span><span id="dNegativeDouble__OPTIONS.cA.i"></span><span class="target" id="options_8c_1ac1c7a53d25afc440019e977ad81edf79"></span>double <code class="sig-name descname">dNegativeDouble</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> <em>options</em>, char <em>cFile</em>[], int <em>iVerbose</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415dNegativeDouble7OPTIONSA_ci" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420AddOptionStringArrayA_cA_cA8MAXARRAY_A6OPTLEN_cPiPiPii">
+<span id="_CPPv320AddOptionStringArrayA_cA_cA8MAXARRAY_A6OPTLEN_cPiPiPii"></span><span id="_CPPv220AddOptionStringArrayA_cA_cAMAXARRAY_AOPTLEN_cPiPiPii"></span><span id="AddOptionStringArray__cA.cA.cAA.iP.iP.iP.i"></span><span class="target" id="options_8c_1a5d19ed569bb8b07657763d495e0e4415"></span>void <code class="sig-name descname">AddOptionStringArray</code><span class="sig-paren">(</span>char <em>cFile</em>[], char <em>cOption</em>[], char <em>saInput</em>[<em>MAXARRAY</em>][<em>OPTLEN</em>], int *<em>iNumIndices</em>, int *<em>iNumLines</em>, int *<em>iLine</em>, int <em>iVerbose</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420AddOptionStringArrayA_cA_cA8MAXARRAY_A6OPTLEN_cPiPiPii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420AddOptionDoubleArrayA_cA_cPdPiPiPii">
+<span id="_CPPv320AddOptionDoubleArrayA_cA_cPdPiPiPii"></span><span id="_CPPv220AddOptionDoubleArrayA_cA_cPdPiPiPii"></span><span id="AddOptionDoubleArray__cA.cA.doubleP.iP.iP.iP.i"></span><span class="target" id="options_8c_1ae8acb05552fa1143768d0993bf57e701"></span>void <code class="sig-name descname">AddOptionDoubleArray</code><span class="sig-paren">(</span>char <em>cFile</em>[], char <em>cOption</em>[], double *<em>daInput</em>, int *<em>iNumIndices</em>, int *<em>iNumLines</em>, int *<em>iLine</em>, int <em>iVerbose</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420AddOptionDoubleArrayA_cA_cPdPiPiPii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415AddOptionDoubleA_cA_cPdPii">
+<span id="_CPPv315AddOptionDoubleA_cA_cPdPii"></span><span id="_CPPv215AddOptionDoubleA_cA_cPdPii"></span><span id="AddOptionDouble__cA.cA.doubleP.iP.i"></span><span class="target" id="options_8c_1af655b6999e100e35bf0f6201e04dfae9"></span>void <code class="sig-name descname">AddOptionDouble</code><span class="sig-paren">(</span>char <em>cFile</em>[], char <em>cOption</em>[], double *<em>dInput</em>, int *<em>iLine</em>, int <em>iVerbose</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415AddOptionDoubleA_cA_cPdPii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412AddOptionIntA_cA_cPiPii">
+<span id="_CPPv312AddOptionIntA_cA_cPiPii"></span><span id="_CPPv212AddOptionIntA_cA_cPiPii"></span><span id="AddOptionInt__cA.cA.iP.iP.i"></span><span class="target" id="options_8c_1adcfc1f8de5de692068658513d93a37a3"></span>void <code class="sig-name descname">AddOptionInt</code><span class="sig-paren">(</span>char <em>cFile</em>[], char <em>cOption</em>[], int *<em>iInput</em>, int *<em>iLine</em>, int <em>iVerbose</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412AddOptionIntA_cA_cPiPii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413AddOptionBoolA_cA_cPiPii">
+<span id="_CPPv313AddOptionBoolA_cA_cPiPii"></span><span id="_CPPv213AddOptionBoolA_cA_cPiPii"></span><span id="AddOptionBool__cA.cA.iP.iP.i"></span><span class="target" id="options_8c_1a23c728b6824426834d634f6599ec32c6"></span>void <code class="sig-name descname">AddOptionBool</code><span class="sig-paren">(</span>char <em>cFile</em>[], char <em>cOption</em>[], int *<em>iInput</em>, int *<em>iLine</em>, int <em>iVerbose</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413AddOptionBoolA_cA_cPiPii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415AddOptionStringA_cA_cA_cPii">
+<span id="_CPPv315AddOptionStringA_cA_cA_cPii"></span><span id="_CPPv215AddOptionStringA_cA_cA_cPii"></span><span id="AddOptionString__cA.cA.cA.iP.i"></span><span class="target" id="options_8c_1ab53852bfdf93802918a7ae432f7e3452"></span>void <code class="sig-name descname">AddOptionString</code><span class="sig-paren">(</span>char <em>cFile</em>[], char <em>cOption</em>[], char <em>cInput</em>[], int *<em>iLine</em>, int <em>iVerbose</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415AddOptionStringA_cA_cA_cPii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49GetNumOutA_cA_ciPii">
+<span id="_CPPv39GetNumOutA_cA_ciPii"></span><span id="_CPPv29GetNumOutA_cA_ciPii"></span><span id="GetNumOut__cA.cA.i.iP.i"></span><span class="target" id="options_8c_1ae5f2e816c3bf41344065a424c693bf10"></span>int <code class="sig-name descname">GetNumOut</code><span class="sig-paren">(</span>char <em>cFile</em>[], char <em>cName</em>[], int <em>iLen</em>, int *<em>iLineNum</em>, int <em>iExit</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49GetNumOutA_cA_ciPii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412iGetNumLinesA_c">
+<span id="_CPPv312iGetNumLinesA_c"></span><span id="_CPPv212iGetNumLinesA_c"></span><span id="iGetNumLines__cA"></span><span class="target" id="options_8c_1a3bcde533918f8ef21f72d028425dce14"></span>int <code class="sig-name descname">iGetNumLines</code><span class="sig-paren">(</span>char <em>cFile</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412iGetNumLinesA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415InitializeInputP6INFILE">
+<span id="_CPPv315InitializeInputP6INFILE"></span><span id="_CPPv215InitializeInputP6INFILE"></span><span id="InitializeInput__INFILEP"></span><span class="target" id="options_8c_1ac1a77ba79e4706ff612333249428ea4c"></span>void <code class="sig-name descname">InitializeInput</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46INFILE" title="INFILE">INFILE</a> *<em>input</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415InitializeInputP6INFILE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412Unrecognized5FILES">
+<span id="_CPPv312Unrecognized5FILES"></span><span id="_CPPv212Unrecognized5FILES"></span><span id="Unrecognized__FILES"></span><span class="target" id="options_8c_1a0d95bfc1dba871f203a1c86deb72dc5b"></span>void <code class="sig-name descname">Unrecognized</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> <em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412Unrecognized5FILES" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417UpdateFoundOptionP6INFILEP7OPTIONSii">
+<span id="_CPPv317UpdateFoundOptionP6INFILEP7OPTIONSii"></span><span id="_CPPv217UpdateFoundOptionP6INFILEP7OPTIONSii"></span><span id="UpdateFoundOption__INFILEP.OPTIONSP.i.i"></span><span class="target" id="options_8c_1ab933d2998e720181af116c0ab7a4b24c"></span>void <code class="sig-name descname">UpdateFoundOption</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46INFILE" title="INFILE">INFILE</a> *<em>input</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, int <em>iLine</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417UpdateFoundOptionP6INFILEP7OPTIONSii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv422UpdateFoundOptionMultiP6INFILEP7OPTIONSPiii">
+<span id="_CPPv322UpdateFoundOptionMultiP6INFILEP7OPTIONSPiii"></span><span id="_CPPv222UpdateFoundOptionMultiP6INFILEP7OPTIONSPiii"></span><span id="UpdateFoundOptionMulti__INFILEP.OPTIONSP.iP.i.i"></span><span class="target" id="options_8c_1a453a6e48034644972cd017244a7bcb49"></span>void <code class="sig-name descname">UpdateFoundOptionMulti</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46INFILE" title="INFILE">INFILE</a> *<em>input</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, int *<em>iLine</em>, int <em>iNumLines</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422UpdateFoundOptionMultiP6INFILEP7OPTIONSPiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416CheckDuplicationP5FILESP7OPTIONSA_cii">
+<span id="_CPPv316CheckDuplicationP5FILESP7OPTIONSA_cii"></span><span id="_CPPv216CheckDuplicationP5FILESP7OPTIONSA_cii"></span><span id="CheckDuplication__FILESP.OPTIONSP.cA.i.i"></span><span class="target" id="options_8c_1a7c90113b7d702eedbd59efcde57b60d5"></span>void <code class="sig-name descname">CheckDuplication</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, char <em>cFile</em>[], int <em>iLine</em>, int <em>iVerbose</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416CheckDuplicationP5FILESP7OPTIONSA_cii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411ReadVerboseP5FILESP7OPTIONSPii">
+<span id="_CPPv311ReadVerboseP5FILESP7OPTIONSPii"></span><span id="_CPPv211ReadVerboseP5FILESP7OPTIONSPii"></span><span id="ReadVerbose__FILESP.OPTIONSP.iP.i"></span><span class="target" id="options_8c_1a4adf5cd082e53f4cd5c11c0ac7f5027b"></span>void <code class="sig-name descname">ReadVerbose</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, int *<em>iVerbose</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411ReadVerboseP5FILESP7OPTIONSPii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415iAssignMassUnitA_ciA_cA_ci">
+<span id="_CPPv315iAssignMassUnitA_ciA_cA_ci"></span><span id="_CPPv215iAssignMassUnitA_ciA_cA_ci"></span><span id="iAssignMassUnit__cA.i.cA.cA.i"></span><span class="target" id="options_8c_1a027e447e221ecafd7de645667f8d9e3f"></span>int <code class="sig-name descname">iAssignMassUnit</code><span class="sig-paren">(</span>char <em>cTmp</em>[], int <em>iVerbose</em>, char <em>cFile</em>[], char <em>cName</em>[], int <em>iLine</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415iAssignMassUnitA_ciA_cA_ci" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412ReadUnitMassP7CONTROLP5FILESP7OPTIONSi">
+<span id="_CPPv312ReadUnitMassP7CONTROLP5FILESP7OPTIONSi"></span><span id="_CPPv212ReadUnitMassP7CONTROLP5FILESP7OPTIONSi"></span><span id="ReadUnitMass__CONTROLP.FILESP.OPTIONSP.i"></span><span class="target" id="options_8c_1af0436e4988d8c1aa7c10901add1ae277"></span>void <code class="sig-name descname">ReadUnitMass</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412ReadUnitMassP7CONTROLP5FILESP7OPTIONSi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415iAssignUnitTimeA_ciA_cA_ci">
+<span id="_CPPv315iAssignUnitTimeA_ciA_cA_ci"></span><span id="_CPPv215iAssignUnitTimeA_ciA_cA_ci"></span><span id="iAssignUnitTime__cA.i.cA.cA.i"></span><span class="target" id="options_8c_1a81d2a0065a05093dd9e478ead2bf01f6"></span>int <code class="sig-name descname">iAssignUnitTime</code><span class="sig-paren">(</span>char <em>cTmp</em>[], int <em>iVerbose</em>, char <em>cFile</em>[], char <em>cName</em>[], int <em>iLine</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415iAssignUnitTimeA_ciA_cA_ci" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412ReadUnitTimeP7CONTROLP5FILESP7OPTIONSi">
+<span id="_CPPv312ReadUnitTimeP7CONTROLP5FILESP7OPTIONSi"></span><span id="_CPPv212ReadUnitTimeP7CONTROLP5FILESP7OPTIONSi"></span><span id="ReadUnitTime__CONTROLP.FILESP.OPTIONSP.i"></span><span class="target" id="options_8c_1ab22c95cb94e9046292eae64eabf83d6f"></span>void <code class="sig-name descname">ReadUnitTime</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412ReadUnitTimeP7CONTROLP5FILESP7OPTIONSi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416iAssignUnitAngleA_ciA_cA_ci">
+<span id="_CPPv316iAssignUnitAngleA_ciA_cA_ci"></span><span id="_CPPv216iAssignUnitAngleA_ciA_cA_ci"></span><span id="iAssignUnitAngle__cA.i.cA.cA.i"></span><span class="target" id="options_8c_1af41e94497ddf15f4514034be1e821069"></span>int <code class="sig-name descname">iAssignUnitAngle</code><span class="sig-paren">(</span>char <em>cTmp</em>[], int <em>iVerbose</em>, char <em>cFile</em>[], char <em>cName</em>[], int <em>iLine</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416iAssignUnitAngleA_ciA_cA_ci" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413ReadUnitAngleP7CONTROLP5FILESP7OPTIONSi">
+<span id="_CPPv313ReadUnitAngleP7CONTROLP5FILESP7OPTIONSi"></span><span id="_CPPv213ReadUnitAngleP7CONTROLP5FILESP7OPTIONSi"></span><span id="ReadUnitAngle__CONTROLP.FILESP.OPTIONSP.i"></span><span class="target" id="options_8c_1a29a61aafcbf154decc323602bb342acd"></span>void <code class="sig-name descname">ReadUnitAngle</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413ReadUnitAngleP7CONTROLP5FILESP7OPTIONSi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417iAssignUnitLengthA_ciA_cA_ci">
+<span id="_CPPv317iAssignUnitLengthA_ciA_cA_ci"></span><span id="_CPPv217iAssignUnitLengthA_ciA_cA_ci"></span><span id="iAssignUnitLength__cA.i.cA.cA.i"></span><span class="target" id="options_8c_1a2b77bb159826875ae68b9cd8671eb818"></span>int <code class="sig-name descname">iAssignUnitLength</code><span class="sig-paren">(</span>char <em>cTmp</em>[], int <em>iVerbose</em>, char <em>cFile</em>[], char <em>cName</em>[], int <em>iLine</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417iAssignUnitLengthA_ciA_cA_ci" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadUnitLengthP7CONTROLP5FILESP7OPTIONSi">
+<span id="_CPPv314ReadUnitLengthP7CONTROLP5FILESP7OPTIONSi"></span><span id="_CPPv214ReadUnitLengthP7CONTROLP5FILESP7OPTIONSi"></span><span id="ReadUnitLength__CONTROLP.FILESP.OPTIONSP.i"></span><span class="target" id="options_8c_1a910520b979146ddbe6d62359beba4324"></span>void <code class="sig-name descname">ReadUnitLength</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadUnitLengthP7CONTROLP5FILESP7OPTIONSi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415iAssignTempUnitA_ciA_cA_ci">
+<span id="_CPPv315iAssignTempUnitA_ciA_cA_ci"></span><span id="_CPPv215iAssignTempUnitA_ciA_cA_ci"></span><span id="iAssignTempUnit__cA.i.cA.cA.i"></span><span class="target" id="options_8c_1a2e0419f158661b3ce0525b3c32ab3e80"></span>int <code class="sig-name descname">iAssignTempUnit</code><span class="sig-paren">(</span>char <em>cTmp</em>[], int <em>iVerbose</em>, char <em>cFile</em>[], char <em>cName</em>[], int <em>iLine</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415iAssignTempUnitA_ciA_cA_ci" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412ReadUnitTempP7CONTROLP5FILESP7OPTIONSi">
+<span id="_CPPv312ReadUnitTempP7CONTROLP5FILESP7OPTIONSi"></span><span id="_CPPv212ReadUnitTempP7CONTROLP5FILESP7OPTIONSi"></span><span id="ReadUnitTemp__CONTROLP.FILESP.OPTIONSP.i"></span><span class="target" id="options_8c_1ac295815c5c21125a891bd41743d6d76a"></span>void <code class="sig-name descname">ReadUnitTemp</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412ReadUnitTempP7CONTROLP5FILESP7OPTIONSi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadSystemNameP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadSystemNameP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadSystemNameP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadSystemName__CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a2fb0272852b172115f96dcb916edf5df"></span>void <code class="sig-name descname">ReadSystemName</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadSystemNameP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417ReadBodyFileNamesP7CONTROLP5FILESP7OPTIONSP6INFILE">
+<span id="_CPPv317ReadBodyFileNamesP7CONTROLP5FILESP7OPTIONSP6INFILE"></span><span id="_CPPv217ReadBodyFileNamesP7CONTROLP5FILESP7OPTIONSP6INFILE"></span><span id="ReadBodyFileNames__CONTROLP.FILESP.OPTIONSP.INFILEP"></span><span class="target" id="options_8c_1a71fc9b7c6f59415e152484b0678053bb"></span>void <code class="sig-name descname">ReadBodyFileNames</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46INFILE" title="INFILE">INFILE</a> *<em>infile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417ReadBodyFileNamesP7CONTROLP5FILESP7OPTIONSP6INFILE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418ReadInitialOptionsPP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6OUTPUTP6SYSTEMA_c">
+<span id="_CPPv318ReadInitialOptionsPP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6OUTPUTP6SYSTEMA_c"></span><span id="_CPPv218ReadInitialOptionsPP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6OUTPUTP6SYSTEMA_c"></span><span id="ReadInitialOptions__BODYPP.CONTROLP.FILESP.MODULEP.OPTIONSP.OUTPUTP.SYSTEMP.cA"></span><span class="target" id="options_8c_1a67dfb1607792cd6ed2003d6423fa12c3"></span>void <code class="sig-name descname">ReadInitialOptions</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> **<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE">MODULE</a> *<em>module</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, char <em>infile</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418ReadInitialOptionsPP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6OUTPUTP6SYSTEMA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419AssignDefaultDoubleP7OPTIONSPdi">
+<span id="_CPPv319AssignDefaultDoubleP7OPTIONSPdi"></span><span id="_CPPv219AssignDefaultDoubleP7OPTIONSPdi"></span><span id="AssignDefaultDouble__OPTIONSP.doubleP.i"></span><span class="target" id="options_8c_1a5ad776f7050785840f9565ef9c17ee9e"></span>void <code class="sig-name descname">AssignDefaultDouble</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, double *<em>dOption</em>, int <em>iNumFiles</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419AssignDefaultDoubleP7OPTIONSPdi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416AssignDefaultIntP7OPTIONSPii">
+<span id="_CPPv316AssignDefaultIntP7OPTIONSPii"></span><span id="_CPPv216AssignDefaultIntP7OPTIONSPii"></span><span id="AssignDefaultInt__OPTIONSP.iP.i"></span><span class="target" id="options_8c_1aad6e0fe53132bf4e78583eff629880b1"></span>void <code class="sig-name descname">AssignDefaultInt</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, int *<em>iOption</em>, int <em>iNumFiles</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416AssignDefaultIntP7OPTIONSPii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419AssignDefaultStringP7OPTIONSA_ci">
+<span id="_CPPv319AssignDefaultStringP7OPTIONSA_ci"></span><span id="_CPPv219AssignDefaultStringP7OPTIONSA_ci"></span><span id="AssignDefaultString__OPTIONSP.cA.i"></span><span class="target" id="options_8c_1a5b54e63dd1d56ac60c586316825f91e2"></span>void <code class="sig-name descname">AssignDefaultString</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, char <em>cOption</em>[], int <em>iNumFiles</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419AssignDefaultStringP7OPTIONSA_ci" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419bOptionAlreadyFoundPii">
+<span id="_CPPv319bOptionAlreadyFoundPii"></span><span id="_CPPv219bOptionAlreadyFoundPii"></span><span id="bOptionAlreadyFound__iP.i"></span><span class="target" id="options_8c_1a2dc968349de96b5879a23e10513b586e"></span>int <code class="sig-name descname">bOptionAlreadyFound</code><span class="sig-paren">(</span>int *<em>iLine</em>, int <em>iNumFiles</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419bOptionAlreadyFoundPii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv47ReadAgeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv37ReadAgeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv27ReadAgeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadAge__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1af407deccd855ee5ad883410ae7015d11"></span>void <code class="sig-name descname">ReadAge</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv47ReadAgeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416ReadAlbedoGlobalP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv316ReadAlbedoGlobalP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv216ReadAlbedoGlobalP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadAlbedoGlobal__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1addc2880dd6b8e60d80b05778dfa8b6ae"></span>void <code class="sig-name descname">ReadAlbedoGlobal</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416ReadAlbedoGlobalP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412ReadBodyTypeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv312ReadBodyTypeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv212ReadBodyTypeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadBodyType__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1aa6a07fb8fdc89ca11eef244a9caa7c92"></span>void <code class="sig-name descname">ReadBodyType</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412ReadBodyTypeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadDoBackwardP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadDoBackwardP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadDoBackwardP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadDoBackward__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a3b9a4ac1b19e56854a0185dbc4093853"></span>void <code class="sig-name descname">ReadDoBackward</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadDoBackwardP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411ReadOutFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv311ReadOutFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv211ReadOutFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadOutFile__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a71e929ba051e48ac31235966c4747b1e"></span>void <code class="sig-name descname">ReadOutFile</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411ReadOutFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv47ReadEtaP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv37ReadEtaP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv27ReadEtaP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadEta__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a0a576c3039e2f481bf035f4d6a5fac46"></span>void <code class="sig-name descname">ReadEta</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv47ReadEtaP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadOutputTimeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadOutputTimeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadOutputTimeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadOutputTime__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a9d44a1b9d3a649d8589ead75712e481b"></span>void <code class="sig-name descname">ReadOutputTime</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadOutputTimeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412ReadStopTimeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv312ReadStopTimeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv212ReadStopTimeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadStopTime__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a1151be50a0f2bb1935726f7a0da88a75"></span>void <code class="sig-name descname">ReadStopTime</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412ReadStopTimeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412ReadTimeStepP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv312ReadTimeStepP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv212ReadTimeStepP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadTimeStep__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a242cd0b7fa408e92ae70345d8a1ce5cc"></span>void <code class="sig-name descname">ReadTimeStep</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412ReadTimeStepP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49ReadVarDtP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv39ReadVarDtP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv29ReadVarDtP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadVarDt__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a89fc6949e875c6f744ae3cdae7b2a6e1"></span>void <code class="sig-name descname">ReadVarDt</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49ReadVarDtP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412ReadBodyNameP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv312ReadBodyNameP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv212ReadBodyNameP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadBodyName__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a7979fb0506ca639c79ef46d1cb31add1"></span>void <code class="sig-name descname">ReadBodyName</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412ReadBodyNameP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49ReadColorP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv39ReadColorP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv29ReadColorP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadColor__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a6798b3bf4006202f2a097bcf0bcfd358"></span>void <code class="sig-name descname">ReadColor</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49ReadColorP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410ReadDigitsP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv310ReadDigitsP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv210ReadDigitsP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadDigits__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a2e133b5c31549e1c343d37f803a3927d"></span>void <code class="sig-name descname">ReadDigits</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410ReadDigitsP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv47ReadEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv37ReadEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv27ReadEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadEcc__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1ae9cb1a1771bd57353aa6ce237a723b6a"></span>void <code class="sig-name descname">ReadEcc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv47ReadEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416ReadEnvelopeMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv316ReadEnvelopeMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv216ReadEnvelopeMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadEnvelopeMass__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1ab81c73a22b1f943880259082330d37ff"></span>void <code class="sig-name descname">ReadEnvelopeMass</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416ReadEnvelopeMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Read the planet’s initial gaseous envelope mass.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code>: A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">control</span></code>: A pointer to the integration <a class="reference internal" href="vplanet.html#struct_c_o_n_t_r_o_l"><span class="std std-ref">CONTROL</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">files</span></code>: A pointer to the array of input <a class="reference internal" href="vplanet.html#struct_f_i_l_e_s"><span class="std std-ref">FILES</span></a> </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_o_p_t_i_o_n_s"><span class="std std-ref">OPTIONS</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">system</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_s_y_s_t_e_m"><span class="std std-ref">SYSTEM</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iFile</span></code>: The current file number </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413ReadDoForwardP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv313ReadDoForwardP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv213ReadDoForwardP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadDoForward__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a5a3f023ed00357fc981c9b4876ab9fdc"></span>void <code class="sig-name descname">ReadDoForward</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413ReadDoForwardP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410ReadGRCorrP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv310ReadGRCorrP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv210ReadGRCorrP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadGRCorr__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a9bb4de7cd92de2ab44e9853b7412d555"></span>void <code class="sig-name descname">ReadGRCorr</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410ReadGRCorrP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadHaltMaxEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadHaltMaxEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadHaltMaxEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHaltMaxEcc__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1aaa2a92b3197a11921cec175d24a859d6"></span>void <code class="sig-name descname">ReadHaltMaxEcc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadHaltMaxEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413ReadHaltMergeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv313ReadHaltMergeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv213ReadHaltMergeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHaltMerge__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1ab0dfc64716feaba696f702cdc3573a1d"></span>void <code class="sig-name descname">ReadHaltMerge</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413ReadHaltMergeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420ReadHaltMaxMutualIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv320ReadHaltMaxMutualIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv220ReadHaltMaxMutualIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHaltMaxMutualInc__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a5145efe1dd6a5d0f9a1d42253e7b076b"></span>void <code class="sig-name descname">ReadHaltMaxMutualInc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420ReadHaltMaxMutualIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Read in the maximum allowed mutual inclination. This parameter applies to both SpiNBbody and DistOrb. If set to 0, then the mutual inclination will not be calculated every timestep in HaltMaxMutualIncSpiNBody or HaltMaxMutualIncDistorb. This parameter can exist in any file, but only once.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code>: A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">control</span></code>: A pointer to the integration <a class="reference internal" href="vplanet.html#struct_c_o_n_t_r_o_l"><span class="std std-ref">CONTROL</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">files</span></code>: A pointer to the array of input <a class="reference internal" href="vplanet.html#struct_f_i_l_e_s"><span class="std std-ref">FILES</span></a> </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_o_p_t_i_o_n_s"><span class="std std-ref">OPTIONS</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">system</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_s_y_s_t_e_m"><span class="std std-ref">SYSTEM</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iFile</span></code>: The current file number </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadHaltMinEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadHaltMinEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadHaltMinEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHaltMinEcc__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a7468288bfe37d1603d00131cdff8fa60"></span>void <code class="sig-name descname">ReadHaltMinEcc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadHaltMinEccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadHaltMinOblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadHaltMinOblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadHaltMinOblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHaltMinObl__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a77688893f35727f90e179c415b0e0f4c"></span>void <code class="sig-name descname">ReadHaltMinObl</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadHaltMinOblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415ReadHaltMinSemiP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv315ReadHaltMinSemiP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv215ReadHaltMinSemiP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHaltMinSemi__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a63f8713c7489802b22e6c34419a17131"></span>void <code class="sig-name descname">ReadHaltMinSemi</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415ReadHaltMinSemiP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415ReadHaltPosDeDtP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv315ReadHaltPosDeDtP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv215ReadHaltPosDeDtP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHaltPosDeDt__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1aea069f6668d908fae694a112ece16528"></span>void <code class="sig-name descname">ReadHaltPosDeDt</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415ReadHaltPosDeDtP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48ReadHeccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv38ReadHeccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv28ReadHeccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHecc__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a223cd54025b4544fc46e9fe4455b32f8"></span>void <code class="sig-name descname">ReadHecc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48ReadHeccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv421ReadIntegrationMethodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv321ReadIntegrationMethodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv221ReadIntegrationMethodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadIntegrationMethod__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a19829c08b399f85b7f5394748d1f9f17"></span>void <code class="sig-name descname">ReadIntegrationMethod</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421ReadIntegrationMethodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48ReadKeccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv38ReadKeccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv28ReadKeccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadKecc__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a37c5571e57cc1665e52c7faf14b2b104"></span>void <code class="sig-name descname">ReadKecc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48ReadKeccP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49ReadDoLogP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv39ReadDoLogP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv29ReadDoLogP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadDoLog__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a045d1c06cfbecac3a088ff7a9ed4ed3a"></span>void <code class="sig-name descname">ReadDoLog</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49ReadDoLogP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411ReadLogFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv311ReadLogFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv211ReadLogFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadLogFile__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a6810be3a706fb78e92934dc9be5d2895"></span>void <code class="sig-name descname">ReadLogFile</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411ReadLogFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49ReadLongPP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv39ReadLongPP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv29ReadLongPP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadLongP__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1aaab8d21a4f67789de3d1d644bf6024b1"></span>void <code class="sig-name descname">ReadLongP</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49ReadLongPP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49ReadLongAP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv39ReadLongAP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv29ReadLongAP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadLongA__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1afa3f887010830880f3485f1f17320c70"></span>void <code class="sig-name descname">ReadLongA</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49ReadLongAP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48ReadArgPP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv38ReadArgPP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv28ReadArgPP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadArgP__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a0e3534412ada69464c1015b9a7ea9217"></span>void <code class="sig-name descname">ReadArgP</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48ReadArgPP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv47ReadIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv37ReadIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv27ReadIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadInc__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a7562aed4f4c823ab15ee9ba188c5ebac"></span>void <code class="sig-name descname">ReadInc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv47ReadIncP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadLuminosityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadLuminosityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadLuminosityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadLuminosity__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a10da8753042f39e0c046d2893d6608e3"></span>void <code class="sig-name descname">ReadLuminosity</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadLuminosityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48ReadLXUVP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv38ReadLXUVP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv28ReadLXUVP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadLXUV__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1af34b8b72e1c1b4b2c145beb7b333d43e"></span>void <code class="sig-name descname">ReadLXUV</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48ReadLXUVP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48ReadMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv38ReadMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv28ReadMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadMass__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a1153b4d55e054f76b13b892746cee6b7"></span>void <code class="sig-name descname">ReadMass</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48ReadMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411ReadMassRadP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv311ReadMassRadP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv211ReadMassRadP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadMassRad__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a553456e5e95f142543fa5cf9803a4752"></span>void <code class="sig-name descname">ReadMassRad</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411ReadMassRadP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadMeanMotionP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv314ReadMeanMotionP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv214ReadMeanMotionP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadMeanMotion__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a430f49dfbac790483749a565132706d4"></span>void <code class="sig-name descname">ReadMeanMotion</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadMeanMotionP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423ReadMinSurfaceWaterMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv323ReadMinSurfaceWaterMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv223ReadMinSurfaceWaterMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadMinSurfaceWaterMass__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a6e4a17c297e456b356fd58b3fa780ae9"></span>void <code class="sig-name descname">ReadMinSurfaceWaterMass</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423ReadMinSurfaceWaterMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Read the minimum surface water mass.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code>: A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">control</span></code>: A pointer to the integration <a class="reference internal" href="vplanet.html#struct_c_o_n_t_r_o_l"><span class="std std-ref">CONTROL</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">files</span></code>: A pointer to the array of input <a class="reference internal" href="vplanet.html#struct_f_i_l_e_s"><span class="std std-ref">FILES</span></a> </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_o_p_t_i_o_n_s"><span class="std std-ref">OPTIONS</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">system</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_s_y_s_t_e_m"><span class="std std-ref">SYSTEM</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iFile</span></code>: The current file number </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419ReadMinEnvelopeMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv319ReadMinEnvelopeMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv219ReadMinEnvelopeMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadMinEnvelopeMass__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a94c7a85c617fbbbe6ab7b2aaa7919678"></span>void <code class="sig-name descname">ReadMinEnvelopeMass</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419ReadMinEnvelopeMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Read the minimum envelope mass.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code>: A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">control</span></code>: A pointer to the integration <a class="reference internal" href="vplanet.html#struct_c_o_n_t_r_o_l"><span class="std std-ref">CONTROL</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">files</span></code>: A pointer to the array of input <a class="reference internal" href="vplanet.html#struct_f_i_l_e_s"><span class="std std-ref">FILES</span></a> </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_o_p_t_i_o_n_s"><span class="std std-ref">OPTIONS</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">system</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_s_y_s_t_e_m"><span class="std std-ref">SYSTEM</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iFile</span></code>: The current file number </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412ReadMinValueP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv312ReadMinValueP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv212ReadMinValueP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadMinValue__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a4fba2c842f390f22a0a59314781d5ea2"></span>void <code class="sig-name descname">ReadMinValue</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412ReadMinValueP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413ReadObliquityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv313ReadObliquityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv213ReadObliquityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadObliquity__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a4d5295f0e8207217409948dbdc4bd80c"></span>void <code class="sig-name descname">ReadObliquity</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413ReadObliquityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410ReadCosOblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv310ReadCosOblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv210ReadCosOblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadCosObl__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1afa01527508d739bf8e4d4609fee224bc"></span>void <code class="sig-name descname">ReadCosObl</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410ReadCosOblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415ReadOutputOrderP5FILESP6MODULEP7OPTIONSP6OUTPUTii">
+<span id="_CPPv315ReadOutputOrderP5FILESP6MODULEP7OPTIONSP6OUTPUTii"></span><span id="_CPPv215ReadOutputOrderP5FILESP6MODULEP7OPTIONSP6OUTPUTii"></span><span id="ReadOutputOrder__FILESP.MODULEP.OPTIONSP.OUTPUTP.i.i"></span><span class="target" id="options_8c_1a1e1e8e8cc149ac64dcc9695022ee09a0"></span>void <code class="sig-name descname">ReadOutputOrder</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE">MODULE</a> *<em>module</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, int <em>iFile</em>, int <em>iVerbose</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415ReadOutputOrderP5FILESP6MODULEP7OPTIONSP6OUTPUTii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414ReadGridOutputP5FILESP7OPTIONSP6OUTPUTii">
+<span id="_CPPv314ReadGridOutputP5FILESP7OPTIONSP6OUTPUTii"></span><span id="_CPPv214ReadGridOutputP5FILESP7OPTIONSP6OUTPUTii"></span><span id="ReadGridOutput__FILESP.OPTIONSP.OUTPUTP.i.i"></span><span class="target" id="options_8c_1a1bae45d0a98d993c74d5554b709ff6cd"></span>void <code class="sig-name descname">ReadGridOutput</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, int <em>iFile</em>, int <em>iVerbose</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414ReadGridOutputP5FILESP7OPTIONSP6OUTPUTii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413ReadOverwriteP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv313ReadOverwriteP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv213ReadOverwriteP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadOverwrite__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a1d6e2835406b03398ac313d1d4f77f00"></span>void <code class="sig-name descname">ReadOverwrite</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413ReadOverwriteP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413ReadOrbPeriodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv313ReadOrbPeriodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv213ReadOrbPeriodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadOrbPeriod__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a40d4d078fd7f6e2b62ff007f423cdd0f"></span>void <code class="sig-name descname">ReadOrbPeriod</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413ReadOrbPeriodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv49ReadPrecAP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv39ReadPrecAP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv29ReadPrecAP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadPrecA__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1ae45e585a64e463670438aa9929318609"></span>void <code class="sig-name descname">ReadPrecA</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49ReadPrecAP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412ReadDynEllipP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv312ReadDynEllipP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv212ReadDynEllipP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadDynEllip__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1ab706579fe2b054fcbad99c061ebfafc5"></span>void <code class="sig-name descname">ReadDynEllip</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412ReadDynEllipP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416ReadCalcDynEllipP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv316ReadCalcDynEllipP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv216ReadCalcDynEllipP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadCalcDynEllip__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1afa3eb9a410afb768d4e3ab90d464f150"></span>void <code class="sig-name descname">ReadCalcDynEllip</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416ReadCalcDynEllipP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410ReadRadiusP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv310ReadRadiusP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv210ReadRadiusP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadRadius__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1afdb4c2faeae296ebe4997785611686c1"></span>void <code class="sig-name descname">ReadRadius</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410ReadRadiusP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418ReadRadiusGyrationP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv318ReadRadiusGyrationP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv218ReadRadiusGyrationP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadRadiusGyration__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a887a0b085ea79aff2a3bbc96635a1ab2"></span>void <code class="sig-name descname">ReadRadiusGyration</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418ReadRadiusGyrationP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413ReadRotPeriodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv313ReadRotPeriodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv213ReadRotPeriodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadRotPeriod__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a943f7c7178b8db1de3da0ae13090999a"></span>void <code class="sig-name descname">ReadRotPeriod</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413ReadRotPeriodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411ReadRotRateP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv311ReadRotRateP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv211ReadRotRateP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadRotRate__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a8e00ed740b375b4269499e84d381cb13"></span>void <code class="sig-name descname">ReadRotRate</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411ReadRotRateP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410ReadRotVelP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv310ReadRotVelP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv210ReadRotVelP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadRotVel__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1ab652ff297ed55b25dd6a6db8dc72c36f"></span>void <code class="sig-name descname">ReadRotVel</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410ReadRotVelP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410ReadSciNotP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv310ReadSciNotP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv210ReadSciNotP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadSciNot__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a851f6e889de5b82bb337ab3f470e5fc0"></span>void <code class="sig-name descname">ReadSciNot</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410ReadSciNotP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417ReadSemiMajorAxisP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv317ReadSemiMajorAxisP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv217ReadSemiMajorAxisP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadSemiMajorAxis__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a26c6f9a619d2e2a5737b6f58259cfad2"></span>void <code class="sig-name descname">ReadSemiMajorAxis</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417ReadSemiMajorAxisP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420ReadSurfaceWaterMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv320ReadSurfaceWaterMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv220ReadSurfaceWaterMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadSurfaceWaterMass__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1aa98790e5850d3de55ee057d55686f98f"></span>void <code class="sig-name descname">ReadSurfaceWaterMass</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420ReadSurfaceWaterMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Read the planet’s initial surface water mass.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code>: A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">control</span></code>: A pointer to the integration <a class="reference internal" href="vplanet.html#struct_c_o_n_t_r_o_l"><span class="std std-ref">CONTROL</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">files</span></code>: A pointer to the array of input <a class="reference internal" href="vplanet.html#struct_f_i_l_e_s"><span class="std std-ref">FILES</span></a> </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_o_p_t_i_o_n_s"><span class="std std-ref">OPTIONS</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">system</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_s_y_s_t_e_m"><span class="std std-ref">SYSTEM</span></a> instance </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iFile</span></code>: The current file number </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415ReadTemperatureP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv315ReadTemperatureP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv215ReadTemperatureP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadTemperature__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1add73e686f63ee43fcfeeb235b19473c6"></span>void <code class="sig-name descname">ReadTemperature</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415ReadTemperatureP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410ReadTidalQP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv310ReadTidalQP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv210ReadTidalQP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadTidalQ__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a618947387be8f1943a0d581c3b9ca535"></span>void <code class="sig-name descname">ReadTidalQ</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410ReadTidalQP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418ReadUseOuterTidalQP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv318ReadUseOuterTidalQP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv218ReadUseOuterTidalQP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadUseOuterTidalQ__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a2cabb5da120882de64e437afbf9e4c45"></span>void <code class="sig-name descname">ReadUseOuterTidalQ</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418ReadUseOuterTidalQP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418ReadOptionsGeneralP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6OUTPUTP6SYSTEMA_12fnReadOption">
+<span id="_CPPv318ReadOptionsGeneralP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6OUTPUTP6SYSTEMA_12fnReadOption"></span><span id="_CPPv218ReadOptionsGeneralP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6OUTPUTP6SYSTEMA_12fnReadOption"></span><span id="ReadOptionsGeneral__BODYP.CONTROLP.FILESP.MODULEP.OPTIONSP.OUTPUTP.SYSTEMP.fnReadOptionA"></span><span class="target" id="options_8c_1adc8df93861c9be16ff99338d09b8e9c2"></span>void <code class="sig-name descname">ReadOptionsGeneral</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE">MODULE</a> *<em>module</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv412fnReadOption" title="fnReadOption">fnReadOption</a> <em>fnRead</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418ReadOptionsGeneralP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6OUTPUTP6SYSTEMA_12fnReadOption" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412ReadViscUManP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv312ReadViscUManP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv212ReadViscUManP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadViscUMan__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a13cca40775eaa3461d4066f44bf8458e"></span>void <code class="sig-name descname">ReadViscUMan</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412ReadViscUManP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418ReadOptionsModulesP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6SYSTEMA_12fnReadOption">
+<span id="_CPPv318ReadOptionsModulesP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6SYSTEMA_12fnReadOption"></span><span id="_CPPv218ReadOptionsModulesP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6SYSTEMA_12fnReadOption"></span><span id="ReadOptionsModules__BODYP.CONTROLP.FILESP.MODULEP.OPTIONSP.SYSTEMP.fnReadOptionA"></span><span class="target" id="options_8c_1ae71ecfba9d8b9ac0d8989569b66f7776"></span>void <code class="sig-name descname">ReadOptionsModules</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE">MODULE</a> *<em>module</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv412fnReadOption" title="fnReadOption">fnReadOption</a> <em>fnRead</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418ReadOptionsModulesP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6SYSTEMA_12fnReadOption" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48ReadXoblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv38ReadXoblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv28ReadXoblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadXobl__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1af8925cdea3c9b07b33f48583c7d3c281"></span>void <code class="sig-name descname">ReadXobl</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48ReadXoblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48ReadYoblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv38ReadYoblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv28ReadYoblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadYobl__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a122c0b8f02677aa834cc86381e41792a"></span>void <code class="sig-name descname">ReadYobl</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48ReadYoblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48ReadZoblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv38ReadZoblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv28ReadZoblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadZobl__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1aea5d32c983fb696c240c0387e6805483"></span>void <code class="sig-name descname">ReadZobl</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iFile</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48ReadZoblP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411ReadOptionsPP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6OUTPUTP6SYSTEMPP6UPDATEA_12fnReadOptionA_c">
+<span id="_CPPv311ReadOptionsPP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6OUTPUTP6SYSTEMPP6UPDATEA_12fnReadOptionA_c"></span><span id="_CPPv211ReadOptionsPP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6OUTPUTP6SYSTEMPP6UPDATEA_12fnReadOptionA_c"></span><span id="ReadOptions__BODYPP.CONTROLP.FILESP.MODULEP.OPTIONSP.OUTPUTP.SYSTEMP.UPDATEPP.fnReadOptionA.cA"></span><span class="target" id="options_8c_1a93f40d56c2daaa69aef00c6fbd295bbb"></span>void <code class="sig-name descname">ReadOptions</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> **<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE">MODULE</a> *<em>module</em>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> **<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv412fnReadOption" title="fnReadOption">fnReadOption</a> <em>fnRead</em>[], char <em>infile</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411ReadOptionsPP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6OUTPUTP6SYSTEMPP6UPDATEA_12fnReadOptionA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv424InitializeOptionsGeneralP7OPTIONSA_12fnReadOption">
+<span id="_CPPv324InitializeOptionsGeneralP7OPTIONSA_12fnReadOption"></span><span id="_CPPv224InitializeOptionsGeneralP7OPTIONSA_12fnReadOption"></span><span id="InitializeOptionsGeneral__OPTIONSP.fnReadOptionA"></span><span class="target" id="options_8c_1a547086502250ce9fa9d530e924da173e"></span>void <code class="sig-name descname">InitializeOptionsGeneral</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv412fnReadOption" title="fnReadOption">fnReadOption</a> <em>fnRead</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424InitializeOptionsGeneralP7OPTIONSA_12fnReadOption" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417InitializeOptionsP7OPTIONSP12fnReadOption">
+<span id="_CPPv317InitializeOptionsP7OPTIONSP12fnReadOption"></span><span id="_CPPv217InitializeOptionsP7OPTIONSP12fnReadOption"></span><span id="InitializeOptions__OPTIONSP.fnReadOptionP"></span><span class="target" id="options_8c_1a2a4019aee0d715d31a1427081fdc7caf"></span>void <code class="sig-name descname">InitializeOptions</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv412fnReadOption" title="fnReadOption">fnReadOption</a> *<em>fnRead</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417InitializeOptionsP7OPTIONSP12fnReadOption" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+<div class="section" id="options-h">
+<h2><a class="toc-backref" href="#id2">options.h</a><a class="headerlink" href="#options-h" title="Permalink to this headline">¶</a></h2>
+<p>All subroutines necessary to read in all options. Also monitor input files for mistakes and log all option data. </p>
+<p><p>To add a new option: 1) Add integer definition here 2) Add new option properties in InitializeOptions 3) Write new fnReadOptions function 3) If necessary, modify the ReadOptions subroutine 4) If necessary, modify the WriteLog subroutine </p>
+<dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Rory Barnes (<a class="reference external" href="https://github.com/RoryBarnes/">RoryBarnes</a>) </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>May 7 2014</p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Defines</p>
+<dl class="macro">
+<dt id="c.OPT_BODYFILES">
+<span class="target" id="options_8h_1aee68faf1d5eeb132d266332f8478d2b0"></span><code class="sig-name descname">OPT_BODYFILES</code><a class="headerlink" href="#c.OPT_BODYFILES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_MODULES">
+<span class="target" id="options_8h_1aebffacc5b7a4cacd6afede71875e4f21"></span><code class="sig-name descname">OPT_MODULES</code><a class="headerlink" href="#c.OPT_MODULES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_SYSTEMNAME">
+<span class="target" id="options_8h_1af6230869defd5d74a1fffa7ae5472d1d"></span><code class="sig-name descname">OPT_SYSTEMNAME</code><a class="headerlink" href="#c.OPT_SYSTEMNAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_UNITANGLE">
+<span class="target" id="options_8h_1adfd815f21b818edaddeb25bd133b5768"></span><code class="sig-name descname">OPT_UNITANGLE</code><a class="headerlink" href="#c.OPT_UNITANGLE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_UNITLENGTH">
+<span class="target" id="options_8h_1a06b6648fd19d987fc41b9d77299f6773"></span><code class="sig-name descname">OPT_UNITLENGTH</code><a class="headerlink" href="#c.OPT_UNITLENGTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_UNITMASS">
+<span class="target" id="options_8h_1aaead61f647b615987ddda5bd16cdb3b0"></span><code class="sig-name descname">OPT_UNITMASS</code><a class="headerlink" href="#c.OPT_UNITMASS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_UNITTIME">
+<span class="target" id="options_8h_1aaf3219ab4633d67c01b6422b12d31f91"></span><code class="sig-name descname">OPT_UNITTIME</code><a class="headerlink" href="#c.OPT_UNITTIME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_UNITTEMP">
+<span class="target" id="options_8h_1a2337276c6ff8784deabd47110ddfca30"></span><code class="sig-name descname">OPT_UNITTEMP</code><a class="headerlink" href="#c.OPT_UNITTEMP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_VERBOSE">
+<span class="target" id="options_8h_1ae33534a21238a3d0a2a892bb0bfd84be"></span><code class="sig-name descname">OPT_VERBOSE</code><a class="headerlink" href="#c.OPT_VERBOSE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_AGE">
+<span class="target" id="options_8h_1af8df5248e5008e66a8decbf5bb236586"></span><code class="sig-name descname">OPT_AGE</code><a class="headerlink" href="#c.OPT_AGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_ALBEDOGLOBAL">
+<span class="target" id="options_8h_1a1069b7ff39adde0f25f423818b06dd8d"></span><code class="sig-name descname">OPT_ALBEDOGLOBAL</code><a class="headerlink" href="#c.OPT_ALBEDOGLOBAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_BACK">
+<span class="target" id="options_8h_1af6c946ac83e1de4f1520022ec5ed8dfa"></span><code class="sig-name descname">OPT_BACK</code><a class="headerlink" href="#c.OPT_BACK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_OUTFILE">
+<span class="target" id="options_8h_1a7752933dd294be8756d0d1b5033d1d94"></span><code class="sig-name descname">OPT_OUTFILE</code><a class="headerlink" href="#c.OPT_OUTFILE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_ETA">
+<span class="target" id="options_8h_1a94a0df39f0ee4f2d28f92854b6b19cc4"></span><code class="sig-name descname">OPT_ETA</code><a class="headerlink" href="#c.OPT_ETA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_OUTPUTTIME">
+<span class="target" id="options_8h_1af9102092b761f5ff03f05f93574ffb92"></span><code class="sig-name descname">OPT_OUTPUTTIME</code><a class="headerlink" href="#c.OPT_OUTPUTTIME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_STOPTIME">
+<span class="target" id="options_8h_1af35c20eac001a08ce526a75aff0e9348"></span><code class="sig-name descname">OPT_STOPTIME</code><a class="headerlink" href="#c.OPT_STOPTIME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_TIMESTEP">
+<span class="target" id="options_8h_1a5f0cf21408e883e19b3958b38840de49"></span><code class="sig-name descname">OPT_TIMESTEP</code><a class="headerlink" href="#c.OPT_TIMESTEP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_VARDT">
+<span class="target" id="options_8h_1a8d1fcd43f5cdff1766bf16d7a14a2e45"></span><code class="sig-name descname">OPT_VARDT</code><a class="headerlink" href="#c.OPT_VARDT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_BODYNAME">
+<span class="target" id="options_8h_1a1786b7e0cb6c073a62dbf773903702f8"></span><code class="sig-name descname">OPT_BODYNAME</code><a class="headerlink" href="#c.OPT_BODYNAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_COLOR">
+<span class="target" id="options_8h_1af6987e4ad2f8be50931527b1b08667bd"></span><code class="sig-name descname">OPT_COLOR</code><a class="headerlink" href="#c.OPT_COLOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_DENSITY">
+<span class="target" id="options_8h_1a574922a654cb6b92e4a5c7e4037ce756"></span><code class="sig-name descname">OPT_DENSITY</code><a class="headerlink" href="#c.OPT_DENSITY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_FORW">
+<span class="target" id="options_8h_1a02b28272912903548ce5b442c92cbdef"></span><code class="sig-name descname">OPT_FORW</code><a class="headerlink" href="#c.OPT_FORW" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HALTMAXECC">
+<span class="target" id="options_8h_1ae24a3828a43f10a85a4d369f37c1de09"></span><code class="sig-name descname">OPT_HALTMAXECC</code><a class="headerlink" href="#c.OPT_HALTMAXECC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HALTMAXMUTUALINC">
+<span class="target" id="options_8h_1a2ffeec7bc15dc4156a3757bd718b822c"></span><code class="sig-name descname">OPT_HALTMAXMUTUALINC</code><a class="headerlink" href="#c.OPT_HALTMAXMUTUALINC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HALTMERGE">
+<span class="target" id="options_8h_1ab6eac12f4fe0e947e95402c02df3578b"></span><code class="sig-name descname">OPT_HALTMERGE</code><a class="headerlink" href="#c.OPT_HALTMERGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HALTMINECC">
+<span class="target" id="options_8h_1ab28bf9cfea4188a510bd6febd5363aec"></span><code class="sig-name descname">OPT_HALTMINECC</code><a class="headerlink" href="#c.OPT_HALTMINECC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HALTMINOBL">
+<span class="target" id="options_8h_1a30349adc385be8ca9f9423644eb22843"></span><code class="sig-name descname">OPT_HALTMINOBL</code><a class="headerlink" href="#c.OPT_HALTMINOBL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HALTMINSEMI">
+<span class="target" id="options_8h_1ab7ee66db40280548bee31edf6b504e62"></span><code class="sig-name descname">OPT_HALTMINSEMI</code><a class="headerlink" href="#c.OPT_HALTMINSEMI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HALTPOSDEDT">
+<span class="target" id="options_8h_1a38dc08de5a61a90a55ea36beedf41188"></span><code class="sig-name descname">OPT_HALTPOSDEDT</code><a class="headerlink" href="#c.OPT_HALTPOSDEDT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_HECC">
+<span class="target" id="options_8h_1abff36aa461d3195936b5daaa3dc4751f"></span><code class="sig-name descname">OPT_HECC</code><a class="headerlink" href="#c.OPT_HECC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_INTEGRATIONMETHOD">
+<span class="target" id="options_8h_1a21e02bfd2cfc51d4eeb028c338d87ab2"></span><code class="sig-name descname">OPT_INTEGRATIONMETHOD</code><a class="headerlink" href="#c.OPT_INTEGRATIONMETHOD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_KECC">
+<span class="target" id="options_8h_1a6edb8ea1f489a22501ea5b198b5c00dd"></span><code class="sig-name descname">OPT_KECC</code><a class="headerlink" href="#c.OPT_KECC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_LOG">
+<span class="target" id="options_8h_1a98f68457392c8aab2492a4b6cd914563"></span><code class="sig-name descname">OPT_LOG</code><a class="headerlink" href="#c.OPT_LOG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_LOGFILE">
+<span class="target" id="options_8h_1a6b8a81db4372750904ac237a9f623773"></span><code class="sig-name descname">OPT_LOGFILE</code><a class="headerlink" href="#c.OPT_LOGFILE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_LONGP">
+<span class="target" id="options_8h_1a87b8061bc907287c72d05a1ebd33a9b2"></span><code class="sig-name descname">OPT_LONGP</code><a class="headerlink" href="#c.OPT_LONGP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_LXUV">
+<span class="target" id="options_8h_1a7f9fdee26c81f33f4df5c2f035b6fe5f"></span><code class="sig-name descname">OPT_LXUV</code><a class="headerlink" href="#c.OPT_LXUV" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_MASS">
+<span class="target" id="options_8h_1a9aa98b20ae667f653426999938d3bc0b"></span><code class="sig-name descname">OPT_MASS</code><a class="headerlink" href="#c.OPT_MASS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_MASSRAD">
+<span class="target" id="options_8h_1ad0c6cdf70fc5f7198676d1be969b5c27"></span><code class="sig-name descname">OPT_MASSRAD</code><a class="headerlink" href="#c.OPT_MASSRAD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_MINVALUE">
+<span class="target" id="options_8h_1a6fbf321f405d1d640fb68bd54eb692b3"></span><code class="sig-name descname">OPT_MINVALUE</code><a class="headerlink" href="#c.OPT_MINVALUE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_ORBECC">
+<span class="target" id="options_8h_1ab742b82d4d8847a2e329155cddac4fda"></span><code class="sig-name descname">OPT_ORBECC</code><a class="headerlink" href="#c.OPT_ORBECC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_ORBMEANMOTION">
+<span class="target" id="options_8h_1ae8a2ea274d404b08e9ba32bf44b78c4c"></span><code class="sig-name descname">OPT_ORBMEANMOTION</code><a class="headerlink" href="#c.OPT_ORBMEANMOTION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_BODYTYPE">
+<span class="target" id="options_8h_1a07d805e03936fc368cfa0cd13685d819"></span><code class="sig-name descname">OPT_BODYTYPE</code><a class="headerlink" href="#c.OPT_BODYTYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_ORBPER">
+<span class="target" id="options_8h_1ad8fdb2b64f29be9cb7b2be2777b649f3"></span><code class="sig-name descname">OPT_ORBPER</code><a class="headerlink" href="#c.OPT_ORBPER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_ORBSEMI">
+<span class="target" id="options_8h_1a28d6b907f5022c9a6e6aa06f1dab46cb"></span><code class="sig-name descname">OPT_ORBSEMI</code><a class="headerlink" href="#c.OPT_ORBSEMI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_INC">
+<span class="target" id="options_8h_1a6a16603ffeb92e30149567b72b511cea"></span><code class="sig-name descname">OPT_INC</code><a class="headerlink" href="#c.OPT_INC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_ARGP">
+<span class="target" id="options_8h_1ad96f44bef903376e3781dbca67c67961"></span><code class="sig-name descname">OPT_ARGP</code><a class="headerlink" href="#c.OPT_ARGP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_LONGA">
+<span class="target" id="options_8h_1af2c5c809a4eebcff03e641c6116bbbac"></span><code class="sig-name descname">OPT_LONGA</code><a class="headerlink" href="#c.OPT_LONGA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_GRCORR">
+<span class="target" id="options_8h_1a3d0251cb28ac60d93b95adba67c970ee"></span><code class="sig-name descname">OPT_GRCORR</code><a class="headerlink" href="#c.OPT_GRCORR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_LUMINOSITY">
+<span class="target" id="options_8h_1aa523b07b1ab0279e660496cdb5319d6b"></span><code class="sig-name descname">OPT_LUMINOSITY</code><a class="headerlink" href="#c.OPT_LUMINOSITY" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Initial) luminosity </p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_TIDALQ">
+<span class="target" id="options_8h_1a57032dc1b175e9455f7bb9a0eebf17a3"></span><code class="sig-name descname">OPT_TIDALQ</code><a class="headerlink" href="#c.OPT_TIDALQ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_USEOUTERTIDALQ">
+<span class="target" id="options_8h_1a74f80ccca00b704bc6791cfb33f96470"></span><code class="sig-name descname">OPT_USEOUTERTIDALQ</code><a class="headerlink" href="#c.OPT_USEOUTERTIDALQ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_OUTDIGITS">
+<span class="target" id="options_8h_1a3b11faab714f5b4ac3d397af15d63ed1"></span><code class="sig-name descname">OPT_OUTDIGITS</code><a class="headerlink" href="#c.OPT_OUTDIGITS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_OUTPUTORDER">
+<span class="target" id="options_8h_1ad46ccf83ef2423d12a7e120145966a01"></span><code class="sig-name descname">OPT_OUTPUTORDER</code><a class="headerlink" href="#c.OPT_OUTPUTORDER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_GRIDOUTPUT">
+<span class="target" id="options_8h_1a5d541334417042ff9d59516e60d0efa5"></span><code class="sig-name descname">OPT_GRIDOUTPUT</code><a class="headerlink" href="#c.OPT_GRIDOUTPUT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_OUTSCINOT">
+<span class="target" id="options_8h_1af93b76facdda5c5304330abd44049049"></span><code class="sig-name descname">OPT_OUTSCINOT</code><a class="headerlink" href="#c.OPT_OUTSCINOT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_OVERWRITE">
+<span class="target" id="options_8h_1af3aca73363152aa93317008f3894c7f5"></span><code class="sig-name descname">OPT_OVERWRITE</code><a class="headerlink" href="#c.OPT_OVERWRITE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_PRECA">
+<span class="target" id="options_8h_1ae9835b486f628567c7ec830c63d38911"></span><code class="sig-name descname">OPT_PRECA</code><a class="headerlink" href="#c.OPT_PRECA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_DYNELLIP">
+<span class="target" id="options_8h_1ae6cd36f880113c8aac1ec4000d60671f"></span><code class="sig-name descname">OPT_DYNELLIP</code><a class="headerlink" href="#c.OPT_DYNELLIP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_CALCDYNELLIP">
+<span class="target" id="options_8h_1a854aeeda63d1dd5fb83d3bb8c2b7fb19"></span><code class="sig-name descname">OPT_CALCDYNELLIP</code><a class="headerlink" href="#c.OPT_CALCDYNELLIP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_PRILUM">
+<span class="target" id="options_8h_1aa286a5c8e79bfb741f4c9b3475a7c798"></span><code class="sig-name descname">OPT_PRILUM</code><a class="headerlink" href="#c.OPT_PRILUM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_VISCUMAN">
+<span class="target" id="options_8h_1a95fbbc0b9ebbe585fd82bcc9197ab708"></span><code class="sig-name descname">OPT_VISCUMAN</code><a class="headerlink" href="#c.OPT_VISCUMAN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_OBL">
+<span class="target" id="options_8h_1ac909a9c3d6a254c10560e0cf728d4630"></span><code class="sig-name descname">OPT_OBL</code><a class="headerlink" href="#c.OPT_OBL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_COSOBL">
+<span class="target" id="options_8h_1ac66a57f095b7be8a24575a25329890e1"></span><code class="sig-name descname">OPT_COSOBL</code><a class="headerlink" href="#c.OPT_COSOBL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_RADIUS">
+<span class="target" id="options_8h_1a28d9ac3733f16d62378b0ddbd99c05f4"></span><code class="sig-name descname">OPT_RADIUS</code><a class="headerlink" href="#c.OPT_RADIUS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_RG">
+<span class="target" id="options_8h_1a1ad064e0e619474fa438567ef466c1c8"></span><code class="sig-name descname">OPT_RG</code><a class="headerlink" href="#c.OPT_RG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_ROTPER">
+<span class="target" id="options_8h_1a2000c13cb2b135db062b8d6522bffe54"></span><code class="sig-name descname">OPT_ROTPER</code><a class="headerlink" href="#c.OPT_ROTPER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_ROTRATE">
+<span class="target" id="options_8h_1a9feab835aa1ca89720ef187ec7fba780"></span><code class="sig-name descname">OPT_ROTRATE</code><a class="headerlink" href="#c.OPT_ROTRATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_ROTVEL">
+<span class="target" id="options_8h_1acfdf4573e9d35421ab997ebf5f95cb3c"></span><code class="sig-name descname">OPT_ROTVEL</code><a class="headerlink" href="#c.OPT_ROTVEL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_TEMPERATURE">
+<span class="target" id="options_8h_1accaa4f3b75890de5d6529ef2ecc9f45a"></span><code class="sig-name descname">OPT_TEMPERATURE</code><a class="headerlink" href="#c.OPT_TEMPERATURE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Effective temperature (initial) </p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_XOBL">
+<span class="target" id="options_8h_1a843439224a08416541e978b293594a7e"></span><code class="sig-name descname">OPT_XOBL</code><a class="headerlink" href="#c.OPT_XOBL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_YOBL">
+<span class="target" id="options_8h_1a5ab421e3ee04aebeba8e6424e51d84ee"></span><code class="sig-name descname">OPT_YOBL</code><a class="headerlink" href="#c.OPT_YOBL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_ZOBL">
+<span class="target" id="options_8h_1af0834f62d9267e7ffb7a835d1f09f8a2"></span><code class="sig-name descname">OPT_ZOBL</code><a class="headerlink" href="#c.OPT_ZOBL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_SURFACEWATERMASS">
+<span class="target" id="options_8h_1ad87303b3acca39ffa5cf89158afc6a33"></span><code class="sig-name descname">OPT_SURFACEWATERMASS</code><a class="headerlink" href="#c.OPT_SURFACEWATERMASS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial surface water mass </p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_MINSURFACEWATERMASS">
+<span class="target" id="options_8h_1a192bfaa77a59999316df8ae08b9c0287"></span><code class="sig-name descname">OPT_MINSURFACEWATERMASS</code><a class="headerlink" href="#c.OPT_MINSURFACEWATERMASS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum surface water mass (desiccated below this) </p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_ENVELOPEMASS">
+<span class="target" id="options_8h_1a4612b590a3089a5a2b24253756c3e85e"></span><code class="sig-name descname">OPT_ENVELOPEMASS</code><a class="headerlink" href="#c.OPT_ENVELOPEMASS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial envelope mass </p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="c.OPT_MINENVELOPEMASS">
+<span class="target" id="options_8h_1a1e832cdf91239378e28b7d1e249075ee"></span><code class="sig-name descname">OPT_MINENVELOPEMASS</code><a class="headerlink" href="#c.OPT_MINENVELOPEMASS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum envelope mass (evaporated below this) </p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../vplot.html" class="btn btn-neutral float-right" title="VPLOT" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="thermint.html" class="btn btn-neutral" title="thermint" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,1 @@
+.. include:: ../../examples/AtmEscKepler-36/README.rst

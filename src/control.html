@@ -1,0 +1,535 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>control &mdash; VPLanet 1.2.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="VPLanet 1.2.0
+ documentation" href="../index.html"/>
+        <link rel="up" title="C API" href="../src.html"/>
+        <link rel="next" title="spinbody" href="spinbody.html"/>
+        <link rel="prev" title="vplanet" href="vplanet.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#input-file-structure">Input File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#output-file-structure">Output File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#input-options">Input Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html#output-parameters">Output Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">control</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#control-c">control.c</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#control-h">control.h</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">VPLanet</a> &raquo;</li>
+      
+        <li><a href="../src.html">C API</a>&raquo;</li>
+      
+    
+      <li>control</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="control">
+<h1>control<a class="headerlink" href="#control" title="Permalink to this headline">¶</a></h1>
+<p><strong>Contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#control-c" id="id1">control.c</a></p></li>
+<li><p><a class="reference internal" href="#control-h" id="id2">control.h</a></p></li>
+</ul>
+</div>
+<div class="section" id="control-c">
+<h2><a class="toc-backref" href="#id1">control.c</a><a class="headerlink" href="#control-c" title="Permalink to this headline">¶</a></h2>
+<p>These subroutines deal with control, including I/O, units, and files. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Rory Barnes (<a class="reference external" href="https://github.com/RoryBarnes/">RoryBarnes</a>)</p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>Jan 7 2015 </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Functions</p>
+<dl class="function">
+<dt id="_CPPv412BodyCopyNULLP4BODYP4BODYiii">
+<span id="_CPPv312BodyCopyNULLP4BODYP4BODYiii"></span><span id="_CPPv212BodyCopyNULLP4BODYP4BODYiii"></span><span id="BodyCopyNULL__BODYP.BODYP.i.i.i"></span><span class="target" id="control_8c_1aacfd0b9f71181e03f1a2c076c057078f"></span>void <code class="sig-name descname">BodyCopyNULL</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>dest</em>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>src</em>, int <em>foo</em>, int <em>iNumBodies</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412BodyCopyNULLP4BODYP4BODYiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48strcicmpPKcPKc">
+<span id="_CPPv38strcicmpPKcPKc"></span><span id="_CPPv28strcicmpPKcPKc"></span><span id="strcicmp__cCP.cCP"></span><span class="target" id="control_8c_1ae2842cb0cbdf6aa210eba0b735e63312"></span>int <code class="sig-name descname">strcicmp</code><span class="sig-paren">(</span>char <em class="property">const</em> *<em>a</em>, char <em class="property">const</em> *<em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48strcicmpPKcPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Case-insensitive <code class="docutils literal notranslate"><span class="pre">strcmp</span></code> </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420compare_option_namesPKvPKv">
+<span id="_CPPv320compare_option_namesPKvPKv"></span><span id="_CPPv220compare_option_namesPKvPKv"></span><span id="compare_option_names__voidCP.voidCP"></span><span class="target" id="control_8c_1abff764167a74a68219abc70d58a03db3"></span>int <code class="sig-name descname">compare_option_names</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>p</em>, <em class="property">const</em> void *<em>q</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420compare_option_namesPKvPKv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Comparison function for option names. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv420compare_output_namesPKvPKv">
+<span id="_CPPv320compare_output_namesPKvPKv"></span><span id="_CPPv220compare_output_namesPKvPKv"></span><span id="compare_output_names__voidCP.voidCP"></span><span class="target" id="control_8c_1ab1268541781a1447d6448a24c08738fe"></span>int <code class="sig-name descname">compare_output_names</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>p</em>, <em class="property">const</em> void *<em>q</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420compare_output_namesPKvPKv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Comparison function for output names. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412sort_optionsP7OPTIONSA_i">
+<span id="_CPPv312sort_optionsP7OPTIONSA_i"></span><span id="_CPPv212sort_optionsP7OPTIONSA_i"></span><span id="sort_options__OPTIONSP.iA"></span><span class="target" id="control_8c_1ab36e4f7b7c64278d9924a3261d391018"></span>void <code class="sig-name descname">sort_options</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, int <em>sorted</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412sort_optionsP7OPTIONSA_i" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sort the <a class="reference internal" href="vplanet.html#struct_o_p_t_i_o_n_s"><span class="std std-ref">OPTIONS</span></a> struct by name. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411sort_outputP6OUTPUTA_i">
+<span id="_CPPv311sort_outputP6OUTPUTA_i"></span><span id="_CPPv211sort_outputP6OUTPUTA_i"></span><span id="sort_output__OUTPUTP.iA"></span><span class="target" id="control_8c_1a8211ebc89bb12dc5ed9bdd0b69c32964"></span>void <code class="sig-name descname">sort_output</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, int <em>sorted</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411sort_outputP6OUTPUTA_i" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sort the <a class="reference internal" href="vplanet.html#struct_o_u_t_p_u_t"><span class="std std-ref">OUTPUT</span></a> struct by name. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417InitializeControlP7CONTROLP6MODULE">
+<span id="_CPPv317InitializeControlP7CONTROLP6MODULE"></span><span id="_CPPv217InitializeControlP7CONTROLP6MODULE"></span><span id="InitializeControl__CONTROLP.MODULEP"></span><span class="target" id="control_8c_1acc0a1793bbff6ecd05f3d306eb6c7cd3"></span>void <code class="sig-name descname">InitializeControl</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE">MODULE</a> *<em>module</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417InitializeControlP7CONTROLP6MODULE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423InitializeControlEvolveP4BODYP7CONTROLP6MODULEP6UPDATE">
+<span id="_CPPv323InitializeControlEvolveP4BODYP7CONTROLP6MODULEP6UPDATE"></span><span id="_CPPv223InitializeControlEvolveP4BODYP7CONTROLP6MODULEP6UPDATE"></span><span id="InitializeControlEvolve__BODYP.CONTROLP.MODULEP.UPDATEP"></span><span class="target" id="control_8c_1ad01dc8af002030c5554051a9c96de27e"></span>void <code class="sig-name descname">InitializeControlEvolve</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE">MODULE</a> *<em>module</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423InitializeControlEvolveP4BODYP7CONTROLP6MODULEP6UPDATE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This function performs the following tasks:</p>
+<p>1) Allocates control-&gt;Evolve.fnBodyCopy, iNumMultiProps, tmpUpdate, daDeriv, and control-&gt;iNumMultiProps. 2) Initializes control-&gt;bOrbiters 3) Initializes control-&gt;Evolve.iNumModules </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414PrintFileTypesi">
+<span id="_CPPv314PrintFileTypesi"></span><span id="_CPPv214PrintFileTypesi"></span><span id="PrintFileTypes__i"></span><span class="target" id="control_8c_1a5876578095bd585b3ba40b9c708f26bd"></span>void <code class="sig-name descname">PrintFileTypes</code><span class="sig-paren">(</span>int <em>iFileType</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414PrintFileTypesi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415WriteHelpOptionP7OPTIONSi">
+<span id="_CPPv315WriteHelpOptionP7OPTIONSi"></span><span id="_CPPv215WriteHelpOptionP7OPTIONSi"></span><span id="WriteHelpOption__OPTIONSP.i"></span><span class="target" id="control_8c_1ae1131c718c6dee5789dc12334d5d2c71"></span>void <code class="sig-name descname">WriteHelpOption</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, int <em>bLong</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415WriteHelpOptionP7OPTIONSi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415WriteHelpOutputP6OUTPUTi">
+<span id="_CPPv315WriteHelpOutputP6OUTPUTi"></span><span id="_CPPv215WriteHelpOutputP6OUTPUTi"></span><span id="WriteHelpOutput__OUTPUTP.i"></span><span class="target" id="control_8c_1a4330e3954aa8670778227b2b0b52c461"></span>void <code class="sig-name descname">WriteHelpOutput</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, int <em>bLong</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415WriteHelpOutputP6OUTPUTi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411HelpOptionsP7OPTIONSi">
+<span id="_CPPv311HelpOptionsP7OPTIONSi"></span><span id="_CPPv211HelpOptionsP7OPTIONSi"></span><span id="HelpOptions__OPTIONSP.i"></span><span class="target" id="control_8c_1a1c3f596e0993856703060655baa3b83a"></span>void <code class="sig-name descname">HelpOptions</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, int <em>bLong</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411HelpOptionsP7OPTIONSi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410HelpOutputP6OUTPUTi">
+<span id="_CPPv310HelpOutputP6OUTPUTi"></span><span id="_CPPv210HelpOutputP6OUTPUTi"></span><span id="HelpOutput__OUTPUTP.i"></span><span class="target" id="control_8c_1a1df6c16711df69de374175e1498a481b"></span>void <code class="sig-name descname">HelpOutput</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, int <em>bLong</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410HelpOutputP6OUTPUTi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv44HelpP7OPTIONSP6OUTPUTA_ci">
+<span id="_CPPv34HelpP7OPTIONSP6OUTPUTA_ci"></span><span id="_CPPv24HelpP7OPTIONSP6OUTPUTA_ci"></span><span id="Help__OPTIONSP.OUTPUTP.cA.i"></span><span class="target" id="control_8c_1a11b0b7cccc5440d182583205a7442754"></span>void <code class="sig-name descname">Help</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS">OPTIONS</a> *<em>options</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, char <em>exe</em>[], int <em>bLong</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv44HelpP7OPTIONSP6OUTPUTA_ci" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48LineExitA_ci">
+<span id="_CPPv38LineExitA_ci"></span><span id="_CPPv28LineExitA_ci"></span><span id="LineExit__cA.i"></span><span class="target" id="control_8c_1a6378b09010aea995aa15a0c3457f6c7c"></span>void <code class="sig-name descname">LineExit</code><span class="sig-paren">(</span>char <em>cFile</em>[], int <em>iLine</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48LineExitA_ci" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv46sLowerA_c">
+<span id="_CPPv36sLowerA_c"></span><span id="_CPPv26sLowerA_c"></span><span id="sLower__cA"></span><span class="target" id="control_8c_1a5a31b00a2cec04dc716028873eb9f72f"></span>char *<code class="sig-name descname">sLower</code><span class="sig-paren">(</span>char <em>cString</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46sLowerA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv47fprintdP4FILEdii">
+<span id="_CPPv37fprintdP4FILEdii"></span><span id="_CPPv27fprintdP4FILEdii"></span><span id="fprintd__FILEP.double.i.i"></span><span class="target" id="control_8c_1a1eac8834351b71fe362a015a86c6e4c0"></span>void <code class="sig-name descname">fprintd</code><span class="sig-paren">(</span>FILE *<em>fp</em>, double <em>x</em>, int <em>iExp</em>, int <em>iDig</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv47fprintdP4FILEdii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413fdUnitsLengthi">
+<span id="_CPPv313fdUnitsLengthi"></span><span id="_CPPv213fdUnitsLengthi"></span><span id="fdUnitsLength__i"></span><span class="target" id="control_8c_1a8afb2e152f418c166f9f798bd292efe5"></span>double <code class="sig-name descname">fdUnitsLength</code><span class="sig-paren">(</span>int <em>iType</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fdUnitsLengthi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413fsUnitsLengthiA_c">
+<span id="_CPPv313fsUnitsLengthiA_c"></span><span id="_CPPv213fsUnitsLengthiA_c"></span><span id="fsUnitsLength__i.cA"></span><span class="target" id="control_8c_1a9ee7aed06741fa494e77946514768f63"></span>void <code class="sig-name descname">fsUnitsLength</code><span class="sig-paren">(</span>int <em>iType</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fsUnitsLengthiA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fdUnitsTimei">
+<span id="_CPPv311fdUnitsTimei"></span><span id="_CPPv211fdUnitsTimei"></span><span id="fdUnitsTime__i"></span><span class="target" id="control_8c_1a271bfe3dddb6ae570305067bcb7673b6"></span>double <code class="sig-name descname">fdUnitsTime</code><span class="sig-paren">(</span>int <em>iType</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdUnitsTimei" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fsUnitsTimeiA_c">
+<span id="_CPPv311fsUnitsTimeiA_c"></span><span id="_CPPv211fsUnitsTimeiA_c"></span><span id="fsUnitsTime__i.cA"></span><span class="target" id="control_8c_1a0a1d539216c8a44d128ed08b60b21497"></span>void <code class="sig-name descname">fsUnitsTime</code><span class="sig-paren">(</span>int <em>iType</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fsUnitsTimeiA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fdUnitsMassi">
+<span id="_CPPv311fdUnitsMassi"></span><span id="_CPPv211fdUnitsMassi"></span><span id="fdUnitsMass__i"></span><span class="target" id="control_8c_1a432ae994ddece1e743ea7315151fcbad"></span>double <code class="sig-name descname">fdUnitsMass</code><span class="sig-paren">(</span>int <em>iType</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdUnitsMassi" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fsUnitsMassiA_c">
+<span id="_CPPv311fsUnitsMassiA_c"></span><span id="_CPPv211fsUnitsMassiA_c"></span><span id="fsUnitsMass__i.cA"></span><span class="target" id="control_8c_1a09b8eb55ce25fd3e1cf68efcd34964a4"></span>void <code class="sig-name descname">fsUnitsMass</code><span class="sig-paren">(</span>int <em>iType</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fsUnitsMassiA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412fdUnitsAnglei">
+<span id="_CPPv312fdUnitsAnglei"></span><span id="_CPPv212fdUnitsAnglei"></span><span id="fdUnitsAngle__i"></span><span class="target" id="control_8c_1afc288cdc5aab1b3faf8d8f69755f0ac4"></span>double <code class="sig-name descname">fdUnitsAngle</code><span class="sig-paren">(</span>int <em>iType</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fdUnitsAnglei" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412fsUnitsAngleiA_c">
+<span id="_CPPv312fsUnitsAngleiA_c"></span><span id="_CPPv212fsUnitsAngleiA_c"></span><span id="fsUnitsAngle__i.cA"></span><span class="target" id="control_8c_1a17fb350bc177b2d9c54a0deb055a4433"></span>void <code class="sig-name descname">fsUnitsAngle</code><span class="sig-paren">(</span>int <em>iType</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fsUnitsAngleiA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416fsUnitsViscosityP5UNITSA_c">
+<span id="_CPPv316fsUnitsViscosityP5UNITSA_c"></span><span id="_CPPv216fsUnitsViscosityP5UNITSA_c"></span><span id="fsUnitsViscosity__UNITSP.cA"></span><span class="target" id="control_8c_1a2a4c329cc320a31e84e0203d3b326b2d"></span>void <code class="sig-name descname">fsUnitsViscosity</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fsUnitsViscosityP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413fsUnitsAngMomP5UNITSA_c">
+<span id="_CPPv313fsUnitsAngMomP5UNITSA_c"></span><span id="_CPPv213fsUnitsAngMomP5UNITSA_c"></span><span id="fsUnitsAngMom__UNITSP.cA"></span><span class="target" id="control_8c_1a75e781616c8a719b270ee0533a9747ad"></span>void <code class="sig-name descname">fsUnitsAngMom</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fsUnitsAngMomP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414fsUnitsDensityP5UNITSA_c">
+<span id="_CPPv314fsUnitsDensityP5UNITSA_c"></span><span id="_CPPv214fsUnitsDensityP5UNITSA_c"></span><span id="fsUnitsDensity__UNITSP.cA"></span><span class="target" id="control_8c_1a80cc326c44a544ed3d5683e1bc5c4ea3"></span>void <code class="sig-name descname">fsUnitsDensity</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fsUnitsDensityP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410fsUnitsVelP5UNITSA_c">
+<span id="_CPPv310fsUnitsVelP5UNITSA_c"></span><span id="_CPPv210fsUnitsVelP5UNITSA_c"></span><span id="fsUnitsVel__UNITSP.cA"></span><span class="target" id="control_8c_1adfe69ab75e8c79b28476edefe0b786d1"></span>void <code class="sig-name descname">fsUnitsVel</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410fsUnitsVelP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fsUnitsRateiA_c">
+<span id="_CPPv311fsUnitsRateiA_c"></span><span id="_CPPv211fsUnitsRateiA_c"></span><span id="fsUnitsRate__i.cA"></span><span class="target" id="control_8c_1a9d014dfa2048fb9f42c7c1318be833f4"></span>void <code class="sig-name descname">fsUnitsRate</code><span class="sig-paren">(</span>int <em>iType</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fsUnitsRateiA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv414fsUnitsAngRateP5UNITSA_c">
+<span id="_CPPv314fsUnitsAngRateP5UNITSA_c"></span><span id="_CPPv214fsUnitsAngRateP5UNITSA_c"></span><span id="fsUnitsAngRate__UNITSP.cA"></span><span class="target" id="control_8c_1a49fe5264e97487b480059d38b9934144"></span>void <code class="sig-name descname">fsUnitsAngRate</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fsUnitsAngRateP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413fsUnitsEnergyP5UNITSA_c">
+<span id="_CPPv313fsUnitsEnergyP5UNITSA_c"></span><span id="_CPPv213fsUnitsEnergyP5UNITSA_c"></span><span id="fsUnitsEnergy__UNITSP.cA"></span><span class="target" id="control_8c_1a1c929219ded4109f5b1f955043031062"></span>void <code class="sig-name descname">fsUnitsEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fsUnitsEnergyP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413fdUnitsEnergyiii">
+<span id="_CPPv313fdUnitsEnergyiii"></span><span id="_CPPv213fdUnitsEnergyiii"></span><span id="fdUnitsEnergy__i.i.i"></span><span class="target" id="control_8c_1a2fac335434e2f09bf5987df222c80698"></span>double <code class="sig-name descname">fdUnitsEnergy</code><span class="sig-paren">(</span>int <em>iTime</em>, int <em>iMass</em>, int <em>iLength</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fdUnitsEnergyiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412fsUnitsPowerP5UNITSA_c">
+<span id="_CPPv312fsUnitsPowerP5UNITSA_c"></span><span id="_CPPv212fsUnitsPowerP5UNITSA_c"></span><span id="fsUnitsPower__UNITSP.cA"></span><span class="target" id="control_8c_1a0feeb5decd615d28688e9d42f437033c"></span>void <code class="sig-name descname">fsUnitsPower</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fsUnitsPowerP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412fdUnitsPoweriii">
+<span id="_CPPv312fdUnitsPoweriii"></span><span id="_CPPv212fdUnitsPoweriii"></span><span id="fdUnitsPower__i.i.i"></span><span class="target" id="control_8c_1a0a8aa2abda1668d8fd31fdd1714d585a"></span>double <code class="sig-name descname">fdUnitsPower</code><span class="sig-paren">(</span>int <em>iTime</em>, int <em>iMass</em>, int <em>iLength</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fdUnitsPoweriii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417fsUnitsEnergyFluxP5UNITSA_c">
+<span id="_CPPv317fsUnitsEnergyFluxP5UNITSA_c"></span><span id="_CPPv217fsUnitsEnergyFluxP5UNITSA_c"></span><span id="fsUnitsEnergyFlux__UNITSP.cA"></span><span class="target" id="control_8c_1afa4a412c881f9cf897f31dc149d0415d"></span>void <code class="sig-name descname">fsUnitsEnergyFlux</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS">UNITS</a> *<em>units</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fsUnitsEnergyFluxP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417fdUnitsEnergyFluxiii">
+<span id="_CPPv317fdUnitsEnergyFluxiii"></span><span id="_CPPv217fdUnitsEnergyFluxiii"></span><span id="fdUnitsEnergyFlux__i.i.i"></span><span class="target" id="control_8c_1a28a68efc74344f63f09d4a1e10a167d2"></span>double <code class="sig-name descname">fdUnitsEnergyFlux</code><span class="sig-paren">(</span>int <em>iTime</em>, int <em>iMass</em>, int <em>iLength</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fdUnitsEnergyFluxiii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fdUnitsTempdii">
+<span id="_CPPv311fdUnitsTempdii"></span><span id="_CPPv211fdUnitsTempdii"></span><span id="fdUnitsTemp__double.i.i"></span><span class="target" id="control_8c_1ac2a5764e8da7e7a75ddab83741c2a9db"></span>double <code class="sig-name descname">fdUnitsTemp</code><span class="sig-paren">(</span>double <em>dTemp</em>, int <em>iOldType</em>, int <em>iNewType</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdUnitsTempdii" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv411fsUnitsTempiA_c">
+<span id="_CPPv311fsUnitsTempiA_c"></span><span id="_CPPv211fsUnitsTempiA_c"></span><span id="fsUnitsTemp__i.cA"></span><span class="target" id="control_8c_1aaa1b9e4ec9959b0a39f1d05eb57db954"></span>void <code class="sig-name descname">fsUnitsTemp</code><span class="sig-paren">(</span>int <em>iType</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fsUnitsTempiA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv415fsUnitsTempRateiA_c">
+<span id="_CPPv315fsUnitsTempRateiA_c"></span><span id="_CPPv215fsUnitsTempRateiA_c"></span><span id="fsUnitsTempRate__i.cA"></span><span class="target" id="control_8c_1ae3a564bd5afc9e162ef75bee2b5b9e7e"></span>void <code class="sig-name descname">fsUnitsTempRate</code><span class="sig-paren">(</span>int <em>iType</em>, char <em>cUnit</em>[]<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fsUnitsTempRateiA_c" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="_CPPv410InfileCopyP6INFILEP6INFILE">
+<span id="_CPPv310InfileCopyP6INFILEP6INFILE"></span><span id="_CPPv210InfileCopyP6INFILEP6INFILE"></span><span id="InfileCopy__INFILEP.INFILEP"></span><span class="target" id="control_8c_1a1ec220d9d2ccb4f0dbf3af33c1631314"></span>void <code class="sig-name descname">InfileCopy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46INFILE" title="INFILE">INFILE</a> *<em>dest</em>, <a class="reference internal" href="vplanet.html#_CPPv46INFILE" title="INFILE">INFILE</a> *<em>src</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410InfileCopyP6INFILEP6INFILE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="class">
+<dt id="_CPPv414SORTED_OPTIONS">
+<span id="_CPPv314SORTED_OPTIONS"></span><span id="_CPPv214SORTED_OPTIONS"></span><span id="SORTED_OPTIONS"></span><span class="target" id="struct_s_o_r_t_e_d___o_p_t_i_o_n_s"></span><em class="property">struct </em><code class="sig-name descname">SORTED_OPTIONS</code><a class="headerlink" href="#_CPPv414SORTED_OPTIONS" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Dummy struct used to sort options. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="member">
+<dt id="_CPPv4N14SORTED_OPTIONS5indexE">
+<span id="_CPPv3N14SORTED_OPTIONS5indexE"></span><span id="_CPPv2N14SORTED_OPTIONS5indexE"></span><span id="SORTED_OPTIONS::index__i"></span><span class="target" id="struct_s_o_r_t_e_d___o_p_t_i_o_n_s_1a0be8bfff71f6f1b5e457739399d7d5d1"></span>int <code class="sig-name descname">index</code><a class="headerlink" href="#_CPPv4N14SORTED_OPTIONS5indexE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="member">
+<dt id="_CPPv4N14SORTED_OPTIONS4nameE">
+<span id="_CPPv3N14SORTED_OPTIONS4nameE"></span><span id="_CPPv2N14SORTED_OPTIONS4nameE"></span><span id="SORTED_OPTIONS::name__cA"></span><span class="target" id="struct_s_o_r_t_e_d___o_p_t_i_o_n_s_1a02cef4fd07178b4f98479e4a333a68b0"></span>char <code class="sig-name descname">name</code>[<code class="sig-name descname">OPTLEN</code>]<a class="headerlink" href="#_CPPv4N14SORTED_OPTIONS4nameE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="_CPPv413SORTED_OUTPUT">
+<span id="_CPPv313SORTED_OUTPUT"></span><span id="_CPPv213SORTED_OUTPUT"></span><span id="SORTED_OUTPUT"></span><span class="target" id="struct_s_o_r_t_e_d___o_u_t_p_u_t"></span><em class="property">struct </em><code class="sig-name descname">SORTED_OUTPUT</code><a class="headerlink" href="#_CPPv413SORTED_OUTPUT" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Dummy struct used to sort output. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="member">
+<dt id="_CPPv4N13SORTED_OUTPUT5indexE">
+<span id="_CPPv3N13SORTED_OUTPUT5indexE"></span><span id="_CPPv2N13SORTED_OUTPUT5indexE"></span><span id="SORTED_OUTPUT::index__i"></span><span class="target" id="struct_s_o_r_t_e_d___o_u_t_p_u_t_1a0e8b7186ec48da7e33de9d8ea7ca2521"></span>int <code class="sig-name descname">index</code><a class="headerlink" href="#_CPPv4N13SORTED_OUTPUT5indexE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="member">
+<dt id="_CPPv4N13SORTED_OUTPUT4nameE">
+<span id="_CPPv3N13SORTED_OUTPUT4nameE"></span><span id="_CPPv2N13SORTED_OUTPUT4nameE"></span><span id="SORTED_OUTPUT::name__cA"></span><span class="target" id="struct_s_o_r_t_e_d___o_u_t_p_u_t_1a880c8ff8c6407706e6301d3369bbd4a7"></span>char <code class="sig-name descname">name</code>[<code class="sig-name descname">OUTLEN</code>]<a class="headerlink" href="#_CPPv4N13SORTED_OUTPUT4nameE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="control-h">
+<h2><a class="toc-backref" href="#id2">control.h</a><a class="headerlink" href="#control-h" title="Permalink to this headline">¶</a></h2>
+<p>These subroutines deal with control, including I/O, units, and files. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Rory Barnes (<a class="reference external" href="https://github.com/RoryBarnes/">RoryBarnes</a>)</p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>Jan 7 2015 </p>
+</dd>
+</dl>
+</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="spinbody.html" class="btn btn-neutral float-right" title="spinbody" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vplanet.html" class="btn btn-neutral" title="vplanet" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,365 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>VSPACE &mdash; VPLanet 1.2.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="VPLanet 1.2.0
+ documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#input-file-structure">Input File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#output-file-structure">Output File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#input-options">Input Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html#output-parameters">Output Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">VPLanet</a> &raquo;</li>
+      
+    
+      <li>VSPACE</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="vspace">
+<h1>VSPACE<a class="headerlink" href="#vspace" title="Permalink to this headline">¶</a></h1>
+<p>A quick way to generate a parameter space for <code class="docutils literal notranslate"><span class="pre">VPLanet</span></code>.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Navigate to the vspace directory and run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span></code>. All this does is put some
+path info in your shell files.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Run vspace on the command line by typing:</p>
+<blockquote>
+<div><p>vspace &lt;input file&gt;</p>
+</div></blockquote>
+<p>An input file is necessary. Take a look at the <code class="docutils literal notranslate"><span class="pre">input</span></code> file in the examples directory.
+This file will contain a list of files to be copied (from some source directory to a
+destination directory) and all the <code class="docutils literal notranslate"><span class="pre">VPLanet</span></code> options you wish to change or add to each file.</p>
+<p>You will need to provide a directory that contains template/example input files (such as
+any directory in vplanet/examples) in the following syntax:</p>
+<blockquote>
+<div><p>srcfolder &lt;path of directory&gt;</p>
+</div></blockquote>
+<p>Additionally, you will need to provide the path of a destination directory. This is where
+your suite of initial conditions will live:</p>
+<blockquote>
+<div><p>destfolder &lt;path of directory&gt;</p>
+</div></blockquote>
+<p>Then, provide a list of the files you wish to be copied and used by <code class="docutils literal notranslate"><span class="pre">VPLanet</span></code>, and all
+options you wish to change, in the following format:</p>
+<blockquote>
+<div><p>file &lt;name of file in srcfolder&gt;
+&lt;option name&gt; &lt;value&gt;
+&lt;option name&gt; &lt;value&gt;
+…</p>
+<p>file &lt;another file in srcfolder&gt;
+&lt;option name&gt; &lt;value&gt;
+…</p>
+</div></blockquote>
+<p>Notice that each file is given a separate line starting with <code class="docutils literal notranslate"><span class="pre">file</span></code>. All options below
+that up to the next instance of <code class="docutils literal notranslate"><span class="pre">file</span></code> will belong to the previous entry.</p>
+<p>Finally, it is advisable to provide a prefix for the generated directories:</p>
+<blockquote>
+<div><p>trialname &lt;some descriptive name for your simulations&gt;</p>
+</div></blockquote>
+<p>This defaults to <code class="docutils literal notranslate"><span class="pre">default</span></code>. As an example, if you generate 3 trials, with the default
+trialname, these will be number like so:</p>
+<blockquote>
+<div><p>default0/
+default1/
+default2/</p>
+</div></blockquote>
+<p>You can additionally remove options from a source file by the following syntax:</p>
+<blockquote>
+<div><p>rm &lt;option name&gt;</p>
+</div></blockquote>
+<p>For the time being, this merely comments out the matching line.</p>
+</div>
+<div class="section" id="how-to-generate-a-parameter-space">
+<h2>How to generate a parameter space<a class="headerlink" href="#how-to-generate-a-parameter-space" title="Permalink to this headline">¶</a></h2>
+<p>VSPACE has two sampling modes: <code class="docutils literal notranslate"><span class="pre">grid</span></code> and <code class="docutils literal notranslate"><span class="pre">random</span></code>, which are specified with the word
+<code class="docutils literal notranslate"><span class="pre">samplemode</span></code>. For example:</p>
+<blockquote>
+<div><p>samplemode random</p>
+</div></blockquote>
+<p>will allow you to generate trials from a random distribution.</p>
+<p>GRID MODE:
+To generate trials that explore a gridded parameter space, simply provide a range of values for
+the desired option instead of a single value. These should have 3 entries, surrounded by
+square brackets <code class="docutils literal notranslate"><span class="pre">[]</span></code>, in the following manner:</p>
+<blockquote>
+<div><p>&lt;option name&gt; [start, end, spacing] &lt;prefix&gt;</p>
+</div></blockquote>
+<p>(Here, <code class="docutils literal notranslate"><span class="pre">prefix</span></code> is a string that will be used in the naming of the output directories.
+More on this below.) For example, to generate trials changing <code class="docutils literal notranslate"><span class="pre">dSemi</span></code> from 1 to 2 with
+spacings of 0.1:</p>
+<blockquote>
+<div><p>dSemi  [1, 2, 0.1]  a</p>
+</div></blockquote>
+<p>Alternatively, you can provide the number of trials instead of the spacing by putting an
+<code class="docutils literal notranslate"><span class="pre">n</span></code> before the 3rd numerical entry. For example,</p>
+<blockquote>
+<div><p>dSemi  [1, 2, n10]  a</p>
+</div></blockquote>
+<p>would generate ten trials, equally spaced, from 1 to 2. You can also change to
+logarithmic spacing by using <code class="docutils literal notranslate"><span class="pre">l</span></code> instead of <code class="docutils literal notranslate"><span class="pre">n</span></code>:</p>
+<blockquote>
+<div><p>dSemi  [1, 2, l10]  a</p>
+</div></blockquote>
+<p>would generate ten trials, logarithmically spaced, from 1 to 2.</p>
+<p>Minus options are allowed, but if you are providing the spacing, rather than using the
+<code class="docutils literal notranslate"><span class="pre">n</span></code> or <code class="docutils literal notranslate"><span class="pre">l</span></code> option, either provide a negative spacing or swap the start and end values.
+Use:</p>
+<blockquote>
+<div><p>dRadius  [-1, -2, -0.1]  R</p>
+</div></blockquote>
+<p>or,</p>
+<blockquote>
+<div><p>dRadius  [-2, -1, 0.1]  R</p>
+</div></blockquote>
+<p>rather than <code class="docutils literal notranslate"><span class="pre">dRadius</span> <span class="pre">[-1,</span> <span class="pre">-2,</span> <span class="pre">0.1]</span>&#160; <span class="pre">R</span></code>. VSPACE will not check whether a minus option is
+allowed by <code class="docutils literal notranslate"><span class="pre">VPLanet</span></code>, so make sure you check <code class="docutils literal notranslate"><span class="pre">vplanet</span> <span class="pre">-h</span></code>.</p>
+<p>You can vary more than one parameter at a time! For example, in your input file you might
+have,</p>
+<blockquote>
+<div><p>dSemi  [1, 2, n10]  a
+dEcc   [0.1, 0.2, n10]  e</p>
+</div></blockquote>
+<p>would generate initial conditions for every possible combination of <code class="docutils literal notranslate"><span class="pre">dSemi</span></code> and
+<code class="docutils literal notranslate"><span class="pre">dEcc</span></code>, resulting in a total of 100 trials. You can do this for as many parameters as
+you like, so you have the power to generate a large number of files very quickly. Use this
+wisely: test with small numbers first to ensure that files end up in the correct locations
+and that initial conditions are indeed output with the desired values.</p>
+<p>RANDOM MODE:
+The syntax for generating randomly sampled data is similar to grid mode, with a few
+noteable differences. If setting <code class="docutils literal notranslate"><span class="pre">samplemode</span> <span class="pre">random</span></code>, one MUST also set the variable
+<code class="docutils literal notranslate"><span class="pre">randsize</span></code>, to an integer value–this is the number of samples/trials.</p>
+<p>Additionally, it is good practice to seed the random number generator, to allow for
+more easily reproducible results. This is accomplished with the variable <code class="docutils literal notranslate"><span class="pre">seed</span></code>:</p>
+<blockquote>
+<div><p>seed &lt;some integer&gt;</p>
+</div></blockquote>
+<p>The options for random mode are set in the same way as grid mode, in the third item
+in the square brackets. The current options are <code class="docutils literal notranslate"><span class="pre">g</span></code> (Gaussian/normal distribution),
+<code class="docutils literal notranslate"><span class="pre">u</span></code> (uniform distribution), <code class="docutils literal notranslate"><span class="pre">s</span></code> (uniform sine distribution), or <code class="docutils literal notranslate"><span class="pre">c</span></code> (uniform
+cosine distribution).</p>
+<p>For Gaussian/normal distributions, the syntax is as below:</p>
+<blockquote>
+<div><p>&lt;option name&gt; [&lt;mean&gt;, &lt;width/stdev&gt;, g] &lt;prefix&gt;</p>
+</div></blockquote>
+<p>An example would be:</p>
+<blockquote>
+<div><p>dEcc  [0.1, 0.01, g]  e</p>
+</div></blockquote>
+<p>For some parameters, you may want to truncate the distribution at certain values,
+for example, dEcc should not be &lt; 0 or &gt; 1. You can provide cutoffs with the <code class="docutils literal notranslate"><span class="pre">g</span></code> option
+as the 4th or 5th item in <code class="docutils literal notranslate"><span class="pre">[]</span></code> with the keyword <code class="docutils literal notranslate"><span class="pre">min</span></code> or <code class="docutils literal notranslate"><span class="pre">max</span></code>, like so:</p>
+<blockquote>
+<div><p>dEcc  [0.1, 0.01, g, min0.0, max1.0]  e</p>
+</div></blockquote>
+<p>You do not need to provide both min and max, if you need only one, and the order does
+not matter.</p>
+<p>A uniform distribution is sampled like so:</p>
+<blockquote>
+<div><p>&lt;option name&gt; [&lt;low&gt;, &lt;high&gt;, u] &lt;prefix&gt;</p>
+</div></blockquote>
+<p>For angles, you may want to sample the sine or cosine of the angle uniformly, rather
+than sampling the angle itself uniformly. You can accomplish this with <code class="docutils literal notranslate"><span class="pre">s</span></code> or <code class="docutils literal notranslate"><span class="pre">c</span></code>,
+for sine and cosine respectively:</p>
+<blockquote>
+<div><p>&lt;option name&gt; [&lt;low angle&gt;, &lt;high angle&gt;, s] &lt;prefix&gt;
+&lt;option name&gt; [&lt;low angle&gt;, &lt;high angle&gt;, c] &lt;prefix&gt;</p>
+</div></blockquote>
+<p>Note that &lt;low angle&gt; and &lt;high angle&gt; should be the min and max values of the angle
+ITSELF, not the sine or cosine of the angle. VSPACE does the conversion to and from
+trig output and angle. The units of the angle can be either radians or degrees, but
+must be consistent with your source <code class="docutils literal notranslate"><span class="pre">vpl.in</span></code> file–VSPACE determines the unit from
+this file.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

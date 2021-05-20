@@ -1,0 +1,14 @@
+poise
+=====
+
+**Contents**
+
+.. contents:: :local:
+
+poise.c
+-------
+.. autodoxygenfile:: poise.c
+
+poise.h
+-------
+.. autodoxygenfile:: poise.h

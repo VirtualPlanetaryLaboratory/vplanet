@@ -1,0 +1,14 @@
+flare
+=====
+
+**Contents**
+
+.. contents:: :local:
+
+flare.c
+-------
+.. autodoxygenfile:: flare.c
+
+flare.h
+-------
+.. autodoxygenfile:: flare.h

@@ -75,13 +75,13 @@ def clim_evol(plname, xrange=False, show=True):
     for i in range(len(lines)):
         if lines[i].split() != []:
             if lines[i].split()[0] == "dRotPeriod":
-                P = -1 * np.float(lines[i].split()[1])
+                P = -1 * flloat(lines[i].split()[1])
             if lines[i].split()[0] == "dSemi":
-                semi = np.float(lines[i].split()[1])
+                semi = flloat(lines[i].split()[1])
                 if semi < 0:
                     semi *= -1
             if lines[i].split()[0] == "dpCO2":
-                pco2 = np.float(lines[i].split()[1])
+                pco2 = flloat(lines[i].split()[1])
 
     try:
         longp = (body.ArgP + body.LongA + body.PrecA) * np.pi / 180.0
@@ -207,7 +207,7 @@ def seasonal_maps(time, show=True):
         elif len(f1) == 5:
             timestamp = f1[3] + "." + f1[4]
 
-        time0 = np.float(timestamp)
+        time0 = flloat(timestamp)
 
         if time0 == time:
             # get system and planet names
@@ -331,4 +331,3 @@ print("Making evolution plot.")
 clim_evol("earth", show=False)
 print("Making seasonal plot.")
 seasonal_maps(0, show=False)
-

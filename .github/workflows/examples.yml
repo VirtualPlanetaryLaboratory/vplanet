@@ -2,7 +2,7 @@ name: examples
 
 
 on:
-  releases:
+  release:
     types: [published]
 
 

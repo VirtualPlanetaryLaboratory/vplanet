@@ -532,7 +532,7 @@ void Help(OPTIONS *options, OUTPUT *output, char exe[], int bLong) {
   printf("====================   ============================================================\n\n");
 
   printf("Input File Structure\n");
-  printf("====================\n\n");
+  printf("--------------------\n\n");
   printf("- Options must be the first string on the line and must be written\n"
          "  exactly as shown below; the options are case-sensitive.\n"
          "- All characters to the right of a # sign are treated as a comment\n"
@@ -546,21 +546,21 @@ void Help(OPTIONS *options, OUTPUT *output, char exe[], int bLong) {
   printf("  need only enough characters to be unambiguous.\n\n");
 
   printf("Output File Structure\n");
-  printf("=====================\n\n");
+  printf("---------------------\n\n");
   printf("Output files consist columns of data separated by white space in\n"
          "the same order as listed in %s.\n\n",
          options[OPT_OUTPUTORDER].cName);
   printf("Input Options\n");
-  printf("=============\n\n");
+  printf("-------------\n\n");
   HelpOptions(options, bLong);
 
   printf("\n\nOutput Parameters\n");
-  printf("=====================\n\n");
+  printf("---------------------\n\n");
   if (!bLong) {
     printf("Format: [Negative forces units] Name -- Description [Negative "
            "unit]\n\n");
   }
-  printf("These options follow the argument %s.\n",
+  printf("These options follow the argument %s.\n\n",
          options[OPT_OUTPUTORDER].cName);
   HelpOutput(output, bLong);
 

@@ -147,4 +147,18 @@ written to the log file in the event of a halt.
 
 Data Structures
 ---------------
- 
+
+VPLanet consists of 8 data structures (structs) that contain all the informaton needed
+to perform a simulation: Control, Body, System, Update, Module, Files, Options,
+and Output. Additionally, it uses 3 function pointer arrays/matrices:
+fnReadOption, fnWriteOutput, and fnUpdate.
+
+Control
+~~~~~~~
+
+The Control struct contains all the variables related to how the code runs. Some
+of these variable are housed inside 4 additional structs: Halt, Io, Evolve, and
+Units. Many of the variables in the main Control struct are function pointer
+arrays that enable individual modules to control the execution.
+
+**Halt**:

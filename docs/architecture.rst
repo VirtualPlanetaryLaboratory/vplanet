@@ -161,4 +161,185 @@ of these variable are housed inside 4 additional structs: Halt, Io, Evolve, and
 Units. Many of the variables in the main Control struct are function pointer
 arrays that enable individual modules to control the execution.
 
-**Halt**:
+**Halt**: This struct contains information on all the halting conditions.
+
+**Io**: This struct contains the variables on how VPLanet prints to the screen
+and to files.
+
+**Evolve**: This struct contains the data related to how VPLanet integrates a
+system, including function pointer vectors for BodyCopy.
+
+**Units**: Information on the units, both input and output, for all bodies and
+files.
+
+Body
+~~~~
+
+The Body struct contains all the physical and orbital variables associated with
+each body in a system. It is initialized as an array with a length equal to the
+number of object in the system, i.e. the number of arguments to saBodyFiles.
+This struct is very large and is not broken down into substructs, but if you add
+a new member to the struct, please include it in the block of text associated
+with the module, or, if a multi-module property, add it to the general block. No
+variables associated with integration, I/O, or multi-body properties should be
+part of the Body struct.
+
+System
+~~~~~~
+
+The System struct contains data relevant to multi-body properties, typically
+parameters associated with orbital dynamics. As with the Body struct, no
+variables associated with integration or I/O should be included, and single body
+properties should be put in the Body struct.
+
+Update
+~~~~~~
+
+The Update struct contains the variables related to how each primary variable is
+advanced during an integration. This includes the size of the function pointer
+matrix (fnUpdate), the variable associated with each element of that matrix, and
+the instantaneous derivatives of each primary variable as a function of time.
+
+
+Module
+~~~~~~
+
+This struct contains information related to how the modules interact for a given
+body. Most of the member of this struct are function pointer matrices, with
+some variable for keeping track of which modules are applied to which body.
+
+Files
+~~~~~
+
+The Files struct contains the relevant data for input and output files, which
+are divided into structs called Infile and Outfile. These two structs contain
+information about file names and output parameters. The one exception is that
+the line number in an input file associated with a give option is recorded in
+the Options struct.
+
+Options
+~~~~~~~
+
+This struct contains all the data that describe the options, such as its name
+default value, associated module(s), etc. Note that the function that reads the
+option is not included (because it must take the Options struct as an argument).
+
+Output
+~~~~~~
+
+The Output struct is analogous to Options, except for output. Note that the
+parameters for the output files, e.g. the .forward files, are stored in
+Files.Outfile.
+
+fnReadOption, fnWriteOutput, and fnUpdate
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+fnReadOption and fnWriteOutput are function pointer vectors that contain the
+list of functions for reading in options and writing outputs, respectively.
+fnUpdate is the matrix of function pointers for the derivatives. It is the core
+of VPLanet and is the feature that allows the dynamic assembly of the modules.
+
+Function Pointers
+-----------------
+
+As VPLanet relies heavily on vectors and matrices of function pointers, but they
+are not commonly used in scientific software, we provide a brief introduction to
+them here. A function pointer is a variable that contains the memory address of
+a function. For example, consider the following C code that shows how to use a
+*scalar* function pointer:
+
+.. code-block:: bash
+  :linenos:
+
+  #include <stdio.h>
+
+  typedef double (*fnptr)(double,double);
+
+  double foo(double a, double b) {
+
+    return a*a + b;
+  }
+
+  int main() {
+    fnptr;
+    double x,y,z;
+
+    x=4;
+    y=0.1;
+
+    fn = &foo;
+
+    z = fn(x,y);
+
+    printf("%lf\n",z);
+    return 0;
+  }
+
+Line 3 defines a new variable case that is a function pointer that returns a
+double and accepts 2 doubles as arguments. We then define a function called foo
+that matches the requirements for fnptr. In the main routine, we define a new
+variable called fn and assign the address of foo to it. We then call the
+variable fn, which is a pointer to foo, and pass the arguments as with a normal
+function. Compiling and executing this code prints 16.100000 to the screen.
+
+Now let's turn fn into an array:
+
+.. code-block:: bash
+  :linenos:
+
+  #include <stdio.h>
+  #include <stdlib.h>
+
+  typedef double (*fnptr)(double,double);
+
+  double foo(double a, double b) {
+
+    return a*a + b;
+  }
+
+  double bar(double a, double b) {
+
+    return a + b*b;
+  }
+
+  int main() {
+    fnptr *fn;
+    double x,y,z;
+
+    x=4;
+    y=0.1;
+
+    fn = malloc(2*sizeof(fnptr));
+
+    fn[0] = &foo;
+    fn[1] = &bar;
+
+    z = fn[0](x,y);
+    printf("%lf\n",z);
+
+    z = fn[1](x,y);
+    printf("%lf\n",z);
+
+    return 0;
+  }
+
+Executing this code will print 16.100000 and 4.010000 to the screen on two
+consecutive lines. This framework can be extended to multiple dimensions, but we
+won't show that here. For VPLanet, the fnUpdate variable is 3 dimensions: one
+for the bodies, one for their primary variables, and one for the processes. In
+other words fn[1][2][3] is the function that returns the derivative of the 2nd
+body's third derivative's 4th process, which in the cases of a DistOrb run of
+Solar System could be the contribution of Mars to the eccentricity evolution of
+Venus.
+
+While this functionality is extremely powerful, it does come with pitfalls,
+especially when debugging. Misassigning functions or inadvertently overwriting
+memory can be extremely difficult to catch with print statements. For this
+reason we strongly recommend using a debugger, such as gdb or lldb, when
+developing VPLanet. In particular, we have found the watchpoint feature of
+these utilities to be invaluable as the debugger will catch when a function pointer
+element is overwritten. The function pointer matrices are also a primary
+motivating factor in employing advanced software tools like valgrind and
+address-sanitizer, which monitor memory calls for use of unitialized memory,
+memory writes that are out of bounds (writing to memory beyond that which was
+allocated to a variable), etc.

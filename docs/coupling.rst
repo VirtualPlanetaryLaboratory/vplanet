@@ -41,20 +41,38 @@ contains numerous subroutines related to initializing the modules, so coupling
 modules does not depend on those functions as they are required for the creation
 of an individual module.
 
-VerifyMulti
-~~~~~~~~~~~
-
 The first set of multi-module functions are the VerifyModuleMulti functions,
 which perform the checks to ensure that a user who has selected multiple modules
 for a body has chosen self-consistent input. As with single-module Verify, the
 specifics of multi-nodule verification are unique to the problem. In the
 subroutine you create here, you are free to include whatever checks are
-necessary. Once you have coded up your function, add a call to it in the actual
-VerifyModuleMulti function in module.c.
+necessary. At the end of each function you can add multi-module function for
+PropsAux and ForceBehavior. Once you have coded up your function, add a call to
+it in the actual VerifyModuleMulti function in module.c. Finally, check
+VerifyModuleCompatability and remove any existing exit calls that are associated
+with the new module combination.
 
 :note::
   All VerifyModuleMulti functions are called even if only 1 module has been
   selected by the user because some default behavior depends on if other modules
   have *not* been selected.
 
-  
+If your module coupling requires PropsAux and/or ForceBehavior functions that
+are unique to the coupling, you can then add them in module.c, too. All
+multi-module functions are called *after* the single-module functions, so if
+something is set in one of those functions, you can change the setting in the
+multi-module functions. Note that you can build as complex a multi-module
+function as you like, i.e. connecting all modules, and use the VerifiMulti
+framework to add/remove functions to the Control->fnPropsAuxMulti and
+Control->fnForceBehaviorMulti function pointer matrices. Just be mindful of the
+order in which the VerifyMulti functions are called.
+
+Multi-Module Derivatives
+------------------------
+
+In some case, a multi-module combination may necessitate new derivatives that
+are not required for single-module runs. VPLanet also includes a framework for
+this possibility with the UpdateMulti and AddModulesMulti functions in module.c.
+These functions are analogous to those for single module functions. Follow the
+example for semi-major axis if EqTide and STELLAR are called for a binary star
+system.

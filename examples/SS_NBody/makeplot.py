@@ -1,5 +1,5 @@
 import vplanet
-import vplot
+import vplot as vpl
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
@@ -55,7 +55,7 @@ def ReadHNBody(FileName):
 
 
 # Run vplanet
-SS = vplanet.run(path / "vpl.in", units=False)
+SS = vplanet.run(path / "vpl.in", units=False, quiet=True)
 
 # Get hnbody results
 hnEarth = ReadHNBody(path / "earth.dat")

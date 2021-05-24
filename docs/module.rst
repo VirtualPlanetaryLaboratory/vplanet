@@ -18,6 +18,8 @@ Add a new ID number in vplanet.h:
 
 where NEWMODULE is the name of your module and x is an integer that creates a
 unique number for the module. Adjust the values to MODULEOPTEND and MODULEOUTEND.
+Add a new struct member to the MODULE struct called *iaModuleName.
+
 At the end of vplanet.h, add #include for your new .h file.
 
 Identify the primary variables, if they are new to the code, follow the `How
@@ -63,8 +65,8 @@ number of bodies that can be tidal perturbers.
 Next is the InitializeUpdateTmpBodyEqtide function that allocates memory in the
 tmpBody struct inside CONTROL.
 
-Options
-~~~~~~~
+Option Functions
+~~~~~~~~~~~~~~~~
 
 The next blocks of code are the functions for reading options, which were
 discussed as part of the initial steps. Note that after InitializeOptions comes
@@ -90,3 +92,51 @@ have the same argument list and must return a 1 (halt the code) or a 0 (do *not*
 halt the code). After the individual halt functions, add the CountHalts and
 VerifyHalts functions and your halting criteria will be evaluating at each
 time step.
+
+
+Output Functions
+~~~~~~~~~~~~~~~~
+
+The output function format is similar to the options. However, note that there
+are two categories of output files, the evolution (.forward) files and the log
+file. EqTide breaks the logging into two functions because some outputs depend
+on the number of perturbers. Please use these functions as a template if your
+module contains similar functionality.
+
+AddModule
+~~~~~~~~~
+
+The AddModule function contains the assignment of the function pointer matrices
+that enable the module to be integrated into the main code. Essentially, all the
+work you finished above to track options, outputs, variables, etc. comes
+together in this function.
+
+Module Functions
+~~~~~~~~~~~~~~~~
+
+The final block of functions contain all the subroutines necessary to actually
+compute the physics and chemistry for your module. These functions must be
+tailored to your specific needs, but do remember that all primary variable
+function must contain the same argument list (BODY*,SYSTEM*,int).
+
+The Header File
+~~~~~~~~~~~~~~~
+
+At the same time you are developing the .c file, you'll want to update the .h
+file. These are all pretty standard across the modules, so use them as a
+template. In these files you define numbers for the options and outputs, as well
+as define prototype functions for all subroutines that can be called from other
+files. You can also define any other macros unique to your module here.
+
+Updating module.c
+-----------------
+
+To finish your new module, you must also update several subroutines in module.c.
+First, allocate and initialize the members of the MODULE struct in
+InitializeModule. Then update FinalizeModule to increment the iNumModules
+variable. Next, add a block of text for your module to AddModules that is
+similar to the blocks already present. Then add the appropriate block of text to
+ReadModules so that the code can actually find your new module! Next add
+lines to PrintModuleList and InitializeBodyModules. The final step is to write
+any `multi-module PropsAux and ForceBehavior functions, <coupling>` if
+necessary. Congratulations! You've now written a new, bug-free module!

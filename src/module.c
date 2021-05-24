@@ -781,98 +781,119 @@ void ReadModules(BODY *body, CONTROL *control, FILES *files, MODULE *module,
   free(lTmp);
 }
 
-void PrintModuleList(FILE *file, int iBitSum) {
+void PrintModuleList(FILE *file, int iBitSum, int bPadString) {
   int space = 0;
+  int nspaces = 66;
   if (iBitSum & ATMESC) {
     if (space) {
       fprintf(file, " ");
     }
-    space = 1;
+    space++;
     fprintf(file, "AtmEsc");
+    nspaces -= strlen("AtmEsc");
   }
   if (iBitSum & BINARY) {
     if (space) {
       fprintf(file, " ");
     }
-    space = 1;
+    space++;
     fprintf(file, "BINARY");
+    nspaces -= strlen("BINARY");
   }
   if (iBitSum & DISTORB) {
     if (space) {
       fprintf(file, " ");
     }
-    space = 1;
+    space++;
     fprintf(file, "DistOrb");
+    nspaces -= strlen("DistOrb");
   }
   if (iBitSum & DISTROT) {
     if (space) {
       fprintf(file, " ");
     }
-    space = 1;
+    space++;
     fprintf(file, "DistRot");
+    nspaces -= strlen("DistRot");
   }
   if (iBitSum & EQTIDE) {
     if (space) {
       fprintf(file, " ");
     }
-    space = 1;
+    space++;
     fprintf(file, "EqTide");
+    nspaces -= strlen("EqTide");
   }
   if (iBitSum & FLARE) {
     if (space) {
       fprintf(file, " ");
     }
-    space = 1;
+    space++;
     fprintf(file, "FLARE");
+    nspaces -= strlen("FLARE");
   }
   if (iBitSum & GALHABIT) {
     if (space) {
       fprintf(file, " ");
     }
-    space = 1;
+    space++;
     fprintf(file, "GalHabit");
+    nspaces -= strlen("GalHabit");
   }
   if (iBitSum & MAGMOC) {
     if (space) {
       fprintf(file, " ");
     }
-    space = 1;
+    space++;
     fprintf(file, "MagmOc");
+    nspaces -= strlen("MagmOc");
   }
   if (iBitSum & POISE) {
     if (space) {
       fprintf(file, " ");
     }
-    space = 1;
+    space++;
     fprintf(file, "POISE");
+    nspaces -= strlen("POISE");
   }
   if (iBitSum & RADHEAT) {
     if (space) {
       fprintf(file, " ");
     }
-    space = 1;
+    space++;
     fprintf(file, "RadHeat");
+    nspaces -= strlen("RadHeat");
   }
   if (iBitSum & SPINBODY) {
     if (space) {
       fprintf(file, " ");
     }
-    space = 1;
+    space++;
     fprintf(file, "SpiNBody");
+    nspaces -= strlen("SpiNBody");
   }
   if (iBitSum & STELLAR) {
     if (space) {
       fprintf(file, " ");
     }
-    space = 1;
+    space++;
     fprintf(file, "STELLAR");
+    nspaces -= strlen("STELLAR");
   }
   if (iBitSum & THERMINT) {
     if (space) {
       fprintf(file, " ");
     }
-    space = 1;
+    space++;
     fprintf(file, "ThermInt");
+    nspaces -= strlen("ThermInt");
+  }
+  if (bPadString) {
+    if (space) 
+      nspaces -= (space - 1);
+    for (int i = 0; i < nspaces; i++) {
+        printf(" ");
+    }
   }
 }
 

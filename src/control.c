@@ -213,13 +213,22 @@ void InitializeControlEvolve(BODY *body, CONTROL *control, MODULE *module,
  * Help functions
  */
 
-void PrintFileTypes(int iFileType) {
+void PrintFileTypes(int iFileType, int bPadString) {
   if (iFileType == 0) {
-    printf("Primary Only");
+    if (bPadString)
+      printf("Primary Only                                                      ");
+    else
+      printf("Primary Only");
   } else if (iFileType == 1) {
-    printf("Body Only");
+    if (bPadString)
+      printf("Body Only                                                         ");
+    else
+      printf("Body Only");
   } else if (iFileType == 2) {
-    printf("Any");
+    if (bPadString)
+      printf("Any                                                               ");
+    else
+      printf("Any");
   }
 }
 
@@ -256,7 +265,7 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       // allowed modules
       printf("{Modules = ");
       if (options->iModuleBit) {
-        PrintModuleList(stdout, options->iModuleBit);
+        PrintModuleList(stdout, options->iModuleBit, 0);
       } else {
         printf("ALL");
       }
@@ -264,7 +273,7 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
 
       // allowed input files
       printf("<Files = ");
-      PrintFileTypes(options->iFileType);
+      PrintFileTypes(options->iFileType,0);
       printf("> ");
 
       // default (always last)
@@ -274,14 +283,14 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       // Header
 
       // Properties
-      printf("+========================================================+\n");
+      printf("+--------------------------------------------------------------------------------------+\n");
       printf("| %s", options->cName);
       int i;
-      for (i = 0; i < (54 - strlen(options->cName)); i++) {
+      for (i = 0; i < (84 - strlen(options->cName)); i++) {
         printf(" ");
       }
       printf(" |\n");
-      printf("+=================+======================================+\n");
+      printf("+=================+====================================================================+\n");
 
       // Long Description
       //  if (memcmp(options->cLongDescr,"null",4)) {
@@ -316,72 +325,72 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
         exit(EXIT_UNITS);
       }
       printf("| Type            | %s", typestr);
-      for (typelen = 0; typelen < (36 - strlen(typestr)); typelen++) {
+      for (typelen = 0; typelen < (66 - strlen(typestr)); typelen++) {
         printf(" ");
       }
       printf(
-            " |\n+-----------------+--------------------------------------+\n");
+            " |\n+-----------------+--------------------------------------------------------------------+\n");
 
       // Custom Unit
       if (options->bNeg == 1) {
         printf("| Custom unit     | %s", options->cNeg);
         int unitlen;
-        for (unitlen = 0; unitlen < (36 - strlen(options->cNeg)); unitlen++) {
+        for (unitlen = 0; unitlen < (66 - strlen(options->cNeg)); unitlen++) {
           printf(" ");
         }
         printf(" |\n");
-        printf("+-----------------+--------------------------------------+\n");
+        printf("+-----------------+--------------------------------------------------------------------+\n");
       }
 
 
       if (options->iType == 2) {
         printf("| Dimension(s)    | %s", options->cDimension);
         int dimlen;
-        for (dimlen = 0; dimlen < (36 - strlen(options->cDimension));
+        for (dimlen = 0; dimlen < (66 - strlen(options->cDimension));
              dimlen++) {
           printf(" ");
         }
         printf(" |\n");
-        printf("+-----------------+--------------------------------------+\n");
+        printf("+-----------------+--------------------------------------------------------------------+\n");
       }
 
 
       // Module List
       if (options->iModuleBit) {
         printf("| Modules         | ");
-        PrintModuleList(stdout, options->iModuleBit);
+        PrintModuleList(stdout, options->iModuleBit,1);
         printf(" |\n");
       } else {
-        printf("| Modules         | ALL                                  |\n");
+        printf("| Modules         | ALL                                                                |\n");
       }
-      printf("+-----------------+--------------------------------------+\n");
+      printf("+-----------------+--------------------------------------------------------------------+\n");
 
       // File List
       printf("| Files           | ");
-      PrintFileTypes(options->iFileType);
+      PrintFileTypes(options->iFileType,1);
       printf(" |\n");
-      printf("+-----------------+--------------------------------------+\n");
+      printf("+-----------------+--------------------------------------------------------------------+\n");
 
       // Default Value
       printf("| Default value   | %s", options->cDefault);
       int valuelen;
       char valuelenchar = strlen(options->cDefault);
-      for (valuelen = 0; valuelen < (36 - valuelenchar); valuelen++) {
+      for (valuelen = 0; valuelen < (66 - valuelenchar); valuelen++) {
         printf(" ");
       }
       printf(
-            " |\n+-----------------+--------------------------------------+\n");
+            " |\n+-----------------+--------------------------------------------------------------------+\n");
 
       // Allowed Values
       if (memcmp(options->cValues, "null", 4)) {
-        printf("| Allowed values    | %s", options->cValues);
+        printf("| Allowed values  | %s", options->cValues);
         int alvalen;
-        for (alvalen = 0; alvalen < (36 - strlen(options->cValues));
+        for (alvalen = 0; alvalen < (66 - strlen(options->cValues));
              alvalen++) {
           printf(" ");
         }
-        printf(" |\n+-----------------+--------------------------------------+"
-               "\n");
+        printf(" |\n+-----------------+--------------------------------------------------------------------+"
+               "\n\n");
       } else {
         printf("\n");
       }
@@ -405,14 +414,14 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
       // ** Long help **
 
       // Properties
-      printf("+========================================================+\n");
+      printf("+--------------------------------------------------------------------------------------+\n");
       printf("| %s", output->cName);
       int i;
-      for (i = 0; i < (54 - strlen(output->cName)); i++) {
+      for (i = 0; i < (84 - strlen(output->cName)); i++) {
         printf(" ");
       }
       printf(" |\n");
-      printf("+=================+======================================+\n");
+      printf("+=================+====================================================================+\n");
 
       // Long description
       // if (memcmp(output->cLongDescr,"null",4)) {
@@ -426,22 +435,22 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
       if (output->bNeg != 0) {
         printf("| Custom unit     | %s", output->cNeg);
         int unitlen;
-        for (unitlen = 0; unitlen < (36 - strlen(output->cNeg)); unitlen++) {
+        for (unitlen = 0; unitlen < (66 - strlen(output->cNeg)); unitlen++) {
           printf(" ");
         }
         printf(" |\n");
-        printf("+-----------------+--------------------------------------+\n");
+        printf("+-----------------+--------------------------------------------------------------------+\n");
       }
 
       // Module List
       if (output->iModuleBit) {
         printf("| Modules         | ");
-        PrintModuleList(stdout, output->iModuleBit);
+        PrintModuleList(stdout, output->iModuleBit,1);
         printf(" |\n");
       } else {
-        printf("| Modules         | ALL                                  |\n");
+        printf("| Modules         | ALL                                                                |\n");
       }
-      printf("+-----------------+--------------------------------------+\n\n");
+      printf("+-----------------+--------------------------------------------------------------------+\n\n");
 
       // printf("\n");
       // printf("**Description**           %s\n", output->cDescr);
@@ -494,9 +503,8 @@ void Help(OPTIONS *options, OUTPUT *output, char exe[], int bLong) {
   printf("\n\n");
 
   printf("Lead Developer: Rory Barnes\n\n");
-  printf("\n%s is a general purpose planetary evolution integrator. From the "
-         "command\n",
-         exe);
+  printf("\nVPLANET is a general purpose planetary evolution integrator. From the "
+         "command\n");
   printf("line, enter one optional command line option and one file name, "
          "e.g.:\n\n"
          "> vplanet vpl.in\n\n"
@@ -514,48 +522,45 @@ void Help(OPTIONS *options, OUTPUT *output, char exe[], int bLong) {
          "https://virtualplanetarylaboratory.github.io/vplanet,\n"
          "or consult the examples directory.\n\n");
 
-  printf("Command Line Options\n");
-  printf("====================   "
-         "==========================================================\n");
-  printf("-v, -verbose           -- Maximum verbosity, i.e. display all "
-         "warnings and updates.\n");
-  printf("-q, -quiet             -- No verbosity, i.e. nothing printed to "
-         "device.\n");
+  printf("====================   ============================================================\n");
+  printf("Command Line Options                          Description                          \n");
+  printf("--------------------   ------------------------------------------------------------\n");
+  printf("-v, -verbose           -- Maximum verbosity, i.e. display all warnings and updates.\n");
+  printf("-q, -quiet             -- No verbosity, i.e. nothing printed to device.\n");
   printf("-h, -help              -- Display short help.\n");
   printf("-H, -Help              -- Display extended help.\n");
-  printf("====================   "
-         "==========================================================\n\n");
+  printf("====================   ============================================================\n\n");
 
   printf("Input File Structure\n");
-  printf("====================\n\n");
+  printf("--------------------\n\n");
   printf("- Options must be the first string on the line and must be written\n"
-         "exactly as shown below; the options are case-sensitive.\n"
+         "  exactly as shown below; the options are case-sensitive.\n"
          "- All characters to the right of a # sign are treated as a comment\n"
-         "and are ignored. Blank lines are also ignored.\n"
+         "  and are ignored. Blank lines are also ignored.\n"
          "- Options that take an array of arguments may span multiple lines if "
          "a $ is\n"
-         "placed at the end of the line.\n"
+         "  placed at the end of the line.\n"
          "- Output parameters (the arguments to %s) are not case "
-         "sensitive,and\n",
+         "sensitive, and\n",
          options[OPT_OUTPUTORDER].cName);
-  printf("need only enough characters to be unambiguous.\n\n");
+  printf("  need only enough characters to be unambiguous.\n\n");
 
   printf("Output File Structure\n");
-  printf("=====================\n\n");
+  printf("---------------------\n\n");
   printf("Output files consist columns of data separated by white space in\n"
          "the same order as listed in %s.\n\n",
          options[OPT_OUTPUTORDER].cName);
   printf("Input Options\n");
-  printf("=============\n\n");
+  printf("-------------\n\n");
   HelpOptions(options, bLong);
 
   printf("\n\nOutput Parameters\n");
-  printf("=====================\n\n");
+  printf("---------------------\n\n");
   if (!bLong) {
     printf("Format: [Negative forces units] Name -- Description [Negative "
            "unit]\n\n");
   }
-  printf("These options follow the argument %s.\n",
+  printf("These options follow the argument %s.\n\n",
          options[OPT_OUTPUTORDER].cName);
   HelpOutput(output, bLong);
 

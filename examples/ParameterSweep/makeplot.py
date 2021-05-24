@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import vplanet
-import vplot
+import vplot as vpl
 import bigplanet as bp
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -26,8 +26,10 @@ if not (path / ".ParameterSweep").exists():
 if not (path / ".ParameterSweep_BPL").exists():
     subprocess.check_output(["bigplanet", "vspace.in"], cwd=path)
 
-# TODO: This doesn't work with current version of bigplanet!
-data = bp.HDF5File(path / "ParameterSweep.hdf5")
+data = bp.BPLFile(path / "ParameterSweep.bpl")
+
+mpl.rcParams["figure.figsize"] = (10, 8)
+fig = plt.figure()
 
 RIC = bp.ExtractColumn(data, "earth_RIC_final")
 RIC_units = bp.ExtractUnits(data, "earth_RIC_final")
@@ -62,4 +64,3 @@ plt.clabel(cont, fmt="%.0f", fontsize=15)
 # Save the figure
 ext = get_args().ext
 fig.savefig(path / f"ParameterSweep.{ext}", dpi=300)
-

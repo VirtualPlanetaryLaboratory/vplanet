@@ -16,7 +16,7 @@ Orbital evolution from an N-body model.
 **Author**            Hayden Smotherman
 **Modules**           SpiNBody
 **Approx. runtime**   20 min (VPLanet)
-                      10 Min (HNBody)
+                      10 Min (HNBody; optional)
 ===================   ============
 
 This example uses SpiNBody to model the orbits of the solar system planets and compares
@@ -28,10 +28,9 @@ To run this example
 
 .. code-block:: bash
 
-    # Run the Solar System example
-    vplanet vpl.in
-    # Run hnbody
+    # Run hnbody (optional)
     hnbody ss.hnb
+
     # Make the plots
     python makeplot.py <pdf | png>
 

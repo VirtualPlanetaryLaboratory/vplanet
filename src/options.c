@@ -2818,7 +2818,7 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
         } else {
           fprintf(stderr, "ERROR: Output parameter %s requires module(s): ",
                   output[iOut].cName);
-          PrintModuleList(stderr, output[iOut].iModuleBit);
+          PrintModuleList(stderr, output[iOut].iModuleBit, 0);
           fprintf(stderr, "\n");
           ok = 0;
         }

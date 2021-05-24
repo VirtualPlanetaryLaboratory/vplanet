@@ -58,7 +58,7 @@ axes[0, 1].plot(time, regimes.bondi.DEnvMassDt, color="C3", label="Bondi-Limited
 
 # Format
 axes[0, 1].set_ylim(-1e12, -1.0e5)
-axes[0, 1].set_yscale("symlog", linthreshy=0.1)
+axes[0, 1].set_yscale("symlog", linthresh=0.1)
 axes[0, 1].set_ylabel(r"$\dot{M}_{envelope}$ [kg/s]")
 axes[0, 1].legend(loc="upper left", framealpha=0, fontsize=12, ncol=1)
 
@@ -187,7 +187,7 @@ axes[0, 1].plot(time, bondi.bondi.DEnvMassDt, color="C3", label="Bondi-Limited")
 
 # Format
 axes[0, 1].set_ylim(-1.0e15, -1.0e9)
-axes[0, 1].set_yscale("symlog", linthreshy=0.1)
+axes[0, 1].set_yscale("symlog", linthresh=0.1)
 axes[0, 1].set_ylabel(r"$\dot{M}_{envelope}$ [kg/s]")
 axes[0, 1].legend(loc="upper left", framealpha=0, fontsize=12, ncol=1)
 

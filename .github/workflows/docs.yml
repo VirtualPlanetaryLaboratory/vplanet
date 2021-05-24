@@ -2,11 +2,9 @@ name: docs
 
 on:
   push:
-    branches:
-      - master
+    branches: [master, main]
   #pull_request: TODO: Enable me
-  #  branches:
-  #    - master
+  #  branches:[master, main]
 
 jobs:
   tests:

@@ -401,4 +401,3 @@ def seasonal_maps(time, show=True):
 # Make plots
 comp2huybers("Earth", show=False)
 seasonal_maps(0, show=False)
-

@@ -36,6 +36,7 @@ sPlanetRadiusModel        lopez
 dAtmXAbsEffH              0.1
 dSemi                     -0.1
 dEcc                      0.
+bUseEnergyLimited         1
 dEnvelopeMass -%.5f
 dMass -%.5f
 saOutputOrder Time -EnvelopeMass Radius

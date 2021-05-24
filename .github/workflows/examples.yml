@@ -14,10 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - python-version: "3.6"
-          - python-version: "3.7"
           - python-version: "3.8"
-          - python-version: "3.9"
 
     steps:
       - uses: actions/checkout@v2
@@ -43,4 +40,4 @@ jobs:
       - name: Run tests
         if: steps.install.outcome == 'success'
         shell: bash -l {0}
-        run: python docs/examplecomplie.py
+        run: python docs/run_examples.py

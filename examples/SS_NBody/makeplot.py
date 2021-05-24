@@ -1,5 +1,5 @@
 import vplanet
-import vplot as vpl
+import vplot
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
@@ -58,10 +58,8 @@ def ReadHNBody(FileName):
 SS = vplanet.run(path / "vpl.in", units=False)
 
 # Get hnbody results
-# TODO: Commit these?!
-hnEarth = ReadHNBody(path / "plan3.dat")
+hnEarth = ReadHNBody(path / "earth.dat")
 hnEarth.Mass = 1.0
-
 
 fig, ([ax1, ax2], [ax3, ax4], [ax5, ax6]) = plt.subplots(3, 2, figsize=[14, 16])
 

@@ -6,6 +6,9 @@ Please view the following pages for written descriptions of how to:
 .. toctree::
    :maxdepth: 1
 
-   Add an Option <option>
+   Code Architecture <architecture>
    Add an Output <output>
-   Add a Module
+   Add an Option <option>
+   Add a Primary Variable <primaryvariable>
+   Add a Module <module>
+   Coupling Modules <coupling>

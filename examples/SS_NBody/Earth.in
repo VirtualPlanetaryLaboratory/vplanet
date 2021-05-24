@@ -2,7 +2,9 @@
 sName                     Earth          # Body's name
 saModules                 spinbody       # Modules to apply, exact spelling required
 
-saOutputOrder Time DeltaT PositionXSpiNBody PositionYSpiNBody PositionZSpiNBody VelXSpiNBody VelYSpiNBody VelZSpiNBody
+saOutputOrder Time DeltaT PositionXSpiNBody PositionYSpiNBody PositionZSpiNBody VelXSpiNBody VelYSpiNBody VelZSpiNBody $
+Eccentricity SemiMajorAxis SpiNBodyInc LongP SpiNBodyLongA
+
 # Physical Properties
 dMass                     -1.0           # Mass, negative -> Earth masses
 dRadius                   -1.0           # Radius, negative -> Earth radii

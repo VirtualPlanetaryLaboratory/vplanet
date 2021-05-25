@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>VPLOT &mdash; VPLanet 1.2.0
+  <title>VPLOT &mdash; VPLanet 2.0.0
  documentation</title>
   
 
@@ -29,15 +30,21 @@
   
 
   
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="VPLanet 1.2.0
+    <link rel="top" title="VPLanet 2.0.0
  documentation" href="index.html"/>
         <link rel="next" title="Parameter Sweep Guide" href="parametersweep.html"/>
-        <link rel="prev" title="options" href="src/options.html"/> 
+        <link rel="prev" title="flare" href="src/flare.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -65,7 +72,7 @@
             
             
               <div class="version">
-                1.2.0
+                2.0.0
 
               </div>
             
@@ -91,15 +98,14 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="help.html">Modules and Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#input-file-structure">Input File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#output-file-structure">Output File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#input-options">Input Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#output-parameters">Output Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">VPLOT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">VPLanet Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">Contributor’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repos.html">Other VPLanet Repositories</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
 </ul>
 
@@ -145,7 +151,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="vplot">
+  <section id="vplot">
 <h1>VPLOT<a class="headerlink" href="#vplot" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="code docutils literal notranslate"><span class="pre">vplot</span></code> Python package allows users to easily plot and interact with
 <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> simulation output. The easiest way to install it is by running</p>
@@ -162,7 +168,7 @@ on <a class="reference external" href="https://github.com/VirtualPlanetaryLabora
 <p class="admonition-title">Todo</p>
 <p><strong>&#64;rodluger</strong>: Write the documentation for <strong>vplot</strong></p>
 </div>
-</div>
+</section>
 
 
            </div>
@@ -174,7 +180,7 @@ on <a class="reference external" href="https://github.com/VirtualPlanetaryLabora
         <a href="parametersweep.html" class="btn btn-neutral float-right" title="Parameter Sweep Guide" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="src/options.html" class="btn btn-neutral" title="options" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="src/flare.html" class="btn btn-neutral" title="flare" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -204,16 +210,16 @@ on <a class="reference external" href="https://github.com/VirtualPlanetaryLabora
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.2.0',
+            VERSION:'2.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
     </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="_static/language_data.js"></script>
 
   
 

@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>C API &mdash; VPLanet 1.2.0
+  <title>C API &mdash; VPLanet 2.0.0
  documentation</title>
   
 
@@ -29,15 +30,21 @@
   
 
   
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="VPLanet 1.2.0
+    <link rel="top" title="VPLanet 2.0.0
  documentation" href="index.html"/>
-        <link rel="next" title="halt" href="src/halt.html"/>
-        <link rel="prev" title="Tidal Heating of Io" href="examples/IoHeat.html"/> 
+        <link rel="next" title="control" href="src/control.html"/>
+        <link rel="prev" title="Chaotic Eccentricity-Inclination Resonances" href="examples/ChaoticResonances.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -65,7 +72,7 @@
             
             
               <div class="version">
-                1.2.0
+                2.0.0
 
               </div>
             
@@ -91,41 +98,40 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="help.html">Modules and Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#input-file-structure">Input File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#output-file-structure">Output File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#input-options">Input Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#output-parameters">Output Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">C API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/thermint.html">thermint</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src/halt.html">halt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src/stellar.html">stellar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/module.html">module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/verify.html">verify</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/radheat.html">radheat</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/evolve.html">evolve</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/eqtide.html">eqtide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/update.html">update</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/vplanet.html">vplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/control.html">control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/body.html">body</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/galhabit.html">galhabit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src/poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/flare.html">flare</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src/binary.html">binary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src/distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/system.html">system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/thermint.html">thermint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/flare.html">flare</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">VPLanet Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">Contributor’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repos.html">Other VPLanet Repositories</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
 </ul>
 
@@ -171,7 +177,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="c-api">
+  <section id="c-api">
 <h1>C API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h1>
 <p>Detailed documentation of C source code.</p>
 <div class="admonition note">
@@ -181,33 +187,33 @@ Some modules may not be very well documented yet!</p>
 </div>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="src/control.html">control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/system.html">system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/atmesc.html">atmesc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/body.html">body</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/radheat.html">radheat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/output.html">output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/options.html">options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/vplanet.html">vplanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/distorb.html">distorb</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/magmoc.html">magmoc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/eqtide.html">eqtide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/verify.html">verify</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/evolve.html">evolve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/update.html">update</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/thermint.html">thermint</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src/halt.html">halt</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src/stellar.html">stellar</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/atmesc.html">atmesc</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/module.html">module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/verify.html">verify</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/radheat.html">radheat</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/evolve.html">evolve</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/eqtide.html">eqtide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/update.html">update</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/vplanet.html">vplanet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/control.html">control</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/spinbody.html">spinbody</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/body.html">body</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/distorb.html">distorb</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/galhabit.html">galhabit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src/poise.html">poise</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/flare.html">flare</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src/binary.html">binary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src/distrot.html">distrot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/magmoc.html">magmoc</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/galhabit.html">galhabit</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/output.html">output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/system.html">system</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/thermint.html">thermint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src/options.html">options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/spinbody.html">spinbody</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/module.html">module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/flare.html">flare</a></li>
 </ul>
 </div>
-</div>
+</section>
 
 
            </div>
@@ -216,10 +222,10 @@ Some modules may not be very well documented yet!</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="src/halt.html" class="btn btn-neutral float-right" title="halt" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="src/control.html" class="btn btn-neutral float-right" title="control" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="examples/IoHeat.html" class="btn btn-neutral" title="Tidal Heating of Io" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="examples/ChaoticResonances.html" class="btn btn-neutral" title="Chaotic Eccentricity-Inclination Resonances" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -249,16 +255,16 @@ Some modules may not be very well documented yet!</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.2.0',
+            VERSION:'2.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
     </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="_static/language_data.js"></script>
 
   
 

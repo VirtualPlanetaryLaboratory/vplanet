@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>evolve &mdash; VPLanet 1.2.0
+  <title>evolve &mdash; VPLanet 2.0.0
  documentation</title>
   
 
@@ -29,16 +30,22 @@
   
 
   
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="VPLanet 1.2.0
+    <link rel="top" title="VPLanet 2.0.0
  documentation" href="../index.html"/>
         <link rel="up" title="C API" href="../src.html"/>
-        <link rel="next" title="eqtide" href="eqtide.html"/>
-        <link rel="prev" title="radheat" href="radheat.html"/> 
+        <link rel="next" title="update" href="update.html"/>
+        <link rel="prev" title="verify" href="verify.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -66,7 +73,7 @@
             
             
               <div class="version">
-                1.2.0
+                2.0.0
 
               </div>
             
@@ -92,45 +99,44 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installing VPLanet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Modules and Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../help.html#input-file-structure">Input File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../help.html#output-file-structure">Output File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../help.html#input-options">Input Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../help.html#output-parameters">Output Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
 <li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">evolve</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#evolve-c">evolve.c</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#evolve-h">evolve.h</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
 <li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../parametersweep.html">Parameter Sweep Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">VPLanet Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">Contributor’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../repos.html">Other VPLanet Repositories</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
 </ul>
 
@@ -178,7 +184,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="evolve">
+  <section id="evolve">
 <h1>evolve<a class="headerlink" href="#evolve" title="Permalink to this headline">¶</a></h1>
 <p><strong>Contents</strong></p>
 <div class="contents local topic" id="contents">
@@ -187,7 +193,7 @@
 <li><p><a class="reference internal" href="#evolve-h" id="id2">evolve.h</a></p></li>
 </ul>
 </div>
-<div class="section" id="evolve-c">
+<section id="evolve-c">
 <h2><a class="toc-backref" href="#id1">evolve.c</a><a class="headerlink" href="#evolve-c" title="Permalink to this headline">¶</a></h2>
 <p>This file contains all the core VPLANET integration routines including the timestepping algorithm and the Runge-Kutta Integration scheme. </p>
 <p><dl class="simple">
@@ -198,68 +204,68 @@
 </dl>
 </p>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Defines</p>
-<dl class="macro">
-<dt id="c.NUM_THREADS">
-<span class="target" id="evolve_8c_1a7735206bdfad487588bba2126b806ab7"></span><code class="sig-name descname">NUM_THREADS</code><a class="headerlink" href="#c.NUM_THREADS" title="Permalink to this definition">¶</a></dt>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-defines">Defines</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.NUM_THREADS">
+<span class="target" id="evolve_8c_1a7735206bdfad487588bba2126b806ab7"></span><span class="sig-name descname"><span class="n"><span class="pre">NUM_THREADS</span></span></span><a class="headerlink" href="#c.NUM_THREADS" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Functions</p>
-<dl class="function">
-<dt id="_CPPv415PropsAuxGeneralP4BODYP7CONTROL">
-<span id="_CPPv315PropsAuxGeneralP4BODYP7CONTROL"></span><span id="_CPPv215PropsAuxGeneralP4BODYP7CONTROL"></span><span id="PropsAuxGeneral__BODYP.CONTROLP"></span><span class="target" id="evolve_8c_1afc7bcd2ca2c7521b936f1285d10240d9"></span>void <code class="sig-name descname">PropsAuxGeneral</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415PropsAuxGeneralP4BODYP7CONTROL" title="Permalink to this definition">¶</a><br /></dt>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415PropsAuxGeneralP4BODYP7CONTROL">
+<span id="_CPPv315PropsAuxGeneralP4BODYP7CONTROL"></span><span id="_CPPv215PropsAuxGeneralP4BODYP7CONTROL"></span><span id="PropsAuxGeneral__BODYP.CONTROLP"></span><span class="target" id="evolve_8c_1afc7bcd2ca2c7521b936f1285d10240d9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PropsAuxGeneral</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415PropsAuxGeneralP4BODYP7CONTROL" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv419PropertiesAuxiliaryP4BODYP7CONTROLP6SYSTEMP6UPDATE">
-<span id="_CPPv319PropertiesAuxiliaryP4BODYP7CONTROLP6SYSTEMP6UPDATE"></span><span id="_CPPv219PropertiesAuxiliaryP4BODYP7CONTROLP6SYSTEMP6UPDATE"></span><span id="PropertiesAuxiliary__BODYP.CONTROLP.SYSTEMP.UPDATEP"></span><span class="target" id="evolve_8c_1a5de884a735c0d60f97bc89c125ad3e89"></span>void <code class="sig-name descname">PropertiesAuxiliary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419PropertiesAuxiliaryP4BODYP7CONTROLP6SYSTEMP6UPDATE" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv419PropertiesAuxiliaryP4BODYP7CONTROLP6SYSTEMP6UPDATE">
+<span id="_CPPv319PropertiesAuxiliaryP4BODYP7CONTROLP6SYSTEMP6UPDATE"></span><span id="_CPPv219PropertiesAuxiliaryP4BODYP7CONTROLP6SYSTEMP6UPDATE"></span><span id="PropertiesAuxiliary__BODYP.CONTROLP.SYSTEMP.UPDATEP"></span><span class="target" id="evolve_8c_1a5de884a735c0d60f97bc89c125ad3e89"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PropertiesAuxiliary</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419PropertiesAuxiliaryP4BODYP7CONTROLP6SYSTEMP6UPDATE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv420CalculateDerivativesP4BODYP6SYSTEMP6UPDATEPPP16fnUpdateVariablei">
-<span id="_CPPv320CalculateDerivativesP4BODYP6SYSTEMP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv220CalculateDerivativesP4BODYP6SYSTEMP6UPDATEPPP16fnUpdateVariablei"></span><span id="CalculateDerivatives__BODYP.SYSTEMP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="evolve_8c_1a6d662bc626cb935b50ea844834f8421a"></span>void <code class="sig-name descname">CalculateDerivatives</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iNumBodies</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420CalculateDerivativesP4BODYP6SYSTEMP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420CalculateDerivativesP4BODYP6SYSTEMP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv320CalculateDerivativesP4BODYP6SYSTEMP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv220CalculateDerivativesP4BODYP6SYSTEMP6UPDATEPPP16fnUpdateVariablei"></span><span id="CalculateDerivatives__BODYP.SYSTEMP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="evolve_8c_1a6d662bc626cb935b50ea844834f8421a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CalculateDerivatives</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420CalculateDerivativesP4BODYP6SYSTEMP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv413CheckProgressP4BODYP7CONTROLP6SYSTEMP6UPDATE">
-<span id="_CPPv313CheckProgressP4BODYP7CONTROLP6SYSTEMP6UPDATE"></span><span id="_CPPv213CheckProgressP4BODYP7CONTROLP6SYSTEMP6UPDATE"></span><span id="CheckProgress__BODYP.CONTROLP.SYSTEMP.UPDATEP"></span><span class="target" id="evolve_8c_1a25ca777c20b811be979375377fd97d38"></span>void <code class="sig-name descname">CheckProgress</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413CheckProgressP4BODYP7CONTROLP6SYSTEMP6UPDATE" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413CheckProgressP4BODYP7CONTROLP6SYSTEMP6UPDATE">
+<span id="_CPPv313CheckProgressP4BODYP7CONTROLP6SYSTEMP6UPDATE"></span><span id="_CPPv213CheckProgressP4BODYP7CONTROLP6SYSTEMP6UPDATE"></span><span id="CheckProgress__BODYP.CONTROLP.SYSTEMP.UPDATEP"></span><span class="target" id="evolve_8c_1a25ca777c20b811be979375377fd97d38"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CheckProgress</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413CheckProgressP4BODYP7CONTROLP6SYSTEMP6UPDATE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv48AssignDtddd">
-<span id="_CPPv38AssignDtddd"></span><span id="_CPPv28AssignDtddd"></span><span id="AssignDt__double.double.double"></span><span class="target" id="evolve_8c_1a6d811c85fde2431c0c93a171d68e73b5"></span>double <code class="sig-name descname">AssignDt</code><span class="sig-paren">(</span>double <em>dMin</em>, double <em>dNextOutput</em>, double <em>dEta</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48AssignDtddd" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv48AssignDtddd">
+<span id="_CPPv38AssignDtddd"></span><span id="_CPPv28AssignDtddd"></span><span id="AssignDt__double.double.double"></span><span class="target" id="evolve_8c_1a6d811c85fde2431c0c93a171d68e73b5"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AssignDt</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dMin</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dNextOutput</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dEta</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48AssignDtddd" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv413fdGetTimeStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable">
-<span id="_CPPv313fdGetTimeStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable"></span><span id="_CPPv213fdGetTimeStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable"></span><span id="fdGetTimeStep__BODYP.CONTROLP.SYSTEMP.UPDATEP.fnUpdateVariablePPP"></span><span class="target" id="evolve_8c_1a6375967d1ed0bea66f411e4945635b15"></span>double <code class="sig-name descname">fdGetTimeStep</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fdGetTimeStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413fdGetTimeStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable">
+<span id="_CPPv313fdGetTimeStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable"></span><span id="_CPPv213fdGetTimeStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable"></span><span id="fdGetTimeStep__BODYP.CONTROLP.SYSTEMP.UPDATEP.fnUpdateVariablePPP"></span><span class="target" id="evolve_8c_1a6375967d1ed0bea66f411e4945635b15"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdGetTimeStep</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fdGetTimeStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv415fdGetUpdateInfoP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable">
-<span id="_CPPv315fdGetUpdateInfoP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable"></span><span id="_CPPv215fdGetUpdateInfoP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable"></span><span id="fdGetUpdateInfo__BODYP.CONTROLP.SYSTEMP.UPDATEP.fnUpdateVariablePPP"></span><span class="target" id="evolve_8c_1a631788d762ced9444c5dc9c39a452cd4"></span>void <code class="sig-name descname">fdGetUpdateInfo</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fdGetUpdateInfoP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415fdGetUpdateInfoP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable">
+<span id="_CPPv315fdGetUpdateInfoP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable"></span><span id="_CPPv215fdGetUpdateInfoP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable"></span><span id="fdGetUpdateInfo__BODYP.CONTROLP.SYSTEMP.UPDATEP.fnUpdateVariablePPP"></span><span class="target" id="evolve_8c_1a631788d762ced9444c5dc9c39a452cd4"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdGetUpdateInfo</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fdGetUpdateInfoP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariable" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv49EulerStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi">
-<span id="_CPPv39EulerStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi"></span><span id="_CPPv29EulerStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi"></span><span id="EulerStep__BODYP.CONTROLP.SYSTEMP.UPDATEP.fnUpdateVariablePPP.doubleP.i"></span><span class="target" id="evolve_8c_1a43dd0364edbcc1af50fa22d650bf2704"></span>void <code class="sig-name descname">EulerStep</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, double *<em>dDt</em>, int <em>iDir</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49EulerStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv49EulerStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi">
+<span id="_CPPv39EulerStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi"></span><span id="_CPPv29EulerStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi"></span><span id="EulerStep__BODYP.CONTROLP.SYSTEMP.UPDATEP.fnUpdateVariablePPP.doubleP.i"></span><span class="target" id="evolve_8c_1a43dd0364edbcc1af50fa22d650bf2704"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">EulerStep</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dDt</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iDir</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49EulerStepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv415RungeKutta4StepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi">
-<span id="_CPPv315RungeKutta4StepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi"></span><span id="_CPPv215RungeKutta4StepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi"></span><span id="RungeKutta4Step__BODYP.CONTROLP.SYSTEMP.UPDATEP.fnUpdateVariablePPP.doubleP.i"></span><span class="target" id="evolve_8c_1a985265ec2d18e36f2ca28669ebf0b8a0"></span>void <code class="sig-name descname">RungeKutta4Step</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, double *<em>dDt</em>, int <em>iDir</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415RungeKutta4StepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415RungeKutta4StepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi">
+<span id="_CPPv315RungeKutta4StepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi"></span><span id="_CPPv215RungeKutta4StepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi"></span><span id="RungeKutta4Step__BODYP.CONTROLP.SYSTEMP.UPDATEP.fnUpdateVariablePPP.doubleP.i"></span><span class="target" id="evolve_8c_1a985265ec2d18e36f2ca28669ebf0b8a0"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RungeKutta4Step</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dDt</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iDir</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415RungeKutta4StepP4BODYP7CONTROLP6SYSTEMP6UPDATEPPP16fnUpdateVariablePdi" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv46EvolveP4BODYP7CONTROLP5FILESP6MODULEP6OUTPUTP6SYSTEMP6UPDATEPPP16fnUpdateVariableP13fnWriteOutput11fnIntegrate">
-<span id="_CPPv36EvolveP4BODYP7CONTROLP5FILESP6MODULEP6OUTPUTP6SYSTEMP6UPDATEPPP16fnUpdateVariableP13fnWriteOutput11fnIntegrate"></span><span id="_CPPv26EvolveP4BODYP7CONTROLP5FILESP6MODULEP6OUTPUTP6SYSTEMP6UPDATEPPP16fnUpdateVariableP13fnWriteOutput11fnIntegrate"></span><span id="Evolve__BODYP.CONTROLP.FILESP.MODULEP.OUTPUTP.SYSTEMP.UPDATEP.fnUpdateVariablePPP.fnWriteOutputP.fnIntegrate"></span><span class="target" id="evolve_8c_1a084e4d1b5f7230384c93f699ac6de814"></span>void <code class="sig-name descname">Evolve</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES">FILES</a> *<em>files</em>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE">MODULE</a> *<em>module</em>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT">OUTPUT</a> *<em>output</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, <a class="reference internal" href="vplanet.html#_CPPv413fnWriteOutput" title="fnWriteOutput">fnWriteOutput</a> *<em>fnWrite</em>, <a class="reference internal" href="vplanet.html#_CPPv411fnIntegrate" title="fnIntegrate">fnIntegrate</a> <em>fnOneStep</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46EvolveP4BODYP7CONTROLP5FILESP6MODULEP6OUTPUTP6SYSTEMP6UPDATEPPP16fnUpdateVariableP13fnWriteOutput11fnIntegrate" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv46EvolveP4BODYP7CONTROLP5FILESP6MODULEP6OUTPUTP6SYSTEMP6UPDATEPPP16fnUpdateVariableP13fnWriteOutput11fnIntegrate">
+<span id="_CPPv36EvolveP4BODYP7CONTROLP5FILESP6MODULEP6OUTPUTP6SYSTEMP6UPDATEPPP16fnUpdateVariableP13fnWriteOutput11fnIntegrate"></span><span id="_CPPv26EvolveP4BODYP7CONTROLP5FILESP6MODULEP6OUTPUTP6SYSTEMP6UPDATEPPP16fnUpdateVariableP13fnWriteOutput11fnIntegrate"></span><span id="Evolve__BODYP.CONTROLP.FILESP.MODULEP.OUTPUTP.SYSTEMP.UPDATEP.fnUpdateVariablePPP.fnWriteOutputP.fnIntegrate"></span><span class="target" id="evolve_8c_1a084e4d1b5f7230384c93f699ac6de814"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Evolve</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE"><span class="n"><span class="pre">MODULE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">module</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">output</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span>, <a class="reference internal" href="vplanet.html#_CPPv413fnWriteOutput" title="fnWriteOutput"><span class="n"><span class="pre">fnWriteOutput</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnWrite</span></span>, <a class="reference internal" href="vplanet.html#_CPPv411fnIntegrate" title="fnIntegrate"><span class="n"><span class="pre">fnIntegrate</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">fnOneStep</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46EvolveP4BODYP7CONTROLP5FILESP6MODULEP6OUTPUTP6SYSTEMP6UPDATEPPP16fnUpdateVariableP13fnWriteOutput11fnIntegrate" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </div>
-</div>
-<div class="section" id="evolve-h">
+</section>
+<section id="evolve-h">
 <h2><a class="toc-backref" href="#id2">evolve.h</a><a class="headerlink" href="#evolve-h" title="Permalink to this headline">¶</a></h2>
 <p>This file contains all the core VPLANET integration routines including the timestepping algorithm and the Runge-Kutta Integration scheme. </p>
 <p><dl class="simple">
@@ -270,20 +276,20 @@
 </dl>
 </p>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Defines</p>
-<dl class="macro">
-<dt id="c.EULER">
-<span class="target" id="evolve_8h_1a7f4ee7567f891560bb62dfbda5f93088"></span><code class="sig-name descname">EULER</code><a class="headerlink" href="#c.EULER" title="Permalink to this definition">¶</a></dt>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-defines">Defines</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.EULER">
+<span class="target" id="evolve_8h_1a7f4ee7567f891560bb62dfbda5f93088"></span><span class="sig-name descname"><span class="n"><span class="pre">EULER</span></span></span><a class="headerlink" href="#c.EULER" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="macro">
-<dt id="c.RUNGEKUTTA">
-<span class="target" id="evolve_8h_1aac4bbec471117b190fd50648998943b2"></span><code class="sig-name descname">RUNGEKUTTA</code><a class="headerlink" href="#c.RUNGEKUTTA" title="Permalink to this definition">¶</a></dt>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.RUNGEKUTTA">
+<span class="target" id="evolve_8h_1aac4bbec471117b190fd50648998943b2"></span><span class="sig-name descname"><span class="n"><span class="pre">RUNGEKUTTA</span></span></span><a class="headerlink" href="#c.RUNGEKUTTA" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -292,10 +298,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="eqtide.html" class="btn btn-neutral float-right" title="eqtide" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="update.html" class="btn btn-neutral float-right" title="update" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="radheat.html" class="btn btn-neutral" title="radheat" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="verify.html" class="btn btn-neutral" title="verify" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -325,16 +331,16 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.2.0',
+            VERSION:'2.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
     </script>
+      <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 

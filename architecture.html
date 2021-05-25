@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>VPLanet Architecture &mdash; VPLanet 2.0.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="VPLanet 2.0.0
+ documentation" href="index.html"/>
+        <link rel="up" title="VPLanet Tutorials" href="tutorials.html"/>
+        <link rel="next" title="Add a VPLanet Output" href="output.html"/>
+        <link rel="prev" title="VPLanet Tutorials" href="tutorials.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">VPLanet Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Code Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vplanet-s-flow-chart">VPLanet’s Flow Chart</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#reading-options">Reading Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#verifying-options">Verifying Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#writing-to-the-log">Writing to the Log</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#system-integration">System Integration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#data-structures">Data Structures</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#control">Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#body">Body</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#system">System</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#update">Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module">Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#files">Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#options">Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fnreadoption-fnwriteoutput-and-fnupdate">fnReadOption, fnWriteOutput, and fnUpdate</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#function-pointers">Function Pointers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Add an Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="option.html">Add an Option</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primaryvariable.html">Add a Primary Variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">Add a Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coupling.html">Coupling Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">Contributor’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repos.html">Other VPLanet Repositories</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">VPLanet</a> &raquo;</li>
+      
+        <li><a href="tutorials.html">VPLanet Tutorials</a>&raquo;</li>
+      
+    
+      <li>VPLanet Architecture</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="vplanet-architecture">
+<h1>VPLanet Architecture<a class="headerlink" href="#vplanet-architecture" title="Permalink to this headline">¶</a></h1>
+<p>This guide describes the fundamental feature of VPLanet’s architecture,
+including its flow chart, data structures, and a review of function pointers.</p>
+<section id="vplanet-s-flow-chart">
+<h2>VPLanet’s Flow Chart<a class="headerlink" href="#vplanet-s-flow-chart" title="Permalink to this headline">¶</a></h2>
+<p>VPLanet has been designed to operate in a linear fashion with very few decision
+points. The key steps are 1) read the input options, 2) verify the options, 3)
+write the initial conditions to a log file, 4) integrate the system while
+outputting results, and 5) write the final conditions to the log file. In
+graphical form, here is the flow chart.</p>
+<figure class="align-default">
+<img alt="VPLanetFlowChart.png" src="VPLanetFlowChart.png" />
+</figure>
+<section id="reading-options">
+<h3>Reading Options<a class="headerlink" href="#reading-options" title="Permalink to this headline">¶</a></h3>
+<p>The first step in the code’s execution is to read in the options specified by
+the user and a function called ReadOptions. These instructions are in ASCII text
+files and are typically called
+the “infiles” as the team has traditionally used the extension .in with them.
+The infiles contain “options” that are described in the modules and options
+page, as well as with the -h and -H command line flags.</p>
+<p>At this stage, numerous simple checks
+are performed on the input, such as ensuring that arguments to an option are not
+unphysical, e.g. eccentricities less than 0. Each of these checks must only
+apply to an individual option. More complicated checks are handled
+in Verify.</p>
+<dl class="field-list simple">
+<dt class="field-odd">note:</dt>
+<dd class="field-odd"><p>Some arrays and matrices are allocated prior to the ReadOptions call.</p>
+</dd>
+</dl>
+</section>
+<section id="verifying-options">
+<h3>Verifying Options<a class="headerlink" href="#verifying-options" title="Permalink to this headline">¶</a></h3>
+<p>Once all the options have been read in, the data are passed to Verify, which is
+one of the most complicated aspects of the code. It’s in Verify that the options
+are checked for self-consistency. For example, if a user inputs mass, radius and
+density for a body, it’s very unlikely they are all consistent at machine
+precision. These sorts of quality control issues are handled in Verify.
+Additionally, it is in Verify that most arrays and matrices, including function
+pointers, are allocated. The entry point to this process is in
+verify.c:VerifyOptions.</p>
+<p>Because any given verification step is likely unique, there is not a universal
+standard for verification. As a developer, you must determine how best to
+confirm that the user has asked for a valid simulation. A primary goal of
+VPLanet is to provide a user-friendly code that identifies all inconsistent
+input because its interdisciplinary nature makes it easy for a user to request
+an unphysical simulation.</p>
+<p>That said, many generic problems have already been identified and solution have
+been implemented. If you are working on a verification step, you should check
+verify.c and all the module files to see if a solution has been presented. Note
+that the modules all have subroutines called something like VerifyAtmEsc that
+performs verification steps that are unique to that module.</p>
+</section>
+<section id="writing-to-the-log">
+<h3>Writing to the Log<a class="headerlink" href="#writing-to-the-log" title="Permalink to this headline">¶</a></h3>
+<p>VPLanet includes functionality to thoroughly document each simulation, and one
+of the primary methods for this feature is the log file. Writing a log file is
+optional, but it is highly recommended for both sanity checks, as well as for
+use with its support scripts. If the user elects to write a log file, it will
+occur after verification <strong>and</strong> after the integration (if an integration is
+requested). In other words the log file provides a snapshot of the initial and
+final conditions of the simulation.</p>
+<p>The log file records the value of each output in system units (SI). While
+options can be input in a wide range of units, recording the state in system
+units allows users to determine if they have input something incorrectly, and
+also helps developers identify bugs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">note:</dt>
+<dd class="field-odd"><p>If a user requests an output with a negative sign, which forces a specific
+unit, then the value in the log file will not be SI, but the custom units
+associated with that output.</p>
+</dd>
+</dl>
+<p>For example, a log file entry might look like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>Age<span class="o">)</span> System Age <span class="o">[</span>sec<span class="o">]</span>: <span class="m">3</span>.155760e+14
+</pre></div>
+</div>
+<p>This line provides basic information about a body. In this case it’s the age of
+the body. The first field, in parentheses, is the output name, i.e. a user could
+copy and paste that string into the argument list of saOutputOrder and its value
+at each output time would be included in the output file. The next field is a
+short description of the output. Next, in brackets, is the units of the output,
+and finally the actual value of the parameter is listed. The log file breaks all
+these outputs down by body, module, and initial/final conditions.</p>
+</section>
+<section id="system-integration">
+<h3>System Integration<a class="headerlink" href="#system-integration" title="Permalink to this headline">¶</a></h3>
+<p>After verify and possible logging, the code will then begin integrating the
+system of equations that are required based on the options. The integration is
+broken down into five steps: Auxiliary Properties (sometimes shortened to
+AuxProps), One Step, Output, Force Behavior, and Halt.</p>
+<dl class="field-list simple">
+<dt class="field-odd">note:</dt>
+<dd class="field-odd"><p>If the user does not select a forward or backward integration, but does elect
+to write a log file, then the code will calculate all the initial conditions
+and write them to the log. This feature can be useful if one just wants to
+assess the current state of a system.</p>
+</dd>
+</dl>
+<p><strong>Auxiliary Properties</strong>: Prior to moving the system one step forward, the code
+calculates “helper” variables that make the code easier to parse. While strictly
+speaking the code would be faster if these parameters were not calculated
+separately, the VPLanet team has found that the code is much easier to read and
+debug with this step. There are not strict rules for what should or should not
+be an auxiliary property, but given that they are calculated every step, you
+should be judicious in their use.</p>
+<p><strong>One Step</strong>: After calculating the auxiliary properties, the code is now ready
+to take a step forward. Currently two integration schemes have been implemented
+in VPLanet: Euler and 4th order Runge-Kutta. The former is strongly discouraged
+and should only be used for testing/educational purposes.</p>
+<p><strong>Output</strong>: After taking one step, the code then compares the new simulation
+time to the output interval. If it’s time for an output, the WriteOutput
+function is called and all outputs are sent to the output file(s), usually
+designated as .forward or .backward depending on the direction of evolution that
+was selected.</p>
+<p><strong>Force Behavior</strong>: Next the code determines if any fundamental change needs to
+be implemented. For example, if all the water is lost from a planet’s
+atmosphere, then that value should be set to 0 and the function pointer in
+fnUpdate should be updated to point to fdTiny, i.e. water loss should no longer
+occur. The details of this step are unique to each module and there are no
+strict guidelines here. As with Verify, check the module files for methods that
+might work for your given problem.</p>
+<p><strong>Halt</strong>: The final step in the integration is to check for halts, which are
+conditions that cause the code execution to end. For example, a user may want to
+stop the code if all the water is lost from a planet. If this occurs, the code
+will write one more output to the .forward/.backward files at the time the
+halting condition was triggered. Note that the final conditions will still be
+written to the log file in the event of a halt.</p>
+</section>
+</section>
+<section id="data-structures">
+<h2>Data Structures<a class="headerlink" href="#data-structures" title="Permalink to this headline">¶</a></h2>
+<p>VPLanet consists of 8 data structures (structs) that contain all the informaton needed
+to perform a simulation: Control, Body, System, Update, Module, Files, Options,
+and Output. Additionally, it uses 3 function pointer arrays/matrices:
+fnReadOption, fnWriteOutput, and fnUpdate.</p>
+<section id="control">
+<h3>Control<a class="headerlink" href="#control" title="Permalink to this headline">¶</a></h3>
+<p>The Control struct contains all the variables related to how the code runs. Some
+of these variable are housed inside 4 additional structs: Halt, Io, Evolve, and
+Units. Many of the variables in the main Control struct are function pointer
+arrays that enable individual modules to control the execution.</p>
+<p><strong>Halt</strong>: This struct contains information on all the halting conditions.</p>
+<p><strong>Io</strong>: This struct contains the variables on how VPLanet prints to the screen
+and to files.</p>
+<p><strong>Evolve</strong>: This struct contains the data related to how VPLanet integrates a
+system, including function pointer vectors for BodyCopy.</p>
+<p><strong>Units</strong>: Information on the units, both input and output, for all bodies and
+files.</p>
+</section>
+<section id="body">
+<h3>Body<a class="headerlink" href="#body" title="Permalink to this headline">¶</a></h3>
+<p>The Body struct contains all the physical and orbital variables associated with
+each body in a system. It is initialized as an array with a length equal to the
+number of object in the system, i.e. the number of arguments to saBodyFiles.
+This struct is very large and is not broken down into substructs, but if you add
+a new member to the struct, please include it in the block of text associated
+with the module, or, if a multi-module property, add it to the general block. No
+variables associated with integration, I/O, or multi-body properties should be
+part of the Body struct.</p>
+</section>
+<section id="system">
+<h3>System<a class="headerlink" href="#system" title="Permalink to this headline">¶</a></h3>
+<p>The System struct contains data relevant to multi-body properties, typically
+parameters associated with orbital dynamics. As with the Body struct, no
+variables associated with integration or I/O should be included, and single body
+properties should be put in the Body struct.</p>
+</section>
+<section id="update">
+<h3>Update<a class="headerlink" href="#update" title="Permalink to this headline">¶</a></h3>
+<p>The Update struct contains the variables related to how each primary variable is
+advanced during an integration. This includes the size of the function pointer
+matrix (fnUpdate), the variable associated with each element of that matrix, and
+the instantaneous derivatives of each primary variable as a function of time.</p>
+</section>
+<section id="module">
+<h3>Module<a class="headerlink" href="#module" title="Permalink to this headline">¶</a></h3>
+<p>This struct contains information related to how the modules interact for a given
+body. Most of the member of this struct are function pointer matrices, with
+some variable for keeping track of which modules are applied to which body.</p>
+</section>
+<section id="files">
+<h3>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h3>
+<p>The Files struct contains the relevant data for input and output files, which
+are divided into structs called Infile and Outfile. These two structs contain
+information about file names and output parameters. The one exception is that
+the line number in an input file associated with a give option is recorded in
+the Options struct.</p>
+</section>
+<section id="options">
+<h3>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
+<p>This struct contains all the data that describe the options, such as its name
+default value, associated module(s), etc. Note that the function that reads the
+option is not included (because it must take the Options struct as an argument).</p>
+</section>
+<section id="output">
+<h3>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h3>
+<p>The Output struct is analogous to Options, except for output. Note that the
+parameters for the output files, e.g. the .forward files, are stored in
+Files.Outfile.</p>
+</section>
+<section id="fnreadoption-fnwriteoutput-and-fnupdate">
+<h3>fnReadOption, fnWriteOutput, and fnUpdate<a class="headerlink" href="#fnreadoption-fnwriteoutput-and-fnupdate" title="Permalink to this headline">¶</a></h3>
+<p>fnReadOption and fnWriteOutput are function pointer vectors that contain the
+list of functions for reading in options and writing outputs, respectively.
+fnUpdate is the matrix of function pointers for the derivatives. It is the core
+of VPLanet and is the feature that allows the dynamic assembly of the modules.</p>
+</section>
+</section>
+<section id="function-pointers">
+<h2>Function Pointers<a class="headerlink" href="#function-pointers" title="Permalink to this headline">¶</a></h2>
+<p>As VPLanet relies heavily on vectors and matrices of function pointers, but they
+are not commonly used in scientific software, we provide a brief introduction to
+them here. A function pointer is a variable that contains the memory address of
+a function. For example, consider the following C code that shows how to use a
+<em>scalar</em> function pointer:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#include &lt;stdio.h&gt;</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span>typedef double <span class="o">(</span>*fnptr<span class="o">)(</span>double,double<span class="o">)</span><span class="p">;</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span>double foo<span class="o">(</span>double a, double b<span class="o">)</span> <span class="o">{</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>  <span class="k">return</span> a*a + b<span class="p">;</span>
+<span class="linenos"> 8</span><span class="o">}</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>int main<span class="o">()</span> <span class="o">{</span>
+<span class="linenos">11</span>  fnptr<span class="p">;</span>
+<span class="linenos">12</span>  double x,y,z<span class="p">;</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>  <span class="nv">x</span><span class="o">=</span><span class="m">4</span><span class="p">;</span>
+<span class="linenos">15</span>  <span class="nv">y</span><span class="o">=</span><span class="m">0</span>.1<span class="p">;</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>  <span class="nv">fn</span> <span class="o">=</span> <span class="p">&amp;</span>foo<span class="p">;</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span>  <span class="nv">z</span> <span class="o">=</span> fn<span class="o">(</span>x,y<span class="o">)</span><span class="p">;</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span>  printf<span class="o">(</span><span class="s2">&quot;%lf\n&quot;</span>,z<span class="o">)</span><span class="p">;</span>
+<span class="linenos">22</span>  <span class="k">return</span> <span class="m">0</span><span class="p">;</span>
+<span class="linenos">23</span><span class="o">}</span>
+</pre></div>
+</div>
+<p>Line 3 defines a new variable case that is a function pointer that returns a
+double and accepts 2 doubles as arguments. We then define a function called foo
+that matches the requirements for fnptr. In the main routine, we define a new
+variable called fn and assign the address of foo to it. We then call the
+variable fn, which is a pointer to foo, and pass the arguments as with a normal
+function. Compiling and executing this code prints 16.100000 to the screen.</p>
+<p>Now let’s turn fn into an array:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#include &lt;stdio.h&gt;</span>
+<span class="linenos"> 2</span><span class="c1">#include &lt;stdlib.h&gt;</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>typedef double <span class="o">(</span>*fnptr<span class="o">)(</span>double,double<span class="o">)</span><span class="p">;</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span>double foo<span class="o">(</span>double a, double b<span class="o">)</span> <span class="o">{</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span>  <span class="k">return</span> a*a + b<span class="p">;</span>
+<span class="linenos"> 9</span><span class="o">}</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>double bar<span class="o">(</span>double a, double b<span class="o">)</span> <span class="o">{</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span>  <span class="k">return</span> a + b*b<span class="p">;</span>
+<span class="linenos">14</span><span class="o">}</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>int main<span class="o">()</span> <span class="o">{</span>
+<span class="linenos">17</span>  fnptr *fn<span class="p">;</span>
+<span class="linenos">18</span>  double x,y,z<span class="p">;</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>  <span class="nv">x</span><span class="o">=</span><span class="m">4</span><span class="p">;</span>
+<span class="linenos">21</span>  <span class="nv">y</span><span class="o">=</span><span class="m">0</span>.1<span class="p">;</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span>  <span class="nv">fn</span> <span class="o">=</span> malloc<span class="o">(</span><span class="m">2</span>*sizeof<span class="o">(</span>fnptr<span class="o">))</span><span class="p">;</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span>  fn<span class="o">[</span><span class="m">0</span><span class="o">]</span> <span class="o">=</span> <span class="p">&amp;</span>foo<span class="p">;</span>
+<span class="linenos">26</span>  fn<span class="o">[</span><span class="m">1</span><span class="o">]</span> <span class="o">=</span> <span class="p">&amp;</span>bar<span class="p">;</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span>  <span class="nv">z</span> <span class="o">=</span> fn<span class="o">[</span><span class="m">0</span><span class="o">](</span>x,y<span class="o">)</span><span class="p">;</span>
+<span class="linenos">29</span>  printf<span class="o">(</span><span class="s2">&quot;%lf\n&quot;</span>,z<span class="o">)</span><span class="p">;</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span>  <span class="nv">z</span> <span class="o">=</span> fn<span class="o">[</span><span class="m">1</span><span class="o">](</span>x,y<span class="o">)</span><span class="p">;</span>
+<span class="linenos">32</span>  printf<span class="o">(</span><span class="s2">&quot;%lf\n&quot;</span>,z<span class="o">)</span><span class="p">;</span>
+<span class="linenos">33</span>
+<span class="linenos">34</span>  <span class="k">return</span> <span class="m">0</span><span class="p">;</span>
+<span class="linenos">35</span><span class="o">}</span>
+</pre></div>
+</div>
+<p>Executing this code will print 16.100000 and 4.010000 to the screen on two
+consecutive lines. This framework can be extended to multiple dimensions, but we
+won’t show that here. For VPLanet, the fnUpdate variable is 3 dimensions: one
+for the bodies, one for their primary variables, and one for the processes. In
+other words fn[1][2][3] is the function that returns the derivative of the 2nd
+body’s third derivative’s 4th process, which in the cases of a DistOrb run of
+Solar System could be the contribution of Mars to the eccentricity evolution of
+Venus.</p>
+<p>While this functionality is extremely powerful, it does come with pitfalls,
+especially when debugging. Misassigning functions or inadvertently overwriting
+memory can be extremely difficult to catch with print statements. For this
+reason we strongly recommend using a debugger, such as gdb or lldb, when
+developing VPLanet. In particular, we have found the watchpoint feature of
+these utilities to be invaluable as the debugger will catch when a function pointer
+element is overwritten. The function pointer matrices are also a primary
+motivating factor in employing advanced software tools like valgrind and
+address-sanitizer, which monitor memory calls for use of unitialized memory,
+memory writes that are out of bounds (writing to memory beyond that which was
+allocated to a variable), etc.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="output.html" class="btn btn-neutral float-right" title="Add a VPLanet Output" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorials.html" class="btn btn-neutral" title="VPLanet Tutorials" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

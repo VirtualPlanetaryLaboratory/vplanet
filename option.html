@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Add a VPLanet Option &mdash; VPLanet 2.0.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="VPLanet 2.0.0
+ documentation" href="index.html"/>
+        <link rel="up" title="VPLanet Tutorials" href="tutorials.html"/>
+        <link rel="next" title="How to Add a Primary Variable" href="primaryvariable.html"/>
+        <link rel="prev" title="Add a VPLanet Output" href="output.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">VPLanet Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Code Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Add an Output</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Add an Option</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primaryvariable.html">Add a Primary Variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">Add a Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coupling.html">Coupling Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">Contributor’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repos.html">Other VPLanet Repositories</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">VPLanet</a> &raquo;</li>
+      
+        <li><a href="tutorials.html">VPLanet Tutorials</a>&raquo;</li>
+      
+    
+      <li>Add a VPLanet Option</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="add-a-vplanet-option">
+<h1>Add a VPLanet Option<a class="headerlink" href="#add-a-vplanet-option" title="Permalink to this headline">¶</a></h1>
+<p>To add a new option, complete the following steps.</p>
+<p>First, determine if the option is applicable to one module, or multiple modules.
+For example, eccentricity is part of the SpiNBody, EqTide, and DistOrb modules,
+but the mean anomaly is only used in SpiNBody. If the option should be
+available to multiple modules, then you should modify options.[ch], but if it is
+only appropriate for an individual module, then it belongs in module files
+(spinbody.[ch] for the previous example).</p>
+<p>Next, in the header file, add a OPT macro to give your output a unique ID, e.g.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#define OPT_MYNEWOPTION   77</span>
+</pre></div>
+</div>
+<p>Note that the number of the option must lie in the appropriate range for the
+module. For new options in option.c, the range is 0-1000, for other modules,
+consult vplanet.h, specifically the text just before MODULEOPTEND is defined.
+Make sure your new outputs name is easily understood and very unlikely to be
+duplicated by another variable name.</p>
+<p>Then add a block of code in the appropriate InitializeOptions function
+(InitializeOptionsGeneral in output.c or InitializeOptionsModuleName, where
+“ModuleName” = AtmEsc, EqTide, etc., in the module’s c file) like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span>sprintf<span class="o">(</span>options<span class="o">[</span>OPT_STOPTIME<span class="o">]</span>.cName,<span class="s2">&quot;dStopTime&quot;</span><span class="o">)</span><span class="p">;</span>
+<span class="linenos"> 2</span>sprintf<span class="o">(</span>options<span class="o">[</span>OPT_STOPTIME<span class="o">]</span>.cDescr,<span class="s2">&quot;Integration Stop Time&quot;</span><span class="o">)</span><span class="p">;</span>
+<span class="linenos"> 3</span>sprintf<span class="o">(</span>options<span class="o">[</span>OPT_STOPTIME<span class="o">]</span>.cDefault,<span class="s2">&quot;10 years&quot;</span><span class="o">)</span><span class="p">;</span>
+<span class="linenos"> 4</span>options<span class="o">[</span>OPT_STOPTIME<span class="o">]</span>.dDefault <span class="o">=</span> <span class="m">10</span>*YEARSEC<span class="p">;</span>
+<span class="linenos"> 5</span>sprintf<span class="o">(</span>options<span class="o">[</span>OPT_STOPTIME<span class="o">]</span>.cDimension,<span class="s2">&quot;time&quot;</span><span class="o">)</span><span class="p">;</span>
+<span class="linenos"> 6</span>options<span class="o">[</span>OPT_STOPTIME<span class="o">]</span>.iType <span class="o">=</span> <span class="m">2</span><span class="p">;</span>
+<span class="linenos"> 7</span>options<span class="o">[</span>OPT_STOPTIME<span class="o">]</span>.bNeg <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
+<span class="linenos"> 8</span>sprintf<span class="o">(</span>options<span class="o">[</span>OPT_STOPTIME<span class="o">]</span>.cNeg,<span class="s2">&quot;Years&quot;</span><span class="o">)</span><span class="p">;</span>
+<span class="linenos"> 9</span>options<span class="o">[</span>OPT_STOPTIME<span class="o">]</span>.dNeg <span class="o">=</span> YEARSEC<span class="p">;</span>
+<span class="linenos">10</span>options<span class="o">[</span>OPT_STOPTIME<span class="o">]</span>.iFileType <span class="o">=</span> <span class="m">2</span><span class="p">;</span>
+<span class="linenos">11</span>options<span class="o">[</span>OPT_STOPTIME<span class="o">]</span>.iModuleBit <span class="o">=</span> <span class="m">0</span><span class="p">;</span>
+<span class="linenos">12</span>fnRead<span class="o">[</span>OPT_STOPTIME<span class="o">]</span> <span class="o">=</span> <span class="p">&amp;</span>ReadStopTime<span class="p">;</span>
+</pre></div>
+</div>
+<p>These lines instruct VPLanet on the key features of the option. Line 1 is the
+name of the option that can appear in the input files. Line 2 is a short
+description of the option that will appear in the help message. Lines 3-4 are
+for the default value the option will be given if it is not included in an input
+file. The string is human readable and appears in the help file, the double is
+the mathematical representation of the string. Line 5 is the dimension (units)
+of the option (only applicable to doubles). Line 6 is the type or cast of the
+option (0 = boolean, 1 = integer, 2 = double, 4 = string, 10 = array of bools,
+11 = array of ints, 12 = array of doubles, 13 = array of strings). Line 7 is a
+flag for permitting the user to use a negative sign (“-”) in front of the
+argument to select a custom unit, which is only permitted for positive-definite
+parameters. If set to true (1), then the next two lines define the alternative
+units’ qualitative description and quantitative value. Line 10 sets what file(s)
+the option can be set in (0 = primary only, 1 = body file only, 2 = any file).</p>
+<p>Next on Line 11 is a variable that explains what options are associated with the
+option and is a bit more complicated. For ease of use, VPLanet checks if each
+option is actually appropriate for the selected modules. This check is done via
+a bitwise comparison, with each module assigned a unique bit as defined in
+vplanet.h. Options that are applicable to all modules, like stop time,
+should be set to 0 as shown. Otherwise, set the value to equal the sum of module
+bits, such as is done for the inclination:</p>
+<p>In other words, each module is assigned a unique integer that is a power of 2 so
+that all module combinations sum to a unique multiple of 2. When an option is
+read in, VPLanet checks that either iModuleBit = 0, or that at least one of the
+appropriate bits in the integer is set to 1.</p>
+<p>The last line in the example is a function pointer to the subroutine that reads
+in the option. This function must be defined prior to this line. Finally, not
+shown is the cLongDescr field that contains a longer description of the output
+parameter that is used with the -H command line option, e.g. the verbosity
+benefits from a bit more explanation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>sprintf(options[OPT_VERBOSE].cLongDescr,</dt><dd><p>“Set how much text is written to the screen. 0 = no output, 1 = onlyn”
+“errors, 2 = progress updates, 3 = statements about input choices,  4 =n”
+“information about unit choices, 5 = all possible output. Note that levelsn”
+“0 and 5 can be set at execution with the -q and -v options, respectively.”</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">note:</dt>
+<dd class="field-odd"><p>Any field that is omitted will be set to the default values that are defined
+in output.c:InitializeOutput.</p>
+</dd>
+</dl>
+<p>Now let’s look at the subroutine that actually reads in the option, sticking
+with the stop time:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span>void ReadStopTime<span class="o">(</span>BODY *body,CONTROL *control,FILES *files,OPTIONS *options,
+<span class="linenos"> 2</span>                  SYSTEM *system,int iFile<span class="o">)</span> <span class="o">{</span>
+<span class="linenos"> 3</span>  /* This parameter can exist <span class="k">in</span> any file, but only once */
+<span class="linenos"> 4</span>  int <span class="nv">lTmp</span><span class="o">=</span>-1<span class="p">;</span>
+<span class="linenos"> 5</span>  double dTmp<span class="p">;</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>  AddOptionDouble<span class="o">(</span>files-&gt;Infile<span class="o">[</span>iFile<span class="o">]</span>.cIn,options-&gt;cName,<span class="p">&amp;</span>dTmp,<span class="p">&amp;</span>lTmp,
+<span class="linenos"> 8</span>                  control-&gt;Io.iVerbose<span class="o">)</span><span class="p">;</span>
+<span class="linenos"> 9</span>  <span class="k">if</span> <span class="o">(</span>lTmp &gt;<span class="o">=</span> <span class="m">0</span><span class="o">)</span> <span class="o">{</span>
+<span class="linenos">10</span>    /* Option was found */
+<span class="linenos">11</span>    CheckDuplication<span class="o">(</span>files,options,files-&gt;Infile<span class="o">[</span>iFile<span class="o">]</span>.cIn,lTmp,
+<span class="linenos">12</span>                     control-&gt;Io.iVerbose<span class="o">)</span><span class="p">;</span>
+<span class="linenos">13</span>    <span class="k">if</span> <span class="o">(</span>dTmp &lt; <span class="m">0</span><span class="o">)</span> <span class="o">{</span>
+<span class="linenos">14</span>      control-&gt;Evolve.dStopTIme <span class="o">=</span> dTmp*dNegativeDouble<span class="o">(</span>*options,
+<span class="linenos">15</span>                                  files-&gt;Infile<span class="o">[</span>iFile<span class="o">]</span>.cIn,
+<span class="linenos">16</span>                                  control-&gt;Io.iVerbose<span class="o">)</span><span class="p">;</span>
+<span class="linenos">17</span>    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="linenos">18</span>      /* Convert stop <span class="nb">time</span> to cgs */
+<span class="linenos">19</span>      control-&gt;Evolve.dStopTime <span class="o">=</span> dTmp*fdUnitsTime<span class="o">(</span>control-&gt;Units<span class="o">[</span>iFile<span class="o">]</span>.iTime<span class="o">)</span><span class="p">;</span>
+<span class="linenos">20</span>      <span class="o">}</span>
+<span class="linenos">21</span>    UpdateFoundOption<span class="o">(</span><span class="p">&amp;</span>files-&gt;Infile<span class="o">[</span>iFile<span class="o">]</span>,options,lTmp,iFile<span class="o">)</span><span class="p">;</span>
+<span class="linenos">22</span>  <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="linenos">23</span>    AssignDefaultDouble<span class="o">(</span>options,<span class="p">&amp;</span>control-&gt;Evolve.dStopTime,files-&gt;iNumInputs<span class="o">)</span><span class="p">;</span>
+<span class="linenos">24</span>  <span class="o">}</span>
+<span class="linenos">25</span><span class="o">}</span>
+</pre></div>
+</div>
+<p>The variable lTmp will represent the line number the option was found on (or,
+if not found, it remains -1), and dTmp holds that value as shown in the input
+file. Line 7 searches the input file for the option and, if found, populates the
+lTmp and dTmp variables.</p>
+<p>Next the function enters and if-then block based on whether or not the option
+was found. If it was, then the first thing to check is if the option is OK to be
+in this file. This feature is something the developer must decide. In this case,
+it does not make sense for multiple instances of dStopTime to appear in multiple
+files (not that the AddOptionDouble automatically scans for duplications inside
+a single file and errors if more than one is found), so we call
+CheckDuplication, which will exit if duplications are present. If the file
+should not be in the primary input file, call the NotPrimaryInput function, such
+as for the semi-major axis:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>NotPrimaryInput<span class="o">(</span>iFile,options-&gt;cName,files-&gt;Infile<span class="o">[</span>iFile<span class="o">]</span>.cIn,lTmp,control-&gt;Io.iVerbose<span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Moving on, line 13 then starts a new if-then block to perform basic checks on
+the validity of the argument. In this case, the option has an explicit negative
+option, so the value is converted to the appropriate units and assigned to
+appropriate struct. If, on the other hand, the argument to the option is
+positive then the argument is converted into the units specified by the user,
+either by setting sUnitTime, or the default time units. In both cases, these
+operations convert the units to system units, which are SI.</p>
+<p>After assigning the user input to the appropriate struct, UpdateFoundOption is
+called to perform bookkeeping on where the option was found and in which file.
+Finally, if the option was not set, the default value is assigned. With these
+steps completed, the option is now available in VPLanet. The code will
+automatically include it in subsequent compilations and you do not need to
+explicitly call a function like ReadStopTime.</p>
+<p>While this completes the procedure for the stop time, a second step is often
+required that we call verify. This step involves checking for consistency
+<em>across</em> options. For example, if a user inputs semi-major axis and orbital
+period, then there is a high likelihood the two values are not equivalent to
+machine precision. Thus, in verify.c there is a function called VerifyOrbit that
+handles these sorts of issues. In general, there is not universal algorithm to
+resolve multi-option inconsistencies and so the developer must write a new
+verify function to ensure that all the input is self-consistent.</p>
+<p>If you want to contribute your new feature to the code base, you must also
+write or update a unit test to include your new function.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="primaryvariable.html" class="btn btn-neutral float-right" title="How to Add a Primary Variable" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="output.html" class="btn btn-neutral" title="Add a VPLanet Output" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

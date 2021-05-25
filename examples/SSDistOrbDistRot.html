@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Solar System Orbital Dynamics from Secular Theory &mdash; VPLanet 1.2.0
+  <title>Solar System Orbital Dynamics from Secular Theory &mdash; VPLanet 2.0.0
  documentation</title>
   
 
@@ -29,16 +30,22 @@
   
 
   
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="VPLanet 1.2.0
+    <link rel="top" title="VPLanet 2.0.0
  documentation" href="../index.html"/>
         <link rel="up" title="Examples" href="../examples.html"/>
-        <link rel="next" title="Magma ocean evolution on GJ 1132 b" href="MagmOc_GJ1132b.html"/>
-        <link rel="prev" title="Coupling Atmospheric Escape and N-Body Evolution: Application to PSR1257+12" href="NBodyAtmEsc.html"/> 
+        <link rel="next" title="Tidal Evolution of Earth-like Exoplanet" href="TidalEarth.html"/>
+        <link rel="prev" title="N-body Orbital Evolution of the Solar System" href="SS_NBody.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -66,7 +73,7 @@
             
             
               <div class="version">
-                1.2.0
+                2.0.0
 
               </div>
             
@@ -92,57 +99,56 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installing VPLanet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Modules and Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../help.html#input-file-structure">Input File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../help.html#output-file-structure">Output File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../help.html#input-options">Input Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../help.html#output-parameters">Output Parameters</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="CassiniMulti.html">Multiple Cassini States in One System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="CircumbinaryOrbit.html">Orbital Evolution of the Circumbinary Planet Kepler-16 b</a></li>
-<li class="toctree-l2"><a class="reference internal" href="MagmOc_Earth.html">Magma Ocean Evolution of Earth</a></li>
-<li class="toctree-l2"><a class="reference internal" href="MiniNeptuneEvap.html">Atmospheric Erosion of Mini-Neptunes with the Lehmer &amp; Catling (2017) Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="SS_NBody.html">N-body Orbital Evolution of the Solar System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="AtmEscKepler-36.html">Kepler-36 Atmospheric Escape</a></li>
-<li class="toctree-l2"><a class="reference internal" href="STEEP.html">STEEP: Coupled Stellar-Tidal Evolution of Binary Orbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ParameterSweep.html">Parameter Sweep Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="VenusWaterLoss.html">Water Loss on Venus</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ChaoticResonances.html">Chaotic Eccentricity-Inclination Resonances</a></li>
-<li class="toctree-l2"><a class="reference internal" href="IceBelts.html">Ice Belt Formation on High Obliquity Planets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="RadHeat.html">Radiogenic Heating of Earth</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GalaxyEffects.html">Evolution of a Wide Stellar Binary due to Galactic Effects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="TidalEarth.html">Tidal Evolution of Earth-like Exoplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="MagmOc_Trappist1g.html">Magma ocean evolution of Trappist-1 g</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ApseLock.html">Apsidal Locking of the CoRoT-7 System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CassiniStates.html">Cassini States</a></li>
 <li class="toctree-l2"><a class="reference internal" href="VenusApproxInterior.html">Thermal and Magnetic Evolution of Venus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MagmOc_Earth.html">Magma Ocean Evolution of Earth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ApseLock.html">Apsidal Locking of the CoRoT-7 System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="STEEP.html">STEEP: Coupled Stellar-Tidal Evolution of Binary Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GalaxyEffects.html">Evolution of a Wide Stellar Binary due to Galactic Effects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="AtmEscKepler-36.html">Kepler-36 Atmospheric Escape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DampedCBP.html">Evolution of a Planet Orbiting a Short-Period Binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CircumbinaryOrbit.html">Orbital Evolution of the Circumbinary Planet Kepler-16 b</a></li>
 <li class="toctree-l2"><a class="reference internal" href="EarthClimate.html">Earth’s Seasonal and Milankovitch Climate Cycles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="EarthInterior.html">Thermal and Magnetic Evolution of Earth’s Interior</a></li>
-<li class="toctree-l2"><a class="reference internal" href="BinaryTides.html">Evolution of Tight Stellar Binaries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="StellarEvol.html">(Pre-)Main Sequence Stellar Evolution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="NBodyAtmEsc.html">Coupling Atmospheric Escape and N-Body Evolution: Application to PSR1257+12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="RadHeat.html">Radiogenic Heating of Earth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HabEvapCore.html">Proxima Centauri b as a “Habitable Evaporated Core.”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MagneticBraking.html">Stellar Magnetic Braking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ParameterSweep.html">Parameter Sweep Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MagmOc_Trappist1g.html">Magma ocean evolution of Trappist-1 g</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MagmOc_GJ1132b.html">Magma ocean evolution on GJ 1132 b</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SS_NBody.html">N-body Orbital Evolution of the Solar System</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Solar System Orbital Dynamics from Secular Theory</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#to-run-this-example">To run this example</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#expected-output">Expected output</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="MagmOc_GJ1132b.html">Magma ocean evolution on GJ 1132 b</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TidalEarth.html">Tidal Evolution of Earth-like Exoplanet</a></li>
 <li class="toctree-l2"><a class="reference internal" href="HLossTides.html">Hydrogen Envelope Loss on Tidally Evolving Planets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="WaterLossTides.html">Water Loss on a Tidally Evolving Planet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="DampedCBP.html">Evolution of a Planet Orbiting a Short-Period Binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="HabEvapCore.html">Proxima Centauri b as a “Habitable Evaporated Core.”</a></li>
-<li class="toctree-l2"><a class="reference internal" href="CassiniStates.html">Cassini States</a></li>
-<li class="toctree-l2"><a class="reference internal" href="AtmEscRegimes.html">Atmospheric Erosion of H Envelopes in the Energy-, Radiation/Recombination-, and Bondi-limited Regimes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="MagneticBraking.html">Stellar Magnetic Braking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="TideLock.html">Tidal Locking of the Planet Candidate Gl 581 d</a></li>
-<li class="toctree-l2"><a class="reference internal" href="AbioticO2.html">Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CassiniMulti.html">Multiple Cassini States in One System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="IceBelts.html">Ice Belt Formation on High Obliquity Planets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="VenusWaterLoss.html">Water Loss on Venus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="AtmEscRegimes.html">Atmospheric Erosion of H Envelopes in the Energy-, Radiation/Recombination-, and Bondi-limited Regimes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="IoHeat.html">Tidal Heating of Io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MiniNeptuneEvap.html">Atmospheric Erosion of Mini-Neptunes with the Lehmer &amp; Catling (2017) Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WaterLossTides.html">Water Loss on a Tidally Evolving Planet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NBodyAtmEsc.html">Coupling Atmospheric Escape and N-Body Evolution: Application to PSR1257+12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BinaryTides.html">Evolution of Tight Stellar Binaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="AbioticO2.html">Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="StellarEvol.html">(Pre-)Main Sequence Stellar Evolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="EarthInterior.html">Thermal and Magnetic Evolution of Earth’s Interior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ChaoticResonances.html">Chaotic Eccentricity-Inclination Resonances</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples.html#broken">Broken</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../src.html">C API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../parametersweep.html">Parameter Sweep Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">VPLanet Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">Contributor’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../repos.html">Other VPLanet Repositories</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
 </ul>
 
@@ -190,9 +196,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="solar-system-orbital-dynamics-from-secular-theory">
+  <section id="solar-system-orbital-dynamics-from-secular-theory">
 <h1>Solar System Orbital Dynamics from Secular Theory<a class="headerlink" href="#solar-system-orbital-dynamics-from-secular-theory" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="overview">
+<section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>Orbital and rotational evolution of the Solar System.</p>
 <table class="docutils align-default">
@@ -232,57 +238,44 @@ using <strong>DistOrb</strong> and <strong>DistRot</strong>. This result can be 
 orbital data from <code class="code docutils literal notranslate"><span class="pre">HNBody</span></code> (<a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2002DDA....33.0802R/abstract">Rauch &amp; Hamilton 2002</a>) to demonstrate the effects
 of secular resonances not resolved by <strong>DistOrb</strong>. Note that <strong>DistRot</strong> can use orbital
 elements generated by non-<strong>VPLanet</strong> sources.</p>
-</div>
-<div class="section" id="to-run-this-example">
+</section>
+<section id="to-run-this-example">
 <h2>To run this example<a class="headerlink" href="#to-run-this-example" title="Permalink to this headline">¶</a></h2>
-<p><strong>Note:</strong> You may need to install latex fonts and pictures, e.g. type1cm.sty, to reproduce these figures.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run the baseline case</span>
-vplanet vpl.in
-
-<span class="c1"># Run without the Earth&#39;s moon</span>
-<span class="nb">cd</span> womoon
-vplanet vpl.in
-<span class="nb">cd</span> ..
-
-<span class="c1"># Run the Mars N-Body case</span>
-<span class="nb">cd</span> marshnb
-vplanet vpl.in
-<span class="nb">cd</span> ..
-
-<span class="c1"># Run the Mars vplanet case</span>
-<span class="nb">cd</span> marsvpl
-vplanet vpl.in
-<span class="nb">cd</span> ..
-
-python makeplot.py &lt;png <span class="p">|</span> pdf&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python makeplot.py &lt;png <span class="p">|</span> pdf&gt;
 </pre></div>
 </div>
-</div>
-<div class="section" id="expected-output">
+</section>
+<section id="expected-output">
 <h2>Expected output<a class="headerlink" href="#expected-output" title="Permalink to this headline">¶</a></h2>
-<div class="figure align-center" id="id2">
+<figure class="align-center" id="id2">
 <a class="reference internal image-reference" href="examples/SSDistOrbDistRotInner.png"><img alt="examples/SSDistOrbDistRotInner.png" src="examples/SSDistOrbDistRotInner.png" style="width: 600px;" /></a>
-<p class="caption"><span class="caption-text">Eccentricity evolution (left) and inclination evolution (right) for the
+<figcaption>
+<p><span class="caption-text">Eccentricity evolution (left) and inclination evolution (right) for the
 inner solar system planets over the next 1 Myr. Initial condition are taken
 from Appendix A of <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/1999ssd..book.....M/abstract">Murray &amp; Dermott (1999)</a>.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</div>
-<div class="figure align-center">
+</figcaption>
+</figure>
+<figure class="align-center">
 <a class="reference internal image-reference" href="examples/SSDistOrbDistRotOuter.png"><img alt="examples/SSDistOrbDistRotOuter.png" src="examples/SSDistOrbDistRotOuter.png" style="width: 600px;" /></a>
-</div>
-<div class="figure align-center" id="id3">
+</figure>
+<figure class="align-center" id="id3">
 <a class="reference internal image-reference" href="examples/SSDistOrbDistRotError.png"><img alt="examples/SSDistOrbDistRotError.png" src="examples/SSDistOrbDistRotError.png" style="width: 600px;" /></a>
-<p class="caption"><span class="caption-text">Absolute errors in the eccentricity (left) and inclination (right) between DistOrb
+<figcaption>
+<p><span class="caption-text">Absolute errors in the eccentricity (left) and inclination (right) between DistOrb
 and HNBODY over 5 Myr.  Upper panels show the inner solar system planets and lower panels
 show the outer planets.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
-</div>
-<div class="figure align-center" id="id4">
+</figcaption>
+</figure>
+<figure class="align-center" id="id4">
 <a class="reference internal image-reference" href="examples/SSDistOrbDistRotObliq.png"><img alt="examples/SSDistOrbDistRotObliq.png" src="examples/SSDistOrbDistRotObliq.png" style="width: 600px;" /></a>
-<p class="caption"><span class="caption-text">Obliquity evolution of Earth with and without the Moon over the next Myr
+<figcaption>
+<p><span class="caption-text">Obliquity evolution of Earth with and without the Moon over the next Myr
 (left) and Mars using secular and N-body models for the orbit over the
 last 10 Myr (right).</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
-</div>
-</div>
-</div>
+</figcaption>
+</figure>
+</section>
+</section>
 
 
            </div>
@@ -291,10 +284,10 @@ last 10 Myr (right).</span><a class="headerlink" href="#id4" title="Permalink to
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="MagmOc_GJ1132b.html" class="btn btn-neutral float-right" title="Magma ocean evolution on GJ 1132 b" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="TidalEarth.html" class="btn btn-neutral float-right" title="Tidal Evolution of Earth-like Exoplanet" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="NBodyAtmEsc.html" class="btn btn-neutral" title="Coupling Atmospheric Escape and N-Body Evolution: Application to PSR1257+12" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="SS_NBody.html" class="btn btn-neutral" title="N-body Orbital Evolution of the Solar System" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -324,16 +317,16 @@ last 10 Myr (right).</span><a class="headerlink" href="#id4" title="Permalink to
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.2.0',
+            VERSION:'2.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
     </script>
+      <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 

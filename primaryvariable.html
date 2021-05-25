@@ -1,0 +1,514 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>How to Add a Primary Variable &mdash; VPLanet 2.0.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="VPLanet 2.0.0
+ documentation" href="index.html"/>
+        <link rel="up" title="VPLanet Tutorials" href="tutorials.html"/>
+        <link rel="next" title="Adding a New Module" href="module.html"/>
+        <link rel="prev" title="Add a VPLanet Option" href="option.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">VPLanet Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Code Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Add an Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="option.html">Add an Option</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Add a Primary Variable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#is-the-parameter-a-primary-variable">Is the parameter a primary variable?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#is-the-primary-variable-multi-module">Is the primary variable multi-module?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#declaration">Declaration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initialization">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-the-new-primary-variable">Using the New Primary Variable</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">Add a Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coupling.html">Coupling Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">Contributor’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repos.html">Other VPLanet Repositories</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">VPLanet</a> &raquo;</li>
+      
+        <li><a href="tutorials.html">VPLanet Tutorials</a>&raquo;</li>
+      
+    
+      <li>How to Add a Primary Variable</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="how-to-add-a-primary-variable">
+<h1>How to Add a Primary Variable<a class="headerlink" href="#how-to-add-a-primary-variable" title="Permalink to this headline">¶</a></h1>
+<p>This page shows how to introduce a new primary variable into a VPLanet
+module. For this tutorial, we add a variable called dPrimaryVariable to a
+fictitious module called Physics that is in files called physics.[ch]. For your
+new primary variable, replace “PrimaryVariable with the name of your new primary
+variable and “”Physics” with the name of the module you are upgrading.</p>
+<section id="is-the-parameter-a-primary-variable">
+<h2>Is the parameter a primary variable?<a class="headerlink" href="#is-the-parameter-a-primary-variable" title="Permalink to this headline">¶</a></h2>
+<p>A “primary variable” is a parameter whose evolution is explicitly tracked by
+VPLanet, e.g. its evolution is controlled by an ordinary differential equation.
+In other words, adding a primary variable is equivalent to adding a new
+governing equation that fundamentally affects an object’s evolution.
+If that is <strong>not</strong> the case, i.e. it depends only on other primary variables, then
+you probably only need to add it to a struct (like BODY), some functions to
+calculate its values, <cite>options &lt;option&gt;</cite> and/or <cite>outputs &lt;outputs&gt;</cite>, and a call
+in PropsAux and/or ForceBehavior. In many cases just adding an output function
+that explicitly calculates the value is sufficient.</p>
+<p>If, however, this parameter is indeed a primary variable, this tutorial will
+guide you through the steps to add it.</p>
+</section>
+<section id="is-the-primary-variable-multi-module">
+<h2>Is the primary variable multi-module?<a class="headerlink" href="#is-the-primary-variable-multi-module" title="Permalink to this headline">¶</a></h2>
+<p>Some variables can be modified by my multiple modules, while others will be
+exclusive to a single module. For example, eccentricity can be affected by
+both tidal evolution (EqTide) and/or planet-planet perturbations (SpiNbody or
+DistOrb). The setup for the variable is the same, but multi-nodule primary
+variables will require additional steps to fully integrate them. For this
+tutorial, we focus on a single-modules primary variable. If your primary
+variable is multi-module, complete the steps shown below, then look at how a
+primary variable like dHecc (a variable related to eccentricity and longitude of
+pericenter) are handled, including in module.c.</p>
+</section>
+<section id="declaration">
+<h2>Declaration<a class="headerlink" href="#declaration" title="Permalink to this headline">¶</a></h2>
+<p>The first step in creating a primary variable is to add it to the BODY struct in
+vplanet.h, i.e.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>struct BODY <span class="o">{</span>
+  ...
+  double dPrimaryVariable<span class="p">;</span>  /**&lt; Dummy variable <span class="k">for</span> primary variable tutorial */
+  ...
+<span class="o">}</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>If the new primary variable is part of an existing module, add it to the
+corresponding block of code. Note the Doxygen comment.</p>
+<p>Next, we add new members to the UPDATE struct, which contains the relevant info
+to integrate the primary variable.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>struct UPDATE <span class="o">{</span>
+  ...
+  int iPrimaryVariable<span class="p">;</span>
+  int iNumPrimaryVariable<span class="p">;</span>
+  ...
+  double dPrimaryVariable<span class="p">;</span>
+  ...
+  int iPrimaryVariablePhysics<span class="p">;</span>
+  ...
+  double *pdDPrimaryVariableDtPhysics<span class="p">;</span>
+  ...
+<span class="o">}</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The first parameter describes the position of this variable in the UPDATE matrix;
+the second is the total number of processes that can modify the primary variable;
+the third is the value of the primary variable at a given timestep; and the
+final variable is a pointer to the instantaneous derivative. Although not shown
+here, don’t forget to add the Doxygen comments.</p>
+<p>Next, add a new function class for the variable in vplanet.h in the block of
+declarations for the other primary variables:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>typedef void <span class="o">(</span>*fnFinalizeUpdatePrimaryVariableModule<span class="o">)(</span>BODY *, UPDATE *,
+              int *, int, int, int<span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>and add it to the MODULE struct:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>struct MODULE <span class="o">{</span>
+  ...
+  fnFinalizeUpdatePrimaryVariableModule **fnFinalizeUpdatePrimaryVariable<span class="p">;</span>
+  ...
+<span class="o">}</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The next step is to add a unique identifier in update.h:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#define VPRIMARYVARIABLE 2000     // Dummy primary variable</span>
+</pre></div>
+</div>
+<p>where the “V” stands for variable, and the integer ID must be unique.</p>
+<p>The final initialization step is to declare the subroutine that returns the
+derivative in the module’s header file, which we’re calling physics.h for this
+example.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>double fdDPrimaryVariableDt<span class="o">(</span>BODY *, SYSTEM *, int *<span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">note:</dt>
+<dd class="field-odd"><p>All subroutines that return the derivative of a primary variable must have
+the argument list of the example above.</p>
+</dd>
+</dl>
+</section>
+<section id="initialization">
+<h2>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h2>
+<p>With the header files updated, we now turn to the steps necessary in the .c
+files. We start with update.c. First, initialize the number of processes that
+can modify this variable in the InitializeUpdate function to 0, and create a
+block of code that initializes the other pieces of the UPDATE struct.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void InitializeUpdate<span class="o">(</span>BODY *body, CONTROL *control, MODULE *module,
+                      UPDATE *update, fnUpdateVariable ****fnUpdate<span class="o">)</span> <span class="o">{</span>
+  ...
+  update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable <span class="o">=</span> <span class="m">0</span><span class="p">;</span>
+  ...
+  // Set to -1 to initialize<span class="p">;</span> this is changed <span class="k">if</span> the user requests it
+  update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable <span class="o">=</span> -1<span class="p">;</span>
+  <span class="k">if</span> <span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="o">)</span> <span class="o">{</span>
+    // At least <span class="m">1</span> module will use this variable
+
+    // Assign iVar accounting variables
+    update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable <span class="o">=</span> iVar<span class="p">;</span>
+    update<span class="o">[</span>iBody<span class="o">]</span>.iaVar<span class="o">[</span>iVar<span class="o">]</span>      <span class="o">=</span> VPRIMARYVARIABLE<span class="p">;</span>
+    update<span class="o">[</span>iBody<span class="o">]</span>.iNumEqns<span class="o">[</span>iVar<span class="o">]</span>   <span class="o">=</span> update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="p">;</span>
+    // Assign pointer to derivative
+    update<span class="o">[</span>iBody<span class="o">]</span>.pdVar<span class="o">[</span>iVar<span class="o">]</span>      <span class="o">=</span> <span class="p">&amp;</span>body<span class="o">[</span>iBody<span class="o">]</span>.dPrimaryVariable<span class="p">;</span>
+    // Allocate memory
+    update<span class="o">[</span>iBody<span class="o">]</span>.iNumBodies<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
+       malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
+    update<span class="o">[</span>iBody<span class="o">]</span>.iaBody<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
+       malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>int *<span class="o">))</span><span class="p">;</span>
+    update<span class="o">[</span>iBody<span class="o">]</span>.iaType<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span> malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable *
+       sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
+    update<span class="o">[</span>iBody<span class="o">]</span>.iaModule<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
+       malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
+
+    // Assign and alloate memory <span class="k">for</span> Runge-Kutta integration
+    <span class="k">if</span> <span class="o">(</span>control-&gt;Evolve.iOneStep <span class="o">==</span> RUNGEKUTTA<span class="o">)</span> <span class="o">{</span>
+      control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.pdVar<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
+         <span class="p">&amp;</span>control-&gt;Evolve.tmpBody<span class="o">[</span>iBody<span class="o">]</span>.dPrimaryVariable<span class="p">;</span>
+      control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.iNumBodies<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
+         malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
+      control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.daDerivProc<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
+         malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>double<span class="o">))</span><span class="p">;</span>
+      control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.iaType<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
+         malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
+      control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.iaModule<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
+         malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
+      control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.iaBody<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
+         malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>int *<span class="o">))</span><span class="p">;</span>
+    <span class="o">}</span>
+
+    // Now allocate memory <span class="k">for</span> the number of processes that affect this variable
+    <span class="nv">iEqn</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="o">(</span><span class="nv">iModule</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span> iModule &lt; module-&gt;iNumModules<span class="o">[</span>iBody<span class="o">]</span><span class="p">;</span> iModule++<span class="o">)</span> <span class="o">{</span>
+      module-&gt;fnFinalizeUpdatePrimaryVariable<span class="o">[</span>iBody<span class="o">][</span>iModule<span class="o">](</span>body, update,
+                <span class="p">&amp;</span>iEqn, iVar, iBody, iFoo<span class="o">)</span><span class="p">;</span>
+    <span class="o">}</span>
+
+    <span class="o">(</span>*fnUpdate<span class="o">)[</span>iBody<span class="o">][</span>iVar<span class="o">]</span>        <span class="o">=</span> malloc<span class="o">(</span>iEqn * sizeof<span class="o">(</span>fnUpdateVariable<span class="o">))</span><span class="p">;</span>
+    update<span class="o">[</span>iBody<span class="o">]</span>.daDerivProc<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span> malloc<span class="o">(</span>iEqn * sizeof<span class="o">(</span>double<span class="o">))</span><span class="p">;</span>
+    iVar++<span class="p">;</span> // increment iVar <span class="k">for</span> the next primary variable
+  <span class="o">}</span>
+  ...
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>There’s a lot going on here, but all these lines do is setup your new primary
+variable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">note:</dt>
+<dd class="field-odd"><p>The pdVar variable is a pointer to the update matrix’s element
+(fnUpdate[iBody][iVar][iEqn]) that is calculated every time step. If you ever
+assign a new value to this variable, you will overwrite the primary variable’s
+derivative (which would be bad!).</p>
+</dd>
+</dl>
+<p>Next we need to add code to the module file, physics.c in this example, for
+which this primary variable will be added. First add a new function that
+continues the initialization process:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void InitializePrimaryVariablePhysics<span class="o">(</span>BODY *body, OPTIONS *options,
+                        UPDATE *update, double dAge, int iBody<span class="o">)</span> <span class="o">{</span>
+
+  // <span class="s2">&quot;Type&quot;</span> of update<span class="p">;</span> <span class="m">1</span> is an ordinary differential equation
+  update<span class="o">[</span>iBody<span class="o">]</span>.iaType<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+                <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span> <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
+  // here we assume only one body is affecting the way the variable is updated
+  update<span class="o">[</span>iBody<span class="o">]</span>.iNumBodies<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+                <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span> <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
+  // allocate memory
+  update<span class="o">[</span>iBody<span class="o">]</span>.iaBody<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+                <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span> <span class="o">=</span> malloc<span class="o">(</span>
+                update<span class="o">[</span>iBody<span class="o">]</span>.iNumBodies<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+                <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span> * sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
+  // Assign body<span class="o">(</span>ies<span class="o">)</span> that affect this derivative
+  update<span class="o">[</span>iBody<span class="o">]</span>.iaBody<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+                <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">][</span><span class="m">0</span><span class="o">]</span> <span class="o">=</span> iBody<span class="p">;</span>
+  // Assign pointer the derivative
+  update<span class="o">[</span>iBody<span class="o">]</span>.pdDPrimaryVariableDtPhysics <span class="o">=</span>
+                <span class="p">&amp;</span>update<span class="o">[</span>iBody<span class="o">]</span>.daDeriv<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+                <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span><span class="p">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Then add a new line to the AssignDerivative function to set the appropriate
+function pointer to the fnUpdate matrix:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void AssignPhysicsDerivatives<span class="o">(</span>BODY *body, EVOLVE *evolve, UPDATE *update,
+                            fnUpdateVariable ***fnUpdate, int iBody<span class="o">)</span> <span class="o">{</span>
+  ...
+  fnUpdate<span class="o">[</span>iBody<span class="o">][</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+          <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span> <span class="o">=</span> <span class="p">&amp;</span>fdDPrimaryVariableDtPhysics<span class="p">;</span>
+  ...
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>where “Physics” is the  module name. The function fdDPrimaryVariableDt is a
+subroutine that return the derivative of the primary variable.</p>
+<p>Next add the following block of code to the InitializeUpdatePhysics function in
+the module’s file (physics.c):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void InitializeUpdatePhysics<span class="o">(</span>BODY *body, UPDATE *update, int iBody<span class="o">)</span> <span class="o">{</span>
+  ...
+  <span class="k">if</span> <span class="o">(</span>iBody &gt; <span class="m">0</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable <span class="o">==</span> <span class="m">0</span><span class="o">)</span> <span class="o">{</span>
+    update<span class="o">[</span>iBody<span class="o">]</span>.iNumVars++<span class="p">;</span>
+  <span class="o">}</span>
+  update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable++<span class="p">;</span>
+  ...
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Then create the FinalizeUpdate function:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void FinalizeUpdatePrimaryVariablePhysics<span class="o">(</span>BODY *body, UPDATE *update,
+                                         int *iEqn, int iVar,int iBody,
+                                         int iFoo<span class="o">)</span> <span class="o">{</span>
+  update<span class="o">[</span>iBody<span class="o">]</span>.iaModule<span class="o">[</span>iVar<span class="o">][</span>*iEqn<span class="o">]</span> <span class="o">=</span> PHYSICS<span class="p">;</span>
+  update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics <span class="o">=</span> *iEqn<span class="p">;</span>
+  <span class="o">(</span>*iEqn<span class="o">)</span>++<span class="p">;</span>
+  <span class="o">}</span>
+</pre></div>
+</div>
+<p>where PHYSICS is the unique integer associated with the module you are
+upgrading.</p>
+<p>Then add the primary variable to the NullDerivatives function:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void NullPhysicsEDerivatives<span class="o">(</span>BODY *body, EVOLVE *evolve, UPDATE *update,
+                           fnUpdateVariable ***fnUpdate, int iBody<span class="o">)</span> <span class="o">{</span>
+  ...
+  fnUpdate<span class="o">[</span>iBody<span class="o">][</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+          <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariableMODULE<span class="o">]</span> <span class="o">=</span> <span class="p">&amp;</span>fndUpdateFunctionTiny<span class="p">;</span>
+  ...
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The final initialization step is to update the AddModule function:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void AddModulePhysics<span class="o">(</span>CONTROL *control, MODULE *module, int iBody,
+                     int iModule<span class="o">)</span> <span class="o">{</span>
+  ...
+  module-&gt;fnFinalizeUpdatePrimaryVariable<span class="o">[</span>iBody<span class="o">][</span>iModule<span class="o">]</span> <span class="o">=</span>
+      <span class="p">&amp;</span>FinalizeUpdatePrimaryVariablePhysics<span class="p">;</span>
+  ...
+<span class="o">}</span>
+</pre></div>
+</div>
+</section>
+<section id="using-the-new-primary-variable">
+<h2>Using the New Primary Variable<a class="headerlink" href="#using-the-new-primary-variable" title="Permalink to this headline">¶</a></h2>
+<p>From here, you must add the particular functions that perform the mathematical
+calculations associated with the primary variable. At the bare minimum, you must
+add the fdDPrimaryVariableDt. Additionally, you may want to take advantage of
+the PropsAux function to compute any intermediary parameters that make it easier
+to understand the code. You may also need to update the ForceBehavior function.
+If your new variable depends on arrays of parameters, you may also need to add
+or update the InitializeBody, InitializeUpdate, InitializeTmpBody, and
+InitializeTmpUpdate functions. See eqtide.c or distorb.c for examples of how
+these functions work. And of course you’ll probably want to add <cite>options
+&lt;option&gt;</cite> and <cite>outputs &lt;output&gt;</cite>. Finally, add <cite>examples and tests &lt;tests&gt;</cite> to
+show off your result and ensure that future upgrades don’t destroy your work.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="module.html" class="btn btn-neutral float-right" title="Adding a New Module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="option.html" class="btn btn-neutral" title="Add a VPLanet Option" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>For developers &mdash; VPLanet 1.2.0
+  <title>Contributor’s Guide &mdash; VPLanet 2.0.0
  documentation</title>
   
 
@@ -29,15 +30,21 @@
   
 
   
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="VPLanet 1.2.0
+    <link rel="top" title="VPLanet 2.0.0
  documentation" href="index.html"/>
         <link rel="next" title="VPLanet Style Guide" href="StyleGuide.html"/>
-        <link rel="prev" title="Parameter Sweep Guide" href="parametersweep.html"/> 
+        <link rel="prev" title="Coupling Modules" href="coupling.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -65,7 +72,7 @@
             
             
               <div class="version">
-                1.2.0
+                2.0.0
 
               </div>
             
@@ -91,19 +98,17 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="help.html">Modules and Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#input-file-structure">Input File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#output-file-structure">Output File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#input-options">Input Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#output-parameters">Output Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">For developers</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">VPLanet Tutorials</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributor’s Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="StyleGuide.html">Style Guide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tests.html">Writing Tests and Examples</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repos.html">Other VPLanet Repositories</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
 </ul>
 
@@ -136,7 +141,7 @@
     <li><a href="index.html">VPLanet</a> &raquo;</li>
       
     
-      <li>For developers</li>
+      <li>Contributor’s Guide</li>
     
       <li class="wy-breadcrumbs-aside">
         
@@ -149,16 +154,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="for-developers">
-<h1>For developers<a class="headerlink" href="#for-developers" title="Permalink to this headline">¶</a></h1>
-<p>Information for <strong>VPLanet</strong> developers.</p>
+  <section id="contributor-s-guide">
+<h1>Contributor’s Guide<a class="headerlink" href="#contributor-s-guide" title="Permalink to this headline">¶</a></h1>
+<p>Interested in joining the <strong>VPLanet</strong> community? Here we outline the steps to
+make a meaningful contribution to the code, and the discovery of life beyond
+the Solar System! Before you begin modifying the code, we recommend you
+contact <cite>Rory Barnes &lt;mailto:rory&#64;astro.washington.edu&gt;</cite> to confirm that your
+proposed changes are not duplicating work and will be of general interest.</p>
+<p>Since VPLanet is a large and abstract code, its sustainability depends on the
+code’s maintenance as it grows. We have therefore initiated a series of steps
+that are required prior to any changes becoming part of the main branch. The
+following sections provide details on each step and include some motivation for
+this methodology.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="StyleGuide.html">Style Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tests.html">Writing Tests and Examples</a></li>
 </ul>
 </div>
-</div>
+<dl class="simple">
+<dt>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</dt><dd><p>Writing Tests and Examples &lt;tests&gt;</p>
+</dd>
+</dl>
+<blockquote>
+<div><p>Attribution &lt;attr&gt;</p>
+</div></blockquote>
+<p>&gt;&gt;&gt;&gt;&gt;&gt;&gt; 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a</p>
+</section>
 
 
            </div>
@@ -170,7 +191,7 @@
         <a href="StyleGuide.html" class="btn btn-neutral float-right" title="VPLanet Style Guide" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="parametersweep.html" class="btn btn-neutral" title="Parameter Sweep Guide" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="coupling.html" class="btn btn-neutral" title="Coupling Modules" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -200,16 +221,16 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.2.0',
+            VERSION:'2.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
     </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="_static/language_data.js"></script>
 
   
 

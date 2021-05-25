@@ -12,40 +12,40 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/CassiniMulti
-   examples/CircumbinaryOrbit
-   examples/MagmOc_Earth
-   examples/MiniNeptuneEvap
-   examples/SS_NBody
-   examples/AtmEscKepler-36
-   examples/STEEP
-   examples/ParameterSweep
-   examples/VenusWaterLoss
-   examples/ChaoticResonances
-   examples/IceBelts
-   examples/RadHeat
-   examples/GalaxyEffects
-   examples/TidalEarth
-   examples/MagmOc_Trappist1g
-   examples/ApseLock
-   examples/VenusApproxInterior
-   examples/EarthClimate
-   examples/EarthInterior
-   examples/BinaryTides
-   examples/StellarEvol
-   examples/NBodyAtmEsc
-   examples/SSDistOrbDistRot
-   examples/MagmOc_GJ1132b
-   examples/HLossTides
-   examples/WaterLossTides
-   examples/DampedCBP
-   examples/HabEvapCore
    examples/CassiniStates
-   examples/AtmEscRegimes
+   examples/VenusApproxInterior
+   examples/MagmOc_Earth
+   examples/ApseLock
+   examples/STEEP
+   examples/GalaxyEffects
+   examples/AtmEscKepler-36
+   examples/DampedCBP
+   examples/CircumbinaryOrbit
+   examples/EarthClimate
+   examples/RadHeat
+   examples/HabEvapCore
    examples/MagneticBraking
+   examples/ParameterSweep
+   examples/MagmOc_Trappist1g
+   examples/MagmOc_GJ1132b
+   examples/SS_NBody
+   examples/SSDistOrbDistRot
+   examples/TidalEarth
+   examples/HLossTides
    examples/TideLock
-   examples/AbioticO2
+   examples/CassiniMulti
+   examples/IceBelts
+   examples/VenusWaterLoss
+   examples/AtmEscRegimes
    examples/IoHeat
+   examples/MiniNeptuneEvap
+   examples/WaterLossTides
+   examples/NBodyAtmEsc
+   examples/BinaryTides
+   examples/AbioticO2
+   examples/StellarEvol
+   examples/EarthInterior
+   examples/ChaoticResonances
 
 
 Broken

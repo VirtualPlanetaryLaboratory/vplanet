@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>system &mdash; VPLanet 1.2.0
+  <title>system &mdash; VPLanet 2.0.0
  documentation</title>
   
 
@@ -29,16 +30,22 @@
   
 
   
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="VPLanet 1.2.0
+    <link rel="top" title="VPLanet 2.0.0
  documentation" href="../index.html"/>
         <link rel="up" title="C API" href="../src.html"/>
-        <link rel="next" title="thermint" href="thermint.html"/>
-        <link rel="prev" title="output" href="output.html"/> 
+        <link rel="next" title="atmesc" href="atmesc.html"/>
+        <link rel="prev" title="control" href="control.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -66,7 +73,7 @@
             
             
               <div class="version">
-                1.2.0
+                2.0.0
 
               </div>
             
@@ -92,45 +99,44 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installing VPLanet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Modules and Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../help.html#input-file-structure">Input File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../help.html#output-file-structure">Output File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../help.html#input-options">Input Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../help.html#output-parameters">Output Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
-<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
 <li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
-<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">system</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#system-c">system.c</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#system-h">system.h</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../parametersweep.html">Parameter Sweep Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">VPLanet Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">Contributor’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../repos.html">Other VPLanet Repositories</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
 </ul>
 
@@ -178,7 +184,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="system">
+  <section id="system">
 <h1>system<a class="headerlink" href="#system" title="Permalink to this headline">¶</a></h1>
 <p><strong>Contents</strong></p>
 <div class="contents local topic" id="contents">
@@ -187,7 +193,7 @@
 <li><p><a class="reference internal" href="#system-h" id="id2">system.h</a></p></li>
 </ul>
 </div>
-<div class="section" id="system-c">
+<section id="system-c">
 <h2><a class="toc-backref" href="#id1">system.c</a><a class="headerlink" href="#system-c" title="Permalink to this headline">¶</a></h2>
 <p>Subroutines that control system-wide properties. </p>
 <p><dl class="simple">
@@ -198,194 +204,326 @@
 </dl>
 </p>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Functions</p>
-<dl class="function">
-<dt id="_CPPv418fdMeanMotionToSemiddd">
-<span id="_CPPv318fdMeanMotionToSemiddd"></span><span id="_CPPv218fdMeanMotionToSemiddd"></span><span id="fdMeanMotionToSemi__double.double.double"></span><span class="target" id="system_8c_1a652ccbe5763d1f57d7f47dd0d7fc82f0"></span>double <code class="sig-name descname">fdMeanMotionToSemi</code><span class="sig-paren">(</span>double <em>dMass1</em>, double <em>dMass2</em>, double <em>dMeanMotion</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fdMeanMotionToSemiddd" title="Permalink to this definition">¶</a><br /></dt>
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418fdMeanMotionToSemiddd">
+<span id="_CPPv318fdMeanMotionToSemiddd"></span><span id="_CPPv218fdMeanMotionToSemiddd"></span><span id="fdMeanMotionToSemi__double.double.double"></span><span class="target" id="system_8c_1a652ccbe5763d1f57d7f47dd0d7fc82f0"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdMeanMotionToSemi</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dMass1</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dMass2</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dMeanMotion</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fdMeanMotionToSemiddd" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv414fdPeriodToSemidd">
-<span id="_CPPv314fdPeriodToSemidd"></span><span id="_CPPv214fdPeriodToSemidd"></span><span id="fdPeriodToSemi__double.double"></span><span class="target" id="system_8c_1a5737d8f7135ba357178a9fc2aca54249"></span>double <code class="sig-name descname">fdPeriodToSemi</code><span class="sig-paren">(</span>double <em>dPeriod</em>, double <em>dMass</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdPeriodToSemidd" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414fdPeriodToSemidd">
+<span id="_CPPv314fdPeriodToSemidd"></span><span id="_CPPv214fdPeriodToSemidd"></span><span id="fdPeriodToSemi__double.double"></span><span class="target" id="system_8c_1a5737d8f7135ba357178a9fc2aca54249"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdPeriodToSemi</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dPeriod</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dMass</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdPeriodToSemidd" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv414fdSemiToPerioddd">
-<span id="_CPPv314fdSemiToPerioddd"></span><span id="_CPPv214fdSemiToPerioddd"></span><span id="fdSemiToPeriod__double.double"></span><span class="target" id="system_8c_1a467addcfe4cbc268ddc31aaa571f4497"></span>double <code class="sig-name descname">fdSemiToPeriod</code><span class="sig-paren">(</span>double <em>dSemi</em>, double <em>dMass</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdSemiToPerioddd" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414fdSemiToPerioddd">
+<span id="_CPPv314fdSemiToPerioddd"></span><span id="_CPPv214fdSemiToPerioddd"></span><span id="fdSemiToPeriod__double.double"></span><span class="target" id="system_8c_1a467addcfe4cbc268ddc31aaa571f4497"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdSemiToPeriod</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dSemi</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dMass</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdSemiToPerioddd" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv418fdSemiToMeanMotiondd">
-<span id="_CPPv318fdSemiToMeanMotiondd"></span><span id="_CPPv218fdSemiToMeanMotiondd"></span><span id="fdSemiToMeanMotion__double.double"></span><span class="target" id="system_8c_1a8f0379df4796faeefc520c2e032032c0"></span>double <code class="sig-name descname">fdSemiToMeanMotion</code><span class="sig-paren">(</span>double <em>dSemi</em>, double <em>dMass</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fdSemiToMeanMotiondd" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418fdSemiToMeanMotiondd">
+<span id="_CPPv318fdSemiToMeanMotiondd"></span><span id="_CPPv218fdSemiToMeanMotiondd"></span><span id="fdSemiToMeanMotion__double.double"></span><span class="target" id="system_8c_1a8f0379df4796faeefc520c2e032032c0"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdSemiToMeanMotion</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dSemi</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dMass</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fdSemiToMeanMotiondd" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv411fdOrbAngMomP4BODYP7CONTROLi">
-<span id="_CPPv311fdOrbAngMomP4BODYP7CONTROLi"></span><span id="_CPPv211fdOrbAngMomP4BODYP7CONTROLi"></span><span id="fdOrbAngMom__BODYP.CONTROLP.i"></span><span class="target" id="system_8c_1a4b74a1be591e844df499cc8650aba6f1"></span>double *<code class="sig-name descname">fdOrbAngMom</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdOrbAngMomP4BODYP7CONTROLi" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv411fdOrbAngMomP4BODYP7CONTROLi">
+<span id="_CPPv311fdOrbAngMomP4BODYP7CONTROLi"></span><span id="_CPPv211fdOrbAngMomP4BODYP7CONTROLi"></span><span id="fdOrbAngMom__BODYP.CONTROLP.i"></span><span class="target" id="system_8c_1a4b74a1be591e844df499cc8650aba6f1"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">fdOrbAngMom</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdOrbAngMomP4BODYP7CONTROLi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Compute the orbital angular momentum of the iBodyth body as J = mu*sqrt(GMA(1-e^2)) for each orbiting body </p>
 </dd></dl>
 
-<dl class="function">
-<dt id="_CPPv411fdTotAngMomP4BODYP7CONTROLP6SYSTEM">
-<span id="_CPPv311fdTotAngMomP4BODYP7CONTROLP6SYSTEM"></span><span id="_CPPv211fdTotAngMomP4BODYP7CONTROLP6SYSTEM"></span><span id="fdTotAngMom__BODYP.CONTROLP.SYSTEMP"></span><span class="target" id="system_8c_1a49391392270b0484a6833e4103597a2b"></span>double <code class="sig-name descname">fdTotAngMom</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdTotAngMomP4BODYP7CONTROLP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv411fdTotAngMomP4BODYP7CONTROLP6SYSTEM">
+<span id="_CPPv311fdTotAngMomP4BODYP7CONTROLP6SYSTEM"></span><span id="_CPPv211fdTotAngMomP4BODYP7CONTROLP6SYSTEM"></span><span id="fdTotAngMom__BODYP.CONTROLP.SYSTEMP"></span><span class="target" id="system_8c_1a49391392270b0484a6833e4103597a2b"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdTotAngMom</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdTotAngMomP4BODYP7CONTROLP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv414fdOrbPotEnergyP4BODYP7CONTROLP6SYSTEMi">
-<span id="_CPPv314fdOrbPotEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="_CPPv214fdOrbPotEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="fdOrbPotEnergy__BODYP.CONTROLP.SYSTEMP.i"></span><span class="target" id="system_8c_1ad60ea3745813bae1a26a28596fd7fdb1"></span>double <code class="sig-name descname">fdOrbPotEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdOrbPotEnergyP4BODYP7CONTROLP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414fdOrbPotEnergyP4BODYP7CONTROLP6SYSTEMi">
+<span id="_CPPv314fdOrbPotEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="_CPPv214fdOrbPotEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="fdOrbPotEnergy__BODYP.CONTROLP.SYSTEMP.i"></span><span class="target" id="system_8c_1ad60ea3745813bae1a26a28596fd7fdb1"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdOrbPotEnergy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdOrbPotEnergyP4BODYP7CONTROLP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Compute orbital potential energy neglecting planet-planet potential energy </p>
 </dd></dl>
 
-<dl class="function">
-<dt id="_CPPv414fdOrbKinEnergyP4BODYP7CONTROLP6SYSTEMi">
-<span id="_CPPv314fdOrbKinEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="_CPPv214fdOrbKinEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="fdOrbKinEnergy__BODYP.CONTROLP.SYSTEMP.i"></span><span class="target" id="system_8c_1a32a202c88514d82b8bb92ebd2f40b2eb"></span>double <code class="sig-name descname">fdOrbKinEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdOrbKinEnergyP4BODYP7CONTROLP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414fdOrbKinEnergyP4BODYP7CONTROLP6SYSTEMi">
+<span id="_CPPv314fdOrbKinEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="_CPPv214fdOrbKinEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="fdOrbKinEnergy__BODYP.CONTROLP.SYSTEMP.i"></span><span class="target" id="system_8c_1a32a202c88514d82b8bb92ebd2f40b2eb"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdOrbKinEnergy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdOrbKinEnergyP4BODYP7CONTROLP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Compute orbital kinetic energy of a body </p>
 </dd></dl>
 
-<dl class="function">
-<dt id="_CPPv411fdOrbEnergyP4BODYP7CONTROLP6SYSTEMi">
-<span id="_CPPv311fdOrbEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="_CPPv211fdOrbEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="fdOrbEnergy__BODYP.CONTROLP.SYSTEMP.i"></span><span class="target" id="system_8c_1a7dbd4df348d54fe76d9d4f6c1b278eb7"></span>double <code class="sig-name descname">fdOrbEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdOrbEnergyP4BODYP7CONTROLP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv411fdOrbEnergyP4BODYP7CONTROLP6SYSTEMi">
+<span id="_CPPv311fdOrbEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="_CPPv211fdOrbEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="fdOrbEnergy__BODYP.CONTROLP.SYSTEMP.i"></span><span class="target" id="system_8c_1a7dbd4df348d54fe76d9d4f6c1b278eb7"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdOrbEnergy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdOrbEnergyP4BODYP7CONTROLP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Compute total orbital energy for a given body </p>
 </dd></dl>
 
-<dl class="function">
-<dt id="_CPPv411fdKinEnergyP4BODYP7CONTROLP6SYSTEMi">
-<span id="_CPPv311fdKinEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="_CPPv211fdKinEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="fdKinEnergy__BODYP.CONTROLP.SYSTEMP.i"></span><span class="target" id="system_8c_1a1023b47e9ef12decde63be1c2895b0db"></span>double <code class="sig-name descname">fdKinEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdKinEnergyP4BODYP7CONTROLP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv411fdKinEnergyP4BODYP7CONTROLP6SYSTEMi">
+<span id="_CPPv311fdKinEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="_CPPv211fdKinEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="fdKinEnergy__BODYP.CONTROLP.SYSTEMP.i"></span><span class="target" id="system_8c_1a1023b47e9ef12decde63be1c2895b0db"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdKinEnergy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdKinEnergyP4BODYP7CONTROLP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Compute total non-orbital kinetic energy of a body </p>
 </dd></dl>
 
-<dl class="function">
-<dt id="_CPPv411fdPotEnergyP4BODYP7CONTROLP6SYSTEMi">
-<span id="_CPPv311fdPotEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="_CPPv211fdPotEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="fdPotEnergy__BODYP.CONTROLP.SYSTEMP.i"></span><span class="target" id="system_8c_1a241c73f55fe57b67aec3cff68392e263"></span>double <code class="sig-name descname">fdPotEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdPotEnergyP4BODYP7CONTROLP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv411fdPotEnergyP4BODYP7CONTROLP6SYSTEMi">
+<span id="_CPPv311fdPotEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="_CPPv211fdPotEnergyP4BODYP7CONTROLP6SYSTEMi"></span><span id="fdPotEnergy__BODYP.CONTROLP.SYSTEMP.i"></span><span class="target" id="system_8c_1a241c73f55fe57b67aec3cff68392e263"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdPotEnergy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdPotEnergyP4BODYP7CONTROLP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Compute a body’s non-orbital potential energy </p>
 </dd></dl>
 
-<dl class="function">
-<dt id="_CPPv411fdTotEnergyP4BODYP7CONTROLP6SYSTEM">
-<span id="_CPPv311fdTotEnergyP4BODYP7CONTROLP6SYSTEM"></span><span id="_CPPv211fdTotEnergyP4BODYP7CONTROLP6SYSTEM"></span><span id="fdTotEnergy__BODYP.CONTROLP.SYSTEMP"></span><span class="target" id="system_8c_1a1c966bef123495d082ddf0656e66510d"></span>double <code class="sig-name descname">fdTotEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdTotEnergyP4BODYP7CONTROLP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv411fdTotEnergyP4BODYP7CONTROLP6SYSTEM">
+<span id="_CPPv311fdTotEnergyP4BODYP7CONTROLP6SYSTEM"></span><span id="_CPPv211fdTotEnergyP4BODYP7CONTROLP6SYSTEM"></span><span id="fdTotEnergy__BODYP.CONTROLP.SYSTEMP"></span><span class="target" id="system_8c_1a1c966bef123495d082ddf0656e66510d"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdTotEnergy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdTotEnergyP4BODYP7CONTROLP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Compute the total energy in the entire system, include lost energy </p>
 </dd></dl>
 
-<dl class="function">
-<dt id="_CPPv414fdTotOrbEnergyP4BODYP7CONTROLP6SYSTEM">
-<span id="_CPPv314fdTotOrbEnergyP4BODYP7CONTROLP6SYSTEM"></span><span id="_CPPv214fdTotOrbEnergyP4BODYP7CONTROLP6SYSTEM"></span><span id="fdTotOrbEnergy__BODYP.CONTROLP.SYSTEMP"></span><span class="target" id="system_8c_1ad093e7d86202e1c9ce9181f943b546b6"></span>double <code class="sig-name descname">fdTotOrbEnergy</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL">CONTROL</a> *<em>control</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdTotOrbEnergyP4BODYP7CONTROLP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414fdTotOrbEnergyP4BODYP7CONTROLP6SYSTEM">
+<span id="_CPPv314fdTotOrbEnergyP4BODYP7CONTROLP6SYSTEM"></span><span id="_CPPv214fdTotOrbEnergyP4BODYP7CONTROLP6SYSTEM"></span><span id="fdTotOrbEnergy__BODYP.CONTROLP.SYSTEMP"></span><span class="target" id="system_8c_1ad093e7d86202e1c9ce9181f943b546b6"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdTotOrbEnergy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdTotOrbEnergyP4BODYP7CONTROLP6SYSTEM" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv48bPrimaryP4BODYi">
-<span id="_CPPv38bPrimaryP4BODYi"></span><span id="_CPPv28bPrimaryP4BODYi"></span><span id="bPrimary__BODYP.i"></span><span class="target" id="system_8c_1a6c1deb2ac844af44481a1b4d296e10cb"></span>int <code class="sig-name descname">bPrimary</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48bPrimaryP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv48bPrimaryP4BODYi">
+<span id="_CPPv38bPrimaryP4BODYi"></span><span id="_CPPv28bPrimaryP4BODYi"></span><span id="bPrimary__BODYP.i"></span><span class="target" id="system_8c_1a6c1deb2ac844af44481a1b4d296e10cb"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bPrimary</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48bPrimaryP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv46CalcHKP4BODYi">
-<span id="_CPPv36CalcHKP4BODYi"></span><span id="_CPPv26CalcHKP4BODYi"></span><span id="CalcHK__BODYP.i"></span><span class="target" id="system_8c_1ab843a69fa03045c29a8aa36ba3fe0c66"></span>void <code class="sig-name descname">CalcHK</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46CalcHKP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv46CalcHKP4BODYi">
+<span id="_CPPv36CalcHKP4BODYi"></span><span id="_CPPv26CalcHKP4BODYi"></span><span id="CalcHK__BODYP.i"></span><span class="target" id="system_8c_1ab843a69fa03045c29a8aa36ba3fe0c66"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CalcHK</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46CalcHKP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv46CalcPQP4BODYi">
-<span id="_CPPv36CalcPQP4BODYi"></span><span id="_CPPv26CalcPQP4BODYi"></span><span id="CalcPQ__BODYP.i"></span><span class="target" id="system_8c_1ae361523a34ae3d332d848ce51454bb97"></span>void <code class="sig-name descname">CalcPQ</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46CalcPQP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv46CalcPQP4BODYi">
+<span id="_CPPv36CalcPQP4BODYi"></span><span id="_CPPv26CalcPQP4BODYi"></span><span id="CalcPQ__BODYP.i"></span><span class="target" id="system_8c_1ae361523a34ae3d332d848ce51454bb97"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CalcPQ</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46CalcPQP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv414fdInstellationP4BODYi">
-<span id="_CPPv314fdInstellationP4BODYi"></span><span id="_CPPv214fdInstellationP4BODYi"></span><span id="fdInstellation__BODYP.i"></span><span class="target" id="system_8c_1a0ed05c10e06f36e935ba4b6e7e5cc65d"></span>double <code class="sig-name descname">fdInstellation</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdInstellationP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414fdInstellationP4BODYi">
+<span id="_CPPv314fdInstellationP4BODYi"></span><span id="_CPPv214fdInstellationP4BODYi"></span><span id="fdInstellation__BODYP.i"></span><span class="target" id="system_8c_1a0ed05c10e06f36e935ba4b6e7e5cc65d"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdInstellation</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdInstellationP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv49fdXUVFluxP4BODYi">
-<span id="_CPPv39fdXUVFluxP4BODYi"></span><span id="_CPPv29fdXUVFluxP4BODYi"></span><span id="fdXUVFlux__BODYP.i"></span><span class="target" id="system_8c_1abc270f691a645877f42f6cc7a65b8563"></span>double <code class="sig-name descname">fdXUVFlux</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49fdXUVFluxP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv49fdXUVFluxP4BODYi">
+<span id="_CPPv39fdXUVFluxP4BODYi"></span><span id="_CPPv29fdXUVFluxP4BODYi"></span><span id="fdXUVFlux__BODYP.i"></span><span class="target" id="system_8c_1abc270f691a645877f42f6cc7a65b8563"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdXUVFlux</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49fdXUVFluxP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Compute the XUV Flux.</p>
-<p><dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code>: A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">iBody</span></code>: The current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> index </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">iXUV</span></code>: Integer describing the XUV model </p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
+<li><p><strong>iBody</strong> – The current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> index </p></li>
+<li><p><strong>iXUV</strong> – Integer describing the XUV model </p></li>
 </ul>
 </dd>
 </dl>
-</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="_CPPv419fdMutualInclinationP4BODYii">
-<span id="_CPPv319fdMutualInclinationP4BODYii"></span><span id="_CPPv219fdMutualInclinationP4BODYii"></span><span id="fdMutualInclination__BODYP.i.i"></span><span class="target" id="system_8c_1aba69fb4de9439720f2ff4328d1e99ac9"></span>double <code class="sig-name descname">fdMutualInclination</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iBody</em>, int <em>jBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fdMutualInclinationP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv410kepler_eqnP4BODYi">
+<span id="_CPPv310kepler_eqnP4BODYi"></span><span id="_CPPv210kepler_eqnP4BODYi"></span><span id="kepler_eqn__BODYP.i"></span><span class="target" id="system_8c_1a2efedc97ff689f87f73070e265e9bb2c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kepler_eqn</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410kepler_eqnP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Solves kepler’s equation for one body</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
+<li><p><strong>iBody</strong> – Index of body in question </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv48osc2cartP4BODYi">
+<span id="_CPPv38osc2cartP4BODYi"></span><span id="_CPPv28osc2cartP4BODYi"></span><span id="osc2cart__BODYP.i"></span><span class="target" id="system_8c_1a669d58350e76a8353234ace68add0c58"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">osc2cart</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48osc2cartP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Converts osculating orbital elements to Cartesian coordinates (in au &amp; au/day)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
+<li><p><strong>iNumBodies</strong> – Number of bodies in the system (star &amp; planets) </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv410astro2baryP4BODYi">
+<span id="_CPPv310astro2baryP4BODYi"></span><span id="_CPPv210astro2baryP4BODYi"></span><span id="astro2bary__BODYP.i"></span><span class="target" id="system_8c_1a2604e63c0bd92d4199fd0fe3a9d5a91e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">astro2bary</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410astro2baryP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Converts astrocentric Cartesian coordinates to barycentric</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
+<li><p><strong>iNumBodies</strong> – Number of bodies in the system (star &amp; planets) </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv410bary2astroP4BODYi">
+<span id="_CPPv310bary2astroP4BODYi"></span><span id="_CPPv210bary2astroP4BODYi"></span><span id="bary2astro__BODYP.i"></span><span class="target" id="system_8c_1af14c629a2816bfe49ae4c3d52debf6f2"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bary2astro</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410bary2astroP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Converts barycentric Cartesian coordinates to astrocentric</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
+<li><p><strong>iNumBodies</strong> – Number of bodies in the system (star &amp; planets) </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv410angularmomP4BODYPdi">
+<span id="_CPPv310angularmomP4BODYPdi"></span><span id="_CPPv210angularmomP4BODYPdi"></span><span id="angularmom__BODYP.doubleP.i"></span><span class="target" id="system_8c_1a64d78ccbdb2974a659fa1ab3387f40d4"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">angularmom</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">AngMom</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410angularmomP4BODYPdi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculates angular momentum vector of planetary system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
+<li><p><strong>AngMom</strong> – Resulting angular momentum vector </p></li>
+<li><p><strong>iNumBodies</strong> – Number of bodies in the system (star &amp; planets) </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv410rotate_invP4BODYP6SYSTEMi">
+<span id="_CPPv310rotate_invP4BODYP6SYSTEMi"></span><span id="_CPPv210rotate_invP4BODYP6SYSTEMi"></span><span id="rotate_inv__BODYP.SYSTEMP.i"></span><span class="target" id="system_8c_1af5db46a89d9abb3b596ca847eb0cb423"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rotate_inv</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410rotate_invP4BODYP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Rotate coordinates into invariable plane</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
+<li><p><strong>system</strong> – Struct containing system information </p></li>
+<li><p><strong>iNumBodies</strong> – Number of bodies in the system (star &amp; planets) </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv45normvPd">
+<span id="_CPPv35normvPd"></span><span id="_CPPv25normvPd"></span><span id="normv__doubleP"></span><span class="target" id="system_8c_1a2d9d5ce00e1963d41795027f6c606090"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">normv</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">vector</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv45normvPd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculates the magnitude of a vector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vector</strong> – Any vector you what the magnitude of </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The magnitude of vector </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv48cart2oscP4BODYi">
+<span id="_CPPv38cart2oscP4BODYi"></span><span id="_CPPv28cart2oscP4BODYi"></span><span id="cart2osc__BODYP.i"></span><span class="target" id="system_8c_1a86557dc42a84e7083b980f5f4691643d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cart2osc</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48cart2oscP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Converts Cartesian coordinates (in au &amp; au/day) to osculating orbital elements</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
+<li><p><strong>iNumBodies</strong> – Number of bodies in the system (star &amp; planets) </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv49inv_planeP4BODYP6SYSTEMi">
+<span id="_CPPv39inv_planeP4BODYP6SYSTEMi"></span><span id="_CPPv29inv_planeP4BODYP6SYSTEMi"></span><span id="inv_plane__BODYP.SYSTEMP.i"></span><span class="target" id="system_8c_1a72c7fb02fe885fdb46bf96f510e09c52"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">inv_plane</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49inv_planeP4BODYP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Calculates coordinates of planetary system with respect to invariable plane</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
+<li><p><strong>system</strong> – Struct containing system information </p></li>
+<li><p><strong>iNumBodies</strong> – Number of bodies in the system (star &amp; planets) </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv419fdMutualInclinationP4BODYii">
+<span id="_CPPv319fdMutualInclinationP4BODYii"></span><span id="_CPPv219fdMutualInclinationP4BODYii"></span><span id="fdMutualInclination__BODYP.i.i"></span><span class="target" id="system_8c_1aba69fb4de9439720f2ff4328d1e99ac9"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdMutualInclination</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">jBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fdMutualInclinationP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculate the mutual or relative inclination of the orbital planes of iBody and jBody.</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>The mutual inclination </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code>: A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">iBody</span></code>: The index of the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> struct for the 1st orbit </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jBody</span></code>: The index of the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> struct for the 2nd orbit</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
+<li><p><strong>iBody</strong> – The index of the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> struct for the 1st orbit </p></li>
+<li><p><strong>jBody</strong> – The index of the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> struct for the 2nd orbit</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The mutual inclination </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="_CPPv419fbCheckMaxMutualIncP4BODYP6EVOLVEP4HALTP2IOiii">
-<span id="_CPPv319fbCheckMaxMutualIncP4BODYP6EVOLVEP4HALTP2IOiii"></span><span id="_CPPv219fbCheckMaxMutualIncP4BODYP6EVOLVEP4HALTP2IOiii"></span><span id="fbCheckMaxMutualInc__BODYP.EVOLVEP.HALTP.IOP.i.i.i"></span><span class="target" id="system_8c_1ac57d965ec518c71f0f2d87cc20a55b1e"></span>int <code class="sig-name descname">fbCheckMaxMutualInc</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em>, <a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT">HALT</a> *<em>halt</em>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO">IO</a> *<em>io</em>, int <em>iBody</em>, int <em>jBody</em>, int <em>iReason</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fbCheckMaxMutualIncP4BODYP6EVOLVEP4HALTP2IOiii" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv419fbCheckMaxMutualIncP4BODYP6EVOLVEP4HALTP2IOiii">
+<span id="_CPPv319fbCheckMaxMutualIncP4BODYP6EVOLVEP4HALTP2IOiii"></span><span id="_CPPv219fbCheckMaxMutualIncP4BODYP6EVOLVEP4HALTP2IOiii"></span><span id="fbCheckMaxMutualInc__BODYP.EVOLVEP.HALTP.IOP.i.i.i"></span><span class="target" id="system_8c_1ac57d965ec518c71f0f2d87cc20a55b1e"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fbCheckMaxMutualInc</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE"><span class="n"><span class="pre">EVOLVE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">evolve</span></span>, <a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT"><span class="n"><span class="pre">HALT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">halt</span></span>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO"><span class="n"><span class="pre">IO</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">io</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">jBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iReason</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fbCheckMaxMutualIncP4BODYP6EVOLVEP4HALTP2IOiii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Check the maximum allowed mutual inclination.</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>TRUE if the mutual incliantion is larger than dMaxMutualInc, FALSE if not </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">evolve</span></code>: A pointer to the integration <a class="reference internal" href="vplanet.html#struct_e_v_o_l_v_e"><span class="std std-ref">EVOLVE</span></a> instance </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">halt</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_h_a_l_t"><span class="std std-ref">HALT</span></a> instance </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">io</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_i_o"><span class="std std-ref">IO</span></a> instance </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">update</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_u_p_d_a_t_e"><span class="std std-ref">UPDATE</span></a> instance </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">iBody</span></code>: The current index in the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance, irrelevant in this case because mutual inclination is by definition a multi-body variable </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">iReason</span></code>: Was the subroutine called from CheckHalts (0) or CheckProgress (1)?</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – A pointer to the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
+<li><p><strong>evolve</strong> – A pointer to the integration <a class="reference internal" href="vplanet.html#struct_e_v_o_l_v_e"><span class="std std-ref">EVOLVE</span></a> instance </p></li>
+<li><p><strong>halt</strong> – A pointer to the <a class="reference internal" href="vplanet.html#struct_h_a_l_t"><span class="std std-ref">HALT</span></a> instance </p></li>
+<li><p><strong>io</strong> – A pointer to the <a class="reference internal" href="vplanet.html#struct_i_o"><span class="std std-ref">IO</span></a> instance </p></li>
+<li><p><strong>update</strong> – A pointer to the <a class="reference internal" href="vplanet.html#struct_u_p_d_a_t_e"><span class="std std-ref">UPDATE</span></a> instance </p></li>
+<li><p><strong>iBody</strong> – The current index in the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance, irrelevant in this case because mutual inclination is by definition a multi-body variable </p></li>
+<li><p><strong>iReason</strong> – Was the subroutine called from CheckHalts (0) or CheckProgress (1)?</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>TRUE if the mutual incliantion is larger than dMaxMutualInc, FALSE if not </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="_CPPv419fdSemiTidalLockEqStP4BODYii">
-<span id="_CPPv319fdSemiTidalLockEqStP4BODYii"></span><span id="_CPPv219fdSemiTidalLockEqStP4BODYii"></span><span id="fdSemiTidalLockEqSt__BODYP.i.i"></span><span class="target" id="system_8c_1a582ba9fa37230c2b54065e38e9775a6e"></span>double <code class="sig-name descname">fdSemiTidalLockEqSt</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iNumLocked</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fdSemiTidalLockEqStP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv419fdSemiTidalLockEqStP4BODYii">
+<span id="_CPPv319fdSemiTidalLockEqStP4BODYii"></span><span id="_CPPv219fdSemiTidalLockEqStP4BODYii"></span><span id="fdSemiTidalLockEqSt__BODYP.i.i"></span><span class="target" id="system_8c_1a582ba9fa37230c2b54065e38e9775a6e"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdSemiTidalLockEqSt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumLocked</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fdSemiTidalLockEqStP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Compute rate of change of semi-major axis for tidally locked star(s) if iNumLocked = 2, both are locked, otherwise, iBody gives body struct index for star that is tidally locked </p>
 </dd></dl>
 
-<dl class="function">
-<dt id="_CPPv412fdSemiDtEqStP4BODYP6SYSTEMPi">
-<span id="_CPPv312fdSemiDtEqStP4BODYP6SYSTEMPi"></span><span id="_CPPv212fdSemiDtEqStP4BODYP6SYSTEMPi"></span><span id="fdSemiDtEqSt__BODYP.SYSTEMP.iP"></span><span class="target" id="system_8c_1ab24859bd6c063c0524225089c5610707"></span>double <code class="sig-name descname">fdSemiDtEqSt</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM">SYSTEM</a> *<em>system</em>, int *<em>iaBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fdSemiDtEqStP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv412fdSemiDtEqStP4BODYP6SYSTEMPi">
+<span id="_CPPv312fdSemiDtEqStP4BODYP6SYSTEMPi"></span><span id="_CPPv212fdSemiDtEqStP4BODYP6SYSTEMPi"></span><span id="fdSemiDtEqSt__BODYP.SYSTEMP.iP"></span><span class="target" id="system_8c_1ab24859bd6c063c0524225089c5610707"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdSemiDtEqSt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fdSemiDtEqStP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Compute change in binary semi-major axis when circular, tidally locked, w ~ n when EQTIDE and STELLAR are active </p>
 </dd></dl>
 
-<dl class="function">
-<dt id="_CPPv423fndUpdateSpiNBodyCoordsP4BODYP6EVOLVE">
-<span id="_CPPv323fndUpdateSpiNBodyCoordsP4BODYP6EVOLVE"></span><span id="_CPPv223fndUpdateSpiNBodyCoordsP4BODYP6EVOLVE"></span><span id="fndUpdateSpiNBodyCoords__BODYP.EVOLVEP"></span><span class="target" id="system_8c_1a7ff8af2ebfcb8b837a125084284f3334"></span>double <code class="sig-name descname">fndUpdateSpiNBodyCoords</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE">EVOLVE</a> *<em>evolve</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423fndUpdateSpiNBodyCoordsP4BODYP6EVOLVE" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv423fndUpdateSpiNBodyCoordsP4BODYP6EVOLVE">
+<span id="_CPPv323fndUpdateSpiNBodyCoordsP4BODYP6EVOLVE"></span><span id="_CPPv223fndUpdateSpiNBodyCoordsP4BODYP6EVOLVE"></span><span id="fndUpdateSpiNBodyCoords__BODYP.EVOLVEP"></span><span class="target" id="system_8c_1a7ff8af2ebfcb8b837a125084284f3334"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndUpdateSpiNBodyCoords</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE"><span class="n"><span class="pre">EVOLVE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">evolve</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423fndUpdateSpiNBodyCoordsP4BODYP6EVOLVE" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv417fdLuminosityTotalP4BODYi">
-<span id="_CPPv317fdLuminosityTotalP4BODYi"></span><span id="_CPPv217fdLuminosityTotalP4BODYi"></span><span id="fdLuminosityTotal__BODYP.i"></span><span class="target" id="system_8c_1ab8e7be860eb403a75c625eb3d813b4ae"></span>double <code class="sig-name descname">fdLuminosityTotal</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, int <em>iNumBodies</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fdLuminosityTotalP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417fdLuminosityTotalP4BODYi">
+<span id="_CPPv317fdLuminosityTotalP4BODYi"></span><span id="_CPPv217fdLuminosityTotalP4BODYi"></span><span id="fdLuminosityTotal__BODYP.i"></span><span class="target" id="system_8c_1ab8e7be860eb403a75c625eb3d813b4ae"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdLuminosityTotal</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fdLuminosityTotalP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="_CPPv413fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei">
-<span id="_CPPv313fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv213fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei"></span><span id="fdMergePlanet__BODYP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="system_8c_1a3517be3fa4f1d4ccff3846d73c215f60"></span>void <code class="sig-name descname">fdMergePlanet</code><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY">BODY</a> *<em>body</em>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE">UPDATE</a> *<em>update</em>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable">fnUpdateVariable</a> ***<em>fnUpdate</em>, int <em>iBody</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv313fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv213fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei"></span><span id="fdMergePlanet__BODYP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="system_8c_1a3517be3fa4f1d4ccff3846d73c215f60"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdMergePlanet</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Handle a merge by zeroing out lost planet’s derivatives, and adding its mass to the central body.</p>
-<p><dl class="simple">
-<dt><strong>Return</strong></dt><dd><p>The mutual inclination </p>
-</dd>
-<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code>: A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">update</span></code>: A pointer to the <a class="reference internal" href="vplanet.html#struct_u_p_d_a_t_e"><span class="std std-ref">UPDATE</span></a> struct </p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">iBody</span></code>: The index of the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> struct for the lost planet</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
+<li><p><strong>update</strong> – A pointer to the <a class="reference internal" href="vplanet.html#struct_u_p_d_a_t_e"><span class="std std-ref">UPDATE</span></a> struct </p></li>
+<li><p><strong>iBody</strong> – The index of the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> struct for the lost planet</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The mutual inclination </p>
+</dd>
 </dl>
-</p>
 </dd></dl>
 
 </div>
-</div>
-<div class="section" id="system-h">
+</section>
+<section id="system-h">
 <h2><a class="toc-backref" href="#id2">system.h</a><a class="headerlink" href="#system-h" title="Permalink to this headline">¶</a></h2>
 <p>Subroutines that control system-wide properties. </p>
 <p><dl class="simple">
@@ -395,8 +533,8 @@
 </dd>
 </dl>
 </p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -405,10 +543,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="thermint.html" class="btn btn-neutral float-right" title="thermint" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="atmesc.html" class="btn btn-neutral float-right" title="atmesc" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="output.html" class="btn btn-neutral" title="output" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="control.html" class="btn btn-neutral" title="control" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -438,16 +576,16 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'1.2.0',
+            VERSION:'2.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
     </script>
+      <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="../_static/language_data.js"></script>
 
   
 

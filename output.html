@@ -1,0 +1,343 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Add a VPLanet Output &mdash; VPLanet 2.0.0
+ documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="VPLanet 2.0.0
+ documentation" href="index.html"/>
+        <link rel="up" title="VPLanet Tutorials" href="tutorials.html"/>
+        <link rel="next" title="Add a VPLanet Option" href="option.html"/>
+        <link rel="prev" title="VPLanet Architecture" href="architecture.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Modules and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">VPLanet Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Code Architecture</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Add an Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="option.html">Add an Option</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primaryvariable.html">Add a Primary Variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">Add a Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coupling.html">Coupling Modules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">Contributor’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repos.html">Other VPLanet Repositories</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">VPLanet</a> &raquo;</li>
+      
+        <li><a href="tutorials.html">VPLanet Tutorials</a>&raquo;</li>
+      
+    
+      <li>Add a VPLanet Output</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="add-a-vplanet-output">
+<h1>Add a VPLanet Output<a class="headerlink" href="#add-a-vplanet-output" title="Permalink to this headline">¶</a></h1>
+<p>To add a new output, complete the following steps.</p>
+<p>First, determine if the output is applicable to one module, or multiple modules.
+For example, eccentricity is part of the SpiNBody, EqTide, and DistOrb modules,
+but the mean anomaly is only used in SpiNBody. If the output should be callable
+by multiple modules, then you should modify output.[ch], but if it is only
+appropriate for an individual module, then it belongs in module files
+(spinbody.[ch] for the previous example).</p>
+<p>Next, in the header file, add a OUT macro to give your output a unique ID, e.g.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#define OUT_MYNEWOUTPUT   77</span>
+</pre></div>
+</div>
+<p>Note that the number of the option must lie in the appropriate range for the
+module. For new outputs in output.c, the range is 0-1000, for other modules,
+consult vplanet.h, specifically the text just before MODULEOUTEND is defined.
+Make sure your new outputs name is easily understood and very unlikely to be
+duplicated by another variable name.</p>
+<p>Then add a block of code in the appropriate InitializeOutput function
+(InitializeOutputGeneral in output.c or InitializeOutputModuleName, where
+“ModuleName” = AtmEsc, EqTide, etc., in the module’s c file) like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>sprintf<span class="o">(</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.cName,<span class="s2">&quot;Mass&quot;</span><span class="o">)</span><span class="p">;</span>
+<span class="linenos">2</span>sprintf<span class="o">(</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.cDescr,<span class="s2">&quot;Mass&quot;</span><span class="o">)</span><span class="p">;</span>
+<span class="linenos">3</span>sprintf<span class="o">(</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.cNeg,<span class="s2">&quot;Mearth&quot;</span><span class="o">)</span><span class="p">;</span>
+<span class="linenos">4</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.bNeg <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
+<span class="linenos">5</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.dNeg <span class="o">=</span> <span class="m">1</span>./MEARTH<span class="p">;</span>
+<span class="linenos">6</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.iNum <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
+<span class="linenos">7</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.iModuleBit <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
+<span class="linenos">8</span>fnWrite<span class="o">[</span>OUT_MASS<span class="o">]</span> <span class="o">=</span> <span class="p">&amp;</span>WriteMass<span class="p">;</span>
+</pre></div>
+</div>
+<p>These lines instruct VPLanet on the key features of the output. Line 1 contains
+the name of the option that will appear in both the log file and/or the argument
+list to saOutputOrder. Line 2 is the short description of the output; mass is a
+fundamental property, so doesn’t need much explanation. This description should
+be now more than 10 words long. Line 3 is the units of the output if the user
+places a negative sign (“-”) in front of it and should be from the list of unit
+names used in astropy. (If you must use an alternative unit, please add it to
+the file custom_units.py in the vplanet folder that is created after pip
+installation.) This feature is only allowed if the
+output is positive definite and requires the bNeg flag be set to 1 (Line 4). If
+set to 0 (or not set), then including a negative sign will cause VPLanet to exit
+and error. The
+next line, is a mathematical description of how to convert the units from system
+units (SI) to the custom unit. The code <em>multiplies</em> the value by this
+conversion factor (note that MEARTH is a macro defined in vplanet.h). Line 6
+tells VPLanet how many elements are part of the output; mass is a scalar, so
+this value is set to 1.</p>
+<p>Next on Line 7 is a variable that explains what options
+are associated with the output and is a bit more complicated. For ease of use,
+VPLanet checks if a selected output is actually appropriate for the selected
+modules. This check is done via a bitwise comparison, with each module assigned
+a unique bit as defined in vplanet.h.
+Outputs that are applicable to all modules, like mass,
+can be set to 1 as shown. Otherwise, set the value to equal the sum of module bits,
+such as is done for the rotation period:</p>
+<p>In other words, each module is assigned a unique integer that is a power of 2 so
+that all module combinations sum to a unique multiple of 2. When an output is
+read in, VPLanet checks that at least one of the appropriate bits in the integer
+is set to 1.</p>
+<p>The last line in the example is a function pointer to the subroutine that reads
+in the output. This function must be defined prior to this line. Finally, not
+shown is the cLongDescr field that contains a longer description of the output
+parameter that is used with the -H command line option, e.g. the “precession
+angle” requires a bit more explanation for a typical user:</p>
+<dl class="field-list simple">
+<dt class="field-odd">note:</dt>
+<dd class="field-odd"><p>Any field that is omitted will be set to the default values that are defined
+in output.c:InitializeOutput.</p>
+</dd>
+</dl>
+<p>Next, let’s turn to the fnWrite subroutine., which assigns the value and unit to
+the output in preparation for writing to an output file. These functions
+typically look like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void WriteMass<span class="o">(</span>BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
+               *units,UPDATE *update,int iBody,double *dTmp,char cUnit<span class="o">[])</span> <span class="o">{</span>
+
+  *dTmp <span class="o">=</span> body<span class="o">[</span>iBody<span class="o">]</span>.dMass<span class="p">;</span>
+
+  <span class="k">if</span> <span class="o">(</span>output-&gt;bDoNeg<span class="o">[</span>iBody<span class="o">])</span> <span class="o">{</span>
+    *dTmp *<span class="o">=</span> output-&gt;dNeg<span class="p">;</span>
+    strcpy<span class="o">(</span>cUnit,output-&gt;cNeg<span class="o">)</span><span class="p">;</span>
+  <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+    *dTmp /<span class="o">=</span> fdUnitsMass<span class="o">(</span>units-&gt;iMass<span class="o">)</span><span class="p">;</span>
+    fsUnitsMass<span class="o">(</span>units-&gt;iMass,cUnit<span class="o">)</span><span class="p">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>In this function the pointer to dTmp is the value(s) you want to be output. It
+can be either a scalar or an array, and can be either calculated here or can
+call another function. In this case, we can just use the current value of the
+body’s mass. The next blocks of code convert the value of the mass from system
+units (SI) to the user’s preferred units, which depend on if the user selected
+the negative option, i.e. the argument to saOutputOrder is either “Mass” or
+“-Mass”. If the negative sign was not included or is not allowed, then the else
+block is executed and the value is converted to the units set by the user by
+options such as sUnitMass, sUnitLength, etc. In this case, mass is simple, but
+other units like energy or pressure could require numerous operations to convert
+to the appropriate units. In some cases, conversion subroutines for common unit
+combinations already exist – see control.c. In both cases, a string that
+describes the units is also assigned, with complex unit descriptions also
+available in control.c.</p>
+<p>With these steps completed, the output parameter is now available in VPLanet.
+The code will automatically include it in subsequent compilations and you do
+not need to ever explicitly call a function like WriteMass.</p>
+<p>If you want to contribute your new feature to the code base, you must also
+write or update a unit test to include your new function.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="option.html" class="btn btn-neutral float-right" title="Add a VPLanet Option" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="architecture.html" class="btn btn-neutral" title="VPLanet Architecture" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

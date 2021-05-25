@@ -5,10 +5,11 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>VSPACE &mdash; VPLanet 1.2.0
+  <title>VSPACE &mdash; VPLanet 2.0.0
  documentation</title>
   
 
@@ -29,12 +30,18 @@
   
 
   
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="VPLanet 1.2.0
+    <link rel="top" title="VPLanet 2.0.0
  documentation" href="index.html"/> 
 
   
@@ -63,7 +70,7 @@
             
             
               <div class="version">
-                1.2.0
+                2.0.0
 
               </div>
             
@@ -89,15 +96,14 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="help.html">Modules and Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#input-file-structure">Input File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#output-file-structure">Output File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#input-options">Input Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#output-parameters">Output Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">VPLanet Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">Contributor’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repos.html">Other VPLanet Repositories</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
 </ul>
 
@@ -143,15 +149,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="vspace">
+  <section id="vspace">
 <h1>VSPACE<a class="headerlink" href="#vspace" title="Permalink to this headline">¶</a></h1>
 <p>A quick way to generate a parameter space for <code class="docutils literal notranslate"><span class="pre">VPLanet</span></code>.</p>
-<div class="section" id="installation">
+<section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>Navigate to the vspace directory and run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span></code>. All this does is put some
 path info in your shell files.</p>
-</div>
-<div class="section" id="examples">
+</section>
+<section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>Run vspace on the command line by typing:</p>
 <blockquote>
@@ -199,8 +205,8 @@ default2/</p>
 <div><p>rm &lt;option name&gt;</p>
 </div></blockquote>
 <p>For the time being, this merely comments out the matching line.</p>
-</div>
-<div class="section" id="how-to-generate-a-parameter-space">
+</section>
+<section id="how-to-generate-a-parameter-space">
 <h2>How to generate a parameter space<a class="headerlink" href="#how-to-generate-a-parameter-space" title="Permalink to this headline">¶</a></h2>
 <p>VSPACE has two sampling modes: <code class="docutils literal notranslate"><span class="pre">grid</span></code> and <code class="docutils literal notranslate"><span class="pre">random</span></code>, which are specified with the word
 <code class="docutils literal notranslate"><span class="pre">samplemode</span></code>. For example:</p>
@@ -300,8 +306,8 @@ ITSELF, not the sine or cosine of the angle. VSPACE does the conversion to and f
 trig output and angle. The units of the angle can be either radians or degrees, but
 must be consistent with your source <code class="docutils literal notranslate"><span class="pre">vpl.in</span></code> file–VSPACE determines the unit from
 this file.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
@@ -334,16 +340,16 @@ this file.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.2.0',
+            VERSION:'2.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
     </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="_static/language_data.js"></script>
 
   
 

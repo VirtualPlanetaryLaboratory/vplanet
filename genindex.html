@@ -1,6 +1,5 @@
 
 
-
 <!DOCTYPE html>
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
@@ -9,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; VPLanet 1.2.0
+  <title>Index &mdash; VPLanet 2.0.0
  documentation</title>
   
 
@@ -30,12 +29,18 @@
   
 
   
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
               href="#"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="VPLanet 1.2.0
+    <link rel="top" title="VPLanet 2.0.0
  documentation" href="index.html"/> 
 
   
@@ -64,7 +69,7 @@
             
             
               <div class="version">
-                1.2.0
+                2.0.0
 
               </div>
             
@@ -90,15 +95,14 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="help.html">Modules and Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#input-file-structure">Input File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#output-file-structure">Output File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#input-options">Input Options</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html#output-parameters">Output Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="developers.html">For developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">VPLanet Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">Contributor’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repos.html">Other VPLanet Repositories</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
 </ul>
 
@@ -270,7 +274,7 @@
 </li>
       <li><a href="src/vplanet.html#c.ALPHA_STRUCT">ALPHA_STRUCT (C macro)</a>
 </li>
-      <li><a href="src/distorb.html#_CPPv410angularmomP4BODYPdi">angularmom (C++ function)</a>
+      <li><a href="src/system.html#_CPPv410angularmomP4BODYPdi">angularmom (C++ function)</a>
 </li>
       <li><a href="src/poise.html#c.ANN">ANN (C macro)</a>
 </li>
@@ -310,7 +314,7 @@
 </li>
       <li><a href="src/stellar.html#_CPPv424AssignStellarDerivativesP4BODYP6EVOLVEP6UPDATEPPP16fnUpdateVariablei">AssignStellarDerivatives (C++ function)</a>
 </li>
-      <li><a href="src/distorb.html#_CPPv410astro2baryP4BODYi">astro2bary (C++ function)</a>
+      <li><a href="src/system.html#_CPPv410astro2baryP4BODYi">astro2bary (C++ function)</a>
 </li>
       <li><a href="src/vplanet.html#c.ATMESC">ATMESC (C macro)</a>
 </li>
@@ -366,7 +370,7 @@
 </li>
       <li><a href="src/distorb.html#_CPPv413BalanceMatrixPPdi">BalanceMatrix (C++ function)</a>
 </li>
-      <li><a href="src/distorb.html#_CPPv410bary2astroP4BODYi">bary2astro (C++ function)</a>
+      <li><a href="src/system.html#_CPPv410bary2astroP4BODYi">bary2astro (C++ function)</a>
 </li>
       <li><a href="src/spinbody.html#_CPPv410Bary2HelioP4BODYi">Bary2Helio (C++ function)</a>
 </li>
@@ -386,7 +390,7 @@
 </li>
       <li><a href="src/magmoc.html#c.BLOWPRESSURE">BLOWPRESSURE (C macro)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv44BODY">BODY (C++ class)</a>
+      <li><a href="src/vplanet.html#_CPPv44BODY">BODY (C++ struct)</a>
 
       <ul>
         <li><a href="src/vplanet.html#_CPPv44BODY">(C++ type)</a>
@@ -1350,11 +1354,11 @@
 </li>
       <li><a href="src/vplanet.html#_CPPv4N4BODY16dMeltMassFluxManE">BODY::dMeltMassFluxMan (C++ member)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv4N4BODY11dMinAllowedE">BODY::dMinAllowed (C++ member)</a>
-</li>
       <li><a href="src/vplanet.html#_CPPv4N4BODY16dMinEnvelopeMassE">BODY::dMinEnvelopeMass (C++ member)</a>
 </li>
       <li><a href="src/vplanet.html#_CPPv4N4BODY13dMinIceHeightE">BODY::dMinIceHeight (C++ member)</a>
+</li>
+      <li><a href="src/vplanet.html#_CPPv4N4BODY19dMinStellarApproachE">BODY::dMinStellarApproach (C++ member)</a>
 </li>
       <li><a href="src/vplanet.html#_CPPv4N4BODY20dMinSurfaceWaterMassE">BODY::dMinSurfaceWaterMass (C++ member)</a>
 </li>
@@ -1806,9 +1810,9 @@
 </li>
       <li><a href="src/body.html#_CPPv410CalcXYZoblP4BODYi">CalcXYZobl (C++ function)</a>
 </li>
-      <li><a href="src/distorb.html#_CPPv48cart2oscP4BODYi">cart2osc (C++ function)</a>
+      <li><a href="src/system.html#_CPPv48cart2oscP4BODYi">cart2osc (C++ function)</a>
 </li>
-      <li><a href="src/output.html#_CPPv48CGSUnitsP5UNITS">CGSUnits (C++ function)</a>
+      <li><a href="src/vplanet.html#c.CELSIUS">CELSIUS (C macro)</a>
 </li>
       <li><a href="src/options.html#_CPPv412CheckCommentA_ci">CheckComment (C++ function)</a>
 </li>
@@ -1830,7 +1834,7 @@
 </li>
       <li><a href="src/body.html#c.COMPLEN">COMPLEN (C macro)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv47CONTROL">CONTROL (C++ class)</a>
+      <li><a href="src/vplanet.html#_CPPv47CONTROL">CONTROL (C++ struct)</a>
 
       <ul>
         <li><a href="src/vplanet.html#_CPPv47CONTROL">(C++ type)</a>
@@ -2184,12 +2188,14 @@
 </li>
       <li><a href="src/thermint.html#c.EVOLOC">EVOLOC (C macro)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv46EVOLVE">EVOLVE (C++ class)</a>
-</li>
       <li><a href="src/evolve.html#_CPPv46EvolveP4BODYP7CONTROLP5FILESP6MODULEP6OUTPUTP6SYSTEMP6UPDATEPPP16fnUpdateVariableP13fnWriteOutput11fnIntegrate">Evolve (C++ function)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv46EVOLVE">EVOLVE (C++ type)</a>
+      <li><a href="src/vplanet.html#_CPPv46EVOLVE">EVOLVE (C++ struct)</a>
+
+      <ul>
+        <li><a href="src/vplanet.html#_CPPv46EVOLVE">(C++ type)</a>
 </li>
+      </ul></li>
       <li><a href="src/vplanet.html#_CPPv4N6EVOLVE12bDiscreteRotE">EVOLVE::bDiscreteRot (C++ member)</a>
 </li>
       <li><a href="src/vplanet.html#_CPPv4N6EVOLVE11bDoBackwardE">EVOLVE::bDoBackward (C++ member)</a>
@@ -2266,6 +2272,8 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src/vplanet.html#c.FARENHEIT">FARENHEIT (C macro)</a>
+</li>
       <li><a href="src/atmesc.html#_CPPv419fbBondiCriticalDmDtP4BODYi">fbBondiCriticalDmDt (C++ function)</a>
 </li>
       <li><a href="src/halt.html#_CPPv411fbCheckHaltP4BODYP7CONTROLP6UPDATEPPP16fnUpdateVariable">fbCheckHalt (C++ function)</a>
@@ -2988,7 +2996,7 @@
 </li>
       <li><a href="src/eqtide.html#_CPPv420fiGetModuleIntEqtideP6MODULEi">fiGetModuleIntEqtide (C++ function)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv45FILES">FILES (C++ class)</a>
+      <li><a href="src/vplanet.html#_CPPv45FILES">FILES (C++ struct)</a>
 
       <ul>
         <li><a href="src/vplanet.html#_CPPv45FILES">(C++ type)</a>
@@ -4194,7 +4202,7 @@
 </li>
       <li><a href="src/radheat.html#_CPPv423fvInitializeBodyRadheatP4BODYP7CONTROLP6UPDATEii">fvInitializeBodyRadheat (C++ function)</a>, <a href="src/radheat.html#_CPPv423fvInitializeBodyRadheatP4BODYP7CONTROLP6UPDATEii">[1]</a>
 </li>
-      <li><a href="src/eqtide.html#_CPPv424fvInitializeBodyThermintP4BODYP7CONTROLP6UPDATEii">fvInitializeBodyThermint (C++ function)</a>, <a href="src/thermint.html#_CPPv424fvInitializeBodyThermintP4BODYP7CONTROLP6UPDATEii">[1]</a>
+      <li><a href="src/thermint.html#_CPPv424fvInitializeBodyThermintP4BODYP7CONTROLP6UPDATEii">fvInitializeBodyThermint (C++ function)</a>
 </li>
       <li><a href="src/radheat.html#_CPPv426fvInitializeControlRadheatP7CONTROLi">fvInitializeControlRadheat (C++ function)</a>, <a href="src/radheat.html#_CPPv426fvInitializeControlRadheatP7CONTROLi">[1]</a>
 </li>
@@ -4822,7 +4830,7 @@
 </li>
       <li><a href="src/radheat.html#c.HALFLIFE40K">HALFLIFE40K (C macro)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv44HALT">HALT (C++ class)</a>
+      <li><a href="src/vplanet.html#_CPPv44HALT">HALT (C++ struct)</a>
 
       <ul>
         <li><a href="src/vplanet.html#_CPPv44HALT">(C++ type)</a>
@@ -4966,7 +4974,7 @@
 </li>
       <li><a href="src/thermint.html#c.IMK2MANORBMODEL">IMK2MANORBMODEL (C macro)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv46INFILE">INFILE (C++ class)</a>
+      <li><a href="src/vplanet.html#_CPPv46INFILE">INFILE (C++ struct)</a>
 
       <ul>
         <li><a href="src/vplanet.html#_CPPv46INFILE">(C++ type)</a>
@@ -5188,9 +5196,9 @@
 </li>
       <li><a href="src/verify.html#_CPPv418IntegrationWarningA_cA_cA_cA_cii">IntegrationWarning (C++ function)</a>
 </li>
-      <li><a href="src/distorb.html#_CPPv49inv_planeP4BODYP6SYSTEMi">inv_plane (C++ function)</a>
+      <li><a href="src/system.html#_CPPv49inv_planeP4BODYP6SYSTEMi">inv_plane (C++ function)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv42IO">IO (C++ class)</a>
+      <li><a href="src/vplanet.html#_CPPv42IO">IO (C++ struct)</a>
 
       <ul>
         <li><a href="src/vplanet.html#_CPPv42IO">(C++ type)</a>
@@ -5234,10 +5242,12 @@
 </li>
       <li><a href="src/vplanet.html#c.KBOLTZ">KBOLTZ (C macro)</a>
 </li>
-      <li><a href="src/distorb.html#_CPPv410kepler_eqnP4BODYi">kepler_eqn (C++ function)</a>
+      <li><a href="src/vplanet.html#c.KELVIN">KELVIN (C macro)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src/system.html#_CPPv410kepler_eqnP4BODYi">kepler_eqn (C++ function)</a>
+</li>
       <li><a href="src/binary.html#c.KEQNTOL">KEQNTOL (C macro)</a>
 </li>
       <li><a href="src/vplanet.html#c.KGAUSS">KGAUSS (C macro)</a>
@@ -5360,6 +5370,8 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src/vplanet.html#c.M_PI">M_PI (C macro)</a>
+</li>
       <li><a href="src/vplanet.html#c.MAGMOC">MAGMOC (C macro)</a>
 </li>
       <li><a href="src/magmoc.html#c.MAGMOC_GREY">MAGMOC_GREY (C macro)</a>
@@ -5381,6 +5393,8 @@
       <li><a href="src/thermint.html#c.MAGPERM">MAGPERM (C macro)</a>
 </li>
       <li><a href="src/vplanet.html#_CPPv44mainiA_Pc">main (C++ function)</a>
+</li>
+      <li><a href="src/vplanet.html#_CPPv49main_impliA_Pc">main_impl (C++ function)</a>
 </li>
       <li><a href="src/thermint.html#c.MANHFLOWPREF">MANHFLOWPREF (C macro)</a>
 </li>
@@ -5422,7 +5436,7 @@
 </li>
       <li><a href="src/stellar.html#c.MATT15X">MATT15X (C macro)</a>
 </li>
-      <li><a href="src/halt.html#c.max">max (C macro)</a>, <a href="src/thermint.html#c.max">[1]</a>
+      <li><a href="src/halt.html#c.max">max (C macro)</a>
 </li>
       <li><a href="src/binary.html#c.MAX_KEPLER_ITERS">MAX_KEPLER_ITERS (C macro)</a>
 </li>
@@ -5460,7 +5474,7 @@
 </li>
       <li><a href="src/poise.html#c.MODERN">MODERN (C macro)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv46MODULE">MODULE (C++ class)</a>
+      <li><a href="src/vplanet.html#_CPPv46MODULE">MODULE (C++ struct)</a>
 
       <ul>
         <li><a href="src/vplanet.html#_CPPv46MODULE">(C++ type)</a>
@@ -5532,10 +5546,10 @@
 </li>
       <li><a href="src/vplanet.html#_CPPv4N6MODULE20fnFinalizeUpdateHeccE">MODULE::fnFinalizeUpdateHecc (C++ member)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv4N6MODULE33fnFinalizeUpdateHydrogenMassSpaceE">MODULE::fnFinalizeUpdateHydrogenMassSpace (C++ member)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src/vplanet.html#_CPPv4N6MODULE33fnFinalizeUpdateHydrogenMassSpaceE">MODULE::fnFinalizeUpdateHydrogenMassSpace (C++ member)</a>
+</li>
       <li><a href="src/vplanet.html#_CPPv4N6MODULE20fnFinalizeUpdateKeccE">MODULE::fnFinalizeUpdateKecc (C++ member)</a>
 </li>
       <li><a href="src/vplanet.html#_CPPv4N6MODULE26fnFinalizeUpdateLostAngMomE">MODULE::fnFinalizeUpdateLostAngMom (C++ member)</a>
@@ -5720,7 +5734,7 @@
 </li>
       <li><a href="src/poise.html#c.nGLEN">nGLEN (C macro)</a>
 </li>
-      <li><a href="src/distorb.html#_CPPv45normvPd">normv (C++ function)</a>
+      <li><a href="src/system.html#_CPPv45normvPd">normv (C++ function)</a>
 </li>
       <li><a href="src/options.html#_CPPv415NotPrimaryInputiA_cA_cii">NotPrimaryInput (C++ function)</a>
 </li>
@@ -6264,11 +6278,11 @@
 </li>
       <li><a href="src/poise.html#c.OPT_MEPDIFF">OPT_MEPDIFF (C macro)</a>
 </li>
-      <li><a href="src/galhabit.html#c.OPT_MINALLOWED">OPT_MINALLOWED (C macro)</a>
-</li>
       <li><a href="src/options.html#c.OPT_MINENVELOPEMASS">OPT_MINENVELOPEMASS (C macro)</a>
 </li>
       <li><a href="src/poise.html#c.OPT_MINICEHEIGHT">OPT_MINICEHEIGHT (C macro)</a>
+</li>
+      <li><a href="src/galhabit.html#c.OPT_MINSTELLARAPPROACH">OPT_MINSTELLARAPPROACH (C macro)</a>
 </li>
       <li><a href="src/options.html#c.OPT_MINSURFACEWATERMASS">OPT_MINSURFACEWATERMASS (C macro)</a>
 </li>
@@ -6590,7 +6604,7 @@
 </li>
       <li><a href="src/thermint.html#c.OPTENDTHERMINT">OPTENDTHERMINT (C macro)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv47OPTIONS">OPTIONS (C++ class)</a>
+      <li><a href="src/vplanet.html#_CPPv47OPTIONS">OPTIONS (C++ struct)</a>
 
       <ul>
         <li><a href="src/vplanet.html#_CPPv47OPTIONS">(C++ type)</a>
@@ -6603,6 +6617,8 @@
       <li><a href="src/vplanet.html#_CPPv4N7OPTIONS8cDefaultE">OPTIONS::cDefault (C++ member)</a>
 </li>
       <li><a href="src/vplanet.html#_CPPv4N7OPTIONS6cDescrE">OPTIONS::cDescr (C++ member)</a>
+</li>
+      <li><a href="src/vplanet.html#_CPPv4N7OPTIONS10cDimensionE">OPTIONS::cDimension (C++ member)</a>
 </li>
       <li><a href="src/vplanet.html#_CPPv4N7OPTIONS5cFileE">OPTIONS::cFile (C++ member)</a>
 </li>
@@ -6662,7 +6678,7 @@
 </li>
       <li><a href="src/spinbody.html#_CPPv414OrbElems2HelioP4BODYi">OrbElems2Helio (C++ function)</a>
 </li>
-      <li><a href="src/distorb.html#_CPPv48osc2cartP4BODYi">osc2cart (C++ function)</a>
+      <li><a href="src/system.html#_CPPv48osc2cartP4BODYi">osc2cart (C++ function)</a>
 </li>
       <li><a href="src/radheat.html#c.OUT_232THDNUMDT">OUT_232THDNUMDT (C macro)</a>
 </li>
@@ -7013,6 +7029,8 @@
       <li><a href="src/eqtide.html#c.OUT_EQROTRATEDISCRETE">OUT_EQROTRATEDISCRETE (C macro)</a>
 </li>
       <li><a href="src/eqtide.html#c.OUT_EQROTRATEEQTIDE">OUT_EQROTRATEEQTIDE (C macro)</a>
+</li>
+      <li><a href="src/eqtide.html#c.OUT_EQTIDEPOWER">OUT_EQTIDEPOWER (C macro)</a>
 </li>
       <li><a href="src/thermint.html#c.OUT_ERUPTEFF">OUT_ERUPTEFF (C macro)</a>
 </li>
@@ -7510,7 +7528,7 @@
 </li>
       <li><a href="src/thermint.html#c.OUTENDTHERMINT">OUTENDTHERMINT (C macro)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv47OUTFILE">OUTFILE (C++ class)</a>
+      <li><a href="src/vplanet.html#_CPPv47OUTFILE">OUTFILE (C++ struct)</a>
 
       <ul>
         <li><a href="src/vplanet.html#_CPPv47OUTFILE">(C++ type)</a>
@@ -7532,7 +7550,7 @@
 </li>
       <li><a href="src/vplanet.html#c.OUTLONDESCR">OUTLONDESCR (C macro)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv46OUTPUT">OUTPUT (C++ class)</a>
+      <li><a href="src/vplanet.html#_CPPv46OUTPUT">OUTPUT (C++ struct)</a>
 
       <ul>
         <li><a href="src/vplanet.html#_CPPv46OUTPUT">(C++ type)</a>
@@ -7608,9 +7626,9 @@
 </li>
       <li><a href="src/options.html#_CPPv412PrintDefaultA_cA_cA_cii">PrintDefault (C++ function)</a>
 </li>
-      <li><a href="src/control.html#_CPPv414PrintFileTypesi">PrintFileTypes (C++ function)</a>
+      <li><a href="src/control.html#_CPPv414PrintFileTypesii">PrintFileTypes (C++ function)</a>
 </li>
-      <li><a href="src/module.html#_CPPv415PrintModuleListP4FILEi">PrintModuleList (C++ function)</a>
+      <li><a href="src/module.html#_CPPv415PrintModuleListP4FILEii">PrintModuleList (C++ function)</a>
 </li>
       <li><a href="src/evolve.html#_CPPv419PropertiesAuxiliaryP4BODYP7CONTROLP6SYSTEMP6UPDATE">PropertiesAuxiliary (C++ function)</a>
 </li>
@@ -7817,12 +7835,6 @@
       <li><a href="src/poise.html#_CPPv410ReadEccAmpP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadEccAmp (C++ function)</a>
 </li>
       <li><a href="src/poise.html#_CPPv410ReadEccPerP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadEccPer (C++ function)</a>
-</li>
-      <li><a href="src/distorb.html#_CPPv412ReadEigenSetP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadEigenSet (C++ function)</a>
-</li>
-      <li><a href="src/distorb.html#_CPPv414ReadEigenvalueP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadEigenvalue (C++ function)</a>
-</li>
-      <li><a href="src/distorb.html#_CPPv415ReadEigenvectorP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadEigenvector (C++ function)</a>
 </li>
       <li><a href="src/poise.html#_CPPv410ReadElevFBP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadElevFB (C++ function)</a>
 </li>
@@ -8032,12 +8044,12 @@
 </li>
       <li><a href="src/magmoc.html#_CPPv418ReadManMeltDensityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadManMeltDensity (C++ function)</a>, <a href="src/magmoc.html#_CPPv418ReadManMeltDensityP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">[1]</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="src/magmoc.html#_CPPv420ReadMantleQuasiSolidP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadMantleQuasiSolid (C++ function)</a>
 </li>
       <li><a href="src/options.html#_CPPv48ReadMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadMass (C++ function)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="src/magmoc.html#_CPPv418ReadMassFracFeOIniP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadMassFracFeOIni (C++ function)</a>, <a href="src/magmoc.html#_CPPv418ReadMassFracFeOIniP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">[1]</a>
 </li>
       <li><a href="src/options.html#_CPPv411ReadMassRadP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadMassRad (C++ function)</a>
@@ -8050,11 +8062,11 @@
 </li>
       <li><a href="src/poise.html#_CPPv411ReadMEPDiffP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadMEPDiff (C++ function)</a>
 </li>
-      <li><a href="src/galhabit.html#_CPPv414ReadMinAllowedP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadMinAllowed (C++ function)</a>
-</li>
       <li><a href="src/options.html#_CPPv419ReadMinEnvelopeMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadMinEnvelopeMass (C++ function)</a>
 </li>
       <li><a href="src/poise.html#_CPPv421ReadMinIceSheetHeightP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadMinIceSheetHeight (C++ function)</a>
+</li>
+      <li><a href="src/galhabit.html#_CPPv422ReadMinStellarApproachP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadMinStellarApproach (C++ function)</a>
 </li>
       <li><a href="src/options.html#_CPPv423ReadMinSurfaceWaterMassP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">ReadMinSurfaceWaterMass (C++ function)</a>
 </li>
@@ -8334,7 +8346,7 @@
 </li>
       <li><a href="src/galhabit.html#_CPPv47Rot2BinP4BODYi">Rot2Bin (C++ function)</a>
 </li>
-      <li><a href="src/distorb.html#_CPPv410rotate_invP4BODYP6SYSTEMi">rotate_inv (C++ function)</a>
+      <li><a href="src/system.html#_CPPv410rotate_invP4BODYP6SYSTEMi">rotate_inv (C++ function)</a>
 </li>
       <li><a href="src/distrot.html#_CPPv412RotateVectorPdPddi">RotateVector (C++ function)</a>
 </li>
@@ -8384,13 +8396,13 @@
 </li>
       <li><a href="src/control.html#_CPPv411sort_outputP6OUTPUTA_i">sort_output (C++ function)</a>
 </li>
-      <li><a href="src/control.html#_CPPv414SORTED_OPTIONS">SORTED_OPTIONS (C++ class)</a>
+      <li><a href="src/control.html#_CPPv414SORTED_OPTIONS">SORTED_OPTIONS (C++ struct)</a>
 </li>
       <li><a href="src/control.html#_CPPv4N14SORTED_OPTIONS5indexE">SORTED_OPTIONS::index (C++ member)</a>
 </li>
       <li><a href="src/control.html#_CPPv4N14SORTED_OPTIONS4nameE">SORTED_OPTIONS::name (C++ member)</a>
 </li>
-      <li><a href="src/control.html#_CPPv413SORTED_OUTPUT">SORTED_OUTPUT (C++ class)</a>
+      <li><a href="src/control.html#_CPPv413SORTED_OUTPUT">SORTED_OUTPUT (C++ struct)</a>
 </li>
       <li><a href="src/control.html#_CPPv4N13SORTED_OUTPUT5indexE">SORTED_OUTPUT::index (C++ member)</a>
 </li>
@@ -8421,6 +8433,8 @@
       <li><a href="src/body.html#_CPPv416STELLAR_BAR_MARR">STELLAR_BAR_MARR (C++ member)</a>
 </li>
       <li><a href="src/body.html#c.STELLAR_BAR_MLEN">STELLAR_BAR_MLEN (C macro)</a>
+</li>
+      <li><a href="src/body.html#_CPPv422STELLAR_BICUBIC_MATRIX">STELLAR_BICUBIC_MATRIX (C++ member)</a>
 </li>
       <li><a href="src/stellar.html#c.STELLAR_DJDT_MA15">STELLAR_DJDT_MA15 (C macro)</a>
 </li>
@@ -8474,7 +8488,7 @@
 </li>
       <li><a href="src/distorb.html#c.SWAP">SWAP (C macro)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv46SYSTEM">SYSTEM (C++ class)</a>
+      <li><a href="src/vplanet.html#_CPPv46SYSTEM">SYSTEM (C++ struct)</a>
 
       <ul>
         <li><a href="src/vplanet.html#_CPPv46SYSTEM">(C++ type)</a>
@@ -8500,10 +8514,10 @@
 </li>
       <li><a href="src/vplanet.html#_CPPv4N6SYSTEM7daAsolnE">SYSTEM::daAsoln (C++ member)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv4N6SYSTEM3daBE">SYSTEM::daB (C++ member)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src/vplanet.html#_CPPv4N6SYSTEM3daBE">SYSTEM::daB (C++ member)</a>
+</li>
       <li><a href="src/vplanet.html#_CPPv4N6SYSTEM7daBsolnE">SYSTEM::daBsoln (C++ member)</a>
 </li>
       <li><a href="src/vplanet.html#_CPPv4N6SYSTEM10daCircFreqE">SYSTEM::daCircFreq (C++ member)</a>
@@ -8658,8 +8672,6 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="src/thermint.html#c.TCORE">TCORE (C macro)</a>
-</li>
       <li><a href="src/distorb.html#c.TEENY">TEENY (C macro)</a>
 </li>
       <li><a href="src/galhabit.html#_CPPv48testrandP6SYSTEM">testrand (C++ function)</a>
@@ -8694,8 +8706,6 @@
 </li>
       <li><a href="src/magmoc.html#c.TIMESTEPCORRECTION">TIMESTEPCORRECTION (C macro)</a>
 </li>
-      <li><a href="src/thermint.html#c.TMAN">TMAN (C macro)</a>
-</li>
       <li><a href="src/atmesc.html#c.TOHMASS">TOHMASS (C macro)</a>
 </li>
       <li><a href="src/atmesc.html#c.TOMASS">TOMASS (C macro)</a>, <a href="src/vplanet.html#c.TOMASS">[1]</a>
@@ -8718,7 +8728,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="src/poise.html#c.UNIFORM3">UNIFORM3 (C macro)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv45UNITS">UNITS (C++ class)</a>
+      <li><a href="src/vplanet.html#_CPPv45UNITS">UNITS (C++ struct)</a>
 
       <ul>
         <li><a href="src/vplanet.html#_CPPv45UNITS">(C++ type)</a>
@@ -8734,9 +8744,11 @@
 </li>
       <li><a href="src/vplanet.html#_CPPv4N5UNITS5iTimeE">UNITS::iTime (C++ member)</a>
 </li>
+      <li><a href="src/output.html#_CPPv47UnitsSIP5UNITS">UnitsSI (C++ function)</a>
+</li>
       <li><a href="src/options.html#_CPPv412Unrecognized5FILES">Unrecognized (C++ function)</a>
 </li>
-      <li><a href="src/vplanet.html#_CPPv46UPDATE">UPDATE (C++ class)</a>
+      <li><a href="src/vplanet.html#_CPPv46UPDATE">UPDATE (C++ struct)</a>
 
       <ul>
         <li><a href="src/vplanet.html#_CPPv46UPDATE">(C++ type)</a>
@@ -9860,6 +9872,8 @@
 </li>
       <li><a href="src/eqtide.html#_CPPv422WriteEqRotRateDiscreteP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">WriteEqRotRateDiscrete (C++ function)</a>
 </li>
+      <li><a href="src/eqtide.html#_CPPv416WriteEqTidePowerP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">WriteEqTidePower (C++ function)</a>
+</li>
       <li><a href="src/atmesc.html#_CPPv413WriteFlowTempP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">WriteFlowTemp (C++ function)</a>
 </li>
       <li><a href="src/poise.html#_CPPv411WriteFluxInP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">WriteFluxIn (C++ function)</a>
@@ -9938,10 +9952,10 @@
 </li>
       <li><a href="src/poise.html#_CPPv420WriteIceCapSouthLandP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">WriteIceCapSouthLand (C++ function)</a>
 </li>
-      <li><a href="src/poise.html#_CPPv423WriteIceCapSouthLatLandP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">WriteIceCapSouthLatLand (C++ function)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="src/poise.html#_CPPv423WriteIceCapSouthLatLandP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">WriteIceCapSouthLatLand (C++ function)</a>
+</li>
       <li><a href="src/poise.html#_CPPv422WriteIceCapSouthLatSeaP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">WriteIceCapSouthLatSea (C++ function)</a>
 </li>
       <li><a href="src/poise.html#_CPPv419WriteIceCapSouthSeaP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">WriteIceCapSouthSea (C++ function)</a>
@@ -10269,16 +10283,16 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.2.0',
+            VERSION:'2.0.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
     </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="_static/language_data.js"></script>
 
   
 

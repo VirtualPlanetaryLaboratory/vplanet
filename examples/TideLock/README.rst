@@ -23,13 +23,6 @@ To run this example
 
 .. code-block:: bash
 
-   cd CPL
-   vplanet vpl.in
-
-   cd ../CTL
-   vplanet vpl.in
-
-   cd ..
    python makeplot.py <pdf | png>
 
 

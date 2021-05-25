@@ -22,8 +22,7 @@ To run this example
 
 .. code-block:: bash
 
-    vplanet vpl.in
-    python plot_trappist.py
+    python makeplot.py
 
 
 Expected output

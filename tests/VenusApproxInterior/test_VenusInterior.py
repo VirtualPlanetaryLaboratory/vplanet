@@ -1,27 +1,16 @@
-from vplot import GetOutput
-import subprocess
-import numpy as np
-import os
-cwd = os.path.dirname(os.path.realpath(__file__))
+from benchmark import Benchmark, benchmark
+import astropy.units as u
+import pytest
 
 
-def test_VenusInterior():
-    """Test the coupling between radheat and thermint under stagnant lid conditions."""
-    # Remove old log file
-    subprocess.run(['rm', 'venus.log'], cwd=cwd)
-    # Run vplanet
-    subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
-
-    # Grab the output
-    output = GetOutput(path=cwd)
-
-    # Check
-    assert np.isclose(output.log.final.venus.TMan, 2679.27122)
-    assert np.isclose(output.log.final.venus.TCore, 6365.71258)
-    assert np.isclose(output.log.final.venus.RIC, 0.0)
-    assert np.isclose(output.log.final.venus.RadPowerTotal, 31.49126)
-    assert np.isclose(output.log.final.venus.MagMom, 0.0)
-
-
-if __name__ == "__main__":
-    test_VenusInterior()
+@benchmark(
+    {
+        "log.final.venus.TMan": {"value": 2679.27122, "unit": u.K},
+        "log.final.venus.TCore": {"value": 6365.71258, "unit": u.K},
+        "log.final.venus.RIC": {"value": 0.0, "unit": u.km},
+        "log.final.venus.RadPowerTotal": {"value": 31.49126, "unit": u.TW},
+        "log.final.venus.MagMom": {"value": 0.0, "unit": u.EMAGMOM},
+    }
+)
+class TestVenusApproxInterior(Benchmark):
+    pass

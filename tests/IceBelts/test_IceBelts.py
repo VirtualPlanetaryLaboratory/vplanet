@@ -1,86 +1,130 @@
-from vplot import GetOutput
-import subprocess
+from benchmark import Benchmark, benchmark
+import astropy.units as u
+import pytest
+import pathlib
 import numpy as np
-import os
-import re
-cwd = os.path.dirname(os.path.realpath(__file__))
 
 
-def test_IceBelts():
-    """Test ice belt formation with POISE."""
-    # Remove old log file
-    subprocess.run(['rm', 'icebelt.log'], cwd=cwd)
-    # Remove seasonal climate files
-    dir = cwd+'/SeasonalClimateFiles'
-    subprocess.run(['rm','-r',dir])
-    # Run vplanet
-    subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
+path = pathlib.Path(__file__).parents[0].absolute()
+sysname = "icebelt"
+plname = "earth"
+timestamp = "0"
 
-    # Grab the output
-    output = GetOutput(path=cwd)
 
-    # Check global properties
-    assert np.isclose(output.log.final.earth.TotIceMass, 3.071389e+15)
-    assert np.isclose(output.log.final.earth.TotIceBalance, 9.223785e-08)
-    assert np.isclose(output.log.final.earth.AreaIceCov, 0.054040)
-    assert np.isclose(output.log.final.earth.IceAccum, 0.458812)
-    assert np.isclose(output.log.final.earth.IceAblate, -0.343222)
-    assert np.isclose(output.log.final.earth.TempMaxLand, 337.829716)
-    assert np.isclose(output.log.final.earth.TempMaxWater, 294.261368)
-    assert np.isclose(output.log.final.earth.PeakInsol, 1069.614002)
+@benchmark(
+    {
+        "log.final.earth.TotIceMass": {"value": 3.071389e15, "unit": u.kg},
+        "log.final.earth.TotIceBalance": {"value": 9.223785e-08, "unit": u.kg},
+        "log.final.earth.AreaIceCov": {"value": 0.054040},
+        "log.final.earth.IceAccum": {"value": 0.458812},
+        "log.final.earth.IceAblate": {"value": -0.343222},
+        "log.final.earth.TempMaxLand": {"value": 337.829716, "unit": u.sec},
+        "log.final.earth.TempMaxWater": {"value": 294.261368, "unit": u.sec},
+        "log.final.earth.PeakInsol": {
+            "value": 1069.614002,
+            "unit": u.kg * u.m ** 2 / u.sec ** 2 / (u.m ** 2 * u.sec),
+        },
+    }
+)
+class TestIceBelt(Benchmark):
+    pass
 
-    # Check Grid Output
-#    for f in subprocess.check_output('ls '+dir+'/*.DailyInsol.*',shell=True).split():
-#      f1 = re.split('\.',re.split('/',f.decode('ascii'))[-1])  #split apart output file
 
-#      print(f1)
-#
-#      if len(f1) == 4:
-#        timestamp = f1[3]
-#      elif len(f1) == 5:
-#        timestamp = f1[3]+'.'+f1[4]
+@pytest.fixture
+def insol(vplanet_output):
+    insolf = (
+        path / "SeasonalClimateFiles" / f"{sysname}.{plname}.DailyInsol.{timestamp}"
+    )
+    return np.loadtxt(insolf, unpack=True)
 
-#      time0 = np.float(timestamp)
 
-#    sysname = f1[0]
-#    plname = f1[1]
-    sysname='icebelt'
-    plname='earth'
-    timestamp='0'
-    insolf = dir+'/'+sysname+'.'+plname+'.DailyInsol.'+timestamp
-    tempf = dir+'/'+sysname+'.'+plname+'.SeasonalTemp.'+timestamp
-    icef = dir+'/'+sysname+'.'+plname+'.SeasonalIceBalance.'+timestamp
-    planckf = dir+'/'+sysname+'.'+plname+'.PlanckB.'+timestamp
-    divf = dir+'/'+sysname+'.'+plname+'.SeasonalDivF.'+timestamp
-    fmeridf = dir+'/'+sysname+'.'+plname+'.SeasonalFMerid.'+timestamp
-    foutf = dir+'/'+sysname+'.'+plname+'.SeasonalFOut.'+timestamp
+@pytest.fixture
+def temp(vplanet_output):
+    tempf = (
+        path / "SeasonalClimateFiles" / f"{sysname}.{plname}.SeasonalTemp.{timestamp}"
+    )
+    return np.loadtxt(tempf, unpack=True)
 
-    insol = np.loadtxt(insolf,unpack=True)
-    temp = np.loadtxt(tempf,unpack=True)
-    ice = np.loadtxt(icef,unpack=True)
-    planck = np.loadtxt(planckf,unpack=True)
-    div = np.loadtxt(divf,unpack=True)
-    fmerid = np.loadtxt(fmeridf,unpack=True)
-    fout = np.loadtxt(fmeridf,unpack=True)
 
-    # Check two different latitudes
-    assert np.isclose(insol[1][0], 1055.352482)
-    assert np.isclose(insol[1][75], 329.47451)
-    assert np.isclose(temp[1][0], 22.591643)
-    assert np.isclose(temp[1][75], 8.998626)
-    assert np.isclose(ice[1][0], -0.0016)
-    assert np.isclose(ice[1][75], -0.000306)
-    assert np.isclose(planck[1][0], 2.09)
-    assert np.isclose(planck[1][75], 2.09)
-    assert np.isclose(div[1][0], 34.757649)
-    assert np.isclose(div[1][75], 13.23595)
-    assert np.isclose(fmerid[1][0], 804939200000000.0)
-    assert np.isclose(fmerid[1][75], 309954000000000.0)
-    assert np.isclose(fout[1][0], 804939200000000.0)
-    assert np.isclose(fout[1][75], 309954000000000.0)
+@pytest.fixture
+def ice(vplanet_output):
+    icef = (
+        path
+        / "SeasonalClimateFiles"
+        / f"{sysname}.{plname}.SeasonalIceBalance.{timestamp}"
+    )
+    return np.loadtxt(icef, unpack=True)
 
-    #print(fmerid[1][0])
-    #print(fmerid[1][75])
 
-if __name__ == "__main__":
-    test_IceBelts()
+@pytest.fixture
+def planck(vplanet_output):
+    planckf = path / "SeasonalClimateFiles" / f"{sysname}.{plname}.PlanckB.{timestamp}"
+    return np.loadtxt(planckf, unpack=True)
+
+
+@pytest.fixture
+def div(vplanet_output):
+    divf = (
+        path / "SeasonalClimateFiles" / f"{sysname}.{plname}.SeasonalDivF.{timestamp}"
+    )
+    return np.loadtxt(divf, unpack=True)
+
+
+@pytest.fixture
+def fmerid(vplanet_output):
+    fmeridf = (
+        path / "SeasonalClimateFiles" / f"{sysname}.{plname}.SeasonalFMerid.{timestamp}"
+    )
+    return np.loadtxt(fmeridf, unpack=True)
+
+
+@pytest.fixture
+def fout(vplanet_output):
+    foutf = (
+        path / "SeasonalClimateFiles" / f"{sysname}.{plname}.SeasonalFOut.{timestamp}"
+    )
+    return np.loadtxt(foutf, unpack=True)
+
+
+class TestGridOutput:
+    def test_insol1(self, insol):
+        assert np.isclose(insol[1][0], 1055.352482)
+
+    def test_insol2(self, insol):
+        assert np.isclose(insol[1][75], 329.47451)
+
+    def test_temp1(self, temp):
+        assert np.isclose(temp[1][0], 22.591643)
+
+    def test_temp2(self, temp):
+        assert np.isclose(temp[1][75], 8.998626)
+
+    def test_ice1(self, ice):
+        assert np.isclose(ice[1][0], -0.0016)
+
+    def test_ice2(self, ice):
+        assert np.isclose(ice[1][75], -0.000306)
+
+    def test_planck1(self, planck):
+        assert np.isclose(planck[1][0], 2.09)
+
+    def test_planck2(self, planck):
+        assert np.isclose(planck[1][75], 2.09)
+
+    def test_div1(self, div):
+        assert np.isclose(div[1][0], 34.757649)
+
+    def test_div2(self, div):
+        assert np.isclose(div[1][75], 13.23595)
+
+    def test_fmerid1(self, fmerid):
+        assert np.isclose(fmerid[1][0], 804939200000000.0)
+
+    def test_fmerid2(self, fmerid):
+        assert np.isclose(fmerid[1][75], 309954000000000.0)
+
+    def test_fout1(self, fout):
+        assert np.isclose(fout[1][0], 250.516533)
+
+    def test_fout2(self, fout):
+        assert np.isclose(fout[1][75], 222.107129)

@@ -11,7 +11,7 @@ the galactic tide, and passing field stars.
 **Date**              07/25/18
 **Author**            Russell Deitrick
 **Modules**           GalHabit
-**Approx. runtime**   6 minutes
+**Approx. runtime**   1 minute
 ===================   ============
 
 Wide orbits are subject to torques from the galactic tide, as well as impulses from
@@ -23,14 +23,6 @@ To run this example
 -------------------
 
 .. code-block:: bash
-
-    # Run the main example
-    vplanet vpl.in
-
-    # Run the `tides_only` example
-    cd tides_only
-    vplanet vpl.in
-    cd ..
 
     # Plot the figure
     python makeplot.py <pdf | png>

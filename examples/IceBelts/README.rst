@@ -23,8 +23,7 @@ To run this example
 
 .. code-block:: bash
 
-    vplanet vpl.in
-    Python makeplot.py <pdf | png>
+    python makeplot.py <pdf | png>
 
 
 Expected output

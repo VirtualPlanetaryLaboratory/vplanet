@@ -1,27 +1,17 @@
-from vplot import GetOutput
-import subprocess
-import numpy as np
-import os
-cwd = os.path.dirname(os.path.realpath(__file__))
+from benchmark import Benchmark, benchmark
+import astropy.units as u
+import pytest
 
 
-def test_HZBinary():
-    """Test the HZ limits for a two stars."""
-    # Remove old log file
-    subprocess.run(['rm', 'HZBinary.log'], cwd=cwd)
-    # Run vplanet
-    subprocess.run(['vplanet', 'vpl.in', '-q'], cwd=cwd)
-
-    # Grab the output
-    output = GetOutput(path=cwd)
-
-    # Check
-    assert np.isclose(output.log.final.secondary.HZLimRecVenus, 9.828450e+10)
-    assert np.isclose(output.log.final.secondary.HZLimEarlyMars, 2.673083e+11)
-    assert np.isclose(output.log.final.secondary.HZLimRunaway, 1.298768e+11)
-    assert np.isclose(output.log.final.secondary.HZLimMoistGreenhouse, 1.300464e+11)
-    assert np.isclose(output.log.final.secondary.HZLimMaxGreenhouse, 2.450954e+11)
-
-
-if __name__ == "__main__":
-    test_HZBinary()
+@benchmark(
+    {
+        "log.final.secondary.HZLimRecVenus": {"value": 9.828450e10, "unit": u.m},
+        "log.final.secondary.HZLimEarlyMars": {"value": 2.673083e11, "unit": u.m},
+        "log.final.secondary.HZLimRunaway": {"value": 1.298768e11, "unit": u.m},
+        "log.final.secondary.HZLimRecVenus": {"value": 9.828450e10, "unit": u.m},
+        "log.final.secondary.HZLimMoistGreenhouse": {"value": 1.300464e11, "unit": u.m},
+        "log.final.secondary.HZLimMaxGreenhouse": {"value": 2.450954e11, "unit": u.m},
+    }
+)
+class TestHZBinary(Benchmark):
+    pass

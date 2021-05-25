@@ -18,6 +18,7 @@ bHaltEnvelopeGone         0               # Halt when evaporated?
 dMinSurfWaterMass         -1.e-5          # Planet is desiccated when water content drops below this (Earth oceans)
 dMinEnvelopeMass          -1.e-5
 bAtmEscAuto               1               # Let AtmEsc decide the escape regime?
+bStopWaterLossInHZ        0
 
 sPlanetRadiusModel        Lehmer
 dThermTemp                880

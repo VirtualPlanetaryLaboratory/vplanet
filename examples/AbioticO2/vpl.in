@@ -2,7 +2,7 @@
 sSystemName               system
 iVerbose                  0
 bOverwrite                1
-saBodyFiles               star.in p00.in p01.in p02.in p03.in p04.in p05.in p06.in p07.in p08.in p09.in p10.in p11.in p12.in p13.in p14.in p15.in p16.in p17.in p18.in p19.in
+saBodyFiles               star.in 
 sUnitMass                 solar
 sUnitLength               AU
 sUnitTime                 YEARS

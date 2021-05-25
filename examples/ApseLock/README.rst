@@ -26,7 +26,6 @@ To run this example
 
 .. code-block:: bash
 
-    vplanet vpl.in
     python makeplot.py <pdf | png>
 
 Expected output
@@ -38,7 +37,7 @@ Expected output
 
 Secular dynamical evolution of CoRoT-7 b and c subject to tidal damping as
 computed by **EqTide** and **DistOrb** based on Figures 2 and 3 from
-`Rodriguez et al. (2011) <https://ui.adsabs.harvard.edu/abs/2011CeMDA.111..161R/abstract>`_. 
+`Rodriguez et al. (2011) <https://ui.adsabs.harvard.edu/abs/2011CeMDA.111..161R/abstract>`_.
 Top left: Semi-major axis evolution of CoRoT-7 b.
 Top Right: Eccentricity evolution for both CoRoT-7 b and c.  CoRoT-7 b's
 eccentricity is initially excited by gravitational perturbations from

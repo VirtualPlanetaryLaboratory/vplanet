@@ -3894,28 +3894,6 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_HALTMAXMUTUALINC].dDefault   = 0;
   options[OPT_HALTMAXMUTUALINC].iType      = 2;
   options[OPT_HALTMAXMUTUALINC].iModuleBit = SPINBODY + DISTORB;
-<<<<<<< HEAD
-  options[OPT_HALTMAXMUTUALINC].bNeg = 0;
-  options[OPT_HALTMAXMUTUALINC].iFileType = 2;
-  fnRead[OPT_HALTMAXMUTUALINC] = &ReadHaltMaxMutualInc;
-  sprintf(options[OPT_HALTMAXMUTUALINC].cLongDescr,
-    "The execution halts when dHaltMaxMutualInc is reached. The mutual (or\n"
-    "relative) inclination is the value of the angle between the orbital\n"
-    "angular momentum vector of two bodies. If set to 0, then the mutual\n"
-    "inclination will not be checked every timestep for halts, i.e. the code\n"
-    "should run faster. For DistOrb calculations with the RD4 %s model,\n"
-    "mutual inclinations above %.2lf degrees, especially if the eccentricities\n"
-    "are significant, should be interpreted cautiously. For the DistOrb-%s\n"
-    "model, values above %.2lf degrees are suspect. SpiNBody is accurate for\n"
-    "any value.\n",options[OPT_ORBITMODEL].cName,((double)MAXMUTUALINCRD4),
-        options[OPT_ORBITMODEL].cName,((double)MAXMUTUALINCLL2)
-  );
-
-  sprintf(options[OPT_HALTMERGE].cName,"bHaltMerge");
-  sprintf(options[OPT_HALTMERGE].cDescr,"Halt at Merge");
-  sprintf(options[OPT_HALTMERGE].cDefault,"If eqtide or distorb called 1, else 0");
-  options[OPT_HALTMERGE].iType = 0;
-=======
   options[OPT_HALTMAXMUTUALINC].bNeg       = 0;
   options[OPT_HALTMAXMUTUALINC].iFileType  = 2;
   fnRead[OPT_HALTMAXMUTUALINC]             = &ReadHaltMaxMutualInc;
@@ -3943,7 +3921,6 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTMERGE].cDefault,
           "If eqtide or distorb called 1, else 0");
   options[OPT_HALTMERGE].iType      = 0;
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   options[OPT_HALTMERGE].iModuleBit = EQTIDE + DISTORB + SPINBODY + STELLAR;
   options[OPT_HALTMERGE].bNeg       = 0;
   options[OPT_HALTMERGE].iFileType  = 2;

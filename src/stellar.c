@@ -341,20 +341,6 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_SATXUVFRAC].dDefault   = 1.e-3;
   options[OPT_SATXUVFRAC].iType      = 0;
   options[OPT_SATXUVFRAC].bMultiFile = 1;
-<<<<<<< HEAD
-  fnRead[OPT_SATXUVFRAC] = &ReadSatXUVFrac;
-  sprintf(options[OPT_SATXUVFRAC].cLongDescr,
-    "After formation stars emit a nearly constant amount of XUV radiation\n"
-    "for a time called the \"saturated\" phase. This parameter sets that value\n"
-    "relative to the total (bolometric) luminosity. Must lie in range [0,1].\n"
-  );
-
-  sprintf(options[OPT_SATXUVTIME].cName,"dSatXUVTime");
-  sprintf(options[OPT_SATXUVTIME].cDescr,"XUV saturation time");
-  sprintf(options[OPT_SATXUVTIME].cDefault,"0.1 Gyr");
-  options[OPT_SATXUVTIME].dDefault = 1.e8 * YEARSEC;
-  options[OPT_SATXUVTIME].iType = 0;
-=======
   fnRead[OPT_SATXUVFRAC]             = &ReadSatXUVFrac;
   sprintf(
         options[OPT_SATXUVFRAC].cLongDescr,
@@ -370,21 +356,11 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_SATXUVTIME].cDimension, "time");
   options[OPT_SATXUVTIME].dDefault   = 1.e8 * YEARSEC;
   options[OPT_SATXUVTIME].iType      = 0;
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   options[OPT_SATXUVTIME].bMultiFile = 1;
   options[OPT_SATXUVTIME].dNeg       = 1e9 * YEARSEC;
   sprintf(options[OPT_SATXUVTIME].cNeg, "Gyr");
   fnRead[OPT_SATXUVTIME] = &ReadSatXUVTime;
   sprintf(options[OPT_SATXUVTIME].cLongDescr,
-<<<<<<< HEAD
-    "The time a star will remain in its \"saturated\" phase.\n");
-
-  sprintf(options[OPT_XUVBETA].cName,"dXUVBeta");
-  sprintf(options[OPT_XUVBETA].cDescr,"XUV decay power law exponent");
-  sprintf(options[OPT_XUVBETA].cDefault,"1.23");
-  options[OPT_XUVBETA].dDefault = 1.23;
-  options[OPT_XUVBETA].iType = 0;
-=======
           "The time a star will remain in its \"saturated\" phase.");
 
   sprintf(options[OPT_XUVBETA].cName, "dXUVBeta");
@@ -393,21 +369,9 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_XUVBETA].cDimension, "nd");
   options[OPT_XUVBETA].dDefault   = 1.23;
   options[OPT_XUVBETA].iType      = 0;
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   options[OPT_XUVBETA].bMultiFile = 1;
   fnRead[OPT_XUVBETA]             = &ReadXUVBeta;
   sprintf(options[OPT_XUVBETA].cLongDescr,
-<<<<<<< HEAD
-    "After the \"saturation\" phase, the ratio of the XUV to total luminosity\n"
-    "will follow a power law followinfg this exponent. Units are gigayears.\n"
-  );
-
-  sprintf(options[OPT_STELLARMODEL].cName,"sStellarModel");
-  sprintf(options[OPT_STELLARMODEL].cDescr,"Luminosity evolution model");
-  sprintf(options[OPT_STELLARMODEL].cDefault,"BARAFFE");
-  sprintf(options[OPT_STELLARMODEL].cValues,"BARAFFE PROXIMA NONE");
-  options[OPT_STELLARMODEL].iType = 3;
-=======
           "After the \"saturation\" phase, the ratio of the XUV to total "
           "luminosity\n"
           "will follow a power law followinfg this exponent. Units are "
@@ -418,7 +382,6 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_STELLARMODEL].cDefault, "BARAFFE");
   sprintf(options[OPT_STELLARMODEL].cValues, "BARAFFE PROXIMA NONE");
   options[OPT_STELLARMODEL].iType      = 3;
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   options[OPT_STELLARMODEL].bMultiFile = 1;
   fnRead[OPT_STELLARMODEL]             = &ReadStellarModel;
   sprintf(options[OPT_STELLARMODEL].cLongDescr,
@@ -452,15 +415,9 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_WINDMODEL].bMultiFile = 1;
   fnRead[OPT_WINDMODEL]             = &ReadWindModel;
   sprintf(options[OPT_WINDMODEL].cLongDescr,
-<<<<<<< HEAD
-    "If REINERS is selected, the stellar wind model of Reiners and Mohanty\n"
-    "(2012, ApJ, 746, 43) is used to modify the rotation rate.\n"
-  );
-=======
           "If REINERS is selected, the stellar wind model of Reiners and "
           "Mohanty\n"
           "(2012, ApJ, 746, 43) is used to modify the rotation rate.");
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
 
   sprintf(options[OPT_XUVMODEL].cName, "sXUVModel");
   sprintf(options[OPT_XUVMODEL].cDescr, "XUV Evolution Model");
@@ -469,23 +426,6 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_XUVMODEL].iType      = 3;
   options[OPT_XUVMODEL].bMultiFile = 1;
   options[OPT_XUVMODEL].iModuleBit = STELLAR;
-<<<<<<< HEAD
-  fnRead[OPT_XUVMODEL] = &ReadXUVModel;
-  sprintf(options[OPT_XUVMODEL].cLongDescr,
-      "This parameter sets the XUV evolution model used in STELLAR. Setting\n"
-      "this to RIBAS (default) will evolve the XUV luminosity according to \n"
-      "the saturated power law of Ribas et al (2005, ApJ, 611, 680),\n"
-      "while setting it to REINERS will use the empirical relations of\n"
-      "Reiners, Schussler and Passegger (2014, ApJ, 794, 144). Please note that\n"
-      "the latter model has not been fully vetted. Users may also set this\n"
-      "parameter to NONE, in which case the XUV luminosity will remain constant.\n"
-  );
-
-  sprintf(options[OPT_HZMODEL].cName,"sHZModel");
-  sprintf(options[OPT_HZMODEL].cDescr,"Habitable Zone Model: Kopparapu13");
-  sprintf(options[OPT_HZMODEL].cDefault,"Kopparapu13");
-  options[OPT_HZMODEL].iType = 3;
-=======
   fnRead[OPT_XUVMODEL]             = &ReadXUVModel;
   sprintf(
         options[OPT_XUVMODEL].cLongDescr,
@@ -503,20 +443,9 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_HZMODEL].cDescr, "Habitable Zone Model: Kopparapu13");
   sprintf(options[OPT_HZMODEL].cDefault, "Kopparapu13");
   options[OPT_HZMODEL].iType      = 3;
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   options[OPT_HZMODEL].bMultiFile = 1;
   fnRead[OPT_HZMODEL]             = &ReadHZModel;
   sprintf(options[OPT_HZMODEL].cLongDescr,
-<<<<<<< HEAD
-    "If KOPPARAPU13 is selected then the Recent Venus, Runaway Greenhouse,\n"
-    "Maximum Greenhouse, and Early Mars habitable zone limits will be\n"
-    "calculated from Kopparapu, R. et al. (2013, ApJ, 765, 131).\n"
-  );
-
-  sprintf(options[OPT_HALTENDBARAFFEFGRID].cName,"bHaltEndBaraffeGrid");
-  sprintf(options[OPT_HALTENDBARAFFEFGRID].cDescr,"Halt when we reach the end of the Baraffe+15 grid?");
-  sprintf(options[OPT_HALTENDBARAFFEFGRID].cDefault,"1");
-=======
           "If KOPPARAPU13 is selected then the Recent Venus, Runaway "
           "Greenhouse,\n"
           "Maximum Greenhouse, and Early Mars habitable zone limits will be\n"
@@ -526,21 +455,9 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_HALTENDBARAFFEFGRID].cDescr,
           "Halt when we reach the end of the Baraffe+15 grid?");
   sprintf(options[OPT_HALTENDBARAFFEFGRID].cDefault, "1");
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   options[OPT_HALTENDBARAFFEFGRID].iType = 0;
   fnRead[OPT_HALTENDBARAFFEFGRID]        = &ReadHaltEndBaraffeGrid;
   sprintf(options[OPT_HALTENDBARAFFEFGRID].cLongDescr,
-<<<<<<< HEAD
-    "The BARRAFFE stellar model will only compute parameters until the end of\n"
-    "the main sequence. Setting this flag to 1 will halt the code if the end\n"
-    "of the model grid is reached.\n"
-  );
-
-  sprintf(options[OPT_ROSSBYCUT].cName,"bRossbyCut");
-  sprintf(options[OPT_ROSSBYCUT].cDescr,"Terminate magnetic braking when Rossby number > 2.08?");
-  sprintf(options[OPT_ROSSBYCUT].cDefault,"0");
-  options[OPT_ROSSBYCUT].iType = 0;
-=======
           "The BARRAFFE stellar model will only compute parameters until the "
           "end of\n"
           "the main sequence. Setting this flag to 1 will halt the code if the "
@@ -552,22 +469,10 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
           "Terminate magnetic braking when Rossby number > 2.08?");
   sprintf(options[OPT_ROSSBYCUT].cDefault, "0"); // XXX Units?
   options[OPT_ROSSBYCUT].iType      = 0;
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   options[OPT_ROSSBYCUT].bMultiFile = 1;
   options[OPT_ROSSBYCUT].iModuleBit = STELLAR;
   fnRead[OPT_ROSSBYCUT]             = &ReadRossbyCut;
   sprintf(options[OPT_ROSSBYCUT].cLongDescr,
-<<<<<<< HEAD
-    "Van Saders, J. et al. (2019, ApJ, 872, 128) find that when the stellar\n"
-    "Rossby number exceeds 2.08, then the magnetic braking is quenched. This\n"
-    "flag enforces that behavior.\n"
-  );
-
-  sprintf(options[OPT_EVOVLERG].cName,"bEvolveRG");
-  sprintf(options[OPT_EVOVLERG].cDescr,"Evolve stellar radius of gyration?");
-  sprintf(options[OPT_EVOVLERG].cDefault,"1");
-  options[OPT_EVOVLERG].iType = 0;
-=======
           "Van Saders, J. et al. (2019, ApJ, 872, 128) find that when the "
           "stellar\n"
           "Rossby number exceeds 2.08, then the magnetic braking is quenched. "
@@ -578,21 +483,13 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_EVOVLERG].cDescr, "Evolve stellar radius of gyration?");
   sprintf(options[OPT_EVOVLERG].cDefault, "1");
   options[OPT_EVOVLERG].iType      = 0;
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   options[OPT_EVOVLERG].bMultiFile = 1;
   options[OPT_EVOVLERG].iModuleBit = STELLAR;
   fnRead[OPT_EVOVLERG]             = &ReadEvolveRG;
   sprintf(options[OPT_EVOVLERG].cLongDescr,
-<<<<<<< HEAD
-    "Set this flag to 0 to ignore the role of mass concentration in stellar\n"
-    "evolution. Only useful for testing purposes.\n"
-  );
-
-=======
           "Set this flag to 0 to ignore the role of mass concentration in "
           "stellar\n"
           "evolution. Only useful for testing purposes.");
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
 }
 
 void ReadOptionsStellar(BODY *body, CONTROL *control, FILES *files,

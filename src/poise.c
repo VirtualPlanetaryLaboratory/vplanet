@@ -13,12 +13,12 @@
 
 void BodyCopyPoise(BODY *dest, BODY *src, int iTideModel, int iNumBodies,
                    int iBody) {
+  dest[iBody].bReadOrbitOblData = src[iBody].bReadOrbitOblData;
 }
 
-<<<<<<< HEAD
 void InitializeUpdateTmpBodyPoise(BODY *body,CONTROL *control,UPDATE *update,\
-   int iBody) {
-   if (body[iBody].bReadOrbitOblData) {
+                                  int iBody) {
+  if (body[iBody].bReadOrbitOblData) {
     int iLine;
 
     control->Evolve.tmpBody[iBody].daSemiSeries = \
@@ -38,10 +38,6 @@ void InitializeUpdateTmpBodyPoise(BODY *body,CONTROL *control,UPDATE *update,\
       body[iBody].daKeccSeries[iLine];
     }
   }
-=======
-void InitializeUpdateTmpBodyPoise(BODY *body, CONTROL *control, UPDATE *update,
-                                  int iBody) {
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
 }
 
 /**************** POISE options ********************/
@@ -120,6 +116,39 @@ void ReadSurfAlbedo(BODY *body, CONTROL *control, FILES *files,
       body[iFile - 1].dSurfAlbedo = options->dDefault;
     }
   }
+}
+
+void ReadOrbitOblData(BODY *body,CONTROL *control,FILES *files,\
+     OPTIONS *options, SYSTEM *system,int iFile) {
+  int lTmp=-1,bTmp;
+  AddOptionBool(files->Infile[iFile].cIn,options->cName,&bTmp,\
+     &lTmp,control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,\
+        control->Io.iVerbose);
+    /* Option was found */
+    body[iFile-1].bReadOrbitOblData = bTmp;
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    body[iFile-1].bReadOrbitOblData = options->dDefault;
+}
+
+void ReadFileOrbitOblData(BODY *body,CONTROL *control,FILES *files,\
+     OPTIONS *options,SYSTEM *system,int iFile) {
+  int lTmp=-1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,\
+     control->Io.iVerbose);
+  if (lTmp >= 0) {
+    /* Cannot exist in primary input file -- Each body has an output file */
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,\
+        control->Io.iVerbose);
+    strcpy(body[iFile-1].cFileOrbitOblData,cTmp);
+    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
+  } else
+    if (iFile > 0)
+      strcpy(body[iFile-1].cFileOrbitOblData,options->cDefault);
 }
 
 void ReadIceAlbedo(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -1103,7 +1132,6 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_LATCELLNUM].dDefault   = 50;
   options[OPT_LATCELLNUM].iType      = 1;
   options[OPT_LATCELLNUM].bMultiFile = 1;
-<<<<<<< HEAD
   fnRead[OPT_LATCELLNUM] = &ReadLatCellNum;
 
   sprintf(options[OPT_READORBITOBLDATA].cName,"bReadOrbitOblData");
@@ -1127,16 +1155,6 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_PLANCKA].cDefault,"203.3");
   options[OPT_PLANCKA].dDefault = 203.3;
   options[OPT_PLANCKA].iType = 2;
-=======
-  fnRead[OPT_LATCELLNUM]             = &ReadLatCellNum;
-
-  sprintf(options[OPT_PLANCKA].cName, "dPlanckA");
-  sprintf(options[OPT_PLANCKA].cDescr, "Constant 'A' used in OLR calculation");
-  sprintf(options[OPT_PLANCKA].cDefault, "203.3");
-  sprintf(options[OPT_PLANCKA].cDimension, "nd");
-  options[OPT_PLANCKA].dDefault   = 203.3;
-  options[OPT_PLANCKA].iType      = 2;
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   options[OPT_PLANCKA].bMultiFile = 1;
   fnRead[OPT_PLANCKA]             = &ReadPlanckA;
 
@@ -1603,7 +1621,6 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_MINICEHEIGHT].dNeg       = 1; // Convert to SI
   sprintf(options[OPT_MINICEHEIGHT].cNeg, "meters");
   fnRead[OPT_MINICEHEIGHT] = &ReadMinIceSheetHeight;
-<<<<<<< HEAD
   sprintf(options[OPT_MINICEHEIGHT].cLongDescr,
     "The minimum thickness of permanent ice in a latitude bin for it to be\n"
     "labeled ice-covered. In some cases, such as rapid thawing, a latituden\n"
@@ -1611,15 +1628,6 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
     "reasons. Parameter forces unphysically small values of the ice height\n"
     "to be ignored.\n"
   );
-=======
-  sprintf(
-        options[OPT_MINICEHEIGHT].cLongDescr,
-        "The minimum thickness of permanent ice in a latitude bin for it to be"
-        " labeled ice-covered. In some cases, such as rapid thawing, a latitude"
-        " can have a very low value of ice height, primarily for numerical"
-        " reasons. Parameter forces unphysically small values of the ice height"
-        " to be ignored.");
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
 }
 
 void ReadOptionsPoise(BODY *body, CONTROL *control, FILES *files,
@@ -1773,7 +1781,6 @@ void VerifyOLR(BODY *body, OPTIONS *options, char cFile[], int iBody,
   }
 }
 
-<<<<<<< HEAD
 void VerifyOrbitOblData(BODY *body,CONTROL *control,OPTIONS *options,\
        int iBody){
   int iNLines, iLine, c;
@@ -1870,8 +1877,6 @@ void VerifyOrbitOblData(BODY *body,CONTROL *control,OPTIONS *options,\
   }
 }
 
-=======
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
 void VerifyNStepSeasonal(BODY *body, int iBody) {
   if (body[iBody].iNStepInYear > body[iBody].iNDays) {
     body[iBody].iNStepInYear = body[iBody].iNDays;
@@ -4331,17 +4336,10 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_NORTHICECAPLATLAND].bNeg       = 0;
   output[OUT_NORTHICECAPLATLAND].iNum       = 1;
   output[OUT_NORTHICECAPLATLAND].iModuleBit = POISE;
-<<<<<<< HEAD
-  fnWrite[OUT_NORTHICECAPLATLAND] = &WriteIceCapNorthLatLand;
-  sprintf(output[OUT_NORTHICECAPLATLAND].cLongDescr,
-    "If a northern land ice cap is present, return the latitude of its\n"
-    "southern edge. If not present, return +100 degrees.\n");
-=======
   fnWrite[OUT_NORTHICECAPLATLAND]           = &WriteIceCapNorthLatLand;
   sprintf(output[OUT_NORTHICECAPLATLAND].cLongDescr,
           "If a northern land ice cap is present, return the latitude of its "
           "southern edge. If not present, return +100 degrees.");
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
 
   sprintf(output[OUT_NORTHICECAPLATSEA].cName, "IceCapNorthLatSea");
   sprintf(output[OUT_NORTHICECAPLATSEA].cDescr,
@@ -4351,13 +4349,8 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_NORTHICECAPLATSEA].iModuleBit = POISE;
   fnWrite[OUT_NORTHICECAPLATSEA]           = &WriteIceCapNorthLatSea;
   sprintf(output[OUT_NORTHICECAPLATSEA].cLongDescr,
-<<<<<<< HEAD
-    "If a northern sea ice cap is present, return the latitude of its\n"
-    "southern edge. If not present, return +100 degrees.\n");
-=======
           "If a northern sea ice cap is present, return the latitude of its "
           "southern edge. If not present, return +100 degrees.");
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
 
   sprintf(output[OUT_SOUTHICECAPLATLAND].cName, "IceCapSouthLatLand");
   sprintf(output[OUT_SOUTHICECAPLATLAND].cDescr,
@@ -4365,17 +4358,10 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_SOUTHICECAPLATLAND].bNeg       = 0;
   output[OUT_SOUTHICECAPLATLAND].iNum       = 1;
   output[OUT_SOUTHICECAPLATLAND].iModuleBit = POISE;
-<<<<<<< HEAD
-  fnWrite[OUT_SOUTHICECAPLATLAND] = &WriteIceCapSouthLatLand;
-  sprintf(output[OUT_SOUTHICECAPLATSEA].cLongDescr,
-    "If a southern sea ice cap is present, return the latitude of its\n"
-    "northern edge. If not present, return -100 degrees.\n");
-=======
   fnWrite[OUT_SOUTHICECAPLATLAND]           = &WriteIceCapSouthLatLand;
   sprintf(output[OUT_SOUTHICECAPLATLAND].cLongDescr,
           "If a southern land ice cap is present, return the latitude of its "
           "northern edge. If not present, return -100 degrees.");
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
 
   sprintf(output[OUT_SOUTHICECAPLATSEA].cName, "IceCapSouthLatSea");
   sprintf(output[OUT_SOUTHICECAPLATSEA].cDescr,
@@ -4383,17 +4369,10 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_SOUTHICECAPLATSEA].bNeg       = 0;
   output[OUT_SOUTHICECAPLATSEA].iNum       = 1;
   output[OUT_SOUTHICECAPLATSEA].iModuleBit = POISE;
-<<<<<<< HEAD
-  fnWrite[OUT_SOUTHICECAPLATSEA] = &WriteIceCapSouthLatSea;
-  sprintf(output[OUT_SOUTHICECAPLATSEA].cLongDescr,
-    "If a southern sea ice cap is present, return the latitude of its\n"
-    "northern edge. If not present, return -100 degrees.\n");
-=======
   fnWrite[OUT_SOUTHICECAPLATSEA]           = &WriteIceCapSouthLatLand;
   sprintf(output[OUT_SOUTHICECAPLATSEA].cLongDescr,
           "If a southern sea ice cap is present, return the latitude of its "
           "northern edge. If not present, return -100 degrees.");
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
 
   sprintf(output[OUT_NORTHICEBELTLATLAND].cName, "IceBeltNorthLatLand");
   sprintf(output[OUT_NORTHICEBELTLATLAND].cDescr,
@@ -4401,15 +4380,6 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_NORTHICEBELTLATLAND].bNeg       = 0;
   output[OUT_NORTHICEBELTLATLAND].iNum       = 1;
   output[OUT_NORTHICEBELTLATLAND].iModuleBit = POISE;
-<<<<<<< HEAD
-  fnWrite[OUT_NORTHICEBELTLATLAND] = &WriteIceBeltNorthLatLand;
-  sprintf(output[OUT_NORTHICEBELTLATLAND].cLongDescr,
-    "If a land ice belt is present, return the latitude of its northern edge.\n"
-    "If not present, return 0. Note that some ice belts may in fact have a\n"
-    "northern edge at the equator.\n");
-
-  sprintf(output[OUT_NORTHICEBELTLATSEA].cName,"IceBeltNorthLatSea");
-=======
   fnWrite[OUT_NORTHICEBELTLATLAND]           = &WriteIceBeltNorthLatLand;
   sprintf(
         output[OUT_NORTHICEBELTLATLAND].cLongDescr,
@@ -4419,21 +4389,11 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
         "northern edge at the equator.");
 
   sprintf(output[OUT_NORTHICEBELTLATSEA].cName, "IceBeltNorthLatSea");
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   sprintf(output[OUT_NORTHICEBELTLATSEA].cDescr,
           "Northernmost extent of sea ice belt.");
   output[OUT_NORTHICEBELTLATSEA].bNeg       = 0;
   output[OUT_NORTHICEBELTLATSEA].iNum       = 1;
   output[OUT_NORTHICEBELTLATSEA].iModuleBit = POISE;
-<<<<<<< HEAD
-  fnWrite[OUT_NORTHICEBELTLATSEA] = &WriteIceBeltNorthLatSea;
-  sprintf(output[OUT_NORTHICEBELTLATSEA].cLongDescr,
-    "If a sea ice belt is present, return the latitude of its northern edge.\n"
-    "If not present, return 0. Note that some ice belts may in fact have a\n"
-    "northern edge at the equator.\n");
-
-  sprintf(output[OUT_SOUTHICEBELTLATLAND].cName,"IceBeltSouthLatLand");
-=======
   fnWrite[OUT_NORTHICEBELTLATSEA]           = &WriteIceBeltNorthLatSea;
   sprintf(
         output[OUT_NORTHICEBELTLATSEA].cLongDescr,
@@ -4443,21 +4403,11 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
         "northern edge at the equator.");
 
   sprintf(output[OUT_SOUTHICEBELTLATLAND].cName, "IceBeltSouthLatLand");
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   sprintf(output[OUT_SOUTHICEBELTLATLAND].cDescr,
           "Southernmost extent of land ice belt.");
   output[OUT_SOUTHICEBELTLATLAND].bNeg       = 0;
   output[OUT_SOUTHICEBELTLATLAND].iNum       = 1;
   output[OUT_SOUTHICEBELTLATLAND].iModuleBit = POISE;
-<<<<<<< HEAD
-  fnWrite[OUT_SOUTHICEBELTLATLAND] = &WriteIceBeltSouthLatLand;
-  sprintf(output[OUT_SOUTHICEBELTLATLAND].cLongDescr,
-    "If a land ice belt is present, return the latitude of its southern edge.\n"
-    "If not present, return 0. Note that some ice belts may in fact have a\n"
-    "southern edge at the equator.\n");
-
-  sprintf(output[OUT_SOUTHICEBELTLATSEA].cName,"IceBeltSouthLatSea");
-=======
   fnWrite[OUT_SOUTHICEBELTLATLAND]           = &WriteIceBeltSouthLatLand;
   sprintf(
         output[OUT_SOUTHICEBELTLATLAND].cLongDescr,
@@ -4467,19 +4417,11 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
         "southern edge at the equator.");
 
   sprintf(output[OUT_SOUTHICEBELTLATSEA].cName, "IceBeltSouthLatSea");
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   sprintf(output[OUT_SOUTHICEBELTLATSEA].cDescr,
           "Southernmost extent of sea ice belt.");
   output[OUT_SOUTHICEBELTLATSEA].bNeg       = 0;
   output[OUT_SOUTHICEBELTLATSEA].iNum       = 1;
   output[OUT_SOUTHICEBELTLATSEA].iModuleBit = POISE;
-<<<<<<< HEAD
-  fnWrite[OUT_SOUTHICEBELTLATSEA] = &WriteIceBeltSouthLatSea;
-  sprintf(output[OUT_SOUTHICEBELTLATSEA].cLongDescr,
-    "If a sea ice belt is present, return the latitude of its southern edge.\n"
-    "If not present, return 0. Note that some ice belts may in fact have a\n"
-    "southern edge at the equator.\n");
-=======
   fnWrite[OUT_SOUTHICEBELTLATSEA]           = &WriteIceBeltSouthLatSea;
   sprintf(
         output[OUT_SOUTHICEBELTLATSEA].cLongDescr,
@@ -4487,7 +4429,6 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
         "edge. "
         "If not present, return 0. Note that some ice belts may in fact have a "
         "southern edge at the equator.");
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
 }
 
 /************ POISE Logging Functions **************/
@@ -4547,7 +4488,6 @@ void AddModulePoise(CONTROL *control, MODULE *module, int iBody, int iModule) {
 }
 
 /************* POISE Functions ***********/
-<<<<<<< HEAD
 void UpdateOrbitOblData(BODY *body, EVOLVE *evolve, int iBody) {
   body[iBody].dSemi = body[iBody].daSemiSeries[body[iBody].iCurrentStep];
   body[iBody].dEcc = body[iBody].daEccSeries[body[iBody].iCurrentStep];
@@ -4563,8 +4503,6 @@ void UpdateOrbitOblData(BODY *body, EVOLVE *evolve, int iBody) {
   body[iBody].dHecc = body[iBody].daHeccSeries[body[iBody].iCurrentStep];
   body[iBody].dKecc = body[iBody].daKeccSeries[body[iBody].iCurrentStep];
 }
-=======
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
 
 /**
 Calculates flow at base of ice sheet

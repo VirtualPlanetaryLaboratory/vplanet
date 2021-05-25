@@ -873,21 +873,6 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_XFRAC].dDefault   = 1.0;
   options[OPT_XFRAC].iType      = 2;
   options[OPT_XFRAC].bMultiFile = 1;
-<<<<<<< HEAD
-  fnRead[OPT_XFRAC] = &ReadXFrac;
-  sprintf(options[OPT_XFRAC].cLongDescr,
-    "Ratio of the planet's XUV radius to its total radius. The XUV radius is\n"
-    "defined to be the distance between the center of the planet and the\n"
-    "absorbing layer, defined to be where the optical depth is 1. Should be\n"
-    "in the range (0,1].\n"
-  );
-
-  sprintf(options[OPT_ATMXABSEFFH].cName,"dAtmXAbsEffH");
-  sprintf(options[OPT_ATMXABSEFFH].cDescr,"Hydrogen X-ray/UV absorption efficiency (epsilon)");
-  sprintf(options[OPT_ATMXABSEFFH].cDefault,"0.15");
-  options[OPT_ATMXABSEFFH].dDefault = 0.15;
-  options[OPT_ATMXABSEFFH].iType = 2;
-=======
   fnRead[OPT_XFRAC]             = &ReadXFrac;
   sprintf(
         options[OPT_XFRAC].cLongDescr,
@@ -905,21 +890,9 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH].cDimension, "nd");
   options[OPT_ATMXABSEFFH].dDefault   = 0.15;
   options[OPT_ATMXABSEFFH].iType      = 2;
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   options[OPT_ATMXABSEFFH].bMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH]             = &ReadAtmXAbsEffH;
   sprintf(options[OPT_ATMXABSEFFH].cLongDescr,
-<<<<<<< HEAD
-    "XUV absoprtion efficiency parameter, epsilon_{XUV}, in Eq. (A1) in\n"
-    "Barnes et al. (2019). Must lie in the range [0,1].\n"
-  );
-
-  sprintf(options[OPT_ATMXABSEFFH2O].cName,"dAtmXAbsEffH2O");
-  sprintf(options[OPT_ATMXABSEFFH2O].cDescr,"Water X-ray/UV absorption efficiency (epsilon)");
-  sprintf(options[OPT_ATMXABSEFFH2O].cDefault,"0.30");
-  options[OPT_ATMXABSEFFH2O].dDefault = 0.15;
-  options[OPT_ATMXABSEFFH2O].iType = 2;
-=======
           "XUV absoprtion efficiency parameter, epsilon_{XUV}, in Eq. (A1) in\n"
           "Barnes et al. (2019). Must lie in the range [0,1].");
 
@@ -930,21 +903,9 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH2O].cDimension, "nd");
   options[OPT_ATMXABSEFFH2O].dDefault   = 0.15;
   options[OPT_ATMXABSEFFH2O].iType      = 2;
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   options[OPT_ATMXABSEFFH2O].bMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2O]             = &ReadAtmXAbsEffH2O;
   sprintf(options[OPT_ATMXABSEFFH2O].cLongDescr,
-<<<<<<< HEAD
-    "XUV absoprtion efficiency parameter for water vapor as defined in\n"
-    "Luger & Barnes (2015, AsBio, 15, 57). Must lie in range [0,1].\n"
-  );
-
-  sprintf(options[OPT_ATMXABSEFFH2OMODEL].cName,"sAtmXAbsEffH2OModel");
-  sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDescr,"Water X-ray/XUV absorption efficiency evolution model");
-  sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDefault,"NONE");
-  sprintf(options[OPT_ATMXABSEFFH2OMODEL].cValues,"BOLMONT16 NONE");
-  options[OPT_ATMXABSEFFH2OMODEL].iType = 3;
-=======
           "XUV absoprtion efficiency parameter for water vapor as defined in\n"
           "Luger & Barnes (2015, AsBio, 15, 57). Must lie in range [0,1].");
 
@@ -955,22 +916,9 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cValues, "BOLMONT16 NONE");
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cDimension, "nd");
   options[OPT_ATMXABSEFFH2OMODEL].iType      = 3;
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   options[OPT_ATMXABSEFFH2OMODEL].bMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2OMODEL]             = &ReadAtmXAbsEffH2OModel;
   sprintf(options[OPT_ATMXABSEFFH2OMODEL].cLongDescr,
-<<<<<<< HEAD
-    "If BOLMONT16 is selected, then the value of %s will follow the model of\n"
-    "Bolmont et al. (2017, MNRAS, 464, 3728). NONE will not change the input\n"
-    "value for %s.\n",options[OPT_ATMXABSEFFH2O].cName,options[OPT_ATMXABSEFFH2O].cName
-  );
-
-  sprintf(options[OPT_OXYGENMASS].cName,"dOxygenMass");
-  sprintf(options[OPT_OXYGENMASS].cDescr,"The initial oxygen mass in the atmosphere.");
-  sprintf(options[OPT_OXYGENMASS].cDefault,"0");
-  options[OPT_OXYGENMASS].dDefault = 0;
-  options[OPT_OXYGENMASS].iType = 2;
-=======
           "If BOLMONT16 is selected, then the value of %s will follow the "
           "model of\n"
           "Bolmont et al. (2017, MNRAS, 464, 3728). NONE will not change the "
@@ -985,7 +933,6 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_OXYGENMASS].cDimension, "mass");
   options[OPT_OXYGENMASS].dDefault   = 0;
   options[OPT_OXYGENMASS].iType      = 2;
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
   options[OPT_OXYGENMASS].bMultiFile = 1;
   fnRead[OPT_OXYGENMASS]             = &ReadOxygenMass;
   // No LongDescr needed

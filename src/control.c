@@ -283,44 +283,6 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       // Header
 
       // Properties
-<<<<<<< HEAD
-      printf("%s\n",options->cName);
-      printf("==================  ====================================\n");
-      if (memcmp(options->cLongDescr,"null",4)) {
-          printf("**Overview**\n");
-          printf("%s\n",options->cLongDescr);
-      } else {
-        printf("**Description**     %s\n", options->cDescr);
-      }
-      printf("**Type**            ");
-      if (options->iType == 0) printf("Bool\n");
-      else if (options->iType == 1) printf("Int\n");
-      else if (options->iType == 2) printf("Double\n");
-      else if (options->iType == 3) printf("String\n");
-      else if (options->iType >= 4) printf("Array\n");
-      if (options->bNeg == 1)
-          printf("**Custom unit**     %s\n", options->cNeg);
-      else
-          printf("**Custom unit**     \n");
-      printf("**Modules**         ");
-      if (options->iModuleBit) PrintModuleList(stdout, options->iModuleBit);
-      else printf("ALL");
-      printf("\n");
-      printf("**Files**           ");
-      PrintFileTypes(options->iFileType);
-      printf("\n");
-      printf("**Default value**   %s\n", options->cDefault);
-      if (memcmp(options->cValues,"null",4)) {
-        printf("**Allowed values**  %s\n", options->cValues);
-      }
-      // printf("**Description**     %s\n", options->cDescr);
-      // // Long description
-      // if (memcmp(options->cLongDescr,"null",4)) {
-      //     printf("\n**Overview**\n");
-      //     printf("%s\n",options->cLongDescr);
-      //}
-      printf("==================  ====================================\n\n");
-=======
       printf("+--------------------------------------------------------------------------------------+\n");
       printf("| %s", options->cName);
       int i;
@@ -432,7 +394,6 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       } else {
         printf("\n");
       }
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
     }
   }
 }
@@ -453,22 +414,6 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
       // ** Long help **
 
       // Properties
-<<<<<<< HEAD
-      printf("%s\n",output->cName);
-      printf("========================  ====================================\n");
-      // Long description
-      if (memcmp(output->cLongDescr,"null",4)) {
-          printf("**Overview**\n");
-          printf("%s\n",output->cLongDescr);
-      } else {
-        printf("**Description**           %s\n", output->cDescr);
-      }
-      if (output->bNeg == 1)
-        printf("**Custom unit**           %s\n", output->cNeg);
-      else
-        printf("**Custom unit**     \n");
-      printf("**Modules**               ");
-=======
       printf("+--------------------------------------------------------------------------------------+\n");
       printf("| %s", output->cName);
       int i;
@@ -498,18 +443,11 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
       }
 
       // Module List
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
       if (output->iModuleBit) {
         printf("| Modules         | ");
         PrintModuleList(stdout, output->iModuleBit,1);
         printf(" |\n");
       } else {
-<<<<<<< HEAD
-        printf("ALL");
-      }
-      printf("\n");
-      printf("========================  ====================================\n\n");
-=======
         printf("| Modules         | ALL                                                                |\n");
       }
       printf("+-----------------+--------------------------------------------------------------------+\n\n");
@@ -521,7 +459,6 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
       // if (memcmp(output->cLongDescr,"null",4)) {
       //   printf("%s\n\n",output->cLongDescr);
       // }
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
     }
   }
 }
@@ -623,15 +560,9 @@ void Help(OPTIONS *options, OUTPUT *output, char exe[], int bLong) {
     printf("Format: [Negative forces units] Name -- Description [Negative "
            "unit]\n\n");
   }
-<<<<<<< HEAD
-  printf("These options follow the argument %s.\n",options[OPT_OUTPUTORDER].cName);
-  printf("\n");
-  HelpOutput(output,bLong);
-=======
   printf("These options follow the argument %s.\n\n",
          options[OPT_OUTPUTORDER].cName);
   HelpOutput(output, bLong);
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a
 
   exit(0);
 }

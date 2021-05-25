@@ -78,7 +78,8 @@
 #define OPT_SKIPSEASENABLED 1921
 #define OPT_DIFFROT 1922
 #define OPT_SPINUPTOL 1923
-
+#define OPT_READORBITOBLDATA  1924
+#define OPT_FILEORBITOBLDATA  1925
 
 #define OPT_LANDFRAC 1940
 #define OPT_HEATCAPLAND 1942
@@ -189,6 +190,7 @@ void HelpOptionsPoise(OPTIONS *);
 void InitializeOptionsPoise(OPTIONS *, fnReadOption[]);
 void ReadOptionsPoise(BODY *, CONTROL *, FILES *, OPTIONS *, SYSTEM *,
                       fnReadOption[], int);
+void ReadOrbitOblData(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
 
 /* Verify Functions */
 void VerifyPoise(BODY *, CONTROL *, FILES *, OPTIONS *, OUTPUT *, SYSTEM *,

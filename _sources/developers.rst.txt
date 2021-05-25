@@ -17,10 +17,5 @@ this methodology.
    :maxdepth: 1
 
    Style Guide <StyleGuide>
-<<<<<<< HEAD
-   Writing Tests and Examples <tests>
-=======
    Writing Tests, and Examples <tests>
-   Issuing Pull Requests <PullRequests>
    Attribution <attr>
->>>>>>> 104ebe57ec2b7777e4e69b25f0d07e2e59bb862a

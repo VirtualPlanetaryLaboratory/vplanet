@@ -71,7 +71,8 @@ def comp2huybers(plname, xrange=False, show=True):
             obltmp *= 180 / np.pi
         obl = np.zeros_like(body.Time) + obltmp
 
-    f = open(path / f"{plname}.in", "r")
+    plname_lower = plname.lower()
+    f = open(path / f"{plname_lower}.in", "r")
     lines = f.readlines()
     f.close()
     pco2 = 0

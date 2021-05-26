@@ -3,7 +3,7 @@ Installing VPLanet
 
 VPLanet will run on macOS 10+, most recent Linux distributions, and Windows 10
 (via their free `Ubuntu Linux interface
-<https://www.microsoft.com/en-us/p/ubuntu/9nblggh4msv6?activetab=pivot:overviewtab>``).
+<https://www.microsoft.com/en-us/p/ubuntu/9nblggh4msv6?activetab=pivot:overviewtab>`_).
 If you plan on developing VPLanet us the Developers
 
 
@@ -11,7 +11,7 @@ Users
 ----------
 
 You can install VPLanet and its support scripts (vplot, vspace, multiplanet, and
-bigplanet) with a single command line call pip:
+bigplanet) using `pip <https://pip.pypa.io/en/stable>`_:
 
 .. code-block:: bash
 
@@ -19,7 +19,8 @@ bigplanet) with a single command line call pip:
 
 This will place executables of the most up-to-date, stable versions of these
 codes in your path (after ensuring all dependency checks are satisfied). This
-command will **not** download the repository.
+command will **not** download the repository. Please note that VPLanet requires
+Python 3.6 or greater.
 
 Developers
 ----------
@@ -34,22 +35,20 @@ commands:
    cd vplanet
    python setup.py develop
 
-After changes to the C source:
+After changes to the C source, make sure to re-install:
 
 .. code-block:: bash
 
-   python setup.py clean --all
    python setup.py develop
 
-XXX Why can't this be a single command??XX
 
-:note::
+.. note::
 
-If you are running macOS Catalina or later, you may need to force the operating
-system to set the location of C libraries:
+   If you are running macOS Catalina or later, you may need to force the operating
+   system to set the location of C libraries:
 
-.. code-block:: bash
+   .. code-block:: bash
 
-   export CPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include
+      export CPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include
 
-Thanks to Chris Colose for identifying and solving this problem.
+   Thanks to Chris Colose for identifying and solving this problem.

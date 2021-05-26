@@ -1,126 +1,30 @@
 Quickstart
 ==========
 
-.. contents:: :local:
+This page provides an example of how to perform a single :code:`VPLanet` simulation. It
+introduces you to the
+input and output files, executing the simulation, and visualizing the result with
+`vplot <https://github.com/VirtualPlanetaryLaboratory/vplot>`_. This example,
+however, only represents a small fraction of the :code:`VPLanet` use cases, so it is
+intended to be representative of how
+to use the code. In other words, the files shown below represent the typical
+structure, formatting and syntax for all :code:`VPLanet` simulations.
+Understanding this example will enable you to build of the other `examples
+<../examples>_` included in this repository.
 
-Very Quick Start
-----------------
-
-To get started very quickly with one example:
-
-.. code-block:: bash
-
-  git clone https://github.com/VirtualPlanetaryLaboratory/vplanet.git
-  cd vplanet
-  make opt
-  cd examples/VenusWaterLoss
-  ../../vplanet vpl.in
-
-Downloading VPLanet
-------------------
-
-There are two ways to install VPLanet: 1) cloning with git, or 2) downloading
-the repository with a zip file. VPLanet has been developed on macOS and Linux
-platforms, but can also run on Windows.
-
-Linux/MacOS
-~~~~~~~~~~~
-
-To install with git, open a terminal and run
-
-.. code-block:: bash
-
-   git clone https://github.com/VirtualPlanetaryLaboratory/vplanet.git
-
- To build from the source code, point your web browser to `releases
- <https://github.com/VirtualPlanetaryLaboratory/vplanet/releases>`_,
- select the release you want (we strongly recommend a version greater than or equal
- to 2.0.0). Place the downloaded file in the directory on your local computer in which
- you want to place :code:`vplanet` and type
-
- .. code-block:: bash
-
-   unzip vplanet-x.x.x
-
- or
-
- .. code-block:: bash
-
-   tar xvfz vplanet-x.x.x.tar.gz
-
- where "x.x.x" is the version number of the source you selected.
-
-.. code-block:: bash
-
-   unzip vplanet-master.zip
-
-Windows 10
-~~~~~~~~~~
-
-You must first install `cygwin <https://www.cygwin.com>` and manually select
-every package that begins with "gcc." Note that as of their v3.0.7, this option
-is not the default. Next click the "Clone or Download" box on the VPLanet webpage,
-select zip, and download it into your preferred directory.
-
-Next open the command window (DOS window; open with "cmd") and navigate to the
-cygwin directory where you wish to place VPLanet, e.g.,
-
-.. code-block:: bash
-
-    cd c:\cygwin64\home\rory\src
-    copy \Users\rory\Downloads\vplanet-master.zip .
-
-Then open a File Explorer window and navigate to the directory with the zip file,
-right click, and select "Extract All", type in the destination directory, and
-click "Extract."
-
-Next open a cygwin terminal window and type the following commands (substituting your username for "rory"):
-
-.. code-block:: bash
-
-  cd /home/rory/src/vplanet-master/src
-  gcc *.c -o vplanet
-
-This will create a file called ./vplanet.exe that can be run inside the cygwin terminal
-exactly as in the Linux and macOS instructions.
-
-Compiling the Code
-------------------
-
-Change your working directory to vplanet to build the executable. :code:`vplanet`
-is written in C, and the current version requires gcc or clang. :code:`vplanet`
-has been developed on MacOS and Linux operating systems.
-
-In the top-level directory is a `Makefile` that will build the executable. Most
-users should use the optimized (-O3) version:
-
-   make opt
-
-Currently, the installer doesn't add the VPLanet executable to your :code:`PATH` variable, so
-you'll have to `do it manually <https://stackoverflow.com/questions/14637979/how-to-permanently-set-path-on-linux-unix>`_.
-
-If you are running macOS Catalina or later, you may need to force the operating
-system to set the location of C libraries:
-
-.. code-block:: bash
-
-   export CPATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include
-
-Thanks to Chris Colose for identifying this issue.
-
-
-A Simple Example
-----------------
+Physics of the Problem
+----------------------
 
 Let's go over how to use :code:`VPLanet` to simulate the evolution of
 a hypothetical ocean on the surface of early Venus. Isotopic evidence
 suggests Venus may have had a similar amount of water to Earth in the
-past `(Donahue et al., 1982) <https://ui.adsabs.harvard.edu/abs/1982Sci...216..630D/abstract>`,
-but because of vigorous hydrodynamic escape it probably lost all of it in the
-first few hundred Myr `(Hunten, 1973) <https://ui.adsabs.harvard.edu/abs/1973JAtS...30.1481H/abstract>`.
+past `(Donahue et al., 1982) <https://ui.adsabs.harvard.edu/abs/1982Sci...216..630D/abstract>`_,
+but because of vigorous hydrodynamic escape it may have lost all of it in the
+first few hundred Myr `(Hunten, 1973) <https://ui.adsabs.harvard.edu/abs/1973JAtS...30.1481H/abstract>`_.
 Here we're going to use the :doc:`stellar </src/stellar>`
 and :doc:`atmesc </src/atmesc>` modules of :code:`VPLanet` to jointly model the evolution
-of the Sun and Venus.
+of the Sun and Venus in order to estimate how long it took for Venus to lose all
+its surface water.
 
 .. note::
 
@@ -129,15 +33,15 @@ of the Sun and Venus.
   Modifying that example to match the input files shown below will generate the
   figure at the end of this guide.
 
-The basic workflow for a :code:`VPLanet` simulation is to create input
-(:code:`.in`) files with the pertinent system, star, and planet parameters
-and to call the executable directly from the command line. Let's go over
-the three input files for this example.
+The basic workflow for a :code:`VPLanet` simulation is to 1) create input
+files with the relevant system, star, and/or planet parameters, 2) execute
+:code:`VPLanet` directly from the command line, and 3) interpret the text
+outuput in a log file and/or time-series data file.
 
 The Input Files
 ---------------
 
-`VPLanet` takes 1 file as input, which contains "options" that direct the
+`:code:`VPLanet` takes 1 file as input, which contains "options" that direct the
 execution of the code. Each option is defined by a single, case-sensitive name,
 and is followed by one or more arguments. The first options file is called the
 "primary input file" and provides
@@ -147,19 +51,20 @@ also must include a list of files that contains information about the bodies in
 the system, i.e. the "body file(s)."
 
 This primary input file is usually called :code:`vpl.in`, but you can call it
-whatever you'd like. We'll start by presenting an example, and the dissect it
+whatever you'd like. We'll start by presenting an example, and then dissect it
 after. The primary input file generally takes a form like this:
 
 vpl.in
 ~~~~~~
 
 .. code-block:: bash
+    :linenos:
 
     # General Options
     sSystemName   solarsystem        # System Name
     iVerbose      5                  # Verbosity level
     bOverwrite    1                  # Allow file overwrites?
-    saBodyFiles   sun.in $           # List of all bodies in the system
+    saBodyFiles   sun.in $           # List of all bodies files for the system
                   venus.in
 
     # Input/Output Units
@@ -179,31 +84,34 @@ vpl.in
     dStopTime     4.6e9              # Stop time for evolution
     dOutputTime   1e6                # Output timesteps (assuming in body files)
 
-  .. note::
+.. note::
 
-      You can obtain descriptions of the options from the command line with the
-      :code:`-h` (short help) or :code:`-H` (long help) flags.
+    You can obtain descriptions of the options from the command line with the
+    :code:`-h` (short help) or :code:`-H` (long help) flags. You can also search
+    the options ` here
+    <https://virtualplanetarylaboratory.github.io/vplanet/help.html>`_.
 
-As described above, the options are specified with unique string (e.g.,
+As described above, the options are specified with a unique string (e.g.,
 :code:`dEta` or :code:`dStopTime`) followed by white space and then the value(s)
 for the option. Note that the leading lower case letter(s) of each option's name
-describes the type (cast) of the expected argument: b = Boolean, i = integer,
+describes the type (or "cast") of the expected argument: b = Boolean, i = integer,
 d = double precision, s = string. If an "a" follows one of these letters, then
 the argument may contain multiple values, i.e. may be an "array," e.g.
-saBodyFiles.
+saBodyFiles on line 5. Only one option is allowed per line.
 
 The order of the options is irrelevant, and white space is ignored. Comments
 can be specified anywhere with the hashtag (#) sign. Note that array options
 can span multiple lines with the :code:`$` symbol, as shown in the arguments to
 saBodyFiles. The :code:`$` tells :code:`VPLanet` to find the next member of the
-array on the next line. The # and $ signs are the only special characters in
+array on the next line. The # and $ symbols are the only special characters in
 :code:`VPLanet` input files.
 
-In theory, the names are helpful, i.e. self-explanatory. But here's a
+The name of each option is intended to be helpful, i.e. self-explanatory, but
+here's a
 line-by-line breakdown to be clear (ignoring comments and white space): We're
 calling the system :code:`"solarsystem"`, which automatically sets the names of
-output files to use the argument as the prefix, as well as enable `vplot` to easily
-use the name. We specified maximum verbosity (:code:`5`),
+output files to use the argument as the prefix, as well as enable :code:`vplot`
+to easily use the name. We specified maximum verbosity (5),
 so :code:`VPLanet` will talk a LOT. We're allowing output file overwrites.
 Next we get to the all important list of body files, and we're telling the code to expect
 two that are called :code:`sun.in` and :code:`venus.in`, which we'll describe
@@ -213,20 +121,22 @@ simulated, each representing a different amount of initial water content.)
 Next, we set the default units for I/O: solar masses, astronomical units, years,
 and degrees. Because we set them in the primary input file, the choices are
 propagated to the body files, but a user can specify units for each body. In the
-case of some double, the user can also force specific units with a negative sign,
-as described below.
+case of some double precision options, the user can also force specific units
+with a negative sign, as described below.
 
 Next, bDoLog tells the code to generate a log file; iDigits sets the
 output precision to 6 decimal places. The last block of options tells :code:`VPLanet`
-what to siomulate. We want to evolve the system *forward* in time. We will employ
+what to simulate. We want to evolve the system *forward* in time. We will employ
 variable (adaptive) timestepping with, as set in the next line, the accuracy
-coefficent dEta to 0.01. The final two lines specify the length of the integation
-(in units of sUnitTime), and the frequency of outputs.
+coefficent dEta set to 0.01, i.e. the code will set the time step to be 100
+times shorter than the time required for the value of the fastest changing
+variable to change by a factor of 2. The final two lines specify the length of
+the integation (in units of sUnitTime), and the frequency of outputs.
 
-..note::
+:note::
 
   The smaller the value of dEta, the higher the precision of the integration, but
-  the slower it will run. We have found that values many cases converge for a
+  the slower it will run. We have found that many cases converge for a
   value of 0.01, but some require 0.0001. *Always* test for convergence before
   assuming :code:`VPLanet` output to be accurate.
 
@@ -237,6 +147,7 @@ sun.in
 ~~~~~~
 
 .. code-block:: bash
+    :linenos:
 
     # Star's Parameters
     sName           sun              # Body's name
@@ -259,36 +170,40 @@ sun.in
 As before, the parameter names are intended to be self-explanatory. Note that we're only
 setting a few, and those that are not specified assume their default values.
 Here we have a few differences with :doc:`VenusWaterLoss </examples/VenusWaterLoss>`:
-The example assigns a hexadecimal color that can be used for plotting with `vplot`, and
+That example assigns a hexadecimal color that can be used for plotting with :code:`vplot`, and
 uses the negative option for dSatXUVTime, which means the units are Gyr. For this
 guide, we're running a shorter integration.
 
-We gave the star a name,
+We gave the star a name and
 told :code:`VPLanet` we want to use the :code:`stellar` module to compute
-its evolution. We assigned the mass and age at time = 0, and
+its evolution. We assigned the mass and age at simulation time = 0, and
 set a few :code:`stellar`-specific properties. Specifically, we're using the
-Baraffe et al. (2015) :cite:`Baraffe15` evolutionary tracks and the Ribas et al.
-(2005) :cite:`Ribas05` XUV evolution power law with a saturation level of
-:code:`1e-3` and timescale of 100 Myr. Note that `"time"` is different than
+`Baraffe et al. (2015) <https://ui.adsabs.harvard.edu/abs/2015A%26A...577A..42B/abstract>`_
+evolutionary tracks and the `Ribas et al.
+(2005) <https://ui.adsabs.harvard.edu/abs/2005ApJ...622..680R/abstract>`_ XUV
+evolution power law with a saturation fraction of 0.001 and saturation time of
+100 Myr. Note that `"time"` is different than
 `"age"` in that the former is the internal counter for the simulation,
 whereas the latter is the physical age of the star since some birth time. For a
-compete description of the modules, please consult the :doc:`manual </Manual>`.
+compete description of the physics in  :code:`VPLanet`, please consult the `manual
+<../Manual>`.
 
 The option saModules is of particular importance in the body files, as it sets
 the physical models ("modules") to be applied to the body. In this case, the only module
 is "stellar", or the quiescent evolution of a star from formation to the end
-of the hydrogen burning (main sequence). In more complicated models, multiple
+of the hydrogen burning. In more complicated simulations, multiple
 modules can be added to the argument list and the code will automatically add
 the new equations, including coupling of any parameters that are affected by
 multiple modules.
 
 Another important :code:`VPLanet` option is saOutputOrder, which is a list
 of all parameters to be output during the integration at a cadence defined by
-dOutputTime.
+dOutputTime (see vpl.in, line 23).
 In this case we requested two "outputs": time and XUV luminosity. (The example
 includes a few more parameters.) Output names need only
 be unique, unlike the option names, but it's often easier to understand the
-output if the full name is provided.
+output if the full name is provided. As shown below, the log file contains the
+list of outputs and their units for each body.
 
 .. note::
 
@@ -304,6 +219,7 @@ venus.in
 ~~~~~~~~
 
 .. code-block:: bash
+    :linenos:
 
     # Planet's Parameters
     sName            venus           # Body's name
@@ -313,8 +229,8 @@ venus.in
                      -OxygenMantleMass
 
     # Physical Parameters
-    dMass         -0.815             # Here, the - sign means Earth masses
-    dRadius       -0.9499            # Here, the - sign means Earth radii
+    dMass         -0.815             # Here, the - symbol means Earth masses
+    dRadius       -0.9499            # Here, the - symbol means Earth radii
     dSemi         0.723              # Semi-major axis
     dEcc          0.006772           # Eccentricity
 
@@ -326,39 +242,45 @@ venus.in
 
 
 This file looks pretty similar to the previous one, but it's worth noting
-a few things. Note that we appear to have given the planet a **negative**
-mass and radius! As we mentioned above, the negative sign actually is actually
+a few things. First, we appear to have given the planet a **negative**
+mass and radius! As mentioned above, the negative sign is actually
 telling
 :code:`VPLanet` to apply *different* units. Many
 parameters have an associated customized unit that overrides the default units
 specified in :code:`vpl.in`. In this case, dMass and dRadius have customized units
 of Earth masses and Earth radii, respectively, so we're OK.
 
+Similarly, note that two outputs have a negative sign in front of them. These
+symbols tell :code:`VPlanet` to output to this parameter to the data files in
+custom units.
+
 .. note::
 
-  Some option arguments (usually those that are positive-definite) can be prepended with a minus sign to force the output into a
-  customized unit. This information can also be found in the help file. In general these "custom units" are
-  tailored to the Sun-Earth system.
+  Some outputs and option arguments (usually those that are positive-definite) can be
+  prepended with a minus sign to force a
+  customized unit. If this functionality is available for an option or
+  output, the `help <https://virtualplanetarylaboratory.github.io/vplanet/help.html>`_
+  (-h or -H) lists the "custom units," which tend to be tailored to the Sun-Earth system.
 
 Finally, we set some :code:`atmesc`-specific parameters. We told the code
-to initialize the planet with one Earth ocean (the minus sign, again, indicates
-custom units) and to compute the water loss using the :code:`lbexact` model
-from `Luger and Barnes (2015) <https://ui.adsabs.harvard.edu/abs/2015AsBio..15..119L/abstract>`.
-Oxygen will be absorbed at the surface instantly, and the XUV absorption efficiency will be calculated
-from the `Bolmont et al. (2016) <https://ui.adsabs.harvard.edu/abs/2017MNRAS.464.3728B/abstract<` model.
+to initialize the planet with one Earth ocean's worth of water (the minus sign, again, indicates
+custom units) and to compute the water loss using the model
+from `Luger and Barnes (2015) <https://ui.adsabs.harvard.edu/abs/2015AsBio..15..119L/abstract>`_
+model and oxygen be absorbed at the surface instantly. The `sWaterLossModel`
+employs the XUV absorption efficiency model from `Bolmont et al. (2016) <https://ui.adsabs.harvard.edu/abs/2017MNRAS.464.3728B/abstract>`_.
 
 
 Running the Code
 ----------------
 
-Now that you understand how the input files work, we are ready to run the code:
+Now that you understand how the input files work, we are ready to run the code!
 
 .. code-block:: bash
 
     vplanet vpl.in
 
 
-Upon running this in a terminal, you may see all sorts of messages printed
+Upon running command this in a terminal, you may see all sorts of messages printed
 to the screen:
 
 
@@ -485,7 +407,7 @@ for the selected modules. The first word
 in many of the log file lines is in parentheses, which indicates the parameter
 can be supplied to saOutputOrder to record the evolution over time.
 
-Next, we will consider the output files, one per body, which are called "forward
+Next, we will consider the output files, one per body, which are often called "forward
 files" or "backwards files". The
 columns in these files correspond to names in the :code:`saOutputOrder`
 option in the corresponding input files. Recall that for the
@@ -532,22 +454,24 @@ Plotting
 With the output generated, it is often convenient to plot the output. While any plotting
 package can be used, the VPLanet team has created a customized tool that enables
 both fast plotting of output, as well as tools to generate publication worthy figures.
-The :code:`vplot` tool (:doc:`docs here <vplot>` XXX Other repo!) can be used to easily visualize the results of
-any :code:`VPLanet` simulation. If you run
+The :code:`vplot` tool (`docs here <https://virtualplanetarylaboratory.github.io/vplot/index.html>`_)
+can be used to easily visualize the results of
+any :code:`VPLanet` simulation. After :code:`VPLanet` finishes, simply run
 
 .. code-block:: bash
 
     vplot
 
 
-in a terminal, you should see the following plot appear:
+for the a plot like the following to appear:
 
 .. figure:: quickstart.png
    :width: 300px
    :align: center
 
 
-Here we see the evolution of the stellar XUV emission, which declines
+:code:`vplot` plot the time series of all the variables from all the bodies
+in a single frame. Here we see the evolution of the stellar XUV emission, which declines
 dramatically after the saturation timescale ends (top); the increase
 in the amount of oxygen in the planet's mantle, which is absorbed from
 the oxygen released from the photolysis of water (center); and
@@ -564,5 +488,5 @@ the :doc:`examples <examples>` directory to see the physics that are currently a
 to generate output and a figure.
 
 Also available are python scripts for generating parameter sweeps and storing the data
-from those sweeps. See :doc:`the parameter sweep guide <parametersweep.rst>`
-guide for more details.
+from those sweeps. See `the parameter sweep guide <parametersweep>`_ for more
+details.

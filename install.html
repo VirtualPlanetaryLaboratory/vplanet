@@ -157,22 +157,26 @@
             
   <section id="installing-vplanet">
 <h1>Installing VPLanet<a class="headerlink" href="#installing-vplanet" title="Permalink to this headline">¶</a></h1>
+<p>VPLanet will run on macOS 10+, most recent Linux distributions, and Windows 10
+(via their free <cite>Ubuntu Linux interface
+&lt;https://www.microsoft.com/en-us/p/ubuntu/9nblggh4msv6?activetab=pivot:overviewtab&gt;`</cite>).
+If you plan on developing VPLanet us the Developers</p>
 <section id="users">
 <h2>Users<a class="headerlink" href="#users" title="Permalink to this headline">¶</a></h2>
-<p>From source:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/VirtualPlanetaryLaboratory/vplanet
-<span class="nb">cd</span> vplanet
-python setup.py install
-</pre></div>
-</div>
-<p>From pip (coming soon):</p>
+<p>You can install VPLanet and its support scripts (vplot, vspace, multiplanet, and
+bigplanet) with a single command line call pip:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m pip install vplanet
 </pre></div>
 </div>
+<p>This will place executables of the most up-to-date, stable versions of these
+codes in your path (after ensuring all dependency checks are satisfied). This
+command will <strong>not</strong> download the repository.</p>
 </section>
 <section id="developers">
 <h2>Developers<a class="headerlink" href="#developers" title="Permalink to this headline">¶</a></h2>
-<p>First time:</p>
+<p>To install VPLanet as a developer, you must clone the repository and then
+install the software. The first time you install VPLanet, use the following
+commands:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/VirtualPlanetaryLaboratory/vplanet
 <span class="nb">cd</span> vplanet
 python setup.py develop
@@ -183,6 +187,17 @@ python setup.py develop
 python setup.py develop
 </pre></div>
 </div>
+<p>XXX Why can’t this be a single command??XX</p>
+<dl class="field-list simple">
+<dt class="field-odd">note:</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<p>If you are running macOS Catalina or later, you may need to force the operating
+system to set the location of C libraries:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">CPATH</span><span class="o">=</span>/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include
+</pre></div>
+</div>
+<p>Thanks to Chris Colose for identifying and solving this problem.</p>
 </section>
 </section>
 

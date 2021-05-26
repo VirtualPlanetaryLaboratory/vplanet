@@ -153,5 +153,5 @@ action they deem appropriate, including a permanent ban from the community.
 Attribution
 -----------
 
-This Code of Conduct is adapted from the Contributor's Covenant v2.0 and
-Microsoft's Open Source Code of Conduct.
+This Code of Conduct is adapted from the Contributor's Covenant v2.0,
+Microsoft's Open Source Code of Conduct, and the N-Body Shop's Code of Conduct.

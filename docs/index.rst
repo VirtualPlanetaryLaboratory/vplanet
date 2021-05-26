@@ -9,6 +9,7 @@ are available in separate repositories.
 .. toctree::
    :maxdepth: 1
 
+   conduct
    install
    quickstart
    help

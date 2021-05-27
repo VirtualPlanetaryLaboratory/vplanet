@@ -1,7 +1,7 @@
 # Planet a parameters
 sName         Earth                     # Body's name
 saModules     magmoc, atmesc                      # Modules to apply, exact spelling required
-cColor        13aed5
+sColor        13aed5
 
 # Physical Properties
 dMass         -1                       # Mass, negative -> Earth masses

@@ -2109,7 +2109,7 @@ void LogBody(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     PrintModuleList(fp, module->iBitSum[iBody], 0);
     fprintf(fp, "\n");
     fprintf(fp, "Module Bit Sum: %d\n", module->iBitSum[iBody]);
-    fprintf(fp, "Color: %s\n", body[iBody].cColor);
+    fprintf(fp, "Color: %s\n", body[iBody].sColor);
     for (iOut = OUTBODYSTART; iOut < OUTEND; iOut++) {
       if (output[iOut].iNum > 0) {
         if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
@@ -2262,7 +2262,7 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
         sprintf(cPoiseGrid, "%s.%s.Climate", system->cName, body[iBody].cName);
 
         if (control->Evolve.dTime == 0 && iLat == 0) {
-          if (body[iBody].bClimateModel == SEA) {
+          if (body[iBody].iClimateModel == SEA) {
             WriteDailyInsol(body, control, &output[iOut], system,
                             &control->Units[iBody], update, iBody, dTmp, cUnit);
             WriteSeasonalTemp(body, control, &output[iOut], system,

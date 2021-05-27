@@ -478,21 +478,21 @@ void ReadClimateModel(BODY *body, CONTROL *control, FILES *files,
     // CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,
     //                 control->Io.iVerbose);
     if (!memcmp(sLower(cTmp), "ann", 3)) {
-      body[iFile - 1].bClimateModel = ANN;
+      body[iFile - 1].iClimateModel = ANN;
     } else if (!memcmp(sLower(cTmp), "sea", 3)) {
-      body[iFile - 1].bClimateModel = SEA;
+      body[iFile - 1].iClimateModel = SEA;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
                 "ERROR: Unknown argument to %s: %s."
-                " Options are ann or sea.\n",
+                " Options are annual or seasonal.\n",
                 options->cName, cTmp);
       }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
-    AssignDefaultInt(options, &body[iFile - 1].bClimateModel,
+    AssignDefaultInt(options, &body[iFile - 1].iClimateModel,
                      files->iNumInputs);
   }
 }
@@ -1173,8 +1173,7 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_COLDSTART]             = &ReadColdStart;
 
   sprintf(options[OPT_FIXICELAT].cName, "dFixIceLat");
-  sprintf(options[OPT_FIXICELAT].cDescr, "Fixes ice line latitude to a set"
-                                         " value");
+  sprintf(options[OPT_FIXICELAT].cDescr, "Force ice cap latitude to this value");
   sprintf(options[OPT_FIXICELAT].cDefault, "None");
   sprintf(options[OPT_FIXICELAT].cDimension, "nd");
   options[OPT_FIXICELAT].dDefault   = 0;
@@ -1192,7 +1191,7 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
 
   sprintf(options[OPT_MEPDIFF].cName, "bMEPDiff");
   sprintf(options[OPT_MEPDIFF].cDescr, "Calculate diffusion from max entropy"
-                                       " production (D=B/4)");
+                                       " production (D=B/4)?");
   sprintf(options[OPT_MEPDIFF].cDefault, "0");
   options[OPT_MEPDIFF].dDefault   = 0;
   options[OPT_MEPDIFF].iType      = 0;
@@ -1203,7 +1202,7 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_HEATCAPANN].cDescr, "Surface heat capacity in annual"
                                           " model");
   sprintf(options[OPT_HEATCAPANN].cDefault, "0.2");
-  sprintf(options[OPT_HEATCAPANN].cDimension, "xxx");
+  sprintf(options[OPT_HEATCAPANN].cDimension, "energy/temperature");
   options[OPT_HEATCAPANN].dDefault   = 0.2;
   options[OPT_HEATCAPANN].iType      = 2;
   options[OPT_HEATCAPANN].bMultiFile = 1;
@@ -1213,14 +1212,14 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_ICEDEPRATE].cDescr, "Deposition rate of ice/snow to form"
                                           " ice sheets");
   sprintf(options[OPT_ICEDEPRATE].cDefault, "2.9e-5");
-  sprintf(options[OPT_ICEDEPRATE].cDimension, "xxx");
+  sprintf(options[OPT_ICEDEPRATE].cDimension, "length/time");
   options[OPT_ICEDEPRATE].dDefault   = 2.9e-5;
   options[OPT_ICEDEPRATE].iType      = 2;
   options[OPT_ICEDEPRATE].bMultiFile = 1;
   fnRead[OPT_ICEDEPRATE]             = &ReadIceDepRate;
 
   sprintf(options[OPT_ICESHEETS].cName, "bIceSheets");
-  sprintf(options[OPT_ICESHEETS].cDescr, "Include ice sheets");
+  sprintf(options[OPT_ICESHEETS].cDescr, "Include ice sheets?");
   sprintf(options[OPT_ICESHEETS].cDefault, "0");
   options[OPT_ICESHEETS].dDefault   = 0;
   options[OPT_ICESHEETS].iType      = 0;
@@ -1230,7 +1229,7 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_INITICELAT].cName, "dInitIceLat");
   sprintf(options[OPT_INITICELAT].cDescr, "Sets initial ice sheet latitude");
   sprintf(options[OPT_INITICELAT].cDefault, "90");
-  sprintf(options[OPT_INITICELAT].cDimension, "xxx");
+  sprintf(options[OPT_INITICELAT].cDimension, "angle");
   options[OPT_INITICELAT].dDefault   = 90.0;
   options[OPT_INITICELAT].iType      = 2;
   options[OPT_INITICELAT].bMultiFile = 1;
@@ -1238,14 +1237,14 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
 
   sprintf(options[OPT_INITICEHEIGHT].cName, "dInitIceHeight");
   sprintf(options[OPT_INITICEHEIGHT].cDescr, "Sets initial ice sheet height");
-  sprintf(options[OPT_INITICEHEIGHT].cDefault, "50"); // XXX 50 what?
-  sprintf(options[OPT_INITICEHEIGHT].cDimension, "xxx");
+  sprintf(options[OPT_INITICEHEIGHT].cDefault, "50"); // 50 meters
+  sprintf(options[OPT_INITICEHEIGHT].cDimension, "length");
   options[OPT_INITICEHEIGHT].dDefault   = 50.0;
   options[OPT_INITICEHEIGHT].iType      = 2;
   options[OPT_INITICEHEIGHT].bMultiFile = 1;
   fnRead[OPT_INITICEHEIGHT]             = &ReadInitIceHeight;
 
-  sprintf(options[OPT_CLIMATEMODEL].cName, "bClimateModel");
+  sprintf(options[OPT_CLIMATEMODEL].cName, "iClimateModel");
   sprintf(options[OPT_CLIMATEMODEL].cDescr, "Use annual or seasonal model");
   sprintf(options[OPT_CLIMATEMODEL].cDefault, "ann");
   options[OPT_CLIMATEMODEL].dDefault   = ANN;
@@ -1263,7 +1262,7 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
 
   sprintf(options[OPT_SKIPSEASENABLED].cName, "bSkipSeasEnabled");
   sprintf(options[OPT_SKIPSEASENABLED].cDescr, "Run annual before seasonal and"
-                                               " allow skip seas");
+                                               " allow skip seas?");
   sprintf(options[OPT_SKIPSEASENABLED].cDefault, "0");
   options[OPT_SKIPSEASENABLED].dDefault   = 0;
   options[OPT_SKIPSEASENABLED].iType      = 0;
@@ -1423,19 +1422,19 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
 
   sprintf(options[OPT_FORCEOBLIQ].cName, "bForceObliq");
   sprintf(options[OPT_FORCEOBLIQ].cDescr, "Force obliquity to evolve"
-                                          " sinusoidally");
+                                          " sinusoidally?");
   sprintf(options[OPT_FORCEOBLIQ].cDefault, "0");
   options[OPT_FORCEOBLIQ].dDefault   = 0;
-  options[OPT_FORCEOBLIQ].iType      = 2;
+  options[OPT_FORCEOBLIQ].iType      = 0;
   options[OPT_FORCEOBLIQ].bMultiFile = 1;
   fnRead[OPT_FORCEOBLIQ]             = &ReadForceObliq;
 
   sprintf(options[OPT_DIFFROT].cName, "bDiffRot");
   sprintf(options[OPT_DIFFROT].cDescr, "Adjust heat diffusion for rotation"
-                                       " rate");
+                                       " rate?");
   sprintf(options[OPT_DIFFROT].cDefault, "0");
   options[OPT_DIFFROT].dDefault   = 0;
-  options[OPT_DIFFROT].iType      = 2;
+  options[OPT_DIFFROT].iType      = 0;
   options[OPT_DIFFROT].bMultiFile = 1;
   fnRead[OPT_DIFFROT]             = &ReadDiffRot;
 
@@ -1459,10 +1458,10 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
 
   sprintf(options[OPT_FORCEECC].cName, "bForceEcc");
   sprintf(options[OPT_FORCEECC].cDescr, "Force Eccentricity to evolve"
-                                        " sinusoidally");
+                                        " sinusoidally?");
   sprintf(options[OPT_FORCEECC].cDefault, "0");
   options[OPT_FORCEECC].dDefault   = 0;
-  options[OPT_FORCEECC].iType      = 2;
+  options[OPT_FORCEECC].iType      = 0;
   options[OPT_FORCEECC].bMultiFile = 1;
   fnRead[OPT_FORCEECC]             = &ReadForceEcc;
 
@@ -1478,7 +1477,7 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
 
   sprintf(options[OPT_ECCPER].cName, "dEccPer");
   sprintf(options[OPT_ECCPER].cDescr, "Period of forced eccentricity oscill");
-  sprintf(options[OPT_ECCPER].cDefault, "50000"); // XXX What units?
+  sprintf(options[OPT_ECCPER].cDefault, "50000"); // !!! What units?
   sprintf(options[OPT_ECCPER].cDimension, "time");
   options[OPT_ECCPER].dDefault   = 50000;
   options[OPT_ECCPER].iType      = 2;
@@ -1486,19 +1485,19 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_ECCPER]             = &ReadEccPer;
 
   sprintf(options[OPT_ACCUMODE].cName, "bAccuracyMode");
-  sprintf(options[OPT_ACCUMODE].cDescr, "Re-invert matrix every EBM time step");
+  sprintf(options[OPT_ACCUMODE].cDescr, "Re-invert matrix every EBM time step?");
   sprintf(options[OPT_ACCUMODE].cDefault, "0");
   options[OPT_ACCUMODE].dDefault   = 0;
-  options[OPT_ACCUMODE].iType      = 2;
+  options[OPT_ACCUMODE].iType      = 0;
   options[OPT_ACCUMODE].bMultiFile = 1;
   fnRead[OPT_ACCUMODE]             = &ReadAccuracyMode;
 
   sprintf(options[OPT_ELEVFB].cName, "bElevFB");
   sprintf(options[OPT_ELEVFB].cDescr, "Use elevation feedback for ice sheet"
-                                      " ablation");
+                                      " ablation?");
   sprintf(options[OPT_ELEVFB].cDefault, "0");
   options[OPT_ELEVFB].dDefault   = 0;
-  options[OPT_ELEVFB].iType      = 2;
+  options[OPT_ELEVFB].iType      = 0;
   options[OPT_ELEVFB].bMultiFile = 1;
   fnRead[OPT_ELEVFB]             = &ReadElevFB;
 
@@ -1578,7 +1577,7 @@ void ReadOptionsPoise(BODY *body, CONTROL *control, FILES *files,
 /******************* Verify POISE ******************/
 void VerifyAlbedo(BODY *body, OPTIONS *options, char cFile[], int iBody,
                   int iVerbose) {
-  if (body[iBody].bClimateModel == ANN) {
+  if (body[iBody].iClimateModel == ANN) {
     /* If all of bColdstart, dFixIceLat, and bAlbedoZA are set, exit */
     if (options[OPT_COLDSTART].iLine[iBody + 1] > -1 &&
         options[OPT_FIXICELAT].iLine[iBody + 1] > -1 &&
@@ -1655,7 +1654,7 @@ void VerifyAlbedo(BODY *body, OPTIONS *options, char cFile[], int iBody,
       // LCOV_EXCL_STOP
     }
 
-  } else if (body[iBody].bClimateModel == SEA) {
+  } else if (body[iBody].iClimateModel == SEA) {
     if (options[OPT_SURFALBEDO].iLine[iBody + 1] > -1) {
       // LCOV_EXCL_START
       if (iVerbose >= VERBERR) {
@@ -1672,7 +1671,7 @@ void VerifyAlbedo(BODY *body, OPTIONS *options, char cFile[], int iBody,
 
 void VerifyIceSheets(BODY *body, OPTIONS *options, char cFile[], int iBody,
                      int iVerbose) {
-  if (body[iBody].bClimateModel == ANN) {
+  if (body[iBody].iClimateModel == ANN) {
     // LCOV_EXCL_START
     if (iVerbose >= VERBERR) {
       fprintf(stderr, "ERROR: Cannot set %s in annual model in File:%s\n",
@@ -1842,7 +1841,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
     body[iBody].dPrecA0 = body[iBody].dPrecA;
   }
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeasEnabled) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeasEnabled) {
     body[iBody].daDiffusionAnn =
           malloc((body[iBody].iNumLats + 1) * sizeof(double));
     body[iBody].daLambdaAnn =
@@ -1932,7 +1931,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
       }
     }
 
-    if (body[iBody].bClimateModel == SEA) {
+    if (body[iBody].iClimateModel == SEA) {
       body[iBody].dSurfAlbedo =
             (body[iBody].dAlbedoLand + body[iBody].dAlbedoWater) / 2.0;
     }
@@ -1945,7 +1944,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
     PoiseAnnual(body, iBody);
   }
 
-  if (body[iBody].bClimateModel == SEA) {
+  if (body[iBody].iClimateModel == SEA) {
     /* oh yeah, seasonal model, oh yeah!
     'tis the season to model ice sheets, fa la la la la, la la la la */
 
@@ -2782,11 +2781,11 @@ void WriteTempLat(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
                   char cUnit[]) {
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
     *dTmp = body[iBody].daTempAnn[body[iBody].iWriteLat];
 
-  } else if (body[iBody].bClimateModel == SEA) {
+  } else if (body[iBody].iClimateModel == SEA) {
 
     *dTmp = body[iBody].daTempAvg[body[iBody].iWriteLat];
   }
@@ -2806,11 +2805,11 @@ void WriteTempMinLat(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                      double *dTmp, char cUnit[]) {
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
     *dTmp = body[iBody].daTempAnn[body[iBody].iWriteLat];
 
-  } else if (body[iBody].bClimateModel == SEA) {
+  } else if (body[iBody].iClimateModel == SEA) {
 
     *dTmp = body[iBody].daTempMinLW[body[iBody].iWriteLat];
   }
@@ -2831,11 +2830,11 @@ void WriteTempMaxLat(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                      double *dTmp, char cUnit[]) {
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
     *dTmp = body[iBody].daTempAnn[body[iBody].iWriteLat];
 
-  } else if (body[iBody].bClimateModel == SEA) {
+  } else if (body[iBody].iClimateModel == SEA) {
 
     *dTmp = body[iBody].daTempMaxLW[body[iBody].iWriteLat];
   }
@@ -2855,11 +2854,11 @@ void WriteTempMaxLand(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                       double *dTmp, char cUnit[]) {
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
     *dTmp = body[iBody].daTempAnn[body[iBody].iWriteLat];
 
-  } else if (body[iBody].bClimateModel == SEA) {
+  } else if (body[iBody].iClimateModel == SEA) {
 
     *dTmp = body[iBody].daTempMaxLand[body[iBody].iWriteLat];
   }
@@ -2879,11 +2878,11 @@ void WriteTempMaxWater(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char cUnit[]) {
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
     *dTmp = body[iBody].daTempAnn[body[iBody].iWriteLat];
 
-  } else if (body[iBody].bClimateModel == SEA) {
+  } else if (body[iBody].iClimateModel == SEA) {
 
     *dTmp = body[iBody].daTempMaxWater[body[iBody].iWriteLat];
   }
@@ -2901,11 +2900,11 @@ void WriteTempLandLat(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                       double *dTmp, char cUnit[]) {
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
     *dTmp = body[iBody].daTempAnn[body[iBody].iWriteLat];
 
-  } else if (body[iBody].bClimateModel == SEA) {
+  } else if (body[iBody].iClimateModel == SEA) {
 
     *dTmp = body[iBody].daTempAvgL[body[iBody].iWriteLat];
   }
@@ -2923,11 +2922,11 @@ void WriteTempWaterLat(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char cUnit[]) {
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
     *dTmp = body[iBody].daTempAnn[body[iBody].iWriteLat];
 
-  } else if (body[iBody].bClimateModel == SEA) {
+  } else if (body[iBody].iClimateModel == SEA) {
 
     *dTmp = body[iBody].daTempAvgW[body[iBody].iWriteLat];
   }
@@ -2963,11 +2962,11 @@ void WriteAlbedoLat(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
     *dTmp = body[iBody].daAlbedoAnn[body[iBody].iWriteLat];
 
-  } else if (body[iBody].bClimateModel == SEA) {
+  } else if (body[iBody].iClimateModel == SEA) {
 
     *dTmp = body[iBody].daAlbedoAvg[body[iBody].iWriteLat];
   }
@@ -2979,11 +2978,11 @@ void WriteAlbedoLandLat(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                         double *dTmp, char cUnit[]) {
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
     *dTmp = body[iBody].daAlbedoAnn[body[iBody].iWriteLat];
 
-  } else if (body[iBody].bClimateModel == SEA) {
+  } else if (body[iBody].iClimateModel == SEA) {
 
     *dTmp = body[iBody].daAlbedoAvgL[body[iBody].iWriteLat];
   }
@@ -2994,11 +2993,11 @@ void WriteAlbedoWaterLat(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
                          int iBody, double *dTmp, char cUnit[]) {
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
     *dTmp = body[iBody].daAlbedoAnn[body[iBody].iWriteLat];
 
-  } else if (body[iBody].bClimateModel == SEA) {
+  } else if (body[iBody].iClimateModel == SEA) {
 
     *dTmp = body[iBody].daAlbedoAvgW[body[iBody].iWriteLat];
   }
@@ -3458,11 +3457,11 @@ void WriteFluxMerid(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
     *dTmp = body[iBody].daFlux[body[iBody].iWriteLat];
 
-  } else if (body[iBody].bClimateModel == SEA) {
+  } else if (body[iBody].iClimateModel == SEA) {
 
     *dTmp = body[iBody].daFluxAvg[body[iBody].iWriteLat];
   }
@@ -3483,11 +3482,11 @@ void WriteFluxIn(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                  UNITS *units, UPDATE *update, int iBody, double *dTmp,
                  char cUnit[]) {
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
     *dTmp = body[iBody].daFluxIn[body[iBody].iWriteLat];
 
-  } else if (body[iBody].bClimateModel == SEA) {
+  } else if (body[iBody].iClimateModel == SEA) {
 
     *dTmp = body[iBody].daFluxInAvg[body[iBody].iWriteLat];
   }
@@ -3507,11 +3506,11 @@ void WriteFluxOut(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
                   char cUnit[]) {
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
     *dTmp = body[iBody].daFluxOut[body[iBody].iWriteLat];
 
-  } else if (body[iBody].bClimateModel == SEA) {
+  } else if (body[iBody].iClimateModel == SEA) {
 
     *dTmp = body[iBody].daFluxOutAvg[body[iBody].iWriteLat];
   }
@@ -3531,9 +3530,9 @@ void WriteDivFlux(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
                   char cUnit[]) {
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeas == 1) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
     *dTmp = body[iBody].daDivFlux[body[iBody].iWriteLat];
-  } else if (body[iBody].bClimateModel == SEA) {
+  } else if (body[iBody].iClimateModel == SEA) {
     *dTmp = body[iBody].daDivFluxAvg[body[iBody].iWriteLat];
   }
   if (output->bDoNeg[iBody]) {
@@ -5065,7 +5064,7 @@ void fvAreaIceCovered(BODY *body, int iBody) {
   body[iBody].dAreaIceCov = 0;
   for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
 
-    if (body[iBody].bClimateModel == SEA) {
+    if (body[iBody].iClimateModel == SEA) {
 
       if (body[iBody].daIceMass[iLat] > 0 ||
           body[iBody].daTempMaxLand[iLat] <= -2.0) {
@@ -5118,7 +5117,7 @@ void ForceBehaviorPoise(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
           body[iBody].dSemi, body[0].dMass + body[iBody].dMass);
     body[iBody].iNDays =
           (int)floor(body[iBody].dRotRate / body[iBody].dMeanMotion);
-    if (body[iBody].bClimateModel == SEA) {
+    if (body[iBody].iClimateModel == SEA) {
 
       VerifyNStepSeasonal(body, iBody);
     }
@@ -5137,8 +5136,8 @@ void ForceBehaviorPoise(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
     }
   }
 
-  if (body[iBody].bClimateModel == ANN || body[iBody].bSkipSeasEnabled) {
-    if (body[iBody].bClimateModel == SEA) {
+  if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeasEnabled) {
+    if (body[iBody].iClimateModel == SEA) {
 
       body[iBody].dSurfAlbedo =
             (body[iBody].dAlbedoLand + body[iBody].dAlbedoWater) / 2.0;
@@ -5147,7 +5146,7 @@ void ForceBehaviorPoise(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
     PoiseAnnual(body, iBody);
   }
 
-  if (body[iBody].bClimateModel == SEA) {
+  if (body[iBody].iClimateModel == SEA) {
 
     if (body[iBody].bSkipSeas == 0) {
       // total change in ice mass this time step
@@ -5192,7 +5191,7 @@ void ForceBehaviorPoise(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
 
           body[iBody].daIceMass[iLat] = 0.0;
         }
-        if (body[iBody].bClimateModel == SEA) {
+        if (body[iBody].iClimateModel == SEA) {
 
           body[iBody].dIceMassTot +=
                 body[iBody].daIceMass[iLat] *
@@ -5407,6 +5406,7 @@ void fvAlbedoAnnual(BODY *body, int iBody) {
                                 sin(body[iBody].daLats[iLat])) -
                            1);
     } else {
+      // !!! Does this next line mean sea ice only freezes it T<-10? Seems cold!
       if (body[iBody].daTempAnn[iLat] <= -10.0) {
         body[iBody].daAlbedoAnn[iLat] = body[iBody].dIceAlbedo;
       } else {

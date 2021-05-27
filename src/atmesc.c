@@ -1123,7 +1123,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_JEANSTIME].cDefault, "1 Gyr");
   sprintf(options[OPT_JEANSTIME].cDimension, "time");
   options[OPT_JEANSTIME].dDefault   = 1.e9 * YEARSEC;
-  options[OPT_JEANSTIME].iType      = 0;
+  options[OPT_JEANSTIME].iType      = 2;
   options[OPT_JEANSTIME].bMultiFile = 1;
   options[OPT_JEANSTIME].dNeg       = 1.e9 * YEARSEC;
   sprintf(options[OPT_JEANSTIME].cNeg, "Gyr");

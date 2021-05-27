@@ -15,17 +15,17 @@ Our Standards
 Examples of behavior that contributes to a positive environment for our
 community include:
 
-  * Demonstrating empathy and kindness toward other people
-  * Being respectful of differing opinions, viewpoints, and experiences
-  * Giving and gracefully accepting constructive feedback
-  * Accepting responsibility, apologizing to those affected by our mistakes, and learning from the experience
-  * Focusing on what is best not just for us as individuals, but for the overall community
+  * Item 1. Demonstrating empathy and kindness toward other people
+  * Item 2. respectful of differing opinions, viewpoints, and experiences
+  * Item 3.  Giving and gracefully accepting constructive feedback
+  * Item 4. Accepting responsibility, apologizing to those affected by our mistakes, and learning from the experience
+  * Item 5. Focusing on what is best not just for us as individuals, but for the overall community
 
 The VPLanet community strives to:
 
-  * Be friendly and patient: Remember you might not be communicating in someone else’s primary spoken or programming language, and others may not have your level of understanding.
-  * Be welcoming: We welcome and support people of all backgrounds and identities. This includes, but is not limited to members of any race, ethnicity, culture, national origin, color, immigration status, social and economic class, educational level, sex, sexual orientation, gender identity and expression, age, size, family status, political belief, religion, and mental and physical ability.
-  * Be respectful: Science is a world-wide community of professionals, and we conduct ourselves professionally. Disagreement is no excuse for poor behavior and poor manners. Disrespectful and unacceptable behavior includes, but is not limited to:
+  #. Be friendly and patient: Remember you might not be communicating in someone else’s primary spoken or programming language, and others may not have your level of understanding.
+  #. Be welcoming: We welcome and support people of all backgrounds and identities. This includes, but is not limited to members of any race, ethnicity, culture, national origin, color, immigration status, social and economic class, educational level, sex, sexual orientation, gender identity and expression, age, size, family status, political belief, religion, and mental and physical ability.
+  #. Be respectful: Science is a world-wide community of professionals, and we conduct ourselves professionally. Disagreement is no excuse for poor behavior and poor manners. Disrespectful and unacceptable behavior includes, but is not limited to:
 
     * Violent threats or language.
     * Discriminatory or derogatory jokes and language.

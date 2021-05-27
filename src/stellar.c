@@ -339,7 +339,7 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_SATXUVFRAC].cDefault, "1e-3");
   sprintf(options[OPT_SATXUVFRAC].cDimension, "nd");
   options[OPT_SATXUVFRAC].dDefault   = 1.e-3;
-  options[OPT_SATXUVFRAC].iType      = 0;
+  options[OPT_SATXUVFRAC].iType      = 2;
   options[OPT_SATXUVFRAC].bMultiFile = 1;
   fnRead[OPT_SATXUVFRAC]             = &ReadSatXUVFrac;
   sprintf(
@@ -368,7 +368,7 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_XUVBETA].cDefault, "1.23");
   sprintf(options[OPT_XUVBETA].cDimension, "nd");
   options[OPT_XUVBETA].dDefault   = 1.23;
-  options[OPT_XUVBETA].iType      = 0;
+  options[OPT_XUVBETA].iType      = 2;
   options[OPT_XUVBETA].bMultiFile = 1;
   fnRead[OPT_XUVBETA]             = &ReadXUVBeta;
   sprintf(options[OPT_XUVBETA].cLongDescr,

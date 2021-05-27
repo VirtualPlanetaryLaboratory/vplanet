@@ -306,7 +306,7 @@ void InitializeOptionsDistOrb(OPTIONS *options, fnReadOption fnRead[]) {
           "Orbit Model: LL2 [2nd order] RD4 [4th order]");
   sprintf(options[OPT_ORBITMODEL].cDefault, "rd4");
   options[OPT_ORBITMODEL].dDefault = RD4;
-  options[OPT_ORBITMODEL].iType    = 1;
+  options[OPT_ORBITMODEL].iType    = 3;
   fnRead[OPT_ORBITMODEL]           = &ReadOrbitModel;
   sprintf(options[OPT_ORBITMODEL].cLongDescr,
           "The secular orbital evolution model used with DistOrb. Option LL2 "

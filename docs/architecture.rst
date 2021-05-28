@@ -2,7 +2,9 @@ VPLanet Architecture
 ====================
 
 This guide describes the fundamental feature of VPLanet's architecture,
-including its flow chart, data structures, and a review of function pointers.
+including its flow chart, data structures, and its framework for model
+comparison. Afterwards, we present a brief introduction to function pointer
+arrays.
 
 VPLanet's Flow Chart
 --------------------
@@ -237,7 +239,21 @@ fnReadOption, fnWriteOutput, and fnUpdate
 fnReadOption and fnWriteOutput are function pointer vectors that contain the
 list of functions for reading in options and writing outputs, respectively.
 fnUpdate is the matrix of function pointers for the derivatives. It is the core
-of VPLanet and is the feature that allows the dynamic assembly of the modules.
+of :code:`VPLanet` and is the feature that allows the dynamic assembly of the modules.
+
+Framework for Model Comparison
+------------------------------
+
+:code:`VPlanet` is designed so that certain model assumptions can be grouped
+together, similar to a macro. Depending on the "model" selected for a given
+module physical and/or orbital parameters of the body will behave differently.
+For example, EqTide module, which computes planetary tides, includes the
+option "sTideModel" with options CPL and CTL, two competing models. With
+:code:`VPlanet`, the user can design experiments that test the assumptions of
+the two tidal models, which are qualitatively different, while holding
+everything constant. Note that not all modules have models.
+
+
 
 Function Pointers
 -----------------

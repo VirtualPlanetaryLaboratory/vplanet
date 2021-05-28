@@ -9,6 +9,7 @@ Please view the following pages for written descriptions of how to:
    Code Architecture <architecture>
    Add an Output <output>
    Add an Option <option>
+   Add a Model <model>
    Add a Primary Variable <primaryvariable>
-   Add a Module <module>
    Coupling Modules <coupling>
+   Add a New Module <module>

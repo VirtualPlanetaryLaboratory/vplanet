@@ -234,8 +234,8 @@ void PrintFileTypes(int iFileType, int bPadString) {
 
 void WriteHelpOption(OPTIONS *options, int bLong) {
   int iChar,iCharsLeft,iPosChar;
-  int iMaxChars=66; // Max # of chars in value field
-  int iMaxHeaderChar = 84; // Max # of chars in header
+  int iMaxChars=65; // Max # of chars in value field
+  int iMaxHeaderChar = 80; // Max # of chars in header
   int iWord,iNumWords,iLineWord,iDescrWord,iLineWordNow,iLine;
   int bFoo; // Dummy for "bContinue" in GetWords
   char cDescription[MAXARRAY][OPTLEN];
@@ -304,7 +304,7 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
 
       // Properties
       printf("+--------------------------------------------------------------------------------------+\n");
-      printf("| %s", options->cName);
+      printf("| **%s**", options->cName);
       for (iPosChar = 0; iPosChar < (iMaxHeaderChar - strlen(options->cName)); iPosChar++) {
         printf(" ");
       }
@@ -339,9 +339,9 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
         }
         // Line is full
         if (iLine == 0) {
-          printf("| Description     | ");
+          printf("| Description     || ");
         } else {
-          printf("|                 | ");
+          printf("|                 || ");
         }
         for (iLineWordNow = 0; iLineWordNow < iLineWord; iLineWordNow++) {
           // write and erase

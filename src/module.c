@@ -783,7 +783,7 @@ void ReadModules(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 
 void PrintModuleList(FILE *file, int iBitSum, int bPadString) {
   int space = 0;
-  int nspaces = 66;
+  int nspaces = 65;
   if (iBitSum & ATMESC) {
     if (space) {
       fprintf(file, " ");
@@ -889,7 +889,7 @@ void PrintModuleList(FILE *file, int iBitSum, int bPadString) {
     nspaces -= strlen("ThermInt");
   }
   if (bPadString) {
-    if (space) 
+    if (space)
       nspaces -= (space - 1);
     for (int i = 0; i < nspaces; i++) {
         printf(" ");

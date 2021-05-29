@@ -100,7 +100,10 @@ extern const double dTINY;
 #define OPTLEN 48        /* Maximum length of an option */
 #define OPTDESCR 128     /* Number of characters in option description */
 #define OPTLONDESCR 2048 /* Number of characters in option long description */
-#define LINE 256         /* Maximum number of characters in a line */
+/* !!! Hack to get long description and module list formatting for Long Help.
+   It'd be better to keep LINE back at 256 for memory, and malloc the char's,
+   but I don't know how to do that. */
+#define LINE 2048         /* Maximum number of characters in a line */
 #define NAMELEN 100
 #define MAXFILES 128 /* Maximum number of input files */
 #define MAXARRAY                                                               \

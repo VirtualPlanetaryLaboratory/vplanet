@@ -309,7 +309,8 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
         printf(" ");
       }
       printf(" |\n");
-      printf("+=================+====================================================================+\n");
+      //printf("+=================+====================================================================+\n");
+      printf("+-----------------+--------------------------------------------------------------------+\n");
 
       // Try Long Description first
       GetWords(options->cLongDescr,cDescription,&iNumWords,&bFoo);

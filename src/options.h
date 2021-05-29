@@ -119,6 +119,8 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
+void GetWords(char cLine[],char[MAXARRAY][OPTLEN],int*,int*);
+
 void InitializeOptions(OPTIONS *, fnReadOption *);
 void ReadOptions(BODY **, CONTROL *, FILES *, MODULE *, OPTIONS *, OUTPUT *,
                  SYSTEM *, UPDATE **, fnReadOption *, char[]);

@@ -233,6 +233,19 @@ void PrintFileTypes(int iFileType, int bPadString) {
 }
 
 void WriteHelpOption(OPTIONS *options, int bLong) {
+  int iChar,iCharsLeft,iPosChar;
+  int iMaxChars=66; // Max # of chars in value field
+  int iMaxHeaderChar = 84; // Max # of chars in header
+  int iWord,iNumWords,iLineWord,iDescrWord,iLineWordNow,iLine;
+  int bFoo; // Dummy for "bContinue" in GetWords
+  char cDescription[MAXARRAY][OPTLEN];
+  char cLine[MAXARRAY][OPTLEN];
+
+  for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
+    memset(cLine[iLineWordNow],'\0',OPTLEN);
+    memset(cDescription[iLineWordNow],'\0',OPTLEN);
+  }
+
   if (memcmp(options->cName, "null", 4)) {
 
     if (bLong == 0) {
@@ -292,14 +305,66 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       // Properties
       printf("+--------------------------------------------------------------------------------------+\n");
       printf("| %s", options->cName);
-      int i;
-      for (i = 0; i < (84 - strlen(options->cName)); i++) {
+      for (iPosChar = 0; iPosChar < (iMaxHeaderChar - strlen(options->cName)); iPosChar++) {
         printf(" ");
       }
       printf(" |\n");
       printf("+=================+====================================================================+\n");
 
-      // Long Description
+      // Try Long Description first
+      GetWords(options->cLongDescr,cDescription,&iNumWords,&bFoo);
+      if (memcmp(cDescription[0], "null", 4) == 0) {
+        // No long description, try short
+        memset(cDescription[0],'\0',OPTLEN);
+        GetWords(options->cDescr,cDescription,&iNumWords,&bFoo);
+      }
+      iCharsLeft = iMaxChars;
+      iWord = 0;  // counter for word in description
+      iLineWord = 0; // counter for word in line
+      iLine = 0;
+
+      while (iWord < iNumWords) {
+        // Extra two is for spaces on either side
+        while (iCharsLeft > iCharsLeft - strlen(cDescription[iWord]) - 2) {
+          strcpy(cLine[iLineWord],cDescription[iWord]);
+          // extra 1 for space
+          iCharsLeft -= (strlen(cLine[iLineWord])+1);
+          iWord++;
+          iLineWord++;
+          if (iWord == iNumWords) {
+            // Hit end of description inside inner loop
+            break;
+          }
+        }
+        // Line is full
+        if (iLine == 0) {
+          printf("| Description     | ");
+        } else {
+          printf("|                 | ");
+        }
+        for (iLineWordNow = 0; iLineWordNow < iLineWord; iLineWordNow++) {
+          // write and erase
+          printf("%s ",cLine[iLineWordNow]);
+        }
+        for (iChar = 0; iChar < iCharsLeft; iChar++) {
+          printf(" ");
+        }
+        printf(" |\n");
+        // Now reset counters
+        iCharsLeft = iMaxChars;
+        for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
+          memset(cLine[iLineWordNow],'\0',OPTLEN);
+        }
+        iLine++;
+        iLineWord = 0;
+      }
+      printf("+-----------------+--------------------------------------------------------------------+\n");
+
+      // Reset description for next time
+      for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
+        memset(cDescription[iLineWordNow],'\0',OPTLEN);
+      }
+
       //  if (memcmp(options->cLongDescr,"null",4)) {
       //     printf("| Overview        |");
       //     char descr = options->cLongDescr;

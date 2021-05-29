@@ -216,17 +216,17 @@ void InitializeControlEvolve(BODY *body, CONTROL *control, MODULE *module,
 void PrintFileTypes(int iFileType, int bPadString) {
   if (iFileType == 0) {
     if (bPadString)
-      printf("Primary Only                                                      ");
+      printf("Primary Only                                                     ");
     else
       printf("Primary Only");
   } else if (iFileType == 1) {
     if (bPadString)
-      printf("Body Only                                                         ");
+      printf("Body Only                                                        ");
     else
       printf("Body Only");
   } else if (iFileType == 2) {
     if (bPadString)
-      printf("Any                                                               ");
+      printf("Any                                                              ");
     else
       printf("Any");
   }
@@ -403,8 +403,8 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
                         "control.c:WriteHelpOption.\n");
         exit(EXIT_UNITS);
       }
-      printf("| Type            | %s", typestr);
-      for (typelen = 0; typelen < (66 - strlen(typestr)); typelen++) {
+      printf("| Type            || %s", typestr);
+      for (typelen = 0; typelen < (iMaxChars - strlen(typestr)); typelen++) {
         printf(" ");
       }
       printf(
@@ -412,9 +412,9 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
 
       // Custom Unit
       if (options->bNeg == 1) {
-        printf("| Custom unit     | %s", options->cNeg);
+        printf("| Custom unit     || %s", options->cNeg);
         int unitlen;
-        for (unitlen = 0; unitlen < (66 - strlen(options->cNeg)); unitlen++) {
+        for (unitlen = 0; unitlen < (iMaxChars - strlen(options->cNeg)); unitlen++) {
           printf(" ");
         }
         printf(" |\n");
@@ -423,9 +423,9 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
 
 
       if (options->iType == 2) {
-        printf("| Dimension(s)    | %s", options->cDimension);
+        printf("| Dimension(s)    || %s", options->cDimension);
         int dimlen;
-        for (dimlen = 0; dimlen < (66 - strlen(options->cDimension));
+        for (dimlen = 0; dimlen < (iMaxChars - strlen(options->cDimension));
              dimlen++) {
           printf(" ");
         }
@@ -436,25 +436,23 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
 
       // Module List
       if (options->iModuleBit) {
-        printf("| Modules         | ");
+        printf("| Modules         || ");
         PrintModuleList(stdout, options->iModuleBit,1);
         printf(" |\n");
       } else {
-        printf("| Modules         | ALL                                                                |\n");
+        printf("| Modules         || ALL                                                               |\n");
       }
       printf("+-----------------+--------------------------------------------------------------------+\n");
 
       // File List
-      printf("| Files           | ");
+      printf("| Files           || ");
       PrintFileTypes(options->iFileType,1);
       printf(" |\n");
       printf("+-----------------+--------------------------------------------------------------------+\n");
 
       // Default Value
-      printf("| Default value   | %s", options->cDefault);
-      int valuelen;
-      char valuelenchar = strlen(options->cDefault);
-      for (valuelen = 0; valuelen < (66 - valuelenchar); valuelen++) {
+      printf("| Default value   || %s", options->cDefault);
+      for (iChar = 0; iChar < (iMaxChars - strlen(options->cDefault)); iChar++) {
         printf(" ");
       }
       printf(
@@ -462,9 +460,9 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
 
       // Allowed Values
       if (memcmp(options->cValues, "null", 4)) {
-        printf("| Allowed values  | %s", options->cValues);
+        printf("| Allowed values  || %s", options->cValues);
         int alvalen;
-        for (alvalen = 0; alvalen < (66 - strlen(options->cValues));
+        for (alvalen = 0; alvalen < (iMaxChars - strlen(options->cValues));
              alvalen++) {
           printf(" ");
         }

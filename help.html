@@ -304,10 +304,13 @@ the same order as listed in saOutputOrder.</p>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bAccuracyMode</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bAccuracyMode</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Re-invert matrix every EBM time step?</p></td>
+<td><div class="line-block">
+<div class="line">Re-invert matrix every EBM time step?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -329,10 +332,13 @@ the same order as listed in saOutputOrder.</p>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bAlbedoZA</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bAlbedoZA</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Use albedo based on zenith angle</p></td>
+<td><div class="line-block">
+<div class="line">Use albedo based on zenith angle</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -354,18 +360,22 @@ the same order as listed in saOutputOrder.</p>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bAtmEscAuto</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bAtmEscAuto</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Let AtmEsc determine the proper atmospheric escape regime for an
-eroding H envelope. If the planetary radius exceeds the Roche
-lobe, the unbound material is assumed to be Bondi-limited and
-mass loss proceeds following Equation 4 from Owen &amp; Wu (2016).
-For planetary radius less than the Roche limit, if the incident
-XUV flux exceeds the critical flux (Equation A25 from Luger et.
-al. 2015), the mass loss is radiation/recombination-limited and
-scales as XUV^0.5. Otherwise, the loss is energy-limited and is
-linearly proportional to the incident XUV flux.</p></td>
+<td><div class="line-block">
+<div class="line">Let AtmEsc determine the proper atmospheric escape regime for</div>
+<div class="line">an eroding H envelope. If the planetary radius exceeds the</div>
+<div class="line">Roche lobe, the unbound material is assumed to be Bondi-limited</div>
+<div class="line">and mass loss proceeds following Equation 4 from Owen &amp; Wu</div>
+<div class="line">(2016). For planetary radius less than the Roche limit, if the</div>
+<div class="line">incident XUV flux exceeds the critical flux (Equation A25 from</div>
+<div class="line">Luger et. al. 2015), the mass loss is</div>
+<div class="line">radiation/recombination-limited and scales as XUV^0.5.</div>
+<div class="line">Otherwise, the loss is energy-limited and is linearly</div>
+<div class="line">proportional to the incident XUV flux.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -387,10 +397,13 @@ linearly proportional to the incident XUV flux.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bCalcAB</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bCalcAB</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Calculate A and B in OLR function, from (T &amp; pCO2)</p></td>
+<td><div class="line-block">
+<div class="line">Calculate A and B in OLR function, from (T &amp; pCO2)</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -412,10 +425,13 @@ linearly proportional to the incident XUV flux.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bColdStart</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bColdStart</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Start from snowball Earth conditions</p></td>
+<td><div class="line-block">
+<div class="line">Start from snowball Earth conditions</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -437,10 +453,13 @@ linearly proportional to the incident XUV flux.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bDiffRot</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bDiffRot</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Adjust heat diffusion for rotation rate?</p></td>
+<td><div class="line-block">
+<div class="line">Adjust heat diffusion for rotation rate?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -462,17 +481,21 @@ linearly proportional to the incident XUV flux.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bDiscreteRot</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bDiscreteRot</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>In the CPL model of EqTide, this option toggles between two ways
-in which the rotation rate behaves once it has damped to
-equilibrium. The rigorous model only has two states: 1:1 and 3:2
-frequency ratios, but this is due to truncation in the solution;
-the equilibrium value is a continuous function of eccentricity.
-If this option is set to 1, then only the 1:1 and 3:2 states are
-availeble, with a boundary at e = sqrt(1/19); if set to 0, the
-rotation rate is (1+9.5e^2) times the mean motion.</p></td>
+<td><div class="line-block">
+<div class="line">In the CPL model of EqTide, this option toggles between two</div>
+<div class="line">ways in which the rotation rate behaves once it has damped to</div>
+<div class="line">equilibrium. The rigorous model only has two states: 1:1 and</div>
+<div class="line">3:2 frequency ratios, but this is due to truncation in the</div>
+<div class="line">solution; the equilibrium value is a continuous function of</div>
+<div class="line">eccentricity. If this option is set to 1, then only the 1:1 and</div>
+<div class="line">3:2 states are availeble, with a boundary at e = sqrt(1/19); if</div>
+<div class="line">set to 0, the rotation rate is (1+9.5e^2) times the mean</div>
+<div class="line">motion.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -494,10 +517,13 @@ rotation rate is (1+9.5e^2) times the mean motion.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bDoBackward</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bDoBackward</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Do Backward Integration?</p></td>
+<td><div class="line-block">
+<div class="line">Do Backward Integration?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -519,10 +545,13 @@ rotation rate is (1+9.5e^2) times the mean motion.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bDoForward</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bDoForward</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Do Forward Integration?</p></td>
+<td><div class="line-block">
+<div class="line">Do Forward Integration?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -544,10 +573,13 @@ rotation rate is (1+9.5e^2) times the mean motion.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bDoLog</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bDoLog</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Write Log File?</p></td>
+<td><div class="line-block">
+<div class="line">Write Log File?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -569,10 +601,13 @@ rotation rate is (1+9.5e^2) times the mean motion.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bElevFB</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bElevFB</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Use elevation feedback for ice sheet ablation?</p></td>
+<td><div class="line-block">
+<div class="line">Use elevation feedback for ice sheet ablation?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -594,10 +629,13 @@ rotation rate is (1+9.5e^2) times the mean motion.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bEnvTides</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bEnvTides</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Include effects of gaseous envelope tides?</p></td>
+<td><div class="line-block">
+<div class="line">Include effects of gaseous envelope tides?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -619,11 +657,14 @@ rotation rate is (1+9.5e^2) times the mean motion.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bEvolveRG</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bEvolveRG</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Set this flag to 0 to ignore the role of mass concentration in
-stellar evolution. Only useful for testing purposes.</p></td>
+<td><div class="line-block">
+<div class="line">Set this flag to 0 to ignore the role of mass concentration in</div>
+<div class="line">stellar evolution. Only useful for testing purposes.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -645,14 +686,17 @@ stellar evolution. Only useful for testing purposes.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bFixOrbit</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bFixOrbit</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>In EqTide, setting this value to 1 holds the eccentricity and
-semi-major axis fixed during the evolution. This option can be
-helpful for testing or for faking planet-planet perturbations
-that maintain an eccentricity. (Although a bFixEcc option would
-probably be better!)</p></td>
+<td><div class="line-block">
+<div class="line">In EqTide, setting this value to 1 holds the eccentricity and</div>
+<div class="line">semi-major axis fixed during the evolution. This option can be</div>
+<div class="line">helpful for testing or for faking planet-planet perturbations</div>
+<div class="line">that maintain an eccentricity. (Although a bFixEcc option would</div>
+<div class="line">probably be better!)</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -674,10 +718,13 @@ probably be better!)</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bForceEcc</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bForceEcc</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Force Eccentricity to evolve sinusoidally?</p></td>
+<td><div class="line-block">
+<div class="line">Force Eccentricity to evolve sinusoidally?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -699,20 +746,23 @@ probably be better!)</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bForceEqSpin</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bForceEqSpin</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Set this option to 1 to force the rotation rate to the
-equilibrium tidal value in EqTide. If set to 0, the rotation
-rate may “bounce” back and forth across the equilibrium value
-due to numerical issues. Setting to 0 may result in a simulation
-that requires orders of magnitude more computational time. The
-threshold to force the equilibrium value is set by dMaxLockDiff,
-but the rotation rate will only be fixed if the derivative on
-the other side of the equilibrium value send the spin rate
-toward equilibrium. This latter functionality enables pre-MS
-stars to not tidally lock if the torque due to contraction
-exceeds the tidal torque.</p></td>
+<td><div class="line-block">
+<div class="line">Set this option to 1 to force the rotation rate to the</div>
+<div class="line">equilibrium tidal value in EqTide. If set to 0, the rotation</div>
+<div class="line">rate may “bounce” back and forth across the equilibrium value</div>
+<div class="line">due to numerical issues. Setting to 0 may result in a</div>
+<div class="line">simulation that requires orders of magnitude more computational</div>
+<div class="line">time. The threshold to force the equilibrium value is set by</div>
+<div class="line">dMaxLockDiff, but the rotation rate will only be fixed if the</div>
+<div class="line">derivative on the other side of the equilibrium value send the</div>
+<div class="line">spin rate toward equilibrium. This latter functionality enables</div>
+<div class="line">pre-MS stars to not tidally lock if the torque due to</div>
+<div class="line">contraction exceeds the tidal torque.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -734,10 +784,13 @@ exceeds the tidal torque.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bForceObliq</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bForceObliq</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Force obliquity to evolve sinusoidally?</p></td>
+<td><div class="line-block">
+<div class="line">Force obliquity to evolve sinusoidally?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -759,12 +812,15 @@ exceeds the tidal torque.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bForcePrecRate</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bForcePrecRate</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>In DisRot, set the axial precession rate to a fixed value. This
-option can mimic the forcing of a natural satellite, or be used
-for testing.</p></td>
+<td><div class="line-block">
+<div class="line">In DisRot, set the axial precession rate to a fixed value. This</div>
+<div class="line">option can mimic the forcing of a natural satellite, or be used</div>
+<div class="line">for testing.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -786,10 +842,13 @@ for testing.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bGalacTides</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bGalacTides</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Include galactic tides</p></td>
+<td><div class="line-block">
+<div class="line">Include galactic tides</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -811,10 +870,13 @@ for testing.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bGRCorr</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bGRCorr</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Use general relativity correction</p></td>
+<td><div class="line-block">
+<div class="line">Use general relativity correction</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -836,10 +898,13 @@ for testing.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHadley</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHadley</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Enable Hadley circulation</p></td>
+<td><div class="line-block">
+<div class="line">Enable Hadley circulation</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -861,10 +926,13 @@ for testing.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltAllPlanetsDesicc</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltAllPlanetsDesicc</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt when all planets desiccated?</p></td>
+<td><div class="line-block">
+<div class="line">Halt when all planets desiccated?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -886,10 +954,13 @@ for testing.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltAllPlanetsSolid</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltAllPlanetsSolid</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt when all planets solidified?</p></td>
+<td><div class="line-block">
+<div class="line">Halt when all planets solidified?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -911,10 +982,13 @@ for testing.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltAtmDesiSurfCool</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltAtmDesiSurfCool</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt when atmosphere desiccated and surface below 1000K?</p></td>
+<td><div class="line-block">
+<div class="line">Halt when atmosphere desiccated and surface below 1000K?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -936,11 +1010,15 @@ for testing.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltCloseEnc</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltCloseEnc</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt the code if the apocenter of an interior planets is less
-than 4 mutual Hill radii from the pericenter of an outer planet.</p></td>
+<td><div class="line-block">
+<div class="line">Halt the code if the apocenter of an interior planets is less</div>
+<div class="line">than 4 mutual Hill radii from the pericenter of an outer</div>
+<div class="line">planet.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -962,10 +1040,13 @@ than 4 mutual Hill radii from the pericenter of an outer planet.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltDblSync</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltDblSync</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt at Double Synchronous State?</p></td>
+<td><div class="line-block">
+<div class="line">Halt at Double Synchronous State?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -987,12 +1068,15 @@ than 4 mutual Hill radii from the pericenter of an outer planet.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltEndBaraffeGrid</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltEndBaraffeGrid</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>The BARRAFFE stellar model will only compute parameters until
-the end of the main sequence. Setting this flag to 1 will halt
-the code if the end of the model grid is reached.</p></td>
+<td><div class="line-block">
+<div class="line">The BARRAFFE stellar model will only compute parameters until</div>
+<div class="line">the end of the main sequence. Setting this flag to 1 will halt</div>
+<div class="line">the code if the end of the model grid is reached.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1014,10 +1098,13 @@ the code if the end of the model grid is reached.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltEnterHabZone</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltEnterHabZone</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt when planet enters habitable zone?</p></td>
+<td><div class="line-block">
+<div class="line">Halt when planet enters habitable zone?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1039,10 +1126,13 @@ the code if the end of the model grid is reached.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltEnvelopeGone</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltEnvelopeGone</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt When Envelope Evaporates?</p></td>
+<td><div class="line-block">
+<div class="line">Halt When Envelope Evaporates?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1064,11 +1154,14 @@ the code if the end of the model grid is reached.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltHillStab</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltHillStab</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>If two planets come within the Hill stability criterion, the
-code willhalt if this parameter is set</p></td>
+<td><div class="line-block">
+<div class="line">If two planets come within the Hill stability criterion, the</div>
+<div class="line">code willhalt if this parameter is set</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1090,10 +1183,13 @@ code willhalt if this parameter is set</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltHolmanUnstable</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltHolmanUnstable</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt when CBP is Holman-Wiegert Unstable?</p></td>
+<td><div class="line-block">
+<div class="line">Halt when CBP is Holman-Wiegert Unstable?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1115,10 +1211,13 @@ code willhalt if this parameter is set</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltMantleMeltFracLow</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltMantleMeltFracLow</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt when mantle mostly solidified?</p></td>
+<td><div class="line-block">
+<div class="line">Halt when mantle mostly solidified?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1140,10 +1239,13 @@ code willhalt if this parameter is set</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltMantleSolidified</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltMantleSolidified</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt when mantle solidified?</p></td>
+<td><div class="line-block">
+<div class="line">Halt when mantle solidified?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1165,10 +1267,13 @@ code willhalt if this parameter is set</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltMerge</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltMerge</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt at Merge</p></td>
+<td><div class="line-block">
+<div class="line">Halt at Merge</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1190,10 +1295,13 @@ code willhalt if this parameter is set</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltPosDeDt</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltPosDeDt</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt if de/dt &gt; 0?</p></td>
+<td><div class="line-block">
+<div class="line">Halt if de/dt &gt; 0?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1215,10 +1323,13 @@ code willhalt if this parameter is set</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltRocheLobe</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltRocheLobe</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt when Roche lobe crossing occurs?</p></td>
+<td><div class="line-block">
+<div class="line">Halt when Roche lobe crossing occurs?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1240,10 +1351,13 @@ code willhalt if this parameter is set</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltSurfaceDesiccated</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltSurfaceDesiccated</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt at Desiccation?</p></td>
+<td><div class="line-block">
+<div class="line">Halt at Desiccation?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1265,10 +1379,13 @@ code willhalt if this parameter is set</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltSyncRot</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltSyncRot</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt if the rotation becomes syncrhonous?</p></td>
+<td><div class="line-block">
+<div class="line">Halt if the rotation becomes syncrhonous?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1290,10 +1407,13 @@ code willhalt if this parameter is set</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHaltTideLock</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHaltTideLock</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt if Tide-Locked?</p></td>
+<td><div class="line-block">
+<div class="line">Halt if Tide-Locked?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1315,10 +1435,13 @@ code willhalt if this parameter is set</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bHostBinary</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bHostBinary</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Include 3 body interactions with binary star</p></td>
+<td><div class="line-block">
+<div class="line">Include 3 body interactions with binary star</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1340,10 +1463,13 @@ code willhalt if this parameter is set</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bIceSheets</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bIceSheets</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Include ice sheets?</p></td>
+<td><div class="line-block">
+<div class="line">Include ice sheets?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1365,12 +1491,15 @@ code willhalt if this parameter is set</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bInstantO2Sink</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bInstantO2Sink</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>If set to 1, then all oxygen released by photolysis is
-immediately removed from the atmosphere. This mimics rapid
-surface oxidation.</p></td>
+<td><div class="line-block">
+<div class="line">If set to 1, then all oxygen released by photolysis is</div>
+<div class="line">immediately removed from the atmosphere. This mimics rapid</div>
+<div class="line">surface oxidation.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1392,10 +1521,13 @@ surface oxidation.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bInvPlane</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bInvPlane</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Convert input coordinates to invariable plane coordinates</p></td>
+<td><div class="line-block">
+<div class="line">Convert input coordinates to invariable plane coordinates</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1417,10 +1549,13 @@ surface oxidation.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bMantleTides</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bMantleTides</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Include effects of mantle tides?</p></td>
+<td><div class="line-block">
+<div class="line">Include effects of mantle tides?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1442,10 +1577,13 @@ surface oxidation.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bMEPDiff</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bMEPDiff</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Calculate diffusion from max entropy production (D=B/4)?</p></td>
+<td><div class="line-block">
+<div class="line">Calculate diffusion from max entropy production (D=B/4)?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1467,10 +1605,13 @@ surface oxidation.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bOceanTides</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bOceanTides</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Include tidal dissapation due to oceans?</p></td>
+<td><div class="line-block">
+<div class="line">Include tidal dissapation due to oceans?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1492,10 +1633,13 @@ surface oxidation.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bOptManQuasiSol</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bOptManQuasiSol</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Solidify when melt frac = 0.4?</p></td>
+<td><div class="line-block">
+<div class="line">Solidify when melt frac = 0.4?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1517,10 +1661,13 @@ surface oxidation.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bOutputEigen</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bOutputEigen</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Output Eigenvalues?</p></td>
+<td><div class="line-block">
+<div class="line">Output Eigenvalues?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1542,10 +1689,13 @@ surface oxidation.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bOutputEnc</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bOutputEnc</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Output stellar encounter information?</p></td>
+<td><div class="line-block">
+<div class="line">Output stellar encounter information?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1567,14 +1717,17 @@ surface oxidation.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bOutputLapl</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bOutputLapl</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Write special files that contain the eigenvalues and
-eigenvectors of the system with DistOrb. In the LL2 solution,
-these are already computed. In the RD4 solution, they are
-computed at time of output. These can be useful for
-interpretating results.</p></td>
+<td><div class="line-block">
+<div class="line">Write special files that contain the eigenvalues and</div>
+<div class="line">eigenvectors of the system with DistOrb. In the LL2 solution,</div>
+<div class="line">these are already computed. In the RD4 solution, they are</div>
+<div class="line">computed at time of output. These can be useful for</div>
+<div class="line">interpretating results.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1596,11 +1749,14 @@ interpretating results.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bOverrideMaxEcc</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bOverrideMaxEcc</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Override default maximum eccentricity (MAXORBDISTORB) in
-DistOrb?</p></td>
+<td><div class="line-block">
+<div class="line">Override default maximum eccentricity (MAXORBDISTORB) in</div>
+<div class="line">DistOrb?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1622,10 +1778,13 @@ DistOrb?</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bOverwrite</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bOverwrite</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Permit file overwrite?</p></td>
+<td><div class="line-block">
+<div class="line">Permit file overwrite?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1647,10 +1806,13 @@ DistOrb?</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bRadialMigr</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bRadialMigr</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Use radial migration?</p></td>
+<td><div class="line-block">
+<div class="line">Use radial migration?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1672,12 +1834,15 @@ DistOrb?</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bReadOrbitData</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bReadOrbitData</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Rather than calculate orbital evolution with DistOrb or
-SpiNBody, users may read in a previously run simulation. See
-sFileOrbitData for more information.</p></td>
+<td><div class="line-block">
+<div class="line">Rather than calculate orbital evolution with DistOrb or</div>
+<div class="line">SpiNBody, users may read in a previously run simulation. See</div>
+<div class="line">sFileOrbitData for more information.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1699,10 +1864,13 @@ sFileOrbitData for more information.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bReadOrbitOblData</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bReadOrbitOblData</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Read in orbital and obliquity data and use with poise</p></td>
+<td><div class="line-block">
+<div class="line">Read in orbital and obliquity data and use with poise</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1724,12 +1892,15 @@ sFileOrbitData for more information.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bRossbyCut</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bRossbyCut</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Van Saders, J. et al. (2019, ApJ, 872, 128) find that when the
-stellar Rossby number exceeds 2.08, then the magnetic braking is
-quenched. This flag enforces that behavior.</p></td>
+<td><div class="line-block">
+<div class="line">Van Saders, J. et al. (2019, ApJ, 872, 128) find that when the</div>
+<div class="line">stellar Rossby number exceeds 2.08, then the magnetic braking</div>
+<div class="line">is quenched. This flag enforces that behavior.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1751,10 +1922,13 @@ quenched. This flag enforces that behavior.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bSeaIceModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bSeaIceModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>model sea ice dynamics and heat flow?</p></td>
+<td><div class="line-block">
+<div class="line">model sea ice dynamics and heat flow?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1776,10 +1950,13 @@ quenched. This flag enforces that behavior.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bSkipSeasEnabled</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bSkipSeasEnabled</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Run annual before seasonal and allow skip seas?</p></td>
+<td><div class="line-block">
+<div class="line">Run annual before seasonal and allow skip seas?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1801,10 +1978,13 @@ quenched. This flag enforces that behavior.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bStellarEnc</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bStellarEnc</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Model stellar encounters?</p></td>
+<td><div class="line-block">
+<div class="line">Model stellar encounters?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1826,12 +2006,16 @@ quenched. This flag enforces that behavior.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bStopWaterLossInHZ</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bStopWaterLossInHZ</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>If set to 1, then all water photolysis and hydrogen escape will
-not occur for a planet in the habitable zone, defined to be when
-the instellation .is less than the runaway greenhouse threshold.</p></td>
+<td><div class="line-block">
+<div class="line">If set to 1, then all water photolysis and hydrogen escape will</div>
+<div class="line">not occur for a planet in the habitable zone, defined to be</div>
+<div class="line">when the instellation .is less than the runaway greenhouse</div>
+<div class="line">threshold.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1853,10 +2037,13 @@ the instellation .is less than the runaway greenhouse threshold.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bTimeEvolVelDisp</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bTimeEvolVelDisp</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Scale velocity dispersion of stars with sqrt(t)?</p></td>
+<td><div class="line-block">
+<div class="line">Scale velocity dispersion of stars with sqrt(t)?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1878,16 +2065,19 @@ the instellation .is less than the runaway greenhouse threshold.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bUseBondiLimited</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bUseBondiLimited</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Force the atmospheric erosion of a H envelope to be
-Bondi-limited where the mass loss is regulated by the sound
-speed at the sonic point following Equation 4 from Owen &amp; Wu
-(2016). Note we compute the sound speed by assuming an
-isothermal atmosphere composed of diatomic hydrogen and that the
-local temperature is set by the local blackbody equlibrium
-temperature (Owen &amp; Wu 2016, Equation 2).</p></td>
+<td><div class="line-block">
+<div class="line">Force the atmospheric erosion of a H envelope to be</div>
+<div class="line">Bondi-limited where the mass loss is regulated by the sound</div>
+<div class="line">speed at the sonic point following Equation 4 from Owen &amp; Wu</div>
+<div class="line">(2016). Note we compute the sound speed by assuming an</div>
+<div class="line">isothermal atmosphere composed of diatomic hydrogen and that</div>
+<div class="line">the local temperature is set by the local blackbody equlibrium</div>
+<div class="line">temperature (Owen &amp; Wu 2016, Equation 2).</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1909,12 +2099,15 @@ temperature (Owen &amp; Wu 2016, Equation 2).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bUseEnergyLimited</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bUseEnergyLimited</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Force the atmospheric erosion of a H envelope to be
-energy-limited, i.e. the mass loss is directly proportional to
-the incident XUV flux (Equation 5 from Luger et al. (2015)).</p></td>
+<td><div class="line-block">
+<div class="line">Force the atmospheric erosion of a H envelope to be</div>
+<div class="line">energy-limited, i.e. the mass loss is directly proportional to</div>
+<div class="line">the incident XUV flux (Equation 5 from Luger et al. (2015)).</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1936,10 +2129,13 @@ the incident XUV flux (Equation 5 from Luger et al. (2015)).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bUseOrbParams</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bUseOrbParams</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Flag to use orbital parameters as inputs</p></td>
+<td><div class="line-block">
+<div class="line">Flag to use orbital parameters as inputs</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1961,13 +2157,16 @@ the incident XUV flux (Equation 5 from Luger et al. (2015)).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bUseRRLimited</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bUseRRLimited</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Force the atmospheric erosion of a H envelope to be
-radiation/recombination-limited, i.e. the mass loss is directly
-proportional to the sqrt of the incident XUV flux (Equation 13
-from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
+<td><div class="line-block">
+<div class="line">Force the atmospheric erosion of a H envelope to be</div>
+<div class="line">radiation/recombination-limited, i.e. the mass loss is directly</div>
+<div class="line">proportional to the sqrt of the incident XUV flux (Equation 13</div>
+<div class="line">from Luger et al. (2015) and Murray-Clay et al. (2009).</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -1989,10 +2188,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bUseTidalRadius</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bUseTidalRadius</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Fix radius used for CPL tidal equations?</p></td>
+<td><div class="line-block">
+<div class="line">Fix radius used for CPL tidal equations?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -2014,10 +2216,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>bVarDt</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>bVarDt</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Use variable timestep?</p></td>
+<td><div class="line-block">
+<div class="line">Use variable timestep?</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -2039,10 +2244,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d232ThMassCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d232ThMassCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Mass of 232Th</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Mass of 232Th</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2067,10 +2275,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d232ThMassCrust</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d232ThMassCrust</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Crust Mass of 232Th</p></td>
+<td><div class="line-block">
+<div class="line">Initial Crust Mass of 232Th</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2095,10 +2306,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d232ThMassMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d232ThMassMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Mass of 232Th</p></td>
+<td><div class="line-block">
+<div class="line">Initial Mass of 232Th</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2123,10 +2337,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d232ThNumCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d232ThNumCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Number of 232Th Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Number of 232Th Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2151,10 +2368,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d232ThNumCrust</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d232ThNumCrust</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Crust Number of 232Th Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Crust Number of 232Th Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2179,10 +2399,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d232ThNumMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d232ThNumMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Number of 232Th Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Number of 232Th Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2207,10 +2430,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d232ThPowerCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d232ThPowerCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Power Production from 232Th Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Power Production from 232Th Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2235,10 +2461,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d232ThPowerCrust</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d232ThPowerCrust</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Crust Power Production from 232Th Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Crust Power Production from 232Th Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2263,10 +2492,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d232ThPowerMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d232ThPowerMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Power Production from 232Th Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Power Production from 232Th Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2291,10 +2523,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d235UMassCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d235UMassCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Mass of 235U</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Mass of 235U</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2319,10 +2554,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d235UMassCrust</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d235UMassCrust</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Crust Mass of 235U</p></td>
+<td><div class="line-block">
+<div class="line">Initial Crust Mass of 235U</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2347,10 +2585,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d235UMassMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d235UMassMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Mass of 235U</p></td>
+<td><div class="line-block">
+<div class="line">Initial Mass of 235U</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2375,10 +2616,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d235UNumCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d235UNumCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Number of 235U Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Number of 235U Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2403,10 +2647,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d235UNumCrust</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d235UNumCrust</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Crust Number of 235U Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Crust Number of 235U Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2431,10 +2678,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d235UNumMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d235UNumMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Number of 235U Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Number of 235U Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2459,10 +2709,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d235UPowerCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d235UPowerCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Power Production from 235U Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Power Production from 235U Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2487,10 +2740,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d235UPowerCrust</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d235UPowerCrust</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Crust Power Production from 235U Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Crust Power Production from 235U Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2515,10 +2771,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d235UPowerMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d235UPowerMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Power Production from 235U Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Power Production from 235U Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2543,10 +2802,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d238UMassCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d238UMassCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Mass of 238U</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Mass of 238U</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2571,10 +2833,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d238UMassCrust</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d238UMassCrust</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Crust Mass of 238U</p></td>
+<td><div class="line-block">
+<div class="line">Initial Crust Mass of 238U</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2599,10 +2864,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d238UMassMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d238UMassMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Mass of 238U</p></td>
+<td><div class="line-block">
+<div class="line">Initial Mass of 238U</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2627,10 +2895,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d238UNumCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d238UNumCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Number of 238U Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Number of 238U Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2655,10 +2926,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d238UNumCrust</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d238UNumCrust</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Crust Number of 238U Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Crust Number of 238U Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2683,10 +2957,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d238UNumMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d238UNumMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Number of 238U Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Number of 238U Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2711,10 +2988,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d238UPowerCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d238UPowerCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Power Production from 238U Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Power Production from 238U Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2739,10 +3019,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d238UPowerCrust</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d238UPowerCrust</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Crust Power Production from 238U Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Crust Power Production from 238U Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2767,10 +3050,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d238UPowerMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d238UPowerMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Power Production from 238U Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Power Production from 238U Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2795,10 +3081,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d26AlMassCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d26AlMassCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Mass of 26Al</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Mass of 26Al</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2823,10 +3112,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d26AlMassMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d26AlMassMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Mantle Mass of 26Al</p></td>
+<td><div class="line-block">
+<div class="line">Initial Mantle Mass of 26Al</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2851,10 +3143,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d26AlNumCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d26AlNumCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Number of 26Al Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Number of 26Al Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2879,10 +3174,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d26AlNumMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d26AlNumMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Mantle Number of 26Al Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Mantle Number of 26Al Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2907,10 +3205,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d26AlPowerCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d26AlPowerCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Power Production from 26Al Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Power Production from 26Al Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2935,10 +3236,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d26AlPowerMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d26AlPowerMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Mantle Power Production from 26Al Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Mantle Power Production from 26Al Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2963,10 +3267,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d40KMassCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d40KMassCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Mass of 40K</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Mass of 40K</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -2991,10 +3298,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d40KMassCrust</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d40KMassCrust</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Crust Mass of 40K</p></td>
+<td><div class="line-block">
+<div class="line">Initial Crust Mass of 40K</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3019,10 +3329,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d40KMassMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d40KMassMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Mantle Mass of 40K</p></td>
+<td><div class="line-block">
+<div class="line">Initial Mantle Mass of 40K</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3047,10 +3360,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d40KNumCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d40KNumCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Number of 40K Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Number of 40K Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3075,10 +3391,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d40KNumCrust</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d40KNumCrust</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Crust Number of 40K Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Crust Number of 40K Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3103,10 +3422,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d40KNumMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d40KNumMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Mantle Number of 40K Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Mantle Number of 40K Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3131,10 +3453,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d40KPowerCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d40KPowerCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Power Production from 40K Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Power Production from 40K Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3159,10 +3484,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d40KPowerCrust</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d40KPowerCrust</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Crust Power Production from 40K Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Crust Power Production from 40K Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3187,10 +3515,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>d40KPowerMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>d40KPowerMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Mantle Power Production from 40K Atoms</p></td>
+<td><div class="line-block">
+<div class="line">Initial Mantle Power Production from 40K Atoms</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3215,10 +3546,13 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dAblateFF</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dAblateFF</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Ice ablation fudge factor</p></td>
+<td><div class="line-block">
+<div class="line">Ice ablation fudge factor</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3243,12 +3577,15 @@ from Luger et al. (2015) and Murray-Clay et al. (2009).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dActViscMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dActViscMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Mantle viscosity activation energy, E_nu in eq (159) of Barnes
-et al (2020). Physically it is a measure of how sensitive
-viscosity is to temperature.</p></td>
+<td><div class="line-block">
+<div class="line">Mantle viscosity activation energy, E_nu in eq (159) of Barnes</div>
+<div class="line">et al (2020). Physically it is a measure of how sensitive</div>
+<div class="line">viscosity is to temperature.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3273,10 +3610,13 @@ viscosity is to temperature.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dAdJumpC2CMB</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dAdJumpC2CMB</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Adiabatic temp jump from ave core to CMB</p></td>
+<td><div class="line-block">
+<div class="line">Adiabatic temp jump from ave core to CMB</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3301,11 +3641,14 @@ viscosity is to temperature.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dAdJumpM2LM</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dAdJumpM2LM</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Constant used to relate TLMan to TMan (TLMan=AdJumpM2LM*TMan),
-analogous to AdJumpM2UM.</p></td>
+<td><div class="line-block">
+<div class="line">Constant used to relate TLMan to TMan (TLMan=AdJumpM2LM*TMan),</div>
+<div class="line">analogous to AdJumpM2UM.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3330,11 +3673,14 @@ analogous to AdJumpM2UM.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dAdJumpM2UM</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dAdJumpM2UM</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Constant used to relate TUMan to TMan (TUMan=AdJumpM2UM*TMan),
-eta_UM below eq (8) in Driscoll &amp; Bercovici (2014).</p></td>
+<td><div class="line-block">
+<div class="line">Constant used to relate TUMan to TMan (TUMan=AdJumpM2UM*TMan),</div>
+<div class="line">eta_UM below eq (8) in Driscoll &amp; Bercovici (2014).</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3359,10 +3705,13 @@ eta_UM below eq (8) in Driscoll &amp; Bercovici (2014).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dAge</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dAge</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>System Age</p></td>
+<td><div class="line-block">
+<div class="line">System Age</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3390,10 +3739,13 @@ eta_UM below eq (8) in Driscoll &amp; Bercovici (2014).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dAlbedoGlobal</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dAlbedoGlobal</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Globally averaged albedo</p></td>
+<td><div class="line-block">
+<div class="line">Globally averaged albedo</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3418,10 +3770,13 @@ eta_UM below eq (8) in Driscoll &amp; Bercovici (2014).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dAlbedoLand</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dAlbedoLand</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>albedo of dry land</p></td>
+<td><div class="line-block">
+<div class="line">albedo of dry land</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3446,10 +3801,13 @@ eta_UM below eq (8) in Driscoll &amp; Bercovici (2014).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dAlbedoWater</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dAlbedoWater</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>albedo of open water</p></td>
+<td><div class="line-block">
+<div class="line">albedo of open water</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3474,10 +3832,13 @@ eta_UM below eq (8) in Driscoll &amp; Bercovici (2014).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dAtmGasConst</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dAtmGasConst</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Atmospheric Gas Constant</p></td>
+<td><div class="line-block">
+<div class="line">Atmospheric Gas Constant</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3502,11 +3863,14 @@ eta_UM below eq (8) in Driscoll &amp; Bercovici (2014).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dAtmXAbsEffH</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dAtmXAbsEffH</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>XUV absoprtion efficiency parameter, epsilon_{XUV}, in Eq. (A1)
-in Barnes et al. (2019). Must lie in the range [0,1].</p></td>
+<td><div class="line-block">
+<div class="line">XUV absoprtion efficiency parameter, epsilon_{XUV}, in Eq. (A1)</div>
+<div class="line">in Barnes et al. (2019). Must lie in the range [0,1].</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3531,12 +3895,15 @@ in Barnes et al. (2019). Must lie in the range [0,1].</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dAtmXAbsEffH2O</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dAtmXAbsEffH2O</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>XUV absoprtion efficiency parameter for water vapor as defined
-in Luger &amp; Barnes (2015, AsBio, 15, 57). Must lie in range
-[0,1].</p></td>
+<td><div class="line-block">
+<div class="line">XUV absoprtion efficiency parameter for water vapor as defined</div>
+<div class="line">in Luger &amp; Barnes (2015, AsBio, 15, 57). Must lie in range</div>
+<div class="line">[0,1].</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3561,11 +3928,14 @@ in Luger &amp; Barnes (2015, AsBio, 15, 57). Must lie in range
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dCBPM0</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dCBPM0</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Circumbinary planet initial mean anomaly for use in the BINARY
-module</p></td>
+<td><div class="line-block">
+<div class="line">Circumbinary planet initial mean anomaly for use in the BINARY</div>
+<div class="line">module</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3590,10 +3960,13 @@ module</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dCBPPsi</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dCBPPsi</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Circumbinary planet initial R, phi oscillation phase angle</p></td>
+<td><div class="line-block">
+<div class="line">Circumbinary planet initial R, phi oscillation phase angle</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3618,10 +3991,13 @@ module</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dCBPZeta</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dCBPZeta</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Circumbinary planet initial z oscillation phase angle</p></td>
+<td><div class="line-block">
+<div class="line">Circumbinary planet initial z oscillation phase angle</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3646,10 +4022,13 @@ module</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dCO2MassMOAtm</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dCO2MassMOAtm</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial CO2 mass in the system</p></td>
+<td><div class="line-block">
+<div class="line">Initial CO2 mass in the system</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3674,14 +4053,17 @@ module</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dCosObl</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dCosObl</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Planet formation simulations predict that an isotropic
-distribution of rotational angular momentum vectors is a typical
-outcome. This result is identical to a uniform distribution in
-cosine obliquity. Use this option to sample a realistic
-distribution of initial obliquities.</p></td>
+<td><div class="line-block">
+<div class="line">Planet formation simulations predict that an isotropic</div>
+<div class="line">distribution of rotational angular momentum vectors is a</div>
+<div class="line">typical outcome. This result is identical to a uniform</div>
+<div class="line">distribution in cosine obliquity. Use this option to sample a</div>
+<div class="line">realistic distribution of initial obliquities.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3706,13 +4088,17 @@ distribution of initial obliquities.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dDAdCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dDAdCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Length scale for core iron adiabatic temperature profile, D_N in
-eq (174) of Barnes et al (2020). It determines the curvature of
-the core iron adiabat as a function of radius so that smaller
-values cause the core adiabat to drop faster with radius.</p></td>
+<td><div class="line-block">
+<div class="line">Length scale for core iron adiabatic temperature profile, D_N</div>
+<div class="line">in eq (174) of Barnes et al (2020). It determines the curvature</div>
+<div class="line">of the core iron adiabat as a function of radius so that</div>
+<div class="line">smaller values cause the core adiabat to drop faster with</div>
+<div class="line">radius.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3737,10 +4123,13 @@ values cause the core adiabat to drop faster with radius.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dDepthMO</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dDepthMO</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial depth of the magma ocean</p></td>
+<td><div class="line-block">
+<div class="line">Initial depth of the magma ocean</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3765,14 +4154,17 @@ values cause the core adiabat to drop faster with radius.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dDfcrit</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dDfcrit</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>When running DistOrb with other modules that modify the
-semi-major axis, set his argument to be the maximum relative
-change in the Laplace coefficients before recalculating the
-values. Setting this value to be low can cause the simulation to
-run very slowly, with negligible gain in accuracy.</p></td>
+<td><div class="line-block">
+<div class="line">When running DistOrb with other modules that modify the</div>
+<div class="line">semi-major axis, set his argument to be the maximum relative</div>
+<div class="line">change in the Laplace coefficients before recalculating the</div>
+<div class="line">values. Setting this value to be low can cause the simulation</div>
+<div class="line">to run very slowly, with negligible gain in accuracy.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3797,10 +4189,13 @@ run very slowly, with negligible gain in accuracy.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dDiffusion</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dDiffusion</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Heat diffusion coefficient</p></td>
+<td><div class="line-block">
+<div class="line">Heat diffusion coefficient</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3825,10 +4220,13 @@ run very slowly, with negligible gain in accuracy.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dDMDensity</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dDMDensity</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Local dark matter density</p></td>
+<td><div class="line-block">
+<div class="line">Local dark matter density</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3853,12 +4251,15 @@ run very slowly, with negligible gain in accuracy.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dDTChiRef</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dDTChiRef</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Core liquidus (melting temperature) depression due to the
-presence of light elements in the core. See eq (175) in Barnes
-et al (2020).</p></td>
+<td><div class="line-block">
+<div class="line">Core liquidus (melting temperature) depression due to the</div>
+<div class="line">presence of light elements in the core. See eq (175) in Barnes</div>
+<div class="line">et al (2020).</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3883,10 +4284,13 @@ et al (2020).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dEcc</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dEcc</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Orbital Eccentricity</p></td>
+<td><div class="line-block">
+<div class="line">Orbital Eccentricity</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3911,10 +4315,13 @@ et al (2020).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dEccAmp</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dEccAmp</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Amplitude of forced eccentricity oscill</p></td>
+<td><div class="line-block">
+<div class="line">Amplitude of forced eccentricity oscill</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3939,10 +4346,13 @@ et al (2020).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dEccPer</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dEccPer</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Period of forced eccentricity oscill</p></td>
+<td><div class="line-block">
+<div class="line">Period of forced eccentricity oscill</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3967,10 +4377,13 @@ et al (2020).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dElecCondCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dElecCondCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Electrical conductivity of core</p></td>
+<td><div class="line-block">
+<div class="line">Electrical conductivity of core</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -3995,10 +4408,13 @@ et al (2020).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dEncounterRad</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dEncounterRad</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Radius at which stellar encounters occur</p></td>
+<td><div class="line-block">
+<div class="line">Radius at which stellar encounters occur</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4023,10 +4439,13 @@ et al (2020).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dEnvelopeMass</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dEnvelopeMass</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Envelope Mass</p></td>
+<td><div class="line-block">
+<div class="line">Initial Envelope Mass</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4051,11 +4470,14 @@ et al (2020).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dEruptEff</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dEruptEff</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Fraction of heat in mantle melt that escapes to the surface. See
-eq (187) in Barnes et al (2020).</p></td>
+<td><div class="line-block">
+<div class="line">Fraction of heat in mantle melt that escapes to the surface.</div>
+<div class="line">See eq (187) in Barnes et al (2020).</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4080,12 +4502,15 @@ eq (187) in Barnes et al (2020).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dEta</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dEta</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>The timestep will be set to dEta times the smallest
-instantaneous timescale, i.e. min(x/(dx/dt) where x represents
-the primary variables.</p></td>
+<td><div class="line-block">
+<div class="line">The timestep will be set to dEta times the smallest</div>
+<div class="line">instantaneous timescale, i.e. min(x/(dx/dt) where x represents</div>
+<div class="line">the primary variables.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4110,10 +4535,13 @@ the primary variables.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dFixIceLat</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dFixIceLat</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Force ice cap latitude to this value</p></td>
+<td><div class="line-block">
+<div class="line">Force ice cap latitude to this value</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4138,12 +4566,15 @@ the primary variables.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dFixMeltfactorUMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dFixMeltfactorUMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Boolean: 1 tells the code to used a fixed upper mantle viscosity
-melt factor, 0 tells the code to compute it from the local
-temperature (default).</p></td>
+<td><div class="line-block">
+<div class="line">Boolean: 1 tells the code to used a fixed upper mantle</div>
+<div class="line">viscosity melt factor, 0 tells the code to compute it from the</div>
+<div class="line">local temperature (default).</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4168,10 +4599,13 @@ temperature (default).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dFlowTemp</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dFlowTemp</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Temperature of the hydrodynamic flow</p></td>
+<td><div class="line-block">
+<div class="line">Temperature of the hydrodynamic flow</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4196,11 +4630,14 @@ temperature (default).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dFreeEcc</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dFreeEcc</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>The free eccentricity of a circumbinary planet with the BINARY
-module. Must be in the range [0,1).</p></td>
+<td><div class="line-block">
+<div class="line">The free eccentricity of a circumbinary planet with the BINARY</div>
+<div class="line">module. Must be in the range [0,1).</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4225,11 +4662,14 @@ module. Must be in the range [0,1).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dFreeInc</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dFreeInc</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>The free inclination of a circumbinary planet with the BINARY
-module. Must be in the range [0,pi).</p></td>
+<td><div class="line-block">
+<div class="line">The free inclination of a circumbinary planet with the BINARY</div>
+<div class="line">module. Must be in the range [0,pi).</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4254,10 +4694,13 @@ module. Must be in the range [0,pi).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dFrzTSeaIce</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dFrzTSeaIce</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Temp of sea ice formation in seasonal model</p></td>
+<td><div class="line-block">
+<div class="line">Temp of sea ice formation in seasonal model</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4282,10 +4725,13 @@ module. Must be in the range [0,pi).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dGalacDensity</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dGalacDensity</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Density of galactic environment</p></td>
+<td><div class="line-block">
+<div class="line">Density of galactic environment</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4310,10 +4756,13 @@ module. Must be in the range [0,pi).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dGasDensity</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dGasDensity</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Local ISM density</p></td>
+<td><div class="line-block">
+<div class="line">Local ISM density</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4338,10 +4787,13 @@ module. Must be in the range [0,pi).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHalt232ThPower</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHalt232ThPower</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Minimum 232Th Power</p></td>
+<td><div class="line-block">
+<div class="line">Minimum 232Th Power</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4366,10 +4818,13 @@ module. Must be in the range [0,pi).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHalt235UPower</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHalt235UPower</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Minimum 235U Power</p></td>
+<td><div class="line-block">
+<div class="line">Minimum 235U Power</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4394,10 +4849,13 @@ module. Must be in the range [0,pi).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHalt238UPower</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHalt238UPower</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Minimum 238U Power</p></td>
+<td><div class="line-block">
+<div class="line">Minimum 238U Power</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4422,10 +4880,13 @@ module. Must be in the range [0,pi).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHalt40KPower</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHalt40KPower</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Minimum 40K Power</p></td>
+<td><div class="line-block">
+<div class="line">Minimum 40K Power</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4450,10 +4911,13 @@ module. Must be in the range [0,pi).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHaltMaxEcc</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHaltMaxEcc</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Maximum eccentricity value that halts ntegration</p></td>
+<td><div class="line-block">
+<div class="line">Maximum eccentricity value that halts ntegration</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4478,19 +4942,22 @@ module. Must be in the range [0,pi).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHaltMaxMutualInc</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHaltMaxMutualInc</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>The execution halts when dHaltMaxMutualInc is reached. The
-mutual (or relative) inclination is the value of the angle
-between the orbital angular momentum vector of two bodies. If
-set to 0, then the mutual inclination will not be checked every
-timestep for halts, i.e. the code should run faster. For DistOrb
-calculations with the RD4 null model, mutual inclinations above
-35.00 degrees, especially if the eccentricities are significant,
-should be interpreted cautiously. For the DistOrb-null model,
-values above 10.00 degrees are suspect. SpiNBody is accurate for
-any value.</p></td>
+<td><div class="line-block">
+<div class="line">The execution halts when dHaltMaxMutualInc is reached. The</div>
+<div class="line">mutual (or relative) inclination is the value of the angle</div>
+<div class="line">between the orbital angular momentum vector of two bodies. If</div>
+<div class="line">set to 0, then the mutual inclination will not be checked every</div>
+<div class="line">timestep for halts, i.e. the code should run faster. For</div>
+<div class="line">DistOrb calculations with the RD4 null model, mutual</div>
+<div class="line">inclinations above 35.00 degrees, especially if the</div>
+<div class="line">eccentricities are significant, should be interpreted</div>
+<div class="line">cautiously. For the DistOrb-null model, values above 10.00</div>
+<div class="line">degrees are suspect. SpiNBody is accurate for any value.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4515,10 +4982,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHaltMinEcc</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHaltMinEcc</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Minimum Eccentricity Value that Halts Integration</p></td>
+<td><div class="line-block">
+<div class="line">Minimum Eccentricity Value that Halts Integration</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4543,10 +5013,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHaltMinObl</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHaltMinObl</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Minimum Obliquity Value that Halts Integration</p></td>
+<td><div class="line-block">
+<div class="line">Minimum Obliquity Value that Halts Integration</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4571,10 +5044,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHaltMinSemi</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHaltMinSemi</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Minimum Semi-Major Axis Value that Halts Integration</p></td>
+<td><div class="line-block">
+<div class="line">Minimum Semi-Major Axis Value that Halts Integration</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4602,10 +5078,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHaltMinTCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHaltMinTCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt at Minimum Core Temperature</p></td>
+<td><div class="line-block">
+<div class="line">Halt at Minimum Core Temperature</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4630,10 +5109,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHaltMinTMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHaltMinTMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Halt at Minimum Mantle Temperature</p></td>
+<td><div class="line-block">
+<div class="line">Halt at Minimum Mantle Temperature</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4658,10 +5140,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHaltRadPower</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHaltRadPower</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Minimum Total Radgiogenic Power</p></td>
+<td><div class="line-block">
+<div class="line">Minimum Total Radgiogenic Power</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4686,10 +5171,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHeatCapAnn</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHeatCapAnn</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Surface heat capacity in annual model</p></td>
+<td><div class="line-block">
+<div class="line">Surface heat capacity in annual model</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4714,10 +5202,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHeatCapLand</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHeatCapLand</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Land heat capacity in seasonal model</p></td>
+<td><div class="line-block">
+<div class="line">Land heat capacity in seasonal model</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4742,10 +5233,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHeatCapWater</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHeatCapWater</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Water heat capacity per meter in seasonal model</p></td>
+<td><div class="line-block">
+<div class="line">Water heat capacity per meter in seasonal model</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4770,10 +5264,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHostBinArgP</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHostBinArgP</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Arg periapse of host binary</p></td>
+<td><div class="line-block">
+<div class="line">Arg periapse of host binary</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4798,10 +5295,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHostBinEcc</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHostBinEcc</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>eccentricity of host binary</p></td>
+<td><div class="line-block">
+<div class="line">eccentricity of host binary</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4826,10 +5326,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHostBinInc</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHostBinInc</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>inclination of host binary</p></td>
+<td><div class="line-block">
+<div class="line">inclination of host binary</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4854,10 +5357,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHostBinLongA</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHostBinLongA</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Long of ascending node of host binary</p></td>
+<td><div class="line-block">
+<div class="line">Long of ascending node of host binary</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4882,10 +5388,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHostBinMass1</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHostBinMass1</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>mass of larger host binary star</p></td>
+<td><div class="line-block">
+<div class="line">mass of larger host binary star</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4910,10 +5419,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dHostBinSemi</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dHostBinSemi</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Semi-major of host binary</p></td>
+<td><div class="line-block">
+<div class="line">Semi-major of host binary</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4938,10 +5450,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dIceAlbedo</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dIceAlbedo</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Albedo of ice</p></td>
+<td><div class="line-block">
+<div class="line">Albedo of ice</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4966,10 +5481,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dIceDepRate</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dIceDepRate</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Deposition rate of ice/snow to form ice sheets</p></td>
+<td><div class="line-block">
+<div class="line">Deposition rate of ice/snow to form ice sheets</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -4994,10 +5512,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dImK2ManOrbModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dImK2ManOrbModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>ImK2Man model to use in orbital equations (1=ImK2(T), 2=k2/Q(T)</p></td>
+<td><div class="line-block">
+<div class="line">ImK2Man model to use in orbital equations (1=ImK2(T), 2=k2/Q(T)</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5022,10 +5543,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dInitIceHeight</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dInitIceHeight</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Sets initial ice sheet height</p></td>
+<td><div class="line-block">
+<div class="line">Sets initial ice sheet height</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5050,10 +5574,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dInitIceLat</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dInitIceLat</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Sets initial ice sheet latitude</p></td>
+<td><div class="line-block">
+<div class="line">Sets initial ice sheet latitude</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5078,10 +5605,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dJeansTime</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dJeansTime</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Time at which flow transitions to Jeans escape</p></td>
+<td><div class="line-block">
+<div class="line">Time at which flow transitions to Jeans escape</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5106,10 +5636,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dK2</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dK2</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Love Number of Degree 2</p></td>
+<td><div class="line-block">
+<div class="line">Love Number of Degree 2</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5134,10 +5667,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dLandFrac</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dLandFrac</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Fraction of land on the planetary surface</p></td>
+<td><div class="line-block">
+<div class="line">Fraction of land on the planetary surface</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5162,10 +5698,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dLapseR</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dLapseR</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Dry adiabatic lapse rate (for elev feedback)</p></td>
+<td><div class="line-block">
+<div class="line">Dry adiabatic lapse rate (for elev feedback)</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5190,10 +5729,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dLL13K0</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dLL13K0</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Lee+Leung 2013 Radial Epicyclic Frequency</p></td>
+<td><div class="line-block">
+<div class="line">Lee+Leung 2013 Radial Epicyclic Frequency</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5218,10 +5760,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dLL13N0</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dLL13N0</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Lee+Leung 2013 Mean Motion</p></td>
+<td><div class="line-block">
+<div class="line">Lee+Leung 2013 Mean Motion</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5246,10 +5791,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dLL13PhiAB</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dLL13PhiAB</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Binary Initial Mean Anomaly for use in the BINARY module</p></td>
+<td><div class="line-block">
+<div class="line">Binary Initial Mean Anomaly for use in the BINARY module</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5274,10 +5822,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dLL13V0</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dLL13V0</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Lee+Leung 2013 Radial Epicyclic Frequency</p></td>
+<td><div class="line-block">
+<div class="line">Lee+Leung 2013 Radial Epicyclic Frequency</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5302,10 +5853,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dLuminosity</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dLuminosity</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Luminosity</p></td>
+<td><div class="line-block">
+<div class="line">Initial Luminosity</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5330,10 +5884,13 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dLXUV</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dLXUV</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Total XUV Luminosity – Unsupported!</p></td>
+<td><div class="line-block">
+<div class="line">Total XUV Luminosity – Unsupported!</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5358,11 +5915,14 @@ any value.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dMagMomCoef</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dMagMomCoef</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Coefficient in front of magnetic moment scaling law, gamma_d in
-eq (192) in Barnes et al (2020).</p></td>
+<td><div class="line-block">
+<div class="line">Coefficient in front of magnetic moment scaling law, gamma_d in</div>
+<div class="line">eq (192) in Barnes et al (2020).</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5387,12 +5947,15 @@ eq (192) in Barnes et al (2020).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dManHFlowPref</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dManHFlowPref</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Coefficient in front of HflowUMan, value can be anything. If
-StagLid&gt;0 then ManHFlowPref=HFLOWREDUCTSTAG. Otherwise default
-behavior is 1.</p></td>
+<td><div class="line-block">
+<div class="line">Coefficient in front of HflowUMan, value can be anything. If</div>
+<div class="line">StagLid&gt;0 then ManHFlowPref=HFLOWREDUCTSTAG. Otherwise default</div>
+<div class="line">behavior is 1.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5417,10 +5980,13 @@ behavior is 1.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dManMeltDensity</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dManMeltDensity</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Density of the molten mantle</p></td>
+<td><div class="line-block">
+<div class="line">Density of the molten mantle</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5445,10 +6011,13 @@ behavior is 1.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dMass</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dMass</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Mass</p></td>
+<td><div class="line-block">
+<div class="line">Mass</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5476,10 +6045,13 @@ behavior is 1.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dMassFracFeOIni</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dMassFracFeOIni</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Mass Fraction of FeO in the mantle</p></td>
+<td><div class="line-block">
+<div class="line">Initial Mass Fraction of FeO in the mantle</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5504,13 +6076,16 @@ behavior is 1.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dMaxLockDiff</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dMaxLockDiff</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>In EqTide, this is the maximum relative difference between the
-actual spin rate and the equilibrium spin rate without tidal
-locking. See bForceEqSpin for more information. bForceEqSpin
-must be set to 1 to enable this option.</p></td>
+<td><div class="line-block">
+<div class="line">In EqTide, this is the maximum relative difference between the</div>
+<div class="line">actual spin rate and the equilibrium spin rate without tidal</div>
+<div class="line">locking. See bForceEqSpin for more information. bForceEqSpin</div>
+<div class="line">must be set to 1 to enable this option.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5535,10 +6110,13 @@ must be set to 1 to enable this option.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dMeanA</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dMeanA</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Mean anomaly</p></td>
+<td><div class="line-block">
+<div class="line">Mean anomaly</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5563,10 +6141,13 @@ must be set to 1 to enable this option.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dMeanMotion</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dMeanMotion</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Orbital Mean Motion</p></td>
+<td><div class="line-block">
+<div class="line">Orbital Mean Motion</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5594,13 +6175,16 @@ must be set to 1 to enable this option.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dMeltfactorLMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dMeltfactorLMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Use to fix the lower mantle viscosity melt factor, defined as
-epsilon_phase in eq (159,160) of Barnes et al (2020). Note that
-this is an option. Default behavior is to compute this factor
-from the local temperature.</p></td>
+<td><div class="line-block">
+<div class="line">Use to fix the lower mantle viscosity melt factor, defined as</div>
+<div class="line">epsilon_phase in eq (159,160) of Barnes et al (2020). Note that</div>
+<div class="line">this is an option. Default behavior is to compute this factor</div>
+<div class="line">from the local temperature.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5625,13 +6209,16 @@ from the local temperature.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dMeltfactorUMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dMeltfactorUMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Use to fix the upper mantle viscosity melt factor, defined as
-epsilon_phase in eq (159,160) of Barnes et al (2020). Note that
-this is an option. Default behavior is to compute this factor
-from the local temperature.</p></td>
+<td><div class="line-block">
+<div class="line">Use to fix the upper mantle viscosity melt factor, defined as</div>
+<div class="line">epsilon_phase in eq (159,160) of Barnes et al (2020). Note that</div>
+<div class="line">this is an option. Default behavior is to compute this factor</div>
+<div class="line">from the local temperature.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5656,10 +6243,13 @@ from the local temperature.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dMinEnvelopeMass</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dMinEnvelopeMass</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Minimum Envelope Mass</p></td>
+<td><div class="line-block">
+<div class="line">Minimum Envelope Mass</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5684,14 +6274,17 @@ from the local temperature.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dMinIceSheetHeight</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dMinIceSheetHeight</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>The minimum thickness of permanent ice in a latitude bin for it
-to be labeled ice-covered. In some cases, such as rapid thawing,
-a latituden can have a very low value of ice height, primarily
-for numerical reasons. Parameter forces unphysically small
-values of the ice height to be ignored.</p></td>
+<td><div class="line-block">
+<div class="line">The minimum thickness of permanent ice in a latitude bin for it</div>
+<div class="line">to be labeled ice-covered. In some cases, such as rapid</div>
+<div class="line">thawing, a latituden can have a very low value of ice height,</div>
+<div class="line">primarily for numerical reasons. Parameter forces unphysically</div>
+<div class="line">small values of the ice height to be ignored.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5716,10 +6309,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dMinStellarApproach</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dMinStellarApproach</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Minimum close approach distance to primary</p></td>
+<td><div class="line-block">
+<div class="line">Minimum close approach distance to primary</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5744,10 +6340,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dMinSurfWaterMass</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dMinSurfWaterMass</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Minimum Surface Water Mass</p></td>
+<td><div class="line-block">
+<div class="line">Minimum Surface Water Mass</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5772,10 +6371,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dMinValue</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dMinValue</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Minimum Non-Zero Value of Eccentricity and Obliquities</p></td>
+<td><div class="line-block">
+<div class="line">Minimum Non-Zero Value of Eccentricity and Obliquities</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5800,10 +6402,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dMixingDepth</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dMixingDepth</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Mixing depth of ocean in seasonal model</p></td>
+<td><div class="line-block">
+<div class="line">Mixing depth of ocean in seasonal model</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5828,10 +6433,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dNuLandWater</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dNuLandWater</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Coefficient of land-ocean heat flux</p></td>
+<td><div class="line-block">
+<div class="line">Coefficient of land-ocean heat flux</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5856,10 +6464,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dObliqAmp</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dObliqAmp</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Amplitude of forced obliquity oscill</p></td>
+<td><div class="line-block">
+<div class="line">Amplitude of forced obliquity oscill</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5884,10 +6495,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dObliqPer</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dObliqPer</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Period of forced obliquity oscill</p></td>
+<td><div class="line-block">
+<div class="line">Period of forced obliquity oscill</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5912,10 +6526,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dObliquity</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dObliquity</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Obliquity</p></td>
+<td><div class="line-block">
+<div class="line">Obliquity</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5940,10 +6557,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dOrbPeriod</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dOrbPeriod</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Orbital Period</p></td>
+<td><div class="line-block">
+<div class="line">Orbital Period</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -5971,10 +6591,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dOutputTime</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dOutputTime</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Output Interval</p></td>
+<td><div class="line-block">
+<div class="line">Output Interval</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6002,10 +6625,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dOxygenMantleMass</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dOxygenMantleMass</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Oxygen Mass in the Mantle</p></td>
+<td><div class="line-block">
+<div class="line">Initial Oxygen Mass in the Mantle</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6030,10 +6656,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dOxygenMass</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dOxygenMass</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>The initial oxygen mass in the atmosphere.</p></td>
+<td><div class="line-block">
+<div class="line">The initial oxygen mass in the atmosphere.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6058,10 +6687,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dpCO2</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dpCO2</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Partial pressure of CO2 in atmosphere</p></td>
+<td><div class="line-block">
+<div class="line">Partial pressure of CO2 in atmosphere</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6086,10 +6718,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dPositionXSpiNBody</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dPositionXSpiNBody</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>X position of the body</p></td>
+<td><div class="line-block">
+<div class="line">X position of the body</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6114,10 +6749,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dPositionYSpiNBody</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dPositionYSpiNBody</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Y position of the body</p></td>
+<td><div class="line-block">
+<div class="line">Y position of the body</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6142,10 +6780,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dPositionZSpiNBody</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dPositionZSpiNBody</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Z position of the body</p></td>
+<td><div class="line-block">
+<div class="line">Z position of the body</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6170,10 +6811,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dPrecRate</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dPrecRate</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Fixed rate of axial precession (angle/s)</p></td>
+<td><div class="line-block">
+<div class="line">Fixed rate of axial precession (angle/s)</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6198,10 +6842,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dPresSWind</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dPresSWind</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Stellar Wind Pressure at body</p></td>
+<td><div class="line-block">
+<div class="line">Stellar Wind Pressure at body</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6226,10 +6873,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dPresXUV</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dPresXUV</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Pressure at base of thermosphere</p></td>
+<td><div class="line-block">
+<div class="line">Pressure at base of thermosphere</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6254,10 +6904,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dRadGyra</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dRadGyra</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Radius of Gyration; moment of inertia constant</p></td>
+<td><div class="line-block">
+<div class="line">Radius of Gyration; moment of inertia constant</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6282,10 +6935,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dRadius</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dRadius</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Radius</p></td>
+<td><div class="line-block">
+<div class="line">Radius</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6313,10 +6969,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dRefHeight</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dRefHeight</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Reference height of atmos temp (for elev feedback)</p></td>
+<td><div class="line-block">
+<div class="line">Reference height of atmos temp (for elev feedback)</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6341,10 +7000,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dRForm</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dRForm</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Galactic formation radius</p></td>
+<td><div class="line-block">
+<div class="line">Galactic formation radius</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6369,10 +7031,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dRotPeriod</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dRotPeriod</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Rotation Period</p></td>
+<td><div class="line-block">
+<div class="line">Rotation Period</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6400,10 +7065,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dRotRate</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dRotRate</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Rotational Angular Frequency</p></td>
+<td><div class="line-block">
+<div class="line">Rotational Angular Frequency</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6431,10 +7099,13 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dRotVel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dRotVel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Rotational Velocity</p></td>
+<td><div class="line-block">
+<div class="line">Rotational Velocity</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6462,13 +7133,16 @@ values of the ice height to be ignored.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dSatXUVFrac</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dSatXUVFrac</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>After formation stars emit a nearly constant amount of XUV
-radiation for a time called the “saturated” phase. This
-parameter sets that value relative to the total (bolometric)
-luminosity. Must lie in range [0,1].</p></td>
+<td><div class="line-block">
+<div class="line">After formation stars emit a nearly constant amount of XUV</div>
+<div class="line">radiation for a time called the “saturated” phase. This</div>
+<div class="line">parameter sets that value relative to the total (bolometric)</div>
+<div class="line">luminosity. Must lie in range [0,1].</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6493,10 +7167,13 @@ luminosity. Must lie in range [0,1].</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dSatXUVTime</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dSatXUVTime</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>The time a star will remain in its “saturated” phase.</p></td>
+<td><div class="line-block">
+<div class="line">The time a star will remain in its “saturated” phase.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Bool</p></td>
@@ -6518,10 +7195,13 @@ luminosity. Must lie in range [0,1].</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dSeaIceConduct</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dSeaIceConduct</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Heat conductivity of sea ice</p></td>
+<td><div class="line-block">
+<div class="line">Heat conductivity of sea ice</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6546,10 +7226,13 @@ luminosity. Must lie in range [0,1].</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dSeasOutputTime</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dSeasOutputTime</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Output interval for seasonal parameters</p></td>
+<td><div class="line-block">
+<div class="line">Output interval for seasonal parameters</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6574,10 +7257,13 @@ luminosity. Must lie in range [0,1].</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dSemi</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dSemi</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Semi-Major Axis</p></td>
+<td><div class="line-block">
+<div class="line">Semi-Major Axis</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6605,12 +7291,15 @@ luminosity. Must lie in range [0,1].</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dShModRef</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dShModRef</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Reference kinematic mantle shear modulus coefficient, mu_ref in
-eq (160) of Barnes et al (2020). Analogous to reference
-viscosity ViscRef.</p></td>
+<td><div class="line-block">
+<div class="line">Reference kinematic mantle shear modulus coefficient, mu_ref in</div>
+<div class="line">eq (160) of Barnes et al (2020). Analogous to reference</div>
+<div class="line">viscosity ViscRef.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6635,10 +7324,13 @@ viscosity ViscRef.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dSpecMomInertia</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dSpecMomInertia</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Specific moment of inertia of polar axis</p></td>
+<td><div class="line-block">
+<div class="line">Specific moment of inertia of polar axis</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6663,10 +7355,13 @@ viscosity ViscRef.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dSpinUpTol</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dSpinUpTol</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Tolerance for spin up phase</p></td>
+<td><div class="line-block">
+<div class="line">Tolerance for spin up phase</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6691,10 +7386,13 @@ viscosity ViscRef.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dStagLid</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dStagLid</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Stagnant Lid Switch</p></td>
+<td><div class="line-block">
+<div class="line">Stagnant Lid Switch</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6719,10 +7417,13 @@ viscosity ViscRef.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dStarScaleL</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dStarScaleL</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Stellar radial scale length in MW</p></td>
+<td><div class="line-block">
+<div class="line">Stellar radial scale length in MW</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6747,10 +7448,13 @@ viscosity ViscRef.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dStiffness</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dStiffness</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Effective stiffness of mantle</p></td>
+<td><div class="line-block">
+<div class="line">Effective stiffness of mantle</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6775,10 +7479,13 @@ viscosity ViscRef.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dStopTime</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dStopTime</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Integration Stop Time</p></td>
+<td><div class="line-block">
+<div class="line">Integration Stop Time</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6806,10 +7513,13 @@ viscosity ViscRef.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dSurfAlbedo</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dSurfAlbedo</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Albedo of (ice-free) surface</p></td>
+<td><div class="line-block">
+<div class="line">Albedo of (ice-free) surface</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6834,10 +7544,13 @@ viscosity ViscRef.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dSurfTemp</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dSurfTemp</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial surface temp</p></td>
+<td><div class="line-block">
+<div class="line">Initial surface temp</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6862,10 +7575,13 @@ viscosity ViscRef.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dSurfWaterMass</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dSurfWaterMass</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Surface Water Mass</p></td>
+<td><div class="line-block">
+<div class="line">Initial Surface Water Mass</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6890,10 +7606,13 @@ viscosity ViscRef.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dSyncEcc</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dSyncEcc</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Minimum Eccentricity for Non-Synchronous Rotation</p></td>
+<td><div class="line-block">
+<div class="line">Minimum Eccentricity for Non-Synchronous Rotation</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6918,10 +7637,13 @@ viscosity ViscRef.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dTCore</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dTCore</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Core Temperature</p></td>
+<td><div class="line-block">
+<div class="line">Initial Core Temperature</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6946,10 +7668,13 @@ viscosity ViscRef.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dTemperature</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dTemperature</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial effective temperature</p></td>
+<td><div class="line-block">
+<div class="line">Initial effective temperature</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -6974,10 +7699,13 @@ viscosity ViscRef.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dTGlobalInit</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dTGlobalInit</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Estimate of initial global temperature</p></td>
+<td><div class="line-block">
+<div class="line">Estimate of initial global temperature</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7002,15 +7730,19 @@ viscosity ViscRef.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dThermTemp</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dThermTemp</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>The thermal temperature of a planet heated by radiation from the
-primary. The user may set a value which will then remain
-constant for the simulation. If the user does not specify a
-value, then it will be calculated automatically from the formula
-T = (F(1-A)/sigma)^0.25, where F is the incident radiation, A is
-albedo and sigma is the Steffan-Boltzman constant.</p></td>
+<td><div class="line-block">
+<div class="line">The thermal temperature of a planet heated by radiation from</div>
+<div class="line">the primary. The user may set a value which will then remain</div>
+<div class="line">constant for the simulation. If the user does not specify a</div>
+<div class="line">value, then it will be calculated automatically from the</div>
+<div class="line">formula T = (F(1-A)/sigma)^0.25, where F is the incident</div>
+<div class="line">radiation, A is albedo and sigma is the Steffan-Boltzman</div>
+<div class="line">constant.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7035,10 +7767,13 @@ albedo and sigma is the Steffan-Boltzman constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dTidalQ</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dTidalQ</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Tidal Quality Factor</p></td>
+<td><div class="line-block">
+<div class="line">Tidal Quality Factor</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7063,10 +7798,13 @@ albedo and sigma is the Steffan-Boltzman constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dTidalQEnv</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dTidalQEnv</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Envelope Tidal Quality Factor</p></td>
+<td><div class="line-block">
+<div class="line">Envelope Tidal Quality Factor</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7091,10 +7829,13 @@ albedo and sigma is the Steffan-Boltzman constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dTidalQMantle</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dTidalQMantle</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Tidal Q of Mantle</p></td>
+<td><div class="line-block">
+<div class="line">Tidal Q of Mantle</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7119,10 +7860,13 @@ albedo and sigma is the Steffan-Boltzman constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dTidalQOcean</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dTidalQOcean</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Ocean Tidal Quality Factor</p></td>
+<td><div class="line-block">
+<div class="line">Ocean Tidal Quality Factor</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7147,10 +7891,13 @@ albedo and sigma is the Steffan-Boltzman constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dTidalRadius</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dTidalRadius</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Eqtide Tidal Radius</p></td>
+<td><div class="line-block">
+<div class="line">Eqtide Tidal Radius</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7175,10 +7922,13 @@ albedo and sigma is the Steffan-Boltzman constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dTidalTau</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dTidalTau</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Tidal Time Lag</p></td>
+<td><div class="line-block">
+<div class="line">Tidal Time Lag</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7203,10 +7953,13 @@ albedo and sigma is the Steffan-Boltzman constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dTimeStep</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dTimeStep</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Integration Timestep</p></td>
+<td><div class="line-block">
+<div class="line">Integration Timestep</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7231,10 +7984,13 @@ albedo and sigma is the Steffan-Boltzman constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dTMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dTMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Mantle Temperature</p></td>
+<td><div class="line-block">
+<div class="line">Initial Mantle Temperature</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7259,10 +8015,13 @@ albedo and sigma is the Steffan-Boltzman constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dTMigration</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dTMigration</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Time of radial migration</p></td>
+<td><div class="line-block">
+<div class="line">Time of radial migration</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7287,10 +8046,13 @@ albedo and sigma is the Steffan-Boltzman constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dTSurf</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dTSurf</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Surface Temperature</p></td>
+<td><div class="line-block">
+<div class="line">Initial Surface Temperature</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7315,10 +8077,13 @@ albedo and sigma is the Steffan-Boltzman constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dVelXSpiNBody</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dVelXSpiNBody</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>X velocity of the body</p></td>
+<td><div class="line-block">
+<div class="line">X velocity of the body</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7343,10 +8108,13 @@ albedo and sigma is the Steffan-Boltzman constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dVelYSpiNBody</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dVelYSpiNBody</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Y velocity of the body</p></td>
+<td><div class="line-block">
+<div class="line">Y velocity of the body</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7371,10 +8139,13 @@ albedo and sigma is the Steffan-Boltzman constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dVelZSpiNBody</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dVelZSpiNBody</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Z velocity of the body</p></td>
+<td><div class="line-block">
+<div class="line">Z velocity of the body</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7399,13 +8170,16 @@ albedo and sigma is the Steffan-Boltzman constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dViscJumpMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dViscJumpMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Numerical factor that is used to get the lower mantle thermal
-boundary viscosity visc_UMan from the upper mantle viscosity
-visc_LM by visc_LM=ViscJumpMan*visc_UM. See eq (163) in Barnes
-et al (2020).</p></td>
+<td><div class="line-block">
+<div class="line">Numerical factor that is used to get the lower mantle thermal</div>
+<div class="line">boundary viscosity visc_UMan from the upper mantle viscosity</div>
+<div class="line">visc_LM by visc_LM=ViscJumpMan*visc_UM. See eq (163) in Barnes</div>
+<div class="line">et al (2020).</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7430,12 +8204,15 @@ et al (2020).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dViscMeltB</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dViscMeltB</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Constant used to compute the reduction in mantle viscosity due
-to the presence of melt. See eq (161) in Barnes et al (2020) and
-Costa et al (2009) for values for different materials.</p></td>
+<td><div class="line-block">
+<div class="line">Constant used to compute the reduction in mantle viscosity due</div>
+<div class="line">to the presence of melt. See eq (161) in Barnes et al (2020)</div>
+<div class="line">and Costa et al (2009) for values for different materials.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7460,12 +8237,15 @@ Costa et al (2009) for values for different materials.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dViscMeltDelta</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dViscMeltDelta</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Constant used to compute the reduction in mantle viscosity due
-to the presence of melt. See eq (161) in Barnes et al (2020) and
-Costa et al (2009) for values for different materials.</p></td>
+<td><div class="line-block">
+<div class="line">Constant used to compute the reduction in mantle viscosity due</div>
+<div class="line">to the presence of melt. See eq (161) in Barnes et al (2020)</div>
+<div class="line">and Costa et al (2009) for values for different materials.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7490,12 +8270,15 @@ Costa et al (2009) for values for different materials.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dViscMeltGamma</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dViscMeltGamma</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Constant used to compute the reduction in mantle viscosity due
-to the presence of melt. See eq (162) in Barnes et al (2020) and
-Costa et al (2009) for values for different materials.</p></td>
+<td><div class="line-block">
+<div class="line">Constant used to compute the reduction in mantle viscosity due</div>
+<div class="line">to the presence of melt. See eq (162) in Barnes et al (2020)</div>
+<div class="line">and Costa et al (2009) for values for different materials.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7520,11 +8303,14 @@ Costa et al (2009) for values for different materials.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dViscMeltPhis</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dViscMeltPhis</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Viscosity-melt reduction coefficient, “phi*” in Eq. 8 of
-Driscoll Bercovici (2015).</p></td>
+<td><div class="line-block">
+<div class="line">Viscosity-melt reduction coefficient, “phi*” in Eq. 8 of</div>
+<div class="line">Driscoll Bercovici (2015).</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7549,12 +8335,15 @@ Driscoll Bercovici (2015).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dViscMeltXi</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dViscMeltXi</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Constant used to compute the reduction in mantle viscosity due
-to the presence of melt. See eq (162) in Barnes et al (2020) and
-Costa et al (2009) for values for different materials.</p></td>
+<td><div class="line-block">
+<div class="line">Constant used to compute the reduction in mantle viscosity due</div>
+<div class="line">to the presence of melt. See eq (162) in Barnes et al (2020)</div>
+<div class="line">and Costa et al (2009) for values for different materials.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7579,11 +8368,14 @@ Costa et al (2009) for values for different materials.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dViscRef</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dViscRef</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Coefficient in front of viscosity equation see eq (159) in
-Barnes et al. (2020).</p></td>
+<td><div class="line-block">
+<div class="line">Coefficient in front of viscosity equation see eq (159) in</div>
+<div class="line">Barnes et al. (2020).</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7608,10 +8400,13 @@ Barnes et al. (2020).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dViscUMan</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dViscUMan</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Upper mantle viscosity</p></td>
+<td><div class="line-block">
+<div class="line">Upper mantle viscosity</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7636,10 +8431,13 @@ Barnes et al. (2020).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dWaterMassAtm</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dWaterMassAtm</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Initial Water Mass in the atmosphere</p></td>
+<td><div class="line-block">
+<div class="line">Initial Water Mass in the atmosphere</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7664,10 +8462,13 @@ Barnes et al. (2020).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dWaterPartCoeff</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dWaterPartCoeff</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Water partition coefficient between melt and solid</p></td>
+<td><div class="line-block">
+<div class="line">Water partition coefficient between melt and solid</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7692,12 +8493,15 @@ Barnes et al. (2020).</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>dXUVBeta</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>dXUVBeta</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>After the “saturation” phase, the ratio of the XUV to total
-luminosity will follow a power law followinfg this exponent.
-Units are gigayears.</p></td>
+<td><div class="line-block">
+<div class="line">After the “saturation” phase, the ratio of the XUV to total</div>
+<div class="line">luminosity will follow a power law followinfg this exponent.</div>
+<div class="line">Units are gigayears.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Double</p></td>
@@ -7722,10 +8526,13 @@ Units are gigayears.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>iBodyType</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>iBodyType</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>BodyType</p></td>
+<td><div class="line-block">
+<div class="line">BodyType</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Int</p></td>
@@ -7747,10 +8554,13 @@ Units are gigayears.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>iClimateModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>iClimateModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Use annual or seasonal model</p></td>
+<td><div class="line-block">
+<div class="line">Use annual or seasonal model</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Int</p></td>
@@ -7772,11 +8582,14 @@ Units are gigayears.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>iDigits</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>iDigits</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>For all floating point output, print this many number of digits
-after the decimal point</p></td>
+<td><div class="line-block">
+<div class="line">For all floating point output, print this many number of digits</div>
+<div class="line">after the decimal point</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Int</p></td>
@@ -7798,10 +8611,13 @@ after the decimal point</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>iGeography</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>iGeography</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Type of land distribution</p></td>
+<td><div class="line-block">
+<div class="line">Type of land distribution</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Int</p></td>
@@ -7823,10 +8639,13 @@ after the decimal point</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>iIceDt</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>iIceDt</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Minimum ice sheet timestep (unit orbital period)</p></td>
+<td><div class="line-block">
+<div class="line">Minimum ice sheet timestep (unit orbital period)</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Int</p></td>
@@ -7848,10 +8667,13 @@ after the decimal point</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>iLatCellNum</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>iLatCellNum</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Number of latitude cells used in climate model</p></td>
+<td><div class="line-block">
+<div class="line">Number of latitude cells used in climate model</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Int</p></td>
@@ -7873,10 +8695,13 @@ after the decimal point</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>iNStepInYear</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>iNStepInYear</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Number of time-steps/year in seasonal model</p></td>
+<td><div class="line-block">
+<div class="line">Number of time-steps/year in seasonal model</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Int</p></td>
@@ -7898,10 +8723,13 @@ after the decimal point</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>iNumYears</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>iNumYears</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Number of years to run seasonal model</p></td>
+<td><div class="line-block">
+<div class="line">Number of years to run seasonal model</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Int</p></td>
@@ -7923,10 +8751,13 @@ after the decimal point</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>iOLRModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>iOLRModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Outgoing longwave rad model</p></td>
+<td><div class="line-block">
+<div class="line">Outgoing longwave rad model</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Int</p></td>
@@ -7948,10 +8779,13 @@ after the decimal point</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>iRandSeed</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>iRandSeed</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Seed for random number generator (stellar encounters)</p></td>
+<td><div class="line-block">
+<div class="line">Seed for random number generator (stellar encounters)</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Int</p></td>
@@ -7973,11 +8807,14 @@ after the decimal point</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>iReRunSeas</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>iReRunSeas</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>how often to rerun seasonal in ice sheet model, in number of
-orbital periods</p></td>
+<td><div class="line-block">
+<div class="line">how often to rerun seasonal in ice sheet model, in number of</div>
+<div class="line">orbital periods</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Int</p></td>
@@ -7999,10 +8836,13 @@ orbital periods</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>iSciNot</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>iSciNot</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Logarithm to Change from Standard to Scientific Notation</p></td>
+<td><div class="line-block">
+<div class="line">Logarithm to Change from Standard to Scientific Notation</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Int</p></td>
@@ -8024,14 +8864,17 @@ orbital periods</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>iVerbose</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>iVerbose</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Set how much text is written to the screen. 0 = no output, 1 =
-only errors, 2 = progress updates, 3 = statements about input
-choices, 4 = information about unit choices, 5 = all possible
-output. Note that levels 0 and 5 can be set at execution with
-the -q and -v options, respectively.</p></td>
+<td><div class="line-block">
+<div class="line">Set how much text is written to the screen. 0 = no output, 1 =</div>
+<div class="line">only errors, 2 = progress updates, 3 = statements about input</div>
+<div class="line">choices, 4 = information about unit choices, 5 = all possible</div>
+<div class="line">output. Note that levels 0 and 5 can be set at execution with</div>
+<div class="line">the -q and -v options, respectively.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Int</p></td>
@@ -8053,10 +8896,13 @@ the -q and -v options, respectively.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>saBodyFiles</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>saBodyFiles</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Input files for each body</p></td>
+<td><div class="line-block">
+<div class="line">Input files for each body</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String-Array</p></td>
@@ -8078,10 +8924,13 @@ the -q and -v options, respectively.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>saGridOutput</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>saGridOutput</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Gridded Output Parameter(s)</p></td>
+<td><div class="line-block">
+<div class="line">Gridded Output Parameter(s)</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String-Array</p></td>
@@ -8103,11 +8952,14 @@ the -q and -v options, respectively.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>saModules</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>saModules</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>List of names of modules to be applied to the body. Spelling
-must be exact, but any capitalization works</p></td>
+<td><div class="line-block">
+<div class="line">List of names of modules to be applied to the body. Spelling</div>
+<div class="line">must be exact, but any capitalization works</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String-Array</p></td>
@@ -8129,10 +8981,13 @@ must be exact, but any capitalization works</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>saOutputOrder</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>saOutputOrder</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Output Parameter(s)</p></td>
+<td><div class="line-block">
+<div class="line">Output Parameter(s)</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String-Array</p></td>
@@ -8154,10 +9009,13 @@ must be exact, but any capitalization works</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>saTidePerts</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>saTidePerts</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Names of bodies engaged in tidal evolution</p></td>
+<td><div class="line-block">
+<div class="line">Names of bodies engaged in tidal evolution</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String-Array</p></td>
@@ -8179,12 +9037,15 @@ must be exact, but any capitalization works</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sAtmXAbsEffH2OModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sAtmXAbsEffH2OModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>If BOLMONT16 is selected, then the value of dAtmXAbsEffH2O will
-follow the model of Bolmont et al. (2017, MNRAS, 464, 3728).
-NONE will not change the input value for dAtmXAbsEffH2O.</p></td>
+<td><div class="line-block">
+<div class="line">If BOLMONT16 is selected, then the value of dAtmXAbsEffH2O will</div>
+<div class="line">follow the model of Bolmont et al. (2017, MNRAS, 464, 3728).</div>
+<div class="line">NONE will not change the input value for dAtmXAbsEffH2O.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8209,10 +9070,13 @@ NONE will not change the input value for dAtmXAbsEffH2O.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sColor</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sColor</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Hexadecimal color code for the body to be used in vplot</p></td>
+<td><div class="line-block">
+<div class="line">Hexadecimal color code for the body to be used in vplot</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8234,15 +9098,18 @@ NONE will not change the input value for dAtmXAbsEffH2O.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sFileOrbitData</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sFileOrbitData</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>The file should have the following format: Time SemiMajorAxis
-Eccentricity Inclination ArgPericenter LongAscNode MeanAnomaly.
-The units will be assumed to be the same as defined for the
-simulation. If using this feature, the integration must used a
-fixed timestep (bVarDt = 0), and the timestep (dTimeStep) must
-equal the cadence in the file. See null for more information.</p></td>
+<td><div class="line-block">
+<div class="line">The file should have the following format: Time SemiMajorAxis</div>
+<div class="line">Eccentricity Inclination ArgPericenter LongAscNode MeanAnomaly.</div>
+<div class="line">The units will be assumed to be the same as defined for the</div>
+<div class="line">simulation. If using this feature, the integration must used a</div>
+<div class="line">fixed timestep (bVarDt = 0), and the timestep (dTimeStep) must</div>
+<div class="line">equal the cadence in the file. See null for more information.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8264,10 +9131,13 @@ equal the cadence in the file. See null for more information.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sFileOrbitOblData</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sFileOrbitOblData</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Name of file containing orbit and obliquity time series</p></td>
+<td><div class="line-block">
+<div class="line">Name of file containing orbit and obliquity time series</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8289,13 +9159,16 @@ equal the cadence in the file. See null for more information.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sHZModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sHZModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>If KOPPARAPU13 is selected then the Recent Venus, Runaway
-Greenhouse, Maximum Greenhouse, and Early Mars habitable zone
-limits will be calculated from Kopparapu, R. et al. (2013, ApJ,
-765, 131).</p></td>
+<td><div class="line-block">
+<div class="line">If KOPPARAPU13 is selected then the Recent Venus, Runaway</div>
+<div class="line">Greenhouse, Maximum Greenhouse, and Early Mars habitable zone</div>
+<div class="line">limits will be calculated from Kopparapu, R. et al. (2013, ApJ,</div>
+<div class="line">765, 131).</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8317,10 +9190,14 @@ limits will be calculated from Kopparapu, R. et al. (2013, ApJ,
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sIntegrationMethod</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sIntegrationMethod</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Integration Method: Euler, Runge-Kutta4 (Default = Runge-Kutta4)</p></td>
+<td><div class="line-block">
+<div class="line">Integration Method: Euler, Runge-Kutta4 (Default =</div>
+<div class="line">Runge-Kutta4)</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8342,10 +9219,13 @@ limits will be calculated from Kopparapu, R. et al. (2013, ApJ,
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sLogFile</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sLogFile</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Log File Name</p></td>
+<td><div class="line-block">
+<div class="line">Log File Name</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8367,10 +9247,13 @@ limits will be calculated from Kopparapu, R. et al. (2013, ApJ,
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sMagBrakingModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sMagBrakingModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Magnetic braking model.</p></td>
+<td><div class="line-block">
+<div class="line">Magnetic braking model.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8395,10 +9278,13 @@ limits will be calculated from Kopparapu, R. et al. (2013, ApJ,
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sMagmOcAtmModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sMagmOcAtmModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Atmospheric flux model: Grey or Petit</p></td>
+<td><div class="line-block">
+<div class="line">Atmospheric flux model: Grey or Petit</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8420,11 +9306,14 @@ limits will be calculated from Kopparapu, R. et al. (2013, ApJ,
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sMassRad</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sMassRad</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Mass-Radius Relationship for Central Body: GS99 RH00 BO06
-Sotin07</p></td>
+<td><div class="line-block">
+<div class="line">Mass-Radius Relationship for Central Body: GS99 RH00 BO06</div>
+<div class="line">Sotin07</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8446,11 +9335,14 @@ Sotin07</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sOrbitModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sOrbitModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>If RD4 is selected for sOrbitModel, the code will halt if an
-eccentricity reaches ~0.69 unless this flag is set to true.</p></td>
+<td><div class="line-block">
+<div class="line">If RD4 is selected for sOrbitModel, the code will halt if an</div>
+<div class="line">eccentricity reaches ~0.69 unless this flag is set to true.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8472,10 +9364,13 @@ eccentricity reaches ~0.69 unless this flag is set to true.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sOutFile</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sOutFile</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Name of Output File</p></td>
+<td><div class="line-block">
+<div class="line">Name of Output File</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8497,14 +9392,17 @@ eccentricity reaches ~0.69 unless this flag is set to true.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sPlanetRadiusModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sPlanetRadiusModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>If LOPEZ12 is selected, the planet radius will follow the model
-in Lopez et al. (2012, ApJ, 761, 59). PROXCENB will use the
-model for Proxima b in Barnes et al. (2016, arXiv:1608.06919).
-LEHMER17 is the Lehmer &amp; Catling (2017, ApJ, 845, 130). NONE
-will cause the radius to remain constant.</p></td>
+<td><div class="line-block">
+<div class="line">If LOPEZ12 is selected, the planet radius will follow the model</div>
+<div class="line">in Lopez et al. (2012, ApJ, 761, 59). PROXCENB will use the</div>
+<div class="line">model for Proxima b in Barnes et al. (2016, arXiv:1608.06919).</div>
+<div class="line">LEHMER17 is the Lehmer &amp; Catling (2017, ApJ, 845, 130). NONE</div>
+<div class="line">will cause the radius to remain constant.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8529,10 +9427,13 @@ will cause the radius to remain constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sRadioHeatModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sRadioHeatModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Radiogenic heating model</p></td>
+<td><div class="line-block">
+<div class="line">Radiogenic heating model</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8554,14 +9455,17 @@ will cause the radius to remain constant.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sStellarModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sStellarModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>If REINERS is selected, the stellar magnetic braking model of
-Reiners &amp; Mohanty (2012, ApJ, 746, 43) is used to modify the
-rotation rate. SKUMANICH uses the model from Skumanich, A.
-(1972, ApJ, 171, 565). MATT uses the model from Matt, S. et al.
-(2015, ApJ, 799, 23). NONE applies no magnetic torque.</p></td>
+<td><div class="line-block">
+<div class="line">If REINERS is selected, the stellar magnetic braking model of</div>
+<div class="line">Reiners &amp; Mohanty (2012, ApJ, 746, 43) is used to modify the</div>
+<div class="line">rotation rate. SKUMANICH uses the model from Skumanich, A.</div>
+<div class="line">(1972, ApJ, 171, 565). MATT uses the model from Matt, S. et al.</div>
+<div class="line">(2015, ApJ, 799, 23). NONE applies no magnetic torque.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8586,10 +9490,13 @@ rotation rate. SKUMANICH uses the model from Skumanich, A.
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sSystemName</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sSystemName</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>System Name</p></td>
+<td><div class="line-block">
+<div class="line">System Name</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8611,11 +9518,14 @@ rotation rate. SKUMANICH uses the model from Skumanich, A.
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sTideModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sTideModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Tidal Model: p2 [constant-phase-lag, 2nd order] t8
-[constant-time-lag, 8th order]</p></td>
+<td><div class="line-block">
+<div class="line">Tidal Model: p2 [constant-phase-lag, 2nd order] t8</div>
+<div class="line">[constant-time-lag, 8th order]</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8637,10 +9547,13 @@ rotation rate. SKUMANICH uses the model from Skumanich, A.
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sUnitAngle</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sUnitAngle</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Angle Units: Degrees Radians</p></td>
+<td><div class="line-block">
+<div class="line">Angle Units: Degrees Radians</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8662,10 +9575,13 @@ rotation rate. SKUMANICH uses the model from Skumanich, A.
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sUnitLength</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sUnitLength</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Length Units: cm m km Solar Earth Jupiter AU</p></td>
+<td><div class="line-block">
+<div class="line">Length Units: cm m km Solar Earth Jupiter AU</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8687,10 +9603,13 @@ rotation rate. SKUMANICH uses the model from Skumanich, A.
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sUnitMass</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sUnitMass</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Mass Units: Grams Kilograms Solar Earth Jupiter Saturn</p></td>
+<td><div class="line-block">
+<div class="line">Mass Units: Grams Kilograms Solar Earth Jupiter Saturn</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8712,10 +9631,13 @@ rotation rate. SKUMANICH uses the model from Skumanich, A.
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sUnitTemp</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sUnitTemp</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Temperature Units: Kelvin Celsius Farenheit</p></td>
+<td><div class="line-block">
+<div class="line">Temperature Units: Kelvin Celsius Farenheit</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8737,10 +9659,13 @@ rotation rate. SKUMANICH uses the model from Skumanich, A.
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sUnitTime</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sUnitTime</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>Time Units: Seconds, Days Years Myr Gyr</p></td>
+<td><div class="line-block">
+<div class="line">Time Units: Seconds, Days Years Myr Gyr</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8762,11 +9687,14 @@ rotation rate. SKUMANICH uses the model from Skumanich, A.
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sWaterLossModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sWaterLossModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>The water loss rate will be determined by the selected model.
-The options are LB15, LBEXACT, and TIAN.</p></td>
+<td><div class="line-block">
+<div class="line">The water loss rate will be determined by the selected model.</div>
+<div class="line">The options are LB15, LBEXACT, and TIAN.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8791,12 +9719,15 @@ The options are LB15, LBEXACT, and TIAN.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sWindModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sWindModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>If REINERS is selected, the stellar wind model of Reiners and
-Mohanty (2012, ApJ, 746, 43) is used to modify the rotation
-rate.</p></td>
+<td><div class="line-block">
+<div class="line">If REINERS is selected, the stellar wind model of Reiners and</div>
+<div class="line">Mohanty (2012, ApJ, 746, 43) is used to modify the rotation</div>
+<div class="line">rate.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>
@@ -8818,17 +9749,20 @@ rate.</p></td>
 <col style="width: 80%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="2"><p>sXUVModel</p></td>
+<tr class="row-odd"><td colspan="2"><p><strong>sXUVModel</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>This parameter sets the XUV evolution model used in STELLAR.
-Setting this to RIBAS (default) will evolve the XUV luminosity
-according to the saturated power law of Ribas et al (2005, ApJ,
-611, 680), while setting it to REINERS will use the empirical
-relations of Reiners, Schussler and Passegger (2014, ApJ, 794,
-144). Please note that the latter model has not been fully
-vetted. Users may also set this parameter to NONE, in which case
-the XUV luminosity will remain constant.</p></td>
+<td><div class="line-block">
+<div class="line">This parameter sets the XUV evolution model used in STELLAR.</div>
+<div class="line">Setting this to RIBAS (default) will evolve the XUV luminosity</div>
+<div class="line">according to the saturated power law of Ribas et al (2005, ApJ,</div>
+<div class="line">611, 680), while setting it to REINERS will use the empirical</div>
+<div class="line">relations of Reiners, Schussler and Passegger (2014, ApJ, 794,</div>
+<div class="line">144). Please note that the latter model has not been fully</div>
+<div class="line">vetted. Users may also set this parameter to NONE, in which</div>
+<div class="line">case the XUV luminosity will remain constant.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>String</p></td>

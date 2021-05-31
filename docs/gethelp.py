@@ -4,7 +4,7 @@ BOLD = r"\x1b[1m"
 REGULAR = r"\x1b[0m"
 
 module_info = """
-Modules and Options
+Options and Outputs
 ===================
 
 .. contents::

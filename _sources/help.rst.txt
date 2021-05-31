@@ -1,5 +1,5 @@
 
-Modules and Options
+Options and Outputs
 ===================
 
 .. contents::

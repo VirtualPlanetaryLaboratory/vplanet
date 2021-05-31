@@ -12,7 +12,7 @@
   <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract"><img src="https://img.shields.io/badge/read-the_paper-darkgreen.svg?style=flat"/></a>
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet/conduct.html"><img src="https://img.shields.io/badge/Code%20of-Conduct-7d93c7.svg"></a>
   <a href="http://twitter.com/VPLanetCode"><img src="https://img.shields.io/twitter/follow/VPLanetCode.svg?style=flat-square&logo=twitter&label=Follow"></a><br>
-  <a href="http://ascl.net/1811.017"><img src="https://img.shields.io/badge/ascl-1811.017-blue.svg?colorB=262255" alt="ascl:1811.017" /></a>
+  <a href="http://ascl.net/1811.017"><img src="https://img.shields.io/badge/ascl-1811.017-orange.svg?colorB=orange" alt="ascl:1811.017" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-purple.svg"/></a>
   <a href="examples"><img src="https://img.shields.io/badge/examples-34-darkblue.svg"/></a>
   <img src = "https://img.shields.io/badge/platform-Linux_|%20macOS_|%20Windows10-darkgreen.svg?style=flat"><br>

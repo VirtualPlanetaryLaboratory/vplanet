@@ -9,8 +9,8 @@
 
 <p align="center">
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet"><img src="https://img.shields.io/badge/read-the_docs-blue.svg?style=flat"></a>
-  <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract"><img src="https://img.shields.io/badge/read-the_paper-7d93c7.svg?style=flat"/></a>
-  <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet/conduct.html"><img src="https://img.shields.io/badge/Code%20of-Conduct-darkgreen.svg"></a>
+  <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract"><img src="https://img.shields.io/badge/read-the_paper-darkgreen.svg?style=flat"/></a>
+  <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet/conduct.html"><img src="https://img.shields.io/badge/Code%20of-Conduct-7d93c7.svg"></a>
   <a href="http://twitter.com/VPLanetCode"><img src="https://img.shields.io/twitter/follow/VPLanetCode.svg?style=flat-square&logo=twitter&label=Follow"></a><br>
   <a href="http://ascl.net/1811.017"><img src="https://img.shields.io/badge/ascl-1811.017-blue.svg?colorB=262255" alt="ascl:1811.017" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-purple.svg"/></a>
@@ -19,7 +19,7 @@
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml/badge.svg"/></a>
   <img src="https://img.shields.io/badge/Tests-333-darkblue.svg"/></a>
-  <img src="https://img.shields.io/badge/Python-3.6+-blue.svg"/></a>
+  <img src="https://img.shields.io/badge/Python-3.6+-orange.svg"/></a>
   <img src = "https://img.shields.io/badge/memcheck-clean-green.svg?style=flat">
   <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">
   <img src="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet/branch/master/graph/badge.svg?token=3LFJQO1M6H"/>
@@ -28,7 +28,7 @@
 
 ### Overview
 
-`VPLanet` is software to simulate planetary system evolution, with a focus on habitability. Physical models, typically consisting of ordinary differential equations, are coupled together to simulate evolution, from planetary cores to passing stars, for the age of a system. We strive for full transparency and reproducibility in our software, and this repository contains 1) the [source code](src), 2) [extensive documentation](https://VirtualPlanetaryLaboratory.github.io/vplanet), 3) scripts and files to [generate published figures](examples) and perform [parameter sweeps](https://virtualplanetarylaboratory.github.io/vplanet/parametersweep.html), and 4) [scripts to validate the current release](tests). We can't claim we found aliens with closed source software!
+`VPLanet` is software to simulate planetary system evolution, with a focus on habitability. Physical models, typically consisting of ordinary differential equations, are coupled together to simulate evolution, from planetary cores to passing stars, for the age of a system. We strive for full transparency and reproducibility in our software, and this repository contains 1) the [source code](src), 2) [extensive documentation](https://VirtualPlanetaryLaboratory.github.io/vplanet), 3) scripts and files to [generate published figures](examples) and perform [parameter sweeps](https://virtualplanetarylaboratory.github.io/vplanet/parametersweep.html), and 4) [scripts to validate the current release](tests). We can't claim we found life beyond the Earth with closed source or unreliable software!
 
 To get started, ensure you have clang/gcc installed and follow the [Installation Guide](https://virtualplanetarylaboratory.github.io/vplanet/quickstart.html). To stay up to date on this repository, [follow it on twitter](https://twitter.com/VPLanetCode).
 

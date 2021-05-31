@@ -1489,7 +1489,7 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_ACCUMODE].cDescr, "Re-invert matrix every EBM time step");
   sprintf(options[OPT_ACCUMODE].cDefault, "0");
   options[OPT_ACCUMODE].dDefault   = 0;
-  options[OPT_ACCUMODE].iType      = 2;
+  options[OPT_ACCUMODE].iType      = 0;
   options[OPT_ACCUMODE].bMultiFile = 1;
   fnRead[OPT_ACCUMODE]             = &ReadAccuracyMode;
 

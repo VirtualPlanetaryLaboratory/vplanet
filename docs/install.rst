@@ -38,10 +38,8 @@ After changes to the C source:
 
 .. code-block:: bash
 
-   python setup.py clean --all
    python setup.py develop
 
-XXX Why can't this be a single command??XX
 
 :note::
 

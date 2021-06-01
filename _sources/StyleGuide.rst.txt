@@ -1,5 +1,5 @@
-VPLanet Style Guide
-===================
+VPLanet Contributors Guide
+==========================
 
 .. contents:: :local:
 
@@ -45,10 +45,10 @@ Function names should have the following prefixes:
 EXCEPT the following when they have either a variable or module name after them:
 BodyCopy, PropsAux, ForceBehavior, CountHalts, Read, Write, AddModule, Verify,
 InitializeOptions, InitializeOutput, InitializeBody, InitializeUpdate,
-InitializeControl, InitializeHalts, InitializeModule, InitializeConstants
+InitializeControl, InitializeHalts, InitializeModule, InitializeConstants.
 
 C Code formatting
-~~~~~~~~~~~~~~~~~
+-----------------
 
 1. Use no tab characters and indent blocks by 2 spaces.
 2. All conditional blocks should have a { at the end of the line.
@@ -57,13 +57,18 @@ C Code formatting
 5. All functions shall return a variable, never an algebraic expression.
 6. All lines shall be less than 80 characters.
 7. For expressions that span multiple lines, the second and following lines
-shall be indented twice (4 spaces).
+   shall have additional indents.
 8. Lines that continue to the next must end with a "\" in C files.
-9. If a conditional statement extends to multiple lines, subsequent lines must
-be indented thrice (6 spaces), so as not to appear to belong to the condtional
-block.
-10. Variable cannot be assigned a value at declaration.
-11. No unused variables in a function.
+9. Variables cannot be assigned a value at declaration.
+10. No unused variables in a function.
+
+.. note::
+
+  The top-level directory contains the file .clang-format that contains
+  instructions for a program to enforce some C code formatting with the `clangformat
+  <https://clang.llvm.org/docs/ClangFormat.html>`_ package. You can code up your
+  changes and then run this command afterwards to fix many (but not al) formatting
+  problems.
 
 Comments
 --------
@@ -139,7 +144,7 @@ html output. This means you should familiarize yourself with both the
 `DOXYGEN markup <https://www.stack.nl/~dimitri/doxygen/manual/commands.html>`_
 and the `reStructuredText markup <http://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_.
 
-The things you can do with DOXYGEN + breathe fairly limited, so it's useful to
+The things you can do with DOXYGEN + breathe are fairly limited, so it's useful to
 know that you can always take advantage of reStructuredText commands by escaping
 a paragraph with the :code:`\rst` command. For instance, check out the header in the atmesc
 source:
@@ -164,13 +169,11 @@ source:
     \endrst
     */
 
-The DOXYGEN citation functionality is pretty lame, so I'm using rst to add citations
-to papers relevant to this module. The cool thing about this is that it automatically
-adds entries to the `html bibliography <zzreferences.html>`_. Note that in order for
-this to work, the references must be in the :code:`docs/vplanet.bib` file in the repo.
+The DOXYGEN citation functionality is pretty limited, but should improve. For now
+you can just copy/past the URL into the comments.
 
 
-Code coverage
+Code Coverage
 -------------
 
 We use `gcov <https://gcc.gnu.org/onlinedocs/gcc/Gcov.html>`_ and
@@ -189,13 +192,16 @@ for the XUV radius fraction in :code:`atmesc`:
 .. code-block:: C
       :linenos:
 
-      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,
+                      control->Io.iVerbose);
       if (lTmp >= 0) {
-            NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-            if (dTmp < 0) {
-                if (control->Io.iVerbose >= VERBERR)
-    	           fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
-                LineExit(files->Infile[iFile].cIn,lTmp);
+        NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,
+                        control->Io.iVerbose);
+        if (dTmp < 0) {
+          if (control->Io.iVerbose >= VERBERR) {
+    	       fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+           }
+           LineExit(files->Infile[iFile].cIn,lTmp);
         }
         body[iFile-1].dXFrac = dTmp;
         UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -210,13 +216,16 @@ mark each line:
 .. code-block:: C
       :linenos:
 
-      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,
+                      control->Io.iVerbose);
       if (lTmp >= 0) {
-            NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-            if (dTmp < 0) {
-                if (control->Io.iVerbose >= VERBERR) // LCOV_EXCL_LINE
-    	           fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName); // LCOV_EXCL_LINE
-                LineExit(files->Infile[iFile].cIn,lTmp); // LCOV_EXCL_LINE
+        NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,
+                        control->Io.iVerbose);
+        if (dTmp < 0) {
+          if (control->Io.iVerbose >= VERBERR) { // LCOV_EXCL_LINE
+    	       fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName); // LCOV_EXCL_LINE
+           }
+           LineExit(files->Infile[iFile].cIn,lTmp); // LCOV_EXCL_LINE
         }
         body[iFile-1].dXFrac = dTmp;
         UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
@@ -227,20 +236,22 @@ or use a block:
 .. code-block:: C
       :linenos:
 
-      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
+      AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,
+                      control->Io.iVerbose);
       if (lTmp >= 0) {
-            NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-            if (dTmp < 0) {
-                // LCOV_EXCL_START
-                if (control->Io.iVerbose >= VERBERR)
-    	           fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
-                LineExit(files->Infile[iFile].cIn,lTmp);
-                // LCOV_EXCL_STOP
+        NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,
+                        control->Io.iVerbose);
+        if (dTmp < 0) {
+          // LCOV_EXCL_START
+          if (control->Io.iVerbose >= VERBERR) {
+    	       fprintf(stderr,"ERROR: %s must be >= 0.\n",options->cName);
+           }
+           LineExit(files->Infile[iFile].cIn,lTmp);
+           // LCOV_EXCL_STOP
         }
         body[iFile-1].dXFrac = dTmp;
         UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
       }
-
 
 Miscellaneous
 -------------

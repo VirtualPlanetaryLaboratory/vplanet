@@ -4,9 +4,6 @@
 
 <h1 align="center">VPLanet: The Virtual Planet Simulator</h1>
 
-
-<h2 align="center">The First VPLanet Developers Workshop will take place June 8-11, 2021!<br><a href="https://forms.gle/viTMHrEeJK4g1eo26">Register here</a> by May 31, 2021.</h2>
-
 <p align="center">
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet"><img src="https://img.shields.io/badge/read-the_docs-blue.svg?style=flat"></a>
   <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract"><img src="https://img.shields.io/badge/read-the_paper-darkgreen.svg?style=flat"/></a>

@@ -13,23 +13,30 @@ def test_conflict():
     # Path to top level repo directory
     path = pathlib.Path(__file__).absolute().parents[2]
 
-    # Don't search for the pattern in this file or in .git
-    this = pathlib.Path(__file__).name
-    dotgit = path / ".git"
+    # Exclude certain files / folders
+    exclude_files = [
+        pathlib.Path(__file__).name,  # this file
+        "*.pyc",  # temporary python files
+    ]
+    exclude_dirs = [
+        ".git",  # the .git metadata, which is massive
+        "__pycache__",  # temporary python files
+    ]
+
+    # Format the exclusion rules
+    exclude_files = [
+        "--exclude={}".format(file.replace("*", "\*")) for file in exclude_files
+    ]
+    exclude_dirs = [
+        "--exclude={}".format(directory.replace("*", "\*"))
+        for directory in exclude_dirs
+    ]
 
     try:
 
         # Call grep
         process = subprocess.check_output(
-            [
-                "grep",
-                "-rnw",
-                "-e",
-                pattern,
-                f"--exclude={this}",
-                f"--exclude-dir={dotgit}",
-                path,
-            ]
+            ["grep", "-rnw", "-e", pattern] + exclude_files + exclude_dirs + [path]
         )
 
     except subprocess.CalledProcessError:
@@ -43,9 +50,6 @@ def test_conflict():
 
     # Raise AssertionError if pattern is found at least once
     if len(results) > 0:
-
-        # DEBUG
-        print(results)
 
         for i in results:
             info = i.split(" ")[0].rpartition(":")[0]

@@ -1244,11 +1244,11 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_INITICEHEIGHT].bMultiFile = 1;
   fnRead[OPT_INITICEHEIGHT]             = &ReadInitIceHeight;
 
-  sprintf(options[OPT_CLIMATEMODEL].cName, "iClimateModel");
+  sprintf(options[OPT_CLIMATEMODEL].cName, "sClimateModel");
   sprintf(options[OPT_CLIMATEMODEL].cDescr, "Use annual or seasonal model");
   sprintf(options[OPT_CLIMATEMODEL].cDefault, "ann");
   options[OPT_CLIMATEMODEL].dDefault   = ANN;
-  options[OPT_CLIMATEMODEL].iType      = 1;
+  options[OPT_CLIMATEMODEL].iType      = 3;
   options[OPT_CLIMATEMODEL].bMultiFile = 1;
   fnRead[OPT_CLIMATEMODEL]             = &ReadClimateModel;
 
@@ -1402,11 +1402,11 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_RERUNSEAS].bMultiFile = 1;
   fnRead[OPT_RERUNSEAS]             = &ReadReRunSeas;
 
-  sprintf(options[OPT_GEOGRAPHY].cName, "iGeography");
+  sprintf(options[OPT_GEOGRAPHY].cName, "sGeography");
   sprintf(options[OPT_GEOGRAPHY].cDescr, "Type of land distribution");
   sprintf(options[OPT_GEOGRAPHY].cDefault, "uni3");
   options[OPT_GEOGRAPHY].dDefault   = UNIFORM3;
-  options[OPT_GEOGRAPHY].iType      = 1;
+  options[OPT_GEOGRAPHY].iType      = 3;
   options[OPT_GEOGRAPHY].bMultiFile = 1;
   fnRead[OPT_GEOGRAPHY]             = &ReadGeography;
 

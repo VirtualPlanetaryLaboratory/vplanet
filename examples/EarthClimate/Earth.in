@@ -31,7 +31,7 @@ bCalcAB          0
 dTGlobalInit      14.85
 #dpCO2            0.00028
 #dSurfAlbedo       0.4
-bClimateModel     sea
+sClimateModel     sea
 iNumYears         4
 iNStepInYear      60
 bSeaIceModel      0

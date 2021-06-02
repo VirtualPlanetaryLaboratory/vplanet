@@ -10,7 +10,7 @@ import sys
 sys.path.insert(1, os.path.abspath(os.path.dirname(__file__)))
 
 # Set to False to keep .log, .forward, etc files
-CLEAN_OUTPUTS = False
+CLEAN_OUTPUTS = True
 
 
 @pytest.fixture(scope="module")
@@ -18,6 +18,7 @@ def vplanet_output(request):
     path = os.path.abspath(os.path.dirname(request.fspath))
     infile = os.path.join(path, "vpl.in")
     output = vplanet.run(infile, quiet=True, clobber=True)
+    yield output
     if CLEAN_OUTPUTS:
         for file in (
             glob.glob(f"{path}/*.log")
@@ -28,4 +29,3 @@ def vplanet_output(request):
             os.remove(file)
         for directory in glob.glob(f"{path}/SeasonalClimateFiles"):
             shutil.rmtree(directory)
-    return output

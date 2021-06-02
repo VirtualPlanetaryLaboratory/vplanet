@@ -34,5 +34,5 @@ help:
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O) 2>&1 | tee docs.log
 	@if [ $(MAKECMDGOALS) != clean ]; then \
 		mkdir -p $(BUILDDIR)/html/_images; \
-		cp vplanet.png $(BUILDDIR)/html/_images/vplanet.png; \
+		cp VPLanetLogo.png $(BUILDDIR)/html/_images/vplanet.png; \
 	fi

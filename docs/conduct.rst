@@ -15,12 +15,12 @@ Our Standards
 Examples of behavior that contributes to a positive environment for our
 community include:
 
-  * Demonstrating empathy and kindness toward other people
-  * Being respectful of differing opinions, viewpoints, and experiences
-  * Giving and gracefully accepting constructive feedback
-  * Accepting responsibility, apologizing to those affected by our mistakes, and
+  - Demonstrating empathy and kindness toward other people
+  - Being respectful of differing opinions, viewpoints, and experiences
+  - Giving and gracefully accepting constructive feedback
+  - Accepting responsibility, apologizing to those affected by our mistakes, and
     learning from the experience
-  * Focusing on what is best not just for us as individuals, but for the overall
+  - Focusing on what is best not just for us as individuals, but for the overall
     community
 
 The VPLanet community strives to:
@@ -41,13 +41,13 @@ conduct ourselves professionally. Disagreement is no excuse for poor behavior
 and poor manners. Disrespectful and unacceptable behavior includes, but is not
 limited to:
 
-  * Violent threats or language.
-  * Discriminatory or derogatory jokes and language.
-  * Posting sexually explicit or violent material.
-  * Posting, or threatening to post, people’s personally identifying information (“doxing”).
-  * Insults, especially those using discriminatory terms or slurs.
-  * Behavior that could be perceived as sexual attention.
-  * Advocating for or encouraging any of the above behaviors.
+  - Violent threats or language.
+  - Discriminatory or derogatory jokes and language.
+  - Posting sexually explicit or violent material.
+  - Posting, or threatening to post, people’s personally identifying information (“doxing”).
+  - Insults, especially those using discriminatory terms or slurs.
+  - Behavior that could be perceived as sexual attention.
+  - Advocating for or encouraging any of the above behaviors.
 
 Understand disagreements: Disagreements, both social and technical, are useful
 learning opportunities, especially in an interdisciplinary community. Seek to
@@ -101,10 +101,10 @@ of the reporter of any incident.
 
 If you decide to send in a report, please include:
 
-  * Your contact information.
-  * Names (real, usernames or pseudonyms) of any individuals involved. If there are additional witnesses, please include them as well.
-  * Your account of what occurred, and if you believe the incident is ongoing. If there is a publicly available record (e.g. a mailing list archive or a public chat log), please include a link or attachment.
-  * Any additional information that may be helpful.
+  - Your contact information.
+  - Names (real, usernames or pseudonyms) of any individuals involved. If there are additional witnesses, please include them as well.
+  - Your account of what occurred, and if you believe the incident is ongoing. If there is a publicly available record (e.g. a mailing list archive or a public chat log), please include a link or attachment.
+  - Any additional information that may be helpful.
 
 All reports will be reviewed by the multi-person VPLanet Council and will result
 in a response that is deemed necessary and appropriate to the circumstances.

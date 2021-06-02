@@ -23,7 +23,7 @@ dPrecA 0.0                              #orientation of spin axis
 
 #_______poise parameters (have fun with these!)_________________________________________
 iLatCellNum      151                    #number of latitude cells
-iClimateModel     sea                   #use seasonal or annual model
+sClimateModel     sea                   #use seasonal or annual model
 dTGlobalInit      14.85                 #initial guess at average surface temp
 iNumYears         4                     #number of years (orbits) to run clim model
 iNStepInYear 80                         #number of steps to take in a "year"

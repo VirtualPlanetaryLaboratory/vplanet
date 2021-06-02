@@ -51,6 +51,9 @@ def test_conflict():
     # Raise AssertionError if pattern is found at least once
     if len(results) > 0:
 
+        # DEBUG
+        print(results)
+
         for i in results:
             info = i.split(" ")[0].rpartition(":")[0]
             file = info.partition(":")[0]

@@ -37,18 +37,16 @@ def test_conflict():
         # Grep didn't find anything: this is good!
         return
 
-    finally:
+    # Grep found something. Let's parse the output
+    results = process.decode().split("\n")
+    results = [result for result in results if len(result)]
 
-        # Grep found something. Let's parse the output
-        results = process.decode().split("\n")
-        results = [result for result in results if len(result)]
-
-        # Raise AssertionError if pattern is found at least once
-        if len(results) > 0:
-            for i in results:
-                info = i.split(" ")[0].rpartition(":")[0]
-                file = info.partition(":")[0]
-                line = info.partition(":")[-1]
-                print("File:", file)
-                print("Line Number:", line)
-            assert False
+    # Raise AssertionError if pattern is found at least once
+    if len(results) > 0:
+        for i in results:
+            info = i.split(" ")[0].rpartition(":")[0]
+            file = info.partition(":")[0]
+            line = info.partition(":")[-1]
+            print("File:", file)
+            print("Line Number:", line)
+        assert False

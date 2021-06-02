@@ -13,44 +13,28 @@ def test_conflict():
     # Path to top level repo directory
     path = pathlib.Path(__file__).absolute().parents[2]
 
-    # Don't search for the pattern in this file or in .git
-    this = pathlib.Path(__file__).name
-    dotgit = path / ".git"
-
-    try:
-
-        # Call grep
-        process = subprocess.check_output(
-            [
-                "grep",
-                "-rnw",
-                "-e",
-                pattern,
-                f"--exclude={this}",
-                f"--exclude-dir={dotgit}",
-                path,
-            ]
+    # Get all files tracked by git
+    files = (
+        subprocess.check_output(
+            ["git", "ls-tree", "-r", "HEAD", "--name-only"], cwd=path
         )
+        .decode()
+        .split("\n")[:-1]
+    )
 
-    except subprocess.CalledProcessError:
+    # Search in all files
+    for file in files:
 
-        # Grep didn't find anything: this is good!
-        return
+        # Ignore this file!
+        if __file__ in str(path / file):
+            continue
 
-    # Grep found something. Let's parse the output
-    results = process.decode().split("\n")
-    results = [result for result in results if len(result)]
-
-    # Raise AssertionError if pattern is found at least once
-    if len(results) > 0:
-
-        # DEBUG
-        print(results)
-
-        for i in results:
-            info = i.split(" ")[0].rpartition(":")[0]
-            file = info.partition(":")[0]
-            line = info.partition(":")[-1]
-            print("File:", file)
-            print("Line Number:", line)
-        assert False
+        try:
+            output = subprocess.check_output(
+                ["grep", "-nw", "-e", pattern, path / file]
+            ).decode()
+        except subprocess.CalledProcessError:
+            # Error means grep didn't find anything
+            pass
+        else:
+            raise ValueError(f"Merge conflict in {file}, line {output}")

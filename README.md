@@ -15,7 +15,7 @@
   <img src = "https://img.shields.io/badge/platform-Linux_|%20macOS_|%20Windows10-darkgreen.svg?style=flat"><br>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml/badge.svg"/></a>
-  <img src="https://img.shields.io/badge/Tests-333-darkblue.svg"/></a>
+  <img src="https://img.shields.io/badge/Tests-334-darkblue.svg"/></a>
   <img src="https://img.shields.io/badge/Python-3.6+-orange.svg"/></a>
   <img src = "https://img.shields.io/badge/memcheck-clean-green.svg?style=flat">
   <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">

@@ -186,7 +186,7 @@ evolution power law with a saturation fraction of 0.001 and saturation time of
 `"age"` in that the former is the internal counter for the simulation,
 whereas the latter is the physical age of the star since some birth time. For a
 compete description of the physics in  :code:`VPLanet`, please consult the `manual
-<../Manual>`_.
+</Manual>`_.
 
 The option saModules is of particular importance in the body files as it sets
 the physical models ("modules") to be applied to the body. In this case, the only module

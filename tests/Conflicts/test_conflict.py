@@ -13,17 +13,10 @@ def test_conflict():
     # Path to top level repo directory
     path = pathlib.Path(__file__).absolute().parents[2]
 
-    # Current git branch
-    branch = (
-        subprocess.check_output(["git", "branch", "--show-current"], cwd=path)
-        .decode()
-        .replace("\n", "")
-    )
-
     # Get all files tracked by git
     files = (
         subprocess.check_output(
-            ["git", "ls-tree", "-r", branch, "--name-only"], cwd=path
+            ["git", "ls-tree", "-r", "HEAD", "--name-only"], cwd=path
         )
         .decode()
         .split("\n")[:-1]

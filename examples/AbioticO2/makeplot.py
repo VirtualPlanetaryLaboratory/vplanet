@@ -153,6 +153,7 @@ im1 = ax[0].imshow(
     water.value,
     cmap=plt.get_cmap("plasma"),
     aspect="auto",
+    origin="lower",
     extent=(0, 1, 0.08, 0.6),
     norm=colors.LogNorm(vmin=0.1, vmax=10),
 )
@@ -164,6 +165,7 @@ im2 = ax[1].imshow(
     o2.value,
     cmap=plt.get_cmap("plasma"),
     aspect="auto",
+    origin="lower",
     extent=(0, 1, 0.08, 0.6),
     norm=colors.LogNorm(vmin=1, vmax=5000),
 )

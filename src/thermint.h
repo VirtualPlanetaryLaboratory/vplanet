@@ -797,11 +797,22 @@ double fdPowerThermint(BODY *, int);
 double cube(double);
 double root(int, BODY *, int, double, double, double, int);
 double cubicroot(int, BODY *, int);
+#ifdef VPLANET_ON_WINDOWS
+#define max(X, Y) (((X) > (Y)) ? (X) : (Y))
+#define min(X, Y) (((X) < (Y)) ? (X) : (Y))
+#else
+#define max(a, b)                                                              \
+  ({                                                                           \
+    __typeof__(a) _a = (a);                                                    \
+    __typeof__(b) _b = (b);                                                    \
+    _a > _b ? _a : _b;                                                         \
+  })
 #define min(a, b)                                                              \
   ({                                                                           \
     __typeof__(a) _a = (a);                                                    \
     __typeof__(b) _b = (b);                                                    \
     _a < _b ? _a : _b;                                                         \
   })
+#endif
 
 /* @endcond */

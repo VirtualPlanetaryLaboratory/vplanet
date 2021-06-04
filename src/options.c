@@ -1626,10 +1626,10 @@ void ReadColor(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   if (lTmp >= 0) {
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    strcpy(body[iFile - 1].cColor, cTmp);
+    strcpy(body[iFile - 1].sColor, cTmp);
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
-    strcpy(body[iFile - 1].cColor, options->cDefault);
+    strcpy(body[iFile - 1].sColor, options->cDefault);
   }
 }
 
@@ -3827,11 +3827,11 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
    *
    */
 
-  sprintf(options[OPT_COLOR].cName, "cColor");
+  sprintf(options[OPT_COLOR].cName, "sColor");
   sprintf(options[OPT_COLOR].cDescr,
           "Hexadecimal color code for the body to be used in vplot");
   sprintf(options[OPT_COLOR].cDefault, "000000");
-  options[OPT_COLOR].iType      = 2;
+  options[OPT_COLOR].iType      = 3;
   options[OPT_COLOR].iModuleBit = 0;
   options[OPT_COLOR].bNeg       = 0;
   options[OPT_COLOR].iFileType  = 1;
@@ -4002,7 +4002,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_INTEGRATIONMETHOD].cDescr,
           "Integration Method: Euler, Runge-Kutta4 (Default = Runge-Kutta4)");
   sprintf(options[OPT_INTEGRATIONMETHOD].cDefault, "Runge-Kutta4");
-  options[OPT_INTEGRATIONMETHOD].iType      = 4;
+  options[OPT_INTEGRATIONMETHOD].iType      = 3;
   options[OPT_INTEGRATIONMETHOD].iModuleBit = 0;
   options[OPT_INTEGRATIONMETHOD].bNeg       = 0;
   options[OPT_INTEGRATIONMETHOD].iFileType  = 2;
@@ -4071,7 +4071,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_LUMINOSITY].cNeg, "LSUN");
   sprintf(options[OPT_LUMINOSITY].cDimension, "energy/time");
   options[OPT_LUMINOSITY].dDefault   = 0;
-  options[OPT_LUMINOSITY].iType      = 0;
+  options[OPT_LUMINOSITY].iType      = 2;
   options[OPT_LUMINOSITY].bMultiFile = 1;
   options[OPT_LUMINOSITY].dNeg       = LSUN;
   fnRead[OPT_LUMINOSITY]             = &ReadLuminosity;
@@ -4113,7 +4113,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_MODULES].iModuleBit = 0;
   options[OPT_MODULES].bNeg       = 0;
   options[OPT_MODULES].iFileType  = 0;
-  options[OPT_MODULES].iType      = 4;
+  options[OPT_MODULES].iType      = 13;
   sprintf(
         options[OPT_MODULES].cLongDescr,
         "List of names of modules to be applied to the body. Spelling must be "
@@ -4148,7 +4148,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_OUTPUTORDER].cName, "saOutputOrder");
   sprintf(options[OPT_OUTPUTORDER].cDescr, "Output Parameter(s)");
   sprintf(options[OPT_OUTPUTORDER].cDefault, "None");
-  options[OPT_OUTPUTORDER].iType      = 14;
+  options[OPT_OUTPUTORDER].iType      = 13;
   options[OPT_OUTPUTORDER].iModuleBit = 0;
   options[OPT_OUTPUTORDER].bNeg       = 0;
   options[OPT_OUTPUTORDER].iFileType  = 1;
@@ -4157,7 +4157,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_GRIDOUTPUT].cName, "saGridOutput");
   sprintf(options[OPT_GRIDOUTPUT].cDescr, "Gridded Output Parameter(s)");
   sprintf(options[OPT_GRIDOUTPUT].cDefault, "None");
-  options[OPT_GRIDOUTPUT].iType      = 14;
+  options[OPT_GRIDOUTPUT].iType      = 13;
   options[OPT_GRIDOUTPUT].iModuleBit = POISE;
   options[OPT_GRIDOUTPUT].bNeg       = 0;
   options[OPT_GRIDOUTPUT].bMultiFile = 1;
@@ -4567,7 +4567,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_TEMPERATURE].cDefault, "TSUN");
   sprintf(options[OPT_TEMPERATURE].cDimension, "temperature");
   options[OPT_TEMPERATURE].dDefault   = TSUN;
-  options[OPT_TEMPERATURE].iType      = 0;
+  options[OPT_TEMPERATURE].iType      = 2;
   options[OPT_TEMPERATURE].bMultiFile = 1;
   fnRead[OPT_TEMPERATURE]             = &ReadTemperature;
 

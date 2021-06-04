@@ -331,9 +331,16 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
         printf("Double");
       } else if (options->iType == 3) {
         printf("String");
-      } else if (options->iType >= 4) {
-        printf("Array");
+      } else if (options->iType == 10) {
+        printf("Bool-Array");
+      } else if (options->iType == 11) {
+        printf("Int-Array");
+      } else if (options->iType == 12) {
+        printf("Double-Array");
+      } else if (options->iType == 13) {
+        printf("String-Array");
       }
+
       printf(") -- %s ", options->cDescr);
 
       if (options->dNeg != 0) {
@@ -438,8 +445,14 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
         typestr = "Double";
       } else if (options->iType == 3) {
         typestr = "String";
-      } else if (options->iType >= 4) {
-        typestr = "Array";
+      } else if (options->iType == 10) {
+        typestr = "Bool-Array";
+      } else if (options->iType == 11) {
+        typestr = "Int-Array";
+      } else if (options->iType == 12) {
+        typestr = "Double-Array";
+      } else if (options->iType == 13) {
+        typestr = "String-Array";
       } else {
         fprintf(stderr, "ERROR: Unknown value for typestr in "
                         "control.c:WriteHelpOption.\n");
@@ -627,8 +640,8 @@ void Help(OPTIONS *options, OUTPUT *output, char exe[], int bLong) {
   }
   printf("\n\n");
 
-  printf("Lead Developer: Rory Barnes\n\n");
-  printf("\nVPLANET is a general purpose planetary evolution integrator. From the "
+  printf("Lead Developer: Rory Barnes (rory@astro.washington.edu)\n\n");
+  printf("\nVPLanet is a general purpose planetary evolution integrator. From the "
          "command\n");
   printf("line, enter one optional command line option and one file name, "
          "e.g.:\n\n"
@@ -646,6 +659,9 @@ void Help(OPTIONS *options, OUTPUT *output, char exe[], int bLong) {
          "more information, see "
          "https://virtualplanetarylaboratory.github.io/vplanet,\n"
          "or consult the examples directory.\n\n");
+
+  printf("Support for VPLanet has been provided through grants by NASA, the "
+          "NSF.\n\n");
 
   printf("====================   ============================================================\n");
   printf("Command Line Options                          Description                          \n");

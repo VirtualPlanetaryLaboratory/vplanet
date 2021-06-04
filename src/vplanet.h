@@ -147,7 +147,7 @@ typedef struct VERIFY VERIFY;
 struct BODY {
   /* Body Properties */
   char cName[NAMELEN]; /**< Body's Name */
-  char cColor[OPTLEN]; /**< Body color (for plotting) */
+  char sColor[OPTLEN]; /**< Body color (for plotting) */
 
   int bMantle; /**< Is there a mantle? */
   int bOcean;  /**< Is there an ocean? */
@@ -593,7 +593,7 @@ struct BODY {
   double dAreaIceCov; /**< Tracks area of surface covered in permanent ice*/
   double dAstroDist;  /**< Distance between primary and planet */
   int bCalcAB;        /**< Calc A and B from Williams & Kasting 1997 */
-  int bClimateModel;  /**< Which EBM to be used (ann or sea) */
+  int iClimateModel;  /**< Which EBM to be used (ann or sea) */
   int bColdStart;     /**< Start from global glaciation (snowball) conditions */
   double dCw_dt;      /**< Heat capacity of water / EBM time step */
   double dDiffCoeff;  /**< Diffusion coefficient set by user */

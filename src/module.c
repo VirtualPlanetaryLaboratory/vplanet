@@ -784,6 +784,8 @@ void ReadModules(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 void PrintModuleList(FILE *file, int iBitSum, int bPadString) {
   int space = 0;
   int nspaces = 65;
+  int iSpace;
+  
   if (iBitSum & ATMESC) {
     if (space) {
       fprintf(file, " ");
@@ -891,7 +893,7 @@ void PrintModuleList(FILE *file, int iBitSum, int bPadString) {
   if (bPadString) {
     if (space)
       nspaces -= (space - 1);
-    for (int i = 0; i < nspaces; i++) {
+    for (iSpace = 0; iSpace < nspaces; iSpace++) {
         printf(" ");
     }
   }

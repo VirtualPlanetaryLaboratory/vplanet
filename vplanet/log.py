@@ -49,7 +49,7 @@ def get_param_name(param, file, line):
 
     Returns a string.
     """
-    # Replace bad characters
+    # Replace any bad characters
     repl = [("#", "")]
     for a, b in repl:
         param = param.replace(a, b)

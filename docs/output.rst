@@ -85,7 +85,7 @@ angle" requires a bit more explanation for a typical user:
     "the vernal equinox. This angle is a \"dog-leg\" angle as shown in Fig. 30\n"
     "of Barnes et al. (2020)."
 
-:note::
+.. note::
   Any field that is omitted will be set to the default values that are defined
   in output.c:InitializeOutput.
 

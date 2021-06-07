@@ -16,7 +16,7 @@ In other words, adding a primary variable is equivalent to adding a new
 governing equation that fundamentally affects an object's evolution.
 If that is **not** the case, i.e. it depends only on other primary variables, then
 you probably only need to add it to a struct (like BODY), some functions to
-calculate its values, `options <option>` and/or `outputs <outputs>`, and a call
+calculate its values, `options <option>`_ and/or `outputs <outputs>`_, and a call
 in PropsAux and/or ForceBehavior. In many cases just adding an output function
 that explicitly calculates the value is sufficient.
 
@@ -111,7 +111,7 @@ example.
 
   double fdDPrimaryVariableDt(BODY *, SYSTEM *, int *);
 
-:note::
+.. note::
 
   All subroutines that return the derivative of a primary variable must have
   the argument list of the example above.
@@ -186,7 +186,7 @@ block of code that initializes the other pieces of the UPDATE struct.
 There's a lot going on here, but all these lines do is setup your new primary
 variable.
 
-:note::
+.. note::
   The pdVar variable is a pointer to the update matrix's element
   (fnUpdate[iBody][iVar][iEqn]) that is calculated every time step. If you ever
   assign a new value to this variable, you will overwrite the primary variable's

@@ -186,7 +186,7 @@ In other words, adding a primary variable is equivalent to adding a new
 governing equation that fundamentally affects an object’s evolution.
 If that is <strong>not</strong> the case, i.e. it depends only on other primary variables, then
 you probably only need to add it to a struct (like BODY), some functions to
-calculate its values, <cite>options &lt;option&gt;</cite> and/or <cite>outputs &lt;outputs&gt;</cite>, and a call
+calculate its values, <a class="reference external" href="option">options</a> and/or <a class="reference external" href="outputs">outputs</a>, and a call
 in PropsAux and/or ForceBehavior. In many cases just adding an output function
 that explicitly calculates the value is sufficient.</p>
 <p>If, however, this parameter is indeed a primary variable, this tutorial will
@@ -263,12 +263,11 @@ example.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>double fdDPrimaryVariableDt<span class="o">(</span>BODY *, SYSTEM *, int *<span class="o">)</span><span class="p">;</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">note:</dt>
-<dd class="field-odd"><p>All subroutines that return the derivative of a primary variable must have
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All subroutines that return the derivative of a primary variable must have
 the argument list of the example above.</p>
-</dd>
-</dl>
+</div>
 </section>
 <section id="initialization">
 <h2>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h2>
@@ -335,14 +334,13 @@ block of code that initializes the other pieces of the UPDATE struct.</p>
 </div>
 <p>There’s a lot going on here, but all these lines do is setup your new primary
 variable.</p>
-<dl class="field-list simple">
-<dt class="field-odd">note:</dt>
-<dd class="field-odd"><p>The pdVar variable is a pointer to the update matrix’s element
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The pdVar variable is a pointer to the update matrix’s element
 (fnUpdate[iBody][iVar][iEqn]) that is calculated every time step. If you ever
 assign a new value to this variable, you will overwrite the primary variable’s
 derivative (which would be bad!).</p>
-</dd>
-</dl>
+</div>
 <p>Next we need to add code to the module file, physics.c in this example, for
 which this primary variable will be added. First add a new function that
 continues the initialization process:</p>

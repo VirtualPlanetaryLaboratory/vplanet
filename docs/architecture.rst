@@ -33,7 +33,7 @@ unphysical, e.g. eccentricities less than 0. Each of these checks must only
 apply to an individual option. More complicated checks are handled
 in Verify.
 
-:note::
+.. note::
 
   Some arrays and matrices are allocated prior to the ReadOptions call.
 
@@ -78,7 +78,7 @@ options can be input in a wide range of units, recording the state in system
 units allows users to determine if they have input something incorrectly, and
 also helps developers identify bugs.
 
-:note::
+.. note::
 
   If a user requests an output with a negative sign, which forces a specific
   unit, then the value in the log file will not be SI, but the custom units
@@ -106,7 +106,7 @@ system of equations that are required based on the options. The integration is
 broken down into five steps: Auxiliary Properties (sometimes shortened to
 AuxProps), One Step, Output, Force Behavior, and Halt.
 
-:note::
+.. note::
 
   If the user does not select a forward or backward integration, but does elect
   to write a log file, then the code will calculate all the initial conditions

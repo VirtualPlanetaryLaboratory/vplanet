@@ -301,7 +301,7 @@ def get_log(path=".", sysname=None, ext="log", units=True):
         try:
             line_items = line.split(":")
             name_and_unit = line_items[0]
-            value = ':'.join(line_items[1:])
+            value = ":".join(line_items[1:])
             unit = get_param_unit(name_and_unit, lf, i)
             name = get_param_name(name_and_unit, lf, i)
             value = get_param_value(value, unit, lf, i, units=units)
@@ -319,7 +319,7 @@ def get_log(path=".", sysname=None, ext="log", units=True):
             try:
                 line_items = line.split(":")
                 name_and_unit = line_items[0]
-                value = ':'.join(line_items[1:])
+                value = ":".join(line_items[1:])
                 unit = get_param_unit(name_and_unit, lf, i)
                 name = get_param_name(name_and_unit, lf, i)
                 value = get_param_value(value, unit, lf, i, units=units)
@@ -353,7 +353,7 @@ def get_log(path=".", sysname=None, ext="log", units=True):
             try:
                 line_items = line.split(":")
                 name_and_unit = line_items[0]
-                value = ':'.join(line_items[1:])
+                value = ":".join(line_items[1:])
                 unit = get_param_unit(name_and_unit, lf, i)
                 name = get_param_name(name_and_unit, lf, i)
                 value = get_param_value(value, unit, lf, i, units=units)

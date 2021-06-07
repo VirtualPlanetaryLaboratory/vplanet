@@ -82,7 +82,7 @@ vpl.in
     bVarDt        1                  # Use variable timestepping?
     dEta          0.01               # Coefficient for variable timestepping
     dStopTime     4.6e9              # Stop time for evolution
-    dOutputTime   1e6                # Output timesteps (assuming in body files)
+    dOutputTime   1e6                # Output interval for forward files
 
 .. note::
 

@@ -18,6 +18,7 @@ are available in separate repositories.
    vplot
    parametersweep
    tutorials
+   Workshop Lectures <http://faculty.washington.edu/rkb9/vplanet/Workshop21/>
    developers
    authors
    repos

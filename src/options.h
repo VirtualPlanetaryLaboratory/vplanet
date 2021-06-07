@@ -9,8 +9,8 @@
   1) Add integer definition here
   2) Add new option properties in InitializeOptions
   3) Write new fnReadOptions function
-  3) If necessary, modify the ReadOptions subroutine
-  4) If necessary, modify the WriteLog subroutine
+  4) If necessary, modify the ReadOptions subroutine
+  5) If necessary, modify the Verify process
 
 */
 

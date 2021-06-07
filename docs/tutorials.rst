@@ -1,5 +1,5 @@
-VPLanet Tutorials
-=================
+Tutorials
+=========
 
 Please view the following pages for written descriptions of how to:
 

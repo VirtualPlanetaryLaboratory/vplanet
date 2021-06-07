@@ -43,9 +43,9 @@
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="VPLanet 2.0.1
  documentation" href="index.html"/>
-        <link rel="up" title="VPLanet Tutorials" href="tutorials.html"/>
+        <link rel="up" title="Tutorials" href="tutorials.html"/>
         <link rel="next" title="Add a VPLanet Output" href="output.html"/>
-        <link rel="prev" title="VPLanet Tutorials" href="tutorials.html"/> 
+        <link rel="prev" title="Tutorials" href="tutorials.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -104,7 +104,7 @@
 <li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">VPLanet Tutorials</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">Tutorials</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Code Architecture</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#vplanet-s-flow-chart">VPLanet’s Flow Chart</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#reading-options">Reading Options</a></li>
@@ -136,6 +136,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module.html">Add a New Module</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference external" href="http://faculty.washington.edu/rkb9/vplanet/Workshop21/">Workshop Lectures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers.html">Contributor’s Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repos.html">Other VPLanet Repositories</a></li>
@@ -170,7 +171,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">VPLanet</a> &raquo;</li>
       
-        <li><a href="tutorials.html">VPLanet Tutorials</a>&raquo;</li>
+        <li><a href="tutorials.html">Tutorials</a>&raquo;</li>
       
     
       <li>VPLanet Architecture</li>
@@ -200,7 +201,7 @@ write the initial conditions to a log file, 4) integrate the system while
 outputting results, and 5) write the final conditions to the log file. In
 graphical form, here is the flow chart.</p>
 <figure class="align-default">
-<img alt="VPLanetFlowChart.png" src="VPLanetFlowChart.png" />
+<img alt="_images/VPLanetFlowChart.png" src="_images/VPLanetFlowChart.png" />
 </figure>
 <section id="reading-options">
 <h3>Reading Options<a class="headerlink" href="#reading-options" title="Permalink to this headline">¶</a></h3>
@@ -215,11 +216,10 @@ are performed on the input, such as ensuring that arguments to an option are not
 unphysical, e.g. eccentricities less than 0. Each of these checks must only
 apply to an individual option. More complicated checks are handled
 in Verify.</p>
-<dl class="field-list simple">
-<dt class="field-odd">note:</dt>
-<dd class="field-odd"><p>Some arrays and matrices are allocated prior to the ReadOptions call.</p>
-</dd>
-</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some arrays and matrices are allocated prior to the ReadOptions call.</p>
+</div>
 </section>
 <section id="verifying-options">
 <h3>Verifying Options<a class="headerlink" href="#verifying-options" title="Permalink to this headline">¶</a></h3>
@@ -256,13 +256,12 @@ final conditions of the simulation.</p>
 options can be input in a wide range of units, recording the state in system
 units allows users to determine if they have input something incorrectly, and
 also helps developers identify bugs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">note:</dt>
-<dd class="field-odd"><p>If a user requests an output with a negative sign, which forces a specific
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If a user requests an output with a negative sign, which forces a specific
 unit, then the value in the log file will not be SI, but the custom units
 associated with that output.</p>
-</dd>
-</dl>
+</div>
 <p>For example, a log file entry might look like this:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>Age<span class="o">)</span> System Age <span class="o">[</span>sec<span class="o">]</span>: <span class="m">3</span>.155760e+14
 </pre></div>
@@ -281,14 +280,13 @@ these outputs down by body, module, and initial/final conditions.</p>
 system of equations that are required based on the options. The integration is
 broken down into five steps: Auxiliary Properties (sometimes shortened to
 AuxProps), One Step, Output, Force Behavior, and Halt.</p>
-<dl class="field-list simple">
-<dt class="field-odd">note:</dt>
-<dd class="field-odd"><p>If the user does not select a forward or backward integration, but does elect
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the user does not select a forward or backward integration, but does elect
 to write a log file, then the code will calculate all the initial conditions
 and write them to the log. This feature can be useful if one just wants to
 assess the current state of a system.</p>
-</dd>
-</dl>
+</div>
 <p><strong>Auxiliary Properties</strong>: Prior to moving the system one step forward, the code
 calculates “helper” variables that make the code easier to parse. While strictly
 speaking the code would be faster if these parameters were not calculated
@@ -518,7 +516,7 @@ allocated to a variable), etc.</p>
         <a href="output.html" class="btn btn-neutral float-right" title="Add a VPLanet Output" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="tutorials.html" class="btn btn-neutral" title="VPLanet Tutorials" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="tutorials.html" class="btn btn-neutral" title="Tutorials" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

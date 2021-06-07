@@ -43,7 +43,7 @@
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="VPLanet 2.0.1
  documentation" href="index.html"/>
-        <link rel="up" title="VPLanet Tutorials" href="tutorials.html"/>
+        <link rel="up" title="Tutorials" href="tutorials.html"/>
         <link rel="next" title="Add a VPLanet Option" href="option.html"/>
         <link rel="prev" title="VPLanet Architecture" href="architecture.html"/> 
 
@@ -104,7 +104,7 @@
 <li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">VPLanet Tutorials</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">Tutorials</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="architecture.html">Code Architecture</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Add an Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="option.html">Add an Option</a></li>
@@ -113,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module.html">Add a New Module</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference external" href="http://faculty.washington.edu/rkb9/vplanet/Workshop21/">Workshop Lectures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers.html">Contributor’s Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repos.html">Other VPLanet Repositories</a></li>
@@ -147,7 +148,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">VPLanet</a> &raquo;</li>
       
-        <li><a href="tutorials.html">VPLanet Tutorials</a>&raquo;</li>
+        <li><a href="tutorials.html">Tutorials</a>&raquo;</li>
       
     
       <li>Add a VPLanet Output</li>
@@ -228,12 +229,11 @@ in the output. This function must be defined prior to this line. Finally, not
 shown is the cLongDescr field that contains a longer description of the output
 parameter that is used with the -H command line option, e.g. the “precession
 angle” requires a bit more explanation for a typical user:</p>
-<dl class="field-list simple">
-<dt class="field-odd">note:</dt>
-<dd class="field-odd"><p>Any field that is omitted will be set to the default values that are defined
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Any field that is omitted will be set to the default values that are defined
 in output.c:InitializeOutput.</p>
-</dd>
-</dl>
+</div>
 <p>Next, let’s turn to the fnWrite subroutine., which assigns the value and unit to
 the output in preparation for writing to an output file. These functions
 typically look like this:</p>

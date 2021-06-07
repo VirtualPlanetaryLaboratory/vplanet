@@ -43,7 +43,7 @@
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="VPLanet 2.0.1
  documentation" href="index.html"/>
-        <link rel="up" title="VPLanet Tutorials" href="tutorials.html"/>
+        <link rel="up" title="Tutorials" href="tutorials.html"/>
         <link rel="next" title="How to Add a Primary Variable" href="primaryvariable.html"/>
         <link rel="prev" title="Add a VPLanet Output" href="output.html"/> 
 
@@ -104,7 +104,7 @@
 <li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">VPLanet Tutorials</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">Tutorials</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="architecture.html">Code Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Add an Output</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Add an Option</a></li>
@@ -113,6 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module.html">Add a New Module</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference external" href="http://faculty.washington.edu/rkb9/vplanet/Workshop21/">Workshop Lectures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers.html">Contributor’s Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repos.html">Other VPLanet Repositories</a></li>
@@ -147,7 +148,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">VPLanet</a> &raquo;</li>
       
-        <li><a href="tutorials.html">VPLanet Tutorials</a>&raquo;</li>
+        <li><a href="tutorials.html">Tutorials</a>&raquo;</li>
       
     
       <li>Add a VPLanet Option</li>
@@ -219,6 +220,9 @@ a bitwise comparison, with each module assigned a unique bit as defined in
 vplanet.h. Options that are applicable to all modules, like stop time,
 should be set to 0 as shown. Otherwise, set the value to equal the sum of module
 bits, such as is done for the inclination:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>options<span class="o">[</span>OPT_INC<span class="o">]</span>.iModuleBit <span class="o">=</span> DISTORB + SPINBODY<span class="p">;</span>
+</pre></div>
+</div>
 <p>In other words, each module is assigned a unique integer that is a power of 2 so
 that all module combinations sum to a unique multiple of 2. When an option is
 read in, VPLanet checks that either iModuleBit = 0, or that at least one of the
@@ -228,22 +232,18 @@ in the option. This function must be defined prior to this line. Finally, not
 shown is the cLongDescr field that contains a longer description of the output
 parameter that is used with the -H command line option, e.g. the verbosity
 benefits from a bit more explanation:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sprintf<span class="o">(</span>options<span class="o">[</span>OPT_VERBOSE<span class="o">]</span>.cLongDescr,
+<span class="s2">&quot;Set how much text is written to the screen. 0 = no output, 1 = only\n&quot;</span>
+<span class="s2">&quot;errors, 2 = progress updates, 3 = statements about input choices,  4 =\n&quot;</span>
+<span class="s2">&quot;information about unit choices, 5 = all possible output. Note that levels\n&quot;</span>
+<span class="s2">&quot;0 and 5 can be set at execution with the -q and -v options, respectively.&quot;</span>
 </pre></div>
 </div>
-<dl class="simple">
-<dt>sprintf(options[OPT_VERBOSE].cLongDescr,</dt><dd><p>“Set how much text is written to the screen. 0 = no output, 1 = onlyn”
-“errors, 2 = progress updates, 3 = statements about input choices,  4 =n”
-“information about unit choices, 5 = all possible output. Note that levelsn”
-“0 and 5 can be set at execution with the -q and -v options, respectively.”</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">note:</dt>
-<dd class="field-odd"><p>Any field that is omitted will be set to the default values that are defined
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Any field that is omitted will be set to the default values that are defined
 in output.c:InitializeOutput.</p>
-</dd>
-</dl>
+</div>
 <p>Now let’s look at the subroutine that actually reads in the option, sticking
 with the stop time:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span>void ReadStopTime<span class="o">(</span>BODY *body,CONTROL *control,FILES *files,OPTIONS *options,

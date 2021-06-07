@@ -66,6 +66,7 @@ should be set to 0 as shown. Otherwise, set the value to equal the sum of module
 bits, such as is done for the inclination:
 
 .. code-block:: bash
+
     options[OPT_INC].iModuleBit = DISTORB + SPINBODY;
 
 In other words, each module is assigned a unique integer that is a power of 2 so
@@ -80,13 +81,15 @@ parameter that is used with the -H command line option, e.g. the verbosity
 benefits from a bit more explanation:
 
 .. code-block:: bash
-sprintf(options[OPT_VERBOSE].cLongDescr,
+
+  sprintf(options[OPT_VERBOSE].cLongDescr,
   "Set how much text is written to the screen. 0 = no output, 1 = only\n"
   "errors, 2 = progress updates, 3 = statements about input choices,  4 =\n"
   "information about unit choices, 5 = all possible output. Note that levels\n"
   "0 and 5 can be set at execution with the -q and -v options, respectively."
 
-:note::
+.. note::
+
   Any field that is omitted will be set to the default values that are defined
   in output.c:InitializeOutput.
 

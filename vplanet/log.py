@@ -49,7 +49,7 @@ def get_param_name(param, file, line):
 
     Returns a string.
     """
-    # Replace bad characters
+    # Replace any bad characters
     repl = [("#", "")]
     for a, b in repl:
         param = param.replace(a, b)
@@ -299,7 +299,9 @@ def get_log(path=".", sysname=None, ext="log", units=True):
     # Process the header
     for i, line in header:
         try:
-            name_and_unit, value = line.split(":")
+            line_items = line.split(":")
+            name_and_unit = line_items[0]
+            value = ":".join(line_items[1:])
             unit = get_param_unit(name_and_unit, lf, i)
             name = get_param_name(name_and_unit, lf, i)
             value = get_param_value(value, unit, lf, i, units=units)
@@ -315,7 +317,9 @@ def get_log(path=".", sysname=None, ext="log", units=True):
     for i, line in initial:
         if "BODY:" not in line:
             try:
-                name_and_unit, value = line.split(":")
+                line_items = line.split(":")
+                name_and_unit = line_items[0]
+                value = ":".join(line_items[1:])
                 unit = get_param_unit(name_and_unit, lf, i)
                 name = get_param_name(name_and_unit, lf, i)
                 value = get_param_value(value, unit, lf, i, units=units)
@@ -347,7 +351,9 @@ def get_log(path=".", sysname=None, ext="log", units=True):
     for i, line in final:
         if "BODY:" not in line:
             try:
-                name_and_unit, value = line.split(":")
+                line_items = line.split(":")
+                name_and_unit = line_items[0]
+                value = ":".join(line_items[1:])
                 unit = get_param_unit(name_and_unit, lf, i)
                 name = get_param_name(name_and_unit, lf, i)
                 value = get_param_value(value, unit, lf, i, units=units)

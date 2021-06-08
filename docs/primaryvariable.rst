@@ -245,10 +245,11 @@ the module's file (physics.c):
   void InitializeUpdatePhysics(BODY *body, UPDATE *update, int iBody) {
     ...
     if (iBody > 0) {
-    if (update[iBody].iNumPrimaryVariable == 0) {
-      update[iBody].iNumVars++;
+      if (update[iBody].iNumPrimaryVariable == 0) {
+        update[iBody].iNumVars++;
+      }
+      update[iBody].iNumPrimaryVariable++;
     }
-    update[iBody].iNumPrimaryVariable++;
     ...
   }
 
@@ -271,7 +272,7 @@ Then add the primary variable to the NullDerivatives function:
 
 .. code-block:: bash
 
-  void NullPhysicsEDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
+  void NullDerivativesPhysics(BODY *body, EVOLVE *evolve, UPDATE *update,
                              fnUpdateVariable ***fnUpdate, int iBody) {
     ...
     fnUpdate[iBody][update[iBody].iPrimaryVariable]

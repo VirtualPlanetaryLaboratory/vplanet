@@ -386,10 +386,11 @@ the module’s file (physics.c):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void InitializeUpdatePhysics<span class="o">(</span>BODY *body, UPDATE *update, int iBody<span class="o">)</span> <span class="o">{</span>
   ...
   <span class="k">if</span> <span class="o">(</span>iBody &gt; <span class="m">0</span><span class="o">)</span> <span class="o">{</span>
-  <span class="k">if</span> <span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable <span class="o">==</span> <span class="m">0</span><span class="o">)</span> <span class="o">{</span>
-    update<span class="o">[</span>iBody<span class="o">]</span>.iNumVars++<span class="p">;</span>
+    <span class="k">if</span> <span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable <span class="o">==</span> <span class="m">0</span><span class="o">)</span> <span class="o">{</span>
+      update<span class="o">[</span>iBody<span class="o">]</span>.iNumVars++<span class="p">;</span>
+    <span class="o">}</span>
+    update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable++<span class="p">;</span>
   <span class="o">}</span>
-  update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable++<span class="p">;</span>
   ...
 <span class="o">}</span>
 </pre></div>
@@ -407,7 +408,7 @@ the module’s file (physics.c):</p>
 <p>where PHYSICS is the unique integer associated with the module you are
 upgrading.</p>
 <p>Then add the primary variable to the NullDerivatives function:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void NullPhysicsEDerivatives<span class="o">(</span>BODY *body, EVOLVE *evolve, UPDATE *update,
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void NullDerivativesPhysics<span class="o">(</span>BODY *body, EVOLVE *evolve, UPDATE *update,
                            fnUpdateVariable ***fnUpdate, int iBody<span class="o">)</span> <span class="o">{</span>
   ...
   fnUpdate<span class="o">[</span>iBody<span class="o">][</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>

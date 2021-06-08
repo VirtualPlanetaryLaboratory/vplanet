@@ -1786,6 +1786,7 @@ depends on the total number of modules available. */
  ********************/
 
 /* Module limits:
+ * General: 0 - 1000
  * EQTIDE: 1000 - 1100
  * RADHEAT: 1100 - 1200
  * ATMESC: 1200 - 1300

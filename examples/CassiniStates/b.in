@@ -11,7 +11,7 @@ dRotPeriod	-1.0  #-10.0			# Rotation period, negative -> days
 dObliquity 45.0
 dRadGyra	0.5			# Radius of gyration (moment of inertia constant)
 #sMassRad Sotin
-#cColor ff0000
+#sColor ff0000
 
 # Orbital Properties
 dEcc 0.1

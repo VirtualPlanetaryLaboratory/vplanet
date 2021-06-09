@@ -7,7 +7,7 @@ dRadius		0.0026		# Radius, negative -> Earth radii
 dObliquity	0
 dRotPeriod	0.2579		# Rotation period, negative -> days
 dRadGyra	0.5		# Radius of gyration (moment of inertia constant)
-cColor 00ff00
+sColor 00ff00
 
 # The first body in the saBodyFiles list must be the central mass.
 # This body carries no orbital information => the coordinate system is bodycentric.

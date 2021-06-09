@@ -1,7 +1,7 @@
 # Planet g parameters
 sName         g			                     # Body's name
 saModules     magmoc, atmesc, radheat, eqtide        # Modules to apply, exact spelling required
-cColor        13aed5
+sColor        13aed5
 
 # Physical Properties
 dMass         -1.14                       # Mass, negative -> Earth masses
@@ -10,7 +10,7 @@ dRotPeriod    -1                           # Rotation Period, negative -> days
 
 # MAGMOC Properties
 dMassFracFeOIni		0.0788		  # Initial mass fraction of FeO in the mantle (default: 0.0788)
-dWaterMassAtm		-2		  # Initial water mass in the system (neg: terrestrial oceans, default: -1) 
+dWaterMassAtm		-2		  # Initial water mass in the system (neg: terrestrial oceans, default: -1)
 dSurfTemp		4000		  # Initial surface temperature (default: 4000K)
 dManMeltDensity		4000		  # Mantle melt density (default: 4000kg/m^3)
 bHaltMantleSolidified 	0		  # Halt when mantle solidified? (default: 0 = no, 1 = yes)

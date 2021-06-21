@@ -23,12 +23,12 @@ Add a new struct member to the MODULE struct called *iaModuleName.
 At the end of vplanet.h, add #include for your new .h file.
 
 Identify the primary variables, if they are new to the code, follow the `How
-to add a primary variable <primaryvariable>` tutorial.
+to add a `primary variable <primaryvariable>`_ tutorial.
 
 Determine which new options you need and follow the `How to add an option
-<option>` tutorial. Add all necessary members to the BODY struct, including new
+<option>`_ tutorial. Add all necessary members to the BODY struct, including new
 options, primary variables, and auxiliary properties. Add all new outputs by
-following the `How to add an output <output>` tutorial.
+following the `How to add an output <output>`_ tutorial.
 
 Creating the Source Files
 -------------------------
@@ -53,7 +53,7 @@ we choose to pre-allocate a BODY struct inside CONTROL, which can increase the
 speed of the code by over a factor of 10 in some cases. The trade off for this
 approach is that all parameters must be copied in the BodyCopy functions.
 
-:note::
+.. note::
 
   Failure to add a BODY struct member to BodyCopy is a very common mistake! If
   your changes are not working, make sure to check this function.
@@ -70,11 +70,11 @@ Option Functions
 
 The next blocks of code are the functions for reading options, which were
 discussed as part of the initial steps. Note that after InitializeOptions comes
-the function ReadoptionsEqtide, which loops over all the options. Make sure your
+the function ReadOptionsEqtide, which loops over all the options. Make sure your
 starting and ending values in the for loop are correct.
 
 After the ReadOptions functions come the Verify functions. As discussed in the
-`Code Architecture <architecture>` page, these functions can take on many forms
+`Code Architecture <architecture>`_ page, these functions can take on many forms
 that depend on the goal of the module. Recall that by the end of Verify, all the
 options should be vetted for self-consistency, with errors handled in a friendly
 way. After Verify, the code expects everything to be clean and ready for a fast
@@ -138,5 +138,5 @@ variable. Next, add a block of text for your module to AddModules that is
 similar to the blocks already present. Then add the appropriate block of text to
 ReadModules so that the code can actually find your new module! Next add
 lines to PrintModuleList and InitializeBodyModules. The final step is to write
-any `multi-module PropsAux and ForceBehavior functions, <coupling>` if
+any `multi-module PropsAux and ForceBehavior functions, <coupling>`_ if
 necessary. Congratulations! You've now written a new, bug-free module!

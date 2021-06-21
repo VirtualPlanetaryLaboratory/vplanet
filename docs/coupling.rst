@@ -52,7 +52,7 @@ it in the actual VerifyModuleMulti function in module.c. Finally, check
 VerifyModuleCompatability and remove any existing exit calls that are associated
 with the new module combination.
 
-:note::
+.. note::
   All VerifyModuleMulti functions are called even if only 1 module has been
   selected by the user because some default behavior depends on if other modules
   have *not* been selected.
@@ -62,7 +62,7 @@ are unique to the coupling, you can then add them in module.c, too. All
 multi-module functions are called *after* the single-module functions, so if
 something is set in one of those functions, you can change the setting in the
 multi-module functions. Note that you can build as complex a multi-module
-function as you like, i.e. connecting all modules, and use the VerifiMulti
+function as you like, i.e. connecting all modules, and use the VerifyMulti
 framework to add/remove functions to the Control->fnPropsAuxMulti and
 Control->fnForceBehaviorMulti function pointer matrices. Just be mindful of the
 order in which the VerifyMulti functions are called.

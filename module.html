@@ -197,12 +197,11 @@ seamlessly to the other modules.</p>
 unique number for the module. Adjust the values to MODULEOPTEND and MODULEOUTEND.
 Add a new struct member to the MODULE struct called <a href="#id1"><span class="problematic" id="id2">*</span></a>iaModuleName.</p>
 <p>At the end of vplanet.h, add #include for your new .h file.</p>
-<p>Identify the primary variables, if they are new to the code, follow the <cite>How
-to add a primary variable &lt;primaryvariable&gt;</cite> tutorial.</p>
-<p>Determine which new options you need and follow the <cite>How to add an option
-&lt;option&gt;</cite> tutorial. Add all necessary members to the BODY struct, including new
+<p>Identify the primary variables, if they are new to the code, follow the <a class="reference external" href="primaryvariable">How
+to add a `primary variable</a> tutorial.</p>
+<p>Determine which new options you need and follow the <a class="reference external" href="option">How to add an option</a> tutorial. Add all necessary members to the BODY struct, including new
 options, primary variables, and auxiliary properties. Add all new outputs by
-following the <cite>How to add an output &lt;output&gt;</cite> tutorial.</p>
+following the <a class="reference external" href="output">How to add an output</a> tutorial.</p>
 </section>
 <section id="creating-the-source-files">
 <h2>Creating the Source Files<a class="headerlink" href="#creating-the-source-files" title="Permalink to this headline">¶</a></h2>
@@ -222,12 +221,11 @@ because allocating memory at every timestep is an expensive calculation. Instead
 we choose to pre-allocate a BODY struct inside CONTROL, which can increase the
 speed of the code by over a factor of 10 in some cases. The trade off for this
 approach is that all parameters must be copied in the BodyCopy functions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">note:</dt>
-<dd class="field-odd"><p>Failure to add a BODY struct member to BodyCopy is a very common mistake! If
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Failure to add a BODY struct member to BodyCopy is a very common mistake! If
 your changes are not working, make sure to check this function.</p>
-</dd>
-</dl>
+</div>
 <p>The next function is InitializeBodyEqtide, which allocates memory in the body
 struct based on options. In this case, the BODY struct needs space for the total
 number of bodies that can be tidal perturbers.</p>
@@ -238,10 +236,10 @@ tmpBody struct inside CONTROL.</p>
 <h3>Option Functions<a class="headerlink" href="#option-functions" title="Permalink to this headline">¶</a></h3>
 <p>The next blocks of code are the functions for reading options, which were
 discussed as part of the initial steps. Note that after InitializeOptions comes
-the function ReadoptionsEqtide, which loops over all the options. Make sure your
+the function ReadOptionsEqtide, which loops over all the options. Make sure your
 starting and ending values in the for loop are correct.</p>
 <p>After the ReadOptions functions come the Verify functions. As discussed in the
-<cite>Code Architecture &lt;architecture&gt;</cite> page, these functions can take on many forms
+<a class="reference external" href="architecture">Code Architecture</a> page, these functions can take on many forms
 that depend on the goal of the module. Recall that by the end of Verify, all the
 options should be vetted for self-consistency, with errors handled in a friendly
 way. After Verify, the code expects everything to be clean and ready for a fast
@@ -298,7 +296,7 @@ variable. Next, add a block of text for your module to AddModules that is
 similar to the blocks already present. Then add the appropriate block of text to
 ReadModules so that the code can actually find your new module! Next add
 lines to PrintModuleList and InitializeBodyModules. The final step is to write
-any <cite>multi-module PropsAux and ForceBehavior functions, &lt;coupling&gt;</cite> if
+any <a class="reference external" href="coupling">multi-module PropsAux and ForceBehavior functions,</a> if
 necessary. Congratulations! You’ve now written a new, bug-free module!</p>
 </section>
 </section>

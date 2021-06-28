@@ -1,11 +1,6 @@
 Parameter Sweep Example
 =======================
 
-.. warning::
-
-    This example is currently broken! See
-    `this issue <https://github.com/VirtualPlanetaryLaboratory/vplanet-private/issues/299>`_.
-
 Overview
 --------
 

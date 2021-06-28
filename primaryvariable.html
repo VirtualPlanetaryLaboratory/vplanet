@@ -385,12 +385,10 @@ subroutine that return the derivative of the primary variable.</p>
 the module’s file (physics.c):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void InitializeUpdatePhysics<span class="o">(</span>BODY *body, UPDATE *update, int iBody<span class="o">)</span> <span class="o">{</span>
   ...
-  <span class="k">if</span> <span class="o">(</span>iBody &gt; <span class="m">0</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">if</span> <span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable <span class="o">==</span> <span class="m">0</span><span class="o">)</span> <span class="o">{</span>
-      update<span class="o">[</span>iBody<span class="o">]</span>.iNumVars++<span class="p">;</span>
-    <span class="o">}</span>
-    update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable++<span class="p">;</span>
+  <span class="k">if</span> <span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable <span class="o">==</span> <span class="m">0</span><span class="o">)</span> <span class="o">{</span>
+    update<span class="o">[</span>iBody<span class="o">]</span>.iNumVars++<span class="p">;</span>
   <span class="o">}</span>
+  update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable++<span class="p">;</span>
   ...
 <span class="o">}</span>
 </pre></div>
@@ -438,8 +436,7 @@ to understand the code. You may also need to update the ForceBehavior function.
 If your new variable depends on arrays of parameters, you may also need to add
 or update the InitializeBody, InitializeUpdate, InitializeTmpBody, and
 InitializeTmpUpdate functions. See eqtide.c or distorb.c for examples of how
-these functions work. And of course you’ll probably want to add <cite>options
-&lt;option&gt;</cite> and <cite>outputs &lt;output&gt;</cite>. Finally, add <cite>examples and tests &lt;tests&gt;</cite> to
+these functions work. And of course you’ll probably want to add <a class="reference external" href="option">options</a> and <a class="reference external" href="output">outputs</a>. Finally, add <a class="reference external" href="tests">examples and tests</a> to
 show off your result and ensure that future upgrades don’t destroy your work.</p>
 </section>
 </section>

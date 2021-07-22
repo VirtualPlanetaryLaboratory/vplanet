@@ -4978,12 +4978,15 @@ Input Options
 +--------------------------------------------------------------------------------------+
 | **sFileOrbitData**                                                                   |
 +-----------------+--------------------------------------------------------------------+
-| Description     || The file should have the following format: Time SemiMajorAxis     |
-|                 || Eccentricity Inclination ArgPericenter LongAscNode MeanAnomaly.   |
-|                 || The units will be assumed to be the same as defined for the       |
-|                 || simulation. If using this feature, the integration must used a    |
+| Description     || File containing pre-computed orbital data. The file must have     |
+|                 || the following format: Time SemiMajorAxis Eccentricity             |
+|                 || Inclination ArgPericenter LongAscNode MeanAnomaly. The units of   |
+|                 || those parameters is assumed to be the same as body being          |
+|                 || simulated. When using this option, the integration must used a    |
 |                 || fixed timestep (bVarDt = 0), and the timestep (dTimeStep) must    |
-|                 || equal the cadence in the file. See null for more information.     |
+|                 || equal the cadence in the file, with time units in the             |
+|                 || sFileOrbitData file assumed to be the same as for the body        |
+|                 || file. See bReadOrbitData for more information.                    |
 +-----------------+--------------------------------------------------------------------+
 | Type            || String                                                            |
 +-----------------+--------------------------------------------------------------------+

@@ -12,40 +12,40 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/HabEvapCore
-   examples/VenusApproxInterior
-   examples/ParameterSweep
-   examples/MagmOc_Trappist1g
-   examples/GalaxyEffects
-   examples/WaterLossTides
-   examples/CassiniMulti
-   examples/ApseLock
-   examples/DampedCBP
-   examples/AbioticO2
-   examples/CircumbinaryOrbit
-   examples/ChaoticResonances
-   examples/SSDistOrbDistRot
-   examples/IceBelts
-   examples/MiniNeptuneEvap
-   examples/BinaryTides
-   examples/MagmOc_Earth
-   examples/RadHeat
-   examples/NBodyAtmEsc
-   examples/TidalEarth
-   examples/AtmEscKepler-36
-   examples/IoHeat
-   examples/MagmOc_GJ1132b
-   examples/MagneticBraking
-   examples/STEEP
-   examples/EarthClimate
-   examples/StellarEvol
-   examples/HLossTides
-   examples/TideLock
-   examples/AtmEscRegimes
-   examples/VenusWaterLoss
-   examples/SS_NBody
    examples/EarthInterior
+   examples/IceBelts
+   examples/NBodyAtmEsc
+   examples/BinaryTides
+   examples/GalaxyEffects
+   examples/HabEvapCore
+   examples/HLossTides
+   examples/SS_NBody
+   examples/TidalEarth
+   examples/MagmOc_Earth
+   examples/CassiniMulti
+   examples/VenusWaterLoss
+   examples/RadHeat
+   examples/WaterLossTides
+   examples/AbioticO2
+   examples/MiniNeptuneEvap
+   examples/CircumbinaryOrbit
    examples/CassiniStates
+   examples/TideLock
+   examples/ApseLock
+   examples/SSDistOrbDistRot
+   examples/MagmOc_Trappist1g
+   examples/VenusApproxInterior
+   examples/EarthClimate
+   examples/MagneticBraking
+   examples/MagmOc_GJ1132b
+   examples/AtmEscRegimes
+   examples/STEEP
+   examples/ParameterSweep
+   examples/IoHeat
+   examples/StellarEvol
+   examples/ChaoticResonances
+   examples/AtmEscKepler-36
+   examples/DampedCBP
 
 
 Broken

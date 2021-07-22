@@ -13128,12 +13128,15 @@ the same order as listed in saOutputOrder.</p>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
 <td><div class="line-block">
-<div class="line">The file should have the following format: Time SemiMajorAxis</div>
-<div class="line">Eccentricity Inclination ArgPericenter LongAscNode MeanAnomaly.</div>
-<div class="line">The units will be assumed to be the same as defined for the</div>
-<div class="line">simulation. If using this feature, the integration must used a</div>
+<div class="line">File containing pre-computed orbital data. The file must have</div>
+<div class="line">the following format: Time SemiMajorAxis Eccentricity</div>
+<div class="line">Inclination ArgPericenter LongAscNode MeanAnomaly. The units of</div>
+<div class="line">those parameters is assumed to be the same as body being</div>
+<div class="line">simulated. When using this option, the integration must used a</div>
 <div class="line">fixed timestep (bVarDt = 0), and the timestep (dTimeStep) must</div>
-<div class="line">equal the cadence in the file. See null for more information.</div>
+<div class="line">equal the cadence in the file, with time units in the</div>
+<div class="line">sFileOrbitData file assumed to be the same as for the body</div>
+<div class="line">file. See bReadOrbitData for more information.</div>
 </div>
 </td>
 </tr>

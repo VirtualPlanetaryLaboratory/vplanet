@@ -228,6 +228,8 @@ void InitializeOptionsDistRot(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_SPECMOMINERTIA]             = &ReadSpecMomInertia;
 
   sprintf(options[OPT_FILEORBITDATA].cName, "sFileOrbitData");
+  // Define OPT_READORBITDATA so it can be used in the long help
+  sprintf(options[OPT_READORBITDATA].cName, "bReadOrbitData");
   sprintf(options[OPT_FILEORBITDATA].cDescr,
           "Name of file containing orbit time series");
   sprintf(options[OPT_FILEORBITDATA].cDefault, "orbit.txt");
@@ -235,16 +237,18 @@ void InitializeOptionsDistRot(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_FILEORBITDATA]        = &ReadFileOrbitData;
   sprintf(
         options[OPT_FILEORBITDATA].cLongDescr,
-        "The file should have the following format: Time SemiMajorAxis \n"
-        "Eccentricity Inclination ArgPericenter LongAscNode MeanAnomaly. The \n"
-        "units will be assumed to be the same as defined for the simulation.\n"
-        "If using this feature, the integration must used a fixed timestep \n"
-        "(%s = 0), and the timestep (%s) must equal the cadence in the file.\n"
-        "See %s for more information.",
+        "File containing pre-computed orbital data. The file must have the \n"
+        "following format: Time SemiMajorAxis Eccentricity Inclination \n"
+        "ArgPericenter LongAscNode MeanAnomaly. The units of those \n"
+        "parameters is assumed to be the same as body being simulated. When \n"
+        "using this option, the integration must used a fixed timestep \n"
+        "(%s = 0), and the timestep (%s) must equal the cadence in the file, \n"
+        "with time units in the %s file assumed to be the same as for the \n"
+        "body file. See %s for more information.",
         options[OPT_VARDT].cName, options[OPT_TIMESTEP].cName,
-        options[OPT_READORBITDATA].cName);
+        options[OPT_FILEORBITDATA].cName, options[OPT_READORBITDATA].cName);
 
-  sprintf(options[OPT_READORBITDATA].cName, "bReadOrbitData");
+  // cName defined above
   sprintf(options[OPT_READORBITDATA].cDescr,
           "Read in orbital data for use with distrot?");
   sprintf(options[OPT_READORBITDATA].cDefault, "0");
@@ -397,9 +401,10 @@ void InitializeYoblDistRotStar(BODY *body, UPDATE *update, int iBody,
 
 void VerifyOrbitData(BODY *body, CONTROL *control, OPTIONS *options,
                      int iBody) {
-  int iNLines, iLine, c;
+  int iNLines, iLine, c, iNumColsFound, bFoo, iNumCols=7;
   double dttmp, datmp, detmp, ditmp, daptmp, dlatmp, dmatmp;
   FILE *fileorb;
+  char cLine[LINE],cFoo[MAXARRAY][OPTLEN];
 
   if (body[iBody].bReadOrbitData) {
     if (options[OPT_FILEORBITDATA].iLine[iBody + 1] == -1) {
@@ -413,6 +418,19 @@ void VerifyOrbitData(BODY *body, CONTROL *control, OPTIONS *options,
         printf("ERROR: File %s not found.\n", body[iBody].cFileOrbitData);
         exit(EXIT_INPUT);
       }
+      // Check file has exactly 7 columns
+      fgets(cLine, LINE, fileorb);
+      GetWords(cLine,cFoo,&iNumColsFound,&bFoo);
+      if (iNumCols != iNumColsFound) {
+        if (control->Io.iVerbose >= VERBERR) {
+          fprintf(stderr,"ERROR: Incorrect number of columns (%d) in %s file %s. "
+          "Must be exactly %d.\n",iNumColsFound,options[OPT_READORBITDATA].cName,
+          body[iBody].cFileOrbitData,iNumCols);
+        }
+        exit(EXIT_INPUT);
+      }
+
+
       iNLines = 0;
       while ((c = getc(fileorb)) != EOF) {
         if (c == '\n') {
@@ -436,7 +454,7 @@ void VerifyOrbitData(BODY *body, CONTROL *control, OPTIONS *options,
 
       iLine = 0;
       while (feof(fileorb) == 0) {
-        fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf", &dttmp, &datmp, &detmp,
+        fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf\n", &dttmp, &datmp, &detmp,
                &ditmp, &daptmp, &dlatmp, &dmatmp);
         body[iBody].daTimeSeries[iLine] =
               dttmp * fdUnitsTime(control->Units[iBody + 1].iTime);
@@ -483,17 +501,19 @@ void VerifyOrbitData(BODY *body, CONTROL *control, OPTIONS *options,
     if (control->Evolve.bDoForward) {
       if (body[iBody].daTimeSeries[1] != control->Evolve.dTimeStep) {
         fprintf(stderr,
-                "ERROR: Time step size (%s = 1) must match orbital data if %s "
-                "= 1\n",
-                options[OPT_TIMESTEP].cName, options[OPT_READORBITDATA].cName);
+                "ERROR: Time step size (%s = %lf) must match orbital data output time "
+                "(%lf) if %s = 1\n",
+                options[OPT_TIMESTEP].cName, control->Evolve.dTimeStep, 
+                body[iBody].daTimeSeries[1], options[OPT_READORBITDATA].cName);
         exit(EXIT_INPUT);
       }
     } else if (control->Evolve.bDoBackward) {
       if (body[iBody].daTimeSeries[1] != -1 * control->Evolve.dTimeStep) {
         fprintf(stderr,
-                "ERROR: Time step size (%s = 1) must match orbital data if %s "
-                "= 1\n",
-                options[OPT_TIMESTEP].cName, options[OPT_READORBITDATA].cName);
+                "ERROR: Time step size (%s = %lf) must match orbital data output time "
+                "(%lf) if %s = 1\n",
+                options[OPT_TIMESTEP].cName, control->Evolve.dTimeStep,
+                body[iBody].daTimeSeries[1], options[OPT_READORBITDATA].cName);
         exit(EXIT_INPUT);
       }
     }

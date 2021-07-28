@@ -702,7 +702,7 @@ void WriteOrbMeanMotion(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime);
+    *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
   }
 }
@@ -735,7 +735,7 @@ void WriteOrbPeriod(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    *dTmp *= fdUnitsTime(units->iTime);
+    *dTmp /= fdUnitsTime(units->iTime); 
     fsUnitsTime(units->iTime, cUnit);
   }
 }

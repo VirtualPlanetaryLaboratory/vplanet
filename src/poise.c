@@ -2270,14 +2270,14 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
       */
       count                 = 0;
       int RunLen            = 5;
-      int iMaxIteration     = 2*RunLen;
+      int iMaxIteration     = 5*RunLen;
       daRunningMean         = malloc((RunLen + 1) * sizeof(double));
       daRunningMean[RunLen] = 0;
       TotalMean             = 0;
       RunningMeanTmp        = dHUGE; // Run the loop at least once
       while (fabs(RunningMeanTmp - daRunningMean[RunLen]) >
                    body[iBody].dSpinUpTol ||
-             count <= iMaxIteration) {
+             count <= RunLen) {
         RunningMeanTmp = daRunningMean[RunLen];
         PoiseSeasonal(body, iBody);
         fvMatrixSeasonal(body, iBody);

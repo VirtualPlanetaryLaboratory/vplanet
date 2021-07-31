@@ -2274,7 +2274,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
       daRunningMean         = malloc((RunLen + 1) * sizeof(double));
       daRunningMean[RunLen] = 0;
       TotalMean             = 0;
-      RunningMeanTmp        = HUGE; // Run the loop at least once
+      RunningMeanTmp        = dHUGE; // Run the loop at least once
       while (fabs(RunningMeanTmp - daRunningMean[RunLen]) >
                    body[iBody].dSpinUpTol ||
              count <= iMaxIteration) {

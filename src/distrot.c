@@ -519,10 +519,9 @@ void VerifyOrbitData(BODY *body, CONTROL *control, OPTIONS *options,
     }
     if (iNLines < (control->Evolve.dStopTime / control->Evolve.dTimeStep + 1)) {
       fprintf(stderr,
-              "ERROR: Input orbit data must at least as long as vplanet "
-              "integration (%f years)\n",
-              control->Evolve.dStopTime / YEARSEC);
-      exit(EXIT_INPUT);
+              "ERROR: Final time in %s is less than %s; simulation cannot be completed.\n",
+              options[OPT_READORBITDATA].cName,options[OPT_STOPTIME].cName);
+      exit(EXIT_INPUT); // Should really be a DoubleLineExit
     }
   }
 }

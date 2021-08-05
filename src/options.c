@@ -1427,9 +1427,11 @@ void ReadDoBackward(BODY *body, CONTROL *control, FILES *files,
                      control->Io.iVerbose);
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
     control->Evolve.bDoBackward = bTmp;
-    fprintf(stderr, "\nWARNING: Backward integrations have not been validated "
+    if (control->Evolve.bDoBackward) {
+      fprintf(stderr, "\nWARNING: Backward integrations have not been validated "
                     "and may be unstable!\n");
-    fprintf(stderr, "Use at your own risk.\n\n");
+      fprintf(stderr, "Use at your own risk.\n\n");
+    }
   } else {
     AssignDefaultInt(options, &control->Evolve.bDoBackward, files->iNumInputs);
   }

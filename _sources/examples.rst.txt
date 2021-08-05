@@ -12,40 +12,40 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/EarthInterior
-   examples/IceBelts
-   examples/NBodyAtmEsc
-   examples/BinaryTides
-   examples/GalaxyEffects
-   examples/HabEvapCore
-   examples/HLossTides
-   examples/SS_NBody
-   examples/TidalEarth
-   examples/MagmOc_Earth
-   examples/CassiniMulti
-   examples/VenusWaterLoss
-   examples/RadHeat
-   examples/WaterLossTides
-   examples/AbioticO2
-   examples/MiniNeptuneEvap
-   examples/CircumbinaryOrbit
-   examples/CassiniStates
-   examples/TideLock
-   examples/ApseLock
    examples/SSDistOrbDistRot
-   examples/MagmOc_Trappist1g
+   examples/BinaryTides
+   examples/CassiniMulti
+   examples/HLossTides
+   examples/RadHeat
+   examples/AtmEscRegimes
+   examples/AtmEscKepler-36
+   examples/AbioticO2
+   examples/GalaxyEffects
+   examples/IoHeat
+   examples/MagmOc_Earth
+   examples/IceBelts
+   examples/CassiniStates
+   examples/StellarEvol
    examples/VenusApproxInterior
-   examples/EarthClimate
+   examples/DampedCBP
+   examples/ParameterSweep
+   examples/TideLock
+   examples/EarthInterior
+   examples/ChaoticResonances
+   examples/HabEvapCore
+   examples/CircumbinaryOrbit
+   examples/WaterLossTides
+   examples/MiniNeptuneEvap
+   examples/STEEP
+   examples/TidalEarth
+   examples/VenusWaterLoss
+   examples/ApseLock
+   examples/MagmOc_Trappist1g
+   examples/NBodyAtmEsc
    examples/MagneticBraking
    examples/MagmOc_GJ1132b
-   examples/AtmEscRegimes
-   examples/STEEP
-   examples/ParameterSweep
-   examples/IoHeat
-   examples/StellarEvol
-   examples/ChaoticResonances
-   examples/AtmEscKepler-36
-   examples/DampedCBP
+   examples/SS_NBody
+   examples/EarthClimate
 
 
 Broken

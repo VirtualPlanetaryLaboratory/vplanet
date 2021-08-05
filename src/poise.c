@@ -2277,7 +2277,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
       RunningMeanTmp        = daRunningMean[RunLen]; 
       while (fabs(RunningMeanTmp - daRunningMean[RunLen]) >
                    body[iBody].dSpinUpTol ||
-             count <= RunLen) {
+             count <= iMaxIteration) {
         RunningMeanTmp = daRunningMean[RunLen];
         PoiseSeasonal(body, iBody);
         fvMatrixSeasonal(body, iBody);
@@ -2308,12 +2308,14 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
           }
         }
         count += 1;
+        /*
         if (count >= iMaxIteration) {
           if (iVerbose > VERBPROG) {
             fprintf(stderr,"ERROR: Initial climate state failed to converge.\n");
           }
           exit(EXIT_INPUT);
         }
+        */
       }
       free(daRunningMean);
 

@@ -431,7 +431,7 @@ void VerifyOrbitData(BODY *body, CONTROL *control, OPTIONS *options,
       }
 
 
-      iNLines = 0;
+      iNLines = 1;
       while ((c = getc(fileorb)) != EOF) {
         if (c == '\n') {
           iNLines++; // add 1 for each new line
@@ -519,10 +519,9 @@ void VerifyOrbitData(BODY *body, CONTROL *control, OPTIONS *options,
     }
     if (iNLines < (control->Evolve.dStopTime / control->Evolve.dTimeStep + 1)) {
       fprintf(stderr,
-              "ERROR: Input orbit data must at least as long as vplanet "
-              "integration (%f years)\n",
-              control->Evolve.dStopTime / YEARSEC);
-      exit(EXIT_INPUT);
+              "ERROR: Final time in %s is less than %s; simulation cannot be completed.\n",
+              options[OPT_FILEORBITDATA].cName,options[OPT_STOPTIME].cName);
+      exit(EXIT_INPUT); // Should really be a DoubleLineExit
     }
   }
 }
@@ -721,8 +720,8 @@ void VerifyDistRot(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     if (body[iBody].bReadOrbitData) {
       if (control->Io.iVerbose >= VERBINPUT) {
         fprintf(stderr,
-                "WARNING: When reading in using %s to calculate\n"
-                "rotational evolution, Cassini parameters may not be correct.",
+                "INFO: When reading in using %s to calculate "
+                "rotational evolution, Cassini parameters may not be correct.\n",
                 options[OPT_READORBITDATA].cName);
       }
       system->daLOrb        = malloc(3 * sizeof(double));
@@ -1302,6 +1301,7 @@ void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
                body[iBody].daLRotTmp[1] * body[iBody].daLRotTmp[1] +
                body[iBody].daLRotTmp[2] * body[iBody].daLRotTmp[2]);
 
+  // Probably should assign array elements to 0 if Lnorm = 0
   if (Lnorm != 0) {
     for (i = 0; i < 3; i++) {
       body[iBody].daLRotTmp[i] /= Lnorm;
@@ -1312,10 +1312,12 @@ void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
   Lnorm = sqrt(body[iBody].daLOrbTmp[0] * body[iBody].daLOrbTmp[0] +
                body[iBody].daLOrbTmp[1] * body[iBody].daLOrbTmp[1] +
                body[iBody].daLOrbTmp[2] * body[iBody].daLOrbTmp[2]);
-
-  for (i = 0; i < 3; i++) {
-    body[iBody].daLOrbTmp[i] /= Lnorm;
+  if (Lnorm != 0) {
+    for (i = 0; i < 3; i++) {
+      body[iBody].daLOrbTmp[i] /= Lnorm;
+    }
   }
+
   cross(body[iBody].daLOrbTmp, body[iBody].daLRotTmp, system->daLOrb);
   *dTmp = sqrt(system->daLOrb[0] * system->daLOrb[0] +
                system->daLOrb[1] * system->daLOrb[1] +
@@ -1413,8 +1415,10 @@ void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
                body[iBody].daLOrbTmp[1] * body[iBody].daLOrbTmp[1] +
                body[iBody].daLOrbTmp[2] * body[iBody].daLOrbTmp[2]);
 
-  for (i = 0; i < 3; i++) {
-    body[iBody].daLOrbTmp[i] /= Lnorm;
+  if (Lnorm != 0) {
+    for (i = 0; i < 3; i++) {
+      body[iBody].daLOrbTmp[i] /= Lnorm;
+    }
   }
   *dTmp = 0.0;
   for (i = 0; i < 3; i++) {
@@ -1688,6 +1692,18 @@ void PropsAuxDistRot(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
 
   if (body[iBody].bReadOrbitData) {
     UpdateOrbitData(body, evolve, iBody);
+  }
+
+  if ((fabs(body[iBody].dXobl) > 1) || fabs(body[iBody].dYobl) > 1 || 
+       fabs(body[iBody].dZobl) > 1) {
+    if (io->iVerbose >= VERBERR) {
+      fprintf(stderr,"ERROR: %s's obliquity out of bounds at %.2e years.\n",
+              body[iBody].cName,evolve->dTime/YEARSEC);
+      fprintf(stderr,"\tXobl: %.6e\n",body[iBody].dXobl);
+      fprintf(stderr,"\tYobl: %.6e\n",body[iBody].dYobl);
+      fprintf(stderr,"\tZobl: %.6e\n",body[iBody].dZobl);
+    }
+    exit(EXIT_INT);
   }
 
   body[iBody].dObliquity = atan2(sqrt(body[iBody].dXobl * body[iBody].dXobl +

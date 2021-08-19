@@ -17,7 +17,7 @@
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml/badge.svg"/></a>
   <img src="https://img.shields.io/badge/Tests-334-darkblue.svg"/></a>
   <img src="https://img.shields.io/badge/Python-3.6+-orange.svg"/></a>
-  <img src = "https://img.shields.io/badge/memcheck-clean-green.svg?style=flat">
+  <img src = "https://img.shields.io/badge/memcheck-dirty-red.svg?style=flat">
   <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">
   <img src="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet/branch/master/graph/badge.svg?token=3LFJQO1M6H"/>
   </a>

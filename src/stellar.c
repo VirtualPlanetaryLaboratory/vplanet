@@ -1665,14 +1665,14 @@ double fdLuminosityFunctionBaraffe(double dAge, double dMass) {
     return NAN;
   } else {
     if (iError == STELLAR_ERR_OUTOFBOUNDS_LO) {
-      fprintf(stderr, "ERROR: Out of bounds (low) in fdBaraffe().\n");
+      fprintf(stderr, "ERROR: Luninosity out of bounds (low) in fdBaraffe().\n");
     } else if (iError == STELLAR_ERR_FILE) {
-      fprintf(stderr, "ERROR: File access error in routine fdBaraffe().\n");
+      fprintf(stderr, "ERROR: File access error in Luminosity routine fdBaraffe().\n");
     } else if (iError == STELLAR_ERR_BADORDER) {
       fprintf(stderr,
-              "ERROR: Bad interpolation order in routine fdBaraffe().\n");
+              "ERROR: Bad Luminosity interpolation order in routine fdBaraffe().\n");
     } else {
-      fprintf(stderr, "ERROR: Undefined error in fdBaraffe().\n");
+      fprintf(stderr, "ERROR: Undefined Luminosity error in fdBaraffe().\n");
     }
     exit(EXIT_INT);
   }
@@ -1688,14 +1688,14 @@ double fdRadiusFunctionBaraffe(double dAge, double dMass) {
     return NAN;
   } else {
     if (iError == STELLAR_ERR_OUTOFBOUNDS_LO) {
-      fprintf(stderr, "ERROR: Out of bounds (low) in fdBaraffe().\n");
+      fprintf(stderr, "ERROR: Radius out of bounds (low) in fdBaraffe().\n");
     } else if (iError == STELLAR_ERR_FILE) {
-      fprintf(stderr, "ERROR: File access error in routine fdBaraffe().\n");
+      fprintf(stderr, "ERROR: File access error in radius routine fdBaraffe().\n");
     } else if (iError == STELLAR_ERR_BADORDER) {
       fprintf(stderr,
-              "ERROR: Bad interpolation order in routine fdBaraffe().\n");
+              "ERROR: Bad radius interpolation order in routine fdBaraffe().\n");
     } else {
-      fprintf(stderr, "ERROR: Undefined error in fdBaraffe().\n");
+      fprintf(stderr, "ERROR: Undefined radius error in fdBaraffe().\n");
     }
     exit(EXIT_INT);
   }
@@ -1711,14 +1711,14 @@ double fdRadGyraFunctionBaraffe(double dAge, double dMass) {
     return NAN;
   } else {
     if (iError == STELLAR_ERR_OUTOFBOUNDS_LO) {
-      fprintf(stderr, "ERROR: Out of bounds (low) in fdBaraffe().\n");
+      fprintf(stderr, "ERROR: Radius of gyration out of bounds (low) in fdBaraffe().\n");
     } else if (iError == STELLAR_ERR_FILE) {
-      fprintf(stderr, "ERROR: File access error in routine fdBaraffe().\n");
+      fprintf(stderr, "ERROR: File access error in radius of gyration routine fdBaraffe().\n");
     } else if (iError == STELLAR_ERR_BADORDER) {
       fprintf(stderr,
-              "ERROR: Bad interpolation order in routine fdBaraffe().\n");
+              "ERROR: Bad radius of gyration interpolation order in routine fdBaraffe().\n");
     } else {
-      fprintf(stderr, "ERROR: Undefined error in fdBaraffe().\n");
+      fprintf(stderr, "ERROR: Undefined radius of gyration error in fdBaraffe().\n");
     }
     exit(EXIT_INT);
   }
@@ -1734,14 +1734,14 @@ double fdTemperatureFunctionBaraffe(double dAge, double dMass) {
     return NAN;
   } else {
     if (iError == STELLAR_ERR_OUTOFBOUNDS_LO) {
-      fprintf(stderr, "ERROR: Out of bounds (low) in fdBaraffe().\n");
+      fprintf(stderr, "ERROR: Temperature out of bounds (low) in fdBaraffe().\n");
     } else if (iError == STELLAR_ERR_FILE) {
-      fprintf(stderr, "ERROR: File access error in routine fdBaraffe().\n");
+      fprintf(stderr, "ERROR: File access error in temperature routine fdBaraffe().\n");
     } else if (iError == STELLAR_ERR_BADORDER) {
       fprintf(stderr,
-              "ERROR: Bad interpolation order in routine fdBaraffe().\n");
+              "ERROR: Bad temperature interpolation order in routine fdBaraffe().\n");
     } else {
-      fprintf(stderr, "ERROR: Undefined error in fdBaraffe().\n");
+      fprintf(stderr, "ERROR: Undefined temperature error in fdBaraffe().\n");
     }
     exit(EXIT_INT);
   }

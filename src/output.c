@@ -1810,7 +1810,7 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
 void UnitsSI(UNITS *units) {
   units->iTime   = 0;
   units->iLength = 0;
-  units->iMass   = 0;
+  units->iMass   = U_KILOGRAM;
   units->iAngle  = 0;
   units->iTemp   = 0;
 }

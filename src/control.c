@@ -940,16 +940,19 @@ double fdUnitsMass(int iType) {
 }
 
 void fsUnitsMass(int iType, char cUnit[]) {
-  if (iType == 0) {
+  if (iType == U_KILOGRAM) {
     sprintf(cUnit, "kg");
-  } else if (iType == 1) {
+  } else if (iType == U_GRAM) {
     sprintf(cUnit, "gm");
-  } else if (iType == 2) {
+  } else if (iType == U_SOLARMASS) {
     sprintf(cUnit, "Msun");
-  } else if (iType == 3) {
+  } else if (iType == U_EARTHMASS) {
     sprintf(cUnit, "Mearth");
-  } else if (iType == 4) {
+  } else if (iType == U_JUPITERMASS) {
     sprintf(cUnit, "Mjupiter");
+  } else if (iType == U_NEPTUNEMASS) {
+    sprintf(cUnit, "Mneptune");
+    
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitMass: %d.\n", iType);
     exit(EXIT_UNITS);

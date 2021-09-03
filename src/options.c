@@ -639,17 +639,17 @@ void ReadVerbose(FILES *files, OPTIONS *options, int *iVerbose, int iFile) {
 int iAssignMassUnit(char cTmp[], int iVerbose, char cFile[], char cName[],
                     int iLine) {
   if (memcmp(sLower(cTmp), "g", 1) == 0) {
-    return 0;
+    return U_GRAM;
   } else if (memcmp(sLower(cTmp), "k", 1) == 0) {
-    return 1;
+    return U_KILOGRAM;
   } else if (memcmp(sLower(cTmp), "s", 1) == 0) {
-    return 2;
+    return U_SOLARMASS;
   } else if (memcmp(sLower(cTmp), "e", 1) == 0) {
-    return 3;
+    return U_EARTHMASS;
   } else if (memcmp(sLower(cTmp), "j", 1) == 0) {
-    return 4;
+    return U_JUPITERMASS;
   } else if (memcmp(sLower(cTmp), "n", 1) == 0) {
-    return 5;
+    return U_NEPTUNEMASS;
   } else {
     if (iVerbose >= VERBERR) {
       fprintf(stderr,

@@ -91,6 +91,14 @@
 #define CELSIUS 1
 #define FARENHEIT 2
 
+// Mass unit IDs
+#define U_GRAM  0
+#define U_KILOGRAM 1
+#define U_SOLARMASS 2
+#define U_EARTHMASS 3
+#define U_JUPITERMASS 4
+#define U_NEPTUNEMASS 5
+
 /* Do not change these declarations */
 extern const double dHUGE;
 extern const double dTINY;

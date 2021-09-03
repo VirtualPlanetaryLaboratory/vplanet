@@ -10,7 +10,7 @@ import numpy as np
         "log.final.a.Temperature": {"value": 2992.330343, "unit": u.K},
         "log.final.a.Radius": {"value": 0.184359, "unit": u.Rsun, "rtol": 1e-4,},
         "log.final.a.LostAngMom": {
-            "value": 9.438825e41,
+            "value": 9.438647e+41,
             "unit": u.kg * u.m ** 2 / u.sec,
             "rtol": 1e-4,
         },
@@ -19,12 +19,12 @@ import numpy as np
         "log.final.b.Temperature": {"value": 5539.190016, "unit": u.K},
         "log.final.b.Radius": {"value": 0.902638, "unit": u.Rsun, "rtol": 1e-4,},
         "log.final.b.LostAngMom": {
-            "value": 5.086001e43,
+            "value": 5.085996e+43,
             "unit": u.kg * u.m ** 2 / u.sec,
             "rtol": 1e-4,
         },
         "log.final.b.RotPer": {"value": 3.075721, "unit": u.days, "rtol": 1e-4},
-        "log.final.b.Density": {"value": 1916.956602, "unit": u.kg / u.m ** 3},
+        "log.final.b.Density": {"value": 1916.956727, "unit": u.kg / u.m ** 3},
     }
 )
 class TestStellarEvol(Benchmark):

@@ -921,17 +921,17 @@ void fsUnitsTime(int iType, char cUnit[]) {
 }
 
 double fdUnitsMass(int iType) {
-  if (iType == 0) {
+  if (iType == U_KILOGRAM) {
     return 1;
-  } else if (iType == 1) {
+  } else if (iType == U_GRAM) {
     return 1e-3;
-  } else if (iType == 2) {
+  } else if (iType == U_SOLARMASS) {
     return MSUN;
-  } else if (iType == 3) {
+  } else if (iType == U_EARTHMASS) {
     return MEARTH;
-  } else if (iType == 4) {
+  } else if (iType == U_JUPITERMASS) {
     return MJUP;
-  } else if (iType == 5) {
+  } else if (iType == U_NEPTUNEMASS) {
     return MNEP;
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitMass: %d.\n", iType);
@@ -940,16 +940,19 @@ double fdUnitsMass(int iType) {
 }
 
 void fsUnitsMass(int iType, char cUnit[]) {
-  if (iType == 0) {
+  if (iType == U_KILOGRAM) {
     sprintf(cUnit, "kg");
-  } else if (iType == 1) {
+  } else if (iType == U_GRAM) {
     sprintf(cUnit, "gm");
-  } else if (iType == 2) {
+  } else if (iType == U_SOLARMASS) {
     sprintf(cUnit, "Msun");
-  } else if (iType == 3) {
+  } else if (iType == U_EARTHMASS) {
     sprintf(cUnit, "Mearth");
-  } else if (iType == 4) {
+  } else if (iType == U_JUPITERMASS) {
     sprintf(cUnit, "Mjupiter");
+  } else if (iType == U_NEPTUNEMASS) {
+    sprintf(cUnit, "Mneptune");
+    
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitMass: %d.\n", iType);
     exit(EXIT_UNITS);

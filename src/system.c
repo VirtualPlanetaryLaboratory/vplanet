@@ -333,6 +333,7 @@ Compute the XUV Flux.
 double fdXUVFlux(BODY *body, int iBody) {
 
   double flux;
+  double dLXUVTot;
 
   if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
     // Body orbits two stars
@@ -347,6 +348,27 @@ double fdXUVFlux(BODY *body, int iBody) {
       flux = -1;
     }
   }
+
+  if (body[0].bFlare && body[0].bStellar){
+    dLXUVTot +=  body[0].dLXUVFlare + body[0].dLXUV;
+    if (iBody > 0) {
+      flux = dLXUVTot/(4 * PI * pow(body[iBody].dSemi, 2)) * (pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
+    } /*
+    else { // Central body can't have XUV flux (for now)
+      flux = -1;}*/
+  }
+
+
+  else if (body[0].bStellar) {
+    dLXUVTot +=  body[0].dLXUV;
+    if (iBody > 0) {
+      flux = dLXUVTot/(4 * PI * pow(body[iBody].dSemi, 2)) * (pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
+    }/*
+    else { // Central body can't have XUV flux (for now)
+      flux = -1;}
+    //fprintf("----- STELLAR (%f)------\n",flux);*/
+  }
+    
 
   return flux;
 }

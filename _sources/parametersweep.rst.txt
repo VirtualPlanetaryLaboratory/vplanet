@@ -8,7 +8,7 @@ and analysis. In brief, :code:`vspace` builds a set of initial conditions,
 and streamlines analysis. The following guide explains how to use these
 tools with an example based on Earth's internal thermal evolution. Files for the example
 presented here can be found in `examples/ParameterSweep
-<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/ParameterSweepe>`_
+<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/ParameterSweep>`_
 in which we examine the current radius of Earth's inner core as a function of the initial
 core temperature and the current amount of radiogenic heating from potassium-40.
 

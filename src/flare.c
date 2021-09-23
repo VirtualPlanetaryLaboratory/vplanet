@@ -627,7 +627,7 @@ void NullStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVar
 void AssignFlareDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
   /* No derivatives yet for flare.
   //This may become useful once flare evolution is included*/
-  //fnUpdate[iBody][update[iBody].iLXUV][0] = &fdLXUVFlare;
+ // fnUpdate[iBody][update[iBody].iLXUV][0] = &fdLXUVFlare;
   
 
 }
@@ -1139,6 +1139,7 @@ void LogBodyFlare(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UPDA
 }
 
 void AddModuleFlare(CONTROL *control,MODULE *module,int iBody,int iModule) {
+  module->iaModule[iBody][iModule] = FLARE;
 
   module->fnCountHalts[iBody][iModule]         = &CountHaltsFlare;
   module->fnReadOptions[iBody][iModule]        = &ReadOptionsFlare;

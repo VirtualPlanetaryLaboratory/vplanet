@@ -935,16 +935,16 @@ void InitializeOutputFlare(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_FLAREFREQ1].cDescr,"Flare frequency in flares/day");
   sprintf(output[OUT_FLAREFREQ1].cNeg,"1/second");
   output[OUT_FLAREFREQ1].bNeg = 1;
-  output[OUT_FLAREFREQ1].dNeg = 1./DAYSEC;
+  output[OUT_FLAREFREQ1].dNeg = 1;
   output[OUT_FLAREFREQ1].iNum = 1;
   output[OUT_FLAREFREQ1].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ1] = &WriteFlareFreq1;
 
   sprintf(output[OUT_FLAREFREQ2].cName,"FlareFreq2");
   sprintf(output[OUT_FLAREFREQ2].cDescr,"Flare frequency in flares/day");
-  sprintf(output[OUT_FLAREFREQ2].cNeg,"1/second");
+  sprintf(output[OUT_FLAREFREQ2].cNeg,"#/day");
   output[OUT_FLAREFREQ2].bNeg = 1;
-  output[OUT_FLAREFREQ2].dNeg = 1./DAYSEC;
+  output[OUT_FLAREFREQ2].dNeg = 1;
   output[OUT_FLAREFREQ2].iNum = 1;
   output[OUT_FLAREFREQ2].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ2] = &WriteFlareFreq2;
@@ -953,7 +953,7 @@ void InitializeOutputFlare(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_FLAREFREQ3].cDescr,"Flare frequency in flares/day");
   sprintf(output[OUT_FLAREFREQ3].cNeg,"1/second");
   output[OUT_FLAREFREQ3].bNeg = 1;
-  output[OUT_FLAREFREQ3].dNeg = 1./DAYSEC;
+  output[OUT_FLAREFREQ3].dNeg = 1;
   output[OUT_FLAREFREQ3].iNum = 1;
   output[OUT_FLAREFREQ3].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ3] = &WriteFlareFreq3;
@@ -962,7 +962,7 @@ void InitializeOutputFlare(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_FLAREFREQ4].cDescr,"Flare frequency in flares/day");
   sprintf(output[OUT_FLAREFREQ4].cNeg,"1/second");
   output[OUT_FLAREFREQ4].bNeg = 1;
-  output[OUT_FLAREFREQ4].dNeg = 1./DAYSEC;
+  output[OUT_FLAREFREQ4].dNeg = 1;
   output[OUT_FLAREFREQ4].iNum = 1;
   output[OUT_FLAREFREQ4].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ4] = &WriteFlareFreq4;
@@ -971,7 +971,7 @@ void InitializeOutputFlare(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_FLAREFREQ5].cDescr,"Flare frequency in flares/day");
   sprintf(output[OUT_FLAREFREQ5].cNeg,"1/second");
   output[OUT_FLAREFREQ5].bNeg = 1;
-  output[OUT_FLAREFREQ5].dNeg = 1./DAYSEC;
+  output[OUT_FLAREFREQ5].dNeg = 1;
   output[OUT_FLAREFREQ5].iNum = 1;
   output[OUT_FLAREFREQ5].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ5] = &WriteFlareFreq5;
@@ -980,7 +980,7 @@ void InitializeOutputFlare(OUTPUT *output,fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_FLAREFREQ6].cDescr,"Flare frequency in flares/day");
   sprintf(output[OUT_FLAREFREQ6].cNeg,"1/second");
   output[OUT_FLAREFREQ6].bNeg = 1;
-  output[OUT_FLAREFREQ6].dNeg = 1./DAYSEC;
+  output[OUT_FLAREFREQ6].dNeg = 1;
   output[OUT_FLAREFREQ6].iNum = 1;
   output[OUT_FLAREFREQ6].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ6] = &WriteFlareFreq6;
@@ -1281,10 +1281,11 @@ double fdFFD(BODY *body,int iBody,double dLogEnergy, double dFlareSlope, double 
 
           if  (body[iBody].iFlareSlopeUnits == FLARE_SLOPE_DAY){
             dFFD = pow(10,dFlareFreq);                              //Here the Flare frequency are in flares/day.
+            dFFD = dFFD/DAYSEC;                                     //Here the Flare frequency are in flares/seconds.
           }
           else if  (body[iBody].iFlareSlopeUnits == FLARE_SLOPE_SEC){
-            dFFD = pow(10,dFlareFreq);                              //Here the Flare frequency are in flares/days.
-            dFFD = dFFD/DAYSEC;                                   //Here the Flare frequency are in flares/seconds.
+            dFFD = pow(10,dFlareFreq);                              //Here the Flare frequency are in flares/seconds.
+            //dFFD = dFFD/DAYSEC;                                   //Here the Flare frequency are in flares/seconds.
           }
           else if  (body[iBody].iFlareSlopeUnits == FLARE_SLOPE_HOUR){
             dFFD = pow(10,dFlareFreq);                              //Here the Flare frequency are in flares/hour.

@@ -86,10 +86,18 @@
   0.6 // Structural constant for spherical mass                              \
         //distribution potential energy (E_pot = -ALPHA*BIGG*M^2/R)
 
-// Temperature macros
-#define KELVIN 0
-#define CELSIUS 1
-#define FARENHEIT 2
+// Angle unit IDs
+#define U_RADIANS 0
+#define U_DEGREES 1
+
+// Length unit IDs
+#define U_METER 0
+#define U_CENTIMETER 1
+#define U_KILOMETER 2
+#define U_SOLARRADIUS 3
+#define U_EARTHRADIUS 4
+#define U_JUPRADIUS 5
+#define U_AU 6
 
 // Mass unit IDs
 #define U_GRAM  0
@@ -98,6 +106,18 @@
 #define U_EARTHMASS 3
 #define U_JUPITERMASS 4
 #define U_NEPTUNEMASS 5
+
+// Temperature unit IDs
+#define U_KELVIN 0
+#define U_CELSIUS 1
+#define U_FARENHEIT 2
+
+// Time unit IDs
+#define U_SECOND 0
+#define U_DAY 1
+#define U_YEAR 2
+#define U_MYR 3
+#define U_GYR 4
 
 /* Do not change these declarations */
 extern const double dHUGE;

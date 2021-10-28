@@ -99,6 +99,15 @@
 #define U_JUPITERMASS 4
 #define U_NEPTUNEMASS 5
 
+// Length unit IDs
+#define U_METER 0
+#define U_CENTIMETER 1
+#define U_KILOMETER 2
+#define U_SOLARRADIUS 3
+#define U_EARTHRADIUS 4
+#define U_JUPRADIUS 5
+#define U_AU 6
+
 /* Do not change these declarations */
 extern const double dHUGE;
 extern const double dTINY;

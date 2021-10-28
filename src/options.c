@@ -930,19 +930,19 @@ void ReadUnitAngle(CONTROL *control, FILES *files, OPTIONS *options,
 int iAssignUnitLength(char cTmp[], int iVerbose, char cFile[], char cName[],
                       int iLine) {
   if (memcmp(sLower(cTmp), "c", 1) == 0) {
-    return 0;
+    return U_CENTIMETER;
   } else if (memcmp(sLower(cTmp), "m", 1) == 0) {
-    return 1;
+    return U_METER;
   } else if (memcmp(sLower(cTmp), "k", 1) == 0) {
-    return 2;
+    return U_KILOMETER;
   } else if (memcmp(sLower(cTmp), "s", 1) == 0) {
-    return 3;
+    return U_SOLARRADIUS;
   } else if (memcmp(sLower(cTmp), "e", 1) == 0) {
-    return 4;
+    return U_EARTHRADIUS;
   } else if (memcmp(sLower(cTmp), "j", 1) == 0) {
-    return 5;
+    return U_JUPRADIUS;
   } else if (memcmp(sLower(cTmp), "a", 1) == 0) {
-    return 6;
+    return U_AU;
   } else {
     if (iVerbose >= VERBERR) {
       fprintf(stderr,

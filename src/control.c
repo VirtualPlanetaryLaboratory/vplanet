@@ -844,19 +844,19 @@ void fprintd(FILE *fp, double x, int iExp, int iDig) {
 
 /* Return proper length conversion */
 double fdUnitsLength(int iType) {
-  if (iType == 0) {
+  if (iType == U_METER) {
     return 1;
-  } else if (iType == 1) {
-    return 0.1;
-  } else if (iType == 2) {
-    return 1e5;
-  } else if (iType == 3) {
+  } else if (iType == U_CENTIMETER) {
+    return 0.01;
+  } else if (iType == U_KILOMETER) {
+    return 1000;
+  } else if (iType == U_SOLARRADIUS) {
     return RSUN;
-  } else if (iType == 4) {
+  } else if (iType == U_EARTHRADIUS) {
     return REARTH;
-  } else if (iType == 5) {
+  } else if (iType == U_JUPRADIUS) {
     return RJUP;
-  } else if (iType == 6) {
+  } else if (iType == U_AU) {
     return AUM;
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitLength %d.\n", iType);
@@ -865,19 +865,19 @@ double fdUnitsLength(int iType) {
 }
 
 void fsUnitsLength(int iType, char cUnit[]) {
-  if (iType == 0) {
+  if (iType == U_METER) {
     sprintf(cUnit, "m");
-  } else if (iType == 1) {
+  } else if (iType == U_CENTIMETER) {
     sprintf(cUnit, "cm");
-  } else if (iType == 2) {
+  } else if (iType == U_KILOMETER) {
     sprintf(cUnit, "km");
-  } else if (iType == 3) {
+  } else if (iType == U_SOLARRADIUS) {
     sprintf(cUnit, "Rsun");
-  } else if (iType == 4) {
+  } else if (iType == U_EARTHRADIUS) {
     sprintf(cUnit, "Rearth");
-  } else if (iType == 5) {
+  } else if (iType == U_JUPRADIUS) {
     sprintf(cUnit, "Rjupiter");
-  } else if (iType == 6) {
+  } else if (iType == U_AU) {
     sprintf(cUnit, "au");
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitLength %d.\n", iType);

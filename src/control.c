@@ -844,19 +844,19 @@ void fprintd(FILE *fp, double x, int iExp, int iDig) {
 
 /* Return proper length conversion */
 double fdUnitsLength(int iType) {
-  if (iType == 0) {
+  if (iType == U_METER) {
     return 1;
-  } else if (iType == 1) {
-    return 0.1;
-  } else if (iType == 2) {
-    return 1e5;
-  } else if (iType == 3) {
+  } else if (iType == U_CENTIMETER) {
+    return 0.01;
+  } else if (iType == U_KILOMETER) {
+    return 1000;
+  } else if (iType == U_SOLARRADIUS) {
     return RSUN;
-  } else if (iType == 4) {
+  } else if (iType == U_EARTHRADIUS) {
     return REARTH;
-  } else if (iType == 5) {
+  } else if (iType == U_JUPRADIUS) {
     return RJUP;
-  } else if (iType == 6) {
+  } else if (iType == U_AU) {
     return AUM;
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitLength %d.\n", iType);
@@ -865,19 +865,19 @@ double fdUnitsLength(int iType) {
 }
 
 void fsUnitsLength(int iType, char cUnit[]) {
-  if (iType == 0) {
+  if (iType == U_METER) {
     sprintf(cUnit, "m");
-  } else if (iType == 1) {
+  } else if (iType == U_CENTIMETER) {
     sprintf(cUnit, "cm");
-  } else if (iType == 2) {
+  } else if (iType == U_KILOMETER) {
     sprintf(cUnit, "km");
-  } else if (iType == 3) {
+  } else if (iType == U_SOLARRADIUS) {
     sprintf(cUnit, "Rsun");
-  } else if (iType == 4) {
+  } else if (iType == U_EARTHRADIUS) {
     sprintf(cUnit, "Rearth");
-  } else if (iType == 5) {
+  } else if (iType == U_JUPRADIUS) {
     sprintf(cUnit, "Rjupiter");
-  } else if (iType == 6) {
+  } else if (iType == U_AU) {
     sprintf(cUnit, "au");
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitLength %d.\n", iType);
@@ -887,15 +887,15 @@ void fsUnitsLength(int iType, char cUnit[]) {
 
 /* Return proper time conversion */
 double fdUnitsTime(int iType) {
-  if (iType == 0) {
+  if (iType == U_SECOND) {
     return 1;
-  } else if (iType == 1) {
+  } else if (iType == U_DAY) {
     return DAYSEC;
-  } else if (iType == 2) {
+  } else if (iType == U_YEAR) {
     return YEARSEC;
-  } else if (iType == 3) {
+  } else if (iType == U_MYR) {
     return 1e6 * YEARSEC;
-  } else if (iType == 4) {
+  } else if (iType == U_GYR) {
     return 1e9 * YEARSEC;
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitTime: %d.\n", iType);
@@ -904,15 +904,15 @@ double fdUnitsTime(int iType) {
 }
 
 void fsUnitsTime(int iType, char cUnit[]) {
-  if (iType == 0) {
+  if (iType == U_SECOND) {
     sprintf(cUnit, "sec");
-  } else if (iType == 1) {
+  } else if (iType == U_DAY) {
     sprintf(cUnit, "day");
-  } else if (iType == 2) {
+  } else if (iType == U_YEAR) {
     sprintf(cUnit, "year");
-  } else if (iType == 3) {
+  } else if (iType == U_MYR) {
     sprintf(cUnit, "Myr");
-  } else if (iType == 4) {
+  } else if (iType == U_GYR) {
     sprintf(cUnit, "Gyr");
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitTime: %d.\n", iType);
@@ -960,9 +960,9 @@ void fsUnitsMass(int iType, char cUnit[]) {
 }
 
 double fdUnitsAngle(int iType) {
-  if (iType == 0) {
+  if (iType == U_RADIANS) {
     return 1;
-  } else if (iType == 1) {
+  } else if (iType == U_DEGREES) {
     return DEGRAD;
   } else {
     fprintf(stderr, "ERROR: Unknown Angle type %d\n.", iType);
@@ -971,9 +971,9 @@ double fdUnitsAngle(int iType) {
 }
 
 void fsUnitsAngle(int iType, char cUnit[]) {
-  if (iType == 0) {
+  if (iType == U_RADIANS) {
     sprintf(cUnit, "rad");
-  } else if (iType == 1) {
+  } else if (iType == U_DEGREES) {
     sprintf(cUnit, "deg");
   } else {
     fprintf(stderr, "ERROR: Unknown Angle type %d\n.", iType);
@@ -1095,40 +1095,40 @@ double fdUnitsEnergyFlux(int iTime, int iMass, int iLength) {
 }
 
 double fdUnitsTemp(double dTemp, int iOldType, int iNewType) {
-  if (iOldType == KELVIN) {
-    if (iNewType == CELSIUS) {
+  if (iOldType == U_KELVIN) {
+    if (iNewType == U_CELSIUS) {
       /* Kelvin -> Celsius */
       return dTemp - 273;
-    } else if (iNewType == FARENHEIT) {
+    } else if (iNewType == U_FARENHEIT) {
       /* Kelvin to Farenheit */
       return (dTemp - 273) * 1.8 + 32;
-    } else if (iNewType == KELVIN) {
+    } else if (iNewType == U_KELVIN) {
       return dTemp;
     } else {
       fprintf(stderr, "ERROR: Unknown Temperature type %d.\n", iNewType);
       exit(EXIT_UNITS);
     }
-  } else if (iOldType == CELSIUS) {
-    if (iNewType == KELVIN) {
+  } else if (iOldType == U_CELSIUS) {
+    if (iNewType == U_KELVIN) {
       /* Celsius -> Kelvin */
       return dTemp + 273;
-    } else if (iNewType == FARENHEIT) {
+    } else if (iNewType == U_FARENHEIT) {
       /* Celsius -> Farenheit */
       return (1.8 * dTemp) + 32;
-    } else if (iNewType == CELSIUS) {
+    } else if (iNewType == U_CELSIUS) {
       return dTemp;
     } else {
       fprintf(stderr, "ERROR: Unknown Temperature type %d.\n", iNewType);
       exit(EXIT_UNITS);
     }
-  } else if (iOldType == FARENHEIT) {
-    if (iNewType == KELVIN) {
+  } else if (iOldType == U_FARENHEIT) {
+    if (iNewType == U_KELVIN) {
       /* Farenheit -> Kelvin */
       return 5 / 9 * (dTemp - 32) + 273;
-    } else if (iNewType == CELSIUS) {
+    } else if (iNewType == U_CELSIUS) {
       /* Farenheit -> Celsius */
       return 5 / 9 * (dTemp - 32);
-    } else if (iNewType == FARENHEIT) {
+    } else if (iNewType == U_FARENHEIT) {
       return dTemp;
     } else {
       fprintf(stderr, "ERROR: Unknown Temperature type %d.\n", iNewType);
@@ -1141,11 +1141,11 @@ double fdUnitsTemp(double dTemp, int iOldType, int iNewType) {
 }
 
 void fsUnitsTemp(int iType, char cUnit[]) {
-  if (iType == 0) {
+  if (iType == U_KELVIN) {
     sprintf(cUnit, "K");
-  } else if (iType == 1) {
+  } else if (iType == U_CELSIUS) {
     sprintf(cUnit, "C");
-  } else if (iType == 2) {
+  } else if (iType == U_FARENHEIT) {
     sprintf(cUnit, "F");
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitTemp %d.\n", iType);
@@ -1153,12 +1153,13 @@ void fsUnitsTemp(int iType, char cUnit[]) {
   }
 }
 
+// XXX This looks fishy. Should time also be checked here
 void fsUnitsTempRate(int iType, char cUnit[]) {
-  if (iType == 0) {
+  if (iType == U_KELVIN) {
     sprintf(cUnit, "K/s");
-  } else if (iType == 1) {
+  } else if (iType == U_CELSIUS) {
     sprintf(cUnit, "C/s");
-  } else if (iType == 2) {
+  } else if (iType == U_FARENHEIT) {
     sprintf(cUnit, "F/s");
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitTempRate %d.\n", iType);

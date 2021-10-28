@@ -669,13 +669,6 @@ int iAssignMassUnit(char cTmp[], int iVerbose, char cFile[], char cName[],
 void ReadUnitMass(CONTROL *control, FILES *files, OPTIONS *options, int iFile) {
   int iFileNow, lTmp = -1;
   char cTmp[OPTLEN];
-  /* Mass Unit
-     0=gm
-     1=kg
-     2=solar
-     3=Earth
-     4=Jup
-     5=Neptune */
 
   AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
@@ -743,15 +736,15 @@ void ReadUnitMass(CONTROL *control, FILES *files, OPTIONS *options, int iFile) {
 int iAssignUnitTime(char cTmp[], int iVerbose, char cFile[], char cName[],
                     int iLine) {
   if (memcmp(sLower(cTmp), "s", 1) == 0) {
-    return 0;
+    return U_SECOND;
   } else if (memcmp(sLower(cTmp), "d", 1) == 0) {
-    return 1;
+    return U_DAY;
   } else if (memcmp(sLower(cTmp), "y", 1) == 0) {
-    return 2;
+    return U_YEAR;
   } else if (memcmp(sLower(cTmp), "m", 1) == 0) {
-    return 3;
+    return U_MYR;
   } else if (memcmp(sLower(cTmp), "g", 1) == 0) {
-    return 4;
+    return U_GYR;
   } else {
     if (iVerbose >= VERBERR) {
       fprintf(stderr,
@@ -772,13 +765,7 @@ int iAssignUnitTime(char cTmp[], int iVerbose, char cFile[], char cName[],
 void ReadUnitTime(CONTROL *control, FILES *files, OPTIONS *options, int iFile) {
   int iFileNow, lTmp = -1;
   char cTmp[OPTLEN];
-  /* Time Unit
-     0=s
-     1=d
-     2=yr
-     3=Myr
-     4=Gyr */
-
+ 
   AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
   if (iFile == 0) {
@@ -841,9 +828,9 @@ void ReadUnitTime(CONTROL *control, FILES *files, OPTIONS *options, int iFile) {
 int iAssignUnitAngle(char cTmp[], int iVerbose, char cFile[], char cName[],
                      int iLine) {
   if (memcmp(sLower(cTmp), "r", 1) == 0) {
-    return 0;
+    return U_RADIANS;
   } else if (memcmp(sLower(cTmp), "d", 1) == 0) {
-    return 1;
+    return U_DEGREES;
   } else {
     if (iVerbose >= VERBERR) {
       fprintf(stderr,
@@ -864,9 +851,6 @@ void ReadUnitAngle(CONTROL *control, FILES *files, OPTIONS *options,
                    int iFile) {
   int iFileNow, lTmp = -1;
   char cTmp[OPTLEN];
-  /* Angle Unit
-     0=rad
-     1=deg */
 
   AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
@@ -963,15 +947,7 @@ void ReadUnitLength(CONTROL *control, FILES *files, OPTIONS *options,
                     int iFile) {
   int iFileNow, lTmp = -1;
   char cTmp[OPTLEN];
-  /* Length Unit
-     0=cm
-     1=m
-     2=km
-     3=R_sun
-     4=R_earth
-     5=R_Jup
-     6=AU */
-
+  
   AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
   if (iFile == 0) {
@@ -1035,15 +1011,15 @@ void ReadUnitLength(CONTROL *control, FILES *files, OPTIONS *options,
 int iAssignTempUnit(char cTmp[], int iVerbose, char cFile[], char cName[],
                     int iLine) {
   if (memcmp(sLower(cTmp), "k", 1) == 0) {
-    return KELVIN;
+    return U_KELVIN;
   } else if (memcmp(sLower(cTmp), "c", 1) == 0) {
-    return CELSIUS;
+    return U_CELSIUS;
   } else if (memcmp(sLower(cTmp), "f", 1) == 0) {
-    return FARENHEIT;
+    return U_FARENHEIT;
   } else {
     if (iVerbose >= VERBERR) {
       fprintf(stderr,
-              "ERROR: Unknown argument to %s: %s. Options are: K, C, F.\n",
+              "ERROR: Unknown argument to %s: %s. Options are: Kelvin, Celsius, Farenheit.\n",
               cName, cTmp);
     }
     LineExit(cFile, iLine);
@@ -1056,12 +1032,7 @@ int iAssignTempUnit(char cTmp[], int iVerbose, char cFile[], char cName[],
 void ReadUnitTemp(CONTROL *control, FILES *files, OPTIONS *options, int iFile) {
   int iFileNow, lTmp = -1;
   char cTmp[OPTLEN];
-  /* Temperature Units
-     0=Kelvin
-     1=Celsius
-     2=Farenheit */
 
-  // Copied from ReadUnitMass
   AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
   if (iFile == 0) {

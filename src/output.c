@@ -47,10 +47,6 @@ void WriteCOPP(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char cUnit[]) {
 
-  if (body[iBody].bSpiNBody) {
-    cart2osc(body,iBody);
-  } 
-
   *dTmp = body[iBody].dEcc*sin(body[iBody].dLongP + body[iBody].dPrecA)*sin(body[iBody].dObliquity);
   strcpy(cUnit,"");
 }

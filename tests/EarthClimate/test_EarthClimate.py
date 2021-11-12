@@ -10,6 +10,7 @@ import pytest
         "log.final.Earth.Obliquity": {"value": 0.409103, "unit": u.rad},
         "log.final.Earth.AlbedoGlobal": {"value": 0.344298},
         "log.final.Earth.FluxOutGlobal": {"value": 233.918026, "unit": u.W / u.m ** 2},
+        "log.final.Earth.COPP": {"value": 0.006474},
         "log.final.Mercury.Eccentricity": {"value": 0.205631},
         "log.final.Saturn.LongA": {"value": 1.984656, "unit": u.rad},
         "log.final.George.ArgP": {"value": 1.688334, "unit": u.rad},

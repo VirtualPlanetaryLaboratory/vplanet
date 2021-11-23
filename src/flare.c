@@ -933,54 +933,54 @@ void InitializeOutputFlare(OUTPUT *output,fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_FLAREFREQ1].cName,"FlareFreq1");
   sprintf(output[OUT_FLAREFREQ1].cDescr,"Flare frequency in flares/day");
-  sprintf(output[OUT_FLAREFREQ1].cNeg,"1/second");
+  sprintf(output[OUT_FLAREFREQ1].cNeg,"1/day");
   output[OUT_FLAREFREQ1].bNeg = 1;
-  output[OUT_FLAREFREQ1].dNeg = 1;
+  output[OUT_FLAREFREQ1].dNeg = DAYSEC;
   output[OUT_FLAREFREQ1].iNum = 1;
   output[OUT_FLAREFREQ1].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ1] = &WriteFlareFreq1;
 
   sprintf(output[OUT_FLAREFREQ2].cName,"FlareFreq2");
   sprintf(output[OUT_FLAREFREQ2].cDescr,"Flare frequency in flares/day");
-  sprintf(output[OUT_FLAREFREQ2].cNeg,"#/day");
+  sprintf(output[OUT_FLAREFREQ2].cNeg,"1/day");
   output[OUT_FLAREFREQ2].bNeg = 1;
-  output[OUT_FLAREFREQ2].dNeg = 1;
+  output[OUT_FLAREFREQ2].dNeg = DAYSEC;
   output[OUT_FLAREFREQ2].iNum = 1;
   output[OUT_FLAREFREQ2].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ2] = &WriteFlareFreq2;
 
   sprintf(output[OUT_FLAREFREQ3].cName,"FlareFreq3");
   sprintf(output[OUT_FLAREFREQ3].cDescr,"Flare frequency in flares/day");
-  sprintf(output[OUT_FLAREFREQ3].cNeg,"1/second");
+  sprintf(output[OUT_FLAREFREQ3].cNeg,"1/day");
   output[OUT_FLAREFREQ3].bNeg = 1;
-  output[OUT_FLAREFREQ3].dNeg = 1;
+  output[OUT_FLAREFREQ3].dNeg = DAYSEC;
   output[OUT_FLAREFREQ3].iNum = 1;
   output[OUT_FLAREFREQ3].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ3] = &WriteFlareFreq3;
 
   sprintf(output[OUT_FLAREFREQ4].cName,"FlareFreq4");
   sprintf(output[OUT_FLAREFREQ4].cDescr,"Flare frequency in flares/day");
-  sprintf(output[OUT_FLAREFREQ4].cNeg,"1/second");
+  sprintf(output[OUT_FLAREFREQ4].cNeg,"1/day");
   output[OUT_FLAREFREQ4].bNeg = 1;
-  output[OUT_FLAREFREQ4].dNeg = 1;
+  output[OUT_FLAREFREQ4].dNeg = DAYSEC;
   output[OUT_FLAREFREQ4].iNum = 1;
   output[OUT_FLAREFREQ4].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ4] = &WriteFlareFreq4;
 
   sprintf(output[OUT_FLAREFREQ5].cName,"FlareFreq5");
   sprintf(output[OUT_FLAREFREQ5].cDescr,"Flare frequency in flares/day");
-  sprintf(output[OUT_FLAREFREQ5].cNeg,"1/second");
+  sprintf(output[OUT_FLAREFREQ5].cNeg,"1/day");
   output[OUT_FLAREFREQ5].bNeg = 1;
-  output[OUT_FLAREFREQ5].dNeg = 1;
+  output[OUT_FLAREFREQ5].dNeg = DAYSEC;
   output[OUT_FLAREFREQ5].iNum = 1;
   output[OUT_FLAREFREQ5].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ5] = &WriteFlareFreq5;
 
   sprintf(output[OUT_FLAREFREQ6].cName,"FlareFreq6");
   sprintf(output[OUT_FLAREFREQ6].cDescr,"Flare frequency in flares/day");
-  sprintf(output[OUT_FLAREFREQ6].cNeg,"1/second");
+  sprintf(output[OUT_FLAREFREQ6].cNeg,"1/day");
   output[OUT_FLAREFREQ6].bNeg = 1;
-  output[OUT_FLAREFREQ6].dNeg = 1;
+  output[OUT_FLAREFREQ6].dNeg = DAYSEC;
   output[OUT_FLAREFREQ6].iNum = 1;
   output[OUT_FLAREFREQ6].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ6] = &WriteFlareFreq6;
@@ -1259,21 +1259,22 @@ double fdDavenport(double dA1,double dA2,double dA3,double dStarAge,double dStar
   //double dA3 = -1.06;
   // Calculating the dA and dB parameters with the Davenport et. al 2019 equation
   double dA, dStarAge_, dStarMass_;
-  dStarAge_ = dStarAge/(YEARSEC*1.0e6);  // Convert dStarAge from seconds to million years because Davenport's function just acept Myr.
-  dStarMass_ = dStarMass/MSUN;           // Convert dStarMass from kg to solar mass because Davenport's function just acept Msun.
-// The StarMass its divide by a factor 1.99e30 (solar mass) because when you defines oon vpl.in you gives just in solar masses, but the
-// code converts to kg
+  dStarAge_ = dStarAge/(YEARSEC*1.0e6);  // Convert dStarAge from seconds to million years because Davenport's function only acept Myr.
+  dStarMass_ = dStarMass/MSUN;           // Convert dStarMass from kg to solar mass because Davenport's function only acept Msun.
+// The StarMass its divide by a factor 1.99e30 (solar mass) because when you define in vpl.in you gives only in solar masses, but the
+// code convert it to kg
   dA = (dA1*log10(dStarAge_))+dA2*(dStarMass_)+dA3;
 
   return dA;
 }
-
+// fdFFD calculates the convertion between the units that are given by the user (through dFlareYInt AND dFlareSlope)
+// and the units that vplanet understand, i.e., SI units (in this case seconds).
 double fdFFD(BODY *body,int iBody,double dLogEnergy, double dFlareSlope, double dFlareYInt){
   double dFlareFreq, dFFDAY, dFFD ;
     dFlareFreq = (dFlareSlope*dLogEnergy)+(dFlareYInt);  //Here the Flare frequency are in log(flares/day). 
 
         if (body[iBody].iFlareFFD == FLARE_FFD_DAVENPORT){
-          dFFDAY = pow(10,dFlareFreq);                                //Here the Flare frequency are in flares/day.
+          //dFFDAY = pow(10,dFlareFreq);                                //Here the Flare frequency are in flares/day.
           dFFD = pow(10,dFlareFreq);                                //Here the Flare frequency are in flares/day.
           dFFD =  dFFD/DAYSEC;                                      //Here the Flare frequency are in flares/second.
         }
@@ -1281,11 +1282,11 @@ double fdFFD(BODY *body,int iBody,double dLogEnergy, double dFlareSlope, double 
 
           if  (body[iBody].iFlareSlopeUnits == FLARE_SLOPE_DAY){
             dFFD = pow(10,dFlareFreq);                              //Here the Flare frequency are in flares/day.
-            dFFD = dFFD/DAYSEC;                                     //Here the Flare frequency are in flares/seconds.
+            dFFD =  dFFD/DAYSEC;                                      //Here the Flare frequency are in flares/second.
           }
           else if  (body[iBody].iFlareSlopeUnits == FLARE_SLOPE_SEC){
             dFFD = pow(10,dFlareFreq);                              //Here the Flare frequency are in flares/seconds.
-            //dFFD = dFFD/DAYSEC;                                   //Here the Flare frequency are in flares/seconds.
+          //  dFFD = dFFD*DAYSEC;                                   //Here the Flare frequency are in flares/days.
           }
           else if  (body[iBody].iFlareSlopeUnits == FLARE_SLOPE_HOUR){
             dFFD = pow(10,dFlareFreq);                              //Here the Flare frequency are in flares/hour.
@@ -1398,15 +1399,15 @@ double fdLXUVFlare(BODY *body,double dDeltaTime,int iBody) {
      
       for(i = 0; i < iEnergyBin + 1; i++) {
          daFFD[i]= fdFFD(body, iBody,daLogEner[i], dFlareSlope, dFlareYInt);
-         daFFDAY[i] = DAYSEC*daFFD[i];
+         //daFFDAY[i] = daFFD[i];
       }
 
-      body[iBody].dFlareFreq1 = daFFDAY[0];
-      body[iBody].dFlareFreq2 = daFFDAY[1];
-      body[iBody].dFlareFreq3 = daFFDAY[2];
-      body[iBody].dFlareFreq4 = daFFDAY[3];
-      body[iBody].dFlareFreq5 = daFFDAY[4];
-      body[iBody].dFlareFreq6 = daFFDAY[5];
+      body[iBody].dFlareFreq1 = daFFD[0];
+      body[iBody].dFlareFreq2 = daFFD[1];
+      body[iBody].dFlareFreq3 = daFFD[2];
+      body[iBody].dFlareFreq4 = daFFD[3];
+      body[iBody].dFlareFreq5 = daFFD[4];
+      body[iBody].dFlareFreq6 = daFFD[5];
     
      //############################ 6. Calculating the XUV luminosity by flares ########################################################################
       double daLXUVFlare[iEnergyBin];

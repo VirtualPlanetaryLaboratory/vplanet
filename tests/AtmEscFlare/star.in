@@ -2,7 +2,7 @@ sName        star       # Body's name
 saModules    stellar, flare
 
 # Physical Parameters
-dMass 0.2
+dMass 0.12
 dAge          1e6
 
 # STELLAR parameters
@@ -17,4 +17,4 @@ sFlareFFD                DAVENPORT
 sFlareBandPass     KEPLER
 
 
-saOutputOrder Time -LXUVFlare -LXUVStellar -LXUVTot
+saOutputOrder Time -LXUVFlare -LXUVStellar

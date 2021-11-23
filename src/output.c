@@ -519,6 +519,10 @@ void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNIT
     *dTmp =  body[iBody].dLXUV;
   }
   
+  else if (body[iBody].bFlare){
+    *dTmp =  body[iBody].dLXUVFlare;
+  }
+
   else if (!body[iBody].bFlare && !body[iBody].bStellar) {
     *dTmp = -1;
   }

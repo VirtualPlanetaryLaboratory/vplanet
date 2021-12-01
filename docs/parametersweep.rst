@@ -1,8 +1,8 @@
 Parameter Sweep Guide
 ===================
 
-Parameter sweeps are a very common use of VPLanet, and the team has
-developed a set of python and command line tools to facilitate their completion
+Parameter sweeps are a very common use of ``VPLanet``, and the team has
+developed a set of pPython and command line tools to facilitate their completion
 and analysis. In brief, :code:`vspace` builds a set of initial conditions,
 :code:`multi-planet` performs the simulations, and :code:`bigplanet` compresses the data
 and streamlines analysis. The following guide explains how to use these
@@ -24,11 +24,11 @@ Initializing Parameter Sweeps with :code:`vspace`
 
 The first step is to create an input file for :code:`vspace`, which is typically called `vspace.in`.
 As described in more detail in :code:`vspace`'s `documentation
-<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/vspace>`_, this file
-modifies template files (here we use the .in files from `examples/EarthInterior
+<https://virtualplanetarylaboratory.github.io/vspace/>`_, this file
+modifies template files (here we use the ``VPLanet`` input files from `examples/EarthInterior
 <https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/EarthInterior>`_)
 and then builds a directory structure with each
-folder containing the .in files for a specific simulation. In this guide we vary
+folder containing the input files for a specific simulation. In this guide we vary
 dTCore (initial core temperature) and d40KPowerCore (initial radiogenic power from potassium-40).
 
 Here’s the input file for :code:`vspace`:
@@ -49,28 +49,27 @@ Here’s the input file for :code:`vspace`:
     file   vpl.in
 
 This file directs :code:`vspace` to vary initial core temperature from 5500 to 6500 in 10 steps and
-initial potassium-40 power from 50 - 150% of Earth's nominal initial amount (see the VPLanet paper
-for more details). The directories will be built in a folder called
+initial potassium-40 power from 50 - 150% of Earth's nominal initial amount. The directories will be built in a folder called
 ParameterSweep and the individual folders will be called test_tcore?K?, where the
 "n" tells :code:`vspace` to create 10 evenly spaced values for each (other distributions are available), so the total number of
 simulations will be 100.
 
-To build the files, run the following command in the command line:
+To build the files, run the following command:
 
 .. code-block:: bash
 
-    vspace [-q, -f] vspace.in
+    vspace [-q -f] vspace.in
 
 This command will create the folder ParameterSweep, with 100 folders
 inside of it, each with their own sun.in, earth.in and vpl.in with the
 parameters from the EarthInteror example, but with dTCore and d40KPowerCore changed
-based on the vspace file. Use -q to suppress output and -f to force :code:`vspace` to overwrite previous
+based on the instructions in the vspace.in file. Use ``-q`` to suppress output and ``-f`` to force :code:`vspace` to overwrite previous
 data (including any :code:`multi-planet` and :code:`bigplanet` files!). Now we are ready to run the parameter sweep.
 
 .. note::
 
     If you randomly generate initial conditions, i.e. Monte Carlo, then :code:`vspace` automatically creates histograms of the
-    options you varied so you can confirm the initial conditions. These png files are located in destfolder.
+    options you varied so you can confirm the initial conditions. These png files are located in *destfolder*.
 
 Running Simulations with :code:`multi-planet`
 -------------------------
@@ -81,13 +80,13 @@ command line:
 
 .. code-block:: bash
 
-    multi-planet -c <num_cores> [-q] vspace.in
+    multi-planet -c <num_cores> [-q -bp] vspace.in
 
-The optional argument -c (or --cores) tells :code:`multi-planet` the number of cores to run.
-There is another optional argument that creates the HDF5 Files for :code:`bigplanet`
+The optional argument ``-c`` (or ``--cores``) tells :code:`multi-planet` the number of cores to run.
+The ``-bp`` flag creates `"bigplanet archive <https://virtualplanetarylaboratory.github.io/bigplanet/filetypes.html>`_
 directly after the simulation completes, but we are going to leave it at the default
 setting, which is false. See the :code:`multi-planet` `documentation
-<https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/multi-planet>`_ for
+<https://virtualplanetarylaboratory.github.io/multi-planet>`_ for
 more information. Use the -q option to suppress output to the terminal.
 
 .. note::
@@ -130,7 +129,7 @@ Compressing Data with :code:`bigplanet`
 The :code:`bigplanet` command compresses your parameter sweep data into an HDF5 file in which
 specific data can be efficiently extracted. **Although compression can take some time,
 plotting with a** :code:`bigplanet` **file can be orders of magnitude faster because the script will
-not need to open files and each directory!**
+not need to open files and each directory!** Here we demonstrate the typical workflow of building a
 To compress the data, type the following command in the terminal (after multi-planet
 finishes):
 

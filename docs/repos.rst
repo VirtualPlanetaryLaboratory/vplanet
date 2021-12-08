@@ -13,3 +13,4 @@ can be found at the GitHub sites:
    David Graham <https://github.com/dglezg7>
    David Fleming <https://github.com/dflemin3>
    Héctor Martínez-Rodríguez <https://github.com/hector-mr>
+   Caitlyn Wilhelm <https://github.com/caitlyn-wilhelm>

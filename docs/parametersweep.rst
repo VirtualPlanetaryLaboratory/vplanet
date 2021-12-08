@@ -4,7 +4,7 @@ Parameter Sweep Guide
 Parameter sweeps are a very common use of ``VPLanet``, and the team has
 developed a set of Python and command line tools to facilitate their completion
 and analysis. In brief, :code:`VSPACE` builds a set of initial conditions,
-:code:`multi-planet` performs the simulations, and :code:`bigplanet` compresses the data
+:code:`multi-planet` performs the simulations, and :code:`BigPlanet` compresses the data
 and streamlines analysis. The following guide explains how to use these
 tools with an example based on Earth's internal thermal evolution. Files for the example
 presented here can be found in `examples/ParameterSweep
@@ -15,7 +15,7 @@ core temperature and the current amount of radiogenic heating from potassium-40.
 
 .. note::
 
-    You need to install :code:`vplot`, :code:`VSPACE`, :code:`MultiPlanet`, and :code:`bigplanet` to
+    You need to install :code:`vplot`, :code:`VSPACE`, :code:`MultiPlanet`, and :code:`BigPlanet` to
     reproduce this example.
 
 
@@ -64,7 +64,7 @@ This command will create the folder ParameterSweep, with 100 folders
 inside of it, each with their own sun.in, earth.in and vpl.in with the
 parameters from the EarthInteror example, but with dTCore and d40KPowerCore changed
 based on the instructions in the VSPACE.in file. Use ``-q`` to suppress output and ``-f`` to force :code:`VSPACE` to overwrite previous
-data (including any :code:`MultiPlanet` and :code:`bigplanet` files!). Now we are ready to run the parameter sweep.
+data (including any :code:`MultiPlanet` and :code:`BigPlanet` files!). Now we are ready to run the parameter sweep.
 
 .. note::
 
@@ -83,7 +83,7 @@ command line:
     multiplanet -c <num_cores> [-q -bp] vspace.in
 
 The optional argument ``-c`` (or ``--cores``) tells :code:`MultiPlanet` the number of cores to run.
-The ``-bp`` flag creates `"bigplanet archive <https://virtualplanetarylaboratory.github.io/bigplanet/filetypes.html>`_
+The ``-bp`` flag creates `"BigPlanet archive <https://virtualplanetarylaboratory.github.io/bigplanet/filetypes.html>`_
 directly after the simulation completes, but we are going to leave it at the default
 setting, which is false. See the :code:`MultiPlanet` `documentation
 <https://virtualplanetarylaboratory.github.io/multi-planet>`_ for
@@ -121,14 +121,14 @@ But with the proper numbers shown.
 After :code:`MultiPlanet` completes, you may have a large number of directories with gigabytes
 of data. Storing, analyzing, and plotting these data can be tedious as each output file
 from each directory must be opened and read in sequentially. To streamline this process,
-use :code:`bigplanet`.
+use :code:`BigPlanet`.
 
-Compressing Data with :code:`bigplanet`
+Compressing Data with :code:`BigPlanet`
 -------------------------------
 
-The :code:`bigplanet` command compresses your parameter sweep data into an HDF5 file in which
+The :code:`BigPlanet` command compresses your parameter sweep data into an HDF5 file in which
 specific data can be efficiently extracted. **Although compression can take some time,
-plotting with a** :code:`bigplanet` ** file can be orders of magnitude faster because the script will
+plotting with a** :code:`BigPlanet` ** file can be orders of magnitude faster because the script will
 not need to open files and each directory!** Here we demonstrate the typical workflow of building a biplanet file.
 To compress the data, type the following command in the terminal (after MultiPlanet
 finishes):
@@ -138,9 +138,9 @@ finishes):
 
     bigplanet -c <num_cores> [-a] bpl.in
 
-The bigplanet arguments work similarly to :code:`multiplanet`’s with the user able to
-specify the number of processors :code:`bigplanet` can use. The only difference is that
-bigplanet uses a bpl.in file, which is *very* similar to a vspace input file. 
+The BigPlanet arguments work similarly to :code:`multiplanet`’s with the user able to
+specify the number of processors :code:`BigPlanet` can use. The only difference is that
+BigPlanet uses a bpl.in file, which is *very* similar to a vspace input file. 
 
 Here’s the input file for :code:`BigPlanet`:
 
@@ -166,20 +166,20 @@ the destfolder created with :code:`VSPACE` and the data generated from :code:`Mu
 
 .. note::
 
-    The default number of cores :code:`bigplanet` will use is the maximum number of
+    The default number of cores :code:`BigPlanet` will use is the maximum number of
     cores on the machine.
 
-Checking :code:`bigplanet` Progress with :code:`bpstatus`
+Checking :code:`BigPlanet` Progress with :code:`bpstatus`
 -------------------------
 
-For large data sets, :code:`bigplanet` may take several hours or more to complete. To check the
+For large data sets, :code:`BigPlanet` may take several hours or more to complete. To check the
 status, use :code:`bpstatus`, which employs the same syntax as :code:`mpstatus` above.
 
-Extracting and Plotting with :code:`bigplanet`
+Extracting and Plotting with :code:`BigPlanet`
 ------------------------------
 
 After you have compressed your data, you need to access it. To accomplish this goal,
-:code:`bigplanet` is also a python module that can be imported into python scripts for the
+:code:`BigPlanet` is also a python module that can be imported into python scripts for the
 extraction of data from the HDF5 file. For our example, final inner core radius as a function of
 current potassium-40 abundance in the core and the initial core temerature, the script looks like
 this:
@@ -205,7 +205,7 @@ start with inner core radius, grabbing its final values and its units:
 ExtractColumn returns an array in which each element corresponds to the final
 value of the inner core radius for each simulation. The first argument is the HDF5
 file, the second argument is called a "key" and describes a parameter of
-interest. To learn more about keys, consult the `bigplanet documentation
+interest. To learn more about keys, consult the `BigPlanet documentation
 <https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/multi-planet>`_.
 In brief, the key syntax is "body_variable_aggregation", in
 which aggregation is some property of a body's variable, e.g. the final value. The
@@ -226,7 +226,7 @@ needed for the plot, use the ``ExtractUniqueValues`` function, like so:
     K40_units = bp.ExtractUnits(data,'earth:40KPowerCore:final')
 
 Now we have the values we need for our plot, but the inner core radius is currently
-stored as an array, not a matrix, so we're still not ready to plot. With :code:`bigplanet` you
+stored as an array, not a matrix, so we're still not ready to plot. With :code:`BigPlanet` you
 can easily transform an array into the appropriately shaped matrix with the ``CreateMatrix``
 function:
 
@@ -245,12 +245,12 @@ of Earth's inner core radius.
 
 .. figure:: BigPlanetExample.png
 
-Creating Meta-Data Files with :code:`bigplanet`
+Creating Meta-Data Files with :code:`BigPlanet`
 ----------------------------
 
 Finally, it's often convenient to write out ASCII files in which each line contains the meta-data
 for your parameter sweep, e.g. the initial eccentricity, the final semi-major axis, and the maximum
-inclination. :code:`bigplanet` facilitates the creation of these files with the ``ArchiveToCSV`` method:
+inclination. :code:`BigPlanet` facilitates the creation of these files with the ``ArchiveToCSV`` method:
 
 .. code-block:: python
 

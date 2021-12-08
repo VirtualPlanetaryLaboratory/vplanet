@@ -90,3 +90,5 @@ sandbox
 todo
 misc
 vplot/
+build/
+dist/

@@ -94,7 +94,6 @@ def comp2huybers(plname, xrange=False, show=True):
         longp = body.PrecA
 
     esinv = ecc * np.sin(longp)
-    import pdb; pdb.set_trace()
 
     lats = np.unique(body.Latitude)
     nlats = len(lats)

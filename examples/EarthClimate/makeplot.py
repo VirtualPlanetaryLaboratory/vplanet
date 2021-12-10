@@ -89,9 +89,9 @@ def comp2huybers(plname, xrange=False, show=True):
                 pco2 = np.float(lines[i].split()[1])
 
     try:
-        longp = (body.ArgP + body.LongA + body.PrecA + 180) * np.pi / 180.0
+        longp = (body.ArgP + body.LongA + body.PrecA + 180)
     except:
-        longp = body.PrecA * np.pi / 180.0
+        longp = body.PrecA
 
     esinv = ecc * np.sin(longp)
 

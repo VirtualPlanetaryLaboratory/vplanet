@@ -16,7 +16,7 @@ mpl.rcParams["figure.figsize"] = (6.5, 6)
 mpl.rcParams["font.size"] = 10.0
 
 # Run vplanet
-cplauto = vplanet.run(path / "Lopez12CPL" / "auto" / "vpl.in", units=False)
+cplauto = vplanet.run(path / "Lopez12CPL" / "Auto" / "vpl.in", units=False)
 cplbondi = vplanet.run(path / "Lopez12CPL" / "Bondi" / "vpl.in", units=False)
 cplelim = vplanet.run(path / "Lopez12CPL" / "ELim" / "vpl.in", units=False)
 cplrr = vplanet.run(path / "Lopez12CPL" / "RR" / "vpl.in", units=False)

@@ -1577,9 +1577,9 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                         "= 1 to limit envelope mass loss.\n");
         io->baRocheMessage[iBody] = 1;
       }
+      // Fix dKTide to prevent infs when in Roche Lobe overflow
+      body[iBody].dKTide = 1.0;
     }
-    // Fix dKTide to prevent infs when in Roche Lobe overflow
-    body[iBody].dKTide = 1.0;
   }
 
   // The XUV flux
@@ -2411,6 +2411,27 @@ void WriteOxygenMass(BODY *body, CONTROL *control, OUTPUT *output,
 }
 
 /**
+Logs Ktide, the gravitational enhancement of mass loss.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteKTide(BODY *body, CONTROL *control, OUTPUT *output,
+                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                     double *dTmp, char cUnit[]) {
+  *dTmp = body[iBody].dKTide;
+
+  strcpy(cUnit, "nd");
+}
+
+/**
 Logs the mantle oxygen mass.
 
 @param body A pointer to the current BODY instance
@@ -3039,6 +3060,14 @@ void InitializeOutputAtmEsc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ETAO].iNum       = 1;
   output[OUT_ETAO].iModuleBit = ATMESC;
   fnWrite[OUT_ETAO]           = &WriteOxygenEta;
+
+  sprintf(output[OUT_ETAO].cName, "KTide");
+  sprintf(output[OUT_ETAO].cDescr,
+          "Mass loss enhancement due to stellar gravity");
+  output[OUT_ETAO].bNeg       = 0;
+  output[OUT_ETAO].iNum       = 1;
+  output[OUT_ETAO].iModuleBit = ATMESC;
+  fnWrite[OUT_ETAO]           = &WriteKTide;
 
   sprintf(output[OUT_EPSH2O].cName, "AtmXAbsEffH2O");
   sprintf(output[OUT_EPSH2O].cDescr,

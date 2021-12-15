@@ -22,3 +22,4 @@ dependencies:
       - breathe>=4.30.0
       - sphinxcontrib-bibtex>=2.2.0
       - coverage>=5.5
+      - tqdm

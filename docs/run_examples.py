@@ -7,13 +7,13 @@ from importlib.util import spec_from_file_location, module_from_spec
 path = pathlib.Path(__file__).parents[0].absolute()
 
 # gets the list of examples
-example_list = glob.glob(str(path.parents[0] / "examples" / "*" / "makeplot.py"))
+example_list = sorted(glob.glob(str(path.parents[0] / "examples" / "*" / "makeplot.py")))
 
 # list of examples that should not be ran in the test
-no_fly_list = ["AbioticO2", "ChaoticResonances", "DampedCBP", "TidalEarth", "SS_NBody"]
-
+no_fly_list = ["AbioticO2", "ChaoticResonances", "DampedCBP", "TidalEarth", "SS_NBody", "MagneticBreaking"]
 
 for example in example_list:
+    print(example)
 
     # Example name
     name = pathlib.Path(example).parents[0].name

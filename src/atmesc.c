@@ -3061,13 +3061,13 @@ void InitializeOutputAtmEsc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ETAO].iModuleBit = ATMESC;
   fnWrite[OUT_ETAO]           = &WriteOxygenEta;
 
-  sprintf(output[OUT_ETAO].cName, "KTide");
-  sprintf(output[OUT_ETAO].cDescr,
+  sprintf(output[OUT_KTIDE].cName, "KTide");
+  sprintf(output[OUT_KTIDE].cDescr,
           "Mass loss enhancement due to stellar gravity");
-  output[OUT_ETAO].bNeg       = 0;
-  output[OUT_ETAO].iNum       = 1;
-  output[OUT_ETAO].iModuleBit = ATMESC;
-  fnWrite[OUT_ETAO]           = &WriteKTide;
+  output[OUT_KTIDE].bNeg       = 0;
+  output[OUT_KTIDE].iNum       = 1;
+  output[OUT_KTIDE].iModuleBit = ATMESC;
+  fnWrite[OUT_KTIDE]           = &WriteKTide;
 
   sprintf(output[OUT_EPSH2O].cName, "AtmXAbsEffH2O");
   sprintf(output[OUT_EPSH2O].cDescr,

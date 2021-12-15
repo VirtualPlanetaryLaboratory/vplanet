@@ -146,12 +146,11 @@ Here’s the input file for :code:`BigPlanet`:
 
 .. code-block:: bash
 
-    sSrcFolder ~/vplanet/examples/EarthInterior
     sDestFolder ParameterSweep
     sArchiveFile ParameterSweep.bpa
+    sOutputFile ParameterSweep.bpf
 
-    saBodyFiles   sun.in earth.in
-
+    saBodyFiles   earth.in sun.in
     sPrimaryFile   vpl.in
 
     saKeyInclude earth:TCore:initial earth:40KPowerCore:final earth:RIC:final
@@ -160,9 +159,10 @@ Here’s the input file for :code:`BigPlanet`:
 This will create an `HDF5
 <https://en.wikipedia.org/wiki/Hierarchical_Data_Format>`_ file
 that shares the same name as the destfolder from the :code:`VSPACE` file, but with ".bpf" or ".bpa"
-appended, e.g. ParameterSweep.bpa. This file will now replace the directory structure
-created by :code:`VSPACE`. The -a option is for creation of an achvie file, which has **everything from
-the destfolder created with :code:`VSPACE` and the data generated from :code:`MultiPlanet`. Here is a 
+appended, depending on what type of BigPlanet file. In this case, we are creating ParameterSweep.bpf. 
+This file will now replace the directory structure created by :code:`VSPACE`. 
+The -a option is for creation of an archive file (the .bpa file), which has **everything** from
+the destfolder created with :code:`VSPACE` and the data generated from :code:`MultiPlanet`.
 
 .. note::
 

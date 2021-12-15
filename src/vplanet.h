@@ -16,7 +16,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
-//#include <xmmintrin.h>
+#ifdef __x86_64__
+  #include <xmmintrin.h>
+#endif
 
 // Windows-specific
 #ifdef VPLANET_ON_WINDOWS

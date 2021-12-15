@@ -278,12 +278,11 @@ finishes):</p>
 specify the number of processors <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code> can use. The only difference is that
 BigPlanet uses a bpl.in file, which is <em>very</em> similar to a vspace input file.</p>
 <p>Here’s the input file for <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sSrcFolder ~/vplanet/examples/EarthInterior
-sDestFolder ParameterSweep
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sDestFolder ParameterSweep
 sArchiveFile ParameterSweep.bpa
+sOutputFile ParameterSweep.bpf
 
-saBodyFiles   sun.in earth.in
-
+saBodyFiles   earth.in sun.in
 sPrimaryFile   vpl.in
 
 saKeyInclude earth:TCore:initial earth:40KPowerCore:final earth:RIC:final
@@ -291,9 +290,10 @@ saKeyInclude earth:TCore:initial earth:40KPowerCore:final earth:RIC:final
 </div>
 <p>This will create an <a class="reference external" href="https://en.wikipedia.org/wiki/Hierarchical_Data_Format">HDF5</a> file
 that shares the same name as the destfolder from the <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code> file, but with “.bpf” or “.bpa”
-appended, e.g. ParameterSweep.bpa. This file will now replace the directory structure
-created by <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code>. The -a option is for creation of an achvie file, which has <a href="#id2"><span class="problematic" id="id3">**</span></a>everything from
-the destfolder created with <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code> and the data generated from <code class="code docutils literal notranslate"><span class="pre">MultiPlanet</span></code>. Here is a</p>
+appended, depending on what type of BigPlanet file. In this case, we are creating ParameterSweep.bpf.
+This file will now replace the directory structure created by <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code>.
+The -a option is for creation of an archive file (the .bpa file), which has <strong>everything</strong> from
+the destfolder created with <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code> and the data generated from <code class="code docutils literal notranslate"><span class="pre">MultiPlanet</span></code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The default number of cores <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code> will use is the maximum number of

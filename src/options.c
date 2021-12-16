@@ -443,9 +443,9 @@ int iGetNumLines(char cFile[]) {
   }
 
   memset(cLine,'\0',LINE);
-  fprintf(stderr,"File: %s\n",cFile);
+  //fprintf(stderr,"File: %s\n",cFile);
   while (fgets(cLine, LINE, fp) != NULL) {
-    fprintf(stderr,"iLine: %d, %s",iNumLines,cLine);
+    //fprintf(stderr,"iLine: %d, %s",iNumLines,cLine);
     iNumLines++;
 
     /* Check to see if line is too long. The maximum length of a line is set
@@ -499,7 +499,7 @@ void InitializeInput(INFILE *input) {
   input->cReactions[0] = 0;
   */
 
-  fprintf(stderr,"File: %s\n",input->cIn);
+  //fprintf(stderr,"File: %s\n",input->cIn);
   for (iLine = 0; iLine < input->iNumLines; iLine++) {
     /* Initialize bLineOK */
     input->bLineOK[iLine] = 0;
@@ -512,7 +512,7 @@ void InitializeInput(INFILE *input) {
     memset(cLine,'\0',LINE);
 
     fgets(cLine, LINE, fp);
-    fprintf(stderr,"iLine: %d, %s",iLine,cLine);
+    //fprintf(stderr,"iLine: %d, %s",iLine,cLine);
     /* Check for # sign or blank line */
     if (CheckComment(cLine, LINE)) {
       /* Line is OK */

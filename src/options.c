@@ -535,7 +535,7 @@ void Unrecognized(FILES files) {
     iLine = 0;
     fprintf(stderr,"File: %s\n",files.Infile[iFile].cIn);
     while (fgets(cLine, LINE, fp) != NULL) {
-      fprintf(stderr,"iLine: %d\n",iLine);
+      fprintf(stderr,"iLine: %d, %s\n",iLine,cLine);
       if (!files.Infile[iFile].bLineOK[iLine]) {
         /* Bad line */
         sscanf(cLine, "%s", cWord);
@@ -543,6 +543,7 @@ void Unrecognized(FILES files) {
                 cWord, files.Infile[iFile].cIn, iLine + 1);
         bExit = 1;
       }
+      memset(cLine,'\0',LINE);
       iLine++;
     }
   }

@@ -470,7 +470,7 @@ int iGetNumLines(char cFile[]) {
         bFileOK = 0;
       }
     }
-  memset(cLine,'\0',LINE);
+    memset(cLine,'\0',LINE);
   }
 
   if (!bFileOK) {
@@ -501,10 +501,12 @@ void InitializeInput(INFILE *input) {
     /* Initialize bLineOK */
     input->bLineOK[iLine] = 0;
 
-    /* Now find those lines that are comments or blank */
+    /* Now find those lines that are comments or blank 
     for (iPos = 0; iPos < LINE; iPos++) {
       cLine[iPos] = '\0';
     }
+    */
+   memset(cLine,'\0',LINE);
 
     fgets(cLine, LINE, fp);
     /* Check for # sign or blank line */

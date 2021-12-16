@@ -460,7 +460,6 @@ int iGetNumLines(char cFile[]) {
       if (cLine[iChar] == 10) { // 10 is ASCII code for line feed
         bReturn = 1;
       }
-      memset(cLine,'\0',LINE);
     }
 
     if (!bReturn && !bComment) {
@@ -471,6 +470,7 @@ int iGetNumLines(char cFile[]) {
         bFileOK = 0;
       }
     }
+  memset(cLine,'\0',LINE);
   }
 
   if (!bFileOK) {

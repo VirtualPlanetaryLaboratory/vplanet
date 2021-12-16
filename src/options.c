@@ -443,7 +443,9 @@ int iGetNumLines(char cFile[]) {
   }
 
   memset(cLine,'\0',LINE);
+  fprintf(stderr,"File: %s\n",cFile);
   while (fgets(cLine, LINE, fp) != NULL) {
+    fprintf(stderr,"iLine: %d, %s",iNumLines,cLine);
     iNumLines++;
 
     /* Check to see if line is too long. The maximum length of a line is set

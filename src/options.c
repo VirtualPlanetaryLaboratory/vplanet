@@ -83,6 +83,7 @@ void GetLine(char cFile[], char cOption[], char cLine[], int *iLine,
     iLineTmp++;
     memset(cTmp, '\0', LINE);
     memset(cWord, '\0', OPTLEN);
+    memset(cLine, '\0', LINE);
   }
   fclose(fp);
 }

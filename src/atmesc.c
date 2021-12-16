@@ -1539,6 +1539,14 @@ Initializes several helper variables and properties used in the integration.
 void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                       int iBody) {
 
+#ifdef DEBUG
+  if (body[iBody].dMass < 0) {
+    fprintf(stderr,"ERROR: %s's mass is %.5e at %.5e years.\n",body[iBody].cName,
+        body[iBody].dMass,evolve->dTime/YEARSEC);
+    exit(EXIT_INT);
+  }
+#endif
+
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
     if (body[iBody].bAutoThermTemp) {
       body[iBody].dThermTemp = fdThermalTemp(body, iBody);
@@ -1566,12 +1574,13 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   } else {
     if (xi > 1) {
       body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
+      fprintf(stderr,"%.5e: %.5e %.5e\n",evolve->dTime/YEARSEC,xi,body[iBody].dKTide);
     } else {
       if (!io->baRocheMessage[iBody] && io->iVerbose >= VERBINPUT &&
           (!body[iBody].bUseBondiLimited && !body[iBody].bAtmEscAuto)) {
         fprintf(stderr,
-                "WARNING: Roche lobe radius is larger than XUV radius for %s, "
-                "evolution may not be accurate.\n",
+                "WARNING: Roche lobe radius is larger than %s's XUV radius. "
+                "Evolution may not be accurate.\n",
                 body[iBody].cName);
         fprintf(stderr, "Consider setting bUseBondiLimited = 1 or bAtmEscAuto "
                         "= 1 to limit envelope mass loss.\n");
@@ -1580,6 +1589,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
       // Fix dKTide to prevent infs when in Roche Lobe overflow
       body[iBody].dKTide = 1.0;
     }
+    //body[iBody].dKTide = 1.0;
   }
 
   // The XUV flux

@@ -533,6 +533,7 @@ void Unrecognized(FILES files) {
     fp = fopen(files.Infile[iFile].cIn, "r");
 
     iLine = 0;
+    fprintf(stderr,"File: %s\n",files.Infile[iFile].cIn);
     while (fgets(cLine, LINE, fp) != NULL) {
       if (!files.Infile[iFile].bLineOK[iLine]) {
         /* Bad line */

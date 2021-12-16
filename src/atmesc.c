@@ -1568,13 +1568,15 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                body[iBody].dSemi) /
               (body[iBody].dRadius * body[iBody].dXFrac);
 
-  // For circumbinary planets, assume no Ktide enhancement
+  // For stars and circumbinary planets, assume no Ktide enhancement
   if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
     body[iBody].dKTide = 1.0;
   } else {
     if (xi > 1) {
       body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
-      fprintf(stderr,"%.5e: %.5e %.5e\n",evolve->dTime/YEARSEC,xi,body[iBody].dKTide);
+      fprintf(stderr,"%.5e: ",evolve->dTime/YEARSEC);
+      fprintf(stderr,"%.5e ",xi);
+      fprintf(stderr,"%.5e\n",body[iBody].dKTide);
     } else {
       if (!io->baRocheMessage[iBody] && io->iVerbose >= VERBINPUT &&
           (!body[iBody].bUseBondiLimited && !body[iBody].bAtmEscAuto)) {

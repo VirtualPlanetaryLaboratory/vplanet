@@ -497,6 +497,7 @@ void InitializeInput(INFILE *input) {
   input->cReactions[0] = 0;
   */
 
+  fprintf(stderr,"File: %s\n",input->cIn);
   for (iLine = 0; iLine < input->iNumLines; iLine++) {
     /* Initialize bLineOK */
     input->bLineOK[iLine] = 0;
@@ -506,9 +507,10 @@ void InitializeInput(INFILE *input) {
       cLine[iPos] = '\0';
     }
     */
-   memset(cLine,'\0',LINE);
+    memset(cLine,'\0',LINE);
 
     fgets(cLine, LINE, fp);
+    fprintf(stderr,"iLine: %d, %s",iLine,cLine);
     /* Check for # sign or blank line */
     if (CheckComment(cLine, LINE)) {
       /* Line is OK */
@@ -537,9 +539,7 @@ void Unrecognized(FILES files) {
     fp = fopen(files.Infile[iFile].cIn, "r");
 
     iLine = 0;
-    fprintf(stderr,"File: %s\n",files.Infile[iFile].cIn);
-    while (fgets(cLine, LINE, fp) != NULL) {
-      fprintf(stderr,"iLine: %d, %s\n",iLine,cLine);
+    while (fgets(cLine, LINE, fp) != NULL) {      
       if (!files.Infile[iFile].bLineOK[iLine]) {
         /* Bad line */
         sscanf(cLine, "%s", cWord);

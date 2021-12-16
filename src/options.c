@@ -83,7 +83,6 @@ void GetLine(char cFile[], char cOption[], char cLine[], int *iLine,
     iLineTmp++;
     memset(cTmp, '\0', LINE);
     memset(cWord, '\0', OPTLEN);
-    memset(cLine, '\0', LINE);
   }
   fclose(fp);
 }
@@ -460,6 +459,7 @@ int iGetNumLines(char cFile[]) {
       if (cLine[iChar] == 10) { // 10 is ASCII code for line feed
         bReturn = 1;
       }
+      memset(cLine,'\0',LINE);
     }
 
     if (!bReturn && !bComment) {

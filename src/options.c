@@ -442,6 +442,7 @@ int iGetNumLines(char cFile[]) {
     exit(EXIT_INPUT);
   }
 
+  memset(cLine,'\0',LINE);
   while (fgets(cLine, LINE, fp) != NULL) {
     iNumLines++;
 

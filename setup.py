@@ -61,16 +61,15 @@ cmdclass = {"build_ext": BuildExt, "develop": Develop}
 # Vplanet suite of tools
 vplanet_suite = [
     "vplot>=1.0.2",
-    "vspace>=1.0.2",
-    "bigplanet>=1.0.1",
-    "multiplanet>=1.0.1",
+    "vspace>=2.0.0",
+    "bigplanet>=2.0.0",
+    "multiplanet>=2.0.0",
 ]
 
 setup(
     name="vplanet",
     author="Rory Barnes",
     author_email="rkb9@uw.edu",
-    version=VERSION,
     url="https://github.com/VirtualPlanetaryLaboratory/vplanet",
     description="The virtual planet simulator",
     long_description=open("README.md", "r").read(),
@@ -79,6 +78,10 @@ setup(
     packages=["vplanet"],
     install_requires=vplanet_suite + ["astropy>=3.0", "numpy", "tqdm",],
     python_requires=">=3.6",
+    use_scm_version={
+    "write_to": os.path.join("vplanet", "vplanet_version.py"),
+    "write_to_template": '__version__ = "{version}"\n',
+    },
     ext_modules=ext_modules,
     cmdclass=cmdclass,
     include_package_data=True,

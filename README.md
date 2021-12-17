@@ -15,7 +15,7 @@
   <img src = "https://img.shields.io/badge/platform-Linux_|%20macOS_|%20Windows10-darkgreen.svg?style=flat"><br>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml/badge.svg"/></a>
-  <img src="https://img.shields.io/badge/Tests-334-darkblue.svg"/></a>
+  <img src="https://img.shields.io/badge/Tests-335-darkblue.svg"/></a>
   <img src="https://img.shields.io/badge/Python-3.6+-orange.svg"/></a>
   <img src = "https://img.shields.io/badge/memcheck-dirty-red.svg?style=flat">
   <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">
@@ -76,7 +76,6 @@ An ecosystem of support software is also publicly available. In this repo, [vspa
 
 Behind the scenes, the VPLanet team maintains code integrity through [continuous integration](https://travis-ci.org), in which numerous scientific and numerical tests are validated at every commit. Check the "build" badge above for the current status. See the [tests/](tests) directory for the validation checks that the current build passes. The "coverage" badge shows the percentage of the code (by line number) that is currently tested by <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">Codecov</a> at every commit. Additionally, we use [valgrind](http://valgrind.org) and [addresssanitizer](https://github.com/google/sanitizers/wiki/AddressSanitizer) to periodically search for memory issues like use of uninitialized memory, accessing memory beyond array bounds, etc. The "memcheck" badge shows the current status of the main branch, either clean (no errors) or dirty. If dirty, check the [Issues](https://github.com/VirtualPlanetaryLaboratory/vplanet/issues) for more information about the current status. Note that all releases are clean. We are committed to maintaining a stable tool for scientists to analyze any planetary system.  
 
-
 ### Community
 
 `VPLanet` is a community project. We're happy to take pull requests; if you want to create one, please issue it to the *dev* branch. The documentation includes [tutorials on adding new features and modules](https://VirtualPlanetaryLaboratory.github.io/vplanet/tutorials.html). It's a platform for planetary science that can grow exponentially, either by adding new physics or by adding competing models for clean comparisons.
@@ -95,4 +94,4 @@ If you use this code to generate results used in any publication or conference c
 
 Enjoy!
 
-© 2018-2020 The VPLanet Team.
+© 2018-2021 The VPLanet Team.

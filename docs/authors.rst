@@ -35,8 +35,8 @@ development.
 He also found many bugs with valgrind and address-sanitizer.
 
 **Caitlyn Wilhelm** added forced eccentricity and obliquity oscillations to
-POISE, and assisted in debugging it. She also built the bigplanet and
-multi-planet script.
+POISE, and assisted in debugging it. She also built the BigPlanet and
+MultiPlanet scripts.
 
 **Rodolfo Garcia** assisted in AtmEsc and ThermInt development.
 

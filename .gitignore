@@ -93,3 +93,4 @@ misc
 vplot/
 build/
 dist/
+vplanet/vplanet_version.py

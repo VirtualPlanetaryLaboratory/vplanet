@@ -4,6 +4,7 @@ from setuptools.command.develop import develop
 from distutils.command.clean import clean
 from glob import glob
 import sys
+import os
 
 
 # Read current code version
@@ -71,6 +72,7 @@ setup(
     author="Rory Barnes",
     author_email="rkb9@uw.edu",
     url="https://github.com/VirtualPlanetaryLaboratory/vplanet",
+    version=VERSION,
     description="The virtual planet simulator",
     long_description=open("README.md", "r").read(),
     long_description_content_type="text/markdown",
@@ -78,10 +80,10 @@ setup(
     packages=["vplanet"],
     install_requires=vplanet_suite + ["astropy>=3.0", "numpy", "tqdm",],
     python_requires=">=3.6",
-    use_scm_version={
-    "write_to": os.path.join("vplanet", "vplanet_version.py"),
-    "write_to_template": '__version__ = "{version}"\n',
-    },
+    #use_scm_version={
+    #"write_to": os.path.join("vplanet", "vplanet_version.py"),
+    #"write_to_template": '__version__ = "{version}"\n',
+    #},
     ext_modules=ext_modules,
     cmdclass=cmdclass,
     include_package_data=True,

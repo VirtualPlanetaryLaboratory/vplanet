@@ -67,7 +67,7 @@ axes[1, 1].set_ylim(0.1, 2)
 axes[1, 1].set_ylabel(r"$L_{XUV}$ ($10^{-3}L_\odot$)")
 
 ## Upper Right middle: Incident XUV flux
-axes[1, 2].plot(time, lc17.planet.FXUV, color="k", label="L&C (2017)")
+axes[1, 2].plot(time, lc17.planet.FXUV, color="k", label="L+C (2017)")
 axes[1, 2].plot(
     time, dyn.planet.FXUV, color=vplot.colors.dark_blue, label="Auto AtmEsc"
 )

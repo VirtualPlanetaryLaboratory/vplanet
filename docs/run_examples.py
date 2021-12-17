@@ -2,6 +2,7 @@ import pathlib
 import glob
 import os
 from importlib.util import spec_from_file_location, module_from_spec
+import vplot
 
 # Path to this directory
 path = pathlib.Path(__file__).parents[0].absolute()
@@ -10,7 +11,7 @@ path = pathlib.Path(__file__).parents[0].absolute()
 example_list = sorted(glob.glob(str(path.parents[0] / "examples" / "*" / "makeplot.py")))
 
 # list of examples that should not be ran in the test
-no_fly_list = ["AbioticO2", "ChaoticResonances", "DampedCBP", "TidalEarth", "SS_NBody", "MagneticBreaking"]
+no_fly_list = ["ChaoticResonances","SSDistOrbDistRot"]
 
 for example in example_list:
     print(example)

@@ -12,6 +12,7 @@ example_list = sorted(glob.glob(str(path.parents[0] / "examples" / "*" / "makepl
 
 # list of examples that should not be ran in the test
 no_fly_list = ["ChaoticResonances","SSDistOrbDistRot"]
+#"MiniNeptuneEvap"
 
 for example in example_list:
     print(example)

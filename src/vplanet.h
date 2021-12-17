@@ -187,6 +187,7 @@ struct BODY {
 
   double dAge;       /**< Body's Age */
   double dMass;      /**< Body's Mass */
+  double dSolidMass; /**< Mass of a body's solid component */
   double dRadius;    /**< Radius of body */
   double dDensity;   /**< Bulk density of body*/
   double dGravAccel; /**< Body's gravitational acceleration */

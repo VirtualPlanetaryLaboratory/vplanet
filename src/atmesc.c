@@ -1359,9 +1359,35 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,
                            [0]; // NOTE: This points to the VALUE of the radius
 }
 
+void EnvelopeLost(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,fnUpdateVariable ***fnUpdate,
+    int iBody) {
+  body[iBody].iHEscapeRegime                      = ATMESC_NONE;
+  body[iBody].dEnvelopeMass                       = 0.;
+  body[iBody].dEnvMassDt                          = 0.0;
+  fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iMass][0]         = &fndUpdateFunctionTiny;
+
+  // Let user know what's happening
+  if (io->iVerbose >= VERBPROG && !body[iBody].bEnvelopeLostMessage) {
+    printf("%s's envelope removed after %.3lf million years. ",
+           body[iBody].cName, evolve->dTime / (1e6 * YEARSEC));
+    if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
+      printf("Switching to Sotin+2007 model for solid planet radius.\n");
+    } else {
+      printf("\n");
+    }
+    body[iBody].bEnvelopeLostMessage = 1;
+  }
+
+  // Update radius
+  // If using Lopez+2012 radius model, set radius to Sotin+2007 radius
+  if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
+    body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
+  }
+}
+
 /**
-This function is run during every step of the integrator to
-perform checks and force certain non-diffeq behavior.
+If necessary, change how the code handle hydrogen envelope escape
 
 @param body A pointer to the current BODY instance
 @param module A pointer to the MODULE instance
@@ -1373,16 +1399,10 @@ perform checks and force certain non-diffeq behavior.
 @param iBody The current BODY number
 @param iModule The current MODULE number
 */
-void fnForceBehaviorAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
+void ForceBehaviorEnvelopeEscape(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
                            SYSTEM *system, UPDATE *update,
                            fnUpdateVariable ***fnUpdate, int iBody,
                            int iModule) {
-
-  if ((body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass) &&
-      (body[iBody].dSurfaceWaterMass > 0.)) {
-    // Let's desiccate this planet.
-    body[iBody].dSurfaceWaterMass = 0.;
-  }
 
   // If time > jeans time, transition to ballistic regime and halt the escape
   if ((body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass) &&
@@ -1394,33 +1414,21 @@ void fnForceBehaviorAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
     fnUpdate[iBody][update[iBody].iMass][0]         = &fndUpdateFunctionTiny;
   }
 
-  // If envelope is lost, set mass to 0 and prevent further evolution
+  /* In some cases, the final mass loss of an envelope can become very large,
+     resulting in the apparent loss of the solid planet. In those cases, set the
+     envelope mass to 0, mass to dSolidMass, and prevent envelope loss. */
+  if (body[iBody].dEnvelopeMass < 0) {
+    body[iBody].dMass = body[iBody].dSolidMass;
+    EnvelopeLost(body,evolve,io,update,fnUpdate,iBody);
+  }
+
+
+  // If envelope is below minimum value, but still present, set its mass to 0 
+  // and prevent further evolution
   if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) &&
       (body[iBody].dEnvelopeMass > 0.)) {
     // Let's remove its envelope and prevent further evolution.
-    body[iBody].iHEscapeRegime                      = ATMESC_NONE;
-    body[iBody].dEnvelopeMass                       = 0.;
-    body[iBody].dEnvMassDt                          = 0.0;
-    fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
-    fnUpdate[iBody][update[iBody].iMass][0]         = &fndUpdateFunctionTiny;
-
-    // Let user know what's happening
-    if (io->iVerbose >= VERBPROG && !body[iBody].bEnvelopeLostMessage) {
-      printf("%s's envelope removed after %.3lf million years. ",
-             body[iBody].cName, evolve->dTime / (1e6 * YEARSEC));
-      if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
-        printf("Switching to Sotin+2007 model for solid planet radius.\n");
-      } else {
-        printf("\n");
-      }
-      body[iBody].bEnvelopeLostMessage = 1;
-    }
-
-    // Update radius
-    // If using Lopez+2012 radius model, set radius to Sotin+2007 radius
-    if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
-      body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
-    }
+    EnvelopeLost(body,evolve,io,update,fnUpdate,iBody);
   }
 
   // Using variable evolution: determine proper escape regime and set
@@ -1527,6 +1535,61 @@ void fnForceBehaviorAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
   }
 }
 
+/**
+If necessary, change how the code handle hwater loss
+
+@param body A pointer to the current BODY instance
+@param module A pointer to the MODULE instance
+@param evolve A pointer to the EVOLVE instance
+@param io A pointer to the IO instance
+@param system A pointer to the SYSTEM instance
+@param update A pointer to the UPDATE instance
+@param fnUpdate A triple-pointer to the function that updates each variable
+@param iBody The current BODY number
+@param iModule The current MODULE number
+*/
+void ForceBehaviorWaterEscape(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
+                           SYSTEM *system, UPDATE *update,
+                           fnUpdateVariable ***fnUpdate, int iBody,
+                           int iModule) {
+
+  //
+  if ((body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass) &&
+      (body[iBody].dSurfaceWaterMass > 0.)) {
+    // Let's desiccate this planet.
+    body[iBody].dSurfaceWaterMass = 0.;
+  }
+
+}
+
+/**
+This function is run during every step of the integrator to
+perform checks and force certain non-diffeq behavior.
+
+@param body A pointer to the current BODY instance
+@param module A pointer to the MODULE instance
+@param evolve A pointer to the EVOLVE instance
+@param io A pointer to the IO instance
+@param system A pointer to the SYSTEM instance
+@param update A pointer to the UPDATE instance
+@param fnUpdate A triple-pointer to the function that updates each variable
+@param iBody The current BODY number
+@param iModule The current MODULE number
+*/
+void fnForceBehaviorAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
+                           SYSTEM *system, UPDATE *update,
+                           fnUpdateVariable ***fnUpdate, int iBody,
+                           int iModule) {
+
+  ForceBehaviorEnvelopeEscape(body,module,evolve,io,system,update,fnUpdate,iBody,iModule);
+
+  ForceBehaviorWaterEscape(body,module,evolve,io,system,update,fnUpdate,iBody,iModule);
+
+
+
+
+}
+
 
 /**
 Initializes several helper variables and properties used in the integration.
@@ -1536,9 +1599,13 @@ Initializes several helper variables and properties used in the integration.
 @param update A pointer to the UPDATE instance
 @param iBody The current BODY number
 */
+
+// XXX A lot of this function should be moved to ForceBehavior! PropsAux is only for computing
+// parameters that make the derivatives easier to interpret
 void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                       int iBody) {
 
+/*
 #ifdef DEBUG
   if (body[iBody].dMass < 0) {
     fprintf(stderr,"ERROR: %s's mass is %.5e at %.5e years.\n",body[iBody].cName,
@@ -1546,6 +1613,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
     exit(EXIT_INT);
   }
 #endif
+*/
 
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
     if (body[iBody].bAutoThermTemp) {
@@ -2029,6 +2097,11 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
             iBody);
     }
     exit(EXIT_INPUT);
+  }
+
+  // If envelope mass exists, compute mass of the solid planet
+  if (body[iBody].dEnvelopeMass > 0) {
+    body[iBody].dSolidMass = body[iBody].dMass - body[iBody].dEnvelopeMass;
   }
 
   // Setup radius and other radii of interest

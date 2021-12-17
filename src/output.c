@@ -42,6 +42,15 @@ void WriteBodyType(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
  * C
  */
 
+/* Climate-obliquity-precession parameter */
+void WriteCOPP(BODY *body, CONTROL *control, OUTPUT *output,
+                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                       double *dTmp, char cUnit[]) {
+
+  *dTmp = body[iBody].dEcc*sin(body[iBody].dLongP + body[iBody].dPrecA)*sin(body[iBody].dObliquity);
+  strcpy(cUnit,"");
+}
+
 /* Critical Semi-major Axis (Holman & Wiegert, 1999 for P-type circumbinary
  * orbit) */
 void WriteCriticalSemi(BODY *body, CONTROL *control, OUTPUT *output,
@@ -1234,6 +1243,16 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /*
    * C
    */
+
+  sprintf(output[OUT_COPP].cName, "COPP");
+  sprintf(output[OUT_COPP].cDescr,
+          "Climate Obliquity Precession Parameter");
+  output[OUT_COPP].bNeg       = 0;
+  output[OUT_COPP].iNum       = 1;
+  output[OUT_COPP].iModuleBit = BINARY + EQTIDE + DISTROT + POISE + SPINBODY;
+  fnWrite[OUT_COPP]           = &WriteCOPP;
+  sprintf(output[OUT_COPP].cLongDescr,
+          "eccentriciy * sin(longitude of pericenter + precession angle) * sin(obliquity)");
 
   sprintf(output[OUT_CRITSEMI].cName, "CriticalSemiMajorAxis");
   sprintf(output[OUT_CRITSEMI].cDescr,

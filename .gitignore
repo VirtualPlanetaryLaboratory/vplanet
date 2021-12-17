@@ -48,7 +48,8 @@ merge-from-private.sh
 vplot_config.py
 *.bst
 *.aux
-*.bbl
+*.bpa
+*.bpf
 *.blg
 */build
 */dist
@@ -90,3 +91,5 @@ sandbox
 todo
 misc
 vplot/
+build/
+dist/

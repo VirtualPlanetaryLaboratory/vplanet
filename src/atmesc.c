@@ -1367,6 +1367,8 @@ void EnvelopeLost(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,fnUpdateVariab
   fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
   fnUpdate[iBody][update[iBody].iMass][0]         = &fndUpdateFunctionTiny;
 
+  printf("Envelope Lost!");
+
   // Let user know what's happening
   if (io->iVerbose >= VERBPROG && !body[iBody].bEnvelopeLostMessage) {
     printf("%s's envelope removed after %.3lf million years. ",
@@ -1379,7 +1381,8 @@ void EnvelopeLost(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,fnUpdateVariab
     body[iBody].bEnvelopeLostMessage = 1;
   }
 
-  // Update radius
+  // Update mass and radius
+  body[iBody].dMass = body[iBody].dSolidMass;
   // If using Lopez+2012 radius model, set radius to Sotin+2007 radius
   if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
     body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
@@ -1416,20 +1419,27 @@ void ForceBehaviorEnvelopeEscape(BODY *body, MODULE *module, EVOLVE *evolve, IO 
 
   /* In some cases, the final mass loss of an envelope can become very large,
      resulting in the apparent loss of the solid planet. In those cases, set the
-     envelope mass to 0, mass to dSolidMass, and prevent envelope loss. */
+     envelope mass to 0, mass to dSolidMass, and prevent envelope loss.
   if (body[iBody].dEnvelopeMass < 0) {
     body[iBody].dMass = body[iBody].dSolidMass;
     EnvelopeLost(body,evolve,io,update,fnUpdate,iBody);
   }
-
+  */
 
   // If envelope is below minimum value, but still present, set its mass to 0 
   // and prevent further evolution
+  /*
   if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) &&
       (body[iBody].dEnvelopeMass > 0.)) {
+  */
+ if (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) {
     // Let's remove its envelope and prevent further evolution.
     EnvelopeLost(body,evolve,io,update,fnUpdate,iBody);
   }
+
+  // if (body[iBody].dEnvelopeMass == 0) {
+  //   fprintf(stderr,"Planet %s's envelope lost!",body[iBody].cName);
+  // }
 
   // Using variable evolution: determine proper escape regime and set
   // H envelope mass loss derivatives accordingly (if H envelope exists)
@@ -1582,12 +1592,7 @@ void fnForceBehaviorAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
                            int iModule) {
 
   ForceBehaviorEnvelopeEscape(body,module,evolve,io,system,update,fnUpdate,iBody,iModule);
-
   ForceBehaviorWaterEscape(body,module,evolve,io,system,update,fnUpdate,iBody,iModule);
-
-
-
-
 }
 
 
@@ -1642,9 +1647,11 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   } else {
     if (xi > 1) {
       body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
+      /*
       fprintf(stderr,"%.5e: ",evolve->dTime/YEARSEC);
       fprintf(stderr,"%.5e ",xi);
       fprintf(stderr,"%.5e\n",body[iBody].dKTide);
+      */
     } else {
       if (!io->baRocheMessage[iBody] && io->iVerbose >= VERBINPUT &&
           (!body[iBody].bUseBondiLimited && !body[iBody].bAtmEscAuto)) {

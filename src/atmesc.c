@@ -1367,7 +1367,7 @@ void EnvelopeLost(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,fnUpdateVariab
   fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
   fnUpdate[iBody][update[iBody].iMass][0]         = &fndUpdateFunctionTiny;
 
-  printf("Envelope Lost!");
+  //printf("Envelope Lost!");
 
   // Let user know what's happening
   if (io->iVerbose >= VERBPROG && !body[iBody].bEnvelopeLostMessage) {

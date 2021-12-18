@@ -243,6 +243,8 @@ struct BODY {
   double dAtmXAbsEffH2O; /**< Effective XUV absorpation efficiency for water */
   double dRGDuration;    /**< Duration of runaway greenhouse phase */
   double dKTide;         /**< Tidal enhancement factor for mass loss */
+  double dMinKTide;      /**< Minimum allowed value for KTide */
+  double dAtmEscXi;      /**< Ratio of Roche radius to XUV radius */
   double dMDotWater;     /**< Water mass loss rate */
   double dFHRef;         /**< Reference hydrogen escape value */
   double dOxygenEta;     /**< Factor for drag of oxygen by hydrogen */

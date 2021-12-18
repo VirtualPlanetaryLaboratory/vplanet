@@ -64,6 +64,8 @@ void BodyCopyAtmEsc(BODY *dest, BODY *src, int foo, int iNumBodies, int iBody) {
   dest[iBody].bCalcFXUV            = src[iBody].bCalcFXUV;
   dest[iBody].dJeansTime           = src[iBody].dJeansTime;
   dest[iBody].dRocheRadius         = src[iBody].dRocheRadius;
+  dest[iBody].dMinKTide            = src[iBody].dMinKTide;
+  dest[iBody].dAtmEscXi            = src[iBody].dAtmEscXi;
   dest[iBody].dBondiRadius         = src[iBody].dBondiRadius;
   dest[iBody].bUseEnergyLimited    = src[iBody].bUseEnergyLimited;
   dest[iBody].bUseRRLimited        = src[iBody].bUseRRLimited;
@@ -678,6 +680,41 @@ void ReadAtmXAbsEffH(BODY *body, CONTROL *control, FILES *files,
 }
 
 /**
+Minimum value for KTide
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadMinKTide(BODY *body, CONTROL *control, FILES *files,
+                     OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0 || dTmp > 1) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr, "ERROR: %s must be in the range [0,1].\n",
+                options->cName);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    body[iFile - 1].dMinKTide = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dMinKTide = options->dDefault;
+  }
+}
+
+/**
 Read the XUV absorption efficiency for water.
 
 @param body A pointer to the current BODY instance
@@ -1153,6 +1190,18 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FXUV].iType      = 2;
   options[OPT_FXUV].bMultiFile = 1;
   fnRead[OPT_FXUV]             = &ReadFXUV;
+
+  sprintf(options[OPT_MINKTIDE].cName, "dMinKTide");
+  sprintf(options[OPT_MINKTIDE].cDescr, "Minimum value for stellar gravitaitonal enhancement of mass loss");
+  sprintf(options[OPT_MINKTIDE].cDimension, "nd");
+  sprintf(options[OPT_MINKTIDE].cDefault,"0.1");
+  options[OPT_MINKTIDE].iType      = 2;
+  options[OPT_MINKTIDE].dDefault   = 0.1;
+   options[OPT_MINKTIDE].bMultiFile = 1;
+  fnRead[OPT_MINKTIDE]             = &ReadMinKTide;
+  sprintf(options[OPT_THERMTEMP].cLongDescr,
+          ""
+          );
 }
 
 /**
@@ -1387,6 +1436,48 @@ void EnvelopeLost(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,fnUpdateVariab
   if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
     body[iBody].dRadius = fdMassToRad_Sotin07(body[iBody].dMass);
   }
+}
+
+double fdAtmEscXi(BODY *body,int iBody) {
+  double dXi = body[iBody].dRocheRadius/(body[iBody].dRadius * body[iBody].dXFrac);
+  return dXi;
+}
+
+double fdKTide(BODY *body,IO *io,int iBody) {
+  double dKTide;
+
+  // For stars and circumbinary planets, assume no Ktide enhancement
+  if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
+    dKTide = 1.0;
+  } else {
+    if (body[iBody].dAtmEscXi > 1) {
+      dKTide = (1 - 3 / (2 * body[iBody].dAtmEscXi) + 1 / (2 * pow(body[iBody].dAtmEscXi, 3)));
+      /*
+      fprintf(stderr,"%.5e: ",evolve->dTime/YEARSEC);
+      fprintf(stderr,"%.5e ",xi);
+      fprintf(stderr,"%.5e\n",body[iBody].dKTide);
+      */
+      if (dKTide < body[iBody].dMinKTide) {
+        dKTide = body[iBody].dMinKTide;
+      }
+    } else {
+      if (!io->baRocheMessage[iBody] && io->iVerbose >= VERBINPUT &&
+          (!body[iBody].bUseBondiLimited && !body[iBody].bAtmEscAuto)) {
+        fprintf(stderr,
+                "WARNING: Roche lobe radius is larger than %s's XUV radius. "
+                "Evolution may not be accurate.\n",
+                body[iBody].cName);
+        fprintf(stderr, "Consider setting bUseBondiLimited = 1 or bAtmEscAuto "
+                        "= 1 to limit envelope mass loss.\n");
+        io->baRocheMessage[iBody] = 1;
+      }
+      // Fix dKTide to prevent infs when in Roche Lobe overflow
+      dKTide = 1.0;
+    }
+    //body[iBody].dKTide = 1.0;
+  }
+
+  return dKTide;
 }
 
 /**
@@ -1636,38 +1727,17 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
     body[iBody].dRadius = body[iBody].dRadXUV / body[iBody].dXFrac;
   }
 
+  // Compute various radii of interest
+  body[iBody].dBondiRadius = fdBondiRadius(body, iBody);
+  body[iBody].dRocheRadius = fdRocheRadius(body, iBody);
+
   // Ktide (due to body zero only). WARNING: not suited for binary...
-  double xi = (pow(body[iBody].dMass / (3. * body[0].dMass), (1. / 3)) *
+  /* xi = (pow(body[iBody].dMass / (3. * body[0].dMass), (1. / 3)) *
                body[iBody].dSemi) /
               (body[iBody].dRadius * body[iBody].dXFrac);
-
-  // For stars and circumbinary planets, assume no Ktide enhancement
-  if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
-    body[iBody].dKTide = 1.0;
-  } else {
-    if (xi > 1) {
-      body[iBody].dKTide = (1 - 3 / (2 * xi) + 1 / (2 * pow(xi, 3)));
-      /*
-      fprintf(stderr,"%.5e: ",evolve->dTime/YEARSEC);
-      fprintf(stderr,"%.5e ",xi);
-      fprintf(stderr,"%.5e\n",body[iBody].dKTide);
-      */
-    } else {
-      if (!io->baRocheMessage[iBody] && io->iVerbose >= VERBINPUT &&
-          (!body[iBody].bUseBondiLimited && !body[iBody].bAtmEscAuto)) {
-        fprintf(stderr,
-                "WARNING: Roche lobe radius is larger than %s's XUV radius. "
-                "Evolution may not be accurate.\n",
-                body[iBody].cName);
-        fprintf(stderr, "Consider setting bUseBondiLimited = 1 or bAtmEscAuto "
-                        "= 1 to limit envelope mass loss.\n");
-        io->baRocheMessage[iBody] = 1;
-      }
-      // Fix dKTide to prevent infs when in Roche Lobe overflow
-      body[iBody].dKTide = 1.0;
-    }
-    //body[iBody].dKTide = 1.0;
-  }
+  */
+  body[iBody].dAtmEscXi = fdAtmEscXi(body,iBody);
+  body[iBody].dKTide = fdKTide(body,io,iBody);
 
   // The XUV flux
   if (body[iBody].bCalcFXUV) {
@@ -1789,10 +1859,6 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
              body[iBody].dXFrac * body[iBody].dXFrac);
     }
   }
-
-  // Compute various radii of interest
-  body[iBody].dBondiRadius = fdBondiRadius(body, iBody);
-  body[iBody].dRocheRadius = fdRocheRadius(body, iBody);
 
   // Compute current H envelope mass loss (if the envelope exists)
   if (body[iBody].dEnvelopeMass >= body[iBody].dMinEnvelopeMass) {

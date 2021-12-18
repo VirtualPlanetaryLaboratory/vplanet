@@ -17,6 +17,7 @@
 *.Inc.Eigen
 SeasonalClimateFiles
 *.hdf5
+*.vscode
 
 #files created from running tests
 *MP_Checkpoint*

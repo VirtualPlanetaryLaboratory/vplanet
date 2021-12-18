@@ -68,6 +68,7 @@
   1234 /**< Whether or not to let atmesc determine escape regime */
 #define OPT_STOPWATERLOSSINHZ                                                  \
   1235 /**< Stop water loss once planet reaches HZ? */
+#define OPT_MINKTIDE  1240 /**< Minimum KTide value */
 
 /* @cond DOXYGEN_OVERRIDE */
 

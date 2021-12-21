@@ -99,7 +99,7 @@ axes[1, 1].plot(time, regimes.auto.FXUV, color="k", label="Incident\nXUV Flux")
 
 # Format
 axes[1, 1].set_xlabel("Time [yr]")
-axes[1, 1].set_ylim(1.0e-2, 200)
+axes[1, 1].set_ylim(1.0e-3, 200)
 axes[1, 1].set_yscale("log")
 axes[1, 1].set_ylabel(r"Critical XUV Flux [W/m$^2$]")
 axes[1, 1].legend(bbox_to_anchor=[0.4, 0.8], framealpha=0, fontsize=13)
@@ -220,7 +220,7 @@ axes[1, 1].plot(time, bondi.auto.FXUV, color="k", label="Incident\nXUV Flux")
 
 # Format
 axes[1, 1].set_xlabel("Time [yr]")
-axes[1, 1].set_ylim(1.0e-2, 200)
+axes[1, 1].set_ylim(1.0e-4, 200)
 axes[1, 1].set_yscale("log")
 axes[1, 1].set_ylabel(r"Critical XUV Flux [W/m$^2$]")
 axes[1, 1].legend(bbox_to_anchor=[0.4, 0.8], framealpha=0, fontsize=13)

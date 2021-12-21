@@ -16,13 +16,10 @@
 void BodyCopyFlare(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
   dest[iBody].dFlareMinEnergy = src[iBody].dFlareMinEnergy;
   dest[iBody].dFlareMaxEnergy = src[iBody].dFlareMaxEnergy;
-  dest[iBody].dDeltat = src[iBody].dDeltat;
   dest[iBody].dLXUVFlare = src[iBody].dLXUVFlare;
   dest[iBody].dLXUVFlareUpper = src[iBody].dLXUVFlareUpper;
   dest[iBody].dLXUVFlareLower = src[iBody].dLXUVFlareLower;    
   dest[iBody].iFlareFFD = src[iBody].iFlareFFD;
-  dest[iBody].iFlareActivity = src[iBody].iFlareActivity;
-  dest[iBody].iFlareCalcLuminosity = src[iBody].iFlareCalcLuminosity;     
   dest[iBody].iFlareBandPass = src[iBody].iFlareBandPass;  
   dest[iBody].iFlareSlopeUnits = src[iBody].iFlareSlopeUnits;
   dest[iBody].dEnergyBin = src[iBody].dEnergyBin;
@@ -31,37 +28,6 @@ void BodyCopyFlare(BODY *dest,BODY *src,int foo,int iNumBodies,int iBody) {
 }  
 
 /**************** FLARE options ********************/
-
-void ReadFlareActivity(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  /* This parameter cannot exist in primary file */
-  int lTmp=-1;
-  char cTmp[OPTLEN];
-
-  AddOptionString(files->Infile[iFile].cIn,options->cName,cTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    if (!memcmp(sLower(cTmp),"ac",2)) {
-      body[iFile-1].iFlareActivity = FLARE_ACTIVE;
-    } else if (!memcmp(sLower(cTmp),"in",2)) {
-      body[iFile-1].iFlareActivity  = FLARE_INACTIVE;
-    } else if (!memcmp(sLower(cTmp),"co",2)) {
-      body[iFile-1].iFlareActivity  = FLARE_CONSTANT;
-    }else if (!memcmp(sLower(cTmp),"al",2)) {
-      body[iFile-1].iFlareActivity  = FLARE_ALLMDWARFS;
-    }else if (!memcmp(sLower(cTmp),"ti",2)) {
-      body[iFile-1].iFlareActivity  = FLARE_TILLEY;
-    }
-     else {
-      if (control->Io.iVerbose >= VERBERR)
-	      fprintf(stderr,"ERROR: Unknown argument to %s: %s. Options are ACTIVE, INACTIVE, ALLMDWARFS, TILLEY and CONSTANT.\n",options->cName,cTmp);
-      LineExit(files->Infile[iFile].cIn,lTmp);
-    }
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].iFlareActivity  = FLARE_CONSTANT;
-}
-
 
 void ReadFlareEnergyBin(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   // This parameter cannot exist in primary file
@@ -78,23 +44,7 @@ void ReadFlareEnergyBin(BODY *body,CONTROL *control,FILES *files,OPTIONS *option
       body[iFile-1].dEnergyBin = options->dDefault;
 }
 
-void ReadFlareDeltat(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
-  // This parameter cannot exist in primary file
-  int lTmp=-1;
-  double dTmp;
-
-  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,control->Io.iVerbose);
-    body[iFile-1].dDeltat = dTmp;
-    UpdateFoundOption(&files->Infile[iFile],options,lTmp,iFile);
-  } else
-    if (iFile > 0)
-      body[iFile-1].dDeltat = options->dDefault;
-}
-
-
-void ReadFlareFFD(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
+ void ReadFlareFFD(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp=-1;
   char cTmp[OPTLEN];
@@ -309,7 +259,7 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   int iOpt,iFile;
 
   sprintf(options[OPT_FLAREYINT].cName,"dFlareYInt");
-  sprintf(options[OPT_FLAREYINT].cDescr,"Y-Intercept for Flare Frequency"); // Where the curve intercepts the y axis (y=ax+b, in this case, the parameter its "b")
+  sprintf(options[OPT_FLAREYINT].cDescr,"Y-Intercept for Flare Frequency"); // Where the curve intercepts the y axis (y=ax+b, in this case, the parameter is "b")
   sprintf(options[OPT_FLAREYINT].cDefault,"20.9 (Proxima)");
   options[OPT_FLAREYINT].dDefault = 20.9;
   options[OPT_FLAREYINT].iType = 2;
@@ -386,35 +336,6 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREENERGYBIN].cNeg,"None");
   fnRead[OPT_FLAREENERGYBIN] = &ReadFlareEnergyBin;
 
-  sprintf(options[OPT_FLAREDELTAT].cName,"dDeltat");
-  sprintf(options[OPT_FLAREDELTAT].cDescr,"Time duration of Flare");
-  sprintf(options[OPT_FLAREDELTAT].cDefault,"1500 seconds");
-  options[OPT_FLAREDELTAT].dDefault = 1500.0;
-  options[OPT_FLAREDELTAT].iType = 2;
-  options[OPT_FLAREDELTAT].bMultiFile = 1;
-  options[OPT_FLAREDELTAT].dNeg = 1;
-  sprintf(options[OPT_FLAREDELTAT].cNeg,"seconds");
-  fnRead[OPT_FLAREDELTAT] = &ReadFlareDeltat;
-
-  sprintf(options[OPT_FLAREACTIVITY].cName,"sFlareActivity");
-  sprintf(options[OPT_FLAREACTIVITY].cDescr,"Ways of calculate the time duration of flares");
-  sprintf(options[OPT_FLAREACTIVITY].cDefault,"CONSTANT");
-  sprintf(options[OPT_FLAREACTIVITY].cValues,"ACTIVE INACTIVE CONSTANT ALLMDWARFS TILLEY");
-  options[OPT_FLAREACTIVITY].iType = 3;
-  options[OPT_FLAREACTIVITY].bMultiFile = 1;
-  fnRead[OPT_FLAREACTIVITY] = &ReadFlareActivity;
-  sprintf(options[OPT_FLAREACTIVITY].cLongDescr,
-    " If ACTIVE is selected, the code will employ the model 'Active M stars' from the \n"
-    "figure 3 of Loyd et al. 2018 (2018ApJ...867...71L) to calculates the time duration \n"
-    "of the flares. If INACTIVE is selected, the code will employ the model 'Inactive M stars'\n"
-    "from the figure 3 of Loyd et al. 2018 (2018ApJ...867...71L). If ALLMDWARFS is selected,\n"
-    "the code will employ the model 'All M stars' from the figure 3 of \n"
-    "Loyd et al. 2018 (2018ApJ...867...71L). If TILLEY is selected, the code will employ the\n"
-    "equation 3 from Tilley et al. 2019 (https://doi.org/10.1089/ast.2017.1794).\n"
-    "If the CONSTANT is selected, the user have \n"
-    "to give the time duration of the flares dDeltat, that are in seconds.\n"
-  );
-
   sprintf(options[OPT_FLAREFFD].cName,"sFlareFFD");
   sprintf(options[OPT_FLAREFFD].cDescr,"Modes of calculate the FFD");
   sprintf(options[OPT_FLAREFFD].cDefault,"DAVENPORT");
@@ -434,35 +355,6 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
     "the code will calculates the XUV luminosity by flares using the two arrays of\n"
     "energy (daOBSEnergy) and flare rate (daOBSFlareRate).\n"
   );
-/*
-  sprintf(options[OPT_FLAREOBSFREQ].cName,"daOBSFlareRate");
-  sprintf(options[OPT_FLAREOBSFREQ].cDescr,"Array of observed values of flare rate");
-  sprintf(options[OPT_FLAREOBSFREQ].cDefault,"None");
-  options[OPT_FLAREOBSFREQ].iType = 14;
-  options[OPT_FLAREOBSFREQ].iModuleBit = 0;
-  options[OPT_FLAREOBSFREQ].bNeg = 0;
-  options[OPT_FLAREOBSFREQ].iFileType = 1;
-  options[OPT_FLAREOBSFREQ].bMultiFile = 1;
-
-
-  sprintf(options[OPT_FLAREOBSENERGY].cName,"daOBSEnergy");
-  sprintf(options[OPT_FLAREOBSENERGY].cDescr,"Array of observed energies");
-  sprintf(options[OPT_FLAREOBSENERGY].cDefault,"None");
-  options[OPT_FLAREOBSENERGY].iType = 14;
-  options[OPT_FLAREOBSENERGY].iModuleBit = FLARE;
-  options[OPT_FLAREOBSENERGY].bNeg = 0;
-  options[OPT_FLAREOBSENERGY].iFileType = 1;
-  options[OPT_FLAREOBSENERGY].bMultiFile = 1;
-
-
-  sprintf(options[OPT_GRIDOUTPUT].cName,"saGridOutput");
-  sprintf(options[OPT_GRIDOUTPUT].cDescr,"Gridded Output Parameter(s)");
-  sprintf(options[OPT_GRIDOUTPUT].cDefault,"None");
-  options[OPT_GRIDOUTPUT].iType = 14;
-  options[OPT_GRIDOUTPUT].iModuleBit = POISE;
-  options[OPT_GRIDOUTPUT].bNeg = 0;
-  options[OPT_GRIDOUTPUT].bMultiFile = 1;
-  options[OPT_GRIDOUTPUT].iFileType = 1;*/
 
   sprintf(options[OPT_FLAREBANDPASS].cName,"sFlareBandPass");
   sprintf(options[OPT_FLAREBANDPASS].cDescr,"Options of band pass of the input energy of flares");
@@ -501,36 +393,6 @@ void InitializeOptionsFlare(OPTIONS *options,fnReadOption fnRead[]) {
     
     
   );
-  /*sprintf(options[OPT_NUMYEARS].cName,"iNumFlareBins");
-  sprintf(options[OPT_NUMYEARS].cDescr,"Number of flares observed input in the module");
-  sprintf(options[OPT_NUMYEARS].cDefault,"2");
-  options[OPT_NUMYEARS].dDefault = 2;
-  options[OPT_NUMYEARS].iType = 1;
-  options[OPT_NUMYEARS].bMultiFile = 1;
-  fnRead[OPT_NUMYEARS] = &ReadNumFlareBins;
-  
-  
-  sprintf(options[OPT_FLAREOBSFREQ].cName,"daOBSFlareRate");
-  sprintf(options[OPT_FLAREOBSFREQ].cDescr,"Array of the observed Flare rate");
-  sprintf(options[OPT_FLAREOBSFREQ].cDefault,"Flares per sec");
-  options[OPT_FLAREOBSFREQ].dDefault = {1.0e26,1.0e27,1.0e28,1.0e29,1.0e30,1.0e31,1.0e32,1.0e33,1.0e34,1.0e35,1.0e36};
-  options[OPT_FLAREOBSFREQ].iType = 11;
-  options[OPT_FLAREOBSFREQ].bMultiFile = 1;
-  options[OPT_FLAREOBSFREQ].dNeg = {1.0e7,1.0e7,1.0e7,1.0e7,1.0e7,1.0e7,1.0e7,1.0e7,1.0e7,1.0e7,1.0e7};
-  sprintf(options[OPT_FLAREOBSFREQ].cNeg,"ergs");
-  fnRead[OPT_FLAREOBSFREQ] = &ReadOBSFlareRate;
-
-  sprintf(options[OPT_FLAREOBSENERGY].cName,"daOBSFlareEnergy");
-  sprintf(options[OPT_FLAREOBSENERGY].cDescr,"Array of the observed Flare Energy");
-  sprintf(options[OPT_FLAREOBSENERGY].cDefault,"10^26 J or 10^33 ergs and 10^29 J or 10^36 ergs");
-  options[OPT_FLAREOBSENERGY].dDefault = {1.0e26,1.0e27,1.0e28,1.0e29,1.0e30,1.0e31,1.0e32,1.0e33,1.0e34,1.0e35,1.0e36};
-  options[OPT_FLAREOBSENERGY].iType = 11;
-  options[OPT_FLAREOBSENERGY].bMultiFile = 1;
-  options[OPT_FLAREOBSENERGY].dNeg = {1.0e7,1.0e7,1.0e7,1.0e7,1.0e7,1.0e7,1.0e7,1.0e7,1.0e7,1.0e7,1.0e7};
-  sprintf(options[OPT_FLAREOBSENERGY].cNeg,"ergs");
-  fnRead[OPT_FLAREOBSENERGY] = &ReadOBSFlareEnergy;
-  
-*/
 }
 
 void ReadOptionsFlare(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,SYSTEM *system,fnReadOption fnRead[],int iBody) {
@@ -549,45 +411,24 @@ void PropsAuxFlare(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,int iBody) {
 }
 
 
-/*
+
 void VerifyFlareFFD(BODY *body, CONTROL *control, OPTIONS *options,UPDATE *update,double dAge,int iBody) {
 
   // Assign luminosity
   if (body[iBody].iFlareFFD == FLARE_FFD_DAVENPORT) {
-    body[iBody].dLuminosity = fdLuminosityFunctionBaraffe(body[iBody].dAge, body[iBody].dMass);
+    body[iBody].dLXUVFlare = fdLXUVFlare(body,evolve->dTimeStep,iBody);
     if (options[OPT_FLAREFFD].iLine[iBody+1] >= 0) {
-      // User specified luminosity, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("INFO: The FFD choose will follow Davenport et. al, 2019.\n");
+        printf("INFO: The FFD choose will follow Davenport et. al, 2019 model.\n");
     }
   } else if (body[iBody].iFlareFFD == FLARE_FFD_LACY) {
-    body[iBody].dLuminosity = fdLuminosityFunctionProximaCen(body[iBody].dAge,body[iBody].dMass);
+    body[iBody].dLXUVFlare = fdLXUVFlare(body,evolve->dTimeStep,iBody);
     if (options[OPT_FLAREFFD].iLine[iBody+1] >= 0) {
-      // User specified luminosity, but we're reading it from the grid!
       if (control->Io.iVerbose >= VERBINPUT)
-        printf("INFO: The FFD will constant during all the simulation.\n");
+        printf("INFO: The FFD will remain constant during all the simulation.\n");
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-*/
 
 void VerifyLXUVFlare(BODY *body,OPTIONS *options,UPDATE *update,int iBody) {
 
@@ -603,24 +444,11 @@ void VerifyLXUVFlare(BODY *body,OPTIONS *options,UPDATE *update,int iBody) {
 
 /*
 void AssignStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
-  fnUpdate[iBody][update[iBody].iRot][update[iBody].iRotStellar]               = &fdDRotRateDt;
-  fnUpdate[iBody][update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = &fdDJDtMagBrakingStellar;
-  fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngStellar]       = &fdDEDtStellar;
-  fnUpdate[iBody][update[iBody].iLuminosity][0]                                = &fdLuminosity;  // NOTE: This points to the value of the Luminosity!
-  fnUpdate[iBody][update[iBody].iRadius][0]                                    = &fdRadius;      // NOTE: This points to the value of the Radius!
-  fnUpdate[iBody][update[iBody].iTemperature][0]                               = &fdTemperature; // NOTE: This points to the value of the Temperature!
-  if(body[iBody].bEvolveRG) {
-    fnUpdate[iBody][update[iBody].iRadGyra][0]                                 = &fdRadGyra; // NOTE: This points to the value of the Radius of Gyration!
-  }
+
 }
 
 void NullStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVariable ***fnUpdate,int iBody) {
-  fnUpdate[iBody][update[iBody].iRot][update[iBody].iRotStellar]               = &fndUpdateFunctionTiny;
-  fnUpdate[iBody][update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = &fndUpdateFunctionTiny;
-  fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngStellar]       = &fndUpdateFunctionTiny;
-  fnUpdate[iBody][update[iBody].iLuminosity][0]                                = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Luminosity!
-  fnUpdate[iBody][update[iBody].iRadius][0]                                    = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Radius!
-  fnUpdate[iBody][update[iBody].iLXUVFlare][0]                               = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Temperature!
+ fnUpdate[iBody][update[iBody].iLXUVFlare][0]                               = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Temperature!
 }
 */
 
@@ -636,16 +464,6 @@ void NullFlareDerivatives(BODY *body,EVOLVE *evolve,UPDATE *update,fnUpdateVaria
   /* No derivatives yet for flare.
   This may become useful once flare evolution is included*/
   fnUpdate[iBody][update[iBody].iLXUV][0] = &fndUpdateFunctionTiny;
-  
-  //fnUpdate[iBody][update[iBody].iRot][update[iBody].iRotStellar]               = &fndUpdateFunctionTiny;
-  //fnUpdate[iBody][update[iBody].iLostAngMom][update[iBody].iLostAngMomStellar] = &fndUpdateFunctionTiny;
-  //fnUpdate[iBody][update[iBody].iLostEng][update[iBody].iLostEngStellar]       = &fndUpdateFunctionTiny;
-  //fnUpdate[iBody][update[iBody].iLuminosity][0]                                = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Luminosity!
-  //fnUpdate[iBody][update[iBody].iRadius][0]                                    = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Radius!
-  //fnUpdate[iBody][update[iBody].iTemperature][0]                               = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Temperature!
-  //if(body[iBody].bEvolveRG) {
-  //  fnUpdate[iBody][update[iBody].iRadGyra][0]                                 = &fndUpdateFunctionTiny; // NOTE: This points to the value of the Radius of Gyration!
-  //}
 }
 
 void VerifyFlare(BODY *body,CONTROL *control,FILES *files,OPTIONS *options,OUTPUT *output,SYSTEM *system,UPDATE *update,int iBody,int iModule) {
@@ -778,7 +596,7 @@ void WriteFlareFreq2(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,U
   *dTmp = body[iBody].dFlareFreq2;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
+    strcpy(cUnit,output->cNeg);fdLXUVFlare(BODY *body,double dDeltaTime,int iBody) 
   } else {
    // *dTmp /= fdUnitsFrequency(units->iTime);
    // fsUnitsFrequency(units,cUnit);

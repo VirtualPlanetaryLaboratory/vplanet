@@ -25,7 +25,7 @@ import pytest
         # Check critical flux [W/m^2] - needs to agree w/ Eqn. A23 from Luger+2015
         # Note - system isn't actual in RR escape - we set bUseRRLimited to force
         # RR-limited escape since dFXUV < the critical flux
-        "log.initial.rr.RRCriticalFlux": {"value": 53.688843, "unit": u.W / u.m ** 2},
+        "log.initial.rr.RRCriticalFlux": {"value": 47.046980, "unit": u.W / u.m ** 2},
     }
 )
 class TestAtmEscRegimes(Benchmark):

@@ -67,7 +67,7 @@ def write_in(envmass, mass):
     """Write the .in files to disk."""
     nfiles = len(envmass)
 
-    # Write the vplt.in file
+    # Write the vpl.in file
     with open(path / "vpl.in", "w") as file:
         filenames = " ".join(["p%02d.in" % n for n in range(nfiles)])
         print(system % filenames, file=file)

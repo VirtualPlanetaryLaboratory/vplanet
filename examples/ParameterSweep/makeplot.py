@@ -40,10 +40,6 @@ TCore_units = bp.ExtractUnits(data, "earth:TCore:initial")
 K40_uniq = bp.ExtractUniqueValues(data, "earth:40KPowerCore:final")
 K40_units = bp.ExtractUnits(data, "earth:40KPowerCore:final")
 
-
-
-print(TCore_uniq)
-
 RIC_Matrix = np.reshape(RIC,(len(TCore_uniq),len(K40_uniq)))
 
 #RIC_Matrix = bp.CreateMatrix(TCore_uniq, K40_uniq, RIC)

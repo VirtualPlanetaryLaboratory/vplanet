@@ -2669,7 +2669,7 @@ void WriteThermTemp(BODY *body, CONTROL *control, OUTPUT *output,
     strcpy(cUnit, output->cNeg);
   } else {
     // System units are Kelvins
-    *dTmp = fdUnitsTemp(*dTmp, KELVIN, units->iTemp);
+    *dTmp = fdUnitsTemp(*dTmp, U_KELVIN, units->iTemp);
     fsUnitsTemp(0, cUnit);
   }
 }
@@ -2697,7 +2697,7 @@ void WriteFlowTemp(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     strcpy(cUnit, output->cNeg);
   } else {
     // System units are Kelvins
-    *dTmp = fdUnitsTemp(*dTmp, KELVIN, units->iTemp);
+    *dTmp = fdUnitsTemp(*dTmp, U_KELVIN, units->iTemp);
     fsUnitsTemp(units->iTemp, cUnit);
   }
 }

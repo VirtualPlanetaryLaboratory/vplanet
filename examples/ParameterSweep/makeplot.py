@@ -20,27 +20,33 @@ if not (path / "ParameterSweep").exists():
 
 # Run multi-planet
 if not (path / ".ParameterSweep").exists():
-    subprocess.check_output(["multi-planet", "vspace.in"], cwd=path)
+    subprocess.check_output(["multiplanet", "vspace.in"], cwd=path)
 
 # Run bigplanet
 if not (path / ".ParameterSweep_BPL").exists():
-    subprocess.check_output(["bigplanet", "vspace.in"], cwd=path)
+    subprocess.check_output(["bigplanet", "bpl.in"], cwd=path)
 
-data = bp.BPLFile(path / "ParameterSweep.bpl")
+data = bp.BPLFile(path / "ParameterSweep.bpf")
 
 mpl.rcParams["figure.figsize"] = (10, 8)
 fig = plt.figure()
 
-RIC = bp.ExtractColumn(data, "earth_RIC_final")
-RIC_units = bp.ExtractUnits(data, "earth_RIC_final")
+RIC = bp.ExtractColumn(data, "earth:RIC:final")
+RIC_units = bp.ExtractUnits(data, "earth:RIC:final")
 
-TCore_uniq = bp.ExtractUniqueValues(data, "earth_TCore_initial")
-TCore_units = bp.ExtractUnits(data, "earth_TCore_initial")
+TCore_uniq = bp.ExtractUniqueValues(data, "earth:TCore:initial")
+TCore_units = bp.ExtractUnits(data, "earth:TCore:initial")
 
-K40_uniq = bp.ExtractUniqueValues(data, "earth_40KPowerCore_final")
-K40_units = bp.ExtractUnits(data, "earth_40KPowerCore_final")
+K40_uniq = bp.ExtractUniqueValues(data, "earth:40KPowerCore:final")
+K40_units = bp.ExtractUnits(data, "earth:40KPowerCore:final")
 
-RIC_Matrix = bp.CreateMatrix(TCore_uniq, K40_uniq, RIC)
+
+
+print(TCore_uniq)
+
+RIC_Matrix = np.reshape(RIC,(len(TCore_uniq),len(K40_uniq)))
+
+#RIC_Matrix = bp.CreateMatrix(TCore_uniq, K40_uniq, RIC)
 
 contours = [0, 500, 1000, 1500, 2000, 2500]
 xlabel = "Initial Core Temperature (" + TCore_units + ")"

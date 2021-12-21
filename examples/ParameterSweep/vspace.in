@@ -1,12 +1,12 @@
-srcfolder  ../EarthInterior
-destfolder ParameterSweep
-trialname test_
+sSrcFolder  ../EarthInterior
+sDestFolder ParameterSweep
+sTrialName test_
 
-file   sun.in
+sBodyFile   sun.in
 
-file   earth.in
+sBodyFile   earth.in
 
 dTCore [5500, 6500, n10] tcore
 d40KPowerCore [-1.5, -0.5, n10] K
 
-file   vpl.in
+sPrimaryFile   vpl.in

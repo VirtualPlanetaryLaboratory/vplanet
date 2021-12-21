@@ -1,25 +1,31 @@
 name: examples
 
-
 on:
   release:
     types: [published]
 
-
 jobs:
   tests:
-    name: "Compile examples on py${{ matrix.python-version }}"
+    name: 'Compile examples on py${{ matrix.python-version }}'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         include:
-          - python-version: "3.8"
+          - python-version: '3.8'
 
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - name: Install Latex
+        id: install_latex
+        shell: bash -l {0}
+        run: |
+          sudo apt-get install cm-super
+          sudo apt-get install texlive-fonts-recommended texlive-fonts-extra
+          sudo apt-get install dvipng
 
       - name: Set up Python
         id: setup_python
@@ -37,7 +43,7 @@ jobs:
           python -m pip install -U pip
           python -m pip install -e .
 
-      - name: Run tests
+      - name: Run Examples
         if: steps.install.outcome == 'success'
         shell: bash -l {0}
         run: python docs/run_examples.py

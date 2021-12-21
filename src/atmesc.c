@@ -1682,8 +1682,11 @@ void fnForceBehaviorAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
                            fnUpdateVariable ***fnUpdate, int iBody,
                            int iModule) {
 
-  ForceBehaviorEnvelopeEscape(body,module,evolve,io,system,update,fnUpdate,iBody,iModule);
-  ForceBehaviorWaterEscape(body,module,evolve,io,system,update,fnUpdate,iBody,iModule);
+  if (body[iBody].dEnvelopeMass > 0) {
+    ForceBehaviorEnvelopeEscape(body,module,evolve,io,system,update,fnUpdate,iBody,iModule);
+  } else if (body[iBody].dSurfaceWaterMass > 0) {
+    ForceBehaviorWaterEscape(body,module,evolve,io,system,update,fnUpdate,iBody,iModule);
+  }
 }
 
 
@@ -2586,7 +2589,7 @@ void WriteKTide(BODY *body, CONTROL *control, OUTPUT *output,
                      double *dTmp, char cUnit[]) {
   *dTmp = body[iBody].dKTide;
 
-  strcpy(cUnit, "nd");
+  strcpy(cUnit, "");
 }
 
 /**

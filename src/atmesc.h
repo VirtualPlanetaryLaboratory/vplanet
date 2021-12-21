@@ -68,6 +68,7 @@
   1234 /**< Whether or not to let atmesc determine escape regime */
 #define OPT_STOPWATERLOSSINHZ                                                  \
   1235 /**< Stop water loss once planet reaches HZ? */
+#define OPT_MINKTIDE  1240 /**< Minimum KTide value */
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -154,8 +155,8 @@ void FinalizeUpdateMassAtmEsc(BODY *, UPDATE *, int *, int, int, int);
 #define OUT_ROCHERADIUS 1228   /**< Roche Lobe radius */
 #define OUT_BONDIRADIUS 1229   /**< Bondi radius */
 #define OUT_HESCAPEREGIME 1230 /**< Hydrogen envelope escape regime */
-#define OUT_RRCRITICALFLUX                                                     \
-  1231 /**< Critical flux between RR and energy-limited escape */
+#define OUT_RRCRITICALFLUX 1231 /**< Critical flux between RR and energy-limited escape */
+#define OUT_KTIDE 1240 /**< Gravitational enhancement of mass loss */
 
 void InitializeOutputAtmEsc(OUTPUT *, fnWriteOutput[]);
 void InitializeOutputFunctionAtmEsc(OUTPUT *, int, int);

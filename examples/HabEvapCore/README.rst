@@ -55,7 +55,8 @@ Expected output
    orange curve for this panel and the
    subsequent panels. *Middle right:* Radius of the planet. The water layer is
    assumed to have no thickness. *Bottom left:* The amount of water on the surface
-   in units of Earth oceans (TO). Water is not permitted to photolyze if the
-   envelope is present or if the planet is in the HZ. *Bottom right:* The maximum
+   in units of Earth oceans (TO). Except for the AtmEscAuto-Isothermal model, water is not 
+   permitted to photolyze if the envelope is present or if the planet is in the HZ. This feature
+   can be toggled with the ``bStopWaterLossInHZ`` option. *Bottom right:* The maximum
    oxygen pressure that can accumulate in the atmosphere from water photolysis
    and hydrogen escape.

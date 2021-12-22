@@ -333,7 +333,7 @@ Compute the XUV Flux.
 double fdXUVFlux(BODY *body, int iBody) {
 
   double flux;
-  double dLXUVTot;
+  double dLXUVTot = 0.0;
 
   if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
     // Body orbits two stars

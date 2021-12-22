@@ -16,7 +16,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
-//#include <xmmintrin.h>
+#include <xmmintrin.h>
 
 // Windows-specific
 #ifdef VPLANET_ON_WINDOWS
@@ -829,8 +829,6 @@ struct BODY {
   double dFlareSlope;             /**< Flare function slope /FFD angular coefficient*/
   double dFlareSlopeErrorUpper;   /**< Upper error of slope /FFD angular coefficient*/
   double dFlareSlopeErrorLower;   /**< Lower error of slope /FFD angular coefficient*/
-  double dFlareC;
-  double dFlareK;
   double dFlareMinEnergy;    /**< Flare minimum energy value to calculate the FFD*/
   double dFlareMaxEnergy;    /**< Flare maximum energy value to calculate the FFD*/
 	double dFlareFreq1;        /**< Minimum flare rate value*/
@@ -839,44 +837,23 @@ struct BODY {
   double dFlareFreq4;
   double dFlareFreq5;
   double dFlareFreq6;
+  double dFlareFreqMax;
 	double dFlareEnergy1;       /**< Minimum flare rate value*/
 	double dFlareEnergy2;       /**< Maximum flare rate value*/
   double dFlareEnergy3;
   double dFlareEnergy4;
   double dFlareEnergy5;
   double dFlareEnergy6;
-	double dFlareDuration1;     /**< Minimum flare rate value*/
-	double dFlareDuration2;     /**< Maximum flare rate value*/
-  double dFlareDuration3;
-  double dFlareDuration4;
-  double dFlareVisWidth;
-  double dFlareXUVWidth;
+  double dFlareEnergyMax;
   double dLXUVFlare;        /**< XUV luminosity by flare*/
   double dLXUVFlareUpper;   /**< Upper value of XUV luminosity by flare when the user include the slope and Y-intercept errors */
   double dLXUVFlareLower;   /**< Lower value of XUV luminosity by flare when the user include the slope and Y-intercept errors */
 	double dLXUVTot;          /**< XUV luminosity total, flare + stellar*/
-  double *daOBSFlareRate;   /**< Observational FFD*/
-  double *daOBSEnergy;      /**< Observational flare energy*/
-  double dLAURA;
-  double *dFFD;             /**< Flare frequency distribution */
+  double dLXUVFlareConst;
   int iFlareFFD;           /**< Flare mode*/
-  int iFlareActivity;       /**< Activity mode*/ 
-  int iFlareCalcLuminosity; /**< Ways to calculates luminosity mode*/ 
   int iFlareBandPass;       /**< Option to choose in which band pass the input energy are*/
   int iFlareSlopeUnits;     /**< Mode to choose in which units the FFD slopes are*/
   double dEnergyBin;           /**< Number of energies consider between the minimum and maximum energies to calculate the luminosity by flares*/
-  int iNumFlareBins;
-  int iNumFlareBinsOBS;
-  double *daLXUVFlare;      /**< Array of XUV luminosity by flare calculed in the modes*/
-  double *daEnergy;         /**< Array to flare energy to the DAVENPORT and LACY modes*/
-  double *daFlareFreq;      /**< Array to flare rate to the DAVENPORT and LACY modes*/
-  double *daFFDAY;          /**< Array to flare rate (in flares/day) to the DAVENPORT and LACY modes*/
-  double *daFFSEC;          /**< Array to flare rate (in flares/second) to the DAVENPORT and LACY modes*/
-  double dLogEnergyMinERG;
-  double dLogEnergyMaxERG;
-  double dLogEnergyMinERGXUV;
-  double dLogEnergyMaxERGXUV;
-  double dDeltat;           /**< Flare duration in seconds*/
 
   // GALHABIT
   int bGalHabit;        /**< Use galhabit module */

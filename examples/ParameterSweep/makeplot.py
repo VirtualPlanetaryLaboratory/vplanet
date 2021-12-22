@@ -26,7 +26,7 @@ if not (path / ".ParameterSweep").exists():
 if not (path / ".ParameterSweep_BPL").exists():
     subprocess.check_output(["bigplanet", "bpl.in"], cwd=path)
 
-data = bp.BPLFile(path / "ParameterSweep.bpf")
+data = path / "ParameterSweep.bpf"
 
 mpl.rcParams["figure.figsize"] = (10, 8)
 fig = plt.figure()

@@ -14,7 +14,7 @@ print(example_list)
 
 
 # list of examples that should not be ran in the test
-fly_list = ["ParameterSweep"]
+#fly_list = ["ParameterSweep"]
 no_fly_list = ["ChaoticResonances","SSDistOrbDistRot"]
 #"MiniNeptuneEvap"
 
@@ -24,7 +24,7 @@ for example in example_list:
     # Example name
     name = pathlib.Path(example).parents[0].name
 
-    if name not in fly_list:
+    if name in no_fly_list:
 
         # Skip
         continue

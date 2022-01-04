@@ -20,7 +20,7 @@
   <a href="examples"><img src="https://img.shields.io/badge/Examples-34-darkblue.svg"/></a>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml/badge.svg"/></a>
-  <img src="https://img.shields.io/badge/Python-3.6%20--%203.9-orange.svg"/></a><br>
+  <img src="https://img.shields.io/badge/Python-3.6%20--%203.9-7d93c7.svg"/></a><br>
   <a href="http://ascl.net/1811.017"><img src="https://img.shields.io/badge/ASCL-1811.017-orange.svg?colorB=orange" alt="ascl:1811.017" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-purple.svg"/></a>
   <img src = "https://img.shields.io/badge/Platforms-Linux_|%20macOS_|%20Windows10-darkgreen.svg?style=flat"><br>

@@ -24,7 +24,7 @@ def _entry_point():
     return core.run(*sys.argv)
 
 
-def run(infile="vpl.in", verbose=False, quiet=False, clobber=False, units=True):
+def run(infile="vpl.in", verbose=False, quiet=False, clobber=False, units=True, C=False):
     """
     Run `vplanet` and return the output.
 
@@ -70,7 +70,11 @@ def run(infile="vpl.in", verbose=False, quiet=False, clobber=False, units=True):
     if clobber or not log_exists:
 
         # Parse kwargs
-        args = ["vplanet", infile]
+        if (C):
+            exe = "../../bin/vplanet"
+        else:
+            exe = "vplanet"
+        args = [exe, infile]
         if verbose:
             args += ["-v"]
         if quiet:

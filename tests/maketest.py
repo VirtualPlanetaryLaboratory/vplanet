@@ -445,7 +445,7 @@ def WriteTest(data,dirname):
             
     print(dirname)
     
-    test_file = 'test_' + dirname +  '_01.py'
+    test_file = 'test_' + dirname +  '.py'
     print(test_file)
     with open(test_file,'w') as t:
         t.write('from benchmark import Benchmark, benchmark \n')

@@ -1144,7 +1144,7 @@ void fsUnitsTemp(int iType, char cUnit[]) {
   if (iType == U_KELVIN) {
     sprintf(cUnit, "K");
   } else if (iType == U_CELSIUS) {
-    sprintf(cUnit, "C");
+    sprintf(cUnit, "Celsius");
   } else if (iType == U_FARENHEIT) {
     sprintf(cUnit, "F");
   } else {

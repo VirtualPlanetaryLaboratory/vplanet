@@ -120,7 +120,7 @@ import pytest
        "log.final.system.Age": {"value": 3.471336e+15, "unit": u.sec}, 
        "log.final.system.Time": {"value": 3.155760e+15, "unit": u.sec}, 
        "log.final.system.TotAngMom": {"value": 2.196283e+41, "unit": (u.kg * u.m ** 2) / u.sec}, 
-       "log.final.system.TotEnergy": {"value": -4.460407e+39, "unit": u.Joule}, 
+       "log.final.system.TotEnergy": {"value": -4.460407e+39, "unit": u.Joule, "rtol": 1e-4}, 
        "log.final.system.PotEnergy": {"value": -1.057009e+40, "unit": u.Joule}, 
        "log.final.system.KinEnergy": {"value": 8.299131e+36, "unit": u.Joule}, 
        "log.final.system.DeltaTime": {"value": 4.378318e+09, "unit": u.sec}, 

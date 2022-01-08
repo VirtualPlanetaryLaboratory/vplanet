@@ -143,7 +143,7 @@ import pytest
        "log.initial.io.EqRotRateCont": {"value": 4.109421e-05, "unit": 1 / u.sec}, 
        "log.initial.io.EqRotPerCont": {"value": 1.528971e+05, "unit": u.sec}, 
        "log.initial.io.EqRotPer": {"value": 1.529215e+05, "unit": u.sec}, 
-       "log.initial.io.EqTidePower": {"value": -1.605613e-314, "unit": 1 / u.sec}, 
+       "log.initial.io.EqTidePower": {"value": -1.600324e-314, "unit": 1 / u.sec}, 
        "log.initial.io.GammaRot": {"value": -1.000000, "unit": u.sec}, 
        "log.initial.io.GammaOrb": {"value": -1.000000, "unit": u.sec}, 
        "log.initial.io.OceanK2": {"value": 0.010000}, 

@@ -52,7 +52,7 @@ def Main(dir,initial = False):
         vplanet.run('vpl.in',quiet = True)
         
         
-        SystemName,BodyName,logfile,outfile,forward,backward = GetSNames(infiles)
+        SystemName,BodyName,logfile,outfile,forward,backward,stellar = GetSNames(infiles)
         
         #process logfile into a dictonary
         data = {}
@@ -90,7 +90,7 @@ def Main(dir,initial = False):
                         climate_name, data, body, GridOutputOrder)
 
         ProcessUnits(data)
-        WriteTest(data,dirname)
+        WriteTest(data,dirname,stellar)
         os.chdir('../')
     
   
@@ -100,7 +100,7 @@ def GetSNames(bodyfiles):
     outfile = ''
     forward = False
     backward = False
-    
+    stellar = False
 
     for file in bodyfiles:
         # gets path to infile
@@ -136,10 +136,13 @@ def GetSNames(bodyfiles):
                 content = [line.strip().split() for line in infile.readlines()]
                 for line in content:
                     if line:
+                        if line[0] == 'saModules':
+                            if 'stellar' in line:
+                                stellar = True
                         if line[0] == 'sName':
                             body_names.append(line[1])
 
-    return system_name, body_names, logfile, outfile, forward, backward
+    return system_name, body_names, logfile, outfile, forward, backward, stellar
   
 
 def ProcessLogFile(logfile, data,forward,backward,initial = False):
@@ -435,7 +438,7 @@ def ProcessUnits(data):
     return data
 
             
-def WriteTest(data,dirname):
+def WriteTest(data,dirname,stellar):
     
     
     
@@ -443,7 +446,7 @@ def WriteTest(data,dirname):
     for i in badchars:
             dirname = dirname.replace(i, "")
             
-    print(dirname)
+    print(stellar)
     
     test_file = 'test_' + dirname +  '.py'
     print(test_file)
@@ -458,17 +461,25 @@ def WriteTest(data,dirname):
         for k,v in data.items():
             if 'Order' in k or v[1] == 'inf':
                 continue
-            
+                    
             #this means its from a output file
             if 'log' not in k and v[0] != '':
-                t.write('       "' + k + '": {"value": ' + str(v[1]) + ', "unit": ' + v[0] + ', "index": [-1] }, \n' )
+                t.write('       "' + k + '": {"value": ' + str(v[1]) + ', "unit": ' + v[0] + ', "index": -1 }, \n' )
             if 'log' not in k and v[0] == '':
                 t.write('       "' + k + '": {"value": ' + str(v[1]) + ', "index": [-1] }, \n' )
             
             if 'log' in k and v[0] != '':
-                t.write('       "' + k + '": {"value": ' + str(v[1]) + ', "unit": ' + v[0] + '}, \n' )
+                if 'final' in k and stellar == True:
+                    t.write('       "' + k + '": {"value": ' + str(v[1]) + ', "unit": ' + v[0] + ', "rtol": 1e-4}, \n' )
+                else:
+                    t.write('       "' + k + '": {"value": ' + str(v[1]) + ', "unit": ' + v[0] + '}, \n' )
             if 'log' in k and v[0] == '':
-                t.write('       "' + k + '": {"value": ' + str(v[1]) + '}, \n' )
+                if 'final' in k and stellar == True:
+                    t.write('       "' + k + '": {"value": ' + str(v[1]) + ', "rtol": 1e-4}, \n' ) 
+                else:
+                    t.write('       "' + k + '": {"value": ' + str(v[1]) + '}, \n' )
+                
+                
         t.write('   } \n')
         t.write(')\n')
         t.write('class Test' + dirname + '(Benchmark): \n')

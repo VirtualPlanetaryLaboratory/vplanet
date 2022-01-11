@@ -45,7 +45,6 @@ jobs:
         if: steps.install.outcome == 'success'
         shell: bash -l {0}
         run: |
-          make legacy
           make coverage
 
       - name: Get unique id
@@ -66,4 +65,4 @@ jobs:
       - name: CodeCov
         uses: codecov/codecov-action@v2.1.0
         with:
-          files: ./coverage.xml
+          files: ./.coverage

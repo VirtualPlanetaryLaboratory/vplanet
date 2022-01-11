@@ -69,7 +69,7 @@ test:
 
 coverage:
 	-mkdir -p gcov && cd gcov && gcc -coverage -o ../bin/vplanet ../src/*.c -lm
-	-pytest
+	-pytest -v tests --junitxml-junit/test-results.xml
 	-lcov --capture --directory gcov --output-file .coverage && genhtml .coverage --output-directory gcov/html
 
 docs:

@@ -34,7 +34,6 @@ tests/Vspace_Log/Log_Test/
 coverage.info
 .coverage
 
-
 # Examples
 examples/ParameterSweep/ParameterSweep/
 examples/IoHeat/data/

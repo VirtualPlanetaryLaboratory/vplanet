@@ -1,0 +1,39 @@
+name: valgrind
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  valgrind:
+    name: Run Valgrind on Ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        id: setup_python
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: vplanet
+          environment-file: environment.yml
+          python-version: 3.8
+
+      - name: Install valgrind
+        id: install
+        if: steps.setup_python.outcome == 'success'
+        shell: bash -l {0}
+        run: |
+          sudo apt-get install valgrind
+
+      - name: Run valgrind test
+        if: steps.install.outcome == 'success'
+        shell: bash -l {0}
+        run: |
+          cd tests/
+          python -m unittest valgrind.py

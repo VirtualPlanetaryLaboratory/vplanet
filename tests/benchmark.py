@@ -26,7 +26,9 @@ class Benchmark:
         benchmark_value = value * unit
 
         # Check
-        assert np.allclose(output_value, benchmark_value, **param_options)
+        if (np.allclose(output_value, benchmark_value, **param_options) == 0):
+                print("Standard: "+repr(benchmark_value)+", Trial: "+repr(output_value))
+                assert False
 
 
 def benchmark(args_dict):

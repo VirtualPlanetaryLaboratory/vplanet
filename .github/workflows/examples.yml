@@ -26,9 +26,11 @@ jobs:
         id: install_latex
         shell: bash -l {0}
         run: |
+          sudo apt-get update
           sudo apt-get install cm-super
           sudo apt-get install texlive-fonts-recommended texlive-fonts-extra
           sudo apt-get install dvipng
+          sudo apt-get update
 
       - name: Set up Python
         id: setup_python

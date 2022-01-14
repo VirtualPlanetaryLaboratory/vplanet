@@ -1,4 +1,4 @@
-name: valgrind
+name: memcheck
 
 on:
   release:

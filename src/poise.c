@@ -3734,7 +3734,7 @@ void WriteEnergyResW(BODY *body, CONTROL *control, OUTPUT *output,
 void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TGLOBAL].cName, "TGlobal");
   sprintf(output[OUT_TGLOBAL].cDescr, "Global mean temperature from POISE");
-  sprintf(output[OUT_TGLOBAL].cNeg, "C");
+  sprintf(output[OUT_TGLOBAL].cNeg, "Celsius");
   output[OUT_TGLOBAL].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TGLOBAL].dNeg       = 1;
@@ -3812,7 +3812,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_TEMPLAT].cName, "TempLat");
   sprintf(output[OUT_TEMPLAT].cDescr, "Surface temperature by latitude.");
-  sprintf(output[OUT_TEMPLAT].cNeg, "C");
+  sprintf(output[OUT_TEMPLAT].cNeg, "Celsius");
   output[OUT_TEMPLAT].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPLAT].dNeg       = 1;
@@ -3824,7 +3824,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TEMPMINLAT].cName, "TempMinLat");
   sprintf(output[OUT_TEMPMINLAT].cDescr,
           "Minimum surface temperature over a year by latitude.");
-  sprintf(output[OUT_TEMPMINLAT].cNeg, "C");
+  sprintf(output[OUT_TEMPMINLAT].cNeg, "Celsius");
   output[OUT_TEMPMINLAT].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPMINLAT].dNeg       = 1;
@@ -3836,7 +3836,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TEMPMAXLAT].cName, "TempMaxLat");
   sprintf(output[OUT_TEMPMAXLAT].cDescr,
           "Maximum surface temperature over a year by latitude.");
-  sprintf(output[OUT_TEMPMAXLAT].cNeg, "C");
+  sprintf(output[OUT_TEMPMAXLAT].cNeg, "Celsius");
   output[OUT_TEMPMAXLAT].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPMAXLAT].dNeg       = 1;
@@ -3848,7 +3848,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TEMPMAXLAND].cName, "TempMaxLand");
   sprintf(output[OUT_TEMPMAXLAND].cDescr,
           "Maximum surface temperature on land");
-  sprintf(output[OUT_TEMPMAXLAND].cNeg, "C");
+  sprintf(output[OUT_TEMPMAXLAND].cNeg, "Celsius");
   output[OUT_TEMPMAXLAND].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPMAXLAND].dNeg       = 1;
@@ -3860,7 +3860,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TEMPMAXWATER].cName, "TempMaxWater");
   sprintf(output[OUT_TEMPMAXWATER].cDescr,
           "Maximum surface temperature on water");
-  sprintf(output[OUT_TEMPMAXWATER].cNeg, "C");
+  sprintf(output[OUT_TEMPMAXWATER].cNeg, "Celsius");
   output[OUT_TEMPMAXWATER].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPMAXWATER].dNeg       = 1;
@@ -3872,7 +3872,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TEMPLANDLAT].cName, "TempLandLat");
   sprintf(output[OUT_TEMPLANDLAT].cDescr,
           "Land surface temperature by latitude.");
-  sprintf(output[OUT_TEMPLANDLAT].cNeg, "C");
+  sprintf(output[OUT_TEMPLANDLAT].cNeg, "Celsius");
   output[OUT_TEMPLANDLAT].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPLANDLAT].dNeg  = 1;
@@ -3883,7 +3883,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TEMPWATERLAT].cName, "TempWaterLat");
   sprintf(output[OUT_TEMPWATERLAT].cDescr,
           "Water surface temperature by latitude.");
-  sprintf(output[OUT_TEMPWATERLAT].cNeg, "C");
+  sprintf(output[OUT_TEMPWATERLAT].cNeg, "Celsius");
   output[OUT_TEMPWATERLAT].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPWATERLAT].dNeg  = 1;

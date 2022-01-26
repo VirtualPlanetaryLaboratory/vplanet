@@ -22,7 +22,7 @@
   <a href="examples"><img src="https://img.shields.io/badge/Examples-34-darkblue.svg"/></a>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml/badge.svg"/></a>
-  <img src="https://img.shields.io/badge/Python-3.6%20--%203.9-7d93c7.svg"/></a>
+  <img src="https://img.shields.io/badge/Python-3.6%20--%203.10-7d93c7.svg"/></a>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/wheels.yml">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/wheels.yml/badge.svg"/></a><br>
   <img src = "https://img.shields.io/badge/Platforms-Linux_|%20macOS_|%20Windows10-darkgreen.svg?style=flat">

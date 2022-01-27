@@ -8,7 +8,8 @@ import os
 
 
 # Read current code version
-VERSION = open("VERSION", "r").read().split("\n")[0].strip()
+VersionPath = os.path.join(os.path.abspath('.'),"VERSION")
+VERSION = open(VersionPath, "r").read().split("\n")[0].strip()
 
 
 class BuildExt(build_ext):

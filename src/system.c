@@ -970,9 +970,9 @@ double fndUpdateSpiNBodyCoords(BODY *body, EVOLVE *evolve) {
       body[iBody].dLongP = atan2(body[iBody].dHecc, body[iBody].dKecc);
       body[iBody].dLongA = atan2(body[iBody].dPinc, body[iBody].dQinc);
       body[iBody].dInc   = 2 * asin(sqrt(body[iBody].dPinc * body[iBody].dPinc +
-                                       body[iBody].dQinc * body[iBody].dQinc));
+                                         body[iBody].dQinc * body[iBody].dQinc));
       body[iBody].dEcc   = sqrt(body[iBody].dKecc * body[iBody].dKecc +
-                              body[iBody].dHecc * body[iBody].dHecc);
+                                body[iBody].dHecc * body[iBody].dHecc);
 
       body[iBody].dMeanA = body[iBody].dMeanL - body[iBody].dLongP;
     } else {

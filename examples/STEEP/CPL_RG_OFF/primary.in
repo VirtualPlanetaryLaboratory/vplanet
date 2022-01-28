@@ -10,7 +10,7 @@ iBodyType       1               # 1 -> Star
 dMass		1.0                # Mass, negative -> Earth masses
 dRotPeriod      -0.5            # Rotation period (-1 -> days)
 bEvolveRG       0
-dRadGyra        0.27 
+dRadGyra        0.27
 dAge		1.0e6
 
 # EQTIDE Parameters
@@ -24,4 +24,4 @@ saTidePerts	secondary	# Body name(s) of tidal perturbers
 sStellarModel baraffe
 sMagBrakingModel matt
 
-saOutputOrder	Time -Radius -RotPer -RotRate -LostAngMom RadGyra -SurfEnFluxTotal -CriticalSemiMajorAxis 
+saOutputOrder	Time -Radius -RotPer -RotRate -LostAngMom RadGyra -SurfEnFluxTotal -CriticalSemiMajorAxis

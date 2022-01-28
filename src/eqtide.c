@@ -2867,7 +2867,7 @@ void WriteGammaOrb(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   /* Broken */
   //*dTmp =
-  //fdGammaOrb(body[iBody].dEccSq,body[iBody].dObliquity,body[iBody].iTidalEpsilon[0]);
+  // fdGammaOrb(body[iBody].dEccSq,body[iBody].dObliquity,body[iBody].iTidalEpsilon[0]);
   *dTmp = -1;
 
   /* Negative option? */

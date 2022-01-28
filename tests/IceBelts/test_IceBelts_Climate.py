@@ -1,9 +1,9 @@
-from benchmark import Benchmark, benchmark
-import astropy.units as u
-import pytest
 import pathlib
-import numpy as np
 
+import astropy.units as u
+import numpy as np
+import pytest
+from benchmark import Benchmark, benchmark
 
 path = pathlib.Path(__file__).parents[0].absolute()
 sysname = "icebelt"
@@ -11,7 +11,7 @@ plname = "earth"
 timestamp = "0"
 
 
-#class TestIceBelt(Benchmark):
+# class TestIceBelt(Benchmark):
 #    pass
 
 

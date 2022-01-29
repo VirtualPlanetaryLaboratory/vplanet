@@ -17,7 +17,7 @@
 #include <sys/types.h>
 #include <time.h>
 #ifdef __x86_64__
-  #include <xmmintrin.h>
+#include <xmmintrin.h>
 #endif
 
 // Windows-specific
@@ -102,7 +102,7 @@
 #define U_AU 6
 
 // Mass unit IDs
-#define U_GRAM  0
+#define U_GRAM 0
 #define U_KILOGRAM 1
 #define U_SOLARMASS 2
 #define U_EARTHMASS 3
@@ -133,7 +133,7 @@ extern const double dTINY;
 /* !!! Hack to get long description and module list formatting for Long Help.
    It'd be better to keep LINE back at 256 for memory, and malloc the char's,
    but I don't know how to do that. */
-#define LINE 2048         /* Maximum number of characters in a line */
+#define LINE 2048 /* Maximum number of characters in a line */
 #define NAMELEN 100
 #define MAXFILES 128 /* Maximum number of input files */
 #define MAXARRAY                                                               \
@@ -143,10 +143,11 @@ extern const double dTINY;
   1000 /* Number of options that could be                                      \
         * in MODULE */
 #define MAXLINES                                                               \
-  256             /* Maximum Number of Lines in an                             \
-                   * input file */
-#define OUTLEN 48 /* Maximum number of characters in an output column header   \
-                   */
+  256 /* Maximum Number of Lines in an                                         \
+       * input file */
+#define OUTLEN                                                                 \
+  48 /* Maximum number of characters in an output column header                \
+      */
 #define OUTDESCR 256     /* Number of characters in output description */
 #define OUTLONDESCR 2048 /* Number of characters in output long description */
 

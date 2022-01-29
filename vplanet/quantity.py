@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
-import numpy as np
-import re
 import numbers
+import re
+
 import astropy
 import astropy.units as u
-from astropy.units.core import (
-    Unit,
-    UnitBase,
-    dimensionless_unscaled,
-    UnitsError,
-)
+import numpy as np
+from astropy.units.core import Unit, UnitBase, UnitsError, dimensionless_unscaled
 from astropy.utils.misc import isiterable
-
 
 # TODO: There may be other methods in
 # https://github.com/astropy/astropy/blob/master/astropy/units/quantity.py
@@ -118,7 +113,12 @@ class VPLANETQuantity(u.Quantity):
                     dtype = float
 
             return np.array(
-                value, dtype=dtype, copy=copy, order=order, subok=True, ndmin=ndmin,
+                value,
+                dtype=dtype,
+                copy=copy,
+                order=order,
+                subok=True,
+                ndmin=ndmin,
             )
 
         # Maybe str, or list/tuple of Quantity? If so, this may set value_unit.
@@ -191,7 +191,12 @@ class VPLANETQuantity(u.Quantity):
                     copy = False  # copy will be made in conversion at end
 
         value = np.array(
-            value, dtype=dtype, copy=copy, order=order, subok=False, ndmin=ndmin,
+            value,
+            dtype=dtype,
+            copy=copy,
+            order=order,
+            subok=False,
+            ndmin=ndmin,
         )
 
         # check that array contains numbers or long int objects
@@ -247,7 +252,7 @@ class VPLANETQuantity(u.Quantity):
 class NumpyQuantity(np.ndarray):
     """
     A custom subclass of numpy ndarray with tags.
-    
+
     """
 
     def __new__(cls, input_array, tags={}, unit=None):

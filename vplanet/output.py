@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
-from .custom_units import custom_units
-from .logger import logger
-from .log import get_log
-from .quantity import VPLANETQuantity as Quantity
-from .quantity import NumpyQuantity
-import numpy as np
-import re
 import os
+import re
 import warnings
+
 import astropy.units as u
+import numpy as np
+
+from .custom_units import custom_units
+from .log import get_log
+from .logger import logger
+from .quantity import NumpyQuantity
+from .quantity import VPLANETQuantity as Quantity
 
 
 class Output(object):
-    """A class containing all of the information of a ``vplanet`` run.
-
-    """
+    """A class containing all of the information of a ``vplanet`` run."""
 
     def __init__(self):
         self.sysname = ""
@@ -39,7 +39,7 @@ class Output(object):
 class Body(object):
     """A class containing the parameter arrays of a body in a ``vplanet`` run.
 
-    These are populated from either a ``.forward``, a ``.backward``, or a 
+    These are populated from either a ``.forward``, a ``.backward``, or a
     ``.Climate`` file.
 
     """
@@ -65,9 +65,7 @@ class Body(object):
 
 
 def get_param_descriptions():
-    """
-
-    """
+    """ """
 
     # Get the help message
     from .wrapper import help
@@ -115,9 +113,7 @@ def get_param_descriptions():
 
 
 def get_params(outputorder, file, units=True, body=None):
-    """
-
-    """
+    """ """
     # Get parameter descriptions from the vplanet help
     description = get_param_descriptions()
 
@@ -189,9 +185,7 @@ def get_params(outputorder, file, units=True, body=None):
 
 
 def get_arrays(log, units=True):
-    """
-
-    """
+    """ """
     # Initialize
     output = Output()
 
@@ -282,16 +276,16 @@ def get_arrays(log, units=True):
 
 def get_output(path=".", sysname=None, units=True):
     """Parse all of the output from a :py:obj:`vplanet` run.
-    
+
     Args:
         sysname (str, optional): System name. This is determined automatically,
-            unless there are multiple runs in the same :py:obj:`path`. Defaults 
+            unless there are multiple runs in the same :py:obj:`path`. Defaults
             to None.
-        path (str, optional): Path to the directory containing the results of 
+        path (str, optional): Path to the directory containing the results of
             the :py:obj:`vplanet` run. Defaults to the current directory.
-        units (bool, optional): Whether or not the quantities returned by this 
+        units (bool, optional): Whether or not the quantities returned by this
             method have astropy units. Default is True.
-    
+
     Returns:
         A :py:class:`Output` instance containing all the information from the
         ``.log``, ``.forward``, and ``.backward`` output files.

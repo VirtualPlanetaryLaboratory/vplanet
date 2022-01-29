@@ -4,7 +4,7 @@ Evolution of a Planet Orbiting a Short-Period Binary
 Overview
 --------
 
-This example shows 5 Gyrs of the orbital evolution of a hypothetical potentially 
+This example shows 5 Gyrs of the orbital evolution of a hypothetical potentially
 habitrable circumbinary planet orbiting a tidally-interacting 0.5 Msun - 0.1 Msun
 stellar binary. The orbit of the circumbinary planet (CBP) secularly evolves as the
 orbit of the central binary evolves due to tides. This case was initially explored

@@ -5,9 +5,10 @@ saModules                 spinbody   AtmEsc   # Modules to apply, exact spelling
 # Physical Properties
 dMass                     -1.02        # Mass, negative -> Earth masses
 dEnvelopeMass             -1
+dMinEnvelopeMass          -1e-3
 
 # SpiNBody Properties
-bUseOrbParams                    1
+bUseOrbParams             1
 
 # Orbital Properties
 dSemi                     -0.18850      # Semi-major axis, negative -> AU
@@ -17,9 +18,9 @@ dLongP                     0            # Longitude of pericenter
 dLongA                     0            # Longitude of ascending node
 dMeanA                     14.25        # Mean Anomaly
 
-dXFrac                    1.0
-sPlanetRadiusModel        lopez
-dAtmXAbsEffH              0.1
+dXFrac                     1.0
+sPlanetRadiusModel         lopez
+dAtmXAbsEffH               0.1
 
 
 saOutputOrder Time SemiMajorAxis Eccentricity SpiNBodyInc LongP SpiNBodyLongA $

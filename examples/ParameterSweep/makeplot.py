@@ -23,7 +23,7 @@ if not (path / ".ParameterSweep").exists():
     subprocess.check_output(["multiplanet", "vspace.in"], cwd=path)
 
 # Run bigplanet
-if not (path / ".ParameterSweep_BPL").exists():
+if not (path / "ParameterSweep.bpf").exists():
     subprocess.check_output(["bigplanet", "bpl.in"], cwd=path)
 
 data = bp.BPLFile(path / "ParameterSweep.bpf")
@@ -39,10 +39,6 @@ TCore_units = bp.ExtractUnits(data, "earth:TCore:initial")
 
 K40_uniq = bp.ExtractUniqueValues(data, "earth:40KPowerCore:final")
 K40_units = bp.ExtractUnits(data, "earth:40KPowerCore:final")
-
-
-
-print(TCore_uniq)
 
 RIC_Matrix = np.reshape(RIC,(len(TCore_uniq),len(K40_uniq)))
 

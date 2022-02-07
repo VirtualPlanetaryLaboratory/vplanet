@@ -10,4 +10,4 @@ dSemi                     -0.1
 dEcc                      0.
 dEnvelopeMass             -6.41275
 dMass                     -14.25056
-saOutputOrder             Time -EnvelopeMass Radius
+saOutputOrder             Time -EnvelopeMass Radius KTide

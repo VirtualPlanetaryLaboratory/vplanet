@@ -8,7 +8,7 @@ A planet orbiting in the main sequence habitable zone of a low mass star, e.g. P
 can lose a hydrogen envelope during the pre-main sequence. If the core is
 volatile rich, then the planet may become habitable, but only if the water isn't
 also lost via photolysis and hydrogen escape. This example demonstrates
-this transition for 6 different assumptions: all possible combinations between 
+this transition for 6 different assumptions: all possible combinations between
 two different radius models and three
 different escape models. The envelope radius may evolve according to a modified
 version of the Lopez et al. (2012) radius tracks (ProxCenB) or the isothermal
@@ -55,7 +55,7 @@ Expected output
    orange curve for this panel and the
    subsequent panels. *Middle right:* Radius of the planet. The water layer is
    assumed to have no thickness. *Bottom left:* The amount of water on the surface
-   in units of Earth oceans (TO). Except for the AtmEscAuto-Isothermal model, water is not 
+   in units of Earth oceans (TO). Except for the AtmEscAuto-Isothermal model, water is not
    permitted to photolyze if the envelope is present or if the planet is in the HZ. This feature
    can be toggled with the ``bStopWaterLossInHZ`` option. *Bottom right:* The maximum
    oxygen pressure that can accumulate in the atmosphere from water photolysis

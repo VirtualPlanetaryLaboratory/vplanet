@@ -43,12 +43,13 @@ void WriteBodyType(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
  */
 
 /* Climate-obliquity-precession parameter */
-void WriteCOPP(BODY *body, CONTROL *control, OUTPUT *output,
-                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+void WriteCOPP(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+               UNITS *units, UPDATE *update, int iBody, double *dTmp,
+               char cUnit[]) {
 
-  *dTmp = body[iBody].dEcc*sin(body[iBody].dLongP + body[iBody].dPrecA)*sin(body[iBody].dObliquity);
-  strcpy(cUnit,"");
+  *dTmp = body[iBody].dEcc * sin(body[iBody].dLongP + body[iBody].dPrecA) *
+          sin(body[iBody].dObliquity);
+  strcpy(cUnit, "");
 }
 
 /* Critical Semi-major Axis (Holman & Wiegert, 1999 for P-type circumbinary
@@ -615,7 +616,7 @@ void WriteOrbAngMom(BODY *body, CONTROL *control, OUTPUT *output,
   if (body[iBody].bSpiNBody) {
     pdOrbMom = fdOrbAngMom(body, control, iBody);
     *dTmp    = sqrt(pdOrbMom[0] * pdOrbMom[0] + pdOrbMom[1] * pdOrbMom[1] +
-                 pdOrbMom[2] * pdOrbMom[2]);
+                    pdOrbMom[2] * pdOrbMom[2]);
     free(pdOrbMom);
   } else {
     pdOrbMom = fdOrbAngMom(body, control, iBody);
@@ -744,7 +745,7 @@ void WriteOrbPeriod(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime); 
+    *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
   }
 }
@@ -1245,14 +1246,14 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
    */
 
   sprintf(output[OUT_COPP].cName, "COPP");
-  sprintf(output[OUT_COPP].cDescr,
-          "Climate Obliquity Precession Parameter");
+  sprintf(output[OUT_COPP].cDescr, "Climate Obliquity Precession Parameter");
   output[OUT_COPP].bNeg       = 0;
   output[OUT_COPP].iNum       = 1;
   output[OUT_COPP].iModuleBit = BINARY + EQTIDE + DISTROT + POISE + SPINBODY;
   fnWrite[OUT_COPP]           = &WriteCOPP;
   sprintf(output[OUT_COPP].cLongDescr,
-          "eccentriciy * sin(longitude of pericenter + precession angle) * sin(obliquity)");
+          "eccentriciy * sin(longitude of pericenter + precession angle) * "
+          "sin(obliquity)");
 
   sprintf(output[OUT_CRITSEMI].cName, "CriticalSemiMajorAxis");
   sprintf(output[OUT_CRITSEMI].cDescr,

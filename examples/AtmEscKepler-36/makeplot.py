@@ -1,11 +1,13 @@
 """Reproduce Figure 3 in Lopez and Fortney (2013)."""
-import vplanet
-import vplot
-import numpy as np
-from tqdm import tqdm
-import matplotlib.pyplot as plt
 import pathlib
 import sys
+
+import matplotlib.pyplot as plt
+import numpy as np
+import vplot
+from tqdm import tqdm
+
+import vplanet
 
 # Path hacks
 path = pathlib.Path(__file__).parents[0].absolute()

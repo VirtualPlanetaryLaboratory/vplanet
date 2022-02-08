@@ -1,10 +1,12 @@
-import vplanet
-import numpy as np
-import os
-import pytest
 import functools
 import inspect
+import os
+
 import astropy.units as u
+import numpy as np
+import pytest
+
+import vplanet
 
 
 def recursive_getattr(obj, attr, *args):
@@ -26,9 +28,11 @@ class Benchmark:
         benchmark_value = value * unit
 
         # Check
-        if (np.allclose(output_value, benchmark_value, **param_options) == 0):
-                print("Standard: "+repr(benchmark_value)+", Trial: "+repr(output_value))
-                assert False
+        if np.allclose(output_value, benchmark_value, **param_options) == 0:
+            print(
+                "Standard: " + repr(benchmark_value) + ", Trial: " + repr(output_value)
+            )
+            assert False
 
 
 def benchmark(args_dict):

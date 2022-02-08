@@ -1173,7 +1173,8 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_COLDSTART]             = &ReadColdStart;
 
   sprintf(options[OPT_FIXICELAT].cName, "dFixIceLat");
-  sprintf(options[OPT_FIXICELAT].cDescr, "Force ice cap latitude to this value");
+  sprintf(options[OPT_FIXICELAT].cDescr,
+          "Force ice cap latitude to this value");
   sprintf(options[OPT_FIXICELAT].cDefault, "None");
   sprintf(options[OPT_FIXICELAT].cDimension, "nd");
   options[OPT_FIXICELAT].dDefault   = 0;
@@ -1485,7 +1486,8 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_ECCPER]             = &ReadEccPer;
 
   sprintf(options[OPT_ACCUMODE].cName, "bAccuracyMode");
-  sprintf(options[OPT_ACCUMODE].cDescr, "Re-invert matrix every EBM time step?");
+  sprintf(options[OPT_ACCUMODE].cDescr,
+          "Re-invert matrix every EBM time step?");
   sprintf(options[OPT_ACCUMODE].cDefault, "0");
   options[OPT_ACCUMODE].dDefault   = 0;
   options[OPT_ACCUMODE].iType      = 0;
@@ -2270,11 +2272,11 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
       */
       count                 = 0;
       int RunLen            = 5;
-      int iMaxIteration     = 2*RunLen;
+      int iMaxIteration     = 2 * RunLen;
       daRunningMean         = malloc((RunLen + 1) * sizeof(double));
       daRunningMean[RunLen] = 0;
       TotalMean             = 0;
-      RunningMeanTmp        = daRunningMean[RunLen]; 
+      RunningMeanTmp        = daRunningMean[RunLen];
       while (fabs(RunningMeanTmp - daRunningMean[RunLen]) >
                    body[iBody].dSpinUpTol ||
              count <= iMaxIteration) {
@@ -2311,7 +2313,8 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
         /*
         if (count >= iMaxIteration) {
           if (iVerbose > VERBPROG) {
-            fprintf(stderr,"ERROR: Initial climate state failed to converge.\n");
+            fprintf(stderr,"ERROR: Initial climate state failed to
+        converge.\n");
           }
           exit(EXIT_INPUT);
         }
@@ -5324,7 +5327,7 @@ void fvAnnualInsolation(BODY *body, int iBody) {
   // Pericenter, relative to direction of planet at spring equinox
   dLongP = body[iBody].dLongP + body[iBody].dPrecA + PI;
   dEcc   = sqrt(body[iBody].dHecc * body[iBody].dHecc +
-              body[iBody].dKecc * body[iBody].dKecc);
+                body[iBody].dKecc * body[iBody].dKecc);
 
   // starts the year at the (northern) winter solstice
   body[iBody].dTrueL = -PI / 2;

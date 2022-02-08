@@ -2209,7 +2209,7 @@ void Rot2Bin(BODY *body, int iBody) {
   //   body[iBody].dEcc =
   //   sqrt(pow(body[iBody].dEccX,2)+pow(body[iBody].dEccY,2)+pow(body[iBody].dEccZ,2));
   //   body[iBody].dAngM =
-  //   sqrt(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)+\
+   //   sqrt(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)+\
                                                           pow(body[iBody].dAngMZ,2));
 
   body[iBody].dIncTmp   = acos(body[iBody].dAngMZTmp / body[iBody].dAngM);
@@ -2872,7 +2872,7 @@ double fndISMDensity(SYSTEM *system, double dRad) {
 }
 
 //--------------Chain rule derivatives for variable
-//transformations-----------------------------
+// transformations-----------------------------
 double fndDexDJ(BODY *body, int iBody) {
   return (-sqrt((1.0 - pow(body[iBody].dEcc, 2.))) * body[iBody].dEccX /
                 pow(body[iBody].dEcc, 2) * pow(sin(body[iBody].dInc), 2) +
@@ -2926,7 +2926,7 @@ double fndDezDap(double dArgP, double dEcc, double dInc) {
 }
 
 //--------------Galactic
-//tides!--------------------------------------------------------------
+// tides!--------------------------------------------------------------
 
 double fndGalHabitDJDt(BODY *body, SYSTEM *system, int *iaBody) {
   double dRho = system->dScalingFTot * system->dGalacDensity / pow(AUPC, 3),
@@ -3030,7 +3030,7 @@ double fndGalHabitDAngMZDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
 
 
 //----Fuck it, let's try these equations (Breiter & Vokrouhlicky
-//2015)-----------------------------
+// 2015)-----------------------------
 double fndQuadC2(BODY *body, int *iaBody) {
   double M1, X0, X1, a1, a2, m2;
 

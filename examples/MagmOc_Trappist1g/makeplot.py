@@ -3,18 +3,19 @@
 # Modules used: MagmOc, AtmEsc, RadHeat, EqTide #
 #################################################
 
-import vplanet
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import numpy as np
 import pathlib
 import sys
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+
+import vplanet
 
 # Path hacks
 path = pathlib.Path(__file__).parents[0].absolute()
 sys.path.insert(1, str(path.parents[0]))
 from get_args import get_args
-
 
 # Set style for plot #
 mpl.rcParams["lines.linewidth"] = 2

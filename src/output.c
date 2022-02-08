@@ -1379,7 +1379,7 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_HZLIMEARLYMARS].cName, "HZLimEarlyMars");
   sprintf(output[OUT_HZLIMEARLYMARS].cDescr, "Early Mars HZ Limit");
-  sprintf(output[OUT_HZLIMEARLYMARS].cNeg, "AUM");
+  sprintf(output[OUT_HZLIMEARLYMARS].cNeg, "AU");
   output[OUT_HZLIMEARLYMARS].bNeg       = 1;
   output[OUT_HZLIMEARLYMARS].dNeg       = 1. / AUM;
   output[OUT_HZLIMEARLYMARS].iNum       = 1;

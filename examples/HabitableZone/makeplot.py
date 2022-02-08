@@ -72,7 +72,7 @@ fig = plt.figure(figsize=(6.5, 5))
 
 # Arrays ecc,obl,heat now contain the data to make the figure
 plt.xlabel("Semi-major Axis (au)", fontsize=20)
-plt.ylabel("Stellar Mass ($M_\odot$)", fontsize=20)
+plt.ylabel("Stellar Mass (M$_\odot$)", fontsize=20)
 plt.tick_params(axis="both", labelsize=20)
 
 plt.xlim(0.01, 2.5)

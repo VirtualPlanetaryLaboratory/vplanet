@@ -1,0 +1,11 @@
+sSystemName               hz
+iVerbose                  0
+bOverwrite                1
+saBodyFiles               star.in 
+sUnitMass                 solar
+sUnitLength               AU
+sUnitTime                 YEARS
+sUnitAngle                d
+bDoLog                    1
+iDigits                   6
+

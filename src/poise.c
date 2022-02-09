@@ -1173,7 +1173,8 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_COLDSTART]             = &ReadColdStart;
 
   sprintf(options[OPT_FIXICELAT].cName, "dFixIceLat");
-  sprintf(options[OPT_FIXICELAT].cDescr, "Force ice cap latitude to this value");
+  sprintf(options[OPT_FIXICELAT].cDescr,
+          "Force ice cap latitude to this value");
   sprintf(options[OPT_FIXICELAT].cDefault, "None");
   sprintf(options[OPT_FIXICELAT].cDimension, "nd");
   options[OPT_FIXICELAT].dDefault   = 0;
@@ -1485,7 +1486,8 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_ECCPER]             = &ReadEccPer;
 
   sprintf(options[OPT_ACCUMODE].cName, "bAccuracyMode");
-  sprintf(options[OPT_ACCUMODE].cDescr, "Re-invert matrix every EBM time step?");
+  sprintf(options[OPT_ACCUMODE].cDescr,
+          "Re-invert matrix every EBM time step?");
   sprintf(options[OPT_ACCUMODE].cDefault, "0");
   options[OPT_ACCUMODE].dDefault   = 0;
   options[OPT_ACCUMODE].iType      = 0;
@@ -2270,11 +2272,11 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
       */
       count                 = 0;
       int RunLen            = 5;
-      int iMaxIteration     = 2*RunLen;
+      int iMaxIteration     = 2 * RunLen;
       daRunningMean         = malloc((RunLen + 1) * sizeof(double));
       daRunningMean[RunLen] = 0;
       TotalMean             = 0;
-      RunningMeanTmp        = daRunningMean[RunLen]; 
+      RunningMeanTmp        = daRunningMean[RunLen];
       while (fabs(RunningMeanTmp - daRunningMean[RunLen]) >
                    body[iBody].dSpinUpTol ||
              count <= iMaxIteration) {
@@ -2311,7 +2313,8 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
         /*
         if (count >= iMaxIteration) {
           if (iVerbose > VERBPROG) {
-            fprintf(stderr,"ERROR: Initial climate state failed to converge.\n");
+            fprintf(stderr,"ERROR: Initial climate state failed to
+        converge.\n");
           }
           exit(EXIT_INPUT);
         }
@@ -3734,7 +3737,7 @@ void WriteEnergyResW(BODY *body, CONTROL *control, OUTPUT *output,
 void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TGLOBAL].cName, "TGlobal");
   sprintf(output[OUT_TGLOBAL].cDescr, "Global mean temperature from POISE");
-  sprintf(output[OUT_TGLOBAL].cNeg, "C");
+  sprintf(output[OUT_TGLOBAL].cNeg, "Celsius");
   output[OUT_TGLOBAL].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TGLOBAL].dNeg       = 1;
@@ -3812,7 +3815,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_TEMPLAT].cName, "TempLat");
   sprintf(output[OUT_TEMPLAT].cDescr, "Surface temperature by latitude.");
-  sprintf(output[OUT_TEMPLAT].cNeg, "C");
+  sprintf(output[OUT_TEMPLAT].cNeg, "Celsius");
   output[OUT_TEMPLAT].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPLAT].dNeg       = 1;
@@ -3824,7 +3827,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TEMPMINLAT].cName, "TempMinLat");
   sprintf(output[OUT_TEMPMINLAT].cDescr,
           "Minimum surface temperature over a year by latitude.");
-  sprintf(output[OUT_TEMPMINLAT].cNeg, "C");
+  sprintf(output[OUT_TEMPMINLAT].cNeg, "Celsius");
   output[OUT_TEMPMINLAT].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPMINLAT].dNeg       = 1;
@@ -3836,7 +3839,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TEMPMAXLAT].cName, "TempMaxLat");
   sprintf(output[OUT_TEMPMAXLAT].cDescr,
           "Maximum surface temperature over a year by latitude.");
-  sprintf(output[OUT_TEMPMAXLAT].cNeg, "C");
+  sprintf(output[OUT_TEMPMAXLAT].cNeg, "Celsius");
   output[OUT_TEMPMAXLAT].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPMAXLAT].dNeg       = 1;
@@ -3848,7 +3851,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TEMPMAXLAND].cName, "TempMaxLand");
   sprintf(output[OUT_TEMPMAXLAND].cDescr,
           "Maximum surface temperature on land");
-  sprintf(output[OUT_TEMPMAXLAND].cNeg, "C");
+  sprintf(output[OUT_TEMPMAXLAND].cNeg, "Celsius");
   output[OUT_TEMPMAXLAND].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPMAXLAND].dNeg       = 1;
@@ -3860,7 +3863,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TEMPMAXWATER].cName, "TempMaxWater");
   sprintf(output[OUT_TEMPMAXWATER].cDescr,
           "Maximum surface temperature on water");
-  sprintf(output[OUT_TEMPMAXWATER].cNeg, "C");
+  sprintf(output[OUT_TEMPMAXWATER].cNeg, "Celsius");
   output[OUT_TEMPMAXWATER].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPMAXWATER].dNeg       = 1;
@@ -3872,7 +3875,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TEMPLANDLAT].cName, "TempLandLat");
   sprintf(output[OUT_TEMPLANDLAT].cDescr,
           "Land surface temperature by latitude.");
-  sprintf(output[OUT_TEMPLANDLAT].cNeg, "C");
+  sprintf(output[OUT_TEMPLANDLAT].cNeg, "Celsius");
   output[OUT_TEMPLANDLAT].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPLANDLAT].dNeg  = 1;
@@ -3883,7 +3886,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_TEMPWATERLAT].cName, "TempWaterLat");
   sprintf(output[OUT_TEMPWATERLAT].cDescr,
           "Water surface temperature by latitude.");
-  sprintf(output[OUT_TEMPWATERLAT].cNeg, "C");
+  sprintf(output[OUT_TEMPWATERLAT].cNeg, "Celsius");
   output[OUT_TEMPWATERLAT].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPWATERLAT].dNeg  = 1;
@@ -5324,7 +5327,7 @@ void fvAnnualInsolation(BODY *body, int iBody) {
   // Pericenter, relative to direction of planet at spring equinox
   dLongP = body[iBody].dLongP + body[iBody].dPrecA + PI;
   dEcc   = sqrt(body[iBody].dHecc * body[iBody].dHecc +
-              body[iBody].dKecc * body[iBody].dKecc);
+                body[iBody].dKecc * body[iBody].dKecc);
 
   // starts the year at the (northern) winter solstice
   body[iBody].dTrueL = -PI / 2;

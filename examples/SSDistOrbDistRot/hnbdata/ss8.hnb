@@ -20,7 +20,7 @@ OutputOrder: time Semi Ecc Inc LongA ArgP MeanA  	# data columns
 OutputInterval: 100		# time interval to write output (TimeUnit)
 OutputCoord: Bodycentric		# output coordinate system
 OutputHeader: False		# Include column id codes and comments?
-OutputDigits: 8			# precision of numbers in output 
+OutputDigits: 8			# precision of numbers in output
 OutputTypes: HWPs		# particle types to produce files for
 PruneCollisions: True
 
@@ -31,7 +31,7 @@ SaveInterval: 1e5
 InputOrder: Mass SemiMajorAxis Eccentricity Inclination \
 		 LongAscendNode ArgP MeanAnomaly
 
-ParticleType: HWP              
+ParticleType: HWP
 
 1.6592964824e-07 0.38709897 0.20563056 7.004870 48.331670 29.124783 174.794387
 2.4464824121e-06 0.72333377 0.00677478 3.394710 76.680690 54.868380 50.430659

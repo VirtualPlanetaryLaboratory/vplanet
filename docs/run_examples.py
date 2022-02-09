@@ -10,7 +10,11 @@ path = pathlib.Path(__file__).parents[0].absolute()
 # gets the list of examples
 example_list = sorted(glob.glob(str(path.parents[0] / "examples" / "*" / "makeplot.py")))
 
+print(example_list)
+
+
 # list of examples that should not be ran in the test
+#fly_list = ["ParameterSweep"]
 no_fly_list = ["ChaoticResonances","SSDistOrbDistRot"]
 #"MiniNeptuneEvap"
 

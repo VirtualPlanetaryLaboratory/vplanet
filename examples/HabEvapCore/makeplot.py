@@ -10,19 +10,20 @@ Barnes et al. 2016
 Date: Oct. 21st, 2018
 
 """
-import vplanet
-import vplot
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import numpy as np
 import pathlib
 import sys
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import vplot
+
+import vplanet
 
 # Path hacks
 path = pathlib.Path(__file__).parents[0].absolute()
 sys.path.insert(1, str(path.parents[0]))
 from get_args import get_args
-
 
 # Run vplanet
 prox = vplanet.run(path / "vpl.in", units=False)
@@ -113,13 +114,25 @@ axes[2].plot(
     label="AtmEscAuto",
 )
 axes[2].plot(
-    time, prox.LC17ELim.EnvelopeMass, color=auto_color, linestyle=lc17_ls, label="",
+    time,
+    prox.LC17ELim.EnvelopeMass,
+    color=auto_color,
+    linestyle=lc17_ls,
+    label="",
 )
 axes[2].plot(
-    time, prox.LC17RRLim.EnvelopeMass, color=rrlim_color, linestyle=lc17_ls, label="",
+    time,
+    prox.LC17RRLim.EnvelopeMass,
+    color=rrlim_color,
+    linestyle=lc17_ls,
+    label="",
 )
 axes[2].plot(
-    time, prox.LC17Auto.EnvelopeMass, color=auto_color, linestyle=lc17_ls, label="",
+    time,
+    prox.LC17Auto.EnvelopeMass,
+    color=auto_color,
+    linestyle=lc17_ls,
+    label="",
 )
 axes[2].set_ylabel(r"Envelope Mass (M$_\oplus$)")
 axes[2].legend(loc="upper right", title="Escape Model")
@@ -127,10 +140,18 @@ axes[2].legend(loc="upper right", title="Escape Model")
 
 ### Middle Right: Planet radius vs Time ###
 axes[3].plot(
-    time, prox.ProxCenELim.PlanetRadius, color="k", linestyle=prox_ls, label="ProxCenB",
+    time,
+    prox.ProxCenELim.PlanetRadius,
+    color="k",
+    linestyle=prox_ls,
+    label="ProxCenB",
 )
 axes[3].plot(
-    time, prox.ProxCenELim.PlanetRadius, color=elim_color, linestyle=prox_ls, label="",
+    time,
+    prox.ProxCenELim.PlanetRadius,
+    color=elim_color,
+    linestyle=prox_ls,
+    label="",
 )
 axes[3].plot(
     time,
@@ -140,19 +161,39 @@ axes[3].plot(
     label="",
 )
 axes[3].plot(
-    time, prox.ProxCenAuto.PlanetRadius, color=auto_color, linestyle=prox_ls, label="",
+    time,
+    prox.ProxCenAuto.PlanetRadius,
+    color=auto_color,
+    linestyle=prox_ls,
+    label="",
 )
 axes[3].plot(
-    time, prox.LC17ELim.PlanetRadius, color="k", linestyle=lc17_ls, label="Isothermal",
+    time,
+    prox.LC17ELim.PlanetRadius,
+    color="k",
+    linestyle=lc17_ls,
+    label="Isothermal",
 )
 axes[3].plot(
-    time, prox.LC17ELim.PlanetRadius, color=elim_color, linestyle=lc17_ls, label="",
+    time,
+    prox.LC17ELim.PlanetRadius,
+    color=elim_color,
+    linestyle=lc17_ls,
+    label="",
 )
 axes[3].plot(
-    time, prox.LC17RRLim.PlanetRadius, color=rrlim_color, linestyle=lc17_ls, label="",
+    time,
+    prox.LC17RRLim.PlanetRadius,
+    color=rrlim_color,
+    linestyle=lc17_ls,
+    label="",
 )
 axes[3].plot(
-    time, prox.LC17Auto.PlanetRadius, color=auto_color, linestyle=lc17_ls, label="",
+    time,
+    prox.LC17Auto.PlanetRadius,
+    color=auto_color,
+    linestyle=lc17_ls,
+    label="",
 )
 axes[3].set_ylabel(r"Radius (R$_\oplus$)")
 axes[3].legend(loc="upper right", title="Radius Model")

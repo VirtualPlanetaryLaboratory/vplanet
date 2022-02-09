@@ -216,52 +216,55 @@ void InitializeControlEvolve(BODY *body, CONTROL *control, MODULE *module,
 void PrintFileTypes(int iFileType, int bPadString) {
   if (iFileType == 0) {
     if (bPadString)
-      printf("Primary Only                                                     ");
+      printf("Primary Only                                                    "
+             " ");
     else
       printf("Primary Only");
   } else if (iFileType == 1) {
     if (bPadString)
-      printf("Body Only                                                        ");
+      printf("Body Only                                                       "
+             " ");
     else
       printf("Body Only");
   } else if (iFileType == 2) {
     if (bPadString)
-      printf("Any                                                              ");
+      printf("Any                                                             "
+             " ");
     else
       printf("Any");
   }
 }
 
-void WriteDescription(char cLongDescr[],char cDescr[],int iMaxChars) {
+void WriteDescription(char cLongDescr[], char cDescr[], int iMaxChars) {
   int bFoo;
-  int iCharsLeft,iWord,iLineWord,iLine,iNumWords,iLineWordNow,iChar;
+  int iCharsLeft, iWord, iLineWord, iLine, iNumWords, iLineWordNow, iChar;
   char cDescription[MAXARRAY][OPTLEN];
   char cLine[MAXARRAY][OPTLEN];
 
   for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
-    memset(cLine[iLineWordNow],'\0',OPTLEN);
-    memset(cDescription[iLineWordNow],'\0',OPTLEN);
+    memset(cLine[iLineWordNow], '\0', OPTLEN);
+    memset(cDescription[iLineWordNow], '\0', OPTLEN);
   }
 
   // Try Long Description first
-  GetWords(cLongDescr,cDescription,&iNumWords,&bFoo);
+  GetWords(cLongDescr, cDescription, &iNumWords, &bFoo);
   if (memcmp(cDescription[0], "null", 4) == 0) {
     // No long description, try short
-    memset(cDescription[0],'\0',OPTLEN);
-    GetWords(cDescr,cDescription,&iNumWords,&bFoo);
+    memset(cDescription[0], '\0', OPTLEN);
+    GetWords(cDescr, cDescription, &iNumWords, &bFoo);
   }
 
   iCharsLeft = iMaxChars;
-  iWord = 0;  // counter for word in description
-  iLineWord = 0; // counter for word in line
-  iLine = 0;
+  iWord      = 0; // counter for word in description
+  iLineWord  = 0; // counter for word in line
+  iLine      = 0;
 
   while (iWord < iNumWords) {
     // Extra two is for spaces on either side
     while (iCharsLeft > iCharsLeft - strlen(cDescription[iWord]) - 2) {
-      strcpy(cLine[iLineWord],cDescription[iWord]);
+      strcpy(cLine[iLineWord], cDescription[iWord]);
       // extra 1 for space
-      iCharsLeft -= (strlen(cLine[iLineWord])+1);
+      iCharsLeft -= (strlen(cLine[iLineWord]) + 1);
       iWord++;
       iLineWord++;
       if (iWord == iNumWords) {
@@ -277,7 +280,7 @@ void WriteDescription(char cLongDescr[],char cDescr[],int iMaxChars) {
     }
     for (iLineWordNow = 0; iLineWordNow < iLineWord; iLineWordNow++) {
       // write and erase
-      printf("%s ",cLine[iLineWordNow]);
+      printf("%s ", cLine[iLineWordNow]);
     }
     for (iChar = 0; iChar < iCharsLeft; iChar++) {
       printf(" ");
@@ -286,28 +289,27 @@ void WriteDescription(char cLongDescr[],char cDescr[],int iMaxChars) {
     // Now reset counters
     iCharsLeft = iMaxChars;
     for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
-      memset(cLine[iLineWordNow],'\0',OPTLEN);
+      memset(cLine[iLineWordNow], '\0', OPTLEN);
     }
     iLine++;
     iLineWord = 0;
   }
-  printf("+-----------------+--------------------------------------------------------------------+\n");
+  printf("+-----------------+--------------------------------------------------"
+         "------------------+\n");
 
   /* Reset description for next time
   for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
     memset(cDescription[iLineWordNow],'\0',OPTLEN);
   }
   */
-
-
 }
 
 
 void WriteHelpOption(OPTIONS *options, int bLong) {
-  int iChar,iCharsLeft,iPosChar;
-  int iMaxChars=65; // Max # of chars in value field
+  int iChar, iCharsLeft, iPosChar;
+  int iMaxChars      = 65; // Max # of chars in value field
   int iMaxHeaderChar = 80; // Max # of chars in header
-  int iWord,iNumWords,iLineWord,iDescrWord,iLineWordNow,iLine;
+  int iWord, iNumWords, iLineWord, iDescrWord, iLineWordNow, iLine;
   int bFoo; // Dummy for "bContinue" in GetWords
 
 
@@ -358,7 +360,7 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
 
       // allowed input files
       printf("<Files = ");
-      PrintFileTypes(options->iFileType,0);
+      PrintFileTypes(options->iFileType, 0);
       printf("> ");
 
       // default (always last)
@@ -368,72 +370,75 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       // Header
 
       // Properties
-      printf("+--------------------------------------------------------------------------------------+\n");
+      printf("+----------------------------------------------------------------"
+             "----------------------+\n");
       printf("| **%s**", options->cName);
-      for (iPosChar = 0; iPosChar < (iMaxHeaderChar - strlen(options->cName)); iPosChar++) {
+      for (iPosChar = 0; iPosChar < (iMaxHeaderChar - strlen(options->cName));
+           iPosChar++) {
         printf(" ");
       }
       printf(" |\n");
-      //printf("+=================+====================================================================+\n");
-      printf("+-----------------+--------------------------------------------------------------------+\n");
+      // printf("+=================+====================================================================+\n");
+      printf("+-----------------+----------------------------------------------"
+             "----------------------+\n");
 
-      WriteDescription(options->cLongDescr,options->cDescr,iMaxChars);
+      WriteDescription(options->cLongDescr, options->cDescr, iMaxChars);
 
-/*
-      // Try Long Description first
-      GetWords(options->cLongDescr,cDescription,&iNumWords,&bFoo);
-      if (memcmp(cDescription[0], "null", 4) == 0) {
-        // No long description, try short
-        memset(cDescription[0],'\0',OPTLEN);
-        GetWords(options->cDescr,cDescription,&iNumWords,&bFoo);
-      }
-      iCharsLeft = iMaxChars;
-      iWord = 0;  // counter for word in description
-      iLineWord = 0; // counter for word in line
-      iLine = 0;
+      /*
+            // Try Long Description first
+            GetWords(options->cLongDescr,cDescription,&iNumWords,&bFoo);
+            if (memcmp(cDescription[0], "null", 4) == 0) {
+              // No long description, try short
+              memset(cDescription[0],'\0',OPTLEN);
+              GetWords(options->cDescr,cDescription,&iNumWords,&bFoo);
+            }
+            iCharsLeft = iMaxChars;
+            iWord = 0;  // counter for word in description
+            iLineWord = 0; // counter for word in line
+            iLine = 0;
 
-      while (iWord < iNumWords) {
-        // Extra two is for spaces on either side
-        while (iCharsLeft > iCharsLeft - strlen(cDescription[iWord]) - 2) {
-          strcpy(cLine[iLineWord],cDescription[iWord]);
-          // extra 1 for space
-          iCharsLeft -= (strlen(cLine[iLineWord])+1);
-          iWord++;
-          iLineWord++;
-          if (iWord == iNumWords) {
-            // Hit end of description inside inner loop
-            break;
-          }
-        }
-        // Line is full
-        if (iLine == 0) {
-          printf("| Description     || ");
-        } else {
-          printf("|                 || ");
-        }
-        for (iLineWordNow = 0; iLineWordNow < iLineWord; iLineWordNow++) {
-          // write and erase
-          printf("%s ",cLine[iLineWordNow]);
-        }
-        for (iChar = 0; iChar < iCharsLeft; iChar++) {
-          printf(" ");
-        }
-        printf(" |\n");
-        // Now reset counters
-        iCharsLeft = iMaxChars;
-        for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
-          memset(cLine[iLineWordNow],'\0',OPTLEN);
-        }
-        iLine++;
-        iLineWord = 0;
-      }
-      printf("+-----------------+--------------------------------------------------------------------+\n");
+            while (iWord < iNumWords) {
+              // Extra two is for spaces on either side
+              while (iCharsLeft > iCharsLeft - strlen(cDescription[iWord]) - 2)
+         { strcpy(cLine[iLineWord],cDescription[iWord]);
+                // extra 1 for space
+                iCharsLeft -= (strlen(cLine[iLineWord])+1);
+                iWord++;
+                iLineWord++;
+                if (iWord == iNumWords) {
+                  // Hit end of description inside inner loop
+                  break;
+                }
+              }
+              // Line is full
+              if (iLine == 0) {
+                printf("| Description     || ");
+              } else {
+                printf("|                 || ");
+              }
+              for (iLineWordNow = 0; iLineWordNow < iLineWord; iLineWordNow++) {
+                // write and erase
+                printf("%s ",cLine[iLineWordNow]);
+              }
+              for (iChar = 0; iChar < iCharsLeft; iChar++) {
+                printf(" ");
+              }
+              printf(" |\n");
+              // Now reset counters
+              iCharsLeft = iMaxChars;
+              for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
+                memset(cLine[iLineWordNow],'\0',OPTLEN);
+              }
+              iLine++;
+              iLineWord = 0;
+            }
+            printf("+-----------------+--------------------------------------------------------------------+\n");
 
-      // Reset description for next time
-      for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
-        memset(cDescription[iLineWordNow],'\0',OPTLEN);
-      }
-      */
+            // Reset description for next time
+            for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
+              memset(cDescription[iLineWordNow],'\0',OPTLEN);
+            }
+            */
       // Type
       int typelen;
       char *typestr;
@@ -462,18 +467,20 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
       for (typelen = 0; typelen < (iMaxChars - strlen(typestr)); typelen++) {
         printf(" ");
       }
-      printf(
-            " |\n+-----------------+--------------------------------------------------------------------+\n");
+      printf(" |\n+-----------------+------------------------------------------"
+             "--------------------------+\n");
 
       // Custom Unit
       if (options->bNeg == 1) {
         printf("| Custom unit     || %s", options->cNeg);
         int unitlen;
-        for (unitlen = 0; unitlen < (iMaxChars - strlen(options->cNeg)); unitlen++) {
+        for (unitlen = 0; unitlen < (iMaxChars - strlen(options->cNeg));
+             unitlen++) {
           printf(" ");
         }
         printf(" |\n");
-        printf("+-----------------+--------------------------------------------------------------------+\n");
+        printf("+-----------------+--------------------------------------------"
+               "------------------------+\n");
       }
 
 
@@ -485,33 +492,38 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
           printf(" ");
         }
         printf(" |\n");
-        printf("+-----------------+--------------------------------------------------------------------+\n");
+        printf("+-----------------+--------------------------------------------"
+               "------------------------+\n");
       }
 
 
       // Module List
       if (options->iModuleBit) {
         printf("| Modules         || ");
-        PrintModuleList(stdout, options->iModuleBit,1);
+        PrintModuleList(stdout, options->iModuleBit, 1);
         printf(" |\n");
       } else {
-        printf("| Modules         || ALL                                                               |\n");
+        printf("| Modules         || ALL                                       "
+               "                        |\n");
       }
-      printf("+-----------------+--------------------------------------------------------------------+\n");
+      printf("+-----------------+----------------------------------------------"
+             "----------------------+\n");
 
       // File List
       printf("| Files           || ");
-      PrintFileTypes(options->iFileType,1);
+      PrintFileTypes(options->iFileType, 1);
       printf(" |\n");
-      printf("+-----------------+--------------------------------------------------------------------+\n");
+      printf("+-----------------+----------------------------------------------"
+             "----------------------+\n");
 
       // Default Value
       printf("| Default value   || %s", options->cDefault);
-      for (iChar = 0; iChar < (iMaxChars - strlen(options->cDefault)); iChar++) {
+      for (iChar = 0; iChar < (iMaxChars - strlen(options->cDefault));
+           iChar++) {
         printf(" ");
       }
-      printf(
-            " |\n+-----------------+--------------------------------------------------------------------+\n");
+      printf(" |\n+-----------------+------------------------------------------"
+             "--------------------------+\n");
 
       // Allowed Values
       if (memcmp(options->cValues, "null", 4)) {
@@ -521,7 +533,8 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
              alvalen++) {
           printf(" ");
         }
-        printf(" |\n+-----------------+--------------------------------------------------------------------+"
+        printf(" |\n+-----------------+----------------------------------------"
+               "----------------------------+"
                "\n\n");
       } else {
         printf("\n");
@@ -531,7 +544,7 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
 }
 
 void WriteHelpOutput(OUTPUT *output, int bLong) {
-  int iMaxChars=65; // Max # of chars in value field
+  int iMaxChars      = 65; // Max # of chars in value field
   int iMaxHeaderChar = 80; // Max # of chars in header
 
   if (memcmp(output->cName, "null", 4)) {
@@ -549,16 +562,18 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
       // ** Long help **
 
       // Properties
-      printf("+--------------------------------------------------------------------------------------+\n");
+      printf("+----------------------------------------------------------------"
+             "----------------------+\n");
       printf("| **%s**", output->cName);
       int i;
       for (i = 0; i < (iMaxHeaderChar - strlen(output->cName)); i++) {
         printf(" ");
       }
       printf(" |\n");
-      printf("+=================+====================================================================+\n");
+      printf("+=================+=============================================="
+             "======================+\n");
 
-      WriteDescription(output->cLongDescr,output->cDescr,iMaxChars);
+      WriteDescription(output->cLongDescr, output->cDescr, iMaxChars);
 
 
       // Long description
@@ -573,22 +588,26 @@ void WriteHelpOutput(OUTPUT *output, int bLong) {
       if (output->bNeg != 0) {
         printf("| Custom unit     || %s", output->cNeg);
         int unitlen;
-        for (unitlen = 0; unitlen < (iMaxChars - strlen(output->cNeg)); unitlen++) {
+        for (unitlen = 0; unitlen < (iMaxChars - strlen(output->cNeg));
+             unitlen++) {
           printf(" ");
         }
         printf(" |\n");
-        printf("+-----------------+--------------------------------------------------------------------+\n");
+        printf("+-----------------+--------------------------------------------"
+               "------------------------+\n");
       }
 
       // Module List
       if (output->iModuleBit) {
         printf("| Modules         || ");
-        PrintModuleList(stdout, output->iModuleBit,1);
+        PrintModuleList(stdout, output->iModuleBit, 1);
         printf(" |\n");
       } else {
-        printf("| Modules         || ALL                                                                |\n");
+        printf("| Modules         || ALL                                       "
+               "                         |\n");
       }
-      printf("+-----------------+--------------------------------------------------------------------+\n\n");
+      printf("+-----------------+----------------------------------------------"
+             "----------------------+\n\n");
 
       // printf("\n");
       // printf("**Description**           %s\n", output->cDescr);
@@ -641,7 +660,8 @@ void Help(OPTIONS *options, OUTPUT *output, char exe[], int bLong) {
   printf("\n\n");
 
   printf("Lead Developer: Rory Barnes (rory@astro.washington.edu)\n\n");
-  printf("\nVPLanet is a general purpose planetary evolution integrator. From the "
+  printf("\nVPLanet is a general purpose planetary evolution integrator. From "
+         "the "
          "command\n");
   printf("line, enter one optional command line option and one file name, "
          "e.g.:\n\n"
@@ -661,16 +681,22 @@ void Help(OPTIONS *options, OUTPUT *output, char exe[], int bLong) {
          "or consult the examples directory.\n\n");
 
   printf("Support for VPLanet has been provided through grants by NASA, the "
-          "NSF.\n\n");
+         "NSF.\n\n");
 
-  printf("====================   ============================================================\n");
-  printf("Command Line Options                          Description                          \n");
-  printf("--------------------   ------------------------------------------------------------\n");
-  printf("-v, -verbose           -- Maximum verbosity, i.e. display all warnings and updates.\n");
-  printf("-q, -quiet             -- No verbosity, i.e. nothing printed to device.\n");
+  printf("====================   "
+         "============================================================\n");
+  printf("Command Line Options                          Description            "
+         "              \n");
+  printf("--------------------   "
+         "------------------------------------------------------------\n");
+  printf("-v, -verbose           -- Maximum verbosity, i.e. display all "
+         "warnings and updates.\n");
+  printf("-q, -quiet             -- No verbosity, i.e. nothing printed to "
+         "device.\n");
   printf("-h, -help              -- Display short help.\n");
   printf("-H, -Help              -- Display extended help.\n");
-  printf("====================   ============================================================\n\n");
+  printf("====================   "
+         "============================================================\n\n");
 
   printf("Input File Structure\n");
   printf("--------------------\n\n");
@@ -952,7 +978,7 @@ void fsUnitsMass(int iType, char cUnit[]) {
     sprintf(cUnit, "Mjupiter");
   } else if (iType == U_NEPTUNEMASS) {
     sprintf(cUnit, "Mneptune");
-    
+
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitMass: %d.\n", iType);
     exit(EXIT_UNITS);
@@ -1144,7 +1170,7 @@ void fsUnitsTemp(int iType, char cUnit[]) {
   if (iType == U_KELVIN) {
     sprintf(cUnit, "K");
   } else if (iType == U_CELSIUS) {
-    sprintf(cUnit, "C");
+    sprintf(cUnit, "Celsius");
   } else if (iType == U_FARENHEIT) {
     sprintf(cUnit, "F");
   } else {

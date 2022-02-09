@@ -423,7 +423,7 @@ void VerifyPositionX(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iPositionX][0]     = 7;
   update[iBody].iNumBodies[update[iBody].iPositionX][0] = 1;
   update[iBody].iaBody[update[iBody].iPositionX][0]     = malloc(
-        update[iBody].iNumBodies[update[iBody].iPositionX][0] * sizeof(int));
+            update[iBody].iNumBodies[update[iBody].iPositionX][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iPositionX][0][0] = iBody;
 
   update[iBody].pdDPositionX =
@@ -436,7 +436,7 @@ void VerifyPositionY(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iPositionY][0]     = 7;
   update[iBody].iNumBodies[update[iBody].iPositionY][0] = 1;
   update[iBody].iaBody[update[iBody].iPositionY][0]     = malloc(
-        update[iBody].iNumBodies[update[iBody].iPositionY][0] * sizeof(int));
+            update[iBody].iNumBodies[update[iBody].iPositionY][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iPositionY][0][0] = iBody;
 
   update[iBody].pdDPositionY =
@@ -449,7 +449,7 @@ void VerifyPositionZ(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iPositionZ][0]     = 7;
   update[iBody].iNumBodies[update[iBody].iPositionZ][0] = 1;
   update[iBody].iaBody[update[iBody].iPositionZ][0]     = malloc(
-        update[iBody].iNumBodies[update[iBody].iPositionZ][0] * sizeof(int));
+            update[iBody].iNumBodies[update[iBody].iPositionZ][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iPositionZ][0][0] = iBody;
 
   update[iBody].pdDPositionZ =
@@ -775,7 +775,7 @@ void Bary2OrbElems(BODY *body, int iBody) {
       }
 
       body[iBody].dOrbPeriod  = sqrt(4 * PI * PI * body[iBody].dSemi *
-                                    body[iBody].dSemi * body[iBody].dSemi / mu);
+                                     body[iBody].dSemi * body[iBody].dSemi / mu);
       body[iBody].dMeanMotion = 2 * PI / body[iBody].dOrbPeriod;
       body[iBody].dPinc       = body[iBody].dSinc * sin(body[iBody].dLongA);
       body[iBody].dQinc       = body[iBody].dSinc * cos(body[iBody].dLongA);

@@ -1,10 +1,12 @@
-import vplanet
-import vplot
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import numpy as np
 import pathlib
 import sys
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import vplot
+
+import vplanet
 
 # Path hacks
 path = pathlib.Path(__file__).parents[0].absolute()
@@ -45,6 +47,7 @@ axes[0, 1].legend(loc="lower left")
 axes[1, 0].plot(time, output.A.Eccentricity, color="k")
 axes[1, 0].plot(time, output.B.Eccentricity, color=vplot.colors.red)
 axes[1, 0].plot(time, output.C.Eccentricity, color=vplot.colors.pale_blue)
+axes[1, 0].set_xlim(0, 100)
 axes[1, 0].set_xlabel("Time (kyrs)")
 axes[1, 0].set_ylabel("Eccentricity")
 
@@ -52,6 +55,7 @@ axes[1, 0].set_ylabel("Eccentricity")
 axes[1, 1].plot(time, output.A.SpiNBodyInc, "k")
 axes[1, 1].plot(time, output.B.SpiNBodyInc, color=vplot.colors.red)
 axes[1, 1].plot(time, output.C.SpiNBodyInc, color=vplot.colors.pale_blue)
+axes[1, 1].set_xlim(0, 100)
 axes[1, 1].set_xlabel("Time (kyrs)")
 axes[1, 1].set_ylabel("Inclination ($^\circ$)")
 

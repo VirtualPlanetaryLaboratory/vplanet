@@ -1,10 +1,13 @@
-import vplanet
-import numpy as np
-import os
 import glob
-import pytest
+import os
 import shutil
+import subprocess as subp
 import sys
+
+import numpy as np
+import pytest
+
+import vplanet
 
 # Make the `benchmark` script discoverable by the tests
 sys.path.insert(1, os.path.abspath(os.path.dirname(__file__)))
@@ -17,7 +20,7 @@ CLEAN_OUTPUTS = True
 def vplanet_output(request):
     path = os.path.abspath(os.path.dirname(request.fspath))
     infile = os.path.join(path, "vpl.in")
-    output = vplanet.run(infile, quiet=True, clobber=True)
+    output = vplanet.run(infile, quiet=True, clobber=True, C=True)
     yield output
     if CLEAN_OUTPUTS:
         for file in (

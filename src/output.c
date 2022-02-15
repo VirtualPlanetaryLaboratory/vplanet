@@ -43,12 +43,13 @@ void WriteBodyType(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
  */
 
 /* Climate-obliquity-precession parameter */
-void WriteCOPP(BODY *body, CONTROL *control, OUTPUT *output,
-                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+void WriteCOPP(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+               UNITS *units, UPDATE *update, int iBody, double *dTmp,
+               char cUnit[]) {
 
-  *dTmp = body[iBody].dEcc*sin(body[iBody].dLongP + body[iBody].dPrecA)*sin(body[iBody].dObliquity);
-  strcpy(cUnit,"");
+  *dTmp = body[iBody].dEcc * sin(body[iBody].dLongP + body[iBody].dPrecA) *
+          sin(body[iBody].dObliquity);
+  strcpy(cUnit, "");
 }
 
 /* Critical Semi-major Axis (Holman & Wiegert, 1999 for P-type circumbinary
@@ -516,34 +517,35 @@ void WriteBodyArgP(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   }
 }
 
-void WriteLXUVTot(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) {
+void WriteLXUVTot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+                  UNITS *units, UPDATE *update, int iBody, double *dTmp,
+                  char cUnit[]) {
   /* Multiple modules can contribute to this output */
   int iModule;
 
-  if (body[iBody].bFlare && body[iBody].bStellar){
-    *dTmp =  body[iBody].dLXUVFlare + body[iBody].dLXUV;
+  if (body[iBody].bFlare && body[iBody].bStellar) {
+    *dTmp = body[iBody].dLXUVFlare + body[iBody].dLXUV;
   }
 
   else if (body[iBody].bStellar) {
-    *dTmp =  body[iBody].dLXUV;
+    *dTmp = body[iBody].dLXUV;
   }
-  
-  else if (body[iBody].bFlare){
-    *dTmp =  body[iBody].dLXUVFlare;
+
+  else if (body[iBody].bFlare) {
+    *dTmp = body[iBody].dLXUVFlare;
   }
 
   else if (!body[iBody].bFlare && !body[iBody].bStellar) {
     *dTmp = -1;
   }
 
-  if (output->bDoNeg[iBody]) {                                  
-    *dTmp *= output->dNeg;                                     
-    strcpy(cUnit,output->cNeg);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
   } else {
-    *dTmp /= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
-    fsUnitsEnergyFlux(units,cUnit);
+    *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergyFlux(units, cUnit);
   }
-
 }
 
 /*
@@ -617,7 +619,7 @@ void WriteOrbAngMom(BODY *body, CONTROL *control, OUTPUT *output,
   if (body[iBody].bSpiNBody) {
     pdOrbMom = fdOrbAngMom(body, control, iBody);
     *dTmp    = sqrt(pdOrbMom[0] * pdOrbMom[0] + pdOrbMom[1] * pdOrbMom[1] +
-                 pdOrbMom[2] * pdOrbMom[2]);
+                    pdOrbMom[2] * pdOrbMom[2]);
     free(pdOrbMom);
   } else {
     pdOrbMom = fdOrbAngMom(body, control, iBody);
@@ -746,7 +748,7 @@ void WriteOrbPeriod(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    *dTmp /= fdUnitsTime(units->iTime); 
+    *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
   }
 }
@@ -1247,14 +1249,14 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
    */
 
   sprintf(output[OUT_COPP].cName, "COPP");
-  sprintf(output[OUT_COPP].cDescr,
-          "Climate Obliquity Precession Parameter");
+  sprintf(output[OUT_COPP].cDescr, "Climate Obliquity Precession Parameter");
   output[OUT_COPP].bNeg       = 0;
   output[OUT_COPP].iNum       = 1;
   output[OUT_COPP].iModuleBit = BINARY + EQTIDE + DISTROT + POISE + SPINBODY;
   fnWrite[OUT_COPP]           = &WriteCOPP;
   sprintf(output[OUT_COPP].cLongDescr,
-          "eccentriciy * sin(longitude of pericenter + precession angle) * sin(obliquity)");
+          "eccentriciy * sin(longitude of pericenter + precession angle) * "
+          "sin(obliquity)");
 
   sprintf(output[OUT_CRITSEMI].cName, "CriticalSemiMajorAxis");
   sprintf(output[OUT_CRITSEMI].cDescr,
@@ -1381,7 +1383,7 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_HZLIMEARLYMARS].cName, "HZLimEarlyMars");
   sprintf(output[OUT_HZLIMEARLYMARS].cDescr, "Early Mars HZ Limit");
-  sprintf(output[OUT_HZLIMEARLYMARS].cNeg, "AUM");
+  sprintf(output[OUT_HZLIMEARLYMARS].cNeg, "AU");
   output[OUT_HZLIMEARLYMARS].bNeg       = 1;
   output[OUT_HZLIMEARLYMARS].dNeg       = 1. / AUM;
   output[OUT_HZLIMEARLYMARS].iNum       = 1;

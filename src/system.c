@@ -349,10 +349,11 @@ double fdXUVFlux(BODY *body, int iBody) {
     }
   }
 
-  if (body[0].bFlare && body[0].bStellar){
-    dLXUVTot +=  body[0].dLXUVFlare + body[0].dLXUV;
+  if (body[0].bFlare && body[0].bStellar) {
+    dLXUVTot += body[0].dLXUVFlare + body[0].dLXUV;
     if (iBody > 0) {
-      flux = dLXUVTot/(4 * PI * pow(body[iBody].dSemi, 2)) * (pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
+      flux = dLXUVTot / (4 * PI * pow(body[iBody].dSemi, 2)) *
+             (pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
     } /*
     else { // Central body can't have XUV flux (for now)
       flux = -1;}*/
@@ -360,15 +361,16 @@ double fdXUVFlux(BODY *body, int iBody) {
 
 
   else if (body[0].bStellar) {
-    dLXUVTot +=  body[0].dLXUV;
+    dLXUVTot += body[0].dLXUV;
     if (iBody > 0) {
-      flux = dLXUVTot/(4 * PI * pow(body[iBody].dSemi, 2)) * (pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
-    }/*
-    else { // Central body can't have XUV flux (for now)
-      flux = -1;}
-    //fprintf("----- STELLAR (%f)------\n",flux);*/
+      flux = dLXUVTot / (4 * PI * pow(body[iBody].dSemi, 2)) *
+             (pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
+    } /*
+     else { // Central body can't have XUV flux (for now)
+       flux = -1;}
+     //fprintf("----- STELLAR (%f)------\n",flux);*/
   }
-    
+
 
   return flux;
 }
@@ -992,9 +994,9 @@ double fndUpdateSpiNBodyCoords(BODY *body, EVOLVE *evolve) {
       body[iBody].dLongP = atan2(body[iBody].dHecc, body[iBody].dKecc);
       body[iBody].dLongA = atan2(body[iBody].dPinc, body[iBody].dQinc);
       body[iBody].dInc   = 2 * asin(sqrt(body[iBody].dPinc * body[iBody].dPinc +
-                                       body[iBody].dQinc * body[iBody].dQinc));
+                                         body[iBody].dQinc * body[iBody].dQinc));
       body[iBody].dEcc   = sqrt(body[iBody].dKecc * body[iBody].dKecc +
-                              body[iBody].dHecc * body[iBody].dHecc);
+                                body[iBody].dHecc * body[iBody].dHecc);
 
       body[iBody].dMeanA = body[iBody].dMeanL - body[iBody].dLongP;
     } else {

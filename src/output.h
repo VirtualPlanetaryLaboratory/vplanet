@@ -75,12 +75,12 @@
 #define OUT_VISCUMAN 595 // Viscosity UMTBL
 
 #define OUT_HECC 600
-#define OUT_HZLIMDRYRUNAWAY 602
-#define OUT_HZLIMRECVENUS 604  /**< Recent Venus HZ Limit */
-#define OUT_HZLIMRUNAWAY 605   /**< Recent Venus HZ Limit */
-#define OUT_HZLIMMOIST 606     /**< Recent Venus HZ Limit */
-#define OUT_HZLIMMAX 607       /**< Recent Venus HZ Limit */
-#define OUT_HZLIMEARLYMARS 608 /**< Recent Venus HZ Limit */
+#define OUT_HZLIMDRYRUNAWAY 602 /**< Recent Venus HZ Limit */
+#define OUT_HZLIMRECVENUS 604   /**< Recent Venus HZ Limit */
+#define OUT_HZLIMRUNAWAY 605    /**< Runaway Greenhouse HZ Limit */
+#define OUT_HZLIMMOIST 606      /**< Moist Greenhouse HZ Limit */
+#define OUT_HZLIMMAX 607        /**< Maximum Venus HZ Limit */
+#define OUT_HZLIMEARLYMARS 608  /**< Early Mars HZ Limit */
 #define OUT_INSTELLATION 609
 
 #define OUT_KECC 610
@@ -99,7 +99,7 @@
 #define OUT_MEANL 665
 #define OUT_LONGP 667
 
-#define OUT_LXUVTOT 668
+#define OUT_LXUVTOT 668 /**< Total XUV Luminosity from the star */
 
 #define OUT_ORBKINENERGY 670
 #define OUT_ORBPOTENERGY 680

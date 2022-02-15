@@ -1,12 +1,14 @@
 """Reproduce Figure 7 in Luger and Barnes (2015)."""
-import vplanet
-import vplot
-import numpy as np
-from tqdm import tqdm
-import matplotlib.pyplot as plt
-import matplotlib.colors as colors
 import pathlib
 import sys
+
+import matplotlib.colors as colors
+import matplotlib.pyplot as plt
+import numpy as np
+import vplot
+from tqdm import tqdm
+
+import vplanet
 
 # Path hacks
 path = pathlib.Path(__file__).parents[0].absolute()

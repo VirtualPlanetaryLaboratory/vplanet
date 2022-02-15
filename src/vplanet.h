@@ -17,7 +17,7 @@
 #include <sys/types.h>
 #include <time.h>
 #ifdef __x86_64__
-  #include <xmmintrin.h>
+#include <xmmintrin.h>
 #endif
 
 // Windows-specific
@@ -102,7 +102,7 @@
 #define U_AU 6
 
 // Mass unit IDs
-#define U_GRAM  0
+#define U_GRAM 0
 #define U_KILOGRAM 1
 #define U_SOLARMASS 2
 #define U_EARTHMASS 3
@@ -133,7 +133,7 @@ extern const double dTINY;
 /* !!! Hack to get long description and module list formatting for Long Help.
    It'd be better to keep LINE back at 256 for memory, and malloc the char's,
    but I don't know how to do that. */
-#define LINE 2048         /* Maximum number of characters in a line */
+#define LINE 2048 /* Maximum number of characters in a line */
 #define NAMELEN 100
 #define MAXFILES 128 /* Maximum number of input files */
 #define MAXARRAY                                                               \
@@ -143,10 +143,11 @@ extern const double dTINY;
   1000 /* Number of options that could be                                      \
         * in MODULE */
 #define MAXLINES                                                               \
-  256             /* Maximum Number of Lines in an                             \
-                   * input file */
-#define OUTLEN 48 /* Maximum number of characters in an output column header   \
-                   */
+  256 /* Maximum Number of Lines in an                                         \
+       * input file */
+#define OUTLEN                                                                 \
+  48 /* Maximum number of characters in an output column header                \
+      */
 #define OUTDESCR 256     /* Number of characters in output description */
 #define OUTLONDESCR 2048 /* Number of characters in output long description */
 
@@ -828,37 +829,45 @@ struct BODY {
   double dFlareConst;
   double dFlareExp;
   */
-  double dFlareYInt;              /**< Flare function Y intercept /FFD linear coefficient*/
-  double dFlareYIntErrorUpper;    /**< Upper error of the Y intercept /FFD linear coefficient*/
-  double dFlareYIntErrorLower;    /**< Lower error of the Y intercept /FFD linear coefficient*/
-  double dFlareSlope;             /**< Flare function slope /FFD angular coefficient*/
-  double dFlareSlopeErrorUpper;   /**< Upper error of slope /FFD angular coefficient*/
-  double dFlareSlopeErrorLower;   /**< Lower error of slope /FFD angular coefficient*/
-  double dFlareMinEnergy;    /**< Flare minimum energy value to calculate the FFD*/
-  double dFlareMaxEnergy;    /**< Flare maximum energy value to calculate the FFD*/
-	double dFlareFreq1;        /**< Minimum flare rate value*/
-	double dFlareFreq2;        /**< Maximum flare rate value*/
+  double dFlareYInt; /**< Flare function Y intercept /FFD linear coefficient*/
+  double dFlareYIntErrorUpper; /**< Upper error of the Y intercept /FFD linear
+                                  coefficient*/
+  double dFlareYIntErrorLower; /**< Lower error of the Y intercept /FFD linear
+                                  coefficient*/
+  double dFlareSlope; /**< Flare function slope /FFD angular coefficient*/
+  double dFlareSlopeErrorUpper; /**< Upper error of slope /FFD angular
+                                   coefficient*/
+  double dFlareSlopeErrorLower; /**< Lower error of slope /FFD angular
+                                   coefficient*/
+  double dFlareMinEnergy; /**< Flare minimum energy value to calculate the FFD*/
+  double dFlareMaxEnergy; /**< Flare maximum energy value to calculate the FFD*/
+  double dFlareFreq1;     /**< Minimum flare rate value*/
+  double dFlareFreq2;     /**< Maximum flare rate value*/
   double dFlareFreq3;
   double dFlareFreq4;
   double dFlareFreq5;
   double dFlareFreq6;
   double dFlareFreqMax;
-	double dFlareEnergy1;       /**< Minimum flare rate value*/
-	double dFlareEnergy2;       /**< Maximum flare rate value*/
+  double dFlareEnergy1; /**< Minimum flare rate value*/
+  double dFlareEnergy2; /**< Maximum flare rate value*/
   double dFlareEnergy3;
   double dFlareEnergy4;
   double dFlareEnergy5;
   double dFlareEnergy6;
   double dFlareEnergyMax;
-  double dLXUVFlare;        /**< XUV luminosity by flare*/
-  double dLXUVFlareUpper;   /**< Upper value of XUV luminosity by flare when the user include the slope and Y-intercept errors */
-  double dLXUVFlareLower;   /**< Lower value of XUV luminosity by flare when the user include the slope and Y-intercept errors */
-	double dLXUVTot;          /**< XUV luminosity total, flare + stellar*/
+  double dLXUVFlare;      /**< XUV luminosity by flare*/
+  double dLXUVFlareUpper; /**< Upper value of XUV luminosity by flare when the
+                             user include the slope and Y-intercept errors */
+  double dLXUVFlareLower; /**< Lower value of XUV luminosity by flare when the
+                             user include the slope and Y-intercept errors */
+  double dLXUVTot;        /**< XUV luminosity total, flare + stellar*/
   double dLXUVFlareConst;
-  int iFlareFFD;           /**< Flare mode*/
-  int iFlareBandPass;       /**< Option to choose in which band pass the input energy are*/
-  int iFlareSlopeUnits;     /**< Mode to choose in which units the FFD slopes are*/
-  double dEnergyBin;           /**< Number of energies consider between the minimum and maximum energies to calculate the luminosity by flares*/
+  int iFlareFFD;      /**< Flare mode*/
+  int iFlareBandPass; /**< Option to choose in which band pass the input energy
+                         are*/
+  int iFlareSlopeUnits; /**< Mode to choose in which units the FFD slopes are*/
+  double dEnergyBin;    /**< Number of energies consider between the minimum and
+                           maximum energies to calculate the luminosity by flares*/
 
   // GALHABIT
   int bGalHabit;        /**< Use galhabit module */

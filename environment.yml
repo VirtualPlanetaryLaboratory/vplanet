@@ -23,3 +23,5 @@ dependencies:
       - sphinxcontrib-bibtex>=2.2.0
       - coverage>=5.5
       - tqdm
+      - pre-commit
+      - clang-format

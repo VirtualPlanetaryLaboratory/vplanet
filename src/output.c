@@ -1480,7 +1480,7 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_ARGP].cNeg, "Deg");
   output[OUT_ARGP].bNeg       = 1;
   output[OUT_ARGP].dNeg       = 1. / DEGRAD;
-  output[OUT_ARGP].iNum       = 13;
+  output[OUT_ARGP].iNum       = 1;
   output[OUT_ARGP].iModuleBit = DISTORB + GALHABIT + SPINBODY + BINARY;
   fnWrite[OUT_ARGP]           = &WriteBodyArgP;
 

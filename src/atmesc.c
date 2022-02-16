@@ -1200,7 +1200,6 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_MINKTIDE].dDefault   = 0.1;
   options[OPT_MINKTIDE].bMultiFile = 1;
   fnRead[OPT_MINKTIDE]             = &ReadMinKTide;
-  sprintf(options[OPT_THERMTEMP].cLongDescr, "");
 }
 
 /**

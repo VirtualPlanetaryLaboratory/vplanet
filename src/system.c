@@ -333,48 +333,43 @@ Compute the XUV Flux.
 double fdXUVFlux(BODY *body, int iBody) {
 
   double flux;
-  double dLXUVTot = 0.0;
+  double dLXUVTot;
 
+  // Body orbits two stars
   if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
-    // Body orbits two stars
     flux = fndFluxExactBinary(body, iBody, body[0].dLXUV, body[1].dLXUV);
   } else {
     // Body orbits one star
     if (iBody > 0) {
-      flux = body[0].dLXUV /
-             (4 * PI * pow(body[iBody].dSemi, 2) *
-              pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
-    } else { // Central body can't have XUV flux (for now)
+      // The star have produces XUV by flares and quiescent state.
+      if (body[0].bFlare && body[0].bStellar) {
+        dLXUVTot = body[0].dLXUVFlare + body[0].dLXUV;
+      }
+      // The star doesn't have flares, only XUV from quiescent state is emitted
+      // by the star.
+      else if (body[0].bStellar) {
+        dLXUVTot = body[0].dLXUV;
+      }
+      // Only flares incoming the planet and produce the XUV flux. Weird, but
+      // could happen. "The user walk by strange ways".
+      if (body[0].bFlare) {
+        dLXUVTot = body[0].dLXUVFlare;
+      }
+      // No module that produce XUV emission was chosen.
+      else {
+        flux = -1;
+      }
+      flux = dLXUVTot / (4 * PI * pow(body[iBody].dSemi, 2) *
+                         pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
+    }
+    // The system has one star, but the body is < 0, so the body has no flux.
+    else { // Central body can't have XUV flux (for now)
       flux = -1;
     }
   }
 
-  if (body[0].bFlare && body[0].bStellar) {
-    dLXUVTot += body[0].dLXUVFlare + body[0].dLXUV;
-    if (iBody > 0) {
-      flux = dLXUVTot / (4 * PI * pow(body[iBody].dSemi, 2)) *
-             (pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
-    } /*
-    else { // Central body can't have XUV flux (for now)
-      flux = -1;}*/
-  }
-
-
-  else if (body[0].bStellar) {
-    dLXUVTot += body[0].dLXUV;
-    if (iBody > 0) {
-      flux = dLXUVTot / (4 * PI * pow(body[iBody].dSemi, 2)) *
-             (pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
-    } /*
-     else { // Central body can't have XUV flux (for now)
-       flux = -1;}
-     //fprintf("----- STELLAR (%f)------\n",flux);*/
-  }
-
-
   return flux;
 }
-
 
 /**
 Solves kepler's equation for one body

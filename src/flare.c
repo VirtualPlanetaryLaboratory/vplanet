@@ -1558,10 +1558,10 @@ double fdBandPassXUV(BODY *body, int iBody, double dInputEnergy) {
     } */
   else if (body[iBody].iFlareBandPass ==
            FLARE_TESS_UV) { // Band pass 1.24 - 1239.85 Å
-    dLogEnergyXUV = log10(dInputEnergy) * (0.3 / 0.076);
+    dLogEnergyXUV = log10(dInputEnergy * (0.3 / 0.076));
   } else if (body[iBody].iFlareBandPass ==
              FLARE_BOLOMETRIC) { // Band pass 1.24 - 1239.85 Å
-    dLogEnergyXUV = log10(dInputEnergy) * 0.3;
+    dLogEnergyXUV = log10(dInputEnergy * 0.3);
   }
   return dLogEnergyXUV;
 }
@@ -1572,28 +1572,19 @@ double fdBandPassKepler(BODY *body, int iBody, double dInputEnergy) {
 
   if (body[iBody].iFlareBandPass == FLARE_KEPLER) { // Band pass 4000 – 9000 Å
     dLogEnergy = log10(dInputEnergy);
-  }
-
-  else if (body[iBody].iFlareBandPass == FLARE_UV) { // Band pass 3000 – 4300 Å
+  } else if (body[iBody].iFlareBandPass ==
+             FLARE_UV) { // Band pass 3000 – 4300 Å
     dLogEnergy = log10(dInputEnergy * 1.455);
-
   } else if (body[iBody].iFlareBandPass == FLARE_GOES) { // Band pass 1 - 8 Å
     dLogEnergy = log10(dInputEnergy * 2.667);
-  }
-
-  else if (body[iBody].iFlareBandPass ==
-           FLARE_SXR) { // Band pass 1.24 - 1239.85 Å
+  } else if (body[iBody].iFlareBandPass ==
+             FLARE_SXR) { // Band pass 1.24 - 1239.85 Å
     dLogEnergy = log10(dInputEnergy * 0.5334);
-  }
-
-  else if (body[iBody].iFlareBandPass ==
-           FLARE_TESS_UV) { // Band pass 1.24 - 1239.85 Å
-    dLogEnergy = log10(dInputEnergy) * (0.16 / 0.076);
-  }
-
-  else if (body[iBody].iFlareBandPass ==
-           FLARE_BOLOMETRIC) { // Band pass 1.24 - 1239.85 Å
-    dLogEnergy = log10(dInputEnergy) * 0.16;
+  } else if (body[iBody].iFlareBandPass == FLARE_TESS_UV) { // Band pass 1 - 8 Å
+    dLogEnergy = log10(dInputEnergy * 2.10526315789);
+  } else if (body[iBody].iFlareBandPass ==
+             FLARE_BOLOMETRIC) { // Band pass 1.24 - 1239.85 Å
+    dLogEnergy = log10(dInputEnergy * 0.16);
   }
   return dLogEnergy;
 }

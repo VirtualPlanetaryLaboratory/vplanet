@@ -938,7 +938,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
           "Water X-ray/UV absorption efficiency (epsilon)");
   sprintf(options[OPT_ATMXABSEFFH2O].cDefault, "0.30");
   sprintf(options[OPT_ATMXABSEFFH2O].cDimension, "nd");
-  options[OPT_ATMXABSEFFH2O].dDefault   = 0.15;
+  options[OPT_ATMXABSEFFH2O].dDefault   = 0.30;
   options[OPT_ATMXABSEFFH2O].iType      = 2;
   options[OPT_ATMXABSEFFH2O].bMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2O]             = &ReadAtmXAbsEffH2O;

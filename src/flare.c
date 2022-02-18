@@ -1691,9 +1691,7 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
                               34.44115635,
                               body[iBody].dAge,
                               body[iBody].dMass);
-  }
-
-  if (body[iBody].iFlareFFD == FLARE_FFD_LACY) {
+  } else if (body[iBody].iFlareFFD == FLARE_FFD_LACY) {
     dFlareSlope = body[iBody].dFlareSlope;
     dFlareYInt  = body[iBody].dFlareYInt;
     // TODO: Let this here for allow the user input the slopes errors in the
@@ -1788,7 +1786,11 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
                        ((daFFD[i + 1] + daFFD[i]) / 2);
       dLXUVFlare += daLXUVFlare[i];
     }
-  } else if (body[iBody].iFlareFFD == FLARE_FFD_NONE) {
+  }
+  // If the FFD model is set to NONE, the luminosity remains constant over the
+  // time evolution of the system and receives the value given by the user in
+  // the input file
+  else if (body[iBody].iFlareFFD == FLARE_FFD_NONE) {
     dLXUVFlare = body[iBody].dLXUVFlareConst;
   }
   /*  else {

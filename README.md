@@ -47,6 +47,8 @@ the stellar torque.
 
 **EqTide**: Tidal evolution in the equilibrium tide framework.
 
+**Flare**: Flare frequency distribution and flare XUV luminosity evolution in low-mass stars .
+
 **GalHabit**: Evolution of a wide orbit due to the galactic tide and impulses from
 passing stars (including radial migration).
 
@@ -90,6 +92,7 @@ Additional `VPLanet` examples can be found at the following GitHub pages:
 [Patrick Barth](https://github.com/pbfeu)<br />
 [David Graham](https://github.com/dglezg7)<br />
 [Caitlyn Wilhelm](https://github.com/caitlyn-wilhelm/IceCoverage)
+[Laura Amaral](https://github.com/lauraamaral/WaterEscapeFlares)
 
 If you believe you have encountered a bug, please raise an issue using the [Issues](https://github.com/VirtualPlanetaryLaboratory/vplanet/issues) tab at the top of this page.
 

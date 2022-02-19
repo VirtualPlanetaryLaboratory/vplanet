@@ -188,39 +188,105 @@ void ReadFlareBandPass(BODY *body,
     body[iFile - 1].iFlareBandPass = FLARE_KEPLER;
 }
 
-void ReadFlareMinEnergy(BODY *body,
-                        CONTROL *control,
-                        FILES *files,
-                        OPTIONS *options,
-                        SYSTEM *system,
-                        int iFile) {
+
+/*void ReadFlareMinEnergy(BODY *body,CONTROL *control,FILES *files,OPTIONS
+*options,SYSTEM *system,int iFile) {
   // This parameter cannot exist in primary file
   int lTmp = -1;
   double dTmp;
 
-  AddOptionDouble(files->Infile[iFile].cIn,
-                  options->cName,
-                  &dTmp,
-                  &lTmp,
-                  control->Io.iVerbose);
+  AddOptionDouble(files->Infile[iFile].cIn,options->cName,&dTmp,&lTmp,control->Io.iVerbose);
   if (lTmp >= 0) {
-    NotPrimaryInput(iFile,
-                    options->cName,
-                    files->Infile[iFile].cIn,
-                    lTmp,
-                    control->Io.iVerbose);
-    if (dTmp < 0)
-      body[iFile - 1].dFlareMinEnergy =
-            dTmp * dNegativeDouble(*options,
-                                   files->Infile[iFile].cIn,
-                                   control->Io.iVerbose);
-    else
+    NotPrimaryInput(iFile,options->cName,files->Infile[iFile].cIn,lTmp,
+control->Io.iVerbose); if (dTmp < 0) body[iFile - 1].dFlareMinEnergy = dTmp *
+dNegativeDouble(*options,files->Infile[iFile].cIn,control->Io.iVerbose); else
       body[iFile - 1].dFlareMinEnergy = dTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0)
     body[iFile - 1].dFlareMinEnergy = options->dDefault;
+}*/
+
+
+/*void ReadFlareMinEnergy(BODY *body, CONTROL *control, FILES *files, OPTIONS
+*options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      body[iFile - 1].dFlareMinEnergy =
+            dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
+                                   control->Io.iVerbose);
+    } else {
+      body[iFile - 1].dFlareMinEnergy = dTmp * fdUnitsEnergy(units->iTime,
+units->iMass, units->iLength);
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dFlareMinEnergy = options->dDefault;
+  }
+}
+*/
+
+
+void ReadFlareMinEnergy(BODY *body, CONTROL *control, FILES *files,
+                        OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      body[iFile - 1].dFlareMinEnergy =
+            dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
+                                   control->Io.iVerbose);
+    } else {
+      body[iFile - 1].dFlareMinEnergy = dTmp;
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else {
+    if (iFile > 0) {
+      body[iFile - 1].dFlareMinEnergy = options->dDefault;
+    }
+  }
 }
 
+
+void ReadFlareMaxEnergy(BODY *body, CONTROL *control, FILES *files,
+                        OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      body[iFile - 1].dFlareMaxEnergy =
+            dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
+                                   control->Io.iVerbose);
+    } else {
+      body[iFile - 1].dFlareMaxEnergy = dTmp;
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else {
+    if (iFile > 0) {
+      body[iFile - 1].dFlareMaxEnergy = options->dDefault;
+    }
+  }
+}
+/*
 void ReadFlareMaxEnergy(BODY *body,
                         CONTROL *control,
                         FILES *files,
@@ -252,7 +318,7 @@ void ReadFlareMaxEnergy(BODY *body,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0)
     body[iFile - 1].dFlareMaxEnergy = options->dDefault;
-}
+}*/
 
 void ReadFlareYInt(BODY *body,
                    CONTROL *control,
@@ -510,7 +576,7 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLAREMINENERGY].dDefault   = 1e26;
   options[OPT_FLAREMINENERGY].iType      = 2;
   options[OPT_FLAREMINENERGY].bMultiFile = 1;
-  options[OPT_FLAREMINENERGY].dNeg       = 1e7;
+  options[OPT_FLAREMINENERGY].dNeg       = 1e-7;
   sprintf(options[OPT_FLAREMINENERGY].cNeg, "ergs");
   fnRead[OPT_FLAREMINENERGY] = &ReadFlareMinEnergy;
 
@@ -521,7 +587,7 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLAREMAXENERGY].dDefault   = 1e29;
   options[OPT_FLAREMAXENERGY].iType      = 2;
   options[OPT_FLAREMAXENERGY].bMultiFile = 1;
-  options[OPT_FLAREMAXENERGY].dNeg       = 1e7;
+  options[OPT_FLAREMAXENERGY].dNeg       = 1e-7;
   sprintf(options[OPT_FLAREMAXENERGY].cNeg, "ergs");
   fnRead[OPT_FLAREMAXENERGY] = &ReadFlareMaxEnergy;
 
@@ -646,8 +712,8 @@ void ReadOptionsFlare(BODY *body,
 
 /******************* Verify FLARE ******************/
 
-void PropsAuxFlare(
-      BODY *body, EVOLVE *evolve, IO *io, UPDATE *update, int iBody) {
+void PropsAuxFlare(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
+                   int iBody) {
   /* Nothing */
 }
 
@@ -927,8 +993,8 @@ void fnForceBehaviorFlare(BODY *body,
 }
 
 
-void InitializeBodyFlare(
-      BODY *body, CONTROL *control, UPDATE *update, int iBody, int iModule) {
+void InitializeBodyFlare(BODY *body, CONTROL *control, UPDATE *update,
+                         int iBody, int iModule) {
   body[iBody].dLXUVFlare = fdLXUVFlare(body, control->Evolve.dTimeStep, iBody);
 }
 
@@ -948,8 +1014,8 @@ void InitializeUpdateFlare(BODY *body, UPDATE *update, int iBody) {
   */
 }
 
-void FinalizeUpdateLXUVFlare(
-      BODY *body, UPDATE *update, int *iEqn, int iVar, int iBody, int iFoo) {
+void FinalizeUpdateLXUVFlare(BODY *body, UPDATE *update, int *iEqn, int iVar,
+                             int iBody, int iFoo) {
   /* No primary variables for FLARE yet*/
   update[iBody].iaModule[iVar][*iEqn] = FLARE;
   update[iBody].iNumLXUV              = (*iEqn)++;
@@ -962,8 +1028,8 @@ void FinalizeUpdateLXUVFlare(
 void CountHaltsFlare(HALT *halt, int *iNumHalts) {
 }
 
-void VerifyHaltFlare(
-      BODY *body, CONTROL *control, OPTIONS *options, int iBody, int *iHalt) {
+void VerifyHaltFlare(BODY *body, CONTROL *control, OPTIONS *options, int iBody,
+                     int *iHalt) {
 }
 
 /************* FLARE Outputs ******************/
@@ -1287,7 +1353,7 @@ void WriteFlareEnergyMax(BODY *body,
 void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_FLAREFREQ1].cName, "FlareFreq1");
-  sprintf(output[OUT_FLAREFREQ1].cDescr, "Flare frequency in flares/day");
+  sprintf(output[OUT_FLAREFREQ1].cDescr, "Flare frequency");
   sprintf(output[OUT_FLAREFREQ1].cNeg, "flares/day");
   output[OUT_FLAREFREQ1].bNeg       = 1;
   output[OUT_FLAREFREQ1].dNeg       = DAYSEC;
@@ -1296,7 +1362,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREFREQ1]           = &WriteFlareFreq1;
 
   sprintf(output[OUT_FLAREFREQ2].cName, "FlareFreq2");
-  sprintf(output[OUT_FLAREFREQ2].cDescr, "Flare frequency in flares/day");
+  sprintf(output[OUT_FLAREFREQ2].cDescr, "Flare frequency");
   sprintf(output[OUT_FLAREFREQ2].cNeg, "flares/day");
   output[OUT_FLAREFREQ2].bNeg       = 1;
   output[OUT_FLAREFREQ2].dNeg       = DAYSEC;
@@ -1305,7 +1371,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREFREQ2]           = &WriteFlareFreq2;
 
   sprintf(output[OUT_FLAREFREQ3].cName, "FlareFreq3");
-  sprintf(output[OUT_FLAREFREQ3].cDescr, "Flare frequency in flares/day");
+  sprintf(output[OUT_FLAREFREQ3].cDescr, "Flare frequency");
   sprintf(output[OUT_FLAREFREQ3].cNeg, "flares/day");
   output[OUT_FLAREFREQ3].bNeg       = 1;
   output[OUT_FLAREFREQ3].dNeg       = DAYSEC;
@@ -1314,7 +1380,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREFREQ3]           = &WriteFlareFreq3;
 
   sprintf(output[OUT_FLAREFREQ4].cName, "FlareFreq4");
-  sprintf(output[OUT_FLAREFREQ4].cDescr, "Flare frequency in flares/day");
+  sprintf(output[OUT_FLAREFREQ4].cDescr, "Flare frequency");
   sprintf(output[OUT_FLAREFREQ4].cNeg, "flares/day");
   output[OUT_FLAREFREQ4].bNeg       = 1;
   output[OUT_FLAREFREQ4].dNeg       = DAYSEC;
@@ -1323,7 +1389,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREFREQ4]           = &WriteFlareFreq4;
 
   sprintf(output[OUT_FLAREFREQ5].cName, "FlareFreq5");
-  sprintf(output[OUT_FLAREFREQ5].cDescr, "Flare frequency in flares/day");
+  sprintf(output[OUT_FLAREFREQ5].cDescr, "Flare frequency");
   sprintf(output[OUT_FLAREFREQ5].cNeg, "flares/day");
   output[OUT_FLAREFREQ5].bNeg       = 1;
   output[OUT_FLAREFREQ5].dNeg       = DAYSEC;
@@ -1332,7 +1398,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREFREQ5]           = &WriteFlareFreq5;
 
   sprintf(output[OUT_FLAREFREQ6].cName, "FlareFreq6");
-  sprintf(output[OUT_FLAREFREQ6].cDescr, "Flare frequency in flares/day");
+  sprintf(output[OUT_FLAREFREQ6].cDescr, "Flare frequency");
   sprintf(output[OUT_FLAREFREQ6].cNeg, "flares/day");
   output[OUT_FLAREFREQ6].bNeg       = 1;
   output[OUT_FLAREFREQ6].dNeg       = DAYSEC;
@@ -1342,7 +1408,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_FLAREFREQMAX].cName, "FlareFreqMax");
   sprintf(output[OUT_FLAREFREQMAX].cDescr,
-          "Maximum Flare frequency in flares/day");
+          "Maximum Flare frequency of the flares");
   sprintf(output[OUT_FLAREFREQMAX].cNeg, "flares/day");
   output[OUT_FLAREFREQMAX].bNeg       = 1;
   output[OUT_FLAREFREQMAX].dNeg       = DAYSEC;
@@ -1352,7 +1418,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
 
   sprintf(output[OUT_FLAREENERGY1].cName, "FlareEnergy1");
-  sprintf(output[OUT_FLAREENERGY1].cDescr, "Flare energy in Joules");
+  sprintf(output[OUT_FLAREENERGY1].cDescr, "Flare energy");
   sprintf(output[OUT_FLAREENERGY1].cNeg, "ergs");
   output[OUT_FLAREENERGY1].bNeg       = 1;
   output[OUT_FLAREENERGY1].dNeg       = 1.0e7;
@@ -1361,7 +1427,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREENERGY1]           = &WriteFlareEnergy1;
 
   sprintf(output[OUT_FLAREENERGY2].cName, "FlareEnergy2");
-  sprintf(output[OUT_FLAREENERGY2].cDescr, "Flare energy in Joules");
+  sprintf(output[OUT_FLAREENERGY2].cDescr, "Flare energy");
   sprintf(output[OUT_FLAREENERGY2].cNeg, "ergs");
   output[OUT_FLAREENERGY2].bNeg       = 1;
   output[OUT_FLAREENERGY2].dNeg       = 1.0e7;
@@ -1370,7 +1436,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREENERGY2]           = &WriteFlareEnergy2;
 
   sprintf(output[OUT_FLAREENERGY3].cName, "FlareEnergy3");
-  sprintf(output[OUT_FLAREENERGY3].cDescr, "Flare energy in Joules");
+  sprintf(output[OUT_FLAREENERGY3].cDescr, "Flare energy");
   sprintf(output[OUT_FLAREENERGY3].cNeg, "ergs");
   output[OUT_FLAREENERGY3].bNeg       = 1;
   output[OUT_FLAREENERGY3].dNeg       = 1.0e7;
@@ -1379,7 +1445,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREENERGY3]           = &WriteFlareEnergy3;
 
   sprintf(output[OUT_FLAREENERGY4].cName, "FlareEnergy4");
-  sprintf(output[OUT_FLAREENERGY4].cDescr, "Flare energy in Joules");
+  sprintf(output[OUT_FLAREENERGY4].cDescr, "Flare energy");
   sprintf(output[OUT_FLAREENERGY4].cNeg, "ergs");
   output[OUT_FLAREENERGY4].bNeg       = 1;
   output[OUT_FLAREENERGY4].dNeg       = 1.0e7;
@@ -1388,7 +1454,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREENERGY4]           = &WriteFlareEnergy4;
 
   sprintf(output[OUT_FLAREENERGY5].cName, "FlareEnergy5");
-  sprintf(output[OUT_FLAREENERGY5].cDescr, "Flare energy in Joules");
+  sprintf(output[OUT_FLAREENERGY5].cDescr, "Flare energy");
   sprintf(output[OUT_FLAREENERGY5].cNeg, "ergs");
   output[OUT_FLAREENERGY5].bNeg       = 1;
   output[OUT_FLAREENERGY5].dNeg       = 1.0e7;
@@ -1397,7 +1463,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREENERGY5]           = &WriteFlareEnergy5;
 
   sprintf(output[OUT_FLAREENERGY6].cName, "FlareEnergy6");
-  sprintf(output[OUT_FLAREENERGY6].cDescr, "Flare energy in Joules");
+  sprintf(output[OUT_FLAREENERGY6].cDescr, "Flare energy");
   sprintf(output[OUT_FLAREENERGY6].cNeg, "ergs");
   output[OUT_FLAREENERGY6].bNeg       = 1;
   output[OUT_FLAREENERGY6].dNeg       = 1.0e7;
@@ -1406,7 +1472,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREENERGY6]           = &WriteFlareEnergy6;
 
   sprintf(output[OUT_FLAREENERGYMAX].cName, "FlareEnergyMax");
-  sprintf(output[OUT_FLAREENERGYMAX].cDescr, "Maximum Flare energy in Joules");
+  sprintf(output[OUT_FLAREENERGYMAX].cDescr, "Maximum Flare energy");
   sprintf(output[OUT_FLAREENERGYMAX].cNeg, "ergs");
   output[OUT_FLAREENERGYMAX].bNeg       = 1;
   output[OUT_FLAREENERGYMAX].dNeg       = 1.0e7;
@@ -1591,16 +1657,15 @@ double fdBandPassKepler(BODY *body, int iBody, double dInputEnergy) {
 
 
 // Davenport parameters of a star with mass dStarMass and age dStarAge
-double fdDavenport(
-      double dA1, double dA2, double dA3, double dStarAge, double dStarMass) {
+double fdDavenport(double dA1, double dA2, double dA3, double dStarAge,
+                   double dStarMass) {
   // Davenport function recives log(ergs) and return log(flare/day)
   // Calculating the dA and dB parameters with the Lacy et. al 1976
   // (1976ApJS...30...85L) equation
   double dA = 0.0;
-  dStarAge  = dStarAge /
-             (YEARSEC *
-              1.0e6); // Converting dStarAge from seconds to million years
-                      // because Davenport et al. 2019 model only accepts Myr.
+  dStarAge  = dStarAge / (YEARSEC * 1.0e6);
+  // Converting dStarAge from seconds to million years
+  // because Davenport et al. 2019 model only accepts Myr.
   dStarMass = dStarMass /
               MSUN; // Converting dStarMass from kg to solar mass because the
                     // Davenport et al. 2019 model only accepts Msun. The
@@ -1726,8 +1791,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     // multiply by 1.0e7 Convert the units of the energy from Joules to ergs
     // because Davenport et al. 2019 model only accepts energy in ergs.
 
-    dLogEnergyMinERG = dLogEnergyMin + 7.0;
-    dLogEnergyMaxERG = dLogEnergyMax + 7.0;
+    dLogEnergyMinERG = dLogEnergyMin; // + 7.0;
+    dLogEnergyMaxERG = dLogEnergyMax; // + 7.0;
 
     // Defining the energy step used in line 1097, 1099, and 1101 to fill the
     // energy arrays
@@ -1791,6 +1856,7 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
   // time evolution of the system and receives the value given by the user in
   // the input file
   else if (body[iBody].iFlareFFD == FLARE_FFD_NONE) {
+    dLXUVFlare = 0.0;
     dLXUVFlare = body[iBody].dLXUVFlareConst;
   }
   /*  else {

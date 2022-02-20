@@ -1,10 +1,10 @@
-Flare frequency distribution of Proxima Centauri.
+Flare frequency distribution of Proxima Centauri with Davenport et. al (2019) and Lacy et. al (1976) models .
 ====================================================================================================
 
 Overview
 --------
 
-This example compares the models of flare frequency distribution proposed by Davenport et. al 2019 and Lacy et. al 1976.
+This example compares the models of flare frequency distribution proposed by Davenport et. al (2019) and Lacy et. al (1976).
 
 
 ===================   ============
@@ -31,6 +31,6 @@ Expected output
    :align: center
 
    Flare frequency distribution (FFD) of energies between 1e33 and 1e36 ergs for Proxima Centauri .
-   The blue, purple, brown and red lines represent the FFD using Davenport et. al 2019 model , at 1 Myr,
-   10 Myr, 100 Myr and 1Gyr. The orange line represents the Lacy et. al 1976 model, where the FFD is
+   The blue, purple, brown and red lines represent the FFD using Davenport et. al (2019) model , at 1 Myr,
+   10 Myr, 100 Myr and 1Gyr. The orange line represents the Lacy et. al (1976) model, where the FFD is
    constant along the stellar age.

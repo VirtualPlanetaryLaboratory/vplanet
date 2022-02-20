@@ -81,8 +81,6 @@ for i in range(0, 9):
 # Plot
 fig = plt.figure(figsize=(4, 3))
 
-cmap = sns.color_palette("plasma", n_colors=4)
-
 a = 0.5
 
 fp = [1, 1, 1, 1]
@@ -124,7 +122,7 @@ legend_elements = [
     Line2D([0], [0], ls="-", color="darkviolet", lw=1, label="Davenport mode, 10 Myr"),
     Line2D([0], [0], ls="-", color="darkred", lw=1, label="Davenport mode, 100 Myr"),
     Line2D([0], [0], ls="-", color="red", lw=1, label="Davenport mode, 1 Gyr"),
-    Line2D([0], [0], color=cmap[3], lw=1, label="Lacy mode"),
+    Line2D([0], [0], color="orange", lw=1, label="Lacy mode"),
 ]
 
 plt.legend(handles=legend_elements, ncol=1, loc="lower left", fontsize=7)

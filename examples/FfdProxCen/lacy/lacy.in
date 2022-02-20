@@ -6,18 +6,14 @@ saModules	                    flare
 dMass                                0.12                   #stellar mass
 
 #flare module
-dFlareMinEnergy            1.0e26              # Min flare energy
-dFlareMaxEnergy           1.0e30              # Max flare energy
-sFlareFFD                           LACY # flare frenquency distribution evolution model
-dEnergyBin                       4                        # Number of bins between min and max energy
-dFlareSlope                  -0.68
-dFlareYInt                     20.9
-#sFlareBandPass KEPLER (4000–9000 Å) UV (3000–4300 Å) GOES band (1-8 Å) SXR (1.24 - 1239.85 Å) BOLOMETRIC (Osten and Wolk (2015)) TESSUV (2000-2800 Å) 
-#sFlareSlopeUnits SEC MIN HOUR DAY #units of the FFD input slopes
-
+dFlareMinEnergy            -1.0e33              # Min flare energy
+dFlareMaxEnergy           -1.0e37              # Max flare energy
+sFlareFFD                           LACY                 # flare frenquency distribution evolution model
+dEnergyBin                       4                         # Number of bins between min and max energy
+dFlareSlope                      -0.68
+dFlareYInt                        20.9
+#sFlareBandPass              KEPLER #(4000–9000 Å) UV (3000–4300 Å) GOES band (1-8 Å) SXR (1.24 - 1239.85 Å) BOLOMETRIC (Osten and Wolk (2015)) TESSUV (2000-2800 Å)
+#sFlareSlopeUnits            SEC #MIN HOUR DAY #units of the FFD input slopes
 
 #ouput parameters
-#saOutputOrder Time FlareFreq1 FlareFreq2 FlareFreq3 FlareFreq4 FlareEnergy1 FlareEnergy2 FlareEnergy3 FlareEnergy4
-saOutputOrder Time -FlareFreq1 -FlareFreq2 -FlareFreq3 -FlareFreq4 FlareEnergy1 FlareEnergy2 FlareEnergy3 FlareEnergy4
-
-
+saOutputOrder Time -FlareFreq1 -FlareFreq2 -FlareFreq3 -FlareFreq4 -FlareEnergy1 -FlareEnergy2 -FlareEnergy3 -FlareEnergy4

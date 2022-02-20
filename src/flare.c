@@ -347,59 +347,61 @@ void ReadFlareYInt(BODY *body,
     body[iFile - 1].dFlareYInt = options->dDefault;
 }
 
-void ReadFlareYIntErrorUpper(BODY *body,
-                             CONTROL *control,
-                             FILES *files,
-                             OPTIONS *options,
-                             SYSTEM *system,
-                             int iFile) {
-  // This parameter cannot exist in primary file
-  int lTmp = -1;
-  double dTmp;
+// TODO: Include the error in the FFD slopes to calculate the upper and higher
+// limit of XUV luminosity by flares
+/*void ReadFlareYIntErrorUpper(BODY *body,
+                           CONTROL *control,
+                           FILES *files,
+                           OPTIONS *options,
+                           SYSTEM *system,
+                           int iFile) {
+// This parameter cannot exist in primary file
+int lTmp = -1;
+double dTmp;
 
-  AddOptionDouble(files->Infile[iFile].cIn,
+AddOptionDouble(files->Infile[iFile].cIn,
+                options->cName,
+                &dTmp,
+                &lTmp,
+                control->Io.iVerbose);
+if (lTmp >= 0) {
+  NotPrimaryInput(iFile,
                   options->cName,
-                  &dTmp,
-                  &lTmp,
+                  files->Infile[iFile].cIn,
+                  lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,
-                    options->cName,
-                    files->Infile[iFile].cIn,
-                    lTmp,
-                    control->Io.iVerbose);
-    body[iFile - 1].dFlareYIntErrorUpper = dTmp;
-    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
-  } else if (iFile > 0)
-    body[iFile - 1].dFlareYIntErrorUpper = options->dDefault;
+  body[iFile - 1].dFlareYIntErrorUpper = dTmp;
+  UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+} else if (iFile > 0)
+  body[iFile - 1].dFlareYIntErrorUpper = options->dDefault;
 }
 
 void ReadFlareYIntErrorLower(BODY *body,
-                             CONTROL *control,
-                             FILES *files,
-                             OPTIONS *options,
-                             SYSTEM *system,
-                             int iFile) {
-  // This parameter cannot exist in primary file
-  int lTmp = -1;
-  double dTmp;
+                           CONTROL *control,
+                           FILES *files,
+                           OPTIONS *options,
+                           SYSTEM *system,
+                           int iFile) {
+// This parameter cannot exist in primary file
+int lTmp = -1;
+double dTmp;
 
-  AddOptionDouble(files->Infile[iFile].cIn,
+AddOptionDouble(files->Infile[iFile].cIn,
+                options->cName,
+                &dTmp,
+                &lTmp,
+                control->Io.iVerbose);
+if (lTmp >= 0) {
+  NotPrimaryInput(iFile,
                   options->cName,
-                  &dTmp,
-                  &lTmp,
+                  files->Infile[iFile].cIn,
+                  lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,
-                    options->cName,
-                    files->Infile[iFile].cIn,
-                    lTmp,
-                    control->Io.iVerbose);
-    body[iFile - 1].dFlareYIntErrorLower = dTmp;
-    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
-  } else if (iFile > 0)
-    body[iFile - 1].dFlareYIntErrorLower = options->dDefault;
-}
+  body[iFile - 1].dFlareYIntErrorLower = dTmp;
+  UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+} else if (iFile > 0)
+  body[iFile - 1].dFlareYIntErrorLower = options->dDefault;
+}*/
 
 void ReadFlareSlope(BODY *body,
                     CONTROL *control,
@@ -428,59 +430,61 @@ void ReadFlareSlope(BODY *body,
     body[iFile - 1].dFlareSlope = options->dDefault;
 }
 
-void ReadFlareSlopeErrorUpper(BODY *body,
-                              CONTROL *control,
-                              FILES *files,
-                              OPTIONS *options,
-                              SYSTEM *system,
-                              int iFile) {
-  // This parameter cannot exist in primary file
-  int lTmp = -1;
-  double dTmp;
+// TODO: Include the error in the FFD slopes to calculate the upper and higher
+// limit of XUV luminosity by flares
+/*void ReadFlareSlopeErrorUpper(BODY *body,
+                            CONTROL *control,
+                            FILES *files,
+                            OPTIONS *options,
+                            SYSTEM *system,
+                            int iFile) {
+// This parameter cannot exist in primary file
+int lTmp = -1;
+double dTmp;
 
-  AddOptionDouble(files->Infile[iFile].cIn,
+AddOptionDouble(files->Infile[iFile].cIn,
+                options->cName,
+                &dTmp,
+                &lTmp,
+                control->Io.iVerbose);
+if (lTmp >= 0) {
+  NotPrimaryInput(iFile,
                   options->cName,
-                  &dTmp,
-                  &lTmp,
+                  files->Infile[iFile].cIn,
+                  lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,
-                    options->cName,
-                    files->Infile[iFile].cIn,
-                    lTmp,
-                    control->Io.iVerbose);
-    body[iFile - 1].dFlareSlopeErrorUpper = dTmp;
-    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
-  } else if (iFile > 0)
-    body[iFile - 1].dFlareSlopeErrorUpper = options->dDefault;
+  body[iFile - 1].dFlareSlopeErrorUpper = dTmp;
+  UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+} else if (iFile > 0)
+  body[iFile - 1].dFlareSlopeErrorUpper = options->dDefault;
 }
 
 void ReadFlareSlopeErrorLower(BODY *body,
-                              CONTROL *control,
-                              FILES *files,
-                              OPTIONS *options,
-                              SYSTEM *system,
-                              int iFile) {
-  // This parameter cannot exist in primary file
-  int lTmp = -1;
-  double dTmp;
+                            CONTROL *control,
+                            FILES *files,
+                            OPTIONS *options,
+                            SYSTEM *system,
+                            int iFile) {
+// This parameter cannot exist in primary file
+int lTmp = -1;
+double dTmp;
 
-  AddOptionDouble(files->Infile[iFile].cIn,
+AddOptionDouble(files->Infile[iFile].cIn,
+                options->cName,
+                &dTmp,
+                &lTmp,
+                control->Io.iVerbose);
+if (lTmp >= 0) {
+  NotPrimaryInput(iFile,
                   options->cName,
-                  &dTmp,
-                  &lTmp,
+                  files->Infile[iFile].cIn,
+                  lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) {
-    NotPrimaryInput(iFile,
-                    options->cName,
-                    files->Infile[iFile].cIn,
-                    lTmp,
-                    control->Io.iVerbose);
-    body[iFile - 1].dFlareSlopeErrorLower = dTmp;
-    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
-  } else if (iFile > 0)
-    body[iFile - 1].dFlareSlopeErrorLower = options->dDefault;
-}
+  body[iFile - 1].dFlareSlopeErrorLower = dTmp;
+  UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+} else if (iFile > 0)
+  body[iFile - 1].dFlareSlopeErrorLower = options->dDefault;
+}*/
 void ReadLXUVFlareConst(BODY *body,
                         CONTROL *control,
                         FILES *files,
@@ -1124,8 +1128,8 @@ void WriteFlareFreq1(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    *dTmp /= 1 / fdUnitsTime(units->iTime);
-    // fsUnitsRate(units,cUnit);
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime, cUnit);
   }
 }
 void WriteFlareFreq2(BODY *body,
@@ -1142,8 +1146,8 @@ void WriteFlareFreq2(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    // *dTmp /= fdUnitsFrequency(units->iTime);
-    // fsUnitsFrequency(units,cUnit);
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime, cUnit);
   }
 }
 void WriteFlareFreq3(BODY *body,
@@ -1160,8 +1164,8 @@ void WriteFlareFreq3(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    // *dTmp /= fdUnitsFrequency(units->iTime);
-    // fsUnitsFrequency(units,cUnit);
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime, cUnit);
   }
 }
 void WriteFlareFreq4(BODY *body,
@@ -1178,8 +1182,8 @@ void WriteFlareFreq4(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    // *dTmp /= fdUnitsFrequency(units->iTime);
-    // fsUnitsFrequency(units,cUnit);
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime, cUnit);
   }
 }
 void WriteFlareFreq5(BODY *body,
@@ -1196,8 +1200,8 @@ void WriteFlareFreq5(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    // *dTmp /= fdUnitsFrequency(units->iTime);
-    // fsUnitsFrequency(units,cUnit);
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime, cUnit);
   }
 }
 void WriteFlareFreq6(BODY *body,
@@ -1214,7 +1218,8 @@ void WriteFlareFreq6(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    // strcpy(cUnit, "1/s");
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime, cUnit);
   }
 }
 void WriteFlareFreqMax(BODY *body,
@@ -1231,8 +1236,8 @@ void WriteFlareFreqMax(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    //*dTmp /= fdUnits(units->iTime,units->iMass,units->iLength);
-    // fsUnitsEnergy(units,cUnit);
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime, cUnit);
   }
 }
 void WriteFlareEnergy1(BODY *body,
@@ -1370,54 +1375,54 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_FLAREFREQ1].cName, "FlareFreq1");
   sprintf(output[OUT_FLAREFREQ1].cDescr,
           "Frequency of the flares with the lowest energy");
-  sprintf(output[OUT_FLAREFREQ1].cNeg, "flares/day");
+  sprintf(output[OUT_FLAREFREQ1].cNeg, "/day");
   output[OUT_FLAREFREQ1].bNeg       = 1;
-  output[OUT_FLAREFREQ1].dNeg       = DAYSEC;
+  output[OUT_FLAREFREQ1].dNeg       = 1;
   output[OUT_FLAREFREQ1].iNum       = 1;
   output[OUT_FLAREFREQ1].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ1]           = &WriteFlareFreq1;
 
   sprintf(output[OUT_FLAREFREQ2].cName, "FlareFreq2");
   sprintf(output[OUT_FLAREFREQ2].cDescr, "Flare frequency");
-  sprintf(output[OUT_FLAREFREQ2].cNeg, "flares/day");
+  sprintf(output[OUT_FLAREFREQ2].cNeg, "/day");
   output[OUT_FLAREFREQ2].bNeg       = 1;
-  output[OUT_FLAREFREQ2].dNeg       = DAYSEC;
+  output[OUT_FLAREFREQ2].dNeg       = 1;
   output[OUT_FLAREFREQ2].iNum       = 1;
   output[OUT_FLAREFREQ2].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ2]           = &WriteFlareFreq2;
 
   sprintf(output[OUT_FLAREFREQ3].cName, "FlareFreq3");
   sprintf(output[OUT_FLAREFREQ3].cDescr, "Flare frequency");
-  sprintf(output[OUT_FLAREFREQ3].cNeg, "flares/day");
+  sprintf(output[OUT_FLAREFREQ3].cNeg, "/day");
   output[OUT_FLAREFREQ3].bNeg       = 1;
-  output[OUT_FLAREFREQ3].dNeg       = DAYSEC;
+  output[OUT_FLAREFREQ3].dNeg       = 1;
   output[OUT_FLAREFREQ3].iNum       = 1;
   output[OUT_FLAREFREQ3].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ3]           = &WriteFlareFreq3;
 
   sprintf(output[OUT_FLAREFREQ4].cName, "FlareFreq4");
   sprintf(output[OUT_FLAREFREQ4].cDescr, "Flare frequency");
-  sprintf(output[OUT_FLAREFREQ4].cNeg, "flares/day");
+  sprintf(output[OUT_FLAREFREQ4].cNeg, "/day");
   output[OUT_FLAREFREQ4].bNeg       = 1;
-  output[OUT_FLAREFREQ4].dNeg       = DAYSEC;
+  output[OUT_FLAREFREQ4].dNeg       = 1;
   output[OUT_FLAREFREQ4].iNum       = 1;
   output[OUT_FLAREFREQ4].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ4]           = &WriteFlareFreq4;
 
   sprintf(output[OUT_FLAREFREQ5].cName, "FlareFreq5");
   sprintf(output[OUT_FLAREFREQ5].cDescr, "Flare frequency");
-  sprintf(output[OUT_FLAREFREQ5].cNeg, "flares/day");
+  sprintf(output[OUT_FLAREFREQ5].cNeg, "/day");
   output[OUT_FLAREFREQ5].bNeg       = 1;
-  output[OUT_FLAREFREQ5].dNeg       = DAYSEC;
+  output[OUT_FLAREFREQ5].dNeg       = 1;
   output[OUT_FLAREFREQ5].iNum       = 1;
   output[OUT_FLAREFREQ5].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ5]           = &WriteFlareFreq5;
 
   sprintf(output[OUT_FLAREFREQ6].cName, "FlareFreq6");
   sprintf(output[OUT_FLAREFREQ6].cDescr, "Flare frequency");
-  sprintf(output[OUT_FLAREFREQ6].cNeg, "flares/day");
+  sprintf(output[OUT_FLAREFREQ6].cNeg, "/day");
   output[OUT_FLAREFREQ6].bNeg       = 1;
-  output[OUT_FLAREFREQ6].dNeg       = DAYSEC;
+  output[OUT_FLAREFREQ6].dNeg       = 1;
   output[OUT_FLAREFREQ6].iNum       = 1;
   output[OUT_FLAREFREQ6].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ6]           = &WriteFlareFreq6;
@@ -1425,9 +1430,9 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_FLAREFREQMAX].cName, "FlareFreqMax");
   sprintf(output[OUT_FLAREFREQMAX].cDescr,
           "Frequency of the flares with the highest energy");
-  sprintf(output[OUT_FLAREFREQMAX].cNeg, "flares/day");
+  sprintf(output[OUT_FLAREFREQMAX].cNeg, "/day");
   output[OUT_FLAREFREQMAX].bNeg       = 1;
-  output[OUT_FLAREFREQMAX].dNeg       = DAYSEC;
+  output[OUT_FLAREFREQMAX].dNeg       = 1;
   output[OUT_FLAREFREQMAX].iNum       = 1;
   output[OUT_FLAREFREQMAX].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQMAX]           = &WriteFlareFreqMax;
@@ -1809,8 +1814,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     // multiply by 1.0e7 Convert the units of the energy from Joules to ergs
     // because Davenport et al. 2019 model only accepts energy in ergs.
 
-    dLogEnergyMinERG = dLogEnergyMin; // + 7.0;
-    dLogEnergyMaxERG = dLogEnergyMax; // + 7.0;
+    dLogEnergyMinERG = dLogEnergyMin + 7.0;
+    dLogEnergyMaxERG = dLogEnergyMax + 7.0;
 
     // Defining the energy step used in line 1097, 1099, and 1101 to fill the
     // energy arrays

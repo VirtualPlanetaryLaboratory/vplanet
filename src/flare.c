@@ -242,7 +242,7 @@ void ReadFlareMinEnergy(BODY *body, CONTROL *control, FILES *files,
 
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
-  if (lTmp >= 0) {
+  if (lTmp > 0) {
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
     if (dTmp < 0) {
@@ -529,7 +529,9 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLAREYINT].bMultiFile = 1;
   fnRead[OPT_FLAREYINT]             = &ReadFlareYInt;
 
-  sprintf(options[OPT_FLAREYINTERRORUPPER].cName, "dFlareYIntErrorUpper");
+  // TODO: Include the error in the FFD slopes to calculate the upper and higher
+  // limit of XUV luminosity by flares
+  /*sprintf(options[OPT_FLAREYINTERRORUPPER].cName, "dFlareYIntErrorUpper");
   sprintf(options[OPT_FLAREYINTERRORUPPER].cDescr, "Y-Intercept upper error");
   sprintf(options[OPT_FLAREYINTERRORUPPER].cDefault, "0.0");
   options[OPT_FLAREYINTERRORUPPER].dDefault   = 0.0;
@@ -544,7 +546,7 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLAREYINTERRORLOWER].iType      = 2;
   options[OPT_FLAREYINTERRORLOWER].bMultiFile = 1;
   fnRead[OPT_FLAREYINTERRORLOWER]             = &ReadFlareYIntErrorLower;
-
+*/
   sprintf(options[OPT_FLARESLOPE].cName, "dFlareSlope");
   sprintf(options[OPT_FLARESLOPE].cDescr, "Slope for Flare Frequency");
   sprintf(options[OPT_FLARESLOPE].cDefault, "-0.68 (Proxima)");
@@ -553,7 +555,9 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLARESLOPE].bMultiFile = 1;
   fnRead[OPT_FLARESLOPE]             = &ReadFlareSlope;
 
-  sprintf(options[OPT_FLARESLOPEERRORUPPER].cName, "dFlareSlopeErrorUpper");
+  // TODO: Include the error in the FFD slopes to calculate the upper and higher
+  // limit of XUV luminosity by flares
+  /*sprintf(options[OPT_FLARESLOPEERRORUPPER].cName, "dFlareSlopeErrorUpper");
   sprintf(options[OPT_FLARESLOPEERRORUPPER].cDescr, "Slope upper error");
   sprintf(options[OPT_FLARESLOPEERRORUPPER].cDefault, "0.0");
   options[OPT_FLARESLOPEERRORUPPER].dDefault   = 0.0;
@@ -568,11 +572,13 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLARESLOPEERRORLOWER].iType      = 2;
   options[OPT_FLARESLOPEERRORLOWER].bMultiFile = 1;
   fnRead[OPT_FLARESLOPEERRORLOWER]             = &ReadFlareSlopeErrorLower;
+*/
+
 
   sprintf(options[OPT_FLAREMINENERGY].cName, "dFlareMinEnergy");
   sprintf(options[OPT_FLAREMINENERGY].cDescr,
           "Minimum Flare Energy to consider");
-  sprintf(options[OPT_FLAREMINENERGY].cDefault, "10^26 J ou 10^33 ergs");
+  sprintf(options[OPT_FLAREMINENERGY].cDefault, "10^26 J");
   options[OPT_FLAREMINENERGY].dDefault   = 1e26;
   options[OPT_FLAREMINENERGY].iType      = 2;
   options[OPT_FLAREMINENERGY].bMultiFile = 1;
@@ -583,7 +589,7 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_FLAREMAXENERGY].cName, "dFlareMaxEnergy");
   sprintf(options[OPT_FLAREMAXENERGY].cDescr,
           "Maximum Flare Energy to consider");
-  sprintf(options[OPT_FLAREMAXENERGY].cDefault, "10^29 J or 10^36 ergs");
+  sprintf(options[OPT_FLAREMAXENERGY].cDefault, "10^29 J");
   options[OPT_FLAREMAXENERGY].dDefault   = 1e29;
   options[OPT_FLAREMAXENERGY].iType      = 2;
   options[OPT_FLAREMAXENERGY].bMultiFile = 1;
@@ -818,8 +824,8 @@ void VerifyFlare(BODY *body,
             MAXMASSFLARE);
     LineExit(files->Infile[iBody + 1].cIn, options[OPT_MASS].iLine[iBody + 1]);
   }
-  /* If the XUV luminosityby flares is inputed by the user, the FFD and flare
-  energies cannot be outputed because are useless: the user
+  /* If the XUV luminosity by flares is given by the user, the code do not allow
+  output FFD and flare energies because the code do not calculate: the user
   already inputed the XUV luminosity by flares and the flare module doesn't need
   this information anymore*/
   if (body[iBody].iFlareFFD == FLARE_FFD_NONE) {
@@ -968,6 +974,12 @@ void VerifyFlare(BODY *body,
     }
   }
 
+  /* if (body[iBody].iFlareFFD == FLARE_FFD_DAVENPORT) || (body[iBody].iFlareFFD
+   == FLARE_FFD_LACY) { if (body[iBody].dFlareMinEnergy = 0) { fprintf(stderr,
+   "ERROR: %s must be >= 0. ", input[OPT_FLAREMINENERGY].cName);
+       }
+   }*/
+
 
   VerifyLXUVFlare(body, options, update, iBody);
   control->fnForceBehavior[iBody][iModule]   = &fnForceBehaviorFlare;
@@ -1051,12 +1063,14 @@ void WriteLXUVFlare(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
-    fsUnitsPower(units, cUnit);
+    *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergyFlux(units, cUnit);
   }
 }
 
-
+// TODO: Include the error in the FFD slopes to calculate the upper and higher
+// limit of XUV luminosity by flares
+/*
 void WriteLXUVFlareUpper(BODY *body,
                          CONTROL *control,
                          OUTPUT *output,
@@ -1071,8 +1085,8 @@ void WriteLXUVFlareUpper(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
-    fsUnitsPower(units, cUnit);
+    *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergyFlux(units, cUnit);
   }
 }
 
@@ -1091,11 +1105,11 @@ void WriteLXUVFlareLower(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
-    fsUnitsPower(units, cUnit);
+    *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergyFlux(units, cUnit);
   }
 }
-
+*/
 void WriteFlareFreq1(BODY *body,
                      CONTROL *control,
                      OUTPUT *output,
@@ -1110,8 +1124,8 @@ void WriteFlareFreq1(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    // *dTmp /= fdUnitsFrequency(units->iTime);
-    // fsUnitsFrequency(units,cUnit);
+    *dTmp /= 1 / fdUnitsTime(units->iTime);
+    // fsUnitsRate(units,cUnit);
   }
 }
 void WriteFlareFreq2(BODY *body,
@@ -1217,7 +1231,8 @@ void WriteFlareFreqMax(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    // strcpy(cUnit, "1/s");
+    //*dTmp /= fdUnits(units->iTime,units->iMass,units->iLength);
+    // fsUnitsEnergy(units,cUnit);
   }
 }
 void WriteFlareEnergy1(BODY *body,
@@ -1234,8 +1249,8 @@ void WriteFlareEnergy1(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    // *dTmp /= fdUnitsEnergy(units->iTime,units->iMass,units->iLength);
-    // fsUnitsEnergy(units,cUnit);
+    *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergy(units, cUnit);
   }
 }
 
@@ -1253,8 +1268,8 @@ void WriteFlareEnergy2(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    //*dTmp /= fdUnitsEnergy(units->iTime,units->iMass,units->iLength);
-    // fsUnitsEnergy(units,cUnit);
+    *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergy(units, cUnit);
   }
 }
 
@@ -1272,8 +1287,8 @@ void WriteFlareEnergy3(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    // *dTmp /= fdUnitsEnergy(units->iTime,units->iMass,units->iLength);
-    // fsUnitsEnergy(units,cUnit);
+    *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergy(units, cUnit);
   }
 }
 
@@ -1291,8 +1306,8 @@ void WriteFlareEnergy4(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    //*dTmp /= fdUnitsEnergy(units->iTime,units->iMass,units->iLength);
-    // fsUnitsEnergy(units,cUnit);
+    *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergy(units, cUnit);
   }
 }
 void WriteFlareEnergy5(BODY *body,
@@ -1309,8 +1324,8 @@ void WriteFlareEnergy5(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    // *dTmp /= fdUnitsEnergy(units->iTime,units->iMass,units->iLength);
-    // fsUnitsEnergy(units,cUnit);
+    *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergy(units, cUnit);
   }
 }
 void WriteFlareEnergy6(BODY *body,
@@ -1327,8 +1342,8 @@ void WriteFlareEnergy6(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    // *dTmp /= fdUnitsEnergy(units->iTime,units->iMass,units->iLength);
-    // fsUnitsEnergy(units,cUnit);
+    *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergy(units, cUnit);
   }
 }
 
@@ -1346,14 +1361,15 @@ void WriteFlareEnergyMax(BODY *body,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    // *dTmp /= fdUnitsEnergy(units->iTime,units->iMass,units->iLength);
-    // fsUnitsEnergy(units,cUnit);
+    *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergy(units, cUnit);
   }
 }
 void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_FLAREFREQ1].cName, "FlareFreq1");
-  sprintf(output[OUT_FLAREFREQ1].cDescr, "Flare frequency");
+  sprintf(output[OUT_FLAREFREQ1].cDescr,
+          "Frequency of the flares with the lowest energy");
   sprintf(output[OUT_FLAREFREQ1].cNeg, "flares/day");
   output[OUT_FLAREFREQ1].bNeg       = 1;
   output[OUT_FLAREFREQ1].dNeg       = DAYSEC;
@@ -1408,7 +1424,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_FLAREFREQMAX].cName, "FlareFreqMax");
   sprintf(output[OUT_FLAREFREQMAX].cDescr,
-          "Maximum Flare frequency of the flares");
+          "Frequency of the flares with the highest energy");
   sprintf(output[OUT_FLAREFREQMAX].cNeg, "flares/day");
   output[OUT_FLAREFREQMAX].bNeg       = 1;
   output[OUT_FLAREFREQMAX].dNeg       = DAYSEC;
@@ -1418,7 +1434,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
 
   sprintf(output[OUT_FLAREENERGY1].cName, "FlareEnergy1");
-  sprintf(output[OUT_FLAREENERGY1].cDescr, "Flare energy");
+  sprintf(output[OUT_FLAREENERGY1].cDescr, "Minimum flare energy");
   sprintf(output[OUT_FLAREENERGY1].cNeg, "ergs");
   output[OUT_FLAREENERGY1].bNeg       = 1;
   output[OUT_FLAREENERGY1].dNeg       = 1.0e7;
@@ -1472,7 +1488,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREENERGY6]           = &WriteFlareEnergy6;
 
   sprintf(output[OUT_FLAREENERGYMAX].cName, "FlareEnergyMax");
-  sprintf(output[OUT_FLAREENERGYMAX].cDescr, "Maximum Flare energy");
+  sprintf(output[OUT_FLAREENERGYMAX].cDescr, "Maximum flare energy");
   sprintf(output[OUT_FLAREENERGYMAX].cNeg, "ergs");
   output[OUT_FLAREENERGYMAX].bNeg       = 1;
   output[OUT_FLAREENERGYMAX].dNeg       = 1.0e7;
@@ -1490,7 +1506,9 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_LXUVFLARE].iModuleBit = FLARE;
   fnWrite[OUT_LXUVFLARE]           = &WriteLXUVFlare;
 
-  sprintf(output[OUT_LXUVFLAREUPPER].cName, "LXUVFlareUpper");
+  // TODO: Include the error in the FFD slopes to calculate the upper and higher
+  // limit of XUV luminosity by flares
+  /*sprintf(output[OUT_LXUVFLAREUPPER].cName, "LXUVFlareUpper");
   sprintf(output[OUT_LXUVFLAREUPPER].cDescr,
           "Upper limit value to XUV Luminosity from flares when considerer "
           "flare rate slope and Y-intercept errors");
@@ -1510,7 +1528,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_LXUVFLARELOWER].dNeg       = 1. / LSUN;
   output[OUT_LXUVFLARELOWER].iNum       = 1;
   output[OUT_LXUVFLARELOWER].iModuleBit = FLARE;
-  fnWrite[OUT_LXUVFLARELOWER]           = &WriteLXUVFlareLower;
+  fnWrite[OUT_LXUVFLARELOWER]           = &WriteLXUVFlareLower;*/
 }
 
 /************ FLARE Logging Functions **************/
@@ -1535,7 +1553,7 @@ void LogFlare(BODY *body,
    int iOut;
 
    fprintf(fp,"\n----- FLARE PARAMETERS ------\n");
-   for (iOut=OUTSTARTRADHEAT;iOut<OUTBODYSTARTRADHEAT;iOut++) {
+   for (iOut=OUTSTARTFLARE;iOut<OUTBODYSTARTFLARE;iOut++) {
      if (output[iOut].iNum > 0)
        WriteLogEntry(control,output[iOut],body,system,fnWrite[iOut],fp,update,0);
    }

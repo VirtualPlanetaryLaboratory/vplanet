@@ -1196,16 +1196,16 @@ void WriteFlareFreq4(BODY *body,
     fsUnitsRate(units->iTime, cUnit);
   }
 }
-void WriteFlareFreq5(BODY *body,
-                     CONTROL *control,
-                     OUTPUT *output,
-                     SYSTEM *system,
-                     UNITS *units,
-                     UPDATE *update,
-                     int iBody,
-                     double *dTmp,
-                     char cUnit[]) {
-  *dTmp = body[iBody].dFlareFreq5;
+void WriteFlareFreqMin(BODY *body,
+                       CONTROL *control,
+                       OUTPUT *output,
+                       SYSTEM *system,
+                       UNITS *units,
+                       UPDATE *update,
+                       int iBody,
+                       double *dTmp,
+                       char cUnit[]) {
+  *dTmp = body[iBody].dFlareFreqMin;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
@@ -1214,16 +1214,16 @@ void WriteFlareFreq5(BODY *body,
     fsUnitsRate(units->iTime, cUnit);
   }
 }
-void WriteFlareFreq6(BODY *body,
-                     CONTROL *control,
-                     OUTPUT *output,
-                     SYSTEM *system,
-                     UNITS *units,
-                     UPDATE *update,
-                     int iBody,
-                     double *dTmp,
-                     char cUnit[]) {
-  *dTmp = body[iBody].dFlareFreq6;
+void WriteFlareFreqMid(BODY *body,
+                       CONTROL *control,
+                       OUTPUT *output,
+                       SYSTEM *system,
+                       UNITS *units,
+                       UPDATE *update,
+                       int iBody,
+                       double *dTmp,
+                       char cUnit[]) {
+  *dTmp = body[iBody].dFlareFreqMid;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
@@ -1325,16 +1325,16 @@ void WriteFlareEnergy4(BODY *body,
     fsUnitsEnergy(units, cUnit);
   }
 }
-void WriteFlareEnergy5(BODY *body,
-                       CONTROL *control,
-                       OUTPUT *output,
-                       SYSTEM *system,
-                       UNITS *units,
-                       UPDATE *update,
-                       int iBody,
-                       double *dTmp,
-                       char cUnit[]) {
-  *dTmp = body[iBody].dFlareEnergy5;
+void WriteFlareEnergyMin(BODY *body,
+                         CONTROL *control,
+                         OUTPUT *output,
+                         SYSTEM *system,
+                         UNITS *units,
+                         UPDATE *update,
+                         int iBody,
+                         double *dTmp,
+                         char cUnit[]) {
+  *dTmp = body[iBody].dFlareEnergyMin;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
@@ -1343,16 +1343,16 @@ void WriteFlareEnergy5(BODY *body,
     fsUnitsEnergy(units, cUnit);
   }
 }
-void WriteFlareEnergy6(BODY *body,
-                       CONTROL *control,
-                       OUTPUT *output,
-                       SYSTEM *system,
-                       UNITS *units,
-                       UPDATE *update,
-                       int iBody,
-                       double *dTmp,
-                       char cUnit[]) {
-  *dTmp = body[iBody].dFlareEnergy6;
+void WriteFlareEnergyMid(BODY *body,
+                         CONTROL *control,
+                         OUTPUT *output,
+                         SYSTEM *system,
+                         UNITS *units,
+                         UPDATE *update,
+                         int iBody,
+                         double *dTmp,
+                         char cUnit[]) {
+  *dTmp = body[iBody].dFlareEnergyMid;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
@@ -1419,23 +1419,25 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_FLAREFREQ4].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ4]           = &WriteFlareFreq4;
 
-  sprintf(output[OUT_FLAREFREQ5].cName, "FlareFreq5");
-  sprintf(output[OUT_FLAREFREQ5].cDescr, "Flare frequency");
-  sprintf(output[OUT_FLAREFREQ5].cNeg, "/day");
-  output[OUT_FLAREFREQ5].bNeg       = 1;
-  output[OUT_FLAREFREQ5].dNeg       = 1;
-  output[OUT_FLAREFREQ5].iNum       = 1;
-  output[OUT_FLAREFREQ5].iModuleBit = FLARE;
-  fnWrite[OUT_FLAREFREQ5]           = &WriteFlareFreq5;
+  sprintf(output[OUT_FLAREFREQMIN].cName, "FlareFreqMin");
+  sprintf(output[OUT_FLAREFREQMIN].cDescr,
+          "Frequency of the flares with the lowest energy");
+  sprintf(output[OUT_FLAREFREQMIN].cNeg, "/day");
+  output[OUT_FLAREFREQMIN].bNeg       = 1;
+  output[OUT_FLAREFREQMIN].dNeg       = 1;
+  output[OUT_FLAREFREQMIN].iNum       = 1;
+  output[OUT_FLAREFREQMIN].iModuleBit = FLARE;
+  fnWrite[OUT_FLAREFREQMIN]           = &WriteFlareFreqMin;
 
-  sprintf(output[OUT_FLAREFREQ6].cName, "FlareFreq6");
-  sprintf(output[OUT_FLAREFREQ6].cDescr, "Flare frequency");
-  sprintf(output[OUT_FLAREFREQ6].cNeg, "/day");
-  output[OUT_FLAREFREQ6].bNeg       = 1;
-  output[OUT_FLAREFREQ6].dNeg       = 1;
-  output[OUT_FLAREFREQ6].iNum       = 1;
-  output[OUT_FLAREFREQ6].iModuleBit = FLARE;
-  fnWrite[OUT_FLAREFREQ6]           = &WriteFlareFreq6;
+  sprintf(output[OUT_FLAREFREQMID].cName, "FlareFreqMid");
+  sprintf(output[OUT_FLAREFREQMID].cDescr,
+          "Frequency of the flares with the middle energy in the energy range");
+  sprintf(output[OUT_FLAREFREQMIN].cNeg, "/day");
+  output[OUT_FLAREFREQMIN].bNeg       = 1;
+  output[OUT_FLAREFREQMIN].dNeg       = 1;
+  output[OUT_FLAREFREQMIN].iNum       = 1;
+  output[OUT_FLAREFREQMIN].iModuleBit = FLARE;
+  fnWrite[OUT_FLAREFREQMIN]           = &WriteFlareFreqMid;
 
   sprintf(output[OUT_FLAREFREQMAX].cName, "FlareFreqMax");
   sprintf(output[OUT_FLAREFREQMAX].cDescr,
@@ -1484,23 +1486,24 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_FLAREENERGY4].iModuleBit = FLARE;
   fnWrite[OUT_FLAREENERGY4]           = &WriteFlareEnergy4;
 
-  sprintf(output[OUT_FLAREENERGY5].cName, "FlareEnergy5");
-  sprintf(output[OUT_FLAREENERGY5].cDescr, "Flare energy");
-  sprintf(output[OUT_FLAREENERGY5].cNeg, "ergs");
-  output[OUT_FLAREENERGY5].bNeg       = 1;
-  output[OUT_FLAREENERGY5].dNeg       = 1.0e7;
-  output[OUT_FLAREENERGY5].iNum       = 1;
-  output[OUT_FLAREENERGY5].iModuleBit = FLARE;
-  fnWrite[OUT_FLAREENERGY5]           = &WriteFlareEnergy5;
+  sprintf(output[OUT_FLAREENERGYMIN].cName, "FlareEnergyMin");
+  sprintf(output[OUT_FLAREENERGYMIN].cDescr, "Minimum flare energy");
+  sprintf(output[OUT_FLAREENERGYMIN].cNeg, "ergs");
+  output[OUT_FLAREENERGYMIN].bNeg       = 1;
+  output[OUT_FLAREENERGYMIN].dNeg       = 1.0e7;
+  output[OUT_FLAREENERGYMIN].iNum       = 1;
+  output[OUT_FLAREENERGYMIN].iModuleBit = FLARE;
+  fnWrite[OUT_FLAREENERGYMIN]           = &WriteFlareEnergyMin;
 
-  sprintf(output[OUT_FLAREENERGY6].cName, "FlareEnergy6");
-  sprintf(output[OUT_FLAREENERGY6].cDescr, "Flare energy");
-  sprintf(output[OUT_FLAREENERGY6].cNeg, "ergs");
-  output[OUT_FLAREENERGY6].bNeg       = 1;
-  output[OUT_FLAREENERGY6].dNeg       = 1.0e7;
-  output[OUT_FLAREENERGY6].iNum       = 1;
-  output[OUT_FLAREENERGY6].iModuleBit = FLARE;
-  fnWrite[OUT_FLAREENERGY6]           = &WriteFlareEnergy6;
+  sprintf(output[OUT_FLAREENERGYMID].cName, "FlareEnergyMid");
+  sprintf(output[OUT_FLAREENERGYMID].cDescr,
+          "Middle flare energy in the range of energy values");
+  sprintf(output[OUT_FLAREENERGYMID].cNeg, "ergs");
+  output[OUT_FLAREENERGYMID].bNeg       = 1;
+  output[OUT_FLAREENERGYMID].dNeg       = 1.0e7;
+  output[OUT_FLAREENERGYMID].iNum       = 1;
+  output[OUT_FLAREENERGYMID].iModuleBit = FLARE;
+  fnWrite[OUT_FLAREENERGYMID]           = &WriteFlareEnergyMid;
 
   sprintf(output[OUT_FLAREENERGYMAX].cName, "FlareEnergyMax");
   sprintf(output[OUT_FLAREENERGYMAX].cDescr, "Maximum flare energy");
@@ -1853,6 +1856,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     body[iBody].dFlareEnergy4   = daEnerJOU[3];
     body[iBody].dFlareEnergy5   = daEnerJOU[4];
     body[iBody].dFlareEnergy6   = daEnerJOU[5];
+    body[iBody].dFlareEnergyMin = daEnerJOU[0];
+    body[iBody].dFlareEnergyMid = daEnerJOU[iEnergyBin / 2];
     body[iBody].dFlareEnergyMax = daEnerJOU[iEnergyBin];
     //############################ 5. Filling the FFD arrays
     //########################################################################
@@ -1872,6 +1877,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     body[iBody].dFlareFreq4   = daFFD[3];
     body[iBody].dFlareFreq5   = daFFD[4];
     body[iBody].dFlareFreq6   = daFFD[5];
+    body[iBody].dFlareFreqMin = daFFD[0];
+    body[iBody].dFlareFreqMid = daFFD[iEnergyBin / 2];
     body[iBody].dFlareFreqMax = daFFD[iEnergyBin];
     //############################ 6. Calculating the XUV luminosity by flares
     //########################################################################

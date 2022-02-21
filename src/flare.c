@@ -1037,6 +1037,16 @@ void FinalizeUpdateLXUVFlare(BODY *body, UPDATE *update, int *iEqn, int iVar,
   update[iBody].iNumLXUV              = (*iEqn)++;
 }
 
+// TODO: Maybe add this to each FlareFreq output? Energies do not evolve, so do
+// not need this.
+/*void FinalizeUpdateFlareFreqMax(BODY *body, UPDATE *update, int *iEqn, int
+  iVar, int iBody, int iFoo) {
+  /* No primary variables for FLARE yet*/
+/*  update[iBody].iaModule[iVar][*iEqn] = FLARE;
+  update[iBody].iNumFlareFreqMax              = (*iEqn)++;
+}
+*/
+
 /***************** FLARE Halts *****************/
 
 /* Halt for massive flare? No Flares? */

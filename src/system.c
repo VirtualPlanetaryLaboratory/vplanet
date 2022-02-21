@@ -352,7 +352,7 @@ double fdXUVFlux(BODY *body, int iBody) {
       }
       // Only flares incoming the planet and produce the XUV flux. Weird, but
       // could happen. "The user walk by strange ways".
-      if (body[0].bFlare) {
+      else if (body[0].bFlare) {
         dLXUVTot = body[0].dLXUVFlare;
       }
       // No module that produce XUV emission was chosen.

@@ -20,4 +20,4 @@ sFlareFFD                           davenport # flare frenquency distribution ev
 dEnergyBin                       4                        # Number of bins between min and max energy
 
 #ouput parameters
-saOutputOrder Time -LXUVTot -LXUVStellar -LXUVFlare -FlareFreq1 -FlareFreqMax -FlareEnergy1 -FlareEnergyMax
+saOutputOrder Time -Luminosity -LXUVTot -LXUVStellar -LXUVFlare -FlareFreq1 -FlareFreqMax -FlareEnergy1 -FlareEnergyMax

@@ -37,6 +37,14 @@ if sys.argv[1] != "pdf" and sys.argv[1] != "png":
 
 path = pathlib.Path(__file__).parents[0].absolute()
 sys.path.insert(1, str(path.parents[0]))
+# Overwritten old files
+directory = ["./LumEvolFlare", "./LumEvolStellar"]
+
+for i in directory:
+    os.chdir(i)
+    os.system("rm *.log")
+    os.system("rm *.forward")
+    os.chdir(path)
 
 
 # Running the simulations
@@ -109,7 +117,13 @@ time05f = fage[3]
 time06f = fage[4]
 
 
-cmap = sns.color_palette("inferno", n_colors=5)
+cmap = [
+    vpl.colors.dark_blue,
+    vpl.colors.red,
+    vpl.colors.orange,
+    vpl.colors.purple,
+    vpl.colors.pale_blue,
+]
 
 # alpha value
 a = 0.6

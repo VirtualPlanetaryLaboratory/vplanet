@@ -180,12 +180,12 @@ void InitializeControlEvolve(BODY *body, CONTROL *control, MODULE *module,
      be generalized for any integration method. */
   if (control->Evolve.iOneStep == RUNGEKUTTA) {
     control->Evolve.daDeriv = malloc(4 * sizeof(double **));
-    control->Evolve.daDerivProc = malloc(4 * sizeof(double **));
+    control->Evolve.daDerivProc = malloc(4 * sizeof(double ***));
     for (iSubStep = 0; iSubStep < 4; iSubStep++) {
       control->Evolve.daDeriv[iSubStep] =
             malloc(control->Evolve.iNumBodies * sizeof(double *));
       control->Evolve.daDerivProc[iSubStep] =
-            malloc(control->Evolve.iNumBodies * sizeof(double *));
+            malloc(control->Evolve.iNumBodies * sizeof(double **));
     }
   }
 

@@ -3,7 +3,7 @@ saModules    stellar, flare
 
 # Physical Parameters
 dMass 0.12
-dAge          1e6
+dAge          1e7
 
 # STELLAR parameters
 sStellarModel baraffe     # Stellar evolutin model: `baraffe` or `none`

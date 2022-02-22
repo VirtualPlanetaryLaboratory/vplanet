@@ -12,7 +12,7 @@ Loss of a hydrogen envelope, surface water and build-up oxygen due to stellar+fl
 **Modules**           AtmEsc
                       FLARE
                       STELLAR
-**Approx. runtime**   21 seconds
+**Approx. runtime**   23 seconds
 ===================   ============
 
 This example shows the evolution of the planetary parameters of Proxima Centauri b, comparing when the planet is
@@ -43,5 +43,8 @@ Expected output
    :width: 3600px
    :align: center
 
-   Surface water content (top left),  Envelope mass (top center), quiescent+flares XUV luminosity and bolometric
-   luminosity ratio (top right), Oxygen content in the atmospher (bottom left), habitable zone location (bottom center) and XUV flux (bottom right).
+   Surface water content (top left),  envelope mass (top center left),
+   planetary radius (top center right) quiescent+flares XUV luminosity
+   and bolometric luminosity ratio (top right), oxygen content in the
+   atmosphere (bottom left), habitable zone location (bottom center),
+   envelope loss rate (bottom center right) and XUV flux (bottom right).

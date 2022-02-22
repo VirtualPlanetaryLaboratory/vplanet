@@ -21,4 +21,4 @@ sPlanetRadiusModel        proximacenb
 bAtmEscAuto               1               # Is the flow radiation-recombination-limited?
 
 #Output
-saOutputOrder Time -Radius -SurfWaterMass -EnvelopeMass -OxygenMass -PlanetRadius -HZLimRunaway -HZlimMaxGreenhouse -HZLimRecVenus -HZLimEarlyMars -FXUV Instellation HEscapeRegime Eta KTide XO
+saOutputOrder Time -PlanetRadius -SurfWaterMass -EnvelopeMass -OxygenMass -HZLimRecVenus -HZLimEarlyMars -FXUV -DEnvMassDt

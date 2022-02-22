@@ -8,7 +8,7 @@ bOverwrite	  1			     # Allow file overwrites?
 # s=string. An "a" indicates an array and multiple arguments are allowed/expected.
 
 # List of "body files" that contain body-specific parameters
-saBodyFiles	    flare.in b.in # Radius model: Prox Cen b; AtmEsc model: RR-limited
+saBodyFiles	    star.in b.in # Radius model: Prox Cen b; AtmEsc model: RR-limited
 
 # Array options can continue to the next line with a terminating "$". The $ can be
 # at the end of the string or not. Comments are allowed afterwards.

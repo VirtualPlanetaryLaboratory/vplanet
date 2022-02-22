@@ -36,96 +36,79 @@ if sys.argv[1] != "pdf" and sys.argv[1] != "png":
     print("Options are: pdf, png")
     exit(1)
 
+# Overwritten old files
+directory = ["./flare", "./stellar"]
+
+for i in directory:
+    os.chdir(i)
+    os.system("rm *.log")
+    os.system("rm *.forward")
+    os.chdir(path)
+
+
 # Running the simulations
 run = ["./flare/vpl.in", "./stellar/vpl.in"]
 
+flare = []
+stellar = []
+
+directory = [flare, stellar]
+
 for i in range(0, 2):
-    vplanet.run(path / run[i], units=False)
-
-
-# Make object for each simulation set to hold data
-f11649c = np.loadtxt("./flare/flare.b.forward")
-s11649c = np.loadtxt("./stellar/stellar.b.forward")
-
-f11649cstar = np.loadtxt("./flare/flare.flare.forward")
-s11649cstar = np.loadtxt("./stellar/stellar.stellar.forward")
-
-
-f11649ctime = f11649c[:, 0]
-s11649ctime = s11649c[:, 0]
-
-flare_SurfWaterMass = f11649c[:, 2]
-stellar_SurfWaterMass = s11649c[:, 2]
-
-flare_EnvelopeMass = f11649c[:, 3]
-stellar_EnvelopeMass = s11649c[:, 3]
-
-flare_OxygenMass = f11649c[:, 4]
-stellar_OxygenMass = s11649c[:, 4]
-
-flare_FXUV = f11649c[:, 10]
-stellar_FXUV = s11649c[:, 10]
-
-flare_HZLimEarlyMars = f11649c[:, 9]
-stellar_HZLimEarlyMars = s11649c[:, 9]
-
-flare_HZLimRecVenus = f11649c[:, 8]  # HZLimRunaway
-stellar_HZLimRecVenus = s11649c[:, 8]
-
-flare_LXUVTot = f11649cstar[:, 5]
-stellar_LXUVTot = s11649cstar[:, 5]
-
-flare_Luminosity = f11649cstar[:, 1]
-stellar_Luminosity = s11649cstar[:, 1]
+    directory[i] = vplanet.run(path / run[i], units=False)
 
 # Plot!
-fig, axes = plt.subplots(nrows=2, ncols=3, sharex="col", figsize=(6, 5))
-
-_1649time = [s11649ctime, f11649ctime]
-_1649dirs = [s11649c, f11649c]
-
-SurfWaterMass = [flare_SurfWaterMass, stellar_SurfWaterMass]
-EnvelopeMass = [flare_EnvelopeMass, stellar_EnvelopeMass]
-OxygenMass = [flare_OxygenMass, stellar_OxygenMass]
-FXUV = [flare_FXUV, stellar_FXUV]
-HZLimEarlyMars = [flare_HZLimEarlyMars, stellar_HZLimEarlyMars]
-HZLimRecVenus = [flare_HZLimRecVenus, stellar_HZLimRecVenus]  #
-LXUVTot = [flare_LXUVTot, stellar_LXUVTot]
-Luminosity = [flare_Luminosity, stellar_Luminosity]
+fig, axes = plt.subplots(nrows=2, ncols=4, sharex="col", figsize=(12, 5))
 
 style = ["-", "--"]
-color = ["red", "midnightblue"]
+color = [vpl.colors.red, vpl.colors.dark_blue]
 
 a = 1
 
 for i in range(0, 2):
     axes[0, 0].plot(
-        _1649time[i],
-        SurfWaterMass[i],
+        directory[i].b.Time,
+        directory[i].b.SurfWaterMass,
         color=color[i],
         linewidth=a,
         linestyle=style[i],
         alpha=0.5,
     )
     axes[0, 1].plot(
-        _1649time[i],
-        EnvelopeMass[i],
+        directory[i].b.Time,
+        directory[i].b.EnvelopeMass,
+        color=color[i],
+        linewidth=a,
+        linestyle=style[i],
+        alpha=0.5,
+    )
+    axes[0, 2].plot(
+        directory[i].b.Time,
+        directory[i].b.PlanetRadius,
         color=color[i],
         linewidth=a,
         linestyle=style[i],
         alpha=0.5,
     )
     axes[1, 0].plot(
-        _1649time[i],
-        OxygenMass[i],
+        directory[i].b.Time,
+        directory[i].b.OxygenMass,
         color=color[i],
         linewidth=a,
         linestyle=style[i],
         alpha=0.5,
     )
     axes[1, 2].plot(
-        _1649time[i],
-        FXUV[i],
+        directory[i].b.Time,
+        directory[i].b.DEnvMassDt,
+        color=color[i],
+        linewidth=a,
+        linestyle=style[i],
+        alpha=0.5,
+    )
+    axes[1, 3].plot(
+        directory[i].b.Time,
+        directory[i].b.FXUV,
         color=color[i],
         linewidth=a,
         linestyle=style[i],
@@ -133,84 +116,71 @@ for i in range(0, 2):
     )
 
 
-axes[0, 2].plot(
-    _1649time[0],
-    LXUVTot[0] / Luminosity[0],
+axes[0, 3].plot(
+    directory[0].star.Time,
+    directory[0].star.LXUVTot / directory[0].star.Luminosity,
     color=color[0],
     linewidth=a,
     linestyle=style[0],
     alpha=0.5,
-    label="flare + stellar",
+    label=r"Flare + Stellar",
 )
-axes[0, 2].plot(
-    _1649time[1],
-    LXUVTot[1] / Luminosity[1],
+axes[0, 3].plot(
+    directory[1].star.Time,
+    directory[1].star.LXUVTot / directory[1].star.Luminosity,
     color=color[1],
     linewidth=a,
     linestyle=style[1],
     alpha=0.5,
-    label="stellar",
+    label=r"Stellar",
 )
-axes[0, 2].legend(loc="lower right", ncol=1, fontsize=7)
+axes[0, 3].legend(loc="lower left", ncol=1, fontsize=9)
 
-
+axes[1, 1].fill_between(
+    directory[0].b.Time,
+    directory[0].b.HZLimRecVenus,
+    directory[0].b.HZLimEarlyMars,
+    color=vpl.colors.purple,
+    alpha=0.5,
+)
 axes[1, 1].annotate(
     "HZ",
-    xy=(0.1, 0.3),
+    xy=(0.1, 0.35),
     xycoords="axes fraction",
     horizontalalignment="left",
     verticalalignment="bottom",
     color="w",
 )
-axes[0, 2].set_ylabel(r"L$_{XUV}$/L$_{bol}$")
-axes[1, 1].set_ylabel("Semi-Major Axis (AU)")
+
 axes[0, 0].set_ylabel("Surface Water (TO)")
 axes[0, 1].set_ylabel(r"Envelope Mass (M$_{\oplus}$)")
-axes[1, 2].set_ylabel(r"XUV flux (W/m$^{2}$)")
+axes[0, 2].set_ylabel(r"Planetary Radius (R$_{\oplus}$)")
+axes[0, 3].set_ylabel(r"L$_{XUV}$/L$_{bol}$")
 axes[1, 0].set_ylabel("Oxygen Pressure (bars)")
-axes[0, 0].set_xlim(1e6, 1e9)
-axes[0, 1].set_xlim(1e6, 1e9)
-axes[0, 2].set_xlim(1e6, 1e9)
-axes[1, 0].set_xlim(1e6, 1e9)
-axes[1, 1].set_xlim(1e6, 1e9)
-axes[1, 2].set_xlim(1e6, 1e9)
+axes[1, 1].set_ylabel("Semi-Major Axis (AU)")
+axes[1, 2].set_ylabel(r"DEnvMassDt (M$_{\oplus}$ Myr$^{-1}$)")
+axes[1, 3].set_ylabel(r"XUV flux (W/m$^{2}$)")
 
-
-axes[0, 0].set_xscale("log")
-axes[0, 1].set_xscale("log")
-axes[0, 2].set_xscale("log")
-axes[1, 0].set_xscale("log")
-axes[1, 1].set_xscale("log")
-axes[1, 2].set_xscale("log")
-
+for i in range(0, 4):
+    axes[0, i].set_xlim(1e6, 1e9)
+    axes[1, i].set_xlim(1e6, 1e9)
+    axes[0, i].set_xscale("log")
+    axes[1, i].set_xscale("log")
+    axes[0, i].set_xlabel("  ")
+    axes[1, i].set_xlabel("System Age (year)")
 
 axes[0, 1].set_yscale("log")
-axes[0, 2].set_yscale("log")
-axes[1, 2].set_yscale("log")
 
-axes[0, 0].set_xlabel("  ")
-axes[0, 1].set_xlabel("  ")
-axes[0, 2].set_xlabel("  ")
-
-axes[1, 1].set_xlabel("System Age (year)")
-
-axes[1, 1].fill_between(
-    _1649time[0], HZLimRecVenus[0], HZLimEarlyMars[0], color="gold", alpha=0.5
-)
 axes[1, 1].annotate(
     "Prox Cen b's orbit",
     xy=(0.03, 0.07),
     xycoords="axes fraction",
-    fontsize=7,
+    fontsize=9,
     horizontalalignment="left",
     verticalalignment="bottom",
     color="k",
 )
-
-# Exoplanet Archive
 axes[1, 1].axhline(y=0.0485, xmin=0.0, xmax=1e11, color="k", lw=0.5)
-
-g = "-"
 
 # Save figure
 if sys.argv[1] == "pdf":

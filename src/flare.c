@@ -14,12 +14,12 @@
 #include <stdio.h>
 
 void BodyCopyFlare(BODY *dest, BODY *src, int foo, int iNumBodies, int iBody) {
-  dest[iBody].dFlareMinEnergy  = src[iBody].dFlareMinEnergy;
-  dest[iBody].dFlareMaxEnergy  = src[iBody].dFlareMaxEnergy;
-  dest[iBody].dLXUVFlareConst  = src[iBody].dLXUVFlareConst;
-  dest[iBody].dLXUVFlare       = src[iBody].dLXUVFlare;
-  dest[iBody].dLXUVFlareUpper  = src[iBody].dLXUVFlareUpper;
-  dest[iBody].dLXUVFlareLower  = src[iBody].dLXUVFlareLower;
+  dest[iBody].dFlareMinEnergy = src[iBody].dFlareMinEnergy;
+  dest[iBody].dFlareMaxEnergy = src[iBody].dFlareMaxEnergy;
+  dest[iBody].dLXUVFlareConst = src[iBody].dLXUVFlareConst;
+  dest[iBody].dLXUVFlare      = src[iBody].dLXUVFlare;
+  // dest[iBody].dLXUVFlareUpper  = src[iBody].dLXUVFlareUpper;
+  // dest[iBody].dLXUVFlareLower  = src[iBody].dLXUVFlareLower;
   dest[iBody].iFlareFFD        = src[iBody].iFlareFFD;
   dest[iBody].iFlareBandPass   = src[iBody].iFlareBandPass;
   dest[iBody].iFlareSlopeUnits = src[iBody].iFlareSlopeUnits;
@@ -876,23 +876,23 @@ void VerifyFlare(BODY *body,
         bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
-                 output[OUT_FLAREFREQ5].cName,
-                 strlen(output[OUT_FLAREFREQ5].cName)) == 0) {
+                 output[OUT_FLAREFREQMIN].cName,
+                 strlen(output[OUT_FLAREFREQMIN].cName)) == 0) {
         /* Match! */
         fprintf(stderr,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
-                output[OUT_FLAREFREQ5].cName);
+                output[OUT_FLAREFREQMIN].cName);
         bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
-                 output[OUT_FLAREFREQ6].cName,
-                 strlen(output[OUT_FLAREFREQ6].cName)) == 0) {
+                 output[OUT_FLAREFREQMID].cName,
+                 strlen(output[OUT_FLAREFREQMID].cName)) == 0) {
         /* Match! */
         fprintf(stderr,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
-                output[OUT_FLAREFREQ6].cName);
+                output[OUT_FLAREFREQMID].cName);
         bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
@@ -946,23 +946,23 @@ void VerifyFlare(BODY *body,
         bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
-                 output[OUT_FLAREENERGY5].cName,
-                 strlen(output[OUT_FLAREENERGY5].cName)) == 0) {
+                 output[OUT_FLAREENERGYMIN].cName,
+                 strlen(output[OUT_FLAREENERGYMIN].cName)) == 0) {
         /* Match! */
         fprintf(stderr,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
-                output[OUT_FLAREENERGY5].cName);
+                output[OUT_FLAREENERGYMIN].cName);
         bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
-                 output[OUT_FLAREENERGY6].cName,
-                 strlen(output[OUT_FLAREENERGY6].cName)) == 0) {
+                 output[OUT_FLAREENERGYMID].cName,
+                 strlen(output[OUT_FLAREENERGYMID].cName)) == 0) {
         /* Match! */
         fprintf(stderr,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
-                output[OUT_FLAREENERGY6].cName);
+                output[OUT_FLAREENERGYMID].cName);
         bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
@@ -1384,37 +1384,40 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   sprintf(output[OUT_FLAREFREQ1].cName, "FlareFreq1");
   sprintf(output[OUT_FLAREFREQ1].cDescr,
-          "Frequency of the flares with the lowest energy");
+          "First value of flare frequency range");
   sprintf(output[OUT_FLAREFREQ1].cNeg, "/day");
   output[OUT_FLAREFREQ1].bNeg       = 1;
-  output[OUT_FLAREFREQ1].dNeg       = 1;
+  output[OUT_FLAREFREQ1].dNeg       = DAYSEC;
   output[OUT_FLAREFREQ1].iNum       = 1;
   output[OUT_FLAREFREQ1].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ1]           = &WriteFlareFreq1;
 
   sprintf(output[OUT_FLAREFREQ2].cName, "FlareFreq2");
-  sprintf(output[OUT_FLAREFREQ2].cDescr, "Flare frequency");
+  sprintf(output[OUT_FLAREFREQ2].cDescr,
+          "Second value of flare frequency range");
   sprintf(output[OUT_FLAREFREQ2].cNeg, "/day");
   output[OUT_FLAREFREQ2].bNeg       = 1;
-  output[OUT_FLAREFREQ2].dNeg       = 1;
+  output[OUT_FLAREFREQ2].dNeg       = DAYSEC;
   output[OUT_FLAREFREQ2].iNum       = 1;
   output[OUT_FLAREFREQ2].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ2]           = &WriteFlareFreq2;
 
   sprintf(output[OUT_FLAREFREQ3].cName, "FlareFreq3");
-  sprintf(output[OUT_FLAREFREQ3].cDescr, "Flare frequency");
+  sprintf(output[OUT_FLAREFREQ3].cDescr,
+          "Third value of flare frequency range");
   sprintf(output[OUT_FLAREFREQ3].cNeg, "/day");
   output[OUT_FLAREFREQ3].bNeg       = 1;
-  output[OUT_FLAREFREQ3].dNeg       = 1;
+  output[OUT_FLAREFREQ3].dNeg       = DAYSEC;
   output[OUT_FLAREFREQ3].iNum       = 1;
   output[OUT_FLAREFREQ3].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ3]           = &WriteFlareFreq3;
 
   sprintf(output[OUT_FLAREFREQ4].cName, "FlareFreq4");
-  sprintf(output[OUT_FLAREFREQ4].cDescr, "Flare frequency");
+  sprintf(output[OUT_FLAREFREQ4].cDescr,
+          "Fourth value of flare frequency range");
   sprintf(output[OUT_FLAREFREQ4].cNeg, "/day");
   output[OUT_FLAREFREQ4].bNeg       = 1;
-  output[OUT_FLAREFREQ4].dNeg       = 1;
+  output[OUT_FLAREFREQ4].dNeg       = DAYSEC;
   output[OUT_FLAREFREQ4].iNum       = 1;
   output[OUT_FLAREFREQ4].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ4]           = &WriteFlareFreq4;
@@ -1424,7 +1427,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
           "Frequency of the flares with the lowest energy");
   sprintf(output[OUT_FLAREFREQMIN].cNeg, "/day");
   output[OUT_FLAREFREQMIN].bNeg       = 1;
-  output[OUT_FLAREFREQMIN].dNeg       = 1;
+  output[OUT_FLAREFREQMIN].dNeg       = DAYSEC;
   output[OUT_FLAREFREQMIN].iNum       = 1;
   output[OUT_FLAREFREQMIN].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQMIN]           = &WriteFlareFreqMin;
@@ -1432,26 +1435,26 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_FLAREFREQMID].cName, "FlareFreqMid");
   sprintf(output[OUT_FLAREFREQMID].cDescr,
           "Frequency of the flares with the middle energy in the energy range");
-  sprintf(output[OUT_FLAREFREQMIN].cNeg, "/day");
-  output[OUT_FLAREFREQMIN].bNeg       = 1;
-  output[OUT_FLAREFREQMIN].dNeg       = 1;
-  output[OUT_FLAREFREQMIN].iNum       = 1;
-  output[OUT_FLAREFREQMIN].iModuleBit = FLARE;
-  fnWrite[OUT_FLAREFREQMIN]           = &WriteFlareFreqMid;
+  sprintf(output[OUT_FLAREFREQMID].cNeg, "/day");
+  output[OUT_FLAREFREQMID].bNeg       = 1;
+  output[OUT_FLAREFREQMID].dNeg       = DAYSEC;
+  output[OUT_FLAREFREQMID].iNum       = 1;
+  output[OUT_FLAREFREQMID].iModuleBit = FLARE;
+  fnWrite[OUT_FLAREFREQMID]           = &WriteFlareFreqMid;
 
   sprintf(output[OUT_FLAREFREQMAX].cName, "FlareFreqMax");
   sprintf(output[OUT_FLAREFREQMAX].cDescr,
           "Frequency of the flares with the highest energy");
   sprintf(output[OUT_FLAREFREQMAX].cNeg, "/day");
   output[OUT_FLAREFREQMAX].bNeg       = 1;
-  output[OUT_FLAREFREQMAX].dNeg       = 1;
+  output[OUT_FLAREFREQMAX].dNeg       = DAYSEC;
   output[OUT_FLAREFREQMAX].iNum       = 1;
   output[OUT_FLAREFREQMAX].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQMAX]           = &WriteFlareFreqMax;
 
 
   sprintf(output[OUT_FLAREENERGY1].cName, "FlareEnergy1");
-  sprintf(output[OUT_FLAREENERGY1].cDescr, "Minimum flare energy");
+  sprintf(output[OUT_FLAREENERGY1].cDescr, "First value of flare energy range");
   sprintf(output[OUT_FLAREENERGY1].cNeg, "ergs");
   output[OUT_FLAREENERGY1].bNeg       = 1;
   output[OUT_FLAREENERGY1].dNeg       = 1.0e7;
@@ -1460,7 +1463,8 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREENERGY1]           = &WriteFlareEnergy1;
 
   sprintf(output[OUT_FLAREENERGY2].cName, "FlareEnergy2");
-  sprintf(output[OUT_FLAREENERGY2].cDescr, "Flare energy");
+  sprintf(output[OUT_FLAREENERGY2].cDescr,
+          "Second value of flare energy range");
   sprintf(output[OUT_FLAREENERGY2].cNeg, "ergs");
   output[OUT_FLAREENERGY2].bNeg       = 1;
   output[OUT_FLAREENERGY2].dNeg       = 1.0e7;
@@ -1469,7 +1473,7 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREENERGY2]           = &WriteFlareEnergy2;
 
   sprintf(output[OUT_FLAREENERGY3].cName, "FlareEnergy3");
-  sprintf(output[OUT_FLAREENERGY3].cDescr, "Flare energy");
+  sprintf(output[OUT_FLAREENERGY3].cDescr, "Third value of flare energy range");
   sprintf(output[OUT_FLAREENERGY3].cNeg, "ergs");
   output[OUT_FLAREENERGY3].bNeg       = 1;
   output[OUT_FLAREENERGY3].dNeg       = 1.0e7;
@@ -1478,7 +1482,8 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREENERGY3]           = &WriteFlareEnergy3;
 
   sprintf(output[OUT_FLAREENERGY4].cName, "FlareEnergy4");
-  sprintf(output[OUT_FLAREENERGY4].cDescr, "Flare energy");
+  sprintf(output[OUT_FLAREENERGY4].cDescr,
+          "Fourth value of flare energy range");
   sprintf(output[OUT_FLAREENERGY4].cNeg, "ergs");
   output[OUT_FLAREENERGY4].bNeg       = 1;
   output[OUT_FLAREENERGY4].dNeg       = 1.0e7;
@@ -1854,8 +1859,6 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     body[iBody].dFlareEnergy2   = daEnerJOU[1];
     body[iBody].dFlareEnergy3   = daEnerJOU[2];
     body[iBody].dFlareEnergy4   = daEnerJOU[3];
-    body[iBody].dFlareEnergy5   = daEnerJOU[4];
-    body[iBody].dFlareEnergy6   = daEnerJOU[5];
     body[iBody].dFlareEnergyMin = daEnerJOU[0];
     body[iBody].dFlareEnergyMid = daEnerJOU[iEnergyBin / 2];
     body[iBody].dFlareEnergyMax = daEnerJOU[iEnergyBin];
@@ -1875,8 +1878,6 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     body[iBody].dFlareFreq2   = daFFD[1];
     body[iBody].dFlareFreq3   = daFFD[2];
     body[iBody].dFlareFreq4   = daFFD[3];
-    body[iBody].dFlareFreq5   = daFFD[4];
-    body[iBody].dFlareFreq6   = daFFD[5];
     body[iBody].dFlareFreqMin = daFFD[0];
     body[iBody].dFlareFreqMid = daFFD[iEnergyBin / 2];
     body[iBody].dFlareFreqMax = daFFD[iEnergyBin];

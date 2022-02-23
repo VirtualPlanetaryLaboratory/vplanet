@@ -295,7 +295,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumVelX * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -339,7 +339,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumVelY * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -383,7 +383,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumVelZ * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -428,7 +428,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumPositionX * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -473,7 +473,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumPositionY * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -518,7 +518,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumPositionZ * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -565,7 +565,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumWaterMassMOAtm * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -610,7 +610,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumWaterMassSol * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -655,7 +655,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumSurfTemp * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -700,7 +700,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumSolidRadius * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -745,7 +745,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumPotTemp * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -790,7 +790,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumOxygenMassMOAtm * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -835,7 +835,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumOxygenMassSol * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -880,7 +880,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumHydrogenMassSpace * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -925,7 +925,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumOxygenMassSpace * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -970,7 +970,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumCO2MassMOAtm * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1015,7 +1015,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumCO2MassSol * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1064,7 +1064,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNum26AlCore * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1110,7 +1110,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNum26AlMan * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1156,7 +1156,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNum40KCore * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1202,7 +1202,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNum40KMan * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1248,7 +1248,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNum40KCrust * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1294,7 +1294,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNum232ThCore * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1340,7 +1340,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNum232ThMan * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1386,7 +1386,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNum232ThCrust * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1432,7 +1432,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNum235UCore * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1478,7 +1478,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNum235UMan * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1524,7 +1524,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNum235UCrust * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1570,7 +1570,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNum238UCore * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1616,7 +1616,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNum238UMan * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1662,7 +1662,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNum238UCrust * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1708,7 +1708,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumEnvelopeMass * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1760,7 +1760,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumDynEllip * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1805,7 +1805,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumHecc * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1850,7 +1850,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumKecc * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1868,7 +1868,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
     // Luminosity:
     /* Someday we'll fix this, here's a template
     AddPrimaryVariable(body,control,module,update,fnUpdate,&body[iBody].dLuminosity,&control->Evolve.tmpBody[iBody].dLuminosity,
-                       &update[iBody].iLuminosity,&module->fnFinalizeUpdateLuminosity[iBody][iModule],
+                       &update[iBody].iLuminosity,&module->fnFinalizeUpdate[iBody][iModule][iVar | VLUMINOSITY?],
                        update[iBody].iNumLuminosity,iBody,iVar,VLUMINOSITY);
     */
     
@@ -1902,7 +1902,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumLuminosity * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -1986,7 +1986,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumPinc * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2031,7 +2031,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumQinc * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2077,7 +2077,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumRadius * sizeof(int *));
       for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2122,7 +2122,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumMass * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2167,7 +2167,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumRot * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2212,7 +2212,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumSemi * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2262,7 +2262,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumSurfaceWaterMass * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2308,7 +2308,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumOxygenMass * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }              
       }
 
@@ -2354,7 +2354,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumOxygenMantleMass * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2400,7 +2400,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumTemperature * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2446,7 +2446,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumRadGyra * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2492,7 +2492,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumTCore * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2537,7 +2537,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumTMan * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2583,7 +2583,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
         control->Evolve.tmpUpdate[iBody].iXobl = iVar;
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2629,7 +2629,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
         control->Evolve.tmpUpdate[iBody].iYobl = iVar;
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2675,7 +2675,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
         control->Evolve.tmpUpdate[iBody].iZobl = iVar;
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2722,7 +2722,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumCBPR * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2768,7 +2768,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumCBPZ * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2815,7 +2815,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumCBPPhi * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2862,7 +2862,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumCBPRDot * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2909,7 +2909,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumCBPZDot * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -2956,7 +2956,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumCBPPhiDot * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -3052,7 +3052,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumEccX * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -3097,7 +3097,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumEccY * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -3142,7 +3142,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumEccZ * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -3188,7 +3188,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumAngMX * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -3234,7 +3234,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumAngMY * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -3280,7 +3280,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumAngMZ * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -3332,7 +3332,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumLXUV * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -3378,7 +3378,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumLostAngMom * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 
@@ -3424,7 +3424,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
               malloc(update[iBody].iNumLostEng * sizeof(int *));
         for (iSubStep=0; iSubStep < 4; iSubStep++) {
             control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
-                  malloc(update[iBody].iNumVars * sizeof(double));
+                  malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
         }
       }
 

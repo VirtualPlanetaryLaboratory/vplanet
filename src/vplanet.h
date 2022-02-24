@@ -1692,6 +1692,7 @@ struct EVOLVE {
   double ***daDeriv; /**< The Matrix of Time Derivatives. First dimension is
                         Body #, second is the Primary variable number, third is
                         the equation number.  */
+  double ****daDerivProc; /**< Derivatives over a timestep */
 
   // Module-specific parameters
   int *iNumModules; /**< Number of Modules per Primary Variable */

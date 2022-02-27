@@ -97,7 +97,7 @@ void ReadFlareFFD(BODY *body,
   } else if (iFile > 0)
     body[iFile - 1].iFlareFFD = FLARE_FFD_DAVENPORT;
 }
-
+/*
 void ReadFlareSlopeUnits(BODY *body,
                          CONTROL *control,
                          FILES *files,
@@ -105,7 +105,7 @@ void ReadFlareSlopeUnits(BODY *body,
                          SYSTEM *system,
                          int iFile) {
   /* This parameter cannot exist in primary file */
-  int lTmp = -1;
+  /*int lTmp = -1;
   char cTmp[OPTLEN];
 
   AddOptionString(files->Infile[iFile].cIn,
@@ -139,7 +139,7 @@ void ReadFlareSlopeUnits(BODY *body,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0)
     body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_DAY;
-}
+}*/
 
 void ReadFlareBandPass(BODY *body,
                        CONTROL *control,
@@ -250,7 +250,7 @@ void ReadFlareMinEnergy(BODY *body, CONTROL *control, FILES *files,
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dFlareMinEnergy = dTmp;
+      body[iFile - 1].dFlareMinEnergy = dTmp * fdUnitsEnergy(control->Units[iFile].iTime,control->Units[iFile].iMass, control->Units[iFile].iLength);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
@@ -277,7 +277,7 @@ void ReadFlareMaxEnergy(BODY *body, CONTROL *control, FILES *files,
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dFlareMaxEnergy = dTmp;
+      body[iFile - 1].dFlareMaxEnergy = dTmp * fdUnitsEnergy(control->Units[iFile].iTime,control->Units[iFile].iMass, control->Units[iFile].iLength);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
@@ -341,10 +341,21 @@ void ReadFlareYInt(BODY *body,
                     files->Infile[iFile].cIn,
                     lTmp,
                     control->Io.iVerbose);
-    body[iFile - 1].dFlareYInt = dTmp;
+    if (dTmp < 0) {
+      body[iFile - 1].dFlareYInt =
+            dTmp * dNegativeDouble(*options,
+                                   files->Infile[iFile].cIn,
+                                   control->Io.iVerbose);
+    } else {
+      body[iFile - 1].dFlareYInt = dTmp / (fdUnitsTime(control->Units[iFile].iTime));
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
-  } else if (iFile > 0)
+  }
+  else {
+    if (iFile > 0) {
     body[iFile - 1].dFlareYInt = options->dDefault;
+    }
+  }  
 }
 
 // TODO: Include the error in the FFD slopes to calculate the upper and higher
@@ -403,6 +414,9 @@ if (lTmp >= 0) {
   body[iFile - 1].dFlareYIntErrorLower = options->dDefault;
 }*/
 
+
+
+
 void ReadFlareSlope(BODY *body,
                     CONTROL *control,
                     FILES *files,
@@ -424,11 +438,24 @@ void ReadFlareSlope(BODY *body,
                     files->Infile[iFile].cIn,
                     lTmp,
                     control->Io.iVerbose);
-    body[iFile - 1].dFlareSlope = dTmp;
+    if (dTmp < 0) {
+      body[iFile - 1].dFlareSlope =
+            dTmp * dNegativeDouble(*options,
+                                   files->Infile[iFile].cIn,
+                                   control->Io.iVerbose);
+    } else {
+      body[iFile - 1].dFlareSlope = dTmp / (fdUnitsTime(control->Units[iFile].iTime) *
+      fdUnitsEnergy(control->Units[iFile].iTime,control->Units[iFile].iMass, control->Units[iFile].iLength));
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
-  } else if (iFile > 0)
+  }
+  else {
+    if (iFile > 0) {
     body[iFile - 1].dFlareSlope = options->dDefault;
+    }
+  }  
 }
+
 
 // TODO: Include the error in the FFD slopes to calculate the upper and higher
 // limit of XUV luminosity by flares
@@ -485,6 +512,8 @@ if (lTmp >= 0) {
 } else if (iFile > 0)
   body[iFile - 1].dFlareSlopeErrorLower = options->dDefault;
 }*/
+
+
 void ReadLXUVFlareConst(BODY *body,
                         CONTROL *control,
                         FILES *files,
@@ -505,16 +534,21 @@ void ReadLXUVFlareConst(BODY *body,
                     files->Infile[iFile].cIn,
                     lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0)
+    if (dTmp < 0) {
       body[iFile - 1].dLXUVFlareConst =
             dTmp * dNegativeDouble(*options,
                                    files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
-    else
-      body[iFile - 1].dLXUVFlareConst = dTmp;
+    } else {
+      body[iFile - 1].dLXUVFlareConst = dTmp * fdUnitsEnergyFlux(control->Units[iFile].iTime,control->Units[iFile].iMass, control->Units[iFile].iLength);
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
-  } else if (iFile > 0)
+  }
+  else {
+    if (iFile > 0) {
     body[iFile - 1].dLXUVFlareConst = options->dDefault;
+    }
+  }  
 }
 
 /* Initiatlize Input Options */
@@ -527,10 +561,12 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
           "Y-Intercept for Flare Frequency"); // Where the curve intercepts the
                                               // y axis (y=ax+b, in this case,
                                               // the parameter is "b")
-  sprintf(options[OPT_FLAREYINT].cDefault, "20.9 (Proxima)");
+  sprintf(options[OPT_FLAREYINT].cDefault, "20.9 (Proxima Centauri)");
   options[OPT_FLAREYINT].dDefault   = 20.9;
   options[OPT_FLAREYINT].iType      = 2;
   options[OPT_FLAREYINT].bMultiFile = 1;
+  options[OPT_FLAREYINT].dNeg      = DAYSEC;
+  sprintf(options[OPT_FLAREYINT].cNeg, "1/day");
   fnRead[OPT_FLAREYINT]             = &ReadFlareYInt;
 
   // TODO: Include the error in the FFD slopes to calculate the upper and higher
@@ -553,10 +589,12 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
 */
   sprintf(options[OPT_FLARESLOPE].cName, "dFlareSlope");
   sprintf(options[OPT_FLARESLOPE].cDescr, "Slope for Flare Frequency");
-  sprintf(options[OPT_FLARESLOPE].cDefault, "-0.68 (Proxima)");
-  options[OPT_FLARESLOPE].dDefault   = -0.68;
+  sprintf(options[OPT_FLARESLOPE].cDefault, "-0.68 (Proxima Centauri)");
+  options[OPT_FLARESLOPE].dDefault   = 0.68;
   options[OPT_FLARESLOPE].iType      = 2;
   options[OPT_FLARESLOPE].bMultiFile = 1;
+  options[OPT_FLARESLOPE].dNeg       = 1.e7 * DAYSEC;
+  sprintf(options[OPT_FLARESLOPE].cNeg, "1/day 1/erg");
   fnRead[OPT_FLARESLOPE]             = &ReadFlareSlope;
 
   // TODO: Include the error in the FFD slopes to calculate the upper and higher
@@ -687,7 +725,7 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
           "energy of flares\n"
           "using the convertion values are taken from Osten and Wolk (2015) "
           "(doi:10.1088/0004-637X/809/1/79).\n");
-
+/*
   sprintf(options[OPT_FLARESLOPEUNITS].cName, "sFlareSlopeUnits");
   sprintf(options[OPT_FLARESLOPEUNITS].cDescr,
           "Options to the units of the FFD in which the FFD slopes are define");
@@ -702,7 +740,7 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
           " SEC, for input slopes with FFD in number of flares per seconds, "
           "MIN for number of flares per minutes, \n"
           " HOUR for number of flares per hour, and DAY number of flares per "
-          "for days.\n");
+          "for days.\n");*/
 }
 
 void ReadOptionsFlare(BODY *body,
@@ -1713,7 +1751,7 @@ double fdDavenport(double dA1, double dA2, double dA3, double dStarAge,
                     // StarMass is divided by a factor of 1.99e30 (solar mass)
                     // because when the user define it in vpl.in they give it in
                     // solar masses, but the code converts it back to kg.
-  dA = (dA1 * log10(dStarAge)) + dA2 * (dStarMass) + dA3;
+  dA = -((dA1 * log10(dStarAge)) + dA2 * (dStarMass) + dA3); //The FFD slope receives a negative signal here to allow the negative funcionality in input file.
 
   return dA;
 }
@@ -1727,9 +1765,15 @@ double fdFFD(BODY *body,
              double dFlareYInt) {
   double dFlareFreq, dFFDAY;
   double dFFD = 0.0;
+
+  dFlareSlope = -dFlareSlope/(1e7*DAYSEC) ;
+  dFlareYInt = dFlareYInt/DAYSEC;
+
   dFlareFreq  = (dFlareSlope * dLogEnergy) +
                (dFlareYInt); // Here the Flare frequency are in log(flares/day).
-
+  dFFD = pow(10, dFlareFreq); // Here the Flare frequency are in flares/day.
+  dFFD = dFFD / DAYSEC; // Here the Flare frequency are in flares/second.
+/*  
   if (body[iBody].iFlareFFD == FLARE_FFD_DAVENPORT) {
     dFFD = pow(10, dFlareFreq); // Here the Flare frequency are in flares/day.
     dFFD = dFFD / DAYSEC; // Here the Flare frequency are in flares/second.
@@ -1753,7 +1797,7 @@ double fdFFD(BODY *body,
       dFFD = pow(10, dFlareFreq); // Here the Flare frequency are in flares/day.
       dFFD = dFFD / DAYSEC; // Here the Flare frequency are in flares/second.
     }
-  }
+  }*/
   return dFFD;
 }
 

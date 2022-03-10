@@ -11,10 +11,11 @@ dSatXUVFrac   1.e-3          # Saturation level of the XUV luminosity
 dRadGyra      0.5
 
 
-dFlareMinEnergy           1.0e26
-dFlareMaxEnergy           1.0e31
-sFlareFFD                DAVENPORT
+dFlareMinEnergy           -1.0e33
+dFlareMaxEnergy           -1.0e36
+sFlareFFD                LACY
 sFlareBandPass     KEPLER
-
+dFlareYInt                         -31.345294004399999
+dFlareSlope                     -0.97307482320000005
 
 saOutputOrder Time -LXUVFlare -LXUVStellar

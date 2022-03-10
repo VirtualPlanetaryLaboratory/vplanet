@@ -472,9 +472,15 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLAREYINT].dDefault   = 20.9;
   options[OPT_FLAREYINT].iType      = 2;
   options[OPT_FLAREYINT].bMultiFile = 1;
-  options[OPT_FLAREYINT].dNeg       = 1 / DAYSEC;
+  options[OPT_FLAREYINT].dNeg       = 1.0 / DAYSEC;
   sprintf(options[OPT_FLAREYINT].cNeg, "1/day");
   fnRead[OPT_FLAREYINT] = &ReadFlareYInt;
+  sprintf(options[OPT_FLAREYINT].cLongDescr,
+          " Y-Intercept for flare frequency distribution. Where the curve "
+          "intercepts the"
+          "y axis (y=ax+b, in this case, dFlareYInt = 'b'). This value is "
+          "valid only for the "
+          " energy range of the data fitted.\n");
 
   // TODO: Include the error in the FFD slopes to calculate the upper and higher
   // limit of XUV luminosity by flares
@@ -500,13 +506,14 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLARESLOPE].dDefault   = -0.68;
   options[OPT_FLARESLOPE].iType      = 2;
   options[OPT_FLARESLOPE].bMultiFile = 1;
-  options[OPT_FLARESLOPE].dNeg =
-        1 / (DAYSEC *
-             log10(1e-7)); // negative signal to compensate that the user cannot
-                           // input a minus if they choose the dNeg option
+  options[OPT_FLARESLOPE].dNeg       = 1.0 / (DAYSEC * log10(1.0e-7));
   sprintf(options[OPT_FLARESLOPE].cNeg, "1/day 1/log10(erg)");
   fnRead[OPT_FLARESLOPE] = &ReadFlareSlope;
-
+  sprintf(
+        options[OPT_FLARESLOPE].cLongDescr,
+        " Slope for flare frequency distribution. The user needs to"
+        " input the module of the value for this parameter. The negative signal"
+        " can be use only for input the value in flares/day 1/log10(erg).  \n");
 
   // TODO: Include the error in the FFD slopes to calculate the upper and higher
   // limit of XUV luminosity by flares
@@ -1662,14 +1669,13 @@ double fdDavenport(double dA1, double dA2, double dA3, double dStarAge,
                     // StarMass is divided by a factor of 1.99e30 (solar mass)
                     // because when the user define it in vpl.in they give it in
                     // solar masses, but the code converts it back to kg.
-  dA = ((dA1 * log10(dStarAge)) + dA2 * (dStarMass) +
-        dA3); // The FFD slope receives a negative signal here to allow the
-              // negative funcionality in input file.
+  dA = ((dA1 * log10(dStarAge)) + dA2 * (dStarMass) + dA3);
+
   return dA;
 }
-// fdFFD calculates the convertion between the units that are given by the user
-// (through dFlareYInt AND dFlareSlope) and the units that vplanet understand,
-// i.e., SI units.
+// fdFFD calculates FFD of the flares. If LACY mode is choosen, them fdFFD has
+// to convert from SI to the units that the equation 3 from Davenport et al.
+// 2019 understand (i.e., flares/day and flares/(day*log10(erg))).
 double fdFFD(BODY *body,
              int iBody,
              double dLogEnergy,
@@ -1678,11 +1684,12 @@ double fdFFD(BODY *body,
   double dFlareFreq, dFFDAY;
   double dFFD = 0.0;
 
-  /*if (body[iBody].iFlareFFD == FLARE_FFD_LACY) {
-    dFlareSlope = dFlareSlope*DAYSEC*log10(1e7);
-    dFlareYInt = dFlareYInt*DAYSEC;
-    //dLogEnergy = dLogEnergy-7;
-  }*/
+  if (body[iBody].iFlareFFD == FLARE_FFD_LACY) {
+    dFlareSlope = -dFlareSlope * DAYSEC *
+                  log10(1.0e7); // Converting the slopes from SI units to day
+                                // and "log10(erg)" units.
+    dFlareYInt = dFlareYInt * DAYSEC;
+  }
 
   dFlareFreq = (dFlareSlope * dLogEnergy) +
                (dFlareYInt); // Here the Flare frequency are in log(flares/day).

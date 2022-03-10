@@ -523,13 +523,20 @@ void WriteLXUVTot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   /* Multiple modules can contribute to this output */
   int iModule;
 
-  *dTmp = 0;
-
-  if (body[iBody].bFlare) {
-    *dTmp += fdLXUVFlare(body, control->Evolve.dTimeStep, iBody);
+  if (body[iBody].bFlare && body[iBody].bStellar) {
+    *dTmp = body[iBody].dLXUVFlare + body[iBody].dLXUV;
   }
-  if (body[iBody].bStellar) {
-    *dTmp += body[iBody].dLXUV;
+
+  else if (body[iBody].bStellar) {
+    *dTmp = body[iBody].dLXUV;
+  }
+
+  else if (body[iBody].bFlare) {
+    *dTmp = body[iBody].dLXUVFlare;
+  }
+
+  else if (!body[iBody].bFlare && !body[iBody].bStellar) {
+    *dTmp = -1;
   }
 
   if (output->bDoNeg[iBody]) {
@@ -538,10 +545,6 @@ void WriteLXUVTot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergyFlux(units, cUnit);
-  }
-
-  if (!body[iBody].bFlare && !body[iBody].bStellar) {
-    *dTmp = -1;
   }
 }
 
@@ -1487,9 +1490,10 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_LXUVTOT].bNeg       = 1;
   output[OUT_LXUVTOT].dNeg       = 1. / LSUN;
   output[OUT_LXUVTOT].iNum       = 1;
-  output[OUT_LXUVTOT].iModuleBit = STELLAR + ATMESC;
+  output[OUT_LXUVTOT].iModuleBit = STELLAR + ATMESC + FLARE;
   fnWrite[OUT_LXUVTOT]           = &WriteLXUVTot;
   // XXX Is this also from all luminous, interior bodies?
+
 
   /*
    * M

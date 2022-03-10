@@ -1058,6 +1058,11 @@ void fsUnitsRate(int iType, char cUnit[]) {
   strcat(cUnit, cTmp);
 }
 
+/* double fdUnitsRate(int iTime) {
+  return 1/(fdUnitsTime(iTime));
+}*/
+
+
 void fsUnitsAngRate(UNITS *units, char cUnit[]) {
   char cTmp[OPTLEN];
 

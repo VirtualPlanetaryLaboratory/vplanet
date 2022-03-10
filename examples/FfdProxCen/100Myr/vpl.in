@@ -1,0 +1,18 @@
+#
+sSystemName           FfdDaven100
+iVerbose                      5
+bOverwrite                1
+saBodyFiles              100Myr.in
+sUnitMass                 solar
+sUnitLength               AU
+sUnitTime                 YEARS
+sUnitAngle                d
+bDoLog                       1
+iDigits                          6
+dMinValue                 1e-10
+bDoForward             1
+bVarDt                       1
+dEta                            0.01
+dStopTime                1.1e9
+dOutputTime               1e5
+

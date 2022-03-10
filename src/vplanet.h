@@ -825,19 +825,53 @@ struct BODY {
 
   // FLARE
   int bFlare;
-  /*
-  double dFlareConst;
-  double dFlareExp;
-  */
-  double dFlareYInt;
-  double dFlareSlope;
-  double dFlareC;
-  double dFlareK;
-  double dFlareMinEnergy;
-  double dFlareMaxEnergy;
-  double dFlareVisWidth;
-  double dFlareXUVWidth;
-  double dLXUVFlare;
+  double dFlareYInt; /**< Flare function Y intercept /FFD linear coefficient*/
+  // double dFlareYIntErrorUpper; /**< Upper error of the Y intercept /FFD
+  // linear coefficient*/
+  // double dFlareYIntErrorLower; /**< Lower error of the Y intercept /FFD
+  // linear coefficient*/
+  double dFlareSlope; /**< Flare function slope /FFD angular coefficient*/
+  // double dFlareSlopeErrorUpper; /**< Upper error of slope /FFD angular
+  //                                  coefficient*/
+  // double dFlareSlopeErrorLower; /**< Lower error of slope /FFD angular
+  //                                  coefficient*/
+  double dFlareMinEnergy; /**< Flare minimum energy value to calculate the FFD*/
+  double dFlareMaxEnergy; /**< Flare maximum energy value to calculate the FFD*/
+  double dFlareFreq1;     /**< First value of flare frequency range*/
+  double dFlareFreq2;     /**< Second value of flare frequency range*/
+  double dFlareFreq3;     /**< Third value of flare frequency range*/
+  double dFlareFreq4;     /**< Fourth value of flare frequency range*/
+  double dFlareFreqMin;   /**< Flare frequency of the flares with the lowest
+                             energy*/
+  double dFlareFreqMid;   /**< Flare frequency of the flares with the central
+                             energy value in the energy range*/
+  double dFlareFreqMax;   /**< Flare frequency of the flares with the highest
+                             energy*/
+  double dFlareEnergy1;   /**< First value of flare energy range*/
+  double dFlareEnergy2;   /**< Second value of flare energy range*/
+  double dFlareEnergy3;   /**< Third value of flare energy range*/
+  double dFlareEnergy4;   /**< Fourth value of flare energy range*/
+  double dFlareEnergyMin; /**< Minimum value of flare energy in the energy
+                             range*/
+  double dFlareEnergyMid; /**< Central value of flare energy in the energy
+                             range*/
+  double dFlareEnergyMax; /**< Maximum value of flare energy in the energy
+                             range*/
+  double dLXUVFlare;      /**< XUV luminosity by flare*/
+  // double dLXUVFlareUpper; /**< Upper value of XUV luminosity by flare when
+  // the
+  //                            user include the slope and Y-intercept errors */
+  // double dLXUVFlareLower; /**< Lower value of XUV luminosity by flare when
+  // the
+  //                            user include the slope and Y-intercept errors */
+  double dLXUVTot;        /**< XUV luminosity total, flare + stellar*/
+  double dLXUVFlareConst; /**< XUV luminosity given by the user*/
+  int iFlareFFD;          /**< Flare mode*/
+  int iFlareBandPass; /**< Option to choose in which band pass the input energy
+                         are*/
+  int iFlareSlopeUnits; /**< Mode to choose in which units the FFD slopes are*/
+  double dEnergyBin;    /**< Number of energies consider between the minimum and
+                           maximum energies to calculate the luminosity by flares*/
 
   // GALHABIT
   int bGalHabit;        /**< Use galhabit module */

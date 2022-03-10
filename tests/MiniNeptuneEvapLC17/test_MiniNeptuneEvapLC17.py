@@ -86,7 +86,7 @@ from benchmark import Benchmark, benchmark
         "log.initial.planet.PresSurf": {"value": 6.585533, "unit": u.GPa},
         "log.initial.planet.DEnvMassDt": {"value": -8.619175e08, "unit": u.kg / u.sec},
         "log.initial.planet.FXUV": {"value": 54.702677, "unit": u.W / u.m ** 2},
-        "log.initial.planet.AtmXAbsEffH2O": {"value": 0.150000},
+        "log.initial.planet.AtmXAbsEffH2O": {"value": 0.300000},
         "log.initial.planet.RocheRadius": {"value": 29.562809, "unit": u.Rearth},
         "log.initial.planet.BondiRadius": {"value": 7.899468e08, "unit": u.m},
         "log.initial.planet.HEscapeRegime": {"value": 3.000000},
@@ -314,7 +314,7 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m ** 2,
             "rtol": 1e-4,
         },
-        "log.final.planet.AtmXAbsEffH2O": {"value": 0.150000, "rtol": 1e-4},
+        "log.final.planet.AtmXAbsEffH2O": {"value": 0.300000, "rtol": 1e-4},
         "log.final.planet.RocheRadius": {
             "value": 29.376060,
             "unit": u.Rearth,

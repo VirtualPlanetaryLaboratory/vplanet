@@ -4713,4 +4713,5 @@ void InitializeOptions(OPTIONS *options, fnReadOption *fnRead) {
   InitializeOptionsGalHabit(options, fnRead);
   InitializeOptionsSpiNBody(options, fnRead);
   InitializeOptionsMagmOc(options, fnRead);
+  InitializeOptionsFlare(options, fnRead);
 }

@@ -41,7 +41,7 @@ To get started, ensure you have clang/gcc installed and follow the [Installation
 
 ### Modules
 
-`VPLanet` currently consists of 12 functioning "modules," each containing a set of equations
+`VPLanet` currently consists of 13 functioning "modules," each containing a set of equations
 that simulates a specifc physical process:
 
 **AtmEsc**: Roche lobe overflow and thermal escape (energy-limited and radiation-recombination-limited) of an atmosphere, including water photolyzation, hydrogen

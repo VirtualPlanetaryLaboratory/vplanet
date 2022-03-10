@@ -1,0 +1,14 @@
+sName		sstar_02		# Body's name
+saModules  stellar
+
+# Physical Parameters
+dMass		    0.2        # Mass, negative -> Earth masses
+dAge                1e6         # Assume star is 1 Myr old when disk disperses
+dRadGyra	    0.5        # Radius of gyration (moment of inertia constant)
+
+# STELLAR parameters
+sStellarModel        baraffe     # Stellar evolutin model: `baraffe` or `none`
+dSatXUVFrac         1.e-3         # Saturation level of the XUV luminosity
+#dSatXUVTime               -1
+
+saOutputOrder	Time -Luminosity -Radius Temperature -RotPer -LXUVTot -LXUVStellar  Age

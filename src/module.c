@@ -782,10 +782,10 @@ void ReadModules(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 }
 
 void PrintModuleList(FILE *file, int iBitSum, int bPadString) {
-  int space = 0;
+  int space   = 0;
   int nspaces = 65;
   int iSpace;
-  
+
   if (iBitSum & ATMESC) {
     if (space) {
       fprintf(file, " ");
@@ -894,7 +894,7 @@ void PrintModuleList(FILE *file, int iBitSum, int bPadString) {
     if (space)
       nspaces -= (space - 1);
     for (iSpace = 0; iSpace < nspaces; iSpace++) {
-        printf(" ");
+      printf(" ");
     }
   }
 }
@@ -1490,10 +1490,9 @@ void VerifyModuleMultiAtmescEqtideThermint(BODY *body, UPDATE *update,
   }
 }
 
-void VerifyModuleMultiFlareStellar(BODY *body, UPDATE *update, CONTROL *control,
-                                   FILES *files, MODULE *module,
-                                   OPTIONS *options, int iBody,
-                                   int *iModuleProps, int *iModuleForce) {
+/*void VerifyModuleMultiFlareStellar(BODY *body, UPDATE *update, CONTROL
+*control, FILES *files, MODULE *module, OPTIONS *options, int iBody, int
+*iModuleProps, int *iModuleForce) {
 
   if (body[iBody].bFlare) {
     if (!body[iBody].bStellar) {
@@ -1506,7 +1505,7 @@ void VerifyModuleMultiFlareStellar(BODY *body, UPDATE *update, CONTROL *control,
             &PropsAuxFlareStellar;
     }
   }
-}
+}*/
 
 /*
  * Binary + Stellar coupling.  If using binary, only 1st 2 bodies (0, 1) can be
@@ -1789,8 +1788,9 @@ void VerifyModuleMulti(BODY *body, UPDATE *update, CONTROL *control,
                                         options, iBody, &iNumMultiProps,
                                         &iNumMultiForce);
 
-  VerifyModuleMultiFlareStellar(body, update, control, files, module, options,
-                                iBody, &iNumMultiProps, &iNumMultiForce);
+  // VerifyModuleMultiFlareStellar(body, update, control, files, module,
+  // options,
+  //                                iBody, &iNumMultiProps, &iNumMultiForce);
 
   VerifyModuleMultiBinaryEqtide(body, update, control, files, module, options,
                                 iBody, &iNumMultiProps, &iNumMultiForce);

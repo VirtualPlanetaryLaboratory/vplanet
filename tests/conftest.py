@@ -1,11 +1,13 @@
-import vplanet
-import numpy as np
-import os
 import glob
-import pytest
+import os
 import shutil
-import sys
 import subprocess as subp
+import sys
+
+import numpy as np
+import pytest
+
+import vplanet
 
 # Make the `benchmark` script discoverable by the tests
 sys.path.insert(1, os.path.abspath(os.path.dirname(__file__)))

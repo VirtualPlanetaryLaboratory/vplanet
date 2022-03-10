@@ -1,0 +1,16 @@
+#
+sName	                            daven10Myr
+saModules	                    flare
+
+#stellar module
+dMass                                0.12                     #stellar mass
+dAge                                  10.0e6                 #stellar age
+
+#flare module
+dFlareMinEnergy            -1.0e33              # Min flare energy
+dFlareMaxEnergy           -1.0e37              # Max flare energy
+sFlareFFD                           DAVENPORT   # flare frenquency distribution evolution model
+dEnergyBin                       4                          # Number of bins between min and max energy
+
+#ouput parameters
+saOutputOrder Time -FlareFreq1 -FlareFreq2 -FlareFreq3 -FlareFreq4 -FlareEnergy1 -FlareEnergy2 -FlareEnergy3 -FlareEnergy4

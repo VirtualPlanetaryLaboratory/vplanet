@@ -12,44 +12,44 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/FfdProxCen
-   examples/VenusWaterLoss
-   examples/SSDistOrbDistRot
-   examples/IoHeat
-   examples/DampedCBP
-   examples/StellarEvol
-   examples/CassiniMulti
    examples/ChaoticResonances
-   examples/AtmEscFlareProxCen
-   examples/MDwarfLuminosity
-   examples/HLossTides
-   examples/AtmEscKepler-36
-   examples/RadHeat
-   examples/ApseLock
-   examples/BinaryTides
-   examples/MiniNeptuneEvap
-   examples/MagmOc_Trappist1g
+   examples/ParameterSweep
+   examples/EarthInterior
    examples/GalaxyEffects
-   examples/TideLock
-   examples/IceBelts
+   examples/AtmEscFlareProxCen
+   examples/ApseLock
+   examples/AtmEscRegimes
+   examples/MiniNeptuneEvap
+   examples/AbioticO2
+   examples/FfdProxCen
+   examples/SS_NBody
    examples/EarthClimate
+   examples/SSDistOrbDistRot
+   examples/STEEP
+   examples/RadHeat
+   examples/HLossTides
+   examples/IceBelts
+   examples/HabitableZone
+   examples/DampedCBP
+   examples/NBodyAtmEsc
+   examples/MagmOc_GJ1132b
+   examples/IoHeat
    examples/TidalEarth
+   examples/TideLock
+   examples/CassiniStates
+   examples/CassiniMulti
+   examples/MagneticBraking
+   examples/MagmOc_Trappist1g
+   examples/BinaryTides
+   examples/VenusWaterLoss
+   examples/StellarEvol
    examples/VenusApproxInterior
    examples/WaterLossTides
-   examples/STEEP
-   examples/HabEvapCore
-   examples/CircumbinaryOrbit
-   examples/MagmOc_GJ1132b
-   examples/MagneticBraking
-   examples/AtmEscRegimes
-   examples/CassiniStates
    examples/MagmOc_Earth
-   examples/SS_NBody
-   examples/ParameterSweep
-   examples/AbioticO2
-   examples/HabitableZone
-   examples/NBodyAtmEsc
-   examples/EarthInterior
+   examples/CircumbinaryOrbit
+   examples/HabEvapCore
+   examples/MDwarfLuminosity
+   examples/AtmEscKepler-36
 
 
 Broken

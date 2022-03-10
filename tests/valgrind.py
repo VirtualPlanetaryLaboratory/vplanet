@@ -1,6 +1,5 @@
-import subprocess
-import numpy as np
 import os
+import subprocess
 import sys
 
 subdir = sorted([f.name for f in os.scandir('.') if f.is_dir()])
@@ -18,7 +17,7 @@ with open('make_log','w') as m:
 
 os.chdir('tests/')
 
-print('done.')
+print("done.")
 
 tot_fail = 0
 tot_test = 0

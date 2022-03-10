@@ -4,13 +4,15 @@ using a coupled EQTIDE and STELLAR VPLANET run.
 
 David P. Fleming, University of Washington, 2018
 """
-import vplanet
-import vplot
-import numpy as np
-import matplotlib as mpl
-import matplotlib.pyplot as plt
 import pathlib
 import sys
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import vplot
+
+import vplanet
 
 # Path hacks
 path = pathlib.Path(__file__).parents[0].absolute()

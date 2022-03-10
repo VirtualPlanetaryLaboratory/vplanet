@@ -1806,7 +1806,7 @@ void VerifyPotTemp(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iPotTemp][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iPotTemp][0] = 1;
   update[iBody].iaBody[update[iBody].iPotTemp][0]     = malloc(
-        update[iBody].iNumBodies[update[iBody].iPotTemp][0] * sizeof(int));
+            update[iBody].iNumBodies[update[iBody].iPotTemp][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iPotTemp][0][0] = iBody;
 
   update[iBody].pdDPotTemp =
@@ -1818,7 +1818,7 @@ void VerifySurfTemp(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iSurfTemp][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iSurfTemp][0] = 1;
   update[iBody].iaBody[update[iBody].iSurfTemp][0]     = malloc(
-        update[iBody].iNumBodies[update[iBody].iSurfTemp][0] * sizeof(int));
+            update[iBody].iNumBodies[update[iBody].iSurfTemp][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iSurfTemp][0][0] = iBody;
 
   update[iBody].pdDSurfTemp =
@@ -1830,7 +1830,7 @@ void VerifySolidRadius(BODY *body, OPTIONS *options, UPDATE *update,
   update[iBody].iaType[update[iBody].iSolidRadius][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iSolidRadius][0] = 1;
   update[iBody].iaBody[update[iBody].iSolidRadius][0]     = malloc(
-        update[iBody].iNumBodies[update[iBody].iSolidRadius][0] * sizeof(int));
+            update[iBody].iNumBodies[update[iBody].iSolidRadius][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iSolidRadius][0][0] = iBody;
 
   update[iBody].pdDSolidRadius =
@@ -1855,7 +1855,7 @@ void VerifyWaterMassSol(BODY *body, OPTIONS *options, UPDATE *update,
   update[iBody].iaType[update[iBody].iWaterMassSol][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iWaterMassSol][0] = 1;
   update[iBody].iaBody[update[iBody].iWaterMassSol][0]     = malloc(
-        update[iBody].iNumBodies[update[iBody].iWaterMassSol][0] * sizeof(int));
+            update[iBody].iNumBodies[update[iBody].iWaterMassSol][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iWaterMassSol][0][0] = iBody;
 
   update[iBody].pdDWaterMassSol =
@@ -1867,7 +1867,7 @@ void VerifyCO2MassMOAtm(BODY *body, OPTIONS *options, UPDATE *update,
   update[iBody].iaType[update[iBody].iCO2MassMOAtm][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iCO2MassMOAtm][0] = 1;
   update[iBody].iaBody[update[iBody].iCO2MassMOAtm][0]     = malloc(
-        update[iBody].iNumBodies[update[iBody].iCO2MassMOAtm][0] * sizeof(int));
+            update[iBody].iNumBodies[update[iBody].iCO2MassMOAtm][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iCO2MassMOAtm][0][0] = iBody;
 
   update[iBody].pdDCO2MassMOAtm =
@@ -1879,7 +1879,7 @@ void VerifyCO2MassSol(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iCO2MassSol][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iCO2MassSol][0] = 1;
   update[iBody].iaBody[update[iBody].iCO2MassSol][0]     = malloc(
-        update[iBody].iNumBodies[update[iBody].iCO2MassSol][0] * sizeof(int));
+            update[iBody].iNumBodies[update[iBody].iCO2MassSol][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iCO2MassSol][0][0] = iBody;
 
   update[iBody].pdDCO2MassSol =

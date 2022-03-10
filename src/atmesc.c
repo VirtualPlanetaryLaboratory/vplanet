@@ -689,8 +689,8 @@ Minimum value for KTide
 @param system A pointer to the SYSTEM instance
 @param iFile The current file number
 */
-void ReadMinKTide(BODY *body, CONTROL *control, FILES *files,
-                     OPTIONS *options, SYSTEM *system, int iFile) {
+void ReadMinKTide(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                  SYSTEM *system, int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp = -1;
   double dTmp;
@@ -938,7 +938,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
           "Water X-ray/UV absorption efficiency (epsilon)");
   sprintf(options[OPT_ATMXABSEFFH2O].cDefault, "0.30");
   sprintf(options[OPT_ATMXABSEFFH2O].cDimension, "nd");
-  options[OPT_ATMXABSEFFH2O].dDefault   = 0.15;
+  options[OPT_ATMXABSEFFH2O].dDefault   = 0.30;
   options[OPT_ATMXABSEFFH2O].iType      = 2;
   options[OPT_ATMXABSEFFH2O].bMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2O]             = &ReadAtmXAbsEffH2O;
@@ -1192,16 +1192,14 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_FXUV]             = &ReadFXUV;
 
   sprintf(options[OPT_MINKTIDE].cName, "dMinKTide");
-  sprintf(options[OPT_MINKTIDE].cDescr, "Minimum value for stellar gravitaitonal enhancement of mass loss");
+  sprintf(options[OPT_MINKTIDE].cDescr,
+          "Minimum value for stellar gravitaitonal enhancement of mass loss");
   sprintf(options[OPT_MINKTIDE].cDimension, "nd");
-  sprintf(options[OPT_MINKTIDE].cDefault,"0.1");
+  sprintf(options[OPT_MINKTIDE].cDefault, "0.1");
   options[OPT_MINKTIDE].iType      = 2;
   options[OPT_MINKTIDE].dDefault   = 0.1;
-   options[OPT_MINKTIDE].bMultiFile = 1;
+  options[OPT_MINKTIDE].bMultiFile = 1;
   fnRead[OPT_MINKTIDE]             = &ReadMinKTide;
-  sprintf(options[OPT_THERMTEMP].cLongDescr,
-          ""
-          );
 }
 
 /**
@@ -1268,7 +1266,7 @@ void VerifyOxygenMass(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iOxygenMass][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iOxygenMass][0] = 1;
   update[iBody].iaBody[update[iBody].iOxygenMass][0]     = malloc(
-        update[iBody].iNumBodies[update[iBody].iOxygenMass][0] * sizeof(int));
+            update[iBody].iNumBodies[update[iBody].iOxygenMass][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iOxygenMass][0][0] = iBody;
 
   update[iBody].pdDOxygenMassDtAtmesc =
@@ -1313,7 +1311,7 @@ void VerifyEnvelopeMass(BODY *body, OPTIONS *options, UPDATE *update,
   update[iBody].iaType[update[iBody].iEnvelopeMass][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iEnvelopeMass][0] = 1;
   update[iBody].iaBody[update[iBody].iEnvelopeMass][0]     = malloc(
-        update[iBody].iNumBodies[update[iBody].iEnvelopeMass][0] * sizeof(int));
+            update[iBody].iNumBodies[update[iBody].iEnvelopeMass][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iEnvelopeMass][0][0] = iBody;
 
   update[iBody].pdDEnvelopeMassDtAtmesc =
@@ -1399,7 +1397,7 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,
   update[iBody].iaType[update[iBody].iRadius][0]     = 0;
   update[iBody].iNumBodies[update[iBody].iRadius][0] = 1;
   update[iBody].iaBody[update[iBody].iRadius][0]     = malloc(
-        update[iBody].iNumBodies[update[iBody].iRadius][0] * sizeof(int));
+            update[iBody].iNumBodies[update[iBody].iRadius][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iRadius][0][0] = iBody;
 
   update[iBody].pdRadiusAtmesc =
@@ -1408,15 +1406,15 @@ void VerifyRadiusAtmEsc(BODY *body, CONTROL *control, OPTIONS *options,
                            [0]; // NOTE: This points to the VALUE of the radius
 }
 
-void EnvelopeLost(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,fnUpdateVariable ***fnUpdate,
-    int iBody) {
+void EnvelopeLost(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
+                  fnUpdateVariable ***fnUpdate, int iBody) {
   body[iBody].iHEscapeRegime                      = ATMESC_NONE;
   body[iBody].dEnvelopeMass                       = 0.;
   body[iBody].dEnvMassDt                          = 0.0;
   fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
   fnUpdate[iBody][update[iBody].iMass][0]         = &fndUpdateFunctionTiny;
 
-  //printf("Envelope Lost!");
+  // printf("Envelope Lost!");
 
   // Let user know what's happening
   if (io->iVerbose >= VERBPROG && !body[iBody].bEnvelopeLostMessage) {
@@ -1438,12 +1436,13 @@ void EnvelopeLost(BODY *body,EVOLVE *evolve,IO *io,UPDATE *update,fnUpdateVariab
   }
 }
 
-double fdAtmEscXi(BODY *body,int iBody) {
-  double dXi = body[iBody].dRocheRadius/(body[iBody].dRadius * body[iBody].dXFrac);
+double fdAtmEscXi(BODY *body, int iBody) {
+  double dXi =
+        body[iBody].dRocheRadius / (body[iBody].dRadius * body[iBody].dXFrac);
   return dXi;
 }
 
-double fdKTide(BODY *body,IO *io,int iBody) {
+double fdKTide(BODY *body, IO *io, int iBody) {
   double dKTide;
 
   // For stars and circumbinary planets, assume no Ktide enhancement
@@ -1451,7 +1450,8 @@ double fdKTide(BODY *body,IO *io,int iBody) {
     dKTide = 1.0;
   } else {
     if (body[iBody].dAtmEscXi > 1) {
-      dKTide = (1 - 3 / (2 * body[iBody].dAtmEscXi) + 1 / (2 * pow(body[iBody].dAtmEscXi, 3)));
+      dKTide = (1 - 3 / (2 * body[iBody].dAtmEscXi) +
+                1 / (2 * pow(body[iBody].dAtmEscXi, 3)));
       /*
       fprintf(stderr,"%.5e: ",evolve->dTime/YEARSEC);
       fprintf(stderr,"%.5e ",xi);
@@ -1474,7 +1474,7 @@ double fdKTide(BODY *body,IO *io,int iBody) {
       // Fix dKTide to prevent infs when in Roche Lobe overflow
       dKTide = 1.0;
     }
-    //body[iBody].dKTide = 1.0;
+    // body[iBody].dKTide = 1.0;
   }
 
   return dKTide;
@@ -1493,10 +1493,10 @@ If necessary, change how the code handle hydrogen envelope escape
 @param iBody The current BODY number
 @param iModule The current MODULE number
 */
-void ForceBehaviorEnvelopeEscape(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
-                           SYSTEM *system, UPDATE *update,
-                           fnUpdateVariable ***fnUpdate, int iBody,
-                           int iModule) {
+void ForceBehaviorEnvelopeEscape(BODY *body, MODULE *module, EVOLVE *evolve,
+                                 IO *io, SYSTEM *system, UPDATE *update,
+                                 fnUpdateVariable ***fnUpdate, int iBody,
+                                 int iModule) {
 
   // If time > jeans time, transition to ballistic regime and halt the escape
   if ((body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass) &&
@@ -1517,15 +1517,15 @@ void ForceBehaviorEnvelopeEscape(BODY *body, MODULE *module, EVOLVE *evolve, IO 
   }
   */
 
-  // If envelope is below minimum value, but still present, set its mass to 0 
+  // If envelope is below minimum value, but still present, set its mass to 0
   // and prevent further evolution
   /*
   if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) &&
       (body[iBody].dEnvelopeMass > 0.)) {
   */
- if (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) {
+  if (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) {
     // Let's remove its envelope and prevent further evolution.
-    EnvelopeLost(body,evolve,io,update,fnUpdate,iBody);
+    EnvelopeLost(body, evolve, io, update, fnUpdate, iBody);
   }
 
   // if (body[iBody].dEnvelopeMass == 0) {
@@ -1649,10 +1649,10 @@ If necessary, change how the code handle hwater loss
 @param iBody The current BODY number
 @param iModule The current MODULE number
 */
-void ForceBehaviorWaterEscape(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
-                           SYSTEM *system, UPDATE *update,
-                           fnUpdateVariable ***fnUpdate, int iBody,
-                           int iModule) {
+void ForceBehaviorWaterEscape(BODY *body, MODULE *module, EVOLVE *evolve,
+                              IO *io, SYSTEM *system, UPDATE *update,
+                              fnUpdateVariable ***fnUpdate, int iBody,
+                              int iModule) {
 
   //
   if ((body[iBody].dSurfaceWaterMass <= body[iBody].dMinSurfaceWaterMass) &&
@@ -1660,7 +1660,6 @@ void ForceBehaviorWaterEscape(BODY *body, MODULE *module, EVOLVE *evolve, IO *io
     // Let's desiccate this planet.
     body[iBody].dSurfaceWaterMass = 0.;
   }
-
 }
 
 /**
@@ -1683,9 +1682,11 @@ void fnForceBehaviorAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
                            int iModule) {
 
   if (body[iBody].dEnvelopeMass > 0) {
-    ForceBehaviorEnvelopeEscape(body,module,evolve,io,system,update,fnUpdate,iBody,iModule);
+    ForceBehaviorEnvelopeEscape(body, module, evolve, io, system, update,
+                                fnUpdate, iBody, iModule);
   } else if (body[iBody].dSurfaceWaterMass > 0) {
-    ForceBehaviorWaterEscape(body,module,evolve,io,system,update,fnUpdate,iBody,iModule);
+    ForceBehaviorWaterEscape(body, module, evolve, io, system, update, fnUpdate,
+                             iBody, iModule);
   }
 }
 
@@ -1699,20 +1700,20 @@ Initializes several helper variables and properties used in the integration.
 @param iBody The current BODY number
 */
 
-// XXX A lot of this function should be moved to ForceBehavior! PropsAux is only for computing
-// parameters that make the derivatives easier to interpret
+// XXX A lot of this function should be moved to ForceBehavior! PropsAux is only
+// for computing parameters that make the derivatives easier to interpret
 void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                       int iBody) {
 
-/*
-#ifdef DEBUG
-  if (body[iBody].dMass < 0) {
-    fprintf(stderr,"ERROR: %s's mass is %.5e at %.5e years.\n",body[iBody].cName,
-        body[iBody].dMass,evolve->dTime/YEARSEC);
-    exit(EXIT_INT);
-  }
-#endif
-*/
+  /*
+  #ifdef DEBUG
+    if (body[iBody].dMass < 0) {
+      fprintf(stderr,"ERROR: %s's mass is %.5e at %.5e
+  years.\n",body[iBody].cName, body[iBody].dMass,evolve->dTime/YEARSEC);
+      exit(EXIT_INT);
+    }
+  #endif
+  */
 
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
     if (body[iBody].bAutoThermTemp) {
@@ -1739,8 +1740,8 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                body[iBody].dSemi) /
               (body[iBody].dRadius * body[iBody].dXFrac);
   */
-  body[iBody].dAtmEscXi = fdAtmEscXi(body,iBody);
-  body[iBody].dKTide = fdKTide(body,io,iBody);
+  body[iBody].dAtmEscXi = fdAtmEscXi(body, iBody);
+  body[iBody].dKTide    = fdKTide(body, io, iBody);
 
   // The XUV flux
   if (body[iBody].bCalcFXUV) {
@@ -2584,9 +2585,9 @@ Logs Ktide, the gravitational enhancement of mass loss.
 @param dTmp Temporary variable used for unit conversions
 @param cUnit The unit for this variable
 */
-void WriteKTide(BODY *body, CONTROL *control, OUTPUT *output,
-                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+void WriteKTide(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+                UNITS *units, UPDATE *update, int iBody, double *dTmp,
+                char cUnit[]) {
   *dTmp = body[iBody].dKTide;
 
   strcpy(cUnit, "");

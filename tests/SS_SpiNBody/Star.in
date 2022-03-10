@@ -1,6 +1,6 @@
 # Planet a parameters
 sName                     Star               # Body's name
-saModules                 spinbody          # Modules to apply, exact spelling required 
+saModules                 spinbody          # Modules to apply, exact spelling required
 
 saOutputOrder Time DeltaT PositionXSpiNBody PositionYSpiNBody PositionZSpiNBody VelXSpiNBody VelYSpiNBody VelZSpiNBody TotAngMom TotOrbEnergy
 # Physical Properties

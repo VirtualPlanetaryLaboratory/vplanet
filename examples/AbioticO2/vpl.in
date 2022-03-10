@@ -2,7 +2,7 @@
 sSystemName               system
 iVerbose                  0
 bOverwrite                1
-saBodyFiles               star.in 
+saBodyFiles               star.in
 sUnitMass                 solar
 sUnitLength               AU
 sUnitTime                 YEARS
@@ -15,4 +15,3 @@ bVarDt                    1
 dEta                      0.1
 dStopTime                 5e9
 dOutputTime               1e9
-

@@ -4,13 +4,15 @@ dynamics of CoRoT-7b and c, using VPLANET's STELLAR, EQTIDE, and DISTORB modules
 
 David P. Fleming, University of Washington, 2018
 """
-import vplanet
-import vplot
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import numpy as np
 import pathlib
 import sys
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import vplot
+
+import vplanet
 
 # Path hacks
 path = pathlib.Path(__file__).parents[0].absolute()

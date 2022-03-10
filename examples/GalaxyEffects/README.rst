@@ -5,7 +5,7 @@ Overview
 --------
 
 Orbital evolution of objects in wide (>10,000 AU) orbits due to galactic migration,
-the galactic tide, and passing field stars. 
+the galactic tide, and passing field stars.
 
 ===================   ============
 **Date**              07/25/18
@@ -17,7 +17,7 @@ the galactic tide, and passing field stars.
 Wide orbits are subject to torques from the galactic tide, as well as impulses from
 passing stars. Complicating the evolution is the possibility of migration, in which
 stars can migrate multiple kpc from their birth location. This example shows that
-evolution for an M dwarf orbiting a Sun-like star. This result is similar to Fig. 1 in `Kaib et al. (2013) <https://ui.adsabs.harvard.edu/abs/2013Natur.493..381K/abstract>`_, but note that we cannot reproduce it exactly to the random nature of encounters. 
+evolution for an M dwarf orbiting a Sun-like star. This result is similar to Fig. 1 in `Kaib et al. (2013) <https://ui.adsabs.harvard.edu/abs/2013Natur.493..381K/abstract>`_, but note that we cannot reproduce it exactly to the random nature of encounters.
 
 To run this example
 -------------------

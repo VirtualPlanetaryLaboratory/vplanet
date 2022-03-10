@@ -1108,8 +1108,8 @@ void VerifyOptions(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 
   int iBody, iModule;
 
-  control->Evolve.dTime   = 0;
-  control->Evolve.nSteps  = 0;
+  control->Evolve.dTime  = 0;
+  control->Evolve.nSteps = 0;
 
   VerifyAge(body, control, options);
   VerifyNames(body, control, options);

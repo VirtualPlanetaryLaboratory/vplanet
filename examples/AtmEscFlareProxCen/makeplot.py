@@ -37,7 +37,7 @@ if sys.argv[1] != "pdf" and sys.argv[1] != "png":
     exit(1)
 
 # Overwritten old files
-directory = ["./flare", "./stellar"]
+directory = ["./davenport", "./lacy", "./stellar"]
 
 for i in directory:
     os.chdir(i)
@@ -47,25 +47,26 @@ for i in directory:
 
 
 # Running the simulations
-run = ["./flare/vpl.in", "./stellar/vpl.in"]
+run = ["./davenport/vpl.in", "./lacy/vpl.in", "./stellar/vpl.in"]
 
-flare = []
+davenport = []
+lacy = []
 stellar = []
 
-directory = [flare, stellar]
+directory = [davenport, lacy, stellar]
 
-for i in range(0, 2):
+for i in range(0, 3):
     directory[i] = vplanet.run(path / run[i], units=False)
 
 # Plot!
 fig, axes = plt.subplots(nrows=2, ncols=4, sharex="col", figsize=(12, 5))
 
-style = ["-", "--"]
-color = [vpl.colors.red, vpl.colors.dark_blue]
+style = ["-", "--", "-."]
+color = [vpl.colors.red, vpl.colors.orange, vpl.colors.dark_blue]
 
 a = 1
 
-for i in range(0, 2):
+for i in range(0, 3):
     axes[0, 0].plot(
         directory[i].b.Time,
         directory[i].b.SurfWaterMass,
@@ -98,14 +99,6 @@ for i in range(0, 2):
         linestyle=style[i],
         alpha=0.5,
     )
-    axes[1, 2].plot(
-        directory[i].b.Time,
-        directory[i].b.DEnvMassDt,
-        color=color[i],
-        linewidth=a,
-        linestyle=style[i],
-        alpha=0.5,
-    )
     axes[1, 3].plot(
         directory[i].b.Time,
         directory[i].b.FXUV,
@@ -114,27 +107,44 @@ for i in range(0, 2):
         linestyle=style[i],
         alpha=0.5,
     )
+    axes[0, 3].plot(
+        directory[i].star.Time,
+        directory[i].star.LXUVTot / directory[i].star.Luminosity,
+        color=color[i],
+        linewidth=a,
+        linestyle=style[i],
+        alpha=0.5,
+    )
 
-
-axes[0, 3].plot(
-    directory[0].star.Time,
-    directory[0].star.LXUVTot / directory[0].star.Luminosity,
+axes[1, 2].plot(
+    directory[0].b.Time,
+    directory[0].b.DEnvMassDt,
     color=color[0],
     linewidth=a,
     linestyle=style[0],
     alpha=0.5,
-    label=r"Flare + Stellar",
+    label="Flare(Davenport mode)+Stellar",
 )
-axes[0, 3].plot(
-    directory[1].star.Time,
-    directory[1].star.LXUVTot / directory[1].star.Luminosity,
+axes[1, 2].plot(
+    directory[1].b.Time,
+    directory[1].b.DEnvMassDt,
     color=color[1],
     linewidth=a,
     linestyle=style[1],
     alpha=0.5,
-    label=r"Stellar",
+    label="Flare(Lacy mode)+Stellar",
 )
-axes[0, 3].legend(loc="lower left", ncol=1, fontsize=9)
+axes[1, 2].plot(
+    directory[2].b.Time,
+    directory[2].b.DEnvMassDt,
+    color=color[2],
+    linewidth=a,
+    linestyle=style[2],
+    alpha=0.5,
+    label="Stellar",
+)
+
+axes[1, 2].legend(loc="lower left", ncol=1, fontsize=8)
 
 axes[1, 1].fill_between(
     directory[0].b.Time,

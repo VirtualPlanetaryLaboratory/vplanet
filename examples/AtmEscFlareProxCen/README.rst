@@ -16,7 +16,7 @@ Loss of a hydrogen envelope, surface water and build-up oxygen due to stellar+fl
 ===================   ============
 
 This example shows the evolution of the planetary parameters of Proxima Centauri b, comparing when the planet is
-reached by flares and when only the quiescent XUV luminosity is consider.
+reached by flares with a constant FFD, a FFD time-dependent and when only the quiescent XUV luminosity is consider.
 
 
 To run this example

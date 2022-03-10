@@ -506,7 +506,7 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLARESLOPE].dDefault   = -0.68;
   options[OPT_FLARESLOPE].iType      = 2;
   options[OPT_FLARESLOPE].bMultiFile = 1;
-  options[OPT_FLARESLOPE].dNeg       = 1.0 / (DAYSEC * log10(1.0e-7));
+  options[OPT_FLARESLOPE].dNeg       = 1.0 / (DAYSEC * log10(1.0e7));
   sprintf(options[OPT_FLARESLOPE].cNeg, "1/day 1/log10(erg)");
   fnRead[OPT_FLARESLOPE] = &ReadFlareSlope;
   sprintf(

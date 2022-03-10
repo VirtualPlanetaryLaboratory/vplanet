@@ -12,40 +12,44 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/EarthInterior
-   examples/MiniNeptuneEvap
-   examples/MagneticBraking
-   examples/CassiniStates
-   examples/TideLock
-   examples/ApseLock
-   examples/STEEP
-   examples/ChaoticResonances
-   examples/ParameterSweep
-   examples/MagmOc_Trappist1g
-   examples/CassiniMulti
-   examples/HabEvapCore
-   examples/StellarEvol
-   examples/VenusApproxInterior
+   examples/FfdProxCen
    examples/VenusWaterLoss
-   examples/SS_NBody
-   examples/CircumbinaryOrbit
-   examples/BinaryTides
-   examples/IoHeat
-   examples/EarthClimate
-   examples/IceBelts
-   examples/GalaxyEffects
-   examples/MagmOc_GJ1132b
-   examples/NBodyAtmEsc
-   examples/WaterLossTides
-   examples/AtmEscRegimes
-   examples/AtmEscKepler-36
-   examples/HLossTides
-   examples/DampedCBP
    examples/SSDistOrbDistRot
+   examples/IoHeat
+   examples/DampedCBP
+   examples/StellarEvol
+   examples/CassiniMulti
+   examples/ChaoticResonances
+   examples/AtmEscFlareProxCen
+   examples/MDwarfLuminosity
+   examples/HLossTides
+   examples/AtmEscKepler-36
    examples/RadHeat
-   examples/AbioticO2
+   examples/ApseLock
+   examples/BinaryTides
+   examples/MiniNeptuneEvap
+   examples/MagmOc_Trappist1g
+   examples/GalaxyEffects
+   examples/TideLock
+   examples/IceBelts
+   examples/EarthClimate
    examples/TidalEarth
+   examples/VenusApproxInterior
+   examples/WaterLossTides
+   examples/STEEP
+   examples/HabEvapCore
+   examples/CircumbinaryOrbit
+   examples/MagmOc_GJ1132b
+   examples/MagneticBraking
+   examples/AtmEscRegimes
+   examples/CassiniStates
    examples/MagmOc_Earth
+   examples/SS_NBody
+   examples/ParameterSweep
+   examples/AbioticO2
+   examples/HabitableZone
+   examples/NBodyAtmEsc
+   examples/EarthInterior
 
 
 Broken

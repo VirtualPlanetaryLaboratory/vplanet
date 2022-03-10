@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape. &mdash; VPLanet 2.2.10
+  <title>Proxima Centauri b Atmospheric Escape &mdash; VPLanet 2.2.10
  documentation</title>
   
 
@@ -44,8 +44,8 @@
     <link rel="top" title="VPLanet 2.2.10
  documentation" href="../index.html"/>
         <link rel="up" title="Examples" href="../examples.html"/>
-        <link rel="next" title="The Habitable Zone" href="HabitableZone.html"/>
-        <link rel="prev" title="Parameter Sweep Example" href="ParameterSweep.html"/> 
+        <link rel="next" title="Luminosity evolution for stars with mass between 0.2 and 0.6 Msun." href="MDwarfLuminosity.html"/>
+        <link rel="prev" title="Chaotic Eccentricity-Inclination Resonances" href="ChaoticResonances.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -109,7 +109,12 @@
 <li class="toctree-l2"><a class="reference internal" href="StellarEvol.html">(Pre-)Main Sequence Stellar Evolution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="CassiniMulti.html">Multiple Cassini States in One System</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ChaoticResonances.html">Chaotic Eccentricity-Inclination Resonances</a></li>
-<li class="toctree-l2"><a class="reference internal" href="AtmEscFlareProxCen.html">Proxima Centauri b Atmospheric Escape</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Proxima Centauri b Atmospheric Escape</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#to-run-this-example">To run this example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#expected-output">Expected output</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="MDwarfLuminosity.html">Luminosity evolution for stars with mass between 0.2 and 0.6 Msun.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="HLossTides.html">Hydrogen Envelope Loss on Tidally Evolving Planets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="AtmEscKepler-36.html">Kepler-36 Atmospheric Escape</a></li>
@@ -135,12 +140,7 @@
 <li class="toctree-l2"><a class="reference internal" href="MagmOc_Earth.html">Magma Ocean Evolution of Earth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SS_NBody.html">N-body Orbital Evolution of the Solar System</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ParameterSweep.html">Parameter Sweep Example</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape.</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#to-run-this-example">To run this example</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#expected-output">Expected output</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="AbioticO2.html">Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="HabitableZone.html">The Habitable Zone</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NBodyAtmEsc.html">Coupling Atmospheric Escape and N-Body Evolution: Application to PSR1257+12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="EarthInterior.html">Thermal and Magnetic Evolution of Earth’s Interior</a></li>
@@ -189,7 +189,7 @@
         <li><a href="../examples.html">Examples</a>&raquo;</li>
       
     
-      <li>Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape.</li>
+      <li>Proxima Centauri b Atmospheric Escape</li>
     
       <li class="wy-breadcrumbs-aside">
         
@@ -202,37 +202,35 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="accumulation-of-atmospheric-oxygen-due-to-water-photolysis-and-hydrogen-escape">
-<h1>Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape.<a class="headerlink" href="#accumulation-of-atmospheric-oxygen-due-to-water-photolysis-and-hydrogen-escape" title="Permalink to this headline">¶</a></h1>
+  <section id="proxima-centauri-b-atmospheric-escape">
+<h1>Proxima Centauri b Atmospheric Escape<a class="headerlink" href="#proxima-centauri-b-atmospheric-escape" title="Permalink to this headline">¶</a></h1>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
-<p>Track water loss and oxygen build-up due to hydrodynamic atmospheric escape.</p>
+<p>Loss of a hydrogen envelope, surface water and build-up oxygen due to stellar+flares XUV stripping.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 59%" />
-<col style="width: 41%" />
+<col style="width: 61%" />
+<col style="width: 39%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><strong>Date</strong></p></td>
-<td><p>07/25/18</p></td>
+<td><p>11/22/21</p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Author</strong></p></td>
-<td><p>Rodrigo Luger</p></td>
+<td><p>Laura Amaral</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Modules</strong></p></td>
 <td><p>AtmEsc
+FLARE
 STELLAR</p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Approx. runtime</strong></p></td>
-<td><p>10 minutes</p></td>
+<td><p>23 seconds</p></td>
 </tr>
 </tbody>
 </table>
-<p>Water-rich terrestrial planets orbiting low mass stars may experience sustained
-bombardment by XUV photons during the pre-main sequence phase of the host star.
-As the planets will likely be in a runaway greenhouse, water can reach the stratosphere
-where it is photolyzed. Hydrogen can then escape leaving behind the heavier oxygen.
-This script reproduces Figure 7 in <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2015AsBio..15..119L/abstract">Luger and Barnes (2015)</a>.</p>
+<p>This example shows the evolution of the planetary parameters of Proxima Centauri b, comparing when the planet is
+reached by flares with a constant FFD, a FFD time-dependent and when only the quiescent XUV luminosity is consider.</p>
 </section>
 <section id="to-run-this-example">
 <h2>To run this example<a class="headerlink" href="#to-run-this-example" title="Permalink to this headline">¶</a></h2>
@@ -249,15 +247,16 @@ This script reproduces Figure 7 in <a class="reference external" href="https://u
 </section>
 <section id="expected-output">
 <h2>Expected output<a class="headerlink" href="#expected-output" title="Permalink to this headline">¶</a></h2>
-<figure class="align-center">
-<a class="reference internal image-reference" href="examples/AbioticO2.png"><img alt="examples/AbioticO2.png" src="examples/AbioticO2.png" style="width: 600px;" /></a>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="examples/AtmEscFlareProxCen.png"><img alt="examples/AtmEscFlareProxCen.png" src="examples/AtmEscFlareProxCen.png" style="width: 3600px;" /></a>
+<figcaption>
+<p><span class="caption-text">Surface water content (top left),  envelope mass (top center left),
+planetary radius (top center right) quiescent+flares XUV luminosity
+and bolometric luminosity ratio (top right), oxygen content in the
+atmosphere (bottom left), habitable zone location (bottom center),
+envelope loss rate (bottom center right) and XUV flux (bottom right).</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
 </figure>
-<p>Water loss and oxygen accumulation for planets orbiting in the habitable
-zones of M dwarfs. The extended pre-main sequence phase of low mass
-stars leads to vigorous hydrodynamic escape from planets in their
-habitable zones, causing the loss of surface water (left) and the
-accumulation of atmospheric oxygen (right). See <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2015AsBio..15..119L/abstract">Luger and Barnes (2015)</a>
-for more details.</p>
 </section>
 </section>
 
@@ -268,10 +267,10 @@ for more details.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="HabitableZone.html" class="btn btn-neutral float-right" title="The Habitable Zone" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="MDwarfLuminosity.html" class="btn btn-neutral float-right" title="Luminosity evolution for stars with mass between 0.2 and 0.6 Msun." accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ParameterSweep.html" class="btn btn-neutral" title="Parameter Sweep Example" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ChaoticResonances.html" class="btn btn-neutral" title="Chaotic Eccentricity-Inclination Resonances" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

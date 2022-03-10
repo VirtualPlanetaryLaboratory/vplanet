@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape. &mdash; VPLanet 2.2.10
+  <title>The Habitable Zone &mdash; VPLanet 2.2.10
  documentation</title>
   
 
@@ -44,8 +44,8 @@
     <link rel="top" title="VPLanet 2.2.10
  documentation" href="../index.html"/>
         <link rel="up" title="Examples" href="../examples.html"/>
-        <link rel="next" title="The Habitable Zone" href="HabitableZone.html"/>
-        <link rel="prev" title="Parameter Sweep Example" href="ParameterSweep.html"/> 
+        <link rel="next" title="Coupling Atmospheric Escape and N-Body Evolution: Application to PSR1257+12" href="NBodyAtmEsc.html"/>
+        <link rel="prev" title="Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape." href="AbioticO2.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -135,13 +135,13 @@
 <li class="toctree-l2"><a class="reference internal" href="MagmOc_Earth.html">Magma Ocean Evolution of Earth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SS_NBody.html">N-body Orbital Evolution of the Solar System</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ParameterSweep.html">Parameter Sweep Example</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="AbioticO2.html">Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape.</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">The Habitable Zone</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#to-run-this-example">To run this example</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#expected-output">Expected output</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="HabitableZone.html">The Habitable Zone</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NBodyAtmEsc.html">Coupling Atmospheric Escape and N-Body Evolution: Application to PSR1257+12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="EarthInterior.html">Thermal and Magnetic Evolution of Earth’s Interior</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples.html#broken">Broken</a></li>
@@ -189,7 +189,7 @@
         <li><a href="../examples.html">Examples</a>&raquo;</li>
       
     
-      <li>Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape.</li>
+      <li>The Habitable Zone</li>
     
       <li class="wy-breadcrumbs-aside">
         
@@ -202,47 +202,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="accumulation-of-atmospheric-oxygen-due-to-water-photolysis-and-hydrogen-escape">
-<h1>Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape.<a class="headerlink" href="#accumulation-of-atmospheric-oxygen-due-to-water-photolysis-and-hydrogen-escape" title="Permalink to this headline">¶</a></h1>
+  <section id="the-habitable-zone">
+<h1>The Habitable Zone<a class="headerlink" href="#the-habitable-zone" title="Permalink to this headline">¶</a></h1>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
-<p>Track water loss and oxygen build-up due to hydrodynamic atmospheric escape.</p>
+<p>Habitable zone limits from <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2013ApJ...765..131K/abstract">Kopparapu et al. (2013)</a>
+for stellar ages of 4.5 Gyr using the <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2015A%26A...577A..42B/abstract">Baraffe et al. (2015)</a>
+model grid.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 59%" />
-<col style="width: 41%" />
+<col style="width: 40%" />
+<col style="width: 60%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><strong>Date</strong></p></td>
-<td><p>07/25/18</p></td>
+<td><p>02/07/2022</p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Author</strong></p></td>
-<td><p>Rodrigo Luger</p></td>
+<td><p>Rory Barnes</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>Modules</strong></p></td>
-<td><p>AtmEsc
-STELLAR</p></td>
+<td><p>STELLAR, VSPACE, MultiPlanet</p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Approx. runtime</strong></p></td>
-<td><p>10 minutes</p></td>
+<td><p>1 minutes</p></td>
 </tr>
 </tbody>
 </table>
-<p>Water-rich terrestrial planets orbiting low mass stars may experience sustained
-bombardment by XUV photons during the pre-main sequence phase of the host star.
-As the planets will likely be in a runaway greenhouse, water can reach the stratosphere
-where it is photolyzed. Hydrogen can then escape leaving behind the heavier oxygen.
-This script reproduces Figure 7 in <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2015AsBio..15..119L/abstract">Luger and Barnes (2015)</a>.</p>
 </section>
 <section id="to-run-this-example">
 <h2>To run this example<a class="headerlink" href="#to-run-this-example" title="Permalink to this headline">¶</a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>You might need to install <code class="code docutils literal notranslate"><span class="pre">tqdm</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install tqdm
-</pre></div>
-</div>
-</div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python makeplot.py &lt;pdf <span class="p">|</span> png&gt;
 </pre></div>
 </div>
@@ -250,14 +239,11 @@ This script reproduces Figure 7 in <a class="reference external" href="https://u
 <section id="expected-output">
 <h2>Expected output<a class="headerlink" href="#expected-output" title="Permalink to this headline">¶</a></h2>
 <figure class="align-center">
-<a class="reference internal image-reference" href="examples/AbioticO2.png"><img alt="examples/AbioticO2.png" src="examples/AbioticO2.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="examples/HabitableZone.png"><img alt="examples/HabitableZone.png" src="examples/HabitableZone.png" style="width: 600px;" /></a>
 </figure>
-<p>Water loss and oxygen accumulation for planets orbiting in the habitable
-zones of M dwarfs. The extended pre-main sequence phase of low mass
-stars leads to vigorous hydrodynamic escape from planets in their
-habitable zones, causing the loss of surface water (left) and the
-accumulation of atmospheric oxygen (right). See <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2015AsBio..15..119L/abstract">Luger and Barnes (2015)</a>
-for more details.</p>
+<p>Dark blue is the “conservative” habitable zone (runaway greenhouse to maximum greenhouse),
+orange and pale blue represent the optimistic extensions toward and away from the host
+star, respectively.</p>
 </section>
 </section>
 
@@ -268,10 +254,10 @@ for more details.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="HabitableZone.html" class="btn btn-neutral float-right" title="The Habitable Zone" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="NBodyAtmEsc.html" class="btn btn-neutral float-right" title="Coupling Atmospheric Escape and N-Body Evolution: Application to PSR1257+12" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ParameterSweep.html" class="btn btn-neutral" title="Parameter Sweep Example" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="AbioticO2.html" class="btn btn-neutral" title="Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape." accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

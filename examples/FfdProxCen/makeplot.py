@@ -41,42 +41,43 @@ if sys.argv[1] != "pdf" and sys.argv[1] != "png":
 path = pathlib.Path(__file__).parents[0].absolute()
 sys.path.insert(1, str(path.parents[0]))
 
-# mpl.style.use('classic')
 
 run = [
-    "./1Myr/vpl.in",
-    "./10Myr/vpl.in",
-    "./100Myr/vpl.in",
-    "./1000Myr/vpl.in",
+    "./davenport/vpl.in",
     "./lacy/vpl.in",
 ]
 
 # Run the simulations
-for i in range(0, 5):
+for i in range(0, 2):
     vplanet.run(path / run[i], units=False)
 
 # Loading the data
-M = np.loadtxt("./lacy/FfdLacy.lacy.forward")
-MD = np.loadtxt("./1Myr/FfdDaven1.daven1Myr.forward")
-ND = np.loadtxt("./10Myr/FfdDaven10.daven10Myr.forward")
-OD = np.loadtxt("./100Myr/FfdDaven100.daven100Myr.forward")
-PD = np.loadtxt("./1000Myr/FfdDaven1000.daven1000Myr.forward")
 
+data_daven = np.loadtxt("./davenport/davenport.star.forward")
+data_lacy = np.loadtxt("./lacy/lacy.star.forward")
 
-# Organizing the data
-Mdata = []
-MdataD = []
-NdataD = []
-OdataD = []
-PdataD = []
+age_daven = data_daven[:, 0]
 
+lacy = []
 
 for i in range(0, 9):
-    Mdata.append(M[0, i])
-    MdataD.append(MD[0, i])
-    NdataD.append(ND[0, i])
-    OdataD.append(OD[0, i])
-    PdataD.append(PD[0, i])
+    lacy.append(data_lacy[0, i])
+
+Mdata = []
+Ndata = []
+Odata = []
+Pdata = []
+
+for idx, val in enumerate(age_daven):
+    if val == (1e6):
+        Mdata = data_daven[idx, :]
+    if val == (1e7):
+        Ndata = data_daven[idx, :]
+    if val == (1e8):
+        Odata = data_daven[idx, :]
+    if val == (1e9):
+        Pdata = data_daven[idx, :]
+
 
 # Plot
 fig = plt.figure(figsize=(4, 3))
@@ -84,28 +85,28 @@ fig = plt.figure(figsize=(4, 3))
 a = 0.5
 
 fp = [1, 1, 1, 1]
+np.interp(lacy[5:9], lacy[1:5], fp)
+plt.plot(lacy[5:9], lacy[1:5], "-", color="Orange", linewidth=a)
+
 np.interp(Mdata[5:9], Mdata[1:5], fp)
-plt.plot(Mdata[5:9], Mdata[1:5], "-", color="Orange", linewidth=a)
+plt.plot(Mdata[5:9], Mdata[1:5], "-", color="cornflowerblue", linewidth=a)
 
-np.interp(MdataD[5:9], MdataD[1:5], fp)
-plt.plot(MdataD[5:9], MdataD[1:5], "-", color="cornflowerblue", linewidth=a)
+np.interp(Ndata[5:9], Ndata[1:5], fp)
+plt.plot(Ndata[5:9], Ndata[1:5], "-", color="darkviolet", linewidth=a)
 
-np.interp(NdataD[5:9], NdataD[1:5], fp)
-plt.plot(NdataD[5:9], NdataD[1:5], "-", color="darkviolet", linewidth=a)
+np.interp(Odata[5:9], Odata[1:5], fp)
+plt.plot(Odata[5:9], Odata[1:5], "-", color="darkred", linewidth=a)
 
-np.interp(OdataD[5:9], OdataD[1:5], fp)
-plt.plot(OdataD[5:9], OdataD[1:5], "-", color="darkred", linewidth=a)
-
-np.interp(PdataD[5:9], PdataD[1:5], fp)
-plt.plot(PdataD[5:9], PdataD[1:5], "-", color="red", linewidth=a)
+np.interp(Pdata[5:9], Pdata[1:5], fp)
+plt.plot(Pdata[5:9], Pdata[1:5], "-", color="red", linewidth=a)
 
 
 for i in range(1, 5):
+    plt.plot(lacy[i + 4], lacy[i], label="t")
     plt.plot(Mdata[i + 4], Mdata[i], label="t")
-    plt.plot(MdataD[i + 4], MdataD[i], label="t")
-    plt.plot(NdataD[i + 4], NdataD[i], label="t")
-    plt.plot(OdataD[i + 4], OdataD[i], label="t")
-    plt.plot(PdataD[i + 4], PdataD[i], label="t")
+    plt.plot(Ndata[i + 4], Ndata[i], label="t")
+    plt.plot(Odata[i + 4], Odata[i], label="t")
+    plt.plot(Pdata[i + 4], Pdata[i], label="t")
 
 
 # Limits and scale
@@ -129,15 +130,12 @@ plt.legend(handles=legend_elements, ncol=1, loc="lower left", fontsize=7)
 
 
 # Label
-plt.title("Flare Frequency Distribution")  # , fontsize=37)
-plt.xlabel("log Flare Energy (erg)")  # ,fontsize=40)
-plt.ylabel("Cumulative Flare Freq (#/day)")  # ,fontsize=40)
-# plt.xticks(fontsize=40)
-# plt.yticks(fontsize=40)
-
+plt.title("Flare Frequency Distribution")
+plt.xlabel("log Flare Energy (erg)")
+plt.ylabel("Cumulative Flare Freq (#/day)")
 
 # Saving figure
 if sys.argv[1] == "pdf":
-    fig.savefig("FfdReproduced.pdf", bbox_inches="tight", dpi=600)
+    fig.savefig("FfdProxCen.pdf", bbox_inches="tight", dpi=600)
 if sys.argv[1] == "png":
-    fig.savefig("FfdReproduced.png", bbox_inches="tight", dpi=600)
+    fig.savefig("FfdProxCen.png", bbox_inches="tight", dpi=600)

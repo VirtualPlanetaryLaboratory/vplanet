@@ -1729,16 +1729,12 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
   if (body[iBody].iFlareFFD == FLARE_FFD_DAVENPORT) {
     // The coefficient values given here were given by Dr. James Davenport in
     // private comunication
-    dFlareSlope = fdDavenport(-0.07054598,
-                              0.81225239,
-                              -1.07054511,
-                              body[iBody].dAge,
-                              body[iBody].dMass);
-    dFlareYInt  = fdDavenport(2.06012734,
-                              -25.79885288,
-                              34.44115635,
-                              body[iBody].dAge,
-                              body[iBody].dMass);
+    dFlareSlope =
+          fdDavenport(-0.07, 0.79, -1.06, body[iBody].dAge,
+                      body[iBody].dMass); //(-0.07054598,0.81225239,-1.07054511)
+    dFlareYInt = fdDavenport(
+          2.01, -25.15, 33.99, body[iBody].dAge,
+          body[iBody].dMass); //(2.06012734,-25.79885288,34.44115635)
   } else if (body[iBody].iFlareFFD == FLARE_FFD_LACY) {
     dFlareSlope = body[iBody].dFlareSlope;
     dFlareYInt  = body[iBody].dFlareYInt;

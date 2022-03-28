@@ -1,8 +1,8 @@
 #
-sSystemName           FfdLacy
+sSystemName           lacy
 iVerbose                      5
 bOverwrite                1
-saBodyFiles              lacy.in
+saBodyFiles              star.in
 sUnitMass                 solar
 sUnitLength               AU
 sUnitTime                 YEARS
@@ -15,4 +15,3 @@ bVarDt                       1
 dEta                            0.01
 dStopTime                1.1e9
 dOutputTime               1e5
-

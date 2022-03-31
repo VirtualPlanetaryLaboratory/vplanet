@@ -97,4 +97,4 @@ setup(
     entry_points={"console_scripts": ["vplanet=vplanet.wrapper:_entry_point"]},
 )
 
-sub.call(["pre-commit", "install"])
+#sub.call(["pre-commit", "install"])

@@ -78,13 +78,13 @@ axes[1, 1].set_xlabel("Time [Myr]")
 axes[1, 1].set_ylabel(r"$\Delta \varpi$ [$^{\circ}$]")
 
 # Final formating
-fig.tight_layout()
+#fig.tight_layout()
 for ax in axes.flatten():
     # Rasterize
     ax.set_rasterization_zorder(0)
 
     # Set tick locations
-    ax.set_xticklabels(["0", "2", "4", "6", "8", "10"])
+    #ax.set_xticklabels(["0", "2", "4", "6", "8", "10"])
     ax.set_xticks([0, 2, 4, 6, 8, 10])
 
 # Show late-term ecc damping
@@ -117,4 +117,5 @@ inset2.set_xlabel("Time [Myr]", fontsize=12)
 
 # Save the figure
 ext = get_args().ext
-fig.savefig(path / f"ApseLock.{ext}", bbox_inches="tight", dpi=600)
+#fig.savefig(path / f"ApseLock.{ext}", bbox_inches="tight", dpi=600)
+fig.savefig(path / f"ApseLock.{ext}", dpi=600)

@@ -717,18 +717,31 @@ void VerifyFlareFFD(BODY *body,
   }
 }
 
+/*
 void VerifyLXUVFlare(BODY *body, OPTIONS *options, UPDATE *update, int iBody) {
 
-  /* This may become useful once flare evolution is included
-  update[iBody].iaType[update[iBody].iLXUV][0] = 1;
+  // This may become useful once flare evolution is included
+  update[iBody].iaType[update[iBody].iLXUVFlare][0] = 1;
   update[iBody].iNumBodies[update[iBody].iLXUV][0]=1;
   update[iBody].iaBody[update[iBody].iLXUV][0] =
   malloc(update[iBody].iNumBodies[update[iBody].iLXUV][0]*sizeof(int));
   update[iBody].iaBody[update[iBody].iLXUV][0][0]=iBody;
   update[iBody].pdDLXUVFlareDt =
   &update[iBody].daDerivProc[update[iBody].iLXUV][0];*/
-}
+//}
 
+
+void VerifyLXUVFlare(BODY *body, OPTIONS *options, UPDATE *update, int iBody) {
+
+  // This may become useful once flare evolution is included
+  update[iBody].iaType[update[iBody].iLXUVFlare][0]     = 1;
+  update[iBody].iNumBodies[update[iBody].iLXUVFlare][0] = 1;
+  update[iBody].iaBody[update[iBody].iLXUVFlare][0]     = malloc(
+            update[iBody].iNumBodies[update[iBody].iLXUVFlare][0] * sizeof(int));
+  update[iBody].iaBody[update[iBody].iLXUVFlare][0][0] = iBody;
+  update[iBody].pdDLXUVFlareDt =
+        &update[iBody].daDerivProc[update[iBody].iLXUVFlare][0];
+}
 
 /*
 void AssignStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE
@@ -958,10 +971,10 @@ void fnForceBehaviorFlare(BODY *body,
                           int iBody,
                           int iModule) {
 
-  if (body[iBody].dLXUVFlare < 0)
-    body[iBody].dLXUVFlare = 0;
-  else
-    body[iBody].dLXUVFlare = fdLXUVFlare(body, evolve->dTimeStep, iBody);
+  // if (body[iBody].dLXUVFlare < 0)
+  //   body[iBody].dLXUVFlare = 0;
+  // else
+  //   body[iBody].dLXUVFlare = fdLXUVFlare(body, evolve->dTimeStep, iBody);
 }
 
 
@@ -1535,8 +1548,7 @@ void LogFlare(BODY *body,
    for (iOut=OUTSTARTFLARE;iOut<OUTBODYSTARTFLARE;iOut++) {
      if (output[iOut].iNum > 0)
        WriteLogEntry(control,output[iOut],body,system,fnWrite[iOut],fp,update,0);
-   }
-   */
+   }*/
 }
 
 void LogBodyFlare(BODY *body,
@@ -1715,8 +1727,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
   double dLXUVFlare = 0.0;
   double dLogEnergyMinERG, dLogEnergyMaxERG, dEnergyMin, dEnergyMax,
         dLogEnergyMin, dLogEnergyMax;
-  int i, iEnergyBin, iLogEnergyMinERG, iLogEnergyMaxERG, iLogEnergyMin,
-        iLogEnergyMax;
+  int iEnergyBin = 100;
+  int i, iLogEnergyMinERG, iLogEnergyMaxERG, iLogEnergyMin, iLogEnergyMax;
   double dEnergyMinXUV, dEnergyMaxXUV, dLogEnergyMinXUV;
   int iLogEnergyMinERGXUV, iLogEnergyMaxERGXUV, iLogEnergyMinXUV,
         iLogEnergyMaxXUV;

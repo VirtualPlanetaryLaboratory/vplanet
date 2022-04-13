@@ -12,28 +12,28 @@ Detailed documentation of C source code.
    :maxdepth: 1
 
 
-   src/control
-   src/update
-   src/poise
-   src/atmesc
-   src/stellar
-   src/output
-   src/module
-   src/distrot
-   src/galhabit
-   src/thermint
-   src/vplanet
-   src/halt
-   src/binary
-   src/verify
    src/spinbody
+   src/vplanet
+   src/atmesc
+   src/output
    src/radheat
-   src/options
+   src/galhabit
+   src/control
+   src/thermint
    src/magmoc
-   src/body
-   src/eqtide
    src/system
    src/distorb
+   src/poise
+   src/eqtide
+   src/update
+   src/binary
+   src/module
+   src/distrot
+   src/body
+   src/stellar
+   src/options
    src/flare
+   src/halt
+   src/verify
    src/evolve
 

@@ -1600,6 +1600,7 @@ struct UPDATE {
 
   /* FLARE */
   int iLXUV;
+  int iLXUVFlare;
   int iNumLXUV;
   double *pdDLXUVFlareDt;
 

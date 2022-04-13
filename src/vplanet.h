@@ -872,6 +872,14 @@ struct BODY {
   int iFlareSlopeUnits; /**< Mode to choose in which units the FFD slopes are*/
   double dEnergyBin;    /**< Number of energies consider between the minimum and
                            maximum energies to calculate the luminosity by flares*/
+  double *daEnergyERG;
+  double *daEnergyJOU;
+  double *daLogEner;
+  double *daEnerJOU;
+
+  double *daEnergyJOUXUV;
+  double *daEnergyERGXUV;
+  double *daLogEnerXUV;
 
   // GALHABIT
   int bGalHabit;        /**< Use galhabit module */
@@ -1600,6 +1608,7 @@ struct UPDATE {
 
   /* FLARE */
   int iLXUV;
+  int iLXUVFlare;
   int iNumLXUV;
   double *pdDLXUVFlareDt;
 

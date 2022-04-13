@@ -96,7 +96,8 @@ void HelpOptionsFlare(OPTIONS *);
 
 void VerifyFlare(BODY *, CONTROL *, FILES *, OPTIONS *, OUTPUT *, SYSTEM *,
                  UPDATE *, int, int);
-
+void VerifyLXUVFlare(BODY *, OPTIONS *, UPDATE *, int);
+void VerifyFlareFFD(BODY *, CONTROL *, OPTIONS *, UPDATE *, double, int);
 /* Update functions */
 void InitializeUpdateFlare(BODY *, UPDATE *, int);
 void FinalizeUpdateLXUVFlare(BODY *, UPDATE *, int *, int, int, int);
@@ -115,10 +116,10 @@ void WriteFlareFreq3(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                      int, double *, char[]);
 void WriteFlareFreq4(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                      int, double *, char[]);
-void WriteFlareFreq5(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
-void WriteFlareFreq6(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
+void WriteFlareFreqMin(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
+                       int, double *, char[]);
+void WriteFlareFreqMid(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
+                       int, double *, char[]);
 void WriteFlareFreqMax(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                        int, double *, char[]);
 void WriteFlareEnergy1(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
@@ -129,10 +130,10 @@ void WriteFlareEnergy3(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                        int, double *, char[]);
 void WriteFlareEnergy4(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                        int, double *, char[]);
-void WriteFlareEnergy5(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
-void WriteFlareEnergy6(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+void WriteFlareEnergyMin(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                         UPDATE *, int, double *, char[]);
+void WriteFlareEnergyMid(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                         UPDATE *, int, double *, char[]);
 void WriteFlareEnergyMax(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                          UPDATE *, int, double *, char[]);
 

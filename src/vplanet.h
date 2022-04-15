@@ -880,6 +880,8 @@ struct BODY {
   double *daEnergyJOUXUV;
   double *daEnergyERGXUV;
   double *daLogEnerXUV;
+  double *daFFD;
+  double *daLXUVFlare;
 
   // GALHABIT
   int bGalHabit;        /**< Use galhabit module */
@@ -1609,6 +1611,8 @@ struct UPDATE {
   /* FLARE */
   int iLXUV;
   int iLXUVFlare;
+  int iEnergyBin;
+  double *pdDEnergyBinDt;
   int iNumLXUV;
   double *pdDLXUVFlareDt;
 

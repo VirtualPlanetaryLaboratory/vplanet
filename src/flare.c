@@ -717,18 +717,18 @@ void VerifyFlareFFD(BODY *body,
   }
 }
 
-/*
-void VerifyLXUVFlare(BODY *body, OPTIONS *options, UPDATE *update, int iBody) {
+
+void VerifyEnergyBin(BODY *body, OPTIONS *options, UPDATE *update, int iBody) {
 
   // This may become useful once flare evolution is included
-  update[iBody].iaType[update[iBody].iLXUVFlare][0] = 1;
-  update[iBody].iNumBodies[update[iBody].iLXUV][0]=1;
-  update[iBody].iaBody[update[iBody].iLXUV][0] =
-  malloc(update[iBody].iNumBodies[update[iBody].iLXUV][0]*sizeof(int));
-  update[iBody].iaBody[update[iBody].iLXUV][0][0]=iBody;
-  update[iBody].pdDLXUVFlareDt =
-  &update[iBody].daDerivProc[update[iBody].iLXUV][0];*/
-//}
+  update[iBody].iaType[update[iBody].iEnergyBin][0]     = 1;
+  update[iBody].iNumBodies[update[iBody].iEnergyBin][0] = 1;
+  update[iBody].iaBody[update[iBody].iEnergyBin][0]     = malloc(
+            update[iBody].iNumBodies[update[iBody].iEnergyBin][0] * sizeof(int));
+  update[iBody].iaBody[update[iBody].iEnergyBin][0][0] = iBody;
+  update[iBody].pdDEnergyBinDt =
+        &update[iBody].daDerivProc[update[iBody].iEnergyBin][0];
+}
 
 
 void VerifyLXUVFlare(BODY *body, OPTIONS *options, UPDATE *update, int iBody) {
@@ -740,21 +740,10 @@ void VerifyLXUVFlare(BODY *body, OPTIONS *options, UPDATE *update, int iBody) {
             update[iBody].iNumBodies[update[iBody].iLXUVFlare][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iLXUVFlare][0][0] = iBody;
   update[iBody].pdDLXUVFlareDt =
+        // update[iBody].fdLXUVFlare =
         &update[iBody].daDerivProc[update[iBody].iLXUVFlare][0];
 }
 
-/*
-void AssignStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE
-*update,fnUpdateVariable ***fnUpdate,int iBody) {
-
-}
-
-void NullStellarDerivatives(BODY *body,EVOLVE *evolve,UPDATE
-*update,fnUpdateVariable ***fnUpdate,int iBody) {
- fnUpdate[iBody][update[iBody].iLXUVFlare][0]                               =
-&fndUpdateFunctionTiny; // NOTE: This points to the value of the Temperature!
-}
-*/
 
 void AssignFlareDerivatives(BODY *body,
                             EVOLVE *evolve,
@@ -763,7 +752,9 @@ void AssignFlareDerivatives(BODY *body,
                             int iBody) {
   /* No derivatives yet for flare.
   //This may become useful once flare evolution is included*/
-  // fnUpdate[iBody][update[iBody].iLXUV][0] = &fdLXUVFlare;
+  // fnUpdate[iBody][update[iBody].iLXUVFlare][0] = &fdLXUVFlare;
+  // fnUpdate[iBody][update[iBody].iEnergyBin][0] = &pdDEnergyBinDt; // NOTE:
+  // This points to the value of the EnergyBin!
 }
 
 void NullFlareDerivatives(BODY *body,
@@ -774,6 +765,12 @@ void NullFlareDerivatives(BODY *body,
   /* No derivatives yet for flare.
   This may become useful once flare evolution is included*/
   fnUpdate[iBody][update[iBody].iLXUV][0] = &fndUpdateFunctionTiny;
+  fnUpdate[iBody][update[iBody].iLXUVFlare][0] =
+        &fndUpdateFunctionTiny; // NOTE: This points to the value of the
+                                // LXUVFlare!
+  fnUpdate[iBody][update[iBody].iEnergyBin][0] =
+        &fndUpdateFunctionTiny; // NOTE: This points to the value of the
+                                // EnergyBin!
 }
 
 void VerifyFlare(BODY *body,
@@ -1693,7 +1690,7 @@ double fdFFD(BODY *body,
              double dLogEnergy,
              double dFlareSlope,
              double dFlareYInt) {
-  double dFlareFreq, dFFDAY;
+  double dFlareFreq;
   double dFFD = 0.0;
 
   if (body[iBody].iFlareFFD == FLARE_FFD_LACY) {
@@ -1727,7 +1724,7 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
   double dLXUVFlare = 0.0;
   double dLogEnergyMinERG, dLogEnergyMaxERG, dEnergyMin, dEnergyMax,
         dLogEnergyMin, dLogEnergyMax;
-  int iEnergyBin = 100;
+  int iEnergyBin = 0.0;
   int i, iLogEnergyMinERG, iLogEnergyMaxERG, iLogEnergyMin, iLogEnergyMax;
   double dEnergyMinXUV, dEnergyMaxXUV, dLogEnergyMinXUV;
   int iLogEnergyMinERGXUV, iLogEnergyMaxERGXUV, iLogEnergyMinXUV,

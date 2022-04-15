@@ -98,6 +98,7 @@ void VerifyFlare(BODY *, CONTROL *, FILES *, OPTIONS *, OUTPUT *, SYSTEM *,
                  UPDATE *, int, int);
 void VerifyLXUVFlare(BODY *, OPTIONS *, UPDATE *, int);
 void VerifyFlareFFD(BODY *, CONTROL *, OPTIONS *, UPDATE *, double, int);
+void VerifyEnergyBin(BODY *, OPTIONS *, UPDATE *, int);
 /* Update functions */
 void InitializeUpdateFlare(BODY *, UPDATE *, int);
 void FinalizeUpdateLXUVFlare(BODY *, UPDATE *, int *, int, int, int);

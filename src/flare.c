@@ -718,30 +718,31 @@ void VerifyFlareFFD(BODY *body,
 }
 
 
-void VerifyEnergyBin(BODY *body, OPTIONS *options, UPDATE *update, int iBody) {
+// void VerifyEnergyBin(BODY *body, OPTIONS *options, UPDATE *update, int iBody)
+// {
 
-  // This may become useful once flare evolution is included
-  update[iBody].iaType[update[iBody].iEnergyBin][0]     = 1;
-  update[iBody].iNumBodies[update[iBody].iEnergyBin][0] = 1;
-  update[iBody].iaBody[update[iBody].iEnergyBin][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iEnergyBin][0] * sizeof(int));
-  update[iBody].iaBody[update[iBody].iEnergyBin][0][0] = iBody;
-  update[iBody].pdDEnergyBinDt =
-        &update[iBody].daDerivProc[update[iBody].iEnergyBin][0];
-}
+// This may become useful once flare evolution is included
+/* update[iBody].iaType[update[iBody].iEnergyBin][0]     = 1;
+ update[iBody].iNumBodies[update[iBody].iEnergyBin][0] = 1;
+ update[iBody].iaBody[update[iBody].iEnergyBin][0]     = malloc(
+           update[iBody].iNumBodies[update[iBody].iEnergyBin][0] * sizeof(int));
+ update[iBody].iaBody[update[iBody].iEnergyBin][0][0] = iBody;
+ update[iBody].pdDEnergyBinDt =
+       &update[iBody].daDerivProc[update[iBody].iEnergyBin][0];*/
+//}
 
 
 void VerifyLXUVFlare(BODY *body, OPTIONS *options, UPDATE *update, int iBody) {
 
   // This may become useful once flare evolution is included
-  update[iBody].iaType[update[iBody].iLXUVFlare][0]     = 1;
+  /*update[iBody].iaType[update[iBody].iLXUVFlare][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iLXUVFlare][0] = 1;
   update[iBody].iaBody[update[iBody].iLXUVFlare][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iLXUVFlare][0] * sizeof(int));
-  update[iBody].iaBody[update[iBody].iLXUVFlare][0][0] = iBody;
+            update[iBody].iNumBodies[update[iBody].iLXUVFlare][0] *
+  sizeof(int)); update[iBody].iaBody[update[iBody].iLXUVFlare][0][0] = iBody;
   update[iBody].pdDLXUVFlareDt =
         // update[iBody].fdLXUVFlare =
-        &update[iBody].daDerivProc[update[iBody].iLXUVFlare][0];
+        &update[iBody].daDerivProc[update[iBody].iLXUVFlare][0];*/
 }
 
 
@@ -765,12 +766,12 @@ void NullFlareDerivatives(BODY *body,
   /* No derivatives yet for flare.
   This may become useful once flare evolution is included*/
   fnUpdate[iBody][update[iBody].iLXUV][0] = &fndUpdateFunctionTiny;
-  fnUpdate[iBody][update[iBody].iLXUVFlare][0] =
-        &fndUpdateFunctionTiny; // NOTE: This points to the value of the
-                                // LXUVFlare!
-  fnUpdate[iBody][update[iBody].iEnergyBin][0] =
-        &fndUpdateFunctionTiny; // NOTE: This points to the value of the
-                                // EnergyBin!
+  // fnUpdate[iBody][update[iBody].iLXUVFlare][0] =
+  //       &fndUpdateFunctionTiny; // NOTE: This points to the value of the
+  //  LXUVFlare!
+  // fnUpdate[iBody][update[iBody].iEnergyBin][0] =
+  //       &fndUpdateFunctionTiny; // NOTE: This points to the value of the
+  //  EnergyBin!
 }
 
 void VerifyFlare(BODY *body,
@@ -968,10 +969,10 @@ void fnForceBehaviorFlare(BODY *body,
                           int iBody,
                           int iModule) {
 
-  // if (body[iBody].dLXUVFlare < 0)
-  //   body[iBody].dLXUVFlare = 0;
-  // else
-  //   body[iBody].dLXUVFlare = fdLXUVFlare(body, evolve->dTimeStep, iBody);
+  if (body[iBody].dLXUVFlare < 0)
+    body[iBody].dLXUVFlare = 0;
+  else
+    body[iBody].dLXUVFlare = fdLXUVFlare(body, evolve->dTimeStep, iBody);
 }
 
 
@@ -1766,8 +1767,9 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     iEnergyBin = (int)dEnergyBin;
 
     // Declaring the XUV Energy arrays of size dEnergyBin
-    double daEnergyERGXUV[iEnergyBin + 1], daEnergyJOUXUV[iEnergyBin + 1],
-          daLogEnerXUV[iEnergyBin + 1];
+    double *daEnergyERGXUV;
+    daEnergyERGXUV = malloc(iEnergyBin * sizeof(double));
+    double daEnergyJOUXUV[iEnergyBin + 1], daLogEnerXUV[iEnergyBin + 1];
 
     //################# 3. Calculating the energy in the Kepler band pass (4000
     //– 9000 Å) ##############################################

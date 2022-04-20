@@ -978,6 +978,19 @@ void fnForceBehaviorFlare(BODY *body,
 
 void InitializeBodyFlare(BODY *body, CONTROL *control, UPDATE *update,
                          int iBody, int iModule) {
+  double *daEnergyERGXUV, *daLXUVFlare, *daFFD, *daEnergyJOUXUV, *daLogEner;
+  double *daLogEnerXUV, *daEnergyERG, *daEnergyJOU, *daEnerJOU;
+
+  daEnergyERGXUV = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daLXUVFlare    = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daFFD          = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daEnergyJOUXUV = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daLogEner      = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daLogEnerXUV   = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daEnergyERG    = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daEnergyJOU    = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daEnerJOU      = malloc(body[iBody].dEnergyBin * sizeof(double));
+
   body[iBody].dLXUVFlare = fdLXUVFlare(body, control->Evolve.dTimeStep, iBody);
 }
 
@@ -1767,9 +1780,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     iEnergyBin = (int)dEnergyBin;
 
     // Declaring the XUV Energy arrays of size dEnergyBin
-    double *daEnergyERGXUV;
-    daEnergyERGXUV = malloc(iEnergyBin * sizeof(double));
-    double daEnergyJOUXUV[iEnergyBin + 1], daLogEnerXUV[iEnergyBin + 1];
+    double daEnergyJOUXUV[iEnergyBin + 1], daLogEnerXUV[iEnergyBin + 1],
+          daEnergyERGXUV[iEnergyBin + 1];
 
     //################# 3. Calculating the energy in the Kepler band pass (4000
     //– 9000 Å) ##############################################

@@ -970,18 +970,18 @@ void fnForceBehaviorFlare(BODY *body,
 
 void InitializeBodyFlare(BODY *body, CONTROL *control, UPDATE *update,
                          int iBody, int iModule) {
-  double *daEnergyERGXUV, *daLXUVFlare, *daFFD, *daEnergyJOUXUV, *daLogEner;
-  double *daLogEnerXUV, *daEnergyERG, *daEnergyJOU, *daEnerJOU;
+  // double *daEnergyERGXUV, *daLXUVFlare, *daFFD, *daEnergyJOUXUV, *daLogEner;
+  // double *daLogEnerXUV, *daEnergyERG, *daEnergyJOU, *daEnerJOU;
 
-  daEnergyERGXUV = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daLXUVFlare    = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daFFD          = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daEnergyJOUXUV = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daLogEner      = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daLogEnerXUV   = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daEnergyERG    = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daEnergyJOU    = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daEnerJOU      = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daEnergyERGXUV = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daLXUVFlare    = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daFFD          = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daEnergyJOUXUV = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daLogEner      = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daLogEnerXUV   = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daEnergyERG    = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daEnergyJOU    = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daEnerJOU      = malloc(body[iBody].dEnergyBin * sizeof(double));
 
   body[iBody].dLXUVFlare = fdLXUVFlare(body, control->Evolve.dTimeStep, iBody);
 }
@@ -1730,7 +1730,7 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
   double dLXUVFlare = 0.0;
   double dLogEnergyMinERG, dLogEnergyMaxERG, dEnergyMin, dEnergyMax,
         dLogEnergyMin, dLogEnergyMax;
-  int iEnergyBin = 0.0;
+  int iEnergyBin = 0;
   int i, iLogEnergyMinERG, iLogEnergyMaxERG, iLogEnergyMin, iLogEnergyMax;
   double dEnergyMinXUV, dEnergyMaxXUV, dLogEnergyMinXUV;
   int iLogEnergyMinERGXUV, iLogEnergyMaxERGXUV, iLogEnergyMinXUV,

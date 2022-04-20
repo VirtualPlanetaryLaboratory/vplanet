@@ -589,23 +589,19 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLAREFFD].bMultiFile = 1;
   fnRead[OPT_FLAREFFD]             = &ReadFlareFFD;
   sprintf(options[OPT_FLAREFFD].cLongDescr,
-          " If DAVENPORT is selected, the code will employ the model from "
-          "Davenport et al.\n"
-          "(2019ApJ...871..241D) the user have to give the mass and Stellar "
-          "age, dMass \n"
-          "and dAge, as well the maximum and minimum energy, dFlareMinEnergy "
-          "and \n"
-          "dFlareMaxEnergy, to calculate the linear and angular coeficients, "
-          "dA and dB of\n"
-          "the flare frequency distribution (FFD), and then the FFD in this "
-          "energy range.\n"
-          "If Lacy is selected, the code will employ the model of Lacy et al. "
-          "(1976ApJS...30...85L),\n"
-          "and the user have to give the same input of the DAVENPORT's mode, "
-          "plus the \n"
-          "linear and angular coeficients, dFlareSlope and dFlareYInt of the "
-          "FFD. If NONE is selected,\n"
-          "the code will use the XUV luminosity given by the user in the input "
+          " If DAVENPORT is selected, the code will employ the model\n"
+          "fro Davenport et al.(2019ApJ...871..241D) the user have\n"
+          "to give the mass and Stellar age, dMass and dAge, as well\n"
+          "the maximum and minimum energy, dFlareMinEnergy and \n"
+          "dFlareMaxEnergy, to calculate the linear (Y-intercept) \n"
+          "and angular (slope) coeficients, dA and dB of the flare \n"
+          "frequency distribution (FFD), and then the FFD in this \n"
+          "energy range. If Lacy is selected, the code will employ \n"
+          "the model of Lacy et al. (1976ApJS...30...85L), and the \n"
+          "user have to give the same input of the DAVENPORT's mode,\n"
+          "plus the linear and angular coeficients, dFlareSlope and \n"
+          "dFlareYInt of the FFD. If NONE is selected, the code will\n"
+          " use the XUV luminosity given by the user in the input \n"
           "file (dLXUVFlareConst). \n");
 
   sprintf(options[OPT_FLAREBANDPASS].cName, "sFlareBandPass");
@@ -618,31 +614,27 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLAREBANDPASS].bMultiFile = 1;
   fnRead[OPT_FLAREBANDPASS]             = &ReadFlareBandPass;
   sprintf(options[OPT_FLAREBANDPASS].cLongDescr,
-          " If UV or GOES is selected, the code will convert the input energy "
-          "of flares\n"
-          "from the UV band (3000–4300 Å) or GOES band (1-8 Å) to kepler band "
-          "(4000–9000 Å) to calculate.\n"
-          " the FFD and to the SXR band (1.24 - 1239.85 Å) to calculate the "
-          "luminosity.\n"
-          " If SXR is selected, the code will convert the input energy of "
-          "flares from the SXR band to kepler band \n"
-          "to calculate the FFD and will use the same value of energy to "
-          "calculate the luminosity .\n"
-          " If KEPLER is selected, the code will use the same input energy to "
-          "calculate the FFD\n"
-          "and will convert the input energy to SXR band to calculate the "
-          "luminosity.\n"
-          "The convertion values are taken from Osten and Wolk (2015) "
-          "(doi:10.1088/0004-637X/809/1/79).\n"
-          "If the TESSUV its selected, the code will convert the input energy "
-          "of flares\n"
-          "using the conversion value to the band U (2000-2800 Å) to the TESS "
-          "data, from \n"
-          " Gunther et al 2020 (https://doi.org/10.3847/1538-3881/ab5d3a). \n"
-          "If the BOLOMETRIC its selected, the code will convert the input "
-          "energy of flares\n"
-          "using the convertion values are taken from Osten and Wolk (2015) "
-          "(doi:10.1088/0004-637X/809/1/79).\n");
+          " If UV or GOES is selected, the code will convert \n"
+          " the input energy of flares from the UV band \n"
+          "(3000-4300 Å) or GOES band (1-8 Å) to kepler band \n"
+          "(4000-9000 Å) to calculate the FFD and to the SXR \n"
+          "band (1.24 - 1239.85 Å) to calculate the luminosity.\n"
+          " If SXR is selected, the code will convert the \n"
+          "input energy of flares from the SXR band to kepler\n"
+          "band to calculate the FFD and will use the same \n"
+          "value of energy to calculate the luminosity .\n"
+          "If KEPLER is selected, the code will use the same\n"
+          "input energy to calculate the FFD and will convert \n"
+          "the input energy to SXR band to calculate the \n"
+          "luminosity. The convertion values are taken from \n"
+          "Osten and Wolk (2015) (doi:10.1088/0004-637X/809/1/79).\n"
+          "If the TESSUV is selected, the code will convert\n"
+          "the input energy of flares using the conversion value\n"
+          "to the band U (2000-2800 Å) to the TESS data, from \n"
+          "Gunther et al 2020 (https://doi.org/10.3847/1538-3881/ab5d3a). \n"
+          "If the BOLOMETRIC its selected, the code will convert the input \n"
+          "energy of flares using the convertion values are taken \n"
+          "from Osten and Wolk (2015) (doi:10.1088/0004-637X/809/1/79).\n");
   /*
     sprintf(options[OPT_FLARESLOPEUNITS].cName, "sFlareSlopeUnits");
     sprintf(options[OPT_FLARESLOPEUNITS].cDescr,
@@ -718,30 +710,31 @@ void VerifyFlareFFD(BODY *body,
 }
 
 
-void VerifyEnergyBin(BODY *body, OPTIONS *options, UPDATE *update, int iBody) {
+// void VerifyEnergyBin(BODY *body, OPTIONS *options, UPDATE *update, int iBody)
+// {
 
-  // This may become useful once flare evolution is included
-  update[iBody].iaType[update[iBody].iEnergyBin][0]     = 1;
-  update[iBody].iNumBodies[update[iBody].iEnergyBin][0] = 1;
-  update[iBody].iaBody[update[iBody].iEnergyBin][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iEnergyBin][0] * sizeof(int));
-  update[iBody].iaBody[update[iBody].iEnergyBin][0][0] = iBody;
-  update[iBody].pdDEnergyBinDt =
-        &update[iBody].daDerivProc[update[iBody].iEnergyBin][0];
-}
+// This may become useful once flare evolution is included
+/* update[iBody].iaType[update[iBody].iEnergyBin][0]     = 1;
+ update[iBody].iNumBodies[update[iBody].iEnergyBin][0] = 1;
+ update[iBody].iaBody[update[iBody].iEnergyBin][0]     = malloc(
+           update[iBody].iNumBodies[update[iBody].iEnergyBin][0] * sizeof(int));
+ update[iBody].iaBody[update[iBody].iEnergyBin][0][0] = iBody;
+ update[iBody].pdDEnergyBinDt =
+       &update[iBody].daDerivProc[update[iBody].iEnergyBin][0];*/
+//}
 
 
 void VerifyLXUVFlare(BODY *body, OPTIONS *options, UPDATE *update, int iBody) {
 
   // This may become useful once flare evolution is included
-  update[iBody].iaType[update[iBody].iLXUVFlare][0]     = 1;
+  /*update[iBody].iaType[update[iBody].iLXUVFlare][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iLXUVFlare][0] = 1;
   update[iBody].iaBody[update[iBody].iLXUVFlare][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iLXUVFlare][0] * sizeof(int));
-  update[iBody].iaBody[update[iBody].iLXUVFlare][0][0] = iBody;
+            update[iBody].iNumBodies[update[iBody].iLXUVFlare][0] *
+  sizeof(int)); update[iBody].iaBody[update[iBody].iLXUVFlare][0][0] = iBody;
   update[iBody].pdDLXUVFlareDt =
         // update[iBody].fdLXUVFlare =
-        &update[iBody].daDerivProc[update[iBody].iLXUVFlare][0];
+        &update[iBody].daDerivProc[update[iBody].iLXUVFlare][0];*/
 }
 
 
@@ -765,12 +758,12 @@ void NullFlareDerivatives(BODY *body,
   /* No derivatives yet for flare.
   This may become useful once flare evolution is included*/
   fnUpdate[iBody][update[iBody].iLXUV][0] = &fndUpdateFunctionTiny;
-  fnUpdate[iBody][update[iBody].iLXUVFlare][0] =
-        &fndUpdateFunctionTiny; // NOTE: This points to the value of the
-                                // LXUVFlare!
-  fnUpdate[iBody][update[iBody].iEnergyBin][0] =
-        &fndUpdateFunctionTiny; // NOTE: This points to the value of the
-                                // EnergyBin!
+  // fnUpdate[iBody][update[iBody].iLXUVFlare][0] =
+  //       &fndUpdateFunctionTiny; // NOTE: This points to the value of the
+  //  LXUVFlare!
+  // fnUpdate[iBody][update[iBody].iEnergyBin][0] =
+  //       &fndUpdateFunctionTiny; // NOTE: This points to the value of the
+  //  EnergyBin!
 }
 
 void VerifyFlare(BODY *body,
@@ -968,15 +961,28 @@ void fnForceBehaviorFlare(BODY *body,
                           int iBody,
                           int iModule) {
 
-  // if (body[iBody].dLXUVFlare < 0)
-  //   body[iBody].dLXUVFlare = 0;
-  // else
-  //   body[iBody].dLXUVFlare = fdLXUVFlare(body, evolve->dTimeStep, iBody);
+  if (body[iBody].dLXUVFlare < 0)
+    body[iBody].dLXUVFlare = 0;
+  else
+    body[iBody].dLXUVFlare = fdLXUVFlare(body, evolve->dTimeStep, iBody);
 }
 
 
 void InitializeBodyFlare(BODY *body, CONTROL *control, UPDATE *update,
                          int iBody, int iModule) {
+  double *daEnergyERGXUV, *daLXUVFlare, *daFFD, *daEnergyJOUXUV, *daLogEner;
+  double *daLogEnerXUV, *daEnergyERG, *daEnergyJOU, *daEnerJOU;
+
+  daEnergyERGXUV = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daLXUVFlare    = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daFFD          = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daEnergyJOUXUV = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daLogEner      = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daLogEnerXUV   = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daEnergyERG    = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daEnergyJOU    = malloc(body[iBody].dEnergyBin * sizeof(double));
+  daEnerJOU      = malloc(body[iBody].dEnergyBin * sizeof(double));
+
   body[iBody].dLXUVFlare = fdLXUVFlare(body, control->Evolve.dTimeStep, iBody);
 }
 
@@ -1766,8 +1772,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     iEnergyBin = (int)dEnergyBin;
 
     // Declaring the XUV Energy arrays of size dEnergyBin
-    double daEnergyERGXUV[iEnergyBin + 1], daEnergyJOUXUV[iEnergyBin + 1],
-          daLogEnerXUV[iEnergyBin + 1];
+    double daEnergyJOUXUV[iEnergyBin + 1], daLogEnerXUV[iEnergyBin + 1],
+          daEnergyERGXUV[iEnergyBin + 1];
 
     //################# 3. Calculating the energy in the Kepler band pass (4000
     //– 9000 Å) ##############################################

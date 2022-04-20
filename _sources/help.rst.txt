@@ -5134,9 +5134,9 @@ Input Options
 | **sFlareBandPass**                                                                   |
 +-----------------+--------------------------------------------------------------------+
 | Description     || If UV or GOES is selected, the code will convert the input        |
-|                 || energy of flares from the UV band (3000\xe2\x80\x934300 \xc3\x85) or GOES band   |
-|                 || (1-8 \xc3\x85) to kepler band (4000\xe2\x80\x939000 \xc3\x85) to calculate. the FFD    |
-|                 || and to the SXR band (1.24 - 1239.85 \xc3\x85) to calculate the          |
+|                 || energy of flares from the UV band (3000-4300 \xc3\x85) or GOES band     |
+|                 || (1-8 \xc3\x85) to kepler band (4000-9000 \xc3\x85) to calculate the FFD and   |
+|                 || to the SXR band (1.24 - 1239.85 \xc3\x85) to calculate the              |
 |                 || luminosity. If SXR is selected, the code will convert the input   |
 |                 || energy of flares from the SXR band to kepler band to calculate    |
 |                 || the FFD and will use the same value of energy to calculate the    |
@@ -5161,18 +5161,19 @@ Input Options
 +--------------------------------------------------------------------------------------+
 | **sFlareFFD**                                                                        |
 +-----------------+--------------------------------------------------------------------+
-| Description     || If DAVENPORT is selected, the code will employ the model from     |
-|                 || Davenport et al. (2019ApJ...871..241D) the user have to give      |
-|                 || the mass and Stellar age, dMass and dAge, as well the maximum     |
-|                 || and minimum energy, dFlareMinEnergy and dFlareMaxEnergy, to       |
-|                 || calculate the linear and angular coeficients, dA and dB of the    |
-|                 || flare frequency distribution (FFD), and then the FFD in this      |
-|                 || energy range. If Lacy is selected, the code will employ the       |
-|                 || model of Lacy et al. (1976ApJS...30...85L), and the user have     |
-|                 || to give the same input of the DAVENPORT\'s mode, plus the linear   |
-|                 || and angular coeficients, dFlareSlope and dFlareYInt of the FFD.   |
-|                 || If NONE is selected, the code will use the XUV luminosity given   |
-|                 || by the user in the input file (dLXUVFlareConst).                  |
+| Description     || If DAVENPORT is selected, the code will employ the model fro      |
+|                 || Davenport et al.(2019ApJ...871..241D) the user have to give the   |
+|                 || mass and Stellar age, dMass and dAge, as well the maximum and     |
+|                 || minimum energy, dFlareMinEnergy and dFlareMaxEnergy, to           |
+|                 || calculate the linear (Y-intercept) and angular (slope)            |
+|                 || coeficients, dA and dB of the flare frequency distribution        |
+|                 || (FFD), and then the FFD in this energy range. If Lacy is          |
+|                 || selected, the code will employ the model of Lacy et al.           |
+|                 || (1976ApJS...30...85L), and the user have to give the same input   |
+|                 || of the DAVENPORT\'s mode, plus the linear and angular              |
+|                 || coeficients, dFlareSlope and dFlareYInt of the FFD. If NONE is    |
+|                 || selected, the code will use the XUV luminosity given by the       |
+|                 || user in the input file (dLXUVFlareConst).                         |
 +-----------------+--------------------------------------------------------------------+
 | Type            || String                                                            |
 +-----------------+--------------------------------------------------------------------+

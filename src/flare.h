@@ -88,7 +88,7 @@ void fnForceBehaviorFlare(BODY *, MODULE *, EVOLVE *, IO *, SYSTEM *, UPDATE *,
                           fnUpdateVariable ***, int, int);
 
 /* Options Functions */
-void HelpOptionsFlare(OPTIONS *);
+
 
 /* Halt Functions */
 

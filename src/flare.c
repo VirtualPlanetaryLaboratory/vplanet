@@ -1839,7 +1839,7 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     body[iBody].dFlareFreqMax = body[iBody].daFFD[iEnergyBin];
     //############################ 6. Calculating the XUV luminosity by flares
     //########################################################################
-    double daLXUVFlare[iEnergyBin];
+    // double daLXUVFlare[iEnergyBin];
 
     // Calculating the luminosity by flares for DAVENPORT or LACY mode
     // if the user select to calculate the luminosity using a FFD model

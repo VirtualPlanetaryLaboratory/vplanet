@@ -889,6 +889,7 @@ struct BODY {
   double *daFFD;
   double *daLXUVFlare;
 
+
   // GALHABIT
   int bGalHabit;        /**< Use galhabit module */
   double dPeriQ;        /**< Pericenter distance */

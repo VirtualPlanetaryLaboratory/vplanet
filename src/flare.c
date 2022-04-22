@@ -787,6 +787,8 @@ void VerifyFlare(BODY *body,
             MAXMASSFLARE);
     LineExit(files->Infile[iBody + 1].cIn, options[OPT_MASS].iLine[iBody + 1]);
   }
+
+
   /* If the XUV luminosity by flares is given by the user, the code do not allow
   output FFD and flare energies because the code do not calculate: the user
   already inputed the XUV luminosity by flares and the flare module doesn't need
@@ -970,18 +972,17 @@ void fnForceBehaviorFlare(BODY *body,
 
 void InitializeBodyFlare(BODY *body, CONTROL *control, UPDATE *update,
                          int iBody, int iModule) {
-  double *daEnergyERGXUV, *daLXUVFlare, *daFFD, *daEnergyJOUXUV, *daLogEner;
-  double *daLogEnerXUV, *daEnergyERG, *daEnergyJOU, *daEnerJOU;
-
-  daEnergyERGXUV = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daLXUVFlare    = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daFFD          = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daEnergyJOUXUV = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daLogEner      = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daLogEnerXUV   = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daEnergyERG    = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daEnergyJOU    = malloc(body[iBody].dEnergyBin * sizeof(double));
-  daEnerJOU      = malloc(body[iBody].dEnergyBin * sizeof(double));
+  // double *daEnergyERGXUV, *daLXUVFlare, *daFFD, *daEnergyJOUXUV, *daLogEner;
+  // double *daLogEnerXUV, *daEnergyERG, *daEnergyJOU, *daEnerJOU;
+  body[iBody].daEnergyERGXUV = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daLXUVFlare    = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daFFD          = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daEnergyJOUXUV = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daLogEner      = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daLogEnerXUV   = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daEnergyERG    = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daEnergyJOU    = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daEnerJOU      = malloc(body[iBody].dEnergyBin * sizeof(double));
 
   body[iBody].dLXUVFlare = fdLXUVFlare(body, control->Evolve.dTimeStep, iBody);
 }
@@ -1730,7 +1731,7 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
   double dLXUVFlare = 0.0;
   double dLogEnergyMinERG, dLogEnergyMaxERG, dEnergyMin, dEnergyMax,
         dLogEnergyMin, dLogEnergyMax;
-  int iEnergyBin = 0.0;
+  int iEnergyBin = 0;
   int i, iLogEnergyMinERG, iLogEnergyMaxERG, iLogEnergyMin, iLogEnergyMax;
   double dEnergyMinXUV, dEnergyMaxXUV, dLogEnergyMinXUV;
   int iLogEnergyMinERGXUV, iLogEnergyMaxERGXUV, iLogEnergyMinXUV,
@@ -1772,8 +1773,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     iEnergyBin = (int)dEnergyBin;
 
     // Declaring the XUV Energy arrays of size dEnergyBin
-    double daEnergyJOUXUV[iEnergyBin + 1], daLogEnerXUV[iEnergyBin + 1],
-          daEnergyERGXUV[iEnergyBin + 1];
+    // double daEnergyJOUXUV[iEnergyBin + 1], daLogEnerXUV[iEnergyBin + 1],
+    //      daEnergyERGXUV[iEnergyBin + 1];
 
     //################# 3. Calculating the energy in the Kepler band pass (4000
     //– 9000 Å) ##############################################
@@ -1793,47 +1794,49 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     dEnergyStep = (dLogEnergyMaxERG - dLogEnergyMinERG) / iEnergyBin;
 
     // Declaring the Kepler Energy arrays of size iEnergyBin
-    double daEnergyERG[iEnergyBin + 1], daEnergyJOU[iEnergyBin + 1],
-          daLogEner[iEnergyBin + 1], daEnerJOU[iEnergyBin + 1];
+    // double daEnergyERG[iEnergyBin + 1], daEnergyJOU[iEnergyBin + 1],
+    //      daLogEner[iEnergyBin + 1], daEnerJOU[iEnergyBin + 1];
 
     //############################ 4. Filling the energy arrays
     //########################################################################
 
     for (i = 0; i < iEnergyBin + 1; i++) {
       // XUV energy (energy_joules)
-      daEnergyJOUXUV[i] = fdEnergyJoulesXUV(dLogEnergyMinXUV + i * dEnergyStep);
+      body[iBody].daEnergyJOUXUV[i] =
+            fdEnergyJoulesXUV(dLogEnergyMinXUV + i * dEnergyStep);
       // Kepler energy (log(energy_ergs))
-      daLogEner[i] = dLogEnergyMinERG + i * dEnergyStep;
+      body[iBody].daLogEner[i] = dLogEnergyMinERG + i * dEnergyStep;
       // Kepler energy (energy_joules)
-      daEnerJOU[i] = pow(10, (dLogEnergyMin + i * dEnergyStep));
+      body[iBody].daEnerJOU[i] = pow(10, (dLogEnergyMin + i * dEnergyStep));
     }
 
-    body[iBody].dFlareEnergy1   = daEnerJOU[0];
-    body[iBody].dFlareEnergy2   = daEnerJOU[1];
-    body[iBody].dFlareEnergy3   = daEnerJOU[2];
-    body[iBody].dFlareEnergy4   = daEnerJOU[3];
-    body[iBody].dFlareEnergyMin = daEnerJOU[0];
-    body[iBody].dFlareEnergyMid = daEnerJOU[iEnergyBin / 2];
-    body[iBody].dFlareEnergyMax = daEnerJOU[iEnergyBin];
+    body[iBody].dFlareEnergy1   = body[iBody].daEnerJOU[0];
+    body[iBody].dFlareEnergy2   = body[iBody].daEnerJOU[1];
+    body[iBody].dFlareEnergy3   = body[iBody].daEnerJOU[2];
+    body[iBody].dFlareEnergy4   = body[iBody].daEnerJOU[3];
+    body[iBody].dFlareEnergyMin = body[iBody].daEnerJOU[0];
+    body[iBody].dFlareEnergyMid = body[iBody].daEnerJOU[iEnergyBin / 2];
+    body[iBody].dFlareEnergyMax = body[iBody].daEnerJOU[iEnergyBin];
     //############################ 5. Filling the FFD arrays
     //########################################################################
 
     // Declaring the Flare Frequency distribution (FFD) arrays of size
     // dEnergyBin
-    double daFFD[iEnergyBin + 1];
+    // double daFFD[iEnergyBin + 1];
 
     // When DAVENPORT or LACY are selected, we have to calculate the FFD first.
     for (i = 0; i < iEnergyBin + 1; i++) {
-      daFFD[i] = fdFFD(body, iBody, daLogEner[i], dFlareSlope, dFlareYInt);
+      body[iBody].daFFD[i] = fdFFD(body, iBody, body[iBody].daLogEner[i],
+                                   dFlareSlope, dFlareYInt);
     }
 
-    body[iBody].dFlareFreq1   = daFFD[0];
-    body[iBody].dFlareFreq2   = daFFD[1];
-    body[iBody].dFlareFreq3   = daFFD[2];
-    body[iBody].dFlareFreq4   = daFFD[3];
-    body[iBody].dFlareFreqMin = daFFD[0];
-    body[iBody].dFlareFreqMid = daFFD[iEnergyBin / 2];
-    body[iBody].dFlareFreqMax = daFFD[iEnergyBin];
+    body[iBody].dFlareFreq1   = body[iBody].daFFD[0];
+    body[iBody].dFlareFreq2   = body[iBody].daFFD[1];
+    body[iBody].dFlareFreq3   = body[iBody].daFFD[2];
+    body[iBody].dFlareFreq4   = body[iBody].daFFD[3];
+    body[iBody].dFlareFreqMin = body[iBody].daFFD[0];
+    body[iBody].dFlareFreqMid = body[iBody].daFFD[iEnergyBin / 2];
+    body[iBody].dFlareFreqMax = body[iBody].daFFD[iEnergyBin];
     //############################ 6. Calculating the XUV luminosity by flares
     //########################################################################
     double daLXUVFlare[iEnergyBin];
@@ -1841,9 +1844,11 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     // Calculating the luminosity by flares for DAVENPORT or LACY mode
     // if the user select to calculate the luminosity using a FFD model
     for (i = 0; i < iEnergyBin; i++) {
-      daLXUVFlare[i] = (daEnergyJOUXUV[i + 1] - daEnergyJOUXUV[i]) *
-                       ((daFFD[i + 1] + daFFD[i]) / 2);
-      dLXUVFlare += daLXUVFlare[i];
+      body[iBody].daLXUVFlare[i] =
+            (body[iBody].daEnergyJOUXUV[i + 1] -
+             body[iBody].daEnergyJOUXUV[i]) *
+            ((body[iBody].daFFD[i + 1] + body[iBody].daFFD[i]) / 2);
+      dLXUVFlare += body[iBody].daLXUVFlare[i];
     }
   }
   // If the FFD model is set to NONE, the luminosity remains constant over the

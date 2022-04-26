@@ -37,13 +37,13 @@ from get_args import get_args
 #     exit(1)
 
 # Overwritten old files
-directory = ["./davenport", "./lacy", "./stellar"]
+# directory = ["./davenport", "./lacy", "./stellar"]
 
-for i in directory:
-    os.chdir(i)
-    os.system("rm *.log")
-    os.system("rm *.forward")
-    os.chdir(path)
+# for i in directory:
+#    os.chdir(i)
+#    os.system("rm *.log")
+#   os.system("rm *.forward")
+#   os.chdir(path)
 
 
 # Running the simulations

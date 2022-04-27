@@ -25,3 +25,4 @@ dependencies:
       - tqdm
       - pre-commit
       - clang-format
+      - seaborn

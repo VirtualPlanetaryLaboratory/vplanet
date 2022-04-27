@@ -84,7 +84,8 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT",
     packages=["vplanet"],
-    install_requires=vplanet_suite + ["astropy>=3.0", "numpy", "tqdm", "pre-commit"],
+    #install_requires=vplanet_suite + ["astropy>=3.0", "numpy", "tqdm", "pre-commit"],
+    install_requires=vplanet_suite + ["astropy>=3.0", "numpy", "tqdm", "seaborn"],
     python_requires=">=3.6",
     # use_scm_version={
     # "write_to": os.path.join("vplanet", "vplanet_version.py"),

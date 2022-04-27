@@ -26,16 +26,6 @@ path = pathlib.Path(__file__).parents[0].absolute()
 sys.path.insert(1, str(path.parents[0]))
 from get_args import get_args
 
-# Check correct number of arguments
-# if len(sys.argv) != 2:
-#     print("ERROR: Incorrect number of arguments.")
-#     print("Usage: " + sys.argv[0] + " <pdf | png>")
-#     exit(1)
-# if sys.argv[1] != "pdf" and sys.argv[1] != "png":
-#     print("ERROR: Unknown file format: " + sys.argv[1])
-#     print("Options are: pdf, png")
-#     exit(1)
-
 # Overwritten old files
 # directory = ["./davenport", "./lacy", "./stellar"]
 
@@ -193,7 +183,5 @@ axes[1, 1].annotate(
 axes[1, 1].axhline(y=0.0485, xmin=0.0, xmax=1e11, color="k", lw=0.5)
 
 # Save figure
-if sys.argv[1] == "pdf":
-    fig.savefig("AtmEscFlareProxCen.pdf", bbox_inches="tight", dpi=300)
-if sys.argv[1] == "png":
-    fig.savefig("AtmEscFlareProxCen.png", bbox_inches="tight", dpi=300)
+ext = get_args().ext
+fig.savefig(path / f"AtmEscFlareProxCen.{ext}", bbox_inches="tight", dpi=200)

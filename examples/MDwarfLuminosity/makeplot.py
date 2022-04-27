@@ -25,16 +25,6 @@ try:
 except:
     print("Cannot import vplot. Please install vplot.")
 
-# Check correct number of arguments
-# if len(sys.argv) != 2:
-#     print("ERROR: Incorrect number of arguments.")
-#     print("Usage: " + sys.argv[0] + " <pdf | png>")
-#     exit(1)
-# if sys.argv[1] != "pdf" and sys.argv[1] != "png":
-#     print("ERROR: Unknown file format: " + sys.argv[1])
-#     print("Options are: pdf, png")
-#     exit(1)
-
 path = pathlib.Path(__file__).parents[0].absolute()
 sys.path.insert(1, str(path.parents[0]))
 # Overwritten old files
@@ -266,7 +256,5 @@ for ax in axes.flatten():
     ax.set_rasterization_zorder(0)
 
 # Saving figure
-if sys.argv[1] == "pdf":
-    fig.savefig("MDwarfLuminosity.pdf", bbox_inches="tight", dpi=300)
-if sys.argv[1] == "png":
-    fig.savefig("MDwarfLuminosity.png", bbox_inches="tight", dpi=300)
+ext = get_args().ext
+fig.savefig(path / f"MDwarfLuminosity.{ext}", bbox_inches="tight", dpi=200)

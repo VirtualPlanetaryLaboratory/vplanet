@@ -12,44 +12,44 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/RadHeat
-   examples/MagmOc_Earth
-   examples/NBodyAtmEsc
-   examples/CassiniMulti
-   examples/SS_NBody
-   examples/BinaryTides
-   examples/ChaoticResonances
-   examples/ApseLock
-   examples/IceBelts
-   examples/VenusApproxInterior
-   examples/AbioticO2
-   examples/MagmOc_GJ1132b
-   examples/AtmEscFlareProxCen
-   examples/AtmEscKepler-36
-   examples/ParameterSweep
-   examples/WaterLossTides
-   examples/MiniNeptuneEvap
-   examples/AtmEscRegimes
-   examples/IoHeat
-   examples/VenusWaterLoss
-   examples/SSDistOrbDistRot
-   examples/HabitableZone
-   examples/TidalEarth
-   examples/StellarEvol
-   examples/EarthInterior
-   examples/TideLock
-   examples/DampedCBP
-   examples/CircumbinaryOrbit
-   examples/GalaxyEffects
-   examples/FfdProxCen
-   examples/MagneticBraking
-   examples/HLossTides
-   examples/STEEP
-   examples/MDwarfLuminosity
-   examples/HabEvapCore
    examples/MagmOc_Trappist1g
+   examples/StellarEvol
    examples/EarthClimate
+   examples/AtmEscKepler-36
+   examples/MiniNeptuneEvap
+   examples/WaterLossTides
+   examples/AbioticO2
+   examples/MagneticBraking
+   examples/ParameterSweep
+   examples/VenusWaterLoss
+   examples/AtmEscFlareProxCen
+   examples/HabEvapCore
+   examples/HabitableZone
+   examples/TideLock
+   examples/AtmEscRegimes
    examples/CassiniStates
+   examples/EarthInterior
+   examples/MDwarfLuminosity
+   examples/RadHeat
+   examples/GalaxyEffects
+   examples/VenusApproxInterior
+   examples/CassiniMulti
+   examples/IceBelts
+   examples/ApseLock
+   examples/SS_NBody
+   examples/CircumbinaryOrbit
+   examples/NBodyAtmEsc
+   examples/STEEP
+   examples/TidalEarth
+   examples/ChaoticResonances
+   examples/BinaryTides
+   examples/DampedCBP
+   examples/IoHeat
+   examples/MagmOc_GJ1132b
+   examples/MagmOc_Earth
+   examples/SSDistOrbDistRot
+   examples/HLossTides
+   examples/FfdProxCen
 
 
 Broken

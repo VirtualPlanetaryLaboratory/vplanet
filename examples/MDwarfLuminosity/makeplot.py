@@ -27,14 +27,16 @@ except:
 
 path = pathlib.Path(__file__).parents[0].absolute()
 sys.path.insert(1, str(path.parents[0]))
+from get_args import get_args
+
 # Overwritten old files
 directory = ["./LumEvolFlare", "./LumEvolStellar"]
 
-for i in directory:
-    os.chdir(i)
-    os.system("rm *.log")
-    os.system("rm *.forward")
-    os.chdir(path)
+# for i in directory:
+#    os.chdir(i)
+#    os.system("rm *.log")
+#    os.system("rm *.forward")
+#    os.chdir(path)
 
 
 # Running the simulations

@@ -30,21 +30,30 @@ except:
 
 path = pathlib.Path(__file__).parents[0].absolute()
 sys.path.insert(1, str(path.parents[0]))
-
+from get_args import get_args
 
 run = [
     "./davenport/vpl.in",
     "./lacy/vpl.in",
 ]
 
+directory = os.getcwd()
+
+print(directory)
 # Run the simulations
 for i in range(0, 2):
     vplanet.run(path / run[i], units=False)
 
 # Loading the data
+directory = os.getcwd()
 
+print(directory)
 data_daven = np.loadtxt("./davenport/davenport.star.forward")
 data_lacy = np.loadtxt("./lacy/lacy.star.forward")
+
+directory = os.getcwd()
+
+print(directory)
 
 age_daven = data_daven[:, 0]
 

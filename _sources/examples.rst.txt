@@ -12,44 +12,44 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/MagmOc_Trappist1g
-   examples/StellarEvol
-   examples/EarthClimate
-   examples/AtmEscKepler-36
-   examples/MiniNeptuneEvap
-   examples/WaterLossTides
-   examples/AbioticO2
-   examples/MagneticBraking
-   examples/ParameterSweep
-   examples/VenusWaterLoss
-   examples/AtmEscFlareProxCen
-   examples/HabEvapCore
-   examples/HabitableZone
-   examples/TideLock
    examples/AtmEscRegimes
-   examples/CassiniStates
-   examples/EarthInterior
-   examples/MDwarfLuminosity
-   examples/RadHeat
-   examples/GalaxyEffects
-   examples/VenusApproxInterior
-   examples/CassiniMulti
-   examples/IceBelts
-   examples/ApseLock
-   examples/SS_NBody
-   examples/CircumbinaryOrbit
    examples/NBodyAtmEsc
-   examples/STEEP
+   examples/CassiniMulti
+   examples/WaterLossTides
+   examples/HLossTides
    examples/TidalEarth
+   examples/MDwarfLuminosity
+   examples/GalaxyEffects
+   examples/CircumbinaryOrbit
+   examples/AtmEscFlareProxCen
+   examples/MiniNeptuneEvap
+   examples/ParameterSweep
+   examples/HabitableZone
+   examples/VenusWaterLoss
+   examples/MagneticBraking
+   examples/SSDistOrbDistRot
+   examples/AtmEscKepler-36
+   examples/MagmOc_Earth
+   examples/TideLock
+   examples/MagmOc_GJ1132b
    examples/ChaoticResonances
    examples/BinaryTides
+   examples/EarthInterior
    examples/DampedCBP
    examples/IoHeat
-   examples/MagmOc_GJ1132b
-   examples/MagmOc_Earth
-   examples/SSDistOrbDistRot
-   examples/HLossTides
+   examples/StellarEvol
+   examples/HabEvapCore
+   examples/IceBelts
+   examples/STEEP
+   examples/CassiniStates
+   examples/VenusApproxInterior
+   examples/AbioticO2
+   examples/ApseLock
+   examples/SS_NBody
    examples/FfdProxCen
+   examples/EarthClimate
+   examples/MagmOc_Trappist1g
+   examples/RadHeat
 
 
 Broken

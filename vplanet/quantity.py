@@ -172,7 +172,7 @@ class VPLANETQuantity(u.Quantity):
             try:
                 value_unit = value.unit
             except AttributeError:
-                value = None
+                value_unit = None
             if value_unit is None:
                 # Default to dimensionless for no (initialized) unit attribute.
                 if unit is None:
@@ -282,9 +282,9 @@ class NumpyQuantity(np.ndarray):
         if obj is None:
             return
         try:
-            self.tags = obj.tags
+            self.tag = obj.tags
         except AttributeError:
-            self.tags = {}
+            self.tag = {}
         try:
             self.unit = obj.unit
         except AttributeError:

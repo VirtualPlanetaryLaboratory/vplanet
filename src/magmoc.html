@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -44,8 +44,8 @@
     <link rel="top" title="VPLanet 2.3.17
  documentation" href="../index.html"/>
         <link rel="up" title="C API" href="../src.html"/>
-        <link rel="next" title="body" href="body.html"/>
-        <link rel="prev" title="galhabit" href="galhabit.html"/> 
+        <link rel="next" title="halt" href="halt.html"/>
+        <link rel="prev" title="poise" href="poise.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -102,34 +102,34 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
-<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
 <li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
 <li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">magmoc</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#magmoc-c">magmoc.c</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#magmoc-h">magmoc.h</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -187,16 +187,16 @@
            <div itemprop="articleBody">
             
   <section id="magmoc">
-<h1>magmoc<a class="headerlink" href="#magmoc" title="Permalink to this headline">¶</a></h1>
+<h1>magmoc<a class="headerlink" href="#magmoc" title="Permalink to this heading">¶</a></h1>
 <p><strong>Contents</strong></p>
-<div class="contents local topic" id="contents">
+<nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#magmoc-c" id="id1">magmoc.c</a></p></li>
 <li><p><a class="reference internal" href="#magmoc-h" id="id2">magmoc.h</a></p></li>
 </ul>
-</div>
+</nav>
 <section id="magmoc-c">
-<h2><a class="toc-backref" href="#id1">magmoc.c</a><a class="headerlink" href="#magmoc-c" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">magmoc.c</a><a class="headerlink" href="#magmoc-c" title="Permalink to this heading">¶</a></h2>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
 <dl class="cpp function">
@@ -304,7 +304,7 @@
 <span id="_CPPv312fndBisectionPFdP4BODYdiEP4BODYdddi"></span><span id="_CPPv212fndBisectionPFdP4BODYdiEP4BODYdddi"></span><span class="target" id="magmoc_8c_1a6ca03aa221661fd4ccb30dc141b97bc9"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndBisection</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">f</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">)</span></span>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dXl</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dXu</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dEps</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fndBisectionPFdP4BODYdiEP4BODYdddi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Bisection method to find root</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>(*f)</strong> – function pointer to the function the root of which should be found </p></li>
 <li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
@@ -313,7 +313,7 @@
 <li><p><strong>iBody</strong> – The current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> number</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>dXm the root of function (*f) </p>
 </dd>
 </dl>
@@ -324,14 +324,14 @@
 <span id="_CPPv318fndWaterMassMOTimeP4BODYdi"></span><span id="_CPPv218fndWaterMassMOTimeP4BODYdi"></span><span id="fndWaterMassMOTime__BODYP.double.i"></span><span class="target" id="magmoc_8c_1a5b0f3388b5a58a1594e79decc0ad59c9"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndWaterMassMOTime</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dFrac</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndWaterMassMOTimeP4BODYdi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mass of water in the mo+atm system to get the water frac in the magmoc Will be used in PropsAuxMagmOc to find its root with fndBisection</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
 <li><p><strong>dFrac</strong> – water mass fraction in the magma oean </p></li>
 <li><p><strong>iBody</strong> – The current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> number</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Water mass for a given dFrac - actual water mass in mo+atm </p>
 </dd>
 </dl>
@@ -342,14 +342,14 @@
 <span id="_CPPv316fndCO2MassMOTimeP4BODYdi"></span><span id="_CPPv216fndCO2MassMOTimeP4BODYdi"></span><span id="fndCO2MassMOTime__BODYP.double.i"></span><span class="target" id="magmoc_8c_1a0e20985bbf90a6ddfa824c95082ecfef"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndCO2MassMOTime</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dFracCO2</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fndCO2MassMOTimeP4BODYdi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Mass of CO2 in the mo+atm system to get the water frac in the magmoc Will be used in PropsAuxMagmOc to find its root with fndBisection</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
 <li><p><strong>dFracCO2</strong> – CO2 mass fraction in the magma oean </p></li>
 <li><p><strong>iBody</strong> – The current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> number</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>CO2 mass for a given dFracCO2 - actual CO2 mass in mo+atm </p>
 </dd>
 </dl>
@@ -360,14 +360,14 @@
 <span id="_CPPv315fndPhysPressCO2P4BODYdi"></span><span id="_CPPv215fndPhysPressCO2P4BODYdi"></span><span id="fndPhysPressCO2__BODYP.double.i"></span><span class="target" id="magmoc_8c_1a0cb6e3929483ca889fd085c000eba813"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndPhysPressCO2</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dPhysPressCO2</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fndPhysPressCO2P4BODYdi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Physical pressure of CO2 in the atmosphere Will be used in PropsAuxMagmOc to find its root with fndBisection</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
 <li><p><strong>dPhysPressCO2</strong> – Physical CO2 pressure in the atmosphere </p></li>
 <li><p><strong>iBody</strong> – The current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> number</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>0 </p>
 </dd>
 </dl>
@@ -378,13 +378,13 @@
 <span id="_CPPv320fndRadioHeatingEarthP4BODYi"></span><span id="_CPPv220fndRadioHeatingEarthP4BODYi"></span><span id="fndRadioHeatingEarth__BODYP.i"></span><span class="target" id="magmoc_8c_1a3f3169dcd977d97fa321a5098d52052e"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndRadioHeatingEarth</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420fndRadioHeatingEarthP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Radiogenic heating used in Schaefer et al. (2016) Earth like composition</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
 <li><p><strong>iBody</strong> – The current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> number</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>radiogenic heating rate </p>
 </dd>
 </dl>
@@ -395,13 +395,13 @@
 <span id="_CPPv318fndBolFluxSchaeferP4BODYi"></span><span id="_CPPv218fndBolFluxSchaeferP4BODYi"></span><span id="fndBolFluxSchaefer__BODYP.i"></span><span class="target" id="magmoc_8c_1a5e4d503d7298ba36c793c91127cfa581"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndBolFluxSchaefer</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndBolFluxSchaeferP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Bolometric flux of GJ1132 used in Schaefer et al. (2016) Fit to Schaefer Fig. 2 (Baraffe, Mstar=0.18Msun, orbit of GJ1132b)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
 <li><p><strong>iBody</strong> – The current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> number</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>bolometric flux at GJ1132b’s orbit </p>
 </dd>
 </dl>
@@ -412,13 +412,13 @@
 <span id="_CPPv317fndNetFluxAtmGreyP4BODYi"></span><span id="_CPPv217fndNetFluxAtmGreyP4BODYi"></span><span id="fndNetFluxAtmGrey__BODYP.i"></span><span class="target" id="magmoc_8c_1a5b1c45aaaeae34cd1e5035245581af67"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndNetFluxAtmGrey</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndNetFluxAtmGreyP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Atmospheric net flux with a grey atmosphere From Elkins-Tanton (2008) &amp; Carone et al. (2014)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
 <li><p><strong>iBody</strong> – The current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> number</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Atmospheric net flux </p>
 </dd>
 </dl>
@@ -429,13 +429,13 @@
 <span id="_CPPv318fndNetFluxAtmPetitP4BODYdi"></span><span id="_CPPv218fndNetFluxAtmPetitP4BODYdi"></span><span id="fndNetFluxAtmPetit__BODYP.double.i"></span><span class="target" id="magmoc_8c_1a6f52b688dce144e79dda7e882a137322"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndNetFluxAtmPetit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dTime</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fndNetFluxAtmPetitP4BODYdi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Atmospheric net flux with the petitCODE From Molliere et al. (2015) Only for GJ1132b with 100% Water atmosphere</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
 <li><p><strong>iBody</strong> – The current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> number</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Atmospheric net flux </p>
 </dd>
 </dl>
@@ -446,7 +446,7 @@
 <span id="_CPPv323fndFe2O3MassFracOxyMassP4BODYi"></span><span id="_CPPv223fndFe2O3MassFracOxyMassP4BODYi"></span><span id="fndFe2O3MassFracOxyMass__BODYP.i"></span><span class="target" id="magmoc_8c_1aed2806650ec5aa1be6a3e829e9c851a9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndFe2O3MassFracOxyMass</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423fndFe2O3MassFracOxyMassP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculation of Fe2O3 mass fraction in the m.o. and oxygen mass in the atmosphere. Used by Schaefer et al. (2016)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
 <li><p><strong>iBody</strong> – The current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> number </p></li>
@@ -461,7 +461,7 @@
 <dd><p>Calculation of melt fraction (average over magma ocean) and kinematic viscosity (uppermost layer) Function melt_fraction() in functions_rk.py</p>
 <p>Calculation of the mantle heat flux Function mantle_flux() in functions_rk.py</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
 <li><p><strong>iBody</strong> – The current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> number </p></li>
@@ -475,7 +475,7 @@
 <span id="_CPPv316fndWaterFracMeltP4BODYi"></span><span id="_CPPv216fndWaterFracMeltP4BODYi"></span><span id="fndWaterFracMelt__BODYP.i"></span><span class="target" id="magmoc_8c_1a82fd8a131e475e50650dab4f37b8df16"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndWaterFracMelt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fndWaterFracMeltP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculation of the water and CO2 mass fraction in the magma ocean Function water_fraction() in functions_rk.py</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
 <li><p><strong>iBody</strong> – The current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> number </p></li>
@@ -862,7 +862,7 @@
 </div>
 </section>
 <section id="magmoc-h">
-<h2><a class="toc-backref" href="#id2">magmoc.h</a><a class="headerlink" href="#magmoc-h" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">magmoc.h</a><a class="headerlink" href="#magmoc-h" title="Permalink to this heading">¶</a></h2>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-defines">Defines</p>
 <dl class="cpp macro">
@@ -1809,10 +1809,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="body.html" class="btn btn-neutral float-right" title="body" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="halt.html" class="btn btn-neutral float-right" title="halt" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="galhabit.html" class="btn btn-neutral" title="galhabit" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="poise.html" class="btn btn-neutral" title="poise" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -1851,6 +1851,7 @@
       <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
 
   

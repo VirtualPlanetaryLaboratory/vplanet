@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -170,7 +170,7 @@
            <div itemprop="articleBody">
             
   <section id="coupling-modules">
-<h1>Coupling Modules<a class="headerlink" href="#coupling-modules" title="Permalink to this headline">¶</a></h1>
+<h1>Coupling Modules<a class="headerlink" href="#coupling-modules" title="Permalink to this heading">¶</a></h1>
 <p>Coupling VPLanet modules is a powerful way to study phenomena in an
 interdisciplinary manner. While developing and validating a new module coupling
 can be challenging, many unsolved problems in planetary evolution require
@@ -181,7 +181,7 @@ is unique. Before attempting a new module coupling, we strongly encourage you
 to be familiar with developing VPLanet by, for example, adding new options
 and/or outputs and fully understanding the code architecture.</p>
 <section id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h2>
 <p>The first step in coupling modules is to determine how they connect. In some
 cases, one module is completely dependent on another, such as atmospheric escape
 and stellar evolution, or climate and orbital evolution. In those cases, the
@@ -199,7 +199,7 @@ the higher level files of body.c, system.c, options.c, output.c, halt.c,
 module.c.</p>
 </section>
 <section id="multi-module-subroutines">
-<h2>Multi-Module Subroutines<a class="headerlink" href="#multi-module-subroutines" title="Permalink to this headline">¶</a></h2>
+<h2>Multi-Module Subroutines<a class="headerlink" href="#multi-module-subroutines" title="Permalink to this heading">¶</a></h2>
 <p>Most of the work in connecting modules lies in module.c in subroutines that end
 with the extension “Multi”. The three that you are most likely to use are:
 VerifyMulti, ForceBehaviorMulti, PropsAuxMulti, and . The first part of module.c
@@ -233,7 +233,7 @@ Control-&gt;fnForceBehaviorMulti function pointer matrices. Just be mindful of t
 order in which the VerifyMulti functions are called.</p>
 </section>
 <section id="multi-module-derivatives">
-<h2>Multi-Module Derivatives<a class="headerlink" href="#multi-module-derivatives" title="Permalink to this headline">¶</a></h2>
+<h2>Multi-Module Derivatives<a class="headerlink" href="#multi-module-derivatives" title="Permalink to this heading">¶</a></h2>
 <p>In some case, a multi-module combination may necessitate new derivatives that
 are not required for single-module runs. VPLanet also includes a framework for
 this possibility with the UpdateMulti and AddModulesMulti functions in module.c.
@@ -292,6 +292,7 @@ system.</p>
       <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
 
   

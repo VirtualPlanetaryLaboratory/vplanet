@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -163,7 +163,7 @@
            <div itemprop="articleBody">
             
   <section id="parameter-sweep-guide">
-<h1>Parameter Sweep Guide<a class="headerlink" href="#parameter-sweep-guide" title="Permalink to this headline">¶</a></h1>
+<h1>Parameter Sweep Guide<a class="headerlink" href="#parameter-sweep-guide" title="Permalink to this heading">¶</a></h1>
 <p>Parameter sweeps are a very common use of <code class="docutils literal notranslate"><span class="pre">VPLanet</span></code>, and the team has
 developed a set of Python and command line tools to facilitate their completion
 and analysis. In brief, <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code> builds a set of initial conditions,
@@ -179,7 +179,7 @@ core temperature and the current amount of radiogenic heating from potassium-40.
 reproduce this example.</p>
 </div>
 <section id="initializing-parameter-sweeps-with-vspace">
-<h2>Initializing Parameter Sweeps with <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code><a class="headerlink" href="#initializing-parameter-sweeps-with-vspace" title="Permalink to this headline">¶</a></h2>
+<h2>Initializing Parameter Sweeps with <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code><a class="headerlink" href="#initializing-parameter-sweeps-with-vspace" title="Permalink to this heading">¶</a></h2>
 <p>The first step is to create an input file for <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code>, which is typically called <cite>VSPACE.in</cite>.
 As described in more detail in <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code>’s <a class="reference external" href="https://virtualplanetarylaboratory.github.io/VSPACE/">documentation</a>, this file
 modifies template files (here we use the <code class="docutils literal notranslate"><span class="pre">VPLanet</span></code> input files from <a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet/tree/master/examples/EarthInterior">examples/EarthInterior</a>)
@@ -222,7 +222,7 @@ options you varied so you can confirm the initial conditions. These png files ar
 </div>
 </section>
 <section id="running-simulations-with-multiplanet">
-<h2>Running Simulations with <code class="code docutils literal notranslate"><span class="pre">MultiPlanet</span></code><a class="headerlink" href="#running-simulations-with-multiplanet" title="Permalink to this headline">¶</a></h2>
+<h2>Running Simulations with <code class="code docutils literal notranslate"><span class="pre">MultiPlanet</span></code><a class="headerlink" href="#running-simulations-with-multiplanet" title="Permalink to this heading">¶</a></h2>
 <p><code class="code docutils literal notranslate"><span class="pre">MultiPlanet</span></code> is the command line tool to run the simulations created with <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code>
 across the processors on your computer. To run, type the following in the
 command line:</p>
@@ -241,7 +241,7 @@ cores on the machine.</p>
 </div>
 </section>
 <section id="checking-multiplanet-progress-with-mpstatus">
-<h2>Checking <code class="code docutils literal notranslate"><span class="pre">MultiPlanet</span></code> Progress with <code class="code docutils literal notranslate"><span class="pre">mpstatus</span></code><a class="headerlink" href="#checking-multiplanet-progress-with-mpstatus" title="Permalink to this headline">¶</a></h2>
+<h2>Checking <code class="code docutils literal notranslate"><span class="pre">MultiPlanet</span></code> Progress with <code class="code docutils literal notranslate"><span class="pre">mpstatus</span></code><a class="headerlink" href="#checking-multiplanet-progress-with-mpstatus" title="Permalink to this heading">¶</a></h2>
 <p>This example is quick to run (~1 minute, depending on the number of cores), but for
 longer simulations it is often
 helpful to know how far along the parameter sweep is. The command <code class="code docutils literal notranslate"><span class="pre">mpstatus</span></code> returns the
@@ -264,7 +264,7 @@ from each directory must be opened and read in sequentially. To streamline this 
 use <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code>.</p>
 </section>
 <section id="compressing-data-with-bigplanet">
-<h2>Compressing Data with <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code><a class="headerlink" href="#compressing-data-with-bigplanet" title="Permalink to this headline">¶</a></h2>
+<h2>Compressing Data with <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code><a class="headerlink" href="#compressing-data-with-bigplanet" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code> command compresses your parameter sweep data into an HDF5 file in which
 specific data can be efficiently extracted. <strong>Although compression can take some time,
 plotting with a</strong> <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code> ** file can be orders of magnitude faster because the script will
@@ -301,12 +301,12 @@ cores on the machine.</p>
 </div>
 </section>
 <section id="checking-bigplanet-progress-with-bpstatus">
-<h2>Checking <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code> Progress with <code class="code docutils literal notranslate"><span class="pre">bpstatus</span></code><a class="headerlink" href="#checking-bigplanet-progress-with-bpstatus" title="Permalink to this headline">¶</a></h2>
+<h2>Checking <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code> Progress with <code class="code docutils literal notranslate"><span class="pre">bpstatus</span></code><a class="headerlink" href="#checking-bigplanet-progress-with-bpstatus" title="Permalink to this heading">¶</a></h2>
 <p>For large data sets, <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code> may take several hours or more to complete. To check the
 status, use <code class="code docutils literal notranslate"><span class="pre">bpstatus</span></code>, which employs the same syntax as <code class="code docutils literal notranslate"><span class="pre">mpstatus</span></code> above.</p>
 </section>
 <section id="extracting-and-plotting-with-bigplanet">
-<h2>Extracting and Plotting with <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code><a class="headerlink" href="#extracting-and-plotting-with-bigplanet" title="Permalink to this headline">¶</a></h2>
+<h2>Extracting and Plotting with <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code><a class="headerlink" href="#extracting-and-plotting-with-bigplanet" title="Permalink to this heading">¶</a></h2>
 <p>After you have compressed your data, you need to access it. To accomplish this goal,
 <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code> is also a python module that can be imported into python scripts for the
 extraction of data from the HDF5 file. For our example, final inner core radius as a function of
@@ -364,7 +364,7 @@ of Earth’s inner core radius.</p>
 </figure>
 </section>
 <section id="creating-meta-data-files-with-bigplanet">
-<h2>Creating Meta-Data Files with <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code><a class="headerlink" href="#creating-meta-data-files-with-bigplanet" title="Permalink to this headline">¶</a></h2>
+<h2>Creating Meta-Data Files with <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code><a class="headerlink" href="#creating-meta-data-files-with-bigplanet" title="Permalink to this heading">¶</a></h2>
 <p>Finally, it’s often convenient to write out ASCII files in which each line contains the meta-data
 for your parameter sweep, e.g. the initial eccentricity, the final semi-major axis, and the maximum
 inclination. <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code> facilitates the creation of these files with the <code class="docutils literal notranslate"><span class="pre">ArchiveToCSV</span></code> method:</p>
@@ -431,6 +431,7 @@ inclination. <code class="code docutils literal notranslate"><span class="pre">B
       <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
 
   

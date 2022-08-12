@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -175,8 +175,8 @@
            <div itemprop="articleBody">
             
   <section id="vplanet-contributors-guide">
-<h1>VPLanet Contributors Guide<a class="headerlink" href="#vplanet-contributors-guide" title="Permalink to this headline">¶</a></h1>
-<div class="contents local topic" id="contents">
+<h1>VPLanet Contributors Guide<a class="headerlink" href="#vplanet-contributors-guide" title="Permalink to this heading">¶</a></h1>
+<nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#naming-conventions" id="id1">Naming conventions</a></p></li>
 <li><p><a class="reference internal" href="#c-code-formatting" id="id2">C Code formatting</a></p></li>
@@ -191,9 +191,9 @@
 <li><p><a class="reference internal" href="#code-coverage" id="id8">Code Coverage</a></p></li>
 <li><p><a class="reference internal" href="#miscellaneous" id="id9">Miscellaneous</a></p></li>
 </ul>
-</div>
+</nav>
 <section id="naming-conventions">
-<h2><a class="toc-backref" href="#id1">Naming conventions</a><a class="headerlink" href="#naming-conventions" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Naming conventions</a><a class="headerlink" href="#naming-conventions" title="Permalink to this heading">¶</a></h2>
 <p>Variable and function names use a “Hungarian style”.
 Variables names should have the following prefixes:</p>
 <div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="n">b</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">Boolean</span><span class="w"></span>
@@ -231,7 +231,7 @@ InitializeOptions, InitializeOutput, InitializeBody, InitializeUpdate,
 InitializeControl, InitializeHalts, InitializeModule, InitializeConstants.</p>
 </section>
 <section id="c-code-formatting">
-<h2><a class="toc-backref" href="#id2">C Code formatting</a><a class="headerlink" href="#c-code-formatting" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">C Code formatting</a><a class="headerlink" href="#c-code-formatting" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Use no tab characters and indent blocks by 2 spaces.</p></li>
 <li><p>All conditional blocks should have a { at the end of the line.</p></li>
@@ -254,9 +254,9 @@ problems.</p>
 </div>
 </section>
 <section id="comments">
-<h2><a class="toc-backref" href="#id3">Comments</a><a class="headerlink" href="#comments" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Comments</a><a class="headerlink" href="#comments" title="Permalink to this heading">¶</a></h2>
 <section id="file-headers">
-<h3><a class="toc-backref" href="#id4">File headers</a><a class="headerlink" href="#file-headers" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">File headers</a><a class="headerlink" href="#file-headers" title="Permalink to this heading">¶</a></h3>
 <p>All files should begin with a doxygen-style docstring:</p>
 <div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
 <span class="cm">@file filename.c</span>
@@ -270,7 +270,7 @@ problems.</p>
 </div>
 </section>
 <section id="functions">
-<h3><a class="toc-backref" href="#id5">Functions</a><a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Functions</a><a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h3>
 <p>All functions should have docstrings describing what they are with
 one-liners describing each of the inputs / outputs.</p>
 <div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
@@ -291,7 +291,7 @@ one-liners describing each of the inputs / outputs.</p>
 </div>
 </section>
 <section id="macros-and-struct-members">
-<h3><a class="toc-backref" href="#id6">Macros and struct members</a><a class="headerlink" href="#macros-and-struct-members" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Macros and struct members</a><a class="headerlink" href="#macros-and-struct-members" title="Permalink to this heading">¶</a></h3>
 <p>Struct members and constants declared using the <code class="code docutils literal notranslate"><span class="pre">#define</span></code> directive should
 all have inline comments for doxygen following this syntax:</p>
 <div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
@@ -309,7 +309,7 @@ all have inline comments for doxygen following this syntax:</p>
 </div>
 </section>
 <section id="fancy-stuff">
-<h3><a class="toc-backref" href="#id7">Fancy stuff</a><a class="headerlink" href="#fancy-stuff" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Fancy stuff</a><a class="headerlink" href="#fancy-stuff" title="Permalink to this heading">¶</a></h3>
 <p>We are currently using <a class="reference external" href="http://breathe.readthedocs.io/en/latest/">breathe</a> to
 link <a class="reference external" href="http://www.doxygen.org">DOXYGEN</a> documentation to <a class="reference external" href="http://sphinx-doc.org/">sphinx</a>
 html output. This means you should familiarize yourself with both the
@@ -317,7 +317,7 @@ html output. This means you should familiarize yourself with both the
 and the <a class="reference external" href="http://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html">reStructuredText markup</a>.</p>
 <p>The things you can do with DOXYGEN + breathe are fairly limited, so it’s useful to
 know that you can always take advantage of reStructuredText commands by escaping
-a paragraph with the <code class="code docutils literal notranslate"><span class="pre">\rst</span></code> command. For instance, check out the header in the atmesc
+a paragraph with the <code class="code docutils literal notranslate"><span class="pre">rst</span></code> command. For instance, check out the header in the atmesc
 source:</p>
 <div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
 <span class="cm">@file atmesc.c</span>
@@ -343,7 +343,7 @@ you can just copy/past the URL into the comments.</p>
 </section>
 </section>
 <section id="code-coverage">
-<h2><a class="toc-backref" href="#id8">Code Coverage</a><a class="headerlink" href="#code-coverage" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Code Coverage</a><a class="headerlink" href="#code-coverage" title="Permalink to this heading">¶</a></h2>
 <p>We use <a class="reference external" href="https://gcc.gnu.org/onlinedocs/gcc/Gcov.html">gcov</a> and
 <a class="reference external" href="http://ltp.sourceforge.net/coverage/lcov.php">lcov</a> to check code
 coverage by the test scripts. In general, there will always exist
@@ -414,7 +414,7 @@ mark each line:</p>
 </div>
 </section>
 <section id="miscellaneous">
-<h2><a class="toc-backref" href="#id9">Miscellaneous</a><a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Miscellaneous</a><a class="headerlink" href="#miscellaneous" title="Permalink to this heading">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
 <li><p>Do not use the word <cite>test</cite> in any file/folder names <em>unless</em> you want it to
@@ -477,6 +477,7 @@ any file with <cite>test</cite> in it.</p></li>
       <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
 
   

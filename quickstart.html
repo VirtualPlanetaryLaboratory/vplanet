@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -172,7 +172,7 @@
            <div itemprop="articleBody">
             
   <section id="quickstart">
-<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this heading">¶</a></h1>
 <p>This page provides an example of how to perform a single <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> simulation. It
 introduces you to the
 input and output files, executing the simulation, and visualizing the result with
@@ -183,7 +183,7 @@ to use the code. In other words, the files shown below represent the typical
 structure, formatting and syntax for all <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> simulations.
 Understanding this example will enable you to build off the other <a class="reference external" href="../examples">examples</a> included in this repository.</p>
 <section id="physics-of-the-example">
-<h2>Physics of the Example<a class="headerlink" href="#physics-of-the-example" title="Permalink to this headline">¶</a></h2>
+<h2>Physics of the Example<a class="headerlink" href="#physics-of-the-example" title="Permalink to this heading">¶</a></h2>
 <p>Let’s go over how to use <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> by simulating the evolution of
 water on Venus. Isotopic evidence
 suggests Venus may have had a similar amount of water to Earth in the
@@ -207,7 +207,7 @@ files with the relevant system, star, and/or planet parameters, 2) execute
 output generated in a log file and/or time-series data file.</p>
 </section>
 <section id="the-input-files">
-<h2>The Input Files<a class="headerlink" href="#the-input-files" title="Permalink to this headline">¶</a></h2>
+<h2>The Input Files<a class="headerlink" href="#the-input-files" title="Permalink to this heading">¶</a></h2>
 <p><code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> takes 1 file as input, which contains “options” that direct the
 execution of the code. Each option is defined by a single, case-sensitive name,
 and is followed by one or more arguments. The option file included in the command
@@ -220,7 +220,7 @@ the system, called the “body files.”</p>
 whatever you’d like. We’ll start by presenting an example, and then dissect it
 after. The primary input file generally takes a form like this:</p>
 <section id="vpl-in">
-<h3>vpl.in<a class="headerlink" href="#vpl-in" title="Permalink to this headline">¶</a></h3>
+<h3>vpl.in<a class="headerlink" href="#vpl-in" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># General Options</span>
 <span class="linenos"> 2</span>sSystemName   solarsystem        <span class="c1"># System Name</span>
 <span class="linenos"> 3</span>iVerbose      <span class="m">5</span>                  <span class="c1"># Verbosity level</span>
@@ -301,7 +301,7 @@ assuming <code class="code docutils literal notranslate"><span class="pre">VPLan
 <code class="code docutils literal notranslate"><span class="pre">sun.in</span></code> and <code class="code docutils literal notranslate"><span class="pre">venus.in</span></code>.</p>
 </section>
 <section id="sun-in">
-<h3>sun.in<a class="headerlink" href="#sun-in" title="Permalink to this headline">¶</a></h3>
+<h3>sun.in<a class="headerlink" href="#sun-in" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># Star&#39;s Parameters</span>
 <span class="linenos"> 2</span>sName           sun              <span class="c1"># Body&#39;s name</span>
 <span class="linenos"> 3</span>saModules       stellar          <span class="c1"># Modules to apply, exact spelling required</span>
@@ -365,7 +365,7 @@ units” are tailored to the Sun-Earth system.</p>
 in <a class="reference internal" href="examples/VenusWaterLoss.html"><span class="doc">VenusWaterLoss</span></a>.</p>
 </section>
 <section id="venus-in">
-<h3>venus.in<a class="headerlink" href="#venus-in" title="Permalink to this headline">¶</a></h3>
+<h3>venus.in<a class="headerlink" href="#venus-in" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># Planet&#39;s Parameters</span>
 <span class="linenos"> 2</span>sName            venus           <span class="c1"># Body&#39;s name</span>
 <span class="linenos"> 3</span>saModules        atmesc          <span class="c1"># Modules to apply, exact spelling required</span>
@@ -406,7 +406,7 @@ employs the XUV absorption efficiency model from <a class="reference external" h
 </section>
 </section>
 <section id="running-the-code">
-<h2>Running the Code<a class="headerlink" href="#running-the-code" title="Permalink to this headline">¶</a></h2>
+<h2>Running the Code<a class="headerlink" href="#running-the-code" title="Permalink to this heading">¶</a></h2>
 <p>Now that you understand how the input files work, we are ready to run the code!</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vplanet vpl.in
 </pre></div>
@@ -464,12 +464,12 @@ Simulation completed.
 directory.</p>
 </section>
 <section id="the-output-files">
-<h2>The Output Files<a class="headerlink" href="#the-output-files" title="Permalink to this headline">¶</a></h2>
+<h2>The Output Files<a class="headerlink" href="#the-output-files" title="Permalink to this heading">¶</a></h2>
 <p>The log file records the details of the simulation and captures a snapshot of the
 system at the initial step and the final step of the evolution. Here’s a
 very condensed version of what you should see:</p>
 <section id="solarsystem-log">
-<h3>solarsystem.log<a class="headerlink" href="#solarsystem-log" title="Permalink to this headline">¶</a></h3>
+<h3>solarsystem.log<a class="headerlink" href="#solarsystem-log" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Executable: vplanet
 Version: &lt;GITVERSION&gt;
 System Name: solarsystem
@@ -534,7 +534,7 @@ Sun, we requested that <code class="code docutils literal notranslate"><span cla
 and the XUV luminosity (in solar units since we used the minus sign):</p>
 </section>
 <section id="solarsystem-sun-forward">
-<h3>solarsystem.sun.forward<a class="headerlink" href="#solarsystem-sun-forward" title="Permalink to this headline">¶</a></h3>
+<h3>solarsystem.sun.forward<a class="headerlink" href="#solarsystem-sun-forward" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">0</span>.000000     <span class="m">0</span>.000677
 <span class="m">1</span>.000000e+06 <span class="m">0</span>.000677
 <span class="m">2</span>.000000e+06 <span class="m">0</span>.000678
@@ -550,7 +550,7 @@ sign, indicating in units of Earth oceans), and the amount of oxygen absorbed by
 the mantle (with a minus sign, indicating units of bars):</p>
 </section>
 <section id="solarsystem-venus-forward">
-<h3>solarsystem.venus.forward<a class="headerlink" href="#solarsystem-venus-forward" title="Permalink to this headline">¶</a></h3>
+<h3>solarsystem.venus.forward<a class="headerlink" href="#solarsystem-venus-forward" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">0</span>.000000     <span class="m">1</span>.000000 <span class="m">0</span>.000000
 <span class="m">1</span>.000000e+06 <span class="m">0</span>.978763 <span class="m">4</span>.238860
 <span class="m">2</span>.000000e+06 <span class="m">0</span>.957524 <span class="m">8</span>.477719
@@ -562,7 +562,7 @@ the mantle (with a minus sign, indicating units of bars):</p>
 </section>
 </section>
 <section id="plotting">
-<h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this headline">¶</a></h2>
+<h2>Plotting<a class="headerlink" href="#plotting" title="Permalink to this heading">¶</a></h2>
 <p>With the output generated, it is often convenient to plot the output. While any plotting
 package can be used, the VPLanet team has created a customized tool that enables
 both fast plotting of output, as well as tools to generate publication worthy figures.
@@ -586,7 +586,7 @@ hydrogen to space. In this simulation, Venus loses all of its surface water
 in about 50 Myr.</p>
 </section>
 <section id="next-steps">
-<h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this heading">¶</a></h2>
 <p>The above example describes one use case, but <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> can simulate many
 more phenomena, all with the same executable and input file format. Navigate to
 the <a class="reference internal" href="examples.html"><span class="doc">examples</span></a> directory to see the physics that are currently available. Each example provides instructions on how
@@ -646,6 +646,7 @@ details.</p>
       <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
 
   

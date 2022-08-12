@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -44,8 +44,8 @@
     <link rel="top" title="VPLanet 2.3.17
  documentation" href="../index.html"/>
         <link rel="up" title="C API" href="../src.html"/>
-        <link rel="next" title="options" href="options.html"/>
-        <link rel="prev" title="spinbody" href="spinbody.html"/> 
+        <link rel="next" title="eqtide" href="eqtide.html"/>
+        <link rel="prev" title="module" href="module.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -102,34 +102,34 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">distrot</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#distrot-c">distrot.c</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#distrot-h">distrot.h</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
-<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
 <li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
 <li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
 <li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -187,16 +187,16 @@
            <div itemprop="articleBody">
             
   <section id="distrot">
-<h1>distrot<a class="headerlink" href="#distrot" title="Permalink to this headline">¶</a></h1>
+<h1>distrot<a class="headerlink" href="#distrot" title="Permalink to this heading">¶</a></h1>
 <p><strong>Contents</strong></p>
-<div class="contents local topic" id="contents">
+<nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#distrot-c" id="id1">distrot.c</a></p></li>
 <li><p><a class="reference internal" href="#distrot-h" id="id2">distrot.h</a></p></li>
 </ul>
-</div>
+</nav>
 <section id="distrot-c">
-<h2><a class="toc-backref" href="#id1">distrot.c</a><a class="headerlink" href="#distrot-c" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">distrot.c</a><a class="headerlink" href="#distrot-c" title="Permalink to this heading">¶</a></h2>
 <p>Subroutines that control the integration of the obliquity model. </p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Russell Deitrick (<a class="reference external" href="https://github.com/deitrr/">deitrr</a>) </p>
@@ -447,13 +447,13 @@
 <span id="_CPPv320fndCentralTorqueSfacP4BODYi"></span><span id="_CPPv220fndCentralTorqueSfacP4BODYi"></span><span id="fndCentralTorqueSfac__BODYP.i"></span><span class="target" id="distrot_8c_1afe7d3cab538d6485806273bd1dad986a"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndCentralTorqueSfac</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420fndCentralTorqueSfacP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Correction to axial precession rate for eccentricity (and possible additional effects) </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Correction to precession rate </p>
 </dd>
 </dl>
@@ -464,13 +464,13 @@
 <span id="_CPPv317fndCentralTorqueRP4BODYi"></span><span id="_CPPv217fndCentralTorqueRP4BODYi"></span><span id="fndCentralTorqueR__BODYP.i"></span><span class="target" id="distrot_8c_1a7a52d6510fb821509b5e8e994e016869"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndCentralTorqueR</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndCentralTorqueRP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Natural axial precession rate due to host star (alpha*cos(obliquity)) </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Axial precession rate (rad/sec) </p>
 </dd>
 </dl>
@@ -481,14 +481,14 @@
 <span id="_CPPv316fndObliquityCRD4P4BODYP6SYSTEMPi"></span><span id="_CPPv216fndObliquityCRD4P4BODYP6SYSTEMPi"></span><span id="fndObliquityCRD4__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1a3fc93fc501566b9350dfae2e3be991c1"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndObliquityCRD4</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fndObliquityCRD4P4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>C(p,q) function in obliquity evol equations if RD4 orbital model is used </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>C(p,q) function </p>
 </dd>
 </dl>
@@ -499,14 +499,14 @@
 <span id="_CPPv316fndObliquityARD4P4BODYP6SYSTEMPi"></span><span id="_CPPv216fndObliquityARD4P4BODYP6SYSTEMPi"></span><span id="fndObliquityARD4__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1af690537b1d1631433b5e35443f9f1a83"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndObliquityARD4</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fndObliquityARD4P4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>A(p,q) function in obliquity evol equations if RD4 orbital model is used </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A(p,q) function </p>
 </dd>
 </dl>
@@ -517,14 +517,14 @@
 <span id="_CPPv316fndObliquityBRD4P4BODYP6SYSTEMPi"></span><span id="_CPPv216fndObliquityBRD4P4BODYP6SYSTEMPi"></span><span id="fndObliquityBRD4__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1adf2b439774d08115e4c70ecf3fbc07c0"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndObliquityBRD4</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fndObliquityBRD4P4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>B(p,q) function in obliquity evol equations if RD4 orbital model is used </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>B(p,q) function </p>
 </dd>
 </dl>
@@ -535,14 +535,14 @@
 <span id="_CPPv316fndObliquityCLL2P4BODYP6SYSTEMPi"></span><span id="_CPPv216fndObliquityCLL2P4BODYP6SYSTEMPi"></span><span id="fndObliquityCLL2__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1a155a0bbbde69a0b7e1b1ae740207e14e"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndObliquityCLL2</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fndObliquityCLL2P4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>C(p,q) function in obliquity evol equations if LL2 orbital model is used </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>C(p,q) function </p>
 </dd>
 </dl>
@@ -553,14 +553,14 @@
 <span id="_CPPv316fndObliquityALL2P4BODYP6SYSTEMPi"></span><span id="_CPPv216fndObliquityALL2P4BODYP6SYSTEMPi"></span><span id="fndObliquityALL2__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1aa73fbbe822c3623209f38210fc1bcd34"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndObliquityALL2</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fndObliquityALL2P4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>A(p,q) function in obliquity evol equations if LL2 orbital model is used </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A(p,q) function </p>
 </dd>
 </dl>
@@ -571,14 +571,14 @@
 <span id="_CPPv316fndObliquityBLL2P4BODYP6SYSTEMPi"></span><span id="_CPPv216fndObliquityBLL2P4BODYP6SYSTEMPi"></span><span id="fndObliquityBLL2__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1af5c2a2c5ae19d4a06da813f9e09c4ebd"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndObliquityBLL2</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fndObliquityBLL2P4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>B(p,q) function in obliquity evol equations if LL2 orbital model is used </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>B(p,q) function </p>
 </dd>
 </dl>
@@ -589,14 +589,14 @@
 <span id="_CPPv316fndObliquityCExtP4BODYP6SYSTEMPi"></span><span id="_CPPv216fndObliquityCExtP4BODYP6SYSTEMPi"></span><span id="fndObliquityCExt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1a27678517e0e84351c50c6c444cd3f469"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndObliquityCExt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fndObliquityCExtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>C(p,q) function in obliquity evol equations if external orbital data is used </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>C(p,q) function </p>
 </dd>
 </dl>
@@ -607,14 +607,14 @@
 <span id="_CPPv316fndObliquityAExtP4BODYP6SYSTEMPi"></span><span id="_CPPv216fndObliquityAExtP4BODYP6SYSTEMPi"></span><span id="fndObliquityAExt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1ac59ac5ed9927bbbe8645a8678fd1dca9"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndObliquityAExt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fndObliquityAExtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>A(p,q) function in obliquity evol equations if external orbital data is used </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A(p,q) function </p>
 </dd>
 </dl>
@@ -625,14 +625,14 @@
 <span id="_CPPv316fndObliquityBExtP4BODYP6SYSTEMPi"></span><span id="_CPPv216fndObliquityBExtP4BODYP6SYSTEMPi"></span><span id="fndObliquityBExt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1a764fa578a633a9b8e8e816b7059e52a5"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndObliquityBExt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fndObliquityBExtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>B(p,q) function in obliquity evol equations if external orbital data is used </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>B(p,q) function </p>
 </dd>
 </dl>
@@ -643,13 +643,13 @@
 <span id="_CPPv320fndAxialGRCorrectionP4BODYPi"></span><span id="_CPPv220fndAxialGRCorrectionP4BODYPi"></span><span id="fndAxialGRCorrection__BODYP.iP"></span><span class="target" id="distrot_8c_1ab5d1846e513f4f2be6cf98f3d9a098dc"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndAxialGRCorrection</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420fndAxialGRCorrectionP4BODYPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>GR correction to axial precession rate </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Correction to axial precession rate d(PrecA)/dt </p>
 </dd>
 </dl>
@@ -660,14 +660,14 @@
 <span id="_CPPv314fndAxialGRDxDtP4BODYP6SYSTEMPi"></span><span id="_CPPv214fndAxialGRDxDtP4BODYP6SYSTEMPi"></span><span id="fndAxialGRDxDt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1addb663f8cfa4533a5878e50cb6c70791"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndAxialGRDxDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fndAxialGRDxDtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>GR correction to derivative of x = sin(obliquity)*cos(preca) </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Correction to derivative dx/dt </p>
 </dd>
 </dl>
@@ -678,14 +678,14 @@
 <span id="_CPPv314fndAxialGRDyDtP4BODYP6SYSTEMPi"></span><span id="_CPPv214fndAxialGRDyDtP4BODYP6SYSTEMPi"></span><span id="fndAxialGRDyDt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1a88f3bfc7806c3f88b74349485c0fa839"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndAxialGRDyDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fndAxialGRDyDtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>GR correction to derivative of y = sin(obliquity)*sin(preca) </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Correction to derivative dy/dt </p>
 </dd>
 </dl>
@@ -696,14 +696,14 @@
 <span id="_CPPv317fndDistRotRD4DyDtP4BODYP6SYSTEMPi"></span><span id="_CPPv217fndDistRotRD4DyDtP4BODYP6SYSTEMPi"></span><span id="fndDistRotRD4DyDt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1a5eaff709f6ecfa9647ab8dd874ac60ca"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndDistRotRD4DyDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndDistRotRD4DyDtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Derivative of y = sin(obliquity)*sin(preca) when RD4 orbital model is used </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Derivative dy/dt </p>
 </dd>
 </dl>
@@ -714,14 +714,14 @@
 <span id="_CPPv317fndDistRotRD4DxDtP4BODYP6SYSTEMPi"></span><span id="_CPPv217fndDistRotRD4DxDtP4BODYP6SYSTEMPi"></span><span id="fndDistRotRD4DxDt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1ae62de5b9107751b4424f2b778ed7dfe7"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndDistRotRD4DxDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndDistRotRD4DxDtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Derivative of x = sin(obliquity)*cos(preca) when RD4 orbital model is used </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Derivative dx/dt </p>
 </dd>
 </dl>
@@ -732,14 +732,14 @@
 <span id="_CPPv317fndDistRotRD4DzDtP4BODYP6SYSTEMPi"></span><span id="_CPPv217fndDistRotRD4DzDtP4BODYP6SYSTEMPi"></span><span id="fndDistRotRD4DzDt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1ad0fd7c5a68d4f8a1c7fe913fdb664fa1"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndDistRotRD4DzDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndDistRotRD4DzDtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Derivative of z = cos(obliquity) when RD4 orbital model is used </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Derivative dz/dt </p>
 </dd>
 </dl>
@@ -750,14 +750,14 @@
 <span id="_CPPv317fndDistRotLL2DyDtP4BODYP6SYSTEMPi"></span><span id="_CPPv217fndDistRotLL2DyDtP4BODYP6SYSTEMPi"></span><span id="fndDistRotLL2DyDt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1ad84e504056c4409b787a537c294f6722"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndDistRotLL2DyDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndDistRotLL2DyDtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Derivative of y = sin(obliquity)*sin(preca) when LL2 orbital model is used </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Derivative dy/dt </p>
 </dd>
 </dl>
@@ -768,14 +768,14 @@
 <span id="_CPPv317fndDistRotLL2DxDtP4BODYP6SYSTEMPi"></span><span id="_CPPv217fndDistRotLL2DxDtP4BODYP6SYSTEMPi"></span><span id="fndDistRotLL2DxDt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1a77cd6af4593082d91b9a114db924f21c"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndDistRotLL2DxDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndDistRotLL2DxDtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Derivative of x = sin(obliquity)*cos(preca) when LL2 orbital model is used </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Derivative dx/dt </p>
 </dd>
 </dl>
@@ -786,14 +786,14 @@
 <span id="_CPPv317fndDistRotLL2DzDtP4BODYP6SYSTEMPi"></span><span id="_CPPv217fndDistRotLL2DzDtP4BODYP6SYSTEMPi"></span><span id="fndDistRotLL2DzDt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1a96d95f7f1bd09a1b60620c9edcca8728"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndDistRotLL2DzDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndDistRotLL2DzDtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Derivative of z = cos(obliquity) when LL2 orbital model is used </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Derivative dz/dt </p>
 </dd>
 </dl>
@@ -804,14 +804,14 @@
 <span id="_CPPv321fndDistRotDDynEllipDtP4BODYP6SYSTEMPi"></span><span id="_CPPv221fndDistRotDDynEllipDtP4BODYP6SYSTEMPi"></span><span id="fndDistRotDDynEllipDt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1a7563cdc49c02f54b454180a233bb1049"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndDistRotDDynEllipDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421fndDistRotDDynEllipDtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Derivative of dynamical ellipticity when coupled to eqtide and thermint </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Derivative d(dynellip)/dt </p>
 </dd>
 </dl>
@@ -822,14 +822,14 @@
 <span id="_CPPv317fndDistRotExtDxDtP4BODYP6SYSTEMPi"></span><span id="_CPPv217fndDistRotExtDxDtP4BODYP6SYSTEMPi"></span><span id="fndDistRotExtDxDt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1a1adb0dfafd15fa60a2628fe173bda2f7"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndDistRotExtDxDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndDistRotExtDxDtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Derivative of x = sin(obliquity)*cos(preca) when orbital data is input from external model </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Derivative dx/dt </p>
 </dd>
 </dl>
@@ -840,14 +840,14 @@
 <span id="_CPPv317fndDistRotExtDyDtP4BODYP6SYSTEMPi"></span><span id="_CPPv217fndDistRotExtDyDtP4BODYP6SYSTEMPi"></span><span id="fndDistRotExtDyDt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1a6d2b2b638b2d62daeb42186a42277928"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndDistRotExtDyDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndDistRotExtDyDtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Derivative of y = sin(obliquity)*sin(preca) when orbital data is input from external model </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Derivative dy/dt </p>
 </dd>
 </dl>
@@ -858,14 +858,14 @@
 <span id="_CPPv317fndDistRotExtDzDtP4BODYP6SYSTEMPi"></span><span id="_CPPv217fndDistRotExtDzDtP4BODYP6SYSTEMPi"></span><span id="fndDistRotExtDzDt__BODYP.SYSTEMP.iP"></span><span class="target" id="distrot_8c_1a0786f38f9f755e9b4d67caebd739b990"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fndDistRotExtDzDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fndDistRotExtDzDtP4BODYP6SYSTEMPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Derivative of z = cos(obliquity) when orbital data is input from external model </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
 <li><p><strong>iaBody</strong> – Array containing indices of bodies associated with interaction </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Derivative dz/dt </p>
 </dd>
 </dl>
@@ -874,7 +874,7 @@
 </div>
 </section>
 <section id="distrot-h">
-<h2><a class="toc-backref" href="#id2">distrot.h</a><a class="headerlink" href="#distrot-h" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">distrot.h</a><a class="headerlink" href="#distrot-h" title="Permalink to this heading">¶</a></h2>
 <p>Subroutines that control the integration of the obliquity model. </p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Russell Deitrick (<a class="reference external" href="https://github.com/deitrr/">deitrr</a>)</p>
@@ -1016,10 +1016,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="options.html" class="btn btn-neutral float-right" title="options" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="eqtide.html" class="btn btn-neutral float-right" title="eqtide" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="spinbody.html" class="btn btn-neutral" title="spinbody" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="module.html" class="btn btn-neutral" title="module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -1058,6 +1058,7 @@
       <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
 
   

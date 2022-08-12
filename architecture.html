@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -188,13 +188,13 @@
            <div itemprop="articleBody">
             
   <section id="vplanet-architecture">
-<h1>VPLanet Architecture<a class="headerlink" href="#vplanet-architecture" title="Permalink to this headline">¶</a></h1>
+<h1>VPLanet Architecture<a class="headerlink" href="#vplanet-architecture" title="Permalink to this heading">¶</a></h1>
 <p>This guide describes the fundamental feature of VPLanet’s architecture,
 including its flow chart, data structures, and its framework for model
 comparison. Afterwards, we present a brief introduction to function pointer
 arrays.</p>
 <section id="vplanet-s-flow-chart">
-<h2>VPLanet’s Flow Chart<a class="headerlink" href="#vplanet-s-flow-chart" title="Permalink to this headline">¶</a></h2>
+<h2>VPLanet’s Flow Chart<a class="headerlink" href="#vplanet-s-flow-chart" title="Permalink to this heading">¶</a></h2>
 <p>VPLanet has been designed to operate in a linear fashion with very few decision
 points. The key steps are 1) read the input options, 2) verify the options, 3)
 write the initial conditions to a log file, 4) integrate the system while
@@ -204,7 +204,7 @@ graphical form, here is the flow chart.</p>
 <img alt="_images/VPLanetFlowChart.png" src="_images/VPLanetFlowChart.png" />
 </figure>
 <section id="reading-options">
-<h3>Reading Options<a class="headerlink" href="#reading-options" title="Permalink to this headline">¶</a></h3>
+<h3>Reading Options<a class="headerlink" href="#reading-options" title="Permalink to this heading">¶</a></h3>
 <p>The first step in the code’s execution is to read in the options specified by
 the user and a function called ReadOptions. These instructions are in ASCII text
 files and are typically called
@@ -222,7 +222,7 @@ in Verify.</p>
 </div>
 </section>
 <section id="verifying-options">
-<h3>Verifying Options<a class="headerlink" href="#verifying-options" title="Permalink to this headline">¶</a></h3>
+<h3>Verifying Options<a class="headerlink" href="#verifying-options" title="Permalink to this heading">¶</a></h3>
 <p>Once all the options have been read in, the data are passed to Verify, which is
 one of the most complicated aspects of the code. It’s in Verify that the options
 are checked for self-consistency. For example, if a user inputs mass, radius and
@@ -244,7 +244,7 @@ that the modules all have subroutines called something like VerifyAtmEsc that
 performs verification steps that are unique to that module.</p>
 </section>
 <section id="writing-to-the-log">
-<h3>Writing to the Log<a class="headerlink" href="#writing-to-the-log" title="Permalink to this headline">¶</a></h3>
+<h3>Writing to the Log<a class="headerlink" href="#writing-to-the-log" title="Permalink to this heading">¶</a></h3>
 <p>VPLanet includes functionality to thoroughly document each simulation, and one
 of the primary methods for this feature is the log file. Writing a log file is
 optional, but it is highly recommended for both sanity checks, as well as for
@@ -275,7 +275,7 @@ and finally the actual value of the parameter is listed. The log file breaks all
 these outputs down by body, module, and initial/final conditions.</p>
 </section>
 <section id="system-integration">
-<h3>System Integration<a class="headerlink" href="#system-integration" title="Permalink to this headline">¶</a></h3>
+<h3>System Integration<a class="headerlink" href="#system-integration" title="Permalink to this heading">¶</a></h3>
 <p>After verify and possible logging, the code will then begin integrating the
 system of equations that are required based on the options. The integration is
 broken down into five steps: Auxiliary Properties (sometimes shortened to
@@ -319,13 +319,13 @@ written to the log file in the event of a halt.</p>
 </section>
 </section>
 <section id="data-structures">
-<h2>Data Structures<a class="headerlink" href="#data-structures" title="Permalink to this headline">¶</a></h2>
+<h2>Data Structures<a class="headerlink" href="#data-structures" title="Permalink to this heading">¶</a></h2>
 <p>VPLanet consists of 8 data structures (structs) that contain all the informaton needed
 to perform a simulation: Control, Body, System, Update, Module, Files, Options,
 and Output. Additionally, it uses 3 function pointer arrays/matrices:
 fnReadOption, fnWriteOutput, and fnUpdate.</p>
 <section id="control">
-<h3>Control<a class="headerlink" href="#control" title="Permalink to this headline">¶</a></h3>
+<h3>Control<a class="headerlink" href="#control" title="Permalink to this heading">¶</a></h3>
 <p>The Control struct contains all the variables related to how the code runs. Some
 of these variable are housed inside 4 additional structs: Halt, Io, Evolve, and
 Units. Many of the variables in the main Control struct are function pointer
@@ -339,7 +339,7 @@ system, including function pointer vectors for BodyCopy.</p>
 files.</p>
 </section>
 <section id="body">
-<h3>Body<a class="headerlink" href="#body" title="Permalink to this headline">¶</a></h3>
+<h3>Body<a class="headerlink" href="#body" title="Permalink to this heading">¶</a></h3>
 <p>The Body struct contains all the physical and orbital variables associated with
 each body in a system. It is initialized as an array with a length equal to the
 number of object in the system, i.e. the number of arguments to saBodyFiles.
@@ -350,27 +350,27 @@ variables associated with integration, I/O, or multi-body properties should be
 part of the Body struct.</p>
 </section>
 <section id="system">
-<h3>System<a class="headerlink" href="#system" title="Permalink to this headline">¶</a></h3>
+<h3>System<a class="headerlink" href="#system" title="Permalink to this heading">¶</a></h3>
 <p>The System struct contains data relevant to multi-body properties, typically
 parameters associated with orbital dynamics. As with the Body struct, no
 variables associated with integration or I/O should be included, and single body
 properties should be put in the Body struct.</p>
 </section>
 <section id="update">
-<h3>Update<a class="headerlink" href="#update" title="Permalink to this headline">¶</a></h3>
+<h3>Update<a class="headerlink" href="#update" title="Permalink to this heading">¶</a></h3>
 <p>The Update struct contains the variables related to how each primary variable is
 advanced during an integration. This includes the size of the function pointer
 matrix (fnUpdate), the variable associated with each element of that matrix, and
 the instantaneous derivatives of each primary variable as a function of time.</p>
 </section>
 <section id="module">
-<h3>Module<a class="headerlink" href="#module" title="Permalink to this headline">¶</a></h3>
+<h3>Module<a class="headerlink" href="#module" title="Permalink to this heading">¶</a></h3>
 <p>This struct contains information related to how the modules interact for a given
 body. Most of the member of this struct are function pointer matrices, with
 some variable for keeping track of which modules are applied to which body.</p>
 </section>
 <section id="files">
-<h3>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h3>
+<h3>Files<a class="headerlink" href="#files" title="Permalink to this heading">¶</a></h3>
 <p>The Files struct contains the relevant data for input and output files, which
 are divided into structs called Infile and Outfile. These two structs contain
 information about file names and output parameters. The one exception is that
@@ -378,19 +378,19 @@ the line number in an input file associated with a give option is recorded in
 the Options struct.</p>
 </section>
 <section id="options">
-<h3>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
+<h3>Options<a class="headerlink" href="#options" title="Permalink to this heading">¶</a></h3>
 <p>This struct contains all the data that describe the options, such as its name
 default value, associated module(s), etc. Note that the function that reads the
 option is not included (because it must take the Options struct as an argument).</p>
 </section>
 <section id="output">
-<h3>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h3>
+<h3>Output<a class="headerlink" href="#output" title="Permalink to this heading">¶</a></h3>
 <p>The Output struct is analogous to Options, except for output. Note that the
 parameters for the output files, e.g. the .forward files, are stored in
 Files.Outfile.</p>
 </section>
 <section id="fnreadoption-fnwriteoutput-and-fnupdate">
-<h3>fnReadOption, fnWriteOutput, and fnUpdate<a class="headerlink" href="#fnreadoption-fnwriteoutput-and-fnupdate" title="Permalink to this headline">¶</a></h3>
+<h3>fnReadOption, fnWriteOutput, and fnUpdate<a class="headerlink" href="#fnreadoption-fnwriteoutput-and-fnupdate" title="Permalink to this heading">¶</a></h3>
 <p>fnReadOption and fnWriteOutput are function pointer vectors that contain the
 list of functions for reading in options and writing outputs, respectively.
 fnUpdate is the matrix of function pointers for the derivatives. It is the core
@@ -398,7 +398,7 @@ of <code class="code docutils literal notranslate"><span class="pre">VPLanet</sp
 </section>
 </section>
 <section id="framework-for-model-comparison">
-<h2>Framework for Model Comparison<a class="headerlink" href="#framework-for-model-comparison" title="Permalink to this headline">¶</a></h2>
+<h2>Framework for Model Comparison<a class="headerlink" href="#framework-for-model-comparison" title="Permalink to this heading">¶</a></h2>
 <p><code class="code docutils literal notranslate"><span class="pre">VPlanet</span></code> is designed so that certain model assumptions can be grouped
 together, similar to a macro. Depending on the “model” selected for a given
 module physical and/or orbital parameters of the body will behave differently.
@@ -409,7 +409,7 @@ the two tidal models, which are qualitatively different, while holding
 everything constant. Note that not all modules have models.</p>
 </section>
 <section id="function-pointers">
-<h2>Function Pointers<a class="headerlink" href="#function-pointers" title="Permalink to this headline">¶</a></h2>
+<h2>Function Pointers<a class="headerlink" href="#function-pointers" title="Permalink to this heading">¶</a></h2>
 <p>As VPLanet relies heavily on vectors and matrices of function pointers, but they
 are not commonly used in scientific software, we provide a brief introduction to
 them here. A function pointer is a variable that contains the memory address of
@@ -555,6 +555,7 @@ allocated to a variable), etc.</p>
       <script type="text/javascript" src="_static/documentation_options.js"></script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
 
   

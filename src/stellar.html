@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -44,8 +44,8 @@
     <link rel="top" title="VPLanet 2.3.17
  documentation" href="../index.html"/>
         <link rel="up" title="C API" href="../src.html"/>
-        <link rel="next" title="eqtide" href="eqtide.html"/>
-        <link rel="prev" title="atmesc" href="atmesc.html"/> 
+        <link rel="next" title="verify" href="verify.html"/>
+        <link rel="prev" title="system" href="system.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -102,34 +102,34 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
 <li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
 <li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">stellar</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#stellar-c">stellar.c</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#stellar-h">stellar.h</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -187,16 +187,16 @@
            <div itemprop="articleBody">
             
   <section id="stellar">
-<h1>stellar<a class="headerlink" href="#stellar" title="Permalink to this headline">¶</a></h1>
+<h1>stellar<a class="headerlink" href="#stellar" title="Permalink to this heading">¶</a></h1>
 <p><strong>Contents</strong></p>
-<div class="contents local topic" id="contents">
+<nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#stellar-c" id="id5">stellar.c</a></p></li>
 <li><p><a class="reference internal" href="#stellar-h" id="id6">stellar.h</a></p></li>
 </ul>
-</div>
+</nav>
 <section id="stellar-c">
-<h2><a class="toc-backref" href="#id5">stellar.c</a><a class="headerlink" href="#stellar-c" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">stellar.c</a><a class="headerlink" href="#stellar-c" title="Permalink to this heading">¶</a></h2>
 <p>Subroutines that control the evolution of the star. </p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Rodrigo Luger (<a class="reference external" href="mailto:rodluger&#37;&#52;&#48;gmail&#46;com">rodluger<span>&#64;</span>gmail<span>&#46;</span>com</a>) </p>
@@ -613,7 +613,7 @@ and a simple wind/magnetic braking model.</p>
 </div>
 </section>
 <section id="stellar-h">
-<h2><a class="toc-backref" href="#id6">stellar.h</a><a class="headerlink" href="#stellar-h" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">stellar.h</a><a class="headerlink" href="#stellar-h" title="Permalink to this heading">¶</a></h2>
 <p>Subroutines that control the evolution of the star. </p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Rodrigo Luger (<a class="reference external" href="mailto:rodluger&#37;&#52;&#48;gmail&#46;com">rodluger<span>&#64;</span>gmail<span>&#46;</span>com</a>) </p>
@@ -899,10 +899,10 @@ and a simple wind/magnetic braking model.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="eqtide.html" class="btn btn-neutral float-right" title="eqtide" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="verify.html" class="btn btn-neutral float-right" title="verify" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="atmesc.html" class="btn btn-neutral" title="atmesc" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="system.html" class="btn btn-neutral" title="system" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -941,6 +941,7 @@ and a simple wind/magnetic braking model.</p>
       <script type="text/javascript" src="../_static/documentation_options.js"></script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
 
   

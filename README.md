@@ -4,7 +4,7 @@
 
 <h1 align="center">VPLanet: The Virtual Planet Simulator</h1>
 
-<h2 align="center">The Second VPLanet Workshop will take place 13-14 Sep 2022! <a href="https://forms.gle/hyYscRM8uoYLgF1m7">Register here.</a></h2>
+<h2 align="center">The Second VPLanet Workshop will take place 13-14 Sep 2022! <a href="https://forms.gle/hyYscRM8uoYLgF1m7">Register here</a> by Sep. 9th to participate!</h2>
 
 <p align="center">
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet"><img src="https://img.shields.io/badge/Read-the_docs-blue.svg?style=flat"></a>

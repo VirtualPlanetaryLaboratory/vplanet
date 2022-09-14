@@ -80,11 +80,9 @@ jobs:
           name: artifact
           path: dist
 
-      # Only push to PyPI if we're on the public repo!
-      
-      - name: Publish package
-        - uses: pypa/gh-action-pypi-publish@main/v2.3.24
-          if: (!github.event.release.prerelease) && github.event_name == 'release' && github.event.action == 'published' && github.repository == 'VirtualPlanetaryLaboratory/vplanet'
-          with:
-            user: __token__
-            password: ${{ secrets.pypi_password }}
+      # Only push to PyPI if we're on the public repo!      
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        if: (!github.event.release.prerelease) && github.event_name == 'release' && github.event.action == 'published' && github.repository == 'VirtualPlanetaryLaboratory/vplanet'
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}

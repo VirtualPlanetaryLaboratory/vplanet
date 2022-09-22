@@ -324,6 +324,8 @@ void ReadWaterLossModel(BODY *body, CONTROL *control, FILES *files,
       body[iFile - 1].iWaterLossModel = ATMESC_LBEXACT;
     } else if (!memcmp(sLower(cTmp), "tian", 4)) {
       body[iFile - 1].iWaterLossModel = ATMESC_TIAN;
+    } else if (!memcmp(sLower(cTmp), "ls16", 4)) {
+      body[iFile - 1].iWaterLossModel = ATMESC_LS2016;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
@@ -952,14 +954,14 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_WATERLOSSMODEL].cDescr,
           "Water loss and oxygen buildup model");
   sprintf(options[OPT_WATERLOSSMODEL].cDefault, "LBEXACT");
-  sprintf(options[OPT_WATERLOSSMODEL].cValues, "LB15 LBEXACT TIAN");
+  sprintf(options[OPT_WATERLOSSMODEL].cValues, "LB15 LBEXACT TIAN LS16");
   sprintf(options[OPT_WATERLOSSMODEL].cDimension, "nd");
   options[OPT_WATERLOSSMODEL].iType      = 3;
   options[OPT_WATERLOSSMODEL].bMultiFile = 1;
   fnRead[OPT_WATERLOSSMODEL]             = &ReadWaterLossModel;
   sprintf(options[OPT_WATERLOSSMODEL].cLongDescr,
           "The water loss rate will be determined by the selected model.\n"
-          "The options are LB15, LBEXACT, and TIAN.\n");
+          "The options are LB15, LBEXACT, TIAN, and LS16.\n");
 
   sprintf(options[OPT_PLANETRADIUSMODEL].cName, "sPlanetRadiusModel");
   sprintf(options[OPT_PLANETRADIUSMODEL].cDescr, "Gaseous Planet Radius Model");
@@ -1577,9 +1579,9 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                         "= 1 to limit envelope mass loss.\n");
         io->baRocheMessage[iBody] = 1;
       }
+          // Fix dKTide to prevent infs when in Roche Lobe overflow
+          body[iBody].dKTide = 1.0;
     }
-    // Fix dKTide to prevent infs when in Roche Lobe overflow
-    body[iBody].dKTide = 1.0;
   }
 
   // The XUV flux
@@ -1593,9 +1595,21 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   }
 
   // Reference hydrogen flux for the water loss
-  body[iBody].dFHRef =
+  // LS2016 uses reference equation 6 in paper. 1.00784 factor changes ATOMMASS to mass of H (MTG)
+  if (body[iBody].iWaterLossModel == ATMESC_LS2016) {
+    body[iBody].dFHRef = 
+        (body[iBody].dAtmXAbsEffH2O * body[iBody].dFXUV * body[iBody].dRadius) /
+        (4 * BIGG * body[iBody].dMass * PROTONMASS);
+    // Use Below for LBEXACT with MGs diff limited treatment
+    //body[iBody].dFHRef =
+      //  (body[iBody].dAtmXAbsEffH2O * body[iBody].dFXUV * body[iBody].dRadius) /
+        //(4 * BIGG * body[iBody].dMass * body[iBody].dKTide * ATOMMASS);
+  } else {
+    body[iBody].dFHRef =
         (body[iBody].dAtmXAbsEffH2O * body[iBody].dFXUV * body[iBody].dRadius) /
         (4 * BIGG * body[iBody].dMass * body[iBody].dKTide * ATOMMASS);
+  }
+  
 
   // Surface gravity
   double g = (BIGG * body[iBody].dMass) /
@@ -1604,6 +1618,13 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   // Oxygen mixing ratio
   double XO = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
                                         body[iBody].dOxygenMass);
+  
+  // Calculate the free oxygen mixing ratio (not in water molecules) and water mixing for switch to diffusion later on (MTG)
+  double NFreeO = body[iBody].dOxygenMass / (32 * ATOMMASS);
+  double Nh2o = body[iBody].dSurfaceWaterMass / (18 * ATOMMASS);
+  double XFreeO = (2 * NFreeO) / ((2 * NFreeO) + (Nh2o));
+  double Xh2o = Nh2o / ((2 * NFreeO) + (Nh2o));
+  double Xcompare = Xh2o; // the mixing ratio XFreeO must be equal to or greater than for diffusion lim esc 
 
   // Diffusion-limited H escape rate
   double BDIFF = 4.8e19 * pow(body[iBody].dFlowTemp, 0.75);
@@ -1621,6 +1642,8 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
     body[iBody].dMDotWater         = 0;
 
   } else {
+
+    double FH = body[iBody].dFHRef;
 
     body[iBody].bRunaway = 1;
 
@@ -1660,8 +1683,8 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                     (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) /
                     (BDIFF * g);
         FH  = body[iBody].dFHRef;
-        rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) /
-              (body[iBody].dCrossoverMass / ATOMMASS - 1.);
+        rat = ((body[iBody].dCrossoverMass / ATOMMASS) - QOH) /
+              ((body[iBody].dCrossoverMass / ATOMMASS) - 1.);
         body[iBody].dOxygenEta = 0;
 
       } else {
@@ -1678,9 +1701,82 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
         FH = body[iBody].dFHRef * pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
         body[iBody].dOxygenEta = 2 * XO / (1. - XO) * rat;
       }
+    } else if (body[iBody].iWaterLossModel == ATMESC_LS2016) {
+
+      // Use below for LBEXACT equations with schaeffer diff lim
+      double x = (QOH - 1.) * (1. - XO) * (BDIFF * g * ATOMMASS) /
+                 (KBOLTZ * body[iBody].dFlowTemp);
+      double FH;
+      double rat;
+
+      // Get the crossover mass
+      if (body[iBody].dFHRef < x) {
+
+        // mcross < mo
+        body[iBody].dCrossoverMass =
+              ATOMMASS +
+              (1. / (1. - XO)) *
+                    (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) /
+                    (BDIFF * g);
+      } else {
+
+        // mcross >= mo
+        double num = 1. + (XO / (1. - XO)) * QOH * QOH;
+        double den = 1. + (XO / (1. - XO)) * QOH;
+        body[iBody].dCrossoverMass =
+              ATOMMASS * num / den +
+              (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) /
+                    ((1 + XO * (QOH - 1)) * BDIFF * g);
+      }
+
+      double GPotential = (BIGG * body[iBody].dMass * PROTONMASS)/(body[iBody].dRadius); 
+
+      double FXUVCritDrag = ((4 * BDIFF * pow(GPotential, 2)) / 
+            (body[iBody].dAtmXAbsEffH2O * KBOLTZ * body[iBody].dFlowTemp * body[iBody].dRadius)) * 
+            (QOH - 1) * (1 - XO);
+      
+      if ((body[iBody].dCrossoverMass >= OXYMASS) &&
+          (body[iBody].dFXUV >= FXUVCritDrag)) {
+        rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) /
+              (body[iBody].dCrossoverMass / ATOMMASS - 1.);
+        FH = body[iBody].dFHRef * pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
+        body[iBody].dOxygenEta = 2 * XO / (1. - XO) * rat;
+      } else {
+        FH  = body[iBody].dFHRef;
+        rat = ((body[iBody].dCrossoverMass / ATOMMASS) - QOH) /
+              ((body[iBody].dCrossoverMass / ATOMMASS) - 1.);
+        body[iBody].dOxygenEta = 0;
+      } 
+      
+      // Eq 5 Schaefer 2016
+     // body[iBody].dCrossoverMass = 
+     //       ATOMMASS + ((KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) / (BDIFF * g * (1-XO)));
+      // Critical FXUV for drag to occur: (drag now requires u2 < uc and FXUV >= FXUVCritDrag)
+      /**double FXUVCritDrag = ((4 * BDIFF * pow(HPOT2, 2)) / 
+            (body[iBody].dAtmXAbsEffH2O * KBOLTZ * body[iBody].dFlowTemp * body[iBody].dRadius)) * 
+            (QOH - 1) * (1 - XO);
+      
+      if ((body[iBody].dCrossoverMass >= OXYMASS) &&
+          (body[iBody].dFXUV >= FXUVCritDrag)) {
+            //double aa = KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef;
+            //double bb = (15*ATOMMASS) * BDIFF * g * XO * (1 - XO);
+            //body[iBody].dOxygenEta = (((aa * XO) - bb) / ((aa * (1-XO)) + (QOH*bb)));
+            double bigY = (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) / 
+                 ((QOH - 1) * BDIFF * g * (1-XO) * ATOMMASS);
+            body[iBody].dOxygenEta = ((bigY - 1) / ((bigY * ((1 - XO) / XO)) + QOH));
+            if (body[iBody].dOxygenEta > 0.5){
+              body[iBody].dOxygenEta = 0.5;
+            }
+            FH = body[iBody].dFHRef / (1 + (QOH * (body[iBody].dOxygenEta)));
+            body[iBody].dOxygenEta = body[iBody].dOxygenEta*2;
+          } else {
+            body[iBody].dOxygenEta = 0;
+            FH = body[iBody].dFHRef;
+          }*/
+
     }
 
-    // if ((XO > 0.6) && (body[iBody].iWaterLossModel == ATMESC_LBEXACT)) {
+    //if ((XO > 0.6) && (body[iBody].iWaterLossModel == ATMESC_LBEXACT)) {
     if ((body[iBody].dOxygenEta > 1) &&
         (body[iBody].iWaterLossModel == ATMESC_LBEXACT)) {
       // Schaefer et al. (2016) prescription, section 2.2
@@ -1690,6 +1786,29 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
       body[iBody].dOxygenEta         = 0;
       body[iBody].dMDotWater =
             body[iBody].dFHDiffLim *
+            (4 * ATOMMASS * PI * body[iBody].dRadius * body[iBody].dRadius *
+             body[iBody].dXFrac * body[iBody].dXFrac);
+    //} else if ((XO <= 0.6) && (body[iBody].iWaterLossModel == ATMESC_LBEXACT)) {
+    } else if ((body[iBody].dOxygenEta <= 1) &&
+               (body[iBody].iWaterLossModel == ATMESC_LBEXACT)) {
+      // In the Tian model, oxygen escapes when it's the dominant species. I
+      // think this is wrong...
+      body[iBody].iWaterEscapeRegime = ATMESC_ELIM;
+      body[iBody].dMDotWater =
+            FH *
+            (4 * ATOMMASS * PI * body[iBody].dRadius * body[iBody].dRadius *
+             body[iBody].dXFrac * body[iBody].dXFrac);
+    } else if ((XFreeO >= Xcompare) && (body[iBody].iWaterLossModel == ATMESC_LS2016)) {
+      body[iBody].iWaterEscapeRegime = ATMESC_DIFFLIM;
+      body[iBody].dOxygenEta = 0;
+      body[iBody].dMDotWater =
+            body[iBody].dFHDiffLim *
+            (4 * ATOMMASS * PI * body[iBody].dRadius * body[iBody].dRadius *
+             body[iBody].dXFrac * body[iBody].dXFrac);
+    } else if ((XFreeO < Xcompare) && (body[iBody].iWaterLossModel == ATMESC_LS2016)) {
+      body[iBody].iWaterEscapeRegime = ATMESC_ELIM;
+      body[iBody].dMDotWater =
+            FH *
             (4 * ATOMMASS * PI * body[iBody].dRadius * body[iBody].dRadius *
              body[iBody].dXFrac * body[iBody].dXFrac);
     } else {
@@ -2972,6 +3091,193 @@ void WriteRRCriticalFlux(BODY *body, CONTROL *control, OUTPUT *output,
 }
 
 /**
+Logs the crossover mass.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteCrossoverMass(BODY *body, CONTROL *control, OUTPUT *output,
+                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                     double *dTmp, char cUnit[]) {
+  *dTmp = body[iBody].dCrossoverMass;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass, cUnit);
+  }
+}
+
+/**
+Logs the Water escape regime
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteWaterEscapeRegime(BODY *body, CONTROL *control, OUTPUT *output,
+                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                        double *dTmp, char cUnit[]) {
+  *dTmp = body[iBody].iWaterEscapeRegime;
+  strcpy(cUnit, "");
+}
+
+
+/**
+Logs the XUV flux received by the planet.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteFXUVCRITDRAG(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+               UNITS *units, UPDATE *update, int iBody, double *dTmp,
+               char cUnit[]) {
+  double BDIFF = 4.8e19 * pow(body[iBody].dFlowTemp, 0.75);
+  double XO = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
+                               body[iBody].dOxygenMass);
+  double GPotential = (BIGG * body[iBody].dMass * PROTONMASS)/(body[iBody].dRadius); 
+
+  *dTmp = ((4 * BDIFF * pow(GPotential, 2)) / 
+            (body[iBody].dAtmXAbsEffH2O * KBOLTZ * body[iBody].dFlowTemp * body[iBody].dRadius)) * 
+            (QOH - 1) * (1 - XO);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    strcpy(cUnit, "W/m^2");
+  }
+}
+
+/**
+Logs the Hydrogen Reference Flux
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteHREFFLUX(BODY *body, CONTROL *control, OUTPUT *output,
+                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                        double *dTmp, char cUnit[]) {
+  *dTmp = body[iBody].dFHRef;
+  strcpy(cUnit, "m^-2 s^-1");
+}
+
+/**
+Logs the H flux if it was diffusion limited (or the true flux in the diffusion limited regime)
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteHDiffLimFlux(BODY *body, CONTROL *control, OUTPUT *output,
+                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                        double *dTmp, char cUnit[]) {
+  *dTmp = body[iBody].dFHDiffLim;
+  strcpy(cUnit, "m^-2 s^-1");
+}
+
+/**
+Modifier for H Ref Flux to include oxygen drag at a snapshot in time
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteHRefODragMod(BODY *body, CONTROL *control, OUTPUT *output,
+                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                        double *dTmp, char cUnit[]) {
+  double rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) /
+              (body[iBody].dCrossoverMass / ATOMMASS - 1.);
+  double XO = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
+                                        body[iBody].dOxygenMass);
+  *dTmp = pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
+  strcpy(cUnit, "");
+}
+
+
+/**
+Logs the molecular oxygen mixing ratio.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteMolecOxygenMixingRatio(BODY *body, CONTROL *control, OUTPUT *output,
+                            SYSTEM *system, UNITS *units, UPDATE *update,
+                            int iBody, double *dTmp, char cUnit[]) {
+  *dTmp = fdMolecOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
+                                    body[iBody].dOxygenMass);
+  strcpy(cUnit, "");
+}
+
+/**
+Logs the water mixing ratio.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteWaterAtmMixingRatio(BODY *body, CONTROL *control, OUTPUT *output,
+                            SYSTEM *system, UNITS *units, UPDATE *update,
+                            int iBody, double *dTmp, char cUnit[]) {
+  *dTmp = fdWaterAtmMixingRatio(body[iBody].dSurfaceWaterMass,
+                                    body[iBody].dOxygenMass);
+  strcpy(cUnit, "");
+}
+
+/**
 Set up stuff to be logged for atmesc.
 
 @param output A pointer to the current OUTPUT instance
@@ -3176,6 +3482,78 @@ void InitializeOutputAtmEsc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_RRCRITICALFLUX].iNum       = 1;
   output[OUT_RRCRITICALFLUX].iModuleBit = ATMESC;
   fnWrite[OUT_RRCRITICALFLUX]           = &WriteRRCriticalFlux;
+
+  /** Megan addition: crossover mass */
+  sprintf(output[OUT_CROSSOVERMASS].cName, "CrossoverMass");
+  sprintf(output[OUT_CROSSOVERMASS].cDescr, "Crossover mass, defines oxygen is escaping if mc > mo");
+  sprintf(output[OUT_CROSSOVERMASS].cNeg, "amu");
+  output[OUT_CROSSOVERMASS].bNeg       = 1;
+  output[OUT_CROSSOVERMASS].dNeg       = 1. / ATOMMASS;
+  output[OUT_CROSSOVERMASS].iNum       = 1;
+  output[OUT_CROSSOVERMASS].iModuleBit = ATMESC;
+  fnWrite[OUT_CROSSOVERMASS]           = &WriteCrossoverMass;
+
+  /** Megan addition: water escape regime */
+  sprintf(output[OUT_WATERESCAPEREGIME].cName, "WaterEscapeRegime");
+  sprintf(output[OUT_WATERESCAPEREGIME].cDescr, "What water escape regime the code is currently in");
+  output[OUT_WATERESCAPEREGIME].bNeg       = 0;
+  output[OUT_WATERESCAPEREGIME].iNum       = 1;
+  output[OUT_WATERESCAPEREGIME].iModuleBit = ATMESC;
+  fnWrite[OUT_WATERESCAPEREGIME]           = &WriteWaterEscapeRegime;
+
+  /** Megan addition: modifier to H ref flux to include O drag */
+  sprintf(output[OUT_HREFODRAGMOD].cName, "HRefODragMod");
+  sprintf(output[OUT_HREFODRAGMOD].cDescr, "Multiply by H ref flux to get flux with drag");
+  output[OUT_HREFODRAGMOD].bNeg       = 0;
+  output[OUT_HREFODRAGMOD].iNum       = 1;
+  output[OUT_HREFODRAGMOD].iModuleBit = ATMESC;
+  fnWrite[OUT_HREFODRAGMOD]           = &WriteHRefODragMod;
+
+  /** Megan addition: FXUVCRITDRAG for LS16 model */
+  sprintf(output[OUT_FXUVCRITDRAG].cName, "FXUVCRITDRAG");
+  sprintf(output[OUT_FXUVCRITDRAG].cDescr, "Critical Drag XUV flux");
+  sprintf(output[OUT_FXUVCRITDRAG].cNeg, "W/m^2");
+  output[OUT_FXUVCRITDRAG].bNeg       = 1;
+  output[OUT_FXUVCRITDRAG].dNeg       = 1;
+  output[OUT_FXUVCRITDRAG].iNum       = 1;
+  output[OUT_FXUVCRITDRAG].iModuleBit = ATMESC;
+  fnWrite[OUT_FXUVCRITDRAG]           = &WriteFXUVCRITDRAG;
+
+  /** Megan addition: Hydrogen Reference Flux */
+  sprintf(output[OUT_HREFFLUX].cName, "HREFFLUX");
+  sprintf(output[OUT_HREFFLUX].cDescr, "The Hydrogen Reference Flux (m^-2 s^-1)");
+  output[OUT_HREFFLUX].bNeg       = 0;
+  output[OUT_HREFFLUX].iNum       = 1;
+  output[OUT_HREFFLUX].iModuleBit = ATMESC;
+  fnWrite[OUT_HREFFLUX]           = &WriteHREFFLUX;
+
+  /** Megan addition: Hydrogen Diffusion Flux */
+  sprintf(output[OUT_HDIFFFLUX].cName, "HDiffFlux");
+  sprintf(output[OUT_HDIFFFLUX].cDescr, "The Hydrogen Diffusion Flux (m^-2 s^-1)");
+  output[OUT_HDIFFFLUX].bNeg       = 0;
+  output[OUT_HDIFFFLUX].iNum       = 1;
+  output[OUT_HDIFFFLUX].iModuleBit = ATMESC;
+  fnWrite[OUT_HDIFFFLUX]           = &WriteHDiffLimFlux;
+
+  /** Megan addition: Molecular Oxygen Mixing Ratio */
+  sprintf(output[OUT_XO2].cName, "XO2");
+  sprintf(output[OUT_XO2].cDescr,
+          "Molecular oxygen mixing ratio in atmosphere");
+  output[OUT_XO2].bNeg       = 0;
+  output[OUT_XO2].iNum       = 1;
+  output[OUT_XO2].iModuleBit = ATMESC;
+  fnWrite[OUT_XO2]           = &WriteMolecOxygenMixingRatio;
+
+  /** Megan addition: Water Mixing Ratio in Atmosphere before condensation */
+  sprintf(output[OUT_XH2O].cName, "XH2O");
+  sprintf(output[OUT_XH2O].cDescr,
+          "Water mixing ratio in upper atmosphere");
+  output[OUT_XH2O].bNeg       = 0;
+  output[OUT_XH2O].iNum       = 1;
+  output[OUT_XH2O].iModuleBit = ATMESC;
+  fnWrite[OUT_XH2O]           = &WriteWaterAtmMixingRatio;
+
+
 }
 
 /************ ATMESC Logging Functions **************/
@@ -3299,11 +3677,9 @@ The rate of change of the surface water mass.
 double fdDSurfaceWaterMassDt(BODY *body, SYSTEM *system, int *iaBody) {
 
   if ((body[iaBody[0]].bRunaway) && (body[iaBody[0]].dSurfaceWaterMass > 0)) {
-
     // This takes care of both energy-limited and diffusion limited escape!
     return -(9. / (1 + 8 * body[iaBody[0]].dOxygenEta)) *
            body[iaBody[0]].dMDotWater;
-
   } else {
 
     return 0.;
@@ -3335,6 +3711,19 @@ double fdDOxygenMassDt(BODY *body, SYSTEM *system, int *iaBody) {
                (1 + 8 * body[iaBody[0]].dOxygenEta) *
                body[iaBody[0]].dMDotWater;
       }
+/**    } else if (body[iaBody[0]].iWaterLossModel == ATMESC_LS2016) {
+        return (8 - 8 * (body[iaBody[0]].dOxygenEta)) /
+                (1 + 8 * (body[iaBody[0]].dOxygenEta)) * body[iaBody[0]].dMDotWater; 
+        double BDIFF = 4.8e19 * pow(body[iaBody[0]].dFlowTemp, 0.75);
+        double g = (BIGG * body[iaBody[0]].dMass) /
+             (body[iaBody[0]].dRadius * body[iaBody[0]].dRadius);
+        double XO = fdAtomicOxygenMixingRatio(body[iaBody[0]].dSurfaceWaterMass,
+                                    body[iaBody[0]].dOxygenMass);
+        return ((BDIFF*PROTONMASS*g)/(KBOLTZ*body[iaBody[0]].dFlowTemp))*15*(1-XO); */
+    } else if (body[iaBody[0]].iWaterLossModel == ATMESC_LS2016) {
+      //Add the 2s here meg
+      return (8 - 8 * (body[iaBody[0]].dOxygenEta)) /
+             (1 + 8 * (body[iaBody[0]].dOxygenEta)) * body[iaBody[0]].dMDotWater;
     } else {
 
       // Exact
@@ -3372,8 +3761,11 @@ double fdDOxygenMantleMassDt(BODY *body, SYSTEM *system, int *iaBody) {
                (1 + 8 * body[iaBody[0]].dOxygenEta) *
                body[iaBody[0]].dMDotWater;
       }
+    } else if (body[iaBody[0]].iWaterLossModel == ATMESC_LS2016) {
+      //Add the 2s here meg
+      return (8 - 8 * (body[iaBody[0]].dOxygenEta)) /
+             (1 + 8 * (body[iaBody[0]].dOxygenEta)) * body[iaBody[0]].dMDotWater;
     } else {
-
       // Exact
       return (8 - 8 * body[iaBody[0]].dOxygenEta) /
              (1 + 8 * body[iaBody[0]].dOxygenEta) * body[iaBody[0]].dMDotWater;
@@ -3579,6 +3971,34 @@ double fdAtomicOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
       return 0.;
     }
   }
+}
+
+/**
+Computes the molecular oxygen mixing ratio in atmosphere. ASSUMING PURE WATER/OXYGEN ATMOSPHERE
+
+@param dSurfaceWaterMass The amount of water in the atmosphere
+@param dOxygenMass The amount of oxygen in the atmosphere
+*/
+double fdMolecOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
+  // Mixing ratio X_O of atomic oxygen in the upper atmosphere
+  // assuming atmosphere is well-mixed up to the photolysis layer
+  double NO2  = dOxygenMass / (32 * ATOMMASS);
+  double NH2O = dSurfaceWaterMass / (18 * ATOMMASS);
+  return NO2 / (NO2+NH2O);
+}
+
+/**
+Computes the water mixing ratio in atmosphere. ASSUMING PURE WATER/OXYGEN ATMOSPHERE
+
+@param dSurfaceWaterMass The amount of water in the atmosphere
+@param dOxygenMass The amount of oxygen in the atmosphere
+*/
+double fdWaterAtmMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
+  // Mixing ratio X_O of atomic oxygen in the upper atmosphere
+  // assuming atmosphere is well-mixed up to the photolysis layer
+  double NO2  = dOxygenMass / (32 * ATOMMASS);
+  double NH2O = dSurfaceWaterMass / (18 * ATOMMASS);
+  return NH2O / (NO2+NH2O);
 }
 
 /**

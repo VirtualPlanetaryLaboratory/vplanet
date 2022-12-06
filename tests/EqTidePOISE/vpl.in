@@ -12,5 +12,5 @@ saBodyFiles   gl514.in gl514b.in
 bDoForward    1
 bVarDt        1
 dEta          0.1
-dStopTime     1e2
-dOutputTime   10
+dStopTime     1
+dOutputTime   1

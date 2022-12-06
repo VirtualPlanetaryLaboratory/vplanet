@@ -1590,7 +1590,7 @@ void VerifyCPL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 void VerifyPerturbersEqtide(BODY *body, FILES *files, OPTIONS *options,
                             UPDATE *update, int iNumBodies, int iBody) {
   int iPert, iBodyPert, iVar, ok;
-  int *bFound = malloc(iNumBodies);
+  int *bFound = malloc(iNumBodies*sizeof(int));
 
   for (iBody = 0; iBody < iNumBodies; iBody++) {
     fprintf(stderr,"Body: %s\n",body[iBody].cName);

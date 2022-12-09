@@ -1590,10 +1590,10 @@ void VerifyCPL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 void VerifyPerturbersEqtide(BODY *body, FILES *files, OPTIONS *options,
                             UPDATE *update, int iNumBodies, int iBody) {
   int iPert, iBodyPert, iVar, ok;
-  int *bFound = malloc(iNumBodies);
+  int *bFound = malloc(iNumBodies*sizeof(int));
 
   for (iBody = 0; iBody < iNumBodies; iBody++) {
-
+    fprintf(stderr,"Body: %s\n",body[iBody].cName);
     if (body[iBody].bEqtide) {
       if (body[iBody].iTidePerts > 0) {
         for (iPert = 0; iPert < body[iBody].iTidePerts; iPert++) {
@@ -1610,7 +1610,7 @@ void VerifyPerturbersEqtide(BODY *body, FILES *files, OPTIONS *options,
                 // Was eqtide set for the perturbed body?
                 if (!body[iBodyPert].bEqtide) {
                   fprintf(stderr,
-                          "ERROR: %s tidally perturbs %s, but module EQTIDE "
+                          "ERROR: %s tidally perturbs %s, but module EqTide "
                           "was not selected for body %s.\n",
                           body[iBody].cName, body[iBodyPert].cName,
                           body[iBodyPert].cName);

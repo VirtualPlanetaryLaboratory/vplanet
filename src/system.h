@@ -25,6 +25,7 @@ double fdPotEnergy(BODY *, CONTROL *, SYSTEM *, int);
 double fdTotEnergy(BODY *, CONTROL *, SYSTEM *);
 
 int bPrimary(BODY *, int);
+int fiAssignOrbiter(BODY*,int);
 
 void CalcHK(BODY *, int);
 void CalcPQ(BODY *, int);

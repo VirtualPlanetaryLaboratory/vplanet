@@ -79,7 +79,7 @@ int main_impl(int argc, char *argv[]) {
   options = malloc(MODULEOPTEND * sizeof(OPTIONS));
   InitializeOptions(options, fnRead);
   output = malloc(MODULEOUTEND * sizeof(OUTPUT));
-  InitializeOutput(output, fnWrite);
+  InitializeOutput(&files, output, fnWrite);
 
   /* Set to IntegrationMethod to 0, so default can be
      assigned if necessary */

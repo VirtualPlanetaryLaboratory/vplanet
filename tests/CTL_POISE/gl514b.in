@@ -76,12 +76,4 @@ dMixingDepth      70
 #________output options!_____________________________________________
 dSeasOutputTime   0
 
-saOutputOrder    Time PrecA -RotPer -TGlobal AlbedoGlobal -FluxOutGlobal $
-  -TotIceMass -TotIceFlow -TotIceBalance DeltaTime AreaIceCov Snowball Obliq Ecce COPP $
-  -LockTime TideLock -BodyDeccDt  -BodyDsemiDtEqtide  -DeccDtEqtide  -DHEccDtEqtide  -DKEccDtEqtide  DMeanMotionDtEqtide  -DOblDtEqtide  -DOrbPerDtEqtide  -DRotPerDtEqtide $
-  DRotRateDtEqtide  -DsemiDtEqtide  -DXoblDtEqtide  -DYoblDtEqtide  -DZoblDtEqtide  -EccTimeEqtide  -EqTidePower  -OblTimeEqtide  -PowerEqtide  -RotTimeEqtide $
-  -SemiTimeEqtide  -SurfEnFluxEqtide  -TidalRadius
 
-saGridOutput     Time IceAccum IceAblate -Latitude -TempLat -TempLandL -TempWaterL $
-AlbedoLand AlbedoWater AlbedoLat -AnnInsol -FluxIn -FluxOut IceMass -IceHeight DIceMassDt $
-  -IceFlow -BedrockH -TempMaxLat -TempMinLat -FluxMerid -DivFlux

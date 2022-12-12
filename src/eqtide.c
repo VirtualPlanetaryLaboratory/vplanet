@@ -2665,7 +2665,7 @@ void WriteEqRotPer(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
                    char cUnit[]) {
 
-  int iOrbiter = fiAssignOrbiter(body,iBody);
+  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
   *dTmp = fdFreqToPer(fdEqRotRate(
         body, iBody, body[iOrbiter].dMeanMotion, body[iOrbiter].dEccSq,
         control->Evolve.iEqtideModel, control->Evolve.bDiscreteRot));
@@ -2683,7 +2683,7 @@ void WriteEqRotPerCont(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char cUnit[]) {
 
-  int iOrbiter = fiAssignOrbiter(body,iBody);
+  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
 
   // To CPL, or to CTL? That is the question
   if (control->Evolve.iEqtideModel == CPL) {
@@ -2708,7 +2708,7 @@ void WriteEqRotPerDiscrete(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
                            int iBody, double *dTmp, char cUnit[]) {
 
-  int iOrbiter = fiAssignOrbiter(body,iBody);
+  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
   if (control->Evolve.iEqtideModel == CPL) {
     *dTmp = fdFreqToPer(fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,
                                                body[iOrbiter].dEccSq));
@@ -2729,7 +2729,7 @@ void WriteEqRotRate(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
 
-  int iOrbiter = fiAssignOrbiter(body,iBody);
+  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
   *dTmp = fdEqRotRate(body, iBody, body[iOrbiter].dMeanMotion,
                       body[iOrbiter].dEccSq, control->Evolve.iEqtideModel,
                       control->Evolve.bDiscreteRot);
@@ -2747,7 +2747,7 @@ void WriteEqRotRateCont(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                         double *dTmp, char cUnit[]) {
 
-  int iOrbiter = fiAssignOrbiter(body,iBody);
+  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
 
   // To CPL, or to CTL? That is the question
   if (control->Evolve.iEqtideModel == CPL) {
@@ -2770,7 +2770,7 @@ void WriteEqRotRateCont(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteEqRotRateDiscrete(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
                             int iBody, double *dTmp, char cUnit[]) {
-  int iOrbiter = fiAssignOrbiter(body,iBody);
+  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
 
   if (control->Evolve.iEqtideModel == CPL) {
     *dTmp = fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,
@@ -2792,7 +2792,7 @@ void WriteEqTidePower(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                       double *dTmp, char cUnit[]) {
 
-  int iOrbiter = fiAssignOrbiter(body,iBody);
+  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
   // Why is this Eq??????? XXX
   if (control->Evolve.iEqtideModel == CPL) {
     *dTmp = fdCPLTidePowerEq(body[iBody].dTidalZ[iOrbiter], body[iBody].dEccSq,
@@ -2935,10 +2935,11 @@ void WritePowerEqtide(BODY *body, CONTROL *control, OUTPUT *output,
   int jBody=0;
   if (iBody==0)
     jBody++;
+    /*
   fprintf(stderr,"\niBody: %d\n",iBody);
   fprintf(stderr,"\njBody: %d\n",jBody);
   fprintf(stderr,"TidalZ: %lf\n",body[iBody].dTidalZ[jBody]);
-
+*/
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3432,7 +3433,7 @@ void LogBodyEqtide(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   fprintf(fp, "----- EQTIDE PARAMETERS (%s)------\n", body[iBody].cName);
   for (iOut = iStart; iOut < OUTENDEQTIDE; iOut++) {
     if (output[iOut].iNum > 0) {
-      fprintf(stderr,"iOut = %d.\n",iOut);
+      //fprintf(stderr,"iOut = %d.\n",iOut);
       WriteLogEntry(body, control, &output[iOut], system, update, fnWrite[iOut],
                     fp, iBody);
     }
@@ -3903,6 +3904,40 @@ void ForceBehaviorEqtide(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
   }
 }
 
+/**
+ * Identify and return the index for the perturbing body.
+ * 
+ * 
+*/
+
+int fiAssignTidalPerturber(BODY *body,int iBody) {
+  int iPerturber;
+
+  if (!bPrimary(body, iBody)) {
+    iPerturber = iBody;
+  } else {
+    // Without more info, assume closest body dominates
+    // XXX Should either be calculable from these variables or be rewritten
+    iPerturber = 0;
+  }
+  return iPerturber;
+}
+
+/* Non-central body contains the orbital parameters */
+
+int fiAssignTidalOrbiter(BODY *body,int iBody) {
+  int iOrbiter;
+
+  if (!bPrimary(body, iBody)) {
+    iOrbiter = iBody;
+  } else {
+    // Without more info, assume closest body dominates
+    // XXX Should either be calculable from these variables or be rewritten
+    iOrbiter = 1;
+  }
+  return iOrbiter;
+}
+
 /*
  ************************ CPL Functions ******************
  */
@@ -3928,8 +3963,8 @@ double fdCPLTidePower(BODY *body, int iBody) {
 
     // Does this work with DF's changes to da/dt with the synchronous case?
     // See Fleming et al., 2018
-    fprintf(stderr,"\niBody: %d\n",iBody);
-    fprintf(stderr,"TidalZ[%d]: %lf\n",iIndex,body[iBody].dTidalZ[iIndex]);
+    //fprintf(stderr,"\niBody: %d\n",iBody);
+    //fprintf(stderr,"TidalZ[%d]: %lf\n",iIndex,body[iBody].dTidalZ[iIndex]);
 
     dOrbPow += -body[iBody].dTidalZ[iIndex] / 8 *
                (4 * body[iBody].iTidalEpsilon[iIndex][0] +

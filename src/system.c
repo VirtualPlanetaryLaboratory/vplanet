@@ -30,21 +30,7 @@ double fdSemiToMeanMotion(double dSemi, double dMass) {
   return pow(BIGG * dMass / (dSemi * dSemi * dSemi), 0.5);
 }
 
-int fiAssignOrbiter(BODY *body,int iBody) {
-  int iOrbiter;
 
-  if (!bPrimary(body, iBody)) {
-    iOrbiter = iBody;
-  } else {
-    for (int iBodyPert=0;iBodyPert<body[iBody].iTidePerts;iBodyPert++) {
-      if (body[iBody].iaTidePerts[iBodyPert] == iBody) {
-        iOrbiter = body[iBody].iaTidePerts[0];
-        break;
-      }
-    }
-  }
-  return iOrbiter;
-}
 
 /*
  * Angular Momentum

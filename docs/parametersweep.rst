@@ -118,6 +118,14 @@ This command returns output like the following to the terminal:
 
 But with the proper numbers shown.
 
+.. warning::
+
+    If you decide to *rerun* a parameter sweep, you must delete the checkpoint file! 
+    The name of this file is ``.sDestFolder``, where sDestFolder is the option in :code:`VSPACE`
+    the provdes the name for the directory that contains the simulations. If you do not delete
+    this file, the :code:`MultiPlanet` will conclude your sweep has finished and will not restart
+    the simulations.
+
 After :code:`MultiPlanet` completes, you may have a large number of directories with gigabytes
 of data. Storing, analyzing, and plotting these data can be tedious as each output file
 from each directory must be opened and read in sequentially. To streamline this process,

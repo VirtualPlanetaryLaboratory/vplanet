@@ -33,9 +33,9 @@ int main_impl(int argc, char *argv[]) {
   _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
   _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_OVERFLOW);
 #else
-  fprintf(
-        stderr,
-        "WARNING: Floating point trapping only enabled for x86 architectures.");
+  fprintf(stderr,
+          "WARNING: Floating point trapping only enabled for x86 "
+          "architectures.\n");
 #endif
 #endif
 

@@ -614,31 +614,31 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLAREBANDPASS].bMultiFile = 1;
   fnRead[OPT_FLAREBANDPASS]             = &ReadFlareBandPass;
   sprintf(options[OPT_FLAREBANDPASS].cLongDescr,
-          /*
-                  "If UV or GOES is selected, the code will convert \n"
-                  "the input energy of flares from the UV band \n"
-                  "(3000-4300 Å) or GOES band (1-8 Å) to the Kepler band \n"
-                  "(4000-9000 Å) to calculate the FFD and the SXR \n"
-                  "band (1.24 - 1239.85 Å) to calculate the luminosity.\n"
-                  " If SXR is selected, the code will convert the \n"
-                  "input energy of flares from the SXR band to the Kepler\n"
-                  "band to calculate the FFD and will use the same \n"
-                  "value of energy to calculate the luminosity .\n"
-                  "If KEPLER is selected, the code will use the same\n"
-                  "input energy to calculate the FFD and will convert \n"
-                  "the input energy to SXR band to calculate the \n"
-                  "luminosity. The conversion values are taken from \n"
-                  "Osten and Wolk (2015) (doi:10.1088/0004-637X/809/1/79).\n"
-                  "If TESSUV is selected, then the code will convert\n"
-                  "the input energy of flares using the conversion value\n"
-                  "to the band U (2000-2800 Å) to the TESS data from \n"
-                  "Gunther et al 2020
-             (https://doi.org/10.3847/1538-3881/ab5d3a). \n" "If the BOLOMETRIC
-             its selected, the code will convert the input \n" "energy of flares
-             using the conversion values are taken \n" "from Osten and Wolk
-             (2015) (doi:10.1088/0004-637X/809/1/79).\n"
-                  */
-          "Currently suppressed due to execution errors.");
+
+          "If UV or GOES is selected, the code will convert \n"
+          "the input energy of flares from the UV band \n"
+          "(3000-4300 Å) or GOES band (1-8 Å) to the Kepler band \n"
+          "(4000-9000 Å) to calculate the FFD and the SXR \n"
+          "band (1.24 - 1239.85 Å) to calculate the luminosity.\n"
+          " If SXR is selected, the code will convert the \n"
+          "input energy of flares from the SXR band to the Kepler\n"
+          "band to calculate the FFD and will use the same \n"
+          "value of energy to calculate the luminosity .\n"
+          "If KEPLER is selected, the code will use the same\n"
+          "input energy to calculate the FFD and will convert \n"
+          "the input energy to SXR band to calculate the \n"
+          "luminosity. The conversion values are taken from \n"
+          "Osten and Wolk (2015) (doi:10.1088/0004-637X/809/1/79).\n"
+          "If TESSUV is selected, then the code will convert\n"
+          "the input energy of flares using the conversion value\n"
+          "to the band U (2000-2800 Å) to the TESS data from \n"
+          "Gunther et al 2020 (https://doi.org/10.3847/1538-3881/ab5d3a). \n"
+          "If the BOLOMETRIC its selected, the code will convert the input \n"
+          "energy of flares using the conversion values are taken \n"
+          "from Osten and Wolk (2015) (doi:10.1088/0004-637X/809/1/79).\n"
+
+          //"Currently suppressed due to execution errors."
+  );
   /*
     sprintf(options[OPT_FLARESLOPEUNITS].cName, "sFlareSlopeUnits");
     sprintf(options[OPT_FLARESLOPEUNITS].cDescr,

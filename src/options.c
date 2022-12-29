@@ -436,6 +436,8 @@ int iGetNumLines(char cFile[]) {
   FILE *fp;
   char cLine[LINE];
 
+  fprintf(stderr,"File: %s\n",cFile);
+
   fp = fopen(cFile, "r");
   if (fp == NULL) {
     fprintf(stderr, "Unable to open %s.\n", cFile);
@@ -486,6 +488,8 @@ void InitializeInput(INFILE *input) {
   int iLine, iPos, bBlank;
   FILE *fp;
   char cLine[LINE];
+
+fprintf(stderr,"File: %s\n",input->cIn);
 
   fp = fopen(input->cIn, "r");
   if (fp == NULL) {

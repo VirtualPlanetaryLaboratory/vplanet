@@ -41,6 +41,7 @@ def Main(dir, initial=False):
         if dirname not in initial_list:
             initial = False
 
+        # Should check for trailing "/" and remove it XXX
         # grab infiles
         infiles = []
         for file in os.listdir(dirname):
@@ -438,10 +439,7 @@ def WriteTest(data, dirname, stellar):
     for i in badchars:
         dirname = dirname.replace(i, "")
 
-    print(stellar)
-
     test_file = "test_" + dirname + ".py"
-    print(test_file)
     with open(test_file, "w") as t:
         t.write("from benchmark import Benchmark, benchmark \n")
         t.write("import astropy.units as u \n")
@@ -512,6 +510,9 @@ def WriteTest(data, dirname, stellar):
         t.write("class Test" + dirname + "(Benchmark): \n")
         t.write("   pass")
         t.write(" \n")
+
+    print("Successfuly created new test file: "+dirname+"/"+test_file)
+
 
 
 def Arguments():

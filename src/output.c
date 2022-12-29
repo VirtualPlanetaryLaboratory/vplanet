@@ -2453,8 +2453,10 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
   }
 }
 
-void InitializeOutput(OUTPUT *output, fnWriteOutput fnWrite[]) {
+void InitializeOutput(FILES *files, OUTPUT *output, fnWriteOutput fnWrite[]) {
   int iOut, iBody, iModule;
+
+  memset(files->cLog, '\0', NAMELEN);
 
   for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
     memset(output[iOut].cName, '\0', OPTLEN);

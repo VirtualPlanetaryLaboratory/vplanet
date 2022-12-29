@@ -6784,6 +6784,504 @@ void EnergyResiduals(BODY *body, int iBody, int iNday) {
   }
 }
 
+void fvPoiseSeasonalInitialize(BODY *body, int iBody, int iYear) {
+  body[iBody].dTGlobal       = 0.0;
+  body[iBody].dFluxInGlobal  = 0.0;
+  body[iBody].dFluxOutGlobal = 0.0;
+
+  for (int iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+    // start of year, reset annual averages to zero
+    body[iBody].daTempAvg[iLat]          = 0.0;
+    body[iBody].daPlanckBAvg[iLat]       = 0.0;
+    body[iBody].daAlbedoAvg[iLat]        = 0.0;
+    body[iBody].daTempAvgL[iLat]         = 0.0;
+    body[iBody].daTempAvgW[iLat]         = 0.0;
+    body[iBody].daAlbedoAvgL[iLat]       = 0.0;
+    body[iBody].daAlbedoAvgW[iLat]       = 0.0;
+    body[iBody].daFluxAvg[iLat]          = 0.0;
+    body[iBody].daFluxInAvg[iLat]        = 0.0;
+    body[iBody].daDivFluxAvg[iLat]       = 0.0;
+    body[iBody].daFluxOutAvg[iLat]       = 0.0;
+    body[iBody].daIceBalanceAnnual[iLat] = 0.0;
+    body[iBody].daEnerResLAnn[iLat]      = 0.0;
+    body[iBody].daEnerResWAnn[iLat]      = 0.0;
+    body[iBody].daTempMinLW[iLat]        = dHUGE;
+    body[iBody].daTempMaxLW[iLat]        = -1 * dHUGE;
+    body[iBody].daTempMaxLand[iLat]      = -1 * dHUGE;
+    body[iBody].daTempMaxWater[iLat]     = -1 * dHUGE;
+
+    if (iYear == 0) {
+      // reset ice sheet stuff only on first year
+      if (body[iBody].bIceSheets) {
+        body[iBody].daIceMassTmp[iLat]   = body[iBody].daIceMass[iLat];
+        body[iBody].daIceAccumTot[iLat]  = 0;
+        body[iBody].daIceAblateTot[iLat] = 0;
+      }
+    }
+  }
+}
+
+void fvCalcPlanckAB(BODY *body,int iBody,int iLat) {
+  if (body[iBody].bCalcAB) {
+    if (body[iBody].iOLRModel == WK97) {
+      /* Calculate A and B from williams and kasting 97 result */
+      body[iBody].daPlanckBSea[iLat] =
+            fdOLRdTwk97(body, iBody, iLat, SEA);
+      body[iBody].daPlanckASea[iLat] =
+            fdOLRwk97(body, iBody, iLat, SEA) -
+            body[iBody].daPlanckBSea[iLat] *
+                  (body[iBody].daTempLW[iLat]);
+    } else if (body[iBody].iOLRModel == HM16) {
+      /* Calculate A and B from haqq-misra+ 2016 result */
+      body[iBody].daPlanckBSea[iLat] =
+            fdOLRdThm16(body, iBody, iLat, SEA);
+      body[iBody].daPlanckASea[iLat] =
+            fdOLRhm16(body, iBody, iLat, SEA) -
+            body[iBody].daPlanckBSea[iLat] *
+                  (body[iBody].daTempLW[iLat]);
+    } else {
+      /* Calculate A and B from spiegel+ 2009 model */
+      body[iBody].daPlanckBSea[iLat] =
+            fdOLRdTsms09(body, iBody, iLat, SEA);
+      body[iBody].daPlanckASea[iLat] =
+            fdOLRsms09(body, iBody, iLat, SEA) -
+            body[iBody].daPlanckBSea[iLat] *
+                  (body[iBody].daTempLW[iLat]);
+    }
+
+    // XXX This section doesn't seem releated to calculating A and B,
+    // but was part of this if-else originally
+
+    if (body[iBody].bMEPDiff) {
+      if (iLat == 0) {
+        body[iBody].daDiffusionSea[iLat] =
+              body[iBody].daPlanckBSea[iLat] / 4.0;
+
+      } else if (iLat == (body[iBody].iNumLats - 1)) {
+        body[iBody].daDiffusionSea[iLat] =
+              (body[iBody].daPlanckBSea[iLat] +
+                body[iBody].daPlanckBSea[iLat - 1]) /
+              8.0;
+
+        body[iBody].daDiffusionSea[iLat + 1] =
+              body[iBody].daPlanckBSea[iLat] / 4.0;
+
+      } else {
+        body[iBody].daDiffusionSea[iLat] =
+              (body[iBody].daPlanckBSea[iLat] +
+                body[iBody].daPlanckBSea[iLat - 1]) /
+              8.0;
+      }
+    }
+  }
+}
+
+void fvCalculateSeaIce(BODY *body,double dStepsize,int iBody,int iNyear,
+    int iNday,int iNstep) {
+  fvSeaIce(body, iBody);
+  for (int iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+    if (body[iBody].daSeaIceHeight[iLat] > 0) {
+      // adjust height of present sea ice
+      body[iBody].daSeaIceHeight[iLat] -= body[iBody].dSeasDeltat /
+                                          body[iBody].dLatentHeatIce *
+                                          body[iBody].daFluxSeaIce[iLat];
+
+      if (body[iBody].daSeaIceHeight[iLat] < 0) {
+        body[iBody].daSeaIceHeight[iLat] = 0;
+      }
+
+    } else {
+
+      if (body[iBody].daTempWater[iLat] < body[iBody].dFrzTSeaIce) {
+        // create new sea ice
+        body[iBody].daSeaIceHeight[iLat] =
+              -body[iBody].dHeatCapWater * body[iBody].dMeanMotion /
+              (2 * PI) / body[iBody].dLatentHeatIce *
+              (body[iBody].daTempWater[iLat] - body[iBody].dFrzTSeaIce);
+      }
+    }
+
+    fvSnowball(body, iBody);
+    // ice growth/ablation
+    if (body[iBody].bIceSheets) {
+      // calculate derivative of ice mass density and take an euler step
+      body[iBody].daIceBalance[iLat][iNstep] =
+            fdIceMassBalance(body, iBody, iLat);
+
+      body[iBody].daIceMassTmp[iLat] +=
+            dStepsize * body[iBody].daIceBalance[iLat][iNstep];
+
+      if (body[iBody].daIceBalance[iLat][iNstep] >= 0) {
+        body[iBody].daIceAccumTot[iLat] +=
+              dStepsize * body[iBody].daIceBalance[iLat][iNstep] /
+              body[iBody].iNumYears;
+
+      } else {
+        if (body[iBody].daIceMassTmp[iLat] > 0) {
+          if (body[iBody].daIceMassTmp[iLat] >=
+              dStepsize * body[iBody].daIceBalance[iLat][iNstep]) {
+
+            body[iBody].daIceAblateTot[iLat] +=
+                  dStepsize * body[iBody].daIceBalance[iLat][iNstep] /
+                  body[iBody].iNumYears;
+
+          } else {
+            body[iBody].daIceAblateTot[iLat] +=
+                  body[iBody].daIceMassTmp[iLat];
+          }
+        }
+      }
+      if (body[iBody].daIceMassTmp[iLat] < 0.0) {
+        body[iBody].daIceMassTmp[iLat] = 0.0;
+      } // don't let ice mass become negative
+      if (body[iBody].daIceBalance[iLat][iNstep] < 0 &&
+          body[iBody].daIceMassTmp[iLat] != 0) {
+
+        if (body[iBody].daIceMassTmp[iLat] <=
+            fabs(dStepsize * body[iBody].daIceBalance[iLat][iNstep])) {
+
+          // adjust temperature
+          body[iBody].daTempLand[iLat] +=
+                -body[iBody].daIceMassTmp[iLat] * LFICE /
+                body[iBody].dHeatCapLand;
+
+        } else {
+          body[iBody].daTempLand[iLat] +=
+                dStepsize * body[iBody].daIceBalance[iLat][iNstep] *
+                LFICE / body[iBody].dHeatCapLand; // adjust temperature
+        }
+      } else if (body[iBody].daIceBalance[iLat][iNstep] > 0) {
+        body[iBody].daTempLand[iLat] +=
+              dStepsize * body[iBody].daIceBalance[iLat][iNstep] * LFICE /
+              body[iBody].dHeatCapLand; // adjust temperature
+      }
+    }
+
+    body[iBody].daTempLW[iLat] =
+          body[iBody].daLandFrac[iLat] * body[iBody].daTempLand[iLat] +
+          body[iBody].daWaterFrac[iLat] * body[iBody].daTempWater[iLat];
+    body[iBody].dTGlobalTmp +=
+          body[iBody].daTempLW[iLat] / body[iBody].iNumLats;
+
+    fvCalcPlanckAB(body,iBody,iLat);
+
+    // calculate fluxes by latitude and global average
+    body[iBody].daFluxOutLand[iLat] =
+          body[iBody].daPlanckASea[iLat] +
+          body[iBody].daPlanckBSea[iLat] * body[iBody].daTempLand[iLat];
+    body[iBody].daFluxOutWater[iLat] =
+          body[iBody].daPlanckASea[iLat] +
+          body[iBody].daPlanckBSea[iLat] * body[iBody].daTempWater[iLat];
+    body[iBody].daFluxOut[iLat] =
+          body[iBody].daLandFrac[iLat] * body[iBody].daFluxOutLand[iLat] +
+          body[iBody].daWaterFrac[iLat] *
+                body[iBody].daFluxOutWater[iLat];
+    body[iBody].dFluxOutGlobalTmp +=
+          body[iBody].daFluxOut[iLat] / body[iBody].iNumLats;
+    body[iBody].daFluxInLand[iLat] =
+          (1.0 - body[iBody].daAlbedoLand[iLat]) *
+          body[iBody].daInsol[iLat][iNday];
+    body[iBody].daFluxInWater[iLat] =
+          (1.0 - body[iBody].daAlbedoWater[iLat]) *
+          body[iBody].daInsol[iLat][iNday];
+    body[iBody].daFluxIn[iLat] =
+          body[iBody].daLandFrac[iLat] * body[iBody].daFluxInLand[iLat] +
+          body[iBody].daWaterFrac[iLat] * body[iBody].daFluxInWater[iLat];
+    body[iBody].dFluxInGlobalTmp +=
+          body[iBody].daFluxIn[iLat] / body[iBody].iNumLats;
+
+    // annual averages by latitude
+    body[iBody].daTempAvg[iLat] +=
+          body[iBody].daTempLW[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daPlanckBAvg[iLat] +=
+          body[iBody].daPlanckBSea[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daAlbedoAvg[iLat] +=
+          body[iBody].daAlbedoLW[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daFluxInAvg[iLat] +=
+          body[iBody].daFluxIn[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daFluxOutAvg[iLat] +=
+          body[iBody].daFluxOut[iLat] / body[iBody].iNStepInYear;
+
+    body[iBody]
+          .daTempDaily[iLat][iNyear * body[iBody].iNStepInYear + iNstep] =
+          body[iBody].daTempLW[iLat];
+    body[iBody].daTempAvgL[iLat] +=
+          body[iBody].daTempLand[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daTempAvgW[iLat] +=
+          body[iBody].daTempWater[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daAlbedoAvgL[iLat] +=
+          body[iBody].daAlbedoLand[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daAlbedoAvgW[iLat] +=
+          body[iBody].daAlbedoWater[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daAlbedoAvg[iLat] +=
+          body[iBody].daAlbedoLW[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daFluxInAvg[iLat] +=
+          body[iBody].daFluxIn[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daFluxOutAvg[iLat] +=
+          body[iBody].daFluxOut[iLat] / body[iBody].iNStepInYear;
+
+
+    // daily values for output over year
+    body[iBody]
+          .daTempDaily[iLat][iNyear * body[iBody].iNStepInYear + iNstep] =
+          body[iBody].daTempLW[iLat];
+
+    body[iBody].daFluxInDaily[iLat][iNyear * body[iBody].iNStepInYear +
+                                    iNstep] = body[iBody].daFluxIn[iLat];
+
+    body[iBody].daFluxOutDaily[iLat][iNyear * body[iBody].iNStepInYear +
+                                      iNstep] =
+          body[iBody].daFluxOut[iLat];
+
+    body[iBody].daPlanckBDaily[iLat][iNyear * body[iBody].iNStepInYear +
+                                      iNstep] =
+          body[iBody].daPlanckBSea[iLat];
+
+    if (body[iBody].daTempLW[iLat] < body[iBody].daTempMinLW[iLat]) {
+      body[iBody].daTempMinLW[iLat] = body[iBody].daTempLW[iLat];
+    }
+    if (body[iBody].daTempLW[iLat] > body[iBody].daTempMaxLW[iLat]) {
+      body[iBody].daTempMaxLW[iLat] = body[iBody].daTempLW[iLat];
+    }
+    if (body[iBody].daTempLand[iLat] > body[iBody].daTempMaxLand[iLat]) {
+      body[iBody].daTempMaxLand[iLat] = body[iBody].daTempLand[iLat];
+    }
+    if (body[iBody].daTempWater[iLat] >
+        body[iBody].daTempMaxWater[iLat]) {
+      body[iBody].daTempMaxWater[iLat] = body[iBody].daTempWater[iLat];
+    }
+  }
+
+  fvTempGradientSea(body, body[iBody].dSeasDeltax, iBody);
+  for (int iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+    body[iBody].daDMidPt[iLat] =
+          0.5 * (body[iBody].daDiffusionSea[iLat + 1] +
+                  body[iBody].daDiffusionSea[iLat]);
+    body[iBody].daFlux[iLat] =
+          -2. * PI * (body[iBody].dRadius * body[iBody].dRadius) *
+          sqrt(1.0 - (sin(body[iBody].daLats[iLat]) *
+                      sin(body[iBody].daLats[iLat]))) *
+          body[iBody].daDMidPt[iLat] * body[iBody].daTGrad[iLat];
+    body[iBody].daFluxAvg[iLat] +=
+          body[iBody].daFlux[iLat] / body[iBody].iNStepInYear;
+    body[iBody]
+          .daFluxDaily[iLat][iNyear * body[iBody].iNStepInYear + iNstep] =
+          body[iBody].daFlux[iLat];
+
+    body[iBody].daDivFlux[iLat] = 0.0;
+    for (int jLat = 0; jLat < body[iBody].iNumLats; jLat++) {
+      body[iBody].daDivFlux[iLat] += -body[iBody].daMDiffSea[iLat][jLat] *
+                                      body[iBody].daTempLW[jLat];
+    }
+    body[iBody].daDivFluxAvg[iLat] +=
+          body[iBody].daDivFlux[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daDivFluxDaily[iLat][iNyear * body[iBody].iNStepInYear +
+                                      iNstep] =
+          body[iBody].daDivFlux[iLat];
+  }
+
+  body[iBody].dTGlobal +=
+        body[iBody].dTGlobalTmp / (body[iBody].iNStepInYear);
+  body[iBody].dFluxOutGlobal +=
+        body[iBody].dFluxOutGlobalTmp / (body[iBody].iNStepInYear);
+  body[iBody].dFluxInGlobal +=
+        body[iBody].dFluxInGlobalTmp / (body[iBody].iNStepInYear);
+}
+
+void fvStaticSeaIce(BODY *body,double dStepsize,int iBody,int iNyear,
+    int iNday,int iNstep) {
+  int iLat,jLat;
+
+  for (iLat = 0; iLat < 2 * body[iBody].iNumLats; iLat++) {
+    body[iBody].daTmpTempSea[iLat] = 0.0;
+    for (jLat = 0; jLat < 2 * body[iBody].iNumLats; jLat++) {
+      body[iBody].daTmpTempSea[iLat] +=
+            body[iBody].daInvMSea[iLat][jLat] *
+            body[iBody].daSourceLW[jLat];
+    }
+  }
+  for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+    // temp change this time step
+    body[iBody].daDeltaTempL[iLat] = body[iBody].daTmpTempSea[2 * iLat] -
+                                      body[iBody].daTempLand[iLat];
+    body[iBody].daDeltaTempW[iLat] =
+          body[iBody].daTmpTempSea[2 * iLat + 1] -
+          body[iBody].daTempWater[iLat];
+    // calculate temperature and fluxes by latitude and global average
+    body[iBody].daTempLand[iLat] = body[iBody].daTmpTempSea[2 * iLat];
+    body[iBody].daTempWater[iLat] =
+          body[iBody].daTmpTempSea[2 * iLat + 1];
+
+    fvSnowball(body, iBody);
+    // ice growth/ablation
+    if (body[iBody].bIceSheets) {
+      // calculate derivative of ice mass density and take an euler step
+      body[iBody].daIceBalance[iLat][iNstep] =
+            fdIceMassBalance(body, iBody, iLat);
+      body[iBody].daIceMassTmp[iLat] +=
+            dStepsize * body[iBody].daIceBalance[iLat][iNstep];
+      //             if (iLat==0) printf("iNstep = %d,
+      //             ice mass 0 =
+      //             %f\n",iNstep,body[iBody].daIceMassTmp[iLat]);
+      if (body[iBody].daIceBalance[iLat][iNstep] >= 0) {
+        body[iBody].daIceAccumTot[iLat] +=
+              dStepsize * body[iBody].daIceBalance[iLat][iNstep] /
+              body[iBody].iNumYears;
+      } else {
+        if (body[iBody].daIceMassTmp[iLat] > 0) {
+          if (body[iBody].daIceMassTmp[iLat] >=
+              dStepsize * body[iBody].daIceBalance[iLat][iNstep]) {
+
+            body[iBody].daIceAblateTot[iLat] +=
+                  dStepsize * body[iBody].daIceBalance[iLat][iNstep] /
+                  body[iBody].iNumYears;
+          } else {
+            body[iBody].daIceAblateTot[iLat] +=
+                  body[iBody].daIceMassTmp[iLat];
+          }
+        }
+      }
+      if (body[iBody].daIceMassTmp[iLat] < 0.0) {
+        body[iBody].daIceMassTmp[iLat] = 0.0;
+      } // don't let ice mass become negative
+      if (body[iBody].daIceBalance[iLat][iNstep] < 0 &&
+          body[iBody].daIceMassTmp[iLat] != 0) {
+
+        if (body[iBody].daIceMassTmp[iLat] <=
+            fabs(dStepsize * body[iBody].daIceBalance[iLat][iNstep])) {
+          // adjust temperature
+          body[iBody].daTempLand[iLat] +=
+                -body[iBody].daIceMassTmp[iLat] * LFICE /
+                body[iBody].dHeatCapLand;
+        } else {
+          // adjust temperature
+          body[iBody].daTempLand[iLat] +=
+                dStepsize * body[iBody].daIceBalance[iLat][iNstep] *
+                LFICE / body[iBody].dHeatCapLand;
+        }
+      } else if (body[iBody].daIceBalance[iLat][iNstep] > 0) {
+        // adjust temperature
+        body[iBody].daTempLand[iLat] +=
+              dStepsize * body[iBody].daIceBalance[iLat][iNstep] * LFICE /
+              body[iBody].dHeatCapLand;
+      }
+    }
+
+    body[iBody].daTempLW[iLat] =
+          body[iBody].daLandFrac[iLat] * body[iBody].daTempLand[iLat] +
+          body[iBody].daWaterFrac[iLat] * body[iBody].daTempWater[iLat];
+    body[iBody].dTGlobalTmp +=
+          body[iBody].daTempLW[iLat] / body[iBody].iNumLats;
+
+    fvCalcPlanckAB(body,iBody,iLat);
+
+    body[iBody].daFluxOutLand[iLat] =
+          body[iBody].daPlanckASea[iLat] +
+          body[iBody].daPlanckBSea[iLat] * body[iBody].daTempLand[iLat];
+    body[iBody].daFluxOutWater[iLat] =
+          body[iBody].daPlanckASea[iLat] +
+          body[iBody].daPlanckBSea[iLat] * body[iBody].daTempWater[iLat];
+    body[iBody].daFluxOut[iLat] =
+          body[iBody].daLandFrac[iLat] * body[iBody].daFluxOutLand[iLat] +
+          body[iBody].daWaterFrac[iLat] *
+                body[iBody].daFluxOutWater[iLat];
+    body[iBody].dFluxOutGlobalTmp +=
+          body[iBody].daFluxOut[iLat] / body[iBody].iNumLats;
+
+    body[iBody].daFluxInLand[iLat] =
+          (1.0 - body[iBody].daAlbedoLand[iLat]) *
+          body[iBody].daInsol[iLat][iNday];
+    body[iBody].daFluxInWater[iLat] =
+          (1.0 - body[iBody].daAlbedoWater[iLat]) *
+          body[iBody].daInsol[iLat][iNday];
+    body[iBody].daFluxIn[iLat] =
+          body[iBody].daLandFrac[iLat] * body[iBody].daFluxInLand[iLat] +
+          body[iBody].daWaterFrac[iLat] * body[iBody].daFluxInWater[iLat];
+    body[iBody].dFluxInGlobalTmp +=
+          body[iBody].daFluxIn[iLat] / body[iBody].iNumLats;
+
+    // annual averages by latitude
+    body[iBody].daTempAvg[iLat] +=
+          body[iBody].daTempLW[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daPlanckBAvg[iLat] +=
+          body[iBody].daPlanckBSea[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daTempAvgL[iLat] +=
+          body[iBody].daTempLand[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daTempAvgW[iLat] +=
+          body[iBody].daTempWater[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daAlbedoAvgL[iLat] +=
+          body[iBody].daAlbedoLand[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daAlbedoAvgW[iLat] +=
+          body[iBody].daAlbedoWater[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daAlbedoAvg[iLat] +=
+          body[iBody].daAlbedoLW[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daFluxInAvg[iLat] +=
+          body[iBody].daFluxIn[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daFluxOutAvg[iLat] +=
+          body[iBody].daFluxOut[iLat] / body[iBody].iNStepInYear;
+
+    body[iBody]
+          .daTempDaily[iLat][iNyear * body[iBody].iNStepInYear + iNstep] =
+          body[iBody].daTempLW[iLat];
+    body[iBody].daFluxInDaily[iLat][iNyear * body[iBody].iNStepInYear +
+                                    iNstep] = body[iBody].daFluxIn[iLat];
+    body[iBody].daFluxOutDaily[iLat][iNyear * body[iBody].iNStepInYear +
+                                      iNstep] =
+          body[iBody].daFluxOut[iLat];
+    body[iBody].daPlanckBDaily[iLat][iNyear * body[iBody].iNStepInYear +
+                                      iNstep] =
+          body[iBody].daPlanckBSea[iLat];
+    if (body[iBody].daTempLW[iLat] < body[iBody].daTempMinLW[iLat]) {
+      body[iBody].daTempMinLW[iLat] = body[iBody].daTempLW[iLat];
+    }
+    if (body[iBody].daTempLW[iLat] > body[iBody].daTempMaxLW[iLat]) {
+      body[iBody].daTempMaxLW[iLat] = body[iBody].daTempLW[iLat];
+    }
+    if (body[iBody].daTempLand[iLat] > body[iBody].daTempMaxLand[iLat]) {
+      body[iBody].daTempMaxLand[iLat] = body[iBody].daTempLand[iLat];
+    }
+    if (body[iBody].daTempWater[iLat] >
+        body[iBody].daTempMaxWater[iLat]) {
+      body[iBody].daTempMaxWater[iLat] = body[iBody].daTempWater[iLat];
+    }
+  }
+
+  fvTempGradientSea(body, body[iBody].dSeasDeltax, iBody);
+  for (int iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+    body[iBody].daDMidPt[iLat] =
+          0.5 * (body[iBody].daDiffusionSea[iLat + 1] +
+                  body[iBody].daDiffusionSea[iLat]);
+    body[iBody].daFlux[iLat] =
+          -2. * PI * (body[iBody].dRadius * body[iBody].dRadius) *
+          sqrt(1.0 - (sin(body[iBody].daLats[iLat]) *
+                      sin(body[iBody].daLats[iLat]))) *
+          body[iBody].daDMidPt[iLat] * body[iBody].daTGrad[iLat];
+    body[iBody].daFluxAvg[iLat] +=
+          body[iBody].daFlux[iLat] / body[iBody].iNStepInYear;
+    body[iBody]
+          .daFluxDaily[iLat][iNyear * body[iBody].iNStepInYear + iNstep] =
+          body[iBody].daFlux[iLat];
+
+    body[iBody].daDivFlux[iLat] = 0.0;
+    for (jLat = 0; jLat < body[iBody].iNumLats; jLat++) {
+      body[iBody].daDivFlux[iLat] += -body[iBody].daMDiffSea[iLat][jLat] *
+                                      body[iBody].daTempLW[jLat];
+    }
+    body[iBody].daDivFluxAvg[iLat] +=
+          body[iBody].daDivFlux[iLat] / body[iBody].iNStepInYear;
+    body[iBody].daDivFluxDaily[iLat][iNyear * body[iBody].iNStepInYear +
+                                      iNstep] =
+          body[iBody].daDivFlux[iLat];
+  }
+
+  body[iBody].dTGlobal +=
+        body[iBody].dTGlobalTmp / (body[iBody].iNStepInYear);
+  body[iBody].dFluxOutGlobal +=
+        body[iBody].dFluxOutGlobalTmp / (body[iBody].iNStepInYear);
+  body[iBody].dFluxInGlobal +=
+        body[iBody].dFluxInGlobalTmp / (body[iBody].iNStepInYear);
+}
+
 /**
 Runs the seasonal EBM, called from ForceBehavior. The seasonal EBM runs on a
 fixed time-step (of order days) to resolve the seasonal cycle. It can be said
@@ -6801,41 +7299,11 @@ void PoiseSeasonal(BODY *body, int iBody) {
   // fvMatrixSeasonal(body,iBody);
   /* main loop */
   // XXX confusing! Should distinguish b/w years/orbits
+  // XXX Needs to be broken down into functions!
+
+
   for (iNyear = 0; iNyear < body[iBody].iNumYears; iNyear++) {
-    body[iBody].dTGlobal       = 0.0;
-    body[iBody].dFluxInGlobal  = 0.0;
-    body[iBody].dFluxOutGlobal = 0.0;
-
-    for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
-      // start of year, reset annual averages to zero
-      body[iBody].daTempAvg[iLat]          = 0.0;
-      body[iBody].daPlanckBAvg[iLat]       = 0.0;
-      body[iBody].daAlbedoAvg[iLat]        = 0.0;
-      body[iBody].daTempAvgL[iLat]         = 0.0;
-      body[iBody].daTempAvgW[iLat]         = 0.0;
-      body[iBody].daAlbedoAvgL[iLat]       = 0.0;
-      body[iBody].daAlbedoAvgW[iLat]       = 0.0;
-      body[iBody].daFluxAvg[iLat]          = 0.0;
-      body[iBody].daFluxInAvg[iLat]        = 0.0;
-      body[iBody].daDivFluxAvg[iLat]       = 0.0;
-      body[iBody].daFluxOutAvg[iLat]       = 0.0;
-      body[iBody].daIceBalanceAnnual[iLat] = 0.0;
-      body[iBody].daEnerResLAnn[iLat]      = 0.0;
-      body[iBody].daEnerResWAnn[iLat]      = 0.0;
-      body[iBody].daTempMinLW[iLat]        = dHUGE;
-      body[iBody].daTempMaxLW[iLat]        = -1 * dHUGE;
-      body[iBody].daTempMaxLand[iLat]      = -1 * dHUGE;
-      body[iBody].daTempMaxWater[iLat]     = -1 * dHUGE;
-
-      if (iNyear == 0) {
-        // reset ice sheet stuff only on first year
-        if (body[iBody].bIceSheets) {
-          body[iBody].daIceMassTmp[iLat]   = body[iBody].daIceMass[iLat];
-          body[iBody].daIceAccumTot[iLat]  = 0;
-          body[iBody].daIceAblateTot[iLat] = 0;
-        }
-      }
-    }
+    fvPoiseSeasonalInitialize(body,iBody,iNyear);   
 
     fvAlbedoSeasonal(body, iBody, 0);
     body[iBody].dAlbedoGlobal = 0.0;
@@ -6849,497 +7317,9 @@ void PoiseSeasonal(BODY *body, int iBody) {
       fvSourceFSeas(body, iBody, iNday);
 
       if (body[iBody].bSeaIceModel == 1) {
-        fvSeaIce(body, iBody);
-        for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
-          if (body[iBody].daSeaIceHeight[iLat] > 0) {
-            // adjust height of present sea ice
-            body[iBody].daSeaIceHeight[iLat] -= body[iBody].dSeasDeltat /
-                                                body[iBody].dLatentHeatIce *
-                                                body[iBody].daFluxSeaIce[iLat];
-
-            if (body[iBody].daSeaIceHeight[iLat] < 0) {
-              body[iBody].daSeaIceHeight[iLat] = 0;
-            }
-
-          } else {
-
-            if (body[iBody].daTempWater[iLat] < body[iBody].dFrzTSeaIce) {
-              // create new sea ice
-              body[iBody].daSeaIceHeight[iLat] =
-                    -body[iBody].dHeatCapWater * body[iBody].dMeanMotion /
-                    (2 * PI) / body[iBody].dLatentHeatIce *
-                    (body[iBody].daTempWater[iLat] - body[iBody].dFrzTSeaIce);
-            }
-          }
-
-          fvSnowball(body, iBody);
-          // ice growth/ablation
-          if (body[iBody].bIceSheets) {
-            // calculate derivative of ice mass density and take an euler step
-            body[iBody].daIceBalance[iLat][iNstep] =
-                  fdIceMassBalance(body, iBody, iLat);
-
-            body[iBody].daIceMassTmp[iLat] +=
-                  dStepsize * body[iBody].daIceBalance[iLat][iNstep];
-
-            if (body[iBody].daIceBalance[iLat][iNstep] >= 0) {
-              body[iBody].daIceAccumTot[iLat] +=
-                    dStepsize * body[iBody].daIceBalance[iLat][iNstep] /
-                    body[iBody].iNumYears;
-
-            } else {
-              if (body[iBody].daIceMassTmp[iLat] > 0) {
-                if (body[iBody].daIceMassTmp[iLat] >=
-                    dStepsize * body[iBody].daIceBalance[iLat][iNstep]) {
-
-                  body[iBody].daIceAblateTot[iLat] +=
-                        dStepsize * body[iBody].daIceBalance[iLat][iNstep] /
-                        body[iBody].iNumYears;
-
-                } else {
-                  body[iBody].daIceAblateTot[iLat] +=
-                        body[iBody].daIceMassTmp[iLat];
-                }
-              }
-            }
-            if (body[iBody].daIceMassTmp[iLat] < 0.0) {
-              body[iBody].daIceMassTmp[iLat] = 0.0;
-            } // don't let ice mass become negative
-            if (body[iBody].daIceBalance[iLat][iNstep] < 0 &&
-                body[iBody].daIceMassTmp[iLat] != 0) {
-
-              if (body[iBody].daIceMassTmp[iLat] <=
-                  fabs(dStepsize * body[iBody].daIceBalance[iLat][iNstep])) {
-
-                // adjust temperature
-                body[iBody].daTempLand[iLat] +=
-                      -body[iBody].daIceMassTmp[iLat] * LFICE /
-                      body[iBody].dHeatCapLand;
-
-              } else {
-                body[iBody].daTempLand[iLat] +=
-                      dStepsize * body[iBody].daIceBalance[iLat][iNstep] *
-                      LFICE / body[iBody].dHeatCapLand; // adjust temperature
-              }
-            } else if (body[iBody].daIceBalance[iLat][iNstep] > 0) {
-              body[iBody].daTempLand[iLat] +=
-                    dStepsize * body[iBody].daIceBalance[iLat][iNstep] * LFICE /
-                    body[iBody].dHeatCapLand; // adjust temperature
-            }
-          }
-
-          body[iBody].daTempLW[iLat] =
-                body[iBody].daLandFrac[iLat] * body[iBody].daTempLand[iLat] +
-                body[iBody].daWaterFrac[iLat] * body[iBody].daTempWater[iLat];
-          body[iBody].dTGlobalTmp +=
-                body[iBody].daTempLW[iLat] / body[iBody].iNumLats;
-
-          if (body[iBody].bCalcAB) {
-            if (body[iBody].iOLRModel == WK97) {
-              /* Calculate A and B from williams and kasting 97 result */
-              body[iBody].daPlanckBSea[iLat] =
-                    fdOLRdTwk97(body, iBody, iLat, SEA);
-              body[iBody].daPlanckASea[iLat] =
-                    fdOLRwk97(body, iBody, iLat, SEA) -
-                    body[iBody].daPlanckBSea[iLat] *
-                          (body[iBody].daTempLW[iLat]);
-            } else if (body[iBody].iOLRModel == HM16) {
-              /* Calculate A and B from haqq-misra+ 2016 result */
-              body[iBody].daPlanckBSea[iLat] =
-                    fdOLRdThm16(body, iBody, iLat, SEA);
-              body[iBody].daPlanckASea[iLat] =
-                    fdOLRhm16(body, iBody, iLat, SEA) -
-                    body[iBody].daPlanckBSea[iLat] *
-                          (body[iBody].daTempLW[iLat]);
-            } else {
-              /* Calculate A and B from spiegel+ 2009 model */
-              body[iBody].daPlanckBSea[iLat] =
-                    fdOLRdTsms09(body, iBody, iLat, SEA);
-              body[iBody].daPlanckASea[iLat] =
-                    fdOLRsms09(body, iBody, iLat, SEA) -
-                    body[iBody].daPlanckBSea[iLat] *
-                          (body[iBody].daTempLW[iLat]);
-            }
-
-
-            if (body[iBody].bMEPDiff) {
-              if (iLat == 0) {
-                body[iBody].daDiffusionSea[iLat] =
-                      body[iBody].daPlanckBSea[iLat] / 4.0;
-
-              } else if (iLat == (body[iBody].iNumLats - 1)) {
-                body[iBody].daDiffusionSea[iLat] =
-                      (body[iBody].daPlanckBSea[iLat] +
-                       body[iBody].daPlanckBSea[iLat - 1]) /
-                      8.0;
-
-                body[iBody].daDiffusionSea[iLat + 1] =
-                      body[iBody].daPlanckBSea[iLat] / 4.0;
-
-              } else {
-                body[iBody].daDiffusionSea[iLat] =
-                      (body[iBody].daPlanckBSea[iLat] +
-                       body[iBody].daPlanckBSea[iLat - 1]) /
-                      8.0;
-              }
-            }
-          }
-
-          // calculate fluxes by latitude and global average
-          body[iBody].daFluxOutLand[iLat] =
-                body[iBody].daPlanckASea[iLat] +
-                body[iBody].daPlanckBSea[iLat] * body[iBody].daTempLand[iLat];
-          body[iBody].daFluxOutWater[iLat] =
-                body[iBody].daPlanckASea[iLat] +
-                body[iBody].daPlanckBSea[iLat] * body[iBody].daTempWater[iLat];
-          body[iBody].daFluxOut[iLat] =
-                body[iBody].daLandFrac[iLat] * body[iBody].daFluxOutLand[iLat] +
-                body[iBody].daWaterFrac[iLat] *
-                      body[iBody].daFluxOutWater[iLat];
-          body[iBody].dFluxOutGlobalTmp +=
-                body[iBody].daFluxOut[iLat] / body[iBody].iNumLats;
-          body[iBody].daFluxInLand[iLat] =
-                (1.0 - body[iBody].daAlbedoLand[iLat]) *
-                body[iBody].daInsol[iLat][iNday];
-          body[iBody].daFluxInWater[iLat] =
-                (1.0 - body[iBody].daAlbedoWater[iLat]) *
-                body[iBody].daInsol[iLat][iNday];
-          body[iBody].daFluxIn[iLat] =
-                body[iBody].daLandFrac[iLat] * body[iBody].daFluxInLand[iLat] +
-                body[iBody].daWaterFrac[iLat] * body[iBody].daFluxInWater[iLat];
-          body[iBody].dFluxInGlobalTmp +=
-                body[iBody].daFluxIn[iLat] / body[iBody].iNumLats;
-
-          // annual averages by latitude
-          body[iBody].daTempAvg[iLat] +=
-                body[iBody].daTempLW[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daPlanckBAvg[iLat] +=
-                body[iBody].daPlanckBSea[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daAlbedoAvg[iLat] +=
-                body[iBody].daAlbedoLW[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daFluxInAvg[iLat] +=
-                body[iBody].daFluxIn[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daFluxOutAvg[iLat] +=
-                body[iBody].daFluxOut[iLat] / body[iBody].iNStepInYear;
-
-          body[iBody]
-                .daTempDaily[iLat][iNyear * body[iBody].iNStepInYear + iNstep] =
-                body[iBody].daTempLW[iLat];
-          body[iBody].daTempAvgL[iLat] +=
-                body[iBody].daTempLand[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daTempAvgW[iLat] +=
-                body[iBody].daTempWater[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daAlbedoAvgL[iLat] +=
-                body[iBody].daAlbedoLand[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daAlbedoAvgW[iLat] +=
-                body[iBody].daAlbedoWater[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daAlbedoAvg[iLat] +=
-                body[iBody].daAlbedoLW[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daFluxInAvg[iLat] +=
-                body[iBody].daFluxIn[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daFluxOutAvg[iLat] +=
-                body[iBody].daFluxOut[iLat] / body[iBody].iNStepInYear;
-
-
-          // daily values for output over year
-          body[iBody]
-                .daTempDaily[iLat][iNyear * body[iBody].iNStepInYear + iNstep] =
-                body[iBody].daTempLW[iLat];
-
-          body[iBody].daFluxInDaily[iLat][iNyear * body[iBody].iNStepInYear +
-                                          iNstep] = body[iBody].daFluxIn[iLat];
-
-          body[iBody].daFluxOutDaily[iLat][iNyear * body[iBody].iNStepInYear +
-                                           iNstep] =
-                body[iBody].daFluxOut[iLat];
-
-          body[iBody].daPlanckBDaily[iLat][iNyear * body[iBody].iNStepInYear +
-                                           iNstep] =
-                body[iBody].daPlanckBSea[iLat];
-
-          if (body[iBody].daTempLW[iLat] < body[iBody].daTempMinLW[iLat]) {
-            body[iBody].daTempMinLW[iLat] = body[iBody].daTempLW[iLat];
-          }
-          if (body[iBody].daTempLW[iLat] > body[iBody].daTempMaxLW[iLat]) {
-            body[iBody].daTempMaxLW[iLat] = body[iBody].daTempLW[iLat];
-          }
-          if (body[iBody].daTempLand[iLat] > body[iBody].daTempMaxLand[iLat]) {
-            body[iBody].daTempMaxLand[iLat] = body[iBody].daTempLand[iLat];
-          }
-          if (body[iBody].daTempWater[iLat] >
-              body[iBody].daTempMaxWater[iLat]) {
-            body[iBody].daTempMaxWater[iLat] = body[iBody].daTempWater[iLat];
-          }
-        }
-
-        fvTempGradientSea(body, body[iBody].dSeasDeltax, iBody);
-        for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
-          body[iBody].daDMidPt[iLat] =
-                0.5 * (body[iBody].daDiffusionSea[iLat + 1] +
-                       body[iBody].daDiffusionSea[iLat]);
-          body[iBody].daFlux[iLat] =
-                -2. * PI * (body[iBody].dRadius * body[iBody].dRadius) *
-                sqrt(1.0 - (sin(body[iBody].daLats[iLat]) *
-                            sin(body[iBody].daLats[iLat]))) *
-                body[iBody].daDMidPt[iLat] * body[iBody].daTGrad[iLat];
-          body[iBody].daFluxAvg[iLat] +=
-                body[iBody].daFlux[iLat] / body[iBody].iNStepInYear;
-          body[iBody]
-                .daFluxDaily[iLat][iNyear * body[iBody].iNStepInYear + iNstep] =
-                body[iBody].daFlux[iLat];
-
-          body[iBody].daDivFlux[iLat] = 0.0;
-          for (jLat = 0; jLat < body[iBody].iNumLats; jLat++) {
-            body[iBody].daDivFlux[iLat] += -body[iBody].daMDiffSea[iLat][jLat] *
-                                           body[iBody].daTempLW[jLat];
-          }
-          body[iBody].daDivFluxAvg[iLat] +=
-                body[iBody].daDivFlux[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daDivFluxDaily[iLat][iNyear * body[iBody].iNStepInYear +
-                                           iNstep] =
-                body[iBody].daDivFlux[iLat];
-        }
-
-        body[iBody].dTGlobal +=
-              body[iBody].dTGlobalTmp / (body[iBody].iNStepInYear);
-        body[iBody].dFluxOutGlobal +=
-              body[iBody].dFluxOutGlobalTmp / (body[iBody].iNStepInYear);
-        body[iBody].dFluxInGlobal +=
-              body[iBody].dFluxInGlobalTmp / (body[iBody].iNStepInYear);
-
+        fvCalculateSeaIce(body,dStepsize,iBody,iNyear,iNday,iNstep);      
       } else {
-        for (iLat = 0; iLat < 2 * body[iBody].iNumLats; iLat++) {
-          body[iBody].daTmpTempSea[iLat] = 0.0;
-          for (jLat = 0; jLat < 2 * body[iBody].iNumLats; jLat++) {
-            body[iBody].daTmpTempSea[iLat] +=
-                  body[iBody].daInvMSea[iLat][jLat] *
-                  body[iBody].daSourceLW[jLat];
-          }
-        }
-        for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
-          // temp change this time step
-          body[iBody].daDeltaTempL[iLat] = body[iBody].daTmpTempSea[2 * iLat] -
-                                           body[iBody].daTempLand[iLat];
-          body[iBody].daDeltaTempW[iLat] =
-                body[iBody].daTmpTempSea[2 * iLat + 1] -
-                body[iBody].daTempWater[iLat];
-          // calculate temperature and fluxes by latitude and global average
-          body[iBody].daTempLand[iLat] = body[iBody].daTmpTempSea[2 * iLat];
-          body[iBody].daTempWater[iLat] =
-                body[iBody].daTmpTempSea[2 * iLat + 1];
-
-          fvSnowball(body, iBody);
-          // ice growth/ablation
-          if (body[iBody].bIceSheets) {
-            // calculate derivative of ice mass density and take an euler step
-            body[iBody].daIceBalance[iLat][iNstep] =
-                  fdIceMassBalance(body, iBody, iLat);
-            body[iBody].daIceMassTmp[iLat] +=
-                  dStepsize * body[iBody].daIceBalance[iLat][iNstep];
-            //             if (iLat==0) printf("iNstep = %d,
-            //             ice mass 0 =
-            //             %f\n",iNstep,body[iBody].daIceMassTmp[iLat]);
-            if (body[iBody].daIceBalance[iLat][iNstep] >= 0) {
-              body[iBody].daIceAccumTot[iLat] +=
-                    dStepsize * body[iBody].daIceBalance[iLat][iNstep] /
-                    body[iBody].iNumYears;
-            } else {
-              if (body[iBody].daIceMassTmp[iLat] > 0) {
-                if (body[iBody].daIceMassTmp[iLat] >=
-                    dStepsize * body[iBody].daIceBalance[iLat][iNstep]) {
-
-                  body[iBody].daIceAblateTot[iLat] +=
-                        dStepsize * body[iBody].daIceBalance[iLat][iNstep] /
-                        body[iBody].iNumYears;
-                } else {
-                  body[iBody].daIceAblateTot[iLat] +=
-                        body[iBody].daIceMassTmp[iLat];
-                }
-              }
-            }
-            if (body[iBody].daIceMassTmp[iLat] < 0.0) {
-              body[iBody].daIceMassTmp[iLat] = 0.0;
-            } // don't let ice mass become negative
-            if (body[iBody].daIceBalance[iLat][iNstep] < 0 &&
-                body[iBody].daIceMassTmp[iLat] != 0) {
-
-              if (body[iBody].daIceMassTmp[iLat] <=
-                  fabs(dStepsize * body[iBody].daIceBalance[iLat][iNstep])) {
-                // adjust temperature
-                body[iBody].daTempLand[iLat] +=
-                      -body[iBody].daIceMassTmp[iLat] * LFICE /
-                      body[iBody].dHeatCapLand;
-              } else {
-                // adjust temperature
-                body[iBody].daTempLand[iLat] +=
-                      dStepsize * body[iBody].daIceBalance[iLat][iNstep] *
-                      LFICE / body[iBody].dHeatCapLand;
-              }
-            } else if (body[iBody].daIceBalance[iLat][iNstep] > 0) {
-              // adjust temperature
-              body[iBody].daTempLand[iLat] +=
-                    dStepsize * body[iBody].daIceBalance[iLat][iNstep] * LFICE /
-                    body[iBody].dHeatCapLand;
-            }
-          }
-
-          body[iBody].daTempLW[iLat] =
-                body[iBody].daLandFrac[iLat] * body[iBody].daTempLand[iLat] +
-                body[iBody].daWaterFrac[iLat] * body[iBody].daTempWater[iLat];
-          body[iBody].dTGlobalTmp +=
-                body[iBody].daTempLW[iLat] / body[iBody].iNumLats;
-
-          if (body[iBody].bCalcAB) {
-            if (body[iBody].iOLRModel == WK97) {
-              body[iBody].daPlanckBSea[iLat] =
-                    fdOLRdTwk97(body, iBody, iLat, SEA);
-              body[iBody].daPlanckASea[iLat] =
-                    fdOLRwk97(body, iBody, iLat, SEA) -
-                    body[iBody].daPlanckBSea[iLat] *
-                          (body[iBody].daTempLW[iLat]);
-            } else if (body[iBody].iOLRModel == HM16) {
-              /* Calculate A and B from haqq-misra+ 2016 result */
-              body[iBody].daPlanckBSea[iLat] =
-                    fdOLRdThm16(body, iBody, iLat, SEA);
-              body[iBody].daPlanckASea[iLat] =
-                    fdOLRhm16(body, iBody, iLat, SEA) -
-                    body[iBody].daPlanckBSea[iLat] *
-                          (body[iBody].daTempLW[iLat]);
-            } else {
-              /* Calculate A and B from spiegel+ 2009 model */
-              body[iBody].daPlanckBSea[iLat] =
-                    fdOLRdTsms09(body, iBody, iLat, SEA);
-              body[iBody].daPlanckASea[iLat] =
-                    fdOLRsms09(body, iBody, iLat, SEA) -
-                    body[iBody].daPlanckBSea[iLat] *
-                          (body[iBody].daTempLW[iLat]);
-            }
-
-            if (body[iBody].bMEPDiff) {
-              if (iLat == 0) {
-                body[iBody].daDiffusionSea[iLat] =
-                      body[iBody].daPlanckBSea[iLat] / 4.0;
-              } else if (iLat == (body[iBody].iNumLats - 1)) {
-                body[iBody].daDiffusionSea[iLat] =
-                      (body[iBody].daPlanckBSea[iLat] +
-                       body[iBody].daPlanckBSea[iLat - 1]) /
-                      8.0;
-                body[iBody].daDiffusionSea[iLat + 1] =
-                      body[iBody].daPlanckBSea[iLat] / 4.0;
-              } else {
-                body[iBody].daDiffusionSea[iLat] =
-                      (body[iBody].daPlanckBSea[iLat] +
-                       body[iBody].daPlanckBSea[iLat - 1]) /
-                      8.0;
-              }
-            }
-          }
-
-          body[iBody].daFluxOutLand[iLat] =
-                body[iBody].daPlanckASea[iLat] +
-                body[iBody].daPlanckBSea[iLat] * body[iBody].daTempLand[iLat];
-          body[iBody].daFluxOutWater[iLat] =
-                body[iBody].daPlanckASea[iLat] +
-                body[iBody].daPlanckBSea[iLat] * body[iBody].daTempWater[iLat];
-          body[iBody].daFluxOut[iLat] =
-                body[iBody].daLandFrac[iLat] * body[iBody].daFluxOutLand[iLat] +
-                body[iBody].daWaterFrac[iLat] *
-                      body[iBody].daFluxOutWater[iLat];
-          body[iBody].dFluxOutGlobalTmp +=
-                body[iBody].daFluxOut[iLat] / body[iBody].iNumLats;
-
-          body[iBody].daFluxInLand[iLat] =
-                (1.0 - body[iBody].daAlbedoLand[iLat]) *
-                body[iBody].daInsol[iLat][iNday];
-          body[iBody].daFluxInWater[iLat] =
-                (1.0 - body[iBody].daAlbedoWater[iLat]) *
-                body[iBody].daInsol[iLat][iNday];
-          body[iBody].daFluxIn[iLat] =
-                body[iBody].daLandFrac[iLat] * body[iBody].daFluxInLand[iLat] +
-                body[iBody].daWaterFrac[iLat] * body[iBody].daFluxInWater[iLat];
-          body[iBody].dFluxInGlobalTmp +=
-                body[iBody].daFluxIn[iLat] / body[iBody].iNumLats;
-
-          // annual averages by latitude
-          body[iBody].daTempAvg[iLat] +=
-                body[iBody].daTempLW[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daPlanckBAvg[iLat] +=
-                body[iBody].daPlanckBSea[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daTempAvgL[iLat] +=
-                body[iBody].daTempLand[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daTempAvgW[iLat] +=
-                body[iBody].daTempWater[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daAlbedoAvgL[iLat] +=
-                body[iBody].daAlbedoLand[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daAlbedoAvgW[iLat] +=
-                body[iBody].daAlbedoWater[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daAlbedoAvg[iLat] +=
-                body[iBody].daAlbedoLW[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daFluxInAvg[iLat] +=
-                body[iBody].daFluxIn[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daFluxOutAvg[iLat] +=
-                body[iBody].daFluxOut[iLat] / body[iBody].iNStepInYear;
-
-          body[iBody]
-                .daTempDaily[iLat][iNyear * body[iBody].iNStepInYear + iNstep] =
-                body[iBody].daTempLW[iLat];
-          body[iBody].daFluxInDaily[iLat][iNyear * body[iBody].iNStepInYear +
-                                          iNstep] = body[iBody].daFluxIn[iLat];
-          body[iBody].daFluxOutDaily[iLat][iNyear * body[iBody].iNStepInYear +
-                                           iNstep] =
-                body[iBody].daFluxOut[iLat];
-          body[iBody].daPlanckBDaily[iLat][iNyear * body[iBody].iNStepInYear +
-                                           iNstep] =
-                body[iBody].daPlanckBSea[iLat];
-          if (body[iBody].daTempLW[iLat] < body[iBody].daTempMinLW[iLat]) {
-            body[iBody].daTempMinLW[iLat] = body[iBody].daTempLW[iLat];
-          }
-          if (body[iBody].daTempLW[iLat] > body[iBody].daTempMaxLW[iLat]) {
-            body[iBody].daTempMaxLW[iLat] = body[iBody].daTempLW[iLat];
-          }
-          if (body[iBody].daTempLand[iLat] > body[iBody].daTempMaxLand[iLat]) {
-            body[iBody].daTempMaxLand[iLat] = body[iBody].daTempLand[iLat];
-          }
-          if (body[iBody].daTempWater[iLat] >
-              body[iBody].daTempMaxWater[iLat]) {
-            body[iBody].daTempMaxWater[iLat] = body[iBody].daTempWater[iLat];
-          }
-        }
-
-        fvTempGradientSea(body, body[iBody].dSeasDeltax, iBody);
-        for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
-          body[iBody].daDMidPt[iLat] =
-                0.5 * (body[iBody].daDiffusionSea[iLat + 1] +
-                       body[iBody].daDiffusionSea[iLat]);
-          body[iBody].daFlux[iLat] =
-                -2. * PI * (body[iBody].dRadius * body[iBody].dRadius) *
-                sqrt(1.0 - (sin(body[iBody].daLats[iLat]) *
-                            sin(body[iBody].daLats[iLat]))) *
-                body[iBody].daDMidPt[iLat] * body[iBody].daTGrad[iLat];
-          body[iBody].daFluxAvg[iLat] +=
-                body[iBody].daFlux[iLat] / body[iBody].iNStepInYear;
-          body[iBody]
-                .daFluxDaily[iLat][iNyear * body[iBody].iNStepInYear + iNstep] =
-                body[iBody].daFlux[iLat];
-
-          body[iBody].daDivFlux[iLat] = 0.0;
-          for (jLat = 0; jLat < body[iBody].iNumLats; jLat++) {
-            body[iBody].daDivFlux[iLat] += -body[iBody].daMDiffSea[iLat][jLat] *
-                                           body[iBody].daTempLW[jLat];
-          }
-          body[iBody].daDivFluxAvg[iLat] +=
-                body[iBody].daDivFlux[iLat] / body[iBody].iNStepInYear;
-          body[iBody].daDivFluxDaily[iLat][iNyear * body[iBody].iNStepInYear +
-                                           iNstep] =
-                body[iBody].daDivFlux[iLat];
-        }
-
-        body[iBody].dTGlobal +=
-              body[iBody].dTGlobalTmp / (body[iBody].iNStepInYear);
-        body[iBody].dFluxOutGlobal +=
-              body[iBody].dFluxOutGlobalTmp / (body[iBody].iNStepInYear);
-        body[iBody].dFluxInGlobal +=
-              body[iBody].dFluxInGlobalTmp / (body[iBody].iNStepInYear);
+        fvStaticSeaIce(body,dStepsize,iBody,iNyear,iNday,iNstep); 
       }
 
       EnergyResiduals(body, iBody, iNday);

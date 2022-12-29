@@ -30,6 +30,8 @@ double fdSemiToMeanMotion(double dSemi, double dMass) {
   return pow(BIGG * dMass / (dSemi * dSemi * dSemi), 0.5);
 }
 
+
+
 /*
  * Angular Momentum
  */

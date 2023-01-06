@@ -33,6 +33,8 @@
   </a>
 </p>
 
+<h1 align="center">The Third VPLanet Workshop will take place 29-30 Aug 2023. The workshop will be virtual and is open to everyone. <a href="https://forms.gle/wk6Sed9fgjkdVHRP9">Register here.</a></h1>
+
 ### Overview
 
 `VPLanet` is software to simulate planetary system evolution, with a focus on habitability. Physical models, typically consisting of ordinary differential equations, are coupled together to simulate evolution, from planetary cores to passing stars, for the age of a system. We strive for full transparency and reproducibility in our software, and this repository contains 1) the [source code](src), 2) [extensive documentation](https://VirtualPlanetaryLaboratory.github.io/vplanet), 3) scripts and files to [generate published figures](examples) and perform [parameter sweeps](https://virtualplanetarylaboratory.github.io/vplanet/parametersweep.html), and 4) [scripts to validate the current release](tests). We can't claim we found life beyond the Earth with closed-source or unreliable software!

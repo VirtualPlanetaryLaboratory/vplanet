@@ -222,28 +222,28 @@ after. The primary input file generally takes a form like this:</p>
 <section id="vpl-in">
 <h3>vpl.in<a class="headerlink" href="#vpl-in" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># General Options</span>
-<span class="linenos"> 2</span>sSystemName   solarsystem        <span class="c1"># System Name</span>
-<span class="linenos"> 3</span>iVerbose      <span class="m">5</span>                  <span class="c1"># Verbosity level</span>
-<span class="linenos"> 4</span>bOverwrite    <span class="m">1</span>                  <span class="c1"># Allow file overwrites?</span>
-<span class="linenos"> 5</span>saBodyFiles   sun.in $           <span class="c1"># List of all bodies files for the system</span>
-<span class="linenos"> 6</span>              venus.in           <span class="c1"># The $ tells VPLanet to continue to the next line</span>
+<span class="linenos"> 2</span>sSystemName<span class="w">   </span>solarsystem<span class="w">        </span><span class="c1"># System Name</span>
+<span class="linenos"> 3</span>iVerbose<span class="w">      </span><span class="m">5</span><span class="w">                  </span><span class="c1"># Verbosity level</span>
+<span class="linenos"> 4</span>bOverwrite<span class="w">    </span><span class="m">1</span><span class="w">                  </span><span class="c1"># Allow file overwrites?</span>
+<span class="linenos"> 5</span>saBodyFiles<span class="w">   </span>sun.in<span class="w"> </span>$<span class="w">           </span><span class="c1"># List of all bodies files for the system</span>
+<span class="linenos"> 6</span><span class="w">              </span>venus.in<span class="w">           </span><span class="c1"># The $ tells VPLanet to continue to the next line</span>
 <span class="linenos"> 7</span>
 <span class="linenos"> 8</span><span class="c1"># Input/Output Units</span>
-<span class="linenos"> 9</span>sUnitMass      solar             <span class="c1"># Options: gram, kg, Earth, Neptune, Jupiter, solar</span>
-<span class="linenos">10</span>sUnitLength    AU                <span class="c1"># Options: cm, m, km, Earth, Jupiter, solar, AU</span>
-<span class="linenos">11</span>sUnitTime      YEARS             <span class="c1"># Options: sec, day, year, Myr, Gyr</span>
-<span class="linenos">12</span>sUnitAngle     d                 <span class="c1"># Options: deg, rad</span>
+<span class="linenos"> 9</span>sUnitMass<span class="w">      </span>solar<span class="w">             </span><span class="c1"># Options: gram, kg, Earth, Neptune, Jupiter, solar</span>
+<span class="linenos">10</span>sUnitLength<span class="w">    </span>AU<span class="w">                </span><span class="c1"># Options: cm, m, km, Earth, Jupiter, solar, AU</span>
+<span class="linenos">11</span>sUnitTime<span class="w">      </span>YEARS<span class="w">             </span><span class="c1"># Options: sec, day, year, Myr, Gyr</span>
+<span class="linenos">12</span>sUnitAngle<span class="w">     </span>d<span class="w">                 </span><span class="c1"># Options: deg, rad</span>
 <span class="linenos">13</span>
 <span class="linenos">14</span><span class="c1"># Input/Output</span>
-<span class="linenos">15</span>bDoLog         <span class="m">1</span>                 <span class="c1"># Write a log file?</span>
-<span class="linenos">16</span>iDigits        <span class="m">6</span>                 <span class="c1"># Maximum number of digits to right of decimal</span>
+<span class="linenos">15</span>bDoLog<span class="w">         </span><span class="m">1</span><span class="w">                 </span><span class="c1"># Write a log file?</span>
+<span class="linenos">16</span>iDigits<span class="w">        </span><span class="m">6</span><span class="w">                 </span><span class="c1"># Maximum number of digits to right of decimal</span>
 <span class="linenos">17</span>
 <span class="linenos">18</span><span class="c1"># Evolution Parameters</span>
-<span class="linenos">19</span>bDoForward    <span class="m">1</span>                  <span class="c1"># Perform a forward evolution?</span>
-<span class="linenos">20</span>bVarDt        <span class="m">1</span>                  <span class="c1"># Use variable timestepping?</span>
-<span class="linenos">21</span>dEta          <span class="m">0</span>.01               <span class="c1"># Coefficient for variable timestepping</span>
-<span class="linenos">22</span>dStopTime     <span class="m">4</span>.6e9              <span class="c1"># Stop time for evolution</span>
-<span class="linenos">23</span>dOutputTime   1e6                <span class="c1"># Output interval for forward files</span>
+<span class="linenos">19</span>bDoForward<span class="w">    </span><span class="m">1</span><span class="w">                  </span><span class="c1"># Perform a forward evolution?</span>
+<span class="linenos">20</span>bVarDt<span class="w">        </span><span class="m">1</span><span class="w">                  </span><span class="c1"># Use variable timestepping?</span>
+<span class="linenos">21</span>dEta<span class="w">          </span><span class="m">0</span>.01<span class="w">               </span><span class="c1"># Coefficient for variable timestepping</span>
+<span class="linenos">22</span>dStopTime<span class="w">     </span><span class="m">4</span>.6e9<span class="w">              </span><span class="c1"># Stop time for evolution</span>
+<span class="linenos">23</span>dOutputTime<span class="w">   </span>1e6<span class="w">                </span><span class="c1"># Output interval for forward files</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -303,22 +303,22 @@ assuming <code class="code docutils literal notranslate"><span class="pre">VPLan
 <section id="sun-in">
 <h3>sun.in<a class="headerlink" href="#sun-in" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># Star&#39;s Parameters</span>
-<span class="linenos"> 2</span>sName           sun              <span class="c1"># Body&#39;s name</span>
-<span class="linenos"> 3</span>saModules       stellar          <span class="c1"># Modules to apply, exact spelling required</span>
+<span class="linenos"> 2</span>sName<span class="w">           </span>sun<span class="w">              </span><span class="c1"># Body&#39;s name</span>
+<span class="linenos"> 3</span>saModules<span class="w">       </span>stellar<span class="w">          </span><span class="c1"># Modules to apply, exact spelling required</span>
 <span class="linenos"> 4</span>
 <span class="linenos"> 5</span><span class="c1"># Physical Parameters</span>
-<span class="linenos"> 6</span>dMass           <span class="m">1</span>.00             <span class="c1"># Mass of the star in solar masses</span>
-<span class="linenos"> 7</span>dAge            5e7              <span class="c1"># Age in years at integration start</span>
+<span class="linenos"> 6</span>dMass<span class="w">           </span><span class="m">1</span>.00<span class="w">             </span><span class="c1"># Mass of the star in solar masses</span>
+<span class="linenos"> 7</span>dAge<span class="w">            </span>5e7<span class="w">              </span><span class="c1"># Age in years at integration start</span>
 <span class="linenos"> 8</span>
 <span class="linenos"> 9</span><span class="c1"># STELLAR Parameters</span>
-<span class="linenos">10</span>sStellarModel   baraffe          <span class="c1"># Stellar evolution model: `baraffe` or `none`</span>
-<span class="linenos">11</span>dSatXUVFrac     <span class="m">1</span>.e-3            <span class="c1"># XUV luminosity fractional saturation level</span>
-<span class="linenos">12</span>dSatXUVTime     1e8              <span class="c1"># XUV saturation timescale in years</span>
+<span class="linenos">10</span>sStellarModel<span class="w">   </span>baraffe<span class="w">          </span><span class="c1"># Stellar evolution model: `baraffe` or `none`</span>
+<span class="linenos">11</span>dSatXUVFrac<span class="w">     </span><span class="m">1</span>.e-3<span class="w">            </span><span class="c1"># XUV luminosity fractional saturation level</span>
+<span class="linenos">12</span>dSatXUVTime<span class="w">     </span>1e8<span class="w">              </span><span class="c1"># XUV saturation timescale in years</span>
 <span class="linenos">13</span>
 <span class="linenos">14</span><span class="c1"># These are the parameters that vplanet will output as arrays in the</span>
 <span class="linenos">15</span><span class="c1"># `.forward` or `.backward` evolution files. Run `vplanet -h` for a list</span>
 <span class="linenos">16</span><span class="c1"># of all options. Note that the &quot;-&quot;&quot; sign creates output with custom units.</span>
-<span class="linenos">17</span>saOutputOrder   Time -LXUVStellar
+<span class="linenos">17</span>saOutputOrder<span class="w">   </span>Time<span class="w"> </span>-LXUVStellar
 </pre></div>
 </div>
 <p>As before, the parameter names are intended to be self-explanatory. Note that we’re only
@@ -367,23 +367,23 @@ in <a class="reference internal" href="examples/VenusWaterLoss.html"><span class
 <section id="venus-in">
 <h3>venus.in<a class="headerlink" href="#venus-in" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># Planet&#39;s Parameters</span>
-<span class="linenos"> 2</span>sName            venus           <span class="c1"># Body&#39;s name</span>
-<span class="linenos"> 3</span>saModules        atmesc          <span class="c1"># Modules to apply, exact spelling required</span>
-<span class="linenos"> 4</span>saOutputOrder    Time $
-<span class="linenos"> 5</span>                 -SurfWaterMass $
-<span class="linenos"> 6</span>                 -OxygenMantleMass
+<span class="linenos"> 2</span>sName<span class="w">            </span>venus<span class="w">           </span><span class="c1"># Body&#39;s name</span>
+<span class="linenos"> 3</span>saModules<span class="w">        </span>atmesc<span class="w">          </span><span class="c1"># Modules to apply, exact spelling required</span>
+<span class="linenos"> 4</span>saOutputOrder<span class="w">    </span>Time<span class="w"> </span>$
+<span class="linenos"> 5</span><span class="w">                 </span>-SurfWaterMass<span class="w"> </span>$
+<span class="linenos"> 6</span><span class="w">                 </span>-OxygenMantleMass
 <span class="linenos"> 7</span>
 <span class="linenos"> 8</span><span class="c1"># Physical Parameters</span>
-<span class="linenos"> 9</span>dMass         -0.815             <span class="c1"># Here, the - symbol means Earth masses</span>
-<span class="linenos">10</span>dRadius       -0.9499            <span class="c1"># Here, the - symbol means Earth radii</span>
-<span class="linenos">11</span>dSemi         <span class="m">0</span>.723              <span class="c1"># Semi-major axis</span>
-<span class="linenos">12</span>dEcc          <span class="m">0</span>.006772           <span class="c1"># Eccentricity</span>
+<span class="linenos"> 9</span>dMass<span class="w">         </span>-0.815<span class="w">             </span><span class="c1"># Here, the - symbol means Earth masses</span>
+<span class="linenos">10</span>dRadius<span class="w">       </span>-0.9499<span class="w">            </span><span class="c1"># Here, the - symbol means Earth radii</span>
+<span class="linenos">11</span>dSemi<span class="w">         </span><span class="m">0</span>.723<span class="w">              </span><span class="c1"># Semi-major axis</span>
+<span class="linenos">12</span>dEcc<span class="w">          </span><span class="m">0</span>.006772<span class="w">           </span><span class="c1"># Eccentricity</span>
 <span class="linenos">13</span>
 <span class="linenos">14</span><span class="c1"># ATMESC Parameters</span>
-<span class="linenos">15</span>dSurfWaterMass       -1.0        <span class="c1"># Initial surface water in Earth oceans</span>
-<span class="linenos">16</span>sWaterLossModel      lbexact     <span class="c1"># Water loss model; Luger and Barnes (2015)</span>
-<span class="linenos">17</span>bInstantO2Sink       <span class="m">1</span>           <span class="c1"># O2 is absorbed instantly at the surface</span>
-<span class="linenos">18</span>sAtmXAbsEffH2OModel  bolmont16   <span class="c1"># XUV absorption efficiency model</span>
+<span class="linenos">15</span>dSurfWaterMass<span class="w">       </span>-1.0<span class="w">        </span><span class="c1"># Initial surface water in Earth oceans</span>
+<span class="linenos">16</span>sWaterLossModel<span class="w">      </span>lbexact<span class="w">     </span><span class="c1"># Water loss model; Luger and Barnes (2015)</span>
+<span class="linenos">17</span>bInstantO2Sink<span class="w">       </span><span class="m">1</span><span class="w">           </span><span class="c1"># O2 is absorbed instantly at the surface</span>
+<span class="linenos">18</span>sAtmXAbsEffH2OModel<span class="w">  </span>bolmont16<span class="w">   </span><span class="c1"># XUV absorption efficiency model</span>
 </pre></div>
 </div>
 <p>This file looks pretty similar to the previous one, but it’s worth noting
@@ -408,40 +408,40 @@ employs the XUV absorption efficiency model from <a class="reference external" h
 <section id="running-the-code">
 <h2>Running the Code<a class="headerlink" href="#running-the-code" title="Permalink to this heading">¶</a></h2>
 <p>Now that you understand how the input files work, we are ready to run the code!</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vplanet vpl.in
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vplanet<span class="w"> </span>vpl.in
 </pre></div>
 </div>
 <p>Upon running this command in a terminal, you may see all sorts of messages printed
 to the screen:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>INFO: sUnitMass <span class="nb">set</span> <span class="k">in</span> vpl.in, all bodies will use this unit.
-INFO: sUnitTime <span class="nb">set</span> <span class="k">in</span> vpl.in, all bodies will use this unit.
-INFO: sUnitAngle <span class="nb">set</span> <span class="k">in</span> vpl.in, all bodies will use this unit.
-INFO: sUnitLength <span class="nb">set</span> <span class="k">in</span> vpl.in, all bodies will use this unit.
-INFO: sUnitTemp not <span class="nb">set</span> <span class="k">in</span> file sun.in, defaulting to Kelvin.
-INFO: sUnitTemp not <span class="nb">set</span> <span class="k">in</span> file venus1.in, defaulting to kelvin.
-INFO: sUnitTemp not <span class="nb">set</span> <span class="k">in</span> file venus2.in, defaulting to kelvin.
-INFO: sUnitTemp not <span class="nb">set</span> <span class="k">in</span> file venus3.in, defaulting to kelvin.
-INFO: dRotPeriod &lt; <span class="m">0</span> <span class="k">in</span> file sun.in, units assumed to be Days.
-INFO: dMass &lt; <span class="m">0</span> <span class="k">in</span> file venus.in, units assumed to be Earth masses.
-INFO: dSemi &lt; <span class="m">0</span> <span class="k">in</span> file venus.in, units assumed to be AU.
-INFO: dRadius &lt; <span class="m">0</span> <span class="k">in</span> file venus.in, units assumed to be Earth radii.
-INFO: dRotPeriod &lt; <span class="m">0</span> <span class="k">in</span> file venus.in, units assumed to be Days.
-INFO: dSurfWaterMass &lt; <span class="m">0</span> <span class="k">in</span> file venus.in, units assumed to be Terrestrial Oceans <span class="o">(</span>TO<span class="o">)</span>.
-INFO: dMinSurfWaterMass &lt; <span class="m">0</span> <span class="k">in</span> file venus.in, units assumed to be Terrestrial Oceans <span class="o">(</span>TO<span class="o">)</span>.
-INFO: dJeansTime not <span class="nb">set</span> <span class="k">for</span> body venus, defaulting to <span class="m">3</span>.16e+16 seconds.
-Input files read.
-INFO: Age <span class="nb">set</span> <span class="k">in</span> one file, all bodies will have this age.
-INFO: sOutFile not set, defaulting to solarsystem.sun.forward.
-INFO: sOutFile not set, defaulting to solarsystem.venus.forward.
-INFO: sIntegrationMethod not set, defaulting to Runge-Kutta4.
-INFO: dEnvelopeMass &lt; dMinEnvelopeMass. No envelope evolution will be included.
-INFO: dEnvelopeMass &lt; dMinEnvelopeMass. No envelope evolution will be included.
-INFO: dEnvelopeMass &lt; dMinEnvelopeMass. No envelope evolution will be included.
-INFO: Radius of Gyration <span class="nb">set</span> <span class="k">for</span> body <span class="m">0</span>, but this value will be computed from the grid.
-All of sun<span class="s1">&#39;s modules verified.</span>
-<span class="s1">All of venus&#39;</span>s modules verified.
-Input files verified.
-Log file written.
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>INFO:<span class="w"> </span>sUnitMass<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>vpl.in,<span class="w"> </span>all<span class="w"> </span>bodies<span class="w"> </span>will<span class="w"> </span>use<span class="w"> </span>this<span class="w"> </span>unit.
+INFO:<span class="w"> </span>sUnitTime<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>vpl.in,<span class="w"> </span>all<span class="w"> </span>bodies<span class="w"> </span>will<span class="w"> </span>use<span class="w"> </span>this<span class="w"> </span>unit.
+INFO:<span class="w"> </span>sUnitAngle<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>vpl.in,<span class="w"> </span>all<span class="w"> </span>bodies<span class="w"> </span>will<span class="w"> </span>use<span class="w"> </span>this<span class="w"> </span>unit.
+INFO:<span class="w"> </span>sUnitLength<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>vpl.in,<span class="w"> </span>all<span class="w"> </span>bodies<span class="w"> </span>will<span class="w"> </span>use<span class="w"> </span>this<span class="w"> </span>unit.
+INFO:<span class="w"> </span>sUnitTemp<span class="w"> </span>not<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>file<span class="w"> </span>sun.in,<span class="w"> </span>defaulting<span class="w"> </span>to<span class="w"> </span>Kelvin.
+INFO:<span class="w"> </span>sUnitTemp<span class="w"> </span>not<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>file<span class="w"> </span>venus1.in,<span class="w"> </span>defaulting<span class="w"> </span>to<span class="w"> </span>kelvin.
+INFO:<span class="w"> </span>sUnitTemp<span class="w"> </span>not<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>file<span class="w"> </span>venus2.in,<span class="w"> </span>defaulting<span class="w"> </span>to<span class="w"> </span>kelvin.
+INFO:<span class="w"> </span>sUnitTemp<span class="w"> </span>not<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>file<span class="w"> </span>venus3.in,<span class="w"> </span>defaulting<span class="w"> </span>to<span class="w"> </span>kelvin.
+INFO:<span class="w"> </span>dRotPeriod<span class="w"> </span>&lt;<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>file<span class="w"> </span>sun.in,<span class="w"> </span>units<span class="w"> </span>assumed<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>Days.
+INFO:<span class="w"> </span>dMass<span class="w"> </span>&lt;<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>file<span class="w"> </span>venus.in,<span class="w"> </span>units<span class="w"> </span>assumed<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>Earth<span class="w"> </span>masses.
+INFO:<span class="w"> </span>dSemi<span class="w"> </span>&lt;<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>file<span class="w"> </span>venus.in,<span class="w"> </span>units<span class="w"> </span>assumed<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>AU.
+INFO:<span class="w"> </span>dRadius<span class="w"> </span>&lt;<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>file<span class="w"> </span>venus.in,<span class="w"> </span>units<span class="w"> </span>assumed<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>Earth<span class="w"> </span>radii.
+INFO:<span class="w"> </span>dRotPeriod<span class="w"> </span>&lt;<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>file<span class="w"> </span>venus.in,<span class="w"> </span>units<span class="w"> </span>assumed<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>Days.
+INFO:<span class="w"> </span>dSurfWaterMass<span class="w"> </span>&lt;<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>file<span class="w"> </span>venus.in,<span class="w"> </span>units<span class="w"> </span>assumed<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>Terrestrial<span class="w"> </span>Oceans<span class="w"> </span><span class="o">(</span>TO<span class="o">)</span>.
+INFO:<span class="w"> </span>dMinSurfWaterMass<span class="w"> </span>&lt;<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>file<span class="w"> </span>venus.in,<span class="w"> </span>units<span class="w"> </span>assumed<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>Terrestrial<span class="w"> </span>Oceans<span class="w"> </span><span class="o">(</span>TO<span class="o">)</span>.
+INFO:<span class="w"> </span>dJeansTime<span class="w"> </span>not<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>body<span class="w"> </span>venus,<span class="w"> </span>defaulting<span class="w"> </span>to<span class="w"> </span><span class="m">3</span>.16e+16<span class="w"> </span>seconds.
+Input<span class="w"> </span>files<span class="w"> </span>read.
+INFO:<span class="w"> </span>Age<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="k">in</span><span class="w"> </span>one<span class="w"> </span>file,<span class="w"> </span>all<span class="w"> </span>bodies<span class="w"> </span>will<span class="w"> </span>have<span class="w"> </span>this<span class="w"> </span>age.
+INFO:<span class="w"> </span>sOutFile<span class="w"> </span>not<span class="w"> </span>set,<span class="w"> </span>defaulting<span class="w"> </span>to<span class="w"> </span>solarsystem.sun.forward.
+INFO:<span class="w"> </span>sOutFile<span class="w"> </span>not<span class="w"> </span>set,<span class="w"> </span>defaulting<span class="w"> </span>to<span class="w"> </span>solarsystem.venus.forward.
+INFO:<span class="w"> </span>sIntegrationMethod<span class="w"> </span>not<span class="w"> </span>set,<span class="w"> </span>defaulting<span class="w"> </span>to<span class="w"> </span>Runge-Kutta4.
+INFO:<span class="w"> </span>dEnvelopeMass<span class="w"> </span>&lt;<span class="w"> </span>dMinEnvelopeMass.<span class="w"> </span>No<span class="w"> </span>envelope<span class="w"> </span>evolution<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>included.
+INFO:<span class="w"> </span>dEnvelopeMass<span class="w"> </span>&lt;<span class="w"> </span>dMinEnvelopeMass.<span class="w"> </span>No<span class="w"> </span>envelope<span class="w"> </span>evolution<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>included.
+INFO:<span class="w"> </span>dEnvelopeMass<span class="w"> </span>&lt;<span class="w"> </span>dMinEnvelopeMass.<span class="w"> </span>No<span class="w"> </span>envelope<span class="w"> </span>evolution<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>included.
+INFO:<span class="w"> </span>Radius<span class="w"> </span>of<span class="w"> </span>Gyration<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>body<span class="w"> </span><span class="m">0</span>,<span class="w"> </span>but<span class="w"> </span>this<span class="w"> </span>value<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>computed<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span>grid.
+All<span class="w"> </span>of<span class="w"> </span>sun<span class="s1">&#39;s modules verified.</span>
+<span class="s1">All of venus&#39;</span>s<span class="w"> </span>modules<span class="w"> </span>verified.
+Input<span class="w"> </span>files<span class="w"> </span>verified.
+Log<span class="w"> </span>file<span class="w"> </span>written.
 </pre></div>
 </div>
 <p>You can safely ignore most of this output: <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> is just being very
@@ -455,9 +455,9 @@ that contain the issue(s). Note that if you did run the examples/VenusWaterLoss
 case you will see more Venuses in the output.</p>
 <p>Anfter informing you of many of the decisions <code class="code docutils literal notranslate"><span class="pre">VPLanet</span></code> made,
 things will go silent for a couple seconds, and then you’ll see:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Evolution completed.
-Log file updated.
-Simulation completed.
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Evolution<span class="w"> </span>completed.
+Log<span class="w"> </span>file<span class="w"> </span>updated.
+Simulation<span class="w"> </span>completed.
 </pre></div>
 </div>
 <p>The code is done running, and you should see several output files in the current
@@ -470,51 +470,51 @@ system at the initial step and the final step of the evolution. Here’s a
 very condensed version of what you should see:</p>
 <section id="solarsystem-log">
 <h3>solarsystem.log<a class="headerlink" href="#solarsystem-log" title="Permalink to this heading">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Executable: vplanet
-Version: &lt;GITVERSION&gt;
-System Name: solarsystem
-Primary Input File: vpl.in
-Body File <span class="c1">#1: sun.in</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Executable:<span class="w"> </span>vplanet
+Version:<span class="w"> </span>&lt;GITVERSION&gt;
+System<span class="w"> </span>Name:<span class="w"> </span>solarsystem
+Primary<span class="w"> </span>Input<span class="w"> </span>File:<span class="w"> </span>vpl.in
+Body<span class="w"> </span>File<span class="w"> </span><span class="c1">#1: sun.in</span>
 ...
 
----- INITIAL SYSTEM PROPERTIES ----
-<span class="o">(</span>Age<span class="o">)</span> System Age <span class="o">[</span>sec<span class="o">]</span>: <span class="m">1</span>.577880e+15
-<span class="o">(</span>Time<span class="o">)</span> Simulation Time <span class="o">[</span>sec<span class="o">]</span>: <span class="m">0</span>.000000
+----<span class="w"> </span>INITIAL<span class="w"> </span>SYSTEM<span class="w"> </span>PROPERTIES<span class="w"> </span>----
+<span class="o">(</span>Age<span class="o">)</span><span class="w"> </span>System<span class="w"> </span>Age<span class="w"> </span><span class="o">[</span>sec<span class="o">]</span>:<span class="w"> </span><span class="m">1</span>.577880e+15
+<span class="o">(</span>Time<span class="o">)</span><span class="w"> </span>Simulation<span class="w"> </span>Time<span class="w"> </span><span class="o">[</span>sec<span class="o">]</span>:<span class="w"> </span><span class="m">0</span>.000000
 ...
------ BODY: sun ----
-Active Modules: STELLAR
-<span class="o">(</span>Mass<span class="o">)</span> Mass <span class="o">[</span>kg<span class="o">]</span>: <span class="m">1</span>.988416e+30
+-----<span class="w"> </span>BODY:<span class="w"> </span>sun<span class="w"> </span>----
+Active<span class="w"> </span>Modules:<span class="w"> </span>STELLAR
+<span class="o">(</span>Mass<span class="o">)</span><span class="w"> </span>Mass<span class="w"> </span><span class="o">[</span>kg<span class="o">]</span>:<span class="w"> </span><span class="m">1</span>.988416e+30
 ...
------ STELLAR PARAMETERS <span class="o">(</span>sun<span class="o">)</span>------
-<span class="o">(</span>LXUVStellar<span class="o">)</span> Base X-ray/XUV Luminosity <span class="o">[</span>LSUN<span class="o">]</span>: <span class="m">0</span>.000677
-Output Order: Time<span class="o">[</span>year<span class="o">]</span> LXUVStellar<span class="o">[</span>LSUN<span class="o">]</span>
+-----<span class="w"> </span>STELLAR<span class="w"> </span>PARAMETERS<span class="w"> </span><span class="o">(</span>sun<span class="o">)</span>------
+<span class="o">(</span>LXUVStellar<span class="o">)</span><span class="w"> </span>Base<span class="w"> </span>X-ray/XUV<span class="w"> </span>Luminosity<span class="w"> </span><span class="o">[</span>LSUN<span class="o">]</span>:<span class="w"> </span><span class="m">0</span>.000677
+Output<span class="w"> </span>Order:<span class="w"> </span>Time<span class="o">[</span>year<span class="o">]</span><span class="w"> </span>LXUVStellar<span class="o">[</span>LSUN<span class="o">]</span>
 
------ BODY: venus ----
-Active Modules: ATMESC
-<span class="o">(</span>Mass<span class="o">)</span> Mass <span class="o">[</span>kg<span class="o">]</span>: <span class="m">4</span>.867332e+24
+-----<span class="w"> </span>BODY:<span class="w"> </span>venus<span class="w"> </span>----
+Active<span class="w"> </span>Modules:<span class="w"> </span>ATMESC
+<span class="o">(</span>Mass<span class="o">)</span><span class="w"> </span>Mass<span class="w"> </span><span class="o">[</span>kg<span class="o">]</span>:<span class="w"> </span><span class="m">4</span>.867332e+24
 ...
------ ATMESC PARAMETERS <span class="o">(</span>venus<span class="o">)</span>------
-<span class="o">(</span>SurfWaterMass<span class="o">)</span> Surface Water Mass <span class="o">[</span>TO<span class="o">]</span>: <span class="m">1</span>.000000
+-----<span class="w"> </span>ATMESC<span class="w"> </span>PARAMETERS<span class="w"> </span><span class="o">(</span>venus<span class="o">)</span>------
+<span class="o">(</span>SurfWaterMass<span class="o">)</span><span class="w"> </span>Surface<span class="w"> </span>Water<span class="w"> </span>Mass<span class="w"> </span><span class="o">[</span>TO<span class="o">]</span>:<span class="w"> </span><span class="m">1</span>.000000
 ...
-Output Order: Time<span class="o">[</span>year<span class="o">]</span> SurfWaterMass<span class="o">[</span>TO<span class="o">]</span> OxygenMantleMass<span class="o">[</span>bars<span class="o">]</span>
+Output<span class="w"> </span>Order:<span class="w"> </span>Time<span class="o">[</span>year<span class="o">]</span><span class="w"> </span>SurfWaterMass<span class="o">[</span>TO<span class="o">]</span><span class="w"> </span>OxygenMantleMass<span class="o">[</span>bars<span class="o">]</span>
 
----- FINAL SYSTEM PROPERTIES ----
-<span class="o">(</span>Age<span class="o">)</span> System Age <span class="o">[</span>sec<span class="o">]</span>: <span class="m">1</span>.467428e+17
-<span class="o">(</span>Time<span class="o">)</span> Simulation Time <span class="o">[</span>sec<span class="o">]</span>: <span class="m">1</span>.451650e+17
+----<span class="w"> </span>FINAL<span class="w"> </span>SYSTEM<span class="w"> </span>PROPERTIES<span class="w"> </span>----
+<span class="o">(</span>Age<span class="o">)</span><span class="w"> </span>System<span class="w"> </span>Age<span class="w"> </span><span class="o">[</span>sec<span class="o">]</span>:<span class="w"> </span><span class="m">1</span>.467428e+17
+<span class="o">(</span>Time<span class="o">)</span><span class="w"> </span>Simulation<span class="w"> </span>Time<span class="w"> </span><span class="o">[</span>sec<span class="o">]</span>:<span class="w"> </span><span class="m">1</span>.451650e+17
 ...
------ BODY: sun ----
-Active Modules: STELLAR
-<span class="o">(</span>Mass<span class="o">)</span> Mass <span class="o">[</span>kg<span class="o">]</span>: <span class="m">1</span>.988416e+30
+-----<span class="w"> </span>BODY:<span class="w"> </span>sun<span class="w"> </span>----
+Active<span class="w"> </span>Modules:<span class="w"> </span>STELLAR
+<span class="o">(</span>Mass<span class="o">)</span><span class="w"> </span>Mass<span class="w"> </span><span class="o">[</span>kg<span class="o">]</span>:<span class="w"> </span><span class="m">1</span>.988416e+30
 ...
------ STELLAR PARAMETERS <span class="o">(</span>sun<span class="o">)</span>------
-<span class="o">(</span>LXUVFrac<span class="o">)</span> X-ray/XUV Luminosity Fraction <span class="o">[]</span>: <span class="m">8</span>.892684e-06
+-----<span class="w"> </span>STELLAR<span class="w"> </span>PARAMETERS<span class="w"> </span><span class="o">(</span>sun<span class="o">)</span>------
+<span class="o">(</span>LXUVFrac<span class="o">)</span><span class="w"> </span>X-ray/XUV<span class="w"> </span>Luminosity<span class="w"> </span>Fraction<span class="w"> </span><span class="o">[]</span>:<span class="w"> </span><span class="m">8</span>.892684e-06
 ...
------ BODY: venus ----
-Active Modules: ATMESC
-<span class="o">(</span>Mass<span class="o">)</span> Mass <span class="o">[</span>kg<span class="o">]</span>: <span class="m">4</span>.867332e+24
------ ATMESC PARAMETERS <span class="o">(</span>venus<span class="o">)</span>------
-<span class="o">(</span>SurfWaterMass<span class="o">)</span> Surface Water Mass <span class="o">[</span>TO<span class="o">]</span>: <span class="m">0</span>.000000
-<span class="o">(</span>OxygenMantleMass<span class="o">)</span> Mass of Oxygen <span class="k">in</span> Mantle <span class="o">[</span>bars<span class="o">]</span>: <span class="m">199</span>.365415
+-----<span class="w"> </span>BODY:<span class="w"> </span>venus<span class="w"> </span>----
+Active<span class="w"> </span>Modules:<span class="w"> </span>ATMESC
+<span class="o">(</span>Mass<span class="o">)</span><span class="w"> </span>Mass<span class="w"> </span><span class="o">[</span>kg<span class="o">]</span>:<span class="w"> </span><span class="m">4</span>.867332e+24
+-----<span class="w"> </span>ATMESC<span class="w"> </span>PARAMETERS<span class="w"> </span><span class="o">(</span>venus<span class="o">)</span>------
+<span class="o">(</span>SurfWaterMass<span class="o">)</span><span class="w"> </span>Surface<span class="w"> </span>Water<span class="w"> </span>Mass<span class="w"> </span><span class="o">[</span>TO<span class="o">]</span>:<span class="w"> </span><span class="m">0</span>.000000
+<span class="o">(</span>OxygenMantleMass<span class="o">)</span><span class="w"> </span>Mass<span class="w"> </span>of<span class="w"> </span>Oxygen<span class="w"> </span><span class="k">in</span><span class="w"> </span>Mantle<span class="w"> </span><span class="o">[</span>bars<span class="o">]</span>:<span class="w"> </span><span class="m">199</span>.365415
 ...
 </pre></div>
 </div>
@@ -535,11 +535,11 @@ and the XUV luminosity (in solar units since we used the minus sign):</p>
 </section>
 <section id="solarsystem-sun-forward">
 <h3>solarsystem.sun.forward<a class="headerlink" href="#solarsystem-sun-forward" title="Permalink to this heading">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">0</span>.000000     <span class="m">0</span>.000677
-<span class="m">1</span>.000000e+06 <span class="m">0</span>.000677
-<span class="m">2</span>.000000e+06 <span class="m">0</span>.000678
-<span class="m">3</span>.000000e+06 <span class="m">0</span>.000678
-<span class="m">4</span>.000000e+06 <span class="m">0</span>.000678
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">0</span>.000000<span class="w">     </span><span class="m">0</span>.000677
+<span class="m">1</span>.000000e+06<span class="w"> </span><span class="m">0</span>.000677
+<span class="m">2</span>.000000e+06<span class="w"> </span><span class="m">0</span>.000678
+<span class="m">3</span>.000000e+06<span class="w"> </span><span class="m">0</span>.000678
+<span class="m">4</span>.000000e+06<span class="w"> </span><span class="m">0</span>.000678
 ...
 </pre></div>
 </div>
@@ -551,11 +551,11 @@ the mantle (with a minus sign, indicating units of bars):</p>
 </section>
 <section id="solarsystem-venus-forward">
 <h3>solarsystem.venus.forward<a class="headerlink" href="#solarsystem-venus-forward" title="Permalink to this heading">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">0</span>.000000     <span class="m">1</span>.000000 <span class="m">0</span>.000000
-<span class="m">1</span>.000000e+06 <span class="m">0</span>.978763 <span class="m">4</span>.238860
-<span class="m">2</span>.000000e+06 <span class="m">0</span>.957524 <span class="m">8</span>.477719
-<span class="m">3</span>.000000e+06 <span class="m">0</span>.936283 <span class="m">12</span>.716579
-<span class="m">4</span>.000000e+06 <span class="m">0</span>.915044 <span class="m">16</span>.955439
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">0</span>.000000<span class="w">     </span><span class="m">1</span>.000000<span class="w"> </span><span class="m">0</span>.000000
+<span class="m">1</span>.000000e+06<span class="w"> </span><span class="m">0</span>.978763<span class="w"> </span><span class="m">4</span>.238860
+<span class="m">2</span>.000000e+06<span class="w"> </span><span class="m">0</span>.957524<span class="w"> </span><span class="m">8</span>.477719
+<span class="m">3</span>.000000e+06<span class="w"> </span><span class="m">0</span>.936283<span class="w"> </span><span class="m">12</span>.716579
+<span class="m">4</span>.000000e+06<span class="w"> </span><span class="m">0</span>.915044<span class="w"> </span><span class="m">16</span>.955439
 ...
 </pre></div>
 </div>
@@ -648,6 +648,7 @@ details.</p>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/sphinx_highlight.js"></script>
 
   
 

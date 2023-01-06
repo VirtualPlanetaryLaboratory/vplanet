@@ -166,7 +166,7 @@ If you plan on developing VPLanet us the Developers</p>
 <h2>Users<a class="headerlink" href="#users" title="Permalink to this heading">¶</a></h2>
 <p>You can install VPLanet and its support scripts (vplot, vspace, multiplanet, and
 bigplanet) using <a class="reference external" href="https://pip.pypa.io/en/stable">pip</a>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m pip install vplanet
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>vplanet
 </pre></div>
 </div>
 <p>This will place executables of the most up-to-date, stable versions of these
@@ -179,20 +179,20 @@ Python 3.6 or greater.</p>
 <p>To install VPLanet as a developer, you must clone the repository and then
 install the software. The first time you install VPLanet, use the following
 commands:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/VirtualPlanetaryLaboratory/vplanet
-<span class="nb">cd</span> vplanet
-python setup.py develop
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/VirtualPlanetaryLaboratory/vplanet
+<span class="nb">cd</span><span class="w"> </span>vplanet
+python<span class="w"> </span>setup.py<span class="w"> </span>develop
 </pre></div>
 </div>
 <p>After changes to the C source, make sure to re-install:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python setup.py develop
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>setup.py<span class="w"> </span>develop
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If you are running macOS Catalina or later, you may need to force the operating
 system to set the location of C libraries:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">CPATH</span><span class="o">=</span>/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">CPATH</span><span class="o">=</span>/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include
 </pre></div>
 </div>
 <p>Thanks to Chris Colose for identifying and solving this problem.</p>
@@ -251,6 +251,7 @@ system to set the location of C libraries:</p>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/sphinx_highlight.js"></script>
 
   
 

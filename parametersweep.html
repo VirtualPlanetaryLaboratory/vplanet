@@ -187,18 +187,18 @@ and then builds a directory structure with each
 folder containing the input files for a specific simulation. In this guide we vary
 dTCore (initial core temperature) and d40KPowerCore (initial radiogenic power from potassium-40).</p>
 <p>Here’s the input file for <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sSrcFolder ~/vplanet/examples/EarthInterior
-sDestFolder ParameterSweep
-sTrialName test_
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sSrcFolder<span class="w"> </span>~/vplanet/examples/EarthInterior
+sDestFolder<span class="w"> </span>ParameterSweep
+sTrialName<span class="w"> </span>test_
 
-sBodyFile   sun.in
+sBodyFile<span class="w">   </span>sun.in
 
-sBodyFile   earth.in
+sBodyFile<span class="w">   </span>earth.in
 
-dTCore <span class="o">[</span><span class="m">5500</span>, <span class="m">6500</span>, n10<span class="o">]</span> tcore
-d40KPowerCore <span class="o">[</span>-1.5, -0.5, n10<span class="o">]</span> K
+dTCore<span class="w"> </span><span class="o">[</span><span class="m">5500</span>,<span class="w"> </span><span class="m">6500</span>,<span class="w"> </span>n10<span class="o">]</span><span class="w"> </span>tcore
+d40KPowerCore<span class="w"> </span><span class="o">[</span>-1.5,<span class="w"> </span>-0.5,<span class="w"> </span>n10<span class="o">]</span><span class="w"> </span>K
 
-sPrimaryFile   vpl.in
+sPrimaryFile<span class="w">   </span>vpl.in
 </pre></div>
 </div>
 <p>This file directs <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code> to vary initial core temperature from 5500 to 6500 in 10 steps and
@@ -207,7 +207,7 @@ ParameterSweep and the individual folders will be called test_tcore?K?, where th
 “n” tells <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code> to create 10 evenly spaced values for each (other distributions are available), so the total number of
 simulations will be 100.</p>
 <p>To build the files, run the following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vspace <span class="o">[</span>-q -f<span class="o">]</span> vspace.in
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vspace<span class="w"> </span><span class="o">[</span>-q<span class="w"> </span>-f<span class="o">]</span><span class="w"> </span>vspace.in
 </pre></div>
 </div>
 <p>This command will create the folder ParameterSweep, with 100 folders
@@ -226,7 +226,7 @@ options you varied so you can confirm the initial conditions. These png files ar
 <p><code class="code docutils literal notranslate"><span class="pre">MultiPlanet</span></code> is the command line tool to run the simulations created with <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code>
 across the processors on your computer. To run, type the following in the
 command line:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>multiplanet -c &lt;num_cores&gt; <span class="o">[</span>-q -bp<span class="o">]</span> vspace.in
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>multiplanet<span class="w"> </span>-c<span class="w"> </span>&lt;num_cores&gt;<span class="w"> </span><span class="o">[</span>-q<span class="w"> </span>-bp<span class="o">]</span><span class="w"> </span>vspace.in
 </pre></div>
 </div>
 <p>The optional argument <code class="docutils literal notranslate"><span class="pre">-c</span></code> (or <code class="docutils literal notranslate"><span class="pre">--cores</span></code>) tells <code class="code docutils literal notranslate"><span class="pre">MultiPlanet</span></code> the number of cores to run.
@@ -247,14 +247,14 @@ longer simulations it is often
 helpful to know how far along the parameter sweep is. The command <code class="code docutils literal notranslate"><span class="pre">mpstatus</span></code> returns the
 current state of the <code class="code docutils literal notranslate"><span class="pre">MultiPlanet</span></code> process. To check the current status, type the
 following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpstatus vspace.in
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpstatus<span class="w"> </span>vspace.in
 </pre></div>
 </div>
 <p>This command returns output like the following to the terminal:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>  --MultiPlanet Status--
-Number of Simulations completed: <span class="m">35</span>
-Number of Simulations <span class="k">in</span> progress: <span class="m">6</span>
-Number of Simulations remaining: <span class="m">59</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">  </span>--MultiPlanet<span class="w"> </span>Status--
+Number<span class="w"> </span>of<span class="w"> </span>Simulations<span class="w"> </span>completed:<span class="w"> </span><span class="m">35</span>
+Number<span class="w"> </span>of<span class="w"> </span>Simulations<span class="w"> </span><span class="k">in</span><span class="w"> </span>progress:<span class="w"> </span><span class="m">6</span>
+Number<span class="w"> </span>of<span class="w"> </span>Simulations<span class="w"> </span>remaining:<span class="w"> </span><span class="m">59</span>
 </pre></div>
 </div>
 <p>But with the proper numbers shown.</p>
@@ -271,21 +271,21 @@ plotting with a</strong> <code class="code docutils literal notranslate"><span c
 not need to open files and each directory!** Here we demonstrate the typical workflow of building a biplanet file.
 To compress the data, type the following command in the terminal (after MultiPlanet
 finishes):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bigplanet -c &lt;num_cores&gt; <span class="o">[</span>-a<span class="o">]</span> bpl.in
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bigplanet<span class="w"> </span>-c<span class="w"> </span>&lt;num_cores&gt;<span class="w"> </span><span class="o">[</span>-a<span class="o">]</span><span class="w"> </span>bpl.in
 </pre></div>
 </div>
 <p>The BigPlanet arguments work similarly to <code class="code docutils literal notranslate"><span class="pre">multiplanet</span></code>’s with the user able to
 specify the number of processors <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code> can use. The only difference is that
 BigPlanet uses a bpl.in file, which is <em>very</em> similar to a vspace input file.</p>
 <p>Here’s the input file for <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sDestFolder ParameterSweep
-sArchiveFile ParameterSweep.bpa
-sOutputFile ParameterSweep.bpf
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sDestFolder<span class="w"> </span>ParameterSweep
+sArchiveFile<span class="w"> </span>ParameterSweep.bpa
+sOutputFile<span class="w"> </span>ParameterSweep.bpf
 
-saBodyFiles   earth.in sun.in
-sPrimaryFile   vpl.in
+saBodyFiles<span class="w">   </span>earth.in<span class="w"> </span>sun.in
+sPrimaryFile<span class="w">   </span>vpl.in
 
-saKeyInclude earth:TCore:initial earth:40KPowerCore:final earth:RIC:final
+saKeyInclude<span class="w"> </span>earth:TCore:initial<span class="w"> </span>earth:40KPowerCore:final<span class="w"> </span>earth:RIC:final
 </pre></div>
 </div>
 <p>This will create an <a class="reference external" href="https://en.wikipedia.org/wiki/Hierarchical_Data_Format">HDF5</a> file
@@ -433,6 +433,7 @@ inclination. <code class="code docutils literal notranslate"><span class="pre">B
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/sphinx_highlight.js"></script>
 
   
 

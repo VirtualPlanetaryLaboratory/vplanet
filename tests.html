@@ -199,7 +199,7 @@ file <code class="code docutils literal notranslate"><span class="pre">test_&lt;
 <span class="n">path</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">test_something</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Brief description of what we&#39;re testing.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Brief description of what we&#39;re testing.&quot;&quot;&quot;</span>
     <span class="c1"># Run vplanet</span>
     <span class="n">output</span> <span class="o">=</span> <span class="n">vplanet</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;vpl.in&quot;</span><span class="p">)</span>
 
@@ -251,7 +251,7 @@ EXACT INSTRUCTIONS TO REPRODUCE EXAMPLE
 
 <span class="p">..</span> <span class="ow">code-block</span><span class="p">::</span> <span class="k">bash</span>
 
-    python makeplot.py
+    python<span class="w"> </span>makeplot.py
 
 
 <span class="gh">Expected output</span>
@@ -277,7 +277,7 @@ than about 800x800 pixels) with <strong>unique file names</strong> (so they donâ
 overwrite images from other examples when building the docs) in the
 example directory. To commit these images, youâ€™ll need to <strong>force add them</strong>
 since <code class="code docutils literal notranslate"><span class="pre">png</span></code> files are in the <cite>.gitignore</cite> by default:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git add -f UNIQUE_FIGURE_NAME.png
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>-f<span class="w"> </span>UNIQUE_FIGURE_NAME.png
 </pre></div>
 </div>
 </section>
@@ -334,6 +334,7 @@ since <code class="code docutils literal notranslate"><span class="pre">png</spa
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/sphinx_highlight.js"></script>
 
   
 

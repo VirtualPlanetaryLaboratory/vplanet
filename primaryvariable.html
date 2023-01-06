@@ -208,10 +208,10 @@ pericenter) are handled, including in module.c.</p>
 <h2>Declaration<a class="headerlink" href="#declaration" title="Permalink to this heading">¶</a></h2>
 <p>The first step in creating a primary variable is to add it to the BODY struct in
 vplanet.h, i.e.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>struct BODY <span class="o">{</span>
-  ...
-  double dPrimaryVariable<span class="p">;</span>  /**&lt; Dummy variable <span class="k">for</span> primary variable tutorial */
-  ...
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>struct<span class="w"> </span>BODY<span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>...
+<span class="w">  </span>double<span class="w"> </span>dPrimaryVariable<span class="p">;</span><span class="w">  </span>/**&lt;<span class="w"> </span>Dummy<span class="w"> </span>variable<span class="w"> </span><span class="k">for</span><span class="w"> </span>primary<span class="w"> </span>variable<span class="w"> </span>tutorial<span class="w"> </span>*/
+<span class="w">  </span>...
 <span class="o">}</span><span class="p">;</span>
 </pre></div>
 </div>
@@ -219,17 +219,17 @@ vplanet.h, i.e.</p>
 corresponding block of code. Note the Doxygen comment.</p>
 <p>Next, we add new members to the UPDATE struct, which contains the relevant info
 to integrate the primary variable.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>struct UPDATE <span class="o">{</span>
-  ...
-  int iPrimaryVariable<span class="p">;</span>
-  int iNumPrimaryVariable<span class="p">;</span>
-  ...
-  double dPrimaryVariable<span class="p">;</span>
-  ...
-  int iPrimaryVariablePhysics<span class="p">;</span>
-  ...
-  double *pdDPrimaryVariableDtPhysics<span class="p">;</span>
-  ...
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>struct<span class="w"> </span>UPDATE<span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>...
+<span class="w">  </span>int<span class="w"> </span>iPrimaryVariable<span class="p">;</span>
+<span class="w">  </span>int<span class="w"> </span>iNumPrimaryVariable<span class="p">;</span>
+<span class="w">  </span>...
+<span class="w">  </span>double<span class="w"> </span>dPrimaryVariable<span class="p">;</span>
+<span class="w">  </span>...
+<span class="w">  </span>int<span class="w"> </span>iPrimaryVariablePhysics<span class="p">;</span>
+<span class="w">  </span>...
+<span class="w">  </span>double<span class="w"> </span>*pdDPrimaryVariableDtPhysics<span class="p">;</span>
+<span class="w">  </span>...
 <span class="o">}</span><span class="p">;</span>
 </pre></div>
 </div>
@@ -240,15 +240,15 @@ final variable is a pointer to the instantaneous derivative. Although not shown
 here, don’t forget to add the Doxygen comments.</p>
 <p>Next, add a new function class for the variable in vplanet.h in the block of
 declarations for the other primary variables:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>typedef void <span class="o">(</span>*fnFinalizeUpdatePrimaryVariableModule<span class="o">)(</span>BODY *, UPDATE *,
-              int *, int, int, int<span class="o">)</span><span class="p">;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>typedef<span class="w"> </span>void<span class="w"> </span><span class="o">(</span>*fnFinalizeUpdatePrimaryVariableModule<span class="o">)(</span>BODY<span class="w"> </span>*,<span class="w"> </span>UPDATE<span class="w"> </span>*,
+<span class="w">              </span>int<span class="w"> </span>*,<span class="w"> </span>int,<span class="w"> </span>int,<span class="w"> </span>int<span class="o">)</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>and add it to the MODULE struct:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>struct MODULE <span class="o">{</span>
-  ...
-  fnFinalizeUpdatePrimaryVariableModule **fnFinalizeUpdatePrimaryVariable<span class="p">;</span>
-  ...
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>struct<span class="w"> </span>MODULE<span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>...
+<span class="w">  </span>fnFinalizeUpdatePrimaryVariableModule<span class="w"> </span>**fnFinalizeUpdatePrimaryVariable<span class="p">;</span>
+<span class="w">  </span>...
 <span class="o">}</span><span class="p">;</span>
 </pre></div>
 </div>
@@ -260,7 +260,7 @@ declarations for the other primary variables:</p>
 <p>The final initialization step is to declare the subroutine that returns the
 derivative in the module’s header file, which we’re calling physics.h for this
 example.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>double fdDPrimaryVariableDt<span class="o">(</span>BODY *, SYSTEM *, int *<span class="o">)</span><span class="p">;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>double<span class="w"> </span>fdDPrimaryVariableDt<span class="o">(</span>BODY<span class="w"> </span>*,<span class="w"> </span>SYSTEM<span class="w"> </span>*,<span class="w"> </span>int<span class="w"> </span>*<span class="o">)</span><span class="p">;</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -275,60 +275,60 @@ the argument list of the example above.</p>
 files. We start with update.c. First, initialize the number of processes that
 can modify this variable in the InitializeUpdate function to 0, and create a
 block of code that initializes the other pieces of the UPDATE struct.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void InitializeUpdate<span class="o">(</span>BODY *body, CONTROL *control, MODULE *module,
-                      UPDATE *update, fnUpdateVariable ****fnUpdate<span class="o">)</span> <span class="o">{</span>
-  ...
-  update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable <span class="o">=</span> <span class="m">0</span><span class="p">;</span>
-  ...
-  // Set to -1 to initialize<span class="p">;</span> this is changed <span class="k">if</span> the user requests it
-  update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable <span class="o">=</span> -1<span class="p">;</span>
-  <span class="k">if</span> <span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="o">)</span> <span class="o">{</span>
-    // At least <span class="m">1</span> module will use this variable
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void<span class="w"> </span>InitializeUpdate<span class="o">(</span>BODY<span class="w"> </span>*body,<span class="w"> </span>CONTROL<span class="w"> </span>*control,<span class="w"> </span>MODULE<span class="w"> </span>*module,
+<span class="w">                      </span>UPDATE<span class="w"> </span>*update,<span class="w"> </span>fnUpdateVariable<span class="w"> </span>****fnUpdate<span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>...
+<span class="w">  </span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">  </span>...
+<span class="w">  </span>//<span class="w"> </span>Set<span class="w"> </span>to<span class="w"> </span>-1<span class="w"> </span>to<span class="w"> </span>initialize<span class="p">;</span><span class="w"> </span>this<span class="w"> </span>is<span class="w"> </span>changed<span class="w"> </span><span class="k">if</span><span class="w"> </span>the<span class="w"> </span>user<span class="w"> </span>requests<span class="w"> </span>it
+<span class="w">  </span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="w"> </span><span class="o">=</span><span class="w"> </span>-1<span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>//<span class="w"> </span>At<span class="w"> </span>least<span class="w"> </span><span class="m">1</span><span class="w"> </span>module<span class="w"> </span>will<span class="w"> </span>use<span class="w"> </span>this<span class="w"> </span>variable
 
-    // Assign iVar accounting variables
-    update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable <span class="o">=</span> iVar<span class="p">;</span>
-    update<span class="o">[</span>iBody<span class="o">]</span>.iaVar<span class="o">[</span>iVar<span class="o">]</span>      <span class="o">=</span> VPRIMARYVARIABLE<span class="p">;</span>
-    update<span class="o">[</span>iBody<span class="o">]</span>.iNumEqns<span class="o">[</span>iVar<span class="o">]</span>   <span class="o">=</span> update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="p">;</span>
-    // Assign pointer to derivative
-    update<span class="o">[</span>iBody<span class="o">]</span>.pdVar<span class="o">[</span>iVar<span class="o">]</span>      <span class="o">=</span> <span class="p">&amp;</span>body<span class="o">[</span>iBody<span class="o">]</span>.dPrimaryVariable<span class="p">;</span>
-    // Allocate memory
-    update<span class="o">[</span>iBody<span class="o">]</span>.iNumBodies<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
-       malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
-    update<span class="o">[</span>iBody<span class="o">]</span>.iaBody<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
-       malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>int *<span class="o">))</span><span class="p">;</span>
-    update<span class="o">[</span>iBody<span class="o">]</span>.iaType<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span> malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable *
-       sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
-    update<span class="o">[</span>iBody<span class="o">]</span>.iaModule<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
-       malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
+<span class="w">    </span>//<span class="w"> </span>Assign<span class="w"> </span>iVar<span class="w"> </span>accounting<span class="w"> </span>variables
+<span class="w">    </span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="w"> </span><span class="o">=</span><span class="w"> </span>iVar<span class="p">;</span>
+<span class="w">    </span>update<span class="o">[</span>iBody<span class="o">]</span>.iaVar<span class="o">[</span>iVar<span class="o">]</span><span class="w">      </span><span class="o">=</span><span class="w"> </span>VPRIMARYVARIABLE<span class="p">;</span>
+<span class="w">    </span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumEqns<span class="o">[</span>iVar<span class="o">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="p">;</span>
+<span class="w">    </span>//<span class="w"> </span>Assign<span class="w"> </span>pointer<span class="w"> </span>to<span class="w"> </span>derivative
+<span class="w">    </span>update<span class="o">[</span>iBody<span class="o">]</span>.pdVar<span class="o">[</span>iVar<span class="o">]</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">&amp;</span>body<span class="o">[</span>iBody<span class="o">]</span>.dPrimaryVariable<span class="p">;</span>
+<span class="w">    </span>//<span class="w"> </span>Allocate<span class="w"> </span>memory
+<span class="w">    </span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumBodies<span class="o">[</span>iVar<span class="o">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">       </span>malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
+<span class="w">    </span>update<span class="o">[</span>iBody<span class="o">]</span>.iaBody<span class="o">[</span>iVar<span class="o">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">       </span>malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>int<span class="w"> </span>*<span class="o">))</span><span class="p">;</span>
+<span class="w">    </span>update<span class="o">[</span>iBody<span class="o">]</span>.iaType<span class="o">[</span>iVar<span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="w"> </span>*
+<span class="w">       </span>sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
+<span class="w">    </span>update<span class="o">[</span>iBody<span class="o">]</span>.iaModule<span class="o">[</span>iVar<span class="o">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">       </span>malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
 
-    // Assign and alloate memory <span class="k">for</span> Runge-Kutta integration
-    <span class="k">if</span> <span class="o">(</span>control-&gt;Evolve.iOneStep <span class="o">==</span> RUNGEKUTTA<span class="o">)</span> <span class="o">{</span>
-      control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.pdVar<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
-         <span class="p">&amp;</span>control-&gt;Evolve.tmpBody<span class="o">[</span>iBody<span class="o">]</span>.dPrimaryVariable<span class="p">;</span>
-      control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.iNumBodies<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
-         malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
-      control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.daDerivProc<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
-         malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>double<span class="o">))</span><span class="p">;</span>
-      control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.iaType<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
-         malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
-      control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.iaModule<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
-         malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
-      control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.iaBody<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span>
-         malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable * sizeof<span class="o">(</span>int *<span class="o">))</span><span class="p">;</span>
-    <span class="o">}</span>
+<span class="w">    </span>//<span class="w"> </span>Assign<span class="w"> </span>and<span class="w"> </span>alloate<span class="w"> </span>memory<span class="w"> </span><span class="k">for</span><span class="w"> </span>Runge-Kutta<span class="w"> </span>integration
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">(</span>control-&gt;Evolve.iOneStep<span class="w"> </span><span class="o">==</span><span class="w"> </span>RUNGEKUTTA<span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">      </span>control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.pdVar<span class="o">[</span>iVar<span class="o">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">         </span><span class="p">&amp;</span>control-&gt;Evolve.tmpBody<span class="o">[</span>iBody<span class="o">]</span>.dPrimaryVariable<span class="p">;</span>
+<span class="w">      </span>control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.iNumBodies<span class="o">[</span>iVar<span class="o">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">         </span>malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
+<span class="w">      </span>control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.daDerivProc<span class="o">[</span>iVar<span class="o">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">         </span>malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>double<span class="o">))</span><span class="p">;</span>
+<span class="w">      </span>control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.iaType<span class="o">[</span>iVar<span class="o">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">         </span>malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
+<span class="w">      </span>control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.iaModule<span class="o">[</span>iVar<span class="o">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">         </span>malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
+<span class="w">      </span>control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.iaBody<span class="o">[</span>iVar<span class="o">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">         </span>malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>int<span class="w"> </span>*<span class="o">))</span><span class="p">;</span>
+<span class="w">    </span><span class="o">}</span>
 
-    // Now allocate memory <span class="k">for</span> the number of processes that affect this variable
-    <span class="nv">iEqn</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span>
-    <span class="k">for</span> <span class="o">(</span><span class="nv">iModule</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span> iModule &lt; module-&gt;iNumModules<span class="o">[</span>iBody<span class="o">]</span><span class="p">;</span> iModule++<span class="o">)</span> <span class="o">{</span>
-      module-&gt;fnFinalizeUpdatePrimaryVariable<span class="o">[</span>iBody<span class="o">][</span>iModule<span class="o">](</span>body, update,
-                <span class="p">&amp;</span>iEqn, iVar, iBody, iFoo<span class="o">)</span><span class="p">;</span>
-    <span class="o">}</span>
+<span class="w">    </span>//<span class="w"> </span>Now<span class="w"> </span>allocate<span class="w"> </span>memory<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>number<span class="w"> </span>of<span class="w"> </span>processes<span class="w"> </span>that<span class="w"> </span>affect<span class="w"> </span>this<span class="w"> </span>variable
+<span class="w">    </span><span class="nv">iEqn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="o">(</span><span class="nv">iModule</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span>iModule<span class="w"> </span>&lt;<span class="w"> </span>module-&gt;iNumModules<span class="o">[</span>iBody<span class="o">]</span><span class="p">;</span><span class="w"> </span>iModule++<span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">      </span>module-&gt;fnFinalizeUpdatePrimaryVariable<span class="o">[</span>iBody<span class="o">][</span>iModule<span class="o">](</span>body,<span class="w"> </span>update,
+<span class="w">                </span><span class="p">&amp;</span>iEqn,<span class="w"> </span>iVar,<span class="w"> </span>iBody,<span class="w"> </span>iFoo<span class="o">)</span><span class="p">;</span>
+<span class="w">    </span><span class="o">}</span>
 
-    <span class="o">(</span>*fnUpdate<span class="o">)[</span>iBody<span class="o">][</span>iVar<span class="o">]</span>        <span class="o">=</span> malloc<span class="o">(</span>iEqn * sizeof<span class="o">(</span>fnUpdateVariable<span class="o">))</span><span class="p">;</span>
-    update<span class="o">[</span>iBody<span class="o">]</span>.daDerivProc<span class="o">[</span>iVar<span class="o">]</span> <span class="o">=</span> malloc<span class="o">(</span>iEqn * sizeof<span class="o">(</span>double<span class="o">))</span><span class="p">;</span>
-    iVar++<span class="p">;</span> // increment iVar <span class="k">for</span> the next primary variable
-  <span class="o">}</span>
-  ...
+<span class="w">    </span><span class="o">(</span>*fnUpdate<span class="o">)[</span>iBody<span class="o">][</span>iVar<span class="o">]</span><span class="w">        </span><span class="o">=</span><span class="w"> </span>malloc<span class="o">(</span>iEqn<span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>fnUpdateVariable<span class="o">))</span><span class="p">;</span>
+<span class="w">    </span>update<span class="o">[</span>iBody<span class="o">]</span>.daDerivProc<span class="o">[</span>iVar<span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>malloc<span class="o">(</span>iEqn<span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>double<span class="o">))</span><span class="p">;</span>
+<span class="w">    </span>iVar++<span class="p">;</span><span class="w"> </span>//<span class="w"> </span>increment<span class="w"> </span>iVar<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>next<span class="w"> </span>primary<span class="w"> </span>variable
+<span class="w">  </span><span class="o">}</span>
+<span class="w">  </span>...
 <span class="o">}</span>
 </pre></div>
 </div>
@@ -344,38 +344,38 @@ derivative (which would be bad!).</p>
 <p>Next we need to add code to the module file, physics.c in this example, for
 which this primary variable will be added. First add a new function that
 continues the initialization process:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void InitializePrimaryVariablePhysics<span class="o">(</span>BODY *body, OPTIONS *options,
-                        UPDATE *update, double dAge, int iBody<span class="o">)</span> <span class="o">{</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void<span class="w"> </span>InitializePrimaryVariablePhysics<span class="o">(</span>BODY<span class="w"> </span>*body,<span class="w"> </span>OPTIONS<span class="w"> </span>*options,
+<span class="w">                        </span>UPDATE<span class="w"> </span>*update,<span class="w"> </span>double<span class="w"> </span>dAge,<span class="w"> </span>int<span class="w"> </span>iBody<span class="o">)</span><span class="w"> </span><span class="o">{</span>
 
-  // <span class="s2">&quot;Type&quot;</span> of update<span class="p">;</span> <span class="m">1</span> is an ordinary differential equation
-  update<span class="o">[</span>iBody<span class="o">]</span>.iaType<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
-                <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span> <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
-  // here we assume only one body is affecting the way the variable is updated
-  update<span class="o">[</span>iBody<span class="o">]</span>.iNumBodies<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
-                <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span> <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
-  // allocate memory
-  update<span class="o">[</span>iBody<span class="o">]</span>.iaBody<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
-                <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span> <span class="o">=</span> malloc<span class="o">(</span>
-                update<span class="o">[</span>iBody<span class="o">]</span>.iNumBodies<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
-                <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span> * sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
-  // Assign body<span class="o">(</span>ies<span class="o">)</span> that affect this derivative
-  update<span class="o">[</span>iBody<span class="o">]</span>.iaBody<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
-                <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">][</span><span class="m">0</span><span class="o">]</span> <span class="o">=</span> iBody<span class="p">;</span>
-  // Assign pointer the derivative
-  update<span class="o">[</span>iBody<span class="o">]</span>.pdDPrimaryVariableDtPhysics <span class="o">=</span>
-                <span class="p">&amp;</span>update<span class="o">[</span>iBody<span class="o">]</span>.daDeriv<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
-                <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span><span class="p">;</span>
+<span class="w">  </span>//<span class="w"> </span><span class="s2">&quot;Type&quot;</span><span class="w"> </span>of<span class="w"> </span>update<span class="p">;</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>is<span class="w"> </span>an<span class="w"> </span>ordinary<span class="w"> </span>differential<span class="w"> </span>equation
+<span class="w">  </span>update<span class="o">[</span>iBody<span class="o">]</span>.iaType<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+<span class="w">                </span><span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">;</span>
+<span class="w">  </span>//<span class="w"> </span>here<span class="w"> </span>we<span class="w"> </span>assume<span class="w"> </span>only<span class="w"> </span>one<span class="w"> </span>body<span class="w"> </span>is<span class="w"> </span>affecting<span class="w"> </span>the<span class="w"> </span>way<span class="w"> </span>the<span class="w"> </span>variable<span class="w"> </span>is<span class="w"> </span>updated
+<span class="w">  </span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumBodies<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+<span class="w">                </span><span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">;</span>
+<span class="w">  </span>//<span class="w"> </span>allocate<span class="w"> </span>memory
+<span class="w">  </span>update<span class="o">[</span>iBody<span class="o">]</span>.iaBody<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+<span class="w">                </span><span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>malloc<span class="o">(</span>
+<span class="w">                </span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumBodies<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+<span class="w">                </span><span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span><span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
+<span class="w">  </span>//<span class="w"> </span>Assign<span class="w"> </span>body<span class="o">(</span>ies<span class="o">)</span><span class="w"> </span>that<span class="w"> </span>affect<span class="w"> </span>this<span class="w"> </span>derivative
+<span class="w">  </span>update<span class="o">[</span>iBody<span class="o">]</span>.iaBody<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+<span class="w">                </span><span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">][</span><span class="m">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>iBody<span class="p">;</span>
+<span class="w">  </span>//<span class="w"> </span>Assign<span class="w"> </span>pointer<span class="w"> </span>the<span class="w"> </span>derivative
+<span class="w">  </span>update<span class="o">[</span>iBody<span class="o">]</span>.pdDPrimaryVariableDtPhysics<span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="p">&amp;</span>update<span class="o">[</span>iBody<span class="o">]</span>.daDeriv<span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+<span class="w">                </span><span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span><span class="p">;</span>
 <span class="o">}</span>
 </pre></div>
 </div>
 <p>Then add a new line to the AssignDerivative function to set the appropriate
 function pointer to the fnUpdate matrix:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void AssignPhysicsDerivatives<span class="o">(</span>BODY *body, EVOLVE *evolve, UPDATE *update,
-                            fnUpdateVariable ***fnUpdate, int iBody<span class="o">)</span> <span class="o">{</span>
-  ...
-  fnUpdate<span class="o">[</span>iBody<span class="o">][</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
-          <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span> <span class="o">=</span> <span class="p">&amp;</span>fdDPrimaryVariableDtPhysics<span class="p">;</span>
-  ...
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void<span class="w"> </span>AssignPhysicsDerivatives<span class="o">(</span>BODY<span class="w"> </span>*body,<span class="w"> </span>EVOLVE<span class="w"> </span>*evolve,<span class="w"> </span>UPDATE<span class="w"> </span>*update,
+<span class="w">                            </span>fnUpdateVariable<span class="w"> </span>***fnUpdate,<span class="w"> </span>int<span class="w"> </span>iBody<span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>...
+<span class="w">  </span>fnUpdate<span class="o">[</span>iBody<span class="o">][</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+<span class="w">          </span><span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">&amp;</span>fdDPrimaryVariableDtPhysics<span class="p">;</span>
+<span class="w">  </span>...
 <span class="o">}</span>
 </pre></div>
 </div>
@@ -383,45 +383,45 @@ function pointer to the fnUpdate matrix:</p>
 subroutine that return the derivative of the primary variable.</p>
 <p>Next add the following block of code to the InitializeUpdatePhysics function in
 the module’s file (physics.c):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void InitializeUpdatePhysics<span class="o">(</span>BODY *body, UPDATE *update, int iBody<span class="o">)</span> <span class="o">{</span>
-  ...
-  <span class="k">if</span> <span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable <span class="o">==</span> <span class="m">0</span><span class="o">)</span> <span class="o">{</span>
-    update<span class="o">[</span>iBody<span class="o">]</span>.iNumVars++<span class="p">;</span>
-  <span class="o">}</span>
-  update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable++<span class="p">;</span>
-  ...
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void<span class="w"> </span>InitializeUpdatePhysics<span class="o">(</span>BODY<span class="w"> </span>*body,<span class="w"> </span>UPDATE<span class="w"> </span>*update,<span class="w"> </span>int<span class="w"> </span>iBody<span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>...
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumVars++<span class="p">;</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="w">  </span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable++<span class="p">;</span>
+<span class="w">  </span>...
 <span class="o">}</span>
 </pre></div>
 </div>
 <p>Then create the FinalizeUpdate function:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void FinalizeUpdatePrimaryVariablePhysics<span class="o">(</span>BODY *body, UPDATE *update,
-                                         int *iEqn, int iVar,int iBody,
-                                         int iFoo<span class="o">)</span> <span class="o">{</span>
-  update<span class="o">[</span>iBody<span class="o">]</span>.iaModule<span class="o">[</span>iVar<span class="o">][</span>*iEqn<span class="o">]</span> <span class="o">=</span> PHYSICS<span class="p">;</span>
-  update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics <span class="o">=</span> *iEqn<span class="p">;</span>
-  <span class="o">(</span>*iEqn<span class="o">)</span>++<span class="p">;</span>
-  <span class="o">}</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void<span class="w"> </span>FinalizeUpdatePrimaryVariablePhysics<span class="o">(</span>BODY<span class="w"> </span>*body,<span class="w"> </span>UPDATE<span class="w"> </span>*update,
+<span class="w">                                         </span>int<span class="w"> </span>*iEqn,<span class="w"> </span>int<span class="w"> </span>iVar,int<span class="w"> </span>iBody,
+<span class="w">                                         </span>int<span class="w"> </span>iFoo<span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>update<span class="o">[</span>iBody<span class="o">]</span>.iaModule<span class="o">[</span>iVar<span class="o">][</span>*iEqn<span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>PHYSICS<span class="p">;</span>
+<span class="w">  </span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariablePhysics<span class="w"> </span><span class="o">=</span><span class="w"> </span>*iEqn<span class="p">;</span>
+<span class="w">  </span><span class="o">(</span>*iEqn<span class="o">)</span>++<span class="p">;</span>
+<span class="w">  </span><span class="o">}</span>
 </pre></div>
 </div>
 <p>where PHYSICS is the unique integer associated with the module you are
 upgrading.</p>
 <p>Then add the primary variable to the NullDerivatives function:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void NullDerivativesPhysics<span class="o">(</span>BODY *body, EVOLVE *evolve, UPDATE *update,
-                           fnUpdateVariable ***fnUpdate, int iBody<span class="o">)</span> <span class="o">{</span>
-  ...
-  fnUpdate<span class="o">[</span>iBody<span class="o">][</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
-          <span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariableMODULE<span class="o">]</span> <span class="o">=</span> <span class="p">&amp;</span>fndUpdateFunctionTiny<span class="p">;</span>
-  ...
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void<span class="w"> </span>NullDerivativesPhysics<span class="o">(</span>BODY<span class="w"> </span>*body,<span class="w"> </span>EVOLVE<span class="w"> </span>*evolve,<span class="w"> </span>UPDATE<span class="w"> </span>*update,
+<span class="w">                           </span>fnUpdateVariable<span class="w"> </span>***fnUpdate,<span class="w"> </span>int<span class="w"> </span>iBody<span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>...
+<span class="w">  </span>fnUpdate<span class="o">[</span>iBody<span class="o">][</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariable<span class="o">]</span>
+<span class="w">          </span><span class="o">[</span>update<span class="o">[</span>iBody<span class="o">]</span>.iPrimaryVariableMODULE<span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">&amp;</span>fndUpdateFunctionTiny<span class="p">;</span>
+<span class="w">  </span>...
 <span class="o">}</span>
 </pre></div>
 </div>
 <p>The final initialization step is to update the AddModule function:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void AddModulePhysics<span class="o">(</span>CONTROL *control, MODULE *module, int iBody,
-                     int iModule<span class="o">)</span> <span class="o">{</span>
-  ...
-  module-&gt;fnFinalizeUpdatePrimaryVariable<span class="o">[</span>iBody<span class="o">][</span>iModule<span class="o">]</span> <span class="o">=</span>
-      <span class="p">&amp;</span>FinalizeUpdatePrimaryVariablePhysics<span class="p">;</span>
-  ...
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void<span class="w"> </span>AddModulePhysics<span class="o">(</span>CONTROL<span class="w"> </span>*control,<span class="w"> </span>MODULE<span class="w"> </span>*module,<span class="w"> </span>int<span class="w"> </span>iBody,
+<span class="w">                     </span>int<span class="w"> </span>iModule<span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">  </span>...
+<span class="w">  </span>module-&gt;fnFinalizeUpdatePrimaryVariable<span class="o">[</span>iBody<span class="o">][</span>iModule<span class="o">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="p">&amp;</span>FinalizeUpdatePrimaryVariablePhysics<span class="p">;</span>
+<span class="w">  </span>...
 <span class="o">}</span>
 </pre></div>
 </div>
@@ -492,6 +492,7 @@ show off your result and ensure that future upgrades don’t destroy your work.<
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/sphinx_highlight.js"></script>
 
   
 

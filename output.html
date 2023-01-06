@@ -188,11 +188,11 @@ duplicated by another variable name.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>sprintf<span class="o">(</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.cName,<span class="s2">&quot;Mass&quot;</span><span class="o">)</span><span class="p">;</span>
 <span class="linenos">2</span>sprintf<span class="o">(</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.cDescr,<span class="s2">&quot;Mass&quot;</span><span class="o">)</span><span class="p">;</span>
 <span class="linenos">3</span>sprintf<span class="o">(</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.cNeg,<span class="s2">&quot;Mearth&quot;</span><span class="o">)</span><span class="p">;</span>
-<span class="linenos">4</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.bNeg <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
-<span class="linenos">5</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.dNeg <span class="o">=</span> <span class="m">1</span>./MEARTH<span class="p">;</span>
-<span class="linenos">6</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.iNum <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
-<span class="linenos">7</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.iModuleBit <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
-<span class="linenos">8</span>fnWrite<span class="o">[</span>OUT_MASS<span class="o">]</span> <span class="o">=</span> <span class="p">&amp;</span>WriteMass<span class="p">;</span>
+<span class="linenos">4</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.bNeg<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">;</span>
+<span class="linenos">5</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.dNeg<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>./MEARTH<span class="p">;</span>
+<span class="linenos">6</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.iNum<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">;</span>
+<span class="linenos">7</span>output<span class="o">[</span>OUT_MASS<span class="o">]</span>.iModuleBit<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">;</span>
+<span class="linenos">8</span>fnWrite<span class="o">[</span>OUT_MASS<span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">&amp;</span>WriteMass<span class="p">;</span>
 </pre></div>
 </div>
 <p>These lines instruct VPLanet on the key features of the output. Line 1 contains
@@ -237,18 +237,18 @@ in output.c:InitializeOutput.</p>
 <p>Next, let’s turn to the fnWrite subroutine., which assigns the value and unit to
 the output in preparation for writing to an output file. These functions
 typically look like this:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void WriteMass<span class="o">(</span>BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
-               *units,UPDATE *update,int iBody,double *dTmp,char cUnit<span class="o">[])</span> <span class="o">{</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>void<span class="w"> </span>WriteMass<span class="o">(</span>BODY<span class="w"> </span>*body,CONTROL<span class="w"> </span>*control,OUTPUT<span class="w"> </span>*output,SYSTEM<span class="w"> </span>*system,UNITS
+<span class="w">               </span>*units,UPDATE<span class="w"> </span>*update,int<span class="w"> </span>iBody,double<span class="w"> </span>*dTmp,char<span class="w"> </span>cUnit<span class="o">[])</span><span class="w"> </span><span class="o">{</span>
 
-  *dTmp <span class="o">=</span> body<span class="o">[</span>iBody<span class="o">]</span>.dMass<span class="p">;</span>
+<span class="w">  </span>*dTmp<span class="w"> </span><span class="o">=</span><span class="w"> </span>body<span class="o">[</span>iBody<span class="o">]</span>.dMass<span class="p">;</span>
 
-  <span class="k">if</span> <span class="o">(</span>output-&gt;bDoNeg<span class="o">[</span>iBody<span class="o">])</span> <span class="o">{</span>
-    *dTmp *<span class="o">=</span> output-&gt;dNeg<span class="p">;</span>
-    strcpy<span class="o">(</span>cUnit,output-&gt;cNeg<span class="o">)</span><span class="p">;</span>
-  <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-    *dTmp /<span class="o">=</span> fdUnitsMass<span class="o">(</span>units-&gt;iMass<span class="o">)</span><span class="p">;</span>
-    fsUnitsMass<span class="o">(</span>units-&gt;iMass,cUnit<span class="o">)</span><span class="p">;</span>
-  <span class="o">}</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">(</span>output-&gt;bDoNeg<span class="o">[</span>iBody<span class="o">])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>*dTmp<span class="w"> </span>*<span class="o">=</span><span class="w"> </span>output-&gt;dNeg<span class="p">;</span>
+<span class="w">    </span>strcpy<span class="o">(</span>cUnit,output-&gt;cNeg<span class="o">)</span><span class="p">;</span>
+<span class="w">  </span><span class="o">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>*dTmp<span class="w"> </span>/<span class="o">=</span><span class="w"> </span>fdUnitsMass<span class="o">(</span>units-&gt;iMass<span class="o">)</span><span class="p">;</span>
+<span class="w">    </span>fsUnitsMass<span class="o">(</span>units-&gt;iMass,cUnit<span class="o">)</span><span class="p">;</span>
+<span class="w">  </span><span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
 </div>
@@ -324,6 +324,7 @@ write or update a unit test to include your new function.</p>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/sphinx_highlight.js"></script>
 
   
 

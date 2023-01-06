@@ -263,7 +263,7 @@ unit, then the value in the log file will not be SI, but the custom units
 associated with that output.</p>
 </div>
 <p>For example, a log file entry might look like this:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>Age<span class="o">)</span> System Age <span class="o">[</span>sec<span class="o">]</span>: <span class="m">3</span>.155760e+14
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>Age<span class="o">)</span><span class="w"> </span>System<span class="w"> </span>Age<span class="w"> </span><span class="o">[</span>sec<span class="o">]</span>:<span class="w"> </span><span class="m">3</span>.155760e+14
 </pre></div>
 </div>
 <p>This line provides basic information about a body. In this case it’s the age of
@@ -417,26 +417,26 @@ a function. For example, consider the following C code that shows how to use a
 <em>scalar</em> function pointer:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#include &lt;stdio.h&gt;</span>
 <span class="linenos"> 2</span>
-<span class="linenos"> 3</span>typedef double <span class="o">(</span>*fnptr<span class="o">)(</span>double,double<span class="o">)</span><span class="p">;</span>
+<span class="linenos"> 3</span>typedef<span class="w"> </span>double<span class="w"> </span><span class="o">(</span>*fnptr<span class="o">)(</span>double,double<span class="o">)</span><span class="p">;</span>
 <span class="linenos"> 4</span>
-<span class="linenos"> 5</span>double foo<span class="o">(</span>double a, double b<span class="o">)</span> <span class="o">{</span>
+<span class="linenos"> 5</span>double<span class="w"> </span>foo<span class="o">(</span>double<span class="w"> </span>a,<span class="w"> </span>double<span class="w"> </span>b<span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="linenos"> 6</span>
-<span class="linenos"> 7</span>  <span class="k">return</span> a*a + b<span class="p">;</span>
+<span class="linenos"> 7</span><span class="w">  </span><span class="k">return</span><span class="w"> </span>a*a<span class="w"> </span>+<span class="w"> </span>b<span class="p">;</span>
 <span class="linenos"> 8</span><span class="o">}</span>
 <span class="linenos"> 9</span>
-<span class="linenos">10</span>int main<span class="o">()</span> <span class="o">{</span>
-<span class="linenos">11</span>  fnptr<span class="p">;</span>
-<span class="linenos">12</span>  double x,y,z<span class="p">;</span>
+<span class="linenos">10</span>int<span class="w"> </span>main<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="linenos">11</span><span class="w">  </span>fnptr<span class="p">;</span>
+<span class="linenos">12</span><span class="w">  </span>double<span class="w"> </span>x,y,z<span class="p">;</span>
 <span class="linenos">13</span>
-<span class="linenos">14</span>  <span class="nv">x</span><span class="o">=</span><span class="m">4</span><span class="p">;</span>
-<span class="linenos">15</span>  <span class="nv">y</span><span class="o">=</span><span class="m">0</span>.1<span class="p">;</span>
+<span class="linenos">14</span><span class="w">  </span><span class="nv">x</span><span class="o">=</span><span class="m">4</span><span class="p">;</span>
+<span class="linenos">15</span><span class="w">  </span><span class="nv">y</span><span class="o">=</span><span class="m">0</span>.1<span class="p">;</span>
 <span class="linenos">16</span>
-<span class="linenos">17</span>  <span class="nv">fn</span> <span class="o">=</span> <span class="p">&amp;</span>foo<span class="p">;</span>
+<span class="linenos">17</span><span class="w">  </span><span class="nv">fn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">&amp;</span>foo<span class="p">;</span>
 <span class="linenos">18</span>
-<span class="linenos">19</span>  <span class="nv">z</span> <span class="o">=</span> fn<span class="o">(</span>x,y<span class="o">)</span><span class="p">;</span>
+<span class="linenos">19</span><span class="w">  </span><span class="nv">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>fn<span class="o">(</span>x,y<span class="o">)</span><span class="p">;</span>
 <span class="linenos">20</span>
-<span class="linenos">21</span>  printf<span class="o">(</span><span class="s2">&quot;%lf\n&quot;</span>,z<span class="o">)</span><span class="p">;</span>
-<span class="linenos">22</span>  <span class="k">return</span> <span class="m">0</span><span class="p">;</span>
+<span class="linenos">21</span><span class="w">  </span>printf<span class="o">(</span><span class="s2">&quot;%lf\n&quot;</span>,z<span class="o">)</span><span class="p">;</span>
+<span class="linenos">22</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
 <span class="linenos">23</span><span class="o">}</span>
 </pre></div>
 </div>
@@ -450,37 +450,37 @@ function. Compiling and executing this code prints 16.100000 to the screen.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#include &lt;stdio.h&gt;</span>
 <span class="linenos"> 2</span><span class="c1">#include &lt;stdlib.h&gt;</span>
 <span class="linenos"> 3</span>
-<span class="linenos"> 4</span>typedef double <span class="o">(</span>*fnptr<span class="o">)(</span>double,double<span class="o">)</span><span class="p">;</span>
+<span class="linenos"> 4</span>typedef<span class="w"> </span>double<span class="w"> </span><span class="o">(</span>*fnptr<span class="o">)(</span>double,double<span class="o">)</span><span class="p">;</span>
 <span class="linenos"> 5</span>
-<span class="linenos"> 6</span>double foo<span class="o">(</span>double a, double b<span class="o">)</span> <span class="o">{</span>
+<span class="linenos"> 6</span>double<span class="w"> </span>foo<span class="o">(</span>double<span class="w"> </span>a,<span class="w"> </span>double<span class="w"> </span>b<span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="linenos"> 7</span>
-<span class="linenos"> 8</span>  <span class="k">return</span> a*a + b<span class="p">;</span>
+<span class="linenos"> 8</span><span class="w">  </span><span class="k">return</span><span class="w"> </span>a*a<span class="w"> </span>+<span class="w"> </span>b<span class="p">;</span>
 <span class="linenos"> 9</span><span class="o">}</span>
 <span class="linenos">10</span>
-<span class="linenos">11</span>double bar<span class="o">(</span>double a, double b<span class="o">)</span> <span class="o">{</span>
+<span class="linenos">11</span>double<span class="w"> </span>bar<span class="o">(</span>double<span class="w"> </span>a,<span class="w"> </span>double<span class="w"> </span>b<span class="o">)</span><span class="w"> </span><span class="o">{</span>
 <span class="linenos">12</span>
-<span class="linenos">13</span>  <span class="k">return</span> a + b*b<span class="p">;</span>
+<span class="linenos">13</span><span class="w">  </span><span class="k">return</span><span class="w"> </span>a<span class="w"> </span>+<span class="w"> </span>b*b<span class="p">;</span>
 <span class="linenos">14</span><span class="o">}</span>
 <span class="linenos">15</span>
-<span class="linenos">16</span>int main<span class="o">()</span> <span class="o">{</span>
-<span class="linenos">17</span>  fnptr *fn<span class="p">;</span>
-<span class="linenos">18</span>  double x,y,z<span class="p">;</span>
+<span class="linenos">16</span>int<span class="w"> </span>main<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="linenos">17</span><span class="w">  </span>fnptr<span class="w"> </span>*fn<span class="p">;</span>
+<span class="linenos">18</span><span class="w">  </span>double<span class="w"> </span>x,y,z<span class="p">;</span>
 <span class="linenos">19</span>
-<span class="linenos">20</span>  <span class="nv">x</span><span class="o">=</span><span class="m">4</span><span class="p">;</span>
-<span class="linenos">21</span>  <span class="nv">y</span><span class="o">=</span><span class="m">0</span>.1<span class="p">;</span>
+<span class="linenos">20</span><span class="w">  </span><span class="nv">x</span><span class="o">=</span><span class="m">4</span><span class="p">;</span>
+<span class="linenos">21</span><span class="w">  </span><span class="nv">y</span><span class="o">=</span><span class="m">0</span>.1<span class="p">;</span>
 <span class="linenos">22</span>
-<span class="linenos">23</span>  <span class="nv">fn</span> <span class="o">=</span> malloc<span class="o">(</span><span class="m">2</span>*sizeof<span class="o">(</span>fnptr<span class="o">))</span><span class="p">;</span>
+<span class="linenos">23</span><span class="w">  </span><span class="nv">fn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>malloc<span class="o">(</span><span class="m">2</span>*sizeof<span class="o">(</span>fnptr<span class="o">))</span><span class="p">;</span>
 <span class="linenos">24</span>
-<span class="linenos">25</span>  fn<span class="o">[</span><span class="m">0</span><span class="o">]</span> <span class="o">=</span> <span class="p">&amp;</span>foo<span class="p">;</span>
-<span class="linenos">26</span>  fn<span class="o">[</span><span class="m">1</span><span class="o">]</span> <span class="o">=</span> <span class="p">&amp;</span>bar<span class="p">;</span>
+<span class="linenos">25</span><span class="w">  </span>fn<span class="o">[</span><span class="m">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">&amp;</span>foo<span class="p">;</span>
+<span class="linenos">26</span><span class="w">  </span>fn<span class="o">[</span><span class="m">1</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">&amp;</span>bar<span class="p">;</span>
 <span class="linenos">27</span>
-<span class="linenos">28</span>  <span class="nv">z</span> <span class="o">=</span> fn<span class="o">[</span><span class="m">0</span><span class="o">](</span>x,y<span class="o">)</span><span class="p">;</span>
-<span class="linenos">29</span>  printf<span class="o">(</span><span class="s2">&quot;%lf\n&quot;</span>,z<span class="o">)</span><span class="p">;</span>
+<span class="linenos">28</span><span class="w">  </span><span class="nv">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>fn<span class="o">[</span><span class="m">0</span><span class="o">](</span>x,y<span class="o">)</span><span class="p">;</span>
+<span class="linenos">29</span><span class="w">  </span>printf<span class="o">(</span><span class="s2">&quot;%lf\n&quot;</span>,z<span class="o">)</span><span class="p">;</span>
 <span class="linenos">30</span>
-<span class="linenos">31</span>  <span class="nv">z</span> <span class="o">=</span> fn<span class="o">[</span><span class="m">1</span><span class="o">](</span>x,y<span class="o">)</span><span class="p">;</span>
-<span class="linenos">32</span>  printf<span class="o">(</span><span class="s2">&quot;%lf\n&quot;</span>,z<span class="o">)</span><span class="p">;</span>
+<span class="linenos">31</span><span class="w">  </span><span class="nv">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>fn<span class="o">[</span><span class="m">1</span><span class="o">](</span>x,y<span class="o">)</span><span class="p">;</span>
+<span class="linenos">32</span><span class="w">  </span>printf<span class="o">(</span><span class="s2">&quot;%lf\n&quot;</span>,z<span class="o">)</span><span class="p">;</span>
 <span class="linenos">33</span>
-<span class="linenos">34</span>  <span class="k">return</span> <span class="m">0</span><span class="p">;</span>
+<span class="linenos">34</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
 <span class="linenos">35</span><span class="o">}</span>
 </pre></div>
 </div>
@@ -557,6 +557,7 @@ allocated to a variable), etc.</p>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/_sphinx_javascript_frameworks_compat.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/sphinx_highlight.js"></script>
 
   
 

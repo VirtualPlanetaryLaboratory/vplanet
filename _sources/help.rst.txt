@@ -5133,7 +5133,19 @@ Input Options
 +--------------------------------------------------------------------------------------+
 | **sFlareBandPass**                                                                   |
 +-----------------+--------------------------------------------------------------------+
-| Description     || Currently suppressed due to execution errors.                     |
+| Description     || If UV or GOES is selected, the code will convert the input        |
+|                 || energy of flares from the UV band (3000-4300 \xc3\x85) or GOES band     |
+|                 || (1-8 \xc3\x85) to the Kepler band (4000-9000 \xc3\x85) to calculate the FFD   |
+|                 || and the SXR band (1.24 - 1239.85 \xc3\x85) to calculate the             |
+|                 || luminosity. If SXR is selected, the code will convert the input   |
+|                 || energy of flares from the SXR band to the Kepler band to          |
+|                 || calculate the FFD and will use the same value of energy to        |
+|                 || calculate the luminosity . If KEPLER is selected, the code will   |
+|                 || use the same input energy to calculate the FFD and will convert   |
+|                 || the input energy to SXR band to calculate the luminosity. The     |
+|                 || conversion values are taken from Osten and Wolk (2015)            |
+|                 || (doi:10.1088/0004-637X/809/1/79). If TESSUV                       |
+|                 ||                                                                   |
 +-----------------+--------------------------------------------------------------------+
 | Type            || String                                                            |
 +-----------------+--------------------------------------------------------------------+

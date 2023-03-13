@@ -12,44 +12,44 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/AtmEscKepler-36
-   examples/EarthClimate
-   examples/WaterLossTides
-   examples/MagmOc_Earth
-   examples/RadHeat
-   examples/NBodyAtmEsc
-   examples/AbioticO2
-   examples/IoHeat
-   examples/StellarEvol
-   examples/MiniNeptuneEvap
-   examples/BinaryTides
-   examples/CassiniStates
-   examples/MagmOc_GJ1132b
-   examples/MagneticBraking
-   examples/CassiniMulti
-   examples/ChaoticResonances
-   examples/DampedCBP
-   examples/MagmOc_Trappist1g
-   examples/MDwarfLuminosity
-   examples/FfdProxCen
-   examples/AtmEscFlareProxCen
-   examples/HabitableZone
-   examples/HabEvapCore
-   examples/EarthInterior
-   examples/IceBelts
-   examples/GalaxyEffects
-   examples/CircumbinaryOrbit
-   examples/SSDistOrbDistRot
-   examples/SS_NBody
-   examples/AtmEscRegimes
-   examples/TidalEarth
-   examples/ParameterSweep
-   examples/ApseLock
-   examples/TideLock
-   examples/VenusWaterLoss
-   examples/HLossTides
-   examples/STEEP
    examples/VenusApproxInterior
+   examples/HLossTides
+   examples/BinaryTides
+   examples/IceBelts
+   examples/MagmOc_Earth
+   examples/CircumbinaryOrbit
+   examples/AtmEscRegimes
+   examples/EarthClimate
+   examples/MDwarfLuminosity
+   examples/MagmOc_GJ1132b
+   examples/HabitableZone
+   examples/AbioticO2
+   examples/MiniNeptuneEvap
+   examples/SSDistOrbDistRot
+   examples/AtmEscKepler-36
+   examples/CassiniMulti
+   examples/EarthInterior
+   examples/VenusWaterLoss
+   examples/WaterLossTides
+   examples/AtmEscFlareProxCen
+   examples/ParameterSweep
+   examples/GalaxyEffects
+   examples/SS_NBody
+   examples/HabEvapCore
+   examples/TideLock
+   examples/MagneticBraking
+   examples/ChaoticResonances
+   examples/StellarEvol
+   examples/DampedCBP
+   examples/FfdProxCen
+   examples/RadHeat
+   examples/CassiniStates
+   examples/NBodyAtmEsc
+   examples/TidalEarth
+   examples/IoHeat
+   examples/MagmOc_Trappist1g
+   examples/ApseLock
+   examples/STEEP
 
 
 Broken

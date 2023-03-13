@@ -78,19 +78,19 @@ slumtot = []
 slumflare = []
 
 for i in range(0, 5):
-    ftime.append(np.genfromtxt(flare[i], usecols=(0), unpack=True))
-    fage.append(np.genfromtxt(flare[i], usecols=(8), unpack=True))
-    flumbol.append(np.genfromtxt(flare[i], usecols=(1), unpack=True))
-    flumxuv.append(np.genfromtxt(flare[i], usecols=(6), unpack=True))
-    flumtot.append(np.genfromtxt(flare[i], usecols=(5), unpack=True))
-    flumflare.append(np.genfromtxt(flare[i], usecols=(7), unpack=True))
+    ftime.append(np.genfromtxt(path / flare[i], usecols=(0), unpack=True))
+    fage.append(np.genfromtxt(path / flare[i], usecols=(8), unpack=True))
+    flumbol.append(np.genfromtxt(path / flare[i], usecols=(1), unpack=True))
+    flumxuv.append(np.genfromtxt(path / flare[i], usecols=(6), unpack=True))
+    flumtot.append(np.genfromtxt(path / flare[i], usecols=(5), unpack=True))
+    flumflare.append(np.genfromtxt(path / flare[i], usecols=(7), unpack=True))
 
 for i in range(0, 5):
-    stime.append(np.genfromtxt(stellar[i], usecols=(0), unpack=True))
-    sage.append(np.genfromtxt(stellar[i], usecols=(7), unpack=True))
-    slumbol.append(np.genfromtxt(stellar[i], usecols=(1), unpack=True))
-    slumxuv.append(np.genfromtxt(stellar[i], usecols=(6), unpack=True))
-    slumtot.append(np.genfromtxt(stellar[i], usecols=(5), unpack=True))
+    stime.append(np.genfromtxt(path / stellar[i], usecols=(0), unpack=True))
+    sage.append(np.genfromtxt(path / stellar[i], usecols=(7), unpack=True))
+    slumbol.append(np.genfromtxt(path / stellar[i], usecols=(1), unpack=True))
+    slumxuv.append(np.genfromtxt(path / stellar[i], usecols=(6), unpack=True))
+    slumtot.append(np.genfromtxt(path / stellar[i], usecols=(5), unpack=True))
 
 
 # Plot
@@ -250,7 +250,6 @@ axes[1, 1].legend(
 
 # Format all axes
 for ax in axes.flatten():
-
     # Format x axis
     ax.set_xlim(time02s[1], time02s.max())
     ax.set_xscale("log")

@@ -20,7 +20,6 @@ help:
 	@if [ $(MAKECMDGOALS) != clean ]; then \
 		python gensrc.py; \
 		python genexamples.py; \
-		python genbugs.py; \
 		python gethelp.py; \
 	else \
 		rm -rf src.rst; \

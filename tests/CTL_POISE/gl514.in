@@ -1,0 +1,23 @@
+# Gl 514 parameters
+sName        gl514
+
+# Physical Parameters
+dMass         0.510
+#dSemi         0
+#dEcc          0
+dObliquity    0
+dRotPeriod    -30.55
+dRadGyra      0.5		# Radius of gyration (moment of inertia constant)
+dRadius       -54.64919165
+dLuminosity   1.65378e25
+
+# EQTIDE Parameters
+dTidalTau    -0.1		# Tidal time lag, negative -> seconds
+dTidalQ	      1e6	# Tidal phase lag
+dK2           0.5	# Love number of degree 2
+#sTideModel    p2		# Tidal model, p2=CPL, t8=CTL
+sTideModel   t8		# Uncomment sTideModel, dTidalTau && dTidalQ to compare
+saTidePerts   gl514b		# Body name(s) of tidal perturberssStellarModel BARAFFE
+
+saModules     eqtide stellar
+saOutputOrder Time -RotPer

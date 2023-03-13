@@ -1,15 +1,17 @@
-import vplanet
-import vplot
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import numpy as np
-import pathlib
-import sys
 import glob
-import subprocess
-from tqdm import tqdm
-from scipy.interpolate import interp2d
 import os
+import pathlib
+import subprocess
+import sys
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import vplot
+from scipy.interpolate import interp2d
+from tqdm import tqdm
+
+import vplanet
 
 # Path hacks
 path = pathlib.Path(__file__).parents[0].absolute()
@@ -33,8 +35,8 @@ if not ((path / "data").exists()):
 sys.stdout.write("Making plot.")
 sys.stdout.flush()
 dirs = []
-for file in os.listdir("data/"):
-    d = os.path.join("data/", file)
+for file in os.listdir(path / "data/"):
+    d = os.path.join(path / "data/", file)
     if os.path.isdir(d):
         dirs.append(d)
 
@@ -48,15 +50,14 @@ maxg = np.zeros(nmass)
 earlym = np.zeros(nmass)
 lum = np.zeros(nmass)
 
-#dirs_list = enumerate(dirs.sort())
-#for dir in dirs.sort():
+# dirs_list = enumerate(dirs.sort())
+# for dir in dirs.sort():
 #    print(dir)
-#exit()
+# exit()
 
 # Run vplanet
-i=0
+i = 0
 for dir in sorted_dirs:
-
     # Run vplanet
     output = vplanet.get_output(path / dir, units=False)
     mass[i] = output.log.initial.star.Mass / MSUN
@@ -65,8 +66,8 @@ for dir in sorted_dirs:
     maxg[i] = output.log.initial.star.HZLimMaxGreenhouse
     earlym[i] = output.log.initial.star.HZLimEarlyMars
     lum[i] = output.log.initial.star.Luminosity / LSUN
-    #print(dir,mass[i],lum[i],recv[i],runaway[i],maxg[i],earlym[i])
-    i = i+1
+    # print(dir,mass[i],lum[i],recv[i],runaway[i],maxg[i],earlym[i])
+    i = i + 1
 
 fig = plt.figure(figsize=(6.5, 5))
 
@@ -76,26 +77,26 @@ plt.ylabel("Stellar Mass (M$_\odot$)", fontsize=20)
 plt.tick_params(axis="both", labelsize=20)
 
 plt.xlim(0.01, 2.5)
-plt.ylim(0.08,1.1)
+plt.ylim(0.08, 1.1)
 
-plt.plot(recv,mass,color=vplot.colors.orange)
-plt.plot(runaway,mass,color=vplot.colors.dark_blue)
-plt.plot(maxg,mass,color=vplot.colors.dark_blue)
-plt.plot(earlym,mass,color=vplot.colors.pale_blue)
+plt.plot(recv, mass, color=vplot.colors.orange)
+plt.plot(runaway, mass, color=vplot.colors.dark_blue)
+plt.plot(maxg, mass, color=vplot.colors.dark_blue)
+plt.plot(earlym, mass, color=vplot.colors.pale_blue)
 
-fbk = {'lw':0.0, 'edgecolor':None}
-plt.fill_betweenx(mass,runaway,maxg,facecolor=vplot.colors.dark_blue,**fbk)
-plt.fill_betweenx(mass,recv,runaway,facecolor=vplot.colors.orange,**fbk)
-plt.fill_betweenx(mass,maxg,earlym,facecolor=vplot.colors.pale_blue,**fbk)
+fbk = {"lw": 0.0, "edgecolor": None}
+plt.fill_betweenx(mass, runaway, maxg, facecolor=vplot.colors.dark_blue, **fbk)
+plt.fill_betweenx(mass, recv, runaway, facecolor=vplot.colors.orange, **fbk)
+plt.fill_betweenx(mass, maxg, earlym, facecolor=vplot.colors.pale_blue, **fbk)
 
-plt.fill([1.5, 1.5,1.7,1.7],[0.6,0.65,0.65,0.6],vplot.colors.orange)
-plt.annotate("Too Hot?",[1.73,0.601],color=vplot.colors.orange,fontsize=20)
+plt.fill([1.5, 1.5, 1.7, 1.7], [0.6, 0.65, 0.65, 0.6], vplot.colors.orange)
+plt.annotate("Too Hot?", [1.73, 0.601], color=vplot.colors.orange, fontsize=20)
 
-plt.fill([1.5, 1.5,1.7,1.7],[0.5,0.55,0.55,0.5],vplot.colors.dark_blue)
-plt.annotate("Hab. Zone",[1.73,0.501],color=vplot.colors.dark_blue,fontsize=20)
+plt.fill([1.5, 1.5, 1.7, 1.7], [0.5, 0.55, 0.55, 0.5], vplot.colors.dark_blue)
+plt.annotate("Hab. Zone", [1.73, 0.501], color=vplot.colors.dark_blue, fontsize=20)
 
-plt.fill([1.5, 1.5,1.7,1.7],[0.4,0.45,0.45,0.4],vplot.colors.pale_blue)
-plt.annotate("Too Cold?",[1.73,0.401],color=vplot.colors.pale_blue,fontsize=20)
+plt.fill([1.5, 1.5, 1.7, 1.7], [0.4, 0.45, 0.45, 0.4], vplot.colors.pale_blue)
+plt.annotate("Too Cold?", [1.73, 0.401], color=vplot.colors.pale_blue, fontsize=20)
 
 ext = get_args().ext
 fig.savefig(path / f"HabitableZone.{ext}", bbox_inches="tight", dpi=600)

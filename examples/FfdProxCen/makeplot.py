@@ -5,21 +5,13 @@ flare frequency distribution for Proxima Centauri, using VPLANET's STELLAR and F
 Laura N.  R. do Amaral, Universidad Nacional Autónoma de México, 2021
 date: Sep. 2021
 """
-import os
 import pathlib
-import subprocess
 import sys
 from math import exp, expm1, log, log10
 
-import matplotlib as mpl
-import matplotlib.colors as colors
 import matplotlib.pyplot as plt
-import matplotlib.style
 import numpy as np
-import seaborn as sns
 from matplotlib.lines import Line2D
-from matplotlib.patches import Patch
-from scipy.interpolate import interp1d
 
 import vplanet
 
@@ -37,23 +29,14 @@ run = [
     "./lacy/vpl.in",
 ]
 
-directory = os.getcwd()
 
-print(directory)
 # Run the simulations
 for i in range(0, 2):
     vplanet.run(path / run[i], units=False)
 
 # Loading the data
-directory = os.getcwd()
-
-print(directory)
-data_daven = np.loadtxt("./davenport/davenport.star.forward")
-data_lacy = np.loadtxt("./lacy/lacy.star.forward")
-
-directory = os.getcwd()
-
-print(directory)
+data_daven = np.loadtxt(path / "./davenport/davenport.star.forward")
+data_lacy = np.loadtxt(path / "./lacy/lacy.star.forward")
 
 age_daven = data_daven[:, 0]
 
@@ -79,25 +62,25 @@ for idx, val in enumerate(age_daven):
 
 
 # Plot
-fig = plt.figure(figsize=(4, 3))
+fig = plt.figure(figsize=(6.5, 6.5))
 
-a = 0.5
+a = 2
 
 fp = [1, 1, 1, 1]
 np.interp(lacy[5:9], lacy[1:5], fp)
-plt.plot(lacy[5:9], lacy[1:5], "-", color="Orange", linewidth=a)
+plt.plot(lacy[5:9], lacy[1:5], "-", color="k", linewidth=a)
 
 np.interp(Mdata[5:9], Mdata[1:5], fp)
-plt.plot(Mdata[5:9], Mdata[1:5], "-", color="cornflowerblue", linewidth=a)
+plt.plot(Mdata[5:9], Mdata[1:5], "-", color=vpl.colors.red, linewidth=a)
 
 np.interp(Ndata[5:9], Ndata[1:5], fp)
-plt.plot(Ndata[5:9], Ndata[1:5], "-", color="darkviolet", linewidth=a)
+plt.plot(Ndata[5:9], Ndata[1:5], "-", color=vpl.colors.orange, linewidth=a)
 
 np.interp(Odata[5:9], Odata[1:5], fp)
-plt.plot(Odata[5:9], Odata[1:5], "-", color="darkred", linewidth=a)
+plt.plot(Odata[5:9], Odata[1:5], "-", color=vpl.colors.dark_blue, linewidth=a)
 
 np.interp(Pdata[5:9], Pdata[1:5], fp)
-plt.plot(Pdata[5:9], Pdata[1:5], "-", color="red", linewidth=a)
+plt.plot(Pdata[5:9], Pdata[1:5], "-", color=vpl.colors.pale_blue, linewidth=a)
 
 
 for i in range(1, 5):
@@ -111,27 +94,55 @@ for i in range(1, 5):
 # Limits and scale
 plt.yscale("log")
 plt.xscale("log")
-plt.xlim(1e33, 1e36)
+plt.xlim(1e34, 1e36)
 
 
 # Legend
 legend_elements = [
     Line2D(
-        [0], [0], ls="-", color="cornflowerblue", lw=1, label="Davenport mode, 1 Myr"
+        [0],
+        [0],
+        ls="-",
+        color=vpl.colors.red,
+        lw=a,
+        label="Davenport et al. (2019), 1 Myr",
     ),
-    Line2D([0], [0], ls="-", color="darkviolet", lw=1, label="Davenport mode, 10 Myr"),
-    Line2D([0], [0], ls="-", color="darkred", lw=1, label="Davenport mode, 100 Myr"),
-    Line2D([0], [0], ls="-", color="red", lw=1, label="Davenport mode, 1 Gyr"),
-    Line2D([0], [0], color="orange", lw=1, label="Lacy mode"),
+    Line2D(
+        [0],
+        [0],
+        ls="-",
+        color=vpl.colors.orange,
+        lw=a,
+        label="Davenport et al. (2019), 10 Myr",
+    ),
+    Line2D(
+        [0],
+        [0],
+        ls="-",
+        color=vpl.colors.dark_blue,
+        lw=a,
+        label="Davenport et al. (2019), 100 Myr",
+    ),
+    Line2D(
+        [0],
+        [0],
+        ls="-",
+        color=vpl.colors.pale_blue,
+        lw=a,
+        label="Davenport et al. (2019), 1 Gyr",
+    ),
+    Line2D([0], [0], color="k", lw=a, label="Lacy et al. (1976)"),
 ]
 
-plt.legend(handles=legend_elements, ncol=1, loc="lower left", fontsize=7)
+plt.legend(handles=legend_elements, ncol=1, loc="lower left", fontsize=12)
 
 
 # Label
-plt.title("Flare Frequency Distribution")
-plt.xlabel("log Flare Energy (erg)")
-plt.ylabel("Cumulative Flare Freq (#/day)")
+plt.title("Flare Frequency Distribution", fontsize=15)
+plt.xlabel("log(Flare Energy/ergs)", fontsize=15)
+plt.ylabel("Cumulative Flare Freq (#/day)", fontsize=15)
+plt.xticks(fontsize=12)
+plt.yticks(fontsize=12)
 
 # Saving figure
 ext = get_args().ext

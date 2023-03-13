@@ -121,7 +121,7 @@ void WriteOutput(BODY *, CONTROL *, FILES *, OUTPUT *, SYSTEM *, UPDATE *,
                  fnWriteOutput *, double, double);
 void WriteLog(BODY *, CONTROL *, FILES *, MODULE *, OPTIONS *, OUTPUT *,
               SYSTEM *, UPDATE *, fnUpdateVariable ***, fnWriteOutput *, int);
-void InitializeOutput(OUTPUT *, fnWriteOutput *);
+void InitializeOutput(FILES*,OUTPUT *, fnWriteOutput *);
 void WriteTime(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
                double *, char[]);
 

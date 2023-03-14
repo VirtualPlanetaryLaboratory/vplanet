@@ -49,6 +49,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.coverage',
               'sphinx.ext.mathjax',
               'breathe',
+              'sphinx_rtd_theme',
               'matplotlib.sphinxext.plot_directive']
               #'sphinxcontrib.bibtex']
 
@@ -97,7 +98,7 @@ release = version
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = English
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -116,8 +117,9 @@ todo_include_todos = True
 # a list of builtin themes.
 #
 if not on_rtd:  # only import and set the theme if we're building docs locally
-    #html_theme = 'sphinx_rtd_theme'
+    html_theme = 'sphinx_rtd_theme'
     html_theme_path = ['.themes', ]
+    html_theme_options = {"display_version": True}
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

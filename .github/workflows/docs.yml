@@ -29,7 +29,6 @@ jobs:
           sudo apt-get install -y doxygen-doc
           python -m pip install -U pip
           python -m pip install -e .
-          pip install sphinx-rtd-theme
 
       - name: Build
         id: build

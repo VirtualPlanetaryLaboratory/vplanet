@@ -1,41 +1,185 @@
 
+
 <!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
-    <title>Adding a New Module &#8212; VPLanet 2.3.42
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Adding a New Module &mdash; VPLanet 2.3.42
  documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Contributor’s Guide" href="developers.html" />
-    <link rel="prev" title="Coupling Modules" href="coupling.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
   
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="VPLanet 2.3.42
+ documentation" href="index.html"/>
+        <link rel="up" title="Tutorials" href="tutorials.html"/>
+        <link rel="next" title="Contributor’s Guide" href="developers.html"/>
+        <link rel="prev" title="Coupling Modules" href="coupling.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
           
 
-          <div class="body" role="main">
+          
+            <a href="index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.3.42
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="conduct.html">Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Options and Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Code Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Add an Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="option.html">Add an Option</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primaryvariable.html">Add a Primary Variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coupling.html">Coupling Modules</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Add a New Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#initial-steps">Initial Steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-the-source-files">Creating the Source Files</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#memory-allocation">Memory Allocation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#option-functions">Option Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#update-and-halt-functions">Update and Halt Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output-functions">Output Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#addmodule">AddModule</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-functions">Module Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#the-header-file">The Header File</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#updating-module-c">Updating module.c</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="http://faculty.washington.edu/rkb9/vplanet/Workshop21/">Workshop Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">Contributor’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repos.html">Other VPLanet Repositories</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">VPLanet</a> &raquo;</li>
+      
+        <li><a href="tutorials.html">Tutorials</a>&raquo;</li>
+      
+    
+      <li>Adding a New Module</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <section id="adding-a-new-module">
-<h1>Adding a New Module<a class="headerlink" href="#adding-a-new-module" title="Permalink to this heading">¶</a></h1>
+<h1>Adding a New Module<a class="headerlink" href="#adding-a-new-module" title="Permalink to this headline">¶</a></h1>
 <p>So you’ve decided you want to add a new module to VPLanet? That’s great as it is
 the best way to improve the code and grow our understanding of planetary and
 stellar evolution! This page walks you through the steps necessary to complete
@@ -44,7 +188,7 @@ as examples, each new module presents unique challenges, but by following the
 established protocols, your new module can be “plug and play” and couple
 seamlessly to the other modules.</p>
 <section id="initial-steps">
-<h2>Initial Steps<a class="headerlink" href="#initial-steps" title="Permalink to this heading">¶</a></h2>
+<h2>Initial Steps<a class="headerlink" href="#initial-steps" title="Permalink to this headline">¶</a></h2>
 <p>Add a new ID number in vplanet.h:</p>
 <blockquote>
 <div><p>#define NEWMODULE 2^x</p>
@@ -60,11 +204,11 @@ options, primary variables, and auxiliary properties. Add all new outputs by
 following the <a class="reference external" href="output">How to add an output</a> tutorial.</p>
 </section>
 <section id="creating-the-source-files">
-<h2>Creating the Source Files<a class="headerlink" href="#creating-the-source-files" title="Permalink to this heading">¶</a></h2>
+<h2>Creating the Source Files<a class="headerlink" href="#creating-the-source-files" title="Permalink to this headline">¶</a></h2>
 <p>For this tutorial, we will follow the format in eqtide.c, which is one of the
 more mature and complicated modules in VPLanet.</p>
 <section id="memory-allocation">
-<h3>Memory Allocation<a class="headerlink" href="#memory-allocation" title="Permalink to this heading">¶</a></h3>
+<h3>Memory Allocation<a class="headerlink" href="#memory-allocation" title="Permalink to this headline">¶</a></h3>
 <p>The first function is InitializeControlEqtide which allocated memory for any
 array in the CONTROL struct. In this case, we need arrays for each body related
 to both rotational and orbital evolution. These arrays set how the evolution
@@ -89,7 +233,7 @@ number of bodies that can be tidal perturbers.</p>
 tmpBody struct inside CONTROL.</p>
 </section>
 <section id="option-functions">
-<h3>Option Functions<a class="headerlink" href="#option-functions" title="Permalink to this heading">¶</a></h3>
+<h3>Option Functions<a class="headerlink" href="#option-functions" title="Permalink to this headline">¶</a></h3>
 <p>The next blocks of code are the functions for reading options, which were
 discussed as part of the initial steps. Note that after InitializeOptions comes
 the function ReadOptionsEqtide, which loops over all the options. Make sure your
@@ -102,7 +246,7 @@ way. After Verify, the code expects everything to be clean and ready for a fast
 and accurate numerical integration.</p>
 </section>
 <section id="update-and-halt-functions">
-<h3>Update and Halt Functions<a class="headerlink" href="#update-and-halt-functions" title="Permalink to this heading">¶</a></h3>
+<h3>Update and Halt Functions<a class="headerlink" href="#update-and-halt-functions" title="Permalink to this headline">¶</a></h3>
 <p>The next sections of the code are for functions related to the UPDATE and HALT
 functions. Most of the UPDATE functions should have been filled in when the
 primary variables were added.</p>
@@ -113,7 +257,7 @@ VerifyHalts functions and your halting criteria will be evaluating at each
 time step.</p>
 </section>
 <section id="output-functions">
-<h3>Output Functions<a class="headerlink" href="#output-functions" title="Permalink to this heading">¶</a></h3>
+<h3>Output Functions<a class="headerlink" href="#output-functions" title="Permalink to this headline">¶</a></h3>
 <p>The output function format is similar to the options. However, note that there
 are two categories of output files, the evolution (.forward) files and the log
 file. EqTide breaks the logging into two functions because some outputs depend
@@ -121,21 +265,21 @@ on the number of perturbers. Please use these functions as a template if your
 module contains similar functionality.</p>
 </section>
 <section id="addmodule">
-<h3>AddModule<a class="headerlink" href="#addmodule" title="Permalink to this heading">¶</a></h3>
+<h3>AddModule<a class="headerlink" href="#addmodule" title="Permalink to this headline">¶</a></h3>
 <p>The AddModule function contains the assignment of the function pointer matrices
 that enable the module to be integrated into the main code. Essentially, all the
 work you finished above to track options, outputs, variables, etc. comes
 together in this function.</p>
 </section>
 <section id="module-functions">
-<h3>Module Functions<a class="headerlink" href="#module-functions" title="Permalink to this heading">¶</a></h3>
+<h3>Module Functions<a class="headerlink" href="#module-functions" title="Permalink to this headline">¶</a></h3>
 <p>The final block of functions contain all the subroutines necessary to actually
 compute the physics and chemistry for your module. These functions must be
 tailored to your specific needs, but do remember that all primary variable
 function must contain the same argument list (BODY*,SYSTEM*,int).</p>
 </section>
 <section id="the-header-file">
-<h3>The Header File<a class="headerlink" href="#the-header-file" title="Permalink to this heading">¶</a></h3>
+<h3>The Header File<a class="headerlink" href="#the-header-file" title="Permalink to this headline">¶</a></h3>
 <p>At the same time you are developing the .c file, you’ll want to update the .h
 file. These are all pretty standard across the modules, so use them as a
 template. In these files you define numbers for the options and outputs, as well
@@ -144,7 +288,7 @@ files. You can also define any other macros unique to your module here.</p>
 </section>
 </section>
 <section id="updating-module-c">
-<h2>Updating module.c<a class="headerlink" href="#updating-module-c" title="Permalink to this heading">¶</a></h2>
+<h2>Updating module.c<a class="headerlink" href="#updating-module-c" title="Permalink to this headline">¶</a></h2>
 <p>To finish your new module, you must also update several subroutines in module.c.
 First, allocate and initialize the members of the MODULE struct in
 InitializeModule. Then update FinalizeModule to increment the iNumModules
@@ -158,86 +302,71 @@ necessary. Congratulations! You’ve now written a new, bug-free module!</p>
 </section>
 
 
+           </div>
           </div>
-          
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="developers.html" class="btn btn-neutral float-right" title="Contributor’s Guide" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="coupling.html" class="btn btn-neutral" title="Coupling Modules" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">VPLanet</a></h1>
+
+    </section>
+
+  </div>
+  
 
 
+  
 
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.3.42',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/documentation_options.js"></script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
 
+  
 
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
 
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
 
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="conduct.html">Code of Conduct</a></li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installing VPLanet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="help.html">Options and Outputs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="src.html">C API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vplot.html">VPLOT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parametersweep.html">Parameter Sweep Guide</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference external" href="http://faculty.washington.edu/rkb9/vplanet/Workshop21/">Workshop Lectures</a></li>
-<li class="toctree-l1"><a class="reference internal" href="developers.html">Contributor’s Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="repos.html">Other VPLanet Repositories</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-  <li><a href="tutorials.html">Tutorials</a><ul>
-      <li>Previous: <a href="coupling.html" title="previous chapter">Coupling Modules</a></li>
-      <li>Next: <a href="developers.html" title="next chapter">Contributor’s Guide</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2018, The VPLanet Team.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
-      
-      |
-      <a href="_sources/module.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>

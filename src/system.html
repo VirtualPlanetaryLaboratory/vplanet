@@ -1,50 +1,202 @@
 
+
 <!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
-    <title>system &#8212; VPLanet 2.3.42
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>system &mdash; VPLanet 2.3.42
  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="thermint" href="thermint.html" />
-    <link rel="prev" title="evolve" href="evolve.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
   
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="VPLanet 2.3.42
+ documentation" href="../index.html"/>
+        <link rel="up" title="C API" href="../src.html"/>
+        <link rel="next" title="distrot" href="distrot.html"/>
+        <link rel="prev" title="update" href="update.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
           
 
-          <div class="body" role="main">
+          
+            <a href="../index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.3.42
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../conduct.html">Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">system</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#system-c">system.c</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#system-h">system.h</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://faculty.washington.edu/rkb9/vplanet/Workshop21/">Workshop Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">Contributor’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../repos.html">Other VPLanet Repositories</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">VPLanet</a> &raquo;</li>
+      
+        <li><a href="../src.html">C API</a>&raquo;</li>
+      
+    
+      <li>system</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <section id="system">
-<h1>system<a class="headerlink" href="#system" title="Permalink to this heading">¶</a></h1>
+<h1>system<a class="headerlink" href="#system" title="Permalink to this headline">¶</a></h1>
 <p><strong>Contents</strong></p>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#system-c" id="id1">system.c</a></p></li>
 <li><p><a class="reference internal" href="#system-h" id="id2">system.h</a></p></li>
 </ul>
-</nav>
+</div>
 <section id="system-c">
-<h2><a class="toc-backref" href="#id1" role="doc-backlink">system.c</a><a class="headerlink" href="#system-c" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id1">system.c</a><a class="headerlink" href="#system-c" title="Permalink to this headline">¶</a></h2>
 <p>Subroutines that control system-wide properties. </p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Rory Barnes (<a class="reference external" href="https://github.com/RoryBarnes/">RoryBarnes</a>) </p>
@@ -152,7 +304,7 @@
 <span id="_CPPv39fdXUVFluxP4BODYi"></span><span id="_CPPv29fdXUVFluxP4BODYi"></span><span id="fdXUVFlux__BODYP.i"></span><span class="target" id="system_8c_1abc270f691a645877f42f6cc7a65b8563"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdXUVFlux</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49fdXUVFluxP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Compute the XUV Flux.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
 <li><p><strong>iBody</strong> – The current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> index </p></li>
@@ -167,7 +319,7 @@
 <span id="_CPPv310kepler_eqnP4BODYi"></span><span id="_CPPv210kepler_eqnP4BODYi"></span><span id="kepler_eqn__BODYP.i"></span><span class="target" id="system_8c_1a2efedc97ff689f87f73070e265e9bb2c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">kepler_eqn</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410kepler_eqnP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Solves kepler’s equation for one body</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Index of body in question </p></li>
@@ -181,7 +333,7 @@
 <span id="_CPPv38osc2cartP4BODYi"></span><span id="_CPPv28osc2cartP4BODYi"></span><span id="osc2cart__BODYP.i"></span><span class="target" id="system_8c_1a669d58350e76a8353234ace68add0c58"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">osc2cart</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48osc2cartP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Converts osculating orbital elements to Cartesian coordinates (in au &amp; au/day)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iNumBodies</strong> – Number of bodies in the system (star &amp; planets) </p></li>
@@ -195,7 +347,7 @@
 <span id="_CPPv310astro2baryP4BODYi"></span><span id="_CPPv210astro2baryP4BODYi"></span><span id="astro2bary__BODYP.i"></span><span class="target" id="system_8c_1a2604e63c0bd92d4199fd0fe3a9d5a91e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">astro2bary</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410astro2baryP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Converts astrocentric Cartesian coordinates to barycentric</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iNumBodies</strong> – Number of bodies in the system (star &amp; planets) </p></li>
@@ -209,7 +361,7 @@
 <span id="_CPPv310bary2astroP4BODYi"></span><span id="_CPPv210bary2astroP4BODYi"></span><span id="bary2astro__BODYP.i"></span><span class="target" id="system_8c_1af14c629a2816bfe49ae4c3d52debf6f2"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bary2astro</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410bary2astroP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Converts barycentric Cartesian coordinates to astrocentric</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iNumBodies</strong> – Number of bodies in the system (star &amp; planets) </p></li>
@@ -223,7 +375,7 @@
 <span id="_CPPv310angularmomP4BODYPdi"></span><span id="_CPPv210angularmomP4BODYPdi"></span><span id="angularmom__BODYP.doubleP.i"></span><span class="target" id="system_8c_1a64d78ccbdb2974a659fa1ab3387f40d4"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">angularmom</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">AngMom</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410angularmomP4BODYPdi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates angular momentum vector of planetary system</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>AngMom</strong> – Resulting angular momentum vector </p></li>
@@ -238,7 +390,7 @@
 <span id="_CPPv310rotate_invP4BODYP6SYSTEMi"></span><span id="_CPPv210rotate_invP4BODYP6SYSTEMi"></span><span id="rotate_inv__BODYP.SYSTEMP.i"></span><span class="target" id="system_8c_1af5db46a89d9abb3b596ca847eb0cb423"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rotate_inv</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410rotate_invP4BODYP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Rotate coordinates into invariable plane</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
@@ -253,10 +405,10 @@
 <span id="_CPPv35normvPd"></span><span id="_CPPv25normvPd"></span><span id="normv__doubleP"></span><span class="target" id="system_8c_1a2d9d5ce00e1963d41795027f6c606090"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">normv</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">vector</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv45normvPd" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the magnitude of a vector</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>vector</strong> – Any vector you what the magnitude of </p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The magnitude of vector </p>
 </dd>
 </dl>
@@ -267,7 +419,7 @@
 <span id="_CPPv38cart2oscP4BODYi"></span><span id="_CPPv28cart2oscP4BODYi"></span><span id="cart2osc__BODYP.i"></span><span class="target" id="system_8c_1a86557dc42a84e7083b980f5f4691643d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cart2osc</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48cart2oscP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Converts Cartesian coordinates (in au &amp; au/day) to osculating orbital elements</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iNumBodies</strong> – Number of bodies in the system (star &amp; planets) </p></li>
@@ -281,7 +433,7 @@
 <span id="_CPPv39inv_planeP4BODYP6SYSTEMi"></span><span id="_CPPv29inv_planeP4BODYP6SYSTEMi"></span><span id="inv_plane__BODYP.SYSTEMP.i"></span><span class="target" id="system_8c_1a72c7fb02fe885fdb46bf96f510e09c52"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">inv_plane</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49inv_planeP4BODYP6SYSTEMi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates coordinates of planetary system with respect to invariable plane</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>system</strong> – Struct containing system information </p></li>
@@ -296,14 +448,14 @@
 <span id="_CPPv319fdMutualInclinationP4BODYii"></span><span id="_CPPv219fdMutualInclinationP4BODYii"></span><span id="fdMutualInclination__BODYP.i.i"></span><span class="target" id="system_8c_1aba69fb4de9439720f2ff4328d1e99ac9"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdMutualInclination</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">jBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fdMutualInclinationP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculate the mutual or relative inclination of the orbital planes of iBody and jBody.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
 <li><p><strong>iBody</strong> – The index of the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> struct for the 1st orbit </p></li>
 <li><p><strong>jBody</strong> – The index of the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> struct for the 2nd orbit</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The mutual inclination </p>
 </dd>
 </dl>
@@ -314,7 +466,7 @@
 <span id="_CPPv319fbCheckMaxMutualIncP4BODYP6EVOLVEP4HALTP2IOiii"></span><span id="_CPPv219fbCheckMaxMutualIncP4BODYP6EVOLVEP4HALTP2IOiii"></span><span id="fbCheckMaxMutualInc__BODYP.EVOLVEP.HALTP.IOP.i.i.i"></span><span class="target" id="system_8c_1ac57d965ec518c71f0f2d87cc20a55b1e"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fbCheckMaxMutualInc</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE"><span class="n"><span class="pre">EVOLVE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">evolve</span></span>, <a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT"><span class="n"><span class="pre">HALT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">halt</span></span>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO"><span class="n"><span class="pre">IO</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">io</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">jBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iReason</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fbCheckMaxMutualIncP4BODYP6EVOLVEP4HALTP2IOiii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Check the maximum allowed mutual inclination.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – A pointer to the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
 <li><p><strong>evolve</strong> – A pointer to the integration <a class="reference internal" href="vplanet.html#struct_e_v_o_l_v_e"><span class="std std-ref">EVOLVE</span></a> instance </p></li>
@@ -325,7 +477,7 @@
 <li><p><strong>iReason</strong> – Was the subroutine called from CheckHalts (0) or CheckProgress (1)?</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>TRUE if the mutual incliantion is larger than dMaxMutualInc, FALSE if not </p>
 </dd>
 </dl>
@@ -358,14 +510,14 @@
 <span id="_CPPv313fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv213fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei"></span><span id="fdMergePlanet__BODYP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="system_8c_1a3517be3fa4f1d4ccff3846d73c215f60"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdMergePlanet</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Handle a merge by zeroing out lost planet’s derivatives, and adding its mass to the central body.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – A pointer to the current <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> instance </p></li>
 <li><p><strong>update</strong> – A pointer to the <a class="reference internal" href="vplanet.html#struct_u_p_d_a_t_e"><span class="std std-ref">UPDATE</span></a> struct </p></li>
 <li><p><strong>iBody</strong> – The index of the <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> struct for the lost planet</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The mutual inclination </p>
 </dd>
 </dl>
@@ -374,7 +526,7 @@
 </div>
 </section>
 <section id="system-h">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">system.h</a><a class="headerlink" href="#system-h" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">system.h</a><a class="headerlink" href="#system-h" title="Permalink to this headline">¶</a></h2>
 <p>Subroutines that control system-wide properties. </p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Rory Barnes (<a class="reference external" href="https://github.com/RoryBarnes/">RoryBarnes</a>) </p>
@@ -387,86 +539,71 @@
 </section>
 
 
+           </div>
           </div>
-          
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="distrot.html" class="btn btn-neutral float-right" title="distrot" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="update.html" class="btn btn-neutral" title="update" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">VPLanet</a></h1>
+
+    </section>
+
+  </div>
+  
 
 
+  
 
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'2.3.42',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/documentation_options.js"></script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
 
+  
 
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
 
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
 
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../conduct.html">Code of Conduct</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing VPLanet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../parametersweep.html">Parameter Sweep Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference external" href="http://faculty.washington.edu/rkb9/vplanet/Workshop21/">Workshop Lectures</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers.html">Contributor’s Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../repos.html">Other VPLanet Repositories</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="../src.html">C API</a><ul>
-      <li>Previous: <a href="evolve.html" title="previous chapter">evolve</a></li>
-      <li>Next: <a href="thermint.html" title="next chapter">thermint</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2018, The VPLanet Team.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
-      
-      |
-      <a href="../_sources/src/system.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>

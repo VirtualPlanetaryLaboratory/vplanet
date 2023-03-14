@@ -1,50 +1,202 @@
 
+
 <!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
-    <title>poise &#8212; VPLanet 2.3.42
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>poise &mdash; VPLanet 2.3.42
  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="distorb" href="distorb.html" />
-    <link rel="prev" title="binary" href="binary.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
   
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="VPLanet 2.3.42
+ documentation" href="../index.html"/>
+        <link rel="up" title="C API" href="../src.html"/>
+        <link rel="next" title="spinbody" href="spinbody.html"/>
+        <link rel="prev" title="atmesc" href="atmesc.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
           
 
-          <div class="body" role="main">
+          
+            <a href="../index.html" class="icon icon-home"> VPLanet
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.3.42
+
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../conduct.html">Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing VPLanet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">poise</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#poise-c">poise.c</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#poise-h">poise.h</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parametersweep.html">Parameter Sweep Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://faculty.washington.edu/rkb9/vplanet/Workshop21/">Workshop Lectures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">Contributor’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../repos.html">Other VPLanet Repositories</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">VPLanet</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">VPLanet</a> &raquo;</li>
+      
+        <li><a href="../src.html">C API</a>&raquo;</li>
+      
+    
+      <li>poise</li>
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <section id="poise">
-<h1>poise<a class="headerlink" href="#poise" title="Permalink to this heading">¶</a></h1>
+<h1>poise<a class="headerlink" href="#poise" title="Permalink to this headline">¶</a></h1>
 <p><strong>Contents</strong></p>
-<nav class="contents local" id="contents">
+<div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#poise-c" id="id1">poise.c</a></p></li>
 <li><p><a class="reference internal" href="#poise-h" id="id2">poise.h</a></p></li>
 </ul>
-</nav>
+</div>
 <section id="poise-c">
-<h2><a class="toc-backref" href="#id1" role="doc-backlink">poise.c</a><a class="headerlink" href="#poise-c" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id1">poise.c</a><a class="headerlink" href="#poise-c" title="Permalink to this headline">¶</a></h2>
 <p>Subroutines that control the energy balance model for climate. </p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Russell Deitrick (<a class="reference external" href="https://github.com/deitrr/">deitrr</a>)</p>
@@ -770,14 +922,14 @@
 <span id="_CPPv311fdBasalFlowP4BODYii"></span><span id="_CPPv211fdBasalFlowP4BODYii"></span><span id="fdBasalFlow__BODYP.i.i"></span><span class="target" id="poise_8c_1a998212a7f5f4771d2fbc1417af2e8ea4"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdBasalFlow</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdBasalFlowP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates flow at base of ice sheet</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
 <li><p><strong>iLat</strong> – Index of current latitude cell </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Flow rate at base of ice sheet (velocity*height -&gt; m^2/s) </p>
 </dd>
 </dl>
@@ -788,7 +940,7 @@
 <span id="_CPPv311fvNoIceBeltPdPdPiPiPi"></span><span id="_CPPv211fvNoIceBeltPdPdPiPiPi"></span><span id="fvNoIceBelt__doubleP.doubleP.iP.iP.iP"></span><span class="target" id="poise_8c_1a4b4337fc8134dd204b60a91d556c053e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvNoIceBelt</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dLatIceEdgeNorth</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dLatIceEdgeSouth</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iLatIceEdgeNorth</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iLatIceEdgeSouth</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">bBelt</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fvNoIceBeltPdPdPiPiPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>If a test for a belt is false, assign these values to the referenced parameters.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dLatIceEdgeNorth</strong> – Northern latitude of ice edge </p></li>
 <li><p><strong>dLatIceEdgeSouth</strong> – Southern latitude of ice edge </p></li>
@@ -805,7 +957,7 @@
 <span id="_CPPv310fvNoIceCapPdPiPi"></span><span id="_CPPv210fvNoIceCapPdPiPi"></span><span id="fvNoIceCap__doubleP.iP.iP"></span><span class="target" id="poise_8c_1afd9b798cbc41f9a8deee8b9bf269347c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvNoIceCap</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dLatIceEdge</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iLatIceEdge</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">bCap</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410fvNoIceCapPdPiPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>If a test for a cap is false, assign these values to the referenced parameters.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dLatIceEdge</strong> – Latitude of ice edge </p></li>
 <li><p><strong>iLatIceEdge</strong> – Index of ice edge latitude </p></li>
@@ -820,7 +972,7 @@
 <span id="_CPPv311fbIceLatSeaP4BODYii"></span><span id="_CPPv211fbIceLatSeaP4BODYii"></span><span id="fbIceLatSea__BODYP.i.i"></span><span class="target" id="poise_8c_1a2f55f42a5f488558bd2508e2a5b63cca"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fbIceLatSea</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fbIceLatSeaP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Is a specific latitude’s sea component covered in ice?</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -834,7 +986,7 @@
 <span id="_CPPv312fbIceLatLandP4BODYii"></span><span id="_CPPv212fbIceLatLandP4BODYii"></span><span id="fbIceLatLand__BODYP.i.i"></span><span class="target" id="poise_8c_1a078c434268f0a565da7bebd99b23ca68"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fbIceLatLand</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fbIceLatLandP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Is a specific latitude’s land component covered in ice?</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -848,13 +1000,13 @@
 <span id="_CPPv39fbIceFreeP4BODYi"></span><span id="_CPPv29fbIceFreeP4BODYi"></span><span id="fbIceFree__BODYP.i"></span><span class="target" id="poise_8c_1aea77739ff17713d596d31e06dd100fec"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fbIceFree</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49fbIceFreeP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Determines if planet has no surface ice</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>1 for no sea or land ice free, 0 for ice </p>
 </dd>
 </dl>
@@ -865,13 +1017,13 @@
 <span id="_CPPv313fbIceFreeLandP4BODYi"></span><span id="_CPPv213fbIceFreeLandP4BODYi"></span><span id="fbIceFreeLand__BODYP.i"></span><span class="target" id="poise_8c_1a2e0786caac1f3752bbc268d594749921"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fbIceFreeLand</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fbIceFreeLandP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Determines if planet has no sland ice</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>1 for no sea or land ice free, 0 for ice </p>
 </dd>
 </dl>
@@ -882,13 +1034,13 @@
 <span id="_CPPv312fbIceFreeSeaP4BODYi"></span><span id="_CPPv212fbIceFreeSeaP4BODYi"></span><span id="fbIceFreeSea__BODYP.i"></span><span class="target" id="poise_8c_1a684ff31510c8a4ccaa1da5e2e90fc8b3"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fbIceFreeSea</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fbIceFreeSeaP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Determines if planet has no sea ice</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>1 for no sea or land ice free, 0 for ice </p>
 </dd>
 </dl>
@@ -901,7 +1053,7 @@
 <p>
 XXX This should really be removed or modified in order to be consistent with other ice coverage functions!!!! XXX </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question</p></li>
@@ -915,7 +1067,7 @@ XXX This should really be removed or modified in order to be consistent with oth
 <span id="_CPPv314fbSnowballLandP4BODYi"></span><span id="_CPPv214fbSnowballLandP4BODYi"></span><span id="fbSnowballLand__BODYP.i"></span><span class="target" id="poise_8c_1aebe0b2ed336984408e9023a54db17c8f"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fbSnowballLand</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fbSnowballLandP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Is all the land on the planet covered in ice?</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -929,7 +1081,7 @@ XXX This should really be removed or modified in order to be consistent with oth
 <span id="_CPPv313fbSnowballSeaP4BODYi"></span><span id="_CPPv213fbSnowballSeaP4BODYi"></span><span id="fbSnowballSea__BODYP.i"></span><span class="target" id="poise_8c_1a884adf7354313098574d4cb1107b1743"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fbSnowballSea</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fbSnowballSeaP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Are the planet’s seas all ice-covered?</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -943,7 +1095,7 @@ XXX This should really be removed or modified in order to be consistent with oth
 <span id="_CPPv317fvNorthIceCapLandP4BODYiPdPiPi"></span><span id="_CPPv217fvNorthIceCapLandP4BODYiPdPiPi"></span><span id="fvNorthIceCapLand__BODYP.i.doubleP.iP.iP"></span><span class="target" id="poise_8c_1a40547566954f6bb2e9a2a792f9c8f00d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvNorthIceCapLand</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dLatIceEdge</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iLatIceEdge</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">bCap</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fvNorthIceCapLandP4BODYiPdPiPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Determine if planet has a northern polar ice cap on land and the extent of the cap.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -960,7 +1112,7 @@ XXX This should really be removed or modified in order to be consistent with oth
 <span id="_CPPv316fvNorthIceCapSeaP4BODYiPdPiPi"></span><span id="_CPPv216fvNorthIceCapSeaP4BODYiPdPiPi"></span><span id="fvNorthIceCapSea__BODYP.i.doubleP.iP.iP"></span><span class="target" id="poise_8c_1af5545a015f49d0ed5ce3fdf2cebfea36"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvNorthIceCapSea</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dLatIceEdge</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iLatIceEdge</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">bCap</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fvNorthIceCapSeaP4BODYiPdPiPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Determines if planet has a northern polar sea ice cap and the extent of the cap.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -977,7 +1129,7 @@ XXX This should really be removed or modified in order to be consistent with oth
 <span id="_CPPv317fvSouthIceCapLandP4BODYiPdPiPi"></span><span id="_CPPv217fvSouthIceCapLandP4BODYiPdPiPi"></span><span id="fvSouthIceCapLand__BODYP.i.doubleP.iP.iP"></span><span class="target" id="poise_8c_1aeb2e6e30e639498616e3d8ee0126b864"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvSouthIceCapLand</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dLatIceEdge</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iLatIceEdge</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">bCap</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fvSouthIceCapLandP4BODYiPdPiPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Determines if planet has a southern polar ice cap on land and the extent of the cap.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -994,7 +1146,7 @@ XXX This should really be removed or modified in order to be consistent with oth
 <span id="_CPPv316fvSouthIceCapSeaP4BODYiPdPiPi"></span><span id="_CPPv216fvSouthIceCapSeaP4BODYiPdPiPi"></span><span id="fvSouthIceCapSea__BODYP.i.doubleP.iP.iP"></span><span class="target" id="poise_8c_1a4fca0edc34c81df555e4a184c6864ab5"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvSouthIceCapSea</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dLatIceEdge</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iLatIceEdge</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">bCap</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fvSouthIceCapSeaP4BODYiPdPiPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Determines if planet has a southern polar sea ice cap</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1011,7 +1163,7 @@ XXX This should really be removed or modified in order to be consistent with oth
 <span id="_CPPv313fvIceBeltLandP4BODYiPdPdPiPiPi"></span><span id="_CPPv213fvIceBeltLandP4BODYiPdPdPiPiPi"></span><span id="fvIceBeltLand__BODYP.i.doubleP.doubleP.iP.iP.iP"></span><span class="target" id="poise_8c_1a16829344e4e8200fb77cfd7018fbc9d6"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvIceBeltLand</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dLatIceEdgeNorth</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dLatIceEdgeSouth</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iLatIceEdgeNorth</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iLatIceEdgeSouth</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">bBelt</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fvIceBeltLandP4BODYiPdPdPiPiPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Determines if planet has an equatorial ice belt on land</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1030,7 +1182,7 @@ XXX This should really be removed or modified in order to be consistent with oth
 <span id="_CPPv312fvIceBeltSeaP4BODYiPdPdPiPiPi"></span><span id="_CPPv212fvIceBeltSeaP4BODYiPdPdPiPiPi"></span><span id="fvIceBeltSea__BODYP.i.doubleP.doubleP.iP.iP.iP"></span><span class="target" id="poise_8c_1a29825e0c843a0c9a86dca2b5bc67ba87"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvIceBeltSea</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dLatIceEdgeNorth</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dLatIceEdgeSouth</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iLatIceEdgeNorth</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iLatIceEdgeSouth</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">bBelt</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fvIceBeltSeaP4BODYiPdPdPiPiPi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Determines if planet has an equatorial ice belt on sea</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1051,7 +1203,7 @@ XXX This should really be removed or modified in order to be consistent with oth
 <p>
 XXX References to other modules are forbidden in this file! </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>evolve</strong> – Struct containing evolve information and variables </p></li>
@@ -1067,7 +1219,7 @@ XXX References to other modules are forbidden in this file! </p>
 <span id="_CPPv320fvPrecessionExplicitP4BODYP6EVOLVEi"></span><span id="_CPPv220fvPrecessionExplicitP4BODYP6EVOLVEi"></span><span id="fvPrecessionExplicit__BODYP.EVOLVEP.i"></span><span class="target" id="poise_8c_1a062f0e22f8668a08166cc5f35df0c4d4"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvPrecessionExplicit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE"><span class="n"><span class="pre">EVOLVE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">evolve</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420fvPrecessionExplicitP4BODYP6EVOLVEi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates precession of the spin axis when DistRot is disabled</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>evolve</strong> – Struct containing evolve information and variables </p></li>
@@ -1082,7 +1234,7 @@ XXX References to other modules are forbidden in this file! </p>
 <span id="_CPPv312fvForceObliqP4BODYP6EVOLVEi"></span><span id="_CPPv212fvForceObliqP4BODYP6EVOLVEi"></span><span id="fvForceObliq__BODYP.EVOLVEP.i"></span><span class="target" id="poise_8c_1a5e9fb3cf183cc8705688a2dfa1c4dcb6"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvForceObliq</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE"><span class="n"><span class="pre">EVOLVE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">evolve</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fvForceObliqP4BODYP6EVOLVEi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Forces obliquity oscillation (bForceObliq = 1).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>evolve</strong> – Struct containing evolve information and variables </p></li>
@@ -1097,7 +1249,7 @@ XXX References to other modules are forbidden in this file! </p>
 <span id="_CPPv310fvForceEccP4BODYP6EVOLVEi"></span><span id="_CPPv210fvForceEccP4BODYP6EVOLVEi"></span><span id="fvForceEcc__BODYP.EVOLVEP.i"></span><span class="target" id="poise_8c_1a2b63c8e7fbc3418b78cbd331f0bb0a13"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvForceEcc</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE"><span class="n"><span class="pre">EVOLVE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">evolve</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410fvForceEccP4BODYP6EVOLVEi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Forces eccentricity oscillation (bForceEcc = 1).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>evolve</strong> – Struct containing evolve information and variables </p></li>
@@ -1114,7 +1266,7 @@ XXX References to other modules are forbidden in this file! </p>
 <p>
 XXX This looks wrong and inconsistent with other ice outputs. This returns the fraction of latitudes that are ice-covered, not the fractional area. </p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question</p></li>
@@ -1128,7 +1280,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv318ForceBehaviorPoiseP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii"></span><span id="_CPPv218ForceBehaviorPoiseP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii"></span><span id="ForceBehaviorPoise__BODYP.MODULEP.EVOLVEP.IOP.SYSTEMP.UPDATEP.fnUpdateVariablePPP.i.i"></span><span class="target" id="poise_8c_1a842e63632fdf88a91967e36f368cc35b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ForceBehaviorPoise</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE"><span class="n"><span class="pre">MODULE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">module</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE"><span class="n"><span class="pre">EVOLVE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">evolve</span></span>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO"><span class="n"><span class="pre">IO</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">io</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iModule</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418ForceBehaviorPoiseP4BODYP6MODULEP6EVOLVEP2IOP6SYSTEMP6UPDATEPPP16fnUpdateVariableii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Force behavior function for POISE. This is where the magic happens&amp;#8212; POISE works entirely in force behavior because it needs to solve several PDEs (not well modeled with RK4). First, the EBM (climate) is run for several orbits, then the ice sheet flow. The EBM can be periodically rerun needed.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>module</strong> – Struct containing module/intermodule quantities </p></li>
@@ -1149,13 +1301,13 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv316fdEccTrueAnomalydd"></span><span id="_CPPv216fdEccTrueAnomalydd"></span><span id="fdEccTrueAnomaly__double.double"></span><span class="target" id="poise_8c_1a1aba4afee5573666af7f3f5f792e443d"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdEccTrueAnomaly</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dTrueA</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dEcc</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fdEccTrueAnomalydd" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates eccentric anomaly from true anomaly</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dTrueA</strong> – Planet’s true anomaly </p></li>
 <li><p><strong>dEcc</strong> – Planet’s orbital eccentricity </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Eccentric anomaly </p>
 </dd>
 </dl>
@@ -1166,7 +1318,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv317fvDailyInsolationP4BODYii"></span><span id="_CPPv217fvDailyInsolationP4BODYii"></span><span id="fvDailyInsolation__BODYP.i.i"></span><span class="target" id="poise_8c_1a35cd0ecc4bd0fe41103862b6b9c74c8d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvDailyInsolation</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iDay</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fvDailyInsolationP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates insolation at each latitude for a single “iNday” of the year/orbit</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1181,7 +1333,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv318fvAnnualInsolationP4BODYi"></span><span id="_CPPv218fvAnnualInsolationP4BODYi"></span><span id="fvAnnualInsolation__BODYP.i"></span><span class="target" id="poise_8c_1a786aa917e887eaffa2e83c2cc9b510cf"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvAnnualInsolation</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418fvAnnualInsolationP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates insolation at each latitude over the entire year/orbit</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1195,7 +1347,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv314fvAlbedoAnnualP4BODYi"></span><span id="_CPPv214fvAlbedoAnnualP4BODYi"></span><span id="fvAlbedoAnnual__BODYP.i"></span><span class="target" id="poise_8c_1a9386350fb2a4d388480ae322ce8b297d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvAlbedoAnnual</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fvAlbedoAnnualP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates/updates the albedo at each latitude for the annual EBM</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1209,7 +1361,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv320fvMatrixInvertAnnualP4BODYi"></span><span id="_CPPv220fvMatrixInvertAnnualP4BODYi"></span><span id="fvMatrixInvertAnnual__BODYP.i"></span><span class="target" id="poise_8c_1aa35e433b3a6a7a1a15dc7846decb007a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvMatrixInvertAnnual</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420fvMatrixInvertAnnualP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Inverts the matrix for the annual EBM</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1223,7 +1375,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv322fvMatrixInvertSeasonalP4BODYi"></span><span id="_CPPv222fvMatrixInvertSeasonalP4BODYi"></span><span id="fvMatrixInvertSeasonal__BODYP.i"></span><span class="target" id="poise_8c_1ac90031853407d6b7d268d390aa5a390b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvMatrixInvertSeasonal</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422fvMatrixInvertSeasonalP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Inverts the matrix for the seasonal EBM</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1237,7 +1389,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv317fvTempGradientAnnP4BODYdi"></span><span id="_CPPv217fvTempGradientAnnP4BODYdi"></span><span id="fvTempGradientAnn__BODYP.double.i"></span><span class="target" id="poise_8c_1a3a26381c4f2e4bf0d318540036db6d50"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvTempGradientAnn</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dDelta_x</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fvTempGradientAnnP4BODYdi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the approximate temperature gradient in latitude for the annual EBM</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>dDelta_x</strong> – Spacing of grid (x = sin(latitude)) </p></li>
@@ -1252,7 +1404,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv317fvTempGradientSeaP4BODYdi"></span><span id="_CPPv217fvTempGradientSeaP4BODYdi"></span><span id="fvTempGradientSea__BODYP.double.i"></span><span class="target" id="poise_8c_1ab1bb1ac781bc0e8db6882085b5f48edf"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvTempGradientSea</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dDelta_x</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fvTempGradientSeaP4BODYdi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the approximate temperature gradient in latitude for the seasonal EBM</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>dDelta_x</strong> – Spacing of grid (x = sin(latitude)) </p></li>
@@ -1267,7 +1419,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv314fvMatrixAnnualP4BODYi"></span><span id="_CPPv214fvMatrixAnnualP4BODYi"></span><span id="fvMatrixAnnual__BODYP.i"></span><span class="target" id="poise_8c_1af9a06e96b59997b85659a7741ad5ed39"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvMatrixAnnual</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fvMatrixAnnualP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the backwards-Euler matrix that integrates the annual EBM. Each operation of the inverse matrix is a “time-step”.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1281,7 +1433,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv311PoiseAnnualP4BODYi"></span><span id="_CPPv211PoiseAnnualP4BODYi"></span><span id="PoiseAnnual__BODYP.i"></span><span class="target" id="poise_8c_1a7ffa7ef16a8d2c7b169688c6eb958b39"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PoiseAnnual</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411PoiseAnnualP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Runs the annual EBM, called from ForceBehavior. The annual EBM runs to steady-state (global temperature change becomes very small), rather than for a set number of orbits.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1295,7 +1447,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv39fdOLRhm16P4BODYiii"></span><span id="_CPPv29fdOLRhm16P4BODYiii"></span><span id="fdOLRhm16__BODYP.i.i.i"></span><span class="target" id="poise_8c_1ae3d0795631c06ade39267bdb1d4ca98c"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdOLRhm16</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bModel</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49fdOLRhm16P4BODYiii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the OLR from the Haqq-Misra+ 2016 formulae</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1311,7 +1463,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv311fdOLRdThm16P4BODYiii"></span><span id="_CPPv211fdOLRdThm16P4BODYiii"></span><span id="fdOLRdThm16__BODYP.i.i.i"></span><span class="target" id="poise_8c_1a511b867af3643afe8abb98c1113aa190"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdOLRdThm16</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bModel</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdOLRdThm16P4BODYiii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the slope of the OLR from the Haqq-Misra+ 2016 formulae</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1327,7 +1479,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv310fdOLRsms09P4BODYiii"></span><span id="_CPPv210fdOLRsms09P4BODYiii"></span><span id="fdOLRsms09__BODYP.i.i.i"></span><span class="target" id="poise_8c_1aaf0919c78bd7894ce1540a32856d4029"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdOLRsms09</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bModel</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410fdOLRsms09P4BODYiii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the OLR from the Spiegel+ 2009 formulae</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1343,7 +1495,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv312fdOLRdTsms09P4BODYiii"></span><span id="_CPPv212fdOLRdTsms09P4BODYiii"></span><span id="fdOLRdTsms09__BODYP.i.i.i"></span><span class="target" id="poise_8c_1a52952411bdcb15f2583d0296a4108758"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdOLRdTsms09</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bModel</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fdOLRdTsms09P4BODYiii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the slope of the OLR from the Spiegel+ 2009 formulae</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1359,7 +1511,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv39fdOLRwk97P4BODYiii"></span><span id="_CPPv29fdOLRwk97P4BODYiii"></span><span id="fdOLRwk97__BODYP.i.i.i"></span><span class="target" id="poise_8c_1afd9ba56ec0b0347f93c4a7f70bbb2906"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdOLRwk97</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bModel</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49fdOLRwk97P4BODYiii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the OLR from the Williams &amp; Kasting 1997 formulae</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1375,7 +1527,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv311fdOLRdTwk97P4BODYiii"></span><span id="_CPPv211fdOLRdTwk97P4BODYiii"></span><span id="fdOLRdTwk97__BODYP.i.i.i"></span><span class="target" id="poise_8c_1a610446f6a092ee09561b43dece411006"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdOLRdTwk97</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bModel</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdOLRdTwk97P4BODYiii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the slope of the OLR from the Williams &amp; Kasting 1997 formulae</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1391,7 +1543,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv312AlbedoTOA250dddd"></span><span id="_CPPv212AlbedoTOA250dddd"></span><span id="AlbedoTOA250__double.double.double.double"></span><span class="target" id="poise_8c_1a796e4bc64a366cc457e70a14ae1a4e5f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AlbedoTOA250</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">Temp</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">phi</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">zenith</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">albsurf</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412AlbedoTOA250dddd" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the “top-of-atmosphere” from the Haqq-Misra+ 2016 formulae at temperatures &lt; 250 K</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>Temp</strong> – Temperature at grid point </p></li>
 <li><p><strong>pCO2</strong> – Atmospheric partial pressure of CO2 </p></li>
@@ -1407,7 +1559,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv314fdAlbedoTOA350dddd"></span><span id="_CPPv214fdAlbedoTOA350dddd"></span><span id="fdAlbedoTOA350__double.double.double.double"></span><span class="target" id="poise_8c_1a11b8a2b8de24ad09d28151137cafb0b2"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdAlbedoTOA350</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">Temp</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">phi</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">zenith</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">albsurf</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdAlbedoTOA350dddd" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the “top-of-atmosphere” from the Haqq-Misra+ 2016 formulae at 250 K &lt; temperatures &lt; 350 K</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>Temp</strong> – Temperature at grid point </p></li>
 <li><p><strong>pCO2</strong> – Atmospheric partial pressure of CO2 </p></li>
@@ -1423,7 +1575,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv312AlbedoTOA280dddd"></span><span id="_CPPv212AlbedoTOA280dddd"></span><span id="AlbedoTOA280__double.double.double.double"></span><span class="target" id="poise_8c_1a99ceb2e2b9eaf7e6ce3b264f47fb1ad3"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AlbedoTOA280</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">Temp</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">pCO2</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">zenith</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">albsurf</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412AlbedoTOA280dddd" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the “top-of-atmosphere” from the Williams &amp; Kasting 1997 formulae at temperatures &lt; 280 K</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>Temp</strong> – Temperature at grid point </p></li>
 <li><p><strong>pCO2</strong> – Atmospheric partial pressure of CO2 </p></li>
@@ -1439,7 +1591,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv312AlbedoTOA370dddd"></span><span id="_CPPv212AlbedoTOA370dddd"></span><span id="AlbedoTOA370__double.double.double.double"></span><span class="target" id="poise_8c_1af5925820c065dc4725c9eb459f4a1108"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AlbedoTOA370</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">Temp</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">pCO2</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">zenith</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">albsurf</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412AlbedoTOA370dddd" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the “top-of-atmosphere” from the Williams &amp; Kasting 1997 formulae at 280 K &lt; temperatures &lt; 370 K</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>Temp</strong> – Temperature at grid point </p></li>
 <li><p><strong>pCO2</strong> – Atmospheric partial pressure of CO2 </p></li>
@@ -1455,10 +1607,10 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv312AlbedoTaylord"></span><span id="_CPPv212AlbedoTaylord"></span><span id="AlbedoTaylor__double"></span><span class="target" id="poise_8c_1ab1d2eae26a2ae21ebe564a4ceaacc425"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AlbedoTaylor</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">zenith</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412AlbedoTaylord" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates albedo based on zenith angle (tuned to Earth)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>zenith</strong> – Zenith angle of each latitude in radians </p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Albedo </p>
 </dd>
 </dl>
@@ -1469,7 +1621,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv313AlbedoTOAhm16P4BODYdii"></span><span id="_CPPv213AlbedoTOAhm16P4BODYdii"></span><span id="AlbedoTOAhm16__BODYP.double.i.i"></span><span class="target" id="poise_8c_1a7850f9b01c9c02a217e72d94710cccbb"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AlbedoTOAhm16</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">zenith</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413AlbedoTOAhm16P4BODYdii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the planetary albedo based on the formulae from Haqq-Misra+ 2016, accounting for temperature and surface type.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information </p></li>
 <li><p><strong>zenith</strong> – Zenith angle of latitude iLat </p></li>
@@ -1485,7 +1637,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv313AlbedoTOAwk97P4BODYdii"></span><span id="_CPPv213AlbedoTOAwk97P4BODYdii"></span><span id="AlbedoTOAwk97__BODYP.double.i.i"></span><span class="target" id="poise_8c_1a2f730535bcbb3d72ff09fc06d5057251"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AlbedoTOAwk97</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">zenith</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413AlbedoTOAwk97P4BODYdii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the planetary albedo based on the formulae from Williams &amp; Kasting 1997, accounting for temperature and surface type.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information </p></li>
 <li><p><strong>zenith</strong> – Zenith angle of latitude iLat </p></li>
@@ -1501,7 +1653,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv314AlbedoTOAsms09P4BODYdii"></span><span id="_CPPv214AlbedoTOAsms09P4BODYdii"></span><span id="AlbedoTOAsms09__BODYP.double.i.i"></span><span class="target" id="poise_8c_1aa633df1ba991843cc1a6f5e90d42c7cc"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AlbedoTOAsms09</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">zenith</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414AlbedoTOAsms09P4BODYdii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the planetary albedo based on the formulae from Spiegel+ 2009, accounting for temperature and surface type.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information </p></li>
 <li><p><strong>zenith</strong> – Zenith angle of latitude iLat </p></li>
@@ -1517,7 +1669,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv316fvAlbedoSeasonalP4BODYii"></span><span id="_CPPv216fvAlbedoSeasonalP4BODYii"></span><span id="fvAlbedoSeasonal__BODYP.i.i"></span><span class="target" id="poise_8c_1aac26cc599ef74da1ab9ce7c24a4905c2"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvAlbedoSeasonal</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iDay</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fvAlbedoSeasonalP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the planetary albedo for the seasonal EBM at iNday iDay</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1532,7 +1684,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv38fvSeaIceP4BODYi"></span><span id="_CPPv28fvSeaIceP4BODYi"></span><span id="fvSeaIce__BODYP.i"></span><span class="target" id="poise_8c_1a07a763fc311fdca6bbf187c2e3a809f6"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvSeaIce</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48fvSeaIceP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Modifies the ocean component to account for effects of sea ice (seasonal EBM only). This slows the EBM considerably so use with caution.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struc containing all body information </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1546,7 +1698,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv316fvMatrixSeasonalP4BODYi"></span><span id="_CPPv216fvMatrixSeasonalP4BODYi"></span><span id="fvMatrixSeasonal__BODYP.i"></span><span class="target" id="poise_8c_1a80655b12335f1588f7a65779a2f4a176"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvMatrixSeasonal</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fvMatrixSeasonalP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the backwards-Euler matrix that integrates the seasonal EBM. Each operation of the inverse matrix is a “time-step”.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1560,7 +1712,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv313fvSourceFSeasP4BODYii"></span><span id="_CPPv213fvSourceFSeasP4BODYii"></span><span id="fvSourceFSeas__BODYP.i.i"></span><span class="target" id="poise_8c_1ad193916c27b806d3003ea4685958c50d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvSourceFSeas</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNday</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fvSourceFSeasP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates non-matrix terms in the energy balance equation (I don’t remember why I called these “SourceF”). These terms are the OLR offset and the absorbed radiation (temperature independent quantities).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1575,7 +1727,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv315EnergyResidualsP4BODYii"></span><span id="_CPPv215EnergyResidualsP4BODYii"></span><span id="EnergyResiduals__BODYP.i.i"></span><span class="target" id="poise_8c_1ad6e6e4d31565e144f3b0339db1731d89"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">EnergyResiduals</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNday</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415EnergyResidualsP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates average energy residual or “error” over course of the year. This should be used as a check on the physics in the EBM (should be ~0).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1650,7 +1802,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv313PoiseSeasonalP4BODYi"></span><span id="_CPPv213PoiseSeasonalP4BODYi"></span><span id="PoiseSeasonal__BODYP.i"></span><span class="target" id="poise_8c_1a72f93964136e16868a8e2529822f4ca0"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PoiseSeasonal</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413PoiseSeasonalP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Runs the seasonal EBM, called from ForceBehavior. The seasonal EBM runs on a fixed time-step (of order days) to resolve the seasonal cycle. It can be said to be in “equilibrium” though not in “steady-state”.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information and variables </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1664,14 +1816,14 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv316fdIceMassBalanceP4BODYii"></span><span id="_CPPv216fdIceMassBalanceP4BODYii"></span><span id="fdIceMassBalance__BODYP.i.i"></span><span class="target" id="poise_8c_1a7afe9bddc7ffa92f928a4b9734458f09"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdIceMassBalance</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLat</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fdIceMassBalanceP4BODYii" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Calculates the net balance between melting and accumulation of ice on land at a given EBM time-step</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing all body information </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
 <li><p><strong>iLat</strong> – Latitude cell in question </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Net gain/loss of ice </p>
 </dd>
 </dl>
@@ -1682,7 +1834,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv315IceSheetTriDiagP4BODYi"></span><span id="_CPPv215IceSheetTriDiagP4BODYi"></span><span id="IceSheetTriDiag__BODYP.i"></span><span class="target" id="poise_8c_1a977ec6e643d711c0d1de268e5e7948eb"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IceSheetTriDiag</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415IceSheetTriDiagP4BODYi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Construct matrix that evolves the ice sheet flow + net balance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing body information </p></li>
 <li><p><strong>iBody</strong> – Body in question </p></li>
@@ -1696,7 +1848,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 <span id="_CPPv314PoiseIceSheetsP4BODYP6EVOLVEi"></span><span id="_CPPv214PoiseIceSheetsP4BODYP6EVOLVEi"></span><span id="PoiseIceSheets__BODYP.EVOLVEP.i"></span><span class="target" id="poise_8c_1a397c513ad197dbb8770cb63b006bc64e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PoiseIceSheets</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE"><span class="n"><span class="pre">EVOLVE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">evolve</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414PoiseIceSheetsP4BODYP6EVOLVEi" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Main ice sheet routine. Integrates the ice sheets via Crank-Nicholson method in ForceBehavior in the same fashion as Huybers’ model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>body</strong> – Struct containing body information </p></li>
 <li><p><strong>evolve</strong> – Struct containing evolution information </p></li>
@@ -1709,7 +1861,7 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 </div>
 </section>
 <section id="poise-h">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">poise.h</a><a class="headerlink" href="#poise-h" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">poise.h</a><a class="headerlink" href="#poise-h" title="Permalink to this headline">¶</a></h2>
 <p>Subroutines that control the energy balance model for climate. </p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Russell Deitrick (<a class="reference external" href="https://github.com/deitrr/">deitrr</a>)</p>
@@ -2430,86 +2582,71 @@ XXX This looks wrong and inconsistent with other ice outputs. This returns the f
 </section>
 
 
+           </div>
           </div>
-          
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="spinbody.html" class="btn btn-neutral float-right" title="spinbody" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="atmesc.html" class="btn btn-neutral" title="atmesc" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, The VPLanet Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">VPLanet</a></h1>
+
+    </section>
+
+  </div>
+  
 
 
+  
 
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'2.3.42',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/documentation_options.js"></script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
 
+  
 
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
 
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
 
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../conduct.html">Code of Conduct</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing VPLanet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../parametersweep.html">Parameter Sweep Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference external" href="http://faculty.washington.edu/rkb9/vplanet/Workshop21/">Workshop Lectures</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developers.html">Contributor’s Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../repos.html">Other VPLanet Repositories</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="../src.html">C API</a><ul>
-      <li>Previous: <a href="binary.html" title="previous chapter">binary</a></li>
-      <li>Next: <a href="distorb.html" title="next chapter">distorb</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2018, The VPLanet Team.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
-      
-      |
-      <a href="../_sources/src/poise.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>

@@ -116,8 +116,8 @@ todo_include_todos = True
 # a list of builtin themes.
 #
 if not on_rtd:  # only import and set the theme if we're building docs locally
-    # html_theme = 'sphinx_rtd_theme'
-    html_theme_path = ['.themes', ]
+    html_theme = 'sphinx_rtd_theme'
+    #html_theme_path = ['.themes', ]
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

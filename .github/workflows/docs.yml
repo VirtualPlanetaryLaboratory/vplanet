@@ -11,7 +11,7 @@ jobs:
     name: "Build docs"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up Python
         id: setup_python
@@ -29,6 +29,7 @@ jobs:
           sudo apt-get install -y doxygen-doc
           python -m pip install -U pip
           python -m pip install -e .
+          pip install sphinx-rtd-theme
 
       - name: Build
         id: build

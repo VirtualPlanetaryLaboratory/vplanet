@@ -18,7 +18,7 @@ jobs:
           submodules: true
           fetch-depth: 0
 
-      - uses: conda-incubator/setup-miniconda@v2
+      - uses: actions/setup-python@v4
         name: Install Python
         with:
           python-version: ${{ matrix.python }}

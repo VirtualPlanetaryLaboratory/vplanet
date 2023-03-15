@@ -13,18 +13,18 @@
   <a href="http://twitter.com/VPLanetCode"><img src="https://img.shields.io/twitter/follow/VPLanetCode.svg?style=flat-square&logo=twitter&label=Follow"></a><br>
   <img src="https://img.shields.io/badge/Unit%20Tests-14,182-darkblue.svg"/></a>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml">
-  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml/badge.svg"/></a>
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml/badge.svg"></a>
   <img src="https://img.shields.io/badge/Memory%20Checks-43-darkblue.svg"/></a>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml">
-  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml/badge.svg"/></a>
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml/badge.svg"></a>
   <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">
-  <img src="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet/branch/master/graph/badge.svg?token=3LFJQO1M6H"/><br>
-  <a href="examples"><img src="https://img.shields.io/badge/Examples-41-darkblue.svg"/></a>
+  <img src="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet/branch/master/graph/badge.svg?token=3LFJQO1M6H"><br>
+  <a href="examples"><img src="https://img.shields.io/badge/Examples-41-darkblue.svg"></a>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml">
-  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml/badge.svg"/></a>
-  <img src="https://img.shields.io/badge/Python-3.7%20--%203.10-7d93c7.svg"/></a>
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml/badge.svg"></a>
+  <img src="https://img.shields.io/badge/Python-3.6%20--%203.10-7d93c7.svg"></a>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml">
-  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg"/></a><br>
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg"></a><br>
   <img src = "https://img.shields.io/badge/Platforms-Linux_|%20macOS_|%20Windows10-darkgreen.svg?style=flat">
   <a href="http://ascl.net/1811.017"><img src="https://img.shields.io/badge/ASCL-1811.017-orange.svg?colorB=orange" alt="ascl:1811.017" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-purple.svg"/></a><br>

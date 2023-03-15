@@ -108,4 +108,4 @@ If you use this code to generate results used in any publication or conference c
 
 Enjoy!
 
-© 2018-2021 The VPLanet Team.
+© 2018-2023 The VPLanet Team.

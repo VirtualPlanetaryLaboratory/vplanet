@@ -7,14 +7,14 @@
 <p align="center">
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet"><img src="https://img.shields.io/badge/Read-the_docs-blue.svg?style=flat"></a>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/docs.yml">
-  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/docs.yml/badge.svg"/></a>
-  <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract"><img src="https://img.shields.io/badge/Read-the_paper-darkgreen.svg?style=flat"/></a>
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/docs.yml/badge.svg"></a>
+  <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract"><img src="https://img.shields.io/badge/Read-the_paper-darkgreen.svg?style=flat"></a>
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet/conduct.html"><img src="https://img.shields.io/badge/Code%20of-Conduct-7d93c7.svg"></a>
   <a href="http://twitter.com/VPLanetCode"><img src="https://img.shields.io/twitter/follow/VPLanetCode.svg?style=flat-square&logo=twitter&label=Follow"></a><br>
-  <img src="https://img.shields.io/badge/Unit%20Tests-14,182-darkblue.svg"/></a>
+  <img src="https://img.shields.io/badge/Unit%20Tests-14,182-darkblue.svg"></a>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml/badge.svg"></a>
-  <img src="https://img.shields.io/badge/Memory%20Checks-43-darkblue.svg"/></a>
+  <img src="https://img.shields.io/badge/Memory%20Checks-43-darkblue.svg"></a>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml/badge.svg"></a>
   <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">

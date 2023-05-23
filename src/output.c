@@ -155,7 +155,19 @@ void WriteHZLimitDryRunaway(BODY *body, CONTROL *control, OUTPUT *output,
      not defined. As a hack, the will return -1 for invalid cases. */
 
   dLuminosity = fdLuminosityTotal(body, control->Evolve.iNumBodies);
-  if (dLuminosity > 0) { // Planet exterior to star(s)
+  /*
+  This needs to be edited for multiple star systems in spinbody.
+  dHelioEcc varies incredibly for CBPs in P-type orbits. dBaryEcc does not vary much.
+  The function below does not work for body[iBody].dEcc > 1.
+  Duct tape solution: include condition if body[iBody].dEcc < 1
+
+  Proposed solution: change (1 - body[iBody].dEcc * body[iBody].dEcc) to
+                            (body[iBody].dEcc * body[iBody].dEcc - 1)
+  Hyperbolic orbits introduce imaginary numbers that end up changing the 
+  expression above to the expression below, however this solution requires
+  proper investigation.                               
+  */
+  if (dLuminosity > 0 && body[iBody].dEcc < 1.0) { // Planet exterior to star(s)
     *dTmp = pow(body[0].dLuminosity * (1 - body[iBody].dAlbedoGlobal) /
                       (16 * PI * DRYRGFLUX *
                        (1 - body[iBody].dEcc * body[iBody].dEcc)),
@@ -725,25 +737,64 @@ void WriteOrbPeriod(BODY *body, CONTROL *control, OUTPUT *output,
                     double *dTmp, char cUnit[]) {
 
   if (body[iBody].bBinary == 0) { // Not doing binary
-    if (iBody > 0) {
+    if (system->bBarycentric && body[iBody].dBaryEcc < 1) {
+      /*
+      Below we consider Solving the Orbital Period for the largest massive body.
+      The contributing masses are the body itself and the second largest mass.
+      We first find the largest mass in the system, then the second largest.
+      */
+      double dMaxMass = body[0].dMass; // Maximum massive body defaulted to first body
+      for (int iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
+        if (body[iTmpBody].dMass > dMaxMass) {
+          dMaxMass = body[iTmpBody].dMass;  // Replaces maximum mass if a different body is larger
+        }
+      }
+      if (body[iBody].dMass == dMaxMass) {
+        double dSecondMass = body[1].dMass; // Second most massive body defaulted to second body
+        for (int iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
+          if (body[iTmpBody].dMass > dSecondMass && body[iTmpBody].dMass != dMaxMass) {
+            dSecondMass = body[iTmpBody].dMass; // Replaces mass if larger than default and smaller than largest mass
+          }
+        }
+        // Below is the calculated orbital period of the largest mass
+        *dTmp = fdSemiToPeriod(body[iBody].dBarySemi, 
+                              (dMaxMass + dSecondMass)*cube(1.0 - dMaxMass/(dMaxMass + dSecondMass)));
+      } else {
+        // All other masses are defined by any mass enclosed within the orbit of the body in focus.
+        double dEnclosedMass = 0.0;
+        // We collect the enclosed masses by making sure their dSemi are smaller than the body in focus
+        for (int iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
+          if (body[iTmpBody].dBarySemi <= body[iBody].dBarySemi) {
+            dEnclosedMass += body[iTmpBody].dMass; // includes the mass of body[iBody].dMassF
+          }
+        }
+        *dTmp = fdSemiToPeriod(body[iBody].dBarySemi, 
+                              dEnclosedMass*cube(1.0 - body[iBody].dMass/dEnclosedMass));
+        // As a warning this setup will break for S-type orbiting CBPs.
+        // We should make a system where the orbital elements are relative to a certain barycenter or body.
+      }
+    }
+    // Orbital period defined in Heliocentric coordinates
+    if (iBody > 0 && body[iBody].dEcc < 1 && !system->bBarycentric) {
       *dTmp = fdSemiToPeriod(body[iBody].dSemi,
-                             (body[0].dMass + body[iBody].dMass));
-    } else {
-      *dTmp = -1;
+                            (body[0].dMass + body[iBody].dMass));
+    }
+    if ((system->bBarycentric && body[iBody].dBaryEcc >= 1.0) || 
+        (!system->bBarycentric && body[iBody].dEcc >= 1.0)) {
+      *dTmp = -1; // The orbital period does not exist for unbound orbits.
     }
   } else // Doing binary
   {
     if (body[iBody].iBodyType == 0) { // CBP
       *dTmp = fdSemiToPeriod(body[iBody].dSemi, (body[0].dMass + body[1].dMass +
-                                                 body[iBody].dMass));
+                                                body[iBody].dMass));
     } else if (body[iBody].iBodyType == 1 && iBody == 1) { // Binary
       *dTmp = fdSemiToPeriod(body[iBody].dSemi,
-                             (body[0].dMass + body[iBody].dMass));
+                            (body[0].dMass + body[iBody].dMass));
     } else {
       *dTmp = -1;
     }
   }
-
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
@@ -2227,7 +2278,7 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
 
     // Need to get orbital elements for SpiNBody in case they're being output
     if (body[iBody].bSpiNBody) {
-      Bary2OrbElems(body, iBody);
+      AssignAllCoords(body, control, files, system, iBody);
     }
 
     for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
@@ -2453,10 +2504,8 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
   }
 }
 
-void InitializeOutput(FILES *files, OUTPUT *output, fnWriteOutput fnWrite[]) {
+void InitializeOutput(OUTPUT *output, fnWriteOutput fnWrite[]) {
   int iOut, iBody, iModule;
-
-  memset(files->cLog, '\0', NAMELEN);
 
   for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
     memset(output[iOut].cName, '\0', OPTLEN);

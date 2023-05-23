@@ -30,8 +30,6 @@ double fdSemiToMeanMotion(double dSemi, double dMass) {
   return pow(BIGG * dMass / (dSemi * dSemi * dSemi), 0.5);
 }
 
-
-
 /*
  * Angular Momentum
  */
@@ -312,8 +310,14 @@ double fdInstellation(BODY *body, int iBody) {
     dInstell = fndFluxExactBinary(body, iBody, body[0].dLuminosity,
                                   body[1].dLuminosity);
   } else {
+    /*
+    This needs to be edited for multiple star systems in spinbody.
+    dHelioEcc varies incredibly for CBPs in P-type orbits. dBaryEcc does not vary much.
+    The function below does not work for body[iBody].dEcc > 1.
+    Duct tape solution: include condition if body[iBody].dEcc < 1  
+    */    
     // Body orbits one star
-    if (iBody > 0) {
+    if (iBody > 0 && body[iBody].dEcc < 1.0) {
       dInstell = body[0].dLuminosity /
                  (4 * PI * body[iBody].dSemi * body[iBody].dSemi *
                   sqrt(1 - body[iBody].dEcc * body[iBody].dEcc));
@@ -335,7 +339,7 @@ Compute the XUV Flux.
 double fdXUVFlux(BODY *body, int iBody) {
 
   double flux;
-  double dLXUVTot = 0.0;
+  double dLXUVTot;
 
   // Body orbits two stars
   if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
@@ -1007,13 +1011,13 @@ double fndUpdateSpiNBodyCoords(BODY *body, EVOLVE *evolve) {
       body[iBody].dMeanA = 0;
     }
 
-    OrbElems2Helio(body, iBody);
+    fvHelioOrbElems2HelioCart(body, evolve->iNumBodies, iBody);
   }
 
   for (iBody = 0; iBody < evolve->iNumBodies; iBody++) {
     // Calculate Barycentric Cartesian coords:
 
-    Helio2Bary(body, evolve->iNumBodies, iBody);
+    fvHelioCart2BaryCart(body, evolve->iNumBodies, iBody);
     body[iBody].dPositionX = body[iBody].dBCartPos[0] * AUM;
     body[iBody].dPositionY = body[iBody].dBCartPos[1] * AUM;
     body[iBody].dPositionZ = body[iBody].dBCartPos[2] * AUM;

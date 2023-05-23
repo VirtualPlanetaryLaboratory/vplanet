@@ -112,7 +112,7 @@
 
 void WriteBodyPrecA(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                     int, double *, char[]);
-void Bary2OrbElems(BODY *body, int iBody);
+//void fvBaryCart2HelioOrbElems(BODY *body,  int iBody);
 void WriteLogEntry(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UPDATE *,
                    fnWriteOutput, FILE *, int);
 
@@ -121,7 +121,7 @@ void WriteOutput(BODY *, CONTROL *, FILES *, OUTPUT *, SYSTEM *, UPDATE *,
                  fnWriteOutput *, double, double);
 void WriteLog(BODY *, CONTROL *, FILES *, MODULE *, OPTIONS *, OUTPUT *,
               SYSTEM *, UPDATE *, fnUpdateVariable ***, fnWriteOutput *, int);
-void InitializeOutput(FILES*,OUTPUT *, fnWriteOutput *);
+void InitializeOutput(OUTPUT *, fnWriteOutput *);
 void WriteTime(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
                double *, char[]);
 

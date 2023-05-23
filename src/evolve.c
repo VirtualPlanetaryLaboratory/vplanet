@@ -18,7 +18,9 @@ void PropsAuxGeneral(BODY *body, CONTROL *control) {
   int iBody; // Dummy counting variable
 
   for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
-    if (iBody != 0 && body[iBody].bBinary == 0) {
+    // bSpiNBody = False because spinbody.c calculates MeanMotion for both bound and unbound orbits
+    // The function below only calculates for bound orbits
+    if (iBody != 0 && body[iBody].bBinary == 0 && !body[iBody].bSpiNBody) {
       body[iBody].dMeanMotion = fdSemiToMeanMotion(
             body[iBody].dSemi, (body[0].dMass + body[iBody].dMass));
     }
@@ -291,6 +293,7 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
                 update[iBody].daDerivProc[iVar][iEqn] =
                       fnUpdate[iBody][iVar][iEqn](
                             body, system, update[iBody].iaBody[iVar][iEqn]);
+                /*
                 dMinNow =
                       sqrt((body[iBody].dPositionX * body[iBody].dPositionX +
                             body[iBody].dPositionY * body[iBody].dPositionY +
@@ -298,6 +301,17 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
                            (body[iBody].dVelX * body[iBody].dVelX +
                             body[iBody].dVelY * body[iBody].dVelY +
                             body[iBody].dVelZ * body[iBody].dVelZ));
+                */
+                // Why bother rewriting the same thing when you can iterate through an array
+                // Will other modules handle the added code below?
+                double dBCartPossq = 0.0, dBCartVelsq = 0.0;
+                int i = 0;
+                for (i = 0; i < 3; i++) {
+                  dBCartPossq += body[iBody].dBCartPos[i] * body[iBody].dBCartPos[i];
+                  dBCartVelsq += body[iBody].dBCartVel[i] * body[iBody].dBCartVel[i];
+                }
+                dMinNow = sqrt(dBCartPossq / dBCartVelsq);
+
                 if (dMinNow < dMin) {
                   dMin = dMinNow;
                 }
@@ -579,6 +593,11 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
    * variables!!! */
   for (iBody = 0; iBody < iNumBodies; iBody++) {
     iNumVars = update[iBody].iNumVars;
+    if (body[iBody].bSpiNBody) {
+      // I'm going to pretend we really hate this condition, so I have to change this.
+      fvAssignBaryCart(body, iBody);
+      fvBaryCart2HelioCart(body, iBody);
+    }
     for (iVar = 0; iVar < iNumVars; iVar++) {
       update[iBody].daDeriv[iVar] = 1. / 6 *
                                     (evolve->daDeriv[0][iBody][iVar] +

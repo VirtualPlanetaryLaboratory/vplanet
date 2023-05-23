@@ -240,8 +240,8 @@ void VerifyOrbit(BODY *body, CONTROL *control, FILES files, OPTIONS *options,
     return;
   }
 
-  /* Was anything set? */
-  if (dSemi == 0 && dMeanMotion == 0 && dPeriod == 0) {
+  /* Was anything set? */ //Update: Nothing needs to be set when using Cartesian Coordinates
+  if (dSemi == 0 && dMeanMotion == 0 && dPeriod == 0 && body[iBody].bUseOrbParams) {
     fprintf(stderr, "ERROR: Must set one of %s, %s or %s.\n",
             options[OPT_ORBSEMI].cName, options[OPT_ORBMEANMOTION].cName,
             options[OPT_ORBPER].cName);
@@ -332,8 +332,38 @@ void VerifyOrbit(BODY *body, CONTROL *control, FILES files, OPTIONS *options,
       body[iBody].dMeanMotion = fdSemiToMeanMotion(
             body[iBody].dSemi, body[0].dMass + body[iBody].dMass);
     }
+  }  
+}
+
+// Verifying the inputs of alternative orbital elements such LongP and MeanL
+void VerifyAltOrbElems(BODY *body, OPTIONS *options, 
+                      int iBody) {
+  int iFile = iBody + 1;
+  // The user can input either ArgP or LongP. If both are input, ignores input of LongP.
+  if (options[OPT_ARGP].iLine[iFile] > -1 && options[OPT_LONGP].iLine[iFile] == -1) {
+    body[iBody].dLongP = fmodPos(body[iBody].dArgP + body[iBody].dLongA, 2. * PI);
+  }
+  if (options[OPT_ARGP].iLine[iFile] == -1 && options[OPT_LONGP].iLine[iFile] > -1) {
+    body[iBody].dArgP = fmodPos(body[iBody].dLongP - body[iBody].dLongA, 2. * PI);
+  }
+  if (options[OPT_ARGP].iLine[iFile] > -1 && options[OPT_LONGP].iLine[iFile] > -1) {
+    printf("WARNING: Both ArgP and LongP were input. Defaulting to the input of ArgP and redefining LongP.\n");
+    body[iBody].dLongP = fmodPos(body[iBody].dArgP + body[iBody].dLongA, 2. * PI);
+  }
+  // The user can input either MeanA or MeanL. If both are input, ignores input of MeanL.
+  if (options[OPT_MEANA].iLine[iFile] > -1 && options[OPT_MEANL].iLine[iFile] == -1) {
+    body[iBody].dMeanL = fmodPos(body[iBody].dMeanA + body[iBody].dLongP, 2. * PI);
+  }
+  if (options[OPT_MEANA].iLine[iFile] == -1 && options[OPT_MEANL].iLine[iFile] > -1) {
+    body[iBody].dMeanA = fmodPos(body[iBody].dMeanL - body[iBody].dLongP, 2. * PI);
+  }
+  if (options[OPT_MEANA].iLine[iFile] > -1 && options[OPT_MEANL].iLine[iFile] > -1) {
+    printf("WARNING: Both MeanA and MeanL were input. Defaulting to the input of MeanA and redefining MeanL.\n");
+    body[iBody].dMeanL = fmodPos(body[iBody].dMeanA + body[iBody].dLongP, 2. * PI);
   }
 }
+
+
 
 /*
  *

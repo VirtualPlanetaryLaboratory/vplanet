@@ -79,6 +79,7 @@
 #define OPT_ARGP 562
 #define OPT_LONGA 563
 #define OPT_GRCORR 564
+#define OPT_BARYCENTRIC 565
 #define OPT_LUMINOSITY 575 /**< (Initial) luminosity */
 #define OPT_TIDALQ 577
 #define OPT_USEOUTERTIDALQ 579

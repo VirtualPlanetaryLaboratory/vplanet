@@ -436,8 +436,6 @@ int iGetNumLines(char cFile[]) {
   FILE *fp;
   char cLine[LINE];
 
-  fprintf(stderr,"File: %s\n",cFile);
-
   fp = fopen(cFile, "r");
   if (fp == NULL) {
     fprintf(stderr, "Unable to open %s.\n", cFile);
@@ -488,8 +486,6 @@ void InitializeInput(INFILE *input) {
   int iLine, iPos, bBlank;
   FILE *fp;
   char cLine[LINE];
-
-fprintf(stderr,"File: %s\n",input->cIn);
 
   fp = fopen(input->cIn, "r");
   if (fp == NULL) {
@@ -1682,9 +1678,18 @@ void ReadEcc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     /* Option was found */
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0 || dTmp >= 1) {
+    // SpiNBody allows unbound orbits. No need to include this error using it.
+    if ((dTmp < 0 || dTmp >= 1.0) && !body[iFile - 1].bSpiNBody) {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: %s must be in the range [0,1).\n",
+                options->cName);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    // Negative eccentricities are unallowed in SpiNBody.
+    if (dTmp < 0 && body[iFile - 1].bSpiNBody) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr, "ERROR: %s must be greater than 0.\n", 
                 options->cName);
       }
       LineExit(files->Infile[iFile].cIn, lTmp);
@@ -2178,8 +2183,10 @@ void ReadLongP(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
   if (lTmp >= 0) {
+    if (!system->bBarycentric) { // Bary reads coordinates of all bodies w.r.t system's common barycenter    
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
+    }                    
     if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2 * PI) {
         if (control->Io.iVerbose >= VERBERR) {
@@ -2260,8 +2267,10 @@ void ReadArgP(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
   if (lTmp >= 0) {
+    if (!system->bBarycentric) { // Bary reads coordinates of all bodies w.r.t system's common barycenter
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
+    }
     if (control->Units[iFile].iAngle == 0) {
       if (dTmp < 0 || dTmp > 2 * PI) {
         if (control->Io.iVerbose >= VERBERR) {

@@ -18,14 +18,17 @@
 #define OPT_VELZSPINBODY 1622
 
 #define OPT_MEANA 1630
+#define OPT_MEANL 1631
 
 #define OPT_USEORBPARAMS 1640
+//#define OPT_OUTPUTCOORDBIT 1641
 
 // Output numbers
 #define OUTSTARTSPINBODY 1600
 #define OUTENDSPINBODY 1700
 #define OUTBODYSTARTSPINBODY 1610
 
+/*
 #define OUT_POSITIONXSPINBODY 1610
 #define OUT_POSITIONYSPINBODY 1611
 #define OUT_POSITIONZSPINBODY 1612
@@ -36,6 +39,51 @@
 
 #define OUT_INCSPINBODY 1630
 #define OUT_LONGASPINBODY 1631
+*/
+
+#define OUT_HELIOPOSX 1650
+#define OUT_HELIOPOSY 1651
+#define OUT_HELIOPOSZ 1652
+#define OUT_HELIOVELX 1653
+#define OUT_HELIOVELY 1654
+#define OUT_HELIOVELZ 1655
+
+#define OUT_BARYPOSX 1660
+#define OUT_BARYPOSY 1661
+#define OUT_BARYPOSZ 1662
+#define OUT_BARYVELX 1663
+#define OUT_BARYVELY 1664
+#define OUT_BARYVELZ 1665
+
+#define OUT_HELIOSEMI 1670
+#define OUT_HELIOECC 1671
+#define OUT_HELIOINC 1672
+#define OUT_HELIOLONGA 1673
+#define OUT_HELIOARGP 1674
+#define OUT_HELIOLONGP 1675
+#define OUT_HELIOMEANA 1676
+#define OUT_HELIOMEANL 1677
+#define OUT_HELIOECCA 1678
+#define OUT_HELIOHYPA 1679
+
+
+#define OUT_BARYSEMI 1680
+#define OUT_BARYECC 1681
+#define OUT_BARYINC 1682
+#define OUT_BARYLONGA 1683
+#define OUT_BARYARGP 1684
+#define OUT_BARYLONGP 1685
+#define OUT_BARYMEANA 1686
+#define OUT_BARYMEANL 1687
+#define OUT_BARYECCA 1678
+#define OUT_BARYHYPA 1679
+
+//Other Misc. variables be low
+#define OUT_BARYMU 1690
+#define OUT_BARYECCSQ 1691
+#define OUT_BARYMEANMOTION 1692
+#define OUT_BARYORBPERIOD 1693
+#define OUT_BARYSINC 1694
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -133,11 +181,20 @@ void InitializeOutputSpiNBody(OUTPUT *output, fnWriteOutput fnWrite[]);
 int fbHaltMaxMutualIncSpiNBody(BODY *, EVOLVE *, HALT *, IO *, UPDATE *,
                                fnUpdateVariable ***, int);
 
+//Addressing total mass of the system for Barycentric Coordinates
+double TotalMass(BODY *body, int iNumBodies);
 // Coordinate Changes
-void OrbElems2Helio(BODY *body, int iBody);
-void Helio2Bary(BODY *body, int iNumBodies, int iBody);
-void Bary2OrbElems(BODY *body, int iBody);
-void Bary2Helio(BODY *body, int iBody);
+void fvBaryOrbElems2BaryCart(BODY *body, int iNumBodies, int iBody);
+void fvHelioOrbElems2HelioCart(BODY *body, int iNumBodies, int iBody);
+void fvHelioCart2BaryCart(BODY *body, int iNumBodies, int iBody);
+void fvAssignBaryCart(BODY *body, int iBody);
+void fvAssignBaryCart2BaryCart(BODY *body, int iBody);
+void fvAssignCartOutputs2BaryCart(BODY *body, int iBody);
+void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody);
+void fvBaryCart2HelioCart(BODY *body, int iBody);
+void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody);
+
+void AssignAllCoords(BODY *body, CONTROL *control, FILES *files, SYSTEM *system, int iBody);
 // These functions are defined in distorb.c, but needed in SpiNBody
 // Relocate to system.c?
 
@@ -154,6 +211,7 @@ double yangle1(BODY *body, int iBody);
 double yangle2(BODY *body, int iBody);
 double zangle1(BODY *body, int iBody);
 double zangle2(BODY *body, int iBody);
+double fmodPos(double x, double y);
 
 // Halts
 void CountHaltsSpiNBody(HALT *, int *);

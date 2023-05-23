@@ -1259,8 +1259,8 @@ void VerifyDistOrb(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     /* If the mutual inclination of any object gets above MAXMUTUALINCRD4,
        print a warning message. */
     // control->Io.dMaxMutualInc = MAXMUTUALINCRD4 * PI/180.;
-    control->Io.dMaxMutualInc = 35 * 3.1415926535 / 180;
-    double dFoo               = 35 * 3.1415926535 / 180;
+    control->Io.dMaxMutualInc = 35 * PI / 180;
+    double dFoo               = 35 * PI / 180;
 
   } else if (control->Evolve.iDistOrbModel == LL2) {
     VerifyPericenter(body, control, options, files->Infile[iBody + 1].cIn,
@@ -3236,14 +3236,15 @@ Calculates x-velocity in orbital plane
 @return Velocity of planet in x direction (au/day)
 */
 double fndVxi(BODY *body, int iBody) {
-  double x, y, mu, n;
+  double x, y, mu, n, v;
   x  = fndXinit(body, iBody);
   y  = fndYinit(body, iBody);
   mu = KGAUSS * KGAUSS * (body[0].dMass + body[iBody].dMass) / MSUN;
   n  = sqrt(mu / (body[iBody].dSemi / AUM * body[iBody].dSemi / AUM *
                  body[iBody].dSemi / AUM));
-  return -body[iBody].dSemi / AUM * body[iBody].dSemi / AUM * n *
+  v = -body[iBody].dSemi / AUM * body[iBody].dSemi / AUM * n *
          sin(body[iBody].dEccA) / sqrt(x * x + y * y);
+  return v;
 }
 
 /**

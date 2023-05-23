@@ -59,7 +59,7 @@
   6.67428e-11                // From Luzum et al., 2011; value recommended     \
                              // by IAU NSFA in Prsa et al. 2016
 #define PI M_PI              // Quick fix
-#define KGAUSS 0.01720209895 // Gauss' Gravitational Constamt
+#define KGAUSS 0.01720209895 // Gauss' Gravitational Constant
 #define EPS 1e-10 // Precision for difference of doubles to be effectively 0
 #define AUM 1.49597870700e11   // Exact m/AU per 31 AUG 2012 IAU resolution B2
 #define AUPC 206265.0          // AU per parsec
@@ -78,7 +78,7 @@
 #define MJUP 1.898130e27       // Jupiter's mass; Prsa et al. 2016
 #define YEARDAY 365.25         // Days per year
 #define MSAT 5.6851e26         // Saturns' Mass
-#define DEGRAD 0.017453292519444445 // Degrees per radian
+#define DEGRAD 0.017453292519943296 // Degrees per radian
 #define TOMASS 1.39e21              // Mass of one terrestrial ocean in kg (TO)
 #define ATOMMASS 1.660538921e-27    // Atomic Mass
 #define SIGMA 5.670367e-8           // Stefan-Boltzmann Constant
@@ -120,6 +120,12 @@
 #define U_YEAR 2
 #define U_MYR 3
 #define U_GYR 4
+
+//Allow output coordinates
+#define BARYCART 2
+#define HELIOCART 4
+#define HELIOELEMS 8
+#define BARYELEMS 16
 
 /* Do not change these declarations */
 extern const double dHUGE;
@@ -312,6 +318,48 @@ struct BODY {
   double dMu;           /**< G(M+m) */
   int iGravPertsSpiNBody; /**< Number of bodies that are orbitally relevent
                              (equal to for evolve->iNumBodies) */
+  int iOutputCoordBit; /**< Determines coordinate system outputs */
+  double dHelioPosX;   /**< x Component of the body's heliocentric position */
+  double dHelioPosY;   /**< y Component of the body's heliocentric position */
+  double dHelioPosZ;   /**< z Component of the body's heliocentric position */
+  double dHelioVelX;   /**< x Component of the body's heliocentric velocity */
+  double dHelioVelY;   /**< y Component of the body's heliocentric velocity */
+  double dHelioVelZ;   /**< z Component of the body's heliocentric velocity */
+
+  double dBaryPosX;    /**< x Component of the body's barycentric position */
+  double dBaryPosY;    /**< y Component of the body's barycentric position */
+  double dBaryPosZ;    /**< z Component of the body's barycentric position */
+  double dBaryVelX;    /**< x Component of the body's barycentric velocity */
+  double dBaryVelY;    /**< y Component of the body's barycentric velocity */
+  double dBaryVelZ;    /**< z Component of the body's barycentric velocity */
+
+  double dHelioSemi;   /**< Body's heliocentric semi-major axis */
+  double dHelioEcc;    /**< Body's heliocentric eccentricity */
+  double dHelioInc;    /**< Body's heliocentric inclination */
+  double dHelioLongA;  /**< Body's heliocentric longitude of ascending node */
+  double dHelioArgP;   /**< Body's heliocentric argument of pericenter */
+  double dHelioLongP;  /**< Body's heliocentric longitude of pericenter */
+  double dHelioMeanA;  /**< Body's heliocentric mean anamoly */
+  double dHelioMeanL;  /**< Body's heliocentric Mean Longitude */
+  double dHelioEccA;   /**< Body's heliocentric Eccentric Anomaly */
+  double dHelioHypA;   /**< Body's heliocentric Hyperbolic Anomaly */  
+
+  double dBarySemi;    /**< Body's barycentric semi-major axis */
+  double dBaryEcc;     /**< Body's barycentric eccentricity */
+  double dBaryInc;     /**< Body's barycentric inclination */
+  double dBaryLongA;   /**< Body's barycentric longitude of ascending node */
+  double dBaryArgP;    /**< Body's barycentric argument of pericenter */
+  double dBaryLongP;   /**< Body's barycentric longitude of pericenter */
+  double dBaryMeanA;   /**< Body's barycentric mean anamoly */
+  double dBaryMeanL;   /**< Body's barycentric Mean Longitude */
+  double dBaryEccA;    /**< Body's barycentric Eccentric Anomaly */
+  double dBaryHypA;    /**< Body's barycentric Hyperbolic Anomaly */
+
+  double dBaryMu;         /**< System's barycenter mass */
+  double dBaryEccSq;      /**< Body's barycentric eccentricity squared */
+  double dBaryMeanMotion; /**< Body's barycentric mean motion */
+  double dBaryOrbPeriod;  /**< Body's barycentric Orbital Period */
+  double dBarySinc;       /**< sin(0.5*BaryInclination) */
 
   /* DISTORB parameters */
   int bDistOrb;  /**< Has module DISTORB been implemented */
@@ -326,6 +374,7 @@ struct BODY {
   double dMeanA; /**< Mean anomaly (only used for inv plane calculation) */
   double dTrueL; /**< True longitude (only used for insolation calculation */
   double dEccA;  /**< Eccentric anomaly (only used for inv plane calculation) */
+  double dHypA;  /**< Hyperbolic anomaly used in unbound hyperbolic orbits */
   double *daCartPos; /**< Cartesian position of body (only used for inv plane
                         calc) */
   double *daCartVel; /**< Cartesian velocity of body (only used for inv plane
@@ -1021,6 +1070,7 @@ struct SYSTEM {
 
   double dTotAngMomInit; /**< System's Initial Angular Momentum */
   double dTotAngMom;     /**< System's Current Angular Momentum */
+  double bBarycentric; /**< Boolean flag to use Barycentric coordinates */
 
   /* DISTORB tools */
   fnLaplaceFunction **fnLaplaceF; /**< Pointers to semi-major axis functions  */
@@ -1268,12 +1318,12 @@ struct UPDATE {
   int iPositionZ;
   int iNumPositionZ;
 
-  double dVelX;      /**< x Component of the body's velocity */
-  double dVelY;      /**< y Component of the body's velocity */
-  double dVelZ;      /**< z Component of the body's velocity */
   double dPositionX; /**< x Component of the body's position */
   double dPositionY; /**< y Component of the body's position */
   double dPositionZ; /**< z Component of the body's position */
+  double dVelX;      /**< x Component of the body's velocity */
+  double dVelY;      /**< y Component of the body's velocity */
+  double dVelZ;      /**< z Component of the body's velocity */
 
   double *pdDVelX;
   double *pdDVelY;
@@ -1516,7 +1566,6 @@ struct UPDATE {
   double dDAngMXDt; /**< Derivative for angular mom x */
   double dDAngMYDt; /**< Derivative for angular mom y */
   double dDAngMZDt; /**< Derivative for angular mom z */
-
   int *iaAngMXGalHabit; /**< Equation # for GalHabit's change in x ang mom */
   int *iaAngMYGalHabit; /**< Equation # for GalHabit's change in y ang mom */
   int *iaAngMZGalHabit; /**< Equation # for GalHabit's change in z ang mom */
@@ -1915,8 +1964,9 @@ struct OUTFILE {
   int bNeg[MODULEOUTEND];            /**< Use Negative Option Units? */
   int iNumGrid;                      /**< Number of grid outputs */
   char caGrid[MODULEOUTEND][OPTLEN]; /**< Gridded output name */
-};
+  int iOutputCoordBit;
 
+};
 
 /* The FILES struct contains all the information
  * regarding every file. */
@@ -2370,6 +2420,13 @@ struct MODULE {
   /*! These functions verify module-specific halts. */
   fnVerifyHaltModule **fnVerifyHalt;
 };
+
+typedef struct
+{
+  double dSemi, dEcc, dInc, dArgP, dLongP, dLongA, dMeanA, dMeanL, dEccA, dHypA, dOrbPeriod, dMu;
+
+} ELEMS; 
+
 
 /* fnIntegrate is a pointer to a function that performs
  * integration. */

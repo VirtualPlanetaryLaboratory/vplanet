@@ -2012,7 +2012,7 @@ void ForceBehaviorSpiNBodyDistOrb(BODY *body, MODULE *module, EVOLVE *evolve,
     if (!evolve->bFirstStep) {
       for (iBody = 0; iBody < evolve->iNumBodies; iBody++) {
         // Need to convert from Osc Elems into Barycentric
-        Bary2OrbElems(body, iBody);
+        fvBaryCart2HelioOrbElems(body, evolve->iNumBodies, iBody);
       }
     }
 
@@ -2108,7 +2108,7 @@ void ForceBehaviorSpiNBodyAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve,
                                  int iModule) {
 
   // Need to get orbital elements for AtmEsc to use for escape
-  Bary2OrbElems(body, iBody);
+  fvBaryCart2HelioOrbElems(body, evolve->iNumBodies, iBody);
 }
 
 void ForceBehaviorEqtideDistOrb(BODY *body, MODULE *module, EVOLVE *evolve,

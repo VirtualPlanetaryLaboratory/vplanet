@@ -1254,7 +1254,6 @@ void fvHelioOrbElems2HelioCart(BODY *body, int iNumBodies, int iBody) {
       elems.dHypA = GetHypAnom(elems);
     }    
 
-    //body[iBody].dMu = BIGG * (body[0].dMass + body[iBody].dMass);
     mTotal = TotalMass(body, iNumBodies);
     dHelioMu = BIGG * mTotal;
     body[iBody].dMu = dHelioMu;
@@ -1348,7 +1347,7 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
            normr;
     //mu              = BIGG * (body[iBody].dMass + body[0].dMass); // G(M+m)
     mTotal = TotalMass(body, iNumBodies);
-    mu = BIGG * mTotal; 
+    mu = BIGG * mTotal;
     body[iBody].dMu = mu;
 
     // Solve for semi-major axis
@@ -1356,34 +1355,54 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
 
     // Solve for eccentricity
     body[iBody].dEccSq = 1.0 - hsq / (mu * body[iBody].dSemi);
-    body[iBody].dEcc   = sqrt(body[iBody].dEccSq);
+    if (body[iBody].dEccSq < 1.0e-15) {
+      body[iBody].dEccSq = 0.0; // Unfortunately machine precision limits the accuracy of dEccSq
+    }
+    body[iBody].dEcc = sqrt(body[iBody].dEccSq);
 
     // Solve for inclination
     body[iBody].dInc  = acos(h[2] / normh);
     body[iBody].dSinc = 0.5 * sin(body[iBody].dInc); // For DistOrb usage
 
-    // Solve for longitude of ascending node
-    if (body[iBody].dInc == 0) {
-      body[iBody].dLongA = 0; // LongA is actually undefined. Should I leave it as 0, question?
-    } else {
-      body[iBody].dLongA = atan2(h[0], -h[1]);
-      if (body[iBody].dLongA < 0) { // Make sure the signs are all right
-        body[iBody].dLongA += 2.0 * PI;
-      }
-    }
-
     // Solve for w and f
-    if (body[iBody].dInc != 0) {
+    if (body[iBody].dInc == 0.0) {
+      body[iBody].dLongA = 0; // LongA is actually undefined. Should I leave it as 0, question?
+      // Leave it as zero. Maybe we can still use it when defining dLongP = dLongA + dArgP 
+      sinwf = body[iBody].dHCartPos[1] / normr; // Different definition when dInc = 0
+      coswf = body[iBody].dHCartPos[0] / normr;           
+    } else {
+      body[iBody].dLongA = fmodPos(atan2(h[0], -h[1]), 2. * PI);
       sinwf = body[iBody].dHCartPos[2] /
               (normr * sin(body[iBody].dInc));
       coswf = (body[iBody].dHCartPos[0] / normr +
               sin(body[iBody].dLongA) * sinwf * cos(body[iBody].dInc)) /
               cos(body[iBody].dLongA);
-    } else { // Different definition when dInc = 0
-      sinwf = body[iBody].dHCartPos[1] / normr;
-      coswf = body[iBody].dHCartPos[0] / normr;
     }
-    if (body[iBody].dEcc != 0) { // No true anomaly for circular orbits
+
+    if (body[iBody].dEcc == 0.0) {
+      if (body[iBody].dInc == 0.0) { // dEcc = dInc = 0
+        // The values below don't exist
+        body[iBody].dLongA = 0;
+        body[iBody].dArgP  = 0;
+        body[iBody].dLongP = 0;
+        body[iBody].dMeanA = 0;
+        body[iBody].dMeanL = 0;
+        // Only the true longitude exists. Make a variable for this?
+      } else { // dEcc = 0, dInc != 0
+        double *dLineOfNodes, dNormLineNodes, dArgLatitude;
+        dLineOfNodes = malloc(3 * sizeof(double));
+        dLineOfNodes[0] = -h[1]; // z x h, z is the unit vector in the z direction
+        dLineOfNodes[1] = +h[0];
+        dNormLineNodes = sqrt(dot(dLineOfNodes, dLineOfNodes));
+        dArgLatitude = acos(dot(dLineOfNodes, body[iBody].dHCartPos) / (dNormLineNodes * normr));
+        free(dLineOfNodes);
+        // The values below don't exist
+        body[iBody].dArgP  = 0;
+        body[iBody].dLongP = 0;
+        body[iBody].dMeanA = 0;
+        body[iBody].dMeanL = 0;        
+      }
+    } else if (body[iBody].dEcc > 0) { // dEcc > 0, dInc can be any real value within its domain.
       sinfAngle = body[iBody].dSemi * (1 - body[iBody].dEccSq) * rdot /
                   (normh * body[iBody].dEcc);
       cosfAngle = (body[iBody].dSemi * (1 - body[iBody].dEccSq) / normr - 1) /
@@ -1414,6 +1433,11 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
                 body[iBody].dEccSq) /
                 (1 + body[iBody].dEcc * cosfAngle);
         } else {
+          if (fabs(cosE) > 1) {
+            // Need io here to check verbosity XXX
+            fprintf(stderr, "ERROR: cosine of the Eccentric Anomaly is greater than 1. Please rerun with a smaller timestep.");
+            exit(EXIT_EXE);
+          }
           body[iBody].dEccA = acos(cosE);
 
           // If the planet is in the second half of the orbit, we need -acos(cosE)
@@ -1444,10 +1468,8 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
           body[iBody].dMeanMotion = sqrt(-mu / (body[iBody].dSemi * body[iBody].dSemi * body[iBody].dSemi));
           body[iBody].dOrbPeriod = 0.0; // This value should actually be nan or infinity. How do I define this, question?        
       }
+      body[iBody].dMeanL = fmodPos(body[iBody].dMeanA + body[iBody].dLongP, 2 * PI);
     }
-    // Calculating Mean Longitude
-    body[iBody].dMeanL = fmodPos(body[iBody].dMeanA + body[iBody].dLongP, 2 * PI);
-
   }
   free(h);
 }
@@ -1486,6 +1508,9 @@ void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
 
   // Solve for eccentricity
   body[iBody].dBaryEccSq = 1.0 - hsq / (mu * body[iBody].dBarySemi);
+  if (body[iBody].dEccSq < 1.0e-15) {
+    body[iBody].dEccSq = 0.0; // Unfortunately machine precision limits the accuracy of dEccSq
+  }  
   body[iBody].dBaryEcc = sqrt(body[iBody].dBaryEccSq);
 
   // Solve for inclination

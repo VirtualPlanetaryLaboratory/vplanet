@@ -22,5 +22,5 @@ sPlanetRadiusModel        lopez
 dAtmXAbsEffH              0.1
 
 
-saOutputOrder Time SemiMajorAxis Eccentricity SpiNBodyInc LongP SpiNBodyLongA $
+saOutputOrder Time SemiMajorAxis Eccentricity HelioInc LongP HelioLongA $
               MeanAnomaly -EnvelopeMass -PlanetRadius -Mass

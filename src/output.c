@@ -778,6 +778,8 @@ void WriteOrbPeriod(BODY *body, CONTROL *control, OUTPUT *output,
     if (iBody > 0 && body[iBody].dEcc < 1 && !system->bBarycentric) {
       *dTmp = fdSemiToPeriod(body[iBody].dSemi,
                             (body[0].dMass + body[iBody].dMass));
+    } else {
+      *dTmp = -1; // orbital period does not exist for either unbound orbits or the central body.
     }
     if ((system->bBarycentric && body[iBody].dBaryEcc >= 1.0) || 
         (!system->bBarycentric && body[iBody].dEcc >= 1.0)) {
@@ -2504,8 +2506,10 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
   }
 }
 
-void InitializeOutput(OUTPUT *output, fnWriteOutput fnWrite[]) {
+void InitializeOutput(FILES *files, OUTPUT *output, fnWriteOutput fnWrite[]) {
   int iOut, iBody, iModule;
+
+  memset(files->cLog, '\0', NAMELEN);
 
   for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
     memset(output[iOut].cName, '\0', OPTLEN);

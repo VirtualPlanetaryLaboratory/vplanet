@@ -75,8 +75,8 @@
 #define OUT_BARYLONGP 1685
 #define OUT_BARYMEANA 1686
 #define OUT_BARYMEANL 1687
-#define OUT_BARYECCA 1678
-#define OUT_BARYHYPA 1679
+#define OUT_BARYECCA 1688
+#define OUT_BARYHYPA 1689
 
 //Other Misc. variables be low
 #define OUT_BARYMU 1690

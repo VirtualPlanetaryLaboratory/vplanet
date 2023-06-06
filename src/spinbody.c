@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 #define dot(a,b)        (a[0]*b[0]+a[1]*b[1]+a[2]*b[2])
+#define NumElements(x)  (sizeof(x) / sizeof(x[0])) // finds number of elements in an array
 
 void BodyCopySpiNBody(BODY *dest, BODY *src, int iFoo, int iNumBodies,
                       int iBody) {
@@ -181,8 +182,11 @@ void ReadMeanA(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     if (!system->bBarycentric){
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    }                    
+    }
+                        
     if (control->Units[iFile].iAngle == 0) {
+      // Need to move this condition elsewhere. Unbound orbits don't limit MeanA
+      /*
       if (dTmp < 0 || dTmp > 2 * PI) {
         if (control->Io.iVerbose >= VERBERR) {
           fprintf(stderr, "ERROR: %s must be in the range [0,2*PI].\n",
@@ -190,7 +194,10 @@ void ReadMeanA(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
         }
         LineExit(files->Infile[iFile].cIn, lTmp);
       }
+      */
     } else {
+      // Need to move this condition elsewhere. Unbound orbits don't limit MeanA
+      /*
       if (dTmp < 0 || dTmp > 360) {
         if (control->Io.iVerbose >= VERBERR) {
           fprintf(stderr, "ERROR: %s must be in the range [0,360].\n",
@@ -198,6 +205,7 @@ void ReadMeanA(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
         }
         LineExit(files->Infile[iFile].cIn, lTmp);
       }
+      */
       /* Change to radians */
       dTmp *= DEGRAD;
     }
@@ -223,6 +231,8 @@ void ReadMeanL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                     control->Io.iVerbose);
     }                    
     if (control->Units[iFile].iAngle == 0) {
+      // Need to move this condition elsewhere. Unbound orbits don't limit MeanL
+      /*
       if (dTmp < 0 || dTmp > 2 * PI) {
         if (control->Io.iVerbose >= VERBERR) {
           fprintf(stderr, "ERROR: %s must be in the range [0,2*PI].\n",
@@ -230,7 +240,10 @@ void ReadMeanL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
         }
         LineExit(files->Infile[iFile].cIn, lTmp);
       }
+      */
     } else {
+      // Need to move this condition elsewhere. Unbound orbits don't limit MeanL
+      /*
       if (dTmp < 0 || dTmp > 360) {
         if (control->Io.iVerbose >= VERBERR) {
           fprintf(stderr, "ERROR: %s must be in the range [0,360].\n",
@@ -238,6 +251,7 @@ void ReadMeanL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
         }
         LineExit(files->Infile[iFile].cIn, lTmp);
       }
+      */
       /* Change to radians */
       dTmp *= DEGRAD;
     }
@@ -686,7 +700,7 @@ void fvAssignBaryCart2HelioCart(BODY *body, int iBody) {
 
 void AssignAllCoords(BODY *body, CONTROL *control, FILES *files, SYSTEM *system, int iBody) {
   //VerifyOutputCoords(body, files, output, iBody);
-  if (!body[iBody].bUseOrbParams) { // If input was BaryCart
+  if (!body[iBody].bUseOrbParams) { // If input was BaryCart or HelioCart
     fvAssignBaryCart(body, iBody); // We assign the vectors named dBCart to the input values
   }
   if (files->Outfile[iBody].iOutputCoordBit & HELIOCART) {
@@ -761,63 +775,65 @@ void VerifyInputCoords(BODY *body, CONTROL *control, OPTIONS *options, SYSTEM *s
 }
 
 void VerifyOutputCoords(BODY *body, FILES *files, OUTPUT *output, int iBody) {
- int iCol;
-  for (iCol = 0;  iCol < files->Outfile[iBody].iNumCols; iCol++) {
-      if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_HELIOPOSX].cName,
-                        strlen(output[0].cName)) == 0 || 
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_HELIOPOSY].cName,
-                        strlen(output[0].cName)) == 0 ||
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_HELIOPOSZ].cName,
-                        strlen(output[0].cName)) == 0 ||
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_HELIOVELX].cName,
-                        strlen(output[0].cName)) == 0 ||
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_HELIOVELY].cName,
-                        strlen(output[0].cName)) == 0 ||
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_HELIOVELZ].cName,
-                        strlen(output[0].cName)) == 0) {
-          files->Outfile[iBody].iOutputCoordBit += HELIOCART;
-          break;
-      } 
-  }
+  int iCol, iValue; // for loop indices  
+  // Arrays that identify the output variables
+  int iBARYCART_Outputs[6] = {OUT_BARYPOSX, OUT_BARYPOSY, OUT_BARYPOSZ, 
+                            OUT_BARYVELX, OUT_BARYVELY, OUT_BARYVELZ};
 
-  for (iCol = 0;  iCol < files->Outfile[iBody].iNumCols; iCol++) {
-      if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_HELIOSEMI].cName,
-                        strlen(output[0].cName)) == 0 ||
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_HELIOECC].cName,
-                        strlen(output[0].cName)) == 0 ||
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_HELIOINC].cName,
-                        strlen(output[0].cName)) == 0 ||
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_HELIOLONGA].cName,
-                        strlen(output[0].cName)) == 0 ||
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_HELIOARGP].cName,
-                        strlen(output[0].cName)) == 0 ||
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_HELIOLONGP].cName,
-                        strlen(output[0].cName)) == 0 ||
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_HELIOMEANA].cName,
-                        strlen(output[0].cName)) == 0) {
-          files->Outfile[iBody].iOutputCoordBit += HELIOELEMS;
-          break;
-      } 
-  }
+  int iHELIOCART_Outputs[6] = {OUT_HELIOPOSX, OUT_HELIOPOSY, OUT_HELIOPOSZ, 
+                            OUT_HELIOVELX, OUT_HELIOVELY, OUT_HELIOVELZ};
 
+  int iHELIOELEMS_Outputs[10] = {OUT_HELIOSEMI, OUT_HELIOECC, OUT_HELIOINC, OUT_HELIOLONGP,
+                            OUT_HELIOLONGA, OUT_HELIOARGP, OUT_HELIOMEANA, OUT_HELIOMEANL,
+                            OUT_HELIOECCA, OUT_HELIOHYPA};
+
+  int iBARYELEMS_Outputs[15] = {OUT_BARYSEMI, OUT_BARYECC, OUT_BARYINC, OUT_BARYLONGP,
+                            OUT_BARYLONGA, OUT_BARYARGP, OUT_BARYMEANA, OUT_BARYMEANL,
+                            OUT_BARYECCA, OUT_BARYHYPA, OUT_BARYMU, OUT_BARYECCSQ, 
+                            OUT_BARYMEANMOTION, OUT_BARYORBPERIOD, OUT_BARYSINC};
+  // Should be defined as something before being summed
+  files->Outfile[iBody].iOutputCoordBit = 1; // Identifies output variable's coordinates 
+  
+  // for loops find variables in the .in files
   for (iCol = 0;  iCol < files->Outfile[iBody].iNumCols; iCol++) {
-      if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_BARYSEMI].cName,
-                        strlen(output[0].cName)) == 0 || 
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_BARYECC].cName,
-                        strlen(output[0].cName)) == 0 ||
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_BARYINC].cName,
-                        strlen(output[0].cName)) == 0 ||
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_BARYLONGA].cName,
-                        strlen(output[0].cName)) == 0 ||
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_BARYARGP].cName,
-                        strlen(output[0].cName)) == 0 ||                        
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_BARYLONGP].cName,
-                        strlen(output[0].cName)) == 0 ||
-          memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_BARYMEANA].cName,
-                        strlen(output[0].cName)) == 0) {
-          files->Outfile[iBody].iOutputCoordBit += BARYELEMS;
-          break;
-      } 
+    for (iValue = 0; iValue < NumElements(iBARYCART_Outputs); iValue++) {
+      if (memcmp(files->Outfile[iBody].caCol[iCol], output[iBARYCART_Outputs[iValue]].cName,
+                        strlen(output[iBARYCART_Outputs[iValue]].cName)) == 0) {
+          files->Outfile[iBody].iOutputCoordBit += BARYCART; // BARYCART output found
+          iCol = files->Outfile[iBody].iNumCols; // breaks out of nested for loop
+          break;                          
+      }
+    }
+  }
+  for (iCol = 0;  iCol < files->Outfile[iBody].iNumCols; iCol++) {
+    for (iValue = 0; iValue < NumElements(iHELIOCART_Outputs); iValue++) {
+      if (memcmp(files->Outfile[iBody].caCol[iCol], output[iHELIOCART_Outputs[iValue]].cName,
+                        strlen(output[iHELIOCART_Outputs[iValue]].cName)) == 0) {
+          files->Outfile[iBody].iOutputCoordBit += HELIOCART; // HELIOCART output found
+          iCol = files->Outfile[iBody].iNumCols; // breaks out of nested for loop
+          break;                          
+      }
+    }
+  }
+  for (iCol = 0;  iCol < files->Outfile[iBody].iNumCols; iCol++) {
+    for (iValue = 0; iValue < NumElements(iHELIOELEMS_Outputs); iValue++) {
+      if (memcmp(files->Outfile[iBody].caCol[iCol], output[iHELIOELEMS_Outputs[iValue]].cName,
+                        strlen(output[iHELIOELEMS_Outputs[iValue]].cName)) == 0) {
+          files->Outfile[iBody].iOutputCoordBit += HELIOELEMS; // HELIOELEMS output found
+          iCol = files->Outfile[iBody].iNumCols; // breaks out of nested for loop
+          break;                          
+      }
+    }
+  }
+  for (iCol = 0;  iCol < files->Outfile[iBody].iNumCols; iCol++) {
+    for (iValue = 0; iValue < NumElements(iBARYELEMS_Outputs); iValue++) {
+      if (memcmp(files->Outfile[iBody].caCol[iCol], output[iBARYELEMS_Outputs[iValue]].cName,
+                        strlen(output[iBARYELEMS_Outputs[iValue]].cName)) == 0) {
+          files->Outfile[iBody].iOutputCoordBit += BARYELEMS; // BARYELEMS output found
+          iCol = files->Outfile[iBody].iNumCols; // breaks out of nested for loop
+          break;                          
+      }
+    }
   }
 }
 
@@ -1165,7 +1181,7 @@ double GetMeanA(ELEMS elems) {
   if (dEcc > 1.0) {
     dMeanA = dEcc * sinh(dHypA) - dHypA;
   }
-  // Add options for dEcc == 0.0 and dEcc == 1.0, question? I guess that's up for the next developer.
+  // Add options for dEcc == 1.0, question? I guess that's up for the next developer.
   return dMeanA;
 }
 
@@ -1380,13 +1396,13 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
     }
 
     if (body[iBody].dEcc == 0.0) {
+      body[iBody].dArgP  = 0;
+      body[iBody].dLongP = 0;
+      body[iBody].dMeanA = 0;
+      body[iBody].dMeanL = 0; 
       if (body[iBody].dInc == 0.0) { // dEcc = dInc = 0
         // The values below don't exist
         body[iBody].dLongA = 0;
-        body[iBody].dArgP  = 0;
-        body[iBody].dLongP = 0;
-        body[iBody].dMeanA = 0;
-        body[iBody].dMeanL = 0;
         // Only the true longitude exists. Make a variable for this?
       } else { // dEcc = 0, dInc != 0
         double *dLineOfNodes, dNormLineNodes, dArgLatitude;
@@ -1396,11 +1412,6 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
         dNormLineNodes = sqrt(dot(dLineOfNodes, dLineOfNodes));
         dArgLatitude = acos(dot(dLineOfNodes, body[iBody].dHCartPos) / (dNormLineNodes * normr));
         free(dLineOfNodes);
-        // The values below don't exist
-        body[iBody].dArgP  = 0;
-        body[iBody].dLongP = 0;
-        body[iBody].dMeanA = 0;
-        body[iBody].dMeanL = 0;        
       }
     } else if (body[iBody].dEcc > 0) { // dEcc > 0, dInc can be any real value within its domain.
       sinfAngle = body[iBody].dSemi * (1 - body[iBody].dEccSq) * rdot /
@@ -1449,6 +1460,7 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
         body[iBody].dHypA = 0.0; // The value is actually undefined but it is left as zero as a band-aid solution
         body[iBody].dMeanA =
               fmodPos(body[iBody].dEccA - body[iBody].dEcc * sin(body[iBody].dEccA), 2 * PI);
+        body[iBody].dMeanL = fmodPos(body[iBody].dMeanA + body[iBody].dLongP, 2 * PI);
 
         body[iBody].dMeanMotion = sqrt(mu / (body[iBody].dSemi * body[iBody].dSemi * body[iBody].dSemi));
         body[iBody].dOrbPeriod  = 2.0 * PI / body[iBody].dMeanMotion;
@@ -1463,12 +1475,13 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
           body[iBody].dHypA = acosh(coshH);
           body[iBody].dEccA = 0.0; // This is actually undefined. Should we make this nan, question?
 
-          body[iBody].dMeanA = fmodPos(body[iBody].dEcc * sinh(body[iBody].dHypA) - body[iBody].dHypA, 2 * PI);
+          body[iBody].dMeanA = body[iBody].dEcc * sinh(body[iBody].dHypA) - body[iBody].dHypA;
+          body[iBody].dMeanL = body[iBody].dMeanA + body[iBody].dLongP;
 
           body[iBody].dMeanMotion = sqrt(-mu / (body[iBody].dSemi * body[iBody].dSemi * body[iBody].dSemi));
           body[iBody].dOrbPeriod = 0.0; // This value should actually be nan or infinity. How do I define this, question?        
       }
-      body[iBody].dMeanL = fmodPos(body[iBody].dMeanA + body[iBody].dLongP, 2 * PI);
+      
     }
   }
   free(h);
@@ -1573,6 +1586,8 @@ void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
 
       body[iBody].dBaryMeanA =
             fmodPos(body[iBody].dBaryEccA - body[iBody].dBaryEcc * sin(body[iBody].dBaryEccA), 2 * PI);
+      // Calculating Mean Longitude
+      body[iBody].dBaryMeanL =  fmodPos(body[iBody].dBaryMeanA + body[iBody].dBaryLongP, 2 * PI);            
 
       // Calculating Mean Motion
       body[iBody].dBaryMeanMotion = sqrt(mu / (body[iBody].dBarySemi * body[iBody].dBarySemi * body[iBody].dBarySemi));
@@ -1587,16 +1602,14 @@ void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
       body[iBody].dBaryHypA = acosh(coshH);
       body[iBody].dBaryEccA = 0.0; // This is actually undefined. Should we make this nan, question?
 
-      body[iBody].dBaryMeanA = 
-            fmodPos(body[iBody].dBaryEcc * sinh(body[iBody].dBaryHypA) - body[iBody].dBaryHypA, 2 * PI);
-      
+      body[iBody].dBaryMeanA = body[iBody].dBaryEcc * sinh(body[iBody].dBaryHypA) - body[iBody].dBaryHypA;
+      // Calculating Mean Longitude
+      body[iBody].dBaryMeanL =  body[iBody].dBaryMeanA + body[iBody].dBaryLongP;
       // Calculating Mean Motion
       body[iBody].dBaryMeanMotion = sqrt(-mu / (body[iBody].dBarySemi * body[iBody].dBarySemi * body[iBody].dBarySemi));
       // Calculate Orbital Period
       body[iBody].dBaryOrbPeriod = 0.0; // The orbital period actually doesn't exist. Need to change?      
     }
-    // Calculating Mean Longitude
-    body[iBody].dBaryMeanL =  fmodPos(body[iBody].dBaryMeanA + body[iBody].dBaryLongP, 2 * PI);
   }
   free(h);
 }

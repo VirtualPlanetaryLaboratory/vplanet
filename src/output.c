@@ -810,8 +810,9 @@ void WriteOrbSemi(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
                   char cUnit[]) {
 
-  if (body[iBody].bBinary == 0) { // Not doing binary
-    if (iBody > 0) {
+  if (!body[iBody].bBinary) { // Not doing binary
+    // The central body doesn't have a semi-major axis in heliocentric coordinates
+    if (iBody > 0 && !system->bBarycentric) {
       *dTmp = body[iBody].dSemi;
     } else {
       *dTmp = -1;

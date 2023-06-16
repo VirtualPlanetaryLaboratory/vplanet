@@ -711,17 +711,19 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
       }
     }
   }
-
+  // Verify spinbody should calculate dThetaInvP and dPhiInvP once initially
+  // Start new function here
   angularmom(body, AngMom, iNumBodies);
   system->dThetaInvP = atan2(AngMom[1], AngMom[0]);
   system->dPhiInvP =
         atan2(sqrt(AngMom[0] * AngMom[0] + AngMom[1] * AngMom[1]), AngMom[2]);
+  // end new function here
 
   rotate_inv(body, system, iNumBodies);
   bary2astro(body, iNumBodies);
   cart2osc(body, iNumBodies);
 
-  /* Loop below recalculates precession param for planets with DistRot
+  /* Loop below recalculates precession angle for planets with DistRot
    * enabled.*/
   for (iBody = 1; iBody < iNumBodies; iBody++) {
     if (body[iBody].bDistRot) {

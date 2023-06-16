@@ -183,33 +183,32 @@ void ReadMeanA(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
     }
-                        
-    if (control->Units[iFile].iAngle == 0) {
-      // Need to move this condition elsewhere. Unbound orbits don't limit MeanA
-      /*
-      if (dTmp < 0 || dTmp > 2 * PI) {
-        if (control->Io.iVerbose >= VERBERR) {
-          fprintf(stderr, "ERROR: %s must be in the range [0,2*PI].\n",
-                  options->cName);
+    // MeanA can have limited domain when orbit is bound
+    // MeanA should have units only in radians if orbit is unbound
+    if (body[iFile - 1].dEcc < 1) {                         
+      if (control->Units[iFile].iAngle == 0) { 
+        if (dTmp < 0 || dTmp > 2 * PI) {
+          if (control->Io.iVerbose >= VERBERR) {
+            fprintf(stderr, "ERROR: %s must be in the range [0,2*PI].\n",
+                    options->cName);
+          }
+          LineExit(files->Infile[iFile].cIn, lTmp);
         }
-        LineExit(files->Infile[iFile].cIn, lTmp);
-      }
-      */
-    } else {
-      // Need to move this condition elsewhere. Unbound orbits don't limit MeanA
-      /*
-      if (dTmp < 0 || dTmp > 360) {
-        if (control->Io.iVerbose >= VERBERR) {
-          fprintf(stderr, "ERROR: %s must be in the range [0,360].\n",
-                  options->cName);
+        
+      } else {
+        
+        if (dTmp < 0 || dTmp > 360) {
+          if (control->Io.iVerbose >= VERBERR) {
+            fprintf(stderr, "ERROR: %s must be in the range [0,360].\n",
+                    options->cName);
+          }
+          LineExit(files->Infile[iFile].cIn, lTmp);
         }
-        LineExit(files->Infile[iFile].cIn, lTmp);
+        
+        /* Change to radians */
+        dTmp *= DEGRAD;
       }
-      */
-      /* Change to radians */
-      dTmp *= DEGRAD;
     }
-
     body[iFile - 1].dMeanA = dTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
@@ -229,33 +228,33 @@ void ReadMeanL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     if (!system->bBarycentric){
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    }                    
-    if (control->Units[iFile].iAngle == 0) {
-      // Need to move this condition elsewhere. Unbound orbits don't limit MeanL
-      /*
-      if (dTmp < 0 || dTmp > 2 * PI) {
-        if (control->Io.iVerbose >= VERBERR) {
-          fprintf(stderr, "ERROR: %s must be in the range [0,2*PI].\n",
-                  options->cName);
-        }
-        LineExit(files->Infile[iFile].cIn, lTmp);
-      }
-      */
-    } else {
-      // Need to move this condition elsewhere. Unbound orbits don't limit MeanL
-      /*
-      if (dTmp < 0 || dTmp > 360) {
-        if (control->Io.iVerbose >= VERBERR) {
-          fprintf(stderr, "ERROR: %s must be in the range [0,360].\n",
-                  options->cName);
-        }
-        LineExit(files->Infile[iFile].cIn, lTmp);
-      }
-      */
-      /* Change to radians */
-      dTmp *= DEGRAD;
     }
-
+    // MeanA can have limited domain when orbit is bound
+    // MeanA should have units only in radians if orbit is unbound
+    if (body[iFile - 1].dEcc < 1) {                    
+      if (control->Units[iFile].iAngle == 0) {
+        // Need to move this condition elsewhere. Unbound orbits don't limit MeanL
+        
+        if (dTmp < 0 || dTmp > 2 * PI) {
+          if (control->Io.iVerbose >= VERBERR) {
+            fprintf(stderr, "ERROR: %s must be in the range [0,2*PI].\n",
+                    options->cName);
+          }
+          LineExit(files->Infile[iFile].cIn, lTmp);
+        }
+      } else {
+        // Need to move this condition elsewhere. Unbound orbits don't limit MeanL
+        if (dTmp < 0 || dTmp > 360) {
+          if (control->Io.iVerbose >= VERBERR) {
+            fprintf(stderr, "ERROR: %s must be in the range [0,360].\n",
+                    options->cName);
+          }
+          LineExit(files->Infile[iFile].cIn, lTmp);
+        }
+        /* Change to radians */
+        dTmp *= DEGRAD;
+      }
+    }
     body[iFile - 1].dMeanL = dTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
@@ -703,6 +702,8 @@ void AssignAllCoords(BODY *body, CONTROL *control, FILES *files, SYSTEM *system,
   if (!body[iBody].bUseOrbParams) { // If input was BaryCart or HelioCart
     fvAssignBaryCart(body, iBody); // We assign the vectors named dBCart to the input values
   }
+  // Do a check if orbelems need to be converted to inv_plane
+  // inv_plane only accepts barycart coords
   if (files->Outfile[iBody].iOutputCoordBit & HELIOCART) {
     fvBaryCart2HelioCart(body, iBody);
     fvAssignBaryCart2HelioCart(body, iBody);
@@ -1129,13 +1130,20 @@ double GetHypAnom(ELEMS elems) {
   if (dMeanA == 0.0) { // Trivial solution for the hyperbolic Hyperbolic Anomaly.
     dHypA = 0.0;
   } else {
-    double dEcc, dLow, dUp, dSinhHypAe, dCoshHypAe,
+    double dEcc, dSignMeanA, dLow, dUp, dSinhHypAe, dCoshHypAe,
             f, fp, fpp, fppp, dx, dNext;
     dEcc = elems.dEcc;
     // Found in Danby 1962 and other sources. They both claim that 1.8 is the best estimated guess
     // The Guess for dHypA is large but the constant accomodates for small values
-    dHypA = log(2*dMeanA / dEcc + 1.8);
-    // I have my own personal guess for small values of dHypA but I need to test and compare first
+    dSignMeanA = fiSign(dMeanA);
+    if (dSignMeanA == 0) { // Can become 0 if fabs(dMeanA) < EPS defined in vplanet.h
+      // David Graham dervied this expression for 0 < dHypA << 1
+      // The expression below was never found anywhere. You can try to prove David wrong.
+      // Or if he's not lazy, come up with an additional constant that improves this initial guess.
+      dHypA = 3 * (dEcc - 1.0) / (2 * dMeanA);
+    } else {
+      dHypA = dSignMeanA * log(dSignMeanA * (2*dMeanA / dEcc) + 1.8);
+    }
 
     int i;
     for (i = 0; i < 32; i++) {
@@ -1270,8 +1278,9 @@ void fvHelioOrbElems2HelioCart(BODY *body, int iNumBodies, int iBody) {
       elems.dHypA = GetHypAnom(elems);
     }    
 
-    mTotal = TotalMass(body, iNumBodies);
-    dHelioMu = BIGG * mTotal;
+    // mTotal = TotalMass(body, iNumBodies);
+    // dHelioMu = BIGG * mTotal;
+    dHelioMu = BIGG * (body[0].dMass + body[iBody].dMass); // Trying this out again
     body[iBody].dMu = dHelioMu;
 
     elems.dMu = body[iBody].dMu;
@@ -1326,7 +1335,7 @@ void Cart2OrbElems(ELEMS elems, double *dPos, double *dVel) {
 
 void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
   double rsq, normr, vsq, mTotal, mu, *h, hsq, normh, sinwf, coswf, sinfAngle,
-        cosfAngle, rdot, sinw, cosw, f, cosE, coshH;
+        cosfAngle, rdot, sinw, cosw, f, cosE, coshH, sinhH;
 
   h = malloc(3 * sizeof(double));
   // First convert from Barycentric to heliocentric
@@ -1362,8 +1371,9 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
             body[iBody].dHCartPos[2] * body[iBody].dHCartVel[2]) /
            normr;
     //mu              = BIGG * (body[iBody].dMass + body[0].dMass); // G(M+m)
-    mTotal = TotalMass(body, iNumBodies);
-    mu = BIGG * mTotal;
+    // mTotal = TotalMass(body, iNumBodies);
+    // mu = BIGG * mTotal;
+    mu = BIGG * (body[iBody].dMass + body[0].dMass); // trying this out
     body[iBody].dMu = mu;
 
     // Solve for semi-major axis
@@ -1470,16 +1480,29 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
         body[iBody].dKecc       = body[iBody].dEcc * cos(body[iBody].dLongP);
       }
       if (body[iBody].dEcc > 1.0) { // We use the Hyperbolic Anomaly, H
-          coshH = (cosfAngle + body[iBody].dEcc) /
+        // Calculate Mean Anomaly
+        //coshH = (cosfAngle + body[iBody].dBaryEcc) /
+        //        (1.0 + body[iBody].dBaryEcc * cosfAngle);
+        /*
+        For hyperbolic orbits f lies only in Quadrants I and IV while acos() lies in 
+        Quadrants I and II. If in Quadrant II, must switch to Quadrant IV.
+        */
+        if (cosfAngle < 0) {
+          sinfAngle = -sinfAngle;
+          // Be Careful. If ever using acos(cosfAngle), it would produce the incorrect angle
+        }          
+        // One loses the sign of dHypA when using coshH. sinhH keeps the sign. 
+        sinhH = sqrt(body[iBody].dEcc * body[iBody].dEcc - 1) * sinfAngle / 
                 (1.0 + body[iBody].dEcc * cosfAngle);
-          body[iBody].dHypA = acosh(coshH);
-          body[iBody].dEccA = 0.0; // This is actually undefined. Should we make this nan, question?
 
-          body[iBody].dMeanA = body[iBody].dEcc * sinh(body[iBody].dHypA) - body[iBody].dHypA;
-          body[iBody].dMeanL = body[iBody].dMeanA + body[iBody].dLongP;
+        body[iBody].dHypA = asinh(sinhH);
+        body[iBody].dEccA = 0.0; // This is actually undefined. Should we make this nan, question?
 
-          body[iBody].dMeanMotion = sqrt(-mu / (body[iBody].dSemi * body[iBody].dSemi * body[iBody].dSemi));
-          body[iBody].dOrbPeriod = 0.0; // This value should actually be nan or infinity. How do I define this, question?        
+        body[iBody].dMeanA = body[iBody].dEcc * sinh(body[iBody].dHypA) - body[iBody].dHypA;
+        body[iBody].dMeanL = body[iBody].dMeanA + body[iBody].dLongP;
+
+        body[iBody].dMeanMotion = sqrt(-mu / (body[iBody].dSemi * body[iBody].dSemi * body[iBody].dSemi));
+        body[iBody].dOrbPeriod = 0.0; // This value should actually be nan or infinity. How do I define this, question?        
       }
       
     }
@@ -1490,7 +1513,7 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
 void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
 
   double rsq, normr, vsq, dHelioMu, mu, mTotal, dBaryRelation, *h, hsq, normh, sinwf, coswf, sinfAngle,
-      cosfAngle, rdot, sinw, cosw, f, cosE, coshH;
+      cosfAngle, rdot, sinw, cosw, f, cosE, coshH, sinhH;
   // Solve for various values that are used repeatedly
   // Solve for specific angular momentum h = r X v
   h = malloc(3 * sizeof(double));
@@ -1590,23 +1613,37 @@ void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
       body[iBody].dBaryMeanL =  fmodPos(body[iBody].dBaryMeanA + body[iBody].dBaryLongP, 2 * PI);            
 
       // Calculating Mean Motion
-      body[iBody].dBaryMeanMotion = sqrt(mu / (body[iBody].dBarySemi * body[iBody].dBarySemi * body[iBody].dBarySemi));
+      body[iBody].dBaryMeanMotion = 
+              sqrt(mu / (body[iBody].dBarySemi * body[iBody].dBarySemi * body[iBody].dBarySemi));
       // Calculating Orbital Period
       body[iBody].dBaryOrbPeriod = 2.0 * PI / body[iBody].dBaryMeanMotion;
     }
     if (body[iBody].dBaryEcc > 1.0) { // Using HypA to calculate other orbital elements.
       // Calculate Mean Anomaly
-      coshH = (cosfAngle + body[iBody].dBaryEcc) /
+      //coshH = (cosfAngle + body[iBody].dBaryEcc) /
+      //        (1.0 + body[iBody].dBaryEcc * cosfAngle);
+      /*
+      For hyperbolic orbits f lies only in Quadrants I and IV while acos() lies in 
+      Quadrants I and II. If in Quadrant II, must switch to Quadrant IV.
+      */
+      if (cosfAngle < 0) {
+        sinfAngle = -sinfAngle; 
+        // Be Careful. If ever using acos(cosfAngle), it would produce the incorrect angle
+      }
+      // You loses the sign of dHypA when using acosh(coshH). asinh(sinhH) keeps the sign. 
+      sinhH = sqrt(body[iBody].dBaryEcc * body[iBody].dBaryEcc - 1) * sinfAngle / 
               (1.0 + body[iBody].dBaryEcc * cosfAngle);
 
-      body[iBody].dBaryHypA = acosh(coshH);
+      body[iBody].dBaryHypA = asinh(sinhH);
+
       body[iBody].dBaryEccA = 0.0; // This is actually undefined. Should we make this nan, question?
 
       body[iBody].dBaryMeanA = body[iBody].dBaryEcc * sinh(body[iBody].dBaryHypA) - body[iBody].dBaryHypA;
       // Calculating Mean Longitude
       body[iBody].dBaryMeanL =  body[iBody].dBaryMeanA + body[iBody].dBaryLongP;
       // Calculating Mean Motion
-      body[iBody].dBaryMeanMotion = sqrt(-mu / (body[iBody].dBarySemi * body[iBody].dBarySemi * body[iBody].dBarySemi));
+      body[iBody].dBaryMeanMotion = 
+              sqrt(-mu / (body[iBody].dBarySemi * body[iBody].dBarySemi * body[iBody].dBarySemi));
       // Calculate Orbital Period
       body[iBody].dBaryOrbPeriod = 0.0; // The orbital period actually doesn't exist. Need to change?      
     }
@@ -1903,28 +1940,32 @@ void WriteHelioMeanA(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                       double *dTmp, char cUnit[]) {
   *dTmp = body[iBody].dHelioMeanA;
-
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle, cUnit);
-  }
+  // MeanA only represented in degrees in a bound orbit
+  if (body[iBody].dEcc < 1) {
+    if (output->bDoNeg[iBody]) {
+      *dTmp *= output->dNeg;
+      strcpy(cUnit, output->cNeg);
+    } else {
+      *dTmp /= fdUnitsAngle(units->iAngle);
+      fsUnitsAngle(units->iAngle, cUnit);
+    }
+  } // In a hyperbolic orbit MeanL is represented as an area in radians
 }
 
 void WriteHelioMeanL(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
   *dTmp = body[iBody].dHelioMeanL;
-
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle, cUnit);
-  }
+  // MeanL only represented in degrees in a bound orbit
+  if (body[iBody].dEcc < 1) {
+    if (output->bDoNeg[iBody]) {
+      *dTmp *= output->dNeg;
+      strcpy(cUnit, output->cNeg);
+    } else {
+      *dTmp /= fdUnitsAngle(units->iAngle);
+      fsUnitsAngle(units->iAngle, cUnit);
+    }
+  } // In a hyperbolic orbit MeanL is represented as an area in radians
 }
 
 void WriteHelioEccA(BODY *body, CONTROL *control, OUTPUT *output,
@@ -1945,14 +1986,8 @@ void WriteHelioHypA(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
   *dTmp = body[iBody].dHelioHypA;
-
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle, cUnit);
-  }
+  // Do not convert to degrees
+  // Hyperbolic Anomaly is a ratio of areas represented only in radians
 }
 
 
@@ -2038,28 +2073,32 @@ void WriteBaryMeanA(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
   *dTmp = body[iBody].dBaryMeanA;
-
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle, cUnit);
-  }
+  // MeanA only represented in degrees in a bound orbit
+  if (body[iBody].dBaryEcc < 1) {
+    if (output->bDoNeg[iBody]) {
+      *dTmp *= output->dNeg;
+      strcpy(cUnit, output->cNeg);
+    } else {
+      *dTmp /= fdUnitsAngle(units->iAngle);
+      fsUnitsAngle(units->iAngle, cUnit);
+    }
+  } // In a hyperbolic orbit MeanA is represented as an area in radians
 }
 
 void WriteBaryMeanL(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
   *dTmp = body[iBody].dBaryMeanL;
-
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle, cUnit);
-  }
+  // MeanL only represented in degrees in a bound orbit
+  if (body[iBody].dBaryEcc < 1) {
+    if (output->bDoNeg[iBody]) {
+      *dTmp *= output->dNeg;
+      strcpy(cUnit, output->cNeg);
+    } else {
+      *dTmp /= fdUnitsAngle(units->iAngle);
+      fsUnitsAngle(units->iAngle, cUnit);
+    }
+  } // In a hyperbolic orbit MeanL is represented as an area in radians
 }
 
 void WriteBaryEccA(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2080,14 +2119,8 @@ void WriteBaryHypA(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
   *dTmp = body[iBody].dBaryHypA;
-
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
-  } else {
-    *dTmp /= fdUnitsAngle(units->iAngle);
-    fsUnitsAngle(units->iAngle, cUnit);
-  }
+  // Do not convert to degrees
+  // Hyperbolic Anomaly is a ratio of areas represented only in radians
 }
 
 //Other Barycentric variable Write functions below

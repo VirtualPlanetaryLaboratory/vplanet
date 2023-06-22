@@ -181,8 +181,10 @@ void InitializeOutputSpiNBody(OUTPUT *output, fnWriteOutput fnWrite[]);
 int fbHaltMaxMutualIncSpiNBody(BODY *, EVOLVE *, HALT *, IO *, UPDATE *,
                                fnUpdateVariable ***, int);
 
-//Addressing total mass of the system for Barycentric Coordinates
+// Addressing total mass of the system for Barycentric Coordinates
 double TotalMass(BODY *body, int iNumBodies);
+// Addressing Barycentric Gravitational Parameter
+double BarycentricMu(BODY *body, int iNumBodies, int iBody);
 // Coordinate Changes
 void fvBaryOrbElems2BaryCart(BODY *body, int iNumBodies, int iBody);
 void fvHelioOrbElems2HelioCart(BODY *body, int iNumBodies, int iBody);

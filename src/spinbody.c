@@ -702,6 +702,10 @@ void AssignAllCoords(BODY *body, CONTROL *control, FILES *files, SYSTEM *system,
   if (!body[iBody].bUseOrbParams) { // If input was BaryCart or HelioCart
     fvAssignBaryCart(body, iBody); // We assign the vectors named dBCart to the input values
   }
+  double iNumBodies = control->Evolve.iNumBodies;
+  // Need Gravitational Parameter to be assigned
+  // Use BaryMu because iterated coordinates are Barycentric
+  body[iBody].dMu = BarycentricMu(body, iNumBodies, iBody);
   // Do a check if orbelems need to be converted to inv_plane
   // inv_plane only accepts barycart coords
   if (files->Outfile[iBody].iOutputCoordBit & HELIOCART) {
@@ -709,11 +713,11 @@ void AssignAllCoords(BODY *body, CONTROL *control, FILES *files, SYSTEM *system,
     fvAssignBaryCart2HelioCart(body, iBody);
   }
   if (files->Outfile[iBody].iOutputCoordBit & HELIOELEMS) {
-    fvBaryCart2HelioOrbElems(body, control->Evolve.iNumBodies, iBody);
+    fvBaryCart2HelioOrbElems(body, iNumBodies, iBody);
     fvAssignHelioOrbElems(body, iBody);
   }
   if (files->Outfile[iBody].iOutputCoordBit & BARYELEMS) {
-    fvBaryCart2BaryOrbElems(body, control->Evolve.iNumBodies, iBody);
+    fvBaryCart2BaryOrbElems(body, iNumBodies, iBody);
     //fvAssignBaryOrbElems(body, system, iBody);
   }
 }
@@ -946,6 +950,17 @@ int fbHaltMaxMutualIncSpiNBody(BODY *body, EVOLVE *evolve, HALT *halt, IO *io,
 
 //========================== Coordinate Changes ================================
 
+double LimitRounding(double x) {
+  /* 
+  Machine precision can round inaccurate values that eventually become present
+  the more calculations vplanet makes. 
+  */
+  if (x < 1e-16) {
+    x = 0.0;
+  }
+  return x;
+}
+
 //fmodPos() restricts inputs of Orbital Element in the domain [0, 2*PI)
 double fmodPos(double x, double y) { //returns modulo_{y}(x) remaining in the domain 0 <= x < y
   double result;
@@ -964,11 +979,23 @@ double TotalMass(BODY *body, int iNumBodies) {
   return dTmpTotalMass;
 }
 
+double BarycentricMu(BODY *body, int iNumBodies, int iBody) {
+  double mTotal, dBaryMu; 
+  mTotal = TotalMass(body, iNumBodies);
+  dBaryMu = mTotal * cube(1. - body[iBody].dMass / mTotal);
+  return dBaryMu;
+}
+
 void OrbElems2Cart(ELEMS elems, double *dPos, double *dVel) {
   double dCosi, dSini, dCosLongA, dSinLongA, dCosArgP, dSinArgP, dEccA, dCosEccA, dSinEccA,
             dHypA, dCoshHypA, dSinhHypA, dL1, dM1, dN1, dL2, dM2, dN2, dSemi, dEcc, 
             dMu, mTotal, dBaryRelation, dXi, dEta, dVelScl;
   // Note: Improved work can be made by introducing parabolic orbits.
+  /*
+  Most of the if statements below were made in consequence of the machine 
+  precision errors present. If a future developer fixes these tiny errors,
+  then the if statements would not be necessary.
+  */
   if (elems.dInc == 0.0) {
     dCosi = 1.0;
     dSini = 0.0;
@@ -992,6 +1019,12 @@ void OrbElems2Cart(ELEMS elems, double *dPos, double *dVel) {
 
   dSemi = elems.dSemi;
   dEcc = elems.dEcc;
+  dCosi = LimitRounding(dCosi);
+  dSini = LimitRounding(dSini);
+  dCosLongA = LimitRounding(dCosLongA);
+  dSinLongA = LimitRounding(dSinLongA);
+  dCosArgP = LimitRounding(dCosArgP);
+  dSinArgP = LimitRounding(dSinArgP);
   if (dEcc > 1) {
     // By convention the semi-major axis is negative in unbound orbits
     dSemi = -dSemi;
@@ -1039,7 +1072,7 @@ void OrbElems2Cart(ELEMS elems, double *dPos, double *dVel) {
     dSinhHypA = sinh(dHypA);
 
     dXi = dSemi * (dCoshHypA - dEcc);
-    dEta = dSemi * pow(dEcc * dEcc - 1., 0.5) * dSinhHypA;
+    dEta = -dSemi * pow(dEcc * dEcc - 1., 0.5) * dSinhHypA;
   }
 
   //Defining Cartesian Coordinates
@@ -1053,9 +1086,9 @@ void OrbElems2Cart(ELEMS elems, double *dPos, double *dVel) {
     dEta = dVelScl* pow(1. - dEcc * dEcc, 0.5) * dCosEccA; // y-component of velocity
   }
   if (dEcc > 1) {
-    dVelScl = -pow(-dMu * dSemi / dot(dPos, dPos), 0.5); // Time derivative of dHypA times semi-major axis
+    dVelScl = pow(-dMu * dSemi / dot(dPos, dPos), 0.5); // Time derivative of dHypA times semi-major axis
     dXi = -dVelScl * dSinhHypA; // x-component of velocity
-    dEta = -dVelScl * pow(dEcc * dEcc - 1.0, 0.5) * dCoshHypA; // y-component of velocity
+    dEta = dVelScl * pow(dEcc * dEcc - 1.0, 0.5) * dCoshHypA; // y-component of velocity
   }
   dVel[0] = dL1 * dXi + dL2 * dEta;
   dVel[1] = dM1 * dXi + dM2 * dEta;
@@ -1281,9 +1314,7 @@ void fvHelioOrbElems2HelioCart(BODY *body, int iNumBodies, int iBody) {
     // mTotal = TotalMass(body, iNumBodies);
     // dHelioMu = BIGG * mTotal;
     dHelioMu = BIGG * (body[0].dMass + body[iBody].dMass); // Trying this out again
-    body[iBody].dMu = dHelioMu;
-
-    elems.dMu = body[iBody].dMu;
+    elems.dMu = dHelioMu;
     OrbElems2Cart(elems, dPos, dVel);
     for (int i = 0; i < 3; i++) {
       body[iBody].dHCartPos[i] = dPos[i];
@@ -1374,7 +1405,7 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
     // mTotal = TotalMass(body, iNumBodies);
     // mu = BIGG * mTotal;
     mu = BIGG * (body[iBody].dMass + body[0].dMass); // trying this out
-    body[iBody].dMu = mu;
+    // body[iBody].dMu = mu;
 
     // Solve for semi-major axis
     body[iBody].dSemi = 1 / (2 / normr - vsq / mu);
@@ -1441,12 +1472,17 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
 
       f = fmodPos(atan2(sinfAngle, cosfAngle), 2 * PI);
 
+      if (fabs(cosfAngle - 1) > 0) {
+        cosfAngle = cos(f);
+        sinfAngle = sin(f);
+      }      
+
       // Calculate Mean anomaly
       // Defitions change since elliptical and hyperbolic orbits have different Mean Anomalies
       if (body[iBody].dEcc < 1.0) { // We use the Eccentric Anomaly, E
         cosE = (cosfAngle + body[iBody].dEcc) /
               (1.0 + body[iBody].dEcc * cosfAngle);
-        if (fabs(fabs(cosE) - 1) < 1e-11) {
+        if (fabs(fabs(cosE) - 1) < 1e-11) { // Error gets larger for longer simulations with smaller timesteps
           /* If there is numerical error such that abs(cosE)>1, then use the small
             angle approximation to find E */
           body[iBody].dEccA =
@@ -1585,12 +1621,17 @@ void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
     body[iBody].dBaryLongP = fmodPos(body[iBody].dBaryArgP + body[iBody].dBaryLongA, 2. * PI);
     f = fmodPos(atan2(sinfAngle, cosfAngle), 2. * PI);
 
+    if (fabs(cosfAngle - 1) > 0) {
+      cosfAngle = cos(f);
+      sinfAngle = sin(f);
+    }
+
     
     if (body[iBody].dBaryEcc < 1.0) { //Using EccA to calculate other orbital elements
       // Calculate Mean anomaly
       cosE = (cosfAngle + body[iBody].dBaryEcc) /
               (1.0 + body[iBody].dBaryEcc * cosfAngle);
-      if (fabs(fabs(cosE) - 1) < 1e-11) {
+      if (fabs(fabs(cosE) - 1) < 1e-11) { // Error gets larger for longer simulations with smaller timesteps
         /* If there is numerical error such that abs(cosE)>1, then use the small
             angle approximation to find E */
         body[iBody].dBaryEccA =

@@ -617,9 +617,9 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
           /*
           "If UV or GOES is selected, the code will convert \n"
           "the input energy of flares from the UV band \n"
-          "(3000-4300 Å) or GOES band (1-8 Å) to the Kepler band \n"
-          "(4000-9000 Å) to calculate the FFD and the SXR \n"
-          "band (1.24 - 1239.85 Å) to calculate the luminosity.\n"
+          "(3000-4300A) or GOES band (1-8A) to the Kepler band \n"
+          "(4000-9000A) to calculate the FFD and the SXR \n"
+          "band (1.24 - 1239.85A) to calculate the luminosity.\n"
           " If SXR is selected, the code will convert the \n"
           "input energy of flares from the SXR band to the Kepler\n"
           "band to calculate the FFD and will use the same \n"
@@ -631,7 +631,7 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
           "Osten and Wolk (2015) (doi:10.1088/0004-637X/809/1/79).\n"
           "If TESSUV is selected, then the code will convert\n"
           "the input energy of flares using the conversion value\n"
-          "to the band U (2000-2800 Å) to the TESS data from \n"
+          "to the band U (2000-2800A) to the TESS data from \n"
           "Gunther et al 2020 (https://doi.org/10.3847/1538-3881/ab5d3a). \n"
           "If the BOLOMETRIC its selected, the code will convert the input \n"
           "energy of flares using the conversion values are taken \n"
@@ -1743,8 +1743,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
   double dEnergyStep, dEnergyStepXUV, dEnergyBin;
 
 
-  //######################### 1. Choosing how to calculate FFD: slopes(age) or
-  // slopes(constant)?##################################
+  // ######################### 1. Choosing how to calculate FFD: slopes(age) or
+  //  slopes(constant)?##################################
 
   if (body[iBody].iFlareFFD == FLARE_FFD_DAVENPORT) {
     // The coefficient values given here were given by Dr. James Davenport in
@@ -1767,8 +1767,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
   }
   if (body[iBody].iFlareFFD == FLARE_FFD_DAVENPORT ||
       body[iBody].iFlareFFD == FLARE_FFD_LACY) {
-    //################# 2. Calculating the XUV energy (SXR 1.24 - 1239.85
-    //Å)#######################################################
+    // ################# 2. Calculating the XUV energy (SXR 1.24 - 1239.85
+    // Å)#######################################################
 
     dLogEnergyMinXUV = fdBandPassXUV(body, iBody, body[iBody].dFlareMinEnergy);
 
@@ -1780,8 +1780,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     // double daEnergyJOUXUV[iEnergyBin + 1], daLogEnerXUV[iEnergyBin + 1],
     //      daEnergyERGXUV[iEnergyBin + 1];
 
-    //################# 3. Calculating the energy in the Kepler band pass (4000
-    //– 9000 Å) ##############################################
+    // ################# 3. Calculating the energy in the Kepler band pass (4000
+    // – 9000 Å) ##############################################
 
     dLogEnergyMin = fdBandPassKepler(body, iBody, body[iBody].dFlareMinEnergy);
     dLogEnergyMax = fdBandPassKepler(body, iBody, body[iBody].dFlareMaxEnergy);
@@ -1801,8 +1801,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     // double daEnergyERG[iEnergyBin + 1], daEnergyJOU[iEnergyBin + 1],
     //      daLogEner[iEnergyBin + 1], daEnerJOU[iEnergyBin + 1];
 
-    //############################ 4. Filling the energy arrays
-    //########################################################################
+    // ############################ 4. Filling the energy arrays
+    // ########################################################################
 
     for (i = 0; i < iEnergyBin + 1; i++) {
       // XUV energy (energy_joules)
@@ -1821,8 +1821,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     body[iBody].dFlareEnergyMin = body[iBody].daEnerJOU[0];
     body[iBody].dFlareEnergyMid = body[iBody].daEnerJOU[iEnergyBin / 2];
     body[iBody].dFlareEnergyMax = body[iBody].daEnerJOU[iEnergyBin];
-    //############################ 5. Filling the FFD arrays
-    //########################################################################
+    // ############################ 5. Filling the FFD arrays
+    // ########################################################################
 
     // Declaring the Flare Frequency distribution (FFD) arrays of size
     // dEnergyBin
@@ -1841,9 +1841,9 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     body[iBody].dFlareFreqMin = body[iBody].daFFD[0];
     body[iBody].dFlareFreqMid = body[iBody].daFFD[iEnergyBin / 2];
     body[iBody].dFlareFreqMax = body[iBody].daFFD[iEnergyBin];
-    //############################ 6. Calculating the XUV luminosity by flares
-    //########################################################################
-    // double daLXUVFlare[iEnergyBin];
+    // ############################ 6. Calculating the XUV luminosity by flares
+    // ########################################################################
+    //  double daLXUVFlare[iEnergyBin];
 
     // Calculating the luminosity by flares for DAVENPORT or LACY mode
     // if the user select to calculate the luminosity using a FFD model

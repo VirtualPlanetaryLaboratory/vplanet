@@ -12,44 +12,44 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/HabEvapCore
-   examples/MagmOc_GJ1132b
-   examples/HLossTides
-   examples/HabitableZone
-   examples/ApseLock
-   examples/CircumbinaryOrbit
    examples/GalaxyEffects
-   examples/VenusApproxInterior
+   examples/EarthInterior
    examples/MiniNeptuneEvap
-   examples/ParameterSweep
-   examples/SSDistOrbDistRot
+   examples/MDwarfLuminosity
+   examples/IoHeat
+   examples/NBodyAtmEsc
+   examples/RadHeat
+   examples/HabitableZone
    examples/AtmEscRegimes
-   examples/TidalEarth
-   examples/TideLock
-   examples/SS_NBody
-   examples/MagmOc_Earth
+   examples/ParameterSweep
+   examples/EarthClimate
+   examples/WaterLossTides
+   examples/HLossTides
    examples/MagmOc_Trappist1g
    examples/AbioticO2
-   examples/STEEP
    examples/MagneticBraking
-   examples/IceBelts
-   examples/StellarEvol
-   examples/ChaoticResonances
-   examples/IoHeat
-   examples/AtmEscKepler-36
-   examples/NBodyAtmEsc
-   examples/AtmEscFlareProxCen
-   examples/BinaryTides
-   examples/VenusWaterLoss
-   examples/EarthInterior
-   examples/EarthClimate
-   examples/FfdProxCen
+   examples/VenusApproxInterior
    examples/CassiniStates
-   examples/WaterLossTides
-   examples/CassiniMulti
-   examples/MDwarfLuminosity
    examples/DampedCBP
-   examples/RadHeat
+   examples/HabEvapCore
+   examples/StellarEvol
+   examples/SSDistOrbDistRot
+   examples/AtmEscFlareProxCen
+   examples/MagmOc_Earth
+   examples/IceBelts
+   examples/AtmEscKepler-36
+   examples/BinaryTides
+   examples/MagmOc_GJ1132b
+   examples/TideLock
+   examples/STEEP
+   examples/VenusWaterLoss
+   examples/FfdProxCen
+   examples/CircumbinaryOrbit
+   examples/CassiniMulti
+   examples/ChaoticResonances
+   examples/TidalEarth
+   examples/ApseLock
+   examples/SS_NBody
 
 
 Broken

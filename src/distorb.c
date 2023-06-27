@@ -84,7 +84,7 @@ void ReadDfCrit(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   }
 }
 
-
+/*
 void ReadInvPlane(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                   SYSTEM *system, int iFile) {
   int lTmp = -1, bTmp;
@@ -93,14 +93,14 @@ void ReadInvPlane(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   if (lTmp >= 0) {
     CheckDuplication(files, options, files->Infile[iFile].cIn, lTmp,
                      control->Io.iVerbose);
-    /* Option was found */
+    // Option was found 
     control->bInvPlane = bTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     AssignDefaultInt(options, &control->bInvPlane, files->iNumInputs);
   }
 }
-
+*/
 void ReadOutputLapl(BODY *body, CONTROL *control, FILES *files,
                     OPTIONS *options, SYSTEM *system, int iFile) {
   int lTmp = -1, bTmp;
@@ -291,7 +291,7 @@ void InitializeOptionsDistOrb(OPTIONS *options, fnReadOption fnRead[]) {
           "low can cause the simulation to run very slowly, with negligible "
           "gain in\n"
           "accuracy.");
-
+  /*
   sprintf(options[OPT_INVPLANE].cName, "bInvPlane");
   sprintf(options[OPT_INVPLANE].cDescr,
           "Convert input coordinates to invariable plane coordinates");
@@ -300,7 +300,7 @@ void InitializeOptionsDistOrb(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_INVPLANE].iType      = 0;
   options[OPT_INVPLANE].bMultiFile = 0;
   fnRead[OPT_INVPLANE]             = &ReadInvPlane;
-
+  */
   sprintf(options[OPT_ORBITMODEL].cName, "sOrbitModel");
   sprintf(options[OPT_ORBITMODEL].cDescr,
           "Orbit Model: LL2 [2nd order] RD4 [4th order]");

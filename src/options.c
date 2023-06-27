@@ -2097,6 +2097,22 @@ void ReadIntegrationMethod(BODY *body, CONTROL *control, FILES *files,
   /* If not input, VerifyIntegration assigns default */
 }
 
+void ReadInvPlane(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                  SYSTEM *system, int iFile) {
+  int lTmp = -1, bTmp;
+  AddOptionBool(files->Infile[iFile].cIn, options->cName, &bTmp, &lTmp,
+                control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files, options, files->Infile[iFile].cIn, lTmp,
+                     control->Io.iVerbose);
+    /* Option was found */
+    control->bInvPlane = bTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else {
+    AssignDefaultInt(options, &control->bInvPlane, files->iNumInputs);
+  }
+}
+
 /*
  *
  * K
@@ -4009,6 +4025,15 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_INTEGRATIONMETHOD].iFileType  = 2;
   fnRead[OPT_INTEGRATIONMETHOD]             = &ReadIntegrationMethod;
 
+  sprintf(options[OPT_INVPLANE].cName, "bInvPlane");
+  sprintf(options[OPT_INVPLANE].cDescr,
+          "Convert input coordinates to invariable plane coordinates");
+  sprintf(options[OPT_INVPLANE].cDefault, "0");
+  options[OPT_INVPLANE].dDefault   = 0;
+  options[OPT_INVPLANE].iType      = 0;
+  options[OPT_INVPLANE].bMultiFile = 0;
+  options[OPT_INVPLANE].iModuleBit = DISTORB + SPINBODY;
+  fnRead[OPT_INVPLANE]             = &ReadInvPlane;
   /*
    *
    * K

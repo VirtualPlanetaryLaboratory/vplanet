@@ -1905,6 +1905,9 @@ struct CONTROL {
   int bOutputEigen;   /**< Output eigen values? */
 
   int bOrbiters; /**< Does this simulation have orbiting bodies? */
+
+  /* Option for DistOrb and SpiNBody */
+  
 };
 
 

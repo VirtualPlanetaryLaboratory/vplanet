@@ -58,6 +58,7 @@
 #define OPT_HECC 360
 
 #define OPT_INTEGRATIONMETHOD 400
+#define OPT_INVPLANE 401
 
 #define OPT_KECC 450
 

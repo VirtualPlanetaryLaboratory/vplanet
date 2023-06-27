@@ -519,29 +519,58 @@ void angularmom(BODY *body, double *AngMom, int iNumBodies) {
   double *rxptmp;
   int i, iBody;
 
-  rxptmp = malloc(3 * sizeof(double));
-
-  if (body[0].bSpiNBody) {
-    fprintf(stderr, "ERROR: Function angularmom called with module SpiNBody. \n"
-                    "This function has only been verified for DistOrb.\n");
-    exit(EXIT_INT);
-  }
-
-  osc2cart(body, iNumBodies);
-  astro2bary(body, iNumBodies);
-
   for (i = 0; i < 3; i++) {
     AngMom[i] = 0;
-  }
+  }  
+
+  rxptmp = malloc(3 * sizeof(double));
+
+  // osc2cart(body, iNumBodies);
+  // astro2bary(body, iNumBodies);
 
   for (iBody = 0; iBody < iNumBodies; iBody++) {
-    cross(body[iBody].daCartPos, body[iBody].daCartVel, rxptmp);
+    if (body[iBody].bSpiNBody) {
+      cross(body[iBody].dBCartPos, body[iBody].dBCartVel, rxptmp);
+    } else {
+      if (iBody == 0) {
+        osc2cart(body, iNumBodies);
+        astro2bary(body, iNumBodies);        
+      }
+      cross(body[iBody].daCartPos, body[iBody].daCartVel, rxptmp);
+    }
     for (i = 0; i < 3; i++) {
-      // Note the MSUN because DistOrb is defined in MSUN units.
-      // This may not work for SpiNBody
-      AngMom[i] += body[iBody].dMass / MSUN * rxptmp[i];
+      // SpiNBody requires SI units for Cartesian coordinates. No conversion 
+      AngMom[i] += body[iBody].dMass * rxptmp[i];
+      if (!body[iBody].bSpiNBody) {
+        // distorb requires solar mass units
+        AngMom[i] /= MSUN;
+      }
     }
   }
+  /*
+  if (body[iBody].bSpiNBody) {
+    for (iBody = 0; iBody < iNumBodies; iBody++) {
+      cross(body[iBody].dBCartPos, body[iBody].dBCartVel, rxptmp);
+      for (i = 0; i < 3; i++) {
+        // SpiNBody requires SI units for Cartesian coordinates. No conversion 
+        AngMom[i] +=body[iBody].dMass * rxptmp[i];
+      }
+    }
+  } else {
+
+    osc2cart(body, iNumBodies);
+    astro2bary(body, iNumBodies);
+
+    for (iBody = 0; iBody < iNumBodies; iBody++) {
+      cross(body[iBody].daCartPos, body[iBody].daCartVel, rxptmp);
+      for (i = 0; i < 3; i++) {
+        // Note the MSUN because DistOrb is defined in MSUN units.
+        // This may not work for SpiNBody
+        AngMom[i] += body[iBody].dMass / MSUN * rxptmp[i];
+      }
+    }
+  }
+  */
   free(rxptmp);
 }
 
@@ -553,37 +582,66 @@ Rotate coordinates into invariable plane
 @param iNumBodies Number of bodies in the system (star & planets)
 */
 void rotate_inv(BODY *body, SYSTEM *system, int iNumBodies) {
-  double *xtmp, *vtmp;
-  int iBody;
+  double *xtmp, *vtmp, *dInvPlanePos, *dInvPlaneVel;
+  int i, iBody;
   xtmp = malloc(3 * sizeof(double));
   vtmp = malloc(3 * sizeof(double));
 
-  for (iBody = 0; iBody < iNumBodies; iBody++) {
-    xtmp[0] = body[iBody].daCartPos[0] * cos(system->dThetaInvP) +
-              body[iBody].daCartPos[1] * sin(system->dThetaInvP);
-    xtmp[1] = -body[iBody].daCartPos[0] * sin(system->dThetaInvP) +
-              body[iBody].daCartPos[1] * cos(system->dThetaInvP);
-    xtmp[2] = body[iBody].daCartPos[2];
-    vtmp[0] = body[iBody].daCartVel[0] * cos(system->dThetaInvP) +
-              body[iBody].daCartVel[1] * sin(system->dThetaInvP);
-    vtmp[1] = -body[iBody].daCartVel[0] * sin(system->dThetaInvP) +
-              body[iBody].daCartVel[1] * cos(system->dThetaInvP);
-    vtmp[2] = body[iBody].daCartVel[2];
+  dInvPlanePos = malloc(3 * sizeof(double));
+  dInvPlaneVel = malloc(3 * sizeof(double));
 
-    body[iBody].daCartPos[0] =
+  for (iBody = 0; iBody < iNumBodies; iBody++) {
+    if (body[iBody].bSpiNBody) {
+      for (i = 0; i < 3; i++) {
+        dInvPlanePos[i] = body[iBody].dBCartPos[i];
+        dInvPlaneVel[i] = body[iBody].dBCartVel[i];
+      }
+    } else {
+      for (i = 0; i < 3; i++) {
+        dInvPlanePos[i] = body[iBody].daCartPos[i];
+        dInvPlaneVel[i] = body[iBody].daCartVel[i];
+      }    
+    }    
+    xtmp[0] = dInvPlanePos[0] * cos(system->dThetaInvP) +
+              dInvPlanePos[1] * sin(system->dThetaInvP);
+    xtmp[1] = -dInvPlanePos[0] * sin(system->dThetaInvP) +
+              dInvPlanePos[1] * cos(system->dThetaInvP);
+    xtmp[2] = dInvPlanePos[2];
+    vtmp[0] = dInvPlaneVel[0] * cos(system->dThetaInvP) +
+              dInvPlaneVel[1] * sin(system->dThetaInvP);
+    vtmp[1] = -dInvPlaneVel[0] * sin(system->dThetaInvP) +
+              dInvPlaneVel[1] * cos(system->dThetaInvP);
+    vtmp[2] = dInvPlaneVel[2];
+
+    dInvPlanePos[0] =
           xtmp[0] * cos(system->dPhiInvP) - xtmp[2] * sin(system->dPhiInvP);
-    body[iBody].daCartPos[1] = xtmp[1];
-    body[iBody].daCartPos[2] =
+    dInvPlanePos[1] = xtmp[1];
+    dInvPlanePos[2] =
           xtmp[0] * sin(system->dPhiInvP) + xtmp[2] * cos(system->dPhiInvP);
-    body[iBody].daCartVel[0] =
+    dInvPlaneVel[0] =
           vtmp[0] * cos(system->dPhiInvP) - vtmp[2] * sin(system->dPhiInvP);
-    body[iBody].daCartVel[1] = vtmp[1];
-    body[iBody].daCartVel[2] =
+    dInvPlaneVel[1] = vtmp[1];
+    dInvPlaneVel[2] =
           vtmp[0] * sin(system->dPhiInvP) + vtmp[2] * cos(system->dPhiInvP);
+
+    if (body[iBody].bSpiNBody) {
+      for (i = 0; i < 3; i++) {
+        body[iBody].dBCartPos[i] = dInvPlanePos[i];
+        body[iBody].dBCartVel[i] = dInvPlaneVel[i];
+      }
+    } else {
+      for (i = 0; i < 3; i++) {
+        body[iBody].daCartPos[i] = dInvPlanePos[i];
+        body[iBody].daCartVel[i] = dInvPlaneVel[i];
+      }    
+    }          
   }
+
 
   free(xtmp);
   free(vtmp);
+  free(dInvPlanePos);
+  free(dInvPlaneVel);
 }
 
 /**
@@ -713,6 +771,13 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
   }
   // Verify spinbody should calculate dThetaInvP and dPhiInvP once initially
   // Start new function here
+  int iSpiNBody = 0; // identifies if SpiNbody is on.
+  for (iBody = 0; iBody < iNumBodies; iBody++) {
+    if (body[iBody].bSpiNBody) {
+      iSpiNBody += 1; // SpiNBody is on
+      break;
+    }
+  }
   angularmom(body, AngMom, iNumBodies);
   system->dThetaInvP = atan2(AngMom[1], AngMom[0]);
   system->dPhiInvP =
@@ -720,8 +785,11 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
   // end new function here
 
   rotate_inv(body, system, iNumBodies);
-  bary2astro(body, iNumBodies);
-  cart2osc(body, iNumBodies);
+  if (iSpiNBody == 0) { // Only do this when SpiNBody is off
+    bary2astro(body, iNumBodies);
+    cart2osc(body, iNumBodies);
+  }
+
 
   /* Loop below recalculates precession angle for planets with DistRot
    * enabled.*/

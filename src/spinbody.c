@@ -723,11 +723,12 @@ void AssignAllCoords(BODY *body, CONTROL *control, FILES *files, SYSTEM *system,
 }
 
 void VerifyInputCoords(BODY *body, CONTROL *control, OPTIONS *options, SYSTEM *system, int iBody) {
+  int iNumBodies = control->Evolve.iNumBodies; // Shorten the notation for clarity
   // Allocate dHCartPos, dBCartPos, dHCartVel, dBCartVel
   // We only want to allocate all of the positions and velocities for every body, so we do this one time at iBody = 0;
   if (iBody == 0) {
     int iTmpBody = 0;
-    for (iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++){
+    for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++){
       body[iTmpBody].dBCartPos = malloc(3 * sizeof(double));
       body[iTmpBody].dBCartVel = malloc(3 * sizeof(double));
       body[iTmpBody].dHCartPos = malloc(3 * sizeof(double));
@@ -735,27 +736,27 @@ void VerifyInputCoords(BODY *body, CONTROL *control, OPTIONS *options, SYSTEM *s
     }
   }
 
-
+  
   if (body[iBody].bUseOrbParams) {  
     if(!system->bBarycentric) {
       printf("HelioOrbElems. Converting to HelioCart...\n");
       if (iBody == 0) {
         int iTmpBody = 0;
-        for (iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
+        for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
           fvAssignHelioOrbElems(body, iTmpBody);
           if (iTmpBody > 0) { // The central body already has all OrbElems as zero.
             VerifyAltOrbElems(body, options, iTmpBody);
           }
-          fvHelioOrbElems2HelioCart(body, control->Evolve.iNumBodies, iTmpBody);
+          fvHelioOrbElems2HelioCart(body, iNumBodies, iTmpBody);
         }
       } 
-      fvHelioCart2BaryCart(body, control->Evolve.iNumBodies, iBody);
+      fvHelioCart2BaryCart(body, iNumBodies, iBody);
       // fvAssignSpinBodyVariables();
     } else {
       printf("BaryOrbElems. Converting to BaryCart...\n");
       fvAssignBaryOrbElems(body, system, iBody);
       VerifyAltOrbElems(body, options, iBody);
-      fvBaryOrbElems2BaryCart(body, control->Evolve.iNumBodies, iBody);
+      fvBaryOrbElems2BaryCart(body, iNumBodies, iBody);
     } fvAssignCartOutputs2BaryCart(body, iBody); // Example: dPositionX = dBCartPos[0];
   } else {
     if(!system->bBarycentric) {
@@ -763,11 +764,11 @@ void VerifyInputCoords(BODY *body, CONTROL *control, OPTIONS *options, SYSTEM *s
       // dPos variables get reassigned later as BaryCart values. Only use fvMoveOptions2Helio initially
       if (body[iBody].dPositionX == 0 && body[iBody].dPositionY == 0 && body[iBody].dPositionZ == 0) {
         int iTmpBody = 0;
-        for (iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
+        for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
           fvMoveOptions2Helio(body, iTmpBody);  // Example: dHCartPos[0] = dPositionX;
         }
       }
-      fvHelioCart2BaryCart(body, control->Evolve.iNumBodies, iBody);
+      fvHelioCart2BaryCart(body, iNumBodies, iBody);
       fvAssignCartOutputs2BaryCart(body, iBody);
       // fvAssignSpinBodyVariables();
     } else {
@@ -777,6 +778,16 @@ void VerifyInputCoords(BODY *body, CONTROL *control, OPTIONS *options, SYSTEM *s
     printf("BaryCart. No Conversion needed.\n");
   }
   // At this point dPosition and dVelocity are in BaryCart coordinates
+  // One more possible transformation involves the invariable plane
+  // The second condition means only do this transformation once.
+  if (control->bInvPlane && iBody == iNumBodies - 1) {
+    // Rotate barycentric coordinates to invariable plane
+    inv_plane(body, system, iNumBodies);
+    // Update dPosition and dVel variables to invariable plane
+    for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+      fvAssignCartOutputs2BaryCart(body, iTmpBody);
+    }
+  }
 }
 
 void VerifyOutputCoords(BODY *body, FILES *files, OUTPUT *output, int iBody) {
@@ -1610,6 +1621,7 @@ void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
                 (normh * body[iBody].dBaryEcc);
     cosfAngle = (body[iBody].dBarySemi * (1. - body[iBody].dBaryEccSq) / normr - 1) /
                 body[iBody].dBaryEcc;
+                
     if (fabs(cosfAngle - 1.0) < 1e-14) { // There are rounding errors at such precise values. We try to avoid cosfAngle > 1
       cosfAngle = 1.0;
       sinfAngle = 0.0;
@@ -1667,11 +1679,12 @@ void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
       For hyperbolic orbits f lies only in Quadrants I and IV while acos() lies in 
       Quadrants I and II. If in Quadrant II, must switch to Quadrant IV.
       */
-      if (cosfAngle < 0) {
-        sinfAngle = -sinfAngle; 
+      //if (cosfAngle < 0) {
+      //  sinfAngle = -sinfAngle; 
         // Be Careful. If ever using acos(cosfAngle), it would produce the incorrect angle
-      }
-      // You loses the sign of dHypA when using acosh(coshH). asinh(sinhH) keeps the sign. 
+      //}
+      
+      // You lose the sign of dHypA when using acosh(coshH). asinh(sinhH) keeps the sign. 
       sinhH = sqrt(body[iBody].dBaryEcc * body[iBody].dBaryEcc - 1) * sinfAngle / 
               (1.0 + body[iBody].dBaryEcc * cosfAngle);
 

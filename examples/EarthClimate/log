@@ -47,12 +47,12 @@ TGlobal = 13.909513
 TGlobal = 14.188601
 TGlobal = 14.365209
 TGlobal = 14.495537
-TGlobal = 14.565920; Prev RunningMean = 0.000000; Curr RunningMean = 14.304956 
-TGlobal = 14.604138; Prev RunningMean = 14.304956; Curr RunningMean = 14.443881 
-TGlobal = 14.629948; Prev RunningMean = 14.443881; Curr RunningMean = 14.532150 
-TGlobal = 14.643636; Prev RunningMean = 14.532150; Curr RunningMean = 14.587836 
-TGlobal = 14.648177; Prev RunningMean = 14.587836; Curr RunningMean = 14.618364 
-TGlobal = 14.649833; Prev RunningMean = 14.618364; Curr RunningMean = 14.635146 
+TGlobal = 14.565920; Prev RunningMean = 0.000000; Curr RunningMean = 14.304956
+TGlobal = 14.604138; Prev RunningMean = 14.304956; Curr RunningMean = 14.443881
+TGlobal = 14.629948; Prev RunningMean = 14.443881; Curr RunningMean = 14.532150
+TGlobal = 14.643636; Prev RunningMean = 14.532150; Curr RunningMean = 14.587836
+TGlobal = 14.648177; Prev RunningMean = 14.587836; Curr RunningMean = 14.618364
+TGlobal = 14.649833; Prev RunningMean = 14.618364; Curr RunningMean = 14.635146
 All of Earth's modules verified.
 All of Mars's modules verified.
 All of Jupiter's modules verified.

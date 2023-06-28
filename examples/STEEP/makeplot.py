@@ -4,15 +4,17 @@ This script produces the STEEP evolution figure from Graham et al., in prep.
 David P. Fleming, University of Washington, 2020
 """
 
-import vplanet
-import vplot
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import numpy as np
 import pathlib
 import sys
-from tqdm import tqdm
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import vplot
 from matplotlib.ticker import FormatStrFormatter
+from tqdm import tqdm
+
+import vplanet
 
 # Path hacks
 path = pathlib.Path(__file__).parents[0].absolute()

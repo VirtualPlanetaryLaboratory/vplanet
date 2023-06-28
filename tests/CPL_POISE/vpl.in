@@ -1,0 +1,16 @@
+sSystemName   gl514
+iVerbose      5
+bOverwrite    1
+sUnitMass     solar
+sUnitLength   au
+sUnitTime     y
+sUnitAngle    d
+sUnitTemp     K
+bDoLog        1
+iDigits       16
+saBodyFiles   gl514.in gl514b.in
+bDoForward    1
+bVarDt        1
+dEta          0.1
+dStopTime     1
+dOutputTime   1

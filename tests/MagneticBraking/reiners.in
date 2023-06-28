@@ -5,8 +5,7 @@ dMass                     1.0
 dAge                      5.0e6
 sStellarModel             baraffe
 sMagBrakingModel          reiners
-bHaltEndBaraffeGrid       1 
+bHaltEndBaraffeGrid       1
 dSatXUVFrac               1.e-3
 dSatXUVTime               -0.1
 saOutputOrder Time -TotEn -TotAngMom -Luminosity -Radius Temperature -RotPer -LXUVTot RadGyra
-

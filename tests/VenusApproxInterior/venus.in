@@ -49,4 +49,3 @@ saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
     -MeltMassFluxMan -FMeltUMan $
     -MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad $
     -BLUMan -BLLMan
-

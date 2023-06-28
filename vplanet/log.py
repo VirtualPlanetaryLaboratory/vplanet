@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
+import logging
+import os
+import re
+import warnings
+from glob import glob
+
+import astropy.units as u
+import numpy as np
+
 from .custom_units import custom_units
 from .logger import logger
 from .quantity import VPLANETQuantity as Quantity
-import re
-import os
-from glob import glob
-import astropy.units as u
-import logging
-import numpy as np
-import warnings
 
 
 def get_param_unit(param, file, line):
@@ -153,7 +155,7 @@ class Log(object):
         """
         Container for the information in the header of the log file,
         an instance of :py:class:`LogStage`.
-        
+
         """
         return self._header
 
@@ -226,9 +228,7 @@ class LogBody(object):
 
 
 def get_log(path=".", sysname=None, ext="log", units=True):
-    """
-
-    """
+    """ """
     # Just in case!
     if ext.startswith("."):
         ext = ext[1:]

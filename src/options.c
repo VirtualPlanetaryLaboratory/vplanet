@@ -436,13 +436,18 @@ int iGetNumLines(char cFile[]) {
   FILE *fp;
   char cLine[LINE];
 
+  fprintf(stderr,"File: %s\n",cFile);
+
   fp = fopen(cFile, "r");
   if (fp == NULL) {
     fprintf(stderr, "Unable to open %s.\n", cFile);
     exit(EXIT_INPUT);
   }
 
+  memset(cLine, '\0', LINE);
+  // fprintf(stderr,"File: %s\n",cFile);
   while (fgets(cLine, LINE, fp) != NULL) {
+    // fprintf(stderr,"iLine: %d, %s",iNumLines,cLine);
     iNumLines++;
 
     /* Check to see if line is too long. The maximum length of a line is set
@@ -469,6 +474,7 @@ int iGetNumLines(char cFile[]) {
         bFileOK = 0;
       }
     }
+    memset(cLine, '\0', LINE);
   }
 
   if (!bFileOK) {
@@ -483,6 +489,8 @@ void InitializeInput(INFILE *input) {
   FILE *fp;
   char cLine[LINE];
 
+fprintf(stderr,"File: %s\n",input->cIn);
+
   fp = fopen(input->cIn, "r");
   if (fp == NULL) {
     fprintf(stderr, "Unable to open %s.\n", input->cIn);
@@ -495,16 +503,20 @@ void InitializeInput(INFILE *input) {
   input->cReactions[0] = 0;
   */
 
+  // fprintf(stderr,"File: %s\n",input->cIn);
   for (iLine = 0; iLine < input->iNumLines; iLine++) {
     /* Initialize bLineOK */
     input->bLineOK[iLine] = 0;
 
-    /* Now find those lines that are comments or blank */
+    /* Now find those lines that are comments or blank
     for (iPos = 0; iPos < LINE; iPos++) {
       cLine[iPos] = '\0';
     }
+    */
+    memset(cLine, '\0', LINE);
 
     fgets(cLine, LINE, fp);
+    // fprintf(stderr,"iLine: %d, %s",iLine,cLine);
     /* Check for # sign or blank line */
     if (CheckComment(cLine, LINE)) {
       /* Line is OK */
@@ -541,6 +553,7 @@ void Unrecognized(FILES files) {
                 cWord, files.Infile[iFile].cIn, iLine + 1);
         bExit = 1;
       }
+      memset(cLine, '\0', LINE);
       iLine++;
     }
   }
@@ -639,17 +652,17 @@ void ReadVerbose(FILES *files, OPTIONS *options, int *iVerbose, int iFile) {
 int iAssignMassUnit(char cTmp[], int iVerbose, char cFile[], char cName[],
                     int iLine) {
   if (memcmp(sLower(cTmp), "g", 1) == 0) {
-    return 0;
+    return U_GRAM;
   } else if (memcmp(sLower(cTmp), "k", 1) == 0) {
-    return 1;
+    return U_KILOGRAM;
   } else if (memcmp(sLower(cTmp), "s", 1) == 0) {
-    return 2;
+    return U_SOLARMASS;
   } else if (memcmp(sLower(cTmp), "e", 1) == 0) {
-    return 3;
+    return U_EARTHMASS;
   } else if (memcmp(sLower(cTmp), "j", 1) == 0) {
-    return 4;
+    return U_JUPITERMASS;
   } else if (memcmp(sLower(cTmp), "n", 1) == 0) {
-    return 5;
+    return U_NEPTUNEMASS;
   } else {
     if (iVerbose >= VERBERR) {
       fprintf(stderr,
@@ -669,13 +682,6 @@ int iAssignMassUnit(char cTmp[], int iVerbose, char cFile[], char cName[],
 void ReadUnitMass(CONTROL *control, FILES *files, OPTIONS *options, int iFile) {
   int iFileNow, lTmp = -1;
   char cTmp[OPTLEN];
-  /* Mass Unit
-     0=gm
-     1=kg
-     2=solar
-     3=Earth
-     4=Jup
-     5=Neptune */
 
   AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
@@ -743,15 +749,15 @@ void ReadUnitMass(CONTROL *control, FILES *files, OPTIONS *options, int iFile) {
 int iAssignUnitTime(char cTmp[], int iVerbose, char cFile[], char cName[],
                     int iLine) {
   if (memcmp(sLower(cTmp), "s", 1) == 0) {
-    return 0;
+    return U_SECOND;
   } else if (memcmp(sLower(cTmp), "d", 1) == 0) {
-    return 1;
+    return U_DAY;
   } else if (memcmp(sLower(cTmp), "y", 1) == 0) {
-    return 2;
+    return U_YEAR;
   } else if (memcmp(sLower(cTmp), "m", 1) == 0) {
-    return 3;
+    return U_MYR;
   } else if (memcmp(sLower(cTmp), "g", 1) == 0) {
-    return 4;
+    return U_GYR;
   } else {
     if (iVerbose >= VERBERR) {
       fprintf(stderr,
@@ -772,12 +778,6 @@ int iAssignUnitTime(char cTmp[], int iVerbose, char cFile[], char cName[],
 void ReadUnitTime(CONTROL *control, FILES *files, OPTIONS *options, int iFile) {
   int iFileNow, lTmp = -1;
   char cTmp[OPTLEN];
-  /* Time Unit
-     0=s
-     1=d
-     2=yr
-     3=Myr
-     4=Gyr */
 
   AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
@@ -841,9 +841,9 @@ void ReadUnitTime(CONTROL *control, FILES *files, OPTIONS *options, int iFile) {
 int iAssignUnitAngle(char cTmp[], int iVerbose, char cFile[], char cName[],
                      int iLine) {
   if (memcmp(sLower(cTmp), "r", 1) == 0) {
-    return 0;
+    return U_RADIANS;
   } else if (memcmp(sLower(cTmp), "d", 1) == 0) {
-    return 1;
+    return U_DEGREES;
   } else {
     if (iVerbose >= VERBERR) {
       fprintf(stderr,
@@ -864,9 +864,6 @@ void ReadUnitAngle(CONTROL *control, FILES *files, OPTIONS *options,
                    int iFile) {
   int iFileNow, lTmp = -1;
   char cTmp[OPTLEN];
-  /* Angle Unit
-     0=rad
-     1=deg */
 
   AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
@@ -930,19 +927,19 @@ void ReadUnitAngle(CONTROL *control, FILES *files, OPTIONS *options,
 int iAssignUnitLength(char cTmp[], int iVerbose, char cFile[], char cName[],
                       int iLine) {
   if (memcmp(sLower(cTmp), "c", 1) == 0) {
-    return 0;
+    return U_CENTIMETER;
   } else if (memcmp(sLower(cTmp), "m", 1) == 0) {
-    return 1;
+    return U_METER;
   } else if (memcmp(sLower(cTmp), "k", 1) == 0) {
-    return 2;
+    return U_KILOMETER;
   } else if (memcmp(sLower(cTmp), "s", 1) == 0) {
-    return 3;
+    return U_SOLARRADIUS;
   } else if (memcmp(sLower(cTmp), "e", 1) == 0) {
-    return 4;
+    return U_EARTHRADIUS;
   } else if (memcmp(sLower(cTmp), "j", 1) == 0) {
-    return 5;
+    return U_JUPRADIUS;
   } else if (memcmp(sLower(cTmp), "a", 1) == 0) {
-    return 6;
+    return U_AU;
   } else {
     if (iVerbose >= VERBERR) {
       fprintf(stderr,
@@ -963,14 +960,6 @@ void ReadUnitLength(CONTROL *control, FILES *files, OPTIONS *options,
                     int iFile) {
   int iFileNow, lTmp = -1;
   char cTmp[OPTLEN];
-  /* Length Unit
-     0=cm
-     1=m
-     2=km
-     3=R_sun
-     4=R_earth
-     5=R_Jup
-     6=AU */
 
   AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
@@ -1035,15 +1024,16 @@ void ReadUnitLength(CONTROL *control, FILES *files, OPTIONS *options,
 int iAssignTempUnit(char cTmp[], int iVerbose, char cFile[], char cName[],
                     int iLine) {
   if (memcmp(sLower(cTmp), "k", 1) == 0) {
-    return KELVIN;
+    return U_KELVIN;
   } else if (memcmp(sLower(cTmp), "c", 1) == 0) {
-    return CELSIUS;
+    return U_CELSIUS;
   } else if (memcmp(sLower(cTmp), "f", 1) == 0) {
-    return FARENHEIT;
+    return U_FARENHEIT;
   } else {
     if (iVerbose >= VERBERR) {
       fprintf(stderr,
-              "ERROR: Unknown argument to %s: %s. Options are: K, C, F.\n",
+              "ERROR: Unknown argument to %s: %s. Options are: Kelvin, "
+              "Celsius, Farenheit.\n",
               cName, cTmp);
     }
     LineExit(cFile, iLine);
@@ -1056,12 +1046,7 @@ int iAssignTempUnit(char cTmp[], int iVerbose, char cFile[], char cName[],
 void ReadUnitTemp(CONTROL *control, FILES *files, OPTIONS *options, int iFile) {
   int iFileNow, lTmp = -1;
   char cTmp[OPTLEN];
-  /* Temperature Units
-     0=Kelvin
-     1=Celsius
-     2=Farenheit */
 
-  // Copied from ReadUnitMass
   AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
   if (iFile == 0) {
@@ -1427,9 +1412,12 @@ void ReadDoBackward(BODY *body, CONTROL *control, FILES *files,
                      control->Io.iVerbose);
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
     control->Evolve.bDoBackward = bTmp;
-    fprintf(stderr, "\nWARNING: Backward integrations have not been validated "
-                    "and may be unstable!\n");
-    fprintf(stderr, "Use at your own risk.\n\n");
+    if (control->Evolve.bDoBackward) {
+      fprintf(stderr,
+              "\nWARNING: Backward integrations have not been validated "
+              "and may be unstable!\n");
+      fprintf(stderr, "Use at your own risk.\n\n");
+    }
   } else {
     AssignDefaultInt(options, &control->Evolve.bDoBackward, files->iNumInputs);
   }
@@ -4729,4 +4717,5 @@ void InitializeOptions(OPTIONS *options, fnReadOption *fnRead) {
   InitializeOptionsGalHabit(options, fnRead);
   InitializeOptionsSpiNBody(options, fnRead);
   InitializeOptionsMagmOc(options, fnRead);
+  InitializeOptionsFlare(options, fnRead);
 }

@@ -1,14 +1,16 @@
-import vplanet
-import vplot
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import numpy as np
-import pathlib
-import sys
-from matplotlib import ticker
-import re
-import astropy.units as u
 import glob
+import pathlib
+import re
+import sys
+
+import astropy.units as u
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import vplot
+from matplotlib import ticker
+
+import vplanet
 
 # Path hacks
 path = pathlib.Path(__file__).parents[0].absolute()
@@ -80,18 +82,18 @@ def comp2huybers(plname, xrange=False, show=True):
     for i in range(len(lines)):
         if lines[i].split() != []:
             if lines[i].split()[0] == "dRotPeriod":
-                P = -1 * np.float(lines[i].split()[1])
+                P = -1 * float(lines[i].split()[1])
             if lines[i].split()[0] == "dSemi":
-                semi = np.float(lines[i].split()[1])
+                semi = float(lines[i].split()[1])
                 if semi < 0:
                     semi *= -1
             if lines[i].split()[0] == "dpCO2":
-                pco2 = np.float(lines[i].split()[1])
+                pco2 = float(lines[i].split()[1])
 
     try:
-        longp = (body.ArgP + body.LongA + body.PrecA + 180) * np.pi / 180.0
+        longp = (body.ArgP + body.LongA + body.PrecA + 180)
     except:
-        longp = body.PrecA * np.pi / 180.0
+        longp = body.PrecA
 
     esinv = ecc * np.sin(longp)
 
@@ -118,7 +120,11 @@ def comp2huybers(plname, xrange=False, show=True):
         plt.xlim(xrange)
 
     plt.xticks(visible=False)
-    clb = plt.colorbar(c, ax=plt.gca(), ticks=[-17, -15, -13, -11, -9, -7, -5],)
+    clb = plt.colorbar(
+        c,
+        ax=plt.gca(),
+        ticks=[-17, -15, -13, -11, -9, -7, -5],
+    )
     clb.set_label("Surface Temp.\n($^{\circ}$C)", fontsize=12)
 
     # plot ice height
@@ -155,7 +161,10 @@ def comp2huybers(plname, xrange=False, show=True):
 
     if xrange:
         plt.xlim(xrange)
-    clb = plt.colorbar(c, ax=plt.gca(),)
+    clb = plt.colorbar(
+        c,
+        ax=plt.gca(),
+    )
     tloc = ticker.MaxNLocator(nbins=5)
     clb.locator = tloc
     clb.update_ticks()
@@ -177,7 +186,10 @@ def comp2huybers(plname, xrange=False, show=True):
 
     if xrange:
         plt.xlim(xrange)
-    clb = plt.colorbar(c, ax=plt.gca(),)
+    clb = plt.colorbar(
+        c,
+        ax=plt.gca(),
+    )
     clb.set_label("Ice Ablation\n(m year$^{-1}$)", fontsize=12)
 
     plt.subplot(7, 1, 1)
@@ -265,7 +277,6 @@ def seasonal_maps(time, show=True):
     """
     check = 0
     for f in glob.glob(str(path / "SeasonalClimateFiles" / "*.DailyInsol.*")):
-
         f1 = f.split(".")
 
         if len(f1) == 4:
@@ -273,7 +284,7 @@ def seasonal_maps(time, show=True):
         elif len(f1) == 5:
             timestamp = f1[3] + "." + f1[4]
 
-        time0 = np.float(timestamp)
+        time0 = float(timestamp)
 
         if time0 == time:
             # get system and planet names

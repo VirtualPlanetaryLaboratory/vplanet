@@ -10,16 +10,6 @@ def get_args():
         choices=["pdf", "png"],
         help="Output figure extension",
     )
-    parser.add_argument(
-        "-q",
-        "--quiet",
-        action="store_true",
-        help="No termnial output"
-    )
-    parser.add_argument(
-        "-rr",
-        "--rerun",
-        action="store_true",
-        help="re-run"
-    )
+    parser.add_argument("-q", "--quiet", action="store_true", help="No termnial output")
+    parser.add_argument("-rr", "--rerun", action="store_true", help="re-run")
     return parser.parse_args()

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from . import vplanet_core as core
-from .output import get_output
-import sys
-import subprocess
 import os
 import re
+import subprocess
+import sys
+
+from . import vplanet_core as core
+from .output import get_output
 
 
 class VPLANETError(RuntimeError):
@@ -24,7 +25,9 @@ def _entry_point():
     return core.run(*sys.argv)
 
 
-def run(infile="vpl.in", verbose=False, quiet=False, clobber=False, units=True):
+def run(
+    infile="vpl.in", verbose=False, quiet=False, clobber=False, units=True, C=False
+):
     """
     Run `vplanet` and return the output.
 
@@ -43,11 +46,11 @@ def run(infile="vpl.in", verbose=False, quiet=False, clobber=False, units=True):
     Raises:
         ``vplanet.VPLANETError``: If something goes wrong in the C extension.
 
-    .. note:: 
-    
+    .. note::
+
         We need to change the way vplanet exits on error in order to
         return to the Python interpreter when it terminates. The current
-        hack is to spawn a subprocess so we don't terminate the current 
+        hack is to spawn a subprocess so we don't terminate the current
         Python session.
 
     """
@@ -70,7 +73,11 @@ def run(infile="vpl.in", verbose=False, quiet=False, clobber=False, units=True):
     if clobber or not log_exists:
 
         # Parse kwargs
-        args = ["vplanet", infile]
+        if C:
+            exe = "../../bin/vplanet"
+        else:
+            exe = "vplanet"
+        args = [exe, infile]
         if verbose:
             args += ["-v"]
         if quiet:

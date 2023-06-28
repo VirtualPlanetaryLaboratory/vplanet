@@ -16,4 +16,4 @@ dSemi           0.7016		                      # Semi-major axis, negative -> AU
 dLongP          304.05                          # Longitude of perihelion (deg)
 
 # Output
-saOutputOrder Time Semim Ecce LongA Inc LongP  
+saOutputOrder Time Semim Ecce LongA Inc LongP

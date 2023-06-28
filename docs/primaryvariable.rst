@@ -244,12 +244,10 @@ the module's file (physics.c):
 
   void InitializeUpdatePhysics(BODY *body, UPDATE *update, int iBody) {
     ...
-    if (iBody > 0) {
-      if (update[iBody].iNumPrimaryVariable == 0) {
-        update[iBody].iNumVars++;
-      }
-      update[iBody].iNumPrimaryVariable++;
+    if (update[iBody].iNumPrimaryVariable == 0) {
+      update[iBody].iNumVars++;
     }
+    update[iBody].iNumPrimaryVariable++;
     ...
   }
 
@@ -304,5 +302,5 @@ If your new variable depends on arrays of parameters, you may also need to add
 or update the InitializeBody, InitializeUpdate, InitializeTmpBody, and
 InitializeTmpUpdate functions. See eqtide.c or distorb.c for examples of how
 these functions work. And of course you'll probably want to add `options
-<option>` and `outputs <output>`. Finally, add `examples and tests <tests>` to
+<option>`_ and `outputs <output>`_. Finally, add `examples and tests <tests>`_ to
 show off your result and ensure that future upgrades don't destroy your work.

@@ -228,6 +228,8 @@ void InitializeOptionsDistRot(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_SPECMOMINERTIA]             = &ReadSpecMomInertia;
 
   sprintf(options[OPT_FILEORBITDATA].cName, "sFileOrbitData");
+  // Define OPT_READORBITDATA so it can be used in the long help
+  sprintf(options[OPT_READORBITDATA].cName, "bReadOrbitData");
   sprintf(options[OPT_FILEORBITDATA].cDescr,
           "Name of file containing orbit time series");
   sprintf(options[OPT_FILEORBITDATA].cDefault, "orbit.txt");
@@ -235,16 +237,18 @@ void InitializeOptionsDistRot(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_FILEORBITDATA]        = &ReadFileOrbitData;
   sprintf(
         options[OPT_FILEORBITDATA].cLongDescr,
-        "The file should have the following format: Time SemiMajorAxis \n"
-        "Eccentricity Inclination ArgPericenter LongAscNode MeanAnomaly. The \n"
-        "units will be assumed to be the same as defined for the simulation.\n"
-        "If using this feature, the integration must used a fixed timestep \n"
-        "(%s = 0), and the timestep (%s) must equal the cadence in the file.\n"
-        "See %s for more information.",
+        "File containing pre-computed orbital data. The file must have the \n"
+        "following format: Time SemiMajorAxis Eccentricity Inclination \n"
+        "ArgPericenter LongAscNode MeanAnomaly. The units of those \n"
+        "parameters is assumed to be the same as body being simulated. When \n"
+        "using this option, the integration must used a fixed timestep \n"
+        "(%s = 0), and the timestep (%s) must equal the cadence in the file, \n"
+        "with time units in the %s file assumed to be the same as for the \n"
+        "body file. See %s for more information.",
         options[OPT_VARDT].cName, options[OPT_TIMESTEP].cName,
-        options[OPT_READORBITDATA].cName);
+        options[OPT_FILEORBITDATA].cName, options[OPT_READORBITDATA].cName);
 
-  sprintf(options[OPT_READORBITDATA].cName, "bReadOrbitData");
+  // cName defined above
   sprintf(options[OPT_READORBITDATA].cDescr,
           "Read in orbital data for use with distrot?");
   sprintf(options[OPT_READORBITDATA].cDefault, "0");
@@ -397,9 +401,10 @@ void InitializeYoblDistRotStar(BODY *body, UPDATE *update, int iBody,
 
 void VerifyOrbitData(BODY *body, CONTROL *control, OPTIONS *options,
                      int iBody) {
-  int iNLines, iLine, c;
+  int iNLines, iLine, c, iNumColsFound, bFoo, iNumCols = 7;
   double dttmp, datmp, detmp, ditmp, daptmp, dlatmp, dmatmp;
   FILE *fileorb;
+  char cLine[LINE], cFoo[MAXARRAY][OPTLEN];
 
   if (body[iBody].bReadOrbitData) {
     if (options[OPT_FILEORBITDATA].iLine[iBody + 1] == -1) {
@@ -413,7 +418,22 @@ void VerifyOrbitData(BODY *body, CONTROL *control, OPTIONS *options,
         printf("ERROR: File %s not found.\n", body[iBody].cFileOrbitData);
         exit(EXIT_INPUT);
       }
-      iNLines = 0;
+      // Check file has exactly 7 columns
+      fgets(cLine, LINE, fileorb);
+      GetWords(cLine, cFoo, &iNumColsFound, &bFoo);
+      if (iNumCols != iNumColsFound) {
+        if (control->Io.iVerbose >= VERBERR) {
+          fprintf(stderr,
+                  "ERROR: Incorrect number of columns (%d) in %s file %s. "
+                  "Must be exactly %d.\n",
+                  iNumColsFound, options[OPT_READORBITDATA].cName,
+                  body[iBody].cFileOrbitData, iNumCols);
+        }
+        exit(EXIT_INPUT);
+      }
+
+
+      iNLines = 1;
       while ((c = getc(fileorb)) != EOF) {
         if (c == '\n') {
           iNLines++; // add 1 for each new line
@@ -436,7 +456,7 @@ void VerifyOrbitData(BODY *body, CONTROL *control, OPTIONS *options,
 
       iLine = 0;
       while (feof(fileorb) == 0) {
-        fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf", &dttmp, &datmp, &detmp,
+        fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf\n", &dttmp, &datmp, &detmp,
                &ditmp, &daptmp, &dlatmp, &dmatmp);
         body[iBody].daTimeSeries[iLine] =
               dttmp * fdUnitsTime(control->Units[iBody + 1].iTime);
@@ -483,26 +503,30 @@ void VerifyOrbitData(BODY *body, CONTROL *control, OPTIONS *options,
     if (control->Evolve.bDoForward) {
       if (body[iBody].daTimeSeries[1] != control->Evolve.dTimeStep) {
         fprintf(stderr,
-                "ERROR: Time step size (%s = 1) must match orbital data if %s "
-                "= 1\n",
-                options[OPT_TIMESTEP].cName, options[OPT_READORBITDATA].cName);
+                "ERROR: Time step size (%s = %lf) must match orbital data "
+                "output time "
+                "(%lf) if %s = 1\n",
+                options[OPT_TIMESTEP].cName, control->Evolve.dTimeStep,
+                body[iBody].daTimeSeries[1], options[OPT_READORBITDATA].cName);
         exit(EXIT_INPUT);
       }
     } else if (control->Evolve.bDoBackward) {
       if (body[iBody].daTimeSeries[1] != -1 * control->Evolve.dTimeStep) {
         fprintf(stderr,
-                "ERROR: Time step size (%s = 1) must match orbital data if %s "
-                "= 1\n",
-                options[OPT_TIMESTEP].cName, options[OPT_READORBITDATA].cName);
+                "ERROR: Time step size (%s = %lf) must match orbital data "
+                "output time "
+                "(%lf) if %s = 1\n",
+                options[OPT_TIMESTEP].cName, control->Evolve.dTimeStep,
+                body[iBody].daTimeSeries[1], options[OPT_READORBITDATA].cName);
         exit(EXIT_INPUT);
       }
     }
     if (iNLines < (control->Evolve.dStopTime / control->Evolve.dTimeStep + 1)) {
       fprintf(stderr,
-              "ERROR: Input orbit data must at least as long as vplanet "
-              "integration (%f years)\n",
-              control->Evolve.dStopTime / YEARSEC);
-      exit(EXIT_INPUT);
+              "ERROR: Final time in %s is less than %s; simulation cannot be "
+              "completed.\n",
+              options[OPT_FILEORBITDATA].cName, options[OPT_STOPTIME].cName);
+      exit(EXIT_INPUT); // Should really be a DoubleLineExit
     }
   }
 }
@@ -700,10 +724,11 @@ void VerifyDistRot(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
     if (body[iBody].bReadOrbitData) {
       if (control->Io.iVerbose >= VERBINPUT) {
-        fprintf(stderr,
-                "WARNING: When reading in using %s to calculate\n"
-                "rotational evolution, Cassini parameters may not be correct.",
-                options[OPT_READORBITDATA].cName);
+        fprintf(
+              stderr,
+              "INFO: When reading in using %s to calculate "
+              "rotational evolution, Cassini parameters may not be correct.\n",
+              options[OPT_READORBITDATA].cName);
       }
       system->daLOrb        = malloc(3 * sizeof(double));
       body[iBody].daLOrb    = malloc(3 * sizeof(double));
@@ -1265,11 +1290,11 @@ void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
   body[iBody].daLRot[1] = 0.0;
   body[iBody].daLRot[2] = 1.0;
   obliq                 = atan2(sqrt(body[iBody].dXobl * body[iBody].dXobl +
-                     body[iBody].dYobl * body[iBody].dYobl),
-                body[iBody].dZobl);
+                                     body[iBody].dYobl * body[iBody].dYobl),
+                                body[iBody].dZobl);
 
   inc   = 2 * asin(sqrt((body[iBody].dPinc * body[iBody].dPinc) +
-                      (body[iBody].dQinc * body[iBody].dQinc)));
+                        (body[iBody].dQinc * body[iBody].dQinc)));
   longa = atan2(body[iBody].dPinc, body[iBody].dQinc);
   RotateVector(body[iBody].daLRot, body[iBody].daLRotTmp, -obliq, 0);
   eqnode = 2 * PI - atan2(body[iBody].dYobl, body[iBody].dXobl) - longa;
@@ -1282,6 +1307,7 @@ void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
                body[iBody].daLRotTmp[1] * body[iBody].daLRotTmp[1] +
                body[iBody].daLRotTmp[2] * body[iBody].daLRotTmp[2]);
 
+  // Probably should assign array elements to 0 if Lnorm = 0
   if (Lnorm != 0) {
     for (i = 0; i < 3; i++) {
       body[iBody].daLRotTmp[i] /= Lnorm;
@@ -1292,10 +1318,12 @@ void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
   Lnorm = sqrt(body[iBody].daLOrbTmp[0] * body[iBody].daLOrbTmp[0] +
                body[iBody].daLOrbTmp[1] * body[iBody].daLOrbTmp[1] +
                body[iBody].daLOrbTmp[2] * body[iBody].daLOrbTmp[2]);
-
-  for (i = 0; i < 3; i++) {
-    body[iBody].daLOrbTmp[i] /= Lnorm;
+  if (Lnorm != 0) {
+    for (i = 0; i < 3; i++) {
+      body[iBody].daLOrbTmp[i] /= Lnorm;
+    }
   }
+
   cross(body[iBody].daLOrbTmp, body[iBody].daLRotTmp, system->daLOrb);
   *dTmp = sqrt(system->daLOrb[0] * system->daLOrb[0] +
                system->daLOrb[1] * system->daLOrb[1] +
@@ -1364,8 +1392,8 @@ void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
   body[iBody].daLRot[1] = 0.0;
   body[iBody].daLRot[2] = 1.0;
   obliq                 = atan2(sqrt(body[iBody].dXobl * body[iBody].dXobl +
-                     body[iBody].dYobl * body[iBody].dYobl),
-                body[iBody].dZobl);
+                                     body[iBody].dYobl * body[iBody].dYobl),
+                                body[iBody].dZobl);
 
   inc = 2 * asin(sqrt((body[iBody].dPinc * body[iBody].dPinc) +
                       (body[iBody].dQinc * body[iBody].dQinc)));
@@ -1393,8 +1421,10 @@ void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
                body[iBody].daLOrbTmp[1] * body[iBody].daLOrbTmp[1] +
                body[iBody].daLOrbTmp[2] * body[iBody].daLOrbTmp[2]);
 
-  for (i = 0; i < 3; i++) {
-    body[iBody].daLOrbTmp[i] /= Lnorm;
+  if (Lnorm != 0) {
+    for (i = 0; i < 3; i++) {
+      body[iBody].daLOrbTmp[i] /= Lnorm;
+    }
   }
   *dTmp = 0.0;
   for (i = 0; i < 3; i++) {
@@ -1633,7 +1663,7 @@ void UpdateOrbitData(BODY *body, EVOLVE *evolve, int iBody) {
   body[iBody].dPinc = body[iBody].daPincSeries[body[iBody].iCurrentStep];
   body[iBody].dQinc = body[iBody].daQincSeries[body[iBody].iCurrentStep];
   body[iBody].dEcc  = sqrt(body[iBody].dHecc * body[iBody].dHecc +
-                          body[iBody].dKecc * body[iBody].dKecc);
+                           body[iBody].dKecc * body[iBody].dKecc);
 
   /* numerical derivatives of p and q */
   if (body[iBody].iCurrentStep == 0) {
@@ -1668,6 +1698,18 @@ void PropsAuxDistRot(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
 
   if (body[iBody].bReadOrbitData) {
     UpdateOrbitData(body, evolve, iBody);
+  }
+
+  if ((fabs(body[iBody].dXobl) > 1) || fabs(body[iBody].dYobl) > 1 ||
+      fabs(body[iBody].dZobl) > 1) {
+    if (io->iVerbose >= VERBERR) {
+      fprintf(stderr, "ERROR: %s's obliquity out of bounds at %.2e years.\n",
+              body[iBody].cName, evolve->dTime / YEARSEC);
+      fprintf(stderr, "\tXobl: %.6e\n", body[iBody].dXobl);
+      fprintf(stderr, "\tYobl: %.6e\n", body[iBody].dYobl);
+      fprintf(stderr, "\tZobl: %.6e\n", body[iBody].dZobl);
+    }
+    exit(EXIT_INT);
   }
 
   body[iBody].dObliquity = atan2(sqrt(body[iBody].dXobl * body[iBody].dXobl +
@@ -1912,7 +1954,7 @@ double fndAxialGRDyDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 //--------------Obliquity/spin
-//evolution--------------------------------------------------------------
+// evolution--------------------------------------------------------------
 
 /**
 Derivative of y = sin(obliquity)*sin(preca) when RD4 orbital model is used

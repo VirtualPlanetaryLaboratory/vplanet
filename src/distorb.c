@@ -2301,9 +2301,9 @@ void PropsAuxDistOrb(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                      int iBody) {
   body[iBody].dLongP = atan2(body[iBody].dHecc, body[iBody].dKecc);
   body[iBody].dEcc   = sqrt(body[iBody].dHecc * body[iBody].dHecc +
-                          body[iBody].dKecc * body[iBody].dKecc);
+                            body[iBody].dKecc * body[iBody].dKecc);
   body[iBody].dSinc  = sqrt(body[iBody].dPinc * body[iBody].dPinc +
-                           body[iBody].dQinc * body[iBody].dQinc);
+                            body[iBody].dQinc * body[iBody].dQinc);
 
   body[iBody].dRPeri = (1.0 - sqrt(body[iBody].dHecc * body[iBody].dHecc +
                                    body[iBody].dKecc * body[iBody].dKecc)) *
@@ -4394,9 +4394,9 @@ double fndDSemiF26Dalpha(double dAxRatio, int iIndexJ) {
 
 
 //----------------Disturbing function h k p
-//q----------------------------------------------
+// q----------------------------------------------
 //--------dR/dh-----------(inner
-//body)------------------------------------------------------
+// body)------------------------------------------------------
 
 /**
 Derivative in d/dh of disturbing function term
@@ -6501,7 +6501,7 @@ double fndDdisturbDQincPrime(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 //--------Relativistic
-//correction---------------------------------------------------------
+// correction---------------------------------------------------------
 
 /**
 Relativistic precession of periastron
@@ -6550,7 +6550,7 @@ double fndApsidalGRDkDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 //-------------------DistOrb's equations in h k p q (4th order direct
-//integration RD4)--------------------
+// integration RD4)--------------------
 
 /**
 Derivative of variable Hecc = e*sin(longp) in RD4 solution
@@ -6566,7 +6566,7 @@ double fndDistOrbRD4DhDt(BODY *body, SYSTEM *system, int *iaBody) {
 
   dMu = KGAUSS * KGAUSS * (body[0].dMass + body[iaBody[0]].dMass) / MSUN;
   y   = fabs(1 - body[iaBody[0]].dHecc * body[iaBody[0]].dHecc -
-           body[iaBody[0]].dKecc * body[iaBody[0]].dKecc);
+             body[iaBody[0]].dKecc * body[iaBody[0]].dKecc);
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     sum += (sqrt(y) * fndDdisturbDKecc(body, system, iaBody) +
             body[iaBody[0]].dKecc *
@@ -6604,7 +6604,7 @@ double fndDistOrbRD4DkDt(BODY *body, SYSTEM *system, int *iaBody) {
 
   dMu = KGAUSS * KGAUSS * (body[0].dMass + body[iaBody[0]].dMass) / MSUN;
   y   = fabs(1 - body[iaBody[0]].dHecc * body[iaBody[0]].dHecc -
-           body[iaBody[0]].dKecc * body[iaBody[0]].dKecc);
+             body[iaBody[0]].dKecc * body[iaBody[0]].dKecc);
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     sum += -(sqrt(y) * fndDdisturbDHecc(body, system, iaBody) +
              body[iaBody[0]].dHecc *
@@ -6642,7 +6642,7 @@ double fndDistOrbRD4DpDt(BODY *body, SYSTEM *system, int *iaBody) {
 
   dMu = KGAUSS * KGAUSS * (body[0].dMass + body[iaBody[0]].dMass) / MSUN;
   y   = fabs(1 - body[iaBody[0]].dHecc * body[iaBody[0]].dHecc -
-           body[iaBody[0]].dKecc * body[iaBody[0]].dKecc);
+             body[iaBody[0]].dKecc * body[iaBody[0]].dKecc);
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     sum += (body[iaBody[0]].dPinc *
                   (-body[iaBody[0]].dKecc *
@@ -6677,7 +6677,7 @@ double fndDistOrbRD4DqDt(BODY *body, SYSTEM *system, int *iaBody) {
 
   dMu = KGAUSS * KGAUSS * (body[0].dMass + body[iaBody[0]].dMass) / MSUN;
   y   = fabs(1 - body[iaBody[0]].dHecc * body[iaBody[0]].dHecc -
-           body[iaBody[0]].dKecc * body[iaBody[0]].dKecc);
+             body[iaBody[0]].dKecc * body[iaBody[0]].dKecc);
   if (body[iaBody[0]].dSemi < body[iaBody[1]].dSemi) {
     sum += (body[iaBody[0]].dQinc *
                   (-body[iaBody[0]].dKecc *
@@ -6700,7 +6700,7 @@ double fndDistOrbRD4DqDt(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 //-------------------DistOrb's equations in h k p q (2nd order Laplace-Lagrange
-//LL2)--------------------
+// LL2)--------------------
 /**
 Value of variable Hecc = e*sin(longp) at time dAge, in the LL2 solution (not a
 derivative)

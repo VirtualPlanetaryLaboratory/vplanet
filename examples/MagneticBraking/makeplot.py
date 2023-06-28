@@ -4,16 +4,18 @@ implementations.
 David P. Fleming, University of Washington, 2018
 """
 
-import vplanet
-import vplot
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import numpy as np
 import pathlib
 import sys
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
-from matplotlib.patches import Patch
+import vplot
 from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
+
+import vplanet
 
 # Path hacks
 path = pathlib.Path(__file__).parents[0].absolute()

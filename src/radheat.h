@@ -33,9 +33,10 @@
 #define MASS26AL 26 * ATOMMASS         /**< [kg] Mass of a 26Al atom */
 #define HALFLIFE26AL 2.26267992e13     /**< [s] Half-life of 26Al */
 /* Mantle */
-#define EMASSMAN26AL 4.6e18   /**< [kg]  Default mantle mass of 26Al */
-#define ENUMMAN26AL 1.0654e41 /**< [num] Default mantle number of 26Al atoms   \
-                               */
+#define EMASSMAN26AL 4.6e18 /**< [kg]  Default mantle mass of 26Al */
+#define ENUMMAN26AL                                                            \
+  1.0654e41 /**< [num] Default mantle number of 26Al atoms                     \
+             */
 #define EPOWERMAN26AL                                                          \
   2.0944e15 /**< [W] Default mantle power from 26Al if all 26Mg from 26Al      \
                decay */
@@ -53,20 +54,24 @@
 #define MASS40K 39.96399848 * ATOMMASS /**< [kg] Mass of a 40K atom */
 #define HALFLIFE40K 5.736527e+16       /**< [s] Half-life of 40K */
 /* Mantle */
-#define EMASSMAN40K 6.45089e+17  /**< [kg]  Default mantle mass of 40K */
-#define ENUMMAN40K 9.72110e+42   /**< [num] Default mantle number of 40K atoms \
-                                  */
-#define EPOWERMAN40K 3.61578e+13 /**< [W] Default mantle power from 40K decay  \
-                                  */
+#define EMASSMAN40K 6.45089e+17 /**< [kg]  Default mantle mass of 40K */
+#define ENUMMAN40K                                                             \
+  9.72110e+42 /**< [num] Default mantle number of 40K atoms                    \
+               */
+#define EPOWERMAN40K                                                           \
+  3.61578e+13 /**< [W] Default mantle power from 40K decay                     \
+               */
 /* Core */
-#define EMASSCORE40K 6.04046e+17  /**< [kg]  Default core mass of 40K */
-#define ENUMCORE40K 9.10261e+42   /**< [num] Default core number of 40K atoms */
-#define EPOWERCORE40K 3.38573e+13 /**< [W] Default core power from 40K decay   \
-                                   */
+#define EMASSCORE40K 6.04046e+17 /**< [kg]  Default core mass of 40K */
+#define ENUMCORE40K 9.10261e+42  /**< [num] Default core number of 40K atoms */
+#define EPOWERCORE40K                                                          \
+  3.38573e+13 /**< [W] Default core power from 40K decay                       \
+               */
 /* Crust (assuming crustal mass constant) */
 #define EMASSCRUST40K 2.47738e+17 /**< [kg]  Default crust mass of 40K */
-#define ENUMCRUST40K 3.73326e+42  /**< [num] Default crust number of 40K atoms \
-                                   */
+#define ENUMCRUST40K                                                           \
+  3.73326e+42 /**< [num] Default crust number of 40K atoms                     \
+               */
 #define EPOWERCRUST40K                                                         \
   1.38859e+13 /**< [W] Default crust power from 40K decay */
 
@@ -105,8 +110,9 @@
   1.16691e+13 /**< [W] Default mantle power from 238U decay */
 /* Core */
 #define EMASSCORE238U 1.16964e+15 /**< [kg]  Default core mass of 238U */
-#define ENUMCORE238U 2.95900e+39  /**< [num] Default core number of 238U atoms \
-                                   */
+#define ENUMCORE238U                                                           \
+  2.95900e+39 /**< [num] Default core number of 238U atoms                     \
+               */
 #define EPOWERCORE238U                                                         \
   1.20381e+11 /**< [W] Default core power from 238U decay */
 /* Crust (assuming crustal mass constant) */
@@ -128,8 +134,9 @@
   2.02490e+13 /**< [W] Default mantle power from 235U decay */
 /* Core */
 #define EMASSCORE235U 9.56785e+14 /**< [kg]  Default core mass of 235U */
-#define ENUMCORE235U 2.45149e+39  /**< [num] Default core number of 235U atoms \
-                                   */
+#define ENUMCORE235U                                                           \
+  2.45149e+39 /**< [num] Default core number of 235U atoms                     \
+               */
 #define EPOWERCORE235U                                                         \
   5.01586e+11 /**< [W] Default core power from 235U decay */
 /* Crust (assuming crustal mass constant) */

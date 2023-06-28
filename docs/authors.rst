@@ -31,12 +31,14 @@ connected them both to EqTide.
 **Patrick Barth** developed the MagmOc module. He also assisted in AtmEsc
 development.
 
+**Laura Amaral** developed the FLARE module and contributed to AtmEsc.
+
 **Thomas Quinn** assisted in the development of DistOrb, DistRot, and GalHabit.
 He also found many bugs with valgrind and address-sanitizer.
 
 **Caitlyn Wilhelm** added forced eccentricity and obliquity oscillations to
-POISE, and assisted in debugging it. She also built the bigplanet and
-multi-planet script.
+POISE, and assisted in debugging it. She also built the BigPlanet and
+MultiPlanet scripts.
 
 **Rodolfo Garcia** assisted in AtmEsc and ThermInt development.
 

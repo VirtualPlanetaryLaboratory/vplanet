@@ -1,13 +1,17 @@
-from setuptools import setup, Extension, find_packages
-from setuptools.command.build_ext import build_ext
-from setuptools.command.develop import develop
+import imp
+import os
+import subprocess as sub
+import sys
 from distutils.command.clean import clean
 from glob import glob
-import sys
 
+from setuptools import Extension, find_packages, setup
+from setuptools.command.build_ext import build_ext
+from setuptools.command.develop import develop
 
 # Read current code version
-VERSION = open("VERSION", "r").read().split("\n")[0].strip()
+VersionPath = os.path.join(os.path.abspath("."), "VERSION")
+VERSION = open(VersionPath, "r").read().split("\n")[0].strip()
 
 
 class BuildExt(build_ext):
@@ -42,7 +46,10 @@ class Develop(develop):
 
 macros = [
     ("VPLANET_PYTHON_INTERFACE", 1),
-    ("VPLANET_VERSION", '"{}"'.format(VERSION),),
+    (
+        "VPLANET_VERSION",
+        '"{}"'.format(VERSION),
+    ),
 ]
 if sys.platform.startswith("win"):
     macros += [("VPLANET_ON_WINDOWS", 1)]
@@ -61,27 +68,34 @@ cmdclass = {"build_ext": BuildExt, "develop": Develop}
 # Vplanet suite of tools
 vplanet_suite = [
     "vplot>=1.0.2",
-    "vspace>=1.0.2",
-    "bigplanet>=1.0.1",
-    "multiplanet>=1.0.1",
+    "vspace>=2.0.0",
+    "bigplanet>=2.0.0",
+    "multiplanet>=2.0.0",
 ]
 
 setup(
     name="vplanet",
     author="Rory Barnes",
     author_email="rkb9@uw.edu",
-    version=VERSION,
     url="https://github.com/VirtualPlanetaryLaboratory/vplanet",
+    version=VERSION,
     description="The virtual planet simulator",
     long_description=open("README.md", "r").read(),
     long_description_content_type="text/markdown",
     license="MIT",
     packages=["vplanet"],
-    install_requires=vplanet_suite + ["astropy>=3.0", "numpy", "tqdm",],
+    #install_requires=vplanet_suite + ["astropy>=3.0", "numpy", "tqdm", "pre-commit"],
+    install_requires=vplanet_suite + ["astropy>=3.0", "numpy", "tqdm", "seaborn"],
     python_requires=">=3.6",
+    # use_scm_version={
+    # "write_to": os.path.join("vplanet", "vplanet_version.py"),
+    # "write_to_template": '__version__ = "{version}"\n',
+    # },
     ext_modules=ext_modules,
     cmdclass=cmdclass,
     include_package_data=True,
     zip_safe=False,
     entry_points={"console_scripts": ["vplanet=vplanet.wrapper:_entry_point"]},
 )
+
+#sub.call(["pre-commit", "install"])

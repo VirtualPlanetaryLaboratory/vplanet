@@ -119,7 +119,7 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
-void GetWords(char cLine[],char[MAXARRAY][OPTLEN],int*,int*);
+void GetWords(char cLine[], char[MAXARRAY][OPTLEN], int *, int *);
 
 void InitializeOptions(OPTIONS *, fnReadOption *);
 void ReadOptions(BODY **, CONTROL *, FILES *, MODULE *, OPTIONS *, OUTPUT *,

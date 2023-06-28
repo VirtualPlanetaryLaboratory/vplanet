@@ -1,11 +1,13 @@
 """Reproduce Figure 3 in Lopez and Fortney (2013)."""
-import vplanet
-import vplot
-import numpy as np
-from tqdm import tqdm
-import matplotlib.pyplot as plt
 import pathlib
 import sys
+
+import matplotlib.pyplot as plt
+import numpy as np
+import vplot
+from tqdm import tqdm
+
+import vplanet
 
 # Path hacks
 path = pathlib.Path(__file__).parents[0].absolute()
@@ -67,7 +69,7 @@ def write_in(envmass, mass):
     """Write the .in files to disk."""
     nfiles = len(envmass)
 
-    # Write the vplt.in file
+    # Write the vpl.in file
     with open(path / "vpl.in", "w") as file:
         filenames = " ".join(["p%02d.in" % n for n in range(nfiles)])
         print(system % filenames, file=file)

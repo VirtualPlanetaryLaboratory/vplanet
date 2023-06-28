@@ -29,8 +29,9 @@
 #define EMASSFRACCRUST                                                         \
   (1 - EMASSFRACMAN - EMASSFRACCORE -                                          \
    EMASSFRACOCEAN) /**< [nd] Mass fraction of Earth's crust */
-#define EMASSCRUST (EMASSFRACCRUST * EMASS) /**< [kg] Mass Earth crust today.  \
-                                             */
+#define EMASSCRUST                                                             \
+  (EMASSFRACCRUST * EMASS) /**< [kg] Mass Earth crust today.                   \
+                            */
 
 // INTERNAL STRUCTURE E
 #define ERADIUS (6371.0 * KM) /**< [m] Radius of Earth */
@@ -115,12 +116,14 @@
 #define STIFFNESS                                                              \
   1.71e13 /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3,       \
              Q=100) */
-#define SHMODREF 1e6       /**< [Pa] Reference kinematic mantle shear modulus */
-#define VISCREF 6e7        /**< [m^2/s] Reference kinematic mantle viscosity */
-#define DYNAMVISCREF 1.5e9 /**< [m^2/s] Reference kinematic mantle viscosity   \
-                            */
-#define VISCJUMPMAN 2.40   /**< [nd] Viscosity jump from upper to lower mantle \
-                            */
+#define SHMODREF 1e6 /**< [Pa] Reference kinematic mantle shear modulus */
+#define VISCREF 6e7  /**< [m^2/s] Reference kinematic mantle viscosity */
+#define DYNAMVISCREF                                                           \
+  1.5e9 /**< [m^2/s] Reference kinematic mantle viscosity                      \
+         */
+#define VISCJUMPMAN                                                            \
+  2.40 /**< [nd] Viscosity jump from upper to lower mantle                     \
+        */
 #define FIXVISCJUMPMAN                                                         \
   0 /**< [nd] (default) Option to fix viscjumpulm. if =0 then viscLM is        \
        computed from TLMan. */
@@ -256,14 +259,18 @@ void fvInitializeBodyThermint(BODY *, CONTROL *, UPDATE *, int, int);
   1719 /**< Temperature jump across lower mantle thermal boundary layer */
 #define OPT_VISCLMAN                                                           \
   1721 /**< Viscosity of lower mantle thermal boundary layer */
-#define OPT_SHMODUMAN 1722 /**< Shear modulus of upper mantle boundary layer   \
-                            */
-#define OPT_SHMODLMAN 1723 /**< Shear modulus of lower mantle boundary layer   \
-                            */
-#define OPT_FMELTUMAN 1724 /**< Melt fraction in upper mantle boundary layer   \
-                            */
-#define OPT_FMELTLMAN 1725 /**< Melt fraction in lower mantle boundary layer   \
-                            */
+#define OPT_SHMODUMAN                                                          \
+  1722 /**< Shear modulus of upper mantle boundary layer                       \
+        */
+#define OPT_SHMODLMAN                                                          \
+  1723 /**< Shear modulus of lower mantle boundary layer                       \
+        */
+#define OPT_FMELTUMAN                                                          \
+  1724 /**< Melt fraction in upper mantle boundary layer                       \
+        */
+#define OPT_FMELTLMAN                                                          \
+  1725 /**< Melt fraction in lower mantle boundary layer                       \
+        */
 #define OPT_MELTFACTORUMAN                                                     \
   1726 /**< Melt viscosity reduction factor in upper mantle */
 #define OPT_FIXMELTFACTORUMAN                                                  \
@@ -348,9 +355,10 @@ void fvInitializeBodyThermint(BODY *, CONTROL *, UPDATE *, int, int);
 
 /* New Parameters for vemcee */
 #define OPT_ACTVISCMAN                                                         \
-  1800                    /**< [J/mol] Viscosity activation energy of mantle */
-#define OPT_SHMODREF 1801 /**< [Pa] Reference kinematic mantle shear modulus   \
-                           */
+  1800 /**< [J/mol] Viscosity activation energy of mantle */
+#define OPT_SHMODREF                                                           \
+  1801 /**< [Pa] Reference kinematic mantle shear modulus                      \
+        */
 #define OPT_STIFFNESS                                                          \
   1802 /**< [Pa] Effective stiffness of mantle (calibrated to k2=0.3, Q=100)   \
         */
@@ -488,14 +496,16 @@ void fvForceBehaviorThermint(BODY *, MODULE *, EVOLVE *, IO *, SYSTEM *,
   1729 /**< [nd] Melt viscosity reduction factor in upper mantle */
 #define OUT_MELTFACTORLMAN                                                     \
   1730 /**< [nd] Melt viscosity reduction factor in lower mantle */
-#define OUT_DEPTHMELTMAN 1731 /**< [m] Depth to base of upper mantle melting   \
-                               */
+#define OUT_DEPTHMELTMAN                                                       \
+  1731 /**< [m] Depth to base of upper mantle melting                          \
+        */
 #define OUT_TDEPTHMELTMAN                                                      \
   1732 /**< [K] Temperature at base of upper mantle melting */
 #define OUT_TJUMPMELTMAN                                                       \
   1733 /**< [K] Temperature jump across upper mantle melt region */
 #define OUT_MELTMASSFLUXMAN 1734 /**< [kg/s] Mantle melt mass flux */
-#define OUT_VISCUMANARR 1737 /**< [m^2/s] Arrhenius viscosity in upper mantle  \
+#define OUT_VISCUMANARR                                                        \
+  1737                       /**< [m^2/s] Arrhenius viscosity in upper mantle  \
                               */
 #define OUT_RAYLEIGHMAN 1738 /**< [nd] Mantle Rayleigh Number */
 #define OUT_VISCMMAN 1739    /**< [m^2/s] Viscosity of mid (average) mantle */
@@ -516,10 +526,12 @@ void fvForceBehaviorThermint(BODY *, MODULE *, EVOLVE *, IO *, SYSTEM *,
   1746 /**< [W/m^2] Heat flux across core-mantle boundary and lower mantle */
 #define OUT_HFLOWCMB                                                           \
   1747 /**< [W] Heat flow across core-mantle boundary and lower mantle */
-#define OUT_HFLOWTIDALMAN 1748  /**< [W] Tidal dissipation heat flow in mantle \
-                                 */
-#define OUT_HFLOWTIDALCORE 1749 /**< [W] Tidal dissipation heat flow in core   \
-                                 */
+#define OUT_HFLOWTIDALMAN                                                      \
+  1748 /**< [W] Tidal dissipation heat flow in mantle                          \
+        */
+#define OUT_HFLOWTIDALCORE                                                     \
+  1749 /**< [W] Tidal dissipation heat flow in core                            \
+        */
 #define OUT_HFLOWLATENTMAN                                                     \
   1750 /**< [W] Latent heat flow from solidification of mantle */
 #define OUT_HFLOWMELTMAN 1751 /**< [W] Melt heat flow from mantle */

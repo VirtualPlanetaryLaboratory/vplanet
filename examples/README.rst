@@ -112,6 +112,8 @@ pulsar planet system PSR1257+12. [AtmEsc, SpiNBody]
 
 `StellarEvol <StellarEvol>`_: Pre-main sequence and main sequence evolution of stellar properties. [STELLAR]
 
+`HabitableZone <HabitableZone>`_: Habitable zone limits for 4.5 Gyr old stars from `Kopparapu et al. (2013) <https://ui.adsabs.harvard.edu/abs/2013ApJ...765..131K/abstract>`_. [STELLAR]
+
 **Tidal Effects**
 =================
 

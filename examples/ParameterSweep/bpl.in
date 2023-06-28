@@ -1,0 +1,8 @@
+sDestFolder ParameterSweep
+sArchiveFile ParameterSweep.bpa
+sOutputFile ParameterSweep.bpf
+
+saBodyFiles   earth.in sun.in
+sPrimaryFile   vpl.in
+
+saKeyInclude earth:TCore:initial earth:40KPowerCore:final earth:RIC:final

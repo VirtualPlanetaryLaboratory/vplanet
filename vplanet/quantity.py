@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
-import numpy as np
-import re
 import numbers
+import re
+
 import astropy
 import astropy.units as u
-from astropy.units.core import (
-    Unit,
-    UnitBase,
-    dimensionless_unscaled,
-    UnitsError,
-)
+import numpy as np
+from astropy.units.core import Unit, UnitBase, UnitsError, dimensionless_unscaled
 from astropy.utils.misc import isiterable
-
 
 # TODO: There may be other methods in
 # https://github.com/astropy/astropy/blob/master/astropy/units/quantity.py
@@ -118,7 +113,12 @@ class VPLANETQuantity(u.Quantity):
                     dtype = float
 
             return np.array(
-                value, dtype=dtype, copy=copy, order=order, subok=True, ndmin=ndmin,
+                value,
+                dtype=dtype,
+                copy=copy,
+                order=order,
+                subok=True,
+                ndmin=ndmin,
             )
 
         # Maybe str, or list/tuple of Quantity? If so, this may set value_unit.
@@ -169,7 +169,10 @@ class VPLANETQuantity(u.Quantity):
         if value_unit is None:
             # If the value has a `unit` attribute and if not None
             # (for Columns with uninitialized unit), treat it like a quantity.
-            value_unit = getattr(value, "unit", None)
+            try:
+                value_unit = value.unit
+            except AttributeError:
+                value_unit = None
             if value_unit is None:
                 # Default to dimensionless for no (initialized) unit attribute.
                 if unit is None:
@@ -191,7 +194,12 @@ class VPLANETQuantity(u.Quantity):
                     copy = False  # copy will be made in conversion at end
 
         value = np.array(
-            value, dtype=dtype, copy=copy, order=order, subok=False, ndmin=ndmin,
+            value,
+            dtype=dtype,
+            copy=copy,
+            order=order,
+            subok=False,
+            ndmin=ndmin,
         )
 
         # check that array contains numbers or long int objects
@@ -206,7 +214,10 @@ class VPLANETQuantity(u.Quantity):
 
         # if we allow subclasses, allow a class from the unit.
         if subok:
-            qcls = getattr(unit, "_quantity_class", cls)
+            try:
+                qcls = unit._quantity_class
+            except AttributeError:
+                qcls = cls
             if issubclass(qcls, cls):
                 cls = qcls
 
@@ -230,8 +241,11 @@ class VPLANETQuantity(u.Quantity):
 
         # If our unit is not set and obj has a valid one, use it.
         if self._unit is None:
-            unit = getattr(obj, "_unit", None)
-            if unit is not None:
+            try:
+                unit = obj._unit
+            except AttributeError:
+                unit = None
+            else:
                 self._set_unit(unit)
 
         # Copy info if the original had `info` defined.  Because of the way the
@@ -241,13 +255,16 @@ class VPLANETQuantity(u.Quantity):
             self.info = obj.info
 
         # Custom tags
-        self.tags = getattr(obj, "tags", {})
+        try:
+            self.tags = obj.tags
+        except AttributeError:
+            self.tags = {}
 
 
 class NumpyQuantity(np.ndarray):
     """
     A custom subclass of numpy ndarray with tags.
-    
+
     """
 
     def __new__(cls, input_array, tags={}, unit=None):
@@ -264,8 +281,14 @@ class NumpyQuantity(np.ndarray):
         # see InfoArray.__array_finalize__ for comments
         if obj is None:
             return
-        self.tag = getattr(obj, "tags", {})
-        self.unit = getattr(obj, "unit", None)
+        try:
+            self.tag = obj.tags
+        except AttributeError:
+            self.tag = {}
+        try:
+            self.unit = obj.unit
+        except AttributeError:
+            self.unit = None
 
     def __array_wrap__(self, out_arr, context=None):
         # Call the parent

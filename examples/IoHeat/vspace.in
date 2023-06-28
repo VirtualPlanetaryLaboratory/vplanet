@@ -1,11 +1,11 @@
-srcfolder  .
-destfolder data
-trialname  ioheat
+sSrcFolder  .
+sDestFolder data
+sTrialName  ioheat
 
-file   vpl.in
+sPrimaryFile   vpl.in
 
-file   jupiter.in
+sBodyFile   jupiter.in
 
-file   io.in
+sBodyFile   io.in
 dEcc  [1e-3,0.01,n30] e
 dObliquity [1e-3,1,l30] o

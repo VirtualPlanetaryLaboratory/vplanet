@@ -16,7 +16,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
+#ifdef __x86_64__
 #include <xmmintrin.h>
+#endif
 
 // Windows-specific
 #ifdef VPLANET_ON_WINDOWS
@@ -88,10 +90,38 @@
   0.6 // Structural constant for spherical mass                              \
         //distribution potential energy (E_pot = -ALPHA*BIGG*M^2/R)
 
-// Temperature macros
-#define KELVIN 0
-#define CELSIUS 1
-#define FARENHEIT 2
+// Angle unit IDs
+#define U_RADIANS 0
+#define U_DEGREES 1
+
+// Length unit IDs
+#define U_METER 0
+#define U_CENTIMETER 1
+#define U_KILOMETER 2
+#define U_SOLARRADIUS 3
+#define U_EARTHRADIUS 4
+#define U_JUPRADIUS 5
+#define U_AU 6
+
+// Mass unit IDs
+#define U_GRAM 0
+#define U_KILOGRAM 1
+#define U_SOLARMASS 2
+#define U_EARTHMASS 3
+#define U_JUPITERMASS 4
+#define U_NEPTUNEMASS 5
+
+// Temperature unit IDs
+#define U_KELVIN 0
+#define U_CELSIUS 1
+#define U_FARENHEIT 2
+
+// Time unit IDs
+#define U_SECOND 0
+#define U_DAY 1
+#define U_YEAR 2
+#define U_MYR 3
+#define U_GYR 4
 
 /* Do not change these declarations */
 extern const double dHUGE;
@@ -105,7 +135,7 @@ extern const double dTINY;
 /* !!! Hack to get long description and module list formatting for Long Help.
    It'd be better to keep LINE back at 256 for memory, and malloc the char's,
    but I don't know how to do that. */
-#define LINE 2048         /* Maximum number of characters in a line */
+#define LINE 2048 /* Maximum number of characters in a line */
 #define NAMELEN 100
 #define MAXFILES 128 /* Maximum number of input files */
 #define MAXARRAY                                                               \
@@ -115,10 +145,11 @@ extern const double dTINY;
   1000 /* Number of options that could be                                      \
         * in MODULE */
 #define MAXLINES                                                               \
-  256             /* Maximum Number of Lines in an                             \
-                   * input file */
-#define OUTLEN 48 /* Maximum number of characters in an output column header   \
-                   */
+  256 /* Maximum Number of Lines in an                                         \
+       * input file */
+#define OUTLEN                                                                 \
+  48 /* Maximum number of characters in an output column header                \
+      */
 #define OUTDESCR 256     /* Number of characters in output description */
 #define OUTLONDESCR 2048 /* Number of characters in output long description */
 
@@ -159,6 +190,7 @@ struct BODY {
 
   double dAge;       /**< Body's Age */
   double dMass;      /**< Body's Mass */
+  double dSolidMass; /**< Mass of a body's solid component */
   double dRadius;    /**< Radius of body */
   double dDensity;   /**< Bulk density of body*/
   double dGravAccel; /**< Body's gravitational acceleration */
@@ -214,6 +246,8 @@ struct BODY {
   double dAtmXAbsEffH2O; /**< Effective XUV absorpation efficiency for water */
   double dRGDuration;    /**< Duration of runaway greenhouse phase */
   double dKTide;         /**< Tidal enhancement factor for mass loss */
+  double dMinKTide;      /**< Minimum allowed value for KTide */
+  double dAtmEscXi;      /**< Ratio of Roche radius to XUV radius */
   double dMDotWater;     /**< Water mass loss rate */
   double dFHRef;         /**< Reference hydrogen escape value */
   double dOxygenEta;     /**< Factor for drag of oxygen by hydrogen */
@@ -799,19 +833,64 @@ struct BODY {
 
   // FLARE
   int bFlare;
-  /*
-  double dFlareConst;
-  double dFlareExp;
-  */
-  double dFlareYInt;
-  double dFlareSlope;
-  double dFlareC;
-  double dFlareK;
-  double dFlareMinEnergy;
-  double dFlareMaxEnergy;
-  double dFlareVisWidth;
-  double dFlareXUVWidth;
-  double dLXUVFlare;
+  double dFlareYInt; /**< Flare function Y intercept /FFD linear coefficient*/
+  // double dFlareYIntErrorUpper; /**< Upper error of the Y intercept /FFD
+  // linear coefficient*/
+  // double dFlareYIntErrorLower; /**< Lower error of the Y intercept /FFD
+  // linear coefficient*/
+  double dFlareSlope; /**< Flare function slope /FFD angular coefficient*/
+  // double dFlareSlopeErrorUpper; /**< Upper error of slope /FFD angular
+  //                                  coefficient*/
+  // double dFlareSlopeErrorLower; /**< Lower error of slope /FFD angular
+  //                                  coefficient*/
+  double dFlareMinEnergy; /**< Flare minimum energy value to calculate the FFD*/
+  double dFlareMaxEnergy; /**< Flare maximum energy value to calculate the FFD*/
+  double dFlareFreq1;     /**< First value of flare frequency range*/
+  double dFlareFreq2;     /**< Second value of flare frequency range*/
+  double dFlareFreq3;     /**< Third value of flare frequency range*/
+  double dFlareFreq4;     /**< Fourth value of flare frequency range*/
+  double dFlareFreqMin;   /**< Flare frequency of the flares with the lowest
+                             energy*/
+  double dFlareFreqMid;   /**< Flare frequency of the flares with the central
+                             energy value in the energy range*/
+  double dFlareFreqMax;   /**< Flare frequency of the flares with the highest
+                             energy*/
+  double dFlareEnergy1;   /**< First value of flare energy range*/
+  double dFlareEnergy2;   /**< Second value of flare energy range*/
+  double dFlareEnergy3;   /**< Third value of flare energy range*/
+  double dFlareEnergy4;   /**< Fourth value of flare energy range*/
+  double dFlareEnergyMin; /**< Minimum value of flare energy in the energy
+                             range*/
+  double dFlareEnergyMid; /**< Central value of flare energy in the energy
+                             range*/
+  double dFlareEnergyMax; /**< Maximum value of flare energy in the energy
+                             range*/
+  double dLXUVFlare;      /**< XUV luminosity by flare*/
+  // double dLXUVFlareUpper; /**< Upper value of XUV luminosity by flare when
+  // the
+  //                            user include the slope and Y-intercept errors */
+  // double dLXUVFlareLower; /**< Lower value of XUV luminosity by flare when
+  // the
+  //                            user include the slope and Y-intercept errors */
+  double dLXUVTot;        /**< XUV luminosity total, flare + stellar*/
+  double dLXUVFlareConst; /**< XUV luminosity given by the user*/
+  int iFlareFFD;          /**< Flare mode*/
+  int iFlareBandPass; /**< Option to choose in which band pass the input energy
+                         are*/
+  int iFlareSlopeUnits; /**< Mode to choose in which units the FFD slopes are*/
+  double dEnergyBin;    /**< Number of energies consider between the minimum and
+                           maximum energies to calculate the luminosity by flares*/
+  double *daEnergyERG;
+  double *daEnergyJOU;
+  double *daLogEner;
+  double *daEnerJOU;
+
+  double *daEnergyJOUXUV;
+  double *daEnergyERGXUV;
+  double *daLogEnerXUV;
+  double *daFFD;
+  double *daLXUVFlare;
+
 
   // GALHABIT
   int bGalHabit;        /**< Use galhabit module */
@@ -1540,6 +1619,9 @@ struct UPDATE {
 
   /* FLARE */
   int iLXUV;
+  int iLXUVFlare;
+  int iEnergyBin;
+  double *pdDEnergyBinDt;
   int iNumLXUV;
   double *pdDLXUVFlareDt;
 
@@ -1666,6 +1748,7 @@ struct EVOLVE {
   double ***daDeriv; /**< The Matrix of Time Derivatives. First dimension is
                         Body #, second is the Primary variable number, third is
                         the equation number.  */
+  double ****daDerivProc; /**< Derivatives over a timestep */
 
   // Module-specific parameters
   int *iNumModules; /**< Number of Modules per Primary Variable */

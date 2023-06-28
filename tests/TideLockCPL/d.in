@@ -16,7 +16,7 @@ dEcc          0.38     # Eccentricity
 dSemi         0.21847  # Semi-major axis (negative for AU)
 
 # EQTIDE Parameters
-dTidalQ       100   # Tidal Q 
+dTidalQ       100   # Tidal Q
 #dTidalTau    -638
 dK2           0.3   # Love Number of degree 2
 saTidePerts   gl581   # Name of tidal perturber (only central body may have >1)

@@ -17,4 +17,4 @@ bDoLog         1                            # Write a log file?
 iDigits        6                            # Maximum number of digits to right of decimal
 dMinValue      1e-10                        # Minimum value of eccentricity/obliquity
 
-# No evolution 
+# No evolution

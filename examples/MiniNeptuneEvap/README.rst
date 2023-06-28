@@ -44,6 +44,6 @@ Expected output
    responds to the evolving radiation field, and that the escape can transition
    between radiation-recombination-limited escape and energy-limited escape,
    i.e. bAtmEscAuto is set to 1. For this latter case, the radius model predicts
-   the initial radius exceeds the Roche limit, and so `VPLanet` forces all the 
-   mass to be contained within that radius and forces the radius to equal the 
+   the initial radius exceeds the Roche limit, and so `VPLanet` forces all the
+   mass to be contained within that radius and forces the radius to equal the
    Roche radius.

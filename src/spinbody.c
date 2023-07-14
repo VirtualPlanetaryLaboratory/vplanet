@@ -966,7 +966,7 @@ double LimitRounding(double x) {
   Machine precision can round inaccurate values that eventually become present
   the more calculations vplanet makes. 
   */
-  if (x < 1e-16) {
+  if (fabs(x) < 1e-16) {
     x = 0.0;
   }
   return x;
@@ -1478,10 +1478,16 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
       sinw = sinwf * cosfAngle - coswf * sinfAngle;
       cosw = sinwf * sinfAngle + coswf * cosfAngle;
 
-      body[iBody].dArgP  = fmodPos(atan2(sinw, cosw), 2 * PI);
-      body[iBody].dLongP = fmodPos(body[iBody].dArgP + body[iBody].dLongA, 2 * PI);
+      body[iBody].dArgP  = fmodPos(atan2(sinw, cosw), 2. * PI);
+      /*
+      Below is a bit complicated to describe. dLongP should not take the modulus
+      w.r.t 2*PI unless the orbit is bound. If unbound, it will be used to find MeanL,
+      which does not take the modulus when unbound because its domain is all real numbers
+      just like the variable MeanA, which is defined as a ratio of areas.
+      */
+      body[iBody].dLongP = body[iBody].dArgP + body[iBody].dLongA;
 
-      f = fmodPos(atan2(sinfAngle, cosfAngle), 2 * PI);
+      f = fmodPos(atan2(sinfAngle, cosfAngle), 2. * PI);
 
       if (fabs(cosfAngle - 1) > 0) {
         cosfAngle = cos(f);
@@ -1515,9 +1521,12 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
           }
         }
         body[iBody].dHypA = 0.0; // The value is actually undefined but it is left as zero as a band-aid solution
+        // take modulus here after using it on LongP
+        body[iBody].dArgP = fmodPos(body[iBody].dArgP, 2. * PI);        
         body[iBody].dMeanA =
               fmodPos(body[iBody].dEccA - body[iBody].dEcc * sin(body[iBody].dEccA), 2 * PI);
-        body[iBody].dMeanL = fmodPos(body[iBody].dMeanA + body[iBody].dLongP, 2 * PI);
+        body[iBody].dLongP = fmodPos(body[iBody].dLongP, 2. * PI);
+        body[iBody].dMeanL = fmodPos(body[iBody].dMeanA + body[iBody].dLongP, 2. * PI);
 
         body[iBody].dMeanMotion = sqrt(mu / (body[iBody].dSemi * body[iBody].dSemi * body[iBody].dSemi));
         body[iBody].dOrbPeriod  = 2.0 * PI / body[iBody].dMeanMotion;
@@ -1534,10 +1543,10 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
         For hyperbolic orbits f lies only in Quadrants I and IV while acos() lies in 
         Quadrants I and II. If in Quadrant II, must switch to Quadrant IV.
         */
-        if (cosfAngle < 0) {
-          sinfAngle = -sinfAngle;
+        //if (cosfAngle < 0) {
+        //  sinfAngle = -sinfAngle;
           // Be Careful. If ever using acos(cosfAngle), it would produce the incorrect angle
-        }          
+        //}          
         // One loses the sign of dHypA when using coshH. sinhH keeps the sign. 
         sinhH = sqrt(body[iBody].dEcc * body[iBody].dEcc - 1) * sinfAngle / 
                 (1.0 + body[iBody].dEcc * cosfAngle);
@@ -1630,7 +1639,13 @@ void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
     cosw = sinwf * sinfAngle + coswf * cosfAngle;
 
     body[iBody].dBaryArgP  = fmodPos(atan2(sinw, cosw), 2. * PI);
-    body[iBody].dBaryLongP = fmodPos(body[iBody].dBaryArgP + body[iBody].dBaryLongA, 2. * PI);
+    /*
+    Below is a bit complicated to describe. dBaryLongP should not take the modulus
+    w.r.t 2*PI unless the orbit is bound. If unbound, it will be used to find MeanL,
+    which does not take the modulus when unbound because its domain is all real numbers
+    just like the variable MeanA, which is defined as a ratio of areas.
+    */
+    body[iBody].dBaryLongP = body[iBody].dBaryArgP + body[iBody].dBaryLongA;
     f = fmodPos(atan2(sinfAngle, cosfAngle), 2. * PI);
 
     if (fabs(cosfAngle - 1) > 0) {
@@ -1659,9 +1674,11 @@ void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
           body[iBody].dBaryEccA = -body[iBody].dBaryEccA + 2 * PI;
         }
       }
-
+      // take modulus here after using it on BaryLongP
+      body[iBody].dBaryArgP = fmodPos(body[iBody].dBaryArgP, 2. * PI);
       body[iBody].dBaryMeanA =
             fmodPos(body[iBody].dBaryEccA - body[iBody].dBaryEcc * sin(body[iBody].dBaryEccA), 2 * PI);
+      body[iBody].dBaryLongP = fmodPos(body[iBody].dBaryLongP, 2. * PI);
       // Calculating Mean Longitude
       body[iBody].dBaryMeanL =  fmodPos(body[iBody].dBaryMeanA + body[iBody].dBaryLongP, 2 * PI);            
 

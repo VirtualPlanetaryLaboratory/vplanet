@@ -341,6 +341,9 @@ def ProcessUnits(data):
         if units == "m^2/s^3":
             v[0] = "u.m ** 2 / u.sec ** 3"
 
+        if units == "m^-2 s^-1":
+            v[0] = "1 / (u.m ** 2 * u.sec ** 1)"
+
         # regular units
         if units == "TO":
             v[0] = "u.TO"

@@ -11,7 +11,7 @@ Track water loss and oxygen build-up due to hydrodynamic atmospheric escape.
 **Author**            Megan Gialluca
 **Modules**           AtmEsc
                       STELLAR
-**Approx. runtime**   10 minutes
+**Approx. runtime**   less than 1 minute
 ===================   ============
 
 M dwarf stars experience particularly long and violent pre-main sequence (PMS) phases.
@@ -47,5 +47,12 @@ Expected output
 .. figure:: T1e-b_EscapeThroughTime.png
    :width: 600px
    :align: center
+
+   Water loss [TO] (top) and oxygen produced/retained [Bar] (bottom) over time [Gyr] for TRAPPIST-1b (red) and e (blue)
+   for an initial water content of 10 TO [Terrestrial Oceans]. In this particular case, hydrodynamic escape is 
+   halted on both planets within 1 Gyr; for T1-e escape ends due to HZ entrance at ~370 Myr and for T1-b escape ends
+   due to desiccation at ~900 Myr. Both planets experience diffusion-limited escape during this simulation, which begins
+   at the time indicated by the vertical dashed lines; this occurs when the mixing ratio of free oxygen in the atmosphere
+   is equal to that of water in the LS16 water loss model. 
 
 

@@ -20,6 +20,8 @@ To run the python scripts and generate the figures in the subdirectories, **you 
 
 `AtmEscRegimes <AtmEscRegimes>`_: Hydrogen envelope loss due to Roche lobe overflow, radiation-recombination-limited escape, energy-limited escape, and "automatic" loss in which the local environment sets the escape rate. [AtmEsc, STELLAR]
 
+`DiffLimWaterEscape <DiffLimWaterEscape>`_: Water photolysis with hydrogen and oxygen escape via diffusion-limited and energy-limited escape. [AtmEsc, STELLAR]
+
 `HabEvapCores <HabEvapCores>`_: Transition of Proxima b from a mini-Neptune to a habitable evaporated core via hydrogen loss. [AtmEsc, STELLAR]
 
 `HLossTides <HLossTides>`_: Coupled atmospheric escape and tidal evolution for

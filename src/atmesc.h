@@ -30,6 +30,7 @@
   11 /**< Flag: Lehmer & Catling (2017) planet radius model */
 #define ATMESC_BOL16                                                           \
   12            /**< Flag: Bolmont (2016) XUV absorption efficiency model */
+#define ATMESC_LS2016 13 /**< Schaefer et al (2016) atmospheric escape model */
 #define QOH 16. /**< Atomic mass ratio oxygen/hydrogen */
 
 /* Options Info */
@@ -161,6 +162,14 @@ void FinalizeUpdateMassAtmEsc(BODY *, UPDATE *, int *, int, int, int);
 #define OUT_HESCAPEREGIME 1230 /**< Hydrogen envelope escape regime */
 #define OUT_RRCRITICALFLUX                                                     \
   1231 /**< Critical flux between RR and energy-limited escape */
+#define OUT_CROSSOVERMASS 1232 /**< Crossover mass, tells us whether oxygen is escaping */
+#define OUT_WATERESCAPEREGIME 1233 /**< What water escape regime is the sim currently in (energy limited, diffusion limited, etc) */
+#define OUT_FXUVCRITDRAG 1234 /**< The critical drag XUV Flux, FXUV > FXUVCritDrag for drag of heavier species to occur */
+#define OUT_HREFFLUX 1235 /**< The hydrogen reference flux (I can't believe this wasn't an output yet) */
+#define OUT_XO2 1236 /**< The molecular oxygen mixing ratio */
+#define OUT_XH2O 1237 /**< The water mixing ratio */
+#define OUT_HDIFFFLUX 1238 /**< The diffusion limited flux (the true flux in the diffusion regime) */
+#define OUT_HREFODRAGMOD 1239 /**< Multiply by H ref flux to get H flux with drag of oxgyen */
 #define OUT_KTIDE 1240 /**< Gravitational enhancement of mass loss */
 
 void InitializeOutputAtmEsc(OUTPUT *, fnWriteOutput[]);
@@ -212,6 +221,8 @@ void fvLinearFit(double *, double *, int, double *);
 double fdDOxygenMassDt(BODY *, SYSTEM *, int *);
 double fdDOxygenMantleMassDt(BODY *, SYSTEM *, int *);
 double fdAtomicOxygenMixingRatio(double, double);
+double fdMolecOxygenMixingRatio(double, double);
+double fdWaterAtmMixingRatio(double, double);
 double fdInsolation(BODY *, int, int);
 int fbDoesWaterEscape(BODY *, EVOLVE *, IO *, int);
 double fdPlanetRadius(BODY *, SYSTEM *, int *);

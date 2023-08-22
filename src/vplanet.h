@@ -81,6 +81,8 @@
 #define DEGRAD 0.017453292519444445 // Degrees per radian
 #define TOMASS 1.39e21              // Mass of one terrestrial ocean in kg (TO)
 #define ATOMMASS 1.660538921e-27    // Atomic Mass
+#define OXYMASS 2.6568622736e-26    // Mass of Atomic Oxygen 16*ATOMMASS 
+#define PROTONMASS 1.6726219e-27    // Proton mass kg
 #define SIGMA 5.670367e-8           // Stefan-Boltzmann Constant
 #define RGAS 8.3144598              // gas constant in J K^-1 mol^-1
 #define KBOLTZ 1.38064852e-23       // Boltzmann constant, J/K

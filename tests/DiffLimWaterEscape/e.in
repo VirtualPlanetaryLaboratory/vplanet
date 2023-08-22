@@ -1,0 +1,23 @@
+# Planet b parameters
+sName                     e              # Body's name
+saModules                 atmesc         # Modules to apply, exact spelling required
+
+# Physical Properties (from Agol et al. [2021])
+dMass                     -0.693           # Mass, negative -> Earth masses
+dRadius                   -0.922           # Radius, negative -> Earth radii
+
+# AtmEsc Properties
+dXFrac                    1.0
+dSurfWaterMass            -10
+dEnvelopeMass             0.0
+sWaterLossModel           ls16
+bInstantO2Sink            0
+sAtmXAbsEffH2OModel       bolmont16
+dJeansTime                -10
+
+# Orbital Properties
+dEcc                       0.00637         # Eccentricity
+dOrbPeriod                 -6.101013
+
+
+saOutputOrder Time -SurfWaterMass -OxygenMass WaterEscapeRegime

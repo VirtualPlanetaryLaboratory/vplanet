@@ -1,4 +1,4 @@
-Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape on the TRAPPIST-1 planets b and e with the LS16 Water loss model (author Megan Gialluca)
+Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape on the TRAPPIST-1 planets b and e with the LS16 Water loss model
 ==================================================
 
 Overview

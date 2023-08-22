@@ -14,9 +14,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import vplanet
-import time
-
-print(time.ctime())
+import vplot
 
 # Get Path
 #path = os.getcwd()
@@ -43,13 +41,16 @@ wid=2
 wl_b = [10-x.value for x in model.b.SurfWaterMass]
 wl_e = [10-x.value for x in model.e.SurfWaterMass]
 
-wl.plot(Time*1e-9, wl_b, color='r', lw=wid, label='TRAPPIST-1b')
-wl.plot(Time*1e-9, wl_e, color='b', lw=wid, label='TRAPPIST-1e')
+bcolor = vplot.colors.red
+ecolor = vplot.colors.dark_blue
+
+wl.plot(Time*1e-9, wl_b, color=bcolor, lw=wid, label='TRAPPIST-1b')
+wl.plot(Time*1e-9, wl_e, color=ecolor, lw=wid, label='TRAPPIST-1e')
 # Doesn't matter what this is, just to get the label in the legend:
 wl.plot([-8,-9], [0,0], color='xkcd:grey', lw=wid, linestyle='--', label='Onset of Diffusion-Lim Escape')
 
-ob.plot(Time*1e-9, model.b.OxygenMass, color='r', lw=wid)
-ob.plot(Time*1e-9, model.e.OxygenMass, color='b', lw=wid)
+ob.plot(Time*1e-9, model.b.OxygenMass, color=bcolor, lw=wid)
+ob.plot(Time*1e-9, model.e.OxygenMass, color=ecolor, lw=wid)
 
 for ax in [wl, ob]:
     ax.tick_params(length=4, width=2, labelsize=18)
@@ -58,8 +59,8 @@ for ax in [wl, ob]:
     ax.spines['bottom'].set_linewidth(2)
     ax.spines['left'].set_linewidth(2)
     ax.spines['right'].set_linewidth(2)
-    ax.axvline(bdifftime*1e-9, color='r', linestyle='--', lw=wid)
-    ax.axvline(edifftime*1e-9, color='b', linestyle='--', lw=wid)
+    ax.axvline(bdifftime*1e-9, color=bcolor, linestyle='--', lw=wid)
+    ax.axvline(edifftime*1e-9, color=ecolor, linestyle='--', lw=wid)
     ax.set_xlim([0,1])
 
 wl.legend(fontsize=16)
@@ -72,5 +73,3 @@ plt.tight_layout()
 
 ext = get_args().ext
 fig.savefig(path / f"T1e-b_EscapeThroughTime.{ext}", dpi=200)
-
-print(time.ctime())

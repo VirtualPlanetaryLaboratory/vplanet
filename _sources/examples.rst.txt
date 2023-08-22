@@ -38,6 +38,7 @@ directory of the :code:`VPLanet` repository.
    examples/GalaxyEffects
    examples/ParameterSweep
    examples/CassiniStates
+   examples/DiffLimWaterEscape
    examples/HLossTides
    examples/AbioticO2
    examples/RadHeat

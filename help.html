@@ -14336,7 +14336,7 @@ the same order as listed in saOutputOrder.</p>
 <tr class="row-even"><td><p>Description</p></td>
 <td><div class="line-block">
 <div class="line">The water loss rate will be determined by the selected model.</div>
-<div class="line">The options are LB15, LBEXACT, and TIAN.</div>
+<div class="line">The options are LB15, LBEXACT, TIAN, and LS16.</div>
 </div>
 </td>
 </tr>
@@ -14366,7 +14366,7 @@ the same order as listed in saOutputOrder.</p>
 </tr>
 <tr class="row-odd"><td><p>Allowed values</p></td>
 <td><div class="line-block">
-<div class="line">LB15 LBEXACT TIAN</div>
+<div class="line">LB15 LBEXACT TIAN LS16</div>
 </div>
 </td>
 </tr>
@@ -17154,6 +17154,36 @@ the same order as listed in saOutputOrder.</p>
 <col style="width: 80%" />
 </colgroup>
 <thead>
+<tr class="row-odd"><th class="head" colspan="2"><p><strong>CrossoverMass</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><div class="line-block">
+<div class="line">Crossover mass, defines oxygen is escaping if mc &gt; mo</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Custom unit</p></td>
+<td><div class="line-block">
+<div class="line">amu</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Modules</p></td>
+<td><div class="line-block">
+<div class="line">AtmEsc</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
 <tr class="row-odd"><th class="head" colspan="2"><p><strong>D232ThNumManDt</strong></p></th>
 </tr>
 </thead>
@@ -19039,6 +19069,36 @@ the same order as listed in saOutputOrder.</p>
 <col style="width: 80%" />
 </colgroup>
 <thead>
+<tr class="row-odd"><th class="head" colspan="2"><p><strong>FXUVCRITDRAG</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><div class="line-block">
+<div class="line">Critical Drag XUV flux</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Custom unit</p></td>
+<td><div class="line-block">
+<div class="line">W/m^2</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Modules</p></td>
+<td><div class="line-block">
+<div class="line">AtmEsc</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
 <tr class="row-odd"><th class="head" colspan="2"><p><strong>GammaOrb</strong></p></th>
 </tr>
 </thead>
@@ -19106,6 +19166,30 @@ the same order as listed in saOutputOrder.</p>
 <tr class="row-even"><td><p>Modules</p></td>
 <td><div class="line-block">
 <div class="line">ThermInt</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head" colspan="2"><p><strong>HDiffFlux</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><div class="line-block">
+<div class="line">The Hydrogen Diffusion Flux (m^-2 s^-1)</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Modules</p></td>
+<td><div class="line-block">
+<div class="line">AtmEsc</div>
 </div>
 </td>
 </tr>
@@ -19520,6 +19604,54 @@ the same order as listed in saOutputOrder.</p>
 <tr class="row-even"><td><p>Modules</p></td>
 <td><div class="line-block">
 <div class="line">ThermInt</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head" colspan="2"><p><strong>HREFFLUX</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><div class="line-block">
+<div class="line">The Hydrogen Reference Flux (m^-2 s^-1)</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Modules</p></td>
+<td><div class="line-block">
+<div class="line">AtmEsc</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head" colspan="2"><p><strong>HRefODragMod</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><div class="line-block">
+<div class="line">Multiply by H ref flux to get flux with drag</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Modules</p></td>
+<td><div class="line-block">
+<div class="line">AtmEsc</div>
 </div>
 </td>
 </tr>
@@ -24252,6 +24384,30 @@ the same order as listed in saOutputOrder.</p>
 <col style="width: 80%" />
 </colgroup>
 <thead>
+<tr class="row-odd"><th class="head" colspan="2"><p><strong>WaterEscapeRegime</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><div class="line-block">
+<div class="line">What water escape regime the code is currently in</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Modules</p></td>
+<td><div class="line-block">
+<div class="line">AtmEsc</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
 <tr class="row-odd"><th class="head" colspan="2"><p><strong>WaterFracMelt</strong></p></th>
 </tr>
 </thead>
@@ -24342,6 +24498,30 @@ the same order as listed in saOutputOrder.</p>
 <col style="width: 80%" />
 </colgroup>
 <thead>
+<tr class="row-odd"><th class="head" colspan="2"><p><strong>XH2O</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><div class="line-block">
+<div class="line">Water mixing ratio in upper atmosphere</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Modules</p></td>
+<td><div class="line-block">
+<div class="line">AtmEsc</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
 <tr class="row-odd"><th class="head" colspan="2"><p><strong>XO</strong></p></th>
 </tr>
 </thead>
@@ -24349,6 +24529,30 @@ the same order as listed in saOutputOrder.</p>
 <tr class="row-even"><td><p>Description</p></td>
 <td><div class="line-block">
 <div class="line">Atomic oxygen mixing ratio in upper atmosphere</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Modules</p></td>
+<td><div class="line-block">
+<div class="line">AtmEsc</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head" colspan="2"><p><strong>XO2</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><div class="line-block">
+<div class="line">Molecular oxygen mixing ratio in atmosphere</div>
 </div>
 </td>
 </tr>

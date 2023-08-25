@@ -207,9 +207,10 @@
 <h1>Parameter Sweep Example<a class="headerlink" href="#parameter-sweep-example" title="Permalink to this headline">¶</a></h1>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
-<p>Example using <code class="code docutils literal notranslate"><span class="pre">vspace</span></code>, <code class="code docutils literal notranslate"><span class="pre">multiplanet</span></code>, and <code class="code docutils literal notranslate"><span class="pre">bigplanet</span></code> in
-conjunction by exploring the ThermInt parameters of dTCore (initial core
-temperature) and d40KPowerCore (initial radiogenic power from potassium-40).</p>
+<p>Example using <code class="code docutils literal notranslate"><span class="pre">VSPACE</span></code>, <code class="code docutils literal notranslate"><span class="pre">MultiPlanet</span></code>, and <code class="code docutils literal notranslate"><span class="pre">BigPlanet</span></code> to
+explore how ThermInt parameters dTCore (initial core temperature) and
+d40KPowerCore (initial radiogenic power from potassium-40) predict the radius
+of Earth’s inner core.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 32%" />
@@ -233,10 +234,7 @@ temperature) and d40KPowerCore (initial radiogenic power from potassium-40).</p>
 </section>
 <section id="to-run-this-example">
 <h2>To run this example<a class="headerlink" href="#to-run-this-example" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vspace<span class="w"> </span>vspace.in
-multi-planet<span class="w"> </span>vspace.in
-bigplanet<span class="w"> </span>vspace.in
-python<span class="w"> </span>makeplot.py<span class="w"> </span>&lt;pdf<span class="w"> </span><span class="p">|</span><span class="w"> </span>png&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>makeplot.py<span class="w"> </span>&lt;pdf<span class="w"> </span><span class="p">|</span><span class="w"> </span>png&gt;
 </pre></div>
 </div>
 </section>

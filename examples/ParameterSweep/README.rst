@@ -4,15 +4,16 @@ Parameter Sweep Example
 Overview
 --------
 
-Example using :code:`vspace`, :code:`multiplanet`, and :code:`bigplanet` in
-conjunction by exploring the ThermInt parameters of dTCore (initial core
-temperature) and d40KPowerCore (initial radiogenic power from potassium-40).
+Example using :code:`VSPACE`, :code:`MultiPlanet`, and :code:`BigPlanet` to
+explore how ThermInt parameters dTCore (initial core temperature) and 
+d40KPowerCore (initial radiogenic power from potassium-40) predict the radius
+of Earth's inner core.
 
 
 ===================   ============
 **Date**              1/26/2021
 **Author**            Caitlyn Wilhelm
-**Modules**           ThermInt, vspace, multi-planet, bigplanet
+**Modules**           ThermInt, VSPACE, MultiPlanet, BigPlanet
 **Approx. runtime**   160 Seconds
 ===================   ============
 
@@ -22,16 +23,13 @@ To run this example
 
 .. code-block:: bash
 
-    vspace vspace.in
-    multi-planet vspace.in
-    bigplanet vspace.in
     python makeplot.py <pdf | png>
 
 
 Expected output
 ---------------
 
-.. figure:: ../../docs/BigPlanetExample.png
+.. figure:: ParameterSweep.png
    :width: 600px
    :align: center
 

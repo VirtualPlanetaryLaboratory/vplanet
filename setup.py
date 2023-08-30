@@ -67,10 +67,10 @@ cmdclass = {"build_ext": BuildExt, "develop": Develop}
 
 # Vplanet suite of tools
 vplanet_suite = [
-    "vplot=1.0.5",
-    "vspace=2.0.4",
-    "bigplanet=3.0.0",
-    "multiplanet=2.0.2",
+    "vplot==1.0.5",
+    "vspace==2.0.4",
+    "bigplanet==3.0.0",
+    "multiplanet==2.0.2",
 ]
 
 setup(

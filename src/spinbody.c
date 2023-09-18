@@ -972,6 +972,17 @@ double LimitRounding(double x) {
   return x;
 }
 
+// Outputting the sign of a double. Zero is defaulted as zero.
+double sign(double value) {
+    if (value > 0.0) {
+        return 1.0;
+    } else if (value < 0.0) {
+        return -1.0;
+    } else {
+        return 0.0;
+    }
+}
+
 //fmodPos() restricts inputs of Orbital Element in the domain [0, 2*PI)
 double fmodPos(double x, double y) { //returns modulo_{y}(x) remaining in the domain 0 <= x < y
   double result;
@@ -995,6 +1006,17 @@ double BarycentricMu(BODY *body, int iNumBodies, int iBody) {
   mTotal = TotalMass(body, iNumBodies);
   dBaryMu = mTotal * cube(1. - body[iBody].dMass / mTotal);
   return dBaryMu;
+}
+
+void EccentricityVector(double dMu, double *dPos, double *dVel, double *h, double *dEccVec) {
+  double dNormPos = sqrt(dot(dPos, dPos));
+  // First term of Eccentricity vector calculated here ((v x h)/Mu)
+  cross(dVel, h, dEccVec) / dMu;
+
+  // Second term of Eccentricity vector added here (subtract r-hat)
+  for (int i = 0; i < 3; i++) {
+    dEccVec[i] -= dPos[i] / dNormPos;
+  }
 }
 
 void OrbElems2Cart(ELEMS elems, double *dPos, double *dVel) {
@@ -1111,8 +1133,10 @@ double GetEccAnom(ELEMS elems) {
   double dMeanA, dEccA; 
   dMeanA = fmodPos(elems.dMeanA, 2. * PI);
 
-  if (dMeanA == 0 || dMeanA == PI) {
-    dEccA = 0; // Trivial solutions for the Eccentric Anomaly
+  if (dMeanA == 0) {
+    dEccA = 0; // Trivial solution for the Eccentric Anomaly
+  } else if (dMeanA == PI) {
+    dEccA = PI; // Trivial solution for the Eccentric Anomaly
   } else {
     double dEcc, dSinMeanA, dLow, dUp, dSinEccAe, dCosEccAe,
             f, fp, fpp, fppp, dx, dNext;
@@ -1181,10 +1205,9 @@ double GetHypAnom(ELEMS elems) {
     // The Guess for dHypA is large but the constant accomodates for small values
     dSignMeanA = fiSign(dMeanA);
     if (dSignMeanA == 0) { // Can become 0 if fabs(dMeanA) < EPS defined in vplanet.h
-      // David Graham dervied this expression for 0 < dHypA << 1
-      // The expression below was never found anywhere. You can try to prove David wrong.
-      // Or if he's not lazy, come up with an additional constant that improves this initial guess.
-      dHypA = 3 * (dEcc - 1.0) / (2 * dMeanA);
+      // Dervied expression for 0 < dHypA << 1
+      //dHypA = 3 * (dEcc - 1.0) / (2 * dMeanA);
+      dHypA = 0; // Defined as zero for now
     } else {
       dHypA = dSignMeanA * log(dSignMeanA * (2*dMeanA / dEcc) + 1.8);
     }
@@ -1322,9 +1345,7 @@ void fvHelioOrbElems2HelioCart(BODY *body, int iNumBodies, int iBody) {
       elems.dHypA = GetHypAnom(elems);
     }    
 
-    // mTotal = TotalMass(body, iNumBodies);
-    // dHelioMu = BIGG * mTotal;
-    dHelioMu = BIGG * (body[0].dMass + body[iBody].dMass); // Trying this out again
+    dHelioMu = BIGG * (body[0].dMass + body[iBody].dMass);
     elems.dMu = dHelioMu;
     OrbElems2Cart(elems, dPos, dVel);
     for (int i = 0; i < 3; i++) {
@@ -1370,358 +1391,420 @@ void fvBaryCart2HelioCart(BODY *body, int iBody) {
 
 
 
-void Cart2OrbElems(ELEMS elems, double *dPos, double *dVel) {
-
-}
-
-
-void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
-  double rsq, normr, vsq, mTotal, mu, *h, hsq, normh, sinwf, coswf, sinfAngle,
-        cosfAngle, rdot, sinw, cosw, f, cosE, coshH, sinhH;
-
+ELEMS fvCart2OrbElems(double dMu, double *dPos, double *dVel) {
+  double dMinValue, *h, dPosSq, dNormPos, dVelSq, dNormVel, dhSq, dNormh, drDot, 
+  dSemi, *dEccVec, dEcc, dEccSq, dInc, dSinc, dArgP, dLongA, dMeanA, dLongP, dMeanL, dTrueA, 
+  dSinwf, dCoswf, dTrueA, dEccA, dCosEccA, dHypA, dMeanMotion, dOrbP, 
+  dPinc, dQinc, dHecc, dKecc;
+  // Need to declare min value to avoid inaccurate outputs
+  dMinValue  = 1.0e-15;
   h = malloc(3 * sizeof(double));
-  // First convert from Barycentric to heliocentric
-  // Helio values are stored in body[iBody].daCartPos and body[iBody].daCartVel
 
-  fvBaryCart2HelioCart(body, iBody);
+  cross(dPos, dVel, h);
 
-  if (iBody == 0) {
-    body[iBody].dSemi  = 0;
-    body[iBody].dEcc   = 0;
-    body[iBody].dInc   = 0;
-    body[iBody].dLongA = 0;
-    body[iBody].dArgP  = 0;
-    body[iBody].dLongP = 0;
-    body[iBody].dMeanA = 0;
-    body[iBody].dMeanL = 0;
-  } else {
+  // Creating squared magnitudes of vectors
+  dPosSq = dot(dPos, dPos);
+  dVelSq = dot(dVel, dVel);
+  dhSq = dot(h, h);
 
-    // Solve for various values that are used repeatedly
-    // Solve for h = r X v
-    cross(body[iBody].dHCartPos, body[iBody].dHCartVel, h);
-    hsq   = h[0] * h[0] + h[1] * h[1] + h[2] * h[2];            // ||h||^2
-    normh = sqrt(hsq);                                          // ||h||
-    vsq   = body[iBody].dHCartVel[0] * body[iBody].dHCartVel[0] // ||v||^2
-          + body[iBody].dHCartVel[1] * body[iBody].dHCartVel[1] +
-          body[iBody].dHCartVel[2] * body[iBody].dHCartVel[2];
-    rsq = body[iBody].dHCartPos[0] * body[iBody].dHCartPos[0] // ||r||^2
-          + body[iBody].dHCartPos[1] * body[iBody].dHCartPos[1] +
-          body[iBody].dHCartPos[2] * body[iBody].dHCartPos[2];
-    normr = sqrt(rsq); // ||r||
-    rdot  = (body[iBody].dHCartPos[0] * body[iBody].dHCartVel[0] +
-            body[iBody].dHCartPos[1] * body[iBody].dHCartVel[1] +
-            body[iBody].dHCartPos[2] * body[iBody].dHCartVel[2]) /
-           normr;
-    //mu              = BIGG * (body[iBody].dMass + body[0].dMass); // G(M+m)
-    // mTotal = TotalMass(body, iNumBodies);
-    // mu = BIGG * mTotal;
-    mu = BIGG * (body[iBody].dMass + body[0].dMass); // trying this out
-    // body[iBody].dMu = mu;
+  // Finding magnitudes of these values
+  dNormPos = sqrt(dPosSq);
+  dNormVel = sqrt(dVelSq);
+  dNormh = sqrt(dhSq);
 
-    // Solve for semi-major axis
-    body[iBody].dSemi = 1 / (2 / normr - vsq / mu);
+  // Finding rdot
+  drDot = dot(dPos, dVel) / dNormPos;
 
-    // Solve for eccentricity
-    body[iBody].dEccSq = 1.0 - hsq / (mu * body[iBody].dSemi);
-    if (body[iBody].dEccSq < 1.0e-15) {
-      body[iBody].dEccSq = 0.0; // Unfortunately machine precision limits the accuracy of dEccSq
-    }
-    body[iBody].dEcc = sqrt(body[iBody].dEccSq);
+  // *** Solve for semi-major axis ***
+  dSemi = 1 / (2 / dNormPos - dVelSq / dMu);
 
-    // Solve for inclination
-    body[iBody].dInc  = acos(h[2] / normh);
-    body[iBody].dSinc = 0.5 * sin(body[iBody].dInc); // For DistOrb usage
+  // *** Solve for Eccentricity ***
+  // Finding Eccentricity vector
+  dEccVec = malloc(3 * sizeof(double));
+  EccentricityVector(dMu, dPos, dVel, h, dEccVec);
 
-    // Solve for w and f
-    if (body[iBody].dInc == 0.0) {
-      body[iBody].dLongA = 0; // LongA is actually undefined. Should I leave it as 0, question?
-      // Leave it as zero. Maybe we can still use it when defining dLongP = dLongA + dArgP 
-      sinwf = body[iBody].dHCartPos[1] / normr; // Different definition when dInc = 0
-      coswf = body[iBody].dHCartPos[0] / normr;           
+  
+  /* Here is the old way that dEcc was calculated
+  dEccSq = 1.0 - dhSq / (dMu * dSemi);
+  if (dEccSq < 1e-15) {
+    dEccSq = 0; // Limits of machine precision
+  }
+  dEcc = sqrt(dEccSq);
+  */
+  // Here is the new way using dEccVec
+  dEccSq = dot(dEcc, dEcc);
+  dEcc = sqrt(dEccSq);
+
+  // *** Solve for Inclination ***
+  // In domain between 0 and PI
+  dInc = acos(h[2] / dNormh); 
+  dSinc = 0.5 * sin(dInc); // For DistOrb usage
+
+  // *** Solve for Longitude of Ascending Node ***
+  dLongA = 0; // best to initialize the variable first
+  if (fabs(dInc) > dMinValue) {
+    if (fabs(h[1]) > dMinValue) {
+      dLongA = fmodPos(atan2(h[0], -h[1]), 2. * PI);
     } else {
-      body[iBody].dLongA = fmodPos(atan2(h[0], -h[1]), 2. * PI);
-      sinwf = body[iBody].dHCartPos[2] /
-              (normr * sin(body[iBody].dInc));
-      coswf = (body[iBody].dHCartPos[0] / normr +
-              sin(body[iBody].dLongA) * sinwf * cos(body[iBody].dInc)) /
-              cos(body[iBody].dLongA);
+      dLongA = sign(h[0]) * PI / 2.0;
     }
+  }
 
-    if (body[iBody].dEcc == 0.0) {
-      body[iBody].dArgP  = 0;
-      body[iBody].dLongP = 0;
-      body[iBody].dMeanA = 0;
-      body[iBody].dMeanL = 0; 
-      if (body[iBody].dInc == 0.0) { // dEcc = dInc = 0
-        // The values below don't exist
-        body[iBody].dLongA = 0;
-        // Only the true longitude exists. Make a variable for this?
-      } else { // dEcc = 0, dInc != 0
-        double *dLineOfNodes, dNormLineNodes, dArgLatitude;
-        dLineOfNodes = malloc(3 * sizeof(double));
-        dLineOfNodes[0] = -h[1]; // z x h, z is the unit vector in the z direction
-        dLineOfNodes[1] = +h[0];
-        dNormLineNodes = sqrt(dot(dLineOfNodes, dLineOfNodes));
-        dArgLatitude = acos(dot(dLineOfNodes, body[iBody].dHCartPos) / (dNormLineNodes * normr));
-        free(dLineOfNodes);
-      }
-    } else if (body[iBody].dEcc > 0) { // dEcc > 0, dInc can be any real value within its domain.
-      sinfAngle = body[iBody].dSemi * (1 - body[iBody].dEccSq) * rdot /
-                  (normh * body[iBody].dEcc);
-      cosfAngle = (body[iBody].dSemi * (1 - body[iBody].dEccSq) / normr - 1) /
-                  body[iBody].dEcc;
-
-      if (fabs(cosfAngle - 1.0) < 1e-14) { // There are rounding errors at such precise values. We try to avoid cosfAngle > 1
-        cosfAngle = 1.0;
-        sinfAngle = 0.0;
-      }
-      sinw = sinwf * cosfAngle - coswf * sinfAngle;
-      cosw = sinwf * sinfAngle + coswf * cosfAngle;
-
-      body[iBody].dArgP  = fmodPos(atan2(sinw, cosw), 2. * PI);
+  // *** Solve for Argument of Pericenter ***
+  dArgP = 0; // best to initialize the variable first
+  // dArgP only exists if the orbit is eccentric
+  if (dEcc > 0) {
+    // Finding Argument of Pericenter using the Eccentricity Vector: Danby pg. 205
+    double dSinw, dCosw; // Trig functions of dArgP    
+    if (fabs(dInc) > dMinValue) {
       /*
-      Below is a bit complicated to describe. dLongP should not take the modulus
-      w.r.t 2*PI unless the orbit is bound. If unbound, it will be used to find MeanL,
-      which does not take the modulus when unbound because its domain is all real numbers
-      just like the variable MeanA, which is defined as a ratio of areas.
+      Solution found by using first or second component of
+      n-hat x dEccVec = dEcc * sin(dArgP)*h-hat, where n is the
+      nodal vector and the -hat suffixes are unit vectors. Danby pg. 205
       */
-      body[iBody].dLongP = body[iBody].dArgP + body[iBody].dLongA;
-
-      f = fmodPos(atan2(sinfAngle, cosfAngle), 2. * PI);
-
-      if (fabs(cosfAngle - 1) > 0) {
-        cosfAngle = cos(f);
-        sinfAngle = sin(f);
-      }      
-
-      // Calculate Mean anomaly
-      // Defitions change since elliptical and hyperbolic orbits have different Mean Anomalies
-      if (body[iBody].dEcc < 1.0) { // We use the Eccentric Anomaly, E
-        cosE = (cosfAngle + body[iBody].dEcc) /
-              (1.0 + body[iBody].dEcc * cosfAngle);
-        if (fabs(fabs(cosE) - 1) < 1e-11) { // Error gets larger for longer simulations with smaller timesteps
-          /* If there is numerical error such that abs(cosE)>1, then use the small
-            angle approximation to find E */
-          body[iBody].dEccA =
-                (1 + (body[iBody].dEccSq - 1) * (cosfAngle * cosfAngle) -
-                body[iBody].dEccSq) /
-                (1 + body[iBody].dEcc * cosfAngle);
-        } else {
-          if (fabs(cosE) > 1) {
-            // Need io here to check verbosity XXX
-            fprintf(stderr, "ERROR: cosine of the Eccentric Anomaly is greater than 1. Please rerun with a smaller timestep.");
-            exit(EXIT_EXE);
-          }
-          body[iBody].dEccA = acos(cosE);
-
-          // If the planet is in the second half of the orbit, we need -acos(cosE)
-          // + 2PI This keeps Mean A in [0, 2PI]
-          if (f > PI) {
-            body[iBody].dEccA = -body[iBody].dEccA + 2 * PI;
-          }
-        }
-        body[iBody].dHypA = 0.0; // The value is actually undefined but it is left as zero as a band-aid solution
-        // take modulus here after using it on LongP
-        body[iBody].dArgP = fmodPos(body[iBody].dArgP, 2. * PI);        
-        body[iBody].dMeanA =
-              fmodPos(body[iBody].dEccA - body[iBody].dEcc * sin(body[iBody].dEccA), 2 * PI);
-        body[iBody].dLongP = fmodPos(body[iBody].dLongP, 2. * PI);
-        body[iBody].dMeanL = fmodPos(body[iBody].dMeanA + body[iBody].dLongP, 2. * PI);
-
-        body[iBody].dMeanMotion = sqrt(mu / (body[iBody].dSemi * body[iBody].dSemi * body[iBody].dSemi));
-        body[iBody].dOrbPeriod  = 2.0 * PI / body[iBody].dMeanMotion;
-        body[iBody].dPinc       = body[iBody].dSinc * sin(body[iBody].dLongA);
-        body[iBody].dQinc       = body[iBody].dSinc * cos(body[iBody].dLongA);
-        body[iBody].dHecc       = body[iBody].dEcc * sin(body[iBody].dLongP);
-        body[iBody].dKecc       = body[iBody].dEcc * cos(body[iBody].dLongP);
-      }
-      if (body[iBody].dEcc > 1.0) { // We use the Hyperbolic Anomaly, H
-        // Calculate Mean Anomaly
-        //coshH = (cosfAngle + body[iBody].dBaryEcc) /
-        //        (1.0 + body[iBody].dBaryEcc * cosfAngle);
-        /*
-        For hyperbolic orbits f lies only in Quadrants I and IV while acos() lies in 
-        Quadrants I and II. If in Quadrant II, must switch to Quadrant IV.
-        */
-        //if (cosfAngle < 0) {
-        //  sinfAngle = -sinfAngle;
-          // Be Careful. If ever using acos(cosfAngle), it would produce the incorrect angle
-        //}          
-        // One loses the sign of dHypA when using coshH. sinhH keeps the sign. 
-        sinhH = sqrt(body[iBody].dEcc * body[iBody].dEcc - 1) * sinfAngle / 
-                (1.0 + body[iBody].dEcc * cosfAngle);
-
-        body[iBody].dHypA = asinh(sinhH);
-        body[iBody].dEccA = 0.0; // This is actually undefined. Should we make this nan, question?
-
-        body[iBody].dMeanA = body[iBody].dEcc * sinh(body[iBody].dHypA) - body[iBody].dHypA;
-        body[iBody].dMeanL = body[iBody].dMeanA + body[iBody].dLongP;
-
-        body[iBody].dMeanMotion = sqrt(-mu / (body[iBody].dSemi * body[iBody].dSemi * body[iBody].dSemi));
-        body[iBody].dOrbPeriod = 0.0; // This value should actually be nan or infinity. How do I define this, question?        
-      }
-      
+      dSinw = dEccVec[2] / (dEcc * sin(dInc));
+    } else {
+      /* 
+      dSinw is constrained on the x-y plane.
+      Solution found by using third component of
+      n-hat x dEccVec = dEcc * sin(dArgP) * h-hat.
+      Also found by drawing out dEccVec on x-y plane
+      */
+      dSinw = dEccVec[1] / dEcc; 
+    }
+    // Works for all inclinations if one sets dLongA = 0 when dInc = 0
+    dCosw = dEccVec[0] * cos(dLongA) + dEccVec[1] * sin(dLongA);
+    // 2nd argument of atan2() cannot be zero
+    if (fabs(dCosw) > dMinValue) {
+      dArgP = fmodPos(atan2(dSinw, dCosw), 2. * PI);
+    } else {
+      dArgP = sign(dSinw) * PI / 2.0;
     }
   }
-  free(h);
-}
 
-void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
-
-  double rsq, normr, vsq, dHelioMu, mu, mTotal, dBaryRelation, *h, hsq, normh, sinwf, coswf, sinfAngle,
-      cosfAngle, rdot, sinw, cosw, f, cosE, coshH, sinhH;
-  // Solve for various values that are used repeatedly
-  // Solve for specific angular momentum h = r X v
-  h = malloc(3 * sizeof(double));
-  cross(body[iBody].dBCartPos, body[iBody].dBCartVel, h);
-  hsq   = h[0] * h[0] + h[1] * h[1] + h[2] * h[2];            // ||h||^2
-  normh = sqrt(hsq);                                          // ||h||
-  vsq   = body[iBody].dBCartVel[0] * body[iBody].dBCartVel[0] // ||v||^2
-        + body[iBody].dBCartVel[1] * body[iBody].dBCartVel[1] +
-        body[iBody].dBCartVel[2] * body[iBody].dBCartVel[2];
-  rsq = body[iBody].dBCartPos[0] * body[iBody].dBCartPos[0] // ||r||^2
-        + body[iBody].dBCartPos[1] * body[iBody].dBCartPos[1] +
-        body[iBody].dBCartPos[2] * body[iBody].dBCartPos[2];
-  normr = sqrt(rsq); // ||r||
-  rdot  = (body[iBody].dBCartPos[0] * body[iBody].dBCartVel[0] +
-          body[iBody].dBCartPos[1] * body[iBody].dBCartVel[1] +
-          body[iBody].dBCartPos[2] * body[iBody].dBCartVel[2]) /
-          normr;
-  //HelioMu = BIGG * (body[0].dMass + body[iBody].dMass);
-  //mTotal = body[0].dMass + body[1].dMass + ... + body[i == iBody].dMass + ... + body[iTmpNumBodies - 1]
-  //BaryMu = HelioMu * (dMassNo_iBody / mTotal)^3
-  mTotal = TotalMass(body, iNumBodies);
-  dBaryRelation = cube(1. - body[iBody].dMass / mTotal);
-  dHelioMu = BIGG * mTotal; // (body[iBody].dMass + body[0].dMass);
-  mu = dHelioMu * dBaryRelation;
-  body[iBody].dBaryMu = mu;
-  // Solve for semi-major axis
-  body[iBody].dBarySemi = 1 / (2 / normr - vsq / mu);
-
-  // Solve for eccentricity
-  body[iBody].dBaryEccSq = 1.0 - hsq / (mu * body[iBody].dBarySemi);
-  if (body[iBody].dEccSq < 1.0e-15) {
-    body[iBody].dEccSq = 0.0; // Unfortunately machine precision limits the accuracy of dEccSq
-  }  
-  body[iBody].dBaryEcc = sqrt(body[iBody].dBaryEccSq);
-
-  // Solve for inclination
-  body[iBody].dBaryInc  = acos(h[2] / normh);
-
-  // dSinc might not need to be used for BaryOrbElems
-  // body[iBody].dBarySinc = 0.5 * sin(body[iBody].dBaryInc); // For DistOrb usage
-
-
-  // Solve for longitude of ascending node, w, and f
-  if (body[iBody].dBaryInc != 0.0) {
-    body[iBody].dBaryLongA = fmodPos(atan2(h[0], -h[1]), 2. * PI);
-    sinwf = body[iBody].dBCartPos[2] /
-            (normr * sin(body[iBody].dBaryInc));
-    coswf = (body[iBody].dBCartPos[0] / normr +
-            sin(body[iBody].dBaryLongA) * sinwf * cos(body[iBody].dBaryInc)) /
-            cos(body[iBody].dBaryLongA);
-  } else { // Different definition when dBaryInc = 0
-    body[iBody].dBaryLongA = 0.0; //It's actually undefined but this will do for now...
-    sinwf = body[iBody].dBCartPos[1] / normr;
-    coswf = body[iBody].dBCartPos[0] / normr;
-  }
-  if (body[iBody].dBaryEcc != 0.0) { // No true anomaly for circular orbits
-    sinfAngle = body[iBody].dBarySemi * (1. - body[iBody].dBaryEccSq) * rdot /
-                (normh * body[iBody].dBaryEcc);
-    cosfAngle = (body[iBody].dBarySemi * (1. - body[iBody].dBaryEccSq) / normr - 1) /
-                body[iBody].dBaryEcc;
-                
-    if (fabs(cosfAngle - 1.0) < 1e-14) { // There are rounding errors at such precise values. We try to avoid cosfAngle > 1
-      cosfAngle = 1.0;
-      sinfAngle = 0.0;
-    }
-    sinw = sinwf * cosfAngle - coswf * sinfAngle;
-    cosw = sinwf * sinfAngle + coswf * cosfAngle;
-
-    body[iBody].dBaryArgP  = fmodPos(atan2(sinw, cosw), 2. * PI);
+  // *** Solve for Longitude of Pericenter ***
+  dLongP = dArgP + dLongA;
+  if (dEcc < 1.0) { // Orbit is bound
     /*
-    Below is a bit complicated to describe. dBaryLongP should not take the modulus
+    Below is a bit complicated to describe. dLongP should not take the modulus
     w.r.t 2*PI unless the orbit is bound. If unbound, it will be used to find MeanL,
     which does not take the modulus when unbound because its domain is all real numbers
     just like the variable MeanA, which is defined as a ratio of areas.
-    */
-    body[iBody].dBaryLongP = body[iBody].dBaryArgP + body[iBody].dBaryLongA;
-    f = fmodPos(atan2(sinfAngle, cosfAngle), 2. * PI);
+    */    
+    dLongP = fmodPos(dLongP, 2. * PI);
+  }
 
-    if (fabs(cosfAngle - 1) > 0) {
-      cosfAngle = cos(f);
-      sinfAngle = sin(f);
-    }
-
-    
-    if (body[iBody].dBaryEcc < 1.0) { //Using EccA to calculate other orbital elements
-      // Calculate Mean anomaly
-      cosE = (cosfAngle + body[iBody].dBaryEcc) /
-              (1.0 + body[iBody].dBaryEcc * cosfAngle);
-      if (fabs(fabs(cosE) - 1) < 1e-11) { // Error gets larger for longer simulations with smaller timesteps
-        /* If there is numerical error such that abs(cosE)>1, then use the small
-            angle approximation to find E */
-        body[iBody].dBaryEccA =
-              (1 + (body[iBody].dBaryEccSq - 1) * (cosfAngle * cosfAngle) -
-                body[iBody].dBaryEccSq) /
-              (1 + body[iBody].dBaryEcc * cosfAngle);
-      } else {
-        body[iBody].dBaryEccA = acos(cosE);
-
-        // If the planet is in the second half of the orbit, we need -acos(cosE)
-        // + 2PI This keeps Mean A in [0, 2PI]
-        if (f > PI) {
-          body[iBody].dBaryEccA = -body[iBody].dBaryEccA + 2 * PI;
-        }
-      }
-      // take modulus here after using it on BaryLongP
-      body[iBody].dBaryArgP = fmodPos(body[iBody].dBaryArgP, 2. * PI);
-      body[iBody].dBaryMeanA =
-            fmodPos(body[iBody].dBaryEccA - body[iBody].dBaryEcc * sin(body[iBody].dBaryEccA), 2 * PI);
-      body[iBody].dBaryLongP = fmodPos(body[iBody].dBaryLongP, 2. * PI);
-      // Calculating Mean Longitude
-      body[iBody].dBaryMeanL =  fmodPos(body[iBody].dBaryMeanA + body[iBody].dBaryLongP, 2 * PI);            
-
-      // Calculating Mean Motion
-      body[iBody].dBaryMeanMotion = 
-              sqrt(mu / (body[iBody].dBarySemi * body[iBody].dBarySemi * body[iBody].dBarySemi));
-      // Calculating Orbital Period
-      body[iBody].dBaryOrbPeriod = 2.0 * PI / body[iBody].dBaryMeanMotion;
-    }
-    if (body[iBody].dBaryEcc > 1.0) { // Using HypA to calculate other orbital elements.
-      // Calculate Mean Anomaly
-      //coshH = (cosfAngle + body[iBody].dBaryEcc) /
-      //        (1.0 + body[iBody].dBaryEcc * cosfAngle);
+  // *** Solve for True Anomaly ***
+  dTrueA = 0; // initializing variable
+  double dSinf, dCosf;
+  if (dEcc < dMinValue) {
+    if (fabs(dInc) > dMinValue) {
       /*
-      For hyperbolic orbits f lies only in Quadrants I and IV while acos() lies in 
-      Quadrants I and II. If in Quadrant II, must switch to Quadrant IV.
+      We similarly to the case of finding the Trig functions
+      for dSinw and dCosw, except now the equation we are 
+      solving is n-hat x dPos = dNormPos * sin(dTrueA) * h-hat
       */
-      //if (cosfAngle < 0) {
-      //  sinfAngle = -sinfAngle; 
-        // Be Careful. If ever using acos(cosfAngle), it would produce the incorrect angle
-      //}
-      
-      // You lose the sign of dHypA when using acosh(coshH). asinh(sinhH) keeps the sign. 
-      sinhH = sqrt(body[iBody].dBaryEcc * body[iBody].dBaryEcc - 1) * sinfAngle / 
-              (1.0 + body[iBody].dBaryEcc * cosfAngle);
+      dSinf = dPos[2] / (dNormPos * sin(dInc));
+    } else {
+      dSinf = dPos[1] / dNormPos;
+    }
+    dCosf = dPos[0] * cos(dLongA) + dPos[1] * sin(dLongA); 
+  } else { // Applies to non-zero dEcc and for all values of dInc
+    /*
+    Solving from dSinf * h-hat = e-hat x r-hat
+    simplifies to the expression below
+    */
+    dSinf = drDot * dNormh / (dMu * dEcc);
+    /*
+    Taking the dot product to find the cosine angle
+    */
+    dCosf = dot(dEccVec, dPos) / (dEcc * dNormPos);
+  }
 
-      body[iBody].dBaryHypA = asinh(sinhH);
-
-      body[iBody].dBaryEccA = 0.0; // This is actually undefined. Should we make this nan, question?
-
-      body[iBody].dBaryMeanA = body[iBody].dBaryEcc * sinh(body[iBody].dBaryHypA) - body[iBody].dBaryHypA;
-      // Calculating Mean Longitude
-      body[iBody].dBaryMeanL =  body[iBody].dBaryMeanA + body[iBody].dBaryLongP;
-      // Calculating Mean Motion
-      body[iBody].dBaryMeanMotion = 
-              sqrt(-mu / (body[iBody].dBarySemi * body[iBody].dBarySemi * body[iBody].dBarySemi));
-      // Calculate Orbital Period
-      body[iBody].dBaryOrbPeriod = 0.0; // The orbital period actually doesn't exist. Need to change?      
+  if (fabs(dCosf) > 1.0 && fabs(dCosf) - 1.0 < dMinValue) {
+    // calculated from the general equation of a conic in polar coordinates
+    double dCosf_Conic, dSinf_Conic;
+    dCosf_Conic = (dSemi * (1 - dEccSq) / dNormPos - 1) / dEcc;
+    dSinf_Conic = dSemi * (1 - dEccSq) * drDot / (dNormh * dEcc);
+    if (fabs(dCosf_Conic) < 1.0) {
+      dCosf = dCosf_Conic;
+      dSinf = dSinf_Conic;
+    } else {
+      dCosf = 1.0;
+      dSinf = 0.0;
     }
   }
+  
+  // There are rounding errors at such precise values. We try to avoid dCosf > 1
+  if (fabs(fabs(dCosf) - 1) < dMinValue || fabs(dSinf) < dMinValue) { 
+    dCosf = sign(dCosf);
+    dSinf = 0.0;  
+  }
+  if (fabs(dCosf) > dMinValue) {
+    dTrueA = fmodPos(atan2(dSinf, dCosf), 2. * PI);
+  } else {
+    dTrueA = sign(dSinf) * PI / 2.0;
+  }
+  
+  if (fabs(fabs(dCosf) - 1) > 0) { // If numerical errors cause dCosf > 1
+    dSinf = sin(dTrueA);
+    dCosf = cos(dTrueA); // Note this value gets used later, which is why it's recorrected here
+  }
+  
+  // *** Solve Eccentric Anomaly ***
+  double dSinEccA, dCosEccA;
+  dEccA = 0.0; // Initializing variable
+  dSinEccA = 0.0;
+  dCosEccA = 1.0;
+  if (1.0 > dEcc && dEcc > dMinValue) {
+    dSinEccA = sqrt(1.0 - dEccSq) * dSinf / (1.0 + dEcc * dCosf);
+    dCosEccA = (dCosf + dEcc) / (1.0 + dEcc * dCosf);
+    if (fabs(fabs(dCosEccA) - 1.0) < dMinValue || fabs(dSinEccA) < dMinValue) {
+      dCosEccA = sign(dCosEccA);
+      dSinEccA = 0.0;
+    }
+    if (dCosEccA > dMinValue) {
+      dEccA = fmodPos(atan2(dSinEccA, dCosEccA), 2. * PI);
+    } else {
+      dEccA = sign(dSinEccA) * PI / 2.0;
+    }
+
+  } else if (dEcc < dMinValue) {
+    dEccA = dTrueA;
+  }
+
+  // *** Solve Hyperbolic Anomaly ***
+  double dSinhH, dCoshH, dTanhH;
+  dHypA = 0.0; // Initializing variable
+  dSinhH = 0.0;
+  dCoshH = 1.0;
+  dTanhH = 0.0;
+  if (dEcc > 1.0) {
+    dSinhH = sqrt(dEccSq - 1) * dSinf / (1.0 + dEcc * dCosf);
+    dCoshH = (dCosf + dEcc) / (1.0 + dEcc * dCosf);
+    dTanhH = dSinhH / dCoshH;
+    if (fabs(dTanhH) < 1.0) {
+      dHypA = asinh(dSinhH);
+    } else {
+      dHypA = atanh(dSinhH / dCoshH);
+    }
+  }
+
+  // *** Solve Mean Anomaly ***
+  dMeanA = 0; // Initializing variable
+  // Using Kepler's Equation to find dMeanA
+  if (1.0 > dEcc && dEcc > dMinValue) {
+    dMeanA = dEccA - dEcc * dSinEccA;
+    dMeanA = fmodPos(dMeanA, 2.0 * PI);
+  } else if (1.0 < dEcc) {
+    dMeanA = dEcc * dSinhH - dHypA;
+  }
+
+  // *** Solve Mean Longitude ***
+  dMeanL = 0; // Initializing variable
+  dMeanL = dMeanA + dLongP;
+  if (1.0 > dEcc) {
+    dMeanL = fmodPos(dMeanL, 2.0 * PI);
+  }
+
+    
+  if (dEcc > 0) {
+    // Calculate Mean Anomaly
+    // Defitions change since elliptical and hyperbolic orbits have different Mean Anomalies
+    if (dEcc < 1.0) { // We use the Eccentric Anomaly, dEccA
+      dCosEccA = (dCosf + dEcc) / (1.0 + dEcc * dCosf);
+      // Error gets larger for longer simulations with smaller timesteps
+      if (fabs(fabs(dCosEccA) - 1) < 1e-11) { 
+        /* If there is numerical error such that abs(cosE)>1, then use the small
+          angle approximation to find E */
+        // Note: you could simplify this expression with a dSinf. Try this later.
+        dEccA = (1 - dEccSq - (1 - dEccSq) * (dCosf * dCosf) ) / (1 + dEcc * dCosf);
+        // This considers values that are close PI instead of 0
+        if (dCosEccA < 0) {
+          dEccA += PI;
+        }
+      } else {
+        if (fabs(dCosEccA) > 1) {
+          // Need io here to check verbosity XXX
+          fprintf(stderr, "ERROR: cosine of the Eccentric Anomaly is greater than 1. 
+                          Please rerun with a smaller timestep.");
+          exit(EXIT_EXE);
+        }
+        dEccA = acos(dCosEccA);
+
+        // If the planet is in the second half of the orbit, we need -acos(cosE)
+        // + 2PI This keeps Mean A in [0, 2PI)
+        if (dTrueA > PI) {
+          dEccA = -dEccA + 2. * PI;
+        }        
+      }
+      dHypA = 0.0; // The value is actually undefined but it is left as zero
+      // take the modulus here after using it on LongP
+      dArgP = fmodPos(dArgP, 2. * PI);
+      dMeanA = fmodPos(dEccA - dEcc * sin(dEccA), 2. * PI);
+      dLongP = fmodPos(dLongP, 2. * PI);
+      dMeanL = fmodPos(dMeanA + dLongP, 2. * PI);
+
+      dMeanMotion = sqrt(dMu / (dSemi * dSemi * dSemi));
+      dOrbP = 2.0 * PI / dMeanMotion;
+
+      // Distorb variables.
+      dPinc = dSinc * sin(dLongA);
+      dQinc = dSinc * cos(dLongA);
+      dHecc = dEcc * sin(dLongP);
+      dKecc = dEcc * cos(dLongP);
+    }
+    if (dEcc > 1.0) { // We use the Hyperbolic Anomaly, H
+      double dSinhH;
+      // One loses the sign of dHypA when using coshH. sinhH keeps the sign.
+      dSinhH = sqrt(dEccSq - 1) * dSinf / (1.0 + dEcc * dCosf);
+
+      dHypA = asinh(dSinhH);
+      dEccA = 0.0; // This is actually undefined.
+
+      dMeanA = dEcc * dSinhH - dHypA;
+      dMeanL = dMeanA + dLongP;
+
+      dMeanMotion = sqrt(-dMu / (dSemi * dSemi * dSemi));
+      dOrbP = 0.0; // This is actually undefined
+    }
+  }
+  // We define all orbital elements to ELEMS
+  ELEMS elems = {0};
+  elems.dSemi = dSemi;
+  elems.dEcc = dEcc;
+  elems.dInc = dInc;
+  elems.dArgP = dArgP;
+  elems.dLongA = dLongA;
+  elems.dMeanA = dMeanA;
+
+  elems.dLongP = dLongP;
+  elems.dMeanL = dMeanL;
+
+  elems.dEccA = dEccA;
+  elems.dHypA = dHypA;
+
+  elems.dMeanMotion = dMeanMotion;
+  elems.dOrbPeriod = dOrbP;
+
+  elems.dSinc = dSinc;
+  elems.dPinc = dPinc;
+  elems.dQinc = dQinc;
+  elems.dHecc = dHecc;
+  elems.dKecc = dKecc; 
+
   free(h);
+  return elems;
 }
 
+void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
+  ELEMS elems = {0};
+  double dMu, *dPos, *dVel;
+  dPos = malloc(3 * sizeof(double));
+  dVel = malloc(3 * sizeof(double));
+
+  for (int i = 0; i < 3; i++) {
+    dPos[i] = body[iBody].dBCartPos[i];
+    dVel[i] = body[iBody].dBCartVel[i];
+  }
+  double dMassTotal = TotalMass(body, iNumBodies);
+  double dBaryRelation = cube(1.0 - body[iBody].dMass / dMassTotal);
+  dMu = BIGG * dBaryRelation * dMassTotal;
+  // Finding the orbital elements here
+  elems = fvCart2OrbElems(dMu, dPos, dVel);
+
+
+  // Assigning elems variables to proper body[iBody] variables
+  body[iBody].dBarySemi = elems.dSemi;
+  body[iBody].dBaryEcc = elems.dEcc;
+  body[iBody].dBaryInc = elems.dInc;
+  body[iBody].dBaryArgP = elems.dArgP;
+  body[iBody].dBaryLongA = elems.dLongA;
+  body[iBody].dBaryMeanA = elems.dMeanA;
+
+  body[iBody].dBaryLongP = elems.dLongP;
+  body[iBody].dBaryMeanL = elems.dMeanL;
+
+  body[iBody].dBaryEccA = elems.dEccA;
+  body[iBody].dBaryHypA = elems.dHypA;
+
+  body[iBody].dBaryMeanMotion = elems.dMeanMotion;
+  body[iBody].dBaryOrbPeriod = elems.dOrbPeriod;
+
+  body[iBody].dBarySinc = elems.dSinc;
+  /* For the future developer wanting to create these 
+  body[iBody].dBaryPinc = elems.dPinc;
+  body[iBody].dBaryQinc = elems.dQinc;
+  body[iBody].dBaryHecc = elems.dHecc;
+  body[iBody].dBaryKecc = elems.dKecc;
+  */
+}
+
+void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
+  if (iBody == 0) { // Assign all of the central body's elements to zero
+    body[iBody].dSemi = 0;
+    body[iBody].dEcc = 0;
+    body[iBody].dInc = 0;
+    body[iBody].dArgP = 0;
+    body[iBody].dLongA = 0;
+    body[iBody].dMeanA = 0;
+
+    body[iBody].dLongP = 0;
+    body[iBody].dMeanL = 0;
+
+    body[iBody].dEccA = 0;
+    body[iBody].dHypA = 0;
+
+    body[iBody].dMeanMotion = 0;
+    body[iBody].dOrbPeriod = 0;
+
+    body[iBody].dSinc = 0;
+    body[iBody].dPinc = 0;
+    body[iBody].dQinc = 0;
+    body[iBody].dHecc = 0;
+    body[iBody].dKecc = 0;
+  } else {
+    ELEMS elems = {0};
+    fvBaryCart2HelioCart(body, iBody);
+
+    double dMu, *dPos, *dVel;
+    dPos = malloc(3 * sizeof(double));
+    dVel = malloc(3 * sizeof(double));
+
+    for (int i = 0; i < 3; i++) {
+      dPos[i] = body[iBody].dHCartPos[i];
+      dVel[i] = body[iBody].dHCartVel[i];
+    }
+
+    dMu = BIGG * (body[iBody].dMass + body[0].dMass);
+    // Finding the orbital elements here
+    elems = fvCart2OrbElems(dMu, dPos, dVel);
+
+
+    // Assigning elems variables to proper body[iBody] variables
+    body[iBody].dSemi = elems.dSemi;
+    body[iBody].dEcc = elems.dEcc;
+    body[iBody].dInc = elems.dInc;
+    body[iBody].dArgP = elems.dArgP;
+    body[iBody].dLongA = elems.dLongA;
+    body[iBody].dMeanA = elems.dMeanA;
+
+    body[iBody].dLongP = elems.dLongP;
+    body[iBody].dMeanL = elems.dMeanL;
+
+    body[iBody].dEccA = elems.dEccA;
+    body[iBody].dHypA = elems.dHypA;
+
+    body[iBody].dMeanMotion = elems.dMeanMotion;
+    body[iBody].dOrbPeriod = elems.dOrbPeriod;
+
+    body[iBody].dSinc = elems.dSinc;
+    body[iBody].dPinc = elems.dPinc;
+    body[iBody].dQinc = elems.dQinc;
+    body[iBody].dHecc = elems.dHecc;
+    body[iBody].dKecc = elems.dKecc;
+  }
+}
 
 // Functions below are EXACTLY the same as in distorb.c, but needed in SpiNBody
 // Should be relocated to system.c?

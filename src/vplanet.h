@@ -2426,9 +2426,11 @@ struct MODULE {
 
 typedef struct
 {
-  double dSemi, dEcc, dInc, dArgP, dLongP, dLongA, dMeanA, dMeanL, dEccA, dHypA, dOrbPeriod, dMu;
+  double dSemi, dEcc, dInc, dArgP, dLongP, dLongA, dMeanA, dMeanL, 
+  dEccA, dHypA, dMeanMotion, dOrbPeriod, 
+  dSinc, dPinc, dQinc, dHecc, dKecc, dMu;
 
-} ELEMS; 
+} ELEMS;
 
 
 /* fnIntegrate is a pointer to a function that performs

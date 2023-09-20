@@ -1011,10 +1011,13 @@ double BarycentricMu(BODY *body, int iNumBodies, int iBody) {
 void EccentricityVector(double dMu, double *dPos, double *dVel, double *h, double *dEccVec) {
   double dNormPos = sqrt(dot(dPos, dPos));
   // First term of Eccentricity vector calculated here ((v x h)/Mu)
-  cross(dVel, h, dEccVec) / dMu;
+  cross(dVel, h, dEccVec);
 
   // Second term of Eccentricity vector added here (subtract r-hat)
   for (int i = 0; i < 3; i++) {
+    // Divide by dMu here for the first term
+    dEccVec[i] /= dMu;
+    // Introduce second term here to subtract from
     dEccVec[i] -= dPos[i] / dNormPos;
   }
 }
@@ -1392,10 +1395,12 @@ void fvBaryCart2HelioCart(BODY *body, int iBody) {
 
 
 ELEMS fvCart2OrbElems(double dMu, double *dPos, double *dVel) {
-  double dMinValue, *h, dPosSq, dNormPos, dVelSq, dNormVel, dhSq, dNormh, drDot, 
-  dSemi, *dEccVec, dEcc, dEccSq, dInc, dSinc, dArgP, dLongA, dMeanA, dLongP, dMeanL, dTrueA, 
-  dSinwf, dCoswf, dTrueA, dEccA, dCosEccA, dHypA, dMeanMotion, dOrbP, 
-  dPinc, dQinc, dHecc, dKecc;
+  double dMinValue, dPosSq, dNormPos, dVelSq, dNormVel, dhSq, dNormh, drDot, 
+  dSemi, dEcc, dEccSq, dInc, dSinc, dArgP, dLongA, dMeanA, dLongP, dMeanL, dTrueA, 
+  dSinf, dCosf, dEccA, dSinEccA, dCosEccA, dHypA, dSinhHypA, dCoshHypA, 
+  dMeanMotion, dOrbP, dPinc, dQinc, dHecc, dKecc; // Scalars
+  double *h, *dEccVec; // vectors
+
   // Need to declare min value to avoid inaccurate outputs
   dMinValue  = 1.0e-15;
   h = malloc(3 * sizeof(double));
@@ -1421,7 +1426,17 @@ ELEMS fvCart2OrbElems(double dMu, double *dPos, double *dVel) {
   // *** Solve for Eccentricity ***
   // Finding Eccentricity vector
   dEccVec = malloc(3 * sizeof(double));
-  EccentricityVector(dMu, dPos, dVel, h, dEccVec);
+  // First term of Eccentricity vector calculated here ((v x h)/Mu)
+  cross(dVel, h, dEccVec);
+
+  // Second term of Eccentricity vector added here (subtract r-hat)
+  for (int i = 0; i < 3; i++) {
+    // Divide by dMu here for the first term
+    dEccVec[i] /= dMu;
+    // Introduce second term here to subtract from
+    dEccVec[i] -= dPos[i] / dNormPos;
+  }
+  // EccentricityVector(dMu, dPos, dVel, h, dEccVec);
 
   
   /* Here is the old way that dEcc was calculated
@@ -1432,13 +1447,16 @@ ELEMS fvCart2OrbElems(double dMu, double *dPos, double *dVel) {
   dEcc = sqrt(dEccSq);
   */
   // Here is the new way using dEccVec
-  dEccSq = dot(dEcc, dEcc);
+
+  dEccSq = dot(dEccVec, dEccVec);
+  if (dEccSq < dMinValue) {
+    dEccSq = 0.0;
+  }
   dEcc = sqrt(dEccSq);
 
   // *** Solve for Inclination ***
   // In domain between 0 and PI
   dInc = acos(h[2] / dNormh); 
-  dSinc = 0.5 * sin(dInc); // For DistOrb usage
 
   // *** Solve for Longitude of Ascending Node ***
   dLongA = 0; // best to initialize the variable first
@@ -1496,7 +1514,6 @@ ELEMS fvCart2OrbElems(double dMu, double *dPos, double *dVel) {
 
   // *** Solve for True Anomaly ***
   dTrueA = 0; // initializing variable
-  double dSinf, dCosf;
   if (dEcc < dMinValue) {
     if (fabs(dInc) > dMinValue) {
       /*
@@ -1519,19 +1536,10 @@ ELEMS fvCart2OrbElems(double dMu, double *dPos, double *dVel) {
     Taking the dot product to find the cosine angle
     */
     dCosf = dot(dEccVec, dPos) / (dEcc * dNormPos);
-  }
 
-  if (fabs(dCosf) > 1.0 && fabs(dCosf) - 1.0 < dMinValue) {
-    // calculated from the general equation of a conic in polar coordinates
-    double dCosf_Conic, dSinf_Conic;
-    dCosf_Conic = (dSemi * (1 - dEccSq) / dNormPos - 1) / dEcc;
-    dSinf_Conic = dSemi * (1 - dEccSq) * drDot / (dNormh * dEcc);
-    if (fabs(dCosf_Conic) < 1.0) {
-      dCosf = dCosf_Conic;
-      dSinf = dSinf_Conic;
-    } else {
-      dCosf = 1.0;
+    if (fabs(dCosf) > 1.0 && fabs(dCosf) - 1.0 < dMinValue) {
       dSinf = 0.0;
+      dCosf = sign(dCosf);
     }
   }
   
@@ -1552,7 +1560,6 @@ ELEMS fvCart2OrbElems(double dMu, double *dPos, double *dVel) {
   }
   
   // *** Solve Eccentric Anomaly ***
-  double dSinEccA, dCosEccA;
   dEccA = 0.0; // Initializing variable
   dSinEccA = 0.0;
   dCosEccA = 1.0;
@@ -1563,7 +1570,7 @@ ELEMS fvCart2OrbElems(double dMu, double *dPos, double *dVel) {
       dCosEccA = sign(dCosEccA);
       dSinEccA = 0.0;
     }
-    if (dCosEccA > dMinValue) {
+    if (fabs(dCosEccA) > dMinValue) {
       dEccA = fmodPos(atan2(dSinEccA, dCosEccA), 2. * PI);
     } else {
       dEccA = sign(dSinEccA) * PI / 2.0;
@@ -1574,20 +1581,13 @@ ELEMS fvCart2OrbElems(double dMu, double *dPos, double *dVel) {
   }
 
   // *** Solve Hyperbolic Anomaly ***
-  double dSinhH, dCoshH, dTanhH;
   dHypA = 0.0; // Initializing variable
-  dSinhH = 0.0;
-  dCoshH = 1.0;
-  dTanhH = 0.0;
+  dSinhHypA = 0.0;
+  // dCoshHypA = 1.0; // Uncomment when needed
   if (dEcc > 1.0) {
-    dSinhH = sqrt(dEccSq - 1) * dSinf / (1.0 + dEcc * dCosf);
-    dCoshH = (dCosf + dEcc) / (1.0 + dEcc * dCosf);
-    dTanhH = dSinhH / dCoshH;
-    if (fabs(dTanhH) < 1.0) {
-      dHypA = asinh(dSinhH);
-    } else {
-      dHypA = atanh(dSinhH / dCoshH);
-    }
+    dSinhHypA = sqrt(dEccSq - 1) * dSinf / (1.0 + dEcc * dCosf);
+    // dCoshHypA = (dCosf + dEcc) / (1.0 + dEcc * dCosf);
+    dHypA = asinh(dSinhHypA);
   }
 
   // *** Solve Mean Anomaly ***
@@ -1597,7 +1597,7 @@ ELEMS fvCart2OrbElems(double dMu, double *dPos, double *dVel) {
     dMeanA = dEccA - dEcc * dSinEccA;
     dMeanA = fmodPos(dMeanA, 2.0 * PI);
   } else if (1.0 < dEcc) {
-    dMeanA = dEcc * dSinhH - dHypA;
+    dMeanA = dEcc * dSinhHypA - dHypA;
   }
 
   // *** Solve Mean Longitude ***
@@ -1607,68 +1607,24 @@ ELEMS fvCart2OrbElems(double dMu, double *dPos, double *dVel) {
     dMeanL = fmodPos(dMeanL, 2.0 * PI);
   }
 
-    
-  if (dEcc > 0) {
-    // Calculate Mean Anomaly
-    // Defitions change since elliptical and hyperbolic orbits have different Mean Anomalies
-    if (dEcc < 1.0) { // We use the Eccentric Anomaly, dEccA
-      dCosEccA = (dCosf + dEcc) / (1.0 + dEcc * dCosf);
-      // Error gets larger for longer simulations with smaller timesteps
-      if (fabs(fabs(dCosEccA) - 1) < 1e-11) { 
-        /* If there is numerical error such that abs(cosE)>1, then use the small
-          angle approximation to find E */
-        // Note: you could simplify this expression with a dSinf. Try this later.
-        dEccA = (1 - dEccSq - (1 - dEccSq) * (dCosf * dCosf) ) / (1 + dEcc * dCosf);
-        // This considers values that are close PI instead of 0
-        if (dCosEccA < 0) {
-          dEccA += PI;
-        }
-      } else {
-        if (fabs(dCosEccA) > 1) {
-          // Need io here to check verbosity XXX
-          fprintf(stderr, "ERROR: cosine of the Eccentric Anomaly is greater than 1. 
-                          Please rerun with a smaller timestep.");
-          exit(EXIT_EXE);
-        }
-        dEccA = acos(dCosEccA);
+  // *** Solve Mean Motion ***
+  dMeanMotion = sqrt(dMu / fabs(dSemi * dSemi * dSemi));
 
-        // If the planet is in the second half of the orbit, we need -acos(cosE)
-        // + 2PI This keeps Mean A in [0, 2PI)
-        if (dTrueA > PI) {
-          dEccA = -dEccA + 2. * PI;
-        }        
-      }
-      dHypA = 0.0; // The value is actually undefined but it is left as zero
-      // take the modulus here after using it on LongP
-      dArgP = fmodPos(dArgP, 2. * PI);
-      dMeanA = fmodPos(dEccA - dEcc * sin(dEccA), 2. * PI);
-      dLongP = fmodPos(dLongP, 2. * PI);
-      dMeanL = fmodPos(dMeanA + dLongP, 2. * PI);
-
-      dMeanMotion = sqrt(dMu / (dSemi * dSemi * dSemi));
-      dOrbP = 2.0 * PI / dMeanMotion;
-
-      // Distorb variables.
-      dPinc = dSinc * sin(dLongA);
-      dQinc = dSinc * cos(dLongA);
-      dHecc = dEcc * sin(dLongP);
-      dKecc = dEcc * cos(dLongP);
-    }
-    if (dEcc > 1.0) { // We use the Hyperbolic Anomaly, H
-      double dSinhH;
-      // One loses the sign of dHypA when using coshH. sinhH keeps the sign.
-      dSinhH = sqrt(dEccSq - 1) * dSinf / (1.0 + dEcc * dCosf);
-
-      dHypA = asinh(dSinhH);
-      dEccA = 0.0; // This is actually undefined.
-
-      dMeanA = dEcc * dSinhH - dHypA;
-      dMeanL = dMeanA + dLongP;
-
-      dMeanMotion = sqrt(-dMu / (dSemi * dSemi * dSemi));
-      dOrbP = 0.0; // This is actually undefined
-    }
+  // *** Solve Orbital Period ***
+  dOrbP = 0.0; // Initializing variable
+  if (dEcc < 1.0) {
+    dOrbP = 2.0 * PI / dMeanMotion;
   }
+
+  // *** Solve Distorb Variables ***
+  // These have not been tested for unbound orbits.
+  dSinc = 0.5 * sin(dInc);
+  dPinc = dSinc * sin(dLongA);
+  dQinc = dSinc * cos(dLongA);
+  dHecc = dEcc * sin(dLongP);
+  dKecc = dEcc * cos(dLongP);  
+
+
   // We define all orbital elements to ELEMS
   ELEMS elems = {0};
   elems.dSemi = dSemi;
@@ -1694,6 +1650,7 @@ ELEMS fvCart2OrbElems(double dMu, double *dPos, double *dVel) {
   elems.dKecc = dKecc; 
 
   free(h);
+  free(dEccVec);
   return elems;
 }
 
@@ -1738,6 +1695,14 @@ void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
   body[iBody].dBaryHecc = elems.dHecc;
   body[iBody].dBaryKecc = elems.dKecc;
   */
+  
+  // We take the modulus of certain angles to keep them in their respected domains
+  if (body[iBody].dBaryEcc < 1.0) {
+    body[iBody].dBaryArgP = fmodPos(body[iBody].dBaryArgP, 2.0 * PI);
+    body[iBody].dBaryLongA = fmodPos(body[iBody].dBaryLongA, 2.0 * PI);
+    body[iBody].dBaryMeanA = fmodPos(body[iBody].dBaryMeanA, 2.0 * PI);
+    body[iBody].dBaryEccA = fmodPos(body[iBody].dBaryEccA, 2.0 * PI);
+  }
 }
 
 void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
@@ -1803,6 +1768,14 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
     body[iBody].dQinc = elems.dQinc;
     body[iBody].dHecc = elems.dHecc;
     body[iBody].dKecc = elems.dKecc;
+
+    // We take the modulus of certain angles to keep them in their respected domains
+    if (body[iBody].dEcc < 1.0) {
+      body[iBody].dArgP = fmodPos(body[iBody].dArgP, 2.0 * PI);
+      body[iBody].dLongA = fmodPos(body[iBody].dLongA, 2.0 * PI);
+      body[iBody].dMeanA = fmodPos(body[iBody].dMeanA, 2.0 * PI);
+      body[iBody].dEccA = fmodPos(body[iBody].dEccA, 2.0 * PI);
+    }
   }
 }
 

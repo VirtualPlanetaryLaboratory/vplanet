@@ -2095,6 +2095,20 @@ void WriteHelioMeanL(BODY *body, CONTROL *control, OUTPUT *output,
   } // In a hyperbolic orbit MeanL is represented as an area in radians
 }
 
+void WriteHelioTrueA(BODY *body, CONTROL *control, OUTPUT *output,
+                    SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                    double *dTmp, char cUnit[]) {
+  *dTmp = body[iBody].dHelioTrueA;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle, cUnit);
+  }
+}
+
 void WriteHelioEccA(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
@@ -2226,6 +2240,20 @@ void WriteBaryMeanL(BODY *body, CONTROL *control, OUTPUT *output,
       fsUnitsAngle(units->iAngle, cUnit);
     }
   } // In a hyperbolic orbit MeanL is represented as an area in radians
+}
+
+void WriteBaryTrueA(BODY *body, CONTROL *control, OUTPUT *output,
+                    SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                    double *dTmp, char cUnit[]) {
+  *dTmp = body[iBody].dBaryTrueA;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngle(units->iAngle);
+    fsUnitsAngle(units->iAngle, cUnit);
+  }
 }
 
 void WriteBaryEccA(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2454,6 +2482,15 @@ void InitializeOutputSpiNBody(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_HELIOMEANL].iModuleBit = SPINBODY;
   fnWrite[OUT_HELIOMEANL]           = &WriteHelioMeanL;
 
+  sprintf(output[OUT_HELIOTRUEA].cName, "HelioTrueA");
+  sprintf(output[OUT_HELIOTRUEA].cDescr, 
+          "Body's heliocentric True Anomaly where origin is centered at the primary mass.");
+  sprintf(output[OUT_HELIOTRUEA].cNeg, "Deg");
+  output[OUT_HELIOTRUEA].bNeg       = 1;
+  output[OUT_HELIOTRUEA].dNeg       = 1. / DEGRAD;
+  output[OUT_HELIOTRUEA].iNum       = 1;
+  output[OUT_HELIOTRUEA].iModuleBit = SPINBODY;
+  fnWrite[OUT_HELIOTRUEA]           = &WriteHelioTrueA;
 
   sprintf(output[OUT_HELIOECCA].cName, "HelioEccA");
   sprintf(output[OUT_HELIOECCA].cDescr, 
@@ -2618,6 +2655,16 @@ void InitializeOutputSpiNBody(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_BARYMEANL].iNum       = 1;
   output[OUT_BARYMEANL].iModuleBit = SPINBODY;
   fnWrite[OUT_BARYMEANL]           = &WriteBaryMeanL;
+
+  sprintf(output[OUT_BARYTRUEA].cName, "BaryTrueA");
+  sprintf(output[OUT_BARYTRUEA].cDescr, 
+          "Body's barycentric True Anomaly where origin is centered at the system's barycenter.");
+  sprintf(output[OUT_BARYTRUEA].cNeg, "Deg");
+  output[OUT_BARYTRUEA].bNeg       = 1;
+  output[OUT_BARYTRUEA].dNeg       = 1. / DEGRAD;
+  output[OUT_BARYTRUEA].iNum       = 1;
+  output[OUT_BARYTRUEA].iModuleBit = SPINBODY;
+  fnWrite[OUT_BARYTRUEA]           = &WriteBaryTrueA;
 
   sprintf(output[OUT_BARYECCA].cName, "BaryEccA");
   sprintf(output[OUT_BARYECCA].cDescr, 

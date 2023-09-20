@@ -341,6 +341,7 @@ struct BODY {
   double dHelioLongP;  /**< Body's heliocentric longitude of pericenter */
   double dHelioMeanA;  /**< Body's heliocentric mean anamoly */
   double dHelioMeanL;  /**< Body's heliocentric Mean Longitude */
+  double dHelioTrueA;  /**< Body's heliocentric True Anomaly */
   double dHelioEccA;   /**< Body's heliocentric Eccentric Anomaly */
   double dHelioHypA;   /**< Body's heliocentric Hyperbolic Anomaly */  
 
@@ -352,6 +353,7 @@ struct BODY {
   double dBaryLongP;   /**< Body's barycentric longitude of pericenter */
   double dBaryMeanA;   /**< Body's barycentric mean anamoly */
   double dBaryMeanL;   /**< Body's barycentric Mean Longitude */
+  double dBaryTrueA;   /**< Body's barycentric True Anomaly */
   double dBaryEccA;    /**< Body's barycentric Eccentric Anomaly */
   double dBaryHypA;    /**< Body's barycentric Hyperbolic Anomaly */
 
@@ -2427,7 +2429,7 @@ struct MODULE {
 typedef struct
 {
   double dSemi, dEcc, dInc, dArgP, dLongP, dLongA, dMeanA, dMeanL, 
-  dEccA, dHypA, dMeanMotion, dOrbPeriod, 
+  dTrueA, dEccA, dHypA, dMeanMotion, dOrbPeriod, 
   dSinc, dPinc, dQinc, dHecc, dKecc, dMu;
 
 } ELEMS;

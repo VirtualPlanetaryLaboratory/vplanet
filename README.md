@@ -10,7 +10,7 @@
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/docs.yml/badge.svg"></a>
   <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract"><img src="https://img.shields.io/badge/Read-the_paper-darkgreen.svg?style=flat"></a>
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet/conduct.html"><img src="https://img.shields.io/badge/Code%20of-Conduct-7d93c7.svg"></a>
-  <a href="https://www.youtube.com/channel/UCyb44vpUvEDId2Y08T7ePRwe"><img src="https://img.shields.io/badge/You-Tube-darkred.svg"></a><br>
+  <a href="https://www.youtube.com/@VPLanetCode/playlists"><img src="https://img.shields.io/badge/You-Tube-darkred.svg"></a><br>
   <img src="https://img.shields.io/badge/Unit%20Tests-14,440-darkblue.svg"></a>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml/badge.svg"></a>
@@ -37,7 +37,7 @@
 
 `VPLanet` is software to simulate planetary system evolution, with a focus on habitability. Physical models, typically consisting of ordinary differential equations, are coupled together to simulate evolution, from planetary cores to passing stars, for the age of a system. We strive for full transparency and reproducibility in our software, and this repository contains 1) the [source code](src), 2) [extensive documentation](https://VirtualPlanetaryLaboratory.github.io/vplanet), 3) scripts and files to [generate published figures](examples) and perform [parameter sweeps](https://virtualplanetarylaboratory.github.io/vplanet/parametersweep.html), and 4) [scripts to validate the current release](tests). We can't claim we found life beyond the Earth with closed-source or unreliable software!
 
-To get started, ensure you have clang/gcc installed and follow the [Installation Guide](https://virtualplanetarylaboratory.github.io/vplanet/quickstart.html). To stay up to date on this repository, [follow it on twitter](https://twitter.com/VPLanetCode).
+To get started, ensure you have clang/gcc installed and follow the [Installation Guide](https://virtualplanetarylaboratory.github.io/vplanet/quickstart.html). You can also watch videos on our [YouTube channel](https://www.youtube.com/@VPLanetCode/playlists) on how to install and run VPLanet, as well as updates on recent results .
 
 ### Modules
 

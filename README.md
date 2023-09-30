@@ -42,7 +42,7 @@ To get started, ensure you have clang/gcc installed and follow the [Installation
 ### Modules
 
 `VPLanet` currently consists of 13 functioning "modules," each containing a set of equations
-that simulates a specifc physical process:
+that simulates a specific physical process:
 
 **AtmEsc**: Roche lobe overflow and thermal escape (energy-limited and radiation-recombination-limited) of an atmosphere, including water photolyzation, hydrogen
 escape, oxygen escape, and oxygen build-up.
@@ -71,7 +71,7 @@ compression/rebound.
 
 **SpiNBody**: N-body integrator for the evolution of a system of massive particles.
 
-**Stellar**: Evolution of a star's bolometeric and XUV luminosity, temperature, radius, and mass concentration. Also includes magnetic braking and stellar wind spin-down.
+**Stellar**: Evolution of a star's bolometric and XUV luminosity, temperature, radius, and mass concentration. Also includes magnetic braking and stellar wind spin-down.
 
 **ThermInt**: Thermal interior evolution, including magnetic fields, for planets
 undergoing plate tectonics or stagnant lid evolution.
@@ -82,7 +82,7 @@ Many of these modules can be combined together to simulate numerous phenomena an
 
 The [examples/](examples) directory contains input files and scripts for generating the figures in [Barnes et al. (2020)](https://ui.adsabs.harvard.edu/abs/2020PASP..132b4502B/abstract) and subsequent publications. The "examples" badge shows if all the examples can be built with the most recent version. The [Manual/](Manual) directory contains the pdf of [Barnes et al. (2020)](https://ui.adsabs.harvard.edu/abs/2020PASP..132b4502B/abstract), which describes the physics of the first 11 modules, validates the software against observations and/or past results, and uses figures from the [examples/](examples) directory.
 
-An ecosystem of support software is also publicly available. [VPLot](https://github.com/VirtualPlanetaryLaboratory/vplot) is both a command line tool to quickly plot the evolution of a single integration, and also includes matplotlib functions to generate publication-worthy figures. The [VSPACE](https://github.com/VirtualPlanetaryLaboratory/vspace) script generates input files for a parameter space sweep, which can then be performed on an arbitrary number of cores with [MultiPlanet](https://github.com/VirtualPlanetaryLaboratory/multi-planet). For large parameter sweeps, an enormous amount of data can be generated, which can slow analyses. To overcome this barrier, the [BigPlanet](https://github.com/VirtualPlanetaryLaboratory/bigplanet) code can both compress datasets into HDF5 format, including statistics of an integration, and tools to faciliate plotting. These three scripts can be executed from he command line to seamlessly [perform parameter sweeps](https://virtualplanetarylaboratory.github.io/vplanet/parametersweep.html). These Python scripts are optimized for [anaconda](https://www.anaconda.com/) distributions versions 3.5-3.9. The "wheels" badge indicates if you can download and install the executables with pip for these Python distributions.
+An ecosystem of support software is also publicly available. [VPLot](https://github.com/VirtualPlanetaryLaboratory/vplot) is both a command line tool to quickly plot the evolution of a single integration, and also includes matplotlib functions to generate publication-worthy figures. The [VSPACE](https://github.com/VirtualPlanetaryLaboratory/vspace) script generates input files for a parameter space sweep, which can then be performed on an arbitrary number of cores with [MultiPlanet](https://github.com/VirtualPlanetaryLaboratory/multi-planet). For large parameter sweeps, an enormous amount of data can be generated, which can slow analyses. To overcome this barrier, the [BigPlanet](https://github.com/VirtualPlanetaryLaboratory/bigplanet) code can both compress datasets into HDF5 format, including statistics of an integration, and tools to facilitate plotting. These three scripts can be executed from the command line to seamlessly [perform parameter sweeps](https://virtualplanetarylaboratory.github.io/vplanet/parametersweep.html). These Python scripts are optimized for [anaconda](https://www.anaconda.com/) distributions versions 3.5-3.9. The "wheels" badge indicates if you can download and install the executables with pip for these Python distributions.
 
 ### Code Integrity
 

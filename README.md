@@ -27,6 +27,7 @@
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg"></a><br>
   <img src = "https://img.shields.io/badge/Platforms-Linux_|%20macOS_|%20Windows10-darkgreen.svg?style=flat">
   <a href="http://ascl.net/1811.017"><img src="https://img.shields.io/badge/ASCL-1811.017-orange.svg?colorB=orange" alt="ascl:1811.017" /></a>
+  <a href="https://emac.gsfc.nasa.gov"><img src="https://img.shields.io/badge/EMAC-2207%E2%80%94138-blue.svg"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-purple.svg"/></a><br>
 
   

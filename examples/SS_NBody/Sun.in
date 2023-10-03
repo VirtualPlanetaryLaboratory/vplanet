@@ -2,7 +2,8 @@
 sName                     Sun               # Body's name
 saModules                 spinbody          # Modules to apply, exact spelling required
 
-saOutputOrder Time DeltaT SemiMajorAxis Eccentricity SpiNBodyInc LongP SpiNBodyLongA MeanAnomaly TotAngMom TotOrbEnergy
+saOutputOrder Time DeltaT SemiMajorAxis Eccentricity LongP MeanAnomaly TotAngMom TotOrbEnergy $
+HelioSemi HelioEcc HelioInc HelioLongA HelioLongP HelioMeanA
 
 # Physical Properties
 dMass                     -333000.0            # Mass, negative -> Earth masses

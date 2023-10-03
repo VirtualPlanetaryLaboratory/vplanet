@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 #define dot(a,b)        (a[0]*b[0]+a[1]*b[1]+a[2]*b[2])
+#define magnitudeSquared(a) (a[0]*a[0] + a[1]*a[1] + a[2]*a[2])
+#define magnitude(a) (sqrt(a[0]*a[0] + a[1]*a[1] + a[2]*a[2]))
 #define NumElements(x)  (sizeof(x) / sizeof(x[0])) // finds number of elements in an array
 
 void BodyCopySpiNBody(BODY *dest, BODY *src, int iFoo, int iNumBodies,
@@ -983,8 +985,8 @@ double sign(double value) {
     }
 }
 
-//fmodPos() restricts inputs of Orbital Element in the domain [0, 2*PI)
-double fmodPos(double x, double y) { //returns modulo_{y}(x) remaining in the domain 0 <= x < y
+//positiveModulus() restricts inputs of Orbital Element in the domain [0, 2*PI)
+double positiveModulus(double x, double y) { //returns modulo_{y}(x) remaining in the domain 0 <= x < y
   double result;
   result = fmod(x, y);
   while (result < 0.0) {
@@ -1006,20 +1008,6 @@ double BarycentricMu(BODY *body, int iNumBodies, int iBody) {
   mTotal = TotalMass(body, iNumBodies);
   dBaryMu = mTotal * cube(1. - body[iBody].dMass / mTotal);
   return dBaryMu;
-}
-
-void EccentricityVector(double dMu, double *dPos, double *dVel, double *h, double *dEccVec) {
-  double dNormPos = sqrt(dot(dPos, dPos));
-  // First term of Eccentricity vector calculated here ((v x h)/Mu)
-  cross(dVel, h, dEccVec);
-
-  // Second term of Eccentricity vector added here (subtract r-hat)
-  for (int i = 0; i < 3; i++) {
-    // Divide by dMu here for the first term
-    dEccVec[i] /= dMu;
-    // Introduce second term here to subtract from
-    dEccVec[i] -= dPos[i] / dNormPos;
-  }
 }
 
 void OrbElems2Cart(ELEMS elems, double *dPos, double *dVel) {
@@ -1134,7 +1122,7 @@ void OrbElems2Cart(ELEMS elems, double *dPos, double *dVel) {
 
 double GetEccAnom(ELEMS elems) {
   double dMeanA, dEccA; 
-  dMeanA = fmodPos(elems.dMeanA, 2. * PI);
+  dMeanA = positiveModulus(elems.dMeanA, 2. * PI);
 
   if (dMeanA == 0) {
     dEccA = 0; // Trivial solution for the Eccentric Anomaly
@@ -1392,229 +1380,255 @@ void fvBaryCart2HelioCart(BODY *body, int iBody) {
   }
 }
 
-
-
-ELEMS fvCart2OrbElems(double dMu, double *dPos, double *dVel) {
-  double dMinValue, dPosSq, dNormPos, dVelSq, dNormVel, dhSq, dNormh, drDot, 
-  dSemi, dEcc, dEccSq, dInc, dSinc, dArgP, dLongA, dMeanA, dLongP, dMeanL, dTrueA, 
-  dSinf, dCosf, dEccA, dSinEccA, dCosEccA, dHypA, dSinhHypA, dCoshHypA, 
-  dMeanMotion, dOrbP, dPinc, dQinc, dHecc, dKecc; // Scalars
-  double *h, *dEccVec; // vectors
-
-  // Need to declare min value to avoid inaccurate outputs
-  dMinValue  = 1.0e-15;
-  h = malloc(3 * sizeof(double));
-
-  cross(dPos, dVel, h);
-
-  // Creating squared magnitudes of vectors
-  dPosSq = dot(dPos, dPos);
-  dVelSq = dot(dVel, dVel);
-  dhSq = dot(h, h);
-
-  // Finding magnitudes of these values
-  dNormPos = sqrt(dPosSq);
-  dNormVel = sqrt(dVelSq);
-  dNormh = sqrt(dhSq);
-
-  // Finding rdot
-  drDot = dot(dPos, dVel) / dNormPos;
-
-  // *** Solve for semi-major axis ***
-  dSemi = 1 / (2 / dNormPos - dVelSq / dMu);
-
-  // *** Solve for Eccentricity ***
-  // Finding Eccentricity vector
-  dEccVec = malloc(3 * sizeof(double));
+void CalculateEccentricityVector(double dMu, 
+                        double *dPositionVector, double *dVelocityVector, 
+                        double *dSpecificAngularMomentum,
+                        double *dEccentricityVector) {
+  double dMagnitudePosition = magnitude(dPositionVector);
   // First term of Eccentricity vector calculated here ((v x h)/Mu)
-  cross(dVel, h, dEccVec);
+  cross(dVelocityVector, dSpecificAngularMomentum, dEccentricityVector);
 
   // Second term of Eccentricity vector added here (subtract r-hat)
   for (int i = 0; i < 3; i++) {
     // Divide by dMu here for the first term
-    dEccVec[i] /= dMu;
+    dEccentricityVector[i] /= dMu;
     // Introduce second term here to subtract from
-    dEccVec[i] -= dPos[i] / dNormPos;
+    dEccentricityVector[i] -= dPositionVector[i] / dMagnitudePosition;
   }
-  // EccentricityVector(dMu, dPos, dVel, h, dEccVec);
+}
 
-  
-  /* Here is the old way that dEcc was calculated
-  dEccSq = 1.0 - dhSq / (dMu * dSemi);
-  if (dEccSq < 1e-15) {
-    dEccSq = 0; // Limits of machine precision
-  }
-  dEcc = sqrt(dEccSq);
-  */
-  // Here is the new way using dEccVec
-
-  dEccSq = dot(dEccVec, dEccVec);
-  if (dEccSq < dMinValue) {
-    dEccSq = 0.0;
-  }
-  dEcc = sqrt(dEccSq);
-
-  // *** Solve for Inclination ***
-  // In domain between 0 and PI
-  dInc = acos(h[2] / dNormh); 
-
+double CalculateLongitudeAscendingNode(double dMinimumValue, double dInclination, 
+                                      double *dSpecificAngularMomentumVector) {
   // *** Solve for Longitude of Ascending Node ***
-  dLongA = 0; // best to initialize the variable first
-  if (fabs(dInc) > dMinValue) {
-    if (fabs(h[1]) > dMinValue) {
-      dLongA = fmodPos(atan2(h[0], -h[1]), 2. * PI);
+  double dLongitudeAscendingNode = 0.0; // best to initialize the variable first
+  if (fabs(dInclination) > dMinimumValue) {
+    if (fabs(dSpecificAngularMomentumVector[1]) > dMinimumValue) {
+      dLongitudeAscendingNode = positiveModulus(atan2(dSpecificAngularMomentumVector[0], 
+                                                      -dSpecificAngularMomentumVector[1]), 
+                                                      2. * PI);
     } else {
-      dLongA = sign(h[0]) * PI / 2.0;
+      dLongitudeAscendingNode = sign(dSpecificAngularMomentumVector[0]) * PI / 2.0;
     }
   }
+  return dLongitudeAscendingNode;
+}
 
+double CalculateArgumentPericenter(double dMinimumValue, double dEccentricity, double dInclination, double dLongitudeAscendingNode, 
+                                  double *dEccentricityVector) {
   // *** Solve for Argument of Pericenter ***
-  dArgP = 0; // best to initialize the variable first
+  double dArgumentPericenter = 0.0; // best to initialize the variable first
   // dArgP only exists if the orbit is eccentric
-  if (dEcc > 0) {
+  if (dEccentricity > 0) {
     // Finding Argument of Pericenter using the Eccentricity Vector: Danby pg. 205
-    double dSinw, dCosw; // Trig functions of dArgP    
-    if (fabs(dInc) > dMinValue) {
+    double dSinArgumentPericenter, dCosArgumentPericenter; // Trig functions of dArgP    
+    if (fabs(dInclination) > dMinimumValue) {
       /*
       Solution found by using first or second component of
-      n-hat x dEccVec = dEcc * sin(dArgP)*h-hat, where n is the
-      nodal vector and the -hat suffixes are unit vectors. Danby pg. 205
+      n-hat x dEccentricityVector = dEccentricity * sin(dArgumentPericenter)*h-hat, 
+      where n is the nodal vector, h is the specific angular momentum, 
+      and the -hat suffixes are unit vectors. Danby pg. 205
       */
-      dSinw = dEccVec[2] / (dEcc * sin(dInc));
+      dSinArgumentPericenter = dEccentricityVector[2] / (dEccentricity * sin(dInclination));
     } else {
       /* 
-      dSinw is constrained on the x-y plane.
+      dSinArgumentPericenter is constrained on the x-y plane.
       Solution found by using third component of
-      n-hat x dEccVec = dEcc * sin(dArgP) * h-hat.
-      Also found by drawing out dEccVec on x-y plane
+      n-hat x dEccentricityVector = dEccentricity * sin(dArgumentPericenter) * h-hat.
+      Also found by drawing out dEccentricityVector on x-y plane
       */
-      dSinw = dEccVec[1] / dEcc; 
+      dSinArgumentPericenter = dEccentricityVector[1] / dEccentricity; 
     }
-    // Works for all inclinations if one sets dLongA = 0 when dInc = 0
-    dCosw = dEccVec[0] * cos(dLongA) + dEccVec[1] * sin(dLongA);
+    // Works for all inclinations if one sets dLongitudeAscendingNode = 0 when dInclination = 0
+    dCosArgumentPericenter = dEccentricityVector[0] * cos(dLongitudeAscendingNode) + dEccentricityVector[1] * sin(dLongitudeAscendingNode);
     // 2nd argument of atan2() cannot be zero
-    if (fabs(dCosw) > dMinValue) {
-      dArgP = fmodPos(atan2(dSinw, dCosw), 2. * PI);
+    if (fabs(dCosArgumentPericenter) > dMinimumValue) {
+      dArgumentPericenter = positiveModulus(atan2(dSinArgumentPericenter, dCosArgumentPericenter), 2. * PI);
     } else {
-      dArgP = sign(dSinw) * PI / 2.0;
+      dArgumentPericenter = sign(dSinArgumentPericenter) * PI / 2.0;
     }
   }
+  return dArgumentPericenter;
+}
 
-  // *** Solve for Longitude of Pericenter ***
-  dLongP = dArgP + dLongA;
-  if (dEcc < 1.0) { // Orbit is bound
-    /*
-    Below is a bit complicated to describe. dLongP should not take the modulus
-    w.r.t 2*PI unless the orbit is bound. If unbound, it will be used to find MeanL,
-    which does not take the modulus when unbound because its domain is all real numbers
-    just like the variable MeanA, which is defined as a ratio of areas.
-    */    
-    dLongP = fmodPos(dLongP, 2. * PI);
-  }
-
+double CalculateTrueAnomaly(double dMinimumValue, double dMu, double dMagnitudePosition, 
+                            double *dPositionVector, double *dVelocityVector, double *dEccentricityVector,
+                            double dMagnitudeSpecificAngularMomentum,
+                            double dEccentricity, double dInclination, double dLongitudeAscendingNode) {
   // *** Solve for True Anomaly ***
-  dTrueA = 0; // initializing variable
-  if (dEcc < dMinValue) {
-    if (fabs(dInc) > dMinValue) {
+  double dTrueAnomaly = 0.0; // initializing variable
+  double dSinTrueAnomaly = 0.0, dCosTrueAnomaly = 1.0;
+  if (dEccentricity < dMinimumValue) {
+    if (fabs(dInclination) > dMinimumValue) {
       /*
       We similarly to the case of finding the Trig functions
-      for dSinw and dCosw, except now the equation we are 
+      for dSinArgP and dCosArgP, except now the equation we are 
       solving is n-hat x dPos = dNormPos * sin(dTrueA) * h-hat
       */
-      dSinf = dPos[2] / (dNormPos * sin(dInc));
+      dSinTrueAnomaly = dPositionVector[2] / (dMagnitudePosition * sin(dInclination));
     } else {
-      dSinf = dPos[1] / dNormPos;
+      dSinTrueAnomaly = dPositionVector[1] / dMagnitudePosition;
     }
-    dCosf = dPos[0] * cos(dLongA) + dPos[1] * sin(dLongA); 
-  } else { // Applies to non-zero dEcc and for all values of dInc
+    dCosTrueAnomaly = dPositionVector[0] * cos(dLongitudeAscendingNode) + dPositionVector[1] * sin(dLongitudeAscendingNode); 
+  } else { // Applies to non-zero dEccentricity and for all values of dInclination
     /*
-    Solving from dSinf * h-hat = e-hat x r-hat
+    Solving from dSinTrueAnomaly * h-hat = e-hat x r-hat
     simplifies to the expression below
     */
-    dSinf = drDot * dNormh / (dMu * dEcc);
+    double dUnitPositionVectorDotVelocityVector = dot(dPositionVector, dVelocityVector) / dMagnitudePosition;
+    dSinTrueAnomaly =  dUnitPositionVectorDotVelocityVector * dMagnitudeSpecificAngularMomentum / (dMu * dEccentricity);
     /*
     Taking the dot product to find the cosine angle
     */
-    dCosf = dot(dEccVec, dPos) / (dEcc * dNormPos);
+    dCosTrueAnomaly = dot(dEccentricityVector, dPositionVector) / (dEccentricity * dMagnitudePosition);
 
-    if (fabs(dCosf) > 1.0 && fabs(dCosf) - 1.0 < dMinValue) {
-      dSinf = 0.0;
-      dCosf = sign(dCosf);
+    if (fabs(dCosTrueAnomaly) > 1.0 && fabs(dCosTrueAnomaly) - 1.0 < dMinimumValue) {
+      dSinTrueAnomaly = 0.0;
+      dCosTrueAnomaly = sign(dCosTrueAnomaly);
     }
   }
-  
+
   // There are rounding errors at such precise values. We try to avoid dCosf > 1
-  if (fabs(fabs(dCosf) - 1) < dMinValue || fabs(dSinf) < dMinValue) { 
-    dCosf = sign(dCosf);
-    dSinf = 0.0;  
+  if (fabs(fabs(dCosTrueAnomaly) - 1) < dMinimumValue || fabs(dSinTrueAnomaly) < dMinimumValue) { 
+    dCosTrueAnomaly = sign(dCosTrueAnomaly);
+    dSinTrueAnomaly = 0.0;  
   }
-  if (fabs(dCosf) > dMinValue) {
-    dTrueA = fmodPos(atan2(dSinf, dCosf), 2. * PI);
+  if (fabs(dCosTrueAnomaly) > dMinimumValue) {
+    dTrueAnomaly = positiveModulus(atan2(dSinTrueAnomaly, dCosTrueAnomaly), 2. * PI);
   } else {
-    dTrueA = sign(dSinf) * PI / 2.0;
+    dTrueAnomaly = sign(dSinTrueAnomaly) * PI / 2.0;
   }
-  
-  if (fabs(fabs(dCosf) - 1) > 0) { // If numerical errors cause dCosf > 1
-    dSinf = sin(dTrueA);
-    dCosf = cos(dTrueA); // Note this value gets used later, which is why it's recorrected here
-  }
-  
+  return dTrueAnomaly;
+}
+
+double CalculateEccentricAnomaly(double dMinimumValue, double dEccentricity, double dTrueAnomaly) {
   // *** Solve Eccentric Anomaly ***
-  dEccA = 0.0; // Initializing variable
-  dSinEccA = 0.0;
-  dCosEccA = 1.0;
-  if (1.0 > dEcc && dEcc > dMinValue) {
-    dSinEccA = sqrt(1.0 - dEccSq) * dSinf / (1.0 + dEcc * dCosf);
-    dCosEccA = (dCosf + dEcc) / (1.0 + dEcc * dCosf);
-    if (fabs(fabs(dCosEccA) - 1.0) < dMinValue || fabs(dSinEccA) < dMinValue) {
-      dCosEccA = sign(dCosEccA);
-      dSinEccA = 0.0;
+  double dEccentricAnomaly = 0.0; // Initializing variable
+  double dSinEccentricAnomaly = 0.0, dCosEccentricAnomaly = 1.0;
+  double dEccentricitySquared = dEccentricity * dEccentricity;
+  double dSinTrueAnomaly = sin(dTrueAnomaly), dCosTrueAnomaly = cos(dTrueAnomaly);
+  
+  if (1.0 > dEccentricity && dEccentricity > dMinimumValue) {
+    dSinEccentricAnomaly = sqrt(1.0 - dEccentricitySquared) * dSinTrueAnomaly / (1.0 + dEccentricity * dCosTrueAnomaly);
+    dCosEccentricAnomaly = (dCosTrueAnomaly + dEccentricity) / (1.0 + dEccentricity * dCosTrueAnomaly);
+    if (fabs(fabs(dCosEccentricAnomaly) - 1.0) < dMinimumValue || fabs(dSinEccentricAnomaly) < dMinimumValue) {
+      dCosEccentricAnomaly = sign(dCosEccentricAnomaly);
+      dSinEccentricAnomaly = 0.0;
     }
-    if (fabs(dCosEccA) > dMinValue) {
-      dEccA = fmodPos(atan2(dSinEccA, dCosEccA), 2. * PI);
+    if (fabs(dCosEccentricAnomaly) > dMinimumValue) {
+      dEccentricAnomaly = positiveModulus(atan2(dSinEccentricAnomaly, dCosEccentricAnomaly), 2. * PI);
     } else {
-      dEccA = sign(dSinEccA) * PI / 2.0;
+      dEccentricAnomaly = sign(dSinEccentricAnomaly) * PI / 2.0;
     }
 
-  } else if (dEcc < dMinValue) {
-    dEccA = dTrueA;
+  } else if (dEccentricity < dMinimumValue) {
+    dEccentricAnomaly = dTrueAnomaly;
   }
+  return dEccentricAnomaly;
+}
 
+double CalculateHyperbolicAnomaly(double dEccentricity, double dTrueAnomaly) {
   // *** Solve Hyperbolic Anomaly ***
-  dHypA = 0.0; // Initializing variable
-  dSinhHypA = 0.0;
-  // dCoshHypA = 1.0; // Uncomment when needed
-  if (dEcc > 1.0) {
-    dSinhHypA = sqrt(dEccSq - 1) * dSinf / (1.0 + dEcc * dCosf);
-    // dCoshHypA = (dCosf + dEcc) / (1.0 + dEcc * dCosf);
-    dHypA = asinh(dSinhHypA);
+  double dHyperbolicAnomaly = 0.0; // Initializing variable
+  double dSinhHyperbolicAnomaly = 0.0;
+  if (dEccentricity > 1.0) {
+    double dEccentricitySquared = dEccentricity * dEccentricity;
+    dSinhHyperbolicAnomaly = sqrt(dEccentricitySquared - 1) * sin(dTrueAnomaly) / (1.0 + dEccentricity * cos(dTrueAnomaly));
+    dHyperbolicAnomaly = asinh(dSinhHyperbolicAnomaly);
   }
+  return dHyperbolicAnomaly;
+}
 
+double CalculateMeanAnomaly(double dMinimumValue, double dEccentricity, double dTrueAnomaly) {
   // *** Solve Mean Anomaly ***
-  dMeanA = 0; // Initializing variable
-  // Using Kepler's Equation to find dMeanA
-  if (1.0 > dEcc && dEcc > dMinValue) {
-    dMeanA = dEccA - dEcc * dSinEccA;
-    dMeanA = fmodPos(dMeanA, 2.0 * PI);
-  } else if (1.0 < dEcc) {
-    dMeanA = dEcc * dSinhHypA - dHypA;
+  double dMeanAnomaly = 0.0; // Initializing variable
+  // Using Kepler's Equation to find dMeanAnomaly
+  if (1.0 > dEccentricity && dEccentricity > dMinimumValue) {
+    double dEccentricAnomaly = CalculateEccentricAnomaly(dMinimumValue, dEccentricity, dTrueAnomaly);
+    dMeanAnomaly = dEccentricAnomaly - dEccentricity * sin(dEccentricAnomaly);
+    dMeanAnomaly = positiveModulus(dMeanAnomaly, 2.0 * PI);
+  } else if (1.0 < dEccentricity) {
+    double dHyperbolicAnomaly = CalculateHyperbolicAnomaly(dEccentricity, dTrueAnomaly);
+    dMeanAnomaly = dEccentricity * sinh(dHyperbolicAnomaly) - dHyperbolicAnomaly;
   }
+  return dMeanAnomaly;
+}
 
-  // *** Solve Mean Longitude ***
-  dMeanL = 0; // Initializing variable
-  dMeanL = dMeanA + dLongP;
-  if (1.0 > dEcc) {
-    dMeanL = fmodPos(dMeanL, 2.0 * PI);
+double CalculateLongitudePericenter(double dArgumentPericenter, double dLongitudeAscendingNode, double dEccentricity) {
+  double dLongitudePericenter = dArgumentPericenter + dLongitudeAscendingNode;
+  if (dEccentricity < 1.0) {
+    dLongitudePericenter = positiveModulus(dLongitudePericenter, 2.0 * PI);
   }
+  return dLongitudePericenter;
+}
 
-  // *** Solve Mean Motion ***
-  dMeanMotion = sqrt(dMu / fabs(dSemi * dSemi * dSemi));
-
-  // *** Solve Orbital Period ***
-  dOrbP = 0.0; // Initializing variable
-  if (dEcc < 1.0) {
-    dOrbP = 2.0 * PI / dMeanMotion;
+double CalculateMeanLongitude(double dMeanAnomaly, double dArgumentPericenter, double dLongitudeAscendingNode, double dEccentricity) {
+  double dLongitudePericenter = dArgumentPericenter + dLongitudeAscendingNode;
+  double dMeanLongitude = dMeanAnomaly + dLongitudePericenter;
+  if (dEccentricity < 1.0) {
+    dMeanLongitude = positiveModulus(dMeanLongitude, 2.0 * PI);
   }
+  return dMeanLongitude;
+}
+
+double CalculateMeanMotion(double dMu, double dSemiMajorAxis) {
+  double dMeanMotion = sqrt(dMu / fabs(cube(dSemiMajorAxis)));
+  return dMeanMotion;
+}
+
+double CalculateOrbitalPeriod(double dMu, double dSemiMajorAxis) {
+  double dMeanMotion = CalculateMeanMotion(dMu, dSemiMajorAxis);
+  double dOrbitalPeriod;
+  if (dSemiMajorAxis > 0) {
+    dOrbitalPeriod = 2.0 * PI / dMeanMotion;
+  }
+  return dOrbitalPeriod;
+}
+
+ELEMS fvCart2OrbElems(double dMu, double *dPositionVector, double *dVelocityVector) {
+  double dMinimumValue, dMagnitudePosition, dMagnitudeVelocitySquared, dMagnitudeVelocity, dMagnitudeSpecificAngularMomentum, dRDot, 
+  dSemi, dEcc, dEccSq, dInc, dSinc, dArgP, dLongA, dMeanA, dLongP, dMeanL, dTrueA, 
+  dSinf, dCosf, dEccA, dSinEccA, dCosEccA, dHypA, dSinhHypA, dCoshHypA, 
+  dMeanMotion, dOrbP, dPinc, dQinc, dHecc, dKecc; // Scalars
+  double *dSpecificAngularMomentumVector, *dEccentricityVector; // vectors
+
+  // Need to declare min value to avoid inaccurate outputs
+  dMinimumValue  = 1.0e-15;
+  // mallocing empty vectors
+  dSpecificAngularMomentumVector = malloc(3 * sizeof(double));
+  dEccentricityVector = malloc(3 * sizeof(double));
+
+  cross(dPositionVector, dVelocityVector, dSpecificAngularMomentumVector);
+  CalculateEccentricityVector(dMu, dPositionVector, dVelocityVector, dSpecificAngularMomentumVector, dEccentricityVector);
+
+  // Creating squared magnitudes of useful vectors
+  dMagnitudeVelocitySquared = magnitudeSquared(dVelocityVector);
+
+  // Finding magnitudes of these values
+  dMagnitudePosition = magnitude(dPositionVector);
+  dMagnitudeVelocity = sqrt(dMagnitudeVelocitySquared);
+  dMagnitudeSpecificAngularMomentum = magnitude(dSpecificAngularMomentumVector);
+
+  // Finding rdot, I don't know what to call this...
+  dRDot = dot(dPositionVector, dVelocityVector) / dMagnitudePosition;
+
+  //CalcConversionParameter(*dPosSq);
+
+  // *** Solve the orbital elements ***
+  dSemi = 1 / (2 / dMagnitudePosition - dMagnitudeVelocitySquared / dMu);
+
+  dEcc = magnitude(dEccentricityVector);
+
+  dInc = acos(dSpecificAngularMomentumVector[2] / dMagnitudeSpecificAngularMomentum); // In domain between 0 and PI
+
+  dLongA = CalculateLongitudeAscendingNode(dMinimumValue, dInc, dSpecificAngularMomentumVector);
+
+  dArgP = CalculateArgumentPericenter(dMinimumValue, dEcc, dInc, dLongA, dEccentricityVector);
+
+  dTrueA = CalculateTrueAnomaly(dMinimumValue, dMu, dMagnitudePosition, 
+                                dPositionVector, dVelocityVector, dEccentricityVector, 
+                                dMagnitudeSpecificAngularMomentum, dEcc, dInc, dLongA);
+
+  dMeanA = CalculateMeanAnomaly(dMinimumValue, dEcc, dTrueA);
 
   // *** Solve Distorb Variables ***
   // These have not been tested for unbound orbits.
@@ -1634,23 +1648,14 @@ ELEMS fvCart2OrbElems(double dMu, double *dPos, double *dVel) {
   elems.dLongA = dLongA;
   elems.dMeanA = dMeanA;
 
-  elems.dLongP = dLongP;
-  elems.dMeanL = dMeanL;
-
-  elems.dEccA = dEccA;
-  elems.dHypA = dHypA;
-
-  elems.dMeanMotion = dMeanMotion;
-  elems.dOrbPeriod = dOrbP;
-
   elems.dSinc = dSinc;
   elems.dPinc = dPinc;
   elems.dQinc = dQinc;
   elems.dHecc = dHecc;
   elems.dKecc = dKecc; 
 
-  free(h);
-  free(dEccVec);
+  free(dSpecificAngularMomentumVector);
+  free(dEccentricityVector);
   return elems;
 }
 
@@ -1698,10 +1703,10 @@ void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
   
   // We take the modulus of certain angles to keep them in their respected domains
   if (body[iBody].dBaryEcc < 1.0) {
-    body[iBody].dBaryArgP = fmodPos(body[iBody].dBaryArgP, 2.0 * PI);
-    body[iBody].dBaryLongA = fmodPos(body[iBody].dBaryLongA, 2.0 * PI);
-    body[iBody].dBaryMeanA = fmodPos(body[iBody].dBaryMeanA, 2.0 * PI);
-    body[iBody].dBaryEccA = fmodPos(body[iBody].dBaryEccA, 2.0 * PI);
+    body[iBody].dBaryArgP = positiveModulus(body[iBody].dBaryArgP, 2.0 * PI);
+    body[iBody].dBaryLongA = positiveModulus(body[iBody].dBaryLongA, 2.0 * PI);
+    body[iBody].dBaryMeanA = positiveModulus(body[iBody].dBaryMeanA, 2.0 * PI);
+    body[iBody].dBaryEccA = positiveModulus(body[iBody].dBaryEccA, 2.0 * PI);
   }
 }
 
@@ -1771,10 +1776,10 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
 
     // We take the modulus of certain angles to keep them in their respected domains
     if (body[iBody].dEcc < 1.0) {
-      body[iBody].dArgP = fmodPos(body[iBody].dArgP, 2.0 * PI);
-      body[iBody].dLongA = fmodPos(body[iBody].dLongA, 2.0 * PI);
-      body[iBody].dMeanA = fmodPos(body[iBody].dMeanA, 2.0 * PI);
-      body[iBody].dEccA = fmodPos(body[iBody].dEccA, 2.0 * PI);
+      body[iBody].dArgP = positiveModulus(body[iBody].dArgP, 2.0 * PI);
+      body[iBody].dLongA = positiveModulus(body[iBody].dLongA, 2.0 * PI);
+      body[iBody].dMeanA = positiveModulus(body[iBody].dMeanA, 2.0 * PI);
+      body[iBody].dEccA = positiveModulus(body[iBody].dEccA, 2.0 * PI);
     }
   }
 }

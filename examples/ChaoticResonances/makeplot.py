@@ -24,8 +24,8 @@ output = vplanet.run(path / "vpl.in", units=False)
 time = output.star.Time / 1.0e6  # Scale to Myr
 ecc1 = output.earth.Eccentricity
 ecc2 = output.outer.Eccentricity
-inc1 = output.earth.SpiNBodyInc
-inc2 = output.outer.SpiNBodyInc
+inc1 = output.earth.HelioInc
+inc2 = output.outer.HelioInc
 varpi1 = output.earth.LongP
 varpi2 = output.outer.LongP
 a1 = output.earth.SemiMajorAxis

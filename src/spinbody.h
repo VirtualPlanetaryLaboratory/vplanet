@@ -84,7 +84,7 @@
 #define OUT_BARYMEANMOTION 1692
 #define OUT_BARYORBPERIOD 1693
 #define OUT_BARYSINC 1694
-#define OUT_HELIOTRUA 1695
+#define OUT_HELIOTRUEA 1695
 #define OUT_BARYTRUEA 1696
 
 /* @cond DOXYGEN_OVERRIDE */
@@ -215,7 +215,7 @@ double yangle1(BODY *body, int iBody);
 double yangle2(BODY *body, int iBody);
 double zangle1(BODY *body, int iBody);
 double zangle2(BODY *body, int iBody);
-double fmodPos(double x, double y);
+double positiveModulus(double x, double y);
 
 // Halts
 void CountHaltsSpiNBody(HALT *, int *);

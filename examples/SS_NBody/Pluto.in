@@ -1,0 +1,22 @@
+# Planet a parameters
+sName                     Pluto          # Body's name
+saModules                 spinbody       # Modules to apply, exact spelling required
+
+# Physical Properties
+dMass                     -0.0022           # Mass, negative -> Earth masses
+dRadius                   -0.186           # Radius, negative -> Earth radii
+
+# SpiNBody Properties
+bUseOrbParams                    1
+
+# Orbital Properties (obtained here https://nssdc.gsfc.nasa.gov/planetary/factsheet/plutofact.html)
+dSemi                     -39.48168677   # Semi-major axis, negative -> AU
+dEcc                       0.24880766   # Eccentricity
+dInc                       17.14175          # Inclination (deg)
+dLongA                     110.30347    # Longitude of ascending node (deg)
+dLongP                     224.06676    # Longitude of pericenter (deg)
+dMeanA                     238.92881    # Mean Anomoly (deg)
+
+#Output
+saOutputOrder Time DeltaT SemiMajorAxis Eccentricity LongP LongA OrbPeriod MeanAnomaly MeanLongitude $
+HelioSemi HelioEcc HelioInc HelioLongA HelioLongP HelioMeanA HelioMeanL

@@ -2,7 +2,9 @@
 sName                     Mercury       # Body's name
 saModules                 spinbody      # Modules to apply, exact spelling required
 
-saOutputOrder Time DeltaT PositionXSpiNBody PositionYSpiNBody PositionZSpiNBody VelXSpiNBody VelYSpiNBody VelZSpiNBody
+saOutputOrder Time DeltaT BaryPosX BaryPosY BaryPosZ BaryVelX BaryVelY BaryVelZ $
+SemiMajorAxis Eccentricity LongP LongA OrbPeriod MeanAnomaly MeanLongitude$
+HelioSemi HelioEcc HelioInc HelioLongA HelioLongP HelioMeanA HelioMeanL
 # Physical Properties
 dMass                     -0.0553       # Mass, negative -> Earth masses
 dRadius                   -0.383        # Radius, negative -> Earth radii

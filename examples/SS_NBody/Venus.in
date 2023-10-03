@@ -2,7 +2,8 @@
 sName                     Venus         # Body's name
 saModules                 spinbody      # Modules to apply, exact spelling required
 
-saOutputOrder Time DeltaT SemiMajorAxis Eccentricity SpiNBodyInc LongP SpiNBodyLongA MeanAnomaly
+saOutputOrder Time DeltaT SemiMajorAxis Eccentricity LongP LongA OrbPeriod MeanAnomaly MeanLongitude $
+HelioSemi HelioEcc HelioInc HelioLongA HelioLongP HelioMeanA HelioMeanL
 # Physical Properties
 dMass                     -0.815        # Mass, negative -> Earth masses
 dRadius                   -0.949        # Radius, negative -> Earth radii

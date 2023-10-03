@@ -50,7 +50,7 @@ def Main(dir, initial=False):
 
         # change to Dir and run vplanet
         os.chdir(dirname)
-        vplanet.run("vpl.in", quiet=True)
+        vplanet.run("vpl.in", quiet=True, C=True)
 
         SystemName, BodyName, logfile, outfile, forward, backward, stellar = GetSNames(
             infiles

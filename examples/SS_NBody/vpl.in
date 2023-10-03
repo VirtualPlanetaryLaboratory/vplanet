@@ -2,7 +2,7 @@
 sSystemName               SpiNBody  # System Name
 bOverwrite                1               # Allow file overwrites?
 saBodyFiles               Sun.in Mercury.in Venus.in Earth.in Mars.in $
-                          Jupiter.in Saturn.in Uranus.in Neptune.in #The solar system
+                          Jupiter.in Saturn.in Uranus.in Neptune.in Pluto.in #The solar system
 sIntegrationMethod        Runge
 
 # Input/Output Units

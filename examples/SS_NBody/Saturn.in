@@ -2,7 +2,8 @@
 sName                     Saturn         # Body's name
 saModules                 spinbody       # Modules to apply, exact spelling required
 
-saOutputOrder Time DeltaT SemiMajorAxis Eccentricity SpiNBodyInc LongP SpiNBodyLongA MeanAnomaly
+saOutputOrder Time DeltaT SemiMajorAxis Eccentricity LongP LongA OrbPeriod MeanAnomaly MeanLongitude $
+HelioSemi HelioEcc HelioInc HelioLongA HelioLongP HelioMeanA HelioMeanL
 # Physical Properties
 dMass                     -95.161        # Mass, negative -> Earth masses
 dRadius                   -763.59        # Radius, negative -> Earth radii

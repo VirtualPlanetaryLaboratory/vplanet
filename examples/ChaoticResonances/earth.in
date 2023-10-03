@@ -2,7 +2,7 @@
 sName                     earth          # Body's name
 saModules                 spinbody       # Modules to apply, exact spelling required
 
-saOutputOrder Time SemiMajorAxis Eccentricity SpiNBodyInc LongP SpiNBodyLongA MeanL -Instellation
+saOutputOrder Time SemiMajorAxis Eccentricity LongP MeanL HelioSemi HelioEcc HelioInc HelioLongA HelioLongP HelioMeanL -Instellation
 # Physical Properties
 dMass                     -1.0           # Mass, negative -> Earth masses
 dRadius                   -1.0           # Radius, negative -> Earth radii

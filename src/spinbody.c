@@ -1428,15 +1428,31 @@ double CalculateLongitudeAscendingNode(double dMinimumValue,
   double dLongitudeAscendingNode = 0.0; // best to initialize the variable first
   double dInclination = CalculateInclination(dSpecificAngularMomentumVector);
   if (fabs(dInclination) > dMinimumValue) {
-    if (fabs(dSpecificAngularMomentumVector[1]) > dMinimumValue) {
-      dLongitudeAscendingNode = positiveModulus(atan2(dSpecificAngularMomentumVector[0], 
-                                                      -dSpecificAngularMomentumVector[1]), 
-                                                      2. * PI);
-    } else {
-      dLongitudeAscendingNode = sign(dSpecificAngularMomentumVector[0]) * PI / 2.0;
-    }
+    dLongitudeAscendingNode = atan2Continuous(dSpecificAngularMomentumVector[0], 
+                                              -dSpecificAngularMomentumVector[1], 
+                                              dMinimumValue);
   }
   return dLongitudeAscendingNode;
+}
+
+void FindSineAndCosineFromNodalVector2InputVector(double *dVector, 
+                                                  double dMinimumValue, 
+                                                  double dInclination, double dLongitudeAscendingNode,
+                                                  double dSinAngle, double dCosAngle) {
+  double dMagnitudeVector = magnitude(dVector);
+  if (fabs(dInclination) > dMinimumValue) {
+    /*
+    Example case between Eccentricity Vector and Nodal Vector: Danby pg. 205
+    Use 1st or 2nd component of equality n-hat x dVector = dMagntiudeVector * sin(dAngle) * h-hat
+    where n is the nodal vector, h is the specific angular momentum, 
+    and the -hat suffixes are unit vectors.
+    */
+    dSinAngle = dVector[2] / (dMagnitudeVector * sin(dInclination));
+  } else {
+    dSinAngle = dVector[1] / dMagnitudeVector; // Found using same equality as above using the z-component
+  }
+  // The dot product of the unit nodal vector and input  unit vector 
+  dCosAngle = (dVector[0] * cos(dLongitudeAscendingNode) + dVector[1] * sin(dLongitudeAscendingNode)) / dMagnitudeVector;
 }
 
 double CalculateArgumentPericenter(double dMinimumValue, 
@@ -1447,34 +1463,13 @@ double CalculateArgumentPericenter(double dMinimumValue,
   double dInclination = CalculateInclination(dSpecificAngularMomentumVector);
   double dLongitudeAscendingNode = CalculateLongitudeAscendingNode(dMinimumValue, dSpecificAngularMomentumVector);
   // dArgP only exists if the orbit is eccentric
-  if (dEccentricity > 0) {
+  if (dEccentricity > dMinimumValue) {
     // Finding Argument of Pericenter using the Eccentricity Vector: Danby pg. 205
-    double dSinArgumentPericenter, dCosArgumentPericenter; // Trig functions of dArgP    
-    if (fabs(dInclination) > dMinimumValue) {
-      /*
-      Solution found by using first or second component of
-      n-hat x dEccentricityVector = dEccentricity * sin(dArgumentPericenter)*h-hat, 
-      where n is the nodal vector, h is the specific angular momentum, 
-      and the -hat suffixes are unit vectors. Danby pg. 205
-      */
-      dSinArgumentPericenter = dEccentricityVector[2] / (dEccentricity * sin(dInclination));
-    } else {
-      /* 
-      dSinArgumentPericenter is constrained on the x-y plane.
-      Solution found by using third component of
-      n-hat x dEccentricityVector = dEccentricity * sin(dArgumentPericenter) * h-hat.
-      Also found by drawing out dEccentricityVector on x-y plane
-      */
-      dSinArgumentPericenter = dEccentricityVector[1] / dEccentricity; 
-    }
-    // Works for all inclinations if one sets dLongitudeAscendingNode = 0 when dInclination = 0
-    dCosArgumentPericenter = dEccentricityVector[0] * cos(dLongitudeAscendingNode) + dEccentricityVector[1] * sin(dLongitudeAscendingNode);
-    // 2nd argument of atan2() cannot be zero
-    if (fabs(dCosArgumentPericenter) > dMinimumValue) {
-      dArgumentPericenter = positiveModulus(atan2(dSinArgumentPericenter, dCosArgumentPericenter), 2. * PI);
-    } else {
-      dArgumentPericenter = sign(dSinArgumentPericenter) * PI / 2.0;
-    }
+    double dSinArgumentPericenter, dCosArgumentPericenter;
+    FindSineAndCosineFromNodalVector2InputVector(dEccentricityVector, dMinimumValue, 
+                                                  dInclination, dLongitudeAscendingNode, 
+                                                  dSinArgumentPericenter, dCosArgumentPericenter);
+    dArgumentPericenter = atan2Continuous(dSinArgumentPericenter, dCosArgumentPericenter, dMinimumValue);
   }
   return dArgumentPericenter;
 }
@@ -1483,35 +1478,20 @@ double CalculateTrueAnomaly(double dMinimumValue, double dMu,
                             double *dPositionVector, double *dVelocityVector, double *dEccentricityVector,
                             double *dSpecificAngularMomentumVector) {
   // *** Solve for True Anomaly ***
-  double dTrueAnomaly = 0.0; // initializing variable
-  double dSinTrueAnomaly = 0.0, dCosTrueAnomaly = 1.0;
+  double dTrueAnomaly = 0.0, dSinTrueAnomaly = 0.0, dCosTrueAnomaly = 1.0; // initializing variable
   double dMagnitudePosition = magnitude(dPositionVector);
   double dMagnitudeSpecificAngularMomentum = magnitude(dSpecificAngularMomentumVector);
   double dEccentricity = magnitude(dEccentricityVector);
   double dInclination = CalculateInclination(dSpecificAngularMomentumVector);
   double dLongitudeAscendingNode = CalculateLongitudeAscendingNode(dMinimumValue, dSpecificAngularMomentumVector);
   if (dEccentricity < dMinimumValue) {
-    if (fabs(dInclination) > dMinimumValue) {
-      /*
-      We similarly to the case of finding the Trig functions
-      for dSinArgP and dCosArgP, except now the equation we are 
-      solving is n-hat x dPos = dNormPos * sin(dTrueA) * h-hat
-      */
-      dSinTrueAnomaly = dPositionVector[2] / (dMagnitudePosition * sin(dInclination));
-    } else {
-      dSinTrueAnomaly = dPositionVector[1] / dMagnitudePosition;
-    }
-    dCosTrueAnomaly = dPositionVector[0] * cos(dLongitudeAscendingNode) + dPositionVector[1] * sin(dLongitudeAscendingNode); 
+    FindSineAndCosineFromNodalVector2InputVector(dPositionVector, dMinimumValue, dInclination, dLongitudeAscendingNode, 
+                                                  dSinTrueAnomaly, dCosTrueAnomaly);
   } else { // Applies to non-zero dEccentricity and for all values of dInclination
-    /*
-    Solving from dSinTrueAnomaly * h-hat = e-hat x r-hat
-    simplifies to the expression below
-    */
+    // Solving from dSinTrueAnomaly * h-hat = e-hat x r-hat simplifies to the expression below
     double dUnitPositionVectorDotVelocityVector = dot(dPositionVector, dVelocityVector) / dMagnitudePosition;
     dSinTrueAnomaly =  dUnitPositionVectorDotVelocityVector * dMagnitudeSpecificAngularMomentum / (dMu * dEccentricity);
-    /*
-    Taking the dot product to find the cosine angle
-    */
+    // Taking the dot product to find the cosine angle
     dCosTrueAnomaly = dot(dEccentricityVector, dPositionVector) / (dEccentricity * dMagnitudePosition);
 
     if (fabs(dCosTrueAnomaly) > 1.0 && fabs(dCosTrueAnomaly) - 1.0 < dMinimumValue) {
@@ -1543,11 +1523,7 @@ double CalculateEccentricAnomaly(double dMinimumValue, double dEccentricity, dou
       dCosEccentricAnomaly = sign(dCosEccentricAnomaly);
       dSinEccentricAnomaly = 0.0;
     }
-    if (fabs(dCosEccentricAnomaly) > dMinimumValue) {
-      dEccentricAnomaly = positiveModulus(atan2(dSinEccentricAnomaly, dCosEccentricAnomaly), 2. * PI);
-    } else {
-      dEccentricAnomaly = sign(dSinEccentricAnomaly) * PI / 2.0;
-    }
+    dEccentricAnomaly = atan2Continuous(dSinEccentricAnomaly, dCosEccentricAnomaly, dMinimumValue);
 
   } else if (dEccentricity < dMinimumValue) {
     dEccentricAnomaly = dTrueAnomaly;
@@ -1590,7 +1566,8 @@ double CalculateLongitudePericenter(double dArgumentPericenter, double dLongitud
   return dLongitudePericenter;
 }
 
-double CalculateMeanLongitude(double dMeanAnomaly, double dArgumentPericenter, double dLongitudeAscendingNode, double dEccentricity) {
+double CalculateMeanLongitude(double dMeanAnomaly, double dArgumentPericenter, 
+                              double dLongitudeAscendingNode, double dEccentricity) {
   double dLongitudePericenter = dArgumentPericenter + dLongitudeAscendingNode;
   double dMeanLongitude = dMeanAnomaly + dLongitudePericenter;
   if (dEccentricity < 1.0) {
@@ -1613,11 +1590,21 @@ double CalculateOrbitalPeriod(double dMu, double dSemiMajorAxis) {
   return dOrbitalPeriod;
 }
 
+ELEMS fvFindDistOrbVariables(double dEccentricity, double dInclination, 
+                              double dLongitudeAscendingNode, double dLongitudePericenter) {
+  // *** Solve Distorb Variables ***
+  // These have not been tested for unbound orbits.
+  ELEMS elems = {0};
+  elems.dSinc = 0.5 * sin(dInclination);
+  elems.dPinc = elems.dSinc * sin(dLongitudeAscendingNode);
+  elems.dQinc = elems.dSinc * cos(dLongitudeAscendingNode);
+  elems.dHecc = dEccentricity * sin(dLongitudePericenter);
+  elems.dKecc = dEccentricity * cos(dLongitudePericenter);
+  return elems;
+}
+
 ELEMS fvCart2OrbElems(double dMu, double *dPositionVector, double *dVelocityVector) {
-  double dMinimumValue, dMagnitudePosition, dMagnitudeVelocitySquared, dMagnitudeVelocity, dMagnitudeSpecificAngularMomentum, dRDot, 
-  dSemi, dEcc, dEccSq, dInc, dSinc, dArgP, dLongA, dMeanA, dLongP, dMeanL, dTrueA, 
-  dSinf, dCosf, dEccA, dSinEccA, dCosEccA, dHypA, dSinhHypA, dCoshHypA, 
-  dMeanMotion, dOrbP, dPinc, dQinc, dHecc, dKecc; // Scalars
+  double dMinimumValue, dSemi, dEcc, dInc, dLongA, dArgP, dTrueA, dMeanA; // Scalars
   double *dSpecificAngularMomentumVector, *dEccentricityVector; // vectors
 
   // Need to declare min value to avoid inaccurate outputs
@@ -1628,9 +1615,6 @@ ELEMS fvCart2OrbElems(double dMu, double *dPositionVector, double *dVelocityVect
 
   cross(dPositionVector, dVelocityVector, dSpecificAngularMomentumVector);
   CalculateEccentricityVector(dMu, dPositionVector, dVelocityVector, dSpecificAngularMomentumVector, dEccentricityVector);
-
-  // Finding magnitudes of these values
-  dMagnitudeSpecificAngularMomentum = magnitude(dSpecificAngularMomentumVector);
 
   // *** Solve the orbital elements ***
   dSemi = CalculateSemiMajorAxis(dMu, dPositionVector, dVelocityVector);
@@ -1649,15 +1633,6 @@ ELEMS fvCart2OrbElems(double dMu, double *dPositionVector, double *dVelocityVect
 
   dMeanA = CalculateMeanAnomaly(dMinimumValue, dEcc, dTrueA);
 
-  // *** Solve Distorb Variables ***
-  // These have not been tested for unbound orbits.
-  dSinc = 0.5 * sin(dInc);
-  dPinc = dSinc * sin(dLongA);
-  dQinc = dSinc * cos(dLongA);
-  dHecc = dEcc * sin(dLongP);
-  dKecc = dEcc * cos(dLongP);  
-
-
   // We define all orbital elements to ELEMS
   ELEMS elems = {0};
   elems.dSemi = dSemi;
@@ -1668,12 +1643,6 @@ ELEMS fvCart2OrbElems(double dMu, double *dPositionVector, double *dVelocityVect
   elems.dMeanA = dMeanA;
 
   elems.dTrueA = dTrueA;
-
-  elems.dSinc = dSinc;
-  elems.dPinc = dPinc;
-  elems.dQinc = dQinc;
-  elems.dHecc = dHecc;
-  elems.dKecc = dKecc; 
 
   free(dSpecificAngularMomentumVector);
   free(dEccentricityVector);
@@ -1705,30 +1674,17 @@ void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
   body[iBody].dBaryLongA = elems.dLongA;
   body[iBody].dBaryMeanA = elems.dMeanA;
 
-  body[iBody].dBaryLongP = elems.dLongP;
-  body[iBody].dBaryMeanL = elems.dMeanL;
+  body[iBody].dBaryMeanMotion = CalculateMeanMotion(dMu, elems.dSemi);
+  body[iBody].dBaryOrbPeriod = CalculateOrbitalPeriod(dMu, elems.dSemi);
 
-  body[iBody].dBaryEccA = elems.dEccA;
-  body[iBody].dBaryHypA = elems.dHypA;
-
-  body[iBody].dBaryMeanMotion = elems.dMeanMotion;
-  body[iBody].dBaryOrbPeriod = elems.dOrbPeriod;
-
-  body[iBody].dBarySinc = elems.dSinc;
-  /* For the future developer wanting to create these 
+  
+  /* For the future developer wanting to create these
+  body[iBody].dBarySinc = elems.dSinc; 
   body[iBody].dBaryPinc = elems.dPinc;
   body[iBody].dBaryQinc = elems.dQinc;
   body[iBody].dBaryHecc = elems.dHecc;
   body[iBody].dBaryKecc = elems.dKecc;
   */
-  
-  // We take the modulus of certain angles to keep them in their respected domains
-  if (body[iBody].dBaryEcc < 1.0) {
-    body[iBody].dBaryArgP = positiveModulus(body[iBody].dBaryArgP, 2.0 * PI);
-    body[iBody].dBaryLongA = positiveModulus(body[iBody].dBaryLongA, 2.0 * PI);
-    body[iBody].dBaryMeanA = positiveModulus(body[iBody].dBaryMeanA, 2.0 * PI);
-    body[iBody].dBaryEccA = positiveModulus(body[iBody].dBaryEccA, 2.0 * PI);
-  }
 }
 
 void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
@@ -1739,12 +1695,6 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
     body[iBody].dArgP = 0;
     body[iBody].dLongA = 0;
     body[iBody].dMeanA = 0;
-
-    body[iBody].dLongP = 0;
-    body[iBody].dMeanL = 0;
-
-    body[iBody].dEccA = 0;
-    body[iBody].dHypA = 0;
 
     body[iBody].dMeanMotion = 0;
     body[iBody].dOrbPeriod = 0;
@@ -1780,28 +1730,14 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
     body[iBody].dLongA = elems.dLongA;
     body[iBody].dMeanA = elems.dMeanA;
 
-    body[iBody].dLongP = elems.dLongP;
-    body[iBody].dMeanL = elems.dMeanL;
-
-    body[iBody].dEccA = elems.dEccA;
-    body[iBody].dHypA = elems.dHypA;
-
-    body[iBody].dMeanMotion = elems.dMeanMotion;
-    body[iBody].dOrbPeriod = elems.dOrbPeriod;
+    body[iBody].dMeanMotion = CalculateMeanMotion(dMu, elems.dSemi);
+    body[iBody].dOrbPeriod = CalculateOrbitalPeriod(dMu, elems.dSemi);
 
     body[iBody].dSinc = elems.dSinc;
     body[iBody].dPinc = elems.dPinc;
     body[iBody].dQinc = elems.dQinc;
     body[iBody].dHecc = elems.dHecc;
     body[iBody].dKecc = elems.dKecc;
-
-    // We take the modulus of certain angles to keep them in their respected domains
-    if (body[iBody].dEcc < 1.0) {
-      body[iBody].dArgP = positiveModulus(body[iBody].dArgP, 2.0 * PI);
-      body[iBody].dLongA = positiveModulus(body[iBody].dLongA, 2.0 * PI);
-      body[iBody].dMeanA = positiveModulus(body[iBody].dMeanA, 2.0 * PI);
-      body[iBody].dEccA = positiveModulus(body[iBody].dEccA, 2.0 * PI);
-    }
   }
 }
 
@@ -2078,6 +2014,9 @@ void WriteHelioArgP(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteHelioLongP(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                       double *dTmp, char cUnit[]) {
+  body[iBody].dHelioLongP = CalculateLongitudePericenter(body[iBody].dHelioArgP, 
+                                                          body[iBody].dHelioLongA, 
+                                                          body[iBody].dHelioEcc);
   *dTmp = body[iBody].dHelioLongP;
 
   if (output->bDoNeg[iBody]) {
@@ -2108,6 +2047,10 @@ void WriteHelioMeanA(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteHelioMeanL(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
+  body[iBody].dHelioMeanL = CalculateMeanLongitude(body[iBody].dHelioMeanA, 
+                                                    body[iBody].dHelioArgP, 
+                                                    body[iBody].dHelioLongA, 
+                                                    body[iBody].dHelioEcc);
   *dTmp = body[iBody].dHelioMeanL;
   // MeanL only represented in degrees in a bound orbit
   if (body[iBody].dEcc < 1) {
@@ -2138,6 +2081,10 @@ void WriteHelioTrueA(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteHelioEccA(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
+  double dMinimumValue = 1.0e-15;
+  body[iBody].dHelioEccA = CalculateEccentricAnomaly(dMinimumValue, 
+                                                    body[iBody].dHelioEcc, 
+                                                    body[iBody].dHelioTrueA);                      
   *dTmp = body[iBody].dHelioEccA;
 
   if (output->bDoNeg[iBody]) {
@@ -2152,6 +2099,8 @@ void WriteHelioEccA(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteHelioHypA(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
+  body[iBody].dHelioHypA = CalculateHyperbolicAnomaly(body[iBody].dHelioEcc, 
+                                                      body[iBody].dHelioTrueA);               
   *dTmp = body[iBody].dHelioHypA;
   // Do not convert to degrees
   // Hyperbolic Anomaly is a ratio of areas represented only in radians
@@ -2225,6 +2174,9 @@ void WriteBaryArgP(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteBaryLongP(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
+  body[iBody].dBaryLongP = CalculateLongitudePericenter(body[iBody].dBaryArgP, 
+                                                        body[iBody].dBaryLongA, 
+                                                        body[iBody].dBaryEcc);        
   *dTmp = body[iBody].dBaryLongP;
 
   if (output->bDoNeg[iBody]) {
@@ -2255,6 +2207,10 @@ void WriteBaryMeanA(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteBaryMeanL(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
+  body[iBody].dBaryMeanL = CalculateMeanLongitude(body[iBody].dBaryMeanA, 
+                                                  body[iBody].dBaryArgP,
+                                                  body[iBody].dBaryLongA, 
+                                                  body[iBody].dBaryEcc);                      
   *dTmp = body[iBody].dBaryMeanL;
   // MeanL only represented in degrees in a bound orbit
   if (body[iBody].dBaryEcc < 1) {
@@ -2285,6 +2241,10 @@ void WriteBaryTrueA(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteBaryEccA(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
+  double dMinimumValue = 1.0e-15;
+  body[iBody].dBaryEccA = CalculateEccentricAnomaly(dMinimumValue, 
+                                                    body[iBody].dBaryEcc, 
+                                                    body[iBody].dBaryTrueA);
   *dTmp = body[iBody].dBaryEccA;
 
   if (output->bDoNeg[iBody]) {
@@ -2299,6 +2259,8 @@ void WriteBaryEccA(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteBaryHypA(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
+  body[iBody].dBaryHypA = CalculateHyperbolicAnomaly(body[iBody].dBaryEcc, 
+                                                      body[iBody].dBaryTrueA);                      
   *dTmp = body[iBody].dBaryHypA;
   // Do not convert to degrees
   // Hyperbolic Anomaly is a ratio of areas represented only in radians
@@ -2322,12 +2284,15 @@ void WriteBaryMu(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM *system,UNITS
 void WriteBaryEccSq(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
                             int iBody, double *dTmp, char cUnit[]) {
+  body[iBody].dBaryEccSq = body[iBody].dBaryEcc * body[iBody].dBaryEcc;
   *dTmp = body[iBody].dBaryEccSq;
 }
 
 void WriteBaryMeanMotion(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                         double *dTmp, char cUnit[]) {
+  body[iBody].dBaryMeanMotion = CalculateMeanMotion(body[iBody].dBaryMu, 
+                                                    body[iBody].dBarySemi);
   *dTmp = body[iBody].dBaryMeanMotion;
 
   if (output->bDoNeg[iBody]) {
@@ -2342,6 +2307,8 @@ void WriteBaryMeanMotion(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteBaryOrbPeriod(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                         double *dTmp, char cUnit[]) {
+  body[iBody].dBaryOrbPeriod = CalculateOrbitalPeriod(body[iBody].dBaryMu, 
+                                                      body[iBody].dBarySemi);                           
   *dTmp = body[iBody].dBaryOrbPeriod;
 
   if (output->bDoNeg[iBody]) {
@@ -2356,6 +2323,7 @@ void WriteBaryOrbPeriod(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteBarySinc(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
                             int iBody, double *dTmp, char cUnit[]) {
+  // A future developer might need to take care of this if needed.
   *dTmp = body[iBody].dBarySinc;
 }
 

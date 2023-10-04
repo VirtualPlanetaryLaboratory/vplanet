@@ -995,6 +995,16 @@ double positiveModulus(double x, double y) { //returns modulo_{y}(x) remaining i
   return result;
 }
 
+double atan2Continuous(double dSinAngle, double dCosAngle, double dMinimumValue) {
+  double dAngle = 0.0;
+  if (fabs(dCosAngle) > dMinimumValue) {
+    dAngle = positiveModulus(atan2(dSinAngle, dCosAngle), 2. * PI);
+  } else {
+    dAngle = sign(dSinAngle) * PI / 2.0;
+  }
+  return dAngle;
+}
+
 double TotalMass(BODY *body, int iNumBodies) {
   double dTmpTotalMass = 0.0;
   for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
@@ -1380,6 +1390,14 @@ void fvBaryCart2HelioCart(BODY *body, int iBody) {
   }
 }
 
+double CalculateSemiMajorAxis(double dMu, 
+                              double *dPositionVector, double *dVelocityVector) {
+  double dMagnitudePosition = magnitude(dPositionVector);
+  double dMagnitudeVelocitySquared = magnitudeSquared(dVelocityVector);
+  double dSemiMajorAxis = 1 / (2 / dMagnitudePosition - dMagnitudeVelocitySquared / dMu);
+  return dSemiMajorAxis;
+}
+
 void CalculateEccentricityVector(double dMu, 
                         double *dPositionVector, double *dVelocityVector, 
                         double *dSpecificAngularMomentum,
@@ -1397,10 +1415,18 @@ void CalculateEccentricityVector(double dMu,
   }
 }
 
-double CalculateLongitudeAscendingNode(double dMinimumValue, double dInclination, 
+double CalculateInclination(double *dSpecificAngularMomentumVector) {
+  double dMagnitudeSpecificAngularMomentum = magnitude(dSpecificAngularMomentumVector);
+  // In domain between 0 and PI
+  double dInclination = acos(dSpecificAngularMomentumVector[2] / dMagnitudeSpecificAngularMomentum);
+  return dInclination;
+}
+
+double CalculateLongitudeAscendingNode(double dMinimumValue, 
                                       double *dSpecificAngularMomentumVector) {
   // *** Solve for Longitude of Ascending Node ***
   double dLongitudeAscendingNode = 0.0; // best to initialize the variable first
+  double dInclination = CalculateInclination(dSpecificAngularMomentumVector);
   if (fabs(dInclination) > dMinimumValue) {
     if (fabs(dSpecificAngularMomentumVector[1]) > dMinimumValue) {
       dLongitudeAscendingNode = positiveModulus(atan2(dSpecificAngularMomentumVector[0], 
@@ -1413,10 +1439,13 @@ double CalculateLongitudeAscendingNode(double dMinimumValue, double dInclination
   return dLongitudeAscendingNode;
 }
 
-double CalculateArgumentPericenter(double dMinimumValue, double dEccentricity, double dInclination, double dLongitudeAscendingNode, 
-                                  double *dEccentricityVector) {
+double CalculateArgumentPericenter(double dMinimumValue, 
+                                  double *dSpecificAngularMomentumVector, double *dEccentricityVector) {
   // *** Solve for Argument of Pericenter ***
   double dArgumentPericenter = 0.0; // best to initialize the variable first
+  double dEccentricity = magnitude(dEccentricityVector);
+  double dInclination = CalculateInclination(dSpecificAngularMomentumVector);
+  double dLongitudeAscendingNode = CalculateLongitudeAscendingNode(dMinimumValue, dSpecificAngularMomentumVector);
   // dArgP only exists if the orbit is eccentric
   if (dEccentricity > 0) {
     // Finding Argument of Pericenter using the Eccentricity Vector: Danby pg. 205
@@ -1450,13 +1479,17 @@ double CalculateArgumentPericenter(double dMinimumValue, double dEccentricity, d
   return dArgumentPericenter;
 }
 
-double CalculateTrueAnomaly(double dMinimumValue, double dMu, double dMagnitudePosition, 
+double CalculateTrueAnomaly(double dMinimumValue, double dMu, 
                             double *dPositionVector, double *dVelocityVector, double *dEccentricityVector,
-                            double dMagnitudeSpecificAngularMomentum,
-                            double dEccentricity, double dInclination, double dLongitudeAscendingNode) {
+                            double *dSpecificAngularMomentumVector) {
   // *** Solve for True Anomaly ***
   double dTrueAnomaly = 0.0; // initializing variable
   double dSinTrueAnomaly = 0.0, dCosTrueAnomaly = 1.0;
+  double dMagnitudePosition = magnitude(dPositionVector);
+  double dMagnitudeSpecificAngularMomentum = magnitude(dSpecificAngularMomentumVector);
+  double dEccentricity = magnitude(dEccentricityVector);
+  double dInclination = CalculateInclination(dSpecificAngularMomentumVector);
+  double dLongitudeAscendingNode = CalculateLongitudeAscendingNode(dMinimumValue, dSpecificAngularMomentumVector);
   if (dEccentricity < dMinimumValue) {
     if (fabs(dInclination) > dMinimumValue) {
       /*
@@ -1492,11 +1525,7 @@ double CalculateTrueAnomaly(double dMinimumValue, double dMu, double dMagnitudeP
     dCosTrueAnomaly = sign(dCosTrueAnomaly);
     dSinTrueAnomaly = 0.0;  
   }
-  if (fabs(dCosTrueAnomaly) > dMinimumValue) {
-    dTrueAnomaly = positiveModulus(atan2(dSinTrueAnomaly, dCosTrueAnomaly), 2. * PI);
-  } else {
-    dTrueAnomaly = sign(dSinTrueAnomaly) * PI / 2.0;
-  }
+  dTrueAnomaly = atan2Continuous(dSinTrueAnomaly, dCosTrueAnomaly, dMinimumValue);
   return dTrueAnomaly;
 }
 
@@ -1600,33 +1629,23 @@ ELEMS fvCart2OrbElems(double dMu, double *dPositionVector, double *dVelocityVect
   cross(dPositionVector, dVelocityVector, dSpecificAngularMomentumVector);
   CalculateEccentricityVector(dMu, dPositionVector, dVelocityVector, dSpecificAngularMomentumVector, dEccentricityVector);
 
-  // Creating squared magnitudes of useful vectors
-  dMagnitudeVelocitySquared = magnitudeSquared(dVelocityVector);
-
   // Finding magnitudes of these values
-  dMagnitudePosition = magnitude(dPositionVector);
-  dMagnitudeVelocity = sqrt(dMagnitudeVelocitySquared);
   dMagnitudeSpecificAngularMomentum = magnitude(dSpecificAngularMomentumVector);
 
-  // Finding rdot, I don't know what to call this...
-  dRDot = dot(dPositionVector, dVelocityVector) / dMagnitudePosition;
-
-  //CalcConversionParameter(*dPosSq);
-
   // *** Solve the orbital elements ***
-  dSemi = 1 / (2 / dMagnitudePosition - dMagnitudeVelocitySquared / dMu);
+  dSemi = CalculateSemiMajorAxis(dMu, dPositionVector, dVelocityVector);
 
   dEcc = magnitude(dEccentricityVector);
 
-  dInc = acos(dSpecificAngularMomentumVector[2] / dMagnitudeSpecificAngularMomentum); // In domain between 0 and PI
+  dInc = CalculateInclination(dSpecificAngularMomentumVector); 
 
-  dLongA = CalculateLongitudeAscendingNode(dMinimumValue, dInc, dSpecificAngularMomentumVector);
+  dLongA = CalculateLongitudeAscendingNode(dMinimumValue, dSpecificAngularMomentumVector);
 
-  dArgP = CalculateArgumentPericenter(dMinimumValue, dEcc, dInc, dLongA, dEccentricityVector);
+  dArgP = CalculateArgumentPericenter(dMinimumValue, dSpecificAngularMomentumVector, dEccentricityVector);
 
-  dTrueA = CalculateTrueAnomaly(dMinimumValue, dMu, dMagnitudePosition, 
+  dTrueA = CalculateTrueAnomaly(dMinimumValue, dMu, 
                                 dPositionVector, dVelocityVector, dEccentricityVector, 
-                                dMagnitudeSpecificAngularMomentum, dEcc, dInc, dLongA);
+                                dSpecificAngularMomentumVector);
 
   dMeanA = CalculateMeanAnomaly(dMinimumValue, dEcc, dTrueA);
 
@@ -1647,6 +1666,8 @@ ELEMS fvCart2OrbElems(double dMu, double *dPositionVector, double *dVelocityVect
   elems.dArgP = dArgP;
   elems.dLongA = dLongA;
   elems.dMeanA = dMeanA;
+
+  elems.dTrueA = dTrueA;
 
   elems.dSinc = dSinc;
   elems.dPinc = dPinc;

@@ -21,6 +21,7 @@
 #define OPT_MEANL 1631
 
 #define OPT_USEORBPARAMS 1640
+#define OPT_EXCLUDEFROMBARYCENTER 1641
 //#define OPT_OUTPUTCOORDBIT 1641
 
 // Output numbers
@@ -186,7 +187,7 @@ int fbHaltMaxMutualIncSpiNBody(BODY *, EVOLVE *, HALT *, IO *, UPDATE *,
 // Addressing total mass of the system for Barycentric Coordinates
 double TotalMass(BODY *body, int iNumBodies);
 // Addressing Barycentric Gravitational Parameter
-double BarycentricMu(BODY *body, int iNumBodies, int iBody);
+double CalculateBarycentricGravitationalParameter(BODY *body, int iNumBodies, int iBody);
 // Coordinate Changes
 void fvBaryOrbElems2BaryCart(BODY *body, int iNumBodies, int iBody);
 void fvHelioOrbElems2HelioCart(BODY *body, int iNumBodies, int iBody);

@@ -299,6 +299,24 @@ void ReadBarycentric(BODY *body, CONTROL *control, FILES *files,
   }
 }
 
+void ReadExcludeFromBarycenter(BODY *body, CONTROL *control, FILES *files,
+                      OPTIONS *options, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn, options->cName, &bTmp, &lTmp,
+                control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].bExcludeFromBarycenter = bTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else {
+    body[iFile - 1].bExcludeFromBarycenter = options->dDefault;
+  }
+}
+
 void InitializeOptionsSpiNBody(OPTIONS *options, fnReadOption fnRead[]) {
   int iOpt, iFile;
 
@@ -396,6 +414,15 @@ void InitializeOptionsSpiNBody(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_BARYCENTRIC].iFileType = 2;
   options[OPT_BARYCENTRIC].iModuleBit = SPINBODY;
   fnRead[OPT_BARYCENTRIC]             = &ReadBarycentric;
+
+  sprintf(options[OPT_EXCLUDEFROMBARYCENTER].cName, "bExcludeFromBarycenter");
+  sprintf(options[OPT_EXCLUDEFROMBARYCENTER].cDescr,
+          "Excludes body from Barycenter calculation");
+  sprintf(options[OPT_EXCLUDEFROMBARYCENTER].cDefault, "0");
+  options[OPT_EXCLUDEFROMBARYCENTER].dDefault   = 0;
+  options[OPT_EXCLUDEFROMBARYCENTER].iType      = 0;
+  options[OPT_EXCLUDEFROMBARYCENTER].bMultiFile = 1;
+  fnRead[OPT_EXCLUDEFROMBARYCENTER]             = &ReadExcludeFromBarycenter;  
 }
 
 void ReadOptionsSpiNBody(BODY *body, CONTROL *control, FILES *files,
@@ -707,7 +734,7 @@ void AssignAllCoords(BODY *body, CONTROL *control, FILES *files, SYSTEM *system,
   double iNumBodies = control->Evolve.iNumBodies;
   // Need Gravitational Parameter to be assigned
   // Use BaryMu because iterated coordinates are Barycentric
-  body[iBody].dMu = BarycentricMu(body, iNumBodies, iBody);
+  body[iBody].dMu = CalculateBarycentricGravitationalParameter(body, iNumBodies, iBody);
   // Do a check if orbelems need to be converted to inv_plane
   // inv_plane only accepts barycart coords
   if (files->Outfile[iBody].iOutputCoordBit & HELIOCART) {
@@ -1019,11 +1046,39 @@ double TotalMass(BODY *body, int iNumBodies) {
   return dTmpTotalMass;
 }
 
-double BarycentricMu(BODY *body, int iNumBodies, int iBody) {
-  double dTotalMass, dBaryMu; 
-  dTotalMass = TotalMass(body, iNumBodies);
-  dBaryMu = dTotalMass * cube(1. - body[iBody].dMass / dTotalMass);
-  return dBaryMu;
+double SumOfBodyMassesExcludedFromBarycenter(BODY *body, int iNumBodies) {
+  double dSumOfBodyMassesExcluded = 0.0;
+  for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+    if (body[iTmpBody].bExcludeFromBarycenter) {
+      dSumOfBodyMassesExcluded += body[iTmpBody].dMass;
+    }
+  }
+  return dSumOfBodyMassesExcluded;
+}
+
+double TotalBarycentricMass(BODY *body, int iNumBodies) {
+  return TotalMass(body, iNumBodies) - SumOfBodyMassesExcludedFromBarycenter(body, iNumBodies);
+}
+
+double CalculateBarycentricFactor(BODY *body, int iNumBodies, int iBody) {
+  double dBarycentricFactor = 1.0;
+  double dTotalBarycentricMass = TotalBarycentricMass(body, iNumBodies);
+  dBarycentricFactor = cube(1.0 - body[iBody].dMass / dTotalBarycentricMass);
+  return dBarycentricFactor;
+}
+
+double CalculateBarycentricGravitationalParameter(BODY *body, int iNumBodies, int iBody) {
+  double dTotalBarycenterMass = TotalBarycentricMass(body, iNumBodies);
+  double dTotalContributingMass = dTotalBarycenterMass;
+  double dBarycentricFactor = 1.0;
+
+  if (body[iBody].bExcludeFromBarycenter) {
+    dTotalContributingMass += body[iBody].dMass;
+  } else {
+    dBarycentricFactor = CalculateBarycentricFactor(body, iNumBodies, iBody);
+  }
+  double dGravitationalParameter = BIGG * dBarycentricFactor * dTotalContributingMass;
+  return dGravitationalParameter;
 }
 
 double CalculateTrigFunctionEdgeCase(double dMinimumValue, double dTrigfunction) {
@@ -1279,7 +1334,7 @@ void AssignBody2Elems(BODY *body, ELEMS elems, int iBody) {
 
 void fvBaryOrbElems2BaryCart(BODY *body, int iNumBodies, int iBody) {
   ELEMS elems;
-  double *dPos, *dVel, mTotal, dBaryRelation, dHelioMu;
+  double *dPos, *dVel;
   dPos = malloc(3 * sizeof(double));
   dVel = malloc(3 * sizeof(double));
   // Switching and assigning elems struct
@@ -1298,14 +1353,9 @@ void fvBaryOrbElems2BaryCart(BODY *body, int iNumBodies, int iBody) {
   }
   if (elems.dEcc > 1) {
     elems.dHypA = GetHypAnom(elems);
-  }   
+  }
 
-  mTotal = TotalMass(body, iNumBodies);
-  dBaryRelation = cube(1. - body[iBody].dMass / mTotal);
-  dHelioMu = BIGG * mTotal; // (body[iBody].dMass + body[0].dMass) does not work here
-
-  body[iBody].dBaryMu = dHelioMu * dBaryRelation;
-
+  body[iBody].dBaryMu = CalculateBarycentricGravitationalParameter(body, iNumBodies, iBody);
   elems.dMu = body[iBody].dBaryMu;
   OrbElems2Cart(elems, dPos, dVel);
   for (int i = 0; i < 3; i++) {
@@ -1362,32 +1412,31 @@ void fvHelioOrbElems2HelioCart(BODY *body, int iNumBodies, int iBody) {
 }
 
 void fvHelioCart2BaryCart(BODY *body, int iNumBodies, int iBody) {
-  int i, iTmpBody;
-  double *xcom, *vcom, mtotal;
-  xcom = malloc(3 * sizeof(double));
-  vcom = malloc(3 * sizeof(double));
-  mtotal = TotalMass(body, iNumBodies);
+  double *dCenterOfMassPositionVector, *dCenterOfMassVelocityVector, dTotalBarycentricMass;
+  dCenterOfMassPositionVector = malloc(3 * sizeof(double));
+  dCenterOfMassVelocityVector = malloc(3 * sizeof(double));
+  dTotalBarycentricMass = TotalBarycentricMass(body, iNumBodies);
 
-  for (i = 0; i < 3; i++) {
-    xcom[i] = 0;
-    vcom[i] = 0;
-    for (iTmpBody = 1; iTmpBody < iNumBodies; iTmpBody++) {
-      xcom[i] += (body[iTmpBody].dMass * body[iTmpBody].dHCartPos[i] / mtotal);
-      vcom[i] += (body[iTmpBody].dMass * body[iTmpBody].dHCartVel[i] / mtotal);
+  for (int i = 0; i < 3; i++) {
+    dCenterOfMassPositionVector[i] = 0;
+    dCenterOfMassVelocityVector[i] = 0;
+    for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+      if (!body[iTmpBody].bExcludeFromBarycenter) {
+        dCenterOfMassPositionVector[i] += (body[iTmpBody].dMass * body[iTmpBody].dHCartPos[i] / dTotalBarycentricMass);
+        dCenterOfMassVelocityVector[i] += (body[iTmpBody].dMass * body[iTmpBody].dHCartVel[i] / dTotalBarycentricMass);
+      }
     }
   }
-  for (i = 0; i < 3; i++) {
-    body[iBody].dBCartPos[i] = body[iBody].dHCartPos[i] - xcom[i];
-    body[iBody].dBCartVel[i] = body[iBody].dHCartVel[i] - vcom[i];
+  for (int i = 0; i < 3; i++) {
+    body[iBody].dBCartPos[i] = body[iBody].dHCartPos[i] - dCenterOfMassPositionVector[i];
+    body[iBody].dBCartVel[i] = body[iBody].dHCartVel[i] - dCenterOfMassVelocityVector[i];
   }
 
-  free(xcom);
-  free(vcom);
+  free(dCenterOfMassPositionVector), free(dCenterOfMassVelocityVector);
 }
 
 void fvBaryCart2HelioCart(BODY *body, int iBody) {
-  int i = 0;
-  for (i = 0; i < 3; i++) {
+  for (int i = 0; i < 3; i++) {
     body[iBody].dHCartPos[i] = body[iBody].dBCartPos[i] - body[0].dBCartPos[i];
     body[iBody].dHCartVel[i] = body[iBody].dBCartVel[i] - body[0].dBCartVel[i];
   }
@@ -1674,7 +1723,7 @@ ELEMS fvCart2OrbElems(double dMinimumValue, double dMu, double *dPositionVector,
 
 void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
   ELEMS elems = {0};
-  double dMu, *dPos, *dVel;
+  double *dPos, *dVel;
   dPos = malloc(3 * sizeof(double));
   dVel = malloc(3 * sizeof(double));
 
@@ -1682,14 +1731,12 @@ void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
     dPos[i] = body[iBody].dBCartPos[i];
     dVel[i] = body[iBody].dBCartVel[i];
   }
-  double dMassTotal = TotalMass(body, iNumBodies);
-  double dBaryRelation = cube(1.0 - body[iBody].dMass / dMassTotal);
-  dMu = BIGG * dBaryRelation * dMassTotal;
+  body[iBody].dBaryMu = CalculateBarycentricGravitationalParameter(body, iNumBodies, iBody);
   
   // Need to declare min value to avoid inaccurate outputs
   double dMinimumValue = 1.0e-15;
   // Finding the orbital elements here
-  elems = fvCart2OrbElems(dMinimumValue, dMu, dPos, dVel);
+  elems = fvCart2OrbElems(dMinimumValue, body[iBody].dBaryMu, dPos, dVel);
 
 
   // Assigning elems variables to proper body[iBody] variables
@@ -1709,8 +1756,8 @@ void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
     body[iBody].dBaryHypA = CalculateHyperbolicAnomaly(elems.dEcc, elems.dTrueA);
   }
 
-  body[iBody].dBaryMeanMotion = CalculateMeanMotion(dMu, elems.dSemi);
-  body[iBody].dBaryOrbPeriod = CalculateOrbitalPeriod(dMu, elems.dSemi);
+  body[iBody].dBaryMeanMotion = CalculateMeanMotion(body[iBody].dBaryMu, elems.dSemi);
+  body[iBody].dBaryOrbPeriod = CalculateOrbitalPeriod(body[iBody].dBaryMu, elems.dSemi);
 
   
   /* For the future developer wanting to create these

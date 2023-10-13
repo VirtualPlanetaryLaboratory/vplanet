@@ -216,6 +216,7 @@ double yangle2(BODY *body, int iBody);
 double zangle1(BODY *body, int iBody);
 double zangle2(BODY *body, int iBody);
 double positiveModulus(double x, double y);
+double positiveModulus2PI(double x);
 
 // Halts
 void CountHaltsSpiNBody(HALT *, int *);

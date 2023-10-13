@@ -341,25 +341,25 @@ void VerifyAltOrbElems(BODY *body, OPTIONS *options,
   int iFile = iBody + 1;
   // The user can input either ArgP or LongP. If both are input, ignores input of LongP.
   if (options[OPT_ARGP].iLine[iFile] > -1 && options[OPT_LONGP].iLine[iFile] == -1) {
-    body[iBody].dLongP = positiveModulus(body[iBody].dArgP + body[iBody].dLongA, 2. * PI);
+    body[iBody].dLongP = positiveModulus2PI(body[iBody].dArgP + body[iBody].dLongA);
   }
   if (options[OPT_ARGP].iLine[iFile] == -1 && options[OPT_LONGP].iLine[iFile] > -1) {
-    body[iBody].dArgP = positiveModulus(body[iBody].dLongP - body[iBody].dLongA, 2. * PI);
+    body[iBody].dArgP = positiveModulus2PI(body[iBody].dLongP - body[iBody].dLongA);
   }
   if (options[OPT_ARGP].iLine[iFile] > -1 && options[OPT_LONGP].iLine[iFile] > -1) {
     printf("WARNING: Both ArgP and LongP were input. Defaulting to the input of ArgP and redefining LongP.\n");
-    body[iBody].dLongP = positiveModulus(body[iBody].dArgP + body[iBody].dLongA, 2. * PI);
+    body[iBody].dLongP = positiveModulus2PI(body[iBody].dArgP + body[iBody].dLongA);
   }
   // The user can input either MeanA or MeanL. If both are input, ignores input of MeanL.
   if (options[OPT_MEANA].iLine[iFile] > -1 && options[OPT_MEANL].iLine[iFile] == -1) {
-    body[iBody].dMeanL = positiveModulus(body[iBody].dMeanA + body[iBody].dLongP, 2. * PI);
+    body[iBody].dMeanL = positiveModulus2PI(body[iBody].dMeanA + body[iBody].dLongP);
   }
   if (options[OPT_MEANA].iLine[iFile] == -1 && options[OPT_MEANL].iLine[iFile] > -1) {
-    body[iBody].dMeanA = positiveModulus(body[iBody].dMeanL - body[iBody].dLongP, 2. * PI);
+    body[iBody].dMeanA = positiveModulus2PI(body[iBody].dMeanL - body[iBody].dLongP);
   }
   if (options[OPT_MEANA].iLine[iFile] > -1 && options[OPT_MEANL].iLine[iFile] > -1) {
     printf("WARNING: Both MeanA and MeanL were input. Defaulting to the input of MeanA and redefining MeanL.\n");
-    body[iBody].dMeanL = positiveModulus(body[iBody].dMeanA + body[iBody].dLongP, 2. * PI);
+    body[iBody].dMeanL = positiveModulus2PI(body[iBody].dMeanA + body[iBody].dLongP);
   }
 }
 

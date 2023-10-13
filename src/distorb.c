@@ -3271,7 +3271,7 @@ double fndVyi(BODY *body, int iBody) {
 /**
 Calculates cross product of vectors
 
-@param a First vector of cross prodect
+@param a First vector of cross product
 @param b Second vector of cross product
 @param c Resulting product containing cross product
 */

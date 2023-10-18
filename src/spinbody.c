@@ -300,7 +300,7 @@ void ReadBarycentric(BODY *body, CONTROL *control, FILES *files,
 }
 
 void ReadExcludeFromBarycenter(BODY *body, CONTROL *control, FILES *files,
-                      OPTIONS *options, int iFile) {
+                      OPTIONS *options, SYSTEM *system, int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp = -1;
   int bTmp;

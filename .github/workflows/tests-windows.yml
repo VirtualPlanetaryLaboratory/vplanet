@@ -9,7 +9,7 @@ on:
 
 jobs:
   tests:
-    name: ${{ matrix.os }}:${{ matrix.python-version }}
+    name: '${{ matrix.os }}:python-${{ matrix.python-version }}'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -54,7 +54,7 @@ jobs:
           echo "::set-output name=id::$JOB_ID"
 
       - name: Publish unit test results
-        uses: EnricoMi/publish-unit-test-result-action@v1
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
         if: always()
         with:
           files: junit/test-*.xml

@@ -2,9 +2,9 @@ name: tests
 
 on:
   push:
-    branches: [master, main]
+    branches: [main]
   pull_request:
-    branches: [master, main]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -37,13 +37,12 @@ jobs:
         run: |
           python -m pip install -U pip
           python -m pip install -e .
-          sudo apt install lcov
 
       - name: Run tests and generate coverage
         if: steps.install.outcome == 'success'
         shell: bash -l {0}
         run: |
-          make coverage
+          make test
 
       - name: Get unique id
         id: unique-id

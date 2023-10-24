@@ -35,8 +35,9 @@ jobs:
         if: steps.setup_python.outcome == 'success'
         shell: bash -l {0}
         run: |
-          python -m pip install -U pip
-          python -m pip install -e .
+          python3 -m pip install -U pip
+          python3 -m pip install -e .
+          python3 -m pip install pytest pytest-cov
 
       - name: Run tests and generate coverage
         if: steps.install.outcome == 'success'

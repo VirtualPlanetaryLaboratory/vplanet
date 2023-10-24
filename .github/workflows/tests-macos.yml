@@ -37,7 +37,7 @@ jobs:
         run: |
           python3 -m pip install -U pip
           python3 -m pip install -e .
-          pip install pytest pytest-cov
+          python3 -m pip install pytest pytest-cov
 
       - name: Run tests and generate coverage
         if: steps.install.outcome == 'success'
@@ -46,12 +46,8 @@ jobs:
           make test
 
       - name: Get unique id
-        id: unique-id
-        env:
-          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        run: |
-          export JOB_ID=`echo $STRATEGY_CONTEXT | md5sum`
-          echo "{name}={value}" >> $GITHUB_OUTPUT
+        uses: Tiryoh/gha-jobid-action@v1
+        id: jobs
 
       - name: Publish unit test results
         uses: EnricoMi/publish-unit-test-result-action/composite@v2

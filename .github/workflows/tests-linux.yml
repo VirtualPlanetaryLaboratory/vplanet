@@ -46,12 +46,8 @@ jobs:
           make coverage
 
       - name: Get unique id
-        id: unique-id
-        env:
-          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        run: |
-          export JOB_ID=`echo $STRATEGY_CONTEXT | md5sum`
-          echo "::set-output name=id::$JOB_ID"
+        uses: Tiryoh/gha-jobid-action@v1
+        id: jobs
 
       - name: Publish unit test results
         uses: EnricoMi/publish-unit-test-result-action@v1

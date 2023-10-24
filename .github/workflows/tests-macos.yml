@@ -1,4 +1,4 @@
-name: tests
+name: tests-macos
 
 on:
   push:
@@ -50,12 +50,12 @@ jobs:
           STRATEGY_CONTEXT: ${{ toJson(strategy) }}
         run: |
           export JOB_ID=`echo $STRATEGY_CONTEXT | md5sum`
-          echo "::set-output name=id::$JOB_ID"
+          echo "{name}={value}" >> $GITHUB_OUTPUT
 
       - name: Publish unit test results
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
         if: always()
-        with:
-          files: junit/test-*.xml
-          comment_mode: update last
-          
+        files: |
+          test-results/**/*.xml
+          test-results/**/*.trx
+          test-results/**/*.json

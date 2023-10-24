@@ -37,6 +37,7 @@ jobs:
         run: |
           python3 -m pip install -U pip
           python3 -m pip install -e .
+          pip install pytest pytest-cov
 
       - name: Run tests and generate coverage
         if: steps.install.outcome == 'success'

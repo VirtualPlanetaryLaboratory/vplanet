@@ -55,7 +55,8 @@ jobs:
       - name: Publish unit test results
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
         if: always()
-        files: |
-          test-results/**/*.xml
-          test-results/**/*.trx
-          test-results/**/*.json
+        with:
+          files: |
+            test-results/**/*.xml
+            test-results/**/*.trx
+            test-results/**/*.json

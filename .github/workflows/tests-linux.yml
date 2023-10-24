@@ -57,8 +57,10 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
-          files: junit/test-*.xml
-          comment_mode: update last
+          files: |
+            test-results/**/*.xml
+            test-results/**/*.trx
+            test-results/**/*.json
 
       - name: CodeCov
         uses: codecov/codecov-action@v2.1.0

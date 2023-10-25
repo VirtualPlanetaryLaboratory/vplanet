@@ -737,53 +737,57 @@ void WriteOrbPeriod(BODY *body, CONTROL *control, OUTPUT *output,
                     double *dTmp, char cUnit[]) {
 
   if (body[iBody].bBinary == 0) { // Not doing binary
-    if (system->bBarycentric && body[iBody].dBaryEcc < 1) {
-      /*
-      Below we consider Solving the Orbital Period for the largest massive body.
-      The contributing masses are the body itself and the second largest mass.
-      We first find the largest mass in the system, then the second largest.
-      */
-      double dMaxMass = body[0].dMass; // Maximum massive body defaulted to first body
-      for (int iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
-        if (body[iTmpBody].dMass > dMaxMass) {
-          dMaxMass = body[iTmpBody].dMass;  // Replaces maximum mass if a different body is larger
-        }
-      }
-      if (body[iBody].dMass == dMaxMass) {
-        double dSecondMass = body[1].dMass; // Second most massive body defaulted to second body
-        for (int iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
-          if (body[iTmpBody].dMass > dSecondMass && body[iTmpBody].dMass != dMaxMass) {
-            dSecondMass = body[iTmpBody].dMass; // Replaces mass if larger than default and smaller than largest mass
-          }
-        }
-        // Below is the calculated orbital period of the largest mass
-        *dTmp = fdSemiToPeriod(body[iBody].dBarySemi, 
-                              (dMaxMass + dSecondMass)*cube(1.0 - dMaxMass/(dMaxMass + dSecondMass)));
-      } else {
-        // All other masses are defined by any mass enclosed within the orbit of the body in focus.
-        double dEnclosedMass = 0.0;
-        // We collect the enclosed masses by making sure their dSemi are smaller than the body in focus
-        for (int iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
-          if (body[iTmpBody].dBarySemi <= body[iBody].dBarySemi) {
-            dEnclosedMass += body[iTmpBody].dMass; // includes the mass of body[iBody].dMassF
-          }
-        }
-        *dTmp = fdSemiToPeriod(body[iBody].dBarySemi, 
-                              dEnclosedMass*cube(1.0 - body[iBody].dMass/dEnclosedMass));
-        // As a warning this setup will break for S-type orbiting CBPs.
-        // We should make a system where the orbital elements are relative to a certain barycenter or body.
-      }
-    }
-    // Orbital period defined in Heliocentric coordinates
-    if (iBody > 0 && body[iBody].dEcc < 1 && !system->bBarycentric) {
-      *dTmp = fdSemiToPeriod(body[iBody].dSemi,
-                            (body[0].dMass + body[iBody].dMass));
+    if (body[iBody].bCalcCoordsFromCenterOfMass) {
+      *dTmp = -1; // undefined because input coordinates are unknown
     } else {
-      *dTmp = -1; // orbital period does not exist for either unbound orbits or the central body.
-    }
-    if ((system->bBarycentric && body[iBody].dBaryEcc >= 1.0) || 
-        (!system->bBarycentric && body[iBody].dEcc >= 1.0)) {
-      *dTmp = -1; // The orbital period does not exist for unbound orbits.
+      if (system->bBarycentric && body[iBody].dBaryEcc < 1) {
+        /*
+        Below we consider Solving the Orbital Period for the largest massive body.
+        The contributing masses are the body itself and the second largest mass.
+        We first find the largest mass in the system, then the second largest.
+        */
+        double dMaxMass = body[0].dMass; // Maximum massive body defaulted to first body
+        for (int iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
+          if (body[iTmpBody].dMass > dMaxMass) {
+            dMaxMass = body[iTmpBody].dMass;  // Replaces maximum mass if a different body is larger
+          }
+        }
+        if (body[iBody].dMass == dMaxMass) {
+          double dSecondMass = body[1].dMass; // Second most massive body defaulted to second body
+          for (int iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
+            if (body[iTmpBody].dMass > dSecondMass && body[iTmpBody].dMass != dMaxMass) {
+              dSecondMass = body[iTmpBody].dMass; // Replaces mass if larger than default and smaller than largest mass
+            }
+          }
+          // Below is the calculated orbital period of the largest mass
+          *dTmp = fdSemiToPeriod(body[iBody].dBarySemi, 
+                                (dMaxMass + dSecondMass)*cube(1.0 - dMaxMass/(dMaxMass + dSecondMass)));
+        } else {
+          // All other masses are defined by any mass enclosed within the orbit of the body in focus.
+          double dEnclosedMass = 0.0;
+          // We collect the enclosed masses by making sure their dSemi are smaller than the body in focus
+          for (int iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
+            if (body[iTmpBody].dBarySemi <= body[iBody].dBarySemi) {
+              dEnclosedMass += body[iTmpBody].dMass; // includes the mass of body[iBody].dMassF
+            }
+          }
+          *dTmp = fdSemiToPeriod(body[iBody].dBarySemi, 
+                                dEnclosedMass*cube(1.0 - body[iBody].dMass/dEnclosedMass));
+          // As a warning this setup will break for S-type orbiting CBPs.
+          // We should make a system where the orbital elements are relative to a certain barycenter or body.
+        }
+      }
+      // Orbital period defined in Heliocentric coordinates
+      if (iBody > 0 && body[iBody].dEcc < 1 && !system->bBarycentric) {
+        *dTmp = fdSemiToPeriod(body[iBody].dSemi,
+                              (body[0].dMass + body[iBody].dMass));
+      } else {
+        *dTmp = -1; // orbital period does not exist for either unbound orbits or the central body.
+      }
+      if ((system->bBarycentric && body[iBody].dBaryEcc >= 1.0) || 
+          (!system->bBarycentric && body[iBody].dEcc >= 1.0)) {
+        *dTmp = -1; // The orbital period does not exist for unbound orbits.
+      }
     }
   } else // Doing binary
   {

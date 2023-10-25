@@ -241,7 +241,8 @@ void VerifyOrbit(BODY *body, CONTROL *control, FILES files, OPTIONS *options,
   }
 
   /* Was anything set? */ //Update: Nothing needs to be set when using Cartesian Coordinates
-  if (dSemi == 0 && dMeanMotion == 0 && dPeriod == 0 && body[iBody].bUseOrbParams) {
+  if (dSemi == 0 && dMeanMotion == 0 && dPeriod == 0 
+      && body[iBody].bUseOrbParams && !body[iBody].bCalcCoordsFromCenterOfMass) {
     fprintf(stderr, "ERROR: Must set one of %s, %s or %s.\n",
             options[OPT_ORBSEMI].cName, options[OPT_ORBMEANMOTION].cName,
             options[OPT_ORBPER].cName);

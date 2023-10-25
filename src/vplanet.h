@@ -303,6 +303,8 @@ struct BODY {
   double dPositionZ;    /**< z Component of the body's position */
   double bUseOrbParams; /**< Boolean flag to use orbital parameters as inputs */
   double bExcludeFromBarycenter; /**< Boolean flag to exclude body from Barycenter calculation */
+  double bCalcCoordsFromCenterOfMass; //**< Boolean flag to use such a variable as an input */
+  double bHaltBodyUnbound; //**< Boolean flag to halt simulation if chosen bodies are unbound */
   double *dDistance3;   /**< Distance cubed to different perturbers */
   double *dDistanceX;   /**< X Distance between two bodies */
   double *dDistanceY;   /**< Y Distance between two bodies */

@@ -97,6 +97,30 @@ int fniHaltMaxEcc(BODY *body, EVOLVE *evolve, HALT *halt, IO *io,
   return 0;
 }
 
+int fniHaltBodyUnbound(BODY *body, EVOLVE *evolve, HALT *halt, IO *io,
+                  UPDATE *update, fnUpdateVariable ***fnUpdate, int iBody) {
+  // Strictly assuming a body is only unbound with respect to its barycenter
+  double dMagnitudeSquaredPosition = 0, dMagnitudeSquaredVelocity = 0;
+  for (int i = 0; i < 3; i++) {
+    dMagnitudeSquaredPosition += body[iBody].dBCartPos[i] * body[iBody].dBCartPos[i];
+    dMagnitudeSquaredVelocity += body[iBody].dBCartVel[i] * body[iBody].dBCartVel[i];
+  }
+  double dMagnitudePosition = sqrt(dMagnitudeSquaredPosition);
+  double dEscapeVelocitySquared = 2.0 * body[iBody].dBaryMu / dMagnitudePosition;  
+  if (dMagnitudeSquaredVelocity >= dEscapeVelocitySquared) {
+    if (io->iVerbose >= VERBPROG) {
+      printf("HALT: MagnitudeSquaredVelocity[%d] = ", iBody);
+      fprintd(stdout, dMagnitudeSquaredVelocity, io->iSciNot, io->iDigits);
+      printf(", > EscapeVelocitySquared = ");
+      fprintd(stdout, dEscapeVelocitySquared, io->iSciNot, io->iDigits);
+      printf(" at %.2e years\n", evolve->dTime / YEARSEC);
+    }
+    return 1;
+  }
+
+  return 0;
+}
+
 int HaltMinEcc(BODY *body, EVOLVE *evolve, HALT *halt, IO *io, UPDATE *update,
                fnUpdateVariable ***fnUpdate, int iBody) {
   /* Halt simulation if body reaches minimum eccentricity. */
@@ -328,6 +352,9 @@ void VerifyHalts(BODY *body, CONTROL *control, MODULE *module,
       if (body[iBody].bSpiNBody) {
         control->fnHalt[iBody][iHaltNow++] = &fbHaltMaxMutualIncSpiNBody;
       }
+    }
+    if (body[iBody].bHaltBodyUnbound) {
+      control->fnHalt[iBody][iHaltNow++] = &fniHaltBodyUnbound;
     }
     if (control->Halt[iBody].dMinSemi > 0) {
       control->fnHalt[iBody][iHaltNow++] = &HaltMinSemi;

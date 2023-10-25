@@ -268,7 +268,7 @@ void ReadUseOrbParams(BODY *body, CONTROL *control, FILES *files,
                       OPTIONS *options, SYSTEM *system, int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp = -1;
-  int bTmp;
+  int bTmp = 0;
 
   AddOptionBool(files->Infile[iFile].cIn, options->cName, &bTmp, &lTmp,
                 control->Io.iVerbose);
@@ -303,7 +303,7 @@ void ReadExcludeFromBarycenter(BODY *body, CONTROL *control, FILES *files,
                       OPTIONS *options, SYSTEM *system, int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp = -1;
-  int bTmp;
+  int bTmp = 0;
 
   AddOptionBool(files->Infile[iFile].cIn, options->cName, &bTmp, &lTmp,
                 control->Io.iVerbose);
@@ -314,6 +314,39 @@ void ReadExcludeFromBarycenter(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     body[iFile - 1].bExcludeFromBarycenter = options->dDefault;
+  }
+}
+
+void ReadCalcCoordsFromCenterOfMass(BODY *body, CONTROL *control, FILES *files,
+                                    OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  int bTmp = 0;
+
+  AddOptionBool(files->Infile[iFile].cIn, options->cName, &bTmp, &lTmp,
+                control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files, options, files->Infile[iFile].cIn, lTmp, VERBALL);
+    body[iFile - 1].bCalcCoordsFromCenterOfMass = bTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else {
+    body[iFile - 1].bCalcCoordsFromCenterOfMass = options->dDefault;
+  }
+}
+
+void ReadHaltBodyUnbound(BODY *body, CONTROL *control, FILES *files,
+                      OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  int bTmp = 0;
+
+  AddOptionBool(files->Infile[iFile].cIn, options->cName, &bTmp, &lTmp,
+                control->Io.iVerbose);
+  if (lTmp >= 0) {
+    body[iFile - 1].bHaltBodyUnbound = bTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else {
+    body[iFile - 1].bHaltBodyUnbound = options->dDefault;
   }
 }
 
@@ -402,6 +435,8 @@ void InitializeOptionsSpiNBody(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_USEORBPARAMS].dDefault   = 0;
   options[OPT_USEORBPARAMS].iType      = 0;
   options[OPT_USEORBPARAMS].bMultiFile = 1;
+  options[OPT_USEORBPARAMS].bNeg       = 0;
+  options[OPT_USEORBPARAMS].iFileType  = 1;
   fnRead[OPT_USEORBPARAMS]             = &ReadUseOrbParams;
 
   sprintf(options[OPT_BARYCENTRIC].cName, "bBarycentric");
@@ -422,7 +457,34 @@ void InitializeOptionsSpiNBody(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_EXCLUDEFROMBARYCENTER].dDefault   = 0;
   options[OPT_EXCLUDEFROMBARYCENTER].iType      = 0;
   options[OPT_EXCLUDEFROMBARYCENTER].bMultiFile = 1;
-  fnRead[OPT_EXCLUDEFROMBARYCENTER]             = &ReadExcludeFromBarycenter;  
+  options[OPT_EXCLUDEFROMBARYCENTER].bNeg       = 0;
+  options[OPT_EXCLUDEFROMBARYCENTER].iFileType  = 1;
+  options[OPT_EXCLUDEFROMBARYCENTER].iModuleBit = SPINBODY;
+  fnRead[OPT_EXCLUDEFROMBARYCENTER]             = &ReadExcludeFromBarycenter;
+
+  sprintf(options[OPT_CALCCOORDSFROMCENTEROFMASS].cName, "bCalcCoordsFromCenterOfMass");
+  sprintf(options[OPT_CALCCOORDSFROMCENTEROFMASS].cDescr, 
+  "Notes the body contributing to the barycenter having undefined barycentric inputs.");
+  sprintf(options[OPT_CALCCOORDSFROMCENTEROFMASS].cDefault, "0");
+  options[OPT_CALCCOORDSFROMCENTEROFMASS].dDefault = 0;
+  options[OPT_CALCCOORDSFROMCENTEROFMASS].iType = 0;
+  options[OPT_CALCCOORDSFROMCENTEROFMASS].bMultiFile = 0;
+  options[OPT_CALCCOORDSFROMCENTEROFMASS].bNeg = 0;
+  options[OPT_CALCCOORDSFROMCENTEROFMASS].iFileType = 1;
+  options[OPT_CALCCOORDSFROMCENTEROFMASS].iModuleBit = SPINBODY;
+  fnRead[OPT_CALCCOORDSFROMCENTEROFMASS]        = &ReadCalcCoordsFromCenterOfMass;
+
+  sprintf(options[OPT_HALTBODYUNBOUND].cName, "bHaltBodyUnbound");
+  sprintf(options[OPT_HALTBODYUNBOUND].cDescr, 
+  "Simulation halts if the chosen body becomes unbound (Eccentricity >= 1).");
+  sprintf(options[OPT_HALTBODYUNBOUND].cDefault, "0");
+  options[OPT_HALTBODYUNBOUND].dDefault = 0;
+  options[OPT_HALTBODYUNBOUND].iType = 0;
+  options[OPT_HALTBODYUNBOUND].bMultiFile = 1;
+  options[OPT_HALTBODYUNBOUND].bNeg = 0;
+  options[OPT_HALTBODYUNBOUND].iFileType = 1;
+  options[OPT_HALTBODYUNBOUND].iModuleBit = SPINBODY;
+  fnRead[OPT_HALTBODYUNBOUND]        = &ReadHaltBodyUnbound;    
 }
 
 void ReadOptionsSpiNBody(BODY *body, CONTROL *control, FILES *files,
@@ -726,6 +788,39 @@ void fvAssignBaryCart2HelioCart(BODY *body, int iBody) {
   body[iBody].dHelioVelZ = body[iBody].dHCartVel[2];
 }
 
+void CalculateCartesianComponentsFromCenterOfMassEquation(BODY *body, int iNumBodies, 
+                                                          int iUnassignedBody, int iDimension) {
+  for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+    if (iTmpBody != iUnassignedBody) {
+      double dMassRatio = body[iTmpBody].dMass / body[iUnassignedBody].dMass;
+      /* 
+      If barycentric coordinates and finding the position and velocity components of one body:
+      BarycentricMass*BarycentricComponent = 0 = \sum_{i=0}^{N-1}(Mass_i*Compenent_i)
+      0 = Mass_{iBody}*Component_{iBody} + \sum_{i != iBody}^{N-1}(Mass_i*Component_i)
+      Component_{iBody} = -\sum_{i != iBody}^{N-1}(Mass_i*Component_i/Mass_iBody)
+      */
+      body[iUnassignedBody].dBCartPos[iDimension] -= dMassRatio * body[iTmpBody].dBCartPos[iDimension];
+      body[iUnassignedBody].dBCartVel[iDimension] -= dMassRatio * body[iTmpBody].dBCartVel[iDimension];
+    }
+  } 
+}
+
+void CalculateBarycentricCoordinatesOfUnassignedBody(BODY *body, int iNumBodies) {
+  for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+    if (body[iTmpBody].bCalcCoordsFromCenterOfMass) {
+      if (body[iTmpBody].bExcludeFromBarycenter) {
+        printf("ERROR: Cannot turn on bCalcCoordsFromCenterOfMass and bExcludeFromBarycenter in the same body.\n");
+        exit(1);
+      }
+      for (int iDimension = 0; iDimension < 3; iDimension++) {
+        CalculateCartesianComponentsFromCenterOfMassEquation(body, iNumBodies, iTmpBody, iDimension); 
+      }
+      fvAssignCartOutputs2BaryCart(body, iTmpBody);
+      break;
+    }
+  }
+}
+
 void AssignAllCoords(BODY *body, CONTROL *control, FILES *files, SYSTEM *system, int iBody) {
   //VerifyOutputCoords(body, files, output, iBody);
   if (!body[iBody].bUseOrbParams) { // If input was BaryCart or HelioCart
@@ -764,8 +859,6 @@ void VerifyInputCoords(BODY *body, CONTROL *control, OPTIONS *options, SYSTEM *s
       body[iTmpBody].dHCartVel = malloc(3 * sizeof(double));
     }
   }
-
-  
   if (body[iBody].bUseOrbParams) {  
     if(!system->bBarycentric) {
       printf("HelioOrbElems. Converting to HelioCart...\n");
@@ -781,12 +874,13 @@ void VerifyInputCoords(BODY *body, CONTROL *control, OPTIONS *options, SYSTEM *s
       } 
       fvHelioCart2BaryCart(body, iNumBodies, iBody);
       // fvAssignSpinBodyVariables();
-    } else {
+    } else if (!body[iBody].bCalcCoordsFromCenterOfMass) {
       printf("BaryOrbElems. Converting to BaryCart...\n");
       fvAssignBaryOrbElems(body, system, iBody);
       VerifyAltOrbElems(body, options, iBody);
       fvBaryOrbElems2BaryCart(body, iNumBodies, iBody);
-    } fvAssignCartOutputs2BaryCart(body, iBody); // Example: dPositionX = dBCartPos[0];
+    } 
+    fvAssignCartOutputs2BaryCart(body, iBody); // Example: dPositionX = dBCartPos[0];
   } else {
     if(!system->bBarycentric) {
       printf("HelioCart. Converting to BaryCart...\n");
@@ -800,12 +894,21 @@ void VerifyInputCoords(BODY *body, CONTROL *control, OPTIONS *options, SYSTEM *s
       fvHelioCart2BaryCart(body, iNumBodies, iBody);
       fvAssignCartOutputs2BaryCart(body, iBody);
       // fvAssignSpinBodyVariables();
-    } else {
+    } else if (!body[iBody].bCalcCoordsFromCenterOfMass) {    
       // BaryCart was the input. No conversions occurred, so we need to assign BaryCart Pos/Vel to dPosition/dVel
       fvAssignBaryCart(body, iBody); // Example: dBCartPos[0] = dPositionX;
     }
     printf("BaryCart. No Conversion needed.\n");
   }
+
+  if (body[iBody].bCalcCoordsFromCenterOfMass && !system->bBarycentric) {
+    printf("ERROR: Cannot simultaneously turn on bCalcCoordsFromCenterOfMass and turn off bBarycentric.\n");
+    exit(1);    
+  }
+  if (system->bBarycentric && iBody == iNumBodies - 1) {
+    CalculateBarycentricCoordinatesOfUnassignedBody(body, iNumBodies);
+  }
+
   // At this point dPosition and dVelocity are in BaryCart coordinates
   // One more possible transformation involves the invariable plane
   // The second condition means only do this transformation once.
@@ -1243,7 +1346,7 @@ double GetEccAnom(ELEMS elems) {
       }
 
       if (i > 31) {
-        printf("Kepler soln failed\n");
+        printf("Kepler solution failed\n");
         exit(1);
       } 
     }
@@ -1560,7 +1663,7 @@ double CalculateEccentricAnomaly(double dMinimumValue, double dEccentricity, dou
   double dEccentricitySquared = dEccentricity * dEccentricity;
   double dSinTrueAnomaly = sin(dTrueAnomaly), dCosTrueAnomaly = cos(dTrueAnomaly);
   
-  if (1.0 > dEccentricity && dEccentricity > dMinimumValue) {
+  if (1.0 > dEccentricity && dEccentricity >= dMinimumValue) {
     dSinEccentricAnomaly = sqrt(1.0 - dEccentricitySquared) * dSinTrueAnomaly / (1.0 + dEccentricity * dCosTrueAnomaly);
     dCosEccentricAnomaly = (dCosTrueAnomaly + dEccentricity) / (1.0 + dEccentricity * dCosTrueAnomaly);
     if (fabs(fabs(dCosEccentricAnomaly) - 1.0) < dMinimumValue || fabs(dSinEccentricAnomaly) < dMinimumValue) {
@@ -1589,7 +1692,9 @@ double CalculateHyperbolicAnomaly(double dEccentricity, double dTrueAnomaly) {
 double CalculateMeanAnomaly(double dMinimumValue, double dEccentricity, double dTrueAnomaly) {
   double dMeanAnomaly = 0.0;
   // Using Kepler's Equation to find dMeanAnomaly
-  if (1.0 > dEccentricity && dEccentricity > dMinimumValue) {
+  if (dEccentricity < dMinimumValue) {
+    dMeanAnomaly = dTrueAnomaly;
+  } else if (1.0 > dEccentricity && dEccentricity >= dMinimumValue) {
     double dEccentricAnomaly = CalculateEccentricAnomaly(dMinimumValue, dEccentricity, dTrueAnomaly);
     dMeanAnomaly = dEccentricAnomaly - dEccentricity * sin(dEccentricAnomaly);
     dMeanAnomaly = positiveModulus2PI(dMeanAnomaly);
@@ -1653,7 +1758,8 @@ void CreateCardinalUnitVector(int iDimension, int iNumDimensions, double *dUnitV
       }
     }
   } else {
-      // Put some error message here.
+      printf("ERROR: Component iDimension higher than iNumDimensions.\n");
+      exit(1);
   }
 }
 void CalculateUnitNodalVector(double *dSpecificAngularMomentumVector, double *dUnitNodalVector) {

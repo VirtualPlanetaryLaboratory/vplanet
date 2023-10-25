@@ -1098,7 +1098,7 @@ double LimitRounding(double x) {
   Machine precision can round inaccurate values that eventually become present
   the more calculations vplanet makes. 
   */
-  if (fabs(x) < 1e-16) {
+  if (fabs(x) < 1e-15) {
     x = 0.0;
   }
   return x;
@@ -1592,7 +1592,7 @@ double SineAngleBetweenNodalVectorAndInputVector(double *dVector, double dMinimu
                                               double dInclination, double dLongitudeAscendingNode) {
   double dSinAngle = 0.0;
   double dMagnitudeVector = magnitude(dVector);
-  if (fabs(dInclination) > dMinimumValue) {
+  if (dMinimumValue < fabs(dInclination) && fabs(dInclination) < PI - dMinimumValue) {
     /*
     Example case between Eccentricity Vector and Nodal Vector: Danby pg. 205
     Use 1st or 2nd component of equality n-hat x dVector = dMagntiudeVector * sin(dAngle) * h-hat
@@ -1603,6 +1603,9 @@ double SineAngleBetweenNodalVectorAndInputVector(double *dVector, double dMinimu
   } else {
     // Found using same equality as above using the z-component
     dSinAngle = dVector[1] / dMagnitudeVector; 
+    if (fabs(dInclination) > PI - dMinimumValue) {
+      dSinAngle *= -1;
+    }
   }
   return dSinAngle;                                                      
 }
@@ -1775,7 +1778,7 @@ void CalculateUnitNodalVector(double *dSpecificAngularMomentumVector, double *dU
       dUnitNodalVector[i] = dNodalVector[i] / dMagnitudeNodalVector; 
     }
   } else { // Nodal Vector doesn't exist, but origin is placed in the x-direction
-    CreateCardinalUnitVector(iDirectionX, iNumDimensions, dNodalVector);
+    CreateCardinalUnitVector(iDirectionX, iNumDimensions, dUnitNodalVector);
   }
   free(dUnitVectorZ);
   free(dNodalVector);
@@ -1849,7 +1852,7 @@ void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody) {
   body[iBody].dBarySemi = elems.dSemi;
   body[iBody].dBaryEcc = elems.dEcc;
   body[iBody].dBaryInc = elems.dInc;
-  body[iBody].dBaryArgP = elems.dArgP;
+  body[iBody].dBaryArgP = LimitRounding(elems.dArgP);
   body[iBody].dBaryLongA = elems.dLongA;
   body[iBody].dBaryMeanA = elems.dMeanA;
 

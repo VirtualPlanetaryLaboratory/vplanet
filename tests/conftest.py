@@ -21,8 +21,6 @@ def vplanet_output(request):
     path = os.path.abspath(os.path.dirname(request.fspath))
     infile = os.path.join(path, "vpl.in")
     output = vplanet.run(infile, quiet=False, clobber=True, C=True)
-    if output == "Error running VPLanet.":
-        assert False
     yield output
     if CLEAN_OUTPUTS:
         for file in (

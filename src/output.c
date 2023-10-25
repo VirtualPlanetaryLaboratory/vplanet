@@ -2167,7 +2167,9 @@ void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 
   /* Get derivatives */
   PropertiesAuxiliary(body, control, system, update);
+  printf("After PropsAux.\n");
   dDt = fdGetTimeStep(body, control, system, update, fnUpdate);
+  printf("After GetTimeStep.\n");
 
   if (iEnd == 0) {
     sprintf(cTime, "Input");

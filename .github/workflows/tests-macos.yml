@@ -1,12 +1,70 @@
-name: tests-macos
+# name: tests-macos
 
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
+#   workflow_dispatch:
+
+# jobs:
+#   tests:
+#     name: '${{ matrix.os }}:python-${{ matrix.python-version }}'
+#     runs-on: ${{ matrix.os }}
+#     strategy:
+#       matrix:
+#         os: [macos-11, macos-12, macos-13]
+#         python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
+#       fail-fast: false
+
+#     steps:
+#       - uses: actions/checkout@v3
+#         with:
+#           fetch-depth: 0
+
+#       - name: Set up Python
+#         id: setup_python
+#         uses: actions/setup-python@v4
+#         with:
+#           activate-environment: vplanet
+#           environment-file: environment.yml
+#           python-version: ${{ matrix.python-version }}
+
+#       - name: Install
+#         id: install
+#         if: steps.setup_python.outcome == 'success'
+#         shell: bash -l {0}
+#         run: |
+#           python3 -m pip install -U pip
+#           python3 -m pip install -e .
+#           python3 -m pip install pytest pytest-cov
+
+#       - name: Run tests and generate coverage
+#         if: steps.install.outcome == 'success'
+#         shell: bash -l {0}
+#         run: |
+#           make test
+
+#       - name: Get unique id
+#         uses: Tiryoh/gha-jobid-action@v1
+#         id: jobs
+
+#       - name: Publish unit test results
+#         uses: EnricoMi/publish-unit-test-result-action/composite@v2
+#         if: always()
+#         with:
+#           files: |
+#             test-results/**/*.xml
+#             test-results/**/*.trx
+#             test-results/**/*.json
+
+name: tests-macos
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
-
 jobs:
   tests:
     name: '${{ matrix.os }}:python-${{ matrix.python-version }}'
@@ -16,39 +74,45 @@ jobs:
         os: [macos-11, macos-12, macos-13]
         python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
       fail-fast: false
-
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
       - name: Set up Python
         id: setup_python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v2
         with:
-          activate-environment: vplanet
-          environment-file: environment.yml
           python-version: ${{ matrix.python-version }}
-
-      - name: Install
-        id: install
+      - name: Install dependencies
         if: steps.setup_python.outcome == 'success'
-        shell: bash -l {0}
         run: |
-          python3 -m pip install -U pip
-          python3 -m pip install -e .
-          python3 -m pip install pytest pytest-cov
-
+          python -m pip install -U pip
+          python -m pip install -e .
+          python -m pip install pytest pytest-cov
       - name: Run tests and generate coverage
-        if: steps.install.outcome == 'success'
-        shell: bash -l {0}
+        if: steps.setup_python.outcome == 'success'
         run: |
           make test
-
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: test-results
+      - name: Download test results
+        uses: actions/download-artifact@v2
+        with:
+          name: test-results
+      - name: Check test results and fail if tests failed
+        run: |
+          # Check if there are any test failures (you might need to adjust this)
+          if grep -q "<failure" test-results/**/*.xml; then
+            echo "Tests failed."
+            exit 1
+          fi
+        shell: bash
       - name: Get unique id
         uses: Tiryoh/gha-jobid-action@v1
         id: jobs
-
       - name: Publish unit test results
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
         if: always()

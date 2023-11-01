@@ -94,19 +94,14 @@ jobs:
 
       - name: Run tests
         if: steps.setup_python.outcome == 'success'
-        run: |
-          make test
+        run: make test
 
-      # These steps will cause a fail if there is an error during the testing
-      - name: Upload test results
-        uses: actions/upload-artifact@v2
+      - name: Check test ouptut created
+        id: check_test_file
+        uses: andstor/file-existence-action@v2
         with:
-          name: test-results
-          path: test-results
-      - name: Download test results
-        uses: actions/download-artifact@v2
-        with:
-          name: test-results
+          files: "/home/runner/work/vplanet/vplanet/junit/test-results.xml"
+          fail: true
 
       - name: Get unique id
         uses: Tiryoh/gha-jobid-action@v1
@@ -116,7 +111,4 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
         if: always()
         with:
-          files: |
-            test-results/**/*.xml
-            test-results/**/*.trx
-            test-results/**/*.json
+          files: junit/test-*.xml

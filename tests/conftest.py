@@ -20,7 +20,7 @@ CLEAN_OUTPUTS = True
 def vplanet_output(request):
     path = os.path.abspath(os.path.dirname(request.fspath))
     infile = os.path.join(path, "vpl.in")
-    output = vplanet.run(infile, quiet=True, clobber=True, C=True)
+    output = vplanet.run(infile, quiet=False, clobber=True, C=True)
     yield output
     if CLEAN_OUTPUTS:
         for file in (

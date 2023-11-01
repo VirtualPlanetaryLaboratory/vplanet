@@ -97,49 +97,6 @@ void ReadFlareFFD(BODY *body,
   } else if (iFile > 0)
     body[iFile - 1].iFlareFFD = FLARE_FFD_DAVENPORT;
 }
-/*
-void ReadFlareSlopeUnits(BODY *body,
-                         CONTROL *control,
-                         FILES *files,
-                         OPTIONS *options,
-                         SYSTEM *system,
-                         int iFile) {
-  /* This parameter cannot exist in primary file */
-/*int lTmp = -1;
-char cTmp[OPTLEN];
-
-AddOptionString(files->Infile[iFile].cIn,
-                options->cName,
-                cTmp,
-                &lTmp,
-                control->Io.iVerbose);
-if (lTmp >= 0) {
-  NotPrimaryInput(iFile,
-                  options->cName,
-                  files->Infile[iFile].cIn,
-                  lTmp,
-                  control->Io.iVerbose);
-  if (!memcmp(sLower(cTmp), "se", 2)) {
-    body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_SEC;
-  } else if (!memcmp(sLower(cTmp), "mi", 2)) {
-    body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_MINUTE;
-  } else if (!memcmp(sLower(cTmp), "ho", 2)) {
-    body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_HOUR;
-  } else if (!memcmp(sLower(cTmp), "da", 2)) {
-    body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_DAY;
-  } else {
-    if (control->Io.iVerbose >= VERBERR)
-      fprintf(stderr,
-              "ERROR: Unknown argument to %s: %s. Options are SEC, MIN, HOUR "
-              "or DAY.\n",
-              options->cName,
-              cTmp);
-    LineExit(files->Infile[iFile].cIn, lTmp);
-  }
-  UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
-} else if (iFile > 0)
-  body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_DAY;
-}*/
 
 void ReadFlareBandPass(BODY *body,
                        CONTROL *control,
@@ -1018,8 +975,8 @@ void FinalizeUpdateLXUVFlare(BODY *body, UPDATE *update, int *iEqn, int iVar,
 // not need this.
 /*void FinalizeUpdateFlareFreqMax(BODY *body, UPDATE *update, int *iEqn, int
   iVar, int iBody, int iFoo) {
-  /* No primary variables for FLARE yet*/
-/*  update[iBody].iaModule[iVar][*iEqn] = FLARE;
+  // No primary variables for FLARE yet
+  //  update[iBody].iaModule[iVar][*iEqn] = FLARE;
   update[iBody].iNumFlareFreqMax              = (*iEqn)++;
 }
 */

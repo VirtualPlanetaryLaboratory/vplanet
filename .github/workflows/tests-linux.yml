@@ -44,20 +44,27 @@ jobs:
       - name: Run tests and generate coverage
         if: steps.install.outcome == 'success'
         shell: bash -l {0}
-        run: |
-          make coverage
+        run: make coverage
 
       # These steps will cause a fail if there is an error during the testing
-      - name: Upload test results
-        uses: actions/upload-artifact@v3
+      # - name: Download test results
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: test-results.xml
+      #     path: /home/runner/work/vplanet/vplanet/junit
+      - name: Check test ouptut created
+        id: check_test_file
+        uses: andstor/file-existence-action@v2
         with:
-          name: test-*.xml
-          path: junit
-      - name: Download test results
-        uses: actions/download-artifact@v3
+          files: "/home/runner/work/vplanet/vplanet/junit/test-results.xml"
+          fail:
+
+      - name: Check test ouptut created
+        id: check_test_file
+        uses: andstor/file-existence-action@v2
         with:
-          name: test-*.xml
-          path: junit
+          files: "/home/runner/work/vplanet/vplanet/junit/test-results.xml"
+          fail:
 
       - name: Get unique id
         uses: Tiryoh/gha-jobid-action@v1

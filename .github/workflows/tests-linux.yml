@@ -1,0 +1,69 @@
+name: tests-linux
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: '${{ matrix.os }}:python-${{ matrix.python-version }}'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04]
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
+        exclude:
+          - os: ubuntu-22.04
+            python-version: '3.6'
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        id: setup_python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install
+        id: install
+        if: steps.setup_python.outcome == 'success'
+        shell: bash -l {0}
+        run: |
+          python -m pip install -U pip
+          python -m pip install -e .
+          pip install pytest pytest-cov
+          sudo apt install lcov
+
+      - name: Run tests and generate coverage
+        if: steps.install.outcome == 'success'
+        shell: bash -l {0}
+        run: make coverage
+
+      - name: Check test ouptut created
+        id: check_test_file
+        uses: andstor/file-existence-action@v2
+        with:
+          files: "/home/runner/work/vplanet/vplanet/junit/test-results.xml"
+          fail: true
+
+      - name: Get unique id
+        uses: Tiryoh/gha-jobid-action@v1
+        id: jobs
+
+      - name: Publish unit test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: junit/test-*.xml
+
+      - name: CodeCov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./.coverage

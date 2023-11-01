@@ -5,32 +5,60 @@
 <h1 align="center">VPLanet: The Virtual Planet Simulator</h1>
 
 <p align="center">
-  <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet"><img src="https://img.shields.io/badge/Read-the_docs-blue.svg?style=flat"></a>
+  <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet">
+    <img src="https://img.shields.io/badge/Read-the_docs-blue.svg?style=flat">
+  </a>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/docs.yml">
-  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/docs.yml/badge.svg"></a>
-  <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract"><img src="https://img.shields.io/badge/Read-the_paper-darkgreen.svg?style=flat"></a>
-  <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet/conduct.html"><img src="https://img.shields.io/badge/Code%20of-Conduct-7d93c7.svg"></a>
-  <a href="https://www.youtube.com/@VPLanetCode/playlists"><img src="https://img.shields.io/badge/You-Tube-darkred.svg"></a><br>
-  <img src="https://img.shields.io/badge/Unit%20Tests-14,440-darkblue.svg"></a>
-  <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml">
-  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests.yml/badge.svg"></a>
-  <img src="https://img.shields.io/badge/Memory%20Checks-43-darkblue.svg"></a>
+    <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/docs.yml/badge.svg">
+  </a>
+  <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract">
+    <img src="https://img.shields.io/badge/Read-the_paper-darkgreen.svg?style=flat">
+  </a>
+  <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet/conduct.html">
+    <img src="https://img.shields.io/badge/Code%20of-Conduct-7d93c7.svg">
+  </a>
+  <a href="https://www.youtube.com/@VPLanetCode/playlists">
+    <img src="https://img.shields.io/badge/You-Tube-darkred.svg">
+  </a>
+  <br>
+  <img src="https://img.shields.io/badge/Unit%20Tests-14,440-darkblue.svg">
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-linux.yml/badge.svg">
+  <img src="https://img.shields.io/badge/Ubuntu%2020-Python%203.6%20--%203.11-7d93c7.svg">
+  <img src="https://img.shields.io/badge/Ubuntu%2022-Python%203.7%20--%203.11-7d93c7.svg">
+  <br>
+  <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-macos.yml">
+    <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-macos.yml/badge.svg">
+  </a>
+  <img src="https://img.shields.io/badge/Mac%20OS11-Python%203.6%20--%203.11-7d93c7.svg">
+  <img src="https://img.shields.io/badge/Mac%20OS12-Python%203.6%20--%203.11-7d93c7.svg">
+  <img src="https://img.shields.io/badge/Mac%20OS13-Python%203.6%20--%203.11-7d93c7.svg">
+  <br>
+  <img src="https://img.shields.io/badge/Memory%20Checks-43-darkblue.svg">
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml">
-  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml/badge.svg"></a>
+    <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml/badge.svg">
+  </a>
   <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">
-  <img src="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet/branch/master/graph/badge.svg?token=3LFJQO1M6H"><br>
-  <a href="examples"><img src="https://img.shields.io/badge/Examples-42-darkblue.svg"></a>
+    <img src="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet/branch/main/graph/badge.svg?token=3LFJQO1M6H">
+  </a>
+  <br>
+  <a href="examples">
+    <img src="https://img.shields.io/badge/Examples-42-darkblue.svg">
+  </a>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml">
-  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml/badge.svg"></a>
-  <img src="https://img.shields.io/badge/Python-3.6%20--%203.11-7d93c7.svg"></a>
+    <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml/badge.svg">
+  </a>
+  <img src="https://img.shields.io/badge/Python-3.6%20--%203.11-7d93c7.svg">
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml">
-  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg"></a><br>
-  <img src = "https://img.shields.io/badge/Platforms-Linux_|%20macOS_|%20Windows10-darkgreen.svg?style=flat">
-  <a href="http://ascl.net/1811.017"><img src="https://img.shields.io/badge/ASCL-1811.017-orange.svg?colorB=orange" alt="ascl:1811.017" /></a>
-  <a href="https://emac.gsfc.nasa.gov"><img src="https://img.shields.io/badge/EMAC-2207%E2%80%94138-blue.svg"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-purple.svg"/></a><br>
-
-  
+    <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg">
+  </a>
+  <br>
+  <a href="http://ascl.net/1811.017">
+    <img src="https://img.shields.io/badge/ASCL-1811.017-orange.svg?colorB=orange" alt="ascl:1811.017">
+  </a>
+  <a href="https://emac.gsfc.nasa.gov">
+    <img src="https://img.shields.io/badge/EMAC-2207%E2%80%94138-blue.svg">
+  </a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-purple.svg"/>
   </a>
 </p>
 
@@ -83,11 +111,11 @@ Many of these modules can be combined together to simulate numerous phenomena an
 
 The [examples/](examples) directory contains input files and scripts for generating the figures in [Barnes et al. (2020)](https://ui.adsabs.harvard.edu/abs/2020PASP..132b4502B/abstract) and subsequent publications. The "examples" badge shows if all the examples can be built with the most recent version. The [Manual/](Manual) directory contains the pdf of [Barnes et al. (2020)](https://ui.adsabs.harvard.edu/abs/2020PASP..132b4502B/abstract), which describes the physics of the first 11 modules, validates the software against observations and/or past results, and uses figures from the [examples/](examples) directory.
 
-An ecosystem of support software is also publicly available. [VPLot](https://github.com/VirtualPlanetaryLaboratory/vplot) is both a command line tool to quickly plot the evolution of a single integration, and also includes matplotlib functions to generate publication-worthy figures. The [VSPACE](https://github.com/VirtualPlanetaryLaboratory/vspace) script generates input files for a parameter space sweep, which can then be performed on an arbitrary number of cores with [MultiPlanet](https://github.com/VirtualPlanetaryLaboratory/multi-planet). For large parameter sweeps, an enormous amount of data can be generated, which can slow analyses. To overcome this barrier, the [BigPlanet](https://github.com/VirtualPlanetaryLaboratory/bigplanet) code can both compress datasets into HDF5 format, including statistics of an integration, and tools to facilitate plotting. These three scripts can be executed from the command line to seamlessly [perform parameter sweeps](https://virtualplanetarylaboratory.github.io/vplanet/parametersweep.html). These Python scripts are optimized for [anaconda](https://www.anaconda.com/) distributions versions 3.5-3.9. The "wheels" badge indicates if you can download and install the executables with pip for these Python distributions.
+An ecosystem of support software is also publicly available. [VPLot](https://github.com/VirtualPlanetaryLaboratory/vplot) is both a command line tool to quickly plot the evolution of a single integration, and also includes matplotlib functions to generate publication-worthy figures. The [VSPACE](https://github.com/VirtualPlanetaryLaboratory/vspace) script generates input files for a parameter space sweep, which can then be performed on an arbitrary number of cores with [MultiPlanet](https://github.com/VirtualPlanetaryLaboratory/multi-planet). For large parameter sweeps, an enormous amount of data can be generated, which can slow analyses. To overcome this barrier, the [BigPlanet](https://github.com/VirtualPlanetaryLaboratory/bigplanet) code can both compress datasets into HDF5 format, including statistics of an integration, and tools to facilitate plotting. These three scripts can be executed from the command line to seamlessly [perform parameter sweeps](https://virtualplanetarylaboratory.github.io/vplanet/parametersweep.html). These Python scripts are optimized for [anaconda](https://www.anaconda.com/) distributions versions 3.7-3.9. The "wheels" badge indicates if you can download and install the executables with pip for these Python distributions on the latest Linux and Mac operating systems.
 
 ### Code Integrity
 
-Behind the scenes, the VPLanet team maintains code integrity through via various automatic checks at every merge into the main branch. You can see the status of these checks via the "badges" the GitHub logo above. Currently we perform 5 checks: documentation ("docs"), units tests ("tests"), memory checks via [valgrind](http://valgrind.org) ("memcheck"), confirmation that all [examples](examples/) are working ("examples"), and that the code is pip-installable on Linux, Mac, and Windows machines ("pip-install") for the Python distributions listed. The "coverage" badge shows the percentage of the code (by line number) that is currently tested by <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">Codecov</a> at every commit. We are committed to maintaining a stable tool for scientists to analyze any planetary system.  
+Behind the scenes, the VPLanet team maintains code integrity through via various automatic checks at every merge into the main branch. You can see the status of these checks via the "badges" the GitHub logo above. Currently we perform 5 checks: documentation ("docs"), units tests ("tests"), memory checks via [valgrind](http://valgrind.org) ("memcheck"), confirmation that all [examples](examples/) are working ("examples"), and that the code is pip-installable on the latest Linux and Mac operating systems ("pip-install") for the Python distributions listed after the GitHub Actions badge. The percentage of the lines of code that are executed by the unit tests is shown with the "codecov" badge, with details available at our <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">Codecov</a> account. We are committed to maintaining a stable tool for scientists to analyze any planetary system.
 
 ### Community
 

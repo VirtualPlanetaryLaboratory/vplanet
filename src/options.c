@@ -436,8 +436,6 @@ int iGetNumLines(char cFile[]) {
   FILE *fp;
   char cLine[LINE];
 
-  fprintf(stderr,"File: %s\n",cFile);
-
   fp = fopen(cFile, "r");
   if (fp == NULL) {
     fprintf(stderr, "Unable to open %s.\n", cFile);
@@ -445,9 +443,7 @@ int iGetNumLines(char cFile[]) {
   }
 
   memset(cLine, '\0', LINE);
-  // fprintf(stderr,"File: %s\n",cFile);
   while (fgets(cLine, LINE, fp) != NULL) {
-    // fprintf(stderr,"iLine: %d, %s",iNumLines,cLine);
     iNumLines++;
 
     /* Check to see if line is too long. The maximum length of a line is set
@@ -489,8 +485,6 @@ void InitializeInput(INFILE *input) {
   FILE *fp;
   char cLine[LINE];
 
-fprintf(stderr,"File: %s\n",input->cIn);
-
   fp = fopen(input->cIn, "r");
   if (fp == NULL) {
     fprintf(stderr, "Unable to open %s.\n", input->cIn);
@@ -503,23 +497,12 @@ fprintf(stderr,"File: %s\n",input->cIn);
   input->cReactions[0] = 0;
   */
 
-  // fprintf(stderr,"File: %s\n",input->cIn);
   for (iLine = 0; iLine < input->iNumLines; iLine++) {
-    /* Initialize bLineOK */
     input->bLineOK[iLine] = 0;
-
-    /* Now find those lines that are comments or blank
-    for (iPos = 0; iPos < LINE; iPos++) {
-      cLine[iPos] = '\0';
-    }
-    */
     memset(cLine, '\0', LINE);
 
     fgets(cLine, LINE, fp);
-    // fprintf(stderr,"iLine: %d, %s",iLine,cLine);
-    /* Check for # sign or blank line */
     if (CheckComment(cLine, LINE)) {
-      /* Line is OK */
       input->bLineOK[iLine] = 1;
     } else {
       // Is it a blank line?

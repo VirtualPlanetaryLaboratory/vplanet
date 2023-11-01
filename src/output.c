@@ -2166,8 +2166,11 @@ void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
   double dDt, dTotTime;
 
   /* Get derivatives */
+  fprintf(stderr,"In WriteLog.\n");
   PropertiesAuxiliary(body, control, system, update);
+  fprintf(stderr,"After PropsAux.\n");
   dDt = fdGetTimeStep(body, control, system, update, fnUpdate);
+  fprintf(stderr,"After GetTimeStep.\n");
 
   if (iEnd == 0) {
     sprintf(cTime, "Input");

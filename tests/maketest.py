@@ -33,7 +33,6 @@ def Main(dir, initial=False):
         dir_list = [dir]
 
     for dirname in dir_list:
-
         if dirname in skip_list:
             continue
         if dirname in initial_list:
@@ -144,14 +143,12 @@ def GetSNames(bodyfiles):
 
 
 def ProcessLogFile(logfile, data, forward, backward, initial=False):
-
     prop = ""
     body = "system"
     with open(logfile, "r+", errors="ignore") as log:
         content = [line.strip() for line in log.readlines()]
 
     for line in content:
-
         if len(line) == 0:
             continue
 
@@ -173,11 +170,9 @@ def ProcessLogFile(logfile, data, forward, backward, initial=False):
 
         # if the line starts with a '(' that means its a variable we need to grab the units
         if line.startswith("("):
-
             if initial == True and prop == "final":
                 continue
             else:
-
                 fv_param = line[1 : line.find(")")].strip()
 
                 # THIS IS FOR VARIABLES THAT START WITH NUMBERS CURRENTLY BUGGED FIX AT LATER DATE
@@ -259,7 +254,6 @@ def ProcessLogFile(logfile, data, forward, backward, initial=False):
 
 
 def ProcessOutputfile(file, data, body, Output):
-
     header = []
     units = []
     for k, v in Output.items():
@@ -288,9 +282,7 @@ def ProcessOutputfile(file, data, body, Output):
 
 
 def ProcessUnits(data):
-
     for k, v in data.items():
-
         if "Order" in k:
             continue
 
@@ -437,7 +429,6 @@ def ProcessUnits(data):
 
 
 def WriteTest(data, dirname, stellar):
-
     badchars = "- "
     for i in badchars:
         dirname = dirname.replace(i, "")
@@ -514,20 +505,22 @@ def WriteTest(data, dirname, stellar):
         t.write("   pass")
         t.write(" \n")
 
-    print("Successfuly created new test file: "+dirname+"/"+test_file)
-
+    print("Successfuly created new test file: " + dirname + "/" + test_file)
 
 
 def Arguments():
     parser = argparse.ArgumentParser(
-        description="Extract data from Vplanet simulations"
+        description="Extract data from VPLanet simulations"
     )
-    parser.add_argument("dir", help="name of directory you want to run")
+    parser.add_argument(
+        "dir",
+        help="Name of directory you want to run. Use 'all' to recreate all tests.",
+    )
     parser.add_argument(
         "-i",
         "--initial",
         action="store_true",
-        help="grabs initial data instead of final",
+        help="Only use initial data for test",
     )
 
     args = parser.parse_args()

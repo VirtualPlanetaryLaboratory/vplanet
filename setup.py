@@ -69,7 +69,7 @@ cmdclass = {"build_ext": BuildExt, "develop": Develop}
 vplanet_suite = [
     "vplot>=1.0.5",
     "vspace>=2.1.0",
-    "bigplanet>=3.0.0",
+    "bigplanet>=3.0.1",
     "multiplanet>=2.0.2",
 ]
 

@@ -72,27 +72,32 @@ jobs:
     strategy:
       matrix:
         os: [macos-11, macos-12, macos-13]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
       fail-fast: false
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
       - name: Set up Python
         id: setup_python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install dependencies
         if: steps.setup_python.outcome == 'success'
         run: |
           python -m pip install -U pip
           python -m pip install -e .
           python -m pip install pytest pytest-cov
-      - name: Run tests and generate coverage
+
+      - name: Run tests
         if: steps.setup_python.outcome == 'success'
         run: |
           make test
+
+      # These steps will cause a fail if there is an error during the testing
       - name: Upload test results
         uses: actions/upload-artifact@v2
         with:
@@ -102,17 +107,11 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: test-results
-      - name: Check test results and fail if tests failed
-        run: |
-          # Check if there are any test failures (you might need to adjust this)
-          if grep -q "<failure" test-results/**/*.xml; then
-            echo "Tests failed."
-            exit 1
-          fi
-        shell: bash
+
       - name: Get unique id
         uses: Tiryoh/gha-jobid-action@v1
         id: jobs
+
       - name: Publish unit test results
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
         if: always()

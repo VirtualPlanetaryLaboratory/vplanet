@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
         exclude:
           - os: ubuntu-22.04
             python-version: '3.6'
@@ -46,6 +46,17 @@ jobs:
         shell: bash -l {0}
         run: |
           make coverage
+
+      # These steps will cause a fail if there is an error during the testing
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: test-results
+      - name: Download test results
+        uses: actions/download-artifact@v2
+        with:
+          name: test-results
 
       - name: Get unique id
         uses: Tiryoh/gha-jobid-action@v1

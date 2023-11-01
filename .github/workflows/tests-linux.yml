@@ -38,6 +38,7 @@ jobs:
         run: |
           python -m pip install -U pip
           python -m pip install -e .
+          pip install pytest pytest-cov
           sudo apt install lcov
 
       - name: Run tests and generate coverage
@@ -55,6 +56,8 @@ jobs:
         if: always()
         with:
           files: |
+            test-results/**/*.xml
+            test-results/**/*.trx
             test-results/**/*.json
 
       - name: CodeCov

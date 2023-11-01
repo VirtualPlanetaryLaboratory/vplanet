@@ -60,10 +60,10 @@ jobs:
           fail:
 
       - name: Check test ouptut created
-        id: check_test_file
+        id: check_coverage_file
         uses: andstor/file-existence-action@v2
         with:
-          files: "/home/runner/work/vplanet/vplanet/junit/test-results.xml"
+          files: "/home/runner/work/vplanet/vplanet/coverage"
           fail:
 
       - name: Get unique id

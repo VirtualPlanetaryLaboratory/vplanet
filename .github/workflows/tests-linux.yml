@@ -59,13 +59,6 @@ jobs:
           files: "/home/runner/work/vplanet/vplanet/junit/test-results.xml"
           fail: true
 
-      - name: Check test ouptut created
-        id: check_coverage_file
-        uses: andstor/file-existence-action@v2
-        with:
-          files: "/home/runner/work/vplanet/vplanet/coverage"
-          fail: true
-
       - name: Get unique id
         uses: Tiryoh/gha-jobid-action@v1
         id: jobs

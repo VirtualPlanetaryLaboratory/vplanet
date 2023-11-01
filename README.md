@@ -23,15 +23,13 @@
   <br>
   <img src="https://img.shields.io/badge/Unit%20Tests-14,440-darkblue.svg">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-linux.yml/badge.svg">
-  <img src="https://img.shields.io/badge/Ubuntu%2020-Python%203.6%20--%203.11-7d93c7.svg">
-  <img src="https://img.shields.io/badge/Ubuntu%2022-Python%203.7%20--%203.11-7d93c7.svg">
+  <img src="https://img.shields.io/badge/Ubuntu%2020-Python%203.6--3.11-7d93c7.svg">
+  <img src="https://img.shields.io/badge/Ubuntu%2022-Python%203.7--3.11-7d93c7.svg">
   <br>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-macos.yml">
     <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-macos.yml/badge.svg">
   </a>
-  <img src="https://img.shields.io/badge/Mac%20OS11-Python%203.6%20--%203.11-7d93c7.svg">
-  <img src="https://img.shields.io/badge/Mac%20OS12-Python%203.6%20--%203.11-7d93c7.svg">
-  <img src="https://img.shields.io/badge/Mac%20OS13-Python%203.6%20--%203.11-7d93c7.svg">
+  <img src="https://img.shields.io/badge/MacOS%2011--13-Python%203.6--3.11-7d93c7.svg">  
   <br>
   <img src="https://img.shields.io/badge/Memory%20Checks-43-darkblue.svg">
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml">

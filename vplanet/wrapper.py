@@ -71,10 +71,9 @@ def run(
 
     # Run vplanet
     if clobber or not log_exists:
-
         # Parse kwargs
         if C:
-            exe = "../../bin/vplanet"
+            exe = "../../../bin/vplanet"
         else:
             exe = "vplanet"
         args = [exe, infile]

@@ -1,0 +1,77 @@
+sName             gl514b
+saModules         poise eqtide
+dMass             1.56169977e-05
+dRadius           -2.10 # From Chen & Kippin 2017 forecaster calc
+dRotPeriod        -1.00000
+dObliquity        23.5
+#bForceObliq      1
+#dObliqAmp        180.
+#dObliqPer        1000
+#dOrbPeriod       0.384739726 # Either the semi or orbital period should be given, not both
+dSemi             0.422
+dEcc              0.45
+#bForceEcc        1
+#dEccPer          1000
+dPrecA            0.0
+#dDynEllip        0.0     # Shape of planet (0 = sphere)
+#dPrecRate        0.0
+dRefHeight        1000
+
+#_______eqtide parameters (have fun with these!)_________________________________________
+dRadGyra          0.5     # Radius of gyration (moment of inertia constant)
+#bDiscreteRot      0       # Setting to 0 since ecc is greater than 0.324
+dTidalQ           12      # Tidal Q Earth value
+dTidalTau        -638     # Earth value
+dK2               0.3     # Love Number of degree 2
+saTidePerts       gl514   # Name of tidal perturber (only central body may have >1)
+dMaxLockDiff      0.1
+
+
+#_______addition disorb/distrot parameters (leave these alone for now)__________________
+dInc              0
+dLongA            0
+#bForcePrecRate   0
+#bOverrideMaxEcc  1
+#dHaltMaxEcc      0.4
+
+#_______poise parameters (have fun with these!)_________________________________________
+iLatCellNum       150
+sClimateModel     sea
+dTGlobalInit      14.85
+iNumYears         10
+iNStepInYear      60
+#dSurfAlbedo      0.4
+
+#__ice params_________
+bIceSheets        1
+dInitIceLat       90.
+dInitIceHeight    0.
+dIceDepRate       2.9e-5
+dIceAlbedo        0.6
+iIceDt            5
+iReRunSeas        500
+bSeaIceModel      0
+#iAlbedoType      fix
+bElevFB           0
+
+#__heat diffusion______
+#bMEPDiff         1
+#bHadley          1
+dDiffusion        0.44
+dNuLandWater      0.81
+
+#__outgoing flux_______
+dPlanckA          203.3
+dPlanckB          2.09
+bCalcAB           0
+#dpCO2            0.00028
+
+#__surface properties__
+dAlbedoLand       0.363
+dAlbedoWater      0.263
+dHeatCapLand      1.42e7
+dHeatCapWater     4.2e6
+dMixingDepth      70
+
+#________output options!_____________________________________________
+dSeasOutputTime   0

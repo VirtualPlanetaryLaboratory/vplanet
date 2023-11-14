@@ -21,7 +21,9 @@ def Main(dir, initial=False):
             reply = str(input(question + " (y/n): ")).lower().strip()
 
             if reply[:1] == "y":
-                dir_list = sorted(next(os.walk("."))[1])
+                top_list = sorted(next(os.walk("."))[1])
+                for top in top_list:
+                    dir_list = sorted(next(os.walk(top))[1])
             elif reply[:1] == "n":
                 print("Files NOT overwritten. Exiting.")
                 exit()
@@ -333,9 +335,6 @@ def ProcessUnits(data):
         if units == "m^2/s^3":
             v[0] = "u.m ** 2 / u.sec ** 3"
 
-        if units == "m^-2 s^-1":
-            v[0] = "1 / (u.m ** 2 * u.sec ** 1)"
-
         # regular units
         if units == "TO":
             v[0] = "u.TO"
@@ -433,41 +432,26 @@ def WriteTest(data, dirname, stellar):
     for i in badchars:
         dirname = dirname.replace(i, "")
 
-    test_file = "test_" + dirname + ".py"
-    with open(test_file, "w") as t:
-        t.write("from benchmark import Benchmark, benchmark \n")
-        t.write("import astropy.units as u \n")
-        t.write("import pytest \n")
-        t.write(" \n")
-        t.write("@benchmark( \n")
-        t.write("   { \n")
+    # Tests are two subdirs down
+    dirs = dirname.split("/")
 
-        for k, v in data.items():
-            if "Order" in k or v[1] == "inf":
-                continue
+    test_file = "test_" + dirs[1] + ".py"
+    t = open(test_file, "w")
+    try:
+        with open(test_file, "w") as t:
+            t.write("from benchmark import Benchmark, benchmark \n")
+            t.write("import astropy.units as u \n")
+            t.write("import pytest \n")
+            t.write(" \n")
+            t.write("@benchmark( \n")
+            t.write("   { \n")
 
-            # this means its from a output file
-            if "log" not in k and v[0] != "":
-                t.write(
-                    '       "'
-                    + k
-                    + '": {"value": '
-                    + str(v[1])
-                    + ', "unit": '
-                    + v[0]
-                    + ', "index": -1 }, \n'
-                )
-            if "log" not in k and v[0] == "":
-                t.write(
-                    '       "'
-                    + k
-                    + '": {"value": '
-                    + str(v[1])
-                    + ', "index": [-1] }, \n'
-                )
+            for k, v in data.items():
+                if "Order" in k or v[1] == "inf":
+                    continue
 
-            if "log" in k and v[0] != "":
-                if "final" in k and stellar == True:
+                # this means its from a output file
+                if "log" not in k and v[0] != "":
                     t.write(
                         '       "'
                         + k
@@ -475,52 +459,72 @@ def WriteTest(data, dirname, stellar):
                         + str(v[1])
                         + ', "unit": '
                         + v[0]
-                        + ', "rtol": 1e-4}, \n'
+                        + ', "index": -1 }, \n'
                     )
-                else:
+                if "log" not in k and v[0] == "":
                     t.write(
                         '       "'
                         + k
                         + '": {"value": '
                         + str(v[1])
-                        + ', "unit": '
-                        + v[0]
-                        + "}, \n"
+                        + ', "index": [-1] }, \n'
                     )
-            if "log" in k and v[0] == "":
-                if "final" in k and stellar == True:
-                    t.write(
-                        '       "'
-                        + k
-                        + '": {"value": '
-                        + str(v[1])
-                        + ', "rtol": 1e-4}, \n'
-                    )
-                else:
-                    t.write('       "' + k + '": {"value": ' + str(v[1]) + "}, \n")
 
-        t.write("   } \n")
-        t.write(")\n")
-        t.write("class Test" + dirname + "(Benchmark): \n")
-        t.write("   pass")
-        t.write(" \n")
+                if "log" in k and v[0] != "":
+                    if "final" in k and stellar == True:
+                        t.write(
+                            '       "'
+                            + k
+                            + '": {"value": '
+                            + str(v[1])
+                            + ', "unit": '
+                            + v[0]
+                            + ', "rtol": 1e-4}, \n'
+                        )
+                    else:
+                        t.write(
+                            '       "'
+                            + k
+                            + '": {"value": '
+                            + str(v[1])
+                            + ', "unit": '
+                            + v[0]
+                            + "}, \n"
+                        )
+                if "log" in k and v[0] == "":
+                    if "final" in k and stellar == True:
+                        t.write(
+                            '       "'
+                            + k
+                            + '": {"value": '
+                            + str(v[1])
+                            + ', "rtol": 1e-4}, \n'
+                        )
+                    else:
+                        t.write('       "' + k + '": {"value": ' + str(v[1]) + "}, \n")
+
+            t.write("   } \n")
+            t.write(")\n")
+            t.write("class Test_" + dirs[1] + "(Benchmark): \n")
+            t.write("   pass")
+            t.write(" \n")
+    except IOError:
+        print("Unable to create file", test_file)
+        exit(1)
 
     print("Successfuly created new test file: " + dirname + "/" + test_file)
 
 
 def Arguments():
     parser = argparse.ArgumentParser(
-        description="Extract data from VPLanet simulations"
+        description="Extract data from Vplanet simulations"
     )
-    parser.add_argument(
-        "dir",
-        help="Name of directory you want to run. Use 'all' to recreate all tests.",
-    )
+    parser.add_argument("dir", help="Name of test directory")
     parser.add_argument(
         "-i",
         "--initial",
         action="store_true",
-        help="Only use initial data for test",
+        help="Make test from initial values only",
     )
 
     args = parser.parse_args()

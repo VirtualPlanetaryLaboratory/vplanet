@@ -31,7 +31,6 @@ double fdSemiToMeanMotion(double dSemi, double dMass) {
 }
 
 
-
 /*
  * Angular Momentum
  */
@@ -365,8 +364,8 @@ double fdXUVFlux(BODY *body, int iBody) {
                          pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5));
     }
     // The system has one star, but the body is < 0, so the body has no flux.
-    else { // Central body can't have XUV flux (for now)
-      flux = -1;
+    else {
+      flux = 0;
     }
   }
 

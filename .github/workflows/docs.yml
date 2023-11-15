@@ -19,6 +19,7 @@ jobs:
         with:
           activate-environment: vplanet
           environment-file: environment.yml
+          python-version: 3.9
 
       - name: Install
         id: install

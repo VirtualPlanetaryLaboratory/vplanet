@@ -11,7 +11,7 @@ from vplanet import custom_units
 
 
 def Main(dir, initial=False):
-    skip_list = ["Conflicts", "__pycache__"]
+    skip_list = ["Conflicts", "__pycache__", "Help"]
     initial_list = ["HZSingle", "IoHeat"]
 
     if dir == "all":
@@ -334,6 +334,9 @@ def ProcessUnits(data):
 
         if units == "m^2/s^3":
             v[0] = "u.m ** 2 / u.sec ** 3"
+
+        if units == "m^-2 s^-1":
+            v[0] = "1 / u.m ** 2 / u.sec"
 
         # regular units
         if units == "TO":

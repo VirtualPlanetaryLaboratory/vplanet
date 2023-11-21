@@ -116,5 +116,5 @@ import pytest
        "log.final.earth.RGDuration": {"value": 1.00000e+08, "unit": u.yr}, 
    } 
 )
-class Test_WaterNoXUVLB15NoO2SinkBolmont16(Benchmark): 
+class Test_WaterELimNoXUVLBExactNoO2SinkBolmont16(Benchmark): 
    pass 

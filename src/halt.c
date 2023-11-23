@@ -101,23 +101,23 @@ int fniHaltBodyUnbound(BODY *body, EVOLVE *evolve, HALT *halt, IO *io,
                   UPDATE *update, fnUpdateVariable ***fnUpdate, int iBody) {
   // Strictly assuming a body is only unbound with respect to its barycenter
   double dMagnitudeSquaredPosition = 0, dMagnitudeSquaredVelocity = 0;
-  for (int i = 0; i < 3; i++) {
-    dMagnitudeSquaredPosition += body[iBody].dBCartPos[i] * body[iBody].dBCartPos[i];
-    dMagnitudeSquaredVelocity += body[iBody].dBCartVel[i] * body[iBody].dBCartVel[i];
-  }
-  double dMagnitudePosition = sqrt(dMagnitudeSquaredPosition);
-  double dEscapeVelocitySquared = 2.0 * body[iBody].dBaryMu / dMagnitudePosition;  
-  if (dMagnitudeSquaredVelocity >= dEscapeVelocitySquared) {
+  double bBodyExcludedFromBarycenter = 0;
+  double iNumBodies = evolve->iNumBodies;
+  CalculateBaryPositionSquaredAndVelocitySquared(body, iBody, iNumBodies, &dMagnitudeSquaredPosition, &dMagnitudeSquaredVelocity);
+  double dSquaredEscapeVelocity = CalculateEscapeVelocitySquared(body[iBody].dBaryMu, dMagnitudeSquaredPosition);  
+  if (dMagnitudeSquaredVelocity >= dSquaredEscapeVelocity) {
     if (io->iVerbose >= VERBPROG) {
-      printf("HALT: MagnitudeSquaredVelocity[%d] = ", iBody);
-      fprintd(stdout, dMagnitudeSquaredVelocity, io->iSciNot, io->iDigits);
-      printf(", > EscapeVelocitySquared = ");
-      fprintd(stdout, dEscapeVelocitySquared, io->iSciNot, io->iDigits);
+      double dMagnitudeVelocity = sqrt(dMagnitudeSquaredVelocity);
+      double dEscapeVelocity = sqrt(dSquaredEscapeVelocity);
+      printf("HALT: MagnitudeVelocity[iBody = %d] = ", iBody);
+      fprintd(stdout, dMagnitudeVelocity, io->iSciNot, io->iDigits);
+      printf(", > EscapeVelocity = ");
+      fprintd(stdout, dEscapeVelocity, io->iSciNot, io->iDigits);
       printf(" at %.2e years\n", evolve->dTime / YEARSEC);
     }
     return 1;
   }
-
+  
   return 0;
 }
 

@@ -22,8 +22,11 @@
 
 #define OPT_USEORBPARAMS 1640
 #define OPT_EXCLUDEFROMBARYCENTER 1641
-#define OPT_CALCCOORDSFROMCENTEROFMASS 1642
-#define OPT_HALTBODYUNBOUND 1643
+#define OPT_OUTPUTLOCALBARYCOORDS 1642
+#define OPT_INPUTCOMMONBARYCOORDS 1643
+#define OPT_REMAININLOCALBARYIFEJECTED 1644
+#define OPT_CALCCOORDSFROMCENTEROFMASS 1645
+#define OPT_HALTBODYUNBOUND 1646
 //#define OPT_OUTPUTCOORDBIT 1641
 
 // Output numbers
@@ -188,8 +191,12 @@ int fbHaltMaxMutualIncSpiNBody(BODY *, EVOLVE *, HALT *, IO *, UPDATE *,
 
 // Addressing total mass of the system for Barycentric Coordinates
 double TotalMass(BODY *body, int iNumBodies);
+double SumOfBodyMassesExcludedFromBarycenter(BODY *body, int iNumBodies);
+double TotalBarycentricMass(BODY *body, int iNumBodies);
 // Addressing Barycentric Gravitational Parameter
 double CalculateBarycentricGravitationalParameter(BODY *body, int iNumBodies, int iBody);
+double CalculateCommonBarycentricFactor(BODY *body, int iNumBodies, int iBody);
+double CalculateCommonBarycentricGravitationalParameter(BODY *body, int iNumBodies, int iBody);
 // Coordinate Changes
 void fvBaryOrbElems2BaryCart(BODY *body, int iNumBodies, int iBody);
 void fvHelioOrbElems2HelioCart(BODY *body, int iNumBodies, int iBody);
@@ -199,7 +206,13 @@ void fvAssignBaryCart2BaryCart(BODY *body, int iBody);
 void fvAssignCartOutputs2BaryCart(BODY *body, int iBody);
 void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody);
 void fvBaryCart2HelioCart(BODY *body, int iBody);
-void fvBaryCart2BaryOrbElems(BODY *body, int iNumBodies, int iBody);
+void fvBaryCart2BaryOrbElems(BODY *body, SYSTEM *system, int iNumBodies, int iBody);
+
+void fvAssignLocalBaryCart(BODY *body, int iBody);
+void fvCommonBarycenter2LocalBarycenter(BODY *body, int iNumBodies);
+double CalculateEscapeVelocitySquared(double dGravitationalParameter, double dMagnitudeSquaredPosition);
+void CalculateBaryPositionSquaredAndVelocitySquared(BODY *body, int iBody, int iNumBodies, 
+                          double* dMagnitudeSquaredPosition, double* dMagnitudeSquaredVelocity);
 
 void AssignAllCoords(BODY *body, CONTROL *control, FILES *files, SYSTEM *system, int iBody);
 // These functions are defined in distorb.c, but needed in SpiNBody

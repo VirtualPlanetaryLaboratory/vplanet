@@ -303,6 +303,7 @@ struct BODY {
   double dPositionZ;    /**< z Component of the body's position */
   double bUseOrbParams; /**< Boolean flag to use orbital parameters as inputs */
   double bExcludeFromBarycenter; /**< Boolean flag to exclude body from Barycenter calculation */
+  double bRemainInLocalBaryIfEjected; /**< Boolean flag to keep track of bodies permanently remaining in Local Barycenter >*/
   double bCalcCoordsFromCenterOfMass; //**< Boolean flag to use such a variable as an input */
   double bHaltBodyUnbound; //**< Boolean flag to halt simulation if chosen bodies are unbound */
   double *dDistance3;   /**< Distance cubed to different perturbers */
@@ -317,6 +318,10 @@ struct BODY {
                            element calculations */
   double *dBCartVel;    /**< Barycentric Cartesian Velocity used for orbital
                            element calculations */
+  double *dLocalBaryCartPos; /**< Local Barycentric Cartesian Position used for orbital
+                           element calculations */
+  double *dLocalBaryCartVel; /**< Local Barycentric Cartesian Velocity used for orbital
+                           element calculations */                                                     
   double dGM;           /**< GM for the star */
   double dMu;           /**< G(M+m) */
   int iGravPertsSpiNBody; /**< Number of bodies that are orbitally relevent
@@ -1076,6 +1081,8 @@ struct SYSTEM {
   double dTotAngMomInit; /**< System's Initial Angular Momentum */
   double dTotAngMom;     /**< System's Current Angular Momentum */
   double bBarycentric; /**< Boolean flag to use Barycentric coordinates */
+  double bOutputLocalBaryCoords; /**< Boolean flag to use Local Barycentric Coordinates >*/
+  double bInputCommonBaryCoords; /**< Boolean flag to read inputs as Common Barycentric Coordinates >*/
 
   /* DISTORB tools */
   fnLaplaceFunction **fnLaplaceF; /**< Pointers to semi-major axis functions  */

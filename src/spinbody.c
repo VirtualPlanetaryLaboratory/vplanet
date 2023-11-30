@@ -351,6 +351,23 @@ void ReadInputCommonBaryCoords(BODY *body, CONTROL *control, FILES *files,
   }
 }
 
+void ReadLocalInvPlane(BODY *body, CONTROL *control, FILES *files,
+                      OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  int bTmp = 0;
+
+  AddOptionBool(files->Infile[iFile].cIn, options->cName, &bTmp, &lTmp,
+                control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files, options, files->Infile[iFile].cIn, lTmp, VERBALL);
+    system->bLocalInvPlane = bTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (system->bBarycentric == bTmp) {
+    system->bLocalInvPlane = options->dDefault;
+  }
+}
+
 void ReadRemainInLocalBaryIfEjected(BODY *body, CONTROL *control, FILES *files,
                                     OPTIONS *options, SYSTEM *system, int iFile) {
   /* This parameter cannot exist in primary file */
@@ -537,6 +554,19 @@ void InitializeOptionsSpiNBody(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_INPUTCOMMONBARYCOORDS].iFileType  = 2;
   options[OPT_INPUTCOMMONBARYCOORDS].iModuleBit = SPINBODY;
   fnRead[OPT_INPUTCOMMONBARYCOORDS]             = &ReadInputCommonBaryCoords;
+
+  sprintf(options[OPT_LOCALINVPLANE].cName,"bLocalInvPlane");
+  sprintf(options[OPT_LOCALINVPLANE].cDescr, 
+  "Outputs Local Barycentric Coordinates w.r.t Local Invariable Plane.");
+  sprintf(options[OPT_LOCALINVPLANE].cDefault, "0");
+  options[OPT_LOCALINVPLANE].dDefault   = 0;
+  options[OPT_LOCALINVPLANE].iType      = 0;
+  options[OPT_LOCALINVPLANE].bMultiFile = 0;
+  options[OPT_LOCALINVPLANE].bNeg       = 0;
+  options[OPT_LOCALINVPLANE].iFileType  = 2;
+  options[OPT_LOCALINVPLANE].iModuleBit = SPINBODY;
+  fnRead[OPT_LOCALINVPLANE]             = &ReadLocalInvPlane;  
+
 
   sprintf(options[OPT_REMAININLOCALBARYIFEJECTED].cName, "bRemainInLocalBaryIfEjected");
   sprintf(options[OPT_REMAININLOCALBARYIFEJECTED].cDescr,
@@ -883,6 +913,43 @@ void fvAssignBaryCart2HelioCart(BODY *body, int iBody) {
   body[iBody].dHelioVelZ = body[iBody].dHCartVel[2];
 }
 
+// Outputting the sign of a double. Zero is defaulted as zero.
+double sign(double value) {
+  if (value > 0.0) {
+      return 1.0;
+  } else if (value < 0.0) {
+      return -1.0;
+  } else {
+      return 0.0;
+  }
+}
+
+//positiveModulus() restricts inputs of Orbital Element in the domain [0, 2*PI)
+double positiveModulus(double x, double y) { //returns modulo_{y}(x) remaining in the domain 0 <= x < y
+  double result;
+  result = fmod(x, y);
+  while (result < 0.0) {
+    result += y;
+  }
+  return result;
+}
+
+double positiveModulus2PI(double x) {
+  double dAngle = positiveModulus(x, 2.0 * PI);
+  return dAngle;
+}
+
+double atan2Continuous(double dSinAngle, double dCosAngle, double dMinimumValue) {
+  double dAngle = 0.0;
+  if (fabs(dCosAngle) > dMinimumValue) {
+    dAngle = positiveModulus2PI(atan2(dSinAngle, dCosAngle));
+  } else {
+    dAngle = positiveModulus2PI(sign(dSinAngle) * PI / 2.0);
+  }
+
+  return dAngle;
+}
+
 void CalculateCartesianComponentsFromCenterOfMassEquation(BODY *body, int iNumBodies, 
                                                           int iUnassignedBody, int iDimension) {
   for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
@@ -1008,6 +1075,62 @@ void fvCommonBarycenter2LocalBarycenter(BODY *body, int iNumBodies) {
   free(dLocalBarycenterPosition), free(dLocalBarycenterVelocity);
 }
 
+void CalculateLocalSpecificAngularMomentum(BODY *body, SYSTEM *system, double *dSpecificAngularMomentum, int iNumBodies) {
+  int i, iBody;
+  double *dSpecificAngularMomentumBody;
+  dSpecificAngularMomentumBody = malloc(3 * sizeof(double));
+  for (iBody = 0; iBody < iNumBodies; iBody++) {
+    if (!body[iBody].bExcludeFromBarycenter) {
+      cross(body[iBody].dLocalBaryCartPos, body[iBody].dLocalBaryCartVel, dSpecificAngularMomentumBody);
+      for (i = 0; i < 3; i++) {
+        dSpecificAngularMomentum[i] += dSpecificAngularMomentumBody[i];
+      } 
+    }
+  }
+
+  free(dSpecificAngularMomentumBody);
+}
+
+void SphericalRotation(double *dRotatingVector, double dTheta, double dPhi) {
+  double *dTmpVector;
+  dTmpVector = malloc(3 * sizeof(double));
+
+  dTmpVector[0] = dRotatingVector[0] * cos(dTheta) + dRotatingVector[1] * sin(dTheta);
+  dTmpVector[1] = -dRotatingVector[0] * sin(dTheta) + dRotatingVector[1] * cos(dTheta);
+  dTmpVector[2] = dRotatingVector[2];
+
+  dRotatingVector[0] = dTmpVector[0] * cos(dPhi) - dTmpVector[2] * sin(dPhi);
+  dRotatingVector[1] = dTmpVector[1];
+  dRotatingVector[2] = dTmpVector[0] * sin(dPhi) + dTmpVector[2] * cos(dPhi);
+
+  free(dTmpVector);
+}
+
+void RotateToLocalInvariablePlane(BODY *body, SYSTEM *system, int iNumBodies) {
+  int iBody;
+  double dMinimumValue = 1.0e-15;
+  double dSpecificAngularMomentum[3] = {0.0, 0.0, 0.0}; /* locally allocates this memory */
+
+  CalculateLocalSpecificAngularMomentum(body, system, dSpecificAngularMomentum, iNumBodies);
+  double dSpecificAngularMomentumXYPlaneSquared = 0;
+  for (int i = 0; i < 2; i++) {
+    dSpecificAngularMomentumXYPlaneSquared += dSpecificAngularMomentum[i] * dSpecificAngularMomentum[i];
+  }
+  double dSpecificAngularMomentumXYPlane = sqrt(dSpecificAngularMomentumXYPlaneSquared);
+  if (dSpecificAngularMomentumXYPlane == 0) {
+    system->dThetaInvP = 0;
+    system->dPhiInvP = 0;
+  } else {
+    system->dThetaInvP = atan2Continuous(dSpecificAngularMomentum[1], dSpecificAngularMomentum[0], dMinimumValue);
+    system->dPhiInvP = atan2Continuous(dSpecificAngularMomentumXYPlane, dSpecificAngularMomentum[2], dMinimumValue);
+  }
+
+  for (iBody = 0; iBody < iNumBodies; iBody++) {
+    SphericalRotation(body[iBody].dLocalBaryCartPos, system->dThetaInvP, system->dPhiInvP);
+    SphericalRotation(body[iBody].dLocalBaryCartVel, system->dThetaInvP, system->dPhiInvP);
+  }    
+}
+
 void AssignAllCoords(BODY *body, CONTROL *control, FILES *files, SYSTEM *system, int iBody) {
   double iNumBodies = control->Evolve.iNumBodies;
 
@@ -1027,6 +1150,11 @@ void AssignAllCoords(BODY *body, CONTROL *control, FILES *files, SYSTEM *system,
     if (system->bOutputLocalBaryCoords) {           
       fvCommonBarycenter2LocalBarycenter(body, iNumBodies);
       fvRemoveFromLocalBaryCenterIfEjected(body, iNumBodies); // only if body[iTmpBody].bRemainInLocalBaryIfEjected == 0
+      /*
+      if (system->bLocalInvPlane) {
+        RotateToLocalInvariablePlane(body, system, iNumBodies);
+      }
+      */
     }
   }
 
@@ -1118,6 +1246,9 @@ void VerifyInputCoords(BODY *body, CONTROL *control, OPTIONS *options, SYSTEM *s
           } else {
             for (int jTmpBody = 0; jTmpBody < iNumBodies; jTmpBody++) {
               fvAssignLocalBaryCart(body, jTmpBody);
+            }
+            if (system->bLocalInvPlane) {
+              RotateToLocalInvariablePlane(body, system, iNumBodies);
             }
             fvLocalBarycenter2CommonBarycenter(body, iNumBodies);
             for (int jTmpBody = 0; jTmpBody < iNumBodies; jTmpBody++) {
@@ -1324,43 +1455,6 @@ double LimitRounding(double x) {
     x = 0.0;
   }
   return x;
-}
-
-// Outputting the sign of a double. Zero is defaulted as zero.
-double sign(double value) {
-  if (value > 0.0) {
-      return 1.0;
-  } else if (value < 0.0) {
-      return -1.0;
-  } else {
-      return 0.0;
-  }
-}
-
-//positiveModulus() restricts inputs of Orbital Element in the domain [0, 2*PI)
-double positiveModulus(double x, double y) { //returns modulo_{y}(x) remaining in the domain 0 <= x < y
-  double result;
-  result = fmod(x, y);
-  while (result < 0.0) {
-    result += y;
-  }
-  return result;
-}
-
-double positiveModulus2PI(double x) {
-  double dAngle = positiveModulus(x, 2.0 * PI);
-  return dAngle;
-}
-
-double atan2Continuous(double dSinAngle, double dCosAngle, double dMinimumValue) {
-  double dAngle = 0.0;
-  if (fabs(dCosAngle) > dMinimumValue) {
-    dAngle = positiveModulus2PI(atan2(dSinAngle, dCosAngle));
-  } else {
-    dAngle = positiveModulus2PI(sign(dSinAngle) * PI / 2.0);
-  }
-
-  return dAngle;
 }
 
 double TotalMass(BODY *body, int iNumBodies) {

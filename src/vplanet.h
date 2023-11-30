@@ -1081,8 +1081,9 @@ struct SYSTEM {
   double dTotAngMomInit; /**< System's Initial Angular Momentum */
   double dTotAngMom;     /**< System's Current Angular Momentum */
   double bBarycentric; /**< Boolean flag to use Barycentric coordinates */
-  double bOutputLocalBaryCoords; /**< Boolean flag to use Local Barycentric Coordinates >*/
-  double bInputCommonBaryCoords; /**< Boolean flag to read inputs as Common Barycentric Coordinates >*/
+  double bOutputLocalBaryCoords; /**< Boolean flag to use Local Barycentric Coordinates */
+  double bInputCommonBaryCoords; /**< Boolean flag to read inputs as Common Barycentric Coordinates */
+  double bLocalInvPlane; /**< Boolean flag to use Local Invariable Plane Transformation */
 
   /* DISTORB tools */
   fnLaplaceFunction **fnLaplaceF; /**< Pointers to semi-major axis functions  */

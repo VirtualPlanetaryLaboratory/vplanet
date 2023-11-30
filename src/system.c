@@ -515,7 +515,7 @@ Calculates angular momentum vector of planetary system
 @param AngMom Resulting angular momentum vector
 @param iNumBodies Number of bodies in the system (star & planets)
 */
-void angularmom(BODY *body, double *AngMom, int iNumBodies) {
+void angularmom(BODY *body, SYSTEM *system, double *AngMom, int iNumBodies) {
   double *rxptmp;
   int i, iBody;
 
@@ -529,8 +529,8 @@ void angularmom(BODY *body, double *AngMom, int iNumBodies) {
   // astro2bary(body, iNumBodies);
 
   for (iBody = 0; iBody < iNumBodies; iBody++) {
-    if (body[iBody].bSpiNBody) {
-      cross(body[iBody].dBCartPos, body[iBody].dBCartVel, rxptmp);
+    if (body[iBody].bSpiNBody) {       
+      cross(body[iBody].dBCartPos, body[iBody].dBCartVel, rxptmp);     
     } else {
       if (iBody == 0) {
         osc2cart(body, iNumBodies);
@@ -539,8 +539,8 @@ void angularmom(BODY *body, double *AngMom, int iNumBodies) {
       cross(body[iBody].daCartPos, body[iBody].daCartVel, rxptmp);
     }
     for (i = 0; i < 3; i++) {
-      // SpiNBody requires SI units for Cartesian coordinates. No conversion 
-      AngMom[i] += body[iBody].dMass * rxptmp[i];
+      // SpiNBody requires SI units for Cartesian coordinates. No conversion
+      AngMom[i] += body[iBody].dMass * rxptmp[i];      
       if (!body[iBody].bSpiNBody) {
         // distorb requires solar mass units
         AngMom[i] /= MSUN;
@@ -778,7 +778,7 @@ void inv_plane(BODY *body, SYSTEM *system, int iNumBodies) {
       break;
     }
   }
-  angularmom(body, AngMom, iNumBodies);
+  angularmom(body, system, AngMom, iNumBodies);
   system->dThetaInvP = atan2(AngMom[1], AngMom[0]);
   system->dPhiInvP =
         atan2(sqrt(AngMom[0] * AngMom[0] + AngMom[1] * AngMom[1]), AngMom[2]);

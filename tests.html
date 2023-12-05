@@ -180,40 +180,18 @@ These tests are short versions of the examples that run in a few seconds, which
 is sufficient time to ensure that integration is accurate. Unit tests are also
 used to track the amount of the code that is executed over the sum of all tests,
 further enabling confidence in the code’s accuracy.</p>
-<p>Test scripts live in the <code class="code docutils literal notranslate"><span class="pre">tests/</span></code> directory in the top-level repo folder.
-Tests are executed automatically on Travis using <code class="code docutils literal notranslate"><span class="pre">py.test</span></code>, which will
+<p>Test scripts live in the <code class="code docutils literal notranslate"><span class="pre">tests/</span></code> directory and are executed automatically
+on every pull request with GitHub Actions. To perform the tests, we use <code class="code docutils literal notranslate"><span class="pre">pytest</span></code>, which will
 find all Python files with the word <code class="code docutils literal notranslate"><span class="pre">test</span></code> somewhere in their name (side note:
-if it’s not meant to be a test, don’t put <code class="code docutils literal notranslate"><span class="pre">test</span></code> in the file name!).
-The <code class="code docutils literal notranslate"><span class="pre">py.test</span></code> suite specifically checks for cases where an <code class="code docutils literal notranslate"><span class="pre">AssertionError</span></code>
-is raised, so in your tests you should use <code class="code docutils literal notranslate"><span class="pre">assert</span></code> statements to check whether
-the output is equal to (or very close to) a benchmarked value.</p>
-<p>To write a test, create a directory in <code class="code docutils literal notranslate"><span class="pre">tests/</span></code> with a descriptive name
-(such as the modules it’s meant to test or a specific application of the code).
-Include the <code class="code docutils literal notranslate"><span class="pre">.in</span></code> files needed to run the test and create a Python
-file <code class="code docutils literal notranslate"><span class="pre">test_&lt;TEST_NAME&gt;.py</span></code>. This file should follow this basic structure:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">vplanet</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pathlib</span>
-
-<span class="c1"># Path to this directory</span>
-<span class="n">path</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
-
-<span class="k">def</span> <span class="nf">test_something</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Brief description of what we&#39;re testing.&quot;&quot;&quot;</span>
-    <span class="c1"># Run vplanet</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">vplanet</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;vpl.in&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Run our comparisons</span>
-    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">final</span><span class="o">.</span><span class="n">planet</span><span class="o">.</span><span class="n">Eccentricity</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">final</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">TotEnergy</span><span class="p">,</span> <span class="n">output</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">initial</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">TotEnergy</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">star</span><span class="o">.</span><span class="n">Luminosity</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0672752</span> <span class="p">,</span> <span class="mf">0.0672752</span> <span class="p">,</span> <span class="mf">0.0080845</span><span class="o">...</span><span class="p">]))</span>
-</pre></div>
-</div>
-<p>In the example above, we’re checking three things: that the final planet
-eccentricity (from the log file) is zero; that the final system energy
-(from the log file) is equal to the initial system energy; and that
-the star’s luminosity (from the forward file) is equal to some array of
-values.</p>
+if it’s not meant to be a test, don’t put <code class="code docutils literal notranslate"><span class="pre">test</span></code> in the file name!).</p>
+<p>The VPLanet team has made it easy to add or revise tests. Inside the <code class="code docutils literal notranslate"><span class="pre">tests/</span></code> directory
+is a file called <code class="code docutils literal notranslate"><span class="pre">maketest.py</span></code>, which will generate a unit test from a set of valid infiles.
+So a typical procedure to create a new test is to:</p>
+<ul class="simple">
+<li><p>Create a simulation that executes previously untested functionality</p></li>
+<li><p>Verify the results are accurate! (Obvious, we know, but please don’t forget!)</p></li>
+<li><p>Copy the .in files t</p></li>
+</ul>
 <p>These unit tests not only ensure new modification don’t break parts of the code
 that already work. In addition, they are used to compute the fraction of the code
 that is verified with <cite>CodeCov &lt;https://app.codecov.io/gh/VirtualPlanetaryLaboratory/vplanet&gt;</cite>

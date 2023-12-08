@@ -13,44 +13,44 @@ directory of the :code:`VPLanet` repository.
 
 
    examples/CassiniStates
-   examples/ChaoticResonances
-   examples/HabitableZone
-   examples/IceBelts
-   examples/IoHeat
-   examples/SSDistOrbDistRot
-   examples/DampedCBP
-   examples/AtmEscKepler-36
-   examples/AbioticO2
-   examples/ApseLock
-   examples/EarthClimate
-   examples/DiffLimWaterEscape
-   examples/HLossTides
-   examples/TideLock
-   examples/MagneticBraking
-   examples/RadHeat
-   examples/HabEvapCore
-   examples/VenusApproxInterior
-   examples/StellarEvol
-   examples/CircumbinaryOrbit
-   examples/MagmOc_Trappist1g
-   examples/CassiniMulti
-   examples/MiniNeptuneEvap
-   examples/MDwarfLuminosity
    examples/STEEP
+   examples/DampedCBP
+   examples/MagneticBraking
+   examples/BinaryTides
+   examples/TideLock
+   examples/DiffLimWaterEscape
+   examples/MagmOc_Earth
+   examples/ChaoticResonances
+   examples/NBodyAtmEsc
+   examples/MiniNeptuneEvap
+   examples/IceBelts
+   examples/ParameterSweep
+   examples/AbioticO2
+   examples/WaterLossTides
+   examples/EarthInterior
    examples/SS_NBody
+   examples/HabitableZone
+   examples/TidalEarth
+   examples/ApseLock
+   examples/CircumbinaryOrbit
+   examples/AtmEscFlareProxCen
+   examples/SSDistOrbDistRot
+   examples/AtmEscKepler-36
+   examples/VenusWaterLoss
+   examples/VenusApproxInterior
+   examples/MagmOc_Trappist1g
+   examples/HLossTides
+   examples/RadHeat
    examples/FfdProxCen
+   examples/CassiniMulti
+   examples/MagmOc_GJ1132b
+   examples/IoHeat
+   examples/EarthClimate
    examples/AtmEscRegimes
    examples/GalaxyEffects
-   examples/ParameterSweep
-   examples/TidalEarth
-   examples/AtmEscFlareProxCen
-   examples/EarthInterior
-   examples/MagmOc_Earth
-   examples/MagmOc_GJ1132b
-   examples/VenusWaterLoss
-   examples/WaterLossTides
-   examples/NBodyAtmEsc
-   examples/BinaryTides
+   examples/MDwarfLuminosity
+   examples/HabEvapCore
+   examples/StellarEvol
 
 
 Broken

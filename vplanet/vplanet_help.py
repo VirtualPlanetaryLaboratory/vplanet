@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import subprocess
 
-
 _help = subprocess.check_output(["vplanet", "-h"]).decode("utf-8")
 _help_verbose = subprocess.check_output(["vplanet", "-H"]).decode("utf-8")
 
@@ -9,7 +8,7 @@ _help_verbose = subprocess.check_output(["vplanet", "-H"]).decode("utf-8")
 class VPLANETHelp:
     """
     VPLANET help message wrapper.
-    
+
     """
 
     def __init__(self, verbose=False):

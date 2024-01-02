@@ -20,6 +20,8 @@ To run the python scripts and generate the figures in the subdirectories, **you 
 
 `AtmEscRegimes <AtmEscRegimes>`_: Hydrogen envelope loss due to Roche lobe overflow, radiation-recombination-limited escape, energy-limited escape, and "automatic" loss in which the local environment sets the escape rate. [AtmEsc, STELLAR]
 
+`DiffLimWaterEscape <DiffLimWaterEscape>`_: Water photolysis with hydrogen and oxygen escape via diffusion-limited and energy-limited escape. [AtmEsc, STELLAR]
+
 `HabEvapCores <HabEvapCores>`_: Transition of Proxima b from a mini-Neptune to a habitable evaporated core via hydrogen loss. [AtmEsc, STELLAR]
 
 `HLossTides <HLossTides>`_: Coupled atmospheric escape and tidal evolution for
@@ -111,6 +113,8 @@ pulsar planet system PSR1257+12. [AtmEsc, SpiNBody]
 `STEEP <STEEP>`_: Tidal evolution of a binary star, including the instability radius for circumbinary planets. [EqTide, STELLAR]
 
 `StellarEvol <StellarEvol>`_: Pre-main sequence and main sequence evolution of stellar properties. [STELLAR]
+
+`HabitableZone <HabitableZone>`_: Habitable zone limits for 4.5 Gyr old stars from `Kopparapu et al. (2013) <https://ui.adsabs.harvard.edu/abs/2013ApJ...765..131K/abstract>`_. [STELLAR]
 
 **Tidal Effects**
 =================

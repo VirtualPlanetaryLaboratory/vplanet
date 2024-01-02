@@ -442,6 +442,7 @@ int iGetNumLines(char cFile[]) {
     exit(EXIT_INPUT);
   }
 
+  memset(cLine, '\0', LINE);
   while (fgets(cLine, LINE, fp) != NULL) {
     iNumLines++;
 
@@ -469,6 +470,7 @@ int iGetNumLines(char cFile[]) {
         bFileOK = 0;
       }
     }
+    memset(cLine, '\0', LINE);
   }
 
   if (!bFileOK) {
@@ -496,18 +498,11 @@ void InitializeInput(INFILE *input) {
   */
 
   for (iLine = 0; iLine < input->iNumLines; iLine++) {
-    /* Initialize bLineOK */
     input->bLineOK[iLine] = 0;
-
-    /* Now find those lines that are comments or blank */
-    for (iPos = 0; iPos < LINE; iPos++) {
-      cLine[iPos] = '\0';
-    }
+    memset(cLine, '\0', LINE);
 
     fgets(cLine, LINE, fp);
-    /* Check for # sign or blank line */
     if (CheckComment(cLine, LINE)) {
-      /* Line is OK */
       input->bLineOK[iLine] = 1;
     } else {
       // Is it a blank line?
@@ -541,6 +536,7 @@ void Unrecognized(FILES files) {
                 cWord, files.Infile[iFile].cIn, iLine + 1);
         bExit = 1;
       }
+      memset(cLine, '\0', LINE);
       iLine++;
     }
   }
@@ -765,7 +761,7 @@ int iAssignUnitTime(char cTmp[], int iVerbose, char cFile[], char cName[],
 void ReadUnitTime(CONTROL *control, FILES *files, OPTIONS *options, int iFile) {
   int iFileNow, lTmp = -1;
   char cTmp[OPTLEN];
- 
+
   AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
   if (iFile == 0) {
@@ -947,7 +943,7 @@ void ReadUnitLength(CONTROL *control, FILES *files, OPTIONS *options,
                     int iFile) {
   int iFileNow, lTmp = -1;
   char cTmp[OPTLEN];
-  
+
   AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
   if (iFile == 0) {
@@ -1019,7 +1015,8 @@ int iAssignTempUnit(char cTmp[], int iVerbose, char cFile[], char cName[],
   } else {
     if (iVerbose >= VERBERR) {
       fprintf(stderr,
-              "ERROR: Unknown argument to %s: %s. Options are: Kelvin, Celsius, Farenheit.\n",
+              "ERROR: Unknown argument to %s: %s. Options are: Kelvin, "
+              "Celsius, Farenheit.\n",
               cName, cTmp);
     }
     LineExit(cFile, iLine);
@@ -1399,8 +1396,9 @@ void ReadDoBackward(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
     control->Evolve.bDoBackward = bTmp;
     if (control->Evolve.bDoBackward) {
-      fprintf(stderr, "\nWARNING: Backward integrations have not been validated "
-                    "and may be unstable!\n");
+      fprintf(stderr,
+              "\nWARNING: Backward integrations have not been validated "
+              "and may be unstable!\n");
       fprintf(stderr, "Use at your own risk.\n\n");
     }
   } else {
@@ -4702,4 +4700,5 @@ void InitializeOptions(OPTIONS *options, fnReadOption *fnRead) {
   InitializeOptionsGalHabit(options, fnRead);
   InitializeOptionsSpiNBody(options, fnRead);
   InitializeOptionsMagmOc(options, fnRead);
+  InitializeOptionsFlare(options, fnRead);
 }

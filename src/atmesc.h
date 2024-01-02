@@ -13,7 +13,8 @@
 #define ATMESC_LBEXACT                                                         \
   1 /**< Flag: Luger and Barnes (2015) atmospheric escape formulae w/ updated  \
        oxygen mixing ratio calculations */
-#define ATMESC_TIAN 2 /**< Flag: Tian (2015) atmospheric escape formulae flag  \
+#define ATMESC_TIAN                                                            \
+  2                   /**< Flag: Tian (2015) atmospheric escape formulae flag  \
                        */
 #define ATMESC_ELIM 3 /**< Flag: Energy-limited escape */
 #define ATMESC_DIFFLIM 4   /**< Flag: Diffusion-limited escape */
@@ -29,6 +30,7 @@
   11 /**< Flag: Lehmer & Catling (2017) planet radius model */
 #define ATMESC_BOL16                                                           \
   12            /**< Flag: Bolmont (2016) XUV absorption efficiency model */
+#define ATMESC_LS2016 13 /**< Schaefer et al (2016) atmospheric escape model */
 #define QOH 16. /**< Atomic mass ratio oxygen/hydrogen */
 
 /* Options Info */
@@ -44,8 +46,9 @@
 #define OPT_OXYGENMASS 1218     /**< Initial oxygen mass */
 #define OPT_WATERLOSSMODEL 1219 /**< Oxygen buildup / water loss model */
 #define OPT_PLANETRADIUSMODEL                                                  \
-  1220                         /**< Gaseous planet radius model (for atmesc) */
-#define OPT_INSTANTO2SINK 1221 /**< Gaseous planet radius model (for atmesc)   \
+  1220 /**< Gaseous planet radius model (for atmesc) */
+#define OPT_INSTANTO2SINK                                                      \
+  1221                         /**< Gaseous planet radius model (for atmesc)   \
                                 */
 #define OPT_ATMXABSEFFH2O 1222 /**< Water Absorption efficiency (epsilon) */
 #define OPT_OXYGENMANTLEMASS 1223 /**< Initial oxygen mass in mantle */
@@ -57,9 +60,10 @@
   1228 /**< Model for time evolution of epsilon for H2O */
 #define OPT_JEANSTIME                                                          \
   1229 /**< Time at which flow becomes ballistic (Jeans escape) */
-#define OPT_FLOWTEMP 1230     /**< Flow temperature */
-#define OPT_BONDILIMITED 1231 /**< Whether or not to use Bondi-limited escape  \
-                               */
+#define OPT_FLOWTEMP 1230 /**< Flow temperature */
+#define OPT_BONDILIMITED                                                       \
+  1231 /**< Whether or not to use Bondi-limited escape                         \
+        */
 #define OPT_ENERGYLIMITED                                                      \
   1232 /**< Whether or not to use energy-limited escape */
 #define OPT_RRLIMITED                                                          \
@@ -67,7 +71,8 @@
 #define OPT_ATMESCAUTO                                                         \
   1234 /**< Whether or not to let atmesc determine escape regime */
 #define OPT_STOPWATERLOSSINHZ                                                  \
-  1235 /**< Stop water loss once planet reaches HZ? */
+  1235                    /**< Stop water loss once planet reaches HZ? */
+#define OPT_MINKTIDE 1240 /**< Minimum KTide value */
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -129,8 +134,9 @@ void FinalizeUpdateMassAtmEsc(BODY *, UPDATE *, int *, int, int, int);
 #define OUT_ETAO 1215 /**< Luger & Barnes (2015) oxygen eta parameter */
 #define OUT_PLANETRADIUS                                                       \
   1216 /**< Planet radius (for the Lehmer & Catling 2017 model) */
-#define OUT_OXYGENMANTLEMASS 1217 /**< Mass of oxygen absorbed by the mantle   \
-                                   */
+#define OUT_OXYGENMANTLEMASS                                                   \
+  1217 /**< Mass of oxygen absorbed by the mantle                              \
+        */
 #define OUT_PLANETRADXUV                                                       \
   1218 /**< Effective planet radius in the XUV (for the Lehmer & Catling 2017  \
           model) */
@@ -156,6 +162,15 @@ void FinalizeUpdateMassAtmEsc(BODY *, UPDATE *, int *, int, int, int);
 #define OUT_HESCAPEREGIME 1230 /**< Hydrogen envelope escape regime */
 #define OUT_RRCRITICALFLUX                                                     \
   1231 /**< Critical flux between RR and energy-limited escape */
+#define OUT_CROSSOVERMASS 1232 /**< Crossover mass, tells us whether oxygen is escaping */
+#define OUT_WATERESCAPEREGIME 1233 /**< What water escape regime is the sim currently in (energy limited, diffusion limited, etc) */
+#define OUT_FXUVCRITDRAG 1234 /**< The critical drag XUV Flux, FXUV > FXUVCritDrag for drag of heavier species to occur */
+#define OUT_HREFFLUX 1235 /**< The hydrogen reference flux (I can't believe this wasn't an output yet) */
+#define OUT_XO2 1236 /**< The molecular oxygen mixing ratio */
+#define OUT_XH2O 1237 /**< The water mixing ratio */
+#define OUT_HDIFFFLUX 1238 /**< The diffusion limited flux (the true flux in the diffusion regime) */
+#define OUT_HREFODRAGMOD 1239 /**< Multiply by H ref flux to get H flux with drag of oxgyen */
+#define OUT_KTIDE 1240 /**< Gravitational enhancement of mass loss */
 
 void InitializeOutputAtmEsc(OUTPUT *, fnWriteOutput[]);
 void InitializeOutputFunctionAtmEsc(OUTPUT *, int, int);
@@ -206,6 +221,8 @@ void fvLinearFit(double *, double *, int, double *);
 double fdDOxygenMassDt(BODY *, SYSTEM *, int *);
 double fdDOxygenMantleMassDt(BODY *, SYSTEM *, int *);
 double fdAtomicOxygenMixingRatio(double, double);
+double fdMolecOxygenMixingRatio(double, double);
+double fdWaterAtmMixingRatio(double, double);
 double fdInsolation(BODY *, int, int);
 int fbDoesWaterEscape(BODY *, EVOLVE *, IO *, int);
 double fdPlanetRadius(BODY *, SYSTEM *, int *);

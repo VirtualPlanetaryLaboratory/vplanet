@@ -11,7 +11,7 @@ jobs:
     name: "Build docs"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up Python
         id: setup_python
@@ -19,6 +19,7 @@ jobs:
         with:
           activate-environment: vplanet
           environment-file: environment.yml
+          python-version: 3.9
 
       - name: Install
         id: install

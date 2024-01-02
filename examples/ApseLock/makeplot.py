@@ -4,13 +4,15 @@ dynamics of CoRoT-7b and c, using VPLANET's STELLAR, EQTIDE, and DISTORB modules
 
 David P. Fleming, University of Washington, 2018
 """
-import vplanet
-import vplot
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import numpy as np
 import pathlib
 import sys
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import vplot
+
+import vplanet
 
 # Path hacks
 path = pathlib.Path(__file__).parents[0].absolute()
@@ -76,13 +78,13 @@ axes[1, 1].set_xlabel("Time [Myr]")
 axes[1, 1].set_ylabel(r"$\Delta \varpi$ [$^{\circ}$]")
 
 # Final formating
-fig.tight_layout()
+#fig.tight_layout()
 for ax in axes.flatten():
     # Rasterize
     ax.set_rasterization_zorder(0)
 
     # Set tick locations
-    ax.set_xticklabels(["0", "2", "4", "6", "8", "10"])
+    #ax.set_xticklabels(["0", "2", "4", "6", "8", "10"])
     ax.set_xticks([0, 2, 4, 6, 8, 10])
 
 # Show late-term ecc damping
@@ -115,4 +117,5 @@ inset2.set_xlabel("Time [Myr]", fontsize=12)
 
 # Save the figure
 ext = get_args().ext
-fig.savefig(path / f"ApseLock.{ext}", bbox_inches="tight", dpi=600)
+#fig.savefig(path / f"ApseLock.{ext}", bbox_inches="tight", dpi=600)
+fig.savefig(path / f"ApseLock.{ext}", dpi=600)

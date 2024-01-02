@@ -7,7 +7,7 @@ Overview
 This examples compares the atmospheric erosion of four planets subject
 to energy-limited escape, radiation/recombination-limited escape, "Bondi-limited" escape,
 and one planet whose escape regime evolves depending on its mass, radius, and
-incident XUV flux. Bondi-limited escape occurs for planets overflowing their Roche lobe, 
+incident XUV flux. Bondi-limited escape occurs for planets overflowing their Roche lobe,
 in which case particles escape at the local sound speed.
 
 ===================   ============

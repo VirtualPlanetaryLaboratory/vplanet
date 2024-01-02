@@ -8,15 +8,15 @@ bOverwrite	1			# Allow file overwrites?
 # s=string. An "a" indicates an array and multiple arguments are allowed/expected.
 
 # List of "body files" that contain body-specific parameters
-saBodyFiles	star.in $ 
-		b.in c.in  	
+saBodyFiles	star.in $
+		b.in c.in
 
-# Array options can continue to the next line with a terminating "$". The $ can be 
+# Array options can continue to the next line with a terminating "$". The $ can be
 # at the end of the string or not. Comments are allowed afterwards.
 
 # Input/Output Units
 sUnitMass	solar		# Options: gram, kg, Earth, Neptune, Jupiter, solar
-sUnitLength	aU		# Options: cm, m, km, Earth, Jupiter, solar, AU 	
+sUnitLength	aU		# Options: cm, m, km, Earth, Jupiter, solar, AU
 sUnitTime	YEARS		# Options: sec, day, year, Myr, Gyr
 sUnitAngle	d		# Options: deg, rad
 sUnitTemp       K

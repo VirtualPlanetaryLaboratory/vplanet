@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from vplanet import Quantity
 import astropy.units as u
 import numpy as np
+
+from vplanet import Quantity
 
 
 def test_quantity():

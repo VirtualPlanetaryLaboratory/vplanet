@@ -276,6 +276,9 @@ void ForceBehaviorEqtide(BODY *, MODULE *, EVOLVE *, IO *, SYSTEM *, UPDATE *,
 
 void PropsAuxEqtide(BODY *, EVOLVE *, IO *, UPDATE *, int);
 
+int fiAssignTidalPerturber(BODY*,int);
+int fiAssignTidalOrbiter(BODY*,int);
+
 /******************** CPL Functions ********************/
 
 /* Auxiliary parameters */

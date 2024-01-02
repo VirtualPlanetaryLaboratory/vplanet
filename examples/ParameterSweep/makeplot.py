@@ -1,13 +1,15 @@
 #!/usr/bin/env python
-import vplanet
-import vplot as vpl
-import bigplanet as bp
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import numpy as np
 import pathlib
-import sys
 import subprocess
+import sys
+
+import bigplanet as bp
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import vplot as vpl
+
+import vplanet
 
 # Path hacks
 path = pathlib.Path(__file__).parents[0].absolute()
@@ -16,29 +18,41 @@ from get_args import get_args
 
 # Run vspace
 if not (path / "ParameterSweep").exists():
+    print("Running VSPACE...")
     subprocess.check_output(["vspace", "vspace.in"], cwd=path)
+else:
+    print("VPSACE already run")
 
 # Run multi-planet
 if not (path / ".ParameterSweep").exists():
-    subprocess.check_output(["multi-planet", "vspace.in"], cwd=path)
+    print("Running MultiPlanet...")
+    subprocess.check_output(["multiplanet", "vspace.in"], cwd=path)
+else:
+    print("Multiplanet already run")
 
 # Run bigplanet
-if not (path / ".ParameterSweep_BPL").exists():
-    subprocess.check_output(["bigplanet", "vspace.in"], cwd=path)
+if not (path / "ParameterSweep.bpf").exists():
+    print("Building BigPlanet File")
+    subprocess.check_output(["bigplanet", "bpl.in"], cwd=path)
+else:
+    print("BigPlanet File already built")
 
-data = bp.BPLFile(path / "ParameterSweep.bpl")
+print("Creating figure...")
+data = bp.BPLFile(path / "ParameterSweep.bpf")
 
-mpl.rcParams["figure.figsize"] = (10, 8)
+mpl.rcParams["figure.figsize"] = (6.5, 6.5)
 fig = plt.figure()
 
-RIC = bp.ExtractColumn(data, "earth_RIC_final")
-RIC_units = bp.ExtractUnits(data, "earth_RIC_final")
+RIC = bp.ExtractColumn(data, "earth:RIC:final")
+RIC_units = bp.ExtractUnits(data, "earth:RIC:final")
 
-TCore_uniq = bp.ExtractUniqueValues(data, "earth_TCore_initial")
-TCore_units = bp.ExtractUnits(data, "earth_TCore_initial")
+TCore_uniq = bp.ExtractUniqueValues(data, "earth:TCore:initial")
+TCore_units = bp.ExtractUnits(data, "earth:TCore:initial")
 
-K40_uniq = bp.ExtractUniqueValues(data, "earth_40KPowerCore_final")
-K40_units = bp.ExtractUnits(data, "earth_40KPowerCore_final")
+K40_uniq = bp.ExtractUniqueValues(data, "earth:40KPowerCore:final")
+K40_units = bp.ExtractUnits(data, "earth:40KPowerCore:final")
+
+RIC_Matrix = np.reshape(RIC, (len(TCore_uniq), len(K40_uniq)))
 
 RIC_Matrix = bp.CreateMatrix(TCore_uniq, K40_uniq, RIC)
 

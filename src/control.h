@@ -35,6 +35,7 @@ double fdUnitsAngle(int);
 double fdUnitsPower(int, int, int);
 double fdUnitsEnergy(int, int, int);
 double fdUnitsEnergyFlux(int, int, int);
+// double fdUnitsRate(int);
 
 void fsUnitsLength(int, char[]);
 void fsUnitsTime(int, char[]);

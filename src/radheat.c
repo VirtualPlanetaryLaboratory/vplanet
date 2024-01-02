@@ -249,10 +249,11 @@ void fvRead26AlNumMan(BODY *body, CONTROL *control, FILES *files,
                     control->Io.iVerbose);
     if (dTmp < 0) {
       body[iFile - 1].d26AlNumMan =
-            dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
-                                   control->Io.iVerbose); // dTmp=input value,
-                                                          // dNegativeDouble=-dNeg
-                                                          // (default Value).
+            dTmp *
+            dNegativeDouble(*options, files->Infile[iFile].cIn,
+                            control->Io.iVerbose); // dTmp=input value,
+                                                   // dNegativeDouble=-dNeg
+                                                   // (default Value).
     } else {
       body[iFile - 1].d26AlNumMan = dTmp; // units of num are num!
     }
@@ -284,10 +285,11 @@ void fvRead26AlNumCore(BODY *body, CONTROL *control, FILES *files,
                     control->Io.iVerbose);
     if (dTmp < 0) {
       body[iFile - 1].d26AlNumCore =
-            dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
-                                   control->Io.iVerbose); // dTmp=input value,
-                                                          // dNegativeDouble=-dNeg
-                                                          // (default Value).
+            dTmp *
+            dNegativeDouble(*options, files->Infile[iFile].cIn,
+                            control->Io.iVerbose); // dTmp=input value,
+                                                   // dNegativeDouble=-dNeg
+                                                   // (default Value).
     } else {
       body[iFile - 1].d26AlNumCore = dTmp; // units of num are num!
     }
@@ -466,10 +468,11 @@ void fvRead40KNumMan(BODY *body, CONTROL *control, FILES *files,
                     control->Io.iVerbose);
     if (dTmp < 0) {
       body[iFile - 1].d40KNumMan =
-            dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
-                                   control->Io.iVerbose); // dTmp=input value,
-                                                          // dNegativeDouble=-dNeg
-                                                          // (default Value).
+            dTmp *
+            dNegativeDouble(*options, files->Infile[iFile].cIn,
+                            control->Io.iVerbose); // dTmp=input value,
+                                                   // dNegativeDouble=-dNeg
+                                                   // (default Value).
     } else {
       body[iFile - 1].d40KNumMan = dTmp; // units of num are num!
     }
@@ -499,10 +502,11 @@ void fvRead40KNumCore(BODY *body, CONTROL *control, FILES *files,
                     control->Io.iVerbose);
     if (dTmp < 0) {
       body[iFile - 1].d40KNumCore =
-            dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
-                                   control->Io.iVerbose); // dTmp=input value,
-                                                          // dNegativeDouble=-dNeg
-                                                          // (default Value).
+            dTmp *
+            dNegativeDouble(*options, files->Infile[iFile].cIn,
+                            control->Io.iVerbose); // dTmp=input value,
+                                                   // dNegativeDouble=-dNeg
+                                                   // (default Value).
     } else {
       body[iFile - 1].d40KNumCore = dTmp; // units of num are num!
     }
@@ -599,10 +603,11 @@ void fvRead40KNumCrust(BODY *body, CONTROL *control, FILES *files,
                     control->Io.iVerbose);
     if (dTmp < 0) {
       body[iFile - 1].d40KNumCrust =
-            dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
-                                   control->Io.iVerbose); // dTmp=input value,
-                                                          // dNegativeDouble=-dNeg
-                                                          // (default Value).
+            dTmp *
+            dNegativeDouble(*options, files->Infile[iFile].cIn,
+                            control->Io.iVerbose); // dTmp=input value,
+                                                   // dNegativeDouble=-dNeg
+                                                   // (default Value).
     } else {
       body[iFile - 1].d40KNumCrust = dTmp; // units of num are num!
     }
@@ -1816,8 +1821,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_26ALPOWERMAN].cDimension, "energy/time");
   options[OPT_26ALPOWERMAN].iType      = 2;
   options[OPT_26ALPOWERMAN].bMultiFile = 1;
-  options[OPT_26ALPOWERMAN].dNeg     = EPOWERMAN26AL; // Earth's POWER of 26Al
-  options[OPT_26ALPOWERMAN].dDefault = 0;
+  options[OPT_26ALPOWERMAN].dNeg       = EPOWERMAN26AL; // Earth's POWER of 26Al
+  options[OPT_26ALPOWERMAN].dDefault   = 0;
   sprintf(options[OPT_26ALPOWERMAN].cNeg, "TW");
   fnRead[OPT_26ALPOWERMAN] = &fvRead26AlPowerMan;
 
@@ -1828,7 +1833,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_26ALPOWERCORE].cDimension, "energy/time");
   options[OPT_26ALPOWERCORE].iType      = 2;
   options[OPT_26ALPOWERCORE].bMultiFile = 1;
-  options[OPT_26ALPOWERCORE].dNeg = EPOWERCORE26AL; // Earth's POWER of 26Al
+  options[OPT_26ALPOWERCORE].dNeg     = EPOWERCORE26AL; // Earth's POWER of 26Al
   options[OPT_26ALPOWERCORE].dDefault = 0;
   sprintf(options[OPT_26ALPOWERCORE].cNeg, "TW");
   fnRead[OPT_26ALPOWERCORE] = &fvRead26AlPowerCore;
@@ -2001,8 +2006,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_232THPOWERCORE].cDimension, "energy/time");
   options[OPT_232THPOWERCORE].iType      = 2;
   options[OPT_232THPOWERCORE].bMultiFile = 1;
-  options[OPT_232THPOWERCORE].dNeg     = EPOWERCORE232TH; // 1e12*1e-7; // cgs
-  options[OPT_232THPOWERCORE].dDefault = EPOWERCORE232TH;
+  options[OPT_232THPOWERCORE].dNeg       = EPOWERCORE232TH; // 1e12*1e-7; // cgs
+  options[OPT_232THPOWERCORE].dDefault   = EPOWERCORE232TH;
   sprintf(options[OPT_232THPOWERCORE].cNeg, "Primordial Earth Units");
   fnRead[OPT_232THPOWERCORE] = &fvRead232ThPowerCore;
 
@@ -2036,7 +2041,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_232THPOWERCRUST].cDimension, "energy/time");
   options[OPT_232THPOWERCRUST].iType      = 2;
   options[OPT_232THPOWERCRUST].bMultiFile = 1;
-  options[OPT_232THPOWERCRUST].dNeg = EPOWERCRUST232TH; // 1e12*1e-7; // cgs
+  options[OPT_232THPOWERCRUST].dNeg     = EPOWERCRUST232TH; // 1e12*1e-7; // cgs
   options[OPT_232THPOWERCRUST].dDefault = EPOWERCRUST232TH;
   sprintf(options[OPT_232THPOWERCRUST].cNeg, "Primordial Earth Units");
   fnRead[OPT_232THPOWERCRUST] = &fvRead232ThPowerCrust;
@@ -2146,8 +2151,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_238UPOWERCRUST].cDimension, "energy/time");
   options[OPT_238UPOWERCRUST].iType      = 2;
   options[OPT_238UPOWERCRUST].bMultiFile = 1;
-  options[OPT_238UPOWERCRUST].dNeg     = EPOWERCRUST238U; // 1e12*1e-7; // cgs
-  options[OPT_238UPOWERCRUST].dDefault = EPOWERCRUST238U;
+  options[OPT_238UPOWERCRUST].dNeg       = EPOWERCRUST238U; // 1e12*1e-7; // cgs
+  options[OPT_238UPOWERCRUST].dDefault   = EPOWERCRUST238U;
   sprintf(options[OPT_238UPOWERCRUST].cNeg, "Primordial Earth Units");
   fnRead[OPT_238UPOWERCRUST] = &fvRead238UPowerCrust;
 
@@ -2613,7 +2618,7 @@ void fvVerify26Al(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i26AlCore][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i26AlCore][0] = 1;
     update[iBody].iaBody[update[iBody].i26AlCore][0]     = malloc(
-          update[iBody].iNumBodies[update[iBody].i26AlCore][0] * sizeof(int));
+              update[iBody].iNumBodies[update[iBody].i26AlCore][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i26AlCore][0][0] = iBody;
     // Initialize derivative so radiogenic power is known at the beginning
     update[iBody].daDerivProc[update[iBody].i26AlCore][0] = fdD26AlNumCoreDt(
@@ -2662,7 +2667,7 @@ void fvVerify40K(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i40KCore][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i40KCore][0] = 1;
     update[iBody].iaBody[update[iBody].i40KCore][0]     = malloc(
-          update[iBody].iNumBodies[update[iBody].i40KCore][0] * sizeof(int));
+              update[iBody].iNumBodies[update[iBody].i40KCore][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i40KCore][0][0]   = iBody;
     update[iBody].daDerivProc[update[iBody].i40KCore][0] = fdD40KNumCoreDt(
           body, system, update[iBody].iaBody[update[iBody].i40KCore][0]);
@@ -2677,7 +2682,7 @@ void fvVerify40K(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i40KCrust][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i40KCrust][0] = 1;
     update[iBody].iaBody[update[iBody].i40KCrust][0]     = malloc(
-          update[iBody].iNumBodies[update[iBody].i40KCrust][0] * sizeof(int));
+              update[iBody].iNumBodies[update[iBody].i40KCrust][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i40KCrust][0][0]   = iBody;
     update[iBody].daDerivProc[update[iBody].i40KCrust][0] = fdD40KNumCrustDt(
           body, system, update[iBody].iaBody[update[iBody].i40KCrust][0]);
@@ -2706,7 +2711,7 @@ void fvVerify232Th(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i232ThMan][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i232ThMan][0] = 1;
     update[iBody].iaBody[update[iBody].i232ThMan][0]     = malloc(
-          update[iBody].iNumBodies[update[iBody].i232ThMan][0] * sizeof(int));
+              update[iBody].iNumBodies[update[iBody].i232ThMan][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i232ThMan][0][0] = iBody;
     // Initialize derivative so radiogenic power is known at the beginning
     update[iBody].daDerivProc[update[iBody].i232ThMan][0] = fdD232ThNumManDt(
@@ -2722,7 +2727,7 @@ void fvVerify232Th(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i232ThCore][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i232ThCore][0] = 1;
     update[iBody].iaBody[update[iBody].i232ThCore][0]     = malloc(
-          update[iBody].iNumBodies[update[iBody].i232ThCore][0] * sizeof(int));
+              update[iBody].iNumBodies[update[iBody].i232ThCore][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i232ThCore][0][0]   = iBody;
     update[iBody].daDerivProc[update[iBody].i232ThCore][0] = fdD232ThNumCoreDt(
           body, system, update[iBody].iaBody[update[iBody].i232ThCore][0]);
@@ -2737,7 +2742,7 @@ void fvVerify232Th(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i232ThCrust][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i232ThCrust][0] = 1;
     update[iBody].iaBody[update[iBody].i232ThCrust][0]     = malloc(
-          update[iBody].iNumBodies[update[iBody].i232ThCrust][0] * sizeof(int));
+              update[iBody].iNumBodies[update[iBody].i232ThCrust][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i232ThCrust][0][0] = iBody;
     update[iBody].daDerivProc[update[iBody].i232ThCrust][0] =
           fdD232ThNumCrustDt(
@@ -2768,7 +2773,7 @@ void fvVerify238U(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i238UMan][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i238UMan][0] = 1;
     update[iBody].iaBody[update[iBody].i238UMan][0]     = malloc(
-          update[iBody].iNumBodies[update[iBody].i238UMan][0] * sizeof(int));
+              update[iBody].iNumBodies[update[iBody].i238UMan][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i238UMan][0][0] = iBody;
     // Initialize derivative so radiogenic power is known at the beginning
     update[iBody].daDerivProc[update[iBody].i238UMan][0] = fdD238UNumManDt(
@@ -2784,7 +2789,7 @@ void fvVerify238U(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i238UCore][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i238UCore][0] = 1;
     update[iBody].iaBody[update[iBody].i238UCore][0]     = malloc(
-          update[iBody].iNumBodies[update[iBody].i238UCore][0] * sizeof(int));
+              update[iBody].iNumBodies[update[iBody].i238UCore][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i238UCore][0][0]   = iBody;
     update[iBody].daDerivProc[update[iBody].i238UCore][0] = fdD238UNumCoreDt(
           body, system, update[iBody].iaBody[update[iBody].i238UCore][0]);
@@ -2799,7 +2804,7 @@ void fvVerify238U(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i238UCrust][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i238UCrust][0] = 1;
     update[iBody].iaBody[update[iBody].i238UCrust][0]     = malloc(
-          update[iBody].iNumBodies[update[iBody].i238UCrust][0] * sizeof(int));
+              update[iBody].iNumBodies[update[iBody].i238UCrust][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i238UCrust][0][0]   = iBody;
     update[iBody].daDerivProc[update[iBody].i238UCrust][0] = fdD238UNumCrustDt(
           body, system, update[iBody].iaBody[update[iBody].i238UCrust][0]);
@@ -2828,7 +2833,7 @@ void fvVerify235U(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i235UMan][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i235UMan][0] = 1;
     update[iBody].iaBody[update[iBody].i235UMan][0]     = malloc(
-          update[iBody].iNumBodies[update[iBody].i235UMan][0] * sizeof(int));
+              update[iBody].iNumBodies[update[iBody].i235UMan][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i235UMan][0][0] = iBody;
     // Initialize derivative so radiogenic power is known at the beginning
     update[iBody].daDerivProc[update[iBody].i235UMan][0] = fdD235UNumManDt(
@@ -2844,7 +2849,7 @@ void fvVerify235U(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i235UCore][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i235UCore][0] = 1;
     update[iBody].iaBody[update[iBody].i235UCore][0]     = malloc(
-          update[iBody].iNumBodies[update[iBody].i235UCore][0] * sizeof(int));
+              update[iBody].iNumBodies[update[iBody].i235UCore][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i235UCore][0][0] = iBody;
     update[iBody].pdD235UNumCoreDt =
           &update[iBody].daDerivProc[update[iBody].i235UCore][0];
@@ -2859,7 +2864,7 @@ void fvVerify235U(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i235UCrust][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i235UCrust][0] = 1;
     update[iBody].iaBody[update[iBody].i235UCrust][0]     = malloc(
-          update[iBody].iNumBodies[update[iBody].i235UCrust][0] * sizeof(int));
+              update[iBody].iNumBodies[update[iBody].i235UCrust][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i235UCrust][0][0] = iBody;
     update[iBody].pdD235UNumCrustDt =
           &update[iBody].daDerivProc[update[iBody].i235UCrust][0];
@@ -6381,8 +6386,8 @@ double fd232ThConstant(double dNum,
 
    @return Radiogenic heat production coefficient for 238U
 */
-double fd238UConstant(double dNum, double dAge) { // PED: changed dPower to
-                                                  // dNum.
+double fd238UConstant(double dNum, double dAge) {  // PED: changed dPower to
+                                                   // dNum.
   return fdRadheatConst(dNum, dAge, HALFLIFE238U); // redirects to
                                                    // fdRadheatConst
 }
@@ -6394,8 +6399,8 @@ double fd238UConstant(double dNum, double dAge) { // PED: changed dPower to
 
    @return Radiogenic heat production coefficient for 235U
 */
-double fd235UConstant(double dNum, double dAge) { // PED: changed dPower to
-                                                  // dNum.
+double fd235UConstant(double dNum, double dAge) {  // PED: changed dPower to
+                                                   // dNum.
   return fdRadheatConst(dNum, dAge, HALFLIFE235U); // redirects to
                                                    // fdRadheatConst
 }

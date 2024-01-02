@@ -16,7 +16,7 @@ Surface energy flux on Io due to tidal dissipation according to **EqTide**'s
 
 This example reproduces the surface energy flux on Io over a range of
 eccentricity and obliquity. It also shows how to use `VSPACE <https://virtualplanetarylaboratory.github.io/VSPACE/>`_,
-a python that can generate input files across a parameter range. 
+a python that can generate input files across a parameter range.
 **VSPACE** will create a large number of directories, each of which has 3
 input files. In this example, the `makeplot.py` script will run each individual
 trial, gather the results, and create the summary plot below. The orange strip

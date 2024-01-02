@@ -8,13 +8,13 @@ __version__ = version().decode("utf-8")
 # Grab the help info
 
 
-# Import the main interface
-from .wrapper import run, help, VPLANETError
+# Import the rest of the user-facing stuff
+from .log import Log, LogBody, LogStage
 
 # Import the logger
 from .logger import logger
-
-# Import the rest of the user-facing stuff
-from .log import Log, LogBody, LogStage
-from .output import get_output, Output, Body
+from .output import Body, Output, get_output
 from .quantity import VPLANETQuantity as Quantity
+
+# Import the main interface
+from .wrapper import VPLANETError, help, run

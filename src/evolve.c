@@ -429,6 +429,7 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       iNumEqns   = update[iBody].iNumEqns[iVar];
       for (iEqn = 0; iEqn < iNumEqns; iEqn++) {
         daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        evolve->daDerivProc[0][iBody][iVar][iEqn] = evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
       evolve->daDeriv[0][iBody][iVar] = daDerivVar;
     }
@@ -472,8 +473,7 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       iNumEqns   = update[iBody].iNumEqns[iVar];
       for (iEqn = 0; iEqn < iNumEqns; iEqn++) {
         daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
-        // evolve->daTmpVal[0][iBody][iVar] +=
-        // (*dDt)*iDir*evolve->tmpUpdate[iBody].daDeriv[iVar][iEqn];
+        evolve->daDerivProc[1][iBody][iVar][iEqn] = evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
       evolve->daDeriv[1][iBody][iVar] = daDerivVar;
     }
@@ -518,8 +518,7 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       iNumEqns   = update[iBody].iNumEqns[iVar];
       for (iEqn = 0; iEqn < iNumEqns; iEqn++) {
         daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
-        // evolve->daTmpVal[0][iBody][iVar] +=
-        // (*dDt)*iDir*evolve->tmpUpdate[iBody].daDeriv[iVar][iEqn];
+        evolve->daDerivProc[2][iBody][iVar][iEqn] = evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
       evolve->daDeriv[2][iBody][iVar] = daDerivVar;
     }
@@ -570,6 +569,7 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
         iNumEqns                        = update[iBody].iNumEqns[iVar];
         for (iEqn = 0; iEqn < iNumEqns; iEqn++) {
           daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+          evolve->daDerivProc[3][iBody][iVar][iEqn] = evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
         }
         evolve->daDeriv[3][iBody][iVar] = daDerivVar;
       }
@@ -585,6 +585,13 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
                                      2 * evolve->daDeriv[1][iBody][iVar] +
                                      2 * evolve->daDeriv[2][iBody][iVar] +
                                      evolve->daDeriv[3][iBody][iVar]);
+      for (iEqn = 0; iEqn < update[iBody].iNumEqns[iVar]; iEqn++) {
+        update[iBody].daDerivProc[iVar][iEqn] = 1. / 6 *
+                                    (evolve->daDerivProc[0][iBody][iVar][iEqn] +
+                                     2 * evolve->daDerivProc[1][iBody][iVar][iEqn] +
+                                     2 * evolve->daDerivProc[2][iBody][iVar][iEqn] +
+                                     evolve->daDerivProc[3][iBody][iVar][iEqn]);
+      }
 
       if (update[iBody].iaType[iVar][0] == 0 ||
           update[iBody].iaType[iVar][0] == 3 ||

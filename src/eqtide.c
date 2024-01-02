@@ -1268,12 +1268,13 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     if (options[OPT_TIDALTAU].iLine[iBody + 1] >= 0) {
       /* Tidal Tau was also set */
       if (control->Io.iVerbose >= VERBINPUT) {
+        // System units (SI) by here
         fprintf(stderr,
                 "INFO: Time lag model selected, %s and %s set in file %s. "
-                "Using %s = %lf and ignoring %s.\n",
+                "Using %s = %lf seconds and ignoring %s.\n",
                 options[OPT_TIDALTAU].cName, options[OPT_TIDALQ].cName,
                 options[OPT_TIDALTAU].cFile[iBody + 1],
-                options[OPT_TIDALTAU].cName, body[iBody + 1].dTidalTau,
+                options[OPT_TIDALTAU].cName, body[iBody].dTidalTau,
                 options[OPT_TIDALQ].cName);
       }
     } else {
@@ -1489,11 +1490,11 @@ void VerifyCPL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       /* Tidal Q was also set */
       if (control->Io.iVerbose >= VERBINPUT) {
         fprintf(stderr,
-                "INFO: Phase lag model selected, %s and %s set in file %s. "
+                "WARNING: Phase lag model selected, but both %s and %s set in file %s. "
                 "Using %s = %lf and ignoring %s.\n",
                 options[OPT_TIDALTAU].cName, options[OPT_TIDALQ].cName,
                 options[OPT_TIDALTAU].cFile[iBody + 1],
-                options[OPT_TIDALQ].cName, body[iBody + 1].dTidalQ,
+                options[OPT_TIDALQ].cName, body[iBody].dTidalQ,
                 options[OPT_TIDALTAU].cName);
       }
     } else {
@@ -1590,10 +1591,10 @@ void VerifyCPL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 void VerifyPerturbersEqtide(BODY *body, FILES *files, OPTIONS *options,
                             UPDATE *update, int iNumBodies, int iBody) {
   int iPert, iBodyPert, iVar, ok;
-  int *bFound = malloc(iNumBodies);
+  int *bFound = malloc(iNumBodies*sizeof(int));
 
   for (iBody = 0; iBody < iNumBodies; iBody++) {
-
+    fprintf(stderr,"Body: %s\n",body[iBody].cName);
     if (body[iBody].bEqtide) {
       if (body[iBody].iTidePerts > 0) {
         for (iPert = 0; iPert < body[iBody].iTidePerts; iPert++) {
@@ -1610,7 +1611,7 @@ void VerifyPerturbersEqtide(BODY *body, FILES *files, OPTIONS *options,
                 // Was eqtide set for the perturbed body?
                 if (!body[iBodyPert].bEqtide) {
                   fprintf(stderr,
-                          "ERROR: %s tidally perturbs %s, but module EQTIDE "
+                          "ERROR: %s tidally perturbs %s, but module EqTide "
                           "was not selected for body %s.\n",
                           body[iBody].cName, body[iBodyPert].cName,
                           body[iBodyPert].cName);
@@ -2663,15 +2664,8 @@ void WriteEccTimescaleEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteEqRotPer(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
                    char cUnit[]) {
-  int iOrbiter;
 
-  if (!bPrimary(body, iBody)) {
-    iOrbiter = iBody;
-  } else {
-    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
-    iOrbiter = body[iBody].iaTidePerts[0];
-  }
-
+  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
   *dTmp = fdFreqToPer(fdEqRotRate(
         body, iBody, body[iOrbiter].dMeanMotion, body[iOrbiter].dEccSq,
         control->Evolve.iEqtideModel, control->Evolve.bDiscreteRot));
@@ -2688,14 +2682,8 @@ void WriteEqRotPer(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 void WriteEqRotPerCont(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char cUnit[]) {
-  int iOrbiter;
 
-  if (!bPrimary(body, iBody)) {
-    iOrbiter = iBody;
-  } else {
-    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
-    iOrbiter = body[iBody].iaTidePerts[0];
-  }
+  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
 
   // To CPL, or to CTL? That is the question
   if (control->Evolve.iEqtideModel == CPL) {
@@ -2719,15 +2707,8 @@ void WriteEqRotPerCont(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteEqRotPerDiscrete(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
                            int iBody, double *dTmp, char cUnit[]) {
-  int iOrbiter;
 
-  if (!bPrimary(body, iBody)) {
-    iOrbiter = iBody;
-  } else {
-    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
-    iOrbiter = body[iBody].iaTidePerts[0];
-  }
-
+  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
   if (control->Evolve.iEqtideModel == CPL) {
     *dTmp = fdFreqToPer(fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,
                                                body[iOrbiter].dEccSq));
@@ -2747,15 +2728,8 @@ void WriteEqRotPerDiscrete(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteEqRotRate(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
-  int iOrbiter;
 
-  if (!bPrimary(body, iBody)) {
-    iOrbiter = iBody;
-  } else {
-    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
-    iOrbiter = body[iBody].iaTidePerts[0];
-  }
-
+  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
   *dTmp = fdEqRotRate(body, iBody, body[iOrbiter].dMeanMotion,
                       body[iOrbiter].dEccSq, control->Evolve.iEqtideModel,
                       control->Evolve.bDiscreteRot);
@@ -2772,14 +2746,8 @@ void WriteEqRotRate(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteEqRotRateCont(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                         double *dTmp, char cUnit[]) {
-  int iOrbiter;
 
-  if (!bPrimary(body, iBody)) {
-    iOrbiter = iBody;
-  } else {
-    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
-    iOrbiter = body[iBody].iaTidePerts[0];
-  }
+  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
 
   // To CPL, or to CTL? That is the question
   if (control->Evolve.iEqtideModel == CPL) {
@@ -2802,14 +2770,7 @@ void WriteEqRotRateCont(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteEqRotRateDiscrete(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
                             int iBody, double *dTmp, char cUnit[]) {
-  int iOrbiter;
-
-  if (!bPrimary(body, iBody)) {
-    iOrbiter = iBody;
-  } else {
-    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
-    iOrbiter = body[iBody].iaTidePerts[0];
-  }
+  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
 
   if (control->Evolve.iEqtideModel == CPL) {
     *dTmp = fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,
@@ -2830,15 +2791,9 @@ void WriteEqRotRateDiscrete(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteEqTidePower(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                       double *dTmp, char cUnit[]) {
-  int iOrbiter;
 
-  if (!bPrimary(body, iBody)) {
-    iOrbiter = iBody;
-  } else {
-    // Only 1 pertuber allowed -- Maybe check in VerifyOutputEqtide?
-    iOrbiter = body[iBody].iaTidePerts[0];
-  }
-
+  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
+  // Why is this Eq??????? XXX
   if (control->Evolve.iEqtideModel == CPL) {
     *dTmp = fdCPLTidePowerEq(body[iBody].dTidalZ[iOrbiter], body[iBody].dEccSq,
                              body[iBody].dMeanMotion, body[iBody].dObliquity,
@@ -2867,7 +2822,7 @@ void WriteGammaOrb(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   /* Broken */
   //*dTmp =
-  //fdGammaOrb(body[iBody].dEccSq,body[iBody].dObliquity,body[iBody].iTidalEpsilon[0]);
+  // fdGammaOrb(body[iBody].dEccSq,body[iBody].dObliquity,body[iBody].iTidalEpsilon[0]);
   *dTmp = -1;
 
   /* Negative option? */
@@ -2928,6 +2883,7 @@ void WriteOblTimescaleEqtide(BODY *body, CONTROL *control, OUTPUT *output,
   }
   */
   *dTmp = -1;
+  strcpy(cUnit, "");
 }
 
 void WriteRotTimescaleEqtide(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2974,6 +2930,16 @@ void WritePowerEqtide(BODY *body, CONTROL *control, OUTPUT *output,
   /* Get total tidal power */
   *dTmp = fdTidePower(body, iBody, control->Evolve.iEqtideModel);
   //*dTmp = body[iBody].dTidalPowMan;
+
+
+  int jBody=0;
+  if (iBody==0)
+    jBody++;
+    /*
+  fprintf(stderr,"\niBody: %d\n",iBody);
+  fprintf(stderr,"\njBody: %d\n",jBody);
+  fprintf(stderr,"TidalZ: %lf\n",body[iBody].dTidalZ[jBody]);
+*/
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3467,6 +3433,7 @@ void LogBodyEqtide(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   fprintf(fp, "----- EQTIDE PARAMETERS (%s)------\n", body[iBody].cName);
   for (iOut = iStart; iOut < OUTENDEQTIDE; iOut++) {
     if (output[iOut].iNum > 0) {
+      //fprintf(stderr,"iOut = %d.\n",iOut);
       WriteLogEntry(body, control, &output[iOut], system, update, fnWrite[iOut],
                     fp, iBody);
     }
@@ -3937,6 +3904,40 @@ void ForceBehaviorEqtide(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
   }
 }
 
+/**
+ * Identify and return the index for the perturbing body.
+ * 
+ * 
+*/
+
+int fiAssignTidalPerturber(BODY *body,int iBody) {
+  int iPerturber;
+
+  if (!bPrimary(body, iBody)) {
+    iPerturber = iBody;
+  } else {
+    // Without more info, assume closest body dominates
+    // XXX Should either be calculable from these variables or be rewritten
+    iPerturber = 0;
+  }
+  return iPerturber;
+}
+
+/* Non-central body contains the orbital parameters */
+
+int fiAssignTidalOrbiter(BODY *body,int iBody) {
+  int iOrbiter;
+
+  if (!bPrimary(body, iBody)) {
+    iOrbiter = iBody;
+  } else {
+    // Without more info, assume closest body dominates
+    // XXX Should either be calculable from these variables or be rewritten
+    iOrbiter = 1;
+  }
+  return iOrbiter;
+}
+
 /*
  ************************ CPL Functions ******************
  */
@@ -3957,10 +3958,14 @@ double fdCPLTidePower(BODY *body, int iBody) {
     } else {
       iOrbiter = iBody;
     }
+    // iIndex should be removed by optimization
     iIndex = body[iBody].iaTidePerts[iPert];
 
     // Does this work with DF's changes to da/dt with the synchronous case?
     // See Fleming et al., 2018
+    //fprintf(stderr,"\niBody: %d\n",iBody);
+    //fprintf(stderr,"TidalZ[%d]: %lf\n",iIndex,body[iBody].dTidalZ[iIndex]);
+
     dOrbPow += -body[iBody].dTidalZ[iIndex] / 8 *
                (4 * body[iBody].iTidalEpsilon[iIndex][0] +
                 body[iOrbiter].dEccSq *
@@ -4064,6 +4069,7 @@ double fdCPLTidePowerEq(double dTidalZ, double dEccSq, double dMeanMotion,
   double dGammaOrb, dGammaRot, dRotRateEq;
   int *iEpsilon;
 
+  // XXX Yikes! This shouldn't be getting mallocked every output!
   iEpsilon = malloc(10 * sizeof(int));
 
   /* Must reset spin rate in order to get the phase lags correctly */

@@ -1,7 +1,7 @@
 # The host star
 sName	        sun		                    # Body's name
 saModules	    stellar                     # Modules to apply, exact spelling required
-cColor          c91111
+sColor          c91111
 
 # Output
 saOutputOrder Age -Luminosity -LXUVStellar -Radius Temperature

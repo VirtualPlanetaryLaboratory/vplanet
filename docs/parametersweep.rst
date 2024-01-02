@@ -118,6 +118,14 @@ This command returns output like the following to the terminal:
 
 But with the proper numbers shown.
 
+.. warning::
+
+    If you decide to *rerun* a parameter sweep, you must delete the checkpoint file! 
+    The name of this file is ``.sDestFolder``, where sDestFolder is the option in :code:`VSPACE`
+    the provdes the name for the directory that contains the simulations. If you do not delete
+    this file, the :code:`MultiPlanet` will conclude your sweep has finished and will not restart
+    the simulations.
+
 After :code:`MultiPlanet` completes, you may have a large number of directories with gigabytes
 of data. Storing, analyzing, and plotting these data can be tedious as each output file
 from each directory must be opened and read in sequentially. To streamline this process,
@@ -146,12 +154,11 @@ Here’s the input file for :code:`BigPlanet`:
 
 .. code-block:: bash
 
-    sSrcFolder ~/vplanet/examples/EarthInterior
     sDestFolder ParameterSweep
     sArchiveFile ParameterSweep.bpa
+    sOutputFile ParameterSweep.bpf
 
-    saBodyFiles   sun.in earth.in
-
+    saBodyFiles   earth.in sun.in
     sPrimaryFile   vpl.in
 
     saKeyInclude earth:TCore:initial earth:40KPowerCore:final earth:RIC:final
@@ -160,9 +167,10 @@ Here’s the input file for :code:`BigPlanet`:
 This will create an `HDF5
 <https://en.wikipedia.org/wiki/Hierarchical_Data_Format>`_ file
 that shares the same name as the destfolder from the :code:`VSPACE` file, but with ".bpf" or ".bpa"
-appended, e.g. ParameterSweep.bpa. This file will now replace the directory structure
-created by :code:`VSPACE`. The -a option is for creation of an achvie file, which has **everything from
-the destfolder created with :code:`VSPACE` and the data generated from :code:`MultiPlanet`. Here is a 
+appended, depending on what type of BigPlanet file. In this case, we are creating ParameterSweep.bpf. 
+This file will now replace the directory structure created by :code:`VSPACE`. 
+The -a option is for creation of an archive file (the .bpa file), which has **everything** from
+the destfolder created with :code:`VSPACE` and the data generated from :code:`MultiPlanet`.
 
 .. note::
 
@@ -181,7 +189,7 @@ Extracting and Plotting with :code:`BigPlanet`
 After you have compressed your data, you need to access it. To accomplish this goal,
 :code:`BigPlanet` is also a python module that can be imported into python scripts for the
 extraction of data from the HDF5 file. For our example, final inner core radius as a function of
-current potassium-40 abundance in the core and the initial core temerature, the script looks like
+current potassium-40 abundance in the core and the initial core temperature, the script looks like
 this:
 
 .. code-block:: python
@@ -268,7 +276,7 @@ where:
 
 *header* adds the names and units for each column (default is False)
 
-*ulysses* makes the file compatable with `VR Ulysses <https://www.vrulysses.com/>`_ (default is 0)
+*ulysses* makes the file compatible with `VR Ulysses <https://www.vrulysses.com/>`_ (default is 0)
 
 
 You are now ready to efficiently explore your parameter space!

@@ -31,6 +31,8 @@ connected them both to EqTide.
 **Patrick Barth** developed the MagmOc module. He also assisted in AtmEsc
 development.
 
+**Laura Amaral** developed the FLARE module and contributed to AtmEsc.
+
 **Thomas Quinn** assisted in the development of DistOrb, DistRot, and GalHabit.
 He also found many bugs with valgrind and address-sanitizer.
 

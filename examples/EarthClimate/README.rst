@@ -21,7 +21,7 @@ northern and southern hemispheres. On longer timescales, ice sheets grow and ret
 due to changes in eccentricity, obliquity and precession angle (the angle orthogonal to obliquity), which are caused by perturbations
 from other bodies. Note that we assume every latitude grid is 75% water, 25% land
 so the latitudinal extent of the ice sheets does not exactly match the geologic
-record, but the frequencies and intensities do. 
+record, but the frequencies and intensities do.
 
 To run this example
 -------------------
@@ -49,4 +49,4 @@ absence of ice on the surface.
    :width: 600px
    :align: center
 
-Earth's orbital, rotational, and climate evolution over 1 Myr. The orbital and rotational evolution are modified by all the planets in the Solar System, and the Moon is included by forcing the Earth's precessional frequency to match the observed rate. CPP is the "climate precession parameter." The bottom four panels show key properties of the climate state, as indicated by the color bars and axes on the right. Compare to Fig. 4 in `(Huybers & Tzipermann 2008) <https://ui.adsabs.harvard.edu/abs/2008PalOc..23.1208H/abstract>`_. 
+Earth's orbital, rotational, and climate evolution over 1 Myr. The orbital and rotational evolution are modified by all the planets in the Solar System, and the Moon is included by forcing the Earth's precessional frequency to match the observed rate. CPP is the "climate precession parameter." The bottom four panels show key properties of the climate state, as indicated by the color bars and axes on the right. Compare to Fig. 4 in `(Huybers & Tzipermann 2008) <https://ui.adsabs.harvard.edu/abs/2008PalOc..23.1208H/abstract>`_.

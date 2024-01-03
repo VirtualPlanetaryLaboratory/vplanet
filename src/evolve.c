@@ -311,11 +311,12 @@ double fdGetTimeStep(BODY *body, CONTROL *control, SYSTEM *system,
                   dBCartVelsq += body[iBody].dBCartVel[i] * body[iBody].dBCartVel[i];
                 }
                 dMinNow = sqrt(dBCartPossq / dBCartVelsq);
-              
-                for (int iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
+                int iTmpBody = 0;
+                for (iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
                   if (body[iTmpBody].bExcludeFromBarycenter) {
                     double dLocalBaryCartPossq = 0, dLocalBaryCartVelsq = 0;
-                    for (int i = 0; i < 3; i++) {
+                    int i = 0;
+                    for (i = 0; i < 3; i++) {
                       dLocalBaryCartPossq += body[iBody].dLocalBaryCartPos[i] * body[iBody].dLocalBaryCartPos[i];
                       dLocalBaryCartVelsq += body[iBody].dLocalBaryCartVel[i] * body[iBody].dLocalBaryCartVel[i];            
                     }

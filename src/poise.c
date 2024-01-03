@@ -6979,8 +6979,8 @@ void fvPoiseSeasonalInitialize(BODY *body, int iBody, int iYear) {
   body[iBody].dTGlobal       = 0.0;
   body[iBody].dFluxInGlobal  = 0.0;
   body[iBody].dFluxOutGlobal = 0.0;
-
-  for (int iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+  int iLat = 0;
+  for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
     // start of year, reset annual averages to zero
     body[iBody].daTempAvg[iLat]          = 0.0;
     body[iBody].daPlanckBAvg[iLat]       = 0.0;
@@ -7080,7 +7080,8 @@ void fvFluxesByLatitude(BODY *body, int iBody, int iNyear, int iNstep) {
           body[iBody].daFlux[iLat];
 
     body[iBody].daDivFlux[iLat] = 0.0;
-    for (int jLat = 0; jLat < body[iBody].iNumLats; jLat++) {
+    int jLat = 0;
+    for (jLat = 0; jLat < body[iBody].iNumLats; jLat++) {
       body[iBody].daDivFlux[iLat] +=
             -body[iBody].daMDiffSea[iLat][jLat] * body[iBody].daTempLW[jLat];
     }
@@ -7243,7 +7244,8 @@ void fvFinishSeaIce(BODY *body, double dStepsize, int iBody, int iLat,
 void fvCalculateSeaIce(BODY *body, double dStepsize, int iBody, int iNyear,
                        int iNday, int iNstep) {
   fvSeaIce(body, iBody);
-  for (int iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+  int iLat = 0;
+  for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
     if (body[iBody].daSeaIceHeight[iLat] > 0) {
       // adjust height of present sea ice
       body[iBody].daSeaIceHeight[iLat] -= body[iBody].dSeasDeltat /

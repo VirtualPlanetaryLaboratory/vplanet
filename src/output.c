@@ -747,14 +747,16 @@ void WriteOrbPeriod(BODY *body, CONTROL *control, OUTPUT *output,
         We first find the largest mass in the system, then the second largest.
         */
         double dMaxMass = body[0].dMass; // Maximum massive body defaulted to first body
-        for (int iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
+        int iTmpBody = 0;
+        for (iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
           if (body[iTmpBody].dMass > dMaxMass) {
             dMaxMass = body[iTmpBody].dMass;  // Replaces maximum mass if a different body is larger
           }
         }
         if (body[iBody].dMass == dMaxMass) {
           double dSecondMass = body[1].dMass; // Second most massive body defaulted to second body
-          for (int iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
+          int iTmpBody = 0;
+          for (iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
             if (body[iTmpBody].dMass > dSecondMass && body[iTmpBody].dMass != dMaxMass) {
               dSecondMass = body[iTmpBody].dMass; // Replaces mass if larger than default and smaller than largest mass
             }
@@ -766,7 +768,8 @@ void WriteOrbPeriod(BODY *body, CONTROL *control, OUTPUT *output,
           // All other masses are defined by any mass enclosed within the orbit of the body in focus.
           double dEnclosedMass = 0.0;
           // We collect the enclosed masses by making sure their dSemi are smaller than the body in focus
-          for (int iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
+          int iTmpBody = 0;
+          for (iTmpBody = 0; iTmpBody < control->Evolve.iNumBodies; iTmpBody++) {
             if (body[iTmpBody].dBarySemi <= body[iBody].dBarySemi) {
               dEnclosedMass += body[iTmpBody].dMass; // includes the mass of body[iBody].dMassF
             }

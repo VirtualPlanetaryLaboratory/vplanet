@@ -858,7 +858,8 @@ void fvAssignCartOutputs2BaryCart(BODY *body, int iBody) {
 }
 
 void fvAssignLocalBaryCart(BODY *body, int iBody) {
-  for (int i = 0; i < 3; i++) {
+  int i = 0;
+  for (i = 0; i < 3; i++) {
     body[iBody].dLocalBaryCartPos[i] = body[iBody].dBCartPos[i];
     body[iBody].dLocalBaryCartVel[i] = body[iBody].dBCartVel[i];
   }
@@ -952,7 +953,8 @@ double atan2Continuous(double dSinAngle, double dCosAngle, double dMinimumValue)
 
 void CalculateCartesianComponentsFromCenterOfMassEquation(BODY *body, int iNumBodies, 
                                                           int iUnassignedBody, int iDimension) {
-  for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+  int iTmpBody = 0;                                                            
+  for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
     if (iTmpBody != iUnassignedBody && !body[iTmpBody].bExcludeFromBarycenter) {
       double dMassRatio = body[iTmpBody].dMass / body[iUnassignedBody].dMass;
       /* 
@@ -968,13 +970,15 @@ void CalculateCartesianComponentsFromCenterOfMassEquation(BODY *body, int iNumBo
 }
 
 void CalculateBarycentricCoordinatesOfUnassignedBody(BODY *body, int iNumBodies) {
-  for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+  int iTmpBody = 0;
+  for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
     if (body[iTmpBody].bCalcCoordsFromCenterOfMass) {
       if (body[iTmpBody].bExcludeFromBarycenter) {
         printf("ERROR: Cannot turn on bCalcCoordsFromCenterOfMass and bExcludeFromBarycenter in the same body.\n");
         exit(1);
       }
-      for (int iDimension = 0; iDimension < 3; iDimension++) {
+      int iDimension = 0;
+      for (iDimension = 0; iDimension < 3; iDimension++) {
         CalculateCartesianComponentsFromCenterOfMassEquation(body, iNumBodies, iTmpBody, iDimension); 
       }
       fvAssignCartOutputs2BaryCart(body, iTmpBody);
@@ -985,19 +989,22 @@ void CalculateBarycentricCoordinatesOfUnassignedBody(BODY *body, int iNumBodies)
 
 void CalculateBaryPositionSquaredAndVelocitySquared(BODY *body, int iBody, int iNumBodies, double* dMagnitudeSquaredPosition, double* dMagnitudeSquaredVelocity) {
   double bBodyExcludedFromBarycenter = 0;
-  for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+  int iTmpBody = 0;
+  for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
     if (body[iTmpBody].bExcludeFromBarycenter) {
       bBodyExcludedFromBarycenter += 1;
       break;
     }
   }
   if (bBodyExcludedFromBarycenter) {
-    for (int i = 0; i < 3; i++) {
+    int i = 0;
+    for (i = 0; i < 3; i++) {
       *dMagnitudeSquaredPosition += body[iBody].dLocalBaryCartPos[i] * body[iBody].dLocalBaryCartPos[i];
       *dMagnitudeSquaredVelocity += body[iBody].dLocalBaryCartVel[i] * body[iBody].dLocalBaryCartVel[i];      
     }
   } else {
-    for (int i = 0; i < 3; i++) {
+    int i = 0;
+    for (i = 0; i < 3; i++) {
       *dMagnitudeSquaredPosition += body[iBody].dBCartPos[i] * body[iBody].dBCartPos[i];
       *dMagnitudeSquaredVelocity += body[iBody].dBCartVel[i] * body[iBody].dBCartVel[i];      
     }
@@ -1011,7 +1018,8 @@ double CalculateEscapeVelocitySquared(double dGravitationalParameter, double dMa
 }
 
 void fvRemoveFromLocalBaryCenterIfEjected(BODY *body, int iNumBodies) {
-  for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+  int iTmpBody = 0;
+  for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
     if (!body[iTmpBody].bExcludeFromBarycenter && !body[iTmpBody].bRemainInLocalBaryIfEjected) {
       double dMagnitudeSquaredPosition = 0, dMagnitudeSquaredVelocity = 0;
       double dLocalBaryMu = CalculateBarycentricGravitationalParameter(body, iNumBodies, iTmpBody);
@@ -1029,18 +1037,22 @@ void fvLocalBarycenter2CommonBarycenter(BODY *body, int iNumBodies) {
    double dCommonBarycenterMass = TotalMass(body, iNumBodies);
   dCommonBarycenterPosition = malloc(3 * sizeof(double));
   dCommonBarycenterVelocity = malloc(3 * sizeof(double));
-  for (int i = 0; i < 3; i++) {
+  int i = 0;
+  for (i = 0; i < 3; i++) {
     dCommonBarycenterPosition[i] = 0;
     dCommonBarycenterVelocity[i] = 0;
   }
+  int iTmpBody = 0;
   for (int iTmpBody  = 0; iTmpBody < iNumBodies; iTmpBody++) {
-    for (int i = 0; i < 3; i++) {
+    int i = 0;
+    for (i = 0; i < 3; i++) {
       dCommonBarycenterPosition[i] += body[iTmpBody].dMass * body[iTmpBody].dLocalBaryCartPos[i] / dCommonBarycenterMass;
       dCommonBarycenterVelocity[i] += body[iTmpBody].dMass * body[iTmpBody].dLocalBaryCartVel[i] / dCommonBarycenterMass;
     }
   }
   for (int iTmpBody  = 0; iTmpBody < iNumBodies; iTmpBody++) {
-    for (int i = 0; i < 3; i++) {
+    int i = 0;
+    for (i = 0; i < 3; i++) {
       body[iTmpBody].dBCartPos[i] = body[iTmpBody].dLocalBaryCartPos[i] - dCommonBarycenterPosition[i];
       body[iTmpBody].dBCartVel[i] = body[iTmpBody].dLocalBaryCartVel[i] - dCommonBarycenterVelocity[i];
     }
@@ -1053,20 +1065,24 @@ void fvCommonBarycenter2LocalBarycenter(BODY *body, int iNumBodies) {
   double *dLocalBarycenterPosition, *dLocalBarycenterVelocity;
   dLocalBarycenterPosition = malloc(3 * sizeof(double));
   dLocalBarycenterVelocity = malloc(3 * sizeof(double));
-  for (int i = 0; i < 3; i++) {
+  int i = 0;
+  for (i = 0; i < 3; i++) {
     dLocalBarycenterPosition[i] = 0;
     dLocalBarycenterVelocity[i] = 0;
   }
-  for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+  int iTmpBody = 0;
+  for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
     if (!body[iTmpBody].bExcludeFromBarycenter) {
-      for (int i = 0; i < 3; i++) {
+      int i = 0;
+      for (i = 0; i < 3; i++) {
         dLocalBarycenterPosition[i] += body[iTmpBody].dMass * body[iTmpBody].dBCartPos[i] / dLocalBarycenterMass;
         dLocalBarycenterVelocity[i] += body[iTmpBody].dMass * body[iTmpBody].dBCartVel[i] / dLocalBarycenterMass;
       }
     }
   }
   for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
-    for (int i = 0; i < 3; i++) {
+    int i = 0;
+    for (i = 0; i < 3; i++) {
     body[iTmpBody].dLocalBaryCartPos[i] = body[iTmpBody].dBCartPos[i] - dLocalBarycenterPosition[i];
     body[iTmpBody].dLocalBaryCartVel[i] = body[iTmpBody].dBCartVel[i] - dLocalBarycenterVelocity[i];
     }
@@ -1113,7 +1129,8 @@ void RotateToLocalInvariablePlane(BODY *body, SYSTEM *system, int iNumBodies) {
 
   CalculateLocalSpecificAngularMomentum(body, system, dSpecificAngularMomentum, iNumBodies);
   double dSpecificAngularMomentumXYPlaneSquared = 0;
-  for (int i = 0; i < 2; i++) {
+  int i = 0;
+  for (i = 0; i < 2; i++) {
     dSpecificAngularMomentumXYPlaneSquared += dSpecificAngularMomentum[i] * dSpecificAngularMomentum[i];
   }
   double dSpecificAngularMomentumXYPlane = sqrt(dSpecificAngularMomentumXYPlaneSquared);
@@ -1135,7 +1152,8 @@ void AssignAllCoords(BODY *body, CONTROL *control, FILES *files, SYSTEM *system,
   double iNumBodies = control->Evolve.iNumBodies;
 
   if (iBody == 0) { // Doing this only once
-    for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+    int iTmpBody = 0;
+    for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
 
       // Need Gravitational Parameter to be assigned
       // Use BaryMu because iterated coordinates are Barycentric
@@ -1235,23 +1253,26 @@ void VerifyInputCoords(BODY *body, CONTROL *control, OPTIONS *options, SYSTEM *s
   if (system->bBarycentric && iBody == iNumBodies - 1) {
     CalculateBarycentricCoordinatesOfUnassignedBody(body, iNumBodies);
     if (system->bOutputLocalBaryCoords) {
-      for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+      int iTmpBody = 0;
+      for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
         if (body[iTmpBody].bExcludeFromBarycenter) {
-          for (int jTmpBody = 0; jTmpBody < iNumBodies; jTmpBody++) {
+          int jTmpBody = 0;
+          for (jTmpBody = 0; jTmpBody < iNumBodies; jTmpBody++) {
             body[jTmpBody].dLocalBaryCartPos = malloc(3 * sizeof(double));
             body[jTmpBody].dLocalBaryCartVel = malloc(3 * sizeof(double));
           }
           if (system->bInputCommonBaryCoords) {
             fvCommonBarycenter2LocalBarycenter(body, iNumBodies);
           } else {
-            for (int jTmpBody = 0; jTmpBody < iNumBodies; jTmpBody++) {
+            int jTmpBody = 0;
+            for (jTmpBody = 0; jTmpBody < iNumBodies; jTmpBody++) {
               fvAssignLocalBaryCart(body, jTmpBody);
             }
             if (system->bLocalInvPlane) {
               RotateToLocalInvariablePlane(body, system, iNumBodies);
             }
             fvLocalBarycenter2CommonBarycenter(body, iNumBodies);
-            for (int jTmpBody = 0; jTmpBody < iNumBodies; jTmpBody++) {
+            for (jTmpBody = 0; jTmpBody < iNumBodies; jTmpBody++) {
               fvAssignCartOutputs2BaryCart(body, jTmpBody);
             }           
           }             
@@ -1459,7 +1480,8 @@ double LimitRounding(double x) {
 
 double TotalMass(BODY *body, int iNumBodies) {
   double dTmpTotalMass = 0.0;
-  for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+  int iTmpBody = 0;
+  for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
     dTmpTotalMass += body[iTmpBody].dMass;
   }
   return dTmpTotalMass;
@@ -1467,7 +1489,8 @@ double TotalMass(BODY *body, int iNumBodies) {
 
 double SumOfBodyMassesExcludedFromBarycenter(BODY *body, int iNumBodies) {
   double dSumOfBodyMassesExcluded = 0.0;
-  for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+  int iTmpBody = 0;
+  for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
     if (body[iTmpBody].bExcludeFromBarycenter) {
       dSumOfBodyMassesExcluded += body[iTmpBody].dMass;
     }
@@ -1791,7 +1814,8 @@ void fvBaryOrbElems2BaryCart(BODY *body, int iNumBodies, int iBody) {
   body[iBody].dBaryMu = CalculateBarycentricGravitationalParameter(body, iNumBodies, iBody);
   elems.dMu = body[iBody].dBaryMu;
   OrbElems2Cart(elems, dPos, dVel);
-  for (int i = 0; i < 3; i++) {
+  int i = 0;
+  for (i = 0; i < 3; i++) {
     body[iBody].dBCartPos[i] = dPos[i];
     body[iBody].dBCartVel[i] = dVel[i];
   }
@@ -1835,7 +1859,8 @@ void fvHelioOrbElems2HelioCart(BODY *body, int iNumBodies, int iBody) {
     dHelioMu = BIGG * (body[0].dMass + body[iBody].dMass);
     elems.dMu = dHelioMu;
     OrbElems2Cart(elems, dPos, dVel);
-    for (int i = 0; i < 3; i++) {
+    int i = 0;
+    for (i = 0; i < 3; i++) {
       body[iBody].dHCartPos[i] = dPos[i];
       body[iBody].dHCartVel[i] = dVel[i];
     }
@@ -1850,17 +1875,19 @@ void fvHelioCart2BaryCart(BODY *body, int iNumBodies, int iBody) {
   dCenterOfMassVelocityVector = malloc(3 * sizeof(double));
   dTotalBarycentricMass = TotalBarycentricMass(body, iNumBodies);
 
-  for (int i = 0; i < 3; i++) {
+  int i = 0;
+  for (i = 0; i < 3; i++) {
     dCenterOfMassPositionVector[i] = 0;
     dCenterOfMassVelocityVector[i] = 0;
-    for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+    int iTmpBody = 0;
+    for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
       if (!body[iTmpBody].bExcludeFromBarycenter) {
         dCenterOfMassPositionVector[i] += (body[iTmpBody].dMass * body[iTmpBody].dHCartPos[i] / dTotalBarycentricMass);
         dCenterOfMassVelocityVector[i] += (body[iTmpBody].dMass * body[iTmpBody].dHCartVel[i] / dTotalBarycentricMass);
       }
     }
   }
-  for (int i = 0; i < 3; i++) {
+  for (i = 0; i < 3; i++) {
     body[iBody].dBCartPos[i] = body[iBody].dHCartPos[i] - dCenterOfMassPositionVector[i];
     body[iBody].dBCartVel[i] = body[iBody].dHCartVel[i] - dCenterOfMassVelocityVector[i];
   }
@@ -1869,7 +1896,8 @@ void fvHelioCart2BaryCart(BODY *body, int iNumBodies, int iBody) {
 }
 
 void fvBaryCart2HelioCart(BODY *body, int iBody) {
-  for (int i = 0; i < 3; i++) {
+  int i = 0;
+  for (i = 0; i < 3; i++) {
     body[iBody].dHCartPos[i] = body[iBody].dBCartPos[i] - body[0].dBCartPos[i];
     body[iBody].dHCartVel[i] = body[iBody].dBCartVel[i] - body[0].dBCartVel[i];
   }
@@ -1892,7 +1920,8 @@ void CalculateEccentricityVector(double dMu,
   cross(dVelocityVector, dSpecificAngularMomentum, dEccentricityVector);
 
   // Second term of Eccentricity vector added here (subtract r-hat)
-  for (int i = 0; i < 3; i++) {
+  int i = 0;
+  for (i = 0; i < 3; i++) {
     // Divide by dMu here for the first term
     dEccentricityVector[i] /= dMu;
     // Introduce second term here to subtract from
@@ -1910,7 +1939,7 @@ double CalculateLongitudeAscendingNode(double dMinimumValue,
                                       double *dSpecificAngularMomentumVector, 
                                       double dInclination) {
   double dLongitudeAscendingNode = 0.0;
-  if (fabs(dInclination) > dMinimumValue) {
+  if (dMinimumValue < fabs(dInclination) && fabs(dInclination) < PI - dMinimumValue) {
     dLongitudeAscendingNode = atan2Continuous(dSpecificAngularMomentumVector[0], 
                                               -dSpecificAngularMomentumVector[1], 
                                               dMinimumValue);
@@ -2083,7 +2112,8 @@ ELEMS fvFindPoincareVariables(double dEccentricity, double dInclination,
 }
 void CreateCardinalUnitVector(int iDimension, int iNumDimensions, double *dUnitVector) {
   if (iDimension < iNumDimensions) {
-    for (int i = 0; i < iNumDimensions; i++) {
+    int i = 0;
+    for (i = 0; i < iNumDimensions; i++) {
       if (i == iDimension) {
         dUnitVector[i] = 1.0;
       } else {
@@ -2104,7 +2134,8 @@ void CalculateUnitNodalVector(double *dSpecificAngularMomentumVector, double *dU
   cross(dUnitVectorZ, dSpecificAngularMomentumVector, dNodalVector);
   double dMagnitudeNodalVector = magnitude(dNodalVector);
   if (dMagnitudeNodalVector > 0) { // Nodal Vector exists
-    for (int i = 0; i < iNumDimensions; i++) {
+    int i = 0;
+    for (i = 0; i < iNumDimensions; i++) {
       dUnitNodalVector[i] = dNodalVector[i] / dMagnitudeNodalVector; 
     }
   } else { // Nodal Vector doesn't exist, but origin is placed in the x-direction
@@ -2112,6 +2143,29 @@ void CalculateUnitNodalVector(double *dSpecificAngularMomentumVector, double *dU
   }
   free(dUnitVectorZ);
   free(dNodalVector);
+}
+
+void ApproximateToStandardBasisVector(double dMinimumValue, double *dVector) {
+  int i = 0;
+  int iNonZeroComponent = 0;
+  int bUnitComponentFound = 0;
+  double dMagnitudeVector = magnitude(dVector);
+  for (i = 0; i < 3; i++) {
+    double dAbsoluteRatio = fabs(dVector[i] / dMagnitudeVector);    
+    if (dAbsoluteRatio < dMinimumValue) {
+      dVector[i] = 0;
+    }
+    if (1.0 - dMinimumValue <= dAbsoluteRatio && dAbsoluteRatio <= 1.0) {
+      iNonZeroComponent = i;
+      bUnitComponentFound += 1;
+      break;
+    }
+  }
+  for (i = 0; i < 3; i++) {
+    if (i != iNonZeroComponent && bUnitComponentFound) {
+      dVector[i] = 0;
+    }
+  }  
 }
 
 ELEMS fvCart2OrbElems(double dMinimumValue, double dMu, double *dPositionVector, double *dVelocityVector) {
@@ -2125,12 +2179,16 @@ ELEMS fvCart2OrbElems(double dMinimumValue, double dMu, double *dPositionVector,
   double dMagnitudePosition = magnitude(dPositionVector);
 
   cross(dPositionVector, dVelocityVector, dSpecificAngularMomentumVector);
+  ApproximateToStandardBasisVector(dMinimumValue, dSpecificAngularMomentumVector);
+
+  double dMagnitudeSpecificAngularMomentum = magnitude(dSpecificAngularMomentumVector);
+
   CalculateEccentricityVector(dMu, dPositionVector, dVelocityVector, 
                               dSpecificAngularMomentumVector, dEccentricityVector, 
                               dMagnitudePosition);
+  ApproximateToStandardBasisVector(dMinimumValue, dEccentricityVector);                              
   CalculateUnitNodalVector(dSpecificAngularMomentumVector, dUnitNodalVector);
   
-  double dMagnitudeSpecificAngularMomentum = magnitude(dSpecificAngularMomentumVector);
   // We define all orbital elements to ELEMS
   ELEMS elems = {0};
   // *** Solve the orbital elements ***
@@ -2167,13 +2225,15 @@ void fvBaryCart2BaryOrbElems(BODY *body, SYSTEM *system, int iNumBodies, int iBo
   dVel = malloc(3 * sizeof(double));
   if (system->bOutputLocalBaryCoords) {
     body[iBody].dBaryMu = CalculateBarycentricGravitationalParameter(body, iNumBodies, iBody);
-    for (int i = 0; i < 3; i++) {
+    int i = 0;
+    for (i = 0; i < 3; i++) {
       dPos[i] = body[iBody].dLocalBaryCartPos[i];
       dVel[i] = body[iBody].dLocalBaryCartVel[i];
     }
   } else {
     body[iBody].dBaryMu = CalculateCommonBarycentricGravitationalParameter(body, iNumBodies, iBody);
-    for (int i = 0; i < 3; i++) {
+    int i = 0;
+    for (i = 0; i < 3; i++) {
       dPos[i] = body[iBody].dBCartPos[i];
       dVel[i] = body[iBody].dBCartVel[i];
     }
@@ -2243,7 +2303,8 @@ void fvBaryCart2HelioOrbElems(BODY *body, int iNumBodies, int iBody) {
     dPos = malloc(3 * sizeof(double));
     dVel = malloc(3 * sizeof(double));
 
-    for (int i = 0; i < 3; i++) {
+    int i = 0;
+    for (i = 0; i < 3; i++) {
       dPos[i] = body[iBody].dHCartPos[i];
       dVel[i] = body[iBody].dHCartVel[i];
     }

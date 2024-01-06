@@ -335,12 +335,8 @@ void fdGetUpdateInfo(BODY *body, CONTROL *control, SYSTEM *system,
 
   int iBody, iVar, iEqn, iNumBodies, iNumVars,
         iNumEqns; // Dummy counting variables
-  EVOLVE
-  integr; // Dummy EVOLVE struct so we don't have to dereference control a lot
   double dVarNow, dMinNow, dMin = dHUGE,
                            dVarTotal; // Intermediate storage variables
-
-  integr = control->Evolve;
 
   iNumBodies = control->Evolve.iNumBodies;
   for (iBody = 0; iBody < iNumBodies; iBody++) {
@@ -416,8 +412,6 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
 
   evolve->dCurrentDt = *dDt;
   iNumBodies         = evolve->iNumBodies;
-#pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars, iNumEqns,  \
-                                                          iVar, iEqn)
   for (iBody = 0; iBody < iNumBodies; iBody++) {
     // int thread_num = omp_get_thread_num();
     // int cpu_num = sched_getcpu();
@@ -463,8 +457,6 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
   fdGetUpdateInfo(evolve->tmpBody, control, system, evolve->tmpUpdate,
                   fnUpdate);
 
-#pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars, iNumEqns,  \
-                                                          iVar, iEqn)
   for (iBody = 0; iBody < iNumBodies; iBody++) {
     iNumVars = update[iBody].iNumVars;
     double daDerivVar;
@@ -508,8 +500,6 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
   fdGetUpdateInfo(evolve->tmpBody, control, system, evolve->tmpUpdate,
                   fnUpdate);
 
-#pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars, iNumEqns,  \
-                                                          iVar, iEqn)
   for (iBody = 0; iBody < iNumBodies; iBody++) {
     iNumVars = update[iBody].iNumVars;
     double daDerivVar;
@@ -553,8 +543,6 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
   fdGetUpdateInfo(evolve->tmpBody, control, system, evolve->tmpUpdate,
                   fnUpdate);
 
-#pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars, iNumEqns,  \
-                                                          iVar, iEqn)
   for (iBody = 0; iBody < iNumBodies; iBody++) {
     double daDerivVar;
     iNumVars = update[iBody].iNumVars;

@@ -3588,8 +3588,6 @@ int fbHaltMin235UPower(BODY *body, EVOLVE *evolve, HALT *halt, IO *io,
 */
 int fbHaltMinRadPower(BODY *body, EVOLVE *evolve, HALT *halt, IO *io,
                       UPDATE *update, fnUpdateVariable ***fnUpdate, int iBody) {
-  int iFoo;
-  iFoo = fdRadPowerTotal(body, iBody);
 
   if (fdRadPowerTotal(body, iBody) < halt->dMinRadPower) {
     if (io->iVerbose >= VERBPROG) {

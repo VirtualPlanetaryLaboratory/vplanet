@@ -757,7 +757,7 @@ void fnPropsAuxStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   if (body[iBody].iXUVModel == STELLAR_MODEL_REINERS) {
 
     // REINERS wind model
-    double dPer, dLXRay, dLXRaySat, dLEUV;
+    double dPer, dLXRay, dLXRaySat;
     dPer = 2 * PI / body[iBody].dRotRate;
 
     // Unsaturated regime (Reiners, Schussler & Passegger 2014, eqn. (11))
@@ -772,8 +772,10 @@ void fnPropsAuxStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
       dLXRay = dLXRaySat;
     }
 
-    // Sanz-Forcada et al. (2011), eqn (3)
+    /* Sanz-Forcada et al. (2011), eqn (3)
+    Not used here, but maybe useful elsewhere?
     dLEUV = 1.e7 * pow(10., 4.80 + 0.860 * log10(dLXRay * 1.e-7));
+    */
 
     // NOTE: We should add XRay and EUV to get XUV, but the Sanz-Forcada
     // model above yields unrealistically high EUV luminosities for M dwarfs.

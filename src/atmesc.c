@@ -1692,6 +1692,22 @@ void fnForceBehaviorAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
   }
 }
 
+void AuxPropsLehmer17(BODY *body,int iBody) {
+  if (body[iBody].bAutoThermTemp) {
+      body[iBody].dThermTemp = fdThermalTemp(body, iBody);
+    }
+    body[iBody].dGravAccel = BIGG *
+                             (body[iBody].dMass - body[iBody].dEnvelopeMass) /
+                             (body[iBody].dRadSolid * body[iBody].dRadSolid);
+    body[iBody].dScaleHeight = body[iBody].dAtmGasConst *
+                               body[iBody].dThermTemp / body[iBody].dGravAccel;
+    body[iBody].dPresSurf =
+          fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel,
+                       body[iBody].dRadSolid);
+    body[iBody].dRadXUV = fdLehmerRadius(body, iBody);
+    body[iBody].dRadius = body[iBody].dRadXUV / body[iBody].dXFrac;
+}
+
 
 /**
 Initializes several helper variables and properties used in the integration.
@@ -1707,41 +1723,13 @@ Initializes several helper variables and properties used in the integration.
 void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                       int iBody) {
 
-  /*
-  #ifdef DEBUG
-    if (body[iBody].dMass < 0) {
-      fprintf(stderr,"ERROR: %s's mass is %.5e at %.5e
-  years.\n",body[iBody].cName, body[iBody].dMass,evolve->dTime/YEARSEC);
-      exit(EXIT_INT);
-    }
-  #endif
-  */
-
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
-    if (body[iBody].bAutoThermTemp) {
-      body[iBody].dThermTemp = fdThermalTemp(body, iBody);
-    }
-    body[iBody].dGravAccel = BIGG *
-                             (body[iBody].dMass - body[iBody].dEnvelopeMass) /
-                             (body[iBody].dRadSolid * body[iBody].dRadSolid);
-    body[iBody].dScaleHeight = body[iBody].dAtmGasConst *
-                               body[iBody].dThermTemp / body[iBody].dGravAccel;
-    body[iBody].dPresSurf =
-          fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel,
-                       body[iBody].dRadSolid);
-    body[iBody].dRadXUV = fdLehmerRadius(body, iBody);
-    body[iBody].dRadius = body[iBody].dRadXUV / body[iBody].dXFrac;
+    AuxPropsLehmer17(body,iBody);
   }
 
   // Compute various radii of interest
   body[iBody].dBondiRadius = fdBondiRadius(body, iBody);
   body[iBody].dRocheRadius = fdRocheRadius(body, iBody);
-
-  // Ktide (due to body zero only). WARNING: not suited for binary...
-  /* xi = (pow(body[iBody].dMass / (3. * body[0].dMass), (1. / 3)) *
-               body[iBody].dSemi) /
-              (body[iBody].dRadius * body[iBody].dXFrac);
-  */
   body[iBody].dAtmEscXi = fdAtmEscXi(body, iBody);
   body[iBody].dKTide    = fdKTide(body, io, iBody);
 

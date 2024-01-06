@@ -2003,9 +2003,9 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
                     SYSTEM *system, UPDATE *update, fnWriteOutput fnWrite[],
                     FILE *fp, int iBody) {
   int iCol, iOut, iSubOut, iExtra = 0;
-  char cCol[MODULEOUTEND][OUTLEN];
+  char cCol[MODULEOUTEND][OUTLEN+2]; // +2 for brackets
   double *dTmp;
-  char cUnit[OUTLEN], cTmp[OUTLEN];
+  char cUnit[OUTLEN], cTmp[OUTLEN+2];
 
   for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
@@ -2038,9 +2038,9 @@ void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
                    SYSTEM *system, UPDATE *update, fnWriteOutput fnWrite[],
                    FILE *fp, int iBody) {
   int iCol, iOut, iSubOut, iExtra = 0;
-  char cCol[MODULEOUTEND][OUTLEN];
+  char cCol[MODULEOUTEND][OUTLEN+2]; // +2 for brackets
   double *dTmp;
-  char cUnit[OUTLEN], cTmp[OUTLEN];
+  char cUnit[OUTLEN], cTmp[OUTLEN+2];
 
   for (iCol = 0; iCol < files->Outfile[iBody].iNumGrid; iCol++) {
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
@@ -2163,11 +2163,14 @@ void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
               fnUpdateVariable ***fnUpdate, fnWriteOutput fnWrite[], int iEnd) {
   char cTime[OPTLEN];
   FILE *fp;
-  double dDt, dTotTime;
+  double dTotTime;
 
   /* Get derivatives */
   PropertiesAuxiliary(body, control, system, update);
-  dDt = fdGetTimeStep(body, control, system, update, fnUpdate);
+  /* XXX The fdGetTimeStep function is not single-purpose. The function sets 
+     members of the UPDATE struct, so those value should probably  be set in 
+     one function, and then the timestep calculated in another. */
+  double dDt = fdGetTimeStep(body, control, system, update, fnUpdate);
 
   if (iEnd == 0) {
     sprintf(cTime, "Input");

@@ -4618,11 +4618,13 @@ double fdDB15DsemiDt(BODY *body, SYSTEM *system, int *iaBody) {
   if (iBody > 0) { // Also means iBody is the orbiter
     double imk2;
     /* Set imk2 using appropriate model */
+    /* XXX This switch is not understood -- deprecate for v3.0 */
     if (body[iBody].dImK2ManOrbModel == 1) {
       imk2 = body[iBody].dImK2Man;
-    }
-    if (body[iBody].dImK2ManOrbModel == 2) {
+    } else if (body[iBody].dImK2ManOrbModel == 2) {
       imk2 = -body[iBody].dK2Man / body[iBody].dTidalQMan;
+    } else {
+      imk2 = body[iBody].dImK2Man; // To eliminate compiler warnings.
     }
     return 21 * imk2 * body[iBody].dSemi * body[iPert].dMass /
            body[iBody].dMass *
@@ -4642,9 +4644,10 @@ double fdDB15DeccDt(BODY *body, UPDATE *update, int *iaBody) {
     /* Set imk2 using appropriate model */
     if (body[iBody].dImK2ManOrbModel == 1) {
       imk2 = body[iBody].dImK2Man;
-    }
-    if (body[iBody].dImK2ManOrbModel == 2) {
+    } else if (body[iBody].dImK2ManOrbModel == 2) {
       imk2 = -body[iBody].dK2Man / body[iBody].dTidalQMan;
+    } else {
+      imk2 = body[iBody].dImK2Man; // To eliminate compiler warnings.
     }
     return 21 / 2. * imk2 * pow(body[iPert].dMass, 3. / 2) * pow(BIGG, 1. / 2) *
            pow(body[iBody].dRadius, 5) * body[iBody].dEcc / body[iBody].dMass /

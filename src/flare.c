@@ -755,7 +755,7 @@ void VerifyFlare(BODY *body,
   already inputed the XUV luminosity by flares and the flare module doesn't need
   this information anymore*/
   if (body[iBody].iFlareFFD == FLARE_FFD_NONE) {
-    int iCol, bError = 0;
+    int iCol;
     for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQ1].cName,
@@ -765,7 +765,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQ1].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQ2].cName,
@@ -775,7 +774,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQ2].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQ3].cName,
@@ -785,7 +783,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQ3].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQ4].cName,
@@ -795,7 +792,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQ4].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQMIN].cName,
@@ -805,7 +801,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQMIN].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQMID].cName,
@@ -815,7 +810,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQMID].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQMAX].cName,
@@ -825,7 +819,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQMAX].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGY1].cName,
@@ -835,7 +828,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGY1].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGY2].cName,
@@ -845,7 +837,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGY2].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGY3].cName,
@@ -855,7 +846,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGY3].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGY4].cName,
@@ -865,7 +855,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGY4].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGYMIN].cName,
@@ -875,7 +864,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGYMIN].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGYMID].cName,
@@ -885,7 +873,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGYMID].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGYMAX].cName,
@@ -895,7 +882,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGYMAX].cName);
-        bError = 1;
       }
     }
   }

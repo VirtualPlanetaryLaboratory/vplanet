@@ -665,16 +665,16 @@ double fdImK2Total(BODY *body, int iBody) {
   @return Upper mantle k2 Love number
 */
 double fdK2Man(BODY *body, int iBody) {
-  //  return 1.5/(1+9.5*body[iBody].dShmodUMan/(STIFFNESS));
-  return 1.5 / (1 + 9.5 * body[iBody].dShmodUMan / body[iBody].dStiffness);
+  double dK2Man = 1.5 / (1 + 9.5 * body[iBody].dShmodUMan / body[iBody].dStiffness);
+  return dK2Man;
 }
 
 double fdTidalQMan(BODY *body, int iBody) {
   double ShmodUManArr;
   ShmodUManArr = body[iBody].dShmodUMan * body[iBody].dMeltfactorUMan;
-  // return body[iBody].dDynamViscos*body[iBody].dMeanMotion/ShmodUManArr;
-  return body[iBody].dDynamViscos * body[iBody].dMeanMotion /
+  double dTidalQMan = body[iBody].dDynamViscos * body[iBody].dMeanMotion /
          body[iBody].dShmodUMan;
+  return dTidalQMan;
 }
 
 double fdImK2ManThermint(BODY *body, int iBody) {

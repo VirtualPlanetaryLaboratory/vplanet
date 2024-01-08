@@ -229,6 +229,7 @@ struct BODY {
                              zone? */
 
   int iWaterLossModel;     /**< Water Loss and Oxygen Buildup Model */
+  int iWaterOutgassModel;  /**< Water Outgassing model for atmesc*/
   int iAtmXAbsEffH2OModel; /**< Water X-ray/XUV absorption efficiency evolution
                               model */
   int iPlanetRadiusModel;  /**< Planet Radius model. */
@@ -266,6 +267,7 @@ struct BODY {
   double dRocheRadius; /**< Radius of the Roche lobe */
   double dBondiRadius; /**< Bondi (Sonic) Radius */
   double dEnvMassDt;   /**< Time derivative of H envelope mass */
+  double dConstWaterOutgassFlux; /**< Constant water outgassing flux for AtmEsc*/
 
   /* BINARY parameters */
   int bBinary;       /**< Apply BINARY module? */

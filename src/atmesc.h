@@ -33,6 +33,9 @@
 #define ATMESC_LS2016 13 /**< Schaefer et al (2016) atmospheric escape model */
 #define QOH 16. /**< Atomic mass ratio oxygen/hydrogen */
 
+#define WATOUTGASS_NONE 14 /**< Flag: No water outgassing (default)*/
+#define WATOUTGASS_CONSTANT 15 /**< Flag: Constant water outgassing*/
+
 /* Options Info */
 #define OPTSTARTATMESC 1200     /**< Start of AtmEsc options */
 #define OPTENDATMESC 1300       /**< End of AtmEsc options */
@@ -73,6 +76,9 @@
 #define OPT_STOPWATERLOSSINHZ                                                  \
   1235                    /**< Stop water loss once planet reaches HZ? */
 #define OPT_MINKTIDE 1240 /**< Minimum KTide value */
+
+#define OPT_WATOUTGASSMODEL 1250 /**< Model for water outgassing flux*/
+#define OPT_CONSTWATOUTGASSFLUX 1251 /**< Constant Water Outgassing Flux */
 
 /* @cond DOXYGEN_OVERRIDE */
 

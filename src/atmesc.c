@@ -74,6 +74,8 @@ void BodyCopyAtmEsc(BODY *dest, BODY *src, int foo, int iNumBodies, int iBody) {
   dest[iBody].dEnvMassDt           = src[iBody].dEnvMassDt;
   dest[iBody].bAutoThermTemp       = src[iBody].bAutoThermTemp;
   dest[iBody].bStopWaterLossInHZ   = src[iBody].bStopWaterLossInHZ;
+  dest[iBody].iWaterOutgassModel   = src[iBody].iWaterOutgassModel;
+  dest[iBody].dConstWaterOutgassFlux = src[iBody].dConstWaterOutgassFlux;
 }
 
 /**************** ATMESC options ********************/
@@ -331,7 +333,7 @@ void ReadWaterLossModel(BODY *body, CONTROL *control, FILES *files,
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
-                "ERROR: Unknown argument to %s: %s. Options are LB15, LBEXACT, "
+                "ERROR: Unknown argument to %s: %s. Options are LB15, LBEXACT, LS16, "
                 "or TIAN.\n",
                 options->cName, cTmp);
       }
@@ -893,6 +895,79 @@ void ReadHaltMinEnvelopeMass(BODY *body, CONTROL *control, FILES *files,
   }
 }
 
+/**
+Read the water outgassing model
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadWaterOutgassModel(BODY *body, CONTROL *control, FILES *files,
+                        OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp), "none", 4)) {
+      body[iFile - 1].iWaterOutgassModel = WATOUTGASS_NONE;
+    } else if (!memcmp(sLower(cTmp), "constant", 4)) {
+      body[iFile - 1].iWaterOutgassModel = WATOUTGASS_CONSTANT;
+    } else {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr,
+                "ERROR: Unknown argument to %s: %s. Options are NONE or CONSTANT.\n",
+                options->cName, cTmp);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].iWaterOutgassModel = WATOUTGASS_NONE;
+  }
+}
+
+/**
+Read the planet's constant water outgassing flux.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadConstWatOutgassFlux(BODY *body, CONTROL *control, FILES *files,
+                          OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      body[iFile - 1].dConstWaterOutgassFlux =
+            dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
+                                   control->Io.iVerbose);
+    } else {
+      body[iFile - 1].dConstWaterOutgassFlux = dTmp;
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dConstWaterOutgassFlux = options->dDefault;
+  }
+}
+
 // ReadMinEnvelopeMass is in options.c to eliminate memory leak in verifying
 // envelope
 
@@ -1202,6 +1277,27 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_MINKTIDE].dDefault   = 0.1;
   options[OPT_MINKTIDE].bMultiFile = 1;
   fnRead[OPT_MINKTIDE]             = &ReadMinKTide;
+
+  sprintf(options[OPT_WATOUTGASSMODEL].cName, "sWaterOutgassModel");
+  sprintf(options[OPT_WATOUTGASSMODEL].cDescr, "Model for Water Outgassing");
+  sprintf(options[OPT_WATOUTGASSMODEL].cDefault, "NONE");
+  sprintf(options[OPT_WATOUTGASSMODEL].cValues,
+          "NONE CONSTANT");
+  options[OPT_WATOUTGASSMODEL].iType      = 3;
+  options[OPT_WATOUTGASSMODEL].bMultiFile = 1;
+  fnRead[OPT_WATOUTGASSMODEL]             = &ReadWaterOutgassModel;
+
+  sprintf(options[OPT_CONSTWATOUTGASSFLUX].cName, "dConstWaterOutgassFlux");
+  sprintf(options[OPT_CONSTWATOUTGASSFLUX].cDescr,
+          "Constant water outgassing flux (for the sWaterOutgassModel CONSTANT)");
+  sprintf(options[OPT_CONSTWATOUTGASSFLUX].cDefault, "0");
+  sprintf(options[OPT_CONSTWATOUTGASSFLUX].cDimension, "mass/time");
+  options[OPT_CONSTWATOUTGASSFLUX].dDefault   = 0;
+  options[OPT_CONSTWATOUTGASSFLUX].iType      = 2;
+  options[OPT_CONSTWATOUTGASSFLUX].bMultiFile = 1;
+  options[OPT_CONSTWATOUTGASSFLUX].dNeg       = TOMASS / (1.e9*YEARSEC);
+  sprintf(options[OPT_CONSTWATOUTGASSFLUX].cNeg, "TO/Gyr");
+  fnRead[OPT_CONSTWATOUTGASSFLUX]             = &ReadConstWatOutgassFlux;
 }
 
 /**

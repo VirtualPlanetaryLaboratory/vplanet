@@ -7066,7 +7066,8 @@ void fvCalcPlanckAB(BODY *body, int iBody, int iLat) {
 }
 
 void fvFluxesByLatitude(BODY *body, int iBody, int iNyear, int iNstep) {
-  for (int iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+  int iLat = 0;
+  for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
     body[iBody].daDMidPt[iLat] = 0.5 * (body[iBody].daDiffusionSea[iLat + 1] +
                                         body[iBody].daDiffusionSea[iLat]);
     body[iBody].daFlux[iLat] =

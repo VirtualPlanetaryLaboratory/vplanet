@@ -1043,14 +1043,14 @@ void fvLocalBarycenter2CommonBarycenter(BODY *body, int iNumBodies) {
     dCommonBarycenterVelocity[i] = 0;
   }
   int iTmpBody = 0;
-  for (int iTmpBody  = 0; iTmpBody < iNumBodies; iTmpBody++) {
+  for (iTmpBody  = 0; iTmpBody < iNumBodies; iTmpBody++) {
     int i = 0;
     for (i = 0; i < 3; i++) {
       dCommonBarycenterPosition[i] += body[iTmpBody].dMass * body[iTmpBody].dLocalBaryCartPos[i] / dCommonBarycenterMass;
       dCommonBarycenterVelocity[i] += body[iTmpBody].dMass * body[iTmpBody].dLocalBaryCartVel[i] / dCommonBarycenterMass;
     }
   }
-  for (int iTmpBody  = 0; iTmpBody < iNumBodies; iTmpBody++) {
+  for (iTmpBody  = 0; iTmpBody < iNumBodies; iTmpBody++) {
     int i = 0;
     for (i = 0; i < 3; i++) {
       body[iTmpBody].dBCartPos[i] = body[iTmpBody].dLocalBaryCartPos[i] - dCommonBarycenterPosition[i];
@@ -1080,7 +1080,7 @@ void fvCommonBarycenter2LocalBarycenter(BODY *body, int iNumBodies) {
       }
     }
   }
-  for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+  for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
     int i = 0;
     for (i = 0; i < 3; i++) {
     body[iTmpBody].dLocalBaryCartPos[i] = body[iTmpBody].dBCartPos[i] - dLocalBarycenterPosition[i];

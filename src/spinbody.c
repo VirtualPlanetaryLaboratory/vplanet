@@ -1290,7 +1290,8 @@ void VerifyInputCoords(BODY *body, CONTROL *control, OPTIONS *options, SYSTEM *s
     // Rotate barycentric coordinates to invariable plane
     inv_plane(body, system, iNumBodies);
     // Update dPosition and dVel variables to invariable plane
-    for (int iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+    int iTmpBody = 0;
+    for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
       fvAssignCartOutputs2BaryCart(body, iTmpBody);
     }
   }

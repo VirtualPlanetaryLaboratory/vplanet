@@ -1542,7 +1542,7 @@ double CalculateTrigFunctionEdgeCase(double dMinimumValue, double dTrigfunction)
   if (fabs(dTrigfunction) < dMinimumValue) {
     dResult = 0.0;
   }
-  if (fabs(dTrigfunction - 1.0) < dMinimumValue) {
+  if (fabs(fabs(dTrigfunction) - 1.0) < dMinimumValue) {
     dResult = sign(dTrigfunction);
   }
   return dResult;

@@ -1548,10 +1548,17 @@ struct UPDATE {
                             in the mantle */
   int iNumOxygenMantleMass; /**< Number of Equations Affecting oxygen mantle
                                mass [1] */
+  int iSurfaceWaterMassLoss; /**< Indexing for assigning derivatives to 
+                                SurfaceWaterMass (for loss through escape)
+                                MTG Addition */
+  int iSurfaceWaterMassOutgas; /**< Indexing for assigning derivatives to 
+                                SurfaceWaterMass (for outgassing)
+                                MTG Addition */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       derivative of these variables due to ATMESC. */
   double *pdDSurfaceWaterMassDtAtmesc;
+  double *pdDSurfaceWaterMassDtAtmescOutgas;
   double *pdDEnvelopeMassDtAtmesc;
   double *pdDMassDtAtmesc;
   double *pdDOxygenMassDtAtmesc;

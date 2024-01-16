@@ -1929,8 +1929,8 @@ struct INFILE {
  * regarding the output files. */
 
 struct OUTFILE {
-  char cOut[NAMELEN];                /**< Output File Name */
-  int iNumCols;                      /**< Number of Columns in Output File */
+  char cOut[2*NAMELEN+10];           /**< Output File Name */
+  int iNumCols;                      /**< Number of Columns in Output File (system.planet+.forward/backward) */
   char caCol[MODULEOUTEND][OPTLEN];  /**< Output Value Name */
   int bNeg[MODULEOUTEND];            /**< Use Negative Option Units? */
   int iNumGrid;                      /**< Number of grid outputs */
@@ -1944,7 +1944,7 @@ struct OUTFILE {
 struct FILES {
   char cExe[LINE];    /**< Name of Executable */
   OUTFILE *Outfile;   /**< Output File Name for Forward Integration */
-  char cLog[NAMELEN]; /**< Log File Name */
+  char cLog[NAMELEN+4]; /**< Log File Name (+4 to allow for ".log" suffix) */
   INFILE *Infile;
   int iNumInputs; /**< Number of Input Files */
 };

@@ -1892,7 +1892,8 @@ void ForceBehaviorWaterEscape(BODY *body, MODULE *module, EVOLVE *evolve,
       (body[iBody].dSurfaceWaterMass > 0.)) {
     // Let's desiccate this planet.
     body[iBody].dSurfaceWaterMass = 0.;
-  }
+  } 
+  
 }
 
 /**
@@ -1920,6 +1921,9 @@ void fnForceBehaviorAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
   } else if (body[iBody].dSurfaceWaterMass > 0) {
     ForceBehaviorWaterEscape(body, module, evolve, io, system, update, fnUpdate,
                              iBody, iModule);
+  // Take care of overshooting (comes up with water outgassing)
+  } else if (body[iBody].dSurfaceWaterMass < 0.) {
+    body[iBody].dSurfaceWaterMass = 0.;
   }
 }
 

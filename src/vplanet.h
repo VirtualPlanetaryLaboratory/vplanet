@@ -889,7 +889,7 @@ struct BODY {
   int iFlareBandPass; /**< Option to choose in which band pass the input energy
                          are*/
   int iFlareSlopeUnits; /**< Mode to choose in which units the FFD slopes are*/
-  double dEnergyBin;    /**< Number of energies consider between the minimum and
+  int iEnergyBin;    /**< Number of energies consider between the minimum and
                            maximum energies to calculate the luminosity by flares*/
   double *daEnergyERG;
   double *daEnergyJOU;

@@ -2953,21 +2953,6 @@ void fvForceBehaviorRadheat(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
   }
 }
 
-/**
-   Exit radheat error statements
-
-   @param files Files struct
-   @param cSpecies char
-   @param iFile Index of file
-*/
-void fvRadheatExit(FILES *files, char cSpecies[16], int iFile) {
-  fprintf(stderr, "ERROR: Radheat called, but no %s option provided.\n",
-          cSpecies);
-  fprintf(stderr, "\tFile: %s\n", files->Infile[iFile].cIn);
-  exit(EXIT_INPUT);
-}
-
-
 void fvAssignRadheatDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
                                 fnUpdateVariable ***fnUpdate, int iBody) {
   // 26Al

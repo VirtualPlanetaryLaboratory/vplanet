@@ -354,7 +354,7 @@ void IntegrationWarning(char cName1[], char cName2[], char cName3[],
 void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
                        OPTIONS *options, SYSTEM *system,
                        fnIntegrate *fnOneStep) {
-  int iFile, iFile1, iFile2;
+  int iFile, iFile1=0, iFile2=0;
   char cTmp[OPTLEN];
 
 

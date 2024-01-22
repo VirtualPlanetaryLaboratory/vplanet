@@ -670,8 +670,6 @@ double fdK2Man(BODY *body, int iBody) {
 }
 
 double fdTidalQMan(BODY *body, int iBody) {
-  double ShmodUManArr;
-  ShmodUManArr = body[iBody].dShmodUMan * body[iBody].dMeltfactorUMan;
   double dTidalQMan = body[iBody].dDynamViscos * body[iBody].dMeanMotion /
          body[iBody].dShmodUMan;
   return dTidalQMan;

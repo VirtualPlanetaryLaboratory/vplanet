@@ -1779,7 +1779,7 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     body[iBody].dFlareFreq4   = body[iBody].daFFD[3];
     body[iBody].dFlareFreqMin = body[iBody].daFFD[0];
     body[iBody].dFlareFreqMid = body[iBody].daFFD[(int)(body[iBody].iEnergyBin / 2)];
-    body[iBody].dFlareFreqMax = body[iBody].daFFD[body[iBody].iEnergyBin-1];
+    body[iBody].dFlareFreqMax = body[iBody].daFFD[body[iBody].iEnergyBin];
     // ############################ 6. Calculating the XUV luminosity by flares
     // ########################################################################
     //  double daLXUVFlare[iEnergyBin];

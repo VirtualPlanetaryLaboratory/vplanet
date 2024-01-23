@@ -922,15 +922,15 @@ void InitializeBodyFlare(BODY *body, CONTROL *control, UPDATE *update,
                          int iBody, int iModule) {
   // double *daEnergyERGXUV, *daLXUVFlare, *daFFD, *daEnergyJOUXUV, *daLogEner;
   // double *daLogEnerXUV, *daEnergyERG, *daEnergyJOU, *daEnerJOU;
-  body[iBody].daEnergyERGXUV = malloc(body[iBody].iEnergyBin * sizeof(double));
-  body[iBody].daLXUVFlare    = malloc(body[iBody].iEnergyBin * sizeof(double));
-  body[iBody].daEnergyJOUXUV = malloc(body[iBody].iEnergyBin * sizeof(double));
-  body[iBody].daFFD          = malloc(body[iBody].iEnergyBin * sizeof(double));
-  body[iBody].daLogEner      = malloc(body[iBody].iEnergyBin * sizeof(double));
-  body[iBody].daLogEnerXUV   = malloc(body[iBody].iEnergyBin * sizeof(double));
-  body[iBody].daEnergyERG    = malloc(body[iBody].iEnergyBin * sizeof(double));
-  body[iBody].daEnergyJOU    = malloc(body[iBody].iEnergyBin * sizeof(double));
-  body[iBody].daEnerJOU      = malloc(body[iBody].iEnergyBin * sizeof(double));
+  body[iBody].daEnergyERGXUV = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daLXUVFlare    = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daEnergyJOUXUV = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daFFD          = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daLogEner      = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daLogEnerXUV   = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daEnergyERG    = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daEnergyJOU    = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daEnerJOU      = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
 
   body[iBody].dLXUVFlare = fdLXUVFlare(body, control->Evolve.dTimeStep, iBody);
 }

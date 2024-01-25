@@ -4240,7 +4240,8 @@ MTG Addition
 */
 double fdDSurfaceWaterMassDtOutgas(BODY *body, SYSTEM *system, int *iaBody){
 
-  if (body[iaBody[0]].iWaterOutgassModel == WATOUTGASS_CONSTANT){
+  if ((body[iaBody[0]].iWaterOutgassModel == WATOUTGASS_CONSTANT) && 
+      (body[iaBody[0]].dRGDuration == 0.)) {
 
     return body[iaBody[0]].dConstWaterOutgassFlux;
 

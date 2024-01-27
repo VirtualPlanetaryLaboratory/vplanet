@@ -1696,13 +1696,13 @@ void PropsAuxLehmer17(BODY *body, int iBody) {
   if (body[iBody].bAutoThermTemp) {
     body[iBody].dThermTemp = fdThermalTemp(body, iBody);
   }
-  body[iBody].dGravAccel = BIGG *
+  body[iBody].dSolidGravAccel = BIGG *
                            (body[iBody].dMass - body[iBody].dEnvelopeMass) /
                            (body[iBody].dRadSolid * body[iBody].dRadSolid);
   body[iBody].dScaleHeight = body[iBody].dAtmGasConst * body[iBody].dThermTemp /
-                             body[iBody].dGravAccel;
+                             body[iBody].dSolidGravAccel;
   body[iBody].dPresSurf =
-        fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel,
+        fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dSolidGravAccel,
                      body[iBody].dRadSolid);
   body[iBody].dRadXUV = fdLehmerRadius(body, iBody);
   body[iBody].dRadius = body[iBody].dRadXUV / body[iBody].dXFrac;
@@ -1735,6 +1735,31 @@ void PropsAuxXUVFlux(BODY *body, int iBody) {
           (body[iBody].dAtmXAbsEffH2O * body[iBody].dFXUV *
            body[iBody].dRadius) /
           (4 * BIGG * body[iBody].dMass * body[iBody].dKTide * ATOMMASS);
+  }
+}
+
+void StopWaterEscape(BODY *body,int iBody) {
+    body[iBody].iWaterEscapeRegime = ATMESC_NONE;
+    body[iBody].dOxygenEta         = 0;
+    body[iBody].dCrossoverMass     = 0;
+    body[iBody].bRunaway           = 0;
+    body[iBody].dMDotWater         = 0;
+}
+
+void PropsAuxLugerBarnes15(BODY *body,int iBody) {
+  // XXX Provide info on where these eqns come from
+  double x = (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) /
+              (10 * body[iBody].dDiffusionConstant * body[iBody].dGravAccel * ATOMMASS);
+  if (x < 1) {
+    body[iBody].dOxygenEta = 0;
+    body[iBody].dCrossoverMass =
+          ATOMMASS + 1.5 * KBOLTZ * body[iBody].dFlowTemp *
+                            body[iBody].dFHRef / (body[iBody].dDiffusionConstant * body[iBody].dGravAccel);
+  } else {
+    body[iBody].dOxygenEta = (x - 1) / (x + 8);
+    body[iBody].dCrossoverMass =
+          43. / 3. * ATOMMASS + KBOLTZ * body[iBody].dFlowTemp *
+                                      body[iBody].dFHRef / (6 * body[iBody].dDiffusionConstant * body[iBody].dGravAccel);
   }
 }
 
@@ -1771,7 +1796,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   PropsAuxXUVFlux(body, iBody);
 
   // Surface gravity
-  double g = (BIGG * body[iBody].dMass) /
+  body[iBody].dGravAccel = (BIGG * body[iBody].dMass) /
              (body[iBody].dRadius * body[iBody].dRadius);
 
   // Oxygen mixing ratio
@@ -1788,20 +1813,14 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                           // than for diffusion lim esc
 
   // Diffusion-limited H escape rate
-  double BDIFF = 4.8e19 * pow(body[iBody].dFlowTemp, 0.75);
+  body[iBody].dDiffusionConstant = fdDiffusionConstant(body,iBody);
   body[iBody].dFHDiffLim =
-        BDIFF * g * ATOMMASS * (QOH - 1.) /
+        body[iBody].dDiffusionConstant * body[iBody].dGravAccel * ATOMMASS * (QOH - 1.) /
         (KBOLTZ * body[iBody].dFlowTemp * (1. + XO / (1. - XO)));
 
   // Is water escaping?
   if (!fbDoesWaterEscape(body, evolve, io, iBody)) {
-
-    body[iBody].dOxygenEta         = 0;
-    body[iBody].dCrossoverMass     = 0;
-    body[iBody].bRunaway           = 0;
-    body[iBody].iWaterEscapeRegime = ATMESC_NONE;
-    body[iBody].dMDotWater         = 0;
-
+    StopWaterEscape(body,iBody);
   } else {
 
     double FH = body[iBody].dFHRef;
@@ -1810,26 +1829,11 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
 
     // Select an escape/oxygen buildup model
     if (body[iBody].iWaterLossModel == ATMESC_LB15) {
-
-      // Luger and Barnes (2015)
-      double x = (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) /
-                 (10 * BDIFF * g * ATOMMASS);
-      if (x < 1) {
-        body[iBody].dOxygenEta = 0;
-        body[iBody].dCrossoverMass =
-              ATOMMASS + 1.5 * KBOLTZ * body[iBody].dFlowTemp *
-                               body[iBody].dFHRef / (BDIFF * g);
-      } else {
-        body[iBody].dOxygenEta = (x - 1) / (x + 8);
-        body[iBody].dCrossoverMass =
-              43. / 3. * ATOMMASS + KBOLTZ * body[iBody].dFlowTemp *
-                                          body[iBody].dFHRef / (6 * BDIFF * g);
-      }
-
+      PropsAuxLugerBarnes15(body,iBody);
     } else if ((body[iBody].iWaterLossModel == ATMESC_LBEXACT) ||
                (body[iBody].iWaterLossModel == ATMESC_TIAN)) {
 
-      double x = (QOH - 1.) * (1. - XO) * (BDIFF * g * ATOMMASS) /
+      double x = (QOH - 1.) * (1. - XO) * (body[iBody].dDiffusionConstant * body[iBody].dGravAccel * ATOMMASS) /
                  (KBOLTZ * body[iBody].dFlowTemp);
       double FH;
       double rat;
@@ -1841,7 +1845,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
               ATOMMASS +
               (1. / (1. - XO)) *
                     (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) /
-                    (BDIFF * g);
+                    (body[iBody].dDiffusionConstant * body[iBody].dGravAccel);
         FH  = body[iBody].dFHRef;
         rat = ((body[iBody].dCrossoverMass / ATOMMASS) - QOH) /
               ((body[iBody].dCrossoverMass / ATOMMASS) - 1.);
@@ -1855,7 +1859,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
         body[iBody].dCrossoverMass =
               ATOMMASS * num / den +
               (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) /
-                    ((1 + XO * (QOH - 1)) * BDIFF * g);
+                    ((1 + XO * (QOH - 1)) * body[iBody].dDiffusionConstant * body[iBody].dGravAccel);
         rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) /
               (body[iBody].dCrossoverMass / ATOMMASS - 1.);
         FH = body[iBody].dFHRef * pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
@@ -1864,7 +1868,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
     } else if (body[iBody].iWaterLossModel == ATMESC_LS2016) {
 
       // Use below for LBEXACT equations with schaeffer diff lim
-      double x = (QOH - 1.) * (1. - XO) * (BDIFF * g * ATOMMASS) /
+      double x = (QOH - 1.) * (1. - XO) * (body[iBody].dDiffusionConstant * body[iBody].dGravAccel * ATOMMASS) /
                  (KBOLTZ * body[iBody].dFlowTemp);
       double FH;
       double rat;
@@ -1877,7 +1881,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
               ATOMMASS +
               (1. / (1. - XO)) *
                     (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) /
-                    (BDIFF * g);
+                    (body[iBody].dDiffusionConstant * body[iBody].dGravAccel);
       } else {
 
         // mcross >= mo
@@ -1886,13 +1890,13 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
         body[iBody].dCrossoverMass =
               ATOMMASS * num / den +
               (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) /
-                    ((1 + XO * (QOH - 1)) * BDIFF * g);
+                    ((1 + XO * (QOH - 1)) * body[iBody].dDiffusionConstant * body[iBody].dGravAccel);
       }
 
       double GPotential =
             (BIGG * body[iBody].dMass * PROTONMASS) / (body[iBody].dRadius);
 
-      double FXUVCritDrag = ((4 * BDIFF * pow(GPotential, 2)) /
+      double FXUVCritDrag = ((4 * body[iBody].dDiffusionConstant * pow(GPotential, 2)) /
                              (body[iBody].dAtmXAbsEffH2O * KBOLTZ *
                               body[iBody].dFlowTemp * body[iBody].dRadius)) *
                             (QOH - 1) * (1 - XO);
@@ -4248,6 +4252,12 @@ double fdHZRG14(BODY *body, int iBody) {
         (4 * PI * AUM * AUM);
 
   return dHZRG14Limit;
+}
+
+double fdDiffusionConstant(BODY *body,int iBody) {
+  //XXX Where does this equation come from? What is coefficient? 
+  double dDiffConst =  4.8e19 * pow(body[iBody].dFlowTemp, 0.75);
+  return dDiffConst;
 }
 
 /**

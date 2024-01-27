@@ -194,6 +194,7 @@ struct BODY {
   double dRadius;    /**< Radius of body */
   double dDensity;   /**< Bulk density of body*/
   double dGravAccel; /**< Body's gravitational acceleration */
+  double dSolidGravAccel; /**< Gravitational acceleration at solid surface */
   double dK2;        /**< Body's Total Love number */
   double dImK2;      /**< Imaginary part of Love's k_2 (total) */
   double dObliquity; /**< Body's Obliquity */
@@ -266,6 +267,7 @@ struct BODY {
   double dRocheRadius; /**< Radius of the Roche lobe */
   double dBondiRadius; /**< Bondi (Sonic) Radius */
   double dEnvMassDt;   /**< Time derivative of H envelope mass */
+  double dDiffusionConstant; /**< Constant for diffusion */
 
   /* BINARY parameters */
   int bBinary;       /**< Apply BINARY module? */
@@ -973,6 +975,7 @@ struct BODY {
                              solid */
   double dDepthMO;        /**< Initial depth of Magma Ocean [km] */
   /* Other variables Thermal model */
+  // XXX Duplicate with dGravAccel??
   double
         dGravAccelSurf; /**< Graviational acceleration at the surface [m/s^2] */
   double dSolidRadiusLocal; /**< Local variable for solidification radius of the

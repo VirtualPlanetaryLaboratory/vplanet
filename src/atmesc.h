@@ -234,6 +234,7 @@ int fbRRCriticalFlux(BODY *, int);
 int fbBondiCriticalDmDt(BODY *, int);
 double fdRRCriticalFlux(BODY *, int);
 void fvAtmEscRegimeChangeOutput(int, int, double);
+double fdDiffusionConstant(BODY*,int);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY *, SYSTEM *, UPDATE *, int, int);

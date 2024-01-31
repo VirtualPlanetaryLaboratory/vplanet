@@ -136,7 +136,7 @@ def GetSNames(bodyfiles):
                 for line in content:
                     if line:
                         if line[0] == "saModules":
-                            if "stellar" in line:
+                            if "stellar".casefold() in line or "stellar,".casefold() in line:
                                 stellar = True
                         if line[0] == "sName":
                             body_names.append(line[1])

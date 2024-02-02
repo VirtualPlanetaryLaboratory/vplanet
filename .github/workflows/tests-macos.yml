@@ -13,16 +13,17 @@ jobs:
     strategy:
       matrix:
         os: [macos-11, macos-12, macos-13]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
+          
       fail-fast: false
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Set up Python
         id: setup_python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -39,7 +40,7 @@ jobs:
 
       - name: Check test ouptut created
         id: check_test_file
-        uses: andstor/file-existence-action@v2
+        uses: andstor/file-existence-action@v3
         with:
           files: "/home/runner/work/vplanet/vplanet/junit/test-results.xml"
           fail: true

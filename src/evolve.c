@@ -687,6 +687,7 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
       // Timesteps are synchronized with the output time, so this statement is
       // sufficient
       control->Io.dNextOutput += control->Io.dOutputTime;
+      printf("%d\n",nSteps);
       nSteps = 0;
     }
 

@@ -42,8 +42,3 @@ jobs:
         uses: Tiryoh/gha-jobid-action@v1
         id: jobs
 
-      - name: Publish unit test results
-        uses: EnricoMi/publish-unit-test-result-action/composite@v2
-        if: always()
-        with:
-          files: junit/test-*.xml

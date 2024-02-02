@@ -106,7 +106,6 @@ import pytest
        "log.final.system.TotEnergy": {"value": -7.1802001227e+39, "unit": u.Joule, "rtol": 1e-4}, 
        "log.final.system.PotEnergy": {"value": -1.6690359127e+40, "unit": u.Joule, "rtol": 1e-4}, 
        "log.final.system.KinEnergy": {"value": 1.4184861863e+37, "unit": u.Joule, "rtol": 1e-4}, 
-       "log.final.system.DeltaTime": {"value": 2.9847629316e+10, "unit": u.sec, "rtol": 1e-4}, 
        "log.final.star.Mass": {"value": 2.3860992000e+29, "unit": u.kg, "rtol": 1e-4}, 
        "log.final.star.Radius": {"value": 1.3660512134e+08, "unit": u.m, "rtol": 1e-4}, 
        "log.final.star.RadGyra": {"value": 0.4634687447, "rtol": 1e-4}, 

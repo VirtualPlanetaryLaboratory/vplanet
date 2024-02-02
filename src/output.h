@@ -119,7 +119,7 @@ void WriteLogEntry(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UPDATE *,
 
 void InitializeOutputFunctions(MODULE *, OUTPUT *, int);
 void WriteOutput(BODY *, CONTROL *, FILES *, OUTPUT *, SYSTEM *, UPDATE *,
-                 fnWriteOutput *, double, double);
+                 fnWriteOutput *, double);
 void WriteLog(BODY *, CONTROL *, FILES *, MODULE *, OPTIONS *, OUTPUT *,
               SYSTEM *, UPDATE *, fnUpdateVariable ***, fnWriteOutput *, int);
 void InitializeOutput(FILES*,OUTPUT *, fnWriteOutput *);

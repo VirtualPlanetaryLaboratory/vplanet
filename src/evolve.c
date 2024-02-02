@@ -633,7 +633,7 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 
   /* Write out initial conditions */
   WriteOutput(body, control, files, output, system, update, fnWrite,
-              control->Evolve.dTime, dDt);
+              control->Evolve.dTime);
 
   /* If Runge-Kutta need to copy actual update to that in
      control->Evolve. This transfer all the meta-data about the
@@ -671,8 +671,7 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     if (fbCheckHalt(body, control, update, fnUpdate)) {
       fdGetUpdateInfo(body, control, system, update, fnUpdate);
       WriteOutput(body, control, files, output, system, update, fnWrite,
-                  control->Evolve.dTime,
-                  control->Io.dOutputTime / control->Evolve.nSteps);
+                  control->Evolve.dTime);
       return;
     }
 
@@ -687,8 +686,7 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     if (control->Evolve.dTime >= control->Io.dNextOutput) {
       control->Evolve.nSteps += nSteps;
       WriteOutput(body, control, files, output, system, update, fnWrite,
-                  control->Evolve.dTime,
-                  control->Io.dOutputTime / control->Evolve.nSteps);
+                  control->Evolve.dTime);
       // Timesteps are synchronized with the output time, so this statement is
       // sufficient
       control->Io.dNextOutput += control->Io.dOutputTime;

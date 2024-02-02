@@ -36,4 +36,4 @@ bDoForward	1		    # Perform a forward evolution?
 bVarDt		  1		    # Use variable timestepping?
 dEta		    0.01		# Coefficient for variable timestepping
 dStopTime                 1e8
-dOutputTime               1e7
+dOutputTime               1e8

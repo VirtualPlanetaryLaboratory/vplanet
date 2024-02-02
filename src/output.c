@@ -2213,8 +2213,7 @@ void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 }
 
 void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
-                 SYSTEM *system, UPDATE *update, fnWriteOutput *fnWrite,
-                 double dTime, double dDt) {
+                 SYSTEM *system, UPDATE *update, fnWriteOutput *fnWrite) {
   int iBody, iCol, iOut, iSubOut, iExtra = 0, iGrid, iLat, jBody, j;
   double dCol[NUMOPT], *dTmp, dGrid[NUMOPT];
   FILE *fp;

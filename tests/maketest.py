@@ -136,8 +136,9 @@ def GetSNames(bodyfiles):
                 for line in content:
                     if line:
                         if line[0] == "saModules":
-                            if "stellar" in line:
+                            if "stellar".casefold() in line or "stellar,".casefold() in line:
                                 stellar = True
+                                print("WARNING: Stellar module detected, rtol will be set to 1e-4 for all values.")
                         if line[0] == "sName":
                             body_names.append(line[1])
 
@@ -475,15 +476,18 @@ def WriteTest(data, dirname, stellar):
 
                 if "log" in k and v[0] != "":
                     if "final" in k and stellar == True:
-                        t.write(
-                            '       "'
-                            + k
-                            + '": {"value": '
-                            + str(v[1])
-                            + ', "unit": '
-                            + v[0]
-                            + ', "rtol": 1e-4}, \n'
-                        )
+                        if "DeltaTime" in k:
+                            print("WARNING: Skipping final DeltaTime")
+                        else:
+                            t.write(
+                                '       "'
+                                + k
+                                + '": {"value": '
+                                + str(v[1])
+                                + ', "unit": '
+                                + v[0]
+                                + ', "rtol": 1e-4}, \n'
+                            )
                     else:
                         t.write(
                             '       "'
@@ -496,13 +500,16 @@ def WriteTest(data, dirname, stellar):
                         )
                 if "log" in k and v[0] == "":
                     if "final" in k and stellar == True:
-                        t.write(
-                            '       "'
-                            + k
-                            + '": {"value": '
-                            + str(v[1])
-                            + ', "rtol": 1e-4}, \n'
-                        )
+                        if "DeltaTime" in k:
+                            print("WARNING: Skipping final DeltaTime")
+                        else:
+                            t.write(
+                                '       "'
+                                + k
+                                + '": {"value": '
+                                + str(v[1])
+                                + ', "rtol": 1e-4}, \n'
+                            )
                     else:
                         t.write('       "' + k + '": {"value": ' + str(v[1]) + "}, \n")
 

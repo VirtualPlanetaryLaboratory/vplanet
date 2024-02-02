@@ -38,13 +38,6 @@ jobs:
         if: steps.setup_python.outcome == 'success'
         run: make test
 
-      - name: Check test ouptut created
-        id: check_test_file
-        uses: andstor/file-existence-action@v3
-        with:
-          files: "/home/runner/work/vplanet/vplanet/junit/test-results.xml"
-          fail: true
-
       - name: Get unique id
         uses: Tiryoh/gha-jobid-action@v1
         id: jobs

@@ -92,7 +92,7 @@ void WriteDeltaTime(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (control->Evolve.bVarDt) {
     if (control->Evolve.dTime > 0) {
-      *dTmp = control->Io.dOutputTime / control->Evolve.nSteps;
+      *dTmp = control->Io.dOutputTime / control->Evolve.iStepsSinceLastOutput;
     } else {
       if (control->Io.iVerbose >= VERBINPUT && !control->Io.bDeltaTimeMessage) {
         fprintf(stderr, "INFO: DeltaTime output for first step is defined to "
@@ -2199,16 +2199,6 @@ void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 
   /* Bodies' Properties */
   LogBody(body, control, files, module, output, system, fnWrite, fp, update);
-
-  /* Deprecated
-  if (iEnd) {
-    dTotTime = difftime(time(NULL),dStartTime);
-    fprintf(fp,"\nRuntime = %d s\n", (int)dTotTime);
-    fprintf(fp,"Total Number of Steps = %d\n",control->Evolve.nSteps);
-    if (control->Io.iVerbose >= VERBPROG)
-      printf("Runtime = %d s\n", (int)dTotTime);
-  }
-  */
   fclose(fp);
 }
 

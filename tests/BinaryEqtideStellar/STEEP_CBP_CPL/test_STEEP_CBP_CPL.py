@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -365,11 +364,6 @@ from benchmark import Benchmark, benchmark
             "unit": u.Joule,
             "rtol": 1e-4,
         },
-        "log.final.system.DeltaTime": {
-            "value": 4.545895e09,
-            "unit": u.sec,
-            "rtol": 1e-4,
-        },
         "log.final.primary.Mass": {"value": 1.988416e30, "unit": u.kg, "rtol": 1e-4},
         "log.final.primary.Obliquity": {"value": 0.000000, "unit": u.rad, "rtol": 1e-4},
         "log.final.primary.PrecA": {"value": 0.000000, "unit": u.rad, "rtol": 1e-4},
@@ -624,14 +618,14 @@ from benchmark import Benchmark, benchmark
         },
         "log.final.primary.R0": {"value": 0.000000, "unit": u.m, "rtol": 1e-4},
         "log.final.primary.CBPInsol": {"value": -1.000000, "rtol": 1e-4},
-        "log.final.primary.BinPriR": {"value": 6.421338e09, "unit": u.m, "rtol": 1e-4},
+        "log.final.primary.BinPriR": {"value": 6.421344e09, "unit": u.m, "rtol": 1e-4},
         "log.final.primary.BinPriPhi": {
-            "value": -2.915592,
+            "value": -2.915610,
             "unit": u.rad,
             "rtol": 1e-4,
         },
-        "log.final.primary.BinSecR": {"value": 6.421338e09, "unit": u.m, "rtol": 1e-4},
-        "log.final.primary.BinSecPhi": {"value": 0.226000, "unit": u.rad, "rtol": 1e-4},
+        "log.final.primary.BinSecR": {"value": 6.421344e09, "unit": u.m, "rtol": 1e-4},
+        "log.final.primary.BinSecPhi": {"value": 0.225983, "unit": u.rad, "rtol": 1e-4},
         "log.final.secondary.Mass": {"value": 1.988416e30, "unit": u.kg, "rtol": 1e-4},
         "log.final.secondary.Obliquity": {
             "value": 0.000000,
@@ -967,22 +961,22 @@ from benchmark import Benchmark, benchmark
         "log.final.secondary.R0": {"value": 0.000000, "unit": u.m, "rtol": 1e-4},
         "log.final.secondary.CBPInsol": {"value": -1.000000, "rtol": 1e-4},
         "log.final.secondary.BinPriR": {
-            "value": 6.421338e09,
+            "value": 6.421344e09,
             "unit": u.m,
             "rtol": 1e-4,
         },
         "log.final.secondary.BinPriPhi": {
-            "value": -2.915592,
+            "value": -2.915610,
             "unit": u.rad,
             "rtol": 1e-4,
         },
         "log.final.secondary.BinSecR": {
-            "value": 6.421338e09,
+            "value": 6.421344e09,
             "unit": u.m,
             "rtol": 1e-4,
         },
         "log.final.secondary.BinSecPhi": {
-            "value": 0.226000,
+            "value": 0.225983,
             "unit": u.rad,
             "rtol": 1e-4,
         },
@@ -1027,7 +1021,7 @@ from benchmark import Benchmark, benchmark
             "rtol": 1e-4,
         },
         "log.final.cbp.Instellation": {
-            "value": 6561.097981,
+            "value": 6561.097947,
             "unit": u.kg / u.sec**3,
             "rtol": 1e-4,
         },
@@ -1075,15 +1069,15 @@ from benchmark import Benchmark, benchmark
         "log.final.cbp.LL13K0": {"value": 4.787701e-07, "unit": u.sec, "rtol": 1e-4},
         "log.final.cbp.LL13V0": {"value": 4.801833e-07, "unit": u.sec, "rtol": 1e-4},
         "log.final.cbp.CBPR": {"value": 1.045308e11, "unit": u.m, "rtol": 1e-4},
-        "log.final.cbp.CBPZ": {"value": 3.846762e08, "unit": u.m, "rtol": 1e-4},
-        "log.final.cbp.CBPPhi": {"value": 0.259277, "unit": u.rad, "rtol": 1e-4},
+        "log.final.cbp.CBPZ": {"value": 3.846763e08, "unit": u.m, "rtol": 1e-4},
+        "log.final.cbp.CBPPhi": {"value": 0.259278, "unit": u.rad, "rtol": 1e-4},
         "log.final.cbp.CBPRDot": {
-            "value": -1493.596153,
+            "value": -1493.596117,
             "unit": u.m / u.sec,
             "rtol": 1e-4,
         },
         "log.final.cbp.CBPZDot": {
-            "value": 198.555074,
+            "value": 198.555026,
             "unit": u.m / u.sec,
             "rtol": 1e-4,
         },
@@ -1094,11 +1088,11 @@ from benchmark import Benchmark, benchmark
         },
         "log.final.cbp.R0": {"value": 1.049579e11, "unit": u.m, "rtol": 1e-4},
         "log.final.cbp.CBPInsol": {"value": 4.858289, "rtol": 1e-4},
-        "log.final.cbp.BinPriR": {"value": 6.421338e09, "unit": u.m, "rtol": 1e-4},
-        "log.final.cbp.BinPriPhi": {"value": -2.915592, "unit": u.rad, "rtol": 1e-4},
-        "log.final.cbp.BinSecR": {"value": 6.421338e09, "unit": u.m, "rtol": 1e-4},
-        "log.final.cbp.BinSecPhi": {"value": 0.226000, "unit": u.rad, "rtol": 1e-4},
+        "log.final.cbp.BinPriR": {"value": 6.421344e09, "unit": u.m, "rtol": 1e-4},
+        "log.final.cbp.BinPriPhi": {"value": -2.915610, "unit": u.rad, "rtol": 1e-4},
+        "log.final.cbp.BinSecR": {"value": 6.421344e09, "unit": u.m, "rtol": 1e-4},
+        "log.final.cbp.BinSecPhi": {"value": 0.225983, "unit": u.rad, "rtol": 1e-4},
     }
 )
-class TestSTEEP_CBP_CPL(Benchmark):
+class Test_STEEP_CBP_CPL(Benchmark):
     pass

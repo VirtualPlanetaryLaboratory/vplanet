@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -112,6 +111,23 @@ from benchmark import Benchmark, benchmark
             "value": 27.771659,
             "unit": u.W / u.m**2,
         },
+        "log.initial.ProxCenELim.CrossoverMass": {"value": 0.000000, "unit": u.kg},
+        "log.initial.ProxCenELim.WaterEscapeRegime": {"value": 8.000000},
+        "log.initial.ProxCenELim.FXUVCRITDRAG": {
+            "value": 0.109027,
+            "unit": u.W / u.m**2,
+        },
+        "log.initial.ProxCenELim.HREFFLUX": {
+            "value": 2.720240e19,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.ProxCenELim.XO2": {"value": 0.000000},
+        "log.initial.ProxCenELim.XH2O": {"value": 1.000000},
+        "log.initial.ProxCenELim.HDiffFlux": {
+            "value": 8.437534e16,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.ProxCenELim.HRefODragMod": {"value": 0.007752},
         "log.initial.ProxCenELim.KTide": {"value": 0.917709},
         "log.initial.ProxCenELim.RGDuration": {"value": 0.00000e00, "unit": u.yr},
         "log.initial.ProxCenRRLim.Mass": {"value": 7.584676e24, "unit": u.kg},
@@ -179,6 +195,23 @@ from benchmark import Benchmark, benchmark
             "value": 27.771659,
             "unit": u.W / u.m**2,
         },
+        "log.initial.ProxCenRRLim.CrossoverMass": {"value": 0.000000, "unit": u.kg},
+        "log.initial.ProxCenRRLim.WaterEscapeRegime": {"value": 8.000000},
+        "log.initial.ProxCenRRLim.FXUVCRITDRAG": {
+            "value": 0.109027,
+            "unit": u.W / u.m**2,
+        },
+        "log.initial.ProxCenRRLim.HREFFLUX": {
+            "value": 2.720240e19,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.ProxCenRRLim.XO2": {"value": 0.000000},
+        "log.initial.ProxCenRRLim.XH2O": {"value": 1.000000},
+        "log.initial.ProxCenRRLim.HDiffFlux": {
+            "value": 8.437534e16,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.ProxCenRRLim.HRefODragMod": {"value": 0.007752},
         "log.initial.ProxCenRRLim.KTide": {"value": 0.917709},
         "log.initial.ProxCenRRLim.RGDuration": {"value": 0.00000e00, "unit": u.yr},
         "log.initial.ProxCenAuto.Mass": {"value": 7.584676e24, "unit": u.kg},
@@ -243,6 +276,23 @@ from benchmark import Benchmark, benchmark
             "value": 27.771659,
             "unit": u.W / u.m**2,
         },
+        "log.initial.ProxCenAuto.CrossoverMass": {"value": 0.000000, "unit": u.kg},
+        "log.initial.ProxCenAuto.WaterEscapeRegime": {"value": 8.000000},
+        "log.initial.ProxCenAuto.FXUVCRITDRAG": {
+            "value": 0.109027,
+            "unit": u.W / u.m**2,
+        },
+        "log.initial.ProxCenAuto.HREFFLUX": {
+            "value": 2.720240e19,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.ProxCenAuto.XO2": {"value": 0.000000},
+        "log.initial.ProxCenAuto.XH2O": {"value": 1.000000},
+        "log.initial.ProxCenAuto.HDiffFlux": {
+            "value": 8.437534e16,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.ProxCenAuto.HRefODragMod": {"value": 0.007752},
         "log.initial.ProxCenAuto.KTide": {"value": 0.917709},
         "log.initial.ProxCenAuto.RGDuration": {"value": 0.00000e00, "unit": u.yr},
         "log.initial.LC17ELim.Mass": {"value": 7.584676e24, "unit": u.kg},
@@ -295,6 +345,23 @@ from benchmark import Benchmark, benchmark
             "value": 0.139129,
             "unit": u.W / u.m**2,
         },
+        "log.initial.LC17ELim.CrossoverMass": {"value": 0.000000, "unit": u.kg},
+        "log.initial.LC17ELim.WaterEscapeRegime": {"value": 8.000000},
+        "log.initial.LC17ELim.FXUVCRITDRAG": {
+            "value": 0.001151,
+            "unit": u.W / u.m**2,
+        },
+        "log.initial.LC17ELim.HREFFLUX": {
+            "value": 1.799959e20,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.LC17ELim.XO2": {"value": 0.000000},
+        "log.initial.LC17ELim.XH2O": {"value": 1.000000},
+        "log.initial.LC17ELim.HDiffFlux": {
+            "value": 4.059461e15,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.LC17ELim.HRefODragMod": {"value": 0.007752},
         "log.initial.LC17ELim.KTide": {"value": 0.632300},
         "log.initial.LC17ELim.RGDuration": {"value": 0.00000e00, "unit": u.yr},
         "log.initial.LC17RRLim.Mass": {"value": 7.584676e24, "unit": u.kg},
@@ -350,6 +417,23 @@ from benchmark import Benchmark, benchmark
             "value": 0.139129,
             "unit": u.W / u.m**2,
         },
+        "log.initial.LC17RRLim.CrossoverMass": {"value": 0.000000, "unit": u.kg},
+        "log.initial.LC17RRLim.WaterEscapeRegime": {"value": 8.000000},
+        "log.initial.LC17RRLim.FXUVCRITDRAG": {
+            "value": 0.001151,
+            "unit": u.W / u.m**2,
+        },
+        "log.initial.LC17RRLim.HREFFLUX": {
+            "value": 1.799959e20,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.LC17RRLim.XO2": {"value": 0.000000},
+        "log.initial.LC17RRLim.XH2O": {"value": 1.000000},
+        "log.initial.LC17RRLim.HDiffFlux": {
+            "value": 4.059461e15,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.LC17RRLim.HRefODragMod": {"value": 0.007752},
         "log.initial.LC17RRLim.KTide": {"value": 0.632300},
         "log.initial.LC17RRLim.RGDuration": {"value": 0.00000e00, "unit": u.yr},
         "log.initial.LC17Auto.Mass": {"value": 7.584676e24, "unit": u.kg},
@@ -402,6 +486,23 @@ from benchmark import Benchmark, benchmark
             "value": 0.139129,
             "unit": u.W / u.m**2,
         },
+        "log.initial.LC17Auto.CrossoverMass": {"value": 0.000000, "unit": u.kg},
+        "log.initial.LC17Auto.WaterEscapeRegime": {"value": 8.000000},
+        "log.initial.LC17Auto.FXUVCRITDRAG": {
+            "value": 0.001151,
+            "unit": u.W / u.m**2,
+        },
+        "log.initial.LC17Auto.HREFFLUX": {
+            "value": 1.799959e20,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.LC17Auto.XO2": {"value": 0.000000},
+        "log.initial.LC17Auto.XH2O": {"value": 1.000000},
+        "log.initial.LC17Auto.HDiffFlux": {
+            "value": 4.059461e15,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.LC17Auto.HRefODragMod": {"value": 0.007752},
         "log.initial.LC17Auto.KTide": {"value": 0.632300},
         "log.initial.LC17Auto.RGDuration": {"value": 0.00000e00, "unit": u.yr},
         "log.final.system.Age": {"value": 3.155760e14, "unit": u.sec, "rtol": 1e-4},
@@ -424,11 +525,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.KinEnergy": {
             "value": 4.957224e35,
             "unit": u.Joule,
-            "rtol": 1e-4,
-        },
-        "log.final.system.DeltaTime": {
-            "value": 6.887448e09,
-            "unit": u.sec,
             "rtol": 1e-4,
         },
         "log.final.star.Mass": {"value": 2.346331e29, "unit": u.kg, "rtol": 1e-4},
@@ -667,6 +763,30 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.ProxCenELim.CrossoverMass": {
+            "value": 0.000000,
+            "unit": u.kg,
+            "rtol": 1e-4,
+        },
+        "log.final.ProxCenELim.WaterEscapeRegime": {"value": 8.000000, "rtol": 1e-4},
+        "log.final.ProxCenELim.FXUVCRITDRAG": {
+            "value": 0.119919,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.ProxCenELim.HREFFLUX": {
+            "value": 6.265011e18,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.ProxCenELim.XO2": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.ProxCenELim.XH2O": {"value": 1.000000, "rtol": 1e-4},
+        "log.final.ProxCenELim.HDiffFlux": {
+            "value": 8.991769e16,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.ProxCenELim.HRefODragMod": {"value": 0.007752, "rtol": 1e-4},
         "log.final.ProxCenELim.KTide": {"value": 0.920286, "rtol": 1e-4},
         "log.final.ProxCenELim.RGDuration": {
             "value": 0.00000e00,
@@ -831,6 +951,30 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.ProxCenRRLim.CrossoverMass": {
+            "value": 0.000000,
+            "unit": u.kg,
+            "rtol": 1e-4,
+        },
+        "log.final.ProxCenRRLim.WaterEscapeRegime": {"value": 8.000000, "rtol": 1e-4},
+        "log.final.ProxCenRRLim.FXUVCRITDRAG": {
+            "value": 0.119063,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.ProxCenRRLim.HREFFLUX": {
+            "value": 6.281581e18,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.ProxCenRRLim.XO2": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.ProxCenRRLim.XH2O": {"value": 1.000000, "rtol": 1e-4},
+        "log.final.ProxCenRRLim.HDiffFlux": {
+            "value": 8.949330e16,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.ProxCenRRLim.HRefODragMod": {"value": 0.007752, "rtol": 1e-4},
         "log.final.ProxCenRRLim.KTide": {"value": 0.920099, "rtol": 1e-4},
         "log.final.ProxCenRRLim.RGDuration": {
             "value": 0.00000e00,
@@ -991,6 +1135,30 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.ProxCenAuto.CrossoverMass": {
+            "value": 0.000000,
+            "unit": u.kg,
+            "rtol": 1e-4,
+        },
+        "log.final.ProxCenAuto.WaterEscapeRegime": {"value": 8.000000, "rtol": 1e-4},
+        "log.final.ProxCenAuto.FXUVCRITDRAG": {
+            "value": 0.119950,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.ProxCenAuto.HREFFLUX": {
+            "value": 6.264427e18,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.ProxCenAuto.XO2": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.ProxCenAuto.XH2O": {"value": 1.000000, "rtol": 1e-4},
+        "log.final.ProxCenAuto.HDiffFlux": {
+            "value": 8.993271e16,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.ProxCenAuto.HRefODragMod": {"value": 0.007752, "rtol": 1e-4},
         "log.final.ProxCenAuto.KTide": {"value": 0.920292, "rtol": 1e-4},
         "log.final.ProxCenAuto.RGDuration": {
             "value": 0.00000e00,
@@ -1139,6 +1307,30 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.LC17ELim.CrossoverMass": {
+            "value": 1.175870e-25,
+            "unit": u.kg,
+            "rtol": 1e-4,
+        },
+        "log.final.LC17ELim.WaterEscapeRegime": {"value": 3.000000, "rtol": 1e-4},
+        "log.final.LC17ELim.FXUVCRITDRAG": {
+            "value": 0.234853,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.LC17ELim.HREFFLUX": {
+            "value": 4.901362e18,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.LC17ELim.XO2": {"value": 0.018014, "rtol": 1e-4},
+        "log.final.LC17ELim.XH2O": {"value": 0.981986, "rtol": 1e-4},
+        "log.final.LC17ELim.HDiffFlux": {
+            "value": 1.401989e17,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.LC17ELim.HRefODragMod": {"value": 0.133128, "rtol": 1e-4},
         "log.final.LC17ELim.KTide": {"value": 0.936530, "rtol": 1e-4},
         "log.final.LC17ELim.RGDuration": {
             "value": 0.00000e00,
@@ -1291,6 +1483,30 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.LC17RRLim.CrossoverMass": {
+            "value": 1.178880e-25,
+            "unit": u.kg,
+            "rtol": 1e-4,
+        },
+        "log.final.LC17RRLim.WaterEscapeRegime": {"value": 3.000000, "rtol": 1e-4},
+        "log.final.LC17RRLim.FXUVCRITDRAG": {
+            "value": 0.235341,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.LC17RRLim.HREFFLUX": {
+            "value": 4.901362e18,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.LC17RRLim.XO2": {"value": 0.014965, "rtol": 1e-4},
+        "log.final.LC17RRLim.XH2O": {"value": 0.985035, "rtol": 1e-4},
+        "log.final.LC17RRLim.HDiffFlux": {
+            "value": 1.404905e17,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.LC17RRLim.HRefODragMod": {"value": 0.133751, "rtol": 1e-4},
         "log.final.LC17RRLim.KTide": {"value": 0.936530, "rtol": 1e-4},
         "log.final.LC17RRLim.RGDuration": {
             "value": 0.00000e00,
@@ -1439,6 +1655,30 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.LC17Auto.CrossoverMass": {
+            "value": 1.178858e-25,
+            "unit": u.kg,
+            "rtol": 1e-4,
+        },
+        "log.final.LC17Auto.WaterEscapeRegime": {"value": 3.000000, "rtol": 1e-4},
+        "log.final.LC17Auto.FXUVCRITDRAG": {
+            "value": 0.235337,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.LC17Auto.HREFFLUX": {
+            "value": 4.901362e18,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.LC17Auto.XO2": {"value": 0.014987, "rtol": 1e-4},
+        "log.final.LC17Auto.XH2O": {"value": 0.985013, "rtol": 1e-4},
+        "log.final.LC17Auto.HDiffFlux": {
+            "value": 1.404884e17,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.LC17Auto.HRefODragMod": {"value": 0.133747, "rtol": 1e-4},
         "log.final.LC17Auto.KTide": {"value": 0.936530, "rtol": 1e-4},
         "log.final.LC17Auto.RGDuration": {
             "value": 0.00000e00,
@@ -1447,5 +1687,5 @@ from benchmark import Benchmark, benchmark
         },
     }
 )
-class TestHabEvapCore(Benchmark):
+class Test_HabEvapCore(Benchmark):
     pass

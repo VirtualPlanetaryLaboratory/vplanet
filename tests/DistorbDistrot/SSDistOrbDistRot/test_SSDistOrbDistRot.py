@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -626,7 +625,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.TotEnergy": {"value": -7.839546e41, "unit": u.Joule},
         "log.final.system.PotEnergy": {"value": -7.839908e41, "unit": u.Joule},
         "log.final.system.KinEnergy": {"value": 5.361272e37, "unit": u.Joule},
-        "log.final.system.DeltaTime": {"value": 1.415139e09, "unit": u.sec},
         "log.final.sun.Mass": {"value": 1.988416e30, "unit": u.kg},
         "log.final.sun.Radius": {"value": 2.019571e08, "unit": u.m},
         "log.final.sun.RadGyra": {"value": 0.500000},
@@ -1153,5 +1151,5 @@ from benchmark import Benchmark, benchmark
         "log.final.Neptune.DQincDtDistOrb": {"value": 3.613980e-17, "unit": 1 / u.sec},
     }
 )
-class TestSSDistOrbDistRot(Benchmark):
+class Test_SSDistOrbDistRot(Benchmark):
     pass

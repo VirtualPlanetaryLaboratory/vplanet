@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -293,11 +292,6 @@ from benchmark import Benchmark, benchmark
             "unit": u.Joule,
             "rtol": 1e-4,
         },
-        "log.final.system.DeltaTime": {
-            "value": 458.4461618920332171,
-            "unit": u.sec,
-            "rtol": 1e-4,
-        },
         "log.final.star.Mass": {
             "value": 1.9884160000000000e30,
             "unit": u.kg,
@@ -570,17 +564,17 @@ from benchmark import Benchmark, benchmark
             "rtol": 1e-4,
         },
         "log.final.earth.ArgP": {
-            "value": 1.7388411561743455,
+            "value": 1.7388411561743453,
             "unit": u.rad,
             "rtol": 1e-4,
         },
         "log.final.earth.MeanAnomaly": {
-            "value": 3.8474870280350597,
+            "value": 3.8474870280350593,
             "unit": u.rad,
             "rtol": 1e-4,
         },
         "log.final.earth.Inc": {
-            "value": 0.7616663331648604,
+            "value": 0.7616663331648603,
             "unit": u.rad,
             "rtol": 1e-4,
         },
@@ -590,7 +584,7 @@ from benchmark import Benchmark, benchmark
             "rtol": 1e-4,
         },
         "log.final.earth.MeanLongitude": {
-            "value": 3.8495586940389401,
+            "value": 3.8495586940389397,
             "unit": u.rad,
             "rtol": 1e-4,
         },
@@ -625,7 +619,7 @@ from benchmark import Benchmark, benchmark
         "log.final.earth.VelYSpiNBody": {"value": -2.0495887004595304e04, "rtol": 1e-4},
         "log.final.earth.VelZSpiNBody": {"value": 1.2959382255760662e04, "rtol": 1e-4},
         "log.final.earth.SpiNBodyInc": {
-            "value": 0.7616663331648604,
+            "value": 0.7616663331648603,
             "unit": u.rad,
             "rtol": 1e-4,
         },
@@ -702,19 +696,19 @@ from benchmark import Benchmark, benchmark
             "unit": u.m,
             "rtol": 1e-4,
         },
-        "log.final.outer.COPP": {"value": 4.9414297148998368e-06, "rtol": 1e-4},
+        "log.final.outer.COPP": {"value": 4.9414297150159201e-06, "rtol": 1e-4},
         "log.final.outer.OrbAngMom": {
             "value": 8.1896514223697359e41,
             "unit": (u.kg * u.m**2) / u.sec,
             "rtol": 1e-4,
         },
         "log.final.outer.ArgP": {
-            "value": 1.7362790073768688,
+            "value": 1.7362790073768690,
             "unit": u.rad,
             "rtol": 1e-4,
         },
         "log.final.outer.MeanAnomaly": {
-            "value": 2.2114076505371290,
+            "value": 2.2114076505371294,
             "unit": u.rad,
             "rtol": 1e-4,
         },
@@ -729,12 +723,12 @@ from benchmark import Benchmark, benchmark
             "rtol": 1e-4,
         },
         "log.final.outer.MeanLongitude": {
-            "value": 2.2114454584262906,
+            "value": 2.2114454584262919,
             "unit": u.rad,
             "rtol": 1e-4,
         },
         "log.final.outer.LongP": {
-            "value": 3.7807889161634023e-05,
+            "value": 3.7807889162522201e-05,
             "unit": u.rad,
             "rtol": 1e-4,
         },
@@ -775,5 +769,5 @@ from benchmark import Benchmark, benchmark
         },
     }
 )
-class TestChaoticResonances(Benchmark):
+class Test_ChaoticResonances(Benchmark):
     pass

@@ -1734,7 +1734,8 @@ struct EVOLVE {
   double dStopTime;  /**< Integration Stop Time */
   double dTimeStep;  /**< Integration Time step */
   int bVarDt;        /**< Use Variable Timestep? */
-  int nSteps;        /**< Total Number of Steps */
+  int iTotalSteps;   /**< Total Number of Steps */
+  int iStepsSinceLastOutput;
   double dMinValue;  /**< Minimum Value for Eccentricity and Obliquity to be
                         Integrated */
   int bFirstStep;    /**< Has the First Dtep Been Taken? */

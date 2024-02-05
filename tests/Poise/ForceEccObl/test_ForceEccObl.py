@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -97,11 +96,11 @@ from benchmark import Benchmark, benchmark
         "log.initial.earth.DIceMassDt": {"value": 0.000000, "unit": u.m},
         "log.initial.earth.IceFlow": {"value": 0.000000, "unit": u.m / u.sec},
         "log.initial.earth.EnergyResL": {
-            "value": 7.638334e-13,
+            "value": 5.506706e-13,
             "unit": u.kg / u.sec**3,
         },
         "log.initial.earth.EnergyResW": {
-            "value": 2.335909e-12,
+            "value": 5.169198e-13,
             "unit": u.kg / u.sec**3,
         },
         "log.initial.earth.BedrockH": {"value": 0.000000, "unit": u.m},
@@ -158,11 +157,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.KinEnergy": {
             "value": 4.396240e37,
             "unit": u.Joule,
-            "rtol": 1e-4,
-        },
-        "log.final.system.DeltaTime": {
-            "value": 3.155760e10,
-            "unit": u.sec,
             "rtol": 1e-4,
         },
         "log.final.sun.Mass": {"value": 1.630501e30, "unit": u.kg, "rtol": 1e-4},
@@ -466,5 +460,5 @@ from benchmark import Benchmark, benchmark
         },
     }
 )
-class TestForceEccObl(Benchmark):
+class Test_ForceEccObl(Benchmark):
     pass

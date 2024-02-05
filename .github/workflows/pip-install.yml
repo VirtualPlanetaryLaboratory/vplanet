@@ -1,8 +1,7 @@
 name: pip-install
 on:
   release:
-    types:
-      - published
+    types: [published]
 
 jobs:
   build_wheels:
@@ -11,7 +10,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04, acos-11, macos-12, macos-13]
-        python: ['3.7', '3.8', '3.9', '3.10', '3.11']
+        python: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
         exclude:
           - os: ubuntu-22.04
             python-version: '3.6'

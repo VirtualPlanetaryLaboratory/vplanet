@@ -22,8 +22,17 @@ def Main(dir, initial=False):
 
             if reply[:1] == "y":
                 top_list = sorted(next(os.walk("."))[1])
+                dir_list = []
                 for top in top_list:
-                    dir_list = sorted(next(os.walk(top))[1])
+                    subdirs = [os.path.join(top, subdir) for subdir in sorted(next(os.walk(top))[1])]
+                    for subdir in subdirs:
+                        if "pycache" not in subdir:
+                            dir_list.append(subdir)
+                    #     for deep_dir in deep_dirs:
+                        #print(subdir)
+                    #dir_list = sum(subdirs, [])
+                #print(dir_list)
+                #exit()
             elif reply[:1] == "n":
                 print("Files NOT overwritten. Exiting.")
                 exit()
@@ -90,7 +99,7 @@ def Main(dir, initial=False):
 
         ProcessUnits(data)
         WriteTest(data, dirname, stellar)
-        os.chdir("../")
+        os.chdir("../../")
 
 
 def GetSNames(bodyfiles):

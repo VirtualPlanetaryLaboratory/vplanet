@@ -1432,7 +1432,6 @@ void PropsAuxMagmOc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                     int iBody) {
   double dCurrentTime     = evolve->dTime;
   double dCurrentTimeStep = evolve->dTimeStep;
-  double dCurrentStepNum  = evolve->nSteps;
   double dAveMolarMassAtm;
 
   // body[iBody].dSurfTemp = body[iBody].dPotTemp;

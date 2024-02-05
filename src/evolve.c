@@ -603,11 +603,9 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
             fnUpdateVariable ***fnUpdate, fnWriteOutput *fnWrite,
             fnIntegrate fnOneStep) {
   /* Master evolution routine that controls the simulation integration. */
-  int iDir, iBody, iModule, nSteps; // Dummy counting variables
+  int iDir, iBody, iModule; // Dummy counting variables
   double dDt, dFoo;                 // Next timestep, dummy variable
   double dEqSpinRate;               // Store the equilibrium spin rate
-
-  nSteps = 0;
 
   if (control->Evolve.bDoForward) {
     iDir = 1;
@@ -645,6 +643,8 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
    *
    */
 
+  control->Evolve.iStepsSinceLastOutput = 0;
+  control->Evolve.iTotalSteps = 0;
   while (control->Evolve.dTime < control->Evolve.dStopTime) {
     /* Take one step */
     fnOneStep(body, control, system, update, fnUpdate, &dDt, iDir);
@@ -678,17 +678,16 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     }
 
     control->Evolve.dTime += dDt;
-    nSteps++;
+    control->Evolve.iStepsSinceLastOutput++;
 
     /* Time for Output? */
     if (control->Evolve.dTime >= control->Io.dNextOutput) {
-      control->Evolve.nSteps += nSteps;
+      control->Evolve.iTotalSteps += control->Evolve.iStepsSinceLastOutput;
       WriteOutput(body, control, files, output, system, update, fnWrite);
       // Timesteps are synchronized with the output time, so this statement is
       // sufficient
       control->Io.dNextOutput += control->Io.dOutputTime;
-      //printf("%d\n",nSteps);
-      nSteps = 0;
+      control->Evolve.iStepsSinceLastOutput = 0;
     }
 
     /* Get auxiliary properties for next step -- first call

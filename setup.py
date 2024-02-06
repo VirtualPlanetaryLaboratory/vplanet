@@ -70,7 +70,7 @@ vplanet_suite = [
     "vplot>=1.0.5",
     "vspace>=2.3.2",
     "bigplanet>=3.0.1",
-    "multiplanet>=2.0.2",
+    "multiplanet>=2.0.3",
 ]
 
 setup(

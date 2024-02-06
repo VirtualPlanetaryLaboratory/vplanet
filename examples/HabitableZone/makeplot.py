@@ -21,16 +21,23 @@ from get_args import get_args
 MSUN = 1.988416e30
 LSUN = 3.846e26
 
-# If necessary, build directories and run them
+# If necessary, build directories
 if not ((path / "data").exists()):
     sys.stdout.write("Buliding directories.")
     sys.stdout.flush()
     subprocess.run(["vspace", "vspace.in"], cwd=str(path))
+else:
+    print("VPSACE already run")
+
+# Run multi-planet
+if not (path / ".data").exists():
     sys.stdout.write("\nRunning trials.")
     sys.stdout.flush()
     subprocess.run(["multiplanet", "vspace.in"], cwd=str(path))
     sys.stdout.write("\n")
     sys.stdout.flush()
+else:
+    print("Multiplanet already run")
 
 sys.stdout.write("Making plot.")
 sys.stdout.flush()

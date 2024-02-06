@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# planetplanet documentation build configuration file, created by
+# vplanet documentation build configuration file, created by
 # sphinx-quickstart on Wed Aug  9 19:49:05 2017.
 #
 # This file is execfile()d with the current directory set to its

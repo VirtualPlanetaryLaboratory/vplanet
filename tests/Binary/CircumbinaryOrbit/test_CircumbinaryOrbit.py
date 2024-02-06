@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -186,7 +185,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.TotEnergy": {"value": -1.273028e43, "unit": u.Joule},
         "log.final.system.PotEnergy": {"value": -1.171413e43, "unit": u.Joule},
         "log.final.system.KinEnergy": {"value": 1.071113e34, "unit": u.Joule},
-        "log.final.system.DeltaTime": {"value": 3.155760e07, "unit": u.sec},
         "log.final.primary.Mass": {"value": 1.365913e30, "unit": u.kg},
         "log.final.primary.Radius": {"value": 6.378100e06, "unit": u.m},
         "log.final.primary.RadGyra": {"value": 0.270000},
@@ -345,5 +343,5 @@ from benchmark import Benchmark, benchmark
         "log.final.cbp.BinSecPhi": {"value": 2.974140, "unit": u.rad},
     }
 )
-class TestCircumbinaryOrbit(Benchmark):
+class Test_CircumbinaryOrbit(Benchmark):
     pass

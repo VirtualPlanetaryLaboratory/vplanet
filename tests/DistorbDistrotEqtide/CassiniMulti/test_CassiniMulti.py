@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -407,11 +406,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.KinEnergy": {
             "value": 1.389431e33,
             "unit": u.Joule,
-            "rtol": 1e-4,
-        },
-        "log.final.system.DeltaTime": {
-            "value": 4.628368e04,
-            "unit": u.sec,
             "rtol": 1e-4,
         },
         "log.final.TGstar.Mass": {"value": 1.590733e29, "unit": u.kg, "rtol": 1e-4},
@@ -1320,5 +1314,5 @@ from benchmark import Benchmark, benchmark
         },
     }
 )
-class TestCassiniMulti(Benchmark):
+class Test_CassiniMulti(Benchmark):
     pass

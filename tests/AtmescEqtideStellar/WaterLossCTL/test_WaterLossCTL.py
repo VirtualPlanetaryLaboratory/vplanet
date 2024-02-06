@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -217,6 +216,14 @@ from benchmark import Benchmark, benchmark
         "log.initial.b.BondiRadius": {"value": 7.899468e08, "unit": u.m},
         "log.initial.b.HEscapeRegime": {"value": 8.000000},
         "log.initial.b.RRCriticalFlux": {"value": 41.738709, "unit": u.W / u.m**2},
+        "log.initial.b.CrossoverMass": {"value": 3.134896e-26, "unit": u.kg},
+        "log.initial.b.WaterEscapeRegime": {"value": 3.000000},
+        "log.initial.b.FXUVCRITDRAG": {"value": 0.928046, "unit": u.W / u.m**2},
+        "log.initial.b.HREFFLUX": {"value": 3.449656e17, "unit": 1 / u.m**2 / u.sec},
+        "log.initial.b.XO2": {"value": 0.000000},
+        "log.initial.b.XH2O": {"value": 1.000000},
+        "log.initial.b.HDiffFlux": {"value": 1.264874e17, "unit": 1 / u.m**2 / u.sec},
+        "log.initial.b.HRefODragMod": {"value": 0.437037},
         "log.initial.b.KTide": {"value": 0.881557},
         "log.initial.b.RGDuration": {"value": 0.00000e00, "unit": u.yr},
         "log.final.system.Age": {"value": 6.311520e13, "unit": u.sec, "rtol": 1e-4},
@@ -239,11 +246,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.KinEnergy": {
             "value": 5.347269e33,
             "unit": u.Joule,
-            "rtol": 1e-4,
-        },
-        "log.final.system.DeltaTime": {
-            "value": 1.939619e10,
-            "unit": u.sec,
             "rtol": 1e-4,
         },
         "log.final.star.Mass": {"value": 1.988416e29, "unit": u.kg, "rtol": 1e-4},
@@ -633,9 +635,33 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.b.CrossoverMass": {
+            "value": 3.134483e-26,
+            "unit": u.kg,
+            "rtol": 1e-4,
+        },
+        "log.final.b.WaterEscapeRegime": {"value": 3.000000, "rtol": 1e-4},
+        "log.final.b.FXUVCRITDRAG": {
+            "value": 0.927295,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.b.HREFFLUX": {
+            "value": 3.449698e17,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.b.XO2": {"value": 0.001220, "rtol": 1e-4},
+        "log.final.b.XH2O": {"value": 0.998780, "rtol": 1e-4},
+        "log.final.b.HDiffFlux": {
+            "value": 1.263845e17,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.b.HRefODragMod": {"value": 0.436615, "rtol": 1e-4},
         "log.final.b.KTide": {"value": 0.881556, "rtol": 1e-4},
         "log.final.b.RGDuration": {"value": 0.00000e00, "unit": u.yr, "rtol": 1e-4},
     }
 )
-class TestWaterLossCTL(Benchmark):
+class Test_WaterLossCTL(Benchmark):
     pass

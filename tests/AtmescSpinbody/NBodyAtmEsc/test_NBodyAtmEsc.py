@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -127,6 +126,14 @@ from benchmark import Benchmark, benchmark
         "log.initial.A.BondiRadius": {"value": 7.41067e09, "unit": u.m},
         "log.initial.A.HEscapeRegime": {"value": 3.00000},
         "log.initial.A.RRCriticalFlux": {"value": 0.00059, "unit": u.W / u.m**2},
+        "log.initial.A.CrossoverMass": {"value": 0.00000, "unit": u.kg},
+        "log.initial.A.WaterEscapeRegime": {"value": 8.00000},
+        "log.initial.A.FXUVCRITDRAG": {"value": 1.29749e-06, "unit": u.W / u.m**2},
+        "log.initial.A.HREFFLUX": {"value": 1.63010e21, "unit": 1 / u.m**2 / u.sec},
+        "log.initial.A.XO2": {"value": 0.00000},
+        "log.initial.A.XH2O": {"value": 0.00000},
+        "log.initial.A.HDiffFlux": {"value": 5.41620e13, "unit": 1 / u.m**2 / u.sec},
+        "log.initial.A.HRefODragMod": {"value": 1.00000},
         "log.initial.A.KTide": {"value": 1.00000},
         "log.initial.A.RGDuration": {"value": 0.00000e00, "unit": u.yr},
         "log.initial.A.PositionXSpiNBody": {"value": 2.73318e10},
@@ -189,6 +196,14 @@ from benchmark import Benchmark, benchmark
         "log.initial.B.BondiRadius": {"value": 2.23584e10, "unit": u.m},
         "log.initial.B.HEscapeRegime": {"value": 3.00000},
         "log.initial.B.RRCriticalFlux": {"value": 0.62208, "unit": u.W / u.m**2},
+        "log.initial.B.CrossoverMass": {"value": 0.00000, "unit": u.kg},
+        "log.initial.B.WaterEscapeRegime": {"value": 8.00000},
+        "log.initial.B.FXUVCRITDRAG": {"value": 0.00197, "unit": u.W / u.m**2},
+        "log.initial.B.HREFFLUX": {"value": 2.90366e19, "unit": 1 / u.m**2 / u.sec},
+        "log.initial.B.XO2": {"value": 0.00000},
+        "log.initial.B.XH2O": {"value": 0.00000},
+        "log.initial.B.HDiffFlux": {"value": 4.44012e15, "unit": 1 / u.m**2 / u.sec},
+        "log.initial.B.HRefODragMod": {"value": 1.00000},
         "log.initial.B.KTide": {"value": 0.83517},
         "log.initial.B.RGDuration": {"value": 0.00000e00, "unit": u.yr},
         "log.initial.B.PositionXSpiNBody": {"value": -1.27562e10},
@@ -251,6 +266,14 @@ from benchmark import Benchmark, benchmark
         "log.initial.C.BondiRadius": {"value": 1.78957e10, "unit": u.m},
         "log.initial.C.HEscapeRegime": {"value": 3.00000},
         "log.initial.C.RRCriticalFlux": {"value": 0.38036, "unit": u.W / u.m**2},
+        "log.initial.C.CrossoverMass": {"value": 0.00000, "unit": u.kg},
+        "log.initial.C.WaterEscapeRegime": {"value": 8.00000},
+        "log.initial.C.FXUVCRITDRAG": {"value": 0.00115, "unit": u.W / u.m**2},
+        "log.initial.C.HREFFLUX": {"value": 2.08584e19, "unit": 1 / u.m**2 / u.sec},
+        "log.initial.C.XO2": {"value": 0.00000},
+        "log.initial.C.XH2O": {"value": 0.00000},
+        "log.initial.C.HDiffFlux": {"value": 3.20948e15, "unit": 1 / u.m**2 / u.sec},
+        "log.initial.C.HRefODragMod": {"value": 1.00000},
         "log.initial.C.KTide": {"value": 0.85262},
         "log.initial.C.RGDuration": {"value": 0.00000e00, "unit": u.yr},
         "log.initial.C.PositionXSpiNBody": {"value": -2.44624e10},
@@ -281,11 +304,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.KinEnergy": {
             "value": 3.55253e43,
             "unit": u.Joule,
-            "rtol": 1e-4,
-        },
-        "log.final.system.DeltaTime": {
-            "value": 1.57788e04,
-            "unit": u.sec,
             "rtol": 1e-4,
         },
         "log.final.Pulsar.Mass": {"value": 2.78424e30, "unit": u.kg, "rtol": 1e-4},
@@ -529,6 +547,26 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.A.CrossoverMass": {"value": 0.00000, "unit": u.kg, "rtol": 1e-4},
+        "log.final.A.WaterEscapeRegime": {"value": 8.00000, "rtol": 1e-4},
+        "log.final.A.FXUVCRITDRAG": {
+            "value": 1.29333e-06,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.A.HREFFLUX": {
+            "value": 1.63247e21,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.A.XO2": {"value": 0.00000, "rtol": 1e-4},
+        "log.final.A.XH2O": {"value": 0.00000, "rtol": 1e-4},
+        "log.final.A.HDiffFlux": {
+            "value": 5.40615e13,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.A.HRefODragMod": {"value": 1.00000, "rtol": 1e-4},
         "log.final.A.KTide": {"value": 1.00000, "rtol": 1e-4},
         "log.final.A.RGDuration": {"value": 5.00000e-04, "unit": u.yr, "rtol": 1e-4},
         "log.final.A.PositionXSpiNBody": {"value": 2.61203e10, "rtol": 1e-4},
@@ -636,6 +674,26 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.B.CrossoverMass": {"value": 0.00000, "unit": u.kg, "rtol": 1e-4},
+        "log.final.B.WaterEscapeRegime": {"value": 8.00000, "rtol": 1e-4},
+        "log.final.B.FXUVCRITDRAG": {
+            "value": 0.00197,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.B.HREFFLUX": {
+            "value": 2.90400e19,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.B.XO2": {"value": 0.00000, "rtol": 1e-4},
+        "log.final.B.XH2O": {"value": 0.00000, "rtol": 1e-4},
+        "log.final.B.HDiffFlux": {
+            "value": 4.44012e15,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.B.HRefODragMod": {"value": 1.00000, "rtol": 1e-4},
         "log.final.B.KTide": {"value": 0.83516, "rtol": 1e-4},
         "log.final.B.RGDuration": {"value": 5.00000e-04, "unit": u.yr, "rtol": 1e-4},
         "log.final.B.PositionXSpiNBody": {"value": -3.60794e10, "rtol": 1e-4},
@@ -739,6 +797,26 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.C.CrossoverMass": {"value": 0.00000, "unit": u.kg, "rtol": 1e-4},
+        "log.final.C.WaterEscapeRegime": {"value": 8.00000, "rtol": 1e-4},
+        "log.final.C.FXUVCRITDRAG": {
+            "value": 0.00115,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.C.HREFFLUX": {
+            "value": 2.08549e19,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.C.XO2": {"value": 0.00000, "rtol": 1e-4},
+        "log.final.C.XH2O": {"value": 0.00000, "rtol": 1e-4},
+        "log.final.C.HDiffFlux": {
+            "value": 3.20949e15,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.C.HRefODragMod": {"value": 1.00000, "rtol": 1e-4},
         "log.final.C.KTide": {"value": 0.85263, "rtol": 1e-4},
         "log.final.C.RGDuration": {"value": 5.00000e-04, "unit": u.yr, "rtol": 1e-4},
         "log.final.C.PositionXSpiNBody": {"value": 1.19574e10, "rtol": 1e-4},
@@ -751,5 +829,5 @@ from benchmark import Benchmark, benchmark
         "log.final.C.SpiNBodyLongA": {"value": 0.06377, "unit": u.rad, "rtol": 1e-4},
     }
 )
-class TestNBodyAtmEsc(Benchmark):
+class Test_NBodyAtmEsc(Benchmark):
     pass

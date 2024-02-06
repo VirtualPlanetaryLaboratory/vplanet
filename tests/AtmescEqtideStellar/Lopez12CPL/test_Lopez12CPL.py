@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -238,6 +237,23 @@ from benchmark import Benchmark, benchmark
         "log.initial.auto.BondiRadius": {"value": 7.899468e08, "unit": u.m},
         "log.initial.auto.HEscapeRegime": {"value": 3.000000},
         "log.initial.auto.RRCriticalFlux": {"value": 0.000139, "unit": u.W / u.m**2},
+        "log.initial.auto.CrossoverMass": {"value": 0.000000, "unit": u.kg},
+        "log.initial.auto.WaterEscapeRegime": {"value": 8.000000},
+        "log.initial.auto.FXUVCRITDRAG": {
+            "value": 3.000221e-05,
+            "unit": u.W / u.m**2,
+        },
+        "log.initial.auto.HREFFLUX": {
+            "value": 8.289171e17,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.auto.XO2": {"value": 0.000000},
+        "log.initial.auto.XH2O": {"value": 0.000000},
+        "log.initial.auto.HDiffFlux": {
+            "value": 3.512237e14,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.auto.HRefODragMod": {"value": 1.000000},
         "log.initial.auto.KTide": {"value": 1.000000},
         "log.initial.auto.RGDuration": {"value": 1.00000e06, "unit": u.yr},
         "log.initial.bondi.Mass": {"value": 2.000000, "unit": u.Mearth},
@@ -368,6 +384,23 @@ from benchmark import Benchmark, benchmark
         "log.initial.bondi.BondiRadius": {"value": 7.899468e08, "unit": u.m},
         "log.initial.bondi.HEscapeRegime": {"value": 5.000000},
         "log.initial.bondi.RRCriticalFlux": {"value": 0.000139, "unit": u.W / u.m**2},
+        "log.initial.bondi.CrossoverMass": {"value": 0.000000, "unit": u.kg},
+        "log.initial.bondi.WaterEscapeRegime": {"value": 8.000000},
+        "log.initial.bondi.FXUVCRITDRAG": {
+            "value": 3.000221e-05,
+            "unit": u.W / u.m**2,
+        },
+        "log.initial.bondi.HREFFLUX": {
+            "value": 8.289171e17,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.bondi.XO2": {"value": 0.000000},
+        "log.initial.bondi.XH2O": {"value": 0.000000},
+        "log.initial.bondi.HDiffFlux": {
+            "value": 3.512237e14,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.bondi.HRefODragMod": {"value": 1.000000},
         "log.initial.bondi.KTide": {"value": 1.000000},
         "log.initial.bondi.RGDuration": {"value": 1.00000e06, "unit": u.yr},
         "log.initial.el.Mass": {"value": 2.000000, "unit": u.Mearth},
@@ -489,6 +522,17 @@ from benchmark import Benchmark, benchmark
         "log.initial.el.BondiRadius": {"value": 7.899468e08, "unit": u.m},
         "log.initial.el.HEscapeRegime": {"value": 3.000000},
         "log.initial.el.RRCriticalFlux": {"value": 0.000139, "unit": u.W / u.m**2},
+        "log.initial.el.CrossoverMass": {"value": 0.000000, "unit": u.kg},
+        "log.initial.el.WaterEscapeRegime": {"value": 8.000000},
+        "log.initial.el.FXUVCRITDRAG": {"value": 3.000221e-05, "unit": u.W / u.m**2},
+        "log.initial.el.HREFFLUX": {"value": 8.289171e17, "unit": 1 / u.m**2 / u.sec},
+        "log.initial.el.XO2": {"value": 0.000000},
+        "log.initial.el.XH2O": {"value": 0.000000},
+        "log.initial.el.HDiffFlux": {
+            "value": 3.512237e14,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.el.HRefODragMod": {"value": 1.000000},
         "log.initial.el.KTide": {"value": 1.000000},
         "log.initial.el.RGDuration": {"value": 1.00000e06, "unit": u.yr},
         "log.initial.rr.Mass": {"value": 2.000000, "unit": u.Mearth},
@@ -610,6 +654,17 @@ from benchmark import Benchmark, benchmark
         "log.initial.rr.BondiRadius": {"value": 7.899468e08, "unit": u.m},
         "log.initial.rr.HEscapeRegime": {"value": 6.000000},
         "log.initial.rr.RRCriticalFlux": {"value": 0.000139, "unit": u.W / u.m**2},
+        "log.initial.rr.CrossoverMass": {"value": 0.000000, "unit": u.kg},
+        "log.initial.rr.WaterEscapeRegime": {"value": 8.000000},
+        "log.initial.rr.FXUVCRITDRAG": {"value": 3.000221e-05, "unit": u.W / u.m**2},
+        "log.initial.rr.HREFFLUX": {"value": 8.289171e17, "unit": 1 / u.m**2 / u.sec},
+        "log.initial.rr.XO2": {"value": 0.000000},
+        "log.initial.rr.XH2O": {"value": 0.000000},
+        "log.initial.rr.HDiffFlux": {
+            "value": 3.512237e14,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.rr.HRefODragMod": {"value": 1.000000},
         "log.initial.rr.KTide": {"value": 1.000000},
         "log.initial.rr.RGDuration": {"value": 1.00000e06, "unit": u.yr},
         "log.final.system.Age": {"value": 6.311520e13, "unit": u.sec, "rtol": 1e-4},
@@ -632,11 +687,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.KinEnergy": {
             "value": 5.347271e34,
             "unit": u.Joule,
-            "rtol": 1e-4,
-        },
-        "log.final.system.DeltaTime": {
-            "value": 4.863245e08,
-            "unit": u.sec,
             "rtol": 1e-4,
         },
         "log.final.star.Mass": {"value": 1.988416e30, "unit": u.kg, "rtol": 1e-4},
@@ -1118,6 +1168,26 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.auto.CrossoverMass": {"value": 0.000000, "unit": u.kg, "rtol": 1e-4},
+        "log.final.auto.WaterEscapeRegime": {"value": 8.000000, "rtol": 1e-4},
+        "log.final.auto.FXUVCRITDRAG": {
+            "value": 3.177121e-05,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.auto.HREFFLUX": {
+            "value": 9.438997e18,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.auto.XO2": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.auto.XH2O": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.auto.HDiffFlux": {
+            "value": 4.098596e14,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.auto.HRefODragMod": {"value": 1.000000, "rtol": 1e-4},
         "log.final.auto.KTide": {"value": 0.100000, "rtol": 1e-4},
         "log.final.auto.RGDuration": {"value": 1.00000e06, "unit": u.yr, "rtol": 1e-4},
         "log.final.bondi.Mass": {"value": 1.000000, "unit": u.Mearth, "rtol": 1e-4},
@@ -1437,6 +1507,30 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.bondi.CrossoverMass": {
+            "value": 0.000000,
+            "unit": u.kg,
+            "rtol": 1e-4,
+        },
+        "log.final.bondi.WaterEscapeRegime": {"value": 8.000000, "rtol": 1e-4},
+        "log.final.bondi.FXUVCRITDRAG": {
+            "value": 0.266361,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.bondi.HREFFLUX": {
+            "value": 5.387538e16,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.bondi.XO2": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.bondi.XH2O": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.bondi.HDiffFlux": {
+            "value": 1.897311e17,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.bondi.HRefODragMod": {"value": 1.000000, "rtol": 1e-4},
         "log.final.bondi.KTide": {"value": 0.936113, "rtol": 1e-4},
         "log.final.bondi.RGDuration": {"value": 1.00000e06, "unit": u.yr, "rtol": 1e-4},
         "log.final.el.Mass": {"value": 1.986370, "unit": u.Mearth, "rtol": 1e-4},
@@ -1712,6 +1806,26 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.el.CrossoverMass": {"value": 0.000000, "unit": u.kg, "rtol": 1e-4},
+        "log.final.el.WaterEscapeRegime": {"value": 8.000000, "rtol": 1e-4},
+        "log.final.el.FXUVCRITDRAG": {
+            "value": 3.010328e-05,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.el.HREFFLUX": {
+            "value": 8.735740e17,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.el.XO2": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.el.XH2O": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.el.HDiffFlux": {
+            "value": 3.528154e14,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.el.HRefODragMod": {"value": 1.000000, "rtol": 1e-4},
         "log.final.el.KTide": {"value": 1.000000, "rtol": 1e-4},
         "log.final.el.RGDuration": {"value": 1.00000e06, "unit": u.yr, "rtol": 1e-4},
         "log.final.rr.Mass": {"value": 1.999399, "unit": u.Mearth, "rtol": 1e-4},
@@ -1987,9 +2101,29 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.rr.CrossoverMass": {"value": 0.000000, "unit": u.kg, "rtol": 1e-4},
+        "log.final.rr.WaterEscapeRegime": {"value": 8.000000, "rtol": 1e-4},
+        "log.final.rr.FXUVCRITDRAG": {
+            "value": 3.000650e-05,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.rr.HREFFLUX": {
+            "value": 8.716219e17,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.rr.XO2": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.rr.XH2O": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.rr.HDiffFlux": {
+            "value": 3.512924e14,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.rr.HRefODragMod": {"value": 1.000000, "rtol": 1e-4},
         "log.final.rr.KTide": {"value": 1.000000, "rtol": 1e-4},
         "log.final.rr.RGDuration": {"value": 1.00000e06, "unit": u.yr, "rtol": 1e-4},
     }
 )
-class TestLopez12CPL(Benchmark):
+class Test_Lopez12CPL(Benchmark):
     pass

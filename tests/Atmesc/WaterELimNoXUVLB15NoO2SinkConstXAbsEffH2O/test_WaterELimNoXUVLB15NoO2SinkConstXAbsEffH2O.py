@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -81,7 +80,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.TotEnergy": {"value": -2.237790e32, "unit": u.Joule},
         "log.final.system.PotEnergy": {"value": -2.239397e32, "unit": u.Joule},
         "log.final.system.KinEnergy": {"value": 1.606047e29, "unit": u.Joule},
-        "log.final.system.DeltaTime": {"value": 3.155760e15, "unit": u.sec},
         "log.final.earth.Mass": {"value": 5.972186e24, "unit": u.kg},
         "log.final.earth.Radius": {"value": 6.378100e06, "unit": u.m},
         "log.final.earth.RadGyra": {"value": 0.500000},

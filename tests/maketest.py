@@ -1,6 +1,8 @@
 import argparse
+import glob
 import os
 import pathlib
+import subprocess
 import sys
 
 import pandas as pd
@@ -15,25 +17,11 @@ def Main(dir, initial=False):
     initial_list = ["HZSingle", "IoHeat"]
 
     if dir == "all":
-        reply = None
-        question = "WARNING: Confirm that you will overwrite all tests"
-        while reply not in ("y", "n"):
-            reply = str(input(question + " (y/n): ")).lower().strip()
-
-            if reply[:1] == "y":
-                top_list = sorted(next(os.walk("."))[1])
-                for top in top_list:
-                    dir_list = sorted(next(os.walk(top))[1])
-            elif reply[:1] == "n":
-                print("Files NOT overwritten. Exiting.")
-                exit()
-            else:
-                print("User input was not valid. Exiting.")
-                exit()
-
+        dir_list = CollectAllTests()
     else:
         dir_list = [dir]
 
+    # BuildVPLanet()
     for dirname in dir_list:
         if dirname in skip_list:
             continue
@@ -50,9 +38,12 @@ def Main(dir, initial=False):
                 infiles.append(file)
 
         # change to Dir and run vplanet
+        print("Creating test " + dirname, flush=True)
         os.chdir(dirname)
-        vplanet.run("vpl.in", quiet=True)
+        RemoveOldFiles()
+        vplanet.run("vpl.in", quiet=True, C=True)
 
+        stellar = False  # Assume first, then it can be replaced with GetSNames
         SystemName, BodyName, logfile, outfile, forward, backward, stellar = GetSNames(
             infiles
         )
@@ -89,8 +80,53 @@ def Main(dir, initial=False):
                     data = ProcessOutputfile(climate_name, data, body, GridOutputOrder)
 
         ProcessUnits(data)
-        WriteTest(data, dirname, stellar)
-        os.chdir("../")
+        WriteTestFile(data, dirname, stellar)
+        os.chdir("../../")
+
+
+def BuildVPLanet():
+    sys.stdout.write("Building VPLanet...")
+    sys.stdout.flush()
+    os.chdir("../")
+    subprocess.check_output(["make", "opt"])
+    print("done.", flush=True)
+    os.chdir("tests")
+
+
+def RemoveOldFiles():
+    for file in glob.glob("*.log"):
+        os.remove(file)
+    for file in glob.glob("*.forward"):
+        os.remove(file)
+    for file in glob.glob("*.backward"):
+        os.remove(file)
+
+
+def CollectAllTests():
+    reply = None
+    question = "WARNING: Confirm that you will overwrite all tests"
+    while reply not in ("y", "n"):
+        reply = str(input(question + " (y/n): ")).lower().strip()
+
+        if reply[:1] == "y":
+            top_list = sorted(next(os.walk("."))[1])
+            dir_list = []
+            for top in top_list:
+                subdirs = [
+                    os.path.join(top, subdir)
+                    for subdir in sorted(next(os.walk(top))[1])
+                ]
+                for subdir in subdirs:
+                    if "pycache" not in subdir:
+                        dir_list.append(subdir)
+            print(" ", flush=True)
+        elif reply[:1] == "n":
+            print("Files NOT overwritten. Exiting.")
+            exit()
+        else:
+            print("User input was not valid. Exiting.")
+            exit()
+    return dir_list
 
 
 def GetSNames(bodyfiles):
@@ -136,9 +172,15 @@ def GetSNames(bodyfiles):
                 for line in content:
                     if line:
                         if line[0] == "saModules":
-                            if "stellar".casefold() in line or "stellar,".casefold() in line:
+                            if (
+                                "stellar".casefold() in line
+                                or "stellar,".casefold() in line
+                            ):
                                 stellar = True
-                                print("WARNING: Stellar module detected, rtol will be set to 1e-4 for all values.")
+                                print(
+                                    "WARNING: Stellar module detected, rtol will be set to 1e-4 for all values.",
+                                    flush=True,
+                                )
                         if line[0] == "sName":
                             body_names.append(line[1])
 
@@ -431,7 +473,7 @@ def ProcessUnits(data):
     return data
 
 
-def WriteTest(data, dirname, stellar):
+def WriteTestFile(data, dirname, stellar):
     badchars = "- "
     for i in badchars:
         dirname = dirname.replace(i, "")
@@ -439,18 +481,21 @@ def WriteTest(data, dirname, stellar):
     # Tests are two subdirs down
     dirs = dirname.split("/")
 
+    if stellar:
+        print("stellar")
+
     test_file = "test_" + dirs[1] + ".py"
     t = open(test_file, "w")
     try:
         with open(test_file, "w") as t:
             t.write("from benchmark import Benchmark, benchmark \n")
             t.write("import astropy.units as u \n")
-            t.write("import pytest \n")
             t.write(" \n")
             t.write("@benchmark( \n")
             t.write("   { \n")
 
             for k, v in data.items():
+                # print(k)
                 if "Order" in k or v[1] == "inf":
                     continue
 
@@ -475,9 +520,11 @@ def WriteTest(data, dirname, stellar):
                     )
 
                 if "log" in k and v[0] != "":
+                    # print ("log, no v[0]")
                     if "final" in k and stellar == True:
+                        # print("final, no v[0]")
                         if "DeltaTime" in k:
-                            print("WARNING: Skipping final DeltaTime")
+                            print("WARNING: Skipping final DeltaTime", flush=True)
                         else:
                             t.write(
                                 '       "'
@@ -489,6 +536,7 @@ def WriteTest(data, dirname, stellar):
                                 + ', "rtol": 1e-4}, \n'
                             )
                     else:
+                        # print("not final")
                         t.write(
                             '       "'
                             + k
@@ -499,9 +547,11 @@ def WriteTest(data, dirname, stellar):
                             + "}, \n"
                         )
                 if "log" in k and v[0] == "":
+                    # print ("log, w/ v[0]")
                     if "final" in k and stellar == True:
+                        # print("final, w v[0]")
                         if "DeltaTime" in k:
-                            print("WARNING: Skipping final DeltaTime")
+                            print("WARNING: Skipping final DeltaTime", flush=True)
                         else:
                             t.write(
                                 '       "'
@@ -511,6 +561,7 @@ def WriteTest(data, dirname, stellar):
                                 + ', "rtol": 1e-4}, \n'
                             )
                     else:
+                        # print("not final")
                         t.write('       "' + k + '": {"value": ' + str(v[1]) + "}, \n")
 
             t.write("   } \n")
@@ -522,7 +573,8 @@ def WriteTest(data, dirname, stellar):
         print("Unable to create file", test_file)
         exit(1)
 
-    print("Successfuly created new test file: " + dirname + "/" + test_file)
+    print("Successfuly created new test file: " + dirname + "/" + test_file, flush=True)
+    print(" ", flush=True)
 
 
 def Arguments():

@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -160,11 +159,11 @@ from benchmark import Benchmark, benchmark
             "unit": u.kg / u.sec**3,
         },
         "log.initial.d.Mass": {"value": 3.3444241599999997e25, "unit": u.kg},
-        "log.initial.d.Obliquity": {"value": 0.4101523742069445, "unit": u.rad},
+        "log.initial.d.Obliquity": {"value": 0.4101523742069444, "unit": u.rad},
         "log.initial.d.PrecA": {"value": 0.0000000000000000, "unit": u.rad},
         "log.initial.d.Xobl": {"value": 0.3987490689144955},
         "log.initial.d.Yobl": {"value": 0.0000000000000000},
-        "log.initial.d.Zobl": {"value": 0.9170600743897985},
+        "log.initial.d.Zobl": {"value": 0.9170600743897986},
         "log.initial.d.Radius": {"value": 1.0190569786845941e07, "unit": u.m},
         "log.initial.d.RadGyra": {"value": 0.5000000000000000},
         "log.initial.d.RotAngMom": {
@@ -256,14 +255,14 @@ from benchmark import Benchmark, benchmark
         },
         "log.initial.d.DYoblDtEqtide": {"value": 0.0000000000000000, "unit": 1 / u.sec},
         "log.initial.d.DZoblDtEqtide": {
-            "value": -1.2956511188029881e-17,
+            "value": -1.2956511188029876e-17,
             "unit": 1 / u.sec,
         },
         "log.initial.d.LockTime": {"value": -1.0000000000000000, "unit": u.sec},
         "log.initial.d.BodyDsemiDtEqtide": {"value": -1.0000000000000000},
         "log.initial.d.BodyDeccDt": {"value": -1.0000000000000000},
         "log.initial.d.DOblDtEqtide": {
-            "value": 3.2492893897661155e-17,
+            "value": 3.2492893897661149e-17,
             "unit": u.rad / u.sec,
         },
         "log.initial.d.DRotPerDtEqtide": {"value": 2.9330699849868684e-11},
@@ -285,10 +284,7 @@ from benchmark import Benchmark, benchmark
         },
         "log.initial.d.EqRotPerCont": {"value": 2.4402210592177450e06, "unit": u.sec},
         "log.initial.d.EqRotPer": {"value": 3.8584775388350980e06, "unit": u.sec},
-        "log.initial.d.EqTidePower": {
-            "value": 7.2762727727987500e-310,
-            "unit": 1 / u.sec,
-        },
+        "log.initial.d.EqTidePower": {"value": 0.0000000000000000, "unit": 1 / u.sec},
         "log.initial.d.GammaRot": {"value": -1.0000000000000000, "unit": u.sec},
         "log.initial.d.GammaOrb": {"value": -1.0000000000000000, "unit": u.sec},
         "log.initial.d.OceanK2": {"value": 0.0100000000000000},
@@ -318,7 +314,6 @@ from benchmark import Benchmark, benchmark
             "unit": u.Joule,
         },
         "log.final.system.KinEnergy": {"value": 1.7636110753935293e33, "unit": u.Joule},
-        "log.final.system.DeltaTime": {"value": 6.7720171673819739e11, "unit": u.sec},
         "log.final.gl581.Mass": {"value": 6.1640895999999998e29, "unit": u.kg},
         "log.final.gl581.Obliquity": {"value": 0.0000000000000000, "unit": u.rad},
         "log.final.gl581.PrecA": {"value": 0.0000000000000000, "unit": u.rad},
@@ -434,11 +429,11 @@ from benchmark import Benchmark, benchmark
             "unit": u.kg / u.sec**3,
         },
         "log.final.d.Mass": {"value": 3.3444241599999997e25, "unit": u.kg},
-        "log.final.d.Obliquity": {"value": 0.3288131817722898, "unit": u.rad},
+        "log.final.d.Obliquity": {"value": 0.3288131817722896, "unit": u.rad},
         "log.final.d.PrecA": {"value": 0.0000000000000000, "unit": u.rad},
-        "log.final.d.Xobl": {"value": 0.3229200843552366},
+        "log.final.d.Xobl": {"value": 0.3229200843552365},
         "log.final.d.Yobl": {"value": 0.0000000000000000},
-        "log.final.d.Zobl": {"value": 0.9464264455249324},
+        "log.final.d.Zobl": {"value": 0.9464264455249325},
         "log.final.d.Radius": {"value": 1.0190569786845941e07, "unit": u.m},
         "log.final.d.RadGyra": {"value": 0.5000000000000000},
         "log.final.d.RotAngMom": {
@@ -496,7 +491,7 @@ from benchmark import Benchmark, benchmark
         "log.final.d.LostEnergy": {"value": 2.2047728231388356e30, "unit": u.Joule},
         "log.final.d.TidalRadius": {"value": 1.0190569786845941e07, "unit": u.m},
         "log.final.d.DsemiDtEqtide": {
-            "value": -1.9341295712977497e-11,
+            "value": -1.9341295712977494e-11,
             "unit": u.m / u.sec,
         },
         "log.final.d.DeccDtEqtide": {
@@ -504,31 +499,31 @@ from benchmark import Benchmark, benchmark
             "unit": 1 / u.sec,
         },
         "log.final.d.DMeanMotionDtEqtide": {
-            "value": 9.6366864093756151e-28,
+            "value": 9.6366864093756133e-28,
             "unit": 1 / u.sec**2,
         },
-        "log.final.d.DOrbPerDtEqtide": {"value": -5.1376881622162712e-15},
+        "log.final.d.DOrbPerDtEqtide": {"value": -5.1376881622162704e-15},
         "log.final.d.EccTimeEqtide": {"value": 2.7407372728149895e21, "unit": u.sec},
-        "log.final.d.SemiTimeEqtide": {"value": 1.6897928164056302e21, "unit": u.sec},
+        "log.final.d.SemiTimeEqtide": {"value": 1.6897928164056307e21, "unit": u.sec},
         "log.final.d.DHEccDtEqtide": {"value": -0.0000000000000000, "unit": 1 / u.sec},
         "log.final.d.DKEccDtEqtide": {
             "value": -1.3864931530303800e-22,
             "unit": 1 / u.sec,
         },
         "log.final.d.DXoblDtEqtide": {
-            "value": -1.1121550382088371e-15,
+            "value": -1.1121550382088367e-15,
             "unit": 1 / u.sec,
         },
         "log.final.d.DYoblDtEqtide": {"value": 0.0000000000000000, "unit": 1 / u.sec},
         "log.final.d.DZoblDtEqtide": {
-            "value": 3.7946657181087617e-16,
+            "value": 3.7946657181087587e-16,
             "unit": 1 / u.sec,
         },
         "log.final.d.LockTime": {"value": 2.8873488943231490e15, "unit": u.sec},
         "log.final.d.BodyDsemiDtEqtide": {"value": -1.0000000000000000},
         "log.final.d.BodyDeccDt": {"value": -1.0000000000000000},
         "log.final.d.DOblDtEqtide": {
-            "value": -1.1751100834114218e-15,
+            "value": -1.1751100834114214e-15,
             "unit": u.rad / u.sec,
         },
         "log.final.d.DRotPerDtEqtide": {"value": -1.3180805030182819e-296},
@@ -547,10 +542,7 @@ from benchmark import Benchmark, benchmark
         },
         "log.final.d.EqRotPerCont": {"value": 2.4402262612929139e06, "unit": u.sec},
         "log.final.d.EqRotPer": {"value": 3.8585015775312437e06, "unit": u.sec},
-        "log.final.d.EqTidePower": {
-            "value": 7.2763608177238376e-310,
-            "unit": 1 / u.sec,
-        },
+        "log.final.d.EqTidePower": {"value": 0.0000000000000000, "unit": 1 / u.sec},
         "log.final.d.GammaRot": {"value": -1.0000000000000000, "unit": u.sec},
         "log.final.d.GammaOrb": {"value": -1.0000000000000000, "unit": u.sec},
         "log.final.d.OceanK2": {"value": 0.0100000000000000},
@@ -560,12 +552,12 @@ from benchmark import Benchmark, benchmark
         "log.final.d.RotTimeEqtide": {"value": 2.9273641243426581e302, "unit": u.sec},
         "log.final.d.EnvK2": {"value": 0.0100000000000000},
         "log.final.d.OblTimeEqtide": {"value": -1.0000000000000000},
-        "log.final.d.PowerEqtide": {"value": 3.7483793016212109e12, "unit": u.W},
+        "log.final.d.PowerEqtide": {"value": 3.7483793016212100e12, "unit": u.W},
         "log.final.d.SurfEnFluxEqtide": {
             "value": 0.0028723458591997,
             "unit": u.kg / u.sec**3,
         },
     }
 )
-class TestTideLockCPL(Benchmark):
+class Test_TideLockCPL(Benchmark):
     pass

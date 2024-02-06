@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -94,6 +93,23 @@ from benchmark import Benchmark, benchmark
             "value": 0.018709,
             "unit": u.W / u.m**2,
         },
+        "log.initial.planet.CrossoverMass": {"value": 0.000000, "unit": u.kg},
+        "log.initial.planet.WaterEscapeRegime": {"value": 8.000000},
+        "log.initial.planet.FXUVCRITDRAG": {
+            "value": 4.123757e-05,
+            "unit": u.W / u.m**2,
+        },
+        "log.initial.planet.HREFFLUX": {
+            "value": 2.824302e21,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.planet.XO2": {"value": 0.000000},
+        "log.initial.planet.XH2O": {"value": 0.000000},
+        "log.initial.planet.HDiffFlux": {
+            "value": 4.341873e14,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.planet.HRefODragMod": {"value": 1.000000},
         "log.initial.planet.KTide": {"value": 1.000000},
         "log.initial.planet.RGDuration": {"value": 0.00000e00, "unit": u.yr},
         "log.final.system.Age": {"value": 6.311520e13, "unit": u.sec, "rtol": 1e-4},
@@ -116,11 +132,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.KinEnergy": {
             "value": 3.008339e39,
             "unit": u.Joule,
-            "rtol": 1e-4,
-        },
-        "log.final.system.DeltaTime": {
-            "value": 4.328295e09,
-            "unit": u.sec,
             "rtol": 1e-4,
         },
         "log.final.star.Mass": {"value": 1.988416e30, "unit": u.kg, "rtol": 1e-4},
@@ -331,6 +342,30 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.planet.CrossoverMass": {
+            "value": 0.000000,
+            "unit": u.kg,
+            "rtol": 1e-4,
+        },
+        "log.final.planet.WaterEscapeRegime": {"value": 8.000000, "rtol": 1e-4},
+        "log.final.planet.FXUVCRITDRAG": {
+            "value": 4.066770e-05,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.planet.HREFFLUX": {
+            "value": 1.746834e21,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.planet.XO2": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.planet.XH2O": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.planet.HDiffFlux": {
+            "value": 4.321780e14,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.planet.HRefODragMod": {"value": 1.000000, "rtol": 1e-4},
         "log.final.planet.KTide": {"value": 1.000000, "rtol": 1e-4},
         "log.final.planet.RGDuration": {
             "value": 0.00000e00,
@@ -339,5 +374,5 @@ from benchmark import Benchmark, benchmark
         },
     }
 )
-class TestMiniNeptuneEvapDyn(Benchmark):
+class Test_MiniNeptuneEvapDyn(Benchmark):
     pass

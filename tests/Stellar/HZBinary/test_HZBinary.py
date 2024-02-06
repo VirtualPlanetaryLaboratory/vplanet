@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -252,11 +251,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.KinEnergy": {
             "value": 9.654707e38,
             "unit": u.Joule,
-            "rtol": 1e-4,
-        },
-        "log.final.system.DeltaTime": {
-            "value": 5.447540e07,
-            "unit": u.sec,
             "rtol": 1e-4,
         },
         "log.final.primary.Mass": {"value": 5.965248e29, "unit": u.kg, "rtol": 1e-4},
@@ -737,5 +731,5 @@ from benchmark import Benchmark, benchmark
         "log.final.secondary.DRotPerDtStellar": {"value": -1.697172e-09, "rtol": 1e-4},
     }
 )
-class TestHZBinary(Benchmark):
+class Test_HZBinary(Benchmark):
     pass

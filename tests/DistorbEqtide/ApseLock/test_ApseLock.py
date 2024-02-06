@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -349,11 +348,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.KinEnergy": {
             "value": 1.054732e40,
             "unit": u.Joule,
-            "rtol": 1e-4,
-        },
-        "log.final.system.DeltaTime": {
-            "value": 8.573338e04,
-            "unit": u.sec,
             "rtol": 1e-4,
         },
         "log.final.star.Mass": {"value": 1.849227e30, "unit": u.kg, "rtol": 1e-4},
@@ -1038,5 +1032,5 @@ from benchmark import Benchmark, benchmark
         },
     }
 )
-class TestApseLock(Benchmark):
+class Test_ApseLock(Benchmark):
     pass

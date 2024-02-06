@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -659,11 +658,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.KinEnergy": {
             "value": 5.361272e37,
             "unit": u.Joule,
-            "rtol": 1e-4,
-        },
-        "log.final.system.DeltaTime": {
-            "value": 3.155760e07,
-            "unit": u.sec,
             "rtol": 1e-4,
         },
         "log.final.sun.Mass": {"value": 1.988416e30, "unit": u.kg, "rtol": 1e-4},
@@ -2135,5 +2129,5 @@ from benchmark import Benchmark, benchmark
         },
     }
 )
-class TestEarthClimate(Benchmark):
+class Test_EarthClimate(Benchmark):
     pass

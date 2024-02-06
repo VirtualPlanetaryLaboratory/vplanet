@@ -1,7 +1,5 @@
 name: tests-macos
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -14,7 +12,7 @@ jobs:
       matrix:
         os: [macos-11, macos-12, macos-13]
         python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
-          
+
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -41,4 +39,3 @@ jobs:
       - name: Get unique id
         uses: Tiryoh/gha-jobid-action@v1
         id: jobs
-

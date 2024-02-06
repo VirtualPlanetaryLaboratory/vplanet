@@ -36,4 +36,4 @@ jobs:
         shell: bash -l {0}
         run: |
           cd tests/
-          python -m unittest valgrind.py
+          python valgrind.py

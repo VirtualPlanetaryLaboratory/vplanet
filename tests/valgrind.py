@@ -5,26 +5,21 @@ import sys
 
 # XXX Near duplicates in maketest.py, 02/06/24
 def Main():
-    # BuildVPLanet()
+    BuildVPLanet()
+    print("")
     dir_list = CollectAllTests()
 
-    print(dir_list)
     tot_fail = 0
     tot_test = 0
     for dir in dir_list:
         tot_test += 1
         sys.stdout.write(dir)
-        # sys.stdout.write("")
         sys.stdout.flush()
         os.chdir(dir)
         subdirs = dir.split("/")
         test = subdirs[1]
         outfile = test + ".valgrind"
-        # cmd='/usr/bin/valgrind --track-origins=yes ../../bin/vplanet vpl.in &> '+ fout
         cmd = "/usr/bin/valgrind --track-origins=yes ../../../bin/vplanet vpl.in"
-
-        # print(cmd)
-        # cmd = cmd.split()
 
         with open(outfile, "w+") as f:
             subprocess.run(cmd, shell=True, stdout=f, stderr=f)
@@ -38,7 +33,6 @@ def Main():
             tot_fail += 1
         print(": " + repr(n_errors) + " error(s)")
         os.chdir("../../")
-        exit()
 
     print("Done! ")
 
@@ -62,7 +56,6 @@ def BuildVPLanet():
 
 def CollectAllTests():
     top_list = sorted(next(os.walk("."))[1])
-    print(top_list)
     dir_list = []
     for top in top_list:
         subdirs = [

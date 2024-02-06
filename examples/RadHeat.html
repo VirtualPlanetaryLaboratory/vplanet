@@ -1,149 +1,98 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Radiogenic Heating of Earth &mdash; VPLanet 2.4.3
- documentation</title>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Radiogenic Heating of Earth &mdash; VPLanet 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=d948c9a6" />
 
   
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-    <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="VPLanet 2.4.3
- documentation" href="../index.html"/>
-        <link rel="up" title="Examples" href="../examples.html"/>
-        <link rel="next" title="Multiple Cassini States in One System" href="CassiniMulti.html"/>
-        <link rel="prev" title="(Pre-)Main Sequence Stellar Evolution" href="StellarEvol.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tidal Locking of the Planet Candidate Gl 581 d" href="TideLock.html" />
+    <link rel="prev" title="Cassini States" href="CassiniStates.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
+        <div class="wy-side-nav-search" >
 
           
-            <a href="../index.html" class="icon icon-home"> VPLanet
           
-
-          
+          <a href="../index.html" class="icon icon-home">
+            VPLanet
           </a>
-
-          
-            
-            
-              <div class="version">
-                2.4.3
-
-              </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../conduct.html">Code of Conduct</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installing VPLanet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="MagmOc_Trappist1g.html">Magma ocean evolution of Trappist-1 g</a></li>
-<li class="toctree-l2"><a class="reference internal" href="EarthClimate.html">Earth’s Seasonal and Milankovitch Climate Cycles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="MagneticBraking.html">Stellar Magnetic Braking</a></li>
-<li class="toctree-l2"><a class="reference internal" href="VenusWaterLoss.html">Water Loss on Venus</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ApseLock.html">Apsidal Locking of the CoRoT-7 System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ChaoticResonances.html">Chaotic Eccentricity-Inclination Resonances</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GalaxyEffects.html">Evolution of a Wide Stellar Binary due to Galactic Effects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="CircumbinaryOrbit.html">Orbital Evolution of the Circumbinary Planet Kepler-16 b</a></li>
-<li class="toctree-l2"><a class="reference internal" href="TidalEarth.html">Tidal Evolution of Earth-like Exoplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="AtmEscKepler-36.html">Kepler-36 Atmospheric Escape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HabEvapCore.html">Proxima Centauri b as a “Habitable Evaporated Core.”</a></li>
 <li class="toctree-l2"><a class="reference internal" href="MiniNeptuneEvap.html">Atmospheric Erosion of Mini-Neptunes with the Lehmer &amp; Catling (2017) Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="AtmEscRegimes.html">Atmospheric Erosion of H Envelopes in the Energy-, Radiation/Recombination-, and Bondi-limited Regimes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="StellarEvol.html">(Pre-)Main Sequence Stellar Evolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="IoHeat.html">Tidal Heating of Io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MagmOc_Trappist1g.html">Magma ocean evolution of Trappist-1 g</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GalaxyEffects.html">Evolution of a Wide Stellar Binary due to Galactic Effects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MDwarfLuminosity.html">Luminosity evolution for stars with mass between 0.2 and 0.6 Msun.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HabitableZone.html">The Habitable Zone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BinaryTides.html">Evolution of Tight Stellar Binaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MagmOc_Earth.html">Magma Ocean Evolution of Earth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ApseLock.html">Apsidal Locking of the CoRoT-7 System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CassiniStates.html">Cassini States</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Radiogenic Heating of Earth</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#to-run-this-example">To run this example</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#expected-output">Expected output</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="CassiniMulti.html">Multiple Cassini States in One System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="AbioticO2.html">Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="AtmEscFlareProxCen.html">Proxima Centauri b Atmospheric Escape</a></li>
-<li class="toctree-l2"><a class="reference internal" href="STEEP.html">STEEP: Coupled Stellar-Tidal Evolution of Binary Orbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ParameterSweep.html">Parameter Sweep Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FfdProxCen.html">Flare frequency distribution of Proxima Centauri</a></li>
-<li class="toctree-l2"><a class="reference internal" href="SS_NBody.html">N-body Orbital Evolution of the Solar System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="WaterLossTides.html">Water Loss on a Tidally Evolving Planet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="VenusApproxInterior.html">Thermal and Magnetic Evolution of Venus</a></li>
-<li class="toctree-l2"><a class="reference internal" href="CassiniStates.html">Cassini States</a></li>
-<li class="toctree-l2"><a class="reference internal" href="SSDistOrbDistRot.html">Solar System Orbital Dynamics from Secular Theory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="IceBelts.html">Ice Belt Formation on High Obliquity Planets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="MagmOc_Earth.html">Magma Ocean Evolution of Earth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="TideLock.html">Tidal Locking of the Planet Candidate Gl 581 d</a></li>
-<li class="toctree-l2"><a class="reference internal" href="MagmOc_GJ1132b.html">Magma ocean evolution on GJ 1132 b</a></li>
-<li class="toctree-l2"><a class="reference internal" href="MDwarfLuminosity.html">Luminosity evolution for stars with mass between 0.2 and 0.6 Msun.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="DiffLimWaterEscape.html">Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape on the TRAPPIST-1 planets b and e with the LS16 Water loss model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="BinaryTides.html">Evolution of Tight Stellar Binaries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="DampedCBP.html">Evolution of a Planet Orbiting a Short-Period Binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="EarthInterior.html">Thermal and Magnetic Evolution of Earth’s Interior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TidalEarth.html">Tidal Evolution of Earth-like Exoplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FfdProxCen.html">Flare frequency distribution of Proxima Centauri</a></li>
+<li class="toctree-l2"><a class="reference internal" href="AtmEscKepler-36.html">Kepler-36 Atmospheric Escape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="AbioticO2.html">Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CassiniMulti.html">Multiple Cassini States in One System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WaterLossTides.html">Water Loss on a Tidally Evolving Planet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="IceBelts.html">Ice Belt Formation on High Obliquity Planets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SS_NBody.html">N-body Orbital Evolution of the Solar System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MagneticBraking.html">Stellar Magnetic Braking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="EarthClimate.html">Earth’s Seasonal and Milankovitch Climate Cycles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NBodyAtmEsc.html">Coupling Atmospheric Escape and N-Body Evolution: Application to PSR1257+12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="HabEvapCore.html">Proxima Centauri b as a “Habitable Evaporated Core.”</a></li>
-<li class="toctree-l2"><a class="reference internal" href="HabitableZone.html">The Habitable Zone</a></li>
-<li class="toctree-l2"><a class="reference internal" href="IoHeat.html">Tidal Heating of Io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="VenusWaterLoss.html">Water Loss on Venus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MagmOc_GJ1132b.html">Magma ocean evolution on GJ 1132 b</a></li>
+<li class="toctree-l2"><a class="reference internal" href="StellarEvol.html">(Pre-)Main Sequence Stellar Evolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="AtmEscRegimes.html">Atmospheric Erosion of H Envelopes in the Energy-, Radiation/Recombination-, and Bondi-limited Regimes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DampedCBP.html">Evolution of a Planet Orbiting a Short-Period Binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DiffLimWaterEscape.html">Accumulation of Atmospheric Oxygen due to Water Photolysis and Hydrogen Escape on the TRAPPIST-1 planets b and e with the LS16 Water loss model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="EarthInterior.html">Thermal and Magnetic Evolution of Earth’s Interior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CircumbinaryOrbit.html">Orbital Evolution of the Circumbinary Planet Kepler-16 b</a></li>
+<li class="toctree-l2"><a class="reference internal" href="VenusApproxInterior.html">Thermal and Magnetic Evolution of Venus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="STEEP.html">STEEP: Coupled Stellar-Tidal Evolution of Binary Orbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ChaoticResonances.html">Chaotic Eccentricity-Inclination Resonances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SSDistOrbDistRot.html">Solar System Orbital Dynamics from Secular Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="AtmEscFlareProxCen.html">Proxima Centauri b Atmospheric Escape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ParameterSweep.html">Parameter Sweep Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="HLossTides.html">Hydrogen Envelope Loss on Tidally Evolving Planets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples.html#broken">Broken</a></li>
 </ul>
@@ -159,60 +108,37 @@
 <li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">VPLanet</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">VPLanet</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">VPLanet</a> &raquo;</li>
-      
-        <li><a href="../examples.html">Examples</a>&raquo;</li>
-      
-    
-      <li>Radiogenic Heating of Earth</li>
-    
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../examples.html">Examples</a></li>
+      <li class="breadcrumb-item active">Radiogenic Heating of Earth</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-        
+            <a href="../_sources/examples/RadHeat.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <section id="radiogenic-heating-of-earth">
-<h1>Radiogenic Heating of Earth<a class="headerlink" href="#radiogenic-heating-of-earth" title="Permalink to this headline">¶</a></h1>
+<h1>Radiogenic Heating of Earth<a class="headerlink" href="#radiogenic-heating-of-earth" title="Link to this heading"></a></h1>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
 <p>Radiogenic heating in Earth’s interior.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 61%" />
-<col style="width: 39%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><strong>Date</strong></p></td>
 <td><p>09/12/18</p></td>
@@ -231,13 +157,13 @@
 <p>This example shows the power generated by radioactive elements in Earth’s interior as predicted by our <a class="reference external" href="../EarthInterior">nominal Earth model</a>.</p>
 </section>
 <section id="to-run-this-example">
-<h2>To run this example<a class="headerlink" href="#to-run-this-example" title="Permalink to this headline">¶</a></h2>
+<h2>To run this example<a class="headerlink" href="#to-run-this-example" title="Link to this heading"></a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>makeplot.py<span class="w"> </span>&lt;pdf<span class="w"> </span><span class="p">|</span><span class="w"> </span>png&gt;
 </pre></div>
 </div>
 </section>
 <section id="expected-output">
-<h2>Expected output<a class="headerlink" href="#expected-output" title="Permalink to this headline">¶</a></h2>
+<h2>Expected output<a class="headerlink" href="#expected-output" title="Link to this heading"></a></h2>
 <figure class="align-center">
 <a class="reference internal image-reference" href="examples/RadHeat.png"><img alt="examples/RadHeat.png" src="examples/RadHeat.png" style="width: 600px;" /></a>
 </figure>
@@ -248,69 +174,32 @@
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="CassiniMulti.html" class="btn btn-neutral float-right" title="Multiple Cassini States in One System" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="StellarEvol.html" class="btn btn-neutral" title="(Pre-)Main Sequence Stellar Evolution" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CassiniStates.html" class="btn btn-neutral float-left" title="Cassini States" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="TideLock.html" class="btn btn-neutral float-right" title="Tidal Locking of the Planet Candidate Gl 581 d" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; Copyright 2018, The VPLanet Team.
-
-    </p>
+    <p>&#169; Copyright 2024, Rory Barnes et al..</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'2.4.3',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/documentation_options.js"></script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

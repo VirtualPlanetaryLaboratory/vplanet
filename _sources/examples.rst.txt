@@ -12,44 +12,44 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/MagmOc_Trappist1g
-   examples/EarthClimate
-   examples/MagneticBraking
-   examples/VenusWaterLoss
-   examples/ApseLock
-   examples/ChaoticResonances
-   examples/GalaxyEffects
-   examples/CircumbinaryOrbit
-   examples/TidalEarth
-   examples/AtmEscKepler-36
-   examples/MiniNeptuneEvap
-   examples/AtmEscRegimes
-   examples/StellarEvol
-   examples/RadHeat
-   examples/CassiniMulti
-   examples/AbioticO2
-   examples/AtmEscFlareProxCen
-   examples/STEEP
-   examples/ParameterSweep
-   examples/FfdProxCen
-   examples/SS_NBody
-   examples/WaterLossTides
-   examples/VenusApproxInterior
-   examples/CassiniStates
-   examples/SSDistOrbDistRot
-   examples/IceBelts
-   examples/MagmOc_Earth
-   examples/TideLock
-   examples/MagmOc_GJ1132b
-   examples/MDwarfLuminosity
-   examples/DiffLimWaterEscape
-   examples/BinaryTides
-   examples/DampedCBP
-   examples/EarthInterior
-   examples/NBodyAtmEsc
    examples/HabEvapCore
-   examples/HabitableZone
+   examples/MiniNeptuneEvap
    examples/IoHeat
+   examples/MagmOc_Trappist1g
+   examples/GalaxyEffects
+   examples/MDwarfLuminosity
+   examples/HabitableZone
+   examples/BinaryTides
+   examples/MagmOc_Earth
+   examples/ApseLock
+   examples/CassiniStates
+   examples/RadHeat
+   examples/TideLock
+   examples/TidalEarth
+   examples/FfdProxCen
+   examples/AtmEscKepler-36
+   examples/AbioticO2
+   examples/CassiniMulti
+   examples/WaterLossTides
+   examples/IceBelts
+   examples/SS_NBody
+   examples/MagneticBraking
+   examples/EarthClimate
+   examples/NBodyAtmEsc
+   examples/VenusWaterLoss
+   examples/MagmOc_GJ1132b
+   examples/StellarEvol
+   examples/AtmEscRegimes
+   examples/DampedCBP
+   examples/DiffLimWaterEscape
+   examples/EarthInterior
+   examples/CircumbinaryOrbit
+   examples/VenusApproxInterior
+   examples/STEEP
+   examples/ChaoticResonances
+   examples/SSDistOrbDistRot
+   examples/AtmEscFlareProxCen
+   examples/ParameterSweep
    examples/HLossTides
 
 

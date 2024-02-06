@@ -1,135 +1,84 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>control &mdash; VPLanet 2.4.3
- documentation</title>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>control &mdash; VPLanet 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=d948c9a6" />
 
   
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-    <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="VPLanet 2.4.3
- documentation" href="../index.html"/>
-        <link rel="up" title="C API" href="../src.html"/>
-        <link rel="next" title="eqtide" href="eqtide.html"/>
-        <link rel="prev" title="C API" href="../src.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="vplanet" href="vplanet.html" />
+    <link rel="prev" title="poise" href="poise.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
-
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
+        <div class="wy-side-nav-search" >
 
           
-            <a href="../index.html" class="icon icon-home"> VPLanet
           
-
-          
+          <a href="../index.html" class="icon icon-home">
+            VPLanet
           </a>
-
-          
-            
-            
-              <div class="version">
-                2.4.3
-
-              </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../conduct.html">Code of Conduct</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installing VPLanet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">control</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#control-c">control.c</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#control-h">control.h</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
-<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -142,407 +91,77 @@
 <li class="toctree-l1"><a class="reference external" href="https://github.com/VirtualPlanetaryLaboratory/vplanet">GitHub</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">VPLanet</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">VPLanet</a>
       </nav>
 
-
-      
       <div class="wy-nav-content">
         <div class="rst-content">
-          
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">VPLanet</a> &raquo;</li>
-      
-        <li><a href="../src.html">C API</a>&raquo;</li>
-      
-    
-      <li>control</li>
-    
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../src.html">C API</a></li>
+      <li class="breadcrumb-item active">control</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
-        
+            <a href="../_sources/src/control.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <section id="control">
-<h1>control<a class="headerlink" href="#control" title="Permalink to this headline">¶</a></h1>
+<h1>control<a class="headerlink" href="#control" title="Link to this heading"></a></h1>
 <p><strong>Contents</strong></p>
-<div class="contents local topic" id="contents">
+<nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#control-c" id="id1">control.c</a></p></li>
 <li><p><a class="reference internal" href="#control-h" id="id2">control.h</a></p></li>
 </ul>
-</div>
+</nav>
 <section id="control-c">
-<h2><a class="toc-backref" href="#id1">control.c</a><a class="headerlink" href="#control-c" title="Permalink to this headline">¶</a></h2>
-<p>These subroutines deal with control, including I/O, units, and files. </p>
-<p><dl class="simple">
-<dt><strong>Author</strong></dt><dd><p>Rory Barnes (<a class="reference external" href="https://github.com/RoryBarnes/">RoryBarnes</a>)</p>
-</dd>
-<dt><strong>Date</strong></dt><dd><p>Jan 7 2015 </p>
-</dd>
-</dl>
-</p>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv412BodyCopyNULLP4BODYP4BODYiii">
-<span id="_CPPv312BodyCopyNULLP4BODYP4BODYiii"></span><span id="_CPPv212BodyCopyNULLP4BODYP4BODYiii"></span><span id="BodyCopyNULL__BODYP.BODYP.i.i.i"></span><span class="target" id="control_8c_1aacfd0b9f71181e03f1a2c076c057078f"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BodyCopyNULL</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dest</span></span>, <a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">src</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">foo</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412BodyCopyNULLP4BODYP4BODYiii" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv48strcicmpPKcPKc">
-<span id="_CPPv38strcicmpPKcPKc"></span><span id="_CPPv28strcicmpPKcPKc"></span><span id="strcicmp__cCP.cCP"></span><span class="target" id="control_8c_1ae2842cb0cbdf6aa210eba0b735e63312"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">strcicmp</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48strcicmpPKcPKc" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Case-insensitive <code class="docutils literal notranslate"><span class="pre">strcmp</span></code></p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv420compare_option_namesPKvPKv">
-<span id="_CPPv320compare_option_namesPKvPKv"></span><span id="_CPPv220compare_option_namesPKvPKv"></span><span id="compare_option_names__voidCP.voidCP"></span><span class="target" id="control_8c_1abff764167a74a68219abc70d58a03db3"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compare_option_names</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">p</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">q</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420compare_option_namesPKvPKv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Comparison function for option names. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv420compare_output_namesPKvPKv">
-<span id="_CPPv320compare_output_namesPKvPKv"></span><span id="_CPPv220compare_output_namesPKvPKv"></span><span id="compare_output_names__voidCP.voidCP"></span><span class="target" id="control_8c_1ab1268541781a1447d6448a24c08738fe"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compare_output_names</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">p</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">q</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420compare_output_namesPKvPKv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Comparison function for output names. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv412sort_optionsP7OPTIONSA_i">
-<span id="_CPPv312sort_optionsP7OPTIONSA_i"></span><span id="_CPPv212sort_optionsP7OPTIONSA_i"></span><span id="sort_options__OPTIONSP.iA"></span><span class="target" id="control_8c_1ab36e4f7b7c64278d9924a3261d391018"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sort_options</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">sorted</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412sort_optionsP7OPTIONSA_i" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sort the <a class="reference internal" href="vplanet.html#struct_o_p_t_i_o_n_s"><span class="std std-ref">OPTIONS</span></a> struct by name. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv411sort_outputP6OUTPUTA_i">
-<span id="_CPPv311sort_outputP6OUTPUTA_i"></span><span id="_CPPv211sort_outputP6OUTPUTA_i"></span><span id="sort_output__OUTPUTP.iA"></span><span class="target" id="control_8c_1a8211ebc89bb12dc5ed9bdd0b69c32964"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sort_output</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">output</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">sorted</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411sort_outputP6OUTPUTA_i" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sort the <a class="reference internal" href="vplanet.html#struct_o_u_t_p_u_t"><span class="std std-ref">OUTPUT</span></a> struct by name. </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv417InitializeControlP7CONTROLP6MODULE">
-<span id="_CPPv317InitializeControlP7CONTROLP6MODULE"></span><span id="_CPPv217InitializeControlP7CONTROLP6MODULE"></span><span id="InitializeControl__CONTROLP.MODULEP"></span><span class="target" id="control_8c_1acc0a1793bbff6ecd05f3d306eb6c7cd3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InitializeControl</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE"><span class="n"><span class="pre">MODULE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">module</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417InitializeControlP7CONTROLP6MODULE" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv423InitializeControlEvolveP4BODYP7CONTROLP6MODULEP6UPDATE">
-<span id="_CPPv323InitializeControlEvolveP4BODYP7CONTROLP6MODULEP6UPDATE"></span><span id="_CPPv223InitializeControlEvolveP4BODYP7CONTROLP6MODULEP6UPDATE"></span><span id="InitializeControlEvolve__BODYP.CONTROLP.MODULEP.UPDATEP"></span><span class="target" id="control_8c_1ad01dc8af002030c5554051a9c96de27e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InitializeControlEvolve</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE"><span class="n"><span class="pre">MODULE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">module</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423InitializeControlEvolveP4BODYP7CONTROLP6MODULEP6UPDATE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>This function performs the following tasks:</p>
-<p>1) Allocates control-&gt;Evolve.fnBodyCopy, iNumMultiProps, tmpUpdate, daDeriv, and control-&gt;iNumMultiProps. 2) Initializes control-&gt;bOrbiters 3) Initializes control-&gt;Evolve.iNumModules </p>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv414PrintFileTypesii">
-<span id="_CPPv314PrintFileTypesii"></span><span id="_CPPv214PrintFileTypesii"></span><span id="PrintFileTypes__i.i"></span><span class="target" id="control_8c_1a3beb35dba4de3adafdd78e59efc81a35"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PrintFileTypes</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFileType</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bPadString</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414PrintFileTypesii" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv416WriteDescriptionA_cA_ci">
-<span id="_CPPv316WriteDescriptionA_cA_ci"></span><span id="_CPPv216WriteDescriptionA_cA_ci"></span><span id="WriteDescription__cA.cA.i"></span><span class="target" id="control_8c_1a1091fc5cd0c5d089c24375e1c8a7528c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WriteDescription</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cLongDescr</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cDescr</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iMaxChars</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416WriteDescriptionA_cA_ci" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv415WriteHelpOptionP7OPTIONSi">
-<span id="_CPPv315WriteHelpOptionP7OPTIONSi"></span><span id="_CPPv215WriteHelpOptionP7OPTIONSi"></span><span id="WriteHelpOption__OPTIONSP.i"></span><span class="target" id="control_8c_1ae1131c718c6dee5789dc12334d5d2c71"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WriteHelpOption</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bLong</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415WriteHelpOptionP7OPTIONSi" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv415WriteHelpOutputP6OUTPUTi">
-<span id="_CPPv315WriteHelpOutputP6OUTPUTi"></span><span id="_CPPv215WriteHelpOutputP6OUTPUTi"></span><span id="WriteHelpOutput__OUTPUTP.i"></span><span class="target" id="control_8c_1a4330e3954aa8670778227b2b0b52c461"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WriteHelpOutput</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">output</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bLong</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415WriteHelpOutputP6OUTPUTi" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv411HelpOptionsP7OPTIONSi">
-<span id="_CPPv311HelpOptionsP7OPTIONSi"></span><span id="_CPPv211HelpOptionsP7OPTIONSi"></span><span id="HelpOptions__OPTIONSP.i"></span><span class="target" id="control_8c_1a1c3f596e0993856703060655baa3b83a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HelpOptions</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bLong</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411HelpOptionsP7OPTIONSi" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv410HelpOutputP6OUTPUTi">
-<span id="_CPPv310HelpOutputP6OUTPUTi"></span><span id="_CPPv210HelpOutputP6OUTPUTi"></span><span id="HelpOutput__OUTPUTP.i"></span><span class="target" id="control_8c_1a1df6c16711df69de374175e1498a481b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HelpOutput</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">output</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bLong</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410HelpOutputP6OUTPUTi" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv44HelpP7OPTIONSP6OUTPUTA_ci">
-<span id="_CPPv34HelpP7OPTIONSP6OUTPUTA_ci"></span><span id="_CPPv24HelpP7OPTIONSP6OUTPUTA_ci"></span><span id="Help__OPTIONSP.OUTPUTP.cA.i"></span><span class="target" id="control_8c_1a11b0b7cccc5440d182583205a7442754"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Help</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">output</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">exe</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bLong</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv44HelpP7OPTIONSP6OUTPUTA_ci" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv48LineExitA_ci">
-<span id="_CPPv38LineExitA_ci"></span><span id="_CPPv28LineExitA_ci"></span><span id="LineExit__cA.i"></span><span class="target" id="control_8c_1a6378b09010aea995aa15a0c3457f6c7c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">LineExit</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cFile</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLine</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48LineExitA_ci" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv46sLowerA_c">
-<span id="_CPPv36sLowerA_c"></span><span id="_CPPv26sLowerA_c"></span><span id="sLower__cA"></span><span class="target" id="control_8c_1a5a31b00a2cec04dc716028873eb9f72f"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">sLower</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cString</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46sLowerA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv47fprintdP4FILEdii">
-<span id="_CPPv37fprintdP4FILEdii"></span><span id="_CPPv27fprintdP4FILEdii"></span><span id="fprintd__FILEP.double.i.i"></span><span class="target" id="control_8c_1a1eac8834351b71fe362a015a86c6e4c0"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fprintd</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">FILE</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fp</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iExp</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iDig</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv47fprintdP4FILEdii" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv413fdUnitsLengthi">
-<span id="_CPPv313fdUnitsLengthi"></span><span id="_CPPv213fdUnitsLengthi"></span><span id="fdUnitsLength__i"></span><span class="target" id="control_8c_1a8afb2e152f418c166f9f798bd292efe5"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdUnitsLength</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fdUnitsLengthi" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv413fsUnitsLengthiA_c">
-<span id="_CPPv313fsUnitsLengthiA_c"></span><span id="_CPPv213fsUnitsLengthiA_c"></span><span id="fsUnitsLength__i.cA"></span><span class="target" id="control_8c_1a9ee7aed06741fa494e77946514768f63"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsUnitsLength</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iType</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fsUnitsLengthiA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv411fdUnitsTimei">
-<span id="_CPPv311fdUnitsTimei"></span><span id="_CPPv211fdUnitsTimei"></span><span id="fdUnitsTime__i"></span><span class="target" id="control_8c_1a271bfe3dddb6ae570305067bcb7673b6"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdUnitsTime</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdUnitsTimei" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv411fsUnitsTimeiA_c">
-<span id="_CPPv311fsUnitsTimeiA_c"></span><span id="_CPPv211fsUnitsTimeiA_c"></span><span id="fsUnitsTime__i.cA"></span><span class="target" id="control_8c_1a0a1d539216c8a44d128ed08b60b21497"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsUnitsTime</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iType</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fsUnitsTimeiA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv411fdUnitsMassi">
-<span id="_CPPv311fdUnitsMassi"></span><span id="_CPPv211fdUnitsMassi"></span><span id="fdUnitsMass__i"></span><span class="target" id="control_8c_1a432ae994ddece1e743ea7315151fcbad"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdUnitsMass</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdUnitsMassi" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv411fsUnitsMassiA_c">
-<span id="_CPPv311fsUnitsMassiA_c"></span><span id="_CPPv211fsUnitsMassiA_c"></span><span id="fsUnitsMass__i.cA"></span><span class="target" id="control_8c_1a09b8eb55ce25fd3e1cf68efcd34964a4"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsUnitsMass</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iType</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fsUnitsMassiA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv412fdUnitsAnglei">
-<span id="_CPPv312fdUnitsAnglei"></span><span id="_CPPv212fdUnitsAnglei"></span><span id="fdUnitsAngle__i"></span><span class="target" id="control_8c_1afc288cdc5aab1b3faf8d8f69755f0ac4"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdUnitsAngle</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fdUnitsAnglei" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv412fsUnitsAngleiA_c">
-<span id="_CPPv312fsUnitsAngleiA_c"></span><span id="_CPPv212fsUnitsAngleiA_c"></span><span id="fsUnitsAngle__i.cA"></span><span class="target" id="control_8c_1a17fb350bc177b2d9c54a0deb055a4433"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsUnitsAngle</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iType</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fsUnitsAngleiA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv416fsUnitsViscosityP5UNITSA_c">
-<span id="_CPPv316fsUnitsViscosityP5UNITSA_c"></span><span id="_CPPv216fsUnitsViscosityP5UNITSA_c"></span><span id="fsUnitsViscosity__UNITSP.cA"></span><span class="target" id="control_8c_1a2a4c329cc320a31e84e0203d3b326b2d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsUnitsViscosity</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416fsUnitsViscosityP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv413fsUnitsAngMomP5UNITSA_c">
-<span id="_CPPv313fsUnitsAngMomP5UNITSA_c"></span><span id="_CPPv213fsUnitsAngMomP5UNITSA_c"></span><span id="fsUnitsAngMom__UNITSP.cA"></span><span class="target" id="control_8c_1a75e781616c8a719b270ee0533a9747ad"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsUnitsAngMom</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fsUnitsAngMomP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv414fsUnitsDensityP5UNITSA_c">
-<span id="_CPPv314fsUnitsDensityP5UNITSA_c"></span><span id="_CPPv214fsUnitsDensityP5UNITSA_c"></span><span id="fsUnitsDensity__UNITSP.cA"></span><span class="target" id="control_8c_1a80cc326c44a544ed3d5683e1bc5c4ea3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsUnitsDensity</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fsUnitsDensityP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv410fsUnitsVelP5UNITSA_c">
-<span id="_CPPv310fsUnitsVelP5UNITSA_c"></span><span id="_CPPv210fsUnitsVelP5UNITSA_c"></span><span id="fsUnitsVel__UNITSP.cA"></span><span class="target" id="control_8c_1adfe69ab75e8c79b28476edefe0b786d1"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsUnitsVel</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410fsUnitsVelP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv411fsUnitsRateiA_c">
-<span id="_CPPv311fsUnitsRateiA_c"></span><span id="_CPPv211fsUnitsRateiA_c"></span><span id="fsUnitsRate__i.cA"></span><span class="target" id="control_8c_1a9d014dfa2048fb9f42c7c1318be833f4"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsUnitsRate</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iType</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fsUnitsRateiA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv414fsUnitsAngRateP5UNITSA_c">
-<span id="_CPPv314fsUnitsAngRateP5UNITSA_c"></span><span id="_CPPv214fsUnitsAngRateP5UNITSA_c"></span><span id="fsUnitsAngRate__UNITSP.cA"></span><span class="target" id="control_8c_1a49fe5264e97487b480059d38b9934144"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsUnitsAngRate</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fsUnitsAngRateP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv413fsUnitsEnergyP5UNITSA_c">
-<span id="_CPPv313fsUnitsEnergyP5UNITSA_c"></span><span id="_CPPv213fsUnitsEnergyP5UNITSA_c"></span><span id="fsUnitsEnergy__UNITSP.cA"></span><span class="target" id="control_8c_1a1c929219ded4109f5b1f955043031062"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsUnitsEnergy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fsUnitsEnergyP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv413fdUnitsEnergyiii">
-<span id="_CPPv313fdUnitsEnergyiii"></span><span id="_CPPv213fdUnitsEnergyiii"></span><span id="fdUnitsEnergy__i.i.i"></span><span class="target" id="control_8c_1a2fac335434e2f09bf5987df222c80698"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdUnitsEnergy</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iTime</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iMass</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLength</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fdUnitsEnergyiii" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv412fsUnitsPowerP5UNITSA_c">
-<span id="_CPPv312fsUnitsPowerP5UNITSA_c"></span><span id="_CPPv212fsUnitsPowerP5UNITSA_c"></span><span id="fsUnitsPower__UNITSP.cA"></span><span class="target" id="control_8c_1a0feeb5decd615d28688e9d42f437033c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsUnitsPower</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fsUnitsPowerP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv412fdUnitsPoweriii">
-<span id="_CPPv312fdUnitsPoweriii"></span><span id="_CPPv212fdUnitsPoweriii"></span><span id="fdUnitsPower__i.i.i"></span><span class="target" id="control_8c_1a0a8aa2abda1668d8fd31fdd1714d585a"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdUnitsPower</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iTime</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iMass</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLength</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fdUnitsPoweriii" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv417fsUnitsEnergyFluxP5UNITSA_c">
-<span id="_CPPv317fsUnitsEnergyFluxP5UNITSA_c"></span><span id="_CPPv217fsUnitsEnergyFluxP5UNITSA_c"></span><span id="fsUnitsEnergyFlux__UNITSP.cA"></span><span class="target" id="control_8c_1afa4a412c881f9cf897f31dc149d0415d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsUnitsEnergyFlux</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fsUnitsEnergyFluxP5UNITSA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv417fdUnitsEnergyFluxiii">
-<span id="_CPPv317fdUnitsEnergyFluxiii"></span><span id="_CPPv217fdUnitsEnergyFluxiii"></span><span id="fdUnitsEnergyFlux__i.i.i"></span><span class="target" id="control_8c_1a28a68efc74344f63f09d4a1e10a167d2"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdUnitsEnergyFlux</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iTime</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iMass</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iLength</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417fdUnitsEnergyFluxiii" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv411fdUnitsTempdii">
-<span id="_CPPv311fdUnitsTempdii"></span><span id="_CPPv211fdUnitsTempdii"></span><span id="fdUnitsTemp__double.i.i"></span><span class="target" id="control_8c_1ac2a5764e8da7e7a75ddab83741c2a9db"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdUnitsTemp</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dTemp</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iOldType</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNewType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdUnitsTempdii" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv411fsUnitsTempiA_c">
-<span id="_CPPv311fsUnitsTempiA_c"></span><span id="_CPPv211fsUnitsTempiA_c"></span><span id="fsUnitsTemp__i.cA"></span><span class="target" id="control_8c_1aaa1b9e4ec9959b0a39f1d05eb57db954"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsUnitsTemp</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iType</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fsUnitsTempiA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv415fsUnitsTempRateiA_c">
-<span id="_CPPv315fsUnitsTempRateiA_c"></span><span id="_CPPv215fsUnitsTempRateiA_c"></span><span id="fsUnitsTempRate__i.cA"></span><span class="target" id="control_8c_1ae3a564bd5afc9e162ef75bee2b5b9e7e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fsUnitsTempRate</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iType</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fsUnitsTempRateiA_c" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv410InfileCopyP6INFILEP6INFILE">
-<span id="_CPPv310InfileCopyP6INFILEP6INFILE"></span><span id="_CPPv210InfileCopyP6INFILEP6INFILE"></span><span id="InfileCopy__INFILEP.INFILEP"></span><span class="target" id="control_8c_1a1ec220d9d2ccb4f0dbf3af33c1631314"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InfileCopy</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46INFILE" title="INFILE"><span class="n"><span class="pre">INFILE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dest</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46INFILE" title="INFILE"><span class="n"><span class="pre">INFILE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">src</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410InfileCopyP6INFILEP6INFILE" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-</div>
-<dl class="cpp struct">
-<dt class="sig sig-object cpp" id="_CPPv414SORTED_OPTIONS">
-<span id="_CPPv314SORTED_OPTIONS"></span><span id="_CPPv214SORTED_OPTIONS"></span><span id="SORTED_OPTIONS"></span><span class="target" id="struct_s_o_r_t_e_d___o_p_t_i_o_n_s"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SORTED_OPTIONS</span></span></span><a class="headerlink" href="#_CPPv414SORTED_OPTIONS" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Dummy struct used to sort options. </p>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N14SORTED_OPTIONS5indexE">
-<span id="_CPPv3N14SORTED_OPTIONS5indexE"></span><span id="_CPPv2N14SORTED_OPTIONS5indexE"></span><span id="SORTED_OPTIONS::index__i"></span><span class="target" id="struct_s_o_r_t_e_d___o_p_t_i_o_n_s_1a0be8bfff71f6f1b5e457739399d7d5d1"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">index</span></span></span><a class="headerlink" href="#_CPPv4N14SORTED_OPTIONS5indexE" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N14SORTED_OPTIONS4nameE">
-<span id="_CPPv3N14SORTED_OPTIONS4nameE"></span><span id="_CPPv2N14SORTED_OPTIONS4nameE"></span><span id="SORTED_OPTIONS::name__cA"></span><span class="target" id="struct_s_o_r_t_e_d___o_p_t_i_o_n_s_1a02cef4fd07178b4f98479e4a333a68b0"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">name</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OPTLEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N14SORTED_OPTIONS4nameE" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-</div>
-</dd></dl>
-
-<dl class="cpp struct">
-<dt class="sig sig-object cpp" id="_CPPv413SORTED_OUTPUT">
-<span id="_CPPv313SORTED_OUTPUT"></span><span id="_CPPv213SORTED_OUTPUT"></span><span id="SORTED_OUTPUT"></span><span class="target" id="struct_s_o_r_t_e_d___o_u_t_p_u_t"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SORTED_OUTPUT</span></span></span><a class="headerlink" href="#_CPPv413SORTED_OUTPUT" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Dummy struct used to sort output. </p>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N13SORTED_OUTPUT5indexE">
-<span id="_CPPv3N13SORTED_OUTPUT5indexE"></span><span id="_CPPv2N13SORTED_OUTPUT5indexE"></span><span id="SORTED_OUTPUT::index__i"></span><span class="target" id="struct_s_o_r_t_e_d___o_u_t_p_u_t_1a0e8b7186ec48da7e33de9d8ea7ca2521"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">index</span></span></span><a class="headerlink" href="#_CPPv4N13SORTED_OUTPUT5indexE" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N13SORTED_OUTPUT4nameE">
-<span id="_CPPv3N13SORTED_OUTPUT4nameE"></span><span id="_CPPv2N13SORTED_OUTPUT4nameE"></span><span id="SORTED_OUTPUT::name__cA"></span><span class="target" id="struct_s_o_r_t_e_d___o_u_t_p_u_t_1a880c8ff8c6407706e6301d3369bbd4a7"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">name</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OUTLEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N13SORTED_OUTPUT4nameE" title="Permalink to this definition">¶</a><br /></dt>
-<dd></dd></dl>
-
-</div>
-</dd></dl>
-
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">control.c</a><a class="headerlink" href="#control-c" title="Link to this heading"></a></h2>
 </section>
 <section id="control-h">
-<h2><a class="toc-backref" href="#id2">control.h</a><a class="headerlink" href="#control-h" title="Permalink to this headline">¶</a></h2>
-<p>These subroutines deal with control, including I/O, units, and files. </p>
-<p><dl class="simple">
-<dt><strong>Author</strong></dt><dd><p>Rory Barnes (<a class="reference external" href="https://github.com/RoryBarnes/">RoryBarnes</a>)</p>
-</dd>
-<dt><strong>Date</strong></dt><dd><p>Jan 7 2015 </p>
-</dd>
-</dl>
-</p>
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">control.h</a><a class="headerlink" href="#control-h" title="Link to this heading"></a></h2>
 </section>
 </section>
 
 
            </div>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="eqtide.html" class="btn btn-neutral float-right" title="eqtide" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="../src.html" class="btn btn-neutral" title="C API" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="poise.html" class="btn btn-neutral float-left" title="poise" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="vplanet.html" class="btn btn-neutral float-right" title="vplanet" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; Copyright 2018, The VPLanet Team.
-
-    </p>
+    <p>&#169; Copyright 2024, Rory Barnes et al..</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'2.4.3',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/documentation_options.js"></script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

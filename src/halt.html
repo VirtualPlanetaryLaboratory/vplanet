@@ -4,9 +4,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>halt &mdash; VPLanet 0.0.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+  <title>halt &mdash; VPLanet 2.4.3
+ documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=d948c9a6" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
 
   
   <!--[if lt IE 9]>
@@ -15,7 +17,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../_static/documentation_options.js?v=7a6bd5fc"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -36,6 +38,10 @@
           <a href="../index.html" class="icon icon-home">
             VPLanet
           </a>
+              <div class="version">
+                2.4.3
+
+              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -56,7 +62,19 @@
 <li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">halt</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#halt-c">halt.c</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#halt-c">halt.c</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv410fiNumHaltsP4HALTP6MODULEi"><code class="docutils literal notranslate"><span class="pre">fiNumHalts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv415InitializeHaltsP7CONTROLP6MODULE"><code class="docutils literal notranslate"><span class="pre">InitializeHalts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv410HaltMinOblP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"><code class="docutils literal notranslate"><span class="pre">HaltMinObl()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv413fniHaltMaxEccP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"><code class="docutils literal notranslate"><span class="pre">fniHaltMaxEcc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv410HaltMinEccP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"><code class="docutils literal notranslate"><span class="pre">HaltMinEcc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv411HaltMinSemiP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"><code class="docutils literal notranslate"><span class="pre">HaltMinSemi()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv413HaltPosDeccDtP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"><code class="docutils literal notranslate"><span class="pre">HaltPosDeccDt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv49HaltMergeP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"><code class="docutils literal notranslate"><span class="pre">HaltMerge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv411VerifyHaltsP4BODYP7CONTROLP6MODULEP7OPTIONS"><code class="docutils literal notranslate"><span class="pre">VerifyHalts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv411fbCheckHaltP4BODYP7CONTROLP6UPDATEPPP16fnUpdateVariable"><code class="docutils literal notranslate"><span class="pre">fbCheckHalt()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#halt-h">halt.h</a></li>
 </ul>
 </li>
@@ -127,9 +145,86 @@
 </nav>
 <section id="halt-c">
 <h2><a class="toc-backref" href="#id1" role="doc-backlink">halt.c</a><a class="headerlink" href="#halt-c" title="Link to this heading"></a></h2>
+<p>This file contains all the checks for dynamical states that result in the termination of the program. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Rory Barnes (<a class="reference external" href="https://github.com/RoryBarnes/">RoryBarnes</a>)</p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>Mar 7 2014 </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv410fiNumHaltsP4HALTP6MODULEi">
+<span id="_CPPv310fiNumHaltsP4HALTP6MODULEi"></span><span id="_CPPv210fiNumHaltsP4HALTP6MODULEi"></span><span id="fiNumHalts__HALTP.MODULEP.i"></span><span class="target" id="halt_8c_1a354fd98b2e89a00361ea83192db00734"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fiNumHalts</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT"><span class="n"><span class="pre">HALT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">halt</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE"><span class="n"><span class="pre">MODULE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">module</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410fiNumHaltsP4HALTP6MODULEi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415InitializeHaltsP7CONTROLP6MODULE">
+<span id="_CPPv315InitializeHaltsP7CONTROLP6MODULE"></span><span id="_CPPv215InitializeHaltsP7CONTROLP6MODULE"></span><span id="InitializeHalts__CONTROLP.MODULEP"></span><span class="target" id="halt_8c_1a9909a8fcba117002b91a15f1439660de"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InitializeHalts</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE"><span class="n"><span class="pre">MODULE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">module</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415InitializeHaltsP7CONTROLP6MODULE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv410HaltMinOblP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv310HaltMinOblP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv210HaltMinOblP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="HaltMinObl__BODYP.EVOLVEP.HALTP.IOP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="halt_8c_1ab86fbecf9937d2a65d36612aed5adf6b"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HaltMinObl</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE"><span class="n"><span class="pre">EVOLVE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">evolve</span></span>, <a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT"><span class="n"><span class="pre">HALT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">halt</span></span>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO"><span class="n"><span class="pre">IO</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">io</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410HaltMinOblP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413fniHaltMaxEccP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv313fniHaltMaxEccP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv213fniHaltMaxEccP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="fniHaltMaxEcc__BODYP.EVOLVEP.HALTP.IOP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="halt_8c_1a03f896a15a8c52c69966fac299b6b88b"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fniHaltMaxEcc</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE"><span class="n"><span class="pre">EVOLVE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">evolve</span></span>, <a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT"><span class="n"><span class="pre">HALT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">halt</span></span>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO"><span class="n"><span class="pre">IO</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">io</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fniHaltMaxEccP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv410HaltMinEccP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv310HaltMinEccP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv210HaltMinEccP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="HaltMinEcc__BODYP.EVOLVEP.HALTP.IOP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="halt_8c_1a78e0dac47df27d1c3b17871af2e74261"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HaltMinEcc</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE"><span class="n"><span class="pre">EVOLVE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">evolve</span></span>, <a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT"><span class="n"><span class="pre">HALT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">halt</span></span>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO"><span class="n"><span class="pre">IO</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">io</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410HaltMinEccP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv411HaltMinSemiP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv311HaltMinSemiP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv211HaltMinSemiP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="HaltMinSemi__BODYP.EVOLVEP.HALTP.IOP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="halt_8c_1a9aad8415735497de82ce315aef225305"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HaltMinSemi</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE"><span class="n"><span class="pre">EVOLVE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">evolve</span></span>, <a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT"><span class="n"><span class="pre">HALT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">halt</span></span>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO"><span class="n"><span class="pre">IO</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">io</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411HaltMinSemiP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413HaltPosDeccDtP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv313HaltPosDeccDtP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv213HaltPosDeccDtP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="HaltPosDeccDt__BODYP.EVOLVEP.HALTP.IOP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="halt_8c_1a7d2334c7c8f89449acbe8e171dcf45d5"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HaltPosDeccDt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE"><span class="n"><span class="pre">EVOLVE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">evolve</span></span>, <a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT"><span class="n"><span class="pre">HALT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">halt</span></span>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO"><span class="n"><span class="pre">IO</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">io</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413HaltPosDeccDtP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv49HaltMergeP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei">
+<span id="_CPPv39HaltMergeP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="_CPPv29HaltMergeP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei"></span><span id="HaltMerge__BODYP.EVOLVEP.HALTP.IOP.UPDATEP.fnUpdateVariablePPP.i"></span><span class="target" id="halt_8c_1aa44f4558a838ab62b684f9675e8fc226"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HaltMerge</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46EVOLVE" title="EVOLVE"><span class="n"><span class="pre">EVOLVE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">evolve</span></span>, <a class="reference internal" href="vplanet.html#_CPPv44HALT" title="HALT"><span class="n"><span class="pre">HALT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">halt</span></span>, <a class="reference internal" href="vplanet.html#_CPPv42IO" title="IO"><span class="n"><span class="pre">IO</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">io</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv49HaltMergeP4BODYP6EVOLVEP4HALTP2IOP6UPDATEPPP16fnUpdateVariablei" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv411VerifyHaltsP4BODYP7CONTROLP6MODULEP7OPTIONS">
+<span id="_CPPv311VerifyHaltsP4BODYP7CONTROLP6MODULEP7OPTIONS"></span><span id="_CPPv211VerifyHaltsP4BODYP7CONTROLP6MODULEP7OPTIONS"></span><span id="VerifyHalts__BODYP.CONTROLP.MODULEP.OPTIONSP"></span><span class="target" id="halt_8c_1a2fc1c4a4faf244e239f5e6cb88c33bb9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">VerifyHalts</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46MODULE" title="MODULE"><span class="n"><span class="pre">MODULE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">module</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411VerifyHaltsP4BODYP7CONTROLP6MODULEP7OPTIONS" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv411fbCheckHaltP4BODYP7CONTROLP6UPDATEPPP16fnUpdateVariable">
+<span id="_CPPv311fbCheckHaltP4BODYP7CONTROLP6UPDATEPPP16fnUpdateVariable"></span><span id="_CPPv211fbCheckHaltP4BODYP7CONTROLP6UPDATEPPP16fnUpdateVariable"></span><span id="fbCheckHalt__BODYP.CONTROLP.UPDATEP.fnUpdateVariablePPP"></span><span class="target" id="halt_8c_1a46d55fbb8db00e099af478b0f1bf6e3a"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fbCheckHalt</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <a class="reference internal" href="vplanet.html#_CPPv416fnUpdateVariable" title="fnUpdateVariable"><span class="n"><span class="pre">fnUpdateVariable</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnUpdate</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fbCheckHaltP4BODYP7CONTROLP6UPDATEPPP16fnUpdateVariable" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
 </section>
 <section id="halt-h">
 <h2><a class="toc-backref" href="#id2" role="doc-backlink">halt.h</a><a class="headerlink" href="#halt-h" title="Link to this heading"></a></h2>
+<p>This file contains all the checks for dynamical states that result in the termination of the program. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Rory Barnes (<a class="reference external" href="https://github.com/RoryBarnes/">RoryBarnes</a>)</p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>Mar 7 2014 </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-defines">Defines</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.max">
+<span class="target" id="halt_8h_1affe776513b24d84b39af8ab0930fef7f"></span><span class="sig-name descname"><span class="n"><span class="pre">max</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">a</span></span>, <span class="n"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.max" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
 </section>
 </section>
 
@@ -144,7 +239,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Rory Barnes et al..</p>
+    <p>&#169; Copyright 2018-2024, The VPLanet Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

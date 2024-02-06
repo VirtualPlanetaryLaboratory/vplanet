@@ -15,6 +15,7 @@ dependencies:
       - pytest-env>=0.6.2
       - pytest-cov>=2.11.1
       - sphinx
+      - sphinx-rtd-theme
       - breathe>=4.30.0
       - sphinxcontrib-bibtex>=2.2.0
       - coverage>=5.5

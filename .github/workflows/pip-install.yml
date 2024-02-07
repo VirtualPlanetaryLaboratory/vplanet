@@ -32,7 +32,7 @@ jobs:
           python -m pip install cibuildwheel==2.12.1
 
       - name: Check if allowed operating system (Linux/Mac)
-        if: runner.os != 'Linux' || runer.os != 'macOS'
+        if: runner.os != 'Linux' || runner.os != 'macOS'
         run: |
           echo "Cannot build on this operating system."
           exit 1

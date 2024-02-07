@@ -5,7 +5,7 @@ on:
 
 jobs:
   build_wheels:
-    name: '${{ matrix.os }}:python-${{ matrix.python-version }}'}
+    name: '${{ matrix.os }}:python-${{ matrix.python-version }}'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:

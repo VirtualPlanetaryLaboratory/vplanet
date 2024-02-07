@@ -33,7 +33,7 @@ jobs:
 
       - name: Build wheel
         run: |
-          if [ "$RUNNER_OS" == "Linux" || "$RUNNER_OS" == "macOS"]; then
+          if [ "$RUNNER_OS" == "Linux" || "$RUNNER_OS" == "macOS" ]; then
             python -m cibuildwheel --output-dir wheelhouse
           else
             echo "$RUNNER_OS not supported"

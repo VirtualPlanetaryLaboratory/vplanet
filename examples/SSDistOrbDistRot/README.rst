@@ -63,7 +63,7 @@ Expected output
    :width: 600px
    :align: center
 
-   Absolute errors in the eccentricity (left) and inclination (right) between DistOrb
+   Absolute errors in the eccentricity (left) and inclination (right) between 4th order DistOrb
    and HNBODY over 5 Myr.  Upper panels show the inner solar system planets and lower panels
    show the outer planets.
 

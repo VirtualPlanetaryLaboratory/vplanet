@@ -1,0 +1,19 @@
+sSystemName   solarsys
+iVerbose      5
+iDigits       6
+bOverwrite    1
+sUnitMass     solar
+sUnitLength   au
+sUnitTime     y
+sUnitAngle    d
+bDoLog        1
+saBodyFiles   sun.in mercury.in venus.in earth.in mars.in jupiter.in $
+                    saturn.in george.in neptune.in
+#saBodyFiles   sun.in venus.in earth.in mars.in jupiter.in saturn.in george.in neptune.in
+#saBodyFiles   sun.in  mercury.in jupiter.in saturn.in
+
+bDoForward    1
+bVarDt        1
+dEta          0.01
+dStopTime     5000
+dOutputTime   1000

@@ -2559,10 +2559,7 @@ void HessEigen(double **amat, int origsize, double real[], double imag[]) {
                 q /= lrcorner;
                 r /= lrcorner;
               }
-            } else {
-              // fprintf(stderr,"ERROR: k=m in distorb.c:HessEigen.");
-              // exit(EXIT_INT);
-            }
+            } 
             value = sqrt(p * p + q * q + r * r);
             s     = (double)fiSign(p) * value;
             if (s != 0.0) {

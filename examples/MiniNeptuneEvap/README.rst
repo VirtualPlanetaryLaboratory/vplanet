@@ -27,7 +27,7 @@ Expected output
 ---------------
 
 .. figure:: MiniNeptuneEvap.png
-   :width: 600px
+   :width: 100%
    :align: center
 
    Evolution of the H envelope mass (top left), total planet mass  (top center),

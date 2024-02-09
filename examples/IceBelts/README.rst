@@ -30,7 +30,7 @@ Expected output
 ---------------
 
 .. figure:: IceBeltClimateEvol.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 The climate evolution of an Earth-like planet at 1.02 AU with an obliquity of
@@ -47,7 +47,7 @@ i.e. the values are negative.
 
 
 .. figure:: IceBeltSeasonal.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 This figure shows the seasonal evolution of the planet over the course of its orbit.

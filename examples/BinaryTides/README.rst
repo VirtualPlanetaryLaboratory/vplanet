@@ -34,7 +34,7 @@ Expected output
 ---------------
 
 .. figure:: BinaryTides.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Coupled stellar and tidal evolution of a solar twin binary from the pre-main

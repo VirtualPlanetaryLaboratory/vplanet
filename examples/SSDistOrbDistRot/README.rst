@@ -42,7 +42,7 @@ Expected output
 
 
 .. figure:: SSDistOrbDistRotInner.png
-   :width: 600px
+   :width: 100%
    :align: center
 
    Eccentricity evolution (left) and inclination evolution (right) for the
@@ -51,7 +51,7 @@ Expected output
 
 
 .. figure:: SSDistOrbDistRotOuter.png
-   :width: 600px
+   :width: 100%
    :align: center
 
     Eccentricity evolution (left) and inclination evolution (right) for the
@@ -60,7 +60,7 @@ Expected output
 
 
 .. figure:: SSDistOrbDistRotError.png
-   :width: 600px
+   :width: 100%
    :align: center
 
    Absolute errors in the eccentricity (left) and inclination (right) between 4th order DistOrb
@@ -69,7 +69,7 @@ Expected output
 
 
 .. figure:: SSDistOrbDistRotObliq.png
-   :width: 600px
+   :width: 100%
    :align: center
 
    Obliquity evolution of Earth with and without the Moon over the next Myr

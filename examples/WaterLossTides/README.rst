@@ -28,7 +28,7 @@ Expected output
 ---------------
 
 .. figure:: WaterLossTides.png
-   :width: 600px
+   :width: 100%
    :align: center
 
    Evolution of planets losing water while tidally evolving. The black curves

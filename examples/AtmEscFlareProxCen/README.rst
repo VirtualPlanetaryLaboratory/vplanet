@@ -40,7 +40,7 @@ Expected output
 ---------------
 
 .. figure:: AtmEscFlareProxCen.png
-   :width: 3600px
+   :width: 100%
    :align: center
 
    Surface water content (top left),  envelope mass (top center left),

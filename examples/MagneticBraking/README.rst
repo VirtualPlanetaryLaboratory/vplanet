@@ -34,14 +34,14 @@ Expected output
 ---------------
 
 .. figure:: MagneticBraking.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Rotation period evolution of 0.1 and 1 solar-mass stars due to stellar evolution
 (`Baraffe et al. 2015 <https://ui.adsabs.harvard.edu/abs/2015A%26A...577A..42B/abstract>`_) and the three magnetic braking laws.
 
 .. figure:: kepler.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Rotation period distribution of a ~4 Gyr-old synthetic cluster of stars

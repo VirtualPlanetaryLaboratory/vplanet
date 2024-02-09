@@ -41,7 +41,7 @@ Expected output
 ---------------
 
 .. figure:: NBodyAtmEsc.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 **Top left**: Envelope mass of planet A. **Top right**: Radius of planet A.

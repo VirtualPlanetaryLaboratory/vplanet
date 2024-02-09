@@ -34,7 +34,7 @@ Expected output
 
 .. figure:: EarthInterior1.png
 .. figure:: EarthInterior2.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Nominal thermal history of the Earth, mantle and core.  Radiogenic

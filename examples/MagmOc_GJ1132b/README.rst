@@ -28,7 +28,7 @@ Expected output
 ---------------
 
 .. figure:: Results_GJ1132b.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Evolution of various planetary parameters for the magma ocean evolution of

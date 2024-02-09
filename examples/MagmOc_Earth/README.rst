@@ -28,7 +28,7 @@ Expected output
 ---------------
 
 .. figure:: Earth_5TO_Hamano.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Evolution of atmospheric pressure (top), mantle temperature (middle: white line),

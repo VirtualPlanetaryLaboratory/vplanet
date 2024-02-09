@@ -39,11 +39,12 @@ Expected output
 ---------------
 
 
-.. figure:: CassiniMulti.png
-   :width: 600px
+.. figure:: CassiniMulti2.png
+   :width: 100%
    :align: center
 
-Evolution of Teegarden's Star b and c into Cassini states. Planet b equilibrates
+Evolution of Teegarden's Star b and c into Cassini states, assuming the 2nd order
+secular orbital model and the constant-time-lag tidal model. Planet b equilibrates
 to an obliquity of about 1 degree, while planet c, which is potentially
 habitable, damps to about 9 degrees. Note that planet b's eccentricity
 occassionally reaches values larger than 0.23, where the CPL tidal model
@@ -52,3 +53,9 @@ dynamical ellipticity, i.e. oblateness, is calculated by assuming hydrostatic
 equilibrium, including the centripetal force.  For both planets, the second
 Cassini parameter (bottom right) settles to a value of approximately -1,
 indicating the presence of a Cassini state.
+
+.. figure:: CassiniMulti4.png
+   :width: 100%
+   :align: center
+
+Same as previous figure, but with the 4th order secular model.

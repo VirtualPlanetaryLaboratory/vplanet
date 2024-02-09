@@ -29,7 +29,7 @@ Expected output
 ---------------
 
 .. figure:: HabitableZone.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Dark blue is the "conservative" habitable zone (runaway greenhouse to maximum greenhouse),

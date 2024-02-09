@@ -1,0 +1,25 @@
+sName		    TGstar		          # Body's name
+saModules   stellar eqtide    # Modules
+
+# Physical Parameters
+dMass		    0.08        # Mass, negative -> Earth masses
+dAge        1.0e6       # Assume star is 1 Myr old when disk disperses
+dRadGyra	  0.4	        # Radius of gyration (moment of inertia constant)
+dRotPeriod  -150        # Rotation period, negative -> Days
+# >L source says >100days
+
+# The first body in the saBodyFiles list must be the central mass.
+# This body carries no orbital information => the coordinate system is bodycentric.
+
+# EQTIDE Parameters
+dTidalQ		    1.0e6	    # Tidal phase lag
+dK2		        0.5		    # Love number of degree 2
+sTideModel	  p2		    # Tidal model, p2=CPL, t8=CTL
+saTidePerts	  TGb TGc		# Body name(s) of tidal perturbers
+
+# STELLAR parameters
+sStellarModel       baraffe     # Stellar evolutin model: `baraffe` or `none`
+sMagBrakingModel    reiners     # Stellar magnetic braking model
+dSatXUVFrac         1.e-3       # Saturation level of the XUV luminosity
+
+saOutputOrder	Time -Radius -RotPer -Luminosity -TotEn -TotAngMom

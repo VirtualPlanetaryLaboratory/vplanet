@@ -45,7 +45,7 @@ Expected output
 ---------------
 
 .. figure:: T1e-b_EscapeThroughTime.png
-   :width: 600px
+   :width: 100%
    :align: center
 
    Water loss [TO] (top) and oxygen produced/retained [Bar] (bottom) over time [Gyr] for TRAPPIST-1b (red) and e (blue)

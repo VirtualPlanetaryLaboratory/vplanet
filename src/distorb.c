@@ -882,6 +882,8 @@ void VerifyGRCorrLL2(BODY *body, int iNumBodies) {
     if (body[iBody].bGRCorr != body[1].bGRCorr) {
       fprintf(stderr, "ERROR: bGRCorr must be the same for all planets in "
                       "DistOrb LL2 model\n");
+      fprintf(stderr,"\t%s: %d\n",body[1].cName,body[1].bGRCorr);
+      fprintf(stderr,"\t%s: %d\n",body[iBody].cName,body[iBody].bGRCorr);
       exit(EXIT_INPUT);
     }
   }
@@ -2558,8 +2560,8 @@ void HessEigen(double **amat, int origsize, double real[], double imag[]) {
                 r /= lrcorner;
               }
             } else {
-              fprintf(stderr,"ERROR: k=m in distorb.c:HessEigen.");
-              exit(EXIT_INT);
+              // fprintf(stderr,"ERROR: k=m in distorb.c:HessEigen.");
+              // exit(EXIT_INT);
             }
             value = sqrt(p * p + q * q + r * r);
             s     = (double)fiSign(p) * value;

@@ -21,7 +21,7 @@
     <img src="https://img.shields.io/badge/You-Tube-darkred.svg">
   </a>
   <br>
-  <img src="https://img.shields.io/badge/Unit%20Tests-16,935-darkblue.svg">
+  <img src="https://img.shields.io/badge/Unit%20Tests-16,402-darkblue.svg">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-linux.yml/badge.svg">
   <img src="https://img.shields.io/badge/Ubuntu%2020-Python%203.6--3.11-7d93c7.svg">
   <img src="https://img.shields.io/badge/Ubuntu%2022-Python%203.7--3.11-7d93c7.svg">

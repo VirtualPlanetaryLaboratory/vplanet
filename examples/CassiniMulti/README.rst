@@ -40,7 +40,7 @@ Expected output
 
 
 .. figure:: CassiniMulti.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Evolution of Teegarden's Star b and c into Cassini states. Planet b equilibrates

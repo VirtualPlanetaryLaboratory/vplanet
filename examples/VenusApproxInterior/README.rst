@@ -30,7 +30,7 @@ Expected output
 
 .. figure:: VenusApproxInterior1.png
 .. figure:: VenusApproxInterior2.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Analagous to EarthInterior.  Nominal thermal history of the Venus' mantle and core.  Radiogenic

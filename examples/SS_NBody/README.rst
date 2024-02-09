@@ -38,7 +38,7 @@ Expected output
 ---------------
 
 .. figure:: SS_NBody.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Evolution of Earth's slowly varying orbital elements in a Solar System simulation over the next

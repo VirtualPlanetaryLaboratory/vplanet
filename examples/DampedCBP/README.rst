@@ -30,7 +30,7 @@ Expected output
 ---------------
 
 .. figure:: HabitableCBP.png
-   :width: 600px
+   :width: 100%
    :align: center
 
    Instellation received by the CBP (top), the CBP orbital semi-major axis (middle),

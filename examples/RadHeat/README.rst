@@ -28,7 +28,7 @@ Expected output
 ---------------
 
 .. figure:: RadHeat.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 History of radiogenic power generation in Earth's core, mantle, and crust, as well as by isotope.

@@ -32,7 +32,7 @@ Expected output
 ---------------
 
 .. figure:: GalaxyEffects.png
-   :width: 600px
+   :width: 100%
    :align: center
 
    Evolution of an M dwarf orbiting the Sun under the influence of the galactic

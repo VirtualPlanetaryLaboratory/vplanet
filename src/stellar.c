@@ -17,18 +17,21 @@
 
 void BodyCopyStellar(BODY *dest, BODY *src, int foo, int iNumBodies,
                      int iBody) {
-  dest[iBody].dLuminosity      = src[iBody].dLuminosity;
-  dest[iBody].dTemperature     = src[iBody].dTemperature;
-  dest[iBody].dSatXUVFrac      = src[iBody].dSatXUVFrac;
-  dest[iBody].dSatXUVTime      = src[iBody].dSatXUVTime;
-  dest[iBody].dXUVBeta         = src[iBody].dXUVBeta;
-  dest[iBody].iStellarModel    = src[iBody].iStellarModel;
-  dest[iBody].iWindModel       = src[iBody].iWindModel;
-  dest[iBody].iXUVModel        = src[iBody].iXUVModel;
-  dest[iBody].iMagBrakingModel = src[iBody].iMagBrakingModel;
-  dest[iBody].dLXUV            = src[iBody].dLXUV;
-  dest[iBody].bRossbyCut       = src[iBody].bRossbyCut;
-  dest[iBody].bEvolveRG        = src[iBody].bEvolveRG;
+  dest[iBody].dLuminosity          = src[iBody].dLuminosity;
+  dest[iBody].dTemperature         = src[iBody].dTemperature;
+  dest[iBody].dSatXUVFrac          = src[iBody].dSatXUVFrac;
+  dest[iBody].dSatXUVTime          = src[iBody].dSatXUVTime;
+  dest[iBody].dXUVBeta             = src[iBody].dXUVBeta;
+  dest[iBody].iStellarModel        = src[iBody].iStellarModel;
+  dest[iBody].iWindModel           = src[iBody].iWindModel;
+  dest[iBody].iXUVModel            = src[iBody].iXUVModel;
+  dest[iBody].iMagBrakingModel     = src[iBody].iMagBrakingModel;
+  dest[iBody].dLXUV                = src[iBody].dLXUV;
+  dest[iBody].bRossbyCut           = src[iBody].bRossbyCut;
+  dest[iBody].bEvolveRG            = src[iBody].bEvolveRG;
+  dest[iBody].dLuminosityAmplitude = src[iBody].dLuminosityAmplitude;
+  dest[iBody].dLuminosityFrequency = src[iBody].dLuminosityFrequency;
+  dest[iBody].dLuminosityPhase     = src[iBody].dLuminosityPhase;
 }
 
 /**************** STELLAR options ********************/
@@ -349,13 +352,14 @@ void ReadLuminosityPeriod(BODY *body, CONTROL *control, FILES *files,
   if (lTmp >= 0) {
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (dTmp < 0)
+    if (dTmp < 0) {
       body[iFile - 1].dLuminosityFrequency =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
-    else
+    } else {
       body[iFile - 1].dLuminosityFrequency =
             dTmp * fdUnitsTime(control->Units[iFile - 1].iTime);
+    }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     if (iFile > 0) {
@@ -574,7 +578,7 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
           "stellar\n"
           "evolution. Only useful for testing purposes.");
 
-  sprintf(options[OPT_LUMAMPLITUDE].cName, "bLuminosityAmplitude");
+  sprintf(options[OPT_LUMAMPLITUDE].cName, "dLuminosityAmplitude");
   sprintf(options[OPT_LUMAMPLITUDE].cDescr,
           "Amplitude of luminosity oscillation for SINEWAVE stellar model");
   sprintf(options[OPT_LUMAMPLITUDE].cDefault, "0.001");
@@ -586,7 +590,7 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_LUMAMPLITUDE].cNeg, "Solar Luminosity (LSUN)");
   fnRead[OPT_LUMAMPLITUDE] = &ReadLuminosityAmplitude;
 
-  sprintf(options[OPT_LUMPERIOD].cName, "bLuminosityPeriod");
+  sprintf(options[OPT_LUMPERIOD].cName, "dLuminosityPeriod");
   sprintf(options[OPT_LUMPERIOD].cDescr,
           "Period of luminosity oscillation for SINEWAVE stellar model");
   sprintf(options[OPT_LUMPERIOD].cDefault, "0.001");
@@ -594,11 +598,11 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_LUMPERIOD].iType      = 0;
   options[OPT_LUMPERIOD].bMultiFile = 1;
   options[OPT_LUMPERIOD].iModuleBit = STELLAR;
-  options[OPT_LUMAMPLITUDE].dNeg    = LSUN;
-  sprintf(options[OPT_LUMAMPLITUDE].cNeg, "Solar Luminosity (LSUN)");
+  options[OPT_LUMPERIOD].dNeg       = YEARSEC;
+  sprintf(options[OPT_LUMPERIOD].cNeg, "Years");
   fnRead[OPT_LUMPERIOD] = &ReadLuminosityPeriod;
 
-  sprintf(options[OPT_LUMPHASE].cName, "bLuminosityPhase");
+  sprintf(options[OPT_LUMPHASE].cName, "dLuminosityPhase");
   sprintf(
         options[OPT_LUMPHASE].cDescr,
         "Phase of luminosity oscillation at age=0 for SINEWAVE stellar model");
@@ -607,8 +611,8 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_LUMPHASE].iType      = 0;
   options[OPT_LUMPHASE].bMultiFile = 1;
   options[OPT_LUMPHASE].iModuleBit = STELLAR;
-  options[OPT_LUMAMPLITUDE].dNeg   = DEGRAD;
-  sprintf(options[OPT_LUMAMPLITUDE].cNeg, "Degrees");
+  options[OPT_LUMPHASE].dNeg       = DEGRAD;
+  sprintf(options[OPT_LUMPHASE].cNeg, "Degrees");
   fnRead[OPT_LUMPHASE] = &ReadLuminosityPhase;
 }
 
@@ -752,15 +756,13 @@ void VerifyStellarProximaCen(BODY *body, CONTROL *control, OPTIONS *options,
 
 void VerifyStellarSineWave(BODY *body, CONTROL *control, OPTIONS *options,
                            int iBody) {
-  if (options[OPT_LUMINOSITY].iLine[iBody + 1] >= 0) {
+  if (options[OPT_LUMINOSITY].iLine[iBody + 1] == -1) {
     if (control->Io.iVerbose >= VERBINPUT) {
-      printf("ERROR: Cannot set %s when option %s is set to SINEWAVE.\n",
+      printf("ERROR: Must set %s when option %s is set to SINEWAVE.\n",
              options[OPT_LUMINOSITY].cName, options[OPT_STELLARMODEL].cName);
     }
-    DoubleLineExit(options[OPT_LUMINOSITY].cFile[iBody + 1],
-                   options[OPT_STELLARMODEL].cFile[iBody + 1],
-                   options[OPT_LUMINOSITY].iLine[iBody + 1],
-                   options[OPT_STELLARMODEL].iLine[iBody + 1]);
+    LineExit(options[OPT_STELLARMODEL].cFile[iBody + 1],
+             options[OPT_STELLARMODEL].iLine[iBody + 1]);
   }
 
   body[iBody].dLuminosity = fdLuminosityFunctionSineWave(body, iBody);
@@ -1446,23 +1448,26 @@ void AddModuleStellar(CONTROL *control, MODULE *module, int iBody,
 /************* STELLAR Functions ************/
 
 double fdLuminosity(BODY *body, SYSTEM *system, int *iaBody) {
-  double foo;
+  double dLuminosity;
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_BARAFFE) {
-    foo = fdLuminosityFunctionBaraffe(body[iaBody[0]].dAge,
-                                      body[iaBody[0]].dMass);
-    if (!isnan(foo)) {
-      return foo;
+    dLuminosity = fdLuminosityFunctionBaraffe(body[iaBody[0]].dAge,
+                                              body[iaBody[0]].dMass);
+    if (!isnan(dLuminosity)) {
+      return dLuminosity;
     } else {
       body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
     }
   } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_PROXIMACEN) {
-    foo = fdLuminosityFunctionProximaCen(body[iaBody[0]].dAge,
-                                         body[iaBody[0]].dMass);
-    if (!isnan(foo)) {
-      return foo;
+    dLuminosity = fdLuminosityFunctionProximaCen(body[iaBody[0]].dAge,
+                                                 body[iaBody[0]].dMass);
+    if (!isnan(dLuminosity)) {
+      return dLuminosity;
     } else {
       body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
     }
+  } else if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_SINEWAVE) {
+    dLuminosity = fdLuminosityFunctionSineWave(body, iaBody[0]);
+    return dLuminosity;
   }
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE ||
       body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST) {
@@ -2006,8 +2011,10 @@ double fdSurfEnFluxStellar(BODY *body, SYSTEM *system, UPDATE *update,
 }
 
 double fdLuminosityFunctionSineWave(BODY *body, int iBody) {
-  double dLuminosity = body[iBody].dLuminosityAmplitude *
-                       sin(body[iBody].dAge * body[iBody].dLuminosityFrequency +
-                           body[iBody].dLuminosityPhase);
+  double dLuminosity =
+        body[iBody].dLuminosity +
+        body[iBody].dLuminosityAmplitude *
+              sin(body[iBody].dAge * body[iBody].dLuminosityFrequency +
+                  body[iBody].dLuminosityPhase);
   return dLuminosity;
 }

@@ -614,6 +614,7 @@ struct BODY {
                          Ro>ROSSBYCRIT */
   int bEvolveRG; /**< Whether or not to evolve radius of gyration? Defaults to 0
                   */
+  double dLuminosityInitial;           
   double dLuminosityAmplitude;
   double dLuminosityFrequency;
   double dLuminosityPhase;

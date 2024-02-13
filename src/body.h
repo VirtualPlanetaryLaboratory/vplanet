@@ -108,6 +108,8 @@ double CalcDynEllipEq(BODY *, int);
 
 void fdHabitableZoneKopparapu2013(BODY *, int, double *);
 
+double fdEffectiveTemperature(BODY*,int);
+
 // RB: Move
 
 // Proxima Centauri properties

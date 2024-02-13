@@ -461,6 +461,7 @@ void BodyCopy(BODY *dest, BODY *src, EVOLVE *evolve) {
     dest[iBody].dLostEng      = src[iBody].dLostEng;
     dest[iBody].dAlbedoGlobal = src[iBody].dAlbedoGlobal;
     dest[iBody].bCalcDynEllip = src[iBody].bCalcDynEllip;
+    dest[iBody].dRadGyra = src[iBody].dRadGyra;
 
     dest[iBody].bBinary   = src[iBody].bBinary;
     dest[iBody].bDistOrb  = src[iBody].bDistOrb;
@@ -1487,4 +1488,9 @@ void fdHabitableZoneKopparapu2013(BODY *body, int iNumBodies,
     // Limits are in AU, convert to meters
     daHZLimit[iLimit] = pow(dLuminosity / dSeff[iLimit], 0.5) * AUM;
   }
+}
+
+double fdEffectiveTemperature(BODY *body,int iBody) {
+  double dTeff = pow((body[iBody].dLuminosity/(4*PI*SIGMA*body[iBody].dRadius*body[iBody].dRadius)),0.25);
+  return dTeff;
 }

@@ -13,5 +13,5 @@ dMinValue                 1e-10
 bDoForward                1
 bVarDt                    1
 dEta                      0.01
-dStopTime                 5e9
-dOutputTime               1e6
+dStopTime                 1000
+dOutputTime               1

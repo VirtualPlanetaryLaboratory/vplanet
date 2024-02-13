@@ -1,0 +1,7 @@
+#
+sName	                  none
+saModules	              stellar
+sStellarModel             none
+dMass                     1
+dLuminosity               -1
+saOutputOrder Time -Luminosity -Radius Temperature -RotPer -LXUVTot RadGyra

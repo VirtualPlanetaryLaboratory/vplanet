@@ -765,7 +765,7 @@ void VerifyStellarSineWave(BODY *body, CONTROL *control, OPTIONS *options,
              options[OPT_STELLARMODEL].iLine[iBody + 1]);
   }
 
-  body[iBody].dLuminosity = fdLuminosityFunctionSineWave(body, iBody);
+  body[iBody].dLuminosityInitial = body[iBody].dLuminosity;
 }
 
 void VerifyStellarNone(BODY *body, CONTROL *control, OPTIONS *options,
@@ -1496,7 +1496,8 @@ double fdRadius(BODY *body, SYSTEM *system, int *iaBody) {
     }
   }
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE ||
-      body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST) {
+      body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST ||
+      body[iaBody[0]].iStellarModel == STELLAR_MODEL_SINEWAVE) {
     return body[iaBody[0]].dRadius;
   } else {
     return 0;
@@ -1521,6 +1522,10 @@ double fdTemperature(BODY *body, SYSTEM *system, int *iaBody) {
     } else {
       body[iaBody[0]].iStellarModel = STELLAR_MODEL_CONST;
     }
+  }
+  if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_SINEWAVE) {
+    foo = fdEffectiveTemperature(body,iaBody[0]);
+    return foo;
   }
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE ||
       body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST) {
@@ -1554,7 +1559,8 @@ double fdRadGyra(BODY *body, SYSTEM *system, int *iaBody) {
     }
   }
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE ||
-      body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST) {
+      body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST||
+      body[iaBody[0]].iStellarModel == STELLAR_MODEL_SINEWAVE) {
     return body[iaBody[0]].dRadGyra;
   } else {
     return 0;
@@ -2012,9 +2018,8 @@ double fdSurfEnFluxStellar(BODY *body, SYSTEM *system, UPDATE *update,
 
 double fdLuminosityFunctionSineWave(BODY *body, int iBody) {
   double dLuminosity =
-        body[iBody].dLuminosity +
-        body[iBody].dLuminosityAmplitude *
-              sin(body[iBody].dAge * body[iBody].dLuminosityFrequency +
-                  body[iBody].dLuminosityPhase);
+      body[iBody].dLuminosityInitial + body[iBody].dLuminosityAmplitude *
+      sin(body[iBody].dAge * body[iBody].dLuminosityFrequency +
+      body[iBody].dLuminosityPhase);
   return dLuminosity;
 }

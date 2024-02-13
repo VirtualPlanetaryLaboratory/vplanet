@@ -3,9 +3,10 @@ sName	                  sinewave
 saModules	              stellar
 sStellarModel             sinewave
 dMass                     1
+dRadius                   0.00454
 dLuminosity               -1
 dLuminosityAmplitude      -0.1
-dLuminosityPeriod         -10
-dLuminosityPhase          30
+dLuminosityPeriod         -100
+dLuminosityPhase          0
 
 saOutputOrder Time -Luminosity -Radius Temperature -RotPer -LXUVTot RadGyra

@@ -980,10 +980,6 @@ void ReadConstWatOutgassFlux(BODY *body, CONTROL *control, FILES *files,
 }
 
 /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 050aa899 (exp decay models of water outgassing and o2 removal)
 Read the planet's Initial water outgassing flux.
 
 @param body A pointer to the current BODY instance

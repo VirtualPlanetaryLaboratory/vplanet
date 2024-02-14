@@ -4555,8 +4555,6 @@ void InitializeOutputAtmEsc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_WATOUTGASMODEL].iNum       = 1;
   output[OUT_WATOUTGASMODEL].iModuleBit = ATMESC;
   fnWrite[OUT_WATOUTGASMODEL]           = &WriteWatOutgasModel;
-
-
 }
 
 /************ ATMESC Logging Functions **************/

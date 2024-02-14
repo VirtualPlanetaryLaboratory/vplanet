@@ -35,9 +35,12 @@
 
 #define WATOUTGASS_NONE 14 /**< Flag: No water outgassing (default)*/
 #define WATOUTGASS_CONSTANT 15 /**< Flag: Constant water outgassing*/
+#define WATOUTGASS_EXPDECAY 19 /**< Flag: Water outgassing rate exponential decay*/
 
 #define OXYREMOVAL_NONE 17 /**< Flag: No oxygen removal (Default)*/
 #define OXYREMOVAL_CONSTANT 18 /**< Flag: Constant oxygen removal model*/
+#define OXYREMOVAL_GIALLUCA24 20 /**< Flag: Oxygen removal model of Gialluca (2024) - \
+            constant removal during magma ocean followed by exp decay*/
 
 /* Options Info */
 #define OPTSTARTATMESC 1200     /**< Start of AtmEsc options */
@@ -82,8 +85,14 @@
 
 #define OPT_WATOUTGASSMODEL 1250 /**< Model for water outgassing flux*/
 #define OPT_CONSTWATOUTGASSFLUX 1251 /**< Constant Water Outgassing Flux */
+#define OPT_INITIALWATOUTGASSFLUX 1254 /**< Initial water outgassing flux (for decaying with time)*/
+#define OPT_WATOUTGASSEXPDECAYRATE 1255 /**< exponential decay rate of water outgassing flux*/
 #define OPT_OXYREMOVALMODEL 1252 /**< Model for oxygen removal flux*/
 #define OPT_CONSTOXYREMOVALFLUX 1253 /**< Constant oxygen removal flux*/
+#define OPT_INITSOLIDOXYREMOVALFLUX 1256 /**< Initial oxygen removal flux after magma ocean solidification*/
+#define OPT_SOLIDOXYREMOVALEXPDECAYRATE 1257 /**< exponential decay rate of oxy removal flux after magma ocean solidification*/
+#define OPT_MAGMAOCEANDURATION 1258 /**< assumed time length of magma ocean, for oxy removal model GIALLUCA24*/
+#define OPT_MINOXYGENMASS 1259 /**< minimum oxygen mass before forced to 0*/
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -185,6 +194,9 @@ void FinalizeUpdateMassAtmEsc(BODY *, UPDATE *, int *, int, int, int);
 #define OUT_WATOUTGASFLUX 1241 /**< Water Outgassing Flux*/
 #define OUT_USERWATOUTGASFLUX 1242 /**< User defined water outgassing flux (for debugging purposes)*/
 #define OUT_WATOUTGASMODEL 1243 /**< User defined water outgassing model (for debugging purposes)*/
+#define OUT_OXYREMOVALFLUX 1244 /**< Oxygen Removal rate over time*/
+#define OUT_WATREMOVALRATE 1245 /**< Water Loss rate*/
+#define OUT_OXYPRODUCTION 1246 /**< Oxygen production rate from photolysis/escape*/
 
 void InitializeOutputAtmEsc(OUTPUT *, fnWriteOutput[]);
 void InitializeOutputFunctionAtmEsc(OUTPUT *, int, int);

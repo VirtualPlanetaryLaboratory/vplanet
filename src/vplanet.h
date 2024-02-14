@@ -189,6 +189,7 @@ struct BODY {
   int iBodyType; /**< Type of object: 0=star, 1=rocky planet, 2 = giant */
 
   double dAge;       /**< Body's Age */
+  double dFormationTime; /**< Body's Formation Time*/
   double dMass;      /**< Body's Mass */
   double dSolidMass; /**< Mass of a body's solid component */
   double dRadius;    /**< Radius of body */
@@ -269,7 +270,13 @@ struct BODY {
   double dBondiRadius; /**< Bondi (Sonic) Radius */
   double dEnvMassDt;   /**< Time derivative of H envelope mass */
   double dConstWaterOutgassFlux; /**< Constant water outgassing flux for AtmEsc*/
+  double dInitialWaterOutgassFlux; /**< Initial water outgass flux for AtmEsc*/
+  double dWatOutgassExpDecayRate; /**< water outgassing exponential decay rate for AtmEsc*/
   double dConstOxyRemovalFlux; /**< Constant oxygen removal flux for AtmEsc*/
+  double dInitSolidOxyRemovalFlux; /**< Initial oxygen removal flux after magma ocean phase for AtmEsc*/
+  double dSolidOxyRemovalExpDecayRate; /**< solid oxygen removal exponential decay rate for AtmEsc*/
+  double dMagmaOceanDuration; /**< assumed magma ocean duration for oxygen removal in AtmEsc*/
+  double dMinOxygenMass; /**< minimum oxygen mass in atmosphere*/
 
   /* BINARY parameters */
   int bBinary;       /**< Apply BINARY module? */

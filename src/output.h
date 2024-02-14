@@ -36,6 +36,7 @@
 #define OUTEND 1000
 
 #define OUT_AGE 160
+#define OUT_BODYAGE 161
 #define OUT_TIME 170
 #define OUT_TOTANGMOM 180
 

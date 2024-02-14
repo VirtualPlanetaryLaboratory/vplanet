@@ -452,6 +452,7 @@ void BodyCopy(BODY *dest, BODY *src, EVOLVE *evolve) {
     dest[iBody].dZobl     = src[iBody].dZobl;
     dest[iBody].dRotRate  = src[iBody].dRotRate;
     dest[iBody].dAge      = src[iBody].dAge;
+    dest[iBody].dFormationTime = src[iBody].dFormationTime;
     // iBody=0 could be in galhabit, so dEcc is overloaded
     // If every run DistOrb w/GalHabit, there could be trouble
     dest[iBody].dEcc          = src[iBody].dEcc;

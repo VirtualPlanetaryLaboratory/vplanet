@@ -17,6 +17,7 @@
 */
 
 #include "vplanet.h"
+#include <math.h>
 
 /**
 Create a copy of the body at index \p iBody. Used during integration
@@ -76,8 +77,14 @@ void BodyCopyAtmEsc(BODY *dest, BODY *src, int foo, int iNumBodies, int iBody) {
   dest[iBody].bStopWaterLossInHZ   = src[iBody].bStopWaterLossInHZ;
   dest[iBody].iWaterOutgassModel   = src[iBody].iWaterOutgassModel;
   dest[iBody].dConstWaterOutgassFlux = src[iBody].dConstWaterOutgassFlux;
+  dest[iBody].dInitialWaterOutgassFlux = src[iBody].dInitialWaterOutgassFlux;
+  dest[iBody].dWatOutgassExpDecayRate = src[iBody].dWatOutgassExpDecayRate;
   dest[iBody].iOxyRemovalModel     = src[iBody].iOxyRemovalModel;
   dest[iBody].dConstOxyRemovalFlux = src[iBody].dConstOxyRemovalFlux;
+  dest[iBody].dInitSolidOxyRemovalFlux = src[iBody].dInitSolidOxyRemovalFlux;
+  dest[iBody].dSolidOxyRemovalExpDecayRate = src[iBody].dSolidOxyRemovalExpDecayRate;
+  dest[iBody].dMagmaOceanDuration  = src[iBody].dMagmaOceanDuration;
+  dest[iBody].dMinOxygenMass       = src[iBody].dMinOxygenMass;
 }
 
 /**************** ATMESC options ********************/
@@ -922,10 +929,12 @@ void ReadWaterOutgassModel(BODY *body, CONTROL *control, FILES *files,
       body[iFile - 1].iWaterOutgassModel = WATOUTGASS_NONE;
     } else if (!memcmp(sLower(cTmp), "constant", 4)) {
       body[iFile - 1].iWaterOutgassModel = WATOUTGASS_CONSTANT;
+    } else if (!memcmp(sLower(cTmp), "expdecay", 4)) {
+      body[iFile - 1].iWaterOutgassModel = WATOUTGASS_EXPDECAY;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
-                "ERROR: Unknown argument to %s: %s. Options are NONE or CONSTANT.\n",
+                "ERROR: Unknown argument to %s: %s. Options are none, constant, or expdecay.\n",
                 options->cName, cTmp);
       }
       LineExit(files->Infile[iFile].cIn, lTmp);
@@ -971,6 +980,74 @@ void ReadConstWatOutgassFlux(BODY *body, CONTROL *control, FILES *files,
 }
 
 /**
+Read the planet's Initial water outgassing flux.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadInitialWatOutgassFlux(BODY *body, CONTROL *control, FILES *files,
+                          OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      body[iFile - 1].dInitialWaterOutgassFlux =
+            dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
+                                   control->Io.iVerbose);
+    } else {
+      body[iFile - 1].dInitialWaterOutgassFlux = dTmp;
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dInitialWaterOutgassFlux = options->dDefault;
+  }
+}
+
+/**
+Read the water outgassing exponential decay rate.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadWatOutgassExpDecayRate(BODY *body, CONTROL *control, FILES *files,
+                       OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      body[iFile - 1].dWatOutgassExpDecayRate =
+            dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
+                                   control->Io.iVerbose);
+    } else {
+      body[iFile - 1].dWatOutgassExpDecayRate = dTmp;
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dWatOutgassExpDecayRate = options->dDefault;
+  }
+}
+
+/**
 Read the oxygen removal model
 
 @param body A pointer to the current BODY instance
@@ -995,10 +1072,12 @@ void ReadOxyRemovalModel(BODY *body, CONTROL *control, FILES *files,
       body[iFile - 1].iOxyRemovalModel = OXYREMOVAL_NONE;
     } else if (!memcmp(sLower(cTmp), "constant", 4)) {
       body[iFile - 1].iOxyRemovalModel = OXYREMOVAL_CONSTANT;
+    } else if (!memcmp(sLower(cTmp), "gialluca24", 4)) {
+      body[iFile - 1].iOxyRemovalModel = OXYREMOVAL_GIALLUCA24;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
-                "ERROR: Unknown argument to %s: %s. Options are NONE or CONSTANT.\n",
+                "ERROR: Unknown argument to %s: %s. Options are none, constant, or gialluca24.\n",
                 options->cName, cTmp);
       }
       LineExit(files->Infile[iFile].cIn, lTmp);
@@ -1040,6 +1119,144 @@ void ReadConstOxyRemovalFlux(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dConstOxyRemovalFlux = options->dDefault;
+  }
+}
+
+/**
+Read the planet's initial oxygen removal flux following the magma ocean phase.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadInitSolidOxyRemovalFlux(BODY *body, CONTROL *control, FILES *files,
+                          OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      body[iFile - 1].dInitSolidOxyRemovalFlux =
+            dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
+                                   control->Io.iVerbose);
+    } else {
+      body[iFile - 1].dInitSolidOxyRemovalFlux = dTmp;
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dInitSolidOxyRemovalFlux = options->dDefault;
+  }
+}
+
+/**
+Read the solid surface oxygen removal exponential decay rate.
+for GIALLUCA24 model
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadSolidOxyRemovalExpDecayRate(BODY *body, CONTROL *control, FILES *files,
+                       OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      body[iFile - 1].dSolidOxyRemovalExpDecayRate =
+            dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
+                                   control->Io.iVerbose);
+    } else {
+      body[iFile - 1].dSolidOxyRemovalExpDecayRate = dTmp;
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dSolidOxyRemovalExpDecayRate = options->dDefault;
+  }
+}
+
+/**
+Read the assumed magma ocean duration.
+for GIALLUCA24 oxygen removal model
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadMagmaOceanDuration(BODY *body, CONTROL *control, FILES *files,
+                       OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      body[iFile - 1].dMagmaOceanDuration =
+            dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
+                                   control->Io.iVerbose);
+    } else {
+      body[iFile - 1].dMagmaOceanDuration = dTmp;
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dMagmaOceanDuration = options->dDefault;
+  }
+}
+
+/**
+Read the planet's initial atmospheric oxygen mass (Luger and Barnes 2015 model).
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the integration CONTROL instance
+@param files A pointer to the array of input FILES
+@param options A pointer to the OPTIONS instance
+@param system A pointer to the SYSTEM instance
+@param iFile The current file number
+*/
+void ReadMinOxygenMass(BODY *body, CONTROL *control, FILES *files,
+                    OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr, "ERROR: %s must be >= 0.\n", options->cName);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    body[iFile - 1].dMinOxygenMass = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dMinOxygenMass = options->dDefault;
   }
 }
 
@@ -1357,7 +1574,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_WATOUTGASSMODEL].cDescr, "Model for Water Outgassing");
   sprintf(options[OPT_WATOUTGASSMODEL].cDefault, "NONE");
   sprintf(options[OPT_WATOUTGASSMODEL].cValues,
-          "NONE CONSTANT");
+          "NONE CONSTANT EXPDECAY");
   options[OPT_WATOUTGASSMODEL].iType      = 3;
   options[OPT_WATOUTGASSMODEL].bMultiFile = 1;
   fnRead[OPT_WATOUTGASSMODEL]             = &ReadWaterOutgassModel;
@@ -1374,18 +1591,42 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_CONSTWATOUTGASSFLUX].cNeg, "TO/Gyr");
   fnRead[OPT_CONSTWATOUTGASSFLUX]             = &ReadConstWatOutgassFlux;
 
+  sprintf(options[OPT_INITIALWATOUTGASSFLUX].cName, "dInitialWaterOutgassFlux");
+  sprintf(options[OPT_INITIALWATOUTGASSFLUX].cDescr,
+          "Initial water outgassing flux (for the sWaterOutgassModel EXPDECAY)");
+  sprintf(options[OPT_INITIALWATOUTGASSFLUX].cDefault, "0");
+  sprintf(options[OPT_INITIALWATOUTGASSFLUX].cDimension, "mass/time");
+  options[OPT_INITIALWATOUTGASSFLUX].dDefault   = 0;
+  options[OPT_INITIALWATOUTGASSFLUX].iType      = 2;
+  options[OPT_INITIALWATOUTGASSFLUX].bMultiFile = 1;
+  options[OPT_INITIALWATOUTGASSFLUX].dNeg       = TOMASS / (1.e9*YEARSEC);
+  sprintf(options[OPT_INITIALWATOUTGASSFLUX].cNeg, "TO/Gyr");
+  fnRead[OPT_INITIALWATOUTGASSFLUX]             = &ReadInitialWatOutgassFlux;
+
+  sprintf(options[OPT_WATOUTGASSEXPDECAYRATE].cName, "dWatOutgassExpDecayRate");
+  sprintf(options[OPT_WATOUTGASSEXPDECAYRATE].cDescr,
+          "Exponential Decay Rate of water outgassing (for model EXPDECAY)");
+  sprintf(options[OPT_WATOUTGASSEXPDECAYRATE].cDefault, "0");
+  sprintf(options[OPT_WATOUTGASSEXPDECAYRATE].cDimension, "1/time");
+  options[OPT_WATOUTGASSEXPDECAYRATE].dDefault   = 0;
+  options[OPT_WATOUTGASSEXPDECAYRATE].iType      = 2;
+  options[OPT_WATOUTGASSEXPDECAYRATE].bMultiFile = 1;
+  options[OPT_WATOUTGASSEXPDECAYRATE].dNeg       = 1 / (1.e9*YEARSEC);
+  sprintf(options[OPT_WATOUTGASSEXPDECAYRATE].cNeg, "1/Gyr");
+  fnRead[OPT_WATOUTGASSEXPDECAYRATE]             = &ReadWatOutgassExpDecayRate; 
+
   sprintf(options[OPT_OXYREMOVALMODEL].cName, "sOxyRemovalModel");
   sprintf(options[OPT_OXYREMOVALMODEL].cDescr, "Model for Oxygen removal flux");
   sprintf(options[OPT_OXYREMOVALMODEL].cDefault, "NONE");
   sprintf(options[OPT_OXYREMOVALMODEL].cValues,
-          "NONE CONSTANT");
+          "NONE CONSTANT GIALLUCA24");
   options[OPT_OXYREMOVALMODEL].iType      = 3;
   options[OPT_OXYREMOVALMODEL].bMultiFile = 1;
   fnRead[OPT_OXYREMOVALMODEL]             = &ReadOxyRemovalModel;
 
   sprintf(options[OPT_CONSTOXYREMOVALFLUX].cName, "dConstOxyRemovalFlux");
   sprintf(options[OPT_CONSTOXYREMOVALFLUX].cDescr,
-          "Constant oxygen removal flux (for the sOxyRemovalModel CONSTANT)");
+          "Constant oxygen removal flux (for the sOxyRemovalModel CONSTANT or the portion of magma ocean removal for GIALLUCA24)");
   sprintf(options[OPT_CONSTOXYREMOVALFLUX].cDefault, "0");
   sprintf(options[OPT_CONSTOXYREMOVALFLUX].cDimension, "mass/time");
   options[OPT_CONSTOXYREMOVALFLUX].dDefault   = 0;
@@ -1394,6 +1635,51 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_CONSTOXYREMOVALFLUX].dNeg       = 1 / (YEARSEC);
   sprintf(options[OPT_CONSTOXYREMOVALFLUX].cNeg, "kg/yr");
   fnRead[OPT_CONSTOXYREMOVALFLUX]             = &ReadConstOxyRemovalFlux;
+
+  sprintf(options[OPT_INITSOLIDOXYREMOVALFLUX].cName, "dInitSolidOxyRemovalFlux");
+  sprintf(options[OPT_INITSOLIDOXYREMOVALFLUX].cDescr,
+          "Initial oxygen removal flux after magma ocean solidification (for the sOxyRemovalModel GIALLUCA24)");
+  sprintf(options[OPT_INITSOLIDOXYREMOVALFLUX].cDefault, "0");
+  sprintf(options[OPT_INITSOLIDOXYREMOVALFLUX].cDimension, "mass/time");
+  options[OPT_INITSOLIDOXYREMOVALFLUX].dDefault   = 0;
+  options[OPT_INITSOLIDOXYREMOVALFLUX].iType      = 2;
+  options[OPT_INITSOLIDOXYREMOVALFLUX].bMultiFile = 1;
+  options[OPT_INITSOLIDOXYREMOVALFLUX].dNeg       = 1 / (YEARSEC);
+  sprintf(options[OPT_INITSOLIDOXYREMOVALFLUX].cNeg, "kg/yr");
+  fnRead[OPT_INITSOLIDOXYREMOVALFLUX]             = &ReadInitSolidOxyRemovalFlux;
+
+  sprintf(options[OPT_SOLIDOXYREMOVALEXPDECAYRATE].cName, "dSolidOxyRemovalExpDecayRate");
+  sprintf(options[OPT_SOLIDOXYREMOVALEXPDECAYRATE].cDescr,
+          "Exponential Decay Rate of oxygen removal after magma ocean solidification (for model GIALLUCA24)");
+  sprintf(options[OPT_SOLIDOXYREMOVALEXPDECAYRATE].cDefault, "0");
+  sprintf(options[OPT_SOLIDOXYREMOVALEXPDECAYRATE].cDimension, "1/time");
+  options[OPT_SOLIDOXYREMOVALEXPDECAYRATE].dDefault   = 0;
+  options[OPT_SOLIDOXYREMOVALEXPDECAYRATE].iType      = 2;
+  options[OPT_SOLIDOXYREMOVALEXPDECAYRATE].bMultiFile = 1;
+  options[OPT_SOLIDOXYREMOVALEXPDECAYRATE].dNeg       = 1 / (1.e9*YEARSEC);
+  sprintf(options[OPT_SOLIDOXYREMOVALEXPDECAYRATE].cNeg, "1/Gyr");
+  fnRead[OPT_SOLIDOXYREMOVALEXPDECAYRATE]             = &ReadSolidOxyRemovalExpDecayRate;
+
+  sprintf(options[OPT_MAGMAOCEANDURATION].cName, "dMagmaOceanDuration");
+  sprintf(options[OPT_MAGMAOCEANDURATION].cDescr,
+          "Assumed Magma Ocean Duration (for AtmEsc oxygen removal model GIALLUCA24)");
+  sprintf(options[OPT_MAGMAOCEANDURATION].cDefault, "0");
+  sprintf(options[OPT_MAGMAOCEANDURATION].cDimension, "time");
+  options[OPT_MAGMAOCEANDURATION].dDefault   = 0;
+  options[OPT_MAGMAOCEANDURATION].iType      = 2;
+  options[OPT_MAGMAOCEANDURATION].bMultiFile = 1;
+  options[OPT_MAGMAOCEANDURATION].dNeg       = (1.e6*YEARSEC);
+  sprintf(options[OPT_MAGMAOCEANDURATION].cNeg, "Myr");
+  fnRead[OPT_MAGMAOCEANDURATION]             = &ReadMagmaOceanDuration; 
+
+  sprintf(options[OPT_MINOXYGENMASS].cName, "dMinOxygenMass");
+  sprintf(options[OPT_MINOXYGENMASS].cDescr, "Minimum Oxygen Mass before default 0");
+  sprintf(options[OPT_MINOXYGENMASS].cDimension, "mass");
+  sprintf(options[OPT_MINOXYGENMASS].cDefault, "5.2e15");
+  options[OPT_MINOXYGENMASS].dDefault   = 5.2e15;
+  options[OPT_MINOXYGENMASS].iType      = 2;
+  options[OPT_MINOXYGENMASS].bMultiFile = 1;
+  fnRead[OPT_MINOXYGENMASS]             = &ReadMinOxygenMass;
 }
 
 /**
@@ -1433,6 +1719,21 @@ Initializes the differential equation matrix for the surface water mass.
 */
 void VerifySurfaceWaterMass(BODY *body, OPTIONS *options, UPDATE *update,
                             double dAge, int iBody) {
+  
+  update[iBody].iaType[update[iBody].iSurfaceWaterMass]
+            [update[iBody].iSurfaceWaterMassOutgas]     = 1;
+  update[iBody].iNumBodies[update[iBody].iSurfaceWaterMass]
+            [update[iBody].iSurfaceWaterMassOutgas] = 1;
+  update[iBody].iaBody[update[iBody].iSurfaceWaterMass]
+            [update[iBody].iSurfaceWaterMassOutgas] =
+                  malloc(update[iBody].iNumBodies[update[iBody].iSurfaceWaterMass]
+                        [update[iBody].iSurfaceWaterMassOutgas] *
+                              sizeof(int));
+  update[iBody].iaBody[update[iBody].iSurfaceWaterMass]
+            [update[iBody].iSurfaceWaterMassOutgas][0] = iBody;
+  update[iBody].pdDSurfaceWaterMassDtAtmescOutgas =
+        &update[iBody].daDerivProc[update[iBody].iSurfaceWaterMass]
+              [update[iBody].iSurfaceWaterMassOutgas];
 
   update[iBody].iaType[update[iBody].iSurfaceWaterMass]
             [update[iBody].iSurfaceWaterMassLoss]     = 1;
@@ -1448,21 +1749,6 @@ void VerifySurfaceWaterMass(BODY *body, OPTIONS *options, UPDATE *update,
   update[iBody].pdDSurfaceWaterMassDtAtmesc =
         &update[iBody].daDerivProc[update[iBody].iSurfaceWaterMass]
               [update[iBody].iSurfaceWaterMassLoss];
-
-  update[iBody].iaType[update[iBody].iSurfaceWaterMass]
-            [update[iBody].iSurfaceWaterMassOutgas]     = 1;
-  update[iBody].iNumBodies[update[iBody].iSurfaceWaterMass]
-            [update[iBody].iSurfaceWaterMassOutgas] = 1;
-  update[iBody].iaBody[update[iBody].iSurfaceWaterMass]
-            [update[iBody].iSurfaceWaterMassOutgas] =
-                  malloc(update[iBody].iNumBodies[update[iBody].iSurfaceWaterMass]
-                        [update[iBody].iSurfaceWaterMassOutgas] *
-                              sizeof(int));
-  update[iBody].iaBody[update[iBody].iSurfaceWaterMass]
-            [update[iBody].iSurfaceWaterMassOutgas][0] = iBody;
-  update[iBody].pdDSurfaceWaterMassDtAtmescOutgas =
-        &update[iBody].daDerivProc[update[iBody].iSurfaceWaterMass]
-              [update[iBody].iSurfaceWaterMassOutgas];
 }
 
 /**
@@ -1897,6 +2183,32 @@ void ForceBehaviorWaterEscape(BODY *body, MODULE *module, EVOLVE *evolve,
 }
 
 /**
+If necessary, change how the code handle oxygen loss through sinks
+
+@param body A pointer to the current BODY instance
+@param module A pointer to the MODULE instance
+@param evolve A pointer to the EVOLVE instance
+@param io A pointer to the IO instance
+@param system A pointer to the SYSTEM instance
+@param update A pointer to the UPDATE instance
+@param fnUpdate A triple-pointer to the function that updates each variable
+@param iBody The current BODY number
+@param iModule The current MODULE number
+*/
+void ForceBehaviorOxygenRemoval(BODY *body, MODULE *module, EVOLVE *evolve,
+                              IO *io, SYSTEM *system, UPDATE *update,
+                              fnUpdateVariable ***fnUpdate, int iBody,
+                              int iModule) {
+
+  //
+  if (body[iBody].dOxygenMass <= body[iBody].dMinOxygenMass) {
+    // force oxygen to 0 if it's less than ~1 mbar
+    body[iBody].dOxygenMass = 0.;
+  } 
+  
+}
+
+/**
 This function is run during every step of the integrator to
 perform checks and force certain non-diffeq behavior.
 
@@ -1924,6 +2236,11 @@ void fnForceBehaviorAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
   // Take care of overshooting (comes up with water outgassing)
   } else if (body[iBody].dSurfaceWaterMass < 0.) {
     body[iBody].dSurfaceWaterMass = 0.;
+  }
+
+  if (body[iBody].iOxyRemovalModel != OXYREMOVAL_NONE) {
+    ForceBehaviorOxygenRemoval(body, module, evolve, io, system, update, fnUpdate,
+                             iBody, iModule);
   }
 }
 
@@ -2004,11 +2321,16 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                                         body[iBody].dOxygenMass);
   
   // Calculate the free oxygen mixing ratio (not in water molecules) and water mixing for switch to diffusion later on (MTG)
+  //double XFreeO = 0;
+  //double Xh2o = 0;
+  //double Xcompare = 0;
+
   double NFreeO = body[iBody].dOxygenMass / (32 * ATOMMASS);
   double Nh2o = body[iBody].dSurfaceWaterMass / (18 * ATOMMASS);
   double XFreeO = (2 * NFreeO) / ((2 * NFreeO) + (Nh2o));
   double Xh2o = Nh2o / ((2 * NFreeO) + (Nh2o));
-  double Xcompare = Xh2o; // the mixing ratio XFreeO must be equal to or greater than for diffusion lim esc 
+  double Xcompare = Xh2o; // the mixing ratio XFreeO must be equal to or greater than for diffusion lim esc
+  
 
   // Diffusion-limited H escape rate
   double BDIFF = 4.8e19 * pow(body[iBody].dFlowTemp, 0.75);
@@ -2227,11 +2549,11 @@ void AssignAtmEscDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
                              fnUpdateVariable ***fnUpdate, int iBody) {
   if (body[iBody].dSurfaceWaterMass > 0) {
     fnUpdate[iBody][update[iBody].iSurfaceWaterMass]
-            [update[iBody].iSurfaceWaterMassLoss] =
-                  &fdDSurfaceWaterMassDt;
-    fnUpdate[iBody][update[iBody].iSurfaceWaterMass]
             [update[iBody].iSurfaceWaterMassOutgas] =
                   &fdDSurfaceWaterMassDtOutgas;
+    fnUpdate[iBody][update[iBody].iSurfaceWaterMass]
+            [update[iBody].iSurfaceWaterMassLoss] =
+                  &fdDSurfaceWaterMassDt;
     fnUpdate[iBody][update[iBody].iOxygenMass]
             [update[iBody].iOxygenMassEsc] = &fdDOxygenMassDt;
     fnUpdate[iBody][update[iBody].iOxygenMass]
@@ -2286,10 +2608,10 @@ void NullAtmEscDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
                            fnUpdateVariable ***fnUpdate, int iBody) {
   if (body[iBody].dSurfaceWaterMass > 0) {
     fnUpdate[iBody][update[iBody].iSurfaceWaterMass]
-              [update[iBody].iSurfaceWaterMassLoss] =
+              [update[iBody].iSurfaceWaterMassOutgas] =
                     &fndUpdateFunctionTiny;
     fnUpdate[iBody][update[iBody].iSurfaceWaterMass]
-              [update[iBody].iSurfaceWaterMassOutgas] =
+              [update[iBody].iSurfaceWaterMassLoss] =
                     &fndUpdateFunctionTiny;
     fnUpdate[iBody][update[iBody].iOxygenMass]
             [update[iBody].iOxygenMassEsc] = &fndUpdateFunctionTiny;
@@ -2628,8 +2950,8 @@ void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY *body, UPDATE *update, int *iEqn,
                                           int iVar, int iBody, int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = ATMESC;
   //update[iBody].iNumSurfaceWaterMass  = (*iEqn)++;
-  update[iBody].iSurfaceWaterMassLoss = (*iEqn)++;
   update[iBody].iSurfaceWaterMassOutgas = (*iEqn)++;
+  update[iBody].iSurfaceWaterMassLoss = (*iEqn)++;
 }
 
 /**
@@ -2907,8 +3229,84 @@ void WriteSurfaceWaterMassDtOutgas(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    *dTmp *= fdUnitsTime(units->iTime);
-    fsUnitsRate(units->iTime, cUnit);
+    strcpy(cUnit, "kg/s");
+  }
+}
+
+/**
+   Write rate of change of water loss
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void WriteSurfaceWaterMassDtRemoval(BODY *body, CONTROL *control, OUTPUT *output,
+                                SYSTEM *system, UNITS *units, UPDATE *update,
+                                int iBody, double *dTmp, char cUnit[]) {
+  *dTmp = *(update[iBody].pdDSurfaceWaterMassDtAtmesc);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    strcpy(cUnit, "kg/s");
+  }
+}
+
+/**
+   Write rate of change of oxygen removal
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void WriteOxygenDtRemoval(BODY *body, CONTROL *control, OUTPUT *output,
+                                SYSTEM *system, UNITS *units, UPDATE *update,
+                                int iBody, double *dTmp, char cUnit[]) {
+  *dTmp = *(update[iBody].pdDOxygenMassDtAtmescSink);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= 1.e-5 * ((BIGG * body[iBody].dMass) /
+                      (4. * PI * pow(body[iBody].dRadius, 4))) * (1.e9 * YEARSEC);
+    strcpy(cUnit, output->cNeg);
+  } else {
+    strcpy(cUnit, "kg/s");
+  }
+}
+
+/**
+   Write rate of change of oxygen production
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void WriteOxygenDtProduction(BODY *body, CONTROL *control, OUTPUT *output,
+                                SYSTEM *system, UNITS *units, UPDATE *update,
+                                int iBody, double *dTmp, char cUnit[]) {
+  *dTmp = *(update[iBody].pdDOxygenMassDtAtmesc);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= 1.e-5 * ((BIGG * body[iBody].dMass) /
+                      (4. * PI * pow(body[iBody].dRadius, 4))) * (1.e9 * YEARSEC);
+    strcpy(cUnit, output->cNeg);
+  } else {
+    strcpy(cUnit, "kg/s");
   }
 }
 
@@ -4069,10 +4467,44 @@ void InitializeOutputAtmEsc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_WATOUTGASFLUX].cNeg, "TO/Gyr");
   output[OUT_WATOUTGASFLUX].bNeg = 1.;
   output[OUT_WATOUTGASFLUX].dNeg =
-        (1.e9*YEARSEC) / TOMASS; // kg/s -> mol of water per year
+        (1.e9*YEARSEC) / TOMASS; // kg/s -> TO/Gyr water per year
   output[OUT_WATOUTGASFLUX].iNum       = 1;
   output[OUT_WATOUTGASFLUX].iModuleBit = ATMESC;
   fnWrite[OUT_WATOUTGASFLUX]           = &WriteSurfaceWaterMassDtOutgas;
+
+  /** Megan addition: water removal flux */
+  sprintf(output[OUT_WATREMOVALRATE].cName, "WaterRemovalDT");
+  sprintf(output[OUT_WATREMOVALRATE].cDescr,
+          "Water loss rate");
+  sprintf(output[OUT_WATREMOVALRATE].cNeg, "TO/Gyr");
+  output[OUT_WATREMOVALRATE].bNeg = 1.;
+  output[OUT_WATREMOVALRATE].dNeg =
+        (1.e9*YEARSEC) / TOMASS; // kg/s -> TO/Gyr water per year
+  output[OUT_WATREMOVALRATE].iNum       = 1;
+  output[OUT_WATREMOVALRATE].iModuleBit = ATMESC;
+  fnWrite[OUT_WATREMOVALRATE]           = &WriteSurfaceWaterMassDtRemoval;
+
+  /** Megan addition: oxygen removal flux */
+  sprintf(output[OUT_OXYREMOVALFLUX].cName, "OxygenRemovalDT");
+  sprintf(output[OUT_OXYREMOVALFLUX].cDescr,
+          "Oxygen Removal rate");
+  sprintf(output[OUT_OXYREMOVALFLUX].cNeg, "Bars/Gyr");
+  output[OUT_OXYREMOVALFLUX].bNeg = 1.;
+  output[OUT_OXYREMOVALFLUX].dNeg = 1.;
+  output[OUT_OXYREMOVALFLUX].iNum       = 1;
+  output[OUT_OXYREMOVALFLUX].iModuleBit = ATMESC;
+  fnWrite[OUT_OXYREMOVALFLUX]           = &WriteOxygenDtRemoval;
+
+  /** Megan addition: oxygen production flux */
+  sprintf(output[OUT_OXYPRODUCTION].cName, "OxygenProducedDT");
+  sprintf(output[OUT_OXYPRODUCTION].cDescr,
+          "Oxygen production rate");
+  sprintf(output[OUT_OXYPRODUCTION].cNeg, "Bars/Gyr");
+  output[OUT_OXYPRODUCTION].bNeg = 1.;
+  output[OUT_OXYPRODUCTION].dNeg = 1.;
+  output[OUT_OXYPRODUCTION].iNum       = 1;
+  output[OUT_OXYPRODUCTION].iModuleBit = ATMESC;
+  fnWrite[OUT_OXYPRODUCTION]           = &WriteOxygenDtProduction;
 
   /** Megan addition: user defined water outgassing flux 
       (for debugging purposes)*/
@@ -4082,7 +4514,7 @@ void InitializeOutputAtmEsc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   sprintf(output[OUT_USERWATOUTGASFLUX].cNeg, "TO/Gyr");
   output[OUT_USERWATOUTGASFLUX].bNeg = 1.;
   output[OUT_USERWATOUTGASFLUX].dNeg =
-        (1.e9*YEARSEC) / TOMASS; // kg/s -> mol of water per year
+        (1.e9*YEARSEC) / TOMASS; // 
   output[OUT_USERWATOUTGASFLUX].iNum       = 1;
   output[OUT_USERWATOUTGASFLUX].iModuleBit = ATMESC;
   fnWrite[OUT_USERWATOUTGASFLUX]           = &WriteUserSurfaceWaterMassDtOutgas;
@@ -4241,10 +4673,23 @@ MTG Addition
 double fdDSurfaceWaterMassDtOutgas(BODY *body, SYSTEM *system, int *iaBody){
 
   if ((body[iaBody[0]].iWaterOutgassModel == WATOUTGASS_CONSTANT) && 
-      (body[iaBody[0]].dRGDuration == 0.)) {
+      (body[iaBody[0]].dRGDuration == 0.) && 
+      (body[iaBody[0]].dAge > body[iaBody[0]].dFormationTime)) {
 
     return body[iaBody[0]].dConstWaterOutgassFlux;
 
+  } else if ((body[iaBody[0]].iWaterOutgassModel == WATOUTGASS_EXPDECAY) && 
+      (body[iaBody[0]].dRGDuration == 0.)) {
+
+    if (body[iaBody[0]].dAge < body[iaBody[0]].dFormationTime) {
+
+      return dTINY;
+
+    } else {
+
+      return (body[iaBody[0]].dInitialWaterOutgassFlux * exp(-body[iaBody[0]].dWatOutgassExpDecayRate * (body[iaBody[0]].dAge - body[iaBody[0]].dFormationTime)));
+
+    }
   } else {
 
     return dTINY;
@@ -4313,13 +4758,33 @@ MTG Addition
 */
 double fdDOxygenMassDtSink(BODY *body, SYSTEM *system, int *iaBody){
 
-  if (body[iaBody[0]].iOxyRemovalModel == OXYREMOVAL_CONSTANT){
+  if ((body[iaBody[0]].iOxyRemovalModel == OXYREMOVAL_CONSTANT) && 
+      (body[iaBody[0]].dRGDuration == 0.) && 
+      (body[iaBody[0]].dAge > body[iaBody[0]].dFormationTime)){
 
     return -body[iaBody[0]].dConstOxyRemovalFlux;
 
+  } else if ((body[iaBody[0]].iOxyRemovalModel == OXYREMOVAL_GIALLUCA24) && 
+      (body[iaBody[0]].dRGDuration == 0.)) {
+
+    if (body[iaBody[0]].dAge < body[iaBody[0]].dFormationTime){
+
+      return -dTINY;
+    
+    } else if ((body[iaBody[0]].dAge - body[iaBody[0]].dFormationTime) < body[iaBody[0]].dMagmaOceanDuration) {
+
+      return -body[iaBody[0]].dConstOxyRemovalFlux;
+
+    } else {
+
+      return -(body[iaBody[0]].dInitSolidOxyRemovalFlux * exp(-body[iaBody[0]].dSolidOxyRemovalExpDecayRate * 
+              (body[iaBody[0]].dAge - body[iaBody[0]].dFormationTime - body[iaBody[0]].dMagmaOceanDuration)));
+
+    }
+
   } else {
 
-    return dTINY;
+    return -dTINY;
 
   }
 }
@@ -4536,6 +5001,11 @@ int fbDoesWaterEscape(BODY *body, EVOLVE *evolve, IO *io, int iBody) {
     return 0;
   }
 
+  // If the planet has not formed fully (e.g., haven't reached the formation time)
+  if (body[iBody].dAge < body[iBody].dFormationTime) {
+    return 0;
+  }
+
   return 1;
 }
 
@@ -4552,6 +5022,7 @@ double fdAtomicOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
   double NH2O = dSurfaceWaterMass / (18 * ATOMMASS);
   if (NH2O > 0) {
     return 1. / (1 + 1. / (0.5 + NO2 / NH2O));
+    //return (2*NO2)/((2*NO2) + NH2O);
   } else {
     if (NO2 > 0) {
       return 1.;
@@ -4573,6 +5044,7 @@ double fdMolecOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
   double NO2  = dOxygenMass / (32 * ATOMMASS);
   double NH2O = dSurfaceWaterMass / (18 * ATOMMASS);
   return NO2 / (NO2+NH2O);
+  
 }
 
 /**
@@ -4587,6 +5059,7 @@ double fdWaterAtmMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
   double NO2  = dOxygenMass / (32 * ATOMMASS);
   double NH2O = dSurfaceWaterMass / (18 * ATOMMASS);
   return NH2O / (NO2+NH2O);
+  
 }
 
 /**

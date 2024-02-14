@@ -30,6 +30,7 @@
 // Regular Options
 
 #define OPT_AGE 100
+#define OPT_FORMATIONTIME 101
 #define OPT_ALBEDOGLOBAL 105
 
 #define OPT_BACK 110

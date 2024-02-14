@@ -27,6 +27,23 @@ void WriteAge(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 }
 
 /*
+ * Specific Body age (dAge minus body's formation time)
+ */
+
+void WriteBodyAge(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  *dTmp = body[iBody].dAge - body[iBody].dFormationTime;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsTime(units->iTime);
+    fsUnitsTime(units->iTime, cUnit);
+  }
+}
+
+/*
  * B
  */
 
@@ -1233,6 +1250,19 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_AGE].iNum       = 1;
   output[OUT_AGE].iModuleBit = 1;
   fnWrite[OUT_AGE]           = &WriteAge;
+
+  /*
+   * Body specific Age (dAge - formation time)
+   */
+
+  sprintf(output[OUT_BODYAGE].cName, "BodyAge");
+  sprintf(output[OUT_BODYAGE].cDescr, "Body-specific Age");
+  sprintf(output[OUT_BODYAGE].cNeg, "Gyr");
+  output[OUT_BODYAGE].bNeg       = 1;
+  output[OUT_BODYAGE].dNeg       = 1. / (YEARSEC * 1e9);
+  output[OUT_BODYAGE].iNum       = 1;
+  output[OUT_BODYAGE].iModuleBit = 1;
+  fnWrite[OUT_BODYAGE]           = &WriteBodyAge;
 
   /*
    * B

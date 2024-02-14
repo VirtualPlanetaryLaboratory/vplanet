@@ -36,7 +36,7 @@ jobs:
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
         shell: bash
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           path: ./wheelhouse/*.whl
 

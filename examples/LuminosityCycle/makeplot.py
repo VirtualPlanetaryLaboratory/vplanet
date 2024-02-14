@@ -40,4 +40,4 @@ plt.xlabel("Time (yr)")
 
 # Save the figure
 ext = get_args().ext
-fig.savefig(path / f"LuminosityCycle.{ext}", bbox_inches="tight", dpi=600)
+fig.savefig(path / f"LuminosityCycle.{ext}", bbox_inches="tight", dpi=300)

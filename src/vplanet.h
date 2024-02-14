@@ -230,6 +230,7 @@ struct BODY {
 
   int iWaterLossModel;     /**< Water Loss and Oxygen Buildup Model */
   int iWaterOutgassModel;  /**< Water Outgassing model for atmesc*/
+  int iOxyRemovalModel;    /**< Oxygen Removal model for atmesc*/
   int iAtmXAbsEffH2OModel; /**< Water X-ray/XUV absorption efficiency evolution
                               model */
   int iPlanetRadiusModel;  /**< Planet Radius model. */
@@ -268,6 +269,7 @@ struct BODY {
   double dBondiRadius; /**< Bondi (Sonic) Radius */
   double dEnvMassDt;   /**< Time derivative of H envelope mass */
   double dConstWaterOutgassFlux; /**< Constant water outgassing flux for AtmEsc*/
+  double dConstOxyRemovalFlux; /**< Constant oxygen removal flux for AtmEsc*/
 
   /* BINARY parameters */
   int bBinary;       /**< Apply BINARY module? */
@@ -1558,6 +1560,12 @@ struct UPDATE {
   int iSurfaceWaterMassOutgas; /**< Indexing for assigning derivatives to 
                                 SurfaceWaterMass (for outgassing)
                                 MTG Addition */
+  int iOxygenMassEsc; /**< Indexing for assigning derivatives to
+                          OxygenMass (for production through escape)
+                          MTG Addition*/
+  int iOxygenMassSink; /**< Indexing for assigning derivatives to
+                          OxygenMass (for loss through sink model)
+                          MTG Addition*/
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       derivative of these variables due to ATMESC. */
@@ -1566,6 +1574,7 @@ struct UPDATE {
   double *pdDEnvelopeMassDtAtmesc;
   double *pdDMassDtAtmesc;
   double *pdDOxygenMassDtAtmesc;
+  double *pdDOxygenMassDtAtmescSink;
   double *pdDOxygenMantleMassDtAtmesc;
   double *pdRadiusAtmesc;
 

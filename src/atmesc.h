@@ -36,6 +36,9 @@
 #define WATOUTGASS_NONE 14 /**< Flag: No water outgassing (default)*/
 #define WATOUTGASS_CONSTANT 15 /**< Flag: Constant water outgassing*/
 
+#define OXYREMOVAL_NONE 17 /**< Flag: No oxygen removal (Default)*/
+#define OXYREMOVAL_CONSTANT 18 /**< Flag: Constant oxygen removal model*/
+
 /* Options Info */
 #define OPTSTARTATMESC 1200     /**< Start of AtmEsc options */
 #define OPTENDATMESC 1300       /**< End of AtmEsc options */
@@ -79,6 +82,8 @@
 
 #define OPT_WATOUTGASSMODEL 1250 /**< Model for water outgassing flux*/
 #define OPT_CONSTWATOUTGASSFLUX 1251 /**< Constant Water Outgassing Flux */
+#define OPT_OXYREMOVALMODEL 1252 /**< Model for oxygen removal flux*/
+#define OPT_CONSTOXYREMOVALFLUX 1253 /**< Constant oxygen removal flux*/
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -229,6 +234,7 @@ double fdDEnvelopeMassDtRRLimited(BODY *, SYSTEM *, int *);
 double fdHZRG14(BODY *, int);
 void fvLinearFit(double *, double *, int, double *);
 double fdDOxygenMassDt(BODY *, SYSTEM *, int *);
+double fdDOxygenMassDtSink(BODY *, SYSTEM *, int *);
 double fdDOxygenMantleMassDt(BODY *, SYSTEM *, int *);
 double fdAtomicOxygenMixingRatio(double, double);
 double fdMolecOxygenMixingRatio(double, double);

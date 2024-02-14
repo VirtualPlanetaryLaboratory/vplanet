@@ -23,8 +23,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="update" href="update.html" />
-    <link rel="prev" title="evolve" href="evolve.html" /> 
+    <link rel="next" title="options" href="options.html" />
+    <link rel="prev" title="module" href="module.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -57,17 +57,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
 <li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">body</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#body-c">body.c</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv46fiSignd"><code class="docutils literal notranslate"><span class="pre">fiSign()</span></code></a></li>
@@ -124,6 +121,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv420fdBaraffeInterpolateiiA16STELLAR_BAR_MLEN_KdA16STELLAR_BAR_ALEN_KdA16STELLAR_BAR_MLEN_A16STELLAR_BAR_ALEN_KdddiPi"><code class="docutils literal notranslate"><span class="pre">fdBaraffeInterpolate()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv49fdBaraffeiddiPi"><code class="docutils literal notranslate"><span class="pre">fdBaraffe()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv428fdHabitableZoneKopparapu2013P4BODYiPd"><code class="docutils literal notranslate"><span class="pre">fdHabitableZoneKopparapu2013()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv422fdEffectiveTemperatureP4BODYi"><code class="docutils literal notranslate"><span class="pre">fdEffectiveTemperature()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#body-h">body.h</a><ul>
@@ -146,18 +144,21 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
 <li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
 <li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -975,6 +976,11 @@ This file contains subroutines that describe physical properties of any body. Th
 </dl>
 </dd></dl>
 
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv422fdEffectiveTemperatureP4BODYi">
+<span id="_CPPv322fdEffectiveTemperatureP4BODYi"></span><span id="_CPPv222fdEffectiveTemperatureP4BODYi"></span><span id="fdEffectiveTemperature__BODYP.i"></span><span class="target" id="body_8c_1a1de9f92c6c4db1bfdda709cd2373ccf5"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdEffectiveTemperature</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422fdEffectiveTemperatureP4BODYi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
 </div>
 </section>
 <section id="body-h">
@@ -1230,8 +1236,8 @@ This file contains subroutines that describe physical properties of any body. Th
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="evolve.html" class="btn btn-neutral float-left" title="evolve" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="update.html" class="btn btn-neutral float-right" title="update" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="module.html" class="btn btn-neutral float-left" title="module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="options.html" class="btn btn-neutral float-right" title="options" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

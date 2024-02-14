@@ -23,8 +23,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="binary" href="binary.html" />
-    <link rel="prev" title="halt" href="halt.html" /> 
+    <link rel="next" title="eqtide" href="eqtide.html" />
+    <link rel="prev" title="options" href="options.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -57,12 +57,16 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
 <li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">vplanet</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#vplanet-c">vplanet.c</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv49main_impliA_Pc"><code class="docutils literal notranslate"><span class="pre">main_impl()</span></code></a></li>
@@ -183,23 +187,19 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
 <li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
 <li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -3475,6 +3475,26 @@
 <span id="_CPPv3N4BODY9bEvolveRGE"></span><span id="_CPPv2N4BODY9bEvolveRGE"></span><span id="BODY::bEvolveRG__i"></span><span class="target" id="struct_b_o_d_y_1ac09b32f6c678b36b4bcce75357631c57"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bEvolveRG</span></span></span><a class="headerlink" href="#_CPPv4N4BODY9bEvolveRGE" title="Link to this definition"></a><br /></dt>
 <dd><p>Whether or not to evolve radius of gyration? Defaults to 0 </p>
 </dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY18dLuminosityInitialE">
+<span id="_CPPv3N4BODY18dLuminosityInitialE"></span><span id="_CPPv2N4BODY18dLuminosityInitialE"></span><span id="BODY::dLuminosityInitial__double"></span><span class="target" id="struct_b_o_d_y_1a13b2eb26970cbac0f04bc881783afa17"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dLuminosityInitial</span></span></span><a class="headerlink" href="#_CPPv4N4BODY18dLuminosityInitialE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY20dLuminosityAmplitudeE">
+<span id="_CPPv3N4BODY20dLuminosityAmplitudeE"></span><span id="_CPPv2N4BODY20dLuminosityAmplitudeE"></span><span id="BODY::dLuminosityAmplitude__double"></span><span class="target" id="struct_b_o_d_y_1a0db1a8f18f36bce5d098f168a9811105"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dLuminosityAmplitude</span></span></span><a class="headerlink" href="#_CPPv4N4BODY20dLuminosityAmplitudeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY20dLuminosityFrequencyE">
+<span id="_CPPv3N4BODY20dLuminosityFrequencyE"></span><span id="_CPPv2N4BODY20dLuminosityFrequencyE"></span><span id="BODY::dLuminosityFrequency__double"></span><span class="target" id="struct_b_o_d_y_1a46470ec29f6bd16c8f3832bf4428952a"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dLuminosityFrequency</span></span></span><a class="headerlink" href="#_CPPv4N4BODY20dLuminosityFrequencyE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY16dLuminosityPhaseE">
+<span id="_CPPv3N4BODY16dLuminosityPhaseE"></span><span id="_CPPv2N4BODY16dLuminosityPhaseE"></span><span id="BODY::dLuminosityPhase__double"></span><span class="target" id="struct_b_o_d_y_1a1926e7b2ed3c990e15de6105d60e4bc0"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dLuminosityPhase</span></span></span><a class="headerlink" href="#_CPPv4N4BODY16dLuminosityPhaseE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N4BODY6bPoiseE">
@@ -9180,8 +9200,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="halt.html" class="btn btn-neutral float-left" title="halt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="binary.html" class="btn btn-neutral float-right" title="binary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="options.html" class="btn btn-neutral float-left" title="options" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eqtide.html" class="btn btn-neutral float-right" title="eqtide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

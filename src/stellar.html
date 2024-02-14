@@ -23,8 +23,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="radheat" href="radheat.html" />
-    <link rel="prev" title="update" href="update.html" /> 
+    <link rel="next" title="verify" href="verify.html" />
+    <link rel="prev" title="thermint" href="thermint.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -57,19 +57,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
 <li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">stellar</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#stellar-c">stellar.c</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv415BodyCopyStellarP4BODYP4BODYiii"><code class="docutils literal notranslate"><span class="pre">BodyCopyStellar()</span></code></a></li>
@@ -83,12 +84,21 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv411ReadHZModelP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadHZModel()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv413ReadRossbyCutP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadRossbyCut()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv412ReadEvolveRGP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadEvolveRG()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv423ReadLuminosityAmplitudeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadLuminosityAmplitude()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv420ReadLuminosityPeriodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadLuminosityPeriod()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv419ReadLuminosityPhaseP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadLuminosityPhase()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv422ReadHaltEndBaraffeGridP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadHaltEndBaraffeGrid()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv424InitializeOptionsStellarP7OPTIONSA_12fnReadOption"><code class="docutils literal notranslate"><span class="pre">InitializeOptionsStellar()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv418ReadOptionsStellarP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMA_12fnReadOptioni"><code class="docutils literal notranslate"><span class="pre">ReadOptionsStellar()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv413VerifyRotRateP4BODYP7CONTROLP7OPTIONSP6UPDATEdi"><code class="docutils literal notranslate"><span class="pre">VerifyRotRate()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv423VerifyLostAngMomStellarP4BODYP7CONTROLP7OPTIONSP6UPDATEdi"><code class="docutils literal notranslate"><span class="pre">VerifyLostAngMomStellar()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv420VerifyLostEngStellarP4BODYP7CONTROLP7OPTIONSP6UPDATEdi"><code class="docutils literal notranslate"><span class="pre">VerifyLostEngStellar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv417NoSineWaveOptionsP4BODYP7CONTROLP7OPTIONSi"><code class="docutils literal notranslate"><span class="pre">NoSineWaveOptions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv420VerifyStellarBaraffeP4BODYP7CONTROLP7OPTIONSi"><code class="docutils literal notranslate"><span class="pre">VerifyStellarBaraffe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv423VerifyStellarProximaCenP4BODYP7CONTROLP7OPTIONSi"><code class="docutils literal notranslate"><span class="pre">VerifyStellarProximaCen()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv421VerifyStellarSineWaveP4BODYP7CONTROLP7OPTIONSi"><code class="docutils literal notranslate"><span class="pre">VerifyStellarSineWave()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv417VerifyStellarNoneP4BODYP7CONTROLP7OPTIONSi"><code class="docutils literal notranslate"><span class="pre">VerifyStellarNone()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv426InitializeUpdateLuminosityP6UPDATEi"><code class="docutils literal notranslate"><span class="pre">InitializeUpdateLuminosity()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv416VerifyLuminosityP4BODYP7CONTROLP7OPTIONSP6UPDATEdi"><code class="docutils literal notranslate"><span class="pre">VerifyLuminosity()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv412VerifyRadiusP4BODYP7CONTROLP7OPTIONSP6UPDATEdi"><code class="docutils literal notranslate"><span class="pre">VerifyRadius()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv413VerifyRadGyraP4BODYP7CONTROLP7OPTIONSP6UPDATEdi"><code class="docutils literal notranslate"><span class="pre">VerifyRadGyra()</span></code></a></li>
@@ -149,21 +159,21 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv426fdRadiusFunctionProximaCendd"><code class="docutils literal notranslate"><span class="pre">fdRadiusFunctionProximaCen()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv422fdCranmerSaar2011TauCZd"><code class="docutils literal notranslate"><span class="pre">fdCranmerSaar2011TauCZ()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv419fdSurfEnFluxStellarP4BODYP6SYSTEMP6UPDATEii"><code class="docutils literal notranslate"><span class="pre">fdSurfEnFluxStellar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv428fdLuminosityFunctionSineWaveP4BODYi"><code class="docutils literal notranslate"><span class="pre">fdLuminosityFunctionSineWave()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#stellar-h">stellar.h</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
 <li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
 <li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -283,6 +293,21 @@ and a simple wind/magnetic braking model.</p>
 <dd></dd></dl>
 
 <dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv423ReadLuminosityAmplitudeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv323ReadLuminosityAmplitudeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv223ReadLuminosityAmplitudeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadLuminosityAmplitude__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="stellar_8c_1ac11e98f1604307b0fa58c3fe456f25a3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadLuminosityAmplitude</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423ReadLuminosityAmplitudeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420ReadLuminosityPeriodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv320ReadLuminosityPeriodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv220ReadLuminosityPeriodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadLuminosityPeriod__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="stellar_8c_1a97cdb72b16139d8e690c8f6e4cb696d7"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadLuminosityPeriod</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420ReadLuminosityPeriodP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv419ReadLuminosityPhaseP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv319ReadLuminosityPhaseP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv219ReadLuminosityPhaseP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadLuminosityPhase__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="stellar_8c_1afec8d753f1cd2792f54e95f8da501557"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadLuminosityPhase</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419ReadLuminosityPhaseP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv422ReadHaltEndBaraffeGridP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
 <span id="_CPPv322ReadHaltEndBaraffeGridP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv222ReadHaltEndBaraffeGridP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadHaltEndBaraffeGrid__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="stellar_8c_1a528274849f9da1289de3a4f230f2f945"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadHaltEndBaraffeGrid</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422ReadHaltEndBaraffeGridP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
@@ -310,6 +335,36 @@ and a simple wind/magnetic braking model.</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv420VerifyLostEngStellarP4BODYP7CONTROLP7OPTIONSP6UPDATEdi">
 <span id="_CPPv320VerifyLostEngStellarP4BODYP7CONTROLP7OPTIONSP6UPDATEdi"></span><span id="_CPPv220VerifyLostEngStellarP4BODYP7CONTROLP7OPTIONSP6UPDATEdi"></span><span id="VerifyLostEngStellar__BODYP.CONTROLP.OPTIONSP.UPDATEP.double.i"></span><span class="target" id="stellar_8c_1a7821ae32e2f4692169b7f347d8607d78"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">VerifyLostEngStellar</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dAge</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420VerifyLostEngStellarP4BODYP7CONTROLP7OPTIONSP6UPDATEdi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417NoSineWaveOptionsP4BODYP7CONTROLP7OPTIONSi">
+<span id="_CPPv317NoSineWaveOptionsP4BODYP7CONTROLP7OPTIONSi"></span><span id="_CPPv217NoSineWaveOptionsP4BODYP7CONTROLP7OPTIONSi"></span><span id="NoSineWaveOptions__BODYP.CONTROLP.OPTIONSP.i"></span><span class="target" id="stellar_8c_1ab96f32d51617ac3dcd629ad34ca0b5ff"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">NoSineWaveOptions</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417NoSineWaveOptionsP4BODYP7CONTROLP7OPTIONSi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv420VerifyStellarBaraffeP4BODYP7CONTROLP7OPTIONSi">
+<span id="_CPPv320VerifyStellarBaraffeP4BODYP7CONTROLP7OPTIONSi"></span><span id="_CPPv220VerifyStellarBaraffeP4BODYP7CONTROLP7OPTIONSi"></span><span id="VerifyStellarBaraffe__BODYP.CONTROLP.OPTIONSP.i"></span><span class="target" id="stellar_8c_1ad526e366c83e68275599d607744dafb1"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">VerifyStellarBaraffe</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv420VerifyStellarBaraffeP4BODYP7CONTROLP7OPTIONSi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv423VerifyStellarProximaCenP4BODYP7CONTROLP7OPTIONSi">
+<span id="_CPPv323VerifyStellarProximaCenP4BODYP7CONTROLP7OPTIONSi"></span><span id="_CPPv223VerifyStellarProximaCenP4BODYP7CONTROLP7OPTIONSi"></span><span id="VerifyStellarProximaCen__BODYP.CONTROLP.OPTIONSP.i"></span><span class="target" id="stellar_8c_1aed12573265e8a7ab1df4d1e5624b1938"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">VerifyStellarProximaCen</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423VerifyStellarProximaCenP4BODYP7CONTROLP7OPTIONSi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv421VerifyStellarSineWaveP4BODYP7CONTROLP7OPTIONSi">
+<span id="_CPPv321VerifyStellarSineWaveP4BODYP7CONTROLP7OPTIONSi"></span><span id="_CPPv221VerifyStellarSineWaveP4BODYP7CONTROLP7OPTIONSi"></span><span id="VerifyStellarSineWave__BODYP.CONTROLP.OPTIONSP.i"></span><span class="target" id="stellar_8c_1a6535574eaef63a1857578e4d3e68c824"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">VerifyStellarSineWave</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421VerifyStellarSineWaveP4BODYP7CONTROLP7OPTIONSi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417VerifyStellarNoneP4BODYP7CONTROLP7OPTIONSi">
+<span id="_CPPv317VerifyStellarNoneP4BODYP7CONTROLP7OPTIONSi"></span><span id="_CPPv217VerifyStellarNoneP4BODYP7CONTROLP7OPTIONSi"></span><span id="VerifyStellarNone__BODYP.CONTROLP.OPTIONSP.i"></span><span class="target" id="stellar_8c_1a5c1b771f0dcccc90bd29cb106646a818"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">VerifyStellarNone</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417VerifyStellarNoneP4BODYP7CONTROLP7OPTIONSi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv426InitializeUpdateLuminosityP6UPDATEi">
+<span id="_CPPv326InitializeUpdateLuminosityP6UPDATEi"></span><span id="_CPPv226InitializeUpdateLuminosityP6UPDATEi"></span><span id="InitializeUpdateLuminosity__UPDATEP.i"></span><span class="target" id="stellar_8c_1ad859765960376afccac602b9d82f5cd5"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InitializeUpdateLuminosity</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426InitializeUpdateLuminosityP6UPDATEi" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
@@ -624,6 +679,11 @@ and a simple wind/magnetic braking model.</p>
 <span id="_CPPv319fdSurfEnFluxStellarP4BODYP6SYSTEMP6UPDATEii"></span><span id="_CPPv219fdSurfEnFluxStellarP4BODYP6SYSTEMP6UPDATEii"></span><span id="fdSurfEnFluxStellar__BODYP.SYSTEMP.UPDATEP.i.i"></span><span class="target" id="stellar_8c_1a026b8c5b16a47f4075894f375260eee5"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdSurfEnFluxStellar</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFoo</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419fdSurfEnFluxStellarP4BODYP6SYSTEMP6UPDATEii" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv428fdLuminosityFunctionSineWaveP4BODYi">
+<span id="_CPPv328fdLuminosityFunctionSineWaveP4BODYi"></span><span id="_CPPv228fdLuminosityFunctionSineWaveP4BODYi"></span><span id="fdLuminosityFunctionSineWave__BODYP.i"></span><span class="target" id="stellar_8c_1ad0508bfde36083d6f4d950bcafd8aeb7"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdLuminosityFunctionSineWave</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv428fdLuminosityFunctionSineWaveP4BODYi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
 </div>
 </section>
 <section id="stellar-h">
@@ -741,6 +801,11 @@ and a simple wind/magnetic braking model.</p>
 <dd></dd></dl>
 
 <dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.STELLAR_MODEL_SINEWAVE">
+<span class="target" id="stellar_8h_1abab1998d6762ab3d59b4b3b225963940"></span><span class="sig-name descname"><span class="n"><span class="pre">STELLAR_MODEL_SINEWAVE</span></span></span><a class="headerlink" href="#c.STELLAR_MODEL_SINEWAVE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.STELLAR_DJDT_NONE">
 <span class="target" id="stellar_8h_1a21463feda666f763a4e5d915b5f42981"></span><span class="sig-name descname"><span class="n"><span class="pre">STELLAR_DJDT_NONE</span></span></span><a class="headerlink" href="#c.STELLAR_DJDT_NONE" title="Link to this definition"></a><br /></dt>
 <dd><p>No stellar angular momentum loss via magnetic braking </p>
@@ -853,6 +918,21 @@ and a simple wind/magnetic braking model.</p>
 </dd></dl>
 
 <dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.OPT_LUMAMPLITUDE">
+<span class="target" id="stellar_8h_1ac234b108ffa5048e6abb506518e2eb38"></span><span class="sig-name descname"><span class="n"><span class="pre">OPT_LUMAMPLITUDE</span></span></span><a class="headerlink" href="#c.OPT_LUMAMPLITUDE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.OPT_LUMPERIOD">
+<span class="target" id="stellar_8h_1a01727c1905ef2eafdde830006014d96c"></span><span class="sig-name descname"><span class="n"><span class="pre">OPT_LUMPERIOD</span></span></span><a class="headerlink" href="#c.OPT_LUMPERIOD" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.OPT_LUMPHASE">
+<span class="target" id="stellar_8h_1a6f30ac1d4d0d0feeb5de7a82420c89c7"></span><span class="sig-name descname"><span class="n"><span class="pre">OPT_LUMPHASE</span></span></span><a class="headerlink" href="#c.OPT_LUMPHASE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.STELLARHALTSYSEND">
 <span class="target" id="stellar_8h_1a14557d2c2107a1559bb092fa1ba6988a"></span><span class="sig-name descname"><span class="n"><span class="pre">STELLARHALTSYSEND</span></span></span><a class="headerlink" href="#c.STELLARHALTSYSEND" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
@@ -910,8 +990,8 @@ and a simple wind/magnetic braking model.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="update.html" class="btn btn-neutral float-left" title="update" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="radheat.html" class="btn btn-neutral float-right" title="radheat" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="thermint.html" class="btn btn-neutral float-left" title="thermint" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="verify.html" class="btn btn-neutral float-right" title="verify" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

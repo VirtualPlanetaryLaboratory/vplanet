@@ -16,7 +16,7 @@ from get_args import get_args
 # Run vplanet
 out = vplanet.run(path / "vpl.in", units=False)
 
-fig = plt.figure(figsize=(8.5, 8))
+fig = plt.figure(figsize=(6.5, 8))
 plt.subplot(2, 2, 1)
 plt.plot(
     out.earth.Time,

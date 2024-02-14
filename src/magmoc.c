@@ -845,25 +845,30 @@ double fndBisection(double (*f)(BODY *, double, int), BODY *body, double dXl,
                     double dXu, double dEps, int iBody) {
   double dXm, dEpsilon, dProd, dFxm, dFxl;
   dEpsilon = 10 * dEps;
-  while (dEpsilon > dEps) {
-    dXm  = (dXl + dXu) / 2.;
-    dFxm = (*f)(body, dXm, iBody);
-    if (fabs(dFxm) < dEps) {
-      return dXm;
+  if (dEpsilon > dEps) {
+    while (dEpsilon > dEps) {
+      dXm  = (dXl + dXu) / 2.;
+      dFxm = (*f)(body, dXm, iBody);
+      if (fabs(dFxm) < dEps) {
+        return dXm;
+      }
+      dFxl = (*f)(body, dXl, iBody);
+      if (fabs(dFxl) < dEps) {
+        return dXl;
+      }
+      dProd = (dFxl / fabs(dFxl)) * (dFxm / fabs(dFxm));
+      if (dProd < 0) {
+        dXu = dXm;
+      } else {
+        dXl = dXm;
+      }
+      dEpsilon = fabs((*f)(body, dXm, iBody));
     }
-    dFxl = (*f)(body, dXl, iBody);
-    if (fabs(dFxl) < dEps) {
-      return dXl;
-    }
-    dProd = (dFxl / fabs(dFxl)) * (dFxm / fabs(dFxm));
-    if (dProd < 0) {
-      dXu = dXm;
-    } else {
-      dXl = dXm;
-    }
-    dEpsilon = fabs((*f)(body, dXm, iBody));
-  }
-  return dXm;
+    return dXm;
+  } else {
+    fprintf(stderr,"ERROR: Tolerance factor <= 0 in fndBisection.");
+    exit(EXIT_INT);
+  }  
 }
 
 /**
@@ -1427,7 +1432,6 @@ void PropsAuxMagmOc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                     int iBody) {
   double dCurrentTime     = evolve->dTime;
   double dCurrentTimeStep = evolve->dTimeStep;
-  double dCurrentStepNum  = evolve->nSteps;
   double dAveMolarMassAtm;
 
   // body[iBody].dSurfTemp = body[iBody].dPotTemp;

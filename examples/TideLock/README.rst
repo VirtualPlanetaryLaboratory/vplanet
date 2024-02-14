@@ -30,7 +30,7 @@ Expected output
 ---------------
 
 .. figure:: TideLock.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 **Left:** Rotational period evolution for the CPL (dashed curve) and CTL (solid curve)

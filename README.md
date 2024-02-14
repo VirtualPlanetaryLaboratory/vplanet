@@ -21,7 +21,7 @@
     <img src="https://img.shields.io/badge/You-Tube-darkred.svg">
   </a>
   <br>
-  <img src="https://img.shields.io/badge/Unit%20Tests-14,881-darkblue.svg">
+  <img src="https://img.shields.io/badge/Unit%20Tests-17,621-darkblue.svg">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-linux.yml/badge.svg">
   <img src="https://img.shields.io/badge/Ubuntu%2020-Python%203.6--3.11-7d93c7.svg">
   <img src="https://img.shields.io/badge/Ubuntu%2022-Python%203.7--3.11-7d93c7.svg">
@@ -31,7 +31,7 @@
   </a>
   <img src="https://img.shields.io/badge/MacOS%2011--13-Python%203.6--3.11-7d93c7.svg">  
   <br>
-  <img src="https://img.shields.io/badge/Memory%20Checks-43-darkblue.svg">
+  <img src="https://img.shields.io/badge/Memory%20Checks-58-darkblue.svg">
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml">
     <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml/badge.svg">
   </a>
@@ -40,7 +40,7 @@
   </a>
   <br>
   <a href="examples">
-    <img src="https://img.shields.io/badge/Examples-42-darkblue.svg">
+    <img src="https://img.shields.io/badge/Examples-41-darkblue.svg">
   </a>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml">
     <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml/badge.svg">

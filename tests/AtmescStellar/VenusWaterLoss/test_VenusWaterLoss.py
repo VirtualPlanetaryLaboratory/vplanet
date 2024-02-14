@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -91,6 +90,20 @@ from benchmark import Benchmark, benchmark
             "value": 40.876539,
             "unit": u.W / u.m**2,
         },
+        "log.initial.venus.CrossoverMass": {"value": 3.124418e-26, "unit": u.kg},
+        "log.initial.venus.WaterEscapeRegime": {"value": 3.000000},
+        "log.initial.venus.FXUVCRITDRAG": {"value": 0.674582, "unit": u.W / u.m**2},
+        "log.initial.venus.HREFFLUX": {
+            "value": 3.072602e17,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.venus.XO2": {"value": 0.000000},
+        "log.initial.venus.XH2O": {"value": 1.000000},
+        "log.initial.venus.HDiffFlux": {
+            "value": 1.142481e17,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.venus.HRefODragMod": {"value": 0.441625},
         "log.initial.venus.KTide": {"value": 0.991008},
         "log.initial.venus.RGDuration": {"value": 0.00000e00, "unit": u.yr},
         "log.final.system.Age": {"value": 4.733640e15, "unit": u.sec, "rtol": 1e-4},
@@ -113,11 +126,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.KinEnergy": {
             "value": 1.923109e35,
             "unit": u.Joule,
-            "rtol": 1e-4,
-        },
-        "log.final.system.DeltaTime": {
-            "value": 2.608066e13,
-            "unit": u.sec,
             "rtol": 1e-4,
         },
         "log.final.sun.Mass": {"value": 1.988416e30, "unit": u.kg, "rtol": 1e-4},
@@ -320,9 +328,33 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.venus.CrossoverMass": {
+            "value": 2.912488e-26,
+            "unit": u.kg,
+            "rtol": 1e-4,
+        },
+        "log.final.venus.WaterEscapeRegime": {"value": 3.000000, "rtol": 1e-4},
+        "log.final.venus.FXUVCRITDRAG": {
+            "value": 0.594047,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.venus.HREFFLUX": {
+            "value": 2.197731e17,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.venus.XO2": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.venus.XH2O": {"value": 1.000000, "rtol": 1e-4},
+        "log.final.venus.HDiffFlux": {
+            "value": 1.142481e17,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.venus.HRefODragMod": {"value": 0.573196, "rtol": 1e-4},
         "log.final.venus.KTide": {"value": 0.991008, "rtol": 1e-4},
         "log.final.venus.RGDuration": {"value": 0.00000e00, "unit": u.yr, "rtol": 1e-4},
     }
 )
-class TestVenusWaterLoss(Benchmark):
+class Test_VenusWaterLoss(Benchmark):
     pass

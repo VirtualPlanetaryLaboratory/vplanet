@@ -41,7 +41,7 @@ Expected output
 ---------------
 
 .. figure:: HEC.png
-   :width: 600px
+   :width: 100%
    :align: center
 
    Sample evolutions of Proxima b if it is a habitable evaporated core. *Top left:*

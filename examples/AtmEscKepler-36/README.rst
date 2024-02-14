@@ -43,7 +43,7 @@ Expected output
 ---------------
 
 .. figure:: AtmEscKepler-36.png
-   :width: 400px
+   :width: 100%
    :align: center
 
    Percentage of the planet's gaseous enveloped stripped via hydrodynamic

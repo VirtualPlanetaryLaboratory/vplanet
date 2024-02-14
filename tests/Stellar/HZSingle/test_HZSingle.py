@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -49,5 +48,5 @@ from benchmark import Benchmark, benchmark
         "log.initial.a.DRotPerDtStellar": {"value": 4.420158e-10},
     }
 )
-class TestHZSingle(Benchmark):
+class Test_HZSingle(Benchmark):
     pass

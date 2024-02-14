@@ -1490,7 +1490,8 @@ void VerifyCPL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       /* Tidal Q was also set */
       if (control->Io.iVerbose >= VERBINPUT) {
         fprintf(stderr,
-                "WARNING: Phase lag model selected, but both %s and %s set in file %s. "
+                "WARNING: Phase lag model selected, but both %s and %s set in "
+                "file %s. "
                 "Using %s = %lf and ignoring %s.\n",
                 options[OPT_TIDALTAU].cName, options[OPT_TIDALQ].cName,
                 options[OPT_TIDALTAU].cFile[iBody + 1],
@@ -1591,10 +1592,9 @@ void VerifyCPL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 void VerifyPerturbersEqtide(BODY *body, FILES *files, OPTIONS *options,
                             UPDATE *update, int iNumBodies, int iBody) {
   int iPert, iBodyPert, iVar, ok;
-  int *bFound = malloc(iNumBodies*sizeof(int));
+  int *bFound = malloc(iNumBodies * sizeof(int));
 
   for (iBody = 0; iBody < iNumBodies; iBody++) {
-    fprintf(stderr,"Body: %s\n",body[iBody].cName);
     if (body[iBody].bEqtide) {
       if (body[iBody].iTidePerts > 0) {
         for (iPert = 0; iPert < body[iBody].iTidePerts; iPert++) {
@@ -2665,8 +2665,8 @@ void WriteEqRotPer(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
                    char cUnit[]) {
 
-  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
-  *dTmp = fdFreqToPer(fdEqRotRate(
+  int iOrbiter = fiAssignTidalOrbiter(body, iBody);
+  *dTmp        = fdFreqToPer(fdEqRotRate(
         body, iBody, body[iOrbiter].dMeanMotion, body[iOrbiter].dEccSq,
         control->Evolve.iEqtideModel, control->Evolve.bDiscreteRot));
 
@@ -2683,7 +2683,7 @@ void WriteEqRotPerCont(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char cUnit[]) {
 
-  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
+  int iOrbiter = fiAssignTidalOrbiter(body, iBody);
 
   // To CPL, or to CTL? That is the question
   if (control->Evolve.iEqtideModel == CPL) {
@@ -2708,7 +2708,7 @@ void WriteEqRotPerDiscrete(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
                            int iBody, double *dTmp, char cUnit[]) {
 
-  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
+  int iOrbiter = fiAssignTidalOrbiter(body, iBody);
   if (control->Evolve.iEqtideModel == CPL) {
     *dTmp = fdFreqToPer(fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,
                                                body[iOrbiter].dEccSq));
@@ -2729,10 +2729,10 @@ void WriteEqRotRate(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
 
-  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
-  *dTmp = fdEqRotRate(body, iBody, body[iOrbiter].dMeanMotion,
-                      body[iOrbiter].dEccSq, control->Evolve.iEqtideModel,
-                      control->Evolve.bDiscreteRot);
+  int iOrbiter = fiAssignTidalOrbiter(body, iBody);
+  *dTmp        = fdEqRotRate(body, iBody, body[iOrbiter].dMeanMotion,
+                             body[iOrbiter].dEccSq, control->Evolve.iEqtideModel,
+                             control->Evolve.bDiscreteRot);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2747,7 +2747,7 @@ void WriteEqRotRateCont(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                         double *dTmp, char cUnit[]) {
 
-  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
+  int iOrbiter = fiAssignTidalOrbiter(body, iBody);
 
   // To CPL, or to CTL? That is the question
   if (control->Evolve.iEqtideModel == CPL) {
@@ -2770,7 +2770,7 @@ void WriteEqRotRateCont(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteEqRotRateDiscrete(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
                             int iBody, double *dTmp, char cUnit[]) {
-  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
+  int iOrbiter = fiAssignTidalOrbiter(body, iBody);
 
   if (control->Evolve.iEqtideModel == CPL) {
     *dTmp = fdCPLEqRotRateDiscrete(body[iOrbiter].dMeanMotion,
@@ -2792,7 +2792,7 @@ void WriteEqTidePower(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                       double *dTmp, char cUnit[]) {
 
-  int iOrbiter = fiAssignTidalOrbiter(body,iBody);
+  int iOrbiter = fiAssignTidalOrbiter(body, iBody);
   // Why is this Eq??????? XXX
   if (control->Evolve.iEqtideModel == CPL) {
     *dTmp = fdCPLTidePowerEq(body[iBody].dTidalZ[iOrbiter], body[iBody].dEccSq,
@@ -2932,13 +2932,13 @@ void WritePowerEqtide(BODY *body, CONTROL *control, OUTPUT *output,
   //*dTmp = body[iBody].dTidalPowMan;
 
 
-  int jBody=0;
-  if (iBody==0)
+  int jBody = 0;
+  if (iBody == 0)
     jBody++;
-    /*
-  fprintf(stderr,"\niBody: %d\n",iBody);
-  fprintf(stderr,"\njBody: %d\n",jBody);
-  fprintf(stderr,"TidalZ: %lf\n",body[iBody].dTidalZ[jBody]);
+  /*
+fprintf(stderr,"\niBody: %d\n",iBody);
+fprintf(stderr,"\njBody: %d\n",jBody);
+fprintf(stderr,"TidalZ: %lf\n",body[iBody].dTidalZ[jBody]);
 */
 
   if (output->bDoNeg[iBody]) {
@@ -3433,7 +3433,7 @@ void LogBodyEqtide(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   fprintf(fp, "----- EQTIDE PARAMETERS (%s)------\n", body[iBody].cName);
   for (iOut = iStart; iOut < OUTENDEQTIDE; iOut++) {
     if (output[iOut].iNum > 0) {
-      //fprintf(stderr,"iOut = %d.\n",iOut);
+      // fprintf(stderr,"iOut = %d.\n",iOut);
       WriteLogEntry(body, control, &output[iOut], system, update, fnWrite[iOut],
                     fp, iBody);
     }
@@ -3906,11 +3906,11 @@ void ForceBehaviorEqtide(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
 
 /**
  * Identify and return the index for the perturbing body.
- * 
- * 
-*/
+ *
+ *
+ */
 
-int fiAssignTidalPerturber(BODY *body,int iBody) {
+int fiAssignTidalPerturber(BODY *body, int iBody) {
   int iPerturber;
 
   if (!bPrimary(body, iBody)) {
@@ -3925,7 +3925,7 @@ int fiAssignTidalPerturber(BODY *body,int iBody) {
 
 /* Non-central body contains the orbital parameters */
 
-int fiAssignTidalOrbiter(BODY *body,int iBody) {
+int fiAssignTidalOrbiter(BODY *body, int iBody) {
   int iOrbiter;
 
   if (!bPrimary(body, iBody)) {
@@ -3963,8 +3963,8 @@ double fdCPLTidePower(BODY *body, int iBody) {
 
     // Does this work with DF's changes to da/dt with the synchronous case?
     // See Fleming et al., 2018
-    //fprintf(stderr,"\niBody: %d\n",iBody);
-    //fprintf(stderr,"TidalZ[%d]: %lf\n",iIndex,body[iBody].dTidalZ[iIndex]);
+    // fprintf(stderr,"\niBody: %d\n",iBody);
+    // fprintf(stderr,"TidalZ[%d]: %lf\n",iIndex,body[iBody].dTidalZ[iIndex]);
 
     dOrbPow += -body[iBody].dTidalZ[iIndex] / 8 *
                (4 * body[iBody].iTidalEpsilon[iIndex][0] +
@@ -4618,11 +4618,13 @@ double fdDB15DsemiDt(BODY *body, SYSTEM *system, int *iaBody) {
   if (iBody > 0) { // Also means iBody is the orbiter
     double imk2;
     /* Set imk2 using appropriate model */
+    /* XXX This switch is not understood -- deprecate for v3.0 */
     if (body[iBody].dImK2ManOrbModel == 1) {
       imk2 = body[iBody].dImK2Man;
-    }
-    if (body[iBody].dImK2ManOrbModel == 2) {
+    } else if (body[iBody].dImK2ManOrbModel == 2) {
       imk2 = -body[iBody].dK2Man / body[iBody].dTidalQMan;
+    } else {
+      imk2 = body[iBody].dImK2Man; // To eliminate compiler warnings.
     }
     return 21 * imk2 * body[iBody].dSemi * body[iPert].dMass /
            body[iBody].dMass *
@@ -4642,9 +4644,10 @@ double fdDB15DeccDt(BODY *body, UPDATE *update, int *iaBody) {
     /* Set imk2 using appropriate model */
     if (body[iBody].dImK2ManOrbModel == 1) {
       imk2 = body[iBody].dImK2Man;
-    }
-    if (body[iBody].dImK2ManOrbModel == 2) {
+    } else if (body[iBody].dImK2ManOrbModel == 2) {
       imk2 = -body[iBody].dK2Man / body[iBody].dTidalQMan;
+    } else {
+      imk2 = body[iBody].dImK2Man; // To eliminate compiler warnings.
     }
     return 21 / 2. * imk2 * pow(body[iPert].dMass, 3. / 2) * pow(BIGG, 1. / 2) *
            pow(body[iBody].dRadius, 5) * body[iBody].dEcc / body[iBody].dMass /

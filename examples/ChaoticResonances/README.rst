@@ -28,7 +28,7 @@ Expected output
 ---------------
 
 .. figure:: ChaoticResonances.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 *Top Left:* The semi-major axis evolution of the inner (Earth-like) planet changes

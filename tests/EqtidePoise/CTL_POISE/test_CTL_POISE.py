@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -168,11 +167,11 @@ from benchmark import Benchmark, benchmark
         "log.initial.gl514.RossbyNumber": {"value": 0.6873965284599931},
         "log.initial.gl514.DRotPerDtStellar": {"value": 2.3504479341501690e-10},
         "log.initial.gl514b.Mass": {"value": 3.1053088098643201e25, "unit": u.kg},
-        "log.initial.gl514b.Obliquity": {"value": 0.4101523742069445, "unit": u.rad},
+        "log.initial.gl514b.Obliquity": {"value": 0.4101523742069444, "unit": u.rad},
         "log.initial.gl514b.PrecA": {"value": 0.0000000000000000, "unit": u.rad},
         "log.initial.gl514b.Xobl": {"value": 0.3987490689144955},
         "log.initial.gl514b.Yobl": {"value": 0.0000000000000000},
-        "log.initial.gl514b.Zobl": {"value": 0.9170600743897985},
+        "log.initial.gl514b.Zobl": {"value": 0.9170600743897986},
         "log.initial.gl514b.Radius": {"value": 1.3394010000000000e07, "unit": u.m},
         "log.initial.gl514b.RadGyra": {"value": 0.5000000000000000},
         "log.initial.gl514b.RotAngMom": {
@@ -198,7 +197,7 @@ from benchmark import Benchmark, benchmark
             "unit": u.kg / u.m**3,
         },
         "log.initial.gl514b.SurfEnFluxTotal": {
-            "value": 2.5164492816849116,
+            "value": 2.5164492816849120,
             "unit": u.kg / u.sec**3,
         },
         "log.initial.gl514b.ImK2": {"value": -0.0250000000000000},
@@ -274,7 +273,7 @@ from benchmark import Benchmark, benchmark
         },
         "log.initial.gl514b.TidalRadius": {"value": 1.3394010000000000e07, "unit": u.m},
         "log.initial.gl514b.DsemiDtEqtide": {
-            "value": 3.6833472670881283e-10,
+            "value": 3.6833472670881294e-10,
             "unit": u.m / u.sec,
         },
         "log.initial.gl514b.DeccDtEqtide": {
@@ -282,16 +281,16 @@ from benchmark import Benchmark, benchmark
             "unit": 1 / u.sec,
         },
         "log.initial.gl514b.DMeanMotionDtEqtide": {
-            "value": -4.5392786228651742e-27,
+            "value": -4.5392786228651756e-27,
             "unit": 1 / u.sec**2,
         },
-        "log.initial.gl514b.DOrbPerDtEqtide": {"value": 1.0601935362604418e-13},
+        "log.initial.gl514b.DOrbPerDtEqtide": {"value": 1.0601935362604420e-13},
         "log.initial.gl514b.EccTimeEqtide": {
             "value": 1.6483819592430168e20,
             "unit": u.sec,
         },
         "log.initial.gl514b.SemiTimeEqtide": {
-            "value": 1.7139383516588075e20,
+            "value": 1.7139383516588071e20,
             "unit": u.sec,
         },
         "log.initial.gl514b.DHEccDtEqtide": {
@@ -303,7 +302,7 @@ from benchmark import Benchmark, benchmark
             "unit": 1 / u.sec,
         },
         "log.initial.gl514b.DXoblDtEqtide": {
-            "value": 1.3978299777162946e-16,
+            "value": 1.3978299777162944e-16,
             "unit": 1 / u.sec,
         },
         "log.initial.gl514b.DYoblDtEqtide": {
@@ -311,22 +310,22 @@ from benchmark import Benchmark, benchmark
             "unit": 1 / u.sec,
         },
         "log.initial.gl514b.DZoblDtEqtide": {
-            "value": -6.0779377238292621e-17,
+            "value": -6.0779377238292596e-17,
             "unit": 1 / u.sec,
         },
         "log.initial.gl514b.LockTime": {"value": -1.0000000000000000, "unit": u.sec},
         "log.initial.gl514b.BodyDsemiDtEqtide": {"value": -1.0000000000000000},
         "log.initial.gl514b.BodyDeccDt": {"value": -1.0000000000000000},
         "log.initial.gl514b.DOblDtEqtide": {
-            "value": 1.5242512641785164e-16,
+            "value": 1.5242512641785159e-16,
             "unit": u.rad / u.sec,
         },
-        "log.initial.gl514b.DRotPerDtEqtide": {"value": 6.7687224755314529e-11},
+        "log.initial.gl514b.DRotPerDtEqtide": {"value": 6.7687224755314555e-11},
         "log.initial.gl514b.DRotRateDtEqtide": {
-            "value": -5.6971688537695393e-20,
+            "value": -5.6971688537695405e-20,
             "unit": 1 / u.sec**2,
         },
-        "log.initial.gl514b.EqRotPer": {"value": 5.1067830269352868e06, "unit": u.sec},
+        "log.initial.gl514b.EqRotPer": {"value": 5.1067830269352887e06, "unit": u.sec},
         "log.initial.gl514b.EqTidePower": {
             "value": -1.0000000000000000,
             "unit": 1 / u.sec,
@@ -337,17 +336,17 @@ from benchmark import Benchmark, benchmark
         "log.initial.gl514b.TidalTau": {"value": 638.0000000000000000, "unit": u.sec},
         "log.initial.gl514b.TideLock": {"value": 0.0000000000000000},
         "log.initial.gl514b.RotTimeEqtide": {
-            "value": 1.2764594842280960e15,
+            "value": 1.2764594842280958e15,
             "unit": u.sec,
         },
         "log.initial.gl514b.EnvK2": {"value": 0.0100000000000000},
         "log.initial.gl514b.OblTimeEqtide": {"value": -1.0000000000000000},
-        "log.initial.gl514b.PowerEqtide": {"value": 5.6730849058585900e15, "unit": u.W},
+        "log.initial.gl514b.PowerEqtide": {"value": 5.6730849058585910e15, "unit": u.W},
         "log.initial.gl514b.SurfEnFluxEqtide": {
-            "value": 2.5164492816849116,
+            "value": 2.5164492816849120,
             "unit": u.kg / u.sec**3,
         },
-        "log.initial.gl514b.TGlobal": {"value": 676.2679353212223532, "unit": u.sec},
+        "log.initial.gl514b.TGlobal": {"value": 676.2679353212224669, "unit": u.sec},
         "log.initial.gl514b.AlbedoGlobal": {"value": 0.2996778493802214},
         "log.initial.gl514b.FluxInGlobal": {
             "value": 1046.1316028565233864,
@@ -363,26 +362,26 @@ from benchmark import Benchmark, benchmark
         "log.initial.gl514b.SkipSeas": {"value": 0.0000000000000000},
         "log.initial.gl514b.AreaIceCov": {"value": 0.0000000000000000},
         "log.initial.gl514b.Latitude": {"value": -1.4552620265106593, "unit": u.rad},
-        "log.initial.gl514b.TempLat": {"value": 557.2247797713517912, "unit": u.sec},
+        "log.initial.gl514b.TempLat": {"value": 557.2247797713516775, "unit": u.sec},
         "log.initial.gl514b.AlbedoLat": {"value": 0.3675649878041329},
         "log.initial.gl514b.AnnInsol": {
-            "value": 755.3407450595735781,
+            "value": 755.3407450595734645,
             "unit": u.kg / u.sec**3,
         },
         "log.initial.gl514b.FluxMerid": {
-            "value": -2.0352457824211096e16,
+            "value": -2.0352457824211124e16,
             "unit": u.Joule,
         },
         "log.initial.gl514b.FluxIn": {
-            "value": 486.1623336259239636,
+            "value": 486.1623336259239068,
             "unit": u.kg / u.sec**3,
         },
         "log.initial.gl514b.FluxOut": {
-            "value": 797.3297897221252697,
+            "value": 797.3297897221251560,
             "unit": u.kg / u.sec**3,
         },
         "log.initial.gl514b.DivFlux": {
-            "value": -311.1690738881308107,
+            "value": -311.1690738881313223,
             "unit": u.kg / u.sec**3,
         },
         "log.initial.gl514b.IceMass": {"value": 0.0000000000000000},
@@ -390,11 +389,11 @@ from benchmark import Benchmark, benchmark
         "log.initial.gl514b.DIceMassDt": {"value": 0.0000000000000000, "unit": u.m},
         "log.initial.gl514b.IceFlow": {"value": 0.0000000000000000},
         "log.initial.gl514b.EnergyResL": {
-            "value": -4.7634785005357116e-11,
+            "value": -4.0699887904338539e-11,
             "unit": u.kg / u.sec**3,
         },
         "log.initial.gl514b.EnergyResW": {
-            "value": 4.0836312109604478e-10,
+            "value": 4.9863047024700791e-10,
             "unit": u.kg / u.sec**3,
         },
         "log.initial.gl514b.BedrockH": {"value": 0.0000000000000000, "unit": u.m},
@@ -408,14 +407,14 @@ from benchmark import Benchmark, benchmark
         },
         "log.initial.gl514b.AlbedoLandLat": {"value": 0.4335649878041328},
         "log.initial.gl514b.AlbedoWaterLat": {"value": 0.3335649878041328},
-        "log.initial.gl514b.TempMinLat": {"value": 520.6583069986143073, "unit": u.sec},
+        "log.initial.gl514b.TempMinLat": {"value": 520.6583069986141936, "unit": u.sec},
         "log.initial.gl514b.TempMaxLat": {"value": 598.1727520370602633, "unit": u.sec},
         "log.initial.gl514b.Snowball": {"value": 0.0000000000000000},
         "log.initial.gl514b.PlanckBAvg": {"value": 2.0899999999999990},
         "log.initial.gl514b.IceAccum": {"value": 0.0000000000000000},
         "log.initial.gl514b.IceAblate": {"value": 0.0000000000000000},
         "log.initial.gl514b.TempMaxLand": {
-            "value": 657.9976852023412448,
+            "value": 657.9976852023411311,
             "unit": u.sec,
         },
         "log.initial.gl514b.TempMaxWater": {
@@ -423,7 +422,7 @@ from benchmark import Benchmark, benchmark
             "unit": u.sec,
         },
         "log.initial.gl514b.PeakInsol": {
-            "value": 4243.8792145061070187,
+            "value": 4243.8792145061061092,
             "unit": u.kg / u.sec**3,
         },
         "log.initial.gl514b.IceCapNorthLand": {"value": 0.0000000000000000},
@@ -495,11 +494,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.KinEnergy": {
             "value": 9.9742042395602989e35,
             "unit": u.Joule,
-            "rtol": 1e-4,
-        },
-        "log.final.system.DeltaTime": {
-            "value": 3.1557600000000000e07,
-            "unit": u.sec,
             "rtol": 1e-4,
         },
         "log.final.gl514.Mass": {
@@ -753,7 +747,7 @@ from benchmark import Benchmark, benchmark
             "rtol": 1e-4,
         },
         "log.final.gl514b.Obliquity": {
-            "value": 0.4101523790171157,
+            "value": 0.4101523790171156,
             "unit": u.rad,
             "rtol": 1e-4,
         },
@@ -764,7 +758,7 @@ from benchmark import Benchmark, benchmark
         },
         "log.final.gl514b.Xobl": {"value": 0.3987490733257115, "rtol": 1e-4},
         "log.final.gl514b.Yobl": {"value": 0.0000000000000000, "rtol": 1e-4},
-        "log.final.gl514b.Zobl": {"value": 0.9170600724717473, "rtol": 1e-4},
+        "log.final.gl514b.Zobl": {"value": 0.9170600724717474, "rtol": 1e-4},
         "log.final.gl514b.Radius": {
             "value": 1.3394010000000000e07,
             "unit": u.m,
@@ -946,7 +940,7 @@ from benchmark import Benchmark, benchmark
             "rtol": 1e-4,
         },
         "log.final.gl514b.DXoblDtEqtide": {
-            "value": 1.3978299858905663e-16,
+            "value": 1.3978299858905660e-16,
             "unit": 1 / u.sec,
             "rtol": 1e-4,
         },
@@ -956,7 +950,7 @@ from benchmark import Benchmark, benchmark
             "rtol": 1e-4,
         },
         "log.final.gl514b.DZoblDtEqtide": {
-            "value": -6.0779378393221619e-17,
+            "value": -6.0779378393221594e-17,
             "unit": 1 / u.sec,
             "rtol": 1e-4,
         },
@@ -971,7 +965,7 @@ from benchmark import Benchmark, benchmark
         },
         "log.final.gl514b.BodyDeccDt": {"value": -1.0000000000000000, "rtol": 1e-4},
         "log.final.gl514b.DOblDtEqtide": {
-            "value": 1.5242512762800832e-16,
+            "value": 1.5242512762800829e-16,
             "unit": u.rad / u.sec,
             "rtol": 1e-4,
         },
@@ -1032,7 +1026,7 @@ from benchmark import Benchmark, benchmark
             "rtol": 1e-4,
         },
         "log.final.gl514b.FluxOutGlobal": {
-            "value": 1046.1310580793265217,
+            "value": 1046.1310580793267491,
             "unit": u.kg / u.sec**3,
             "rtol": 1e-4,
         },
@@ -1065,12 +1059,12 @@ from benchmark import Benchmark, benchmark
         },
         "log.final.gl514b.AlbedoLat": {"value": 0.3675649876307175, "rtol": 1e-4},
         "log.final.gl514b.AnnInsol": {
-            "value": 755.3407530704208739,
+            "value": 755.3407530704207602,
             "unit": u.kg / u.sec**3,
             "rtol": 1e-4,
         },
         "log.final.gl514b.FluxMerid": {
-            "value": -2.0352457616350744e16,
+            "value": -2.0352457616350760e16,
             "unit": u.Joule,
             "rtol": 1e-4,
         },
@@ -1085,7 +1079,7 @@ from benchmark import Benchmark, benchmark
             "rtol": 1e-4,
         },
         "log.final.gl514b.DivFlux": {
-            "value": -311.1690707101504927,
+            "value": -311.1690707101508337,
             "unit": u.kg / u.sec**3,
             "rtol": 1e-4,
         },
@@ -1102,12 +1096,12 @@ from benchmark import Benchmark, benchmark
         },
         "log.final.gl514b.IceFlow": {"value": 0.0000000000000000, "rtol": 1e-4},
         "log.final.gl514b.EnergyResL": {
-            "value": 4.1836756281554699e-11,
+            "value": 4.1382008930668235e-11,
             "unit": u.kg / u.sec**3,
             "rtol": 1e-4,
         },
         "log.final.gl514b.EnergyResW": {
-            "value": -3.7482550396816805e-10,
+            "value": -3.7528025131905451e-10,
             "unit": u.kg / u.sec**3,
             "rtol": 1e-4,
         },
@@ -1126,7 +1120,7 @@ from benchmark import Benchmark, benchmark
             "unit": u.sec,
             "rtol": 1e-4,
         },
-        "log.final.gl514b.AlbedoLandLat": {"value": 0.4335649876307174, "rtol": 1e-4},
+        "log.final.gl514b.AlbedoLandLat": {"value": 0.4335649876307175, "rtol": 1e-4},
         "log.final.gl514b.AlbedoWaterLat": {"value": 0.3335649876307175, "rtol": 1e-4},
         "log.final.gl514b.TempMinLat": {
             "value": 520.6588002187510256,
@@ -1143,7 +1137,7 @@ from benchmark import Benchmark, benchmark
         "log.final.gl514b.IceAccum": {"value": 0.0000000000000000, "rtol": 1e-4},
         "log.final.gl514b.IceAblate": {"value": 0.0000000000000000, "rtol": 1e-4},
         "log.final.gl514b.TempMaxLand": {
-            "value": 657.9980346867481558,
+            "value": 657.9980346867480421,
             "unit": u.sec,
             "rtol": 1e-4,
         },
@@ -1208,5 +1202,5 @@ from benchmark import Benchmark, benchmark
         },
     }
 )
-class TestCTL_POISE(Benchmark):
+class Test_CTL_POISE(Benchmark):
     pass

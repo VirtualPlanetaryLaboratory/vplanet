@@ -31,7 +31,7 @@ Expected output
 ---------------
 
 .. figure:: CircumbinaryOrbit.png
-   :width: 600px
+   :width: 100%
    :align: center
 
    Orbital evolution of circumbinary planet Kepler-16b according to

@@ -29,7 +29,7 @@ Expected output
 ---------------
 
 .. figure:: StellarEvol.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Evolution of the radius, radius of gyration, luminosity, XUV luminosity,

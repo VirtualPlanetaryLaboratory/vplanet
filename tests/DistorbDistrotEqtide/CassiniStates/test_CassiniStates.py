@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -279,7 +278,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.TotEnergy": {"value": -2.276496e41, "unit": u.Joule},
         "log.final.system.PotEnergy": {"value": -2.276504e41, "unit": u.Joule},
         "log.final.system.KinEnergy": {"value": 1.103902e36, "unit": u.Joule},
-        "log.final.system.DeltaTime": {"value": 1.139264e07, "unit": u.sec},
         "log.final.star.Mass": {"value": 1.988416e30, "unit": u.kg},
         "log.final.star.Obliquity": {"value": 0.000000, "unit": u.rad},
         "log.final.star.PrecA": {"value": 0.000000, "unit": u.rad},
@@ -525,5 +523,5 @@ from benchmark import Benchmark, benchmark
         "log.final.c.DQincDtDistOrb": {"value": -1.383556e-15, "unit": 1 / u.sec},
     }
 )
-class TestCassiniStates(Benchmark):
+class Test_CassiniStates(Benchmark):
     pass

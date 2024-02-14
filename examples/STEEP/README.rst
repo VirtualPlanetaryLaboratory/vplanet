@@ -30,7 +30,7 @@ Expected output
 ---------------
 
 .. figure:: steep.png
-   :width: 600px
+   :width: 100%
    :align: center
 
    Critical semi-major axis (top), orbital period (middle), and orbital

@@ -1824,8 +1824,11 @@ void VerifyOrbitOblData(BODY *body, CONTROL *control, OPTIONS *options,
 
       iLine = 0;
       while (feof(fileorb) == 0) {
-        fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf", &dttmp, &datmp, &detmp,
-               &daptmp, &dlatmp, &dobltmp, &dprecatmp);
+        if (fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf", &dttmp, &datmp, &detmp,
+              &daptmp, &dlatmp, &dobltmp, &dprecatmp) != 7) {
+                fprintf(stderr,"ERROR: Incorrect number of columns in orbit-obliquity file.");
+                exit(EXIT_INPUT);
+        }
 
         body[iBody].daTimeSeries[iLine] =
               dttmp * fdUnitsTime(control->Units[iBody + 1].iTime);
@@ -1964,7 +1967,7 @@ void DampTemp(BODY *body, double dTGlobalTmp, int iBody) {
 void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
   int iLat, jLat, count, iRun;
   double Toffset, dXBoundary, RunningMeanTmp;
-  double *daRunningMean, TotalMean;
+  double *daRunningMean;
 
   body[iBody].dIceMassTot   = 0.0;
   body[iBody].daInsol       = malloc(body[iBody].iNumLats * sizeof(double *));
@@ -2451,7 +2454,6 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
       int iMaxIteration     = 2 * RunLen;
       daRunningMean         = malloc((RunLen + 1) * sizeof(double));
       daRunningMean[RunLen] = 0;
-      TotalMean             = 0;
       RunningMeanTmp        = daRunningMean[RunLen];
       while (fabs(RunningMeanTmp - daRunningMean[RunLen]) >
                    body[iBody].dSpinUpTol ||
@@ -2623,10 +2625,6 @@ void NullPoiseDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
 void VerifyPoise(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                  OUTPUT *output, SYSTEM *system, UPDATE *update, int iBody,
                  int iModule) {
-  int iLat, jLat;
-  jLat = 0;
-  iLat = 0;
-
   VerifyAlbedo(body, options, files->Infile[iBody + 1].cIn, iBody,
                control->Io.iVerbose);
   VerifyAstro(body, options, files->Infile[iBody + 1].cIn, iBody,
@@ -4789,8 +4787,7 @@ cap.
 void fvNorthIceCapLand(BODY *body, int iBody, double *dLatIceEdge,
                        int *iLatIceEdge, int *bCap) {
 
-  int iLat, iNum;
-  iNum = 0;
+  int iLat;
 
   // Check for ice at north pole; no ice at +90 => No ice cap
   if (!fbIceLatLand(body, iBody, body[iBody].iNumLats - 1)) {
@@ -4835,8 +4832,7 @@ Determines if planet has a northern polar sea ice cap and the extent of the cap.
 void fvNorthIceCapSea(BODY *body, int iBody, double *dLatIceEdge,
                       int *iLatIceEdge, int *bCap) {
 
-  int iLat, iNum;
-  iNum = 0;
+  int iLat;
 
   // Check for ice at north pole; no ice at +90 => No ice cap
   if (!fbIceLatSea(body, iBody, body[iBody].iNumLats - 1)) {
@@ -4882,8 +4878,7 @@ cap.
 void fvSouthIceCapLand(BODY *body, int iBody, double *dLatIceEdge,
                        int *iLatIceEdge, int *bCap) {
 
-  int iLat, iNum;
-  iNum = 0;
+  int iLat;
 
   // Check for ice at south pole; no ice at -90 => No ice cap
   if (!fbIceLatLand(body, iBody, 0)) {
@@ -4928,8 +4923,7 @@ Determines if planet has a southern polar sea ice cap
 void fvSouthIceCapSea(BODY *body, int iBody, double *dLatIceEdge,
                       int *iLatIceEdge, int *bCap) {
 
-  int iLat, iNum;
-  iNum = 0;
+  int iLat;
 
   // Check for ice at south pole; no ice at -90 => No ice cap
   if (!fbIceLatSea(body, iBody, 0)) {
@@ -4978,7 +4972,7 @@ void fvIceBeltLand(BODY *body, int iBody, double *dLatIceEdgeNorth,
                    int *iLatIceEdgeSouth, int *bBelt) {
 
   int bCapNorth, bCapSouth, iIce;
-  int iLat, iEquator, iLatStart, iLatEnd, iLatCapNorth, iLatCapSouth;
+  int iLat, iLatStart, iLatEnd, iLatCapNorth, iLatCapSouth;
   double dLatCapNorth, dLatCapSouth;
 
   // If IceFree or Snowball, no ice belt
@@ -4998,7 +4992,6 @@ void fvIceBeltLand(BODY *body, int iBody, double *dLatIceEdgeNorth,
   // If made it here, belt is possible, so let's look!
   *iLatIceEdgeNorth = 0;
   *iLatIceEdgeSouth = 0;
-  iEquator          = (int)(body[iBody].iNumLats / 2);
 
   // Get parameters for Northern Ice Cap
   fvNorthIceCapLand(body, iBody, &dLatCapNorth, &iLatCapNorth, &bCapNorth);
@@ -5738,10 +5731,9 @@ operation of the inverse matrix is a "time-step".
 */
 void fvMatrixAnnual(BODY *body, int iBody) {
   int iLat, jLat;
-  double dDelta_t, dDelta_x;
+  double dDelta_t;
 
   dDelta_t = 1.5 / body[iBody].iNumLats;
-  dDelta_x = 2.0 / body[iBody].iNumLats;
 
   for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
     body[iBody].daTempTerms[iLat] = 0.0;
@@ -6748,14 +6740,13 @@ operation of the inverse matrix is a "time-step".
 */
 void fvMatrixSeasonal(BODY *body, int iBody) {
   int iLat, jLat;
-  double dXBoundary, dNu_fl, dNu_fw, dCl_dt, dCw_dt, dt_Lf;
+  double dXBoundary, dNu_fl, dNu_fw, dCl_dt, dCw_dt;
 
   dCl_dt = body[iBody].dHeatCapLand * body[iBody].dMeanMotion / (2 * PI) /
            body[iBody].dSeasDeltat;
 
   dCw_dt = body[iBody].dHeatCapWater * body[iBody].dMeanMotion / (2 * PI) /
            body[iBody].dSeasDeltat;
-  dt_Lf = body[iBody].dSeasDeltat / body[iBody].dLatentHeatIce;
 
   for (iLat = 0; iLat < body[iBody].iNumLats + 1; iLat++) {
     body[iBody].daLambdaSea[iLat] =
@@ -6873,15 +6864,13 @@ should be used as a check on the physics in the EBM (should be ~0).
 */
 void EnergyResiduals(BODY *body, int iBody, int iNday) {
   int iLat;
-  double dNu_fl, dNu_fw, dCl_dt, dCw_dt, dt_Lf;
+  double dNu_fl, dNu_fw, dCl_dt, dCw_dt;
 
   dCl_dt = body[iBody].dHeatCapLand * body[iBody].dMeanMotion / (2 * PI) /
            body[iBody].dSeasDeltat;
 
   dCw_dt = body[iBody].dHeatCapWater * body[iBody].dMeanMotion / (2 * PI) /
            body[iBody].dSeasDeltat;
-  dt_Lf = body[iBody].dSeasDeltat * body[iBody].dMeanMotion / (2 * PI) /
-          body[iBody].dLatentHeatIce;
 
   for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
     dNu_fl = body[iBody].dNuLandWater / body[iBody].daLandFrac[iLat];

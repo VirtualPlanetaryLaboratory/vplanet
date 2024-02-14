@@ -335,12 +335,8 @@ void fdGetUpdateInfo(BODY *body, CONTROL *control, SYSTEM *system,
 
   int iBody, iVar, iEqn, iNumBodies, iNumVars,
         iNumEqns; // Dummy counting variables
-  EVOLVE
-  integr; // Dummy EVOLVE struct so we don't have to dereference control a lot
   double dVarNow, dMinNow, dMin = dHUGE,
                            dVarTotal; // Intermediate storage variables
-
-  integr = control->Evolve;
 
   iNumBodies = control->Evolve.iNumBodies;
   for (iBody = 0; iBody < iNumBodies; iBody++) {
@@ -416,8 +412,6 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
 
   evolve->dCurrentDt = *dDt;
   iNumBodies         = evolve->iNumBodies;
-#pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars, iNumEqns,  \
-                                                          iVar, iEqn)
   for (iBody = 0; iBody < iNumBodies; iBody++) {
     // int thread_num = omp_get_thread_num();
     // int cpu_num = sched_getcpu();
@@ -429,7 +423,8 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       iNumEqns   = update[iBody].iNumEqns[iVar];
       for (iEqn = 0; iEqn < iNumEqns; iEqn++) {
         daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
-        evolve->daDerivProc[0][iBody][iVar][iEqn] = evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        evolve->daDerivProc[0][iBody][iVar][iEqn] =
+              evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
       evolve->daDeriv[0][iBody][iVar] = daDerivVar;
     }
@@ -463,8 +458,6 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
   fdGetUpdateInfo(evolve->tmpBody, control, system, evolve->tmpUpdate,
                   fnUpdate);
 
-#pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars, iNumEqns,  \
-                                                          iVar, iEqn)
   for (iBody = 0; iBody < iNumBodies; iBody++) {
     iNumVars = update[iBody].iNumVars;
     double daDerivVar;
@@ -473,7 +466,8 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       iNumEqns   = update[iBody].iNumEqns[iVar];
       for (iEqn = 0; iEqn < iNumEqns; iEqn++) {
         daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
-        evolve->daDerivProc[1][iBody][iVar][iEqn] = evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        evolve->daDerivProc[1][iBody][iVar][iEqn] =
+              evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
       evolve->daDeriv[1][iBody][iVar] = daDerivVar;
     }
@@ -508,8 +502,6 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
   fdGetUpdateInfo(evolve->tmpBody, control, system, evolve->tmpUpdate,
                   fnUpdate);
 
-#pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars, iNumEqns,  \
-                                                          iVar, iEqn)
   for (iBody = 0; iBody < iNumBodies; iBody++) {
     iNumVars = update[iBody].iNumVars;
     double daDerivVar;
@@ -518,7 +510,8 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       iNumEqns   = update[iBody].iNumEqns[iVar];
       for (iEqn = 0; iEqn < iNumEqns; iEqn++) {
         daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
-        evolve->daDerivProc[2][iBody][iVar][iEqn] = evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        evolve->daDerivProc[2][iBody][iVar][iEqn] =
+              evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
       evolve->daDeriv[2][iBody][iVar] = daDerivVar;
     }
@@ -553,8 +546,6 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
   fdGetUpdateInfo(evolve->tmpBody, control, system, evolve->tmpUpdate,
                   fnUpdate);
 
-#pragma omp parallel for num_threads(NUM_THREADS) private(iNumVars, iNumEqns,  \
-                                                          iVar, iEqn)
   for (iBody = 0; iBody < iNumBodies; iBody++) {
     double daDerivVar;
     iNumVars = update[iBody].iNumVars;
@@ -569,7 +560,8 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
         iNumEqns                        = update[iBody].iNumEqns[iVar];
         for (iEqn = 0; iEqn < iNumEqns; iEqn++) {
           daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
-          evolve->daDerivProc[3][iBody][iVar][iEqn] = evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+          evolve->daDerivProc[3][iBody][iVar][iEqn] =
+                evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
         }
         evolve->daDeriv[3][iBody][iVar] = daDerivVar;
       }
@@ -586,11 +578,12 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
                                      2 * evolve->daDeriv[2][iBody][iVar] +
                                      evolve->daDeriv[3][iBody][iVar]);
       for (iEqn = 0; iEqn < update[iBody].iNumEqns[iVar]; iEqn++) {
-        update[iBody].daDerivProc[iVar][iEqn] = 1. / 6 *
-                                    (evolve->daDerivProc[0][iBody][iVar][iEqn] +
-                                     2 * evolve->daDerivProc[1][iBody][iVar][iEqn] +
-                                     2 * evolve->daDerivProc[2][iBody][iVar][iEqn] +
-                                     evolve->daDerivProc[3][iBody][iVar][iEqn]);
+        update[iBody].daDerivProc[iVar][iEqn] =
+              1. / 6 *
+              (evolve->daDerivProc[0][iBody][iVar][iEqn] +
+               2 * evolve->daDerivProc[1][iBody][iVar][iEqn] +
+               2 * evolve->daDerivProc[2][iBody][iVar][iEqn] +
+               evolve->daDerivProc[3][iBody][iVar][iEqn]);
       }
 
       if (update[iBody].iaType[iVar][0] == 0 ||
@@ -615,11 +608,9 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
             fnUpdateVariable ***fnUpdate, fnWriteOutput *fnWrite,
             fnIntegrate fnOneStep) {
   /* Master evolution routine that controls the simulation integration. */
-  int iDir, iBody, iModule, nSteps; // Dummy counting variables
-  double dDt, dFoo;                 // Next timestep, dummy variable
-  double dEqSpinRate;               // Store the equilibrium spin rate
-
-  nSteps = 0;
+  int iDir, iBody, iModule; // Dummy counting variables
+  double dDt, dFoo;         // Next timestep, dummy variable
+  double dEqSpinRate;       // Store the equilibrium spin rate
 
   if (control->Evolve.bDoForward) {
     iDir = 1;
@@ -644,8 +635,7 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
   }
 
   /* Write out initial conditions */
-  WriteOutput(body, control, files, output, system, update, fnWrite,
-              control->Evolve.dTime, dDt);
+  WriteOutput(body, control, files, output, system, update, fnWrite);
 
   /* If Runge-Kutta need to copy actual update to that in
      control->Evolve. This transfer all the meta-data about the
@@ -658,6 +648,8 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
    *
    */
 
+  control->Evolve.iStepsSinceLastOutput = 0;
+  control->Evolve.iTotalSteps           = 0;
   while (control->Evolve.dTime < control->Evolve.dStopTime) {
     /* Take one step */
     fnOneStep(body, control, system, update, fnUpdate, &dDt, iDir);
@@ -682,9 +674,7 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     /* Halt? */
     if (fbCheckHalt(body, control, update, fnUpdate)) {
       fdGetUpdateInfo(body, control, system, update, fnUpdate);
-      WriteOutput(body, control, files, output, system, update, fnWrite,
-                  control->Evolve.dTime,
-                  control->Io.dOutputTime / control->Evolve.nSteps);
+      WriteOutput(body, control, files, output, system, update, fnWrite);
       return;
     }
 
@@ -693,18 +683,19 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     }
 
     control->Evolve.dTime += dDt;
-    nSteps++;
+    control->Evolve.iStepsSinceLastOutput++;
 
     /* Time for Output? */
     if (control->Evolve.dTime >= control->Io.dNextOutput) {
-      control->Evolve.nSteps += nSteps;
-      WriteOutput(body, control, files, output, system, update, fnWrite,
-                  control->Evolve.dTime,
-                  control->Io.dOutputTime / control->Evolve.nSteps);
+      control->Evolve.iTotalSteps += control->Evolve.iStepsSinceLastOutput;
+      WriteOutput(body, control, files, output, system, update, fnWrite);
       // Timesteps are synchronized with the output time, so this statement is
       // sufficient
       control->Io.dNextOutput += control->Io.dOutputTime;
-      nSteps = 0;
+      if (control->Evolve.dTime < control->Evolve.dStopTime) {
+        // Reset counter if we are not at the end of the simulation
+        control->Evolve.iStepsSinceLastOutput = 0;
+      }
     }
 
     /* Get auxiliary properties for next step -- first call

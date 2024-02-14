@@ -81,7 +81,7 @@
 #define DEGRAD 0.017453292519444445 // Degrees per radian
 #define TOMASS 1.39e21              // Mass of one terrestrial ocean in kg (TO)
 #define ATOMMASS 1.660538921e-27    // Atomic Mass
-#define OXYMASS 2.6568622736e-26    // Mass of Atomic Oxygen 16*ATOMMASS 
+#define OXYMASS 2.6568622736e-26    // Mass of Atomic Oxygen 16*ATOMMASS
 #define PROTONMASS 1.6726219e-27    // Proton mass kg
 #define SIGMA 5.670367e-8           // Stefan-Boltzmann Constant
 #define RGAS 8.3144598              // gas constant in J K^-1 mol^-1
@@ -614,6 +614,10 @@ struct BODY {
                          Ro>ROSSBYCRIT */
   int bEvolveRG; /**< Whether or not to evolve radius of gyration? Defaults to 0
                   */
+  double dLuminosityInitial;           
+  double dLuminosityAmplitude;
+  double dLuminosityFrequency;
+  double dLuminosityPhase;
 
   /* POISE parameters */
   int bPoise; /**< Apply POISE module? */
@@ -679,12 +683,12 @@ struct BODY {
   double dPlanckA; /**< Constant term in Blackbody linear approximation */
   double dPlanckB; /**< Linear coeff in Blackbody linear approx (sensitivity) */
   double dPrecA0;  /**< Initial pA value used when distrot is not called */
-  int bReadOrbitOblData;    /**< Use orbit and obliquity data from file rather
-                                than distrot */
-  char cFileOrbitOblData[NAMELEN];  /**< read orbital and obliquity data from
-                                        this file (distorb=0) */
-  double *daOblSeries; /**< time series for obliquity data */
-  double *daPrecASeries; /**< time series for obliquity data */
+  int bReadOrbitOblData; /**< Use orbit and obliquity data from file rather
+                             than distrot */
+  char cFileOrbitOblData[NAMELEN]; /**< read orbital and obliquity data from
+                                       this file (distorb=0) */
+  double *daOblSeries;             /**< time series for obliquity data */
+  double *daPrecASeries;           /**< time series for obliquity data */
   double dRefHeight;      /**< Ref height of "surface" in elevation feedback */
   int iReRunSeas;         /**< When to rerun EBM in ice sheet model */
   double dSeaIceConduct;  /**< Conductivity of sea ice */
@@ -878,8 +882,8 @@ struct BODY {
   int iFlareBandPass; /**< Option to choose in which band pass the input energy
                          are*/
   int iFlareSlopeUnits; /**< Mode to choose in which units the FFD slopes are*/
-  double dEnergyBin;    /**< Number of energies consider between the minimum and
-                           maximum energies to calculate the luminosity by flares*/
+  int iEnergyBin;       /**< Number of energies consider between the minimum and
+                              maximum energies to calculate the luminosity by flares*/
   double *daEnergyERG;
   double *daEnergyJOU;
   double *daLogEner;
@@ -1726,15 +1730,16 @@ typedef void (*fnBodyCopyModule)(BODY *, BODY *, int, int, int);
 
 /* Integration parameters */
 struct EVOLVE {
-  int bDoForward;    /**< Perform Forward Integration? */
-  int bDoBackward;   /**< Perform Backward Integration? */
-  int iDir;          /**< 1=forward, -1=backward */
-  double dTime;      /**< Integration Time */
-  double dEta;       /**< Variable Timestep Coefficient */
-  double dStopTime;  /**< Integration Stop Time */
-  double dTimeStep;  /**< Integration Time step */
-  int bVarDt;        /**< Use Variable Timestep? */
-  int nSteps;        /**< Total Number of Steps */
+  int bDoForward;   /**< Perform Forward Integration? */
+  int bDoBackward;  /**< Perform Backward Integration? */
+  int iDir;         /**< 1=forward, -1=backward */
+  double dTime;     /**< Integration Time */
+  double dEta;      /**< Variable Timestep Coefficient */
+  double dStopTime; /**< Integration Stop Time */
+  double dTimeStep; /**< Integration Time step */
+  int bVarDt;       /**< Use Variable Timestep? */
+  int iTotalSteps;  /**< Total Number of Steps */
+  int iStepsSinceLastOutput;
   double dMinValue;  /**< Minimum Value for Eccentricity and Obliquity to be
                         Integrated */
   int bFirstStep;    /**< Has the First Dtep Been Taken? */
@@ -1911,8 +1916,9 @@ struct INFILE {
  * regarding the output files. */
 
 struct OUTFILE {
-  char cOut[NAMELEN];                /**< Output File Name */
-  int iNumCols;                      /**< Number of Columns in Output File */
+  char cOut[2 * NAMELEN + 10];       /**< Output File Name */
+  int iNumCols;                      /**< Number of Columns in Output File
+                                        (system.planet+.forward/backward) */
   char caCol[MODULEOUTEND][OPTLEN];  /**< Output Value Name */
   int bNeg[MODULEOUTEND];            /**< Use Negative Option Units? */
   int iNumGrid;                      /**< Number of grid outputs */
@@ -1924,9 +1930,9 @@ struct OUTFILE {
  * regarding every file. */
 
 struct FILES {
-  char cExe[LINE];    /**< Name of Executable */
-  OUTFILE *Outfile;   /**< Output File Name for Forward Integration */
-  char cLog[NAMELEN]; /**< Log File Name */
+  char cExe[LINE];        /**< Name of Executable */
+  OUTFILE *Outfile;       /**< Output File Name for Forward Integration */
+  char cLog[NAMELEN + 4]; /**< Log File Name (+4 to allow for ".log" suffix) */
   INFILE *Infile;
   int iNumInputs; /**< Number of Input Files */
 };

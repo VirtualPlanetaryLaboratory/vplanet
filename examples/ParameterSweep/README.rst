@@ -30,7 +30,7 @@ Expected output
 ---------------
 
 .. figure:: ParameterSweep.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Inner core radius of Earth after 4.5 Gyr as a function of the initial core

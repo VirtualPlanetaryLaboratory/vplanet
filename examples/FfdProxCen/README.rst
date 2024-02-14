@@ -27,7 +27,7 @@ Expected output
 ---------------
 
 .. figure:: FfdProxCen.png
-   :width:  7200px
+   :width:  100%
    :align: center
 
    Flare frequency distribution (FFD) for Proxima Centauri between 10^34 and 10^36 ergs.

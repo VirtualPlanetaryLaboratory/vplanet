@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -117,5 +116,5 @@ from benchmark import Benchmark, benchmark
         "log.final.comp.NBadImpulse": {"value": 0.0000000000},
     }
 )
-class TestGalaxyEffects(Benchmark):
+class Test_GalaxyEffects(Benchmark):
     pass

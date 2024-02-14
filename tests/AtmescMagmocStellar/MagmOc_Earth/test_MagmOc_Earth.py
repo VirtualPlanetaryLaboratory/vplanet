@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -91,6 +90,20 @@ from benchmark import Benchmark, benchmark
             "value": 53.023382,
             "unit": u.W / u.m**2,
         },
+        "log.initial.Earth.CrossoverMass": {"value": 6.588282e-26, "unit": u.kg},
+        "log.initial.Earth.WaterEscapeRegime": {"value": 3.000000},
+        "log.initial.Earth.FXUVCRITDRAG": {"value": 0.177574, "unit": u.W / u.m**2},
+        "log.initial.Earth.HREFFLUX": {
+            "value": 1.923284e18,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.Earth.XO2": {"value": 0.000000},
+        "log.initial.Earth.XH2O": {"value": 1.000000},
+        "log.initial.Earth.HDiffFlux": {
+            "value": 1.264874e17,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.Earth.HRefODragMod": {"value": 0.169570},
         "log.initial.Earth.KTide": {"value": 0.993607},
         "log.initial.Earth.RGDuration": {"value": 0.00000e00, "unit": u.yr},
         "log.initial.Earth.WaterMassMOAtm": {"value": 5.000000, "unit": u.TO},
@@ -135,11 +148,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.KinEnergy": {
             "value": 2.813173e39,
             "unit": u.Joule,
-            "rtol": 1e-4,
-        },
-        "log.final.system.DeltaTime": {
-            "value": 3.019866e06,
-            "unit": u.sec,
             "rtol": 1e-4,
         },
         "log.final.Sun.Mass": {"value": 1.988416e30, "unit": u.kg, "rtol": 1e-4},
@@ -342,6 +350,30 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.Earth.CrossoverMass": {
+            "value": 6.588282e-26,
+            "unit": u.kg,
+            "rtol": 1e-4,
+        },
+        "log.final.Earth.WaterEscapeRegime": {"value": 3.000000, "rtol": 1e-4},
+        "log.final.Earth.FXUVCRITDRAG": {
+            "value": 0.177574,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.Earth.HREFFLUX": {
+            "value": 1.923284e18,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.Earth.XO2": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.Earth.XH2O": {"value": 1.000000, "rtol": 1e-4},
+        "log.final.Earth.HDiffFlux": {
+            "value": 1.264874e17,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.Earth.HRefODragMod": {"value": 0.169570, "rtol": 1e-4},
         "log.final.Earth.KTide": {"value": 0.993607, "rtol": 1e-4},
         "log.final.Earth.RGDuration": {"value": 0.00000e00, "unit": u.yr, "rtol": 1e-4},
         "log.final.Earth.WaterMassMOAtm": {
@@ -404,5 +436,5 @@ from benchmark import Benchmark, benchmark
         "log.final.Earth.CO2FracMelt": {"value": 0.000000, "rtol": 1e-4},
     }
 )
-class TestMagmOc_Earth(Benchmark):
+class Test_MagmOc_Earth(Benchmark):
     pass

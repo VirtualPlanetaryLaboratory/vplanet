@@ -35,7 +35,7 @@ Expected output
 
 .. figure:: TidalEarth1.png
 .. figure:: TidalEarth2.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Evolution of various properties of a tidally heated Earth-like planet. The initial

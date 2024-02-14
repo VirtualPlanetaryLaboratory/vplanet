@@ -1,5 +1,4 @@
 import astropy.units as u
-import pytest
 from benchmark import Benchmark, benchmark
 
 
@@ -94,6 +93,20 @@ from benchmark import Benchmark, benchmark
             "value": 55.216468,
             "unit": u.W / u.m**2,
         },
+        "log.initial.GJ1132b.CrossoverMass": {"value": 3.364096e-24, "unit": u.kg},
+        "log.initial.GJ1132b.WaterEscapeRegime": {"value": 3.000000},
+        "log.initial.GJ1132b.FXUVCRITDRAG": {"value": 0.306419, "unit": u.W / u.m**2},
+        "log.initial.GJ1132b.HREFFLUX": {
+            "value": 1.870052e20,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.GJ1132b.XO2": {"value": 0.000000},
+        "log.initial.GJ1132b.XH2O": {"value": 1.000000},
+        "log.initial.GJ1132b.HDiffFlux": {
+            "value": 1.549411e17,
+            "unit": 1 / u.m**2 / u.sec,
+        },
+        "log.initial.GJ1132b.HRefODragMod": {"value": 0.111848},
         "log.initial.GJ1132b.KTide": {"value": 0.771875},
         "log.initial.GJ1132b.RGDuration": {"value": 0.00000e00, "unit": u.yr},
         "log.initial.GJ1132b.WaterMassMOAtm": {"value": 100.000000, "unit": u.TO},
@@ -138,11 +151,6 @@ from benchmark import Benchmark, benchmark
         "log.final.system.KinEnergy": {
             "value": 5.048424e37,
             "unit": u.Joule,
-            "rtol": 1e-4,
-        },
-        "log.final.system.DeltaTime": {
-            "value": 2.494672e06,
-            "unit": u.sec,
             "rtol": 1e-4,
         },
         "log.final.GJ1132.Mass": {"value": 3.599033e29, "unit": u.kg, "rtol": 1e-4},
@@ -369,6 +377,30 @@ from benchmark import Benchmark, benchmark
             "unit": u.W / u.m**2,
             "rtol": 1e-4,
         },
+        "log.final.GJ1132b.CrossoverMass": {
+            "value": 3.323598e-24,
+            "unit": u.kg,
+            "rtol": 1e-4,
+        },
+        "log.final.GJ1132b.WaterEscapeRegime": {"value": 3.000000, "rtol": 1e-4},
+        "log.final.GJ1132b.FXUVCRITDRAG": {
+            "value": 0.306419,
+            "unit": u.W / u.m**2,
+            "rtol": 1e-4,
+        },
+        "log.final.GJ1132b.HREFFLUX": {
+            "value": 1.847379e20,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.GJ1132b.XO2": {"value": 0.000000, "rtol": 1e-4},
+        "log.final.GJ1132b.XH2O": {"value": 1.000000, "rtol": 1e-4},
+        "log.final.GJ1132b.HDiffFlux": {
+            "value": 1.549411e17,
+            "unit": 1 / u.m**2 / u.sec,
+            "rtol": 1e-4,
+        },
+        "log.final.GJ1132b.HRefODragMod": {"value": 0.111857, "rtol": 1e-4},
         "log.final.GJ1132b.KTide": {"value": 0.771875, "rtol": 1e-4},
         "log.final.GJ1132b.RGDuration": {
             "value": 0.00000e00,
@@ -443,5 +475,5 @@ from benchmark import Benchmark, benchmark
         "log.final.GJ1132b.CO2FracMelt": {"value": 0.000000, "rtol": 1e-4},
     }
 )
-class TestMagmOc_GJ1132b(Benchmark):
+class Test_MagmOc_GJ1132b(Benchmark):
     pass

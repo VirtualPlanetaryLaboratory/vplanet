@@ -2,20 +2,18 @@ name: docs
 
 on:
   push:
-    branches: [master, main]
-  #pull_request: TODO: Enable me
-  #  branches:[master, main]
+    branches: [main]
 
 jobs:
   tests:
     name: "Build docs"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         id: setup_python
-        uses: conda-incubator/setup-miniconda@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
           activate-environment: vplanet
           environment-file: environment.yml
@@ -42,7 +40,7 @@ jobs:
           touch .build/html/.nojekyll
 
       - name: Publish
-        uses: JamesIves/github-pages-deploy-action@4.1.2
+        uses: JamesIves/github-pages-deploy-action@v4
         # NOTE: Triggered only when the PR is *merged* (event_name == 'push')
         if: steps.build.outcome == 'success' && github.event_name == 'push'
         with:

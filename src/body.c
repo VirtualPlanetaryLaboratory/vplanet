@@ -461,6 +461,7 @@ void BodyCopy(BODY *dest, BODY *src, EVOLVE *evolve) {
     dest[iBody].dLostEng      = src[iBody].dLostEng;
     dest[iBody].dAlbedoGlobal = src[iBody].dAlbedoGlobal;
     dest[iBody].bCalcDynEllip = src[iBody].bCalcDynEllip;
+    dest[iBody].dRadGyra = src[iBody].dRadGyra;
 
     dest[iBody].bBinary   = src[iBody].bBinary;
     dest[iBody].bDistOrb  = src[iBody].bDistOrb;
@@ -665,16 +666,14 @@ double fdImK2Total(BODY *body, int iBody) {
   @return Upper mantle k2 Love number
 */
 double fdK2Man(BODY *body, int iBody) {
-  //  return 1.5/(1+9.5*body[iBody].dShmodUMan/(STIFFNESS));
-  return 1.5 / (1 + 9.5 * body[iBody].dShmodUMan / body[iBody].dStiffness);
+  double dK2Man = 1.5 / (1 + 9.5 * body[iBody].dShmodUMan / body[iBody].dStiffness);
+  return dK2Man;
 }
 
 double fdTidalQMan(BODY *body, int iBody) {
-  double ShmodUManArr;
-  ShmodUManArr = body[iBody].dShmodUMan * body[iBody].dMeltfactorUMan;
-  // return body[iBody].dDynamViscos*body[iBody].dMeanMotion/ShmodUManArr;
-  return body[iBody].dDynamViscos * body[iBody].dMeanMotion /
+  double dTidalQMan = body[iBody].dDynamViscos * body[iBody].dMeanMotion /
          body[iBody].dShmodUMan;
+  return dTidalQMan;
 }
 
 double fdImK2ManThermint(BODY *body, int iBody) {
@@ -1489,4 +1488,9 @@ void fdHabitableZoneKopparapu2013(BODY *body, int iNumBodies,
     // Limits are in AU, convert to meters
     daHZLimit[iLimit] = pow(dLuminosity / dSeff[iLimit], 0.5) * AUM;
   }
+}
+
+double fdEffectiveTemperature(BODY *body,int iBody) {
+  double dTeff = pow((body[iBody].dLuminosity/(4*PI*SIGMA*body[iBody].dRadius*body[iBody].dRadius)),0.25);
+  return dTeff;
 }

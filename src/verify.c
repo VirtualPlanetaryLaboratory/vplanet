@@ -354,7 +354,7 @@ void IntegrationWarning(char cName1[], char cName2[], char cName3[],
 void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
                        OPTIONS *options, SYSTEM *system,
                        fnIntegrate *fnOneStep) {
-  int iFile, iFile1, iFile2;
+  int iFile, iFile1 = 0, iFile2 = 0;
   char cTmp[OPTLEN];
 
 
@@ -547,6 +547,7 @@ void VerifyMassRad(BODY *body, CONTROL *control, OPTIONS *options, char cFile[],
   }
 
   /* Were all set? */
+  // XXX User can't set density!
   if (options[OPT_MASS].iLine[iFile] > -1 &&
       options[OPT_RADIUS].iLine[iFile] > -1 &&
       options[OPT_DENSITY].iLine[iFile] > -1) {
@@ -1108,8 +1109,7 @@ void VerifyOptions(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 
   int iBody, iModule;
 
-  control->Evolve.dTime  = 0;
-  control->Evolve.nSteps = 0;
+  control->Evolve.dTime = 0;
 
   VerifyAge(body, control, options);
   VerifyNames(body, control, options);

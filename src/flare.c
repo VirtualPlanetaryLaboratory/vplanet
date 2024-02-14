@@ -23,7 +23,7 @@ void BodyCopyFlare(BODY *dest, BODY *src, int foo, int iNumBodies, int iBody) {
   dest[iBody].iFlareFFD      = src[iBody].iFlareFFD;
   dest[iBody].iFlareBandPass = src[iBody].iFlareBandPass;
   // dest[iBody].iFlareSlopeUnits = src[iBody].iFlareSlopeUnits;
-  dest[iBody].dEnergyBin = src[iBody].dEnergyBin;
+  dest[iBody].iEnergyBin = src[iBody].iEnergyBin;
   // dest[iBody].dFlareSlope      = src[iBody].dFlareSlope;
   //  dest[iBody].dFlareYInt       = src[iBody].dFlareYInt;
 }
@@ -38,11 +38,11 @@ void ReadFlareEnergyBin(BODY *body,
                         int iFile) {
   // This parameter cannot exist in primary file
   int lTmp = -1;
-  double dTmp;
+  int iTmp;
 
-  AddOptionDouble(files->Infile[iFile].cIn,
+  AddOptionInt(files->Infile[iFile].cIn,
                   options->cName,
-                  &dTmp,
+                  &iTmp,
                   &lTmp,
                   control->Io.iVerbose);
   if (lTmp >= 0) {
@@ -51,10 +51,10 @@ void ReadFlareEnergyBin(BODY *body,
                     files->Infile[iFile].cIn,
                     lTmp,
                     control->Io.iVerbose);
-    body[iFile - 1].dEnergyBin = dTmp;
+    body[iFile - 1].iEnergyBin = iTmp;
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0)
-    body[iFile - 1].dEnergyBin = options->dDefault;
+    body[iFile - 1].iEnergyBin = (int)options->dDefault;
 }
 
 void ReadFlareFFD(BODY *body,
@@ -97,49 +97,6 @@ void ReadFlareFFD(BODY *body,
   } else if (iFile > 0)
     body[iFile - 1].iFlareFFD = FLARE_FFD_DAVENPORT;
 }
-/*
-void ReadFlareSlopeUnits(BODY *body,
-                         CONTROL *control,
-                         FILES *files,
-                         OPTIONS *options,
-                         SYSTEM *system,
-                         int iFile) {
-  /* This parameter cannot exist in primary file */
-/*int lTmp = -1;
-char cTmp[OPTLEN];
-
-AddOptionString(files->Infile[iFile].cIn,
-                options->cName,
-                cTmp,
-                &lTmp,
-                control->Io.iVerbose);
-if (lTmp >= 0) {
-  NotPrimaryInput(iFile,
-                  options->cName,
-                  files->Infile[iFile].cIn,
-                  lTmp,
-                  control->Io.iVerbose);
-  if (!memcmp(sLower(cTmp), "se", 2)) {
-    body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_SEC;
-  } else if (!memcmp(sLower(cTmp), "mi", 2)) {
-    body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_MINUTE;
-  } else if (!memcmp(sLower(cTmp), "ho", 2)) {
-    body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_HOUR;
-  } else if (!memcmp(sLower(cTmp), "da", 2)) {
-    body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_DAY;
-  } else {
-    if (control->Io.iVerbose >= VERBERR)
-      fprintf(stderr,
-              "ERROR: Unknown argument to %s: %s. Options are SEC, MIN, HOUR "
-              "or DAY.\n",
-              options->cName,
-              cTmp);
-    LineExit(files->Infile[iFile].cIn, lTmp);
-  }
-  UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
-} else if (iFile > 0)
-  body[iFile - 1].iFlareSlopeUnits = FLARE_SLOPE_DAY;
-}*/
 
 void ReadFlareBandPass(BODY *body,
                        CONTROL *control,
@@ -568,14 +525,15 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_LXUVFLARECONST].cDimension, "energy/time");
   fnRead[OPT_LXUVFLARECONST] = &ReadLXUVFlareConst;
 
+  // XXX Change to iEnergyBin for next major release
   sprintf(options[OPT_FLAREENERGYBIN].cName, "dEnergyBin");
   sprintf(options[OPT_FLAREENERGYBIN].cDescr,
           "Number of energies consider between the minimum and maximum "
           "energies to calculate the luminosity by flares");
   sprintf(options[OPT_FLAREENERGYBIN].cDefault,
           "100 energies between dFlareMinEnergy and dFlareMaxEnergy");
-  options[OPT_FLAREENERGYBIN].dDefault   = 100.0;
-  options[OPT_FLAREENERGYBIN].iType      = 2;
+  options[OPT_FLAREENERGYBIN].dDefault   = 100;
+  options[OPT_FLAREENERGYBIN].iType      = 1;
   options[OPT_FLAREENERGYBIN].bMultiFile = 1;
   options[OPT_FLAREENERGYBIN].dNeg       = 1;
   sprintf(options[OPT_FLAREENERGYBIN].cNeg, "None");
@@ -794,7 +752,7 @@ void VerifyFlare(BODY *body,
   already inputed the XUV luminosity by flares and the flare module doesn't need
   this information anymore*/
   if (body[iBody].iFlareFFD == FLARE_FFD_NONE) {
-    int iCol, bError = 0;
+    int iCol;
     for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQ1].cName,
@@ -804,7 +762,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQ1].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQ2].cName,
@@ -814,7 +771,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQ2].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQ3].cName,
@@ -824,7 +780,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQ3].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQ4].cName,
@@ -834,7 +789,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQ4].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQMIN].cName,
@@ -844,7 +798,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQMIN].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQMID].cName,
@@ -854,7 +807,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQMID].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREFREQMAX].cName,
@@ -864,7 +816,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREFREQMAX].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGY1].cName,
@@ -874,7 +825,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGY1].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGY2].cName,
@@ -884,7 +834,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGY2].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGY3].cName,
@@ -894,7 +843,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGY3].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGY4].cName,
@@ -904,7 +852,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGY4].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGYMIN].cName,
@@ -914,7 +861,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGYMIN].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGYMID].cName,
@@ -924,7 +870,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGYMID].cName);
-        bError = 1;
       }
       if (memcmp(files->Outfile[iBody].caCol[iCol],
                  output[OUT_FLAREENERGYMAX].cName,
@@ -934,7 +879,6 @@ void VerifyFlare(BODY *body,
                 "WARNING: Output option %s only allowed with FFD model "
                 "DAVENPORT or LACY \n",
                 output[OUT_FLAREENERGYMAX].cName);
-        bError = 1;
       }
     }
   }
@@ -974,15 +918,15 @@ void InitializeBodyFlare(BODY *body, CONTROL *control, UPDATE *update,
                          int iBody, int iModule) {
   // double *daEnergyERGXUV, *daLXUVFlare, *daFFD, *daEnergyJOUXUV, *daLogEner;
   // double *daLogEnerXUV, *daEnergyERG, *daEnergyJOU, *daEnerJOU;
-  body[iBody].daEnergyERGXUV = malloc(body[iBody].dEnergyBin * sizeof(double));
-  body[iBody].daLXUVFlare    = malloc(body[iBody].dEnergyBin * sizeof(double));
-  body[iBody].daFFD          = malloc(body[iBody].dEnergyBin * sizeof(double));
-  body[iBody].daEnergyJOUXUV = malloc(body[iBody].dEnergyBin * sizeof(double));
-  body[iBody].daLogEner      = malloc(body[iBody].dEnergyBin * sizeof(double));
-  body[iBody].daLogEnerXUV   = malloc(body[iBody].dEnergyBin * sizeof(double));
-  body[iBody].daEnergyERG    = malloc(body[iBody].dEnergyBin * sizeof(double));
-  body[iBody].daEnergyJOU    = malloc(body[iBody].dEnergyBin * sizeof(double));
-  body[iBody].daEnerJOU      = malloc(body[iBody].dEnergyBin * sizeof(double));
+  body[iBody].daEnergyERGXUV = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daLXUVFlare    = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daEnergyJOUXUV = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daFFD          = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daLogEner      = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daLogEnerXUV   = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daEnergyERG    = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daEnergyJOU    = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
+  body[iBody].daEnerJOU      = malloc((body[iBody].iEnergyBin+1) * sizeof(double));
 
   body[iBody].dLXUVFlare = fdLXUVFlare(body, control->Evolve.dTimeStep, iBody);
 }
@@ -1014,8 +958,8 @@ void FinalizeUpdateLXUVFlare(BODY *body, UPDATE *update, int *iEqn, int iVar,
 // not need this.
 /*void FinalizeUpdateFlareFreqMax(BODY *body, UPDATE *update, int *iEqn, int
   iVar, int iBody, int iFoo) {
-  /* No primary variables for FLARE yet*/
-/*  update[iBody].iaModule[iVar][*iEqn] = FLARE;
+  // No primary variables for FLARE yet
+  //  update[iBody].iaModule[iVar][*iEqn] = FLARE;
   update[iBody].iNumFlareFreqMax              = (*iEqn)++;
 }
 */
@@ -1731,12 +1675,11 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
   double dLXUVFlare = 0.0;
   double dLogEnergyMinERG, dLogEnergyMaxERG, dEnergyMin, dEnergyMax,
         dLogEnergyMin, dLogEnergyMax;
-  int iEnergyBin = 0;
   int i, iLogEnergyMinERG, iLogEnergyMaxERG, iLogEnergyMin, iLogEnergyMax;
   double dEnergyMinXUV, dEnergyMaxXUV, dLogEnergyMinXUV;
   int iLogEnergyMinERGXUV, iLogEnergyMaxERGXUV, iLogEnergyMinXUV,
         iLogEnergyMaxXUV;
-  double dEnergyStep, dEnergyStepXUV, dEnergyBin;
+  double dEnergyStep, dEnergyStepXUV;
 
 
   // ######################### 1. Choosing how to calculate FFD: slopes(age) or
@@ -1768,10 +1711,6 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
 
     dLogEnergyMinXUV = fdBandPassXUV(body, iBody, body[iBody].dFlareMinEnergy);
 
-    // Defining the array size (dEnergybin) of energies
-    dEnergyBin = body[iBody].dEnergyBin;
-    iEnergyBin = (int)dEnergyBin;
-
     // Declaring the XUV Energy arrays of size dEnergyBin
     // double daEnergyJOUXUV[iEnergyBin + 1], daLogEnerXUV[iEnergyBin + 1],
     //      daEnergyERGXUV[iEnergyBin + 1];
@@ -1791,7 +1730,7 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
 
     // Defining the energy step used in line 1097, 1099, and 1101 to fill the
     // energy arrays
-    dEnergyStep = (dLogEnergyMaxERG - dLogEnergyMinERG) / iEnergyBin;
+    dEnergyStep = (dLogEnergyMaxERG - dLogEnergyMinERG) / body[iBody].iEnergyBin;
 
     // Declaring the Kepler Energy arrays of size iEnergyBin
     // double daEnergyERG[iEnergyBin + 1], daEnergyJOU[iEnergyBin + 1],
@@ -1800,7 +1739,7 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     // ############################ 4. Filling the energy arrays
     // ########################################################################
 
-    for (i = 0; i < iEnergyBin + 1; i++) {
+    for (i = 0; i < body[iBody].iEnergyBin + 1; i++) {
       // XUV energy (energy_joules)
       body[iBody].daEnergyJOUXUV[i] =
             fdEnergyJoulesXUV(dLogEnergyMinXUV + i * dEnergyStep);
@@ -1815,8 +1754,8 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     body[iBody].dFlareEnergy3   = body[iBody].daEnerJOU[2];
     body[iBody].dFlareEnergy4   = body[iBody].daEnerJOU[3];
     body[iBody].dFlareEnergyMin = body[iBody].daEnerJOU[0];
-    body[iBody].dFlareEnergyMid = body[iBody].daEnerJOU[iEnergyBin / 2];
-    body[iBody].dFlareEnergyMax = body[iBody].daEnerJOU[iEnergyBin];
+    body[iBody].dFlareEnergyMid = body[iBody].daEnerJOU[(int)(body[iBody].iEnergyBin / 2.)];
+    body[iBody].dFlareEnergyMax = body[iBody].daEnerJOU[body[iBody].iEnergyBin];
     // ############################ 5. Filling the FFD arrays
     // ########################################################################
 
@@ -1825,7 +1764,7 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     // double daFFD[iEnergyBin + 1];
 
     // When DAVENPORT or LACY are selected, we have to calculate the FFD first.
-    for (i = 0; i < iEnergyBin + 1; i++) {
+    for (i = 0; i < body[iBody].iEnergyBin + 1; i++) {
       body[iBody].daFFD[i] = fdFFD(body, iBody, body[iBody].daLogEner[i],
                                    dFlareSlope, dFlareYInt);
     }
@@ -1835,15 +1774,15 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     body[iBody].dFlareFreq3   = body[iBody].daFFD[2];
     body[iBody].dFlareFreq4   = body[iBody].daFFD[3];
     body[iBody].dFlareFreqMin = body[iBody].daFFD[0];
-    body[iBody].dFlareFreqMid = body[iBody].daFFD[iEnergyBin / 2];
-    body[iBody].dFlareFreqMax = body[iBody].daFFD[iEnergyBin];
+    body[iBody].dFlareFreqMid = body[iBody].daFFD[(int)(body[iBody].iEnergyBin / 2)];
+    body[iBody].dFlareFreqMax = body[iBody].daFFD[body[iBody].iEnergyBin];
     // ############################ 6. Calculating the XUV luminosity by flares
     // ########################################################################
     //  double daLXUVFlare[iEnergyBin];
 
     // Calculating the luminosity by flares for DAVENPORT or LACY mode
     // if the user select to calculate the luminosity using a FFD model
-    for (i = 0; i < iEnergyBin; i++) {
+    for (i = 0; i < body[iBody].iEnergyBin; i++) {
       body[iBody].daLXUVFlare[i] =
             (body[iBody].daEnergyJOUXUV[i + 1] -
              body[iBody].daEnergyJOUXUV[i]) *

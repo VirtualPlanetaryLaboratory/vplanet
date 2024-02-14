@@ -419,7 +419,10 @@ void VerifyOrbitData(BODY *body, CONTROL *control, OPTIONS *options,
         exit(EXIT_INPUT);
       }
       // Check file has exactly 7 columns
-      fgets(cLine, LINE, fileorb);
+      if (fgets(cLine, LINE, fileorb) == NULL) {
+        fprintf(stderr,"ERROR: Unable to read line from orbit data file.");
+        exit(EXIT_INPUT);
+      } 
       GetWords(cLine, cFoo, &iNumColsFound, &bFoo);
       if (iNumCols != iNumColsFound) {
         if (control->Io.iVerbose >= VERBERR) {
@@ -456,8 +459,11 @@ void VerifyOrbitData(BODY *body, CONTROL *control, OPTIONS *options,
 
       iLine = 0;
       while (feof(fileorb) == 0) {
-        fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf\n", &dttmp, &datmp, &detmp,
-               &ditmp, &daptmp, &dlatmp, &dmatmp);
+        if (fscanf(fileorb, "%lf %lf %lf %lf %lf %lf %lf\n", &dttmp, &datmp, &detmp,
+               &ditmp, &daptmp, &dlatmp, &dmatmp) != 7) {
+                  fprintf(stderr,"ERROR: Incorrect number of columns in orbit file.");
+                  exit(EXIT_INPUT);
+        }
         body[iBody].daTimeSeries[iLine] =
               dttmp * fdUnitsTime(control->Units[iBody + 1].iTime);
         body[iBody].daSemiSeries[iLine] =

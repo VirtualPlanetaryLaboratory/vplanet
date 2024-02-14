@@ -882,6 +882,8 @@ void VerifyGRCorrLL2(BODY *body, int iNumBodies) {
     if (body[iBody].bGRCorr != body[1].bGRCorr) {
       fprintf(stderr, "ERROR: bGRCorr must be the same for all planets in "
                       "DistOrb LL2 model\n");
+      fprintf(stderr,"\t%s: %d\n",body[1].cName,body[1].bGRCorr);
+      fprintf(stderr,"\t%s: %d\n",body[iBody].cName,body[iBody].bGRCorr);
       exit(EXIT_INPUT);
     }
   }
@@ -1645,7 +1647,7 @@ int fniHaltHillStab(BODY *body, EVOLVE *evolve, HALT *halt, IO *io,
           gamma2 = sqrt(1 - (body[iBody].dHecc * body[iBody].dHecc +
                              body[iBody].dKecc * body[iBody].dKecc));
           delta  = sqrt(body[iBody].dSemi / body[jBody].dSemi);
-        } else if (body[jBody].dSemi > body[iBody].dSemi) {
+        } else {
           // jBody is the outer planet
           mu2    = body[jBody].dMass / body[0].dMass;
           mu1    = body[iBody].dMass / body[0].dMass;
@@ -2557,7 +2559,7 @@ void HessEigen(double **amat, int origsize, double real[], double imag[]) {
                 q /= lrcorner;
                 r /= lrcorner;
               }
-            }
+            } 
             value = sqrt(p * p + q * q + r * r);
             s     = (double)fiSign(p) * value;
             if (s != 0.0) {
@@ -2653,6 +2655,7 @@ void HessReduce(double **a, int size) {
 
   for (r = 0; r < size; r++) {
     max = 0;
+    rmax = r+1;
     for (rp = r + 1; rp < size; rp++) {
       if (fabs(a[rp][r]) > max) {
         max  = fabs(a[rp][r]);
@@ -3043,6 +3046,9 @@ void RecalcLaplace(BODY *body, EVOLVE *evolve, SYSTEM *system, int iVerbose) {
         alpha1 = body[iBody].dSemi / body[jBody].dSemi;
       } else if (body[iBody].dSemi > body[jBody].dSemi) {
         alpha1 = body[jBody].dSemi / body[iBody].dSemi;
+      } else {
+        fprintf(stderr,"ERROR: Semi-major axes cannot be identical in RecalcLaplace.");
+        exit(EXIT_INPUT);
       }
 
       for (j = 0; j < 26; j++) {
@@ -3076,7 +3082,7 @@ Recalculates eigenvalues in case where LL2 solution is coupled to eqtide
 */
 void RecalcEigenVals(BODY *body, EVOLVE *evolve, SYSTEM *system) {
   int iBody, jBody, j, done = 0;
-  double alpha1, dalpha = -1, dalphaTmp;
+  double alpha1 = 0, dalpha = -1, dalphaTmp;
 
   for (iBody = 1; iBody < evolve->iNumBodies - 1; iBody++) {
     for (jBody = iBody + 1; jBody < evolve->iNumBodies; jBody++) {
@@ -3084,6 +3090,9 @@ void RecalcEigenVals(BODY *body, EVOLVE *evolve, SYSTEM *system) {
         alpha1 = body[iBody].dSemi / body[jBody].dSemi;
       } else if (body[iBody].dSemi > body[jBody].dSemi) {
         alpha1 = body[jBody].dSemi / body[iBody].dSemi;
+      } else {
+        fprintf(stderr,"ERROR: Semi-major axes cannot be identical in RecalcEigenVals.");
+        exit(EXIT_INPUT);
       }
       for (j = 0; j < 2; j++) {
         dalphaTmp =

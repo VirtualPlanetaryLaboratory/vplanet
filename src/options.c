@@ -100,7 +100,10 @@ void GetNextValidLine(char cFile[], int iStart, char cLine[], int *iLine) {
   *iLine = 0;
 
   for (iLineTmp = 0; iLineTmp < iStart; iLineTmp++) {
-    fgets(cLine, LINE, fp);
+    if (fgets(cLine, LINE, fp) == NULL) {
+      fprintf(stderr, "ERROR: Unable to read next valid line.");
+      LineExit(cFile, iStart);
+    }
     (*iLine)++;
   }
 
@@ -373,7 +376,7 @@ void AddOptionString(char cFile[], char cOption[], char cInput[], int *iLine,
   sscanf(cLine, "%s %s", cTmp, cInput);
 }
 
-
+/* Looks like this was deprecated somewhere RB 01/02/24
 int GetNumOut(char cFile[], char cName[], int iLen, int *iLineNum, int iExit) {
   char cLine[LINE], cWord[NAMELEN];
   int iPos, j, ok, bDone = 0, iLine = 0, iNumOut;
@@ -386,12 +389,12 @@ int GetNumOut(char cFile[], char cName[], int iLen, int *iLineNum, int iExit) {
   }
 
   while (fgets(cLine, LINE, fp) != NULL) {
-    /* Check for # sign */
+    // Check for # sign
     if (memcmp(cLine, "#", 1) != 0) {
-      /* Check for desired parameter */
+      // Check for desired parameter
       sscanf(cLine, "%s", cWord);
       if (memcmp(cWord, cName, iLen) == 0) {
-        /* Parameter Found! */
+        // Parameter Found!
         if (bDone) {
           fprintf(stderr, "ERROR: Multiple occurences of parameter %s found.\n",
                   cName);
@@ -404,12 +407,12 @@ int GetNumOut(char cFile[], char cName[], int iLen, int *iLineNum, int iExit) {
         iNumOut = 0;
         ok      = 1;
         for (iPos = 1; iPos < LINE;
-             iPos++) { /* Ignore first character, as it makes conditional
-                          well-defined */
-          /* printf("%d ",cLine[iPos]); */
+             iPos++) { // Ignore first character, as it makes conditional
+                          // well-defined
+          // printf("%d ",cLine[iPos]);
           if (ok) {
             if (cLine[iPos] == 35) { // 35 is ASCII code for #
-              /* Pound sign! */
+              // Pound sign!
               ok = 0;
               iNumOut++;
             }
@@ -425,18 +428,17 @@ int GetNumOut(char cFile[], char cName[], int iLen, int *iLineNum, int iExit) {
       cLine[iPos] = 0;
     }
   }
-  /* Lose the input parameter */
+  // Lose the input parameter
   iNumOut--;
   return iNumOut;
 }
+*/
 
 int iGetNumLines(char cFile[]) {
   int iNumLines = 0, iChar, bFileOK = 1;
   int bComment, bReturn;
   FILE *fp;
   char cLine[LINE];
-
-  fprintf(stderr,"File: %s\n",cFile);
 
   fp = fopen(cFile, "r");
   if (fp == NULL) {
@@ -445,9 +447,7 @@ int iGetNumLines(char cFile[]) {
   }
 
   memset(cLine, '\0', LINE);
-  // fprintf(stderr,"File: %s\n",cFile);
   while (fgets(cLine, LINE, fp) != NULL) {
-    // fprintf(stderr,"iLine: %d, %s",iNumLines,cLine);
     iNumLines++;
 
     /* Check to see if line is too long. The maximum length of a line is set
@@ -489,11 +489,9 @@ void InitializeInput(INFILE *input) {
   FILE *fp;
   char cLine[LINE];
 
-fprintf(stderr,"File: %s\n",input->cIn);
-
   fp = fopen(input->cIn, "r");
   if (fp == NULL) {
-    fprintf(stderr, "Unable to open %s.\n", input->cIn);
+    fprintf(stderr, "ERROR: Unable to open %s.\n", input->cIn);
     exit(EXIT_INPUT);
   }
   input->iNumLines = iGetNumLines(input->cIn);
@@ -503,23 +501,15 @@ fprintf(stderr,"File: %s\n",input->cIn);
   input->cReactions[0] = 0;
   */
 
-  // fprintf(stderr,"File: %s\n",input->cIn);
   for (iLine = 0; iLine < input->iNumLines; iLine++) {
-    /* Initialize bLineOK */
     input->bLineOK[iLine] = 0;
-
-    /* Now find those lines that are comments or blank
-    for (iPos = 0; iPos < LINE; iPos++) {
-      cLine[iPos] = '\0';
-    }
-    */
     memset(cLine, '\0', LINE);
 
-    fgets(cLine, LINE, fp);
-    // fprintf(stderr,"iLine: %d, %s",iLine,cLine);
-    /* Check for # sign or blank line */
+    if (fgets(cLine, LINE, fp) == NULL) {
+      fprintf(stderr, "ERROR: Unable to open %s.\n", input->cIn);
+      exit(EXIT_INPUT);
+    }
     if (CheckComment(cLine, LINE)) {
-      /* Line is OK */
       input->bLineOK[iLine] = 1;
     } else {
       // Is it a blank line?
@@ -2347,7 +2337,10 @@ void ReadLuminosity(BODY *body, CONTROL *control, FILES *files,
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                    control->Io.iVerbose);
     } else {
-      body[iFile - 1].dLuminosity = dTmp;
+      body[iFile - 1].dLuminosity =
+            dTmp * fdUnitsPower(control->Units[iFile - 1].iTime,
+                                control->Units[iFile - 1].iMass,
+                                control->Units[iFile - 1].iLength);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
@@ -2660,7 +2653,7 @@ void ReadCosObl(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
                      OUTPUT *output, int iFile, int iVerbose) {
   int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 1, iNumGrid = 0;
-  int k, iOut, *lTmp, iCol, jCol;
+  int k, iOut = -1, *lTmp, iCol, jCol;
   char saTmp[MAXARRAY][OPTLEN], cTmp[OPTLEN], cOption[MAXARRAY][OPTLEN],
         cOut[OPTLEN];
   int iLen1, iLen2;
@@ -2863,7 +2856,7 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
 void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
                     int iVerbose) {
   int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 0, iNumGrid = 0;
-  int k, iOut, *lTmp;
+  int k, iOut = -1, *lTmp;
   char saTmp[MAXARRAY][OPTLEN], cTmp[OPTLEN], cOption[MAXARRAY][OPTLEN],
         cOut[OPTLEN];
   int iLen1, iLen2;

@@ -38,7 +38,7 @@ Expected output
 
 
 .. figure:: CassiniStatesEvol.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 An Earth-mass planet damping into Cassini state 2 under the influence of tides
@@ -46,7 +46,7 @@ and perturbations from an 18 Earth-mass companion planet. The bottom right panel
 constructed to be similar to Figure 2 of `Winn & Holman (2005) <https://ui.adsabs.harvard.edu/abs/2005ApJ...628L.159W/abstract>`_.
 
 .. figure:: CassiniStatesSection.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Phase space of the three prograde Cassini states (numbered). The gray curves

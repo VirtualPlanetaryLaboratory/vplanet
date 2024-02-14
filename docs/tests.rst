@@ -13,43 +13,18 @@ is sufficient time to ensure that integration is accurate. Unit tests are also
 used to track the amount of the code that is executed over the sum of all tests,
 further enabling confidence in the code's accuracy.
 
-Test scripts live in the :code:`tests/` directory in the top-level repo folder.
-Tests are executed automatically on Travis using :code:`py.test`, which will
+Test scripts live in the :code:`tests/` directory and are executed automatically 
+on every pull request with GitHub Actions. To perform the tests, we use :code:`pytest`, which will
 find all Python files with the word :code:`test` somewhere in their name (side note:
 if it's not meant to be a test, don't put :code:`test` in the file name!).
-The :code:`py.test` suite specifically checks for cases where an :code:`AssertionError`
-is raised, so in your tests you should use :code:`assert` statements to check whether
-the output is equal to (or very close to) a benchmarked value.
 
-To write a test, create a directory in :code:`tests/` with a descriptive name
-(such as the modules it's meant to test or a specific application of the code).
-Include the :code:`.in` files needed to run the test and create a Python
-file :code:`test_<TEST_NAME>.py`. This file should follow this basic structure:
+The VPLanet team has made it easy to add or revise tests. Inside the :code:`tests/` directory
+is a file called :code:`maketest.py`, which will generate a unit test from a set of valid infiles.
+So a typical procedure to create a new test is to:
 
-.. code-block:: python
-
-    import vplanet
-    import numpy as np
-    import pathlib
-
-    # Path to this directory
-    path = pathlib.Path(__file__).parents[0].absolute()
-
-    def test_something():
-        """Brief description of what we're testing."""
-        # Run vplanet
-        output = vplanet.run(path / "vpl.in")
-
-        # Run our comparisons
-        assert np.isclose(output.log.final.planet.Eccentricity, 0)
-        assert np.isclose(output.log.final.system.TotEnergy, output.log.initial.system.TotEnergy)
-        assert np.allclose(output.star.Luminosity, np.array([0.0672752 , 0.0672752 , 0.0080845...]))
-
-In the example above, we're checking three things: that the final planet
-eccentricity (from the log file) is zero; that the final system energy
-(from the log file) is equal to the initial system energy; and that
-the star's luminosity (from the forward file) is equal to some array of
-values.
+- Create a simulation that executes previously untested functionality
+- Verify the results are accurate! (Obvious, we know, but please don't forget!)
+- Copy the .in files t
 
 These unit tests not only ensure new modification don't break parts of the code
 that already work. In addition, they are used to compute the fraction of the code

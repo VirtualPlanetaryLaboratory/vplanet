@@ -36,7 +36,7 @@ Expected output
 ---------------
 
 .. figure:: EarthClimateSeasons.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Insolation (upper left), surface temperature (upper right), ice mass balance
@@ -46,7 +46,7 @@ represent *potential* melting, i.e. this value is calculated even in the
 absence of ice on the surface.
 
 .. figure:: EarthClimateMilankovitch.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Earth's orbital, rotational, and climate evolution over 1 Myr. The orbital and rotational evolution are modified by all the planets in the Solar System, and the Moon is included by forcing the Earth's precessional frequency to match the observed rate. CPP is the "climate precession parameter." The bottom four panels show key properties of the climate state, as indicated by the color bars and axes on the right. Compare to Fig. 4 in `(Huybers & Tzipermann 2008) <https://ui.adsabs.harvard.edu/abs/2008PalOc..23.1208H/abstract>`_.

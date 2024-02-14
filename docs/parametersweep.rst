@@ -189,7 +189,7 @@ Extracting and Plotting with :code:`BigPlanet`
 After you have compressed your data, you need to access it. To accomplish this goal,
 :code:`BigPlanet` is also a python module that can be imported into python scripts for the
 extraction of data from the HDF5 file. For our example, final inner core radius as a function of
-current potassium-40 abundance in the core and the initial core temerature, the script looks like
+current potassium-40 abundance in the core and the initial core temperature, the script looks like
 this:
 
 .. code-block:: python
@@ -276,7 +276,7 @@ where:
 
 *header* adds the names and units for each column (default is False)
 
-*ulysses* makes the file compatable with `VR Ulysses <https://www.vrulysses.com/>`_ (default is 0)
+*ulysses* makes the file compatible with `VR Ulysses <https://www.vrulysses.com/>`_ (default is 0)
 
 
 You are now ready to efficiently explore your parameter space!

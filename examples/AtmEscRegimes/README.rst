@@ -30,7 +30,7 @@ Expected output
 ---------------
 
 .. figure:: AtmEscRegimes.png
-   :width: 600px
+   :width: 100%
    :align: center
 
    Evolution of the H envelope mass fraction (top left), time derivative of the
@@ -55,7 +55,7 @@ Expected output
    escape.
 
 .. figure:: AtmEscRegimesZoom.png
-    :width: 600px
+    :width: 100%
     :align: center
 
     First 10,000 years of atmospheric mass-loss for the Bondi-limited (red) and

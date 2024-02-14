@@ -1,0 +1,11 @@
+# sun parameters
+sName        sun
+dMass        0.1
+dRadius      0.00135
+dLuminosity  -1
+sStellarModel none
+saModules    stellar eqtide
+saTidePerts  tidalearth
+
+dTidalQ       1e6
+dK2           1.5

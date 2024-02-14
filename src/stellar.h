@@ -33,6 +33,7 @@
 #define STELLAR_MODEL_CONST 3
 #define STELLAR_MODEL_RIBAS 4
 #define STELLAR_MODEL_PROXIMACEN 5
+#define STELLAR_MODEL_SINEWAVE 6
 
 #define STELLAR_DJDT_NONE                                                      \
   0 /**< No stellar angular momentum loss via magnetic braking */
@@ -63,6 +64,10 @@
 
 #define OPT_EVOVLERG                                                           \
   1522 /**< Whether or not to evolve stellar radius of gyration */
+
+#define OPT_LUMAMPLITUDE 1550
+#define OPT_LUMPERIOD 1555
+#define OPT_LUMPHASE 1560
 
 /* Halt Functions */
 #define STELLARHALTSYSEND 5
@@ -149,6 +154,7 @@ void fnForceBehaviorStellar(BODY *, MODULE *, EVOLVE *, IO *, SYSTEM *,
 double fdLuminosity(BODY *, SYSTEM *, int *);
 double fdLuminosityFunctionBaraffe(double, double);
 double fdLuminosityFunctionProximaCen(double, double);
+double fdLuminosityFunctionSineWave(BODY *, int);
 double fdRadius(BODY *, SYSTEM *, int *);
 double fdRadGyra(BODY *, SYSTEM *, int *);
 double fdRadiusFunctionBaraffe(double, double);

@@ -29,7 +29,7 @@ Expected output
 ---------------
 
 .. figure:: Lopez12CPL.png
-    :width: 600px
+    :width: 100%
     :align: center
 
     Evolution of planets losing a hydrogen envelope, as modeled by Lopez

@@ -67,7 +67,7 @@ C Code formatting
   The top-level directory contains the file .clang-format that contains
   instructions for a program to enforce some C code formatting with the `clangformat
   <https://clang.llvm.org/docs/ClangFormat.html>`_ package. You can code up your
-  changes and then run this command afterwards to fix many (but not al) formatting
+  changes and then run this command afterwards to fix many (but not all) formatting
   problems.
 
 Comments

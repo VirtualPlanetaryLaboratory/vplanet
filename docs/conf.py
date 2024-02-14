@@ -106,6 +106,16 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
     html_theme_path = ['.themes', ]
     html_theme_options = {"display_version": True}
 
+# -- Options for HTML output ----------------------------------------------
+
+# The theme to use for HTML and HTML Help pages.  See the documentation for
+# a list of builtin themes.
+#
+if not on_rtd:  # only import and set the theme if we're building docs locally
+    html_theme = 'sphinx_rtd_theme'
+    html_theme_path = ['.themes', ]
+    html_theme_options = {"display_version": True}
+
 html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme

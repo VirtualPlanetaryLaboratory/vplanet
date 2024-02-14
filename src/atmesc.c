@@ -980,6 +980,7 @@ void ReadConstWatOutgassFlux(BODY *body, CONTROL *control, FILES *files,
 }
 
 /**
+<<<<<<< HEAD
 Read the planet's Initial water outgassing flux.
 
 @param body A pointer to the current BODY instance
@@ -1048,6 +1049,8 @@ void ReadWatOutgassExpDecayRate(BODY *body, CONTROL *control, FILES *files,
 }
 
 /**
+=======
+>>>>>>> 61aabd5a (Adding constant oxygen removal option)
 Read the oxygen removal model
 
 @param body A pointer to the current BODY instance

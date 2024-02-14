@@ -108,6 +108,8 @@ pulsar planet system PSR1257+12. [AtmEsc, SpiNBody]
 
 `BinaryTides <BinaryTides>`_: Coupled stellar and tidal evolution of short-period binary stars. [EqTide, STELLAR]
 
+`LuminosityCycle <LuminosityCycle>`_: Force the luminosity and effective temperature to oscillate with time. Also shows how to force them to be constant.
+
 `MagneticBraking <MagneticBraking>`_: Rotational evolution of stars under different magnetic braking assumptions. [STELLAR]
 
 `STEEP <STEEP>`_: Tidal evolution of a binary star, including the instability radius for circumbinary planets. [EqTide, STELLAR]

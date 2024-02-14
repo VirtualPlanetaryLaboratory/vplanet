@@ -44,6 +44,8 @@
 
 #define OXYREMOVAL_NONE 17 /**< Flag: No oxygen removal (Default)*/
 #define OXYREMOVAL_CONSTANT 18 /**< Flag: Constant oxygen removal model*/
+#define OXYREMOVAL_GIALLUCA24 20 /**< Flag: Oxygen removal model of Gialluca (2024) - \
+            constant removal during magma ocean followed by exp decay*/
 
 /* Options Info */
 #define OPTSTARTATMESC 1200     /**< Start of AtmEsc options */

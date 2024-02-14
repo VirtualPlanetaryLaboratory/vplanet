@@ -1338,15 +1338,35 @@ Initializes the differential equation matrix for the surface water mass.
 void VerifySurfaceWaterMass(BODY *body, OPTIONS *options, UPDATE *update,
                             double dAge, int iBody) {
 
-  update[iBody].iaType[update[iBody].iSurfaceWaterMass][0]     = 1;
-  update[iBody].iNumBodies[update[iBody].iSurfaceWaterMass][0] = 1;
-  update[iBody].iaBody[update[iBody].iSurfaceWaterMass][0] =
-        malloc(update[iBody].iNumBodies[update[iBody].iSurfaceWaterMass][0] *
-               sizeof(int));
-  update[iBody].iaBody[update[iBody].iSurfaceWaterMass][0][0] = iBody;
-
+  update[iBody].iaType[update[iBody].iSurfaceWaterMass]
+            [update[iBody].iSurfaceWaterMassLoss]     = 1;
+  update[iBody].iNumBodies[update[iBody].iSurfaceWaterMass]
+            [update[iBody].iSurfaceWaterMassLoss] = 1;
+  update[iBody].iaBody[update[iBody].iSurfaceWaterMass]
+            [update[iBody].iSurfaceWaterMassLoss] =
+                  malloc(update[iBody].iNumBodies[update[iBody].iSurfaceWaterMass]
+                        [update[iBody].iSurfaceWaterMassLoss] *
+                              sizeof(int));
+  update[iBody].iaBody[update[iBody].iSurfaceWaterMass]
+            [update[iBody].iSurfaceWaterMassLoss][0] = iBody;
   update[iBody].pdDSurfaceWaterMassDtAtmesc =
-        &update[iBody].daDerivProc[update[iBody].iSurfaceWaterMass][0];
+        &update[iBody].daDerivProc[update[iBody].iSurfaceWaterMass]
+              [update[iBody].iSurfaceWaterMassLoss];
+
+  update[iBody].iaType[update[iBody].iSurfaceWaterMass]
+            [update[iBody].iSurfaceWaterMassOutgas]     = 1;
+  update[iBody].iNumBodies[update[iBody].iSurfaceWaterMass]
+            [update[iBody].iSurfaceWaterMassOutgas] = 1;
+  update[iBody].iaBody[update[iBody].iSurfaceWaterMass]
+            [update[iBody].iSurfaceWaterMassOutgas] =
+                  malloc(update[iBody].iNumBodies[update[iBody].iSurfaceWaterMass]
+                        [update[iBody].iSurfaceWaterMassOutgas] *
+                              sizeof(int));
+  update[iBody].iaBody[update[iBody].iSurfaceWaterMass]
+            [update[iBody].iSurfaceWaterMassOutgas][0] = iBody;
+  update[iBody].pdDSurfaceWaterMassDtAtmescOutgas =
+        &update[iBody].daDerivProc[update[iBody].iSurfaceWaterMass]
+              [update[iBody].iSurfaceWaterMassOutgas];
 }
 
 /**
@@ -2105,8 +2125,12 @@ to the magical matrix of function pointers.
 void AssignAtmEscDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
                              fnUpdateVariable ***fnUpdate, int iBody) {
   if (body[iBody].dSurfaceWaterMass > 0) {
-    fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] =
-          &fdDSurfaceWaterMassDt;
+    fnUpdate[iBody][update[iBody].iSurfaceWaterMass]
+            [update[iBody].iSurfaceWaterMassLoss] =
+                  &fdDSurfaceWaterMassDt;
+    fnUpdate[iBody][update[iBody].iSurfaceWaterMass]
+            [update[iBody].iSurfaceWaterMassOutgas] =
+                  &fdDSurfaceWaterMassDtOutgas;
     fnUpdate[iBody][update[iBody].iOxygenMass][0] = &fdDOxygenMassDt;
     fnUpdate[iBody][update[iBody].iOxygenMantleMass][0] =
           &fdDOxygenMantleMassDt;
@@ -2157,8 +2181,12 @@ for variables that will not get updated.
 void NullAtmEscDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
                            fnUpdateVariable ***fnUpdate, int iBody) {
   if (body[iBody].dSurfaceWaterMass > 0) {
-    fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] =
-          &fndUpdateFunctionTiny;
+    fnUpdate[iBody][update[iBody].iSurfaceWaterMass]
+              [update[iBody].iSurfaceWaterMassLoss] =
+                    &fndUpdateFunctionTiny;
+    fnUpdate[iBody][update[iBody].iSurfaceWaterMass]
+              [update[iBody].iSurfaceWaterMassOutgas] =
+                    &fndUpdateFunctionTiny;
     fnUpdate[iBody][update[iBody].iOxygenMass][0] = &fndUpdateFunctionTiny;
     fnUpdate[iBody][update[iBody].iOxygenMantleMass][0] =
           &fndUpdateFunctionTiny;
@@ -2435,6 +2463,7 @@ void InitializeUpdateAtmEsc(BODY *body, UPDATE *update, int iBody) {
       update[iBody].iNumVars++;
     }
     update[iBody].iNumSurfaceWaterMass++;
+    update[iBody].iNumSurfaceWaterMass++;
 
     if (update[iBody].iNumOxygenMass == 0) {
       update[iBody].iNumVars++;
@@ -2497,7 +2526,9 @@ which variables get updated every time step.
 void FinalizeUpdateSurfaceWaterMassAtmEsc(BODY *body, UPDATE *update, int *iEqn,
                                           int iVar, int iBody, int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = ATMESC;
-  update[iBody].iNumSurfaceWaterMass  = (*iEqn)++;
+  //update[iBody].iNumSurfaceWaterMass  = (*iEqn)++;
+  update[iBody].iSurfaceWaterMassLoss = (*iEqn)++;
+  update[iBody].iSurfaceWaterMassOutgas = (*iEqn)++;
 }
 
 /**
@@ -2749,6 +2780,32 @@ void WriteSurfaceWaterMass(BODY *body, CONTROL *control, OUTPUT *output,
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
+  }
+}
+
+/**
+   Write rate of change of water outgassing
+
+   @param body Body struct
+   @param control Control struct
+   @param output Output struct
+   @param system System struct
+   @param units Units struct
+   @param update Update struct
+   @param iBody Index of body
+   @param dTmp Temporary variable
+   @param cUnit Units
+*/
+void WriteSurfaceWaterMassDtOutgas(BODY *body, CONTROL *control, OUTPUT *output,
+                                SYSTEM *system, UNITS *units, UPDATE *update,
+                                int iBody, double *dTmp, char cUnit[]) {
+  *dTmp = *(update[iBody].pdDSurfaceWaterMassDtAtmescOutgas);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime, cUnit);
   }
 }
 
@@ -3573,6 +3630,55 @@ void WriteWaterAtmMixingRatio(BODY *body, CONTROL *control, OUTPUT *output,
 }
 
 /**
+Logs the atmospheric mass loss rate.
+
+\warning This routine is currently broken.
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteUserSurfaceWaterMassDtOutgas(BODY *body, CONTROL *control, OUTPUT *output,
+                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                     double *dTmp, char cUnit[]) {
+  *dTmp = body[iBody].dConstWaterOutgassFlux;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    //*dTmp *= fdUnitsTime(units->iTime)/fdUnitsMass(units->iMass);
+    strcpy(cUnit, "kg/s");
+  }
+}
+
+/**
+Logs the Water outgassing model
+
+@param body A pointer to the current BODY instance
+@param control A pointer to the current CONTROL instance
+@param output A pointer to the current OUTPUT instance
+@param system A pointer to the current SYSTEM instance
+@param units A pointer to the current UNITS instance
+@param update A pointer to the current UPDATE instance
+@param iBody The current body Number
+@param dTmp Temporary variable used for unit conversions
+@param cUnit The unit for this variable
+*/
+void WriteWatOutgasModel(BODY *body, CONTROL *control, OUTPUT *output,
+                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                        double *dTmp, char cUnit[]) {
+  *dTmp = body[iBody].iWaterOutgassModel;
+  strcpy(cUnit, "");
+}
+
+/**
 Set up stuff to be logged for atmesc.
 
 @param output A pointer to the current OUTPUT instance
@@ -3859,6 +3965,43 @@ void InitializeOutputAtmEsc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_XH2O].iNum       = 1;
   output[OUT_XH2O].iModuleBit = ATMESC;
   fnWrite[OUT_XH2O]           = &WriteWaterAtmMixingRatio;
+
+  /** Megan addition: water outgassing flux */
+  sprintf(output[OUT_WATOUTGASFLUX].cName, "WaterOutgassDT");
+  sprintf(output[OUT_WATOUTGASFLUX].cDescr,
+          "Water outgassing rate");
+  sprintf(output[OUT_WATOUTGASFLUX].cNeg, "TO/Gyr");
+  output[OUT_WATOUTGASFLUX].bNeg = 1.;
+  output[OUT_WATOUTGASFLUX].dNeg =
+        (1.e9*YEARSEC) / TOMASS; // kg/s -> mol of water per year
+  output[OUT_WATOUTGASFLUX].iNum       = 1;
+  output[OUT_WATOUTGASFLUX].iModuleBit = ATMESC;
+  fnWrite[OUT_WATOUTGASFLUX]           = &WriteSurfaceWaterMassDtOutgas;
+
+  /** Megan addition: user defined water outgassing flux 
+      (for debugging purposes)*/
+  sprintf(output[OUT_USERWATOUTGASFLUX].cName, "UserConstWaterOutgassDT");
+  sprintf(output[OUT_USERWATOUTGASFLUX].cDescr,
+          "User Defined Water outgassing rate");
+  sprintf(output[OUT_USERWATOUTGASFLUX].cNeg, "TO/Gyr");
+  output[OUT_USERWATOUTGASFLUX].bNeg = 1.;
+  output[OUT_USERWATOUTGASFLUX].dNeg =
+        (1.e9*YEARSEC) / TOMASS; // kg/s -> mol of water per year
+  output[OUT_USERWATOUTGASFLUX].iNum       = 1;
+  output[OUT_USERWATOUTGASFLUX].iModuleBit = ATMESC;
+  fnWrite[OUT_USERWATOUTGASFLUX]           = &WriteUserSurfaceWaterMassDtOutgas;
+
+  /** Megan addition: user def water outgassing model (none or constant)
+        (for debugging purposes)*/
+  sprintf(output[OUT_WATOUTGASMODEL].cName, "WatOutgassModel");
+  sprintf(output[OUT_WATOUTGASMODEL].cDescr,
+          "Water Outgassing Model (none or constant)");
+  output[OUT_WATOUTGASMODEL].bNeg       = 0;
+  output[OUT_WATOUTGASMODEL].iNum       = 1;
+  output[OUT_WATOUTGASMODEL].iModuleBit = ATMESC;
+  fnWrite[OUT_WATOUTGASMODEL]           = &WriteWatOutgasModel;
+
+
 }
 
 /************ ATMESC Logging Functions **************/
@@ -3987,9 +4130,31 @@ double fdDSurfaceWaterMassDt(BODY *body, SYSTEM *system, int *iaBody) {
            body[iaBody[0]].dMDotWater;
   } else {
 
-    return 0.;
+    return dTINY;
   }
 }
+
+/**
+The rate of change of surface water mass due to constant outgassing.
+MTG Addition
+
+@param body A pointer to the current BODY instance
+@param system A pointer to the current SYSTEM instance
+@param iaBody An array of body indices. The current body is index 0.
+*/
+double fdDSurfaceWaterMassDtOutgas(BODY *body, SYSTEM *system, int *iaBody){
+
+  if (body[iaBody[0]].iWaterOutgassModel == WATOUTGASS_CONSTANT){
+
+    return body[iaBody[0]].dConstWaterOutgassFlux;
+
+  } else {
+
+    return dTINY;
+
+  }
+}
+
 
 /**
 The rate of change of the oxygen mass in the atmosphere.

@@ -5055,8 +5055,7 @@ double fdAtomicOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
   double NO2  = dOxygenMass / (32 * ATOMMASS);
   double NH2O = dSurfaceWaterMass / (18 * ATOMMASS);
   if (NH2O > 0) {
-    return 1. / (1 + 1. / (0.5 + NO2 / NH2O));
-    //return (2*NO2)/((2*NO2) + NH2O);
+    return 1. / (1 + (0.5 * (NH2O / NO2)));
   } else {
     if (NO2 > 0) {
       return 1.;
@@ -5077,7 +5076,7 @@ double fdMolecOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
   // Mixing ratio X_O of atomic oxygen in the upper atmosphere
   // assuming atmosphere is well-mixed up to the photolysis layer
   // XXX Hack to make envelope losses behave
-  if (dSurfaceWaterMass > 0) {
+  if (dOxygenMass > 0) {
     double NO2  = dOxygenMass / (32 * ATOMMASS);
     double NH2O = dSurfaceWaterMass / (18 * ATOMMASS);
     return NO2 / (NO2 + NH2O);

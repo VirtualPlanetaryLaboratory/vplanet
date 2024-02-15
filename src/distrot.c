@@ -2118,13 +2118,19 @@ external model
 @return Derivative dx/dt
 */
 double fndDistRotExtDxDt(BODY *body, SYSTEM *system, int *iaBody) {
-  double y;
+  double y, dprec;
   y = fabs(1.0 - (body[iaBody[0]].dXobl * body[iaBody[0]].dXobl) -
            (body[iaBody[0]].dYobl * body[iaBody[0]].dYobl));
 
+  if (body[iaBody[0]].bForcePrecRate == 0) {
+    dprec = fndCentralTorqueR(body, iaBody[0]);
+  } else {
+    dprec = body[iaBody[0]].dPrecRate;
+  }
+
   return fndObliquityAExt(body, system, iaBody) * sqrt(y) +
          body[iaBody[0]].dYobl * 2. * fndObliquityCExt(body, system, iaBody) -
-         body[iaBody[0]].dYobl * fndCentralTorqueR(body, iaBody[0]);
+         body[iaBody[0]].dYobl * dprec;
 }
 
 /**
@@ -2136,13 +2142,19 @@ external model
 @return Derivative dy/dt
 */
 double fndDistRotExtDyDt(BODY *body, SYSTEM *system, int *iaBody) {
-  double y;
+  double y, dprec;
   y = fabs(1.0 - (body[iaBody[0]].dXobl * body[iaBody[0]].dXobl) -
            (body[iaBody[0]].dYobl * body[iaBody[0]].dYobl));
 
+  if (body[iaBody[0]].bForcePrecRate == 0) {
+    dprec = fndCentralTorqueR(body, iaBody[0]);
+  } else {
+    dprec = body[iaBody[0]].dPrecRate;
+  }
+
   return -fndObliquityBExt(body, system, iaBody) * sqrt(y) -
          body[iaBody[0]].dXobl * 2. * fndObliquityCExt(body, system, iaBody) +
-         body[iaBody[0]].dXobl * fndCentralTorqueR(body, iaBody[0]);
+         body[iaBody[0]].dXobl * dprec;
 }
 
 /**

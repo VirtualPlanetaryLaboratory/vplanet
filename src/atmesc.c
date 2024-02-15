@@ -5054,14 +5054,10 @@ double fdAtomicOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
   // assuming atmosphere is well-mixed up to the photolysis layer
   double NO2  = dOxygenMass / (32 * ATOMMASS);
   double NH2O = dSurfaceWaterMass / (18 * ATOMMASS);
-  if (NH2O > 0) {
+  if (NO2 > 0) {
     return 1. / (1 + (0.5 * (NH2O / NO2)));
   } else {
-    if (NO2 > 0) {
-      return 1.;
-    } else {
-      return 0.;
-    }
+    return 0.;
   }
 }
 

@@ -5057,11 +5057,7 @@ double fdAtomicOxygenMixingRatio(double dSurfaceWaterMass, double dOxygenMass) {
   if (NH2O > 0) {
     return 1. / (1 + 1. / (0.5 + NO2 / NH2O));
   } else {
-    if (NO2 > 0) {
-      return 1.;
-    } else {
-      return 0.;
-    }
+    return 0.;
   }
 }
 

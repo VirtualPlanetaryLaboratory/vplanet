@@ -465,6 +465,7 @@ void fvForceBehaviorThermint(BODY *, MODULE *, EVOLVE *, IO *, SYSTEM *,
 #define OUT_TMAN 1710 /**< [K] Average mantle temperature */
 #define OUT_TUMAN                                                              \
   1711 /**< [K] Temperature base of upper mantle boundary layer */
+#define OUT_TSOLUMAN 1801 /**< [K] Upper mantle solidus temperature */
 #define OUT_TLMAN                                                              \
   1712 /**< [K] Temperature top of lower mantle boundary layer */
 #define OUT_TCORE 1713 /**< [K] Average core temperature */
@@ -593,6 +594,8 @@ void fvFinalizeOutputFunctionThermint(OUTPUT *, int, int);
 void fvWriteTMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
                  double *, char[]);
 void fvWriteTUMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
+                  double *, char[]);
+void fvWriteTsolUMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
                   double *, char[]);
 void fvWriteTLMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
                   double *, char[]);

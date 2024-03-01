@@ -572,8 +572,9 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLAREBANDPASS].bMultiFile = 1;
   fnRead[OPT_FLAREBANDPASS]             = &ReadFlareBandPass;
   sprintf(options[OPT_FLAREBANDPASS].cLongDescr,
-          " If UV or GOES is selected, the code will convert \n"
-        /*  " the input energy of flares from the UV band \n"
+          /*
+          "If UV or GOES is selected, the code will convert \n"
+          "the input energy of flares from the UV band \n"
           "(3000-4300 Å) or GOES band (1-8 Å) to kepler band \n"
           "(4000-9000 Å) to calculate the FFD and to the SXR \n"
           "band (1.24 - 1239.85 Å) to calculate the luminosity.\n"
@@ -592,7 +593,10 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
           "Gunther et al 2020 (https://doi.org/10.3847/1538-3881/ab5d3a). \n"
           "If the BOLOMETRIC its selected, the code will convert the input \n"
           "energy of flares using the convertion values are taken \n"
-          "from Osten and Wolk (2015) (doi:10.1088/0004-637X/809/1/79).\n"*/);
+          "from Osten and Wolk (2015) (doi:10.1088/0004-637X/809/1/79).\n"
+          */
+          "Currently suppressed due to execution errors."
+  );
   /*
     sprintf(options[OPT_FLARESLOPEUNITS].cName, "sFlareSlopeUnits");
     sprintf(options[OPT_FLARESLOPEUNITS].cDescr,

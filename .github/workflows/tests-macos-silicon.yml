@@ -33,7 +33,9 @@ jobs:
 
       - name: Run tests
         if: steps.setup_python.outcome == 'success'
-        run: make test
+        run: |
+          make opt
+          pytest
 
       - name: Get unique id
         uses: Tiryoh/gha-jobid-action@v1

@@ -33,6 +33,9 @@
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-linux.yml/badge.svg">
   <img src="https://img.shields.io/badge/Ubuntu%2020-Python%203.6--3.11-7d93c7.svg">
   <img src="https://img.shields.io/badge/Ubuntu%2022-Python%203.7--3.11-7d93c7.svg">
+  <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml">
+    <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg">
+  </a>
   <br>
   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-macos-intel.yml">
     <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-macos-intel.yml/badge.svg">
@@ -58,9 +61,7 @@
     <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml/badge.svg">
   </a>
   <img src="https://img.shields.io/badge/Python-3.6%20--%203.11-7d93c7.svg">
-  <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml">
-    <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg">
-  </a>
+  
   <br>
   
 </p>

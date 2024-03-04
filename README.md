@@ -17,11 +17,19 @@
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet/conduct.html">
     <img src="https://img.shields.io/badge/Code%20of-Conduct-7d93c7.svg">
   </a>
+  <a href="http://ascl.net/1811.017">
+    <img src="https://img.shields.io/badge/ASCL-1811.017-orange.svg?colorB=orange" alt="ascl:1811.017">
+  </a>
+  <a href="https://emac.gsfc.nasa.gov">
+    <img src="https://img.shields.io/badge/EMAC-2207%E2%80%94138-blue.svg">
+  </a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-purple.svg"/>
+  </a>
   <a href="https://www.youtube.com/@VPLanetCode/playlists">
     <img src="https://img.shields.io/badge/You-Tube-darkred.svg">
   </a>
   <br>
-  <img src="https://img.shields.io/badge/Unit%20Tests-17,621-darkblue.svg">
+  <img src="https://img.shields.io/badge/Unit%20Tests-17,632-darkblue.svg">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-linux.yml/badge.svg">
   <img src="https://img.shields.io/badge/Ubuntu%2020-Python%203.6--3.11-7d93c7.svg">
   <img src="https://img.shields.io/badge/Ubuntu%2022-Python%203.7--3.11-7d93c7.svg">
@@ -42,7 +50,7 @@
   <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">
     <img src="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet/branch/main/graph/badge.svg?token=3LFJQO1M6H">
   </a>
-  <br>
+
   <a href="examples">
     <img src="https://img.shields.io/badge/Examples-41-darkblue.svg">
   </a>
@@ -54,14 +62,7 @@
     <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg">
   </a>
   <br>
-  <a href="http://ascl.net/1811.017">
-    <img src="https://img.shields.io/badge/ASCL-1811.017-orange.svg?colorB=orange" alt="ascl:1811.017">
-  </a>
-  <a href="https://emac.gsfc.nasa.gov">
-    <img src="https://img.shields.io/badge/EMAC-2207%E2%80%94138-blue.svg">
-  </a>
-    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-purple.svg"/>
-  </a>
+  
 </p>
 
 ### Overview

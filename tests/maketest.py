@@ -481,9 +481,6 @@ def WriteTestFile(data, dirname, stellar):
     # Tests are two subdirs down
     dirs = dirname.split("/")
 
-    if stellar:
-        print("stellar")
-
     test_file = "test_" + dirs[1] + ".py"
     t = open(test_file, "w")
     try:

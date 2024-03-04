@@ -14,9 +14,10 @@
 
 void InitializeControlEqtide(CONTROL *control, int iBody) {
 
-  /* We only want to initialize these values once, but if the user fails to
+  /* XXX We only want to initialize these values once, but if the user fails to
      instantiate eqtide for body 0, then the code segaults and fixing this is
-     hard. So we just re-malloc.
+     hard. So we just re-malloc. This block of code causes memory to be permanently
+     lost, so should be fixed someday!
      */
   control->Evolve.bForceEqSpin =
         malloc(control->Evolve.iNumBodies * sizeof(int));
@@ -2788,16 +2789,21 @@ void WriteEqRotRateDiscrete(BODY *body, CONTROL *control, OUTPUT *output,
   }
 }
 
+// Equilibrium Tidal Power
 void WriteEqTidePower(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                       double *dTmp, char cUnit[]) {
 
   int iOrbiter = fiAssignTidalOrbiter(body, iBody);
-  // Why is this Eq??????? XXX
   if (control->Evolve.iEqtideModel == CPL) {
-    *dTmp = fdCPLTidePowerEq(body[iBody].dTidalZ[iOrbiter], body[iBody].dEccSq,
+    if (body[iBody].iTidePerts == 1) {
+      int iPert = body[iBody].iaTidePerts[0];
+      *dTmp = fdCPLTidePowerEq(body[iBody].dTidalZ[iPert], body[iBody].dEccSq,
                              body[iBody].dMeanMotion, body[iBody].dObliquity,
                              control->Evolve.bDiscreteRot);
+    } else {
+      *dTmp = -1;
+    }
   } else {
     // XXX Add CTL functions
     *dTmp = -1;
@@ -3433,7 +3439,9 @@ void LogBodyEqtide(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   fprintf(fp, "----- EQTIDE PARAMETERS (%s)------\n", body[iBody].cName);
   for (iOut = iStart; iOut < OUTENDEQTIDE; iOut++) {
     if (output[iOut].iNum > 0) {
+      // fprintf(stderr,"iBody = %d\n",iBody);
       // fprintf(stderr,"iOut = %d.\n",iOut);
+      // fflush(stdout);
       WriteLogEntry(body, control, &output[iOut], system, update, fnWrite[iOut],
                     fp, iBody);
     }
@@ -3798,6 +3806,8 @@ double fdDEdTCPLEqtide(BODY *body, SYSTEM *system, int *iaBody) {
   double dDEDt;
 
   dDEDt = fdCPLTidePower(body, iBody);
+  // printf("dEnergyDt: %lf\n", dDEDt);
+  // fflush(stdout);
   return dDEDt;
 }
 
@@ -3963,8 +3973,8 @@ double fdCPLTidePower(BODY *body, int iBody) {
 
     // Does this work with DF's changes to da/dt with the synchronous case?
     // See Fleming et al., 2018
-    // fprintf(stderr,"\niBody: %d\n",iBody);
-    // fprintf(stderr,"TidalZ[%d]: %lf\n",iIndex,body[iBody].dTidalZ[iIndex]);
+    //fprintf(stderr,"\niBody: %d\n",iBody);
+    //fprintf(stderr,"TidalZ[%d]: %lf\n",iIndex,body[iBody].dTidalZ[iIndex]);
 
     dOrbPow += -body[iBody].dTidalZ[iIndex] / 8 *
                (4 * body[iBody].iTidalEpsilon[iIndex][0] +
@@ -3976,6 +3986,7 @@ double fdCPLTidePower(BODY *body, int iBody) {
                 4 * sin(body[iBody].dObliquity) * sin(body[iBody].dObliquity) *
                       (body[iBody].iTidalEpsilon[iIndex][0] -
                        body[iBody].iTidalEpsilon[iIndex][8]));
+    //fprintf(stderr,"dOrbPow: %lf\n",dOrbPow);
     dRotPow +=
           body[iBody].dTidalZ[iIndex] * body[iBody].dRotRate /
           (8 * body[iOrbiter].dMeanMotion) *
@@ -3987,6 +3998,7 @@ double fdCPLTidePower(BODY *body, int iBody) {
                  (-2 * body[iBody].iTidalEpsilon[iIndex][0] +
                   body[iBody].iTidalEpsilon[iIndex][8] +
                   body[iBody].iTidalEpsilon[iIndex][9]));
+    //fprintf(stderr,"dRotPow: %lf\n",dRotPow);
   }
 
   return dOrbPow + dRotPow;

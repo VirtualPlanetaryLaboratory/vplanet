@@ -44,12 +44,12 @@ saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
     -MeltMassFluxMan -FMeltUMan $
     -MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad $
     -BLUMan -BLLMan $
-    -238UPowerMan -238UNumMan -238UMassMan -238UPowerCore -238UNumCore -238UMassCore $
-    -238UPowerCrust -238UNumCrust -238UMassCrust $
-    -235UPowerMan -235UNumMan -235UMassMan -235UPowerCore -235UNumCore -235UMassCore $
-    -235UPowerCrust -235UNumCrust -235UMassCrust $
-    -232ThPowerMan -232ThNumMan -232ThMassMan -232ThPowerCore -232ThNumCore -232ThMassCore $
-    -232ThPowerCrust -232ThNumCrust -232ThMassCrust $
-    -40KPowerMan -40KNumMan -40KMassMan -40KPowerCore -40KNumCore -40KMassCore $
-    -40KPowerCrust -40KNumCrust -40KMassCrust ChiOC ChiIC MassChiOC MassChiIC MassOC MassIC $
+    -238UPowerMan -238UMassMan -238UPowerCore -238UMassCore $
+    -238UPowerCrust -238UMassCrust $
+    -235UPowerMan -235UMassMan -235UPowerCore -235UMassCore $
+    -235UPowerCrust -235UMassCrust $
+    -232ThPowerMan -232ThMassMan -232ThPowerCore -232ThMassCore $
+    -232ThPowerCrust -232ThMassCrust $
+    -40KPowerMan -40KMassMan -40KPowerCore -40KMassCore $
+    -40KPowerCrust -40KMassCrust ChiOC ChiIC MassChiOC MassChiIC MassOC MassIC $
     -RadPowerTotal

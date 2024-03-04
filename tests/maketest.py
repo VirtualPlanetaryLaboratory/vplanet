@@ -496,7 +496,7 @@ def WriteTestFile(data, dirname, stellar):
                 if "Order" in k or v[1] == "inf":
                     continue
 
-                # this means its from a output file
+                # this means its from an output file
                 if "log" not in k and v[0] != "":
                     t.write(
                         '       "'

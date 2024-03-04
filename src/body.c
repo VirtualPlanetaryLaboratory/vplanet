@@ -1494,3 +1494,38 @@ double fdEffectiveTemperature(BODY *body,int iBody) {
   double dTeff = pow((body[iBody].dLuminosity/(4*PI*SIGMA*body[iBody].dRadius*body[iBody].dRadius)),0.25);
   return dTeff;
 }
+
+double* fdaRotationalAngularMomentum(BODY *body,int iBody) {
+  int i;
+  double obliq,inc,longa,eqnode,Lnorm;
+
+  body[iBody].daLRot[0] = 0.0;
+  body[iBody].daLRot[1] = 0.0;
+  body[iBody].daLRot[2] = 1.0;
+  obliq                 = atan2(sqrt(body[iBody].dXobl * body[iBody].dXobl +
+                                     body[iBody].dYobl * body[iBody].dYobl),
+                                body[iBody].dZobl);
+
+  inc = 2 * asin(sqrt((body[iBody].dPinc * body[iBody].dPinc) +
+                      (body[iBody].dQinc * body[iBody].dQinc)));
+
+  longa = atan2(body[iBody].dPinc, body[iBody].dQinc);
+  RotateVector(body[iBody].daLRot, body[iBody].daLRotTmp, -obliq, 0);
+  eqnode = 2 * PI - atan2(body[iBody].dYobl, body[iBody].dXobl) - longa;
+  RotateVector(body[iBody].daLRotTmp, body[iBody].daLRot, eqnode, 2);
+  RotateVector(body[iBody].daLRot, body[iBody].daLRotTmp, inc, 0);
+  RotateVector(body[iBody].daLRotTmp, body[iBody].daLRot, longa, 2);
+
+  cross(body[iBody].daLRot, body[iBody].daLOrb, body[iBody].daLRotTmp);
+  Lnorm = sqrt(body[iBody].daLRotTmp[0] * body[iBody].daLRotTmp[0] +
+               body[iBody].daLRotTmp[1] * body[iBody].daLRotTmp[1] +
+               body[iBody].daLRotTmp[2] * body[iBody].daLRotTmp[2]);
+
+  if (Lnorm != 0) {
+    for (i = 0; i < 3; i++) {
+      body[iBody].daLRotTmp[i] /= Lnorm;
+    }
+  }
+
+  return body[iBody].daLRotTmp;
+}

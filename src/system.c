@@ -1065,3 +1065,50 @@ void fdMergePlanet(BODY *body, UPDATE *update, fnUpdateVariable ***fnUpdate,
   body[iBody].dMass = 0;
   body[iBody].dSemi = body[0].dRadius;
 }
+
+double* fdaOrbitalAngularMomentum(BODY *body,CONTROL *control,SYSTEM *system,int iBody) {
+  int i,jBody;
+  double h,inc,longa,Lnorm;
+
+  for (i = 0; i < 3; i++) {
+    system->daLOrb[i] = 0.0;
+  }
+  for (jBody = 1; jBody < control->Evolve.iNumBodies; jBody++) {
+    h = body[jBody].dMass / MSUN * KGAUSS *
+        sqrt((body[0].dMass + body[jBody].dMass) / MSUN * body[jBody].dSemi /
+             AUM *
+             (1. - (body[jBody].dHecc * body[jBody].dHecc) -
+              (body[jBody].dKecc * body[jBody].dKecc)));
+
+    body[jBody].daLOrb[0] = 0.0;
+    body[jBody].daLOrb[1] = 0.0;
+    body[jBody].daLOrb[2] = h;
+
+    inc = 2 * asin(sqrt((body[jBody].dPinc * body[jBody].dPinc) +
+                        (body[jBody].dQinc * body[jBody].dQinc)));
+
+    // rotate about x by inc angle
+    RotateVector(body[jBody].daLOrb, body[jBody].daLOrbTmp, inc, 0);
+    longa = atan2(body[jBody].dPinc, body[jBody].dQinc);
+    // rotate about z by Omega
+    RotateVector(body[jBody].daLOrbTmp, body[jBody].daLOrb, longa, 2);
+    for (i = 0; i < 3; i++) {
+      system->daLOrb[i] += body[jBody].daLOrb[i];
+    }
+  }
+  Lnorm = sqrt(system->daLOrb[0] * system->daLOrb[0] +
+               system->daLOrb[1] * system->daLOrb[1] +
+               system->daLOrb[2] * system->daLOrb[2]);
+  for (i = 0; i < 3; i++) {
+    system->daLOrb[i] /= Lnorm;
+  }
+  Lnorm = sqrt(body[iBody].daLOrb[0] * body[iBody].daLOrb[0] +
+               body[iBody].daLOrb[1] * body[iBody].daLOrb[1] +
+               body[iBody].daLOrb[2] * body[iBody].daLOrb[2]);
+
+  for (i = 0; i < 3; i++) {
+    body[iBody].daLOrb[i] /= Lnorm;
+  }
+
+  return body[iBody].daLOrb;
+}

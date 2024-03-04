@@ -121,6 +121,8 @@ double fdProximaCenBRadius(double, double, double);
 // Lopez et al. (2012) radius evolution
 double fdLopezRadius(double, double, double, double, int);
 
+double* fdaRotationalAngularMomentum(BODY*,int);
+
 // Proxima Cen b radius evolution grid
 static double const daProxCenBComp[] = {0.00001,     0.000100100, 0.000200000,
                                         0.000500000, 0.00100000,  0.00200000,

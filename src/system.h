@@ -51,4 +51,6 @@ double fndUpdateSpiNBodyCoords(BODY *, EVOLVE *);
 
 void fdMergePlanet(BODY *, UPDATE *, fnUpdateVariable ***, int);
 
+double* fdaOrbitalAngularMomentum(BODY*,CONTROL*,SYSTEM*,int);
+
 /* @endcond */

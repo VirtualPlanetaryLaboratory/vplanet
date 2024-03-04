@@ -1261,72 +1261,10 @@ void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
   double h, inc, longa, Lnorm = 0.0, obliq, eqnode;
   int i, jBody;
 
-  for (i = 0; i < 3; i++) {
-    system->daLOrb[i] = 0.0;
-  }
-  for (jBody = 1; jBody < control->Evolve.iNumBodies; jBody++) {
-    h = body[jBody].dMass / MSUN * KGAUSS *
-        sqrt((body[0].dMass + body[jBody].dMass) / MSUN * body[jBody].dSemi /
-             AUM *
-             (1. - (body[jBody].dHecc * body[jBody].dHecc) -
-              (body[jBody].dKecc * body[jBody].dKecc)));
 
-    body[jBody].daLOrb[0] = 0.0;
-    body[jBody].daLOrb[1] = 0.0;
-    body[jBody].daLOrb[2] = h;
+  body[iBody].daLOrb = fdaOrbitalAngularMomentum(body,control,system,iBody);
 
-    inc = 2 * asin(sqrt((body[jBody].dPinc * body[jBody].dPinc) +
-                        (body[jBody].dQinc * body[jBody].dQinc)));
-
-    // rotate about x by inc angle
-    RotateVector(body[jBody].daLOrb, body[jBody].daLOrbTmp, inc, 0);
-    longa = atan2(body[jBody].dPinc, body[jBody].dQinc);
-    // rotate about z by Omega
-    RotateVector(body[jBody].daLOrbTmp, body[jBody].daLOrb, longa, 2);
-    for (i = 0; i < 3; i++) {
-      system->daLOrb[i] += body[jBody].daLOrb[i];
-    }
-  }
-  Lnorm = sqrt(system->daLOrb[0] * system->daLOrb[0] +
-               system->daLOrb[1] * system->daLOrb[1] +
-               system->daLOrb[2] * system->daLOrb[2]);
-  for (i = 0; i < 3; i++) {
-    system->daLOrb[i] /= Lnorm;
-  }
-  Lnorm = sqrt(body[iBody].daLOrb[0] * body[iBody].daLOrb[0] +
-               body[iBody].daLOrb[1] * body[iBody].daLOrb[1] +
-               body[iBody].daLOrb[2] * body[iBody].daLOrb[2]);
-
-  for (i = 0; i < 3; i++) {
-    body[iBody].daLOrb[i] /= Lnorm;
-  }
-  body[iBody].daLRot[0] = 0.0;
-  body[iBody].daLRot[1] = 0.0;
-  body[iBody].daLRot[2] = 1.0;
-  obliq                 = atan2(sqrt(body[iBody].dXobl * body[iBody].dXobl +
-                                     body[iBody].dYobl * body[iBody].dYobl),
-                                body[iBody].dZobl);
-
-  inc   = 2 * asin(sqrt((body[iBody].dPinc * body[iBody].dPinc) +
-                        (body[iBody].dQinc * body[iBody].dQinc)));
-  longa = atan2(body[iBody].dPinc, body[iBody].dQinc);
-  RotateVector(body[iBody].daLRot, body[iBody].daLRotTmp, -obliq, 0);
-  eqnode = 2 * PI - atan2(body[iBody].dYobl, body[iBody].dXobl) - longa;
-  RotateVector(body[iBody].daLRotTmp, body[iBody].daLRot, eqnode, 2);
-  RotateVector(body[iBody].daLRot, body[iBody].daLRotTmp, inc, 0);
-  RotateVector(body[iBody].daLRotTmp, body[iBody].daLRot, longa, 2);
-
-  cross(body[iBody].daLRot, body[iBody].daLOrb, body[iBody].daLRotTmp);
-  Lnorm = sqrt(body[iBody].daLRotTmp[0] * body[iBody].daLRotTmp[0] +
-               body[iBody].daLRotTmp[1] * body[iBody].daLRotTmp[1] +
-               body[iBody].daLRotTmp[2] * body[iBody].daLRotTmp[2]);
-
-  // Probably should assign array elements to 0 if Lnorm = 0
-  if (Lnorm != 0) {
-    for (i = 0; i < 3; i++) {
-      body[iBody].daLRotTmp[i] /= Lnorm;
-    }
-  }
+  body[iBody].daLRotTmp = fdaRotationalAngularMomentum(body,iBody);
 
   cross(system->daLOrb, body[iBody].daLOrb, body[iBody].daLOrbTmp);
   Lnorm = sqrt(body[iBody].daLOrbTmp[0] * body[iBody].daLOrbTmp[0] +
@@ -1361,75 +1299,10 @@ void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
   double h, inc, longa, Lnorm = 0.0, obliq, eqnode;
   int i, jBody;
 
-  for (i = 0; i < 3; i++) {
-    system->daLOrb[i] = 0.0;
-  }
+  body[iBody].daLOrb = fdaOrbitalAngularMomentum(body,control,system,iBody);
 
-  for (jBody = 1; jBody < control->Evolve.iNumBodies; jBody++) {
-    h = body[jBody].dMass / MSUN * KGAUSS *
-        sqrt((body[0].dMass + body[jBody].dMass) / MSUN * body[jBody].dSemi /
-             AUM *
-             (1. - (body[jBody].dHecc * body[jBody].dHecc) -
-              (body[jBody].dKecc * body[jBody].dKecc)));
-
-    body[jBody].daLOrb[0] = 0.0;
-    body[jBody].daLOrb[1] = 0.0;
-    body[jBody].daLOrb[2] = h;
-
-    inc = 2 * asin(sqrt((body[jBody].dPinc * body[jBody].dPinc) +
-                        (body[jBody].dQinc * body[jBody].dQinc)));
-
-    // rotate about x by inc angle
-    RotateVector(body[jBody].daLOrb, body[jBody].daLOrbTmp, inc, 0);
-    longa = atan2(body[jBody].dPinc, body[jBody].dQinc);
-    // rotate about z by Omega
-    RotateVector(body[jBody].daLOrbTmp, body[jBody].daLOrb, longa, 2);
-    for (i = 0; i < 3; i++) {
-      system->daLOrb[i] += body[jBody].daLOrb[i];
-    }
-  }
-  Lnorm = sqrt(system->daLOrb[0] * system->daLOrb[0] +
-               system->daLOrb[1] * system->daLOrb[1] +
-               system->daLOrb[2] * system->daLOrb[2]);
-
-  for (i = 0; i < 3; i++) {
-    system->daLOrb[i] /= Lnorm;
-  }
-  Lnorm = sqrt(body[iBody].daLOrb[0] * body[iBody].daLOrb[0] +
-               body[iBody].daLOrb[1] * body[iBody].daLOrb[1] +
-               body[iBody].daLOrb[2] * body[iBody].daLOrb[2]);
-
-  for (i = 0; i < 3; i++) {
-    body[iBody].daLOrb[i] /= Lnorm;
-  }
-  body[iBody].daLRot[0] = 0.0;
-  body[iBody].daLRot[1] = 0.0;
-  body[iBody].daLRot[2] = 1.0;
-  obliq                 = atan2(sqrt(body[iBody].dXobl * body[iBody].dXobl +
-                                     body[iBody].dYobl * body[iBody].dYobl),
-                                body[iBody].dZobl);
-
-  inc = 2 * asin(sqrt((body[iBody].dPinc * body[iBody].dPinc) +
-                      (body[iBody].dQinc * body[iBody].dQinc)));
-
-  longa = atan2(body[iBody].dPinc, body[iBody].dQinc);
-  RotateVector(body[iBody].daLRot, body[iBody].daLRotTmp, -obliq, 0);
-  eqnode = 2 * PI - atan2(body[iBody].dYobl, body[iBody].dXobl) - longa;
-  RotateVector(body[iBody].daLRotTmp, body[iBody].daLRot, eqnode, 2);
-  RotateVector(body[iBody].daLRot, body[iBody].daLRotTmp, inc, 0);
-  RotateVector(body[iBody].daLRotTmp, body[iBody].daLRot, longa, 2);
-
-  cross(body[iBody].daLRot, body[iBody].daLOrb, body[iBody].daLRotTmp);
-  Lnorm = sqrt(body[iBody].daLRotTmp[0] * body[iBody].daLRotTmp[0] +
-               body[iBody].daLRotTmp[1] * body[iBody].daLRotTmp[1] +
-               body[iBody].daLRotTmp[2] * body[iBody].daLRotTmp[2]);
-
-  if (Lnorm != 0) {
-    for (i = 0; i < 3; i++) {
-      body[iBody].daLRotTmp[i] /= Lnorm;
-    }
-  }
-
+  body[iBody].daLRotTmp = fdaRotationalAngularMomentum(body,iBody);
+ 
   cross(system->daLOrb, body[iBody].daLOrb, body[iBody].daLOrbTmp);
   Lnorm = sqrt(body[iBody].daLOrbTmp[0] * body[iBody].daLOrbTmp[0] +
                body[iBody].daLOrbTmp[1] * body[iBody].daLOrbTmp[1] +
@@ -1440,6 +1313,7 @@ void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
       body[iBody].daLOrbTmp[i] /= Lnorm;
     }
   }
+
   *dTmp = 0.0;
   for (i = 0; i < 3; i++) {
     *dTmp += body[iBody].daLRotTmp[i] * body[iBody].daLOrbTmp[i];

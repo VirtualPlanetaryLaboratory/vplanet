@@ -1,0 +1,40 @@
+name: tests-macos-intel
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: '${{ matrix.os }}:python-${{ matrix.python-version }}'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-11, macos-12, macos-13]
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        id: setup_python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        if: steps.setup_python.outcome == 'success'
+        run: |
+          python -m pip install -U pip
+          python -m pip install -e .
+          python -m pip install pytest pytest-cov
+
+      - name: Run tests
+        if: steps.setup_python.outcome == 'success'
+        run: make test
+
+      - name: Get unique id
+        uses: Tiryoh/gha-jobid-action@v1
+        id: jobs

@@ -124,6 +124,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv420fvVerifyHaltThermintP4BODYP7CONTROLP7OPTIONSiPi"><code class="docutils literal notranslate"><span class="pre">fvVerifyHaltThermint()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv411fvWriteTManP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"><code class="docutils literal notranslate"><span class="pre">fvWriteTMan()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv412fvWriteTUManP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"><code class="docutils literal notranslate"><span class="pre">fvWriteTUMan()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv415fvWriteTsolUManP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"><code class="docutils literal notranslate"><span class="pre">fvWriteTsolUMan()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv412fvWriteTLManP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"><code class="docutils literal notranslate"><span class="pre">fvWriteTLMan()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv416fvWriteTJumpUManP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"><code class="docutils literal notranslate"><span class="pre">fvWriteTJumpUMan()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv416fvWriteTJumpLManP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"><code class="docutils literal notranslate"><span class="pre">fvWriteTJumpLMan()</span></code></a></li>
@@ -1242,6 +1243,27 @@
 <dt class="sig sig-object cpp" id="_CPPv412fvWriteTUManP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
 <span id="_CPPv312fvWriteTUManP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv212fvWriteTUManP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="fvWriteTUMan__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="thermint_8c_1a8bbb898c9618f13f88380a5ecf2afd92"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvWriteTUMan</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">output</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dTmp</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412fvWriteTUManP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Link to this definition"></a><br /></dt>
 <dd><p>Write TUMan output</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – Body struct </p></li>
+<li><p><strong>control</strong> – Control struct </p></li>
+<li><p><strong>output</strong> – Output struct </p></li>
+<li><p><strong>system</strong> – System struct </p></li>
+<li><p><strong>units</strong> – Units struct </p></li>
+<li><p><strong>update</strong> – Update struct </p></li>
+<li><p><strong>iBody</strong> – Index of body </p></li>
+<li><p><strong>dTmp</strong> – Temporary variable </p></li>
+<li><p><strong>cUnit</strong> – Variable units </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415fvWriteTsolUManP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv315fvWriteTsolUManP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv215fvWriteTsolUManP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="fvWriteTsolUMan__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="thermint_8c_1a6141a0daf761327e16af6b2d2c30d01d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvWriteTsolUMan</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">output</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dTmp</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fvWriteTsolUManP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Link to this definition"></a><br /></dt>
+<dd><p>Write TsolUMan output</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -5004,6 +5026,12 @@
 </dd></dl>
 
 <dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.OUT_TSOLUMAN">
+<span class="target" id="thermint_8h_1a39940064a30055ebff5f0aea30b3fe9c"></span><span class="sig-name descname"><span class="n"><span class="pre">OUT_TSOLUMAN</span></span></span><a class="headerlink" href="#c.OUT_TSOLUMAN" title="Link to this definition"></a><br /></dt>
+<dd><p>[K] Upper mantle solidus temperature </p>
+</dd></dl>
+
+<dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.OUT_TLMAN">
 <span class="target" id="thermint_8h_1a47cbe413dd84e3dc133c729f03f1fd6b"></span><span class="sig-name descname"><span class="n"><span class="pre">OUT_TLMAN</span></span></span><a class="headerlink" href="#c.OUT_TLMAN" title="Link to this definition"></a><br /></dt>
 <dd><p>[K] Temperature top of lower mantle boundary layer </p>
@@ -6280,6 +6308,27 @@
 <dt class="sig sig-object cpp">
 <span class="target" id="thermint_8h_1a003a186df07e4a5a7173973a576a41fe"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvWriteTUMan</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="p"><span class="pre">*</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="p"><span class="pre">*</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="p"><span class="pre">*</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="p"><span class="pre">*</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="p"><span class="pre">*</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="p"><span class="pre">*</span></span>, <span class="kt"><span class="pre">int</span></span>, <span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">*</span></span>, <span class="kt"><span class="pre">char</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><br /></dt>
 <dd><p>Write TUMan output</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – Body struct </p></li>
+<li><p><strong>control</strong> – Control struct </p></li>
+<li><p><strong>output</strong> – Output struct </p></li>
+<li><p><strong>system</strong> – System struct </p></li>
+<li><p><strong>units</strong> – Units struct </p></li>
+<li><p><strong>update</strong> – Update struct </p></li>
+<li><p><strong>iBody</strong> – Index of body </p></li>
+<li><p><strong>dTmp</strong> – Temporary variable </p></li>
+<li><p><strong>cUnit</strong> – Variable units </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="thermint_8h_1aa365af79ee9d8ef9152b5abedb4cb4d9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fvWriteTsolUMan</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="p"><span class="pre">*</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="p"><span class="pre">*</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="p"><span class="pre">*</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="p"><span class="pre">*</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="p"><span class="pre">*</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="p"><span class="pre">*</span></span>, <span class="kt"><span class="pre">int</span></span>, <span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">*</span></span>, <span class="kt"><span class="pre">char</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><br /></dt>
+<dd><p>Write TsolUMan output</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

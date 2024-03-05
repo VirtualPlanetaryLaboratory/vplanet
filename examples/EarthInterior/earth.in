@@ -38,7 +38,7 @@ dTCore         6000
 #dViscJumpMan  2.40
 dActViscMan    3e5
 
-saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
+saOutputOrder -Time -TMan -TUMan -TSolUMan -TLMan -TCMB -TCore $
     -HflowUMan -HflowMeltMan -RadPowerMan -RadPowerCore -RadPowerCrust $
     -HflowCMB -HflowSecMan $
     -TDotMan -TDotCore -TJumpLMan -TJumpUMan -RIC -RayleighMan -ViscUMan -ViscLMan $

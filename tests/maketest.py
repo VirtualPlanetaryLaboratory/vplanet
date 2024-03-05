@@ -481,9 +481,6 @@ def WriteTestFile(data, dirname, stellar):
     # Tests are two subdirs down
     dirs = dirname.split("/")
 
-    if stellar:
-        print("stellar")
-
     test_file = "test_" + dirs[1] + ".py"
     t = open(test_file, "w")
     try:
@@ -499,7 +496,7 @@ def WriteTestFile(data, dirname, stellar):
                 if "Order" in k or v[1] == "inf":
                     continue
 
-                # this means its from a output file
+                # this means its from an output file
                 if "log" not in k and v[0] != "":
                     t.write(
                         '       "'

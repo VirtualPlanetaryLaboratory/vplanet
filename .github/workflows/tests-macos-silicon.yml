@@ -1,4 +1,4 @@
-name: tests-macos
+name: tests-macos-silicon
 on:
   pull_request:
     branches: [main]
@@ -10,9 +10,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-11, macos-12, macos-13]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
-
+        os: [macos-14]
+        python-version: ['3.10', '3.11']
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -34,7 +33,9 @@ jobs:
 
       - name: Run tests
         if: steps.setup_python.outcome == 'success'
-        run: make test
+        run: |
+          make opt
+          pytest
 
       - name: Get unique id
         uses: Tiryoh/gha-jobid-action@v1

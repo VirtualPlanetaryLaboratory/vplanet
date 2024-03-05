@@ -663,11 +663,14 @@ void WriteOrbEcc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   sprintf(cUnit, "%s", "");
 }
 
+// XXX This function doesn't work!
 void WriteLostEng(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
                   char cUnit[]) {
 
+  *dTmp = -1;
   *dTmp = body[iBody].dLostEng;
+
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2138,7 +2141,7 @@ void LogBody(BODY *body, CONTROL *control, FILES *files, MODULE *module,
       if (output[iOut].iNum > 0) {
         if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
           // Useful for debugging
-          // fprintf(stderr,"%d %d\n",iBody,iOut);
+          //fprintf(stderr,"%d %d\n",iBody,iOut);
           WriteLogEntry(body, control, &output[iOut], system, update,
                         fnWrite[iOut], fp, iBody);
         }

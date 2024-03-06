@@ -90,6 +90,10 @@
   0.6 // Structural constant for spherical mass                              \
         //distribution potential energy (E_pot = -ALPHA*BIGG*M^2/R)
 
+#define XAXIS 0
+#define YAXIS 1
+#define ZAXIS 2
+
 // Angle unit IDs
 #define U_RADIANS 0
 #define U_DEGREES 1
@@ -2403,6 +2407,7 @@ typedef void (*fnIntegrate)(BODY *, CONTROL *, SYSTEM *, UPDATE *,
 #include "output.h"
 #include "system.h"
 #include "update.h"
+#include "util.h"
 #include "verify.h"
 
 /* module files */

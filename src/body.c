@@ -136,20 +136,6 @@ double fdBodyPotEnergy(double dMass, double dRadius) {
 }
 
 /**
-  Calculate a body's rotational angular momentum
-
-  @param dRadGyra Body's radius of gyration
-  @param dMass Body's mass
-  @param dRad Body's radius
-  @param dOmega Body's rotational frequency
-
-  @return Body's rotational angular momentum
-*/
-double fdRotAngMom(double dRadGyra, double dMass, double dRad, double dOmega) {
-  return dRadGyra * dRadGyra * dMass * dRad * dRad * dOmega;
-}
-
-/**
   Calculate a body's rotational kinetic energy
 
   @param dMass Body's mass
@@ -461,7 +447,7 @@ void BodyCopy(BODY *dest, BODY *src, EVOLVE *evolve) {
     dest[iBody].dLostEng      = src[iBody].dLostEng;
     dest[iBody].dAlbedoGlobal = src[iBody].dAlbedoGlobal;
     dest[iBody].bCalcDynEllip = src[iBody].bCalcDynEllip;
-    dest[iBody].dRadGyra = src[iBody].dRadGyra;
+    dest[iBody].dRadGyra      = src[iBody].dRadGyra;
 
     dest[iBody].bBinary   = src[iBody].bBinary;
     dest[iBody].bDistOrb  = src[iBody].bDistOrb;
@@ -666,13 +652,14 @@ double fdImK2Total(BODY *body, int iBody) {
   @return Upper mantle k2 Love number
 */
 double fdK2Man(BODY *body, int iBody) {
-  double dK2Man = 1.5 / (1 + 9.5 * body[iBody].dShmodUMan / body[iBody].dStiffness);
+  double dK2Man =
+        1.5 / (1 + 9.5 * body[iBody].dShmodUMan / body[iBody].dStiffness);
   return dK2Man;
 }
 
 double fdTidalQMan(BODY *body, int iBody) {
   double dTidalQMan = body[iBody].dDynamViscos * body[iBody].dMeanMotion /
-         body[iBody].dShmodUMan;
+                      body[iBody].dShmodUMan;
   return dTidalQMan;
 }
 
@@ -1149,23 +1136,6 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge,
 }
 
 /**
-  Dot product of two vectors
-
-  @param x First array
-  @param y Second array
-  @param res dot product
-  @return dot product of arrays x and y
-*/
-double fdDotProduct(const int *x, const double *y) {
-  double res = 0.0;
-  int i;
-  for (i = 0; i < 16; i++) {
-    res += x[i] * y[i];
-  }
-  return res;
-}
-
-/**
   Matrix-vector multiplication
 
   @param mat Matrix
@@ -1490,42 +1460,71 @@ void fdHabitableZoneKopparapu2013(BODY *body, int iNumBodies,
   }
 }
 
-double fdEffectiveTemperature(BODY *body,int iBody) {
-  double dTeff = pow((body[iBody].dLuminosity/(4*PI*SIGMA*body[iBody].dRadius*body[iBody].dRadius)),0.25);
+double fdEffectiveTemperature(BODY *body, int iBody) {
+  double dTeff =
+        pow((body[iBody].dLuminosity /
+             (4 * PI * SIGMA * body[iBody].dRadius * body[iBody].dRadius)),
+            0.25);
   return dTeff;
 }
+/**
+  Calculate a body's rotational angular momentum
 
-double* fdaRotationalAngularMomentum(BODY *body,int iBody) {
-  int i;
-  double obliq,inc,longa,eqnode,Lnorm;
+  @return Body's rotational angular momentum
+*/
+double fdRotAngMom(BODY *body, int iBody) {
+  double dAngMom;
 
-  body[iBody].daLRot[0] = 0.0;
-  body[iBody].daLRot[1] = 0.0;
-  body[iBody].daLRot[2] = 1.0;
-  obliq                 = atan2(sqrt(body[iBody].dXobl * body[iBody].dXobl +
-                                     body[iBody].dYobl * body[iBody].dYobl),
-                                body[iBody].dZobl);
-
-  inc = 2 * asin(sqrt((body[iBody].dPinc * body[iBody].dPinc) +
-                      (body[iBody].dQinc * body[iBody].dQinc)));
-
-  longa = atan2(body[iBody].dPinc, body[iBody].dQinc);
-  RotateVector(body[iBody].daLRot, body[iBody].daLRotTmp, -obliq, 0);
-  eqnode = 2 * PI - atan2(body[iBody].dYobl, body[iBody].dXobl) - longa;
-  RotateVector(body[iBody].daLRotTmp, body[iBody].daLRot, eqnode, 2);
-  RotateVector(body[iBody].daLRot, body[iBody].daLRotTmp, inc, 0);
-  RotateVector(body[iBody].daLRotTmp, body[iBody].daLRot, longa, 2);
-
-  cross(body[iBody].daLRot, body[iBody].daLOrb, body[iBody].daLRotTmp);
-  Lnorm = sqrt(body[iBody].daLRotTmp[0] * body[iBody].daLRotTmp[0] +
-               body[iBody].daLRotTmp[1] * body[iBody].daLRotTmp[1] +
-               body[iBody].daLRotTmp[2] * body[iBody].daLRotTmp[2]);
-
-  if (Lnorm != 0) {
-    for (i = 0; i < 3; i++) {
-      body[iBody].daLRotTmp[i] /= Lnorm;
-    }
-  }
-
-  return body[iBody].daLRotTmp;
+  dAngMom = body[iBody].dRadGyra * body[iBody].dRadGyra * body[iBody].dMass *
+            body[iBody].dRadius * body[iBody].dRadius * body[iBody].dRotRate;
+  return dAngMom;
 }
+
+double *fdaRotationalAngularMomentumRotFrame(BODY *body, int iBody) {
+  static double daAngMom[3];
+  int i;
+  double obliq, inc, longa, eqnode, Lnorm;
+
+  daAngMom[0] = 0.0;
+  daAngMom[1] = 0.0;
+  daAngMom[2] = fdRotAngMom(body, iBody);
+
+  return daAngMom;
+}
+
+double *fdaRotationalAngularMomentumRotFrameUnitVector(BODY *body, int iBody) {
+  double *ptrAngMom;
+
+  ptrAngMom = fdaRotationalAngularMomentumRotFrame(body, iBody);
+  fvNormalize(ptrAngMom, 3);
+  return ptrAngMom;
+}
+
+
+//   obliq                 = atan2(sqrt(body[iBody].dXobl * body[iBody].dXobl +
+//                                      body[iBody].dYobl * body[iBody].dYobl),
+//                                 body[iBody].dZobl);
+
+//   inc = 2 * asin(sqrt((body[iBody].dPinc * body[iBody].dPinc) +
+//                       (body[iBody].dQinc * body[iBody].dQinc)));
+
+//   longa = atan2(body[iBody].dPinc, body[iBody].dQinc);
+//   RotateVector(body[iBody].daLRot, body[iBody].daLRotTmp, -obliq, 0);
+//   eqnode = 2 * PI - atan2(body[iBody].dYobl, body[iBody].dXobl) - longa;
+//   RotateVector(body[iBody].daLRotTmp, body[iBody].daLRot, eqnode, 2);
+//   RotateVector(body[iBody].daLRot, body[iBody].daLRotTmp, inc, 0);
+//   RotateVector(body[iBody].daLRotTmp, body[iBody].daLRot, longa, 2);
+
+//   cross(body[iBody].daLRot, body[iBody].daLOrb, body[iBody].daLRotTmp);
+//   Lnorm = sqrt(body[iBody].daLRotTmp[0] * body[iBody].daLRotTmp[0] +
+//                body[iBody].daLRotTmp[1] * body[iBody].daLRotTmp[1] +
+//                body[iBody].daLRotTmp[2] * body[iBody].daLRotTmp[2]);
+
+//   if (Lnorm != 0) {
+//     for (i = 0; i < 3; i++) {
+//       body[iBody].daLRotTmp[i] /= Lnorm;
+//     }
+//   }
+
+//   return body[iBody].daLRotTmp;
+// }

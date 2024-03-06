@@ -1066,9 +1066,112 @@ void fdMergePlanet(BODY *body, UPDATE *update, fnUpdateVariable ***fnUpdate,
   body[iBody].dSemi = body[0].dRadius;
 }
 
-double* fdaOrbitalAngularMomentum(BODY *body,CONTROL *control,SYSTEM *system,int iBody) {
-  int i,jBody;
-  double h,inc,longa,Lnorm;
+double fdOrbitalAngularMomentum(BODY *body, int iBody) {
+  double dAngMom = body[iBody].dMass / MSUN * KGAUSS *
+                   sqrt((body[0].dMass + body[iBody].dMass) / MSUN *
+                        body[iBody].dSemi / AUM *
+                        (1. - (body[iBody].dHecc * body[iBody].dHecc) -
+                         (body[iBody].dKecc * body[iBody].dKecc)));
+  return dAngMom;
+}
+
+double *fdaOrbitalAngularMomentum(BODY *body, int iBody) {
+  static double daVector[3];
+  double daVectorTmp[3];
+
+  double dAngMom = fdOrbitalAngularMomentum(body, iBody);
+
+  daVector[0] = 0.0;
+  daVector[1] = 0.0;
+  daVector[2] = dAngMom;
+
+  double dInclination = 2 * asin(sqrt((body[iBody].dPinc * body[iBody].dPinc) +
+                                      (body[iBody].dQinc * body[iBody].dQinc)));
+  RotateVector(daVector, daVectorTmp, dInclination, 0);
+
+  double dLongAscNode = atan2(body[iBody].dPinc, body[iBody].dQinc);
+  RotateVector(daVectorTmp, daVector, dLongAscNode, 2);
+
+  return daVector;
+}
+
+double *fdaSumAngularMomenta(BODY *body, CONTROL *control,
+                             double *(*function)(BODY *, int)) {
+  static double daVector[3];
+  int i, iBody;
+  double *daBodyVector;
+
+  for (i = 0; i < 3; i++) {
+    daVector[i] = 0.0;
+  }
+
+  for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
+    daBodyVector = function(body, iBody);
+    for (i = 0; i < 3; i++) {
+      daVector[i] += daBodyVector[i];
+    }
+  }
+  return daVector;
+}
+
+double *fdaOrbitalAngularMomentumTotal(BODY *body, CONTROL *control) {
+  return fdaSumAngularMomenta(body, control, fdaOrbitalAngularMomentum);
+}
+
+
+double *fdaRotationalAngularMomentumTotal(BODY *body, CONTROL *control) {
+  return fdaSumAngularMomenta(body, control, fdaRotationalAngularMomentum);
+}
+
+void fvTotalAngularMomentum(BODY *body, CONTROL *control, SYSTEM *system) {
+  int i;
+
+  for (i = 0; i < 3; i++) {
+    system->daAngMomTot[i] = 0.0;
+  }
+
+  system->daAngMomOrbTot = fdaOrbitalAngularMomentumTotal(body, control);
+  system->daAngMomRotTot = fdaRotationalAngularMomentumTotal(body, control);
+
+  for (i = 0; i < 3; i++) {
+    system->daAngMomTot[i] += system->daAngMomOrbTot[i];
+    system->daAngMomTot[i] += system->daAngMomRotTot[i];
+  }
+}
+
+void fvNormalizeVector(double *daVector, int iNumElements) {
+  int i;
+  double dMagnitude;
+
+  dMagnitude = sqrt(fdDotProduct(daVector, daVector));
+  for (i = 0; i < iNumElements; i++) {
+    daVector[i] /= dMagnitude;
+  }
+}
+
+void fvTotalAngularMomentumUnitVector(BODY *body, CONTROL *control,
+                                      SYSTEM *system, int iBody) {
+  fvTotalAngularMomentum(body, control, system);
+  fvNormalizeVector(system->daAngMomTot, 3);
+}
+
+void fvTotalOrbitalAngularMomentumUnitVector(BODY *body, CONTROL *control,
+                                             SYSTEM *system, int iBody) {
+  fvTotalOrbitalAngularMomentum(body, control, system);
+  fvNormalizeVector(system->daAngMomOrbTot, 3);
+}
+
+void fvRotationalAngularMomentumUnitVector(BODY *body, CONTROL *control,
+                                           SYSTEM *system, int iBody) {
+  fvRotationalAngularMomentum();
+  fvNormalizeVector(system->daAngMomOrbTot, 3);
+}
+
+
+double *fdaOrbitalAngularMomentumAllBodies(BODY *body, CONTROL *control,
+                                           SYSTEM *system, int iBody) {
+  int i, jBody;
+  double h, inc, longa, Lnorm;
 
   for (i = 0; i < 3; i++) {
     system->daLOrb[i] = 0.0;
@@ -1111,4 +1214,7 @@ double* fdaOrbitalAngularMomentum(BODY *body,CONTROL *control,SYSTEM *system,int
   }
 
   return body[iBody].daLOrb;
+}
+
+void RotateZVectorToOrbitFrame(BODY *body, int iBody) {
 }

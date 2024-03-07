@@ -814,8 +814,7 @@ void WriteRotAngMom(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
 
-  *dTmp = fdRotAngMom(body[iBody].dRadGyra, body[iBody].dMass,
-                      body[iBody].dRadius, body[iBody].dRotRate);
+  *dTmp = fdRotAngMom(body, iBody);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2006,9 +2005,9 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
                     SYSTEM *system, UPDATE *update, fnWriteOutput fnWrite[],
                     FILE *fp, int iBody) {
   int iCol, iOut, iSubOut, iExtra = 0;
-  char cCol[MODULEOUTEND][OUTLEN+2]; // +2 for brackets
+  char cCol[MODULEOUTEND][OUTLEN + 2]; // +2 for brackets
   double *dTmp;
-  char cUnit[OUTLEN], cTmp[OUTLEN+2];
+  char cUnit[OUTLEN], cTmp[OUTLEN + 2];
 
   for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
@@ -2041,9 +2040,9 @@ void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
                    SYSTEM *system, UPDATE *update, fnWriteOutput fnWrite[],
                    FILE *fp, int iBody) {
   int iCol, iOut, iSubOut, iExtra = 0;
-  char cCol[MODULEOUTEND][OUTLEN+2]; // +2 for brackets
+  char cCol[MODULEOUTEND][OUTLEN + 2]; // +2 for brackets
   double *dTmp;
-  char cUnit[OUTLEN], cTmp[OUTLEN+2];
+  char cUnit[OUTLEN], cTmp[OUTLEN + 2];
 
   for (iCol = 0; iCol < files->Outfile[iBody].iNumGrid; iCol++) {
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
@@ -2141,7 +2140,7 @@ void LogBody(BODY *body, CONTROL *control, FILES *files, MODULE *module,
       if (output[iOut].iNum > 0) {
         if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
           // Useful for debugging
-          //fprintf(stderr,"%d %d\n",iBody,iOut);
+          // fprintf(stderr,"%d %d\n",iBody,iOut);
           WriteLogEntry(body, control, &output[iOut], system, update,
                         fnWrite[iOut], fp, iBody);
         }
@@ -2170,8 +2169,8 @@ void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 
   /* Get derivatives */
   PropertiesAuxiliary(body, control, system, update);
-  /* XXX The fdGetTimeStep function is not single-purpose. The function sets 
-     members of the UPDATE struct, so those value should probably  be set in 
+  /* XXX The fdGetTimeStep function is not single-purpose. The function sets
+     members of the UPDATE struct, so those value should probably  be set in
      one function, and then the timestep calculated in another. */
   double dDt = fdGetTimeStep(body, control, system, update, fnUpdate);
 

@@ -51,6 +51,27 @@ double fndUpdateSpiNBodyCoords(BODY *, EVOLVE *);
 
 void fdMergePlanet(BODY *, UPDATE *, fnUpdateVariable ***, int);
 
-double* fdaOrbitalAngularMomentum(BODY*,CONTROL*,SYSTEM*,int);
+double fdOrbitalAngularMomentum(BODY *, int);
+double fdTotalAngularMomentum(BODY *, CONTROL *);
+double *fdaOrbitalAngularMomentumOrbFrame(BODY *, int);
+// double* fdaOrbitalAngularMomentum(BODY*,CONTROL*,SYSTEM*,int);
+double *fdaOrbitalAngularMomentumRefFrame(BODY *, int);
+double *fdaTotalOrbitalAngularMomentumRefFrame(BODY *, CONTROL *);
+double *fdaTotalOrbitalAngularMomentumRefFrameUnitVector(BODY *, CONTROL *);
+double *fdaOrbitalAngularMomentumInvFrame(BODY *, int);
+double *fdaTotalOrbitalAngularMomentumInvFrame(BODY *, CONTROL *);
+double *fdaTotalOrbitalAngularMomentumInvFrameUnitVector(BODY *, CONTROL *);
+double *fdaRotationalAngularMomentumRefFrame(BODY *, int);
+double *fdaTotalRotationalAngularMomentumRefFrame(BODY *, CONTROL *);
+double *fdaTotalRotationalAngularMomentumRefFrameUnitVector(BODY *, CONTROL *);
+double *fdaRotationalAngularMomentumInvFrame(BODY *, int);
+double *fdaTotalRotationalAngularMomentumInvFrame(BODY *, CONTROL *);
+double *fdaTotalRotationalAngularMomentumRefFrameUnitVector(BODY *, CONTROL *);
+double *fdaTotalAngularMomentumRefFrame(BODY *, CONTROL *);
+double *fdaTotalAngularMomentumRefFrameUnitVector(BODY *, CONTROL *);
+
+
+void fvCassiniVectors(BODY *, double *, double *, double *, double *, double *,
+                      int);
 
 /* @endcond */

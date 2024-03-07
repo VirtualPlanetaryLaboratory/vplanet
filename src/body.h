@@ -67,7 +67,7 @@ double fdRotVel(double, double);
 double fdDPerDt(double, double);
 
 double fdBodyPotEnergy(double, double);
-double fdRotAngMom(double, double, double, double);
+double fdRotAngMom(BODY *, int);
 double fdRotKinEnergy(double, double, double, double);
 
 double fdDensityMassToRadius(double, double);
@@ -108,7 +108,7 @@ double CalcDynEllipEq(BODY *, int);
 
 void fdHabitableZoneKopparapu2013(BODY *, int, double *);
 
-double fdEffectiveTemperature(BODY*,int);
+double fdEffectiveTemperature(BODY *, int);
 
 // RB: Move
 
@@ -121,7 +121,8 @@ double fdProximaCenBRadius(double, double, double);
 // Lopez et al. (2012) radius evolution
 double fdLopezRadius(double, double, double, double, int);
 
-double* fdaRotationalAngularMomentum(BODY*,int);
+double *fdaRotationalAngularMomentumRotFrame(BODY *, int);
+double *fdaRotationalAngularMomentumRotFrameUnitVector(BODY *, int);
 
 // Proxima Cen b radius evolution grid
 static double const daProxCenBComp[] = {0.00001,     0.000100100, 0.000200000,

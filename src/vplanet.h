@@ -90,6 +90,10 @@
   0.6 // Structural constant for spherical mass                              \
         //distribution potential energy (E_pot = -ALPHA*BIGG*M^2/R)
 
+#define XAXIS 0
+#define YAXIS 1
+#define ZAXIS 2
+
 // Angle unit IDs
 #define U_RADIANS 0
 #define U_DEGREES 1
@@ -345,22 +349,22 @@ struct BODY {
   double
         dEigenvector; /**< User input eigenvector amplitude (diagnostic only) */
   int bEigenSet;      /**< Manually set an eigenvalue/frequency */
-  double *daLOrb;     /**< Orbital angular momentum */
-  double *daLOrbTmp;  /**< Temp copy of orbital angular momentum */
-  double dRPeri;      /**< Pericenter distance */
-  double dRApo;       /**< Apocenter distance */
+  double *daAngMomOrb; /**< Orbital angular momentum */
+  double *daLOrbTmp;   /**< Temp copy of orbital angular momentum */
+  double dRPeri;       /**< Pericenter distance */
+  double dRApo;        /**< Apocenter distance */
 
   /* DISTROT parameters */
   int bDistRot;
-  double dPrecA;      /**< Precession angle */
-  double dTrueApA;    /**< True anomaly at equinox (used for invariable plane
-                         conversion) */
-  double dDynEllip;   /**< Dynamical ellipticity */
-  double dYobl;       /**< sin(obliq)*sin(preca) */
-  double dXobl;       /**< sin(obliq)*cos(preca) */
-  double dZobl;       /**< cos(obliq) */
-  double *daLRot;     /**< Spin angular momentum vector */
-  double *daLRotTmp;  /**< Temp copy of spin angular momentum vector */
+  double dPrecA;       /**< Precession angle */
+  double dTrueApA;     /**< True anomaly at equinox (used for invariable plane
+                          conversion) */
+  double dDynEllip;    /**< Dynamical ellipticity */
+  double dYobl;        /**< sin(obliq)*sin(preca) */
+  double dXobl;        /**< sin(obliq)*cos(preca) */
+  double dZobl;        /**< cos(obliq) */
+  double *daAngMomRot; /**< Spin angular momentum vector */
+  // double *daLRotTmp;   /**< Temp copy of spin angular momentum vector */
   int bForcePrecRate; /**< Set precession rate to a fixed value */
   double dPrecRate;   /**< Value to set fixed precession rate to */
   int bCalcDynEllip; /**< Calc dyn ellipticity from spin, radius, mass, inertia?
@@ -614,7 +618,7 @@ struct BODY {
                          Ro>ROSSBYCRIT */
   int bEvolveRG; /**< Whether or not to evolve radius of gyration? Defaults to 0
                   */
-  double dLuminosityInitial;           
+  double dLuminosityInitial;
   double dLuminosityAmplitude;
   double dLuminosityFrequency;
   double dLuminosityPhase;
@@ -1025,8 +1029,14 @@ typedef double (*fnLaplaceFunction)(double, int);
 struct SYSTEM {
   char cName[NAMELEN]; /**< System's Name */
 
-  double dTotAngMomInit; /**< System's Initial Angular Momentum */
-  double dTotAngMom;     /**< System's Current Angular Momentum */
+  double dTotAngMomInit; /**< Magnitude of Initial Total Angular Momentum Vector
+                          */
+  double dTotAngMom; /**< Magnitude of Current Total Angular Momentum Vector */
+  double *daAngMomTot;    /**< System's Current Total Angular Momentum Vector */
+  double *daAngMomOrbTot; /**< System's Current Total Orbital Angular Momentum
+                             Vector */
+  double *daAngMomRotTot; /**< System's Current Total Rotational Angular
+                             Momentum Vector */
 
   /* DISTORB tools */
   fnLaplaceFunction **fnLaplaceF; /**< Pointers to semi-major axis functions  */
@@ -1065,7 +1075,6 @@ struct SYSTEM {
   int *iaRowswap;   /**< Row interchange array used in eigenvector routine */
   double **daAcopy; /**< Copy of eigenvalue matrix for eccentricity */
   double *daScale;  /**< Used in matrix inversion */
-  double *daLOrb;   /**< Total angular momentum of system */
 
   double dTotEnInit; /**< System's Initial Energy */
   double dTotEn;     /** < System's total energy */
@@ -2398,6 +2407,7 @@ typedef void (*fnIntegrate)(BODY *, CONTROL *, SYSTEM *, UPDATE *,
 #include "output.h"
 #include "system.h"
 #include "update.h"
+#include "util.h"
 #include "verify.h"
 
 /* module files */

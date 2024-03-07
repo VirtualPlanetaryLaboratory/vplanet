@@ -32,16 +32,15 @@ void BodyCopyDistOrb(BODY *dest, BODY *src, int iTideModel, int iNumBodies,
 
 void InitializeBodyDistOrb(BODY *body, CONTROL *control, UPDATE *update,
                            int iBody, int iModule) {
-  if (body[iBody].bDistOrb) {
-    if (control->Evolve.iDistOrbModel == RD4) {
-      body[iBody].iGravPerts    = control->Evolve.iNumBodies - 2;
-      body[iBody].iDistOrbModel = RD4;
-    } else if (control->Evolve.iDistOrbModel == LL2) {
-      /* "Perturbers" in LL2 correspond to eigenfrequencies, not planet pairs.
-         Number of eigenfrequencies = number of planets. */
-      body[iBody].iGravPerts    = control->Evolve.iNumBodies - 1;
-      body[iBody].iDistOrbModel = LL2;
-    }
+
+  if (control->Evolve.iDistOrbModel == RD4) {
+    body[iBody].iGravPerts    = control->Evolve.iNumBodies - 2;
+    body[iBody].iDistOrbModel = RD4;
+  } else if (control->Evolve.iDistOrbModel == LL2) {
+    /* "Perturbers" in LL2 correspond to eigenfrequencies, not planet pairs.
+        Number of eigenfrequencies = number of planets. */
+    body[iBody].iGravPerts    = control->Evolve.iNumBodies - 1;
+    body[iBody].iDistOrbModel = LL2;
   }
 
   body[iBody].iaGravPerts = malloc(body[iBody].iGravPerts * sizeof(int));
@@ -882,8 +881,8 @@ void VerifyGRCorrLL2(BODY *body, int iNumBodies) {
     if (body[iBody].bGRCorr != body[1].bGRCorr) {
       fprintf(stderr, "ERROR: bGRCorr must be the same for all planets in "
                       "DistOrb LL2 model\n");
-      fprintf(stderr,"\t%s: %d\n",body[1].cName,body[1].bGRCorr);
-      fprintf(stderr,"\t%s: %d\n",body[iBody].cName,body[iBody].bGRCorr);
+      fprintf(stderr, "\t%s: %d\n", body[1].cName, body[1].bGRCorr);
+      fprintf(stderr, "\t%s: %d\n", body[iBody].cName, body[iBody].bGRCorr);
       exit(EXIT_INPUT);
     }
   }
@@ -1049,7 +1048,7 @@ void VerifyDistOrb(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
     /* Setup Semi-major axis functions (LaplaceF) for secular terms*/
     if (iBody == 1) {
-      system->daLOrb = malloc(3 * sizeof(double));
+      system->daAngMomOrbTot = malloc(3 * sizeof(double));
 
       system->fnLaplaceF     = malloc(LAPLNUM * sizeof(fnLaplaceFunction *));
       system->fnLaplaceDeriv = malloc(LAPLNUM * sizeof(fnLaplaceFunction *));
@@ -1193,8 +1192,7 @@ void VerifyDistOrb(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       CalcHK(body, iBody);
       CalcPQ(body, iBody);
 
-      body[iBody].daLOrb    = malloc(3 * sizeof(double));
-      body[iBody].daLOrbTmp = malloc(3 * sizeof(double));
+      body[iBody].daAngMomOrb = malloc(3 * sizeof(double));
 
       /* Body updates */
       for (iPert = 0; iPert < body[iBody].iGravPerts; iPert++) {
@@ -1304,8 +1302,6 @@ void VerifyDistOrb(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     } else {
       /* Conditions for recalc'ing eigenvalues */
       if (iBody == 1) {
-        system->daLOrb = malloc(3 * sizeof(double));
-
         system->daLaplaceD = malloc(1 * sizeof(double *));
         system->daAlpha0   = malloc(1 * sizeof(double *));
 
@@ -1328,7 +1324,6 @@ void VerifyDistOrb(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       }
 
       for (jBody = 1; jBody < (control->Evolve.iNumBodies); jBody++) {
-        body[jBody].daLOrb    = malloc(3 * sizeof(double));
         body[jBody].daLOrbTmp = malloc(3 * sizeof(double));
 
         if (body[iBody].dSemi < body[jBody].dSemi) {
@@ -2559,7 +2554,7 @@ void HessEigen(double **amat, int origsize, double real[], double imag[]) {
                 q /= lrcorner;
                 r /= lrcorner;
               }
-            } 
+            }
             value = sqrt(p * p + q * q + r * r);
             s     = (double)fiSign(p) * value;
             if (s != 0.0) {
@@ -2654,8 +2649,8 @@ void HessReduce(double **a, int size) {
   double max, n;
 
   for (r = 0; r < size; r++) {
-    max = 0;
-    rmax = r+1;
+    max  = 0;
+    rmax = r + 1;
     for (rp = r + 1; rp < size; rp++) {
       if (fabs(a[rp][r]) > max) {
         max  = fabs(a[rp][r]);
@@ -3047,7 +3042,8 @@ void RecalcLaplace(BODY *body, EVOLVE *evolve, SYSTEM *system, int iVerbose) {
       } else if (body[iBody].dSemi > body[jBody].dSemi) {
         alpha1 = body[jBody].dSemi / body[iBody].dSemi;
       } else {
-        fprintf(stderr,"ERROR: Semi-major axes cannot be identical in RecalcLaplace.");
+        fprintf(stderr,
+                "ERROR: Semi-major axes cannot be identical in RecalcLaplace.");
         exit(EXIT_INPUT);
       }
 
@@ -3091,7 +3087,9 @@ void RecalcEigenVals(BODY *body, EVOLVE *evolve, SYSTEM *system) {
       } else if (body[iBody].dSemi > body[jBody].dSemi) {
         alpha1 = body[jBody].dSemi / body[iBody].dSemi;
       } else {
-        fprintf(stderr,"ERROR: Semi-major axes cannot be identical in RecalcEigenVals.");
+        fprintf(
+              stderr,
+              "ERROR: Semi-major axes cannot be identical in RecalcEigenVals.");
         exit(EXIT_INPUT);
       }
       for (j = 0; j < 2; j++) {

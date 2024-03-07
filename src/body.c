@@ -1148,7 +1148,7 @@ void fvMatrixVectorMult(const int mat[16][16], const double *vec,
   // in matrix form: result = mat * vec;
   int i;
   for (i = 0; i < 16; i++) {
-    result[i] = fdDotProduct(mat[i], vec);
+    result[i] = fdDotProduct(mat[i], vec, 16);
   }
 }
 
@@ -1496,7 +1496,7 @@ double *fdaRotationalAngularMomentumRotFrameUnitVector(BODY *body, int iBody) {
   double *ptrAngMom;
 
   ptrAngMom = fdaRotationalAngularMomentumRotFrame(body, iBody);
-  fvNormalize(ptrAngMom, 3);
+  fvNormalizeVector(ptrAngMom, 3);
   return ptrAngMom;
 }
 

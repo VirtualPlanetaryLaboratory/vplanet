@@ -983,9 +983,6 @@ void InitializeConstants(BODY *body, UPDATE *update, CONTROL *control,
                          SYSTEM *system, OPTIONS *options) {
   int iBody;
 
-  // Initially no lost angular momentum, energy
-  // Set to dTINY, not 0 since these are integrated
-  // and it being 0 can mess up the time step
   for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
     body[iBody].dLostAngMom = dTINY;
     body[iBody].dLostEng    = dTINY;
@@ -998,6 +995,10 @@ void InitializeConstants(BODY *body, UPDATE *update, CONTROL *control,
   // Compute initial total energy
   system->dTotEnInit = fdTotEnergy(body, control, system);
   system->dTotEn     = system->dTotEnInit;
+
+  system->daAngMomTot    = malloc(3 * sizeof(double));
+  system->daAngMomOrbTot = malloc(3 * sizeof(double));
+  system->daAngMomRotTot = malloc(3 * sizeof(double));
 }
 
 void fnNullDerivatives(BODY *body, EVOLVE *evolve, MODULE *module,
@@ -1094,6 +1095,17 @@ void VerifyAge(BODY *body, CONTROL *control, OPTIONS *options) {
     }
   }
 }
+
+void AllocateBodyVectors(BODY *body, CONTROL *control) {
+  int iBody;
+
+  for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
+    body[iBody].daAngMomOrb = malloc(3 * sizeof(double));
+    body[iBody].daAngMomRot = malloc(3 * sizeof(double));
+  }
+}
+
+
 /**
 
  * Master Verify subroutine
@@ -1176,6 +1188,8 @@ void VerifyOptions(BODY *body, CONTROL *control, FILES *files, MODULE *module,
       VerifyImK2(body, control, files, options, system, update, iBody);
     }
   }
+
+  AllocateBodyVectors(body, control);
 
   // Initialize angular momentum and energy prior to logging/integration
   InitializeConstants(body, update, control, system, options);

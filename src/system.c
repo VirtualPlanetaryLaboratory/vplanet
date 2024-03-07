@@ -1228,6 +1228,22 @@ double *fdaOrbitalAngularMomentumRefFrame(BODY *body, int iBody) {
 }
 
 /**
+Returns the vector of a body's orbital angular momentum based on orbital
+elements in the Invariable Frame.
+*/
+double *fdaOrbitalAngularMomentumInvFrame(BODY *body, int iBody) {
+  static double daAngMom[3];
+  int i;
+  double *ptrAngMom;
+
+  ptrAngMom = fdaOrbitalAngularMomentumOrbFrame(body, iBody);
+  fvCopyPointerToArray(ptrAngMom, daAngMom, 3);
+  fvOrbFrameToInvFrame(body, daAngMom, iBody);
+
+  return daAngMom;
+}
+
+/**
 Returns the total orbital angular momentum vector in the Reference Frame.
 */
 double *fdaTotalOrbitalAngularMomentumRefFrame(BODY *body, CONTROL *control) {
@@ -1376,36 +1392,20 @@ double *fdaTotalRotationalAngularMomentumRefFrameUnitVector(BODY *body,
 
 // Total Angular Momentum
 
-double fdTotalAngularMomentum(BODY *body, CONTROL *control, SYSTEM *system) {
+double fdTotalAngularMomentum(BODY *body, CONTROL *control) {
   double dMagnitude = 0.0;
   double *daAngMom;
 
-  daAngMom   = fdaTotalAngularMomentumRefFrame(body, control, system);
+  daAngMom   = fdaTotalAngularMomentumRefFrame(body, control);
   dMagnitude = fdDotProduct(daAngMom, daAngMom, 3);
 
   return dMagnitude;
 }
 
 /**
-Returns the unit vector of the total rotational angular momentum vector.
-*/
-double *fdaRotationalAngularMomentumUnitVector(BODY *body, CONTROL *control,
-                                               SYSTEM *system, int iBody) {
-  static double daAngMom[3];
-  double *ptrAngMom;
-
-  ptrAngMom = fdaRotationalAngularMomentum(body, control);
-  CopyPointerToArray(ptrAngMom, daAngMom, 3);
-  fvNormalizeVector(daAngMom, 3);
-
-  return daAngMom;
-}
-
-/**
 Returns the total angular momentum vector in the Reference Frame.
 */
-double *fdaTotalAngularMomentumRefFrame(BODY *body, CONTROL *control,
-                                        SYSTEM *system) {
+double *fdaTotalAngularMomentumRefFrame(BODY *body, CONTROL *control) {
   static double daAngMomTot[3];
   double *daAngMomRot, *daAngMomOrb;
   int i;
@@ -1428,12 +1428,12 @@ double *fdaTotalAngularMomentumRefFrame(BODY *body, CONTROL *control,
 /**
 Returns the unit vector of the total angular momentum in the Reference Frame.
 */
-double *fdaTotalAngularMomentumRefFrameUnitVector(BODY *body, CONTROL *control,
-                                                  SYSTEM *system, int iBody) {
+double *fdaTotalAngularMomentumRefFrameUnitVector(BODY *body,
+                                                  CONTROL *control) {
   static double daAngMomTot[3];
   double *ptrAngMomTot;
 
-  ptrAngMomTot = fdaTotalAngularMomentumRefFrame(body, control, system);
+  ptrAngMomTot = fdaTotalAngularMomentumRefFrame(body, control);
   CopyPointerToArray(ptrAngMomTot, daAngMomTot, 3);
   fvNormalizeVector(daAngMomTot, 3);
 

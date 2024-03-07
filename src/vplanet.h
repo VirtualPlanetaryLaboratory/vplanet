@@ -364,9 +364,9 @@ struct BODY {
   double dXobl;        /**< sin(obliq)*cos(preca) */
   double dZobl;        /**< cos(obliq) */
   double *daAngMomRot; /**< Spin angular momentum vector */
-  double *daLRotTmp;   /**< Temp copy of spin angular momentum vector */
-  int bForcePrecRate;  /**< Set precession rate to a fixed value */
-  double dPrecRate;    /**< Value to set fixed precession rate to */
+  // double *daLRotTmp;   /**< Temp copy of spin angular momentum vector */
+  int bForcePrecRate; /**< Set precession rate to a fixed value */
+  double dPrecRate;   /**< Value to set fixed precession rate to */
   int bCalcDynEllip; /**< Calc dyn ellipticity from spin, radius, mass, inertia?
                       */
   int bRelaxDynEllip; /**< shape of planet relaxes when spun down */

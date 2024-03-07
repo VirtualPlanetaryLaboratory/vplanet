@@ -736,15 +736,9 @@ void VerifyDistRot(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
               "rotational evolution, Cassini parameters may not be correct.\n",
               options[OPT_READORBITDATA].cName);
       }
-      system->daLOrb        = malloc(3 * sizeof(double));
-      body[iBody].daLOrb    = malloc(3 * sizeof(double));
-      body[iBody].daLOrbTmp = malloc(3 * sizeof(double));
     }
 
     CalcXYZobl(body, iBody);
-
-    body[iBody].daLRot    = malloc(3 * sizeof(double));
-    body[iBody].daLRotTmp = malloc(3 * sizeof(double));
 
     if (body[iBody].bReadOrbitData) {
       InitializeXoblDistRot(body, update, iBody, 0);
@@ -1257,29 +1251,18 @@ void WriteZoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                       double *dTmp, char cUnit[]) {
+  double daAngMomTot[3] = {0, 0, 1};
+  double *daAngMomOrb =
+        fdaOrbitalAngularMomentumInvFrameUnitVector(body, iBody);
+  double *daAngMomRot =
+        fdaRotationalAngularMomentumInvFrameUnitVector(body, iBody);
 
-  double h, inc, longa, Lnorm = 0.0, obliq, eqnode;
-  int i, jBody;
+  double *daTotCrossOrb = fdaCross(daAngMomTot, daAngMomOrb);
+  double *daRotCrossOrb = fdaCross(daAngMomRot, daAngMomOrb);
+  double *daDoubleCross = fdaCross(daTotCrossOrb, daRotCrossOrb);
 
+  // *dTmp = Eq. 26
 
-  body[iBody].daLOrb = fdaOrbitalAngularMomentum(body,control,system,iBody);
-
-  body[iBody].daLRotTmp = fdaRotationalAngularMomentum(body,iBody);
-
-  cross(system->daLOrb, body[iBody].daLOrb, body[iBody].daLOrbTmp);
-  Lnorm = sqrt(body[iBody].daLOrbTmp[0] * body[iBody].daLOrbTmp[0] +
-               body[iBody].daLOrbTmp[1] * body[iBody].daLOrbTmp[1] +
-               body[iBody].daLOrbTmp[2] * body[iBody].daLOrbTmp[2]);
-  if (Lnorm != 0) {
-    for (i = 0; i < 3; i++) {
-      body[iBody].daLOrbTmp[i] /= Lnorm;
-    }
-  }
-
-  cross(body[iBody].daLOrbTmp, body[iBody].daLRotTmp, system->daLOrb);
-  *dTmp = sqrt(system->daLOrb[0] * system->daLOrb[0] +
-               system->daLOrb[1] * system->daLOrb[1] +
-               system->daLOrb[2] * system->daLOrb[2]);
   if (body[iBody].dInc == 0 && body[iBody].dObliquity == 0) {
     if (control->Io.iVerbose >= VERBPROG &&
         !control->Io.baCassiniOneMessage[iBody]) {
@@ -1299,10 +1282,10 @@ void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
   double h, inc, longa, Lnorm = 0.0, obliq, eqnode;
   int i, jBody;
 
-  body[iBody].daLOrb = fdaOrbitalAngularMomentum(body,control,system,iBody);
+  body[iBody].daLOrb = fdaOrbitalAngularMomentum(body, control, system, iBody);
 
-  body[iBody].daLRotTmp = fdaRotationalAngularMomentum(body,iBody);
- 
+  body[iBody].daLRotTmp = fdaRotationalAngularMomentum(body, iBody);
+
   cross(system->daLOrb, body[iBody].daLOrb, body[iBody].daLOrbTmp);
   Lnorm = sqrt(body[iBody].daLOrbTmp[0] * body[iBody].daLOrbTmp[0] +
                body[iBody].daLOrbTmp[1] * body[iBody].daLOrbTmp[1] +
@@ -1615,18 +1598,21 @@ void ForceBehaviorDistRot(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
 }
 
 void RotateVector(double *v1, double *v2, double theta, int axis) {
-  if (axis == 0) {
+  if (axis == XAXIS) {
     v2[0] = v1[0];
     v2[1] = cos(theta) * v1[1] - sin(theta) * v1[2];
     v2[2] = sin(theta) * v1[1] + cos(theta) * v1[2];
-  } else if (axis == 1) {
+  } else if (axis == YAXIS) {
     v2[0] = cos(theta) * v1[0] + sin(theta) * v1[2];
     v2[1] = v1[1];
     v2[2] = -sin(theta) * v1[0] + cos(theta) * v1[2];
-  } else if (axis == 2) {
+  } else if (axis == ZAXIS) {
     v2[0] = cos(theta) * v1[0] - sin(theta) * v1[1];
     v2[1] = sin(theta) * v1[0] + cos(theta) * v1[1];
     v2[2] = v1[2];
+  } else {
+    fprintf(stderr, "ERROR: Invaliad roational axis in RotateVector.\n");
+    exit(EXIT_INT);
   }
 }
 

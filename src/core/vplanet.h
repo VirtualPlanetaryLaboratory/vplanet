@@ -2397,7 +2397,7 @@ typedef void (*fnIntegrate)(BODY *, CONTROL *, SYSTEM *, UPDATE *,
  * Other Header Files - These are primarily for function declarations
  */
 
-/* Top-level files */
+/* core files */
 #include "body.h"
 #include "control.h"
 #include "evolve.h"
@@ -2411,16 +2411,16 @@ typedef void (*fnIntegrate)(BODY *, CONTROL *, SYSTEM *, UPDATE *,
 #include "verify.h"
 
 /* module files */
-#include "atmesc.h"
-#include "binary.h"
-#include "distorb.h"
-#include "distrot.h"
-#include "eqtide.h"
-#include "flare.h"
-#include "galhabit.h"
-#include "magmoc.h"
-#include "poise.h"
-#include "radheat.h"
-#include "spinbody.h"
-#include "stellar.h"
-#include "thermint.h"
+#include "../modules/atmesc.h"
+#include "../modules/binary.h"
+#include "../modules/distorb.h"
+#include "../modules/distrot.h"
+#include "../modules/eqtide.h"
+#include "../modules/flare.h"
+#include "../modules/galhabit.h"
+#include "../modules/magmoc.h"
+#include "../modules/poise.h"
+#include "../modules/radheat.h"
+#include "../modules/spinbody.h"
+#include "../modules/stellar.h"
+#include "../modules/thermint.h"

@@ -7,12 +7,8 @@
  *
  */
 
-#include "vplanet.h"
-#include <assert.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "../core/vplanet.h"
+
 
 // all variables!
 void BodyCopyMagmOc(BODY *dest, BODY *src, int foo, int iNumBodies, int iBody) {

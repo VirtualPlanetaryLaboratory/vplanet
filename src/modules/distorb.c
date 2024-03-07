@@ -9,12 +9,7 @@
 
 */
 
-#include "vplanet.h"
-#include <assert.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "../core/vplanet.h"
 
 void BodyCopyDistOrb(BODY *dest, BODY *src, int iTideModel, int iNumBodies,
                      int iBody) {

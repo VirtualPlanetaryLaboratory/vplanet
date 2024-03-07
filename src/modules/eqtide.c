@@ -10,7 +10,7 @@
 
 */
 
-#include "vplanet.h"
+#include "../core/vplanet.h"
 
 void InitializeControlEqtide(CONTROL *control, int iBody) {
 

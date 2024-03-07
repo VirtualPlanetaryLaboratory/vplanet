@@ -6,12 +6,7 @@
   @date Feb 21 2017
 */
 
-#include "vplanet.h"
-#include <assert.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "../core/vplanet.h"
 
 void BodyCopySpiNBody(BODY *dest, BODY *src, int iFoo, int iNumBodies,
                       int iBody) {

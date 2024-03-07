@@ -5,7 +5,7 @@
   @date June 1 2015
 */
 
-#include "vplanet.h"
+#include "../core/vplanet.h"
 
 /**
   Copy values from src to dest for iBody.

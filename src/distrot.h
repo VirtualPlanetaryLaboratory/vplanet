@@ -135,4 +135,5 @@ double fndDistRotExtDxDt(BODY *, SYSTEM *, int *);
 double fndDistRotExtDyDt(BODY *, SYSTEM *, int *);
 double fndDistRotExtDzDt(BODY *, SYSTEM *, int *);
 
+
 /* @endcond */

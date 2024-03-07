@@ -423,7 +423,7 @@ void VerifyPositionX(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iPositionX][0]     = 7;
   update[iBody].iNumBodies[update[iBody].iPositionX][0] = 1;
   update[iBody].iaBody[update[iBody].iPositionX][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iPositionX][0] * sizeof(int));
+        update[iBody].iNumBodies[update[iBody].iPositionX][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iPositionX][0][0] = iBody;
 
   update[iBody].pdDPositionX =
@@ -436,7 +436,7 @@ void VerifyPositionY(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iPositionY][0]     = 7;
   update[iBody].iNumBodies[update[iBody].iPositionY][0] = 1;
   update[iBody].iaBody[update[iBody].iPositionY][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iPositionY][0] * sizeof(int));
+        update[iBody].iNumBodies[update[iBody].iPositionY][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iPositionY][0][0] = iBody;
 
   update[iBody].pdDPositionY =
@@ -449,7 +449,7 @@ void VerifyPositionZ(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iPositionZ][0]     = 7;
   update[iBody].iNumBodies[update[iBody].iPositionZ][0] = 1;
   update[iBody].iaBody[update[iBody].iPositionZ][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iPositionZ][0] * sizeof(int));
+        update[iBody].iNumBodies[update[iBody].iPositionZ][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iPositionZ][0][0] = iBody;
 
   update[iBody].pdDPositionZ =
@@ -675,7 +675,7 @@ void Bary2OrbElems(BODY *body, int iBody) {
 
     // Solve for various values that are used repeatedly
     // Solve for h = r X v
-    cross(body[iBody].dHCartPos, body[iBody].dHCartVel, h);
+    fvCrossProduct(body[iBody].dHCartPos, body[iBody].dHCartVel, h);
     hsq   = h[0] * h[0] + h[1] * h[1] + h[2] * h[2];            // ||h||^2
     normh = sqrt(hsq);                                          // ||h||
     vsq   = body[iBody].dHCartVel[0] * body[iBody].dHCartVel[0] // ||v||^2

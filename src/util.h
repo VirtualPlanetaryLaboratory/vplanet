@@ -7,5 +7,7 @@
 
 void fvCopyPointerToArray(double *, double *, int);
 void fvNormalizeVector(double *, int);
-double fdDotProduct(const int *, const double *, int);
+double fdDotProduct(const double *, const double *, int);
 void fvTwoEulerRotations(double *, double, int, double, int);
+void fvCrossProduct(double *, double *, double *);
+double *fdaCrossProduct(double *, double *);

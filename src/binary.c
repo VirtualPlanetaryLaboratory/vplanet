@@ -595,7 +595,7 @@ void VerifyCBPPhi(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iCBPPhi][0]     = 10;
   update[iBody].iNumBodies[update[iBody].iCBPPhi][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPPhi][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iCBPPhi][0] * sizeof(int));
+        update[iBody].iNumBodies[update[iBody].iCBPPhi][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPPhi][0][0] = iBody;
 
   update[iBody].pdCBPPhiBinary =
@@ -608,7 +608,7 @@ void VerifyCBPRDot(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iCBPRDot][0]     = 10;
   update[iBody].iNumBodies[update[iBody].iCBPRDot][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPRDot][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iCBPRDot][0] * sizeof(int));
+        update[iBody].iNumBodies[update[iBody].iCBPRDot][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPRDot][0][0] = iBody;
 
   update[iBody].pdCBPRDotBinary =
@@ -621,7 +621,7 @@ void VerifyCBPZDot(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iCBPZDot][0]     = 10;
   update[iBody].iNumBodies[update[iBody].iCBPZDot][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPZDot][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iCBPZDot][0] * sizeof(int));
+        update[iBody].iNumBodies[update[iBody].iCBPZDot][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPZDot][0][0] = iBody;
 
   update[iBody].pdCBPZDotBinary =
@@ -634,7 +634,7 @@ void VerifyCBPPhiDot(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iCBPPhiDot][0]     = 10;
   update[iBody].iNumBodies[update[iBody].iCBPPhiDot][0] = 1;
   update[iBody].iaBody[update[iBody].iCBPPhiDot][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iCBPPhiDot][0] * sizeof(int));
+        update[iBody].iNumBodies[update[iBody].iCBPPhiDot][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iCBPPhiDot][0][0] = iBody;
 
   update[iBody].pdCBPPhiDotBinary =
@@ -1056,7 +1056,7 @@ void WriteBinPriRBinary(BODY *body, CONTROL *control, OUTPUT *output,
   // Compute current binary true anomaly
   double meanAnomaly = body[1].dMeanMotion * body[0].dAge + body[1].dLL13PhiAB;
   double eccAnomaly  = fndMeanToEccentric(
-         meanAnomaly, body[1].dEcc); // Solve Kepler's equation
+        meanAnomaly, body[1].dEcc); // Solve Kepler's equation
   double trueAnomaly = fndEccToTrue(eccAnomaly, body[1].dEcc);
 
   // Compute binary separation
@@ -1084,7 +1084,7 @@ void WriteBinSecRBinary(BODY *body, CONTROL *control, OUTPUT *output,
   // Compute current binary true anomaly
   double meanAnomaly = body[1].dMeanMotion * body[1].dAge + body[1].dLL13PhiAB;
   double eccAnomaly  = fndMeanToEccentric(
-         meanAnomaly, body[1].dEcc); // Solve Kepler's equation
+        meanAnomaly, body[1].dEcc); // Solve Kepler's equation
   double trueAnomaly = fndEccToTrue(eccAnomaly, body[1].dEcc);
 
   // Compute binary separation
@@ -1112,7 +1112,7 @@ void WriteBinPriPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
   // Compute current binary true anomaly
   double meanAnomaly = body[1].dMeanMotion * body[0].dAge + body[1].dLL13PhiAB;
   double eccAnomaly  = fndMeanToEccentric(
-         meanAnomaly, body[1].dEcc); // Solve Kepler's equation
+        meanAnomaly, body[1].dEcc); // Solve Kepler's equation
 
   *dTmp = fndEccToTrue(eccAnomaly, body[1].dEcc);
   if (output->bDoNeg[iBody]) {
@@ -1132,7 +1132,7 @@ void WriteBinSecPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
   // Compute current binary true anomaly
   double meanAnomaly = body[1].dMeanMotion * body[1].dAge + body[1].dLL13PhiAB;
   double eccAnomaly  = fndMeanToEccentric(
-         meanAnomaly, body[1].dEcc); // Solve Kepler's equation
+        meanAnomaly, body[1].dEcc); // Solve Kepler's equation
 
   // Secondary is PI radians away from primary
   *dTmp = fndEccToTrue(eccAnomaly, body[1].dEcc) + PI;
@@ -1592,7 +1592,7 @@ void fnvCylToCartVel(double *daCylPos, double *daCylVel, double *dCartVel) {
      h = r x v in cartesian coords */
 void fnvSpecificAngMom(double *r, double *v, double *h) {
   // No return since resultant vector, h, is supplied
-  cross(r, v, h); // r x v -> h
+  fvCrossProduct(r, v, h); // r x v -> h
 }
 
 /** Calculate specific orbital energy
@@ -1740,7 +1740,7 @@ void fnvComputeEccVector(BODY *body, double *evec, int iBody) {
   fnvCylToCartVel(r, v, vCart);
 
   fnvSpecificAngMom(rCart, vCart, h);
-  cross(vCart, h, evec);
+  fvCrossProduct(vCart, h, evec);
 
   double mag_r = sqrt(fndDot(rCart, rCart));
 

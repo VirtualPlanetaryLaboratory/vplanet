@@ -3273,21 +3273,6 @@ double fndVyi(BODY *body, int iBody) {
   return v;
 }
 
-
-/**
-Calculates cross product of vectors
-
-@param a First vector of cross prodect
-@param b Second vector of cross product
-@param c Resulting product containing cross product
-*/
-void cross(double *a, double *b, double *c) {
-  c[0] = a[1] * b[2] - b[1] * a[2];
-  c[1] = a[2] * b[0] - b[2] * a[0];
-  c[2] = a[0] * b[1] - b[0] * a[1];
-}
-
-
 //
 /*
  * Semi-major axis functions

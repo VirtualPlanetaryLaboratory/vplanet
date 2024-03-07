@@ -532,7 +532,7 @@ void angularmom(BODY *body, double *AngMom, int iNumBodies) {
   }
 
   for (iBody = 0; iBody < iNumBodies; iBody++) {
-    cross(body[iBody].daCartPos, body[iBody].daCartVel, rxptmp);
+    fvCrossProduct(body[iBody].daCartPos, body[iBody].daCartVel, rxptmp);
     for (i = 0; i < 3; i++) {
       // Note the MSUN because DistOrb is defined in MSUN units.
       // This may not work for SpiNBody
@@ -615,7 +615,7 @@ void cart2osc(BODY *body, int iNumBodies) {
             body[iBody].daCartPos[2] * body[iBody].daCartVel[2]) /
            r;
     mu = KGAUSS * KGAUSS * (body[0].dMass + body[iBody].dMass) / MSUN;
-    cross(body[iBody].daCartPos, body[iBody].daCartVel, h);
+    fvCrossProduct(body[iBody].daCartPos, body[iBody].daCartVel, h);
     hsq = normv(h) * normv(h);
 
     body[iBody].dSemi = pow((2.0 / r - vsq / mu), -1) * AUM;
@@ -1151,8 +1151,7 @@ Transform a vector from the Rotation Frame to the Invariable Frame.
 
 @param daVector The vector to be transformed.
 */
-void fvRotFrameToInvFrame(BODY *body, CONTROL *control, double *daVector,
-                          int iBody) {
+void fvRotFrameToInvFrame(BODY *body, double *daVector, int iBody) {
   fvRotFrameToOrbFrame(body, daVector, iBody);
   fvOrbFrameToRefFrame(body, daVector, iBody);
   fvRefFrameToInvFrame(body, daVector, iBody);
@@ -1163,8 +1162,7 @@ Transform a vector from the Rotation Frame to the Reference Frame.
 
 @param daVector The vector to be transformed.
 */
-void fvRotFrameToRefFrame(BODY *body, CONTROL *control, double *daVector,
-                          int iBody) {
+void fvRotFrameToRefFrame(BODY *body, double *daVector, int iBody) {
   fvRotFrameToOrbFrame(body, daVector, iBody);
   fvOrbFrameToRefFrame(body, daVector, iBody);
 }
@@ -1174,8 +1172,7 @@ Transform a vector from the Rotation Frame to the Reference Frame.
 
 @param daVector The vector to be transformed.
 */
-void fvOrbFrameToInvFrame(BODY *body, CONTROL *control, double *daVector,
-                          int iBody) {
+void fvOrbFrameToInvFrame(BODY *body, double *daVector, int iBody) {
   fvOrbFrameToRefFrame(body, daVector, iBody);
   fvRefFrameToInvFrame(body, daVector, iBody);
 }
@@ -1228,22 +1225,6 @@ double *fdaOrbitalAngularMomentumRefFrame(BODY *body, int iBody) {
 }
 
 /**
-Returns the vector of a body's orbital angular momentum based on orbital
-elements in the Invariable Frame.
-*/
-double *fdaOrbitalAngularMomentumInvFrame(BODY *body, int iBody) {
-  static double daAngMom[3];
-  int i;
-  double *ptrAngMom;
-
-  ptrAngMom = fdaOrbitalAngularMomentumOrbFrame(body, iBody);
-  fvCopyPointerToArray(ptrAngMom, daAngMom, 3);
-  fvOrbFrameToInvFrame(body, daAngMom, iBody);
-
-  return daAngMom;
-}
-
-/**
 Returns the total orbital angular momentum vector in the Reference Frame.
 */
 double *fdaTotalOrbitalAngularMomentumRefFrame(BODY *body, CONTROL *control) {
@@ -1259,9 +1240,7 @@ Returns the unit vector of the total orbital angular momentum vector in the
 Reference Frame.
 */
 double *fdaTotalOrbitalAngularMomentumRefFrameUnitVector(BODY *body,
-                                                         CONTROL *control,
-                                                         SYSTEM *system,
-                                                         int iBody) {
+                                                         CONTROL *control) {
   double *ptrAngMom;
 
   ptrAngMom = fdaTotalOrbitalAngularMomentumRefFrame(body, control);
@@ -1273,25 +1252,35 @@ double *fdaTotalOrbitalAngularMomentumRefFrameUnitVector(BODY *body,
 Returns the vector of a body's orbital angular momentum based on orbital
 elements in the Reference Frame.
 */
-double *fdaOrbitalAngularMomentumInvFrame(BODY *body, CONTROL *control,
-                                          int iBody) {
+double *fdaOrbitalAngularMomentumInvFrame(BODY *body, int iBody) {
   static double daAngMom[3];
   int i;
   double *ptrAngMom;
 
   ptrAngMom = fdaOrbitalAngularMomentumOrbFrame(body, iBody);
   fvCopyPointerToArray(ptrAngMom, daAngMom, 3);
-  fvOrbFrameToInvFrame(body, control, daAngMom, iBody);
+  fvOrbFrameToInvFrame(body, daAngMom, iBody);
 
   return daAngMom;
+}
+
+/**
+Returns the unit vector of the total orbital angular momentum vector in the
+Invariable Frame.
+*/
+double *fdaOrbitalAngularMomentumInvFrameUnitVector(BODY *body, int iBody) {
+  double *ptrAngMom;
+
+  ptrAngMom = fdaOrbitalAngularMomentumInvFrame(body, iBody);
+  fvNormalizeVector(ptrAngMom, 3);
+  return ptrAngMom;
 }
 
 /**
 Returns the vector of a body's orbital angular momentum based on orbital
 elements in the Invariable Frame.
 */
-double *fdaTotalOrbitalAngularMomentumInvFrame(BODY *body, CONTROL *control,
-                                               int iBody) {
+double *fdaTotalOrbitalAngularMomentumInvFrame(BODY *body, CONTROL *control) {
   double *ptrAngMom;
 
   ptrAngMom =
@@ -1304,11 +1293,10 @@ Returns the unit vector of the total orbital angular momentum vector in the
 Invariable Frame.
 */
 double *fdaTotalOrbitalAngularMomentumInvFrameUnitVector(BODY *body,
-                                                         CONTROL *control,
-                                                         int iBody) {
+                                                         CONTROL *control) {
   double *ptrAngMom;
 
-  ptrAngMom = fdaTotalOrbitalAngularMomentumInvFrame(body, control, iBody);
+  ptrAngMom = fdaTotalOrbitalAngularMomentumInvFrame(body, control);
   fvNormalizeVector(ptrAngMom, 3);
   return ptrAngMom;
 }
@@ -1318,12 +1306,12 @@ double *fdaTotalOrbitalAngularMomentumInvFrameUnitVector(BODY *body,
 /**
 Returns the Reference Frame vector of a body's rotational angular momentum.
 */
-double *fdaRotationalAngularMomentumRefFrame(BODY *body, CONTROL *control,
-                                             int iBody) {
+double *fdaRotationalAngularMomentumRefFrame(BODY *body, int iBody) {
   double *daAngMom;
 
   daAngMom = fdaRotationalAngularMomentumRotFrame(body, iBody);
-  fvRotFrameToRefFrame(body, control, daAngMom, iBody);
+  fvRotFrameToRefFrame(body, daAngMom, iBody);
+  return daAngMom;
 }
 
 /**
@@ -1335,33 +1323,43 @@ double *fdaTotalRotationalAngularMomentumRefFrame(BODY *body,
   double *ptrAngMom;
 
   ptrAngMom = fdaSumAngularMomenta(body, control,
-                                   &fdaRotationalAngularMomentumRefFrame);
-  return ptrAngMom;
-}
-
-/**
-Returns the unit vector of the total rotational angular momentum vector in the
-Reference Frame.
-*/
-double *fdaTotalRotationalAngularMomentumRefFrameUnitVector(BODY *body,
-                                                            CONTROL *control) {
-  double *ptrAngMom;
-
-  ptrAngMom = fdaTotalOrbitalAngularMomentumRefFrame(body, control);
-  fvNormalizeVector(ptrAngMom, 3);
+                                   fdaRotationalAngularMomentumRefFrame);
   return ptrAngMom;
 }
 
 /**
 Returns the Invariable Frame vector of a body's rotational angular momentum.
 */
-double *fdaRotationalAngularMomentumInvFrame(BODY *body, CONTROL *control,
-                                             int iBody) {
+double *fdaRotationalAngularMomentumInvFrame(BODY *body, int iBody) {
   double *daAngMom;
 
   daAngMom = fdaRotationalAngularMomentumRotFrame(body, iBody);
-  fvRotFrameToInvFrame(body, control, daAngMom, iBody);
+  fvRotFrameToInvFrame(body, daAngMom, iBody);
   return daAngMom;
+}
+
+/**
+Returns the unit vector of the total rotational angular momentum vector in the
+Invariable Frame.
+*/
+double *fdaRotationalAngularMomentumInvFrameUnitVector(BODY *body, int iBody) {
+  double *ptrAngMom;
+
+  ptrAngMom = fdaRotationalAngularMomentumInvFrame(body, iBody);
+  fvNormalizeVector(ptrAngMom, 3);
+  return ptrAngMom;
+}
+
+/**
+Returns the unit vector of the total rotational angular momentum vector in the
+Invariable Frame.
+*/
+double *fdaRotationalAngularMomentumRefFrameUnitVector(BODY *body, int iBody) {
+  double *ptrAngMom;
+
+  ptrAngMom = fdaOrbitalAngularMomentumRefFrame(body, iBody);
+  fvNormalizeVector(ptrAngMom, 3);
+  return ptrAngMom;
 }
 
 /**
@@ -1373,7 +1371,7 @@ double *fdaTotalRotationalAngularMomentumInvFrame(BODY *body,
   double *daAngMom;
 
   daAngMom = fdaSumAngularMomenta(body, control,
-                                  &fdaRotationalAngularMomentumInvFrame);
+                                  fdaRotationalAngularMomentumInvFrame);
   return daAngMom;
 }
 
@@ -1415,7 +1413,7 @@ double *fdaTotalAngularMomentumRefFrame(BODY *body, CONTROL *control) {
   }
 
   daAngMomOrb = fdaTotalOrbitalAngularMomentumRefFrame(body, control);
-  daAngMomRot = fdaRotationalAngularMomentumTotalRefFrame(body, control);
+  daAngMomRot = fdaTotalRotationalAngularMomentumRefFrame(body, control);
 
   for (i = 0; i < 3; i++) {
     daAngMomTot[i] += daAngMomOrb[i];
@@ -1434,8 +1432,22 @@ double *fdaTotalAngularMomentumRefFrameUnitVector(BODY *body,
   double *ptrAngMomTot;
 
   ptrAngMomTot = fdaTotalAngularMomentumRefFrame(body, control);
-  CopyPointerToArray(ptrAngMomTot, daAngMomTot, 3);
+  fvCopyPointerToArray(ptrAngMomTot, daAngMomTot, 3);
   fvNormalizeVector(daAngMomTot, 3);
 
   return daAngMomTot;
+}
+
+void fvCassiniVectors(BODY *body, double *daAngMomTot, double *daAngMomOrb,
+                      double *daAngMomRot, double *daTotCrossOrb,
+                      double *daRotCrossOrb, int iBody) {
+
+  daAngMomTot[0] = 0.0;
+  daAngMomTot[1] = 0.0;
+  daAngMomTot[2] = 1.0;
+  daAngMomOrb    = fdaOrbitalAngularMomentumInvFrameUnitVector(body, iBody);
+  daAngMomRot    = fdaRotationalAngularMomentumInvFrameUnitVector(body, iBody);
+
+  daTotCrossOrb = fdaCrossProduct(daAngMomTot, daAngMomOrb);
+  daRotCrossOrb = fdaCrossProduct(daAngMomRot, daAngMomOrb);
 }

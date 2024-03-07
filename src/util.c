@@ -50,7 +50,7 @@ Dot product of two vectors
 
 @return Dot product of the arrays
 */
-double fdDotProduct(const int *daFirstVector, const double *daSecondVector,
+double fdDotProduct(const double *daFirstVector, const double *daSecondVector,
                     int iNumElements) {
   double dDotProduct = 0.0;
   int i;
@@ -70,4 +70,30 @@ void fvTwoEulerRotations(double *daVector, double dAngle1, int iAxis1,
 
   RotateVector(daVector, daVectorTmp, dAngle1, iAxis1);
   RotateVector(daVectorTmp, daVector, dAngle2, iAxis2);
+}
+
+/**
+Calculates cross product of vectors
+
+@param a First vector of cross prodect
+@param b Second vector of cross product
+@param c Resulting product containing cross product
+*/
+void fvCrossProduct(double *daVector1, double *daVector2,
+                    double *daCrossProduct) {
+  daCrossProduct[0] = daVector1[1] * daVector2[2] - daVector2[1] * daVector1[2];
+  daCrossProduct[1] = daVector1[2] * daVector2[0] - daVector2[2] * daVector1[0];
+  daCrossProduct[2] = daVector1[0] * daVector2[1] - daVector2[0] * daVector1[1];
+}
+
+/**
+Return the cross product of two vectors
+*/
+double *fdaCrossProduct(double *daVector1, double *daVector2) {
+  static double daCrossProduct[3];
+  daCrossProduct[0] = daVector1[1] * daVector2[2] - daVector2[1] * daVector1[2];
+  daCrossProduct[1] = daVector1[2] * daVector2[0] - daVector2[2] * daVector1[0];
+  daCrossProduct[2] = daVector1[0] * daVector2[1] - daVector2[0] * daVector1[1];
+
+  return daCrossProduct;
 }

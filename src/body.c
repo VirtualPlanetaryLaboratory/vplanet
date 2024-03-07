@@ -1143,12 +1143,14 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge,
   @param result Resultant vector
 
 */
-void fvMatrixVectorMult(const int mat[16][16], const double *vec,
-                        double *result) {
+void fvMatrixVectorMult(const int iaMatrix[16][16], const double *daVector,
+                        double *daResult) {
   // in matrix form: result = mat * vec;
-  int i;
+  int i,j;
   for (i = 0; i < 16; i++) {
-    result[i] = fdDotProduct(mat[i], vec, 16);
+    for (j=0;j<16;j++) {
+      daResult[i] += iaMatrix[i][j]*daVector[j];
+    }
   }
 }
 

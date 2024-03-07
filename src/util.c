@@ -61,12 +61,31 @@ double fdDotProduct(const double *daFirstVector, const double *daSecondVector,
   return dDotProduct;
 }
 
+void RotateVector(double *v1, double *v2, double theta, int axis) {
+  if (axis == XAXIS) {
+    v2[0] = v1[0];
+    v2[1] = cos(theta) * v1[1] - sin(theta) * v1[2];
+    v2[2] = sin(theta) * v1[1] + cos(theta) * v1[2];
+  } else if (axis == YAXIS) {
+    v2[0] = cos(theta) * v1[0] + sin(theta) * v1[2];
+    v2[1] = v1[1];
+    v2[2] = -sin(theta) * v1[0] + cos(theta) * v1[2];
+  } else if (axis == ZAXIS) {
+    v2[0] = cos(theta) * v1[0] - sin(theta) * v1[1];
+    v2[1] = sin(theta) * v1[0] + cos(theta) * v1[1];
+    v2[2] = v1[2];
+  } else {
+    fprintf(stderr, "ERROR: Invaliad roational axis in RotateVector.\n");
+    exit(EXIT_INT);
+  }
+}
+
 /**
 Perform two rotations on a z-vector (0,0,z) to place it in the Orbit Frame.
 */
 void fvTwoEulerRotations(double *daVector, double dAngle1, int iAxis1,
                          double dAngle2, int iAxis2) {
-  double *daVectorTmp;
+  static double daVectorTmp[3];
 
   RotateVector(daVector, daVectorTmp, dAngle1, iAxis1);
   RotateVector(daVectorTmp, daVector, dAngle2, iAxis2);

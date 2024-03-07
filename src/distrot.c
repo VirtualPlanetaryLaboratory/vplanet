@@ -1251,8 +1251,8 @@ void WriteZoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                       double *dTmp, char cUnit[]) {
-  double *daAngMomTot, *daAngMomOrb, *daAngMomRot, *daTotCrossOrb,
-        *daRotCrossOrb;
+  static double daAngMomTot[3], daAngMomOrb[3], daAngMomRot[3], daTotCrossOrb[3],
+        daRotCrossOrb[3];
 
   fvCassiniVectors(body, daAngMomTot, daAngMomOrb, daAngMomRot, daTotCrossOrb,
                    daRotCrossOrb, iBody);
@@ -1275,8 +1275,8 @@ void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                       double *dTmp, char cUnit[]) {
-  double *daAngMomTot, *daAngMomOrb, *daAngMomRot, *daTotCrossOrb,
-        *daRotCrossOrb;
+  static double daAngMomTot[3], daAngMomOrb[3], daAngMomRot[3], daTotCrossOrb[3],
+        daRotCrossOrb[3];
 
   fvCassiniVectors(body, daAngMomTot, daAngMomOrb, daAngMomRot, daTotCrossOrb,
                    daRotCrossOrb, iBody);
@@ -1576,25 +1576,6 @@ void ForceBehaviorDistRot(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
                           int iModule) {
   if (body[iBody].bReadOrbitData) {
     body[iBody].iCurrentStep++;
-  }
-}
-
-void RotateVector(double *v1, double *v2, double theta, int axis) {
-  if (axis == XAXIS) {
-    v2[0] = v1[0];
-    v2[1] = cos(theta) * v1[1] - sin(theta) * v1[2];
-    v2[2] = sin(theta) * v1[1] + cos(theta) * v1[2];
-  } else if (axis == YAXIS) {
-    v2[0] = cos(theta) * v1[0] + sin(theta) * v1[2];
-    v2[1] = v1[1];
-    v2[2] = -sin(theta) * v1[0] + cos(theta) * v1[2];
-  } else if (axis == ZAXIS) {
-    v2[0] = cos(theta) * v1[0] - sin(theta) * v1[1];
-    v2[1] = sin(theta) * v1[0] + cos(theta) * v1[1];
-    v2[2] = v1[2];
-  } else {
-    fprintf(stderr, "ERROR: Invaliad roational axis in RotateVector.\n");
-    exit(EXIT_INT);
   }
 }
 

@@ -17,6 +17,7 @@ void WriteAge(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
               UNITS *units, UPDATE *update, int iBody, double *dTmp,
               char cUnit[]) {
   *dTmp = body[iBody].dAge;
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
@@ -25,6 +26,129 @@ void WriteAge(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     fsUnitsTime(units->iTime, cUnit);
   }
 }
+
+/*
+ * Angular Momentum
+ */
+
+void WriteAngMomTot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  *dTmp = fdTotalAngularMomentum(body,control);
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngMom(units);
+    fsUnitsAngMom(units, cUnit);
+  }
+}
+
+void WriteAngMomTotRefX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  static double daAngMom[3];
+
+  daAngMom = fdaTotalAngularMomentumRefFrame(body,control);
+  *dTmp = daAngMom[0];
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngMom(units);
+    fsUnitsAngMom(units, cUnit);
+  }
+}
+
+void WriteAngMomTotRefY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  static double daAngMom[3];
+
+  daAngMom = fdaTotalAngularMomentumRefFrame(body,control);
+  *dTmp = daAngMom[1];
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngMom(units);
+    fsUnitsAngMom(units, cUnit);
+  }
+}
+
+void WriteAngMomTotRefZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  static double daAngMom[3];
+
+  daAngMom = fdaTotalAngularMomentumRefFrame(body,control);
+  *dTmp = daAngMom[2];
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngMom(units);
+    fsUnitsAngMom(units, cUnit);
+  }
+}
+
+oid WriteAngMomTotRefUnitX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  static double daAngMom[3];
+
+  daAngMom = fdaTotalAngularMomentumRefFrameUnitVector(body,control);
+  *dTmp = daAngMom[0];
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngMom(units);
+    fsUnitsAngMom(units, cUnit);
+  }
+}
+
+void WriteAngMomTotRefUnitY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  static double daAngMom[3];
+
+  daAngMom = fdaTotalAngularMomentumRefFrameUnitVector(body,control);
+  *dTmp = daAngMom[1];
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngMom(units);
+    fsUnitsAngMom(units, cUnit);
+  }
+}
+
+void WriteAngMomTotRefUnitZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  static double daAngMom[3];
+
+  daAngMom = fdaTotalAngularMomentumRefFrameUnitVector(body,control);
+  *dTmp = daAngMom[2];
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngMom(units);
+    fsUnitsAngMom(units, cUnit);
+  }
+}
+
+
+
 
 /*
  * B

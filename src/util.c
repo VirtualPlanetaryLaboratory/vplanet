@@ -97,3 +97,16 @@ double *fdaCrossProduct(double *daVector1, double *daVector2) {
 
   return daCrossProduct;
 }
+
+
+double fdMagnitude(double *daVector, int iNumElements) {
+  int i;
+  double dMagnitude, dSum = 0;
+
+  for (i = 0; i < iNumElements; i++) {
+    dSum += daVector[i] * daVector[i];
+  }
+  dMagnitude = sqrt(dSum);
+
+  return dMagnitude;
+}

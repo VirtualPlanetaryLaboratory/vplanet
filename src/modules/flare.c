@@ -9,9 +9,7 @@
 
 */
 
-#include "vplanet.h"
-#include <math.h>
-#include <stdio.h>
+#include "../core/vplanet.h"
 
 void BodyCopyFlare(BODY *dest, BODY *src, int foo, int iNumBodies, int iBody) {
   dest[iBody].dFlareMinEnergy = src[iBody].dFlareMinEnergy;

@@ -12,12 +12,7 @@
 /* note August 15: system->dScalingF added to NearbyStarDist(), VelocityDisp(),
  * VerifyGalHabit(), ForceBehavior(), CalcEncounterRate */
 
-#include "vplanet.h"
-#include <assert.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "../core/vplanet.h"
 
 void BodyCopyGalHabit(BODY *dest, BODY *src, int iTideModel, int iNumBodies,
                       int iBody) {

@@ -1031,6 +1031,13 @@ void fsUnitsAngMom(UNITS *units, char cUnit[]) {
   strcat(cUnit, cTmp);
 }
 
+double fdUnitsAngMom(UNITS *units) {
+  double dFactor;
+  dFactor = fdUnitsMass(units->iMass) * fdUnitsLength(units->iLength)  /
+         (fdUnitsTime(units->iTime) * fdUnitsTime(units->iTime));
+  return dFactor;
+}
+
 void fsUnitsDensity(UNITS *units, char cUnit[]) {
   char cTmp[OPTLEN];
 

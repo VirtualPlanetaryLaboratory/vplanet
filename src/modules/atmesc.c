@@ -16,7 +16,7 @@
 
 */
 
-#include "vplanet.h"
+#include "../core/vplanet.h"
 
 /**
 Create a copy of the body at index \p iBody. Used during integration

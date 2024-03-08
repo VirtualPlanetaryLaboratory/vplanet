@@ -12,3 +12,4 @@ void fvTwoEulerRotations(double *, double, int, double, int);
 void fvCrossProduct(double *, double *, double *);
 double *fdaCrossProduct(double *, double *);
 double fdMagnitude(double *, int);
+void RotateVector(double *, double *, double, int);

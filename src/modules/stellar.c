@@ -13,7 +13,7 @@
 
 */
 
-#include "vplanet.h"
+#include "../core/vplanet.h"
 
 void BodyCopyStellar(BODY *dest, BODY *src, int foo, int iNumBodies,
                      int iBody) {

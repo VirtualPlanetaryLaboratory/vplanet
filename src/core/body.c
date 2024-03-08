@@ -1143,12 +1143,14 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge,
   @param result Resultant vector
 
 */
-void fvMatrixVectorMult(const int mat[16][16], const double *vec,
-                        double *result) {
+void fvMatrixVectorMult(const int iaMatrix[16][16], const double *daVector,
+                        double *daResult) {
   // in matrix form: result = mat * vec;
-  int i;
+  int i,j;
   for (i = 0; i < 16; i++) {
-    result[i] = fdDotProduct(mat[i], vec, 16);
+    for (j=0;j<16;j++) {
+      daResult[i] += iaMatrix[i][j]*daVector[j];
+    }
   }
 }
 
@@ -1472,7 +1474,7 @@ double fdEffectiveTemperature(BODY *body, int iBody) {
 
   @return Body's rotational angular momentum
 */
-double fdRotAngMom(BODY *body, int iBody) {
+double fdRotationalAngularMomentum(BODY *body, int iBody) {
   double dAngMom;
 
   dAngMom = body[iBody].dRadGyra * body[iBody].dRadGyra * body[iBody].dMass *
@@ -1487,7 +1489,7 @@ double *fdaRotationalAngularMomentumRotFrame(BODY *body, int iBody) {
 
   daAngMom[0] = 0.0;
   daAngMom[1] = 0.0;
-  daAngMom[2] = fdRotAngMom(body, iBody);
+  daAngMom[2] = fdRotationalAngularMomentum(body, iBody);
 
   return daAngMom;
 }

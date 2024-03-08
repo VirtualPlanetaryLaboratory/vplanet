@@ -131,7 +131,7 @@ double fdTotAngMom(BODY *body, CONTROL *control, SYSTEM *system) {
     for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
       pdaTmp = fdOrbAngMom(body, control, iBody);
       dTot += *pdaTmp;
-      dTot += fdRotAngMom(body, iBody);
+      dTot += fdRotationalAngularMomentum(body, iBody);
       dTot += body[iBody].dLostAngMom;
       free(pdaTmp);
     }
@@ -1184,11 +1184,13 @@ Returns the magnitude of a body's orbital angular momentum based on orbital
 elements.
 */
 double fdOrbitalAngularMomentum(BODY *body, int iBody) {
+  // XXX Remove KGAUSS for v3.0! 
   double dAngMom = body[iBody].dMass / MSUN * KGAUSS *
                    sqrt((body[0].dMass + body[iBody].dMass) / MSUN *
                         body[iBody].dSemi / AUM *
                         (1. - (body[iBody].dHecc * body[iBody].dHecc) -
                          (body[iBody].dKecc * body[iBody].dKecc)));
+  // XXX I don't think these units are right!
   return dAngMom;
 }
 
@@ -1214,13 +1216,24 @@ elements in the Reference Frame.
 */
 double *fdaOrbitalAngularMomentumRefFrame(BODY *body, int iBody) {
   static double daAngMom[3];
-  int i;
   double *ptrAngMom;
 
   ptrAngMom = fdaOrbitalAngularMomentumOrbFrame(body, iBody);
   fvCopyPointerToArray(ptrAngMom, daAngMom, 3);
   fvOrbFrameToRefFrame(body, daAngMom, iBody);
 
+  return daAngMom;
+}
+
+/**
+Returns the unit vector of a body's orbital angular momentum based on orbital
+elements in the Reference Frame.
+*/
+double *fdaOrbitalAngularMomentumRefFrameUnitVector(BODY *body, int iBody) {
+  double *daAngMom;
+
+  daAngMom = fdaOrbitalAngularMomentumRefFrame(body, iBody);
+  fvNormalizeVector(daAngMom,3);
   return daAngMom;
 }
 

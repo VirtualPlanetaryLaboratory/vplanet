@@ -9,7 +9,7 @@
 
 */
 
-#include "vplanet.h"
+#include "../core/vplanet.h"
 
 void BodyCopyPoise(BODY *dest, BODY *src, int iTideModel, int iNumBodies,
                    int iBody) {

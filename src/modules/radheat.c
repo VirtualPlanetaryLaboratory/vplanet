@@ -11,7 +11,7 @@
 
 */
 
-#include "vplanet.h"
+#include "../core/vplanet.h"
 
 void fvInitializeControlRadheat(CONTROL *control, int iBody) {
   if (iBody == 0) {

@@ -21,7 +21,7 @@
 
 */
 
-#include "vplanet.h"
+#include "../core/vplanet.h"
 
 /** Copy body properties from src to dest for cbp */
 void BodyCopyBinary(BODY *dest, BODY *src, int foo, int iNumBodies, int iBody) {

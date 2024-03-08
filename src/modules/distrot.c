@@ -1242,14 +1242,14 @@ void WriteZoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
   }
 }
 
-double fdCassiniOne(BODY *body, int iBody) {
+double fdCassiniOne(BODY *body, CONTROL *control, int iBody) {
   int i;
   double dCassiniOne, dMagTotCrossOrb, dMagRotCrossOrb;
-  double *daAngMomTot, *daAngMomOrb, *daAngMomRot, *daTotCrossOrb,
-        *daRotCrossOrb;
+  static double daAngMomTot[3], daAngMomOrb[3], daAngMomRot[3],
+        daTotCrossOrb[3], daRotCrossOrb[3];
 
-  fvCassiniVectors(body, daAngMomTot, daAngMomOrb, daAngMomRot, daTotCrossOrb,
-                   daRotCrossOrb, iBody);
+  fvCassiniVectors(body, control, daAngMomTot, daAngMomOrb, daAngMomRot,
+                   daTotCrossOrb, daRotCrossOrb, iBody);
   double *daDoubleCross = fdaCrossProduct(daTotCrossOrb, daRotCrossOrb);
   dMagTotCrossOrb       = fdMagnitude(daTotCrossOrb, 3);
   dMagRotCrossOrb       = fdMagnitude(daRotCrossOrb, 3);
@@ -1266,7 +1266,7 @@ double fdCassiniOne(BODY *body, int iBody) {
 void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                       double *dTmp, char cUnit[]) {
-  *dTmp = fdCassiniOne(body, iBody);
+  *dTmp = fdCassiniOne(body, control, iBody);
   strcpy(cUnit, "");
 
   if (body[iBody].dInc == 0 && body[iBody].dObliquity == 0) {
@@ -1287,8 +1287,8 @@ void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
   static double daAngMomTot[3], daAngMomOrb[3], daAngMomRot[3],
         daTotCrossOrb[3], daRotCrossOrb[3];
 
-  fvCassiniVectors(body, daAngMomTot, daAngMomOrb, daAngMomRot, daTotCrossOrb,
-                   daRotCrossOrb, iBody);
+  fvCassiniVectors(body, control, daAngMomTot, daAngMomOrb, daAngMomRot,
+                   daTotCrossOrb, daRotCrossOrb, iBody);
 
 
   if (body[iBody].dInc == 0 && body[iBody].dObliquity == 0) {

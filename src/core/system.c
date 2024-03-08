@@ -1184,7 +1184,7 @@ Returns the magnitude of a body's orbital angular momentum based on orbital
 elements.
 */
 double fdOrbitalAngularMomentum(BODY *body, int iBody) {
-  // XXX Remove KGAUSS for v3.0! 
+  // XXX Remove KGAUSS for v3.0!
   double dAngMom = body[iBody].dMass / MSUN * KGAUSS *
                    sqrt((body[0].dMass + body[iBody].dMass) / MSUN *
                         body[iBody].dSemi / AUM *
@@ -1233,7 +1233,7 @@ double *fdaOrbitalAngularMomentumRefFrameUnitVector(BODY *body, int iBody) {
   double *daAngMom;
 
   daAngMom = fdaOrbitalAngularMomentumRefFrame(body, iBody);
-  fvNormalizeVector(daAngMom,3);
+  fvNormalizeVector(daAngMom, 3);
   return daAngMom;
 }
 
@@ -1451,15 +1451,13 @@ double *fdaTotalAngularMomentumRefFrameUnitVector(BODY *body,
   return daAngMomTot;
 }
 
-void fvCassiniVectors(BODY *body, double *daAngMomTot, double *daAngMomOrb,
-                      double *daAngMomRot, double *daTotCrossOrb,
-                      double *daRotCrossOrb, int iBody) {
+void fvCassiniVectors(BODY *body, CONTROL *control, double *daAngMomTot,
+                      double *daAngMomOrb, double *daAngMomRot,
+                      double *daTotCrossOrb, double *daRotCrossOrb, int iBody) {
 
-  daAngMomTot[0] = 0.0;
-  daAngMomTot[1] = 0.0;
-  daAngMomTot[2] = 1.0;
-  daAngMomOrb    = fdaOrbitalAngularMomentumInvFrameUnitVector(body, iBody);
-  daAngMomRot    = fdaRotationalAngularMomentumInvFrameUnitVector(body, iBody);
+  daAngMomTot = fdaTotalAngularMomentumRefFrameUnitVector(body, control);
+  daAngMomOrb = fdaOrbitalAngularMomentumRefFrameUnitVector(body, iBody);
+  daAngMomRot = fdaRotationalAngularMomentumRefFrameUnitVector(body, iBody);
 
   daTotCrossOrb = fdaCrossProduct(daAngMomTot, daAngMomOrb);
   daRotCrossOrb = fdaCrossProduct(daAngMomRot, daAngMomOrb);

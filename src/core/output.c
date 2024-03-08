@@ -48,7 +48,7 @@ void WriteAngMomTot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system
 void WriteAngMomTotRefX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
               UNITS *units, UPDATE *update, int iBody, double *dTmp,
               char cUnit[]) {
-  static double daAngMom[3];
+  double *daAngMom;
 
   daAngMom = fdaTotalAngularMomentumRefFrame(body,control);
   *dTmp = daAngMom[0];
@@ -65,7 +65,7 @@ void WriteAngMomTotRefX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *sy
 void WriteAngMomTotRefY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
               UNITS *units, UPDATE *update, int iBody, double *dTmp,
               char cUnit[]) {
-  static double daAngMom[3];
+  double *daAngMom;
 
   daAngMom = fdaTotalAngularMomentumRefFrame(body,control);
   *dTmp = daAngMom[1];
@@ -82,7 +82,7 @@ void WriteAngMomTotRefY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *sy
 void WriteAngMomTotRefZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
               UNITS *units, UPDATE *update, int iBody, double *dTmp,
               char cUnit[]) {
-  static double daAngMom[3];
+  double *daAngMom;
 
   daAngMom = fdaTotalAngularMomentumRefFrame(body,control);
   *dTmp = daAngMom[2];
@@ -96,12 +96,56 @@ void WriteAngMomTotRefZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *sy
   }
 }
 
-oid WriteAngMomTotRefUnitX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+void WriteAngMomTotRefUnitX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
               UNITS *units, UPDATE *update, int iBody, double *dTmp,
               char cUnit[]) {
-  static double daAngMom[3];
+  double *daAngMom;
 
   daAngMom = fdaTotalAngularMomentumRefFrameUnitVector(body,control);
+  *dTmp = daAngMom[0];
+  strcpy(cUnit,"");
+}
+
+void WriteAngMomTotRefUnitY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  double *daAngMom;
+
+  daAngMom = fdaTotalAngularMomentumRefFrameUnitVector(body,control);
+  *dTmp = daAngMom[1];
+  strcpy(cUnit,"");
+}
+
+void WriteAngMomTotRefUnitZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  double *daAngMom;
+
+  daAngMom = fdaTotalAngularMomentumRefFrameUnitVector(body,control);
+  *dTmp = daAngMom[2];
+  strcpy(cUnit,"");
+}
+
+void WriteAngMomOrb(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  *dTmp = fdOrbitalAngularMomentum(body,iBody);
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngMom(units);
+    fsUnitsAngMom(units, cUnit);
+  }
+}
+
+void WriteAngMomOrbRefX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  double *daAngMom;
+
+  daAngMom = fdaOrbitalAngularMomentumRefFrame(body,iBody);
   *dTmp = daAngMom[0];
 
   if (output->bDoNeg[iBody]) {
@@ -113,12 +157,12 @@ oid WriteAngMomTotRefUnitX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM 
   }
 }
 
-void WriteAngMomTotRefUnitY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+void WriteAngMomOrbRefY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
               UNITS *units, UPDATE *update, int iBody, double *dTmp,
               char cUnit[]) {
-  static double daAngMom[3];
+  double *daAngMom;
 
-  daAngMom = fdaTotalAngularMomentumRefFrameUnitVector(body,control);
+  daAngMom = fdaOrbitalAngularMomentumRefFrame(body,iBody);
   *dTmp = daAngMom[1];
 
   if (output->bDoNeg[iBody]) {
@@ -130,12 +174,12 @@ void WriteAngMomTotRefUnitY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM
   }
 }
 
-void WriteAngMomTotRefUnitZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+void WriteAngMomOrbRefZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
               UNITS *units, UPDATE *update, int iBody, double *dTmp,
               char cUnit[]) {
-  static double daAngMom[3];
+  double *daAngMom;
 
-  daAngMom = fdaTotalAngularMomentumRefFrameUnitVector(body,control);
+  daAngMom = fdaOrbitalAngularMomentumRefFrame(body,iBody);
   *dTmp = daAngMom[2];
 
   if (output->bDoNeg[iBody]) {
@@ -147,7 +191,131 @@ void WriteAngMomTotRefUnitZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM
   }
 }
 
+void WriteAngMomOrbRefUnitX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  double *daAngMom;
 
+  daAngMom = fdaOrbitalAngularMomentumRefFrameUnitVector(body,iBody);
+  *dTmp = daAngMom[0];
+  strcpy(cUnit,"");
+}
+
+void WriteAngMomOrbRefUnitY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  double *daAngMom;
+
+  daAngMom = fdaOrbitalAngularMomentumRefFrameUnitVector(body,iBody);
+  *dTmp = daAngMom[1];
+  strcpy(cUnit,"");
+}
+
+void WriteAngMomOrbRefUnitZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  double *daAngMom;
+
+  daAngMom = fdaOrbitalAngularMomentumRefFrameUnitVector(body,iBody);
+  *dTmp = daAngMom[2];
+  strcpy(cUnit,"");
+}
+
+
+void WriteAngMomRot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  *dTmp = fdRotationalAngularMomentum(body,iBody);
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngMom(units);
+    fsUnitsAngMom(units, cUnit);
+  }
+}
+
+void WriteAngMomRotRefX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  double *daAngMom;
+
+  daAngMom = fdaRotationalAngularMomentumRefFrame(body,iBody);
+  *dTmp = daAngMom[0];
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngMom(units);
+    fsUnitsAngMom(units, cUnit);
+  }
+}
+
+void WriteAngMomRotRefY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  double *daAngMom;
+
+  daAngMom = fdaRotationalAngularMomentumRefFrame(body,iBody);
+  *dTmp = daAngMom[1];
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngMom(units);
+    fsUnitsAngMom(units, cUnit);
+  }
+}
+
+void WriteAngMomRotRefZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  double *daAngMom;
+
+  daAngMom = fdaRotationalAngularMomentumRefFrame(body,iBody);
+  *dTmp = daAngMom[2];
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsAngMom(units);
+    fsUnitsAngMom(units, cUnit);
+  }
+}
+
+void WriteAngMomRotRefUnitX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  double *daAngMom;
+
+  daAngMom = fdaRotationalAngularMomentumRefFrameUnitVector(body,iBody);
+  *dTmp = daAngMom[0];
+  strcpy(cUnit,"");
+}
+
+void WriteAngMomRotRefUnitY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  double *daAngMom;
+
+  daAngMom = fdaRotationalAngularMomentumRefFrameUnitVector(body,iBody);
+  *dTmp = daAngMom[1];
+  strcpy(cUnit,"");
+}
+
+void WriteAngMomRotRefUnitZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+              UNITS *units, UPDATE *update, int iBody, double *dTmp,
+              char cUnit[]) {
+  double *daAngMom;
+
+  daAngMom = fdaRotationalAngularMomentumRefFrameUnitVector(body,iBody);
+  *dTmp = daAngMom[2];
+  strcpy(cUnit,"");
+}
 
 
 /*
@@ -735,6 +903,7 @@ void WriteBodyPrecA(BODY *body, CONTROL *control, OUTPUT *output,
   }
 }
 
+// XXX Duplicate! Delete in v3.0
 void WriteOrbAngMom(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
@@ -934,23 +1103,6 @@ void WriteRadGyra(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   sprintf(cUnit, "%s", "");
 }
 
-void WriteRotAngMom(BODY *body, CONTROL *control, OUTPUT *output,
-                    SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
-
-  *dTmp = fdRotAngMom(body, iBody);
-
-  if (output->bDoNeg[iBody]) {
-    *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
-  } else {
-    *dTmp *= fdUnitsTime(units->iTime) /
-             (fdUnitsMass(units->iMass) * fdUnitsLength(units->iLength) *
-              fdUnitsLength(units->iLength));
-    fsUnitsAngMom(units, cUnit);
-  }
-}
-
 void WriteRotKinEnergy(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char cUnit[]) {
@@ -1126,6 +1278,7 @@ void WriteTime(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   }
 }
 
+// XXX Duplicate! Delete in v3.0
 void WriteTotAngMom(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
@@ -1359,6 +1512,145 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_AGE].iNum       = 1;
   output[OUT_AGE].iModuleBit = 1;
   fnWrite[OUT_AGE]           = &WriteAge;
+
+  /*
+   * Angular Momentum
+   */
+
+  sprintf(output[OUT_ANGMOMTOT].cName, "AngMomTot");
+  sprintf(output[OUT_ANGMOMTOT].cDescr, "Magnitude of system's total angular momentum");
+  output[OUT_ANGMOMTOT].iNum       = 1;
+  output[OUT_ANGMOMTOT].iModuleBit = EQTIDE + DISTORB + SPINBODY + BINARY + STELLAR + DISTROT;
+  fnWrite[OUT_ANGMOMTOT]           = &WriteAngMomTot;
+
+  sprintf(output[OUT_ANGMOMTOTREFX].cName, "AngMomTotRefX");
+  sprintf(output[OUT_ANGMOMTOTREFX].cDescr, "x-component of system's total angular momentum vector in the reference frame");
+  output[OUT_ANGMOMTOTREFX].iNum       = 1;
+  output[OUT_ANGMOMTOTREFX].iModuleBit = EQTIDE + DISTORB + SPINBODY + BINARY + STELLAR + DISTROT;
+  fnWrite[OUT_ANGMOMTOTREFX]           = &WriteAngMomTotRefX;
+
+  sprintf(output[OUT_ANGMOMTOTREFY].cName, "AngMomTotRefY");
+  sprintf(output[OUT_ANGMOMTOTREFY].cDescr, "y-component of system's total angular momentum vector in the reference frame");
+  output[OUT_ANGMOMTOTREFY].iNum       = 1;
+  output[OUT_ANGMOMTOTREFY].iModuleBit = EQTIDE + DISTORB + SPINBODY + BINARY + STELLAR + DISTROT;
+  fnWrite[OUT_ANGMOMTOTREFY]           = &WriteAngMomTotRefY;
+
+  sprintf(output[OUT_ANGMOMTOTREFZ].cName, "AngMomTotRefZ");
+  sprintf(output[OUT_ANGMOMTOTREFZ].cDescr, "z-component of system's total angular momentum vector in the reference frame");
+  output[OUT_ANGMOMTOTREFZ].iNum       = 1;
+  output[OUT_ANGMOMTOTREFZ].iModuleBit = EQTIDE + DISTORB + SPINBODY + BINARY + STELLAR + DISTROT;
+  fnWrite[OUT_ANGMOMTOTREFZ]           = &WriteAngMomTotRefZ;
+
+  sprintf(output[OUT_ANGMOMTOTREFUNITX].cName, "AngMomTotRefUnitX");
+  sprintf(output[OUT_ANGMOMTOTREFUNITX].cDescr, "x-component of system's total angular momentum unit vector in the reference frame");
+  output[OUT_ANGMOMTOTREFUNITX].iNum       = 1;
+  output[OUT_ANGMOMTOTREFUNITX].iModuleBit = EQTIDE + DISTORB + SPINBODY + BINARY + STELLAR + DISTROT;
+  fnWrite[OUT_ANGMOMTOTREFUNITX]           = &WriteAngMomTotRefUnitX;
+
+  sprintf(output[OUT_ANGMOMTOTREFUNITY].cName, "AngMomTotRefUnitY");
+  sprintf(output[OUT_ANGMOMTOTREFUNITY].cDescr, "y-component of system's total angular momentum unit vector in the reference frame");
+  output[OUT_ANGMOMTOTREFUNITY].iNum       = 1;
+  output[OUT_ANGMOMTOTREFUNITY].iModuleBit = EQTIDE + DISTORB + SPINBODY + BINARY + STELLAR + DISTROT;
+  fnWrite[OUT_ANGMOMTOTREFUNITY]           = &WriteAngMomTotRefUnitY;
+
+  sprintf(output[OUT_ANGMOMTOTREFUNITZ].cName, "AngMomTotRefUnitZ");
+  sprintf(output[OUT_ANGMOMTOTREFUNITZ].cDescr, "z-component of system's total angular momentum unit vector in the reference frame");
+  output[OUT_ANGMOMTOTREFUNITZ].iNum       = 1;
+  output[OUT_ANGMOMTOTREFUNITZ].iModuleBit = EQTIDE + DISTORB + SPINBODY + BINARY + STELLAR + DISTROT;
+  fnWrite[OUT_ANGMOMTOTREFUNITZ]           = &WriteAngMomTotRefUnitZ; 
+
+  sprintf(output[OUT_ANGMOMORB].cName, "AngMomOrb");
+  sprintf(output[OUT_ANGMOMORB].cDescr, "Magnitude of a body's orbital angular momentum");
+  output[OUT_ANGMOMORB].iNum       = 1;
+  output[OUT_ANGMOMORB].iModuleBit = EQTIDE + DISTORB + SPINBODY + BINARY;
+  fnWrite[OUT_ANGMOMORB]           = &WriteAngMomOrb;
+
+  sprintf(output[OUT_ANGMOMORBREFX].cName, "AngMomOrbRefX");
+  sprintf(output[OUT_ANGMOMORBREFX].cDescr, "x-component of body's orbital angular momentum vector in the reference frame");
+  output[OUT_ANGMOMORBREFX].iNum       = 1;
+  output[OUT_ANGMOMORBREFX].iModuleBit = EQTIDE + DISTORB + SPINBODY + BINARY;
+  fnWrite[OUT_ANGMOMORBREFX]           = &WriteAngMomOrbRefX;
+
+  sprintf(output[OUT_ANGMOMORBREFY].cName, "AngMomOrbRefY");
+  sprintf(output[OUT_ANGMOMORBREFY].cDescr, "y-component of body's orbital angular momentum vector in the reference frame");
+  output[OUT_ANGMOMORBREFY].iNum       = 1;
+  output[OUT_ANGMOMORBREFY].iModuleBit = EQTIDE + DISTORB + SPINBODY + BINARY;
+  fnWrite[OUT_ANGMOMORBREFY]           = &WriteAngMomOrbRefY;
+
+  sprintf(output[OUT_ANGMOMORBREFZ].cName, "AngMomOrbRefZ");
+  sprintf(output[OUT_ANGMOMORBREFZ].cDescr, "z-component of body's orbital angular momentum vector in the reference frame");
+  output[OUT_ANGMOMORBREFZ].iNum       = 1;
+  output[OUT_ANGMOMORBREFZ].iModuleBit = EQTIDE + DISTORB + SPINBODY + BINARY;
+  fnWrite[OUT_ANGMOMORBREFZ]           = &WriteAngMomOrbRefZ;
+
+  sprintf(output[OUT_ANGMOMORBREFUNITX].cName, "AngMomOrbRefUnitX");
+  sprintf(output[OUT_ANGMOMORBREFUNITX].cDescr, "x-component of body's orbital angular momentum unit vector in the reference frame");
+  output[OUT_ANGMOMORBREFUNITX].iNum       = 1;
+  output[OUT_ANGMOMORBREFUNITX].iModuleBit = EQTIDE + DISTORB + SPINBODY + BINARY;
+  fnWrite[OUT_ANGMOMORBREFUNITX]           = &WriteAngMomOrbRefUnitX;
+
+  sprintf(output[OUT_ANGMOMORBREFUNITY].cName, "AngMomOrbRefUnitY");
+  sprintf(output[OUT_ANGMOMORBREFUNITY].cDescr, "y-component of body's orbital angular momentum unit vector in the reference frame");
+  output[OUT_ANGMOMORBREFUNITY].iNum       = 1;
+  output[OUT_ANGMOMORBREFUNITY].iModuleBit = EQTIDE + DISTORB + SPINBODY + BINARY;
+  fnWrite[OUT_ANGMOMORBREFUNITY]           = &WriteAngMomOrbRefUnitY;
+
+  sprintf(output[OUT_ANGMOMORBREFUNITZ].cName, "AngMomOrbRefUnitZ");
+  sprintf(output[OUT_ANGMOMORBREFUNITZ].cDescr, "z-component of body's orbital angular momentum unit vector in the reference frame");
+  output[OUT_ANGMOMORBREFUNITZ].iNum       = 1;
+  output[OUT_ANGMOMORBREFUNITZ].iModuleBit = EQTIDE + DISTORB + SPINBODY + BINARY;
+  fnWrite[OUT_ANGMOMORBREFUNITZ]           = &WriteAngMomOrbRefUnitZ; 
+
+
+
+
+
+  sprintf(output[OUT_ANGMOMROT].cName, "AngMomRot");
+  sprintf(output[OUT_ANGMOMROT].cDescr, "Magnitude of a body's rotational angular momentum");
+  output[OUT_ANGMOMROT].iNum       = 1;
+  output[OUT_ANGMOMROT].iModuleBit = EQTIDE + DISTROT;
+  fnWrite[OUT_ANGMOMROT]           = &WriteAngMomRot;
+
+  sprintf(output[OUT_ANGMOMROTREFX].cName, "AngMomRotRefX");
+  sprintf(output[OUT_ANGMOMROTREFX].cDescr, "x-component of body's rotational angular momentum vector in the reference frame");
+  output[OUT_ANGMOMROTREFX].iNum       = 1;
+  output[OUT_ANGMOMROTREFX].iModuleBit = EQTIDE + DISTROT;
+  fnWrite[OUT_ANGMOMROTREFX]           = &WriteAngMomRotRefX;
+
+  sprintf(output[OUT_ANGMOMROTREFY].cName, "AngMomRotRefY");
+  sprintf(output[OUT_ANGMOMROTREFY].cDescr, "y-component of body's rotational angular momentum vector in the reference frame");
+  output[OUT_ANGMOMROTREFY].iNum       = 1;
+  output[OUT_ANGMOMROTREFY].iModuleBit = EQTIDE + DISTROT;
+  fnWrite[OUT_ANGMOMROTREFY]           = &WriteAngMomRotRefY;
+
+  sprintf(output[OUT_ANGMOMROTREFZ].cName, "AngMomRotRefZ");
+  sprintf(output[OUT_ANGMOMROTREFZ].cDescr, "z-component of body's rotational angular momentum vector in the reference frame");
+  output[OUT_ANGMOMROTREFZ].iNum       = 1;
+  output[OUT_ANGMOMROTREFZ].iModuleBit = EQTIDE + DISTROT;
+  fnWrite[OUT_ANGMOMROTREFZ]           = &WriteAngMomRotRefZ;
+
+  sprintf(output[OUT_ANGMOMROTREFUNITX].cName, "AngMomRotRefUnitX");
+  sprintf(output[OUT_ANGMOMROTREFUNITX].cDescr, "x-component of body's rotational angular momentum unit vector in the reference frame");
+  output[OUT_ANGMOMROTREFUNITX].iNum       = 1;
+  output[OUT_ANGMOMROTREFUNITX].iModuleBit = EQTIDE + DISTROT;
+  fnWrite[OUT_ANGMOMROTREFUNITX]           = &WriteAngMomRotRefUnitX;
+
+  sprintf(output[OUT_ANGMOMROTREFUNITY].cName, "AngMomRotRefUnitY");
+  sprintf(output[OUT_ANGMOMROTREFUNITY].cDescr, "y-component of body's rotational angular momentum unit vector in the reference frame");
+  output[OUT_ANGMOMROTREFUNITY].iNum       = 1;
+  output[OUT_ANGMOMROTREFUNITY].iModuleBit = EQTIDE + DISTROT;
+  fnWrite[OUT_ANGMOMROTREFUNITY]           = &WriteAngMomRotRefUnitY;
+
+  sprintf(output[OUT_ANGMOMROTREFUNITZ].cName, "AngMomRotRefUnitZ");
+  sprintf(output[OUT_ANGMOMROTREFUNITZ].cDescr, "z-component of body's rotationtal angular momentum unit vector in the reference frame");
+  output[OUT_ANGMOMROTREFUNITZ].iNum       = 1;
+  output[OUT_ANGMOMROTREFUNITZ].iModuleBit = EQTIDE + DISTROT;
+  fnWrite[OUT_ANGMOMROTREFUNITZ]           = &WriteAngMomRotRefUnitZ; 
+
+
+
+
+
 
   /*
    * B
@@ -1663,6 +1955,7 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
           "Fig. 30\n"
           "of Barnes et al. (2020).");
 
+  // Duplicate! Delete in v3.0
   sprintf(output[OUT_ORBANGMOM].cName, "OrbAngMom");
   sprintf(output[OUT_ORBANGMOM].cDescr, "Orbital Angular Momentum");
   sprintf(output[OUT_ORBANGMOM].cNeg, "kg*m^2/s");
@@ -1775,6 +2068,7 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_RADGYRA].iModuleBit = 1;
   fnWrite[OUT_RADGYRA]           = &WriteRadGyra;
 
+  // XXX Duplicate! Delete in v3.0
   sprintf(output[OUT_ROTANGMOM].cName, "RotAngMom");
   sprintf(output[OUT_ROTANGMOM].cDescr, "Rotational Angular Momentum");
   sprintf(output[OUT_ROTANGMOM].cNeg, "kg*m^2/s");
@@ -1782,7 +2076,7 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ROTANGMOM].iNum       = 1;
   output[OUT_ROTANGMOM].dNeg       = 1.0;
   output[OUT_ROTANGMOM].iModuleBit = EQTIDE + DISTROT + STELLAR + BINARY;
-  fnWrite[OUT_ROTANGMOM]           = &WriteRotAngMom;
+  fnWrite[OUT_ROTANGMOM]           = &WriteAngMomRot;
 
   sprintf(output[OUT_ROTKINENERGY].cName, "RotKinEnergy");
   sprintf(output[OUT_ROTKINENERGY].cDescr, "Body's Rotational Energy");
@@ -1843,6 +2137,7 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_TIME].iModuleBit = 1;
   fnWrite[OUT_TIME]           = &WriteTime;
 
+  // XXX Duplicate with ANGMOMTOT -- remove in v3.0
   sprintf(output[OUT_TOTANGMOM].cName, "TotAngMom");
   sprintf(output[OUT_TOTANGMOM].cDescr, "Total Angular Momentum");
   sprintf(output[OUT_TOTANGMOM].cNeg, "kg*m^2/s");

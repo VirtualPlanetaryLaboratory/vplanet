@@ -1474,7 +1474,7 @@ double fdEffectiveTemperature(BODY *body, int iBody) {
 
   @return Body's rotational angular momentum
 */
-double fdRotAngMom(BODY *body, int iBody) {
+double fdRotationalAngularMomentum(BODY *body, int iBody) {
   double dAngMom;
 
   dAngMom = body[iBody].dRadGyra * body[iBody].dRadGyra * body[iBody].dMass *
@@ -1489,7 +1489,7 @@ double *fdaRotationalAngularMomentumRotFrame(BODY *body, int iBody) {
 
   daAngMom[0] = 0.0;
   daAngMom[1] = 0.0;
-  daAngMom[2] = fdRotAngMom(body, iBody);
+  daAngMom[2] = fdRotationalAngularMomentum(body, iBody);
 
   return daAngMom;
 }

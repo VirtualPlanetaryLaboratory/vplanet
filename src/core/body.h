@@ -67,7 +67,7 @@ double fdRotVel(double, double);
 double fdDPerDt(double, double);
 
 double fdBodyPotEnergy(double, double);
-double fdRotAngMom(BODY *, int);
+double fdRotationalAngularMomentum(BODY *, int);
 double fdRotKinEnergy(double, double, double, double);
 
 double fdDensityMassToRadius(double, double);

@@ -59,7 +59,7 @@
   6.67428e-11                // From Luzum et al., 2011; value recommended     \
                              // by IAU NSFA in Prsa et al. 2016
 #define PI M_PI              // Quick fix
-#define KGAUSS 0.01720209895 // Gauss' Gravitational Constamt
+#define KGAUSS 0.01720209895 // Gauss' Gravitational Constamt XXX Remove for v3.0!
 #define EPS 1e-10 // Precision for difference of doubles to be effectively 0
 #define AUM 1.49597870700e11   // Exact m/AU per 31 AUG 2012 IAU resolution B2
 #define AUPC 206265.0          // AU per parsec
@@ -130,7 +130,7 @@
 /* Do not change these declarations */
 extern const double dHUGE;
 extern const double dTINY;
-/* Do not change these declarations */
+/* Do not change those declarations */
 
 // IO limits for files, lines, and names
 #define OPTLEN 48        /* Maximum length of an option */

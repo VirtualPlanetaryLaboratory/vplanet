@@ -1245,17 +1245,44 @@ void WriteZoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 double fdCassiniOne(BODY *body, CONTROL *control, int iBody) {
   int i;
   double dCassiniOne, dMagTotCrossOrb, dMagRotCrossOrb;
-  static double daAngMomTot[3], daAngMomOrb[3], daAngMomRot[3],
-        daTotCrossOrb[3], daRotCrossOrb[3];
+  double *ptrAngMomTot, *ptrAngMomOrb, *ptrAngMomRot,
+        *ptrTotCrossOrb, *ptrRotCrossOrb, *ptrDoubleCross;
+  static double daAngMomTot[3],daAngMomOrb[3],daAngMomRot[3],daTotCrossOrb[3],daRotCrossOrb[3],daDoubleCross[3];
 
-  fvCassiniVectors(body, control, daAngMomTot, daAngMomOrb, daAngMomRot,
-                   daTotCrossOrb, daRotCrossOrb, iBody);
-  double *daDoubleCross = fdaCrossProduct(daTotCrossOrb, daRotCrossOrb);
+  //fvCassiniVectors(body, control, &ptrAngMomTot, &ptrAngMomOrb, &ptrAngMomRot,
+  //                 &ptrTotCrossOrb, &ptrRotCrossOrb, iBody);
+  ptrAngMomTot = fdaTotalAngularMomentumRefFrameUnitVector(body, control);
+  ptrAngMomOrb = fdaOrbitalAngularMomentumRefFrameUnitVector(body, iBody);
+  ptrAngMomRot = fdaRotationalAngularMomentumRefFrameUnitVector(body, iBody);
+  fvCopyPointerToArray(ptrAngMomTot,daAngMomTot,3);
+  fvCopyPointerToArray(ptrAngMomOrb,daAngMomOrb,3);
+  fvCopyPointerToArray(ptrAngMomRot,daAngMomRot,3);
+
+  // ptrTotCrossOrb = fdaCrossProduct(daAngMomTot, daAngMomOrb);
+  // ptrRotCrossOrb = fdaCrossProduct(daAngMomRot, daAngMomOrb);
+  fvCrossProduct(daAngMomTot,daAngMomOrb,daTotCrossOrb);
+  fvCrossProduct(daAngMomRot,daAngMomOrb,daRotCrossOrb);
+  
+  // fvCopyPointerToArray(ptrTotCrossOrb,daTotCrossOrb,3);
+  // fvCopyPointerToArray(ptrRotCrossOrb,daRotCrossOrb,3);
+
   dMagTotCrossOrb       = fdMagnitude(daTotCrossOrb, 3);
   dMagRotCrossOrb       = fdMagnitude(daRotCrossOrb, 3);
 
-  for (i = 0; i < 3; i++) {
-    daDoubleCross[i] = daDoubleCross[i] / (dMagRotCrossOrb * dMagTotCrossOrb);
+  ptrDoubleCross = fdaCrossProduct(daTotCrossOrb, daRotCrossOrb);
+  fvCopyPointerToArray(ptrDoubleCross,daDoubleCross,3);
+  
+  if (dMagRotCrossOrb !=0 && dMagTotCrossOrb != 0) {
+    for (i = 0; i < 3; i++) {
+      daDoubleCross[i] = daDoubleCross[i] / (dMagRotCrossOrb * dMagTotCrossOrb);
+    }
+  } else {
+    if (control->Io.iVerbose > VERBPROG) {
+      fprintf(stderr,"WARNING: Zero-length vectors in Cassini Parameter calculations.");
+      for (i = 0; i < 3; i++) {
+        daDoubleCross[i] = -1;
+      }
+    }
   }
   dCassiniOne = fdMagnitude(daDoubleCross, 3);
 
@@ -1284,11 +1311,11 @@ void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                       double *dTmp, char cUnit[]) {
-  static double daAngMomTot[3], daAngMomOrb[3], daAngMomRot[3],
-        daTotCrossOrb[3], daRotCrossOrb[3];
+  double *daAngMomTot, *daAngMomOrb, *daAngMomRot,
+        *daTotCrossOrb, *daRotCrossOrb;
 
-  fvCassiniVectors(body, control, daAngMomTot, daAngMomOrb, daAngMomRot,
-                   daTotCrossOrb, daRotCrossOrb, iBody);
+  fvCassiniVectors(body, control, &daAngMomTot, &daAngMomOrb, &daAngMomRot,
+                   &daTotCrossOrb, &daRotCrossOrb, iBody);
 
 
   if (body[iBody].dInc == 0 && body[iBody].dObliquity == 0) {

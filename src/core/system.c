@@ -1165,6 +1165,7 @@ Transform a vector from the Rotation Frame to the Reference Frame.
 void fvRotFrameToRefFrame(BODY *body, double *daVector, int iBody) {
   fvRotFrameToOrbFrame(body, daVector, iBody);
   fvOrbFrameToRefFrame(body, daVector, iBody);
+  int i=0;
 }
 
 /**
@@ -1370,7 +1371,7 @@ Invariable Frame.
 double *fdaRotationalAngularMomentumRefFrameUnitVector(BODY *body, int iBody) {
   double *ptrAngMom;
 
-  ptrAngMom = fdaOrbitalAngularMomentumRefFrame(body, iBody);
+  ptrAngMom = fdaRotationalAngularMomentumRefFrame(body, iBody);
   fvNormalizeVector(ptrAngMom, 3);
   return ptrAngMom;
 }
@@ -1451,14 +1452,15 @@ double *fdaTotalAngularMomentumRefFrameUnitVector(BODY *body,
   return daAngMomTot;
 }
 
-void fvCassiniVectors(BODY *body, CONTROL *control, double *daAngMomTot,
-                      double *daAngMomOrb, double *daAngMomRot,
-                      double *daTotCrossOrb, double *daRotCrossOrb, int iBody) {
+void fvCassiniVectors(BODY *body, CONTROL *control, double **daAngMomTot,
+                      double **daAngMomOrb, double **daAngMomRot,
+                      double **daTotCrossOrb, double **daRotCrossOrb, int iBody) {
+  *daAngMomTot = fdaTotalAngularMomentumRefFrameUnitVector(body, control);
+  *daAngMomOrb = fdaOrbitalAngularMomentumRefFrameUnitVector(body, iBody);
+  *daAngMomRot = fdaRotationalAngularMomentumRefFrameUnitVector(body, iBody);
 
-  daAngMomTot = fdaTotalAngularMomentumRefFrameUnitVector(body, control);
-  daAngMomOrb = fdaOrbitalAngularMomentumRefFrameUnitVector(body, iBody);
-  daAngMomRot = fdaRotationalAngularMomentumRefFrameUnitVector(body, iBody);
-
-  daTotCrossOrb = fdaCrossProduct(daAngMomTot, daAngMomOrb);
-  daRotCrossOrb = fdaCrossProduct(daAngMomRot, daAngMomOrb);
+  *daTotCrossOrb = fdaCrossProduct(*daAngMomTot, *daAngMomOrb);
+  *daRotCrossOrb = fdaCrossProduct(*daAngMomRot, *daAngMomOrb);
+  
+  int i=0;
 }

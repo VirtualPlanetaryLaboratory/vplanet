@@ -73,7 +73,7 @@ double *fdaTotalAngularMomentumRefFrame(BODY *, CONTROL *);
 double *fdaTotalAngularMomentumRefFrameUnitVector(BODY *, CONTROL *);
 
 
-void fvCassiniVectors(BODY *, CONTROL *, double *, double *, double *, double *,
-                      double *, int);
+void fvCassiniVectors(BODY *, CONTROL *, double **, double **, double **, double **,
+                      double **, int);
 
 /* @endcond */

@@ -135,5 +135,7 @@ double fndDistRotExtDxDt(BODY *, SYSTEM *, int *);
 double fndDistRotExtDyDt(BODY *, SYSTEM *, int *);
 double fndDistRotExtDzDt(BODY *, SYSTEM *, int *);
 
+double fdCassiniOne(BODY *, CONTROL *, int);
+double fdCassiniTwo(BODY *, CONTROL *, int);
 
 /* @endcond */

@@ -32,7 +32,7 @@ int main_impl(int argc, char *argv[]) {
   //  feenableexcept(FE_INVALID | FE_OVERFLOW);
   _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
   _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_OVERFLOW);
-  fprintf(stderr, "Floating point trapping enabled.\n");
+  fprintf(stderr, "INFO: Floating point trapping enabled.\n");
 #else
   fprintf(stderr,
           "WARNING: Floating point trapping only enabled for x86 "

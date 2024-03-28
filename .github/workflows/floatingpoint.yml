@@ -26,7 +26,6 @@ jobs:
           python-version: 3.9
 
       - name: Run
-        if: steps.install.outcome == 'success'
         shell: bash -l {0}
         run: |
           cd tests/

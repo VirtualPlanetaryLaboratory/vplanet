@@ -1146,6 +1146,8 @@ void WriteBodyDYoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   /* Ensure that we don't overwrite derivative */
   dDeriv = 0;
+  dDeriv = pow(10, 300);
+  dDeriv *= dDeriv;
   for (iPert = 0; iPert <= body[iBody].iGravPerts; iPert++) {
     dDeriv += *(update[iBody].padDYoblDtDistRot[iPert]);
   }

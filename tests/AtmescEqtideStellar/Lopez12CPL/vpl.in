@@ -1,6 +1,6 @@
 sSystemName               Lopez12CPL
 
-iVerbose                  0
+iVerbose                  5
 bOverwrite                1
 
 saBodyFiles               star.in $ # The star

@@ -1,7 +1,7 @@
 # Example from Fig. 3 from Lehmer & Catling (2017), but with evolving properties
 sSystemName               dynamic
 
-iVerbose                  0
+iVerbose                  5
 bOverwrite                1
 saBodyFiles               star.in planet.in
 

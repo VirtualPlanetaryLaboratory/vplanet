@@ -1,6 +1,6 @@
 # Primary input file for VPLANET
 sSystemName	TGard		# System Name
-iVerbose	0					# Verbosity level
+iVerbose	5					# Verbosity level
 bOverwrite	1				# Allow file overwrites?
 
 # All space after a # is ignored, as is white space

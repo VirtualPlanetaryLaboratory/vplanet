@@ -1,6 +1,6 @@
 
 sSystemName               trappist1
-iVerbose                  0
+iVerbose                  5
 bOverwrite                1
 saBodyFiles               star.in b.in e.in
 sUnitMass                 solar

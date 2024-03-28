@@ -1,6 +1,6 @@
 # Primary input file for VPLANET
 sSystemName	STEEP_CPL		# System Name
-iVerbose		0						# Verbosity level
+iVerbose		5						# Verbosity level
 bOverwrite	1						# Allow file overwrites?
 
 # List of "body files" that contain body-specific parameters

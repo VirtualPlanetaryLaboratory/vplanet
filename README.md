@@ -8,9 +8,7 @@
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet">
     <img src="https://img.shields.io/badge/Read-the_docs-blue.svg?style=flat">
   </a>
-  <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/docs.yml">
-    <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/docs.yml/badge.svg">
-  </a>
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/docs.yml/badge.svg">  
   <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract">
     <img src="https://img.shields.io/badge/Read-the_paper-darkgreen.svg?style=flat">
   </a>
@@ -27,44 +25,26 @@
   <img src="https://img.shields.io/badge/Ubuntu%2022-Python%203.7--3.11-7d93c7.svg">
   
   <br>
-  <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-macos-intel.yml">
-    <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-macos-intel.yml/badge.svg">
-  </a>
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-macos-intel.yml/badge.svg">
   <img src="https://img.shields.io/badge/MacOS%2011--13-Python%203.6--3.11-7d93c7.svg">
-  <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-macos-silicon.yml">
-    <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-macos-silicon.yml/badge.svg">
-  </a>
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-macos-silicon.yml/badge.svg">
   <img src="https://img.shields.io/badge/MacOS%2014-Python%203.10--3.11-7d93c7.svg">  
   <br>
   <img src="https://img.shields.io/badge/Memory%20Checks-58-darkblue.svg">
-  <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml">
-    <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml/badge.svg">
-  </a>
-  
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml/badge.svg">
 
   <a href="examples">
     <img src="https://img.shields.io/badge/Examples-41-darkblue.svg">
   </a>
-  <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml">
-    <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml/badge.svg">
-  </a>
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml/badge.svg">
   <img src="https://img.shields.io/badge/Python-3.6%20--%203.11-7d93c7.svg">
   
   <br>
   <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">
     <img src="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet/branch/main/graph/badge.svg?token=3LFJQO1M6H">
   </a>
-  <a href="http://ascl.net/1811.017">
-    <img src="https://img.shields.io/badge/ASCL-1811.017-orange.svg?colorB=orange" alt="ascl:1811.017">
-  </a>
-  <a href="https://emac.gsfc.nasa.gov">
-    <img src="https://img.shields.io/badge/EMAC-2207%E2%80%94138-blue.svg">
-  </a>
-    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-purple.svg"/>
-  </a>
-  <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml">
-    <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg">
-  </a>
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg">
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/floatingpoint.yml/badge.svg">
 </p>
 
 ### Overview

@@ -1,7 +1,7 @@
 # Primary input file to demonstrate coupling between AtmEsc and EqTide with
 # water present
 sSystemName               WaterCPL
-iVerbose                  0
+iVerbose                  5
 bOverwrite                1
 
 saBodyFiles               star.in b.in

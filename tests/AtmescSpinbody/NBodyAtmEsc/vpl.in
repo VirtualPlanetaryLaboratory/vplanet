@@ -14,7 +14,7 @@ sUnitAngle                deg             # Options: deg, rad
 bDoLog                    1              # Write a log file?
 iDigits                   5              # Maximum number of digits to right of decimal
 dMinValue                 1e-10          # Minimum value of eccentricity/obliquity
-iVerbose                  0              # Verbosity level max=5
+iVerbose                  5              # Verbosity level max=5
 
 #Evolution Parameters
 bDoForward                1              # Perform a forward evolution?

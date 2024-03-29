@@ -1,0 +1,32 @@
+name: floating-point
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  floatingpoint:
+    name: Check for floating point exceptions
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        id: setup_python
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: vplanet
+          environment-file: environment.yml
+          python-version: 3.9
+
+      - name: Run
+        shell: bash -l {0}
+        run: |
+          cd tests/
+          python floatingpoint.py

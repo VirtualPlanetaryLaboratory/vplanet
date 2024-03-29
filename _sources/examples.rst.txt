@@ -12,46 +12,46 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/AtmEscFlareProxCen
-   examples/HLossTides
-   examples/HabEvapCore
-   examples/GalaxyEffects
-   examples/AtmEscRegimes
-   examples/AtmEscKepler-36
-   examples/DampedCBP
-   examples/VenusWaterLoss
-   examples/NBodyAtmEsc
-   examples/MagmOc_Earth
-   examples/RadHeat
-   examples/TideLock
-   examples/DiffLimWaterEscape
-   examples/MagmOc_GJ1132b
-   examples/LuminosityCycle
-   examples/VenusApproxInterior
-   examples/SSDistOrbDistRot
-   examples/ChaoticResonances
-   examples/CircumbinaryOrbit
-   examples/MagneticBraking
-   examples/BinaryTides
-   examples/FfdProxCen
-   examples/AbioticO2
-   examples/HabitableZone
-   examples/MDwarfLuminosity
-   examples/MiniNeptuneEvap
-   examples/StellarEvol
-   examples/IceBelts
-   examples/SS_NBody
    examples/CassiniMulti
-   examples/ApseLock
+   examples/FfdProxCen
+   examples/BinaryTides
+   examples/AtmEscFlareProxCen
+   examples/MagneticBraking
+   examples/NBodyAtmEsc
+   examples/MiniNeptuneEvap
+   examples/VenusWaterLoss
    examples/WaterLossTides
-   examples/EarthClimate
-   examples/MagmOc_Trappist1g
-   examples/IoHeat
+   examples/MagmOc_Earth
+   examples/AtmEscRegimes
+   examples/StellarEvol
    examples/TidalEarth
-   examples/ParameterSweep
-   examples/STEEP
-   examples/CassiniStates
+   examples/CircumbinaryOrbit
+   examples/HLossTides
    examples/EarthInterior
+   examples/RadHeat
+   examples/CassiniStates
+   examples/EarthClimate
+   examples/IoHeat
+   examples/HabitableZone
+   examples/ChaoticResonances
+   examples/ParameterSweep
+   examples/HabEvapCore
+   examples/IceBelts
+   examples/VenusApproxInterior
+   examples/AtmEscKepler-36
+   examples/MDwarfLuminosity
+   examples/MagmOc_GJ1132b
+   examples/TideLock
+   examples/GalaxyEffects
+   examples/MagmOc_Trappist1g
+   examples/DampedCBP
+   examples/AbioticO2
+   examples/SSDistOrbDistRot
+   examples/DiffLimWaterEscape
+   examples/SS_NBody
+   examples/ApseLock
+   examples/STEEP
+   examples/LuminosityCycle
 
 
 Broken

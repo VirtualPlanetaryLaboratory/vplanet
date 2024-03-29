@@ -30,21 +30,22 @@
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-macos-silicon.yml/badge.svg">
   <img src="https://img.shields.io/badge/MacOS%2014-Python%203.10--3.11-7d93c7.svg">  
   <br>
-  <img src="https://img.shields.io/badge/Memory%20Checks-58-darkblue.svg">
+  <!--- <img src="https://img.shields.io/badge/Memory%20Checks-58-darkblue.svg">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml/badge.svg">
-
+  -->
   <a href="examples">
     <img src="https://img.shields.io/badge/Examples-41-darkblue.svg">
   </a>
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml/badge.svg">
   <img src="https://img.shields.io/badge/Python-3.6%20--%203.11-7d93c7.svg">
   
-  <br>
   <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">
     <img src="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet/branch/main/graph/badge.svg?token=3LFJQO1M6H">
   </a>
+  <!---
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/floatingpoint.yml/badge.svg">
+    -->
 </p>
 
 ### Overview

@@ -1191,7 +1191,9 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_FXUV].cDimension, "energyflux");
   options[OPT_FXUV].iType      = 2;
   options[OPT_FXUV].bMultiFile = 1;
-  fnRead[OPT_FXUV]             = &ReadFXUV;
+  options[OPT_FXUV].dNeg       = 1;
+  sprintf(options[OPT_FXUV].cNeg, "W/m^2");
+  fnRead[OPT_FXUV] = &ReadFXUV;
 
   sprintf(options[OPT_MINKTIDE].cName, "dMinKTide");
   sprintf(options[OPT_MINKTIDE].cDescr,

@@ -12,46 +12,46 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/CassiniMulti
-   examples/FfdProxCen
    examples/BinaryTides
-   examples/AtmEscFlareProxCen
-   examples/MagneticBraking
-   examples/NBodyAtmEsc
-   examples/MiniNeptuneEvap
-   examples/VenusWaterLoss
-   examples/WaterLossTides
-   examples/MagmOc_Earth
-   examples/AtmEscRegimes
-   examples/StellarEvol
-   examples/TidalEarth
-   examples/CircumbinaryOrbit
-   examples/HLossTides
-   examples/EarthInterior
-   examples/RadHeat
-   examples/CassiniStates
-   examples/EarthClimate
-   examples/IoHeat
-   examples/HabitableZone
-   examples/ChaoticResonances
-   examples/ParameterSweep
-   examples/HabEvapCore
-   examples/IceBelts
-   examples/VenusApproxInterior
-   examples/AtmEscKepler-36
-   examples/MDwarfLuminosity
-   examples/MagmOc_GJ1132b
-   examples/TideLock
-   examples/GalaxyEffects
-   examples/MagmOc_Trappist1g
-   examples/DampedCBP
-   examples/AbioticO2
-   examples/SSDistOrbDistRot
    examples/DiffLimWaterEscape
-   examples/SS_NBody
-   examples/ApseLock
-   examples/STEEP
    examples/LuminosityCycle
+   examples/ChaoticResonances
+   examples/MagneticBraking
+   examples/AtmEscFlareProxCen
+   examples/TideLock
+   examples/FfdProxCen
+   examples/SS_NBody
+   examples/VenusWaterLoss
+   examples/SSDistOrbDistRot
+   examples/MagmOc_Trappist1g
+   examples/AbioticO2
+   examples/STEEP
+   examples/GalaxyEffects
+   examples/HabitableZone
+   examples/MagmOc_GJ1132b
+   examples/WaterLossTides
+   examples/AtmEscKepler-36
+   examples/IceBelts
+   examples/DampedCBP
+   examples/CassiniStates
+   examples/MagmOc_Earth
+   examples/NBodyAtmEsc
+   examples/HLossTides
+   examples/CircumbinaryOrbit
+   examples/EarthClimate
+   examples/RadHeat
+   examples/EarthInterior
+   examples/VenusApproxInterior
+   examples/ApseLock
+   examples/StellarEvol
+   examples/CassiniMulti
+   examples/ParameterSweep
+   examples/IoHeat
+   examples/MiniNeptuneEvap
+   examples/AtmEscRegimes
+   examples/TidalEarth
+   examples/HabEvapCore
+   examples/MDwarfLuminosity
 
 
 Broken

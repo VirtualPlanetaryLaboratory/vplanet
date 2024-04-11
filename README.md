@@ -18,6 +18,9 @@
   <a href="https://www.youtube.com/@VPLanetCode/playlists">
     <img src="https://img.shields.io/badge/You-Tube-darkred.svg">
   </a>
+   <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/discussions">
+     <img src="https://img.shields.io/badge/Discussions-darkgreen.svg">
+  </a>
   <br>
   <img src="https://img.shields.io/badge/Unit%20Tests-18,062-darkblue.svg">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-linux.yml/badge.svg">

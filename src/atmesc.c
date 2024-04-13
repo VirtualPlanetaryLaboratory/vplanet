@@ -4138,18 +4138,25 @@ int fbDoesWaterEscape(BODY *body, EVOLVE *evolve, IO *io, int iBody) {
   // spectrum! The Kopparapu+14 limit is for a single star only. This
   // approximation for a binary is only valid if the two stars have
   // similar spectral types, or if body zero dominates the flux.
-  if (fdInstellation(body, iBody) < fdHZRG14(body, iBody)) {
-    if (body[iBody].dRGDuration == 0.) {
-      body[iBody].dRGDuration = body[iBody].dAge;
-      if (io->iVerbose > VERBPROG && !io->baEnterHZMessage[iBody]) {
-        printf("%s enters the habitable zone at %.2lf Myr.\n",
-               body[iBody].cName, evolve->dTime / (YEARSEC * 1e6));
-        io->baEnterHZMessage[iBody] = 1;
+  double dInstellation = fdInstellation(body, iBody);
+  if (dInstellation == -1 && body[iBody].bCalcFXUV == 0) {
+    // Constant XUV flux, so set water to escape
+    return 1;
+  } else {
+    double dRunawayGreenhouseFlux = fdHZRG14(body, iBody);
+    if (dInstellation < dRunawayGreenhouseFlux) {
+      if (body[iBody].dRGDuration == 0.) {
+        body[iBody].dRGDuration = body[iBody].dAge;
+        if (io->iVerbose > VERBPROG && !io->baEnterHZMessage[iBody]) {
+          printf("%s enters the habitable zone at %.2lf Myr.\n",
+                body[iBody].cName, evolve->dTime / (YEARSEC * 1e6));
+          io->baEnterHZMessage[iBody] = 1;
+        }
       }
-    }
-    // Only stop water loss if user requested, which is default
-    if (body[iBody].bStopWaterLossInHZ) {
-      return 0;
+      // Only stop water loss if user requested, which is default
+      if (body[iBody].bStopWaterLossInHZ) {
+        return 0;
+      }
     }
   }
 

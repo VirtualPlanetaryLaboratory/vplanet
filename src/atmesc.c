@@ -2108,43 +2108,52 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   }
 
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
-    if (body[iBody].dEnvelopeMass >= 0.5 * body[iBody].dMass) {
-      fprintf(stderr,
-              "ERROR: %s's Envelope mass is greater than 50%% of its total "
-              "mass, which ",
+    if (body[0].bStellar) {
+      if (body[iBody].dEnvelopeMass >= 0.5 * body[iBody].dMass) {
+        fprintf(stderr,
+                "ERROR: %s's Envelope mass is greater than 50%% of its total "
+                "mass, which ",
+                body[iBody].cName);
+        fprintf(stderr,
+                "is not allowed  for the Lehmer-Catling (2017) envelope "
+                "model.\n");
+        DoubleLineExit(files->Infile[iBody + 1].cIn,
+                       files->Infile[iBody + 1].cIn,
+                       options[OPT_ENVELOPEMASS].iLine[iBody + 1],
+                       options[OPT_ENVELOPEMASS].iLine[iBody + 1]);
+      }
+      if (body[iBody].dEnvelopeMass >= 0.1 * body[iBody].dMass) {
+        fprintf(
+              stderr,
+              "WARNING: Envelope masses more than 10%% of the total mass are "
+              "not "
+              "recommended for the Lehmer-Catling (2017) envelope model. %s's "
+              "envelope ",
               body[iBody].cName);
-      fprintf(
-            stderr,
-            "is not allowed  for the Lehmer-Catling (2017) envelope model.\n");
-      DoubleLineExit(files->Infile[iBody + 1].cIn, files->Infile[iBody + 1].cIn,
-                     options[OPT_ENVELOPEMASS].iLine[iBody + 1],
-                     options[OPT_ENVELOPEMASS].iLine[iBody + 1]);
-    }
-    if (body[iBody].dEnvelopeMass >= 0.1 * body[iBody].dMass) {
-      fprintf(
-            stderr,
-            "WARNING: Envelope masses more than 10%% of the total mass are not "
-            "recommended for the Lehmer-Catling (2017) envelope model. %s's "
-            "envelope ",
-            body[iBody].cName);
-      fprintf(stderr, "mass exceeds this threshold.\n");
-    }
+        fprintf(stderr, "mass exceeds this threshold.\n");
+      }
 
-    // Get thermal temperature
-    if (body[iBody].bAutoThermTemp) {
-      body[iBody].dThermTemp = fdThermalTemp(body, iBody);
+      // Get thermal temperature
+      if (body[iBody].bAutoThermTemp) {
+        body[iBody].dThermTemp = fdThermalTemp(body, iBody);
+      }
+      body[iBody].dRadSolid = fdMassToRad_LehmerCatling17(
+            body[iBody].dMass - body[iBody].dEnvelopeMass);
+      body[iBody].dGravAccel = BIGG *
+                               (body[iBody].dMass - body[iBody].dEnvelopeMass) /
+                               (body[iBody].dRadSolid * body[iBody].dRadSolid);
+      body[iBody].dScaleHeight = body[iBody].dAtmGasConst *
+                                 body[iBody].dThermTemp /
+                                 body[iBody].dGravAccel;
+      body[iBody].dPresSurf =
+            fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel,
+                         body[iBody].dRadSolid);
+      body[iBody].dRadXUV = fdLehmerRadius(body, iBody);
+    } else {
+      fprintf(stderr,
+              "ERROR: The Lehmer & Catling (2017) model requires a star.\n");
+      exit(EXIT_INPUT);
     }
-    body[iBody].dRadSolid = fdMassToRad_LehmerCatling17(
-          body[iBody].dMass - body[iBody].dEnvelopeMass);
-    body[iBody].dGravAccel = BIGG *
-                             (body[iBody].dMass - body[iBody].dEnvelopeMass) /
-                             (body[iBody].dRadSolid * body[iBody].dRadSolid);
-    body[iBody].dScaleHeight = body[iBody].dAtmGasConst *
-                               body[iBody].dThermTemp / body[iBody].dGravAccel;
-    body[iBody].dPresSurf =
-          fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel,
-                       body[iBody].dRadSolid);
-    body[iBody].dRadXUV = fdLehmerRadius(body, iBody);
   } else {
     int iCol, bError = 0;
     for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {

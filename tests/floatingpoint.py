@@ -39,6 +39,11 @@ def Main():
         if last_line != "Simulation completed.\n":
             tot_fail += 1
             print("Fail", flush=True)
+            print("\n------------\n")
+            with open(outfile, "r") as f:
+                print(f.read())
+            print("\n------------\n")
+
         else:
             print("Pass", flush=True)
         os.chdir("../../")

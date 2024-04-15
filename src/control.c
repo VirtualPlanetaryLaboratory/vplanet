@@ -1086,8 +1086,9 @@ void fsUnitsEnergy(UNITS *units, char cUnit[]) {
 }
 
 double fdUnitsEnergy(int iTime, int iMass, int iLength) {
-  return fdUnitsMass(iMass) * fdUnitsLength(iLength) * fdUnitsLength(iLength) /
+  double dConversion = fdUnitsMass(iMass) * fdUnitsLength(iLength) * fdUnitsLength(iLength) /
          (fdUnitsTime(iTime) * fdUnitsTime(iTime));
+  return dConversion;
 }
 
 void fsUnitsPower(UNITS *units, char cUnit[]) {

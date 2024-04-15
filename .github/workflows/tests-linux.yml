@@ -62,6 +62,9 @@ jobs:
           files: junit/test-*.xml
 
       - name: CodeCov
+        if:  ${{ matrix.os }} == ubuntu-22.04 &&  ${{ matrix.python-version }} == '3.9'
         uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           files: ./.coverage

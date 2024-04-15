@@ -676,7 +676,8 @@ void WriteLostEng(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
+    double dConversion = fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
+    *dTmp /= dConversion;
     fsUnitsEnergy(units, cUnit);
   }
 }

@@ -1028,7 +1028,11 @@ void WriteOblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
               dObldz * (*(update[iBody].padDZoblDtDistRot[iPert]));
   }
 
+  if (dDeriv == 0) {
+    *dTmp = -1;
+  } else {
   *dTmp = fabs(PI / dDeriv);
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1065,7 +1069,11 @@ void WritePrecATimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
               dpAdy * (*(update[iBody].padDYoblDtDistRot[iPert]));
   }
 
-  *dTmp = fabs(2 * PI / dDeriv);
+  if (dDeriv == 0) {
+    dDeriv = -1;
+  } else {
+    *dTmp = fabs(2 * PI / dDeriv);
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1146,8 +1154,6 @@ void WriteBodyDYoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   /* Ensure that we don't overwrite derivative */
   dDeriv = 0;
-  dDeriv = pow(10, 300);
-  dDeriv *= dDeriv;
   for (iPert = 0; iPert <= body[iBody].iGravPerts; iPert++) {
     dDeriv += *(update[iBody].padDYoblDtDistRot[iPert]);
   }
@@ -1198,7 +1204,11 @@ void WriteXoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
     dDeriv += *(update[iBody].padDXoblDtDistRot[iPert]);
   }
 
-  *dTmp = fabs(1. / dDeriv);
+  if (dDeriv == 0) {
+    *dTmp = -1;
+  } else {
+    *dTmp = fabs(1. / dDeriv);
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1221,7 +1231,11 @@ void WriteYoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
     dDeriv += *(update[iBody].padDYoblDtDistRot[iPert]);
   }
 
-  *dTmp = fabs(1. / dDeriv);
+  if (dDeriv == 0) {
+    *dTmp = -1;
+  } else {
+    *dTmp = fabs(1. / dDeriv);
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1244,8 +1258,12 @@ void WriteZoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
     dDeriv += *(update[iBody].padDZoblDtDistRot[iPert]);
   }
 
-  *dTmp = fabs(1. / dDeriv);
-
+  if (dDeriv == 0) {
+    *dTmp = -1;
+  } else {
+    *dTmp = fabs(1. / dDeriv);
+  }
+  
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);

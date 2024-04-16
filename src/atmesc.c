@@ -2108,7 +2108,7 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   }
 
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
-    if (body[iBody].dEnvelopeMass >= 0.5 * body[iBody].dMass) {
+    if (body[iBody].dEnvelopeMass > 0.5 * body[iBody].dMass) {
       fprintf(stderr,
               "ERROR: %s's Envelope mass is greater than 50%% of its total "
               "mass, which ",
@@ -2118,7 +2118,7 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
             "is not allowed  for the Lehmer-Catling (2017) envelope model.\n");
       DoubleLineExit(files->Infile[iBody + 1].cIn, files->Infile[iBody + 1].cIn,
                      options[OPT_ENVELOPEMASS].iLine[iBody + 1],
-                     options[OPT_ENVELOPEMASS].iLine[iBody + 1]);
+                     options[OPT_MASS].iLine[iBody + 1]);
     }
     if (body[iBody].dEnvelopeMass >= 0.1 * body[iBody].dMass) {
       fprintf(
@@ -2130,21 +2130,9 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       fprintf(stderr, "mass exceeds this threshold.\n");
     }
 
-    // Get thermal temperature
-    if (body[iBody].bAutoThermTemp) {
-      body[iBody].dThermTemp = fdThermalTemp(body, iBody);
-    }
-    body[iBody].dRadSolid = fdMassToRad_LehmerCatling17(
-          body[iBody].dMass - body[iBody].dEnvelopeMass);
-    body[iBody].dGravAccel = BIGG *
-                             (body[iBody].dMass - body[iBody].dEnvelopeMass) /
-                             (body[iBody].dRadSolid * body[iBody].dRadSolid);
-    body[iBody].dScaleHeight = body[iBody].dAtmGasConst *
-                               body[iBody].dThermTemp / body[iBody].dGravAccel;
-    body[iBody].dPresSurf =
-          fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel,
-                       body[iBody].dRadSolid);
-    body[iBody].dRadXUV = fdLehmerRadius(body, iBody);
+    // Calculate auxiliary properties
+    body[iBody].dRadSolid = fdMassToRad_LehmerCatling17(body[iBody].dMass - body[iBody].dEnvelopeMass);
+    AuxPropsLehmer17(body,iBody);
   } else {
     int iCol, bError = 0;
     for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
@@ -2830,10 +2818,14 @@ void WriteRGLimit(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   double flux = fdHZRG14(body, iBody);
 
   // Convert to semi-major axis *at current eccentricity!*
-  *dTmp = pow(4 * PI * flux /
-                    (body[0].dLuminosity *
-                     pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5)),
-              -0.5);
+  if (body[0].dLuminosity == 0) {
+    *dTmp = -1;
+  } else {
+    *dTmp = pow(4 * PI * flux /
+                (body[0].dLuminosity *
+                pow((1 - body[iBody].dEcc * body[iBody].dEcc), 0.5)),
+                -0.5);
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4400,14 +4392,17 @@ double fdRocheRadius(BODY *body, int iBody) {
  @return Body's Bondi radius
 */
 double fdBondiRadius(BODY *body, int iBody) {
-
+  double dBondiRadius;
   // Compute sound speed in planet's atmosphere assuming a diatomic H atmosphere
-  // assuming body 0 is the star as it should be when using atmesc
-  double cs = fdEqH2AtmosphereSoundSpeed(body[0].dTemperature, body[0].dRadius,
+  // assuming body 0 is the star
+  if (body[0].bStellar) {
+    double dSoundSpeed = fdEqH2AtmosphereSoundSpeed(body[0].dTemperature, body[0].dRadius,
                                          body[iBody].dSemi);
-  double rb = BIGG * body[iBody].dMass / (2.0 * cs * cs);
-
-  return rb;
+    dBondiRadius = BIGG * body[iBody].dMass / (2.0 * dSoundSpeed * dSoundSpeed);
+  } else {
+    dBondiRadius = -1;
+  }
+  return dBondiRadius;
 }
 
 /**

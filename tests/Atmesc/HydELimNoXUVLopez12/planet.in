@@ -1,0 +1,24 @@
+sName		planet     	        # Body's name
+saModules 	atmesc              # Active modules
+
+# Physical Parameters
+dMass		            -2.0         # Mass, negative -> Earth masses
+sPlanetRadiusModel      lopez12      # Mass-radius model
+dRadGyra	            0.4	        # Radius of gyration; ang. mom. coeff.
+dAge                    1.0e6        # Age [yr]
+
+# ATMESC Parameters
+dXFrac                  1.0     # X-Ray/XUV absorption radius in planet radii
+dAtmXAbsEffH            0.1     # H X-ray/XUV absorption efficiency (epsilon)
+dSurfWaterMass   	    0.0     # Initial water mass, negative -> Earth oceans
+dEnvelopeMass           -1.0    # Initial H envelope mass, negative -> Earth Mass
+bInstantO2Sink          0       # Is Oxygen instantly absorbed by the surface?
+bHaltSurfaceDesiccated  0 	    # Halt when dry?
+bHaltEnvelopeGone       0	      # Halt when H enevlope evaporated?
+dJeansTime		        -12.0   # Time when flow transitions to ballistic escape (Gyr)
+bUseEnergyLimited       1       # Is the flow energy-limited?
+bUseRRLimited           0       # Is the flow radiation/recombination-limited?
+bUseBondiLimited        0       # Is the flow Bondi-limited?
+bAtmEscAuto             0       # Should atmesc decide the escape regime?
+
+saOutputOrder 	Time -Mass -EnvelopeMass -PlanetRadius -BondiRadius -RocheRadius DEnvMassDt

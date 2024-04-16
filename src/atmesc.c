@@ -3356,10 +3356,14 @@ void WriteFXUVCRITDRAG(BODY *body, CONTROL *control, OUTPUT *output,
   double GPotential =
         (BIGG * body[iBody].dMass * PROTONMASS) / (body[iBody].dRadius);
 
-  *dTmp = ((4 * BDIFF * pow(GPotential, 2)) /
-           (body[iBody].dAtmXAbsEffH2O * KBOLTZ * body[iBody].dFlowTemp *
-            body[iBody].dRadius)) *
-          (QOH - 1) * (1 - XO);
+  if (body[iBody].dAtmXAbsEffH2O > 0 && body[iBody].dFlowTemp > 0 && body[iBody].dRadius > 0) {
+    *dTmp = ((4 * BDIFF * pow(GPotential, 2)) /
+            (body[iBody].dAtmXAbsEffH2O * KBOLTZ * body[iBody].dFlowTemp *
+              body[iBody].dRadius)) *
+            (QOH - 1) * (1 - XO);
+  } else {
+    *dTmp = -1;
+  }
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
@@ -4303,24 +4307,29 @@ double fdXUVEfficiencyBolmont2016(double dFXUV) {
   double c3 = -0.89880083;
 
   // Convert to erg/cm^2/s and take the log
-  double x = log10(dFXUV * 1.e3);
-  double y;
+  double dWaterEscapeEfficiency;
 
-  // Piecewise polynomial fit and handle edge cases
-  if ((x >= -2) && (x < -1)) {
-    y = pow(10, a0 * x * x + a1 * x + a2);
-  } else if ((x >= -1) && (x < 0)) {
-    y = pow(10, b0 * x * x * x + b1 * x * x + b2 * x + b3);
-  } else if ((x >= 0) && (x <= 5)) {
-    y = pow(10, c0 * x * x * x + c1 * x * x + c2 * x + c3);
-  } else if (x < -2) { // Lower flux bound
-    y = 0.001;
-  } else if (x > 5) { // Upper flux bound
-    y = 0.01;
-  } else { // Base case that never happens but DPF likes code symmetry
-    y = 0.1;
+  if (dFXUV > 0) {
+    double x = log10(dFXUV * 1.e3);
+
+    // Piecewise polynomial fit and handle edge cases
+    if ((x >= -2) && (x < -1)) {
+      dWaterEscapeEfficiency = pow(10, a0 * x * x + a1 * x + a2);
+    } else if ((x >= -1) && (x < 0)) {
+      dWaterEscapeEfficiency = pow(10, b0 * x * x * x + b1 * x * x + b2 * x + b3);
+    } else if ((x >= 0) && (x <= 5)) {
+      dWaterEscapeEfficiency = pow(10, c0 * x * x * x + c1 * x * x + c2 * x + c3);
+    } else if (x < -2) { // Lower flux bound
+      dWaterEscapeEfficiency = 0.001;
+    } else if (x > 5) { // Upper flux bound
+      dWaterEscapeEfficiency = 0.01;
+    } else { // Base case that never happens but DPF likes code symmetry
+      dWaterEscapeEfficiency = 0.1;
+    }
+  } else {
+    dWaterEscapeEfficiency = 0; // No escape if F_XUV = 0
   }
-  return y;
+  return dWaterEscapeEfficiency;
 }
 
 /**

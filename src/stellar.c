@@ -463,7 +463,7 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
           "gigayears.");
 
   sprintf(options[OPT_STELLARMODEL].cName, "sStellarModel");
-  sprintf(options[OPT_STELLARMODEL].cDescr, "Luminosity evolution model");
+  sprintf(options[OPT_STELLARMODEL].cDescr, "Stellar evolution model");
   sprintf(options[OPT_STELLARMODEL].cDefault, "BARAFFE");
   sprintf(options[OPT_STELLARMODEL].cValues, "BARAFFE PROXIMA SINEWAVE NONE");
   options[OPT_STELLARMODEL].iType      = 3;
@@ -1524,6 +1524,7 @@ double fdTemperature(BODY *body, SYSTEM *system, int *iaBody) {
     }
   }
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_SINEWAVE) {
+    printf("%lf\n",body[iaBody[0]].dLuminosity);
     foo = fdEffectiveTemperature(body,iaBody[0]);
     return foo;
   }

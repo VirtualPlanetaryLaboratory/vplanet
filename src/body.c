@@ -61,10 +61,10 @@ double fdDPerDt(double dRotRate, double dDrotrateDt) {
   @param dDeriv The value of the variable's time derivative
 
   @return The timescale of the variable's change: |x/(dx/dt)|. If the
-  derivative is 0, return 0.
+  derivative is <1e-100, return 0.
 */
 double fdTimescale(double dVar, double dDeriv) {
-  if (dDeriv != 0) {
+  if (dDeriv > 1e-100) {
     return fabs(dVar / dDeriv);
   } else {
     return 0;
@@ -84,16 +84,16 @@ controlled by multiple processes.
 @return The timescale of the variable's change: |x/Sum(dx/dt)|
 */
 double fdTimescaleMulti(double dVar, double *dDeriv, int iNum) {
-  double dTime;
+  double dTime,dTotalDerivative;
   int iPert;
 
-  dTime = 0;
+  dTotalDerivative = 0;
   for (iPert = 0; iPert < iNum; iPert++) {
     if (dDeriv[iPert] != 0) {
-      dTime += dDeriv[iPert]; // Note that here dTime is actullay the rate
+      dTotalDerivative += dDeriv[iPert]; 
     }
-    dTime = fabs(dVar / dTime);
   }
+  dTime = fabs(dVar / dTotalDerivative);
   return dTime;
 }
 
@@ -580,10 +580,15 @@ double CalcDynEllipEq(BODY *body, int iBody) {
 double fdLehmerRadius(BODY *body, int iBody) {
   double dRadXUV, dRoche;
 
-  dRadXUV = body[iBody].dRadSolid * body[iBody].dRadSolid /
+  // Set floor for surface pressure to prevent overflow error
+  if (body[iBody].dPresSurf > 1e-100) {
+    dRadXUV = body[iBody].dRadSolid * body[iBody].dRadSolid /
             (body[iBody].dScaleHeight *
                    log(body[iBody].dPresXUV / body[iBody].dPresSurf) +
              body[iBody].dRadSolid);
+  } else {
+    dRadXUV = body[iBody].dRadSolid;
+  }
   dRoche = fdRocheRadius(body, iBody);
   // printf("%lf %lf %lf %lf
   // %lf\n",body[iBody].dPresXUV,body[iBody].dPresSurf,body[iBody].dGravAccel,body[iBody].dEnvelopeMass,dRadXUV);

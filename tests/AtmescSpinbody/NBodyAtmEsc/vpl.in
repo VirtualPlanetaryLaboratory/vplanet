@@ -20,6 +20,6 @@ iVerbose                  5              # Verbosity level max=5
 bDoForward                1              # Perform a forward evolution?
 bVarDt                    0              # Use variable timestepping?
 #dEta                      .1
-dTimeStep                 0.0005         # Timestep in years
+dTimeStep                 0.0001         # Timestep in years
 dStopTime                 100            # Stop time for evolution
 dOutputTime               100            # Output timesteps (assuming in body files)

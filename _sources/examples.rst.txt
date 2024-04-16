@@ -12,46 +12,46 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/BinaryTides
-   examples/DiffLimWaterEscape
-   examples/LuminosityCycle
-   examples/ChaoticResonances
-   examples/MagneticBraking
-   examples/AtmEscFlareProxCen
-   examples/TideLock
-   examples/FfdProxCen
-   examples/SS_NBody
-   examples/VenusWaterLoss
-   examples/SSDistOrbDistRot
-   examples/MagmOc_Trappist1g
-   examples/AbioticO2
-   examples/STEEP
-   examples/GalaxyEffects
-   examples/HabitableZone
-   examples/MagmOc_GJ1132b
-   examples/WaterLossTides
-   examples/AtmEscKepler-36
-   examples/IceBelts
-   examples/DampedCBP
-   examples/CassiniStates
    examples/MagmOc_Earth
-   examples/NBodyAtmEsc
-   examples/HLossTides
-   examples/CircumbinaryOrbit
-   examples/EarthClimate
-   examples/RadHeat
-   examples/EarthInterior
-   examples/VenusApproxInterior
-   examples/ApseLock
-   examples/StellarEvol
+   examples/HabEvapCore
+   examples/HabitableZone
    examples/CassiniMulti
    examples/ParameterSweep
-   examples/IoHeat
-   examples/MiniNeptuneEvap
-   examples/AtmEscRegimes
+   examples/NBodyAtmEsc
+   examples/StellarEvol
+   examples/HLossTides
    examples/TidalEarth
-   examples/HabEvapCore
+   examples/VenusWaterLoss
+   examples/BinaryTides
+   examples/FfdProxCen
+   examples/STEEP
+   examples/AtmEscKepler-36
+   examples/SS_NBody
+   examples/ApseLock
+   examples/VenusApproxInterior
+   examples/CassiniStates
+   examples/SSDistOrbDistRot
+   examples/MagmOc_Trappist1g
+   examples/AtmEscRegimes
+   examples/IoHeat
+   examples/GalaxyEffects
+   examples/RadHeat
+   examples/CircumbinaryOrbit
+   examples/TideLock
+   examples/WaterLossTides
+   examples/AbioticO2
+   examples/IceBelts
+   examples/MagneticBraking
+   examples/DampedCBP
    examples/MDwarfLuminosity
+   examples/EarthClimate
+   examples/EarthInterior
+   examples/DiffLimWaterEscape
+   examples/ChaoticResonances
+   examples/LuminosityCycle
+   examples/MiniNeptuneEvap
+   examples/AtmEscFlareProxCen
+   examples/MagmOc_GJ1132b
 
 
 Broken

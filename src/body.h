@@ -89,9 +89,10 @@ double fdRadToMass_GordaSvech99(double);
 double fdRadToMass_ReidHawley(double);
 double fdRadToMass_Sotin07(double);
 double fdMassToRad_LehmerCatling17(double);
-double fdLehmerRadius(BODY *, int);
+double fdLehmerRadius(BODY *, int, int);
 double fdLehmerPres(double, double, double);
 double fdThermalTemp(BODY *, int);
+double fdEqH2AtmosphereSoundSpeed(double, double, double);
 
 double fdImK2Total(BODY *, int);
 double fdImK2Man(BODY *, int);

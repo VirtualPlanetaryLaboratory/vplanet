@@ -1025,6 +1025,8 @@ typedef double (*fnLaplaceFunction)(double, int);
 struct SYSTEM {
   char cName[NAMELEN]; /**< System's Name */
 
+  int iNumBodies; /** Number of bodies in the system; redundant with Evolve! */
+
   double dTotAngMomInit; /**< System's Initial Angular Momentum */
   double dTotAngMom;     /**< System's Current Angular Momentum */
 

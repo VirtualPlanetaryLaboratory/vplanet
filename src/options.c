@@ -1191,6 +1191,7 @@ void ReadInitialOptions(BODY **body, CONTROL *control, FILES *files,
 
   /* First find input files */
   ReadBodyFileNames(control, files, &options[OPT_BODYFILES], &input);
+  system->iNumBodies = control->Evolve.iNumBodies;
 
   // allocate the body struct
   *body = malloc(control->Evolve.iNumBodies * sizeof(BODY));

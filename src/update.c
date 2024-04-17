@@ -1787,6 +1787,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       update[iBody].iaBody[iVar] =
             malloc(update[iBody].iNumHecc * sizeof(int *));
       update[iBody].iaType[iVar] = malloc(update[iBody].iNumHecc * sizeof(int));
+      // XXX +1 allows for GR correction -- better to set iNumKecc based on user input!
       update[iBody].iaModule[iVar] =
             malloc(update[iBody].iNumHecc * sizeof(int));
 
@@ -1832,6 +1833,7 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       update[iBody].iaBody[iVar] =
             malloc(update[iBody].iNumKecc * sizeof(int *));
       update[iBody].iaType[iVar] = malloc(update[iBody].iNumKecc * sizeof(int));
+      // XXX +1 allows for GR correction -- better to set iNumKecc based on user input!
       update[iBody].iaModule[iVar] =
             malloc(update[iBody].iNumKecc * sizeof(int));
 

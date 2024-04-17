@@ -1509,16 +1509,19 @@ void FinalizeUpdateHeccDistOrb(BODY *body, UPDATE *update, int *iEqn, int iVar,
   /* The indexing gets a bit confusing here. iPert = 0 to iGravPerts-1
    * correspond to all perturbing planets, iPert = iGravPerts corresponds to the
    * stellar general relativistic correction, if applied */
+   /* XXX This should be changed to body[iBody].iGravPerts knows before hecc and kecc 
+   are initialized in update.c if the GR correction has been applied! */
 
   int iPert;
 
+  update[iBody].iaModule[iVar][*iEqn] = DISTORB;
   if (body[iBody].bGRCorr) {
     update[iBody].padDHeccDtDistOrb =
           malloc((body[iBody].iGravPerts + 1) * sizeof(double *));
     update[iBody].iaHeccDistOrb =
           malloc((body[iBody].iGravPerts + 1) * sizeof(int));
     for (iPert = 0; iPert < body[iBody].iGravPerts + 1; iPert++) {
-      update[iBody].iaModule[iVar][*iEqn] = DISTORB;
+
       update[iBody].iaHeccDistOrb[iPert]  = (*iEqn)++;
     }
   } else {
@@ -1526,7 +1529,6 @@ void FinalizeUpdateHeccDistOrb(BODY *body, UPDATE *update, int *iEqn, int iVar,
           malloc(body[iBody].iGravPerts * sizeof(double *));
     update[iBody].iaHeccDistOrb = malloc(body[iBody].iGravPerts * sizeof(int));
     for (iPert = 0; iPert < body[iBody].iGravPerts; iPert++) {
-      update[iBody].iaModule[iVar][*iEqn] = DISTORB;
       update[iBody].iaHeccDistOrb[iPert]  = (*iEqn)++;
     }
   }
@@ -1540,13 +1542,14 @@ void FinalizeUpdateKeccDistOrb(BODY *body, UPDATE *update, int *iEqn, int iVar,
 
   int iPert;
 
+  update[iBody].iaModule[iVar][*iEqn] = DISTORB;
   if (body[iBody].bGRCorr) {
     update[iBody].padDKeccDtDistOrb =
           malloc((body[iBody].iGravPerts + 1) * sizeof(double *));
     update[iBody].iaKeccDistOrb =
           malloc((body[iBody].iGravPerts + 1) * sizeof(int));
     for (iPert = 0; iPert < body[iBody].iGravPerts + 1; iPert++) {
-      update[iBody].iaModule[iVar][*iEqn] = DISTORB;
+ 
       update[iBody].iaKeccDistOrb[iPert]  = (*iEqn)++;
     }
   } else {
@@ -1554,7 +1557,6 @@ void FinalizeUpdateKeccDistOrb(BODY *body, UPDATE *update, int *iEqn, int iVar,
           malloc(body[iBody].iGravPerts * sizeof(double *));
     update[iBody].iaKeccDistOrb = malloc(body[iBody].iGravPerts * sizeof(int));
     for (iPert = 0; iPert < body[iBody].iGravPerts; iPert++) {
-      update[iBody].iaModule[iVar][*iEqn] = DISTORB;
       update[iBody].iaKeccDistOrb[iPert]  = (*iEqn)++;
     }
   }

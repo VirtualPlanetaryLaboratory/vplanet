@@ -21,7 +21,7 @@ def Main(dir, initial=False):
     else:
         dir_list = [dir]
 
-    BuildVPLanet()
+    #BuildVPLanet()
     for dirname in dir_list:
         if dirname in skip_list:
             continue

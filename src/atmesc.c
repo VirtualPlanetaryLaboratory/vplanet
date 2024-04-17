@@ -4129,6 +4129,11 @@ int fbDoesWaterEscape(BODY *body, EVOLVE *evolve, IO *io, int iBody) {
     return 0;
   }
 
+  /* If the central body is not a star, then allow water to escape */
+  if (!body[0].bStellar) {
+    return 1;
+  }
+
   // 2. Check if planet is beyond RG limit; if user requested water loss to stop
   // (the cold trap prevents water loss) then water does not escape.
   // NOTE: The RG flux limit below is calculated based on body zero's

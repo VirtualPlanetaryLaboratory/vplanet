@@ -1070,7 +1070,7 @@ void WritePrecATimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
   }
 
   if (dDeriv == 0) {
-    dDeriv = -1;
+    *dTmp = -1;
   } else {
     *dTmp = fabs(2 * PI / dDeriv);
   }

@@ -18,7 +18,7 @@
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../_static/documentation_options.js?v=c0370f68"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -104,7 +104,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv48BodyCopyP4BODYP4BODYP6EVOLVE"><code class="docutils literal notranslate"><span class="pre">BodyCopy()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv410CalcXYZoblP4BODYi"><code class="docutils literal notranslate"><span class="pre">CalcXYZobl()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv414CalcDynEllipEqP4BODYi"><code class="docutils literal notranslate"><span class="pre">CalcDynEllipEq()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv414fdLehmerRadiusP4BODYi"><code class="docutils literal notranslate"><span class="pre">fdLehmerRadius()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv414fdLehmerRadiusP4BODYii"><code class="docutils literal notranslate"><span class="pre">fdLehmerRadius()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv426fdEqH2AtmosphereSoundSpeedddd"><code class="docutils literal notranslate"><span class="pre">fdEqH2AtmosphereSoundSpeed()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv412fdLehmerPresddd"><code class="docutils literal notranslate"><span class="pre">fdLehmerPres()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv413fdThermalTempP4BODYi"><code class="docutils literal notranslate"><span class="pre">fdThermalTemp()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv411fdImK2TotalP4BODYi"><code class="docutils literal notranslate"><span class="pre">fdImK2Total()</span></code></a></li>
@@ -684,8 +685,8 @@ This file contains subroutines that describe physical properties of any body. Th
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv414fdLehmerRadiusP4BODYi">
-<span id="_CPPv314fdLehmerRadiusP4BODYi"></span><span id="_CPPv214fdLehmerRadiusP4BODYi"></span><span id="fdLehmerRadius__BODYP.i"></span><span class="target" id="body_8c_1a159dd8c35518cbac1ce88f647ddd8428"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdLehmerRadius</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdLehmerRadiusP4BODYi" title="Link to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv414fdLehmerRadiusP4BODYii">
+<span id="_CPPv314fdLehmerRadiusP4BODYii"></span><span id="_CPPv214fdLehmerRadiusP4BODYii"></span><span id="fdLehmerRadius__BODYP.i.i"></span><span class="target" id="body_8c_1a8b088c5a7adaa96bc67680476ec2f970"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdLehmerRadius</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdLehmerRadiusP4BODYii" title="Link to this definition"></a><br /></dt>
 <dd><p>Lehmer+ (2017)’s model for the radius of a planet where it’s losing its atmopshere due to XUV radiation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -697,6 +698,24 @@ This file contains subroutines that describe physical properties of any body. Th
 <li><p><strong>dPresSurf</strong> – pressure at surface due to envelope </p></li>
 <li><p><strong>dRadXUV</strong> – radius from center of planet where optical depth of XUV is unity </p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv426fdEqH2AtmosphereSoundSpeedddd">
+<span id="_CPPv326fdEqH2AtmosphereSoundSpeedddd"></span><span id="_CPPv226fdEqH2AtmosphereSoundSpeedddd"></span><span id="fdEqH2AtmosphereSoundSpeed__double.double.double"></span><span class="target" id="body_8c_1ad1b29daacb98adbabbbaf6bfbab90172"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdEqH2AtmosphereSoundSpeed</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dTemp</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dRad</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dSemi</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426fdEqH2AtmosphereSoundSpeedddd" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculate sound speed of a diatomic H (H2) isothermal gaseous atmosphere in which the temperature is set by the local equilibrium temperature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dTemp</strong> – double stellar effective temperature </p></li>
+<li><p><strong>dRad</strong> – double stellar radius </p></li>
+<li><p><strong>dSemi</strong> – double planetary semi-major axis</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>sound speed </p>
 </dd>
 </dl>
 </dd></dl>

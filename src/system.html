@@ -18,7 +18,7 @@
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../_static/documentation_options.js?v=c0370f68"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -94,6 +94,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv423fndUpdateSpiNBodyCoordsP4BODYP6EVOLVE"><code class="docutils literal notranslate"><span class="pre">fndUpdateSpiNBodyCoords()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv417fdLuminosityTotalP4BODYi"><code class="docutils literal notranslate"><span class="pre">fdLuminosityTotal()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv413fdMergePlanetP4BODYP6UPDATEPPP16fnUpdateVariablei"><code class="docutils literal notranslate"><span class="pre">fdMergePlanet()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv413fdRocheRadiusP4BODYii"><code class="docutils literal notranslate"><span class="pre">fdRocheRadius()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv413fdBondiRadiusP4BODYi"><code class="docutils literal notranslate"><span class="pre">fdBondiRadius()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#system-h">system.h</a></li>
@@ -491,6 +493,40 @@
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The mutual inclination </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413fdRocheRadiusP4BODYii">
+<span id="_CPPv313fdRocheRadiusP4BODYii"></span><span id="_CPPv213fdRocheRadiusP4BODYii"></span><span id="fdRocheRadius__BODYP.i.i"></span><span class="target" id="system_8c_1a886de89999f7c42a3f42a1adcf8f1be6"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdRocheRadius</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iNumBodies</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fdRocheRadiusP4BODYii" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculate the Roche radius assuming body 0 is the host star using Eqn. 8 from Luger et al. (2015)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> struct </p></li>
+<li><p><strong>iBody</strong> – int body indentifier</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Body’s Roche radius </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413fdBondiRadiusP4BODYi">
+<span id="_CPPv313fdBondiRadiusP4BODYi"></span><span id="_CPPv213fdBondiRadiusP4BODYi"></span><span id="fdBondiRadius__BODYP.i"></span><span class="target" id="system_8c_1a8f331cb22768a2ddd46f3b0f7e541978"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdBondiRadius</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413fdBondiRadiusP4BODYi" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculate the Bondi radius assuming body 0 is the host star and that the planetary atmosphere at the Bondi radius is diatomic H2 at the blackbody equilibrium temperature set by thermal emission from the host star adapting equation. Adapted from equations 2 and 4 from Owen &amp; Wu (2016)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> – <a class="reference internal" href="vplanet.html#struct_b_o_d_y"><span class="std std-ref">BODY</span></a> struct </p></li>
+<li><p><strong>iBody</strong> – int body indentifier</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Body’s Bondi radius </p>
 </dd>
 </dl>
 </dd></dl>

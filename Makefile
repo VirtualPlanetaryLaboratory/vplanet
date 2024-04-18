@@ -65,11 +65,11 @@ sanitize:
 
 test:
 	-gcc -o bin/vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
-	-pytest
+	-pytest --tb=short
 
 coverage:
 	-mkdir -p gcov && cd gcov && gcc -coverage -o ../bin/vplanet ../src/*.c -lm
-	-python -m pytest -v tests --junitxml=junit/test-results.xml
+	-python -m pytest --tb=short tests --junitxml=junit/test-results.xml
 	-lcov --capture --directory gcov --output-file .coverage && genhtml .coverage --output-directory gcov/html
 
 docs:

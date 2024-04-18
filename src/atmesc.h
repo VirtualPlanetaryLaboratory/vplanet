@@ -227,8 +227,6 @@ double fdInsolation(BODY *, int, int);
 int fbDoesWaterEscape(BODY *, EVOLVE *, IO *, int);
 double fdPlanetRadius(BODY *, SYSTEM *, int *);
 double fdXUVEfficiencyBolmont2016(double);
-double fdBondiRadius(BODY *, int);
-double fdRocheRadius(BODY *, int);
 double fdBondiLimitedDmDt(BODY *, int);
 int fbRRCriticalFlux(BODY *, int);
 int fbBondiCriticalDmDt(BODY *, int);

@@ -10,8 +10,8 @@
 */
 
 /* Orbital model */
-#define LL2 1
 #define RD4 0
+#define LL2 1
 
 // Constants
 #define TEENY 1e-20 // Already a dTINY in vplanet.h! XXX

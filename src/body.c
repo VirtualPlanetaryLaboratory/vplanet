@@ -577,7 +577,7 @@ double CalcDynEllipEq(BODY *body, int iBody) {
    @param dRadXUV radius from center of planet where optical depth of XUV is
   unity
    */
-double fdLehmerRadius(BODY *body, int iBody) {
+double fdLehmerRadius(BODY *body, int iNumBodies, int iBody) {
   double dRadXUV, dRoche;
 
   // Set floor for surface pressure to prevent overflow error
@@ -589,7 +589,7 @@ double fdLehmerRadius(BODY *body, int iBody) {
   } else {
     dRadXUV = body[iBody].dRadSolid;
   }
-  dRoche = fdRocheRadius(body, iBody);
+  dRoche = fdRocheRadius(body, iNumBodies, iBody);
   // printf("%lf %lf %lf %lf
   // %lf\n",body[iBody].dPresXUV,body[iBody].dPresSurf,body[iBody].dGravAccel,body[iBody].dEnvelopeMass,dRadXUV);
   if (dRadXUV <= 0) {
@@ -606,6 +606,24 @@ double fdLehmerRadius(BODY *body, int iBody) {
   }
   return dRadXUV;
 }
+
+/**
+ Calculate sound speed of a diatomic H (H2) isothermal gaseous atmosphere in
+ which the temperature is set by the local equilibrium temperature.
+
+ @param dTemp double stellar effective temperature
+ @param dRad double stellar radius
+ @param dSemi double planetary semi-major axis
+
+ @return sound speed
+*/
+double fdEqH2AtmosphereSoundSpeed(double dTemp, double dRad, double dSemi) {
+
+  double dCS = 2300.0 * sqrt(dTemp / 5800.0) * pow(dRad / RSUN, 0.25) *
+               pow(dSemi / (0.1 * AUM), 0.25);
+  return dCS;
+}
+
 
 /**
   Lehmer+ (2017)'s model for the pressure of a planet where it's losing its

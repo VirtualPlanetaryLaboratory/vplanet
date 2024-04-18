@@ -1065,3 +1065,49 @@ void fdMergePlanet(BODY *body, UPDATE *update, fnUpdateVariable ***fnUpdate,
   body[iBody].dMass = 0;
   body[iBody].dSemi = body[0].dRadius;
 }
+
+/**
+ Calculate the Roche radius assuming body 0 is the host star using Eqn. 8 from
+ Luger et al. (2015)
+
+ @param body BODY struct
+ @param iBody int body indentifier
+
+ @return Body's Roche radius
+*/
+double fdRocheRadius(BODY *body, int iNumBodies, int iBody) {
+  double dRoche; 
+  
+  if (iNumBodies == 1) {
+    dRoche = DBL_MAX;
+  } else {
+    dRoche = pow(body[iBody].dMass / (3.0 * body[0].dMass), 1. / 3.) *
+                  body[iBody].dSemi;
+  }
+  return dRoche;
+}
+
+/**
+ Calculate the Bondi radius assuming body 0 is the host star and that the
+ planetary atmosphere at the Bondi radius is diatomic H2 at the blackbody
+ equilibrium temperature set by thermal emission from the host star adapting
+ equation. Adapted from equations 2 and 4 from Owen & Wu (2016)
+
+ @param body BODY struct
+ @param iBody int body indentifier
+
+ @return Body's Bondi radius
+*/
+double fdBondiRadius(BODY *body, int iBody) {
+  double dBondiRadius;
+  // Compute sound speed in planet's atmosphere assuming a diatomic H atmosphere
+  // assuming body 0 is the star
+  if (body[0].bStellar) {
+    double dSoundSpeed = fdEqH2AtmosphereSoundSpeed(body[0].dTemperature, body[0].dRadius,
+                                         body[iBody].dSemi);
+    dBondiRadius = BIGG * body[iBody].dMass / (2.0 * dSoundSpeed * dSoundSpeed);
+  } else {
+    dBondiRadius = -1;
+  }
+  return dBondiRadius;
+}

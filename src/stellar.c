@@ -29,6 +29,7 @@ void BodyCopyStellar(BODY *dest, BODY *src, int foo, int iNumBodies,
   dest[iBody].dLXUV                = src[iBody].dLXUV;
   dest[iBody].bRossbyCut           = src[iBody].bRossbyCut;
   dest[iBody].bEvolveRG            = src[iBody].bEvolveRG;
+  dest[iBody].dLuminosityInitial = src[iBody].dLuminosityInitial;
   dest[iBody].dLuminosityAmplitude = src[iBody].dLuminosityAmplitude;
   dest[iBody].dLuminosityFrequency = src[iBody].dLuminosityFrequency;
   dest[iBody].dLuminosityPhase     = src[iBody].dLuminosityPhase;
@@ -1524,7 +1525,6 @@ double fdTemperature(BODY *body, SYSTEM *system, int *iaBody) {
     }
   }
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_SINEWAVE) {
-    printf("%lf\n",body[iaBody[0]].dLuminosity);
     foo = fdEffectiveTemperature(body,iaBody[0]);
     return foo;
   }

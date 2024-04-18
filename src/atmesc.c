@@ -1446,39 +1446,37 @@ double fdAtmEscXi(BODY *body, int iBody) {
   return dXi;
 }
 
-double fdKTide(BODY *body, IO *io, int iBody) {
+double fdKTide(BODY *body, IO *io, int iNumBodies, int iBody) {
   double dKTide;
 
   // For stars and circumbinary planets, assume no Ktide enhancement
   if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
     dKTide = 1.0;
   } else {
-    if (body[iBody].dAtmEscXi > 1) {
-      dKTide = (1 - 3 / (2 * body[iBody].dAtmEscXi) +
-                1 / (2 * pow(body[iBody].dAtmEscXi, 3)));
-      /*
-      fprintf(stderr,"%.5e: ",evolve->dTime/YEARSEC);
-      fprintf(stderr,"%.5e ",xi);
-      fprintf(stderr,"%.5e\n",body[iBody].dKTide);
-      */
-      if (dKTide < body[iBody].dMinKTide) {
-        dKTide = body[iBody].dMinKTide;
+    if (iNumBodies > 1) {
+      if (body[iBody].dAtmEscXi > 1) {
+        dKTide = (1 - 3 / (2 * body[iBody].dAtmEscXi) +
+                  1 / (2 * pow(body[iBody].dAtmEscXi, 3)));
+        if (dKTide < body[iBody].dMinKTide) {
+          dKTide = body[iBody].dMinKTide;
+        }
+      } else {
+        if (!io->baRocheMessage[iBody] && io->iVerbose >= VERBINPUT &&
+            (!body[iBody].bUseBondiLimited && !body[iBody].bAtmEscAuto)) {
+          fprintf(stderr,
+                  "WARNING: Roche lobe radius is larger than %s's XUV radius. "
+                  "Evolution may not be accurate.\n",
+                  body[iBody].cName);
+          fprintf(stderr, "Consider setting bUseBondiLimited = 1 or bAtmEscAuto "
+                          "= 1 to limit envelope mass loss.\n");
+          io->baRocheMessage[iBody] = 1;
+        }
+        // Fix dKTide to prevent infs when in Roche Lobe overflow
+        dKTide = 1.0;
       }
     } else {
-      if (!io->baRocheMessage[iBody] && io->iVerbose >= VERBINPUT &&
-          (!body[iBody].bUseBondiLimited && !body[iBody].bAtmEscAuto)) {
-        fprintf(stderr,
-                "WARNING: Roche lobe radius is larger than %s's XUV radius. "
-                "Evolution may not be accurate.\n",
-                body[iBody].cName);
-        fprintf(stderr, "Consider setting bUseBondiLimited = 1 or bAtmEscAuto "
-                        "= 1 to limit envelope mass loss.\n");
-        io->baRocheMessage[iBody] = 1;
-      }
-      // Fix dKTide to prevent infs when in Roche Lobe overflow
       dKTide = 1.0;
     }
-    // body[iBody].dKTide = 1.0;
   }
 
   return dKTide;
@@ -1694,7 +1692,7 @@ void fnForceBehaviorAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
   }
 }
 
-void AuxPropsLehmer17(BODY *body, int iBody) {
+void AuxPropsLehmer17(BODY *body, EVOLVE *evolve, int iBody) {
   if (body[iBody].bAutoThermTemp) {
     body[iBody].dThermTemp = fdThermalTemp(body, iBody);
   }
@@ -1706,7 +1704,7 @@ void AuxPropsLehmer17(BODY *body, int iBody) {
   body[iBody].dPresSurf =
         fdLehmerPres(body[iBody].dEnvelopeMass, body[iBody].dGravAccel,
                      body[iBody].dRadSolid);
-  body[iBody].dRadXUV = fdLehmerRadius(body, iBody);
+  body[iBody].dRadXUV = fdLehmerRadius(body, evolve->iNumBodies, iBody);
   body[iBody].dRadius = body[iBody].dRadXUV / body[iBody].dXFrac;
 }
 
@@ -1726,14 +1724,14 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                       int iBody) {
 
   if (body[iBody].iPlanetRadiusModel == ATMESC_LEHMER17) {
-    AuxPropsLehmer17(body, iBody);
+    AuxPropsLehmer17(body, evolve, iBody);
   }
 
   // Compute various radii of interest
   body[iBody].dBondiRadius = fdBondiRadius(body, iBody);
-  body[iBody].dRocheRadius = fdRocheRadius(body, iBody);
+  body[iBody].dRocheRadius = fdRocheRadius(body, evolve->iNumBodies, iBody);
   body[iBody].dAtmEscXi    = fdAtmEscXi(body, iBody);
-  body[iBody].dKTide       = fdKTide(body, io, iBody);
+  body[iBody].dKTide       = fdKTide(body, io, evolve->iNumBodies, iBody);
 
   // The XUV flux
   if (body[iBody].bCalcFXUV) {
@@ -2133,7 +2131,7 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
       // Calculate auxiliary properties
       body[iBody].dRadSolid = fdMassToRad_LehmerCatling17(body[iBody].dMass - body[iBody].dEnvelopeMass);
-      AuxPropsLehmer17(body,iBody);      
+      AuxPropsLehmer17(body,&(control->Evolve), iBody);      
     } else {
       fprintf(stderr,
               "ERROR: The Lehmer & Catling (2017) model requires a star.\n");
@@ -2312,7 +2310,7 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   // Setup radius and other radii of interest
   VerifyRadiusAtmEsc(body, control, options, update, body[iBody].dAge, iBody);
   body[iBody].dBondiRadius = fdBondiRadius(body, iBody);
-  body[iBody].dRocheRadius = fdRocheRadius(body, iBody);
+  body[iBody].dRocheRadius = fdRocheRadius(body, control->Evolve.iNumBodies, iBody);
 
   control->fnForceBehavior[iBody][iModule]   = &fnForceBehaviorAtmEsc;
   control->fnPropsAux[iBody][iModule]        = &fnPropsAuxAtmEsc;
@@ -3429,11 +3427,15 @@ Modifier for H Ref Flux to include oxygen drag at a snapshot in time
 void WriteHRefODragMod(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char cUnit[]) {
-  double rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) /
-               (body[iBody].dCrossoverMass / ATOMMASS - 1.);
-  double XO = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
-                                        body[iBody].dOxygenMass);
-  *dTmp     = pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
+  if (body[iBody].dCrossoverMass / ATOMMASS - 1. != 0) {
+    double rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) /
+                (body[iBody].dCrossoverMass / ATOMMASS - 1.);
+    double XO = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
+                                          body[iBody].dOxygenMass);
+    *dTmp     = pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
+  } else {
+    *dTmp = -1;
+  }
   strcpy(cUnit, "");
 }
 
@@ -4082,7 +4084,7 @@ double fdPlanetRadius(BODY *body, SYSTEM *system, int *iaBody) {
     body[iaBody[0]].dPresSurf =
           fdLehmerPres(body[iaBody[0]].dEnvelopeMass,
                        body[iaBody[0]].dGravAccel, body[iaBody[0]].dRadSolid);
-    body[iaBody[0]].dRadXUV = fdLehmerRadius(body, iaBody[0]);
+    body[iaBody[0]].dRadXUV = fdLehmerRadius(body, system->iNumBodies, iaBody[0]);
   }
 
   double foo;
@@ -4132,6 +4134,11 @@ int fbDoesWaterEscape(BODY *body, EVOLVE *evolve, IO *io, int iBody) {
       body[iBody].dRGDuration = body[iBody].dAge;
     }
     return 0;
+  }
+
+  /* If the central body is not a star, then allow water to escape */
+  if (!body[0].bStellar) {
+    return 1;
   }
 
   // 2. Check if planet is beyond RG limit; if user requested water loss to stop
@@ -4363,62 +4370,7 @@ void fvLinearFit(double *x, double *y, int iLen, double *daCoeffs) {
   daCoeffs[1] = yavg - daCoeffs[0] * xavg; // Intercept
 }
 
-/**
- Calculate sound speed of a diatomic H (H2) isothermal gaseous atmosphere in
- which the temperature is set by the local equilibrium temperature.
 
- @param dTemp double stellar effective temperature
- @param dRad double stellar radius
- @param dSemi double planetary semi-major axis
-
- @return sound speed
-*/
-double fdEqH2AtmosphereSoundSpeed(double dTemp, double dRad, double dSemi) {
-
-  double dCS = 2300.0 * sqrt(dTemp / 5800.0) * pow(dRad / RSUN, 0.25) *
-               pow(dSemi / (0.1 * AUM), 0.25);
-  return dCS;
-}
-
-/**
- Calculate the Roche radius assuming body 0 is the host star using Eqn. 8 from
- Luger et al. (2015)
-
- @param body BODY struct
- @param iBody int body indentifier
-
- @return Body's Roche radius
-*/
-double fdRocheRadius(BODY *body, int iBody) {
-  double dRoche = pow(body[iBody].dMass / (3.0 * body[0].dMass), 1. / 3.) *
-                  body[iBody].dSemi;
-  return dRoche;
-}
-
-/**
- Calculate the Bondi radius assuming body 0 is the host star and that the
- planetary atmosphere at the Bondi radius is diatomic H2 at the blackbody
- equilibrium temperature set by thermal emission from the host star adapting
- equation. Adapted from equations 2 and 4 from Owen & Wu (2016)
-
- @param body BODY struct
- @param iBody int body indentifier
-
- @return Body's Bondi radius
-*/
-double fdBondiRadius(BODY *body, int iBody) {
-  double dBondiRadius;
-  // Compute sound speed in planet's atmosphere assuming a diatomic H atmosphere
-  // assuming body 0 is the star
-  if (body[0].bStellar) {
-    double dSoundSpeed = fdEqH2AtmosphereSoundSpeed(body[0].dTemperature, body[0].dRadius,
-                                         body[iBody].dSemi);
-    dBondiRadius = BIGG * body[iBody].dMass / (2.0 * dSoundSpeed * dSoundSpeed);
-  } else {
-    dBondiRadius = -1;
-  }
-  return dBondiRadius;
-}
 
 /**
  Calculate the whether or not incident XUV flux exceeds critical flux between

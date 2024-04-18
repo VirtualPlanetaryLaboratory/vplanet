@@ -1446,34 +1446,37 @@ double fdAtmEscXi(BODY *body, int iBody) {
   return dXi;
 }
 
-double fdKTide(BODY *body, IO *io, int iBody) {
+double fdKTide(BODY *body, IO *io, int iNumBodies, int iBody) {
   double dKTide;
 
   // For stars and circumbinary planets, assume no Ktide enhancement
   if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
     dKTide = 1.0;
   } else {
-    if (body[iBody].dAtmEscXi > 1) {
-      dKTide = (1 - 3 / (2 * body[iBody].dAtmEscXi) +
-                1 / (2 * pow(body[iBody].dAtmEscXi, 3)));
-      if (dKTide < body[iBody].dMinKTide) {
-        dKTide = body[iBody].dMinKTide;
+    if (iNumBodies > 1) {
+      if (body[iBody].dAtmEscXi > 1) {
+        dKTide = (1 - 3 / (2 * body[iBody].dAtmEscXi) +
+                  1 / (2 * pow(body[iBody].dAtmEscXi, 3)));
+        if (dKTide < body[iBody].dMinKTide) {
+          dKTide = body[iBody].dMinKTide;
+        }
+      } else {
+        if (!io->baRocheMessage[iBody] && io->iVerbose >= VERBINPUT &&
+            (!body[iBody].bUseBondiLimited && !body[iBody].bAtmEscAuto)) {
+          fprintf(stderr,
+                  "WARNING: Roche lobe radius is larger than %s's XUV radius. "
+                  "Evolution may not be accurate.\n",
+                  body[iBody].cName);
+          fprintf(stderr, "Consider setting bUseBondiLimited = 1 or bAtmEscAuto "
+                          "= 1 to limit envelope mass loss.\n");
+          io->baRocheMessage[iBody] = 1;
+        }
+        // Fix dKTide to prevent infs when in Roche Lobe overflow
+        dKTide = 1.0;
       }
     } else {
-      if (!io->baRocheMessage[iBody] && io->iVerbose >= VERBINPUT &&
-          (!body[iBody].bUseBondiLimited && !body[iBody].bAtmEscAuto)) {
-        fprintf(stderr,
-                "WARNING: Roche lobe radius is larger than %s's XUV radius. "
-                "Evolution may not be accurate.\n",
-                body[iBody].cName);
-        fprintf(stderr, "Consider setting bUseBondiLimited = 1 or bAtmEscAuto "
-                        "= 1 to limit envelope mass loss.\n");
-        io->baRocheMessage[iBody] = 1;
-      }
-      // Fix dKTide to prevent infs when in Roche Lobe overflow
       dKTide = 1.0;
     }
-    // body[iBody].dKTide = 1.0;
   }
 
   return dKTide;
@@ -1728,7 +1731,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   body[iBody].dBondiRadius = fdBondiRadius(body, iBody);
   body[iBody].dRocheRadius = fdRocheRadius(body, evolve->iNumBodies, iBody);
   body[iBody].dAtmEscXi    = fdAtmEscXi(body, iBody);
-  body[iBody].dKTide       = fdKTide(body, io, iBody);
+  body[iBody].dKTide       = fdKTide(body, io, evolve->iNumBodies, iBody);
 
   // The XUV flux
   if (body[iBody].bCalcFXUV) {
@@ -3424,11 +3427,15 @@ Modifier for H Ref Flux to include oxygen drag at a snapshot in time
 void WriteHRefODragMod(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char cUnit[]) {
-  double rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) /
-               (body[iBody].dCrossoverMass / ATOMMASS - 1.);
-  double XO = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
-                                        body[iBody].dOxygenMass);
-  *dTmp     = pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
+  if (body[iBody].dCrossoverMass / ATOMMASS - 1. != 0) {
+    double rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) /
+                (body[iBody].dCrossoverMass / ATOMMASS - 1.);
+    double XO = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
+                                          body[iBody].dOxygenMass);
+    *dTmp     = pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
+  } else {
+    *dTmp = -1;
+  }
   strcpy(cUnit, "");
 }
 

@@ -39,11 +39,13 @@
   <img src="https://img.shields.io/badge/Test%20Sims-70-darkblue.svg">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml/badge.svg">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/floatingpoint.yml/badge.svg">
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/sanitizer.yml/badge.svg">
+  <br>
   <a href="examples">
     <img src="https://img.shields.io/badge/Examples-41-darkblue.svg">
   </a>
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml/badge.svg">
-  <img src="https://img.shields.io/badge/Python-3.6%20--%203.11-7d93c7.svg">
+  <img src="https://img.shields.io/badge/Ubuntu%2022-3.6%20--%203.11-7d93c7.svg">
 
 </p>
 
@@ -104,7 +106,7 @@ The "pip-install" badge indicates if the latest executables are available for in
 
 We are committed to maintaining a stable tool for scientists to analyze planetary system. Behind the scenes, the `VPLanet` team maintains code integrity through automatic checks at every merge into the main branch. You can see the status of these checks via the badges above. Currently we perform "Unit Tests" for the initial and final conditions across an orthogonal set of "Test Sims" (simulations), with the numbers of tests for each shown via badges. We perform the tests across all permutations of operating systems and Python version shown by the badges. 
 
-We also check for memory violations via [valgrind's memcheck tool](http://valgrind.org) ("memcheck"), check for overflow, invalid operation, and divide-by-zero floating point exceptions ("floating-point"), and test if all the [examples](examples/) work across the operating system and Python versions listed after the "examples" badge. 
+We also check for memory violations via [valgrind's memcheck tool](http://valgrind.org) ("memcheck") and [address sanitizer](https://github.com/google/sanitizers/wiki/AddressSanitizer) ("sanitizer"), check for overflow, invalid operation, and divide-by-zero floating point exceptions ("floating-point"), and test if all the [examples](examples/) work across the operating system and Python versions listed after the "examples" badge. 
 
 The percentage of the lines of code that are executed by the unit tests is shown with the "codecov" badge, with details available at our <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">Codecov</a> account. 
 

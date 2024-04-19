@@ -18,28 +18,30 @@ def Main():
         os.chdir(dir)
         subdirs = dir.split("/")
         test = subdirs[1]
-        outfile = test + ".valgrind"
-        cmd = "/usr/bin/valgrind --track-origins=yes ../../../bin/vplanet vpl.in"
+        outfile = test + ".sanitize"
+        cmd = "../../../bin/vplanet vpl.in"
 
         with open(outfile, "w+") as f:
+            fail = 0
             subprocess.run(cmd, shell=True, stdout=f, stderr=f)
+            #subprocess.run(cmd, shell=True)
         f = open(outfile, "r")
-        last_line = f.readlines()[-1]
-        # print(last_line)
-        f.close()
-        words = last_line.split()
-        n_errors = int(words[3])
-        if n_errors > 0:
-            tot_fail += 1
+        for line in f:
+            if ("ABORTING" in line):
+                fail = 1
+                tot_fail += 1
+        if fail:
             print(": FAIL",flush=True)
         else:
             print(": pass",flush=True)
+        f.close()
+
         os.chdir("../../")
 
     print("Done! ")
 
     if tot_fail == 0:
-        print("VPLanet is mem-check-clean!")
+        print("VPLanet is sanitized!")
         assert True
     else:
         print(repr(tot_fail) + "/" + repr(tot_test) + " test(s) failed.")
@@ -51,7 +53,7 @@ def BuildVPLanet():
     sys.stdout.write("Building VPLanet...")
     sys.stdout.flush()
     os.chdir("../")
-    subprocess.check_output(["make", "opt"])
+    subprocess.check_output(["make", "sanitize"])
     print("done.", flush=True)
     os.chdir("tests")
 

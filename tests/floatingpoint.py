@@ -38,7 +38,7 @@ def Main():
         f.close()
         if last_line != "Simulation completed.\n":
             tot_fail += 1
-            print("Fail", flush=True)
+            print("FAIL", flush=True)
         else:
             print("Pass", flush=True)
         os.chdir("../../")

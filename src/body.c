@@ -1142,10 +1142,26 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge,
    * Let's use them to do a simple tetralinear interpolation.
    * Adapted from the method described in
    * http://en.wikipedia.org/wiki/Trilinear_interpolation */
-  dm   = (dMassEarth - daLopezMass[m]) / (daLopezMass[m + 1] - daLopezMass[m]);
-  dc   = (dComp - daLopezComp[c]) / (daLopezComp[c + 1] - daLopezComp[c]);
-  df   = (dFlux - daLopezFlux[f]) / (daLopezFlux[f + 1] - daLopezFlux[f]);
-  dt   = (dAgeYears - daLopezAge[t]) / (daLopezAge[t + 1] - daLopezAge[t]);
+  if (m < MASSLEN - 1) {
+    dm   = (dMassEarth - daLopezMass[m]) / (daLopezMass[m + 1] - daLopezMass[m]);
+  } else {
+    dm   = (dMassEarth - daLopezMass[m]) / (daLopezMass[m] - daLopezMass[m-1]);
+  }
+  if (c < COMPLEN - 1) {
+    dc   = (dComp - daLopezComp[c]) / (daLopezComp[c+1] - daLopezComp[c]);
+  } else {
+    dc   = (dComp - daLopezComp[c]) / (daLopezComp[c] - daLopezComp[c-1]);
+  }
+  if (f < FLUXLEN - 1) {
+    df   = (dFlux - daLopezFlux[f]) / (daLopezFlux[f + 1] - daLopezFlux[f]);
+  } else {
+    df   = (dFlux - daLopezFlux[f]) / (daLopezFlux[f] - daLopezFlux[f-1]);
+  }
+  if (t < TIMELEN - 1) {
+    dt   = (dAgeYears - daLopezAge[t]) / (daLopezAge[t + 1] - daLopezAge[t]);
+  } else {
+    dt   = (dAgeYears - daLopezAge[t]) / (daLopezAge[t + 1] - daLopezAge[t]);
+  }
   R000 = daLopezRadius[m][c][f][z][t] * (1 - dm) +
          daLopezRadius[m + 1][c][f][z][t] * dm;
   R001 = daLopezRadius[m][c][f][z][t + 1] * (1 - dm) +

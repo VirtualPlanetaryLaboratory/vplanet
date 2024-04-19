@@ -10,52 +10,48 @@
   </a>
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/docs.yml/badge.svg">  
   <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract">
-    <img src="https://img.shields.io/badge/Read-the_paper-darkgreen.svg?style=flat">
+    <img src="https://img.shields.io/badge/Read-the_paper-orange.svg?style=flat">
   </a>
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet/conduct.html">
-    <img src="https://img.shields.io/badge/Code%20of-Conduct-7d93c7.svg">
+    <img src="https://img.shields.io/badge/Code%20of-Conduct-black.svg">
   </a>
   <a href="https://www.youtube.com/@VPLanetCode/playlists">
     <img src="https://img.shields.io/badge/You-Tube-darkred.svg">
   </a>
    <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/discussions">
-     <img src="https://img.shields.io/badge/Discussions-darkgreen.svg">
+     <img src="https://img.shields.io/badge/Discussions-orange.svg">
   </a>
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg">
   <br>
   <img src="https://img.shields.io/badge/Unit%20Tests-19,130-darkblue.svg">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-linux.yml/badge.svg">
   <img src="https://img.shields.io/badge/Ubuntu%2020-Python%203.6--3.11-7d93c7.svg">
   <img src="https://img.shields.io/badge/Ubuntu%2022-Python%203.7--3.11-7d93c7.svg">
-  
+  <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">
+    <img src="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet/branch/main/graph/badge.svg?token=3LFJQO1M6H">
+  </a>
   <br>
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-macos-intel.yml/badge.svg">
   <img src="https://img.shields.io/badge/MacOS%2011--13-Python%203.6--3.11-7d93c7.svg">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-macos-silicon.yml/badge.svg">
   <img src="https://img.shields.io/badge/MacOS%2014-Python%203.10--3.11-7d93c7.svg">  
   <br>
-  <!--- <img src="https://img.shields.io/badge/Memory%20Checks-58-darkblue.svg">
+  <img src="https://img.shields.io/badge/Test%20Sims-70-darkblue.svg">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/memcheck.yml/badge.svg">
-  -->
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/floatingpoint.yml/badge.svg">
   <a href="examples">
     <img src="https://img.shields.io/badge/Examples-41-darkblue.svg">
   </a>
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml/badge.svg">
   <img src="https://img.shields.io/badge/Python-3.6%20--%203.11-7d93c7.svg">
-  
-  <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">
-    <img src="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet/branch/main/graph/badge.svg?token=3LFJQO1M6H">
-  </a>
-  <!---
-  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg">
-  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/floatingpoint.yml/badge.svg">
-    -->
+
 </p>
 
 ### Overview
 
 `VPLanet` is software to simulate planetary system evolution, with a focus on habitability. Physical models, typically consisting of ordinary differential equations, are coupled together to simulate evolution, from planetary cores to passing stars, for the age of a system. We strive for full transparency and reproducibility in our software, and this repository contains 1) the [source code](src), 2) [extensive documentation](https://VirtualPlanetaryLaboratory.github.io/vplanet), 3) scripts and files to [generate published figures](examples) and perform [parameter sweeps](https://virtualplanetarylaboratory.github.io/vplanet/parametersweep.html), and 4) [scripts to validate the current release](tests). We can't claim we found life beyond the Earth with closed-source or unreliable software!
 
-To get started, ensure you have clang/gcc installed and follow the [Installation Guide](https://virtualplanetarylaboratory.github.io/vplanet/quickstart.html). You can also watch videos on our [YouTube channel](https://www.youtube.com/@VPLanetCode/playlists) on how to install and run VPLanet, as well as updates on recent results .
+To get started, ensure you have clang/gcc installed and follow the [Installation Guide](https://virtualplanetarylaboratory.github.io/vplanet/quickstart.html). You can also watch videos on our [YouTube channel](https://www.youtube.com/@VPLanetCode/playlists) on how to install and run `VPLanet`, as well as updates on recent results .
 
 ### Modules
 
@@ -98,30 +94,36 @@ Many of these modules can be combined together to simulate numerous phenomena an
 
 ### Resources
 
-The [examples/](examples) directory contains input files and scripts for generating the figures in [Barnes et al. (2020)](https://ui.adsabs.harvard.edu/abs/2020PASP..132b4502B/abstract) and subsequent publications. The "examples" badge shows if all the examples can be built with the most recent version. The [Manual/](Manual) directory contains the pdf of [Barnes et al. (2020)](https://ui.adsabs.harvard.edu/abs/2020PASP..132b4502B/abstract), which describes the physics of the first 11 modules, validates the software against observations and/or past results, and uses figures from the [examples/](examples) directory.
+The [examples/](examples) directory contains input files and scripts for generating the figures in [Barnes et al. (2020)](https://ui.adsabs.harvard.edu/abs/2020PASP..132b4502B/abstract) and subsequent publications. The [Manual/](Manual) directory contains the pdf of [Barnes et al. (2020)](https://ui.adsabs.harvard.edu/abs/2020PASP..132b4502B/abstract) that describes the physics of the first 11 modules, validates the software against observations and/or past results, and includes figures from the [examples/](examples) directory. 
 
-An ecosystem of support software is also publicly available. [VPLot](https://github.com/VirtualPlanetaryLaboratory/vplot) is both a command line tool to quickly plot the evolution of a single integration, and also includes matplotlib functions to generate publication-worthy figures. The [VSPACE](https://github.com/VirtualPlanetaryLaboratory/vspace) script generates input files for a parameter space sweep, which can then be performed on an arbitrary number of cores with [MultiPlanet](https://github.com/VirtualPlanetaryLaboratory/multi-planet). For large parameter sweeps, an enormous amount of data can be generated, which can slow analyses. To overcome this barrier, the [BigPlanet](https://github.com/VirtualPlanetaryLaboratory/bigplanet) code can both compress datasets into HDF5 format, including statistics of an integration, and tools to facilitate plotting. These three scripts can be executed from the command line to seamlessly [perform parameter sweeps](https://virtualplanetarylaboratory.github.io/vplanet/parametersweep.html). These Python scripts are optimized for [anaconda](https://www.anaconda.com/) distributions versions 3.7-3.9. The "wheels" badge indicates if you can download and install the executables with pip for these Python distributions on the latest Linux and Mac operating systems.
+An ecosystem of support software is also publicly available in other repositories of the [Virtual Planetary Laboratory](https://vpl.uw.edu/). The [vplot](https://github.com/VirtualPlanetaryLaboratory/vplot) package is both a command line tool to quickly plot the evolution of a single simulation and a Pythom module for generating publication-worthy figures. The [VSPACE](https://github.com/VirtualPlanetaryLaboratory/vspace) script generates input files for a parameter space sweep, which can then be performed on an arbitrary number of cores with [MultiPlanet](https://github.com/VirtualPlanetaryLaboratory/multi-planet). For large parameter sweeps, an enormous amount of data can be generated, which can slow analyses. To overcome this barrier, the [BigPlanet](https://github.com/VirtualPlanetaryLaboratory/bigplanet) code can both compress datasets into HDF5 format, including statistics of an integration, and tools to facilitate plotting. These three scripts can be executed from the command line to seamlessly [perform parameter sweeps](https://virtualplanetarylaboratory.github.io/vplanet/parametersweep.html). These Python scripts are optimized for [anaconda](https://www.anaconda.com/) distributions. 
+
+The "pip-install" badge indicates if the latest executables are available for installation via pip for the Python distributions and operating systems for which we perform unit tests (see below). (*Note: This badge is currently broken due to an unknown GitHub issue, so if you pip install, you may want to check your `VPLanet` version, which is printed near the top of the log file that is generated when you perform a simulation.*) 
 
 ### Code Integrity
 
-Behind the scenes, the VPLanet team maintains code integrity through via various automatic checks at every merge into the main branch. You can see the status of these checks via the "badges" the GitHub logo above. Currently we perform 5 checks: documentation ("docs"), units tests ("tests"), memory checks via [valgrind](http://valgrind.org) ("memcheck"), confirmation that all [examples](examples/) are working ("examples"), and that the code is pip-installable on the latest Linux and Mac operating systems ("pip-install") for the Python distributions listed after the GitHub Actions badge. The percentage of the lines of code that are executed by the unit tests is shown with the "codecov" badge, with details available at our <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">Codecov</a> account. We are committed to maintaining a stable tool for scientists to analyze any planetary system.
+We are committed to maintaining a stable tool for scientists to analyze planetary system. Behind the scenes, the `VPLanet` team maintains code integrity through automatic checks at every merge into the main branch. You can see the status of these checks via the badges above. Currently we perform "Unit Tests" for the initial and final conditions across an orthogonal set of "Test Sims" (simulations), with the numbers of tests for each shown via badges. We perform the tests across all permutations of operating systems and Python version shown by the badges. 
+
+We also check for memory violations via [valgrind's memcheck tool](http://valgrind.org) ("memcheck"), check for overflow, invalid operation, and divide-by-zero floating point exceptions ("floating-point"), and test if all the [examples](examples/) work across the operating system and Python versions listed after the "examples" badge. 
+
+The percentage of the lines of code that are executed by the unit tests is shown with the "codecov" badge, with details available at our <a href="https://codecov.io/gh/VirtualPlanetaryLaboratory/vplanet">Codecov</a> account. 
 
 ### Community
 
-`VPLanet` is a community project. We're happy to take pull requests; if you want to create one, please issue it to the *dev* branch. The documentation includes [tutorials on adding new features and modules](https://VirtualPlanetaryLaboratory.github.io/vplanet/tutorials.html). It's a platform for planetary science that can grow exponentially, either by adding new physics or by adding competing models for clean comparisons.
+`VPLanet` is a community project. We're happy to take pull requests; if you want to create one, please issue it to the *dev* branch. The documentation includes [tutorials on adding new features and modules](https://VirtualPlanetaryLaboratory.github.io/vplanet/tutorials.html). `VPLanet` is a platform for planetary science that can grow exponentially, either by adding new physics or by adding competing models for clean comparisons.
 
 A list of additional GitHub repositories with `VPLanet` examples can be found [here](https://VirtualPlanetaryLaboratory.github.io/vplanet/repos.html).
 
-If you believe you have encountered a bug, please raise an issue using the [Issues](https://github.com/VirtualPlanetaryLaboratory/vplanet/issues) tab at the top of this page.
+If you have questions or are running into issues, you can read or post to a [Discussion](discussions).
 
-If you'd like to stay up to date on `VPLanet` by joining the e-mail list, please send a request to Rory Barnes, rory@astro.washington.edu. You can also follow VPLanet on twitter: [@VPLanetCode](https://twitter.com/VPLanetCode).
+If you believe you have encountered a bug, please raise an issue using the [Issues](https://github.com/VirtualPlanetaryLaboratory/vplanet/issues) tab at the top of this page.
 
 ### Acknowledgments
 
 If you use this code to generate results used in any publication or conference contribution, please cite [Barnes, R. et al. (2020), PASP, 132, 24502](https://ui.adsabs.harvard.edu/abs/2020PASP..132b4502B/abstract).
 
-`VPLanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, 80NSSC17K048, 13-13NAI7_0024, and 80NSSC20K0229. We also acknowledge support from the University of Washington and the Carnegie Institute for Science.
+`VPLanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, 80NSSC17K048, 13-13NAI7_0024, 80NSSC20K0229, and 80NSSC20K0261. We also acknowledge support from the University of Washington and the Carnegie Institute for Science.
 
 Enjoy!
 
-© 2018-2023 The VPLanet Team.
+© 2018-2024 The VPLanet Team.

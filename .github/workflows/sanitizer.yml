@@ -1,12 +1,13 @@
-name: memcheck
+name: sanitizer
 
 on:
-  release:
-    types: [published]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
-  valgrind:
-    name: Run Valgrind on Ubuntu
+  sanitizer:
+    name: Run address-sanitizer on Ubuntu
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -22,18 +23,12 @@ jobs:
         with:
           activate-environment: vplanet
           environment-file: environment.yml
-          python-version: 3.8
+          python-version: 3.9
 
-      - name: Install valgrind
-        id: install
-        if: steps.setup_python.outcome == 'success'
-        shell: bash -l {0}
-        run: |
-          sudo apt-get install valgrind
-
-      - name: Run valgrind test
+      - name: Run sanitizer
         if: steps.install.outcome == 'success'
         shell: bash -l {0}
         run: |
+          make sanitize
           cd tests/
-          python valgrind.py
+          python sanitizer.py

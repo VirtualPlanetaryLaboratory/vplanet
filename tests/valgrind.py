@@ -31,7 +31,9 @@ def Main():
         n_errors = int(words[3])
         if n_errors > 0:
             tot_fail += 1
-        print(": " + repr(n_errors) + " error(s)")
+            print(": FAIL",flush=True)
+        else:
+            print(": pass",flush=True)
         os.chdir("../../")
 
     print("Done! ")

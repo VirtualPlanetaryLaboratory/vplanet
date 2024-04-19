@@ -31,9 +31,9 @@ def Main():
                 fail = 1
                 tot_fail += 1
         if fail:
-            print(": error")
+            print(": FAIL",flush=True)
         else:
-            print(": clean")
+            print(": pass",flush=True)
         f.close()
 
         os.chdir("../../")

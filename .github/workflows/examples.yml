@@ -26,7 +26,6 @@ jobs:
           sudo apt-get install cm-super
           sudo apt-get install texlive-fonts-recommended texlive-fonts-extra
           sudo apt-get install dvipng
-          sudo apt-get update
 
       - name: Set up Python
         id: setup_python

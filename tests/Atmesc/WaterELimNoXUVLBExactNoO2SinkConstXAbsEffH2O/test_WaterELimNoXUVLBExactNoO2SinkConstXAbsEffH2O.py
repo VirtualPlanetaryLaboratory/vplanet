@@ -55,7 +55,7 @@ import astropy.units as u
        "log.initial.earth.XO2": {"value": 0.000000}, 
        "log.initial.earth.XH2O": {"value": 1.000000}, 
        "log.initial.earth.HDiffFlux": {"value": 1.264874e+17, "unit": 1 / u.m ** 2 / u.sec}, 
-       "log.initial.earth.HRefODragMod": {"value": -0.000000}, 
+       "log.initial.earth.HRefODragMod": {"value": -1.000000}, 
        "log.initial.earth.KTide": {"value": 1.000000}, 
        "log.initial.earth.RGDuration": {"value": 0.00000e+00, "unit": u.yr}, 
        "log.final.system.Age": {"value": 3.155760e+15, "unit": u.sec}, 
@@ -110,7 +110,7 @@ import astropy.units as u
        "log.final.earth.XO2": {"value": 0.000000}, 
        "log.final.earth.XH2O": {"value": 1.000000}, 
        "log.final.earth.HDiffFlux": {"value": 1.264874e+17, "unit": 1 / u.m ** 2 / u.sec}, 
-       "log.final.earth.HRefODragMod": {"value": -0.000000}, 
+       "log.final.earth.HRefODragMod": {"value": -1.000000}, 
        "log.final.earth.KTide": {"value": 1.000000}, 
        "log.final.earth.RGDuration": {"value": 0.00000e+00, "unit": u.yr}, 
    } 

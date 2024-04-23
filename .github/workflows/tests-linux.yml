@@ -34,6 +34,7 @@ jobs:
         if: steps.setup_python.outcome == 'success'
         shell: bash -l {0}
         run: |
+          sudo apt-get update
           python -m pip install -U pip
           python -m pip install -e .
           pip install pytest pytest-cov
@@ -45,7 +46,7 @@ jobs:
         shell: bash -l {0}
         run: |
           make opt
-          pytest
+          pytest --tb=short
 
       - name: Check test ouptut created
         id: check_test_file

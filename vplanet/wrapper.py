@@ -89,6 +89,7 @@ def run(
         except subprocess.CalledProcessError as e:
             error = True
         if error:
+            print(e)
             raise VPLANETError("Error running VPLANET.")
 
     # Grab the output

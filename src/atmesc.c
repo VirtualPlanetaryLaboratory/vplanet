@@ -1846,10 +1846,11 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                     (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) /
                     (BDIFF * g);
         FH  = body[iBody].dFHRef;
+        /* Is this necessary? XXX
         rat = ((body[iBody].dCrossoverMass / ATOMMASS) - QOH) /
               ((body[iBody].dCrossoverMass / ATOMMASS) - 1.);
         body[iBody].dOxygenEta = 0;
-
+        */
       } else {
 
         // mcross >= mo
@@ -1859,10 +1860,14 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
               ATOMMASS * num / den +
               (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) /
                     ((1 + XO * (QOH - 1)) * BDIFF * g);
-        rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) /
+        if (body[iBody].dCrossoverMass != ATOMMASS) {
+          rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) /
               (body[iBody].dCrossoverMass / ATOMMASS - 1.);
-        FH = body[iBody].dFHRef * pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
-        body[iBody].dOxygenEta = 2 * XO / (1. - XO) * rat;
+          FH = body[iBody].dFHRef * pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
+          body[iBody].dOxygenEta = 2 * XO / (1. - XO) * rat;
+        } else {
+          body[iBody].dOxygenEta = 0;
+        }        
       }
     } else if (body[iBody].iWaterLossModel == ATMESC_LS2016) {
 

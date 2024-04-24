@@ -867,6 +867,33 @@ void fprintd(FILE *fp, double x, int iExp, int iDig) {
   }
 }
 
+void fvFormattedString(char **sString,const char* sFormattedString, ...) {
+  va_list vaArgs;
+  va_start(vaArgs, sFormattedString);
+  
+  va_list vaArgsCopy;
+  va_copy(vaArgsCopy, vaArgs);
+  
+  // Determine the length of the formatted string
+  int iString = vsnprintf(NULL, 0, sFormattedString, vaArgs);
+  
+  // Allocate memory for the string
+  *sString = (char*)malloc((iString + 1) * sizeof(char));
+  if (*sString == NULL) {
+    va_end(vaArgs); 
+    va_end(vaArgsCopy); 
+    fprintf(stderr,"ERROR: Unable to create formatted string in functionfvWriteString.\n");
+    exit(EXIT_EXE);
+  }
+  
+  // Fill the string with the formatted data using the copied va_list
+  vsnprintf(*sString, iString + 1, sFormattedString, vaArgsCopy);
+  
+  va_end(vaArgs); // Clean up the original va_list
+  va_end(vaArgsCopy); // Clean up the copied va_list
+}
+
+
 /*
  * Unit Conversions
  */

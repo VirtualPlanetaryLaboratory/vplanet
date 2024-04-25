@@ -957,7 +957,7 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_ATMXABSEFFH2OMODEL].iType      = 3;
   options[OPT_ATMXABSEFFH2OMODEL].bMultiFile = 1;
   fnRead[OPT_ATMXABSEFFH2OMODEL]             = &ReadAtmXAbsEffH2OModel;
-  sprintf(options[OPT_ATMXABSEFFH2OMODEL].cLongDescr,
+  fvFormattedString(&options[OPT_ATMXABSEFFH2OMODEL].cLongDescr,
           "If BOLMONT16 is selected, then the value of %s will follow the "
           "model of\n"
           "Bolmont et al. (2017, MNRAS, 464, 3728). NONE will not change the "

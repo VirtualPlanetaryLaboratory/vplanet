@@ -420,19 +420,19 @@ void ReadLXUVFlareConst(BODY *body,
 void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   int iOpt, iFile;
 
-  sprintf(options[OPT_FLAREYINT].cName, "dFlareYInt");
-  sprintf(options[OPT_FLAREYINT].cDescr,
+  fvFormattedString(&options[OPT_FLAREYINT].cName, "dFlareYInt");
+  fvFormattedString(&options[OPT_FLAREYINT].cDescr,
           "Y-Intercept for Flare Frequency"); // Where the curve intercepts the
                                               // y axis (y=ax+b, in this case,
                                               // the parameter is "b")
-  sprintf(options[OPT_FLAREYINT].cDefault, "20.9 (Proxima Centauri)");
+  fvFormattedString(&options[OPT_FLAREYINT].cDefault, "20.9 (Proxima Centauri)");
   options[OPT_FLAREYINT].dDefault   = 20.9;
   options[OPT_FLAREYINT].iType      = 2;
   options[OPT_FLAREYINT].bMultiFile = 1;
   options[OPT_FLAREYINT].dNeg       = 1.0 / DAYSEC;
-  sprintf(options[OPT_FLAREYINT].cNeg, "1/day");
+  fvFormattedString(&options[OPT_FLAREYINT].cNeg, "1/day");
   fnRead[OPT_FLAREYINT] = &ReadFlareYInt;
-  sprintf(options[OPT_FLAREYINT].cLongDescr,
+  fvFormattedString(&options[OPT_FLAREYINT].cLongDescr,
           " Y-Intercept for flare frequency distribution. Where the curve "
           "intercepts the"
           "y axis (y=ax+b, in this case, dFlareYInt = 'b'). This value is "
@@ -441,50 +441,50 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
 
   // TODO: Include the error in the FFD slopes to calculate the upper and higher
   // limit of XUV luminosity by flares
-  /*sprintf(options[OPT_FLAREYINTERRORUPPER].cName, "dFlareYIntErrorUpper");
-  sprintf(options[OPT_FLAREYINTERRORUPPER].cDescr, "Y-Intercept upper error");
-  sprintf(options[OPT_FLAREYINTERRORUPPER].cDefault, "0.0");
+  /*fvFormattedString(options[OPT_FLAREYINTERRORUPPER].cName, "dFlareYIntErrorUpper");
+  fvFormattedString(options[OPT_FLAREYINTERRORUPPER].cDescr, "Y-Intercept upper error");
+  fvFormattedString(options[OPT_FLAREYINTERRORUPPER].cDefault, "0.0");
   options[OPT_FLAREYINTERRORUPPER].dDefault   = 0.0;
   options[OPT_FLAREYINTERRORUPPER].iType      = 2;
   options[OPT_FLAREYINTERRORUPPER].bMultiFile = 1;
   fnRead[OPT_FLAREYINTERRORUPPER]             = &ReadFlareYIntErrorUpper;
 
-  sprintf(options[OPT_FLAREYINTERRORLOWER].cName, "dFlareYIntErrorLower");
-  sprintf(options[OPT_FLAREYINTERRORLOWER].cDescr, "Y-Intercept lower error");
-  sprintf(options[OPT_FLAREYINTERRORLOWER].cDefault, "0.0");
+  fvFormattedString(options[OPT_FLAREYINTERRORLOWER].cName, "dFlareYIntErrorLower");
+  fvFormattedString(options[OPT_FLAREYINTERRORLOWER].cDescr, "Y-Intercept lower error");
+  fvFormattedString(options[OPT_FLAREYINTERRORLOWER].cDefault, "0.0");
   options[OPT_FLAREYINTERRORLOWER].dDefault   = 0.0;
   options[OPT_FLAREYINTERRORLOWER].iType      = 2;
   options[OPT_FLAREYINTERRORLOWER].bMultiFile = 1;
   fnRead[OPT_FLAREYINTERRORLOWER]             = &ReadFlareYIntErrorLower;
 */
-  sprintf(options[OPT_FLARESLOPE].cName, "dFlareSlope");
-  sprintf(options[OPT_FLARESLOPE].cDescr, "Slope for Flare Frequency");
-  sprintf(options[OPT_FLARESLOPE].cDefault, "-0.68 (Proxima Centauri)");
+  fvFormattedString(&options[OPT_FLARESLOPE].cName, "dFlareSlope");
+  fvFormattedString(&options[OPT_FLARESLOPE].cDescr, "Slope for Flare Frequency");
+  fvFormattedString(&options[OPT_FLARESLOPE].cDefault, "-0.68 (Proxima Centauri)");
   options[OPT_FLARESLOPE].dDefault   = -0.68;
   options[OPT_FLARESLOPE].iType      = 2;
   options[OPT_FLARESLOPE].bMultiFile = 1;
   options[OPT_FLARESLOPE].dNeg       = 1.0 / (DAYSEC * log10(1.0e7));
-  sprintf(options[OPT_FLARESLOPE].cNeg, "1/day 1/log10(erg)");
+  fvFormattedString(&options[OPT_FLARESLOPE].cNeg, "1/day 1/log10(erg)");
   fnRead[OPT_FLARESLOPE] = &ReadFlareSlope;
-  sprintf(
-        options[OPT_FLARESLOPE].cLongDescr,
+  fvFormattedString(
+        &options[OPT_FLARESLOPE].cLongDescr,
         " Slope for flare frequency distribution. The user needs to"
         " input the module of the value for this parameter. The negative signal"
         " can be use only for input the value in flares/day 1/log10(erg).  \n");
 
   // TODO: Include the error in the FFD slopes to calculate the upper and higher
   // limit of XUV luminosity by flares
-  /*sprintf(options[OPT_FLARESLOPEERRORUPPER].cName, "dFlareSlopeErrorUpper");
-  sprintf(options[OPT_FLARESLOPEERRORUPPER].cDescr, "Slope upper error");
-  sprintf(options[OPT_FLARESLOPEERRORUPPER].cDefault, "0.0");
+  /*fvFormattedString(options[OPT_FLARESLOPEERRORUPPER].cName, "dFlareSlopeErrorUpper");
+  fvFormattedString(options[OPT_FLARESLOPEERRORUPPER].cDescr, "Slope upper error");
+  fvFormattedString(options[OPT_FLARESLOPEERRORUPPER].cDefault, "0.0");
   options[OPT_FLARESLOPEERRORUPPER].dDefault   = 0.0;
   options[OPT_FLARESLOPEERRORUPPER].iType      = 2;
   options[OPT_FLARESLOPEERRORUPPER].bMultiFile = 1;
   fnRead[OPT_FLARESLOPEERRORUPPER]             = &ReadFlareSlopeErrorUpper;
 
-  sprintf(options[OPT_FLARESLOPEERRORLOWER].cName, "dFlareSlopeErrorLower");
-  sprintf(options[OPT_FLARESLOPEERRORLOWER].cDescr, "Slope lower error");
-  sprintf(options[OPT_FLARESLOPEERRORLOWER].cDefault, "0.0");
+  fvFormattedString(options[OPT_FLARESLOPEERRORLOWER].cName, "dFlareSlopeErrorLower");
+  fvFormattedString(options[OPT_FLARESLOPEERRORLOWER].cDescr, "Slope lower error");
+  fvFormattedString(options[OPT_FLARESLOPEERRORLOWER].cDefault, "0.0");
   options[OPT_FLARESLOPEERRORLOWER].dDefault   = 0.0;
   options[OPT_FLARESLOPEERRORLOWER].iType      = 2;
   options[OPT_FLARESLOPEERRORLOWER].bMultiFile = 1;
@@ -492,61 +492,61 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
 */
 
 
-  sprintf(options[OPT_FLAREMINENERGY].cName, "dFlareMinEnergy");
-  sprintf(options[OPT_FLAREMINENERGY].cDescr,
+  fvFormattedString(&options[OPT_FLAREMINENERGY].cName, "dFlareMinEnergy");
+  fvFormattedString(&options[OPT_FLAREMINENERGY].cDescr,
           "Minimum Flare Energy to consider");
-  sprintf(options[OPT_FLAREMINENERGY].cDefault, "10^26 J");
+  fvFormattedString(&options[OPT_FLAREMINENERGY].cDefault, "10^26 J");
   options[OPT_FLAREMINENERGY].dDefault   = 1e26;
   options[OPT_FLAREMINENERGY].iType      = 2;
   options[OPT_FLAREMINENERGY].bMultiFile = 1;
   options[OPT_FLAREMINENERGY].dNeg       = 1e-7;
-  sprintf(options[OPT_FLAREMINENERGY].cNeg, "ergs");
+  fvFormattedString(&options[OPT_FLAREMINENERGY].cNeg, "ergs");
   fnRead[OPT_FLAREMINENERGY] = &ReadFlareMinEnergy;
 
-  sprintf(options[OPT_FLAREMAXENERGY].cName, "dFlareMaxEnergy");
-  sprintf(options[OPT_FLAREMAXENERGY].cDescr,
+  fvFormattedString(&options[OPT_FLAREMAXENERGY].cName, "dFlareMaxEnergy");
+  fvFormattedString(&options[OPT_FLAREMAXENERGY].cDescr,
           "Maximum Flare Energy to consider");
-  sprintf(options[OPT_FLAREMAXENERGY].cDefault, "10^29 J");
+  fvFormattedString(&options[OPT_FLAREMAXENERGY].cDefault, "10^29 J");
   options[OPT_FLAREMAXENERGY].dDefault   = 1e29;
   options[OPT_FLAREMAXENERGY].iType      = 2;
   options[OPT_FLAREMAXENERGY].bMultiFile = 1;
   options[OPT_FLAREMAXENERGY].dNeg       = 1e-7;
-  sprintf(options[OPT_FLAREMAXENERGY].cNeg, "ergs");
+  fvFormattedString(&options[OPT_FLAREMAXENERGY].cNeg, "ergs");
   fnRead[OPT_FLAREMAXENERGY] = &ReadFlareMaxEnergy;
 
-  sprintf(options[OPT_LXUVFLARECONST].cName, "dLXUVFlareConst");
-  sprintf(options[OPT_LXUVFLARECONST].cDescr, "XUV luminosity of flares");
-  sprintf(options[OPT_LXUVFLARECONST].cDefault, "10^22 Watts or 10^29 erg/s");
+  fvFormattedString(&options[OPT_LXUVFLARECONST].cName, "dLXUVFlareConst");
+  fvFormattedString(&options[OPT_LXUVFLARECONST].cDescr, "XUV luminosity of flares");
+  fvFormattedString(&options[OPT_LXUVFLARECONST].cDefault, "10^22 Watts or 10^29 erg/s");
   options[OPT_LXUVFLARECONST].dDefault   = 1e22;
   options[OPT_LXUVFLARECONST].iType      = 2;
   options[OPT_LXUVFLARECONST].bMultiFile = 1;
   options[OPT_LXUVFLARECONST].dNeg       = LSUN;
-  sprintf(options[OPT_LXUVFLARECONST].cNeg, "LSUN");
-  sprintf(options[OPT_LXUVFLARECONST].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_LXUVFLARECONST].cNeg, "LSUN");
+  fvFormattedString(&options[OPT_LXUVFLARECONST].cDimension, "energy/time");
   fnRead[OPT_LXUVFLARECONST] = &ReadLXUVFlareConst;
 
   // XXX Change to iEnergyBin for next major release
-  sprintf(options[OPT_FLAREENERGYBIN].cName, "dEnergyBin");
-  sprintf(options[OPT_FLAREENERGYBIN].cDescr,
+  fvFormattedString(&options[OPT_FLAREENERGYBIN].cName, "dEnergyBin");
+  fvFormattedString(&options[OPT_FLAREENERGYBIN].cDescr,
           "Number of energies consider between the minimum and maximum "
           "energies to calculate the luminosity by flares");
-  sprintf(options[OPT_FLAREENERGYBIN].cDefault,
+  fvFormattedString(&options[OPT_FLAREENERGYBIN].cDefault,
           "100 energies between dFlareMinEnergy and dFlareMaxEnergy");
   options[OPT_FLAREENERGYBIN].dDefault   = 100;
   options[OPT_FLAREENERGYBIN].iType      = 1;
   options[OPT_FLAREENERGYBIN].bMultiFile = 1;
   options[OPT_FLAREENERGYBIN].dNeg       = 1;
-  sprintf(options[OPT_FLAREENERGYBIN].cNeg, "None");
+  fvFormattedString(&options[OPT_FLAREENERGYBIN].cNeg, "None");
   fnRead[OPT_FLAREENERGYBIN] = &ReadFlareEnergyBin;
 
-  sprintf(options[OPT_FLAREFFD].cName, "sFlareFFD");
-  sprintf(options[OPT_FLAREFFD].cDescr, "Modes of calculate the FFD");
-  sprintf(options[OPT_FLAREFFD].cDefault, "DAVENPORT");
-  sprintf(options[OPT_FLAREFFD].cValues, "DAVENPORT LACY NONE");
+  fvFormattedString(&options[OPT_FLAREFFD].cName, "sFlareFFD");
+  fvFormattedString(&options[OPT_FLAREFFD].cDescr, "Modes of calculate the FFD");
+  fvFormattedString(&options[OPT_FLAREFFD].cDefault, "DAVENPORT");
+  fvFormattedString(&options[OPT_FLAREFFD].cValues, "DAVENPORT LACY NONE");
   options[OPT_FLAREFFD].iType      = 3;
   options[OPT_FLAREFFD].bMultiFile = 1;
   fnRead[OPT_FLAREFFD]             = &ReadFlareFFD;
-  sprintf(options[OPT_FLAREFFD].cLongDescr,
+  fvFormattedString(&options[OPT_FLAREFFD].cLongDescr,
           " If DAVENPORT is selected, the code will employ the model\n"
           "fro Davenport et al.(2019) the user have\n"
           "to give the mass and Stellar age, dMass and dAge, as well\n"
@@ -562,16 +562,16 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
           " use the XUV luminosity given by the user in the input \n"
           "file (dLXUVFlareConst). \n");
 
-  sprintf(options[OPT_FLAREBANDPASS].cName, "sFlareBandPass");
-  sprintf(options[OPT_FLAREBANDPASS].cDescr,
+  fvFormattedString(&options[OPT_FLAREBANDPASS].cName, "sFlareBandPass");
+  fvFormattedString(&options[OPT_FLAREBANDPASS].cDescr,
           "Options of band pass of the input energy of flares");
-  sprintf(options[OPT_FLAREBANDPASS].cDefault, "KEPLER");
-  sprintf(options[OPT_FLAREBANDPASS].cValues,
+  fvFormattedString(&options[OPT_FLAREBANDPASS].cDefault, "KEPLER");
+  fvFormattedString(&options[OPT_FLAREBANDPASS].cValues,
           "KEPLER UV GOES SXR BOLOMETRIC TESSUV");
   options[OPT_FLAREBANDPASS].iType      = 3;
   options[OPT_FLAREBANDPASS].bMultiFile = 1;
   fnRead[OPT_FLAREBANDPASS]             = &ReadFlareBandPass;
-  sprintf(options[OPT_FLAREBANDPASS].cLongDescr,
+  fvFormattedString(&options[OPT_FLAREBANDPASS].cLongDescr,
           /*
           "If UV or GOES is selected, the code will convert \n"
           "the input energy of flares from the UV band \n"
@@ -598,15 +598,15 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
           "Currently suppressed due to execution errors."
   );
   /*
-    sprintf(options[OPT_FLARESLOPEUNITS].cName, "sFlareSlopeUnits");
-    sprintf(options[OPT_FLARESLOPEUNITS].cDescr,
+    fvFormattedString(options[OPT_FLARESLOPEUNITS].cName, "sFlareSlopeUnits");
+    fvFormattedString(options[OPT_FLARESLOPEUNITS].cDescr,
             "Options to the units of the FFD in which the FFD slopes are
-    define"); sprintf(options[OPT_FLARESLOPEUNITS].cDefault, "DAY");
-    sprintf(options[OPT_FLARESLOPEUNITS].cValues, "SEC MIN HOUR DAY");
+    define"); fvFormattedString(options[OPT_FLARESLOPEUNITS].cDefault, "DAY");
+    fvFormattedString(options[OPT_FLARESLOPEUNITS].cValues, "SEC MIN HOUR DAY");
     options[OPT_FLARESLOPEUNITS].iType      = 3;
     options[OPT_FLARESLOPEUNITS].bMultiFile = 1;
     fnRead[OPT_FLARESLOPEUNITS]             = &ReadFlareSlopeUnits;
-    sprintf(options[OPT_FLARESLOPEUNITS].cLongDescr,
+    fvFormattedString(options[OPT_FLARESLOPEUNITS].cLongDescr,
             " This option allow the user input the units for the inputed FFD "
             "slopes. The options are\n"
             " SEC, for input slopes with FFD in number of flares per seconds, "
@@ -1303,70 +1303,70 @@ void WriteFlareEnergyMax(BODY *body,
 }
 void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
-  sprintf(output[OUT_FLAREFREQ1].cName, "FlareFreq1");
-  sprintf(output[OUT_FLAREFREQ1].cDescr,
+  fvFormattedString(&output[OUT_FLAREFREQ1].cName, "FlareFreq1");
+  fvFormattedString(&output[OUT_FLAREFREQ1].cDescr,
           "First value of flare frequency range");
-  sprintf(output[OUT_FLAREFREQ1].cNeg, "/day");
+  fvFormattedString(&output[OUT_FLAREFREQ1].cNeg, "/day");
   output[OUT_FLAREFREQ1].bNeg       = 1;
   output[OUT_FLAREFREQ1].dNeg       = DAYSEC;
   output[OUT_FLAREFREQ1].iNum       = 1;
   output[OUT_FLAREFREQ1].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ1]           = &WriteFlareFreq1;
 
-  sprintf(output[OUT_FLAREFREQ2].cName, "FlareFreq2");
-  sprintf(output[OUT_FLAREFREQ2].cDescr,
+  fvFormattedString(&output[OUT_FLAREFREQ2].cName, "FlareFreq2");
+  fvFormattedString(&output[OUT_FLAREFREQ2].cDescr,
           "Second value of flare frequency range");
-  sprintf(output[OUT_FLAREFREQ2].cNeg, "/day");
+  fvFormattedString(&output[OUT_FLAREFREQ2].cNeg, "/day");
   output[OUT_FLAREFREQ2].bNeg       = 1;
   output[OUT_FLAREFREQ2].dNeg       = DAYSEC;
   output[OUT_FLAREFREQ2].iNum       = 1;
   output[OUT_FLAREFREQ2].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ2]           = &WriteFlareFreq2;
 
-  sprintf(output[OUT_FLAREFREQ3].cName, "FlareFreq3");
-  sprintf(output[OUT_FLAREFREQ3].cDescr,
+  fvFormattedString(&output[OUT_FLAREFREQ3].cName, "FlareFreq3");
+  fvFormattedString(&output[OUT_FLAREFREQ3].cDescr,
           "Third value of flare frequency range");
-  sprintf(output[OUT_FLAREFREQ3].cNeg, "/day");
+  fvFormattedString(&output[OUT_FLAREFREQ3].cNeg, "/day");
   output[OUT_FLAREFREQ3].bNeg       = 1;
   output[OUT_FLAREFREQ3].dNeg       = DAYSEC;
   output[OUT_FLAREFREQ3].iNum       = 1;
   output[OUT_FLAREFREQ3].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ3]           = &WriteFlareFreq3;
 
-  sprintf(output[OUT_FLAREFREQ4].cName, "FlareFreq4");
-  sprintf(output[OUT_FLAREFREQ4].cDescr,
+  fvFormattedString(&output[OUT_FLAREFREQ4].cName, "FlareFreq4");
+  fvFormattedString(&output[OUT_FLAREFREQ4].cDescr,
           "Fourth value of flare frequency range");
-  sprintf(output[OUT_FLAREFREQ4].cNeg, "/day");
+  fvFormattedString(&output[OUT_FLAREFREQ4].cNeg, "/day");
   output[OUT_FLAREFREQ4].bNeg       = 1;
   output[OUT_FLAREFREQ4].dNeg       = DAYSEC;
   output[OUT_FLAREFREQ4].iNum       = 1;
   output[OUT_FLAREFREQ4].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQ4]           = &WriteFlareFreq4;
 
-  sprintf(output[OUT_FLAREFREQMIN].cName, "FlareFreqMin");
-  sprintf(output[OUT_FLAREFREQMIN].cDescr,
+  fvFormattedString(&output[OUT_FLAREFREQMIN].cName, "FlareFreqMin");
+  fvFormattedString(&output[OUT_FLAREFREQMIN].cDescr,
           "Frequency of the flares with the lowest energy");
-  sprintf(output[OUT_FLAREFREQMIN].cNeg, "/day");
+  fvFormattedString(&output[OUT_FLAREFREQMIN].cNeg, "/day");
   output[OUT_FLAREFREQMIN].bNeg       = 1;
   output[OUT_FLAREFREQMIN].dNeg       = DAYSEC;
   output[OUT_FLAREFREQMIN].iNum       = 1;
   output[OUT_FLAREFREQMIN].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQMIN]           = &WriteFlareFreqMin;
 
-  sprintf(output[OUT_FLAREFREQMID].cName, "FlareFreqMid");
-  sprintf(output[OUT_FLAREFREQMID].cDescr,
+  fvFormattedString(&output[OUT_FLAREFREQMID].cName, "FlareFreqMid");
+  fvFormattedString(&output[OUT_FLAREFREQMID].cDescr,
           "Frequency of the flares with the middle energy in the energy range");
-  sprintf(output[OUT_FLAREFREQMID].cNeg, "/day");
+  fvFormattedString(&output[OUT_FLAREFREQMID].cNeg, "/day");
   output[OUT_FLAREFREQMID].bNeg       = 1;
   output[OUT_FLAREFREQMID].dNeg       = DAYSEC;
   output[OUT_FLAREFREQMID].iNum       = 1;
   output[OUT_FLAREFREQMID].iModuleBit = FLARE;
   fnWrite[OUT_FLAREFREQMID]           = &WriteFlareFreqMid;
 
-  sprintf(output[OUT_FLAREFREQMAX].cName, "FlareFreqMax");
-  sprintf(output[OUT_FLAREFREQMAX].cDescr,
+  fvFormattedString(&output[OUT_FLAREFREQMAX].cName, "FlareFreqMax");
+  fvFormattedString(&output[OUT_FLAREFREQMAX].cDescr,
           "Frequency of the flares with the highest energy");
-  sprintf(output[OUT_FLAREFREQMAX].cNeg, "/day");
+  fvFormattedString(&output[OUT_FLAREFREQMAX].cNeg, "/day");
   output[OUT_FLAREFREQMAX].bNeg       = 1;
   output[OUT_FLAREFREQMAX].dNeg       = DAYSEC;
   output[OUT_FLAREFREQMAX].iNum       = 1;
@@ -1374,66 +1374,66 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREFREQMAX]           = &WriteFlareFreqMax;
 
 
-  sprintf(output[OUT_FLAREENERGY1].cName, "FlareEnergy1");
-  sprintf(output[OUT_FLAREENERGY1].cDescr, "First value of flare energy range");
-  sprintf(output[OUT_FLAREENERGY1].cNeg, "ergs");
+  fvFormattedString(&output[OUT_FLAREENERGY1].cName, "FlareEnergy1");
+  fvFormattedString(&output[OUT_FLAREENERGY1].cDescr, "First value of flare energy range");
+  fvFormattedString(&output[OUT_FLAREENERGY1].cNeg, "ergs");
   output[OUT_FLAREENERGY1].bNeg       = 1;
   output[OUT_FLAREENERGY1].dNeg       = 1.0e7;
   output[OUT_FLAREENERGY1].iNum       = 1;
   output[OUT_FLAREENERGY1].iModuleBit = FLARE;
   fnWrite[OUT_FLAREENERGY1]           = &WriteFlareEnergy1;
 
-  sprintf(output[OUT_FLAREENERGY2].cName, "FlareEnergy2");
-  sprintf(output[OUT_FLAREENERGY2].cDescr,
+  fvFormattedString(&output[OUT_FLAREENERGY2].cName, "FlareEnergy2");
+  fvFormattedString(&output[OUT_FLAREENERGY2].cDescr,
           "Second value of flare energy range");
-  sprintf(output[OUT_FLAREENERGY2].cNeg, "ergs");
+  fvFormattedString(&output[OUT_FLAREENERGY2].cNeg, "ergs");
   output[OUT_FLAREENERGY2].bNeg       = 1;
   output[OUT_FLAREENERGY2].dNeg       = 1.0e7;
   output[OUT_FLAREENERGY2].iNum       = 1;
   output[OUT_FLAREENERGY2].iModuleBit = FLARE;
   fnWrite[OUT_FLAREENERGY2]           = &WriteFlareEnergy2;
 
-  sprintf(output[OUT_FLAREENERGY3].cName, "FlareEnergy3");
-  sprintf(output[OUT_FLAREENERGY3].cDescr, "Third value of flare energy range");
-  sprintf(output[OUT_FLAREENERGY3].cNeg, "ergs");
+  fvFormattedString(&output[OUT_FLAREENERGY3].cName, "FlareEnergy3");
+  fvFormattedString(&output[OUT_FLAREENERGY3].cDescr, "Third value of flare energy range");
+  fvFormattedString(&output[OUT_FLAREENERGY3].cNeg, "ergs");
   output[OUT_FLAREENERGY3].bNeg       = 1;
   output[OUT_FLAREENERGY3].dNeg       = 1.0e7;
   output[OUT_FLAREENERGY3].iNum       = 1;
   output[OUT_FLAREENERGY3].iModuleBit = FLARE;
   fnWrite[OUT_FLAREENERGY3]           = &WriteFlareEnergy3;
 
-  sprintf(output[OUT_FLAREENERGY4].cName, "FlareEnergy4");
-  sprintf(output[OUT_FLAREENERGY4].cDescr,
+  fvFormattedString(&output[OUT_FLAREENERGY4].cName, "FlareEnergy4");
+  fvFormattedString(&output[OUT_FLAREENERGY4].cDescr,
           "Fourth value of flare energy range");
-  sprintf(output[OUT_FLAREENERGY4].cNeg, "ergs");
+  fvFormattedString(&output[OUT_FLAREENERGY4].cNeg, "ergs");
   output[OUT_FLAREENERGY4].bNeg       = 1;
   output[OUT_FLAREENERGY4].dNeg       = 1.0e7;
   output[OUT_FLAREENERGY4].iNum       = 1;
   output[OUT_FLAREENERGY4].iModuleBit = FLARE;
   fnWrite[OUT_FLAREENERGY4]           = &WriteFlareEnergy4;
 
-  sprintf(output[OUT_FLAREENERGYMIN].cName, "FlareEnergyMin");
-  sprintf(output[OUT_FLAREENERGYMIN].cDescr, "Minimum flare energy");
-  sprintf(output[OUT_FLAREENERGYMIN].cNeg, "ergs");
+  fvFormattedString(&output[OUT_FLAREENERGYMIN].cName, "FlareEnergyMin");
+  fvFormattedString(&output[OUT_FLAREENERGYMIN].cDescr, "Minimum flare energy");
+  fvFormattedString(&output[OUT_FLAREENERGYMIN].cNeg, "ergs");
   output[OUT_FLAREENERGYMIN].bNeg       = 1;
   output[OUT_FLAREENERGYMIN].dNeg       = 1.0e7;
   output[OUT_FLAREENERGYMIN].iNum       = 1;
   output[OUT_FLAREENERGYMIN].iModuleBit = FLARE;
   fnWrite[OUT_FLAREENERGYMIN]           = &WriteFlareEnergyMin;
 
-  sprintf(output[OUT_FLAREENERGYMID].cName, "FlareEnergyMid");
-  sprintf(output[OUT_FLAREENERGYMID].cDescr,
+  fvFormattedString(&output[OUT_FLAREENERGYMID].cName, "FlareEnergyMid");
+  fvFormattedString(&output[OUT_FLAREENERGYMID].cDescr,
           "Middle flare energy in the range of energy values");
-  sprintf(output[OUT_FLAREENERGYMID].cNeg, "ergs");
+  fvFormattedString(&output[OUT_FLAREENERGYMID].cNeg, "ergs");
   output[OUT_FLAREENERGYMID].bNeg       = 1;
   output[OUT_FLAREENERGYMID].dNeg       = 1.0e7;
   output[OUT_FLAREENERGYMID].iNum       = 1;
   output[OUT_FLAREENERGYMID].iModuleBit = FLARE;
   fnWrite[OUT_FLAREENERGYMID]           = &WriteFlareEnergyMid;
 
-  sprintf(output[OUT_FLAREENERGYMAX].cName, "FlareEnergyMax");
-  sprintf(output[OUT_FLAREENERGYMAX].cDescr, "Maximum flare energy");
-  sprintf(output[OUT_FLAREENERGYMAX].cNeg, "ergs");
+  fvFormattedString(&output[OUT_FLAREENERGYMAX].cName, "FlareEnergyMax");
+  fvFormattedString(&output[OUT_FLAREENERGYMAX].cDescr, "Maximum flare energy");
+  fvFormattedString(&output[OUT_FLAREENERGYMAX].cNeg, "ergs");
   output[OUT_FLAREENERGYMAX].bNeg       = 1;
   output[OUT_FLAREENERGYMAX].dNeg       = 1.0e7;
   output[OUT_FLAREENERGYMAX].iNum       = 1;
@@ -1441,9 +1441,9 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_FLAREENERGYMAX]           = &WriteFlareEnergyMax;
 
 
-  sprintf(output[OUT_LXUVFLARE].cName, "LXUVFlare");
-  sprintf(output[OUT_LXUVFLARE].cDescr, "XUV Luminosity from flares");
-  sprintf(output[OUT_LXUVFLARE].cNeg, "LSUN");
+  fvFormattedString(&output[OUT_LXUVFLARE].cName, "LXUVFlare");
+  fvFormattedString(&output[OUT_LXUVFLARE].cDescr, "XUV Luminosity from flares");
+  fvFormattedString(&output[OUT_LXUVFLARE].cNeg, "LSUN");
   output[OUT_LXUVFLARE].bNeg       = 1;
   output[OUT_LXUVFLARE].dNeg       = 1. / LSUN;
   output[OUT_LXUVFLARE].iNum       = 1;
@@ -1452,22 +1452,22 @@ void InitializeOutputFlare(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   // TODO: Include the error in the FFD slopes to calculate the upper and higher
   // limit of XUV luminosity by flares
-  /*sprintf(output[OUT_LXUVFLAREUPPER].cName, "LXUVFlareUpper");
-  sprintf(output[OUT_LXUVFLAREUPPER].cDescr,
+  /*fvFormattedString(output[OUT_LXUVFLAREUPPER].cName, "LXUVFlareUpper");
+  fvFormattedString(output[OUT_LXUVFLAREUPPER].cDescr,
           "Upper limit value to XUV Luminosity from flares when considerer "
           "flare rate slope and Y-intercept errors");
-  sprintf(output[OUT_LXUVFLAREUPPER].cNeg, "LSUN");
+  fvFormattedString(output[OUT_LXUVFLAREUPPER].cNeg, "LSUN");
   output[OUT_LXUVFLAREUPPER].bNeg       = 1;
   output[OUT_LXUVFLAREUPPER].dNeg       = 1. / LSUN;
   output[OUT_LXUVFLAREUPPER].iNum       = 1;
   output[OUT_LXUVFLAREUPPER].iModuleBit = FLARE;
   fnWrite[OUT_LXUVFLAREUPPER]           = &WriteLXUVFlareUpper;
 
-  sprintf(output[OUT_LXUVFLARELOWER].cName, "LXUVFlareLower");
-  sprintf(output[OUT_LXUVFLARELOWER].cDescr,
+  fvFormattedString(output[OUT_LXUVFLARELOWER].cName, "LXUVFlareLower");
+  fvFormattedString(output[OUT_LXUVFLARELOWER].cDescr,
           "Lower limit value to XUV Luminosity from flares when considerer "
           "flare rate slope and Y-intercept errors");
-  sprintf(output[OUT_LXUVFLARELOWER].cNeg, "LSUN");
+  fvFormattedString(output[OUT_LXUVFLARELOWER].cNeg, "LSUN");
   output[OUT_LXUVFLARELOWER].bNeg       = 1;
   output[OUT_LXUVFLARELOWER].dNeg       = 1. / LSUN;
   output[OUT_LXUVFLARELOWER].iNum       = 1;

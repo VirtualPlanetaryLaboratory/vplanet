@@ -660,7 +660,7 @@ void WriteOrbEcc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
       *dTmp = -1;
     }
   }
-  sprintf(cUnit, "%s", "");
+  fvFormattedString(&cUnit, "%s", "");
 }
 
 // XXX This function doesn't work!
@@ -808,7 +808,7 @@ void WriteRadGyra(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
                   char cUnit[]) {
   *dTmp = body[iBody].dRadGyra;
-  sprintf(cUnit, "%s", "");
+  fvFormattedString(&cUnit, "%s", "");
 }
 
 void WriteRotAngMom(BODY *body, CONTROL *control, OUTPUT *output,
@@ -1229,9 +1229,9 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
    * Age
    */
 
-  sprintf(output[OUT_AGE].cName, "Age");
-  sprintf(output[OUT_AGE].cDescr, "System Age");
-  sprintf(output[OUT_AGE].cNeg, "Gyr");
+  fvFormattedString(&output[OUT_AGE].cName, "Age");
+  fvFormattedString(&output[OUT_AGE].cDescr, "System Age");
+  fvFormattedString(&output[OUT_AGE].cNeg, "Gyr");
   output[OUT_AGE].bNeg       = 1;
   output[OUT_AGE].dNeg       = 1. / (YEARSEC * 1e9);
   output[OUT_AGE].iNum       = 1;
@@ -1242,8 +1242,8 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
    * B
    */
 
-  sprintf(output[OUT_BODYTYPE].cName, "BodyType");
-  sprintf(output[OUT_BODYTYPE].cDescr, "Type of Body (0 == planet)");
+  fvFormattedString(&output[OUT_BODYTYPE].cName, "BodyType");
+  fvFormattedString(&output[OUT_BODYTYPE].cDescr, "Type of Body (0 == planet)");
   output[OUT_BODYTYPE].iNum       = 1;
   output[OUT_BODYTYPE].iModuleBit = 1;
   fnWrite[OUT_BODYTYPE]           = &WriteBodyType;
@@ -1252,26 +1252,26 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
    * C
    */
 
-  sprintf(output[OUT_COPP].cName, "COPP");
-  sprintf(output[OUT_COPP].cDescr, "Climate Obliquity Precession Parameter");
+  fvFormattedString(&output[OUT_COPP].cName, "COPP");
+  fvFormattedString(&output[OUT_COPP].cDescr, "Climate Obliquity Precession Parameter");
   output[OUT_COPP].bNeg       = 0;
   output[OUT_COPP].iNum       = 1;
   output[OUT_COPP].iModuleBit = BINARY + EQTIDE + DISTROT + POISE + SPINBODY;
   fnWrite[OUT_COPP]           = &WriteCOPP;
-  sprintf(output[OUT_COPP].cLongDescr,
+  fvFormattedString(&output[OUT_COPP].cLongDescr,
           "eccentriciy * sin(longitude of pericenter + precession angle) * "
           "sin(obliquity)");
 
-  sprintf(output[OUT_CRITSEMI].cName, "CriticalSemiMajorAxis");
-  sprintf(output[OUT_CRITSEMI].cDescr,
+  fvFormattedString(&output[OUT_CRITSEMI].cName, "CriticalSemiMajorAxis");
+  fvFormattedString(&output[OUT_CRITSEMI].cDescr,
           "Holman & Wiegert (1999) P-type Critical Semi-major Axis");
-  sprintf(output[OUT_CRITSEMI].cNeg, "AU");
+  fvFormattedString(&output[OUT_CRITSEMI].cNeg, "AU");
   output[OUT_CRITSEMI].bNeg       = 1;
   output[OUT_CRITSEMI].dNeg       = 1. / AUM;
   output[OUT_CRITSEMI].iNum       = 1;
   output[OUT_CRITSEMI].iModuleBit = BINARY + EQTIDE + STELLAR;
   fnWrite[OUT_CRITSEMI]           = &WriteCriticalSemi;
-  sprintf(output[OUT_CRITSEMI].cLongDescr,
+  fvFormattedString(&output[OUT_CRITSEMI].cLongDescr,
           "For a circumbinary planet, semi-major axes below a critical value "
           "result\n"
           "in unstable orbits. This output parameter prints the instantaneous\n"
@@ -1281,18 +1281,18 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
    * D
    */
 
-  sprintf(output[OUT_DT].cName, "DeltaTime");
-  sprintf(output[OUT_DT].cDescr, "Average Timestep Over Last Output Interval");
-  sprintf(output[OUT_DT].cNeg, "years");
+  fvFormattedString(&output[OUT_DT].cName, "DeltaTime");
+  fvFormattedString(&output[OUT_DT].cDescr, "Average Timestep Over Last Output Interval");
+  fvFormattedString(&output[OUT_DT].cNeg, "years");
   output[OUT_DT].bNeg       = 1;
   output[OUT_DT].dNeg       = 1. / YEARSEC;
   output[OUT_DT].iNum       = 1;
   output[OUT_DT].iModuleBit = 1;
   fnWrite[OUT_DT]           = &WriteDeltaTime;
 
-  sprintf(output[OUT_DENSITY].cName, "Density");
-  sprintf(output[OUT_DENSITY].cDescr, "Average Density");
-  sprintf(output[OUT_DENSITY].cNeg, "EarthDensity");
+  fvFormattedString(&output[OUT_DENSITY].cName, "Density");
+  fvFormattedString(&output[OUT_DENSITY].cDescr, "Average Density");
+  fvFormattedString(&output[OUT_DENSITY].cNeg, "EarthDensity");
   output[OUT_DENSITY].bNeg = 1;
   output[OUT_DENSITY].dNeg =
         3 * REARTH * REARTH * REARTH / (4 * PI * MEARTH); // kg/m^3
@@ -1304,96 +1304,96 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
    * H
    */
 
-  sprintf(output[OUT_HECC].cName, "HEcc");
-  sprintf(output[OUT_HECC].cDescr, "Poincare's h (=e*sin(varpi)");
+  fvFormattedString(&output[OUT_HECC].cName, "HEcc");
+  fvFormattedString(&output[OUT_HECC].cDescr, "Poincare's h (=e*sin(varpi)");
   output[OUT_HECC].bNeg       = 0;
   output[OUT_HECC].iNum       = 1;
   output[OUT_HECC].iModuleBit = EQTIDE + DISTORB;
   fnWrite[OUT_HECC]           = &WriteHecc;
 
-  sprintf(output[OUT_HZLIMDRYRUNAWAY].cName, "HZLimitDryRunaway");
-  sprintf(output[OUT_HZLIMDRYRUNAWAY].cDescr,
+  fvFormattedString(&output[OUT_HZLIMDRYRUNAWAY].cName, "HZLimitDryRunaway");
+  fvFormattedString(&output[OUT_HZLIMDRYRUNAWAY].cDescr,
           "Semi-major axis of Dry Runaway HZ Limit");
-  sprintf(output[OUT_HZLIMDRYRUNAWAY].cNeg, "AU");
+  fvFormattedString(&output[OUT_HZLIMDRYRUNAWAY].cNeg, "AU");
   output[OUT_HZLIMDRYRUNAWAY].bNeg       = 1;
   output[OUT_HZLIMDRYRUNAWAY].dNeg       = 1 / AUM;
   output[OUT_HZLIMDRYRUNAWAY].iNum       = 1;
   output[OUT_HZLIMDRYRUNAWAY].iModuleBit = 1;
   fnWrite[OUT_HZLIMDRYRUNAWAY]           = &WriteHZLimitDryRunaway;
-  sprintf(output[OUT_HZLIMDRYRUNAWAY].cLongDescr,
+  fvFormattedString(&output[OUT_HZLIMDRYRUNAWAY].cLongDescr,
           "Minimum distance where a \"dry\" planet can be habitable, following "
           "Abe\n"
           "et al. (2011), or ~415 W/m^2 net instellation.");
 
-  sprintf(output[OUT_HZLIMRECVENUS].cName, "HZLimRecVenus");
-  sprintf(output[OUT_HZLIMRECVENUS].cDescr, "Recent Venus HZ Limit");
-  sprintf(output[OUT_HZLIMRECVENUS].cNeg, "AU");
+  fvFormattedString(&output[OUT_HZLIMRECVENUS].cName, "HZLimRecVenus");
+  fvFormattedString(&output[OUT_HZLIMRECVENUS].cDescr, "Recent Venus HZ Limit");
+  fvFormattedString(&output[OUT_HZLIMRECVENUS].cNeg, "AU");
   output[OUT_HZLIMRECVENUS].bNeg       = 1;
   output[OUT_HZLIMRECVENUS].dNeg       = 1. / AUM;
   output[OUT_HZLIMRECVENUS].iNum       = 1;
   output[OUT_HZLIMRECVENUS].iModuleBit = 1;
   fnWrite[OUT_HZLIMRECVENUS]           = &WriteHZLimitRecentVenus;
-  sprintf(output[OUT_HZLIMRECVENUS].cLongDescr,
+  fvFormattedString(&output[OUT_HZLIMRECVENUS].cLongDescr,
           "Recent Venus habitable zone limit from Kopparapu et al. (2013). The "
           "value\n"
           "is determined by the total luminosity and average effective "
           "temperature\n"
           "of all interior bodies.");
 
-  sprintf(output[OUT_HZLIMRUNAWAY].cName, "HZLimRunaway");
-  sprintf(output[OUT_HZLIMRUNAWAY].cDescr, "Runaway Greenhouse HZ Limit");
-  sprintf(output[OUT_HZLIMRUNAWAY].cNeg, "AU");
+  fvFormattedString(&output[OUT_HZLIMRUNAWAY].cName, "HZLimRunaway");
+  fvFormattedString(&output[OUT_HZLIMRUNAWAY].cDescr, "Runaway Greenhouse HZ Limit");
+  fvFormattedString(&output[OUT_HZLIMRUNAWAY].cNeg, "AU");
   output[OUT_HZLIMRUNAWAY].bNeg       = 1;
   output[OUT_HZLIMRUNAWAY].dNeg       = 1. / AUM;
   output[OUT_HZLIMRUNAWAY].iNum       = 1;
   output[OUT_HZLIMRUNAWAY].iModuleBit = 1;
   fnWrite[OUT_HZLIMRUNAWAY]           = &WriteHZLimitRunawayGreenhouse;
-  sprintf(output[OUT_HZLIMRUNAWAY].cLongDescr,
+  fvFormattedString(&output[OUT_HZLIMRUNAWAY].cLongDescr,
           "Runaway greenhouse habitable zone limit from Kopparapu et al. "
           "(2013).\n"
           "The value is determined by the total luminosity and average "
           "effective\n"
           "temperature of all interior bodies.");
 
-  sprintf(output[OUT_HZLIMMOIST].cName, "HZLimMoistGreenhouse");
-  sprintf(output[OUT_HZLIMMOIST].cDescr, "Moist Greenhouse HZ Limit");
-  sprintf(output[OUT_HZLIMMOIST].cNeg, "AU");
+  fvFormattedString(&output[OUT_HZLIMMOIST].cName, "HZLimMoistGreenhouse");
+  fvFormattedString(&output[OUT_HZLIMMOIST].cDescr, "Moist Greenhouse HZ Limit");
+  fvFormattedString(&output[OUT_HZLIMMOIST].cNeg, "AU");
   output[OUT_HZLIMMOIST].bNeg       = 1;
   output[OUT_HZLIMMOIST].dNeg       = 1. / AUM;
   output[OUT_HZLIMMOIST].iNum       = 1;
   output[OUT_HZLIMMOIST].iModuleBit = 1;
   fnWrite[OUT_HZLIMMOIST]           = &WriteHZLimitMoistGreenhouse;
-  sprintf(
-        output[OUT_HZLIMMOIST].cLongDescr,
+  fvFormattedString(
+        &output[OUT_HZLIMMOIST].cLongDescr,
         "Moist greenhouse habitable zone limit from Kopparapu et al. (2013).\n"
         "The value is determined by the total luminosity and average "
         "effective\n"
         "temperature of all interior bodies.");
 
-  sprintf(output[OUT_HZLIMMAX].cName, "HZLimMaxGreenhouse");
-  sprintf(output[OUT_HZLIMMAX].cDescr, "Maximum Greenhouse HZ Limit");
-  sprintf(output[OUT_HZLIMMAX].cNeg, "AU");
+  fvFormattedString(&output[OUT_HZLIMMAX].cName, "HZLimMaxGreenhouse");
+  fvFormattedString(&output[OUT_HZLIMMAX].cDescr, "Maximum Greenhouse HZ Limit");
+  fvFormattedString(&output[OUT_HZLIMMAX].cNeg, "AU");
   output[OUT_HZLIMMAX].bNeg       = 1;
   output[OUT_HZLIMMAX].dNeg       = 1. / AUM;
   output[OUT_HZLIMMAX].iNum       = 1;
   output[OUT_HZLIMMAX].iModuleBit = 1;
   fnWrite[OUT_HZLIMMAX]           = &WriteHZLimitMaxGreenhouse;
-  sprintf(output[OUT_HZLIMMAX].cLongDescr,
+  fvFormattedString(&output[OUT_HZLIMMAX].cLongDescr,
           "Maximum greenhouse habitable zone limit from Kopparapu et al. "
           "(2013).\n"
           "The value is determined by the total luminosity and average "
           "effective\n"
           "temperature of all interior bodies.");
 
-  sprintf(output[OUT_HZLIMEARLYMARS].cName, "HZLimEarlyMars");
-  sprintf(output[OUT_HZLIMEARLYMARS].cDescr, "Early Mars HZ Limit");
-  sprintf(output[OUT_HZLIMEARLYMARS].cNeg, "AU");
+  fvFormattedString(&output[OUT_HZLIMEARLYMARS].cName, "HZLimEarlyMars");
+  fvFormattedString(&output[OUT_HZLIMEARLYMARS].cDescr, "Early Mars HZ Limit");
+  fvFormattedString(&output[OUT_HZLIMEARLYMARS].cNeg, "AU");
   output[OUT_HZLIMEARLYMARS].bNeg       = 1;
   output[OUT_HZLIMEARLYMARS].dNeg       = 1. / AUM;
   output[OUT_HZLIMEARLYMARS].iNum       = 1;
   output[OUT_HZLIMEARLYMARS].iModuleBit = 1;
   fnWrite[OUT_HZLIMEARLYMARS]           = &WriteHZLimitEarlyMars;
-  sprintf(output[OUT_HZLIMEARLYMARS].cLongDescr,
+  fvFormattedString(&output[OUT_HZLIMEARLYMARS].cLongDescr,
           "Early Mars habitable zone limit from Kopparapu et al. (2013). The "
           "value\n"
           "is determined by the total luminosity and average effective "
@@ -1405,9 +1405,9 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
    */
 
   /* Imk2Man */
-  sprintf(output[OUT_IMK2MAN].cName, "Imk2Man");
-  sprintf(output[OUT_IMK2MAN].cDescr, "Imaginary Love Number k2 Mantle");
-  sprintf(output[OUT_IMK2MAN].cNeg, "nd");
+  fvFormattedString(&output[OUT_IMK2MAN].cName, "Imk2Man");
+  fvFormattedString(&output[OUT_IMK2MAN].cDescr, "Imaginary Love Number k2 Mantle");
+  fvFormattedString(&output[OUT_IMK2MAN].cNeg, "nd");
   output[OUT_IMK2MAN].bNeg       = 1;
   output[OUT_IMK2MAN].dNeg       = 1;
   output[OUT_IMK2MAN].iNum       = 1;
@@ -1415,25 +1415,25 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_IMK2MAN]           = &WriteImK2Man;
 
 
-  sprintf(output[OUT_INC].cName, "Inc");
-  sprintf(output[OUT_INC].cDescr, "Body's Inclination");
-  sprintf(output[OUT_INC].cNeg, "Deg");
+  fvFormattedString(&output[OUT_INC].cName, "Inc");
+  fvFormattedString(&output[OUT_INC].cDescr, "Body's Inclination");
+  fvFormattedString(&output[OUT_INC].cNeg, "Deg");
   output[OUT_INC].bNeg       = 1;
   output[OUT_INC].dNeg       = 1. / DEGRAD;
   output[OUT_INC].iNum       = 1;
   output[OUT_INC].iModuleBit = DISTORB + GALHABIT + SPINBODY + BINARY;
   fnWrite[OUT_INC]           = &WriteBodyInc;
 
-  sprintf(output[OUT_INSTELLATION].cName, "Instellation");
-  sprintf(output[OUT_INSTELLATION].cDescr,
+  fvFormattedString(&output[OUT_INSTELLATION].cName, "Instellation");
+  fvFormattedString(&output[OUT_INSTELLATION].cDescr,
           "Orbit-averaged INcident STELLar radiATION");
-  sprintf(output[OUT_INSTELLATION].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_INSTELLATION].cNeg, "W/m^2");
   output[OUT_INSTELLATION].bNeg       = 1;
   output[OUT_INSTELLATION].dNeg       = 1;
   output[OUT_INSTELLATION].iNum       = 1;
   output[OUT_INSTELLATION].iModuleBit = 1;
   fnWrite[OUT_INSTELLATION]           = &WriteInstellation;
-  sprintf(output[OUT_INSTELLATION].cLongDescr,
+  fvFormattedString(&output[OUT_INSTELLATION].cLongDescr,
           "Total instellation on a planet from all luminous, interior bodies.");
 
   /*
@@ -1441,17 +1441,17 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
    */
 
   /* K2Man */
-  sprintf(output[OUT_K2MAN].cName, "K2Man");
-  sprintf(output[OUT_K2MAN].cDescr, "Real Love Number k2 Mantle");
-  sprintf(output[OUT_K2MAN].cNeg, "nd");
+  fvFormattedString(&output[OUT_K2MAN].cName, "K2Man");
+  fvFormattedString(&output[OUT_K2MAN].cDescr, "Real Love Number k2 Mantle");
+  fvFormattedString(&output[OUT_K2MAN].cNeg, "nd");
   output[OUT_K2MAN].bNeg       = 1;
   output[OUT_K2MAN].dNeg       = 1;
   output[OUT_K2MAN].iNum       = 1;
   output[OUT_K2MAN].iModuleBit = THERMINT + EQTIDE;
   fnWrite[OUT_K2MAN]           = &WriteK2Man;
 
-  sprintf(output[OUT_KECC].cName, "KEcc");
-  sprintf(output[OUT_KECC].cDescr, "Poincare's k (=e*cos(varpi)");
+  fvFormattedString(&output[OUT_KECC].cName, "KEcc");
+  fvFormattedString(&output[OUT_KECC].cDescr, "Poincare's k (=e*cos(varpi)");
   output[OUT_KECC].bNeg       = 0;
   output[OUT_KECC].iNum       = 1;
   output[OUT_KECC].iModuleBit = EQTIDE + DISTORB;
@@ -1461,36 +1461,36 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
    * L
    */
 
-  sprintf(output[OUT_LONGA].cName, "LongA");
-  sprintf(output[OUT_LONGA].cDescr, "Body's Longitude of ascending node");
-  sprintf(output[OUT_LONGA].cNeg, "Deg");
+  fvFormattedString(&output[OUT_LONGA].cName, "LongA");
+  fvFormattedString(&output[OUT_LONGA].cDescr, "Body's Longitude of ascending node");
+  fvFormattedString(&output[OUT_LONGA].cNeg, "Deg");
   output[OUT_LONGA].bNeg       = 1;
   output[OUT_LONGA].dNeg       = 1. / DEGRAD;
   output[OUT_LONGA].iNum       = 1;
   output[OUT_LONGA].iModuleBit = DISTORB + GALHABIT + SPINBODY + BINARY;
   fnWrite[OUT_LONGA]           = &WriteBodyLongA;
 
-  sprintf(output[OUT_LONGP].cName, "LongP");
-  sprintf(output[OUT_LONGP].cDescr, "Body's Longitude of pericenter");
-  sprintf(output[OUT_LONGP].cNeg, "Deg");
+  fvFormattedString(&output[OUT_LONGP].cName, "LongP");
+  fvFormattedString(&output[OUT_LONGP].cDescr, "Body's Longitude of pericenter");
+  fvFormattedString(&output[OUT_LONGP].cNeg, "Deg");
   output[OUT_LONGP].bNeg       = 1;
   output[OUT_LONGP].dNeg       = 1. / DEGRAD;
   output[OUT_LONGP].iNum       = 1;
   output[OUT_LONGP].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY;
   fnWrite[OUT_LONGP]           = &WriteLongP;
 
-  sprintf(output[OUT_ARGP].cName, "ArgP");
-  sprintf(output[OUT_ARGP].cDescr, "Body's argument of pericenter");
-  sprintf(output[OUT_ARGP].cNeg, "Deg");
+  fvFormattedString(&output[OUT_ARGP].cName, "ArgP");
+  fvFormattedString(&output[OUT_ARGP].cDescr, "Body's argument of pericenter");
+  fvFormattedString(&output[OUT_ARGP].cNeg, "Deg");
   output[OUT_ARGP].bNeg       = 1;
   output[OUT_ARGP].dNeg       = 1. / DEGRAD;
   output[OUT_ARGP].iNum       = 1;
   output[OUT_ARGP].iModuleBit = DISTORB + GALHABIT + SPINBODY + BINARY;
   fnWrite[OUT_ARGP]           = &WriteBodyArgP;
 
-  sprintf(output[OUT_LXUVTOT].cName, "LXUVTot");
-  sprintf(output[OUT_LXUVTOT].cDescr, "Total XUV Luminosity");
-  sprintf(output[OUT_LXUVTOT].cNeg, "LSUN");
+  fvFormattedString(&output[OUT_LXUVTOT].cName, "LXUVTot");
+  fvFormattedString(&output[OUT_LXUVTOT].cDescr, "Total XUV Luminosity");
+  fvFormattedString(&output[OUT_LXUVTOT].cNeg, "LSUN");
   output[OUT_LXUVTOT].bNeg       = 1;
   output[OUT_LXUVTOT].dNeg       = 1. / LSUN;
   output[OUT_LXUVTOT].iNum       = 1;
@@ -1503,9 +1503,9 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
    * M
    */
 
-  sprintf(output[OUT_MASS].cName, "Mass");
-  sprintf(output[OUT_MASS].cDescr, "Mass");
-  sprintf(output[OUT_MASS].cNeg, "Mearth");
+  fvFormattedString(&output[OUT_MASS].cName, "Mass");
+  fvFormattedString(&output[OUT_MASS].cDescr, "Mass");
+  fvFormattedString(&output[OUT_MASS].cNeg, "Mearth");
   output[OUT_MASS].bNeg       = 1;
   output[OUT_MASS].dNeg       = 1. / MEARTH;
   output[OUT_MASS].iNum       = 1;
@@ -1517,94 +1517,94 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
    *   O
    */
 
-  sprintf(output[OUT_OBL].cName, "Obliquity");
-  sprintf(output[OUT_OBL].cDescr, "Obliquity");
-  sprintf(output[OUT_OBL].cNeg, "deg");
+  fvFormattedString(&output[OUT_OBL].cName, "Obliquity");
+  fvFormattedString(&output[OUT_OBL].cDescr, "Obliquity");
+  fvFormattedString(&output[OUT_OBL].cNeg, "deg");
   output[OUT_OBL].bNeg       = 1;
   output[OUT_OBL].dNeg       = DEGRAD;
   output[OUT_OBL].iNum       = 1;
   output[OUT_OBL].iModuleBit = EQTIDE + DISTROT + POISE;
   fnWrite[OUT_OBL]           = &WriteObliquity;
 
-  sprintf(output[OUT_PRECA].cName, "PrecA");
-  sprintf(output[OUT_PRECA].cDescr, "Body's precession angle");
-  sprintf(output[OUT_PRECA].cNeg, "Deg");
+  fvFormattedString(&output[OUT_PRECA].cName, "PrecA");
+  fvFormattedString(&output[OUT_PRECA].cDescr, "Body's precession angle");
+  fvFormattedString(&output[OUT_PRECA].cNeg, "Deg");
   output[OUT_PRECA].bNeg       = 1;
   output[OUT_PRECA].dNeg       = 1. / DEGRAD;
   output[OUT_PRECA].iNum       = 1;
   output[OUT_PRECA].iModuleBit = EQTIDE + DISTROT + POISE;
   fnWrite[OUT_PRECA]           = &WriteBodyPrecA;
-  sprintf(output[OUT_PRECA].cLongDescr,
+  fvFormattedString(&output[OUT_PRECA].cLongDescr,
           "The precession angle is orthogonal to the obliquity and is measured "
           "from\n"
           "the vernal equinox. This angle is a \"dog-leg\" angle as shown in "
           "Fig. 30\n"
           "of Barnes et al. (2020).");
 
-  sprintf(output[OUT_ORBANGMOM].cName, "OrbAngMom");
-  sprintf(output[OUT_ORBANGMOM].cDescr, "Orbital Angular Momentum");
-  sprintf(output[OUT_ORBANGMOM].cNeg, "kg*m^2/s");
+  fvFormattedString(&output[OUT_ORBANGMOM].cName, "OrbAngMom");
+  fvFormattedString(&output[OUT_ORBANGMOM].cDescr, "Orbital Angular Momentum");
+  fvFormattedString(&output[OUT_ORBANGMOM].cNeg, "kg*m^2/s");
   output[OUT_ORBANGMOM].bNeg       = 1;
   output[OUT_ORBANGMOM].iNum       = 1;
   output[OUT_ORBANGMOM].dNeg       = 1.0;
   output[OUT_ORBANGMOM].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY;
   fnWrite[OUT_ORBANGMOM]           = &WriteOrbAngMom;
 
-  sprintf(output[OUT_ORBECC].cName, "Eccentricity");
-  sprintf(output[OUT_ORBECC].cDescr, "Orbital Eccentricity");
+  fvFormattedString(&output[OUT_ORBECC].cName, "Eccentricity");
+  fvFormattedString(&output[OUT_ORBECC].cDescr, "Orbital Eccentricity");
   output[OUT_ORBECC].iNum = 1;
   output[OUT_ORBECC].bNeg = 0;
   output[OUT_ORBECC].iModuleBit =
         EQTIDE + DISTORB + BINARY + GALHABIT + POISE + SPINBODY;
   fnWrite[OUT_ORBECC] = &WriteOrbEcc;
 
-  sprintf(output[OUT_MEANA].cName, "MeanAnomaly");
-  sprintf(output[OUT_MEANA].cDescr, "Orbital Mean Anomaly");
-  sprintf(output[OUT_MEANA].cNeg, "Deg");
+  fvFormattedString(&output[OUT_MEANA].cName, "MeanAnomaly");
+  fvFormattedString(&output[OUT_MEANA].cDescr, "Orbital Mean Anomaly");
+  fvFormattedString(&output[OUT_MEANA].cNeg, "Deg");
   output[OUT_MEANA].iNum       = 1;
   output[OUT_MEANA].bNeg       = 1;
   output[OUT_MEANA].dNeg       = 1 / DEGRAD;
   output[OUT_MEANA].iModuleBit = SPINBODY;
   fnWrite[OUT_MEANA]           = &WriteMeanAnomaly;
 
-  sprintf(output[OUT_MEANL].cName, "MeanLongitude");
-  sprintf(output[OUT_MEANL].cDescr, "Orbital Mean Longitude");
-  sprintf(output[OUT_MEANL].cNeg, "Deg");
+  fvFormattedString(&output[OUT_MEANL].cName, "MeanLongitude");
+  fvFormattedString(&output[OUT_MEANL].cDescr, "Orbital Mean Longitude");
+  fvFormattedString(&output[OUT_MEANL].cNeg, "Deg");
   output[OUT_MEANL].iNum       = 1;
   output[OUT_MEANL].bNeg       = 1;
   output[OUT_MEANL].dNeg       = 1 / DEGRAD;
   output[OUT_MEANL].iModuleBit = SPINBODY + DISTORB;
   fnWrite[OUT_MEANL]           = &WriteMeanLongitude;
 
-  sprintf(output[OUT_ORBEN].cName, "OrbEnergy");
-  sprintf(output[OUT_ORBEN].cDescr, "Body's Total Orbital Energy");
-  sprintf(output[OUT_ORBEN].cNeg, "ergs");
+  fvFormattedString(&output[OUT_ORBEN].cName, "OrbEnergy");
+  fvFormattedString(&output[OUT_ORBEN].cDescr, "Body's Total Orbital Energy");
+  fvFormattedString(&output[OUT_ORBEN].cNeg, "ergs");
   output[OUT_ORBEN].bNeg       = 1;
   output[OUT_ORBEN].iNum       = 1;
   output[OUT_ORBEN].iModuleBit = EQTIDE + DISTORB + BINARY;
   fnWrite[OUT_ORBEN]           = &WriteOrbEnergy;
 
-  sprintf(output[OUT_LOSTENG].cName, "LostEnergy");
-  sprintf(output[OUT_LOSTENG].cDescr, "Body's Total Lost Energy");
-  sprintf(output[OUT_LOSTENG].cNeg, "ergs");
+  fvFormattedString(&output[OUT_LOSTENG].cName, "LostEnergy");
+  fvFormattedString(&output[OUT_LOSTENG].cDescr, "Body's Total Lost Energy");
+  fvFormattedString(&output[OUT_LOSTENG].cNeg, "ergs");
   output[OUT_LOSTENG].bNeg       = 1;
   output[OUT_LOSTENG].iNum       = 1;
   output[OUT_LOSTENG].iModuleBit = EQTIDE + STELLAR;
   fnWrite[OUT_LOSTENG]           = &WriteLostEng;
 
-  sprintf(output[OUT_LOSTANGMOM].cName, "LostAngMom");
-  sprintf(output[OUT_LOSTANGMOM].cDescr,
+  fvFormattedString(&output[OUT_LOSTANGMOM].cName, "LostAngMom");
+  fvFormattedString(&output[OUT_LOSTANGMOM].cDescr,
           "Lost Angular Momentum due to Magnetic Braking");
-  sprintf(output[OUT_LOSTANGMOM].cNeg, "kg*m^2/s");
+  fvFormattedString(&output[OUT_LOSTANGMOM].cNeg, "kg*m^2/s");
   output[OUT_LOSTANGMOM].bNeg       = 1;
   output[OUT_LOSTANGMOM].iNum       = 1;
   output[OUT_LOSTANGMOM].dNeg       = 1.0;
   output[OUT_LOSTANGMOM].iModuleBit = STELLAR;
   fnWrite[OUT_LOSTANGMOM]           = &WriteLostAngMom;
 
-  sprintf(output[OUT_ORBMEANMOTION].cName, "MeanMotion");
-  sprintf(output[OUT_ORBMEANMOTION].cDescr, "Orbital Mean Motion");
-  sprintf(output[OUT_ORBMEANMOTION].cNeg, "/day");
+  fvFormattedString(&output[OUT_ORBMEANMOTION].cName, "MeanMotion");
+  fvFormattedString(&output[OUT_ORBMEANMOTION].cDescr, "Orbital Mean Motion");
+  fvFormattedString(&output[OUT_ORBMEANMOTION].cNeg, "/day");
   output[OUT_ORBMEANMOTION].bNeg = 1;
   output[OUT_ORBMEANMOTION].dNeg = DAYSEC;
   output[OUT_ORBMEANMOTION].iNum = 1;
@@ -1612,9 +1612,9 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
         EQTIDE + DISTORB + BINARY + SPINBODY + ATMESC + POISE;
   fnWrite[OUT_ORBMEANMOTION] = &WriteOrbMeanMotion;
 
-  sprintf(output[OUT_ORBPER].cName, "OrbPeriod");
-  sprintf(output[OUT_ORBPER].cDescr, "Orbital Period");
-  sprintf(output[OUT_ORBPER].cNeg, "days");
+  fvFormattedString(&output[OUT_ORBPER].cName, "OrbPeriod");
+  fvFormattedString(&output[OUT_ORBPER].cDescr, "Orbital Period");
+  fvFormattedString(&output[OUT_ORBPER].cNeg, "days");
   output[OUT_ORBPER].bNeg = 1;
   output[OUT_ORBPER].dNeg = 1. / DAYSEC;
   output[OUT_ORBPER].iNum = 1;
@@ -1622,9 +1622,9 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
         EQTIDE + DISTORB + BINARY + POISE + SPINBODY + ATMESC;
   fnWrite[OUT_ORBPER] = &WriteOrbPeriod;
 
-  sprintf(output[OUT_ORBSEMI].cName, "SemiMajorAxis");
-  sprintf(output[OUT_ORBSEMI].cDescr, "Semi-major Axis");
-  sprintf(output[OUT_ORBSEMI].cNeg, "AU");
+  fvFormattedString(&output[OUT_ORBSEMI].cName, "SemiMajorAxis");
+  fvFormattedString(&output[OUT_ORBSEMI].cDescr, "Semi-major Axis");
+  fvFormattedString(&output[OUT_ORBSEMI].cNeg, "AU");
   output[OUT_ORBSEMI].bNeg = 1;
   output[OUT_ORBSEMI].dNeg = 1. / AUM;
   output[OUT_ORBSEMI].iNum = 1;
@@ -1636,60 +1636,60 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
    * R
    */
 
-  sprintf(output[OUT_RADIUS].cName, "Radius");
-  sprintf(output[OUT_RADIUS].cDescr, "Radius");
+  fvFormattedString(&output[OUT_RADIUS].cName, "Radius");
+  fvFormattedString(&output[OUT_RADIUS].cDescr, "Radius");
   output[OUT_RADIUS].bNeg = 1;
-  sprintf(output[OUT_RADIUS].cNeg, "Rearth");
+  fvFormattedString(&output[OUT_RADIUS].cNeg, "Rearth");
   output[OUT_RADIUS].dNeg       = 1. / REARTH;
   output[OUT_RADIUS].iNum       = 1;
   output[OUT_RADIUS].iModuleBit = 1;
   fnWrite[OUT_RADIUS]           = &WriteRadius;
 
-  sprintf(output[OUT_RADGYRA].cName, "RadGyra");
-  sprintf(output[OUT_RADGYRA].cDescr,
+  fvFormattedString(&output[OUT_RADGYRA].cName, "RadGyra");
+  fvFormattedString(&output[OUT_RADGYRA].cDescr,
           "Radius of Gyration/Moment of Inertia Constant");
   output[OUT_RADGYRA].bNeg       = 0;
   output[OUT_RADGYRA].iNum       = 1;
   output[OUT_RADGYRA].iModuleBit = 1;
   fnWrite[OUT_RADGYRA]           = &WriteRadGyra;
 
-  sprintf(output[OUT_ROTANGMOM].cName, "RotAngMom");
-  sprintf(output[OUT_ROTANGMOM].cDescr, "Rotational Angular Momentum");
-  sprintf(output[OUT_ROTANGMOM].cNeg, "kg*m^2/s");
+  fvFormattedString(&output[OUT_ROTANGMOM].cName, "RotAngMom");
+  fvFormattedString(&output[OUT_ROTANGMOM].cDescr, "Rotational Angular Momentum");
+  fvFormattedString(&output[OUT_ROTANGMOM].cNeg, "kg*m^2/s");
   output[OUT_ROTANGMOM].bNeg       = 1;
   output[OUT_ROTANGMOM].iNum       = 1;
   output[OUT_ROTANGMOM].dNeg       = 1.0;
   output[OUT_ROTANGMOM].iModuleBit = EQTIDE + DISTROT + STELLAR + BINARY;
   fnWrite[OUT_ROTANGMOM]           = &WriteRotAngMom;
 
-  sprintf(output[OUT_ROTKINENERGY].cName, "RotKinEnergy");
-  sprintf(output[OUT_ROTKINENERGY].cDescr, "Body's Rotational Energy");
-  sprintf(output[OUT_ROTKINENERGY].cNeg, "ergs");
+  fvFormattedString(&output[OUT_ROTKINENERGY].cName, "RotKinEnergy");
+  fvFormattedString(&output[OUT_ROTKINENERGY].cDescr, "Body's Rotational Energy");
+  fvFormattedString(&output[OUT_ROTKINENERGY].cNeg, "ergs");
   output[OUT_ROTKINENERGY].iNum       = 1;
   output[OUT_ROTKINENERGY].iModuleBit = EQTIDE + DISTORB;
   fnWrite[OUT_ROTKINENERGY]           = &WriteRotKinEnergy;
 
-  sprintf(output[OUT_ROTPER].cName, "RotPer");
-  sprintf(output[OUT_ROTPER].cDescr, "Rotational Period");
-  sprintf(output[OUT_ROTPER].cNeg, "days");
+  fvFormattedString(&output[OUT_ROTPER].cName, "RotPer");
+  fvFormattedString(&output[OUT_ROTPER].cDescr, "Rotational Period");
+  fvFormattedString(&output[OUT_ROTPER].cNeg, "days");
   output[OUT_ROTPER].bNeg       = 1;
   output[OUT_ROTPER].dNeg       = 1. / DAYSEC;
   output[OUT_ROTPER].iNum       = 1;
   output[OUT_ROTPER].iModuleBit = EQTIDE + DISTROT + STELLAR;
   fnWrite[OUT_ROTPER]           = &WriteRotPer;
 
-  sprintf(output[OUT_ROTRATE].cName, "RotRate");
-  sprintf(output[OUT_ROTRATE].cDescr, "Rotational Frequency");
-  sprintf(output[OUT_ROTRATE].cNeg, "/day");
+  fvFormattedString(&output[OUT_ROTRATE].cName, "RotRate");
+  fvFormattedString(&output[OUT_ROTRATE].cDescr, "Rotational Frequency");
+  fvFormattedString(&output[OUT_ROTRATE].cNeg, "/day");
   output[OUT_ROTRATE].bNeg       = 1;
   output[OUT_ROTRATE].dNeg       = DAYSEC;
   output[OUT_ROTRATE].iNum       = 1;
   output[OUT_ROTRATE].iModuleBit = EQTIDE + DISTROT + STELLAR;
   fnWrite[OUT_ROTRATE]           = &WriteRotRate;
 
-  sprintf(output[OUT_ROTVEL].cName, "RotVel");
-  sprintf(output[OUT_ROTVEL].cDescr, "Rotational Velocity");
-  sprintf(output[OUT_ROTVEL].cNeg, "km/s");
+  fvFormattedString(&output[OUT_ROTVEL].cName, "RotVel");
+  fvFormattedString(&output[OUT_ROTVEL].cDescr, "Rotational Velocity");
+  fvFormattedString(&output[OUT_ROTVEL].cNeg, "km/s");
   output[OUT_ROTVEL].bNeg       = 1;
   output[OUT_ROTVEL].dNeg       = 1e-5;
   output[OUT_ROTVEL].iNum       = 1;
@@ -1702,18 +1702,18 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
    *
    */
 
-  sprintf(output[OUT_SURFENFLUX].cName, "SurfEnFluxTotal");
-  sprintf(output[OUT_SURFENFLUX].cDescr, "Total Surface Energy Flux");
-  sprintf(output[OUT_SURFENFLUX].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_SURFENFLUX].cName, "SurfEnFluxTotal");
+  fvFormattedString(&output[OUT_SURFENFLUX].cDescr, "Total Surface Energy Flux");
+  fvFormattedString(&output[OUT_SURFENFLUX].cNeg, "W/m^2");
   output[OUT_SURFENFLUX].bNeg       = 1;
   output[OUT_SURFENFLUX].dNeg       = 1;
   output[OUT_SURFENFLUX].iNum       = 1;
   output[OUT_SURFENFLUX].iModuleBit = EQTIDE + RADHEAT + THERMINT;
   fnWrite[OUT_SURFENFLUX]           = &WriteSurfaceEnergyFlux;
 
-  sprintf(output[OUT_TIME].cName, "Time");
-  sprintf(output[OUT_TIME].cDescr, "Simulation Time");
-  sprintf(output[OUT_TIME].cNeg, "Gyr");
+  fvFormattedString(&output[OUT_TIME].cName, "Time");
+  fvFormattedString(&output[OUT_TIME].cDescr, "Simulation Time");
+  fvFormattedString(&output[OUT_TIME].cNeg, "Gyr");
   output[OUT_TIME].bNeg       = 1;
   output[OUT_TIME].dNeg       = 1. / (YEARSEC * 1e9);
   output[OUT_TIME].iNum       = 1;
@@ -1721,9 +1721,9 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_TIME].iModuleBit = 1;
   fnWrite[OUT_TIME]           = &WriteTime;
 
-  sprintf(output[OUT_TOTANGMOM].cName, "TotAngMom");
-  sprintf(output[OUT_TOTANGMOM].cDescr, "Total Angular Momentum");
-  sprintf(output[OUT_TOTANGMOM].cNeg, "kg*m^2/s");
+  fvFormattedString(&output[OUT_TOTANGMOM].cName, "TotAngMom");
+  fvFormattedString(&output[OUT_TOTANGMOM].cDescr, "Total Angular Momentum");
+  fvFormattedString(&output[OUT_TOTANGMOM].cNeg, "kg*m^2/s");
   output[OUT_TOTANGMOM].bNeg = 1;
   output[OUT_TOTANGMOM].iNum = 1;
   output[OUT_TOTANGMOM].dNeg = 1.0;
@@ -1731,104 +1731,104 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
         EQTIDE + DISTORB + DISTROT + STELLAR + BINARY + SPINBODY;
   fnWrite[OUT_TOTANGMOM] = &WriteTotAngMom;
 
-  sprintf(output[OUT_TOTENERGY].cName, "TotEnergy");
-  sprintf(output[OUT_TOTENERGY].cDescr, "Total System Energy");
-  sprintf(output[OUT_TOTENERGY].cNeg, "ergs");
+  fvFormattedString(&output[OUT_TOTENERGY].cName, "TotEnergy");
+  fvFormattedString(&output[OUT_TOTENERGY].cDescr, "Total System Energy");
+  fvFormattedString(&output[OUT_TOTENERGY].cNeg, "ergs");
   output[OUT_TOTENERGY].bNeg       = 1;
   output[OUT_TOTENERGY].dNeg       = 1;
   output[OUT_TOTENERGY].iNum       = 1;
   output[OUT_TOTENERGY].iModuleBit = EQTIDE + DISTORB + STELLAR + SPINBODY;
   fnWrite[OUT_TOTENERGY]           = &WriteTotEnergy;
 
-  sprintf(output[OUT_POTENERGY].cName, "PotEnergy");
-  sprintf(output[OUT_POTENERGY].cDescr, "Body's non-orbital Potential Energy");
-  sprintf(output[OUT_POTENERGY].cNeg, "ergs");
+  fvFormattedString(&output[OUT_POTENERGY].cName, "PotEnergy");
+  fvFormattedString(&output[OUT_POTENERGY].cDescr, "Body's non-orbital Potential Energy");
+  fvFormattedString(&output[OUT_POTENERGY].cNeg, "ergs");
   output[OUT_POTENERGY].bNeg       = 1;
   output[OUT_POTENERGY].dNeg       = 1;
   output[OUT_POTENERGY].iNum       = 1;
   output[OUT_POTENERGY].iModuleBit = 1;
   fnWrite[OUT_POTENERGY]           = &WritePotEnergy;
 
-  sprintf(output[OUT_KINENERGY].cName, "KinEnergy");
-  sprintf(output[OUT_KINENERGY].cDescr, "Body's non-orbital Kinetic Energy");
-  sprintf(output[OUT_KINENERGY].cNeg, "ergs");
+  fvFormattedString(&output[OUT_KINENERGY].cName, "KinEnergy");
+  fvFormattedString(&output[OUT_KINENERGY].cDescr, "Body's non-orbital Kinetic Energy");
+  fvFormattedString(&output[OUT_KINENERGY].cNeg, "ergs");
   output[OUT_KINENERGY].bNeg       = 1;
   output[OUT_KINENERGY].dNeg       = 1;
   output[OUT_KINENERGY].iNum       = 1;
   output[OUT_KINENERGY].iModuleBit = 1;
   fnWrite[OUT_KINENERGY]           = &WriteKinEnergy;
 
-  sprintf(output[OUT_ORBKINENERGY].cName, "OrbKinEnergy");
-  sprintf(output[OUT_ORBKINENERGY].cDescr, "Body's Orbital Kinetic Energy");
-  sprintf(output[OUT_ORBKINENERGY].cNeg, "ergs");
+  fvFormattedString(&output[OUT_ORBKINENERGY].cName, "OrbKinEnergy");
+  fvFormattedString(&output[OUT_ORBKINENERGY].cDescr, "Body's Orbital Kinetic Energy");
+  fvFormattedString(&output[OUT_ORBKINENERGY].cNeg, "ergs");
   output[OUT_ORBKINENERGY].bNeg       = 1;
   output[OUT_ORBKINENERGY].dNeg       = 1;
   output[OUT_ORBKINENERGY].iNum       = 1;
   output[OUT_ORBKINENERGY].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY;
   fnWrite[OUT_ORBKINENERGY]           = &WriteOrbKinEnergy;
 
-  sprintf(output[OUT_ORBKINENERGY].cName, "TotOrbEnergy");
-  sprintf(output[OUT_ORBKINENERGY].cDescr, "System's Total Orbital Energy");
-  sprintf(output[OUT_ORBKINENERGY].cNeg, "ergs");
+  fvFormattedString(&output[OUT_ORBKINENERGY].cName, "TotOrbEnergy");
+  fvFormattedString(&output[OUT_ORBKINENERGY].cDescr, "System's Total Orbital Energy");
+  fvFormattedString(&output[OUT_ORBKINENERGY].cNeg, "ergs");
   output[OUT_ORBKINENERGY].bNeg       = 1;
   output[OUT_ORBKINENERGY].dNeg       = 1;
   output[OUT_ORBKINENERGY].iNum       = 1;
   output[OUT_ORBKINENERGY].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY;
   fnWrite[OUT_ORBKINENERGY]           = &WriteTotOrbEnergy;
 
-  sprintf(output[OUT_ORBPOTENERGY].cName, "OrbPotEnergy");
-  sprintf(output[OUT_ORBPOTENERGY].cDescr, "Body's Orbital Potential Energy");
-  sprintf(output[OUT_ORBPOTENERGY].cNeg, "ergs");
+  fvFormattedString(&output[OUT_ORBPOTENERGY].cName, "OrbPotEnergy");
+  fvFormattedString(&output[OUT_ORBPOTENERGY].cDescr, "Body's Orbital Potential Energy");
+  fvFormattedString(&output[OUT_ORBPOTENERGY].cNeg, "ergs");
   output[OUT_ORBPOTENERGY].bNeg       = 1;
   output[OUT_ORBPOTENERGY].dNeg       = 1;
   output[OUT_ORBPOTENERGY].iNum       = 1;
   output[OUT_ORBPOTENERGY].iModuleBit = EQTIDE + DISTORB + BINARY + SPINBODY;
   fnWrite[OUT_ORBPOTENERGY]           = &WriteOrbPotEnergy;
 
-  sprintf(output[OUT_IMK2].cName, "ImK2");
-  sprintf(output[OUT_IMK2].cDescr, "Im(k_2)");
+  fvFormattedString(&output[OUT_IMK2].cName, "ImK2");
+  fvFormattedString(&output[OUT_IMK2].cDescr, "Im(k_2)");
   output[OUT_IMK2].bNeg       = 0;
   output[OUT_IMK2].iNum       = 1;
   output[OUT_IMK2].iModuleBit = EQTIDE + THERMINT;
   fnWrite[OUT_IMK2]           = &WriteImK2;
 
-  sprintf(output[OUT_K2].cName, "K2");
-  sprintf(output[OUT_K2].cDescr, "k_2");
+  fvFormattedString(&output[OUT_K2].cName, "K2");
+  fvFormattedString(&output[OUT_K2].cDescr, "k_2");
   output[OUT_K2].bNeg       = 0;
   output[OUT_K2].iNum       = 1;
   output[OUT_K2].iModuleBit = EQTIDE + THERMINT;
   fnWrite[OUT_K2]           = &WriteK2;
 
-  sprintf(output[OUT_TIDALQ].cName, "TidalQ");
-  sprintf(output[OUT_TIDALQ].cDescr, "Tidal Q");
+  fvFormattedString(&output[OUT_TIDALQ].cName, "TidalQ");
+  fvFormattedString(&output[OUT_TIDALQ].cDescr, "Tidal Q");
   output[OUT_TIDALQ].bNeg       = 0;
   output[OUT_TIDALQ].iNum       = 1;
   output[OUT_TIDALQ].iModuleBit = EQTIDE + THERMINT;
   fnWrite[OUT_TIDALQ]           = WriteTidalQ;
 
-  sprintf(output[OUT_TIDALQMAN].cName, "TidalQMantle");
-  sprintf(output[OUT_TIDALQMAN].cDescr, "Mantle's Tidal Q");
+  fvFormattedString(&output[OUT_TIDALQMAN].cName, "TidalQMantle");
+  fvFormattedString(&output[OUT_TIDALQMAN].cDescr, "Mantle's Tidal Q");
   output[OUT_TIDALQMAN].bNeg       = 0;
   output[OUT_TIDALQMAN].iNum       = 1;
   output[OUT_TIDALQMAN].iModuleBit = EQTIDE + THERMINT;
   fnWrite[OUT_TIDALQMAN]           = WriteTidalQMantle;
 
-  sprintf(output[OUT_XOBL].cName, "Xobl");
-  sprintf(output[OUT_XOBL].cDescr,
+  fvFormattedString(&output[OUT_XOBL].cName, "Xobl");
+  fvFormattedString(&output[OUT_XOBL].cDescr,
           "Body's sin(obliquity)*cos(precession angle)");
   output[OUT_XOBL].iNum       = 1;
   output[OUT_XOBL].iModuleBit = EQTIDE + DISTROT;
   fnWrite[OUT_XOBL]           = &WriteXobl;
 
-  sprintf(output[OUT_YOBL].cName, "Yobl");
-  sprintf(output[OUT_YOBL].cDescr,
+  fvFormattedString(&output[OUT_YOBL].cName, "Yobl");
+  fvFormattedString(&output[OUT_YOBL].cDescr,
           "Body's sin(obliquity)*sin(precession angle)");
   output[OUT_YOBL].iNum       = 1;
   output[OUT_YOBL].iModuleBit = EQTIDE + DISTROT;
   fnWrite[OUT_YOBL]           = &WriteYobl;
 
-  sprintf(output[OUT_ZOBL].cName, "Zobl");
-  sprintf(output[OUT_ZOBL].cDescr, "Body's cos(obliquity)");
+  fvFormattedString(&output[OUT_ZOBL].cName, "Zobl");
+  fvFormattedString(&output[OUT_ZOBL].cDescr, "Body's cos(obliquity)");
   output[OUT_ZOBL].iNum       = 1;
   output[OUT_ZOBL].iModuleBit = EQTIDE + DISTROT;
   fnWrite[OUT_ZOBL]           = &WriteZobl;
@@ -2009,7 +2009,7 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
   int iCol, iOut, iSubOut, iExtra = 0;
   char cCol[MODULEOUTEND][OUTLEN+2]; // +2 for brackets
   double *dTmp;
-  char cUnit[OUTLEN], cTmp[OUTLEN+2];
+  char cUnit[OUTLEN], *cTmp;
 
   for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
@@ -2022,7 +2022,7 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
         for (iSubOut = 0; iSubOut < output[iOut].iNum; iSubOut++) {
           strcpy(cCol[iCol + iSubOut + iExtra],
                  files->Outfile[iBody].caCol[iCol]);
-          sprintf(cTmp, "[%s]", cUnit);
+          fvFormattedString(&cTmp, "[%s]", cUnit);
           strcat(cCol[iCol + iSubOut + iExtra], cTmp);
         }
         iExtra += (output[iOut].iNum - 1);
@@ -2044,7 +2044,7 @@ void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
   int iCol, iOut, iSubOut, iExtra = 0;
   char cCol[MODULEOUTEND][OUTLEN+2]; // +2 for brackets
   double *dTmp;
-  char cUnit[OUTLEN], cTmp[OUTLEN+2];
+  char cUnit[OUTLEN], *cTmp;
 
   for (iCol = 0; iCol < files->Outfile[iBody].iNumGrid; iCol++) {
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
@@ -2057,7 +2057,7 @@ void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
         for (iSubOut = 0; iSubOut < output[iOut].iNum; iSubOut++) {
           strcpy(cCol[iCol + iSubOut + iExtra],
                  files->Outfile[iBody].caGrid[iCol]);
-          sprintf(cTmp, "[%s]", cUnit);
+          fvFormattedString(&cTmp, "[%s]", cUnit);
           strcat(cCol[iCol + iSubOut + iExtra], cTmp);
         }
         iExtra += (output[iOut].iNum - 1);
@@ -2165,7 +2165,7 @@ void LogBody(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
               OPTIONS *options, OUTPUT *output, SYSTEM *system, UPDATE *update,
               fnUpdateVariable ***fnUpdate, fnWriteOutput fnWrite[], int iEnd) {
-  char cTime[OPTLEN];
+  char *cTime;
   FILE *fp;
   double dTotTime;
 
@@ -2177,13 +2177,13 @@ void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
   double dDt = fdGetTimeStep(body, control, system, update, fnUpdate);
 
   if (iEnd == 0) {
-    sprintf(cTime, "Input");
+    fvFormattedString(&cTime, "Input");
     fp = fopen(files->cLog, "w");
   } else if (iEnd == 1) {
-    sprintf(cTime, "Final");
+    fvFormattedString(&cTime, "Final");
     fp = fopen(files->cLog, "a");
   } else if (iEnd == -1) {
-    sprintf(cTime, "Initial");
+    fvFormattedString(&cTime, "Initial");
     fp = fopen(files->cLog, "w");
   } else {
     fprintf(stderr, "ERROR: Unknown cTime in output.c:WriteLog.\n");
@@ -2211,7 +2211,7 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
   int iBody, iCol, iOut, iSubOut, iExtra = 0, iGrid, iLat, jBody, j;
   double dCol[NUMOPT], *dTmp, dGrid[NUMOPT];
   FILE *fp;
-  char cUnit[OPTLEN], cPoiseGrid[3 * NAMELEN], cLaplaceFunc[3 * NAMELEN];
+  char *cUnit, *cPoiseGrid, *cLaplaceFunc;
 
   /* Write out all data columns for each body. As some data may span more than
      1 column, we search the input list sequentially, adding iExtra to the
@@ -2279,7 +2279,7 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
         }
         /* Now write the columns */
 
-        sprintf(cPoiseGrid, "%s.%s.Climate", system->cName, body[iBody].cName);
+        fvFormattedString(&cPoiseGrid, "%s.%s.Climate", system->cName, body[iBody].cName);
 
         if (control->Evolve.dTime == 0 && iLat == 0) {
           if (body[iBody].iClimateModel == SEA) {
@@ -2347,7 +2347,7 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
         if (control->Evolve.iDistOrbModel == RD4) {
           /* open body file to write laplace functions and related */
           for (jBody = iBody + 1; jBody < control->Evolve.iNumBodies; jBody++) {
-            sprintf(cLaplaceFunc, "%s.%s.Laplace", body[iBody].cName,
+            fvFormattedString(&cLaplaceFunc, "%s.%s.Laplace", body[iBody].cName,
                     body[jBody].cName);
             if (control->Evolve.dTime == 0) {
               fp = fopen(cLaplaceFunc, "w");
@@ -2392,7 +2392,7 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
             /* open body file to write laplace functions and related */
             for (jBody = iBody + 1; jBody < control->Evolve.iNumBodies;
                  jBody++) {
-              sprintf(cLaplaceFunc, "%s.%s.Laplace", body[iBody].cName,
+              fvFormattedString(&cLaplaceFunc, "%s.%s.Laplace", body[iBody].cName,
                       body[jBody].cName);
               fp = fopen(cLaplaceFunc, "w");
               if (body[iBody].dSemi < body[jBody].dSemi) {
@@ -2456,18 +2456,18 @@ void InitializeOutput(FILES *files, OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
     memset(output[iOut].cName, '\0', OPTLEN);
-    sprintf(output[iOut].cName, "null");
+    fvFormattedString(&output[iOut].cName, "null");
     output[iOut].bGrid  = 0;
     output[iOut].bNeg   = 0; /* Is a negative option allowed */
     output[iOut].dNeg   = 1; /* Conversion factor for negative options */
     output[iOut].iNum   = 0; /* Number of parameters associated with option */
     output[iOut].bDoNeg = malloc(MAXFILES * sizeof(int));
     memset(output[iOut].cDescr, '\0', OUTDESCR);
-    sprintf(output[iOut].cDescr, "null");
+    fvFormattedString(&output[iOut].cDescr, "null");
     memset(output[iOut].cLongDescr, '\0', OUTLONDESCR);
-    sprintf(output[iOut].cLongDescr, "null");
+    fvFormattedString(&output[iOut].cLongDescr, "null");
     memset(output[iOut].cNeg, '\0', OUTDESCR);
-    sprintf(output[iOut].cNeg, "null");
+    fvFormattedString(&output[iOut].cNeg, "null");
     for (iBody = 0; iBody < MAXFILES; iBody++) {
       output[iOut].bDoNeg[iBody] = 0;
     }

@@ -144,10 +144,10 @@ void ReadFileOrbitOblData(BODY *body, CONTROL *control, FILES *files,
     /* Cannot exist in primary input file -- Each body has an output file */
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    strcpy(body[iFile - 1].cFileOrbitOblData, cTmp);
+    strcpy(body[iFile - 1].sFileOrbitOblData, cTmp);
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0)
-    strcpy(body[iFile - 1].cFileOrbitOblData, options->cDefault);
+    strcpy(body[iFile - 1].sFileOrbitOblData, options->cDefault);
 }
 
 void ReadIceAlbedo(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -1124,504 +1124,504 @@ void ReadMinIceSheetHeight(BODY *body, CONTROL *control, FILES *files,
 }
 
 void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
-  sprintf(options[OPT_LATCELLNUM].cName, "iLatCellNum");
-  sprintf(options[OPT_LATCELLNUM].cDescr, "Number of latitude cells used in"
+  fvFormattedString(&options[OPT_LATCELLNUM].cName, "iLatCellNum");
+  fvFormattedString(&options[OPT_LATCELLNUM].cDescr, "Number of latitude cells used in"
                                           " climate model");
-  sprintf(options[OPT_LATCELLNUM].cDefault, "50");
+  fvFormattedString(&options[OPT_LATCELLNUM].cDefault, "50");
   options[OPT_LATCELLNUM].dDefault   = 50;
   options[OPT_LATCELLNUM].iType      = 1;
   options[OPT_LATCELLNUM].bMultiFile = 1;
   fnRead[OPT_LATCELLNUM]             = &ReadLatCellNum;
 
-  sprintf(options[OPT_READORBITOBLDATA].cName, "bReadOrbitOblData");
-  sprintf(options[OPT_READORBITOBLDATA].cDescr, "Read in orbital and obliquity \
+  fvFormattedString(&options[OPT_READORBITOBLDATA].cName, "bReadOrbitOblData");
+  fvFormattedString(&options[OPT_READORBITOBLDATA].cDescr, "Read in orbital and obliquity \
     data and use with poise");
-  sprintf(options[OPT_READORBITOBLDATA].cDefault, "0");
+  fvFormattedString(&options[OPT_READORBITOBLDATA].cDefault, "0");
   options[OPT_READORBITOBLDATA].dDefault   = 0;
   options[OPT_READORBITOBLDATA].iType      = 0;
   options[OPT_READORBITOBLDATA].bMultiFile = 1;
   fnRead[OPT_READORBITOBLDATA]             = &ReadOrbitOblData;
 
-  sprintf(options[OPT_FILEORBITOBLDATA].cName, "sFileOrbitOblData");
-  sprintf(options[OPT_FILEORBITOBLDATA].cDescr, "Name of file containing orbit\
+  fvFormattedString(&options[OPT_FILEORBITOBLDATA].cName, "sFileOrbitOblData");
+  fvFormattedString(&options[OPT_FILEORBITOBLDATA].cDescr, "Name of file containing orbit\
     and obliquity time series");
-  sprintf(options[OPT_FILEORBITOBLDATA].cDefault, "Obl_data.txt");
+  fvFormattedString(&options[OPT_FILEORBITOBLDATA].cDefault, "Obl_data.txt");
   options[OPT_FILEORBITOBLDATA].iType = 3;
   fnRead[OPT_FILEORBITOBLDATA]        = &ReadFileOrbitOblData;
 
-  sprintf(options[OPT_PLANCKA].cName, "dPlanckA");
-  sprintf(options[OPT_PLANCKA].cDescr, "Constant 'A' used in OLR calculation");
-  sprintf(options[OPT_PLANCKA].cDefault, "203.3");
+  fvFormattedString(&options[OPT_PLANCKA].cName, "dPlanckA");
+  fvFormattedString(&options[OPT_PLANCKA].cDescr, "Constant 'A' used in OLR calculation");
+  fvFormattedString(&options[OPT_PLANCKA].cDefault, "203.3");
   options[OPT_PLANCKA].dDefault   = 203.3;
   options[OPT_PLANCKA].iType      = 2;
   options[OPT_PLANCKA].bMultiFile = 1;
   fnRead[OPT_PLANCKA]             = &ReadPlanckA;
 
-  sprintf(options[OPT_PLANCKB].cName, "dPlanckB");
-  sprintf(options[OPT_PLANCKB].cDescr, "Sensitivity 'B' used in"
+  fvFormattedString(&options[OPT_PLANCKB].cName, "dPlanckB");
+  fvFormattedString(&options[OPT_PLANCKB].cDescr, "Sensitivity 'B' used in"
                                        " OLR calculation");
-  sprintf(options[OPT_PLANCKB].cDefault, "2.09");
-  sprintf(options[OPT_PLANCKB].cDimension, "nd");
+  fvFormattedString(&options[OPT_PLANCKB].cDefault, "2.09");
+  fvFormattedString(&options[OPT_PLANCKB].cDimension, "nd");
   options[OPT_PLANCKB].dDefault   = 2.09;
   options[OPT_PLANCKB].iType      = 2;
   options[OPT_PLANCKB].bMultiFile = 1;
   fnRead[OPT_PLANCKB]             = &ReadPlanckB;
 
-  sprintf(options[OPT_ICEALBEDO].cName, "dIceAlbedo");
-  sprintf(options[OPT_ICEALBEDO].cDescr, "Albedo of ice");
-  sprintf(options[OPT_ICEALBEDO].cDefault, "0.6");
-  sprintf(options[OPT_ICEALBEDO].cDimension, "nd");
+  fvFormattedString(&options[OPT_ICEALBEDO].cName, "dIceAlbedo");
+  fvFormattedString(&options[OPT_ICEALBEDO].cDescr, "Albedo of ice");
+  fvFormattedString(&options[OPT_ICEALBEDO].cDefault, "0.6");
+  fvFormattedString(&options[OPT_ICEALBEDO].cDimension, "nd");
   options[OPT_ICEALBEDO].dDefault   = 0.6;
   options[OPT_ICEALBEDO].iType      = 2;
   options[OPT_ICEALBEDO].bMultiFile = 1;
   fnRead[OPT_ICEALBEDO]             = &ReadIceAlbedo;
 
-  sprintf(options[OPT_SURFALBEDO].cName, "dSurfAlbedo");
-  sprintf(options[OPT_SURFALBEDO].cDescr, "Albedo of (ice-free) surface");
-  sprintf(options[OPT_SURFALBEDO].cDefault, "0.3");
-  sprintf(options[OPT_SURFALBEDO].cDimension, "nd");
+  fvFormattedString(&options[OPT_SURFALBEDO].cName, "dSurfAlbedo");
+  fvFormattedString(&options[OPT_SURFALBEDO].cDescr, "Albedo of (ice-free) surface");
+  fvFormattedString(&options[OPT_SURFALBEDO].cDefault, "0.3");
+  fvFormattedString(&options[OPT_SURFALBEDO].cDimension, "nd");
   options[OPT_SURFALBEDO].dDefault   = 0.3;
   options[OPT_SURFALBEDO].iType      = 2;
   options[OPT_SURFALBEDO].bMultiFile = 1;
   fnRead[OPT_SURFALBEDO]             = &ReadSurfAlbedo;
 
-  sprintf(options[OPT_TGLOBALEST].cName, "dTGlobalInit");
-  sprintf(options[OPT_TGLOBALEST].cDescr, "Estimate of initial global"
+  fvFormattedString(&options[OPT_TGLOBALEST].cName, "dTGlobalInit");
+  fvFormattedString(&options[OPT_TGLOBALEST].cDescr, "Estimate of initial global"
                                           " temperature");
-  sprintf(options[OPT_TGLOBALEST].cDefault, "14.85");
-  sprintf(options[OPT_TGLOBALEST].cDimension, "temperature");
+  fvFormattedString(&options[OPT_TGLOBALEST].cDefault, "14.85");
+  fvFormattedString(&options[OPT_TGLOBALEST].cDimension, "temperature");
   options[OPT_TGLOBALEST].dDefault   = 14.85;
   options[OPT_TGLOBALEST].iType      = 2;
   options[OPT_TGLOBALEST].bMultiFile = 1;
   fnRead[OPT_TGLOBALEST]             = &ReadTGlobalInit;
 
-  sprintf(options[OPT_PCO2].cName, "dpCO2");
-  sprintf(options[OPT_PCO2].cDescr, "Partial pressure of CO2 in atmosphere");
-  sprintf(options[OPT_PCO2].cDefault, "3.3e-4");
-  sprintf(options[OPT_PCO2].cDimension, "nd");
+  fvFormattedString(&options[OPT_PCO2].cName, "dpCO2");
+  fvFormattedString(&options[OPT_PCO2].cDescr, "Partial pressure of CO2 in atmosphere");
+  fvFormattedString(&options[OPT_PCO2].cDefault, "3.3e-4");
+  fvFormattedString(&options[OPT_PCO2].cDimension, "nd");
   options[OPT_PCO2].dDefault   = 3.3e-4;
   options[OPT_PCO2].iType      = 2;
   options[OPT_PCO2].bMultiFile = 1;
   fnRead[OPT_PCO2]             = &ReadPCO2;
 
-  sprintf(options[OPT_CALCAB].cName, "bCalcAB");
-  sprintf(options[OPT_CALCAB].cDescr, "Calculate A and B in OLR function, from"
+  fvFormattedString(&options[OPT_CALCAB].cName, "bCalcAB");
+  fvFormattedString(&options[OPT_CALCAB].cDescr, "Calculate A and B in OLR function, from"
                                       " (T & pCO2)");
-  sprintf(options[OPT_CALCAB].cDefault, "0");
-  sprintf(options[OPT_CALCAB].cDimension, "nd");
+  fvFormattedString(&options[OPT_CALCAB].cDefault, "0");
+  fvFormattedString(&options[OPT_CALCAB].cDimension, "nd");
   options[OPT_CALCAB].dDefault   = 0;
   options[OPT_CALCAB].iType      = 0;
   options[OPT_CALCAB].bMultiFile = 1;
   fnRead[OPT_CALCAB]             = &ReadCalcAB;
 
-  sprintf(options[OPT_DIFFUSION].cName, "dDiffusion");
-  sprintf(options[OPT_DIFFUSION].cDescr, "Heat diffusion coefficient");
-  sprintf(options[OPT_DIFFUSION].cDefault, "0.44");
-  sprintf(options[OPT_DIFFUSION].cDimension, "nd");
+  fvFormattedString(&options[OPT_DIFFUSION].cName, "dDiffusion");
+  fvFormattedString(&options[OPT_DIFFUSION].cDescr, "Heat diffusion coefficient");
+  fvFormattedString(&options[OPT_DIFFUSION].cDefault, "0.44");
+  fvFormattedString(&options[OPT_DIFFUSION].cDimension, "nd");
   options[OPT_DIFFUSION].dDefault   = 0.44;
   options[OPT_DIFFUSION].iType      = 2;
   options[OPT_DIFFUSION].bMultiFile = 1;
   fnRead[OPT_DIFFUSION]             = &ReadDiffusion;
 
-  sprintf(options[OPT_HADLEY].cName, "bHadley");
-  sprintf(options[OPT_HADLEY].cDescr, "Enable Hadley circulation");
-  sprintf(options[OPT_HADLEY].cDefault, "0");
+  fvFormattedString(&options[OPT_HADLEY].cName, "bHadley");
+  fvFormattedString(&options[OPT_HADLEY].cDescr, "Enable Hadley circulation");
+  fvFormattedString(&options[OPT_HADLEY].cDefault, "0");
   options[OPT_HADLEY].dDefault   = 0;
   options[OPT_HADLEY].iType      = 0;
   options[OPT_HADLEY].bMultiFile = 1;
   fnRead[OPT_HADLEY]             = &ReadHadley;
 
-  sprintf(options[OPT_COLDSTART].cName, "bColdStart");
-  sprintf(options[OPT_COLDSTART].cDescr, "Start from snowball Earth"
+  fvFormattedString(&options[OPT_COLDSTART].cName, "bColdStart");
+  fvFormattedString(&options[OPT_COLDSTART].cDescr, "Start from snowball Earth"
                                          " conditions");
-  sprintf(options[OPT_COLDSTART].cDefault, "0");
+  fvFormattedString(&options[OPT_COLDSTART].cDefault, "0");
   options[OPT_COLDSTART].dDefault   = 0;
   options[OPT_COLDSTART].iType      = 0;
   options[OPT_COLDSTART].bMultiFile = 1;
   fnRead[OPT_COLDSTART]             = &ReadColdStart;
 
-  sprintf(options[OPT_FIXICELAT].cName, "dFixIceLat");
-  sprintf(options[OPT_FIXICELAT].cDescr,
+  fvFormattedString(&options[OPT_FIXICELAT].cName, "dFixIceLat");
+  fvFormattedString(&options[OPT_FIXICELAT].cDescr,
           "Force ice cap latitude to this value");
-  sprintf(options[OPT_FIXICELAT].cDefault, "None");
-  sprintf(options[OPT_FIXICELAT].cDimension, "nd");
+  fvFormattedString(&options[OPT_FIXICELAT].cDefault, "None");
+  fvFormattedString(&options[OPT_FIXICELAT].cDimension, "nd");
   options[OPT_FIXICELAT].dDefault   = 0;
   options[OPT_FIXICELAT].iType      = 2;
   options[OPT_FIXICELAT].bMultiFile = 1;
   fnRead[OPT_FIXICELAT]             = &ReadFixIceLat;
 
-  sprintf(options[OPT_ALBEDOZA].cName, "bAlbedoZA");
-  sprintf(options[OPT_ALBEDOZA].cDescr, "Use albedo based on zenith angle");
-  sprintf(options[OPT_ALBEDOZA].cDefault, "0");
+  fvFormattedString(&options[OPT_ALBEDOZA].cName, "bAlbedoZA");
+  fvFormattedString(&options[OPT_ALBEDOZA].cDescr, "Use albedo based on zenith angle");
+  fvFormattedString(&options[OPT_ALBEDOZA].cDefault, "0");
   options[OPT_ALBEDOZA].dDefault   = 0;
   options[OPT_ALBEDOZA].iType      = 0;
   options[OPT_ALBEDOZA].bMultiFile = 1;
   fnRead[OPT_ALBEDOZA]             = &ReadAlbedoZA;
 
-  sprintf(options[OPT_MEPDIFF].cName, "bMEPDiff");
-  sprintf(options[OPT_MEPDIFF].cDescr, "Calculate diffusion from max entropy"
+  fvFormattedString(&options[OPT_MEPDIFF].cName, "bMEPDiff");
+  fvFormattedString(&options[OPT_MEPDIFF].cDescr, "Calculate diffusion from max entropy"
                                        " production (D=B/4)?");
-  sprintf(options[OPT_MEPDIFF].cDefault, "0");
+  fvFormattedString(&options[OPT_MEPDIFF].cDefault, "0");
   options[OPT_MEPDIFF].dDefault   = 0;
   options[OPT_MEPDIFF].iType      = 0;
   options[OPT_MEPDIFF].bMultiFile = 1;
   fnRead[OPT_MEPDIFF]             = &ReadMEPDiff;
 
-  sprintf(options[OPT_HEATCAPANN].cName, "dHeatCapAnn");
-  sprintf(options[OPT_HEATCAPANN].cDescr, "Surface heat capacity in annual"
+  fvFormattedString(&options[OPT_HEATCAPANN].cName, "dHeatCapAnn");
+  fvFormattedString(&options[OPT_HEATCAPANN].cDescr, "Surface heat capacity in annual"
                                           " model");
-  sprintf(options[OPT_HEATCAPANN].cDefault, "0.2");
-  sprintf(options[OPT_HEATCAPANN].cDimension, "energy/temperature");
+  fvFormattedString(&options[OPT_HEATCAPANN].cDefault, "0.2");
+  fvFormattedString(&options[OPT_HEATCAPANN].cDimension, "energy/temperature");
   options[OPT_HEATCAPANN].dDefault   = 0.2;
   options[OPT_HEATCAPANN].iType      = 2;
   options[OPT_HEATCAPANN].bMultiFile = 1;
   fnRead[OPT_HEATCAPANN]             = &ReadHeatCapAnn;
 
-  sprintf(options[OPT_ICEDEPRATE].cName, "dIceDepRate");
-  sprintf(options[OPT_ICEDEPRATE].cDescr, "Deposition rate of ice/snow to form"
+  fvFormattedString(&options[OPT_ICEDEPRATE].cName, "dIceDepRate");
+  fvFormattedString(&options[OPT_ICEDEPRATE].cDescr, "Deposition rate of ice/snow to form"
                                           " ice sheets");
-  sprintf(options[OPT_ICEDEPRATE].cDefault, "2.9e-5");
-  sprintf(options[OPT_ICEDEPRATE].cDimension, "length/time");
+  fvFormattedString(&options[OPT_ICEDEPRATE].cDefault, "2.9e-5");
+  fvFormattedString(&options[OPT_ICEDEPRATE].cDimension, "length/time");
   options[OPT_ICEDEPRATE].dDefault   = 2.9e-5;
   options[OPT_ICEDEPRATE].iType      = 2;
   options[OPT_ICEDEPRATE].bMultiFile = 1;
   fnRead[OPT_ICEDEPRATE]             = &ReadIceDepRate;
 
-  sprintf(options[OPT_ICESHEETS].cName, "bIceSheets");
-  sprintf(options[OPT_ICESHEETS].cDescr, "Include ice sheets?");
-  sprintf(options[OPT_ICESHEETS].cDefault, "0");
+  fvFormattedString(&options[OPT_ICESHEETS].cName, "bIceSheets");
+  fvFormattedString(&options[OPT_ICESHEETS].cDescr, "Include ice sheets?");
+  fvFormattedString(&options[OPT_ICESHEETS].cDefault, "0");
   options[OPT_ICESHEETS].dDefault   = 0;
   options[OPT_ICESHEETS].iType      = 0;
   options[OPT_ICESHEETS].bMultiFile = 1;
   fnRead[OPT_ICESHEETS]             = &ReadIceSheets;
 
-  sprintf(options[OPT_INITICELAT].cName, "dInitIceLat");
-  sprintf(options[OPT_INITICELAT].cDescr, "Sets initial ice sheet latitude");
-  sprintf(options[OPT_INITICELAT].cDefault, "90");
-  sprintf(options[OPT_INITICELAT].cDimension, "angle");
+  fvFormattedString(&options[OPT_INITICELAT].cName, "dInitIceLat");
+  fvFormattedString(&options[OPT_INITICELAT].cDescr, "Sets initial ice sheet latitude");
+  fvFormattedString(&options[OPT_INITICELAT].cDefault, "90");
+  fvFormattedString(&options[OPT_INITICELAT].cDimension, "angle");
   options[OPT_INITICELAT].dDefault   = 90.0;
   options[OPT_INITICELAT].iType      = 2;
   options[OPT_INITICELAT].bMultiFile = 1;
   fnRead[OPT_INITICELAT]             = &ReadInitIceLat;
 
-  sprintf(options[OPT_INITICEHEIGHT].cName, "dInitIceHeight");
-  sprintf(options[OPT_INITICEHEIGHT].cDescr, "Sets initial ice sheet height");
-  sprintf(options[OPT_INITICEHEIGHT].cDefault, "50"); // 50 meters
-  sprintf(options[OPT_INITICEHEIGHT].cDimension, "length");
+  fvFormattedString(&options[OPT_INITICEHEIGHT].cName, "dInitIceHeight");
+  fvFormattedString(&options[OPT_INITICEHEIGHT].cDescr, "Sets initial ice sheet height");
+  fvFormattedString(&options[OPT_INITICEHEIGHT].cDefault, "50"); // 50 meters
+  fvFormattedString(&options[OPT_INITICEHEIGHT].cDimension, "length");
   options[OPT_INITICEHEIGHT].dDefault   = 50.0;
   options[OPT_INITICEHEIGHT].iType      = 2;
   options[OPT_INITICEHEIGHT].bMultiFile = 1;
   fnRead[OPT_INITICEHEIGHT]             = &ReadInitIceHeight;
 
-  sprintf(options[OPT_CLIMATEMODEL].cName, "sClimateModel");
-  sprintf(options[OPT_CLIMATEMODEL].cDescr, "Use annual or seasonal model");
-  sprintf(options[OPT_CLIMATEMODEL].cDefault, "ann");
+  fvFormattedString(&options[OPT_CLIMATEMODEL].cName, "sClimateModel");
+  fvFormattedString(&options[OPT_CLIMATEMODEL].cDescr, "Use annual or seasonal model");
+  fvFormattedString(&options[OPT_CLIMATEMODEL].cDefault, "ann");
   options[OPT_CLIMATEMODEL].dDefault   = ANN;
   options[OPT_CLIMATEMODEL].iType      = 3;
   options[OPT_CLIMATEMODEL].bMultiFile = 1;
   fnRead[OPT_CLIMATEMODEL]             = &ReadClimateModel;
 
-  sprintf(options[OPT_OLRMODEL].cName, "iOLRModel");
-  sprintf(options[OPT_OLRMODEL].cDescr, "Outgoing longwave rad model");
-  sprintf(options[OPT_OLRMODEL].cDefault, "sms09");
+  fvFormattedString(&options[OPT_OLRMODEL].cName, "iOLRModel");
+  fvFormattedString(&options[OPT_OLRMODEL].cDescr, "Outgoing longwave rad model");
+  fvFormattedString(&options[OPT_OLRMODEL].cDefault, "sms09");
   options[OPT_OLRMODEL].dDefault   = SMS09;
   options[OPT_OLRMODEL].iType      = 1;
   options[OPT_OLRMODEL].bMultiFile = 1;
   fnRead[OPT_OLRMODEL]             = &ReadOLRModel;
 
-  sprintf(options[OPT_SKIPSEASENABLED].cName, "bSkipSeasEnabled");
-  sprintf(options[OPT_SKIPSEASENABLED].cDescr, "Run annual before seasonal and"
+  fvFormattedString(&options[OPT_SKIPSEASENABLED].cName, "bSkipSeasEnabled");
+  fvFormattedString(&options[OPT_SKIPSEASENABLED].cDescr, "Run annual before seasonal and"
                                                " allow skip seas?");
-  sprintf(options[OPT_SKIPSEASENABLED].cDefault, "0");
+  fvFormattedString(&options[OPT_SKIPSEASENABLED].cDefault, "0");
   options[OPT_SKIPSEASENABLED].dDefault   = 0;
   options[OPT_SKIPSEASENABLED].iType      = 0;
   options[OPT_SKIPSEASENABLED].bMultiFile = 1;
   fnRead[OPT_SKIPSEASENABLED]             = &ReadSkipSeasEnabled;
 
-  sprintf(options[OPT_HEATCAPLAND].cName, "dHeatCapLand");
-  sprintf(options[OPT_HEATCAPLAND].cDescr, "Land heat capacity in seasonal"
+  fvFormattedString(&options[OPT_HEATCAPLAND].cName, "dHeatCapLand");
+  fvFormattedString(&options[OPT_HEATCAPLAND].cDescr, "Land heat capacity in seasonal"
                                            " model");
-  sprintf(options[OPT_HEATCAPLAND].cDefault, "1.42e7"); // XXX What units?
-  sprintf(options[OPT_HEATCAPLAND].cDimension, "energy/temperature");
+  fvFormattedString(&options[OPT_HEATCAPLAND].cDefault, "1.42e7"); // XXX What units?
+  fvFormattedString(&options[OPT_HEATCAPLAND].cDimension, "energy/temperature");
   options[OPT_HEATCAPLAND].dDefault   = 1.42e7;
   options[OPT_HEATCAPLAND].iType      = 2;
   options[OPT_HEATCAPLAND].bMultiFile = 1;
   fnRead[OPT_HEATCAPLAND]             = &ReadHeatCapLand;
 
-  sprintf(options[OPT_HEATCAPWATER].cName, "dHeatCapWater");
-  sprintf(options[OPT_HEATCAPWATER].cDescr, "Water heat capacity per meter in"
+  fvFormattedString(&options[OPT_HEATCAPWATER].cName, "dHeatCapWater");
+  fvFormattedString(&options[OPT_HEATCAPWATER].cDescr, "Water heat capacity per meter in"
                                             " seasonal model");
-  sprintf(options[OPT_HEATCAPWATER].cDefault, "4.2e6"); // XXX What units
-  sprintf(options[OPT_HEATCAPWATER].cDimension, "energy/temperature");
+  fvFormattedString(&options[OPT_HEATCAPWATER].cDefault, "4.2e6"); // XXX What units
+  fvFormattedString(&options[OPT_HEATCAPWATER].cDimension, "energy/temperature");
   options[OPT_HEATCAPWATER].dDefault   = 4.2e6;
   options[OPT_HEATCAPWATER].iType      = 2;
   options[OPT_HEATCAPWATER].bMultiFile = 1;
   fnRead[OPT_HEATCAPWATER]             = &ReadHeatCapWater;
 
-  sprintf(options[OPT_MIXINGDEPTH].cName, "dMixingDepth");
-  sprintf(options[OPT_MIXINGDEPTH].cDescr, "Mixing depth of ocean in seasonal"
+  fvFormattedString(&options[OPT_MIXINGDEPTH].cName, "dMixingDepth");
+  fvFormattedString(&options[OPT_MIXINGDEPTH].cDescr, "Mixing depth of ocean in seasonal"
                                            " model");
-  sprintf(options[OPT_MIXINGDEPTH].cDefault, "70"); // meters
-  sprintf(options[OPT_MIXINGDEPTH].cDimension, "length");
+  fvFormattedString(&options[OPT_MIXINGDEPTH].cDefault, "70"); // meters
+  fvFormattedString(&options[OPT_MIXINGDEPTH].cDimension, "length");
   options[OPT_MIXINGDEPTH].dDefault   = 70.;
   options[OPT_MIXINGDEPTH].iType      = 2;
   options[OPT_MIXINGDEPTH].bMultiFile = 1;
   fnRead[OPT_MIXINGDEPTH]             = &ReadMixingDepth;
 
-  sprintf(options[OPT_FRZTSEAICE].cName, "dFrzTSeaIce");
-  sprintf(options[OPT_FRZTSEAICE].cDescr, "Temp of sea ice formation in"
+  fvFormattedString(&options[OPT_FRZTSEAICE].cName, "dFrzTSeaIce");
+  fvFormattedString(&options[OPT_FRZTSEAICE].cDescr, "Temp of sea ice formation in"
                                           " seasonal model");
-  sprintf(options[OPT_FRZTSEAICE].cDefault, "-2 deg C");
-  sprintf(options[OPT_FRZTSEAICE].cDimension, "temperature");
+  fvFormattedString(&options[OPT_FRZTSEAICE].cDefault, "-2 deg C");
+  fvFormattedString(&options[OPT_FRZTSEAICE].cDimension, "temperature");
   options[OPT_FRZTSEAICE].dDefault   = -2.;
   options[OPT_FRZTSEAICE].iType      = 2;
   options[OPT_FRZTSEAICE].bMultiFile = 1;
   fnRead[OPT_FRZTSEAICE]             = &ReadFrzTSeaIce;
 
-  sprintf(options[OPT_NULANDWATER].cName, "dNuLandWater");
-  sprintf(options[OPT_NULANDWATER].cDescr, "Coefficient of land-ocean heat"
+  fvFormattedString(&options[OPT_NULANDWATER].cName, "dNuLandWater");
+  fvFormattedString(&options[OPT_NULANDWATER].cDescr, "Coefficient of land-ocean heat"
                                            " flux");
-  sprintf(options[OPT_NULANDWATER].cDefault, "0.81");
-  sprintf(options[OPT_NULANDWATER].cDimension, "energy/length^2");
+  fvFormattedString(&options[OPT_NULANDWATER].cDefault, "0.81");
+  fvFormattedString(&options[OPT_NULANDWATER].cDimension, "energy/length^2");
   options[OPT_NULANDWATER].dDefault   = 0.81;
   options[OPT_NULANDWATER].iType      = 2;
   options[OPT_NULANDWATER].bMultiFile = 1;
   fnRead[OPT_NULANDWATER]             = &ReadNuLandWater;
 
-  sprintf(options[OPT_LANDFRAC].cName, "dLandFrac");
-  sprintf(options[OPT_LANDFRAC].cDescr, "Fraction of land on the planetary"
+  fvFormattedString(&options[OPT_LANDFRAC].cName, "dLandFrac");
+  fvFormattedString(&options[OPT_LANDFRAC].cDescr, "Fraction of land on the planetary"
                                         " surface");
-  sprintf(options[OPT_LANDFRAC].cDefault, "0.34");
-  sprintf(options[OPT_LANDFRAC].cDimension, "nd");
+  fvFormattedString(&options[OPT_LANDFRAC].cDefault, "0.34");
+  fvFormattedString(&options[OPT_LANDFRAC].cDimension, "nd");
   options[OPT_LANDFRAC].dDefault   = 0.34;
   options[OPT_LANDFRAC].iType      = 2;
   options[OPT_LANDFRAC].bMultiFile = 1;
   fnRead[OPT_LANDFRAC]             = &ReadLandFrac;
 
-  sprintf(options[OPT_NSTEPINYEAR].cName, "iNStepInYear");
-  sprintf(options[OPT_NSTEPINYEAR].cDescr, "Number of time-steps/year in"
+  fvFormattedString(&options[OPT_NSTEPINYEAR].cName, "iNStepInYear");
+  fvFormattedString(&options[OPT_NSTEPINYEAR].cDescr, "Number of time-steps/year in"
                                            " seasonal model");
-  sprintf(options[OPT_NSTEPINYEAR].cDefault, "60");
+  fvFormattedString(&options[OPT_NSTEPINYEAR].cDefault, "60");
   options[OPT_NSTEPINYEAR].dDefault   = 60;
   options[OPT_NSTEPINYEAR].iType      = 1;
   options[OPT_NSTEPINYEAR].bMultiFile = 1;
   fnRead[OPT_NSTEPINYEAR]             = &ReadNStepInYear;
 
-  sprintf(options[OPT_NUMYEARS].cName, "iNumYears");
-  sprintf(options[OPT_NUMYEARS].cDescr, "Number of years to run seasonal"
+  fvFormattedString(&options[OPT_NUMYEARS].cName, "iNumYears");
+  fvFormattedString(&options[OPT_NUMYEARS].cDescr, "Number of years to run seasonal"
                                         " model");
-  sprintf(options[OPT_NUMYEARS].cDefault, "10");
+  fvFormattedString(&options[OPT_NUMYEARS].cDefault, "10");
   options[OPT_NUMYEARS].dDefault   = 10;
   options[OPT_NUMYEARS].iType      = 1;
   options[OPT_NUMYEARS].bMultiFile = 1;
   fnRead[OPT_NUMYEARS]             = &ReadNumYears;
 
-  sprintf(options[OPT_SEAICEMODEL].cName, "bSeaIceModel");
-  sprintf(options[OPT_SEAICEMODEL].cDescr, "model sea ice dynamics and heat"
+  fvFormattedString(&options[OPT_SEAICEMODEL].cName, "bSeaIceModel");
+  fvFormattedString(&options[OPT_SEAICEMODEL].cDescr, "model sea ice dynamics and heat"
                                            " flow?");
-  sprintf(options[OPT_SEAICEMODEL].cDefault, "1");
+  fvFormattedString(&options[OPT_SEAICEMODEL].cDefault, "1");
   options[OPT_SEAICEMODEL].dDefault   = 1;
   options[OPT_SEAICEMODEL].iType      = 0;
   options[OPT_SEAICEMODEL].bMultiFile = 1;
   fnRead[OPT_SEAICEMODEL]             = &ReadSeaIceModel;
 
-  sprintf(options[OPT_ICECONDUCT].cName, "dSeaIceConduct");
-  sprintf(options[OPT_ICECONDUCT].cDescr, "Heat conductivity of sea ice");
-  sprintf(options[OPT_ICECONDUCT].cDefault, "2");
-  sprintf(options[OPT_ICECONDUCT].cDimension, "nd");
+  fvFormattedString(&options[OPT_ICECONDUCT].cName, "dSeaIceConduct");
+  fvFormattedString(&options[OPT_ICECONDUCT].cDescr, "Heat conductivity of sea ice");
+  fvFormattedString(&options[OPT_ICECONDUCT].cDefault, "2");
+  fvFormattedString(&options[OPT_ICECONDUCT].cDimension, "nd");
   options[OPT_ICECONDUCT].dDefault   = 2.;
   options[OPT_ICECONDUCT].iType      = 2;
   options[OPT_ICECONDUCT].bMultiFile = 1;
   fnRead[OPT_ICECONDUCT]             = &ReadSeaIceConduct;
 
-  sprintf(options[OPT_ALBEDOLAND].cName, "dAlbedoLand");
-  sprintf(options[OPT_ALBEDOLAND].cDescr, "albedo of dry land");
-  sprintf(options[OPT_ALBEDOLAND].cDefault, "0.363");
-  sprintf(options[OPT_ALBEDOLAND].cDimension, "nd");
+  fvFormattedString(&options[OPT_ALBEDOLAND].cName, "dAlbedoLand");
+  fvFormattedString(&options[OPT_ALBEDOLAND].cDescr, "albedo of dry land");
+  fvFormattedString(&options[OPT_ALBEDOLAND].cDefault, "0.363");
+  fvFormattedString(&options[OPT_ALBEDOLAND].cDimension, "nd");
   options[OPT_ALBEDOLAND].dDefault   = 0.363;
   options[OPT_ALBEDOLAND].iType      = 2;
   options[OPT_ALBEDOLAND].bMultiFile = 1;
   fnRead[OPT_ALBEDOLAND]             = &ReadAlbedoLand;
 
-  sprintf(options[OPT_ALBEDOWATER].cName, "dAlbedoWater");
-  sprintf(options[OPT_ALBEDOWATER].cDescr, "albedo of open water");
-  sprintf(options[OPT_ALBEDOWATER].cDefault, "0.263");
-  sprintf(options[OPT_ALBEDOWATER].cDimension, "nd");
+  fvFormattedString(&options[OPT_ALBEDOWATER].cName, "dAlbedoWater");
+  fvFormattedString(&options[OPT_ALBEDOWATER].cDescr, "albedo of open water");
+  fvFormattedString(&options[OPT_ALBEDOWATER].cDefault, "0.263");
+  fvFormattedString(&options[OPT_ALBEDOWATER].cDimension, "nd");
   options[OPT_ALBEDOWATER].dDefault   = 0.263;
   options[OPT_ALBEDOWATER].iType      = 2;
   options[OPT_ALBEDOWATER].bMultiFile = 1;
   fnRead[OPT_ALBEDOWATER]             = &ReadAlbedoWater;
 
-  sprintf(options[OPT_ICEDT].cName, "iIceDt");
-  sprintf(options[OPT_ICEDT].cDescr, "Minimum ice sheet timestep (unit orbital"
+  fvFormattedString(&options[OPT_ICEDT].cName, "iIceDt");
+  fvFormattedString(&options[OPT_ICEDT].cDescr, "Minimum ice sheet timestep (unit orbital"
                                      " period)");
-  sprintf(options[OPT_ICEDT].cDefault, "5");
+  fvFormattedString(&options[OPT_ICEDT].cDefault, "5");
   options[OPT_ICEDT].dDefault   = 5;
   options[OPT_ICEDT].iType      = 1;
   options[OPT_ICEDT].bMultiFile = 1;
   fnRead[OPT_ICEDT]             = &ReadIceDt;
 
-  sprintf(options[OPT_RERUNSEAS].cName, "iReRunSeas");
-  sprintf(options[OPT_RERUNSEAS].cDescr, "how often to rerun seasonal in ice"
+  fvFormattedString(&options[OPT_RERUNSEAS].cName, "iReRunSeas");
+  fvFormattedString(&options[OPT_RERUNSEAS].cDescr, "how often to rerun seasonal in ice"
                                          " sheet model, in number of orbital"
                                          " periods");
-  sprintf(options[OPT_RERUNSEAS].cDefault, "500");
+  fvFormattedString(&options[OPT_RERUNSEAS].cDefault, "500");
   options[OPT_RERUNSEAS].dDefault   = 5;
   options[OPT_RERUNSEAS].iType      = 1;
   options[OPT_RERUNSEAS].bMultiFile = 1;
   fnRead[OPT_RERUNSEAS]             = &ReadReRunSeas;
 
-  sprintf(options[OPT_GEOGRAPHY].cName, "sGeography");
-  sprintf(options[OPT_GEOGRAPHY].cDescr, "Type of land distribution");
-  sprintf(options[OPT_GEOGRAPHY].cDefault, "uni3");
+  fvFormattedString(&options[OPT_GEOGRAPHY].cName, "sGeography");
+  fvFormattedString(&options[OPT_GEOGRAPHY].cDescr, "Type of land distribution");
+  fvFormattedString(&options[OPT_GEOGRAPHY].cDefault, "uni3");
   options[OPT_GEOGRAPHY].dDefault   = UNIFORM3;
   options[OPT_GEOGRAPHY].iType      = 3;
   options[OPT_GEOGRAPHY].bMultiFile = 1;
   fnRead[OPT_GEOGRAPHY]             = &ReadGeography;
 
-  sprintf(options[OPT_SEASOUTPUTTIME].cName, "dSeasOutputTime");
-  sprintf(options[OPT_SEASOUTPUTTIME].cDescr, "Output interval for seasonal"
+  fvFormattedString(&options[OPT_SEASOUTPUTTIME].cName, "dSeasOutputTime");
+  fvFormattedString(&options[OPT_SEASOUTPUTTIME].cDescr, "Output interval for seasonal"
                                               " parameters");
-  sprintf(options[OPT_SEASOUTPUTTIME].cDefault, "0");
-  sprintf(options[OPT_SEASOUTPUTTIME].cDimension, "nd");
+  fvFormattedString(&options[OPT_SEASOUTPUTTIME].cDefault, "0");
+  fvFormattedString(&options[OPT_SEASOUTPUTTIME].cDimension, "nd");
   options[OPT_SEASOUTPUTTIME].dDefault   = 0;
   options[OPT_SEASOUTPUTTIME].iType      = 2;
   options[OPT_SEASOUTPUTTIME].bMultiFile = 1;
   fnRead[OPT_SEASOUTPUTTIME]             = &ReadSeasOutputTime;
 
-  sprintf(options[OPT_FORCEOBLIQ].cName, "bForceObliq");
-  sprintf(options[OPT_FORCEOBLIQ].cDescr, "Force obliquity to evolve"
+  fvFormattedString(&options[OPT_FORCEOBLIQ].cName, "bForceObliq");
+  fvFormattedString(&options[OPT_FORCEOBLIQ].cDescr, "Force obliquity to evolve"
                                           " sinusoidally?");
-  sprintf(options[OPT_FORCEOBLIQ].cDefault, "0");
+  fvFormattedString(&options[OPT_FORCEOBLIQ].cDefault, "0");
   options[OPT_FORCEOBLIQ].dDefault   = 0;
   options[OPT_FORCEOBLIQ].iType      = 0;
   options[OPT_FORCEOBLIQ].bMultiFile = 1;
   fnRead[OPT_FORCEOBLIQ]             = &ReadForceObliq;
 
-  sprintf(options[OPT_DIFFROT].cName, "bDiffRot");
-  sprintf(options[OPT_DIFFROT].cDescr, "Adjust heat diffusion for rotation"
+  fvFormattedString(&options[OPT_DIFFROT].cName, "bDiffRot");
+  fvFormattedString(&options[OPT_DIFFROT].cDescr, "Adjust heat diffusion for rotation"
                                        " rate?");
-  sprintf(options[OPT_DIFFROT].cDefault, "0");
+  fvFormattedString(&options[OPT_DIFFROT].cDefault, "0");
   options[OPT_DIFFROT].dDefault   = 0;
   options[OPT_DIFFROT].iType      = 0;
   options[OPT_DIFFROT].bMultiFile = 1;
   fnRead[OPT_DIFFROT]             = &ReadDiffRot;
 
-  sprintf(options[OPT_OBLIQAMP].cName, "dObliqAmp");
-  sprintf(options[OPT_OBLIQAMP].cDescr, "Amplitude of forced obliquity oscill");
-  sprintf(options[OPT_OBLIQAMP].cDefault, "50 deg");
-  sprintf(options[OPT_OBLIQAMP].cDimension, "angle");
+  fvFormattedString(&options[OPT_OBLIQAMP].cName, "dObliqAmp");
+  fvFormattedString(&options[OPT_OBLIQAMP].cDescr, "Amplitude of forced obliquity oscill");
+  fvFormattedString(&options[OPT_OBLIQAMP].cDefault, "50 deg");
+  fvFormattedString(&options[OPT_OBLIQAMP].cDimension, "angle");
   options[OPT_OBLIQAMP].dDefault   = 50;
   options[OPT_OBLIQAMP].iType      = 2;
   options[OPT_OBLIQAMP].bMultiFile = 1;
   fnRead[OPT_OBLIQAMP]             = &ReadObliqAmp;
 
-  sprintf(options[OPT_OBLIQPER].cName, "dObliqPer");
-  sprintf(options[OPT_OBLIQPER].cDescr, "Period of forced obliquity oscill");
-  sprintf(options[OPT_OBLIQPER].cDefault, "50000"); // XXX What units?
-  sprintf(options[OPT_OBLIQPER].cDimension, "time");
+  fvFormattedString(&options[OPT_OBLIQPER].cName, "dObliqPer");
+  fvFormattedString(&options[OPT_OBLIQPER].cDescr, "Period of forced obliquity oscill");
+  fvFormattedString(&options[OPT_OBLIQPER].cDefault, "50000"); // XXX What units?
+  fvFormattedString(&options[OPT_OBLIQPER].cDimension, "time");
   options[OPT_OBLIQPER].dDefault   = 50000;
   options[OPT_OBLIQPER].iType      = 2;
   options[OPT_OBLIQPER].bMultiFile = 1;
   fnRead[OPT_OBLIQPER]             = &ReadObliqPer;
 
-  sprintf(options[OPT_FORCEECC].cName, "bForceEcc");
-  sprintf(options[OPT_FORCEECC].cDescr, "Force Eccentricity to evolve"
+  fvFormattedString(&options[OPT_FORCEECC].cName, "bForceEcc");
+  fvFormattedString(&options[OPT_FORCEECC].cDescr, "Force Eccentricity to evolve"
                                         " sinusoidally?");
-  sprintf(options[OPT_FORCEECC].cDefault, "0");
+  fvFormattedString(&options[OPT_FORCEECC].cDefault, "0");
   options[OPT_FORCEECC].dDefault   = 0;
   options[OPT_FORCEECC].iType      = 0;
   options[OPT_FORCEECC].bMultiFile = 1;
   fnRead[OPT_FORCEECC]             = &ReadForceEcc;
 
-  sprintf(options[OPT_ECCAMP].cName, "dEccAmp");
-  sprintf(options[OPT_ECCAMP].cDescr, "Amplitude of forced eccentricity"
+  fvFormattedString(&options[OPT_ECCAMP].cName, "dEccAmp");
+  fvFormattedString(&options[OPT_ECCAMP].cDescr, "Amplitude of forced eccentricity"
                                       " oscill");
-  sprintf(options[OPT_ECCAMP].cDefault, "0.1");
-  sprintf(options[OPT_ECCAMP].cDimension, "nd");
+  fvFormattedString(&options[OPT_ECCAMP].cDefault, "0.1");
+  fvFormattedString(&options[OPT_ECCAMP].cDimension, "nd");
   options[OPT_ECCAMP].dDefault   = 0.1;
   options[OPT_ECCAMP].iType      = 2;
   options[OPT_ECCAMP].bMultiFile = 1;
   fnRead[OPT_ECCAMP]             = &ReadEccAmp;
 
-  sprintf(options[OPT_ECCPER].cName, "dEccPer");
-  sprintf(options[OPT_ECCPER].cDescr, "Period of forced eccentricity oscill");
-  sprintf(options[OPT_ECCPER].cDefault, "50000"); // !!! What units?
-  sprintf(options[OPT_ECCPER].cDimension, "time");
+  fvFormattedString(&options[OPT_ECCPER].cName, "dEccPer");
+  fvFormattedString(&options[OPT_ECCPER].cDescr, "Period of forced eccentricity oscill");
+  fvFormattedString(&options[OPT_ECCPER].cDefault, "50000"); // !!! What units?
+  fvFormattedString(&options[OPT_ECCPER].cDimension, "time");
   options[OPT_ECCPER].dDefault   = 50000;
   options[OPT_ECCPER].iType      = 2;
   options[OPT_ECCPER].bMultiFile = 1;
   fnRead[OPT_ECCPER]             = &ReadEccPer;
 
-  sprintf(options[OPT_ACCUMODE].cName, "bAccuracyMode");
-  sprintf(options[OPT_ACCUMODE].cDescr,
+  fvFormattedString(&options[OPT_ACCUMODE].cName, "bAccuracyMode");
+  fvFormattedString(&options[OPT_ACCUMODE].cDescr,
           "Re-invert matrix every EBM time step?");
-  sprintf(options[OPT_ACCUMODE].cDefault, "0");
+  fvFormattedString(&options[OPT_ACCUMODE].cDefault, "0");
   options[OPT_ACCUMODE].dDefault   = 0;
   options[OPT_ACCUMODE].iType      = 0;
   options[OPT_ACCUMODE].bMultiFile = 1;
   fnRead[OPT_ACCUMODE]             = &ReadAccuracyMode;
 
-  sprintf(options[OPT_ELEVFB].cName, "bElevFB");
-  sprintf(options[OPT_ELEVFB].cDescr, "Use elevation feedback for ice sheet"
+  fvFormattedString(&options[OPT_ELEVFB].cName, "bElevFB");
+  fvFormattedString(&options[OPT_ELEVFB].cDescr, "Use elevation feedback for ice sheet"
                                       " ablation?");
-  sprintf(options[OPT_ELEVFB].cDefault, "0");
+  fvFormattedString(&options[OPT_ELEVFB].cDefault, "0");
   options[OPT_ELEVFB].dDefault   = 0;
   options[OPT_ELEVFB].iType      = 0;
   options[OPT_ELEVFB].bMultiFile = 1;
   fnRead[OPT_ELEVFB]             = &ReadElevFB;
 
-  sprintf(options[OPT_LAPSER].cName, "dLapseR");
-  sprintf(options[OPT_LAPSER].cDescr, "Dry adiabatic lapse rate (for elev"
+  fvFormattedString(&options[OPT_LAPSER].cName, "dLapseR");
+  fvFormattedString(&options[OPT_LAPSER].cDescr, "Dry adiabatic lapse rate (for elev"
                                       " feedback)");
-  sprintf(options[OPT_LAPSER].cDefault, "9.8e-3 C/m");
-  sprintf(options[OPT_LAPSER].cDimension, "temperature/length");
+  fvFormattedString(&options[OPT_LAPSER].cDefault, "9.8e-3 C/m");
+  fvFormattedString(&options[OPT_LAPSER].cDimension, "temperature/length");
   options[OPT_LAPSER].dDefault   = 9.8e-3;
   options[OPT_LAPSER].iType      = 2;
   options[OPT_LAPSER].bMultiFile = 1;
   fnRead[OPT_LAPSER]             = &ReadLapseR;
 
-  sprintf(options[OPT_REFHEIGHT].cName, "dRefHeight");
-  sprintf(options[OPT_REFHEIGHT].cDescr, "Reference height of atmos temp (for"
+  fvFormattedString(&options[OPT_REFHEIGHT].cName, "dRefHeight");
+  fvFormattedString(&options[OPT_REFHEIGHT].cDescr, "Reference height of atmos temp (for"
                                          " elev feedback)");
-  sprintf(options[OPT_REFHEIGHT].cDefault, "1000 m");
-  sprintf(options[OPT_REFHEIGHT].cDimension, "length");
+  fvFormattedString(&options[OPT_REFHEIGHT].cDefault, "1000 m");
+  fvFormattedString(&options[OPT_REFHEIGHT].cDimension, "length");
   options[OPT_REFHEIGHT].dDefault   = 1000.0;
   options[OPT_REFHEIGHT].iType      = 2;
   options[OPT_REFHEIGHT].bMultiFile = 1;
   fnRead[OPT_REFHEIGHT]             = &ReadRefHeight;
 
-  sprintf(options[OPT_ABLATEFF].cName, "dAblateFF");
-  sprintf(options[OPT_ABLATEFF].cDescr, "Ice ablation fudge factor");
-  sprintf(options[OPT_ABLATEFF].cDefault, "2.3");
-  sprintf(options[OPT_ABLATEFF].cDimension, "nd");
+  fvFormattedString(&options[OPT_ABLATEFF].cName, "dAblateFF");
+  fvFormattedString(&options[OPT_ABLATEFF].cDescr, "Ice ablation fudge factor");
+  fvFormattedString(&options[OPT_ABLATEFF].cDefault, "2.3");
+  fvFormattedString(&options[OPT_ABLATEFF].cDimension, "nd");
   options[OPT_ABLATEFF].dDefault   = 2.3;
   options[OPT_ABLATEFF].iType      = 2;
   options[OPT_ABLATEFF].bMultiFile = 1;
   fnRead[OPT_ABLATEFF]             = &ReadAblateFF;
 
-  sprintf(options[OPT_SPINUPTOL].cName, "dSpinUpTol");
-  sprintf(options[OPT_SPINUPTOL].cDescr, "Tolerance for spin up phase");
-  sprintf(options[OPT_SPINUPTOL].cDefault, "0.1 deg C");
-  sprintf(options[OPT_SPINUPTOL].cDimension, "temperature");
+  fvFormattedString(&options[OPT_SPINUPTOL].cName, "dSpinUpTol");
+  fvFormattedString(&options[OPT_SPINUPTOL].cDescr, "Tolerance for spin up phase");
+  fvFormattedString(&options[OPT_SPINUPTOL].cDefault, "0.1 deg C");
+  fvFormattedString(&options[OPT_SPINUPTOL].cDimension, "temperature");
   options[OPT_SPINUPTOL].dDefault   = 0.1;
   options[OPT_SPINUPTOL].iType      = 2;
   options[OPT_SPINUPTOL].bMultiFile = 1;
   fnRead[OPT_SPINUPTOL]             = &ReadSpinUpTol;
 
-  sprintf(options[OPT_MINICEHEIGHT].cName, "dMinIceSheetHeight");
-  sprintf(options[OPT_MINICEHEIGHT].cDescr, "Minimum ice sheet height for a"
+  fvFormattedString(&options[OPT_MINICEHEIGHT].cName, "dMinIceSheetHeight");
+  fvFormattedString(&options[OPT_MINICEHEIGHT].cDescr, "Minimum ice sheet height for a"
                                             " latitude to be considered"
                                             " ice-covered");
-  sprintf(options[OPT_MINICEHEIGHT].cDefault, "0.001"); // What units? XXX
-  sprintf(options[OPT_MINICEHEIGHT].cDimension, "length");
+  fvFormattedString(&options[OPT_MINICEHEIGHT].cDefault, "0.001"); // What units? XXX
+  fvFormattedString(&options[OPT_MINICEHEIGHT].cDimension, "length");
   options[OPT_MINICEHEIGHT].dDefault   = 0.001;
   options[OPT_MINICEHEIGHT].iType      = 2;
   options[OPT_MINICEHEIGHT].bMultiFile = 1;
   options[OPT_MINICEHEIGHT].dNeg       = 1; // Convert to SI
-  sprintf(options[OPT_MINICEHEIGHT].cNeg, "meters");
+  fvFormattedString(&options[OPT_MINICEHEIGHT].cNeg, "meters");
   fnRead[OPT_MINICEHEIGHT] = &ReadMinIceSheetHeight;
-  sprintf(options[OPT_MINICEHEIGHT].cLongDescr,
+  fvFormattedString(&options[OPT_MINICEHEIGHT].cLongDescr,
           "The minimum thickness of permanent ice in a latitude bin for it to "
           "be\n"
           "labeled ice-covered. In some cases, such as rapid thawing, a "
@@ -1796,9 +1796,9 @@ void VerifyOrbitOblData(BODY *body, CONTROL *control, OPTIONS *options,
               options[OPT_READORBITOBLDATA].cName, body[iBody].cName);
       exit(EXIT_INPUT);
     } else {
-      fileorb = fopen(body[iBody].cFileOrbitOblData, "r");
+      fileorb = fopen(body[iBody].sFileOrbitOblData, "r");
       if (fileorb == NULL) {
-        printf("ERROR: File %s not found.\n", body[iBody].cFileOrbitOblData);
+        printf("ERROR: File %s not found.\n", body[iBody].sFileOrbitOblData);
         exit(EXIT_INPUT);
       }
       iNLines = 0;
@@ -3330,7 +3330,7 @@ void WriteDailyInsol(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                      double *dTmp, char cUnit[]) {
 
-  char cOut[3 * NAMELEN];
+  char *cOut;
   FILE *fp;
   int iLat, iDay;
   double dTime;
@@ -3349,17 +3349,17 @@ void WriteDailyInsol(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (dTime == 0) {
 
-    sprintf(cOut, "SeasonalClimateFiles/%s.%s.DailyInsol.0", system->cName,
+    fvFormattedString(&cOut, "SeasonalClimateFiles/%s.%s.DailyInsol.0", system->cName,
             body[iBody].cName);
 
   } else if (dTime < 10000) {
 
-    sprintf(cOut, "SeasonalClimateFiles/%s.%s.DailyInsol.%.0f", system->cName,
+    fvFormattedString(&cOut, "SeasonalClimateFiles/%s.%s.DailyInsol.%.0f", system->cName,
             body[iBody].cName, dTime);
 
   } else {
 
-    sprintf(cOut, "SeasonalClimateFiles/%s.%s.DailyInsol.%.2e", system->cName,
+    fvFormattedString(&cOut, "SeasonalClimateFiles/%s.%s.DailyInsol.%.2e", system->cName,
             body[iBody].cName, dTime);
   }
 
@@ -3383,7 +3383,7 @@ void WritePlanckB(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
                   char cUnit[]) {
 
-  char cOut[3 * NAMELEN];
+  char *cOut;
   FILE *fp;
   int iLat, iDay;
   double dTime;
@@ -3402,17 +3402,17 @@ void WritePlanckB(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (dTime == 0) {
 
-    sprintf(cOut, "SeasonalClimateFiles/%s.%s.PlanckB.0", system->cName,
+    fvFormattedString(&cOut, "SeasonalClimateFiles/%s.%s.PlanckB.0", system->cName,
             body[iBody].cName);
 
   } else if (dTime < 10000) {
 
-    sprintf(cOut, "SeasonalClimateFiles/%s.%s.PlanckB.%.0f", system->cName,
+    fvFormattedString(&cOut, "SeasonalClimateFiles/%s.%s.PlanckB.%.0f", system->cName,
             body[iBody].cName, dTime);
 
   } else {
 
-    sprintf(cOut, "SeasonalClimateFiles/%s.%s.PlanckB.%.2e", system->cName,
+    fvFormattedString(&cOut, "SeasonalClimateFiles/%s.%s.PlanckB.%.2e", system->cName,
             body[iBody].cName, dTime);
   }
 
@@ -3437,7 +3437,7 @@ void WriteSeasonalTemp(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char cUnit[]) {
 
-  char cOut[3 * NAMELEN];
+  char *cOut;
   FILE *fp;
   int iLat, iDay;
   double dTime;
@@ -3456,17 +3456,17 @@ void WriteSeasonalTemp(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (dTime == 0) {
 
-    sprintf(cOut, "SeasonalClimateFiles/%s.%s.SeasonalTemp.0", system->cName,
+    fvFormattedString(&cOut, "SeasonalClimateFiles/%s.%s.SeasonalTemp.0", system->cName,
             body[iBody].cName);
 
   } else if (dTime < 10000) {
 
-    sprintf(cOut, "SeasonalClimateFiles/%s.%s.SeasonalTemp.%.0f", system->cName,
+    fvFormattedString(&cOut, "SeasonalClimateFiles/%s.%s.SeasonalTemp.%.0f", system->cName,
             body[iBody].cName, dTime);
 
   } else {
 
-    sprintf(cOut, "SeasonalClimateFiles/%s.%s.SeasonalTemp.%.2e", system->cName,
+    fvFormattedString(&cOut, "SeasonalClimateFiles/%s.%s.SeasonalTemp.%.2e", system->cName,
             body[iBody].cName, dTime);
   }
 
@@ -3493,8 +3493,7 @@ void WriteSeasonalFluxes(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
                          int iBody, double *dTmp, char cUnit[]) {
 
-  char cOutM[3 * NAMELEN], cOutI[3 * NAMELEN], cOutO[3 * NAMELEN],
-        cOutD[3 * NAMELEN];
+  char *cOutM, *cOutI, *cOutO, *cOutD;
   FILE *fpM, *fpI, *fpO, *fpD;
   int iLat, iDay;
   double dTime;
@@ -3513,35 +3512,35 @@ void WriteSeasonalFluxes(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (dTime == 0) {
 
-    sprintf(cOutM, "SeasonalClimateFiles/%s.%s.SeasonalFMerid.0", system->cName,
+    fvFormattedString(&cOutM, "SeasonalClimateFiles/%s.%s.SeasonalFMerid.0", system->cName,
             body[iBody].cName);
-    sprintf(cOutI, "SeasonalClimateFiles/%s.%s.SeasonalFIn.0", system->cName,
+    fvFormattedString(&cOutI, "SeasonalClimateFiles/%s.%s.SeasonalFIn.0", system->cName,
             body[iBody].cName);
-    sprintf(cOutO, "SeasonalClimateFiles/%s.%s.SeasonalFOut.0", system->cName,
+    fvFormattedString(&cOutO, "SeasonalClimateFiles/%s.%s.SeasonalFOut.0", system->cName,
             body[iBody].cName);
-    sprintf(cOutD, "SeasonalClimateFiles/%s.%s.SeasonalDivF.0", system->cName,
+    fvFormattedString(&cOutD, "SeasonalClimateFiles/%s.%s.SeasonalDivF.0", system->cName,
             body[iBody].cName);
 
   } else if (dTime < 10000) {
 
-    sprintf(cOutM, "SeasonalClimateFiles/%s.%s.SeasonalFMerid.%.0f",
+    fvFormattedString(&cOutM, "SeasonalClimateFiles/%s.%s.SeasonalFMerid.%.0f",
             system->cName, body[iBody].cName, dTime);
-    sprintf(cOutI, "SeasonalClimateFiles/%s.%s.SeasonalFIn.%.0f", system->cName,
+    fvFormattedString(&cOutI, "SeasonalClimateFiles/%s.%s.SeasonalFIn.%.0f", system->cName,
             body[iBody].cName, dTime);
-    sprintf(cOutO, "SeasonalClimateFiles/%s.%s.SeasonalFOut.%.0f",
+    fvFormattedString(&cOutO, "SeasonalClimateFiles/%s.%s.SeasonalFOut.%.0f",
             system->cName, body[iBody].cName, dTime);
-    sprintf(cOutD, "SeasonalClimateFiles/%s.%s.SeasonalDivF.%.0f",
+    fvFormattedString(&cOutD, "SeasonalClimateFiles/%s.%s.SeasonalDivF.%.0f",
             system->cName, body[iBody].cName, dTime);
 
   } else {
 
-    sprintf(cOutM, "SeasonalClimateFiles/%s.%s.SeasonalFMerid.%.2e",
+    fvFormattedString(&cOutM, "SeasonalClimateFiles/%s.%s.SeasonalFMerid.%.2e",
             system->cName, body[iBody].cName, dTime);
-    sprintf(cOutI, "SeasonalClimateFiles/%s.%s.SeasonalFIn.%.2e", system->cName,
+    fvFormattedString(&cOutI, "SeasonalClimateFiles/%s.%s.SeasonalFIn.%.2e", system->cName,
             body[iBody].cName, dTime);
-    sprintf(cOutO, "SeasonalClimateFiles/%s.%s.SeasonalFOut.%.2e",
+    fvFormattedString(&cOutO, "SeasonalClimateFiles/%s.%s.SeasonalFOut.%.2e",
             system->cName, body[iBody].cName, dTime);
-    sprintf(cOutD, "SeasonalClimateFiles/%s.%s.SeasonalDivF.%.2e",
+    fvFormattedString(&cOutD, "SeasonalClimateFiles/%s.%s.SeasonalDivF.%.2e",
             system->cName, body[iBody].cName, dTime);
   }
 
@@ -3590,7 +3589,7 @@ void WriteSeasonalIceBalance(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
                              int iBody, double *dTmp, char cUnit[]) {
 
-  char cOut[3 * NAMELEN];
+  char *cOut;
   FILE *fp;
   int iLat, iDay;
   double dTime;
@@ -3609,17 +3608,17 @@ void WriteSeasonalIceBalance(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (dTime == 0) {
 
-    sprintf(cOut, "SeasonalClimateFiles/%s.%s.SeasonalIceBalance.0",
+    fvFormattedString(&cOut, "SeasonalClimateFiles/%s.%s.SeasonalIceBalance.0",
             system->cName, body[iBody].cName);
 
   } else if (dTime < 10000) {
 
-    sprintf(cOut, "SeasonalClimateFiles/%s.%s.SeasonalIceBalance.%.0f",
+    fvFormattedString(&cOut, "SeasonalClimateFiles/%s.%s.SeasonalIceBalance.%.0f",
             system->cName, body[iBody].cName, dTime);
 
   } else {
 
-    sprintf(cOut, "SeasonalClimateFiles/%s.%s.SeasonalIceBalance.%.2e",
+    fvFormattedString(&cOut, "SeasonalClimateFiles/%s.%s.SeasonalIceBalance.%.2e",
             system->cName, body[iBody].cName, dTime);
   }
 
@@ -3909,9 +3908,9 @@ void WriteEnergyResW(BODY *body, CONTROL *control, OUTPUT *output,
 }
 
 void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
-  sprintf(output[OUT_TGLOBAL].cName, "TGlobal");
-  sprintf(output[OUT_TGLOBAL].cDescr, "Global mean temperature from POISE");
-  sprintf(output[OUT_TGLOBAL].cNeg, "Celsius");
+  fvFormattedString(&output[OUT_TGLOBAL].cName, "TGlobal");
+  fvFormattedString(&output[OUT_TGLOBAL].cDescr, "Global mean temperature from POISE");
+  fvFormattedString(&output[OUT_TGLOBAL].cNeg, "Celsius");
   output[OUT_TGLOBAL].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TGLOBAL].dNeg       = 1;
@@ -3919,77 +3918,77 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_TGLOBAL].iModuleBit = POISE;
   fnWrite[OUT_TGLOBAL]           = &WriteTGlobal;
 
-  sprintf(output[OUT_ALBEDOGLOBAL].cName, "AlbedoGlobal");
-  sprintf(output[OUT_ALBEDOGLOBAL].cDescr,
+  fvFormattedString(&output[OUT_ALBEDOGLOBAL].cName, "AlbedoGlobal");
+  fvFormattedString(&output[OUT_ALBEDOGLOBAL].cDescr,
           "Global mean bond albedo from POISE");
   output[OUT_ALBEDOGLOBAL].bNeg       = 0;
   output[OUT_ALBEDOGLOBAL].iNum       = 1;
   output[OUT_ALBEDOGLOBAL].iModuleBit = POISE;
   fnWrite[OUT_ALBEDOGLOBAL]           = &WriteAlbedoGlobal;
 
-  sprintf(output[OUT_SNOWBALL].cName, "Snowball");
-  sprintf(output[OUT_SNOWBALL].cDescr, "Is the planet in a snowball state?");
+  fvFormattedString(&output[OUT_SNOWBALL].cName, "Snowball");
+  fvFormattedString(&output[OUT_SNOWBALL].cDescr, "Is the planet in a snowball state?");
   output[OUT_SNOWBALL].bNeg       = 0;
   output[OUT_SNOWBALL].iNum       = 1;
   output[OUT_SNOWBALL].iModuleBit = POISE;
   fnWrite[OUT_SNOWBALL]           = &WriteSnowball;
 
-  sprintf(output[OUT_TOTICEMASS].cName, "TotIceMass");
-  sprintf(output[OUT_TOTICEMASS].cDescr, "Global total ice mass in ice sheets");
-  sprintf(output[OUT_TOTICEMASS].cNeg, "kg");
+  fvFormattedString(&output[OUT_TOTICEMASS].cName, "TotIceMass");
+  fvFormattedString(&output[OUT_TOTICEMASS].cDescr, "Global total ice mass in ice sheets");
+  fvFormattedString(&output[OUT_TOTICEMASS].cNeg, "kg");
   output[OUT_TOTICEMASS].bNeg       = 1;
   output[OUT_TOTICEMASS].iNum       = 1;
   output[OUT_TOTICEMASS].iModuleBit = POISE;
   fnWrite[OUT_TOTICEMASS]           = &WriteTotIceMass;
 
-  sprintf(output[OUT_TOTICEFLOW].cName, "TotIceFlow");
-  sprintf(output[OUT_TOTICEFLOW].cDescr,
+  fvFormattedString(&output[OUT_TOTICEFLOW].cName, "TotIceFlow");
+  fvFormattedString(&output[OUT_TOTICEFLOW].cDescr,
           "Global total ice flow in ice sheets (should = 0)");
-  sprintf(output[OUT_TOTICEFLOW].cNeg, "kg");
+  fvFormattedString(&output[OUT_TOTICEFLOW].cNeg, "kg");
   output[OUT_TOTICEFLOW].bNeg       = 1;
   output[OUT_TOTICEFLOW].iNum       = 1;
   output[OUT_TOTICEFLOW].iModuleBit = POISE;
   fnWrite[OUT_TOTICEFLOW]           = &WriteIceFlowTot;
 
-  sprintf(output[OUT_TOTICEBALANCE].cName, "TotIceBalance");
-  sprintf(output[OUT_TOTICEBALANCE].cDescr,
+  fvFormattedString(&output[OUT_TOTICEBALANCE].cName, "TotIceBalance");
+  fvFormattedString(&output[OUT_TOTICEBALANCE].cDescr,
           "Global total ice balance in ice sheets (this time step)");
-  sprintf(output[OUT_TOTICEBALANCE].cNeg, "kg");
+  fvFormattedString(&output[OUT_TOTICEBALANCE].cNeg, "kg");
   output[OUT_TOTICEBALANCE].bNeg       = 1;
   output[OUT_TOTICEBALANCE].iNum       = 1;
   output[OUT_TOTICEBALANCE].iModuleBit = POISE;
   fnWrite[OUT_TOTICEBALANCE]           = &WriteIceBalanceTot;
 
-  sprintf(output[OUT_FLUXINGLOBAL].cName, "FluxInGlobal");
-  sprintf(output[OUT_FLUXINGLOBAL].cDescr,
+  fvFormattedString(&output[OUT_FLUXINGLOBAL].cName, "FluxInGlobal");
+  fvFormattedString(&output[OUT_FLUXINGLOBAL].cDescr,
           "Global mean flux in (insol*(1-albedo)) from POISE");
   /* Sadly, Russell, we must set the negative option to W/m^2.
-  sprintf(output[OUT_FLUXINGLOBAL].cNeg,"pirate-ninjas/m^2");
+  fvFormattedString(output[OUT_FLUXINGLOBAL].cNeg,"pirate-ninjas/m^2");
   output[OUT_FLUXINGLOBAL].dNeg = 1/40.55185;
   */
   output[OUT_FLUXINGLOBAL].bNeg = 1;
   output[OUT_FLUXINGLOBAL].dNeg = 1; // Just in case
-  sprintf(output[OUT_FLUXINGLOBAL].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_FLUXINGLOBAL].cNeg, "W/m^2");
   output[OUT_FLUXINGLOBAL].iNum       = 1;
   output[OUT_FLUXINGLOBAL].iModuleBit = POISE;
   fnWrite[OUT_FLUXINGLOBAL]           = &WriteFluxInGlobal;
 
-  sprintf(output[OUT_FLUXOUTGLOBAL].cName, "FluxOutGlobal");
-  sprintf(output[OUT_FLUXOUTGLOBAL].cDescr, "Global mean flux out from POISE");
+  fvFormattedString(&output[OUT_FLUXOUTGLOBAL].cName, "FluxOutGlobal");
+  fvFormattedString(&output[OUT_FLUXOUTGLOBAL].cDescr, "Global mean flux out from POISE");
   /* Here, too
-  sprintf(output[OUT_FLUXOUTGLOBAL].cNeg,"pirate-ninjas/m^2");
+  fvFormattedString(output[OUT_FLUXOUTGLOBAL].cNeg,"pirate-ninjas/m^2");
   output[OUT_FLUXOUTGLOBAL].dNeg = 1/40.55185;
   */
   output[OUT_FLUXOUTGLOBAL].bNeg = 1;
   output[OUT_FLUXOUTGLOBAL].dNeg = 1;
-  sprintf(output[OUT_FLUXOUTGLOBAL].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_FLUXOUTGLOBAL].cNeg, "W/m^2");
   output[OUT_FLUXOUTGLOBAL].iNum       = 1;
   output[OUT_FLUXOUTGLOBAL].iModuleBit = POISE;
   fnWrite[OUT_FLUXOUTGLOBAL]           = &WriteFluxOutGlobal;
 
-  sprintf(output[OUT_TEMPLAT].cName, "TempLat");
-  sprintf(output[OUT_TEMPLAT].cDescr, "Surface temperature by latitude.");
-  sprintf(output[OUT_TEMPLAT].cNeg, "Celsius");
+  fvFormattedString(&output[OUT_TEMPLAT].cName, "TempLat");
+  fvFormattedString(&output[OUT_TEMPLAT].cDescr, "Surface temperature by latitude.");
+  fvFormattedString(&output[OUT_TEMPLAT].cNeg, "Celsius");
   output[OUT_TEMPLAT].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPLAT].dNeg       = 1;
@@ -3998,10 +3997,10 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_TEMPLAT].iModuleBit = POISE;
   fnWrite[OUT_TEMPLAT]           = &WriteTempLat;
 
-  sprintf(output[OUT_TEMPMINLAT].cName, "TempMinLat");
-  sprintf(output[OUT_TEMPMINLAT].cDescr,
+  fvFormattedString(&output[OUT_TEMPMINLAT].cName, "TempMinLat");
+  fvFormattedString(&output[OUT_TEMPMINLAT].cDescr,
           "Minimum surface temperature over a year by latitude.");
-  sprintf(output[OUT_TEMPMINLAT].cNeg, "Celsius");
+  fvFormattedString(&output[OUT_TEMPMINLAT].cNeg, "Celsius");
   output[OUT_TEMPMINLAT].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPMINLAT].dNeg       = 1;
@@ -4010,10 +4009,10 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_TEMPMINLAT].iModuleBit = POISE;
   fnWrite[OUT_TEMPMINLAT]           = &WriteTempMinLat;
 
-  sprintf(output[OUT_TEMPMAXLAT].cName, "TempMaxLat");
-  sprintf(output[OUT_TEMPMAXLAT].cDescr,
+  fvFormattedString(&output[OUT_TEMPMAXLAT].cName, "TempMaxLat");
+  fvFormattedString(&output[OUT_TEMPMAXLAT].cDescr,
           "Maximum surface temperature over a year by latitude.");
-  sprintf(output[OUT_TEMPMAXLAT].cNeg, "Celsius");
+  fvFormattedString(&output[OUT_TEMPMAXLAT].cNeg, "Celsius");
   output[OUT_TEMPMAXLAT].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPMAXLAT].dNeg       = 1;
@@ -4022,10 +4021,10 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_TEMPMAXLAT].iModuleBit = POISE;
   fnWrite[OUT_TEMPMAXLAT]           = &WriteTempMaxLat;
 
-  sprintf(output[OUT_TEMPMAXLAND].cName, "TempMaxLand");
-  sprintf(output[OUT_TEMPMAXLAND].cDescr,
+  fvFormattedString(&output[OUT_TEMPMAXLAND].cName, "TempMaxLand");
+  fvFormattedString(&output[OUT_TEMPMAXLAND].cDescr,
           "Maximum surface temperature on land");
-  sprintf(output[OUT_TEMPMAXLAND].cNeg, "Celsius");
+  fvFormattedString(&output[OUT_TEMPMAXLAND].cNeg, "Celsius");
   output[OUT_TEMPMAXLAND].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPMAXLAND].dNeg       = 1;
@@ -4034,10 +4033,10 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_TEMPMAXLAND].iModuleBit = POISE;
   fnWrite[OUT_TEMPMAXLAND]           = &WriteTempMaxLand;
 
-  sprintf(output[OUT_TEMPMAXWATER].cName, "TempMaxWater");
-  sprintf(output[OUT_TEMPMAXWATER].cDescr,
+  fvFormattedString(&output[OUT_TEMPMAXWATER].cName, "TempMaxWater");
+  fvFormattedString(&output[OUT_TEMPMAXWATER].cDescr,
           "Maximum surface temperature on water");
-  sprintf(output[OUT_TEMPMAXWATER].cNeg, "Celsius");
+  fvFormattedString(&output[OUT_TEMPMAXWATER].cNeg, "Celsius");
   output[OUT_TEMPMAXWATER].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPMAXWATER].dNeg       = 1;
@@ -4046,10 +4045,10 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_TEMPMAXWATER].iModuleBit = POISE;
   fnWrite[OUT_TEMPMAXWATER]           = &WriteTempMaxWater;
 
-  sprintf(output[OUT_TEMPLANDLAT].cName, "TempLandLat");
-  sprintf(output[OUT_TEMPLANDLAT].cDescr,
+  fvFormattedString(&output[OUT_TEMPLANDLAT].cName, "TempLandLat");
+  fvFormattedString(&output[OUT_TEMPLANDLAT].cDescr,
           "Land surface temperature by latitude.");
-  sprintf(output[OUT_TEMPLANDLAT].cNeg, "Celsius");
+  fvFormattedString(&output[OUT_TEMPLANDLAT].cNeg, "Celsius");
   output[OUT_TEMPLANDLAT].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPLANDLAT].dNeg  = 1;
@@ -4057,10 +4056,10 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_TEMPLANDLAT].bGrid = 1;
   fnWrite[OUT_TEMPLANDLAT]      = &WriteTempLandLat;
 
-  sprintf(output[OUT_TEMPWATERLAT].cName, "TempWaterLat");
-  sprintf(output[OUT_TEMPWATERLAT].cDescr,
+  fvFormattedString(&output[OUT_TEMPWATERLAT].cName, "TempWaterLat");
+  fvFormattedString(&output[OUT_TEMPWATERLAT].cDescr,
           "Water surface temperature by latitude.");
-  sprintf(output[OUT_TEMPWATERLAT].cNeg, "Celsius");
+  fvFormattedString(&output[OUT_TEMPWATERLAT].cNeg, "Celsius");
   output[OUT_TEMPWATERLAT].bNeg = 1;
   // conversion is hardcoded in write function
   output[OUT_TEMPWATERLAT].dNeg  = 1;
@@ -4068,9 +4067,9 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_TEMPWATERLAT].bGrid = 1;
   fnWrite[OUT_TEMPWATERLAT]      = &WriteTempWaterLat;
 
-  sprintf(output[OUT_LATITUDE].cName, "Latitude");
-  sprintf(output[OUT_LATITUDE].cDescr, "Latitude.");
-  sprintf(output[OUT_LATITUDE].cNeg, "deg");
+  fvFormattedString(&output[OUT_LATITUDE].cName, "Latitude");
+  fvFormattedString(&output[OUT_LATITUDE].cDescr, "Latitude.");
+  fvFormattedString(&output[OUT_LATITUDE].cNeg, "deg");
   output[OUT_LATITUDE].bNeg       = 1;
   output[OUT_LATITUDE].dNeg       = 1 / DEGRAD;
   output[OUT_LATITUDE].iNum       = 1;
@@ -4078,32 +4077,32 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_LATITUDE].iModuleBit = POISE;
   fnWrite[OUT_LATITUDE]           = &WriteLatitude;
 
-  sprintf(output[OUT_ALBEDOLAT].cName, "AlbedoLat");
-  sprintf(output[OUT_ALBEDOLAT].cDescr, "Surface albedo by latitude.");
+  fvFormattedString(&output[OUT_ALBEDOLAT].cName, "AlbedoLat");
+  fvFormattedString(&output[OUT_ALBEDOLAT].cDescr, "Surface albedo by latitude.");
   output[OUT_ALBEDOLAT].bNeg       = 0;
   output[OUT_ALBEDOLAT].iNum       = 1;
   output[OUT_ALBEDOLAT].bGrid      = 1;
   output[OUT_ALBEDOLAT].iModuleBit = POISE;
   fnWrite[OUT_ALBEDOLAT]           = &WriteAlbedoLat;
 
-  sprintf(output[OUT_ALBEDOLANDLAT].cName, "AlbedoLandLat");
-  sprintf(output[OUT_ALBEDOLANDLAT].cDescr, "Land surface albedo by latitude.");
+  fvFormattedString(&output[OUT_ALBEDOLANDLAT].cName, "AlbedoLandLat");
+  fvFormattedString(&output[OUT_ALBEDOLANDLAT].cDescr, "Land surface albedo by latitude.");
   output[OUT_ALBEDOLANDLAT].bNeg  = 0;
   output[OUT_ALBEDOLANDLAT].iNum  = 1;
   output[OUT_ALBEDOLANDLAT].bGrid = 1;
   fnWrite[OUT_ALBEDOLANDLAT]      = &WriteAlbedoLandLat;
 
-  sprintf(output[OUT_ALBEDOWATERLAT].cName, "AlbedoWaterLat");
-  sprintf(output[OUT_ALBEDOWATERLAT].cDescr,
+  fvFormattedString(&output[OUT_ALBEDOWATERLAT].cName, "AlbedoWaterLat");
+  fvFormattedString(&output[OUT_ALBEDOWATERLAT].cDescr,
           "Water surface albedo by latitude.");
   output[OUT_ALBEDOWATERLAT].bNeg  = 0;
   output[OUT_ALBEDOWATERLAT].iNum  = 1;
   output[OUT_ALBEDOWATERLAT].bGrid = 1;
   fnWrite[OUT_ALBEDOWATERLAT]      = &WriteAlbedoWaterLat;
 
-  sprintf(output[OUT_ANNUALINSOL].cName, "AnnInsol");
-  sprintf(output[OUT_ANNUALINSOL].cDescr, "Annual insolation by latitude.");
-  sprintf(output[OUT_ANNUALINSOL].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_ANNUALINSOL].cName, "AnnInsol");
+  fvFormattedString(&output[OUT_ANNUALINSOL].cDescr, "Annual insolation by latitude.");
+  fvFormattedString(&output[OUT_ANNUALINSOL].cNeg, "W/m^2");
   output[OUT_ANNUALINSOL].bNeg       = 1;
   output[OUT_ANNUALINSOL].dNeg       = 1 / 40.55185;
   output[OUT_ANNUALINSOL].iNum       = 1;
@@ -4111,9 +4110,9 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ANNUALINSOL].iModuleBit = POISE;
   fnWrite[OUT_ANNUALINSOL]           = &WriteAnnualInsol;
 
-  sprintf(output[OUT_PEAKINSOL].cName, "PeakInsol");
-  sprintf(output[OUT_PEAKINSOL].cDescr, "Peak insolation by latitude.");
-  sprintf(output[OUT_PEAKINSOL].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_PEAKINSOL].cName, "PeakInsol");
+  fvFormattedString(&output[OUT_PEAKINSOL].cDescr, "Peak insolation by latitude.");
+  fvFormattedString(&output[OUT_PEAKINSOL].cNeg, "W/m^2");
   output[OUT_PEAKINSOL].bNeg       = 1;
   output[OUT_PEAKINSOL].dNeg       = 1 / 40.55185;
   output[OUT_PEAKINSOL].iNum       = 1;
@@ -4121,10 +4120,10 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_PEAKINSOL].iModuleBit = POISE;
   fnWrite[OUT_PEAKINSOL]           = &WritePeakInsol;
 
-  sprintf(output[OUT_FLUXMERID].cName, "FluxMerid");
-  sprintf(output[OUT_FLUXMERID].cDescr,
+  fvFormattedString(&output[OUT_FLUXMERID].cName, "FluxMerid");
+  fvFormattedString(&output[OUT_FLUXMERID].cDescr,
           "Total meridional (northward) flux by latitude");
-  sprintf(output[OUT_FLUXMERID].cNeg, "PW");
+  fvFormattedString(&output[OUT_FLUXMERID].cNeg, "PW");
   output[OUT_FLUXMERID].bNeg       = 1;
   output[OUT_FLUXMERID].dNeg       = 1e-15;
   output[OUT_FLUXMERID].iNum       = 1;
@@ -4132,9 +4131,9 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_FLUXMERID].iModuleBit = POISE;
   fnWrite[OUT_FLUXMERID]           = &WriteFluxMerid;
 
-  sprintf(output[OUT_FLUXIN].cName, "FluxIn");
-  sprintf(output[OUT_FLUXIN].cDescr, "Incoming flux by latitude");
-  sprintf(output[OUT_FLUXIN].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_FLUXIN].cName, "FluxIn");
+  fvFormattedString(&output[OUT_FLUXIN].cDescr, "Incoming flux by latitude");
+  fvFormattedString(&output[OUT_FLUXIN].cNeg, "W/m^2");
   output[OUT_FLUXIN].bNeg       = 1;
   output[OUT_FLUXIN].dNeg       = 1;
   output[OUT_FLUXIN].iNum       = 1;
@@ -4142,9 +4141,9 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_FLUXIN].iModuleBit = POISE;
   fnWrite[OUT_FLUXIN]           = &WriteFluxIn;
 
-  sprintf(output[OUT_FLUXOUT].cName, "FluxOut");
-  sprintf(output[OUT_FLUXOUT].cDescr, "Outgoing (spaceward) flux by latitude");
-  sprintf(output[OUT_FLUXOUT].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_FLUXOUT].cName, "FluxOut");
+  fvFormattedString(&output[OUT_FLUXOUT].cDescr, "Outgoing (spaceward) flux by latitude");
+  fvFormattedString(&output[OUT_FLUXOUT].cNeg, "W/m^2");
   output[OUT_FLUXOUT].bNeg       = 1;
   output[OUT_FLUXOUT].dNeg       = 1;
   output[OUT_FLUXOUT].iNum       = 1;
@@ -4152,10 +4151,10 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_FLUXOUT].iModuleBit = POISE;
   fnWrite[OUT_FLUXOUT]           = &WriteFluxOut;
 
-  sprintf(output[OUT_DIVFLUX].cName, "DivFlux");
-  sprintf(output[OUT_DIVFLUX].cDescr,
+  fvFormattedString(&output[OUT_DIVFLUX].cName, "DivFlux");
+  fvFormattedString(&output[OUT_DIVFLUX].cDescr,
           "Divergence of flux (flow into adjacent cells) by latitude");
-  sprintf(output[OUT_DIVFLUX].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_DIVFLUX].cNeg, "W/m^2");
   output[OUT_DIVFLUX].bNeg       = 1;
   output[OUT_DIVFLUX].dNeg       = 1;
   output[OUT_DIVFLUX].iNum       = 1;
@@ -4163,9 +4162,9 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_DIVFLUX].iModuleBit = POISE;
   fnWrite[OUT_DIVFLUX]           = &WriteDivFlux;
 
-  sprintf(output[OUT_ICEMASS].cName, "IceMass");
-  sprintf(output[OUT_ICEMASS].cDescr, "Mass of ice sheets/area by latitude");
-  sprintf(output[OUT_ICEMASS].cNeg, "kg/m^2");
+  fvFormattedString(&output[OUT_ICEMASS].cName, "IceMass");
+  fvFormattedString(&output[OUT_ICEMASS].cDescr, "Mass of ice sheets/area by latitude");
+  fvFormattedString(&output[OUT_ICEMASS].cNeg, "kg/m^2");
   output[OUT_ICEMASS].bNeg       = 1;
   output[OUT_ICEMASS].dNeg       = 1;
   output[OUT_ICEMASS].iNum       = 1;
@@ -4173,9 +4172,9 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ICEMASS].iModuleBit = POISE;
   fnWrite[OUT_ICEMASS]           = &WriteIceMass;
 
-  sprintf(output[OUT_ICEHEIGHT].cName, "IceHeight");
-  sprintf(output[OUT_ICEHEIGHT].cDescr, "Height of ice sheets");
-  sprintf(output[OUT_ICEHEIGHT].cNeg, "m");
+  fvFormattedString(&output[OUT_ICEHEIGHT].cName, "IceHeight");
+  fvFormattedString(&output[OUT_ICEHEIGHT].cDescr, "Height of ice sheets");
+  fvFormattedString(&output[OUT_ICEHEIGHT].cNeg, "m");
   output[OUT_ICEHEIGHT].bNeg       = 1;
   output[OUT_ICEHEIGHT].dNeg       = 1;
   output[OUT_ICEHEIGHT].iNum       = 1;
@@ -4183,10 +4182,10 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ICEHEIGHT].iModuleBit = POISE;
   fnWrite[OUT_ICEHEIGHT]           = &WriteIceHeight;
 
-  sprintf(output[OUT_DICEMASSDT].cName, "DIceMassDt");
-  sprintf(output[OUT_DICEMASSDT].cDescr,
+  fvFormattedString(&output[OUT_DICEMASSDT].cName, "DIceMassDt");
+  fvFormattedString(&output[OUT_DICEMASSDT].cDescr,
           "derivative of mass of ice sheets/area by latitude");
-  sprintf(output[OUT_DICEMASSDT].cNeg, "kg/m^2/s");
+  fvFormattedString(&output[OUT_DICEMASSDT].cNeg, "kg/m^2/s");
   output[OUT_DICEMASSDT].bNeg       = 1;
   output[OUT_DICEMASSDT].dNeg       = 1;
   output[OUT_DICEMASSDT].iNum       = 1;
@@ -4194,10 +4193,10 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_DICEMASSDT].iModuleBit = POISE;
   fnWrite[OUT_DICEMASSDT]           = &WriteDIceMassDt;
 
-  sprintf(output[OUT_ICEACCUM].cName, "IceAccum");
-  sprintf(output[OUT_ICEACCUM].cDescr,
+  fvFormattedString(&output[OUT_ICEACCUM].cName, "IceAccum");
+  fvFormattedString(&output[OUT_ICEACCUM].cDescr,
           "Ice growth per orbit (accumulation only)");
-  sprintf(output[OUT_ICEACCUM].cNeg, "m/orbit");
+  fvFormattedString(&output[OUT_ICEACCUM].cNeg, "m/orbit");
   output[OUT_ICEACCUM].bNeg       = 1;
   output[OUT_ICEACCUM].dNeg       = 1;
   output[OUT_ICEACCUM].iNum       = 1;
@@ -4205,9 +4204,9 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ICEACCUM].iModuleBit = POISE;
   fnWrite[OUT_ICEACCUM]           = &WriteIceAccum;
 
-  sprintf(output[OUT_ICEABLATE].cName, "IceAblate");
-  sprintf(output[OUT_ICEABLATE].cDescr, "ice decay per orbit (ablation only)");
-  sprintf(output[OUT_ICEABLATE].cNeg, "m/orbit");
+  fvFormattedString(&output[OUT_ICEABLATE].cName, "IceAblate");
+  fvFormattedString(&output[OUT_ICEABLATE].cDescr, "ice decay per orbit (ablation only)");
+  fvFormattedString(&output[OUT_ICEABLATE].cNeg, "m/orbit");
   output[OUT_ICEABLATE].bNeg       = 1;
   output[OUT_ICEABLATE].dNeg       = 1;
   output[OUT_ICEABLATE].iNum       = 1;
@@ -4215,9 +4214,9 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ICEABLATE].iModuleBit = POISE;
   fnWrite[OUT_ICEABLATE]           = &WriteIceAblate;
 
-  sprintf(output[OUT_ICEFLOW].cName, "IceFlow");
-  sprintf(output[OUT_ICEFLOW].cDescr, "flow of ice sheets/area by latitude");
-  sprintf(output[OUT_ICEFLOW].cNeg, "m/s");
+  fvFormattedString(&output[OUT_ICEFLOW].cName, "IceFlow");
+  fvFormattedString(&output[OUT_ICEFLOW].cDescr, "flow of ice sheets/area by latitude");
+  fvFormattedString(&output[OUT_ICEFLOW].cNeg, "m/s");
   output[OUT_ICEFLOW].bNeg       = 1;
   output[OUT_ICEFLOW].dNeg       = 1;
   output[OUT_ICEFLOW].iNum       = 1;
@@ -4225,9 +4224,9 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ICEFLOW].iModuleBit = POISE;
   fnWrite[OUT_ICEFLOW]           = &WriteDIceMassDtFlow;
 
-  sprintf(output[OUT_BEDROCKH].cName, "BedrockH");
-  sprintf(output[OUT_BEDROCKH].cDescr, "height/depth of bedrock");
-  sprintf(output[OUT_BEDROCKH].cNeg, "m");
+  fvFormattedString(&output[OUT_BEDROCKH].cName, "BedrockH");
+  fvFormattedString(&output[OUT_BEDROCKH].cDescr, "height/depth of bedrock");
+  fvFormattedString(&output[OUT_BEDROCKH].cNeg, "m");
   output[OUT_BEDROCKH].bNeg       = 1;
   output[OUT_BEDROCKH].dNeg       = 1;
   output[OUT_BEDROCKH].iNum       = 1;
@@ -4235,9 +4234,9 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_BEDROCKH].iModuleBit = POISE;
   fnWrite[OUT_BEDROCKH]           = &WriteBedrockH;
 
-  sprintf(output[OUT_ENERGYRESL].cName, "EnergyResL");
-  sprintf(output[OUT_ENERGYRESL].cDescr, "Energy residual on land");
-  sprintf(output[OUT_ENERGYRESL].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_ENERGYRESL].cName, "EnergyResL");
+  fvFormattedString(&output[OUT_ENERGYRESL].cDescr, "Energy residual on land");
+  fvFormattedString(&output[OUT_ENERGYRESL].cNeg, "W/m^2");
   output[OUT_ENERGYRESL].bNeg       = 1;
   output[OUT_ENERGYRESL].dNeg       = 1;
   output[OUT_ENERGYRESL].iNum       = 1;
@@ -4245,9 +4244,9 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ENERGYRESL].iModuleBit = POISE;
   fnWrite[OUT_ENERGYRESL]           = &WriteEnergyResL;
 
-  sprintf(output[OUT_ENERGYRESW].cName, "EnergyResW");
-  sprintf(output[OUT_ENERGYRESW].cDescr, "Energy residual over water");
-  sprintf(output[OUT_ENERGYRESW].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_ENERGYRESW].cName, "EnergyResW");
+  fvFormattedString(&output[OUT_ENERGYRESW].cDescr, "Energy residual over water");
+  fvFormattedString(&output[OUT_ENERGYRESW].cNeg, "W/m^2");
   output[OUT_ENERGYRESW].bNeg       = 1;
   output[OUT_ENERGYRESW].dNeg       = 1;
   output[OUT_ENERGYRESW].iNum       = 1;
@@ -4255,196 +4254,196 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ENERGYRESW].iModuleBit = POISE;
   fnWrite[OUT_ENERGYRESW]           = &WriteEnergyResW;
 
-  sprintf(output[OUT_SKIPSEAS].cName, "SkipSeas");
-  sprintf(output[OUT_SKIPSEAS].cDescr,
+  fvFormattedString(&output[OUT_SKIPSEAS].cName, "SkipSeas");
+  fvFormattedString(&output[OUT_SKIPSEAS].cDescr,
           "Is Seasonal model skipped due to RGH or snowball?");
   output[OUT_SKIPSEAS].bNeg       = 0;
   output[OUT_SKIPSEAS].iNum       = 1;
   output[OUT_SKIPSEAS].iModuleBit = POISE;
   fnWrite[OUT_SKIPSEAS]           = &WriteSkipSeas;
 
-  sprintf(output[OUT_PLANCKBAVG].cName, "PlanckBAvg");
-  sprintf(output[OUT_PLANCKBAVG].cDescr, "Annually averaged Planck B coeff");
-  sprintf(output[OUT_PLANCKBAVG].cNeg, "W/m^2/C");
+  fvFormattedString(&output[OUT_PLANCKBAVG].cName, "PlanckBAvg");
+  fvFormattedString(&output[OUT_PLANCKBAVG].cDescr, "Annually averaged Planck B coeff");
+  fvFormattedString(&output[OUT_PLANCKBAVG].cNeg, "W/m^2/C");
   output[OUT_PLANCKBAVG].bNeg       = 0;
   output[OUT_PLANCKBAVG].iNum       = 1;
   output[OUT_PLANCKBAVG].bGrid      = 1;
   output[OUT_PLANCKBAVG].iModuleBit = POISE;
   fnWrite[OUT_PLANCKBAVG]           = &WritePlanckBAvg;
 
-  sprintf(output[OUT_AREAICECOV].cName, "AreaIceCov");
-  sprintf(output[OUT_AREAICECOV].cDescr, "Fractional area ice covered");
-  sprintf(output[OUT_AREAICECOV].cNeg, " ");
+  fvFormattedString(&output[OUT_AREAICECOV].cName, "AreaIceCov");
+  fvFormattedString(&output[OUT_AREAICECOV].cDescr, "Fractional area ice covered");
+  fvFormattedString(&output[OUT_AREAICECOV].cNeg, " ");
   output[OUT_AREAICECOV].bNeg       = 1;
   output[OUT_AREAICECOV].iNum       = 1;
   output[OUT_AREAICECOV].iModuleBit = POISE;
   fnWrite[OUT_AREAICECOV]           = &WriteAreaIceCov;
 
-  sprintf(output[OUT_NORTHICECAPLAND].cName, "IceCapNorthLand");
-  sprintf(output[OUT_NORTHICECAPLAND].cDescr,
+  fvFormattedString(&output[OUT_NORTHICECAPLAND].cName, "IceCapNorthLand");
+  fvFormattedString(&output[OUT_NORTHICECAPLAND].cDescr,
           "Does the planet have a northern polar ice cap on land?");
   output[OUT_NORTHICECAPLAND].bNeg       = 0;
   output[OUT_NORTHICECAPLAND].iNum       = 1;
   output[OUT_NORTHICECAPLAND].iModuleBit = POISE;
   fnWrite[OUT_NORTHICECAPLAND]           = &WriteIceCapNorthLand;
 
-  sprintf(output[OUT_NORTHICECAPSEA].cName, "IceCapNorthSea");
-  sprintf(output[OUT_NORTHICECAPSEA].cDescr,
+  fvFormattedString(&output[OUT_NORTHICECAPSEA].cName, "IceCapNorthSea");
+  fvFormattedString(&output[OUT_NORTHICECAPSEA].cDescr,
           "Does the planet have a northern polar sea ice cap");
   output[OUT_NORTHICECAPSEA].bNeg       = 0;
   output[OUT_NORTHICECAPSEA].iNum       = 1;
   output[OUT_NORTHICECAPSEA].iModuleBit = POISE;
   fnWrite[OUT_NORTHICECAPSEA]           = &WriteIceCapNorthSea;
 
-  sprintf(output[OUT_SOUTHICECAPLAND].cName, "IceCapSouthLand");
-  sprintf(output[OUT_SOUTHICECAPLAND].cDescr,
+  fvFormattedString(&output[OUT_SOUTHICECAPLAND].cName, "IceCapSouthLand");
+  fvFormattedString(&output[OUT_SOUTHICECAPLAND].cDescr,
           "Does the planet have a southern polar ice cap on land?");
   output[OUT_SOUTHICECAPLAND].bNeg       = 0;
   output[OUT_SOUTHICECAPLAND].iNum       = 1;
   output[OUT_SOUTHICECAPLAND].iModuleBit = POISE;
   fnWrite[OUT_SOUTHICECAPLAND]           = &WriteIceCapSouthLand;
 
-  sprintf(output[OUT_SOUTHICECAPSEA].cName, "IceCapSouthSea");
-  sprintf(output[OUT_SOUTHICECAPSEA].cDescr,
+  fvFormattedString(&output[OUT_SOUTHICECAPSEA].cName, "IceCapSouthSea");
+  fvFormattedString(&output[OUT_SOUTHICECAPSEA].cDescr,
           "Does the planet have a southern polar sea ice cap?");
   output[OUT_SOUTHICECAPSEA].bNeg       = 0;
   output[OUT_SOUTHICECAPSEA].iNum       = 1;
   output[OUT_SOUTHICECAPSEA].iModuleBit = POISE;
   fnWrite[OUT_SOUTHICECAPSEA]           = &WriteIceCapSouthSea;
 
-  sprintf(output[OUT_ICEBELTLAND].cName, "IceBeltLand");
-  sprintf(output[OUT_ICEBELTLAND].cDescr,
+  fvFormattedString(&output[OUT_ICEBELTLAND].cName, "IceBeltLand");
+  fvFormattedString(&output[OUT_ICEBELTLAND].cDescr,
           "Does the planet have a land ice belt?");
   output[OUT_ICEBELTLAND].bNeg       = 0;
   output[OUT_ICEBELTLAND].iNum       = 1;
   output[OUT_ICEBELTLAND].iModuleBit = POISE;
   fnWrite[OUT_ICEBELTLAND]           = &WriteIceBeltLand;
 
-  sprintf(output[OUT_ICEBELTSEA].cName, "IceBeltSea");
-  sprintf(output[OUT_ICEBELTSEA].cDescr,
+  fvFormattedString(&output[OUT_ICEBELTSEA].cName, "IceBeltSea");
+  fvFormattedString(&output[OUT_ICEBELTSEA].cDescr,
           "Does the planet have a sea ice belt?");
   output[OUT_ICEBELTSEA].bNeg       = 0;
   output[OUT_ICEBELTSEA].iNum       = 1;
   output[OUT_ICEBELTSEA].iModuleBit = POISE;
   fnWrite[OUT_ICEBELTSEA]           = &WriteIceBeltSea;
 
-  sprintf(output[OUT_SNOWBALLLAND].cName, "SnowballLand");
-  sprintf(output[OUT_SNOWBALLLAND].cDescr, "Is all land covered in ice?");
+  fvFormattedString(&output[OUT_SNOWBALLLAND].cName, "SnowballLand");
+  fvFormattedString(&output[OUT_SNOWBALLLAND].cDescr, "Is all land covered in ice?");
   output[OUT_SNOWBALLLAND].bNeg       = 0;
   output[OUT_SNOWBALLLAND].iNum       = 1;
   output[OUT_SNOWBALLLAND].iModuleBit = POISE;
   fnWrite[OUT_SNOWBALLLAND]           = &WriteSnowballLand;
 
-  sprintf(output[OUT_SNOWBALLSEA].cName, "SnowballSea");
-  sprintf(output[OUT_SNOWBALLSEA].cDescr, "Is all sea covered in ice?");
+  fvFormattedString(&output[OUT_SNOWBALLSEA].cName, "SnowballSea");
+  fvFormattedString(&output[OUT_SNOWBALLSEA].cDescr, "Is all sea covered in ice?");
   output[OUT_SNOWBALLSEA].bNeg       = 0;
   output[OUT_SNOWBALLSEA].iNum       = 1;
   output[OUT_SNOWBALLSEA].iModuleBit = POISE;
   fnWrite[OUT_SNOWBALLSEA]           = &WriteSnowballSea;
 
-  sprintf(output[OUT_ICEFREE].cName, "IceFree");
-  sprintf(output[OUT_ICEFREE].cDescr,
+  fvFormattedString(&output[OUT_ICEFREE].cName, "IceFree");
+  fvFormattedString(&output[OUT_ICEFREE].cDescr,
           "Is the planet free of sea and land ice?");
   output[OUT_ICEFREE].bNeg       = 0;
   output[OUT_ICEFREE].iNum       = 1;
   output[OUT_ICEFREE].iModuleBit = POISE;
   fnWrite[OUT_ICEFREE]           = &WriteIceFree;
 
-  sprintf(output[OUT_NORTHICECAPLATLAND].cName, "IceCapNorthLatLand");
-  sprintf(output[OUT_NORTHICECAPLATLAND].cDescr,
+  fvFormattedString(&output[OUT_NORTHICECAPLATLAND].cName, "IceCapNorthLatLand");
+  fvFormattedString(&output[OUT_NORTHICECAPLATLAND].cDescr,
           "Southernmost extent of northern land ice cap.");
   output[OUT_NORTHICECAPLATLAND].bNeg       = 0;
   output[OUT_NORTHICECAPLATLAND].iNum       = 1;
   output[OUT_NORTHICECAPLATLAND].iModuleBit = POISE;
   fnWrite[OUT_NORTHICECAPLATLAND]           = &WriteIceCapNorthLatLand;
-  sprintf(output[OUT_NORTHICECAPLATLAND].cLongDescr,
+  fvFormattedString(&output[OUT_NORTHICECAPLATLAND].cLongDescr,
           "If a northern land ice cap is present, return the latitude of its "
           "southern edge. If not present, return +100 degrees.");
 
-  sprintf(output[OUT_NORTHICECAPLATSEA].cName, "IceCapNorthLatSea");
-  sprintf(output[OUT_NORTHICECAPLATSEA].cDescr,
+  fvFormattedString(&output[OUT_NORTHICECAPLATSEA].cName, "IceCapNorthLatSea");
+  fvFormattedString(&output[OUT_NORTHICECAPLATSEA].cDescr,
           "Southernmost extent of northern sea ice cap.");
   output[OUT_NORTHICECAPLATSEA].bNeg       = 0;
   output[OUT_NORTHICECAPLATSEA].iNum       = 1;
   output[OUT_NORTHICECAPLATSEA].iModuleBit = POISE;
   fnWrite[OUT_NORTHICECAPLATSEA]           = &WriteIceCapNorthLatSea;
-  sprintf(output[OUT_NORTHICECAPLATSEA].cLongDescr,
+  fvFormattedString(&output[OUT_NORTHICECAPLATSEA].cLongDescr,
           "If a northern sea ice cap is present, return the latitude of its "
           "southern edge. If not present, return +100 degrees.");
 
-  sprintf(output[OUT_SOUTHICECAPLATLAND].cName, "IceCapSouthLatLand");
-  sprintf(output[OUT_SOUTHICECAPLATLAND].cDescr,
+  fvFormattedString(&output[OUT_SOUTHICECAPLATLAND].cName, "IceCapSouthLatLand");
+  fvFormattedString(&output[OUT_SOUTHICECAPLATLAND].cDescr,
           "Northernmost extent of southern land ice cap.");
   output[OUT_SOUTHICECAPLATLAND].bNeg       = 0;
   output[OUT_SOUTHICECAPLATLAND].iNum       = 1;
   output[OUT_SOUTHICECAPLATLAND].iModuleBit = POISE;
   fnWrite[OUT_SOUTHICECAPLATLAND]           = &WriteIceCapSouthLatLand;
-  sprintf(output[OUT_SOUTHICECAPLATLAND].cLongDescr,
+  fvFormattedString(&output[OUT_SOUTHICECAPLATLAND].cLongDescr,
           "If a southern land ice cap is present, return the latitude of its "
           "northern edge. If not present, return -100 degrees.");
 
-  sprintf(output[OUT_SOUTHICECAPLATSEA].cName, "IceCapSouthLatSea");
-  sprintf(output[OUT_SOUTHICECAPLATSEA].cDescr,
+  fvFormattedString(&output[OUT_SOUTHICECAPLATSEA].cName, "IceCapSouthLatSea");
+  fvFormattedString(&output[OUT_SOUTHICECAPLATSEA].cDescr,
           "Northernmost extent of southern sea ice cap.");
   output[OUT_SOUTHICECAPLATSEA].bNeg       = 0;
   output[OUT_SOUTHICECAPLATSEA].iNum       = 1;
   output[OUT_SOUTHICECAPLATSEA].iModuleBit = POISE;
   fnWrite[OUT_SOUTHICECAPLATSEA]           = &WriteIceCapSouthLatLand;
-  sprintf(output[OUT_SOUTHICECAPLATSEA].cLongDescr,
+  fvFormattedString(&output[OUT_SOUTHICECAPLATSEA].cLongDescr,
           "If a southern sea ice cap is present, return the latitude of its "
           "northern edge. If not present, return -100 degrees.");
 
-  sprintf(output[OUT_NORTHICEBELTLATLAND].cName, "IceBeltNorthLatLand");
-  sprintf(output[OUT_NORTHICEBELTLATLAND].cDescr,
+  fvFormattedString(&output[OUT_NORTHICEBELTLATLAND].cName, "IceBeltNorthLatLand");
+  fvFormattedString(&output[OUT_NORTHICEBELTLATLAND].cDescr,
           "Northernmost extent of land ice belt.");
   output[OUT_NORTHICEBELTLATLAND].bNeg       = 0;
   output[OUT_NORTHICEBELTLATLAND].iNum       = 1;
   output[OUT_NORTHICEBELTLATLAND].iModuleBit = POISE;
   fnWrite[OUT_NORTHICEBELTLATLAND]           = &WriteIceBeltNorthLatLand;
-  sprintf(
-        output[OUT_NORTHICEBELTLATLAND].cLongDescr,
+  fvFormattedString(
+        &output[OUT_NORTHICEBELTLATLAND].cLongDescr,
         "If a land ice belt is present, return the latitude of its northern "
         "edge. "
         "If not present, return 0. Note that some ice belts may in fact have a "
         "northern edge at the equator.");
 
-  sprintf(output[OUT_NORTHICEBELTLATSEA].cName, "IceBeltNorthLatSea");
-  sprintf(output[OUT_NORTHICEBELTLATSEA].cDescr,
+  fvFormattedString(&output[OUT_NORTHICEBELTLATSEA].cName, "IceBeltNorthLatSea");
+  fvFormattedString(&output[OUT_NORTHICEBELTLATSEA].cDescr,
           "Northernmost extent of sea ice belt.");
   output[OUT_NORTHICEBELTLATSEA].bNeg       = 0;
   output[OUT_NORTHICEBELTLATSEA].iNum       = 1;
   output[OUT_NORTHICEBELTLATSEA].iModuleBit = POISE;
   fnWrite[OUT_NORTHICEBELTLATSEA]           = &WriteIceBeltNorthLatSea;
-  sprintf(
-        output[OUT_NORTHICEBELTLATSEA].cLongDescr,
+  fvFormattedString(
+        &output[OUT_NORTHICEBELTLATSEA].cLongDescr,
         "If a sea ice belt is present, return the latitude of its northern "
         "edge. "
         "If not present, return 0. Note that some ice belts may in fact have a "
         "northern edge at the equator.");
 
-  sprintf(output[OUT_SOUTHICEBELTLATLAND].cName, "IceBeltSouthLatLand");
-  sprintf(output[OUT_SOUTHICEBELTLATLAND].cDescr,
+  fvFormattedString(&output[OUT_SOUTHICEBELTLATLAND].cName, "IceBeltSouthLatLand");
+  fvFormattedString(&output[OUT_SOUTHICEBELTLATLAND].cDescr,
           "Southernmost extent of land ice belt.");
   output[OUT_SOUTHICEBELTLATLAND].bNeg       = 0;
   output[OUT_SOUTHICEBELTLATLAND].iNum       = 1;
   output[OUT_SOUTHICEBELTLATLAND].iModuleBit = POISE;
   fnWrite[OUT_SOUTHICEBELTLATLAND]           = &WriteIceBeltSouthLatLand;
-  sprintf(
-        output[OUT_SOUTHICEBELTLATLAND].cLongDescr,
+  fvFormattedString(
+        &output[OUT_SOUTHICEBELTLATLAND].cLongDescr,
         "If a land ice belt is present, return the latitude of its southern "
         "edge. "
         "If not present, return 0. Note that some ice belts may in fact have a "
         "southern edge at the equator.");
 
-  sprintf(output[OUT_SOUTHICEBELTLATSEA].cName, "IceBeltSouthLatSea");
-  sprintf(output[OUT_SOUTHICEBELTLATSEA].cDescr,
+  fvFormattedString(&output[OUT_SOUTHICEBELTLATSEA].cName, "IceBeltSouthLatSea");
+  fvFormattedString(&output[OUT_SOUTHICEBELTLATSEA].cDescr,
           "Southernmost extent of sea ice belt.");
   output[OUT_SOUTHICEBELTLATSEA].bNeg       = 0;
   output[OUT_SOUTHICEBELTLATSEA].iNum       = 1;
   output[OUT_SOUTHICEBELTLATSEA].iModuleBit = POISE;
   fnWrite[OUT_SOUTHICEBELTLATSEA]           = &WriteIceBeltSouthLatSea;
-  sprintf(
-        output[OUT_SOUTHICEBELTLATSEA].cLongDescr,
+  fvFormattedString(
+        &output[OUT_SOUTHICEBELTLATSEA].cLongDescr,
         "If a sea ice belt is present, return the latitude of its southern "
         "edge. "
         "If not present, return 0. Note that some ice belts may in fact have a "

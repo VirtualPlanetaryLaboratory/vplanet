@@ -34,15 +34,19 @@ jobs:
         if: steps.setup_python.outcome == 'success'
         shell: bash -l {0}
         run: |
+          sudo apt-get update
           python -m pip install -U pip
           python -m pip install -e .
           pip install pytest pytest-cov
           sudo apt install lcov
 
-      - name: Run tests and generate coverage
+      - name: Run tests 
+        id: test
         if: steps.install.outcome == 'success'
         shell: bash -l {0}
-        run: make coverage
+        run: |
+          make opt
+          pytest --tb=short
 
       - name: Check test ouptut created
         id: check_test_file
@@ -50,6 +54,11 @@ jobs:
         with:
           files: "/home/runner/work/vplanet/vplanet/junit/test-results.xml"
           fail: true
+
+      - name: Generate coverage
+        id: coverage
+        if: steps.test.outcome == 'success' && steps.check_test_file.outcome == 'success'
+        run: make coverage
 
       - name: Get unique id
         uses: Tiryoh/gha-jobid-action@v1

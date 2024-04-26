@@ -273,16 +273,16 @@ void ReadOrbitModel(BODY *body, CONTROL *control, FILES *files,
 
 
 void InitializeOptionsDistOrb(OPTIONS *options, fnReadOption fnRead[]) {
-  sprintf(options[OPT_DFCRIT].cName, "dDfcrit");
-  sprintf(options[OPT_DFCRIT].cDescr,
+  fvFormattedString(&options[OPT_DFCRIT].cName, "dDfcrit");
+  fvFormattedString(&options[OPT_DFCRIT].cDescr,
           "Tolerance parameter for recalculating semi-major axis functions");
-  sprintf(options[OPT_DFCRIT].cDefault, "0.1");
-  sprintf(options[OPT_DFCRIT].cDimension, "nd");
+  fvFormattedString(&options[OPT_DFCRIT].cDefault, "0.1");
+  fvFormattedString(&options[OPT_DFCRIT].cDimension, "nd");
   options[OPT_DFCRIT].dDefault   = 0.1;
   options[OPT_DFCRIT].iType      = 2;
   options[OPT_DFCRIT].bMultiFile = 0;
   fnRead[OPT_DFCRIT]             = &ReadDfCrit;
-  sprintf(options[OPT_DFCRIT].cLongDescr,
+  fvFormattedString(&options[OPT_DFCRIT].cLongDescr,
           "When running DistOrb with other modules that modify the semi-major "
           "axis,\n"
           "set his argument to be the maximum relative change in the Laplace\n"
@@ -292,23 +292,23 @@ void InitializeOptionsDistOrb(OPTIONS *options, fnReadOption fnRead[]) {
           "gain in\n"
           "accuracy.");
 
-  sprintf(options[OPT_INVPLANE].cName, "bInvPlane");
-  sprintf(options[OPT_INVPLANE].cDescr,
+  fvFormattedString(&options[OPT_INVPLANE].cName, "bInvPlane");
+  fvFormattedString(&options[OPT_INVPLANE].cDescr,
           "Convert input coordinates to invariable plane coordinates");
-  sprintf(options[OPT_INVPLANE].cDefault, "0");
+  fvFormattedString(&options[OPT_INVPLANE].cDefault, "0");
   options[OPT_INVPLANE].dDefault   = 0;
   options[OPT_INVPLANE].iType      = 0;
   options[OPT_INVPLANE].bMultiFile = 0;
   fnRead[OPT_INVPLANE]             = &ReadInvPlane;
 
-  sprintf(options[OPT_ORBITMODEL].cName, "sOrbitModel");
-  sprintf(options[OPT_ORBITMODEL].cDescr,
+  fvFormattedString(&options[OPT_ORBITMODEL].cName, "sOrbitModel");
+  fvFormattedString(&options[OPT_ORBITMODEL].cDescr,
           "Orbit Model: LL2 [2nd order] RD4 [4th order]");
-  sprintf(options[OPT_ORBITMODEL].cDefault, "rd4");
+  fvFormattedString(&options[OPT_ORBITMODEL].cDefault, "rd4");
   options[OPT_ORBITMODEL].dDefault = RD4;
   options[OPT_ORBITMODEL].iType    = 3;
   fnRead[OPT_ORBITMODEL]           = &ReadOrbitModel;
-  sprintf(options[OPT_ORBITMODEL].cLongDescr,
+  fvFormattedString(&options[OPT_ORBITMODEL].cLongDescr,
           "The secular orbital evolution model used with DistOrb. Option LL2 "
           "is the\n"
           "Laplace-Lagrange (eigenvalue) solution that is valid for small "
@@ -326,41 +326,41 @@ void InitializeOptionsDistOrb(OPTIONS *options, fnReadOption fnRead[]) {
           "does not converge.",
           options[OPT_ORMAXECC].cName);
 
-  sprintf(options[OPT_ORMAXECC].cName, "bOverrideMaxEcc");
-  sprintf(options[OPT_ORMAXECC].cDescr,
+  fvFormattedString(&options[OPT_ORMAXECC].cName, "bOverrideMaxEcc");
+  fvFormattedString(&options[OPT_ORMAXECC].cDescr,
           "Override default maximum eccentricity (MAXORBDISTORB) in DistOrb?");
-  sprintf(options[OPT_ORMAXECC].cDefault, "0");
+  fvFormattedString(&options[OPT_ORMAXECC].cDefault, "0");
   options[OPT_ORMAXECC].dDefault   = 0;
   options[OPT_ORMAXECC].iType      = 0;
   options[OPT_ORMAXECC].bMultiFile = 0;
   fnRead[OPT_ORMAXECC]             = &ReadOverrideMaxEcc;
-  sprintf(options[OPT_ORBITMODEL].cLongDescr,
+  fvFormattedString(&options[OPT_ORBITMODEL].cLongDescr,
           "If RD4 is selected for %s, the code will halt if an eccentricity "
           "reaches\n"
           "~0.69 unless this flag is set to true.",
           options[OPT_ORBITMODEL].cName);
 
-  sprintf(options[OPT_HALTHILLSTAB].cName, "bHaltHillStab");
-  sprintf(options[OPT_HALTHILLSTAB].cDescr, "Halt if Hill unstable?");
-  sprintf(options[OPT_HALTHILLSTAB].cDefault, "0");
+  fvFormattedString(&options[OPT_HALTHILLSTAB].cName, "bHaltHillStab");
+  fvFormattedString(&options[OPT_HALTHILLSTAB].cDescr, "Halt if Hill unstable?");
+  fvFormattedString(&options[OPT_HALTHILLSTAB].cDefault, "0");
   options[OPT_HALTHILLSTAB].dDefault   = 0;
   options[OPT_HALTHILLSTAB].iType      = 0;
   options[OPT_HALTHILLSTAB].bMultiFile = 0;
   fnRead[OPT_HALTHILLSTAB]             = &ReadHaltHillStab;
-  sprintf(
-        options[OPT_HALTHILLSTAB].cLongDescr,
+  fvFormattedString(
+        &options[OPT_HALTHILLSTAB].cLongDescr,
         "If two planets come within the Hill stability criterion, the code will"
         "halt if this parameter is set");
 
-  sprintf(options[OPT_HALTCLOSEENC].cName, "bHaltCloseEnc");
-  sprintf(options[OPT_HALTCLOSEENC].cDescr, "Halt if orbits get too close");
-  sprintf(options[OPT_HALTCLOSEENC].cDefault, "0");
+  fvFormattedString(&options[OPT_HALTCLOSEENC].cName, "bHaltCloseEnc");
+  fvFormattedString(&options[OPT_HALTCLOSEENC].cDescr, "Halt if orbits get too close");
+  fvFormattedString(&options[OPT_HALTCLOSEENC].cDefault, "0");
   options[OPT_HALTCLOSEENC].dDefault   = 0;
   options[OPT_HALTCLOSEENC].iType      = 0;
   options[OPT_HALTCLOSEENC].bMultiFile = 0;
   fnRead[OPT_HALTCLOSEENC]             = &ReadHaltCloseEnc;
-  sprintf(
-        options[OPT_HALTCLOSEENC].cLongDescr,
+  fvFormattedString(
+        &options[OPT_HALTCLOSEENC].cLongDescr,
         "Halt the code if the apocenter of an interior planets is less than 4 "
         "mutual Hill radii from the pericenter of an outer planet.");
 
@@ -370,58 +370,58 @@ void InitializeOptionsDistOrb(OPTIONS *options, fnReadOption fnRead[]) {
   that are accurate to higher orders. One could conceivably fake the higher
   order evolution using only the LL2 solution by doing this.
 
-  sprintf(options[OPT_EIGENSET].cName,"bEigenSet");
-  sprintf(options[OPT_EIGENSET].cDescr,"Read in eigenvalues/vectors for
-  DistOrb?"); sprintf(options[OPT_EIGENSET].cDefault,"0");
+  fvFormattedString(options[OPT_EIGENSET].cName,"bEigenSet");
+  fvFormattedString(options[OPT_EIGENSET].cDescr,"Read in eigenvalues/vectors for
+  DistOrb?"); fvFormattedString(options[OPT_EIGENSET].cDefault,"0");
   options[OPT_EIGENSET].dDefault = 0;
   options[OPT_EIGENSET].iType = 0;
   options[OPT_EIGENSET].bMultiFile = 0;
   fnRead[OPT_EIGENSET] = &ReadEigenSet;
 
-  sprintf(options[OPT_EIGENVALUE].cName,"dEigenvalue");
-  sprintf(options[OPT_EIGENVALUE].cDescr,"Set this to provide
-  eigenvalues/vectors at input"); sprintf(options[OPT_EIGENVALUE].cDefault,"0");
-  sprintf(options[OPT_EIGENVALUE].cDimension,"nd");
+  fvFormattedString(options[OPT_EIGENVALUE].cName,"dEigenvalue");
+  fvFormattedString(options[OPT_EIGENVALUE].cDescr,"Set this to provide
+  eigenvalues/vectors at input"); fvFormattedString(options[OPT_EIGENVALUE].cDefault,"0");
+  fvFormattedString(options[OPT_EIGENVALUE].cDimension,"nd");
   options[OPT_EIGENVALUE].dDefault = 0;
   options[OPT_EIGENVALUE].iType = 0;
   options[OPT_EIGENVALUE].bMultiFile = 0;
   fnRead[OPT_EIGENVALUE] = &ReadEigenvalue;
 
-  sprintf(options[OPT_EIGENVECTOR].cName,"dEigenvector");
-  sprintf(options[OPT_EIGENVECTOR].cDescr,"Set this to provide
+  fvFormattedString(options[OPT_EIGENVECTOR].cName,"dEigenvector");
+  fvFormattedString(options[OPT_EIGENVECTOR].cDescr,"Set this to provide
   eigenvalues/vectors at input");
-  sprintf(options[OPT_EIGENVECTOR].cDefault,"0");
-  sprintf(options[OPT_EIGENVECTOR].cDimension,"nd");
+  fvFormattedString(options[OPT_EIGENVECTOR].cDefault,"0");
+  fvFormattedString(options[OPT_EIGENVECTOR].cDimension,"nd");
   options[OPT_EIGENVECTOR].dDefault = 0;
   options[OPT_EIGENVECTOR].iType = 0;
   options[OPT_EIGENVECTOR].bMultiFile = 0;
   fnRead[OPT_EIGENVECTOR] = &ReadEigenvector;
 */
 
-  sprintf(options[OPT_OUTPUTLAPL].cName, "bOutputLapl");
-  sprintf(options[OPT_OUTPUTLAPL].cDescr,
+  fvFormattedString(&options[OPT_OUTPUTLAPL].cName, "bOutputLapl");
+  fvFormattedString(&options[OPT_OUTPUTLAPL].cDescr,
           "Output Laplace functions and related data?");
-  sprintf(options[OPT_OUTPUTLAPL].cDefault, "0");
+  fvFormattedString(&options[OPT_OUTPUTLAPL].cDefault, "0");
   options[OPT_OUTPUTLAPL].dDefault   = 0;
   options[OPT_OUTPUTLAPL].iType      = 0;
   options[OPT_OUTPUTLAPL].bMultiFile = 0;
   fnRead[OPT_OUTPUTLAPL]             = &ReadOutputLapl;
-  sprintf(
-        options[OPT_OUTPUTLAPL].cLongDescr,
+  fvFormattedString(
+        &options[OPT_OUTPUTLAPL].cLongDescr,
         "Write files that contain the Laplace coefficients and their "
         "derivatives\n"
         "in DistOrb. This file can be used to check that they are recomputed \n"
         "frequently enough when damping (e.g. EqTide) is included.");
 
-  sprintf(options[OPT_OUTPUTEIGEN].cName, "bOutputEigen");
-  sprintf(options[OPT_OUTPUTEIGEN].cDescr, "Output Eigenvalues?");
-  sprintf(options[OPT_OUTPUTEIGEN].cDefault, "0");
+  fvFormattedString(&options[OPT_OUTPUTEIGEN].cName, "bOutputEigen");
+  fvFormattedString(&options[OPT_OUTPUTEIGEN].cDescr, "Output Eigenvalues?");
+  fvFormattedString(&options[OPT_OUTPUTEIGEN].cDefault, "0");
   options[OPT_OUTPUTEIGEN].dDefault   = 0;
   options[OPT_OUTPUTEIGEN].iType      = 0;
   options[OPT_OUTPUTEIGEN].bMultiFile = 0;
   fnRead[OPT_OUTPUTEIGEN]             = &ReadOutputEigen;
-  sprintf(
-        options[OPT_OUTPUTLAPL].cLongDescr,
+  fvFormattedString(
+        &options[OPT_OUTPUTLAPL].cLongDescr,
         "Write special files that contain the eigenvalues and eigenvectors of "
         "the\n"
         "system with DistOrb. In the LL2 solution, these are already computed. "
@@ -1752,19 +1752,19 @@ int fbCheckMutualIncDistorb(BODY *body, EVOLVE *evolve, HALT *halt, IO *io,
 /************* DISTORB Outputs ******************/
 
 void WriteEigen(CONTROL *control, SYSTEM *system) {
-  char cEccEigFile[2 * NAMELEN], cIncEigFile[2 * NAMELEN];
+  char *sEccEigFile, *sIncEigFile;
   int iBody;
   FILE *fecc, *finc;
 
-  sprintf(cEccEigFile, "%s.Ecc.Eigen", system->cName);
-  sprintf(cIncEigFile, "%s.Inc.Eigen", system->cName);
+  fvFormattedString(&sEccEigFile, "%s.Ecc.Eigen", system->cName);
+  fvFormattedString(&sIncEigFile, "%s.Inc.Eigen", system->cName);
 
   if (control->Evolve.dTime == 0) {
-    fecc = fopen(cEccEigFile, "w");
-    finc = fopen(cIncEigFile, "w");
+    fecc = fopen(sEccEigFile, "w");
+    finc = fopen(sIncEigFile, "w");
   } else {
-    fecc = fopen(cEccEigFile, "a");
-    finc = fopen(cIncEigFile, "a");
+    fecc = fopen(sEccEigFile, "a");
+    finc = fopen(sIncEigFile, "a");
   }
 
   fprintd(fecc, control->Evolve.dTime / fdUnitsTime(control->Units[1].iTime),
@@ -2101,104 +2101,104 @@ void InitializeOutputDistOrb(OUTPUT *output, fnWriteOutput fnWrite[]) {
   // XXX Many of these should be moved to OutputGeneral as they apply to both
   // DistOrb and SpiNBody
 
-  sprintf(output[OUT_DECCDTDISTORB].cName, "DEccDtDistOrb");
-  sprintf(output[OUT_DECCDTDISTORB].cDescr,
+  fvFormattedString(&output[OUT_DECCDTDISTORB].cName, "DEccDtDistOrb");
+  fvFormattedString(&output[OUT_DECCDTDISTORB].cDescr,
           "Body's eccentricity derivative in DistOrb");
-  sprintf(output[OUT_DECCDTDISTORB].cNeg, "1/year");
+  fvFormattedString(&output[OUT_DECCDTDISTORB].cNeg, "1/year");
   output[OUT_DECCDTDISTORB].bNeg       = 1;
   output[OUT_DECCDTDISTORB].dNeg       = YEARSEC;
   output[OUT_DECCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DECCDTDISTORB]           = &WriteBodyDEccDtDistOrb;
 
-  sprintf(output[OUT_DSINCDTDISTORB].cName, "DSincDtDistOrb");
-  sprintf(output[OUT_DSINCDTDISTORB].cDescr,
+  fvFormattedString(&output[OUT_DSINCDTDISTORB].cName, "DSincDtDistOrb");
+  fvFormattedString(&output[OUT_DSINCDTDISTORB].cDescr,
           "Body's sin(Inc/2) derivative in DistOrb");
-  sprintf(output[OUT_DSINCDTDISTORB].cNeg, "1/year");
+  fvFormattedString(&output[OUT_DSINCDTDISTORB].cNeg, "1/year");
   output[OUT_DSINCDTDISTORB].bNeg       = 1;
   output[OUT_DSINCDTDISTORB].dNeg       = YEARSEC;
   output[OUT_DSINCDTDISTORB].iNum       = 1;
   output[OUT_DSINCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DSINCDTDISTORB]           = &WriteBodyDSincDtDistOrb;
 
-  sprintf(output[OUT_DINCDTDISTORB].cName, "DIncDtDistOrb");
-  sprintf(output[OUT_DINCDTDISTORB].cDescr,
+  fvFormattedString(&output[OUT_DINCDTDISTORB].cName, "DIncDtDistOrb");
+  fvFormattedString(&output[OUT_DINCDTDISTORB].cDescr,
           "Body's inclination derivative in DistOrb");
-  sprintf(output[OUT_DINCDTDISTORB].cNeg, "deg/year");
+  fvFormattedString(&output[OUT_DINCDTDISTORB].cNeg, "deg/year");
   output[OUT_DINCDTDISTORB].bNeg       = 1;
   output[OUT_DINCDTDISTORB].dNeg       = YEARSEC / DEGRAD;
   output[OUT_DINCDTDISTORB].iNum       = 1;
   output[OUT_DINCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DINCDTDISTORB]           = &WriteBodyDIncDtDistOrb;
 
-  sprintf(output[OUT_DLONGPDTDISTORB].cName, "DLongPDtDistOrb");
-  sprintf(output[OUT_DLONGPDTDISTORB].cDescr,
+  fvFormattedString(&output[OUT_DLONGPDTDISTORB].cName, "DLongPDtDistOrb");
+  fvFormattedString(&output[OUT_DLONGPDTDISTORB].cDescr,
           "Body's longitude of pericenter derivative in DistOrb");
-  sprintf(output[OUT_DLONGPDTDISTORB].cNeg, "deg/yr");
+  fvFormattedString(&output[OUT_DLONGPDTDISTORB].cNeg, "deg/yr");
   output[OUT_DLONGPDTDISTORB].bNeg       = 1;
   output[OUT_DLONGPDTDISTORB].dNeg       = YEARSEC / DEGRAD;
   output[OUT_DLONGPDTDISTORB].iNum       = 1;
   output[OUT_DLONGPDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DLONGPDTDISTORB]           = &WriteBodyDLongPDtDistOrb;
 
-  sprintf(output[OUT_DLONGADTDISTORB].cName, "DLongADtDistOrb");
-  sprintf(output[OUT_DLONGADTDISTORB].cDescr,
+  fvFormattedString(&output[OUT_DLONGADTDISTORB].cName, "DLongADtDistOrb");
+  fvFormattedString(&output[OUT_DLONGADTDISTORB].cDescr,
           "Body's longitude of ascending node derivative in DistOrb");
-  sprintf(output[OUT_DLONGADTDISTORB].cNeg, "deg/yr");
+  fvFormattedString(&output[OUT_DLONGADTDISTORB].cNeg, "deg/yr");
   output[OUT_DLONGADTDISTORB].bNeg       = 1;
   output[OUT_DLONGADTDISTORB].dNeg       = YEARSEC / DEGRAD;
   output[OUT_DLONGADTDISTORB].iNum       = 1;
   output[OUT_DLONGADTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DLONGADTDISTORB]           = &WriteBodyDLongADtDistOrb;
 
-  sprintf(output[OUT_SINC].cName, "Sinc");
-  sprintf(output[OUT_SINC].cDescr, "Body's sin(Inc/2) in DistOrb");
+  fvFormattedString(&output[OUT_SINC].cName, "Sinc");
+  fvFormattedString(&output[OUT_SINC].cDescr, "Body's sin(Inc/2) in DistOrb");
   output[OUT_SINC].iNum       = 1;
   output[OUT_SINC].iModuleBit = DISTORB;
   fnWrite[OUT_SINC]           = &WriteBodySinc;
 
-  sprintf(output[OUT_PINC].cName, "Pinc");
-  sprintf(output[OUT_PINC].cDescr, "Body's Poincare p in DistOrb");
+  fvFormattedString(&output[OUT_PINC].cName, "Pinc");
+  fvFormattedString(&output[OUT_PINC].cDescr, "Body's Poincare p in DistOrb");
   output[OUT_PINC].iNum       = 1;
   output[OUT_PINC].iModuleBit = DISTORB;
   fnWrite[OUT_PINC]           = &WriteBodyPinc;
 
-  sprintf(output[OUT_QINC].cName, "Qinc");
-  sprintf(output[OUT_QINC].cDescr, "Body's Poincare q in DistOrb");
+  fvFormattedString(&output[OUT_QINC].cName, "Qinc");
+  fvFormattedString(&output[OUT_QINC].cDescr, "Body's Poincare q in DistOrb");
   output[OUT_QINC].iNum       = 1;
   output[OUT_QINC].iModuleBit = DISTORB;
   fnWrite[OUT_QINC]           = &WriteBodyQinc;
 
-  sprintf(output[OUT_DHECCDTDISTORB].cName, "DHeccDtDistOrb");
-  sprintf(output[OUT_DHECCDTDISTORB].cDescr,
+  fvFormattedString(&output[OUT_DHECCDTDISTORB].cName, "DHeccDtDistOrb");
+  fvFormattedString(&output[OUT_DHECCDTDISTORB].cDescr,
           "Body's Poincare h derivative in DistOrb");
-  sprintf(output[OUT_DHECCDTDISTORB].cNeg, "1/year");
+  fvFormattedString(&output[OUT_DHECCDTDISTORB].cNeg, "1/year");
   output[OUT_DHECCDTDISTORB].bNeg       = 1;
   output[OUT_DHECCDTDISTORB].dNeg       = YEARSEC;
   output[OUT_DHECCDTDISTORB].iNum       = 1;
   output[OUT_DHECCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DHECCDTDISTORB]           = &WriteBodyDHeccDtDistOrb;
 
-  sprintf(output[OUT_DKECCDTDISTORB].cName, "DKeccDtDistOrb");
-  sprintf(output[OUT_DKECCDTDISTORB].cDescr, "Body's Poincare k in DistOrb");
-  sprintf(output[OUT_DKECCDTDISTORB].cNeg, "1/year");
+  fvFormattedString(&output[OUT_DKECCDTDISTORB].cName, "DKeccDtDistOrb");
+  fvFormattedString(&output[OUT_DKECCDTDISTORB].cDescr, "Body's Poincare k in DistOrb");
+  fvFormattedString(&output[OUT_DKECCDTDISTORB].cNeg, "1/year");
   output[OUT_DKECCDTDISTORB].bNeg       = 1;
   output[OUT_DKECCDTDISTORB].dNeg       = YEARSEC;
   output[OUT_DKECCDTDISTORB].iNum       = 1;
   output[OUT_DKECCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DKECCDTDISTORB]           = &WriteBodyDKeccDtDistOrb;
 
-  sprintf(output[OUT_DPINCDTDISTORB].cName, "DPincDtDistOrb");
-  sprintf(output[OUT_DPINCDTDISTORB].cDescr, "Body's Poincare p in DistOrb");
-  sprintf(output[OUT_DPINCDTDISTORB].cNeg, "1/year");
+  fvFormattedString(&output[OUT_DPINCDTDISTORB].cName, "DPincDtDistOrb");
+  fvFormattedString(&output[OUT_DPINCDTDISTORB].cDescr, "Body's Poincare p in DistOrb");
+  fvFormattedString(&output[OUT_DPINCDTDISTORB].cNeg, "1/year");
   output[OUT_DPINCDTDISTORB].bNeg       = 1;
   output[OUT_DPINCDTDISTORB].dNeg       = YEARSEC;
   output[OUT_DPINCDTDISTORB].iNum       = 1;
   output[OUT_DPINCDTDISTORB].iModuleBit = DISTORB;
   fnWrite[OUT_DPINCDTDISTORB]           = &WriteBodyDPincDtDistOrb;
 
-  sprintf(output[OUT_DQINCDTDISTORB].cName, "DQincDtDistOrb");
-  sprintf(output[OUT_DQINCDTDISTORB].cDescr, "Body's Poincare q in DistOrb");
-  sprintf(output[OUT_DQINCDTDISTORB].cNeg, "1/year");
+  fvFormattedString(&output[OUT_DQINCDTDISTORB].cName, "DQincDtDistOrb");
+  fvFormattedString(&output[OUT_DQINCDTDISTORB].cDescr, "Body's Poincare q in DistOrb");
+  fvFormattedString(&output[OUT_DQINCDTDISTORB].cNeg, "1/year");
   output[OUT_DQINCDTDISTORB].bNeg       = 1;
   output[OUT_DQINCDTDISTORB].dNeg       = YEARSEC;
   output[OUT_DQINCDTDISTORB].iNum       = 1;

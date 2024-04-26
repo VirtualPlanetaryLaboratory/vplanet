@@ -1769,553 +1769,553 @@ void fvReadHaltRadPower(BODY *body, CONTROL *control, FILES *files,
 void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
 
   /* 26Al */
-  sprintf(options[OPT_26ALMASSMAN].cName, "d26AlMassMan");
-  sprintf(options[OPT_26ALMASSMAN].cDescr, "Initial Mantle Mass of 26Al");
-  sprintf(options[OPT_26ALMASSMAN].cDefault, "0");
-  sprintf(options[OPT_26ALMASSMAN].cDimension, "mass");
+  fvFormattedString(&options[OPT_26ALMASSMAN].cName, "d26AlMassMan");
+  fvFormattedString(&options[OPT_26ALMASSMAN].cDescr, "Initial Mantle Mass of 26Al");
+  fvFormattedString(&options[OPT_26ALMASSMAN].cDefault, "0");
+  fvFormattedString(&options[OPT_26ALMASSMAN].cDimension, "mass");
   options[OPT_26ALMASSMAN].iType      = 2;
   options[OPT_26ALMASSMAN].bMultiFile = 1;
   options[OPT_26ALMASSMAN].dNeg       = MEARTH;
   options[OPT_26ALMASSMAN].dDefault   = 0;
-  sprintf(options[OPT_26ALMASSMAN].cNeg, "Mearth");
+  fvFormattedString(&options[OPT_26ALMASSMAN].cNeg, "Mearth");
   fnRead[OPT_26ALMASSMAN] = &fvRead26AlMassMan;
 
-  sprintf(options[OPT_26ALMASSCORE].cName, "d26AlMassCore");
-  sprintf(options[OPT_26ALMASSCORE].cDescr, "Initial Core Mass of 26Al");
-  sprintf(options[OPT_26ALMASSCORE].cDefault, "0");
-  sprintf(options[OPT_26ALMASSCORE].cDimension, "mass");
+  fvFormattedString(&options[OPT_26ALMASSCORE].cName, "d26AlMassCore");
+  fvFormattedString(&options[OPT_26ALMASSCORE].cDescr, "Initial Core Mass of 26Al");
+  fvFormattedString(&options[OPT_26ALMASSCORE].cDefault, "0");
+  fvFormattedString(&options[OPT_26ALMASSCORE].cDimension, "mass");
   options[OPT_26ALMASSCORE].iType      = 2;
   options[OPT_26ALMASSCORE].bMultiFile = 1;
   options[OPT_26ALMASSCORE].dNeg       = MEARTH;
   options[OPT_26ALMASSCORE].dDefault   = 0;
-  sprintf(options[OPT_26ALMASSCORE].cNeg, "Mearth");
+  fvFormattedString(&options[OPT_26ALMASSCORE].cNeg, "Mearth");
   fnRead[OPT_26ALMASSCORE] = &fvRead26AlMassCore;
 
-  sprintf(options[OPT_26ALNUMMAN].cName, "d26AlNumMan");
-  sprintf(options[OPT_26ALNUMMAN].cDescr,
+  fvFormattedString(&options[OPT_26ALNUMMAN].cName, "d26AlNumMan");
+  fvFormattedString(&options[OPT_26ALNUMMAN].cDescr,
           "Initial Mantle Number of 26Al Atoms");
-  sprintf(options[OPT_26ALNUMMAN].cDefault, "0");
-  sprintf(options[OPT_26ALNUMMAN].cDimension, "mass");
+  fvFormattedString(&options[OPT_26ALNUMMAN].cDefault, "0");
+  fvFormattedString(&options[OPT_26ALNUMMAN].cDimension, "mass");
   options[OPT_26ALNUMMAN].iType      = 2;
   options[OPT_26ALNUMMAN].bMultiFile = 1;
   options[OPT_26ALNUMMAN].dNeg       = ENUMMAN26AL;
   options[OPT_26ALNUMMAN].dDefault   = 0;
-  sprintf(options[OPT_26ALNUMMAN].cNeg, "Primordial Earth 26Al Number");
+  fvFormattedString(&options[OPT_26ALNUMMAN].cNeg, "Primordial Earth 26Al Number");
   fnRead[OPT_26ALNUMMAN] = &fvRead26AlNumMan;
 
-  sprintf(options[OPT_26ALNUMCORE].cName, "d26AlNumCore");
-  sprintf(options[OPT_26ALNUMCORE].cDescr, "Initial Core Number of 26Al Atoms");
-  sprintf(options[OPT_26ALNUMCORE].cDefault, "0");
-  sprintf(options[OPT_26ALNUMCORE].cDimension, "nd");
+  fvFormattedString(&options[OPT_26ALNUMCORE].cName, "d26AlNumCore");
+  fvFormattedString(&options[OPT_26ALNUMCORE].cDescr, "Initial Core Number of 26Al Atoms");
+  fvFormattedString(&options[OPT_26ALNUMCORE].cDefault, "0");
+  fvFormattedString(&options[OPT_26ALNUMCORE].cDimension, "nd");
   options[OPT_26ALNUMCORE].iType      = 2;
   options[OPT_26ALNUMCORE].bMultiFile = 1;
   options[OPT_26ALNUMCORE].dNeg       = ENUMCORE26AL;
   options[OPT_26ALNUMCORE].dDefault   = 0;
-  sprintf(options[OPT_26ALNUMCORE].cNeg, "Primordial Earth 26Al Number");
+  fvFormattedString(&options[OPT_26ALNUMCORE].cNeg, "Primordial Earth 26Al Number");
   fnRead[OPT_26ALNUMCORE] = &fvRead26AlNumCore;
 
-  sprintf(options[OPT_26ALPOWERMAN].cName, "d26AlPowerMan");
-  sprintf(options[OPT_26ALPOWERMAN].cDescr,
+  fvFormattedString(&options[OPT_26ALPOWERMAN].cName, "d26AlPowerMan");
+  fvFormattedString(&options[OPT_26ALPOWERMAN].cDescr,
           "Initial Mantle Power Production from 26Al Atoms");
-  sprintf(options[OPT_26ALPOWERMAN].cDefault, "0");
-  sprintf(options[OPT_26ALPOWERMAN].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_26ALPOWERMAN].cDefault, "0");
+  fvFormattedString(&options[OPT_26ALPOWERMAN].cDimension, "energy/time");
   options[OPT_26ALPOWERMAN].iType      = 2;
   options[OPT_26ALPOWERMAN].bMultiFile = 1;
   options[OPT_26ALPOWERMAN].dNeg       = EPOWERMAN26AL; // Earth's POWER of 26Al
   options[OPT_26ALPOWERMAN].dDefault   = 0;
-  sprintf(options[OPT_26ALPOWERMAN].cNeg, "TW");
+  fvFormattedString(&options[OPT_26ALPOWERMAN].cNeg, "TW");
   fnRead[OPT_26ALPOWERMAN] = &fvRead26AlPowerMan;
 
-  sprintf(options[OPT_26ALPOWERCORE].cName, "d26AlPowerCore");
-  sprintf(options[OPT_26ALPOWERCORE].cDescr,
+  fvFormattedString(&options[OPT_26ALPOWERCORE].cName, "d26AlPowerCore");
+  fvFormattedString(&options[OPT_26ALPOWERCORE].cDescr,
           "Initial Core Power Production from 26Al Atoms");
-  sprintf(options[OPT_26ALPOWERCORE].cDefault, "0");
-  sprintf(options[OPT_26ALPOWERCORE].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_26ALPOWERCORE].cDefault, "0");
+  fvFormattedString(&options[OPT_26ALPOWERCORE].cDimension, "energy/time");
   options[OPT_26ALPOWERCORE].iType      = 2;
   options[OPT_26ALPOWERCORE].bMultiFile = 1;
   options[OPT_26ALPOWERCORE].dNeg     = EPOWERCORE26AL; // Earth's POWER of 26Al
   options[OPT_26ALPOWERCORE].dDefault = 0;
-  sprintf(options[OPT_26ALPOWERCORE].cNeg, "TW");
+  fvFormattedString(&options[OPT_26ALPOWERCORE].cNeg, "TW");
   fnRead[OPT_26ALPOWERCORE] = &fvRead26AlPowerCore;
 
   /* 40K */
-  sprintf(options[OPT_40KMASSMAN].cName, "d40KMassMan");
-  sprintf(options[OPT_40KMASSMAN].cDescr, "Initial Mantle Mass of 40K");
-  sprintf(options[OPT_40KMASSMAN].cDefault, "Primordial Earth");
-  sprintf(options[OPT_40KMASSMAN].cDimension, "mass");
+  fvFormattedString(&options[OPT_40KMASSMAN].cName, "d40KMassMan");
+  fvFormattedString(&options[OPT_40KMASSMAN].cDescr, "Initial Mantle Mass of 40K");
+  fvFormattedString(&options[OPT_40KMASSMAN].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_40KMASSMAN].cDimension, "mass");
   options[OPT_40KMASSMAN].iType      = 2;
   options[OPT_40KMASSMAN].bMultiFile = 1;
   options[OPT_40KMASSMAN].dNeg       = EMASSMAN40K;
   options[OPT_40KMASSMAN].dDefault   = EMASSMAN40K;
-  sprintf(options[OPT_40KMASSMAN].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_40KMASSMAN].cNeg, "Primordial Earth Units");
   fnRead[OPT_40KMASSMAN] = &fvRead40KMassMan;
 
-  sprintf(options[OPT_40KMASSCORE].cName, "d40KMassCore");
-  sprintf(options[OPT_40KMASSCORE].cDescr, "Initial Core Mass of 40K");
-  sprintf(options[OPT_40KMASSCORE].cDefault, "Primordial Earth Units");
-  sprintf(options[OPT_40KMASSCORE].cDimension, "mass");
+  fvFormattedString(&options[OPT_40KMASSCORE].cName, "d40KMassCore");
+  fvFormattedString(&options[OPT_40KMASSCORE].cDescr, "Initial Core Mass of 40K");
+  fvFormattedString(&options[OPT_40KMASSCORE].cDefault, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_40KMASSCORE].cDimension, "mass");
   options[OPT_40KMASSCORE].iType      = 2;
   options[OPT_40KMASSCORE].bMultiFile = 1;
   options[OPT_40KMASSCORE].dNeg       = EMASSCORE40K;
   options[OPT_40KMASSCORE].dDefault   = EMASSCORE40K;
-  sprintf(options[OPT_40KMASSCORE].cNeg, "Primordial Earth");
+  fvFormattedString(&options[OPT_40KMASSCORE].cNeg, "Primordial Earth");
   fnRead[OPT_40KMASSCORE] = &fvRead40KMassCore;
 
-  sprintf(options[OPT_40KMASSCRUST].cName, "d40KMassCrust");
-  sprintf(options[OPT_40KMASSCRUST].cDescr, "Initial Crust Mass of 40K");
-  sprintf(options[OPT_40KMASSCRUST].cDefault, "Primordial Earth");
-  sprintf(options[OPT_40KMASSCRUST].cDimension, "mass");
+  fvFormattedString(&options[OPT_40KMASSCRUST].cName, "d40KMassCrust");
+  fvFormattedString(&options[OPT_40KMASSCRUST].cDescr, "Initial Crust Mass of 40K");
+  fvFormattedString(&options[OPT_40KMASSCRUST].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_40KMASSCRUST].cDimension, "mass");
   options[OPT_40KMASSCRUST].iType      = 2;
   options[OPT_40KMASSCRUST].bMultiFile = 1;
   options[OPT_40KMASSCRUST].dNeg       = EMASSCRUST40K;
   options[OPT_40KMASSCRUST].dDefault   = EMASSCRUST40K;
-  sprintf(options[OPT_40KMASSCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_40KMASSCRUST].cNeg, "Primordial Earth Units");
   fnRead[OPT_40KMASSCRUST] = &fvRead40KMassCrust;
 
-  sprintf(options[OPT_40KNUMMAN].cName, "d40KNumMan");
-  sprintf(options[OPT_40KNUMMAN].cDescr, "Initial Mantle Number of 40K Atoms");
-  sprintf(options[OPT_40KNUMMAN].cDefault, "Primordial Earth");
-  sprintf(options[OPT_40KNUMMAN].cDimension, "nd");
+  fvFormattedString(&options[OPT_40KNUMMAN].cName, "d40KNumMan");
+  fvFormattedString(&options[OPT_40KNUMMAN].cDescr, "Initial Mantle Number of 40K Atoms");
+  fvFormattedString(&options[OPT_40KNUMMAN].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_40KNUMMAN].cDimension, "nd");
   options[OPT_40KNUMMAN].iType      = 2;
   options[OPT_40KNUMMAN].bMultiFile = 1;
   options[OPT_40KNUMMAN].dNeg       = ENUMMAN40K;
   options[OPT_40KNUMMAN].dDefault   = ENUMMAN40K;
-  sprintf(options[OPT_40KNUMMAN].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_40KNUMMAN].cNeg, "Primordial Earth Units");
   fnRead[OPT_40KNUMMAN] = &fvRead40KNumMan;
 
-  sprintf(options[OPT_40KNUMCORE].cName, "d40KNumCore");
-  sprintf(options[OPT_40KNUMCORE].cDescr, "Initial Core Number of 40K Atoms");
-  sprintf(options[OPT_40KNUMCORE].cDefault, "Primordial Earth");
-  sprintf(options[OPT_40KNUMCORE].cDimension, "nd");
+  fvFormattedString(&options[OPT_40KNUMCORE].cName, "d40KNumCore");
+  fvFormattedString(&options[OPT_40KNUMCORE].cDescr, "Initial Core Number of 40K Atoms");
+  fvFormattedString(&options[OPT_40KNUMCORE].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_40KNUMCORE].cDimension, "nd");
   options[OPT_40KNUMCORE].iType      = 2;
   options[OPT_40KNUMCORE].bMultiFile = 1;
   options[OPT_40KNUMCORE].dNeg       = ENUMCORE40K;
   options[OPT_40KNUMCORE].dDefault   = ENUMCORE40K;
-  sprintf(options[OPT_40KNUMCORE].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_40KNUMCORE].cNeg, "Primordial Earth Units");
   fnRead[OPT_40KNUMCORE] = &fvRead40KNumCore;
 
-  sprintf(options[OPT_40KNUMCRUST].cName, "d40KNumCrust");
-  sprintf(options[OPT_40KNUMCRUST].cDescr, "Initial Crust Number of 40K Atoms");
-  sprintf(options[OPT_40KNUMCRUST].cDefault, "Primordial Earth");
-  sprintf(options[OPT_40KNUMCRUST].cDimension, "nd");
+  fvFormattedString(&options[OPT_40KNUMCRUST].cName, "d40KNumCrust");
+  fvFormattedString(&options[OPT_40KNUMCRUST].cDescr, "Initial Crust Number of 40K Atoms");
+  fvFormattedString(&options[OPT_40KNUMCRUST].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_40KNUMCRUST].cDimension, "nd");
   options[OPT_40KNUMCRUST].iType      = 2;
   options[OPT_40KNUMCRUST].bMultiFile = 1;
   options[OPT_40KNUMCRUST].dNeg       = ENUMCRUST40K;
   options[OPT_40KNUMCRUST].dDefault   = ENUMCRUST40K;
-  sprintf(options[OPT_40KNUMCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_40KNUMCRUST].cNeg, "Primordial Earth Units");
   fnRead[OPT_40KNUMCRUST] = &fvRead40KNumCrust;
 
-  sprintf(options[OPT_40KPOWERMAN].cName, "d40KPowerMan");
-  sprintf(options[OPT_40KPOWERMAN].cDescr,
+  fvFormattedString(&options[OPT_40KPOWERMAN].cName, "d40KPowerMan");
+  fvFormattedString(&options[OPT_40KPOWERMAN].cDescr,
           "Initial Mantle Power Production from 40K Atoms");
-  sprintf(options[OPT_40KPOWERMAN].cDefault, "Primordial Earth");
-  sprintf(options[OPT_40KPOWERMAN].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_40KPOWERMAN].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_40KPOWERMAN].cDimension, "energy/time");
   options[OPT_40KPOWERMAN].iType      = 2;
   options[OPT_40KPOWERMAN].bMultiFile = 1;
   options[OPT_40KPOWERMAN].dNeg       = EPOWERMAN40K; // Earth's POWER of 40K
   options[OPT_40KPOWERMAN].dDefault   = EPOWERMAN40K;
-  sprintf(options[OPT_40KPOWERMAN].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_40KPOWERMAN].cNeg, "Primordial Earth Units");
   fnRead[OPT_40KPOWERMAN] = &fvRead40KPowerMan;
 
-  sprintf(options[OPT_40KPOWERCORE].cName, "d40KPowerCore");
-  sprintf(options[OPT_40KPOWERCORE].cDescr,
+  fvFormattedString(&options[OPT_40KPOWERCORE].cName, "d40KPowerCore");
+  fvFormattedString(&options[OPT_40KPOWERCORE].cDescr,
           "Initial Core Power Production from 40K Atoms");
-  sprintf(options[OPT_40KPOWERCORE].cDefault, "Primordial Earth");
-  sprintf(options[OPT_40KPOWERCORE].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_40KPOWERCORE].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_40KPOWERCORE].cDimension, "energy/time");
   options[OPT_40KPOWERCORE].iType      = 2;
   options[OPT_40KPOWERCORE].bMultiFile = 1;
   options[OPT_40KPOWERCORE].dNeg       = EPOWERCORE40K; // Earth's POWER of 40K
   options[OPT_40KPOWERCORE].dDefault   = EPOWERCORE40K;
-  sprintf(options[OPT_40KPOWERCORE].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_40KPOWERCORE].cNeg, "Primordial Earth Units");
   fnRead[OPT_40KPOWERCORE] = &fvRead40KPowerCore;
 
-  sprintf(options[OPT_40KPOWERCRUST].cName, "d40KPowerCrust");
-  sprintf(options[OPT_40KPOWERCRUST].cDescr,
+  fvFormattedString(&options[OPT_40KPOWERCRUST].cName, "d40KPowerCrust");
+  fvFormattedString(&options[OPT_40KPOWERCRUST].cDescr,
           "Initial Crust Power Production from 40K Atoms");
-  sprintf(options[OPT_40KPOWERCRUST].cDefault, "Primordial Earth");
-  sprintf(options[OPT_40KPOWERCRUST].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_40KPOWERCRUST].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_40KPOWERCRUST].cDimension, "energy/time");
   options[OPT_40KPOWERCRUST].iType      = 2;
   options[OPT_40KPOWERCRUST].bMultiFile = 1;
   options[OPT_40KPOWERCRUST].dNeg     = EPOWERCRUST40K; // Earth's POWER of 40K
   options[OPT_40KPOWERCRUST].dDefault = EPOWERCRUST40K;
-  sprintf(options[OPT_40KPOWERCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_40KPOWERCRUST].cNeg, "Primordial Earth Units");
   fnRead[OPT_40KPOWERCRUST] = &fvRead40KPowerCrust;
 
   /* 232Th */
-  sprintf(options[OPT_232THMASSMAN].cName, "d232ThMassMan");
-  sprintf(options[OPT_232THMASSMAN].cDescr, "Initial Mass of 232Th");
-  sprintf(options[OPT_232THMASSMAN].cDefault, "Primordial Earth");
-  sprintf(options[OPT_232THMASSMAN].cDimension, "mass");
+  fvFormattedString(&options[OPT_232THMASSMAN].cName, "d232ThMassMan");
+  fvFormattedString(&options[OPT_232THMASSMAN].cDescr, "Initial Mass of 232Th");
+  fvFormattedString(&options[OPT_232THMASSMAN].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_232THMASSMAN].cDimension, "mass");
   options[OPT_232THMASSMAN].iType      = 2;
   options[OPT_232THMASSMAN].bMultiFile = 1;
   options[OPT_232THMASSMAN].dNeg       = EMASSMAN232TH;
   options[OPT_232THMASSMAN].dDefault   = EMASSMAN232TH;
-  sprintf(options[OPT_232THMASSMAN].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_232THMASSMAN].cNeg, "Primordial Earth Units");
   fnRead[OPT_232THMASSMAN] = &fvRead232ThMassMan;
 
-  sprintf(options[OPT_232THNUMMAN].cName, "d232ThNumMan");
-  sprintf(options[OPT_232THNUMMAN].cDescr, "Initial Number of 232Th Atoms");
-  sprintf(options[OPT_232THNUMMAN].cDefault, "Primordial Earth");
-  sprintf(options[OPT_232THNUMMAN].cDimension, "nd");
+  fvFormattedString(&options[OPT_232THNUMMAN].cName, "d232ThNumMan");
+  fvFormattedString(&options[OPT_232THNUMMAN].cDescr, "Initial Number of 232Th Atoms");
+  fvFormattedString(&options[OPT_232THNUMMAN].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_232THNUMMAN].cDimension, "nd");
   options[OPT_232THNUMMAN].iType      = 2;
   options[OPT_232THNUMMAN].bMultiFile = 1;
   options[OPT_232THNUMMAN].dNeg       = ENUMMAN232TH;
   options[OPT_232THNUMMAN].dDefault   = ENUMMAN232TH;
-  sprintf(options[OPT_232THNUMMAN].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_232THNUMMAN].cNeg, "Primordial Earth Units");
   fnRead[OPT_232THNUMMAN] = &fvRead232ThNumMan;
 
-  sprintf(options[OPT_232THPOWERMAN].cName, "d232ThPowerMan");
-  sprintf(options[OPT_232THPOWERMAN].cDescr,
+  fvFormattedString(&options[OPT_232THPOWERMAN].cName, "d232ThPowerMan");
+  fvFormattedString(&options[OPT_232THPOWERMAN].cDescr,
           "Initial Power Production from 232Th Atoms");
-  sprintf(options[OPT_232THPOWERMAN].cDefault, "Primordial Earth");
-  sprintf(options[OPT_232THPOWERMAN].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_232THPOWERMAN].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_232THPOWERMAN].cDimension, "energy/time");
   options[OPT_232THPOWERMAN].iType      = 2;
   options[OPT_232THPOWERMAN].bMultiFile = 1;
   options[OPT_232THPOWERMAN].dNeg       = EPOWERMAN232TH; // 1e12*1e-7; // cgs
   options[OPT_232THPOWERMAN].dDefault   = EPOWERMAN232TH;
-  sprintf(options[OPT_232THPOWERMAN].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_232THPOWERMAN].cNeg, "Primordial Earth Units");
   fnRead[OPT_232THPOWERMAN] = &fvRead232ThPowerMan;
 
-  sprintf(options[OPT_232THMASSCORE].cName, "d232ThMassCore");
-  sprintf(options[OPT_232THMASSCORE].cDescr, "Initial Core Mass of 232Th");
-  sprintf(options[OPT_232THMASSCORE].cDefault, "Primordial Earth");
-  sprintf(options[OPT_232THMASSCORE].cDimension, "mass");
+  fvFormattedString(&options[OPT_232THMASSCORE].cName, "d232ThMassCore");
+  fvFormattedString(&options[OPT_232THMASSCORE].cDescr, "Initial Core Mass of 232Th");
+  fvFormattedString(&options[OPT_232THMASSCORE].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_232THMASSCORE].cDimension, "mass");
   options[OPT_232THMASSCORE].iType      = 2;
   options[OPT_232THMASSCORE].bMultiFile = 1;
   options[OPT_232THMASSCORE].dNeg       = EMASSCORE232TH;
   options[OPT_232THMASSCORE].dDefault   = EMASSCORE232TH;
-  sprintf(options[OPT_232THMASSCORE].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_232THMASSCORE].cNeg, "Primordial Earth Units");
   fnRead[OPT_232THMASSCORE] = &fvRead232ThMassCore;
 
-  sprintf(options[OPT_232THNUMCORE].cName, "d232ThNumCore");
-  sprintf(options[OPT_232THNUMCORE].cDescr,
+  fvFormattedString(&options[OPT_232THNUMCORE].cName, "d232ThNumCore");
+  fvFormattedString(&options[OPT_232THNUMCORE].cDescr,
           "Initial Core Number of 232Th Atoms");
-  sprintf(options[OPT_232THNUMCORE].cDefault, "Primordial Earth");
-  sprintf(options[OPT_232THNUMCORE].cDimension, "nd");
+  fvFormattedString(&options[OPT_232THNUMCORE].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_232THNUMCORE].cDimension, "nd");
   options[OPT_232THNUMCORE].iType      = 2;
   options[OPT_232THNUMCORE].bMultiFile = 1;
   options[OPT_232THNUMCORE].dNeg       = ENUMCORE232TH;
   options[OPT_232THNUMCORE].dDefault   = ENUMCORE232TH;
-  sprintf(options[OPT_232THNUMCORE].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_232THNUMCORE].cNeg, "Primordial Earth Units");
   fnRead[OPT_232THNUMCORE] = &fvRead232ThNumCore;
 
-  sprintf(options[OPT_232THPOWERCORE].cName, "d232ThPowerCore");
-  sprintf(options[OPT_232THPOWERCORE].cDescr,
+  fvFormattedString(&options[OPT_232THPOWERCORE].cName, "d232ThPowerCore");
+  fvFormattedString(&options[OPT_232THPOWERCORE].cDescr,
           "Initial Core Power Production from 232Th Atoms");
-  sprintf(options[OPT_232THPOWERCORE].cDefault, "Primordial Earth");
-  sprintf(options[OPT_232THPOWERCORE].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_232THPOWERCORE].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_232THPOWERCORE].cDimension, "energy/time");
   options[OPT_232THPOWERCORE].iType      = 2;
   options[OPT_232THPOWERCORE].bMultiFile = 1;
   options[OPT_232THPOWERCORE].dNeg       = EPOWERCORE232TH; // 1e12*1e-7; // cgs
   options[OPT_232THPOWERCORE].dDefault   = EPOWERCORE232TH;
-  sprintf(options[OPT_232THPOWERCORE].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_232THPOWERCORE].cNeg, "Primordial Earth Units");
   fnRead[OPT_232THPOWERCORE] = &fvRead232ThPowerCore;
 
-  sprintf(options[OPT_232THMASSCRUST].cName, "d232ThMassCrust");
-  sprintf(options[OPT_232THMASSCRUST].cDescr, "Initial Crust Mass of 232Th");
-  sprintf(options[OPT_232THMASSCRUST].cDefault, "Primordial Earth");
-  sprintf(options[OPT_232THMASSCRUST].cDimension, "mass");
+  fvFormattedString(&options[OPT_232THMASSCRUST].cName, "d232ThMassCrust");
+  fvFormattedString(&options[OPT_232THMASSCRUST].cDescr, "Initial Crust Mass of 232Th");
+  fvFormattedString(&options[OPT_232THMASSCRUST].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_232THMASSCRUST].cDimension, "mass");
   options[OPT_232THMASSCRUST].iType      = 2;
   options[OPT_232THMASSCRUST].bMultiFile = 1;
   options[OPT_232THMASSCRUST].dNeg       = EMASSCRUST232TH;
   options[OPT_232THMASSCRUST].dDefault   = EMASSCRUST232TH;
-  sprintf(options[OPT_232THMASSCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_232THMASSCRUST].cNeg, "Primordial Earth Units");
   fnRead[OPT_232THMASSCRUST] = &fvRead232ThMassCrust;
 
-  sprintf(options[OPT_232THNUMCRUST].cName, "d232ThNumCrust");
-  sprintf(options[OPT_232THNUMCRUST].cDescr,
+  fvFormattedString(&options[OPT_232THNUMCRUST].cName, "d232ThNumCrust");
+  fvFormattedString(&options[OPT_232THNUMCRUST].cDescr,
           "Initial Crust Number of 232Th Atoms");
-  sprintf(options[OPT_232THNUMCRUST].cDefault, "Primordial Earth");
-  sprintf(options[OPT_232THNUMCRUST].cDimension, "nd");
+  fvFormattedString(&options[OPT_232THNUMCRUST].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_232THNUMCRUST].cDimension, "nd");
   options[OPT_232THNUMCRUST].iType      = 2;
   options[OPT_232THNUMCRUST].bMultiFile = 1;
   options[OPT_232THNUMCRUST].dNeg       = ENUMCRUST232TH;
   options[OPT_232THNUMCRUST].dDefault   = ENUMCRUST232TH;
-  sprintf(options[OPT_232THNUMCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_232THNUMCRUST].cNeg, "Primordial Earth Units");
   fnRead[OPT_232THNUMCRUST] = &fvRead232ThNumCrust;
 
-  sprintf(options[OPT_232THPOWERCRUST].cName, "d232ThPowerCrust");
-  sprintf(options[OPT_232THPOWERCRUST].cDescr,
+  fvFormattedString(&options[OPT_232THPOWERCRUST].cName, "d232ThPowerCrust");
+  fvFormattedString(&options[OPT_232THPOWERCRUST].cDescr,
           "Initial Crust Power Production from 232Th Atoms");
-  sprintf(options[OPT_232THPOWERCRUST].cDefault, "Primordial Earth");
-  sprintf(options[OPT_232THPOWERCRUST].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_232THPOWERCRUST].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_232THPOWERCRUST].cDimension, "energy/time");
   options[OPT_232THPOWERCRUST].iType      = 2;
   options[OPT_232THPOWERCRUST].bMultiFile = 1;
   options[OPT_232THPOWERCRUST].dNeg     = EPOWERCRUST232TH; // 1e12*1e-7; // cgs
   options[OPT_232THPOWERCRUST].dDefault = EPOWERCRUST232TH;
-  sprintf(options[OPT_232THPOWERCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_232THPOWERCRUST].cNeg, "Primordial Earth Units");
   fnRead[OPT_232THPOWERCRUST] = &fvRead232ThPowerCrust;
 
   /* 238U*/
-  sprintf(options[OPT_238UMASSMAN].cName, "d238UMassMan");
-  sprintf(options[OPT_238UMASSMAN].cDescr, "Initial Mass of 238U");
-  sprintf(options[OPT_238UMASSMAN].cDefault, "Primordial Earth");
-  sprintf(options[OPT_238UMASSMAN].cDimension, "mass");
+  fvFormattedString(&options[OPT_238UMASSMAN].cName, "d238UMassMan");
+  fvFormattedString(&options[OPT_238UMASSMAN].cDescr, "Initial Mass of 238U");
+  fvFormattedString(&options[OPT_238UMASSMAN].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_238UMASSMAN].cDimension, "mass");
   options[OPT_238UMASSMAN].iType      = 2;
   options[OPT_238UMASSMAN].bMultiFile = 1;
   options[OPT_238UMASSMAN].dNeg       = EMASSMAN238U;
   options[OPT_238UMASSMAN].dDefault   = EMASSMAN238U;
-  sprintf(options[OPT_238UMASSMAN].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_238UMASSMAN].cNeg, "Primordial Earth Units");
   fnRead[OPT_238UMASSMAN] = &fvRead238UMassMan;
 
-  sprintf(options[OPT_238UNUMMAN].cName, "d238UNumMan");
-  sprintf(options[OPT_238UNUMMAN].cDescr, "Initial Number of 238U Atoms");
-  sprintf(options[OPT_238UNUMMAN].cDefault, "Primordial Earth");
-  sprintf(options[OPT_238UNUMMAN].cDimension, "nd");
+  fvFormattedString(&options[OPT_238UNUMMAN].cName, "d238UNumMan");
+  fvFormattedString(&options[OPT_238UNUMMAN].cDescr, "Initial Number of 238U Atoms");
+  fvFormattedString(&options[OPT_238UNUMMAN].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_238UNUMMAN].cDimension, "nd");
   options[OPT_238UNUMMAN].dDefault   = 0;
   options[OPT_238UNUMMAN].iType      = 2;
   options[OPT_238UNUMMAN].bMultiFile = 1;
   options[OPT_238UNUMMAN].dNeg       = ENUMMAN238U;
   options[OPT_238UNUMMAN].dDefault   = ENUMMAN238U;
-  sprintf(options[OPT_238UNUMMAN].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_238UNUMMAN].cNeg, "Primordial Earth Units");
   fnRead[OPT_238UNUMMAN] = &fvRead238UNumMan;
 
-  sprintf(options[OPT_238UPOWERMAN].cName, "d238UPowerMan"); // section added
+  fvFormattedString(&options[OPT_238UPOWERMAN].cName, "d238UPowerMan"); // section added
                                                              // PED
-  sprintf(options[OPT_238UPOWERMAN].cDescr,
+  fvFormattedString(&options[OPT_238UPOWERMAN].cDescr,
           "Initial Power Production from 238U Atoms");
-  sprintf(options[OPT_238UPOWERMAN].cDefault, "Primordial Earth");
-  sprintf(options[OPT_238UPOWERMAN].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_238UPOWERMAN].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_238UPOWERMAN].cDimension, "energy/time");
   options[OPT_238UPOWERMAN].iType      = 2;
   options[OPT_238UPOWERMAN].bMultiFile = 1;
   options[OPT_238UPOWERMAN].dNeg       = EPOWERMAN238U; // 1e12*1e-7; // cgs
   options[OPT_238UPOWERMAN].dDefault   = EPOWERMAN238U;
-  sprintf(options[OPT_238UPOWERMAN].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_238UPOWERMAN].cNeg, "Primordial Earth Units");
   fnRead[OPT_238UPOWERMAN] = &fvRead238UPowerMan;
 
-  sprintf(options[OPT_238UMASSCORE].cName, "d238UMassCore");
-  sprintf(options[OPT_238UMASSCORE].cDescr, "Initial Core Mass of 238U");
-  sprintf(options[OPT_238UMASSCORE].cDefault, "Primordial Earth");
-  sprintf(options[OPT_238UMASSCORE].cDimension, "mass");
+  fvFormattedString(&options[OPT_238UMASSCORE].cName, "d238UMassCore");
+  fvFormattedString(&options[OPT_238UMASSCORE].cDescr, "Initial Core Mass of 238U");
+  fvFormattedString(&options[OPT_238UMASSCORE].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_238UMASSCORE].cDimension, "mass");
   options[OPT_238UMASSCORE].iType      = 2;
   options[OPT_238UMASSCORE].bMultiFile = 1;
   options[OPT_238UMASSCORE].dNeg       = EMASSCORE238U;
   options[OPT_238UMASSCORE].dDefault   = EMASSCORE238U;
-  sprintf(options[OPT_238UMASSCORE].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_238UMASSCORE].cNeg, "Primordial Earth Units");
   fnRead[OPT_238UMASSCORE] = &fvRead238UMassCore;
 
-  sprintf(options[OPT_238UNUMCORE].cName, "d238UNumCore");
-  sprintf(options[OPT_238UNUMCORE].cDescr, "Initial Core Number of 238U Atoms");
-  sprintf(options[OPT_238UNUMCORE].cDefault, "Primordial Earth");
-  sprintf(options[OPT_238UNUMCORE].cDimension, "nd");
+  fvFormattedString(&options[OPT_238UNUMCORE].cName, "d238UNumCore");
+  fvFormattedString(&options[OPT_238UNUMCORE].cDescr, "Initial Core Number of 238U Atoms");
+  fvFormattedString(&options[OPT_238UNUMCORE].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_238UNUMCORE].cDimension, "nd");
   options[OPT_238UNUMCORE].dDefault   = 0;
   options[OPT_238UNUMCORE].iType      = 2;
   options[OPT_238UNUMCORE].bMultiFile = 1;
   options[OPT_238UNUMCORE].dNeg       = ENUMCORE238U;
   options[OPT_238UNUMCORE].dDefault   = ENUMCORE238U;
-  sprintf(options[OPT_238UNUMCORE].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_238UNUMCORE].cNeg, "Primordial Earth Units");
   fnRead[OPT_238UNUMCORE] = &fvRead238UNumCore;
 
-  sprintf(options[OPT_238UPOWERCORE].cName,
+  fvFormattedString(&options[OPT_238UPOWERCORE].cName,
           "d238UPowerCore"); // section added PED
-  sprintf(options[OPT_238UPOWERCORE].cDescr,
+  fvFormattedString(&options[OPT_238UPOWERCORE].cDescr,
           "Initial Core Power Production from 238U Atoms");
-  sprintf(options[OPT_238UPOWERCORE].cDefault, "Primordial Earth");
-  sprintf(options[OPT_238UPOWERCORE].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_238UPOWERCORE].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_238UPOWERCORE].cDimension, "energy/time");
   options[OPT_238UPOWERCORE].iType      = 2;
   options[OPT_238UPOWERCORE].bMultiFile = 1;
   options[OPT_238UPOWERCORE].dNeg       = EPOWERCORE238U; // 1e12*1e-7; // cgs
   options[OPT_238UPOWERCORE].dDefault   = EPOWERCORE238U;
-  sprintf(options[OPT_238UPOWERCORE].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_238UPOWERCORE].cNeg, "Primordial Earth Units");
   fnRead[OPT_238UPOWERCORE] = &fvRead238UPowerCore;
 
-  sprintf(options[OPT_238UMASSCRUST].cName, "d238UMassCrust");
-  sprintf(options[OPT_238UMASSCRUST].cDescr, "Initial Crust Mass of 238U");
-  sprintf(options[OPT_238UMASSCRUST].cDefault, "Primordial Earth");
-  sprintf(options[OPT_238UMASSCRUST].cDimension, "mass");
+  fvFormattedString(&options[OPT_238UMASSCRUST].cName, "d238UMassCrust");
+  fvFormattedString(&options[OPT_238UMASSCRUST].cDescr, "Initial Crust Mass of 238U");
+  fvFormattedString(&options[OPT_238UMASSCRUST].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_238UMASSCRUST].cDimension, "mass");
   options[OPT_238UMASSCRUST].iType      = 2;
   options[OPT_238UMASSCRUST].bMultiFile = 1;
   options[OPT_238UMASSCRUST].dNeg       = EMASSCRUST238U;
   options[OPT_238UMASSCRUST].dDefault   = EMASSCRUST238U;
-  sprintf(options[OPT_238UMASSCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_238UMASSCRUST].cNeg, "Primordial Earth Units");
   fnRead[OPT_238UMASSCRUST] = &fvRead238UMassCrust;
 
-  sprintf(options[OPT_238UNUMCRUST].cName, "d238UNumCrust");
-  sprintf(options[OPT_238UNUMCRUST].cDescr,
+  fvFormattedString(&options[OPT_238UNUMCRUST].cName, "d238UNumCrust");
+  fvFormattedString(&options[OPT_238UNUMCRUST].cDescr,
           "Initial Crust Number of 238U Atoms");
-  sprintf(options[OPT_238UNUMCRUST].cDefault, "Primordial Earth");
-  sprintf(options[OPT_238UNUMCRUST].cDimension, "nd");
+  fvFormattedString(&options[OPT_238UNUMCRUST].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_238UNUMCRUST].cDimension, "nd");
   options[OPT_238UNUMCRUST].dDefault   = 0;
   options[OPT_238UNUMCRUST].iType      = 2;
   options[OPT_238UNUMCRUST].bMultiFile = 1;
   options[OPT_238UNUMCRUST].dNeg       = ENUMCRUST238U;
   options[OPT_238UNUMCRUST].dDefault   = ENUMCRUST238U;
-  sprintf(options[OPT_238UNUMCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_238UNUMCRUST].cNeg, "Primordial Earth Units");
   fnRead[OPT_238UNUMCRUST] = &fvRead238UNumCrust;
 
-  sprintf(options[OPT_238UPOWERCRUST].cName,
+  fvFormattedString(&options[OPT_238UPOWERCRUST].cName,
           "d238UPowerCrust"); // section added PED
-  sprintf(options[OPT_238UPOWERCRUST].cDescr,
+  fvFormattedString(&options[OPT_238UPOWERCRUST].cDescr,
           "Initial Crust Power Production from 238U Atoms");
-  sprintf(options[OPT_238UPOWERCRUST].cDefault, "Primordial Earth");
-  sprintf(options[OPT_238UPOWERCRUST].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_238UPOWERCRUST].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_238UPOWERCRUST].cDimension, "energy/time");
   options[OPT_238UPOWERCRUST].iType      = 2;
   options[OPT_238UPOWERCRUST].bMultiFile = 1;
   options[OPT_238UPOWERCRUST].dNeg       = EPOWERCRUST238U; // 1e12*1e-7; // cgs
   options[OPT_238UPOWERCRUST].dDefault   = EPOWERCRUST238U;
-  sprintf(options[OPT_238UPOWERCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_238UPOWERCRUST].cNeg, "Primordial Earth Units");
   fnRead[OPT_238UPOWERCRUST] = &fvRead238UPowerCrust;
 
   /* 235U */
-  sprintf(options[OPT_235UMASSMAN].cName, "d235UMassMan"); // PED
-  sprintf(options[OPT_235UMASSMAN].cDescr, "Initial Mass of 235U");
-  sprintf(options[OPT_235UMASSMAN].cDefault, "Primordial Earth");
-  sprintf(options[OPT_235UMASSMAN].cDimension, "nd");
+  fvFormattedString(&options[OPT_235UMASSMAN].cName, "d235UMassMan"); // PED
+  fvFormattedString(&options[OPT_235UMASSMAN].cDescr, "Initial Mass of 235U");
+  fvFormattedString(&options[OPT_235UMASSMAN].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_235UMASSMAN].cDimension, "nd");
   options[OPT_235UMASSMAN].iType      = 2;
   options[OPT_235UMASSMAN].bMultiFile = 1;
   options[OPT_235UMASSMAN].dNeg       = EMASSMAN235U;
   options[OPT_235UMASSMAN].dDefault   = EMASSMAN235U;
-  sprintf(options[OPT_235UMASSMAN].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_235UMASSMAN].cNeg, "Primordial Earth Units");
   fnRead[OPT_235UMASSMAN] = &fvRead235UMassMan;
 
-  sprintf(options[OPT_235UNUMMAN].cName, "d235UNumMan"); // PED
-  sprintf(options[OPT_235UNUMMAN].cDescr, "Initial Number of 235U Atoms");
-  sprintf(options[OPT_235UNUMMAN].cDefault, "Primordial Earth");
-  sprintf(options[OPT_235UNUMMAN].cDimension, "nd");
+  fvFormattedString(&options[OPT_235UNUMMAN].cName, "d235UNumMan"); // PED
+  fvFormattedString(&options[OPT_235UNUMMAN].cDescr, "Initial Number of 235U Atoms");
+  fvFormattedString(&options[OPT_235UNUMMAN].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_235UNUMMAN].cDimension, "nd");
   options[OPT_235UNUMMAN].iType      = 2;
   options[OPT_235UNUMMAN].bMultiFile = 1;
   options[OPT_235UNUMMAN].dNeg       = ENUMMAN235U;
   options[OPT_235UNUMMAN].dDefault   = ENUMMAN235U;
-  sprintf(options[OPT_235UNUMMAN].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_235UNUMMAN].cNeg, "Primordial Earth Units");
   fnRead[OPT_235UNUMMAN] = &fvRead235UNumMan;
 
-  sprintf(options[OPT_235UPOWERMAN].cName, "d235UPowerMan"); // section added
+  fvFormattedString(&options[OPT_235UPOWERMAN].cName, "d235UPowerMan"); // section added
                                                              // PED
-  sprintf(options[OPT_235UPOWERMAN].cDescr,
+  fvFormattedString(&options[OPT_235UPOWERMAN].cDescr,
           "Initial Power Production from 235U Atoms");
-  sprintf(options[OPT_235UPOWERMAN].cDefault, "Primordial Earth");
-  sprintf(options[OPT_235UPOWERMAN].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_235UPOWERMAN].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_235UPOWERMAN].cDimension, "energy/time");
   options[OPT_235UPOWERMAN].iType      = 2;
   options[OPT_235UPOWERMAN].bMultiFile = 1;
   options[OPT_235UPOWERMAN].dNeg       = EPOWERMAN235U;
   options[OPT_235UPOWERMAN].dDefault   = EPOWERMAN235U;
-  sprintf(options[OPT_235UPOWERMAN].cNeg, "Primoridal Earth Units");
+  fvFormattedString(&options[OPT_235UPOWERMAN].cNeg, "Primoridal Earth Units");
   fnRead[OPT_235UPOWERMAN] = &fvRead235UPowerMan;
 
-  sprintf(options[OPT_235UMASSCORE].cName, "d235UMassCore");
-  sprintf(options[OPT_235UMASSCORE].cDescr, "Initial Core Mass of 235U");
-  sprintf(options[OPT_235UMASSCORE].cDefault, "Primordial Earth");
-  sprintf(options[OPT_235UMASSCORE].cDimension, "mass");
+  fvFormattedString(&options[OPT_235UMASSCORE].cName, "d235UMassCore");
+  fvFormattedString(&options[OPT_235UMASSCORE].cDescr, "Initial Core Mass of 235U");
+  fvFormattedString(&options[OPT_235UMASSCORE].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_235UMASSCORE].cDimension, "mass");
   options[OPT_235UMASSCORE].iType      = 2;
   options[OPT_235UMASSCORE].bMultiFile = 1;
   options[OPT_235UMASSCORE].dNeg       = EMASSCORE235U;
   options[OPT_235UMASSCORE].dDefault   = EMASSCORE235U;
-  sprintf(options[OPT_235UMASSCORE].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_235UMASSCORE].cNeg, "Primordial Earth Units");
   fnRead[OPT_235UMASSCORE] = &fvRead235UMassCore;
 
-  sprintf(options[OPT_235UNUMCORE].cName, "d235UNumCore");
-  sprintf(options[OPT_235UNUMCORE].cDescr, "Initial Core Number of 235U Atoms");
-  sprintf(options[OPT_235UNUMCORE].cDefault, "Primordial Earth");
-  sprintf(options[OPT_235UNUMCORE].cDimension, "nd");
+  fvFormattedString(&options[OPT_235UNUMCORE].cName, "d235UNumCore");
+  fvFormattedString(&options[OPT_235UNUMCORE].cDescr, "Initial Core Number of 235U Atoms");
+  fvFormattedString(&options[OPT_235UNUMCORE].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_235UNUMCORE].cDimension, "nd");
   options[OPT_235UNUMCORE].iType      = 2;
   options[OPT_235UNUMCORE].bMultiFile = 1;
   options[OPT_235UNUMCORE].dNeg       = ENUMCORE235U;
   options[OPT_235UNUMCORE].dDefault   = ENUMCORE235U;
-  sprintf(options[OPT_235UNUMCORE].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_235UNUMCORE].cNeg, "Primordial Earth Units");
   fnRead[OPT_235UNUMCORE] = &fvRead235UNumCore;
 
-  sprintf(options[OPT_235UPOWERCORE].cName,
+  fvFormattedString(&options[OPT_235UPOWERCORE].cName,
           "d235UPowerCore"); // section added PED
-  sprintf(options[OPT_235UPOWERCORE].cDescr,
+  fvFormattedString(&options[OPT_235UPOWERCORE].cDescr,
           "Initial Core Power Production from 235U Atoms");
-  sprintf(options[OPT_235UPOWERCORE].cDefault, "Primordial Earth");
-  sprintf(options[OPT_235UPOWERCORE].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_235UPOWERCORE].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_235UPOWERCORE].cDimension, "energy/time");
   options[OPT_235UPOWERCORE].iType      = 2;
   options[OPT_235UPOWERCORE].bMultiFile = 1;
   options[OPT_235UPOWERCORE].dNeg       = EPOWERCORE235U;
   options[OPT_235UPOWERCORE].dDefault   = EPOWERCORE235U;
-  sprintf(options[OPT_235UPOWERCORE].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_235UPOWERCORE].cNeg, "Primordial Earth Units");
   fnRead[OPT_235UPOWERCORE] = &fvRead235UPowerCore;
 
-  sprintf(options[OPT_235UMASSCRUST].cName, "d235UMassCrust");
-  sprintf(options[OPT_235UMASSCRUST].cDescr, "Initial Crust Mass of 235U");
-  sprintf(options[OPT_235UMASSCRUST].cDefault, "Primordial Earth");
-  sprintf(options[OPT_235UMASSCRUST].cDimension, "mass");
+  fvFormattedString(&options[OPT_235UMASSCRUST].cName, "d235UMassCrust");
+  fvFormattedString(&options[OPT_235UMASSCRUST].cDescr, "Initial Crust Mass of 235U");
+  fvFormattedString(&options[OPT_235UMASSCRUST].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_235UMASSCRUST].cDimension, "mass");
   options[OPT_235UMASSCRUST].iType      = 2;
   options[OPT_235UMASSCRUST].bMultiFile = 1;
   options[OPT_235UMASSCRUST].dNeg       = EMASSCRUST235U;
   options[OPT_235UMASSCRUST].dDefault   = EMASSCRUST235U;
-  sprintf(options[OPT_235UMASSCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_235UMASSCRUST].cNeg, "Primordial Earth Units");
   fnRead[OPT_235UMASSCRUST] = &fvRead235UMassCrust;
 
-  sprintf(options[OPT_235UNUMCRUST].cName, "d235UNumCrust");
-  sprintf(options[OPT_235UNUMCRUST].cDescr,
+  fvFormattedString(&options[OPT_235UNUMCRUST].cName, "d235UNumCrust");
+  fvFormattedString(&options[OPT_235UNUMCRUST].cDescr,
           "Initial Crust Number of 235U Atoms");
-  sprintf(options[OPT_235UNUMCRUST].cDefault, "Primordial Earth");
-  sprintf(options[OPT_235UNUMCRUST].cDimension, "nd");
+  fvFormattedString(&options[OPT_235UNUMCRUST].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_235UNUMCRUST].cDimension, "nd");
   options[OPT_235UNUMCRUST].iType      = 2;
   options[OPT_235UNUMCRUST].bMultiFile = 1;
   options[OPT_235UNUMCRUST].dNeg       = ENUMCRUST235U;
   options[OPT_235UNUMCRUST].dDefault   = ENUMCRUST235U;
-  sprintf(options[OPT_235UNUMCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_235UNUMCRUST].cNeg, "Primordial Earth Units");
   fnRead[OPT_235UNUMCRUST] = &fvRead235UNumCrust;
 
-  sprintf(options[OPT_235UPOWERCRUST].cName,
+  fvFormattedString(&options[OPT_235UPOWERCRUST].cName,
           "d235UPowerCrust"); // section added PED
-  sprintf(options[OPT_235UPOWERCRUST].cDescr,
+  fvFormattedString(&options[OPT_235UPOWERCRUST].cDescr,
           "Initial Crust Power Production from 235U Atoms");
-  sprintf(options[OPT_235UPOWERCRUST].cDefault, "Primordial Earth");
-  sprintf(options[OPT_235UPOWERCRUST].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_235UPOWERCRUST].cDefault, "Primordial Earth");
+  fvFormattedString(&options[OPT_235UPOWERCRUST].cDimension, "energy/time");
   options[OPT_235UPOWERCRUST].iType      = 2;
   options[OPT_235UPOWERCRUST].bMultiFile = 1;
   options[OPT_235UPOWERCRUST].dNeg       = EPOWERCRUST235U;
   options[OPT_235UPOWERCRUST].dDefault   = EPOWERCRUST235U;
-  sprintf(options[OPT_235UPOWERCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_235UPOWERCRUST].cNeg, "Primordial Earth Units");
   fnRead[OPT_235UPOWERCRUST] = &fvRead235UPowerCrust;
 
-  sprintf(options[OPT_HALT40KPOWER].cName, "dHalt40KPower");
-  sprintf(options[OPT_HALT40KPOWER].cDescr, "Minimum 40K Power");
-  sprintf(options[OPT_HALT40KPOWER].cDefault, "0");
-  sprintf(options[OPT_HALT40KPOWER].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_HALT40KPOWER].cName, "dHalt40KPower");
+  fvFormattedString(&options[OPT_HALT40KPOWER].cDescr, "Minimum 40K Power");
+  fvFormattedString(&options[OPT_HALT40KPOWER].cDefault, "0");
+  fvFormattedString(&options[OPT_HALT40KPOWER].cDimension, "energy/time");
   options[OPT_HALT40KPOWER].iType      = 2;
   options[OPT_HALT40KPOWER].bMultiFile = 1;
   options[OPT_HALT40KPOWER].dNeg       = 1e12; // TW
   options[OPT_HALT40KPOWER].dDefault   = 0;
-  sprintf(options[OPT_HALT40KPOWER].cNeg, "TW");
+  fvFormattedString(&options[OPT_HALT40KPOWER].cNeg, "TW");
   fnRead[OPT_HALT40KPOWER] = &fvReadHalt40KPower;
 
-  sprintf(options[OPT_HALT232THPOWER].cName, "dHalt232ThPower");
-  sprintf(options[OPT_HALT232THPOWER].cDescr, "Minimum 232Th Power");
-  sprintf(options[OPT_HALT232THPOWER].cDefault, "0");
-  sprintf(options[OPT_HALT232THPOWER].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_HALT232THPOWER].cName, "dHalt232ThPower");
+  fvFormattedString(&options[OPT_HALT232THPOWER].cDescr, "Minimum 232Th Power");
+  fvFormattedString(&options[OPT_HALT232THPOWER].cDefault, "0");
+  fvFormattedString(&options[OPT_HALT232THPOWER].cDimension, "energy/time");
   options[OPT_HALT232THPOWER].iType      = 2;
   options[OPT_HALT232THPOWER].bMultiFile = 1;
   options[OPT_HALT232THPOWER].dNeg       = 1e12; // TW
   options[OPT_HALT232THPOWER].dDefault   = 0;
-  sprintf(options[OPT_HALT232THPOWER].cNeg, "TW");
+  fvFormattedString(&options[OPT_HALT232THPOWER].cNeg, "TW");
   fnRead[OPT_HALT232THPOWER] = &fvReadHalt232ThPower;
 
-  sprintf(options[OPT_HALT235UPOWER].cName, "dHalt235UPower");
-  sprintf(options[OPT_HALT235UPOWER].cDescr, "Minimum 235U Power");
-  sprintf(options[OPT_HALT235UPOWER].cDefault, "0");
-  sprintf(options[OPT_HALT235UPOWER].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_HALT235UPOWER].cName, "dHalt235UPower");
+  fvFormattedString(&options[OPT_HALT235UPOWER].cDescr, "Minimum 235U Power");
+  fvFormattedString(&options[OPT_HALT235UPOWER].cDefault, "0");
+  fvFormattedString(&options[OPT_HALT235UPOWER].cDimension, "energy/time");
   options[OPT_HALT235UPOWER].iType      = 2;
   options[OPT_HALT235UPOWER].bMultiFile = 1;
   options[OPT_HALT235UPOWER].dNeg       = 1e12; // TW
   options[OPT_HALT235UPOWER].dDefault   = 0;
-  sprintf(options[OPT_HALT235UPOWER].cNeg, "TW");
+  fvFormattedString(&options[OPT_HALT235UPOWER].cNeg, "TW");
   fnRead[OPT_HALT235UPOWER] = &fvReadHalt235UPower;
 
-  sprintf(options[OPT_HALT238UPOWER].cName, "dHalt238UPower");
-  sprintf(options[OPT_HALT238UPOWER].cDescr, "Minimum 238U Power");
-  sprintf(options[OPT_HALT238UPOWER].cDefault, "0");
-  sprintf(options[OPT_HALT238UPOWER].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_HALT238UPOWER].cName, "dHalt238UPower");
+  fvFormattedString(&options[OPT_HALT238UPOWER].cDescr, "Minimum 238U Power");
+  fvFormattedString(&options[OPT_HALT238UPOWER].cDefault, "0");
+  fvFormattedString(&options[OPT_HALT238UPOWER].cDimension, "energy/time");
   options[OPT_HALT238UPOWER].iType      = 2;
   options[OPT_HALT238UPOWER].bMultiFile = 1;
   options[OPT_HALT238UPOWER].dNeg       = 1e12; // TW
   options[OPT_HALT238UPOWER].dDefault   = 0;
-  sprintf(options[OPT_HALT238UPOWER].cNeg, "TW");
+  fvFormattedString(&options[OPT_HALT238UPOWER].cNeg, "TW");
   fnRead[OPT_HALT238UPOWER] = &fvReadHalt238UPower;
 
-  sprintf(options[OPT_HALTRADPOWER].cName, "dHaltRadPower");
-  sprintf(options[OPT_HALTRADPOWER].cDescr, "Minimum Total Radgiogenic Power");
-  sprintf(options[OPT_HALTRADPOWER].cDefault, "0");
-  sprintf(options[OPT_HALTRADPOWER].cDimension, "energy/time");
+  fvFormattedString(&options[OPT_HALTRADPOWER].cName, "dHaltRadPower");
+  fvFormattedString(&options[OPT_HALTRADPOWER].cDescr, "Minimum Total Radgiogenic Power");
+  fvFormattedString(&options[OPT_HALTRADPOWER].cDefault, "0");
+  fvFormattedString(&options[OPT_HALTRADPOWER].cDimension, "energy/time");
   options[OPT_HALTRADPOWER].iType      = 2;
   options[OPT_HALTRADPOWER].bMultiFile = 1;
   options[OPT_HALTRADPOWER].dNeg       = 1e12; // TW
   options[OPT_HALTRADPOWER].dDefault   = 0;
-  sprintf(options[OPT_HALTRADPOWER].cNeg, "TW");
+  fvFormattedString(&options[OPT_HALTRADPOWER].cNeg, "TW");
   fnRead[OPT_HALTRADPOWER] = &fvReadHaltRadPower;
 }
 /**
@@ -5427,28 +5427,28 @@ void fvWriteSurfEnFluxRadTotal(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* Aluminum */
-  sprintf(output[OUT_26ALPOWERMAN].cName, "26AlPowerMan");
-  sprintf(output[OUT_26ALPOWERMAN].cDescr, "Total Power Generated by 26Al");
-  sprintf(output[OUT_26ALPOWERMAN].cNeg, "TW");
+  fvFormattedString(&output[OUT_26ALPOWERMAN].cName, "26AlPowerMan");
+  fvFormattedString(&output[OUT_26ALPOWERMAN].cDescr, "Total Power Generated by 26Al");
+  fvFormattedString(&output[OUT_26ALPOWERMAN].cNeg, "TW");
   output[OUT_26ALPOWERMAN].bNeg       = 1;
   output[OUT_26ALPOWERMAN].dNeg       = 1e-12;
   output[OUT_26ALPOWERMAN].iNum       = 1;
   output[OUT_26ALPOWERMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALPOWERMAN]           = &fvWrite26AlPowerMan;
 
-  sprintf(output[OUT_26ALENFLUX].cName, "26AlEnFlux");
-  sprintf(output[OUT_26ALENFLUX].cDescr, "Surface Energy Flux from 26Al");
-  sprintf(output[OUT_26ALENFLUX].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_26ALENFLUX].cName, "26AlEnFlux");
+  fvFormattedString(&output[OUT_26ALENFLUX].cDescr, "Surface Energy Flux from 26Al");
+  fvFormattedString(&output[OUT_26ALENFLUX].cNeg, "W/m^2");
   output[OUT_26ALENFLUX].bNeg       = 1;
   output[OUT_26ALENFLUX].dNeg       = 1;
   output[OUT_26ALENFLUX].iNum       = 1;
   output[OUT_26ALENFLUX].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALENFLUX]           = &fvWrite26AlEnFlux;
 
-  sprintf(output[OUT_26ALDPOWERDT].cName, "D26AlPowerDt");
-  sprintf(output[OUT_26ALDPOWERDT].cDescr,
+  fvFormattedString(&output[OUT_26ALDPOWERDT].cName, "D26AlPowerDt");
+  fvFormattedString(&output[OUT_26ALDPOWERDT].cDescr,
           "Time Rate of Change of 26Al Power Generation");
-  sprintf(output[OUT_26ALDPOWERDT].cNeg, "TW/Gyr");
+  fvFormattedString(&output[OUT_26ALDPOWERDT].cNeg, "TW/Gyr");
   output[OUT_26ALDPOWERDT].bNeg = 1;
   output[OUT_26ALDPOWERDT].dNeg =
         1e9 / 1e12; //[yr/Gyr*TW/W] //1e12/1e9; /* XXX */
@@ -5456,37 +5456,37 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_26ALDPOWERDT].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALDPOWERDT]           = &fvWriteD26AlPowerDt;
 
-  sprintf(output[OUT_26ALDNUMDT].cName, "D26AlNumManDt");
-  sprintf(output[OUT_26ALDNUMDT].cDescr,
+  fvFormattedString(&output[OUT_26ALDNUMDT].cName, "D26AlNumManDt");
+  fvFormattedString(&output[OUT_26ALDNUMDT].cDescr,
           "Time Rate of Change of 26Al Heat Generation");
-  sprintf(output[OUT_26ALDNUMDT].cNeg, "/Gyr");
+  fvFormattedString(&output[OUT_26ALDNUMDT].cNeg, "/Gyr");
   output[OUT_26ALDNUMDT].bNeg       = 1;
   output[OUT_26ALDNUMDT].dNeg       = YEARSEC * 1e9; //[s/Gyr]
   output[OUT_26ALDNUMDT].iNum       = 1;
   output[OUT_26ALDNUMDT].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALDNUMDT]           = &fvWriteD26AlNumDt;
 
-  sprintf(output[OUT_26ALTIME].cName, "26AlTimescale");
-  sprintf(output[OUT_26ALTIME].cDescr, "Timescale for 26Al Power Generation");
-  sprintf(output[OUT_26ALTIME].cNeg, "Gyr");
+  fvFormattedString(&output[OUT_26ALTIME].cName, "26AlTimescale");
+  fvFormattedString(&output[OUT_26ALTIME].cDescr, "Timescale for 26Al Power Generation");
+  fvFormattedString(&output[OUT_26ALTIME].cNeg, "Gyr");
   output[OUT_26ALTIME].bNeg = 1;
   output[OUT_26ALTIME].dNeg = 1 / (YEARSEC * 1e9); //[Gyr/s] //YEARSEC*1e9;
   output[OUT_26ALTIME].iNum = 1;
   output[OUT_26ALTIME].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALTIME]           = &fvWrite26AlTimescale;
 
-  sprintf(output[OUT_26ALMASSMAN].cName, "26AlMassMan");
-  sprintf(output[OUT_26ALMASSMAN].cDescr, "Mass of Mantle in 26Al");
-  sprintf(output[OUT_26ALMASSMAN].cNeg, "Mearth");
+  fvFormattedString(&output[OUT_26ALMASSMAN].cName, "26AlMassMan");
+  fvFormattedString(&output[OUT_26ALMASSMAN].cDescr, "Mass of Mantle in 26Al");
+  fvFormattedString(&output[OUT_26ALMASSMAN].cNeg, "Mearth");
   output[OUT_26ALMASSMAN].bNeg       = 1;
   output[OUT_26ALMASSMAN].dNeg       = 1. / MEARTH; //[EMass/kg]
   output[OUT_26ALMASSMAN].iNum       = 1;
   output[OUT_26ALMASSMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALMASSMAN]           = &fvWrite26AlMassMan;
 
-  sprintf(output[OUT_26ALNUMMAN].cName, "26AlNumMan");
-  sprintf(output[OUT_26ALNUMMAN].cDescr, "Total Number of 26Al Atoms");
-  sprintf(output[OUT_26ALNUMMAN].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_26ALNUMMAN].cName, "26AlNumMan");
+  fvFormattedString(&output[OUT_26ALNUMMAN].cDescr, "Total Number of 26Al Atoms");
+  fvFormattedString(&output[OUT_26ALNUMMAN].cNeg, "Initial Primordial Earth Number");
   output[OUT_26ALNUMMAN].bNeg       = 1;
   output[OUT_26ALNUMMAN].dNeg       = EMASSMAN26AL / MASS26AL;
   output[OUT_26ALNUMMAN].iNum       = 1;
@@ -5494,37 +5494,37 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_26ALNUMMAN]           = &fvWrite26AlNumMan;
 
   /* Core */
-  sprintf(output[OUT_26ALPOWERCORE].cName, "26AlPowerCore");
-  sprintf(output[OUT_26ALPOWERCORE].cDescr, "Core Power Generated by 26Al");
-  sprintf(output[OUT_26ALPOWERCORE].cNeg, "TW");
+  fvFormattedString(&output[OUT_26ALPOWERCORE].cName, "26AlPowerCore");
+  fvFormattedString(&output[OUT_26ALPOWERCORE].cDescr, "Core Power Generated by 26Al");
+  fvFormattedString(&output[OUT_26ALPOWERCORE].cNeg, "TW");
   output[OUT_26ALPOWERCORE].bNeg       = 1;
   output[OUT_26ALPOWERCORE].dNeg       = 1 / 1e12; //[TW/W]
   output[OUT_26ALPOWERCORE].iNum       = 1;
   output[OUT_26ALPOWERCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALPOWERCORE]           = &fvWrite26AlPowerCore;
 
-  sprintf(output[OUT_26ALMASSCORE].cName, "26AlMassCore");
-  sprintf(output[OUT_26ALMASSCORE].cDescr, "Mass of core in 26Al");
-  sprintf(output[OUT_26ALMASSCORE].cNeg, "Mearth");
+  fvFormattedString(&output[OUT_26ALMASSCORE].cName, "26AlMassCore");
+  fvFormattedString(&output[OUT_26ALMASSCORE].cDescr, "Mass of core in 26Al");
+  fvFormattedString(&output[OUT_26ALMASSCORE].cNeg, "Mearth");
   output[OUT_26ALMASSCORE].bNeg       = 1;
   output[OUT_26ALMASSCORE].dNeg       = 1. / MEARTH;
   output[OUT_26ALMASSCORE].iNum       = 1;
   output[OUT_26ALMASSCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALMASSCORE]           = &fvWrite26AlMassCore;
 
-  sprintf(output[OUT_26ALNUMCORE].cName, "26AlNumCore");
-  sprintf(output[OUT_26ALNUMCORE].cDescr, "Total Core Number of 26Al Atoms");
-  sprintf(output[OUT_26ALNUMCORE].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_26ALNUMCORE].cName, "26AlNumCore");
+  fvFormattedString(&output[OUT_26ALNUMCORE].cDescr, "Total Core Number of 26Al Atoms");
+  fvFormattedString(&output[OUT_26ALNUMCORE].cNeg, "Initial Primordial Earth Number");
   output[OUT_26ALNUMCORE].bNeg       = 1;
   output[OUT_26ALNUMCORE].dNeg       = EMASSCORE26AL / MASS26AL;
   output[OUT_26ALNUMCORE].iNum       = 1;
   output[OUT_26ALNUMCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_26ALNUMCORE]           = &fvWrite26AlNumCore;
 
-  sprintf(output[OUT_26ALPOWERTOT].cName, "26AlPowerTotal");
-  sprintf(output[OUT_26ALPOWERTOT].cDescr,
+  fvFormattedString(&output[OUT_26ALPOWERTOT].cName, "26AlPowerTotal");
+  fvFormattedString(&output[OUT_26ALPOWERTOT].cDescr,
           "Total Power from Decay of 26Al Atoms");
-  sprintf(output[OUT_26ALPOWERTOT].cNeg, "TW");
+  fvFormattedString(&output[OUT_26ALPOWERTOT].cNeg, "TW");
   output[OUT_26ALPOWERTOT].bNeg       = 1;
   output[OUT_26ALPOWERTOT].dNeg       = 1e-12;
   output[OUT_26ALPOWERTOT].iNum       = 1;
@@ -5532,65 +5532,65 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_26ALPOWERTOT]           = &fvWrite26AlPowerTot;
 
   /* Potassium */
-  sprintf(output[OUT_40KENFLUX].cName, "40KEnFlux");
-  sprintf(output[OUT_40KENFLUX].cDescr, "Surface Energy Flux from 40K");
-  sprintf(output[OUT_40KENFLUX].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_40KENFLUX].cName, "40KEnFlux");
+  fvFormattedString(&output[OUT_40KENFLUX].cDescr, "Surface Energy Flux from 40K");
+  fvFormattedString(&output[OUT_40KENFLUX].cNeg, "W/m^2");
   output[OUT_40KENFLUX].bNeg       = 1;
   output[OUT_40KENFLUX].dNeg       = 1;
   output[OUT_40KENFLUX].iNum       = 1;
   output[OUT_40KENFLUX].iModuleBit = RADHEAT;
   fnWrite[OUT_40KENFLUX]           = &fvWrite40KEnFlux;
 
-  sprintf(output[OUT_40KDPOWERDT].cName, "D40KPowerDt");
-  sprintf(output[OUT_40KDPOWERDT].cDescr,
+  fvFormattedString(&output[OUT_40KDPOWERDT].cName, "D40KPowerDt");
+  fvFormattedString(&output[OUT_40KDPOWERDT].cDescr,
           "Time Rate of Change of 40K Power Generation");
-  sprintf(output[OUT_40KDPOWERDT].cNeg, "TW/Gyr");
+  fvFormattedString(&output[OUT_40KDPOWERDT].cNeg, "TW/Gyr");
   output[OUT_40KDPOWERDT].bNeg       = 1;
   output[OUT_40KDPOWERDT].dNeg       = 1e9 / 1e12; /* :) */
   output[OUT_40KDPOWERDT].iNum       = 1;
   output[OUT_40KDPOWERDT].iModuleBit = RADHEAT;
   fnWrite[OUT_40KDPOWERDT]           = &fvWriteD40KPowerDt;
 
-  sprintf(output[OUT_40KDNUMDT].cName, "D40KNumManDt");
-  sprintf(output[OUT_40KDNUMDT].cDescr,
+  fvFormattedString(&output[OUT_40KDNUMDT].cName, "D40KNumManDt");
+  fvFormattedString(&output[OUT_40KDNUMDT].cDescr,
           "Time Rate of Change of 40K Heat Generation");
-  sprintf(output[OUT_40KDNUMDT].cNeg, "/Gyr");
+  fvFormattedString(&output[OUT_40KDNUMDT].cNeg, "/Gyr");
   output[OUT_40KDNUMDT].bNeg       = 1;
   output[OUT_40KDNUMDT].dNeg       = YEARSEC * 1e9;
   output[OUT_40KDNUMDT].iNum       = 1;
   output[OUT_40KDNUMDT].iModuleBit = RADHEAT;
   fnWrite[OUT_40KDNUMDT]           = &fvWriteD40KNumDt;
 
-  sprintf(output[OUT_40KTIME].cName, "40KTimescale");
-  sprintf(output[OUT_40KTIME].cDescr, "Timescale for 40K Power Generation");
-  sprintf(output[OUT_40KTIME].cNeg, "Gyr");
+  fvFormattedString(&output[OUT_40KTIME].cName, "40KTimescale");
+  fvFormattedString(&output[OUT_40KTIME].cDescr, "Timescale for 40K Power Generation");
+  fvFormattedString(&output[OUT_40KTIME].cNeg, "Gyr");
   output[OUT_40KTIME].bNeg       = 1;
   output[OUT_40KTIME].dNeg       = 1 / (YEARSEC * 1e9);
   output[OUT_40KTIME].iNum       = 1;
   output[OUT_40KTIME].iModuleBit = RADHEAT;
   fnWrite[OUT_40KTIME]           = &fvWrite40KTimescale;
 
-  sprintf(output[OUT_40KPOWERMAN].cName, "40KPowerMan");
-  sprintf(output[OUT_40KPOWERMAN].cDescr, "Total Power Generated by 40K");
-  sprintf(output[OUT_40KPOWERMAN].cNeg, "TW");
+  fvFormattedString(&output[OUT_40KPOWERMAN].cName, "40KPowerMan");
+  fvFormattedString(&output[OUT_40KPOWERMAN].cDescr, "Total Power Generated by 40K");
+  fvFormattedString(&output[OUT_40KPOWERMAN].cNeg, "TW");
   output[OUT_40KPOWERMAN].bNeg       = 1;
   output[OUT_40KPOWERMAN].dNeg       = 1e-12;
   output[OUT_40KPOWERMAN].iNum       = 1;
   output[OUT_40KPOWERMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_40KPOWERMAN]           = &fvWrite40KPowerMan;
 
-  sprintf(output[OUT_40KMASSMAN].cName, "40KMassMan");
-  sprintf(output[OUT_40KMASSMAN].cDescr, "Total Mass of 40K");
-  sprintf(output[OUT_40KMASSMAN].cNeg, "Mearth");
+  fvFormattedString(&output[OUT_40KMASSMAN].cName, "40KMassMan");
+  fvFormattedString(&output[OUT_40KMASSMAN].cDescr, "Total Mass of 40K");
+  fvFormattedString(&output[OUT_40KMASSMAN].cNeg, "Mearth");
   output[OUT_40KMASSMAN].bNeg       = 1;
   output[OUT_40KMASSMAN].dNeg       = 1. / MEARTH;
   output[OUT_40KMASSMAN].iNum       = 1;
   output[OUT_40KMASSMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_40KMASSMAN]           = &fvWrite40KMassMan;
 
-  sprintf(output[OUT_40KNUMMAN].cName, "40KNumMan");
-  sprintf(output[OUT_40KNUMMAN].cDescr, "Total Number of 40K Atoms");
-  sprintf(output[OUT_40KNUMMAN].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_40KNUMMAN].cName, "40KNumMan");
+  fvFormattedString(&output[OUT_40KNUMMAN].cDescr, "Total Number of 40K Atoms");
+  fvFormattedString(&output[OUT_40KNUMMAN].cNeg, "Initial Primordial Earth Number");
   output[OUT_40KNUMMAN].bNeg       = 1;
   output[OUT_40KNUMMAN].dNeg       = EMASSMAN40K / MASS40K;
   output[OUT_40KNUMMAN].iNum       = 1;
@@ -5598,27 +5598,27 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_40KNUMMAN]           = &fvWrite40KNumMan;
 
   /* Core */
-  sprintf(output[OUT_40KPOWERCORE].cName, "40KPowerCore");
-  sprintf(output[OUT_40KPOWERCORE].cDescr, "Core Power Generated by 40K");
-  sprintf(output[OUT_40KPOWERCORE].cNeg, "TW");
+  fvFormattedString(&output[OUT_40KPOWERCORE].cName, "40KPowerCore");
+  fvFormattedString(&output[OUT_40KPOWERCORE].cDescr, "Core Power Generated by 40K");
+  fvFormattedString(&output[OUT_40KPOWERCORE].cNeg, "TW");
   output[OUT_40KPOWERCORE].bNeg       = 1;
   output[OUT_40KPOWERCORE].dNeg       = 1e-12; // ergs/s -> TW
   output[OUT_40KPOWERCORE].iNum       = 1;
   output[OUT_40KPOWERCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_40KPOWERCORE]           = &fvWrite40KPowerCore;
 
-  sprintf(output[OUT_40KMASSCORE].cName, "40KMassCore");
-  sprintf(output[OUT_40KMASSCORE].cDescr, "Total Core Mass of 40K");
-  sprintf(output[OUT_40KMASSCORE].cNeg, "Mearth");
+  fvFormattedString(&output[OUT_40KMASSCORE].cName, "40KMassCore");
+  fvFormattedString(&output[OUT_40KMASSCORE].cDescr, "Total Core Mass of 40K");
+  fvFormattedString(&output[OUT_40KMASSCORE].cNeg, "Mearth");
   output[OUT_40KMASSCORE].bNeg       = 1;
   output[OUT_40KMASSCORE].dNeg       = 1. / MEARTH;
   output[OUT_40KMASSCORE].iNum       = 1;
   output[OUT_40KMASSCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_40KMASSCORE]           = &fvWrite40KMassCore;
 
-  sprintf(output[OUT_40KNUMCORE].cName, "40KNumCore");
-  sprintf(output[OUT_40KNUMCORE].cDescr, "Total Core Number of 40K Atoms");
-  sprintf(output[OUT_40KNUMCORE].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_40KNUMCORE].cName, "40KNumCore");
+  fvFormattedString(&output[OUT_40KNUMCORE].cDescr, "Total Core Number of 40K Atoms");
+  fvFormattedString(&output[OUT_40KNUMCORE].cNeg, "Initial Primordial Earth Number");
   output[OUT_40KNUMCORE].bNeg       = 1;
   output[OUT_40KNUMCORE].dNeg       = EMASSCORE40K / MASS40K;
   output[OUT_40KNUMCORE].iNum       = 1;
@@ -5626,37 +5626,37 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_40KNUMCORE]           = &fvWrite40KNumCore;
 
   /* Crust */
-  sprintf(output[OUT_40KPOWERCRUST].cName, "40KPowerCrust");
-  sprintf(output[OUT_40KPOWERCRUST].cDescr, "Crust Power Generated by 40K");
-  sprintf(output[OUT_40KPOWERCRUST].cNeg, "TW");
+  fvFormattedString(&output[OUT_40KPOWERCRUST].cName, "40KPowerCrust");
+  fvFormattedString(&output[OUT_40KPOWERCRUST].cDescr, "Crust Power Generated by 40K");
+  fvFormattedString(&output[OUT_40KPOWERCRUST].cNeg, "TW");
   output[OUT_40KPOWERCRUST].bNeg       = 1;
   output[OUT_40KPOWERCRUST].dNeg       = 1e-12; // ergs/s -> TW
   output[OUT_40KPOWERCRUST].iNum       = 1;
   output[OUT_40KPOWERCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_40KPOWERCRUST]           = &fvWrite40KPowerCrust;
 
-  sprintf(output[OUT_40KMASSCRUST].cName, "40KMassCrust");
-  sprintf(output[OUT_40KMASSCRUST].cDescr, "Total Crust Mass of 40K");
-  sprintf(output[OUT_40KMASSCRUST].cNeg, "Mearth");
+  fvFormattedString(&output[OUT_40KMASSCRUST].cName, "40KMassCrust");
+  fvFormattedString(&output[OUT_40KMASSCRUST].cDescr, "Total Crust Mass of 40K");
+  fvFormattedString(&output[OUT_40KMASSCRUST].cNeg, "Mearth");
   output[OUT_40KMASSCRUST].bNeg       = 1;
   output[OUT_40KMASSCRUST].dNeg       = 1. / MEARTH;
   output[OUT_40KMASSCRUST].iNum       = 1;
   output[OUT_40KMASSCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_40KMASSCRUST]           = &fvWrite40KMassCrust;
 
-  sprintf(output[OUT_40KNUMCRUST].cName, "40KNumCrust");
-  sprintf(output[OUT_40KNUMCRUST].cDescr, "Total Crust Number of 40K Atoms");
-  sprintf(output[OUT_40KNUMCRUST].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_40KNUMCRUST].cName, "40KNumCrust");
+  fvFormattedString(&output[OUT_40KNUMCRUST].cDescr, "Total Crust Number of 40K Atoms");
+  fvFormattedString(&output[OUT_40KNUMCRUST].cNeg, "Initial Primordial Earth Number");
   output[OUT_40KNUMCRUST].bNeg       = 1;
   output[OUT_40KNUMCRUST].dNeg       = EMASSCRUST40K / MASS40K;
   output[OUT_40KNUMCRUST].iNum       = 1;
   output[OUT_40KNUMCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_40KNUMCRUST]           = &fvWrite40KNumCrust;
 
-  sprintf(output[OUT_40KPOWERTOT].cName, "40KPowerTotal");
-  sprintf(output[OUT_40KPOWERTOT].cDescr,
+  fvFormattedString(&output[OUT_40KPOWERTOT].cName, "40KPowerTotal");
+  fvFormattedString(&output[OUT_40KPOWERTOT].cDescr,
           "Total Power from Decay of 40K Atoms");
-  sprintf(output[OUT_40KPOWERTOT].cNeg, "TW");
+  fvFormattedString(&output[OUT_40KPOWERTOT].cNeg, "TW");
   output[OUT_40KPOWERTOT].bNeg       = 1;
   output[OUT_40KPOWERTOT].dNeg       = 1e-12;
   output[OUT_40KPOWERTOT].iNum       = 1;
@@ -5664,55 +5664,55 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_40KPOWERTOT]           = &fvWrite40KPowerTot;
 
   /* Thorium */
-  sprintf(output[OUT_232THPOWERMAN].cName, "232ThPowerMan");
-  sprintf(output[OUT_232THPOWERMAN].cDescr, "Total Power Generated by 232Th");
-  sprintf(output[OUT_232THPOWERMAN].cNeg, "TW");
+  fvFormattedString(&output[OUT_232THPOWERMAN].cName, "232ThPowerMan");
+  fvFormattedString(&output[OUT_232THPOWERMAN].cDescr, "Total Power Generated by 232Th");
+  fvFormattedString(&output[OUT_232THPOWERMAN].cNeg, "TW");
   output[OUT_232THPOWERMAN].bNeg       = 1;
   output[OUT_232THPOWERMAN].dNeg       = 1e-12;
   output[OUT_232THPOWERMAN].iNum       = 1;
   output[OUT_232THPOWERMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_232THPOWERMAN]           = &fvWrite232ThPowerMan;
 
-  sprintf(output[OUT_232THENFLUX].cName, "232ThEnFlux");
-  sprintf(output[OUT_232THENFLUX].cDescr, "Surface Energy Flux from 232Th");
-  sprintf(output[OUT_232THENFLUX].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_232THENFLUX].cName, "232ThEnFlux");
+  fvFormattedString(&output[OUT_232THENFLUX].cDescr, "Surface Energy Flux from 232Th");
+  fvFormattedString(&output[OUT_232THENFLUX].cNeg, "W/m^2");
   output[OUT_232THENFLUX].bNeg       = 1;
   output[OUT_232THENFLUX].dNeg       = 1;
   output[OUT_232THENFLUX].iNum       = 1;
   output[OUT_232THENFLUX].iModuleBit = RADHEAT;
   fnWrite[OUT_232THENFLUX]           = &fvWrite232ThEnFlux;
 
-  sprintf(output[OUT_232THDNUMDT].cName, "D232ThNumManDt");
-  sprintf(output[OUT_232THDNUMDT].cDescr,
+  fvFormattedString(&output[OUT_232THDNUMDT].cName, "D232ThNumManDt");
+  fvFormattedString(&output[OUT_232THDNUMDT].cDescr,
           "Time Rate of Change of the number of 232Th nuclei");
-  sprintf(output[OUT_232THDNUMDT].cNeg, "/Gyr");
+  fvFormattedString(&output[OUT_232THDNUMDT].cNeg, "/Gyr");
   output[OUT_232THDNUMDT].bNeg       = 1;
   output[OUT_232THDNUMDT].dNeg       = YEARSEC * 1e9;
   output[OUT_232THDNUMDT].iNum       = 1;
   output[OUT_232THDNUMDT].iModuleBit = RADHEAT;
   fnWrite[OUT_232THDNUMDT]           = &fvWriteD232ThNumDt;
 
-  sprintf(output[OUT_232THTIME].cName, "232ThTimescale");
-  sprintf(output[OUT_232THTIME].cDescr, "Timescale for 232Th Power Generation");
-  sprintf(output[OUT_232THTIME].cNeg, "Gyr");
+  fvFormattedString(&output[OUT_232THTIME].cName, "232ThTimescale");
+  fvFormattedString(&output[OUT_232THTIME].cDescr, "Timescale for 232Th Power Generation");
+  fvFormattedString(&output[OUT_232THTIME].cNeg, "Gyr");
   output[OUT_232THTIME].bNeg       = 1;
   output[OUT_232THTIME].dNeg       = 1. / (YEARSEC * 1e9);
   output[OUT_232THTIME].iNum       = 1;
   output[OUT_232THTIME].iModuleBit = RADHEAT;
   fnWrite[OUT_232THTIME]           = &fvWrite232ThTimescale;
 
-  sprintf(output[OUT_232THMASSMAN].cName, "232ThMassMan");
-  sprintf(output[OUT_232THMASSMAN].cDescr, "Total Mass of 232Th");
-  sprintf(output[OUT_232THMASSMAN].cNeg, "Mearth");
+  fvFormattedString(&output[OUT_232THMASSMAN].cName, "232ThMassMan");
+  fvFormattedString(&output[OUT_232THMASSMAN].cDescr, "Total Mass of 232Th");
+  fvFormattedString(&output[OUT_232THMASSMAN].cNeg, "Mearth");
   output[OUT_232THMASSMAN].bNeg       = 1;
   output[OUT_232THMASSMAN].dNeg       = 1. / MEARTH;
   output[OUT_232THMASSMAN].iNum       = 1;
   output[OUT_232THMASSMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_232THMASSMAN]           = &fvWrite232ThMassMan;
 
-  sprintf(output[OUT_232THNUMMAN].cName, "232ThNumMan");
-  sprintf(output[OUT_232THNUMMAN].cDescr, "Total Number of 232Th Atoms");
-  sprintf(output[OUT_232THNUMMAN].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_232THNUMMAN].cName, "232ThNumMan");
+  fvFormattedString(&output[OUT_232THNUMMAN].cDescr, "Total Number of 232Th Atoms");
+  fvFormattedString(&output[OUT_232THNUMMAN].cNeg, "Initial Primordial Earth Number");
   output[OUT_232THNUMMAN].bNeg       = 1;
   output[OUT_232THNUMMAN].dNeg       = EMASSMAN232TH / MASS232TH;
   output[OUT_232THNUMMAN].iNum       = 1;
@@ -5720,27 +5720,27 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_232THNUMMAN]           = &fvWrite232ThNumMan;
 
   /* Core */
-  sprintf(output[OUT_232THPOWERCORE].cName, "232ThPowerCore");
-  sprintf(output[OUT_232THPOWERCORE].cDescr, "Total Power Generated by 232Th");
-  sprintf(output[OUT_232THPOWERCORE].cNeg, "TW");
+  fvFormattedString(&output[OUT_232THPOWERCORE].cName, "232ThPowerCore");
+  fvFormattedString(&output[OUT_232THPOWERCORE].cDescr, "Total Power Generated by 232Th");
+  fvFormattedString(&output[OUT_232THPOWERCORE].cNeg, "TW");
   output[OUT_232THPOWERCORE].bNeg       = 1;
   output[OUT_232THPOWERCORE].dNeg       = 1e-12;
   output[OUT_232THPOWERCORE].iNum       = 1;
   output[OUT_232THPOWERCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_232THPOWERCORE]           = &fvWrite232ThPowerCore;
 
-  sprintf(output[OUT_232THMASSCORE].cName, "232ThMassCore");
-  sprintf(output[OUT_232THMASSCORE].cDescr, "Total Mass of 232Th");
-  sprintf(output[OUT_232THMASSCORE].cNeg, "Mearth");
+  fvFormattedString(&output[OUT_232THMASSCORE].cName, "232ThMassCore");
+  fvFormattedString(&output[OUT_232THMASSCORE].cDescr, "Total Mass of 232Th");
+  fvFormattedString(&output[OUT_232THMASSCORE].cNeg, "Mearth");
   output[OUT_232THMASSCORE].bNeg       = 1;
   output[OUT_232THMASSCORE].dNeg       = 1. / MEARTH;
   output[OUT_232THMASSCORE].iNum       = 1;
   output[OUT_232THMASSCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_232THMASSCORE]           = &fvWrite232ThMassCore;
 
-  sprintf(output[OUT_232THNUMCORE].cName, "232ThNumCore");
-  sprintf(output[OUT_232THNUMCORE].cDescr, "Total Number of 232Th Atoms");
-  sprintf(output[OUT_232THNUMCORE].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_232THNUMCORE].cName, "232ThNumCore");
+  fvFormattedString(&output[OUT_232THNUMCORE].cDescr, "Total Number of 232Th Atoms");
+  fvFormattedString(&output[OUT_232THNUMCORE].cNeg, "Initial Primordial Earth Number");
   output[OUT_232THNUMCORE].bNeg       = 1;
   output[OUT_232THNUMCORE].dNeg       = EMASSCORE232TH / MASS232TH;
   output[OUT_232THNUMCORE].iNum       = 1;
@@ -5748,37 +5748,37 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_232THNUMCORE]           = &fvWrite232ThNumCore;
 
   /* Crust */
-  sprintf(output[OUT_232THPOWERCRUST].cName, "232ThPowerCrust");
-  sprintf(output[OUT_232THPOWERCRUST].cDescr, "Total Power Generated by 232Th");
-  sprintf(output[OUT_232THPOWERCRUST].cNeg, "TW");
+  fvFormattedString(&output[OUT_232THPOWERCRUST].cName, "232ThPowerCrust");
+  fvFormattedString(&output[OUT_232THPOWERCRUST].cDescr, "Total Power Generated by 232Th");
+  fvFormattedString(&output[OUT_232THPOWERCRUST].cNeg, "TW");
   output[OUT_232THPOWERCRUST].bNeg       = 1;
   output[OUT_232THPOWERCRUST].dNeg       = 1e-12;
   output[OUT_232THPOWERCRUST].iNum       = 1;
   output[OUT_232THPOWERCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_232THPOWERCRUST]           = &fvWrite232ThPowerCrust;
 
-  sprintf(output[OUT_232THMASSCRUST].cName, "232ThMassCrust");
-  sprintf(output[OUT_232THMASSCRUST].cDescr, "Total Mass of 232Th");
-  sprintf(output[OUT_232THMASSCRUST].cNeg, "Mearth");
+  fvFormattedString(&output[OUT_232THMASSCRUST].cName, "232ThMassCrust");
+  fvFormattedString(&output[OUT_232THMASSCRUST].cDescr, "Total Mass of 232Th");
+  fvFormattedString(&output[OUT_232THMASSCRUST].cNeg, "Mearth");
   output[OUT_232THMASSCRUST].bNeg       = 1;
   output[OUT_232THMASSCRUST].dNeg       = 1. / MEARTH;
   output[OUT_232THMASSCRUST].iNum       = 1;
   output[OUT_232THMASSCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_232THMASSCRUST]           = &fvWrite232ThMassCrust;
 
-  sprintf(output[OUT_232THNUMCRUST].cName, "232ThNumCrust");
-  sprintf(output[OUT_232THNUMCRUST].cDescr, "Total Number of 232Th Atoms");
-  sprintf(output[OUT_232THNUMCRUST].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_232THNUMCRUST].cName, "232ThNumCrust");
+  fvFormattedString(&output[OUT_232THNUMCRUST].cDescr, "Total Number of 232Th Atoms");
+  fvFormattedString(&output[OUT_232THNUMCRUST].cNeg, "Initial Primordial Earth Number");
   output[OUT_232THNUMCRUST].bNeg       = 1;
   output[OUT_232THNUMCRUST].dNeg       = EMASSCRUST232TH / MASS232TH;
   output[OUT_232THNUMCRUST].iNum       = 1;
   output[OUT_232THNUMCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_232THNUMCRUST]           = &fvWrite232ThNumCrust;
 
-  sprintf(output[OUT_232THPOWERTOT].cName, "232ThPowerTotal");
-  sprintf(output[OUT_232THPOWERTOT].cDescr,
+  fvFormattedString(&output[OUT_232THPOWERTOT].cName, "232ThPowerTotal");
+  fvFormattedString(&output[OUT_232THPOWERTOT].cDescr,
           "Total Power from Decay of 232Th Atoms");
-  sprintf(output[OUT_232THPOWERTOT].cNeg, "TW");
+  fvFormattedString(&output[OUT_232THPOWERTOT].cNeg, "TW");
   output[OUT_232THPOWERTOT].bNeg       = 1;
   output[OUT_232THPOWERTOT].dNeg       = 1e-12;
   output[OUT_232THPOWERTOT].iNum       = 1;
@@ -5788,55 +5788,55 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* Uranium 238 */
 
-  sprintf(output[OUT_238UPOWERMAN].cName, "238UPowerMan");
-  sprintf(output[OUT_238UPOWERMAN].cDescr, "Total Power Generated by 238U");
-  sprintf(output[OUT_238UPOWERMAN].cNeg, "TW");
+  fvFormattedString(&output[OUT_238UPOWERMAN].cName, "238UPowerMan");
+  fvFormattedString(&output[OUT_238UPOWERMAN].cDescr, "Total Power Generated by 238U");
+  fvFormattedString(&output[OUT_238UPOWERMAN].cNeg, "TW");
   output[OUT_238UPOWERMAN].bNeg       = 1;
   output[OUT_238UPOWERMAN].dNeg       = 1e-12;
   output[OUT_238UPOWERMAN].iNum       = 1;
   output[OUT_238UPOWERMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_238UPOWERMAN]           = &fvWrite238UPowerMan;
 
-  sprintf(output[OUT_238UENFLUX].cName, "238UEnFlux");
-  sprintf(output[OUT_238UENFLUX].cDescr, "Surface Energy Flux due to 238U");
-  sprintf(output[OUT_238UENFLUX].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_238UENFLUX].cName, "238UEnFlux");
+  fvFormattedString(&output[OUT_238UENFLUX].cDescr, "Surface Energy Flux due to 238U");
+  fvFormattedString(&output[OUT_238UENFLUX].cNeg, "W/m^2");
   output[OUT_238UENFLUX].bNeg       = 1;
   output[OUT_238UENFLUX].dNeg       = 1;
   output[OUT_238UENFLUX].iNum       = 1;
   output[OUT_238UENFLUX].iModuleBit = RADHEAT;
   fnWrite[OUT_238UENFLUX]           = &fvWrite238UEnFlux;
 
-  sprintf(output[OUT_238UDNUMDT].cName, "D238UNumManDt");
-  sprintf(output[OUT_238UDNUMDT].cDescr,
+  fvFormattedString(&output[OUT_238UDNUMDT].cName, "D238UNumManDt");
+  fvFormattedString(&output[OUT_238UDNUMDT].cDescr,
           "Time Rate of Change of the Number of 238U Nuclei");
-  sprintf(output[OUT_238UDNUMDT].cNeg, "/Gyr");
+  fvFormattedString(&output[OUT_238UDNUMDT].cNeg, "/Gyr");
   output[OUT_238UDNUMDT].bNeg       = 1;
   output[OUT_238UDNUMDT].dNeg       = YEARSEC * 1e9;
   output[OUT_238UDNUMDT].iNum       = 1;
   output[OUT_238UDNUMDT].iModuleBit = RADHEAT;
   fnWrite[OUT_238UDNUMDT]           = &fvWriteD238UNumDt;
 
-  sprintf(output[OUT_238UTIME].cName, "238UTimescale");
-  sprintf(output[OUT_238UTIME].cDescr, "Timescale for 238U Power Generation");
-  sprintf(output[OUT_238UTIME].cNeg, "Gyr");
+  fvFormattedString(&output[OUT_238UTIME].cName, "238UTimescale");
+  fvFormattedString(&output[OUT_238UTIME].cDescr, "Timescale for 238U Power Generation");
+  fvFormattedString(&output[OUT_238UTIME].cNeg, "Gyr");
   output[OUT_238UTIME].bNeg       = 1;
   output[OUT_238UTIME].dNeg       = 1. / (YEARSEC * 1e9);
   output[OUT_238UTIME].iNum       = 1;
   output[OUT_238UTIME].iModuleBit = RADHEAT;
   fnWrite[OUT_238UTIME]           = &fvWrite238UTimescale;
 
-  sprintf(output[OUT_238UMASSMAN].cName, "238UMassMan");
-  sprintf(output[OUT_238UMASSMAN].cDescr, "Total Mass of 238U");
-  sprintf(output[OUT_238UMASSMAN].cNeg, "Mearth");
+  fvFormattedString(&output[OUT_238UMASSMAN].cName, "238UMassMan");
+  fvFormattedString(&output[OUT_238UMASSMAN].cDescr, "Total Mass of 238U");
+  fvFormattedString(&output[OUT_238UMASSMAN].cNeg, "Mearth");
   output[OUT_238UMASSMAN].bNeg       = 1;
   output[OUT_238UMASSMAN].dNeg       = 1. / MEARTH;
   output[OUT_238UMASSMAN].iNum       = 1;
   output[OUT_238UMASSMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_238UMASSMAN]           = &fvWrite238UMassMan;
 
-  sprintf(output[OUT_238UNUMMAN].cName, "238UNumMan");
-  sprintf(output[OUT_238UNUMMAN].cDescr, "Total Number of 238U Atoms");
-  sprintf(output[OUT_238UNUMMAN].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_238UNUMMAN].cName, "238UNumMan");
+  fvFormattedString(&output[OUT_238UNUMMAN].cDescr, "Total Number of 238U Atoms");
+  fvFormattedString(&output[OUT_238UNUMMAN].cNeg, "Initial Primordial Earth Number");
   output[OUT_238UNUMMAN].bNeg       = 1;
   output[OUT_238UNUMMAN].dNeg       = EMASSMAN238U / MASS238U;
   output[OUT_238UNUMMAN].iNum       = 1;
@@ -5844,28 +5844,28 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_238UNUMMAN]           = &fvWrite238UNumMan;
 
   /* Core */
-  sprintf(output[OUT_238UPOWERCORE].cName, "238UPowerCore");
-  sprintf(output[OUT_238UPOWERCORE].cDescr,
+  fvFormattedString(&output[OUT_238UPOWERCORE].cName, "238UPowerCore");
+  fvFormattedString(&output[OUT_238UPOWERCORE].cDescr,
           "Total Core Power Generated by 238U");
-  sprintf(output[OUT_238UPOWERCORE].cNeg, "TW");
+  fvFormattedString(&output[OUT_238UPOWERCORE].cNeg, "TW");
   output[OUT_238UPOWERCORE].bNeg       = 1;
   output[OUT_238UPOWERCORE].dNeg       = 1e-12;
   output[OUT_238UPOWERCORE].iNum       = 1;
   output[OUT_238UPOWERCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_238UPOWERCORE]           = &fvWrite238UPowerCore;
 
-  sprintf(output[OUT_238UMASSCORE].cName, "238UMassCore");
-  sprintf(output[OUT_238UMASSCORE].cDescr, "Total Core Mass of 238U");
-  sprintf(output[OUT_238UMASSCORE].cNeg, "Mearth");
+  fvFormattedString(&output[OUT_238UMASSCORE].cName, "238UMassCore");
+  fvFormattedString(&output[OUT_238UMASSCORE].cDescr, "Total Core Mass of 238U");
+  fvFormattedString(&output[OUT_238UMASSCORE].cNeg, "Mearth");
   output[OUT_238UMASSCORE].bNeg       = 1;
   output[OUT_238UMASSCORE].dNeg       = 1. / MEARTH;
   output[OUT_238UMASSCORE].iNum       = 1;
   output[OUT_238UMASSCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_238UMASSCORE]           = &fvWrite238UMassCore;
 
-  sprintf(output[OUT_238UNUMCORE].cName, "238UNumCore");
-  sprintf(output[OUT_238UNUMCORE].cDescr, "Total Core Number of 238U Atoms");
-  sprintf(output[OUT_238UNUMCORE].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_238UNUMCORE].cName, "238UNumCore");
+  fvFormattedString(&output[OUT_238UNUMCORE].cDescr, "Total Core Number of 238U Atoms");
+  fvFormattedString(&output[OUT_238UNUMCORE].cNeg, "Initial Primordial Earth Number");
   output[OUT_238UNUMCORE].bNeg       = 1;
   output[OUT_238UNUMCORE].dNeg       = EMASSCORE238U / MASS238U;
   output[OUT_238UNUMCORE].iNum       = 1;
@@ -5873,38 +5873,38 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_238UNUMCORE]           = &fvWrite238UNumCore;
 
   /* Crust */
-  sprintf(output[OUT_238UPOWERCRUST].cName, "238UPowerCrust");
-  sprintf(output[OUT_238UPOWERCRUST].cDescr,
+  fvFormattedString(&output[OUT_238UPOWERCRUST].cName, "238UPowerCrust");
+  fvFormattedString(&output[OUT_238UPOWERCRUST].cDescr,
           "Total Crust Power Generated by 238U");
-  sprintf(output[OUT_238UPOWERCRUST].cNeg, "TW");
+  fvFormattedString(&output[OUT_238UPOWERCRUST].cNeg, "TW");
   output[OUT_238UPOWERCRUST].bNeg       = 1;
   output[OUT_238UPOWERCRUST].dNeg       = 1e-12;
   output[OUT_238UPOWERCRUST].iNum       = 1;
   output[OUT_238UPOWERCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_238UPOWERCRUST]           = &fvWrite238UPowerCrust;
 
-  sprintf(output[OUT_238UMASSCRUST].cName, "238UMassCrust");
-  sprintf(output[OUT_238UMASSCRUST].cDescr, "Total Crust Mass of 238U");
-  sprintf(output[OUT_238UMASSCRUST].cNeg, "Mearth");
+  fvFormattedString(&output[OUT_238UMASSCRUST].cName, "238UMassCrust");
+  fvFormattedString(&output[OUT_238UMASSCRUST].cDescr, "Total Crust Mass of 238U");
+  fvFormattedString(&output[OUT_238UMASSCRUST].cNeg, "Mearth");
   output[OUT_238UMASSCRUST].bNeg       = 1;
   output[OUT_238UMASSCRUST].dNeg       = 1. / MEARTH;
   output[OUT_238UMASSCRUST].iNum       = 1;
   output[OUT_238UMASSCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_238UMASSCRUST]           = &fvWrite238UMassCrust;
 
-  sprintf(output[OUT_238UNUMCRUST].cName, "238UNumCrust");
-  sprintf(output[OUT_238UNUMCRUST].cDescr, "Total Crust Number of 238U Atoms");
-  sprintf(output[OUT_238UNUMCRUST].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_238UNUMCRUST].cName, "238UNumCrust");
+  fvFormattedString(&output[OUT_238UNUMCRUST].cDescr, "Total Crust Number of 238U Atoms");
+  fvFormattedString(&output[OUT_238UNUMCRUST].cNeg, "Initial Primordial Earth Number");
   output[OUT_238UNUMCRUST].bNeg       = 1;
   output[OUT_238UNUMCRUST].dNeg       = EMASSCRUST238U / MASS238U;
   output[OUT_238UNUMCRUST].iNum       = 1;
   output[OUT_238UNUMCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_238UNUMCRUST]           = &fvWrite238UNumCrust;
 
-  sprintf(output[OUT_238UPOWERTOT].cName, "238UPowerTotal");
-  sprintf(output[OUT_238UPOWERTOT].cDescr,
+  fvFormattedString(&output[OUT_238UPOWERTOT].cName, "238UPowerTotal");
+  fvFormattedString(&output[OUT_238UPOWERTOT].cDescr,
           "Total Power from Decay of 238U Atoms");
-  sprintf(output[OUT_238UPOWERTOT].cNeg, "TW");
+  fvFormattedString(&output[OUT_238UPOWERTOT].cNeg, "TW");
   output[OUT_238UPOWERTOT].bNeg       = 1;
   output[OUT_238UPOWERTOT].dNeg       = 1e-12;
   output[OUT_238UPOWERTOT].iNum       = 1;
@@ -5914,55 +5914,55 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* Uranium 235 */
 
-  sprintf(output[OUT_235UPOWERMAN].cName, "235UPowerMan");
-  sprintf(output[OUT_235UPOWERMAN].cDescr, "Total Power Generated by 235U");
-  sprintf(output[OUT_235UPOWERMAN].cNeg, "TW");
+  fvFormattedString(&output[OUT_235UPOWERMAN].cName, "235UPowerMan");
+  fvFormattedString(&output[OUT_235UPOWERMAN].cDescr, "Total Power Generated by 235U");
+  fvFormattedString(&output[OUT_235UPOWERMAN].cNeg, "TW");
   output[OUT_235UPOWERMAN].bNeg       = 1;
   output[OUT_235UPOWERMAN].dNeg       = 1e-12;
   output[OUT_235UPOWERMAN].iNum       = 1;
   output[OUT_235UPOWERMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_235UPOWERMAN]           = &fvWrite235UPowerMan;
 
-  sprintf(output[OUT_235UENFLUX].cName, "235UEnFlux");
-  sprintf(output[OUT_235UENFLUX].cDescr, "Surface Energy Flux due to 235U");
-  sprintf(output[OUT_235UENFLUX].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_235UENFLUX].cName, "235UEnFlux");
+  fvFormattedString(&output[OUT_235UENFLUX].cDescr, "Surface Energy Flux due to 235U");
+  fvFormattedString(&output[OUT_235UENFLUX].cNeg, "W/m^2");
   output[OUT_235UENFLUX].bNeg       = 1;
   output[OUT_235UENFLUX].dNeg       = 1;
   output[OUT_235UENFLUX].iNum       = 1;
   output[OUT_235UENFLUX].iModuleBit = RADHEAT;
   fnWrite[OUT_235UENFLUX]           = &fvWrite235UEnFlux;
 
-  sprintf(output[OUT_235UDNUMDT].cName, "D235UNumManDt");
-  sprintf(output[OUT_235UDNUMDT].cDescr,
+  fvFormattedString(&output[OUT_235UDNUMDT].cName, "D235UNumManDt");
+  fvFormattedString(&output[OUT_235UDNUMDT].cDescr,
           "Time Rate of Change of the Number of 235U Nuclei");
-  sprintf(output[OUT_235UDNUMDT].cNeg, "/Gyr");
+  fvFormattedString(&output[OUT_235UDNUMDT].cNeg, "/Gyr");
   output[OUT_235UDNUMDT].bNeg       = 1;
   output[OUT_235UDNUMDT].dNeg       = YEARSEC * 1e9;
   output[OUT_235UDNUMDT].iNum       = 1;
   output[OUT_235UDNUMDT].iModuleBit = RADHEAT;
   fnWrite[OUT_235UDNUMDT]           = &fvWriteD235UNumDt;
 
-  sprintf(output[OUT_235UTIME].cName, "235UTimescale");
-  sprintf(output[OUT_235UTIME].cDescr, "Timescale for 235U Power Generation");
-  sprintf(output[OUT_235UTIME].cNeg, "Gyr");
+  fvFormattedString(&output[OUT_235UTIME].cName, "235UTimescale");
+  fvFormattedString(&output[OUT_235UTIME].cDescr, "Timescale for 235U Power Generation");
+  fvFormattedString(&output[OUT_235UTIME].cNeg, "Gyr");
   output[OUT_235UTIME].bNeg       = 1;
   output[OUT_235UTIME].dNeg       = 1. / (YEARSEC * 1e9);
   output[OUT_235UTIME].iNum       = 1;
   output[OUT_235UTIME].iModuleBit = RADHEAT;
   fnWrite[OUT_235UTIME]           = &fvWrite235UTimescale;
 
-  sprintf(output[OUT_235UMASSMAN].cName, "235UMassMan");
-  sprintf(output[OUT_235UMASSMAN].cDescr, "Total Mass of 235U");
-  sprintf(output[OUT_235UMASSMAN].cNeg, "Mearth");
+  fvFormattedString(&output[OUT_235UMASSMAN].cName, "235UMassMan");
+  fvFormattedString(&output[OUT_235UMASSMAN].cDescr, "Total Mass of 235U");
+  fvFormattedString(&output[OUT_235UMASSMAN].cNeg, "Mearth");
   output[OUT_235UMASSMAN].bNeg       = 1;
   output[OUT_235UMASSMAN].dNeg       = 1. / MEARTH;
   output[OUT_235UMASSMAN].iNum       = 1;
   output[OUT_235UMASSMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_235UMASSMAN]           = &fvWrite235UMassMan;
 
-  sprintf(output[OUT_235UNUMMAN].cName, "235UNumMan");
-  sprintf(output[OUT_235UNUMMAN].cDescr, "Total Number of 235U Atoms");
-  sprintf(output[OUT_235UNUMMAN].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_235UNUMMAN].cName, "235UNumMan");
+  fvFormattedString(&output[OUT_235UNUMMAN].cDescr, "Total Number of 235U Atoms");
+  fvFormattedString(&output[OUT_235UNUMMAN].cNeg, "Initial Primordial Earth Number");
   output[OUT_235UNUMMAN].bNeg       = 1;
   output[OUT_235UNUMMAN].dNeg       = EMASSMAN235U / MASS235U;
   output[OUT_235UNUMMAN].iNum       = 1;
@@ -5970,28 +5970,28 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_235UNUMMAN]           = &fvWrite235UNumMan;
 
   /* Core */
-  sprintf(output[OUT_235UPOWERCORE].cName, "235UPowerCore");
-  sprintf(output[OUT_235UPOWERCORE].cDescr,
+  fvFormattedString(&output[OUT_235UPOWERCORE].cName, "235UPowerCore");
+  fvFormattedString(&output[OUT_235UPOWERCORE].cDescr,
           "Total Core Power Generated by 235U");
-  sprintf(output[OUT_235UPOWERCORE].cNeg, "TW");
+  fvFormattedString(&output[OUT_235UPOWERCORE].cNeg, "TW");
   output[OUT_235UPOWERCORE].bNeg       = 1;
   output[OUT_235UPOWERCORE].dNeg       = 1e-12;
   output[OUT_235UPOWERCORE].iNum       = 1;
   output[OUT_235UPOWERCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_235UPOWERCORE]           = &fvWrite235UPowerCore;
 
-  sprintf(output[OUT_235UMASSCORE].cName, "235UMassCore");
-  sprintf(output[OUT_235UMASSCORE].cDescr, "Total Core Mass of 235U");
-  sprintf(output[OUT_235UMASSCORE].cNeg, "Mearth");
+  fvFormattedString(&output[OUT_235UMASSCORE].cName, "235UMassCore");
+  fvFormattedString(&output[OUT_235UMASSCORE].cDescr, "Total Core Mass of 235U");
+  fvFormattedString(&output[OUT_235UMASSCORE].cNeg, "Mearth");
   output[OUT_235UMASSCORE].bNeg       = 1;
   output[OUT_235UMASSCORE].dNeg       = 1. / MEARTH;
   output[OUT_235UMASSCORE].iNum       = 1;
   output[OUT_235UMASSCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_235UMASSCORE]           = &fvWrite235UMassCore;
 
-  sprintf(output[OUT_235UNUMCORE].cName, "235UNumCore");
-  sprintf(output[OUT_235UNUMCORE].cDescr, "Total Core Number of 235U Atoms");
-  sprintf(output[OUT_235UNUMCORE].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_235UNUMCORE].cName, "235UNumCore");
+  fvFormattedString(&output[OUT_235UNUMCORE].cDescr, "Total Core Number of 235U Atoms");
+  fvFormattedString(&output[OUT_235UNUMCORE].cNeg, "Initial Primordial Earth Number");
   output[OUT_235UNUMCORE].bNeg       = 1;
   output[OUT_235UNUMCORE].dNeg       = EMASSCORE235U / MASS235U;
   output[OUT_235UNUMCORE].iNum       = 1;
@@ -5999,38 +5999,38 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_235UNUMCORE]           = &fvWrite235UNumCore;
 
   /* Crust */
-  sprintf(output[OUT_235UPOWERCRUST].cName, "235UPowerCrust");
-  sprintf(output[OUT_235UPOWERCRUST].cDescr,
+  fvFormattedString(&output[OUT_235UPOWERCRUST].cName, "235UPowerCrust");
+  fvFormattedString(&output[OUT_235UPOWERCRUST].cDescr,
           "Total Crust Power Generated by 235U");
-  sprintf(output[OUT_235UPOWERCRUST].cNeg, "TW");
+  fvFormattedString(&output[OUT_235UPOWERCRUST].cNeg, "TW");
   output[OUT_235UPOWERCRUST].bNeg       = 1;
   output[OUT_235UPOWERCRUST].dNeg       = 1e-12;
   output[OUT_235UPOWERCRUST].iNum       = 1;
   output[OUT_235UPOWERCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_235UPOWERCRUST]           = &fvWrite235UPowerCrust;
 
-  sprintf(output[OUT_235UMASSCRUST].cName, "235UMassCrust");
-  sprintf(output[OUT_235UMASSCRUST].cDescr, "Total Crust Mass of 235U");
-  sprintf(output[OUT_235UMASSCRUST].cNeg, "Mearth");
+  fvFormattedString(&output[OUT_235UMASSCRUST].cName, "235UMassCrust");
+  fvFormattedString(&output[OUT_235UMASSCRUST].cDescr, "Total Crust Mass of 235U");
+  fvFormattedString(&output[OUT_235UMASSCRUST].cNeg, "Mearth");
   output[OUT_235UMASSCRUST].bNeg       = 1;
   output[OUT_235UMASSCRUST].dNeg       = 1. / MEARTH;
   output[OUT_235UMASSCRUST].iNum       = 1;
   output[OUT_235UMASSCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_235UMASSCRUST]           = &fvWrite235UMassCrust;
 
-  sprintf(output[OUT_235UNUMCRUST].cName, "235UNumCrust");
-  sprintf(output[OUT_235UNUMCRUST].cDescr, "Total Crust Number of 235U Atoms");
-  sprintf(output[OUT_235UNUMCRUST].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_235UNUMCRUST].cName, "235UNumCrust");
+  fvFormattedString(&output[OUT_235UNUMCRUST].cDescr, "Total Crust Number of 235U Atoms");
+  fvFormattedString(&output[OUT_235UNUMCRUST].cNeg, "Initial Primordial Earth Number");
   output[OUT_235UNUMCRUST].bNeg       = 1;
   output[OUT_235UNUMCRUST].dNeg       = EMASSCRUST235U / MASS235U;
   output[OUT_235UNUMCRUST].iNum       = 1;
   output[OUT_235UNUMCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_235UNUMCRUST]           = &fvWrite235UNumCrust;
 
-  sprintf(output[OUT_235UPOWERTOT].cName, "235UPowerTotal");
-  sprintf(output[OUT_235UPOWERTOT].cDescr,
+  fvFormattedString(&output[OUT_235UPOWERTOT].cName, "235UPowerTotal");
+  fvFormattedString(&output[OUT_235UPOWERTOT].cDescr,
           "Total Power from Decay of 235U Atoms");
-  sprintf(output[OUT_235UPOWERTOT].cNeg, "TW");
+  fvFormattedString(&output[OUT_235UPOWERTOT].cNeg, "TW");
   output[OUT_235UPOWERTOT].bNeg       = 1;
   output[OUT_235UPOWERTOT].dNeg       = 1e-12;
   output[OUT_235UPOWERTOT].iNum       = 1;
@@ -6039,50 +6039,50 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
 
   /* Totals */
-  sprintf(output[OUT_RADPOWERCRUST].cName, "RadPowerCrust");
-  sprintf(output[OUT_RADPOWERCRUST].cDescr,
+  fvFormattedString(&output[OUT_RADPOWERCRUST].cName, "RadPowerCrust");
+  fvFormattedString(&output[OUT_RADPOWERCRUST].cDescr,
           "Total Power Generated by Radiogenic Nuclides in the crust");
-  sprintf(output[OUT_RADPOWERCRUST].cNeg, "TW");
+  fvFormattedString(&output[OUT_RADPOWERCRUST].cNeg, "TW");
   output[OUT_RADPOWERCRUST].bNeg       = 1;
   output[OUT_RADPOWERCRUST].dNeg       = 1e-12;
   output[OUT_RADPOWERCRUST].iNum       = 1;
   output[OUT_RADPOWERCRUST].iModuleBit = RADHEAT;
   fnWrite[OUT_RADPOWERCRUST]           = &fvWriteRadPowerCrust;
 
-  sprintf(output[OUT_RADPOWERMAN].cName, "RadPowerMan");
-  sprintf(output[OUT_RADPOWERMAN].cDescr,
+  fvFormattedString(&output[OUT_RADPOWERMAN].cName, "RadPowerMan");
+  fvFormattedString(&output[OUT_RADPOWERMAN].cDescr,
           "Total Power Generated by Radiogenic Nuclides in the mantle");
-  sprintf(output[OUT_RADPOWERMAN].cNeg, "TW");
+  fvFormattedString(&output[OUT_RADPOWERMAN].cNeg, "TW");
   output[OUT_RADPOWERMAN].bNeg       = 1;
   output[OUT_RADPOWERMAN].dNeg       = 1e-12;
   output[OUT_RADPOWERMAN].iNum       = 1;
   output[OUT_RADPOWERMAN].iModuleBit = RADHEAT;
   fnWrite[OUT_RADPOWERMAN]           = &fvWriteRadPowerMan;
 
-  sprintf(output[OUT_RADPOWERCORE].cName, "RadPowerCore");
-  sprintf(output[OUT_RADPOWERCORE].cDescr,
+  fvFormattedString(&output[OUT_RADPOWERCORE].cName, "RadPowerCore");
+  fvFormattedString(&output[OUT_RADPOWERCORE].cDescr,
           "Total Power Generated by Radiogenic Nuclides in Core");
-  sprintf(output[OUT_RADPOWERCORE].cNeg, "TW");
+  fvFormattedString(&output[OUT_RADPOWERCORE].cNeg, "TW");
   output[OUT_RADPOWERCORE].bNeg       = 1;
   output[OUT_RADPOWERCORE].dNeg       = 1e-12;
   output[OUT_RADPOWERCORE].iNum       = 1;
   output[OUT_RADPOWERCORE].iModuleBit = RADHEAT;
   fnWrite[OUT_RADPOWERCORE]           = &fvWriteRadPowerCore;
 
-  sprintf(output[OUT_RADPOWERTOTAL].cName, "RadPowerTotal");
-  sprintf(output[OUT_RADPOWERTOTAL].cDescr,
+  fvFormattedString(&output[OUT_RADPOWERTOTAL].cName, "RadPowerTotal");
+  fvFormattedString(&output[OUT_RADPOWERTOTAL].cDescr,
           "Total Power Generated by Radiogenic Nuclides in Total (M+C)");
-  sprintf(output[OUT_RADPOWERTOTAL].cNeg, "TW");
+  fvFormattedString(&output[OUT_RADPOWERTOTAL].cNeg, "TW");
   output[OUT_RADPOWERTOTAL].bNeg       = 1;
   output[OUT_RADPOWERTOTAL].dNeg       = 1e-12;
   output[OUT_RADPOWERTOTAL].iNum       = 1;
   output[OUT_RADPOWERTOTAL].iModuleBit = RADHEAT;
   fnWrite[OUT_RADPOWERTOTAL]           = &fvWriteRadPowerTotal;
 
-  sprintf(output[OUT_SURFENFLUXRADTOTAL].cName, "SurfEnFluxRadTotal");
-  sprintf(output[OUT_SURFENFLUXRADTOTAL].cDescr,
+  fvFormattedString(&output[OUT_SURFENFLUXRADTOTAL].cName, "SurfEnFluxRadTotal");
+  fvFormattedString(&output[OUT_SURFENFLUXRADTOTAL].cDescr,
           "Total Surface Heat Flux Generated by Radiogenic Nuclides");
-  sprintf(output[OUT_SURFENFLUXRADTOTAL].cNeg, "W/m^2");
+  fvFormattedString(&output[OUT_SURFENFLUXRADTOTAL].cNeg, "W/m^2");
   output[OUT_SURFENFLUXRADTOTAL].bNeg       = 1;
   output[OUT_SURFENFLUXRADTOTAL].dNeg       = 1;
   output[OUT_SURFENFLUXRADTOTAL].iNum       = 1;

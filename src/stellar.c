@@ -420,58 +420,58 @@ void ReadHaltEndBaraffeGrid(BODY *body, CONTROL *control, FILES *files,
 void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   int iOpt, iFile;
 
-  sprintf(options[OPT_SATXUVFRAC].cName, "dSatXUVFrac");
-  sprintf(options[OPT_SATXUVFRAC].cDescr, "Saturated XUV luminosity fraction");
-  sprintf(options[OPT_SATXUVFRAC].cDefault, "1e-3");
-  sprintf(options[OPT_SATXUVFRAC].cDimension, "nd");
+  fvFormattedString(&options[OPT_SATXUVFRAC].cName, "dSatXUVFrac");
+  fvFormattedString(&options[OPT_SATXUVFRAC].cDescr, "Saturated XUV luminosity fraction");
+  fvFormattedString(&options[OPT_SATXUVFRAC].cDefault, "1e-3");
+  fvFormattedString(&options[OPT_SATXUVFRAC].cDimension, "nd");
   options[OPT_SATXUVFRAC].dDefault   = 1.e-3;
   options[OPT_SATXUVFRAC].iType      = 2;
   options[OPT_SATXUVFRAC].bMultiFile = 1;
   fnRead[OPT_SATXUVFRAC]             = &ReadSatXUVFrac;
-  sprintf(
-        options[OPT_SATXUVFRAC].cLongDescr,
+  fvFormattedString(
+        &options[OPT_SATXUVFRAC].cLongDescr,
         "After formation stars emit a nearly constant amount of XUV radiation\n"
         "for a time called the \"saturated\" phase. This parameter sets that "
         "value\n"
         "relative to the total (bolometric) luminosity. Must lie in range "
         "[0,1].");
 
-  sprintf(options[OPT_SATXUVTIME].cName, "dSatXUVTime");
-  sprintf(options[OPT_SATXUVTIME].cDescr, "XUV saturation time");
-  sprintf(options[OPT_SATXUVTIME].cDefault, "0.1 Gyr");
-  sprintf(options[OPT_SATXUVTIME].cDimension, "time");
+  fvFormattedString(&options[OPT_SATXUVTIME].cName, "dSatXUVTime");
+  fvFormattedString(&options[OPT_SATXUVTIME].cDescr, "XUV saturation time");
+  fvFormattedString(&options[OPT_SATXUVTIME].cDefault, "0.1 Gyr");
+  fvFormattedString(&options[OPT_SATXUVTIME].cDimension, "time");
   options[OPT_SATXUVTIME].dDefault   = 1.e8 * YEARSEC;
   options[OPT_SATXUVTIME].iType      = 0;
   options[OPT_SATXUVTIME].bMultiFile = 1;
   options[OPT_SATXUVTIME].dNeg       = 1e9 * YEARSEC;
-  sprintf(options[OPT_SATXUVTIME].cNeg, "Gyr");
+  fvFormattedString(&options[OPT_SATXUVTIME].cNeg, "Gyr");
   fnRead[OPT_SATXUVTIME] = &ReadSatXUVTime;
-  sprintf(options[OPT_SATXUVTIME].cLongDescr,
+  fvFormattedString(&options[OPT_SATXUVTIME].cLongDescr,
           "The time a star will remain in its \"saturated\" phase.");
 
-  sprintf(options[OPT_XUVBETA].cName, "dXUVBeta");
-  sprintf(options[OPT_XUVBETA].cDescr, "XUV decay power law exponent");
-  sprintf(options[OPT_XUVBETA].cDefault, "1.23");
-  sprintf(options[OPT_XUVBETA].cDimension, "nd");
+  fvFormattedString(&options[OPT_XUVBETA].cName, "dXUVBeta");
+  fvFormattedString(&options[OPT_XUVBETA].cDescr, "XUV decay power law exponent");
+  fvFormattedString(&options[OPT_XUVBETA].cDefault, "1.23");
+  fvFormattedString(&options[OPT_XUVBETA].cDimension, "nd");
   options[OPT_XUVBETA].dDefault   = 1.23;
   options[OPT_XUVBETA].iType      = 2;
   options[OPT_XUVBETA].bMultiFile = 1;
   fnRead[OPT_XUVBETA]             = &ReadXUVBeta;
-  sprintf(options[OPT_XUVBETA].cLongDescr,
+  fvFormattedString(&options[OPT_XUVBETA].cLongDescr,
           "After the \"saturation\" phase, the ratio of the XUV to total "
           "luminosity\n"
           "will follow a power law followinfg this exponent. Units are "
           "gigayears.");
 
-  sprintf(options[OPT_STELLARMODEL].cName, "sStellarModel");
-  sprintf(options[OPT_STELLARMODEL].cDescr, "Stellar evolution model");
-  sprintf(options[OPT_STELLARMODEL].cDefault, "BARAFFE");
-  sprintf(options[OPT_STELLARMODEL].cValues, "BARAFFE PROXIMA SINEWAVE NONE");
+  fvFormattedString(&options[OPT_STELLARMODEL].cName, "sStellarModel");
+  fvFormattedString(&options[OPT_STELLARMODEL].cDescr, "Stellar evolution model");
+  fvFormattedString(&options[OPT_STELLARMODEL].cDefault, "BARAFFE");
+  fvFormattedString(&options[OPT_STELLARMODEL].cValues, "BARAFFE PROXIMA SINEWAVE NONE");
   options[OPT_STELLARMODEL].iType      = 3;
   options[OPT_STELLARMODEL].bMultiFile = 1;
   fnRead[OPT_STELLARMODEL]             = &ReadStellarModel;
-  sprintf(
-        options[OPT_STELLARMODEL].cLongDescr,
+  fvFormattedString(
+        &options[OPT_STELLARMODEL].cLongDescr,
         "If BARAFFE is selected, luminosity, effective temperature, radius, "
         "and\n"
         "radius of gyration will follow the model of Baraffe, I. et al.\n"
@@ -480,15 +480,15 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
         "(2016, arXiv:1608.06919). SINEWAVE produces oscillatory luminosity.\n"
         "NONE will leave them constant.\n");
 
-  sprintf(options[OPT_MAGBRAKINGMODEL].cName, "sMagBrakingModel");
-  sprintf(options[OPT_MAGBRAKINGMODEL].cDescr, "Magnetic braking model.");
-  sprintf(options[OPT_MAGBRAKINGMODEL].cDefault, "REINERS");
-  sprintf(options[OPT_MAGBRAKINGMODEL].cValues,
+  fvFormattedString(&options[OPT_MAGBRAKINGMODEL].cName, "sMagBrakingModel");
+  fvFormattedString(&options[OPT_MAGBRAKINGMODEL].cDescr, "Magnetic braking model.");
+  fvFormattedString(&options[OPT_MAGBRAKINGMODEL].cDefault, "REINERS");
+  fvFormattedString(&options[OPT_MAGBRAKINGMODEL].cValues,
           "REINERS, SKUMANICH, MATT, NONE");
   options[OPT_MAGBRAKINGMODEL].iType      = 3;
   options[OPT_MAGBRAKINGMODEL].bMultiFile = 1;
   fnRead[OPT_MAGBRAKINGMODEL]             = &ReadMagBrakingModel;
-  sprintf(options[OPT_STELLARMODEL].cLongDescr,
+  fvFormattedString(&options[OPT_STELLARMODEL].cLongDescr,
           "If REINERS is selected, the stellar magnetic braking model of\n"
           "Reiners & Mohanty (2012, ApJ, 746, 43) is used to modify the "
           "rotation rate.\n"
@@ -496,27 +496,27 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
           "MATT uses the model from Matt, S. et al. (2015, ApJ, 799, 23).\n"
           "NONE applies no magnetic torque.\n");
 
-  sprintf(options[OPT_WINDMODEL].cName, "sWindModel");
-  sprintf(options[OPT_WINDMODEL].cDescr, "Wind Angular Momentum Loss Model");
-  sprintf(options[OPT_WINDMODEL].cDefault, "REINERS");
+  fvFormattedString(&options[OPT_WINDMODEL].cName, "sWindModel");
+  fvFormattedString(&options[OPT_WINDMODEL].cDescr, "Wind Angular Momentum Loss Model");
+  fvFormattedString(&options[OPT_WINDMODEL].cDefault, "REINERS");
   options[OPT_WINDMODEL].iType      = 3;
   options[OPT_WINDMODEL].bMultiFile = 1;
   fnRead[OPT_WINDMODEL]             = &ReadWindModel;
-  sprintf(options[OPT_WINDMODEL].cLongDescr,
+  fvFormattedString(&options[OPT_WINDMODEL].cLongDescr,
           "If REINERS is selected, the stellar wind model of Reiners and "
           "Mohanty\n"
           "(2012, ApJ, 746, 43) is used to modify the rotation rate.");
 
-  sprintf(options[OPT_XUVMODEL].cName, "sXUVModel");
-  sprintf(options[OPT_XUVMODEL].cDescr, "XUV Evolution Model");
-  sprintf(options[OPT_XUVMODEL].cDefault, "RIBAS");
-  sprintf(options[OPT_XUVMODEL].cValues, "RIBAS REINERS NONE");
+  fvFormattedString(&options[OPT_XUVMODEL].cName, "sXUVModel");
+  fvFormattedString(&options[OPT_XUVMODEL].cDescr, "XUV Evolution Model");
+  fvFormattedString(&options[OPT_XUVMODEL].cDefault, "RIBAS");
+  fvFormattedString(&options[OPT_XUVMODEL].cValues, "RIBAS REINERS NONE");
   options[OPT_XUVMODEL].iType      = 3;
   options[OPT_XUVMODEL].bMultiFile = 1;
   options[OPT_XUVMODEL].iModuleBit = STELLAR;
   fnRead[OPT_XUVMODEL]             = &ReadXUVModel;
-  sprintf(
-        options[OPT_XUVMODEL].cLongDescr,
+  fvFormattedString(
+        &options[OPT_XUVMODEL].cLongDescr,
         "This parameter sets the XUV evolution model used in STELLAR. Setting\n"
         "this to RIBAS (default) will evolve the XUV luminosity according to \n"
         "the saturated power law of Ribas et al (2005, ApJ, 611, 680),\n"
@@ -527,93 +527,93 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
         "parameter to NONE, in which case the XUV luminosity will remain "
         "constant.");
 
-  sprintf(options[OPT_HZMODEL].cName, "sHZModel");
-  sprintf(options[OPT_HZMODEL].cDescr, "Habitable Zone Model: Kopparapu13");
-  sprintf(options[OPT_HZMODEL].cDefault, "Kopparapu13");
+  fvFormattedString(&options[OPT_HZMODEL].cName, "sHZModel");
+  fvFormattedString(&options[OPT_HZMODEL].cDescr, "Habitable Zone Model: Kopparapu13");
+  fvFormattedString(&options[OPT_HZMODEL].cDefault, "Kopparapu13");
   options[OPT_HZMODEL].iType      = 3;
   options[OPT_HZMODEL].bMultiFile = 1;
   fnRead[OPT_HZMODEL]             = &ReadHZModel;
-  sprintf(options[OPT_HZMODEL].cLongDescr,
+  fvFormattedString(&options[OPT_HZMODEL].cLongDescr,
           "If KOPPARAPU13 is selected then the Recent Venus, Runaway "
           "Greenhouse,\n"
           "Maximum Greenhouse, and Early Mars habitable zone limits will be\n"
           "calculated from Kopparapu, R. et al. (2013, ApJ, 765, 131).");
 
-  sprintf(options[OPT_HALTENDBARAFFEFGRID].cName, "bHaltEndBaraffeGrid");
-  sprintf(options[OPT_HALTENDBARAFFEFGRID].cDescr,
+  fvFormattedString(&options[OPT_HALTENDBARAFFEFGRID].cName, "bHaltEndBaraffeGrid");
+  fvFormattedString(&options[OPT_HALTENDBARAFFEFGRID].cDescr,
           "Halt when we reach the end of the Baraffe+15 grid?");
-  sprintf(options[OPT_HALTENDBARAFFEFGRID].cDefault, "1");
+  fvFormattedString(&options[OPT_HALTENDBARAFFEFGRID].cDefault, "1");
   options[OPT_HALTENDBARAFFEFGRID].iType = 0;
   fnRead[OPT_HALTENDBARAFFEFGRID]        = &ReadHaltEndBaraffeGrid;
-  sprintf(options[OPT_HALTENDBARAFFEFGRID].cLongDescr,
+  fvFormattedString(&options[OPT_HALTENDBARAFFEFGRID].cLongDescr,
           "The BARRAFFE stellar model will only compute parameters until the "
           "end of\n"
           "the main sequence. Setting this flag to 1 will halt the code if the "
           "end\n"
           "of the model grid is reached.");
 
-  sprintf(options[OPT_ROSSBYCUT].cName, "bRossbyCut");
-  sprintf(options[OPT_ROSSBYCUT].cDescr,
+  fvFormattedString(&options[OPT_ROSSBYCUT].cName, "bRossbyCut");
+  fvFormattedString(&options[OPT_ROSSBYCUT].cDescr,
           "Terminate magnetic braking when Rossby number > 2.08?");
-  sprintf(options[OPT_ROSSBYCUT].cDefault, "0"); // XXX Units?
+  fvFormattedString(&options[OPT_ROSSBYCUT].cDefault, "0"); // XXX Units?
   options[OPT_ROSSBYCUT].iType      = 0;
   options[OPT_ROSSBYCUT].bMultiFile = 1;
   options[OPT_ROSSBYCUT].iModuleBit = STELLAR;
   fnRead[OPT_ROSSBYCUT]             = &ReadRossbyCut;
-  sprintf(options[OPT_ROSSBYCUT].cLongDescr,
+  fvFormattedString(&options[OPT_ROSSBYCUT].cLongDescr,
           "Van Saders, J. et al. (2019, ApJ, 872, 128) find that when the "
           "stellar\n"
           "Rossby number exceeds 2.08, then the magnetic braking is quenched. "
           "This\n"
           "flag enforces that behavior.");
 
-  sprintf(options[OPT_EVOVLERG].cName, "bEvolveRG");
-  sprintf(options[OPT_EVOVLERG].cDescr, "Evolve stellar radius of gyration?");
-  sprintf(options[OPT_EVOVLERG].cDefault, "1");
+  fvFormattedString(&options[OPT_EVOVLERG].cName, "bEvolveRG");
+  fvFormattedString(&options[OPT_EVOVLERG].cDescr, "Evolve stellar radius of gyration?");
+  fvFormattedString(&options[OPT_EVOVLERG].cDefault, "1");
   options[OPT_EVOVLERG].iType      = 0;
   options[OPT_EVOVLERG].bMultiFile = 1;
   options[OPT_EVOVLERG].iModuleBit = STELLAR;
   fnRead[OPT_EVOVLERG]             = &ReadEvolveRG;
-  sprintf(options[OPT_EVOVLERG].cLongDescr,
+  fvFormattedString(&options[OPT_EVOVLERG].cLongDescr,
           "Set this flag to 0 to ignore the role of mass concentration in "
           "stellar\n"
           "evolution. Only useful for testing purposes.");
 
-  sprintf(options[OPT_LUMAMPLITUDE].cName, "dLuminosityAmplitude");
-  sprintf(options[OPT_LUMAMPLITUDE].cDescr,
+  fvFormattedString(&options[OPT_LUMAMPLITUDE].cName, "dLuminosityAmplitude");
+  fvFormattedString(&options[OPT_LUMAMPLITUDE].cDescr,
           "Amplitude of luminosity oscillation for SINEWAVE stellar model");
-  sprintf(options[OPT_LUMAMPLITUDE].cDefault, "0.001");
+  fvFormattedString(&options[OPT_LUMAMPLITUDE].cDefault, "0.001");
   options[OPT_LUMAMPLITUDE].dDefault   = 0.001;
   options[OPT_LUMAMPLITUDE].iType      = 0;
   options[OPT_LUMAMPLITUDE].bMultiFile = 1;
   options[OPT_LUMAMPLITUDE].iModuleBit = STELLAR;
   options[OPT_LUMAMPLITUDE].dNeg       = LSUN;
-  sprintf(options[OPT_LUMAMPLITUDE].cNeg, "Solar Luminosity (LSUN)");
+  fvFormattedString(&options[OPT_LUMAMPLITUDE].cNeg, "Solar Luminosity (LSUN)");
   fnRead[OPT_LUMAMPLITUDE] = &ReadLuminosityAmplitude;
 
-  sprintf(options[OPT_LUMPERIOD].cName, "dLuminosityPeriod");
-  sprintf(options[OPT_LUMPERIOD].cDescr,
+  fvFormattedString(&options[OPT_LUMPERIOD].cName, "dLuminosityPeriod");
+  fvFormattedString(&options[OPT_LUMPERIOD].cDescr,
           "Period of luminosity oscillation for SINEWAVE stellar model");
-  sprintf(options[OPT_LUMPERIOD].cDefault, "0.001");
+  fvFormattedString(&options[OPT_LUMPERIOD].cDefault, "0.001");
   options[OPT_LUMPERIOD].dDefault   = 0.001;
   options[OPT_LUMPERIOD].iType      = 0;
   options[OPT_LUMPERIOD].bMultiFile = 1;
   options[OPT_LUMPERIOD].iModuleBit = STELLAR;
   options[OPT_LUMPERIOD].dNeg       = YEARSEC;
-  sprintf(options[OPT_LUMPERIOD].cNeg, "Years");
+  fvFormattedString(&options[OPT_LUMPERIOD].cNeg, "Years");
   fnRead[OPT_LUMPERIOD] = &ReadLuminosityPeriod;
 
-  sprintf(options[OPT_LUMPHASE].cName, "dLuminosityPhase");
-  sprintf(
-        options[OPT_LUMPHASE].cDescr,
+  fvFormattedString(&options[OPT_LUMPHASE].cName, "dLuminosityPhase");
+  fvFormattedString(
+        &options[OPT_LUMPHASE].cDescr,
         "Phase of luminosity oscillation at age=0 for SINEWAVE stellar model");
-  sprintf(options[OPT_LUMPHASE].cDefault, "0");
+  fvFormattedString(&options[OPT_LUMPHASE].cDefault, "0");
   options[OPT_LUMPHASE].dDefault   = 0;
   options[OPT_LUMPHASE].iType      = 0;
   options[OPT_LUMPHASE].bMultiFile = 1;
   options[OPT_LUMPHASE].iModuleBit = STELLAR;
   options[OPT_LUMPHASE].dNeg       = DEGRAD;
-  sprintf(options[OPT_LUMPHASE].cNeg, "Degrees");
+  fvFormattedString(&options[OPT_LUMPHASE].cNeg, "Degrees");
   fnRead[OPT_LUMPHASE] = &ReadLuminosityPhase;
 }
 
@@ -1329,9 +1329,9 @@ void WriteDRotPerDtStellar(BODY *body, CONTROL *control, OUTPUT *output,
 
 void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
-  sprintf(output[OUT_LUMINOSITY].cName, "Luminosity");
-  sprintf(output[OUT_LUMINOSITY].cDescr, "Luminosity");
-  sprintf(output[OUT_LUMINOSITY].cNeg, "LSUN");
+  fvFormattedString(&output[OUT_LUMINOSITY].cName, "Luminosity");
+  fvFormattedString(&output[OUT_LUMINOSITY].cDescr, "Luminosity");
+  fvFormattedString(&output[OUT_LUMINOSITY].cNeg, "LSUN");
   output[OUT_LUMINOSITY].bNeg       = 1;
   output[OUT_LUMINOSITY].dNeg       = 1. / LSUN;
   output[OUT_LUMINOSITY].iNum       = 1;
@@ -1339,40 +1339,40 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_LUMINOSITY]           = &WriteLuminosity;
 
   // Maybe change to TEFF? XXX
-  sprintf(output[OUT_TEMPERATURE].cName, "Temperature");
-  sprintf(output[OUT_TEMPERATURE].cDescr, "Effective Temperature");
+  fvFormattedString(&output[OUT_TEMPERATURE].cName, "Temperature");
+  fvFormattedString(&output[OUT_TEMPERATURE].cDescr, "Effective Temperature");
   output[OUT_TEMPERATURE].bNeg       = 0;
   output[OUT_TEMPERATURE].iNum       = 1;
   output[OUT_TEMPERATURE].iModuleBit = STELLAR;
   fnWrite[OUT_TEMPERATURE]           = &WriteTemperature;
 
-  sprintf(output[OUT_LXUV].cName, "LXUVStellar");
-  sprintf(output[OUT_LXUV].cDescr, "Base X-ray/XUV Luminosity");
-  sprintf(output[OUT_LXUV].cNeg, "LSUN");
+  fvFormattedString(&output[OUT_LXUV].cName, "LXUVStellar");
+  fvFormattedString(&output[OUT_LXUV].cDescr, "Base X-ray/XUV Luminosity");
+  fvFormattedString(&output[OUT_LXUV].cNeg, "LSUN");
   output[OUT_LXUV].bNeg       = 1;
   output[OUT_LXUV].dNeg       = 1. / LSUN;
   output[OUT_LXUV].iNum       = 1;
   output[OUT_LXUV].iModuleBit = STELLAR;
   fnWrite[OUT_LXUV]           = &WriteLXUV;
 
-  sprintf(output[OUT_LXUVFRAC].cName, "LXUVFrac");
-  sprintf(output[OUT_LXUVFRAC].cDescr, "Fraction of luminosity in XUV");
+  fvFormattedString(&output[OUT_LXUVFRAC].cName, "LXUVFrac");
+  fvFormattedString(&output[OUT_LXUVFRAC].cDescr, "Fraction of luminosity in XUV");
   output[OUT_LXUVFRAC].bNeg       = 0;
   output[OUT_LXUVFRAC].iNum       = 1;
   output[OUT_LXUVFRAC].iModuleBit = STELLAR;
   fnWrite[OUT_LXUVFRAC]           = &WriteLXUVFrac;
 
-  sprintf(output[OUT_ROSSBYNUMBER].cName, "RossbyNumber");
-  sprintf(output[OUT_ROSSBYNUMBER].cDescr, "Rossby Number");
+  fvFormattedString(&output[OUT_ROSSBYNUMBER].cName, "RossbyNumber");
+  fvFormattedString(&output[OUT_ROSSBYNUMBER].cDescr, "Rossby Number");
   output[OUT_ROSSBYNUMBER].bNeg       = 0;
   output[OUT_ROSSBYNUMBER].iNum       = 1;
   output[OUT_ROSSBYNUMBER].iModuleBit = STELLAR;
   fnWrite[OUT_ROSSBYNUMBER]           = &WriteRossbyNumber;
 
-  sprintf(output[OUT_DROTPERDTSTELLAR].cName, "DRotPerDtStellar");
-  sprintf(output[OUT_DROTPERDTSTELLAR].cDescr,
+  fvFormattedString(&output[OUT_DROTPERDTSTELLAR].cName, "DRotPerDtStellar");
+  fvFormattedString(&output[OUT_DROTPERDTSTELLAR].cDescr,
           "Time Rate of Change of Rotation Period in STELLAR");
-  sprintf(output[OUT_DROTPERDTSTELLAR].cNeg, "days/Myr");
+  fvFormattedString(&output[OUT_DROTPERDTSTELLAR].cNeg, "days/Myr");
   output[OUT_DROTPERDTSTELLAR].bNeg       = 1;
   output[OUT_DROTPERDTSTELLAR].dNeg       = DAYSEC / (YEARSEC * 1e6);
   output[OUT_DROTPERDTSTELLAR].iNum       = 1;

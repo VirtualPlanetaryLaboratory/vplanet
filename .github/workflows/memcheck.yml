@@ -29,6 +29,7 @@ jobs:
         if: steps.setup_python.outcome == 'success'
         shell: bash -l {0}
         run: |
+          sudo apt-get update
           sudo apt-get install valgrind
 
       - name: Run valgrind test

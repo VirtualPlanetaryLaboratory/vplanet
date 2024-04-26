@@ -867,6 +867,30 @@ void fprintd(FILE *fp, double x, int iExp, int iDig) {
   }
 }
 
+void fvFormattedString(char **sString,const char* sFormattedString, ...) {
+  va_list vaArgs,vaArgsCopy;
+
+  va_start(vaArgs, sFormattedString);
+  va_copy(vaArgsCopy, vaArgs);
+  
+  int iStringLength = vsnprintf(NULL, 0, sFormattedString, vaArgs) + 1;
+  va_end(vaArgs); 
+
+  if (*sString == NULL) {
+    *sString = (char*)malloc((iStringLength) * sizeof(char));
+  } else { 
+    realloc(sString, iStringLength* sizeof(char));
+  }
+  if (*sString == NULL) {
+    va_end(vaArgsCopy); 
+    fprintf(stderr,"ERROR: Unable to create formatted string in functionfvWriteString.\n");
+    exit(EXIT_EXE);
+  }
+  
+  vsnprintf(*sString, iStringLength, sFormattedString, vaArgsCopy);  
+  va_end(vaArgsCopy); 
+}
+
 /*
  * Unit Conversions
  */
@@ -895,19 +919,19 @@ double fdUnitsLength(int iType) {
 
 void fsUnitsLength(int iType, char cUnit[]) {
   if (iType == U_METER) {
-    sprintf(cUnit, "m");
+    fvFormattedString(&cUnit, "m");
   } else if (iType == U_CENTIMETER) {
-    sprintf(cUnit, "cm");
+    fvFormattedString(&cUnit, "cm");
   } else if (iType == U_KILOMETER) {
-    sprintf(cUnit, "km");
+    fvFormattedString(&cUnit, "km");
   } else if (iType == U_SOLARRADIUS) {
-    sprintf(cUnit, "Rsun");
+    fvFormattedString(&cUnit, "Rsun");
   } else if (iType == U_EARTHRADIUS) {
-    sprintf(cUnit, "Rearth");
+    fvFormattedString(&cUnit, "Rearth");
   } else if (iType == U_JUPRADIUS) {
-    sprintf(cUnit, "Rjupiter");
+    fvFormattedString(&cUnit, "Rjupiter");
   } else if (iType == U_AU) {
-    sprintf(cUnit, "au");
+    fvFormattedString(&cUnit, "au");
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitLength %d.\n", iType);
     exit(EXIT_UNITS);
@@ -934,15 +958,15 @@ double fdUnitsTime(int iType) {
 
 void fsUnitsTime(int iType, char cUnit[]) {
   if (iType == U_SECOND) {
-    sprintf(cUnit, "sec");
+    fvFormattedString(&cUnit, "sec");
   } else if (iType == U_DAY) {
-    sprintf(cUnit, "day");
+    fvFormattedString(&cUnit, "day");
   } else if (iType == U_YEAR) {
-    sprintf(cUnit, "year");
+    fvFormattedString(&cUnit, "year");
   } else if (iType == U_MYR) {
-    sprintf(cUnit, "Myr");
+    fvFormattedString(&cUnit, "Myr");
   } else if (iType == U_GYR) {
-    sprintf(cUnit, "Gyr");
+    fvFormattedString(&cUnit, "Gyr");
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitTime: %d.\n", iType);
     exit(EXIT_UNITS);
@@ -970,17 +994,17 @@ double fdUnitsMass(int iType) {
 
 void fsUnitsMass(int iType, char cUnit[]) {
   if (iType == U_KILOGRAM) {
-    sprintf(cUnit, "kg");
+    fvFormattedString(&cUnit, "kg");
   } else if (iType == U_GRAM) {
-    sprintf(cUnit, "gm");
+    fvFormattedString(&cUnit, "gm");
   } else if (iType == U_SOLARMASS) {
-    sprintf(cUnit, "Msun");
+    fvFormattedString(&cUnit, "Msun");
   } else if (iType == U_EARTHMASS) {
-    sprintf(cUnit, "Mearth");
+    fvFormattedString(&cUnit, "Mearth");
   } else if (iType == U_JUPITERMASS) {
-    sprintf(cUnit, "Mjupiter");
+    fvFormattedString(&cUnit, "Mjupiter");
   } else if (iType == U_NEPTUNEMASS) {
-    sprintf(cUnit, "Mneptune");
+    fvFormattedString(&cUnit, "Mneptune");
 
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitMass: %d.\n", iType);
@@ -1001,9 +1025,9 @@ double fdUnitsAngle(int iType) {
 
 void fsUnitsAngle(int iType, char cUnit[]) {
   if (iType == U_RADIANS) {
-    sprintf(cUnit, "rad");
+    fvFormattedString(&cUnit, "rad");
   } else if (iType == U_DEGREES) {
-    sprintf(cUnit, "deg");
+    fvFormattedString(&cUnit, "deg");
   } else {
     fprintf(stderr, "ERROR: Unknown Angle type %d\n.", iType);
     exit(EXIT_UNITS);
@@ -1053,7 +1077,7 @@ void fsUnitsVel(UNITS *units, char cUnit[]) {
 void fsUnitsRate(int iType, char cUnit[]) {
   char cTmp[OPTLEN];
 
-  sprintf(cUnit, "/");
+  fvFormattedString(&cUnit, "/");
   fsUnitsTime(iType, cTmp);
   strcat(cUnit, cTmp);
 }
@@ -1177,11 +1201,11 @@ double fdUnitsTemp(double dTemp, int iOldType, int iNewType) {
 
 void fsUnitsTemp(int iType, char cUnit[]) {
   if (iType == U_KELVIN) {
-    sprintf(cUnit, "K");
+    fvFormattedString(&cUnit, "K");
   } else if (iType == U_CELSIUS) {
-    sprintf(cUnit, "Celsius");
+    fvFormattedString(&cUnit, "Celsius");
   } else if (iType == U_FARENHEIT) {
-    sprintf(cUnit, "F");
+    fvFormattedString(&cUnit, "F");
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitTemp %d.\n", iType);
     exit(EXIT_UNITS);
@@ -1191,11 +1215,11 @@ void fsUnitsTemp(int iType, char cUnit[]) {
 // XXX This looks fishy. Should time also be checked here
 void fsUnitsTempRate(int iType, char cUnit[]) {
   if (iType == U_KELVIN) {
-    sprintf(cUnit, "K/s");
+    fvFormattedString(&cUnit, "K/s");
   } else if (iType == U_CELSIUS) {
-    sprintf(cUnit, "C/s");
+    fvFormattedString(&cUnit, "C/s");
   } else if (iType == U_FARENHEIT) {
-    sprintf(cUnit, "F/s");
+    fvFormattedString(&cUnit, "F/s");
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitTempRate %d.\n", iType);
     exit(EXIT_UNITS);

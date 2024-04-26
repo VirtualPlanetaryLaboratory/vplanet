@@ -26,6 +26,7 @@ void Help(OPTIONS *, OUTPUT *, char[], int);
 void LineExit(char[], int);
 char *sLower(char[]);
 void fprintd(FILE *, double, int, int);
+void fvFormattedString(char**,const char*, ...);
 
 double fdUnitsLength(int);
 double fdUnitsTime(int);

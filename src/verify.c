@@ -142,7 +142,7 @@ void VerifyNames(BODY *body, CONTROL *control, OPTIONS *options) {
                 options[OPT_BODYNAME].cName,
                 options[OPT_BODYNAME].cFile[iBody] + 1, iBody);
       }
-      sprintf(body[iBody].cName, "%d", iBody + 1);
+      fvFormattedString(&body[iBody].cName, "%d", iBody + 1);
     }
     for (jBody = iBody + 1; jBody < control->Evolve.iNumBodies; jBody++) {
       if (strcmp(body[iBody].cName, body[jBody].cName) == 0) {
@@ -383,7 +383,7 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
   if (control->Evolve.bDoBackward) {
     for (iFile = 1; iFile < files->iNumInputs; iFile++) {
       if (options[OPT_OUTFILE].iLine[iFile] == -1) {
-        sprintf(files->Outfile[iFile - 1].cOut, "%s.%s.backward", system->cName,
+        fvFormattedString(&files->Outfile[iFile - 1].cOut, "%s.%s.backward", system->cName,
                 body[iFile - 1].cName);
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr, "INFO: %s not set, defaulting to %s.\n",
@@ -398,7 +398,7 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
   if (control->Evolve.bDoForward) {
     for (iFile = 1; iFile < files->iNumInputs; iFile++) {
       if (options[OPT_OUTFILE].iLine[iFile] == -1) {
-        sprintf(files->Outfile[iFile - 1].cOut, "%s.%s.forward", system->cName,
+        fvFormattedString(&files->Outfile[iFile - 1].cOut, "%s.%s.forward", system->cName,
                 body[iFile - 1].cName);
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr, "INFO: %s not set, defaulting to %s.\n",

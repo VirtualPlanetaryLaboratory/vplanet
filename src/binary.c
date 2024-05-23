@@ -1026,7 +1026,7 @@ void WriteFreeEccBinary(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp = -1;
   }
 
-  strcpy(cUnit, "");
+  fvFormattedString(&cUnit, "");
 }
 
 void WriteFreeIncBinary(BODY *body, CONTROL *control, OUTPUT *output,
@@ -1041,7 +1041,7 @@ void WriteFreeIncBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -1069,7 +1069,7 @@ void WriteBinPriRBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[1].dMass * radius * dInvMass;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1097,7 +1097,7 @@ void WriteBinSecRBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[0].dMass * radius * dInvMass;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1117,7 +1117,7 @@ void WriteBinPriPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fndEccToTrue(eccAnomaly, body[1].dEcc);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -1138,7 +1138,7 @@ void WriteBinSecPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fndEccToTrue(eccAnomaly, body[1].dEcc) + PI;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -1157,7 +1157,7 @@ void WriteCBPPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -1171,7 +1171,7 @@ void WriteCBPPhiDotBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dCBPPhiDot;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1190,7 +1190,7 @@ void WriteLL13N0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -1210,7 +1210,7 @@ void WriteLL13K0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -1229,7 +1229,7 @@ void WriteLL13V0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -1244,7 +1244,7 @@ void WriteCBPRBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dCBPR;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1259,7 +1259,7 @@ void WriteCBPR0Binary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dR0;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1273,7 +1273,7 @@ void WriteCBPZBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dCBPZ;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1287,7 +1287,7 @@ void WriteCBPRDotBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dCBPRDot;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) / fdUnitsLength(units->iLength);
     fsUnitsVel(units, cUnit);
@@ -1301,7 +1301,7 @@ void WriteCBPZDotBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dCBPZDot;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) / fdUnitsLength(units->iLength);
     fsUnitsVel(units, cUnit);
@@ -1322,7 +1322,7 @@ void WriteCBPInsol(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   }
 
   // Always in units of insolation received by Earth
-  strcpy(cUnit, "F/F_Earth");
+  fvFormattedString(&cUnit, "F/F_Earth");
 }
 
 void InitializeOutputBinary(OUTPUT *output, fnWriteOutput fnWrite[]) {

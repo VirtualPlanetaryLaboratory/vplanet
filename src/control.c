@@ -60,7 +60,7 @@ void sort_options(OPTIONS *options, int sorted[]) {
   SORTED_OPTIONS sorted_options[MODULEOPTEND];
   for (iOpt = 0; iOpt < MODULEOPTEND; iOpt++) {
     sorted_options[iOpt].index = iOpt;
-    strcpy(sorted_options[iOpt].name, options[iOpt].cName);
+    fvFormattedString(&sorted_options[iOpt].name, options[iOpt].cName);
   }
   qsort(sorted_options, MODULEOPTEND, sizeof(sorted_options[0]),
         compare_option_names);
@@ -78,7 +78,7 @@ void sort_output(OUTPUT *output, int sorted[]) {
   SORTED_OUTPUT sorted_output[MODULEOUTEND];
   for (iOpt = 0; iOpt < MODULEOUTEND; iOpt++) {
     sorted_output[iOpt].index = iOpt;
-    strcpy(sorted_output[iOpt].name, output[iOpt].cName);
+    fvFormattedString(&sorted_output[iOpt].name, output[iOpt].cName);
   }
   qsort(sorted_output, MODULEOUTEND, sizeof(sorted_output[0]),
         compare_output_names);
@@ -265,7 +265,7 @@ void WriteDescription(char cLongDescr[], char cDescr[], int iMaxChars) {
   while (iWord < iNumWords) {
     // Extra two is for spaces on either side
     while (iCharsLeft > iCharsLeft - strlen(cDescription[iWord]) - 2) {
-      strcpy(cLine[iLineWord], cDescription[iWord]);
+      fvFormattedString(&cLine[iLineWord], cDescription[iWord]);
       // extra 1 for space
       iCharsLeft -= (strlen(cLine[iLineWord]) + 1);
       iWord++;
@@ -387,61 +387,6 @@ void WriteHelpOption(OPTIONS *options, int bLong) {
 
       WriteDescription(options->cLongDescr, options->cDescr, iMaxChars);
 
-      /*
-            // Try Long Description first
-            GetWords(options->cLongDescr,cDescription,&iNumWords,&bFoo);
-            if (memcmp(cDescription[0], "null", 4) == 0) {
-              // No long description, try short
-              memset(cDescription[0],'\0',OPTLEN);
-              GetWords(options->cDescr,cDescription,&iNumWords,&bFoo);
-            }
-            iCharsLeft = iMaxChars;
-            iWord = 0;  // counter for word in description
-            iLineWord = 0; // counter for word in line
-            iLine = 0;
-
-            while (iWord < iNumWords) {
-              // Extra two is for spaces on either side
-              while (iCharsLeft > iCharsLeft - strlen(cDescription[iWord]) - 2)
-         { strcpy(cLine[iLineWord],cDescription[iWord]);
-                // extra 1 for space
-                iCharsLeft -= (strlen(cLine[iLineWord])+1);
-                iWord++;
-                iLineWord++;
-                if (iWord == iNumWords) {
-                  // Hit end of description inside inner loop
-                  break;
-                }
-              }
-              // Line is full
-              if (iLine == 0) {
-                printf("| Description     || ");
-              } else {
-                printf("|                 || ");
-              }
-              for (iLineWordNow = 0; iLineWordNow < iLineWord; iLineWordNow++) {
-                // write and erase
-                printf("%s ",cLine[iLineWordNow]);
-              }
-              for (iChar = 0; iChar < iCharsLeft; iChar++) {
-                printf(" ");
-              }
-              printf(" |\n");
-              // Now reset counters
-              iCharsLeft = iMaxChars;
-              for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
-                memset(cLine[iLineWordNow],'\0',OPTLEN);
-              }
-              iLine++;
-              iLineWord = 0;
-            }
-            printf("+-----------------+--------------------------------------------------------------------+\n");
-
-            // Reset description for next time
-            for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
-              memset(cDescription[iLineWordNow],'\0',OPTLEN);
-            }
-            */
       // Type
       int typelen;
       char *typestr;
@@ -867,6 +812,18 @@ void fprintd(FILE *fp, double x, int iExp, int iDig) {
   }
 }
 
+void AllocateStringMemory(char **sString,int iStringLength) {
+  if (*sString != NULL) {
+    free(*sString);
+  }
+  *sString = (char*)malloc((iStringLength) * sizeof(char));
+
+  if (*sString == NULL) {
+    fprintf(stderr,"ERROR: Failure in function AllocateStringMemory.\n");
+    exit(EXIT_EXE);
+  }
+}
+
 void fvFormattedString(char **sString,const char* sFormattedString, ...) {
   va_list vaArgs,vaArgsCopy;
 
@@ -876,17 +833,8 @@ void fvFormattedString(char **sString,const char* sFormattedString, ...) {
   int iStringLength = vsnprintf(NULL, 0, sFormattedString, vaArgs) + 1;
   va_end(vaArgs); 
 
-  if (*sString == NULL) {
-    *sString = (char*)malloc((iStringLength) * sizeof(char));
-  } else { 
-    realloc(sString, iStringLength* sizeof(char));
-  }
-  if (*sString == NULL) {
-    va_end(vaArgsCopy); 
-    fprintf(stderr,"ERROR: Unable to create formatted string in functionfvWriteString.\n");
-    exit(EXIT_EXE);
-  }
-  
+  AllocateStringMemory(sString,iStringLength);
+
   vsnprintf(*sString, iStringLength, sFormattedString, vaArgsCopy);  
   va_end(vaArgsCopy); 
 }
@@ -1233,7 +1181,7 @@ void fsUnitsTempRate(int iType, char cUnit[]) {
 void InfileCopy(INFILE *dest, INFILE *src) {
   int iLine;
 
-  strcpy(dest->cIn, src->cIn);
+  fvFormattedString(&dest->cIn, src->cIn);
   for (iLine = 0; iLine < src->iNumLines; iLine++) {
     dest->bLineOK[iLine] = src->bLineOK[iLine];
   }

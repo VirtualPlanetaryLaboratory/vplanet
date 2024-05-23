@@ -60,7 +60,7 @@ int main_impl(int argc, char *argv[]) {
   MODULE module;
   FILES files;
   SYSTEM system;
-  char infile[NAMELEN];
+  char *infile;
   fnReadOption fnRead[MODULEOPTEND]; // XXX Pointers?
   fnWriteOutput fnWrite[MODULEOUTEND];
   fnUpdateVariable ***fnUpdate;
@@ -89,7 +89,7 @@ int main_impl(int argc, char *argv[]) {
   control.Evolve.iOneStep = 0;
 
   /* Copy executable file name to the files struct. */
-  strcpy(files.cExe, argv[0]);
+  fvFormattedString(&files.cExe, argv[0]);
 
   if (argc == 1) {
     fprintf(stderr,
@@ -135,7 +135,7 @@ int main_impl(int argc, char *argv[]) {
   /* Now identify input file, usually vpl.in */
   for (iOption = 1; iOption < argc; iOption++) {
     if (iOption != iVerbose && iOption != iQuiet && iOption != iOverwrite) {
-      strcpy(infile, argv[iOption]);
+      fvFormattedString(&infile, argv[iOption]);
     }
   }
 

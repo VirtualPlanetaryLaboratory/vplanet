@@ -2216,7 +2216,7 @@ void WritePotTemp(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dPotTemp;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTemp(units->iTemp, 1, 0);
     fsUnitsTemp(units->iTemp, cUnit);
@@ -2229,7 +2229,7 @@ void WriteSurfTemp(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dSurfTemp;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTemp(units->iTemp, 1, 0);
     fsUnitsTemp(units->iTemp, cUnit);
@@ -2242,7 +2242,7 @@ void WriteSolidRadius(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dSolidRadius;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -2255,7 +2255,7 @@ void WriteWaterMassMOAtm(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dWaterMassMOAtm;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2268,7 +2268,7 @@ void WriteWaterMassSol(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dWaterMassSol;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2281,7 +2281,7 @@ void WriteCO2MassMOAtm(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dCO2MassMOAtm;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2294,7 +2294,7 @@ void WriteCO2MassSol(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dCO2MassSol;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2307,7 +2307,7 @@ void WriteOxygenMassMOAtm(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dOxygenMassMOAtm;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2320,7 +2320,7 @@ void WriteOxygenMassSol(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dOxygenMassSol;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2333,7 +2333,7 @@ void WritePressWaterAtm(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dPressWaterAtm;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
   }
 }
@@ -2344,7 +2344,7 @@ void WritePressCO2Atm(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dPressCO2Atm;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
   }
 }
@@ -2355,7 +2355,7 @@ void WritePressOxygenAtm(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dPressOxygenAtm;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
   }
 }
@@ -2366,7 +2366,7 @@ void WriteHydrogenMassSpace(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dHydrogenMassSpace;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2379,7 +2379,7 @@ void WriteOxygenMassSpace(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dOxygenMassSpace;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2392,7 +2392,7 @@ void WriteFracFe2O3Man(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dFracFe2O3Man;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
   }
 }
@@ -2403,7 +2403,7 @@ void WriteNetFluxAtmo(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dNetFluxAtmo;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
   }
 }
@@ -2414,7 +2414,7 @@ void WriteWaterFracMelt(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dWaterFracMelt;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
   }
 }
@@ -2425,7 +2425,7 @@ void WriteCO2FracMelt(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dCO2FracMelt;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
   }
 }
@@ -2438,7 +2438,7 @@ void WriteRadioPower(BODY *body, CONTROL *control, OUTPUT *output,
               .dRadioHeat; //* (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3)));
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -2453,7 +2453,7 @@ void WriteTidalPower(BODY *body, CONTROL *control, OUTPUT *output,
               .dTidalHeat; // * (4/3*PI*body[iBody].dManMeltDensity*(pow(body[iBody].dRadius,3)-pow(body[iBody].dCoreRadius,3)));
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -2466,7 +2466,7 @@ void WriteHZInnerEdge(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dHZInnerEdge;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -2479,7 +2479,7 @@ void WriteMeltFraction(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dMeltFraction;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
   }
 }

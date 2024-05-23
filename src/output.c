@@ -2452,21 +2452,21 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
 void InitializeOutput(FILES *files, OUTPUT *output, fnWriteOutput fnWrite[]) {
   int iOut, iBody, iModule;
 
-  memset(files->cLog, '\0', NAMELEN);
+  //memset(files->cLog, '\0', NAMELEN);
 
   for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
-    memset(output[iOut].cName, '\0', OPTLEN);
+    //memset(output[iOut].cName, '\0', OPTLEN);
     fvFormattedString(&output[iOut].cName, "null");
     output[iOut].bGrid  = 0;
     output[iOut].bNeg   = 0; /* Is a negative option allowed */
     output[iOut].dNeg   = 1; /* Conversion factor for negative options */
     output[iOut].iNum   = 0; /* Number of parameters associated with option */
     output[iOut].bDoNeg = malloc(MAXFILES * sizeof(int));
-    memset(output[iOut].cDescr, '\0', OUTDESCR);
+    //memset(output[iOut].cDescr, '\0', OUTDESCR);
     fvFormattedString(&output[iOut].cDescr, "null");
-    memset(output[iOut].cLongDescr, '\0', OUTLONDESCR);
+    //memset(output[iOut].cLongDescr, '\0', OUTLONDESCR);
     fvFormattedString(&output[iOut].cLongDescr, "null");
-    memset(output[iOut].cNeg, '\0', OUTDESCR);
+    //memset(output[iOut].cNeg, '\0', OUTDESCR);
     fvFormattedString(&output[iOut].cNeg, "null");
     for (iBody = 0; iBody < MAXFILES; iBody++) {
       output[iOut].bDoNeg[iBody] = 0;

@@ -2648,7 +2648,7 @@ void WriteSurfaceWaterMass(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2672,7 +2672,7 @@ void WriteHEscapeRegime(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                         double *dTmp, char cUnit[]) {
   *dTmp = body[iBody].iHEscapeRegime;
-  strcpy(cUnit, "");
+  fvFormattedString(&cUnit, "");
 }
 
 /**
@@ -2696,7 +2696,7 @@ void WriteOxygenMass(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= 1.e-5 * ((BIGG * body[iBody].dMass) /
                       (4. * PI * pow(body[iBody].dRadius, 4)));
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2721,7 +2721,7 @@ void WriteKTide(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                 char cUnit[]) {
   *dTmp = body[iBody].dKTide;
 
-  strcpy(cUnit, "");
+  fvFormattedString(&cUnit, "");
 }
 
 /**
@@ -2745,7 +2745,7 @@ void WriteOxygenMantleMass(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= 1.e-5 * ((BIGG * body[iBody].dMass) /
                       (4. * PI * pow(body[iBody].dRadius, 4)));
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2772,7 +2772,7 @@ void WritePlanetRadius(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -2799,7 +2799,7 @@ void WriteEnvelopeMass(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2838,7 +2838,7 @@ void WriteRGLimit(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -2863,7 +2863,7 @@ void WriteOxygenMixingRatio(BODY *body, CONTROL *control, OUTPUT *output,
                             int iBody, double *dTmp, char cUnit[]) {
   *dTmp = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
                                     body[iBody].dOxygenMass);
-  strcpy(cUnit, "");
+  fvFormattedString(&cUnit, "");
 }
 
 /**
@@ -2883,7 +2883,7 @@ void WriteOxygenEta(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char cUnit[]) {
   *dTmp = body[iBody].dOxygenEta;
-  strcpy(cUnit, "");
+  fvFormattedString(&cUnit, "");
 }
 
 /**
@@ -2903,7 +2903,7 @@ void WriteAtmXAbsEffH2O(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                         double *dTmp, char cUnit[]) {
   *dTmp = body[iBody].dAtmXAbsEffH2O;
-  strcpy(cUnit, "");
+  fvFormattedString(&cUnit, "");
 }
 
 /**
@@ -2926,7 +2926,7 @@ void WritePlanetRadXUV(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -2957,10 +2957,10 @@ void WriteDEnvMassDt(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     //*dTmp *= fdUnitsTime(units->iTime)/fdUnitsMass(units->iMass);
-    strcpy(cUnit, "kg/s");
+    fvFormattedString(&cUnit, "kg/s"); // XXX Why isn't the other line commented out???
   }
 }
 
@@ -2984,7 +2984,7 @@ void WriteThermTemp(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     // System units are Kelvins
     *dTmp = fdUnitsTemp(*dTmp, U_KELVIN, units->iTemp);
@@ -3012,7 +3012,7 @@ void WriteFlowTemp(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     // System units are Kelvins
     *dTmp = fdUnitsTemp(*dTmp, U_KELVIN, units->iTemp);
@@ -3040,9 +3040,9 @@ void WritePresSurf(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
-    strcpy(cUnit, "Pa");
+    fvFormattedString(&cUnit, "Pa");
   }
 }
 
@@ -3066,7 +3066,7 @@ void WritePresXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     //*dTmp /= fdUnitsPressure(units->iLength);
     // fsUnitsLength(units->iLength,cUnit);
@@ -3093,7 +3093,7 @@ void WriteJeansTime(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -3120,7 +3120,7 @@ void WriteScaleHeight(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -3147,7 +3147,7 @@ void WriteAtmGasConst(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
   }
 }
@@ -3172,7 +3172,7 @@ void WriteRadSolid(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -3199,7 +3199,7 @@ void WriteRocheRadius(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dRocheRadius;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -3227,7 +3227,7 @@ void WriteBondiRadius(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dBondiRadius;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -3254,9 +3254,9 @@ void WriteFXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
-    strcpy(cUnit, "W/m^2");
+    fvFormattedString(&cUnit, "W/m^2");
   }
 }
 
@@ -3283,9 +3283,9 @@ void WriteRRCriticalFlux(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
-    strcpy(cUnit, "W/m^2");
+    fvFormattedString(&cUnit, "W/m^2");
   }
 }
 
@@ -3309,7 +3309,7 @@ void WriteCrossoverMass(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -3333,7 +3333,7 @@ void WriteWaterEscapeRegime(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
                             int iBody, double *dTmp, char cUnit[]) {
   *dTmp = body[iBody].iWaterEscapeRegime;
-  strcpy(cUnit, "");
+  fvFormattedString(&cUnit, "");
 }
 
 
@@ -3369,9 +3369,9 @@ void WriteFXUVCRITDRAG(BODY *body, CONTROL *control, OUTPUT *output,
   }
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
-    strcpy(cUnit, "W/m^2");
+    fvFormattedString(&cUnit, "W/m^2");
   }
 }
 
@@ -3392,7 +3392,7 @@ void WriteHREFFLUX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
                    char cUnit[]) {
   *dTmp = body[iBody].dFHRef;
-  strcpy(cUnit, "m^-2 s^-1");
+  fvFormattedString(&cUnit, "m^-2 s^-1");
 }
 
 /**
@@ -3413,7 +3413,7 @@ void WriteHDiffLimFlux(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char cUnit[]) {
   *dTmp = body[iBody].dFHDiffLim;
-  strcpy(cUnit, "m^-2 s^-1");
+  fvFormattedString(&cUnit, "m^-2 s^-1");
 }
 
 /**
@@ -3441,7 +3441,7 @@ void WriteHRefODragMod(BODY *body, CONTROL *control, OUTPUT *output,
   } else {
     *dTmp = -1;
   }
-  strcpy(cUnit, "");
+  fvFormattedString(&cUnit, "");
 }
 
 
@@ -3463,7 +3463,7 @@ void WriteMolecOxygenMixingRatio(BODY *body, CONTROL *control, OUTPUT *output,
                                  int iBody, double *dTmp, char cUnit[]) {
   *dTmp = fdMolecOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
                                    body[iBody].dOxygenMass);
-  strcpy(cUnit, "");
+  fvFormattedString(&cUnit, "");
 }
 
 /**
@@ -3484,7 +3484,7 @@ void WriteWaterAtmMixingRatio(BODY *body, CONTROL *control, OUTPUT *output,
                               int iBody, double *dTmp, char cUnit[]) {
   *dTmp = fdWaterAtmMixingRatio(body[iBody].dSurfaceWaterMass,
                                 body[iBody].dOxygenMass);
-  strcpy(cUnit, "");
+  fvFormattedString(&cUnit, "");
 }
 
 /**

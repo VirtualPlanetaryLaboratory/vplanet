@@ -996,7 +996,7 @@ void WriteLXUVFlare(BODY *body,
   *dTmp = fdLXUVFlare(body, control->Evolve.dTimeStep, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergyFlux(units, cUnit);
@@ -1057,7 +1057,7 @@ void WriteFlareFreq1(BODY *body,
   *dTmp = body[iBody].dFlareFreq1;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1075,7 +1075,7 @@ void WriteFlareFreq2(BODY *body,
   *dTmp = body[iBody].dFlareFreq2;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1093,7 +1093,7 @@ void WriteFlareFreq3(BODY *body,
   *dTmp = body[iBody].dFlareFreq3;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1111,7 +1111,7 @@ void WriteFlareFreq4(BODY *body,
   *dTmp = body[iBody].dFlareFreq4;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1129,7 +1129,7 @@ void WriteFlareFreqMin(BODY *body,
   *dTmp = body[iBody].dFlareFreqMin;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1147,7 +1147,7 @@ void WriteFlareFreqMid(BODY *body,
   *dTmp = body[iBody].dFlareFreqMid;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1165,7 +1165,7 @@ void WriteFlareFreqMax(BODY *body,
   *dTmp = body[iBody].dFlareFreqMax;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1183,7 +1183,7 @@ void WriteFlareEnergy1(BODY *body,
   *dTmp = body[iBody].dFlareEnergy1;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergy(units, cUnit);
@@ -1202,7 +1202,7 @@ void WriteFlareEnergy2(BODY *body,
   *dTmp = body[iBody].dFlareEnergy2;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergy(units, cUnit);
@@ -1221,7 +1221,7 @@ void WriteFlareEnergy3(BODY *body,
   *dTmp = body[iBody].dFlareEnergy3;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergy(units, cUnit);
@@ -1240,7 +1240,7 @@ void WriteFlareEnergy4(BODY *body,
   *dTmp = body[iBody].dFlareEnergy4;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergy(units, cUnit);
@@ -1258,7 +1258,7 @@ void WriteFlareEnergyMin(BODY *body,
   *dTmp = body[iBody].dFlareEnergyMin;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergy(units, cUnit);
@@ -1276,7 +1276,7 @@ void WriteFlareEnergyMid(BODY *body,
   *dTmp = body[iBody].dFlareEnergyMid;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergy(units, cUnit);
@@ -1295,7 +1295,7 @@ void WriteFlareEnergyMax(BODY *body,
   *dTmp = body[iBody].dFlareEnergyMax;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergy(units, cUnit);

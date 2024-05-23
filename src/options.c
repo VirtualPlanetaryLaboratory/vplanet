@@ -51,7 +51,7 @@ int CheckComment(char cLine[], int iLen) {
 void GetLine(char cFile[], char cOption[], char cLine[], int *iLine,
              int iVerbose) {
   int iLen, bDone = 0, iLineTmp = 0;
-  char cWord[OPTLEN], cTmp[LINE];
+  char *cWord[OPTLEN], cTmp[LINE];
   FILE *fp;
 
   iLen = strlen(cOption);
@@ -555,7 +555,7 @@ void Unrecognized(FILES files) {
 void UpdateFoundOption(INFILE *input, OPTIONS *options, int iLine, int iFile) {
   input->bLineOK[iLine] = 1;
   options->iLine[iFile] = iLine;
-  strcpy(options->cFile[iFile], input->cIn);
+  fvFormattedString(&options->cFile[iFile], input->cIn);
 }
 
 void UpdateFoundOptionMulti(INFILE *input, OPTIONS *options, int *iLine,
@@ -567,7 +567,7 @@ void UpdateFoundOptionMulti(INFILE *input, OPTIONS *options, int *iLine,
     The user should be able to figure it out from there.
   */
   options->iLine[iFile] = iLine[0];
-  strcpy(options->cFile[iFile], input->cIn);
+  fvFormattedString(&options->cFile[iFile], input->cIn);
   for (iLineNow = 0; iLineNow < iNumLines; iLineNow++) {
     input->bLineOK[iLine[iLineNow]] = 1;
   }
@@ -1111,7 +1111,7 @@ void ReadSystemName(CONTROL *control, FILES *files, OPTIONS *options,
   if (lTmp >= 0) {
     CheckDuplication(files, options, files->Infile[iFile].cIn, lTmp,
                      control->Io.iVerbose);
-    strcpy(system->cName, cTmp);
+    fvFormattedString(&system->cName, cTmp);
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   }
 }
@@ -1159,7 +1159,7 @@ void ReadBodyFileNames(CONTROL *control, FILES *files, OPTIONS *options,
 
   for (iIndex = 0; iIndex < iNumIndices; iIndex++) {
 
-    strcpy(files->Infile[iIndex + 1].cIn, saTmp[iIndex]);
+    fvFormattedString(&files->Infile[iIndex + 1].cIn, saTmp[iIndex]);
   }
 
   control->Evolve.iNumBodies = iNumIndices;
@@ -1185,7 +1185,7 @@ void ReadInitialOptions(BODY **body, CONTROL *control, FILES *files,
   int iFile, iBody, iModule;
   INFILE input;
 
-  strcpy(input.cIn, infile);
+  fvFormattedString(&input.cIn, infile);
   /* Initialize primary input file */
   InitializeInput(&input);
 
@@ -1277,7 +1277,7 @@ void AssignDefaultString(OPTIONS *options, char cOption[], int iNumFiles) {
   }
 
   /* If made it here, not input already, so assign default */
-  strcpy(cOption, options->cDefault);
+  fvFormattedString(&cOption, options->cDefault);
 }
 
 int bOptionAlreadyFound(int *iLine, int iNumFiles) {
@@ -1427,7 +1427,7 @@ void ReadOutFile(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     /* Cannot exist in primary input file -- Each body has an output file */
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    strcpy(files->Outfile[iFile - 1].cOut, cTmp);
+    fvFormattedString(&files->Outfile[iFile - 1].cOut, cTmp);
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     AssignDefaultString(options, files->Outfile[iFile - 1].cOut,
@@ -1583,7 +1583,7 @@ void ReadBodyName(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
     if (strlen(cTmp) > 0) {
-      strcpy(body[iFile - 1].cName, cTmp);
+      fvFormattedString(&body[iFile - 1].cName, cTmp);
     } else {
       fvFormattedString(&body[iFile - 1].cName, "%d", iFile);
     }
@@ -1605,10 +1605,10 @@ void ReadColor(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   if (lTmp >= 0) {
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    strcpy(body[iFile - 1].sColor, cTmp);
+    fvFormattedString(&body[iFile - 1].sColor, cTmp);
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
-    strcpy(body[iFile - 1].sColor, options->cDefault);
+    fvFormattedString(&body[iFile - 1].sColor, options->cDefault);
   }
 }
 
@@ -2142,7 +2142,7 @@ void ReadLogFile(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   if (lTmp >= 0) {
     CheckDuplication(files, options, files->Infile[iFile].cIn, lTmp,
                      control->Io.iVerbose);
-    strcpy(files->cLog, cTmp);
+    fvFormattedString(&files->cLog, cTmp);
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     /* Assign Default */
@@ -2655,8 +2655,8 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
                      OUTPUT *output, int iFile, int iVerbose) {
   int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 1, iNumGrid = 0;
   int k, iOut = -1, *lTmp, iCol, jCol;
-  char saTmp[MAXARRAY][OPTLEN], cTmp[OPTLEN], cOption[MAXARRAY][OPTLEN],
-        cOut[OPTLEN];
+  char saTmp[MAXARRAY][OPTLEN], cTmp[OPTLEN], *cOption[MAXARRAY],
+        *cOut;
   int iLen1, iLen2;
 
   lTmp = malloc(MAXLINES * sizeof(int));
@@ -2700,19 +2700,19 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
       for (j = 0; j < OPTLEN; j++) {
         cTmp[j] = 0;
       }
-      strcpy(cTmp, saTmp[i]);
+      fvFormattedString(&cTmp, saTmp[i]);
       for (j = 0; j < MODULEOUTEND; j++) {
         for (k = 0; k < OPTLEN; k++) {
           cOut[k] = 0;
         }
-        strcpy(cOut, output[j].cName);
+        fvFormattedString(&cOut, output[j].cName);
         iLen1 = strlen(cOut);
         iLen2 = strlen(cTmp);
         /* Check for perfect match */
         if ((iLen1 == iLen2) &&
             (memcmp(sLower(cTmp), sLower(cOut), strlen(cOut)) == 0)) {
           /* Output option found! */
-          strcpy(cOption[count], output[j].cName);
+          fvFormattedString(&cOption[count], output[j].cName);
           count = 1;
           iOut  = j;
           if (output[j].bGrid == 1) {
@@ -2729,7 +2729,7 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
 
           if (memcmp(sLower(cTmp), sLower(cOut), iLen) == 0 && iLen1 > iLen2) {
             /* Output option found! */
-            strcpy(cOption[count], output[j].cName);
+            fvFormattedString(&cOption[count], output[j].cName);
             count++;
             iOut = j;
             if (output[j].bGrid == 1) {
@@ -2788,10 +2788,10 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
         }
         if (output[iOut].bGrid == 0 || output[iOut].bGrid == 2) {
           memset(files->Outfile[iFile - 1].caCol[i], '\0', OPTLEN);
-          strcpy(files->Outfile[iFile - 1].caCol[i], output[iOut].cName);
+          fvFormattedString(&files->Outfile[iFile - 1].caCol[i], output[iOut].cName);
         } else {
           memset(files->Outfile[iFile - 1].caGrid[iNumGrid - 1], '\0', OPTLEN);
-          strcpy(files->Outfile[iFile - 1].caGrid[iNumGrid - 1],
+          fvFormattedString(&files->Outfile[iFile - 1].caGrid[iNumGrid - 1],
                  output[iOut].cName);
         }
         // Is option part of selected modules?
@@ -2852,13 +2852,15 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
   }
 
   free(lTmp);
+  free(cTmp);
+  free(cOption);
 }
 
 void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
                     int iVerbose) {
   int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 0, iNumGrid = 0;
   int k, iOut = -1, *lTmp;
-  char saTmp[MAXARRAY][OPTLEN], cTmp[OPTLEN], cOption[MAXARRAY][OPTLEN],
+  char saTmp[MAXARRAY][OPTLEN], *cTmp, cOption[MAXARRAY][OPTLEN],
         cOut[OPTLEN];
   int iLen1, iLen2;
 
@@ -2893,19 +2895,19 @@ void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
       for (j = 0; j < OPTLEN; j++) {
         cTmp[j] = 0;
       }
-      strcpy(cTmp, saTmp[i]);
+      fvFormattedString(&cTmp, saTmp[i]);
       for (j = 0; j < MODULEOUTEND; j++) {
         for (k = 0; k < OPTLEN; k++) {
           cOut[k] = 0;
         }
-        strcpy(cOut, output[j].cName);
+        fvFormattedString(&cOut, output[j].cName);
         iLen1 = strlen(cOut);
         iLen2 = strlen(cTmp);
         /* Check for perfect match */
         if ((iLen1 == iLen2) &&
             (memcmp(sLower(cTmp), sLower(cOut), strlen(cOut)) == 0)) {
           /* Output option found! */
-          strcpy(cOption[count], output[j].cName);
+          fvFormattedString(&cOption[count], output[j].cName);
           count = 1;
           iOut  = j;
           if (output[j].bGrid == 1 || output[j].bGrid == 2) {
@@ -2921,7 +2923,7 @@ void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
 
           if (memcmp(sLower(cTmp), sLower(cOut), iLen) == 0 && iLen1 > iLen2) {
             /* Output option found! */
-            strcpy(cOption[count], output[j].cName);
+            fvFormattedString(&cOption[count], output[j].cName);
             count++;
             iOut = j;
             if (output[j].bGrid == 1 || output[j].bGrid == 2) {
@@ -2979,10 +2981,10 @@ void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
         }
         if (output[iOut].bGrid == 0) {
           memset(files->Outfile[iFile - 1].caCol[i], '\0', OPTLEN);
-          strcpy(files->Outfile[iFile - 1].caCol[i], output[iOut].cName);
+          fvFormattedString(&files->Outfile[iFile - 1].caCol[i], output[iOut].cName);
         } else {
           memset(files->Outfile[iFile - 1].caGrid[iNumGrid - 1], '\0', OPTLEN);
-          strcpy(files->Outfile[iFile - 1].caGrid[iNumGrid - 1],
+          fvFormattedString(&files->Outfile[iFile - 1].caGrid[iNumGrid - 1],
                  output[iOut].cName);
         }
       }
@@ -4661,23 +4663,24 @@ void InitializeOptions(OPTIONS *options, fnReadOption *fnRead) {
 
   /* Initialize all parameters describing the option's location */
   for (iOpt = 0; iOpt < MODULEOPTEND; iOpt++) {
-    memset(options[iOpt].cName, '\0', OPTLEN);
+    //memset(options[iOpt].cName, '\0', OPTLEN);
+    options[iOpt].cName = NULL;
     fvFormattedString(&options[iOpt].cName, "null");
     options[iOpt].iLine      = malloc(MAXFILES * sizeof(int));
     options[iOpt].bMultiFile = 0;
     options[iOpt].iMultiIn   = 0;
     options[iOpt].iType      = -1;
-    memset(options[iOpt].cDescr, '\0', OPTDESCR);
+    //memset(options[iOpt].cDescr, '\0', OPTDESCR);
     fvFormattedString(&options[iOpt].cDescr, "null");
-    memset(options[iOpt].cLongDescr, '\0', OPTLONDESCR);
+    //memset(options[iOpt].cLongDescr, '\0', OPTLONDESCR);
     fvFormattedString(&options[iOpt].cLongDescr, "null");
-    memset(options[iOpt].cDefault, '\0', OPTDESCR);
+    //memset(options[iOpt].cDefault, '\0', OPTDESCR);
     fvFormattedString(&options[iOpt].cDefault, "null");
-    memset(options[iOpt].cValues, '\0', OPTDESCR);
+    //memset(options[iOpt].cValues, '\0', OPTDESCR);
     fvFormattedString(&options[iOpt].cValues, "null");
-    memset(options[iOpt].cNeg, '\0', OPTDESCR);
+    //memset(options[iOpt].cNeg, '\0', OPTDESCR);
     fvFormattedString(&options[iOpt].cNeg, "null");
-    memset(options[iOpt].cDimension, '\0', OPTDESCR);
+    //memset(options[iOpt].cDimension, '\0', OPTDESCR);
     options[iOpt].dDefault   = NAN;
     options[iOpt].iModuleBit = 0;
     options[iOpt].bNeg       = 0;
@@ -4686,7 +4689,7 @@ void InitializeOptions(OPTIONS *options, fnReadOption *fnRead) {
 
     for (iFile = 0; iFile < MAXFILES; iFile++) {
       options[iOpt].iLine[iFile] = -1;
-      memset(options[iOpt].cFile[iFile], '\0', OPTLEN);
+      //memset(options[iOpt].cFile[iFile], '\0', OPTLEN);
       fvFormattedString(&options[iOpt].cFile[iFile], "null");
     }
   }

@@ -625,8 +625,8 @@ void ReadTidePerts(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     /* Now do some initializing */
     body[iFile - 1].iTidePerts = iNumIndices;
     for (iBody = 0; iBody < iNumIndices; iBody++) {
-      memset(body[iFile - 1].saTidePerts[iBody], '\0', NAMELEN);
-      strcpy(body[iFile - 1].saTidePerts[iBody], saTmp[iBody]);
+      //memset(body[iFile - 1].saTidePerts[iBody], '\0', NAMELEN);
+      fvFormattedString(&body[iFile - 1].saTidePerts[iBody], saTmp[iBody]);
     }
     UpdateFoundOptionMulti(&files->Infile[iFile], options, lTmp, iNumLines,
                            iFile);
@@ -1603,7 +1603,7 @@ void VerifyPerturbersEqtide(BODY *body, FILES *files, OPTIONS *options,
           for (iBodyPert = 0; iBodyPert < iNumBodies; iBodyPert++) {
             if (iBodyPert != iBody) {
               if (strncmp(body[iBody].saTidePerts[iPert], body[iBodyPert].cName,
-                          sizeof(body[iBody].saTidePerts[iPert])) == 0) {
+                        strlen(body[iBody].saTidePerts[iPert])) == 0) {
                 /* This parameter contains the body # of the "iPert-th"
                         tidal perturber */
                 body[iBody].iaTidePerts[iPert] = iBodyPert;
@@ -1752,7 +1752,7 @@ int fiGetModuleIntEqtide(MODULE *module, int iBody) {
 
 void VerifyTideModel(CONTROL *control, FILES *files, OPTIONS *options) {
   int iFile, iFound = 0;
-  char cTmp[8];
+  char *cTmp;
 
   for (iFile = 0; iFile < files->iNumInputs; iFile++) {
     if (options[OPT_TIDEMODEL].iLine[iFile] >= 0) {
@@ -1775,7 +1775,7 @@ void VerifyTideModel(CONTROL *control, FILES *files, OPTIONS *options) {
   }
 
   if (iFound == 0) {
-    strcpy(cTmp, options[OPT_TIDEMODEL].cDefault);
+    fvFormattedString(&cTmp, options[OPT_TIDEMODEL].cDefault);
     if (!memcmp(sLower(cTmp), "p2", 2)) {
       control->Evolve.iEqtideModel = CPL;
     } else if (!memcmp(sLower(cTmp), "t8", 2)) {
@@ -1790,6 +1790,7 @@ void VerifyTideModel(CONTROL *control, FILES *files, OPTIONS *options) {
        make it seem like the user set it. */
     options[OPT_TIDEMODEL].iLine[0] = 1;
   }
+  free(cTmp);
 }
 
 void AssignEqtideDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
@@ -2340,7 +2341,7 @@ void WriteLockTime(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dLockTime;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -2354,7 +2355,7 @@ void WriteTidalRadius(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dTidalRadius;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -2377,7 +2378,7 @@ void WriteDOblDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) / fdUnitsAngle(units->iAngle);
     fsUnitsAngRate(units, cUnit);
@@ -2395,7 +2396,7 @@ void WriteTidalQOcean(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp = -1;
   }
 
-  strcpy(cUnit, "");
+  fvFormattedString(&cUnit, "");
 }
 
 void WriteTidalQEnv(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2409,7 +2410,7 @@ void WriteTidalQEnv(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp = -1;
   }
 
-  strcpy(cUnit, "");
+  fvFormattedString(&cUnit, "");
 }
 
 void WriteDSemiDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2423,7 +2424,7 @@ void WriteDSemiDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) / fdUnitsLength(units->iLength);
     fsUnitsVel(units, cUnit);
@@ -2438,7 +2439,7 @@ void WriteDEccDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -2457,7 +2458,7 @@ void WriteDMeanMotionDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) / fdUnitsLength(units->iLength);
     fsUnitsRate(units->iTime, cUnit);
@@ -2477,7 +2478,7 @@ void WriteDOrbPerDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) / fdUnitsLength(units->iLength);
     fvFormattedString(&cUnit, "%s", "");
@@ -2500,9 +2501,9 @@ void WriteDRotPerDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = dDeriv * (-2 * PI / (body[iBody].dRotRate * body[iBody].dRotRate));
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
-    strcpy(cUnit, "");
+    fvFormattedString(&cUnit, "");
   }
 }
 
@@ -2522,7 +2523,7 @@ void WriteDRotRateDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) * fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -2541,7 +2542,7 @@ void WriteDHeccDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -2559,7 +2560,7 @@ void WriteDKeccDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -2581,7 +2582,7 @@ void WriteDXoblDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -2603,7 +2604,7 @@ void WriteDYoblDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -2625,7 +2626,7 @@ void WriteDZoblDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -2655,7 +2656,7 @@ void WriteEccTimescaleEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -2673,7 +2674,7 @@ void WriteEqRotPer(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -2698,7 +2699,7 @@ void WriteEqRotPerCont(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -2719,7 +2720,7 @@ void WriteEqRotPerDiscrete(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -2737,7 +2738,7 @@ void WriteEqRotRate(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -2761,7 +2762,7 @@ void WriteEqRotRateCont(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -2782,7 +2783,7 @@ void WriteEqRotRateDiscrete(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -2811,7 +2812,7 @@ void WriteEqTidePower(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -2857,7 +2858,7 @@ void WriteK2Ocean(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   *dTmp = body[iBody].dK2Ocean;
 
-  strcpy(cUnit, "");
+  fvFormattedString(&cUnit, "");
 }
 
 void WriteK2Env(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -2866,7 +2867,7 @@ void WriteK2Env(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   *dTmp = body[iBody].dK2Env;
 
-  strcpy(cUnit, "");
+  fvFormattedString(&cUnit, "");
 }
 
 void WriteOblTimescaleEqtide(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2889,7 +2890,7 @@ void WriteOblTimescaleEqtide(BODY *body, CONTROL *control, OUTPUT *output,
   }
   */
   *dTmp = -1;
-  strcpy(cUnit, "");
+  fvFormattedString(&cUnit, "");
 }
 
 void WriteRotTimescaleEqtide(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2901,7 +2902,7 @@ void WriteRotTimescaleEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -2919,7 +2920,7 @@ void WriteSemiTimescaleEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -2949,7 +2950,7 @@ fprintf(stderr,"TidalZ: %lf\n",body[iBody].dTidalZ[jBody]);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -2965,7 +2966,7 @@ void WriteEnergyFluxEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergyFlux(units, cUnit);
@@ -2979,7 +2980,7 @@ void WriteTidalTau(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(&cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);

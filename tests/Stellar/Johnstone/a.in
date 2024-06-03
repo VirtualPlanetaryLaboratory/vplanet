@@ -1,0 +1,26 @@
+# Star
+sName               a		                  # Body's name
+saModules	    stellar                     # Modules to apply, exact spelling required
+
+# Physical Parameters
+dAge                2e6
+dMass               0.1
+dRotPeriod          -1.0
+
+
+# Stellar Parameters
+sStellarModel       baraffe
+sXUVModel           johnstone
+sMagBrakingModel    Matt
+dRossbySat          0.0605
+dR_xSat             5.134e-4
+dJohnstoneBeta1     -0.135
+dJohnstoneBeta2     -1.889
+dSatXUVFrac         1e-3 
+dSatXUVTime         -0.1
+dXUVBeta            1.23
+
+
+
+# Output
+saOutputOrder  Time -TotEn -TotAngMom -Luminosity -Radius Temperature -RotPer -LXUVTot RadGyra RossbyNumber

@@ -201,14 +201,14 @@ We then need to add some lines to ```module.c```. In InitializeModule, add
 .. code-block:: bash  
 
   module->fnFinalizeUpdatePhysics =
-        malloc(iNumBodies * sizeof(fnFinalizeUpdateCarbManModule));
+        malloc(iNumBodies * sizeof(fnFinalizeUpdatePhysicsModule));
 
 and in FinalizeModule, add
 
 .. code-block:: bash
 
   module->fnFinalizeUpdatePhysics[iBody] =
-        malloc(iNumModules * sizeof(fnFinalizeUpdateCarbManModule));
+        malloc(iNumModules * sizeof(fnFinalizeUpdatePhysicsModule));
 
 and
 

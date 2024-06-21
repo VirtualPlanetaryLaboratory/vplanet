@@ -16,7 +16,10 @@ further enabling confidence in the code's accuracy.
 Test scripts live in the :code:`tests/` directory and are executed automatically 
 on every pull request with GitHub Actions. To perform the tests, we use :code:`pytest`, which will
 find all Python files with the word :code:`test` somewhere in their name (side note:
-if it's not meant to be a test, don't put :code:`test` in the file name!).
+if it's not meant to be a test, don't put :code:`test` in the file name!). Under the :code:`tests`
+directory are subdirectories whose names consists of VPLanet modules, e.g. BINARY and AtmescEqtideStellar.
+These subdirectories contain the tests available for the module combinations of the subdirectory name.
+
 
 The VPLanet team has made it easy to add or revise tests. Inside the :code:`tests/` directory
 is a file called :code:`maketest.py`, which will generate a unit test from a set of valid infiles.
@@ -24,7 +27,12 @@ So a typical procedure to create a new test is to:
 
 - Create a simulation that executes previously untested functionality
 - Verify the results are accurate! (Obvious, we know, but please don't forget!)
-- Copy the .in files t
+- Create a subdirectory with a unique name for your test. 
+- Copy the .in files for your test into your new subdirectory
+- cd to the :code:`tests` directory and run ```python maketest.py <modules/subdir>```, which the 
+  argument is the relative to path to your new test
+- Commit your .in files and the new :code:`test_<subdir>.py" file to the repository
+- Issue a PR!
 
 These unit tests not only ensure new modification don't break parts of the code
 that already work. In addition, they are used to compute the fraction of the code

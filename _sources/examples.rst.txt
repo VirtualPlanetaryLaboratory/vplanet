@@ -12,46 +12,46 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/MagmOc_Earth
-   examples/HabEvapCore
-   examples/HabitableZone
+   examples/IceBelts
+   examples/CassiniStates
+   examples/ChaoticResonances
+   examples/MiniNeptuneEvap
+   examples/GalaxyEffects
+   examples/EarthInterior
+   examples/AtmEscKepler-36
    examples/CassiniMulti
-   examples/ParameterSweep
-   examples/NBodyAtmEsc
-   examples/StellarEvol
+   examples/MagneticBraking
+   examples/LuminosityCycle
+   examples/CircumbinaryOrbit
    examples/HLossTides
-   examples/TidalEarth
+   examples/VenusApproxInterior
+   examples/StellarEvol
+   examples/DiffLimWaterEscape
    examples/VenusWaterLoss
    examples/BinaryTides
-   examples/FfdProxCen
-   examples/STEEP
-   examples/AtmEscKepler-36
-   examples/SS_NBody
-   examples/ApseLock
-   examples/VenusApproxInterior
-   examples/CassiniStates
-   examples/SSDistOrbDistRot
-   examples/MagmOc_Trappist1g
-   examples/AtmEscRegimes
-   examples/IoHeat
-   examples/GalaxyEffects
-   examples/RadHeat
-   examples/CircumbinaryOrbit
-   examples/TideLock
    examples/WaterLossTides
-   examples/AbioticO2
-   examples/IceBelts
-   examples/MagneticBraking
-   examples/DampedCBP
-   examples/MDwarfLuminosity
-   examples/EarthClimate
-   examples/EarthInterior
-   examples/DiffLimWaterEscape
-   examples/ChaoticResonances
-   examples/LuminosityCycle
-   examples/MiniNeptuneEvap
-   examples/AtmEscFlareProxCen
+   examples/TideLock
    examples/MagmOc_GJ1132b
+   examples/ParameterSweep
+   examples/MagmOc_Trappist1g
+   examples/HabitableZone
+   examples/AtmEscRegimes
+   examples/FfdProxCen
+   examples/ApseLock
+   examples/NBodyAtmEsc
+   examples/TidalEarth
+   examples/AtmEscFlareProxCen
+   examples/DampedCBP
+   examples/SS_NBody
+   examples/RadHeat
+   examples/MDwarfLuminosity
+   examples/IoHeat
+   examples/MagmOc_Earth
+   examples/SSDistOrbDistRot
+   examples/HabEvapCore
+   examples/EarthClimate
+   examples/AbioticO2
+   examples/STEEP
 
 
 Broken

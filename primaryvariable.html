@@ -251,6 +251,10 @@ block of code that initializes the other pieces of the UPDATE struct.</p>
 <span class="w">         </span>malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>int<span class="o">))</span><span class="p">;</span>
 <span class="w">      </span>control-&gt;Evolve.tmpUpdate<span class="o">[</span>iBody<span class="o">]</span>.iaBody<span class="o">[</span>iVar<span class="o">]</span><span class="w"> </span><span class="o">=</span>
 <span class="w">         </span>malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumPrimaryVariable<span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>int<span class="w"> </span>*<span class="o">))</span><span class="p">;</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="o">(</span><span class="nv">iSubStep</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span>iSubStep<span class="w"> </span>&lt;<span class="w"> </span><span class="m">4</span><span class="p">;</span><span class="w"> </span>iSubStep++<span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span>control-&gt;Evolve.daDerivProc<span class="o">[</span>iSubStep<span class="o">][</span>iBody<span class="o">][</span>iVar<span class="o">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span>malloc<span class="o">(</span>update<span class="o">[</span>iBody<span class="o">]</span>.iNumEqns<span class="o">[</span>iVar<span class="o">]</span><span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>double<span class="o">))</span><span class="p">;</span>
+<span class="w">      </span><span class="o">}</span>
 <span class="w">    </span><span class="o">}</span>
 
 <span class="w">    </span>//<span class="w"> </span>Now<span class="w"> </span>allocate<span class="w"> </span>memory<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>number<span class="w"> </span>of<span class="w"> </span>processes<span class="w"> </span>that<span class="w"> </span>affect<span class="w"> </span>this<span class="w"> </span>variable
@@ -277,6 +281,24 @@ variable.</p>
 assign a new value to this variable, you will overwrite the primary variable’s
 derivative (which would be bad!).</p>
 </div>
+<p>We then need to add some lines to <code class="docutils literal notranslate"><span class="pre">`module.c`</span></code>. In InitializeModule, add</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>module-&gt;fnFinalizeUpdatePhysics =</dt><dd><p>malloc(iNumBodies * sizeof(fnFinalizeUpdateCarbManModule));</p>
+</dd>
+</dl>
+<p>and in FinalizeModule, add</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module-&gt;fnFinalizeUpdatePhysics<span class="o">[</span>iBody<span class="o">]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span>malloc<span class="o">(</span>iNumModules<span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>fnFinalizeUpdateCarbManModule<span class="o">))</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>and</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module-&gt;fnFinalizeUpdatePhysics<span class="o">[</span>iBody<span class="o">][</span>iModule<span class="o">]</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">&amp;</span>FinalizeUpdateNULL<span class="p">;</span>
+</pre></div>
+</div>
+<p>Please add them next to the other similar statements</p>
 <p>Next we need to add code to the module file, physics.c in this example, for
 which this primary variable will be added. First add a new function that
 continues the initialization process:</p>

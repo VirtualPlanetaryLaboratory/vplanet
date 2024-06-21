@@ -200,7 +200,7 @@ We then need to add some lines to ```module.c```. In InitializeModule, add
 
 .. code-block:: bash  
 
-module->fnFinalizeUpdatePhysics =
+  module->fnFinalizeUpdatePhysics =
         malloc(iNumBodies * sizeof(fnFinalizeUpdateCarbManModule));
 
 and in FinalizeModule, add
@@ -214,7 +214,7 @@ and
 
 .. code-block:: bash
 
- module->fnFinalizeUpdatePhysics[iBody][iModule]   = &FinalizeUpdateNULL; 
+  module->fnFinalizeUpdatePhysics[iBody][iModule]   = &FinalizeUpdateNULL; 
 
 Please add them next to the other similar statements
 

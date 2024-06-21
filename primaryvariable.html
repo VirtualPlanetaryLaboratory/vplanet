@@ -282,13 +282,10 @@ assign a new value to this variable, you will overwrite the primary variable’s
 derivative (which would be bad!).</p>
 </div>
 <p>We then need to add some lines to <code class="docutils literal notranslate"><span class="pre">`module.c`</span></code>. In InitializeModule, add</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module-&gt;fnFinalizeUpdatePhysics<span class="w"> </span><span class="o">=</span>
+<span class="w">      </span>malloc<span class="o">(</span>iNumBodies<span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>fnFinalizeUpdateCarbManModule<span class="o">))</span><span class="p">;</span>
 </pre></div>
 </div>
-<dl class="simple">
-<dt>module-&gt;fnFinalizeUpdatePhysics =</dt><dd><p>malloc(iNumBodies * sizeof(fnFinalizeUpdateCarbManModule));</p>
-</dd>
-</dl>
 <p>and in FinalizeModule, add</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module-&gt;fnFinalizeUpdatePhysics<span class="o">[</span>iBody<span class="o">]</span><span class="w"> </span><span class="o">=</span>
 <span class="w">      </span>malloc<span class="o">(</span>iNumModules<span class="w"> </span>*<span class="w"> </span>sizeof<span class="o">(</span>fnFinalizeUpdateCarbManModule<span class="o">))</span><span class="p">;</span>

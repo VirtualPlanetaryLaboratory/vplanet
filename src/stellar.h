@@ -34,6 +34,7 @@
 #define STELLAR_MODEL_RIBAS 4
 #define STELLAR_MODEL_PROXIMACEN 5
 #define STELLAR_MODEL_SINEWAVE 6
+#define STELLAR_MODEL_JOHNSTONE  7
 
 #define STELLAR_DJDT_NONE                                                      \
   0 /**< No stellar angular momentum loss via magnetic braking */
@@ -69,6 +70,15 @@
 #define OPT_LUMPERIOD 1555
 #define OPT_LUMPHASE 1560
 
+/*Johnstone Parameters*/ /*SSS*/
+#define OPT_ROSSBYSAT 1523
+#define OPT_R_XSAT     1524
+#define OPT_JOHNSTONEBETA1  1525
+#define OPT_JOHNSTONEBETA2  1526
+
+
+
+
 /* Halt Functions */
 #define STELLARHALTSYSEND 5
 #define STELLARHALTBODYEND 5
@@ -86,6 +96,7 @@
 #define OUT_LXUVFRAC 1513
 #define OUT_ROSSBYNUMBER 1514
 #define OUT_DROTPERDTSTELLAR 1515
+#define OPT_LXRAY 1527
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -112,6 +123,8 @@ void InitializeVplanetStellar(CONTROL *, MODULE *);
 void fnPropsAuxStellar(BODY *, EVOLVE *, IO *, UPDATE *, int);
 void VerifyHaltStellar(BODY *, CONTROL *, OPTIONS *, int, int *);
 void VerifyRotationStellar(BODY *, CONTROL *, OPTIONS *, char[], int);
+//void VerifyXUV(BODY * ,CONTROL *, FILES *, OPTIONS *,int *); /SSS
+
 
 /* Update functions */
 void InitializeUpdateStellar(BODY *, UPDATE *, int);
@@ -139,6 +152,8 @@ void WriteLXUVFrac(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
 void WriteRossbyNumber(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                        int, double *, char[]);
 void WriteDRotPerDtStellar(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                           UPDATE *, int, double *, char[]);
+void WriteLXRay(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                            UPDATE *, int, double *, char[]);
 
 /* Logging Functions */
@@ -176,6 +191,11 @@ double fdDEDtRotRadGyraStellar(BODY *, SYSTEM *, int *);
 double fdDEDtRotBrakeStellar(BODY *, SYSTEM *, int *);
 double fdDEDtStellar(BODY *, SYSTEM *, int *);
 double fdCranmerSaar2011TauCZ(double);
+double fdR_xSat(BODY *, int);
+double fdJohnstoneBeta1(BODY *, int);
+double fdJohnstoneBeta2(BODY *, int);
+double fdRossbyNumber(BODY *, int);
+double fdLXRay(BODY *,int);
 
 /* Dummy functions */
 double fdSurfEnFluxStellar(BODY *, SYSTEM *, UPDATE *, int, int);

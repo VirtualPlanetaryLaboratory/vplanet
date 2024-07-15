@@ -33,6 +33,7 @@ void BodyCopyStellar(BODY *dest, BODY *src, int foo, int iNumBodies,
   dest[iBody].dLuminosityAmplitude = src[iBody].dLuminosityAmplitude;
   dest[iBody].dLuminosityFrequency = src[iBody].dLuminosityFrequency;
   dest[iBody].dLuminosityPhase     = src[iBody].dLuminosityPhase;
+  dest[iBody].dLXRay               = src[iBody].dLXRay;
 }
 
 /**************** STELLAR options ********************/
@@ -129,6 +130,8 @@ void ReadStellarModel(BODY *body, CONTROL *control, FILES *files,
       body[iFile - 1].iStellarModel = STELLAR_MODEL_PROXIMACEN;
     } else if (!memcmp(sLower(cTmp), "si", 2)) {
       body[iFile - 1].iStellarModel = STELLAR_MODEL_SINEWAVE;
+    
+
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
@@ -178,6 +181,115 @@ void ReadMagBrakingModel(BODY *body, CONTROL *control, FILES *files,
           STELLAR_DJDT_RM12; // Default to Reiners & Mohanty 2012 model
   }
 }
+
+void ReadRossbySat(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                 SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr, "ERROR: %s must be >= 0.\n", options->cName);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    body[iFile - 1].dRossbySat = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dRossbySat = options->dDefault;
+  }
+}
+
+
+
+void ReadRossR_xSat(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                 SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp; 
+                 
+
+               
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr, "ERROR: %s must be >= 0.\n", options->cName);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    body[iFile - 1].dR_xSat = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dR_xSat = options->dDefault;
+  }}
+ 
+void ReadJohnstoneBeta1(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                 SYSTEM *system, int iFile) {
+  
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].dJohnstoneBeta1 = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+    } else if (iFile > 0) {
+    body[iFile - 1].dJohnstoneBeta1 = options->dDefault;
+  }
+}
+
+void ReadJohnstoneBeta2(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                 SYSTEM *system, int iFile) {
+  
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+    if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].dJohnstoneBeta2 = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+    } else if (iFile > 0) {
+    body[iFile - 1].dJohnstoneBeta2 = options->dDefault;
+  }
+  }
+  
+
+
+
+ AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+    if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].dLXRay = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+    } else if (iFile > 0) {
+    body[iFile - 1].dLXRay = options->dDefault;
+    }
+  }
+
+
+
+
+
+
+
 
 void ReadWindModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                    SYSTEM *system, int iFile) {
@@ -230,10 +342,14 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                         "The recommended model is RIBAS.\n");
       }
       body[iFile - 1].iXUVModel = STELLAR_MODEL_REINERS;
+    
+    } else if (!memcmp(sLower(cTmp), "jo", 2)) {
+      body[iFile - 1].iXUVModel = STELLAR_MODEL_JOHNSTONE;
+
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
-                "ERROR: Unknown argument to %s: %s. Options are RIBAS, REINERS "
+                "ERROR: Unknown argument to %s: %s. Options are RIBAS, REINERS,JOHNSTONE "
                 "or NONE.\n",
                 options->cName, cTmp);
       }
@@ -245,6 +361,74 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   }
 }
 
+///SSS #start functions for calculating the xray --> uv
+
+/*void ReadLXRayModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                  SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp), "sa", 2)) {
+      body[iFile - 1].iXRAY = XRAY_MODEL_SANZ_FORCADA;
+    } else if (!memcmp(sLower(cTmp), "no", 2)) {
+      body[iFile - 1].iXUVModel = XRAY_MODEL_NONE;
+    }else if (!memcmp(sLower(cTmp), "jo", 2)) {
+      body[iFile - 1].iXUVModel = XRAY_MODEL_JOHNSTONE ;
+      
+    } else {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr,
+                "ERROR: Unknown argument to %s: %s. Options are SANZ-FORCADA,JOHNSTONE "
+                "or NONE.\n",
+                options->cName, cTmp);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } 
+  }
+*/
+ 
+  void ReadEUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                  SYSTEM *system, int iFile) {
+  
+  int lTmp = -1;
+  char cTmp[OPTLEN];
+
+ // AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp), "sa", 2)) {
+      body[iFile - 1].iEUVModel = EUV_MODEL_SANZ_FORCADA;
+    } else if (!memcmp(sLower(cTmp), "no", 2)) {
+      body[iFile - 1].iEUVModel = EUV_MODEL_NONE;
+    }else if (!memcmp(sLower(cTmp), "jo", 2)) {
+      body[iFile - 1].iEUVModel = EUV_MODEL_JOHNSTONE ;
+      
+    } else {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr,
+                "ERROR: Unknown argument to %s: %s. Options are SANZ-FORCADA,JOHNSTONE "
+                "or NONE.\n",
+                options->cName, cTmp);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } 
+  } 
+  
+ 
+  
+  
 void ReadHZModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                  SYSTEM *system, int iFile) {
   /* This parameter cannot exist in primary file */
@@ -449,6 +633,85 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_SATXUVTIME].cLongDescr,
           "The time a star will remain in its \"saturated\" phase.");
 
+ sprintf(options[OPT_ROSSBYSAT].cName, "dRossbySat"); //What put in in files
+  sprintf(options[OPT_ROSSBYSAT].cDescr, "Saturated Rossby number for xuv fraction");
+  sprintf(options[OPT_ROSSBYSAT].cDefault, "0.0605");
+  sprintf(options[OPT_ROSSBYSAT].cDimension, "nd"); //non dimensional
+  options[OPT_ROSSBYSAT].dDefault   = 0.0605;
+  options[OPT_ROSSBYSAT].iType      = 2; //tells is a double
+  options[OPT_ROSSBYSAT].bMultiFile = 1; //exist in multiple files?
+  fnRead[OPT_ROSSBYSAT]             = &ReadRossbySat; //pointers again
+  sprintf(
+        options[OPT_ROSSBYSAT].cLongDescr,
+        "Johnstone 2021 Rossby Saturation;");
+  sprintf(options[OPT_R_XSAT].cName, "dR_xSat"); //What put in in files
+  sprintf(options[OPT_R_XSAT].cDescr, "Saturated XUV luminosity fraction Johnstone 2021");
+  sprintf(options[OPT_R_XSAT].cDefault, "5e-4"); //should this be true though? actually be what i have below?
+  sprintf(options[OPT_R_XSAT].cDimension, "nd"); //non dimensional
+  options[OPT_R_XSAT].dDefault   = 0.0005135;
+  options[OPT_R_XSAT].iType      = 2; //tells is a double
+  options[OPT_R_XSAT].bMultiFile = 1; //exist in multiple files?
+  fnRead[OPT_R_XSAT]             = &ReadRossR_xSat; //pointers again
+  sprintf(
+        options[OPT_R_XSAT].cLongDescr,
+        "Johnstone 2021 R_x);");
+
+  sprintf(options[OPT_JOHNSTONEBETA1].cName, "dJohnstoneBeta1"); //What put in in files
+  sprintf(options[OPT_JOHNSTONEBETA1].cDescr, "Johnstone Beta1");
+  sprintf(options[OPT_JOHNSTONEBETA1].cDefault, "1e-3");
+  sprintf(options[OPT_JOHNSTONEBETA1].cDimension, "nd"); //non dimensional
+  options[OPT_JOHNSTONEBETA1].dDefault   = -0.135;
+  options[OPT_JOHNSTONEBETA1].iType      = 2; //tells is a double
+  options[OPT_JOHNSTONEBETA1].bMultiFile = 1; //exist in multiple files?
+  fnRead[OPT_JOHNSTONEBETA1]             = &ReadJohnstoneBeta1; //pointers again
+  sprintf(
+        options[OPT_JOHNSTONEBETA1].cLongDescr,
+        "Johnstone 2021 Beta1");
+
+  sprintf(options[OPT_JOHNSTONEBETA2].cName, "dJohnstoneBeta2"); //What put in in files
+  sprintf(options[OPT_JOHNSTONEBETA2].cDescr, "Johnstone Beta2");
+  sprintf(options[OPT_JOHNSTONEBETA2].cDefault, "1e-3");
+  sprintf(options[OPT_JOHNSTONEBETA2].cDimension, "nd"); //non dimensional
+  options[OPT_JOHNSTONEBETA2].dDefault   = -1.889;
+  options[OPT_JOHNSTONEBETA2].iType      = 2; //tells is a double
+  options[OPT_JOHNSTONEBETA2].bMultiFile = 1; //exist in multiple files?
+  fnRead[OPT_JOHNSTONEBETA2]             = &ReadJohnstoneBeta2; //pointers again
+  sprintf(
+        options[OPT_JOHNSTONEBETA2].cLongDescr,
+        "Johnstone 2021 Beta2");
+
+///SSS this is the thing we are trying to calculate, correct place to define it? I think so 
+/// differentiate between S-F and Johnstone here? will have diff xray/euv variables 
+/*
+sprintf(options[OPT_LXRAYMODEL].cName, "dLXRay"); //What put in in files
+  sprintf(options[OPT_LXRAYMODEL].cDescr, "XRay Luminosity");
+  sprintf(options[OPT_LXRAYMODEL].cDefault, "5e-4"); ///SSS also need default values for this?
+  sprintf(options[OPT_LXRAYMODEL].cDimension, "nd"); //non dimensional
+  options[OPT_LXRAYMODEL].dDefault   = 1; 
+  options[OPT_LXRAYMODEL].iType      = 2; //tells is a double
+  options[OPT_LXRAYMODEL].bMultiFile = 1; //exist in multiple files?
+  fnRead[OPT_LXRAYMODEL]             = &ReadLXRay; //pointers again
+  sprintf(
+        options[OPT_LXRAYMODEL].cLongDescr,
+        "If Sanz-Forcada selected, use Xray calculation from 2011 paper\n;"
+        "if Johnstone selected, use XRay calculation from 2020 paper.;");
+*/
+  
+  sprintf(options[OPT_LEUVMODEL].cName, "sUVModel"); //What put in in files
+  sprintf(options[OPT_LEUVMODEL].cDescr, "UV Model");
+  sprintf(options[OPT_LEUVMODEL].cDefault, "5e-4"); //SSS what set as default for this?
+  sprintf(options[OPT_LEUVMODEL].cDimension, "nd"); //non dimensional
+  options[OPT_LEUVMODEL].dDefault   = 1; //is there a way to set this to XLUV if turned off?
+  options[OPT_LEUVMODEL].iType      = 2; //tells is a double
+  options[OPT_LEUVMODEL].bMultiFile = 1; //exist in multiple files?
+  fnRead[OPT_LEUVMODEL]             = &ReadLEUV; //pointers again
+  sprintf(
+        options[OPT_LEUVMODEL].cLongDescr,
+        "If Sanz-Forcada selected, use EUV calculation from 2011 paper\n;"
+        "if Johnstone selected, use EUV calculation from 2020 paper.\n"
+        "NONE applies no calculations/turned off"
+        "Units are Watts"); 
+
   sprintf(options[OPT_XUVBETA].cName, "dXUVBeta");
   sprintf(options[OPT_XUVBETA].cDescr, "XUV decay power law exponent");
   sprintf(options[OPT_XUVBETA].cDefault, "1.23");
@@ -510,7 +773,7 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_XUVMODEL].cName, "sXUVModel");
   sprintf(options[OPT_XUVMODEL].cDescr, "XUV Evolution Model");
   sprintf(options[OPT_XUVMODEL].cDefault, "RIBAS");
-  sprintf(options[OPT_XUVMODEL].cValues, "RIBAS REINERS NONE");
+  sprintf(options[OPT_XUVMODEL].cValues, "RIBAS REINERS JOHNSTONE NONE");
   options[OPT_XUVMODEL].iType      = 3;
   options[OPT_XUVMODEL].bMultiFile = 1;
   options[OPT_XUVMODEL].iModuleBit = STELLAR;
@@ -521,9 +784,11 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
         "this to RIBAS (default) will evolve the XUV luminosity according to \n"
         "the saturated power law of Ribas et al (2005, ApJ, 611, 680),\n"
         "while setting it to REINERS will use the empirical relations of\n"
-        "Reiners, Schussler and Passegger (2014, ApJ, 794, 144). Please note "
-        "that\n"
-        "the latter model has not been fully vetted. Users may also set this\n"
+        "Reiners, Schussler and Passegger (2014, ApJ, 794, 144). \n"
+        "Johnstone will evolve the XUV luminosity according to \n"
+        "the power law of Johnstone 2021 (A&A 649, A96 (2021))\n"
+        "Please note that\n"
+        "the REINERS model has not been fully vetted. Users may also set this\n"
         "parameter to NONE, in which case the XUV luminosity will remain "
         "constant.");
 
@@ -992,12 +1257,45 @@ void fnPropsAuxStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
       body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
     }
 
+} else if (body[iBody].iXUVModel == STELLAR_MODEL_JOHNSTONE) {
+
+    // JOHNSTONE 2020 power-law model SSS
+        double dRossbyNumber, dJohnstonecon1, dJohnstonecon2;
+        dRossbyNumber = (fdRossbyNumber(body,iBody)*(0.95/(PERIODSUN/fdCranmerSaar2011TauCZ(TEFFSUN)))); //C&S in terms of js
+        dJohnstonecon1= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta1))); 
+        dJohnstonecon2= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta2)));
+
+   ///SSS If undefined Johnstone variables, must define them 
+   //  if (JS variables undefined) {
+   //   fprintf(stderr, "ERROR! Must define values for Johnstone Beta 1 and Beta 2 "
+   //                   "to use Johnstone model!\n");
+   //   exit(1);
+   // }
+
+
+
+  if (dRossbyNumber <= body[iBody].dRossbySat) {
+
+     body[iBody].dLXUV = dJohnstonecon1*pow(dRossbyNumber,body[iBody].dJohnstoneBeta1);
+
+      
+    } else {
+      
+       body[iBody].dLXUV = dJohnstonecon2*pow(dRossbyNumber,body[iBody].dJohnstoneBeta2);
+  
+     }
+ body[iBody].dLXUV*=body[iBody].dLuminosity; //dLuminosity is the bol. luminosity, why multiply by bol. luminosity and then reassign?should be divide?
+
+ //SSS
+ 
   } else {
 
     // Constant XUV fraction
     body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
   }
 }
+
+
 
 void fnForceBehaviorStellar(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
                             SYSTEM *system, UPDATE *update,
@@ -1086,6 +1384,73 @@ void VerifyStellar(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     exit(EXIT_INPUT);
   }
 
+///SSS
+/*void VerifyXRAY(body, control, options, update, body[iBody].dAge, iBody);
+
+  if (update[iBody].iNumRadius > 1) {
+    if (control->Io.iVerbose >= VERBERR) {
+      fprintf(stderr,
+              "ERROR: Must choose Sanz-Forcada, Johnstone, or None %d!",
+              iBody);
+    }
+    exit(EXIT_INPUT);
+  }
+
+  if (update[iBody].iNumRadGyra > 1) {
+    if (control->Io.iVerbose >= VERBERR) {
+      fprintf(stderr,
+              "ERROR: %d!",
+              iBody);
+    }
+    exit(EXIT_INPUT);
+  }
+*/
+
+void VerifyEUV(body, control, options, update, body[iBody].dXLUV, iBody);
+
+  if (update[iBody].iNumRadius > 1) {   ///these should point to something else, think on it a little harder
+    if (control->Io.iVerbose >= VERBERR) {
+      fprintf(stderr,
+              "ERROR: Must choose Sanz-Forcada, Johnstone, or None %d!",
+              iBody);
+    }
+    exit(EXIT_INPUT);
+  }
+
+  if (update[iBody].iNumRadGyra > 1) {
+    if (control->Io.iVerbose >= VERBERR) {
+      fprintf(stderr,
+              "ERROR: %d!",
+              iBody);
+    }
+    exit(EXIT_INPUT);
+  }
+
+
+
+
+//void VerifyXUV(BODY* body,CONTROL *control, FILES *files, OPTIONS *options,int iBody) //SSS
+ //{ if (body[iBody].iXUVModel !=  STELLAR_MODEL_JOHNSTONE) {
+   //if (options[OPT_JOHNSTONEBETA1].iLine[iBody+1] > -1 ) {"Error: Must set Johnstone model"}
+    //if (control->Io.iVerbose >= VERBERR) {
+      //fprintf(stderr,
+        //      "ERROR: Cannot use other XUV model with Johnstone variables %d!",
+          //    iBody); 
+    //}
+    // if 
+    //exit(EXIT_INPUT); //change to double line exit function
+
+
+ //}
+ //}
+
+
+
+ 
+// VerifyXUV(body,control,files,options,iBody);  /SSS
+VerifyXRAY(body,control,files,options,iBody);
+//VerifyEUV(body,control,files,options,iBody);
+
   VerifyRadius(body, control, options, update, body[iBody].dAge, iBody);
   VerifyRadGyra(body, control, options, update, body[iBody].dAge, iBody);
   VerifyRotRate(body, control, options, update, body[iBody].dAge, iBody);
@@ -1112,6 +1477,8 @@ void VerifyStellar(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 void InitializeModuleStellar(CONTROL *control, MODULE *module) {
   /* Anything Here? */
 }
+ 
+
 
 /**************** STELLAR update ****************/
 
@@ -1304,7 +1671,7 @@ void WriteRossbyNumber(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char cUnit[]) {
   *dTmp =
-        body[iBody].dRotPer / fdCranmerSaar2011TauCZ(body[iBody].dTemperature);
+       fdRossbyNumber(body,iBody);
   strcpy(cUnit, "");
 }
 
@@ -2016,6 +2383,31 @@ double fdSurfEnFluxStellar(BODY *body, SYSTEM *system, UPDATE *update,
   // RORY: I don't think so! -- This function should be set to ReturnOutputZero
   return 0;
 }
+double fdRossbyNumber(BODY *body , int iBody) {
+
+ double dRossbyNumber = body[iBody].dRotPer / fdCranmerSaar2011TauCZ(body[iBody].dTemperature);
+ return dRossbyNumber;
+//this is the Cranmer and Saar rossby number, will need to change name eventually w/different versions
+}
+
+///SSS
+
+double fdLEUVJohnstone( BODY *body, int iBody) {
+
+double dLXRayJohnstone = 1e7 * pow(10.,((log10(dLXRay * 1e-7)-2.04)/0.681));
+return dLXRayJohnstone; 
+
+}
+
+
+
+double fdLEUVSanzForcada( BODY *body, int iBody) {
+
+double dLEUVSanzForcada = 1e7 * pow(10., 4.80 + 0.860 * log10(dLXRay * 1.e-7));
+
+return dLEUVSanzForcada; 
+
+}
 
 double fdLuminosityFunctionSineWave(BODY *body, int iBody) {
   double dLuminosity =
@@ -2024,3 +2416,4 @@ double fdLuminosityFunctionSineWave(BODY *body, int iBody) {
       body[iBody].dLuminosityPhase);
   return dLuminosity;
 }
+

@@ -36,6 +36,21 @@
 #define STELLAR_MODEL_SINEWAVE 6
 #define STELLAR_MODEL_JOHNSTONE  7
 
+
+#define EUV_MODEL_SANZFORCADA 10
+#define EUV_MODEL_JOHNSTONE   11
+#define EUV_MODEL_NONE        12
+
+#define XRAY_MODEL_SANZFORCADA 13
+#define XRAY_MODEL_JOHNSTONE   14
+#define XRAY_MODEL_NONE        15
+
+#define LXUV_MODEL_SANZFORCADA 16
+#define LXUV_MODEL_JOHNSTONE   18
+#define LXUV_MODEL_REINERS     19
+#define LXUV_MODEL_NONE        20
+
+
 #define STELLAR_DJDT_NONE                                                      \
   0 /**< No stellar angular momentum loss via magnetic braking */
 #define STELLAR_DJDT_RM12 1 /**< dJ/dt according to Reiners & Mohanty 2012 */
@@ -52,8 +67,31 @@
 
 #define OPT_SATXUVFRAC 1511   /**< Saturation XUV luminosity fraction */
 #define OPT_STELLARMODEL 1512 /**< Luminosity evolution model */
+
+
 #define OPT_WINDMODEL 1514    /**< Wind model */
 #define OPT_XUVMODEL 1515     /**< XUV evol model */
+#define OPT_EUVMODEL 1528     /**<EUV evol model */
+#define OPT_EUVMODEL_SANZFORCADA  1529  /**<Sanz-Forcada EUV evol model */
+#define OPT_EUVMODEL_JOHNSTONE    1530
+#define OPT_EUVMODEL_NONE         1531
+#define OPT_XRAYMODEL             1528     
+#define OPT_XRAYMODEL_SANZFORCADA  1529
+#define OPT_XRAYMODEL_JOHNSTONE    1530
+#define OPT_XRAYMODEL_NONE         1531
+#define OPT_LXUVMODEL               1532    
+#define OPT_LXUVMODE_SANZFORCADA  1533
+#define OPT_LXUVMODE_JOHNSTONE    1534
+#define OPT_LXUVMODEL_REINERS      1535
+#define OPT_LXUVMODEL_NONE         1536
+
+
+
+
+
+
+
+//#define OPT_XRAYMODEL 1529
 #define OPT_HALTENDBARAFFEFGRID                                                \
   1516 /**< Halt when we reach the end of the Baraffe grid? */
 #define OPT_SATXUVTIME 1517 /**< XUV saturation time */
@@ -153,7 +191,15 @@ void WriteRossbyNumber(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                        int, double *, char[]);
 void WriteDRotPerDtStellar(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                            UPDATE *, int, double *, char[]);
-void WriteLXRay(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                           
+
+void WriteEUV(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                           UPDATE *, int, double *, char[]);
+
+void WriteXRay(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                           UPDATE *, int, double *, char[]);
+
+void WriteLXUV(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                            UPDATE *, int, double *, char[]);
 
 /* Logging Functions */
@@ -195,7 +241,10 @@ double fdR_xSat(BODY *, int);
 double fdJohnstoneBeta1(BODY *, int);
 double fdJohnstoneBeta2(BODY *, int);
 double fdRossbyNumber(BODY *, int);
-double fdLXRay(BODY *,int);
+double fdXRay(BODY *,int);
+double fdEUV(BODY *,int);
+double fdLXUV(BODY *,int);
+
 
 /* Dummy functions */
 double fdSurfEnFluxStellar(BODY *, SYSTEM *, UPDATE *, int, int);

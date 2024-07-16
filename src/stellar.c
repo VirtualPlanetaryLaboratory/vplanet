@@ -33,7 +33,7 @@ void BodyCopyStellar(BODY *dest, BODY *src, int foo, int iNumBodies,
   dest[iBody].dLuminosityAmplitude = src[iBody].dLuminosityAmplitude;
   dest[iBody].dLuminosityFrequency = src[iBody].dLuminosityFrequency;
   dest[iBody].dLuminosityPhase     = src[iBody].dLuminosityPhase;
-  dest[iBody].dLXRay               = src[iBody].dLXRay;
+  dest[iBody].dXRay               = src[iBody].dXRay;
 }
 
 /**************** STELLAR options ********************/
@@ -272,17 +272,6 @@ void ReadJohnstoneBeta2(BODY *body, CONTROL *control, FILES *files, OPTIONS *opt
 
 
 
- AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
-                  control->Io.iVerbose);
-    if (lTmp >= 0) {
-    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
-                    control->Io.iVerbose);
-    body[iFile - 1].dLXRay = dTmp;
-    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
-    } else if (iFile > 0) {
-    body[iFile - 1].dLXRay = options->dDefault;
-    }
-  }
 
 
 
@@ -361,9 +350,9 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   }
 }
 
-///SSS #start functions for calculating the xray --> uv
-
-/*void ReadLXRayModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+///SSS #start functions for calculating the xray & uv
+ 
+  void ReadXRayModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                   SYSTEM *system, int iFile) {
   /* This parameter cannot exist in primary file */
   int lTmp = -1;
@@ -375,58 +364,110 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
     if (!memcmp(sLower(cTmp), "sa", 2)) {
-      body[iFile - 1].iXRAY = XRAY_MODEL_SANZ_FORCADA;
+      body[iFile - 1].iXRAYModel = XRAY_MODEL_SANZFORCADA;
     } else if (!memcmp(sLower(cTmp), "no", 2)) {
-      body[iFile - 1].iXUVModel = XRAY_MODEL_NONE;
-    }else if (!memcmp(sLower(cTmp), "jo", 2)) {
-      body[iFile - 1].iXUVModel = XRAY_MODEL_JOHNSTONE ;
-      
+      body[iFile - 1].iXRAYModel = XRAY_MODEL_NONE;
+    
+    
+    } else if (!memcmp(sLower(cTmp), "jo", 2)) {
+      body[iFile - 1].iXRAYModel = XRAY_MODEL_JOHNSTONE;
+
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
-                "ERROR: Unknown argument to %s: %s. Options are SANZ-FORCADA,JOHNSTONE "
+                "ERROR: Unknown argument to %s: %s. Options are SANZ-FORCADA, JOHNSTONE "
                 "or NONE.\n",
                 options->cName, cTmp);
       }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
-  } 
+  } else if (iFile > 0) {
+    body[iFile - 1].iXRAYModel = XRAY_MODEL_SANZFORCADA; //sets it to default? 
   }
-*/
+}
+
  
   void ReadEUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                   SYSTEM *system, int iFile) {
-  
+  /* This parameter cannot exist in primary file */
   int lTmp = -1;
   char cTmp[OPTLEN];
 
- // AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
+  AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
   if (lTmp >= 0) {
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
     if (!memcmp(sLower(cTmp), "sa", 2)) {
-      body[iFile - 1].iEUVModel = EUV_MODEL_SANZ_FORCADA;
+      body[iFile - 1].iEUVModel = EUV_MODEL_SANZFORCADA;
     } else if (!memcmp(sLower(cTmp), "no", 2)) {
       body[iFile - 1].iEUVModel = EUV_MODEL_NONE;
-    }else if (!memcmp(sLower(cTmp), "jo", 2)) {
-      body[iFile - 1].iEUVModel = EUV_MODEL_JOHNSTONE ;
-      
+    
+    
+    } else if (!memcmp(sLower(cTmp), "jo", 2)) {
+      body[iFile - 1].iEUVModel = EUV_MODEL_JOHNSTONE;
+
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
-                "ERROR: Unknown argument to %s: %s. Options are SANZ-FORCADA,JOHNSTONE "
+                "ERROR: Unknown argument to %s: %s. Options are SANZFORCADA, JOHNSTONE "
                 "or NONE.\n",
                 options->cName, cTmp);
       }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
-  } 
-  } 
+  } else if (iFile > 0) {
+    body[iFile - 1].iEUVModel = EUV_MODEL_SANZFORCADA;
+  }
+}
   
- 
+   void ReadLXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                  SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp), "sa", 2)) {
+      body[iFile - 1].iLXUVModel = LXUV_MODEL_SANZFORCADA;
+    } else if (!memcmp(sLower(cTmp), "no", 2)) {
+      body[iFile - 1].iLXUVModel = LXUV_MODEL_NONE;
+    
+    
+    } else if (!memcmp(sLower(cTmp), "jo", 2)) {
+      body[iFile - 1].iLXUVModel = LXUV_MODEL_JOHNSTONE;
+    
+    } else if (!memcmp(sLower(cTmp), "re", 2)) {
+      body[iFile - 1].iLXUVModel = LXUV_MODEL_REINERS;
+
+
+    } else {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr,
+                "ERROR: Unknown argument to %s: %s. Options are SANZFORCADA, JOHNSTONE,REINERS "
+                "or NONE.\n",
+                options->cName, cTmp);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].iLXUVModel = LXUV_MODEL_SANZFORCADA;
+  }
+}
+  
+
+
+
+
+
+
   
   
 void ReadHZModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -682,35 +723,56 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
 
 ///SSS this is the thing we are trying to calculate, correct place to define it? I think so 
 /// differentiate between S-F and Johnstone here? will have diff xray/euv variables 
-/*
-sprintf(options[OPT_LXRAYMODEL].cName, "dLXRay"); //What put in in files
-  sprintf(options[OPT_LXRAYMODEL].cDescr, "XRay Luminosity");
-  sprintf(options[OPT_LXRAYMODEL].cDefault, "5e-4"); ///SSS also need default values for this?
-  sprintf(options[OPT_LXRAYMODEL].cDimension, "nd"); //non dimensional
-  options[OPT_LXRAYMODEL].dDefault   = 1; 
-  options[OPT_LXRAYMODEL].iType      = 2; //tells is a double
-  options[OPT_LXRAYMODEL].bMultiFile = 1; //exist in multiple files?
-  fnRead[OPT_LXRAYMODEL]             = &ReadLXRay; //pointers again
+
+sprintf(options[OPT_XRAYMODEL].cName, "dXRAY"); //What put in in files
+  sprintf(options[OPT_XRAYMODEL].cDescr, "XRay Luminosity");
+  sprintf(options[OPT_XRAYMODEL].cDefault, "5e-4"); ///SSS also need default values for this?
+  sprintf(options[OPT_XRAYMODEL].cDimension, "nd"); //non dimensional
+  options[OPT_XRAYMODEL].dDefault   = 1; 
+  options[OPT_XRAYMODEL].iType      = 2; //tells is a double
+  options[OPT_XRAYMODEL].bMultiFile = 1; //exist in multiple files?
+  fnRead[OPT_XRAYMODEL]             = &ReadXRayModel; //pointers again
   sprintf(
-        options[OPT_LXRAYMODEL].cLongDescr,
+        options[OPT_XRAYMODEL].cLongDescr,
         "If Sanz-Forcada selected, use Xray calculation from 2011 paper\n;"
         "if Johnstone selected, use XRay calculation from 2020 paper.;");
-*/
+
   
-  sprintf(options[OPT_LEUVMODEL].cName, "sUVModel"); //What put in in files
-  sprintf(options[OPT_LEUVMODEL].cDescr, "UV Model");
-  sprintf(options[OPT_LEUVMODEL].cDefault, "5e-4"); //SSS what set as default for this?
-  sprintf(options[OPT_LEUVMODEL].cDimension, "nd"); //non dimensional
-  options[OPT_LEUVMODEL].dDefault   = 1; //is there a way to set this to XLUV if turned off?
-  options[OPT_LEUVMODEL].iType      = 2; //tells is a double
-  options[OPT_LEUVMODEL].bMultiFile = 1; //exist in multiple files?
-  fnRead[OPT_LEUVMODEL]             = &ReadLEUV; //pointers again
+  sprintf(options[OPT_EUVMODEL].cName, "sEUVMODEL");
+  sprintf(options[OPT_EUVMODEL].cDescr, "EUV Model");
+  sprintf(options[OPT_EUVMODEL].cDefault, "SANZFORCADA");
+  sprintf(options[OPT_EUVMODEL].cValues, "SANZFORCADA JOHNSTONE NONE");
+  options[OPT_EUVMODEL].iType      = 3;
+  options[OPT_EUVMODEL].bMultiFile = 1;
+  fnRead[OPT_EUVMODEL]             = &ReadEUVModel;
   sprintf(
-        options[OPT_LEUVMODEL].cLongDescr,
-        "If Sanz-Forcada selected, use EUV calculation from 2011 paper\n;"
-        "if Johnstone selected, use EUV calculation from 2020 paper.\n"
-        "NONE applies no calculations/turned off"
-        "Units are Watts"); 
+        options[OPT_EUVMODEL].cLongDescr,
+        "If SANZFORCADA is selected,uses Sanz-Forcada 2011, "
+        "to calculate\n"
+        "the EUV from the star.\n"
+        ". JOHNSTONE will use the Johnstone 2021 EUV "
+        "calculations\n"
+        "(---). \n");
+
+ sprintf(options[OPT_LXUVMODEL].cName, "sLXUVMODEL");
+  sprintf(options[OPT_LXUVMODEL].cDescr, "LXUV Model");
+  sprintf(options[OPT_LXUVMODEL].cDefault, "SANZFORCADA");
+  sprintf(options[OPT_LXUVMODEL].cValues, "SANZFORCADA JOHNSTONE REINERS NONE");
+  options[OPT_LXUVMODEL].iType      = 3;
+  options[OPT_LXUVMODEL].bMultiFile = 1;
+  fnRead[OPT_LXUVMODEL]             = &ReadLXUVModel;
+  sprintf(
+        options[OPT_LXUVMODEL].cLongDescr,
+        "If SANZFORCADA is selected,uses Sanz-Forcada 2011, "
+        "to calculate\n"
+        "the EUV from the star.\n"
+        ". JOHNSTONE will use the Johnstone 2021 EUV "
+        "calculations\n"
+        "If Reiners uses XLUV calculation from windmodel section. \n");
+
+
+
+
 
   sprintf(options[OPT_XUVBETA].cName, "dXUVBeta");
   sprintf(options[OPT_XUVBETA].cDescr, "XUV decay power law exponent");
@@ -1384,31 +1446,10 @@ void VerifyStellar(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     exit(EXIT_INPUT);
   }
 
-///SSS
-/*void VerifyXRAY(body, control, options, update, body[iBody].dAge, iBody);
+///SSS These point to the incorrect values, should be also input body[iBody].dEUV and .dXRay?
+void VerifyXRay(BODY * body, control, options, update, iBody);
 
-  if (update[iBody].iNumRadius > 1) {
-    if (control->Io.iVerbose >= VERBERR) {
-      fprintf(stderr,
-              "ERROR: Must choose Sanz-Forcada, Johnstone, or None %d!",
-              iBody);
-    }
-    exit(EXIT_INPUT);
-  }
-
-  if (update[iBody].iNumRadGyra > 1) {
-    if (control->Io.iVerbose >= VERBERR) {
-      fprintf(stderr,
-              "ERROR: %d!",
-              iBody);
-    }
-    exit(EXIT_INPUT);
-  }
-*/
-
-void VerifyEUV(body, control, options, update, body[iBody].dXLUV, iBody);
-
-  if (update[iBody].iNumRadius > 1) {   ///these should point to something else, think on it a little harder
+  if (update[iBody].iNumRadius > 1) { //once again using radius is wrong, ask about in meeting 
     if (control->Io.iVerbose >= VERBERR) {
       fprintf(stderr,
               "ERROR: Must choose Sanz-Forcada, Johnstone, or None %d!",
@@ -1427,29 +1468,54 @@ void VerifyEUV(body, control, options, update, body[iBody].dXLUV, iBody);
   }
 
 
+void VerifyEUV(BODY *body, control, options, update, iBody); ///actually running vplanet gives me error with verify function
+
+  if (update[iBody].iNumRadius > 1) {   ///these should point to something else, think on it a little harder?
+    if (control->Io.iVerbose >= VERBERR) {
+      fprintf(stderr,
+              "ERROR: Must choose Sanz-Forcada, Johnstone, or None %d!",
+              iBody);
+    }
+    exit(EXIT_INPUT);
+  }
+
+  if (update[iBody].iNumRadGyra > 1) {
+    if (control->Io.iVerbose >= VERBERR) {
+      fprintf(stderr,
+              "ERROR: %d!",
+              iBody);
+    }
+    exit(EXIT_INPUT);
+  }
+
+void VerifyLXUV(BODY *body, control, options, update, iBody); //should also point to reiners option, found in wind model?
+
+  if (update[iBody].iNumRadius > 1) {   
+    if (control->Io.iVerbose >= VERBERR) {
+      fprintf(stderr,
+              "ERROR: Must choose Sanz-Forcada, Johnstone, Reiners, or None %d!",
+              iBody);
+    }
+    exit(EXIT_INPUT);
+  }
+
+  if (update[iBody].iNumRadGyra > 1) {
+    if (control->Io.iVerbose >= VERBERR) {
+      fprintf(stderr,
+              "ERROR: %d!",
+              iBody);
+    }
+    exit(EXIT_INPUT);
+  }
 
 
-//void VerifyXUV(BODY* body,CONTROL *control, FILES *files, OPTIONS *options,int iBody) //SSS
- //{ if (body[iBody].iXUVModel !=  STELLAR_MODEL_JOHNSTONE) {
-   //if (options[OPT_JOHNSTONEBETA1].iLine[iBody+1] > -1 ) {"Error: Must set Johnstone model"}
-    //if (control->Io.iVerbose >= VERBERR) {
-      //fprintf(stderr,
-        //      "ERROR: Cannot use other XUV model with Johnstone variables %d!",
-          //    iBody); 
-    //}
-    // if 
-    //exit(EXIT_INPUT); //change to double line exit function
-
-
- //}
- //}
 
 
 
  
-// VerifyXUV(body,control,files,options,iBody);  /SSS
-VerifyXRAY(body,control,files,options,iBody);
-//VerifyEUV(body,control,files,options,iBody);
+VerifyLXUV(body,control,files,options,iBody);  /SSS
+VerifyXRay(body,control,files,options,iBody);
+VerifyEUV(body,control,files,options,iBody);
 
   VerifyRadius(body, control, options, update, body[iBody].dAge, iBody);
   VerifyRadGyra(body, control, options, update, body[iBody].dAge, iBody);
@@ -2392,22 +2458,79 @@ double fdRossbyNumber(BODY *body , int iBody) {
 
 ///SSS
 
-double fdLEUVJohnstone( BODY *body, int iBody) {
+double fdEUVJohnstone( BODY *body, int iBody) {
 
-double dLXRayJohnstone = 1e7 * pow(10.,((log10(dLXRay * 1e-7)-2.04)/0.681));
-return dLXRayJohnstone; 
+double dEUVJohnstone1 = 1e7* pow(10.,2.04+(0.681*body[iBody].dXRay*1e-7)+((1-0.681)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
+double dEUVJohnstone2= 1e7* pow(10.,-0.034+(0.920*dEUVJohnstone1*1e-7)+((1-0.920)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
+double dEUVJohnstone= dEUVJohnstone1 + dEUVJohnstone2;
+return dEUVJohnstone; 
+
+
+
+
+
+}
+
+
+
+double fdEUVSanzForcada( BODY *body, int iBody) {
+
+double dEUVSanzForcada = 1e7 * pow(10.,( 4.80 + (0.860 * log10(body[iBody].dXRay * 1.e-7))));
+
+return dEUVSanzForcada; 
 
 }
 
 
 
-double fdLEUVSanzForcada( BODY *body, int iBody) {
 
-double dLEUVSanzForcada = 1e7 * pow(10., 4.80 + 0.860 * log10(dLXRay * 1.e-7));
 
-return dLEUVSanzForcada; 
+double fdXRayJohnstone( BODY *body, int iBody) {
+
+double dXRayJohnstone = 1e7 * pow(10.,((log10(body[iBody].dEUV * 1.e-7)-2.04-((1-0.681)*4*PI*body[iBody].dRadius* body[iBody].dRadius))/0.681));
+
+return dXRayJohnstone; 
 
 }
+
+
+
+
+
+
+double fdXRaySanzForcada( BODY *body, int iBody) {
+
+double dXRaySanzForcada = 1e7 * pow(10.,((log10(body[iBody].dEUV * 1.e-7)-4.80)/0.860));
+
+return dXRaySanzForcada; 
+
+}
+
+double fdXLUVJohnstone(BODY *body, int iBody){
+
+double dXLUVJohnstone(BODY *body, int iBody) = fdXRayJohnstone + fdEUVJohnstone;
+
+return dXLUVJohnstone;
+
+
+
+}
+
+
+double fdXLUVSanzForcada(BODY *body, int iBody){
+
+double dXLUVSanzForcada(BODY *body, int iBody) = fdEUVSanzForcada + fdXRaySanzForcada;
+
+return dXLUVSanzForcada;
+
+
+
+}
+
+
+
+
+
 
 double fdLuminosityFunctionSineWave(BODY *body, int iBody) {
   double dLuminosity =

@@ -608,6 +608,10 @@ struct BODY {
   int iMagBrakingModel;
   int iWindModel;
   int iXUVModel;
+  int iEUVModel;
+  int iXRAYModel;
+  int iLXUVModel;
+
   double dLXUV; // Not really a STELLAR parameter
   double iHZModel;
   double dLostAngMom; /**< Angular momemntum lost to space via magnetic braking
@@ -625,12 +629,9 @@ struct BODY {
   double dR_xSat;
   double dJohnstoneBeta1;
   double dJohnstoneBeta2;
-  double dLXRay; //double check this doesn't pull Ribas values in stellar model 
-  double dLEUV;
-  double dJohnstoneEUVconst; //going to put these here for now, can always change them later 
-  double dJohnstoneXRayconst;
-  double dSanzForcadaEUVconst;
-  double dSanzForcadaXRayconst;
+  double dXRay; //double check this doesn't pull Ribas values in stellar model 
+  double dEUV;
+  
 
 
   /* POISE parameters */

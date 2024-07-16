@@ -1513,7 +1513,7 @@ void VerifyLXUV(BODY *body, control, options, update, iBody); //should also poin
 
 
  
-VerifyLXUV(body,control,files,options,iBody);  /SSS
+VerifyLXUV(body,control,files,options,iBody);  ///SSS
 VerifyXRay(body,control,files,options,iBody);
 VerifyEUV(body,control,files,options,iBody);
 
@@ -2506,22 +2506,22 @@ return dXRaySanzForcada;
 
 }
 
-double fdXLUVJohnstone(BODY *body, int iBody){
+double fdLXUVJohnstone(BODY *body, int iBody){
 
-double dXLUVJohnstone(BODY *body, int iBody) = fdXRayJohnstone + fdEUVJohnstone;
+double dLXUVJohnstone(BODY *body, int iBody) = dXRayJohnstone + dEUVJohnstone;
 
-return dXLUVJohnstone;
+return dLXUVJohnstone;
 
 
 
 }
 
 
-double fdXLUVSanzForcada(BODY *body, int iBody){
+double fdLXUVSanzForcada(BODY *body, int iBody){
 
-double dXLUVSanzForcada(BODY *body, int iBody) = fdEUVSanzForcada + fdXRaySanzForcada;
+double dLXUVSanzForcada(BODY *body, int iBody) = dEUVSanzForcada + dXRaySanzForcada;
 
-return dXLUVSanzForcada;
+return dLXUVSanzForcada;
 
 
 

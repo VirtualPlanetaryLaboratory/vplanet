@@ -444,7 +444,7 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       body[iFile - 1].iLXUVModel = LXUV_MODEL_JOHNSTONE;
     
     } else if (!memcmp(sLower(cTmp), "re", 2)) {
-      body[iFile - 1].iLXUVModel = LXUV_MODEL_REINERS;
+      body[iFile - 1].iLXUVModel = LXUV_MODEL_RIBAS;
 
 
     } else {
@@ -1410,6 +1410,93 @@ void NullStellarDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
   }
 }
 
+///SSS These point to the incorrect values, should be also input body[iBody].dEUV and .dXRay?
+void VerifyXRay(BODY * body, control, options, update, iBody){
+    if (body[iBody].iXRAYModel == XRAY_MODEL_NONE) {
+      printf("Chosen no xray  model",iBody);
+   }
+       
+    else if (body[iBody].iEUVModel == XRAY_MODEL_JOHNSTONE){
+      printf("Chosen Johnstone xray model",iBody);
+  }
+}
+
+void VerifyEUV(BODY * body, control, options, update, iBody) {
+  if (body[iBody].iEUVModel == EUV_MODEL_NONE) {
+      if (body[iBody].iLXUVModel == LXUV_MODEL_RIBAS){
+         // body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
+          printf(stderr,"Chosen Ribas model",iBody);
+      }
+      if (body[iBody].iLXUVModel == LXUV_MODEL_NONE){
+          printf(stderr,"No model chosen test message",iBody);
+
+      }
+
+  } else if (body[iBody].iEUVModel == EUV_MODEL_SANZFORCADA) { //doesn't need to assume Johnstone is picked for Xray
+      
+       // dLEUV = 1.e7 * pow(10., 4.80 + 0.860 * log10(dLXRay * 1.e-7));
+       printf(stderr,"Chosen EUV sanz forcada  model",iBody);
+
+    
+    
+} else if (body[iBody].iEUVModel == EUV_MODEL_JOHNSTONE) {
+    
+
+//double dEUVJohnstone1 = 1e7* pow(10.,2.04+(0.681*body[iBody].dXRay*1e-7)+((1-0.681)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
+
+//double dEUVJohnstone2= 1e7* pow(10.,-0.034+(0.920*dEUVJohnstone1*1e-7)+((1-0.920)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
+
+//double dEUVJohnstone= dEUVJohnstone1 + dEUVJohnstone2;
+
+//return dEUVJohnstone;}
+ printf("Johnstone EUV model chosen test message",iBody);
+   
+    
+}}
+                       
+
+void VerifyLXUV(BODY *body, control, options, update, iBody){
+///verify xray, verify euv (pick which one), verify both 
+///validate mass/teff is consistent with xray model, similar for euv (stellar types etc)
+///both:ribas and euv not selected, 
+   
+    if (body[iBody].iEUVModel == EUV_MODEL_NONE) {
+      if (body[iBody].iLXUVModel == LXUV_MODEL_RIBAS){
+         // body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
+          printf("Chosen Ribas model",iBody);
+      }
+      if (body[iBody].iLXUVModel == LXUV_MODEL_NONE){
+          printf("No model chosen test message",iBody);
+
+      }
+    }
+    
+    else if (body[iBody].iEUVModel == EUV_MODEL_SANZFORCADA) { //doesn't need to assume Johnstone is picked for Xray?
+      
+        printf("sanz forcada calc model chosen test message",iBody);
+        // dLXUV= EUV SF + Xray JS
+   
+
+   
+    
+    } else if (body[iBody].iEUVModel == EUV_MODEL_JOHNSTONE) {
+      //dLXUV= EUV JS + XRay JS 
+      printf("Johnstone calc chosen model chosen test message",iBody);
+      //double dEUVJohnstone1 = 1e7* pow(10.,2.04+(0.681*body[iBody].dXRay*1e-7)+((1-0.681)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
+      //double dEUVJohnstone2= 1e7* pow(10.,-0.034+(0.920*dEUVJohnstone1*1e-7)+((1-0.920)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
+      //double dEUVJohnstone= dEUVJohnstone1 + dEUVJohnstone2;
+      //return dEUVJohnstone;
+    }
+    
+    }
+
+
+
+
+
+
+
+
 void VerifyStellar(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                    OUTPUT *output, SYSTEM *system, UPDATE *update, int iBody,
                    int iModule) {
@@ -1446,76 +1533,9 @@ void VerifyStellar(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     exit(EXIT_INPUT);
   }
 
-///SSS These point to the incorrect values, should be also input body[iBody].dEUV and .dXRay?
-void VerifyXRay(BODY * body, control, options, update, iBody);
-
-  if (update[iBody].iNumRadius > 1) { //once again using radius is wrong, ask about in meeting 
-    if (control->Io.iVerbose >= VERBERR) {
-      fprintf(stderr,
-              "ERROR: Must choose Sanz-Forcada, Johnstone, or None %d!",
-              iBody);
-    }
-    exit(EXIT_INPUT);
-  }
-
-  if (update[iBody].iNumRadGyra > 1) {
-    if (control->Io.iVerbose >= VERBERR) {
-      fprintf(stderr,
-              "ERROR: %d!",
-              iBody);
-    }
-    exit(EXIT_INPUT);
-  }
-
-
-void VerifyEUV(BODY *body, control, options, update, iBody); ///actually running vplanet gives me error with verify function
-
-  if (update[iBody].iNumRadius > 1) {   ///these should point to something else, think on it a little harder?
-    if (control->Io.iVerbose >= VERBERR) {
-      fprintf(stderr,
-              "ERROR: Must choose Sanz-Forcada, Johnstone, or None %d!",
-              iBody);
-    }
-    exit(EXIT_INPUT);
-  }
-
-  if (update[iBody].iNumRadGyra > 1) {
-    if (control->Io.iVerbose >= VERBERR) {
-      fprintf(stderr,
-              "ERROR: %d!",
-              iBody);
-    }
-    exit(EXIT_INPUT);
-  }
-
-void VerifyLXUV(BODY *body, control, options, update, iBody); //should also point to reiners option, found in wind model?
-
-  if (update[iBody].iNumRadius > 1) {   
-    if (control->Io.iVerbose >= VERBERR) {
-      fprintf(stderr,
-              "ERROR: Must choose Sanz-Forcada, Johnstone, Reiners, or None %d!",
-              iBody);
-    }
-    exit(EXIT_INPUT);
-  }
-
-  if (update[iBody].iNumRadGyra > 1) {
-    if (control->Io.iVerbose >= VERBERR) {
-      fprintf(stderr,
-              "ERROR: %d!",
-              iBody);
-    }
-    exit(EXIT_INPUT);
-  }
-
-
-
-
-
- 
-VerifyLXUV(body,control,files,options,iBody);  ///SSS
-VerifyXRay(body,control,files,options,iBody);
-VerifyEUV(body,control,files,options,iBody);
+  VerifyLXUV(body,control,files,options,iBody);  ///SSS
+  VerifyXRay(body,control,files,options,iBody);
+  VerifyEUV(body,control,files,options,iBody);
 
   VerifyRadius(body, control, options, update, body[iBody].dAge, iBody);
   VerifyRadGyra(body, control, options, update, body[iBody].dAge, iBody);
@@ -1759,6 +1779,39 @@ void WriteDRotPerDtStellar(BODY *body, CONTROL *control, OUTPUT *output,
     strcpy(cUnit, "");
   }
 }
+
+
+/// SSS 
+void WriteEUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system, //eventually need to be LEUV name change
+               UNITS *units, UPDATE *update, int iBody, double *dTmp,
+               char cUnit[]) {
+  *dTmp = body[iBody].dLXUV;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
+    fsUnitsPower(units, cUnit);
+  }}
+
+void WriteLXRAY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+               UNITS *units, UPDATE *update, int iBody, double *dTmp,
+               char cUnit[]) {
+  *dTmp = body[iBody].dLXUV;
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
+    fsUnitsPower(units, cUnit);
+  }}
+
+
+/// Note that Write LXUV function already exists on line 1737
+
+
 
 void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
@@ -2458,15 +2511,27 @@ double fdRossbyNumber(BODY *body , int iBody) {
 
 ///SSS
 
+double
+
+ fdLXRAYJohnstone (BODY* body, int iBody){
+  //this should call the xray values from Johnstone but we've done the XUV in vplanet earlier, what use here?
+  //could use the xray calc from euv values but defeats the purpose a little 
+  //need this because will come back when we use it for the sanz-forcada bit 
+
+  double dXRAYJohnstone= 1e7; //unsure what to put here, just a placemarker so vplanet doesn't yell at me 
+
+
+
+ }
+
+
+
 double fdEUVJohnstone( BODY *body, int iBody) {
 
 double dEUVJohnstone1 = 1e7* pow(10.,2.04+(0.681*body[iBody].dXRay*1e-7)+((1-0.681)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
 double dEUVJohnstone2= 1e7* pow(10.,-0.034+(0.920*dEUVJohnstone1*1e-7)+((1-0.920)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
 double dEUVJohnstone= dEUVJohnstone1 + dEUVJohnstone2;
 return dEUVJohnstone; 
-
-
-
 
 
 }
@@ -2482,47 +2547,32 @@ return dEUVSanzForcada;
 }
 
 
-
-
-
-double fdXRayJohnstone( BODY *body, int iBody) {
-
-double dXRayJohnstone = 1e7 * pow(10.,((log10(body[iBody].dEUV * 1.e-7)-2.04-((1-0.681)*4*PI*body[iBody].dRadius* body[iBody].dRadius))/0.681));
-
-return dXRayJohnstone; 
-
-}
-
-
-
-
-
-
-double fdXRaySanzForcada( BODY *body, int iBody) {
-
-double dXRaySanzForcada = 1e7 * pow(10.,((log10(body[iBody].dEUV * 1.e-7)-4.80)/0.860));
-
-return dXRaySanzForcada; 
-
-}
-
 double fdLXUVJohnstone(BODY *body, int iBody){
 
-double dLXUVJohnstone(BODY *body, int iBody) = dXRayJohnstone + dEUVJohnstone;
+  double dLXRay= fdLXRAYJohnstone(body,iBody);
 
-return dLXUVJohnstone;
+  double dEUV= fdEUVJohnstone(body,iBody);
+
+  double dLXUV = dLXRay + dEUV; 
+
+
+  return dLXUV;
 
 
 
 }
 
 
-double fdLXUVSanzForcada(BODY *body, int iBody){
+double fdLXUVJohnstoneSanzForcada(BODY *body, int iBody){
 
-double dLXUVSanzForcada(BODY *body, int iBody) = dEUVSanzForcada + dXRaySanzForcada;
+  double dLXRay= fdLXRAYJohnstone(body,iBody);
 
-return dLXUVSanzForcada;
+  double dEUV= fdEUVSanzForcada(body,iBody); ///rem this needs to be changed to LEUV later 
 
+  double dLXUV = dLXRay + dEUV; 
+
+
+  return dLXUV;
 
 
 }

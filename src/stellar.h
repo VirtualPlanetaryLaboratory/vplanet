@@ -36,19 +36,19 @@
 #define STELLAR_MODEL_SINEWAVE 6
 #define STELLAR_MODEL_JOHNSTONE  7
 
+#define EUV_MODEL_NONE        0
+#define EUV_MODEL_SANZFORCADA 1
+#define EUV_MODEL_JOHNSTONE   2
+     
+#define XRAY_MODEL_NONE        0
+#define XRAY_MODEL_SANZFORCADA 1
+#define XRAY_MODEL_JOHNSTONE   2
 
-#define EUV_MODEL_SANZFORCADA 10
-#define EUV_MODEL_JOHNSTONE   11
-#define EUV_MODEL_NONE        12
+#define LXUV_MODEL_NONE        0
+#define LXUV_MODEL_SANZFORCADA 1
+#define LXUV_MODEL_JOHNSTONE   2
+#define LXUV_MODEL_RIBAS       3
 
-#define XRAY_MODEL_SANZFORCADA 13
-#define XRAY_MODEL_JOHNSTONE   14
-#define XRAY_MODEL_NONE        15
-
-#define LXUV_MODEL_SANZFORCADA 16
-#define LXUV_MODEL_JOHNSTONE   18
-#define LXUV_MODEL_REINERS     19
-#define LXUV_MODEL_NONE        20
 
 
 #define STELLAR_DJDT_NONE                                                      \

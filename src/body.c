@@ -771,15 +771,11 @@ double fdHflowSecMan(BODY *body, EVOLVE *evolve, int iBody) {
   double dHflowSecMan = 0;
 
   if (body[iBody].bThermint) {
-    dHflowSecMan += fdPowerThermint(body, iBody);
-    // dHflowSecMan += fdHflowSecManThermint(body,iBody);
+    dHflowSecMan += fdPowerThermint(body, iBody); 
   }
   if (body[iBody].bEqtide) {
-    // dHflowSecMan -= fdTidePower(body,iBody,evolve->iEqtideModel); // formerly
-    // dTidalPowerMan
-    dHflowSecMan -= body[iBody].dTidalPowMan;
-  }
-  // Should add RadHeat here
+    dHflowSecMan -= fdTidePower(body,iBody,evolve->iEqtideModel);
+  }  // XXX Should add RadHeat here
   return dHflowSecMan;
 }
 

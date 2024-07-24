@@ -18,19 +18,29 @@ from get_args import get_args
 
 # Run vspace
 if not (path / "ParameterSweep").exists():
+    print("Running VSPACE...")
     subprocess.check_output(["vspace", "vspace.in"], cwd=path)
+else:
+    print("VPSACE already run")
 
 # Run multi-planet
 if not (path / ".ParameterSweep").exists():
+    print("Running MultiPlanet...")
     subprocess.check_output(["multiplanet", "vspace.in"], cwd=path)
+else:
+    print("Multiplanet already run")
 
 # Run bigplanet
 if not (path / "ParameterSweep.bpf").exists():
+    print("Building BigPlanet File")
     subprocess.check_output(["bigplanet", "bpl.in"], cwd=path)
+else:
+    print("BigPlanet File already built")
 
+print("Creating figure...")
 data = bp.BPLFile(path / "ParameterSweep.bpf")
 
-mpl.rcParams["figure.figsize"] = (10, 8)
+mpl.rcParams["figure.figsize"] = (6.5, 6.5)
 fig = plt.figure()
 
 RIC = bp.ExtractColumn(data, "earth:RIC:final")
@@ -44,7 +54,7 @@ K40_units = bp.ExtractUnits(data, "earth:40KPowerCore:final")
 
 RIC_Matrix = np.reshape(RIC, (len(TCore_uniq), len(K40_uniq)))
 
-# RIC_Matrix = bp.CreateMatrix(TCore_uniq, K40_uniq, RIC)
+RIC_Matrix = bp.CreateMatrix(TCore_uniq, K40_uniq, RIC)
 
 contours = [0, 500, 1000, 1500, 2000, 2500]
 xlabel = "Initial Core Temperature (" + TCore_units + ")"

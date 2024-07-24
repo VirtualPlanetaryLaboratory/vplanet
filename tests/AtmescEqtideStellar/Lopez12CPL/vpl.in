@@ -1,0 +1,25 @@
+sSystemName               Lopez12CPL
+
+iVerbose                  5
+bOverwrite                1
+
+saBodyFiles               star.in $ # The star
+                          auto.in $ # Automatic mass loss
+                          bondi.in $
+                          el.in $
+                          rr.in
+
+sUnitMass                 solar
+sUnitLength               AU
+sUnitTime                 YEARS
+sUnitAngle                d
+
+bDoLog                    1
+iDigits                   6
+dMinValue                 1e-10
+
+bDoForward                1
+bVarDt                    1
+dEta                      0.01
+dStopTime                 1e6
+dOutputTime               1e6

@@ -1401,7 +1401,7 @@ void VerifyOutputCoords(BODY *body, FILES *files, OUTPUT *output, int iBody) {
 
 void CoordinateMessage(BODY *body, CONTROL *control, int iBody, char *cMessage) {
   if (iBody == control->Evolve.iNumBodies - 1){
-        printf(cMessage);
+        printf("%s\n", cMessage);
       }
 }
 

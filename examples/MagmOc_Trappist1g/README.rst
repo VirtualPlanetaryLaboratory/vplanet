@@ -29,7 +29,7 @@ Expected output
 ---------------
 
 .. figure:: Trappist1g_2TO.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Evolution of various planetary parameters for the magma ocean evolution of

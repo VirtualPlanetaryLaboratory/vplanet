@@ -1,0 +1,38 @@
+# Teegarden-b Parameters
+sName				TGb				# Body's name
+saModules 	eqtide distorb distrot        	# Modules
+
+# Physical Properties
+dMass				-1.05  	  # Mass, negative -> Earth masses
+dRadius			-1.20  		# Radius, negative -> Earth radii
+# >L This is a guess from a source graph (Damasso 2018)
+dRotPeriod	-1.0  		# Rotation period, negative -> days
+# >L yet another straight up guess.
+dObliquity	30.0      # Obliquity (degrees)
+dRadGyra		0.4       # Radius of gyration (unitless)
+
+# Orbital Properties
+dEcc        0.16		# Eccentricity
+# >L current set is flat/wet/pushed, next is 10/wet/pushed
+dSemi       -0.0252          # Semi-major axis, negative -> AU
+
+# Eqtide Properties
+dTidalQ     	100              # Tidal phase lag
+# >L Each orbital pattern needs to be run with TQ70(dry) and TQ12(wet)
+dK2           0.3             # Love number of degree 2
+dMaxLockDiff  0.01            # Tidally lock when spin period is within 1% of orbital period
+saTidePerts   TGstar          # Tidally interacting with star
+
+# DISTORB Parameters
+dInc          10.0             # Orbital inclination (assume coplanar)
+dLongA        38.0             # Longitude of the Ascending node (degrees)
+dLongP        77.0             # Longitude of the Periapse (degrees)
+sOrbitModel   rd4             # Use 4th Order disturbing function model
+
+# DISTROT Parameters
+dPrecA				0
+bCalcDynEllip 1
+
+#Output
+saOutputOrder Time -RotPer LongP SemimajorAxis Eccentricity -SurfEnFluxTot $
+		Obli PrecA CassiniOne CassiniTwo PrecFNat DynEllip DeltaT

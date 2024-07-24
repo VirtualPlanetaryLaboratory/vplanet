@@ -68,6 +68,8 @@ gcov/*
 *.so
 *.valgrind
 *.cache
+*.floatingpoint
+*.sanitize
 
 # Documentation
 docs/.build

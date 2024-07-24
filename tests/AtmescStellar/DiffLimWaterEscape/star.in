@@ -1,0 +1,9 @@
+sName	          star
+saModules	      stellar
+dMass           0.09
+dAge            1e6
+sStellarModel   baraffe
+dSatXUVFrac     1.e-3.03
+dSatXUVTime     -3.146
+dXUVBeta        1.172
+saOutputOrder 	Time -Luminosity -LXUVTot Temperature HZLimRecVenus HZLimRunaway HZLimMaxGreenhouse HZLimEarlyMars DeltaTime

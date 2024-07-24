@@ -26,7 +26,7 @@ Expected output
 ---------------
 
 .. figure:: MDwarfLuminosity.png
-   :width: 3600px
+   :width: 100%
    :align: center
 
    Evolution of the bolometric luminosity (top left),  quiescent XUV luminosity(top right),

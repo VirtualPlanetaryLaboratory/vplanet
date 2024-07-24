@@ -2189,6 +2189,30 @@ void fvWriteTUMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   }
 }
 /**
+  Write TsolUMan output
+
+  @param body Body struct
+  @param control Control struct
+  @param output Output struct
+  @param system System struct
+  @param units Units struct
+  @param update Update struct
+  @param iBody Index of body
+  @param dTmp Temporary variable
+  @param cUnit Variable units
+*/
+void fvWriteTsolUMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+                     UNITS *units, UPDATE *update, int iBody, double *dTmp,
+                     char cUnit[]) {
+  /* Get TsolUMan */ 
+  *dTmp = body[iBody].dTsolUMan;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    strcpy(cUnit, output->cNeg);
+  } else{   
+  }
+}
+/**
   Write TLMan output
 
   @param body Body struct
@@ -3667,6 +3691,15 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_TUMAN].iNum       = 1;
   output[OUT_TUMAN].iModuleBit = THERMINT;
   fnWrite[OUT_TUMAN]           = &fvWriteTUMan;
+
+  sprintf(output[OUT_TSOLUMAN].cName, "TsolUMan");
+  sprintf(output[OUT_TSOLUMAN].cDescr, "Upper Mantle Thermal Boundary Layer Solidus Temperature");
+  sprintf(output[OUT_TSOLUMAN].cNeg, "K");
+  output[OUT_TSOLUMAN].bNeg    = 1;
+  output[OUT_TSOLUMAN].dNeg    = 1;
+  output[OUT_TSOLUMAN].iNum    = 1;
+  output[OUT_TSOLUMAN].iModuleBit = THERMINT;
+  fnWrite[OUT_TSOLUMAN]        = &fvWriteTsolUMan;
 
   sprintf(output[OUT_TLMAN].cName, "TLMan");
   sprintf(output[OUT_TLMAN].cDescr, "Lower Mantle Temperature");

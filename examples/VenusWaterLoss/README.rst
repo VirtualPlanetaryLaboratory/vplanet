@@ -33,7 +33,7 @@ Expected output
 ---------------
 
 .. figure:: VenusWaterLoss.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Evolution of the surface water content (left) and amount of oxygen absorbed
@@ -42,7 +42,7 @@ surface water inventories. The vertical dashed line is the `Watson et al.
 (1981) <https://ui.adsabs.harvard.edu/abs/1981Icar...48..150W/abstract>`_ timescale for the desiccation of Venus.
 
 .. figure:: BolmontScaling.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 The scaling of the atmospheric escape efficiency for H2O as a function of the XUV flux

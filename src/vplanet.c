@@ -28,15 +28,18 @@ We need this wrapper so we can call `main_impl` from Python.
  */
 int main_impl(int argc, char *argv[]) {
 #ifdef DEBUG
-#ifdef __x86_64__
-  //  feenableexcept(FE_INVALID | FE_OVERFLOW);
-  _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
-  _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_OVERFLOW);
-#else
-  fprintf(stderr,
-          "WARNING: Floating point trapping only enabled for x86 "
-          "architectures.\n");
-#endif
+  #ifdef __x86_64__
+    //  feenableexcept(FE_INVALID | FE_OVERFLOW);
+    _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
+    _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_OVERFLOW);
+    _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_DIV_ZERO);
+    //_MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_UNDERFLOW);
+    fprintf(stderr, "INFO: Floating point trapping enabled.\n");
+  #else
+    fprintf(stderr,
+            "WARNING: Floating point trapping only enabled for x86 "
+            "architectures.\n");
+  #endif
 #endif
 
   // struct timeval start, end;

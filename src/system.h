@@ -51,4 +51,7 @@ double fndUpdateSpiNBodyCoords(BODY *, EVOLVE *);
 
 void fdMergePlanet(BODY *, UPDATE *, fnUpdateVariable ***, int);
 
+double fdBondiRadius(BODY *, int);
+double fdRocheRadius(BODY *, int, int);
+
 /* @endcond */

@@ -1,0 +1,29 @@
+# Primary input file for VPLANET
+sSystemName               PSR1257         # System Name
+bOverwrite                1               # Allow file overwrites?
+saBodyFiles               Pulsar.in A.in B.in C.in
+sIntegrationMethod        Runge
+
+# Input/Output Units
+sUnitMass                 Earth           # Options: gram, kg, Earth, Neptune, Jupiter, solar
+sUnitLength               AU              # Options: cm, m, km, Earth, Jupiter, solar, AU
+sUnitTime                 year            # Options: sec, day, year, Myr, Gyr
+sUnitAngle                deg             # Options: deg, rad
+
+# Input/Output
+bDoLog                    1              # Write a log file?
+iDigits                   5              # Maximum number of digits to right of decimal
+dMinValue                 1e-10          # Minimum value of eccentricity/obliquity
+iVerbose                  5              # Verbosity level max=5
+
+#Evolution Parameters
+bDoForward                1              # Perform a forward evolution?
+bVarDt                    0              # Use variable timestepping?
+#dEta                      .1
+<<<<<<< HEAD:tests/NBodyAtmEsc/vpl.in
+dTimeStep                 0.00005         # Timestep in years
+=======
+dTimeStep                 0.0001         # Timestep in years
+>>>>>>> 4c18ee466e6db05e4c7989dcb7a270145d630d3a:tests/AtmescSpinbody/NBodyAtmEsc/vpl.in
+dStopTime                 100            # Stop time for evolution
+dOutputTime               100            # Output timesteps (assuming in body files)

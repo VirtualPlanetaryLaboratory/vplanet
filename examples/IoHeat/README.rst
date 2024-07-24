@@ -36,7 +36,7 @@ Expected output
 ---------------
 
 .. figure:: IoHeat.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Contour plot of surface tidal heat flux of Io as a function of its eccentricity

@@ -92,7 +92,7 @@ void WriteDeltaTime(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (control->Evolve.bVarDt) {
     if (control->Evolve.dTime > 0) {
-      *dTmp = control->Io.dOutputTime / control->Evolve.nSteps;
+      *dTmp = control->Io.dOutputTime / control->Evolve.iStepsSinceLastOutput;
     } else {
       if (control->Io.iVerbose >= VERBINPUT && !control->Io.bDeltaTimeMessage) {
         fprintf(stderr, "INFO: DeltaTime output for first step is defined to "
@@ -675,17 +675,21 @@ void WriteOrbEcc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   sprintf(cUnit, "%s", "");
 }
 
+// XXX This function doesn't work!
 void WriteLostEng(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
                   char cUnit[]) {
 
+  *dTmp = -1;
   *dTmp = body[iBody].dLostEng;
+
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     strcpy(cUnit, output->cNeg);
   } else {
-    *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
+    double dConversion = fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
+    *dTmp /= dConversion;
     fsUnitsEnergy(units, cUnit);
   }
 }
@@ -2064,9 +2068,9 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
                     SYSTEM *system, UPDATE *update, fnWriteOutput fnWrite[],
                     FILE *fp, int iBody) {
   int iCol, iOut, iSubOut, iExtra = 0;
-  char cCol[MODULEOUTEND][OUTLEN];
+  char cCol[MODULEOUTEND][OUTLEN+2]; // +2 for brackets
   double *dTmp;
-  char cUnit[OUTLEN], cTmp[OUTLEN];
+  char cUnit[OUTLEN], cTmp[OUTLEN+2];
 
   for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
@@ -2099,9 +2103,9 @@ void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
                    SYSTEM *system, UPDATE *update, fnWriteOutput fnWrite[],
                    FILE *fp, int iBody) {
   int iCol, iOut, iSubOut, iExtra = 0;
-  char cCol[MODULEOUTEND][OUTLEN];
+  char cCol[MODULEOUTEND][OUTLEN+2]; // +2 for brackets
   double *dTmp;
-  char cUnit[OUTLEN], cTmp[OUTLEN];
+  char cUnit[OUTLEN], cTmp[OUTLEN+2];
 
   for (iCol = 0; iCol < files->Outfile[iBody].iNumGrid; iCol++) {
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
@@ -2199,7 +2203,7 @@ void LogBody(BODY *body, CONTROL *control, FILES *files, MODULE *module,
       if (output[iOut].iNum > 0) {
         if (module->iBitSum[iBody] & output[iOut].iModuleBit) {
           // Useful for debugging
-          // fprintf(stderr,"%d %d\n",iBody,iOut);
+          //fprintf(stderr,"%d %d\n",iBody,iOut);
           WriteLogEntry(body, control, &output[iOut], system, update,
                         fnWrite[iOut], fp, iBody);
         }
@@ -2224,11 +2228,14 @@ void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
               fnUpdateVariable ***fnUpdate, fnWriteOutput fnWrite[], int iEnd) {
   char cTime[OPTLEN];
   FILE *fp;
-  double dDt, dTotTime;
+  double dTotTime;
 
   /* Get derivatives */
   PropertiesAuxiliary(body, control, system, update);
-  dDt = fdGetTimeStep(body, control, system, update, fnUpdate);
+  /* XXX The fdGetTimeStep function is not single-purpose. The function sets 
+     members of the UPDATE struct, so those value should probably  be set in 
+     one function, and then the timestep calculated in another. */
+  double dDt = fdGetTimeStep(body, control, system, update, fnUpdate);
 
   if (iEnd == 0) {
     sprintf(cTime, "Input");
@@ -2257,22 +2264,11 @@ void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 
   /* Bodies' Properties */
   LogBody(body, control, files, module, output, system, fnWrite, fp, update);
-
-  /* Deprecated
-  if (iEnd) {
-    dTotTime = difftime(time(NULL),dStartTime);
-    fprintf(fp,"\nRuntime = %d s\n", (int)dTotTime);
-    fprintf(fp,"Total Number of Steps = %d\n",control->Evolve.nSteps);
-    if (control->Io.iVerbose >= VERBPROG)
-      printf("Runtime = %d s\n", (int)dTotTime);
-  }
-  */
   fclose(fp);
 }
 
 void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
-                 SYSTEM *system, UPDATE *update, fnWriteOutput *fnWrite,
-                 double dTime, double dDt) {
+                 SYSTEM *system, UPDATE *update, fnWriteOutput *fnWrite) {
   int iBody, iCol, iOut, iSubOut, iExtra = 0, iGrid, iLat, jBody, j;
   double dCol[NUMOPT], *dTmp, dGrid[NUMOPT];
   FILE *fp;

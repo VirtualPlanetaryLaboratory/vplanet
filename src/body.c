@@ -61,10 +61,10 @@ double fdDPerDt(double dRotRate, double dDrotrateDt) {
   @param dDeriv The value of the variable's time derivative
 
   @return The timescale of the variable's change: |x/(dx/dt)|. If the
-  derivative is 0, return 0.
+  derivative is <1e-100, return 0.
 */
 double fdTimescale(double dVar, double dDeriv) {
-  if (dDeriv != 0) {
+  if (dDeriv > 1e-100) {
     return fabs(dVar / dDeriv);
   } else {
     return 0;
@@ -84,16 +84,16 @@ controlled by multiple processes.
 @return The timescale of the variable's change: |x/Sum(dx/dt)|
 */
 double fdTimescaleMulti(double dVar, double *dDeriv, int iNum) {
-  double dTime;
+  double dTime,dTotalDerivative;
   int iPert;
 
-  dTime = 0;
+  dTotalDerivative = 0;
   for (iPert = 0; iPert < iNum; iPert++) {
     if (dDeriv[iPert] != 0) {
-      dTime += dDeriv[iPert]; // Note that here dTime is actullay the rate
+      dTotalDerivative += dDeriv[iPert]; 
     }
-    dTime = fabs(dVar / dTime);
   }
+  dTime = fabs(dVar / dTotalDerivative);
   return dTime;
 }
 
@@ -461,6 +461,7 @@ void BodyCopy(BODY *dest, BODY *src, EVOLVE *evolve) {
     dest[iBody].dLostEng      = src[iBody].dLostEng;
     dest[iBody].dAlbedoGlobal = src[iBody].dAlbedoGlobal;
     dest[iBody].bCalcDynEllip = src[iBody].bCalcDynEllip;
+    dest[iBody].dRadGyra = src[iBody].dRadGyra;
 
     dest[iBody].bBinary   = src[iBody].bBinary;
     dest[iBody].bDistOrb  = src[iBody].bDistOrb;
@@ -576,14 +577,19 @@ double CalcDynEllipEq(BODY *body, int iBody) {
    @param dRadXUV radius from center of planet where optical depth of XUV is
   unity
    */
-double fdLehmerRadius(BODY *body, int iBody) {
+double fdLehmerRadius(BODY *body, int iNumBodies, int iBody) {
   double dRadXUV, dRoche;
 
-  dRadXUV = body[iBody].dRadSolid * body[iBody].dRadSolid /
+  // Set floor for surface pressure to prevent overflow error
+  if (body[iBody].dPresSurf > 1e-100) {
+    dRadXUV = body[iBody].dRadSolid * body[iBody].dRadSolid /
             (body[iBody].dScaleHeight *
                    log(body[iBody].dPresXUV / body[iBody].dPresSurf) +
              body[iBody].dRadSolid);
-  dRoche = fdRocheRadius(body, iBody);
+  } else {
+    dRadXUV = body[iBody].dRadSolid;
+  }
+  dRoche = fdRocheRadius(body, iNumBodies, iBody);
   // printf("%lf %lf %lf %lf
   // %lf\n",body[iBody].dPresXUV,body[iBody].dPresSurf,body[iBody].dGravAccel,body[iBody].dEnvelopeMass,dRadXUV);
   if (dRadXUV <= 0) {
@@ -600,6 +606,24 @@ double fdLehmerRadius(BODY *body, int iBody) {
   }
   return dRadXUV;
 }
+
+/**
+ Calculate sound speed of a diatomic H (H2) isothermal gaseous atmosphere in
+ which the temperature is set by the local equilibrium temperature.
+
+ @param dTemp double stellar effective temperature
+ @param dRad double stellar radius
+ @param dSemi double planetary semi-major axis
+
+ @return sound speed
+*/
+double fdEqH2AtmosphereSoundSpeed(double dTemp, double dRad, double dSemi) {
+
+  double dCS = 2300.0 * sqrt(dTemp / 5800.0) * pow(dRad / RSUN, 0.25) *
+               pow(dSemi / (0.1 * AUM), 0.25);
+  return dCS;
+}
+
 
 /**
   Lehmer+ (2017)'s model for the pressure of a planet where it's losing its
@@ -665,16 +689,14 @@ double fdImK2Total(BODY *body, int iBody) {
   @return Upper mantle k2 Love number
 */
 double fdK2Man(BODY *body, int iBody) {
-  //  return 1.5/(1+9.5*body[iBody].dShmodUMan/(STIFFNESS));
-  return 1.5 / (1 + 9.5 * body[iBody].dShmodUMan / body[iBody].dStiffness);
+  double dK2Man = 1.5 / (1 + 9.5 * body[iBody].dShmodUMan / body[iBody].dStiffness);
+  return dK2Man;
 }
 
 double fdTidalQMan(BODY *body, int iBody) {
-  double ShmodUManArr;
-  ShmodUManArr = body[iBody].dShmodUMan * body[iBody].dMeltfactorUMan;
-  // return body[iBody].dDynamViscos*body[iBody].dMeanMotion/ShmodUManArr;
-  return body[iBody].dDynamViscos * body[iBody].dMeanMotion /
+  double dTidalQMan = body[iBody].dDynamViscos * body[iBody].dMeanMotion /
          body[iBody].dShmodUMan;
+  return dTidalQMan;
 }
 
 double fdImK2ManThermint(BODY *body, int iBody) {
@@ -1120,10 +1142,26 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge,
    * Let's use them to do a simple tetralinear interpolation.
    * Adapted from the method described in
    * http://en.wikipedia.org/wiki/Trilinear_interpolation */
-  dm   = (dMassEarth - daLopezMass[m]) / (daLopezMass[m + 1] - daLopezMass[m]);
-  dc   = (dComp - daLopezComp[c]) / (daLopezComp[c + 1] - daLopezComp[c]);
-  df   = (dFlux - daLopezFlux[f]) / (daLopezFlux[f + 1] - daLopezFlux[f]);
-  dt   = (dAgeYears - daLopezAge[t]) / (daLopezAge[t + 1] - daLopezAge[t]);
+  if (m < MASSLEN - 1) {
+    dm   = (dMassEarth - daLopezMass[m]) / (daLopezMass[m + 1] - daLopezMass[m]);
+  } else {
+    dm   = (dMassEarth - daLopezMass[m]) / (daLopezMass[m] - daLopezMass[m-1]);
+  }
+  if (c < COMPLEN - 1) {
+    dc   = (dComp - daLopezComp[c]) / (daLopezComp[c+1] - daLopezComp[c]);
+  } else {
+    dc   = (dComp - daLopezComp[c]) / (daLopezComp[c] - daLopezComp[c-1]);
+  }
+  if (f < FLUXLEN - 1) {
+    df   = (dFlux - daLopezFlux[f]) / (daLopezFlux[f + 1] - daLopezFlux[f]);
+  } else {
+    df   = (dFlux - daLopezFlux[f]) / (daLopezFlux[f] - daLopezFlux[f-1]);
+  }
+  if (t < TIMELEN - 1) {
+    dt   = (dAgeYears - daLopezAge[t]) / (daLopezAge[t + 1] - daLopezAge[t]);
+  } else {
+    dt   = (dAgeYears - daLopezAge[t]) / (daLopezAge[t + 1] - daLopezAge[t]);
+  }
   R000 = daLopezRadius[m][c][f][z][t] * (1 - dm) +
          daLopezRadius[m + 1][c][f][z][t] * dm;
   R001 = daLopezRadius[m][c][f][z][t + 1] * (1 - dm) +
@@ -1489,4 +1527,9 @@ void fdHabitableZoneKopparapu2013(BODY *body, int iNumBodies,
     // Limits are in AU, convert to meters
     daHZLimit[iLimit] = pow(dLuminosity / dSeff[iLimit], 0.5) * AUM;
   }
+}
+
+double fdEffectiveTemperature(BODY *body,int iBody) {
+  double dTeff = pow((body[iBody].dLuminosity/(4*PI*SIGMA*body[iBody].dRadius*body[iBody].dRadius)),0.25);
+  return dTeff;
 }

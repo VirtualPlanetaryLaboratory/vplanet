@@ -1845,18 +1845,13 @@ void AddModuleGalHabit(CONTROL *control, MODULE *module, int iBody,
 /************* GALHABIT Functions ***********/
 void PropsAuxGalHabit(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                       int iBody) {
-  double sinw, cosw, cosw_alt, sign, dMu, dL;
+  double sinw, cosw, cosw_alt, sign;
 
   /* calculate osculating elements */
   body[iBody].dEcc =
         sqrt(pow(body[iBody].dEccX, 2) + pow(body[iBody].dEccY, 2) +
              pow(body[iBody].dEccZ, 2));
-  //   body[iBody].dAngM = sqrt(pow(body[iBody].dAngMX,2)+pow(body[iBody].dAngMY,2)+\
-                                                          pow(body[iBody].dAngMZ,2));
-  dMu = BIGG * (body[iBody].dMassInterior +
-                body[iBody].dMass); // calculate mass coefficient for
-                                    // primary/primary+secondary
-  dL                = sqrt(dMu * body[iBody].dSemi);
+ 
   body[iBody].dAngM = sqrt(1.0 - pow(body[iBody].dEcc, 2));
 
   body[iBody].dInc   = acos(body[iBody].dAngMZ / body[iBody].dAngM);
@@ -1874,10 +1869,6 @@ void PropsAuxGalHabit(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                 sqrt(pow(body[iBody].dAngMX, 2) + pow(body[iBody].dAngMY, 2)));
 
   body[iBody].dArgP = atan2(sinw, cosw);
-
-  // if (body[iBody].bHostBinary) {
-  //     Rot2Bin(body,iBody);
-  //   }
 
   body[iBody].dLongP = body[iBody].dLongA + body[iBody].dArgP;
   while (body[iBody].dArgP > 2 * PI) {
@@ -1898,8 +1889,6 @@ void PropsAuxGalHabit(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   while (body[iBody].dLongA < 0) {
     body[iBody].dLongA += 2 * PI;
   }
-
-  //   body[iBody].dEcc = 1.0 - body[iBody].dPeriQ/body[iBody].dSemi;
 }
 
 void ForceBehaviorGalHabit(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
@@ -2256,10 +2245,6 @@ void CalcEccVec(BODY *body, int iBody) {
 }
 
 void CalcAngMVec(BODY *body, int iBody) {
-  double dMu, dL;
-  dMu = BIGG * (body[iBody].dMassInterior); //+body[iBody].dMass);
-  dL  = sqrt(dMu * body[iBody].dSemi);
-
   body[iBody].dAngM = sqrt((1.0 - pow(body[iBody].dEcc, 2)));
   body[iBody].dAngMX =
         body[iBody].dAngM * (sin(body[iBody].dLongA) * sin(body[iBody].dInc));
@@ -2998,9 +2983,7 @@ double fndGalHabitDEccZDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fndGalHabitDAngMXDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
-  double dMu, dJ, dL;
-  dMu = BIGG * (body[iaBody[0]].dMassInterior); //+body[iaBody[0]].dMass);
-  dL  = sqrt(dMu * body[iaBody[0]].dSemi);
+  double dJ;
   dJ  = sqrt((1.0 - pow(body[iaBody[0]].dEcc, 2)));
 
   return sin(body[iaBody[0]].dLongA) * sin(body[iaBody[0]].dInc) *
@@ -3010,9 +2993,7 @@ double fndGalHabitDAngMXDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
 }
 
 double fndGalHabitDAngMYDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
-  double dMu, dJ, dL;
-  dMu = BIGG * (body[iaBody[0]].dMassInterior); //+body[iaBody[0]].dMass);
-  dL  = sqrt(dMu * body[iaBody[0]].dSemi);
+  double dJ;
   dJ  = sqrt((1.0 - pow(body[iaBody[0]].dEcc, 2)));
 
   return -cos(body[iaBody[0]].dLongA) * sin(body[iaBody[0]].dInc) *

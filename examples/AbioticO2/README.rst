@@ -41,7 +41,7 @@ Expected output
 ---------------
 
 .. figure:: AbioticO2.png
-   :width: 600px
+   :width: 100%
    :align: center
 
 Water loss and oxygen accumulation for planets orbiting in the habitable

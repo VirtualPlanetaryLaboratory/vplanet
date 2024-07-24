@@ -32,7 +32,7 @@ Expected output
 ---------------
 
 .. figure:: ApseLock.png
-   :width: 300px
+   :width: 100%
    :align: center
 
 Secular dynamical evolution of CoRoT-7 b and c subject to tidal damping as

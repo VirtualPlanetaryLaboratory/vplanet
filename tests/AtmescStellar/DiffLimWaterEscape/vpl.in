@@ -1,0 +1,17 @@
+
+sSystemName               trappist1
+iVerbose                  5
+bOverwrite                1
+saBodyFiles               star.in b.in e.in
+sUnitMass                 solar
+sUnitLength               AU
+sUnitTime                 YEARS
+sUnitAngle                d
+bDoLog                    1
+iDigits                   6
+dMinValue                 1e-10
+bDoForward                1
+bVarDt                    1
+dEta                      0.1
+dStopTime                 0.95e9
+dOutputTime               0.95e9

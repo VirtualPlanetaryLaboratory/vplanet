@@ -1,0 +1,9 @@
+# sun parameters
+sName        sun
+dMass 0.82
+dSemi        0
+dEcc         0
+dRadius      0.00135
+dLuminosity -1
+sStellarModel none            #sun does not change over time
+saModules    stellar          #use stellar module (needed for luminosity)

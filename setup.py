@@ -67,10 +67,10 @@ cmdclass = {"build_ext": BuildExt, "develop": Develop}
 
 # Vplanet suite of tools
 vplanet_suite = [
-    "vplot>=1.0.2",
-    "vspace>=2.0.0",
-    "bigplanet>=2.0.0",
-    "multiplanet>=2.0.0",
+    "vplot>=1.0.5",
+    "vspace>=2.3.2",
+    "bigplanet>=3.0.1",
+    "multiplanet>=2.0.3",
 ]
 
 setup(
@@ -84,7 +84,7 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT",
     packages=["vplanet"],
-    #install_requires=vplanet_suite + ["astropy>=3.0", "numpy", "tqdm", "pre-commit"],
+    # install_requires=vplanet_suite + ["astropy>=3.0", "numpy", "tqdm", "pre-commit"],
     install_requires=vplanet_suite + ["astropy>=3.0", "numpy", "tqdm", "seaborn"],
     python_requires=">=3.6",
     # use_scm_version={
@@ -98,4 +98,4 @@ setup(
     entry_points={"console_scripts": ["vplanet=vplanet.wrapper:_entry_point"]},
 )
 
-#sub.call(["pre-commit", "install"])
+# sub.call(["pre-commit", "install"])

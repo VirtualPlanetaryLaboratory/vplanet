@@ -1147,6 +1147,45 @@ void RotateToLocalInvariablePlane(BODY *body, SYSTEM *system, int iNumBodies) {
     SphericalRotation(body[iBody].dLocalBaryCartVel, system->dThetaInvP, system->dPhiInvP);
   }    
 }
+/*
+
+******** Comment starts ********
+If time permits, will be used to calculate the shortest timestep
+between all bodies. Which this function is applied to the 
+fdGetTimeStep() function in evolve.c. For now, when finding dMinNow
+in LocalBaryCoords, leave the if condition temporarily as 
+
+if (body[iTmpBody].bExcludeFromBarycenter && system->bOutputLocalBaryCoords) {
+  double dLocalBaryCartPossq = 0, dLocalBaryCartVelsq = 0;
+  int i = 0;
+  for (i = 0; i < 3; i++) {
+    dLocalBaryCartPossq += body[iBody].dLocalBaryCartPos[i] * body[iBody].dLocalBaryCartPos[i];
+    dLocalBaryCartVelsq += body[iBody].dLocalBaryCartVel[i] * body[iBody].dLocalBaryCartVel[i];            
+  }
+  double dLocalMinNow = sqrt(dLocalBaryCartPossq / dLocalBaryCartVelsq);
+  if (dLocalMinNow < dMinNow) {
+    dMinNow = dLocalMinNow;
+  }
+  break;
+}
+
+******** Comment ends ********
+
+double CalculateShortestTimeStep(BODY *body, int iNumBodies) {
+  double dShortestTimeStep = 0;
+  int iTmpBody = 0;
+  int jTmpBody = 0;
+  for (iTmpBody = 0; iTmpBody < iNumBodies; iTmpBody++) {
+    for (jTmpBody = 0; jTmpBody < iNumBodies; jTmpBody++) {
+      int i = 0;
+      for (i = 0; i < 3; i++) {
+        body[iTmpBody].dHCartPos[i] = body[jTmpBody].dBCartPos[i] - body[iTmpBody].dBCartPos[i];
+        body[iTmpBody].dHCartVel[i] = body[jTmpBody].dBCartVel[i] - body[iTmpBody].dBCartVel[i];
+      }      
+    }
+  }
+}      
+*/
 
 void AssignAllCoords(BODY *body, CONTROL *control, FILES *files, SYSTEM *system, int iBody) {
   double iNumBodies = control->Evolve.iNumBodies;

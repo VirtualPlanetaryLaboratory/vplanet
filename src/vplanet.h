@@ -368,7 +368,7 @@ struct BODY {
                       */
   int bRelaxDynEllip; /**< shape of planet relaxes when spun down */
   int bReadOrbitData; /**< Use orbit data from file rather than distorb */
-  char cFileOrbitData[NAMELEN]; /**< read orbital data from this file
+  char *cFileOrbitData; /**< read orbital data from this file
                                    (distorb=0) */
   double *daTimeSeries;         /**< time series for orbital data */
   double *daSemiSeries;         /**< time series for orbital data */

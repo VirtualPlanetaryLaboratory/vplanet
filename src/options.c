@@ -51,15 +51,15 @@ int CheckComment(char cLine[], int iLen) {
 void GetLine(char cFile[], char cOption[], char cLine[], int *iLine,
              int iVerbose) {
   int iLen, bDone = 0, iLineTmp = 0;
-  char *cWord[OPTLEN], cTmp[LINE];
+  char *cWord, *cTmp;
   FILE *fp;
 
   iLen = strlen(cOption);
 
   fp = fopen(cFile, "r");
   memset(cLine, '\0', LINE);
-  memset(cTmp, '\0', LINE);
-  memset(cWord, '\0', OPTLEN);
+  // memset(cTmp, '\0', LINE);
+  // memset(cWord, '\0', OPTLEN);
 
   while (fgets(cTmp, LINE, fp) != NULL) {
     if (!CheckComment(cTmp, LINE)) {
@@ -81,10 +81,12 @@ void GetLine(char cFile[], char cOption[], char cLine[], int *iLine,
       }
     }
     iLineTmp++;
-    memset(cTmp, '\0', LINE);
-    memset(cWord, '\0', OPTLEN);
+    // memset(cTmp, '\0', LINE);
+    // memset(cWord, '\0', OPTLEN);
   }
   fclose(fp);
+  free(cWord);
+  free(cTmp);
 }
 
 /* If the previous line ended in $, must find the next valid line

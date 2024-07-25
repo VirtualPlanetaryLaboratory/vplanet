@@ -33,13 +33,13 @@ int strcicmp(char const *a, char const *b) {
 //! Dummy struct used to sort options
 typedef struct {
   int index;
-  char name[OPTLEN];
+  char *name;
 } SORTED_OPTIONS;
 
 //! Dummy struct used to sort output
 typedef struct {
   int index;
-  char name[OUTLEN];
+  char *name;
 } SORTED_OUTPUT;
 
 //! Comparison function for option names

@@ -724,18 +724,19 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
 ///SSS this is the thing we are trying to calculate, correct place to define it? I think so 
 /// differentiate between S-F and Johnstone here? will have diff xray/euv variables 
 
-sprintf(options[OPT_XRAYMODEL].cName, "dXRAY"); //What put in in files
-  sprintf(options[OPT_XRAYMODEL].cDescr, "XRay Luminosity");
-  sprintf(options[OPT_XRAYMODEL].cDefault, "5e-4"); ///SSS also need default values for this?
-  sprintf(options[OPT_XRAYMODEL].cDimension, "nd"); //non dimensional
-  options[OPT_XRAYMODEL].dDefault   = 1; 
-  options[OPT_XRAYMODEL].iType      = 2; //tells is a double
-  options[OPT_XRAYMODEL].bMultiFile = 1; //exist in multiple files?
-  fnRead[OPT_XRAYMODEL]             = &ReadXRayModel; //pointers again
+  sprintf(options[OPT_XRAYMODEL].cName, "sXRAYMODEL");
+  sprintf(options[OPT_XRAYMODEL].cDescr, "XRAY Model");
+  sprintf(options[OPT_XRAYMODEL].cDefault, "NONE");
+  sprintf(options[OPT_XRAYMODEL].cValues, "JOHNSTONE NONE");
+  options[OPT_XRAYMODEL].iType      = 3;
+  options[OPT_XRAYMODEL].bMultiFile = 1;
+  fnRead[OPT_XRAYMODEL]             = &ReadXRayModel;
   sprintf(
-        options[OPT_XRAYMODEL].cLongDescr,
-        "If Sanz-Forcada selected, use Xray calculation from 2011 paper\n;"
-        "if Johnstone selected, use XRay calculation from 2020 paper.;");
+        options[OPT_EUVMODEL].cLongDescr,
+        "If none selected, no model chosen "
+        "JOHNSTONE will use the Johnstone 2021 Xray "
+        "calculations\n"
+        "(---). \n");
 
   
   sprintf(options[OPT_EUVMODEL].cName, "sEUVMODEL");
@@ -754,10 +755,12 @@ sprintf(options[OPT_XRAYMODEL].cName, "dXRAY"); //What put in in files
         "calculations\n"
         "(---). \n");
 
+
+///Note that there is already an XUV model built in, this is repetitive and probably not needed
  sprintf(options[OPT_LXUVMODEL].cName, "sLXUVMODEL");
   sprintf(options[OPT_LXUVMODEL].cDescr, "LXUV Model");
   sprintf(options[OPT_LXUVMODEL].cDefault, "SANZFORCADA");
-  sprintf(options[OPT_LXUVMODEL].cValues, "SANZFORCADA JOHNSTONE REINERS NONE");
+  sprintf(options[OPT_LXUVMODEL].cValues, "SANZFORCADA JOHNSTONE RIBAS NONE");
   options[OPT_LXUVMODEL].iType      = 3;
   options[OPT_LXUVMODEL].bMultiFile = 1;
   fnRead[OPT_LXUVMODEL]             = &ReadLXUVModel;
@@ -1411,51 +1414,51 @@ void NullStellarDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
 }
 
 ///SSS These point to the incorrect values, should be also input body[iBody].dEUV and .dXRay?
-void VerifyXRay(BODY * body, control, options, update, iBody){
+void VerifyXRay(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, int iBody){
     if (body[iBody].iXRAYModel == XRAY_MODEL_NONE) {
-      printf("Chosen no xray  model",iBody);
+      printf("ERROR: xraymodel none %d!",
+              iBody);
    }
        
     else if (body[iBody].iEUVModel == XRAY_MODEL_JOHNSTONE){
-      printf("Chosen Johnstone xray model",iBody);
+      printf(
+              "ERROR: euv model JS %d!",
+              iBody);
   }
 }
 
-void VerifyEUV(BODY * body, control, options, update, iBody) {
+void VerifyEUV(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, int iBody) {
   if (body[iBody].iEUVModel == EUV_MODEL_NONE) {
       if (body[iBody].iLXUVModel == LXUV_MODEL_RIBAS){
          // body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
-          printf(stderr,"Chosen Ribas model",iBody);
+           printf(
+              "EUV model ribas %d!",
+              iBody);
       }
       if (body[iBody].iLXUVModel == LXUV_MODEL_NONE){
-          printf(stderr,"No model chosen test message",iBody);
+           printf(
+              "euv model none %d!",
+              iBody);
 
       }
 
   } else if (body[iBody].iEUVModel == EUV_MODEL_SANZFORCADA) { //doesn't need to assume Johnstone is picked for Xray
       
        // dLEUV = 1.e7 * pow(10., 4.80 + 0.860 * log10(dLXRay * 1.e-7));
-       printf(stderr,"Chosen EUV sanz forcada  model",iBody);
-
+        printf(
+              "euv model SF %d!",
+              iBody);
     
     
 } else if (body[iBody].iEUVModel == EUV_MODEL_JOHNSTONE) {
     
-
-//double dEUVJohnstone1 = 1e7* pow(10.,2.04+(0.681*body[iBody].dXRay*1e-7)+((1-0.681)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
-
-//double dEUVJohnstone2= 1e7* pow(10.,-0.034+(0.920*dEUVJohnstone1*1e-7)+((1-0.920)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
-
-//double dEUVJohnstone= dEUVJohnstone1 + dEUVJohnstone2;
-
-//return dEUVJohnstone;}
- printf("Johnstone EUV model chosen test message",iBody);
+     printf("euv model js %d",iBody);
    
     
 }}
                        
 
-void VerifyLXUV(BODY *body, control, options, update, iBody){
+void VerifyLXUV(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, int iBody){
 ///verify xray, verify euv (pick which one), verify both 
 ///validate mass/teff is consistent with xray model, similar for euv (stellar types etc)
 ///both:ribas and euv not selected, 
@@ -1463,17 +1466,17 @@ void VerifyLXUV(BODY *body, control, options, update, iBody){
     if (body[iBody].iEUVModel == EUV_MODEL_NONE) {
       if (body[iBody].iLXUVModel == LXUV_MODEL_RIBAS){
          // body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
-          printf("Chosen Ribas model",iBody);
+         printf("xuv model ribas  %d",iBody);
       }
       if (body[iBody].iLXUVModel == LXUV_MODEL_NONE){
-          printf("No model chosen test message",iBody);
+          printf("No model chosen test message %d",iBody);
 
       }
     }
     
     else if (body[iBody].iEUVModel == EUV_MODEL_SANZFORCADA) { //doesn't need to assume Johnstone is picked for Xray?
       
-        printf("sanz forcada calc model chosen test message",iBody);
+        printf("sanz forcada calc model chosen test message %d",iBody);
         // dLXUV= EUV SF + Xray JS
    
 
@@ -1481,7 +1484,7 @@ void VerifyLXUV(BODY *body, control, options, update, iBody){
     
     } else if (body[iBody].iEUVModel == EUV_MODEL_JOHNSTONE) {
       //dLXUV= EUV JS + XRay JS 
-      printf("Johnstone calc chosen model chosen test message",iBody);
+      printf("Johnstone calc chosen model chosen test message %d",iBody);
       //double dEUVJohnstone1 = 1e7* pow(10.,2.04+(0.681*body[iBody].dXRay*1e-7)+((1-0.681)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
       //double dEUVJohnstone2= 1e7* pow(10.,-0.034+(0.920*dEUVJohnstone1*1e-7)+((1-0.920)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
       //double dEUVJohnstone= dEUVJohnstone1 + dEUVJohnstone2;
@@ -1533,13 +1536,13 @@ void VerifyStellar(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     exit(EXIT_INPUT);
   }
 
-  VerifyLXUV(body,control,files,options,iBody);  ///SSS
-  VerifyXRay(body,control,files,options,iBody);
-  VerifyEUV(body,control,files,options,iBody);
+  VerifyLXUV(body,control,options,update,iBody);  ///SSS
+  VerifyXRay(body,control,options,update,iBody);
+  VerifyEUV(body,control,options,update, iBody);
 
-  VerifyRadius(body, control, options, update, body[iBody].dAge, iBody);
-  VerifyRadGyra(body, control, options, update, body[iBody].dAge, iBody);
-  VerifyRotRate(body, control, options, update, body[iBody].dAge, iBody);
+  VerifyRadius(body, control, files,options, update, body[iBody].dAge, iBody);
+  VerifyRadGyra(body, control,files, options, update, body[iBody].dAge, iBody);
+  VerifyRotRate(body, control,files, options, update, body[iBody].dAge, iBody);
 
   if (update[iBody].iNumTemperature > 1) {
     if (control->Io.iVerbose >= VERBERR) {

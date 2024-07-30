@@ -13,45 +13,45 @@ directory of the :code:`VPLanet` repository.
 
 
    examples/IceBelts
-   examples/CassiniStates
-   examples/ChaoticResonances
-   examples/MiniNeptuneEvap
-   examples/GalaxyEffects
    examples/EarthInterior
-   examples/AtmEscKepler-36
-   examples/CassiniMulti
-   examples/MagneticBraking
-   examples/LuminosityCycle
-   examples/CircumbinaryOrbit
-   examples/HLossTides
-   examples/VenusApproxInterior
-   examples/StellarEvol
    examples/DiffLimWaterEscape
-   examples/VenusWaterLoss
-   examples/BinaryTides
-   examples/WaterLossTides
-   examples/TideLock
-   examples/MagmOc_GJ1132b
-   examples/ParameterSweep
-   examples/MagmOc_Trappist1g
-   examples/HabitableZone
-   examples/AtmEscRegimes
-   examples/FfdProxCen
-   examples/ApseLock
-   examples/NBodyAtmEsc
-   examples/TidalEarth
-   examples/AtmEscFlareProxCen
-   examples/DampedCBP
-   examples/SS_NBody
-   examples/RadHeat
-   examples/MDwarfLuminosity
-   examples/IoHeat
-   examples/MagmOc_Earth
-   examples/SSDistOrbDistRot
    examples/HabEvapCore
+   examples/RadHeat
+   examples/WaterLossTides
+   examples/NBodyAtmEsc
+   examples/AtmEscFlareProxCen
+   examples/FfdProxCen
+   examples/IoHeat
+   examples/GalaxyEffects
+   examples/ChaoticResonances
+   examples/VenusWaterLoss
+   examples/CassiniStates
+   examples/CassiniMulti
+   examples/DampedCBP
    examples/EarthClimate
+   examples/SSDistOrbDistRot
+   examples/MiniNeptuneEvap
+   examples/BinaryTides
+   examples/MagmOc_GJ1132b
    examples/AbioticO2
+   examples/CircumbinaryOrbit
+   examples/TideLock
+   examples/SS_NBody
+   examples/ApseLock
+   examples/VenusApproxInterior
+   examples/MagneticBraking
+   examples/MagmOc_Earth
    examples/STEEP
+   examples/MagmOc_Trappist1g
+   examples/MDwarfLuminosity
+   examples/HLossTides
+   examples/ParameterSweep
+   examples/TidalEarth
+   examples/LuminosityCycle
+   examples/AtmEscKepler-36
+   examples/AtmEscRegimes
+   examples/HabitableZone
+   examples/StellarEvol
 
 
 Broken

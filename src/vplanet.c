@@ -60,7 +60,7 @@ int main_impl(int argc, char *argv[]) {
   MODULE module;
   FILES files;
   SYSTEM system;
-  char *infile;
+  char *infile = NULL;
   fnReadOption fnRead[MODULEOPTEND]; // XXX Pointers?
   fnWriteOutput fnWrite[MODULEOUTEND];
   fnUpdateVariable ***fnUpdate;

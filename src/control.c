@@ -242,8 +242,9 @@ void WriteDescription(char cLongDescr[], char cDescr[], int iMaxChars) {
   int bFoo;
   int iCharsLeft, iWord, iLineWord, iLine, iNumWords, iLineWordNow, iChar;
   char cDescription[MAXARRAY][OPTLEN];
-  char cLine[MAXARRAY][OPTLEN];
+  char **cLine;
 
+  cLine = malloc(MAXARRAY * sizeof(char*));
   for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
     memset(cLine[iLineWordNow], '\0', OPTLEN);
     memset(cDescription[iLineWordNow], '\0', OPTLEN);

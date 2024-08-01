@@ -48,18 +48,19 @@ int CheckComment(char cLine[], int iLen) {
   return 0;
 }
 
-void GetLine(char cFile[], char cOption[], char cLine[], int *iLine,
+void GetLine(char *cFile, char *cOption, char **cLine, int *iLine,
              int iVerbose) {
   int iLen, bDone = 0, iLineTmp = 0;
-  char *cWord, *cTmp;
+  char cWord[LINE], cTmp[LINE];
   FILE *fp;
+
+  *cLine=NULL;
 
   iLen = strlen(cOption);
 
   fp = fopen(cFile, "r");
-  memset(cLine, '\0', LINE);
-  // memset(cTmp, '\0', LINE);
-  // memset(cWord, '\0', OPTLEN);
+  memset(cTmp, '\0', LINE);
+  memset(cWord, '\0', OPTLEN);
 
   while (fgets(cTmp, LINE, fp) != NULL) {
     if (!CheckComment(cTmp, LINE)) {
@@ -75,18 +76,16 @@ void GetLine(char cFile[], char cOption[], char cLine[], int *iLine,
                   iLineTmp + 1);
           exit(1);
         }
-        strcpy(cLine, cTmp);
+        fvFormattedString(cLine, cTmp);
         *iLine = iLineTmp;
         bDone  = 1;
       }
     }
     iLineTmp++;
-    // memset(cTmp, '\0', LINE);
-    // memset(cWord, '\0', OPTLEN);
+    memset(cTmp, '\0', LINE);
+    memset(cWord, '\0', OPTLEN);
   }
   fclose(fp);
-  free(cWord);
-  free(cTmp);
 }
 
 /* If the previous line ended in $, must find the next valid line
@@ -157,12 +156,12 @@ int GetPos(char cLine[]) {
    a trailing $, if so, it is an array that continues to the next
    line. */
 
-void GetWords(char cLine[], char cInput[MAXARRAY][OPTLEN], int *iNumWords,
+void GetWords(char *cLine, char cInput[MAXARRAY][OPTLEN], int *iNumWords,
               int *bContinue) {
   int iPos, iPosStart, iWord;
   char cTmp[OPTLEN];
 
-  if (strlen(cLine) == 0) {
+  if (cLine == NULL) {
     *iNumWords = 0;
     *bContinue = 0;
     return;
@@ -249,14 +248,14 @@ double dNegativeDouble(OPTIONS options, char cFile[], int iVerbose) {
    not found, saInput is an array of empty strings, and iLine is
    unchanged. */
 
-void AddOptionStringArray(char cFile[], char cOption[],
+void AddOptionStringArray(char *cFile, char *cOption,
                           char saInput[MAXARRAY][OPTLEN], int *iNumIndices,
                           int *iNumLines, int *iLine, int iVerbose) {
-  char cLine[LINE], cTmp[MAXARRAY][OPTLEN];
+  char *cLine, cTmp[MAXARRAY][OPTLEN];
   int iPos, iWord, bContinue, iNumWords;
   FILE *fp;
 
-  memset(cLine, '\0', LINE);
+  //memset(cLine, '\0', LINE);
 
   /* iLine=malloc(MAXLINES*sizeof(int)); */
 
@@ -272,7 +271,7 @@ void AddOptionStringArray(char cFile[], char cOption[],
     memset(cTmp[iPos], '\0', OPTLEN);
   }
 
-  GetLine(cFile, cOption, cLine, &iLine[0], iVerbose);
+  GetLine(cFile, cOption, &cLine, &iLine[0], iVerbose);
   GetWords(cLine, cTmp, &iNumWords, &bContinue);
   *iNumLines = 1;
 
@@ -311,13 +310,14 @@ void AddOptionStringArray(char cFile[], char cOption[],
       }
     }
   }
-}
+  free(cLine);
+  }
 
 /* Get all fields in a double array. The fields are stored in daInput,
    and the lines which were read are in iNumLines. If a parameter is
    not found, daInput is empty, and iLine is unchanged. */
 
-void AddOptionDoubleArray(char cFile[], char cOption[], double *daInput,
+void AddOptionDoubleArray(char *cFile, char *cOption, double *daInput,
                           int *iNumIndices, int *iNumLines, int *iLine,
                           int iVerbose) {
   int iIndex;
@@ -330,31 +330,32 @@ void AddOptionDoubleArray(char cFile[], char cOption[], double *daInput,
   }
 }
 
-void AddOptionDouble(char cFile[], char cOption[], double *dInput, int *iLine,
+void AddOptionDouble(char *cFile, char *cOption, double *dInput, int *iLine,
                      int iVerbose) {
-  char cTmp[OPTLEN], cLine[LINE];
+  char cTmp[OPTLEN], *cLine;
 
-  GetLine(cFile, cOption, cLine, iLine, iVerbose);
+  GetLine(cFile, cOption, &cLine, iLine, iVerbose);
   if (*iLine >= 0) {
     sscanf(cLine, "%s %lf", cTmp, dInput);
   }
 }
 
-void AddOptionInt(char cFile[], char cOption[], int *iInput, int *iLine,
+void AddOptionInt(char *cFile, char *cOption, int *iInput, int *iLine,
                   int iVerbose) {
-  char cTmp[OPTLEN], cLine[LINE];
+  char cTmp[OPTLEN], *cLine;
 
-  GetLine(cFile, cOption, cLine, iLine, iVerbose);
+  GetLine(cFile, cOption, &cLine, iLine, iVerbose);
   if (*iLine >= 0) {
     sscanf(cLine, "%s %d", cTmp, iInput);
   }
+  free(cLine);
 }
 
-void AddOptionBool(char cFile[], char cOption[], int *iInput, int *iLine,
+void AddOptionBool(char *cFile, char *cOption, int *iInput, int *iLine,
                    int iVerbose) {
 
   AddOptionInt(cFile, cOption, iInput, iLine, iVerbose);
-  if (*iLine == -1) { // PED 4/9/15
+  if (*iLine == -1) { 
     return;
   }
   if (*iInput == 0 || *iInput == 1) {
@@ -367,15 +368,17 @@ void AddOptionBool(char cFile[], char cOption[], int *iInput, int *iLine,
   }
 }
 
-void AddOptionString(char cFile[], char cOption[], char cInput[], int *iLine,
+void AddOptionString(char *cFile, char *cOption, char cInput[], int *iLine,
                      int iVerbose) {
-  char cTmp[OPTLEN], cLine[LINE];
+  char cTmp[OPTLEN], *cLine;
 
-  memset(cLine, '\0', LINE);
   memset(cTmp, '\0', OPTLEN);
 
-  GetLine(cFile, cOption, cLine, iLine, iVerbose);
-  sscanf(cLine, "%s %s", cTmp, cInput);
+  GetLine(cFile, cOption, &cLine, iLine, iVerbose);
+  if (*iLine >= 0) {
+    sscanf(cLine, "%s %s", cTmp, cInput);
+  }
+  free(cLine);
 }
 
 /* Looks like this was deprecated somewhere RB 01/02/24
@@ -436,7 +439,7 @@ int GetNumOut(char cFile[], char cName[], int iLen, int *iLineNum, int iExit) {
 }
 */
 
-int iGetNumLines(char cFile[]) {
+int iGetNumLines(char *cFile) {
   int iNumLines = 0, iChar, bFileOK = 1;
   int bComment, bReturn;
   FILE *fp;
@@ -581,7 +584,7 @@ void CheckDuplication(FILES *files, OPTIONS *options, char cFile[], int iLine,
 
   if (options->bMultiFile) {
     fprintf(stderr,
-            "ERROR: CheckDuplication called, but options. bMultiFile = %d\n",
+            "ERROR: CheckDuplication called, but options.bMultiFile = %d\n",
             options->bMultiFile);
     exit(EXIT_INPUT);
   }
@@ -1108,6 +1111,7 @@ void ReadSystemName(CONTROL *control, FILES *files, OPTIONS *options,
   int lTmp = -1;
   char cTmp[OPTLEN];
 
+  system->cName = NULL;
   AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
   if (lTmp >= 0) {
@@ -1166,9 +1170,9 @@ void ReadBodyFileNames(CONTROL *control, FILES *files, OPTIONS *options,
 
   control->Evolve.iNumBodies = iNumIndices;
   files->Outfile             = malloc(iNumIndices * sizeof(OUTFILE));
-  for (iIndex = 0; iIndex < iNumIndices; iIndex++) {
-    memset(files->Outfile[iIndex].cOut, '\0', NAMELEN);
-  }
+  // for (iIndex = 0; iIndex < iNumIndices; iIndex++) {
+  //   memset(files->Outfile[iIndex].cOut, '\0', NAMELEN);
+  // }
 
   UpdateFoundOptionMulti(&files->Infile[0], options, lTmp, iNumLines, 0);
 
@@ -1187,6 +1191,7 @@ void ReadInitialOptions(BODY **body, CONTROL *control, FILES *files,
   int iFile, iBody, iModule;
   INFILE input;
 
+  input.cIn = NULL;
   fvFormattedString(&input.cIn, infile);
   /* Initialize primary input file */
   InitializeInput(&input);
@@ -2657,11 +2662,12 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
                      OUTPUT *output, int iFile, int iVerbose) {
   int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 1, iNumGrid = 0;
   int k, iOut = -1, *lTmp, iCol, jCol;
-  char saTmp[MAXARRAY][OPTLEN], cTmp[OPTLEN], *cOption[MAXARRAY],
+  char saTmp[MAXARRAY][OPTLEN], *cTmp=NULL, **cOption,
         *cOut;
   int iLen1, iLen2;
 
   lTmp = malloc(MAXLINES * sizeof(int));
+  cOption = malloc(MAXARRAY*sizeof(char*));
 
   AddOptionStringArray(files->Infile[iFile].cIn, options[OPT_OUTPUTORDER].cName,
                        saTmp, &iNumIndices, &files->Infile[iFile].iNumLines,
@@ -2699,14 +2705,14 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
     /* Check for ambiguity */
     for (i = 0; i < iNumIndices; i++) {
       count = 0; /* Number of possibilities */
-      for (j = 0; j < OPTLEN; j++) {
-        cTmp[j] = 0;
-      }
+      // for (j = 0; j < OPTLEN; j++) {
+      //   cTmp[j] = 0;
+      // }
       fvFormattedString(&cTmp, saTmp[i]);
       for (j = 0; j < MODULEOUTEND; j++) {
-        for (k = 0; k < OPTLEN; k++) {
-          cOut[k] = 0;
-        }
+        // for (k = 0; k < OPTLEN; k++) {
+        //   cOut[k] = 0;
+        // }
         fvFormattedString(&cOut, output[j].cName);
         iLen1 = strlen(cOut);
         iLen2 = strlen(cTmp);
@@ -2789,7 +2795,7 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
           output[iOut].bDoNeg[iFile - 1] = 0;
         }
         if (output[iOut].bGrid == 0 || output[iOut].bGrid == 2) {
-          memset(files->Outfile[iFile - 1].caCol[i], '\0', OPTLEN);
+          //memset(files->Outfile[iFile - 1].caCol[i], '\0', OPTLEN);
           fvFormattedString(&files->Outfile[iFile - 1].caCol[i], output[iOut].cName);
         } else {
           memset(files->Outfile[iFile - 1].caGrid[iNumGrid - 1], '\0', OPTLEN);
@@ -2862,11 +2868,11 @@ void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
                     int iVerbose) {
   int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 0, iNumGrid = 0;
   int k, iOut = -1, *lTmp;
-  char saTmp[MAXARRAY][OPTLEN], *cTmp, cOption[MAXARRAY][OPTLEN],
-        cOut[OPTLEN];
+  char saTmp[MAXARRAY][OPTLEN], *cTmp, **cOption, *cOut;
   int iLen1, iLen2;
 
   lTmp = malloc(MAXLINES * sizeof(int));
+  cOption = malloc(MAXARRAY*sizeof(char*));
 
   AddOptionStringArray(files->Infile[iFile].cIn, options[OPT_GRIDOUTPUT].cName,
                        saTmp, &iNumIndices, &files->Infile[iFile].iNumLines,

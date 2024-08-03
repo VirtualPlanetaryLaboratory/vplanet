@@ -1259,7 +1259,7 @@ void VerifyHaltStellar(BODY *body, CONTROL *control, OPTIONS *options,
 
 void WriteLuminosity(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dLuminosity;
 
   if (output->bDoNeg[iBody]) {
@@ -1273,7 +1273,7 @@ void WriteLuminosity(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteTemperature(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dTemperature;
   // Kelvin only
   fsUnitsTemp(0, cUnit);
@@ -1281,7 +1281,7 @@ void WriteTemperature(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteLXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
   *dTmp = body[iBody].dLXUV;
 
   if (output->bDoNeg[iBody]) {
@@ -1295,14 +1295,14 @@ void WriteLXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteLXUVFrac(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = body[iBody].dLXUV / body[iBody].dLuminosity;
   strcpy(cUnit, "");
 }
 
 void WriteRossbyNumber(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp =
         body[iBody].dRotPer / fdCranmerSaar2011TauCZ(body[iBody].dTemperature);
   strcpy(cUnit, "");
@@ -1310,7 +1310,7 @@ void WriteRossbyNumber(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteDRotPerDtStellar(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 

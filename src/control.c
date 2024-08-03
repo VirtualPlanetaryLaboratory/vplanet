@@ -866,21 +866,21 @@ double fdUnitsLength(int iType) {
   }
 }
 
-void fsUnitsLength(int iType, char cUnit[]) {
+void fsUnitsLength(int iType, char **cUnit) {
   if (iType == U_METER) {
-    fvFormattedString(&cUnit, "m");
+    fvFormattedString(cUnit, "m");
   } else if (iType == U_CENTIMETER) {
-    fvFormattedString(&cUnit, "cm");
+    fvFormattedString(cUnit, "cm");
   } else if (iType == U_KILOMETER) {
-    fvFormattedString(&cUnit, "km");
+    fvFormattedString(cUnit, "km");
   } else if (iType == U_SOLARRADIUS) {
-    fvFormattedString(&cUnit, "Rsun");
+    fvFormattedString(cUnit, "Rsun");
   } else if (iType == U_EARTHRADIUS) {
-    fvFormattedString(&cUnit, "Rearth");
+    fvFormattedString(cUnit, "Rearth");
   } else if (iType == U_JUPRADIUS) {
-    fvFormattedString(&cUnit, "Rjupiter");
+    fvFormattedString(cUnit, "Rjupiter");
   } else if (iType == U_AU) {
-    fvFormattedString(&cUnit, "au");
+    fvFormattedString(cUnit, "au");
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitLength %d.\n", iType);
     exit(EXIT_UNITS);
@@ -905,17 +905,17 @@ double fdUnitsTime(int iType) {
   }
 }
 
-void fsUnitsTime(int iType, char cUnit[]) {
+void fsUnitsTime(int iType, char **cUnit) {
   if (iType == U_SECOND) {
-    fvFormattedString(&cUnit, "sec");
+    fvFormattedString(cUnit, "sec");
   } else if (iType == U_DAY) {
-    fvFormattedString(&cUnit, "day");
+    fvFormattedString(cUnit, "day");
   } else if (iType == U_YEAR) {
-    fvFormattedString(&cUnit, "year");
+    fvFormattedString(cUnit, "year");
   } else if (iType == U_MYR) {
-    fvFormattedString(&cUnit, "Myr");
+    fvFormattedString(cUnit, "Myr");
   } else if (iType == U_GYR) {
-    fvFormattedString(&cUnit, "Gyr");
+    fvFormattedString(cUnit, "Gyr");
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitTime: %d.\n", iType);
     exit(EXIT_UNITS);
@@ -941,19 +941,19 @@ double fdUnitsMass(int iType) {
   }
 }
 
-void fsUnitsMass(int iType, char cUnit[]) {
+void fsUnitsMass(int iType, char **cUnit) {
   if (iType == U_KILOGRAM) {
-    fvFormattedString(&cUnit, "kg");
+    fvFormattedString(cUnit, "kg");
   } else if (iType == U_GRAM) {
-    fvFormattedString(&cUnit, "gm");
+    fvFormattedString(cUnit, "gm");
   } else if (iType == U_SOLARMASS) {
-    fvFormattedString(&cUnit, "Msun");
+    fvFormattedString(cUnit, "Msun");
   } else if (iType == U_EARTHMASS) {
-    fvFormattedString(&cUnit, "Mearth");
+    fvFormattedString(cUnit, "Mearth");
   } else if (iType == U_JUPITERMASS) {
-    fvFormattedString(&cUnit, "Mjupiter");
+    fvFormattedString(cUnit, "Mjupiter");
   } else if (iType == U_NEPTUNEMASS) {
-    fvFormattedString(&cUnit, "Mneptune");
+    fvFormattedString(cUnit, "Mneptune");
 
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitMass: %d.\n", iType);
@@ -972,39 +972,51 @@ double fdUnitsAngle(int iType) {
   }
 }
 
-void fsUnitsAngle(int iType, char cUnit[]) {
+void fsUnitsAngle(int iType, char **cUnit) {
   if (iType == U_RADIANS) {
-    fvFormattedString(&cUnit, "rad");
+    fvFormattedString(cUnit, "rad");
   } else if (iType == U_DEGREES) {
-    fvFormattedString(&cUnit, "deg");
+    fvFormattedString(cUnit, "deg");
   } else {
     fprintf(stderr, "ERROR: Unknown Angle type %d\n.", iType);
     exit(EXIT_UNITS);
   }
 }
 
-void fsUnitsViscosity(UNITS *units, char cUnit[]) {
-  char cTmp[OUTLEN];
+void fsUnitsViscosity(UNITS *units, char **cUnit) {
+  char *cUnitLength=NULL,*cUnitTime=NULL;
 
-  fsUnitsLength(units->iLength, cUnit);
-  strcat(cUnit, "^2/");
-  fsUnitsTime(units->iTime, cTmp);
-  strcat(cUnit, cTmp);
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsTime(units->iTime, &cUnitTime);
+  // strcat(cUnit, "^2/");
+  // fsUnitsTime(units->iTime, cTmp);
+  // strcat(cUnit, cTmp);
+  fvFormattedString(cUnit,cUnitLength,"^2/",cUnitTime);
+  free(cUnitLength);
+  free(cUnitTime);
 }
 
-void fsUnitsAngMom(UNITS *units, char cUnit[]) {
-  char cTmp[OPTLEN];
+void fsUnitsAngMom(UNITS *units, char **cUnit) {
+  char *cUnitMass=NULL,*cUnitLength=NULL,*cUnitTime=NULL;
 
-  fsUnitsMass(units->iMass, cUnit);
-  fsUnitsLength(units->iLength, cTmp);
-  strcat(cUnit, "*");
-  strcat(cUnit, cTmp);
-  strcat(cUnit, "^2/");
-  fsUnitsTime(units->iTime, cTmp);
-  strcat(cUnit, cTmp);
+  fsUnitsMass(units->iMass, &cUnitMass);
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsTime(units->iTime, &cUnitTime);
+  // fsUnitsMass(units->iMass, cUnit);
+  // fsUnitsLength(units->iLength, cTmp);
+  // strcat(cUnit, "*");
+  // strcat(cUnit, cTmp);
+  // strcat(cUnit, "^2/");
+  // fsUnitsTime(units->iTime, cTmp);
+  // strcat(cUnit, cTmp);
+  fvFormattedString(cUnit,cUnitMass,"*",cUnitLength,"^2/",cUnitTime);
+  free(cUnitMass);
+  free(cUnitLength);
+  free(cUnitTime);
+
 }
 
-void fsUnitsDensity(UNITS *units, char cUnit[]) {
+void fsUnitsDensity(UNITS *units, char **cUnit) {
   char cTmp[OPTLEN];
 
   fsUnitsMass(units->iMass, cUnit);
@@ -1014,7 +1026,7 @@ void fsUnitsDensity(UNITS *units, char cUnit[]) {
   strcat(cUnit, "^3");
 }
 
-void fsUnitsVel(UNITS *units, char cUnit[]) {
+void fsUnitsVel(UNITS *units, char **cUnit) {
   char cTmp[OPTLEN];
 
   fsUnitsLength(units->iLength, cUnit);
@@ -1023,7 +1035,7 @@ void fsUnitsVel(UNITS *units, char cUnit[]) {
   strcat(cUnit, cTmp);
 }
 
-void fsUnitsRate(int iType, char cUnit[]) {
+void fsUnitsRate(int iType, char **cUnit) {
   char cTmp[OPTLEN];
 
   fvFormattedString(&cUnit, "/");
@@ -1036,7 +1048,7 @@ void fsUnitsRate(int iType, char cUnit[]) {
 }*/
 
 
-void fsUnitsAngRate(UNITS *units, char cUnit[]) {
+void fsUnitsAngRate(UNITS *units, char **cUnit) {
   char cTmp[OPTLEN];
 
   fsUnitsAngle(units->iAngle, cUnit);
@@ -1045,7 +1057,7 @@ void fsUnitsAngRate(UNITS *units, char cUnit[]) {
   strcat(cUnit, cTmp);
 }
 
-void fsUnitsEnergy(UNITS *units, char cUnit[]) {
+void fsUnitsEnergy(UNITS *units, char **cUnit) {
   char cTmp[OPTLEN];
 
   fsUnitsMass(units->iMass, cUnit);
@@ -1064,7 +1076,7 @@ double fdUnitsEnergy(int iTime, int iMass, int iLength) {
   return dConversion;
 }
 
-void fsUnitsPower(UNITS *units, char cUnit[]) {
+void fsUnitsPower(UNITS *units, char **cUnit) {
   char cTmp[OPTLEN];
 
   fsUnitsMass(units->iMass, cUnit);
@@ -1082,7 +1094,7 @@ double fdUnitsPower(int iTime, int iMass, int iLength) {
          (fdUnitsTime(iTime) * fdUnitsTime(iTime) * fdUnitsTime(iTime));
 }
 
-void fsUnitsEnergyFlux(UNITS *units, char cUnit[]) {
+void fsUnitsEnergyFlux(UNITS *units, char **cUnit) {
   char cTmp[OPTLEN];
 
   fsUnitsEnergy(units, cUnit);
@@ -1148,13 +1160,13 @@ double fdUnitsTemp(double dTemp, int iOldType, int iNewType) {
   }
 }
 
-void fsUnitsTemp(int iType, char cUnit[]) {
+void fsUnitsTemp(int iType, char **cUnit) {
   if (iType == U_KELVIN) {
-    fvFormattedString(&cUnit, "K");
+    fvFormattedString(cUnit, "K");
   } else if (iType == U_CELSIUS) {
-    fvFormattedString(&cUnit, "Celsius");
+    fvFormattedString(cUnit, "Celsius");
   } else if (iType == U_FARENHEIT) {
-    fvFormattedString(&cUnit, "F");
+    fvFormattedString(cUnit, "F");
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitTemp %d.\n", iType);
     exit(EXIT_UNITS);
@@ -1162,13 +1174,13 @@ void fsUnitsTemp(int iType, char cUnit[]) {
 }
 
 // XXX This looks fishy. Should time also be checked here
-void fsUnitsTempRate(int iType, char cUnit[]) {
+void fsUnitsTempRate(int iType, char **cUnit) {
   if (iType == U_KELVIN) {
-    fvFormattedString(&cUnit, "K/s");
+    fvFormattedString(cUnit, "K/s");
   } else if (iType == U_CELSIUS) {
-    fvFormattedString(&cUnit, "C/s");
+    fvFormattedString(cUnit, "C/s");
   } else if (iType == U_FARENHEIT) {
-    fvFormattedString(&cUnit, "F/s");
+    fvFormattedString(cUnit, "F/s");
   } else {
     fprintf(stderr, "ERROR: Unknown iUnitTempRate %d.\n", iType);
     exit(EXIT_UNITS);

@@ -1992,7 +1992,7 @@ struct OUTPUT {
 typedef void (*fnReadOption)(BODY *, CONTROL *, FILES *, OPTIONS *, SYSTEM *,
                              int);
 typedef void (*fnWriteOutput)(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                              UPDATE *, int, double *, char[]);
+                              UPDATE *, int, double *, char**);
 
 
 /*

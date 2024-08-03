@@ -15,7 +15,7 @@
 
 void WriteAge(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
               UNITS *units, UPDATE *update, int iBody, double *dTmp,
-              char cUnit[]) {
+              char **cUnit) {
   *dTmp = body[iBody].dAge;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -33,7 +33,7 @@ void WriteAge(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 /* iBodyType */
 void WriteBodyType(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = body[iBody].iBodyType;
   strcpy(cUnit, "");
 }
@@ -45,7 +45,7 @@ void WriteBodyType(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 /* Climate-obliquity-precession parameter */
 void WriteCOPP(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
 
   *dTmp = body[iBody].dEcc * sin(body[iBody].dLongP + body[iBody].dPrecA) *
           sin(body[iBody].dObliquity);
@@ -56,7 +56,7 @@ void WriteCOPP(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
  * orbit) */
 void WriteCriticalSemi(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
 
   // Only valid for simulations of tidally-interacting binary stars that have
   // 2 bodies: 0, 1, both stars, with bStellar = bEqtide = 1
@@ -88,7 +88,7 @@ void WriteCriticalSemi(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteDeltaTime(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   if (control->Evolve.bVarDt) {
     if (control->Evolve.dTime > 0) {
@@ -115,7 +115,7 @@ void WriteDeltaTime(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteDensity(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
 
   *dTmp = fdSphereDensity(body[iBody].dMass, body[iBody].dRadius);
 
@@ -135,7 +135,7 @@ void WriteDensity(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteHecc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
 
   *dTmp = body[iBody].dHecc;
   strcpy(cUnit, "");
@@ -145,7 +145,7 @@ void WriteHecc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteHZLimitDryRunaway(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
-                            int iBody, double *dTmp, char cUnit[]) {
+                            int iBody, double *dTmp, char **cUnit) {
 
   double dLuminosity;
   int jBody;
@@ -175,7 +175,7 @@ void WriteHZLimitDryRunaway(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteHZLimitRecentVenus(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   int iLim;
   double *daHZLimits; // Array of HZ limits
 
@@ -215,7 +215,7 @@ void WriteHZLimitRecentVenus(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteHZLimitRunawayGreenhouse(BODY *body, CONTROL *control, OUTPUT *output,
                                    SYSTEM *system, UNITS *units, UPDATE *update,
-                                   int iBody, double *dTmp, char cUnit[]) {
+                                   int iBody, double *dTmp, char **cUnit) {
 
   double *daHZLimits; // Array of HZ limits
   daHZLimits = malloc(6 * sizeof(double));
@@ -246,7 +246,7 @@ void WriteHZLimitRunawayGreenhouse(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteHZLimitMoistGreenhouse(BODY *body, CONTROL *control, OUTPUT *output,
                                  SYSTEM *system, UNITS *units, UPDATE *update,
-                                 int iBody, double *dTmp, char cUnit[]) {
+                                 int iBody, double *dTmp, char **cUnit) {
 
   double *daHZLimits; // Array of HZ limits
   daHZLimits = malloc(6 * sizeof(double));
@@ -276,7 +276,7 @@ void WriteHZLimitMoistGreenhouse(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteHZLimitMaxGreenhouse(BODY *body, CONTROL *control, OUTPUT *output,
                                SYSTEM *system, UNITS *units, UPDATE *update,
-                               int iBody, double *dTmp, char cUnit[]) {
+                               int iBody, double *dTmp, char **cUnit) {
 
   double *daHZLimits; // Array of HZ limits
   daHZLimits = malloc(6 * sizeof(double));
@@ -306,7 +306,7 @@ void WriteHZLimitMaxGreenhouse(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteHZLimitEarlyMars(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
 
   double *daHZLimits; // Array of HZ limits
   daHZLimits = malloc(6 * sizeof(double));
@@ -340,7 +340,7 @@ void WriteHZLimitEarlyMars(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyInc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
   if (body[iBody].bDistOrb) {
     *dTmp = fdInclination(body, iBody);
   } else {
@@ -358,7 +358,7 @@ void WriteBodyInc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteInstellation(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
 
   // Should have special case if bBinary=1
   // if (body[iBody].bSpiNBody)
@@ -391,7 +391,7 @@ void WriteInstellation(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteK2Man(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                 UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                char cUnit[]) {
+                char **cUnit) {
   // This is calculated during PropsAux
   if (body[iBody].bEqtide) {
     *dTmp = body[iBody].dK2Man;
@@ -406,7 +406,7 @@ void WriteK2Man(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteImK2Man(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
 
   if (body[iBody].bEqtide) {
     *dTmp = body[iBody].dImK2Man;
@@ -422,7 +422,7 @@ void WriteImK2Man(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteKecc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
 
   *dTmp = body[iBody].dKecc;
   strcpy(cUnit, "");
@@ -434,7 +434,7 @@ void WriteKecc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteBodyLongA(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
   if (body[iBody].bDistOrb) {
     *dTmp = fdLongA(body, iBody);
   } else {
@@ -459,7 +459,7 @@ void WriteBodyLongA(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteLongP(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                 UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                char cUnit[]) {
+                char **cUnit) {
 
 
   if (body[iBody].bSpiNBody || body[iBody].bBinary) {
@@ -494,7 +494,7 @@ void WriteLongP(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteBodyArgP(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   double varpi, Omega;
 
   if (body[iBody].bDistOrb) {
@@ -519,7 +519,7 @@ void WriteBodyArgP(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteLXUVTot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
   /* Multiple modules can contribute to this output */
   int iModule;
 
@@ -554,7 +554,7 @@ void WriteLXUVTot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteMass(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
 
   *dTmp = body[iBody].dMass;
   if (output->bDoNeg[iBody]) {
@@ -572,7 +572,7 @@ void WriteMass(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteObliquity(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = atan2(sqrt(pow(body[iBody].dXobl, 2) + pow(body[iBody].dYobl, 2)),
                 body[iBody].dZobl);
@@ -588,7 +588,7 @@ void WriteObliquity(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyPrecA(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
   if (body[iBody].bDistRot == 0 && body[iBody].bPoise == 1) {
     *dTmp = body[iBody].dPrecA;
   } else {
@@ -613,7 +613,7 @@ void WriteBodyPrecA(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteOrbAngMom(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
   char cTmp;
   double *pdOrbMom;
   if (body[iBody].bSpiNBody) {
@@ -639,7 +639,7 @@ void WriteOrbAngMom(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteOrbEcc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                  UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                 char cUnit[]) {
+                 char **cUnit) {
   if (body[iBody].bBinary != 1) { // Not doing binary
     if (iBody > 0) {
       if (body[iBody].bDistOrb || body[iBody].bEqtide) {
@@ -666,7 +666,7 @@ void WriteOrbEcc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 // XXX This function doesn't work!
 void WriteLostEng(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
 
   *dTmp = -1;
   *dTmp = body[iBody].dLostEng;
@@ -684,7 +684,7 @@ void WriteLostEng(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteOrbEnergy(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = fdOrbEnergy(body, control, system, iBody);
 
@@ -699,7 +699,7 @@ void WriteOrbEnergy(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteOrbMeanMotion(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
 
   if (body[iBody].bBinary == 0) { // Not doing binary
     if (iBody > 0) {
@@ -726,7 +726,7 @@ void WriteOrbMeanMotion(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteOrbPeriod(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   if (body[iBody].bBinary == 0) { // Not doing binary
     if (iBody > 0) {
@@ -759,7 +759,7 @@ void WriteOrbPeriod(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteOrbSemi(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
 
   if (body[iBody].bBinary == 0) { // Not doing binary
     if (iBody > 0) {
@@ -792,7 +792,7 @@ void WriteOrbSemi(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteRadius(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                  UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                 char cUnit[]) {
+                 char **cUnit) {
 
   *dTmp = body[iBody].dRadius;
   if (output->bDoNeg[iBody]) {
@@ -806,14 +806,14 @@ void WriteRadius(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteRadGyra(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
   *dTmp = body[iBody].dRadGyra;
-  fvFormattedString(&cUnit, "%s", "");
+  fvFormattedString(cUnit, "%s", "");
 }
 
 void WriteRotAngMom(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = fdRotAngMom(body[iBody].dRadGyra, body[iBody].dMass,
                       body[iBody].dRadius, body[iBody].dRotRate);
@@ -831,7 +831,7 @@ void WriteRotAngMom(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteRotKinEnergy(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
 
   *dTmp = fdRotKinEnergy(body[iBody].dMass, body[iBody].dRadius,
                          body[iBody].dRadGyra, body[iBody].dRotRate);
@@ -846,7 +846,7 @@ void WriteRotKinEnergy(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteRotRate(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
 
   *dTmp = body[iBody].dRotRate;
   if (output->bDoNeg[iBody]) {
@@ -860,7 +860,7 @@ void WriteRotRate(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteRotPer(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                  UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                 char cUnit[]) {
+                 char **cUnit) {
 
   *dTmp = fdFreqToPer(body[iBody].dRotRate);
   if (output->bDoNeg[iBody]) {
@@ -874,7 +874,7 @@ void WriteRotPer(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteRotVel(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                  UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                 char cUnit[]) {
+                 char **cUnit) {
 
   *dTmp = fdRotVel(body[iBody].dRadius, body[iBody].dRotRate);
   if (output->bDoNeg[iBody]) {
@@ -892,7 +892,7 @@ the solid interior, ocean, and/envelope. */
 
 void WriteSurfaceEnergyFlux(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
-                            int iBody, double *dTmp, char cUnit[]) {
+                            int iBody, double *dTmp, char **cUnit) {
 
   /* Surface Energy Flux is complicated because it either all comes
      through thermint, or it can be from eqtide and/or radheat. */
@@ -945,7 +945,7 @@ void WriteSurfaceEnergyFlux(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteTidalQ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                  UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                 char cUnit[]) {
+                 char **cUnit) {
 
   if (body[iBody].bEqtide) {
     if (body[iBody].bThermint && !body[iBody].bOcean && !body[iBody].bEnv) {
@@ -979,7 +979,7 @@ void WriteTidalQ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteTidalQMantle(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
 
   // Updated every timestep by PropsAuxEqtideThermint
   if (body[iBody].bEqtide) {
@@ -992,7 +992,7 @@ void WriteTidalQMantle(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteTime(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
 
   *dTmp = control->Evolve.iDir * control->Evolve.dTime;
   if (output->bDoNeg[iBody]) {
@@ -1006,7 +1006,7 @@ void WriteTime(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteTotAngMom(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = fdTotAngMom(body, control, system);
 
@@ -1023,7 +1023,7 @@ void WriteTotAngMom(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteLostAngMom(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dLostAngMom;
 
@@ -1040,7 +1040,7 @@ void WriteLostAngMom(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteTotEnergy(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = fdTotEnergy(body, control, system);
 
@@ -1055,7 +1055,7 @@ void WriteTotEnergy(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WritePotEnergy(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = fdPotEnergy(body, control, system, iBody);
 
@@ -1070,7 +1070,7 @@ void WritePotEnergy(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteKinEnergy(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = fdKinEnergy(body, control, system, iBody);
 
@@ -1085,7 +1085,7 @@ void WriteKinEnergy(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteOrbKinEnergy(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
 
   *dTmp = fdOrbKinEnergy(body, control, system, iBody);
 
@@ -1100,7 +1100,7 @@ void WriteOrbKinEnergy(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteOrbPotEnergy(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
 
   if (iBody > 0) {
     *dTmp = fdOrbPotEnergy(body, control, system, iBody);
@@ -1119,7 +1119,7 @@ void WriteOrbPotEnergy(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteTotOrbEnergy(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp = fdTotOrbEnergy(body, control, system);
 
   if (output->bDoNeg[iBody]) {
@@ -1133,7 +1133,7 @@ void WriteTotOrbEnergy(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteImK2(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
 
   // ImK2 should always be up to date
   if (body[iBody].bEqtide) {
@@ -1146,7 +1146,7 @@ void WriteImK2(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteK2(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
              UNITS *units, UPDATE *update, int iBody, double *dTmp,
-             char cUnit[]) {
+             char **cUnit) {
 
   if (body[iBody].bThermint && !body[iBody].bOcean && !body[iBody].bEnv) {
     *dTmp = fdK2Man(body, iBody);
@@ -1158,7 +1158,7 @@ void WriteK2(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteXobl(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
 
   *dTmp = body[iBody].dXobl;
   strcpy(cUnit, "");
@@ -1166,7 +1166,7 @@ void WriteXobl(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteYobl(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
 
   *dTmp = body[iBody].dYobl;
   strcpy(cUnit, "");
@@ -1174,7 +1174,7 @@ void WriteYobl(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteZobl(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
 
   *dTmp = body[iBody].dZobl;
   strcpy(cUnit, "");
@@ -1182,7 +1182,7 @@ void WriteZobl(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteMeanAnomaly(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
 
   *dTmp = body[iBody].dMeanA;
@@ -1197,7 +1197,7 @@ void WriteMeanAnomaly(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteMeanLongitude(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   if (control->Evolve.bUsingDistOrb && iBody != 0) {
     *dTmp = body[iBody].dMeanL +
             sqrt(body[iBody].dMu /
@@ -1846,15 +1846,15 @@ void UnitsSI(UNITS *units) {
 void WriteLogEntry(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UPDATE *update, fnWriteOutput fnWrite, FILE *fp, int iBody) {
   double *dTmp;
-  char cUnit[48];
+  char *cUnit=NULL;
   UNITS units;
   int i, j, iNumIndices;
 
 
-  cUnit[0] = '\0';
+  //cUnit[0] = '\0';
   dTmp     = malloc(output->iNum * sizeof(double));
   UnitsSI(&units);
-  fnWrite(body, control, output, system, &units, update, iBody, dTmp, cUnit);
+  fnWrite(body, control, output, system, &units, update, iBody, dTmp, &cUnit);
 
   fprintf(fp, "(%s) %s [%s]: ", output->cName, output->cDescr, cUnit);
   for (j = 0; j < output->iNum; j++) {
@@ -1862,6 +1862,7 @@ void WriteLogEntry(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     fprintf(fp, " ");
   }
   free(dTmp);
+  free(cUnit);
   fprintf(fp, "\n");
 }
 
@@ -2009,7 +2010,7 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
   int iCol, iOut, iSubOut, iExtra = 0;
   char cCol[MODULEOUTEND][OUTLEN+2]; // +2 for brackets
   double *dTmp;
-  char cUnit[OUTLEN], *cTmp;
+  char *cUnit=NULL, *cTmp;
 
   for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
@@ -2018,7 +2019,7 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
         /* Match! */
         dTmp = malloc(output[iOut].iNum * sizeof(double));
         fnWrite[iOut](body, control, &output[iOut], system,
-                      &control->Units[iBody], update, iBody, dTmp, cUnit);
+                      &control->Units[iBody], update, iBody, dTmp, &cUnit);
         for (iSubOut = 0; iSubOut < output[iOut].iNum; iSubOut++) {
           strcpy(cCol[iCol + iSubOut + iExtra],
                  files->Outfile[iBody].caCol[iCol]);
@@ -2044,7 +2045,7 @@ void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
   int iCol, iOut, iSubOut, iExtra = 0;
   char cCol[MODULEOUTEND][OUTLEN+2]; // +2 for brackets
   double *dTmp;
-  char cUnit[OUTLEN], *cTmp;
+  char *cUnit=NULL, *cTmp;
 
   for (iCol = 0; iCol < files->Outfile[iBody].iNumGrid; iCol++) {
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
@@ -2053,7 +2054,7 @@ void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
         /* Match! */
         dTmp = malloc(output[iOut].iNum * sizeof(double));
         fnWrite[iOut](body, control, &output[iOut], system,
-                      &control->Units[iBody], update, iBody, dTmp, cUnit);
+                      &control->Units[iBody], update, iBody, dTmp, &cUnit);
         for (iSubOut = 0; iSubOut < output[iOut].iNum; iSubOut++) {
           strcpy(cCol[iCol + iSubOut + iExtra],
                  files->Outfile[iBody].caGrid[iCol]);
@@ -2233,8 +2234,9 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
                      strlen(output[iOut].cName)) == 0) {
             /* Match! */
             dTmp = malloc(output[iOut].iNum * sizeof(double));
+            cUnit=NULL;
             fnWrite[iOut](body, control, &output[iOut], system,
-                          &control->Units[iBody], update, iBody, dTmp, cUnit);
+                          &control->Units[iBody], update, iBody, dTmp, &cUnit);
             for (iSubOut = 0; iSubOut < output[iOut].iNum; iSubOut++) {
               dCol[iCol + iSubOut + iExtra] = dTmp[iSubOut];
             }
@@ -2269,9 +2271,10 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
               if (memcmp(files->Outfile[iBody].caGrid[iGrid],
                          output[iOut].cName, strlen(output[iOut].cName)) == 0) {
                 body[iBody].iWriteLat = iLat;
+                cUnit=NULL;
                 fnWrite[iOut](body, control, &output[iOut], system,
                               &control->Units[iBody], update, iBody, dTmp,
-                              cUnit);
+                              &cUnit);
                 dGrid[iGrid] = *dTmp;
               }
             }
@@ -2284,18 +2287,18 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
         if (control->Evolve.dTime == 0 && iLat == 0) {
           if (body[iBody].iClimateModel == SEA) {
             WriteDailyInsol(body, control, &output[iOut], system,
-                            &control->Units[iBody], update, iBody, dTmp, cUnit);
+                            &control->Units[iBody], update, iBody, dTmp, &cUnit);
             WriteSeasonalTemp(body, control, &output[iOut], system,
                               &control->Units[iBody], update, iBody, dTmp,
-                              cUnit);
+                              &cUnit);
             WriteSeasonalIceBalance(body, control, &output[iOut], system,
                                     &control->Units[iBody], update, iBody, dTmp,
-                                    cUnit);
+                                    &cUnit);
             WriteSeasonalFluxes(body, control, &output[iOut], system,
                                 &control->Units[iBody], update, iBody, dTmp,
-                                cUnit);
+                                &cUnit);
             WritePlanckB(body, control, &output[iOut], system,
-                         &control->Units[iBody], update, iBody, dTmp, cUnit);
+                         &control->Units[iBody], update, iBody, dTmp, &cUnit);
 
             if (body[iBody].dSeasOutputTime != 0) {
               body[iBody].dSeasNextOutput = body[iBody].dSeasOutputTime;
@@ -2310,18 +2313,18 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
           if (control->Evolve.dTime >= body[iBody].dSeasNextOutput &&
               iLat == 0) {
             WriteDailyInsol(body, control, &output[iOut], system,
-                            &control->Units[iBody], update, iBody, dTmp, cUnit);
+                            &control->Units[iBody], update, iBody, dTmp, &cUnit);
             WriteSeasonalTemp(body, control, &output[iOut], system,
                               &control->Units[iBody], update, iBody, dTmp,
-                              cUnit);
+                              &cUnit);
             WriteSeasonalIceBalance(body, control, &output[iOut], system,
                                     &control->Units[iBody], update, iBody, dTmp,
-                                    cUnit);
+                                    &cUnit);
             WriteSeasonalFluxes(body, control, &output[iOut], system,
                                 &control->Units[iBody], update, iBody, dTmp,
-                                cUnit);
+                                &cUnit);
             WritePlanckB(body, control, &output[iOut], system,
-                         &control->Units[iBody], update, iBody, dTmp, cUnit);
+                         &control->Units[iBody], update, iBody, dTmp, &cUnit);
 
             body[iBody].dSeasNextOutput =
                   control->Evolve.dTime + body[iBody].dSeasOutputTime;

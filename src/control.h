@@ -38,21 +38,21 @@ double fdUnitsEnergy(int, int, int);
 double fdUnitsEnergyFlux(int, int, int);
 // double fdUnitsRate(int);
 
-void fsUnitsLength(int, char[]);
-void fsUnitsTime(int, char[]);
-void fsUnitsAngle(int, char[]);
-void fsUnitsMass(int, char[]);
-void fsUnitsTemp(int, char[]);
-void fsUnitsTempRate(int, char[]);
-void fsUnitsAngMom(UNITS *, char[]);
-void fsUnitsDensity(UNITS *, char[]);
-void fsUnitsVel(UNITS *, char[]);
-void fsUnitsRate(int, char[]);
-void fsUnitsAngRate(UNITS *, char[]);
-void fsUnitsPower(UNITS *, char[]);
-void fsUnitsEnergy(UNITS *, char[]);
-void fsUnitsEnergyFlux(UNITS *, char[]);
-void fsUnitsViscosity(UNITS *, char[]);
+void fsUnitsLength(int, char**);
+void fsUnitsTime(int, char**);
+void fsUnitsAngle(int, char**);
+void fsUnitsMass(int, char**);
+void fsUnitsTemp(int, char**);
+void fsUnitsTempRate(int, char**);
+void fsUnitsAngMom(UNITS *, char**);
+void fsUnitsDensity(UNITS *, char**);
+void fsUnitsVel(UNITS *, char**);
+void fsUnitsRate(int, char**);
+void fsUnitsAngRate(UNITS *, char**);
+void fsUnitsPower(UNITS *, char**);
+void fsUnitsEnergy(UNITS *, char**);
+void fsUnitsEnergyFlux(UNITS *, char**);
+void fsUnitsViscosity(UNITS *, char**);
 
 void InfileCopy(INFILE *, INFILE *);
 

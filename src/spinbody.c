@@ -891,49 +891,49 @@ void VerifyHaltSpiNBody(BODY *body, CONTROL *control, OPTIONS *options,
 
 void WritePositionX(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dPositionX;
   strcpy(cUnit, "");
 }
 
 void WritePositionY(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dPositionY;
   strcpy(cUnit, "");
 }
 
 void WritePositionZ(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dPositionZ;
   strcpy(cUnit, "");
 }
 
 void WriteVelX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
   *dTmp = body[iBody].dVelX;
   strcpy(cUnit, "");
 }
 
 void WriteVelY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
   *dTmp = body[iBody].dVelY;
   strcpy(cUnit, "");
 }
 
 void WriteVelZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
   *dTmp = body[iBody].dVelZ;
   strcpy(cUnit, "");
 }
 
 void WriteInclinationSpinBody(BODY *body, CONTROL *control, OUTPUT *output,
                               SYSTEM *system, UNITS *units, UPDATE *update,
-                              int iBody, double *dTmp, char cUnit[]) {
+                              int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dInc;
 
   if (output->bDoNeg[iBody]) {
@@ -947,7 +947,7 @@ void WriteInclinationSpinBody(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteLongASpinBody(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dLongA;
 
   if (output->bDoNeg[iBody]) {

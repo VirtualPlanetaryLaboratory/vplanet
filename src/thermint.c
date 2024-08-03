@@ -2118,7 +2118,7 @@ void fvVerifyHaltThermint(BODY *body, CONTROL *control, OPTIONS *options,
 */
 void fvWriteTMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                  UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                 char cUnit[]) {
+                 char **cUnit) {
   /* Get TMan */
   *dTmp = body[iBody].dTMan;
   if (output->bDoNeg[iBody]) {
@@ -2146,7 +2146,7 @@ void fvWriteTMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 */
 void fvWriteTUMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
   /* Get TUMan */
   *dTmp = body[iBody].dTUMan;
   if (output->bDoNeg[iBody]) {
@@ -2170,7 +2170,7 @@ void fvWriteTUMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 */
 void fvWriteTsolUMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                      UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                     char cUnit[]) {
+                     char **cUnit) {
   /* Get TsolUMan */ 
   *dTmp = body[iBody].dTsolUMan;
   if (output->bDoNeg[iBody]) {
@@ -2194,7 +2194,7 @@ void fvWriteTsolUMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *syste
 */
 void fvWriteTLMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
   /* Get TLMan */
   *dTmp = body[iBody].dTLMan;
   if (output->bDoNeg[iBody]) {
@@ -2218,7 +2218,7 @@ void fvWriteTLMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 */
 void fvWriteTJumpUMan(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   /* Get TLMan */
   *dTmp = body[iBody].dTJumpUMan;
   if (output->bDoNeg[iBody]) {
@@ -2242,7 +2242,7 @@ void fvWriteTJumpUMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteTJumpLMan(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   /* Get TLMan */
   *dTmp = body[iBody].dTJumpLMan;
   if (output->bDoNeg[iBody]) {
@@ -2266,7 +2266,7 @@ void fvWriteTJumpLMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteSignTJumpUMan(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   /* Get TLMan */
   *dTmp = body[iBody].dSignTJumpUMan;
   if (output->bDoNeg[iBody]) {
@@ -2290,7 +2290,7 @@ void fvWriteSignTJumpUMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteSignTJumpLMan(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   /* Get TLMan */
   *dTmp = body[iBody].dSignTJumpLMan;
   if (output->bDoNeg[iBody]) {
@@ -2314,7 +2314,7 @@ void fvWriteSignTJumpLMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteTCMB(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                  UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                 char cUnit[]) {
+                 char **cUnit) {
   /* Get TCore */
   *dTmp = body[iBody].dTCMB;
   if (output->bDoNeg[iBody]) {
@@ -2338,7 +2338,7 @@ void fvWriteTCMB(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 */
 void fvWriteTCore(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
   /* Get TCore */
   *dTmp = body[iBody].dTCore;
   if (output->bDoNeg[iBody]) {
@@ -2362,7 +2362,7 @@ void fvWriteTCore(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 */
 void fvWriteViscUManArr(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   /* Get ViscUManArr */
   *dTmp = body[iBody].dViscUManArr;
   if (output->bDoNeg[iBody]) {
@@ -2389,7 +2389,7 @@ void fvWriteViscUManArr(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteViscUMan(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dViscUMan;
 
   if (output->bDoNeg[iBody]) {
@@ -2416,7 +2416,7 @@ void fvWriteViscUMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteDynamicViscosity(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   *dTmp = fdDynamicViscosity(body, iBody);
 
   if (output->bDoNeg[iBody]) {
@@ -2442,7 +2442,7 @@ void fvWriteDynamicViscosity(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteViscLMan(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dViscLMan;
 
   if (output->bDoNeg[iBody]) {
@@ -2469,7 +2469,7 @@ void fvWriteViscLMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteViscMMan(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dViscMMan;
 
   if (output->bDoNeg[iBody]) {
@@ -2496,7 +2496,7 @@ void fvWriteViscMMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteViscJumpMan(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   /* Get TLMan */
   *dTmp = body[iBody].dViscJumpMan;
   if (output->bDoNeg[iBody]) {
@@ -2520,7 +2520,7 @@ void fvWriteViscJumpMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteBLUMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = body[iBody].dBLUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2543,7 +2543,7 @@ void fvWriteBLUMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 */
 void fvWriteBLLMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = body[iBody].dBLLMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2566,7 +2566,7 @@ void fvWriteBLLMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 */
 void fvWriteShmodUMan(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dShmodUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2589,7 +2589,7 @@ void fvWriteShmodUMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteFMeltUMan(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dFMeltUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2612,7 +2612,7 @@ void fvWriteFMeltUMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteFMeltLMan(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dFMeltLMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2635,7 +2635,7 @@ void fvWriteFMeltLMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteMeltfactorUMan(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dMeltfactorUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2658,7 +2658,7 @@ void fvWriteMeltfactorUMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteMeltfactorLMan(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dMeltfactorLMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2681,7 +2681,7 @@ void fvWriteMeltfactorLMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteDepthMeltMan(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dDepthMeltMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2704,7 +2704,7 @@ void fvWriteDepthMeltMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteTDepthMeltMan(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dTDepthMeltMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2727,7 +2727,7 @@ void fvWriteTDepthMeltMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteTJumpMeltMan(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dTJumpMeltMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2750,7 +2750,7 @@ void fvWriteTJumpMeltMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteMeltMassFluxMan(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
-                            int iBody, double *dTmp, char cUnit[]) {
+                            int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dMeltMassFluxMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2773,7 +2773,7 @@ void fvWriteMeltMassFluxMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteRayleighMan(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dRayleighMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2796,7 +2796,7 @@ void fvWriteRayleighMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteEruptEff(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dEruptEff;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2820,7 +2820,7 @@ void fvWriteEruptEff(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteRIC(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                 UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                char cUnit[]) {
+                char **cUnit) {
   *dTmp = body[iBody].dRIC;
 
   if (output->bDoNeg[iBody]) {
@@ -2844,7 +2844,7 @@ void fvWriteRIC(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 */
 void fvWriteDRICDTCMB(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dDRICDTCMB;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2867,7 +2867,7 @@ void fvWriteDRICDTCMB(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteChiOC(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
   *dTmp = body[iBody].dChiOC;
   //  *dTmp = body[iBody].dRIC;
   if (output->bDoNeg[iBody]) {
@@ -2891,7 +2891,7 @@ void fvWriteChiOC(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 */
 void fvWriteChiIC(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
   *dTmp = body[iBody].dChiIC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2914,7 +2914,7 @@ void fvWriteChiIC(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 */
 void fvWriteMassOC(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = body[iBody].dMassOC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2937,7 +2937,7 @@ void fvWriteMassOC(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 */
 void fvWriteMassIC(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = body[iBody].dMassIC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2960,7 +2960,7 @@ void fvWriteMassIC(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 */
 void fvWriteMassChiOC(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dMassChiOC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2983,7 +2983,7 @@ void fvWriteMassChiOC(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteMassChiIC(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dMassChiIC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3006,7 +3006,7 @@ void fvWriteMassChiIC(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteDTChi(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
   *dTmp = body[iBody].dDTChi;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3029,7 +3029,7 @@ void fvWriteDTChi(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 */
 void fvWriteThermConductOC(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dThermConductOC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3052,7 +3052,7 @@ void fvWriteThermConductOC(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteCoreBuoyTherm(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dCoreBuoyTherm;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3075,7 +3075,7 @@ void fvWriteCoreBuoyTherm(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteCoreBuoyCompo(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dCoreBuoyCompo;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3098,7 +3098,7 @@ void fvWriteCoreBuoyCompo(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteCoreBuoyTotal(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dCoreBuoyTotal;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3121,7 +3121,7 @@ void fvWriteCoreBuoyTotal(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteGravICB(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dGravICB;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3144,7 +3144,7 @@ void fvWriteGravICB(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteMagMom(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = body[iBody].dMagMom;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3167,7 +3167,7 @@ void fvWriteMagMom(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 */
 void fvWriteRICDot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = body[iBody].dRICDot;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3190,7 +3190,7 @@ void fvWriteRICDot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 */
 void fvWritePresSWind(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dPresSWind;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3213,7 +3213,7 @@ void fvWritePresSWind(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteMagPauseRad(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dMagPauseRad;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3238,7 +3238,7 @@ void fvWriteMagPauseRad(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteHfluxUMan(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dHfluxUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3261,7 +3261,7 @@ void fvWriteHfluxUMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteHfluxLMan(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dHfluxLMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3284,7 +3284,7 @@ void fvWriteHfluxLMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteHfluxCMB(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dHfluxCMB;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3307,7 +3307,7 @@ void fvWriteHfluxCMB(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteHfluxCMBAd(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dHfluxCMBAd;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3330,7 +3330,7 @@ void fvWriteHfluxCMBAd(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteHfluxCMBConv(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dHfluxCMBConv;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3353,7 +3353,7 @@ void fvWriteHfluxCMBConv(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteHflowUMan(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dHflowUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3376,7 +3376,7 @@ void fvWriteHflowUMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteHflowSurf(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dHflowSurf;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3399,7 +3399,7 @@ void fvWriteHflowSurf(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteHflowLMan(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dHflowLMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3422,7 +3422,7 @@ void fvWriteHflowLMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteHflowCMB(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dHflowCMB;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3445,7 +3445,7 @@ void fvWriteHflowCMB(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteHflowLatentMan(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dHflowLatentMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3468,7 +3468,7 @@ void fvWriteHflowLatentMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteHflowMeltMan(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dHflowMeltMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3491,7 +3491,7 @@ void fvWriteHflowMeltMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteHflowSecMan(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dHflowSecMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3515,7 +3515,7 @@ void fvWriteHflowSecMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteHflowLatentIC(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dHflowLatentIC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3538,7 +3538,7 @@ void fvWriteHflowLatentIC(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWritePowerGravIC(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dPowerGravIC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3561,7 +3561,7 @@ void fvWritePowerGravIC(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteTDotMan(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
   /* Get TDotMan */
   *dTmp = (*(update[iBody].pdTDotMan));
   if (output->bDoNeg[iBody]) {
@@ -3591,7 +3591,7 @@ void fvWriteTDotMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteTDotCore(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
   /* Get TDotCore */
   *dTmp = (*(update[iBody].pdTDotCore));
   if (output->bDoNeg[iBody]) {
@@ -3622,7 +3622,7 @@ void fvWriteTDotCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteTrefLind(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dTrefLind;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;

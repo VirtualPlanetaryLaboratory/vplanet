@@ -3659,7 +3659,7 @@ void fvVerifyHaltRadheat(BODY *body, CONTROL *control, OPTIONS *options,
 */
 void fvWrite26AlPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   /* Get total power from 26Al
    *dTmp = -(*(update[iBody].pdD26AlNumManDt))*ENERGY26Al;  */
   *dTmp = fd26AlPowerMan(update, iBody);
@@ -3686,7 +3686,7 @@ void fvWrite26AlPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite26AlEnFlux(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   /* Get surface heat flux from 26Al */
   *dTmp = fd26AlEnFlux(body, update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -3712,7 +3712,7 @@ void fvWrite26AlEnFlux(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteD26AlNumDt(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp = *(update[iBody].pdD26AlNumManDt);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3737,7 +3737,7 @@ void fvWriteD26AlNumDt(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite26AlTimescale(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
 }
 /**
@@ -3755,7 +3755,7 @@ void fvWrite26AlTimescale(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite26AlMassMan(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d26AlNumMan * MASS26AL;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3780,7 +3780,7 @@ void fvWrite26AlMassMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteD26AlPowerDt(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
 }
 /**
@@ -3798,7 +3798,7 @@ void fvWriteD26AlPowerDt(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite26AlNumMan(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d26AlNumMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3823,7 +3823,7 @@ void fvWrite26AlNumMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite26AlPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   /* Get total power from 26Al */
   *dTmp = fd26AlPowerCore(update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -3849,7 +3849,7 @@ void fvWrite26AlPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite26AlMassCore(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d26AlNumCore * MASS26AL;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3874,7 +3874,7 @@ void fvWrite26AlMassCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite26AlNumCore(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d26AlNumCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3898,7 +3898,7 @@ void fvWrite26AlNumCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite26AlPowerTot(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = fd26AlPower(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -3926,7 +3926,7 @@ void fvWrite26AlPowerTot(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite40KPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   /* Get total power from 40K
    *dTmp = -(*(update[iBody].pdD40KNumManDt))*ENERGY40K;  */
   *dTmp = fd40KPowerMan(update, iBody);
@@ -3953,7 +3953,7 @@ void fvWrite40KPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite40KEnFlux(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   /* Get surface heat flux from 40K */
   *dTmp = fd40KEnFlux(body, update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -3979,7 +3979,7 @@ void fvWrite40KEnFlux(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteD40KNumDt(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = *(update[iBody].pdD40KNumManDt);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4004,7 +4004,7 @@ void fvWriteD40KNumDt(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite40KTimescale(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
 }
 /**
@@ -4022,7 +4022,7 @@ void fvWrite40KTimescale(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite40KMassMan(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d40KNumMan * MASS40K;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4048,7 +4048,7 @@ void fvWrite40KMassMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteD40KPowerDt(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = -1;
 }
 /**
@@ -4066,7 +4066,7 @@ void fvWriteD40KPowerDt(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite40KNumMan(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d40KNumMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4091,7 +4091,7 @@ void fvWrite40KNumMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite40KPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   /* Get total power from 40K */
   *dTmp = fd40KPowerCore(update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -4117,7 +4117,7 @@ void fvWrite40KPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite40KMassCore(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d40KNumCore * MASS40K;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4142,7 +4142,7 @@ void fvWrite40KMassCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite40KNumCore(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d40KNumCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4167,7 +4167,7 @@ void fvWrite40KNumCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite40KPowerCrust(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   /* Get total power from 40K */
   *dTmp = fd40KPowerCrust(update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -4193,7 +4193,7 @@ void fvWrite40KPowerCrust(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite40KMassCrust(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d40KNumCrust * MASS40K;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4218,7 +4218,7 @@ void fvWrite40KMassCrust(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite40KNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d40KNumCrust;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4242,7 +4242,7 @@ void fvWrite40KNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite40KPowerTot(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = fd40KPower(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4269,7 +4269,7 @@ void fvWrite40KPowerTot(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite232ThEnFlux(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   /* Get surface heat flux from 232Th */
   *dTmp = fd232ThEnFlux(body, update, iBody);
 
@@ -4296,7 +4296,7 @@ void fvWrite232ThEnFlux(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteD232ThNumDt(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = *(update[iBody].pdD232ThNumManDt);
 
   if (output->bDoNeg[iBody]) {
@@ -4322,7 +4322,7 @@ void fvWriteD232ThNumDt(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWritedD232ThPowerDt(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
 }
 /**
@@ -4340,7 +4340,7 @@ void fvWritedD232ThPowerDt(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite232ThTimescale(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
 }
 /**
@@ -4358,7 +4358,7 @@ void fvWrite232ThTimescale(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite232ThPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   /* Get total heat from 232Th */
   *dTmp = fd232ThPowerMan(update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -4384,7 +4384,7 @@ void fvWrite232ThPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite232ThMassMan(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d232ThNumMan * MASS232TH;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4409,7 +4409,7 @@ void fvWrite232ThMassMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite232ThNumMan(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d232ThNumMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4434,7 +4434,7 @@ void fvWrite232ThNumMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite232ThPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   /* Get total heat from 232Th */
   *dTmp = fd232ThPowerCore(update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -4460,7 +4460,7 @@ void fvWrite232ThPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite232ThMassCore(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d232ThNumCore * MASS232TH;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4485,7 +4485,7 @@ void fvWrite232ThMassCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite232ThNumCore(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d232ThNumCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4510,7 +4510,7 @@ void fvWrite232ThNumCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite232ThPowerCrust(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
-                            int iBody, double *dTmp, char cUnit[]) {
+                            int iBody, double *dTmp, char **cUnit) {
   /* Get total heat from 232Th */
   *dTmp = fd232ThPowerCrust(update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -4536,7 +4536,7 @@ void fvWrite232ThPowerCrust(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite232ThMassCrust(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d232ThNumCrust * MASS232TH;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4561,7 +4561,7 @@ void fvWrite232ThMassCrust(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite232ThNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d232ThNumCrust;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4585,7 +4585,7 @@ void fvWrite232ThNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite232ThPowerTot(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = fd232ThPower(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4612,7 +4612,7 @@ void fvWrite232ThPowerTot(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite238UEnFlux(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   /* Get surface heat flux from 238U */
   *dTmp = fd238UEnFlux(body, update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -4638,7 +4638,7 @@ void fvWrite238UEnFlux(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteD238UNumDt(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp = *(update[iBody].pdD238UNumManDt);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4663,7 +4663,7 @@ void fvWriteD238UNumDt(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWritedD238UPowerDt(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
 }
 /**
@@ -4681,7 +4681,7 @@ void fvWritedD238UPowerDt(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite238UTimescale(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
 }
 
@@ -4701,7 +4701,7 @@ void fvWrite238UTimescale(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite238UPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   /* Get total power from 238U */
   *dTmp = fd238UPowerMan(update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -4727,7 +4727,7 @@ void fvWrite238UPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite238UMassMan(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d238UNumMan * MASS238U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4752,7 +4752,7 @@ void fvWrite238UMassMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite238UNumMan(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d238UNumMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4777,7 +4777,7 @@ void fvWrite238UNumMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite238UPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   /* Get total power from 238U */
   *dTmp = fd238UPowerCore(update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -4803,7 +4803,7 @@ void fvWrite238UPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite238UMassCore(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d238UNumCore * MASS238U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4828,7 +4828,7 @@ void fvWrite238UMassCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite238UNumCore(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d238UNumCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4853,7 +4853,7 @@ void fvWrite238UNumCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite238UPowerCrust(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   /* Get total power from 238U */
   *dTmp = fd238UPowerCrust(update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -4879,7 +4879,7 @@ void fvWrite238UPowerCrust(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite238UMassCrust(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d238UNumCrust * MASS238U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4904,7 +4904,7 @@ void fvWrite238UMassCrust(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite238UNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d238UNumCrust;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4928,7 +4928,7 @@ void fvWrite238UNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite238UPowerTot(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = fd238UPower(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4956,7 +4956,7 @@ void fvWrite238UPowerTot(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite235UEnFlux(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   /* Get surface heat flux from 235U */
   *dTmp = fd235UEnFlux(body, update, iBody);
 
@@ -4983,7 +4983,7 @@ void fvWrite235UEnFlux(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteD235UNumDt(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp = *(update[iBody].pdD235UNumManDt);
 
   if (output->bDoNeg[iBody]) {
@@ -5009,7 +5009,7 @@ void fvWriteD235UNumDt(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWritedD235UPowerDt(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
 }
 /**
@@ -5027,7 +5027,7 @@ void fvWritedD235UPowerDt(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite235UTimescale(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
 }
 
@@ -5047,7 +5047,7 @@ void fvWrite235UTimescale(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite235UPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   /* Get total power from 235U */
   *dTmp = -(*(update[iBody].pdD235UNumManDt)) * ENERGY235U;
   if (output->bDoNeg[iBody]) {
@@ -5073,7 +5073,7 @@ void fvWrite235UPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite235UMassMan(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d235UNumMan * MASS235U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -5098,7 +5098,7 @@ void fvWrite235UMassMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite235UNumMan(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d235UNumMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -5123,7 +5123,7 @@ void fvWrite235UNumMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite235UPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   /* Get total power from 235U */
   *dTmp = fd235UPowerCore(update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -5149,7 +5149,7 @@ void fvWrite235UPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite235UMassCore(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d235UNumCore * MASS235U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -5174,7 +5174,7 @@ void fvWrite235UMassCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite235UNumCore(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d235UNumCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -5199,7 +5199,7 @@ void fvWrite235UNumCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite235UPowerCrust(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   /* Get total power from 235U */
   *dTmp = fd235UPowerCrust(update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -5225,7 +5225,7 @@ void fvWrite235UPowerCrust(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite235UMassCrust(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d235UNumCrust * MASS235U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -5250,7 +5250,7 @@ void fvWrite235UMassCrust(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite235UNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].d235UNumCrust;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -5274,7 +5274,7 @@ void fvWrite235UNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWrite235UPowerTot(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   *dTmp = fd235UPower(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -5302,7 +5302,7 @@ void fvWrite235UPowerTot(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteRadPowerCrust(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   /* Radiogenic Power Production in crust*/
   *dTmp = fdRadPowerCrust(update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -5328,7 +5328,7 @@ void fvWriteRadPowerCrust(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteRadPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   /* Radiogenic Power Production in mantle*/
   *dTmp = fdRadPowerMan(update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -5354,7 +5354,7 @@ void fvWriteRadPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteRadPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   /* Total Radiogenic Power Production in core*/
   *dTmp = fdRadPowerCore(update, iBody);
   if (output->bDoNeg[iBody]) {
@@ -5380,7 +5380,7 @@ void fvWriteRadPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteRadPowerTotal(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   /* Total Radiogenic Power Production */
   *dTmp = body[iBody].dRadPowerTotal;
   if (output->bDoNeg[iBody]) {
@@ -5406,7 +5406,7 @@ void fvWriteRadPowerTotal(BODY *body, CONTROL *control, OUTPUT *output,
 */
 void fvWriteSurfEnFluxRadTotal(BODY *body, CONTROL *control, OUTPUT *output,
                                SYSTEM *system, UNITS *units, UPDATE *update,
-                               int iBody, double *dTmp, char cUnit[]) {
+                               int iBody, double *dTmp, char **cUnit) {
   /* Radiogenic Surface Energy Flux */
   *dTmp = fdSurfEnFluxRadTotal(body, system, update, iBody, iBody);
   if (output->bDoNeg[iBody]) {

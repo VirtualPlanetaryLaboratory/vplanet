@@ -110,8 +110,7 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
-void WriteBodyPrecA(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char[]);
+
 void Bary2OrbElems(BODY *body, int iBody);
 void WriteLogEntry(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UPDATE *,
                    fnWriteOutput, FILE *, int);
@@ -122,7 +121,9 @@ void WriteOutput(BODY *, CONTROL *, FILES *, OUTPUT *, SYSTEM *, UPDATE *,
 void WriteLog(BODY *, CONTROL *, FILES *, MODULE *, OPTIONS *, OUTPUT *,
               SYSTEM *, UPDATE *, fnUpdateVariable ***, fnWriteOutput *, int);
 void InitializeOutput(FILES*,OUTPUT *, fnWriteOutput *);
-void WriteTime(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-               double *, char[]);
 
+void WriteTime(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
+               double *, char**);
+void WriteBodyPrecA(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
+                    int, double *, char**);
 /* @endcond */

@@ -106,28 +106,28 @@ void FinalizeUpdatePositionZSpiNBody(BODY *body, UPDATE *update, int *iEqn,
 
 void WritePositionX(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]);
+                    double *dTmp, char **cUnit);
 void WritePositionY(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]);
+                    double *dTmp, char **cUnit);
 void WritePositionZ(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]);
+                    double *dTmp, char **cUnit);
 void WriteVelX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]);
+               char **cUnit);
 void WriteVelY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]);
+               char **cUnit);
 void WriteVelZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]);
+               char **cUnit);
 void WriteInclinationSpinBody(BODY *body, CONTROL *control, OUTPUT *output,
                               SYSTEM *system, UNITS *units, UPDATE *update,
-                              int iBody, double *dTmp, char cUnit[]);
+                              int iBody, double *dTmp, char **cUnit);
 void WriteLongASpinBody(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]);
+                        double *dTmp, char **cUnit);
 void InitializeOutputSpiNBody(OUTPUT *output, fnWriteOutput fnWrite[]);
 
 int fbHaltMaxMutualIncSpiNBody(BODY *, EVOLVE *, HALT *, IO *, UPDATE *,

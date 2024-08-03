@@ -939,7 +939,7 @@ void VerifyHaltDistRot(BODY *body, CONTROL *control, OPTIONS *options,
 
 void WriteBodyDOblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
-                            int iBody, double *dTmp, char cUnit[]) {
+                            int iBody, double *dTmp, char **cUnit) {
   double dDeriv, dObldx, dObldy, dObldz;
   int iPert;
 
@@ -980,7 +980,7 @@ void WriteBodyDOblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -991,7 +991,7 @@ void WriteBodyDOblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteOblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   double dDeriv, dObldx, dObldy, dObldz;
   int iPert;
 
@@ -1036,7 +1036,7 @@ void WriteOblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1047,7 +1047,7 @@ void WriteOblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WritePrecATimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   double dDeriv, dpAdx, dpAdy;
   int iPert;
 
@@ -1077,7 +1077,7 @@ void WritePrecATimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -1088,7 +1088,7 @@ void WritePrecATimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyDPrecADtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                               SYSTEM *system, UNITS *units, UPDATE *update,
-                              int iBody, double *dTmp, char cUnit[]) {
+                              int iBody, double *dTmp, char **cUnit) {
   double dDeriv, dpAdx, dpAdy;
   int iPert;
 
@@ -1114,7 +1114,7 @@ void WriteBodyDPrecADtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     *dTmp /= fdUnitsAngle(units->iAngle);
@@ -1125,7 +1125,7 @@ void WriteBodyDPrecADtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyDXoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1139,7 +1139,7 @@ void WriteBodyDXoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1148,7 +1148,7 @@ void WriteBodyDXoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyDYoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1162,7 +1162,7 @@ void WriteBodyDYoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1171,7 +1171,7 @@ void WriteBodyDYoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyDZoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1185,7 +1185,7 @@ void WriteBodyDZoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1194,7 +1194,7 @@ void WriteBodyDZoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteXoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1212,7 +1212,7 @@ void WriteXoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1221,7 +1221,7 @@ void WriteXoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteYoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1239,7 +1239,7 @@ void WriteYoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1248,7 +1248,7 @@ void WriteYoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteZoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1266,7 +1266,7 @@ void WriteZoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
   
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1276,7 +1276,7 @@ void WriteZoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   double h, inc, longa, Lnorm = 0.0, obliq, eqnode;
   int i, jBody;
@@ -1376,7 +1376,7 @@ void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   double h, inc, longa, Lnorm = 0.0, obliq, eqnode;
   int i, jBody;
@@ -1479,24 +1479,24 @@ void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteDynEllip(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   if (iBody > 0) {
     *dTmp = body[iBody].dDynEllip;
   } else {
     *dTmp = -1;
   }
-  fvFormattedString(&cUnit, "%s", "");
+  fvFormattedString(cUnit, "%s", "");
 }
 
 void WritePrecFNat(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = fndCentralTorqueR(body, iBody);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     *dTmp /= fdUnitsAngle(units->iAngle);

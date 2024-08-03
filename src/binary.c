@@ -1018,7 +1018,7 @@ void VerifyHaltBinary(BODY *body, CONTROL *control, OPTIONS *options, int iBody,
 
 void WriteFreeEccBinary(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   // Note: Only makes sense for planets (iBodyType == 0)
   if (body[iBody].iBodyType == 0) {
     *dTmp = body[iBody].dFreeEcc;
@@ -1026,12 +1026,12 @@ void WriteFreeEccBinary(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp = -1;
   }
 
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteFreeIncBinary(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   // Note: Only makes sense for planets (iBodyType == 0)
   if (body[iBody].iBodyType == 0) {
     *dTmp = body[iBody].dFreeInc;
@@ -1041,7 +1041,7 @@ void WriteFreeIncBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -1051,7 +1051,7 @@ void WriteFreeIncBinary(BODY *body, CONTROL *control, OUTPUT *output,
 /** Write the binary primary star radial position */
 void WriteBinPriRBinary(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
 
   // Compute current binary true anomaly
   double meanAnomaly = body[1].dMeanMotion * body[0].dAge + body[1].dLL13PhiAB;
@@ -1069,7 +1069,7 @@ void WriteBinPriRBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[1].dMass * radius * dInvMass;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1079,7 +1079,7 @@ void WriteBinPriRBinary(BODY *body, CONTROL *control, OUTPUT *output,
 /** Write the binary secondary star radial position */
 void WriteBinSecRBinary(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
 
   // Compute current binary true anomaly
   double meanAnomaly = body[1].dMeanMotion * body[1].dAge + body[1].dLL13PhiAB;
@@ -1097,7 +1097,7 @@ void WriteBinSecRBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[0].dMass * radius * dInvMass;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1107,7 +1107,7 @@ void WriteBinSecRBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBinPriPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
 
   // Compute current binary true anomaly
   double meanAnomaly = body[1].dMeanMotion * body[0].dAge + body[1].dLL13PhiAB;
@@ -1117,7 +1117,7 @@ void WriteBinPriPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fndEccToTrue(eccAnomaly, body[1].dEcc);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -1127,7 +1127,7 @@ void WriteBinPriPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBinSecPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
 
   // Compute current binary true anomaly
   double meanAnomaly = body[1].dMeanMotion * body[1].dAge + body[1].dLL13PhiAB;
@@ -1138,7 +1138,7 @@ void WriteBinSecPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fndEccToTrue(eccAnomaly, body[1].dEcc) + PI;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -1148,7 +1148,7 @@ void WriteBinSecPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteCBPPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   if (body[iBody].iBodyType == 0) {
     *dTmp = body[iBody].dCBPPhi;
   } else {
@@ -1157,7 +1157,7 @@ void WriteCBPPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -1166,12 +1166,12 @@ void WriteCBPPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteCBPPhiDotBinary(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dCBPPhiDot;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1180,7 +1180,7 @@ void WriteCBPPhiDotBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteLL13N0Binary(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   // Note: Only applies to planets (iBodyType == 0)
   if (body[iBody].iBodyType == 0) {
     *dTmp = body[iBody].dLL13N0;
@@ -1190,7 +1190,7 @@ void WriteLL13N0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -1200,7 +1200,7 @@ void WriteLL13N0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteLL13K0Binary(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   // Note: Only applies to planets (iBodyType == 0)
   if (body[iBody].iBodyType == 0) {
     *dTmp = body[iBody].dLL13K0;
@@ -1210,7 +1210,7 @@ void WriteLL13K0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -1219,7 +1219,7 @@ void WriteLL13K0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteLL13V0Binary(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   // Note: Only applies to planets (iBodyType == 0)
   if (body[iBody].iBodyType == 0) {
     *dTmp = body[iBody].dLL13V0;
@@ -1229,7 +1229,7 @@ void WriteLL13V0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -1239,12 +1239,12 @@ void WriteLL13V0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 /** Write the circumbinary planet orbital radius (CBPR) */
 void WriteCBPRBinary(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dCBPR;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1254,12 +1254,12 @@ void WriteCBPRBinary(BODY *body, CONTROL *control, OUTPUT *output,
 /** Write the circumbinary planet guiding radius (CBPR0) */
 void WriteCBPR0Binary(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dR0;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1268,12 +1268,12 @@ void WriteCBPR0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteCBPZBinary(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dCBPZ;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1282,12 +1282,12 @@ void WriteCBPZBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteCBPRDotBinary(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dCBPRDot;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) / fdUnitsLength(units->iLength);
     fsUnitsVel(units, cUnit);
@@ -1296,12 +1296,12 @@ void WriteCBPRDotBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteCBPZDotBinary(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dCBPZDot;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) / fdUnitsLength(units->iLength);
     fsUnitsVel(units, cUnit);
@@ -1312,7 +1312,7 @@ void WriteCBPZDotBinary(BODY *body, CONTROL *control, OUTPUT *output,
    orbit assuming P_bin << P_cbp */
 void WriteCBPInsol(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   // Make sure that this is a planet, if not, -1
   if (iBody < 2 || body[iBody].iBodyType != 0) {
@@ -1322,7 +1322,7 @@ void WriteCBPInsol(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   }
 
   // Always in units of insolation received by Earth
-  fvFormattedString(&cUnit, "F/F_Earth");
+  fvFormattedString(cUnit, "F/F_Earth");
 }
 
 void InitializeOutputBinary(OUTPUT *output, fnWriteOutput fnWrite[]) {

@@ -1412,13 +1412,13 @@ void VerifyHaltGalHabit(BODY *body, CONTROL *control, OPTIONS *options,
 
 void WriteBodyPeriQ(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dSemi * (1.0 - body[iBody].dEcc);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1427,42 +1427,42 @@ void WriteBodyPeriQ(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyEccX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   *dTmp = body[iBody].dEccX;
 }
 
 void WriteBodyEccY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   *dTmp = body[iBody].dEccY;
 }
 
 void WriteBodyEccZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   *dTmp = body[iBody].dEccZ;
 }
 
 void WriteBodyAngMX(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dAngMX;
 }
 
 void WriteBodyAngMY(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dAngMY;
 }
 
 void WriteBodyAngMZ(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dAngMZ;
 }
@@ -1470,28 +1470,28 @@ void WriteBodyAngMZ(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteNEncounters(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   *dTmp = (double)system->iNEncounters;
 }
 
 void WriteNBadImpulse(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   *dTmp = (double)body[iBody].iBadImpulse;
 }
 
 void WriteFVelDisp(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   *dTmp = system->dScalingFVelDisp;
 }
 
 void WriteDEccDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   double dex, dey, dez;
 
   if (body[iBody].bGalacTides) {
@@ -1509,7 +1509,7 @@ void WriteDEccDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1518,7 +1518,7 @@ void WriteDEccDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteDIncDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   double dhx, dhy, dhz, qx, qy, qz;
 
   if (body[iBody].bGalacTides) {
@@ -1553,7 +1553,7 @@ void WriteDIncDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     *dTmp /= fdUnitsAngle(units->iAngle);
@@ -1563,7 +1563,7 @@ void WriteDIncDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteDLongADtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
-                            int iBody, double *dTmp, char cUnit[]) {
+                            int iBody, double *dTmp, char **cUnit) {
   double dhx, dhy, dhz, qx, qy, qz;
 
   if (body[iBody].bGalacTides) {
@@ -1598,7 +1598,7 @@ void WriteDLongADtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     *dTmp /= fdUnitsAngle(units->iAngle);
@@ -1608,7 +1608,7 @@ void WriteDLongADtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteDArgPDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   double dex, dey, dez, dhx, dhy, dhz, qx, qy, qz, dLAdt, dedt;
 
   if (body[iBody].bGalacTides) {
@@ -1651,7 +1651,7 @@ void WriteDArgPDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     *dTmp /= fdUnitsAngle(units->iAngle);

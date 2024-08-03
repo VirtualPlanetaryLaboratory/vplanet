@@ -177,29 +177,29 @@ void InitializeOutputFunctionAtmEsc(OUTPUT *, int, int);
 void FinalizeOutputFunctionAtmEsc(OUTPUT *, int, int);
 
 void WriteSurfaceWaterMass(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void WriteOxygenMass(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
+                     int, double *, char**);
 void WriteOxygenMantleMass(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void WriteEnvelopeMass(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteRGLimit(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void WriteBondiRadius(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void WriteRocheRadius(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void WriteOxygenMixingRatio(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                            UPDATE *, int, double *, char[]);
+                            UPDATE *, int, double *, char**);
 void WriteOxygenEta(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char[]);
+                    int, double *, char**);
 void WriteAtmXAbsEffH2O(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void WriteRRCriticalFlux(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void WriteHEscapeRegime(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 
 /* Logging Functions */
 void LogOptionsAtmEsc(CONTROL *, FILE *);

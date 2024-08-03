@@ -2683,7 +2683,7 @@ void VerifyHaltPoise(BODY *body, CONTROL *control, OPTIONS *options, int iBody,
 
 void WriteTGlobal(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
   /* Get TGlobal */
   *dTmp = body[iBody].dTGlobal;
   if (output->bDoNeg[iBody]) {
@@ -2697,7 +2697,7 @@ void WriteTGlobal(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteAlbedoGlobal(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   /* Get AlbedoGlobal */
   *dTmp = body[iBody].dAlbedoGlobal;
   strcpy(cUnit, "");
@@ -2705,7 +2705,7 @@ void WriteAlbedoGlobal(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteSnowball(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   /* Get snowball status */
   *dTmp = (double)body[iBody].bSnowball;
   strcpy(cUnit, "");
@@ -2713,7 +2713,7 @@ void WriteSnowball(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteIceCapNorthLand(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   int iLatIceEdge, bCap;
   double dLat;
 
@@ -2725,7 +2725,7 @@ void WriteIceCapNorthLand(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceCapNorthLatLand(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   int iLatIceEdge, bCap;
   double dLat;
 
@@ -2743,7 +2743,7 @@ void WriteIceCapNorthLatLand(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceCapNorthSea(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   int iLatIceEdge, bCap;
   double dLat;
 
@@ -2754,7 +2754,7 @@ void WriteIceCapNorthSea(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceCapNorthLatSea(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
-                            int iBody, double *dTmp, char cUnit[]) {
+                            int iBody, double *dTmp, char **cUnit) {
   int iLatIceEdge, bCap;
   double dLat;
 
@@ -2772,7 +2772,7 @@ void WriteIceCapNorthLatSea(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceCapSouthLand(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   int iLatIceEdge, bCap;
   double dLat;
 
@@ -2783,7 +2783,7 @@ void WriteIceCapSouthLand(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceCapSouthLatLand(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   int iLatIceEdge, bCap;
   double dLat;
 
@@ -2801,7 +2801,7 @@ void WriteIceCapSouthLatLand(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceCapSouthSea(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   int iLatIceEdge, bCap;
   double dLat;
 
@@ -2812,7 +2812,7 @@ void WriteIceCapSouthSea(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceCapSouthLatSea(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
-                            int iBody, double *dTmp, char cUnit[]) {
+                            int iBody, double *dTmp, char **cUnit) {
 
   int iLatIceEdge, bCap;
   double dLat;
@@ -2831,7 +2831,7 @@ void WriteIceCapSouthLatSea(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceBeltLand(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   int iLatNorth, iLatSouth, bBelt;
   double dLatNorth, dLatSouth;
 
@@ -2844,7 +2844,7 @@ void WriteIceBeltLand(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceBeltNorthLatLand(BODY *body, CONTROL *control, OUTPUT *output,
                               SYSTEM *system, UNITS *units, UPDATE *update,
-                              int iBody, double *dTmp, char cUnit[]) {
+                              int iBody, double *dTmp, char **cUnit) {
   int iLatNorth, iLatSouth, bBelt;
   double dLatNorth, dLatSouth;
 
@@ -2863,7 +2863,7 @@ void WriteIceBeltNorthLatLand(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceBeltSouthLatLand(BODY *body, CONTROL *control, OUTPUT *output,
                               SYSTEM *system, UNITS *units, UPDATE *update,
-                              int iBody, double *dTmp, char cUnit[]) {
+                              int iBody, double *dTmp, char **cUnit) {
   int iLatNorth, iLatSouth, bBelt;
   double dLatSouth, dLatNorth;
 
@@ -2882,7 +2882,7 @@ void WriteIceBeltSouthLatLand(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceBeltSea(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
   int iLatNorth, iLatSouth, bBelt;
   double dLatNorth, dLatSouth;
 
@@ -2895,7 +2895,7 @@ void WriteIceBeltSea(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceBeltNorthLatSea(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   int iLatNorth, iLatSouth, bBelt;
   double dLatNorth, dLatSouth;
 
@@ -2914,7 +2914,7 @@ void WriteIceBeltNorthLatSea(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceBeltSouthLatSea(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   int iLatNorth, iLatSouth, bBelt;
   double dLatNorth, dLatSouth;
 
@@ -2933,7 +2933,7 @@ void WriteIceBeltSouthLatSea(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteSnowballLand(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
 
   *dTmp = (double)fbSnowballLand(body, iBody);
   strcpy(cUnit, "");
@@ -2941,7 +2941,7 @@ void WriteSnowballLand(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteSnowballSea(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   *dTmp = (double)fbSnowballSea(body, iBody);
   strcpy(cUnit, "");
@@ -2949,7 +2949,7 @@ void WriteSnowballSea(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceFree(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
 
   *dTmp = (double)fbIceFree(body, iBody);
   strcpy(cUnit, "");
@@ -2957,7 +2957,7 @@ void WriteIceFree(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteSkipSeas(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   /* Get AlbedoGlobal */
   *dTmp = body[iBody].bSkipSeas;
   strcpy(cUnit, "");
@@ -2965,7 +2965,7 @@ void WriteSkipSeas(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteTempLat(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
 
   if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
@@ -2989,7 +2989,7 @@ void WriteTempLat(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteTempMinLat(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
 
   if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
@@ -3014,7 +3014,7 @@ void WriteTempMinLat(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteTempMaxLat(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
 
   if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
@@ -3038,7 +3038,7 @@ void WriteTempMaxLat(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteTempMaxLand(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
@@ -3062,7 +3062,7 @@ void WriteTempMaxLand(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteTempMaxWater(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
 
   if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
@@ -3084,7 +3084,7 @@ void WriteTempMaxWater(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteTempLandLat(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
@@ -3106,7 +3106,7 @@ void WriteTempLandLat(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteTempWaterLat(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
 
   if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
@@ -3128,7 +3128,7 @@ void WriteTempWaterLat(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteLatitude(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   *dTmp = body[iBody].daLats[body[iBody].iWriteLat];
 
@@ -3146,7 +3146,7 @@ void WriteLatitude(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteAlbedoLat(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
@@ -3162,7 +3162,7 @@ void WriteAlbedoLat(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteAlbedoLandLat(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
 
   if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
@@ -3177,7 +3177,7 @@ void WriteAlbedoLandLat(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteAlbedoWaterLat(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
 
   if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
@@ -3192,7 +3192,7 @@ void WriteAlbedoWaterLat(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteFluxInGlobal(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dFluxInGlobal;
 
@@ -3209,7 +3209,7 @@ void WriteFluxInGlobal(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteFluxOutGlobal(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dFluxOutGlobal;
 
@@ -3227,7 +3227,7 @@ void WriteFluxOutGlobal(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteTotIceMass(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dIceMassTot;
 
@@ -3245,7 +3245,7 @@ void WriteTotIceMass(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceFlowTot(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dIceFlowTot;
 
@@ -3260,7 +3260,7 @@ void WriteIceFlowTot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteAreaIceCov(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
 
   fvAreaIceCovered(body, iBody);
   *dTmp = body[iBody].dAreaIceCov;
@@ -3276,7 +3276,7 @@ void WriteAreaIceCov(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceBalanceTot(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dIceBalanceTot;
 
@@ -3294,7 +3294,7 @@ void WriteIceBalanceTot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteAnnualInsol(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].daAnnualInsol[body[iBody].iWriteLat];
 
@@ -3311,7 +3311,7 @@ void WriteAnnualInsol(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WritePeakInsol(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].daPeakInsol[body[iBody].iWriteLat];
 
@@ -3328,7 +3328,7 @@ void WritePeakInsol(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteDailyInsol(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
 
   char *cOut;
   FILE *fp;
@@ -3381,7 +3381,7 @@ void WriteDailyInsol(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WritePlanckB(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
 
   char *cOut;
   FILE *fp;
@@ -3435,7 +3435,7 @@ void WritePlanckB(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteSeasonalTemp(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
 
   char *cOut;
   FILE *fp;
@@ -3491,7 +3491,7 @@ void WriteSeasonalTemp(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteSeasonalFluxes(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
 
   char *cOutM, *cOutI, *cOutO, *cOutD;
   FILE *fpM, *fpI, *fpO, *fpD;
@@ -3587,7 +3587,7 @@ void WriteSeasonalFluxes(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteSeasonalIceBalance(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
 
   char *cOut;
   FILE *fp;
@@ -3640,7 +3640,7 @@ void WriteSeasonalIceBalance(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteFluxMerid(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
@@ -3665,7 +3665,7 @@ void WriteFluxMerid(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteFluxIn(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                  UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                 char cUnit[]) {
+                 char **cUnit) {
 
   if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
@@ -3689,7 +3689,7 @@ void WriteFluxIn(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteFluxOut(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
 
   if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
 
@@ -3713,7 +3713,7 @@ void WriteFluxOut(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteDivFlux(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
 
   if (body[iBody].iClimateModel == ANN || body[iBody].bSkipSeas == 1) {
     *dTmp = body[iBody].daDivFlux[body[iBody].iWriteLat];
@@ -3730,7 +3730,7 @@ void WriteDivFlux(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteIceMass(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
 
   if (body[iBody].bIceSheets) {
     *dTmp = body[iBody].daIceMass[body[iBody].iWriteLat];
@@ -3750,7 +3750,7 @@ void WriteIceMass(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteIceHeight(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   if (body[iBody].bIceSheets) {
     *dTmp = body[iBody].daIceMass[body[iBody].iWriteLat] / RHOICE;
@@ -3768,7 +3768,7 @@ void WriteIceHeight(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBedrockH(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   if (body[iBody].bIceSheets) {
     *dTmp = body[iBody].daBedrockH[body[iBody].iWriteLat];
@@ -3786,7 +3786,7 @@ void WriteBedrockH(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WritePlanckBAvg(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
 
   if (body[iBody].bIceSheets) {
     *dTmp = body[iBody].daPlanckBAvg[body[iBody].iWriteLat];
@@ -3804,7 +3804,7 @@ void WritePlanckBAvg(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteDIceMassDt(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
 
   //*dTmp = body[iBody].daIceBalanceAnnual[body[iBody].iWriteLat];
   if (body[iBody].bIceSheets) {
@@ -3823,7 +3823,7 @@ void WriteDIceMassDt(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteIceAccum(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   //*dTmp = body[iBody].daIceBalanceAnnual[body[iBody].iWriteLat];
   if (body[iBody].bIceSheets) {
@@ -3842,7 +3842,7 @@ void WriteIceAccum(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteIceAblate(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   //*dTmp = body[iBody].daIceBalanceAnnual[body[iBody].iWriteLat];
   if (body[iBody].bIceSheets) {
@@ -3862,7 +3862,7 @@ void WriteIceAblate(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteDIceMassDtFlow(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
 
   // *dTmp = body[iBody].daIceBalanceAnnual[body[iBody].iWriteLat];
   if (body[iBody].bIceSheets) {
@@ -3881,7 +3881,7 @@ void WriteDIceMassDtFlow(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteEnergyResL(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].daEnergyResL[body[iBody].iWriteLat];
 
@@ -3895,7 +3895,7 @@ void WriteEnergyResL(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteEnergyResW(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].daEnergyResW[body[iBody].iWriteLat];
 

@@ -2643,12 +2643,12 @@ Logs the surface water mass.
 */
 void WriteSurfaceWaterMass(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dSurfaceWaterMass;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2670,9 +2670,9 @@ Logs the H escape regime
 */
 void WriteHEscapeRegime(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].iHEscapeRegime;
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 /**
@@ -2690,13 +2690,13 @@ Logs the atmospheric oxygen mass.
 */
 void WriteOxygenMass(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dOxygenMass;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= 1.e-5 * ((BIGG * body[iBody].dMass) /
                       (4. * PI * pow(body[iBody].dRadius, 4)));
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2718,10 +2718,10 @@ Logs Ktide, the gravitational enhancement of mass loss.
 */
 void WriteKTide(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                 UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                char cUnit[]) {
+                char **cUnit) {
   *dTmp = body[iBody].dKTide;
 
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 /**
@@ -2739,13 +2739,13 @@ Logs the mantle oxygen mass.
 */
 void WriteOxygenMantleMass(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dOxygenMantleMass;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= 1.e-5 * ((BIGG * body[iBody].dMass) /
                       (4. * PI * pow(body[iBody].dRadius, 4)));
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2767,12 +2767,12 @@ Logs the planet radius.
 */
 void WritePlanetRadius(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dRadius;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -2794,12 +2794,12 @@ Logs the envelope mass.
 */
 void WriteEnvelopeMass(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dEnvelopeMass;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -2821,7 +2821,7 @@ Logs the semi-major axis corresponding to the current runaway greenhouse limit.
 */
 void WriteRGLimit(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
 
   // Get the RG flux
   double flux = fdHZRG14(body, iBody);
@@ -2838,7 +2838,7 @@ void WriteRGLimit(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -2860,10 +2860,10 @@ Logs the oxygen mixing ratio at the base of the hydrodynamic wind.
 */
 void WriteOxygenMixingRatio(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
-                            int iBody, double *dTmp, char cUnit[]) {
+                            int iBody, double *dTmp, char **cUnit) {
   *dTmp = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
                                     body[iBody].dOxygenMass);
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 /**
@@ -2881,9 +2881,9 @@ Logs the oxygen eta parameter from Luger and Barnes (2015).
 */
 void WriteOxygenEta(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dOxygenEta;
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 /**
@@ -2901,9 +2901,9 @@ Logs the XUV absorption efficiency for water.
 */
 void WriteAtmXAbsEffH2O(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dAtmXAbsEffH2O;
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 /**
@@ -2921,12 +2921,12 @@ Logs the planet's radius in the XUV.
 */
 void WritePlanetRadXUV(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dRadXUV;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -2950,17 +2950,17 @@ Logs the atmospheric mass loss rate.
 */
 void WriteDEnvMassDt(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
   *dTmp = *(update[iBody].pdDEnvelopeMassDtAtmesc);
 
   //*dTmp = fnUpdate[iBody][update[iBody].iEnvelopeMass][0];
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     //*dTmp *= fdUnitsTime(units->iTime)/fdUnitsMass(units->iMass);
-    fvFormattedString(&cUnit, "kg/s"); // XXX Why isn't the other line commented out???
+    fvFormattedString(cUnit, "kg/s"); // XXX Why isn't the other line commented out???
   }
 }
 
@@ -2979,12 +2979,12 @@ Logs the thermospheric temperature.
 */
 void WriteThermTemp(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dThermTemp;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     // System units are Kelvins
     *dTmp = fdUnitsTemp(*dTmp, U_KELVIN, units->iTemp);
@@ -3007,12 +3007,12 @@ Logs the temperature of the flow.
 */
 void WriteFlowTemp(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = body[iBody].dFlowTemp;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     // System units are Kelvins
     *dTmp = fdUnitsTemp(*dTmp, U_KELVIN, units->iTemp);
@@ -3035,14 +3035,14 @@ Logs the surface pressure.
 */
 void WritePresSurf(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = body[iBody].dPresSurf;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
-    fvFormattedString(&cUnit, "Pa");
+    fvFormattedString(cUnit, "Pa"); // XXX
   }
 }
 
@@ -3061,12 +3061,12 @@ Logs the pressure at the XUV absorption radius.
 */
 void WritePresXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                  char cUnit[]) {
+                  char **cUnit) {
   *dTmp = body[iBody].dPresXUV;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     //*dTmp /= fdUnitsPressure(units->iLength);
     // fsUnitsLength(units->iLength,cUnit);
@@ -3088,12 +3088,12 @@ Logs the time at which the flow transitioned to Jeans escape.
 */
 void WriteJeansTime(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dJeansTime;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -3115,12 +3115,12 @@ Logs the atmospheric scale height.
 */
 void WriteScaleHeight(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dScaleHeight;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -3142,12 +3142,12 @@ Logs the gas constant.
 */
 void WriteAtmGasConst(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dAtmGasConst;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3167,12 +3167,12 @@ Logs the planet's solid radius.
 */
 void WriteRadSolid(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = body[iBody].dRadSolid;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -3194,12 +3194,12 @@ Logs the planet's Roche radius.
 */
 void WriteRocheRadius(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dRocheRadius;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -3222,12 +3222,12 @@ Logs the planet's Bondi radius.
 */
 void WriteBondiRadius(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dBondiRadius;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -3249,14 +3249,14 @@ Logs the XUV flux received by the planet.
 */
 void WriteFXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
   *dTmp = body[iBody].dFXUV;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
-    fvFormattedString(&cUnit, "W/m^2");
+    fvFormattedString(cUnit, "W/m^2");
   }
 }
 
@@ -3276,16 +3276,16 @@ and energy-limited H envelope escape regimes
 */
 void WriteRRCriticalFlux(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
 
   // Calculate critical flux for body
   *dTmp = fdRRCriticalFlux(body, iBody);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
-    fvFormattedString(&cUnit, "W/m^2");
+    fvFormattedString(cUnit, "W/m^2");
   }
 }
 
@@ -3304,12 +3304,12 @@ Logs the crossover mass.
 */
 void WriteCrossoverMass(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dCrossoverMass;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -3331,9 +3331,9 @@ Logs the Water escape regime
 */
 void WriteWaterEscapeRegime(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
-                            int iBody, double *dTmp, char cUnit[]) {
+                            int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].iWaterEscapeRegime;
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 
@@ -3352,7 +3352,7 @@ Logs the XUV flux received by the planet.
 */
 void WriteFXUVCRITDRAG(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   double BDIFF = 4.8e19 * pow(body[iBody].dFlowTemp, 0.75);
   double XO    = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
                                            body[iBody].dOxygenMass);
@@ -3369,9 +3369,9 @@ void WriteFXUVCRITDRAG(BODY *body, CONTROL *control, OUTPUT *output,
   }
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
-    fvFormattedString(&cUnit, "W/m^2");
+    fvFormattedString(cUnit, "W/m^2"); // XXX
   }
 }
 
@@ -3390,9 +3390,9 @@ Logs the Hydrogen Reference Flux
 */
 void WriteHREFFLUX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = body[iBody].dFHRef;
-  fvFormattedString(&cUnit, "m^-2 s^-1");
+  fvFormattedString(cUnit, "m^-2 s^-1"); // XXX
 }
 
 /**
@@ -3411,9 +3411,9 @@ limited regime)
 */
 void WriteHDiffLimFlux(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dFHDiffLim;
-  fvFormattedString(&cUnit, "m^-2 s^-1");
+  fvFormattedString(cUnit, "m^-2 s^-1"); // XXX
 }
 
 /**
@@ -3431,7 +3431,7 @@ Modifier for H Ref Flux to include oxygen drag at a snapshot in time
 */
 void WriteHRefODragMod(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   if (body[iBody].dCrossoverMass / ATOMMASS - 1. != 0) {
     double rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) /
                 (body[iBody].dCrossoverMass / ATOMMASS - 1.);
@@ -3441,7 +3441,7 @@ void WriteHRefODragMod(BODY *body, CONTROL *control, OUTPUT *output,
   } else {
     *dTmp = -1;
   }
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 
@@ -3460,10 +3460,10 @@ Logs the molecular oxygen mixing ratio.
 */
 void WriteMolecOxygenMixingRatio(BODY *body, CONTROL *control, OUTPUT *output,
                                  SYSTEM *system, UNITS *units, UPDATE *update,
-                                 int iBody, double *dTmp, char cUnit[]) {
+                                 int iBody, double *dTmp, char **cUnit) {
   *dTmp = fdMolecOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
                                    body[iBody].dOxygenMass);
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 /**
@@ -3481,10 +3481,10 @@ Logs the water mixing ratio.
 */
 void WriteWaterAtmMixingRatio(BODY *body, CONTROL *control, OUTPUT *output,
                               SYSTEM *system, UNITS *units, UPDATE *update,
-                              int iBody, double *dTmp, char cUnit[]) {
+                              int iBody, double *dTmp, char **cUnit) {
   *dTmp = fdWaterAtmMixingRatio(body[iBody].dSurfaceWaterMass,
                                 body[iBody].dOxygenMass);
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 /**

@@ -592,133 +592,133 @@ void fvInitializeOutputFunctionThermint(OUTPUT *, int, int);
 void fvFinalizeOutputFunctionThermint(OUTPUT *, int, int);
 
 void fvWriteTMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                 double *, char[]);
+                 double *, char**);
 void fvWriteTUMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void fvWriteTsolUMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void fvWriteTLMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void fvWriteTJumpUMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteTJumpLMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteSignTJumpUMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWriteSignTJumpLMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWriteTCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void fvWriteTCMB(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                 double *, char[]);
+                 double *, char**);
 void fvWriteTICB(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                 double *, char[]);
+                 double *, char**);
 void fvWriteBLUMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void fvWriteBLLMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void fvWriteViscUManArr(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWriteViscUMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
+                     int, double *, char**);
 void fvWriteViscLMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
+                     int, double *, char**);
 void fvWriteViscMMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
+                     int, double *, char**);
 void fvWriteShmodUMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteShmodLMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteFMeltUMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteFMeltLMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteMeltfactorUMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void fvWriteMeltfactorLMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void fvWriteDepthMeltMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWriteTDepthMeltMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWriteTJumpMeltMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWriteMeltMassFluxMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                            UPDATE *, int, double *, char[]);
+                            UPDATE *, int, double *, char**);
 void fvWriteRayleighMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWriteTDotMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char[]);
+                    int, double *, char**);
 void fvWriteTDotCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
+                     int, double *, char**);
 void fvWriteHfluxUMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteHflowUMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteHflowSecMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWriteHfluxLMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteHflowLMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteHflowTidalMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWriteHflowTidalCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void fvWriteHflowLatentMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void fvWriteHflowMeltMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWriteHflowLatentIC(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWritePowerGravIC(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWriteHflowICB(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
+                     int, double *, char**);
 void fvWriteHflowSurf(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteTidalPowMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWriteRIC(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                double *, char[]);
+                double *, char**);
 void fvWriteDRICDTCMB(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteChiOC(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void fvWriteChiIC(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void fvWriteMassOC(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void fvWriteMassIC(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void fvWriteMassChiOC(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteMassChiIC(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteDTChi(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void fvWriteThermConductOC(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void fvWriteHfluxCMBAd(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void fvWriteHfluxCMBConv(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWriteCoreBuoyTherm(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWriteCoreBuoyCompo(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWriteCoreBuoyTotal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWriteGravICB(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char[]);
+                    int, double *, char**);
 void fvWriteRICDot(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void fvWriteMagMom(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void fvWritePresSWind(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteMagPauseRad(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 /* Logging Functions */
 void fvLogOptionsThermint(CONTROL *, FILE *);
 void fvLogThermint(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UPDATE *,

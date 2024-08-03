@@ -1791,7 +1791,7 @@ void WriteEigen(CONTROL *control, SYSTEM *system) {
 
 void WriteBodyDEccDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
-                            int iBody, double *dTmp, char cUnit[]) {
+                            int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1809,7 +1809,7 @@ void WriteBodyDEccDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1818,7 +1818,7 @@ void WriteBodyDEccDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyDSincDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1842,7 +1842,7 @@ void WriteBodyDSincDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1851,7 +1851,7 @@ void WriteBodyDSincDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyDLongPDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
                               SYSTEM *system, UNITS *units, UPDATE *update,
-                              int iBody, double *dTmp, char cUnit[]) {
+                              int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1869,7 +1869,7 @@ void WriteBodyDLongPDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     *dTmp /= fdUnitsAngle(units->iAngle);
@@ -1880,7 +1880,7 @@ void WriteBodyDLongPDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyDLongADtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
                               SYSTEM *system, UNITS *units, UPDATE *update,
-                              int iBody, double *dTmp, char cUnit[]) {
+                              int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1904,7 +1904,7 @@ void WriteBodyDLongADtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     *dTmp /= fdUnitsAngle(units->iAngle);
@@ -1915,7 +1915,7 @@ void WriteBodyDLongADtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyDIncDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
-                            int iBody, double *dTmp, char cUnit[]) {
+                            int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1941,7 +1941,7 @@ void WriteBodyDIncDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     *dTmp /= fdUnitsAngle(units->iAngle);
@@ -1952,17 +1952,17 @@ void WriteBodyDIncDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodySinc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   *dTmp = sqrt(body[iBody].dPinc * body[iBody].dPinc +
                body[iBody].dQinc * body[iBody].dQinc);
 
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 /*
 void WriteBodyLongA(BODY *body,CONTROL *control,OUTPUT *output,SYSTEM
-*system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char cUnit[]) { if
+*system,UNITS *units,UPDATE *update,int iBody,double *dTmp,char **cUnit) { if
 (body[iBody].bDistOrb) { *dTmp = atan2(body[iBody].dPinc, body[iBody].dQinc); }
 else if (body[iBody].bGalHabit) { *dTmp = body[iBody].dLongA;
   }
@@ -1986,23 +1986,23 @@ else if (body[iBody].bGalHabit) { *dTmp = body[iBody].dLongA;
 
 void WriteBodyPinc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   *dTmp = body[iBody].dPinc;
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteBodyQinc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   *dTmp = body[iBody].dQinc;
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteBodyDHeccDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   /* need to put check for star's output options in verify */
   double dDeriv;
   int iPert;
@@ -2017,7 +2017,7 @@ void WriteBodyDHeccDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -2026,7 +2026,7 @@ void WriteBodyDHeccDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyDKeccDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   /* need to put check for star's output options in verify */
   double dDeriv;
   int iPert;
@@ -2041,7 +2041,7 @@ void WriteBodyDKeccDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -2050,7 +2050,7 @@ void WriteBodyDKeccDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyDPincDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   /* need to put check for star's output options in verify */
   double dDeriv;
   int iPert;
@@ -2065,7 +2065,7 @@ void WriteBodyDPincDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -2074,7 +2074,7 @@ void WriteBodyDPincDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyDQincDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   /* need to put check for star's output options in verify */
   double dDeriv;
   int iPert;
@@ -2089,7 +2089,7 @@ void WriteBodyDQincDtDistOrb(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);

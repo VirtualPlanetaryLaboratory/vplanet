@@ -981,8 +981,6 @@ void VerifyModuleMultiRadheatThermint(BODY *body, UPDATE *update,
                                       OPTIONS *options, int iBody,
                                       int *iModuleProps, int *iModuleForce) {
 
-  /* This will need modification if material can move between layers */
-
   if (body[iBody].bThermint) {
     if (!body[iBody].bRadheat) {
       if (control->Io.iVerbose > VERBINPUT) {
@@ -1007,7 +1005,11 @@ void VerifyModuleMultiEqtideThermint(BODY *body, UPDATE *update,
                                      int iBody, int *iModuleProps,
                                      int *iModuleForce) {
 
-  // Initialize mantle tidal power
+  if (control->Evolve.iEqtideModel == CTL) {
+    fprintf(stderr,"ERROR: The CTL EqTide model cannot be coupled to ThermInt.\n");
+    exit(EXIT_INPUT);
+  }
+
   body[iBody].dTidalPowMan = 0;
 
   if (body[iBody].bEqtide && body[iBody].bThermint) {

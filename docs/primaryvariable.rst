@@ -167,6 +167,10 @@ block of code that initializes the other pieces of the UPDATE struct.
            malloc(update[iBody].iNumPrimaryVariable * sizeof(int));
         control->Evolve.tmpUpdate[iBody].iaBody[iVar] =
            malloc(update[iBody].iNumPrimaryVariable * sizeof(int *));
+        for (iSubStep=0; iSubStep < 4; iSubStep++) {
+          control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
+              malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
+        }
       }
 
       // Now allocate memory for the number of processes that affect this variable
@@ -191,6 +195,28 @@ variable.
   (fnUpdate[iBody][iVar][iEqn]) that is calculated every time step. If you ever
   assign a new value to this variable, you will overwrite the primary variable's
   derivative (which would be bad!).
+
+We then need to add some lines to ```module.c```. In InitializeModule, add
+
+.. code-block:: bash  
+
+  module->fnFinalizeUpdatePhysics =
+        malloc(iNumBodies * sizeof(fnFinalizeUpdatePhysicsModule));
+
+and in FinalizeModule, add
+
+.. code-block:: bash
+
+  module->fnFinalizeUpdatePhysics[iBody] =
+        malloc(iNumModules * sizeof(fnFinalizeUpdatePhysicsModule));
+
+and
+
+.. code-block:: bash
+
+  module->fnFinalizeUpdatePhysics[iBody][iModule]   = &FinalizeUpdateNULL; 
+
+Please add them next to the other similar statements
 
 Next we need to add code to the module file, physics.c in this example, for
 which this primary variable will be added. First add a new function that

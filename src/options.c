@@ -255,11 +255,9 @@ void AddOptionStringArray(char *cFile, char *cOption,
   int iPos, iWord, bContinue, iNumWords;
   FILE *fp;
 
-  *saInput = malloc(MAXARRAY*sizeof(char*));
+   iLine[0] = -1;
 
-  iLine[0] = -1;
-
-  /* Fencepost problem. If cInput continues across multiple lines,
+  /* Fencepost problem. If saInput continues across multiple lines,
      then we must keep getting more lines. For the first line, we
      remove the first word, as it is cOption. iLine must come
      preassigned and set to 0. */
@@ -272,6 +270,7 @@ void AddOptionStringArray(char *cFile, char *cOption,
   GetLine(cFile, cOption, &cLine, &iLine[0], iVerbose);
   GetWords(cLine, cTmp, &iNumWords, &bContinue);
   *iNumLines = 1;
+  *saInput = malloc(MAXARRAY*sizeof(char*));
 
   for (iWord = 0; iWord < iNumWords - 1; iWord++) {
     *saInput[iWord] = NULL;
@@ -294,6 +293,9 @@ void AddOptionStringArray(char *cFile, char *cOption,
                      &iLine[*iNumLines]);
     if (memcmp(cLine, "null", 4)) {
       GetWords(cLine, cTmp, &iNumWords, &bContinue);
+      if (*iNumIndices + iNumWords > MAXARRAY) {
+        fprintf(stderr,"ERROR: Too many arguments to %s. Either remove options, or increase value of MAXARRAY",cOption);
+      }
       for (iWord = 0; iWord < iNumWords; iWord++) {
         fvFormattedString(saInput[*iNumIndices + iWord], cTmp[iWord]);
         memset(cTmp[iWord], '\0', OPTLEN);

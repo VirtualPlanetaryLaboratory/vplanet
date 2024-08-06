@@ -2026,7 +2026,7 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
           fvFormattedString(&cCol[iCol + iSubOut + iExtra],
                  files->Outfile[iBody].caCol[iCol]);
           fvFormattedString(&cTmp, "[%s]", cUnit);
-          fvFormattedString(cCol[iCol + iSubOut + iExtra], cTmp);
+          fvFormattedString(&cCol[iCol + iSubOut + iExtra], cTmp);
         }
         iExtra += (output[iOut].iNum - 1);
         free(dTmp);
@@ -2064,7 +2064,7 @@ void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
           fvFormattedString(&cCol[iCol + iSubOut + iExtra],
                  files->Outfile[iBody].caGrid[iCol]);
           fvFormattedString(&cTmp, "[%s]", cUnit);
-          fvFormattedString(cCol[iCol + iSubOut + iExtra], cTmp);
+          fvFormattedString(&cCol[iCol + iSubOut + iExtra], cTmp);
         }
         iExtra += (output[iOut].iNum - 1);
         free(dTmp);

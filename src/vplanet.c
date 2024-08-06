@@ -90,6 +90,7 @@ int main_impl(int argc, char *argv[]) {
   control.Evolve.iOneStep = 0;
 
   /* Copy executable file name to the files struct. */
+  files.cExe=NULL;
   fvFormattedString(&files.cExe, argv[0]);
 
   if (argc == 1) {

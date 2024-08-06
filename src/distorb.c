@@ -1976,7 +1976,7 @@ else if (body[iBody].bGalHabit) { *dTmp = body[iBody].dLongA;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
+    fvFormattedString(cUnit,output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle,cUnit);

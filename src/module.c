@@ -688,11 +688,11 @@ void ReadModules(BODY *body, CONTROL *control, FILES *files, MODULE *module,
                  OPTIONS *options, int iFile) {
   int iNumIndices = 0, iNumLines = 0, iModule;
   int *lTmp;
-  char saTmp[MAXARRAY][OPTLEN];
+  char **saTmp;
 
   lTmp = malloc(MAXLINES * sizeof(int));
 
-  AddOptionStringArray(files->Infile[iFile].cIn, options->cName, saTmp,
+  AddOptionStringArray(files->Infile[iFile].cIn, options->cName, &saTmp,
                        &iNumIndices, &iNumLines, lTmp, control->Io.iVerbose);
   if (lTmp[0] >= 0) {
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp[0],

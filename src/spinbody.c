@@ -893,42 +893,42 @@ void WritePositionX(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dPositionX;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WritePositionY(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dPositionY;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WritePositionZ(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                     double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dPositionZ;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteVelX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
                char **cUnit) {
   *dTmp = body[iBody].dVelX;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteVelY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
                char **cUnit) {
   *dTmp = body[iBody].dVelY;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteVelZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
                char **cUnit) {
   *dTmp = body[iBody].dVelZ;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteInclinationSpinBody(BODY *body, CONTROL *control, OUTPUT *output,
@@ -938,7 +938,7 @@ void WriteInclinationSpinBody(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -952,7 +952,7 @@ void WriteLongASpinBody(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);

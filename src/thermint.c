@@ -2123,7 +2123,7 @@ void fvWriteTMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dTMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     /*      *dTmp /= fdUnitsTemp(body[iBody].dTman,0,units->iTemp);  //set
     "iOldType" to 0, second input var, arbitarily.
@@ -2151,7 +2151,7 @@ void fvWriteTUMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dTUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2175,7 +2175,7 @@ void fvWriteTsolUMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *syste
   *dTmp = body[iBody].dTsolUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else{   
   }
 }
@@ -2199,7 +2199,7 @@ void fvWriteTLMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dTLMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2223,7 +2223,7 @@ void fvWriteTJumpUMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dTJumpUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2247,7 +2247,7 @@ void fvWriteTJumpLMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dTJumpLMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2271,7 +2271,7 @@ void fvWriteSignTJumpUMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dSignTJumpUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2295,7 +2295,7 @@ void fvWriteSignTJumpLMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dSignTJumpLMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2319,7 +2319,7 @@ void fvWriteTCMB(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dTCMB;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2343,7 +2343,7 @@ void fvWriteTCore(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dTCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2367,7 +2367,7 @@ void fvWriteViscUManArr(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dViscUManArr;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     fsUnitsViscosity(units, cUnit);
     *dTmp /= fdUnitsTime(units->iTime) /
@@ -2394,7 +2394,7 @@ void fvWriteViscUMan(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     fsUnitsViscosity(units, cUnit);
     *dTmp /= fdUnitsTime(units->iTime) /
@@ -2421,7 +2421,7 @@ void fvWriteDynamicViscosity(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     fsUnitsEnergy(units, cUnit);
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
@@ -2447,7 +2447,7 @@ void fvWriteViscLMan(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     fsUnitsViscosity(units, cUnit);
     *dTmp /= fdUnitsTime(units->iTime) /
@@ -2474,7 +2474,7 @@ void fvWriteViscMMan(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     fsUnitsViscosity(units, cUnit);
     *dTmp /= fdUnitsTime(units->iTime) /
@@ -2501,7 +2501,7 @@ void fvWriteViscJumpMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dViscJumpMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2524,7 +2524,7 @@ void fvWriteBLUMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dBLUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2547,7 +2547,7 @@ void fvWriteBLLMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dBLLMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2570,7 +2570,7 @@ void fvWriteShmodUMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dShmodUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2593,7 +2593,7 @@ void fvWriteFMeltUMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dFMeltUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2616,7 +2616,7 @@ void fvWriteFMeltLMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dFMeltLMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2639,7 +2639,7 @@ void fvWriteMeltfactorUMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dMeltfactorUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2662,7 +2662,7 @@ void fvWriteMeltfactorLMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dMeltfactorLMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2685,7 +2685,7 @@ void fvWriteDepthMeltMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dDepthMeltMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2708,7 +2708,7 @@ void fvWriteTDepthMeltMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dTDepthMeltMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2731,7 +2731,7 @@ void fvWriteTJumpMeltMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dTJumpMeltMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2754,7 +2754,7 @@ void fvWriteMeltMassFluxMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dMeltMassFluxMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2777,7 +2777,7 @@ void fvWriteRayleighMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dRayleighMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2800,7 +2800,7 @@ void fvWriteEruptEff(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dEruptEff;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2825,7 +2825,7 @@ void fvWriteRIC(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2848,7 +2848,7 @@ void fvWriteDRICDTCMB(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dDRICDTCMB;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2872,7 +2872,7 @@ void fvWriteChiOC(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   //  *dTmp = body[iBody].dRIC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2895,7 +2895,7 @@ void fvWriteChiIC(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dChiIC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2918,7 +2918,7 @@ void fvWriteMassOC(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dMassOC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2941,7 +2941,7 @@ void fvWriteMassIC(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dMassIC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2964,7 +2964,7 @@ void fvWriteMassChiOC(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dMassChiOC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -2987,7 +2987,7 @@ void fvWriteMassChiIC(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dMassChiIC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3010,7 +3010,7 @@ void fvWriteDTChi(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dDTChi;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3033,7 +3033,7 @@ void fvWriteThermConductOC(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dThermConductOC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3056,7 +3056,7 @@ void fvWriteCoreBuoyTherm(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dCoreBuoyTherm;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3079,7 +3079,7 @@ void fvWriteCoreBuoyCompo(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dCoreBuoyCompo;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3102,7 +3102,7 @@ void fvWriteCoreBuoyTotal(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dCoreBuoyTotal;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3125,7 +3125,7 @@ void fvWriteGravICB(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dGravICB;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3148,7 +3148,7 @@ void fvWriteMagMom(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dMagMom;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3171,7 +3171,7 @@ void fvWriteRICDot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dRICDot;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3194,7 +3194,7 @@ void fvWritePresSWind(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dPresSWind;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3217,7 +3217,7 @@ void fvWriteMagPauseRad(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dMagPauseRad;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3242,7 +3242,7 @@ void fvWriteHfluxUMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dHfluxUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3265,7 +3265,7 @@ void fvWriteHfluxLMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dHfluxLMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3288,7 +3288,7 @@ void fvWriteHfluxCMB(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dHfluxCMB;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3311,7 +3311,7 @@ void fvWriteHfluxCMBAd(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dHfluxCMBAd;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3334,7 +3334,7 @@ void fvWriteHfluxCMBConv(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dHfluxCMBConv;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3357,7 +3357,7 @@ void fvWriteHflowUMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dHflowUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3380,7 +3380,7 @@ void fvWriteHflowSurf(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dHflowSurf;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3403,7 +3403,7 @@ void fvWriteHflowLMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dHflowLMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3426,7 +3426,7 @@ void fvWriteHflowCMB(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dHflowCMB;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3449,7 +3449,7 @@ void fvWriteHflowLatentMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dHflowLatentMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3472,7 +3472,7 @@ void fvWriteHflowMeltMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dHflowMeltMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3495,7 +3495,7 @@ void fvWriteHflowSecMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dHflowSecMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3519,7 +3519,7 @@ void fvWriteHflowLatentIC(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dHflowLatentIC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3542,7 +3542,7 @@ void fvWritePowerGravIC(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dPowerGravIC;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }
@@ -3566,7 +3566,7 @@ void fvWriteTDotMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = (*(update[iBody].pdTDotMan));
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     /*
       *dTmp /=
@@ -3596,7 +3596,7 @@ void fvWriteTDotCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = (*(update[iBody].pdTDotCore));
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     /*
       *dTmp /=
@@ -3626,7 +3626,7 @@ void fvWriteTrefLind(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dTrefLind;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
   }
 }

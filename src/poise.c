@@ -140,14 +140,15 @@ void ReadFileOrbitOblData(BODY *body, CONTROL *control, FILES *files,
 
   AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
+  body[iFile - 1].sFileOrbitOblData=NULL;             
   if (lTmp >= 0) {
     /* Cannot exist in primary input file -- Each body has an output file */
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    strcpy(body[iFile - 1].sFileOrbitOblData, cTmp);
+    fvFormattedString(&body[iFile - 1].sFileOrbitOblData, cTmp);
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0)
-    strcpy(body[iFile - 1].sFileOrbitOblData, options->cDefault);
+    fvFormattedString(&body[iFile - 1].sFileOrbitOblData, options->cDefault);
 }
 
 void ReadIceAlbedo(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -2688,7 +2689,7 @@ void WriteTGlobal(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dTGlobal;
   if (output->bDoNeg[iBody]) {
     /* Units already in Celsius (POISE uses Celsius) */
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp = fdUnitsTemp(*dTmp, U_CELSIUS, U_KELVIN);
     fsUnitsTime(0, cUnit);
@@ -2700,7 +2701,7 @@ void WriteAlbedoGlobal(BODY *body, CONTROL *control, OUTPUT *output,
                        double *dTmp, char **cUnit) {
   /* Get AlbedoGlobal */
   *dTmp = body[iBody].dAlbedoGlobal;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteSnowball(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -2708,7 +2709,7 @@ void WriteSnowball(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    char **cUnit) {
   /* Get snowball status */
   *dTmp = (double)body[iBody].bSnowball;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteIceCapNorthLand(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2720,7 +2721,7 @@ void WriteIceCapNorthLand(BODY *body, CONTROL *control, OUTPUT *output,
   fvNorthIceCapLand(body, iBody, &dLat, &iLatIceEdge, &bCap);
 
   *dTmp = (double)bCap;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteIceCapNorthLatLand(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2734,7 +2735,7 @@ void WriteIceCapNorthLatLand(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = dLat;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -2749,7 +2750,7 @@ void WriteIceCapNorthSea(BODY *body, CONTROL *control, OUTPUT *output,
 
   fvNorthIceCapSea(body, iBody, &dLat, &iLatIceEdge, &bCap);
   *dTmp = (double)bCap;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteIceCapNorthLatSea(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2763,7 +2764,7 @@ void WriteIceCapNorthLatSea(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = dLat;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -2778,7 +2779,7 @@ void WriteIceCapSouthLand(BODY *body, CONTROL *control, OUTPUT *output,
 
   fvSouthIceCapLand(body, iBody, &dLat, &iLatIceEdge, &bCap);
   *dTmp = (double)bCap;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteIceCapSouthLatLand(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2792,7 +2793,7 @@ void WriteIceCapSouthLatLand(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = dLat;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -2807,7 +2808,7 @@ void WriteIceCapSouthSea(BODY *body, CONTROL *control, OUTPUT *output,
 
   fvSouthIceCapSea(body, iBody, &dLat, &iLatIceEdge, &bCap);
   *dTmp = (double)bCap;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteIceCapSouthLatSea(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2822,7 +2823,7 @@ void WriteIceCapSouthLatSea(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = dLat;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -2839,7 +2840,7 @@ void WriteIceBeltLand(BODY *body, CONTROL *control, OUTPUT *output,
                 &bBelt);
 
   *dTmp = (double)bBelt;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteIceBeltNorthLatLand(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2854,7 +2855,7 @@ void WriteIceBeltNorthLatLand(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = dLatNorth;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -2873,7 +2874,7 @@ void WriteIceBeltSouthLatLand(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = dLatSouth;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -2890,7 +2891,7 @@ void WriteIceBeltSea(BODY *body, CONTROL *control, OUTPUT *output,
                &bBelt);
 
   *dTmp = (double)bBelt;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteIceBeltNorthLatSea(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2905,7 +2906,7 @@ void WriteIceBeltNorthLatSea(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = dLatNorth;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -2924,7 +2925,7 @@ void WriteIceBeltSouthLatSea(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = dLatSouth;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -2936,7 +2937,7 @@ void WriteSnowballLand(BODY *body, CONTROL *control, OUTPUT *output,
                        double *dTmp, char **cUnit) {
 
   *dTmp = (double)fbSnowballLand(body, iBody);
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteSnowballSea(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2944,7 +2945,7 @@ void WriteSnowballSea(BODY *body, CONTROL *control, OUTPUT *output,
                       double *dTmp, char **cUnit) {
 
   *dTmp = (double)fbSnowballSea(body, iBody);
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteIceFree(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -2952,7 +2953,7 @@ void WriteIceFree(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   char **cUnit) {
 
   *dTmp = (double)fbIceFree(body, iBody);
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteSkipSeas(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -2960,7 +2961,7 @@ void WriteSkipSeas(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    char **cUnit) {
   /* Get AlbedoGlobal */
   *dTmp = body[iBody].bSkipSeas;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteTempLat(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -2978,7 +2979,7 @@ void WriteTempLat(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     /* Units already in Celsius (POISE uses Celsius) */
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
 
   } else {
 
@@ -3003,7 +3004,7 @@ void WriteTempMinLat(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
 
     /* Units already in Celsius (POISE uses Celsius) */
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
 
   } else {
 
@@ -3027,7 +3028,7 @@ void WriteTempMaxLat(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     /* Units already in Celsius (POISE uses Celsius) */
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
 
   } else {
 
@@ -3051,7 +3052,7 @@ void WriteTempMaxLand(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     /* Units already in Celsius (POISE uses Celsius) */
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
 
   } else {
 
@@ -3075,7 +3076,7 @@ void WriteTempMaxWater(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     /* Units already in Celsius (POISE uses Celsius) */
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp = fdUnitsTemp(*dTmp, U_CELSIUS, U_KELVIN);
     fsUnitsTime(0, cUnit);
@@ -3097,7 +3098,7 @@ void WriteTempLandLat(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     /* Units already in Celsius (POISE uses Celsius) */
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp = fdUnitsTemp(*dTmp, U_CELSIUS, U_KELVIN);
     fsUnitsTime(0, cUnit);
@@ -3119,7 +3120,7 @@ void WriteTempWaterLat(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     /* Units already in Celsius (POISE uses Celsius) */
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp = fdUnitsTemp(*dTmp, U_CELSIUS, U_KELVIN);
     fsUnitsTime(0, cUnit);
@@ -3135,7 +3136,7 @@ void WriteLatitude(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   if (output->bDoNeg[iBody]) {
 
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
 
   } else {
 
@@ -3157,7 +3158,7 @@ void WriteAlbedoLat(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp = body[iBody].daAlbedoAvg[body[iBody].iWriteLat];
   }
 
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteAlbedoLandLat(BODY *body, CONTROL *control, OUTPUT *output,
@@ -3172,7 +3173,7 @@ void WriteAlbedoLandLat(BODY *body, CONTROL *control, OUTPUT *output,
 
     *dTmp = body[iBody].daAlbedoAvgL[body[iBody].iWriteLat];
   }
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteAlbedoWaterLat(BODY *body, CONTROL *control, OUTPUT *output,
@@ -3187,7 +3188,7 @@ void WriteAlbedoWaterLat(BODY *body, CONTROL *control, OUTPUT *output,
 
     *dTmp = body[iBody].daAlbedoAvgW[body[iBody].iWriteLat];
   }
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteFluxInGlobal(BODY *body, CONTROL *control, OUTPUT *output,
@@ -3198,7 +3199,7 @@ void WriteFluxInGlobal(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     // Negative option is SI
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
 
   } else {
 
@@ -3216,7 +3217,7 @@ void WriteFluxOutGlobal(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
 
     // Negative option is SI
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
 
   } else {
 
@@ -3234,7 +3235,7 @@ void WriteTotIceMass(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
 
     // Negative option is SI
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
 
   } else {
 
@@ -3251,7 +3252,7 @@ void WriteIceFlowTot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     // Negative option is SI
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -3267,7 +3268,7 @@ void WriteAreaIceCov(BODY *body, CONTROL *control, OUTPUT *output,
 
   // if (output->bDoNeg[iBody]) {
   //     // Negative option is SI
-  //     strcpy(cUnit,output->cNeg);
+  //     fvFormattedString(cUnit,output->cNeg);
   //   } else {
   //     *dTmp /= fdUnitsMass(units->iMass);
   //     fsUnitsMass(units->iMass,cUnit);
@@ -3283,7 +3284,7 @@ void WriteIceBalanceTot(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
 
     // Negative option is SI
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
 
   } else {
 
@@ -3300,7 +3301,7 @@ void WriteAnnualInsol(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
 
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
 
   } else {
 
@@ -3317,7 +3318,7 @@ void WritePeakInsol(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
 
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
 
   } else {
 
@@ -3654,7 +3655,7 @@ void WriteFluxMerid(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
 
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
 
   } else {
 
@@ -3678,7 +3679,7 @@ void WriteFluxIn(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
 
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
 
   } else {
 
@@ -3702,7 +3703,7 @@ void WriteFluxOut(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
 
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
 
   } else {
 
@@ -3721,7 +3722,7 @@ void WriteDivFlux(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     *dTmp = body[iBody].daDivFluxAvg[body[iBody].iWriteLat];
   }
   if (output->bDoNeg[iBody]) {
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergyFlux(units, cUnit);
@@ -3740,7 +3741,7 @@ void WriteIceMass(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   }
 
   if (output->bDoNeg[iBody]) {
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
 
   } else {
     //*dTmp /= fdUnitsMass(units->iMass)/pow(fdUnitsLength(units->iLength),2);
@@ -3759,7 +3760,7 @@ void WriteIceHeight(BODY *body, CONTROL *control, OUTPUT *output,
   }
 
   if (output->bDoNeg[iBody]) {
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -3777,7 +3778,7 @@ void WriteBedrockH(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   }
 
   if (output->bDoNeg[iBody]) {
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -3795,7 +3796,7 @@ void WritePlanckBAvg(BODY *body, CONTROL *control, OUTPUT *output,
   }
 
   // if (output->bDoNeg[iBody]) {
-  //     strcpy(cUnit,output->cNeg);
+  //     fvFormattedString(cUnit,output->cNeg);
   //   } else {
   //     *dTmp /= fdUnitsLength(units->iLength);
   //     fsUnitsLength(units->iLength,cUnit);
@@ -3814,7 +3815,7 @@ void WriteDIceMassDt(BODY *body, CONTROL *control, OUTPUT *output,
   }
 
   if (output->bDoNeg[iBody]) {
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -3833,7 +3834,7 @@ void WriteIceAccum(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   }
 
   // if (output->bDoNeg[iBody]) {
-  //     strcpy(cUnit,output->cNeg);
+  //     fvFormattedString(cUnit,output->cNeg);
   //   } else {
   //     *dTmp /= fdUnitsLength(units->iLength);
   //     fsUnitsLength(units->iLength,cUnit);
@@ -3852,7 +3853,7 @@ void WriteIceAblate(BODY *body, CONTROL *control, OUTPUT *output,
   }
 
   // if (output->bDoNeg[iBody]) {
-  //     strcpy(cUnit,output->cNeg);
+  //     fvFormattedString(cUnit,output->cNeg);
   //   } else {
   //     *dTmp /= fdUnitsLength(units->iLength);
   //     fsUnitsLength(units->iLength,cUnit);
@@ -3872,7 +3873,7 @@ void WriteDIceMassDtFlow(BODY *body, CONTROL *control, OUTPUT *output,
   }
 
   if (output->bDoNeg[iBody]) {
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     // *dTmp /= fdUnitsMass(units->iMass)/pow(fdUnitsLength(units->iLength),2);
     // fsUnitsEnergyFlux(units,cUnit);
@@ -3886,7 +3887,7 @@ void WriteEnergyResL(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].daEnergyResL[body[iBody].iWriteLat];
 
   if (output->bDoNeg[iBody]) {
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergyFlux(units, cUnit);
@@ -3900,7 +3901,7 @@ void WriteEnergyResW(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].daEnergyResW[body[iBody].iWriteLat];
 
   if (output->bDoNeg[iBody]) {
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergyFlux(units, cUnit);

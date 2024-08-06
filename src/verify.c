@@ -355,7 +355,7 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
                        OPTIONS *options, SYSTEM *system,
                        fnIntegrate *fnOneStep) {
   int iFile, iFile1 = 0, iFile2 = 0;
-  char cTmp[OPTLEN];
+  char *cTmp=NULL;
 
 
   // Initialize iDir to 0, i.e. assume no integrations requested to start
@@ -475,7 +475,7 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
     *fnOneStep = &RungeKutta4Step;
   } else {
     /* Assign Default */
-    strcpy(cTmp, options[OPT_INTEGRATIONMETHOD].cDefault);
+    fvFormattedString(&cTmp, options[OPT_INTEGRATIONMETHOD].cDefault);
     if (control->Io.iVerbose >= VERBINPUT) {
       fprintf(stderr, "INFO: %s not set, defaulting to %s.\n",
               options[OPT_INTEGRATIONMETHOD].cName,

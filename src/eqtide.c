@@ -613,11 +613,11 @@ void ReadTidePerts(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                    SYSTEM *system, int iFile) {
   int iBody, iNumIndices = 0, iNumLines = 0;
   int *lTmp;
-  char saTmp[MAXARRAY][OPTLEN];
+  char **saTmp;
 
   lTmp = malloc(MAXLINES * sizeof(int));
 
-  AddOptionStringArray(files->Infile[iFile].cIn, options->cName, saTmp,
+  AddOptionStringArray(files->Infile[iFile].cIn, options->cName, &saTmp,
                        &iNumIndices, &iNumLines, lTmp, control->Io.iVerbose);
   if (lTmp[0] >= 0) {
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp[0],
@@ -2294,7 +2294,7 @@ void WriteBodyDsemiDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
+    fvFormattedString(cUnit,output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime)/fdUnitsLength(units->iLength);
     fsUnitsVel(units,cUnit);
@@ -2326,7 +2326,7 @@ void WriteBodyDeccDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
+    fvFormattedString(cUnit,output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime,cUnit);
@@ -2461,8 +2461,7 @@ void WriteDMeanMotionDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
     fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) / fdUnitsLength(units->iLength);
-    fsUnitsRate(units->iTime, cUnit);
-    strcat(cUnit, "^2");
+    fsUnitsRateSquared(units->iTime, cUnit);
   }
 }
 
@@ -2478,7 +2477,7 @@ void WriteDOrbPerDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    fvFormattedString(&cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) / fdUnitsLength(units->iLength);
     fvFormattedString(cUnit, "%s", "");
@@ -2503,7 +2502,7 @@ void WriteDRotPerDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
   } else {
-    fvFormattedString(&cUnit, "");
+    fvFormattedString(cUnit, "");
   }
 }
 
@@ -2526,8 +2525,7 @@ void WriteDRotRateDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
     fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) * fdUnitsTime(units->iTime);
-    fsUnitsRate(units->iTime, cUnit);
-    strcat(cUnit, "^2");
+    fsUnitsRateSquared(units->iTime, cUnit);
   }
 }
 
@@ -2833,7 +2831,7 @@ void WriteGammaOrb(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = -1;
 
   /* Negative option? */
-  strcat(cUnit, "sec");
+  fsUnitsTime(units->iTime,cUnit);
 }
 
 void WriteGammaRot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -2849,7 +2847,7 @@ void WriteGammaRot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = -1;
 
   /* Negative option? */
-  strcat(cUnit, "sec");
+  fsUnitsTime(units->iTime,cUnit);
 }
 
 void WriteK2Ocean(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -2858,7 +2856,7 @@ void WriteK2Ocean(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   *dTmp = body[iBody].dK2Ocean;
 
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteK2Env(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -2867,7 +2865,7 @@ void WriteK2Env(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   *dTmp = body[iBody].dK2Env;
 
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteOblTimescaleEqtide(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2883,14 +2881,14 @@ void WriteOblTimescaleEqtide(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit,output->cNeg);
+    fvFormattedString(cUnit,output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime,cUnit);
   }
   */
   *dTmp = -1;
-  fvFormattedString(&cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteRotTimescaleEqtide(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2992,7 +2990,7 @@ void WriteTideLock(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    char **cUnit) {
 
   *dTmp = control->Evolve.bForceEqSpin[iBody];
-  strcat(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {

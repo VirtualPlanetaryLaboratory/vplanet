@@ -1837,7 +1837,7 @@ struct CONTROL {
   IO Io;
   UNITS *Units;
 
-  char sGitVersion[64];
+  char *sGitVersion;
 
   /* Move to BODY */
   int *iMassRad; /**< Mass-Radius Relationship */

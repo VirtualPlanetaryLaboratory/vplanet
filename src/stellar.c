@@ -1264,7 +1264,7 @@ void WriteLuminosity(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -1286,7 +1286,7 @@ void WriteLXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -1297,7 +1297,7 @@ void WriteLXUVFrac(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
                    char **cUnit) {
   *dTmp = body[iBody].dLXUV / body[iBody].dLuminosity;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteRossbyNumber(BODY *body, CONTROL *control, OUTPUT *output,
@@ -1305,7 +1305,7 @@ void WriteRossbyNumber(BODY *body, CONTROL *control, OUTPUT *output,
                        double *dTmp, char **cUnit) {
   *dTmp =
         body[iBody].dRotPer / fdCranmerSaar2011TauCZ(body[iBody].dTemperature);
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteDRotPerDtStellar(BODY *body, CONTROL *control, OUTPUT *output,
@@ -1321,9 +1321,9 @@ void WriteDRotPerDtStellar(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = dDeriv * (-2 * PI / (body[iBody].dRotRate * body[iBody].dRotRate));
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
-    strcpy(cUnit, "");
+    fvFormattedString(cUnit, "");
   }
 }
 

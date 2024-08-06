@@ -1013,34 +1013,57 @@ void fsUnitsAngMom(UNITS *units, char **cUnit) {
   free(cUnitMass);
   free(cUnitLength);
   free(cUnitTime);
-
 }
 
 void fsUnitsDensity(UNITS *units, char **cUnit) {
-  char cTmp[OPTLEN];
+  char *cUnitMass=NULL,*cUnitLength=NULL;
 
-  fsUnitsMass(units->iMass, cUnit);
-  strcat(cUnit, "/");
-  fsUnitsLength(units->iLength, cTmp);
-  strcat(cUnit, cTmp);
-  strcat(cUnit, "^3");
+  // fsUnitsMass(units->iMass, cUnit);
+  // strcat(cUnit, "/");
+  // fsUnitsLength(units->iLength, cTmp);
+  // strcat(cUnit, cTmp);
+  // strcat(cUnit, "^3");
+  fsUnitsMass(units->iMass, &cUnitMass);
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fvFormattedString(cUnit,cUnitMass,"/",cUnitLength,"^3");
+  free(cUnitMass);
+  free(cUnitLength); 
 }
 
 void fsUnitsVel(UNITS *units, char **cUnit) {
-  char cTmp[OPTLEN];
+  char *cUnitLength=NULL,*cUnitTime=NULL;
 
-  fsUnitsLength(units->iLength, cUnit);
-  strcat(cUnit, "/");
-  fsUnitsTime(units->iTime, cTmp);
-  strcat(cUnit, cTmp);
+  // fsUnitsLength(units->iLength, cUnit);
+  // strcat(cUnit, "/");
+  // fsUnitsTime(units->iTime, cTmp);
+  // strcat(cUnit, cTmp);
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsTime(units->iTime, &cUnitTime);
+  fvFormattedString(cUnit,cUnitLength,"/",cUnitTime);
+  free(cUnitTime);
+  free(cUnitLength);
 }
 
 void fsUnitsRate(int iType, char **cUnit) {
-  char cTmp[OPTLEN];
+  char *cUnitTime=NULL;
 
-  fvFormattedString(&cUnit, "/");
-  fsUnitsTime(iType, cTmp);
-  strcat(cUnit, cTmp);
+  // fvFormattedString(&cUnit, "/");
+  // fsUnitsTime(iType, cTmp);
+  // strcat(cUnit, cTmp);
+  fsUnitsTime(iType, &cUnitTime);
+  fvFormattedString(cUnit,"/",cUnitTime);
+  free(cUnitTime);
+}
+
+void fsUnitsRateSquared(int iType, char **cUnit) {
+  char *cUnitTime=NULL;
+
+  // fvFormattedString(&cUnit, "/");
+  // fsUnitsTime(iType, cTmp);
+  // strcat(cUnit, cTmp);
+  fsUnitsTime(iType, &cUnitTime);
+  fvFormattedString(cUnit,"/",cUnitTime,"^2");
+  free(cUnitTime);
 }
 
 /* double fdUnitsRate(int iTime) {
@@ -1049,25 +1072,38 @@ void fsUnitsRate(int iType, char **cUnit) {
 
 
 void fsUnitsAngRate(UNITS *units, char **cUnit) {
-  char cTmp[OPTLEN];
+  char *cUnitAngle=NULL,*cUnitTime=NULL;
 
-  fsUnitsAngle(units->iAngle, cUnit);
-  strcat(cUnit, "/");
-  fsUnitsTime(units->iTime, cTmp);
-  strcat(cUnit, cTmp);
+  // fsUnitsAngle(units->iAngle, cUnit);
+  // strcat(cUnit, "/");
+  // fsUnitsTime(units->iTime, cTmp);
+  // strcat(cUnit, cTmp);
+  fsUnitsAngle(units->iAngle, &cUnitAngle);
+  fsUnitsTime(units->iTime, &cUnitTime);
+  fvFormattedString(cUnit,cUnitAngle,"/",cUnitTime);
+  free(cUnitTime);
+  free(cUnitAngle);
 }
 
 void fsUnitsEnergy(UNITS *units, char **cUnit) {
-  char cTmp[OPTLEN];
+  char *cUnitMass=NULL,*cUnitLength=NULL,*cUnitTime=NULL;
 
-  fsUnitsMass(units->iMass, cUnit);
-  strcat(cUnit, "*");
-  fsUnitsLength(units->iLength, cTmp);
-  strcat(cUnit, cTmp);
-  strcat(cUnit, "^2/");
-  fsUnitsTime(units->iTime, cTmp);
-  strcat(cUnit, cTmp);
-  strcat(cUnit, "^2");
+  fsUnitsMass(units->iMass, &cUnitMass);
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsTime(units->iTime, &cUnitTime);
+
+  // fsUnitsMass(units->iMass, cUnit);
+  // strcat(cUnit, "*");
+  // fsUnitsLength(units->iLength, cTmp);
+  // strcat(cUnit, cTmp);
+  // strcat(cUnit, "^2/");
+  // fsUnitsTime(units->iTime, cTmp);
+  // strcat(cUnit, cTmp);
+  // strcat(cUnit, "^2");
+  fvFormattedString(cUnit,cUnitMass,"*",cUnitLength,"^2/",cUnitTime,"^2");
+  free(cUnitMass);
+  free(cUnitLength);
+  free(cUnitTime);
 }
 
 double fdUnitsEnergy(int iTime, int iMass, int iLength) {
@@ -1077,16 +1113,24 @@ double fdUnitsEnergy(int iTime, int iMass, int iLength) {
 }
 
 void fsUnitsPower(UNITS *units, char **cUnit) {
-  char cTmp[OPTLEN];
+  char *cUnitMass=NULL,*cUnitLength=NULL,*cUnitTime=NULL;
 
-  fsUnitsMass(units->iMass, cUnit);
-  strcat(cUnit, "*");
-  fsUnitsLength(units->iLength, cTmp);
-  strcat(cUnit, cTmp);
-  strcat(cUnit, "^2/");
-  fsUnitsTime(units->iTime, cTmp);
-  strcat(cUnit, cTmp);
-  strcat(cUnit, "^3");
+  fsUnitsMass(units->iMass, &cUnitMass);
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsTime(units->iTime, &cUnitTime);
+
+  // fsUnitsMass(units->iMass, cUnit);
+  // strcat(cUnit, "*");
+  // fsUnitsLength(units->iLength, cTmp);
+  // strcat(cUnit, cTmp);
+  // strcat(cUnit, "^2/");
+  // fsUnitsTime(units->iTime, cTmp);
+  // strcat(cUnit, cTmp);
+  // strcat(cUnit, "^3");
+  fvFormattedString(cUnit,cUnitMass,"*",cUnitLength,"^2/",cUnitTime,"^3");
+  free(cUnitMass);
+  free(cUnitLength);
+  free(cUnitTime);
 }
 
 double fdUnitsPower(int iTime, int iMass, int iLength) {
@@ -1095,16 +1139,21 @@ double fdUnitsPower(int iTime, int iMass, int iLength) {
 }
 
 void fsUnitsEnergyFlux(UNITS *units, char **cUnit) {
-  char cTmp[OPTLEN];
+  char *cUnitMass=NULL,*cUnitLength=NULL,*cUnitTime=NULL;
 
-  fsUnitsEnergy(units, cUnit);
-  strcat(cUnit, "/(");
-  fsUnitsLength(units->iLength, cTmp);
-  strcat(cUnit, cTmp);
-  strcat(cUnit, "^2*");
-  fsUnitsTime(units->iTime, cTmp);
-  strcat(cUnit, cTmp);
-  strcat(cUnit, ")");
+  fsUnitsMass(units->iMass, &cUnitMass);
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsTime(units->iTime, &cUnitTime);
+
+  // fsUnitsEnergy(units, cUnit);
+  // strcat(cUnit, "/(");
+  // fsUnitsLength(units->iLength, cTmp);
+  // strcat(cUnit, cTmp);
+  // strcat(cUnit, "^2*");
+  // fsUnitsTime(units->iTime, cTmp);
+  // strcat(cUnit, cTmp);
+  // strcat(cUnit, ")");
+  fvFormattedString(cUnit,cUnitMass,"/",cUnitTime,"^3");
 }
 
 double fdUnitsEnergyFlux(int iTime, int iMass, int iLength) {
@@ -1198,9 +1247,4 @@ void InfileCopy(INFILE *dest, INFILE *src) {
   for (iLine = 0; iLine < src->iNumLines; iLine++) {
     dest->bLineOK[iLine] = src->bLineOK[iLine];
   }
-
-  /* PHOTOCHEM fields
-  strcpy(dest->cSpecies,src->cSpecies);
-  strcpy(dest->cReactions,src->cReactions);
-  */
 }

@@ -19,7 +19,7 @@ void WriteAge(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dAge;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -35,7 +35,7 @@ void WriteBodyType(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
                    char **cUnit) {
   *dTmp = body[iBody].iBodyType;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 /*
@@ -49,7 +49,7 @@ void WriteCOPP(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   *dTmp = body[iBody].dEcc * sin(body[iBody].dLongP + body[iBody].dPrecA) *
           sin(body[iBody].dObliquity);
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 /* Critical Semi-major Axis (Holman & Wiegert, 1999 for P-type circumbinary
@@ -75,7 +75,7 @@ void WriteCriticalSemi(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -106,7 +106,7 @@ void WriteDeltaTime(BODY *body, CONTROL *control, OUTPUT *output,
   }
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -121,7 +121,7 @@ void WriteDensity(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= pow(fdUnitsLength(units->iLength), 3) / fdUnitsMass(units->iMass);
     fsUnitsDensity(units, cUnit);
@@ -138,7 +138,7 @@ void WriteHecc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                char **cUnit) {
 
   *dTmp = body[iBody].dHecc;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 /************* HABITABLE ZONE LIMITS ***********/
@@ -166,7 +166,7 @@ void WriteHZLimitDryRunaway(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -205,7 +205,7 @@ void WriteHZLimitRecentVenus(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = daHZLimits[0];
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -236,7 +236,7 @@ void WriteHZLimitRunawayGreenhouse(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = daHZLimits[1];
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -266,7 +266,7 @@ void WriteHZLimitMoistGreenhouse(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = daHZLimits[2];
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -296,7 +296,7 @@ void WriteHZLimitMaxGreenhouse(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = daHZLimits[3];
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -326,7 +326,7 @@ void WriteHZLimitEarlyMars(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = daHZLimits[4];
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -349,7 +349,7 @@ void WriteBodyInc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -377,7 +377,7 @@ void WriteInstellation(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergyFlux(units, cUnit);
@@ -397,7 +397,7 @@ void WriteK2Man(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     *dTmp = body[iBody].dK2Man;
     if (output->bDoNeg[iBody]) {
       *dTmp *= output->dNeg;
-      strcpy(cUnit, output->cNeg);
+      fvFormattedString(cUnit, output->cNeg);
     }
   } else {
     *dTmp = -1;
@@ -410,10 +410,10 @@ void WriteImK2Man(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (body[iBody].bEqtide) {
     *dTmp = body[iBody].dImK2Man;
-    strcpy(cUnit, "");
+    fvFormattedString(cUnit, "");
     if (output->bDoNeg[iBody]) {
       *dTmp *= output->dNeg;
-      strcpy(cUnit, output->cNeg);
+      fvFormattedString(cUnit, output->cNeg);
     }
   } else {
     *dTmp = -1;
@@ -425,7 +425,7 @@ void WriteKecc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                char **cUnit) {
 
   *dTmp = body[iBody].dKecc;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 /*
@@ -450,7 +450,7 @@ void WriteBodyLongA(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -467,7 +467,7 @@ void WriteLongP(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
     if (output->bDoNeg[iBody]) {
       *dTmp *= output->dNeg;
-      strcpy(cUnit, output->cNeg);
+      fvFormattedString(cUnit, output->cNeg);
     } else {
       *dTmp /= fdUnitsAngle(units->iAngle);
       fsUnitsAngle(units->iAngle, cUnit);
@@ -484,7 +484,7 @@ void WriteLongP(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
     if (output->bDoNeg[iBody]) {
       *dTmp *= output->dNeg;
-      strcpy(cUnit, output->cNeg);
+      fvFormattedString(cUnit, output->cNeg);
     } else {
       *dTmp /= fdUnitsAngle(units->iAngle);
       fsUnitsAngle(units->iAngle, cUnit);
@@ -510,7 +510,7 @@ void WriteBodyArgP(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   }
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -541,7 +541,7 @@ void WriteLXUVTot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergyFlux(units, cUnit);
@@ -559,7 +559,7 @@ void WriteMass(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dMass;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -579,7 +579,7 @@ void WriteObliquity(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -604,7 +604,7 @@ void WriteBodyPrecA(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -628,7 +628,7 @@ void WriteOrbAngMom(BODY *body, CONTROL *control, OUTPUT *output,
   }
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) /
              (fdUnitsMass(units->iMass) * fdUnitsLength(units->iLength) *
@@ -660,7 +660,7 @@ void WriteOrbEcc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
       *dTmp = -1;
     }
   }
-  fvFormattedString(&cUnit, "%s", "");
+  fvFormattedString(cUnit, "%s", "");
 }
 
 // XXX This function doesn't work!
@@ -674,7 +674,7 @@ void WriteLostEng(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     double dConversion = fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     *dTmp /= dConversion;
@@ -690,7 +690,7 @@ void WriteOrbEnergy(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergy(units, cUnit);
@@ -717,7 +717,7 @@ void WriteOrbMeanMotion(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -750,7 +750,7 @@ void WriteOrbPeriod(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -779,7 +779,7 @@ void WriteOrbSemi(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -797,7 +797,7 @@ void WriteRadius(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dRadius;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -820,7 +820,7 @@ void WriteRotAngMom(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) /
              (fdUnitsMass(units->iMass) * fdUnitsLength(units->iLength) *
@@ -837,7 +837,7 @@ void WriteRotKinEnergy(BODY *body, CONTROL *control, OUTPUT *output,
                          body[iBody].dRadGyra, body[iBody].dRotRate);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergy(units, cUnit);
@@ -851,7 +851,7 @@ void WriteRotRate(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = body[iBody].dRotRate;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -865,7 +865,7 @@ void WriteRotPer(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = fdFreqToPer(body[iBody].dRotRate);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -879,7 +879,7 @@ void WriteRotVel(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = fdRotVel(body[iBody].dRadius, body[iBody].dRotRate);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) / fdUnitsLength(units->iLength);
     fsUnitsVel(units, cUnit);
@@ -936,7 +936,7 @@ void WriteSurfaceEnergyFlux(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergyFlux(units, cUnit);
@@ -973,7 +973,7 @@ void WriteTidalQ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     *dTmp = -1;
   }
 
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 
@@ -987,7 +987,7 @@ void WriteTidalQMantle(BODY *body, CONTROL *control, OUTPUT *output,
   } else {
     *dTmp = -1;
   }
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteTime(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -997,7 +997,7 @@ void WriteTime(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = control->Evolve.iDir * control->Evolve.dTime;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -1012,7 +1012,7 @@ void WriteTotAngMom(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) /
              (fdUnitsMass(units->iMass) * fdUnitsLength(units->iLength) *
@@ -1029,7 +1029,7 @@ void WriteLostAngMom(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) /
              (fdUnitsMass(units->iMass) * fdUnitsLength(units->iLength) *
@@ -1046,7 +1046,7 @@ void WriteTotEnergy(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergy(units, cUnit);
@@ -1061,7 +1061,7 @@ void WritePotEnergy(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergy(units, cUnit);
@@ -1076,7 +1076,7 @@ void WriteKinEnergy(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergy(units, cUnit);
@@ -1091,7 +1091,7 @@ void WriteOrbKinEnergy(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergy(units, cUnit);
@@ -1110,7 +1110,7 @@ void WriteOrbPotEnergy(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergy(units, cUnit);
@@ -1124,7 +1124,7 @@ void WriteTotOrbEnergy(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergy(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergy(units, cUnit);
@@ -1141,7 +1141,7 @@ void WriteImK2(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   } else {
     *dTmp = -1;
   }
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteK2(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -1153,7 +1153,7 @@ void WriteK2(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   } else {
     *dTmp = body[iBody].dK2;
   }
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteXobl(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -1161,7 +1161,7 @@ void WriteXobl(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                char **cUnit) {
 
   *dTmp = body[iBody].dXobl;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteYobl(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -1169,7 +1169,7 @@ void WriteYobl(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                char **cUnit) {
 
   *dTmp = body[iBody].dYobl;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteZobl(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -1177,7 +1177,7 @@ void WriteZobl(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                char **cUnit) {
 
   *dTmp = body[iBody].dZobl;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteMeanAnomaly(BODY *body, CONTROL *control, OUTPUT *output,
@@ -1188,7 +1188,7 @@ void WriteMeanAnomaly(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dMeanA;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -1212,7 +1212,7 @@ void WriteMeanLongitude(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -2008,10 +2008,11 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
                     SYSTEM *system, UPDATE *update, fnWriteOutput fnWrite[],
                     FILE *fp, int iBody) {
   int iCol, iOut, iSubOut, iExtra = 0;
-  char cCol[MODULEOUTEND][OUTLEN+2]; // +2 for brackets
+  char **cCol; // +2 for brackets
   double *dTmp;
   char *cUnit=NULL, *cTmp;
 
+  cCol=malloc(MODULEOUTEND*sizeof(char*));
   for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
       if (memcmp(files->Outfile[iBody].caCol[iCol], output[iOut].cName,
@@ -2021,10 +2022,11 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
         fnWrite[iOut](body, control, &output[iOut], system,
                       &control->Units[iBody], update, iBody, dTmp, &cUnit);
         for (iSubOut = 0; iSubOut < output[iOut].iNum; iSubOut++) {
-          strcpy(cCol[iCol + iSubOut + iExtra],
+          cCol[iCol + iSubOut + iExtra]=NULL;
+          fvFormattedString(&cCol[iCol + iSubOut + iExtra],
                  files->Outfile[iBody].caCol[iCol]);
           fvFormattedString(&cTmp, "[%s]", cUnit);
-          strcat(cCol[iCol + iSubOut + iExtra], cTmp);
+          fvFormattedString(cCol[iCol + iSubOut + iExtra], cTmp);
         }
         iExtra += (output[iOut].iNum - 1);
         free(dTmp);
@@ -2037,16 +2039,18 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
     fprintf(fp, " %s", cCol[iCol]);
   }
   fprintf(fp, "\n");
+  free(cCol);
 }
 
 void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
                    SYSTEM *system, UPDATE *update, fnWriteOutput fnWrite[],
                    FILE *fp, int iBody) {
   int iCol, iOut, iSubOut, iExtra = 0;
-  char cCol[MODULEOUTEND][OUTLEN+2]; // +2 for brackets
+  char **cCol; // +2 for brackets
   double *dTmp;
   char *cUnit=NULL, *cTmp;
 
+  cCol=malloc(MODULEOUTEND*sizeof(char*));
   for (iCol = 0; iCol < files->Outfile[iBody].iNumGrid; iCol++) {
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
       if (memcmp(files->Outfile[iBody].caGrid[iCol], output[iOut].cName,
@@ -2056,10 +2060,11 @@ void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
         fnWrite[iOut](body, control, &output[iOut], system,
                       &control->Units[iBody], update, iBody, dTmp, &cUnit);
         for (iSubOut = 0; iSubOut < output[iOut].iNum; iSubOut++) {
-          strcpy(cCol[iCol + iSubOut + iExtra],
+          cCol[iCol + iSubOut + iExtra]=NULL;
+          fvFormattedString(&cCol[iCol + iSubOut + iExtra],
                  files->Outfile[iBody].caGrid[iCol]);
           fvFormattedString(&cTmp, "[%s]", cUnit);
-          strcat(cCol[iCol + iSubOut + iExtra], cTmp);
+          fvFormattedString(cCol[iCol + iSubOut + iExtra], cTmp);
         }
         iExtra += (output[iOut].iNum - 1);
         free(dTmp);
@@ -2073,6 +2078,7 @@ void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
     fprintf(fp, " %s", cCol[iCol]);
   }
   fprintf(fp, "\n");
+  free(cCol);
 }
 
 void LogOptions(CONTROL *control, FILES *files, MODULE *module, SYSTEM *system,
@@ -2450,6 +2456,9 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
       }
     }
   }
+  free(cUnit);
+  free(cPoiseGrid);
+  free(cLaplaceFunc);
 }
 
 void InitializeOutput(FILES *files, OUTPUT *output, fnWriteOutput fnWrite[]) {

@@ -249,15 +249,13 @@ double dNegativeDouble(OPTIONS options, char cFile[], int iVerbose) {
    unchanged. */
 
 void AddOptionStringArray(char *cFile, char *cOption,
-                          char saInput[MAXARRAY][OPTLEN], int *iNumIndices,
+                          char ***saInput, int *iNumIndices,
                           int *iNumLines, int *iLine, int iVerbose) {
   char *cLine, cTmp[MAXARRAY][OPTLEN];
   int iPos, iWord, bContinue, iNumWords;
   FILE *fp;
 
-  //memset(cLine, '\0', LINE);
-
-  /* iLine=malloc(MAXLINES*sizeof(int)); */
+  *saInput = malloc(MAXARRAY*sizeof(char*));
 
   iLine[0] = -1;
 
@@ -276,8 +274,10 @@ void AddOptionStringArray(char *cFile, char *cOption,
   *iNumLines = 1;
 
   for (iWord = 0; iWord < iNumWords - 1; iWord++) {
-    memset(saInput[iWord], '\0', OPTLEN);
-    strcpy(saInput[iWord], cTmp[iWord + 1]);
+    *saInput[iWord] = NULL;
+    //memset(saInput[iWord], '\0', OPTLEN);
+  
+    fvFormattedString(saInput[iWord], cTmp[iWord + 1]);
     /* Reset cTmp string: If the next time cTmp is filled, the
        new string is longer than the old, then vestigial characters
        can remain after a trailing $. */
@@ -295,7 +295,7 @@ void AddOptionStringArray(char *cFile, char *cOption,
     if (memcmp(cLine, "null", 4)) {
       GetWords(cLine, cTmp, &iNumWords, &bContinue);
       for (iWord = 0; iWord < iNumWords; iWord++) {
-        strcpy(saInput[*iNumIndices + iWord], cTmp[iWord]);
+        fvFormattedString(saInput[*iNumIndices + iWord], cTmp[iWord]);
         memset(cTmp[iWord], '\0', OPTLEN);
       }
       *iNumIndices += iNumWords;
@@ -321,12 +321,12 @@ void AddOptionDoubleArray(char *cFile, char *cOption, double *daInput,
                           int *iNumIndices, int *iNumLines, int *iLine,
                           int iVerbose) {
   int iIndex;
-  char cTmp[MAXARRAY][OPTLEN];
+  char **saTmp;
 
-  AddOptionStringArray(cFile, cOption, cTmp, iNumIndices, iNumLines, iLine,
+  AddOptionStringArray(cFile, cOption, &saTmp, iNumIndices, iNumLines, iLine,
                        iVerbose);
   for (iIndex = 0; iIndex < *iNumIndices; iIndex++) {
-    daInput[iIndex] = atof(cTmp[iIndex]);
+    daInput[iIndex] = atof(saTmp[iIndex]);
   }
 }
 
@@ -1126,11 +1126,11 @@ void ReadBodyFileNames(CONTROL *control, FILES *files, OPTIONS *options,
                        INFILE *infile) {
   int iIndex, iNumIndices = 0, iNumLines = 0;
   int *lTmp;
-  char saTmp[MAXARRAY][OPTLEN];
+  char **saTmp;
 
   lTmp = malloc(MAXLINES * sizeof(int));
 
-  AddOptionStringArray(infile->cIn, options->cName, saTmp, &iNumIndices,
+  AddOptionStringArray(infile->cIn, options->cName, &saTmp, &iNumIndices,
                        &iNumLines, lTmp, control->Io.iVerbose);
 
   if (lTmp[0] >= 0) {
@@ -2662,7 +2662,7 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
                      OUTPUT *output, int iFile, int iVerbose) {
   int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 1, iNumGrid = 0;
   int k, iOut = -1, *lTmp, iCol, jCol;
-  char saTmp[MAXARRAY][OPTLEN], *cTmp=NULL, **cOption,
+  char **saTmp, *cTmp=NULL, **cOption,
         *cOut;
   int iLen1, iLen2;
 
@@ -2670,7 +2670,7 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
   cOption = malloc(MAXARRAY*sizeof(char*));
 
   AddOptionStringArray(files->Infile[iFile].cIn, options[OPT_OUTPUTORDER].cName,
-                       saTmp, &iNumIndices, &files->Infile[iFile].iNumLines,
+                       &saTmp, &iNumIndices, &files->Infile[iFile].iNumLines,
                        lTmp, iVerbose);
 
   if (lTmp[0] >= 0) {
@@ -2868,14 +2868,14 @@ void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
                     int iVerbose) {
   int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 0, iNumGrid = 0;
   int k, iOut = -1, *lTmp;
-  char saTmp[MAXARRAY][OPTLEN], *cTmp, **cOption, *cOut;
+  char **saTmp, *cTmp, **cOption, *cOut;
   int iLen1, iLen2;
 
   lTmp = malloc(MAXLINES * sizeof(int));
   cOption = malloc(MAXARRAY*sizeof(char*));
 
   AddOptionStringArray(files->Infile[iFile].cIn, options[OPT_GRIDOUTPUT].cName,
-                       saTmp, &iNumIndices, &files->Infile[iFile].iNumLines,
+                       &saTmp, &iNumIndices, &files->Infile[iFile].iNumLines,
                        lTmp, iVerbose);
 
   if (lTmp[0] >= 0) {

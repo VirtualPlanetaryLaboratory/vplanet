@@ -66,10 +66,11 @@ int main_impl(int argc, char *argv[]) {
   fnUpdateVariable ***fnUpdate;
   fnIntegrate fnOneStep;
 
+  control.sGitVersion=NULL;
 #ifdef GITVERSION
-  strcpy(control.sGitVersion, GITVERSION);
+  fvFormattedString(&control.sGitVersion, GITVERSION);
 #else
-  strcpy(control.sGitVersion, "Unknown");
+  fvFormattedString(&control.sGitVersion, "Unknown");
 #endif
 
   /** Must initialize all options and outputs for all modules

@@ -3665,7 +3665,7 @@ void fvWrite26AlPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd26AlPowerMan(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -3691,7 +3691,7 @@ void fvWrite26AlEnFlux(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd26AlEnFlux(body, update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergyFlux(units, cUnit);
@@ -3716,7 +3716,7 @@ void fvWriteD26AlNumDt(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = *(update[iBody].pdD26AlNumManDt);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -3759,7 +3759,7 @@ void fvWrite26AlMassMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d26AlNumMan * MASS26AL;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -3802,7 +3802,7 @@ void fvWrite26AlNumMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d26AlNumMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   }
   /* else nothing, as it is a number */
 }
@@ -3828,7 +3828,7 @@ void fvWrite26AlPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd26AlPowerCore(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -3853,7 +3853,7 @@ void fvWrite26AlMassCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d26AlNumCore * MASS26AL;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -3878,7 +3878,7 @@ void fvWrite26AlNumCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d26AlNumCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   }
   /* else nothing, as it is a number */
 }
@@ -3902,7 +3902,7 @@ void fvWrite26AlPowerTot(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd26AlPower(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -3932,7 +3932,7 @@ void fvWrite40KPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd40KPowerMan(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -3958,7 +3958,7 @@ void fvWrite40KEnFlux(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd40KEnFlux(body, update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergyFlux(units, cUnit);
@@ -3983,7 +3983,7 @@ void fvWriteD40KNumDt(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = *(update[iBody].pdD40KNumManDt);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -4026,7 +4026,7 @@ void fvWrite40KMassMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d40KNumMan * MASS40K;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -4070,7 +4070,7 @@ void fvWrite40KNumMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d40KNumMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   }
   /* else nothing, as it is a number */
 }
@@ -4096,7 +4096,7 @@ void fvWrite40KPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd40KPowerCore(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -4121,7 +4121,7 @@ void fvWrite40KMassCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d40KNumCore * MASS40K;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -4146,7 +4146,7 @@ void fvWrite40KNumCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d40KNumCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   }
   /* else nothing, as it is a number */
 }
@@ -4172,7 +4172,7 @@ void fvWrite40KPowerCrust(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd40KPowerCrust(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -4197,7 +4197,7 @@ void fvWrite40KMassCrust(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d40KNumCrust * MASS40K;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -4222,7 +4222,7 @@ void fvWrite40KNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d40KNumCrust;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   }
   /* else nothing, as it is a number */
 }
@@ -4246,7 +4246,7 @@ void fvWrite40KPowerTot(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd40KPower(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -4275,7 +4275,7 @@ void fvWrite232ThEnFlux(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergyFlux(units, cUnit);
@@ -4301,7 +4301,7 @@ void fvWriteD232ThNumDt(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -4363,7 +4363,7 @@ void fvWrite232ThPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd232ThPowerMan(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -4388,7 +4388,7 @@ void fvWrite232ThMassMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d232ThNumMan * MASS232TH;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -4413,7 +4413,7 @@ void fvWrite232ThNumMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d232ThNumMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   }
   /* else nothing, as it is a number */
 }
@@ -4439,7 +4439,7 @@ void fvWrite232ThPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd232ThPowerCore(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -4464,7 +4464,7 @@ void fvWrite232ThMassCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d232ThNumCore * MASS232TH;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -4489,7 +4489,7 @@ void fvWrite232ThNumCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d232ThNumCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   }
   /* else nothing, as it is a number */
 }
@@ -4515,7 +4515,7 @@ void fvWrite232ThPowerCrust(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd232ThPowerCrust(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -4540,7 +4540,7 @@ void fvWrite232ThMassCrust(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d232ThNumCrust * MASS232TH;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -4565,7 +4565,7 @@ void fvWrite232ThNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d232ThNumCrust;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   }
   /* else nothing, as it is a number */
 }
@@ -4589,7 +4589,7 @@ void fvWrite232ThPowerTot(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd232ThPower(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -4617,7 +4617,7 @@ void fvWrite238UEnFlux(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd238UEnFlux(body, update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergyFlux(units, cUnit);
@@ -4642,7 +4642,7 @@ void fvWriteD238UNumDt(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = *(update[iBody].pdD238UNumManDt);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -4706,7 +4706,7 @@ void fvWrite238UPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd238UPowerMan(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -4731,7 +4731,7 @@ void fvWrite238UMassMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d238UNumMan * MASS238U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -4756,7 +4756,7 @@ void fvWrite238UNumMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d238UNumMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   }
   /* else nothing, as it is a number */
 }
@@ -4782,7 +4782,7 @@ void fvWrite238UPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd238UPowerCore(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -4807,7 +4807,7 @@ void fvWrite238UMassCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d238UNumCore * MASS238U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -4832,7 +4832,7 @@ void fvWrite238UNumCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d238UNumCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   }
   /* else nothing, as it is a number */
 }
@@ -4858,7 +4858,7 @@ void fvWrite238UPowerCrust(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd238UPowerCrust(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -4883,7 +4883,7 @@ void fvWrite238UMassCrust(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d238UNumCrust * MASS238U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -4908,7 +4908,7 @@ void fvWrite238UNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d238UNumCrust;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   }
   /* else nothing, as it is a number */
 }
@@ -4932,7 +4932,7 @@ void fvWrite238UPowerTot(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd238UPower(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -4962,7 +4962,7 @@ void fvWrite235UEnFlux(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergyFlux(units, cUnit);
@@ -4988,7 +4988,7 @@ void fvWriteD235UNumDt(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -5052,7 +5052,7 @@ void fvWrite235UPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = -(*(update[iBody].pdD235UNumManDt)) * ENERGY235U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -5077,7 +5077,7 @@ void fvWrite235UMassMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d235UNumMan * MASS235U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -5102,7 +5102,7 @@ void fvWrite235UNumMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d235UNumMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   }
   /* else nothing, as it is a number */
 }
@@ -5128,7 +5128,7 @@ void fvWrite235UPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd235UPowerCore(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -5153,7 +5153,7 @@ void fvWrite235UMassCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d235UNumCore * MASS235U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -5178,7 +5178,7 @@ void fvWrite235UNumCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d235UNumCore;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   }
   /* else nothing, as it is a number */
 }
@@ -5204,7 +5204,7 @@ void fvWrite235UPowerCrust(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd235UPowerCrust(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -5229,7 +5229,7 @@ void fvWrite235UMassCrust(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d235UNumCrust * MASS235U;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsMass(units->iMass);
     fsUnitsMass(units->iMass, cUnit);
@@ -5254,7 +5254,7 @@ void fvWrite235UNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].d235UNumCrust;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   }
   /* else nothing, as it is a number */
 }
@@ -5278,7 +5278,7 @@ void fvWrite235UPowerTot(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fd235UPower(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -5307,7 +5307,7 @@ void fvWriteRadPowerCrust(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fdRadPowerCrust(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -5333,7 +5333,7 @@ void fvWriteRadPowerMan(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fdRadPowerMan(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -5359,7 +5359,7 @@ void fvWriteRadPowerCore(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fdRadPowerCore(update, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -5385,7 +5385,7 @@ void fvWriteRadPowerTotal(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[iBody].dRadPowerTotal;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -5411,7 +5411,7 @@ void fvWriteSurfEnFluxRadTotal(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fdSurfEnFluxRadTotal(body, system, update, iBody, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
     fsUnitsEnergyFlux(units, cUnit);

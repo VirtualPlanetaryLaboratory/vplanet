@@ -92,18 +92,19 @@ void sort_output(OUTPUT *output, int sorted[]) {
  * Struct Initialization
  */
 
-void InitializeControl(CONTROL *control, MODULE *module) {
+void InitializeFiles(FILES *files, int iNumBodies) {
+  int iBody;
+
+  files->cLog = NULL;
+  files->cExe = NULL;
+  for (iBody = 0; iBody < iNumBodies; iBody++) {
+    // Infile must be initilized in ReadBodyNames
+    files->Outfile[iBody].cOut = NULL;
+  }
+}
+
+void InitializePropsAux(CONTROL *control, MODULE *module) {
   int iBody, iModule;
-
-  control->bOutputLapl = 0;
-
-  control->iMassRad = malloc(control->Evolve.iNumBodies * sizeof(int));
-  control->fnForceBehavior =
-        malloc(control->Evolve.iNumBodies * sizeof(fnForceBehaviorModule *));
-  control->fnForceBehaviorMulti =
-        malloc(control->Evolve.iNumBodies * sizeof(fnForceBehaviorModule *));
-  control->iNumMultiForce = malloc(control->Evolve.iNumBodies * sizeof(int));
-  control->Halt           = malloc(control->Evolve.iNumBodies * sizeof(HALT));
 
   control->fnPropsAux =
         malloc(control->Evolve.iNumBodies * sizeof(fnPropsAuxModule *));
@@ -111,18 +112,59 @@ void InitializeControl(CONTROL *control, MODULE *module) {
         malloc(control->Evolve.iNumBodies * sizeof(fnPropsAuxModule *));
 
   for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
-    control->fnForceBehavior[iBody] =
-          malloc(module->iNumModules[iBody] * sizeof(fnForceBehaviorModule));
     control->fnPropsAux[iBody] =
           malloc(module->iNumModules[iBody] * sizeof(fnPropsAuxModule));
-
     for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
-      module->fnInitializeControl[iBody][iModule](control, iBody);
       control->fnPropsAux[iBody][iModule] = &PropsAuxNULL;
     }
   }
 
-  // Initialize IO error messages
+  if (module->iNumModules[iBody] > 0) {
+    /* XXX Note that the number of elements here is really a permutation,
+       but this should work for a while. */
+    control->fnPropsAuxMulti[iBody] =
+          malloc(2 * module->iNumModules[iBody] * sizeof(fnPropsAuxModule *));
+  }
+}
+
+void InitilizeForceBehavior(CONTROL *control, MODULE *module) {
+  int iBody;
+
+  control->fnForceBehavior =
+        malloc(control->Evolve.iNumBodies * sizeof(fnForceBehaviorModule *));
+  control->fnForceBehaviorMulti =
+        malloc(control->Evolve.iNumBodies * sizeof(fnForceBehaviorModule *));
+  control->iNumMultiForce = malloc(control->Evolve.iNumBodies * sizeof(int));
+  for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
+    control->fnForceBehavior[iBody] =
+          malloc(module->iNumModules[iBody] * sizeof(fnForceBehaviorModule));
+  }
+
+  if (module->iNumModules[iBody] > 0) {
+    /* XXX Note that the number of elements here is really a permutation,
+       but this should work for a while. */
+    control->fnForceBehaviorMulti[iBody] = malloc(
+          2 * module->iNumModules[iBody] * sizeof(fnForceBehaviorModule *));
+  }
+}
+
+void InitializeControlModules(CONTROL *control, MODULE *module) {
+  int iBody, iModule;
+
+  for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
+    for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
+      module->fnInitializeControl[iBody][iModule](control, iBody);
+    }
+  }
+}
+
+void InitializeHalt(CONTROL *control) {
+  control->Halt = malloc(control->Evolve.iNumBodies * sizeof(HALT));
+}
+
+void InitializeIo(CONTROL *control) {
+  int iBody;
+
   control->Io.baRocheMessage = malloc(control->Evolve.iNumBodies * sizeof(int));
   control->Io.baCassiniOneMessage =
         malloc(control->Evolve.iNumBodies * sizeof(int));
@@ -141,6 +183,18 @@ void InitializeControl(CONTROL *control, MODULE *module) {
   // Initialize this value, too. Probably need a whole new structure for
   // CheckProgress
   control->Io.dMaxMutualInc = 0;
+}
+
+void InitializeControl(CONTROL *control, MODULE *module) {
+
+  InitializePropsAux(control, module);
+  InitializeIo(control);
+  InitilizeForceBehavior(control, module);
+  InitializeHalt(control);
+  InitializeControlModules(control, module);
+
+  control->bOutputLapl = 0;
+  control->iMassRad    = malloc(control->Evolve.iNumBodies * sizeof(int));
 }
 
 /**
@@ -179,7 +233,7 @@ void InitializeControlEvolve(BODY *body, CONTROL *control, MODULE *module,
   /* Currently this only matters for RK4 integration. This should
      be generalized for any integration method. */
   if (control->Evolve.iOneStep == RUNGEKUTTA) {
-    control->Evolve.daDeriv = malloc(4 * sizeof(double **));
+    control->Evolve.daDeriv     = malloc(4 * sizeof(double **));
     control->Evolve.daDerivProc = malloc(4 * sizeof(double ***));
     for (iSubStep = 0; iSubStep < 4; iSubStep++) {
       control->Evolve.daDeriv[iSubStep] =
@@ -244,7 +298,7 @@ void WriteDescription(char cLongDescr[], char cDescr[], int iMaxChars) {
   char cDescription[MAXARRAY][OPTLEN];
   char **cLine;
 
-  cLine = malloc(MAXARRAY * sizeof(char*));
+  cLine = malloc(MAXARRAY * sizeof(char *));
   for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
     memset(cLine[iLineWordNow], '\0', OPTLEN);
     memset(cDescription[iLineWordNow], '\0', OPTLEN);
@@ -813,31 +867,31 @@ void fprintd(FILE *fp, double x, int iExp, int iDig) {
   }
 }
 
-void AllocateStringMemory(char **sString,int iStringLength) {
+void AllocateStringMemory(char **sString, int iStringLength) {
   if (*sString != NULL) {
     free(*sString);
   }
-  *sString = (char*)malloc((iStringLength) * sizeof(char));
+  *sString = (char *)malloc((iStringLength) * sizeof(char));
 
   if (*sString == NULL) {
-    fprintf(stderr,"ERROR: Failure in function AllocateStringMemory.\n");
+    fprintf(stderr, "ERROR: Failure in function AllocateStringMemory.\n");
     exit(EXIT_EXE);
   }
 }
 
-void fvFormattedString(char **sString,const char* sFormattedString, ...) {
-  va_list vaArgs,vaArgsCopy;
+void fvFormattedString(char **sString, const char *sFormattedString, ...) {
+  va_list vaArgs, vaArgsCopy;
 
   va_start(vaArgs, sFormattedString);
   va_copy(vaArgsCopy, vaArgs);
-  
+
   int iStringLength = vsnprintf(NULL, 0, sFormattedString, vaArgs) + 1;
-  va_end(vaArgs); 
+  va_end(vaArgs);
 
-  AllocateStringMemory(sString,iStringLength);
+  AllocateStringMemory(sString, iStringLength);
 
-  vsnprintf(*sString, iStringLength, sFormattedString, vaArgsCopy);  
-  va_end(vaArgsCopy); 
+  vsnprintf(*sString, iStringLength, sFormattedString, vaArgsCopy);
+  va_end(vaArgsCopy);
 }
 
 /*
@@ -984,20 +1038,20 @@ void fsUnitsAngle(int iType, char **cUnit) {
 }
 
 void fsUnitsViscosity(UNITS *units, char **cUnit) {
-  char *cUnitLength=NULL,*cUnitTime=NULL;
+  char *cUnitLength = NULL, *cUnitTime = NULL;
 
   fsUnitsLength(units->iLength, &cUnitLength);
   fsUnitsTime(units->iTime, &cUnitTime);
   // strcat(cUnit, "^2/");
   // fsUnitsTime(units->iTime, cTmp);
   // strcat(cUnit, cTmp);
-  fvFormattedString(cUnit,cUnitLength,"^2/",cUnitTime);
+  fvFormattedString(cUnit, cUnitLength, "^2/", cUnitTime);
   free(cUnitLength);
   free(cUnitTime);
 }
 
 void fsUnitsAngMom(UNITS *units, char **cUnit) {
-  char *cUnitMass=NULL,*cUnitLength=NULL,*cUnitTime=NULL;
+  char *cUnitMass = NULL, *cUnitLength = NULL, *cUnitTime = NULL;
 
   fsUnitsMass(units->iMass, &cUnitMass);
   fsUnitsLength(units->iLength, &cUnitLength);
@@ -1009,14 +1063,14 @@ void fsUnitsAngMom(UNITS *units, char **cUnit) {
   // strcat(cUnit, "^2/");
   // fsUnitsTime(units->iTime, cTmp);
   // strcat(cUnit, cTmp);
-  fvFormattedString(cUnit,cUnitMass,"*",cUnitLength,"^2/",cUnitTime);
+  fvFormattedString(cUnit, cUnitMass, "*", cUnitLength, "^2/", cUnitTime);
   free(cUnitMass);
   free(cUnitLength);
   free(cUnitTime);
 }
 
 void fsUnitsDensity(UNITS *units, char **cUnit) {
-  char *cUnitMass=NULL,*cUnitLength=NULL;
+  char *cUnitMass = NULL, *cUnitLength = NULL;
 
   // fsUnitsMass(units->iMass, cUnit);
   // strcat(cUnit, "/");
@@ -1025,13 +1079,13 @@ void fsUnitsDensity(UNITS *units, char **cUnit) {
   // strcat(cUnit, "^3");
   fsUnitsMass(units->iMass, &cUnitMass);
   fsUnitsLength(units->iLength, &cUnitLength);
-  fvFormattedString(cUnit,cUnitMass,"/",cUnitLength,"^3");
+  fvFormattedString(cUnit, cUnitMass, "/", cUnitLength, "^3");
   free(cUnitMass);
-  free(cUnitLength); 
+  free(cUnitLength);
 }
 
 void fsUnitsVel(UNITS *units, char **cUnit) {
-  char *cUnitLength=NULL,*cUnitTime=NULL;
+  char *cUnitLength = NULL, *cUnitTime = NULL;
 
   // fsUnitsLength(units->iLength, cUnit);
   // strcat(cUnit, "/");
@@ -1039,30 +1093,30 @@ void fsUnitsVel(UNITS *units, char **cUnit) {
   // strcat(cUnit, cTmp);
   fsUnitsLength(units->iLength, &cUnitLength);
   fsUnitsTime(units->iTime, &cUnitTime);
-  fvFormattedString(cUnit,cUnitLength,"/",cUnitTime);
+  fvFormattedString(cUnit, cUnitLength, "/", cUnitTime);
   free(cUnitTime);
   free(cUnitLength);
 }
 
 void fsUnitsRate(int iType, char **cUnit) {
-  char *cUnitTime=NULL;
+  char *cUnitTime = NULL;
 
   // fvFormattedString(&cUnit, "/");
   // fsUnitsTime(iType, cTmp);
   // strcat(cUnit, cTmp);
   fsUnitsTime(iType, &cUnitTime);
-  fvFormattedString(cUnit,"/",cUnitTime);
+  fvFormattedString(cUnit, "/", cUnitTime);
   free(cUnitTime);
 }
 
 void fsUnitsRateSquared(int iType, char **cUnit) {
-  char *cUnitTime=NULL;
+  char *cUnitTime = NULL;
 
   // fvFormattedString(&cUnit, "/");
   // fsUnitsTime(iType, cTmp);
   // strcat(cUnit, cTmp);
   fsUnitsTime(iType, &cUnitTime);
-  fvFormattedString(cUnit,"/",cUnitTime,"^2");
+  fvFormattedString(cUnit, "/", cUnitTime, "^2");
   free(cUnitTime);
 }
 
@@ -1072,7 +1126,7 @@ void fsUnitsRateSquared(int iType, char **cUnit) {
 
 
 void fsUnitsAngRate(UNITS *units, char **cUnit) {
-  char *cUnitAngle=NULL,*cUnitTime=NULL;
+  char *cUnitAngle = NULL, *cUnitTime = NULL;
 
   // fsUnitsAngle(units->iAngle, cUnit);
   // strcat(cUnit, "/");
@@ -1080,13 +1134,13 @@ void fsUnitsAngRate(UNITS *units, char **cUnit) {
   // strcat(cUnit, cTmp);
   fsUnitsAngle(units->iAngle, &cUnitAngle);
   fsUnitsTime(units->iTime, &cUnitTime);
-  fvFormattedString(cUnit,cUnitAngle,"/",cUnitTime);
+  fvFormattedString(cUnit, cUnitAngle, "/", cUnitTime);
   free(cUnitTime);
   free(cUnitAngle);
 }
 
 void fsUnitsEnergy(UNITS *units, char **cUnit) {
-  char *cUnitMass=NULL,*cUnitLength=NULL,*cUnitTime=NULL;
+  char *cUnitMass = NULL, *cUnitLength = NULL, *cUnitTime = NULL;
 
   fsUnitsMass(units->iMass, &cUnitMass);
   fsUnitsLength(units->iLength, &cUnitLength);
@@ -1100,20 +1154,21 @@ void fsUnitsEnergy(UNITS *units, char **cUnit) {
   // fsUnitsTime(units->iTime, cTmp);
   // strcat(cUnit, cTmp);
   // strcat(cUnit, "^2");
-  fvFormattedString(cUnit,cUnitMass,"*",cUnitLength,"^2/",cUnitTime,"^2");
+  fvFormattedString(cUnit, cUnitMass, "*", cUnitLength, "^2/", cUnitTime, "^2");
   free(cUnitMass);
   free(cUnitLength);
   free(cUnitTime);
 }
 
 double fdUnitsEnergy(int iTime, int iMass, int iLength) {
-  double dConversion = fdUnitsMass(iMass) * fdUnitsLength(iLength) * fdUnitsLength(iLength) /
-         (fdUnitsTime(iTime) * fdUnitsTime(iTime));
+  double dConversion = fdUnitsMass(iMass) * fdUnitsLength(iLength) *
+                       fdUnitsLength(iLength) /
+                       (fdUnitsTime(iTime) * fdUnitsTime(iTime));
   return dConversion;
 }
 
 void fsUnitsPower(UNITS *units, char **cUnit) {
-  char *cUnitMass=NULL,*cUnitLength=NULL,*cUnitTime=NULL;
+  char *cUnitMass = NULL, *cUnitLength = NULL, *cUnitTime = NULL;
 
   fsUnitsMass(units->iMass, &cUnitMass);
   fsUnitsLength(units->iLength, &cUnitLength);
@@ -1127,7 +1182,7 @@ void fsUnitsPower(UNITS *units, char **cUnit) {
   // fsUnitsTime(units->iTime, cTmp);
   // strcat(cUnit, cTmp);
   // strcat(cUnit, "^3");
-  fvFormattedString(cUnit,cUnitMass,"*",cUnitLength,"^2/",cUnitTime,"^3");
+  fvFormattedString(cUnit, cUnitMass, "*", cUnitLength, "^2/", cUnitTime, "^3");
   free(cUnitMass);
   free(cUnitLength);
   free(cUnitTime);
@@ -1139,7 +1194,7 @@ double fdUnitsPower(int iTime, int iMass, int iLength) {
 }
 
 void fsUnitsEnergyFlux(UNITS *units, char **cUnit) {
-  char *cUnitMass=NULL,*cUnitLength=NULL,*cUnitTime=NULL;
+  char *cUnitMass = NULL, *cUnitLength = NULL, *cUnitTime = NULL;
 
   fsUnitsMass(units->iMass, &cUnitMass);
   fsUnitsLength(units->iLength, &cUnitLength);
@@ -1153,7 +1208,7 @@ void fsUnitsEnergyFlux(UNITS *units, char **cUnit) {
   // fsUnitsTime(units->iTime, cTmp);
   // strcat(cUnit, cTmp);
   // strcat(cUnit, ")");
-  fvFormattedString(cUnit,cUnitMass,"/",cUnitTime,"^3");
+  fvFormattedString(cUnit, cUnitMass, "/", cUnitTime, "^3");
 }
 
 double fdUnitsEnergyFlux(int iTime, int iMass, int iLength) {

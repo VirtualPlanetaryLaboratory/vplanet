@@ -54,7 +54,7 @@ void GetLine(char *cFile, char *cOption, char **cLine, int *iLine,
   char cWord[LINE], cTmp[LINE];
   FILE *fp;
 
-  *cLine=NULL;
+  *cLine = NULL;
 
   iLen = strlen(cOption);
 
@@ -248,14 +248,14 @@ double dNegativeDouble(OPTIONS options, char cFile[], int iVerbose) {
    not found, saInput is an array of empty strings, and iLine is
    unchanged. */
 
-void AddOptionStringArray(char *cFile, char *cOption,
-                          char ***saInput, int *iNumIndices,
-                          int *iNumLines, int *iLine, int iVerbose) {
+void AddOptionStringArray(char *cFile, char *cOption, char ***saInput,
+                          int *iNumIndices, int *iNumLines, int *iLine,
+                          int iVerbose) {
   char *cLine, cTmp[MAXARRAY][OPTLEN];
   int iPos, iWord, bContinue, iNumWords;
   FILE *fp;
 
-   iLine[0] = -1;
+  iLine[0] = -1;
 
   /* Fencepost problem. If saInput continues across multiple lines,
      then we must keep getting more lines. For the first line, we
@@ -270,12 +270,12 @@ void AddOptionStringArray(char *cFile, char *cOption,
   GetLine(cFile, cOption, &cLine, &iLine[0], iVerbose);
   GetWords(cLine, cTmp, &iNumWords, &bContinue);
   *iNumLines = 1;
-  *saInput = malloc(MAXARRAY*sizeof(char*));
+  *saInput   = malloc(MAXARRAY * sizeof(char *));
 
   for (iWord = 0; iWord < iNumWords - 1; iWord++) {
     *saInput[iWord] = NULL;
-    //memset(saInput[iWord], '\0', OPTLEN);
-  
+    // memset(saInput[iWord], '\0', OPTLEN);
+
     fvFormattedString(saInput[iWord], cTmp[iWord + 1]);
     /* Reset cTmp string: If the next time cTmp is filled, the
        new string is longer than the old, then vestigial characters
@@ -294,7 +294,10 @@ void AddOptionStringArray(char *cFile, char *cOption,
     if (memcmp(cLine, "null", 4)) {
       GetWords(cLine, cTmp, &iNumWords, &bContinue);
       if (*iNumIndices + iNumWords > MAXARRAY) {
-        fprintf(stderr,"ERROR: Too many arguments to %s. Either remove options, or increase value of MAXARRAY",cOption);
+        fprintf(stderr,
+                "ERROR: Too many arguments to %s. Either remove options, or "
+                "increase value of MAXARRAY",
+                cOption);
       }
       for (iWord = 0; iWord < iNumWords; iWord++) {
         fvFormattedString(saInput[*iNumIndices + iWord], cTmp[iWord]);
@@ -313,7 +316,7 @@ void AddOptionStringArray(char *cFile, char *cOption,
     }
   }
   free(cLine);
-  }
+}
 
 /* Get all fields in a double array. The fields are stored in daInput,
    and the lines which were read are in iNumLines. If a parameter is
@@ -357,7 +360,7 @@ void AddOptionBool(char *cFile, char *cOption, int *iInput, int *iLine,
                    int iVerbose) {
 
   AddOptionInt(cFile, cOption, iInput, iLine, iVerbose);
-  if (*iLine == -1) { 
+  if (*iLine == -1) {
     return;
   }
   if (*iInput == 0 || *iInput == 1) {
@@ -1166,7 +1169,7 @@ void ReadBodyFileNames(CONTROL *control, FILES *files, OPTIONS *options,
   InfileCopy(&files->Infile[0], infile);
 
   for (iIndex = 0; iIndex < iNumIndices; iIndex++) {
-
+    files->Infile[iIndex + 1].cIn = NULL;
     fvFormattedString(&files->Infile[iIndex + 1].cIn, saTmp[iIndex]);
   }
 
@@ -2663,13 +2666,12 @@ void ReadCosObl(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
                      OUTPUT *output, int iFile, int iVerbose) {
   int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 1, iNumGrid = 0;
-  int k, iOut = -1, *lTmp, iCol, jCol;
-  char **saTmp, *cTmp=NULL, **cOption,
-        *cOut;
+  int k, iOut         = -1, *lTmp, iCol, jCol;
+  char **saTmp, *cTmp = NULL, **cOption, *cOut;
   int iLen1, iLen2;
 
-  lTmp = malloc(MAXLINES * sizeof(int));
-  cOption = malloc(MAXARRAY*sizeof(char*));
+  lTmp    = malloc(MAXLINES * sizeof(int));
+  cOption = malloc(MAXARRAY * sizeof(char *));
 
   AddOptionStringArray(files->Infile[iFile].cIn, options[OPT_OUTPUTORDER].cName,
                        &saTmp, &iNumIndices, &files->Infile[iFile].iNumLines,
@@ -2797,12 +2799,13 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
           output[iOut].bDoNeg[iFile - 1] = 0;
         }
         if (output[iOut].bGrid == 0 || output[iOut].bGrid == 2) {
-          //memset(files->Outfile[iFile - 1].caCol[i], '\0', OPTLEN);
-          fvFormattedString(&files->Outfile[iFile - 1].caCol[i], output[iOut].cName);
+          // memset(files->Outfile[iFile - 1].caCol[i], '\0', OPTLEN);
+          fvFormattedString(&files->Outfile[iFile - 1].caCol[i],
+                            output[iOut].cName);
         } else {
           memset(files->Outfile[iFile - 1].caGrid[iNumGrid - 1], '\0', OPTLEN);
           fvFormattedString(&files->Outfile[iFile - 1].caGrid[iNumGrid - 1],
-                 output[iOut].cName);
+                            output[iOut].cName);
         }
         // Is option part of selected modules?
         if (module->iBitSum[iFile - 1] & output[iOut].iModuleBit) {
@@ -2873,8 +2876,8 @@ void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
   char **saTmp, *cTmp, **cOption, *cOut;
   int iLen1, iLen2;
 
-  lTmp = malloc(MAXLINES * sizeof(int));
-  cOption = malloc(MAXARRAY*sizeof(char*));
+  lTmp    = malloc(MAXLINES * sizeof(int));
+  cOption = malloc(MAXARRAY * sizeof(char *));
 
   AddOptionStringArray(files->Infile[iFile].cIn, options[OPT_GRIDOUTPUT].cName,
                        &saTmp, &iNumIndices, &files->Infile[iFile].iNumLines,
@@ -2991,11 +2994,12 @@ void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
         }
         if (output[iOut].bGrid == 0) {
           memset(files->Outfile[iFile - 1].caCol[i], '\0', OPTLEN);
-          fvFormattedString(&files->Outfile[iFile - 1].caCol[i], output[iOut].cName);
+          fvFormattedString(&files->Outfile[iFile - 1].caCol[i],
+                            output[iOut].cName);
         } else {
           memset(files->Outfile[iFile - 1].caGrid[iNumGrid - 1], '\0', OPTLEN);
           fvFormattedString(&files->Outfile[iFile - 1].caGrid[iNumGrid - 1],
-                 output[iOut].cName);
+                            output[iOut].cName);
         }
       }
     }
@@ -3649,7 +3653,9 @@ void ReadOptions(BODY **body, CONTROL *control, FILES *files, MODULE *module,
   /* Initialize module control */
   InitializeControl(control, module);
 
-  /* Now read in remaining options */
+  InitializeFiles(files, control->Evolve.iNumBodies);
+
+  /* Now read in multi-module options */
   ReadOptionsGeneral(*body, control, files, module, options, output, system,
                      fnRead);
 
@@ -3672,7 +3678,8 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_SYSTEMNAME].cName, "sSystemName");
   fvFormattedString(&options[OPT_SYSTEMNAME].cDescr, "System Name");
-  fvFormattedString(&options[OPT_SYSTEMNAME].cDefault, "None - must be supplied");
+  fvFormattedString(&options[OPT_SYSTEMNAME].cDefault,
+                    "None - must be supplied");
   options[OPT_SYSTEMNAME].iModuleBit = 0;
   options[OPT_SYSTEMNAME].iType      = 3;
   options[OPT_SYSTEMNAME].iFileType  = 0;
@@ -3698,7 +3705,8 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_AGE]             = &ReadAge;
 
   fvFormattedString(&options[OPT_ALBEDOGLOBAL].cName, "dAlbedoGlobal");
-  fvFormattedString(&options[OPT_ALBEDOGLOBAL].cDescr, "Globally averaged albedo");
+  fvFormattedString(&options[OPT_ALBEDOGLOBAL].cDescr,
+                    "Globally averaged albedo");
   fvFormattedString(&options[OPT_ALBEDOGLOBAL].cDefault, "0.3");
   fvFormattedString(&options[OPT_ALBEDOGLOBAL].cDimension, "nd");
   options[OPT_ALBEDOGLOBAL].dDefault   = 0;
@@ -3744,11 +3752,12 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_ETA].bNeg       = 0;
   options[OPT_ETA].iFileType  = 2;
   fnRead[OPT_ETA]             = &ReadEta;
-  fvFormattedString(&options[OPT_ETA].cLongDescr,
-          "The timestep will be set to %s times the smallest instantaneous "
-          "timescale, \n"
-          "i.e. min(x/(dx/dt) where x represents the primary variables.",
-          options[OPT_ETA].cName);
+  fvFormattedString(
+        &options[OPT_ETA].cLongDescr,
+        "The timestep will be set to %s times the smallest instantaneous "
+        "timescale, \n"
+        "i.e. min(x/(dx/dt) where x represents the primary variables.",
+        options[OPT_ETA].cName);
 
   fvFormattedString(&options[OPT_OUTPUTTIME].cName, "dOutputTime");
   fvFormattedString(&options[OPT_OUTPUTTIME].cDescr, "Output Interval");
@@ -3799,7 +3808,8 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_VARDT]             = &ReadVarDt;
 
   fvFormattedString(&options[OPT_BODYFILES].cName, "saBodyFiles");
-  fvFormattedString(&options[OPT_BODYFILES].cDescr, "Input files for each body");
+  fvFormattedString(&options[OPT_BODYFILES].cDescr,
+                    "Input files for each body");
   fvFormattedString(&options[OPT_BODYFILES].cDefault, "None");
   options[OPT_BODYFILES].iModuleBit = 0;
   options[OPT_BODYFILES].bNeg       = 0;
@@ -3808,7 +3818,8 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_BODYNAME].cName, "sName");
   fvFormattedString(&options[OPT_BODYNAME].cDescr, "Body's Name");
-  fvFormattedString(&options[OPT_BODYNAME].cDefault, "Integer of Input Order, i.e. 1");
+  fvFormattedString(&options[OPT_BODYNAME].cDefault,
+                    "Integer of Input Order, i.e. 1");
   options[OPT_BODYNAME].iType      = 3;
   options[OPT_BODYNAME].iModuleBit = 0;
   options[OPT_BODYNAME].bNeg       = 0;
@@ -3823,7 +3834,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_COLOR].cName, "sColor");
   fvFormattedString(&options[OPT_COLOR].cDescr,
-          "Hexadecimal color code for the body to be used in vplot");
+                    "Hexadecimal color code for the body to be used in vplot");
   fvFormattedString(&options[OPT_COLOR].cDefault, "000000");
   options[OPT_COLOR].iType      = 3;
   options[OPT_COLOR].iModuleBit = 0;
@@ -3852,7 +3863,8 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_FORW]             = &ReadDoForward;
 
   fvFormattedString(&options[OPT_GRCORR].cName, "bGRCorr");
-  fvFormattedString(&options[OPT_GRCORR].cDescr, "Use general relativity correction");
+  fvFormattedString(&options[OPT_GRCORR].cDescr,
+                    "Use general relativity correction");
   fvFormattedString(&options[OPT_GRCORR].cDefault, "0");
   options[OPT_GRCORR].dDefault   = 0;
   options[OPT_GRCORR].iType      = 0;
@@ -3870,7 +3882,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_HALTMAXECC].cName, "dHaltMaxEcc");
   fvFormattedString(&options[OPT_HALTMAXECC].cDescr,
-          "Maximum eccentricity value that halts ntegration");
+                    "Maximum eccentricity value that halts ntegration");
   fvFormattedString(&options[OPT_HALTMAXECC].cDefault, "1");
   fvFormattedString(&options[OPT_HALTMAXECC].cDimension, "nd");
   options[OPT_HALTMAXECC].dDefault   = 1;
@@ -3882,7 +3894,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_HALTMAXMUTUALINC].cName, "dHaltMaxMutualInc");
   fvFormattedString(&options[OPT_HALTMAXMUTUALINC].cDescr,
-          "Maximum mutual inclination value that halts integration");
+                    "Maximum mutual inclination value that halts integration");
   fvFormattedString(&options[OPT_HALTMAXMUTUALINC].cDefault, "0 [not checked]");
   fvFormattedString(&options[OPT_HALTMAXMUTUALINC].cDimension, "angle");
   options[OPT_HALTMAXMUTUALINC].dDefault   = 0;
@@ -3913,7 +3925,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_HALTMERGE].cName, "bHaltMerge");
   fvFormattedString(&options[OPT_HALTMERGE].cDescr, "Halt at Merge");
   fvFormattedString(&options[OPT_HALTMERGE].cDefault,
-          "If eqtide or distorb called 1, else 0");
+                    "If eqtide or distorb called 1, else 0");
   options[OPT_HALTMERGE].iType      = 0;
   options[OPT_HALTMERGE].iModuleBit = EQTIDE + DISTORB + SPINBODY + STELLAR;
   options[OPT_HALTMERGE].bNeg       = 0;
@@ -3922,7 +3934,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_HALTMINECC].cName, "dHaltMinEcc");
   fvFormattedString(&options[OPT_HALTMINECC].cDescr,
-          "Minimum Eccentricity Value that Halts Integration");
+                    "Minimum Eccentricity Value that Halts Integration");
   fvFormattedString(&options[OPT_HALTMINECC].cDefault, "-1");
   fvFormattedString(&options[OPT_HALTMINECC].cDimension, "nd");
   options[OPT_HALTMINECC].dDefault   = -1;
@@ -3934,7 +3946,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_HALTMINOBL].cName, "dHaltMinObl");
   fvFormattedString(&options[OPT_HALTMINOBL].cDescr,
-          "Minimum Obliquity Value that Halts Integration");
+                    "Minimum Obliquity Value that Halts Integration");
   fvFormattedString(&options[OPT_HALTMINOBL].cDefault, "-1 degrees");
   fvFormattedString(&options[OPT_HALTMINOBL].cDimension, "angle");
   options[OPT_HALTMINOBL].dDefault   = -DEGRAD;
@@ -3947,7 +3959,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_HALTMINSEMI].cName, "dHaltMinSemi");
   fvFormattedString(&options[OPT_HALTMINSEMI].cDescr,
-          "Minimum Semi-Major Axis Value that Halts Integration");
+                    "Minimum Semi-Major Axis Value that Halts Integration");
   fvFormattedString(&options[OPT_HALTMINSEMI].cDefault, "0");
   fvFormattedString(&options[OPT_HALTMINSEMI].cNeg, "au");
   fvFormattedString(&options[OPT_HALTMINSEMI].cDimension, "length");
@@ -3992,9 +4004,11 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
    *
    */
 
-  fvFormattedString(&options[OPT_INTEGRATIONMETHOD].cName, "sIntegrationMethod");
-  fvFormattedString(&options[OPT_INTEGRATIONMETHOD].cDescr,
-          "Integration Method: Euler, Runge-Kutta4 (Default = Runge-Kutta4)");
+  fvFormattedString(&options[OPT_INTEGRATIONMETHOD].cName,
+                    "sIntegrationMethod");
+  fvFormattedString(
+        &options[OPT_INTEGRATIONMETHOD].cDescr,
+        "Integration Method: Euler, Runge-Kutta4 (Default = Runge-Kutta4)");
   fvFormattedString(&options[OPT_INTEGRATIONMETHOD].cDefault, "Runge-Kutta4");
   options[OPT_INTEGRATIONMETHOD].iType      = 3;
   options[OPT_INTEGRATIONMETHOD].iModuleBit = 0;
@@ -4047,7 +4061,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_LONGP].cName, "dLongP");
   fvFormattedString(&options[OPT_LONGP].cDescr,
-          "Longitude of pericenter of planet's orbit");
+                    "Longitude of pericenter of planet's orbit");
   fvFormattedString(&options[OPT_LONGP].cDefault, "0");
   fvFormattedString(&options[OPT_LONGP].cDimension, "angle");
   options[OPT_LONGP].dDefault   = 0.0;
@@ -4070,7 +4084,8 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_LUMINOSITY]             = &ReadLuminosity;
 
   fvFormattedString(&options[OPT_LXUV].cName, "dLXUV");
-  fvFormattedString(&options[OPT_LXUV].cDescr, "Total XUV Luminosity -- Unsupported!");
+  fvFormattedString(&options[OPT_LXUV].cDescr,
+                    "Total XUV Luminosity -- Unsupported!");
   fvFormattedString(&options[OPT_LXUV].cDefault, "-1");
   fvFormattedString(&options[OPT_LXUV].cDimension, "energy/time");
   options[OPT_LXUV].dDefault   = -1;
@@ -4088,7 +4103,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_MINVALUE].cName, "dMinValue");
   fvFormattedString(&options[OPT_MINVALUE].cDescr,
-          "Minimum Non-Zero Value of Eccentricity and Obliquities");
+                    "Minimum Non-Zero Value of Eccentricity and Obliquities");
   fvFormattedString(&options[OPT_MINVALUE].cDefault, "0");
   fvFormattedString(&options[OPT_MINVALUE].cDimension, "nd");
   options[OPT_MINVALUE].dDefault = 0;
@@ -4126,7 +4141,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_OUTDIGITS].cName, "iDigits");
   fvFormattedString(&options[OPT_OUTDIGITS].cDescr,
-          "Number of Digits After Decimal Point");
+                    "Number of Digits After Decimal Point");
   fvFormattedString(&options[OPT_OUTDIGITS].cDefault, "4");
   options[OPT_OUTDIGITS].iType      = 1;
   options[OPT_OUTDIGITS].iModuleBit = 0;
@@ -4148,7 +4163,8 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_OUTPUTORDER].bMultiFile = 1;
 
   fvFormattedString(&options[OPT_GRIDOUTPUT].cName, "saGridOutput");
-  fvFormattedString(&options[OPT_GRIDOUTPUT].cDescr, "Gridded Output Parameter(s)");
+  fvFormattedString(&options[OPT_GRIDOUTPUT].cDescr,
+                    "Gridded Output Parameter(s)");
   fvFormattedString(&options[OPT_GRIDOUTPUT].cDefault, "None");
   options[OPT_GRIDOUTPUT].iType      = 13;
   options[OPT_GRIDOUTPUT].iModuleBit = POISE;
@@ -4158,7 +4174,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_OUTSCINOT].cName, "iSciNot");
   fvFormattedString(&options[OPT_OUTSCINOT].cDescr,
-          "Logarithm to Change from Standard to Scientific Notation");
+                    "Logarithm to Change from Standard to Scientific Notation");
   fvFormattedString(&options[OPT_OUTSCINOT].cDefault, "4");
   options[OPT_OUTSCINOT].iType      = 1;
   options[OPT_OUTSCINOT].iModuleBit = 0;
@@ -4233,7 +4249,8 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_ORBSEMI]             = &ReadSemiMajorAxis;
 
   fvFormattedString(&options[OPT_INC].cName, "dInc");
-  fvFormattedString(&options[OPT_INC].cDescr, "Inclination of planet's orbital plane");
+  fvFormattedString(&options[OPT_INC].cDescr,
+                    "Inclination of planet's orbital plane");
   fvFormattedString(&options[OPT_INC].cDefault, "0");
   fvFormattedString(&options[OPT_INC].cNeg, "Degrees");
   fvFormattedString(&options[OPT_INC].cDimension, "angle");
@@ -4247,7 +4264,8 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_INC]             = &ReadInc;
 
   fvFormattedString(&options[OPT_ARGP].cName, "dArgP");
-  fvFormattedString(&options[OPT_ARGP].cDescr, "Argument of pericenter of planet's orbit");
+  fvFormattedString(&options[OPT_ARGP].cDescr,
+                    "Argument of pericenter of planet's orbit");
   fvFormattedString(&options[OPT_ARGP].cDefault, "0");
   fvFormattedString(&options[OPT_ARGP].cNeg, "Degrees");
   fvFormattedString(&options[OPT_ARGP].cDimension, "angle");
@@ -4280,7 +4298,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_LONGA].cName, "dLongA");
   fvFormattedString(&options[OPT_LONGA].cDescr,
-          "Longitude of ascending node of planet's orbital plane");
+                    "Longitude of ascending node of planet's orbital plane");
   fvFormattedString(&options[OPT_LONGA].cDefault, "0");
   fvFormattedString(&options[OPT_LONGA].cNeg, "Degrees");
   fvFormattedString(&options[OPT_LONGA].cDimension, "angle");
@@ -4294,7 +4312,8 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_LONGA]             = &ReadLongA;
 
   fvFormattedString(&options[OPT_DYNELLIP].cName, "dDynEllip");
-  fvFormattedString(&options[OPT_DYNELLIP].cDescr, "Planet's dynamical ellipticity");
+  fvFormattedString(&options[OPT_DYNELLIP].cDescr,
+                    "Planet's dynamical ellipticity");
   fvFormattedString(&options[OPT_DYNELLIP].cDefault, "0.00328");
   fvFormattedString(&options[OPT_DYNELLIP].cDimension, "nd");
   options[OPT_DYNELLIP].dDefault   = 0.00328;
@@ -4307,7 +4326,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_CALCDYNELLIP].cName, "bCalcDynEllip");
   fvFormattedString(&options[OPT_CALCDYNELLIP].cDescr,
-          "Calculate dynamical ellipticity from RotRate");
+                    "Calculate dynamical ellipticity from RotRate");
   fvFormattedString(&options[OPT_CALCDYNELLIP].cDefault, "0");
   options[OPT_CALCDYNELLIP].dDefault   = 0;
   options[OPT_CALCDYNELLIP].iType      = 0;
@@ -4318,9 +4337,11 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_CALCDYNELLIP]             = &ReadCalcDynEllip;
 
   fvFormattedString(&options[OPT_SURFACEWATERMASS].cName, "dSurfWaterMass");
-  fvFormattedString(&options[OPT_SURFACEWATERMASS].cDescr, "Initial Surface Water Mass");
+  fvFormattedString(&options[OPT_SURFACEWATERMASS].cDescr,
+                    "Initial Surface Water Mass");
   fvFormattedString(&options[OPT_SURFACEWATERMASS].cDefault, "0");
-  fvFormattedString(&options[OPT_SURFACEWATERMASS].cNeg, "Terrestrial Oceans (TO)");
+  fvFormattedString(&options[OPT_SURFACEWATERMASS].cNeg,
+                    "Terrestrial Oceans (TO)");
   fvFormattedString(&options[OPT_SURFACEWATERMASS].cDimension, "mass");
   options[OPT_SURFACEWATERMASS].dDefault   = 0;
   options[OPT_SURFACEWATERMASS].iType      = 2;
@@ -4328,11 +4349,13 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_SURFACEWATERMASS].dNeg       = TOMASS;
   fnRead[OPT_SURFACEWATERMASS]             = &ReadSurfaceWaterMass;
 
-  fvFormattedString(&options[OPT_MINSURFACEWATERMASS].cName, "dMinSurfWaterMass");
+  fvFormattedString(&options[OPT_MINSURFACEWATERMASS].cName,
+                    "dMinSurfWaterMass");
   fvFormattedString(&options[OPT_MINSURFACEWATERMASS].cDescr,
-          "Minimum Surface Water Mass");
+                    "Minimum Surface Water Mass");
   fvFormattedString(&options[OPT_MINSURFACEWATERMASS].cDefault, "1.e-5 TO");
-  fvFormattedString(&options[OPT_MINSURFACEWATERMASS].cNeg, "Terrestrial Oceans (TO)");
+  fvFormattedString(&options[OPT_MINSURFACEWATERMASS].cNeg,
+                    "Terrestrial Oceans (TO)");
   fvFormattedString(&options[OPT_MINSURFACEWATERMASS].cDimension, "mass");
   options[OPT_MINSURFACEWATERMASS].dDefault   = 1.e-5 * TOMASS;
   options[OPT_MINSURFACEWATERMASS].iType      = 2;
@@ -4352,7 +4375,8 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_ENVELOPEMASS]             = &ReadEnvelopeMass;
 
   fvFormattedString(&options[OPT_MINENVELOPEMASS].cName, "dMinEnvelopeMass");
-  fvFormattedString(&options[OPT_MINENVELOPEMASS].cDescr, "Minimum Envelope Mass");
+  fvFormattedString(&options[OPT_MINENVELOPEMASS].cDescr,
+                    "Minimum Envelope Mass");
   fvFormattedString(&options[OPT_MINENVELOPEMASS].cDefault, "1.e-8 Earth");
   fvFormattedString(&options[OPT_MINENVELOPEMASS].cNeg, "Mearth");
   fvFormattedString(&options[OPT_MINENVELOPEMASS].cDimension, "mass");
@@ -4393,8 +4417,9 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_BODYTYPE]             = &ReadBodyType;
 
   fvFormattedString(&options[OPT_MASSRAD].cName, "sMassRad");
-  fvFormattedString(&options[OPT_MASSRAD].cDescr,
-          "Mass-Radius Relationship for Central Body: GS99 RH00 BO06 Sotin07 ");
+  fvFormattedString(
+        &options[OPT_MASSRAD].cDescr,
+        "Mass-Radius Relationship for Central Body: GS99 RH00 BO06 Sotin07 ");
   fvFormattedString(&options[OPT_MASSRAD].cDefault, "None");
   options[OPT_MASSRAD].iType      = 3;
   options[OPT_MASSRAD].bMultiFile = 1;
@@ -4427,14 +4452,15 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_COSOBL].bNeg       = 0;
   options[OPT_COSOBL].iFileType  = 1;
   fnRead[OPT_COSOBL]             = &ReadCosObl;
-  fvFormattedString(&options[OPT_COSOBL].cLongDescr,
-          "Planet formation simulations predict that an isotropic distribution "
-          "of\n"
-          "rotational angular momentum vectors is a typical outcome. This "
-          "result is\n"
-          "identical to a uniform distribution in cosine obliquity. Use this "
-          "option\n"
-          "to sample a realistic distribution of initial obliquities.\n");
+  fvFormattedString(
+        &options[OPT_COSOBL].cLongDescr,
+        "Planet formation simulations predict that an isotropic distribution "
+        "of\n"
+        "rotational angular momentum vectors is a typical outcome. This "
+        "result is\n"
+        "identical to a uniform distribution in cosine obliquity. Use this "
+        "option\n"
+        "to sample a realistic distribution of initial obliquities.\n");
 
   fvFormattedString(&options[OPT_RADIUS].cName, "dRadius");
   fvFormattedString(&options[OPT_RADIUS].cDescr, "Radius");
@@ -4452,7 +4478,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_RG].cName, "dRadGyra");
   fvFormattedString(&options[OPT_RG].cDescr,
-          "Radius of Gyration; moment of inertia constant");
+                    "Radius of Gyration; moment of inertia constant");
   fvFormattedString(&options[OPT_RG].cDefault, "0.5");
   fvFormattedString(&options[OPT_RG].cDimension, "nd");
   options[OPT_RG].dDefault   = 0.5;
@@ -4478,7 +4504,8 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_ROTPER]             = &ReadRotPeriod;
 
   fvFormattedString(&options[OPT_ROTRATE].cName, "dRotRate");
-  fvFormattedString(&options[OPT_ROTRATE].cDescr, "Rotational Angular Frequency");
+  fvFormattedString(&options[OPT_ROTRATE].cDescr,
+                    "Rotational Angular Frequency");
   fvFormattedString(&options[OPT_ROTRATE].cDefault, "2*pi/day");
   fvFormattedString(&options[OPT_ROTRATE].cNeg, "/Day");
   fvFormattedString(&options[OPT_ROTRATE].cDimension, "time^-1");
@@ -4512,7 +4539,8 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
    */
 
   fvFormattedString(&options[OPT_UNITANGLE].cName, "sUnitAngle");
-  fvFormattedString(&options[OPT_UNITANGLE].cDescr, "Angle Units: Degrees Radians");
+  fvFormattedString(&options[OPT_UNITANGLE].cDescr,
+                    "Angle Units: Degrees Radians");
   fvFormattedString(&options[OPT_UNITANGLE].cDefault, "Radians");
   options[OPT_UNITANGLE].iModuleBit = 0;
   options[OPT_UNITANGLE].bNeg       = 0;
@@ -4521,7 +4549,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_UNITLENGTH].cName, "sUnitLength");
   fvFormattedString(&options[OPT_UNITLENGTH].cDescr,
-          "Length Units: cm m km Solar Earth Jupiter AU");
+                    "Length Units: cm m km Solar Earth Jupiter AU");
   fvFormattedString(&options[OPT_UNITLENGTH].cDefault, "cm");
   options[OPT_UNITLENGTH].iModuleBit = 0;
   options[OPT_UNITLENGTH].bNeg       = 0;
@@ -4530,7 +4558,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_UNITMASS].cName, "sUnitMass");
   fvFormattedString(&options[OPT_UNITMASS].cDescr,
-          "Mass Units: Grams Kilograms Solar Earth Jupiter Saturn");
+                    "Mass Units: Grams Kilograms Solar Earth Jupiter Saturn");
   fvFormattedString(&options[OPT_UNITMASS].cDefault, "grams");
   options[OPT_UNITMASS].iModuleBit = 0;
   options[OPT_UNITMASS].bNeg       = 0;
@@ -4539,7 +4567,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_UNITTIME].cName, "sUnitTime");
   fvFormattedString(&options[OPT_UNITTIME].cDescr,
-          "Time Units: Seconds, Days Years Myr Gyr");
+                    "Time Units: Seconds, Days Years Myr Gyr");
   fvFormattedString(&options[OPT_UNITTIME].cDefault, "Seconds");
   options[OPT_UNITTIME].iModuleBit = 0;
   options[OPT_UNITTIME].bNeg       = 0;
@@ -4548,7 +4576,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_UNITTEMP].cName, "sUnitTemp");
   fvFormattedString(&options[OPT_UNITTEMP].cDescr,
-          "Temperature Units: Kelvin Celsius Farenheit");
+                    "Temperature Units: Kelvin Celsius Farenheit");
   fvFormattedString(&options[OPT_UNITTEMP].cDefault, "Kelvin");
   options[OPT_UNITTEMP].iModuleBit = 0;
   options[OPT_UNITTEMP].bNeg       = 0;
@@ -4556,7 +4584,8 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_UNITTEMP].iFileType  = 2;
 
   fvFormattedString(&options[OPT_TEMPERATURE].cName, "dTemperature");
-  fvFormattedString(&options[OPT_TEMPERATURE].cDescr, "Initial effective temperature");
+  fvFormattedString(&options[OPT_TEMPERATURE].cDescr,
+                    "Initial effective temperature");
   fvFormattedString(&options[OPT_TEMPERATURE].cDefault, "TSUN");
   fvFormattedString(&options[OPT_TEMPERATURE].cDimension, "temperature");
   options[OPT_TEMPERATURE].dDefault   = TSUN;
@@ -4566,20 +4595,21 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_USEOUTERTIDALQ].cName, "bUseOuterTidalQ");
   fvFormattedString(&options[OPT_USEOUTERTIDALQ].cDescr,
-          "User outermost layer's tidal Q as body's total tidal Q?");
+                    "User outermost layer's tidal Q as body's total tidal Q?");
   fvFormattedString(&options[OPT_USEOUTERTIDALQ].cDefault, "0");
   options[OPT_USEOUTERTIDALQ].iType      = 0;
   options[OPT_USEOUTERTIDALQ].bMultiFile = 1;
   fnRead[OPT_USEOUTERTIDALQ]             = &ReadUseOuterTidalQ;
-  fvFormattedString(&options[OPT_USEOUTERTIDALQ].cLongDescr,
-          "The total tidal Q of a body can be computed either as the sum of\n"
-          "contributions of all layers (mantle, ocean, envelope), or as the "
-          "tidal Q\n"
-          "of the outer most layer. When %s is set to 0, the tidal Q is the "
-          "sum,\n"
-          "when set to 1, it is the outer layer's (envelope, then ocean, then\n"
-          "mantle) value.\n",
-          options[OPT_USEOUTERTIDALQ].cName);
+  fvFormattedString(
+        &options[OPT_USEOUTERTIDALQ].cLongDescr,
+        "The total tidal Q of a body can be computed either as the sum of\n"
+        "contributions of all layers (mantle, ocean, envelope), or as the "
+        "tidal Q\n"
+        "of the outer most layer. When %s is set to 0, the tidal Q is the "
+        "sum,\n"
+        "when set to 1, it is the outer layer's (envelope, then ocean, then\n"
+        "mantle) value.\n",
+        options[OPT_USEOUTERTIDALQ].cName);
 
   /*
    *
@@ -4673,24 +4703,24 @@ void InitializeOptions(OPTIONS *options, fnReadOption *fnRead) {
 
   /* Initialize all parameters describing the option's location */
   for (iOpt = 0; iOpt < MODULEOPTEND; iOpt++) {
-    //memset(options[iOpt].cName, '\0', OPTLEN);
+    // memset(options[iOpt].cName, '\0', OPTLEN);
     options[iOpt].cName = NULL;
     fvFormattedString(&options[iOpt].cName, "null");
     options[iOpt].iLine      = malloc(MAXFILES * sizeof(int));
     options[iOpt].bMultiFile = 0;
     options[iOpt].iMultiIn   = 0;
     options[iOpt].iType      = -1;
-    //memset(options[iOpt].cDescr, '\0', OPTDESCR);
+    // memset(options[iOpt].cDescr, '\0', OPTDESCR);
     fvFormattedString(&options[iOpt].cDescr, "null");
-    //memset(options[iOpt].cLongDescr, '\0', OPTLONDESCR);
+    // memset(options[iOpt].cLongDescr, '\0', OPTLONDESCR);
     fvFormattedString(&options[iOpt].cLongDescr, "null");
-    //memset(options[iOpt].cDefault, '\0', OPTDESCR);
+    // memset(options[iOpt].cDefault, '\0', OPTDESCR);
     fvFormattedString(&options[iOpt].cDefault, "null");
-    //memset(options[iOpt].cValues, '\0', OPTDESCR);
+    // memset(options[iOpt].cValues, '\0', OPTDESCR);
     fvFormattedString(&options[iOpt].cValues, "null");
-    //memset(options[iOpt].cNeg, '\0', OPTDESCR);
+    // memset(options[iOpt].cNeg, '\0', OPTDESCR);
     fvFormattedString(&options[iOpt].cNeg, "null");
-    //memset(options[iOpt].cDimension, '\0', OPTDESCR);
+    // memset(options[iOpt].cDimension, '\0', OPTDESCR);
     options[iOpt].dDefault   = NAN;
     options[iOpt].iModuleBit = 0;
     options[iOpt].bNeg       = 0;
@@ -4699,7 +4729,7 @@ void InitializeOptions(OPTIONS *options, fnReadOption *fnRead) {
 
     for (iFile = 0; iFile < MAXFILES; iFile++) {
       options[iOpt].iLine[iFile] = -1;
-      //memset(options[iOpt].cFile[iFile], '\0', OPTLEN);
+      // memset(options[iOpt].cFile[iFile], '\0', OPTLEN);
       fvFormattedString(&options[iOpt].cFile[iFile], "null");
     }
   }

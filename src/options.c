@@ -251,7 +251,7 @@ double dNegativeDouble(OPTIONS options, char cFile[], int iVerbose) {
 void AddOptionStringArray(char *cFile, char *cOption, char ***saInput,
                           int *iNumIndices, int *iNumLines, int *iLine,
                           int iVerbose) {
-  char *cLine, cTmp[MAXARRAY][OPTLEN];
+  char *cLine, cTmp[MAXARRAY][OPTLEN], **saInputCopy;
   int iPos, iWord, bContinue, iNumWords;
   FILE *fp;
 
@@ -270,13 +270,18 @@ void AddOptionStringArray(char *cFile, char *cOption, char ***saInput,
   GetLine(cFile, cOption, &cLine, &iLine[0], iVerbose);
   GetWords(cLine, cTmp, &iNumWords, &bContinue);
   *iNumLines = 1;
-  *saInput   = malloc(MAXARRAY * sizeof(char *));
+  *saInput   = (char **)malloc((iNumWords-1) * sizeof(char *));
 
   for (iWord = 0; iWord < iNumWords - 1; iWord++) {
-    *saInput[iWord] = NULL;
+    (*saInput)[iWord] = NULL;
+  }
+  saInputCopy = *saInput;
+
+  for (iWord = 0; iWord < iNumWords - 1; iWord++) {
     // memset(saInput[iWord], '\0', OPTLEN);
 
-    fvFormattedString(saInput[iWord], cTmp[iWord + 1]);
+    //fvFormattedString(saInput[iWord], cTmp[iWord + 1]);
+    fvFormattedString(&saInputCopy[iWord], cTmp[iWord + 1]);
     /* Reset cTmp string: If the next time cTmp is filled, the
        new string is longer than the old, then vestigial characters
        can remain after a trailing $. */
@@ -1116,7 +1121,6 @@ void ReadSystemName(CONTROL *control, FILES *files, OPTIONS *options,
   int lTmp = -1;
   char cTmp[OPTLEN];
 
-  system->cName = NULL;
   AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
                   control->Io.iVerbose);
   if (lTmp >= 0) {

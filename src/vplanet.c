@@ -73,6 +73,8 @@ int main_impl(int argc, char *argv[]) {
   fvFormattedString(&control.sGitVersion, "Unknown");
 #endif
 
+  system.cName=NULL;
+
   /** Must initialize all options and outputs for all modules
      independent of what is selected. This allows a complete
      help screen as well as checks during ReadOptions. This

@@ -2008,9 +2008,9 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
                     SYSTEM *system, UPDATE *update, fnWriteOutput fnWrite[],
                     FILE *fp, int iBody) {
   int iCol, iOut, iSubOut, iExtra = 0;
-  char **cCol; // +2 for brackets
+  char **cCol; 
   double *dTmp;
-  char *cUnit=NULL, *cTmp;
+  char *cUnit=NULL, *cTmp=NULL;
 
   cCol=malloc(MODULEOUTEND*sizeof(char*));
   for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
@@ -2172,7 +2172,7 @@ void LogBody(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
               OPTIONS *options, OUTPUT *output, SYSTEM *system, UPDATE *update,
               fnUpdateVariable ***fnUpdate, fnWriteOutput fnWrite[], int iEnd) {
-  char *cTime;
+  char *cTime=NULL;
   FILE *fp;
   double dTotTime;
 

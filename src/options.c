@@ -270,7 +270,7 @@ void AddOptionStringArray(char *cFile, char *cOption, char ***saInput,
   GetLine(cFile, cOption, &cLine, &iLine[0], iVerbose);
   GetWords(cLine, cTmp, &iNumWords, &bContinue);
   *iNumLines = 1;
-  *saInput   = (char **)malloc((iNumWords-1) * sizeof(char *));
+  *saInput   = (char **)malloc(MAXARRAY * sizeof(char *));
 
   for (iWord = 0; iWord < iNumWords - 1; iWord++) {
     (*saInput)[iWord] = NULL;
@@ -305,7 +305,7 @@ void AddOptionStringArray(char *cFile, char *cOption, char ***saInput,
                 cOption);
       }
       for (iWord = 0; iWord < iNumWords; iWord++) {
-        fvFormattedString(saInput[*iNumIndices + iWord], cTmp[iWord]);
+        fvFormattedString(&saInputCopy[*iNumIndices + iWord], cTmp[iWord]);
         memset(cTmp[iWord], '\0', OPTLEN);
       }
       *iNumIndices += iNumWords;

@@ -1752,7 +1752,6 @@ int fiGetModuleIntEqtide(MODULE *module, int iBody) {
 
 void VerifyTideModel(CONTROL *control, FILES *files, OPTIONS *options) {
   int iFile, iFound = 0;
-  char *cTmp;
 
   for (iFile = 0; iFile < files->iNumInputs; iFile++) {
     if (options[OPT_TIDEMODEL].iLine[iFile] >= 0) {
@@ -1775,6 +1774,7 @@ void VerifyTideModel(CONTROL *control, FILES *files, OPTIONS *options) {
   }
 
   if (iFound == 0) {
+    char *cTmp;
     fvFormattedString(&cTmp, options[OPT_TIDEMODEL].cDefault);
     if (!memcmp(sLower(cTmp), "p2", 2)) {
       control->Evolve.iEqtideModel = CPL;
@@ -1789,8 +1789,8 @@ void VerifyTideModel(CONTROL *control, FILES *files, OPTIONS *options) {
     /* Chicanery. Since I only want this set once, I will
        make it seem like the user set it. */
     options[OPT_TIDEMODEL].iLine[0] = 1;
+    free(cTmp);
   }
-  free(cTmp);
 }
 
 void AssignEqtideDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,

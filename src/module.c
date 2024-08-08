@@ -1005,9 +1005,11 @@ void VerifyModuleMultiEqtideThermint(BODY *body, UPDATE *update,
                                      int iBody, int *iModuleProps,
                                      int *iModuleForce) {
 
-  if (control->Evolve.iEqtideModel == CTL) {
-    fprintf(stderr,"ERROR: The CTL EqTide model cannot be coupled to ThermInt.\n");
-    exit(EXIT_INPUT);
+  if (body[iBody].bEqtide && body[iBody].bThermint) {
+    if (control->Evolve.iEqtideModel == CTL) {
+      fprintf(stderr,"ERROR: The CTL EqTide model cannot be coupled to ThermInt.\n");
+      exit(EXIT_INPUT);
+    }
   }
 
   body[iBody].dTidalPowMan = 0;

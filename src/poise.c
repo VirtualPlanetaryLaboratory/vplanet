@@ -1153,6 +1153,7 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_PLANCKA].cName, "dPlanckA");
   fvFormattedString(&options[OPT_PLANCKA].cDescr, "Constant 'A' used in OLR calculation");
   fvFormattedString(&options[OPT_PLANCKA].cDefault, "203.3");
+  fvFormattedString(&options[OPT_PLANCKA].cDimension, "nd");
   options[OPT_PLANCKA].dDefault   = 203.3;
   options[OPT_PLANCKA].iType      = 2;
   options[OPT_PLANCKA].bMultiFile = 1;
@@ -3331,7 +3332,7 @@ void WriteDailyInsol(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                      double *dTmp, char **cUnit) {
 
-  char *cOut;
+  char *cOut=NULL;
   FILE *fp;
   int iLat, iDay;
   double dTime;
@@ -3378,13 +3379,14 @@ void WriteDailyInsol(BODY *body, CONTROL *control, OUTPUT *output,
   }
 
   fclose(fp);
+  free(cOut);
 }
 
 void WritePlanckB(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
                   char **cUnit) {
 
-  char *cOut;
+  char *cOut=NULL;
   FILE *fp;
   int iLat, iDay;
   double dTime;
@@ -3432,13 +3434,14 @@ void WritePlanckB(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   }
 
   fclose(fp);
+  free(cOut);
 }
 
 void WriteSeasonalTemp(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char **cUnit) {
 
-  char *cOut;
+  char *cOut=NULL;
   FILE *fp;
   int iLat, iDay;
   double dTime;
@@ -3488,13 +3491,14 @@ void WriteSeasonalTemp(BODY *body, CONTROL *control, OUTPUT *output,
   }
 
   fclose(fp);
+  free(cOut);
 }
 
 void WriteSeasonalFluxes(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
                          int iBody, double *dTmp, char **cUnit) {
 
-  char *cOutM, *cOutI, *cOutO, *cOutD;
+  char *cOutM=NULL, *cOutI=NULL, *cOutO=NULL, *cOutD=NULL;
   FILE *fpM, *fpI, *fpO, *fpD;
   int iLat, iDay;
   double dTime;
@@ -3584,13 +3588,17 @@ void WriteSeasonalFluxes(BODY *body, CONTROL *control, OUTPUT *output,
   fclose(fpI);
   fclose(fpO);
   fclose(fpD);
+  free(cOutM);
+  free(cOutI);
+  free(cOutO);
+  free(cOutD);
 }
 
 void WriteSeasonalIceBalance(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
                              int iBody, double *dTmp, char **cUnit) {
 
-  char *cOut;
+  char *cOut=NULL;
   FILE *fp;
   int iLat, iDay;
   double dTime;
@@ -3637,6 +3645,7 @@ void WriteSeasonalIceBalance(BODY *body, CONTROL *control, OUTPUT *output,
   }
 
   fclose(fp);
+  free(cOut);
 }
 
 void WriteFluxMerid(BODY *body, CONTROL *control, OUTPUT *output,

@@ -1774,7 +1774,7 @@ void VerifyTideModel(CONTROL *control, FILES *files, OPTIONS *options) {
   }
 
   if (iFound == 0) {
-    char *cTmp;
+    char *cTmp=NULL;
     fvFormattedString(&cTmp, options[OPT_TIDEMODEL].cDefault);
     if (!memcmp(sLower(cTmp), "p2", 2)) {
       control->Evolve.iEqtideModel = CPL;

@@ -29,7 +29,6 @@ We need this wrapper so we can call `main_impl` from Python.
 int main_impl(int argc, char *argv[]) {
 #ifdef DEBUG
   #ifdef __x86_64__
-    //  feenableexcept(FE_INVALID | FE_OVERFLOW);
     _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
     _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_OVERFLOW);
     _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_DIV_ZERO);

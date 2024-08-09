@@ -476,7 +476,6 @@ double fndCalcLongA(double dLongP, double dArgP) {
 
 void VerifyOrbitModel(CONTROL *control, FILES *files, OPTIONS *options) {
   int iFile, iFound = 0;
-  char *cTmp;
 
   for (iFile = 0; iFile < files->iNumInputs; iFile++) {
     if (options[OPT_ORBITMODEL].iLine[iFile] >= 0) {
@@ -499,6 +498,7 @@ void VerifyOrbitModel(CONTROL *control, FILES *files, OPTIONS *options) {
   }
 
   if (iFound == 0) {
+    char *cTmp;
     fvFormattedString(&cTmp, options[OPT_ORBITMODEL].cDefault);
     if (!memcmp(sLower(cTmp), "ll2", 3)) {
       control->Evolve.iDistOrbModel = LL2;
@@ -513,8 +513,8 @@ void VerifyOrbitModel(CONTROL *control, FILES *files, OPTIONS *options) {
     /* Chicanery. Since I only want this set once, I will
        make it seem like the user set it. */
     options[OPT_ORBITMODEL].iLine[0] = 1;
+    free(cTmp);
   }
-  free(cTmp);
 }
 
 

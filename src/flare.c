@@ -431,6 +431,7 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLAREYINT].bMultiFile = 1;
   options[OPT_FLAREYINT].dNeg       = 1.0 / DAYSEC;
   fvFormattedString(&options[OPT_FLAREYINT].cNeg, "1/day");
+  fvFormattedString(&options[OPT_FLAREYINT].cDimension,"1/time");
   fnRead[OPT_FLAREYINT] = &ReadFlareYInt;
   fvFormattedString(&options[OPT_FLAREYINT].cLongDescr,
           " Y-Intercept for flare frequency distribution. Where the curve "
@@ -465,6 +466,7 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLARESLOPE].bMultiFile = 1;
   options[OPT_FLARESLOPE].dNeg       = 1.0 / (DAYSEC * log10(1.0e7));
   fvFormattedString(&options[OPT_FLARESLOPE].cNeg, "1/day 1/log10(erg)");
+  fvFormattedString(&options[OPT_FLARESLOPE].cDimension,"1/time/energy");
   fnRead[OPT_FLARESLOPE] = &ReadFlareSlope;
   fvFormattedString(
         &options[OPT_FLARESLOPE].cLongDescr,
@@ -501,6 +503,7 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLAREMINENERGY].bMultiFile = 1;
   options[OPT_FLAREMINENERGY].dNeg       = 1e-7;
   fvFormattedString(&options[OPT_FLAREMINENERGY].cNeg, "ergs");
+  fvFormattedString(&options[OPT_FLAREMINENERGY].cDimension, "energy");
   fnRead[OPT_FLAREMINENERGY] = &ReadFlareMinEnergy;
 
   fvFormattedString(&options[OPT_FLAREMAXENERGY].cName, "dFlareMaxEnergy");
@@ -512,6 +515,7 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLAREMAXENERGY].bMultiFile = 1;
   options[OPT_FLAREMAXENERGY].dNeg       = 1e-7;
   fvFormattedString(&options[OPT_FLAREMAXENERGY].cNeg, "ergs");
+  fvFormattedString(&options[OPT_FLAREMAXENERGY].cDimension, "energy");
   fnRead[OPT_FLAREMAXENERGY] = &ReadFlareMaxEnergy;
 
   fvFormattedString(&options[OPT_LXUVFLARECONST].cName, "dLXUVFlareConst");
@@ -537,6 +541,7 @@ void InitializeOptionsFlare(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FLAREENERGYBIN].bMultiFile = 1;
   options[OPT_FLAREENERGYBIN].dNeg       = 1;
   fvFormattedString(&options[OPT_FLAREENERGYBIN].cNeg, "None");
+  fvFormattedString(&options[OPT_FLAREENERGYBIN].cDimension,"energy");
   fnRead[OPT_FLAREENERGYBIN] = &ReadFlareEnergyBin;
 
   fvFormattedString(&options[OPT_FLAREFFD].cName, "sFlareFFD");

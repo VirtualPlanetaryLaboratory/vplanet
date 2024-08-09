@@ -2669,13 +2669,16 @@ void ReadCosObl(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
 void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
                      OUTPUT *output, int iFile, int iVerbose) {
-  int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 1, iNumGrid = 0;
+  int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 1, iNumGrid = 0,iOption;
   int k, iOut         = -1, *lTmp, iCol, jCol;
   char **saTmp, *cTmp = NULL, **cOption, *cOut;
   int iLen1, iLen2;
 
   lTmp    = malloc(MAXLINES * sizeof(int));
   cOption = malloc(MAXARRAY * sizeof(char *));
+  for (iOption=0;iOption<MAXARRAY;iOption++) {
+    cOption[iOption]=NULL;
+  }
 
   AddOptionStringArray(files->Infile[iFile].cIn, options[OPT_OUTPUTORDER].cName,
                        &saTmp, &iNumIndices, &files->Infile[iFile].iNumLines,
@@ -2875,13 +2878,16 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
 
 void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
                     int iVerbose) {
-  int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 0, iNumGrid = 0;
+  int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 0, iNumGrid = 0,iOption;
   int k, iOut = -1, *lTmp;
-  char **saTmp, *cTmp, **cOption, *cOut;
+  char **saTmp, *cTmp=NULL, **cOption, *cOut;
   int iLen1, iLen2;
 
   lTmp    = malloc(MAXLINES * sizeof(int));
   cOption = malloc(MAXARRAY * sizeof(char *));
+  for (iOption=0;iOption<MAXARRAY;iOption++) {
+    cOption[iOption]=NULL;
+  }
 
   AddOptionStringArray(files->Infile[iFile].cIn, options[OPT_GRIDOUTPUT].cName,
                        &saTmp, &iNumIndices, &files->Infile[iFile].iNumLines,
@@ -2909,9 +2915,9 @@ void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
     /* Check for ambiguity */
     for (i = 0; i < iNumIndices; i++) {
       count = 0; /* Number of possibilities */
-      for (j = 0; j < OPTLEN; j++) {
-        cTmp[j] = 0;
-      }
+      // for (j = 0; j < OPTLEN; j++) {
+      //   cTmp[j] = 0;
+      // }
       fvFormattedString(&cTmp, saTmp[i]);
       for (j = 0; j < MODULEOUTEND; j++) {
         for (k = 0; k < OPTLEN; k++) {
@@ -2930,7 +2936,7 @@ void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
           if (output[j].bGrid == 1 || output[j].bGrid == 2) {
             iNumGrid += 1;
           }
-          j = MODULEOUTEND; /* Poor man's break! */
+          j = MODULEOUTEND; /* Break! */
         } else {
           if (iLen1 < iLen2) {
             iLen = iLen1;
@@ -3001,7 +3007,7 @@ void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
           fvFormattedString(&files->Outfile[iFile - 1].caCol[i],
                             output[iOut].cName);
         } else {
-          memset(files->Outfile[iFile - 1].caGrid[iNumGrid - 1], '\0', OPTLEN);
+          //memset(files->Outfile[iFile - 1].caGrid[iNumGrid - 1], '\0', OPTLEN);
           fvFormattedString(&files->Outfile[iFile - 1].caGrid[iNumGrid - 1],
                             output[iOut].cName);
         }
@@ -3016,6 +3022,8 @@ void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
   files->Outfile[iFile - 1].iNumGrid = iNumGrid;
 
   free(lTmp);
+  free(cTmp);
+  free(cOption);
 }
 
 void ReadOverwrite(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,

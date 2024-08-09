@@ -78,6 +78,7 @@ void sort_output(OUTPUT *output, int sorted[]) {
   SORTED_OUTPUT sorted_output[MODULEOUTEND];
   for (iOpt = 0; iOpt < MODULEOUTEND; iOpt++) {
     sorted_output[iOpt].index = iOpt;
+    sorted_output[iOpt].name=NULL;
     fvFormattedString(&sorted_output[iOpt].name, output[iOpt].cName);
   }
   qsort(sorted_output, MODULEOUTEND, sizeof(sorted_output[0]),
@@ -93,13 +94,16 @@ void sort_output(OUTPUT *output, int sorted[]) {
  */
 
 void InitializeFiles(FILES *files, int iNumBodies) {
-  int iBody;
+  int iBody,iOption;
 
   files->cLog = NULL;
   files->cExe = NULL;
   for (iBody = 0; iBody < iNumBodies; iBody++) {
     // Infile must be initilized in ReadBodyNames
     files->Outfile[iBody].cOut = NULL;
+    for (iOption=0;iOption<MODULEOPTEND;iOption++) {
+      files->Outfile[iBody].caGrid[iOption] = NULL;
+    }
   }
 }
 
@@ -299,8 +303,12 @@ void WriteDescription(char cLongDescr[], char cDescr[], int iMaxChars) {
   char **cLine;
 
   cLine = malloc(MAXARRAY * sizeof(char *));
+  for (iWord=0;iWord<MAXARRAY;iWord++) {
+    cLine[iWord]=NULL;
+  }
+
   for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
-    memset(cLine[iLineWordNow], '\0', OPTLEN);
+    //memset(cLine[iLineWordNow], '\0', OPTLEN);
     memset(cDescription[iLineWordNow], '\0', OPTLEN);
   }
 
@@ -347,7 +355,8 @@ void WriteDescription(char cLongDescr[], char cDescr[], int iMaxChars) {
     // Now reset counters
     iCharsLeft = iMaxChars;
     for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
-      memset(cLine[iLineWordNow], '\0', OPTLEN);
+      //memset(cLine[iLineWordNow], '\0', OPTLEN);
+      cLine[iLineWordNow]=NULL;
     }
     iLine++;
     iLineWord = 0;
@@ -1045,7 +1054,7 @@ void fsUnitsViscosity(UNITS *units, char **cUnit) {
   // strcat(cUnit, "^2/");
   // fsUnitsTime(units->iTime, cTmp);
   // strcat(cUnit, cTmp);
-  fvFormattedString(cUnit, cUnitLength, "^2/", cUnitTime);
+  fvFormattedString(cUnit, "%s^2/%s",cUnitLength,cUnitTime);
   free(cUnitLength);
   free(cUnitTime);
 }

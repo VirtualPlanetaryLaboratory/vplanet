@@ -1791,9 +1791,13 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
 
   // Diffusion-limited H escape rate
   double BDIFF = 4.8e19 * pow(body[iBody].dFlowTemp, 0.75);
+  if (XO == 1) {
+    body[iBody].dFHDiffLim = 0;
+  } else {
   body[iBody].dFHDiffLim =
         BDIFF * g * ATOMMASS * (QOH - 1.) /
         (KBOLTZ * body[iBody].dFlowTemp * (1. + XO / (1. - XO)));
+  }
 
   // Is water escaping?
   if (!fbDoesWaterEscape(body, evolve, io, iBody)) {
@@ -3432,12 +3436,17 @@ Modifier for H Ref Flux to include oxygen drag at a snapshot in time
 void WriteHRefODragMod(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char **cUnit) {
+  // XXX This should probably all just be moved into a function
   if (body[iBody].dCrossoverMass / ATOMMASS - 1. != 0) {
     double rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) /
                 (body[iBody].dCrossoverMass / ATOMMASS - 1.);
     double XO = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
                                           body[iBody].dOxygenMass);
-    *dTmp     = pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
+    if (XO == 1) {
+      *dTmp = 0;
+    } else {
+      *dTmp     = pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
+    }
   } else {
     *dTmp = -1;
   }

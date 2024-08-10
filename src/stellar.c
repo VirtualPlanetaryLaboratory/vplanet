@@ -1707,6 +1707,9 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
   double dTauCZ;
   double dT0;
   double dR0; // Rossby number
+  double dFracBreak; // fraction of breakup spin rate
+  double dbetaSq; // "beta" factor for Breimann+21 torque, squared
+  double dFmag; // magnetic-activity function for Breimann+21 torque
 
   // If using bRossbyCut, magnetic braking terminates when the rossby number
   // exceeds 2.08 following the model of van Saders et al. (2018)
@@ -1792,30 +1795,57 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
   // Breimann+21 magnetic braking model
   else if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_BR21) {
 
+    // Note: 
+    //   To use Breimann+21 "Standard" torque parameters, set:
+    //   BREIM21KS = 450.0
+    //   BREIM21PS = 0.2
+    //   BREIM21P = 2.0
+    //   To reduce Breimann+21 torque to Matt+15, set parameters to:
+    //   BREIM21KS = 100.0
+    //   BREIM21PS = 0.0
+    //   BREIM21P = 2.0
+    //   dbeta = 1.
+
     // Compute convective turnover timescale
     dTauCZ = fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
 
-    // Compute Rossby number
-    dR0 = body[iaBody[0]].dRotPer / dTauCZ;
+    // Compute Rossby number, normalized to solar value.
+    // Be sure value of BREIM21TAUSUN is correct for chosen turnover timescale.
+    dR0 = BREIM21OMEGASUN * BREIM21TAUSUN / body[iaBody[0]].dRotRate / dTauCZ;
 
-    // Compute Matt+2015 normalized torque
-    dT0 = MATT15T0 * pow(body[iaBody[0]].dRadius / RSUN, 3.1) *
+      // python code for reference, during development
+      // f = omega_N*const.OmegaSun*((Rstar*const.RSun)**3/(const.GravConst*Mstar*const.MSun))**0.5
+      //     beta = (1.+(f/k2)**2)**0.5
+
+      // RossbyStar = (omega_N*TauStar)**-1   #[OmegaSun*TauSun]
+
+      // Fm = min(ks*(RossbyStar)**ps,(RossbyStar)**(-p))
+
+      // T0 = -6.33333333333e30*2./p
+
+      // T = T0*(Rstar**3.1)*(Mstar**0.5)*omega_N*(beta**(-0.44))*Fm
+
+    // Compute fraction of breakup spin rate
+    dFracBreak = body[iaBody[0]].dRotRate * 
+          pow(body[iaBody[0]].dRadius,1.5) / sqrt(BIGG * body[iaBody[0]].dMass);
+
+    // Compute beta factor squared (due to centrifugal acceleration of wind)
+    dbetaSq = (1.0 + dFracBreak*dFracBreak / (0.0716*0.0716));
+    // dbetaSq = 1.0; // For developement, to reduce to Matt+15
+
+    // Compute magnetic-activity function
+    dFmag = min(BREIM21KS * pow(dR0, BREIM21PS), 1.0/pow(dR0, BREIM21P));
+
+    // Compute torque normalization
+    dT0 = -BREIM21T0*2.0/BREIM21P * pow(body[iaBody[0]].dRadius / RSUN, 3.1) *
           sqrt(body[iaBody[0]].dMass / MSUN);
 
-    // Is the magnetic braking saturated?
-    if (dR0 <= MATT15R0SUN / MATT15X) {
-      // Saturated
-      dDJDt = -dT0 * MATT15X * MATT15X *
-              (body[iaBody[0]].dRotRate / MATT15OMEGASUN);
-    } else {
-      // Unsaturated
-      dDJDt = -dT0 * (dTauCZ / MATT15TAUCZ) * (dTauCZ / MATT15TAUCZ) *
-              pow(body[iaBody[0]].dRotRate / MATT15OMEGASUN, 3);
-    }
+    // Put it all together for the total torque
+    dDJDt = dT0 * body[iaBody[0]].dRotRate/BREIM21OMEGASUN / pow(dbetaSq,0.22) * dFmag;
 
     // dDJDt = -0.0;  // Temporarily set to zero, during development.
 
-      return -dDJDt; // Return positive amount of lost angular momentum
+    return -dDJDt; // Return positive amount of lost angular momentum
   }
   // No magnetic braking
   else {

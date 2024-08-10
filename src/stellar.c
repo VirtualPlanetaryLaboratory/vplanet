@@ -1706,7 +1706,7 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
   double dOmegaCrit;
   double dTauCZ;
   double dT0;
-  double dR0; // Rossby number
+  double dRo; // Rossby number
   double dFracBreak; // fraction of breakup spin rate
   double dbetaSq; // "beta" factor for Breimann+21 torque, squared
   double dFmag; // magnetic-activity function for Breimann+21 torque
@@ -1714,11 +1714,11 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
   // If using bRossbyCut, magnetic braking terminates when the rossby number
   // exceeds 2.08 following the model of van Saders et al. (2018)
   if (body[iaBody[0]].bRossbyCut) {
-    dR0 = body[iaBody[0]].dRotPer /
+    dRo = body[iaBody[0]].dRotPer /
           fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
 
     // Rossby number exceeds threshold: cease magnetic braking
-    if (dR0 > ROSSBYCRIT) {
+    if (dRo > ROSSBYCRIT) {
       return dTINY;
     }
   }
@@ -1773,14 +1773,14 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
     dTauCZ = fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
 
     // Compute Rossby number
-    dR0 = body[iaBody[0]].dRotPer / dTauCZ;
+    dRo = body[iaBody[0]].dRotPer / dTauCZ;
 
     // Compute Matt+2015 normalized torque
     dT0 = MATT15T0 * pow(body[iaBody[0]].dRadius / RSUN, 3.1) *
           sqrt(body[iaBody[0]].dMass / MSUN);
 
     // Is the magnetic braking saturated?
-    if (dR0 <= MATT15R0SUN / MATT15X) {
+    if (dRo <= MATT15R0SUN / MATT15X) {
       // Saturated
       dDJDt = -dT0 * MATT15X * MATT15X *
               (body[iaBody[0]].dRotRate / MATT15OMEGASUN);
@@ -1811,7 +1811,7 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
 
     // Compute Rossby number, normalized to solar value.
     // Be sure value of BREIM21TAUSUN is correct for chosen turnover timescale.
-    dR0 = BREIM21OMEGASUN * BREIM21TAUSUN / body[iaBody[0]].dRotRate / dTauCZ;
+    dRo = BREIM21OMEGASUN * BREIM21TAUSUN / body[iaBody[0]].dRotRate / dTauCZ;
 
       // python code for reference, during development
       // f = omega_N*const.OmegaSun*((Rstar*const.RSun)**3/(const.GravConst*Mstar*const.MSun))**0.5
@@ -1834,7 +1834,7 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
     // dbetaSq = 1.0; // For developement, to reduce to Matt+15
 
     // Compute magnetic-activity function
-    dFmag = min(BREIM21KS * pow(dR0, BREIM21PS), 1.0/pow(dR0, BREIM21P));
+    dFmag = min(BREIM21KS * pow(dRo, BREIM21PS), 1.0/pow(dRo, BREIM21P));
 
     // Compute torque normalization
     dT0 = -BREIM21T0*2.0/BREIM21P * pow(body[iaBody[0]].dRadius / RSUN, 3.1) *

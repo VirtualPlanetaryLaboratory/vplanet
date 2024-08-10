@@ -41,6 +41,7 @@
 #define STELLAR_DJDT_SK72                                                      \
   2 /**< dJ/dt according to Skumanich 1972 empirical law */
 #define STELLAR_DJDT_MA15 3 /**< dJ/dt according to Matt+2015 */
+#define STELLAR_DJDT_BR21 4 /**< dJ/dt according to Breimann+2021 */
 
 #define HZ_MODEL_KOPPARAPU 1
 #define DRYRGFLUX 415 /**< W/m^2 from Abe et al. (2011) */

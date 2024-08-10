@@ -163,11 +163,13 @@ void ReadMagBrakingModel(BODY *body, CONTROL *control, FILES *files,
       body[iFile - 1].iMagBrakingModel = STELLAR_DJDT_SK72;
     } else if (!memcmp(sLower(cTmp), "ma", 2)) {
       body[iFile - 1].iMagBrakingModel = STELLAR_DJDT_MA15;
+    } else if (!memcmp(sLower(cTmp), "br", 2)) {
+      body[iFile - 1].iMagBrakingModel = STELLAR_DJDT_BR21;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
                 "ERROR: Unknown argument to %s: %s. Options are REINERS, "
-                "SKUMANICH, MATT, or NONE.\n",
+                "SKUMANICH, MATT, BREIMANN21 or NONE.\n",
                 options->cName, cTmp);
       }
       LineExit(files->Infile[iFile].cIn, lTmp);
@@ -1760,7 +1762,9 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
              body[iaBody[0]].dRotRate;
 
     return dDJDt; // Return positive amount of los angular momentum
-  } else if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_MA15) {
+  } 
+  // Matt+15 magnetic braking model
+  else if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_MA15) {
 
     // Compute convective turnover timescale and normalized torque
     dTauCZ = fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
@@ -1784,6 +1788,13 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
     }
 
     return -dDJDt; // Return positive amount of lost angular momentum
+  } 
+  // Breimann+21 magnetic braking model
+  else if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_BR21) {
+
+      dDJDt = -0.0;  // Temporarily set to zero, during development.
+
+      return -dDJDt; // Return positive amount of lost angular momentum
   }
   // No magnetic braking
   else {

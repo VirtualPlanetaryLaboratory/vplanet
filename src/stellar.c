@@ -1766,7 +1766,7 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
   // Matt+15 magnetic braking model
   else if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_MA15) {
 
-    // Compute convective turnover timescale and normalized torque
+    // Compute convective turnover timescale
     dTauCZ = fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
 
     // Compute Rossby number
@@ -1792,7 +1792,28 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
   // Breimann+21 magnetic braking model
   else if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_BR21) {
 
-      dDJDt = -0.0;  // Temporarily set to zero, during development.
+    // Compute convective turnover timescale
+    dTauCZ = fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
+
+    // Compute Rossby number
+    dR0 = body[iaBody[0]].dRotPer / dTauCZ;
+
+    // Compute Matt+2015 normalized torque
+    dT0 = MATT15T0 * pow(body[iaBody[0]].dRadius / RSUN, 3.1) *
+          sqrt(body[iaBody[0]].dMass / MSUN);
+
+    // Is the magnetic braking saturated?
+    if (dR0 <= MATT15R0SUN / MATT15X) {
+      // Saturated
+      dDJDt = -dT0 * MATT15X * MATT15X *
+              (body[iaBody[0]].dRotRate / MATT15OMEGASUN);
+    } else {
+      // Unsaturated
+      dDJDt = -dT0 * (dTauCZ / MATT15TAUCZ) * (dTauCZ / MATT15TAUCZ) *
+              pow(body[iaBody[0]].dRotRate / MATT15OMEGASUN, 3);
+    }
+
+    // dDJDt = -0.0;  // Temporarily set to zero, during development.
 
       return -dDJDt; // Return positive amount of lost angular momentum
   }

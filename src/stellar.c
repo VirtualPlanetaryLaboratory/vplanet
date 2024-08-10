@@ -1804,26 +1804,14 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
     //   BREIM21KS = 100.0
     //   BREIM21PS = 0.0
     //   BREIM21P = 2.0
-    //   dbeta = 1.
+    //   dbetaSq = 1.0
 
     // Compute convective turnover timescale
     dTauCZ = fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
 
-    // Compute Rossby number, normalized to solar value.
-    // Be sure value of BREIM21TAUSUN is correct for chosen turnover timescale.
+    // Compute Rossby number, normalized to solar value.  Be sure value of 
+    // BREIM21TAUSUN is correct for chosen turnover timescale.
     dRo = BREIM21OMEGASUN * BREIM21TAUSUN / body[iaBody[0]].dRotRate / dTauCZ;
-
-      // python code for reference, during development
-      // f = omega_N*const.OmegaSun*((Rstar*const.RSun)**3/(const.GravConst*Mstar*const.MSun))**0.5
-      //     beta = (1.+(f/k2)**2)**0.5
-
-      // RossbyStar = (omega_N*TauStar)**-1   #[OmegaSun*TauSun]
-
-      // Fm = min(ks*(RossbyStar)**ps,(RossbyStar)**(-p))
-
-      // T0 = -6.33333333333e30*2./p
-
-      // T = T0*(Rstar**3.1)*(Mstar**0.5)*omega_N*(beta**(-0.44))*Fm
 
     // Compute fraction of breakup spin rate
     dFracBreak = body[iaBody[0]].dRotRate * 
@@ -1831,9 +1819,9 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
 
     // Compute beta factor squared (due to centrifugal acceleration of wind)
     dbetaSq = (1.0 + dFracBreak*dFracBreak / (0.0716*0.0716));
-    // dbetaSq = 1.0; // For developement, to reduce to Matt+15
+    // dbetaSq = 1.0;   // to reduce to Matt+15, for development
 
-    // Compute magnetic-activity function
+    // Compute magnetic-activity function (this captures sat/unsat behavior)
     dFmag = min(BREIM21KS * pow(dRo, BREIM21PS), 1.0/pow(dRo, BREIM21P));
 
     // Compute torque normalization
@@ -1842,8 +1830,6 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
 
     // Put it all together for the total torque
     dDJDt = dT0 * body[iaBody[0]].dRotRate/BREIM21OMEGASUN / pow(dbetaSq,0.22) * dFmag;
-
-    // dDJDt = -0.0;  // Temporarily set to zero, during development.
 
     return -dDJDt; // Return positive amount of lost angular momentum
   }

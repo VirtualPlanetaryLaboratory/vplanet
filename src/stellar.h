@@ -25,10 +25,10 @@
 #define MATT15OMEGASUN                                                         \
   2.6e-6 /**< Matt+2015 solar angular rotation frequency in s^-1 */
 #define BREIM21OMEGASUN 2.6e-6 /**< Breimann+21 solar rot rate (rad/s) */
-#define BREIM21TAUSUN 1.115e6/**< Breimann+21 solar TauCZ value (s) */   \
+#define BREIM21TAUSUN 1.115e6 /**< Breimann+21 solar TauCZ value (s) */ 
   /**< Be sure that TauCZ above is consistent with turnover timescale used. */
-#define BREIM21KS 100.0   /**< Breimann+21 ks torque parameter */
-#define BREIM21PS 0.0     /**< Breimann+21 ps torque parameter */
+#define BREIM21KS 450.0   /**< Breimann+21 ks torque parameter */
+#define BREIM21PS 0.2     /**< Breimann+21 ps torque parameter */
 #define BREIM21P 2.0      /**< Breimann+21 p torque parameter */
 #define BREIM21T0 6.3e23  /**< Breimann+21 solar torque const (Joules) */
 #define ROSSBYCRIT                                                             \

@@ -94,6 +94,7 @@
 #define OUT_LXUVFRAC 1513
 #define OUT_ROSSBYNUMBER 1514
 #define OUT_DROTPERDTSTELLAR 1515
+#define OUT_WINDTORQUE 1516
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -145,6 +146,8 @@ void WriteLXUV(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
 void WriteLXUVFrac(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                    int, double *, char[]);
 void WriteRossbyNumber(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
+                       int, double *, char[]);
+void WriteWindTorque(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                        int, double *, char[]);
 void WriteDRotPerDtStellar(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                            UPDATE *, int, double *, char[]);

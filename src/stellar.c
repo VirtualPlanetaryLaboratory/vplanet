@@ -1310,6 +1310,14 @@ void WriteRossbyNumber(BODY *body, CONTROL *control, OUTPUT *output,
   strcpy(cUnit, "");
 }
 
+void WriteWindTorque(BODY *body, CONTROL *control, OUTPUT *output,
+                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                       double *dTmp, char cUnit[]) {
+  // int iaBody[1] = {iBody}; // Is this the way, then iaBody below?
+  *dTmp = fdDJDtMagBrakingStellar(body, system, &iBody);
+  strcpy(cUnit, "");
+}
+
 void WriteDRotPerDtStellar(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
                            int iBody, double *dTmp, char cUnit[]) {
@@ -1370,6 +1378,13 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ROSSBYNUMBER].iNum       = 1;
   output[OUT_ROSSBYNUMBER].iModuleBit = STELLAR;
   fnWrite[OUT_ROSSBYNUMBER]           = &WriteRossbyNumber;
+
+  sprintf(output[OUT_WINDTORQUE].cName, "WindTorque");
+  sprintf(output[OUT_WINDTORQUE].cDescr, "Stellar Wind Torque");
+  output[OUT_WINDTORQUE].bNeg       = 0;
+  output[OUT_WINDTORQUE].iNum       = 1;
+  output[OUT_WINDTORQUE].iModuleBit = STELLAR;
+  fnWrite[OUT_WINDTORQUE]           = &WriteWindTorque;
 
   sprintf(output[OUT_DROTPERDTSTELLAR].cName, "DRotPerDtStellar");
   sprintf(output[OUT_DROTPERDTSTELLAR].cDescr,

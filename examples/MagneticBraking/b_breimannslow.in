@@ -3,7 +3,7 @@ sName	                  b_breimannslow
 saModules	              stellar
 dMass                     1.0
 dAge                      5.0e6
-dRotPeriod               -15.0   # Initial rotaiton period (days)
+dRotPeriod               -10.0   # Initial rotaiton period (days)
 sStellarModel             baraffe
 sMagBrakingModel          breimann21
 bHaltEndBaraffeGrid       1

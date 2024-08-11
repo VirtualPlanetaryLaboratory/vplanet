@@ -145,8 +145,6 @@ ax.set_ylabel("Rotation Period [d]")
 ax.legend(loc="best", fontsize=12)
 
 # Save the figure
-# ext = get_args().ext
-ext = 'png'
 fig.savefig(path / f"MagneticBraking_MBOnly.{ext}", bbox_inches="tight", dpi=600)
 
 
@@ -198,8 +196,6 @@ ax.set_ylabel("Stellar Wind Torque  [Joules]")
 ax.legend(loc="best", fontsize=12)
 
 # Save the figure
-# ext = get_args().ext
-ext = 'png'
 fig.savefig(path / f"MagneticBrakingTorques.{ext}", bbox_inches="tight", dpi=600)
 
 

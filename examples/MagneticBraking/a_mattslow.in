@@ -3,7 +3,7 @@ sName	                  a_mattslow
 saModules	              stellar
 dMass                     0.1
 dAge                      5.0e6
-dRotPeriod               -15.0   # Initial rotaiton period (days)
+dRotPeriod               -10.0   # Initial rotaiton period (days)
 sStellarModel             baraffe
 sMagBrakingModel          matt
 bHaltEndBaraffeGrid       1

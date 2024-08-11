@@ -20,25 +20,28 @@ import vplanet
 # Path hacks
 path = pathlib.Path(__file__).parents[0].absolute()
 sys.path.insert(1, str(path.parents[0]))
-from get_args import get_args
+# from get_args import get_args
 
 # Typical plot parameters that make for pretty plot
 mpl.rcParams["figure.figsize"] = (9, 8)
-mpl.rcParams["font.size"] = 18.0
+mpl.rcParams["font.size"] = 17.0
 
 # Run vplanet
 vplanet.run(path / "vpl.in")
 
+
 ### Magnetic braking validation figure ###
 
-ms = ["a_matt", "a_reiners", "a_sk"]
-gs = ["b_matt", "b_reiners", "b_sk"]
-labels = ["Matt et al. (2015)", "Reiners & Mohanty (2012)", "Repetto & Nelemans (2014)"]
-colors = [vplot.colors.orange, vplot.colors.dark_blue, vplot.colors.pale_blue]
+
+ms = ["a_matt", "a_reiners", "a_sk", "a_breimann"]
+gs = ["b_matt", "b_reiners", "b_sk", "b_breimann"]
+labels = ["Matt et al. (2015)", "Reiners & Mohanty (2012)", "Repetto & Nelemans (2014)", "Breimann et al. (2021)"]
+colors = [vplot.colors.orange, vplot.colors.dark_blue, vplot.colors.pale_blue, "green"]
+startAge = 5e6 # starting age of stars
 
 fig, ax = plt.subplots()
 
-# saOutputOrder Time -TotEn -TotAngMom -Luminosity -Radius Temperature -RotPer -LXUVTot RadGyra
+# saOutputOrder Time -TotAngMom -Luminosity -Radius Temperature -RotPer RadGyra WindTorque RossbyNumber
 
 for ii in range(len(ms)):
     # Load in data
@@ -46,8 +49,8 @@ for ii in range(len(ms)):
     g = np.genfromtxt(path / ("system." + gs[ii] + ".forward"))
 
     # Plot!
-    ax.plot(m[:, 0], m[:, 6], lw=3, ls="-", color=colors[ii])
-    ax.plot(g[:, 0], g[:, 6], lw=3, ls="--", color=colors[ii])
+    ax.plot(m[:, 0]+startAge, m[:, 5], lw=3, ls="-", color=colors[ii])
+    ax.plot(g[:, 0]+startAge, g[:, 5], lw=3, ls="--", color=colors[ii])
 
 # Annotate
 ax.plot(
@@ -69,12 +72,20 @@ ax.plot(
     color=vplot.colors.pale_blue,
     label="Repetto & Nelemans (2014)",
 )
+ax.plot(
+    [500],
+    [500],
+    lw=3,
+    ls="-",
+    color="green",
+    label="Breimann et al. (2021)",
+)
 ax.plot([500], [500], lw=3, ls="-", color="C7", label="M = 0.1 M$_{\odot}$")
 ax.plot([500], [500], lw=3, ls="--", color="C7", label="M = 1 M$_{\odot}$")
 
 # Format plot
-ax.set_xlim(1.0e6, 5.0e9)
-ax.set_ylim(0.1, 70)
+ax.set_xlim(5.0e6, 8.1e9)
+ax.set_ylim(0.08, 70)
 ax.set_xscale("log")
 ax.set_yscale("log")
 ax.set_xlabel("Time [yr]")
@@ -82,10 +93,118 @@ ax.set_ylabel("Rotation Period [d]")
 ax.legend(loc="best", fontsize=12)
 
 # Save the figure
-ext = get_args().ext
+# ext = get_args().ext
+ext = 'png'
 fig.savefig(path / f"MagneticBraking.{ext}", bbox_inches="tight", dpi=600)
 
+
+### Comparison between Matt+15 and Breimann+21 only ####
+
+
+ms = ["a_matt", "a_mattslow", "a_breimann", "a_breimannslow"]
+gs = ["b_matt", "b_mattslow", "b_breimann", "b_breimannslow"]
+labels = ["Matt et al. (2015)", "Matt et al. (2015)", "Breimann et al. (2021)", "Breimann et al. (2021)"]
+colors = [vplot.colors.orange, vplot.colors.orange, "green", "green"]
+startAge = 5e6 # starting age of stars
+
+fig, ax = plt.subplots()
+
+# saOutputOrder Time -TotAngMom -Luminosity -Radius Temperature -RotPer RadGyra WindTorque RossbyNumber
+
+for ii in range(len(ms)):
+    # Load in data
+    m = np.genfromtxt(path / ("system." + ms[ii] + ".forward"))
+    g = np.genfromtxt(path / ("system." + gs[ii] + ".forward"))
+
+    # Plot!
+    ax.plot(m[:, 0]+startAge, m[:, 5], lw=3, ls="-", color=colors[ii])
+    ax.plot(g[:, 0]+startAge, g[:, 5], lw=3, ls="--", color=colors[ii])
+
+# Annotate
+ax.plot(
+    [500], [500], lw=3, ls="-", color=vplot.colors.orange, label="Matt et al. (2015)"
+)
+ax.plot(
+    [500],
+    [500],
+    lw=3,
+    ls="-",
+    color="green",
+    label="Breimann et al. (2021)",
+)
+ax.plot([500], [500], lw=3, ls="-", color="C7", label="M = 0.1 M$_{\odot}$")
+ax.plot([500], [500], lw=3, ls="--", color="C7", label="M = 1 M$_{\odot}$")
+
+# Format plot
+ax.set_xlim(5.0e6, 8.1e9)
+ax.set_ylim(0.08, 70)
+ax.set_xscale("log")
+ax.set_yscale("log")
+ax.set_xlabel("Time [yr]")
+ax.set_ylabel("Rotation Period [d]")
+ax.legend(loc="best", fontsize=12)
+
+# Save the figure
+# ext = get_args().ext
+ext = 'png'
+fig.savefig(path / f"MagneticBraking_MBOnly.{ext}", bbox_inches="tight", dpi=600)
+
+
+### Plot comparing the wind braking torques (similar to Breimann+21 Fig 10) ####
+
+
+ms = ["a_matt", "a_breimann"]
+gs = ["b_matt", "b_breimann"]
+labels = ["Matt et al. (2015)", "Breimann et al. (2021)"]
+colors = [vplot.colors.orange, "green"]
+startIDX = 30 # output line to start plotting
+solarRo = 2.1 # approximate Solar Rossby No for CS11 turnover timescale
+
+fig, ax = plt.subplots()
+
+# saOutputOrder Time -TotAngMom -Luminosity -Radius Temperature -RotPer RadGyra WindTorque RossbyNumber
+
+for ii in range(len(ms)):
+    # Load in data
+    m = np.genfromtxt(path / ("system." + ms[ii] + ".forward"))
+    g = np.genfromtxt(path / ("system." + gs[ii] + ".forward"))
+
+    # Plot!
+    ax.plot(m[startIDX:, 8]/solarRo, m[startIDX:, 7], lw=3, ls="-", color=colors[ii])
+    ax.plot(g[startIDX:, 8]/solarRo, g[startIDX:, 7], lw=3, ls="--", color=colors[ii])
+
+# Annotate
+ax.plot(
+    [500], [500], lw=3, ls="-", color=vplot.colors.orange, label="Matt et al. (2015)"
+)
+ax.plot(
+    [500],
+    [500],
+    lw=3,
+    ls="-",
+    color="green",
+    label="Breimann et al. (2021)",
+)
+ax.plot([500], [500], lw=3, ls="-", color="C7", label="M = 0.1 M$_{\odot}$")
+ax.plot([500], [500], lw=3, ls="--", color="C7", label="M = 1 M$_{\odot}$")
+
+# Format plot
+ax.set_xlim(.0005, 2)
+ax.set_ylim(1e20, 1e28)
+ax.set_xscale("log")
+ax.set_yscale("log")
+ax.set_xlabel("Rossby Number  [solar units]")
+ax.set_ylabel("Stellar Wind Torque  [Joules]")
+ax.legend(loc="best", fontsize=12)
+
+# Save the figure
+# ext = get_args().ext
+ext = 'png'
+fig.savefig(path / f"MagneticBrakingTorques.{ext}", bbox_inches="tight", dpi=600)
+
+
 ### Now make Kepler comparison figure ###
+
 
 # Typical plot parameters that make for pretty plots
 mpl.rcParams["font.size"] = 17

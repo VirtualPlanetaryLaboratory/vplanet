@@ -1824,7 +1824,8 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
     // Compute magnetic-activity function (this captures sat/unsat behavior)
     dFmag = min(BREIM21KS * pow(dRo, BREIM21PS), 1.0/pow(dRo, BREIM21P));
 
-    // Compute torque normalization
+    // Compute torque normalization. Note that torque norm should also 
+    // depend on which solar rotation rate is adopted, BREIM21OMEGASUN.
     dT0 = -BREIM21T0*2.0/BREIM21P * pow(body[iaBody[0]].dRadius / RSUN, 3.1) *
           sqrt(body[iaBody[0]].dMass / MSUN);
 

@@ -1810,7 +1810,12 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
   // Breimann+21 magnetic braking model
   else if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_BR21) {
 
-    // Note: 
+    // Notes:
+    //   To be self-consistent (i.e., to reproduce the solar spin rate):
+    //   BREIM21TAUSUN should be set to whatever solar value is given by 
+    //   the turnover timescale used.
+    //   Torque normalization BREIM21T0 should be proportional to
+    //   the adopted value of solar rotation rate BREIM21OMEGASUN.
     //   To use Breimann+21 "Standard" torque parameters, set:
     //   BREIM21KS = 450.0
     //   BREIM21PS = 0.2
@@ -1824,8 +1829,7 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
     // Compute convective turnover timescale
     dTauCZ = fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
 
-    // Compute Rossby number, normalized to solar value.  Be sure value of 
-    // BREIM21TAUSUN is correct for chosen turnover timescale.
+    // Compute Rossby number, normalized to solar value.
     dRo = BREIM21OMEGASUN * BREIM21TAUSUN / body[iaBody[0]].dRotRate / dTauCZ;
 
     // Compute fraction of breakup spin rate
@@ -1834,13 +1838,12 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
 
     // Compute beta factor squared (due to centrifugal acceleration of wind)
     dbetaSq = (1.0 + dFracBreak*dFracBreak / (0.0716*0.0716));
-    // dbetaSq = 1.0;   // to reduce to Matt+15, for development
+    // dbetaSq = 1.0;   // to reduce to Matt+15 formulation, for development
 
     // Compute magnetic-activity function (this captures sat/unsat behavior)
     dFmag = min(BREIM21KS * pow(dRo, BREIM21PS), 1.0/pow(dRo, BREIM21P));
 
-    // Compute torque normalization. Note that torque norm should also 
-    // depend on which solar rotation rate is adopted, BREIM21OMEGASUN.
+    // Compute torque normalization.
     dT0 = -BREIM21T0*2.0/BREIM21P * pow(body[iaBody[0]].dRadius / RSUN, 3.1) *
           sqrt(body[iaBody[0]].dMass / MSUN);
 

@@ -23,8 +23,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="poise" href="poise.html" />
-    <link rel="prev" title="evolve" href="evolve.html" /> 
+    <link rel="next" title="thermint" href="thermint.html" />
+    <link rel="prev" title="distrot" href="distrot.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -57,27 +57,16 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
 <li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">stellar</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#stellar-c">stellar.c</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv415BodyCopyStellarP4BODYP4BODYiii"><code class="docutils literal notranslate"><span class="pre">BodyCopyStellar()</span></code></a></li>
@@ -135,6 +124,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv49WriteLXUVP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"><code class="docutils literal notranslate"><span class="pre">WriteLXUV()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv413WriteLXUVFracP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"><code class="docutils literal notranslate"><span class="pre">WriteLXUVFrac()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv417WriteRossbyNumberP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"><code class="docutils literal notranslate"><span class="pre">WriteRossbyNumber()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv415WriteWindTorqueP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"><code class="docutils literal notranslate"><span class="pre">WriteWindTorque()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv421WriteDRotPerDtStellarP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"><code class="docutils literal notranslate"><span class="pre">WriteDRotPerDtStellar()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv423InitializeOutputStellarP6OUTPUTA_13fnWriteOutput"><code class="docutils literal notranslate"><span class="pre">InitializeOutputStellar()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv417LogOptionsStellarP7CONTROLP4FILE"><code class="docutils literal notranslate"><span class="pre">LogOptionsStellar()</span></code></a></li>
@@ -172,8 +162,19 @@
 <li class="toctree-l3"><a class="reference internal" href="#stellar-h">stellar.h</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
 <li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -513,6 +514,11 @@ and a simple wind/magnetic braking model.</p>
 <dd></dd></dl>
 
 <dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415WriteWindTorqueP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
+<span id="_CPPv315WriteWindTorqueP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv215WriteWindTorqueP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteWindTorque__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="stellar_8c_1a4cd8a9a11ceab73b5b08ccb032992ec7"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WriteWindTorque</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">output</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dTmp</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415WriteWindTorqueP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv421WriteDRotPerDtStellarP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c">
 <span id="_CPPv321WriteDRotPerDtStellarP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="_CPPv221WriteDRotPerDtStellarP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c"></span><span id="WriteDRotPerDtStellar__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cA"></span><span class="target" id="stellar_8c_1afe23f013263f866f571de934268ac6c3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WriteDRotPerDtStellar</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">output</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dTmp</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421WriteDRotPerDtStellarP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdA_c" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
@@ -765,6 +771,42 @@ and a simple wind/magnetic braking model.</p>
 </dd></dl>
 
 <dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.BREIM21OMEGASUN">
+<span class="target" id="stellar_8h_1a692a714cb805179ab03da08023d90f01"></span><span class="sig-name descname"><span class="n"><span class="pre">BREIM21OMEGASUN</span></span></span><a class="headerlink" href="#c.BREIM21OMEGASUN" title="Link to this definition"></a><br /></dt>
+<dd><p>Breimann+21 solar rot rate (rad/s) </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.BREIM21TAUSUN">
+<span class="target" id="stellar_8h_1a0dc34bbb144cca3e1cd707b4ffa38a63"></span><span class="sig-name descname"><span class="n"><span class="pre">BREIM21TAUSUN</span></span></span><a class="headerlink" href="#c.BREIM21TAUSUN" title="Link to this definition"></a><br /></dt>
+<dd><p>Breimann+21 solar TauCZ value (s) Be sure that TauCZ above is consistent with turnover timescale used. </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.BREIM21KS">
+<span class="target" id="stellar_8h_1a523cee977e6a48a5fb4f9e9555302031"></span><span class="sig-name descname"><span class="n"><span class="pre">BREIM21KS</span></span></span><a class="headerlink" href="#c.BREIM21KS" title="Link to this definition"></a><br /></dt>
+<dd><p>Breimann+21 ks torque parameter </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.BREIM21PS">
+<span class="target" id="stellar_8h_1a1876833affe0f9b0f4c7c7085b9af244"></span><span class="sig-name descname"><span class="n"><span class="pre">BREIM21PS</span></span></span><a class="headerlink" href="#c.BREIM21PS" title="Link to this definition"></a><br /></dt>
+<dd><p>Breimann+21 ps torque parameter </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.BREIM21P">
+<span class="target" id="stellar_8h_1a6280b929dc0df3972ab21bb60f5ae32e"></span><span class="sig-name descname"><span class="n"><span class="pre">BREIM21P</span></span></span><a class="headerlink" href="#c.BREIM21P" title="Link to this definition"></a><br /></dt>
+<dd><p>Breimann+21 p torque parameter </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.BREIM21T0">
+<span class="target" id="stellar_8h_1af9422f5512006748bb2761cc1dab03cb"></span><span class="sig-name descname"><span class="n"><span class="pre">BREIM21T0</span></span></span><a class="headerlink" href="#c.BREIM21T0" title="Link to this definition"></a><br /></dt>
+<dd><p>Breimann+21 solar torque const (Joules) </p>
+</dd></dl>
+
+<dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.ROSSBYCRIT">
 <span class="target" id="stellar_8h_1a3e6b3434af5c5282f3e9ea2248e23d8a"></span><span class="sig-name descname"><span class="n"><span class="pre">ROSSBYCRIT</span></span></span><a class="headerlink" href="#c.ROSSBYCRIT" title="Link to this definition"></a><br /></dt>
 <dd><p>Critical Rossby number above which magnetic braking shuts off \ according to van Saders+2018 </p>
@@ -827,6 +869,12 @@ and a simple wind/magnetic braking model.</p>
 <dt class="sig sig-object cpp" id="c.STELLAR_DJDT_MA15">
 <span class="target" id="stellar_8h_1a87c0503a1a2926feb180dd9296cde19a"></span><span class="sig-name descname"><span class="n"><span class="pre">STELLAR_DJDT_MA15</span></span></span><a class="headerlink" href="#c.STELLAR_DJDT_MA15" title="Link to this definition"></a><br /></dt>
 <dd><p>dJ/dt according to Matt+2015 </p>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.STELLAR_DJDT_BR21">
+<span class="target" id="stellar_8h_1a94432cdef000cc86102578745026f6f9"></span><span class="sig-name descname"><span class="n"><span class="pre">STELLAR_DJDT_BR21</span></span></span><a class="headerlink" href="#c.STELLAR_DJDT_BR21" title="Link to this definition"></a><br /></dt>
+<dd><p>dJ/dt according to Breimann+2021 </p>
 </dd></dl>
 
 <dl class="cpp macro">
@@ -982,6 +1030,11 @@ and a simple wind/magnetic braking model.</p>
 <span class="target" id="stellar_8h_1ab9e919fe12bdd4cd80dd4906c132a853"></span><span class="sig-name descname"><span class="n"><span class="pre">OUT_DROTPERDTSTELLAR</span></span></span><a class="headerlink" href="#c.OUT_DROTPERDTSTELLAR" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.OUT_WINDTORQUE">
+<span class="target" id="stellar_8h_1a520c3e3fe535dc4743dc423c7608200c"></span><span class="sig-name descname"><span class="n"><span class="pre">OUT_WINDTORQUE</span></span></span><a class="headerlink" href="#c.OUT_WINDTORQUE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
 </div>
 </section>
 </section>
@@ -990,8 +1043,8 @@ and a simple wind/magnetic braking model.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="evolve.html" class="btn btn-neutral float-left" title="evolve" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="poise.html" class="btn btn-neutral float-right" title="poise" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="distrot.html" class="btn btn-neutral float-left" title="distrot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="thermint.html" class="btn btn-neutral float-right" title="thermint" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

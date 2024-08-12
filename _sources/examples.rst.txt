@@ -12,46 +12,46 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/IceBelts
-   examples/EarthInterior
-   examples/DiffLimWaterEscape
-   examples/HabEvapCore
-   examples/RadHeat
-   examples/WaterLossTides
-   examples/NBodyAtmEsc
-   examples/AtmEscFlareProxCen
-   examples/FfdProxCen
-   examples/IoHeat
-   examples/GalaxyEffects
-   examples/ChaoticResonances
-   examples/VenusWaterLoss
-   examples/CassiniStates
-   examples/CassiniMulti
-   examples/DampedCBP
-   examples/EarthClimate
-   examples/SSDistOrbDistRot
-   examples/MiniNeptuneEvap
-   examples/BinaryTides
-   examples/MagmOc_GJ1132b
-   examples/AbioticO2
-   examples/CircumbinaryOrbit
-   examples/TideLock
-   examples/SS_NBody
-   examples/ApseLock
-   examples/VenusApproxInterior
-   examples/MagneticBraking
-   examples/MagmOc_Earth
-   examples/STEEP
    examples/MagmOc_Trappist1g
-   examples/MDwarfLuminosity
-   examples/HLossTides
-   examples/ParameterSweep
-   examples/TidalEarth
    examples/LuminosityCycle
-   examples/AtmEscKepler-36
-   examples/AtmEscRegimes
+   examples/MDwarfLuminosity
+   examples/ChaoticResonances
+   examples/IceBelts
+   examples/MiniNeptuneEvap
+   examples/ApseLock
+   examples/DiffLimWaterEscape
+   examples/MagmOc_Earth
+   examples/BinaryTides
+   examples/AbioticO2
+   examples/MagneticBraking
+   examples/DampedCBP
+   examples/NBodyAtmEsc
+   examples/VenusApproxInterior
+   examples/TidalEarth
+   examples/TideLock
    examples/HabitableZone
+   examples/RadHeat
+   examples/CassiniMulti
+   examples/EarthClimate
+   examples/GalaxyEffects
+   examples/MagmOc_GJ1132b
    examples/StellarEvol
+   examples/SSDistOrbDistRot
+   examples/WaterLossTides
+   examples/AtmEscRegimes
+   examples/FfdProxCen
+   examples/ParameterSweep
+   examples/VenusWaterLoss
+   examples/SS_NBody
+   examples/IoHeat
+   examples/AtmEscKepler-36
+   examples/EarthInterior
+   examples/HLossTides
+   examples/AtmEscFlareProxCen
+   examples/CircumbinaryOrbit
+   examples/STEEP
+   examples/CassiniStates
+   examples/HabEvapCore
 
 
 Broken

@@ -24,6 +24,13 @@
 #define MATT15TAUCZ 1.115e6 /**< Matt+2015 solar TauCZ value in s */
 #define MATT15OMEGASUN                                                         \
   2.6e-6 /**< Matt+2015 solar angular rotation frequency in s^-1 */
+#define BREIM21OMEGASUN 2.6e-6 /**< Breimann+21 solar rot rate (rad/s) */
+#define BREIM21TAUSUN 1.115e6 /**< Breimann+21 solar TauCZ value (s) */ 
+  /**< Be sure that TauCZ above is consistent with turnover timescale used. */
+#define BREIM21KS 450.0   /**< Breimann+21 ks torque parameter */
+#define BREIM21PS 0.2     /**< Breimann+21 ps torque parameter */
+#define BREIM21P 2.0      /**< Breimann+21 p torque parameter */
+#define BREIM21T0 6.3e23  /**< Breimann+21 solar torque const (Joules) */
 #define ROSSBYCRIT                                                             \
   2.08 /**< Critical Rossby number above which magnetic braking shuts off      \
           according to van Saders+2018 */
@@ -41,6 +48,7 @@
 #define STELLAR_DJDT_SK72                                                      \
   2 /**< dJ/dt according to Skumanich 1972 empirical law */
 #define STELLAR_DJDT_MA15 3 /**< dJ/dt according to Matt+2015 */
+#define STELLAR_DJDT_BR21 4 /**< dJ/dt according to Breimann+2021 */
 
 #define HZ_MODEL_KOPPARAPU 1
 #define DRYRGFLUX 415 /**< W/m^2 from Abe et al. (2011) */
@@ -86,6 +94,7 @@
 #define OUT_LXUVFRAC 1513
 #define OUT_ROSSBYNUMBER 1514
 #define OUT_DROTPERDTSTELLAR 1515
+#define OUT_WINDTORQUE 1516
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -137,6 +146,8 @@ void WriteLXUV(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
 void WriteLXUVFrac(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                    int, double *, char[]);
 void WriteRossbyNumber(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
+                       int, double *, char[]);
+void WriteWindTorque(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                        int, double *, char[]);
 void WriteDRotPerDtStellar(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                            UPDATE *, int, double *, char[]);

@@ -163,11 +163,13 @@ void ReadMagBrakingModel(BODY *body, CONTROL *control, FILES *files,
       body[iFile - 1].iMagBrakingModel = STELLAR_DJDT_SK72;
     } else if (!memcmp(sLower(cTmp), "ma", 2)) {
       body[iFile - 1].iMagBrakingModel = STELLAR_DJDT_MA15;
+    } else if (!memcmp(sLower(cTmp), "br", 2)) {
+      body[iFile - 1].iMagBrakingModel = STELLAR_DJDT_BR21;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
                 "ERROR: Unknown argument to %s: %s. Options are REINERS, "
-                "SKUMANICH, MATT, or NONE.\n",
+                "SKUMANICH, MATT, BREIMANN21 or NONE.\n",
                 options->cName, cTmp);
       }
       LineExit(files->Infile[iFile].cIn, lTmp);
@@ -1308,6 +1310,14 @@ void WriteRossbyNumber(BODY *body, CONTROL *control, OUTPUT *output,
   strcpy(cUnit, "");
 }
 
+void WriteWindTorque(BODY *body, CONTROL *control, OUTPUT *output,
+                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                       double *dTmp, char cUnit[]) {
+  // int iaBody[1] = {iBody}; // Is this the way, then iaBody below?
+  *dTmp = fdDJDtMagBrakingStellar(body, system, &iBody);
+  strcpy(cUnit, "");
+}
+
 void WriteDRotPerDtStellar(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
                            int iBody, double *dTmp, char cUnit[]) {
@@ -1368,6 +1378,13 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ROSSBYNUMBER].iNum       = 1;
   output[OUT_ROSSBYNUMBER].iModuleBit = STELLAR;
   fnWrite[OUT_ROSSBYNUMBER]           = &WriteRossbyNumber;
+
+  sprintf(output[OUT_WINDTORQUE].cName, "WindTorque");
+  sprintf(output[OUT_WINDTORQUE].cDescr, "Stellar Wind Torque");
+  output[OUT_WINDTORQUE].bNeg       = 0;
+  output[OUT_WINDTORQUE].iNum       = 1;
+  output[OUT_WINDTORQUE].iModuleBit = STELLAR;
+  fnWrite[OUT_WINDTORQUE]           = &WriteWindTorque;
 
   sprintf(output[OUT_DROTPERDTSTELLAR].cName, "DRotPerDtStellar");
   sprintf(output[OUT_DROTPERDTSTELLAR].cDescr,
@@ -1704,16 +1721,19 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
   double dOmegaCrit;
   double dTauCZ;
   double dT0;
-  double dR0; // Rossby number
+  double dRo; // Rossby number
+  double dFracBreak; // fraction of breakup spin rate
+  double dbetaSq; // "beta" factor for Breimann+21 torque, squared
+  double dFmag; // magnetic-activity function for Breimann+21 torque
 
   // If using bRossbyCut, magnetic braking terminates when the rossby number
   // exceeds 2.08 following the model of van Saders et al. (2018)
   if (body[iaBody[0]].bRossbyCut) {
-    dR0 = body[iaBody[0]].dRotPer /
+    dRo = body[iaBody[0]].dRotPer /
           fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
 
     // Rossby number exceeds threshold: cease magnetic braking
-    if (dR0 > ROSSBYCRIT) {
+    if (dRo > ROSSBYCRIT) {
       return dTINY;
     }
   }
@@ -1760,20 +1780,22 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
              body[iaBody[0]].dRotRate;
 
     return dDJDt; // Return positive amount of los angular momentum
-  } else if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_MA15) {
+  } 
+  // Matt+15 magnetic braking model
+  else if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_MA15) {
 
-    // Compute convective turnover timescale and normalized torque
+    // Compute convective turnover timescale
     dTauCZ = fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
 
     // Compute Rossby number
-    dR0 = body[iaBody[0]].dRotPer / dTauCZ;
+    dRo = body[iaBody[0]].dRotPer / dTauCZ;
 
     // Compute Matt+2015 normalized torque
     dT0 = MATT15T0 * pow(body[iaBody[0]].dRadius / RSUN, 3.1) *
           sqrt(body[iaBody[0]].dMass / MSUN);
 
     // Is the magnetic braking saturated?
-    if (dR0 <= MATT15R0SUN / MATT15X) {
+    if (dRo <= MATT15R0SUN / MATT15X) {
       // Saturated
       dDJDt = -dT0 * MATT15X * MATT15X *
               (body[iaBody[0]].dRotRate / MATT15OMEGASUN);
@@ -1782,6 +1804,51 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
       dDJDt = -dT0 * (dTauCZ / MATT15TAUCZ) * (dTauCZ / MATT15TAUCZ) *
               pow(body[iaBody[0]].dRotRate / MATT15OMEGASUN, 3);
     }
+
+    return -dDJDt; // Return positive amount of lost angular momentum
+  } 
+  // Breimann+21 magnetic braking model
+  else if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_BR21) {
+
+    // Notes:
+    //   To be self-consistent (i.e., to reproduce the solar spin rate):
+    //   BREIM21TAUSUN should be set to whatever solar value is given by 
+    //   the turnover timescale used.
+    //   Torque normalization BREIM21T0 should be proportional to
+    //   the adopted value of solar rotation rate BREIM21OMEGASUN.
+    //   To use Breimann+21 "Standard" torque parameters, set:
+    //   BREIM21KS = 450.0
+    //   BREIM21PS = 0.2
+    //   BREIM21P = 2.0
+    //   To reduce Breimann+21 torque to Matt+15, set parameters to:
+    //   BREIM21KS = 100.0
+    //   BREIM21PS = 0.0
+    //   BREIM21P = 2.0
+    //   dbetaSq = 1.0
+
+    // Compute convective turnover timescale
+    dTauCZ = fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
+
+    // Compute Rossby number, normalized to solar value.
+    dRo = BREIM21OMEGASUN * BREIM21TAUSUN / body[iaBody[0]].dRotRate / dTauCZ;
+
+    // Compute fraction of breakup spin rate
+    dFracBreak = body[iaBody[0]].dRotRate * 
+          pow(body[iaBody[0]].dRadius,1.5) / sqrt(BIGG * body[iaBody[0]].dMass);
+
+    // Compute beta factor squared (due to centrifugal acceleration of wind)
+    dbetaSq = (1.0 + dFracBreak*dFracBreak / (0.0716*0.0716));
+    // dbetaSq = 1.0;   // to reduce to Matt+15 formulation, for development
+
+    // Compute magnetic-activity function (this captures sat/unsat behavior)
+    dFmag = min(BREIM21KS * pow(dRo, BREIM21PS), 1.0/pow(dRo, BREIM21P));
+
+    // Compute torque normalization.
+    dT0 = -BREIM21T0*2.0/BREIM21P * pow(body[iaBody[0]].dRadius / RSUN, 3.1) *
+          sqrt(body[iaBody[0]].dMass / MSUN);
+
+    // Put it all together for the total torque
+    dDJDt = dT0 * body[iaBody[0]].dRotRate/BREIM21OMEGASUN / pow(dbetaSq,0.22) * dFmag;
 
     return -dDJDt; // Return positive amount of lost angular momentum
   }

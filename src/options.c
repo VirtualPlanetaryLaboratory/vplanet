@@ -507,10 +507,10 @@ void CheckFileExists(char *cFile) {
 }
 
 int fbBlankLine(char *cLine,int iLineLength) {
-  int iPos,bBlank = 0;
+  int iPos,bBlank = 1;
   for (iPos = 0; iPos < LINE; iPos++) {
     if (!isspace(cLine[iPos]) && cLine[iPos] != '\0') {
-      bBlank = 1;
+      bBlank = 0;
     }
   }
   return bBlank;

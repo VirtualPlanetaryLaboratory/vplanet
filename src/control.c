@@ -93,18 +93,20 @@ void sort_output(OUTPUT *output, int sorted[]) {
  * Struct Initialization
  */
 
-void InitializeFilesOptions(FILES *files,OPTIONS *options, int iFile) {
-  int iOption;
+void InitializeFilesOptions(FILES *files,OPTIONS *options) {
+  int iFile,iOption;
 
   for (iOption=0;iOption<MODULEOPTEND;iOption++) {
-    if (iFile > 0) {
-      files->Outfile[iFile-1].caGrid[iOption] = NULL;
-    }
-    options[iOption].iLine[iFile] = -1;
-    options[iOption].cFile[iFile] = NULL;
     options[iOption].cFile = malloc(files->iNumInputs*sizeof(char*));
-    fvFormattedString(&options[iOption].cFile[iFile], "null");
-  }    
+    for (iFile = 0; iFile < files->iNumInputs; iFile++) {
+      options[iOption].iLine[iFile] = -1;
+      options[iOption].cFile[iFile] = NULL;
+      fvFormattedString(&options[iOption].cFile[iFile], "null");    
+      if (iFile > 0) {
+        files->Outfile[iFile-1].caGrid[iOption] = NULL;
+      }
+    }
+  }
 }
 
 void InitializeFiles(FILES *files, OPTIONS *options, char *sPrimaryFile, char **saBodyFiles, int iNumBodies) {
@@ -114,7 +116,7 @@ void InitializeFiles(FILES *files, OPTIONS *options, char *sPrimaryFile, char **
   files->cLog = NULL;
   files->cExe = NULL;
   files->Infile            = malloc(files->iNumInputs * sizeof(INFILE));
-  files->Outfile             = malloc(files->iNumInputs-1 * sizeof(OUTFILE));
+  files->Outfile             = malloc(iNumBodies * sizeof(OUTFILE));
 
   for (iFile = 0; iFile < files->iNumInputs; iFile++) {
     files->Infile[iFile].cIn = NULL;
@@ -122,17 +124,17 @@ void InitializeFiles(FILES *files, OPTIONS *options, char *sPrimaryFile, char **
       files->Infile[0].iNumLines = iGetNumLines(sPrimaryFile);
       fvFormattedString(&files->Infile[0].cIn, sPrimaryFile);
     } else {
-      CheckFileExists(saBodyFiles[iFile]);
+      CheckFileExists(saBodyFiles[iFile-1]);
       files->Infile[iFile].iNumLines = iGetNumLines(saBodyFiles[iFile-1]);
       fvFormattedString(&files->Infile[iFile].cIn, saBodyFiles[iFile-1]);
 
       files->Outfile[iFile-1].cOut = NULL;
       // Outfile names assigned after reading in output file names
     }
-
     RecordCommentsAndWhiteSpace(&files->Infile[iFile]);
-    InitializeFilesOptions(files,options,iFile);
   }
+
+  InitializeFilesOptions(files,options);
 }
 
 void InitializePropsAux(CONTROL *control, MODULE *module) {

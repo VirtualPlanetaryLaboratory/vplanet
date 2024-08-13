@@ -582,10 +582,11 @@ void UpdateFoundOptionMulti(INFILE *input, OPTIONS *options, int *iLine,
     The user should be able to figure it out from there.
   */
   options->iLine[iFile] = iLine[0];
-  fvFormattedString(&options->cFile[iFile], input->cIn);
   for (iLineNow = 0; iLineNow < iNumLines; iLineNow++) {
     input->bLineOK[iLine[iLineNow]] = 1;
   }
+
+  fvFormattedString(&options->cFile[iFile], input->cIn);
 }
 
 void CheckDuplication(FILES *files, OPTIONS *options, char cFile[], int iLine,
@@ -1131,16 +1132,16 @@ void ReadSystemName(CONTROL *control, FILES *files, OPTIONS *options,
   }
 }
 
-void ReadBodyFileNames(CONTROL *control, FILES *files, OPTIONS *options,
-                       INFILE *infile) {
-  int iIndex, iNumIndices = 0, iNumLines = 0;
+void ReadBodyFileNames(BODY **body,CONTROL *control, FILES *files, OPTIONS *options,
+                       INFILE *infile, char ***saBodyFiles, int *iStartLine, int *iNumLines) {
+  int iIndex, iNumIndices = 0;
   int *lTmp;
-  char **saTmp;
 
   lTmp = malloc(MAXLINES * sizeof(int));
+  *iNumLines = 0;
 
-  AddOptionStringArray(infile->cIn, options->cName, &saTmp, &iNumIndices,
-                       &iNumLines, lTmp, control->Io.iVerbose);
+  AddOptionStringArray(infile->cIn, options->cName, saBodyFiles, &iNumIndices,
+                       iNumLines, lTmp, control->Io.iVerbose);
 
   if (lTmp[0] >= 0) {
     if (iNumIndices == 0) {
@@ -1166,25 +1167,9 @@ void ReadBodyFileNames(CONTROL *control, FILES *files, OPTIONS *options,
     exit(EXIT_INPUT);
   }
 
-  /* With body files identified, must allocate space */
-  files->Infile            = malloc(files->iNumInputs * sizeof(INFILE));
-  files->Infile[0].bLineOK = malloc(infile->iNumLines * sizeof(int));
-
-  InfileCopy(&files->Infile[0], infile);
-
-  for (iIndex = 0; iIndex < iNumIndices; iIndex++) {
-    files->Infile[iIndex + 1].cIn = NULL;
-    fvFormattedString(&files->Infile[iIndex + 1].cIn, saTmp[iIndex]);
-  }
-
   control->Evolve.iNumBodies = iNumIndices;
-  files->Outfile             = malloc(iNumIndices * sizeof(OUTFILE));
-  // for (iIndex = 0; iIndex < iNumIndices; iIndex++) {
-  //   memset(files->Outfile[iIndex].cOut, '\0', NAMELEN);
-  // }
-
-  UpdateFoundOptionMulti(&files->Infile[0], options, lTmp, iNumLines, 0);
-
+  *body = malloc(control->Evolve.iNumBodies * sizeof(BODY));
+  *iStartLine = lTmp[0];
   free(lTmp);
 }
 
@@ -1196,8 +1181,9 @@ void ReadBodyFileNames(CONTROL *control, FILES *files, OPTIONS *options,
 
 void ReadInitialOptions(BODY **body, CONTROL *control, FILES *files,
                         MODULE *module, OPTIONS *options, OUTPUT *output,
-                        SYSTEM *system, char infile[]) {
-  int iFile, iBody, iModule;
+                        SYSTEM *system, char cInfile[]) {
+  int iFile, iBody, iModule,iBodyFileLine,iNumLines;
+  char **saBodyFiles;
   INFILE input;
 
   input.cIn = NULL;
@@ -1205,21 +1191,19 @@ void ReadInitialOptions(BODY **body, CONTROL *control, FILES *files,
   /* Initialize primary input file */
   InitializeInput(&input);
 
-  /* First find input files */
-  ReadBodyFileNames(control, files, &options[OPT_BODYFILES], &input);
-  system->iNumBodies = control->Evolve.iNumBodies;
+  /* Read sBodyFiles, which must be in the primary file */
+  ReadBodyFileNames(body, control, files, &options[OPT_BODYFILES], &input, &saBodyFiles, &iBodyFileLine, &iNumLines);
 
-  // allocate the body struct
-  *body = malloc(control->Evolve.iNumBodies * sizeof(BODY));
+  InitializeFiles(files, &options, saBodyFiles, control->Evolve.iNumBodies);
+
+  UpdateFoundOptionMulti(&files->Infile[0], options, &iBodyFileLine, iNumLines, 0);
 
   /* Initialize functions in the module struct */
   InitializeModule(*body, control, module);
 
-  /* Is iVerbose set in primary input? */
+  /* Is iVerbose set ? */
   ReadVerbose(files, &options[OPT_VERBOSE], &control->Io.iVerbose, 0);
 
-  /* Now we can search through files for all options. First we scan the files
-   * for Verbosity */
   /* We have to initialize other input files first */
   for (iFile = 1; iFile < files->iNumInputs; iFile++) {
     InitializeInput(&files->Infile[iFile]);
@@ -3656,6 +3640,8 @@ void ReadOptions(BODY **body, CONTROL *control, FILES *files, MODULE *module,
   ReadInitialOptions(body, control, files, module, options, output, system,
                      infile);
 
+  InitializeSystem(*body, control,system);
+
   /* Now that we know how many bodies there are, initialize more features */
   *update = malloc(control->Evolve.iNumBodies * sizeof(UPDATE));
 
@@ -3664,8 +3650,6 @@ void ReadOptions(BODY **body, CONTROL *control, FILES *files, MODULE *module,
 
   /* Initialize module control */
   InitializeControl(control, module);
-
-  InitializeFiles(files, control->Evolve.iNumBodies);
 
   /* Now read in multi-module options */
   ReadOptionsGeneral(*body, control, files, module, options, output, system,
@@ -4716,7 +4700,15 @@ void InitializeOptions(OPTIONS *options, fnReadOption *fnRead) {
   /* Initialize all parameters describing the option's location */
   for (iOpt = 0; iOpt < MODULEOPTEND; iOpt++) {
     // memset(options[iOpt].cName, '\0', OPTLEN);
+
     options[iOpt].cName = NULL;
+    options[iOpt].cDescr = NULL;
+    options[iOpt].cLongDescr = NULL;
+    options[iOpt].cDefault = NULL;
+    options[iOpt].cValues = NULL;
+    options[iOpt].cNeg = NULL;
+    options[iOpt].cDimension = NULL;
+
     fvFormattedString(&options[iOpt].cName, "null");
     options[iOpt].iLine      = malloc(MAXFILES * sizeof(int));
     options[iOpt].bMultiFile = 0;
@@ -4738,12 +4730,6 @@ void InitializeOptions(OPTIONS *options, fnReadOption *fnRead) {
     options[iOpt].bNeg       = 0;
     options[iOpt].iFileType  = 2;
     options[iOpt].dNeg       = 0;
-
-    for (iFile = 0; iFile < MAXFILES; iFile++) {
-      options[iOpt].iLine[iFile] = -1;
-      // memset(options[iOpt].cFile[iFile], '\0', OPTLEN);
-      fvFormattedString(&options[iOpt].cFile[iFile], "null");
-    }
   }
 
   /* Now populate entries for general options. */

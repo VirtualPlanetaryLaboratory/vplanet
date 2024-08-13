@@ -1963,7 +1963,7 @@ struct OPTIONS {
   int iMultiIn;
   int *iLine; /**< Option's Line number in Input File */
   char *iFile;
-  char *cFile[MAXFILES]; /**< File Name Where Set */
+  char **cFile; /**< File Name Where Set */
   int bNeg;                     /**< Is There a Negative Option? */
   char *cNeg;          /**< Description of Negative Unit Conversion */
   int iFileType; /**< What type of file can option be in? 0 = primary only, 1 =

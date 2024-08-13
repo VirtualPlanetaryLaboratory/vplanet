@@ -17,7 +17,7 @@ void InitializeControl(CONTROL *, MODULE *);
 void InitializeControlEvolve(BODY *, CONTROL *, MODULE *, UPDATE *);
 void InitializeControlVerifyProperty(CONTROL *);
 
-void InitializeFiles(FILES *, int);
+void InitializeFiles(FILES *, OPTIONS **, char **, int);
 
 void WriteHelpOption(OPTIONS *, int);
 void WriteHelpOutput(OUTPUT *, int);

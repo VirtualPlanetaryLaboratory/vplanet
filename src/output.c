@@ -2468,6 +2468,11 @@ void InitializeOutput(FILES *files, OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
     //memset(output[iOut].cName, '\0', OPTLEN);
+    output[iOut].cName = NULL;
+    output[iOut].cDescr = NULL;
+    output[iOut].cLongDescr = NULL;
+    output[iOut].cNeg = NULL;
+
     fvFormattedString(&output[iOut].cName, "null");
     output[iOut].bGrid  = 0;
     output[iOut].bNeg   = 0; /* Is a negative option allowed */

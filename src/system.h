@@ -7,6 +7,8 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
+void InitializeSystem(BODY *,CONTROL *,SYSTEM *);
+
 double fdSemiToPeriod(double, double);
 double fdPeriodToSemi(double, double);
 double fdSemiToMeanMotion(double, double);

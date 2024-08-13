@@ -27,12 +27,8 @@ void NotPrimaryInput(int iFile, char cName[], char cFile[], int iLine,
   }
 }
 
-/* Returns the line with the desiried options AND asserts no duplicate
-   entries. cLine is the entire text of the line, iLine is the line
-   number. */
-
-/* Is the first non-white space a #? I so, return 1 */
-int CheckComment(char cLine[], int iLen) {
+/* Commented lines start with a # */
+int fbCommentedLine(char cLine[], int iLen) {
   int iPos;
 
   for (iPos = 0; iPos < iLen; iPos++) {
@@ -63,7 +59,7 @@ void GetLine(char *cFile, char *cOption, char **cLine, int *iLine,
   memset(cWord, '\0', OPTLEN);
 
   while (fgets(cTmp, LINE, fp) != NULL) {
-    if (!CheckComment(cTmp, LINE)) {
+    if (!fbCommentedLine(cTmp, LINE)) {
       sscanf(cTmp, "%s", cWord);
       if (memcmp(cWord, cOption, iLen + 1) == 0) {
         /* Parameter Found! */
@@ -499,44 +495,46 @@ int iGetNumLines(char *cFile) {
   return iNumLines;
 }
 
-void InitializeInput(INFILE *input) {
-  int iLine, iPos, bBlank;
+void CheckFileExists(char *cFile) {
   FILE *fp;
-  char cLine[LINE];
 
-  fp = fopen(input->cIn, "r");
+  fp = fopen(cFile, "r");
   if (fp == NULL) {
-    fprintf(stderr, "ERROR: Unable to open %s.\n", input->cIn);
+    fprintf(stderr, "ERROR: Unable to open %s for reading.\n", cFile);
     exit(EXIT_INPUT);
   }
-  input->iNumLines = iGetNumLines(input->cIn);
-  input->bLineOK   = malloc(input->iNumLines * sizeof(int));
-  /*
-  input->cSpecies[0] = 0;
-  input->cReactions[0] = 0;
-  */
+  fclose(fp);
+}
 
-  for (iLine = 0; iLine < input->iNumLines; iLine++) {
-    input->bLineOK[iLine] = 0;
+int fbBlankLine(char *cLine,int iLineLength) {
+  int iPos,bBlank = 0;
+  for (iPos = 0; iPos < LINE; iPos++) {
+    if (!isspace(cLine[iPos]) && cLine[iPos] != '\0') {
+      bBlank = 1;
+    }
+  }
+  return bBlank;
+}
+
+void RecordCommentsAndWhiteSpace(INFILE *infile) {
+  int iLine, iPos, bBlank;
+  char cLine[LINE];
+  FILE *fp;
+
+  fp = fopen(infile->cIn, "r");
+  infile->bLineOK   = malloc(infile->iNumLines * sizeof(int));
+
+  for (iLine = 0; iLine < infile->iNumLines; iLine++) {
+    infile->bLineOK[iLine] = 0;
     memset(cLine, '\0', LINE);
 
+    // XXX Isn't this the same as CheckFileExists?
     if (fgets(cLine, LINE, fp) == NULL) {
-      fprintf(stderr, "ERROR: Unable to open %s.\n", input->cIn);
+      fprintf(stderr, "ERROR: Unable to open %s.\n", infile->cIn);
       exit(EXIT_INPUT);
     }
-    if (CheckComment(cLine, LINE)) {
-      input->bLineOK[iLine] = 1;
-    } else {
-      // Is it a blank line?
-      bBlank = 0;
-      for (iPos = 0; iPos < LINE; iPos++) {
-        if (!isspace(cLine[iPos]) && cLine[iPos] != '\0') {
-          bBlank = 1;
-        }
-      }
-      if (!bBlank) {
-        input->bLineOK[iLine] = 1;
-      }
+    if (fbCommentedLine(cLine, LINE) || fbBlankLine(cLine,LINE)) {
+      infile->bLineOK[iLine] = 1;
     }
   }
 }
@@ -1133,14 +1131,11 @@ void ReadSystemName(CONTROL *control, FILES *files, OPTIONS *options,
 }
 
 void ReadBodyFileNames(BODY **body,CONTROL *control, FILES *files, OPTIONS *options,
-                       INFILE *infile, char ***saBodyFiles, int *iStartLine, int *iNumLines) {
-  int iIndex, iNumIndices = 0;
-  int *lTmp;
+                       char *cFile, char ***saBodyFiles, int *iStartLine, int *iNumLines) {
+  int iNumIndices,*lTmp;
 
   lTmp = malloc(MAXLINES * sizeof(int));
-  *iNumLines = 0;
-
-  AddOptionStringArray(infile->cIn, options->cName, saBodyFiles, &iNumIndices,
+  AddOptionStringArray(cFile, options->cName, saBodyFiles, &iNumIndices,
                        iNumLines, lTmp, control->Io.iVerbose);
 
   if (lTmp[0] >= 0) {
@@ -1149,21 +1144,20 @@ void ReadBodyFileNames(BODY **body,CONTROL *control, FILES *files, OPTIONS *opti
         fprintf(stderr, "ERROR: No files supplied for option %s.\n",
                 options->cName);
       }
-      LineExit(infile->cIn, lTmp[0]);
+      LineExit(cFile, lTmp[0]);
     }
-    files->iNumInputs = iNumIndices + 1;
-    if (files->iNumInputs >= MAXFILES) {
+    if (iNumIndices >= MAXFILES) {
       fprintf(stderr,
               "ERROR: Number of input files (%d) exceeds MAXFILES (%d).\n",
-              files->iNumInputs, MAXFILES);
+              iNumIndices, MAXFILES);
       fprintf(
             stderr,
             "Either use less body files, or increase MAXFILES in vplanet.h.\n");
-      LineExit(infile->cIn, lTmp[0]);
+      LineExit(cFile, lTmp[0]);
     }
   } else {
     fprintf(stderr, "ERROR: Option %s is required in file %s.\n",
-            options->cName, infile->cIn);
+            options->cName, cFile);
     exit(EXIT_INPUT);
   }
 
@@ -1181,22 +1175,15 @@ void ReadBodyFileNames(BODY **body,CONTROL *control, FILES *files, OPTIONS *opti
 
 void ReadInitialOptions(BODY **body, CONTROL *control, FILES *files,
                         MODULE *module, OPTIONS *options, OUTPUT *output,
-                        SYSTEM *system, char cInfile[]) {
+                        SYSTEM *system, char *sPrimaryFile) {
   int iFile, iBody, iModule,iBodyFileLine,iNumLines;
   char **saBodyFiles;
-  INFILE input;
 
-  input.cIn = NULL;
-  fvFormattedString(&input.cIn, infile);
-  /* Initialize primary input file */
-  InitializeInput(&input);
+  ReadBodyFileNames(body, control, files, &options[OPT_BODYFILES], sPrimaryFile, &saBodyFiles, &iBodyFileLine, &iNumLines);
 
-  /* Read sBodyFiles, which must be in the primary file */
-  ReadBodyFileNames(body, control, files, &options[OPT_BODYFILES], &input, &saBodyFiles, &iBodyFileLine, &iNumLines);
+  InitializeFiles(files, options, sPrimaryFile, saBodyFiles, control->Evolve.iNumBodies);
 
-  InitializeFiles(files, &options, saBodyFiles, control->Evolve.iNumBodies);
-
-  UpdateFoundOptionMulti(&files->Infile[0], options, &iBodyFileLine, iNumLines, 0);
+  UpdateFoundOptionMulti(&files->Infile[0], &options[OPT_BODYFILES], &iBodyFileLine, iNumLines, 0);
 
   /* Initialize functions in the module struct */
   InitializeModule(*body, control, module);
@@ -1206,7 +1193,6 @@ void ReadInitialOptions(BODY **body, CONTROL *control, FILES *files,
 
   /* We have to initialize other input files first */
   for (iFile = 1; iFile < files->iNumInputs; iFile++) {
-    InitializeInput(&files->Infile[iFile]);
     ReadVerbose(files, options, &control->Io.iVerbose, iFile);
   }
 
@@ -1229,13 +1215,10 @@ void ReadInitialOptions(BODY **body, CONTROL *control, FILES *files,
   for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
     FinalizeModule(*body, control, module, iBody);
   }
-  /* Check that selected modules are compatable */
+
   for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
     VerifyModuleCompatability(*body, control, files, module, options, iBody);
   }
-
-
-  free(input.bLineOK);
 }
 
 void AssignDefaultDouble(OPTIONS *options, double *dOption, int iNumFiles) {

@@ -93,44 +93,46 @@ void sort_output(OUTPUT *output, int sorted[]) {
  * Struct Initialization
  */
 
-void InitializeFiles(FILES *files, OPTIONS **options, char **saBodyFiles, int iNumBodies) {
-  int iFile,iOption,iNumFiles;
+void InitializeFilesOptions(FILES *files,OPTIONS *options, int iFile) {
+  int iOption;
 
-  iNumFiles=iNumBodies-1;
+  for (iOption=0;iOption<MODULEOPTEND;iOption++) {
+    if (iFile > 0) {
+      files->Outfile[iFile-1].caGrid[iOption] = NULL;
+    }
+    options[iOption].iLine[iFile] = -1;
+    options[iOption].cFile[iFile] = NULL;
+    options[iOption].cFile = malloc(files->iNumInputs*sizeof(char*));
+    fvFormattedString(&options[iOption].cFile[iFile], "null");
+  }    
+}
 
-  /* With body files identified, must allocate space */
-  files->Infile            = malloc(files->iNumInputs * sizeof(INFILE));
-  files->Infile[0].bLineOK = malloc(files->Infile[0].iNumLines * sizeof(int));
+void InitializeFiles(FILES *files, OPTIONS *options, char *sPrimaryFile, char **saBodyFiles, int iNumBodies) {
+  int iFile;
 
-  //InfileCopy(&files->Infile[0], infile);
-
-  files->Outfile             = malloc(iNumFiles * sizeof(OUTFILE));
-  // for (iIndex = 0; iIndex < iNumIndices; iIndex++) {
-  //   memset(files->Outfile[iIndex].cOut, '\0', NAMELEN);
-  // }
-
+  files->iNumInputs = iNumBodies + 1;
   files->cLog = NULL;
   files->cExe = NULL;
+  files->Infile            = malloc(files->iNumInputs * sizeof(INFILE));
+  files->Outfile             = malloc(files->iNumInputs-1 * sizeof(OUTFILE));
 
-  for (iFile = 0; iFile < iNumFiles; iFile++) {
+  for (iFile = 0; iFile < files->iNumInputs; iFile++) {
     files->Infile[iFile].cIn = NULL;
-    fvFormattedString(&files->Infile[iFile].cIn, saBodyFiles[iFile]);
+    if (iFile == 0) {
+      files->Infile[0].iNumLines = iGetNumLines(sPrimaryFile);
+      fvFormattedString(&files->Infile[0].cIn, sPrimaryFile);
+    } else {
+      CheckFileExists(saBodyFiles[iFile]);
+      files->Infile[iFile].iNumLines = iGetNumLines(saBodyFiles[iFile-1]);
+      fvFormattedString(&files->Infile[iFile].cIn, saBodyFiles[iFile-1]);
 
-    files->Outfile[iFile].cOut = NULL;
-    // Outfile names assigned after reading in output file names
-
-    for (iOption=0;iOption<MODULEOPTEND;iOption++) {
-      files->Outfile[iFile].caGrid[iOption] = NULL;
-
-      options[iOption]->iLine[iFile] = -1;
-      options[iOption]->cFile[iFile] = NULL;
-      options[iOption]->cFile = malloc(iNumFiles*sizeof(char*));
-      // memset(options[iOpt].cFile[iFile], '\0', OPTLEN);
-      fvFormattedString(&options[iOption]->cFile[iFile], "null");
+      files->Outfile[iFile-1].cOut = NULL;
+      // Outfile names assigned after reading in output file names
     }
+
+    RecordCommentsAndWhiteSpace(&files->Infile[iFile]);
+    InitializeFilesOptions(files,options,iFile);
   }
-
-
 }
 
 void InitializePropsAux(CONTROL *control, MODULE *module) {

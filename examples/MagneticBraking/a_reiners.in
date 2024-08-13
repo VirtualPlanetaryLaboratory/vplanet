@@ -1,11 +1,12 @@
 #
 sName	                  a_reiners
-saModules	          stellar
+saModules	              stellar
 dMass                     0.1
 dAge                      5.0e6
+dRotPeriod               -1.0   # Initial rotaiton period (days)
 sStellarModel             baraffe
 sMagBrakingModel          reiners
 bHaltEndBaraffeGrid       1
 dSatXUVFrac               1.e-3
 dSatXUVTime               -0.1
-saOutputOrder Time -TotEn -TotAngMom -Luminosity -Radius Temperature -RotPer -LXUVTot RadGyra
+saOutputOrder Time -TotAngMom -Luminosity -Radius Temperature -RotPer RadGyra WindTorque RossbyNumber

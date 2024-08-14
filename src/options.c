@@ -1601,7 +1601,7 @@ void ReadColor(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   if (lTmp >= 0) {
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    body[iFile-1].cName = NULL;
+    body[iFile-1].sColor = NULL;
     fvFormattedString(&body[iFile - 1].sColor, cTmp);
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {

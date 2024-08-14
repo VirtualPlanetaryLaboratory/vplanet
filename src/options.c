@@ -344,6 +344,7 @@ void AddOptionDouble(char *cFile, char *cOption, double *dInput, int *iLine,
   if (*iLine >= 0) {
     sscanf(cLine, "%s %lf", cTmp, dInput);
   }
+  free(cLine);
 }
 
 void AddOptionInt(char *cFile, char *cOption, int *iInput, int *iLine,
@@ -1219,6 +1220,7 @@ void ReadInitialOptions(BODY **body, CONTROL *control, FILES *files,
   for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
     VerifyModuleCompatability(*body, control, files, module, options, iBody);
   }
+  free(saBodyFiles);
 }
 
 void AssignDefaultDouble(OPTIONS *options, double *dOption, int iNumFiles) {
@@ -1565,6 +1567,7 @@ void ReadBodyName(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     /* Cannot exist in primary input file -- Each body has an output file */
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
+    body[iFile-1].cName=NULL;
     if (strlen(cTmp) > 0) {
       fvFormattedString(&body[iFile - 1].cName, cTmp);
     } else {
@@ -1572,6 +1575,7 @@ void ReadBodyName(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
+    body[iFile-1].cName=NULL;
     fvFormattedString(&body[iFile - 1].cName, "%d", iFile);
   }
 }
@@ -1588,9 +1592,11 @@ void ReadColor(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   if (lTmp >= 0) {
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
+    body[iFile-1].cName = NULL;
     fvFormattedString(&body[iFile - 1].sColor, cTmp);
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
+    body[iFile-1].sColor = NULL;
     fvFormattedString(&body[iFile - 1].sColor, options->cDefault);
   }
 }
@@ -2638,7 +2644,7 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
                      OUTPUT *output, int iFile, int iVerbose) {
   int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 1, iNumGrid = 0,iOption;
   int k, iOut         = -1, *lTmp, iCol, jCol;
-  char **saTmp, *cTmp = NULL, **cOption, *cOut;
+  char **saTmp, *cTmp = NULL, **cOption, *cOut = NULL;
   int iLen1, iLen2;
 
   lTmp    = malloc(MAXLINES * sizeof(int));
@@ -2841,6 +2847,8 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
   free(lTmp);
   free(cTmp);
   free(cOption);
+  free(saTmp);
+  free(cOut);
 }
 
 void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,

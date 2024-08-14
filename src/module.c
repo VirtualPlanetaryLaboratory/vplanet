@@ -779,6 +779,7 @@ void ReadModules(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     }
   }
   free(lTmp);
+  free(saTmp);
 }
 
 void PrintModuleList(FILE *file, int iBitSum, int bPadString) {

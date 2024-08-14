@@ -1379,15 +1379,15 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ROSSBYNUMBER].iModuleBit = STELLAR;
   fnWrite[OUT_ROSSBYNUMBER]           = &WriteRossbyNumber;
 
-  sprintf(output[OUT_WINDTORQUE].cName, "WindTorque");
-  sprintf(output[OUT_WINDTORQUE].cDescr, "Stellar Wind Torque");
+  fvFormattedString(&output[OUT_WINDTORQUE].cName, "WindTorque");
+  fvFormattedString(&output[OUT_WINDTORQUE].cDescr, "Stellar Wind Torque");
   output[OUT_WINDTORQUE].bNeg       = 0;
   output[OUT_WINDTORQUE].iNum       = 1;
   output[OUT_WINDTORQUE].iModuleBit = STELLAR;
   fnWrite[OUT_WINDTORQUE]           = &WriteWindTorque;
 
-  sprintf(output[OUT_WINDTORQUE].cName, "WindTorque");
-  sprintf(output[OUT_WINDTORQUE].cDescr, "Stellar Wind Torque");
+  fvFormattedString(&output[OUT_WINDTORQUE].cName, "WindTorque");
+  fvFormattedString(&output[OUT_WINDTORQUE].cDescr, "Stellar Wind Torque");
   output[OUT_WINDTORQUE].bNeg       = 0;
   output[OUT_WINDTORQUE].iNum       = 1;
   output[OUT_WINDTORQUE].iModuleBit = STELLAR;

@@ -104,6 +104,7 @@ void InitializeFilesOptions(FILES *files,OPTIONS *options) {
       fvFormattedString(&options[iOption].cFile[iFile], "null");    
       if (iFile > 0) {
         files->Outfile[iFile-1].caGrid[iOption] = NULL;
+        files->Outfile[iFile-1].caCol[iOption] = NULL;
       }
     }
   }
@@ -151,14 +152,15 @@ void InitializePropsAux(CONTROL *control, MODULE *module) {
     for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
       control->fnPropsAux[iBody][iModule] = &PropsAuxNULL;
     }
+
+    if (module->iNumModules[iBody] > 0) {
+      /* XXX Note that the number of elements here is really a permutation,
+        but this should work for a while. */
+      control->fnPropsAuxMulti[iBody] =
+            malloc(2 * module->iNumModules[iBody] * sizeof(fnPropsAuxModule *));
+    }
   }
 
-  if (module->iNumModules[iBody] > 0) {
-    /* XXX Note that the number of elements here is really a permutation,
-       but this should work for a while. */
-    control->fnPropsAuxMulti[iBody] =
-          malloc(2 * module->iNumModules[iBody] * sizeof(fnPropsAuxModule *));
-  }
 }
 
 void InitilizeForceBehavior(CONTROL *control, MODULE *module) {
@@ -172,13 +174,13 @@ void InitilizeForceBehavior(CONTROL *control, MODULE *module) {
   for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
     control->fnForceBehavior[iBody] =
           malloc(module->iNumModules[iBody] * sizeof(fnForceBehaviorModule));
-  }
 
-  if (module->iNumModules[iBody] > 0) {
-    /* XXX Note that the number of elements here is really a permutation,
-       but this should work for a while. */
-    control->fnForceBehaviorMulti[iBody] = malloc(
-          2 * module->iNumModules[iBody] * sizeof(fnForceBehaviorModule *));
+    if (module->iNumModules[iBody] > 0) {
+      /* XXX Note that the number of elements here is really a permutation,
+        but this should work for a while. */
+      control->fnForceBehaviorMulti[iBody] = malloc(
+            2 * module->iNumModules[iBody] * sizeof(fnForceBehaviorModule *));
+    }
   }
 }
 
@@ -1233,10 +1235,9 @@ double fdUnitsPower(int iTime, int iMass, int iLength) {
 }
 
 void fsUnitsEnergyFlux(UNITS *units, char **cUnit) {
-  char *cUnitMass = NULL, *cUnitLength = NULL, *cUnitTime = NULL;
+  char *cUnitMass = NULL,*cUnitTime = NULL;
 
   fsUnitsMass(units->iMass, &cUnitMass);
-  fsUnitsLength(units->iLength, &cUnitLength);
   fsUnitsTime(units->iTime, &cUnitTime);
 
   // fsUnitsEnergy(units, cUnit);
@@ -1248,6 +1249,8 @@ void fsUnitsEnergyFlux(UNITS *units, char **cUnit) {
   // strcat(cUnit, cTmp);
   // strcat(cUnit, ")");
   fvFormattedString(cUnit, "%s/%s^3", cUnitMass, cUnitTime);
+  free(cUnitMass);
+  free(cUnitTime);
 }
 
 double fdUnitsEnergyFlux(int iTime, int iMass, int iLength) {

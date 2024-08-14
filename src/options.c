@@ -89,24 +89,27 @@ void GetLine(char *cFile, char *cOption, char **cLine, int *iLine,
    recursively, and cLine and *iLine are the line and line number,
    respectively. */
 
-void GetNextValidLine(char cFile[], int iStart, char cLine[], int *iLine) {
+void GetNextValidLine(char cFile[], int iStart, char **cLine, int *iLine) {
   FILE *fp;
   int iPos, iLineTmp, ok = 1;
+  char cTmp[LINE];
 
   fp     = fopen(cFile, "r");
   *iLine = 0;
+  *cLine = NULL;
 
   for (iLineTmp = 0; iLineTmp < iStart; iLineTmp++) {
-    if (fgets(cLine, LINE, fp) == NULL) {
+    if (fgets(cTmp, LINE, fp) == NULL) {
       fprintf(stderr, "ERROR: Unable to read next valid line.");
       LineExit(cFile, iStart);
     }
+    fvFormattedString(cLine, cTmp);
     (*iLine)++;
   }
 
   /* If EOF, return */
-  if (fgets(cLine, LINE, fp) == NULL) {
-    fvFormattedString(&cLine, "null");
+  if (fgets(cTmp, LINE, fp) == NULL) {
+    fvFormattedString(cLine, "null");
     fclose(fp);
     return;
   }
@@ -115,15 +118,16 @@ void GetNextValidLine(char cFile[], int iStart, char cLine[], int *iLine) {
      or blank line (line feed = 10). */
 
   for (iPos = 0; iPos < LINE; iPos++) {
-    if (cLine[iPos] == 36 || cLine[iPos] == 35 || cLine[iPos] == 10) {
+    if (cTmp[iPos] == 36 || cTmp[iPos] == 35 || cTmp[iPos] == 10) {
       /* First character is a $, # or \n: continue */
       GetNextValidLine(cFile, iStart + 1, cLine, iLine);
       fclose(fp);
       return;
     }
-    if (!isspace(cLine[iPos])) {
+    if (!isspace(cTmp[iPos])) {
       /* Found next valid line */
       fclose(fp);
+      fvFormattedString(cLine, cTmp);
       return;
     }
   }
@@ -266,12 +270,13 @@ void AddOptionStringArray(char *cFile, char *cOption, char ***saInput,
   GetLine(cFile, cOption, &cLine, &iLine[0], iVerbose);
   GetWords(cLine, cTmp, &iNumWords, &bContinue);
   *iNumLines = 1;
-  *saInput   = (char **)malloc(MAXARRAY * sizeof(char *));
+  //*saInput   = (char **)malloc(MAXARRAY * sizeof(char *));
+  saInputCopy = (char **)malloc(MAXARRAY * sizeof(char *));
 
-  for (iWord = 0; iWord < iNumWords - 1; iWord++) {
-    (*saInput)[iWord] = NULL;
+  for (iWord = 0; iWord < MAXARRAY; iWord++) {
+    //(*saInput)[iWord] = NULL;
+    saInputCopy[iWord] = NULL;
   }
-  saInputCopy = *saInput;
 
   for (iWord = 0; iWord < iNumWords - 1; iWord++) {
     // memset(saInput[iWord], '\0', OPTLEN);
@@ -290,7 +295,7 @@ void AddOptionStringArray(char *cFile, char *cOption, char ***saInput,
 
   /* Now keep getting lines until done */
   while (bContinue) {
-    GetNextValidLine(cFile, iLine[*iNumLines - 1] + 1, cLine,
+    GetNextValidLine(cFile, iLine[*iNumLines - 1] + 1, &cLine,
                      &iLine[*iNumLines]);
     if (memcmp(cLine, "null", 4)) {
       GetWords(cLine, cTmp, &iNumWords, &bContinue);
@@ -316,7 +321,11 @@ void AddOptionStringArray(char *cFile, char *cOption, char ***saInput,
       }
     }
   }
-  free(cLine);
+  // for (iWord=0;iWord<iNumWords;iWord++) {
+  //   fvFormattedString(&(*saInput)[iWord],saInputCopy[iWord]);
+  // }
+  *saInput = saInputCopy;
+  //free(cLine);
 }
 
 /* Get all fields in a double array. The fields are stored in daInput,
@@ -1132,20 +1141,19 @@ void ReadSystemName(CONTROL *control, FILES *files, OPTIONS *options,
 }
 
 void ReadBodyFileNames(BODY **body,CONTROL *control, FILES *files, OPTIONS *options,
-                       char *cFile, char ***saBodyFiles, int *iStartLine, int *iNumLines) {
-  int iNumIndices,*lTmp;
+                       char *cFile, char ***saBodyFiles, int *iNumLines, int *iaLines) {
+  int iNumIndices;
 
-  lTmp = malloc(MAXLINES * sizeof(int));
   AddOptionStringArray(cFile, options->cName, saBodyFiles, &iNumIndices,
-                       iNumLines, lTmp, control->Io.iVerbose);
+                       iNumLines, iaLines, control->Io.iVerbose);
 
-  if (lTmp[0] >= 0) {
+  if (iaLines[0] >= 0) {
     if (iNumIndices == 0) {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr, "ERROR: No files supplied for option %s.\n",
                 options->cName);
       }
-      LineExit(cFile, lTmp[0]);
+      LineExit(cFile, iaLines[0]);
     }
     if (iNumIndices >= MAXFILES) {
       fprintf(stderr,
@@ -1154,7 +1162,7 @@ void ReadBodyFileNames(BODY **body,CONTROL *control, FILES *files, OPTIONS *opti
       fprintf(
             stderr,
             "Either use less body files, or increase MAXFILES in vplanet.h.\n");
-      LineExit(cFile, lTmp[0]);
+      LineExit(cFile, iaLines[0]);
     }
   } else {
     fprintf(stderr, "ERROR: Option %s is required in file %s.\n",
@@ -1164,8 +1172,6 @@ void ReadBodyFileNames(BODY **body,CONTROL *control, FILES *files, OPTIONS *opti
 
   control->Evolve.iNumBodies = iNumIndices;
   *body = malloc(control->Evolve.iNumBodies * sizeof(BODY));
-  *iStartLine = lTmp[0];
-  free(lTmp);
 }
 
 /*
@@ -1177,14 +1183,16 @@ void ReadBodyFileNames(BODY **body,CONTROL *control, FILES *files, OPTIONS *opti
 void ReadInitialOptions(BODY **body, CONTROL *control, FILES *files,
                         MODULE *module, OPTIONS *options, OUTPUT *output,
                         SYSTEM *system, char *sPrimaryFile) {
-  int iFile, iBody, iModule,iBodyFileLine,iNumLines;
+  int iFile, iBody, iModule,iNumBodyFileLines,*iaLines;
   char **saBodyFiles;
 
-  ReadBodyFileNames(body, control, files, &options[OPT_BODYFILES], sPrimaryFile, &saBodyFiles, &iBodyFileLine, &iNumLines);
+  iaLines=malloc(MAXLINES*sizeof(int));
+
+  ReadBodyFileNames(body, control, files, &options[OPT_BODYFILES], sPrimaryFile, &saBodyFiles, &iNumBodyFileLines, iaLines);
 
   InitializeFiles(files, options, sPrimaryFile, saBodyFiles, control->Evolve.iNumBodies);
 
-  UpdateFoundOptionMulti(&files->Infile[0], &options[OPT_BODYFILES], &iBodyFileLine, iNumLines, 0);
+  UpdateFoundOptionMulti(&files->Infile[0], &options[OPT_BODYFILES], iaLines, iNumBodyFileLines,  0);
 
   /* Initialize functions in the module struct */
   InitializeModule(*body, control, module);
@@ -1221,6 +1229,7 @@ void ReadInitialOptions(BODY **body, CONTROL *control, FILES *files,
     VerifyModuleCompatability(*body, control, files, module, options, iBody);
   }
   free(saBodyFiles);
+  free(iaLines);
 }
 
 void AssignDefaultDouble(OPTIONS *options, double *dOption, int iNumFiles) {

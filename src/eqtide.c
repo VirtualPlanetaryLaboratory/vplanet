@@ -626,6 +626,7 @@ void ReadTidePerts(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     body[iFile - 1].iTidePerts = iNumIndices;
     for (iBody = 0; iBody < iNumIndices; iBody++) {
       //memset(body[iFile - 1].saTidePerts[iBody], '\0', NAMELEN);
+      body[iFile - 1].saTidePerts[iBody] = NULL;
       fvFormattedString(&body[iFile - 1].saTidePerts[iBody], saTmp[iBody]);
     }
     UpdateFoundOptionMulti(&files->Infile[iFile], options, lTmp, iNumLines,

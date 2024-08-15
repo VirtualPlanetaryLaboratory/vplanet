@@ -720,43 +720,57 @@ void ReadModules(BODY *body, CONTROL *control, FILES *files, MODULE *module,
        * ADD NEW MODULES HERE *
        ************************/
 
-      if (memcmp(sLower(saTmp[iModule]), "eqtide", 6) == 0) {
+      int iModuleLength = strlen(saTmp[iModule]);
+      // if (memcmp(sLower(saTmp[iModule]), "eqtide", iModuleLength) == 0) {
+      if (strcmp(sLower(saTmp[iModule]), "eqtide") == 0) {
         body[iFile - 1].bEqtide = 1;
         module->iBitSum[iFile - 1] += EQTIDE;
-      } else if (memcmp(sLower(saTmp[iModule]), "radheat", 7) == 0) {
+      // } else if (memcmp(sLower(saTmp[iModule]), "radheat", iModuleLength) == 0) {
+      } else if (strcmp(sLower(saTmp[iModule]), "radheat") == 0) {
         body[iFile - 1].bRadheat = 1;
         module->iBitSum[iFile - 1] += RADHEAT;
-      } else if (memcmp(sLower(saTmp[iModule]), "distorb", 8) == 0) {
+      //} else if (memcmp(sLower(saTmp[iModule]), "distorb", iModuleLength) == 0) {
+      } else if (strcmp(sLower(saTmp[iModule]), "distorb") == 0) {
         body[iFile - 1].bDistOrb = 1;
         module->iBitSum[iFile - 1] += DISTORB;
-      } else if (memcmp(sLower(saTmp[iModule]), "distrot", 7) == 0) {
+      // } else if (memcmp(sLower(saTmp[iModule]), "distrot", iModuleLength) == 0) {
+      } else if (strcmp(sLower(saTmp[iModule]), "distrot") == 0) {
         body[iFile - 1].bDistRot = 1;
         module->iBitSum[iFile - 1] += DISTROT;
-      } else if (memcmp(sLower(saTmp[iModule]), "thermint", 8) == 0) {
+      // } else if (memcmp(sLower(saTmp[iModule]), "thermint", iModuleLength) == 0) {
+      } else if (strcmp(sLower(saTmp[iModule]), "thermint") == 0) {
         body[iFile - 1].bThermint = 1;
         module->iBitSum[iFile - 1] += THERMINT;
-      } else if (memcmp(sLower(saTmp[iModule]), "atmesc", 6) == 0) {
+      // } else if (memcmp(sLower(saTmp[iModule]), "atmesc", iModuleLength) == 0) {
+      } else if (strcmp(sLower(saTmp[iModule]), "atmesc") == 0) {
         body[iFile - 1].bAtmEsc = 1;
         module->iBitSum[iFile - 1] += ATMESC;
-      } else if (memcmp(sLower(saTmp[iModule]), "stellar", 7) == 0) {
+      // } else if (memcmp(sLower(saTmp[iModule]), "stellar", iModuleLength) == 0) {
+      } else if (strcmp(sLower(saTmp[iModule]), "stellar") == 0) {
         body[iFile - 1].bStellar = 1;
         module->iBitSum[iFile - 1] += STELLAR;
-      } else if (memcmp(sLower(saTmp[iModule]), "poise", 5) == 0) {
+      // } else if (memcmp(sLower(saTmp[iModule]), "poise", iModuleLength) == 0) {
+      } else if (strcmp(sLower(saTmp[iModule]), "poise") == 0) {
         body[iFile - 1].bPoise = 1;
         module->iBitSum[iFile - 1] += POISE;
-      } else if (memcmp(sLower(saTmp[iModule]), "binary", 6) == 0) {
+      // } else if (memcmp(sLower(saTmp[iModule]), "binary", iModuleLength) == 0) {
+      } else if (strcmp(sLower(saTmp[iModule]), "binary") == 0) {
         body[iFile - 1].bBinary = 1;
         module->iBitSum[iFile - 1] += BINARY;
-      } else if (memcmp(sLower(saTmp[iModule]), "flare", 5) == 0) {
+      // } else if (memcmp(sLower(saTmp[iModule]), "flare", iModuleLength) == 0) {
+      } else if (strcmp(sLower(saTmp[iModule]), "flare") == 0) {
         body[iFile - 1].bFlare = 1;
         module->iBitSum[iFile - 1] += FLARE;
-      } else if (memcmp(sLower(saTmp[iModule]), "galhabit", 8) == 0) {
+      // } else if (memcmp(sLower(saTmp[iModule]), "galhabit", iModuleLength) == 0) {
+      } else if (strcmp(sLower(saTmp[iModule]), "galhabit") == 0) {
         body[iFile - 1].bGalHabit = 1;
         module->iBitSum[iFile - 1] += GALHABIT;
-      } else if (memcmp(sLower(saTmp[iModule]), "spinbody", 8) == 0) {
+      // } else if (memcmp(sLower(saTmp[iModule]), "spinbody", iModuleLength) == 0) {
+      } else if (strcmp(sLower(saTmp[iModule]), "spinbody") == 0) {
         body[iFile - 1].bSpiNBody = 1;
         module->iBitSum[iFile - 1] += SPINBODY;
-      } else if (memcmp(sLower(saTmp[iModule]), "magmoc", 6) == 0) {
+      // } else if (memcmp(sLower(saTmp[iModule]), "magmoc", iModuleLength) == 0) {
+      } else if (strcmp(sLower(saTmp[iModule]), "magmoc") == 0) {
         body[iFile - 1].bMagmOc = 1;
         module->iBitSum[iFile - 1] += MAGMOC;
       } else {

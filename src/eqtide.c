@@ -1305,9 +1305,10 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   if (files->Outfile[iBody].iNumCols > 0) {
     for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
 
-      if (memcmp(files->Outfile[iBody].caCol[iCol],
-                 output[OUT_EQROTPERCONT].cName,
-                 strlen(output[OUT_EQROTPERCONT].cName)) == 0) {
+      // if (memcmp(files->Outfile[iBody].caCol[iCol],
+      //            output[OUT_EQROTPERCONT].cName,
+      //            strlen(output[OUT_EQROTPERCONT].cName)) == 0) {
+      if (strcmp(files->Outfile[iBody].caCol[iCol],output[OUT_EQROTPERCONT].cName) == 0) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
@@ -1321,9 +1322,10 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                        options[OPT_OUTPUTORDER].iLine[iBody + 1]);
       }
 
-      if (memcmp(files->Outfile[iBody].caCol[iCol],
-                 output[OUT_EQROTPERDISCRETE].cName,
-                 strlen(output[OUT_EQROTPERDISCRETE].cName)) == 0) {
+      // if (memcmp(files->Outfile[iBody].caCol[iCol],
+      //            output[OUT_EQROTPERDISCRETE].cName,
+      //            strlen(output[OUT_EQROTPERDISCRETE].cName)) == 0) {
+      if (strcmp(files->Outfile[iBody].caCol[iCol],output[OUT_EQROTPERDISCRETE].cName) == 0) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
@@ -1337,9 +1339,10 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                        options[OPT_OUTPUTORDER].iLine[iBody + 1]);
       }
 
-      if (memcmp(files->Outfile[iBody].caCol[iCol],
-                 output[OUT_EQROTRATECONT].cName,
-                 strlen(output[OUT_EQROTRATECONT].cName)) == 0) {
+      // if (memcmp(files->Outfile[iBody].caCol[iCol],
+      //            output[OUT_EQROTRATECONT].cName,
+      //            strlen(output[OUT_EQROTRATECONT].cName)) == 0) {
+      if (strcmp(files->Outfile[iBody].caCol[iCol],output[OUT_EQROTRATECONT].cName) == 0) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
@@ -1353,9 +1356,10 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                        options[OPT_OUTPUTORDER].iLine[iBody + 1]);
       }
 
-      if (memcmp(files->Outfile[iBody].caCol[iCol],
-                 output[OUT_EQROTRATEDISCRETE].cName,
-                 strlen(output[OUT_EQROTRATEDISCRETE].cName)) == 0) {
+      // if (memcmp(files->Outfile[iBody].caCol[iCol],
+      //            output[OUT_EQROTRATEDISCRETE].cName,
+      //            strlen(output[OUT_EQROTRATEDISCRETE].cName)) == 0) {
+      if (strcmp(files->Outfile[iBody].caCol[iCol],output[OUT_EQROTRATEDISCRETE].cName) == 0) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
@@ -1369,8 +1373,9 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                        options[OPT_OUTPUTORDER].iLine[iBody + 1]);
       }
 
-      if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_GAMMAORB].cName,
-                 strlen(output[OUT_GAMMAORB].cName)) == 0) {
+      // if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_GAMMAORB].cName,
+      //            strlen(output[OUT_GAMMAORB].cName)) == 0) {
+      if (strcmp(files->Outfile[iBody].caCol[iCol], output[OUT_GAMMAORB].cName) == 0) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
@@ -1384,8 +1389,9 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                        options[OPT_OUTPUTORDER].iLine[iBody + 1]);
       }
 
-      if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_GAMMAROT].cName,
-                 strlen(output[OUT_GAMMAROT].cName)) == 0) {
+      // if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_GAMMAROT].cName,
+      //            strlen(output[OUT_GAMMAROT].cName)) == 0) {
+      if (strcmp(files->Outfile[iBody].caCol[iCol], output[OUT_GAMMAROT].cName) == 0) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
@@ -1399,8 +1405,9 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                        options[OPT_OUTPUTORDER].iLine[iBody + 1]);
       }
 
-      if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_TIDALQ].cName,
-                 strlen(output[OUT_TIDALQ].cName)) == 0) {
+      // if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_TIDALQ].cName,
+      //            strlen(output[OUT_TIDALQ].cName)) == 0) {
+      if (strcmp(files->Outfile[iBody].caCol[iCol], output[OUT_TIDALQ].cName) == 0) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",

@@ -2015,8 +2015,9 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
   cCol=malloc(MODULEOUTEND*sizeof(char*));
   for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
-      if (memcmp(files->Outfile[iBody].caCol[iCol], output[iOut].cName,
-                 strlen(output[iOut].cName)) == 0) {
+      // if (memcmp(files->Outfile[iBody].caCol[iCol], output[iOut].cName,
+      //            strlen(output[iOut].cName)) == 0) {
+        if (strcmp(files->Outfile[iBody].caCol[iCol], output[iOut].cName) == 0) {
         /* Match! */
         dTmp = malloc(output[iOut].iNum * sizeof(double));
         fnWrite[iOut](body, control, &output[iOut], system,
@@ -2053,8 +2054,9 @@ void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
   cCol=malloc(MODULEOUTEND*sizeof(char*));
   for (iCol = 0; iCol < files->Outfile[iBody].iNumGrid; iCol++) {
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
-      if (memcmp(files->Outfile[iBody].caGrid[iCol], output[iOut].cName,
-                 strlen(output[iOut].cName)) == 0) {
+      // if (memcmp(files->Outfile[iBody].caGrid[iCol], output[iOut].cName,
+      //            strlen(output[iOut].cName)) == 0) {
+      if (strcmp(files->Outfile[iBody].caGrid[iCol], output[iOut].cName) == 0) {
         /* Match! */
         dTmp = malloc(output[iOut].iNum * sizeof(double));
         fnWrite[iOut](body, control, &output[iOut], system,
@@ -2236,8 +2238,9 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
     for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
       for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
         if (output[iOut].bGrid == 0 || output[iOut].bGrid == 2) {
-          if (memcmp(files->Outfile[iBody].caCol[iCol], output[iOut].cName,
-                     strlen(output[iOut].cName)) == 0) {
+          // if (memcmp(files->Outfile[iBody].caCol[iCol], output[iOut].cName,
+          //            strlen(output[iOut].cName)) == 0) {
+            if (strcmp(files->Outfile[iBody].caCol[iCol], output[iOut].cName) == 0) {
             /* Match! */
             dTmp = malloc(output[iOut].iNum * sizeof(double));
             cUnit=NULL;
@@ -2274,8 +2277,9 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
         for (iGrid = 0; iGrid < files->Outfile[iBody].iNumGrid; iGrid++) {
           for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
             if (output[iOut].bGrid == 1 || output[iOut].bGrid == 2) {
-              if (memcmp(files->Outfile[iBody].caGrid[iGrid],
-                         output[iOut].cName, strlen(output[iOut].cName)) == 0) {
+              // if (memcmp(files->Outfile[iBody].caGrid[iGrid],
+              //            output[iOut].cName, strlen(output[iOut].cName)) == 0) {
+              if (strcmp(files->Outfile[iBody].caGrid[iGrid],output[iOut].cName) == 0) {
                 body[iBody].iWriteLat = iLat;
                 cUnit=NULL;
                 fnWrite[iOut](body, control, &output[iOut], system,

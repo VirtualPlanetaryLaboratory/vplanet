@@ -2153,9 +2153,10 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   } else {
     int iCol, bError = 0;
     for (iCol = 0; iCol < files->Outfile[iBody].iNumCols; iCol++) {
-      if (memcmp(files->Outfile[iBody].caCol[iCol],
-                 output[OUT_PLANETRADXUV].cName,
-                 strlen(output[OUT_PLANETRADXUV].cName)) == 0) {
+      // if (memcmp(files->Outfile[iBody].caCol[iCol],
+      //            output[OUT_PLANETRADXUV].cName,
+      //            strlen(files->Outfile[iBody].caCol[iCol])) == 0) {
+        if (strcmp(files->Outfile[iBody].caCol[iCol],output[OUT_PLANETRADXUV].cName) == 0) {
         /* Match! */
         fprintf(stderr,
                 "ERROR: Output option %s only allowed with AtmEsc's LEHMER17 "
@@ -2163,8 +2164,9 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                 output[OUT_PLANETRADXUV].cName);
         bError = 1;
       }
-      if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_RADSOLID].cName,
-                 strlen(output[OUT_RADSOLID].cName)) == 0) {
+      // if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_RADSOLID].cName,
+      //            strlen(files->Outfile[iBody].caCol[iCol])) == 0) {
+        if (strcmp(files->Outfile[iBody].caCol[iCol], output[OUT_RADSOLID].cName) == 0) {
         /* Match! */
         fprintf(stderr,
                 "ERROR: Output option %s only allowed with AtmEsc's LEHMER17 "
@@ -2172,9 +2174,10 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                 output[OUT_RADSOLID].cName);
         bError = 1;
       }
-      if (memcmp(files->Outfile[iBody].caCol[iCol],
-                 output[OUT_SCALEHEIGHT].cName,
-                 strlen(output[OUT_SCALEHEIGHT].cName)) == 0) {
+      // if (memcmp(files->Outfile[iBody].caCol[iCol],
+      //            output[OUT_SCALEHEIGHT].cName,
+      //            strlen(files->Outfile[iBody].caCol[iCol])) == 0) {
+        if (strcmp(files->Outfile[iBody].caCol[iCol],output[OUT_SCALEHEIGHT].cName) == 0) {
         /* Match! */
         fprintf(stderr,
                 "ERROR: Output option %s only allowed with AtmEsc's LEHMER17 "
@@ -2182,8 +2185,9 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                 output[OUT_SCALEHEIGHT].cName);
         bError = 1;
       }
-      if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_PRESSURF].cName,
-                 strlen(output[OUT_PRESSURF].cName)) == 0) {
+      // if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_PRESSURF].cName,
+      //            strlen(files->Outfile[iBody].caCol[iCol])) == 0) {
+        if (strcmp(files->Outfile[iBody].caCol[iCol], output[OUT_PRESSURF].cName) == 0) {
         /* Match! */
         fprintf(stderr,
                 "ERROR: Output option %s only allowed with AtmEsc's LEHMER17 "

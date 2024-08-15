@@ -341,7 +341,6 @@ void WriteDescription(char cLongDescr[], char cDescr[], int iMaxChars) {
   }
 
   for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
-    //memset(cLine[iLineWordNow], '\0', OPTLEN);
     memset(cDescription[iLineWordNow], '\0', OPTLEN);
   }
 
@@ -388,7 +387,6 @@ void WriteDescription(char cLongDescr[], char cDescr[], int iMaxChars) {
     // Now reset counters
     iCharsLeft = iMaxChars;
     for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
-      //memset(cLine[iLineWordNow], '\0', OPTLEN);
       cLine[iLineWordNow]=NULL;
     }
     iLine++;
@@ -396,12 +394,6 @@ void WriteDescription(char cLongDescr[], char cDescr[], int iMaxChars) {
   }
   printf("+-----------------+--------------------------------------------------"
          "------------------+\n");
-
-  /* Reset description for next time
-  for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
-    memset(cDescription[iLineWordNow],'\0',OPTLEN);
-  }
-  */
 }
 
 
@@ -1084,9 +1076,6 @@ void fsUnitsViscosity(UNITS *units, char **cUnit) {
 
   fsUnitsLength(units->iLength, &cUnitLength);
   fsUnitsTime(units->iTime, &cUnitTime);
-  // strcat(cUnit, "^2/");
-  // fsUnitsTime(units->iTime, cTmp);
-  // strcat(cUnit, cTmp);
   fvFormattedString(cUnit, "%s^2/%s",cUnitLength,cUnitTime);
   free(cUnitLength);
   free(cUnitTime);
@@ -1098,13 +1087,6 @@ void fsUnitsAngMom(UNITS *units, char **cUnit) {
   fsUnitsMass(units->iMass, &cUnitMass);
   fsUnitsLength(units->iLength, &cUnitLength);
   fsUnitsTime(units->iTime, &cUnitTime);
-  // fsUnitsMass(units->iMass, cUnit);
-  // fsUnitsLength(units->iLength, cTmp);
-  // strcat(cUnit, "*");
-  // strcat(cUnit, cTmp);
-  // strcat(cUnit, "^2/");
-  // fsUnitsTime(units->iTime, cTmp);
-  // strcat(cUnit, cTmp);
   fvFormattedString(cUnit, "%s*%s^2/%s", cUnitMass, cUnitLength, cUnitTime);
   free(cUnitMass);
   free(cUnitLength);
@@ -1114,11 +1096,6 @@ void fsUnitsAngMom(UNITS *units, char **cUnit) {
 void fsUnitsDensity(UNITS *units, char **cUnit) {
   char *cUnitMass = NULL, *cUnitLength = NULL;
 
-  // fsUnitsMass(units->iMass, cUnit);
-  // strcat(cUnit, "/");
-  // fsUnitsLength(units->iLength, cTmp);
-  // strcat(cUnit, cTmp);
-  // strcat(cUnit, "^3");
   fsUnitsMass(units->iMass, &cUnitMass);
   fsUnitsLength(units->iLength, &cUnitLength);
   fvFormattedString(cUnit, "%s/%s^3",cUnitMass, cUnitLength);
@@ -1129,10 +1106,6 @@ void fsUnitsDensity(UNITS *units, char **cUnit) {
 void fsUnitsVel(UNITS *units, char **cUnit) {
   char *cUnitLength = NULL, *cUnitTime = NULL;
 
-  // fsUnitsLength(units->iLength, cUnit);
-  // strcat(cUnit, "/");
-  // fsUnitsTime(units->iTime, cTmp);
-  // strcat(cUnit, cTmp);
   fsUnitsLength(units->iLength, &cUnitLength);
   fsUnitsTime(units->iTime, &cUnitTime);
   fvFormattedString(cUnit, "%s/%s", cUnitLength, cUnitTime);
@@ -1143,9 +1116,6 @@ void fsUnitsVel(UNITS *units, char **cUnit) {
 void fsUnitsRate(int iType, char **cUnit) {
   char *cUnitTime = NULL;
 
-  // fvFormattedString(&cUnit, "/");
-  // fsUnitsTime(iType, cTmp);
-  // strcat(cUnit, cTmp);
   fsUnitsTime(iType, &cUnitTime);
   fvFormattedString(cUnit, "/%s", cUnitTime);
   free(cUnitTime);
@@ -1154,26 +1124,15 @@ void fsUnitsRate(int iType, char **cUnit) {
 void fsUnitsRateSquared(int iType, char **cUnit) {
   char *cUnitTime = NULL;
 
-  // fvFormattedString(&cUnit, "/");
-  // fsUnitsTime(iType, cTmp);
-  // strcat(cUnit, cTmp);
   fsUnitsTime(iType, &cUnitTime);
   fvFormattedString(cUnit, "/%s^2", cUnitTime);
   free(cUnitTime);
 }
 
-/* double fdUnitsRate(int iTime) {
-  return 1/(fdUnitsTime(iTime));
-}*/
-
 
 void fsUnitsAngRate(UNITS *units, char **cUnit) {
   char *cUnitAngle = NULL, *cUnitTime = NULL;
 
-  // fsUnitsAngle(units->iAngle, cUnit);
-  // strcat(cUnit, "/");
-  // fsUnitsTime(units->iTime, cTmp);
-  // strcat(cUnit, cTmp);
   fsUnitsAngle(units->iAngle, &cUnitAngle);
   fsUnitsTime(units->iTime, &cUnitTime);
   fvFormattedString(cUnit, "%s/%s", cUnitAngle, cUnitTime);
@@ -1188,14 +1147,6 @@ void fsUnitsEnergy(UNITS *units, char **cUnit) {
   fsUnitsLength(units->iLength, &cUnitLength);
   fsUnitsTime(units->iTime, &cUnitTime);
 
-  // fsUnitsMass(units->iMass, cUnit);
-  // strcat(cUnit, "*");
-  // fsUnitsLength(units->iLength, cTmp);
-  // strcat(cUnit, cTmp);
-  // strcat(cUnit, "^2/");
-  // fsUnitsTime(units->iTime, cTmp);
-  // strcat(cUnit, cTmp);
-  // strcat(cUnit, "^2");
   fvFormattedString(cUnit, "%s*%s^2/%s^2", cUnitMass, cUnitLength, cUnitTime);
   free(cUnitMass);
   free(cUnitLength);
@@ -1216,14 +1167,6 @@ void fsUnitsPower(UNITS *units, char **cUnit) {
   fsUnitsLength(units->iLength, &cUnitLength);
   fsUnitsTime(units->iTime, &cUnitTime);
 
-  // fsUnitsMass(units->iMass, cUnit);
-  // strcat(cUnit, "*");
-  // fsUnitsLength(units->iLength, cTmp);
-  // strcat(cUnit, cTmp);
-  // strcat(cUnit, "^2/");
-  // fsUnitsTime(units->iTime, cTmp);
-  // strcat(cUnit, cTmp);
-  // strcat(cUnit, "^3");
   fvFormattedString(cUnit, "%s*%s^2/%s^3", cUnitMass, cUnitLength, cUnitTime);
   free(cUnitMass);
   free(cUnitLength);
@@ -1241,14 +1184,6 @@ void fsUnitsEnergyFlux(UNITS *units, char **cUnit) {
   fsUnitsMass(units->iMass, &cUnitMass);
   fsUnitsTime(units->iTime, &cUnitTime);
 
-  // fsUnitsEnergy(units, cUnit);
-  // strcat(cUnit, "/(");
-  // fsUnitsLength(units->iLength, cTmp);
-  // strcat(cUnit, cTmp);
-  // strcat(cUnit, "^2*");
-  // fsUnitsTime(units->iTime, cTmp);
-  // strcat(cUnit, cTmp);
-  // strcat(cUnit, ")");
   fvFormattedString(cUnit, "%s/%s^3", cUnitMass, cUnitTime);
   free(cUnitMass);
   free(cUnitTime);

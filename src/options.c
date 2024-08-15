@@ -270,18 +270,14 @@ void AddOptionStringArray(char *cFile, char *cOption, char ***saInput,
   GetLine(cFile, cOption, &cLine, &iLine[0], iVerbose);
   GetWords(cLine, cTmp, &iNumWords, &bContinue);
   *iNumLines = 1;
-  //*saInput   = (char **)malloc(MAXARRAY * sizeof(char *));
   saInputCopy = (char **)malloc(MAXARRAY * sizeof(char *));
 
   for (iWord = 0; iWord < MAXARRAY; iWord++) {
-    //(*saInput)[iWord] = NULL;
     saInputCopy[iWord] = NULL;
   }
 
   for (iWord = 0; iWord < iNumWords - 1; iWord++) {
-    // memset(saInput[iWord], '\0', OPTLEN);
 
-    //fvFormattedString(saInput[iWord], cTmp[iWord + 1]);
     fvFormattedString(&saInputCopy[iWord], cTmp[iWord + 1]);
     /* Reset cTmp string: If the next time cTmp is filled, the
        new string is longer than the old, then vestigial characters
@@ -321,11 +317,7 @@ void AddOptionStringArray(char *cFile, char *cOption, char ***saInput,
       }
     }
   }
-  // for (iWord=0;iWord<iNumWords;iWord++) {
-  //   fvFormattedString(&(*saInput)[iWord],saInputCopy[iWord]);
-  // }
   *saInput = saInputCopy;
-  //free(cLine);
 }
 
 /* Get all fields in a double array. The fields are stored in daInput,
@@ -396,64 +388,6 @@ void AddOptionString(char *cFile, char *cOption, char cInput[], int *iLine,
   }
   free(cLine);
 }
-
-/* Looks like this was deprecated somewhere RB 01/02/24
-int GetNumOut(char cFile[], char cName[], int iLen, int *iLineNum, int iExit) {
-  char cLine[LINE], cWord[NAMELEN];
-  int iPos, j, ok, bDone = 0, iLine = 0, iNumOut;
-  FILE *fp;
-
-  fp = fopen(cFile, "r");
-  if (fp == NULL) {
-    fprintf(stderr, "Unable to open %s.\n", cFile);
-    exit(iExit);
-  }
-
-  while (fgets(cLine, LINE, fp) != NULL) {
-    // Check for # sign
-    if (memcmp(cLine, "#", 1) != 0) {
-      // Check for desired parameter
-      sscanf(cLine, "%s", cWord);
-      if (memcmp(cWord, cName, iLen) == 0) {
-        // Parameter Found!
-        if (bDone) {
-          fprintf(stderr, "ERROR: Multiple occurences of parameter %s found.\n",
-                  cName);
-          fprintf(stderr, "\t%s, lines: %d and %d\n", cFile, *iLineNum, iLine);
-          exit(iExit);
-        }
-        bDone     = 1;
-        *iLineNum = iLine;
-
-        iNumOut = 0;
-        ok      = 1;
-        for (iPos = 1; iPos < LINE;
-             iPos++) { // Ignore first character, as it makes conditional
-                          // well-defined
-          // printf("%d ",cLine[iPos]);
-          if (ok) {
-            if (cLine[iPos] == 35) { // 35 is ASCII code for #
-              // Pound sign!
-              ok = 0;
-              iNumOut++;
-            }
-            if (isspace(cLine[iPos]) && !isspace(cLine[iPos - 1])) {
-              iNumOut++;
-            }
-          }
-        }
-      }
-    }
-    iLine++;
-    for (iPos = 0; iPos < LINE; iPos++) {
-      cLine[iPos] = 0;
-    }
-  }
-  // Lose the input parameter
-  iNumOut--;
-  return iNumOut;
-}
-*/
 
 int iGetNumLines(char *cFile) {
   int iNumLines = 0, iChar, bFileOK = 1;
@@ -2788,7 +2722,6 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
           output[iOut].bDoNeg[iFile - 1] = 0;
         }
         if (output[iOut].bGrid == 0 || output[iOut].bGrid == 2) {
-          // memset(files->Outfile[iFile - 1].caCol[i], '\0', OPTLEN);
           fvFormattedString(&files->Outfile[iFile - 1].caCol[i],
                             output[iOut].cName);
         } else {
@@ -2991,14 +2924,12 @@ void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
           fvFormattedString(&files->Outfile[iFile - 1].caCol[i],
                             output[iOut].cName);
         } else {
-          //memset(files->Outfile[iFile - 1].caGrid[iNumGrid - 1], '\0', OPTLEN);
           fvFormattedString(&files->Outfile[iFile - 1].caGrid[iNumGrid - 1],
                             output[iOut].cName);
         }
       }
     }
 
-    // files->Outfile[iFile-1].iNumGrid = iNumGrid;
     UpdateFoundOptionMulti(&files->Infile[iFile], &options[OPT_GRIDOUTPUT],
                            lTmp, files->Infile[iFile].iNumLines, iFile);
   }
@@ -4699,7 +4630,6 @@ void InitializeOptions(OPTIONS *options, fnReadOption *fnRead) {
 
   /* Initialize all parameters describing the option's location */
   for (iOpt = 0; iOpt < MODULEOPTEND; iOpt++) {
-    // memset(options[iOpt].cName, '\0', OPTLEN);
 
     options[iOpt].cName = NULL;
     options[iOpt].cDescr = NULL;
@@ -4714,17 +4644,11 @@ void InitializeOptions(OPTIONS *options, fnReadOption *fnRead) {
     options[iOpt].bMultiFile = 0;
     options[iOpt].iMultiIn   = 0;
     options[iOpt].iType      = -1;
-    // memset(options[iOpt].cDescr, '\0', OPTDESCR);
     fvFormattedString(&options[iOpt].cDescr, "null");
-    // memset(options[iOpt].cLongDescr, '\0', OPTLONDESCR);
     fvFormattedString(&options[iOpt].cLongDescr, "null");
-    // memset(options[iOpt].cDefault, '\0', OPTDESCR);
     fvFormattedString(&options[iOpt].cDefault, "null");
-    // memset(options[iOpt].cValues, '\0', OPTDESCR);
     fvFormattedString(&options[iOpt].cValues, "null");
-    // memset(options[iOpt].cNeg, '\0', OPTDESCR);
     fvFormattedString(&options[iOpt].cNeg, "null");
-    // memset(options[iOpt].cDimension, '\0', OPTDESCR);
     options[iOpt].dDefault   = NAN;
     options[iOpt].iModuleBit = 0;
     options[iOpt].bNeg       = 0;

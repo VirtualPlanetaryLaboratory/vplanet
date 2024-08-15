@@ -2468,10 +2468,7 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
 void InitializeOutput(FILES *files, OUTPUT *output, fnWriteOutput fnWrite[]) {
   int iOut, iBody, iModule;
 
-  //memset(files->cLog, '\0', NAMELEN);
-
   for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
-    //memset(output[iOut].cName, '\0', OPTLEN);
     output[iOut].cName = NULL;
     output[iOut].cDescr = NULL;
     output[iOut].cLongDescr = NULL;
@@ -2484,11 +2481,8 @@ void InitializeOutput(FILES *files, OUTPUT *output, fnWriteOutput fnWrite[]) {
     output[iOut].iNum   = 0; /* Number of parameters associated with option */
     output[iOut].bDoNeg = malloc(MAXFILES * sizeof(int));
     output[iOut].iModuleBit = 0;
-    //memset(output[iOut].cDescr, '\0', OUTDESCR);
     fvFormattedString(&output[iOut].cDescr, "null");
-    //memset(output[iOut].cLongDescr, '\0', OUTLONDESCR);
     fvFormattedString(&output[iOut].cLongDescr, "null");
-    //memset(output[iOut].cNeg, '\0', OUTDESCR);
     fvFormattedString(&output[iOut].cNeg, "null");
     for (iBody = 0; iBody < MAXFILES; iBody++) {
       output[iOut].bDoNeg[iBody] = 0;

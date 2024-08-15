@@ -6,7 +6,6 @@ import sys
 # XXX Near duplicates in maketest.py, 02/06/24
 def Main():
     BuildVPLanet()
-    print("")
     dir_list = CollectAllTests()
 
     tot_fail = 0

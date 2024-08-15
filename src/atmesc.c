@@ -1799,6 +1799,10 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
         (KBOLTZ * body[iBody].dFlowTemp * (1. + XO / (1. - XO)));
   }
 
+  if (body[iBody].dOxygenMass == 0) {
+    body[iBody].dOxygenEta = 0;
+  }
+
   // Is water escaping?
   if (!fbDoesWaterEscape(body, evolve, io, iBody)) {
 

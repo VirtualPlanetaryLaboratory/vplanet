@@ -2864,7 +2864,7 @@ void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
                     int iVerbose) {
   int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 0, iNumGrid = 0,iOption;
   int k, iOut = -1, *lTmp;
-  char **saTmp, *cTmp=NULL, **cOption, *cOut;
+  char **saTmp, *cTmp=NULL, **cOption, *cOut=NULL;
   int iLen1, iLen2;
 
   lTmp    = malloc(MAXLINES * sizeof(int));
@@ -2904,9 +2904,9 @@ void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
       // }
       fvFormattedString(&cTmp, saTmp[i]);
       for (j = 0; j < MODULEOUTEND; j++) {
-        for (k = 0; k < OPTLEN; k++) {
-          cOut[k] = 0;
-        }
+        // for (k = 0; k < OPTLEN; k++) {
+        //   cOut[k] = 0;
+        // }
         fvFormattedString(&cOut, output[j].cName);
         iLen1 = strlen(cOut);
         iLen2 = strlen(cTmp);

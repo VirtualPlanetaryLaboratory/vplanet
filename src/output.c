@@ -2048,7 +2048,7 @@ void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
   int iCol, iOut, iSubOut, iExtra = 0;
   char **cCol; // +2 for brackets
   double *dTmp;
-  char *cUnit=NULL, *cTmp;
+  char *cUnit=NULL, *cTmp=NULL;
 
   cCol=malloc(MODULEOUTEND*sizeof(char*));
   for (iCol = 0; iCol < files->Outfile[iBody].iNumGrid; iCol++) {
@@ -2479,6 +2479,7 @@ void InitializeOutput(FILES *files, OUTPUT *output, fnWriteOutput fnWrite[]) {
     output[iOut].dNeg   = 1; /* Conversion factor for negative options */
     output[iOut].iNum   = 0; /* Number of parameters associated with option */
     output[iOut].bDoNeg = malloc(MAXFILES * sizeof(int));
+    output[iOut].iModuleBit = 0;
     //memset(output[iOut].cDescr, '\0', OUTDESCR);
     fvFormattedString(&output[iOut].cDescr, "null");
     //memset(output[iOut].cLongDescr, '\0', OUTLONDESCR);

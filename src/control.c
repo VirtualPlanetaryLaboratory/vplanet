@@ -60,6 +60,7 @@ void sort_options(OPTIONS *options, int sorted[]) {
   SORTED_OPTIONS sorted_options[MODULEOPTEND];
   for (iOpt = 0; iOpt < MODULEOPTEND; iOpt++) {
     sorted_options[iOpt].index = iOpt;
+    sorted_options[iOpt].name = NULL;
     fvFormattedString(&sorted_options[iOpt].name, options[iOpt].cName);
   }
   qsort(sorted_options, MODULEOPTEND, sizeof(sorted_options[0]),

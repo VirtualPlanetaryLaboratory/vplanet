@@ -148,10 +148,12 @@ void ReadFileOrbitData(BODY *body, CONTROL *control, FILES *files,
     /* Cannot exist in primary input file -- Each body has an output file */
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
+    body[iFile - 1].cFileOrbitData = NULL;
     fvFormattedString(&body[iFile - 1].cFileOrbitData, cTmp);
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     //       fvFormattedString(body[iFile-1].cFileOrbitData,"%s",options[OPT_FILEORBITDATA].cDefault);
+    body[iFile - 1].cFileOrbitData = NULL;
     fvFormattedString(&body[iFile - 1].cFileOrbitData, options->cDefault);
   }
 }

@@ -39,10 +39,13 @@ int bFloatComparison(double x, double y) {
  */
 
 int bFileExists(const char *filename) {
-  FILE *file;
-  if ((file = fopen(filename, "r"))) {
-    fclose(file);
-    return 1;
+  if (filename != NULL) {
+    FILE *file;
+    if ((file = fopen(filename, "r"))) {
+      fclose(file);
+      return 1;
+    }
+    return 0;
   }
   return 0;
 }

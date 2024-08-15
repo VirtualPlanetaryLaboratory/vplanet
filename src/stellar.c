@@ -1313,7 +1313,6 @@ void WriteRossbyNumber(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteWindTorque(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char **cUnit) {
-  // int iaBody[1] = {iBody}; // Is this the way, then iaBody below?
   *dTmp = fdDJDtMagBrakingStellar(body, system, &iBody);
   fvFormattedString(cUnit, "");
 }
@@ -1378,13 +1377,6 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ROSSBYNUMBER].iNum       = 1;
   output[OUT_ROSSBYNUMBER].iModuleBit = STELLAR;
   fnWrite[OUT_ROSSBYNUMBER]           = &WriteRossbyNumber;
-
-  fvFormattedString(&output[OUT_WINDTORQUE].cName, "WindTorque");
-  fvFormattedString(&output[OUT_WINDTORQUE].cDescr, "Stellar Wind Torque");
-  output[OUT_WINDTORQUE].bNeg       = 0;
-  output[OUT_WINDTORQUE].iNum       = 1;
-  output[OUT_WINDTORQUE].iModuleBit = STELLAR;
-  fnWrite[OUT_WINDTORQUE]           = &WriteWindTorque;
 
   fvFormattedString(&output[OUT_WINDTORQUE].cName, "WindTorque");
   fvFormattedString(&output[OUT_WINDTORQUE].cDescr, "Stellar Wind Torque");

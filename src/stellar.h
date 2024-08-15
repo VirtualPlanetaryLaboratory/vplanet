@@ -147,6 +147,8 @@ void WriteLXUVFrac(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                    int, double *, char**);
 void WriteRossbyNumber(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                        int, double *, char**);
+void WriteWindTorque(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
+                       int, double *, char**);
 void WriteDRotPerDtStellar(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                            UPDATE *, int, double *, char**);
 

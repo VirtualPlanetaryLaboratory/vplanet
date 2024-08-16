@@ -3151,6 +3151,24 @@ void ReadRadiusGyration(BODY *body, CONTROL *control, FILES *files,
   }
 }
 
+void ReadRandSeed(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                  SYSTEM *system, int iFile) {
+  /* This parameter can exist in any file, but only once */
+  int lTmp = -1;
+  int iTmp;
+
+  AddOptionInt(files->Infile[iFile].cIn, options->cName, &iTmp, &lTmp,
+               control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files, options, files->Infile[iFile].cIn, lTmp,
+                     control->Io.iVerbose);
+    system->iSeed = iTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else {
+    AssignDefaultInt(options, &system->iSeed, files->iNumInputs);
+  }
+}
+
 /* Rotation Period */
 
 void ReadRotPeriod(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -4415,6 +4433,15 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_RG].bNeg       = 0;
   options[OPT_RG].iFileType  = 1;
   fnRead[OPT_RG]             = &ReadRadiusGyration;
+
+  fvFormattedString(&options[OPT_RANDSEED].cName, "iRandSeed");
+  fvFormattedString(&options[OPT_RANDSEED].cDescr,
+          "Seed for random number generator (stellar encounters)");
+  fvFormattedString(&options[OPT_RANDSEED].cDefault, "42");
+  options[OPT_RANDSEED].dDefault   = 42;
+  options[OPT_RANDSEED].iType      = 1;
+  options[OPT_RANDSEED].bMultiFile = 0;
+  fnRead[OPT_RANDSEED]             = &ReadRandSeed;
 
   fvFormattedString(&options[OPT_ROTPER].cName, "dRotPeriod");
   fvFormattedString(&options[OPT_ROTPER].cDescr, "Rotation Period");

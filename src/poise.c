@@ -606,15 +606,21 @@ void ReadGeography(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                     control->Io.iVerbose);
     //CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,\
                        control->Io.iVerbose);
-    if (!memcmp(sLower(cTmp), "uni3", 4)) {
-      body[iFile - 1].iGeography = UNIFORM3;
-    } else if (!memcmp(sLower(cTmp), "modn", 4)) {
-      body[iFile - 1].iGeography = MODERN;
+    if (!memcmp(sLower(cTmp), "u", 1)) {
+      body[iFile - 1].iGeography = LANDWATERUNIFORM;
+    } else if (!memcmp(sLower(cTmp), "m", 1)) {
+      body[iFile - 1].iGeography = LANDWATERMODERN;
+    } else if (!memcmp(sLower(cTmp), "r", 1)) {
+      body[iFile - 1].iGeography = LANDWATERRANDOM;
+    } else if (!memcmp(sLower(cTmp), "p", 1)) {
+      body[iFile - 1].iGeography = LANDWATERPOLAR;
+    } else if (!memcmp(sLower(cTmp), "e", 1)) {
+      body[iFile - 1].iGeography = LANDWATEREQUATORIAL;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
                 "ERROR: Unknown argument to %s: %s."
-                " Options are uni3 or modn.\n",
+                " Options are uniform, modern, random, polar, or equatorial.\n",
                 options->cName, cTmp);
       }
       LineExit(files->Infile[iFile].cIn, lTmp);
@@ -623,6 +629,25 @@ void ReadGeography(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   } else {
     body[iFile - 1].iGeography = options->dDefault;
   }
+}
+
+void ReadLandWaterLatitude(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                  SYSTEM *system, int iFile) {
+  int lTmp = -1;                   
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].dLatLandWater = dTmp * fdUnitsAngle(control->Units[iFile-1].iAngle);
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else {
+    if (iFile > 0) {
+      body[iFile - 1].dLatLandWater = options->dDefault;
+    }
+  }   
 }
 
 
@@ -1475,11 +1500,33 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_GEOGRAPHY].cName, "sGeography");
   fvFormattedString(&options[OPT_GEOGRAPHY].cDescr, "Type of land distribution");
-  fvFormattedString(&options[OPT_GEOGRAPHY].cDefault, "uni3");
-  options[OPT_GEOGRAPHY].dDefault   = UNIFORM3;
+  fvFormattedString(&options[OPT_GEOGRAPHY].cDefault, "uniform");
+  options[OPT_GEOGRAPHY].dDefault   = LANDWATERUNIFORM;
   options[OPT_GEOGRAPHY].iType      = 3;
   options[OPT_GEOGRAPHY].bMultiFile = 1;
   fnRead[OPT_GEOGRAPHY]             = &ReadGeography;
+  fvFormattedString(&options[OPT_LANDWATERLATITUDE].cLongDescr,
+    "The distribution of land and water across a planetary surface. \"Uniform\" sets "
+    "all latitudes to have the land fraction set by %s. \"Modern\" is modern Earth's "
+    "distribution. \"Random\" sets a random ratio for each latitude. \"Polar\" creates "
+    "land masses that extend %s degrees (radians) from the pole. \"Equatorial\" creates "
+    "land masses that extend %s degress (radians) from the equator.",options[OPT_LANDFRAC].cName,
+    options[OPT_LANDWATERLATITUDE].cName,options[OPT_LANDWATERLATITUDE].cName
+  );
+
+  fvFormattedString(&options[OPT_LANDWATERLATITUDE].cName, "dLandWaterLatitude");
+  fvFormattedString(&options[OPT_LANDWATERLATITUDE].cDescr, "N+S Latitude that separates land mass and oceans");
+  fvFormattedString(&options[OPT_LANDWATERLATITUDE].cDefault, "+/-45 degrees");
+  fvFormattedString(&options[OPT_LANDWATERLATITUDE].cDimension, "angle");
+  options[OPT_LANDWATERLATITUDE].dDefault   = PI/4;
+  options[OPT_LANDWATERLATITUDE].iType      = 2;
+  options[OPT_LANDWATERLATITUDE].bMultiFile = 1;
+  fnRead[OPT_LANDWATERLATITUDE]             = &ReadLandWaterLatitude;
+  fvFormattedString(&options[OPT_LANDWATERLATITUDE].cLongDescr,
+    "If the polar or equatorial geographies is selected (%s), then this option "
+    "set the boundary between the land mass and oceans. The distributions are "
+    "symmetric about the equator.",options[OPT_GEOGRAPHY].cName
+  );
 
   fvFormattedString(&options[OPT_SEASOUTPUTTIME].cName, "dSeasOutputTime");
   fvFormattedString(&options[OPT_SEASOUTPUTTIME].cDescr, "Output interval for seasonal"
@@ -1913,38 +1960,98 @@ void InitializeLatGrid(BODY *body, int iBody) {
   }
 }
 
+void fvInitializeLandWaterUniform(BODY *body,int iBody) {
+  int iLat;
+
+  for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+    body[iBody].daLandFrac[iLat]  = body[iBody].dLandFrac;
+    body[iBody].daWaterFrac[iLat] = 1.0 - body[iBody].daLandFrac[iLat];
+  }
+}
+
+void fvInitializeLandWaterModern(BODY *body,int iBody) {
+  int iLat;
+
+  for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+    if (body[iBody].daLats[iLat] * 180. / PI <= -60) {
+      body[iBody].daLandFrac[iLat] = 0.95 / 1.0094;
+    } else if (body[iBody].daLats[iLat] * 180. / PI > -60 &&
+                body[iBody].daLats[iLat] * 180. / PI <= -40) {
+      body[iBody].daLandFrac[iLat] = 0.05 / 1.0094;
+    } else if (body[iBody].daLats[iLat] * 180. / PI > -40 &&
+                body[iBody].daLats[iLat] * 180. / PI <= 20) {
+      body[iBody].daLandFrac[iLat] = 0.25 / 1.0094;
+    } else if (body[iBody].daLats[iLat] * 180. / PI > 20 &&
+                body[iBody].daLats[iLat] * 180. / PI <= 70) {
+      body[iBody].daLandFrac[iLat] = 0.5 / 1.0094;
+    } else {
+      body[iBody].daLandFrac[iLat] = 0.38 / 1.0094;
+    }
+    body[iBody].daWaterFrac[iLat] = 1.0 - body[iBody].daLandFrac[iLat];
+  }
+}
+
+void fvInitializeLandWaterRandom(BODY *body,int iBody) {
+  int iLat;
+
+  for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+    body[iBody].daLandFrac[iLat]  = (double)rand()/(double)RAND_MAX;
+    body[iBody].daWaterFrac[iLat] = 1.0 - body[iBody].daLandFrac[iLat];
+  }
+}
+
+void fvInitializeLandWaterPolar(BODY *body,int iBody) {
+  int iLat;
+
+  for (iLat=0;iLat<body[iBody].iLatLandWater;iLat++) {
+    body[iBody].daLandFrac[iLat]  = 1;
+    body[iBody].daWaterFrac[iLat] = 0;
+  }
+  for (iLat=body[iBody].iLatLandWater;iLat<(body[iBody].iNumLats - body[iBody].iLatLandWater);iLat++) {
+    body[iBody].daLandFrac[iLat]  = 0;
+    body[iBody].daWaterFrac[iLat] = 1;
+  }
+  for (iLat=(body[iBody].iNumLats - body[iBody].iLatLandWater);iLat<body[iBody].iNumLats;iLat++) {
+    body[iBody].daLandFrac[iLat]  = 1;
+    body[iBody].daWaterFrac[iLat] = 0;
+  }
+}
+
+void fvInitializeLandWaterEquatorial(BODY *body,int iBody) {
+  int iLat;
+
+  for (iLat=0;iLat<body[iBody].iLatLandWater;iLat++) {
+    body[iBody].daLandFrac[iLat]  = 0;
+    body[iBody].daWaterFrac[iLat] = 1;
+  }
+  for (iLat=body[iBody].iLatLandWater;iLat<(body[iBody].iNumLats - body[iBody].iLatLandWater);iLat++) {
+    body[iBody].daLandFrac[iLat]  = 1;
+    body[iBody].daWaterFrac[iLat] = 0;
+  }
+  for (iLat=(body[iBody].iNumLats - body[iBody].iLatLandWater);iLat<body[iBody].iNumLats;iLat++) {
+    body[iBody].daLandFrac[iLat]  = 0;
+    body[iBody].daWaterFrac[iLat] = 1;
+  }
+}
+
 void InitializeLandWater(BODY *body, int iBody) {
   int iLat;
 
   body[iBody].daLandFrac  = malloc(body[iBody].iNumLats * sizeof(double));
   body[iBody].daWaterFrac = malloc(body[iBody].iNumLats * sizeof(double));
 
-  if (body[iBody].iGeography == UNIFORM3) {
-    for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
-      body[iBody].daLandFrac[iLat]  = body[iBody].dLandFrac;
-      body[iBody].daWaterFrac[iLat] = 1.0 - body[iBody].daLandFrac[iLat];
-    }
-  } else if (body[iBody].iGeography == MODERN) {
-    for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
-      if (body[iBody].daLats[iLat] * 180. / PI <= -60) {
-        body[iBody].daLandFrac[iLat] = 0.95 / 1.0094;
-      } else if (body[iBody].daLats[iLat] * 180. / PI > -60 &&
-                 body[iBody].daLats[iLat] * 180. / PI <= -40) {
-        body[iBody].daLandFrac[iLat] = 0.05 / 1.0094;
-      } else if (body[iBody].daLats[iLat] * 180. / PI > -40 &&
-                 body[iBody].daLats[iLat] * 180. / PI <= 20) {
-        body[iBody].daLandFrac[iLat] = 0.25 / 1.0094;
-      } else if (body[iBody].daLats[iLat] * 180. / PI > 20 &&
-                 body[iBody].daLats[iLat] * 180. / PI <= 70) {
-        body[iBody].daLandFrac[iLat] = 0.5 / 1.0094;
-      } else {
-        body[iBody].daLandFrac[iLat] = 0.38 / 1.0094;
-      }
-      body[iBody].daWaterFrac[iLat] = 1.0 - body[iBody].daLandFrac[iLat];
-    }
+  if (body[iBody].iGeography == LANDWATERUNIFORM) {
+    fvInitializeLandWaterUniform(body,iBody);
+  } else if (body[iBody].iGeography == LANDWATERMODERN) {
+    fvInitializeLandWaterModern(body,iBody);
+  } else if (body[iBody].iGeography == LANDWATERRANDOM) {
+    fvInitializeLandWaterRandom(body,iBody);
+  } else if (body[iBody].iGeography == LANDWATERPOLAR) {
+    fvInitializeLandWaterPolar(body,iBody);
+  } else if (body[iBody].iGeography == LANDWATEREQUATORIAL) {
+    fvInitializeLandWaterEquatorial(body,iBody);
   }
 }
-
 
 void DampTemp(BODY *body, double dTGlobalTmp, int iBody) {
   int iLat;
@@ -2624,6 +2731,47 @@ void NullPoiseDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
   //  Nothing here, because entire climate simulation is ran in ForceBehavior
 }
 
+void VerifyGeography(BODY *body,CONTROL *control,OPTIONS *options,SYSTEM *system,int iBody) {
+
+  if (body[iBody].iGeography == LANDWATERUNIFORM || body[iBody].iGeography == LANDWATERMODERN ||
+        body[iBody].iGeography == LANDWATERRANDOM) {
+    if (options[OPT_LANDWATERLATITUDE].iLine[iBody+1] != -1) {
+      if (control->Io.iVerbose > VERBINPUT) {
+        fprintf(stderr,"ERROR: Cannot set %s with \"uniform\", \"modern\", or \"random\" geography. "
+            "Note that \"uniform\" is the default.\n",
+            options[OPT_LANDWATERLATITUDE].cName);
+      }
+      DoubleLineExit(options[OPT_LANDWATERLATITUDE].cFile[iBody + 1],options[OPT_GEOGRAPHY].cFile[iBody + 1],
+          options[OPT_LANDWATERLATITUDE].iLine[iBody+1],options[OPT_GEOGRAPHY].iLine[iBody+1]);
+    }
+  }
+
+  if (body[iBody].iGeography == LANDWATERMODERN || body[iBody].iGeography == LANDWATERRANDOM ||
+      body[iBody].iGeography == LANDWATERPOLAR || body[iBody].iGeography == LANDWATEREQUATORIAL) {
+    if (options[OPT_LANDFRAC].iLine[iBody+1] != -1) {
+      if (control->Io.iVerbose > VERBINPUT) {
+        fprintf(stderr,"ERROR: %s can only be set when %s is set to \"uniform\". Note that \"uniform\" is the default.\n",
+            options[OPT_LANDFRAC].cName,options[OPT_GEOGRAPHY].cName);
+      }
+    }
+  }
+
+  if (body[iBody].iGeography == LANDWATERRANDOM && options[OPT_RANDSEED].iLine[iBody+1] == -1) {
+    if (control->Io.iVerbose > VERBINPUT) {
+        fprintf(stderr,"\nWARNING: %s is set to \"radnom\", but %s is not set.\n\n",
+        options[OPT_GEOGRAPHY].cName,options[OPT_RANDSEED].cName);
+    }
+  }
+
+  if (body[iBody].iGeography == LANDWATERRANDOM) {
+    srand(system->iSeed);
+  }
+
+  if (body[iBody].iGeography == LANDWATERPOLAR || body[iBody].iGeography == LANDWATEREQUATORIAL) {
+    body[iBody].iLatLandWater = (int)(body[iBody].dLatLandWater*body[iBody].iNumLats/PI);
+  }
+}
+
 void VerifyPoise(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                  OUTPUT *output, SYSTEM *system, UPDATE *update, int iBody,
                  int iModule) {
@@ -2641,6 +2789,8 @@ void VerifyPoise(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     VerifyDynEllip(body, control, options, files->Infile[iBody + 1].cIn, iBody,
                    control->Io.iVerbose);
   }
+
+  VerifyGeography(body,control,options,system,iBody);
 
   /* Initialize climate arrays */
   InitializeLatGrid(body, iBody);

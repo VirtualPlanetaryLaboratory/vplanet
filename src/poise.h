@@ -26,8 +26,11 @@
 #define ALBTAYLOR 1
 
 /* Land Geography */
-#define UNIFORM3 0
-#define MODERN 1
+#define LANDWATERUNIFORM 0
+#define LANDWATERMODERN 1
+#define LANDWATERRANDOM 2
+#define LANDWATERPOLAR 3
+#define LANDWATEREQUATORIAL 4
 
 // Constants for the ice model
 #define LFICE 3.34e5  // ???
@@ -111,6 +114,7 @@
 #define OPT_ECCAMP 1968
 #define OPT_ECCPER 1969
 #define OPT_MINICEHEIGHT 1970
+#define OPT_LANDWATERLATITUDE 1980
 
 #define OPT_OLRMODEL 1998
 #define OPT_CLIMATEMODEL 1999

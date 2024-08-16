@@ -210,25 +210,6 @@ void ReadDMDensity(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   }
 }
 
-void ReadRandSeed(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
-                  SYSTEM *system, int iFile) {
-  /* This parameter can exist in any file, but only once */
-  int lTmp = -1;
-  int iTmp;
-
-  AddOptionInt(files->Infile[iFile].cIn, options->cName, &iTmp, &lTmp,
-               control->Io.iVerbose);
-  if (lTmp >= 0) {
-    CheckDuplication(files, options, files->Infile[iFile].cIn, lTmp,
-                     control->Io.iVerbose);
-    system->iSeed = iTmp;
-    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
-  } else {
-    AssignDefaultInt(options, &system->iSeed, files->iNumInputs);
-  }
-}
-
-
 void ReadEncounterRad(BODY *body, CONTROL *control, FILES *files,
                       OPTIONS *options, SYSTEM *system, int iFile) {
   /* This parameter can exist in any file, but only once */
@@ -582,15 +563,6 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_GALACDENSITY].iType      = 2;
   options[OPT_GALACDENSITY].bMultiFile = 0;
   fnRead[OPT_GALACDENSITY]             = &ReadGalacDensity;
-
-  fvFormattedString(&options[OPT_RANDSEED].cName, "iRandSeed");
-  fvFormattedString(&options[OPT_RANDSEED].cDescr,
-          "Seed for random number generator (stellar encounters)");
-  fvFormattedString(&options[OPT_RANDSEED].cDefault, "42");
-  options[OPT_RANDSEED].dDefault   = 42;
-  options[OPT_RANDSEED].iType      = 1;
-  options[OPT_RANDSEED].bMultiFile = 0;
-  fnRead[OPT_RANDSEED]             = &ReadRandSeed;
 
   fvFormattedString(&options[OPT_ENCOUNTERRAD].cName, "dEncounterRad");
   fvFormattedString(&options[OPT_ENCOUNTERRAD].cDescr,

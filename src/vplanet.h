@@ -630,6 +630,8 @@ struct BODY {
                               needed) */
   double dAlbedoLand;      /**< Sets base albedo of land (sea model) */
   double dAlbedoWater;     /**< Sets base albedo of water (sea model) */
+  double dLatLandWater;     /**< Lattitude boundary between land and water in polar and equatorial options */
+  int iLatLandWater;     /**< Lattitude boundary between land and water in polar and equatorial options */
   int bAlbedoZA;           /**< Use albedo based on zenith angle (ann model) */
   double dAreaIceCov; /**< Tracks area of surface covered in permanent ice*/
   double dAstroDist;  /**< Distance between primary and planet */

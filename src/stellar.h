@@ -138,19 +138,19 @@ void InitializeOutputFunctionStellar(OUTPUT *, int, int);
 void FinalizeOutputFunctionStellar(OUTPUT *, int, int);
 
 void WriteLuminosity(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
+                     int, double *, char**);
 void WriteTemperature(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void WriteLXUV(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-               double *, char[]);
+               double *, char**);
 void WriteLXUVFrac(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteRossbyNumber(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteWindTorque(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteDRotPerDtStellar(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 
 /* Logging Functions */
 void LogOptionsStellar(CONTROL *, FILE *);

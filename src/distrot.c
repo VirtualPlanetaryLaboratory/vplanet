@@ -148,35 +148,37 @@ void ReadFileOrbitData(BODY *body, CONTROL *control, FILES *files,
     /* Cannot exist in primary input file -- Each body has an output file */
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    strcpy(body[iFile - 1].cFileOrbitData, cTmp);
+    body[iFile - 1].cFileOrbitData = NULL;
+    fvFormattedString(&body[iFile - 1].cFileOrbitData, cTmp);
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
-    //       sprintf(body[iFile-1].cFileOrbitData,"%s",options[OPT_FILEORBITDATA].cDefault);
-    strcpy(body[iFile - 1].cFileOrbitData, options->cDefault);
+    //       fvFormattedString(body[iFile-1].cFileOrbitData,"%s",options[OPT_FILEORBITDATA].cDefault);
+    body[iFile - 1].cFileOrbitData = NULL;
+    fvFormattedString(&body[iFile - 1].cFileOrbitData, options->cDefault);
   }
 }
 
 void InitializeOptionsDistRot(OPTIONS *options, fnReadOption fnRead[]) {
 
-  sprintf(options[OPT_DYNELLIP].cName, "dDynEllip");
-  sprintf(options[OPT_DYNELLIP].cDescr, "Planet's dynamical ellipticity");
-  sprintf(options[OPT_DYNELLIP].cDefault, "0.00328");
-  sprintf(options[OPT_DYNELLIP].cDimension, "nd");
+  fvFormattedString(&options[OPT_DYNELLIP].cName, "dDynEllip");
+  fvFormattedString(&options[OPT_DYNELLIP].cDescr, "Planet's dynamical ellipticity");
+  fvFormattedString(&options[OPT_DYNELLIP].cDefault, "0.00328");
+  fvFormattedString(&options[OPT_DYNELLIP].cDimension, "nd");
   options[OPT_DYNELLIP].dDefault   = 0.00328;
   options[OPT_DYNELLIP].iType      = 2;
   options[OPT_DYNELLIP].bMultiFile = 1;
   fnRead[OPT_DYNELLIP]             = &ReadDynEllip;
 
-  sprintf(options[OPT_CALCDYNELLIP].cName, "bCalcDynEllip");
-  sprintf(options[OPT_CALCDYNELLIP].cDescr,
+  fvFormattedString(&options[OPT_CALCDYNELLIP].cName, "bCalcDynEllip");
+  fvFormattedString(&options[OPT_CALCDYNELLIP].cDescr,
           "Calculate dynamical ellipticity from RotRate");
-  sprintf(options[OPT_CALCDYNELLIP].cDefault, "0");
+  fvFormattedString(&options[OPT_CALCDYNELLIP].cDefault, "0");
   options[OPT_CALCDYNELLIP].dDefault   = 0;
   options[OPT_CALCDYNELLIP].iType      = 0;
   options[OPT_CALCDYNELLIP].bMultiFile = 1;
   fnRead[OPT_CALCDYNELLIP]             = &ReadCalcDynEllip;
-  sprintf(
-        options[OPT_CALCDYNELLIP].cLongDescr,
+  fvFormattedString(
+        &options[OPT_CALCDYNELLIP].cLongDescr,
         "In DistRot, set this to 1 to force the equilibrium shape (dynamical \n"
         "ellipticity) to be calculated based on the current rotation rate and "
         "\n"
@@ -189,54 +191,54 @@ void InitializeOptionsDistRot(OPTIONS *options, fnReadOption fnRead[]) {
         options[OPT_DYNELLIP].cName // XXX Check this!
   );
 
-  sprintf(options[OPT_FORCEPRECRATE].cName, "bForcePrecRate");
-  sprintf(options[OPT_FORCEPRECRATE].cDescr,
+  fvFormattedString(&options[OPT_FORCEPRECRATE].cName, "bForcePrecRate");
+  fvFormattedString(&options[OPT_FORCEPRECRATE].cDescr,
           "Set the axial precession to a fixed rate?");
-  sprintf(options[OPT_FORCEPRECRATE].cDefault, "0");
+  fvFormattedString(&options[OPT_FORCEPRECRATE].cDefault, "0");
   options[OPT_FORCEPRECRATE].dDefault   = 0;
   options[OPT_FORCEPRECRATE].iType      = 0;
   options[OPT_FORCEPRECRATE].bMultiFile = 1;
   fnRead[OPT_FORCEPRECRATE]             = &ReadForcePrecRate;
-  sprintf(options[OPT_FORCEPRECRATE].cLongDescr,
+  fvFormattedString(&options[OPT_FORCEPRECRATE].cLongDescr,
           "In DisRot, set the axial precession rate to a fixed value. This "
           "option \n"
           "can mimic the forcing of a natural satellite, or be used for "
           "testing.");
 
-  sprintf(options[OPT_PRECRATE].cName, "dPrecRate");
-  sprintf(options[OPT_PRECRATE].cDescr,
+  fvFormattedString(&options[OPT_PRECRATE].cName, "dPrecRate");
+  fvFormattedString(&options[OPT_PRECRATE].cDescr,
           "Fixed rate of axial precession (angle/s)");
-  sprintf(options[OPT_PRECRATE].cDefault, "7.7261e-12");
-  sprintf(options[OPT_PRECRATE].cDimension, "angle/time");
+  fvFormattedString(&options[OPT_PRECRATE].cDefault, "7.7261e-12");
+  fvFormattedString(&options[OPT_PRECRATE].cDimension, "angle/time");
   options[OPT_PRECRATE].dDefault   = 7.7261e-12;
   options[OPT_PRECRATE].iType      = 2;
   options[OPT_PRECRATE].bMultiFile = 1;
   fnRead[OPT_PRECRATE]             = &ReadPrecRate;
-  sprintf(options[OPT_READORBITDATA].cLongDescr,
+  fvFormattedString(&options[OPT_READORBITDATA].cLongDescr,
           "Value of the body's axial precession frequency if %s is set to 1.\n"
           "Default value is the modern Earth's value as driven by the Moon.",
           options[OPT_FORCEPRECRATE].cName);
 
-  sprintf(options[OPT_SPECMOMINERTIA].cName, "dSpecMomInertia");
-  sprintf(options[OPT_SPECMOMINERTIA].cDescr,
+  fvFormattedString(&options[OPT_SPECMOMINERTIA].cName, "dSpecMomInertia");
+  fvFormattedString(&options[OPT_SPECMOMINERTIA].cDescr,
           "Specific moment of inertia of polar axis");
-  sprintf(options[OPT_SPECMOMINERTIA].cDefault, "0.33");
-  sprintf(options[OPT_SPECMOMINERTIA].cDimension, "nd");
+  fvFormattedString(&options[OPT_SPECMOMINERTIA].cDefault, "0.33");
+  fvFormattedString(&options[OPT_SPECMOMINERTIA].cDimension, "nd");
   options[OPT_SPECMOMINERTIA].dDefault   = 0.33;
   options[OPT_SPECMOMINERTIA].iType      = 2;
   options[OPT_SPECMOMINERTIA].bMultiFile = 1;
   fnRead[OPT_SPECMOMINERTIA]             = &ReadSpecMomInertia;
 
-  sprintf(options[OPT_FILEORBITDATA].cName, "sFileOrbitData");
+  fvFormattedString(&options[OPT_FILEORBITDATA].cName, "sFileOrbitData");
   // Define OPT_READORBITDATA so it can be used in the long help
-  sprintf(options[OPT_READORBITDATA].cName, "bReadOrbitData");
-  sprintf(options[OPT_FILEORBITDATA].cDescr,
+  fvFormattedString(&options[OPT_READORBITDATA].cName, "bReadOrbitData");
+  fvFormattedString(&options[OPT_FILEORBITDATA].cDescr,
           "Name of file containing orbit time series");
-  sprintf(options[OPT_FILEORBITDATA].cDefault, "orbit.txt");
+  fvFormattedString(&options[OPT_FILEORBITDATA].cDefault, "orbit.txt");
   options[OPT_FILEORBITDATA].iType = 3;
   fnRead[OPT_FILEORBITDATA]        = &ReadFileOrbitData;
-  sprintf(
-        options[OPT_FILEORBITDATA].cLongDescr,
+  fvFormattedString(
+        &options[OPT_FILEORBITDATA].cLongDescr,
         "File containing pre-computed orbital data. The file must have the \n"
         "following format: Time SemiMajorAxis Eccentricity Inclination \n"
         "ArgPericenter LongAscNode MeanAnomaly. The units of those \n"
@@ -249,14 +251,14 @@ void InitializeOptionsDistRot(OPTIONS *options, fnReadOption fnRead[]) {
         options[OPT_FILEORBITDATA].cName, options[OPT_READORBITDATA].cName);
 
   // cName defined above
-  sprintf(options[OPT_READORBITDATA].cDescr,
+  fvFormattedString(&options[OPT_READORBITDATA].cDescr,
           "Read in orbital data for use with distrot?");
-  sprintf(options[OPT_READORBITDATA].cDefault, "0");
+  fvFormattedString(&options[OPT_READORBITDATA].cDefault, "0");
   options[OPT_READORBITDATA].dDefault   = 0;
   options[OPT_READORBITDATA].iType      = 0;
   options[OPT_READORBITDATA].bMultiFile = 1;
   fnRead[OPT_READORBITDATA]             = &ReadOrbitData;
-  sprintf(options[OPT_READORBITDATA].cLongDescr,
+  fvFormattedString(&options[OPT_READORBITDATA].cLongDescr,
           "Rather than calculate orbital evolution with DistOrb or SpiNBody, "
           "users \n"
           "may read in a previously run simulation. See %s for more \n"
@@ -939,7 +941,7 @@ void VerifyHaltDistRot(BODY *body, CONTROL *control, OPTIONS *options,
 
 void WriteBodyDOblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
-                            int iBody, double *dTmp, char cUnit[]) {
+                            int iBody, double *dTmp, char **cUnit) {
   double dDeriv, dObldx, dObldy, dObldz;
   int iPert;
 
@@ -980,7 +982,7 @@ void WriteBodyDOblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -991,7 +993,7 @@ void WriteBodyDOblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteOblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
-                         int iBody, double *dTmp, char cUnit[]) {
+                         int iBody, double *dTmp, char **cUnit) {
   double dDeriv, dObldx, dObldy, dObldz;
   int iPert;
 
@@ -1036,7 +1038,7 @@ void WriteOblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1047,7 +1049,7 @@ void WriteOblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WritePrecATimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   double dDeriv, dpAdx, dpAdy;
   int iPert;
 
@@ -1077,7 +1079,7 @@ void WritePrecATimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -1088,7 +1090,7 @@ void WritePrecATimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyDPrecADtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                               SYSTEM *system, UNITS *units, UPDATE *update,
-                              int iBody, double *dTmp, char cUnit[]) {
+                              int iBody, double *dTmp, char **cUnit) {
   double dDeriv, dpAdx, dpAdy;
   int iPert;
 
@@ -1114,7 +1116,7 @@ void WriteBodyDPrecADtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     *dTmp /= fdUnitsAngle(units->iAngle);
@@ -1125,7 +1127,7 @@ void WriteBodyDPrecADtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyDXoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1139,7 +1141,7 @@ void WriteBodyDXoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1148,7 +1150,7 @@ void WriteBodyDXoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyDYoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1162,7 +1164,7 @@ void WriteBodyDYoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1171,7 +1173,7 @@ void WriteBodyDYoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyDZoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                              SYSTEM *system, UNITS *units, UPDATE *update,
-                             int iBody, double *dTmp, char cUnit[]) {
+                             int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1185,7 +1187,7 @@ void WriteBodyDZoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1194,7 +1196,7 @@ void WriteBodyDZoblDtDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteXoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1212,7 +1214,7 @@ void WriteXoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1221,7 +1223,7 @@ void WriteXoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteYoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1239,7 +1241,7 @@ void WriteYoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1248,7 +1250,7 @@ void WriteYoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteZoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1266,7 +1268,7 @@ void WriteZoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
   
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1276,7 +1278,7 @@ void WriteZoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   double h, inc, longa, Lnorm = 0.0, obliq, eqnode;
   int i, jBody;
@@ -1376,7 +1378,7 @@ void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   double h, inc, longa, Lnorm = 0.0, obliq, eqnode;
   int i, jBody;
@@ -1479,24 +1481,24 @@ void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteDynEllip(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   if (iBody > 0) {
     *dTmp = body[iBody].dDynEllip;
   } else {
     *dTmp = -1;
   }
-  sprintf(cUnit, "%s", "");
+  fvFormattedString(cUnit, "%s", "");
 }
 
 void WritePrecFNat(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = fndCentralTorqueR(body, iBody);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     *dTmp /= fdUnitsAngle(units->iAngle);
@@ -1507,122 +1509,122 @@ void WritePrecFNat(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void InitializeOutputDistRot(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
-  sprintf(output[OUT_DOBLDTDISTROT].cName, "DOblDtDistRot");
-  sprintf(output[OUT_DOBLDTDISTROT].cDescr, "Body's dobl/dt in DistRot");
-  sprintf(output[OUT_DOBLDTDISTROT].cNeg, "deg/year");
+  fvFormattedString(&output[OUT_DOBLDTDISTROT].cName, "DOblDtDistRot");
+  fvFormattedString(&output[OUT_DOBLDTDISTROT].cDescr, "Body's dobl/dt in DistRot");
+  fvFormattedString(&output[OUT_DOBLDTDISTROT].cNeg, "deg/year");
   output[OUT_DOBLDTDISTROT].bNeg       = 1;
   output[OUT_DOBLDTDISTROT].dNeg       = YEARSEC / DEGRAD;
   output[OUT_DOBLDTDISTROT].iNum       = 1;
   output[OUT_DOBLDTDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_DOBLDTDISTROT]           = &WriteBodyDOblDtDistRot;
 
-  sprintf(output[OUT_DPRECADTDISTROT].cName, "DPrecADtDistRot");
-  sprintf(output[OUT_DPRECADTDISTROT].cDescr, "Body's dpA/dt in DistRot");
-  sprintf(output[OUT_DPRECADTDISTROT].cNeg, "deg/year");
+  fvFormattedString(&output[OUT_DPRECADTDISTROT].cName, "DPrecADtDistRot");
+  fvFormattedString(&output[OUT_DPRECADTDISTROT].cDescr, "Body's dpA/dt in DistRot");
+  fvFormattedString(&output[OUT_DPRECADTDISTROT].cNeg, "deg/year");
   output[OUT_DPRECADTDISTROT].bNeg       = 1;
   output[OUT_DPRECADTDISTROT].dNeg       = YEARSEC / DEGRAD;
   output[OUT_DPRECADTDISTROT].iNum       = 1;
   output[OUT_DPRECADTDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_DPRECADTDISTROT]           = &WriteBodyDPrecADtDistRot;
 
-  sprintf(output[OUT_DXOBLDTDISTROT].cName, "DXoblDtDistRot");
-  sprintf(output[OUT_DXOBLDTDISTROT].cDescr, "Body's dXobl/dt in DistRot");
-  sprintf(output[OUT_DXOBLDTDISTROT].cNeg, "1/year");
+  fvFormattedString(&output[OUT_DXOBLDTDISTROT].cName, "DXoblDtDistRot");
+  fvFormattedString(&output[OUT_DXOBLDTDISTROT].cDescr, "Body's dXobl/dt in DistRot");
+  fvFormattedString(&output[OUT_DXOBLDTDISTROT].cNeg, "1/year");
   output[OUT_DXOBLDTDISTROT].bNeg       = 1;
   output[OUT_DXOBLDTDISTROT].dNeg       = YEARSEC;
   output[OUT_DXOBLDTDISTROT].iNum       = 1;
   output[OUT_DXOBLDTDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_DXOBLDTDISTROT]           = &WriteBodyDXoblDtDistRot;
 
-  sprintf(output[OUT_DYOBLDTDISTROT].cName, "DYoblDtDistRot");
-  sprintf(output[OUT_DYOBLDTDISTROT].cDescr, "Body's dYobl/dt in DistRot");
-  sprintf(output[OUT_DYOBLDTDISTROT].cNeg, "1/year");
+  fvFormattedString(&output[OUT_DYOBLDTDISTROT].cName, "DYoblDtDistRot");
+  fvFormattedString(&output[OUT_DYOBLDTDISTROT].cDescr, "Body's dYobl/dt in DistRot");
+  fvFormattedString(&output[OUT_DYOBLDTDISTROT].cNeg, "1/year");
   output[OUT_DYOBLDTDISTROT].bNeg       = 1;
   output[OUT_DYOBLDTDISTROT].dNeg       = YEARSEC;
   output[OUT_DYOBLDTDISTROT].iNum       = 1;
   output[OUT_DYOBLDTDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_DYOBLDTDISTROT]           = &WriteBodyDYoblDtDistRot;
 
-  sprintf(output[OUT_DZOBLDTDISTROT].cName, "DZoblDtDistRot");
-  sprintf(output[OUT_DZOBLDTDISTROT].cDescr, "Body's dZobl/dt in DistRot");
-  sprintf(output[OUT_DZOBLDTDISTROT].cNeg, "1/year");
+  fvFormattedString(&output[OUT_DZOBLDTDISTROT].cName, "DZoblDtDistRot");
+  fvFormattedString(&output[OUT_DZOBLDTDISTROT].cDescr, "Body's dZobl/dt in DistRot");
+  fvFormattedString(&output[OUT_DZOBLDTDISTROT].cNeg, "1/year");
   output[OUT_DZOBLDTDISTROT].bNeg       = 1;
   output[OUT_DZOBLDTDISTROT].dNeg       = YEARSEC;
   output[OUT_DZOBLDTDISTROT].iNum       = 1;
   output[OUT_DZOBLDTDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_DZOBLDTDISTROT]           = &WriteBodyDZoblDtDistRot;
 
-  sprintf(output[OUT_XOBLTIMEDISTROT].cName, "XoblTimeDistRot");
-  sprintf(output[OUT_XOBLTIMEDISTROT].cDescr, "Xobl timescale in DistRot");
-  sprintf(output[OUT_XOBLTIMEDISTROT].cNeg, "year");
+  fvFormattedString(&output[OUT_XOBLTIMEDISTROT].cName, "XoblTimeDistRot");
+  fvFormattedString(&output[OUT_XOBLTIMEDISTROT].cDescr, "Xobl timescale in DistRot");
+  fvFormattedString(&output[OUT_XOBLTIMEDISTROT].cNeg, "year");
   output[OUT_XOBLTIMEDISTROT].bNeg       = 1;
   output[OUT_XOBLTIMEDISTROT].dNeg       = 1. / YEARSEC;
   output[OUT_XOBLTIMEDISTROT].iNum       = 1;
   output[OUT_XOBLTIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_XOBLTIMEDISTROT]           = &WriteXoblTimeDistRot;
 
-  sprintf(output[OUT_YOBLTIMEDISTROT].cName, "YoblTimeDistRot");
-  sprintf(output[OUT_YOBLTIMEDISTROT].cDescr, "Yobl timescale in DistRot");
-  sprintf(output[OUT_YOBLTIMEDISTROT].cNeg, "year");
+  fvFormattedString(&output[OUT_YOBLTIMEDISTROT].cName, "YoblTimeDistRot");
+  fvFormattedString(&output[OUT_YOBLTIMEDISTROT].cDescr, "Yobl timescale in DistRot");
+  fvFormattedString(&output[OUT_YOBLTIMEDISTROT].cNeg, "year");
   output[OUT_YOBLTIMEDISTROT].bNeg       = 1;
   output[OUT_YOBLTIMEDISTROT].dNeg       = 1. / YEARSEC;
   output[OUT_YOBLTIMEDISTROT].iNum       = 1;
   output[OUT_YOBLTIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_YOBLTIMEDISTROT]           = &WriteYoblTimeDistRot;
 
-  sprintf(output[OUT_ZOBLTIMEDISTROT].cName, "ZoblTimeDistRot");
-  sprintf(output[OUT_ZOBLTIMEDISTROT].cDescr, "Zobl timescale in DistRot");
-  sprintf(output[OUT_ZOBLTIMEDISTROT].cNeg, "year");
+  fvFormattedString(&output[OUT_ZOBLTIMEDISTROT].cName, "ZoblTimeDistRot");
+  fvFormattedString(&output[OUT_ZOBLTIMEDISTROT].cDescr, "Zobl timescale in DistRot");
+  fvFormattedString(&output[OUT_ZOBLTIMEDISTROT].cNeg, "year");
   output[OUT_ZOBLTIMEDISTROT].bNeg       = 1;
   output[OUT_ZOBLTIMEDISTROT].dNeg       = 1. / YEARSEC;
   output[OUT_ZOBLTIMEDISTROT].iNum       = 1;
   output[OUT_ZOBLTIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_ZOBLTIMEDISTROT]           = &WriteZoblTimeDistRot;
 
-  sprintf(output[OUT_OBLTIMEDISTROT].cName, "OblTimeDistRot");
-  sprintf(output[OUT_OBLTIMEDISTROT].cDescr, "Obliquity timescale in DistRot");
-  sprintf(output[OUT_OBLTIMEDISTROT].cNeg, "year");
+  fvFormattedString(&output[OUT_OBLTIMEDISTROT].cName, "OblTimeDistRot");
+  fvFormattedString(&output[OUT_OBLTIMEDISTROT].cDescr, "Obliquity timescale in DistRot");
+  fvFormattedString(&output[OUT_OBLTIMEDISTROT].cNeg, "year");
   output[OUT_OBLTIMEDISTROT].bNeg       = 1;
   output[OUT_OBLTIMEDISTROT].dNeg       = 1. / YEARSEC;
   output[OUT_OBLTIMEDISTROT].iNum       = 1;
   output[OUT_OBLTIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_OBLTIMEDISTROT]           = &WriteOblTimeDistRot;
 
-  sprintf(output[OUT_PRECATIMEDISTROT].cName, "PrecATimeDistRot");
-  sprintf(output[OUT_PRECATIMEDISTROT].cDescr,
+  fvFormattedString(&output[OUT_PRECATIMEDISTROT].cName, "PrecATimeDistRot");
+  fvFormattedString(&output[OUT_PRECATIMEDISTROT].cDescr,
           "Axial precession timescale in DistRot");
-  sprintf(output[OUT_PRECATIMEDISTROT].cNeg, "year");
+  fvFormattedString(&output[OUT_PRECATIMEDISTROT].cNeg, "year");
   output[OUT_PRECATIMEDISTROT].bNeg       = 1;
   output[OUT_PRECATIMEDISTROT].dNeg       = 1. / YEARSEC;
   output[OUT_PRECATIMEDISTROT].iNum       = 1;
   output[OUT_PRECATIMEDISTROT].iModuleBit = DISTROT;
   fnWrite[OUT_PRECATIMEDISTROT]           = &WritePrecATimeDistRot;
 
-  sprintf(output[OUT_CASS1].cName, "CassiniOne");
-  sprintf(output[OUT_CASS1].cDescr,
+  fvFormattedString(&output[OUT_CASS1].cName, "CassiniOne");
+  fvFormattedString(&output[OUT_CASS1].cDescr,
           "First Cassini parameter (misalignment of Cassini state vectors)");
   output[OUT_CASS1].bNeg       = 0;
   output[OUT_CASS1].iNum       = 1;
   output[OUT_CASS1].iModuleBit = DISTROT;
   fnWrite[OUT_CASS1]           = &WriteBodyCassOne;
 
-  sprintf(output[OUT_CASS2].cName, "CassiniTwo");
-  sprintf(output[OUT_CASS2].cDescr,
+  fvFormattedString(&output[OUT_CASS2].cName, "CassiniTwo");
+  fvFormattedString(&output[OUT_CASS2].cDescr,
           "Second Cassini parameter (alignment of Cassini state vectors");
   output[OUT_CASS2].bNeg       = 0;
   output[OUT_CASS2].iNum       = 1;
   output[OUT_CASS2].iModuleBit = DISTROT;
   fnWrite[OUT_CASS2]           = &WriteBodyCassTwo;
 
-  sprintf(output[OUT_DYNELLIP].cName, "DynEllip");
-  sprintf(output[OUT_DYNELLIP].cDescr, "dynamical ellipticity of planet");
+  fvFormattedString(&output[OUT_DYNELLIP].cName, "DynEllip");
+  fvFormattedString(&output[OUT_DYNELLIP].cDescr, "dynamical ellipticity of planet");
   output[OUT_DYNELLIP].bNeg       = 0;
   output[OUT_DYNELLIP].iNum       = 1;
   output[OUT_DYNELLIP].iModuleBit = DISTROT;
   fnWrite[OUT_DYNELLIP]           = &WriteDynEllip;
 
-  sprintf(output[OUT_PRECFNAT].cName, "PrecFNat");
-  sprintf(output[OUT_PRECFNAT].cDescr, "natural precession freq of planet");
+  fvFormattedString(&output[OUT_PRECFNAT].cName, "PrecFNat");
+  fvFormattedString(&output[OUT_PRECFNAT].cDescr, "natural precession freq of planet");
   output[OUT_PRECFNAT].bNeg       = 0;
   output[OUT_PRECFNAT].iNum       = 1;
   output[OUT_PRECFNAT].iModuleBit = DISTROT;

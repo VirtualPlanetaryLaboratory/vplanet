@@ -7,6 +7,10 @@
 
 #include "vplanet.h"
 
+void InitializeSystem(BODY *body,CONTROL *control,SYSTEM *system) {
+  system->iNumBodies = control->Evolve.iNumBodies;
+}
+
 /*
  * Physical Relationships
  */

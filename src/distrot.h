@@ -77,31 +77,31 @@ void FinalizeUpdateZoblDistRot(BODY *, UPDATE *, int *, int, int, int);
 
 void HelpOutputDistRot(OUTPUT *);
 void WriteBodyDOblDtDistRot(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                            UPDATE *, int, double *, char[]);
+                            UPDATE *, int, double *, char**);
 void WriteBodyDPrecADtDistRot(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                              UPDATE *, int, double *, char[]);
+                              UPDATE *, int, double *, char**);
 void WriteBodyDXoblDtDistRot(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                             UPDATE *, int, double *, char[]);
+                             UPDATE *, int, double *, char**);
 void WriteBodyDYoblADtDistRot(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                              UPDATE *, int, double *, char[]);
+                              UPDATE *, int, double *, char**);
 void WriteBodyDZoblDtDistRot(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                             UPDATE *, int, double *, char[]);
+                             UPDATE *, int, double *, char**);
 void WriteBodyXobl(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteBodyYobl(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteBodyZobl(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteOblTimeDistRot(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void WritePrecATimeDistRot(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void WriteXoblTimeDistRot(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void WriteYoblTimeDistRot(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void WriteZoblTimeDistRot(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 
 void InitializeOutputDistRot(OUTPUT *, fnWriteOutput[]);
 

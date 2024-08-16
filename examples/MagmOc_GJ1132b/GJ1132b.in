@@ -1,6 +1,6 @@
 # Planet a parameters
 sName         GJ1132b                     # Body's name
-saModules     magmoc, atmesc                      # Modules to apply, exact spelling required
+saModules     magmoc atmesc                      # Modules to apply, exact spelling required
 sColor        13aed5
 
 # Physical Properties

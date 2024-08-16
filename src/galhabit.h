@@ -91,31 +91,31 @@ void FinalizeUpdatePeriQGalHabit(BODY *, UPDATE *, int *, int, int, int);
 void FinalizeUpdateArgPGalHabit(BODY *, UPDATE *, int *, int, int, int);
 void FinalizeUpdateIncGalHabit(BODY *, UPDATE *, int *, int, int, int);
 void FinalizeUpdateLongAGalHabit(BODY *, UPDATE *, int *, int, int, int);
-
-void HelpOutputGalHabit(OUTPUT *);
-void WriteBodyPeriQ(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char[]);
-void WriteDEccDtGalHTidal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
-void WriteDIncDtGalHTidal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
-void WriteDArgPDtGalHTidal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
-void WriteDLongADtGalHTidal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                            UPDATE *, int, double *, char[]);
 void InitializeOutputGalHabit(OUTPUT *, fnWriteOutput[]);
+void HelpOutputGalHabit(OUTPUT *);
+
+void WriteBodyPeriQ(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
+                    int, double *, char**);
+void WriteDEccDtGalHTidal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                          UPDATE *, int, double *, char**);
+void WriteDIncDtGalHTidal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                          UPDATE *, int, double *, char**);
+void WriteDArgPDtGalHTidal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                           UPDATE *, int, double *, char**);
+void WriteDLongADtGalHTidal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                            UPDATE *, int, double *, char**);
 void WriteBodyEccX(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteBodyEccY(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteBodyEccZ(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteBodyAngMX(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char[]);
+                    int, double *, char**);
 void WriteBodyAngMY(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char[]);
+                    int, double *, char**);
 void WriteBodyAngMZ(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char[]);
+                    int, double *, char**);
 
 /* Logging Functions */
 void LogOptionsGalHabit(CONTROL *, FILE *);

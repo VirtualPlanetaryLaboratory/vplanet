@@ -1,6 +1,6 @@
 # Planet a parameters
 sName         Earth                     # Body's name
-saModules     magmoc, atmesc                      # Modules to apply, exact spelling required
+saModules     magmoc atmesc                      # Modules to apply, exact spelling required
 sColor        13aed5
 
 # Physical Properties

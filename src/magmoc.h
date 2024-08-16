@@ -209,51 +209,51 @@ void InitializeOutputFunctionMagmOc(OUTPUT *, int, int);
 void FinalizeOutputFunctionMagmOc(OUTPUT *, int, int);
 
 void WritePotTemp(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void WriteSurfTemp(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteSolidRadius(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void WriteWaterMassMOAtm(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void WriteWaterMassSol(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteCO2MassMOAtm(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteCO2MassSol(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
+                     int, double *, char**);
 void WriteOxygenMassMOAtm(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void WriteOxygenMassSol(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void WritePressWaterAtm(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void WritePressCO2Atm(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void WritePressOxygenAtm(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void WriteHydrogenMassSpace(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                            UPDATE *, int, double *, char[]);
+                            UPDATE *, int, double *, char**);
 void WriteOxygenMassSpace(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void WriteFracFe2O3Man(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteNetFluxAtmo(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void WriteWaterFracMelt(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void WriteCO2FracMelt(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void WriteRadioPower(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
+                     int, double *, char**);
 void WriteTidalPower(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
+                     int, double *, char**);
 void WriteSemiMajorAxis(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void WriteHZInnerEdge(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void WriteMeltFraction(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 
 /* Logging Functions */
 void LogOptionsMagmOc(CONTROL *, FILE *);

@@ -1,6 +1,6 @@
 # The host star
 sName	        Trappist1                # Body's name
-saModules	stellar, eqtide          # Modules to apply, exact spelling required
+saModules	stellar eqtide          # Modules to apply, exact spelling required
 
 # Output
 saOutputOrder Age -Luminosity -LXUVStellar -Radius Temperature

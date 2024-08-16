@@ -617,7 +617,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY8dPlanckBE"><code class="docutils literal notranslate"><span class="pre">BODY::dPlanckB</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY7dPrecA0E"><code class="docutils literal notranslate"><span class="pre">BODY::dPrecA0</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY17bReadOrbitOblDataE"><code class="docutils literal notranslate"><span class="pre">BODY::bReadOrbitOblData</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY17cFileOrbitOblDataE"><code class="docutils literal notranslate"><span class="pre">BODY::cFileOrbitOblData</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY17sFileOrbitOblDataE"><code class="docutils literal notranslate"><span class="pre">BODY::sFileOrbitOblData</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY11daOblSeriesE"><code class="docutils literal notranslate"><span class="pre">BODY::daOblSeries</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY13daPrecASeriesE"><code class="docutils literal notranslate"><span class="pre">BODY::daPrecASeries</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY10dRefHeightE"><code class="docutils literal notranslate"><span class="pre">BODY::dRefHeight</span></code></a></li>
@@ -1387,8 +1387,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6INFILE3cInE"><code class="docutils literal notranslate"><span class="pre">INFILE::cIn</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6INFILE7bLineOKE"><code class="docutils literal notranslate"><span class="pre">INFILE::bLineOK</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6INFILE9iNumLinesE"><code class="docutils literal notranslate"><span class="pre">INFILE::iNumLines</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6INFILE8cSpeciesE"><code class="docutils literal notranslate"><span class="pre">INFILE::cSpecies</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6INFILE10cReactionsE"><code class="docutils literal notranslate"><span class="pre">INFILE::cReactions</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N7OUTFILE4cOutE"><code class="docutils literal notranslate"><span class="pre">OUTFILE::cOut</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N7OUTFILE8iNumColsE"><code class="docutils literal notranslate"><span class="pre">OUTFILE::iNumCols</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N7OUTFILE5caColE"><code class="docutils literal notranslate"><span class="pre">OUTFILE::caCol</span></code></a></li>
@@ -2170,7 +2168,7 @@
 
 <dl class="cpp type">
 <dt class="sig sig-object cpp" id="_CPPv413fnWriteOutput">
-<span id="_CPPv313fnWriteOutput"></span><span id="_CPPv213fnWriteOutput"></span><span id="fnWriteOutput"></span><span class="target" id="vplanet_8h_1a9fde18b47ffe4b0fa3d304f8b0032852"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">fnWriteOutput</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><a class="reference internal" href="#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv413fnWriteOutput" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv313fnWriteOutput"></span><span id="_CPPv213fnWriteOutput"></span><span id="fnWriteOutput"></span><span class="target" id="vplanet_8h_1a0fb7d9f7909d4c80019d1680963cfbae"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">fnWriteOutput</span></span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">(</span></span><a class="reference internal" href="#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv413fnWriteOutput" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp type">
@@ -2617,13 +2615,13 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N4BODY5cNameE">
-<span id="_CPPv3N4BODY5cNameE"></span><span id="_CPPv2N4BODY5cNameE"></span><span id="BODY::cName__cA"></span><span class="target" id="struct_b_o_d_y_1a2349851cd65c89caacb18dd3132ebe7b"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cName</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NAMELEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N4BODY5cNameE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N4BODY5cNameE"></span><span id="_CPPv2N4BODY5cNameE"></span><span id="BODY::cName__cP"></span><span class="target" id="struct_b_o_d_y_1a5c69f6562bf0e2b58249b61f58ad9d3d"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cName</span></span></span><a class="headerlink" href="#_CPPv4N4BODY5cNameE" title="Link to this definition"></a><br /></dt>
 <dd><p>Body’s Name </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N4BODY6sColorE">
-<span id="_CPPv3N4BODY6sColorE"></span><span id="_CPPv2N4BODY6sColorE"></span><span id="BODY::sColor__cA"></span><span class="target" id="struct_b_o_d_y_1a11dc1c5b2bb22c73fbbb7dc66daf4d96"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sColor</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OPTLEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N4BODY6sColorE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N4BODY6sColorE"></span><span id="_CPPv2N4BODY6sColorE"></span><span id="BODY::sColor__cP"></span><span class="target" id="struct_b_o_d_y_1a3c906b5fe2678ed0932ce29bf40a93bb"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">sColor</span></span></span><a class="headerlink" href="#_CPPv4N4BODY6sColorE" title="Link to this definition"></a><br /></dt>
 <dd><p>Body color (for plotting) </p>
 </dd></dl>
 
@@ -3528,7 +3526,7 @@
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N4BODY14cFileOrbitDataE">
-<span id="_CPPv3N4BODY14cFileOrbitDataE"></span><span id="_CPPv2N4BODY14cFileOrbitDataE"></span><span id="BODY::cFileOrbitData__cA"></span><span class="target" id="struct_b_o_d_y_1aded375637c479fc7c0fcbd0f98aef43e"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cFileOrbitData</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NAMELEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N4BODY14cFileOrbitDataE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N4BODY14cFileOrbitDataE"></span><span id="_CPPv2N4BODY14cFileOrbitDataE"></span><span id="BODY::cFileOrbitData__cP"></span><span class="target" id="struct_b_o_d_y_1ac1f8165149bf9c7ee46927c252f0d61e"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cFileOrbitData</span></span></span><a class="headerlink" href="#_CPPv4N4BODY14cFileOrbitDataE" title="Link to this definition"></a><br /></dt>
 <dd><p>read orbital data from this file (distorb=0) </p>
 </dd></dl>
 
@@ -3678,7 +3676,7 @@
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N4BODY11saTidePertsE">
-<span id="_CPPv3N4BODY11saTidePertsE"></span><span id="_CPPv2N4BODY11saTidePertsE"></span><span id="BODY::saTidePerts__cAA"></span><span class="target" id="struct_b_o_d_y_1a96410c5a3eb9dea95b8fb51ff8811f40"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">saTidePerts</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">MAXARRAY</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NAMELEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N4BODY11saTidePertsE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N4BODY11saTidePertsE"></span><span id="_CPPv2N4BODY11saTidePertsE"></span><span id="BODY::saTidePerts__cPA"></span><span class="target" id="struct_b_o_d_y_1ac42de1e86deb5588cabe44907a8589a6"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">saTidePerts</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">MAXARRAY</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N4BODY11saTidePertsE" title="Link to this definition"></a><br /></dt>
 <dd><p>Names of Tidal Perturbers </p>
 </dd></dl>
 
@@ -5211,8 +5209,8 @@
 </dd></dl>
 
 <dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N4BODY17cFileOrbitOblDataE">
-<span id="_CPPv3N4BODY17cFileOrbitOblDataE"></span><span id="_CPPv2N4BODY17cFileOrbitOblDataE"></span><span id="BODY::cFileOrbitOblData__cA"></span><span class="target" id="struct_b_o_d_y_1a45185d628095947ac4086ed4a86bfcf0"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cFileOrbitOblData</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NAMELEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N4BODY17cFileOrbitOblDataE" title="Link to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY17sFileOrbitOblDataE">
+<span id="_CPPv3N4BODY17sFileOrbitOblDataE"></span><span id="_CPPv2N4BODY17sFileOrbitOblDataE"></span><span id="BODY::sFileOrbitOblData__cP"></span><span class="target" id="struct_b_o_d_y_1ab32d235528cc449d9cdc5c471dcc8241"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">sFileOrbitOblData</span></span></span><a class="headerlink" href="#_CPPv4N4BODY17sFileOrbitOblDataE" title="Link to this definition"></a><br /></dt>
 <dd><p>read orbital and obliquity data from this file (distorb=0) </p>
 </dd></dl>
 
@@ -6812,7 +6810,7 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N6SYSTEM5cNameE">
-<span id="_CPPv3N6SYSTEM5cNameE"></span><span id="_CPPv2N6SYSTEM5cNameE"></span><span id="SYSTEM::cName__cA"></span><span class="target" id="struct_s_y_s_t_e_m_1ade1da51b1f8f18a8f744451b353bfabc"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cName</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NAMELEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N6SYSTEM5cNameE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N6SYSTEM5cNameE"></span><span id="_CPPv2N6SYSTEM5cNameE"></span><span id="SYSTEM::cName__cP"></span><span class="target" id="struct_s_y_s_t_e_m_1a142fa46ccc511e0ddbcbbaced98b374a"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cName</span></span></span><a class="headerlink" href="#_CPPv4N6SYSTEM5cNameE" title="Link to this definition"></a><br /></dt>
 <dd><p>System’s Name </p>
 </dd></dl>
 
@@ -9601,7 +9599,7 @@
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N7CONTROL11sGitVersionE">
-<span id="_CPPv3N7CONTROL11sGitVersionE"></span><span id="_CPPv2N7CONTROL11sGitVersionE"></span><span id="CONTROL::sGitVersion__cA"></span><span class="target" id="struct_c_o_n_t_r_o_l_1a9b148ac7ca148257af00106b5774b991"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sGitVersion</span></span></span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">64</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N7CONTROL11sGitVersionE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N7CONTROL11sGitVersionE"></span><span id="_CPPv2N7CONTROL11sGitVersionE"></span><span id="CONTROL::sGitVersion__cP"></span><span class="target" id="struct_c_o_n_t_r_o_l_1a9fbcaf2977af4bd6f7254ec0c5e92ddf"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">sGitVersion</span></span></span><a class="headerlink" href="#_CPPv4N7CONTROL11sGitVersionE" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
@@ -9698,7 +9696,7 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N6INFILE3cInE">
-<span id="_CPPv3N6INFILE3cInE"></span><span id="_CPPv2N6INFILE3cInE"></span><span id="INFILE::cIn__cA"></span><span class="target" id="struct_i_n_f_i_l_e_1a5ee052c3a38616da67796bdbacf76b05"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cIn</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NAMELEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N6INFILE3cInE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N6INFILE3cInE"></span><span id="_CPPv2N6INFILE3cInE"></span><span id="INFILE::cIn__cP"></span><span class="target" id="struct_i_n_f_i_l_e_1ab7718efc8b4c1967d49660aac3643616"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cIn</span></span></span><a class="headerlink" href="#_CPPv4N6INFILE3cInE" title="Link to this definition"></a><br /></dt>
 <dd><p>File Name </p>
 </dd></dl>
 
@@ -9714,18 +9712,6 @@
 <dd><p>Number of Input Lines </p>
 </dd></dl>
 
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N6INFILE8cSpeciesE">
-<span id="_CPPv3N6INFILE8cSpeciesE"></span><span id="_CPPv2N6INFILE8cSpeciesE"></span><span id="INFILE::cSpecies__cA"></span><span class="target" id="struct_i_n_f_i_l_e_1a96d7db25a8ea762954e83b5821444838"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cSpecies</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NAMELEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N6INFILE8cSpeciesE" title="Link to this definition"></a><br /></dt>
-<dd><p>Name of Chemical Species N/I </p>
-</dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N6INFILE10cReactionsE">
-<span id="_CPPv3N6INFILE10cReactionsE"></span><span id="_CPPv2N6INFILE10cReactionsE"></span><span id="INFILE::cReactions__cA"></span><span class="target" id="struct_i_n_f_i_l_e_1a6228eb34c54bee536d04205594efc70d"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cReactions</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NAMELEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N6INFILE10cReactionsE" title="Link to this definition"></a><br /></dt>
-<dd><p>Names of Chemical Reactions N/I </p>
-</dd></dl>
-
 </div>
 </dd></dl>
 
@@ -9736,7 +9722,7 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N7OUTFILE4cOutE">
-<span id="_CPPv3N7OUTFILE4cOutE"></span><span id="_CPPv2N7OUTFILE4cOutE"></span><span id="OUTFILE::cOut__cA"></span><span class="target" id="struct_o_u_t_f_i_l_e_1a89a910e5fd20d7d00546404604642876"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cOut</span></span></span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">2</span></span><span class="w"> </span><span class="o"><span class="pre">*</span></span><span class="w"> </span><span class="n"><span class="pre">NAMELEN</span></span><span class="w"> </span><span class="o"><span class="pre">+</span></span><span class="w"> </span><span class="m"><span class="pre">10</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N7OUTFILE4cOutE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N7OUTFILE4cOutE"></span><span id="_CPPv2N7OUTFILE4cOutE"></span><span id="OUTFILE::cOut__cP"></span><span class="target" id="struct_o_u_t_f_i_l_e_1a4e2ed0f4d003be3dc7a230aef4e27688"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cOut</span></span></span><a class="headerlink" href="#_CPPv4N7OUTFILE4cOutE" title="Link to this definition"></a><br /></dt>
 <dd><p>Output File Name </p>
 </dd></dl>
 
@@ -9748,7 +9734,7 @@
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N7OUTFILE5caColE">
-<span id="_CPPv3N7OUTFILE5caColE"></span><span id="_CPPv2N7OUTFILE5caColE"></span><span id="OUTFILE::caCol__cAA"></span><span class="target" id="struct_o_u_t_f_i_l_e_1a1ee9c078c92f814aab341171220366e9"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">caCol</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">MODULEOUTEND</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OPTLEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N7OUTFILE5caColE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N7OUTFILE5caColE"></span><span id="_CPPv2N7OUTFILE5caColE"></span><span id="OUTFILE::caCol__cPA"></span><span class="target" id="struct_o_u_t_f_i_l_e_1ababcfdd994d26cc762a8475a7f5207f0"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">caCol</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">MODULEOUTEND</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N7OUTFILE5caColE" title="Link to this definition"></a><br /></dt>
 <dd><p>Output Value Name </p>
 </dd></dl>
 
@@ -9766,7 +9752,7 @@
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N7OUTFILE6caGridE">
-<span id="_CPPv3N7OUTFILE6caGridE"></span><span id="_CPPv2N7OUTFILE6caGridE"></span><span id="OUTFILE::caGrid__cAA"></span><span class="target" id="struct_o_u_t_f_i_l_e_1ab1c2b68eff098b11c143e6e25339ed89"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">caGrid</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">MODULEOUTEND</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OPTLEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N7OUTFILE6caGridE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N7OUTFILE6caGridE"></span><span id="_CPPv2N7OUTFILE6caGridE"></span><span id="OUTFILE::caGrid__cPA"></span><span class="target" id="struct_o_u_t_f_i_l_e_1a33748eb7f1c07765c2040024ddfd69ba"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">caGrid</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">MODULEOUTEND</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N7OUTFILE6caGridE" title="Link to this definition"></a><br /></dt>
 <dd><p>Gridded output name </p>
 </dd></dl>
 
@@ -9780,7 +9766,7 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N5FILES4cExeE">
-<span id="_CPPv3N5FILES4cExeE"></span><span id="_CPPv2N5FILES4cExeE"></span><span id="FILES::cExe__cA"></span><span class="target" id="struct_f_i_l_e_s_1a5a59164d7072b6b6a6b9af0fda84f615"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cExe</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">LINE</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N5FILES4cExeE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N5FILES4cExeE"></span><span id="_CPPv2N5FILES4cExeE"></span><span id="FILES::cExe__cP"></span><span class="target" id="struct_f_i_l_e_s_1a3e83345ff9835b0981aa247bc3caf8c4"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cExe</span></span></span><a class="headerlink" href="#_CPPv4N5FILES4cExeE" title="Link to this definition"></a><br /></dt>
 <dd><p>Name of Executable </p>
 </dd></dl>
 
@@ -9792,7 +9778,7 @@
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N5FILES4cLogE">
-<span id="_CPPv3N5FILES4cLogE"></span><span id="_CPPv2N5FILES4cLogE"></span><span id="FILES::cLog__cA"></span><span class="target" id="struct_f_i_l_e_s_1a8f85f68488c1fd87e1b557d35b83b87d"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cLog</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">NAMELEN</span></span><span class="w"> </span><span class="o"><span class="pre">+</span></span><span class="w"> </span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N5FILES4cLogE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N5FILES4cLogE"></span><span id="_CPPv2N5FILES4cLogE"></span><span id="FILES::cLog__cP"></span><span class="target" id="struct_f_i_l_e_s_1a94921e97da70635f3b366c7a50be25c7"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cLog</span></span></span><a class="headerlink" href="#_CPPv4N5FILES4cLogE" title="Link to this definition"></a><br /></dt>
 <dd><p>Log File Name (+4 to allow for “.log” suffix) </p>
 </dd></dl>
 
@@ -9817,25 +9803,25 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N7OPTIONS5cNameE">
-<span id="_CPPv3N7OPTIONS5cNameE"></span><span id="_CPPv2N7OPTIONS5cNameE"></span><span id="OPTIONS::cName__cA"></span><span class="target" id="struct_o_p_t_i_o_n_s_1ad16a1f4092982aef59cb210d83abe41b"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cName</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OPTLEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N7OPTIONS5cNameE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N7OPTIONS5cNameE"></span><span id="_CPPv2N7OPTIONS5cNameE"></span><span id="OPTIONS::cName__cP"></span><span class="target" id="struct_o_p_t_i_o_n_s_1a854639015f80b7f50620b6e804314c54"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cName</span></span></span><a class="headerlink" href="#_CPPv4N7OPTIONS5cNameE" title="Link to this definition"></a><br /></dt>
 <dd><p>Option Name </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N7OPTIONS6cDescrE">
-<span id="_CPPv3N7OPTIONS6cDescrE"></span><span id="_CPPv2N7OPTIONS6cDescrE"></span><span id="OPTIONS::cDescr__cA"></span><span class="target" id="struct_o_p_t_i_o_n_s_1a0a71817f16063ca40fbff6109fc7129d"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cDescr</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OPTDESCR</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N7OPTIONS6cDescrE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N7OPTIONS6cDescrE"></span><span id="_CPPv2N7OPTIONS6cDescrE"></span><span id="OPTIONS::cDescr__cP"></span><span class="target" id="struct_o_p_t_i_o_n_s_1a2049a15c5c472bdf55f6603a76ab22e4"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cDescr</span></span></span><a class="headerlink" href="#_CPPv4N7OPTIONS6cDescrE" title="Link to this definition"></a><br /></dt>
 <dd><p>Brief Description of Option </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N7OPTIONS10cLongDescrE">
-<span id="_CPPv3N7OPTIONS10cLongDescrE"></span><span id="_CPPv2N7OPTIONS10cLongDescrE"></span><span id="OPTIONS::cLongDescr__cA"></span><span class="target" id="struct_o_p_t_i_o_n_s_1a84f6d746b9d2c10717496a70be3ed93b"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cLongDescr</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OPTLONDESCR</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N7OPTIONS10cLongDescrE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N7OPTIONS10cLongDescrE"></span><span id="_CPPv2N7OPTIONS10cLongDescrE"></span><span id="OPTIONS::cLongDescr__cP"></span><span class="target" id="struct_o_p_t_i_o_n_s_1a99a9c4eba23f7f4323c8a18d997fed8a"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cLongDescr</span></span></span><a class="headerlink" href="#_CPPv4N7OPTIONS10cLongDescrE" title="Link to this definition"></a><br /></dt>
 <dd><p>Long Description of Option </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N7OPTIONS7cValuesE">
-<span id="_CPPv3N7OPTIONS7cValuesE"></span><span id="_CPPv2N7OPTIONS7cValuesE"></span><span id="OPTIONS::cValues__cA"></span><span class="target" id="struct_o_p_t_i_o_n_s_1a429187cdde22250b25f6e71ff2534ca3"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cValues</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OPTDESCR</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N7OPTIONS7cValuesE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N7OPTIONS7cValuesE"></span><span id="_CPPv2N7OPTIONS7cValuesE"></span><span id="OPTIONS::cValues__cP"></span><span class="target" id="struct_o_p_t_i_o_n_s_1a4c5099b2e333a06feb82c16d7f24ec8a"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cValues</span></span></span><a class="headerlink" href="#_CPPv4N7OPTIONS7cValuesE" title="Link to this definition"></a><br /></dt>
 <dd><p>Description of permitted values / ranges </p>
 </dd></dl>
 
@@ -9847,13 +9833,13 @@
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N7OPTIONS8cDefaultE">
-<span id="_CPPv3N7OPTIONS8cDefaultE"></span><span id="_CPPv2N7OPTIONS8cDefaultE"></span><span id="OPTIONS::cDefault__cA"></span><span class="target" id="struct_o_p_t_i_o_n_s_1a136d59303da370fd3e2d3802f1771897"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cDefault</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OPTDESCR</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N7OPTIONS8cDefaultE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N7OPTIONS8cDefaultE"></span><span id="_CPPv2N7OPTIONS8cDefaultE"></span><span id="OPTIONS::cDefault__cP"></span><span class="target" id="struct_o_p_t_i_o_n_s_1a572b732929193c415e078d9ec28b9258"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cDefault</span></span></span><a class="headerlink" href="#_CPPv4N7OPTIONS8cDefaultE" title="Link to this definition"></a><br /></dt>
 <dd><p>Description of Default Value </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N7OPTIONS10cDimensionE">
-<span id="_CPPv3N7OPTIONS10cDimensionE"></span><span id="_CPPv2N7OPTIONS10cDimensionE"></span><span id="OPTIONS::cDimension__cA"></span><span class="target" id="struct_o_p_t_i_o_n_s_1a46050516bd45f6fd80cca6a7788b49a9"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cDimension</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OPTDESCR</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N7OPTIONS10cDimensionE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N7OPTIONS10cDimensionE"></span><span id="_CPPv2N7OPTIONS10cDimensionE"></span><span id="OPTIONS::cDimension__cP"></span><span class="target" id="struct_o_p_t_i_o_n_s_1a910d74901644265d03603d92876e02f0"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cDimension</span></span></span><a class="headerlink" href="#_CPPv4N7OPTIONS10cDimensionE" title="Link to this definition"></a><br /></dt>
 <dd><p>Qualitative description of the option, included for connection wtih bigplanet. Options are: time, length, mass, angle, energy, pressure, amperes. Units may be combined with standard mathematical operations, e.g. energy/time, or mass*length/time^2. </p>
 </dd></dl>
 
@@ -9893,7 +9879,7 @@
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N7OPTIONS5cFileE">
-<span id="_CPPv3N7OPTIONS5cFileE"></span><span id="_CPPv2N7OPTIONS5cFileE"></span><span id="OPTIONS::cFile__cAA"></span><span class="target" id="struct_o_p_t_i_o_n_s_1a0efc54c93eb2ca1c430cb7fb2b85c305"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cFile</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">MAXFILES</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OPTLEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N7OPTIONS5cFileE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N7OPTIONS5cFileE"></span><span id="_CPPv2N7OPTIONS5cFileE"></span><span id="OPTIONS::cFile__cPP"></span><span class="target" id="struct_o_p_t_i_o_n_s_1ae24d4fb9030773fae7b8560a2adde4ee"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cFile</span></span></span><a class="headerlink" href="#_CPPv4N7OPTIONS5cFileE" title="Link to this definition"></a><br /></dt>
 <dd><p>File Name Where Set </p>
 </dd></dl>
 
@@ -9905,7 +9891,7 @@
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N7OPTIONS4cNegE">
-<span id="_CPPv3N7OPTIONS4cNegE"></span><span id="_CPPv2N7OPTIONS4cNegE"></span><span id="OPTIONS::cNeg__cA"></span><span class="target" id="struct_o_p_t_i_o_n_s_1a0c490cfa7e07297674fefa8f852719bf"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cNeg</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OPTDESCR</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N7OPTIONS4cNegE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N7OPTIONS4cNegE"></span><span id="_CPPv2N7OPTIONS4cNegE"></span><span id="OPTIONS::cNeg__cP"></span><span class="target" id="struct_o_p_t_i_o_n_s_1a464283f89c54dcf8b92491c65e3b4d9f"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cNeg</span></span></span><a class="headerlink" href="#_CPPv4N7OPTIONS4cNegE" title="Link to this definition"></a><br /></dt>
 <dd><p>Description of Negative Unit Conversion </p>
 </dd></dl>
 
@@ -9931,19 +9917,19 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N6OUTPUT5cNameE">
-<span id="_CPPv3N6OUTPUT5cNameE"></span><span id="_CPPv2N6OUTPUT5cNameE"></span><span id="OUTPUT::cName__cA"></span><span class="target" id="struct_o_u_t_p_u_t_1a63cc21a758bc0a390b34f238e7fa5f2b"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cName</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OPTLEN</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N6OUTPUT5cNameE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N6OUTPUT5cNameE"></span><span id="_CPPv2N6OUTPUT5cNameE"></span><span id="OUTPUT::cName__cP"></span><span class="target" id="struct_o_u_t_p_u_t_1acbf1ffdf2be721598191604b77b53886"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cName</span></span></span><a class="headerlink" href="#_CPPv4N6OUTPUT5cNameE" title="Link to this definition"></a><br /></dt>
 <dd><p>Output Name </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N6OUTPUT6cDescrE">
-<span id="_CPPv3N6OUTPUT6cDescrE"></span><span id="_CPPv2N6OUTPUT6cDescrE"></span><span id="OUTPUT::cDescr__cA"></span><span class="target" id="struct_o_u_t_p_u_t_1ad5dad3e6a4aadafeead717ce779c29e0"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cDescr</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OUTDESCR</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N6OUTPUT6cDescrE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N6OUTPUT6cDescrE"></span><span id="_CPPv2N6OUTPUT6cDescrE"></span><span id="OUTPUT::cDescr__cP"></span><span class="target" id="struct_o_u_t_p_u_t_1a3e6b55686af7b2a2664f42fdf281e26e"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cDescr</span></span></span><a class="headerlink" href="#_CPPv4N6OUTPUT6cDescrE" title="Link to this definition"></a><br /></dt>
 <dd><p>Output Description </p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N6OUTPUT10cLongDescrE">
-<span id="_CPPv3N6OUTPUT10cLongDescrE"></span><span id="_CPPv2N6OUTPUT10cLongDescrE"></span><span id="OUTPUT::cLongDescr__cA"></span><span class="target" id="struct_o_u_t_p_u_t_1af75737da6391a385ab9ab13ad3baefec"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cLongDescr</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OUTLONDESCR</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N6OUTPUT10cLongDescrE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N6OUTPUT10cLongDescrE"></span><span id="_CPPv2N6OUTPUT10cLongDescrE"></span><span id="OUTPUT::cLongDescr__cP"></span><span class="target" id="struct_o_u_t_p_u_t_1a4d7ffc50d5cafdba3f8e8960dfe3efd2"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cLongDescr</span></span></span><a class="headerlink" href="#_CPPv4N6OUTPUT10cLongDescrE" title="Link to this definition"></a><br /></dt>
 <dd><p>Output Long Description </p>
 </dd></dl>
 
@@ -9967,7 +9953,7 @@
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N6OUTPUT4cNegE">
-<span id="_CPPv3N6OUTPUT4cNegE"></span><span id="_CPPv2N6OUTPUT4cNegE"></span><span id="OUTPUT::cNeg__cA"></span><span class="target" id="struct_o_u_t_p_u_t_1ae83d7727d7c2e61c9f0485e1731b599a"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cNeg</span></span></span><span class="p"><span class="pre">[</span></span><span class="n"><span class="pre">OUTDESCR</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#_CPPv4N6OUTPUT4cNegE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N6OUTPUT4cNegE"></span><span id="_CPPv2N6OUTPUT4cNegE"></span><span id="OUTPUT::cNeg__cP"></span><span class="target" id="struct_o_u_t_p_u_t_1a87f25b54cf0e3e362ac9a7c1e43f9cea"></span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cNeg</span></span></span><a class="headerlink" href="#_CPPv4N6OUTPUT4cNegE" title="Link to this definition"></a><br /></dt>
 <dd><p>Units of Negative Option </p>
 </dd></dl>
 

@@ -2004,16 +2004,16 @@ void fvInitializeLandWaterPolar(BODY *body,int iBody) {
   int iLat;
 
   for (iLat=0;iLat<body[iBody].iLatLandWater;iLat++) {
-    body[iBody].daLandFrac[iLat]  = 1;
-    body[iBody].daWaterFrac[iLat] = 0;
+    body[iBody].daLandFrac[iLat]  = 0.99;
+    body[iBody].daWaterFrac[iLat] = 0.01;
   }
   for (iLat=body[iBody].iLatLandWater;iLat<(body[iBody].iNumLats - body[iBody].iLatLandWater);iLat++) {
-    body[iBody].daLandFrac[iLat]  = 0;
-    body[iBody].daWaterFrac[iLat] = 1;
+    body[iBody].daLandFrac[iLat]  = 0.01;
+    body[iBody].daWaterFrac[iLat] = 0.99;
   }
   for (iLat=(body[iBody].iNumLats - body[iBody].iLatLandWater);iLat<body[iBody].iNumLats;iLat++) {
-    body[iBody].daLandFrac[iLat]  = 1;
-    body[iBody].daWaterFrac[iLat] = 0;
+    body[iBody].daLandFrac[iLat]  = 0.99;
+    body[iBody].daWaterFrac[iLat] = 0.01;
   }
 }
 
@@ -2021,16 +2021,16 @@ void fvInitializeLandWaterEquatorial(BODY *body,int iBody) {
   int iLat;
 
   for (iLat=0;iLat<body[iBody].iLatLandWater;iLat++) {
-    body[iBody].daLandFrac[iLat]  = 0;
-    body[iBody].daWaterFrac[iLat] = 1;
+    body[iBody].daLandFrac[iLat]  = 0.01;
+    body[iBody].daWaterFrac[iLat] = 0.99;
   }
   for (iLat=body[iBody].iLatLandWater;iLat<(body[iBody].iNumLats - body[iBody].iLatLandWater);iLat++) {
-    body[iBody].daLandFrac[iLat]  = 1;
-    body[iBody].daWaterFrac[iLat] = 0;
+    body[iBody].daLandFrac[iLat]  = 0.99;
+    body[iBody].daWaterFrac[iLat] = 0.01;
   }
   for (iLat=(body[iBody].iNumLats - body[iBody].iLatLandWater);iLat<body[iBody].iNumLats;iLat++) {
-    body[iBody].daLandFrac[iLat]  = 0;
-    body[iBody].daWaterFrac[iLat] = 1;
+    body[iBody].daLandFrac[iLat]  = 0.01;
+    body[iBody].daWaterFrac[iLat] = 0.99;
   }
 }
 

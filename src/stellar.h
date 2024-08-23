@@ -35,19 +35,16 @@
 #define STELLAR_MODEL_PROXIMACEN 5
 #define STELLAR_MODEL_SINEWAVE 6
 #define STELLAR_MODEL_JOHNSTONE  7
+#define STELLAR_MODEL_SANZFORCADA 8
 
 #define EUV_MODEL_NONE        0
 #define EUV_MODEL_SANZFORCADA 1
 #define EUV_MODEL_JOHNSTONE   2
      
 #define XRAY_MODEL_NONE        0
-#define XRAY_MODEL_SANZFORCADA 1
-#define XRAY_MODEL_JOHNSTONE   2
+#define XRAY_MODEL_JOHNSTONE   1
 
-#define LXUV_MODEL_NONE        0
-#define LXUV_MODEL_SANZFORCADA 1
-#define LXUV_MODEL_JOHNSTONE   2
-#define LXUV_MODEL_RIBAS       3
+
 
 
 
@@ -71,19 +68,26 @@
 
 #define OPT_WINDMODEL 1514    /**< Wind model */
 #define OPT_XUVMODEL 1515     /**< XUV evol model */
+
+
 #define OPT_EUVMODEL 1528     /**<EUV evol model */
-#define OPT_EUVMODEL_SANZFORCADA  1529  /**<Sanz-Forcada EUV evol model */
+#define OPT_XRAYMODEL             1540 
+#define OPT_LXUVMODEL             1532    
+
+/*
+#define OPT_EUVMODEL_SANZFORCADA  1529  /**<Sanz-Forcada EUV evol model 
 #define OPT_EUVMODEL_JOHNSTONE    1530
 #define OPT_EUVMODEL_NONE         1531
-#define OPT_XRAYMODEL             1528     
-#define OPT_XRAYMODEL_SANZFORCADA  1529
+
+ 
 #define OPT_XRAYMODEL_JOHNSTONE    1530
 #define OPT_XRAYMODEL_NONE         1531
-#define OPT_LXUVMODEL               1532    
+
+   
 #define OPT_LXUVMODE_SANZFORCADA  1533
 #define OPT_LXUVMODE_JOHNSTONE    1534
-#define OPT_LXUVMODEL_REINERS      1535
-#define OPT_LXUVMODEL_NONE         1536
+#define OPT_LXUVMODEL_RIBAS      1535
+#define OPT_LXUVMODEL_NONE         1536 */
 
 
 
@@ -91,7 +95,6 @@
 
 
 
-//#define OPT_XRAYMODEL 1529
 #define OPT_HALTENDBARAFFEFGRID                                                \
   1516 /**< Halt when we reach the end of the Baraffe grid? */
 #define OPT_SATXUVTIME 1517 /**< XUV saturation time */
@@ -134,7 +137,9 @@
 #define OUT_LXUVFRAC 1513
 #define OUT_ROSSBYNUMBER 1514
 #define OUT_DROTPERDTSTELLAR 1515
-#define OPT_LXRAY 1527
+#define OPT_LXRAY 1527  ///for whatever reason it isn't recognizing my functions to be turned on 
+#define OPT_EUV   1551
+#define OPT_XRAY  1552
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -161,7 +166,7 @@ void InitializeVplanetStellar(CONTROL *, MODULE *);
 void fnPropsAuxStellar(BODY *, EVOLVE *, IO *, UPDATE *, int);
 void VerifyHaltStellar(BODY *, CONTROL *, OPTIONS *, int, int *);
 void VerifyRotationStellar(BODY *, CONTROL *, OPTIONS *, char[], int);
-//void VerifyXUV(BODY * ,CONTROL *, FILES *, OPTIONS *,int *); /SSS
+
 
 
 /* Update functions */
@@ -199,8 +204,6 @@ void WriteEUV(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
 void WriteXRay(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                            UPDATE *, int, double *, char[]);
 
-void WriteLXUV(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
 
 /* Logging Functions */
 void LogOptionsStellar(CONTROL *, FILE *);

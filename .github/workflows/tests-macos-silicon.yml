@@ -35,8 +35,12 @@ jobs:
         if: steps.setup_python.outcome == 'success'
         run: |
           make opt
-          pytest --tb=short
+          pytest --tb=short --junitxml=junit/test-results.xml
 
-      - name: Get unique id
-        uses: Tiryoh/gha-jobid-action@v1
-        id: jobs
+      - name: Check test ouptut created
+        id: check_test_file
+        uses: andstor/file-existence-action@v3
+        with:
+          files: "${{ github.workspace }}/junit/test-results.xml"
+          fail: true
+

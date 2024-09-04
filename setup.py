@@ -1,6 +1,4 @@
-import imp
 import os
-import subprocess as sub
 import sys
 from distutils.command.clean import clean
 from glob import glob

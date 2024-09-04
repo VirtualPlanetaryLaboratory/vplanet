@@ -41,5 +41,5 @@ jobs:
         id: check_test_file
         uses: andstor/file-existence-action@v3
         with:
-          files: "/home/runner/work/vplanet/vplanet/junit/test-results.xml"
+          files: "${{ github.workspace }}/junit/test-results.xml"
           fail: true

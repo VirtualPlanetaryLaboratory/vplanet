@@ -53,7 +53,7 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-22.04' && matrix.python-version == '3.9' }}
         uses: andstor/file-existence-action@v3
         with:
-          files: "/home/runner/work/vplanet/vplanet/junit/test-results.xml"
+          files: "${{ github.workspace }}/junit/test-results.xml"
           fail: true
 
       - name: Publish unit test results

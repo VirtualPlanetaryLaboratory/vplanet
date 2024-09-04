@@ -44,8 +44,3 @@ jobs:
           files: "/home/runner/work/vplanet/vplanet/junit/test-results.xml"
           fail: true
 
-      - name: Get unique id
-        uses: Tiryoh/gha-jobid-action@v1
-        id: jobs
-        with:
-          job_name: "Testing ${{ matrix.os }}:python-${{ matrix.python-version }}" 

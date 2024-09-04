@@ -48,26 +48,27 @@ jobs:
           make opt
           pytest --tb=short --junitxml=junit/test-results.xml
 
-      - name: Check test ouptut created
+      - name: Check test output created
         id: check_test_file
+        if: ${{ matrix.os == 'ubuntu-22.04' && matrix.python-version == '3.9' }}
         uses: andstor/file-existence-action@v3
         with:
           files: "/home/runner/work/vplanet/vplanet/junit/test-results.xml"
           fail: true
 
       - name: Publish unit test results
+        if: ${{ matrix.os == 'ubuntu-22.04' && matrix.python-version == '3.9' }}
         uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
         with:
           files: junit/test-*.xml
 
       - name: Generate coverage
         id: coverage
-        if: steps.test.outcome == 'success' && steps.check_test_file.outcome == 'success'
+        if: ${{ matrix.os == 'ubuntu-22.04' && matrix.python-version == '3.9' && steps.test.outcome == 'success' && steps.check_test_file.outcome == 'success' }}
         run: make coverage
 
-      - name: CodeCov
-        if:  ${{ matrix.os }} == ubuntu-22.04 &&  ${{ matrix.python-version }} == '3.9'
+      - name: Upload to CodeCov
+        if: ${{ matrix.os == 'ubuntu-22.04' && matrix.python-version == '3.9' }}
         uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

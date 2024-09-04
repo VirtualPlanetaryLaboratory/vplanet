@@ -55,10 +55,10 @@ jobs:
           files: "/home/runner/work/vplanet/vplanet/junit/test-results.xml"
           fail: true
 
-      - name: Generate coverage
-        id: coverage
-        if: steps.test.outcome == 'success' && steps.check_test_file.outcome == 'success'
-        run: make coverage
+      - name: List all jobs in the workflow run
+        uses: Tiryoh/gha-jobid-action@v1
+        with:
+          list: true
 
       - name: Get unique id
         uses: Tiryoh/gha-jobid-action@v1
@@ -71,6 +71,11 @@ jobs:
         if: always()
         with:
           files: junit/test-*.xml
+
+      - name: Generate coverage
+        id: coverage
+        if: steps.test.outcome == 'success' && steps.check_test_file.outcome == 'success'
+        run: make coverage
 
       - name: CodeCov
         if:  ${{ matrix.os }} == ubuntu-22.04 &&  ${{ matrix.python-version }} == '3.9'

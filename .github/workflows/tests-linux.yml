@@ -63,6 +63,9 @@ jobs:
       - name: Get unique id
         uses: Tiryoh/gha-jobid-action@v1
         id: jobs
+        with:
+          job_name: "Testing ${{ matrix.os }}:python-${{ matrix.python-version }}" # input job.<job-id>.name and matrix here.
+          per_page: 50 # input matrix size here if it is larger than 30
 
       - name: Publish unit test results
         uses: EnricoMi/publish-unit-test-result-action@v2

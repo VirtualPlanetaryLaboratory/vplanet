@@ -46,7 +46,7 @@ jobs:
         shell: bash -l {0}
         run: |
           make opt
-          pytest --tb=short
+          pytest --tb=short --junitxml=junit/test-results.xml
 
       - name: Check test ouptut created
         id: check_test_file

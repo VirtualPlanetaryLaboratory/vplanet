@@ -12,46 +12,46 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/MagmOc_Trappist1g
-   examples/LuminosityCycle
-   examples/MDwarfLuminosity
-   examples/ChaoticResonances
-   examples/IceBelts
-   examples/MiniNeptuneEvap
-   examples/ApseLock
-   examples/DiffLimWaterEscape
-   examples/MagmOc_Earth
-   examples/BinaryTides
-   examples/AbioticO2
-   examples/MagneticBraking
-   examples/DampedCBP
-   examples/NBodyAtmEsc
-   examples/VenusApproxInterior
-   examples/TidalEarth
-   examples/TideLock
-   examples/HabitableZone
-   examples/RadHeat
-   examples/CassiniMulti
    examples/EarthClimate
-   examples/GalaxyEffects
-   examples/MagmOc_GJ1132b
-   examples/StellarEvol
-   examples/SSDistOrbDistRot
-   examples/WaterLossTides
-   examples/AtmEscRegimes
-   examples/FfdProxCen
-   examples/ParameterSweep
-   examples/VenusWaterLoss
-   examples/SS_NBody
-   examples/IoHeat
-   examples/AtmEscKepler-36
-   examples/EarthInterior
-   examples/HLossTides
-   examples/AtmEscFlareProxCen
-   examples/CircumbinaryOrbit
    examples/STEEP
+   examples/StellarEvol
+   examples/AtmEscKepler-36
+   examples/ParameterSweep
+   examples/MiniNeptuneEvap
    examples/CassiniStates
+   examples/MagneticBraking
+   examples/CassiniMulti
+   examples/HLossTides
+   examples/IceBelts
+   examples/VenusWaterLoss
+   examples/LuminosityCycle
+   examples/WaterLossTides
+   examples/DampedCBP
+   examples/SS_NBody
+   examples/HabitableZone
+   examples/DiffLimWaterEscape
+   examples/TideLock
+   examples/CircumbinaryOrbit
+   examples/AtmEscFlareProxCen
+   examples/RadHeat
+   examples/BinaryTides
+   examples/ApseLock
+   examples/VenusApproxInterior
    examples/HabEvapCore
+   examples/MDwarfLuminosity
+   examples/SSDistOrbDistRot
+   examples/EarthInterior
+   examples/MagmOc_Trappist1g
+   examples/MagmOc_GJ1132b
+   examples/GalaxyEffects
+   examples/NBodyAtmEsc
+   examples/FfdProxCen
+   examples/AbioticO2
+   examples/AtmEscRegimes
+   examples/TidalEarth
+   examples/ChaoticResonances
+   examples/IoHeat
+   examples/MagmOc_Earth
 
 
 Broken

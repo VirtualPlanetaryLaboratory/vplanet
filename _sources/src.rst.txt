@@ -14,26 +14,26 @@ Detailed documentation of C source code.
 
    src/distorb
    src/verify
-   src/control
-   src/magmoc
-   src/vplanet
-   src/spinbody
-   src/eqtide
-   src/output
-   src/system
-   src/distrot
    src/stellar
-   src/thermint
-   src/binary
-   src/galhabit
-   src/radheat
-   src/update
-   src/body
    src/evolve
-   src/halt
-   src/flare
+   src/distrot
+   src/update
    src/options
-   src/poise
+   src/eqtide
+   src/control
+   src/output
    src/atmesc
+   src/halt
+   src/magmoc
+   src/radheat
+   src/thermint
+   src/galhabit
+   src/binary
+   src/body
+   src/poise
+   src/spinbody
+   src/system
    src/module
+   src/flare
+   src/vplanet
 

@@ -1,1 +1,4 @@
 include VERSION
+include src/*.c
+include src/*.h
+include bin/vplanet

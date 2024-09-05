@@ -94,7 +94,7 @@ setup(
     include_package_data=True,
 #    package_data={'': ['VERSION']},
     package_data={'': ['src/*.[ch]']},
-    data_files=[('', ['VERSION','bin/vplanet'])],
+    data_files=[('', ['VERSION'])],
     zip_safe=False,
     entry_points={"console_scripts": ["vplanet=vplanet.wrapper:_entry_point"]},
 )

@@ -8,7 +8,8 @@ from setuptools.command.build_ext import build_ext
 from setuptools.command.develop import develop
 
 # Read current code version
-VersionPath = os.path.join(os.path.abspath("."), "VERSION")
+VersionPath = os.path.join(os.path.abspath(os.path.dirname(__file__)), "VERSION")
+print(VersionPath)
 VERSION = open(VersionPath, "r").read().split("\n")[0].strip()
 
 

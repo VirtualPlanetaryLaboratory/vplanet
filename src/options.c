@@ -343,7 +343,12 @@ void AddOptionDouble(char *cFile, char *cOption, double *dInput, int *iLine,
 
   GetLine(cFile, cOption, &cLine, iLine, iVerbose);
   if (*iLine >= 0) {
-    sscanf(cLine, "%s %lf", cTmp, dInput);
+    int iNumOptionsRead = sscanf(cLine, "%s %lf", cTmp, dInput);
+    if (iNumOptionsRead != 2) {                                                     
+      printf("ERROR: %d arguments read for option %s.\n",iNumOptionsRead,cOption);
+      printf("\tcLine=%s, cTmp=%s, dInput=%lf\n", cLine, cTmp, *dInput );
+      exit(EXIT_INPUT);
+    }
   }
   free(cLine);
 }
@@ -354,7 +359,12 @@ void AddOptionInt(char *cFile, char *cOption, int *iInput, int *iLine,
 
   GetLine(cFile, cOption, &cLine, iLine, iVerbose);
   if (*iLine >= 0) {
-    sscanf(cLine, "%s %d", cTmp, iInput);
+    int iNumOptionsRead = sscanf(cLine, "%s %d", cTmp, iInput);
+    if (iNumOptionsRead != 2) {                                                     
+      printf("ERROR: %d arguments read for option %s.\n",iNumOptionsRead,cOption);
+      printf("\tcLine=%s, cTmp=%s, dInput=%d\n", cLine, cTmp, *iInput );
+      exit(EXIT_INPUT);
+    } 
   }
   free(cLine);
 }
@@ -384,7 +394,12 @@ void AddOptionString(char *cFile, char *cOption, char cInput[], int *iLine,
 
   GetLine(cFile, cOption, &cLine, iLine, iVerbose);
   if (*iLine >= 0) {
-    sscanf(cLine, "%s %s", cTmp, cInput);
+    int iNumOptionsRead = sscanf(cLine, "%s %s", cTmp, cInput);
+    if (iNumOptionsRead != 2) {                                                     
+      printf("ERROR: %d arguments read for option %s.\n",iNumOptionsRead,cOption);
+      printf("\tcLine=%s, cTmp=%s, dInput=%s\n", cLine, cTmp, cInput );
+      exit(EXIT_INPUT);
+    } 
   }
   free(cLine);
 }

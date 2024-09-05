@@ -89,19 +89,19 @@ jobs:
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
-        with:
+     - uses: actions/download-artifact@v4
+       with:
           name: wheel-${{ matrix.os }}-${{ matrix.python-version }}
           path: wheelhouse
 
-      - uses: actions/download-artifact@v4
-        with:
+     - uses: actions/download-artifact@v4
+       with:
           name: sdist-${{ matrix.os }}-${{ matrix.python-version }}
           path: dist
 
       # Only push to PyPI if we're on the public repo!
-      - uses: pypa/gh-action-pypi-publish@release/v1
-        if: (!github.event.release.prerelease) && github.event_name == 'release' && github.event.action == 'published' && github.repository == 'VirtualPlanetaryLaboratory/vplanet'
-        with:
+     - uses: pypa/gh-action-pypi-publish@release/v1
+       if: (!github.event.release.prerelease) && github.event_name == 'release' && github.event.action == 'published' && github.repository == 'VirtualPlanetaryLaboratory/vplanet'
+       with:
           user: __token__
           password: ${{ secrets.pypi_password }}

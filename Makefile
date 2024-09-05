@@ -36,7 +36,7 @@ debug_no_AE:
 	-gcc -g -o bin/vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 
 opt:
-	-gcc -o bin/vplanet src/*.c -lm -O3 -std=gnu17 -DGITVERSION=\"$(GITVERSION)\"
+	-gcc -o bin/vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
 	@echo ""
 	@echo "=========================================================================================================="
 	@echo 'To add vplanet to your $$PATH, please run the appropriate command for your shell type:'
@@ -68,9 +68,12 @@ test:
 	-pytest --tb=short
 
 coverage:
-	-mkdir -p gcov && cd gcov && gcc -coverage -o ../bin/vplanet ../src/*.c -lm
-	-python -m pytest --tb=short tests --junitxml=junit/test-results.xml
-	-lcov --capture --directory gcov --output-file .coverage && genhtml .coverage --output-directory gcov/html
+	rm -f gcov/*.gcda gcov/*.gcno .coverage
+	mkdir -p gcov
+	cd gcov && gcc -coverage -o ../bin/vplanet ../src/*.c -lm
+	python -m pytest --tb=short tests --junitxml=junit/test-results.xml
+	lcov --capture --directory gcov --output-file .coverage
+	genhtml .coverage --output-directory gcov/html
 
 docs:
 	-make -C docs html && echo 'Documentation available at `docs/.build/html/index.html`.'

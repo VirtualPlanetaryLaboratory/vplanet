@@ -93,6 +93,7 @@ setup(
     ext_modules=ext_modules,
     cmdclass=cmdclass,
     include_package_data=True,
+    data_files=[('', ['VERSION'])],
     zip_safe=False,
     entry_points={"console_scripts": ["vplanet=vplanet.wrapper:_entry_point"]},
 )

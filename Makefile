@@ -36,7 +36,7 @@ debug_no_AE:
 	-gcc -g -o bin/vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 
 opt:
-	-gcc -o bin/vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
+	-gcc -o bin/vplanet src/*.c -lm -O3 -std=gnu17 -DGITVERSION=\"$(GITVERSION)\"
 	@echo ""
 	@echo "=========================================================================================================="
 	@echo 'To add vplanet to your $$PATH, please run the appropriate command for your shell type:'

@@ -50,7 +50,6 @@ jobs:
 
       - name: Check test output created
         id: check_test_file
-        if: ${{ matrix.os == 'ubuntu-22.04' && matrix.python-version == '3.9' }}
         uses: andstor/file-existence-action@v3
         with:
           files: "${{ github.workspace }}/junit/test-results.xml"

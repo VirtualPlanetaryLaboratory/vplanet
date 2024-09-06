@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04, macos-12, macos-13, macos-14]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
         exclude:
           - os: ubuntu-22.04
             python-version: '3.6'
@@ -60,7 +60,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04, macos-12, macos-13, macos-14]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
         exclude:
           - os: ubuntu-22.04
             python-version: '3.6'
@@ -96,7 +96,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04, macos-12, macos-13, macos-14]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
         exclude:
           - os: ubuntu-22.04
             python-version: '3.6'
@@ -105,7 +105,7 @@ jobs:
           - os: macos-14
             python-version: '3.7'
       fail-fast: false
-      
+
     steps:
      - uses: actions/download-artifact@v4
        with:
@@ -117,9 +117,21 @@ jobs:
           name: sdist-${{ matrix.os }}-${{ matrix.python-version }}
           path: dist
 
+     - name: Install dependencies
+       run: |
+         python -m pip install --upgrade pip
+         python -m pip install twine
+
+     - name: Upload to PyPI
+       if: github.repository == 'VirtualPlanetaryLaboratory/vplanet'
+       run: python -m twine upload dist/* wheelhouse/*
+       env:
+         TWINE_USERNAME: __token__
+         TWINE_PASSWORD: ${{ secrets.pypi_password }}
+
       # Only push to PyPI if we're on the public repo!
-     - uses: pypa/gh-action-pypi-publish@release/v1
-       if: (!github.event.release.prerelease) && github.event_name == 'release' && github.event.action == 'published' && github.repository == 'VirtualPlanetaryLaboratory/vplanet'
-       with:
-          user: __token__
-          password: ${{ secrets.pypi_password }}
+    #  - uses: pypa/gh-action-pypi-publish@release/v1
+    #    if: (!github.event.release.prerelease) && github.event_name == 'release' && github.event.action == 'published' && github.repository == 'VirtualPlanetaryLaboratory/vplanet'
+    #    with:
+    #       user: __token__
+    #       password: ${{ secrets.pypi_password }}

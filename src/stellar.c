@@ -36,6 +36,7 @@ void BodyCopyStellar(BODY *dest, BODY *src, int foo, int iNumBodies,
   dest[iBody].dLuminosityFrequency = src[iBody].dLuminosityFrequency;
   dest[iBody].dLuminosityPhase     = src[iBody].dLuminosityPhase;
   dest[iBody].dXRay               = src[iBody].dXRay;
+  dest[iBody].dEUV                =src[iBody].dEUV;
 }
 
 /**************** STELLAR options ********************/
@@ -334,8 +335,8 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       }
       body[iFile - 1].iXUVModel = STELLAR_MODEL_REINERS;
     
-     } else if (!memcmp(sLower(cTmp), "sa", 2)) {
-      body[iFile - 1].iXUVModel = STELLAR_MODEL_SANZFORCADA;
+     } else if (!memcmp(sLower(cTmp), "ca", 2)) {
+      body[iFile - 1].iXUVModel = STELLAR_MODEL_CALCULATED; ///changed from SF to calc
 
     
     } else if (!memcmp(sLower(cTmp), "jo", 2)) {
@@ -346,7 +347,7 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
                 "ERROR: Unknown argument to %s: %s. Options are RIBAS, REINERS,JOHNSTONE "
-                "or SANZ-FORCADA or NONE.\n",
+                "or CALCULATED or NONE.\n",
                 options->cName, cTmp);
       }
       LineExit(files->Infile[iFile].cIn, lTmp);
@@ -379,7 +380,7 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
-                "ERROR: Unknown argument to %s: %s. Options are JOHNSTONE "
+                "ERROR: Unknown argument. Options are JOHNSTONE "
                 "or NONE.\n",
                 options->cName, cTmp);
       }
@@ -387,7 +388,7 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
-    body[iFile - 1].iXRAYModel = XRAY_MODEL_NONE; //sets it to default? 
+    body[iFile - 1].iXRAYModel = XRAY_MODEL_NONE; 
   }
 }
 
@@ -423,7 +424,7 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
-    body[iFile - 1].iEUVModel = EUV_MODEL_NONE; //i think this auto sets the default value
+    body[iFile - 1].iEUVModel = EUV_MODEL_NONE; 
   }
 }
   
@@ -699,7 +700,7 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(
         options[OPT_EUVMODEL].cLongDescr,
         "If none selected, no model chosen "
-        "JOHNSTONE will use the Johnstone 2021 Xray "
+        "JOHNSTONE will use the Johnstone 2021  "
         "calculations\n"
         "(---). \n");
 
@@ -788,7 +789,7 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   sprintf(options[OPT_XUVMODEL].cName, "sXUVModel");
   sprintf(options[OPT_XUVMODEL].cDescr, "XUV Evolution Model");
   sprintf(options[OPT_XUVMODEL].cDefault, "RIBAS");
-  sprintf(options[OPT_XUVMODEL].cValues, "RIBAS REINERS JOHNSTONE SANZFORCADA NONE");
+  sprintf(options[OPT_XUVMODEL].cValues, "RIBAS REINERS JOHNSTONE CALCULATED NONE");
   options[OPT_XUVMODEL].iType      = 3;
   options[OPT_XUVMODEL].bMultiFile = 1;
   options[OPT_XUVMODEL].iModuleBit = STELLAR;
@@ -1363,17 +1364,15 @@ void NullStellarDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
   }
 }
 
-///SSS These point to the incorrect values, should be also input body[iBody].dEUV and .dXRay?
+///SSS 
 void VerifyXRay(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, int iBody){
     if (body[iBody].iXRAYModel == XRAY_MODEL_NONE) {
-      printf(" xraymodel none ",
-              iBody);
+      printf("No XRay Model Chosen %d ",iBody);
    }
        
     else if (body[iBody].iXRAYModel == XRAY_MODEL_JOHNSTONE){
       printf(
-              "Xray model JS ON ",
-              iBody);
+              "Chosen XRay Model is Johnstone et al 2021 %d", iBody);
   }
 }
 
@@ -1382,30 +1381,25 @@ void VerifyEUV(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, int
       if (body[iBody].iXUVModel == STELLAR_MODEL_RIBAS){
          // body[iBody].dXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
            printf(
-              "EUV model ribas ",
-              iBody);
+              "Setting to default XUV, model is Ribas et al (2005, ApJ, 611, 680) %d ",iBody);
       }
       if (body[iBody].iXUVModel == STELLAR_MODEL_NONE){
            printf(
-              "euv model none ",
+              "No EUV model chosen %d ",
               iBody);
 
       }
 
   } else if (body[iBody].iEUVModel == EUV_MODEL_SANZFORCADA) { //doesn't need to assume Johnstone is picked for Xray
-      
-       // dLEUV = 1.e7 * pow(10., 4.80 + 0.860 * log10(dLXRay * 1.e-7));
-        printf(
-              "euv model SF !",
-              iBody);
+        printf( "Chosen EUV model is Sanz-Forcada et al 2011 %d",iBody);
     
     
 } else if (body[iBody].iEUVModel == EUV_MODEL_JOHNSTONE) {
     
-     printf("euv model js ",iBody);
-   
-    
-}}
+     printf("Chosen EUV model is Johnstone et al 2021 %d ",iBody);
+     }
+
+}
                        
 
 void VerifyXUV(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, int iBody){
@@ -1415,40 +1409,48 @@ void VerifyXUV(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, int
    
     if (body[iBody].iEUVModel == EUV_MODEL_NONE) {
       if (body[iBody].iXUVModel == STELLAR_MODEL_RIBAS){
-         // body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
-         printf("xuv model ribas  ",iBody);
+        
+         printf("Chosen XUV model is Ribas et al 2005  %d",iBody);
       }
       if (body[iBody].iXUVModel == STELLAR_MODEL_NONE){
-          printf("No model XUV model chosen test message ",iBody);
+          printf("No XUV Model Chosen %d",iBody);
+
+      }
+    }
+    if (body[iBody].iXUVModel == STELLAR_MODEL_CALCULATED) {
+        if (body[iBody].iEUVModel == EUV_MODEL_JOHNSTONE)
+         printf("summation model JS %d  ",iBody);
+          //dLXUV= EUV JS + XRay JS 
+
+        if (body[iBody].iEUVModel == EUV_MODEL_SANZFORCADA)
+         printf("summation model SF %d  ",iBody);
+          //dLXUV= EUV JS + XRay JS 
+
+        if (body[iBody].iEUVModel == EUV_MODEL_NONE)
+         printf("Error,please choose EUV model or default values  %d  ",iBody);
+          //dLXUV= EUV JS + XRay JS 
+      }
+     
+    /// the following two may not actually be needed but wanted to include them just incase
+    if (body[iBody].iEUVModel == EUV_MODEL_JOHNSTONE) {
+
+      if (body[iBody].iXUVModel == STELLAR_MODEL_NONE){
+          printf("No model XUV model chosen, Johnstone et al 2021 EUV model is on %d! ",iBody);
 
       }
     }
     
-    else if (body[iBody].iEUVModel == EUV_MODEL_SANZFORCADA) { //doesn't need to assume Johnstone is picked for Xray?
+    if (body[iBody].iEUVModel == EUV_MODEL_SANZFORCADA) {
+
+      if (body[iBody].iXUVModel == STELLAR_MODEL_NONE){
+          printf("No model XUV model chosen, Sanz-Forcada et al 2011 EUV model is on %d! ",iBody);
+
+      }
+    }
       
-        printf("sanz forcada calc model chosen test message ",iBody);
-        // dLXUV= EUV SF + Xray JS
-   
-
-   
+   }
     
-    } else if (body[iBody].iEUVModel == EUV_MODEL_JOHNSTONE) {
-      //dLXUV= EUV JS + XRay JS 
-      printf("Johnstone calc xuv chosen model chosen test message ",iBody);
-      //double dEUVJohnstone1 = 1e7* pow(10.,2.04+(0.681*body[iBody].dXRay*1e-7)+((1-0.681)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
-      //double dEUVJohnstone2= 1e7* pow(10.,-0.034+(0.920*dEUVJohnstone1*1e-7)+((1-0.920)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
-      //double dEUVJohnstone= dEUVJohnstone1 + dEUVJohnstone2;
-      //return dEUVJohnstone;
-    }
-    
-    }
-
-
-
-
-
-
-
+  
 
 void VerifyStellar(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                    OUTPUT *output, SYSTEM *system, UPDATE *update, int iBody,
@@ -1738,8 +1740,7 @@ void WriteDRotPerDtStellar(BODY *body, CONTROL *control, OUTPUT *output,
 /// SSS 
 void WriteEUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system, //eventually need to be LEUV name change
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
-  *dTmp = body[iBody].dLXUV;
+               char cUnit[]) {*dTmp = body[iBody].dEUV;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1749,10 +1750,9 @@ void WriteEUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system, //ev
     fsUnitsPower(units, cUnit);
   }}
 
-void WriteLXRAY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+void WriteLXRay(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
-  *dTmp = body[iBody].dLXUV;
+               char cUnit[]) {*dTmp = body[iBody].dXRay;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1787,13 +1787,33 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_TEMPERATURE]           = &WriteTemperature;
 
   sprintf(output[OUT_LXUV].cName, "LXUVStellar");
-  sprintf(output[OUT_LXUV].cDescr, "Base X-ray /XUV Luminosity");
+  sprintf(output[OUT_LXUV].cDescr, "Base X-ray /XUV Luminosity"); ///sss this is interesting
   sprintf(output[OUT_LXUV].cNeg, "LSUN");
   output[OUT_LXUV].bNeg       = 1;
   output[OUT_LXUV].dNeg       = 1. / LSUN;
   output[OUT_LXUV].iNum       = 1;
   output[OUT_LXUV].iModuleBit = STELLAR;
   fnWrite[OUT_LXUV]           = &WriteLXUV;
+
+  sprintf(output[OUT_EUV].cName, "EUVStellar");
+  sprintf(output[OUT_EUV].cDescr, "Base EUV /XUV Luminosity"); 
+  sprintf(output[OUT_EUV].cNeg, "LSUN");
+  output[OUT_EUV].bNeg       = 1;
+  output[OUT_EUV].dNeg       = 1. / LSUN;
+  output[OUT_EUV].iNum       = 1;
+  output[OUT_EUV].iModuleBit = STELLAR;
+  fnWrite[OUT_EUV]           = &WriteEUV;
+
+
+  sprintf(output[OUT_XRAY].cName, "XRayStellar");
+  sprintf(output[OUT_XRAY].cDescr, "Base X-ray /XUV Luminosity"); 
+  sprintf(output[OUT_XRAY].cNeg, "LSUN");
+  output[OUT_XRAY].bNeg       = 1;
+  output[OUT_XRAY].dNeg       = 1. / LSUN;
+  output[OUT_XRAY].iNum       = 1;
+  output[OUT_XRAY].iModuleBit = STELLAR;
+  fnWrite[OUT_XRAY]           = &WriteLXRay;
+
 
   sprintf(output[OUT_LXUVFRAC].cName, "LXUVFrac");
   sprintf(output[OUT_LXUVFRAC].cDescr, "Fraction of luminosity in XUV");
@@ -2463,69 +2483,63 @@ double fdRossbyNumber(BODY *body , int iBody) {
 //this is the Cranmer and Saar rossby number, will need to change name eventually w/different versions
 }
 
-///SSS
+///SSS 
 
 double fdLXRAYJohnstone (BODY* body, int iBody){
-  //this should call the xray values from Johnstone but we've done the XUV in vplanet earlier, what use here?
-  //could use the xray calc from euv values but defeats the purpose a little 
-  //need this because will come back when we use it for the sanz-forcada bit 
+  if (body[iBody].iXUVModel == STELLAR_MODEL_JOHNSTONE){
 
-    double dXRAYJohnstone= 1e7; //unsure what to put here, just a placemarker so vplanet doesn't yell at me 
-
+    double dXRAYJohnstone= body[iBody].dLXUV*=body[iBody].dLuminosity; //this should set the prev "LXUV value to Xray Johnstone" now 
+    return dXRAYJohnstone; 
+   }
 }
 
 
-double fdEUVSanzForcada( BODY *body, int iBody) {
-
-  double dEUVSanzForcada = 1e7 * pow(10.,( 4.80 + (0.860 * log10(body[iBody].dXRay * 1.e-7))));
-
-  return dEUVSanzForcada; 
-
-}
-
-double fdEUVJohnstone( BODY *body, int iBody) {
+double fdEUV( BODY *body, int iBody) {
+  if (body[iBody].iEUVModel == EUV_MODEL_JOHNSTONE){
 
   double dEUVJohnstone1 = 1e7* pow(10.,2.04+(0.681*body[iBody].dXRay*1e-7)+((1-0.681)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
 
   double dEUVJohnstone2= 1e7* pow(10.,-0.034+(0.920*dEUVJohnstone1*1e-7)+((1-0.920)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
 
   double dEUVJohnstone= dEUVJohnstone1 + dEUVJohnstone2;
-  return dEUVJohnstone; 
+  return dEUVJohnstone; }
 
 
-}
+   if (body[iBody].iEUVModel == EUV_MODEL_SANZFORCADA){
 
-double fdLXUVJohnstone(BODY *body, int iBody){
+  double dEUVSanzForcada = 1e7 * pow(10.,( 4.80 + (0.860 * log10(body[iBody].dXRay * 1.e-7))));
 
-  double dLXRay= fdLXRAYJohnstone(body,iBody);
-
-  double dEUV= fdEUVJohnstone(body,iBody);
-
-  double dLXUV = dLXRay + dEUV; 
-
-
-  return dLXUV;
-
-
-
+  return dEUVSanzForcada; 
+   }
 }
 
 
-double fdLXUVJohnstoneSanzForcada(BODY *body, int iBody){
+double fdLXUVCalc(BODY *body, int iBody){
+  if (body[iBody].iXUVModel == STELLAR_MODEL_CALCULATED){
+    if (body[iBody].iXUVModel == EUV_MODEL_JOHNSTONE){
+      double dLXRay= fdLXRAYJohnstone(body,iBody); 
 
-  double dLXRay= fdLXRAYJohnstone(body,iBody);
+      double dEUV= fdEUV(body,iBody);
 
-  double dEUV= fdEUVSanzForcada(body,iBody); ///rem this needs to be changed to LEUV later 
+      double dLXUV = dLXRay + dEUV;
 
-  double dLXUV = dLXRay + dEUV; 
-
-
-  return dLXUV;
-
-
-}
+       return dLXUV;
 
 
+    }
+  
+  if (body[iBody].iEUVModel == EUV_MODEL_SANZFORCADA){
+      double dLXRay= fdLXRAYJohnstone(body,iBody);
+      
+      double dEUV= fdEUV(body,iBody); 
+
+      double dLXUV = dLXRay + dEUV;
+
+      return dLXUV;
+      
+      }
+     }
+  }
 
 
 

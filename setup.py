@@ -1,6 +1,13 @@
 import os
 import sys
-from distutils.command.clean import clean
+
+# if sys.version_info >= (3, 12):
+#     # For Python 3.12 and above, use setuptools
+#     from setuptools.command.clean import clean
+# else:
+#     # For Python versions below 3.12, use distutils
+#     from distutils.command.clean import clean
+
 from glob import glob
 
 from setuptools import Extension, find_packages, setup
@@ -35,10 +42,10 @@ class Develop(develop):
     """Custom develop command that clears build cache before install."""
 
     def run(self):
-        c = clean(self.distribution)
-        c.all = True
-        c.finalize_options()
-        c.run()
+        # c = clean(self.distribution)
+        # c.all = True
+        # c.finalize_options()
+        # c.run()
         develop.run(self)
 
 

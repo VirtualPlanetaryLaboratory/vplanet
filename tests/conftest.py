@@ -3,8 +3,6 @@ import os
 import shutil
 import subprocess as subp
 import sys
-
-import numpy as np
 import pytest
 
 import vplanet

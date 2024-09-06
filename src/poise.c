@@ -1484,7 +1484,7 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_LANDFRACMEAN].bMultiFile = 1;
   fnRead[OPT_LANDFRACMEAN]             = &ReadLandFracMean;
 
-  fvFormattedString(&options[OPT_LANDFRACAMP].cName, "dLandFrac");
+  fvFormattedString(&options[OPT_LANDFRACAMP].cName, "dLandFracAmp");
   fvFormattedString(&options[OPT_LANDFRACAMP].cDescr, "Max difference in land fraction from the mean");
   fvFormattedString(&options[OPT_LANDFRACAMP].cDefault, "0.34");
   fvFormattedString(&options[OPT_LANDFRACAMP].cDimension, "nd");
@@ -2114,17 +2114,17 @@ void fvWriteLandFracFile(BODY *body,int iBody) {
   int iLat;
   double dInterval,dLatNow;
   FILE *fp;
-  char *cOut;
+  char *cOut = NULL;
 
-  dInterval = 180/body[iBody].iNumLats;
+  dInterval = 180./body[iBody].iNumLats;
   fvFormattedString(&cOut, "%s.geography", body[iBody].cName);
-  fp = open(cOut,"w");
+  fp = fopen(cOut,"w");
   for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
-    dLatNow = -90 + iLat*dInterval;
+    dLatNow = -90 + 0.5*dInterval + iLat*dInterval;
     fprintf(fp,"%.5lf %.5lf %.5lf\n",dLatNow,body[iBody].daLandFrac[iLat],
         body[iBody].daWaterFrac[iLat]);
   }
-  close(fp);
+  fclose(fp);
 }
 
 void InitializeLandWater(BODY *body, int iBody) {
@@ -3989,17 +3989,15 @@ void WriteIceMass(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (body[iBody].bIceSheets) {
     *dTmp = body[iBody].daIceMass[body[iBody].iWriteLat];
-
   } else {
     *dTmp = 0.0;
   }
 
   if (output->bDoNeg[iBody]) {
     fvFormattedString(cUnit, output->cNeg);
-
   } else {
-    //*dTmp /= fdUnitsMass(units->iMass)/pow(fdUnitsLength(units->iLength),2);
-    // fsUnitsEnergyFlux(units,cUnit);
+    *dTmp /= fdUnitsMass(units->iMass)/pow(fdUnitsLength(units->iLength),2);
+    fsUnitsMass(units->iMass,cUnit);
   }
 }
 

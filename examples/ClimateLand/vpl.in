@@ -15,6 +15,6 @@ saBodyFiles   sun.in $           #you must list all input files here (except vpl
               equatorial.in      # One land mass along the equator
 bDoForward    1                  #integrate forward in time
 bVarDt        1                  #use variable time stepping (not relevant to poise)
-dEta          0.1                #how much to scale variable time step
-dStopTime     1e6               #how long should the integration be
-dOutputTime   1e3                  #how much output you want
+dEta          0.01                #how much to scale variable time step
+dStopTime     1e5               #how long should the integration be
+dOutputTime   1e2                  #how much output you want

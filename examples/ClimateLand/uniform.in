@@ -1,13 +1,13 @@
 sName       uniform                    #name of planet
 saModules   poise                       #what vplanet modules you want to use
 sGeography  uniform
-dLandFrac   0.5
+dLandFrac   0.292
 
 dMass        3.00316726e-06             #mass of planet
 dRadius      -1.00                      #radius (not important right now)
 dRotPeriod   -1.00000                   #rotation period (minus = days)
 dObliquity 23.5
-dSemi 1.02
+dSemi 1
 dEcc         0.0                        #eccentricity of orbit
 dLongP       0                          #pericenter, wrt Earth's position at spring equinox
 #                                        note that this is the typical value +180,

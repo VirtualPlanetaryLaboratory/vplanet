@@ -36,7 +36,7 @@ void BodyCopyStellar(BODY *dest, BODY *src, int foo, int iNumBodies,
   dest[iBody].dLuminosityFrequency = src[iBody].dLuminosityFrequency;
   dest[iBody].dLuminosityPhase     = src[iBody].dLuminosityPhase;
   dest[iBody].dXRay               = src[iBody].dXRay;
-  dest[iBody].dEUV                =src[iBody].dEUV;
+  dest[iBody].dEUV                =src[iBody].dEUV;///SSS
 }
 
 /**************** STELLAR options ********************/
@@ -424,7 +424,7 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
-    body[iFile - 1].iEUVModel = EUV_MODEL_NONE; 
+    body[iFile - 1].iEUVModel = EUV_MODEL_NONE; ///sss
   }
 }
   
@@ -1740,7 +1740,8 @@ void WriteDRotPerDtStellar(BODY *body, CONTROL *control, OUTPUT *output,
 /// SSS 
 void WriteEUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system, //eventually need to be LEUV name change
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {*dTmp = body[iBody].dEUV;
+               char cUnit[]) {
+  *dTmp = fdEUV(body,iBody);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1752,7 +1753,8 @@ void WriteEUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system, //ev
 
 void WriteLXRay(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {*dTmp = body[iBody].dXRay;
+               char cUnit[]) {
+  *dTmp = body[iBody].dXRay;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -2484,7 +2486,7 @@ double fdRossbyNumber(BODY *body , int iBody) {
 }
 
 ///SSS 
-
+///pick between johnstone or none option 
 double fdLXRAYJohnstone (BODY* body, int iBody){
   if (body[iBody].iXUVModel == STELLAR_MODEL_JOHNSTONE){
 
@@ -2516,30 +2518,18 @@ double fdEUV( BODY *body, int iBody) {
 
 double fdLXUVCalc(BODY *body, int iBody){
   if (body[iBody].iXUVModel == STELLAR_MODEL_CALCULATED){
-    if (body[iBody].iXUVModel == EUV_MODEL_JOHNSTONE){
-      double dLXRay= fdLXRAYJohnstone(body,iBody); 
+        double dLXRay= fdLXRAYJohnstone(body,iBody); 
 
-      double dEUV= fdEUV(body,iBody);
+        double dEUV= fdEUV(body,iBody);
 
-      double dLXUV = dLXRay + dEUV;
+       double dLXUV = dLXRay + dEUV;
 
        return dLXUV;
 
 
     }
-  
-  if (body[iBody].iEUVModel == EUV_MODEL_SANZFORCADA){
-      double dLXRay= fdLXRAYJohnstone(body,iBody);
-      
-      double dEUV= fdEUV(body,iBody); 
-
-      double dLXUV = dLXRay + dEUV;
-
-      return dLXUV;
-      
-      }
-     }
   }
+
 
 
 

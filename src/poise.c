@@ -2110,6 +2110,23 @@ void fvInitializeLandWaterEquatorial(BODY *body,int iBody) {
   }
 }
 
+void fvWriteLandFracFile(BODY *body,int iBody) {
+  int iLat;
+  double dInterval,dLatNow;
+  FILE *fp;
+  char *cOut;
+
+  dInterval = 180/body[iBody].iNumLats;
+  fvFormattedString(&cOut, "%s.geography", body[iBody].cName);
+  fp = open(cOut,"w");
+  for (iLat=0;iLat<body[iBody].iNumLats;iLat++) {
+    dLatNow = -90 + iLat*dInterval;
+    fprintf(fp,"%.5lf %.5lf %.5lf\n",dLatNow,body[iBody].daLandFrac[iLat],
+        body[iBody].daWaterFrac[iLat]);
+  }
+  close(fp);
+}
+
 void InitializeLandWater(BODY *body, int iBody) {
   int iLat;
 
@@ -2127,6 +2144,8 @@ void InitializeLandWater(BODY *body, int iBody) {
   } else if (body[iBody].iGeography == LANDWATEREQUATORIAL) {
     fvInitializeLandWaterEquatorial(body,iBody);
   }
+
+  fvWriteLandFracFile(body,iBody);
 }
 
 void DampTemp(BODY *body, double dTGlobalTmp, int iBody) {

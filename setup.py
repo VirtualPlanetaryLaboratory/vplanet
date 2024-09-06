@@ -42,10 +42,10 @@ class Develop(develop):
     """Custom develop command that clears build cache before install."""
 
     def run(self):
-        c = clean(self.distribution)
-        c.all = True
-        c.finalize_options()
-        c.run()
+        # c = clean(self.distribution)
+        # c.all = True
+        # c.finalize_options()
+        # c.run()
         develop.run(self)
 
 

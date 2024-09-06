@@ -42,6 +42,8 @@
   1.733e3         // coeff of ice deformability at T>=263K (Pa^-3 s^-1 - ref?)
 #define Q1ICE 6e4 // energy in ice deformation at T<263K (J/mol)
 #define Q2ICE 13.9e4 // energy in ice deformation at T>=263 (J/mol)
+#define LANDFRACMAX 0.99
+#define LANDFRACMIN 0.01
 
 // Constant for the lithospheric model
 #define nGLEN 3.0                  // Glen's law coefficient
@@ -85,9 +87,11 @@
 #define OPT_FILEORBITOBLDATA  1925
 
 #define OPT_LANDFRAC 1940
-#define OPT_HEATCAPLAND 1942
-#define OPT_HEATCAPWATER 1943
-#define OPT_FRZTSEAICE 1944
+#define OPT_LANDFRACMEAN 1941
+#define OPT_LANDFRACAMP 1942
+#define OPT_HEATCAPLAND 1943
+#define OPT_HEATCAPWATER 1944
+#define OPT_FRZTSEAICE 1945
 //#define OPT_LATENTHEAT    1945
 #define OPT_ICECONDUCT 1946
 #define OPT_MIXINGDEPTH 1947

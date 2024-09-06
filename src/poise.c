@@ -958,6 +958,56 @@ void ReadLandFrac(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   }
 }
 
+void ReadLandFracMean(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                  SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp > 1 || dTmp < 0) {
+      fprintf(stderr, "ERROR: %s must be in the range [0,1].\n",
+              options->cName);
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    body[iFile - 1].dLandFracMean = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else {
+    if (iFile > 0) {
+      body[iFile - 1].dLandFracMean = options->dDefault;
+    }
+  }
+}
+
+void ReadLandFracAmp(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                  SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp > 1 || dTmp < 0) {
+      fprintf(stderr, "ERROR: %s must be in the range [0,1].\n",
+              options->cName);
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    body[iFile - 1].dLandFracAmp = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else {
+    if (iFile > 0) {
+      body[iFile - 1].dLandFracAmp = options->dDefault;
+    }
+  }
+}
+
 void ReadNuLandWater(BODY *body, CONTROL *control, FILES *files,
                      OPTIONS *options, SYSTEM *system, int iFile) {
   /* This parameter cannot exist in primary file */
@@ -1424,6 +1474,24 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_LANDFRAC].iType      = 2;
   options[OPT_LANDFRAC].bMultiFile = 1;
   fnRead[OPT_LANDFRAC]             = &ReadLandFrac;
+
+  fvFormattedString(&options[OPT_LANDFRACMEAN].cName, "dLandFracMean");
+  fvFormattedString(&options[OPT_LANDFRACMEAN].cDescr, "Average fraction of land per latitude");
+  fvFormattedString(&options[OPT_LANDFRACMEAN].cDefault, "0.5");
+  fvFormattedString(&options[OPT_LANDFRACMEAN].cDimension, "nd");
+  options[OPT_LANDFRACMEAN].dDefault   = 0.5;
+  options[OPT_LANDFRACMEAN].iType      = 2;
+  options[OPT_LANDFRACMEAN].bMultiFile = 1;
+  fnRead[OPT_LANDFRACMEAN]             = &ReadLandFracMean;
+
+  fvFormattedString(&options[OPT_LANDFRACAMP].cName, "dLandFrac");
+  fvFormattedString(&options[OPT_LANDFRACAMP].cDescr, "Max difference in land fraction from the mean");
+  fvFormattedString(&options[OPT_LANDFRACAMP].cDefault, "0.34");
+  fvFormattedString(&options[OPT_LANDFRACAMP].cDimension, "nd");
+  options[OPT_LANDFRACAMP].dDefault   = 0.34;
+  options[OPT_LANDFRACAMP].iType      = 2;
+  options[OPT_LANDFRACAMP].bMultiFile = 1;
+  fnRead[OPT_LANDFRACAMP]             = &ReadLandFracAmp;
 
   fvFormattedString(&options[OPT_NSTEPINYEAR].cName, "iNStepInYear");
   fvFormattedString(&options[OPT_NSTEPINYEAR].cDescr, "Number of time-steps/year in"
@@ -1993,9 +2061,17 @@ void fvInitializeLandWaterModern(BODY *body,int iBody) {
 
 void fvInitializeLandWaterRandom(BODY *body,int iBody) {
   int iLat;
+  double dOffset;
 
   for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
-    body[iBody].daLandFrac[iLat]  = (double)rand()/(double)RAND_MAX;
+    dOffset = body[iBody].dLandFracAmp * (1 - 2*(double)rand()/(double)RAND_MAX);
+    body[iBody].daLandFrac[iLat]  = body[iBody].dLandFracMean + dOffset;
+    if (body[iBody].daLandFrac[iLat] > LANDFRACMAX) {
+      body[iBody].daLandFrac[iLat] = LANDFRACMAX;
+    } 
+    if (body[iBody].daLandFrac[iLat] < LANDFRACMIN) {
+      body[iBody].daLandFrac[iLat] = LANDFRACMIN;
+    }    
     body[iBody].daWaterFrac[iLat] = 1.0 - body[iBody].daLandFrac[iLat];
   }
 }
@@ -2004,16 +2080,16 @@ void fvInitializeLandWaterPolar(BODY *body,int iBody) {
   int iLat;
 
   for (iLat=0;iLat<body[iBody].iLatLandWater;iLat++) {
-    body[iBody].daLandFrac[iLat]  = 0.99;
-    body[iBody].daWaterFrac[iLat] = 0.01;
+    body[iBody].daLandFrac[iLat]  = LANDFRACMAX;
+    body[iBody].daWaterFrac[iLat] = LANDFRACMIN;
   }
   for (iLat=body[iBody].iLatLandWater;iLat<(body[iBody].iNumLats - body[iBody].iLatLandWater);iLat++) {
-    body[iBody].daLandFrac[iLat]  = 0.01;
-    body[iBody].daWaterFrac[iLat] = 0.99;
+    body[iBody].daLandFrac[iLat]  = LANDFRACMIN;
+    body[iBody].daWaterFrac[iLat] = LANDFRACMAX;
   }
   for (iLat=(body[iBody].iNumLats - body[iBody].iLatLandWater);iLat<body[iBody].iNumLats;iLat++) {
-    body[iBody].daLandFrac[iLat]  = 0.99;
-    body[iBody].daWaterFrac[iLat] = 0.01;
+    body[iBody].daLandFrac[iLat]  = LANDFRACMIN;
+    body[iBody].daWaterFrac[iLat] = LANDFRACMAX;
   }
 }
 
@@ -2021,16 +2097,16 @@ void fvInitializeLandWaterEquatorial(BODY *body,int iBody) {
   int iLat;
 
   for (iLat=0;iLat<body[iBody].iLatLandWater;iLat++) {
-    body[iBody].daLandFrac[iLat]  = 0.01;
-    body[iBody].daWaterFrac[iLat] = 0.99;
+    body[iBody].daLandFrac[iLat]  = LANDFRACMIN;
+    body[iBody].daWaterFrac[iLat] = LANDFRACMAX;
   }
   for (iLat=body[iBody].iLatLandWater;iLat<(body[iBody].iNumLats - body[iBody].iLatLandWater);iLat++) {
-    body[iBody].daLandFrac[iLat]  = 0.99;
-    body[iBody].daWaterFrac[iLat] = 0.01;
+    body[iBody].daLandFrac[iLat]  = LANDFRACMAX;
+    body[iBody].daWaterFrac[iLat] = LANDFRACMIN;
   }
   for (iLat=(body[iBody].iNumLats - body[iBody].iLatLandWater);iLat<body[iBody].iNumLats;iLat++) {
-    body[iBody].daLandFrac[iLat]  = 0.01;
-    body[iBody].daWaterFrac[iLat] = 0.99;
+    body[iBody].daLandFrac[iLat]  = LANDFRACMIN;
+    body[iBody].daWaterFrac[iLat] = LANDFRACMAX;
   }
 }
 

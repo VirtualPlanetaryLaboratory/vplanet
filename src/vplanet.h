@@ -800,7 +800,9 @@ struct BODY {
   double **daInvMSea;       /**< Inverted matrix in seasonal EBM */
   double *daLambdaSea;      /**< Diffusion terms in seasonal EBM matrix */
   double dLandFrac;         /**< Land fraction input by user */
-  double *daLandFrac;       /**< Fraction of cell which is land */
+  double dLandFracMean;     /**< Average land fraction per latitude */
+  double dLandFracAmp;      /**< Land fraction input by user */
+  double *daLandFrac;       /**< Max land fraction difference from the mean */
   double **daMDiffSea;      /**< Diffusion only matrix in seasonal EBM */
   double **daMEulerCopySea; /**< Temporary copy of Euler time step matrix
                                (seasonal) */

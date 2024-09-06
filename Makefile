@@ -68,13 +68,12 @@ test:
 	-pytest --tb=short
 
 coverage:
-	rm -f ./gcov/*.gcda ./gcov/*.gcno ./.coverage
-	mkdir -p ./gcov
-	cd gcov && gcc -coverage -o ./../bin/vplanet ./../src/*.c -lm
-	pwd
-	python -m pytest --tb=short tests --junitxml=./junit/test-results.xml
-	lcov --capture --directory ./gcov --output-file ./.coverage
-	genhtml ./.coverage --output-directory ./gcov/html
+	-rm -f ./gcov/*.gcda ./gcov/*.gcno ./.coverage
+	-mkdir -p ./gcov
+	-cd gcov && gcc -coverage -o ./../bin/vplanet ./../src/*.c -lm
+	-python -m pytest --tb=short tests --junitxml=./junit/test-results.xml
+	-lcov --capture --directory ./gcov --output-file ./.coverage
+	-genhtml ./.coverage --output-directory ./gcov/html
 
 docs:
 	-make -C docs html && echo 'Documentation available at `docs/.build/html/index.html`.'

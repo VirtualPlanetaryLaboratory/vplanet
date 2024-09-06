@@ -15,7 +15,9 @@ jobs:
           - os: ubuntu-22.04
             python-version: '3.6'
           - os: macos-14
-            python-version: ['3.6', '3.7', '3.8', '3.9']
+            python-version: '3.6'
+          - os: macos-14
+            python-version: '3.7'
       fail-fast: false
 
     steps:
@@ -61,8 +63,10 @@ jobs:
         exclude:
           - os: ubuntu-22.04
             python-version: '3.6'
+           - os: macos-14
+            python-version: '3.6'
           - os: macos-14
-            python-version: ['3.6', '3.7', '3.8', '3.9']
+            python-version: '3.7'
       fail-fast: false
 
     steps:

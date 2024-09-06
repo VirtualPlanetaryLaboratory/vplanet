@@ -70,8 +70,9 @@ test:
 coverage:
 	rm -f ./gcov/*.gcda ./gcov/*.gcno ./.coverage
 	mkdir -p ./gcov
-	gcc -coverage -o ./bin/vplanet src/*.c -lm
-	python -m pytest --tb=short tests --junitxml=junit/test-results.xml
+	cd gcov && gcc -coverage -o ./../bin/vplanet ./../src/*.c -lm
+	pwd
+	python -m pytest --tb=short tests --junitxml=./junit/test-results.xml
 	lcov --capture --directory ./gcov --output-file ./.coverage
 	genhtml ./.coverage --output-directory ./gcov/html
 

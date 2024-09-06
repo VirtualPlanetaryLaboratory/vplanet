@@ -30,6 +30,7 @@ tests/Vspace_Log/Log_Test/
 *BP_CreateHDF5*
 *BP_Extract*
 *BP_Stats*
+junit/
 
 coverage.info
 .coverage

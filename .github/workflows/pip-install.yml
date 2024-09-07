@@ -100,15 +100,55 @@ jobs:
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-22.04
 
-    steps:
+   steps:
      - uses: actions/download-artifact@v4
        with:
-          name: wheel-*
+          name: wheel-ubuntu-20.04-*
           path: wheelhouse
 
      - uses: actions/download-artifact@v4
        with:
-          name: sdist-*
+          name: wheel-ubuntu-22.04-*
+          path: wheelhouse
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: wheel-macos-12-*
+          path: wheelhouse
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: wheel-macos-13-*
+          path: wheelhouse
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: wheel-macos-14-*
+          path: wheelhouse
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: sdist-ubuntu-20.04-*
+          path: dist
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: sdist-ubuntu-22.04-*
+          path: dist
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: sdist-macos-12-*
+          path: dist
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: sdist-macos-13-*
+          path: dist
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: sdist-macos-14-*
           path: dist
 
      - name: Install dependencies

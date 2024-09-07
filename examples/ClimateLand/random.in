@@ -30,7 +30,7 @@ dTGlobalInit      14.85                 #initial guess at average surface temp
 iNumYears         4                     #number of years (orbits) to run clim model
 iNStepInYear 80                         #number of steps to take in a "year"
 #dSurfAlbedo       0.35                 #average surface albedo (annual model only)
-dLandFracMean      0.34
+dLandFracMean      0.292
 dLandFracAmp       0.2
 
 #__ice params_________

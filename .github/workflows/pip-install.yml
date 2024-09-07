@@ -99,28 +99,16 @@ jobs:
   upload_pypi:
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, macos-12, macos-13, macos-14]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
-        exclude:
-          - os: ubuntu-22.04
-            python-version: '3.6'
-          - os: macos-14
-            python-version: '3.6'
-          - os: macos-14
-            python-version: '3.7'
-      fail-fast: false
 
     steps:
      - uses: actions/download-artifact@v4
        with:
-          name: wheel-${{ matrix.os }}-${{ matrix.python-version }}
+          name: wheel-*
           path: wheelhouse
 
      - uses: actions/download-artifact@v4
        with:
-          name: sdist-${{ matrix.os }}-${{ matrix.python-version }}
+          name: sdist-*
           path: dist
 
      - name: Install dependencies

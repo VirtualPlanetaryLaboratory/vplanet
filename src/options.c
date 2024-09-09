@@ -269,7 +269,7 @@ void AddOptionStringArray(char *cFile, char *cOption, char ***saInput,
 
   GetLine(cFile, cOption, &cLine, &iLine[0], iVerbose);
   GetWords(cLine, cTmp, &iNumWords, &bContinue);
-  *iNumLines = 1;
+  *iNumLines  = 1;
   saInputCopy = (char **)malloc(MAXARRAY * sizeof(char *));
 
   for (iWord = 0; iWord < MAXARRAY; iWord++) {
@@ -450,8 +450,8 @@ void CheckFileExists(char *cFile) {
   fclose(fp);
 }
 
-int fbBlankLine(char *cLine,int iLineLength) {
-  int iPos,bBlank = 1;
+int fbBlankLine(char *cLine, int iLineLength) {
+  int iPos, bBlank = 1;
   for (iPos = 0; iPos < LINE; iPos++) {
     if (!isspace(cLine[iPos]) && cLine[iPos] != '\0') {
       bBlank = 0;
@@ -465,8 +465,8 @@ void RecordCommentsAndWhiteSpace(INFILE *infile) {
   char cLine[LINE];
   FILE *fp;
 
-  fp = fopen(infile->cIn, "r");
-  infile->bLineOK   = malloc(infile->iNumLines * sizeof(int));
+  fp              = fopen(infile->cIn, "r");
+  infile->bLineOK = malloc(infile->iNumLines * sizeof(int));
 
   for (iLine = 0; iLine < infile->iNumLines; iLine++) {
     infile->bLineOK[iLine] = 0;
@@ -477,7 +477,7 @@ void RecordCommentsAndWhiteSpace(INFILE *infile) {
       fprintf(stderr, "ERROR: Unable to open %s.\n", infile->cIn);
       exit(EXIT_INPUT);
     }
-    if (fbCommentedLine(cLine, LINE) || fbBlankLine(cLine,LINE)) {
+    if (fbCommentedLine(cLine, LINE) || fbBlankLine(cLine, LINE)) {
       infile->bLineOK[iLine] = 1;
     }
   }
@@ -1074,8 +1074,9 @@ void ReadSystemName(CONTROL *control, FILES *files, OPTIONS *options,
   }
 }
 
-void ReadBodyFileNames(BODY **body,CONTROL *control, FILES *files, OPTIONS *options,
-                       char *cFile, char ***saBodyFiles, int *iNumLines, int *iaLines) {
+void ReadBodyFileNames(BODY **body, CONTROL *control, FILES *files,
+                       OPTIONS *options, char *cFile, char ***saBodyFiles,
+                       int *iNumLines, int *iaLines) {
   int iNumIndices;
 
   AddOptionStringArray(cFile, options->cName, saBodyFiles, &iNumIndices,
@@ -1117,16 +1118,19 @@ void ReadBodyFileNames(BODY **body,CONTROL *control, FILES *files, OPTIONS *opti
 void ReadInitialOptions(BODY **body, CONTROL *control, FILES *files,
                         MODULE *module, OPTIONS *options, OUTPUT *output,
                         SYSTEM *system, char *sPrimaryFile) {
-  int iFile, iBody, iModule,iNumBodyFileLines,*iaLines;
+  int iFile, iBody, iModule, iNumBodyFileLines, *iaLines;
   char **saBodyFiles;
 
-  iaLines=malloc(MAXLINES*sizeof(int));
+  iaLines = malloc(MAXLINES * sizeof(int));
 
-  ReadBodyFileNames(body, control, files, &options[OPT_BODYFILES], sPrimaryFile, &saBodyFiles, &iNumBodyFileLines, iaLines);
+  ReadBodyFileNames(body, control, files, &options[OPT_BODYFILES], sPrimaryFile,
+                    &saBodyFiles, &iNumBodyFileLines, iaLines);
 
-  InitializeFiles(files, options, sPrimaryFile, saBodyFiles, control->Evolve.iNumBodies);
+  InitializeFiles(files, options, sPrimaryFile, saBodyFiles,
+                  control->Evolve.iNumBodies);
 
-  UpdateFoundOptionMulti(&files->Infile[0], &options[OPT_BODYFILES], iaLines, iNumBodyFileLines,  0);
+  UpdateFoundOptionMulti(&files->Infile[0], &options[OPT_BODYFILES], iaLines,
+                         iNumBodyFileLines, 0);
 
   /* Initialize functions in the module struct */
   InitializeModule(*body, control, module);
@@ -1510,7 +1514,7 @@ void ReadBodyName(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     /* Cannot exist in primary input file -- Each body has an output file */
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    body[iFile-1].cName=NULL;
+    body[iFile - 1].cName = NULL;
     if (strlen(cTmp) > 0) {
       fvFormattedString(&body[iFile - 1].cName, cTmp);
     } else {
@@ -1518,7 +1522,7 @@ void ReadBodyName(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
-    body[iFile-1].cName=NULL;
+    body[iFile - 1].cName = NULL;
     fvFormattedString(&body[iFile - 1].cName, "%d", iFile);
   }
 }
@@ -1535,11 +1539,11 @@ void ReadColor(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   if (lTmp >= 0) {
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    body[iFile-1].sColor = NULL;
+    body[iFile - 1].sColor = NULL;
     fvFormattedString(&body[iFile - 1].sColor, cTmp);
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
-    body[iFile-1].sColor = NULL;
+    body[iFile - 1].sColor = NULL;
     fvFormattedString(&body[iFile - 1].sColor, options->cDefault);
   }
 }
@@ -2582,18 +2586,49 @@ void ReadCosObl(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
  * Output Order -- This one is special and takes different arguments
  */
 
+void fvCheckIfTooManyOutputs(FILES *files, int iFile, int iNumIndices,
+                             int iVerbose) {
+  if (iNumIndices >= MAXARRAY) {
+    if (iVerbose >= VERBERR) {
+      fprintf(stderr,
+              "ERROR: Too many output options in file %s. Either reduce, or "
+              "increase MAXARRAY in vplanet.h.\n",
+              files->Infile[iFile].cIn);
+    }
+    exit(EXIT_INPUT);
+  }
+}
+
+void fvRecordAndRemoveNegativeSigns(char **saTmp, int **bNeg, int iNumIndices) {
+  int iIndex, iPos;
+  *bNeg = malloc(MAXARRAY * sizeof(int));
+
+  for (iIndex = 0; iIndex < iNumIndices; iIndex++) {
+    if (saTmp[iIndex][0] == 45) {
+      /* Option is negative */
+      (*bNeg)[iIndex] = 1;
+      /* Now remove negative sign */
+      for (iPos = 0; iPos < strlen(saTmp[iIndex]); iPos++) {
+        saTmp[iIndex][iPos] = saTmp[iIndex][iPos + 1];
+      }
+      saTmp[iIndex][strlen(saTmp[iIndex])] = 0;
+    } else {
+      (*bNeg)[iIndex] = 0;
+    }
+  }
+}
 
 void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
                      OUTPUT *output, int iFile, int iVerbose) {
-  int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 1, iNumGrid = 0,iOption;
+  int i, j, count, iLen, iNumIndices = 0, *bNeg, ok = 1, iNumGrid = 0, iOption;
   int k, iOut         = -1, *lTmp, iCol, jCol;
   char **saTmp, *cTmp = NULL, **cOption, *cOut = NULL;
   int iLen1, iLen2;
 
   lTmp    = malloc(MAXLINES * sizeof(int));
   cOption = malloc(MAXARRAY * sizeof(char *));
-  for (iOption=0;iOption<MAXARRAY;iOption++) {
-    cOption[iOption]=NULL;
+  for (iOption = 0; iOption < MAXARRAY; iOption++) {
+    cOption[iOption] = NULL;
   }
 
   AddOptionStringArray(files->Infile[iFile].cIn, options[OPT_OUTPUTORDER].cName,
@@ -2604,30 +2639,8 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
     NotPrimaryInput(iFile, options[OPT_OUTPUTORDER].cName,
                     files->Infile[iFile].cIn, lTmp[0], iVerbose);
 
-    if (iNumIndices >= MAXARRAY) {
-      if (iVerbose >= VERBERR) {
-        fprintf(stderr,
-                "ERROR: Too many output options in file %s. Either reduce, or "
-                "increase MAXARRAY in vplanet.h.\n",
-                files->Infile[iFile].cIn);
-      }
-      exit(EXIT_INPUT);
-    }
-
-    /* First remove and record negative signs */
-    for (i = 0; i < iNumIndices; i++) {
-      if (saTmp[i][0] == 45) {
-        /* Option is negative */
-        bNeg[i] = 1;
-        /* Now remove negative sign */
-        for (j = 0; j < strlen(saTmp[i]); j++) {
-          saTmp[i][j] = saTmp[i][j + 1];
-        }
-        saTmp[i][strlen(saTmp[i])] = 0;
-      } else {
-        bNeg[i] = 0;
-      }
-    }
+    fvCheckIfTooManyOutputs(files, iFile, iNumIndices, iVerbose);
+    fvRecordAndRemoveNegativeSigns(saTmp, &bNeg, iNumIndices);
 
     /* Check for ambiguity */
     for (i = 0; i < iNumIndices; i++) {
@@ -2795,15 +2808,16 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
 
 void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
                     int iVerbose) {
-  int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 0, iNumGrid = 0,iOption;
-  int k, iOut = -1, *lTmp;
-  char **saTmp, *cTmp=NULL, **cOption, *cOut=NULL;
+  int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 0, iNumGrid = 0,
+                         iOption;
+  int k, iOut         = -1, *lTmp;
+  char **saTmp, *cTmp = NULL, **cOption, *cOut = NULL;
   int iLen1, iLen2;
 
   lTmp    = malloc(MAXLINES * sizeof(int));
   cOption = malloc(MAXARRAY * sizeof(char *));
-  for (iOption=0;iOption<MAXARRAY;iOption++) {
-    cOption[iOption]=NULL;
+  for (iOption = 0; iOption < MAXARRAY; iOption++) {
+    cOption[iOption] = NULL;
   }
 
   AddOptionStringArray(files->Infile[iFile].cIn, options[OPT_GRIDOUTPUT].cName,
@@ -3571,7 +3585,7 @@ void ReadOptions(BODY **body, CONTROL *control, FILES *files, MODULE *module,
   ReadInitialOptions(body, control, files, module, options, output, system,
                      infile);
 
-  InitializeSystem(*body, control,system);
+  InitializeSystem(*body, control, system);
 
   /* Now that we know how many bodies there are, initialize more features */
   *update = malloc(control->Evolve.iNumBodies * sizeof(UPDATE));
@@ -4631,12 +4645,12 @@ void InitializeOptions(OPTIONS *options, fnReadOption *fnRead) {
   /* Initialize all parameters describing the option's location */
   for (iOpt = 0; iOpt < MODULEOPTEND; iOpt++) {
 
-    options[iOpt].cName = NULL;
-    options[iOpt].cDescr = NULL;
+    options[iOpt].cName      = NULL;
+    options[iOpt].cDescr     = NULL;
     options[iOpt].cLongDescr = NULL;
-    options[iOpt].cDefault = NULL;
-    options[iOpt].cValues = NULL;
-    options[iOpt].cNeg = NULL;
+    options[iOpt].cDefault   = NULL;
+    options[iOpt].cValues    = NULL;
+    options[iOpt].cNeg       = NULL;
     options[iOpt].cDimension = NULL;
 
     fvFormattedString(&options[iOpt].cName, "null");

@@ -53,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wheel-${{ matrix.os }}-${{ matrix.python-version }}
-          path: ./wheelhouse/*.whl
+          path: ./wheelhouse/
 
   build_sdist:
     name: Building source for ${{ matrix.os }}:Python-${{ matrix.python-version }}
@@ -94,7 +94,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sdist-${{ matrix.os }}-${{ matrix.python-version }}
-          path: dist/*.tar.gz
+          path: dist/
 
   upload_pypi:
     needs: [build_wheels, build_sdist]

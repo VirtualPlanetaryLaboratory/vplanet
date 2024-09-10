@@ -28,17 +28,17 @@ We need this wrapper so we can call `main_impl` from Python.
  */
 int main_impl(int argc, char *argv[]) {
 #ifdef DEBUG
-  #ifdef __x86_64__
-    _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
-    _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_OVERFLOW);
-    _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_DIV_ZERO);
-    //_MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_UNDERFLOW);
-    fprintf(stderr, "INFO: Floating point trapping enabled.\n");
-  #else
-    fprintf(stderr,
-            "WARNING: Floating point trapping only enabled for x86 "
-            "architectures.\n");
-  #endif
+#ifdef __x86_64__
+  _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
+  _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_OVERFLOW);
+  _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_DIV_ZERO);
+  //_MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_UNDERFLOW);
+  fprintf(stderr, "INFO: Floating point trapping enabled.\n");
+#else
+  fprintf(stderr,
+          "WARNING: Floating point trapping only enabled for x86 "
+          "architectures.\n");
+#endif
 #endif
 
   // struct timeval start, end;
@@ -65,14 +65,14 @@ int main_impl(int argc, char *argv[]) {
   fnUpdateVariable ***fnUpdate;
   fnIntegrate fnOneStep;
 
-  control.sGitVersion=NULL;
+  control.sGitVersion = NULL;
 #ifdef GITVERSION
   fvFormattedString(&control.sGitVersion, GITVERSION);
 #else
   fvFormattedString(&control.sGitVersion, "Unknown");
 #endif
 
-  system.cName=NULL;
+  system.cName = NULL;
 
   /** Must initialize all options and outputs for all modules
      independent of what is selected. This allows a complete
@@ -91,8 +91,8 @@ int main_impl(int argc, char *argv[]) {
   control.Evolve.iOneStep = 0;
 
   /* Copy executable file name to the files struct. */
-  files.cExe=NULL;
-  fvFormattedString(&files.cExe, argv[0]);
+  files.cExe = NULL;
+  fvFormattedString(&files.cExe, argv[0]); // XXX This isn't working!
 
   if (argc == 1) {
     fprintf(stderr,

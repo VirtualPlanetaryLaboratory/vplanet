@@ -2586,14 +2586,16 @@ void ReadCosObl(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
  * Output Order Functions
  */
 
-void fvAllocateOutputOrderArrays(char ****saMatch, int **baNeg, int **iaMatch,
-                                 int **iaNumMatches, int iNumArgs) {
+void fvAllocateOutputOrderArrays(FILES *files, char ****saMatch, int **baNeg,
+                                 int **iaMatch, int **iaNumMatches,
+                                 int iNumArgs, int iFile) {
   int iIndex, iMatch;
 
-  *saMatch      = malloc(iNumArgs * sizeof(char **));
-  *baNeg        = malloc(iNumArgs * sizeof(int));
-  *iaMatch      = malloc(iNumArgs * sizeof(int));
-  *iaNumMatches = malloc(iNumArgs * sizeof(int));
+  files->Outfile[iFile - 1].caCol = malloc(iNumArgs * sizeof(char *));
+  *saMatch                        = malloc(iNumArgs * sizeof(char **));
+  *baNeg                          = malloc(iNumArgs * sizeof(int));
+  *iaMatch                        = malloc(iNumArgs * sizeof(int));
+  *iaNumMatches                   = malloc(iNumArgs * sizeof(int));
 
   for (iIndex = 0; iIndex < iNumArgs; iIndex++) {
     (*saMatch)[iIndex] =
@@ -2852,8 +2854,8 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
     NotPrimaryInput(iFile, options[OPT_OUTPUTORDER].cName,
                     files->Infile[iFile].cIn, lTmp[0], iVerbose);
     fvCheckTooManyOutputs(files, iFile, iNumArgs, iVerbose);
-    fvAllocateOutputOrderArrays(&saMatch, &baNeg, &iaMatch, &iaNumMatches,
-                                iNumArgs);
+    fvAllocateOutputOrderArrays(files, &saMatch, &baNeg, &iaMatch,
+                                &iaNumMatches, iNumArgs, iFile);
     fvRecordAndRemoveOutputOrderNegativeSigns(saArguments, baNeg, iNumArgs);
     fvCountAndRecordOutputOrderMatches(output, saArguments, saMatch, iaMatch,
                                        iaNumMatches, iNumArgs);

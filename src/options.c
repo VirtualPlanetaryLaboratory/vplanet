@@ -2641,14 +2641,31 @@ void fvAssignOutputMatchData(char ***saMatch, char *sOut, int *iaMatch,
   iaMatch[iArg] = iOut;
 }
 
+void fvCheckUnambiguousMatch(OUTPUT *output, char ***saMatch, char *sArg,
+                             char *sOut, int *iaMatch, int *iaNumMatches,
+                             int iLen1, int iLen2, int iOut, int iArg) {
+  int iLen;
+
+  if (iLen1 < iLen2) {
+    iLen = iLen1;
+  } else {
+    iLen = iLen2;
+  }
+  if (memcmp(sLower(sArg), sLower(sOut), iLen) == 0 && iLen1 > iLen2) {
+    fvAssignOutputMatchData(saMatch, output[iOut].cName, iaMatch, iaNumMatches,
+                            iArg, iOut);
+  }
+}
+
 void fvCountAndRecordOutputOrderMatches(OUTPUT *output, char **saArguments,
                                         char ***saMatch, int *iaMatch,
                                         int *iaNumMatches, int iNumArgs) {
-  int iArg, iLen, iLen1, iLen2, iOut;
+  int iArg, iLen, iLen1, iLen2, iOut, iMatch, iPerfectMatch;
   char *sArg = NULL, *sOut = NULL;
 
   for (iArg = 0; iArg < iNumArgs; iArg++) {
     iaNumMatches[iArg] = 0;
+    iPerfectMatch      = -1;
     fvFormattedString(&sArg, saArguments[iArg]);
 
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
@@ -2660,17 +2677,19 @@ void fvCountAndRecordOutputOrderMatches(OUTPUT *output, char **saArguments,
           (memcmp(sLower(sArg), sLower(sOut), strlen(sOut)) == 0)) {
         fvAssignOutputMatchData(saMatch, output[iOut].cName, iaMatch,
                                 iaNumMatches, iArg, iOut);
+        iPerfectMatch = iOut;
       } else {
-        if (iLen1 < iLen2) {
-          iLen = iLen1;
-        } else {
-          iLen = iLen2;
-        }
-        if (memcmp(sLower(sArg), sLower(sOut), iLen) == 0 && iLen1 > iLen2) {
-          fvAssignOutputMatchData(saMatch, output[iOut].cName, iaMatch,
-                                  iaNumMatches, iArg, iOut);
-        }
+        fvCheckUnambiguousMatch(output, saMatch, sArg, sOut, iaMatch,
+                                iaNumMatches, iLen1, iLen2, iOut, iArg);
       }
+    }
+    if (iPerfectMatch > -1) {
+      for (iMatch = 0; iMatch < iaNumMatches[iArg]; iMatch++) {
+        saMatch[iArg][iMatch] = NULL;
+      }
+      iaNumMatches[iArg] = 0;
+      fvAssignOutputMatchData(saMatch, output[iPerfectMatch].cName, iaMatch,
+                              iaNumMatches, iArg, iPerfectMatch);
     }
   }
 }
@@ -2784,11 +2803,11 @@ void fvCheckOutputOrderDuplication(FILES *files, char ***saMatch, int *lTmp,
     for (jArg = iArg + 1; jArg < iNumArgs; jArg++) {
       iLen1 = strlen(saMatch[iArg][0]);
       iLen2 = strlen(saMatch[jArg][0]);
-      if ((iLen1 == iLen2) && memcmp(saMatch[iArg][0], saMatch[jArg][0],
-                                     strlen(saMatch[iArg][0]))) {
+      if ((iLen1 == iLen2) &&
+          memcmp(saMatch[iArg][0], saMatch[jArg][0], iLen1) == 0) {
         if (iVerbose >= VERBINPUT) {
           fprintf(stderr,
-                  "ERROR: Output option %s selected twice, which is "
+                  "ERROR: Output option %s requested more than once, which is "
                   "not allowed.\n",
                   saMatch[iArg][0]);
         }

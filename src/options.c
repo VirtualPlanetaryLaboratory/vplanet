@@ -2586,16 +2586,16 @@ void ReadCosObl(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
  * OutputOrder and GridOutput Functions
  */
 
-void fvAllocateOutputArrays(FILES *files, char ****saMatch, int **baNeg,
+void fvAllocateOutputArrays(char ****saMatch, char ***saOutput, int **baNeg,
                             int **iaMatch, int **iaNumMatches, int iNumArgs,
                             int iFile) {
   int iIndex, iMatch;
 
-  files->Outfile[iFile - 1].caCol = malloc(iNumArgs * sizeof(char *));
-  *saMatch                        = malloc(iNumArgs * sizeof(char **));
-  *baNeg                          = malloc(iNumArgs * sizeof(int));
-  *iaMatch                        = malloc(iNumArgs * sizeof(int));
-  *iaNumMatches                   = malloc(iNumArgs * sizeof(int));
+  *saOutput     = (char **)malloc(iNumArgs * sizeof(char *));
+  *saMatch      = malloc(iNumArgs * sizeof(char **));
+  *baNeg        = malloc(iNumArgs * sizeof(int));
+  *iaMatch      = malloc(iNumArgs * sizeof(int));
+  *iaNumMatches = malloc(iNumArgs * sizeof(int));
 
   for (iIndex = 0; iIndex < iNumArgs; iIndex++) {
     (*saMatch)[iIndex] =
@@ -2846,14 +2846,14 @@ void fvCheckNotGridOutput(FILES *files, OPTIONS *options, OUTPUT *output,
 }
 
 void fvAssignOutputData(FILES *files, OUTPUT *output, char **saOutput,
-                        int *baNeg, int *iaMatch, int iNumArgs, int iFile) {
+                        int *baNeg, int *iaMatch, int *iNumOut, int iNumArgs,
+                        int iFile) {
   int iArg;
 
   for (iArg = 0; iArg < iNumArgs; iArg++) {
-    // fvFormattedString(&files->Outfile[iFile - 1].caCol[iArg],
-    //                   output[iaMatch[iArg]].cName);
+    saOutput[iArg] = NULL;
     fvFormattedString(&saOutput[iArg], output[iaMatch[iArg]].cName);
-    files->Outfile[iFile - 1].iNumCols = iNumArgs;
+    *iNumOut = iNumArgs;
     if (baNeg[iArg]) {
       output[iaMatch[iArg]].bDoNeg[iFile - 1] = 1;
     } else {
@@ -2871,16 +2871,16 @@ void fvFreeOuputArrays(char ***saMatch, int *baNeg, int *iaNumMatches,
 }
 
 void fvGeneralOutputChecks(FILES *files, MODULE *module, OPTIONS *options,
-                           OUTPUT *output, char **saArguments, char ****saMatch,
-                           int **baNeg, int *lTmp, int **iaMatch,
-                           int **iaNumMatches, int iNumArgs, int iFile,
-                           int iOption, int iVerbose) {
+                           OUTPUT *output, char ***saOutput, char **saArguments,
+                           char ****saMatch, int **baNeg, int *lTmp,
+                           int **iaMatch, int **iaNumMatches, int iNumArgs,
+                           int iFile, int iOption, int iVerbose) {
 
   NotPrimaryInput(iFile, options[iOption].cName, files->Infile[iFile].cIn,
                   lTmp[0], iVerbose);
   fvCheckTooManyOutputs(files, iFile, iNumArgs, iVerbose);
-  fvAllocateOutputArrays(files, saMatch, baNeg, iaMatch, iaNumMatches, iNumArgs,
-                         iFile);
+  fvAllocateOutputArrays(saMatch, saOutput, baNeg, iaMatch, iaNumMatches,
+                         iNumArgs, iFile);
   fvRecordAndRemoveOutputNegativeSigns(saArguments, *baNeg, iNumArgs);
   fvCountAndRecordOutputMatches(output, saArguments, *saMatch, *iaMatch,
                                 *iaNumMatches, iNumArgs);
@@ -2898,31 +2898,33 @@ void fvGeneralOutputChecks(FILES *files, MODULE *module, OPTIONS *options,
 
 void fvfinalizeOutput(FILES *files, MODULE *module, OPTIONS *options,
                       OUTPUT *output, char **saArguments, char ***saMatch,
-                      int *baNeg, int *lTmp, int *iaMatch, int *iaNumMatches,
-                      int iNumArgs, int iFile, int iOption, int iVerbose) {
+                      char **saOutput, int *iNumOut, int *baNeg, int *lTmp,
+                      int *iaMatch, int *iaNumMatches, int iNumArgs, int iFile,
+                      int iOption, int iVerbose) {
 
-  fvAssignOutputData(files, output, files->Outfile[iFile - 1].caCol, baNeg,
-                     iaMatch, iNumArgs, iFile);
+  fvAssignOutputData(files, output, saOutput, baNeg, iaMatch, iNumOut, iNumArgs,
+                     iFile);
   UpdateFoundOptionMulti(&files->Infile[iFile], &options[iOption], lTmp,
                          files->Infile[iFile].iNumLines, iFile);
   fvFreeOuputArrays(saMatch, baNeg, iaNumMatches, iaMatch);
 }
 
 void fvAssignOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
-                         OUTPUT *output, char **saArguments, int *lTmp,
-                         int iNumArgs, int iFile, int iVerbose) {
+                         OUTPUT *output, char **saArguments, char ***saOutput,
+                         int *lTmp, int iNumArgs, int iFile, int iVerbose) {
   int *baNeg;
   int *iaNumMatches, *iaMatch;
   char ***saMatch;
 
-  fvGeneralOutputChecks(files, module, options, output, saArguments, &saMatch,
-                        &baNeg, lTmp, &iaMatch, &iaNumMatches, iNumArgs, iFile,
-                        OPT_OUTPUTORDER, iVerbose);
+  fvGeneralOutputChecks(files, module, options, output, saOutput, saArguments,
+                        &saMatch, &baNeg, lTmp, &iaMatch, &iaNumMatches,
+                        iNumArgs, iFile, OPT_OUTPUTORDER, iVerbose);
   fvCheckNotGridOutput(files, options, output, saMatch, iaMatch, lTmp, iNumArgs,
                        iFile, iVerbose);
-  fvfinalizeOutput(files, module, options, output, saArguments, saMatch, baNeg,
-                   lTmp, iaMatch, iaNumMatches, iNumArgs, iFile,
-                   OPT_OUTPUTORDER, iVerbose);
+  fvfinalizeOutput(files, module, options, output, saArguments, saMatch,
+                   files->Outfile[iFile - 1].caCol,
+                   &(files->Outfile[iFile - 1].iNumCols), baNeg, lTmp, iaMatch,
+                   iaNumMatches, iNumArgs, iFile, OPT_OUTPUTORDER, iVerbose);
 }
 
 void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
@@ -2936,8 +2938,9 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
                        lTmp, iVerbose);
 
   if (lTmp[0] >= 0) {
-    fvAssignOutputOrder(files, module, options, output, saArguments, lTmp,
-                        iNumArgs, iFile, iVerbose);
+    fvAssignOutputOrder(files, module, options, output, saArguments,
+                        &files->Outfile[iFile - 1].caCol, lTmp, iNumArgs, iFile,
+                        iVerbose);
   } else {
     files->Outfile[iFile - 1].iNumCols = 0;
   }
@@ -2946,154 +2949,71 @@ void ReadOutputOrder(FILES *files, MODULE *module, OPTIONS *options,
   free(saArguments);
 }
 
-void ReadGridOutput(FILES *files, OPTIONS *options, OUTPUT *output, int iFile,
-                    int iVerbose) {
-  int i, j, count, iLen, iNumIndices = 0, bNeg[MAXARRAY], ok = 0, iNumGrid = 0,
-                         iOption;
-  int k, iOut         = -1, *lTmp;
-  char **saTmp, *cTmp = NULL, **cOption, *cOut = NULL;
-  int iLen1, iLen2;
+void fvCheckNotOutputOrder(FILES *files, OPTIONS *options, OUTPUT *output,
+                           char ***saMatch, int *iaMatch, int *lTmp,
+                           int iNumArgs, int iFile, int iVerbose) {
+  int bExit, iArg;
 
-  lTmp    = malloc(MAXLINES * sizeof(int));
-  cOption = malloc(MAXARRAY * sizeof(char *));
-  for (iOption = 0; iOption < MAXARRAY; iOption++) {
-    cOption[iOption] = NULL;
+  bExit = 0;
+  for (iArg = 0; iArg < iNumArgs; iArg++) {
+    if (output[iaMatch[iArg]].bGrid == 0) {
+      if (iVerbose >= VERBINPUT) {
+        fprintf(stderr,
+                "ERROR: Output option %s can only be an argument for option "
+                "%s.\n",
+                saMatch[iArg][0], options[OPT_OUTPUTORDER].cName);
+      }
+      bExit = 1;
+    }
   }
+  if (bExit) {
+    LineExit(files->Infile[iFile].cIn, lTmp[0]);
+  }
+}
 
+void fvAssignGridOutput(FILES *files, MODULE *module, OPTIONS *options,
+                        OUTPUT *output, char **saArguments, char ***saOutput,
+                        int *lTmp, int iNumArgs, int iFile, int iVerbose) {
+  int *baNeg;
+  int *iaNumMatches, *iaMatch;
+  char ***saMatch;
+
+  fvGeneralOutputChecks(files, module, options, output, saOutput, saArguments,
+                        &saMatch, &baNeg, lTmp, &iaMatch, &iaNumMatches,
+                        iNumArgs, iFile, OPT_GRIDOUTPUT, iVerbose);
+  fvCheckNotOutputOrder(files, options, output, saMatch, iaMatch, lTmp,
+                        iNumArgs, iFile, iVerbose);
+  fvfinalizeOutput(files, module, options, output, saArguments, saMatch,
+                   files->Outfile[iFile - 1].caGrid,
+                   &files->Outfile[iFile - 1].iNumGrid, baNeg, lTmp, iaMatch,
+                   iaNumMatches, iNumArgs, iFile, OPT_GRIDOUTPUT, iVerbose);
+}
+
+void ReadGridOutput(FILES *files, MODULE *module, OPTIONS *options,
+                    OUTPUT *output, int iFile, int iVerbose) {
+  char **saArguments;
+  int *lTmp, iNumArgs;
+
+  lTmp = malloc(MAXLINES * sizeof(int));
   AddOptionStringArray(files->Infile[iFile].cIn, options[OPT_GRIDOUTPUT].cName,
-                       &saTmp, &iNumIndices, &files->Infile[iFile].iNumLines,
+                       &saArguments, &iNumArgs, &files->Infile[iFile].iNumLines,
                        lTmp, iVerbose);
 
   if (lTmp[0] >= 0) {
-    NotPrimaryInput(iFile, options[OPT_GRIDOUTPUT].cName,
-                    files->Infile[iFile].cIn, lTmp[0], iVerbose);
-
-    /* First remove and record negative signs */
-    for (i = 0; i < iNumIndices; i++) {
-      if (saTmp[i][0] == 45) {
-        /* Option is negative */
-        bNeg[i] = 1;
-        /* Now remove negative sign */
-        for (j = 0; j < strlen(saTmp[i]); j++) {
-          saTmp[i][j] = saTmp[i][j + 1];
-        }
-        saTmp[i][strlen(saTmp[i])] = 0;
-      } else {
-        bNeg[i] = 0;
-      }
-    }
-
-    /* Check for ambiguity */
-    for (i = 0; i < iNumIndices; i++) {
-      count = 0; /* Number of possibilities */
-      // for (j = 0; j < OPTLEN; j++) {
-      //   cTmp[j] = 0;
-      // }
-      fvFormattedString(&cTmp, saTmp[i]);
-      for (j = 0; j < MODULEOUTEND; j++) {
-        // for (k = 0; k < OPTLEN; k++) {
-        //   cOut[k] = 0;
-        // }
-        fvFormattedString(&cOut, output[j].cName);
-        iLen1 = strlen(cOut);
-        iLen2 = strlen(cTmp);
-        /* Check for perfect match */
-        if ((iLen1 == iLen2) &&
-            (memcmp(sLower(cTmp), sLower(cOut), strlen(cOut)) == 0)) {
-          /* Output option found! */
-          fvFormattedString(&cOption[count], output[j].cName);
-          count = 1;
-          iOut  = j;
-          if (output[j].bGrid == 1 || output[j].bGrid == 2) {
-            iNumGrid += 1;
-          }
-          j = MODULEOUTEND; /* Break! */
-        } else {
-          if (iLen1 < iLen2) {
-            iLen = iLen1;
-          } else {
-            iLen = iLen2;
-          }
-
-          if (memcmp(sLower(cTmp), sLower(cOut), iLen) == 0 && iLen1 > iLen2) {
-            /* Output option found! */
-            fvFormattedString(&cOption[count], output[j].cName);
-            count++;
-            iOut = j;
-            if (output[j].bGrid == 1 || output[j].bGrid == 2) {
-              iNumGrid += 1;
-            }
-          }
-        }
-      }
-
-      if (count > 1) {
-        /* More than one possibility */
-        if (iVerbose >= VERBERR) {
-          fprintf(stderr,
-                  "ERROR: Output option \"%s\" is ambiguous. Options are ",
-                  saTmp[i]);
-          for (j = 0; j < count; j++) {
-            fprintf(stderr, "%s", cOption[j]);
-            if (j < count - 1) {
-              fprintf(stderr, ", ");
-            }
-          }
-          fprintf(stderr, ".\n");
-        }
-        LineExit(files->Infile[iFile].cIn, lTmp[0]);
-      }
-
-      if (!count) {
-        /* Option not found */
-        if (iVerbose >= VERBERR) {
-          fprintf(stderr, "ERROR: Unknown output option \"%s\".\n", saTmp[i]);
-        }
-        LineExit(files->Infile[iFile].cIn, lTmp[0]);
-      }
-
-      if (count == 1) {
-        /* Unique option */
-
-        /* Verify and record negative options */
-        if (bNeg[i]) {
-          // Is the negative option allowed?
-          if (!output[iOut].bNeg) { /* No */
-            if (iVerbose >= VERBERR) {
-              fprintf(stderr, "ERROR: Output option %s ", saTmp[i]);
-              if (strlen(saTmp[i]) < strlen(output[iOut].cName)) {
-                fprintf(stderr, "(= %s) ", output[iOut].cName);
-              }
-              fprintf(stderr, "cannot be negative.\n");
-            }
-            LineExit(files->Infile[iFile].cIn, lTmp[0]);
-          } else { // Yes, initialize bDoNeg to true
-            output[iOut].bDoNeg[iFile - 1] = 1;
-          }
-        } else { // Negative option not set, initialize bDoNeg to false
-          output[iOut].bDoNeg[iFile - 1] = 0;
-        }
-        if (output[iOut].bGrid == 0) {
-          memset(files->Outfile[iFile - 1].caCol[i], '\0', OPTLEN);
-          fvFormattedString(&files->Outfile[iFile - 1].caCol[i],
-                            output[iOut].cName);
-        } else {
-          fvFormattedString(&files->Outfile[iFile - 1].caGrid[iNumGrid - 1],
-                            output[iOut].cName);
-        }
-      }
-    }
-
-    UpdateFoundOptionMulti(&files->Infile[iFile], &options[OPT_GRIDOUTPUT],
-                           lTmp, files->Infile[iFile].iNumLines, iFile);
+    fvAssignGridOutput(files, module, options, output, saArguments,
+                       &files->Outfile[iFile - 1].caGrid, lTmp, iNumArgs, iFile,
+                       iVerbose);
+  } else {
+    files->Outfile[iFile - 1].iNumGrid = 0;
   }
 
-  files->Outfile[iFile - 1].iNumGrid = iNumGrid;
-
   free(lTmp);
-  free(cTmp);
-  free(cOption);
+  free(saArguments);
 }
+
+/*
+ * End Output functions
+ */
 
 void ReadOverwrite(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                    SYSTEM *system, int iFile) {
@@ -3585,7 +3505,8 @@ void ReadOptionsGeneral(BODY *body, CONTROL *control, FILES *files,
     ReadOutputOrder(files, module, options, output, iFile,
                     control->Io.iVerbose);
     if (body[iFile - 1].bPoise) {
-      ReadGridOutput(files, options, output, iFile, control->Io.iVerbose);
+      ReadGridOutput(files, module, options, output, iFile,
+                     control->Io.iVerbose);
     } else {
       // Initialize iNumGrid to 0 so no memory issues
       files->Outfile[iFile - 1].iNumGrid = 0;

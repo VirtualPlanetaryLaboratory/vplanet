@@ -103,10 +103,6 @@ void InitializeFilesOptions(FILES *files, OPTIONS *options) {
       options[iOption].iLine[iFile] = -1;
       options[iOption].cFile[iFile] = NULL;
       fvFormattedString(&options[iOption].cFile[iFile], "null");
-      if (iFile > 0) {
-        files->Outfile[iFile - 1].caGrid[iOption] = NULL;
-        // files->Outfile[iFile-1].caCol[iOption] = NULL;
-      }
     }
   }
 }
@@ -117,7 +113,6 @@ void InitializeFiles(FILES *files, OPTIONS *options, char *sPrimaryFile,
 
   files->iNumInputs = iNumBodies + 1;
   files->cLog       = NULL;
-  files->cExe       = NULL;
   files->Infile     = malloc(files->iNumInputs * sizeof(INFILE));
   files->Outfile    = malloc(iNumBodies * sizeof(OUTFILE));
 

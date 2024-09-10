@@ -2075,19 +2075,14 @@ void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
   cCol = malloc(MODULEOUTEND * sizeof(char *));
   for (iCol = 0; iCol < files->Outfile[iBody].iNumGrid; iCol++) {
     for (iOut = 0; iOut < MODULEOUTEND; iOut++) {
-      // if (memcmp(files->Outfile[iBody].caGrid[iCol], output[iOut].cName,
-      //            strlen(output[iOut].cName)) == 0) {
       if (strcmp(files->Outfile[iBody].caGrid[iCol], output[iOut].cName) == 0) {
-        /* Match! */
         dTmp = malloc(output[iOut].iNum * sizeof(double));
         fnWrite[iOut](body, control, &output[iOut], system,
                       &control->Units[iBody], update, iBody, dTmp, &cUnit);
         for (iSubOut = 0; iSubOut < output[iOut].iNum; iSubOut++) {
           cCol[iCol + iSubOut + iExtra] = NULL;
-          fvFormattedString(&cCol[iCol + iSubOut + iExtra],
-                            files->Outfile[iBody].caGrid[iCol]);
-          fvFormattedString(&cTmp, "[%s]", cUnit);
-          fvFormattedString(&cCol[iCol + iSubOut + iExtra], cTmp);
+          fvFormattedString(&cCol[iCol + iSubOut + iExtra], "%s [%s]",
+                            files->Outfile[iBody].caGrid[iCol], cUnit);
         }
         iExtra += (output[iOut].iNum - 1);
         free(dTmp);

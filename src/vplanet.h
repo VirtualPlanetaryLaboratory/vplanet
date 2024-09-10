@@ -1919,13 +1919,13 @@ struct INFILE {
  * regarding the output files. */
 
 struct OUTFILE {
-  char *cOut;                 /**< Output File Name */
-  int iNumCols;               /**< Number of Columns in Output File
-                                 (system.planet+.forward/backward) */
-  char **caCol;               /**< Output Value Name */
-  int bNeg[MODULEOUTEND];     /**< Use Negative Option Units? */
-  int iNumGrid;               /**< Number of grid outputs */
-  char *caGrid[MODULEOUTEND]; /**< Gridded output name */
+  char *cOut;             /**< Output File Name */
+  int iNumCols;           /**< Number of Columns in Output File
+                             (system.planet+.forward/backward) */
+  char **caCol;           /**< Output Value Name */
+  int bNeg[MODULEOUTEND]; /**< Use Negative Option Units? */
+  int iNumGrid;           /**< Number of grid outputs */
+  char **caGrid;          /**< Gridded output name */
 };
 
 

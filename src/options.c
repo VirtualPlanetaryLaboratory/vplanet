@@ -2831,13 +2831,14 @@ void fvCheckNotGridOutput(FILES *files, OPTIONS *options, OUTPUT *output,
 
   bExit = 0;
   for (iArg = 0; iArg < iNumArgs; iArg++) {
-    if (output[iaMatch[iArg]].bGrid) {
+    if (output[iaMatch[iArg]].bGrid == 1) {
       if (iVerbose >= VERBINPUT) {
         fprintf(stderr,
                 "ERROR: Output option %s can only be an argument for option "
                 "%s.\n",
                 saMatch[iArg][0], options[OPT_GRIDOUTPUT].cName);
       }
+      bExit = 1;
     }
   }
   if (bExit) {

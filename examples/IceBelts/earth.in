@@ -61,7 +61,7 @@ dMixingDepth      70                    #mixing depth of ocean
 
 
 #________output options!_____________________________________________
-saOutputOrder    Latitude Time PrecA -TGlobal AlbedoGlobal -FluxOutGlobal $
+saOutputOrder    Time PrecA -TGlobal AlbedoGlobal -FluxOutGlobal $
   -TotIceMass -TotIceFlow -TotIceBalance DeltaTime AreaIceCov Snowball Obliq $
   IceBeltLand IceBeltSea Ecce
 

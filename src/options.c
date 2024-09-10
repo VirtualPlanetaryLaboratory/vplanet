@@ -2583,12 +2583,12 @@ void ReadCosObl(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 }
 
 /*
- * Output Order Functions
+ * OutputOrder and GridOutput Functions
  */
 
-void fvAllocateOutputOrderArrays(FILES *files, char ****saMatch, int **baNeg,
-                                 int **iaMatch, int **iaNumMatches,
-                                 int iNumArgs, int iFile) {
+void fvAllocateOutputArrays(FILES *files, char ****saMatch, int **baNeg,
+                            int **iaMatch, int **iaNumMatches, int iNumArgs,
+                            int iFile) {
   int iIndex, iMatch;
 
   files->Outfile[iFile - 1].caCol = malloc(iNumArgs * sizeof(char *));
@@ -2619,8 +2619,8 @@ void fvCheckTooManyOutputs(FILES *files, int iFile, int iNumArgs,
   }
 }
 
-void fvRecordAndRemoveOutputOrderNegativeSigns(char **saArguments, int *baNeg,
-                                               int iNumArgs) {
+void fvRecordAndRemoveOutputNegativeSigns(char **saArguments, int *baNeg,
+                                          int iNumArgs) {
   int iArg, iPos;
 
   for (iArg = 0; iArg < iNumArgs; iArg++) {
@@ -2659,9 +2659,9 @@ void fvCheckUnambiguousMatch(OUTPUT *output, char ***saMatch, char *sArg,
   }
 }
 
-void fvCountAndRecordOutputOrderMatches(OUTPUT *output, char **saArguments,
-                                        char ***saMatch, int *iaMatch,
-                                        int *iaNumMatches, int iNumArgs) {
+void fvCountAndRecordOutputMatches(OUTPUT *output, char **saArguments,
+                                   char ***saMatch, int *iaMatch,
+                                   int *iaNumMatches, int iNumArgs) {
   int iArg, iLen, iLen1, iLen2, iOut, iMatch, iPerfectMatch;
   char *sArg = NULL, *sOut = NULL;
 
@@ -2696,9 +2696,9 @@ void fvCountAndRecordOutputOrderMatches(OUTPUT *output, char **saArguments,
   }
 }
 
-void fvCheckNoOutputOrderMatch(FILES *files, char **saArguments, int *lTmp,
-                               int *iaNumMatches, int iNumArgs, int iFile,
-                               int iVerbose) {
+void fvCheckNoOutputMatch(FILES *files, char **saArguments, int *lTmp,
+                          int *iaNumMatches, int iNumArgs, int iFile,
+                          int iVerbose) {
   int bExit, iArg;
 
   bExit = 0;
@@ -2716,9 +2716,9 @@ void fvCheckNoOutputOrderMatch(FILES *files, char **saArguments, int *lTmp,
   }
 }
 
-void fvCheckOutputOrderAmbiguity(FILES *files, char **saArguments,
-                                 char ***saMatch, int *lTmp, int *iaNumMatches,
-                                 int iNumArgs, int iFile, int iVerbose) {
+void fvCheckOutputAmbiguity(FILES *files, char **saArguments, char ***saMatch,
+                            int *lTmp, int *iaNumMatches, int iNumArgs,
+                            int iFile, int iVerbose) {
   int bExit, iArg, iMatch;
 
   bExit = 0;
@@ -2744,11 +2744,11 @@ void fvCheckOutputOrderAmbiguity(FILES *files, char **saArguments,
   }
 }
 
-void fvCheckOutputOrderNegativesAllowed(FILES *files, OUTPUT *output,
-                                        char **saArguments, char ***saMatch,
-                                        int *lTmp, int *baNeg, int *iaMatch,
-                                        int *iaNumMatches, int iNumArgs,
-                                        int iFile, int iVerbose) {
+void fvCheckOutputNegativesAllowed(FILES *files, OUTPUT *output,
+                                   char **saArguments, char ***saMatch,
+                                   int *lTmp, int *baNeg, int *iaMatch,
+                                   int *iaNumMatches, int iNumArgs, int iFile,
+                                   int iVerbose) {
   int bExit, iArg;
 
   bExit = 0;
@@ -2771,11 +2771,10 @@ void fvCheckOutputOrderNegativesAllowed(FILES *files, OUTPUT *output,
   }
 }
 
-void fvCheckOutputOrderModuleCompatibility(FILES *files, MODULE *module,
-                                           OPTIONS *options, OUTPUT *output,
-                                           int *lTmp, int *iaMatch,
-                                           int iNumArgs, int iFile,
-                                           int iVerbose) {
+void fvCheckOutputModuleCompatibility(FILES *files, MODULE *module,
+                                      OPTIONS *options, OUTPUT *output,
+                                      int *lTmp, int *iaMatch, int iNumArgs,
+                                      int iFile, int iVerbose) {
   int bExit, iArg;
 
   bExit = 0;
@@ -2798,8 +2797,8 @@ void fvCheckOutputOrderModuleCompatibility(FILES *files, MODULE *module,
 
 /* Check for duplicate columns, which is not allowed becaue it would be
       incompatible with BigPlanet's employment of Pandas data frames. */
-void fvCheckOutputOrderDuplication(FILES *files, char ***saMatch, int *lTmp,
-                                   int iNumArgs, int iFile, int iVerbose) {
+void fvCheckOutputDuplication(FILES *files, char ***saMatch, int *lTmp,
+                              int iNumArgs, int iFile, int iVerbose) {
   int bExit, iArg, jArg, iLen1, iLen2;
 
   bExit = 0;
@@ -2846,13 +2845,14 @@ void fvCheckNotGridOutput(FILES *files, OPTIONS *options, OUTPUT *output,
   }
 }
 
-void fvRecordOutputOrderData(FILES *files, OUTPUT *output, int *baNeg,
-                             int *iaMatch, int iNumArgs, int iFile) {
+void fvAssignOutputData(FILES *files, OUTPUT *output, char **saOutput,
+                        int *baNeg, int *iaMatch, int iNumArgs, int iFile) {
   int iArg;
 
   for (iArg = 0; iArg < iNumArgs; iArg++) {
-    fvFormattedString(&files->Outfile[iFile - 1].caCol[iArg],
-                      output[iaMatch[iArg]].cName);
+    // fvFormattedString(&files->Outfile[iFile - 1].caCol[iArg],
+    //                   output[iaMatch[iArg]].cName);
+    fvFormattedString(&saOutput[iArg], output[iaMatch[iArg]].cName);
     files->Outfile[iFile - 1].iNumCols = iNumArgs;
     if (baNeg[iArg]) {
       output[iaMatch[iArg]].bDoNeg[iFile - 1] = 1;
@@ -2879,22 +2879,21 @@ void fvGeneralOutputChecks(FILES *files, MODULE *module, OPTIONS *options,
   NotPrimaryInput(iFile, options[iOption].cName, files->Infile[iFile].cIn,
                   lTmp[0], iVerbose);
   fvCheckTooManyOutputs(files, iFile, iNumArgs, iVerbose);
-  fvAllocateOutputOrderArrays(files, saMatch, baNeg, iaMatch, iaNumMatches,
-                              iNumArgs, iFile);
-  fvRecordAndRemoveOutputOrderNegativeSigns(saArguments, *baNeg, iNumArgs);
-  fvCountAndRecordOutputOrderMatches(output, saArguments, *saMatch, *iaMatch,
-                                     *iaNumMatches, iNumArgs);
-  fvCheckNoOutputOrderMatch(files, saArguments, lTmp, *iaNumMatches, iNumArgs,
-                            iFile, iVerbose);
-  fvCheckOutputOrderAmbiguity(files, saArguments, *saMatch, lTmp, *iaNumMatches,
-                              iNumArgs, iFile, iVerbose);
-  fvCheckOutputOrderNegativesAllowed(files, output, saArguments, *saMatch, lTmp,
-                                     *baNeg, *iaMatch, *iaNumMatches, iNumArgs,
-                                     iFile, iVerbose);
-  fvCheckOutputOrderModuleCompatibility(files, module, options, output, lTmp,
-                                        *iaMatch, iNumArgs, iFile, iVerbose);
-  fvCheckOutputOrderDuplication(files, *saMatch, lTmp, iNumArgs, iFile,
-                                iVerbose);
+  fvAllocateOutputArrays(files, saMatch, baNeg, iaMatch, iaNumMatches, iNumArgs,
+                         iFile);
+  fvRecordAndRemoveOutputNegativeSigns(saArguments, *baNeg, iNumArgs);
+  fvCountAndRecordOutputMatches(output, saArguments, *saMatch, *iaMatch,
+                                *iaNumMatches, iNumArgs);
+  fvCheckNoOutputMatch(files, saArguments, lTmp, *iaNumMatches, iNumArgs, iFile,
+                       iVerbose);
+  fvCheckOutputAmbiguity(files, saArguments, *saMatch, lTmp, *iaNumMatches,
+                         iNumArgs, iFile, iVerbose);
+  fvCheckOutputNegativesAllowed(files, output, saArguments, *saMatch, lTmp,
+                                *baNeg, *iaMatch, *iaNumMatches, iNumArgs,
+                                iFile, iVerbose);
+  fvCheckOutputModuleCompatibility(files, module, options, output, lTmp,
+                                   *iaMatch, iNumArgs, iFile, iVerbose);
+  fvCheckOutputDuplication(files, *saMatch, lTmp, iNumArgs, iFile, iVerbose);
 }
 
 void fvfinalizeOutput(FILES *files, MODULE *module, OPTIONS *options,
@@ -2902,7 +2901,8 @@ void fvfinalizeOutput(FILES *files, MODULE *module, OPTIONS *options,
                       int *baNeg, int *lTmp, int *iaMatch, int *iaNumMatches,
                       int iNumArgs, int iFile, int iOption, int iVerbose) {
 
-  fvRecordOutputOrderData(files, output, baNeg, iaMatch, iNumArgs, iFile);
+  fvAssignOutputData(files, output, files->Outfile[iFile - 1].caCol, baNeg,
+                     iaMatch, iNumArgs, iFile);
   UpdateFoundOptionMulti(&files->Infile[iFile], &options[iOption], lTmp,
                          files->Infile[iFile].iNumLines, iFile);
   fvFreeOuputArrays(saMatch, baNeg, iaNumMatches, iaMatch);

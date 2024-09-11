@@ -574,9 +574,10 @@ void ReadHostBinMass1(BODY *body, CONTROL *control, FILES *files,
 
 void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_GALACDENSITY].cName, "dGalacDensity");
-  fvFormattedString(&options[OPT_GALACDENSITY].cDescr, "Density of galactic environment");
+  fvFormattedString(&options[OPT_GALACDENSITY].cDescr,
+                    "Density of galactic environment");
   fvFormattedString(&options[OPT_GALACDENSITY].cDefault,
-          "0.102"); // need to find updated value
+                    "0.102"); // need to find updated value
   fvFormattedString(&options[OPT_GALACDENSITY].cDimension, "mass/length^3");
   options[OPT_GALACDENSITY].dDefault   = 0.102;
   options[OPT_GALACDENSITY].iType      = 2;
@@ -585,7 +586,7 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_RANDSEED].cName, "iRandSeed");
   fvFormattedString(&options[OPT_RANDSEED].cDescr,
-          "Seed for random number generator (stellar encounters)");
+                    "Seed for random number generator (stellar encounters)");
   fvFormattedString(&options[OPT_RANDSEED].cDefault, "42");
   options[OPT_RANDSEED].dDefault   = 42;
   options[OPT_RANDSEED].iType      = 1;
@@ -594,7 +595,7 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_ENCOUNTERRAD].cName, "dEncounterRad");
   fvFormattedString(&options[OPT_ENCOUNTERRAD].cDescr,
-          "Radius at which stellar encounters occur");
+                    "Radius at which stellar encounters occur");
   fvFormattedString(&options[OPT_ENCOUNTERRAD].cDefault, "206265 AU");
   fvFormattedString(&options[OPT_ENCOUNTERRAD].cDimension, "length");
   options[OPT_ENCOUNTERRAD].dDefault   = 206265.0 * AUM;
@@ -612,7 +613,8 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_RFORM]             = &ReadRForm;
 
   fvFormattedString(&options[OPT_TMIGRATION].cName, "dTMigration");
-  fvFormattedString(&options[OPT_TMIGRATION].cDescr, "Time of radial migration");
+  fvFormattedString(&options[OPT_TMIGRATION].cDescr,
+                    "Time of radial migration");
   fvFormattedString(&options[OPT_TMIGRATION].cDefault, "3 Gy");
   fvFormattedString(&options[OPT_TMIGRATION].cDimension, "time");
   options[OPT_TMIGRATION].dDefault   = 3e9 * YEARSEC;
@@ -640,7 +642,8 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_GASDENSITY]             = &ReadGasDensity;
 
   fvFormattedString(&options[OPT_DMDENSITY].cName, "dDMDensity");
-  fvFormattedString(&options[OPT_DMDENSITY].cDescr, "Local dark matter density");
+  fvFormattedString(&options[OPT_DMDENSITY].cDescr,
+                    "Local dark matter density");
   fvFormattedString(&options[OPT_DMDENSITY].cDefault, "0.01 Msun pc^3");
   fvFormattedString(&options[OPT_DMDENSITY].cDimension, "mass/length^3");
   options[OPT_DMDENSITY].dDefault   = 0.01;
@@ -649,7 +652,8 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_DMDENSITY]             = &ReadDMDensity;
 
   fvFormattedString(&options[OPT_STARSCALEL].cName, "dStarScaleL");
-  fvFormattedString(&options[OPT_STARSCALEL].cDescr, "Stellar radial scale length in MW");
+  fvFormattedString(&options[OPT_STARSCALEL].cDescr,
+                    "Stellar radial scale length in MW");
   fvFormattedString(&options[OPT_STARSCALEL].cDefault, "2.4 kpc");
   fvFormattedString(&options[OPT_STARSCALEL].cDimension, "length");
   options[OPT_STARSCALEL].dDefault   = 2.4;
@@ -659,7 +663,8 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
 
 
   fvFormattedString(&options[OPT_STELLARENC].cName, "bStellarEnc");
-  fvFormattedString(&options[OPT_STELLARENC].cDescr, "Model stellar encounters?");
+  fvFormattedString(&options[OPT_STELLARENC].cDescr,
+                    "Model stellar encounters?");
   fvFormattedString(&options[OPT_STELLARENC].cDefault, "1");
   options[OPT_STELLARENC].dDefault   = 1;
   options[OPT_STELLARENC].iType      = 0;
@@ -668,7 +673,7 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_OUTPUTENC].cName, "bOutputEnc");
   fvFormattedString(&options[OPT_OUTPUTENC].cDescr,
-          "Output stellar encounter information?");
+                    "Output stellar encounter information?");
   fvFormattedString(&options[OPT_OUTPUTENC].cDefault, "0");
   options[OPT_OUTPUTENC].dDefault   = 0;
   options[OPT_OUTPUTENC].iType      = 0;
@@ -677,7 +682,7 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_TIMEEVOLVELDISP].cName, "bTimeEvolVelDisp");
   fvFormattedString(&options[OPT_TIMEEVOLVELDISP].cDescr,
-          "Scale velocity dispersion of stars with sqrt(t)?");
+                    "Scale velocity dispersion of stars with sqrt(t)?");
   fvFormattedString(&options[OPT_TIMEEVOLVELDISP].cDefault, "1");
   fvFormattedString(&options[OPT_TIMEEVOLVELDISP].cDimension, "length/time");
   options[OPT_TIMEEVOLVELDISP].dDefault   = 1;
@@ -687,7 +692,7 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_HOSTBINARY].cName, "bHostBinary");
   fvFormattedString(&options[OPT_HOSTBINARY].cDescr,
-          "Include 3 body interactions with binary star");
+                    "Include 3 body interactions with binary star");
   fvFormattedString(&options[OPT_HOSTBINARY].cDefault, "0");
   options[OPT_HOSTBINARY].dDefault   = 0;
   options[OPT_HOSTBINARY].iType      = 0;
@@ -702,9 +707,10 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_GALACTIDES].bMultiFile = 0;
   fnRead[OPT_GALACTIDES]             = &ReadGalacTides;
 
-  fvFormattedString(&options[OPT_MINSTELLARAPPROACH].cName, "dMinStellarApproach");
+  fvFormattedString(&options[OPT_MINSTELLARAPPROACH].cName,
+                    "dMinStellarApproach");
   fvFormattedString(&options[OPT_MINSTELLARAPPROACH].cDescr,
-          "Minimum close approach distance to primary");
+                    "Minimum close approach distance to primary");
   fvFormattedString(&options[OPT_MINSTELLARAPPROACH].cDefault, "1 AU");
   fvFormattedString(&options[OPT_MINSTELLARAPPROACH].cDimension, "length");
   options[OPT_MINSTELLARAPPROACH].dDefault   = AUM;
@@ -715,7 +721,8 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_MINSTELLARAPPROACH] = &ReadMinStellarApproach;
 
   fvFormattedString(&options[OPT_HOSTBINECC].cName, "dHostBinEcc");
-  fvFormattedString(&options[OPT_HOSTBINECC].cDescr, "eccentricity of host binary");
+  fvFormattedString(&options[OPT_HOSTBINECC].cDescr,
+                    "eccentricity of host binary");
   fvFormattedString(&options[OPT_HOSTBINECC].cDefault, "0.51");
   fvFormattedString(&options[OPT_HOSTBINECC].cDimension, "nd");
   options[OPT_HOSTBINECC].dDefault   = 0.51;
@@ -724,7 +731,8 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_HOSTBINECC]             = &ReadHostBinEcc;
 
   fvFormattedString(&options[OPT_HOSTBINSEMI].cName, "dHostBinSemi");
-  fvFormattedString(&options[OPT_HOSTBINSEMI].cDescr, "Semi-major of host binary");
+  fvFormattedString(&options[OPT_HOSTBINSEMI].cDescr,
+                    "Semi-major of host binary");
   fvFormattedString(&options[OPT_HOSTBINSEMI].cDefault, "17.57 AU");
   fvFormattedString(&options[OPT_HOSTBINSEMI].cDimension, "length");
   options[OPT_HOSTBINSEMI].dDefault   = 17.57 * AUM;
@@ -735,7 +743,8 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_HOSTBINSEMI] = &ReadHostBinSemi;
 
   fvFormattedString(&options[OPT_HOSTBININC].cName, "dHostBinInc");
-  fvFormattedString(&options[OPT_HOSTBININC].cDescr, "inclination of host binary");
+  fvFormattedString(&options[OPT_HOSTBININC].cDescr,
+                    "inclination of host binary");
   fvFormattedString(&options[OPT_HOSTBININC].cDefault, "60.0 deg");
   fvFormattedString(&options[OPT_HOSTBININC].cDimension, "angle");
   options[OPT_HOSTBININC].dDefault   = 60.0 * DEGRAD;
@@ -744,7 +753,8 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_HOSTBININC]             = &ReadHostBinInc;
 
   fvFormattedString(&options[OPT_HOSTBINARGP].cName, "dHostBinArgP");
-  fvFormattedString(&options[OPT_HOSTBINARGP].cDescr, "Arg periapse of host binary");
+  fvFormattedString(&options[OPT_HOSTBINARGP].cDescr,
+                    "Arg periapse of host binary");
   fvFormattedString(&options[OPT_HOSTBINARGP].cDefault, "0.0");
   fvFormattedString(&options[OPT_HOSTBINARGP].cDimension, "angle");
   options[OPT_HOSTBINARGP].dDefault   = 0.0;
@@ -754,7 +764,7 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_HOSTBINLONGA].cName, "dHostBinLongA");
   fvFormattedString(&options[OPT_HOSTBINLONGA].cDescr,
-          "Long of ascending node of host binary");
+                    "Long of ascending node of host binary");
   fvFormattedString(&options[OPT_HOSTBINLONGA].cDefault, "0.0");
   fvFormattedString(&options[OPT_HOSTBINLONGA].cDimension, "angle");
   options[OPT_HOSTBINLONGA].dDefault   = 0.0;
@@ -763,7 +773,8 @@ void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_HOSTBINLONGA]             = &ReadHostBinLongA;
 
   fvFormattedString(&options[OPT_HOSTBINMASS1].cName, "dHostBinMass1");
-  fvFormattedString(&options[OPT_HOSTBINMASS1].cDescr, "mass of larger host binary star");
+  fvFormattedString(&options[OPT_HOSTBINMASS1].cDescr,
+                    "mass of larger host binary star");
   fvFormattedString(&options[OPT_HOSTBINMASS1].cDefault, "1.1 Msun");
   fvFormattedString(&options[OPT_HOSTBINMASS1].cDimension, "mass");
   options[OPT_HOSTBINMASS1].dDefault   = 1.1 * MSUN;
@@ -1164,7 +1175,8 @@ void VerifyGalHabit(BODY *body, CONTROL *control, FILES *files,
 
   if (iBody >= 1) {
     if (system->bOutputEnc) {
-      fvFormattedString(&cOut, "%s.%s.Encounters", system->cName, body[iBody].cName);
+      fvFormattedString(&cOut, "%s.%s.Encounters", system->cName,
+                        body[iBody].cName);
       fOut = fopen(cOut, "w");
       fprintf(fOut,
               "#time encdt tstart MV mass sigma impx impy impz u_rel v_rel "
@@ -1430,6 +1442,7 @@ void WriteBodyEccX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    char **cUnit) {
 
   *dTmp = body[iBody].dEccX;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteBodyEccY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -1437,6 +1450,7 @@ void WriteBodyEccY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    char **cUnit) {
 
   *dTmp = body[iBody].dEccY;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteBodyEccZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -1444,6 +1458,7 @@ void WriteBodyEccZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    char **cUnit) {
 
   *dTmp = body[iBody].dEccZ;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteBodyAngMX(BODY *body, CONTROL *control, OUTPUT *output,
@@ -1451,6 +1466,7 @@ void WriteBodyAngMX(BODY *body, CONTROL *control, OUTPUT *output,
                     double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dAngMX;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteBodyAngMY(BODY *body, CONTROL *control, OUTPUT *output,
@@ -1458,6 +1474,7 @@ void WriteBodyAngMY(BODY *body, CONTROL *control, OUTPUT *output,
                     double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dAngMY;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteBodyAngMZ(BODY *body, CONTROL *control, OUTPUT *output,
@@ -1465,6 +1482,7 @@ void WriteBodyAngMZ(BODY *body, CONTROL *control, OUTPUT *output,
                     double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dAngMZ;
+  fvFormattedString(cUnit, "");
 }
 
 
@@ -1473,6 +1491,7 @@ void WriteNEncounters(BODY *body, CONTROL *control, OUTPUT *output,
                       double *dTmp, char **cUnit) {
 
   *dTmp = (double)system->iNEncounters;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteNBadImpulse(BODY *body, CONTROL *control, OUTPUT *output,
@@ -1480,6 +1499,7 @@ void WriteNBadImpulse(BODY *body, CONTROL *control, OUTPUT *output,
                       double *dTmp, char **cUnit) {
 
   *dTmp = (double)body[iBody].iBadImpulse;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteFVelDisp(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -1487,6 +1507,7 @@ void WriteFVelDisp(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    char **cUnit) {
 
   *dTmp = system->dScalingFVelDisp;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteDEccDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
@@ -1695,7 +1716,8 @@ void InitializeOutputGalHabit(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_ECCZ]           = &WriteBodyEccZ;
 
   fvFormattedString(&output[OUT_ANGMX].cName, "AngMX");
-  fvFormattedString(&output[OUT_ANGMX].cDescr, "X component of angular mom vector");
+  fvFormattedString(&output[OUT_ANGMX].cDescr,
+                    "X component of angular mom vector");
   fvFormattedString(&output[OUT_ANGMX].cNeg, " ");
   output[OUT_ANGMX].bNeg       = 0;
   output[OUT_ANGMX].iNum       = 1;
@@ -1703,7 +1725,8 @@ void InitializeOutputGalHabit(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_ANGMX]           = &WriteBodyAngMX;
 
   fvFormattedString(&output[OUT_ANGMY].cName, "AngMY");
-  fvFormattedString(&output[OUT_ANGMY].cDescr, "Y component of angular mom vector");
+  fvFormattedString(&output[OUT_ANGMY].cDescr,
+                    "Y component of angular mom vector");
   fvFormattedString(&output[OUT_ANGMY].cNeg, " ");
   output[OUT_ANGMY].bNeg       = 0;
   output[OUT_ANGMY].iNum       = 1;
@@ -1711,7 +1734,8 @@ void InitializeOutputGalHabit(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_ANGMY]           = &WriteBodyAngMY;
 
   fvFormattedString(&output[OUT_ANGMZ].cName, "AngMZ");
-  fvFormattedString(&output[OUT_ANGMZ].cDescr, "Z component of angular mom vector");
+  fvFormattedString(&output[OUT_ANGMZ].cDescr,
+                    "Z component of angular mom vector");
   fvFormattedString(&output[OUT_ANGMZ].cNeg, " ");
   output[OUT_ANGMZ].bNeg       = 0;
   output[OUT_ANGMZ].iNum       = 1;
@@ -1720,7 +1744,7 @@ void InitializeOutputGalHabit(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_NENCOUNTERS].cName, "NEncounters");
   fvFormattedString(&output[OUT_NENCOUNTERS].cDescr,
-          "cumulative number of stellar encounters");
+                    "cumulative number of stellar encounters");
   fvFormattedString(&output[OUT_NENCOUNTERS].cNeg, " ");
   output[OUT_NENCOUNTERS].bNeg       = 0;
   output[OUT_NENCOUNTERS].iNum       = 1;
@@ -1729,7 +1753,7 @@ void InitializeOutputGalHabit(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_NBADIMPULSE].cName, "NBadImpulse");
   fvFormattedString(&output[OUT_NBADIMPULSE].cDescr,
-          "cumulative number of questionable encounters");
+                    "cumulative number of questionable encounters");
   fvFormattedString(&output[OUT_NBADIMPULSE].cNeg, " ");
   output[OUT_NBADIMPULSE].bNeg       = 0;
   output[OUT_NBADIMPULSE].iNum       = 1;
@@ -1738,7 +1762,7 @@ void InitializeOutputGalHabit(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_FVELDISP].cName, "FVelDisp");
   fvFormattedString(&output[OUT_FVELDISP].cDescr,
-          "Scaling factor for velocity dispersion");
+                    "Scaling factor for velocity dispersion");
   fvFormattedString(&output[OUT_FVELDISP].cNeg, " ");
   output[OUT_FVELDISP].bNeg       = 0;
   output[OUT_FVELDISP].iNum       = 1;
@@ -1747,7 +1771,7 @@ void InitializeOutputGalHabit(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DECCDTGALHTIDAL].cName, "DEccDtGalHTidal");
   fvFormattedString(&output[OUT_DECCDTGALHTIDAL].cDescr,
-          "Body's tidal decc/dt in GalHabit");
+                    "Body's tidal decc/dt in GalHabit");
   fvFormattedString(&output[OUT_DECCDTGALHTIDAL].cNeg, "1/year");
   output[OUT_DECCDTGALHTIDAL].bNeg       = 1;
   output[OUT_DECCDTGALHTIDAL].dNeg       = YEARSEC;
@@ -1756,7 +1780,7 @@ void InitializeOutputGalHabit(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DINCDTGALHTIDAL].cName, "DIncDtGalHTidal");
   fvFormattedString(&output[OUT_DINCDTGALHTIDAL].cDescr,
-          "Body's tidal dinc/dt in GalHabit");
+                    "Body's tidal dinc/dt in GalHabit");
   fvFormattedString(&output[OUT_DINCDTGALHTIDAL].cNeg, "1/year");
   output[OUT_DINCDTGALHTIDAL].bNeg       = 1;
   output[OUT_DINCDTGALHTIDAL].dNeg       = YEARSEC / DEGRAD;
@@ -1765,7 +1789,7 @@ void InitializeOutputGalHabit(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DARGPDTGALHTIDAL].cName, "DArgPDtGalHTidal");
   fvFormattedString(&output[OUT_DARGPDTGALHTIDAL].cDescr,
-          "Body's tidal dargp/dt in GalHabit");
+                    "Body's tidal dargp/dt in GalHabit");
   fvFormattedString(&output[OUT_DARGPDTGALHTIDAL].cNeg, "1/year");
   output[OUT_DARGPDTGALHTIDAL].bNeg       = 1;
   output[OUT_DARGPDTGALHTIDAL].dNeg       = YEARSEC / DEGRAD;
@@ -1774,7 +1798,7 @@ void InitializeOutputGalHabit(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DLONGADTGALHTIDAL].cName, "DLongADtGalHTidal");
   fvFormattedString(&output[OUT_DLONGADTGALHTIDAL].cDescr,
-          "Body's tidal dlonga/dt in GalHabit");
+                    "Body's tidal dlonga/dt in GalHabit");
   fvFormattedString(&output[OUT_DLONGADTGALHTIDAL].cNeg, "1/year");
   output[OUT_DLONGADTGALHTIDAL].bNeg       = 1;
   output[OUT_DLONGADTGALHTIDAL].dNeg       = YEARSEC / DEGRAD;
@@ -1851,7 +1875,7 @@ void PropsAuxGalHabit(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   body[iBody].dEcc =
         sqrt(pow(body[iBody].dEccX, 2) + pow(body[iBody].dEccY, 2) +
              pow(body[iBody].dEccZ, 2));
- 
+
   body[iBody].dAngM = sqrt(1.0 - pow(body[iBody].dEcc, 2));
 
   body[iBody].dInc   = acos(body[iBody].dAngMZ / body[iBody].dAngM);
@@ -2015,7 +2039,8 @@ void ForceBehaviorGalHabit(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
 
     /* write out encounter info */
     if (system->bOutputEnc) {
-      fvFormattedString(&cOut, "%s.%s.Encounters", system->cName, body[iBody].cName);
+      fvFormattedString(&cOut, "%s.%s.Encounters", system->cName,
+                        body[iBody].cName);
       fOut = fopen(cOut, "a");
       // fprintf(fOut,"#time MV mass sigma impx impy impz u_s v_s w_s u_r v_r
       // w_r u_sun v_sun w_sun Rx Ry Rz\n");
@@ -2984,7 +3009,7 @@ double fndGalHabitDEccZDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fndGalHabitDAngMXDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
   double dJ;
-  dJ  = sqrt((1.0 - pow(body[iaBody[0]].dEcc, 2)));
+  dJ = sqrt((1.0 - pow(body[iaBody[0]].dEcc, 2)));
 
   return sin(body[iaBody[0]].dLongA) * sin(body[iaBody[0]].dInc) *
                fndGalHabitDJDt(body, system, iaBody) +
@@ -2994,7 +3019,7 @@ double fndGalHabitDAngMXDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fndGalHabitDAngMYDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
   double dJ;
-  dJ  = sqrt((1.0 - pow(body[iaBody[0]].dEcc, 2)));
+  dJ = sqrt((1.0 - pow(body[iaBody[0]].dEcc, 2)));
 
   return -cos(body[iaBody[0]].dLongA) * sin(body[iaBody[0]].dInc) *
                fndGalHabitDJDt(body, system, iaBody) +

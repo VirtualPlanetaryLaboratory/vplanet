@@ -161,7 +161,8 @@ void ReadFileOrbitData(BODY *body, CONTROL *control, FILES *files,
 void InitializeOptionsDistRot(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_DYNELLIP].cName, "dDynEllip");
-  fvFormattedString(&options[OPT_DYNELLIP].cDescr, "Planet's dynamical ellipticity");
+  fvFormattedString(&options[OPT_DYNELLIP].cDescr,
+                    "Planet's dynamical ellipticity");
   fvFormattedString(&options[OPT_DYNELLIP].cDefault, "0.00328");
   fvFormattedString(&options[OPT_DYNELLIP].cDimension, "nd");
   options[OPT_DYNELLIP].dDefault   = 0.00328;
@@ -171,7 +172,7 @@ void InitializeOptionsDistRot(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_CALCDYNELLIP].cName, "bCalcDynEllip");
   fvFormattedString(&options[OPT_CALCDYNELLIP].cDescr,
-          "Calculate dynamical ellipticity from RotRate");
+                    "Calculate dynamical ellipticity from RotRate");
   fvFormattedString(&options[OPT_CALCDYNELLIP].cDefault, "0");
   options[OPT_CALCDYNELLIP].dDefault   = 0;
   options[OPT_CALCDYNELLIP].iType      = 0;
@@ -193,35 +194,37 @@ void InitializeOptionsDistRot(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_FORCEPRECRATE].cName, "bForcePrecRate");
   fvFormattedString(&options[OPT_FORCEPRECRATE].cDescr,
-          "Set the axial precession to a fixed rate?");
+                    "Set the axial precession to a fixed rate?");
   fvFormattedString(&options[OPT_FORCEPRECRATE].cDefault, "0");
   options[OPT_FORCEPRECRATE].dDefault   = 0;
   options[OPT_FORCEPRECRATE].iType      = 0;
   options[OPT_FORCEPRECRATE].bMultiFile = 1;
   fnRead[OPT_FORCEPRECRATE]             = &ReadForcePrecRate;
-  fvFormattedString(&options[OPT_FORCEPRECRATE].cLongDescr,
-          "In DisRot, set the axial precession rate to a fixed value. This "
-          "option \n"
-          "can mimic the forcing of a natural satellite, or be used for "
-          "testing.");
+  fvFormattedString(
+        &options[OPT_FORCEPRECRATE].cLongDescr,
+        "In DisRot, set the axial precession rate to a fixed value. This "
+        "option \n"
+        "can mimic the forcing of a natural satellite, or be used for "
+        "testing.");
 
   fvFormattedString(&options[OPT_PRECRATE].cName, "dPrecRate");
   fvFormattedString(&options[OPT_PRECRATE].cDescr,
-          "Fixed rate of axial precession (angle/s)");
+                    "Fixed rate of axial precession (angle/s)");
   fvFormattedString(&options[OPT_PRECRATE].cDefault, "7.7261e-12");
   fvFormattedString(&options[OPT_PRECRATE].cDimension, "angle/time");
   options[OPT_PRECRATE].dDefault   = 7.7261e-12;
   options[OPT_PRECRATE].iType      = 2;
   options[OPT_PRECRATE].bMultiFile = 1;
   fnRead[OPT_PRECRATE]             = &ReadPrecRate;
-  fvFormattedString(&options[OPT_READORBITDATA].cLongDescr,
-          "Value of the body's axial precession frequency if %s is set to 1.\n"
-          "Default value is the modern Earth's value as driven by the Moon.",
-          options[OPT_FORCEPRECRATE].cName);
+  fvFormattedString(
+        &options[OPT_READORBITDATA].cLongDescr,
+        "Value of the body's axial precession frequency if %s is set to 1.\n"
+        "Default value is the modern Earth's value as driven by the Moon.",
+        options[OPT_FORCEPRECRATE].cName);
 
   fvFormattedString(&options[OPT_SPECMOMINERTIA].cName, "dSpecMomInertia");
   fvFormattedString(&options[OPT_SPECMOMINERTIA].cDescr,
-          "Specific moment of inertia of polar axis");
+                    "Specific moment of inertia of polar axis");
   fvFormattedString(&options[OPT_SPECMOMINERTIA].cDefault, "0.33");
   fvFormattedString(&options[OPT_SPECMOMINERTIA].cDimension, "nd");
   options[OPT_SPECMOMINERTIA].dDefault   = 0.33;
@@ -233,7 +236,7 @@ void InitializeOptionsDistRot(OPTIONS *options, fnReadOption fnRead[]) {
   // Define OPT_READORBITDATA so it can be used in the long help
   fvFormattedString(&options[OPT_READORBITDATA].cName, "bReadOrbitData");
   fvFormattedString(&options[OPT_FILEORBITDATA].cDescr,
-          "Name of file containing orbit time series");
+                    "Name of file containing orbit time series");
   fvFormattedString(&options[OPT_FILEORBITDATA].cDefault, "orbit.txt");
   options[OPT_FILEORBITDATA].iType = 3;
   fnRead[OPT_FILEORBITDATA]        = &ReadFileOrbitData;
@@ -252,18 +255,19 @@ void InitializeOptionsDistRot(OPTIONS *options, fnReadOption fnRead[]) {
 
   // cName defined above
   fvFormattedString(&options[OPT_READORBITDATA].cDescr,
-          "Read in orbital data for use with distrot?");
+                    "Read in orbital data for use with distrot?");
   fvFormattedString(&options[OPT_READORBITDATA].cDefault, "0");
   options[OPT_READORBITDATA].dDefault   = 0;
   options[OPT_READORBITDATA].iType      = 0;
   options[OPT_READORBITDATA].bMultiFile = 1;
   fnRead[OPT_READORBITDATA]             = &ReadOrbitData;
-  fvFormattedString(&options[OPT_READORBITDATA].cLongDescr,
-          "Rather than calculate orbital evolution with DistOrb or SpiNBody, "
-          "users \n"
-          "may read in a previously run simulation. See %s for more \n"
-          "information.",
-          options[OPT_FILEORBITDATA].cName);
+  fvFormattedString(
+        &options[OPT_READORBITDATA].cLongDescr,
+        "Rather than calculate orbital evolution with DistOrb or SpiNBody, "
+        "users \n"
+        "may read in a previously run simulation. See %s for more \n"
+        "information.",
+        options[OPT_FILEORBITDATA].cName);
 }
 
 void ReadOptionsDistRot(BODY *body, CONTROL *control, FILES *files,
@@ -1033,7 +1037,7 @@ void WriteOblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
   if (dDeriv == 0) {
     *dTmp = -1;
   } else {
-  *dTmp = fabs(PI / dDeriv);
+    *dTmp = fabs(PI / dDeriv);
   }
 
   if (output->bDoNeg[iBody]) {
@@ -1265,7 +1269,7 @@ void WriteZoblTimeDistRot(BODY *body, CONTROL *control, OUTPUT *output,
   } else {
     *dTmp = fabs(1. / dDeriv);
   }
-  
+
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
@@ -1374,6 +1378,7 @@ void WriteBodyCassOne(BODY *body, CONTROL *control, OUTPUT *output,
       control->Io.baCassiniOneMessage[iBody] = 1;
     }
   }
+  fvFormattedString(cUnit, "");
 }
 
 void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
@@ -1477,6 +1482,7 @@ void WriteBodyCassTwo(BODY *body, CONTROL *control, OUTPUT *output,
       control->Io.baCassiniTwoMessage[iBody] = 1;
     }
   }
+  fvFormattedString(cUnit, "");
 }
 
 void WriteDynEllip(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -1510,7 +1516,8 @@ void WritePrecFNat(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 void InitializeOutputDistRot(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DOBLDTDISTROT].cName, "DOblDtDistRot");
-  fvFormattedString(&output[OUT_DOBLDTDISTROT].cDescr, "Body's dobl/dt in DistRot");
+  fvFormattedString(&output[OUT_DOBLDTDISTROT].cDescr,
+                    "Body's dobl/dt in DistRot");
   fvFormattedString(&output[OUT_DOBLDTDISTROT].cNeg, "deg/year");
   output[OUT_DOBLDTDISTROT].bNeg       = 1;
   output[OUT_DOBLDTDISTROT].dNeg       = YEARSEC / DEGRAD;
@@ -1519,7 +1526,8 @@ void InitializeOutputDistRot(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DOBLDTDISTROT]           = &WriteBodyDOblDtDistRot;
 
   fvFormattedString(&output[OUT_DPRECADTDISTROT].cName, "DPrecADtDistRot");
-  fvFormattedString(&output[OUT_DPRECADTDISTROT].cDescr, "Body's dpA/dt in DistRot");
+  fvFormattedString(&output[OUT_DPRECADTDISTROT].cDescr,
+                    "Body's dpA/dt in DistRot");
   fvFormattedString(&output[OUT_DPRECADTDISTROT].cNeg, "deg/year");
   output[OUT_DPRECADTDISTROT].bNeg       = 1;
   output[OUT_DPRECADTDISTROT].dNeg       = YEARSEC / DEGRAD;
@@ -1528,7 +1536,8 @@ void InitializeOutputDistRot(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DPRECADTDISTROT]           = &WriteBodyDPrecADtDistRot;
 
   fvFormattedString(&output[OUT_DXOBLDTDISTROT].cName, "DXoblDtDistRot");
-  fvFormattedString(&output[OUT_DXOBLDTDISTROT].cDescr, "Body's dXobl/dt in DistRot");
+  fvFormattedString(&output[OUT_DXOBLDTDISTROT].cDescr,
+                    "Body's dXobl/dt in DistRot");
   fvFormattedString(&output[OUT_DXOBLDTDISTROT].cNeg, "1/year");
   output[OUT_DXOBLDTDISTROT].bNeg       = 1;
   output[OUT_DXOBLDTDISTROT].dNeg       = YEARSEC;
@@ -1537,7 +1546,8 @@ void InitializeOutputDistRot(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DXOBLDTDISTROT]           = &WriteBodyDXoblDtDistRot;
 
   fvFormattedString(&output[OUT_DYOBLDTDISTROT].cName, "DYoblDtDistRot");
-  fvFormattedString(&output[OUT_DYOBLDTDISTROT].cDescr, "Body's dYobl/dt in DistRot");
+  fvFormattedString(&output[OUT_DYOBLDTDISTROT].cDescr,
+                    "Body's dYobl/dt in DistRot");
   fvFormattedString(&output[OUT_DYOBLDTDISTROT].cNeg, "1/year");
   output[OUT_DYOBLDTDISTROT].bNeg       = 1;
   output[OUT_DYOBLDTDISTROT].dNeg       = YEARSEC;
@@ -1546,7 +1556,8 @@ void InitializeOutputDistRot(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DYOBLDTDISTROT]           = &WriteBodyDYoblDtDistRot;
 
   fvFormattedString(&output[OUT_DZOBLDTDISTROT].cName, "DZoblDtDistRot");
-  fvFormattedString(&output[OUT_DZOBLDTDISTROT].cDescr, "Body's dZobl/dt in DistRot");
+  fvFormattedString(&output[OUT_DZOBLDTDISTROT].cDescr,
+                    "Body's dZobl/dt in DistRot");
   fvFormattedString(&output[OUT_DZOBLDTDISTROT].cNeg, "1/year");
   output[OUT_DZOBLDTDISTROT].bNeg       = 1;
   output[OUT_DZOBLDTDISTROT].dNeg       = YEARSEC;
@@ -1555,7 +1566,8 @@ void InitializeOutputDistRot(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DZOBLDTDISTROT]           = &WriteBodyDZoblDtDistRot;
 
   fvFormattedString(&output[OUT_XOBLTIMEDISTROT].cName, "XoblTimeDistRot");
-  fvFormattedString(&output[OUT_XOBLTIMEDISTROT].cDescr, "Xobl timescale in DistRot");
+  fvFormattedString(&output[OUT_XOBLTIMEDISTROT].cDescr,
+                    "Xobl timescale in DistRot");
   fvFormattedString(&output[OUT_XOBLTIMEDISTROT].cNeg, "year");
   output[OUT_XOBLTIMEDISTROT].bNeg       = 1;
   output[OUT_XOBLTIMEDISTROT].dNeg       = 1. / YEARSEC;
@@ -1564,7 +1576,8 @@ void InitializeOutputDistRot(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_XOBLTIMEDISTROT]           = &WriteXoblTimeDistRot;
 
   fvFormattedString(&output[OUT_YOBLTIMEDISTROT].cName, "YoblTimeDistRot");
-  fvFormattedString(&output[OUT_YOBLTIMEDISTROT].cDescr, "Yobl timescale in DistRot");
+  fvFormattedString(&output[OUT_YOBLTIMEDISTROT].cDescr,
+                    "Yobl timescale in DistRot");
   fvFormattedString(&output[OUT_YOBLTIMEDISTROT].cNeg, "year");
   output[OUT_YOBLTIMEDISTROT].bNeg       = 1;
   output[OUT_YOBLTIMEDISTROT].dNeg       = 1. / YEARSEC;
@@ -1573,7 +1586,8 @@ void InitializeOutputDistRot(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_YOBLTIMEDISTROT]           = &WriteYoblTimeDistRot;
 
   fvFormattedString(&output[OUT_ZOBLTIMEDISTROT].cName, "ZoblTimeDistRot");
-  fvFormattedString(&output[OUT_ZOBLTIMEDISTROT].cDescr, "Zobl timescale in DistRot");
+  fvFormattedString(&output[OUT_ZOBLTIMEDISTROT].cDescr,
+                    "Zobl timescale in DistRot");
   fvFormattedString(&output[OUT_ZOBLTIMEDISTROT].cNeg, "year");
   output[OUT_ZOBLTIMEDISTROT].bNeg       = 1;
   output[OUT_ZOBLTIMEDISTROT].dNeg       = 1. / YEARSEC;
@@ -1582,7 +1596,8 @@ void InitializeOutputDistRot(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_ZOBLTIMEDISTROT]           = &WriteZoblTimeDistRot;
 
   fvFormattedString(&output[OUT_OBLTIMEDISTROT].cName, "OblTimeDistRot");
-  fvFormattedString(&output[OUT_OBLTIMEDISTROT].cDescr, "Obliquity timescale in DistRot");
+  fvFormattedString(&output[OUT_OBLTIMEDISTROT].cDescr,
+                    "Obliquity timescale in DistRot");
   fvFormattedString(&output[OUT_OBLTIMEDISTROT].cNeg, "year");
   output[OUT_OBLTIMEDISTROT].bNeg       = 1;
   output[OUT_OBLTIMEDISTROT].dNeg       = 1. / YEARSEC;
@@ -1592,7 +1607,7 @@ void InitializeOutputDistRot(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_PRECATIMEDISTROT].cName, "PrecATimeDistRot");
   fvFormattedString(&output[OUT_PRECATIMEDISTROT].cDescr,
-          "Axial precession timescale in DistRot");
+                    "Axial precession timescale in DistRot");
   fvFormattedString(&output[OUT_PRECATIMEDISTROT].cNeg, "year");
   output[OUT_PRECATIMEDISTROT].bNeg       = 1;
   output[OUT_PRECATIMEDISTROT].dNeg       = 1. / YEARSEC;
@@ -1601,30 +1616,34 @@ void InitializeOutputDistRot(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_PRECATIMEDISTROT]           = &WritePrecATimeDistRot;
 
   fvFormattedString(&output[OUT_CASS1].cName, "CassiniOne");
-  fvFormattedString(&output[OUT_CASS1].cDescr,
-          "First Cassini parameter (misalignment of Cassini state vectors)");
+  fvFormattedString(
+        &output[OUT_CASS1].cDescr,
+        "First Cassini parameter (misalignment of Cassini state vectors)");
   output[OUT_CASS1].bNeg       = 0;
   output[OUT_CASS1].iNum       = 1;
   output[OUT_CASS1].iModuleBit = DISTROT;
   fnWrite[OUT_CASS1]           = &WriteBodyCassOne;
 
   fvFormattedString(&output[OUT_CASS2].cName, "CassiniTwo");
-  fvFormattedString(&output[OUT_CASS2].cDescr,
-          "Second Cassini parameter (alignment of Cassini state vectors");
+  fvFormattedString(
+        &output[OUT_CASS2].cDescr,
+        "Second Cassini parameter (alignment of Cassini state vectors");
   output[OUT_CASS2].bNeg       = 0;
   output[OUT_CASS2].iNum       = 1;
   output[OUT_CASS2].iModuleBit = DISTROT;
   fnWrite[OUT_CASS2]           = &WriteBodyCassTwo;
 
   fvFormattedString(&output[OUT_DYNELLIP].cName, "DynEllip");
-  fvFormattedString(&output[OUT_DYNELLIP].cDescr, "dynamical ellipticity of planet");
+  fvFormattedString(&output[OUT_DYNELLIP].cDescr,
+                    "dynamical ellipticity of planet");
   output[OUT_DYNELLIP].bNeg       = 0;
   output[OUT_DYNELLIP].iNum       = 1;
   output[OUT_DYNELLIP].iModuleBit = DISTROT;
   fnWrite[OUT_DYNELLIP]           = &WriteDynEllip;
 
   fvFormattedString(&output[OUT_PRECFNAT].cName, "PrecFNat");
-  fvFormattedString(&output[OUT_PRECFNAT].cDescr, "natural precession freq of planet");
+  fvFormattedString(&output[OUT_PRECFNAT].cDescr,
+                    "natural precession freq of planet");
   output[OUT_PRECFNAT].bNeg       = 0;
   output[OUT_PRECFNAT].iNum       = 1;
   output[OUT_PRECFNAT].iModuleBit = DISTROT;

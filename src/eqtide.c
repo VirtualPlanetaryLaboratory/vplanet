@@ -16,8 +16,8 @@ void InitializeControlEqtide(CONTROL *control, int iBody) {
 
   /* XXX We only want to initialize these values once, but if the user fails to
      instantiate eqtide for body 0, then the code segaults and fixing this is
-     hard. So we just re-malloc. This block of code causes memory to be permanently
-     lost, so should be fixed someday!
+     hard. So we just re-malloc. This block of code causes memory to be
+     permanently lost, so should be fixed someday!
      */
   control->Evolve.bForceEqSpin =
         malloc(control->Evolve.iNumBodies * sizeof(int));
@@ -720,7 +720,7 @@ void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_DISCRETEROT].cName, "bDiscreteRot");
   fvFormattedString(&options[OPT_DISCRETEROT].cDescr,
-          "Use Discrete Rotation Model (Phase lag only)");
+                    "Use Discrete Rotation Model (Phase lag only)");
   fvFormattedString(&options[OPT_DISCRETEROT].cDefault, "1");
   options[OPT_DISCRETEROT].iType = 0;
   fnRead[OPT_DISCRETEROT]        = &ReadDiscreteRot;
@@ -745,36 +745,41 @@ void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_FIXORBIT].iType      = 0;
   options[OPT_FIXORBIT].bMultiFile = 1;
   fnRead[OPT_FIXORBIT]             = &ReadFixOrbit;
-  fvFormattedString(&options[OPT_FIXORBIT].cLongDescr,
-          "In EqTide, setting this value to 1 holds the eccentricity and "
-          "semi-major \n"
-          "axis fixed during the evolution. This option can be helpful for "
-          "testing \n"
-          "or for faking planet-planet perturbations that maintain an "
-          "eccentricity. \n"
-          "(Although a bFixEcc option would probably be better!)\n");
+  fvFormattedString(
+        &options[OPT_FIXORBIT].cLongDescr,
+        "In EqTide, setting this value to 1 holds the eccentricity and "
+        "semi-major \n"
+        "axis fixed during the evolution. This option can be helpful for "
+        "testing \n"
+        "or for faking planet-planet perturbations that maintain an "
+        "eccentricity. \n"
+        "(Although a bFixEcc option would probably be better!)\n");
 
   fvFormattedString(&options[OPT_MAXLOCKDIFF].cName, "dMaxLockDiff");
-  fvFormattedString(&options[OPT_FORCEEQSPIN].cName, "bForceEqSpin"); // for LongDescr
-  fvFormattedString(&options[OPT_MAXLOCKDIFF].cDescr,
-          "Maximum relative difference between spin and equilibrium spin rates "
-          "to force equilibrium rate");
+  fvFormattedString(&options[OPT_FORCEEQSPIN].cName,
+                    "bForceEqSpin"); // for LongDescr
+  fvFormattedString(
+        &options[OPT_MAXLOCKDIFF].cDescr,
+        "Maximum relative difference between spin and equilibrium spin rates "
+        "to force equilibrium rate");
   fvFormattedString(&options[OPT_MAXLOCKDIFF].cDefault, "0");
   fvFormattedString(&options[OPT_MAXLOCKDIFF].cDimension, "nd");
   options[OPT_MAXLOCKDIFF].dDefault   = 0;
   options[OPT_MAXLOCKDIFF].iType      = 2;
   options[OPT_MAXLOCKDIFF].bMultiFile = 1;
   fnRead[OPT_MAXLOCKDIFF]             = &ReadMaxLockDiff;
-  fvFormattedString(&options[OPT_MAXLOCKDIFF].cLongDescr,
-          "In EqTide, this is the maximum relative difference between the "
-          "actual \n"
-          "spin rate and the equilibrium spin rate without tidal locking. See "
-          "%s \n"
-          "for more information. %s must be set to 1 to enable this option.",
-          options[OPT_FORCEEQSPIN].cName, options[OPT_FORCEEQSPIN].cName);
+  fvFormattedString(
+        &options[OPT_MAXLOCKDIFF].cLongDescr,
+        "In EqTide, this is the maximum relative difference between the "
+        "actual \n"
+        "spin rate and the equilibrium spin rate without tidal locking. See "
+        "%s \n"
+        "for more information. %s must be set to 1 to enable this option.",
+        options[OPT_FORCEEQSPIN].cName, options[OPT_FORCEEQSPIN].cName);
 
   // cName defined above
-  fvFormattedString(&options[OPT_FORCEEQSPIN].cDescr, "Force Spin Rate to Equilibrium?");
+  fvFormattedString(&options[OPT_FORCEEQSPIN].cDescr,
+                    "Force Spin Rate to Equilibrium?");
   fvFormattedString(&options[OPT_FORCEEQSPIN].cDefault, "0");
   options[OPT_FORCEEQSPIN].iType      = 0;
   options[OPT_FORCEEQSPIN].bMultiFile = 1;
@@ -799,7 +804,8 @@ void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
         options[OPT_MAXLOCKDIFF].cName);
 
   fvFormattedString(&options[OPT_HALTDBLSYNC].cName, "bHaltDblSync");
-  fvFormattedString(&options[OPT_HALTDBLSYNC].cDescr, "Halt at Double Synchronous State?");
+  fvFormattedString(&options[OPT_HALTDBLSYNC].cDescr,
+                    "Halt at Double Synchronous State?");
   fvFormattedString(&options[OPT_HALTDBLSYNC].cDefault, "0");
   options[OPT_HALTDBLSYNC].iType = 0;
   fnRead[OPT_HALTDBLSYNC]        = &ReadHaltDblSync;
@@ -824,7 +830,7 @@ void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_HALTSYNCROT].cName, "bHaltSyncRot");
   fvFormattedString(&options[OPT_HALTSYNCROT].cDescr,
-          "Halt if the rotation becomes syncrhonous?");
+                    "Halt if the rotation becomes syncrhonous?");
   fvFormattedString(&options[OPT_HALTSYNCROT].cDefault, "0");
   options[OPT_HALTSYNCROT].iType      = 0;
   options[OPT_HALTSYNCROT].bMultiFile = 1;
@@ -840,7 +846,8 @@ void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_K2]             = &ReadK2;
 
   fvFormattedString(&options[OPT_K2OCEAN].cName, "dK2Ocean");
-  fvFormattedString(&options[OPT_K2OCEAN].cDescr, "Ocean's Love Number of Degree 2");
+  fvFormattedString(&options[OPT_K2OCEAN].cDescr,
+                    "Ocean's Love Number of Degree 2");
   fvFormattedString(&options[OPT_K2OCEAN].cDefault, "0.05");
   fvFormattedString(&options[OPT_K2OCEAN].cDimension, "nd");
   options[OPT_K2OCEAN].dDefault   = 0.01;
@@ -849,7 +856,8 @@ void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_K2OCEAN]             = &ReadK2Ocean;
 
   fvFormattedString(&options[OPT_K2ENV].cName, "dK2Env");
-  fvFormattedString(&options[OPT_K2ENV].cDescr, "Envelope's Love Number of Degree 2");
+  fvFormattedString(&options[OPT_K2ENV].cDescr,
+                    "Envelope's Love Number of Degree 2");
   fvFormattedString(&options[OPT_K2ENV].cDefault, "0.01");
   fvFormattedString(&options[OPT_K2ENV].cDimension, "nd");
   options[OPT_K2ENV].dDefault   = 0.01;
@@ -858,9 +866,10 @@ void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_K2ENV]             = &ReadK2Env;
 
   fvFormattedString(&options[OPT_MAXLOCKDIFF].cName, "dMaxLockDiff");
-  fvFormattedString(&options[OPT_MAXLOCKDIFF].cDescr,
-          "Maximum relative difference between spin and equilibrium spin rates "
-          "to force equilibrium spin rate");
+  fvFormattedString(
+        &options[OPT_MAXLOCKDIFF].cDescr,
+        "Maximum relative difference between spin and equilibrium spin rates "
+        "to force equilibrium spin rate");
   fvFormattedString(&options[OPT_MAXLOCKDIFF].cDefault, "0");
   fvFormattedString(&options[OPT_MAXLOCKDIFF].cDimension, "nd");
   options[OPT_MAXLOCKDIFF].dDefault   = 0;
@@ -869,14 +878,16 @@ void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_MAXLOCKDIFF]             = &ReadMaxLockDiff;
 
   fvFormattedString(&options[OPT_OCEANTIDES].cName, "bOceanTides");
-  fvFormattedString(&options[OPT_OCEANTIDES].cDescr, "Include effects of ocean tides?");
+  fvFormattedString(&options[OPT_OCEANTIDES].cDescr,
+                    "Include effects of ocean tides?");
   fvFormattedString(&options[OPT_OCEANTIDES].cDefault, "0");
   options[OPT_OCEANTIDES].iType      = 0;
   options[OPT_OCEANTIDES].bMultiFile = 1;
   fnRead[OPT_OCEANTIDES]             = &ReadEqtideOceanTides;
 
   fvFormattedString(&options[OPT_MANTLETIDES].cName, "bMantleTides");
-  fvFormattedString(&options[OPT_MANTLETIDES].cDescr, "Include effects of mantle tides?");
+  fvFormattedString(&options[OPT_MANTLETIDES].cDescr,
+                    "Include effects of mantle tides?");
   fvFormattedString(&options[OPT_MANTLETIDES].cDefault, "0");
   options[OPT_MANTLETIDES].iType      = 0;
   options[OPT_MANTLETIDES].bMultiFile = 1;
@@ -885,7 +896,7 @@ void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
   // XXX What does this option do?
   fvFormattedString(&options[OPT_USETIDALRADIUS].cName, "bUseTidalRadius");
   fvFormattedString(&options[OPT_USETIDALRADIUS].cDescr,
-          "Fix radius used for CPL tidal equations?");
+                    "Fix radius used for CPL tidal equations?");
   fvFormattedString(&options[OPT_USETIDALRADIUS].cDefault, "0");
   options[OPT_USETIDALRADIUS].iType      = 0;
   options[OPT_USETIDALRADIUS].bMultiFile = 1;
@@ -893,7 +904,7 @@ void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_ENVTIDES].cName, "bEnvTides");
   fvFormattedString(&options[OPT_ENVTIDES].cDescr,
-          "Include effects of gaseous envelope tides?");
+                    "Include effects of gaseous envelope tides?");
   fvFormattedString(&options[OPT_ENVTIDES].cDefault, "0");
   options[OPT_ENVTIDES].iType      = 0;
   options[OPT_ENVTIDES].bMultiFile = 1;
@@ -901,7 +912,7 @@ void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_SYNCECC].cName, "dSyncEcc");
   fvFormattedString(&options[OPT_SYNCECC].cDescr,
-          "Minimum Eccentricity for Non-Synchronous Rotation");
+                    "Minimum Eccentricity for Non-Synchronous Rotation");
   fvFormattedString(&options[OPT_SYNCECC].cDefault, "0");
   fvFormattedString(&options[OPT_SYNCECC].cDimension, "nd");
   options[OPT_SYNCECC].dDefault   = 0;
@@ -919,7 +930,8 @@ void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_TIDALQ]             = &ReadTidalQ;
 
   fvFormattedString(&options[OPT_TIDALQOCEAN].cName, "dTidalQOcean");
-  fvFormattedString(&options[OPT_TIDALQOCEAN].cDescr, "Ocean Tidal Quality Factor");
+  fvFormattedString(&options[OPT_TIDALQOCEAN].cDescr,
+                    "Ocean Tidal Quality Factor");
   fvFormattedString(&options[OPT_TIDALQOCEAN].cDefault, "12");
   fvFormattedString(&options[OPT_TIDALQOCEAN].cDimension, "nd");
   options[OPT_TIDALQOCEAN].dDefault   = 12;
@@ -928,7 +940,8 @@ void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_TIDALQOCEAN]             = &ReadTidalQOcean;
 
   fvFormattedString(&options[OPT_TIDALQENV].cName, "dTidalQEnv");
-  fvFormattedString(&options[OPT_TIDALQENV].cDescr, "Envelope Tidal Quality Factor");
+  fvFormattedString(&options[OPT_TIDALQENV].cDescr,
+                    "Envelope Tidal Quality Factor");
   fvFormattedString(&options[OPT_TIDALQENV].cDefault, "1.0e4");
   fvFormattedString(&options[OPT_TIDALQENV].cDimension, "nd");
   options[OPT_TIDALQENV].dDefault   = 1.0e4;
@@ -949,22 +962,22 @@ void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_TIDEMODEL].cName, "sTideModel");
   fvFormattedString(&options[OPT_TIDEMODEL].cDescr,
-          "Tidal Model: p2 [constant-phase-lag, 2nd order] t8 "
-          "[constant-time-lag, 8th order]");
+                    "Tidal Model: p2 [constant-phase-lag, 2nd order] t8 "
+                    "[constant-time-lag, 8th order]");
   fvFormattedString(&options[OPT_TIDEMODEL].cDefault, "p2");
   options[OPT_TIDEMODEL].iType = 3;
   fnRead[OPT_TIDEMODEL]        = &ReadTideModel;
 
   fvFormattedString(&options[OPT_TIDEPERTS].cName, "saTidePerts");
   fvFormattedString(&options[OPT_TIDEPERTS].cDescr,
-          "Names of bodies engaged in tidal evolution");
+                    "Names of bodies engaged in tidal evolution");
   fvFormattedString(&options[OPT_TIDEPERTS].cDefault, "none");
   options[OPT_TIDEPERTS].iType = 13;
   fnRead[OPT_TIDEPERTS]        = &ReadTidePerts;
 
   fvFormattedString(&options[OPT_OCEANTIDES].cName, "bOceanTides");
   fvFormattedString(&options[OPT_OCEANTIDES].cDescr,
-          "Include tidal dissapation due to oceans?");
+                    "Include tidal dissapation due to oceans?");
   fvFormattedString(&options[OPT_OCEANTIDES].cDefault, "0");
   options[OPT_OCEANTIDES].iType      = 0;
   options[OPT_OCEANTIDES].bMultiFile = 1;
@@ -980,7 +993,8 @@ void InitializeOptionsEqtide(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_TIDALQMANTLE]             = &ReadTidalQMantle;
 
   fvFormattedString(&options[OPT_K2MANTLE].cName, "dK2Mantle");
-  fvFormattedString(&options[OPT_K2MANTLE].cDescr, "Mantle's Love Number of Degree 2");
+  fvFormattedString(&options[OPT_K2MANTLE].cDescr,
+                    "Mantle's Love Number of Degree 2");
   fvFormattedString(&options[OPT_K2MANTLE].cDefault, "0.01");
   fvFormattedString(&options[OPT_K2MANTLE].cDimension, "nd");
   options[OPT_K2MANTLE].dDefault   = 0.01;
@@ -1307,7 +1321,8 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       // if (memcmp(files->Outfile[iBody].caCol[iCol],
       //            output[OUT_EQROTPERCONT].cName,
       //            strlen(output[OUT_EQROTPERCONT].cName)) == 0) {
-      if (strcmp(files->Outfile[iBody].caCol[iCol],output[OUT_EQROTPERCONT].cName) == 0) {
+      if (strcmp(files->Outfile[iBody].caCol[iCol],
+                 output[OUT_EQROTPERCONT].cName) == 0) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
@@ -1324,7 +1339,8 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       // if (memcmp(files->Outfile[iBody].caCol[iCol],
       //            output[OUT_EQROTPERDISCRETE].cName,
       //            strlen(output[OUT_EQROTPERDISCRETE].cName)) == 0) {
-      if (strcmp(files->Outfile[iBody].caCol[iCol],output[OUT_EQROTPERDISCRETE].cName) == 0) {
+      if (strcmp(files->Outfile[iBody].caCol[iCol],
+                 output[OUT_EQROTPERDISCRETE].cName) == 0) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
@@ -1341,7 +1357,8 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       // if (memcmp(files->Outfile[iBody].caCol[iCol],
       //            output[OUT_EQROTRATECONT].cName,
       //            strlen(output[OUT_EQROTRATECONT].cName)) == 0) {
-      if (strcmp(files->Outfile[iBody].caCol[iCol],output[OUT_EQROTRATECONT].cName) == 0) {
+      if (strcmp(files->Outfile[iBody].caCol[iCol],
+                 output[OUT_EQROTRATECONT].cName) == 0) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
@@ -1358,7 +1375,8 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       // if (memcmp(files->Outfile[iBody].caCol[iCol],
       //            output[OUT_EQROTRATEDISCRETE].cName,
       //            strlen(output[OUT_EQROTRATEDISCRETE].cName)) == 0) {
-      if (strcmp(files->Outfile[iBody].caCol[iCol],output[OUT_EQROTRATEDISCRETE].cName) == 0) {
+      if (strcmp(files->Outfile[iBody].caCol[iCol],
+                 output[OUT_EQROTRATEDISCRETE].cName) == 0) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
@@ -1372,9 +1390,11 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                        options[OPT_OUTPUTORDER].iLine[iBody + 1]);
       }
 
-      // if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_GAMMAORB].cName,
+      // if (memcmp(files->Outfile[iBody].caCol[iCol],
+      // output[OUT_GAMMAORB].cName,
       //            strlen(output[OUT_GAMMAORB].cName)) == 0) {
-      if (strcmp(files->Outfile[iBody].caCol[iCol], output[OUT_GAMMAORB].cName) == 0) {
+      if (strcmp(files->Outfile[iBody].caCol[iCol],
+                 output[OUT_GAMMAORB].cName) == 0) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
@@ -1388,9 +1408,11 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                        options[OPT_OUTPUTORDER].iLine[iBody + 1]);
       }
 
-      // if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_GAMMAROT].cName,
+      // if (memcmp(files->Outfile[iBody].caCol[iCol],
+      // output[OUT_GAMMAROT].cName,
       //            strlen(output[OUT_GAMMAROT].cName)) == 0) {
-      if (strcmp(files->Outfile[iBody].caCol[iCol], output[OUT_GAMMAROT].cName) == 0) {
+      if (strcmp(files->Outfile[iBody].caCol[iCol],
+                 output[OUT_GAMMAROT].cName) == 0) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
@@ -1406,7 +1428,8 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
       // if (memcmp(files->Outfile[iBody].caCol[iCol], output[OUT_TIDALQ].cName,
       //            strlen(output[OUT_TIDALQ].cName)) == 0) {
-      if (strcmp(files->Outfile[iBody].caCol[iCol], output[OUT_TIDALQ].cName) == 0) {
+      if (strcmp(files->Outfile[iBody].caCol[iCol], output[OUT_TIDALQ].cName) ==
+          0) {
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr,
                   "ERROR: Time lag model selected; output %s is not allowed.\n",
@@ -1610,7 +1633,7 @@ void VerifyPerturbersEqtide(BODY *body, FILES *files, OPTIONS *options,
           for (iBodyPert = 0; iBodyPert < iNumBodies; iBodyPert++) {
             if (iBodyPert != iBody) {
               if (strncmp(body[iBody].saTidePerts[iPert], body[iBodyPert].cName,
-                        strlen(body[iBody].saTidePerts[iPert])) == 0) {
+                          strlen(body[iBody].saTidePerts[iPert])) == 0) {
                 /* This parameter contains the body # of the "iPert-th"
                         tidal perturber */
                 body[iBody].iaTidePerts[iPert] = iBodyPert;
@@ -1781,7 +1804,7 @@ void VerifyTideModel(CONTROL *control, FILES *files, OPTIONS *options) {
   }
 
   if (iFound == 0) {
-    char *cTmp=NULL;
+    char *cTmp = NULL;
     fvFormattedString(&cTmp, options[OPT_TIDEMODEL].cDefault);
     if (!memcmp(sLower(cTmp), "p2", 2)) {
       control->Evolve.iEqtideModel = CPL;
@@ -2309,6 +2332,7 @@ void WriteBodyDsemiDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
   */
 
   *dTmp = -1;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteBodyDeccDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
@@ -2340,6 +2364,7 @@ void WriteBodyDeccDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
   }
   */
   *dTmp = -1;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteLockTime(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -2805,8 +2830,8 @@ void WriteEqTidePower(BODY *body, CONTROL *control, OUTPUT *output,
     if (body[iBody].iTidePerts == 1) {
       int iPert = body[iBody].iaTidePerts[0];
       *dTmp = fdCPLTidePowerEq(body[iBody].dTidalZ[iPert], body[iBody].dEccSq,
-                             body[iBody].dMeanMotion, body[iBody].dObliquity,
-                             control->Evolve.bDiscreteRot);
+                               body[iBody].dMeanMotion, body[iBody].dObliquity,
+                               control->Evolve.bDiscreteRot);
     } else {
       *dTmp = -1;
     }
@@ -2838,7 +2863,7 @@ void WriteGammaOrb(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = -1;
 
   /* Negative option? */
-  fsUnitsTime(units->iTime,cUnit);
+  fsUnitsTime(units->iTime, cUnit);
 }
 
 void WriteGammaRot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -2854,7 +2879,7 @@ void WriteGammaRot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   *dTmp = -1;
 
   /* Negative option? */
-  fsUnitsTime(units->iTime,cUnit);
+  fsUnitsTime(units->iTime, cUnit);
 }
 
 void WriteK2Ocean(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -3004,7 +3029,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_BODYDSEMIDTEQTIDE].cName, "BodyDsemiDtEqtide");
   fvFormattedString(&output[OUT_BODYDSEMIDTEQTIDE].cDescr,
-          "Body's Contribution to dSemi/dt in EqTide");
+                    "Body's Contribution to dSemi/dt in EqTide");
   fvFormattedString(&output[OUT_BODYDSEMIDTEQTIDE].cNeg, "AU/Gyr");
   output[OUT_BODYDSEMIDTEQTIDE].bNeg       = 1;
   output[OUT_BODYDSEMIDTEQTIDE].dNeg       = YEARSEC * 1e9 / AUM;
@@ -3020,7 +3045,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_BODYDECCDTEQTIDE].cName, "BodyDeccDt");
   fvFormattedString(&output[OUT_BODYDECCDTEQTIDE].cDescr,
-          "Body's Contribution to dEcc/dt in EqTide");
+                    "Body's Contribution to dEcc/dt in EqTide");
   fvFormattedString(&output[OUT_BODYDECCDTEQTIDE].cNeg, "/Gyr");
   output[OUT_BODYDECCDTEQTIDE].bNeg       = 1;
   output[OUT_BODYDECCDTEQTIDE].dNeg       = YEARSEC * 1e9;
@@ -3035,7 +3060,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DOBLDTEQTIDE].cName, "DOblDtEqtide");
   fvFormattedString(&output[OUT_DOBLDTEQTIDE].cDescr,
-          "Time Rate of Change of Obliquity in EqTide");
+                    "Time Rate of Change of Obliquity in EqTide");
   fvFormattedString(&output[OUT_DOBLDTEQTIDE].cNeg, "deg/Gyr");
   output[OUT_DOBLDTEQTIDE].bNeg       = 1;
   output[OUT_DOBLDTEQTIDE].dNeg       = YEARSEC * 1e9 / DEGRAD;
@@ -3072,7 +3097,8 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_TIDALQENV]           = WriteTidalQEnv;
 
   fvFormattedString(&output[OUT_DSEMIDTEQTIDE].cName, "DsemiDtEqtide");
-  fvFormattedString(&output[OUT_DSEMIDTEQTIDE].cDescr, "Total da/dt from EqTide");
+  fvFormattedString(&output[OUT_DSEMIDTEQTIDE].cDescr,
+                    "Total da/dt from EqTide");
   fvFormattedString(&output[OUT_DSEMIDTEQTIDE].cNeg, "AU/Gyr");
   output[OUT_DSEMIDTEQTIDE].bNeg       = 1;
   output[OUT_DSEMIDTEQTIDE].dNeg       = (YEARSEC * 1e9) / AUM;
@@ -3081,7 +3107,8 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DSEMIDTEQTIDE]           = &WriteDSemiDtEqtide;
 
   fvFormattedString(&output[OUT_DECCDTEQTIDE].cName, "DeccDtEqtide");
-  fvFormattedString(&output[OUT_DECCDTEQTIDE].cDescr, "Total de/dt from EqTide");
+  fvFormattedString(&output[OUT_DECCDTEQTIDE].cDescr,
+                    "Total de/dt from EqTide");
   fvFormattedString(&output[OUT_DECCDTEQTIDE].cNeg, "/Gyr");
   output[OUT_DECCDTEQTIDE].bNeg       = 1;
   output[OUT_DECCDTEQTIDE].dNeg       = YEARSEC * 1e9;
@@ -3090,13 +3117,15 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_DECCDTEQTIDE]           = &WriteDEccDtEqtide;
 
   fvFormattedString(&output[OUT_DMMDTEQTIDE].cName, "DMeanMotionDtEqtide");
-  fvFormattedString(&output[OUT_DMMDTEQTIDE].cDescr, "Total dMeanMotion/dt from EqTide");
+  fvFormattedString(&output[OUT_DMMDTEQTIDE].cDescr,
+                    "Total dMeanMotion/dt from EqTide");
   output[OUT_DMMDTEQTIDE].iNum       = 1;
   output[OUT_DMMDTEQTIDE].iModuleBit = EQTIDE;
   fnWrite[OUT_DMMDTEQTIDE]           = &WriteDMeanMotionDtEqtide;
 
   fvFormattedString(&output[OUT_DORBPERDTEQTIDE].cName, "DOrbPerDtEqtide");
-  fvFormattedString(&output[OUT_DORBPERDTEQTIDE].cDescr, "Total dOrbPer/dt from EqTide");
+  fvFormattedString(&output[OUT_DORBPERDTEQTIDE].cDescr,
+                    "Total dOrbPer/dt from EqTide");
   fvFormattedString(&output[OUT_DORBPERDTEQTIDE].cNeg, "days/Gyr");
   output[OUT_DORBPERDTEQTIDE].bNeg       = 1;
   output[OUT_DORBPERDTEQTIDE].dNeg       = YEARSEC * 1e9 / DAYSEC;
@@ -3106,7 +3135,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DROTPERDTEQTIDE].cName, "DRotPerDtEqtide");
   fvFormattedString(&output[OUT_DROTPERDTEQTIDE].cDescr,
-          "Time Rate of Change of Rotation Period in EqTide");
+                    "Time Rate of Change of Rotation Period in EqTide");
   fvFormattedString(&output[OUT_DROTPERDTEQTIDE].cNeg, "days/Myr");
   output[OUT_DROTPERDTEQTIDE].bNeg       = 1;
   output[OUT_DROTPERDTEQTIDE].dNeg       = DAYSEC / (YEARSEC * 1e6);
@@ -3116,7 +3145,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DROTRATEDTEQTIDE].cName, "DRotRateDtEqtide");
   fvFormattedString(&output[OUT_DROTRATEDTEQTIDE].cDescr,
-          "Time Rate of Change of Rotation Rate in EqTide");
+                    "Time Rate of Change of Rotation Rate in EqTide");
   output[OUT_DROTRATEDTEQTIDE].bNeg       = 0;
   output[OUT_DROTRATEDTEQTIDE].iNum       = 1;
   output[OUT_DROTRATEDTEQTIDE].iModuleBit = EQTIDE;
@@ -3124,7 +3153,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DHECCDTEQTIDE].cName, "DHEccDtEqtide");
   fvFormattedString(&output[OUT_DHECCDTEQTIDE].cDescr,
-          "Time Rate of Change of Poincare's h in EqTide");
+                    "Time Rate of Change of Poincare's h in EqTide");
   fvFormattedString(&output[OUT_DHECCDTEQTIDE].cNeg, "/Gyr");
   output[OUT_DHECCDTEQTIDE].bNeg       = 1;
   output[OUT_DHECCDTEQTIDE].dNeg       = (1e9 * YEARSEC);
@@ -3134,7 +3163,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DKECCDTEQTIDE].cName, "DKEccDtEqtide");
   fvFormattedString(&output[OUT_DKECCDTEQTIDE].cDescr,
-          "Time Rate of Change of Poincare's k in EqTide");
+                    "Time Rate of Change of Poincare's k in EqTide");
   fvFormattedString(&output[OUT_DKECCDTEQTIDE].cNeg, "/Gyr");
   output[OUT_DKECCDTEQTIDE].bNeg       = 1;
   output[OUT_DKECCDTEQTIDE].dNeg       = (1e9 * YEARSEC);
@@ -3144,7 +3173,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DXOBLDTEQTIDE].cName, "DXoblDtEqtide");
   fvFormattedString(&output[OUT_DXOBLDTEQTIDE].cDescr,
-          "Time Rate of Change of Laskar's X in EqTide");
+                    "Time Rate of Change of Laskar's X in EqTide");
   fvFormattedString(&output[OUT_DXOBLDTEQTIDE].cNeg, "/Gyr");
   output[OUT_DXOBLDTEQTIDE].bNeg       = 1;
   output[OUT_DXOBLDTEQTIDE].dNeg       = (1e9 * YEARSEC);
@@ -3154,7 +3183,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DYOBLDTEQTIDE].cName, "DYoblDtEqtide");
   fvFormattedString(&output[OUT_DYOBLDTEQTIDE].cDescr,
-          "Time Rate of Change of Laskar's Y in EqTide");
+                    "Time Rate of Change of Laskar's Y in EqTide");
   fvFormattedString(&output[OUT_DYOBLDTEQTIDE].cNeg, "/Gyr");
   output[OUT_DYOBLDTEQTIDE].bNeg       = 1;
   output[OUT_DYOBLDTEQTIDE].dNeg       = (1e9 * YEARSEC);
@@ -3164,7 +3193,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DZOBLDTEQTIDE].cName, "DZoblDtEqtide");
   fvFormattedString(&output[OUT_DZOBLDTEQTIDE].cDescr,
-          "Time Rate of Change of Laskar's Z in EqTide");
+                    "Time Rate of Change of Laskar's Z in EqTide");
   fvFormattedString(&output[OUT_DZOBLDTEQTIDE].cNeg, "/Gyr");
   output[OUT_DZOBLDTEQTIDE].bNeg       = 1;
   output[OUT_DZOBLDTEQTIDE].dNeg       = (1e9 * YEARSEC);
@@ -3177,8 +3206,9 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
    */
 
   fvFormattedString(&output[OUT_ECCTIMEEQTIDE].cName, "EccTimeEqtide");
-  fvFormattedString(&output[OUT_ECCTIMEEQTIDE].cDescr,
-          "Timescale for Eccentricity Evolution (e/[de/dt]) in EqTide");
+  fvFormattedString(
+        &output[OUT_ECCTIMEEQTIDE].cDescr,
+        "Timescale for Eccentricity Evolution (e/[de/dt]) in EqTide");
   fvFormattedString(&output[OUT_ECCTIMEEQTIDE].cNeg, "years");
   output[OUT_ECCTIMEEQTIDE].bNeg       = 1;
   output[OUT_ECCTIMEEQTIDE].dNeg       = 1. / YEARSEC;
@@ -3187,7 +3217,8 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_ECCTIMEEQTIDE]           = &WriteEccTimescaleEqtide;
 
   fvFormattedString(&output[OUT_EQROTPER].cName, "EqRotPer");
-  fvFormattedString(&output[OUT_EQROTPER].cDescr, "Equilibrium Rotation Period");
+  fvFormattedString(&output[OUT_EQROTPER].cDescr,
+                    "Equilibrium Rotation Period");
   fvFormattedString(&output[OUT_EQROTPER].cNeg, "days");
   output[OUT_EQROTPER].bNeg       = 1;
   output[OUT_EQROTPER].dNeg       = 1. / DAYSEC;
@@ -3197,7 +3228,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_EQROTPERCONT].cName, "EqRotPerCont");
   fvFormattedString(&output[OUT_EQROTPERCONT].cDescr,
-          "CPL2 Continuous Equilibrium Rotation Period");
+                    "CPL2 Continuous Equilibrium Rotation Period");
   fvFormattedString(&output[OUT_EQROTPERCONT].cNeg, "days");
   output[OUT_EQROTPERCONT].bNeg       = 1;
   output[OUT_EQROTPERCONT].dNeg       = 1. / DAYSEC;
@@ -3207,7 +3238,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_EQROTPERDISCRETE].cName, "EqRotPerDiscrete");
   fvFormattedString(&output[OUT_EQROTPERDISCRETE].cDescr,
-          "CPL2 Discrete Equilibrium Spin Period");
+                    "CPL2 Discrete Equilibrium Spin Period");
   fvFormattedString(&output[OUT_EQROTPERDISCRETE].cNeg, "days");
   output[OUT_EQROTPERDISCRETE].bNeg       = 1;
   output[OUT_EQROTPERDISCRETE].dNeg       = 1. / DAYSEC;
@@ -3226,7 +3257,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_EQROTRATECONT].cName, "EqRotRateCont");
   fvFormattedString(&output[OUT_EQROTRATECONT].cDescr,
-          "CPL2 Continuous Equilibrium Spin Rate");
+                    "CPL2 Continuous Equilibrium Spin Rate");
   fvFormattedString(&output[OUT_EQROTRATECONT].cNeg, "/day");
   output[OUT_EQROTRATE].bNeg           = 1;
   output[OUT_EQROTRATECONT].dNeg       = DAYSEC;
@@ -3236,7 +3267,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_EQROTRATEDISCRETE].cName, "EqRotRateDiscrete");
   fvFormattedString(&output[OUT_EQROTRATEDISCRETE].cDescr,
-          "CPL2 Discrete Equilibrium Spin Rate");
+                    "CPL2 Discrete Equilibrium Spin Rate");
   fvFormattedString(&output[OUT_EQROTRATEDISCRETE].cNeg, "/day");
   output[OUT_EQROTRATEDISCRETE].bNeg       = 1;
   output[OUT_EQROTRATEDISCRETE].dNeg       = DAYSEC;
@@ -3245,7 +3276,8 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_EQROTRATEDISCRETE]           = &WriteEqRotRateDiscrete;
 
   fvFormattedString(&output[OUT_EQTIDEPOWER].cName, "EqTidePower");
-  fvFormattedString(&output[OUT_EQTIDEPOWER].cDescr, "Equilibrium Power from Tides");
+  fvFormattedString(&output[OUT_EQTIDEPOWER].cDescr,
+                    "Equilibrium Power from Tides");
   fvFormattedString(&output[OUT_EQTIDEPOWER].cNeg, "/day");
   output[OUT_EQTIDEPOWER].bNeg       = 1;
   output[OUT_EQTIDEPOWER].dNeg       = DAYSEC;
@@ -3292,7 +3324,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_OBLTIMEEQTIDE].cName, "OblTimeEqtide");
   fvFormattedString(&output[OUT_OBLTIMEEQTIDE].cDescr,
-          "Timescale for Obliquity Evolution in EqTide");
+                    "Timescale for Obliquity Evolution in EqTide");
   fvFormattedString(&output[OUT_OBLTIMEEQTIDE].cNeg, "years");
   output[OUT_OBLTIMEEQTIDE].bNeg       = 1;
   output[OUT_OBLTIMEEQTIDE].dNeg       = 1. / YEARSEC;
@@ -3306,7 +3338,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_ROTRATETIMEEQTIDE].cName, "RotTimeEqtide");
   fvFormattedString(&output[OUT_ROTRATETIMEEQTIDE].cDescr,
-          "Timescale for Rotational Evolution in EqTide");
+                    "Timescale for Rotational Evolution in EqTide");
   output[OUT_ROTRATETIMEEQTIDE].bNeg = 0;
   fvFormattedString(&output[OUT_ROTRATETIMEEQTIDE].cNeg, "years");
   output[OUT_ROTRATETIMEEQTIDE].bNeg       = 1;
@@ -3317,7 +3349,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DROTPERDTEQTIDE].cName, "DRotPerDtEqtide");
   fvFormattedString(&output[OUT_DROTPERDTEQTIDE].cDescr,
-          "Time Rate of Change of Rotation Period in EqTide");
+                    "Time Rate of Change of Rotation Period in EqTide");
   fvFormattedString(&output[OUT_DROTPERDTEQTIDE].cNeg, "days/Myr");
   output[OUT_DROTPERDTEQTIDE].bNeg       = 1;
   output[OUT_DROTPERDTEQTIDE].dNeg       = DAYSEC / (1e6 * YEARSEC);
@@ -3327,7 +3359,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DROTRATEDTEQTIDE].cName, "DRotRateDtEqtide");
   fvFormattedString(&output[OUT_DROTRATEDTEQTIDE].cDescr,
-          "Time Rate of Change of Rotational Frequency in EqTide");
+                    "Time Rate of Change of Rotational Frequency in EqTide");
   output[OUT_DROTRATEDTEQTIDE].bNeg       = 0;
   output[OUT_DROTRATEDTEQTIDE].iNum       = 1;
   output[OUT_DROTRATEDTEQTIDE].iModuleBit = EQTIDE;
@@ -3338,8 +3370,9 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
    */
 
   fvFormattedString(&output[OUT_SEMITIMEEQTIDE].cName, "SemiTimeEqtide");
-  fvFormattedString(&output[OUT_SEMITIMEEQTIDE].cDescr,
-          "Timescale for Semi-major Axis Evolution (a/[da/dt]) in EqTide");
+  fvFormattedString(
+        &output[OUT_SEMITIMEEQTIDE].cDescr,
+        "Timescale for Semi-major Axis Evolution (a/[da/dt]) in EqTide");
   output[OUT_SEMITIMEEQTIDE].bNeg = 0;
   fvFormattedString(&output[OUT_SEMITIMEEQTIDE].cNeg, "years");
   output[OUT_SEMITIMEEQTIDE].bNeg       = 1;
@@ -3363,7 +3396,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_ENFLUXEQTIDE].cName, "SurfEnFluxEqtide");
   fvFormattedString(&output[OUT_ENFLUXEQTIDE].cDescr,
-          "Surface Energy Flux due to Tides in EqTide");
+                    "Surface Energy Flux due to Tides in EqTide");
   fvFormattedString(&output[OUT_ENFLUXEQTIDE].cNeg, "W/m^2");
   output[OUT_ENFLUXEQTIDE].bNeg       = 1;
   output[OUT_ENFLUXEQTIDE].dNeg       = 1;
@@ -3373,7 +3406,7 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_POWEREQTIDE].cName, "PowerEqtide");
   fvFormattedString(&output[OUT_POWEREQTIDE].cDescr,
-          "Internal Power due to Tides in EqTide");
+                    "Internal Power due to Tides in EqTide");
   fvFormattedString(&output[OUT_POWEREQTIDE].cNeg, "TW");
   output[OUT_POWEREQTIDE].bNeg       = 1;
   output[OUT_POWEREQTIDE].dNeg       = 1e-12;
@@ -3389,7 +3422,8 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_TIDELOCK]           = &WriteTideLock;
 
   fvFormattedString(&output[OUT_LOCKTIME].cName, "LockTime");
-  fvFormattedString(&output[OUT_LOCKTIME].cDescr, "Time when body tidally locked.");
+  fvFormattedString(&output[OUT_LOCKTIME].cDescr,
+                    "Time when body tidally locked.");
   fvFormattedString(&output[OUT_LOCKTIME].cNeg, "Myr");
   output[OUT_LOCKTIME].bNeg       = 1;
   output[OUT_LOCKTIME].dNeg       = 1. / (YEARSEC * 1e6);
@@ -3979,8 +4013,8 @@ double fdCPLTidePower(BODY *body, int iBody) {
 
     // Does this work with DF's changes to da/dt with the synchronous case?
     // See Fleming et al., 2018
-    //fprintf(stderr,"\niBody: %d\n",iBody);
-    //fprintf(stderr,"TidalZ[%d]: %lf\n",iIndex,body[iBody].dTidalZ[iIndex]);
+    // fprintf(stderr,"\niBody: %d\n",iBody);
+    // fprintf(stderr,"TidalZ[%d]: %lf\n",iIndex,body[iBody].dTidalZ[iIndex]);
 
     dOrbPow += -body[iBody].dTidalZ[iIndex] / 8 *
                (4 * body[iBody].iTidalEpsilon[iIndex][0] +
@@ -3992,7 +4026,7 @@ double fdCPLTidePower(BODY *body, int iBody) {
                 4 * sin(body[iBody].dObliquity) * sin(body[iBody].dObliquity) *
                       (body[iBody].iTidalEpsilon[iIndex][0] -
                        body[iBody].iTidalEpsilon[iIndex][8]));
-    //fprintf(stderr,"dOrbPow: %lf\n",dOrbPow);
+    // fprintf(stderr,"dOrbPow: %lf\n",dOrbPow);
     dRotPow +=
           body[iBody].dTidalZ[iIndex] * body[iBody].dRotRate /
           (8 * body[iOrbiter].dMeanMotion) *
@@ -4004,7 +4038,7 @@ double fdCPLTidePower(BODY *body, int iBody) {
                  (-2 * body[iBody].iTidalEpsilon[iIndex][0] +
                   body[iBody].iTidalEpsilon[iIndex][8] +
                   body[iBody].iTidalEpsilon[iIndex][9]));
-    //fprintf(stderr,"dRotPow: %lf\n",dRotPow);
+    // fprintf(stderr,"dRotPow: %lf\n",dRotPow);
   }
 
   return dOrbPow + dRotPow;

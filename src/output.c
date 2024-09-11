@@ -402,6 +402,7 @@ void WriteK2Man(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   } else {
     *dTmp = -1;
   }
+  fvFormattedString(cUnit, "");
 }
 
 void WriteImK2Man(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
@@ -418,6 +419,7 @@ void WriteImK2Man(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   } else {
     *dTmp = -1;
   }
+  fvFormattedString(cUnit, "");
 }
 
 void WriteKecc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,

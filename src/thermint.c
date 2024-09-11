@@ -1224,11 +1224,12 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_VISCJUMPMAN].dDefault   = VISCJUMPMAN;
   fvFormattedString(&options[OPT_VISCJUMPMAN].cNeg, "No negative behavior");
   fnRead[OPT_VISCJUMPMAN] = &fvReadViscJumpMan;
-  fvFormattedString(&options[OPT_VISCJUMPMAN].cLongDescr,
-          "Numerical factor that is used to get the lower mantle thermal "
-          "boundary \n"
-          "viscosity visc_UMan from the upper mantle viscosity visc_LM by \n"
-          "visc_LM=ViscJumpMan*visc_UM.  See eq (163) in Barnes et al (2020).");
+  fvFormattedString(
+        &options[OPT_VISCJUMPMAN].cLongDescr,
+        "Numerical factor that is used to get the lower mantle thermal "
+        "boundary \n"
+        "viscosity visc_UMan from the upper mantle viscosity visc_LM by \n"
+        "visc_LM=ViscJumpMan*visc_UM.  See eq (163) in Barnes et al (2020).");
 
   fvFormattedString(&options[OPT_VISCREF].cName, "dViscRef");
   fvFormattedString(&options[OPT_VISCREF].cDescr, "ViscRef");
@@ -1241,8 +1242,8 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_VISCREF].cNeg, "No negative behavior");
   fnRead[OPT_VISCREF] = &fvReadViscRef;
   fvFormattedString(&options[OPT_VISCREF].cLongDescr,
-          "Coefficient in front of viscosity equation \n"
-          "see eq (159) in Barnes et al. (2020).");
+                    "Coefficient in front of viscosity equation \n"
+                    "see eq (159) in Barnes et al. (2020).");
 
   fvFormattedString(&options[OPT_TREFLIND].cName, "dTrefLind");
   fvFormattedString(&options[OPT_TREFLIND].cDescr, "TrefLind");
@@ -1255,12 +1256,13 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_TREFLIND].dDefault = TREFLIND;
   fvFormattedString(&options[OPT_TREFLIND].cNeg, "No negative behavior");
   fnRead[OPT_TREFLIND] = &fvReadTrefLind;
-  fvFormattedString(&options[OPT_TREFLIND].cLongDescr,
-          "Lindemann's law reference temperature, also called T_Fe0 in "
-          "Driscoll \n"
-          "Bercovici (2015), see their Eq. A23. Default value is set to "
-          "TREFLIND,\n"
-          "which is defined in thermint.h)");
+  fvFormattedString(
+        &options[OPT_TREFLIND].cLongDescr,
+        "Lindemann's law reference temperature, also called T_Fe0 in "
+        "Driscoll \n"
+        "Bercovici (2015), see their Eq. A23. Default value is set to "
+        "TREFLIND,\n"
+        "which is defined in thermint.h)");
 
   fvFormattedString(&options[OPT_DTCHIREF].cName, "dDTChiRef");
   fvFormattedString(&options[OPT_DTCHIREF].cDescr, "DTChiRef");
@@ -1287,13 +1289,16 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_ERUPTEFF].dDefault   = ERUPTEFF;
   fvFormattedString(&options[OPT_ERUPTEFF].cNeg, "No negative behavior");
   fnRead[OPT_ERUPTEFF] = &fvReadEruptEff;
-  fvFormattedString(&options[OPT_ERUPTEFF].cLongDescr,
-          "Fraction of heat in mantle melt that escapes to the surface. \n"
-          "See eq (187) in Barnes et al (2020).");
+  fvFormattedString(
+        &options[OPT_ERUPTEFF].cLongDescr,
+        "Fraction of heat in mantle melt that escapes to the surface. \n"
+        "See eq (187) in Barnes et al (2020).");
 
   fvFormattedString(&options[OPT_VISCMELTPHIS].cName, "dViscMeltPhis");
-  fvFormattedString(&options[OPT_VISCMELTPHIS].cDescr, "Viscosity Melt Factor Phi star");
-  fvFormattedString(&options[OPT_VISCMELTPHIS].cDefault, "Default is VISCMELTPHIS");
+  fvFormattedString(&options[OPT_VISCMELTPHIS].cDescr,
+                    "Viscosity Melt Factor Phi star");
+  fvFormattedString(&options[OPT_VISCMELTPHIS].cDefault,
+                    "Default is VISCMELTPHIS");
   fvFormattedString(&options[OPT_VISCMELTPHIS].cDimension, "nd");
   options[OPT_VISCMELTPHIS].iType      = 2;
   options[OPT_VISCMELTPHIS].bMultiFile = 1;
@@ -1307,7 +1312,8 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
         "Bercovici (2015).");
 
   fvFormattedString(&options[OPT_VISCMELTXI].cName, "dViscMeltXi");
-  fvFormattedString(&options[OPT_VISCMELTXI].cDescr, "Viscosity Melt Factor Xi");
+  fvFormattedString(&options[OPT_VISCMELTXI].cDescr,
+                    "Viscosity Melt Factor Xi");
   fvFormattedString(&options[OPT_VISCMELTXI].cDefault, "Default is VISCMELTXI");
   fvFormattedString(&options[OPT_VISCMELTXI].cDimension, "nd");
   options[OPT_VISCMELTXI].iType      = 2;
@@ -1316,14 +1322,17 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_VISCMELTXI].dDefault   = VISCMELTXI;
   fvFormattedString(&options[OPT_VISCMELTXI].cNeg, "No negative behavior");
   fnRead[OPT_VISCMELTXI] = &fvReadViscMeltXi;
-  fvFormattedString(&options[OPT_VISCMELTXI].cLongDescr,
-          "Constant used to compute the reduction in mantle viscosity \n"
-          "due to the presence of melt.  See eq (162) in Barnes et al (2020) \n"
-          "and Costa et al (2009) for values for different materials.");
+  fvFormattedString(
+        &options[OPT_VISCMELTXI].cLongDescr,
+        "Constant used to compute the reduction in mantle viscosity \n"
+        "due to the presence of melt.  See eq (162) in Barnes et al (2020) \n"
+        "and Costa et al (2009) for values for different materials.");
 
   fvFormattedString(&options[OPT_VISCMELTGAMMA].cName, "dViscMeltGamma");
-  fvFormattedString(&options[OPT_VISCMELTGAMMA].cDescr, "Viscosity Melt Factor Gamma");
-  fvFormattedString(&options[OPT_VISCMELTGAMMA].cDefault, "Default is VISCMELTGAMMA");
+  fvFormattedString(&options[OPT_VISCMELTGAMMA].cDescr,
+                    "Viscosity Melt Factor Gamma");
+  fvFormattedString(&options[OPT_VISCMELTGAMMA].cDefault,
+                    "Default is VISCMELTGAMMA");
   fvFormattedString(&options[OPT_VISCMELTGAMMA].cDimension, "nd");
   options[OPT_VISCMELTGAMMA].iType      = 2;
   options[OPT_VISCMELTGAMMA].bMultiFile = 1;
@@ -1331,14 +1340,17 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_VISCMELTGAMMA].dDefault   = VISCMELTGAMMA;
   fvFormattedString(&options[OPT_VISCMELTGAMMA].cNeg, "No negative behavior");
   fnRead[OPT_VISCMELTGAMMA] = &fvReadViscMeltGamma;
-  fvFormattedString(&options[OPT_VISCMELTGAMMA].cLongDescr,
-          "Constant used to compute the reduction in mantle viscosity \n"
-          "due to the presence of melt.  See eq (162) in Barnes et al (2020) \n"
-          "and Costa et al (2009) for values for different materials.");
+  fvFormattedString(
+        &options[OPT_VISCMELTGAMMA].cLongDescr,
+        "Constant used to compute the reduction in mantle viscosity \n"
+        "due to the presence of melt.  See eq (162) in Barnes et al (2020) \n"
+        "and Costa et al (2009) for values for different materials.");
 
   fvFormattedString(&options[OPT_VISCMELTDELTA].cName, "dViscMeltDelta");
-  fvFormattedString(&options[OPT_VISCMELTDELTA].cDescr, "Viscosity Melt Factor Delta");
-  fvFormattedString(&options[OPT_VISCMELTDELTA].cDefault, "Default is VISCMELTDELTA");
+  fvFormattedString(&options[OPT_VISCMELTDELTA].cDescr,
+                    "Viscosity Melt Factor Delta");
+  fvFormattedString(&options[OPT_VISCMELTDELTA].cDefault,
+                    "Default is VISCMELTDELTA");
   fvFormattedString(&options[OPT_VISCMELTDELTA].cDimension, "nd");
   options[OPT_VISCMELTDELTA].iType      = 2;
   options[OPT_VISCMELTDELTA].bMultiFile = 1;
@@ -1346,10 +1358,11 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_VISCMELTDELTA].dDefault   = VISCMELTDELTA;
   fvFormattedString(&options[OPT_VISCMELTDELTA].cNeg, "No negative behavior");
   fnRead[OPT_VISCMELTDELTA] = &fvReadViscMeltDelta;
-  fvFormattedString(&options[OPT_VISCMELTDELTA].cLongDescr,
-          "Constant used to compute the reduction in mantle viscosity \n"
-          "due to the presence of melt.  See eq (161) in Barnes et al (2020) \n"
-          "and Costa et al (2009) for values for different materials.");
+  fvFormattedString(
+        &options[OPT_VISCMELTDELTA].cLongDescr,
+        "Constant used to compute the reduction in mantle viscosity \n"
+        "due to the presence of melt.  See eq (161) in Barnes et al (2020) \n"
+        "and Costa et al (2009) for values for different materials.");
 
   fvFormattedString(&options[OPT_VISCMELTB].cName, "dViscMeltB");
   fvFormattedString(&options[OPT_VISCMELTB].cDescr, "Viscosity Melt Factor B");
@@ -1361,22 +1374,25 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_VISCMELTB].dDefault   = VISCMELTB;
   fvFormattedString(&options[OPT_VISCMELTB].cNeg, "No negative behavior");
   fnRead[OPT_VISCMELTB] = &fvReadViscMeltB;
-  fvFormattedString(&options[OPT_VISCMELTB].cLongDescr,
-          "Constant used to compute the reduction in mantle viscosity \n"
-          "due to the presence of melt.  See eq (161) in Barnes et al (2020) \n"
-          "and Costa et al (2009) for values for different materials.");
+  fvFormattedString(
+        &options[OPT_VISCMELTB].cLongDescr,
+        "Constant used to compute the reduction in mantle viscosity \n"
+        "due to the presence of melt.  See eq (161) in Barnes et al (2020) \n"
+        "and Costa et al (2009) for values for different materials.");
 
   fvFormattedString(&options[OPT_MELTFACTORLMAN].cName, "dMeltfactorLMan");
   fvFormattedString(&options[OPT_MELTFACTORLMAN].cDescr,
-          "Lower Mantle Viscosity Melt Factor");
-  fvFormattedString(&options[OPT_MELTFACTORLMAN].cDefault, "%f", MELTFACTORLMAN);
+                    "Lower Mantle Viscosity Melt Factor");
+  fvFormattedString(&options[OPT_MELTFACTORLMAN].cDefault, "%f",
+                    MELTFACTORLMAN);
   fvFormattedString(&options[OPT_MELTFACTORLMAN].cDimension, "nd");
   options[OPT_MELTFACTORLMAN].iType      = 2;
   options[OPT_MELTFACTORLMAN].bMultiFile = 1;
   // XXX Rory doesn't think negative options should be allowed here
   // options[OPT_MELTFACTORLMAN].dNeg = MELTFACTORLMAN;
   options[OPT_MELTFACTORLMAN].dDefault = MELTFACTORLMAN;
-  // fvFormattedString(options[OPT_MELTFACTORLMAN].cNeg,"Default is MELTFACTORLMAN");
+  // fvFormattedString(options[OPT_MELTFACTORLMAN].cNeg,"Default is
+  // MELTFACTORLMAN");
   fnRead[OPT_MELTFACTORLMAN] = &fvReadMeltfactorLMan;
   fvFormattedString(
         &options[OPT_MELTFACTORLMAN].cLongDescr,
@@ -1387,8 +1403,9 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_MELTFACTORUMAN].cName, "dMeltfactorUMan");
   fvFormattedString(&options[OPT_MELTFACTORUMAN].cDescr,
-          "Upper Mantle Viscosity Melt Factor");
-  fvFormattedString(&options[OPT_MELTFACTORUMAN].cDefault, "%f", MELTFACTORUMAN);
+                    "Upper Mantle Viscosity Melt Factor");
+  fvFormattedString(&options[OPT_MELTFACTORUMAN].cDefault, "%f",
+                    MELTFACTORUMAN);
   fvFormattedString(&options[OPT_MELTFACTORUMAN].cDimension, "nd");
   options[OPT_MELTFACTORUMAN].iType      = 2;
   options[OPT_MELTFACTORUMAN].bMultiFile = 1;
@@ -1403,22 +1420,26 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
         "this is an option.  Default behavior is to compute this factor from \n"
         "the local temperature.");
 
-  fvFormattedString(&options[OPT_FIXMELTFACTORUMAN].cName, "dFixMeltfactorUMan");
-  fvFormattedString(&options[OPT_FIXMELTFACTORUMAN].cDescr, "Fix Viscosity Melt Factor");
+  fvFormattedString(&options[OPT_FIXMELTFACTORUMAN].cName,
+                    "dFixMeltfactorUMan");
+  fvFormattedString(&options[OPT_FIXMELTFACTORUMAN].cDescr,
+                    "Fix Viscosity Melt Factor");
   fvFormattedString(&options[OPT_FIXMELTFACTORUMAN].cDefault,
-          "Default is FIXMELTFACTORUMAN");
+                    "Default is FIXMELTFACTORUMAN");
   fvFormattedString(&options[OPT_FIXMELTFACTORUMAN].cDimension, "nd");
   options[OPT_FIXMELTFACTORUMAN].iType      = 2;
   options[OPT_FIXMELTFACTORUMAN].bMultiFile = 1;
   options[OPT_FIXMELTFACTORUMAN].dNeg       = FIXMELTFACTORUMAN;
   options[OPT_FIXMELTFACTORUMAN].dDefault   = FIXMELTFACTORUMAN;
-  fvFormattedString(&options[OPT_FIXMELTFACTORUMAN].cNeg, "No negative behavior");
+  fvFormattedString(&options[OPT_FIXMELTFACTORUMAN].cNeg,
+                    "No negative behavior");
   fnRead[OPT_FIXMELTFACTORUMAN] = &fvReadFixMeltfactorUMan;
-  fvFormattedString(&options[OPT_FIXMELTFACTORUMAN].cLongDescr,
-          "Boolean: 1 tells the code to used a fixed upper mantle viscosity "
-          "melt \n"
-          "factor, 0 tells the code to compute it from the local temperature "
-          "(default).");
+  fvFormattedString(
+        &options[OPT_FIXMELTFACTORUMAN].cLongDescr,
+        "Boolean: 1 tells the code to used a fixed upper mantle viscosity "
+        "melt \n"
+        "factor, 0 tells the code to compute it from the local temperature "
+        "(default).");
 
   /* RB: I don't understand this. STAGLID is 0 in thermint.h, so isn't the
     default not to use staglid? I'd also prefer to see this change to
@@ -1441,7 +1462,8 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_MANHFLOWPREF].cName, "dManHFlowPref");
   fvFormattedString(&options[OPT_MANHFLOWPREF].cDescr, "Mantle HFlow Prefix");
-  fvFormattedString(&options[OPT_MANHFLOWPREF].cDefault, "Default is MANHFLOWPREF");
+  fvFormattedString(&options[OPT_MANHFLOWPREF].cDefault,
+                    "Default is MANHFLOWPREF");
   fvFormattedString(&options[OPT_MANHFLOWPREF].cDimension, "nd");
   options[OPT_MANHFLOWPREF].iType      = 2;
   options[OPT_MANHFLOWPREF].bMultiFile = 1;
@@ -1449,13 +1471,15 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_MANHFLOWPREF].dDefault   = MANHFLOWPREF;
   fvFormattedString(&options[OPT_MANHFLOWPREF].cNeg, "No negative behavior");
   fnRead[OPT_MANHFLOWPREF] = &fvReadManHFlowPref;
-  fvFormattedString(&options[OPT_MANHFLOWPREF].cLongDescr,
-          "Coefficient in front of HflowUMan, value can be anything. \n"
-          "If StagLid>0 then ManHFlowPref=HFLOWREDUCTSTAG.  \n"
-          "Otherwise default behavior is 1.");
+  fvFormattedString(
+        &options[OPT_MANHFLOWPREF].cLongDescr,
+        "Coefficient in front of HflowUMan, value can be anything. \n"
+        "If StagLid>0 then ManHFlowPref=HFLOWREDUCTSTAG.  \n"
+        "Otherwise default behavior is 1.");
 
   fvFormattedString(&options[OPT_MAGMOMCOEF].cName, "dMagMomCoef");
-  fvFormattedString(&options[OPT_MAGMOMCOEF].cDescr, "Magnetic Moment Coefficient");
+  fvFormattedString(&options[OPT_MAGMOMCOEF].cDescr,
+                    "Magnetic Moment Coefficient");
   fvFormattedString(&options[OPT_MAGMOMCOEF].cDefault, "Default is MAGMOMCOEF");
   fvFormattedString(&options[OPT_MAGMOMCOEF].cDimension, "nd");
   options[OPT_MAGMOMCOEF].iType      = 2;
@@ -1465,11 +1489,12 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_MAGMOMCOEF].cNeg, "No negative behavior");
   fnRead[OPT_MAGMOMCOEF] = &fvReadMagMomCoef;
   fvFormattedString(&options[OPT_MAGMOMCOEF].cLongDescr,
-          "Coefficient in front of magnetic moment scaling law, \n"
-          "gamma_d in eq (192) in Barnes et al (2020).");
+                    "Coefficient in front of magnetic moment scaling law, \n"
+                    "gamma_d in eq (192) in Barnes et al (2020).");
 
   fvFormattedString(&options[OPT_PRESSWIND].cName, "dPresSWind");
-  fvFormattedString(&options[OPT_PRESSWIND].cDescr, "Stellar Wind Pressure at body");
+  fvFormattedString(&options[OPT_PRESSWIND].cDescr,
+                    "Stellar Wind Pressure at body");
   fvFormattedString(&options[OPT_PRESSWIND].cDefault, "Default is EPRESSWIND");
   fvFormattedString(&options[OPT_PRESSWIND].cDimension, "pressure");
   options[OPT_PRESSWIND].iType      = 2;
@@ -1482,7 +1507,7 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   /* Halt at Minimum Mantle Temperature */
   fvFormattedString(&options[OPT_HALTMINTMAN].cName, "dHaltMinTMan");
   fvFormattedString(&options[OPT_HALTMINTMAN].cDescr,
-          "Halt at Minimum Mantle Temperature");
+                    "Halt at Minimum Mantle Temperature");
   fvFormattedString(&options[OPT_HALTMINTMAN].cDefault, "0 K");
   fvFormattedString(&options[OPT_HALTMINTMAN].cDimension, "temperature");
   options[OPT_HALTMINTMAN].iType      = 2;
@@ -1494,7 +1519,8 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
 
   /* Halt at Minimum Core Temperature */
   fvFormattedString(&options[OPT_HALTMINTCORE].cName, "dHaltMinTCore");
-  fvFormattedString(&options[OPT_HALTMINTCORE].cDescr, "Halt at Minimum Core Temperature");
+  fvFormattedString(&options[OPT_HALTMINTCORE].cDescr,
+                    "Halt at Minimum Core Temperature");
   fvFormattedString(&options[OPT_HALTMINTCORE].cDefault, "0 K");
   fvFormattedString(&options[OPT_HALTMINTCORE].cDimension, "temperature");
   options[OPT_HALTMINTCORE].iType      = 2;
@@ -1507,7 +1533,8 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   /* Begin vemcee parameters */
   /* ActViscMan */
   fvFormattedString(&options[OPT_ACTVISCMAN].cName, "dActViscMan");
-  fvFormattedString(&options[OPT_ACTVISCMAN].cDescr, "Mantle viscosity activation energy");
+  fvFormattedString(&options[OPT_ACTVISCMAN].cDescr,
+                    "Mantle viscosity activation energy");
   fvFormattedString(&options[OPT_ACTVISCMAN].cDefault, "Default is ACTVISCMAN");
   fvFormattedString(&options[OPT_ACTVISCMAN].cDimension, "pressure");
   options[OPT_ACTVISCMAN].iType      = 2;
@@ -1518,14 +1545,14 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_ACTVISCMAN] = &fvReadActViscMan;
   // Needs a LongDescr
   fvFormattedString(&options[OPT_ACTVISCMAN].cLongDescr,
-          "Mantle viscosity activation energy, E_nu in \n"
-          "eq (159) of Barnes et al (2020).  Physically it is\n"
-          "a measure of how sensitive viscosity is to temperature.");
+                    "Mantle viscosity activation energy, E_nu in \n"
+                    "eq (159) of Barnes et al (2020).  Physically it is\n"
+                    "a measure of how sensitive viscosity is to temperature.");
 
   /* ShModRef */
   fvFormattedString(&options[OPT_SHMODREF].cName, "dShModRef");
   fvFormattedString(&options[OPT_SHMODREF].cDescr,
-          "Reference kinematic mantle shear modulus");
+                    "Reference kinematic mantle shear modulus");
   fvFormattedString(&options[OPT_SHMODREF].cDefault, "Default is SHMODREF");
   fvFormattedString(&options[OPT_SHMODREF].cDimension, "pressure");
   options[OPT_SHMODREF].iType      = 2;
@@ -1535,14 +1562,16 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_SHMODREF].cNeg, "No negative behavior");
   fnRead[OPT_SHMODREF] = &fvReadShModRef;
   // Needs a LongDescr
-  fvFormattedString(&options[OPT_SHMODREF].cLongDescr,
-          "Reference kinematic mantle shear modulus coefficient, mu_ref\n"
-          "in eq (160) of Barnes et al (2020).  Analogous to reference \n"
-          "viscosity ViscRef.");
+  fvFormattedString(
+        &options[OPT_SHMODREF].cLongDescr,
+        "Reference kinematic mantle shear modulus coefficient, mu_ref\n"
+        "in eq (160) of Barnes et al (2020).  Analogous to reference \n"
+        "viscosity ViscRef.");
 
   /* Stiffness */
   fvFormattedString(&options[OPT_STIFFNESS].cName, "dStiffness");
-  fvFormattedString(&options[OPT_STIFFNESS].cDescr, "Effective stiffness of mantle");
+  fvFormattedString(&options[OPT_STIFFNESS].cDescr,
+                    "Effective stiffness of mantle");
   fvFormattedString(&options[OPT_STIFFNESS].cDefault, "Default is STIFFNESS");
   fvFormattedString(&options[OPT_STIFFNESS].cDimension, "pressure");
   options[OPT_STIFFNESS].iType      = 2;
@@ -1555,7 +1584,7 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   /* DLind */
   fvFormattedString(&options[OPT_DLIND].cName, "dDLind");
   fvFormattedString(&options[OPT_DLIND].cDescr,
-          "Lindemann's law length scale for iron liquidus");
+                    "Lindemann's law length scale for iron liquidus");
   fvFormattedString(&options[OPT_DLIND].cDefault, "Default is DLIND");
   fvFormattedString(&options[OPT_DLIND].cDimension, "length");
   options[OPT_DLIND].iType      = 2;
@@ -1565,16 +1594,18 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_DLIND].cNeg, "No negative behavior");
   fnRead[OPT_DLIND] = &fvReadDLind;
   // Needs a LongDescr
-  fvFormattedString(&options[OPT_DLIND].cLongDescr,
-          "Length scale for core iron liquidus (Lindemann's law), D_Fe \n"
-          "in eq (175) of Barnes et al (2020).  It determines the \n"
-          "curvature of the core iron liquidus as a function of radius \n"
-          "so that smaller values cause the iron liquidus to drop faster \n"
-          "with radius.");
+  fvFormattedString(
+        &options[OPT_DLIND].cLongDescr,
+        "Length scale for core iron liquidus (Lindemann's law), D_Fe \n"
+        "in eq (175) of Barnes et al (2020).  It determines the \n"
+        "curvature of the core iron liquidus as a function of radius \n"
+        "so that smaller values cause the iron liquidus to drop faster \n"
+        "with radius.");
 
   /* DAdCore */
   fvFormattedString(&options[OPT_DADCORE].cName, "dDAdCore");
-  fvFormattedString(&options[OPT_DADCORE].cDescr, "Liq iron core adiabatic length scale");
+  fvFormattedString(&options[OPT_DADCORE].cDescr,
+                    "Liq iron core adiabatic length scale");
   fvFormattedString(&options[OPT_DADCORE].cDefault, "Default is DADCORE");
   fvFormattedString(&options[OPT_DADCORE].cDimension, "length");
   options[OPT_DADCORE].iType      = 2;
@@ -1584,17 +1615,18 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_DADCORE].cNeg, "No negative behavior");
   fnRead[OPT_DADCORE] = &fvReadDAdCore;
   // Needs a LongDescr
-  fvFormattedString(&options[OPT_DADCORE].cLongDescr,
-          "Length scale for core iron adiabatic temperature profile, D_N \n"
-          "in eq (174) of Barnes et al (2020).  It determines the \n"
-          "curvature of the core iron adiabat as a function of radius \n"
-          "so that smaller values cause the core adiabat to drop faster \n"
-          "with radius.");
+  fvFormattedString(
+        &options[OPT_DADCORE].cLongDescr,
+        "Length scale for core iron adiabatic temperature profile, D_N \n"
+        "in eq (174) of Barnes et al (2020).  It determines the \n"
+        "curvature of the core iron adiabat as a function of radius \n"
+        "so that smaller values cause the core adiabat to drop faster \n"
+        "with radius.");
 
   /* AdJumpM2UM */
   fvFormattedString(&options[OPT_ADJUMPM2UM].cName, "dAdJumpM2UM");
   fvFormattedString(&options[OPT_ADJUMPM2UM].cDescr,
-          "Adiabatic temp jump from ave mantle to UM");
+                    "Adiabatic temp jump from ave mantle to UM");
   fvFormattedString(&options[OPT_ADJUMPM2UM].cDefault, "Default is ADJUMPM2UM");
   fvFormattedString(&options[OPT_ADJUMPM2UM].cDimension, "temperature");
   options[OPT_ADJUMPM2UM].iType      = 2;
@@ -1604,14 +1636,15 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_ADJUMPM2UM].cNeg, "No negative behavior");
   fnRead[OPT_ADJUMPM2UM] = &fvReadAdJumpM2UM;
   // Needs a LongDescr
-  fvFormattedString(&options[OPT_ADJUMPM2UM].cLongDescr,
-          "Constant used to relate TUMan to TMan (TUMan=AdJumpM2UM*TMan),\n"
-          "eta_UM below eq (8) in Driscoll & Bercovici (2014).");
+  fvFormattedString(
+        &options[OPT_ADJUMPM2UM].cLongDescr,
+        "Constant used to relate TUMan to TMan (TUMan=AdJumpM2UM*TMan),\n"
+        "eta_UM below eq (8) in Driscoll & Bercovici (2014).");
 
   /* AdJumpM2LM */
   fvFormattedString(&options[OPT_ADJUMPM2LM].cName, "dAdJumpM2LM");
   fvFormattedString(&options[OPT_ADJUMPM2LM].cDescr,
-          "Adiabatic temp jump from ave mantle to LM");
+                    "Adiabatic temp jump from ave mantle to LM");
   fvFormattedString(&options[OPT_ADJUMPM2LM].cDefault, "Default is ADJUMPM2LM");
   fvFormattedString(&options[OPT_ADJUMPM2LM].cDimension, "nd");
   options[OPT_ADJUMPM2LM].iType      = 2;
@@ -1621,15 +1654,17 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_ADJUMPM2LM].cNeg, "No negative behavior");
   fnRead[OPT_ADJUMPM2LM] = &fvReadAdJumpM2LM;
   // Needs a LongDescr
-  fvFormattedString(&options[OPT_ADJUMPM2LM].cLongDescr,
-          "Constant used to relate TLMan to TMan (TLMan=AdJumpM2LM*TMan),\n"
-          "analogous to AdJumpM2UM.");
+  fvFormattedString(
+        &options[OPT_ADJUMPM2LM].cLongDescr,
+        "Constant used to relate TLMan to TMan (TLMan=AdJumpM2LM*TMan),\n"
+        "analogous to AdJumpM2UM.");
 
   /* AdJumpC2CMB */
   fvFormattedString(&options[OPT_ADJUMPC2CMB].cName, "dAdJumpC2CMB");
   fvFormattedString(&options[OPT_ADJUMPC2CMB].cDescr,
-          "Adiabatic temp jump from ave core to CMB");
-  fvFormattedString(&options[OPT_ADJUMPC2CMB].cDefault, "Default is ADJUMPC2CMB");
+                    "Adiabatic temp jump from ave core to CMB");
+  fvFormattedString(&options[OPT_ADJUMPC2CMB].cDefault,
+                    "Default is ADJUMPC2CMB");
   fvFormattedString(&options[OPT_ADJUMPC2CMB].cDimension, "nd");
   options[OPT_ADJUMPC2CMB].iType      = 2;
   options[OPT_ADJUMPC2CMB].bMultiFile = 1;
@@ -1640,9 +1675,12 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
 
   /* ElecCondCore */
   fvFormattedString(&options[OPT_ELECCONDCORE].cName, "dElecCondCore");
-  fvFormattedString(&options[OPT_ELECCONDCORE].cDescr, "Electrical conductivity of core");
-  fvFormattedString(&options[OPT_ELECCONDCORE].cDefault, "Default is ELECCONDCORE");
-  fvFormattedString(&options[OPT_ELECCONDCORE].cDimension, "time^3*ampere^2/mass/length");
+  fvFormattedString(&options[OPT_ELECCONDCORE].cDescr,
+                    "Electrical conductivity of core");
+  fvFormattedString(&options[OPT_ELECCONDCORE].cDefault,
+                    "Default is ELECCONDCORE");
+  fvFormattedString(&options[OPT_ELECCONDCORE].cDimension,
+                    "time^3*ampere^2/mass/length");
   options[OPT_ELECCONDCORE].iType      = 2;
   options[OPT_ELECCONDCORE].bMultiFile = 1;
   options[OPT_ELECCONDCORE].dNeg       = ELECCONDCORE;
@@ -1652,9 +1690,11 @@ void fvInitializeOptionsThermint(OPTIONS *options, fnReadOption fnRead[]) {
 
   /* ImK2ManOrbModel */
   fvFormattedString(&options[OPT_IMK2MANORBMODEL].cName, "dImK2ManOrbModel");
-  fvFormattedString(&options[OPT_IMK2MANORBMODEL].cDescr,
-          "ImK2Man model to use in orbital equations (1=ImK2(T), 2=k2/Q(T)");
-  fvFormattedString(&options[OPT_IMK2MANORBMODEL].cDefault, "Default is IMK2MANORBMODEL");
+  fvFormattedString(
+        &options[OPT_IMK2MANORBMODEL].cDescr,
+        "ImK2Man model to use in orbital equations (1=ImK2(T), 2=k2/Q(T)");
+  fvFormattedString(&options[OPT_IMK2MANORBMODEL].cDefault,
+                    "Default is IMK2MANORBMODEL");
   fvFormattedString(&options[OPT_IMK2MANORBMODEL].cDimension, "nd");
   options[OPT_IMK2MANORBMODEL].iType      = 2;
   options[OPT_IMK2MANORBMODEL].bMultiFile = 1;
@@ -2168,15 +2208,15 @@ void fvWriteTUMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   @param dTmp Temporary variable
   @param cUnit Variable units
 */
-void fvWriteTsolUMan(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
-                     UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                     char **cUnit) {
-  /* Get TsolUMan */ 
+void fvWriteTsolUMan(BODY *body, CONTROL *control, OUTPUT *output,
+                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                     double *dTmp, char **cUnit) {
+  /* Get TsolUMan */
   *dTmp = body[iBody].dTsolUMan;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
-  } else{   
+  } else {
   }
 }
 /**
@@ -2273,6 +2313,7 @@ void fvWriteSignTJumpUMan(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
   } else {
+    fvFormattedString(cUnit, "");
   }
 }
 /**
@@ -2297,6 +2338,7 @@ void fvWriteSignTJumpLMan(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
   } else {
+    fvFormattedString(cUnit, "");
   }
 }
 /**
@@ -2595,6 +2637,7 @@ void fvWriteFMeltUMan(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
   } else {
+    fvFormattedString(cUnit, "");
   }
 }
 /**
@@ -2618,6 +2661,7 @@ void fvWriteFMeltLMan(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
   } else {
+    fvFormattedString(cUnit, "");
   }
 }
 /**
@@ -2641,6 +2685,7 @@ void fvWriteMeltfactorUMan(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
   } else {
+    fvFormattedString(cUnit, "");
   }
 }
 /**
@@ -2664,6 +2709,7 @@ void fvWriteMeltfactorLMan(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
   } else {
+    fvFormattedString(cUnit, "");
   }
 }
 /**
@@ -2802,6 +2848,7 @@ void fvWriteEruptEff(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
   } else {
+    fvFormattedString(cUnit, "");
   }
 }
 
@@ -3660,13 +3707,14 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_TUMAN]           = &fvWriteTUMan;
 
   fvFormattedString(&output[OUT_TSOLUMAN].cName, "TsolUMan");
-  fvFormattedString(&output[OUT_TSOLUMAN].cDescr, "Upper Mantle Thermal Boundary Layer Solidus Temperature");
+  fvFormattedString(&output[OUT_TSOLUMAN].cDescr,
+                    "Upper Mantle Thermal Boundary Layer Solidus Temperature");
   fvFormattedString(&output[OUT_TSOLUMAN].cNeg, "K");
-  output[OUT_TSOLUMAN].bNeg    = 1;
-  output[OUT_TSOLUMAN].dNeg    = 1;
-  output[OUT_TSOLUMAN].iNum    = 1;
+  output[OUT_TSOLUMAN].bNeg       = 1;
+  output[OUT_TSOLUMAN].dNeg       = 1;
+  output[OUT_TSOLUMAN].iNum       = 1;
   output[OUT_TSOLUMAN].iModuleBit = THERMINT;
-  fnWrite[OUT_TSOLUMAN]        = &fvWriteTsolUMan;
+  fnWrite[OUT_TSOLUMAN]           = &fvWriteTsolUMan;
 
   fvFormattedString(&output[OUT_TLMAN].cName, "TLMan");
   fvFormattedString(&output[OUT_TLMAN].cDescr, "Lower Mantle Temperature");
@@ -3678,7 +3726,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_TLMAN]           = &fvWriteTLMan;
 
   fvFormattedString(&output[OUT_TJUMPUMAN].cName, "TJumpUMan");
-  fvFormattedString(&output[OUT_TJUMPUMAN].cDescr, "Upper Mantle Temperature Jump");
+  fvFormattedString(&output[OUT_TJUMPUMAN].cDescr,
+                    "Upper Mantle Temperature Jump");
   fvFormattedString(&output[OUT_TJUMPUMAN].cNeg, "K");
   output[OUT_TJUMPUMAN].bNeg       = 1;
   output[OUT_TJUMPUMAN].dNeg       = 1;
@@ -3687,7 +3736,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_TJUMPUMAN]           = &fvWriteTJumpUMan;
 
   fvFormattedString(&output[OUT_TJUMPLMAN].cName, "TJumpLMan");
-  fvFormattedString(&output[OUT_TJUMPLMAN].cDescr, "Lower Mantle Temperature Jump");
+  fvFormattedString(&output[OUT_TJUMPLMAN].cDescr,
+                    "Lower Mantle Temperature Jump");
   fvFormattedString(&output[OUT_TJUMPLMAN].cNeg, "K");
   output[OUT_TJUMPLMAN].bNeg       = 1;
   output[OUT_TJUMPLMAN].dNeg       = 1;
@@ -3697,7 +3747,7 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_SIGNTJUMPUMAN].cName, "SignTJumpUMan");
   fvFormattedString(&output[OUT_SIGNTJUMPUMAN].cDescr,
-          "Sign of Upper Mantle Temperature Jump");
+                    "Sign of Upper Mantle Temperature Jump");
   fvFormattedString(&output[OUT_SIGNTJUMPUMAN].cNeg, "K");
   output[OUT_SIGNTJUMPUMAN].bNeg       = 1;
   output[OUT_SIGNTJUMPUMAN].dNeg       = 1;
@@ -3707,7 +3757,7 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_SIGNTJUMPLMAN].cName, "SignTJumpLMan");
   fvFormattedString(&output[OUT_SIGNTJUMPLMAN].cDescr,
-          "Sign of Lower Mantle Temperature Jump");
+                    "Sign of Lower Mantle Temperature Jump");
   fvFormattedString(&output[OUT_SIGNTJUMPLMAN].cNeg, "K");
   output[OUT_SIGNTJUMPLMAN].bNeg       = 1;
   output[OUT_SIGNTJUMPLMAN].dNeg       = 1;
@@ -3745,7 +3795,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* ViscUManArr Arrhenius Only */
   fvFormattedString(&output[OUT_VISCUMANARR].cName, "ViscUManArr");
-  fvFormattedString(&output[OUT_VISCUMANARR].cDescr, "Upper Mantle Arrhenius Viscosity");
+  fvFormattedString(&output[OUT_VISCUMANARR].cDescr,
+                    "Upper Mantle Arrhenius Viscosity");
   fvFormattedString(&output[OUT_VISCUMANARR].cNeg, "m^2/s");
   output[OUT_VISCUMANARR].bNeg       = 1;
   output[OUT_VISCUMANARR].dNeg       = 1;
@@ -3766,7 +3817,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* ViscMMan */
   fvFormattedString(&output[OUT_VISCMMAN].cName, "ViscMMan");
-  fvFormattedString(&output[OUT_VISCMMAN].cDescr, "Average (mid) Mantle Viscosity");
+  fvFormattedString(&output[OUT_VISCMMAN].cDescr,
+                    "Average (mid) Mantle Viscosity");
   fvFormattedString(&output[OUT_VISCMMAN].cNeg, "m^2/s");
   output[OUT_VISCMMAN].bNeg       = 1;
   output[OUT_VISCMMAN].dNeg       = 1;
@@ -3786,7 +3838,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* BLUMan */
   fvFormattedString(&output[OUT_BLUMAN].cName, "BLUMan");
-  fvFormattedString(&output[OUT_BLUMAN].cDescr, "Boundary Layer Thickness Upper Mantle");
+  fvFormattedString(&output[OUT_BLUMAN].cDescr,
+                    "Boundary Layer Thickness Upper Mantle");
   fvFormattedString(&output[OUT_BLUMAN].cNeg, "km");
   output[OUT_BLUMAN].bNeg       = 1;
   output[OUT_BLUMAN].dNeg       = 1e-3; // KM;
@@ -3797,7 +3850,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* BLLMan */
   fvFormattedString(&output[OUT_BLLMAN].cName, "BLLMan");
-  fvFormattedString(&output[OUT_BLLMAN].cDescr, "Boundary Layer Thickness Lower Mantle");
+  fvFormattedString(&output[OUT_BLLMAN].cDescr,
+                    "Boundary Layer Thickness Lower Mantle");
   fvFormattedString(&output[OUT_BLLMAN].cNeg, "km");
   output[OUT_BLLMAN].bNeg       = 1;
   output[OUT_BLLMAN].dNeg       = 1e-3;
@@ -3808,7 +3862,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* ShmodUMan */
   fvFormattedString(&output[OUT_SHMODUMAN].cName, "ShmodUMan");
-  fvFormattedString(&output[OUT_SHMODUMAN].cDescr, "Shear Modulus Upper Mantle");
+  fvFormattedString(&output[OUT_SHMODUMAN].cDescr,
+                    "Shear Modulus Upper Mantle");
   fvFormattedString(&output[OUT_SHMODUMAN].cNeg, "Pa");
   output[OUT_SHMODUMAN].bNeg       = 1;
   output[OUT_SHMODUMAN].dNeg       = 1;
@@ -3818,7 +3873,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* FMeltUMan */
   fvFormattedString(&output[OUT_FMELTUMAN].cName, "FMeltUMan");
-  fvFormattedString(&output[OUT_FMELTUMAN].cDescr, "Melt Fraction Upper Mantle");
+  fvFormattedString(&output[OUT_FMELTUMAN].cDescr,
+                    "Melt Fraction Upper Mantle");
   fvFormattedString(&output[OUT_FMELTUMAN].cNeg, "nd");
   output[OUT_FMELTUMAN].bNeg       = 1;
   output[OUT_FMELTUMAN].dNeg       = 1;
@@ -3828,7 +3884,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* FMeltLMan */
   fvFormattedString(&output[OUT_FMELTLMAN].cName, "FMeltLMan");
-  fvFormattedString(&output[OUT_FMELTLMAN].cDescr, "Melt Fraction Lower Mantle");
+  fvFormattedString(&output[OUT_FMELTLMAN].cDescr,
+                    "Melt Fraction Lower Mantle");
   fvFormattedString(&output[OUT_FMELTLMAN].cNeg, "nd");
   output[OUT_FMELTLMAN].bNeg       = 1;
   output[OUT_FMELTLMAN].dNeg       = 1;
@@ -3838,7 +3895,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* MeltfactorUMan */
   fvFormattedString(&output[OUT_MELTFACTORUMAN].cName, "MeltfactorUMan");
-  fvFormattedString(&output[OUT_MELTFACTORUMAN].cDescr, "Melt Factor Upper Mantle");
+  fvFormattedString(&output[OUT_MELTFACTORUMAN].cDescr,
+                    "Melt Factor Upper Mantle");
   fvFormattedString(&output[OUT_MELTFACTORUMAN].cNeg, "nd");
   output[OUT_MELTFACTORUMAN].bNeg       = 1;
   output[OUT_MELTFACTORUMAN].dNeg       = 1;
@@ -3849,7 +3907,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* MeltfactorLMan */
   fvFormattedString(&output[OUT_MELTFACTORLMAN].cName, "MeltfactorLMan");
-  fvFormattedString(&output[OUT_MELTFACTORLMAN].cDescr, "Melt Factor Lower Mantle");
+  fvFormattedString(&output[OUT_MELTFACTORLMAN].cDescr,
+                    "Melt Factor Lower Mantle");
   fvFormattedString(&output[OUT_MELTFACTORLMAN].cNeg, "nd");
   output[OUT_MELTFACTORLMAN].bNeg       = 1;
   output[OUT_MELTFACTORLMAN].dNeg       = 1;
@@ -3861,7 +3920,7 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* DepthMeltMan */
   fvFormattedString(&output[OUT_DEPTHMELTMAN].cName, "DepthMeltMan");
   fvFormattedString(&output[OUT_DEPTHMELTMAN].cDescr,
-          "Depth to base of Upper Mantle Melt Region");
+                    "Depth to base of Upper Mantle Melt Region");
   fvFormattedString(&output[OUT_DEPTHMELTMAN].cNeg, "m");
   output[OUT_DEPTHMELTMAN].bNeg       = 1;
   output[OUT_DEPTHMELTMAN].dNeg       = 1;
@@ -3872,7 +3931,7 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* TDepthMeltMan */
   fvFormattedString(&output[OUT_TDEPTHMELTMAN].cName, "TDepthMeltMan");
   fvFormattedString(&output[OUT_TDEPTHMELTMAN].cDescr,
-          "Temp at base of Upper Mantle Melt Region");
+                    "Temp at base of Upper Mantle Melt Region");
   fvFormattedString(&output[OUT_TDEPTHMELTMAN].cNeg, "K");
   output[OUT_TDEPTHMELTMAN].bNeg       = 1;
   output[OUT_TDEPTHMELTMAN].dNeg       = 1;
@@ -3883,7 +3942,7 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* TJumpMeltMan */
   fvFormattedString(&output[OUT_TJUMPMELTMAN].cName, "TJumpMeltMan");
   fvFormattedString(&output[OUT_TJUMPMELTMAN].cDescr,
-          "Temp Jump across Upper Mantle Melt Region");
+                    "Temp Jump across Upper Mantle Melt Region");
   fvFormattedString(&output[OUT_TJUMPMELTMAN].cNeg, "K");
   output[OUT_TJUMPMELTMAN].bNeg       = 1;
   output[OUT_TJUMPMELTMAN].dNeg       = 1;
@@ -3893,7 +3952,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* MeltMassFluxMan */
   fvFormattedString(&output[OUT_MELTMASSFLUXMAN].cName, "MeltMassFluxMan");
-  fvFormattedString(&output[OUT_MELTMASSFLUXMAN].cDescr, "Mantle Melt Mass Flux");
+  fvFormattedString(&output[OUT_MELTMASSFLUXMAN].cDescr,
+                    "Mantle Melt Mass Flux");
   fvFormattedString(&output[OUT_MELTMASSFLUXMAN].cNeg, "kg/s");
   output[OUT_MELTMASSFLUXMAN].bNeg       = 1;
   output[OUT_MELTMASSFLUXMAN].dNeg       = 1;
@@ -3903,7 +3963,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* EruptEff */
   fvFormattedString(&output[OUT_ERUPTEFF].cName, "EruptEff");
-  fvFormattedString(&output[OUT_ERUPTEFF].cDescr, "Mantle Melt Eruption Efficiency");
+  fvFormattedString(&output[OUT_ERUPTEFF].cDescr,
+                    "Mantle Melt Eruption Efficiency");
   fvFormattedString(&output[OUT_ERUPTEFF].cNeg, "nd");
   output[OUT_ERUPTEFF].bNeg       = 1;
   output[OUT_ERUPTEFF].dNeg       = 1;
@@ -3944,7 +4005,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   // Dynamic Viscosity
   fvFormattedString(&output[OUT_DYNVISC].cName, "DynViscUMan");
-  fvFormattedString(&output[OUT_DYNVISC].cDescr, "Upper Mantle's Dynamic Viscosity");
+  fvFormattedString(&output[OUT_DYNVISC].cDescr,
+                    "Upper Mantle's Dynamic Viscosity");
   fvFormattedString(&output[OUT_DYNVISC].cNeg, "Pa");
   output[OUT_DYNVISC].bNeg       = 1;
   output[OUT_DYNVISC].dNeg       = 1;
@@ -3955,7 +4017,7 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* ChiOC */
   fvFormattedString(&output[OUT_CHIOC].cName, "ChiOC");
   fvFormattedString(&output[OUT_CHIOC].cDescr,
-          "Light Element Concentration in Outer Core");
+                    "Light Element Concentration in Outer Core");
   fvFormattedString(&output[OUT_CHIOC].cNeg, "nd");
   output[OUT_CHIOC].bNeg       = 1;
   output[OUT_CHIOC].dNeg       = 1;
@@ -3966,7 +4028,7 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* ChiIC */
   fvFormattedString(&output[OUT_CHIIC].cName, "ChiIC");
   fvFormattedString(&output[OUT_CHIIC].cDescr,
-          "Light Element Concentration in Inner Core");
+                    "Light Element Concentration in Inner Core");
   fvFormattedString(&output[OUT_CHIIC].cNeg, "nd");
   output[OUT_CHIIC].bNeg       = 1;
   output[OUT_CHIIC].dNeg       = 1;
@@ -4029,7 +4091,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* CoreBuoyTherm */
   fvFormattedString(&output[OUT_COREBUOYTHERM].cName, "CoreBuoyTherm");
-  fvFormattedString(&output[OUT_COREBUOYTHERM].cDescr, "Core Thermal Buoyancy Flux");
+  fvFormattedString(&output[OUT_COREBUOYTHERM].cDescr,
+                    "Core Thermal Buoyancy Flux");
   fvFormattedString(&output[OUT_COREBUOYTHERM].cNeg, "m^2/s^3");
   output[OUT_COREBUOYTHERM].bNeg       = 1;
   output[OUT_COREBUOYTHERM].dNeg       = 1;
@@ -4040,7 +4103,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* CoreBuoyCompo */
   fvFormattedString(&output[OUT_COREBUOYCOMPO].cName, "CoreBuoyCompo");
-  fvFormattedString(&output[OUT_COREBUOYCOMPO].cDescr, "Core Compositional Buoyancy Flux");
+  fvFormattedString(&output[OUT_COREBUOYCOMPO].cDescr,
+                    "Core Compositional Buoyancy Flux");
   fvFormattedString(&output[OUT_COREBUOYCOMPO].cNeg, "m^2/s^3");
   output[OUT_COREBUOYCOMPO].bNeg       = 1;
   output[OUT_COREBUOYCOMPO].dNeg       = 1;
@@ -4051,7 +4115,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* CoreBuoyTotal */
   fvFormattedString(&output[OUT_COREBUOYTOTAL].cName, "CoreBuoyTotal");
-  fvFormattedString(&output[OUT_COREBUOYTOTAL].cDescr, "Core Total Buoyancy Flux");
+  fvFormattedString(&output[OUT_COREBUOYTOTAL].cDescr,
+                    "Core Total Buoyancy Flux");
   fvFormattedString(&output[OUT_COREBUOYTOTAL].cNeg, "m^2/s^3");
   output[OUT_COREBUOYTOTAL].bNeg       = 1;
   output[OUT_COREBUOYTOTAL].dNeg       = 1;
@@ -4092,7 +4157,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* PresSWind */
   fvFormattedString(&output[OUT_PRESSWIND].cName, "PresSWind");
-  fvFormattedString(&output[OUT_PRESSWIND].cDescr, "Stellar wind pressure at body");
+  fvFormattedString(&output[OUT_PRESSWIND].cDescr,
+                    "Stellar wind pressure at body");
   fvFormattedString(&output[OUT_PRESSWIND].cNeg, "EPRESSWIND");
   output[OUT_PRESSWIND].bNeg       = 1;
   output[OUT_PRESSWIND].dNeg       = 1. / (EPRESSWIND);
@@ -4133,7 +4199,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* HFluxCMB */
   fvFormattedString(&output[OUT_HFLUXCMB].cName, "HfluxCMB");
-  fvFormattedString(&output[OUT_HFLUXCMB].cDescr, "Heat Flux Core-Mantle Boundary");
+  fvFormattedString(&output[OUT_HFLUXCMB].cDescr,
+                    "Heat Flux Core-Mantle Boundary");
   fvFormattedString(&output[OUT_HFLUXCMB].cNeg, "W/m^2");
   output[OUT_HFLUXCMB].bNeg       = 1;
   output[OUT_HFLUXCMB].dNeg       = 1;
@@ -4144,7 +4211,7 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* HfluxCMBAd */
   fvFormattedString(&output[OUT_HFLUXCMBAD].cName, "HfluxCMBAd");
   fvFormattedString(&output[OUT_HFLUXCMBAD].cDescr,
-          "Adiabatic Heat Flux Core-Mantle Boundary");
+                    "Adiabatic Heat Flux Core-Mantle Boundary");
   fvFormattedString(&output[OUT_HFLUXCMBAD].cNeg, "W/m^2");
   output[OUT_HFLUXCMBAD].bNeg       = 1;
   output[OUT_HFLUXCMBAD].dNeg       = 1;
@@ -4155,8 +4222,9 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* HfluxCMBConv */
   fvFormattedString(&output[OUT_HFLUXCMBCONV].cName, "HfluxCMBConv");
-  fvFormattedString(&output[OUT_HFLUXCMBCONV].cDescr,
-          "Super-Adiabatic (convective) Heat Flux Core-Mantle Boundary");
+  fvFormattedString(
+        &output[OUT_HFLUXCMBCONV].cDescr,
+        "Super-Adiabatic (convective) Heat Flux Core-Mantle Boundary");
   fvFormattedString(&output[OUT_HFLUXCMBCONV].cNeg, "W/m^2");
   output[OUT_HFLUXCMBCONV].bNeg       = 1;
   output[OUT_HFLUXCMBCONV].dNeg       = 1;
@@ -4167,7 +4235,7 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* ThermConductOC */
   fvFormattedString(&output[OUT_THERMCONDUCTOC].cName, "ThermConductOC");
   fvFormattedString(&output[OUT_THERMCONDUCTOC].cDescr,
-          "Thermal Conductivity of the Outer Core");
+                    "Thermal Conductivity of the Outer Core");
   fvFormattedString(&output[OUT_THERMCONDUCTOC].cNeg, "W/m/K");
   output[OUT_THERMCONDUCTOC].bNeg       = 1;
   output[OUT_THERMCONDUCTOC].dNeg       = 1;
@@ -4197,7 +4265,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* HFlowCMB */
   fvFormattedString(&output[OUT_HFLOWCMB].cName, "HflowCMB");
-  fvFormattedString(&output[OUT_HFLOWCMB].cDescr, "Heat Flow Core-Mantle Boundary");
+  fvFormattedString(&output[OUT_HFLOWCMB].cDescr,
+                    "Heat Flow Core-Mantle Boundary");
   fvFormattedString(&output[OUT_HFLOWCMB].cNeg, "TW");
   output[OUT_HFLOWCMB].bNeg       = 1;
   output[OUT_HFLOWCMB].dNeg       = 1e-12;
@@ -4207,7 +4276,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* HflowLatentMan */
   fvFormattedString(&output[OUT_HFLOWLATENTMAN].cName, "HflowLatentMan");
-  fvFormattedString(&output[OUT_HFLOWLATENTMAN].cDescr, "Latent Heat Flow Mantle");
+  fvFormattedString(&output[OUT_HFLOWLATENTMAN].cDescr,
+                    "Latent Heat Flow Mantle");
   fvFormattedString(&output[OUT_HFLOWLATENTMAN].cNeg, "TW");
   output[OUT_HFLOWLATENTMAN].bNeg       = 1;
   output[OUT_HFLOWLATENTMAN].dNeg       = 1e-12;
@@ -4227,7 +4297,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* HFlowSecMan */
   fvFormattedString(&output[OUT_HFLOWSECMAN].cName, "HflowSecMan");
-  fvFormattedString(&output[OUT_HFLOWSECMAN].cDescr, "Mantle Secular Heat Flow");
+  fvFormattedString(&output[OUT_HFLOWSECMAN].cDescr,
+                    "Mantle Secular Heat Flow");
   fvFormattedString(&output[OUT_HFLOWSECMAN].cNeg, "TW");
   output[OUT_HFLOWSECMAN].bNeg       = 1;
   output[OUT_HFLOWSECMAN].dNeg       = 1e-12;
@@ -4249,7 +4320,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* HFlowLatentIC */
   fvFormattedString(&output[OUT_HFLOWLATENTIC].cName, "HflowLatentIC");
-  fvFormattedString(&output[OUT_HFLOWLATENTIC].cDescr, "Latent Heat Release at ICB");
+  fvFormattedString(&output[OUT_HFLOWLATENTIC].cDescr,
+                    "Latent Heat Release at ICB");
   fvFormattedString(&output[OUT_HFLOWLATENTIC].cNeg, "TW");
   output[OUT_HFLOWLATENTIC].bNeg       = 1;
   output[OUT_HFLOWLATENTIC].dNeg       = 1e-12;
@@ -4259,7 +4331,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* PowerGravIC */
   fvFormattedString(&output[OUT_POWERGRAVIC].cName, "PowerGravIC");
-  fvFormattedString(&output[OUT_POWERGRAVIC].cDescr, "Gravitational Power Release at ICB");
+  fvFormattedString(&output[OUT_POWERGRAVIC].cDescr,
+                    "Gravitational Power Release at ICB");
   fvFormattedString(&output[OUT_POWERGRAVIC].cNeg, "TW");
   output[OUT_POWERGRAVIC].bNeg       = 1;
   output[OUT_POWERGRAVIC].dNeg       = 1e-12;
@@ -4269,7 +4342,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* TDotMan */
   fvFormattedString(&output[OUT_TDOTMAN].cName, "TDotMan");
-  fvFormattedString(&output[OUT_TDOTMAN].cDescr, "Change in Mantle Temperature");
+  fvFormattedString(&output[OUT_TDOTMAN].cDescr,
+                    "Change in Mantle Temperature");
   fvFormattedString(&output[OUT_TDOTMAN].cNeg, "K/s");
   output[OUT_TDOTMAN].bNeg       = 1;
   output[OUT_TDOTMAN].dNeg       = 1;
@@ -4290,7 +4364,8 @@ void fvInitializeOutputThermint(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* Constants */
   /* TrefLind */
   fvFormattedString(&output[OUT_TREFLIND].cName, "TrefLind");
-  fvFormattedString(&output[OUT_TREFLIND].cDescr, "Core Liquidus Lindeman Reference");
+  fvFormattedString(&output[OUT_TREFLIND].cDescr,
+                    "Core Liquidus Lindeman Reference");
   fvFormattedString(&output[OUT_TREFLIND].cNeg, "K");
   output[OUT_TREFLIND].bNeg       = 1;
   output[OUT_TREFLIND].dNeg       = 1;

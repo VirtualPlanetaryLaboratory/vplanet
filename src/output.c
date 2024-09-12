@@ -2062,6 +2062,7 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
   }
   fprintf(fp, "\n");
   free(cCol);
+  free(cUnit);
 }
 
 void LogGridOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
@@ -2190,7 +2191,6 @@ void LogBody(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
               OPTIONS *options, OUTPUT *output, SYSTEM *system, UPDATE *update,
               fnUpdateVariable ***fnUpdate, fnWriteOutput fnWrite[], int iEnd) {
-  char *cTime = NULL;
   FILE *fp;
   double dTotTime;
 
@@ -2202,13 +2202,10 @@ void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
   double dDt = fdGetTimeStep(body, control, system, update, fnUpdate);
 
   if (iEnd == 0) {
-    fvFormattedString(&cTime, "Input");
     fp = fopen(files->cLog, "w");
   } else if (iEnd == 1) {
-    fvFormattedString(&cTime, "Final");
     fp = fopen(files->cLog, "a");
   } else if (iEnd == -1) {
-    fvFormattedString(&cTime, "Initial");
     fp = fopen(files->cLog, "w");
   } else {
     fprintf(stderr, "ERROR: Unknown cTime in output.c:WriteLog.\n");

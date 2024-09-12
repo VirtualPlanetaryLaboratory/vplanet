@@ -903,7 +903,6 @@ Initialize the user options for the atmospheric escape model.
 @param fnRead Array of pointers to the functions that read in the options
 */
 void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
-  int iOpt, iFile;
 
   fvFormattedString(&options[OPT_XFRAC].cName, "dXFrac");
   fvFormattedString(&options[OPT_XFRAC].cDescr, "Fraction of planet radius in X-ray/UV");
@@ -1791,7 +1790,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
 
   // Diffusion-limited H escape rate
   double BDIFF = 4.8e19 * pow(body[iBody].dFlowTemp, 0.75);
-  if (XO == 1) {
+  if (fbFloatComparison(XO,1)) {
     body[iBody].dFHDiffLim = 0;
   } else {
   body[iBody].dFHDiffLim =
@@ -1799,7 +1798,7 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
         (KBOLTZ * body[iBody].dFlowTemp * (1. + XO / (1. - XO)));
   }
 
-  if (body[iBody].dOxygenMass == 0) {
+  if (fbFloatComparison(body[iBody].dOxygenMass,0)) {
     body[iBody].dOxygenEta = 0;
   }
 
@@ -1841,7 +1840,6 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
 
       double x = (QOH - 1.) * (1. - XO) * (BDIFF * g * ATOMMASS) /
                  (KBOLTZ * body[iBody].dFlowTemp);
-      double FH;
       double rat;
 
       // Get the crossover mass
@@ -1853,7 +1851,6 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
               (1. / (1. - XO)) *
                     (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) /
                     (BDIFF * g);
-        FH  = body[iBody].dFHRef;
         /* Is this necessary? XXX
         rat = ((body[iBody].dCrossoverMass / ATOMMASS) - QOH) /
               ((body[iBody].dCrossoverMass / ATOMMASS) - 1.);
@@ -1868,10 +1865,9 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
               ATOMMASS * num / den +
               (KBOLTZ * body[iBody].dFlowTemp * body[iBody].dFHRef) /
                     ((1 + XO * (QOH - 1)) * BDIFF * g);
-        if (body[iBody].dCrossoverMass != ATOMMASS) {
+        if (!fbFloatComparison(body[iBody].dCrossoverMass,ATOMMASS)) {
           rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) /
               (body[iBody].dCrossoverMass / ATOMMASS - 1.);
-          FH = body[iBody].dFHRef * pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
           body[iBody].dOxygenEta = 2 * XO / (1. - XO) * rat;
         } else {
           body[iBody].dOxygenEta = 0;
@@ -1882,7 +1878,6 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
       // Use below for LBEXACT equations with schaeffer diff lim
       double x = (QOH - 1.) * (1. - XO) * (BDIFF * g * ATOMMASS) /
                  (KBOLTZ * body[iBody].dFlowTemp);
-      double FH;
       double rat;
 
       // Get the crossover mass
@@ -1917,10 +1912,8 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
           (body[iBody].dFXUV >= FXUVCritDrag)) {
         rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) /
               (body[iBody].dCrossoverMass / ATOMMASS - 1.);
-        FH = body[iBody].dFHRef * pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
         body[iBody].dOxygenEta = 2 * XO / (1. - XO) * rat;
       } else {
-        FH  = body[iBody].dFHRef;
         rat = ((body[iBody].dCrossoverMass / ATOMMASS) - QOH) /
               ((body[iBody].dCrossoverMass / ATOMMASS) - 1.);
         body[iBody].dOxygenEta = 0;
@@ -2839,7 +2832,7 @@ void WriteRGLimit(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   double flux = fdHZRG14(body, iBody);
 
   // Convert to semi-major axis *at current eccentricity!*
-  if (body[0].dLuminosity == 0) {
+  if (fbFloatComparison(body[0].dLuminosity,0)) {
     *dTmp = -1;
   } else {
     *dTmp = pow(4 * PI * flux /
@@ -3445,12 +3438,12 @@ void WriteHRefODragMod(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char **cUnit) {
   // XXX This should probably all just be moved into a function
-  if (body[iBody].dCrossoverMass / ATOMMASS - 1. != 0) {
+  if (!fbFloatComparison((body[iBody].dCrossoverMass / ATOMMASS), 1)) {
     double rat = (body[iBody].dCrossoverMass / ATOMMASS - QOH) /
                 (body[iBody].dCrossoverMass / ATOMMASS - 1.);
     double XO = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
                                           body[iBody].dOxygenMass);
-    if (XO == 1) {
+    if (fbFloatComparison(XO,1)) {
       *dTmp = 0;
     } else {
       *dTmp     = pow(1. + (XO / (1. - XO)) * QOH * rat, -1);
@@ -4162,7 +4155,7 @@ int fbDoesWaterEscape(BODY *body, EVOLVE *evolve, IO *io, int iBody) {
   // approximation for a binary is only valid if the two stars have
   // similar spectral types, or if body zero dominates the flux.
   double dInstellation = fdInstellation(body, iBody);
-  if (dInstellation == -1 && body[iBody].bCalcFXUV == 0) {
+  if (fbFloatComparison(dInstellation,-1) && fbFloatComparison(body[iBody].bCalcFXUV,0)) {
     // Constant XUV flux, so set water to escape
     return 1;
   } else {
@@ -4368,8 +4361,8 @@ void fvLinearFit(double *x, double *y, int iLen, double *daCoeffs) {
   // from http://en.wikipedia.org/wiki/Simple_linear_regression
   double num = 0, den = 0;
   double xavg = 0, yavg = 0;
-  double m, b;
   int i;
+
   for (i = 0; i < iLen; i++) {
     xavg += x[i];
     yavg += y[i];

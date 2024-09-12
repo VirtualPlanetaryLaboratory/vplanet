@@ -10,8 +10,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-11, macos-12, macos-13]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
+        os: [macos-12, macos-13]
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -35,8 +35,11 @@ jobs:
         if: steps.setup_python.outcome == 'success'
         run: |
           make opt
-          pytest --tb=short
+          pytest --tb=short --junitxml=junit/test-results.xml
 
-      - name: Get unique id
-        uses: Tiryoh/gha-jobid-action@v1
-        id: jobs
+      - name: Check test ouptut created
+        id: check_test_file
+        uses: andstor/file-existence-action@v3
+        with:
+          files: "${{ github.workspace }}/junit/test-results.xml"
+          fail: true

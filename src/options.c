@@ -2617,7 +2617,7 @@ void fvAllocateOutputArrays(char ****saMatch, char ***saOutput, int **baNeg,
 
   for (iIndex = 0; iIndex < iNumArgs; iIndex++) {
     (*saMatch)[iIndex] =
-          malloc(MAXARRAY * sizeof(int)); // Could be this many matches
+          malloc(MAXARRAY * sizeof(char*)); // Could be this many matches
     for (iMatch = 0; iMatch < MAXARRAY; iMatch++) {
       (*saMatch)[iIndex][iMatch] = NULL;
     }

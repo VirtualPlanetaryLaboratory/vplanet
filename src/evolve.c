@@ -13,6 +13,11 @@
 
 #include "vplanet.h"
 
+double fdTrapezoidalArea(double dY1,double dY2,double dDeltaX) {
+  double dArea = 0.5*dDeltaX*(dY1 + dY2);
+  return dArea;
+}
+
 void PropsAuxGeneral(BODY *body, CONTROL *control) {
   /* Recompute the mean motion, necessary for most modules */
   int iBody; // Dummy counting variable
@@ -48,6 +53,17 @@ void PropertiesAuxiliary(BODY *body, CONTROL *control, SYSTEM *system,
                                                &control->Io, update, iBody);
     }
   }
+}
+
+void fvCumulative(BODY *body,CONTROL *control,SYSTEM *system,double dDt) {
+  int iBody;
+
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    if (body[iBody].bAtmEsc) {
+      fvCumulativeAtmEsc(body,&control->Evolve,system,dDt,iBody);
+    }
+  }
+
 }
 
 void CalculateDerivatives(BODY *body, SYSTEM *system, UPDATE *update,
@@ -668,6 +684,8 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
               fnUpdate, iBody, iModule);
       }
     }
+
+    fvCumulative(body,control,system,dDt);
 
     fdGetUpdateInfo(body, control, system, update, fnUpdate);
 

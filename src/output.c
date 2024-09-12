@@ -128,6 +128,23 @@ void WriteDensity(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   }
 }
 
+/*
+  E
+*/
+
+void WriteEscapeVelocity(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+                 UNITS *units, UPDATE *update, int iBody, double *dTmp,
+                 char **cUnit) {
+
+  *dTmp = fdEscapeVelocity(body,iBody);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    fvFormattedString(cUnit, output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime) / fdUnitsLength(units->iLength);
+    fsUnitsVel(units, cUnit);
+  }
+}
 
 /*
  * H
@@ -1304,6 +1321,19 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_DENSITY].iNum       = 1;
   output[OUT_DENSITY].iModuleBit = 1;
   fnWrite[OUT_DENSITY]           = &WriteDensity;
+
+/* 
+  E
+*/
+
+  fvFormattedString(&output[OUT_ESCAPEVELOCITY].cName, "EscapeVelocity");
+  fvFormattedString(&output[OUT_ESCAPEVELOCITY].cDescr, "Escape Velocity");
+  fvFormattedString(&output[OUT_ESCAPEVELOCITY].cNeg, "m/s");
+  output[OUT_ESCAPEVELOCITY].bNeg       = 1;
+  output[OUT_ESCAPEVELOCITY].dNeg       = 1;
+  output[OUT_ESCAPEVELOCITY].iNum       = 1;
+  output[OUT_ESCAPEVELOCITY].iModuleBit = 1;
+  fnWrite[OUT_ESCAPEVELOCITY]           = &WriteEscapeVelocity;
 
   /*
    * H

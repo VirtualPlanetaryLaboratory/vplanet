@@ -2002,6 +2002,17 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
 }
 
 
+void fvCumulativeAtmEsc(BODY *body,EVOLVE *evolve,SYSTEM *system,double dDt,int iBody) {
+  if (evolve->bFirstStep) {
+    body[iBody].dFXUVCumulative = 0;
+    body[iBody].dFXUVLast = fdXUVFlux(body,iBody);
+  } else {
+    body[iBody].dFXUV = fdXUVFlux(body,iBody);
+    body[iBody].dFXUVCumulative += fdTrapezoidalArea(body[iBody].dFXUV,body[iBody].dFXUVLast,dDt);
+    body[iBody].dFXUVLast = body[iBody].dFXUV;
+  }
+}
+
 /**
 Assigns functions returning the time-derivatives of each variable
 to the magical matrix of function pointers.
@@ -3454,6 +3465,20 @@ void WriteHRefODragMod(BODY *body, CONTROL *control, OUTPUT *output,
   fvFormattedString(cUnit, "");
 }
 
+void WriteCumulativeFXUV(BODY *body, CONTROL *control, OUTPUT *output,
+                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                       double *dTmp, char **cUnit) {
+  *dTmp = body[iBody].dFXUVCumulative;
+
+    if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    fvFormattedString(cUnit, output->cNeg);
+  } else {
+    *dTmp *= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
+  }
+}
+
 
 /**
 Logs the molecular oxygen mixing ratio.
@@ -3692,6 +3717,16 @@ void InitializeOutputAtmEsc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_FXUV].iNum       = 1;
   output[OUT_FXUV].iModuleBit = ATMESC;
   fnWrite[OUT_FXUV]           = &WriteFXUV;
+
+  fvFormattedString(&output[OUT_CUMULATIVEFXUV].cName, "CumulativeFXUV");
+  fvFormattedString(&output[OUT_CUMULATIVEFXUV].cDescr, "Cumulative XUV flux");
+  fvFormattedString(&output[OUT_CUMULATIVEFXUV].cNeg, "W/m^2");
+  output[OUT_CUMULATIVEFXUV].bNeg       = 1;
+  output[OUT_CUMULATIVEFXUV].dNeg       = 1;
+  output[OUT_CUMULATIVEFXUV].iNum       = 1;
+  output[OUT_CUMULATIVEFXUV].iModuleBit = ATMESC;
+  fnWrite[OUT_CUMULATIVEFXUV]           = &WriteCumulativeFXUV;
+
 
   fvFormattedString(&output[OUT_HESCAPEREGIME].cName, "HEscapeRegime");
   fvFormattedString(&output[OUT_HESCAPEREGIME].cDescr,

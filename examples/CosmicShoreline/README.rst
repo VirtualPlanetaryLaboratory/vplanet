@@ -15,8 +15,6 @@ a proposed boundary between planet with and without atmosphere.
 ===================   ============
 
 
-
-
 To run this example
 -------------------
 
@@ -32,6 +30,9 @@ Expected output
    :width: 100%
    :align: center
 
-The blue line is the cosmic shoreline and the blue points
-represent the Solar System planets. The Sun's XUV luminosity
-is assumed to follow the Ribas et al. (2005) model.
+The blue line is the cosmic shoreline, which is taken from Fig. 2
+of Zahnle & Catling (2018). The black points are the positions
+of the Solar System planets in this parameter space. The Sun's XUV luminosity
+is assumed to follow the Ribas et al. (2005) model. This figure, while
+not as complete as Zahnle & Catling (2018), is a near exact reproduction
+of their results.

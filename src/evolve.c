@@ -58,9 +58,9 @@ void PropertiesAuxiliary(BODY *body, CONTROL *control, SYSTEM *system,
 void fvCumulative(BODY *body,CONTROL *control,SYSTEM *system,double dDt) {
   int iBody;
 
-  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
-    if (body[iBody].bAtmEsc) {
-      fvCumulativeAtmEsc(body,&control->Evolve,system,dDt,iBody);
+  if (body[0].bStellar) {
+    for (iBody=1;iBody<control->Evolve.iNumBodies;iBody++) {
+      fvCumulativeXUVFlux(body,&control->Evolve,system,dDt,iBody);
     }
   }
 
@@ -650,6 +650,9 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     dDt = control->Evolve.dTimeStep;
   }
 
+  fvCumulative(body,control,system,dDt);
+
+
   /* Write out initial conditions */
   WriteOutput(body, control, files, output, system, update, fnWrite);
 
@@ -684,8 +687,6 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
               fnUpdate, iBody, iModule);
       }
     }
-
-    fvCumulative(body,control,system,dDt);
 
     fdGetUpdateInfo(body, control, system, update, fnUpdate);
 

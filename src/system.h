@@ -56,4 +56,7 @@ void fdMergePlanet(BODY *, UPDATE *, fnUpdateVariable ***, int);
 double fdBondiRadius(BODY *, int);
 double fdRocheRadius(BODY *, int, int);
 
+void fvCumulativeXUVFlux(BODY *,EVOLVE *,SYSTEM *,double,int);
+
+
 /* @endcond */

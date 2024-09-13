@@ -82,6 +82,20 @@ void WriteCriticalSemi(BODY *body, CONTROL *control, OUTPUT *output,
   }
 }
 
+void WriteCumulativeXUVFlux(BODY *body, CONTROL *control, OUTPUT *output,
+                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                       double *dTmp, char **cUnit) {
+  *dTmp = body[iBody].dFXUVCumulative;
+
+    if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    fvFormattedString(cUnit, output->cNeg);
+  } else {
+    *dTmp *= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
+    fsUnitsEnergyFlux(units,cUnit);
+  }
+}
+
 /*
  * D
  */
@@ -1297,6 +1311,15 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
         "result\n"
         "in unstable orbits. This output parameter prints the instantaneous\n"
         "value of that critical distance.");
+
+  fvFormattedString(&output[OUT_CUMULATIVEFXUV].cName, "CumulativeXUVFlux");
+  fvFormattedString(&output[OUT_CUMULATIVEFXUV].cDescr, "Cumulative XUV flux");
+  fvFormattedString(&output[OUT_CUMULATIVEFXUV].cNeg, "W/m^2");
+  output[OUT_CUMULATIVEFXUV].bNeg       = 1;
+  output[OUT_CUMULATIVEFXUV].dNeg       = 1;
+  output[OUT_CUMULATIVEFXUV].iNum       = 1;
+  output[OUT_CUMULATIVEFXUV].iModuleBit = 1;
+  fnWrite[OUT_CUMULATIVEFXUV]           = &WriteCumulativeXUVFlux;
 
   /*
    * D

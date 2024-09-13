@@ -213,7 +213,6 @@ void LogBodyAtmEsc(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UPDATE *,
 void fnForceBehaviorAtmEsc(BODY *, MODULE *, EVOLVE *, IO *, SYSTEM *, UPDATE *,
                            fnUpdateVariable ***, int, int);
 void fnPropsAuxAtmEsc(BODY *, EVOLVE *, IO *, UPDATE *, int);
-void fvCumulativeAtmEsc(BODY *,EVOLVE *,SYSTEM *,double,int);
 
 double fdDSurfaceWaterMassDt(BODY *, SYSTEM *, int *);
 double fdDEnvelopeMassDt(BODY *, SYSTEM *, int *);

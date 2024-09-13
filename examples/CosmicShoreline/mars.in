@@ -3,4 +3,4 @@ saModules    atmesc
 dMass        -0.107
 dRadius      -0.53202
 dSemi        1.52366290
-saOutputOrder    Time -FXUV -CumulativeFXUV
+saOutputOrder    Time -FXUV -CumulativeXUVFlux

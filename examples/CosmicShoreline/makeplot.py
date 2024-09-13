@@ -20,17 +20,17 @@ output = vplanet.run(units = False)
 # Plot!
 fig = plt.figure(figsize=(8.5, 6))
 
-fxuv_earth = output.log.final.Earth.CumulativeFXUV
+fxuv_earth = output.log.final.Earth.CumulativeXUVFlux
 
 fxuv = []
-fxuv.append(output.log.final.Mercury.CumulativeFXUV/fxuv_earth)
-fxuv.append(output.log.final.Venus.CumulativeFXUV/fxuv_earth)
-fxuv.append(output.log.final.Earth.CumulativeFXUV/fxuv_earth)
-fxuv.append(output.log.final.Mars.CumulativeFXUV/fxuv_earth)
-fxuv.append(output.log.final.Jupiter.CumulativeFXUV/fxuv_earth)
-fxuv.append(output.log.final.Saturn.CumulativeFXUV/fxuv_earth)
-fxuv.append(output.log.final.George.CumulativeFXUV/fxuv_earth)
-fxuv.append(output.log.final.Neptune.CumulativeFXUV/fxuv_earth)
+fxuv.append(output.log.final.Mercury.CumulativeXUVFlux/fxuv_earth)
+fxuv.append(output.log.final.Venus.CumulativeXUVFlux/fxuv_earth)
+fxuv.append(output.log.final.Earth.CumulativeXUVFlux/fxuv_earth)
+fxuv.append(output.log.final.Mars.CumulativeXUVFlux/fxuv_earth)
+fxuv.append(output.log.final.Jupiter.CumulativeXUVFlux/fxuv_earth)
+fxuv.append(output.log.final.Saturn.CumulativeXUVFlux/fxuv_earth)
+fxuv.append(output.log.final.George.CumulativeXUVFlux/fxuv_earth)
+fxuv.append(output.log.final.Neptune.CumulativeXUVFlux/fxuv_earth)
 
 escvel = []
 escvel.append(output.log.final.Mercury.EscapeVelocity/1e3)

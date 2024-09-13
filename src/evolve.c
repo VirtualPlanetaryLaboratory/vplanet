@@ -652,7 +652,6 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 
   fvCumulative(body,control,system,dDt);
 
-
   /* Write out initial conditions */
   WriteOutput(body, control, files, output, system, update, fnWrite);
 
@@ -720,6 +719,8 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     /* Get auxiliary properties for next step -- first call
        was prior to loop. */
     PropertiesAuxiliary(body, control, system, update);
+
+  fvCumulative(body,control,system,dDt);
 
     // If control->Evolve.bFirstStep hasn't been switched off by now, do so.
     if (control->Evolve.bFirstStep) {

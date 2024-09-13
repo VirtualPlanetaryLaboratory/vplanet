@@ -33,6 +33,7 @@ directory of the :code:`VPLanet` repository.
    examples/TideLock
    examples/CircumbinaryOrbit
    examples/AtmEscFlareProxCen
+   examples/CosmicShoreline
    examples/RadHeat
    examples/BinaryTides
    examples/ApseLock

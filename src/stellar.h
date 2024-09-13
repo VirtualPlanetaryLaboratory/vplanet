@@ -179,7 +179,7 @@ void WriteDRotPerDtStellar(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
 void WriteEUV(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                            UPDATE *, int, double *, char[]);
 
-void WriteXRay(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+void WriteLXRay(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                            UPDATE *, int, double *, char[]);
 
 
@@ -222,7 +222,7 @@ double fdR_xSat(BODY *, int);
 double fdJohnstoneBeta1(BODY *, int);
 double fdJohnstoneBeta2(BODY *, int);
 double fdRossbyNumber(BODY *, int);
-double fdLXRAYJohnstone(BODY *, int);
+double fdLXRAY(BODY *, int);
 double fdEUV(BODY *,int);
 double fdLXUVCalc(BODY *,int);
 

@@ -1115,3 +1115,18 @@ double fdBondiRadius(BODY *body, int iBody) {
   }
   return dBondiRadius;
 }
+
+void fvCumulativeXUVFlux(BODY *body,EVOLVE *evolve,SYSTEM *system,double dDt,int iBody) {
+  if (evolve->bFirstStep) {
+    body[iBody].dFXUVCumulative = 0;
+    if (body[iBody].bCalcFXUV) {
+      body[iBody].dFXUV = fdXUVFlux(body, iBody);
+    }
+  } else {
+    if (body[iBody].bCalcFXUV) {
+      body[iBody].dFXUV = fdXUVFlux(body, iBody);
+    }
+    body[iBody].dFXUVCumulative += fdTrapezoidalArea(body[iBody].dFXUV,body[iBody].dFXUVLast,dDt);
+    body[iBody].dFXUVLast = body[iBody].dFXUV;
+  }
+}

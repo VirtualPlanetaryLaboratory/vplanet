@@ -1,0 +1,6 @@
+sName        George
+saModules    atmesc
+dMass        -14.54
+dRadius      -4.007
+dSemi        19.19203990
+saOutputOrder    Time -fXUV -CumulativeXUVFlux

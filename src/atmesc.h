@@ -171,6 +171,7 @@ void FinalizeUpdateMassAtmEsc(BODY *, UPDATE *, int *, int, int, int);
 #define OUT_HDIFFFLUX 1238 /**< The diffusion limited flux (the true flux in the diffusion regime) */
 #define OUT_HREFODRAGMOD 1239 /**< Multiply by H ref flux to get H flux with drag of oxgyen */
 #define OUT_KTIDE 1240 /**< Gravitational enhancement of mass loss */
+#define OUT_CUMULATIVEFXUV 1250 
 
 void InitializeOutputAtmEsc(OUTPUT *, fnWriteOutput[]);
 void InitializeOutputFunctionAtmEsc(OUTPUT *, int, int);
@@ -212,6 +213,7 @@ void LogBodyAtmEsc(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UPDATE *,
 void fnForceBehaviorAtmEsc(BODY *, MODULE *, EVOLVE *, IO *, SYSTEM *, UPDATE *,
                            fnUpdateVariable ***, int, int);
 void fnPropsAuxAtmEsc(BODY *, EVOLVE *, IO *, UPDATE *, int);
+
 double fdDSurfaceWaterMassDt(BODY *, SYSTEM *, int *);
 double fdDEnvelopeMassDt(BODY *, SYSTEM *, int *);
 double fdDEnvelopeMassDtBondiLimited(BODY *, SYSTEM *, int *);

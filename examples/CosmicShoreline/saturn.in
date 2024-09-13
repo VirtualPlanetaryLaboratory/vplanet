@@ -1,0 +1,6 @@
+sName        Saturn
+saModules    atmesc
+dMass        -95.16
+dRadius      -9.449
+dSemi       9.53999265
+saOutputOrder    Time -FXUV -CumulativeXUVFlux

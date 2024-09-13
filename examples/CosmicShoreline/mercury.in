@@ -1,0 +1,6 @@
+sName        Mercury
+saModules    atmesc
+dMass        -0.0553
+dRadius      -0.383
+dSemi        0.38709897
+saOutputOrder    Time -FXUV -CumulativeXUVFlux

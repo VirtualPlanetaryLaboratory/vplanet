@@ -1529,3 +1529,10 @@ double fdEffectiveTemperature(BODY *body,int iBody) {
   double dTeff = pow((body[iBody].dLuminosity/(4*PI*SIGMA*body[iBody].dRadius*body[iBody].dRadius)),0.25);
   return dTeff;
 }
+
+double fdEscapeVelocity(BODY *body,int iBody) {
+  double dEscVel;
+
+  dEscVel = sqrt(2*BIGG*body[iBody].dMass/body[iBody].dRadius);
+  return dEscVel;
+}

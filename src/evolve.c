@@ -13,6 +13,11 @@
 
 #include "vplanet.h"
 
+double fdTrapezoidalArea(double dY1,double dY2,double dDeltaX) {
+  double dArea = 0.5*dDeltaX*(dY1 + dY2);
+  return dArea;
+}
+
 void PropsAuxGeneral(BODY *body, CONTROL *control) {
   /* Recompute the mean motion, necessary for most modules */
   int iBody; // Dummy counting variable
@@ -48,6 +53,17 @@ void PropertiesAuxiliary(BODY *body, CONTROL *control, SYSTEM *system,
                                                &control->Io, update, iBody);
     }
   }
+}
+
+void fvCumulative(BODY *body,CONTROL *control,SYSTEM *system,double dDt) {
+  int iBody;
+
+  if (body[0].bStellar) {
+    for (iBody=1;iBody<control->Evolve.iNumBodies;iBody++) {
+      fvCumulativeXUVFlux(body,&control->Evolve,system,dDt,iBody);
+    }
+  }
+
 }
 
 void CalculateDerivatives(BODY *body, SYSTEM *system, UPDATE *update,
@@ -634,6 +650,8 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     dDt = control->Evolve.dTimeStep;
   }
 
+  fvCumulative(body,control,system,dDt);
+
   /* Write out initial conditions */
   WriteOutput(body, control, files, output, system, update, fnWrite);
 
@@ -701,6 +719,8 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     /* Get auxiliary properties for next step -- first call
        was prior to loop. */
     PropertiesAuxiliary(body, control, system, update);
+
+  fvCumulative(body,control,system,dDt);
 
     // If control->Evolve.bFirstStep hasn't been switched off by now, do so.
     if (control->Evolve.bFirstStep) {

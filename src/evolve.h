@@ -16,6 +16,7 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
+double fdTrapezoidalArea(double,double,double);
 void PropertiesAuxiliary(BODY *, CONTROL *, SYSTEM *, UPDATE *);
 void fdGetUpdateInfo(BODY *, CONTROL *, SYSTEM *, UPDATE *,
                      fnUpdateVariable ***);

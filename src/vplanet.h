@@ -262,6 +262,8 @@ struct BODY {
   double dThermTemp; /**< Thermosphere's temperature in Lehmer-Catling model */
   double dAtmGasConst; /**< Atmosphere's gas constant in Lehmer-Catling model */
   double dFXUV;        /**< XUV Flux at planet's atmosphere */
+  double dFXUVLast;    /**< XUV at planet during last time step */
+  double dFXUVCumulative;
   double dJeansTime;   /**< Jeans timescale for atmospheric escape */
   double dFlowTemp;    /**< Temperature of the hydrodynamic flow */
   double dRocheRadius; /**< Radius of the Roche lobe */

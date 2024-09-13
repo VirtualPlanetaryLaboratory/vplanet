@@ -2001,7 +2001,6 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   }
 }
 
-
 /**
 Assigns functions returning the time-derivatives of each variable
 to the magical matrix of function pointers.

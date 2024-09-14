@@ -60,7 +60,7 @@ void sort_options(OPTIONS *options, int sorted[]) {
   SORTED_OPTIONS sorted_options[MODULEOPTEND];
   for (iOpt = 0; iOpt < MODULEOPTEND; iOpt++) {
     sorted_options[iOpt].index = iOpt;
-    sorted_options[iOpt].name = NULL;
+    sorted_options[iOpt].name  = NULL;
     fvFormattedString(&sorted_options[iOpt].name, options[iOpt].cName);
   }
   qsort(sorted_options, MODULEOPTEND, sizeof(sorted_options[0]),
@@ -79,7 +79,7 @@ void sort_output(OUTPUT *output, int sorted[]) {
   SORTED_OUTPUT sorted_output[MODULEOUTEND];
   for (iOpt = 0; iOpt < MODULEOUTEND; iOpt++) {
     sorted_output[iOpt].index = iOpt;
-    sorted_output[iOpt].name=NULL;
+    sorted_output[iOpt].name  = NULL;
     fvFormattedString(&sorted_output[iOpt].name, output[iOpt].cName);
   }
   qsort(sorted_output, MODULEOUTEND, sizeof(sorted_output[0]),
@@ -94,31 +94,27 @@ void sort_output(OUTPUT *output, int sorted[]) {
  * Struct Initialization
  */
 
-void InitializeFilesOptions(FILES *files,OPTIONS *options) {
-  int iFile,iOption;
+void InitializeFilesOptions(FILES *files, OPTIONS *options) {
+  int iFile, iOption;
 
-  for (iOption=0;iOption<MODULEOPTEND;iOption++) {
-    options[iOption].cFile = malloc(files->iNumInputs*sizeof(char*));
+  for (iOption = 0; iOption < MODULEOPTEND; iOption++) {
+    options[iOption].cFile = malloc(files->iNumInputs * sizeof(char *));
     for (iFile = 0; iFile < files->iNumInputs; iFile++) {
       options[iOption].iLine[iFile] = -1;
       options[iOption].cFile[iFile] = NULL;
-      fvFormattedString(&options[iOption].cFile[iFile], "null");    
-      if (iFile > 0) {
-        files->Outfile[iFile-1].caGrid[iOption] = NULL;
-        files->Outfile[iFile-1].caCol[iOption] = NULL;
-      }
+      fvFormattedString(&options[iOption].cFile[iFile], "null");
     }
   }
 }
 
-void InitializeFiles(FILES *files, OPTIONS *options, char *sPrimaryFile, char **saBodyFiles, int iNumBodies) {
+void InitializeFiles(FILES *files, OPTIONS *options, char *sPrimaryFile,
+                     char **saBodyFiles, int iNumBodies) {
   int iFile;
 
   files->iNumInputs = iNumBodies + 1;
-  files->cLog = NULL;
-  files->cExe = NULL;
-  files->Infile            = malloc(files->iNumInputs * sizeof(INFILE));
-  files->Outfile             = malloc(iNumBodies * sizeof(OUTFILE));
+  files->cLog       = NULL;
+  files->Infile     = malloc(files->iNumInputs * sizeof(INFILE));
+  files->Outfile    = malloc(iNumBodies * sizeof(OUTFILE));
 
   for (iFile = 0; iFile < files->iNumInputs; iFile++) {
     files->Infile[iFile].cIn = NULL;
@@ -126,17 +122,17 @@ void InitializeFiles(FILES *files, OPTIONS *options, char *sPrimaryFile, char **
       files->Infile[0].iNumLines = iGetNumLines(sPrimaryFile);
       fvFormattedString(&files->Infile[0].cIn, sPrimaryFile);
     } else {
-      CheckFileExists(saBodyFiles[iFile-1]);
-      files->Infile[iFile].iNumLines = iGetNumLines(saBodyFiles[iFile-1]);
-      fvFormattedString(&files->Infile[iFile].cIn, saBodyFiles[iFile-1]);
+      CheckFileExists(saBodyFiles[iFile - 1]);
+      files->Infile[iFile].iNumLines = iGetNumLines(saBodyFiles[iFile - 1]);
+      fvFormattedString(&files->Infile[iFile].cIn, saBodyFiles[iFile - 1]);
 
-      files->Outfile[iFile-1].cOut = NULL;
+      files->Outfile[iFile - 1].cOut = NULL;
       // Outfile names assigned after reading in output file names
     }
     RecordCommentsAndWhiteSpace(&files->Infile[iFile]);
   }
 
-  InitializeFilesOptions(files,options);
+  InitializeFilesOptions(files, options);
 }
 
 void InitializePropsAux(CONTROL *control, MODULE *module) {
@@ -161,7 +157,6 @@ void InitializePropsAux(CONTROL *control, MODULE *module) {
             malloc(2 * module->iNumModules[iBody] * sizeof(fnPropsAuxModule *));
     }
   }
-
 }
 
 void InitilizeForceBehavior(CONTROL *control, MODULE *module) {
@@ -336,8 +331,8 @@ void WriteDescription(char cLongDescr[], char cDescr[], int iMaxChars) {
   char **cLine;
 
   cLine = malloc(MAXARRAY * sizeof(char *));
-  for (iWord=0;iWord<MAXARRAY;iWord++) {
-    cLine[iWord]=NULL;
+  for (iWord = 0; iWord < MAXARRAY; iWord++) {
+    cLine[iWord] = NULL;
   }
 
   for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
@@ -387,7 +382,7 @@ void WriteDescription(char cLongDescr[], char cDescr[], int iMaxChars) {
     // Now reset counters
     iCharsLeft = iMaxChars;
     for (iLineWordNow = 0; iLineWordNow < MAXARRAY; iLineWordNow++) {
-      cLine[iLineWordNow]=NULL;
+      cLine[iLineWordNow] = NULL;
     }
     iLine++;
     iLineWord = 0;
@@ -923,8 +918,9 @@ void fvFormattedString(char **sString, const char *sFormattedString, ...) {
   va_end(vaArgs);
 
   AllocateStringMemory(sString, iStringLength);
-
+  va_start(vaArgs, sFormattedString);
   vsnprintf(*sString, iStringLength, sFormattedString, vaArgsCopy);
+  va_end(vaArgs);
   va_end(vaArgsCopy);
 }
 
@@ -1076,7 +1072,7 @@ void fsUnitsViscosity(UNITS *units, char **cUnit) {
 
   fsUnitsLength(units->iLength, &cUnitLength);
   fsUnitsTime(units->iTime, &cUnitTime);
-  fvFormattedString(cUnit, "%s^2/%s",cUnitLength,cUnitTime);
+  fvFormattedString(cUnit, "%s^2/%s", cUnitLength, cUnitTime);
   free(cUnitLength);
   free(cUnitTime);
 }
@@ -1098,7 +1094,7 @@ void fsUnitsDensity(UNITS *units, char **cUnit) {
 
   fsUnitsMass(units->iMass, &cUnitMass);
   fsUnitsLength(units->iLength, &cUnitLength);
-  fvFormattedString(cUnit, "%s/%s^3",cUnitMass, cUnitLength);
+  fvFormattedString(cUnit, "%s/%s^3", cUnitMass, cUnitLength);
   free(cUnitMass);
   free(cUnitLength);
 }
@@ -1179,7 +1175,7 @@ double fdUnitsPower(int iTime, int iMass, int iLength) {
 }
 
 void fsUnitsEnergyFlux(UNITS *units, char **cUnit) {
-  char *cUnitMass = NULL,*cUnitTime = NULL;
+  char *cUnitMass = NULL, *cUnitTime = NULL;
 
   fsUnitsMass(units->iMass, &cUnitMass);
   fsUnitsTime(units->iTime, &cUnitTime);

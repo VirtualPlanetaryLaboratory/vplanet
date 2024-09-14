@@ -29,9 +29,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install cibuildwheel
+      - name: Install packages
         run: |
           python -m pip install -U pip
+          python -m pip install setuptools
           python -m pip install cibuildwheel
 
       - name: Build wheel on Linux
@@ -52,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wheel-${{ matrix.os }}-${{ matrix.python-version }}
-          path: ./wheelhouse/*.whl
+          path: ./wheelhouse/
 
   build_sdist:
     name: Building source for ${{ matrix.os }}:Python-${{ matrix.python-version }}
@@ -81,6 +82,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install packages
+        run: |
+          python -m pip install -U pip
+          python -m pip install setuptools
+
       - name: Build sdist
         run: python setup.py sdist
 
@@ -88,33 +94,61 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sdist-${{ matrix.os }}-${{ matrix.python-version }}
-          path: dist/*.tar.gz
+          path: dist/
 
   upload_pypi:
     needs: [build_wheels, build_sdist]
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, macos-12, macos-13, macos-14]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
-        exclude:
-          - os: ubuntu-22.04
-            python-version: '3.6'
-          - os: macos-14
-            python-version: '3.6'
-          - os: macos-14
-            python-version: '3.7'
-      fail-fast: false
+    runs-on: ubuntu-22.04
 
     steps:
      - uses: actions/download-artifact@v4
        with:
-          name: wheel-${{ matrix.os }}-${{ matrix.python-version }}
+          name: wheel-ubuntu-20.04-3.6.whl
           path: wheelhouse
 
      - uses: actions/download-artifact@v4
        with:
-          name: sdist-${{ matrix.os }}-${{ matrix.python-version }}
+          name: wheel-ubuntu-22.04-*
+          path: wheelhouse
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: wheel-macos-12-*
+          path: wheelhouse
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: wheel-macos-13-*
+          path: wheelhouse
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: wheel-macos-14-*
+          path: wheelhouse
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: sdist-ubuntu-20.04-*
+          path: dist
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: sdist-ubuntu-22.04-*
+          path: dist
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: sdist-macos-12-*
+          path: dist
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: sdist-macos-13-*
+          path: dist
+
+     - uses: actions/download-artifact@v4
+       with:
+          name: sdist-macos-14-*
           path: dist
 
      - name: Install dependencies

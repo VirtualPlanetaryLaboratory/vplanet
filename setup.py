@@ -1,8 +1,6 @@
 import os
 import sys
-from distutils.command.clean import clean
 from glob import glob
-
 from setuptools import Extension, find_packages, setup
 from setuptools.command.build_ext import build_ext
 from setuptools.command.develop import develop
@@ -35,10 +33,10 @@ class Develop(develop):
     """Custom develop command that clears build cache before install."""
 
     def run(self):
-        c = clean(self.distribution)
-        c.all = True
-        c.finalize_options()
-        c.run()
+        # c = clean(self.distribution)
+        # c.all = True
+        # c.finalize_options()
+        # c.run()
         develop.run(self)
 
 

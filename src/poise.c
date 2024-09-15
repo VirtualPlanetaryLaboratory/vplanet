@@ -2920,7 +2920,7 @@ void fvGeographyExitLandFracMean(CONTROL *control, OPTIONS *options,
             "ERROR: Cannot set %s with \"uniform\", \"modern\", \"polar\" or "
             "\"equatorial\" geography. "
             "Note that \"uniform\" is the default.\n",
-            options[OPT_LANDWATERLATITUDE].cName);
+            options[OPT_LANDFRACMEAN].cName);
   }
   DoubleLineExit(options[OPT_LANDFRACMEAN].cFile[iBody + 1],
                  options[OPT_GEOGRAPHY].cFile[iBody + 1],
@@ -2934,7 +2934,7 @@ void fvGeographyExitLandFracAmp(CONTROL *control, OPTIONS *options, int iBody) {
             "ERROR: Cannot set %s with \"uniform\", \"modern\", \"polar\" or "
             "\"equatorial\" geography. "
             "Note that \"uniform\" is the default.\n",
-            options[OPT_LANDWATERLATITUDE].cName);
+            options[OPT_LANDFRACAMP].cName);
   }
   DoubleLineExit(options[OPT_LANDFRACAMP].cFile[iBody + 1],
                  options[OPT_GEOGRAPHY].cFile[iBody + 1],
@@ -2981,7 +2981,13 @@ void fvVerifyGeographyModern(CONTROL *control, OPTIONS *options, int iBody) {
 
 void fvVerifyGeographyRandom(CONTROL *control, OPTIONS *options, SYSTEM *system,
                              int iBody) {
-  fvVerifyLatitudeMeanAndAmpNotSet(control, options, iBody);
+
+  if (options[OPT_LANDWATERLATITUDE].iLine[iBody + 1] != -1) {
+    fvGeographyExitLandWaterLatitude(control, options, iBody);
+  }
+  if (options[OPT_LANDFRAC].iLine[iBody + 1] != -1) {
+    fvGeographyExitLandFrac(control, options, iBody);
+  }
   if (options[OPT_RANDSEED].iLine[iBody + 1] == -1) {
     if (control->Io.iVerbose > VERBINPUT) {
       fprintf(stderr,
@@ -3003,7 +3009,7 @@ void fvVerifyGeographyPolarEquatorial(BODY *body, CONTROL *control,
   if (options[OPT_LANDFRAC].iLine[iBody + 1] != -1) {
     fvGeographyExitLandFrac(control, options, iBody);
   }
-  if (options[OPT_LANDWATERLATITUDE].iLine[iBody + 1] != -1) {
+  if (options[OPT_LANDWATERLATITUDE].iLine[iBody + 1] == -1) {
     if (control->Io.iVerbose > VERBINPUT) {
       fprintf(stderr, "\nWARNING: %s set to \"", options[OPT_GEOGRAPHY].cName);
       if (body[iBody].iGeography == GEOGRAPHYPOLAR) {

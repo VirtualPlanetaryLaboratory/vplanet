@@ -607,15 +607,15 @@ void ReadGeography(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     //CheckDuplication(files,options,files->Infile[iFile].cIn,lTmp,\
                        control->Io.iVerbose);
     if (!memcmp(sLower(cTmp), "u", 1)) {
-      body[iFile - 1].iGeography = LANDWATERUNIFORM;
+      body[iFile - 1].iGeography = GEOGRAPHYUNIFORM;
     } else if (!memcmp(sLower(cTmp), "m", 1)) {
-      body[iFile - 1].iGeography = LANDWATERMODERN;
+      body[iFile - 1].iGeography = GEOGRAPHYMODERN;
     } else if (!memcmp(sLower(cTmp), "r", 1)) {
-      body[iFile - 1].iGeography = LANDWATERRANDOM;
+      body[iFile - 1].iGeography = GEOGRAPHYRANDOM;
     } else if (!memcmp(sLower(cTmp), "p", 1)) {
-      body[iFile - 1].iGeography = LANDWATERPOLAR;
+      body[iFile - 1].iGeography = GEOGRAPHYPOLAR;
     } else if (!memcmp(sLower(cTmp), "e", 1)) {
-      body[iFile - 1].iGeography = LANDWATEREQUATORIAL;
+      body[iFile - 1].iGeography = GEOGRAPHYEQUATORIAL;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
@@ -1606,7 +1606,7 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_GEOGRAPHY].cDescr,
                     "Type of land distribution");
   fvFormattedString(&options[OPT_GEOGRAPHY].cDefault, "uniform");
-  options[OPT_GEOGRAPHY].dDefault   = LANDWATERUNIFORM;
+  options[OPT_GEOGRAPHY].dDefault   = GEOGRAPHYUNIFORM;
   options[OPT_GEOGRAPHY].iType      = 3;
   options[OPT_GEOGRAPHY].bMultiFile = 1;
   fnRead[OPT_GEOGRAPHY]             = &ReadGeography;
@@ -2205,15 +2205,15 @@ void InitializeLandWater(BODY *body, int iBody) {
   body[iBody].daLandFrac  = malloc(body[iBody].iNumLats * sizeof(double));
   body[iBody].daWaterFrac = malloc(body[iBody].iNumLats * sizeof(double));
 
-  if (body[iBody].iGeography == LANDWATERUNIFORM) {
+  if (body[iBody].iGeography == GEOGRAPHYUNIFORM) {
     fvInitializeLandWaterUniform(body, iBody);
-  } else if (body[iBody].iGeography == LANDWATERMODERN) {
+  } else if (body[iBody].iGeography == GEOGRAPHYMODERN) {
     fvInitializeLandWaterModern(body, iBody);
-  } else if (body[iBody].iGeography == LANDWATERRANDOM) {
+  } else if (body[iBody].iGeography == GEOGRAPHYRANDOM) {
     fvInitializeLandWaterRandom(body, iBody);
-  } else if (body[iBody].iGeography == LANDWATERPOLAR) {
+  } else if (body[iBody].iGeography == GEOGRAPHYPOLAR) {
     fvInitializeLandWaterPolar(body, iBody);
-  } else if (body[iBody].iGeography == LANDWATEREQUATORIAL) {
+  } else if (body[iBody].iGeography == GEOGRAPHYEQUATORIAL) {
     fvInitializeLandWaterEquatorial(body, iBody);
   }
 
@@ -2898,58 +2898,140 @@ void NullPoiseDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
   //  Nothing here, because entire climate simulation is ran in ForceBehavior
 }
 
-void VerifyGeography(BODY *body, CONTROL *control, OPTIONS *options,
-                     SYSTEM *system, int iBody) {
-
-  if (body[iBody].iGeography == LANDWATERUNIFORM ||
-      body[iBody].iGeography == LANDWATERMODERN ||
-      body[iBody].iGeography == LANDWATERRANDOM) {
-    if (options[OPT_LANDWATERLATITUDE].iLine[iBody + 1] != -1) {
-      if (control->Io.iVerbose > VERBINPUT) {
-        fprintf(stderr,
-                "ERROR: Cannot set %s with \"uniform\", \"modern\", or "
-                "\"random\" geography. "
-                "Note that \"uniform\" is the default.\n",
-                options[OPT_LANDWATERLATITUDE].cName);
-      }
-      DoubleLineExit(options[OPT_LANDWATERLATITUDE].cFile[iBody + 1],
-                     options[OPT_GEOGRAPHY].cFile[iBody + 1],
-                     options[OPT_LANDWATERLATITUDE].iLine[iBody + 1],
-                     options[OPT_GEOGRAPHY].iLine[iBody + 1]);
-    }
+void fvGeographyExitLandWaterLatitude(CONTROL *control, OPTIONS *options,
+                                      int iBody) {
+  if (control->Io.iVerbose > VERBINPUT) {
+    fprintf(stderr,
+            "ERROR: Cannot set %s with \"uniform\", \"modern\", or "
+            "\"random\" geography. "
+            "Note that \"uniform\" is the default.\n",
+            options[OPT_LANDWATERLATITUDE].cName);
   }
+  DoubleLineExit(options[OPT_LANDWATERLATITUDE].cFile[iBody + 1],
+                 options[OPT_GEOGRAPHY].cFile[iBody + 1],
+                 options[OPT_LANDWATERLATITUDE].iLine[iBody + 1],
+                 options[OPT_GEOGRAPHY].iLine[iBody + 1]);
+}
 
-  if (body[iBody].iGeography == LANDWATERMODERN ||
-      body[iBody].iGeography == LANDWATERRANDOM ||
-      body[iBody].iGeography == LANDWATERPOLAR ||
-      body[iBody].iGeography == LANDWATEREQUATORIAL) {
-    if (options[OPT_LANDFRAC].iLine[iBody + 1] != -1) {
-      if (control->Io.iVerbose > VERBINPUT) {
-        fprintf(stderr,
-                "ERROR: %s can only be set when %s is set to \"uniform\". Note "
-                "that \"uniform\" is the default.\n",
-                options[OPT_LANDFRAC].cName, options[OPT_GEOGRAPHY].cName);
-      }
-    }
+void fvGeographyExitLandFracMean(CONTROL *control, OPTIONS *options,
+                                 int iBody) {
+  if (control->Io.iVerbose > VERBINPUT) {
+    fprintf(stderr,
+            "ERROR: Cannot set %s with \"uniform\", \"modern\", \"polar\" or "
+            "\"equatorial\" geography. "
+            "Note that \"uniform\" is the default.\n",
+            options[OPT_LANDWATERLATITUDE].cName);
   }
+  DoubleLineExit(options[OPT_LANDFRACMEAN].cFile[iBody + 1],
+                 options[OPT_GEOGRAPHY].cFile[iBody + 1],
+                 options[OPT_LANDFRACMEAN].iLine[iBody + 1],
+                 options[OPT_GEOGRAPHY].iLine[iBody + 1]);
+}
 
-  if (body[iBody].iGeography == LANDWATERRANDOM &&
-      options[OPT_RANDSEED].iLine[iBody + 1] == -1) {
+void fvGeographyExitLandFracAmp(CONTROL *control, OPTIONS *options, int iBody) {
+  if (control->Io.iVerbose > VERBINPUT) {
+    fprintf(stderr,
+            "ERROR: Cannot set %s with \"uniform\", \"modern\", \"polar\" or "
+            "\"equatorial\" geography. "
+            "Note that \"uniform\" is the default.\n",
+            options[OPT_LANDWATERLATITUDE].cName);
+  }
+  DoubleLineExit(options[OPT_LANDFRACAMP].cFile[iBody + 1],
+                 options[OPT_GEOGRAPHY].cFile[iBody + 1],
+                 options[OPT_LANDFRACAMP].iLine[iBody + 1],
+                 options[OPT_GEOGRAPHY].iLine[iBody + 1]);
+}
+
+void fvGeographyExitLandFrac(CONTROL *control, OPTIONS *options, int iBody) {
+  if (control->Io.iVerbose > VERBINPUT) {
+    fprintf(stderr,
+            "ERROR: %s can only be set when %s is set to \"uniform\". Note "
+            "that \"uniform\" is the default.\n",
+            options[OPT_LANDFRAC].cName, options[OPT_GEOGRAPHY].cName);
+  }
+  DoubleLineExit(options[OPT_LANDFRAC].cFile[iBody + 1],
+                 options[OPT_GEOGRAPHY].cFile[iBody + 1],
+                 options[OPT_LANDFRAC].iLine[iBody + 1],
+                 options[OPT_GEOGRAPHY].iLine[iBody + 1]);
+}
+
+void fvVerifyLatitudeMeanAndAmpNotSet(CONTROL *control, OPTIONS *options,
+                                      int iBody) {
+  if (options[OPT_LANDWATERLATITUDE].iLine[iBody + 1] != -1) {
+    fvGeographyExitLandWaterLatitude(control, options, iBody);
+  }
+  if (options[OPT_LANDFRACMEAN].iLine[iBody + 1] != -1) {
+    fvGeographyExitLandFracMean(control, options, iBody);
+  }
+  if (options[OPT_LANDFRACAMP].iLine[iBody + 1] != -1) {
+    fvGeographyExitLandFracAmp(control, options, iBody);
+  }
+}
+
+void fvVerifyGeographyUniform(CONTROL *control, OPTIONS *options, int iBody) {
+  fvVerifyLatitudeMeanAndAmpNotSet(control, options, iBody);
+}
+
+void fvVerifyGeographyModern(CONTROL *control, OPTIONS *options, int iBody) {
+  fvVerifyLatitudeMeanAndAmpNotSet(control, options, iBody);
+  if (options[OPT_LANDFRAC].iLine[iBody + 1] != -1) {
+    fvGeographyExitLandFrac(control, options, iBody);
+  }
+}
+
+void fvVerifyGeographyRandom(CONTROL *control, OPTIONS *options, SYSTEM *system,
+                             int iBody) {
+  fvVerifyLatitudeMeanAndAmpNotSet(control, options, iBody);
+  if (options[OPT_RANDSEED].iLine[iBody + 1] == -1) {
     if (control->Io.iVerbose > VERBINPUT) {
       fprintf(stderr,
-              "\nWARNING: %s is set to \"radnom\", but %s is not set.\n\n",
+              "\nWARNING: %s is set to \"random\", but %s is not set.\n\n",
               options[OPT_GEOGRAPHY].cName, options[OPT_RANDSEED].cName);
     }
   }
+  srand(system->iSeed);
+}
 
-  if (body[iBody].iGeography == LANDWATERRANDOM) {
-    srand(system->iSeed);
+void fvVerifyGeographyPolarEquatorial(BODY *body, CONTROL *control,
+                                      OPTIONS *options, int iBody) {
+  if (options[OPT_LANDFRACMEAN].iLine[iBody + 1] != -1) {
+    fvGeographyExitLandFracMean(control, options, iBody);
+  }
+  if (options[OPT_LANDFRACAMP].iLine[iBody + 1] != -1) {
+    fvGeographyExitLandFracAmp(control, options, iBody);
+  }
+  if (options[OPT_LANDFRAC].iLine[iBody + 1] != -1) {
+    fvGeographyExitLandFrac(control, options, iBody);
+  }
+  if (options[OPT_LANDWATERLATITUDE].iLine[iBody + 1] != -1) {
+    if (control->Io.iVerbose > VERBINPUT) {
+      fprintf(stderr, "\nWARNING: %s set to \"", options[OPT_GEOGRAPHY].cName);
+      if (body[iBody].iGeography == GEOGRAPHYPOLAR) {
+        fprintf(stderr, "polar");
+      } else if (body[iBody].iGeography == GEOGRAPHYEQUATORIAL) {
+        fprintf(stderr, "equatorial");
+      }
+      fprintf(stderr, "\" but %s is not set.\n",
+              options[OPT_LANDWATERLATITUDE].cName);
+    }
   }
 
-  if (body[iBody].iGeography == LANDWATERPOLAR ||
-      body[iBody].iGeography == LANDWATEREQUATORIAL) {
-    body[iBody].iLatLandWater =
-          (int)(body[iBody].dLatLandWater * body[iBody].iNumLats / PI);
+  body[iBody].iLatLandWater =
+        (int)(body[iBody].dLatLandWater * body[iBody].iNumLats / PI);
+}
+
+void VerifyGeography(BODY *body, CONTROL *control, OPTIONS *options,
+                     SYSTEM *system, int iBody) {
+
+  if (body[iBody].iGeography == GEOGRAPHYUNIFORM) {
+    fvVerifyGeographyUniform(control, options, iBody);
+  } else if (body[iBody].iGeography == GEOGRAPHYMODERN) {
+    fvVerifyGeographyModern(control, options, iBody);
+  } else if (body[iBody].iGeography == GEOGRAPHYRANDOM) {
+    fvVerifyGeographyRandom(control, options, system, iBody);
+  } else if (body[iBody].iGeography == GEOGRAPHYPOLAR ||
+             body[iBody].iGeography == GEOGRAPHYEQUATORIAL) {
+    fvVerifyGeographyPolarEquatorial(body, control, options, iBody);
   }
 }
 

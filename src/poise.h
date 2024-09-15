@@ -26,11 +26,11 @@
 #define ALBTAYLOR 1
 
 /* Land Geography */
-#define LANDWATERUNIFORM 0
-#define LANDWATERMODERN 1
-#define LANDWATERRANDOM 2
-#define LANDWATERPOLAR 3
-#define LANDWATEREQUATORIAL 4
+#define GEOGRAPHYUNIFORM 0
+#define GEOGRAPHYMODERN 1
+#define GEOGRAPHYRANDOM 2
+#define GEOGRAPHYPOLAR 3
+#define GEOGRAPHYEQUATORIAL 4
 
 // Constants for the ice model
 #define LFICE 3.34e5  // ???
@@ -83,8 +83,8 @@
 #define OPT_SKIPSEASENABLED 1921
 #define OPT_DIFFROT 1922
 #define OPT_SPINUPTOL 1923
-#define OPT_READORBITOBLDATA  1924
-#define OPT_FILEORBITOBLDATA  1925
+#define OPT_READORBITOBLDATA 1924
+#define OPT_FILEORBITOBLDATA 1925
 
 #define OPT_LANDFRAC 1940
 #define OPT_LANDFRACMEAN 1941
@@ -92,7 +92,7 @@
 #define OPT_HEATCAPLAND 1943
 #define OPT_HEATCAPWATER 1944
 #define OPT_FRZTSEAICE 1945
-//#define OPT_LATENTHEAT    1945
+// #define OPT_LATENTHEAT    1945
 #define OPT_ICECONDUCT 1946
 #define OPT_MIXINGDEPTH 1947
 #define OPT_NULANDWATER 1948
@@ -198,7 +198,7 @@ void HelpOptionsPoise(OPTIONS *);
 void InitializeOptionsPoise(OPTIONS *, fnReadOption[]);
 void ReadOptionsPoise(BODY *, CONTROL *, FILES *, OPTIONS *, SYSTEM *,
                       fnReadOption[], int);
-void ReadOrbitOblData(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadOrbitOblData(BODY *, CONTROL *, FILES *, OPTIONS *, SYSTEM *, int);
 
 /* Verify Functions */
 void VerifyPoise(BODY *, CONTROL *, FILES *, OPTIONS *, OUTPUT *, SYSTEM *,
@@ -217,39 +217,39 @@ void FinalizeUpdateIceMassPoise(BODY *, UPDATE *, int *, int, int, int);
 
 void HelpOutputPoise(OUTPUT *);
 void WriteTGlobal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char**);
+                  double *, char **);
 void WriteAlbedoGlobal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char**);
+                       int, double *, char **);
 void WriteTempLat(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char**);
+                  double *, char **);
 void WriteTempMinLW(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char**);
+                    int, double *, char **);
 void WriteTempMaxLW(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char**);
+                    int, double *, char **);
 void WriteAlbedoLat(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char**);
+                    int, double *, char **);
 void WriteAnnualInsol(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char**);
+                      int, double *, char **);
 void WriteDailyInsol(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char**);
+                     int, double *, char **);
 void WritePlanckB(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char**);
+                  double *, char **);
 void WritePlanckBAvg(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char**);
+                     int, double *, char **);
 void WriteSeasonalTemp(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char**);
+                       int, double *, char **);
 void WriteSeasonalFluxes(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char**);
+                         UPDATE *, int, double *, char **);
 void WriteSeasonalIceBalance(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                             UPDATE *, int, double *, char**);
+                             UPDATE *, int, double *, char **);
 void WriteFluxMerid(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char**);
+                    int, double *, char **);
 void WriteFluxIn(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                 double *, char**);
+                 double *, char **);
 void WriteFluxOut(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char**);
+                  double *, char **);
 void WriteDivFlux(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char**);
+                  double *, char **);
 void InitializeOutputPoise(OUTPUT *, fnWriteOutput[]);
 
 /* Logging Functions */

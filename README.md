@@ -23,7 +23,7 @@
   </a>
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg">
   <br>
-  <img src="https://img.shields.io/badge/Unit%20Tests-19,599-darkblue.svg">
+  <img src="https://img.shields.io/badge/Unit%20Tests-19,667-darkblue.svg">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-linux.yml/badge.svg">
   <img src="https://img.shields.io/badge/Ubuntu%2020-Python%203.6--3.12-7d93c7.svg">
   <img src="https://img.shields.io/badge/Ubuntu%2022-Python%203.7--3.12-7d93c7.svg">

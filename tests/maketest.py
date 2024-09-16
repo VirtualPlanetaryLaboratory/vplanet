@@ -363,6 +363,9 @@ def ProcessUnits(data):
         if units == "kg/m^3":
             v[0] = "u.kg / u.m ** 3"
 
+        if units == "kg/sec^3":
+            v[0] = "u.kg / u.sec ** 3"
+
         if units == "m/sec" or units == "m/s":
             v[0] = "u.m / u.sec"
 

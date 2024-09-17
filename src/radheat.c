@@ -1770,7 +1770,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
 
   /* 26Al */
   fvFormattedString(&options[OPT_26ALMASSMAN].cName, "d26AlMassMan");
-  fvFormattedString(&options[OPT_26ALMASSMAN].cDescr, "Initial Mantle Mass of 26Al");
+  fvFormattedString(&options[OPT_26ALMASSMAN].cDescr,
+                    "Initial Mantle Mass of 26Al");
   fvFormattedString(&options[OPT_26ALMASSMAN].cDefault, "0");
   fvFormattedString(&options[OPT_26ALMASSMAN].cDimension, "mass");
   options[OPT_26ALMASSMAN].iType      = 2;
@@ -1781,7 +1782,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_26ALMASSMAN] = &fvRead26AlMassMan;
 
   fvFormattedString(&options[OPT_26ALMASSCORE].cName, "d26AlMassCore");
-  fvFormattedString(&options[OPT_26ALMASSCORE].cDescr, "Initial Core Mass of 26Al");
+  fvFormattedString(&options[OPT_26ALMASSCORE].cDescr,
+                    "Initial Core Mass of 26Al");
   fvFormattedString(&options[OPT_26ALMASSCORE].cDefault, "0");
   fvFormattedString(&options[OPT_26ALMASSCORE].cDimension, "mass");
   options[OPT_26ALMASSCORE].iType      = 2;
@@ -1793,30 +1795,33 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_26ALNUMMAN].cName, "d26AlNumMan");
   fvFormattedString(&options[OPT_26ALNUMMAN].cDescr,
-          "Initial Mantle Number of 26Al Atoms");
+                    "Initial Mantle Number of 26Al Atoms");
   fvFormattedString(&options[OPT_26ALNUMMAN].cDefault, "0");
   fvFormattedString(&options[OPT_26ALNUMMAN].cDimension, "mass");
   options[OPT_26ALNUMMAN].iType      = 2;
   options[OPT_26ALNUMMAN].bMultiFile = 1;
   options[OPT_26ALNUMMAN].dNeg       = ENUMMAN26AL;
   options[OPT_26ALNUMMAN].dDefault   = 0;
-  fvFormattedString(&options[OPT_26ALNUMMAN].cNeg, "Primordial Earth 26Al Number");
+  fvFormattedString(&options[OPT_26ALNUMMAN].cNeg,
+                    "Primordial Earth 26Al Number");
   fnRead[OPT_26ALNUMMAN] = &fvRead26AlNumMan;
 
   fvFormattedString(&options[OPT_26ALNUMCORE].cName, "d26AlNumCore");
-  fvFormattedString(&options[OPT_26ALNUMCORE].cDescr, "Initial Core Number of 26Al Atoms");
+  fvFormattedString(&options[OPT_26ALNUMCORE].cDescr,
+                    "Initial Core Number of 26Al Atoms");
   fvFormattedString(&options[OPT_26ALNUMCORE].cDefault, "0");
   fvFormattedString(&options[OPT_26ALNUMCORE].cDimension, "nd");
   options[OPT_26ALNUMCORE].iType      = 2;
   options[OPT_26ALNUMCORE].bMultiFile = 1;
   options[OPT_26ALNUMCORE].dNeg       = ENUMCORE26AL;
   options[OPT_26ALNUMCORE].dDefault   = 0;
-  fvFormattedString(&options[OPT_26ALNUMCORE].cNeg, "Primordial Earth 26Al Number");
+  fvFormattedString(&options[OPT_26ALNUMCORE].cNeg,
+                    "Primordial Earth 26Al Number");
   fnRead[OPT_26ALNUMCORE] = &fvRead26AlNumCore;
 
   fvFormattedString(&options[OPT_26ALPOWERMAN].cName, "d26AlPowerMan");
   fvFormattedString(&options[OPT_26ALPOWERMAN].cDescr,
-          "Initial Mantle Power Production from 26Al Atoms");
+                    "Initial Mantle Power Production from 26Al Atoms");
   fvFormattedString(&options[OPT_26ALPOWERMAN].cDefault, "0");
   fvFormattedString(&options[OPT_26ALPOWERMAN].cDimension, "energy/time");
   options[OPT_26ALPOWERMAN].iType      = 2;
@@ -1828,7 +1833,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_26ALPOWERCORE].cName, "d26AlPowerCore");
   fvFormattedString(&options[OPT_26ALPOWERCORE].cDescr,
-          "Initial Core Power Production from 26Al Atoms");
+                    "Initial Core Power Production from 26Al Atoms");
   fvFormattedString(&options[OPT_26ALPOWERCORE].cDefault, "0");
   fvFormattedString(&options[OPT_26ALPOWERCORE].cDimension, "energy/time");
   options[OPT_26ALPOWERCORE].iType      = 2;
@@ -1840,7 +1845,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
 
   /* 40K */
   fvFormattedString(&options[OPT_40KMASSMAN].cName, "d40KMassMan");
-  fvFormattedString(&options[OPT_40KMASSMAN].cDescr, "Initial Mantle Mass of 40K");
+  fvFormattedString(&options[OPT_40KMASSMAN].cDescr,
+                    "Initial Mantle Mass of 40K");
   fvFormattedString(&options[OPT_40KMASSMAN].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_40KMASSMAN].cDimension, "mass");
   options[OPT_40KMASSMAN].iType      = 2;
@@ -1851,8 +1857,10 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_40KMASSMAN] = &fvRead40KMassMan;
 
   fvFormattedString(&options[OPT_40KMASSCORE].cName, "d40KMassCore");
-  fvFormattedString(&options[OPT_40KMASSCORE].cDescr, "Initial Core Mass of 40K");
-  fvFormattedString(&options[OPT_40KMASSCORE].cDefault, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_40KMASSCORE].cDescr,
+                    "Initial Core Mass of 40K");
+  fvFormattedString(&options[OPT_40KMASSCORE].cDefault,
+                    "Primordial Earth Units");
   fvFormattedString(&options[OPT_40KMASSCORE].cDimension, "mass");
   options[OPT_40KMASSCORE].iType      = 2;
   options[OPT_40KMASSCORE].bMultiFile = 1;
@@ -1862,7 +1870,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_40KMASSCORE] = &fvRead40KMassCore;
 
   fvFormattedString(&options[OPT_40KMASSCRUST].cName, "d40KMassCrust");
-  fvFormattedString(&options[OPT_40KMASSCRUST].cDescr, "Initial Crust Mass of 40K");
+  fvFormattedString(&options[OPT_40KMASSCRUST].cDescr,
+                    "Initial Crust Mass of 40K");
   fvFormattedString(&options[OPT_40KMASSCRUST].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_40KMASSCRUST].cDimension, "mass");
   options[OPT_40KMASSCRUST].iType      = 2;
@@ -1873,7 +1882,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_40KMASSCRUST] = &fvRead40KMassCrust;
 
   fvFormattedString(&options[OPT_40KNUMMAN].cName, "d40KNumMan");
-  fvFormattedString(&options[OPT_40KNUMMAN].cDescr, "Initial Mantle Number of 40K Atoms");
+  fvFormattedString(&options[OPT_40KNUMMAN].cDescr,
+                    "Initial Mantle Number of 40K Atoms");
   fvFormattedString(&options[OPT_40KNUMMAN].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_40KNUMMAN].cDimension, "nd");
   options[OPT_40KNUMMAN].iType      = 2;
@@ -1884,7 +1894,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_40KNUMMAN] = &fvRead40KNumMan;
 
   fvFormattedString(&options[OPT_40KNUMCORE].cName, "d40KNumCore");
-  fvFormattedString(&options[OPT_40KNUMCORE].cDescr, "Initial Core Number of 40K Atoms");
+  fvFormattedString(&options[OPT_40KNUMCORE].cDescr,
+                    "Initial Core Number of 40K Atoms");
   fvFormattedString(&options[OPT_40KNUMCORE].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_40KNUMCORE].cDimension, "nd");
   options[OPT_40KNUMCORE].iType      = 2;
@@ -1895,7 +1906,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_40KNUMCORE] = &fvRead40KNumCore;
 
   fvFormattedString(&options[OPT_40KNUMCRUST].cName, "d40KNumCrust");
-  fvFormattedString(&options[OPT_40KNUMCRUST].cDescr, "Initial Crust Number of 40K Atoms");
+  fvFormattedString(&options[OPT_40KNUMCRUST].cDescr,
+                    "Initial Crust Number of 40K Atoms");
   fvFormattedString(&options[OPT_40KNUMCRUST].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_40KNUMCRUST].cDimension, "nd");
   options[OPT_40KNUMCRUST].iType      = 2;
@@ -1907,7 +1919,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_40KPOWERMAN].cName, "d40KPowerMan");
   fvFormattedString(&options[OPT_40KPOWERMAN].cDescr,
-          "Initial Mantle Power Production from 40K Atoms");
+                    "Initial Mantle Power Production from 40K Atoms");
   fvFormattedString(&options[OPT_40KPOWERMAN].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_40KPOWERMAN].cDimension, "energy/time");
   options[OPT_40KPOWERMAN].iType      = 2;
@@ -1919,7 +1931,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_40KPOWERCORE].cName, "d40KPowerCore");
   fvFormattedString(&options[OPT_40KPOWERCORE].cDescr,
-          "Initial Core Power Production from 40K Atoms");
+                    "Initial Core Power Production from 40K Atoms");
   fvFormattedString(&options[OPT_40KPOWERCORE].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_40KPOWERCORE].cDimension, "energy/time");
   options[OPT_40KPOWERCORE].iType      = 2;
@@ -1931,7 +1943,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_40KPOWERCRUST].cName, "d40KPowerCrust");
   fvFormattedString(&options[OPT_40KPOWERCRUST].cDescr,
-          "Initial Crust Power Production from 40K Atoms");
+                    "Initial Crust Power Production from 40K Atoms");
   fvFormattedString(&options[OPT_40KPOWERCRUST].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_40KPOWERCRUST].cDimension, "energy/time");
   options[OPT_40KPOWERCRUST].iType      = 2;
@@ -1954,7 +1966,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_232THMASSMAN] = &fvRead232ThMassMan;
 
   fvFormattedString(&options[OPT_232THNUMMAN].cName, "d232ThNumMan");
-  fvFormattedString(&options[OPT_232THNUMMAN].cDescr, "Initial Number of 232Th Atoms");
+  fvFormattedString(&options[OPT_232THNUMMAN].cDescr,
+                    "Initial Number of 232Th Atoms");
   fvFormattedString(&options[OPT_232THNUMMAN].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_232THNUMMAN].cDimension, "nd");
   options[OPT_232THNUMMAN].iType      = 2;
@@ -1966,7 +1979,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_232THPOWERMAN].cName, "d232ThPowerMan");
   fvFormattedString(&options[OPT_232THPOWERMAN].cDescr,
-          "Initial Power Production from 232Th Atoms");
+                    "Initial Power Production from 232Th Atoms");
   fvFormattedString(&options[OPT_232THPOWERMAN].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_232THPOWERMAN].cDimension, "energy/time");
   options[OPT_232THPOWERMAN].iType      = 2;
@@ -1977,7 +1990,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_232THPOWERMAN] = &fvRead232ThPowerMan;
 
   fvFormattedString(&options[OPT_232THMASSCORE].cName, "d232ThMassCore");
-  fvFormattedString(&options[OPT_232THMASSCORE].cDescr, "Initial Core Mass of 232Th");
+  fvFormattedString(&options[OPT_232THMASSCORE].cDescr,
+                    "Initial Core Mass of 232Th");
   fvFormattedString(&options[OPT_232THMASSCORE].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_232THMASSCORE].cDimension, "mass");
   options[OPT_232THMASSCORE].iType      = 2;
@@ -1989,7 +2003,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_232THNUMCORE].cName, "d232ThNumCore");
   fvFormattedString(&options[OPT_232THNUMCORE].cDescr,
-          "Initial Core Number of 232Th Atoms");
+                    "Initial Core Number of 232Th Atoms");
   fvFormattedString(&options[OPT_232THNUMCORE].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_232THNUMCORE].cDimension, "nd");
   options[OPT_232THNUMCORE].iType      = 2;
@@ -2001,30 +2015,33 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_232THPOWERCORE].cName, "d232ThPowerCore");
   fvFormattedString(&options[OPT_232THPOWERCORE].cDescr,
-          "Initial Core Power Production from 232Th Atoms");
+                    "Initial Core Power Production from 232Th Atoms");
   fvFormattedString(&options[OPT_232THPOWERCORE].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_232THPOWERCORE].cDimension, "energy/time");
   options[OPT_232THPOWERCORE].iType      = 2;
   options[OPT_232THPOWERCORE].bMultiFile = 1;
   options[OPT_232THPOWERCORE].dNeg       = EPOWERCORE232TH; // 1e12*1e-7; // cgs
   options[OPT_232THPOWERCORE].dDefault   = EPOWERCORE232TH;
-  fvFormattedString(&options[OPT_232THPOWERCORE].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_232THPOWERCORE].cNeg,
+                    "Primordial Earth Units");
   fnRead[OPT_232THPOWERCORE] = &fvRead232ThPowerCore;
 
   fvFormattedString(&options[OPT_232THMASSCRUST].cName, "d232ThMassCrust");
-  fvFormattedString(&options[OPT_232THMASSCRUST].cDescr, "Initial Crust Mass of 232Th");
+  fvFormattedString(&options[OPT_232THMASSCRUST].cDescr,
+                    "Initial Crust Mass of 232Th");
   fvFormattedString(&options[OPT_232THMASSCRUST].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_232THMASSCRUST].cDimension, "mass");
   options[OPT_232THMASSCRUST].iType      = 2;
   options[OPT_232THMASSCRUST].bMultiFile = 1;
   options[OPT_232THMASSCRUST].dNeg       = EMASSCRUST232TH;
   options[OPT_232THMASSCRUST].dDefault   = EMASSCRUST232TH;
-  fvFormattedString(&options[OPT_232THMASSCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_232THMASSCRUST].cNeg,
+                    "Primordial Earth Units");
   fnRead[OPT_232THMASSCRUST] = &fvRead232ThMassCrust;
 
   fvFormattedString(&options[OPT_232THNUMCRUST].cName, "d232ThNumCrust");
   fvFormattedString(&options[OPT_232THNUMCRUST].cDescr,
-          "Initial Crust Number of 232Th Atoms");
+                    "Initial Crust Number of 232Th Atoms");
   fvFormattedString(&options[OPT_232THNUMCRUST].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_232THNUMCRUST].cDimension, "nd");
   options[OPT_232THNUMCRUST].iType      = 2;
@@ -2036,14 +2053,15 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_232THPOWERCRUST].cName, "d232ThPowerCrust");
   fvFormattedString(&options[OPT_232THPOWERCRUST].cDescr,
-          "Initial Crust Power Production from 232Th Atoms");
+                    "Initial Crust Power Production from 232Th Atoms");
   fvFormattedString(&options[OPT_232THPOWERCRUST].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_232THPOWERCRUST].cDimension, "energy/time");
   options[OPT_232THPOWERCRUST].iType      = 2;
   options[OPT_232THPOWERCRUST].bMultiFile = 1;
   options[OPT_232THPOWERCRUST].dNeg     = EPOWERCRUST232TH; // 1e12*1e-7; // cgs
   options[OPT_232THPOWERCRUST].dDefault = EPOWERCRUST232TH;
-  fvFormattedString(&options[OPT_232THPOWERCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_232THPOWERCRUST].cNeg,
+                    "Primordial Earth Units");
   fnRead[OPT_232THPOWERCRUST] = &fvRead232ThPowerCrust;
 
   /* 238U*/
@@ -2059,7 +2077,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_238UMASSMAN] = &fvRead238UMassMan;
 
   fvFormattedString(&options[OPT_238UNUMMAN].cName, "d238UNumMan");
-  fvFormattedString(&options[OPT_238UNUMMAN].cDescr, "Initial Number of 238U Atoms");
+  fvFormattedString(&options[OPT_238UNUMMAN].cDescr,
+                    "Initial Number of 238U Atoms");
   fvFormattedString(&options[OPT_238UNUMMAN].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_238UNUMMAN].cDimension, "nd");
   options[OPT_238UNUMMAN].dDefault   = 0;
@@ -2070,10 +2089,11 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_238UNUMMAN].cNeg, "Primordial Earth Units");
   fnRead[OPT_238UNUMMAN] = &fvRead238UNumMan;
 
-  fvFormattedString(&options[OPT_238UPOWERMAN].cName, "d238UPowerMan"); // section added
-                                                             // PED
+  fvFormattedString(&options[OPT_238UPOWERMAN].cName,
+                    "d238UPowerMan"); // section added
+                                      // PED
   fvFormattedString(&options[OPT_238UPOWERMAN].cDescr,
-          "Initial Power Production from 238U Atoms");
+                    "Initial Power Production from 238U Atoms");
   fvFormattedString(&options[OPT_238UPOWERMAN].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_238UPOWERMAN].cDimension, "energy/time");
   options[OPT_238UPOWERMAN].iType      = 2;
@@ -2084,7 +2104,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_238UPOWERMAN] = &fvRead238UPowerMan;
 
   fvFormattedString(&options[OPT_238UMASSCORE].cName, "d238UMassCore");
-  fvFormattedString(&options[OPT_238UMASSCORE].cDescr, "Initial Core Mass of 238U");
+  fvFormattedString(&options[OPT_238UMASSCORE].cDescr,
+                    "Initial Core Mass of 238U");
   fvFormattedString(&options[OPT_238UMASSCORE].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_238UMASSCORE].cDimension, "mass");
   options[OPT_238UMASSCORE].iType      = 2;
@@ -2095,7 +2116,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_238UMASSCORE] = &fvRead238UMassCore;
 
   fvFormattedString(&options[OPT_238UNUMCORE].cName, "d238UNumCore");
-  fvFormattedString(&options[OPT_238UNUMCORE].cDescr, "Initial Core Number of 238U Atoms");
+  fvFormattedString(&options[OPT_238UNUMCORE].cDescr,
+                    "Initial Core Number of 238U Atoms");
   fvFormattedString(&options[OPT_238UNUMCORE].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_238UNUMCORE].cDimension, "nd");
   options[OPT_238UNUMCORE].dDefault   = 0;
@@ -2107,9 +2129,9 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_238UNUMCORE] = &fvRead238UNumCore;
 
   fvFormattedString(&options[OPT_238UPOWERCORE].cName,
-          "d238UPowerCore"); // section added PED
+                    "d238UPowerCore"); // section added PED
   fvFormattedString(&options[OPT_238UPOWERCORE].cDescr,
-          "Initial Core Power Production from 238U Atoms");
+                    "Initial Core Power Production from 238U Atoms");
   fvFormattedString(&options[OPT_238UPOWERCORE].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_238UPOWERCORE].cDimension, "energy/time");
   options[OPT_238UPOWERCORE].iType      = 2;
@@ -2120,7 +2142,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_238UPOWERCORE] = &fvRead238UPowerCore;
 
   fvFormattedString(&options[OPT_238UMASSCRUST].cName, "d238UMassCrust");
-  fvFormattedString(&options[OPT_238UMASSCRUST].cDescr, "Initial Crust Mass of 238U");
+  fvFormattedString(&options[OPT_238UMASSCRUST].cDescr,
+                    "Initial Crust Mass of 238U");
   fvFormattedString(&options[OPT_238UMASSCRUST].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_238UMASSCRUST].cDimension, "mass");
   options[OPT_238UMASSCRUST].iType      = 2;
@@ -2132,7 +2155,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_238UNUMCRUST].cName, "d238UNumCrust");
   fvFormattedString(&options[OPT_238UNUMCRUST].cDescr,
-          "Initial Crust Number of 238U Atoms");
+                    "Initial Crust Number of 238U Atoms");
   fvFormattedString(&options[OPT_238UNUMCRUST].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_238UNUMCRUST].cDimension, "nd");
   options[OPT_238UNUMCRUST].dDefault   = 0;
@@ -2144,16 +2167,17 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_238UNUMCRUST] = &fvRead238UNumCrust;
 
   fvFormattedString(&options[OPT_238UPOWERCRUST].cName,
-          "d238UPowerCrust"); // section added PED
+                    "d238UPowerCrust"); // section added PED
   fvFormattedString(&options[OPT_238UPOWERCRUST].cDescr,
-          "Initial Crust Power Production from 238U Atoms");
+                    "Initial Crust Power Production from 238U Atoms");
   fvFormattedString(&options[OPT_238UPOWERCRUST].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_238UPOWERCRUST].cDimension, "energy/time");
   options[OPT_238UPOWERCRUST].iType      = 2;
   options[OPT_238UPOWERCRUST].bMultiFile = 1;
   options[OPT_238UPOWERCRUST].dNeg       = EPOWERCRUST238U; // 1e12*1e-7; // cgs
   options[OPT_238UPOWERCRUST].dDefault   = EPOWERCRUST238U;
-  fvFormattedString(&options[OPT_238UPOWERCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_238UPOWERCRUST].cNeg,
+                    "Primordial Earth Units");
   fnRead[OPT_238UPOWERCRUST] = &fvRead238UPowerCrust;
 
   /* 235U */
@@ -2169,7 +2193,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_235UMASSMAN] = &fvRead235UMassMan;
 
   fvFormattedString(&options[OPT_235UNUMMAN].cName, "d235UNumMan"); // PED
-  fvFormattedString(&options[OPT_235UNUMMAN].cDescr, "Initial Number of 235U Atoms");
+  fvFormattedString(&options[OPT_235UNUMMAN].cDescr,
+                    "Initial Number of 235U Atoms");
   fvFormattedString(&options[OPT_235UNUMMAN].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_235UNUMMAN].cDimension, "nd");
   options[OPT_235UNUMMAN].iType      = 2;
@@ -2179,10 +2204,11 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_235UNUMMAN].cNeg, "Primordial Earth Units");
   fnRead[OPT_235UNUMMAN] = &fvRead235UNumMan;
 
-  fvFormattedString(&options[OPT_235UPOWERMAN].cName, "d235UPowerMan"); // section added
-                                                             // PED
+  fvFormattedString(&options[OPT_235UPOWERMAN].cName,
+                    "d235UPowerMan"); // section added
+                                      // PED
   fvFormattedString(&options[OPT_235UPOWERMAN].cDescr,
-          "Initial Power Production from 235U Atoms");
+                    "Initial Power Production from 235U Atoms");
   fvFormattedString(&options[OPT_235UPOWERMAN].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_235UPOWERMAN].cDimension, "energy/time");
   options[OPT_235UPOWERMAN].iType      = 2;
@@ -2193,7 +2219,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_235UPOWERMAN] = &fvRead235UPowerMan;
 
   fvFormattedString(&options[OPT_235UMASSCORE].cName, "d235UMassCore");
-  fvFormattedString(&options[OPT_235UMASSCORE].cDescr, "Initial Core Mass of 235U");
+  fvFormattedString(&options[OPT_235UMASSCORE].cDescr,
+                    "Initial Core Mass of 235U");
   fvFormattedString(&options[OPT_235UMASSCORE].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_235UMASSCORE].cDimension, "mass");
   options[OPT_235UMASSCORE].iType      = 2;
@@ -2204,7 +2231,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_235UMASSCORE] = &fvRead235UMassCore;
 
   fvFormattedString(&options[OPT_235UNUMCORE].cName, "d235UNumCore");
-  fvFormattedString(&options[OPT_235UNUMCORE].cDescr, "Initial Core Number of 235U Atoms");
+  fvFormattedString(&options[OPT_235UNUMCORE].cDescr,
+                    "Initial Core Number of 235U Atoms");
   fvFormattedString(&options[OPT_235UNUMCORE].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_235UNUMCORE].cDimension, "nd");
   options[OPT_235UNUMCORE].iType      = 2;
@@ -2215,9 +2243,9 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_235UNUMCORE] = &fvRead235UNumCore;
 
   fvFormattedString(&options[OPT_235UPOWERCORE].cName,
-          "d235UPowerCore"); // section added PED
+                    "d235UPowerCore"); // section added PED
   fvFormattedString(&options[OPT_235UPOWERCORE].cDescr,
-          "Initial Core Power Production from 235U Atoms");
+                    "Initial Core Power Production from 235U Atoms");
   fvFormattedString(&options[OPT_235UPOWERCORE].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_235UPOWERCORE].cDimension, "energy/time");
   options[OPT_235UPOWERCORE].iType      = 2;
@@ -2228,7 +2256,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_235UPOWERCORE] = &fvRead235UPowerCore;
 
   fvFormattedString(&options[OPT_235UMASSCRUST].cName, "d235UMassCrust");
-  fvFormattedString(&options[OPT_235UMASSCRUST].cDescr, "Initial Crust Mass of 235U");
+  fvFormattedString(&options[OPT_235UMASSCRUST].cDescr,
+                    "Initial Crust Mass of 235U");
   fvFormattedString(&options[OPT_235UMASSCRUST].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_235UMASSCRUST].cDimension, "mass");
   options[OPT_235UMASSCRUST].iType      = 2;
@@ -2240,7 +2269,7 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_235UNUMCRUST].cName, "d235UNumCrust");
   fvFormattedString(&options[OPT_235UNUMCRUST].cDescr,
-          "Initial Crust Number of 235U Atoms");
+                    "Initial Crust Number of 235U Atoms");
   fvFormattedString(&options[OPT_235UNUMCRUST].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_235UNUMCRUST].cDimension, "nd");
   options[OPT_235UNUMCRUST].iType      = 2;
@@ -2251,16 +2280,17 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_235UNUMCRUST] = &fvRead235UNumCrust;
 
   fvFormattedString(&options[OPT_235UPOWERCRUST].cName,
-          "d235UPowerCrust"); // section added PED
+                    "d235UPowerCrust"); // section added PED
   fvFormattedString(&options[OPT_235UPOWERCRUST].cDescr,
-          "Initial Crust Power Production from 235U Atoms");
+                    "Initial Crust Power Production from 235U Atoms");
   fvFormattedString(&options[OPT_235UPOWERCRUST].cDefault, "Primordial Earth");
   fvFormattedString(&options[OPT_235UPOWERCRUST].cDimension, "energy/time");
   options[OPT_235UPOWERCRUST].iType      = 2;
   options[OPT_235UPOWERCRUST].bMultiFile = 1;
   options[OPT_235UPOWERCRUST].dNeg       = EPOWERCRUST235U;
   options[OPT_235UPOWERCRUST].dDefault   = EPOWERCRUST235U;
-  fvFormattedString(&options[OPT_235UPOWERCRUST].cNeg, "Primordial Earth Units");
+  fvFormattedString(&options[OPT_235UPOWERCRUST].cNeg,
+                    "Primordial Earth Units");
   fnRead[OPT_235UPOWERCRUST] = &fvRead235UPowerCrust;
 
   fvFormattedString(&options[OPT_HALT40KPOWER].cName, "dHalt40KPower");
@@ -2308,7 +2338,8 @@ void fvInitializeOptionsRadheat(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_HALT238UPOWER] = &fvReadHalt238UPower;
 
   fvFormattedString(&options[OPT_HALTRADPOWER].cName, "dHaltRadPower");
-  fvFormattedString(&options[OPT_HALTRADPOWER].cDescr, "Minimum Total Radgiogenic Power");
+  fvFormattedString(&options[OPT_HALTRADPOWER].cDescr,
+                    "Minimum Total Radgiogenic Power");
   fvFormattedString(&options[OPT_HALTRADPOWER].cDefault, "0");
   fvFormattedString(&options[OPT_HALTRADPOWER].cDimension, "energy/time");
   options[OPT_HALTRADPOWER].iType      = 2;
@@ -2618,7 +2649,7 @@ void fvVerify26Al(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i26AlCore][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i26AlCore][0] = 1;
     update[iBody].iaBody[update[iBody].i26AlCore][0]     = malloc(
-              update[iBody].iNumBodies[update[iBody].i26AlCore][0] * sizeof(int));
+          update[iBody].iNumBodies[update[iBody].i26AlCore][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i26AlCore][0][0] = iBody;
     // Initialize derivative so radiogenic power is known at the beginning
     update[iBody].daDerivProc[update[iBody].i26AlCore][0] = fdD26AlNumCoreDt(
@@ -2667,7 +2698,7 @@ void fvVerify40K(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i40KCore][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i40KCore][0] = 1;
     update[iBody].iaBody[update[iBody].i40KCore][0]     = malloc(
-              update[iBody].iNumBodies[update[iBody].i40KCore][0] * sizeof(int));
+          update[iBody].iNumBodies[update[iBody].i40KCore][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i40KCore][0][0]   = iBody;
     update[iBody].daDerivProc[update[iBody].i40KCore][0] = fdD40KNumCoreDt(
           body, system, update[iBody].iaBody[update[iBody].i40KCore][0]);
@@ -2682,7 +2713,7 @@ void fvVerify40K(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i40KCrust][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i40KCrust][0] = 1;
     update[iBody].iaBody[update[iBody].i40KCrust][0]     = malloc(
-              update[iBody].iNumBodies[update[iBody].i40KCrust][0] * sizeof(int));
+          update[iBody].iNumBodies[update[iBody].i40KCrust][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i40KCrust][0][0]   = iBody;
     update[iBody].daDerivProc[update[iBody].i40KCrust][0] = fdD40KNumCrustDt(
           body, system, update[iBody].iaBody[update[iBody].i40KCrust][0]);
@@ -2711,7 +2742,7 @@ void fvVerify232Th(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i232ThMan][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i232ThMan][0] = 1;
     update[iBody].iaBody[update[iBody].i232ThMan][0]     = malloc(
-              update[iBody].iNumBodies[update[iBody].i232ThMan][0] * sizeof(int));
+          update[iBody].iNumBodies[update[iBody].i232ThMan][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i232ThMan][0][0] = iBody;
     // Initialize derivative so radiogenic power is known at the beginning
     update[iBody].daDerivProc[update[iBody].i232ThMan][0] = fdD232ThNumManDt(
@@ -2727,7 +2758,7 @@ void fvVerify232Th(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i232ThCore][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i232ThCore][0] = 1;
     update[iBody].iaBody[update[iBody].i232ThCore][0]     = malloc(
-              update[iBody].iNumBodies[update[iBody].i232ThCore][0] * sizeof(int));
+          update[iBody].iNumBodies[update[iBody].i232ThCore][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i232ThCore][0][0]   = iBody;
     update[iBody].daDerivProc[update[iBody].i232ThCore][0] = fdD232ThNumCoreDt(
           body, system, update[iBody].iaBody[update[iBody].i232ThCore][0]);
@@ -2742,7 +2773,7 @@ void fvVerify232Th(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i232ThCrust][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i232ThCrust][0] = 1;
     update[iBody].iaBody[update[iBody].i232ThCrust][0]     = malloc(
-              update[iBody].iNumBodies[update[iBody].i232ThCrust][0] * sizeof(int));
+          update[iBody].iNumBodies[update[iBody].i232ThCrust][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i232ThCrust][0][0] = iBody;
     update[iBody].daDerivProc[update[iBody].i232ThCrust][0] =
           fdD232ThNumCrustDt(
@@ -2773,7 +2804,7 @@ void fvVerify238U(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i238UMan][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i238UMan][0] = 1;
     update[iBody].iaBody[update[iBody].i238UMan][0]     = malloc(
-              update[iBody].iNumBodies[update[iBody].i238UMan][0] * sizeof(int));
+          update[iBody].iNumBodies[update[iBody].i238UMan][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i238UMan][0][0] = iBody;
     // Initialize derivative so radiogenic power is known at the beginning
     update[iBody].daDerivProc[update[iBody].i238UMan][0] = fdD238UNumManDt(
@@ -2789,7 +2820,7 @@ void fvVerify238U(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i238UCore][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i238UCore][0] = 1;
     update[iBody].iaBody[update[iBody].i238UCore][0]     = malloc(
-              update[iBody].iNumBodies[update[iBody].i238UCore][0] * sizeof(int));
+          update[iBody].iNumBodies[update[iBody].i238UCore][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i238UCore][0][0]   = iBody;
     update[iBody].daDerivProc[update[iBody].i238UCore][0] = fdD238UNumCoreDt(
           body, system, update[iBody].iaBody[update[iBody].i238UCore][0]);
@@ -2804,7 +2835,7 @@ void fvVerify238U(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i238UCrust][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i238UCrust][0] = 1;
     update[iBody].iaBody[update[iBody].i238UCrust][0]     = malloc(
-              update[iBody].iNumBodies[update[iBody].i238UCrust][0] * sizeof(int));
+          update[iBody].iNumBodies[update[iBody].i238UCrust][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i238UCrust][0][0]   = iBody;
     update[iBody].daDerivProc[update[iBody].i238UCrust][0] = fdD238UNumCrustDt(
           body, system, update[iBody].iaBody[update[iBody].i238UCrust][0]);
@@ -2833,7 +2864,7 @@ void fvVerify235U(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i235UMan][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i235UMan][0] = 1;
     update[iBody].iaBody[update[iBody].i235UMan][0]     = malloc(
-              update[iBody].iNumBodies[update[iBody].i235UMan][0] * sizeof(int));
+          update[iBody].iNumBodies[update[iBody].i235UMan][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i235UMan][0][0] = iBody;
     // Initialize derivative so radiogenic power is known at the beginning
     update[iBody].daDerivProc[update[iBody].i235UMan][0] = fdD235UNumManDt(
@@ -2849,7 +2880,7 @@ void fvVerify235U(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i235UCore][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i235UCore][0] = 1;
     update[iBody].iaBody[update[iBody].i235UCore][0]     = malloc(
-              update[iBody].iNumBodies[update[iBody].i235UCore][0] * sizeof(int));
+          update[iBody].iNumBodies[update[iBody].i235UCore][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i235UCore][0][0] = iBody;
     update[iBody].pdD235UNumCoreDt =
           &update[iBody].daDerivProc[update[iBody].i235UCore][0];
@@ -2864,7 +2895,7 @@ void fvVerify235U(BODY *body, OPTIONS *options, SYSTEM *system, UPDATE *update,
     update[iBody].iaType[update[iBody].i235UCrust][0]     = 1;
     update[iBody].iNumBodies[update[iBody].i235UCrust][0] = 1;
     update[iBody].iaBody[update[iBody].i235UCrust][0]     = malloc(
-              update[iBody].iNumBodies[update[iBody].i235UCrust][0] * sizeof(int));
+          update[iBody].iNumBodies[update[iBody].i235UCrust][0] * sizeof(int));
     update[iBody].iaBody[update[iBody].i235UCrust][0][0] = iBody;
     update[iBody].pdD235UNumCrustDt =
           &update[iBody].daDerivProc[update[iBody].i235UCrust][0];
@@ -3739,6 +3770,7 @@ void fvWrite26AlTimescale(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
                           int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
+  fvFormattedString(cUnit, "");
 }
 /**
    Write radiogenic 26Al mantle mass.
@@ -3782,6 +3814,7 @@ void fvWriteD26AlPowerDt(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
+  fvFormattedString(cUnit, "");
 }
 /**
    Write radiogenic 26Al mantle number.
@@ -3803,8 +3836,9 @@ void fvWrite26AlNumMan(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
+  } else {
+    fvFormattedString(cUnit, "");
   }
-  /* else nothing, as it is a number */
 }
 
 /* Core */
@@ -3879,8 +3913,9 @@ void fvWrite26AlNumCore(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
+  } else {
+    fvFormattedString(cUnit, "");
   }
-  /* else nothing, as it is a number */
 }
 
 /**
@@ -4006,6 +4041,7 @@ void fvWrite40KTimescale(BODY *body, CONTROL *control, OUTPUT *output,
                          SYSTEM *system, UNITS *units, UPDATE *update,
                          int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
+  fvFormattedString(cUnit, "");
 }
 /**
    Write radiogenic 40K mantle mass.
@@ -4050,6 +4086,7 @@ void fvWriteD40KPowerDt(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                         double *dTmp, char **cUnit) {
   *dTmp = -1;
+  fvFormattedString(cUnit, "");
 }
 /**
    Write radiogenic 40K mantle number.
@@ -4071,8 +4108,9 @@ void fvWrite40KNumMan(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
+  } else {
+    fvFormattedString(cUnit, "");
   }
-  /* else nothing, as it is a number */
 }
 
 /* Core */
@@ -4147,8 +4185,9 @@ void fvWrite40KNumCore(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
+  } else {
+    fvFormattedString(cUnit, "");
   }
-  /* else nothing, as it is a number */
 }
 
 /* Crust */
@@ -4223,8 +4262,9 @@ void fvWrite40KNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
+  } else {
+    fvFormattedString(cUnit, "");
   }
-  /* else nothing, as it is a number */
 }
 
 /**
@@ -4324,6 +4364,7 @@ void fvWritedD232ThPowerDt(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
                            int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
+  fvFormattedString(cUnit, "");
 }
 /**
    Write radiogenic 232Th decay time?
@@ -4414,8 +4455,9 @@ void fvWrite232ThNumMan(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
+  } else {
+    fvFormattedString(cUnit, "");
   }
-  /* else nothing, as it is a number */
 }
 
 /* Core */
@@ -4490,8 +4532,9 @@ void fvWrite232ThNumCore(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
+  } else {
+    fvFormattedString(cUnit, "");
   }
-  /* else nothing, as it is a number */
 }
 
 /* Crust */
@@ -4566,8 +4609,9 @@ void fvWrite232ThNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
+  } else {
+    fvFormattedString(cUnit, "");
   }
-  /* else nothing, as it is a number */
 }
 
 /**
@@ -4665,6 +4709,7 @@ void fvWritedD238UPowerDt(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
                           int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
+  fvFormattedString(cUnit, "");
 }
 /**
    Write radiogenic 238U decay time?
@@ -4683,6 +4728,7 @@ void fvWrite238UTimescale(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
                           int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
+  fvFormattedString(cUnit, "");
 }
 
 /* Mantle */
@@ -4757,8 +4803,9 @@ void fvWrite238UNumMan(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
+  } else {
+    fvFormattedString(cUnit, "");
   }
-  /* else nothing, as it is a number */
 }
 
 /* Core */
@@ -4833,8 +4880,9 @@ void fvWrite238UNumCore(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
+  } else {
+    fvFormattedString(cUnit, "");
   }
-  /* else nothing, as it is a number */
 }
 
 /* Crust */
@@ -4909,8 +4957,9 @@ void fvWrite238UNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
+  } else {
+    fvFormattedString(cUnit, "");
   }
-  /* else nothing, as it is a number */
 }
 
 /**
@@ -5011,6 +5060,7 @@ void fvWritedD235UPowerDt(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
                           int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
+  fvFormattedString(cUnit, "");
 }
 /**
    Write radiogenic 235U decay time?
@@ -5029,6 +5079,7 @@ void fvWrite235UTimescale(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
                           int iBody, double *dTmp, char **cUnit) {
   *dTmp = -1;
+  fvFormattedString(cUnit, "");
 }
 
 /* Mantle */
@@ -5103,8 +5154,9 @@ void fvWrite235UNumMan(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
+  } else {
+    fvFormattedString(cUnit, "");
   }
-  /* else nothing, as it is a number */
 }
 
 /* Core */
@@ -5179,8 +5231,9 @@ void fvWrite235UNumCore(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
+  } else {
+    fvFormattedString(cUnit, "");
   }
-  /* else nothing, as it is a number */
 }
 
 /* Crust */
@@ -5255,8 +5308,9 @@ void fvWrite235UNumCrust(BODY *body, CONTROL *control, OUTPUT *output,
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
+  } else {
+    fvFormattedString(cUnit, "");
   }
-  /* else nothing, as it is a number */
 }
 
 /**
@@ -5428,7 +5482,8 @@ void fvWriteSurfEnFluxRadTotal(BODY *body, CONTROL *control, OUTPUT *output,
 void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* Aluminum */
   fvFormattedString(&output[OUT_26ALPOWERMAN].cName, "26AlPowerMan");
-  fvFormattedString(&output[OUT_26ALPOWERMAN].cDescr, "Total Power Generated by 26Al");
+  fvFormattedString(&output[OUT_26ALPOWERMAN].cDescr,
+                    "Total Power Generated by 26Al");
   fvFormattedString(&output[OUT_26ALPOWERMAN].cNeg, "TW");
   output[OUT_26ALPOWERMAN].bNeg       = 1;
   output[OUT_26ALPOWERMAN].dNeg       = 1e-12;
@@ -5437,7 +5492,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_26ALPOWERMAN]           = &fvWrite26AlPowerMan;
 
   fvFormattedString(&output[OUT_26ALENFLUX].cName, "26AlEnFlux");
-  fvFormattedString(&output[OUT_26ALENFLUX].cDescr, "Surface Energy Flux from 26Al");
+  fvFormattedString(&output[OUT_26ALENFLUX].cDescr,
+                    "Surface Energy Flux from 26Al");
   fvFormattedString(&output[OUT_26ALENFLUX].cNeg, "W/m^2");
   output[OUT_26ALENFLUX].bNeg       = 1;
   output[OUT_26ALENFLUX].dNeg       = 1;
@@ -5447,7 +5503,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_26ALDPOWERDT].cName, "D26AlPowerDt");
   fvFormattedString(&output[OUT_26ALDPOWERDT].cDescr,
-          "Time Rate of Change of 26Al Power Generation");
+                    "Time Rate of Change of 26Al Power Generation");
   fvFormattedString(&output[OUT_26ALDPOWERDT].cNeg, "TW/Gyr");
   output[OUT_26ALDPOWERDT].bNeg = 1;
   output[OUT_26ALDPOWERDT].dNeg =
@@ -5458,7 +5514,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_26ALDNUMDT].cName, "D26AlNumManDt");
   fvFormattedString(&output[OUT_26ALDNUMDT].cDescr,
-          "Time Rate of Change of 26Al Heat Generation");
+                    "Time Rate of Change of 26Al Heat Generation");
   fvFormattedString(&output[OUT_26ALDNUMDT].cNeg, "/Gyr");
   output[OUT_26ALDNUMDT].bNeg       = 1;
   output[OUT_26ALDNUMDT].dNeg       = YEARSEC * 1e9; //[s/Gyr]
@@ -5467,7 +5523,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_26ALDNUMDT]           = &fvWriteD26AlNumDt;
 
   fvFormattedString(&output[OUT_26ALTIME].cName, "26AlTimescale");
-  fvFormattedString(&output[OUT_26ALTIME].cDescr, "Timescale for 26Al Power Generation");
+  fvFormattedString(&output[OUT_26ALTIME].cDescr,
+                    "Timescale for 26Al Power Generation");
   fvFormattedString(&output[OUT_26ALTIME].cNeg, "Gyr");
   output[OUT_26ALTIME].bNeg = 1;
   output[OUT_26ALTIME].dNeg = 1 / (YEARSEC * 1e9); //[Gyr/s] //YEARSEC*1e9;
@@ -5485,8 +5542,10 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_26ALMASSMAN]           = &fvWrite26AlMassMan;
 
   fvFormattedString(&output[OUT_26ALNUMMAN].cName, "26AlNumMan");
-  fvFormattedString(&output[OUT_26ALNUMMAN].cDescr, "Total Number of 26Al Atoms");
-  fvFormattedString(&output[OUT_26ALNUMMAN].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_26ALNUMMAN].cDescr,
+                    "Total Number of 26Al Atoms");
+  fvFormattedString(&output[OUT_26ALNUMMAN].cNeg,
+                    "Initial Primordial Earth Number");
   output[OUT_26ALNUMMAN].bNeg       = 1;
   output[OUT_26ALNUMMAN].dNeg       = EMASSMAN26AL / MASS26AL;
   output[OUT_26ALNUMMAN].iNum       = 1;
@@ -5495,7 +5554,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* Core */
   fvFormattedString(&output[OUT_26ALPOWERCORE].cName, "26AlPowerCore");
-  fvFormattedString(&output[OUT_26ALPOWERCORE].cDescr, "Core Power Generated by 26Al");
+  fvFormattedString(&output[OUT_26ALPOWERCORE].cDescr,
+                    "Core Power Generated by 26Al");
   fvFormattedString(&output[OUT_26ALPOWERCORE].cNeg, "TW");
   output[OUT_26ALPOWERCORE].bNeg       = 1;
   output[OUT_26ALPOWERCORE].dNeg       = 1 / 1e12; //[TW/W]
@@ -5513,8 +5573,10 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_26ALMASSCORE]           = &fvWrite26AlMassCore;
 
   fvFormattedString(&output[OUT_26ALNUMCORE].cName, "26AlNumCore");
-  fvFormattedString(&output[OUT_26ALNUMCORE].cDescr, "Total Core Number of 26Al Atoms");
-  fvFormattedString(&output[OUT_26ALNUMCORE].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_26ALNUMCORE].cDescr,
+                    "Total Core Number of 26Al Atoms");
+  fvFormattedString(&output[OUT_26ALNUMCORE].cNeg,
+                    "Initial Primordial Earth Number");
   output[OUT_26ALNUMCORE].bNeg       = 1;
   output[OUT_26ALNUMCORE].dNeg       = EMASSCORE26AL / MASS26AL;
   output[OUT_26ALNUMCORE].iNum       = 1;
@@ -5523,7 +5585,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_26ALPOWERTOT].cName, "26AlPowerTotal");
   fvFormattedString(&output[OUT_26ALPOWERTOT].cDescr,
-          "Total Power from Decay of 26Al Atoms");
+                    "Total Power from Decay of 26Al Atoms");
   fvFormattedString(&output[OUT_26ALPOWERTOT].cNeg, "TW");
   output[OUT_26ALPOWERTOT].bNeg       = 1;
   output[OUT_26ALPOWERTOT].dNeg       = 1e-12;
@@ -5533,7 +5595,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* Potassium */
   fvFormattedString(&output[OUT_40KENFLUX].cName, "40KEnFlux");
-  fvFormattedString(&output[OUT_40KENFLUX].cDescr, "Surface Energy Flux from 40K");
+  fvFormattedString(&output[OUT_40KENFLUX].cDescr,
+                    "Surface Energy Flux from 40K");
   fvFormattedString(&output[OUT_40KENFLUX].cNeg, "W/m^2");
   output[OUT_40KENFLUX].bNeg       = 1;
   output[OUT_40KENFLUX].dNeg       = 1;
@@ -5543,7 +5606,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_40KDPOWERDT].cName, "D40KPowerDt");
   fvFormattedString(&output[OUT_40KDPOWERDT].cDescr,
-          "Time Rate of Change of 40K Power Generation");
+                    "Time Rate of Change of 40K Power Generation");
   fvFormattedString(&output[OUT_40KDPOWERDT].cNeg, "TW/Gyr");
   output[OUT_40KDPOWERDT].bNeg       = 1;
   output[OUT_40KDPOWERDT].dNeg       = 1e9 / 1e12; /* :) */
@@ -5553,7 +5616,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_40KDNUMDT].cName, "D40KNumManDt");
   fvFormattedString(&output[OUT_40KDNUMDT].cDescr,
-          "Time Rate of Change of 40K Heat Generation");
+                    "Time Rate of Change of 40K Heat Generation");
   fvFormattedString(&output[OUT_40KDNUMDT].cNeg, "/Gyr");
   output[OUT_40KDNUMDT].bNeg       = 1;
   output[OUT_40KDNUMDT].dNeg       = YEARSEC * 1e9;
@@ -5562,7 +5625,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_40KDNUMDT]           = &fvWriteD40KNumDt;
 
   fvFormattedString(&output[OUT_40KTIME].cName, "40KTimescale");
-  fvFormattedString(&output[OUT_40KTIME].cDescr, "Timescale for 40K Power Generation");
+  fvFormattedString(&output[OUT_40KTIME].cDescr,
+                    "Timescale for 40K Power Generation");
   fvFormattedString(&output[OUT_40KTIME].cNeg, "Gyr");
   output[OUT_40KTIME].bNeg       = 1;
   output[OUT_40KTIME].dNeg       = 1 / (YEARSEC * 1e9);
@@ -5571,7 +5635,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_40KTIME]           = &fvWrite40KTimescale;
 
   fvFormattedString(&output[OUT_40KPOWERMAN].cName, "40KPowerMan");
-  fvFormattedString(&output[OUT_40KPOWERMAN].cDescr, "Total Power Generated by 40K");
+  fvFormattedString(&output[OUT_40KPOWERMAN].cDescr,
+                    "Total Power Generated by 40K");
   fvFormattedString(&output[OUT_40KPOWERMAN].cNeg, "TW");
   output[OUT_40KPOWERMAN].bNeg       = 1;
   output[OUT_40KPOWERMAN].dNeg       = 1e-12;
@@ -5590,7 +5655,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_40KNUMMAN].cName, "40KNumMan");
   fvFormattedString(&output[OUT_40KNUMMAN].cDescr, "Total Number of 40K Atoms");
-  fvFormattedString(&output[OUT_40KNUMMAN].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_40KNUMMAN].cNeg,
+                    "Initial Primordial Earth Number");
   output[OUT_40KNUMMAN].bNeg       = 1;
   output[OUT_40KNUMMAN].dNeg       = EMASSMAN40K / MASS40K;
   output[OUT_40KNUMMAN].iNum       = 1;
@@ -5599,7 +5665,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* Core */
   fvFormattedString(&output[OUT_40KPOWERCORE].cName, "40KPowerCore");
-  fvFormattedString(&output[OUT_40KPOWERCORE].cDescr, "Core Power Generated by 40K");
+  fvFormattedString(&output[OUT_40KPOWERCORE].cDescr,
+                    "Core Power Generated by 40K");
   fvFormattedString(&output[OUT_40KPOWERCORE].cNeg, "TW");
   output[OUT_40KPOWERCORE].bNeg       = 1;
   output[OUT_40KPOWERCORE].dNeg       = 1e-12; // ergs/s -> TW
@@ -5617,8 +5684,10 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_40KMASSCORE]           = &fvWrite40KMassCore;
 
   fvFormattedString(&output[OUT_40KNUMCORE].cName, "40KNumCore");
-  fvFormattedString(&output[OUT_40KNUMCORE].cDescr, "Total Core Number of 40K Atoms");
-  fvFormattedString(&output[OUT_40KNUMCORE].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_40KNUMCORE].cDescr,
+                    "Total Core Number of 40K Atoms");
+  fvFormattedString(&output[OUT_40KNUMCORE].cNeg,
+                    "Initial Primordial Earth Number");
   output[OUT_40KNUMCORE].bNeg       = 1;
   output[OUT_40KNUMCORE].dNeg       = EMASSCORE40K / MASS40K;
   output[OUT_40KNUMCORE].iNum       = 1;
@@ -5627,7 +5696,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* Crust */
   fvFormattedString(&output[OUT_40KPOWERCRUST].cName, "40KPowerCrust");
-  fvFormattedString(&output[OUT_40KPOWERCRUST].cDescr, "Crust Power Generated by 40K");
+  fvFormattedString(&output[OUT_40KPOWERCRUST].cDescr,
+                    "Crust Power Generated by 40K");
   fvFormattedString(&output[OUT_40KPOWERCRUST].cNeg, "TW");
   output[OUT_40KPOWERCRUST].bNeg       = 1;
   output[OUT_40KPOWERCRUST].dNeg       = 1e-12; // ergs/s -> TW
@@ -5636,7 +5706,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_40KPOWERCRUST]           = &fvWrite40KPowerCrust;
 
   fvFormattedString(&output[OUT_40KMASSCRUST].cName, "40KMassCrust");
-  fvFormattedString(&output[OUT_40KMASSCRUST].cDescr, "Total Crust Mass of 40K");
+  fvFormattedString(&output[OUT_40KMASSCRUST].cDescr,
+                    "Total Crust Mass of 40K");
   fvFormattedString(&output[OUT_40KMASSCRUST].cNeg, "Mearth");
   output[OUT_40KMASSCRUST].bNeg       = 1;
   output[OUT_40KMASSCRUST].dNeg       = 1. / MEARTH;
@@ -5645,8 +5716,10 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_40KMASSCRUST]           = &fvWrite40KMassCrust;
 
   fvFormattedString(&output[OUT_40KNUMCRUST].cName, "40KNumCrust");
-  fvFormattedString(&output[OUT_40KNUMCRUST].cDescr, "Total Crust Number of 40K Atoms");
-  fvFormattedString(&output[OUT_40KNUMCRUST].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_40KNUMCRUST].cDescr,
+                    "Total Crust Number of 40K Atoms");
+  fvFormattedString(&output[OUT_40KNUMCRUST].cNeg,
+                    "Initial Primordial Earth Number");
   output[OUT_40KNUMCRUST].bNeg       = 1;
   output[OUT_40KNUMCRUST].dNeg       = EMASSCRUST40K / MASS40K;
   output[OUT_40KNUMCRUST].iNum       = 1;
@@ -5655,7 +5728,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_40KPOWERTOT].cName, "40KPowerTotal");
   fvFormattedString(&output[OUT_40KPOWERTOT].cDescr,
-          "Total Power from Decay of 40K Atoms");
+                    "Total Power from Decay of 40K Atoms");
   fvFormattedString(&output[OUT_40KPOWERTOT].cNeg, "TW");
   output[OUT_40KPOWERTOT].bNeg       = 1;
   output[OUT_40KPOWERTOT].dNeg       = 1e-12;
@@ -5665,7 +5738,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* Thorium */
   fvFormattedString(&output[OUT_232THPOWERMAN].cName, "232ThPowerMan");
-  fvFormattedString(&output[OUT_232THPOWERMAN].cDescr, "Total Power Generated by 232Th");
+  fvFormattedString(&output[OUT_232THPOWERMAN].cDescr,
+                    "Total Power Generated by 232Th");
   fvFormattedString(&output[OUT_232THPOWERMAN].cNeg, "TW");
   output[OUT_232THPOWERMAN].bNeg       = 1;
   output[OUT_232THPOWERMAN].dNeg       = 1e-12;
@@ -5674,7 +5748,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_232THPOWERMAN]           = &fvWrite232ThPowerMan;
 
   fvFormattedString(&output[OUT_232THENFLUX].cName, "232ThEnFlux");
-  fvFormattedString(&output[OUT_232THENFLUX].cDescr, "Surface Energy Flux from 232Th");
+  fvFormattedString(&output[OUT_232THENFLUX].cDescr,
+                    "Surface Energy Flux from 232Th");
   fvFormattedString(&output[OUT_232THENFLUX].cNeg, "W/m^2");
   output[OUT_232THENFLUX].bNeg       = 1;
   output[OUT_232THENFLUX].dNeg       = 1;
@@ -5684,7 +5759,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_232THDNUMDT].cName, "D232ThNumManDt");
   fvFormattedString(&output[OUT_232THDNUMDT].cDescr,
-          "Time Rate of Change of the number of 232Th nuclei");
+                    "Time Rate of Change of the number of 232Th nuclei");
   fvFormattedString(&output[OUT_232THDNUMDT].cNeg, "/Gyr");
   output[OUT_232THDNUMDT].bNeg       = 1;
   output[OUT_232THDNUMDT].dNeg       = YEARSEC * 1e9;
@@ -5693,7 +5768,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_232THDNUMDT]           = &fvWriteD232ThNumDt;
 
   fvFormattedString(&output[OUT_232THTIME].cName, "232ThTimescale");
-  fvFormattedString(&output[OUT_232THTIME].cDescr, "Timescale for 232Th Power Generation");
+  fvFormattedString(&output[OUT_232THTIME].cDescr,
+                    "Timescale for 232Th Power Generation");
   fvFormattedString(&output[OUT_232THTIME].cNeg, "Gyr");
   output[OUT_232THTIME].bNeg       = 1;
   output[OUT_232THTIME].dNeg       = 1. / (YEARSEC * 1e9);
@@ -5711,8 +5787,10 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_232THMASSMAN]           = &fvWrite232ThMassMan;
 
   fvFormattedString(&output[OUT_232THNUMMAN].cName, "232ThNumMan");
-  fvFormattedString(&output[OUT_232THNUMMAN].cDescr, "Total Number of 232Th Atoms");
-  fvFormattedString(&output[OUT_232THNUMMAN].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_232THNUMMAN].cDescr,
+                    "Total Number of 232Th Atoms");
+  fvFormattedString(&output[OUT_232THNUMMAN].cNeg,
+                    "Initial Primordial Earth Number");
   output[OUT_232THNUMMAN].bNeg       = 1;
   output[OUT_232THNUMMAN].dNeg       = EMASSMAN232TH / MASS232TH;
   output[OUT_232THNUMMAN].iNum       = 1;
@@ -5721,7 +5799,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* Core */
   fvFormattedString(&output[OUT_232THPOWERCORE].cName, "232ThPowerCore");
-  fvFormattedString(&output[OUT_232THPOWERCORE].cDescr, "Total Power Generated by 232Th");
+  fvFormattedString(&output[OUT_232THPOWERCORE].cDescr,
+                    "Total Power Generated by 232Th");
   fvFormattedString(&output[OUT_232THPOWERCORE].cNeg, "TW");
   output[OUT_232THPOWERCORE].bNeg       = 1;
   output[OUT_232THPOWERCORE].dNeg       = 1e-12;
@@ -5739,8 +5818,10 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_232THMASSCORE]           = &fvWrite232ThMassCore;
 
   fvFormattedString(&output[OUT_232THNUMCORE].cName, "232ThNumCore");
-  fvFormattedString(&output[OUT_232THNUMCORE].cDescr, "Total Number of 232Th Atoms");
-  fvFormattedString(&output[OUT_232THNUMCORE].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_232THNUMCORE].cDescr,
+                    "Total Number of 232Th Atoms");
+  fvFormattedString(&output[OUT_232THNUMCORE].cNeg,
+                    "Initial Primordial Earth Number");
   output[OUT_232THNUMCORE].bNeg       = 1;
   output[OUT_232THNUMCORE].dNeg       = EMASSCORE232TH / MASS232TH;
   output[OUT_232THNUMCORE].iNum       = 1;
@@ -5749,7 +5830,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* Crust */
   fvFormattedString(&output[OUT_232THPOWERCRUST].cName, "232ThPowerCrust");
-  fvFormattedString(&output[OUT_232THPOWERCRUST].cDescr, "Total Power Generated by 232Th");
+  fvFormattedString(&output[OUT_232THPOWERCRUST].cDescr,
+                    "Total Power Generated by 232Th");
   fvFormattedString(&output[OUT_232THPOWERCRUST].cNeg, "TW");
   output[OUT_232THPOWERCRUST].bNeg       = 1;
   output[OUT_232THPOWERCRUST].dNeg       = 1e-12;
@@ -5767,8 +5849,10 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_232THMASSCRUST]           = &fvWrite232ThMassCrust;
 
   fvFormattedString(&output[OUT_232THNUMCRUST].cName, "232ThNumCrust");
-  fvFormattedString(&output[OUT_232THNUMCRUST].cDescr, "Total Number of 232Th Atoms");
-  fvFormattedString(&output[OUT_232THNUMCRUST].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_232THNUMCRUST].cDescr,
+                    "Total Number of 232Th Atoms");
+  fvFormattedString(&output[OUT_232THNUMCRUST].cNeg,
+                    "Initial Primordial Earth Number");
   output[OUT_232THNUMCRUST].bNeg       = 1;
   output[OUT_232THNUMCRUST].dNeg       = EMASSCRUST232TH / MASS232TH;
   output[OUT_232THNUMCRUST].iNum       = 1;
@@ -5777,7 +5861,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_232THPOWERTOT].cName, "232ThPowerTotal");
   fvFormattedString(&output[OUT_232THPOWERTOT].cDescr,
-          "Total Power from Decay of 232Th Atoms");
+                    "Total Power from Decay of 232Th Atoms");
   fvFormattedString(&output[OUT_232THPOWERTOT].cNeg, "TW");
   output[OUT_232THPOWERTOT].bNeg       = 1;
   output[OUT_232THPOWERTOT].dNeg       = 1e-12;
@@ -5789,7 +5873,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* Uranium 238 */
 
   fvFormattedString(&output[OUT_238UPOWERMAN].cName, "238UPowerMan");
-  fvFormattedString(&output[OUT_238UPOWERMAN].cDescr, "Total Power Generated by 238U");
+  fvFormattedString(&output[OUT_238UPOWERMAN].cDescr,
+                    "Total Power Generated by 238U");
   fvFormattedString(&output[OUT_238UPOWERMAN].cNeg, "TW");
   output[OUT_238UPOWERMAN].bNeg       = 1;
   output[OUT_238UPOWERMAN].dNeg       = 1e-12;
@@ -5798,7 +5883,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_238UPOWERMAN]           = &fvWrite238UPowerMan;
 
   fvFormattedString(&output[OUT_238UENFLUX].cName, "238UEnFlux");
-  fvFormattedString(&output[OUT_238UENFLUX].cDescr, "Surface Energy Flux due to 238U");
+  fvFormattedString(&output[OUT_238UENFLUX].cDescr,
+                    "Surface Energy Flux due to 238U");
   fvFormattedString(&output[OUT_238UENFLUX].cNeg, "W/m^2");
   output[OUT_238UENFLUX].bNeg       = 1;
   output[OUT_238UENFLUX].dNeg       = 1;
@@ -5808,7 +5894,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_238UDNUMDT].cName, "D238UNumManDt");
   fvFormattedString(&output[OUT_238UDNUMDT].cDescr,
-          "Time Rate of Change of the Number of 238U Nuclei");
+                    "Time Rate of Change of the Number of 238U Nuclei");
   fvFormattedString(&output[OUT_238UDNUMDT].cNeg, "/Gyr");
   output[OUT_238UDNUMDT].bNeg       = 1;
   output[OUT_238UDNUMDT].dNeg       = YEARSEC * 1e9;
@@ -5817,7 +5903,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_238UDNUMDT]           = &fvWriteD238UNumDt;
 
   fvFormattedString(&output[OUT_238UTIME].cName, "238UTimescale");
-  fvFormattedString(&output[OUT_238UTIME].cDescr, "Timescale for 238U Power Generation");
+  fvFormattedString(&output[OUT_238UTIME].cDescr,
+                    "Timescale for 238U Power Generation");
   fvFormattedString(&output[OUT_238UTIME].cNeg, "Gyr");
   output[OUT_238UTIME].bNeg       = 1;
   output[OUT_238UTIME].dNeg       = 1. / (YEARSEC * 1e9);
@@ -5835,8 +5922,10 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_238UMASSMAN]           = &fvWrite238UMassMan;
 
   fvFormattedString(&output[OUT_238UNUMMAN].cName, "238UNumMan");
-  fvFormattedString(&output[OUT_238UNUMMAN].cDescr, "Total Number of 238U Atoms");
-  fvFormattedString(&output[OUT_238UNUMMAN].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_238UNUMMAN].cDescr,
+                    "Total Number of 238U Atoms");
+  fvFormattedString(&output[OUT_238UNUMMAN].cNeg,
+                    "Initial Primordial Earth Number");
   output[OUT_238UNUMMAN].bNeg       = 1;
   output[OUT_238UNUMMAN].dNeg       = EMASSMAN238U / MASS238U;
   output[OUT_238UNUMMAN].iNum       = 1;
@@ -5846,7 +5935,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* Core */
   fvFormattedString(&output[OUT_238UPOWERCORE].cName, "238UPowerCore");
   fvFormattedString(&output[OUT_238UPOWERCORE].cDescr,
-          "Total Core Power Generated by 238U");
+                    "Total Core Power Generated by 238U");
   fvFormattedString(&output[OUT_238UPOWERCORE].cNeg, "TW");
   output[OUT_238UPOWERCORE].bNeg       = 1;
   output[OUT_238UPOWERCORE].dNeg       = 1e-12;
@@ -5855,7 +5944,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_238UPOWERCORE]           = &fvWrite238UPowerCore;
 
   fvFormattedString(&output[OUT_238UMASSCORE].cName, "238UMassCore");
-  fvFormattedString(&output[OUT_238UMASSCORE].cDescr, "Total Core Mass of 238U");
+  fvFormattedString(&output[OUT_238UMASSCORE].cDescr,
+                    "Total Core Mass of 238U");
   fvFormattedString(&output[OUT_238UMASSCORE].cNeg, "Mearth");
   output[OUT_238UMASSCORE].bNeg       = 1;
   output[OUT_238UMASSCORE].dNeg       = 1. / MEARTH;
@@ -5864,8 +5954,10 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_238UMASSCORE]           = &fvWrite238UMassCore;
 
   fvFormattedString(&output[OUT_238UNUMCORE].cName, "238UNumCore");
-  fvFormattedString(&output[OUT_238UNUMCORE].cDescr, "Total Core Number of 238U Atoms");
-  fvFormattedString(&output[OUT_238UNUMCORE].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_238UNUMCORE].cDescr,
+                    "Total Core Number of 238U Atoms");
+  fvFormattedString(&output[OUT_238UNUMCORE].cNeg,
+                    "Initial Primordial Earth Number");
   output[OUT_238UNUMCORE].bNeg       = 1;
   output[OUT_238UNUMCORE].dNeg       = EMASSCORE238U / MASS238U;
   output[OUT_238UNUMCORE].iNum       = 1;
@@ -5875,7 +5967,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* Crust */
   fvFormattedString(&output[OUT_238UPOWERCRUST].cName, "238UPowerCrust");
   fvFormattedString(&output[OUT_238UPOWERCRUST].cDescr,
-          "Total Crust Power Generated by 238U");
+                    "Total Crust Power Generated by 238U");
   fvFormattedString(&output[OUT_238UPOWERCRUST].cNeg, "TW");
   output[OUT_238UPOWERCRUST].bNeg       = 1;
   output[OUT_238UPOWERCRUST].dNeg       = 1e-12;
@@ -5884,7 +5976,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_238UPOWERCRUST]           = &fvWrite238UPowerCrust;
 
   fvFormattedString(&output[OUT_238UMASSCRUST].cName, "238UMassCrust");
-  fvFormattedString(&output[OUT_238UMASSCRUST].cDescr, "Total Crust Mass of 238U");
+  fvFormattedString(&output[OUT_238UMASSCRUST].cDescr,
+                    "Total Crust Mass of 238U");
   fvFormattedString(&output[OUT_238UMASSCRUST].cNeg, "Mearth");
   output[OUT_238UMASSCRUST].bNeg       = 1;
   output[OUT_238UMASSCRUST].dNeg       = 1. / MEARTH;
@@ -5893,8 +5986,10 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_238UMASSCRUST]           = &fvWrite238UMassCrust;
 
   fvFormattedString(&output[OUT_238UNUMCRUST].cName, "238UNumCrust");
-  fvFormattedString(&output[OUT_238UNUMCRUST].cDescr, "Total Crust Number of 238U Atoms");
-  fvFormattedString(&output[OUT_238UNUMCRUST].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_238UNUMCRUST].cDescr,
+                    "Total Crust Number of 238U Atoms");
+  fvFormattedString(&output[OUT_238UNUMCRUST].cNeg,
+                    "Initial Primordial Earth Number");
   output[OUT_238UNUMCRUST].bNeg       = 1;
   output[OUT_238UNUMCRUST].dNeg       = EMASSCRUST238U / MASS238U;
   output[OUT_238UNUMCRUST].iNum       = 1;
@@ -5903,7 +5998,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_238UPOWERTOT].cName, "238UPowerTotal");
   fvFormattedString(&output[OUT_238UPOWERTOT].cDescr,
-          "Total Power from Decay of 238U Atoms");
+                    "Total Power from Decay of 238U Atoms");
   fvFormattedString(&output[OUT_238UPOWERTOT].cNeg, "TW");
   output[OUT_238UPOWERTOT].bNeg       = 1;
   output[OUT_238UPOWERTOT].dNeg       = 1e-12;
@@ -5915,7 +6010,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* Uranium 235 */
 
   fvFormattedString(&output[OUT_235UPOWERMAN].cName, "235UPowerMan");
-  fvFormattedString(&output[OUT_235UPOWERMAN].cDescr, "Total Power Generated by 235U");
+  fvFormattedString(&output[OUT_235UPOWERMAN].cDescr,
+                    "Total Power Generated by 235U");
   fvFormattedString(&output[OUT_235UPOWERMAN].cNeg, "TW");
   output[OUT_235UPOWERMAN].bNeg       = 1;
   output[OUT_235UPOWERMAN].dNeg       = 1e-12;
@@ -5924,7 +6020,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_235UPOWERMAN]           = &fvWrite235UPowerMan;
 
   fvFormattedString(&output[OUT_235UENFLUX].cName, "235UEnFlux");
-  fvFormattedString(&output[OUT_235UENFLUX].cDescr, "Surface Energy Flux due to 235U");
+  fvFormattedString(&output[OUT_235UENFLUX].cDescr,
+                    "Surface Energy Flux due to 235U");
   fvFormattedString(&output[OUT_235UENFLUX].cNeg, "W/m^2");
   output[OUT_235UENFLUX].bNeg       = 1;
   output[OUT_235UENFLUX].dNeg       = 1;
@@ -5934,7 +6031,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_235UDNUMDT].cName, "D235UNumManDt");
   fvFormattedString(&output[OUT_235UDNUMDT].cDescr,
-          "Time Rate of Change of the Number of 235U Nuclei");
+                    "Time Rate of Change of the Number of 235U Nuclei");
   fvFormattedString(&output[OUT_235UDNUMDT].cNeg, "/Gyr");
   output[OUT_235UDNUMDT].bNeg       = 1;
   output[OUT_235UDNUMDT].dNeg       = YEARSEC * 1e9;
@@ -5943,7 +6040,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_235UDNUMDT]           = &fvWriteD235UNumDt;
 
   fvFormattedString(&output[OUT_235UTIME].cName, "235UTimescale");
-  fvFormattedString(&output[OUT_235UTIME].cDescr, "Timescale for 235U Power Generation");
+  fvFormattedString(&output[OUT_235UTIME].cDescr,
+                    "Timescale for 235U Power Generation");
   fvFormattedString(&output[OUT_235UTIME].cNeg, "Gyr");
   output[OUT_235UTIME].bNeg       = 1;
   output[OUT_235UTIME].dNeg       = 1. / (YEARSEC * 1e9);
@@ -5961,8 +6059,10 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_235UMASSMAN]           = &fvWrite235UMassMan;
 
   fvFormattedString(&output[OUT_235UNUMMAN].cName, "235UNumMan");
-  fvFormattedString(&output[OUT_235UNUMMAN].cDescr, "Total Number of 235U Atoms");
-  fvFormattedString(&output[OUT_235UNUMMAN].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_235UNUMMAN].cDescr,
+                    "Total Number of 235U Atoms");
+  fvFormattedString(&output[OUT_235UNUMMAN].cNeg,
+                    "Initial Primordial Earth Number");
   output[OUT_235UNUMMAN].bNeg       = 1;
   output[OUT_235UNUMMAN].dNeg       = EMASSMAN235U / MASS235U;
   output[OUT_235UNUMMAN].iNum       = 1;
@@ -5972,7 +6072,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* Core */
   fvFormattedString(&output[OUT_235UPOWERCORE].cName, "235UPowerCore");
   fvFormattedString(&output[OUT_235UPOWERCORE].cDescr,
-          "Total Core Power Generated by 235U");
+                    "Total Core Power Generated by 235U");
   fvFormattedString(&output[OUT_235UPOWERCORE].cNeg, "TW");
   output[OUT_235UPOWERCORE].bNeg       = 1;
   output[OUT_235UPOWERCORE].dNeg       = 1e-12;
@@ -5981,7 +6081,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_235UPOWERCORE]           = &fvWrite235UPowerCore;
 
   fvFormattedString(&output[OUT_235UMASSCORE].cName, "235UMassCore");
-  fvFormattedString(&output[OUT_235UMASSCORE].cDescr, "Total Core Mass of 235U");
+  fvFormattedString(&output[OUT_235UMASSCORE].cDescr,
+                    "Total Core Mass of 235U");
   fvFormattedString(&output[OUT_235UMASSCORE].cNeg, "Mearth");
   output[OUT_235UMASSCORE].bNeg       = 1;
   output[OUT_235UMASSCORE].dNeg       = 1. / MEARTH;
@@ -5990,8 +6091,10 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_235UMASSCORE]           = &fvWrite235UMassCore;
 
   fvFormattedString(&output[OUT_235UNUMCORE].cName, "235UNumCore");
-  fvFormattedString(&output[OUT_235UNUMCORE].cDescr, "Total Core Number of 235U Atoms");
-  fvFormattedString(&output[OUT_235UNUMCORE].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_235UNUMCORE].cDescr,
+                    "Total Core Number of 235U Atoms");
+  fvFormattedString(&output[OUT_235UNUMCORE].cNeg,
+                    "Initial Primordial Earth Number");
   output[OUT_235UNUMCORE].bNeg       = 1;
   output[OUT_235UNUMCORE].dNeg       = EMASSCORE235U / MASS235U;
   output[OUT_235UNUMCORE].iNum       = 1;
@@ -6001,7 +6104,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   /* Crust */
   fvFormattedString(&output[OUT_235UPOWERCRUST].cName, "235UPowerCrust");
   fvFormattedString(&output[OUT_235UPOWERCRUST].cDescr,
-          "Total Crust Power Generated by 235U");
+                    "Total Crust Power Generated by 235U");
   fvFormattedString(&output[OUT_235UPOWERCRUST].cNeg, "TW");
   output[OUT_235UPOWERCRUST].bNeg       = 1;
   output[OUT_235UPOWERCRUST].dNeg       = 1e-12;
@@ -6010,7 +6113,8 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_235UPOWERCRUST]           = &fvWrite235UPowerCrust;
 
   fvFormattedString(&output[OUT_235UMASSCRUST].cName, "235UMassCrust");
-  fvFormattedString(&output[OUT_235UMASSCRUST].cDescr, "Total Crust Mass of 235U");
+  fvFormattedString(&output[OUT_235UMASSCRUST].cDescr,
+                    "Total Crust Mass of 235U");
   fvFormattedString(&output[OUT_235UMASSCRUST].cNeg, "Mearth");
   output[OUT_235UMASSCRUST].bNeg       = 1;
   output[OUT_235UMASSCRUST].dNeg       = 1. / MEARTH;
@@ -6019,8 +6123,10 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_235UMASSCRUST]           = &fvWrite235UMassCrust;
 
   fvFormattedString(&output[OUT_235UNUMCRUST].cName, "235UNumCrust");
-  fvFormattedString(&output[OUT_235UNUMCRUST].cDescr, "Total Crust Number of 235U Atoms");
-  fvFormattedString(&output[OUT_235UNUMCRUST].cNeg, "Initial Primordial Earth Number");
+  fvFormattedString(&output[OUT_235UNUMCRUST].cDescr,
+                    "Total Crust Number of 235U Atoms");
+  fvFormattedString(&output[OUT_235UNUMCRUST].cNeg,
+                    "Initial Primordial Earth Number");
   output[OUT_235UNUMCRUST].bNeg       = 1;
   output[OUT_235UNUMCRUST].dNeg       = EMASSCRUST235U / MASS235U;
   output[OUT_235UNUMCRUST].iNum       = 1;
@@ -6029,7 +6135,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_235UPOWERTOT].cName, "235UPowerTotal");
   fvFormattedString(&output[OUT_235UPOWERTOT].cDescr,
-          "Total Power from Decay of 235U Atoms");
+                    "Total Power from Decay of 235U Atoms");
   fvFormattedString(&output[OUT_235UPOWERTOT].cNeg, "TW");
   output[OUT_235UPOWERTOT].bNeg       = 1;
   output[OUT_235UPOWERTOT].dNeg       = 1e-12;
@@ -6040,8 +6146,9 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   /* Totals */
   fvFormattedString(&output[OUT_RADPOWERCRUST].cName, "RadPowerCrust");
-  fvFormattedString(&output[OUT_RADPOWERCRUST].cDescr,
-          "Total Power Generated by Radiogenic Nuclides in the crust");
+  fvFormattedString(
+        &output[OUT_RADPOWERCRUST].cDescr,
+        "Total Power Generated by Radiogenic Nuclides in the crust");
   fvFormattedString(&output[OUT_RADPOWERCRUST].cNeg, "TW");
   output[OUT_RADPOWERCRUST].bNeg       = 1;
   output[OUT_RADPOWERCRUST].dNeg       = 1e-12;
@@ -6050,8 +6157,9 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_RADPOWERCRUST]           = &fvWriteRadPowerCrust;
 
   fvFormattedString(&output[OUT_RADPOWERMAN].cName, "RadPowerMan");
-  fvFormattedString(&output[OUT_RADPOWERMAN].cDescr,
-          "Total Power Generated by Radiogenic Nuclides in the mantle");
+  fvFormattedString(
+        &output[OUT_RADPOWERMAN].cDescr,
+        "Total Power Generated by Radiogenic Nuclides in the mantle");
   fvFormattedString(&output[OUT_RADPOWERMAN].cNeg, "TW");
   output[OUT_RADPOWERMAN].bNeg       = 1;
   output[OUT_RADPOWERMAN].dNeg       = 1e-12;
@@ -6061,7 +6169,7 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_RADPOWERCORE].cName, "RadPowerCore");
   fvFormattedString(&output[OUT_RADPOWERCORE].cDescr,
-          "Total Power Generated by Radiogenic Nuclides in Core");
+                    "Total Power Generated by Radiogenic Nuclides in Core");
   fvFormattedString(&output[OUT_RADPOWERCORE].cNeg, "TW");
   output[OUT_RADPOWERCORE].bNeg       = 1;
   output[OUT_RADPOWERCORE].dNeg       = 1e-12;
@@ -6070,8 +6178,9 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_RADPOWERCORE]           = &fvWriteRadPowerCore;
 
   fvFormattedString(&output[OUT_RADPOWERTOTAL].cName, "RadPowerTotal");
-  fvFormattedString(&output[OUT_RADPOWERTOTAL].cDescr,
-          "Total Power Generated by Radiogenic Nuclides in Total (M+C)");
+  fvFormattedString(
+        &output[OUT_RADPOWERTOTAL].cDescr,
+        "Total Power Generated by Radiogenic Nuclides in Total (M+C)");
   fvFormattedString(&output[OUT_RADPOWERTOTAL].cNeg, "TW");
   output[OUT_RADPOWERTOTAL].bNeg       = 1;
   output[OUT_RADPOWERTOTAL].dNeg       = 1e-12;
@@ -6079,9 +6188,10 @@ void fvInitializeOutputRadheat(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_RADPOWERTOTAL].iModuleBit = RADHEAT;
   fnWrite[OUT_RADPOWERTOTAL]           = &fvWriteRadPowerTotal;
 
-  fvFormattedString(&output[OUT_SURFENFLUXRADTOTAL].cName, "SurfEnFluxRadTotal");
+  fvFormattedString(&output[OUT_SURFENFLUXRADTOTAL].cName,
+                    "SurfEnFluxRadTotal");
   fvFormattedString(&output[OUT_SURFENFLUXRADTOTAL].cDescr,
-          "Total Surface Heat Flux Generated by Radiogenic Nuclides");
+                    "Total Surface Heat Flux Generated by Radiogenic Nuclides");
   fvFormattedString(&output[OUT_SURFENFLUXRADTOTAL].cNeg, "W/m^2");
   output[OUT_SURFENFLUXRADTOTAL].bNeg       = 1;
   output[OUT_SURFENFLUXRADTOTAL].dNeg       = 1;

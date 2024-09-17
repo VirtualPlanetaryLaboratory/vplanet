@@ -11,7 +11,7 @@ import vplanet
 sys.path.insert(1, os.path.abspath(os.path.dirname(__file__)))
 
 # Set to False to keep .log, .forward, etc files
-CLEAN_OUTPUTS = True
+CLEAN_OUTPUTS = False
 
 
 @pytest.fixture(scope="module")

@@ -2100,7 +2100,7 @@ void LogOutputOrder(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
                       &control->Units[iBody], update, iBody, dTmp, &cUnit);
         for (iSubOut = 0; iSubOut < output[iOut].iNum; iSubOut++) {
           cCol[iCol + iSubOut + iExtra] = NULL;
-          fvFormattedString(&cCol[iCol + iSubOut + iExtra], "%s [%s]",
+          fvFormattedString(&cCol[iCol + iSubOut + iExtra], "%s[%s]",
                             files->Outfile[iBody].caCol[iCol], cUnit);
         }
         iExtra += (output[iOut].iNum - 1);

@@ -1300,7 +1300,7 @@ void fnPropsAuxStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
        body[iBody].dLXUV = dJohnstonecon2*pow(dRossbyNumber,body[iBody].dJohnstoneBeta2);
   
      }
- body[iBody].dLXUV*=body[iBody].dLuminosity; //dLuminosity is the bol. luminosity, why multiply by bol. luminosity and then reassign?should be divide?
+ body[iBody].dLXUV*=body[iBody].dLuminosity; 
 
  //SSS
  
@@ -2489,7 +2489,7 @@ double fdRossbyNumber(BODY *body , int iBody) {
 ///SSS 
 ///pick between johnstone or none option 
 double fdLXRAY(BODY* body, int iBody){
-  if (body[iBody].iXRAYModel == STELLAR_MODEL_JOHNSTONE){
+  if (body[iBody].iXRAYModel == XRAY_MODEL_JOHNSTONE){
      double dRossbyNumber, dJohnstonecon1, dJohnstonecon2;
         dRossbyNumber = (fdRossbyNumber(body,iBody)*(0.95/(PERIODSUN/fdCranmerSaar2011TauCZ(TEFFSUN)))); //C&S in terms of js
         dJohnstonecon1= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta1))); 
@@ -2497,28 +2497,30 @@ double fdLXRAY(BODY* body, int iBody){
 
   if (dRossbyNumber <= body[iBody].dRossbySat) {
 
-     body[iBody].dXRay = dJohnstonecon1*pow(dRossbyNumber,body[iBody].dJohnstoneBeta1);
+     body[iBody].dLXUV= dJohnstonecon1*pow(dRossbyNumber,body[iBody].dJohnstoneBeta1);
 
       
     } else {
       
-       body[iBody].dXRay = dJohnstonecon2*pow(dRossbyNumber,body[iBody].dJohnstoneBeta2);
+       body[iBody].dLXUV = dJohnstonecon2*pow(dRossbyNumber,body[iBody].dJohnstoneBeta2);
   
      } 
   
-  double dLXRay = body[iBody].dXRay*body[iBody].dLuminosity; 
-  return dLXRay;
+  double dXRay = body[iBody].dLXUV*body[iBody].dLuminosity; 
+  return dXRay;
   
    }
 }
-
+ 
+ 
 
 double fdEUV( BODY *body, int iBody) {
+  double dXRay = fdLXRAY(body,iBody);
   if (body[iBody].iEUVModel == EUV_MODEL_JOHNSTONE){
+    
+    double dEUVJohnstone1 = pow(10.,2.04)*pow((4*PI*body[iBody].dRadius*body[iBody].dRadius),(1-6.628))*pow((dXRay),6.626)/(1e7);
 
-    double dEUVJohnstone1 = 1e7* pow(10.,2.04+(0.681*body[iBody].dXRay*1e-7)+((1-0.681)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
-
-    double dEUVJohnstone2= 1e7* pow(10.,-0.034+(0.920*dEUVJohnstone1*1e-7)+((1-0.920)*pow(10,4*PI*body[iBody].dRadius* body[iBody].dRadius)));
+    double dEUVJohnstone2= pow(10.,-0.034)*pow((4*PI*body[iBody].dRadius*body[iBody].dRadius),(1-0.920))*pow((dEUVJohnstone1),0.920)/(1e7);
 
     double dEUVJohnstone= dEUVJohnstone1 + dEUVJohnstone2;
     
@@ -2527,7 +2529,7 @@ double fdEUV( BODY *body, int iBody) {
 
   if (body[iBody].iEUVModel == EUV_MODEL_SANZFORCADA){
 
-    double dEUVSanzForcada = 1e7 * pow(10.,( 4.80 + (0.860 * log10(body[iBody].dXRay * 1.e-7))));
+    double dEUVSanzForcada = pow(10.,(4.80+1.99))*pow(dXRay,(0.860+0.073))/1e7 ;
 
     return dEUVSanzForcada; 
    }

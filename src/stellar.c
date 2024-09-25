@@ -2502,11 +2502,11 @@ double fdLXRAY(BODY* body, int iBody){
       
     } else {
       
-       body[iBody].dLXUV = dJohnstonecon2*pow(dRossbyNumber,body[iBody].dJohnstoneBeta2);
+       body[iBody].dLXUV = dJohnstonecon2*pow(dRossbyNumber,body[iBody].dJohnstoneBeta2); ///what units does this output in? hmm
   
      } 
   
-  double dXRay = body[iBody].dLXUV*body[iBody].dLuminosity; 
+  double dXRay = body[iBody].dLXUV*body[iBody].dLuminosity;  ///i wonder if this is why the units are off? 
   return dXRay;
   
    }
@@ -2518,9 +2518,9 @@ double fdEUV( BODY *body, int iBody) {
   double dXRay = fdLXRAY(body,iBody);
   if (body[iBody].iEUVModel == EUV_MODEL_JOHNSTONE){
     
-    double dEUVJohnstone1 = pow(10.,2.04)*pow((4*PI*body[iBody].dRadius*body[iBody].dRadius),(1-6.628))*pow((dXRay),6.626)/(1e7);
+    double dEUVJohnstone1 = pow(10.,2.04)*pow((4*PI*body[iBody].dRadius*body[iBody].dRadius),(1-6.628))*pow((dXRay),6.626);
 
-    double dEUVJohnstone2= pow(10.,-0.034)*pow((4*PI*body[iBody].dRadius*body[iBody].dRadius),(1-0.920))*pow((dEUVJohnstone1),0.920)/(1e7);
+    double dEUVJohnstone2= pow(10.,-0.034)*pow((4*PI*body[iBody].dRadius*body[iBody].dRadius),(1-0.920))*pow((dEUVJohnstone1),0.920);
 
     double dEUVJohnstone= dEUVJohnstone1 + dEUVJohnstone2;
     
@@ -2529,7 +2529,7 @@ double fdEUV( BODY *body, int iBody) {
 
   if (body[iBody].iEUVModel == EUV_MODEL_SANZFORCADA){
 
-    double dEUVSanzForcada = pow(10.,(4.80+1.99))*pow(dXRay,(0.860+0.073))/1e7 ;
+    double dEUVSanzForcada = pow(10.,(4.80+1.99))*pow(dXRay,(0.860+0.073)) ;
 
     return dEUVSanzForcada; 
    }

@@ -493,27 +493,30 @@ void InitializeOptionsMagmOc(OPTIONS *options, fnReadOption fnRead[]) {
 
   /* FeO */
 
-  fvFormattedString(&options[OPT_FEO].cName, "dMassFracFeOIni"); // name of the variable
+  fvFormattedString(&options[OPT_FEO].cName,
+                    "dMassFracFeOIni"); // name of the variable
   fvFormattedString(&options[OPT_FEO].cDescr,
-          "Initial Mass Fraction of FeO in the "
-          "mantle"); // description that will be shown for vplanet -h
-  fvFormattedString(&options[OPT_FEO].cDefault,
-          "BSE Earth: 0.0788"); // comment what the default value will be
+                    "Initial Mass Fraction of FeO in the "
+                    "mantle"); // description that will be shown for vplanet -h
+  fvFormattedString(
+        &options[OPT_FEO].cDefault,
+        "BSE Earth: 0.0788"); // comment what the default value will be
   fvFormattedString(&options[OPT_FEO].cDimension, "nd");
   options[OPT_FEO].iType      = 2; // type of the variable: double??
   options[OPT_FEO].bMultiFile = 1; // can it be used in multiple files? 1 = yes
   options[OPT_FEO].dNeg = 1; // is there a unit other than the SI unit? factor
                              // to convert between both units
-  options[OPT_FEO].dDefault = 0.0788;        // default value
-  fvFormattedString(&options[OPT_FEO].cNeg, "no unit"); // specify unit (for help)
-  fnRead[OPT_FEO] = &ReadMassFracFeOIni;     // link read function from above
+  options[OPT_FEO].dDefault = 0.0788; // default value
+  fvFormattedString(&options[OPT_FEO].cNeg,
+                    "no unit");          // specify unit (for help)
+  fnRead[OPT_FEO] = &ReadMassFracFeOIni; // link read function from above
 
   /* Water */
 
   // XXX This probably overlaps with dSurfWaterMass in AtmEsc
   fvFormattedString(&options[OPT_WATERMASSATM].cName, "dWaterMassAtm");
   fvFormattedString(&options[OPT_WATERMASSATM].cDescr,
-          "Initial Water Mass in the atmosphere");
+                    "Initial Water Mass in the atmosphere");
   fvFormattedString(&options[OPT_WATERMASSATM].cDefault, "1 Terrestrial Ocean");
   fvFormattedString(&options[OPT_WATERMASSATM].cDimension, "mass");
   options[OPT_WATERMASSATM].iType      = 2;
@@ -528,7 +531,8 @@ void InitializeOptionsMagmOc(OPTIONS *options, fnReadOption fnRead[]) {
   /* CO2 */
 
   fvFormattedString(&options[OPT_CO2MASSMOATM].cName, "dCO2MassMOAtm");
-  fvFormattedString(&options[OPT_CO2MASSMOATM].cDescr, "Initial CO2 mass in the system");
+  fvFormattedString(&options[OPT_CO2MASSMOATM].cDescr,
+                    "Initial CO2 mass in the system");
   fvFormattedString(&options[OPT_CO2MASSMOATM].cDefault, "0 TO");
   fvFormattedString(&options[OPT_CO2MASSMOATM].cDimension, "mass");
   options[OPT_CO2MASSMOATM].iType      = 2;
@@ -556,7 +560,8 @@ void InitializeOptionsMagmOc(OPTIONS *options, fnReadOption fnRead[]) {
   /* Density */
 
   fvFormattedString(&options[OPT_MANMELTDENSITY].cName, "dManMeltDensity");
-  fvFormattedString(&options[OPT_MANMELTDENSITY].cDescr, "Density of the molten mantle");
+  fvFormattedString(&options[OPT_MANMELTDENSITY].cDescr,
+                    "Density of the molten mantle");
   fvFormattedString(&options[OPT_MANMELTDENSITY].cDefault, "4000 kg/m^3");
   fvFormattedString(&options[OPT_MANMELTDENSITY].cDimension, "mass/length^3");
   options[OPT_MANMELTDENSITY].iType      = 2;
@@ -570,7 +575,7 @@ void InitializeOptionsMagmOc(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_WATERPARTCOEFF].cName, "dWaterPartCoeff");
   fvFormattedString(&options[OPT_WATERPARTCOEFF].cDescr,
-          "Water partition coefficient between melt and solid");
+                    "Water partition coefficient between melt and solid");
   fvFormattedString(&options[OPT_WATERPARTCOEFF].cDefault, "0.01");
   fvFormattedString(&options[OPT_WATERPARTCOEFF].cDimension, "nd");
   options[OPT_WATERPARTCOEFF].iType      = 2;
@@ -583,7 +588,8 @@ void InitializeOptionsMagmOc(OPTIONS *options, fnReadOption fnRead[]) {
   /* Magma Ocean Depth */
 
   fvFormattedString(&options[OPT_DEPTHMO].cName, "dDepthMO");
-  fvFormattedString(&options[OPT_DEPTHMO].cDescr, "Initial depth of the magma ocean");
+  fvFormattedString(&options[OPT_DEPTHMO].cDescr,
+                    "Initial depth of the magma ocean");
   fvFormattedString(&options[OPT_DEPTHMO].cDefault, "core radius");
   fvFormattedString(&options[OPT_DEPTHMO].cDimension, "length");
   options[OPT_DEPTHMO].iType      = 2;
@@ -595,45 +601,50 @@ void InitializeOptionsMagmOc(OPTIONS *options, fnReadOption fnRead[]) {
 
   /* Halts */
 
-  fvFormattedString(&options[OPT_HALTMANTLESOLIDIFIED].cName, "bHaltMantleSolidified");
+  fvFormattedString(&options[OPT_HALTMANTLESOLIDIFIED].cName,
+                    "bHaltMantleSolidified");
   fvFormattedString(&options[OPT_HALTMANTLESOLIDIFIED].cDescr,
-          "Halt when mantle solidified?");
+                    "Halt when mantle solidified?");
   fvFormattedString(&options[OPT_HALTMANTLESOLIDIFIED].cDefault, "0");
   options[OPT_HALTMANTLESOLIDIFIED].iType = 0;
   fnRead[OPT_HALTMANTLESOLIDIFIED]        = &ReadHaltMantleSolidified;
 
-  fvFormattedString(&options[OPT_HALTMANTLEMELTFRACLOW].cName, "bHaltMantleMeltFracLow");
+  fvFormattedString(&options[OPT_HALTMANTLEMELTFRACLOW].cName,
+                    "bHaltMantleMeltFracLow");
   fvFormattedString(&options[OPT_HALTMANTLEMELTFRACLOW].cDescr,
-          "Halt when mantle mostly solidified?");
+                    "Halt when mantle mostly solidified?");
   fvFormattedString(&options[OPT_HALTMANTLEMELTFRACLOW].cDefault, "0");
   options[OPT_HALTMANTLEMELTFRACLOW].iType = 0;
   fnRead[OPT_HALTMANTLEMELTFRACLOW]        = &ReadHaltMantleMeltFracLow;
 
-  fvFormattedString(&options[OPT_HALTATMDESISRUFCOOL].cName, "bHaltAtmDesiSurfCool");
+  fvFormattedString(&options[OPT_HALTATMDESISRUFCOOL].cName,
+                    "bHaltAtmDesiSurfCool");
   fvFormattedString(&options[OPT_HALTATMDESISRUFCOOL].cDescr,
-          "Halt when atmosphere desiccated and surface below 1000K?");
+                    "Halt when atmosphere desiccated and surface below 1000K?");
   fvFormattedString(&options[OPT_HALTATMDESISRUFCOOL].cDefault, "0");
   options[OPT_HALTATMDESISRUFCOOL].iType = 0;
   fnRead[OPT_HALTATMDESISRUFCOOL]        = &ReadHaltAtmDesiSurfCool;
 
   fvFormattedString(&options[OPT_HALTENTERHABZONE].cName, "bHaltEnterHabZone");
   fvFormattedString(&options[OPT_HALTENTERHABZONE].cDescr,
-          "Halt when planet enters habitable zone?");
+                    "Halt when planet enters habitable zone?");
   fvFormattedString(&options[OPT_HALTENTERHABZONE].cDefault, "0");
   options[OPT_HALTENTERHABZONE].iType = 0;
   fnRead[OPT_HALTENTERHABZONE]        = &ReadHaltEnterHabZone;
 
-  fvFormattedString(&options[OPT_HALTALLPLANETSSOLID].cName, "bHaltAllPlanetsSolid");
+  fvFormattedString(&options[OPT_HALTALLPLANETSSOLID].cName,
+                    "bHaltAllPlanetsSolid");
   fvFormattedString(&options[OPT_HALTALLPLANETSSOLID].cDescr,
-          "Halt when all planets solidified?");
+                    "Halt when all planets solidified?");
   fvFormattedString(&options[OPT_HALTALLPLANETSSOLID].cDefault, "0");
   options[OPT_HALTALLPLANETSSOLID].iType = 0;
   fnRead[OPT_HALTALLPLANETSSOLID]        = &ReadHaltAllPlanetsSolid;
 
   // XXX Overlap with bHaltSurfaceDesiccated in AtmEsc
-  fvFormattedString(&options[OPT_HALTALLPLANETSDESICC].cName, "bHaltAllPlanetsDesicc");
+  fvFormattedString(&options[OPT_HALTALLPLANETSDESICC].cName,
+                    "bHaltAllPlanetsDesicc");
   fvFormattedString(&options[OPT_HALTALLPLANETSDESICC].cDescr,
-          "Halt when all planets desiccated?");
+                    "Halt when all planets desiccated?");
   fvFormattedString(&options[OPT_HALTALLPLANETSDESICC].cDefault, "0");
   options[OPT_HALTALLPLANETSDESICC].iType = 0;
   fnRead[OPT_HALTALLPLANETSDESICC]        = &ReadHaltAllPlanetsDesicc;
@@ -641,7 +652,8 @@ void InitializeOptionsMagmOc(OPTIONS *options, fnReadOption fnRead[]) {
   /* Model options */
 
   fvFormattedString(&options[OPT_RADIOHEATMODEL].cName, "sRadioHeatModel");
-  fvFormattedString(&options[OPT_RADIOHEATMODEL].cDescr, "Radiogenic heating model");
+  fvFormattedString(&options[OPT_RADIOHEATMODEL].cDescr,
+                    "Radiogenic heating model");
   fvFormattedString(&options[OPT_RADIOHEATMODEL].cDefault, "NONE");
   options[OPT_RADIOHEATMODEL].iType      = 3;
   options[OPT_RADIOHEATMODEL].bMultiFile = 1;
@@ -649,14 +661,15 @@ void InitializeOptionsMagmOc(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_MAGMOCATMMODEL].cName, "sMagmOcAtmModel");
   fvFormattedString(&options[OPT_MAGMOCATMMODEL].cDescr,
-          "Atmospheric flux model: Grey or Petit");
+                    "Atmospheric flux model: Grey or Petit");
   fvFormattedString(&options[OPT_MAGMOCATMMODEL].cDefault, "GREY");
   options[OPT_MAGMOCATMMODEL].iType      = 3;
   options[OPT_MAGMOCATMMODEL].bMultiFile = 1;
   fnRead[OPT_MAGMOCATMMODEL]             = &ReadMagmOcAtmModel;
 
   fvFormattedString(&options[OPT_MANQUASISOL].cName, "bOptManQuasiSol");
-  fvFormattedString(&options[OPT_MANQUASISOL].cDescr, "Solidify when melt frac = 0.4?");
+  fvFormattedString(&options[OPT_MANQUASISOL].cDescr,
+                    "Solidify when melt frac = 0.4?");
   fvFormattedString(&options[OPT_MANQUASISOL].cDefault, "0");
   options[OPT_MANQUASISOL].iType      = 0;
   options[OPT_MANQUASISOL].bMultiFile = 1;
@@ -866,9 +879,9 @@ double fndBisection(double (*f)(BODY *, double, int), BODY *body, double dXl,
     }
     return dXm;
   } else {
-    fprintf(stderr,"ERROR: Tolerance factor <= 0 in fndBisection.");
+    fprintf(stderr, "ERROR: Tolerance factor <= 0 in fndBisection.");
     exit(EXIT_INT);
-  }  
+  }
 }
 
 /**
@@ -1810,7 +1823,7 @@ void VerifyPotTemp(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iPotTemp][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iPotTemp][0] = 1;
   update[iBody].iaBody[update[iBody].iPotTemp][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iPotTemp][0] * sizeof(int));
+        update[iBody].iNumBodies[update[iBody].iPotTemp][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iPotTemp][0][0] = iBody;
 
   update[iBody].pdDPotTemp =
@@ -1822,7 +1835,7 @@ void VerifySurfTemp(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iSurfTemp][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iSurfTemp][0] = 1;
   update[iBody].iaBody[update[iBody].iSurfTemp][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iSurfTemp][0] * sizeof(int));
+        update[iBody].iNumBodies[update[iBody].iSurfTemp][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iSurfTemp][0][0] = iBody;
 
   update[iBody].pdDSurfTemp =
@@ -1834,7 +1847,7 @@ void VerifySolidRadius(BODY *body, OPTIONS *options, UPDATE *update,
   update[iBody].iaType[update[iBody].iSolidRadius][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iSolidRadius][0] = 1;
   update[iBody].iaBody[update[iBody].iSolidRadius][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iSolidRadius][0] * sizeof(int));
+        update[iBody].iNumBodies[update[iBody].iSolidRadius][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iSolidRadius][0][0] = iBody;
 
   update[iBody].pdDSolidRadius =
@@ -1859,7 +1872,7 @@ void VerifyWaterMassSol(BODY *body, OPTIONS *options, UPDATE *update,
   update[iBody].iaType[update[iBody].iWaterMassSol][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iWaterMassSol][0] = 1;
   update[iBody].iaBody[update[iBody].iWaterMassSol][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iWaterMassSol][0] * sizeof(int));
+        update[iBody].iNumBodies[update[iBody].iWaterMassSol][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iWaterMassSol][0][0] = iBody;
 
   update[iBody].pdDWaterMassSol =
@@ -1871,7 +1884,7 @@ void VerifyCO2MassMOAtm(BODY *body, OPTIONS *options, UPDATE *update,
   update[iBody].iaType[update[iBody].iCO2MassMOAtm][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iCO2MassMOAtm][0] = 1;
   update[iBody].iaBody[update[iBody].iCO2MassMOAtm][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iCO2MassMOAtm][0] * sizeof(int));
+        update[iBody].iNumBodies[update[iBody].iCO2MassMOAtm][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iCO2MassMOAtm][0][0] = iBody;
 
   update[iBody].pdDCO2MassMOAtm =
@@ -1883,7 +1896,7 @@ void VerifyCO2MassSol(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
   update[iBody].iaType[update[iBody].iCO2MassSol][0]     = 1;
   update[iBody].iNumBodies[update[iBody].iCO2MassSol][0] = 1;
   update[iBody].iaBody[update[iBody].iCO2MassSol][0]     = malloc(
-            update[iBody].iNumBodies[update[iBody].iCO2MassSol][0] * sizeof(int));
+        update[iBody].iNumBodies[update[iBody].iCO2MassSol][0] * sizeof(int));
   update[iBody].iaBody[update[iBody].iCO2MassSol][0][0] = iBody;
 
   update[iBody].pdDCO2MassSol =
@@ -2394,6 +2407,7 @@ void WriteFracFe2O3Man(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
   } else {
+    fvFormattedString(cUnit, "");
   }
 }
 
@@ -2416,6 +2430,7 @@ void WriteWaterFracMelt(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
   } else {
+    fvFormattedString(cUnit, "");
   }
 }
 
@@ -2427,6 +2442,7 @@ void WriteCO2FracMelt(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
   } else {
+    fvFormattedString(cUnit, "");
   }
 }
 
@@ -2481,6 +2497,7 @@ void WriteMeltFraction(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
   } else {
+    fvFormattedString(cUnit, "");
   }
 }
 
@@ -2488,7 +2505,8 @@ void WriteMeltFraction(BODY *body, CONTROL *control, OUTPUT *output,
 void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_POTTEMP].cName, "PotTemp");
-  fvFormattedString(&output[OUT_POTTEMP].cDescr, "Potential temperature magma ocean");
+  fvFormattedString(&output[OUT_POTTEMP].cDescr,
+                    "Potential temperature magma ocean");
   fvFormattedString(&output[OUT_POTTEMP].cNeg, "K");
   output[OUT_POTTEMP].bNeg = 1;
   output[OUT_POTTEMP].dNeg =
@@ -2498,7 +2516,8 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_POTTEMP]           = &WritePotTemp;
 
   fvFormattedString(&output[OUT_SURFTEMP].cName, "SurfTemp");
-  fvFormattedString(&output[OUT_SURFTEMP].cDescr, "Surface temperature magma ocean");
+  fvFormattedString(&output[OUT_SURFTEMP].cDescr,
+                    "Surface temperature magma ocean");
   fvFormattedString(&output[OUT_SURFTEMP].cNeg, "K");
   output[OUT_SURFTEMP].bNeg = 1;
   output[OUT_SURFTEMP].dNeg =
@@ -2509,7 +2528,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_SOLIDRADIUS].cName, "SolidRadius");
   fvFormattedString(&output[OUT_SOLIDRADIUS].cDescr,
-          "Solidification radius of the mantle");
+                    "Solidification radius of the mantle");
   fvFormattedString(&output[OUT_SOLIDRADIUS].cNeg, "Rearth");
   output[OUT_SOLIDRADIUS].bNeg = 1;
   output[OUT_SOLIDRADIUS].dNeg =
@@ -2520,7 +2539,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_WATERMASSMOATM].cName, "WaterMassMOAtm");
   fvFormattedString(&output[OUT_WATERMASSMOATM].cDescr,
-          "Water mass in magma ocean and atmosphere");
+                    "Water mass in magma ocean and atmosphere");
   fvFormattedString(&output[OUT_WATERMASSMOATM].cNeg, "TO");
   output[OUT_WATERMASSMOATM].bNeg = 1;
   output[OUT_WATERMASSMOATM].dNeg =
@@ -2530,7 +2549,8 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_WATERMASSMOATM]           = &WriteWaterMassMOAtm;
 
   fvFormattedString(&output[OUT_WATERMASSSOL].cName, "WaterMassSol");
-  fvFormattedString(&output[OUT_WATERMASSSOL].cDescr, "Water mass in solidified mantle");
+  fvFormattedString(&output[OUT_WATERMASSSOL].cDescr,
+                    "Water mass in solidified mantle");
   fvFormattedString(&output[OUT_WATERMASSSOL].cNeg, "TO");
   output[OUT_WATERMASSSOL].bNeg = 1;
   output[OUT_WATERMASSSOL].dNeg =
@@ -2541,7 +2561,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_CO2MASSMOATM].cName, "CO2MassMOAtm");
   fvFormattedString(&output[OUT_CO2MASSMOATM].cDescr,
-          "CO2 mass in magma ocean and atmosphere");
+                    "CO2 mass in magma ocean and atmosphere");
   fvFormattedString(&output[OUT_CO2MASSMOATM].cNeg, "kg");
   output[OUT_CO2MASSMOATM].bNeg = 1;
   output[OUT_CO2MASSMOATM].dNeg =
@@ -2551,7 +2571,8 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_CO2MASSMOATM]           = &WriteCO2MassMOAtm;
 
   fvFormattedString(&output[OUT_CO2MASSSOL].cName, "CO2MassSol");
-  fvFormattedString(&output[OUT_CO2MASSSOL].cDescr, "CO2 mass in solidified mantle");
+  fvFormattedString(&output[OUT_CO2MASSSOL].cDescr,
+                    "CO2 mass in solidified mantle");
   fvFormattedString(&output[OUT_CO2MASSSOL].cNeg, "kg");
   output[OUT_CO2MASSSOL].bNeg = 1;
   output[OUT_CO2MASSSOL].dNeg =
@@ -2562,7 +2583,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_OXYGENMASSMOATM].cName, "OxygenMassMOAtm");
   fvFormattedString(&output[OUT_OXYGENMASSMOATM].cDescr,
-          "Oxygen mass in magma ocean and atmosphere");
+                    "Oxygen mass in magma ocean and atmosphere");
   fvFormattedString(&output[OUT_OXYGENMASSMOATM].cNeg, "kg");
   output[OUT_OXYGENMASSMOATM].bNeg = 1;
   output[OUT_OXYGENMASSMOATM].dNeg =
@@ -2572,7 +2593,8 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_OXYGENMASSMOATM]           = &WriteOxygenMassMOAtm;
 
   fvFormattedString(&output[OUT_OXYGENMASSSOL].cName, "OxygenMassSol");
-  fvFormattedString(&output[OUT_OXYGENMASSSOL].cDescr, "Oxygen Mass in solidified mantle");
+  fvFormattedString(&output[OUT_OXYGENMASSSOL].cDescr,
+                    "Oxygen Mass in solidified mantle");
   fvFormattedString(&output[OUT_OXYGENMASSSOL].cNeg, "kg");
   output[OUT_OXYGENMASSSOL].bNeg = 1;
   output[OUT_OXYGENMASSSOL].dNeg =
@@ -2582,7 +2604,8 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_OXYGENMASSSOL]           = &WriteOxygenMassSol;
 
   fvFormattedString(&output[OUT_PRESSWATERATM].cName, "PressWaterAtm");
-  fvFormattedString(&output[OUT_PRESSWATERATM].cDescr, "Water pressure in atmosphere");
+  fvFormattedString(&output[OUT_PRESSWATERATM].cDescr,
+                    "Water pressure in atmosphere");
   fvFormattedString(&output[OUT_PRESSWATERATM].cNeg, "bar");
   output[OUT_PRESSWATERATM].bNeg = 1;
   output[OUT_PRESSWATERATM].dNeg =
@@ -2592,7 +2615,8 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_PRESSWATERATM]           = &WritePressWaterAtm;
 
   fvFormattedString(&output[OUT_PRESSCO2ATM].cName, "PressCO2Atm");
-  fvFormattedString(&output[OUT_PRESSCO2ATM].cDescr, "CO2 pressure in atmosphere");
+  fvFormattedString(&output[OUT_PRESSCO2ATM].cDescr,
+                    "CO2 pressure in atmosphere");
   fvFormattedString(&output[OUT_PRESSCO2ATM].cNeg, "bar");
   output[OUT_PRESSCO2ATM].bNeg = 1;
   output[OUT_PRESSCO2ATM].dNeg =
@@ -2602,7 +2626,8 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_PRESSCO2ATM]           = &WritePressCO2Atm;
 
   fvFormattedString(&output[OUT_PRESSOXYGENATM].cName, "PressOxygenAtm");
-  fvFormattedString(&output[OUT_PRESSOXYGENATM].cDescr, "Oxygen pressure in atmosphere");
+  fvFormattedString(&output[OUT_PRESSOXYGENATM].cDescr,
+                    "Oxygen pressure in atmosphere");
   fvFormattedString(&output[OUT_PRESSOXYGENATM].cNeg, "bar");
   output[OUT_PRESSOXYGENATM].bNeg = 1;
   output[OUT_PRESSOXYGENATM].dNeg =
@@ -2612,7 +2637,8 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_PRESSOXYGENATM]           = &WritePressOxygenAtm;
 
   fvFormattedString(&output[OUT_HYDROGENMASSSPACE].cName, "HydrogenMassSpace");
-  fvFormattedString(&output[OUT_HYDROGENMASSSPACE].cDescr, "H mass lost to space");
+  fvFormattedString(&output[OUT_HYDROGENMASSSPACE].cDescr,
+                    "H mass lost to space");
   fvFormattedString(&output[OUT_HYDROGENMASSSPACE].cNeg, "kg");
   output[OUT_HYDROGENMASSSPACE].bNeg = 1;
   output[OUT_HYDROGENMASSSPACE].dNeg =
@@ -2622,7 +2648,8 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_HYDROGENMASSSPACE]           = &WriteHydrogenMassSpace;
 
   fvFormattedString(&output[OUT_OXYGENMASSSPACE].cName, "OxygenMassSpace");
-  fvFormattedString(&output[OUT_OXYGENMASSSPACE].cDescr, "O atoms lost to space");
+  fvFormattedString(&output[OUT_OXYGENMASSSPACE].cDescr,
+                    "O atoms lost to space");
   fvFormattedString(&output[OUT_OXYGENMASSSPACE].cNeg, "kg");
   output[OUT_OXYGENMASSSPACE].bNeg = 1;
   output[OUT_OXYGENMASSSPACE].dNeg =
@@ -2633,14 +2660,15 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_FRACFE2O3MAN].cName, "FracFe2O3Man");
   fvFormattedString(&output[OUT_FRACFE2O3MAN].cDescr,
-          "Fe2O3 mass fraction in magma ocean");
+                    "Fe2O3 mass fraction in magma ocean");
   output[OUT_FRACFE2O3MAN].bNeg       = 1;
   output[OUT_FRACFE2O3MAN].iNum       = 1;
   output[OUT_FRACFE2O3MAN].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_FRACFE2O3MAN]           = &WriteFracFe2O3Man;
 
   fvFormattedString(&output[OUT_NETFLUXATMO].cName, "NetFluxAtmo");
-  fvFormattedString(&output[OUT_NETFLUXATMO].cDescr, "Atmospheric Net Flux (OLR-ASR)");
+  fvFormattedString(&output[OUT_NETFLUXATMO].cDescr,
+                    "Atmospheric Net Flux (OLR-ASR)");
   fvFormattedString(&output[OUT_NETFLUXATMO].cNeg, "W/m^2");
   output[OUT_NETFLUXATMO].bNeg       = 1;
   output[OUT_NETFLUXATMO].iNum       = 1;
@@ -2649,14 +2677,15 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_WATERFRACMELT].cName, "WaterFracMelt");
   fvFormattedString(&output[OUT_WATERFRACMELT].cDescr,
-          "water mass fraction in magma ocean");
+                    "water mass fraction in magma ocean");
   output[OUT_WATERFRACMELT].bNeg       = 1;
   output[OUT_WATERFRACMELT].iNum       = 1;
   output[OUT_WATERFRACMELT].iModuleBit = MAGMOC; // name of module
   fnWrite[OUT_WATERFRACMELT]           = &WriteWaterFracMelt;
 
   fvFormattedString(&output[OUT_CO2FRACMELT].cName, "CO2FracMelt");
-  fvFormattedString(&output[OUT_CO2FRACMELT].cDescr, "CO2 mass fraction in magma ocean");
+  fvFormattedString(&output[OUT_CO2FRACMELT].cDescr,
+                    "CO2 mass fraction in magma ocean");
   output[OUT_CO2FRACMELT].bNeg       = 1;
   output[OUT_CO2FRACMELT].iNum       = 1;
   output[OUT_CO2FRACMELT].iModuleBit = MAGMOC; // name of module
@@ -2665,7 +2694,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   // XXX Overlap with RadPowerMan from thermint
   fvFormattedString(&output[OUT_RADIOPOWER].cName, "RadioPower");
   fvFormattedString(&output[OUT_RADIOPOWER].cDescr,
-          "Power from radiogenic heating in the mantle");
+                    "Power from radiogenic heating in the mantle");
   fvFormattedString(&output[OUT_RADIOPOWER].cNeg, "TW");
   output[OUT_RADIOPOWER].bNeg       = 1;
   output[OUT_RADIOPOWER].dNeg       = 1e-12;
@@ -2676,7 +2705,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   // XXX Overlap with PowerTidal from Eqtide
   fvFormattedString(&output[OUT_TIDALPOWER].cName, "TidalPower");
   fvFormattedString(&output[OUT_TIDALPOWER].cDescr,
-          "Power from tidal heating in the mantle");
+                    "Power from tidal heating in the mantle");
   fvFormattedString(&output[OUT_TIDALPOWER].cNeg, "TW");
   output[OUT_TIDALPOWER].bNeg       = 1;
   output[OUT_TIDALPOWER].dNeg       = 1e-12;
@@ -2687,7 +2716,7 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   // XXX Overlap with HZ outputs in output.c
   fvFormattedString(&output[OUT_HZINNEREDGE].cName, "HZInnerEdge");
   fvFormattedString(&output[OUT_HZINNEREDGE].cDescr,
-          "Inner Edge of the Habitable Zone (Runaway Greenhouse)");
+                    "Inner Edge of the Habitable Zone (Runaway Greenhouse)");
   fvFormattedString(&output[OUT_HZINNEREDGE].cNeg, "AU");
   output[OUT_HZINNEREDGE].bNeg = 1;
   output[OUT_HZINNEREDGE].dNeg =
@@ -2697,7 +2726,8 @@ void InitializeOutputMagmOc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_HZINNEREDGE]           = &WriteHZInnerEdge;
 
   fvFormattedString(&output[OUT_MELTFRACTION].cName, "MeltFraction");
-  fvFormattedString(&output[OUT_MELTFRACTION].cDescr, "Melt fraction of the magma ocean");
+  fvFormattedString(&output[OUT_MELTFRACTION].cDescr,
+                    "Melt fraction of the magma ocean");
   output[OUT_MELTFRACTION].bNeg       = 1;
   output[OUT_MELTFRACTION].iNum       = 1;
   output[OUT_MELTFRACTION].iModuleBit = MAGMOC; // name of module

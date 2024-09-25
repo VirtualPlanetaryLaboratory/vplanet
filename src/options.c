@@ -1161,6 +1161,10 @@ void ReadInitialOptions(BODY **body, CONTROL *control, FILES *files,
     ReadVerbose(files, options, &control->Io.iVerbose, iFile);
   }
 
+  if (control->Io.iVerbose >= VERBERR) {
+    fprintf(stderr, "INFO: Running VPLanet %s.\n", control->sGitVersion);
+  }
+
   /* Need units prior to any parameter read */
   control->Units = malloc(files->iNumInputs * sizeof(UNITS));
 

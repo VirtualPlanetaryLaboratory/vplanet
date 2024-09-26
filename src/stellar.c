@@ -2491,7 +2491,7 @@ double fdRossbyNumber(BODY *body , int iBody) {
 double fdLXRAY(BODY* body, int iBody){
   if (body[iBody].iXRAYModel == XRAY_MODEL_JOHNSTONE){
      double dRossbyNumber, dJohnstonecon1, dJohnstonecon2;
-        dRossbyNumber = (fdRossbyNumber(body,iBody)*(0.95/(PERIODSUN/fdCranmerSaar2011TauCZ(TEFFSUN)))); //C&S in terms of js
+        dRossbyNumber = (fdRossbyNumber(body,iBody)*(0.95/(PERIODSUN))*fdCranmerSaar2011TauCZ(TEFFSUN)); 
         dJohnstonecon1= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta1))); 
         dJohnstonecon2= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta2)));
 
@@ -2502,11 +2502,11 @@ double fdLXRAY(BODY* body, int iBody){
       
     } else {
       
-       body[iBody].dLXUV = dJohnstonecon2*pow(dRossbyNumber,body[iBody].dJohnstoneBeta2); ///what units does this output in? hmm
+       body[iBody].dLXUV = dJohnstonecon2*pow(dRossbyNumber,body[iBody].dJohnstoneBeta2); 
   
      } 
   
-  double dXRay = body[iBody].dLXUV*body[iBody].dLuminosity;  ///i wonder if this is why the units are off? 
+  double dXRay = body[iBody].dLXUV*body[iBody].dLuminosity;  
   return dXRay;
   
    }
@@ -2516,13 +2516,13 @@ double fdLXRAY(BODY* body, int iBody){
 
 double fdEUV( BODY *body, int iBody) {
   double dXRay = fdLXRAY(body,iBody);
-  if (body[iBody].iEUVModel == EUV_MODEL_JOHNSTONE){
+  if (body[iBody].iEUVModel == EUV_MODEL_JOHNSTONE){ //What is the radius in for units? SI is m, need cm^2 to cancel out
     
-    double dEUVJohnstone1 = pow(10.,2.04)*pow((4*PI*body[iBody].dRadius*body[iBody].dRadius),(1-6.628))*pow((dXRay),6.626);
+    double dEUVJohnstone1 = pow(10.,2.04)*pow((4*PI*body[iBody].dRadius*body[iBody].dRadius*1e4),(1-.681))*pow((dXRay),.681);
 
-    double dEUVJohnstone2= pow(10.,-0.034)*pow((4*PI*body[iBody].dRadius*body[iBody].dRadius),(1-0.920))*pow((dEUVJohnstone1),0.920);
+    double dEUVJohnstone2= pow(10.,-0.034)*pow((4*PI*body[iBody].dRadius*body[iBody].dRadius*1e4),(1-0.920))*pow((dEUVJohnstone1),0.920);
 
-    double dEUVJohnstone= dEUVJohnstone1 + dEUVJohnstone2;
+    double dEUVJohnstone= dEUVJohnstone1 + dEUVJohnstone2; 
     
     return dEUVJohnstone;}
 

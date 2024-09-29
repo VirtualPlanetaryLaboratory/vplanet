@@ -1,7 +1,7 @@
 sName       equatorial                    #name of planet
 saModules   poise                       #what vplanet modules you want to use
 sGeography  equitorial
-dLandWaterLatitude 73.6
+dLandWaterLatitude 16.4
 
 dMass        3.00316726e-06             #mass of planet
 dRadius      -1.00                      #radius (not important right now)

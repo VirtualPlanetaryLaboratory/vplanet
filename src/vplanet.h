@@ -634,19 +634,17 @@ struct BODY {
   double dAlbedoWater;     /**< Sets base albedo of water (sea model) */
   double dLatLandWater; /**< Lattitude boundary between land and water in polar
                            and equatorial options */
-  int iLatLandWater; /**< Lattitude boundary between land and water in polar and
-                        equatorial options */
-  int bAlbedoZA;     /**< Use albedo based on zenith angle (ann model) */
-  double dAreaIceCov; /**< Tracks area of surface covered in permanent ice*/
-  double dAstroDist;  /**< Distance between primary and planet */
-  int bCalcAB;        /**< Calc A and B from Williams & Kasting 1997 */
-  int iClimateModel;  /**< Which EBM to be used (ann or sea) */
-  int bColdStart;     /**< Start from global glaciation (snowball) conditions */
-  double dCw_dt;      /**< Heat capacity of water / EBM time step */
-  double dDiffCoeff;  /**< Diffusion coefficient set by user */
-  int bDiffRot;       /**< Adjust heat diffusion for rotation rate */
-  int bElevFB;        /**< Apply elevation feedback to ice ablation */
-  double dFixIceLat;  /**< Fixes ice line latitude to user set value */
+  int bAlbedoZA;        /**< Use albedo based on zenith angle (ann model) */
+  double dAreaIceCov;   /**< Tracks area of surface covered in permanent ice*/
+  double dAstroDist;    /**< Distance between primary and planet */
+  int bCalcAB;          /**< Calc A and B from Williams & Kasting 1997 */
+  int iClimateModel;    /**< Which EBM to be used (ann or sea) */
+  int bColdStart;    /**< Start from global glaciation (snowball) conditions */
+  double dCw_dt;     /**< Heat capacity of water / EBM time step */
+  double dDiffCoeff; /**< Diffusion coefficient set by user */
+  int bDiffRot;      /**< Adjust heat diffusion for rotation rate */
+  int bElevFB;       /**< Apply elevation feedback to ice ablation */
+  double dFixIceLat; /**< Fixes ice line latitude to user set value */
   double dFluxInGlobal;     /**< Global mean of incoming flux */
   double dFluxInGlobalTmp;  /**< Copy of global mean incoming flux */
   double dFluxOutGlobal;    /**< Global mean of outgoing flux */
@@ -724,7 +722,8 @@ struct BODY {
   double *daFlux;        /**< Meridional surface heat flux */
   double *daFluxIn;      /**< Incoming surface flux (insolation) */
   double *daFluxOut;     /**< Outgoing surface flux (longwave) */
-  double *daLats;      /**< Latitude of each cell (centered); South Pole is 0 */
+  double *daLats; /**< Latitude of each cell (centered), assuming equal areas
+                     per bin; South Pole is 0 */
   double *daPeakInsol; /**< Annually averaged insolation at each latitude */
   double *daTGrad;     /**< Gradient of temperature (meridional) */
 

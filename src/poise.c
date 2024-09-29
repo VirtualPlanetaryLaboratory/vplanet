@@ -1512,6 +1512,12 @@ void InitializeOptionsPoise(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_LANDFRACMEAN].iType      = 2;
   options[OPT_LANDFRACMEAN].bMultiFile = 1;
   fnRead[OPT_LANDFRACMEAN]             = &ReadLandFracMean;
+  fvFormattedString(
+        &options[OPT_LANDWATERLATITUDE].cLongDescr,
+        "The average fraction of land per latitude. Note that the actual "
+        "distribution of land will be normalized so that the global fraction "
+        "of land on the surface will equal %s",
+        options[OPT_LANDFRACMEAN].cName);
 
   fvFormattedString(&options[OPT_LANDFRACAMP].cName, "dLandFracAmp");
   fvFormattedString(&options[OPT_LANDFRACAMP].cDescr,
@@ -2091,7 +2097,7 @@ void InitializeLatGrid(BODY *body, int iBody) {
   }
 }
 
-void fvInitializeLandWaterUniform(BODY *body, int iBody) {
+void fvInitializeGeographyUniform(BODY *body, int iBody) {
   int iLat;
 
   for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
@@ -2100,7 +2106,7 @@ void fvInitializeLandWaterUniform(BODY *body, int iBody) {
   }
 }
 
-void fvInitializeLandWaterModern(BODY *body, int iBody) {
+void fvInitializeGeographyModern(BODY *body, int iBody) {
   int iLat;
 
   for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
@@ -2122,9 +2128,9 @@ void fvInitializeLandWaterModern(BODY *body, int iBody) {
   }
 }
 
-void fvInitializeLandWaterRandom(BODY *body, int iBody) {
+void fvInitializeGeographyRandom(BODY *body, int iBody) {
   int iLat;
-  double dOffset;
+  double dOffset, dLandFrac, dLandFracNormFactor;
 
   for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
     dOffset = body[iBody].dLandFracAmp *
@@ -2136,88 +2142,79 @@ void fvInitializeLandWaterRandom(BODY *body, int iBody) {
     if (body[iBody].daLandFrac[iLat] < LANDFRACMIN) {
       body[iBody].daLandFrac[iLat] = LANDFRACMIN;
     }
+  }
+
+  dLandFrac           = fdLandFracGlobal(body, iBody);
+  dLandFracNormFactor = body[iBody].dLandFracMean / dLandFrac;
+  for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+    body[iBody].daLandFrac[iLat] *= dLandFracNormFactor;
     body[iBody].daWaterFrac[iLat] = 1.0 - body[iBody].daLandFrac[iLat];
   }
 }
 
-void fvInitializeLandWaterPolar(BODY *body, int iBody) {
+void fvInitializeGeographyPolar(BODY *body, int iBody) {
   int iLat;
 
-  for (iLat = 0; iLat < body[iBody].iLatLandWater; iLat++) {
-    body[iBody].daLandFrac[iLat]  = LANDFRACMAX;
-    body[iBody].daWaterFrac[iLat] = LANDFRACMIN;
-  }
-  for (iLat = body[iBody].iLatLandWater;
-       iLat < (body[iBody].iNumLats - body[iBody].iLatLandWater);
-       iLat++) {
-    body[iBody].daLandFrac[iLat]  = LANDFRACMIN;
-    body[iBody].daWaterFrac[iLat] = LANDFRACMAX;
-  }
-  for (iLat = (body[iBody].iNumLats - body[iBody].iLatLandWater);
-       iLat < body[iBody].iNumLats;
-       iLat++) {
-    body[iBody].daLandFrac[iLat]  = LANDFRACMIN;
-    body[iBody].daWaterFrac[iLat] = LANDFRACMAX;
+  for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+    if (body[iBody].daLats[iLat] <= -body[iBody].dLatLandWater ||
+        body[iBody].daLats[iLat] >= body[iBody].dLatLandWater) {
+      body[iBody].daLandFrac[iLat]  = LANDFRACMAX;
+      body[iBody].daWaterFrac[iLat] = LANDFRACMIN;
+    } else {
+      body[iBody].daLandFrac[iLat]  = LANDFRACMIN;
+      body[iBody].daWaterFrac[iLat] = LANDFRACMAX;
+    }
   }
 }
 
-void fvInitializeLandWaterEquatorial(BODY *body, int iBody) {
+void fvInitializeGeographyEquatorial(BODY *body, int iBody) {
   int iLat;
 
-  for (iLat = 0; iLat < body[iBody].iLatLandWater; iLat++) {
-    body[iBody].daLandFrac[iLat]  = LANDFRACMIN;
-    body[iBody].daWaterFrac[iLat] = LANDFRACMAX;
-  }
-  for (iLat = body[iBody].iLatLandWater;
-       iLat < (body[iBody].iNumLats - body[iBody].iLatLandWater);
-       iLat++) {
-    body[iBody].daLandFrac[iLat]  = LANDFRACMAX;
-    body[iBody].daWaterFrac[iLat] = LANDFRACMIN;
-  }
-  for (iLat = (body[iBody].iNumLats - body[iBody].iLatLandWater);
-       iLat < body[iBody].iNumLats;
-       iLat++) {
-    body[iBody].daLandFrac[iLat]  = LANDFRACMIN;
-    body[iBody].daWaterFrac[iLat] = LANDFRACMAX;
+  for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+    if (body[iBody].daLats[iLat] <= -body[iBody].dLatLandWater ||
+        body[iBody].daLats[iLat] >= body[iBody].dLatLandWater) {
+      body[iBody].daLandFrac[iLat]  = LANDFRACMIN;
+      body[iBody].daWaterFrac[iLat] = LANDFRACMAX;
+    } else {
+      body[iBody].daLandFrac[iLat]  = LANDFRACMAX;
+      body[iBody].daWaterFrac[iLat] = LANDFRACMIN;
+    }
   }
 }
 
-void fvWriteLandFracFile(BODY *body, int iBody) {
+void fvWriteGeographyFile(BODY *body, int iBody) {
   int iLat;
-  double dInterval, dLatNow;
   FILE *fp;
   char *cOut = NULL;
 
-  dInterval = 180. / body[iBody].iNumLats;
   fvFormattedString(&cOut, "%s.geography", body[iBody].cName);
   fp = fopen(cOut, "w");
   for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
-    dLatNow = -90 + 0.5 * dInterval + iLat * dInterval;
-    fprintf(fp, "%.5lf %.5lf %.5lf\n", dLatNow, body[iBody].daLandFrac[iLat],
-            body[iBody].daWaterFrac[iLat]);
+    fprintf(fp, "%.5lf %.5lf %.5lf\n", (body[iBody].daLats[iLat] * 180. / PI),
+            body[iBody].daLandFrac[iLat], body[iBody].daWaterFrac[iLat]);
   }
   fclose(fp);
 }
 
-void InitializeLandWater(BODY *body, int iBody) {
+void InitializeGeography(BODY *body, int iBody) {
   int iLat;
 
   body[iBody].daLandFrac  = malloc(body[iBody].iNumLats * sizeof(double));
   body[iBody].daWaterFrac = malloc(body[iBody].iNumLats * sizeof(double));
 
   if (body[iBody].iGeography == GEOGRAPHYUNIFORM) {
-    fvInitializeLandWaterUniform(body, iBody);
+    fvInitializeGeographyUniform(body, iBody);
   } else if (body[iBody].iGeography == GEOGRAPHYMODERN) {
-    fvInitializeLandWaterModern(body, iBody);
+    fvInitializeGeographyModern(body, iBody);
   } else if (body[iBody].iGeography == GEOGRAPHYRANDOM) {
-    fvInitializeLandWaterRandom(body, iBody);
+    fvInitializeGeographyRandom(body, iBody);
   } else if (body[iBody].iGeography == GEOGRAPHYPOLAR) {
-    fvInitializeLandWaterPolar(body, iBody);
+    fvInitializeGeographyPolar(body, iBody);
   } else if (body[iBody].iGeography == GEOGRAPHYEQUATORIAL) {
-    fvInitializeLandWaterEquatorial(body, iBody);
+    fvInitializeGeographyEquatorial(body, iBody);
   }
 
-  fvWriteLandFracFile(body, iBody);
+  fvWriteGeographyFile(body, iBody);
 }
 
 void DampTemp(BODY *body, double dTGlobalTmp, int iBody) {
@@ -2516,7 +2513,7 @@ void InitializeClimateParams(BODY *body, int iBody, int iVerbose) {
     body[iBody].daIceAccumTot  = malloc(body[iBody].iNumLats * sizeof(double));
     body[iBody].daIceAblateTot = malloc(body[iBody].iNumLats * sizeof(double));
 
-    InitializeLandWater(body, iBody);
+    InitializeGeography(body, iBody);
     body[iBody].dLatFHeatCp    = 83.5; // CC sez this is about right
     body[iBody].dLatentHeatIce = body[iBody].dHeatCapWater *
                                  body[iBody].dLatFHeatCp /
@@ -3021,9 +3018,6 @@ void fvVerifyGeographyPolarEquatorial(BODY *body, CONTROL *control,
               options[OPT_LANDWATERLATITUDE].cName);
     }
   }
-
-  body[iBody].iLatLandWater =
-        (int)(body[iBody].dLatLandWater * body[iBody].iNumLats / PI);
 }
 
 void VerifyGeography(BODY *body, CONTROL *control, OPTIONS *options,
@@ -4338,6 +4332,13 @@ void WriteEnergyResW(BODY *body, CONTROL *control, OUTPUT *output,
   }
 }
 
+void WriteLandFracGlobal(BODY *body, CONTROL *control, OUTPUT *output,
+                         SYSTEM *system, UNITS *units, UPDATE *update,
+                         int iBody, double *dTmp, char **cUnit) {
+  *dTmp = fdLandFracGlobal(body, iBody);
+  fvFormattedString(cUnit, "");
+}
+
 void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fvFormattedString(&output[OUT_TGLOBAL].cName, "TGlobal");
   fvFormattedString(&output[OUT_TGLOBAL].cDescr,
@@ -4908,6 +4909,14 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
         "edge. "
         "If not present, return 0. Note that some ice belts may in fact have a "
         "southern edge at the equator.");
+
+  fvFormattedString(&output[OUT_LANDFRACGLOBAL].cName, "LandFracGlobal");
+  fvFormattedString(&output[OUT_LANDFRACGLOBAL].cDescr,
+                    "Fraction of planetary surface covered by land");
+  output[OUT_LANDFRACGLOBAL].bNeg       = 0;
+  output[OUT_LANDFRACGLOBAL].iNum       = 1;
+  output[OUT_LANDFRACGLOBAL].iModuleBit = POISE;
+  fnWrite[OUT_LANDFRACGLOBAL]           = &WriteLandFracGlobal;
 }
 
 /************ POISE Logging Functions **************/
@@ -8220,4 +8229,15 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
       }
     }
   }
+}
+
+double fdLandFracGlobal(BODY *body, int iBody) {
+  int iLat;
+  double dLandFrac = 0;
+
+  for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+    dLandFrac += body[iBody].daLandFrac[iLat];
+  }
+  dLandFrac /= body[iBody].iNumLats;
+  return dLandFrac;
 }

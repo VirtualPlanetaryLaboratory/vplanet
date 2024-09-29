@@ -186,6 +186,7 @@
 #define OUT_NORTHICEBELTLATSEA 1973
 #define OUT_SOUTHICEBELTLATLAND 1974
 #define OUT_SOUTHICEBELTLATSEA 1975
+#define OUT_LANDFRACGLOBAL 1976
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -310,5 +311,5 @@ double fdPoiseDIceMassDtFlow(BODY *, SYSTEM *, int *);
 
 double fdEccTrueAnomaly(double, double);
 double fdAlbedoTOA350(double, double, double, double);
-
+double fdLandFracGlobal(BODY *, int);
 /* @endcond */

@@ -2085,15 +2085,28 @@ void VerifyNStepSeasonal(BODY *body, int iBody) {
 }
 
 void InitializeLatGrid(BODY *body, int iBody) {
-  double dDelta_x, SinLat;
-  int iLats;
-  dDelta_x = 2.0 / body[iBody].iNumLats;
+  double dInterval, dSinMinLat, dSinMidLat, dSinMaxLat, dMaxLat;
+  int iLat;
 
-  body[iBody].daLats = malloc(body[iBody].iNumLats * sizeof(double));
+  body[iBody].daLats      = malloc(body[iBody].iNumLats * sizeof(double));
+  body[iBody].daLatsMin   = malloc((body[iBody].iNumLats) * sizeof(double));
+  body[iBody].daLatsWidth = malloc((body[iBody].iNumLats) * sizeof(double));
+  body[iBody].daLatsArea  = malloc((body[iBody].iNumLats) * sizeof(double));
 
-  for (iLats = 0; iLats < body[iBody].iNumLats; iLats++) {
-    SinLat                    = (-1.0 + dDelta_x / 2.) + iLats * dDelta_x;
-    body[iBody].daLats[iLats] = asin(SinLat);
+  dInterval = 2.0 / body[iBody].iNumLats;
+  for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
+    dSinMinLat                  = -1.0 + iLat * dInterval;
+    body[iBody].daLatsMin[iLat] = asin(dSinMinLat);
+
+    dSinMidLat               = (-1.0 + 0.5 * dInterval) + iLat * dInterval;
+    body[iBody].daLats[iLat] = asin(dSinMidLat);
+
+    dSinMaxLat                    = -1 + (iLat + 1) * dInterval;
+    dMaxLat                       = asin(dSinMaxLat);
+    body[iBody].daLatsWidth[iLat] = dMaxLat - body[iBody].daLatsMin[iLat];
+    body[iBody].daLatsArea[iLat]  = 2 * PI * body[iBody].dRadius *
+                                   body[iBody].dRadius *
+                                   (dSinMaxLat - dSinMinLat);
   }
 }
 
@@ -2185,13 +2198,20 @@ void fvInitializeGeographyEquatorial(BODY *body, int iBody) {
 void fvWriteGeographyFile(BODY *body, int iBody) {
   int iLat;
   FILE *fp;
-  char *cOut = NULL;
+  char *cOut      = NULL;
+  double dRad2Deg = 180 / PI;
 
   fvFormattedString(&cOut, "%s.geography", body[iBody].cName);
   fp = fopen(cOut, "w");
+  fprintf(fp,
+          "MidLat[deg] LandFrac WaterFrac MinLat[deg] Width[deg] Area[km^2]\n");
   for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
-    fprintf(fp, "%.5lf %.5lf %.5lf\n", (body[iBody].daLats[iLat] * 180. / PI),
-            body[iBody].daLandFrac[iLat], body[iBody].daWaterFrac[iLat]);
+    fprintf(fp, "%.5lf %.5lf %.5lf %.5lf %lf %lf\n",
+            (body[iBody].daLats[iLat] * dRad2Deg), body[iBody].daLandFrac[iLat],
+            body[iBody].daWaterFrac[iLat],
+            (body[iBody].daLatsMin[iLat] * dRad2Deg),
+            (body[iBody].daLatsWidth[iLat] * dRad2Deg),
+            body[iBody].daLatsArea[iLat] / 1e6);
   }
   fclose(fp);
 }
@@ -8233,11 +8253,11 @@ void PoiseIceSheets(BODY *body, EVOLVE *evolve, int iBody) {
 
 double fdLandFracGlobal(BODY *body, int iBody) {
   int iLat;
-  double dLandFrac = 0;
+  double dLandFrac, dLandArea = 0;
 
   for (iLat = 0; iLat < body[iBody].iNumLats; iLat++) {
-    dLandFrac += body[iBody].daLandFrac[iLat];
+    dLandArea += (body[iBody].daLandFrac[iLat] * body[iBody].daLatsArea[iLat]);
   }
-  dLandFrac /= body[iBody].iNumLats;
+  dLandFrac = dLandArea / (4 * PI * body[iBody].dRadius * body[iBody].dRadius);
   return dLandFrac;
 }

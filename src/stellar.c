@@ -1691,7 +1691,11 @@ void WriteTemperature(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteLXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
                char cUnit[]) {
-  *dTmp = body[iBody].dLXUV;
+  if (body[iBody].iXUVModel == STELLAR_MODEL_RIBAS){
+    *dTmp = body[iBody].dLXUV;
+ } else if (body[iBody].iXUVModel == STELLAR_MODEL_CALCULATED) {
+  *dTmp = fdLXUVCalc(body,iBody);
+  }
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1790,7 +1794,7 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_TEMPERATURE]           = &WriteTemperature;
 
   sprintf(output[OUT_LXUV].cName, "LXUVStellar");
-  sprintf(output[OUT_LXUV].cDescr, "Base X-ray /XUV Luminosity"); ///sss this is interesting
+  sprintf(output[OUT_LXUV].cDescr, "Base X-ray /XUV Luminosity"); 
   sprintf(output[OUT_LXUV].cNeg, "LSUN");
   output[OUT_LXUV].bNeg       = 1;
   output[OUT_LXUV].dNeg       = 1. / LSUN;
@@ -2516,20 +2520,32 @@ double fdLXRAY(BODY* body, int iBody){
 
 double fdEUV( BODY *body, int iBody) {
   double dXRay = fdLXRAY(body,iBody);
-  if (body[iBody].iEUVModel == EUV_MODEL_JOHNSTONE){ //What is the radius in for units? SI is m, need cm^2 to cancel out
-    
-    double dEUVJohnstone1 = pow(10.,2.04)*pow((4*PI*body[iBody].dRadius*body[iBody].dRadius*1e4),(1-.681))*pow((dXRay),.681);
+  if (body[iBody].iEUVModel == EUV_MODEL_JOHNSTONE){
+    /// Vplanet takes Radius and Lxray in terms of SI, need to convert these to work with our functions
+    ///vplanet takes cm^2-> m^2
+    ///Inputs Lxray in W, need to use erg/s
+    ///Johnstone also uses flux in erg/s/cm^2, convert this to erg/s for luminosity like s-f 
+    //output from eqn 1 (erg/s) into eqn 2 in (erg/s), then compute
+    //add the two, then convert that sum into W
+    double m1,m2,k1,k2;
+    m1=0.681;
+    m2=0.920;
+    k1=2.04;
+    k2=-0.341;
+    double dEUVJohnstone1 = pow(10.,k1)*pow((4*PI*body[iBody].dRadius*body[iBody].dRadius*1e4),(1-m1))*pow((dXRay*1e7),m1);
 
-    double dEUVJohnstone2= pow(10.,-0.034)*pow((4*PI*body[iBody].dRadius*body[iBody].dRadius*1e4),(1-0.920))*pow((dEUVJohnstone1),0.920);
+    double dEUVJohnstone2= pow(10.,k2)*pow((4*PI*body[iBody].dRadius*body[iBody].dRadius*1e4),(1-m2))*pow(dEUVJohnstone1,(1-m2));
 
-    double dEUVJohnstone= dEUVJohnstone1 + dEUVJohnstone2; 
+    double dEUVJohnstone= (dEUVJohnstone1 + dEUVJohnstone2)*1e-7; ///this gives our output back in W 
     
     return dEUVJohnstone;}
 
-
+//same deal for Sanz-Forcada, takes input for Xrays in W, need erg/s, then output again in W
   if (body[iBody].iEUVModel == EUV_MODEL_SANZFORCADA){
-
-    double dEUVSanzForcada = pow(10.,(4.80+1.99))*pow(dXRay,(0.860+0.073)) ;
+    double m3,k3;
+    m3=0.860;
+    k3=4.80;
+    double dEUVSanzForcada = (pow(10.,(k3))*pow((dXRay*1e7),(m3)))*1e-7 ;
 
     return dEUVSanzForcada; 
    }
@@ -2537,17 +2553,15 @@ double fdEUV( BODY *body, int iBody) {
 
 
 double fdLXUVCalc(BODY *body, int iBody){
-  if (body[iBody].iXUVModel == STELLAR_MODEL_CALCULATED){
-        double dLXRay= fdLXRAY(body,iBody); 
+  
+  double dLXRay= fdLXRAY(body,iBody); 
 
-        double dEUV= fdEUV(body,iBody);
+  double dEUV= fdEUV(body,iBody);
 
-       double dLXUV = dLXRay + dEUV;
+  double dLXUV = dLXRay + dEUV;
 
-       return dLXUV;
+  return dLXUV;
 
-
-    }
   }
 
 

@@ -18,6 +18,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install Xcode v15.4
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.4'
+
       - name: Set up Python
         id: setup_python
         uses: actions/setup-python@v5
@@ -43,4 +48,3 @@ jobs:
         with:
           files: "${{ github.workspace }}/junit/test-results.xml"
           fail: true
-

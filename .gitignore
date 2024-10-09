@@ -18,6 +18,7 @@
 SeasonalClimateFiles
 *.hdf5
 *.vscode
+*.geography
 
 #files created from running tests
 *MP_Checkpoint*

@@ -1161,6 +1161,10 @@ void ReadInitialOptions(BODY **body, CONTROL *control, FILES *files,
     ReadVerbose(files, options, &control->Io.iVerbose, iFile);
   }
 
+  if (control->Io.iVerbose >= VERBERR) {
+    fprintf(stderr, "INFO: Running VPLanet %s.\n", control->sGitVersion);
+  }
+
   /* Need units prior to any parameter read */
   control->Units = malloc(files->iNumInputs * sizeof(UNITS));
 
@@ -2617,7 +2621,7 @@ void fvAllocateOutputArrays(char ****saMatch, char ***saOutput, int **baNeg,
 
   for (iIndex = 0; iIndex < iNumArgs; iIndex++) {
     (*saMatch)[iIndex] =
-          malloc(MAXARRAY * sizeof(char*)); // Could be this many matches
+          malloc(MAXARRAY * sizeof(char *)); // Could be this many matches
     for (iMatch = 0; iMatch < MAXARRAY; iMatch++) {
       (*saMatch)[iIndex][iMatch] = NULL;
     }
@@ -3240,6 +3244,24 @@ void ReadRadiusGyration(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dRadGyra = options->dDefault;
+  }
+}
+
+void ReadRandSeed(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                  SYSTEM *system, int iFile) {
+  /* This parameter can exist in any file, but only once */
+  int lTmp = -1;
+  int iTmp;
+
+  AddOptionInt(files->Infile[iFile].cIn, options->cName, &iTmp, &lTmp,
+               control->Io.iVerbose);
+  if (lTmp >= 0) {
+    CheckDuplication(files, options, files->Infile[iFile].cIn, lTmp,
+                     control->Io.iVerbose);
+    system->iSeed = iTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else {
+    AssignDefaultInt(options, &system->iSeed, files->iNumInputs);
   }
 }
 
@@ -4508,6 +4530,15 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_RG].bNeg       = 0;
   options[OPT_RG].iFileType  = 1;
   fnRead[OPT_RG]             = &ReadRadiusGyration;
+
+  fvFormattedString(&options[OPT_RANDSEED].cName, "iRandSeed");
+  fvFormattedString(&options[OPT_RANDSEED].cDescr,
+                    "Seed for random number generator (stellar encounters)");
+  fvFormattedString(&options[OPT_RANDSEED].cDefault, "42");
+  options[OPT_RANDSEED].dDefault   = 42;
+  options[OPT_RANDSEED].iType      = 1;
+  options[OPT_RANDSEED].bMultiFile = 0;
+  fnRead[OPT_RANDSEED]             = &ReadRandSeed;
 
   fvFormattedString(&options[OPT_ROTPER].cName, "dRotPeriod");
   fvFormattedString(&options[OPT_ROTPER].cDescr, "Rotation Period");

@@ -3700,13 +3700,7 @@ void WriteAreaIceCov(BODY *body, CONTROL *control, OUTPUT *output,
   fvAreaIceCovered(body, iBody);
   *dTmp = body[iBody].dAreaIceCov;
 
-  // if (output->bDoNeg[iBody]) {
-  //     // Negative option is SI
-  //     fvFormattedString(cUnit,output->cNeg);
-  //   } else {
-  //     *dTmp /= fdUnitsMass(units->iMass);
-  //     fsUnitsMass(units->iMass,cUnit);
-  //   }
+  fvFormattedString(cUnit,"");
 }
 
 void WriteIceBalanceTot(BODY *body, CONTROL *control, OUTPUT *output,
@@ -4186,6 +4180,7 @@ void WriteIceMass(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   if (output->bDoNeg[iBody]) {
     fvFormattedString(cUnit, output->cNeg);
   } else {
+    fvFormattedString(cUnit,"");
     /* XXX Need to fix units!
     *dTmp /= fdUnitsMass(units->iMass)/pow(fdUnitsLength(units->iLength),2);
     fsUnitsMass(units->iMass,cUnit);
@@ -4239,6 +4234,8 @@ void WritePlanckBAvg(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp = 0.0;
   }
 
+  fvFormattedString(cUnit,"");
+
   // if (output->bDoNeg[iBody]) {
   //     fvFormattedString(cUnit,output->cNeg);
   //   } else {
@@ -4277,6 +4274,7 @@ void WriteIceAccum(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     *dTmp = 0.0;
   }
 
+  fvFormattedString(cUnit,"");
   // if (output->bDoNeg[iBody]) {
   //     fvFormattedString(cUnit,output->cNeg);
   //   } else {
@@ -4296,6 +4294,7 @@ void WriteIceAblate(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp = 0.0;
   }
 
+  fvFormattedString(cUnit,"");
   // if (output->bDoNeg[iBody]) {
   //     fvFormattedString(cUnit,output->cNeg);
   //   } else {

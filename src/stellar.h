@@ -70,8 +70,8 @@
 #define OPT_XUVMODEL 1515     /**< XUV evol model */
 
 
-#define OPT_EUVMODEL 1528     /**<EUV evol model */
-#define OPT_XRAYMODEL             1540 
+#define OPT_LEUVMODEL 1528     /**<EUV evol model */
+#define OPT_LXRAYMODEL             1540 
 
 
 
@@ -117,8 +117,8 @@
 #define OUT_LXUVFRAC 1513
 #define OUT_ROSSBYNUMBER 1514
 #define OUT_DROTPERDTSTELLAR 1515  
-#define OUT_EUV   1516 ///sss 
-#define OUT_XRAY  1517
+#define OUT_LEUV   1516 ///sss 
+#define OUT_LXRAY  1517
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -176,7 +176,7 @@ void WriteRossbyNumber(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
 void WriteDRotPerDtStellar(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                            UPDATE *, int, double *, char[]);
                            
-void WriteEUV(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+void WriteLEUV(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                            UPDATE *, int, double *, char[]);
 
 void WriteLXRay(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
@@ -223,7 +223,7 @@ double fdJohnstoneBeta1(BODY *, int);
 double fdJohnstoneBeta2(BODY *, int);
 double fdRossbyNumber(BODY *, int);
 double fdLXRAY(BODY *, int);
-double fdEUV(BODY *,int);
+double fdLEUV(BODY *,int);
 double fdLXUVCalc(BODY *,int);
 
 

@@ -608,8 +608,8 @@ struct BODY {
   int iMagBrakingModel;
   int iWindModel;
   int iXUVModel;
-  int iEUVModel;
-  int iXRAYModel;
+  int iLEUVModel;
+  int iLXRAYModel;
   int iLXUVModel;
 
   double dLXUV; // Not really a STELLAR parameter
@@ -629,8 +629,8 @@ struct BODY {
   double dR_xSat;
   double dJohnstoneBeta1;
   double dJohnstoneBeta2;
-  double dXRay; //double check this doesn't pull Ribas values in stellar model 
-  double dEUV;
+  double dLXRay; //double check this doesn't pull Ribas values in stellar model 
+  double dLEUV;
   
 
 

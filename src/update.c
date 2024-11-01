@@ -20,7 +20,11 @@ void InitializeUpdateBodyPerts(CONTROL *control, UPDATE *update, int iBody) {
 
 void InitializeUpdateTmpBody(BODY *body, CONTROL *control, MODULE *module,
                              UPDATE *update, int iBody) {
-  int iModule;
+  int jBody,iModule;
+
+  for (jBody=0;jBody<control->Evolve.iNumBodies;jBody++) {
+   control->Evolve.tmpBody[jBody].cName = NULL;           
+  }
 
   for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
     module->fnInitializeUpdateTmpBody[iBody][iModule](body, control, update,

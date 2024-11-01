@@ -7,6 +7,8 @@
 
 /* @cond DOXYGEN_OVERRIDE */
 
+void InitializeSystem(BODY *,CONTROL *,SYSTEM *);
+
 double fdSemiToPeriod(double, double);
 double fdPeriodToSemi(double, double);
 double fdSemiToMeanMotion(double, double);
@@ -53,5 +55,8 @@ void fdMergePlanet(BODY *, UPDATE *, fnUpdateVariable ***, int);
 
 double fdBondiRadius(BODY *, int);
 double fdRocheRadius(BODY *, int, int);
+
+void fvCumulativeXUVFlux(BODY *,EVOLVE *,SYSTEM *,double,int);
+
 
 /* @endcond */

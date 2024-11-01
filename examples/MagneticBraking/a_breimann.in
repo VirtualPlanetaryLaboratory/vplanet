@@ -1,0 +1,12 @@
+#
+sName	                  a_breimann
+saModules	              stellar
+dMass                     0.1
+dAge                      5.0e6
+dRotPeriod               -1.0   # Initial rotaiton period (days)
+sStellarModel             baraffe
+sMagBrakingModel          breimann21
+bHaltEndBaraffeGrid       1
+dSatXUVFrac               1.e-3
+dSatXUVTime               -0.1
+saOutputOrder Time -TotAngMom -Luminosity -Radius Temperature -RotPer RadGyra WindTorque RossbyNumber

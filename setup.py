@@ -1,16 +1,12 @@
-import imp
 import os
-import subprocess as sub
 import sys
-from distutils.command.clean import clean
 from glob import glob
-
 from setuptools import Extension, find_packages, setup
 from setuptools.command.build_ext import build_ext
 from setuptools.command.develop import develop
 
 # Read current code version
-VersionPath = os.path.join(os.path.abspath("."), "VERSION")
+VersionPath = os.path.join(os.path.abspath(os.path.dirname(__file__)), "VERSION")
 VERSION = open(VersionPath, "r").read().split("\n")[0].strip()
 
 
@@ -37,10 +33,10 @@ class Develop(develop):
     """Custom develop command that clears build cache before install."""
 
     def run(self):
-        c = clean(self.distribution)
-        c.all = True
-        c.finalize_options()
-        c.run()
+        # c = clean(self.distribution)
+        # c.all = True
+        # c.finalize_options()
+        # c.run()
         develop.run(self)
 
 
@@ -94,6 +90,9 @@ setup(
     ext_modules=ext_modules,
     cmdclass=cmdclass,
     include_package_data=True,
+#    package_data={'': ['VERSION']},
+    package_data={'': ['src/*.[ch]']},
+    data_files=[('', ['VERSION'])],
     zip_safe=False,
     entry_points={"console_scripts": ["vplanet=vplanet.wrapper:_entry_point"]},
 )

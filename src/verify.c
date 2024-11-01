@@ -12,7 +12,7 @@
  */
 
 /*! Check to see if two decimals numbers are equal (1) or not (0) */
-int bFloatComparison(double x, double y) {
+int fbFloatComparison(double x, double y) {
   double dBigger;
   double dRel_Tol;
   if (fabs(x) > fabs(y)) {
@@ -39,10 +39,13 @@ int bFloatComparison(double x, double y) {
  */
 
 int bFileExists(const char *filename) {
-  FILE *file;
-  if ((file = fopen(filename, "r"))) {
-    fclose(file);
-    return 1;
+  if (filename != NULL) {
+    FILE *file;
+    if ((file = fopen(filename, "r"))) {
+      fclose(file);
+      return 1;
+    }
+    return 0;
   }
   return 0;
 }
@@ -142,7 +145,7 @@ void VerifyNames(BODY *body, CONTROL *control, OPTIONS *options) {
                 options[OPT_BODYNAME].cName,
                 options[OPT_BODYNAME].cFile[iBody] + 1, iBody);
       }
-      sprintf(body[iBody].cName, "%d", iBody + 1);
+      fvFormattedString(&body[iBody].cName, "%d", iBody + 1);
     }
     for (jBody = iBody + 1; jBody < control->Evolve.iNumBodies; jBody++) {
       if (strcmp(body[iBody].cName, body[jBody].cName) == 0) {
@@ -355,7 +358,7 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
                        OPTIONS *options, SYSTEM *system,
                        fnIntegrate *fnOneStep) {
   int iFile, iFile1 = 0, iFile2 = 0;
-  char cTmp[OPTLEN];
+  char *cTmp=NULL;
 
 
   // Initialize iDir to 0, i.e. assume no integrations requested to start
@@ -383,7 +386,7 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
   if (control->Evolve.bDoBackward) {
     for (iFile = 1; iFile < files->iNumInputs; iFile++) {
       if (options[OPT_OUTFILE].iLine[iFile] == -1) {
-        sprintf(files->Outfile[iFile - 1].cOut, "%s.%s.backward", system->cName,
+        fvFormattedString(&files->Outfile[iFile - 1].cOut, "%s.%s.backward", system->cName,
                 body[iFile - 1].cName);
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr, "INFO: %s not set, defaulting to %s.\n",
@@ -398,7 +401,7 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
   if (control->Evolve.bDoForward) {
     for (iFile = 1; iFile < files->iNumInputs; iFile++) {
       if (options[OPT_OUTFILE].iLine[iFile] == -1) {
-        sprintf(files->Outfile[iFile - 1].cOut, "%s.%s.forward", system->cName,
+        fvFormattedString(&files->Outfile[iFile - 1].cOut, "%s.%s.forward", system->cName,
                 body[iFile - 1].cName);
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr, "INFO: %s not set, defaulting to %s.\n",
@@ -475,7 +478,7 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
     *fnOneStep = &RungeKutta4Step;
   } else {
     /* Assign Default */
-    strcpy(cTmp, options[OPT_INTEGRATIONMETHOD].cDefault);
+    fvFormattedString(&cTmp, options[OPT_INTEGRATIONMETHOD].cDefault);
     if (control->Io.iVerbose >= VERBINPUT) {
       fprintf(stderr, "INFO: %s not set, defaulting to %s.\n",
               options[OPT_INTEGRATIONMETHOD].cName,

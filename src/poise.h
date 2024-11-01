@@ -209,39 +209,39 @@ void FinalizeUpdateIceMassPoise(BODY *, UPDATE *, int *, int, int, int);
 
 void HelpOutputPoise(OUTPUT *);
 void WriteTGlobal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void WriteAlbedoGlobal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteTempLat(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void WriteTempMinLW(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char[]);
+                    int, double *, char**);
 void WriteTempMaxLW(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char[]);
+                    int, double *, char**);
 void WriteAlbedoLat(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char[]);
+                    int, double *, char**);
 void WriteAnnualInsol(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void WriteDailyInsol(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
+                     int, double *, char**);
 void WritePlanckB(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void WritePlanckBAvg(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
+                     int, double *, char**);
 void WriteSeasonalTemp(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteSeasonalFluxes(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void WriteSeasonalIceBalance(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                             UPDATE *, int, double *, char[]);
+                             UPDATE *, int, double *, char**);
 void WriteFluxMerid(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char[]);
+                    int, double *, char**);
 void WriteFluxIn(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                 double *, char[]);
+                 double *, char**);
 void WriteFluxOut(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void WriteDivFlux(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void InitializeOutputPoise(OUTPUT *, fnWriteOutput[]);
 
 /* Logging Functions */

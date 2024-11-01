@@ -442,7 +442,7 @@ void BodyCopy(BODY *dest, BODY *src, EVOLVE *evolve) {
      Module-specific parameters belong in the fnBodyCopy subroutines. */
 
   for (iBody = 0; iBody < evolve->iNumBodies; iBody++) {
-    strcpy(dest[iBody].cName, src[iBody].cName);
+    fvFormattedString(&dest[iBody].cName, src[iBody].cName);
     dest[iBody].iBodyType = src[iBody].iBodyType;
     dest[iBody].dMass     = src[iBody].dMass;
     dest[iBody].dRadius   = src[iBody].dRadius;
@@ -771,15 +771,11 @@ double fdHflowSecMan(BODY *body, EVOLVE *evolve, int iBody) {
   double dHflowSecMan = 0;
 
   if (body[iBody].bThermint) {
-    dHflowSecMan += fdPowerThermint(body, iBody);
-    // dHflowSecMan += fdHflowSecManThermint(body,iBody);
+    dHflowSecMan += fdPowerThermint(body, iBody); 
   }
   if (body[iBody].bEqtide) {
-    // dHflowSecMan -= fdTidePower(body,iBody,evolve->iEqtideModel); // formerly
-    // dTidalPowerMan
-    dHflowSecMan -= body[iBody].dTidalPowMan;
-  }
-  // Should add RadHeat here
+    dHflowSecMan -= fdTidePower(body,iBody,evolve->iEqtideModel);
+  }  // XXX Should add RadHeat here
   return dHflowSecMan;
 }
 
@@ -1532,4 +1528,11 @@ void fdHabitableZoneKopparapu2013(BODY *body, int iNumBodies,
 double fdEffectiveTemperature(BODY *body,int iBody) {
   double dTeff = pow((body[iBody].dLuminosity/(4*PI*SIGMA*body[iBody].dRadius*body[iBody].dRadius)),0.25);
   return dTeff;
+}
+
+double fdEscapeVelocity(BODY *body,int iBody) {
+  double dEscVel;
+
+  dEscVel = sqrt(2*BIGG*body[iBody].dMass/body[iBody].dRadius);
+  return dEscVel;
 }

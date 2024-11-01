@@ -7,6 +7,10 @@
 
 #include "vplanet.h"
 
+void InitializeSystem(BODY *body,CONTROL *control,SYSTEM *system) {
+  system->iNumBodies = control->Evolve.iNumBodies;
+}
+
 /*
  * Physical Relationships
  */
@@ -1110,4 +1114,19 @@ double fdBondiRadius(BODY *body, int iBody) {
     dBondiRadius = -1;
   }
   return dBondiRadius;
+}
+
+void fvCumulativeXUVFlux(BODY *body,EVOLVE *evolve,SYSTEM *system,double dDt,int iBody) {
+  if (evolve->bFirstStep) {
+    body[iBody].dFXUVCumulative = 0;
+    if (body[iBody].bCalcFXUV) {
+      body[iBody].dFXUV = fdXUVFlux(body, iBody);
+    }
+  } else {
+    if (body[iBody].bCalcFXUV) {
+      body[iBody].dFXUV = fdXUVFlux(body, iBody);
+    }
+    body[iBody].dFXUVCumulative += fdTrapezoidalArea(body[iBody].dFXUV,body[iBody].dFXUVLast,dDt);
+    body[iBody].dFXUVLast = body[iBody].dFXUV;
+  }
 }

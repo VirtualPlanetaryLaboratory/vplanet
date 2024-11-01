@@ -28,18 +28,17 @@ We need this wrapper so we can call `main_impl` from Python.
  */
 int main_impl(int argc, char *argv[]) {
 #ifdef DEBUG
-  #ifdef __x86_64__
-    //  feenableexcept(FE_INVALID | FE_OVERFLOW);
-    _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
-    _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_OVERFLOW);
-    _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_DIV_ZERO);
-    //_MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_UNDERFLOW);
-    fprintf(stderr, "INFO: Floating point trapping enabled.\n");
-  #else
-    fprintf(stderr,
-            "WARNING: Floating point trapping only enabled for x86 "
-            "architectures.\n");
-  #endif
+#ifdef __x86_64__
+  _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_INVALID);
+  _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_OVERFLOW);
+  _MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_DIV_ZERO);
+  //_MM_SET_EXCEPTION_MASK(_MM_GET_EXCEPTION_MASK() & ~_MM_MASK_UNDERFLOW);
+  fprintf(stderr, "INFO: Floating point trapping enabled.\n");
+#else
+  fprintf(stderr,
+          "WARNING: Floating point trapping only enabled for x86 "
+          "architectures.\n");
+#endif
 #endif
 
   // struct timeval start, end;
@@ -51,7 +50,7 @@ int main_impl(int argc, char *argv[]) {
   dStartTime = time(NULL);
   */
 
-  int iOption, iVerbose, iQuiet, iOverwrite;
+  int iArg, iVerbose, iQuiet, iOverwrite;
   OPTIONS *options;
   OUTPUT *output;
   CONTROL control;
@@ -60,17 +59,20 @@ int main_impl(int argc, char *argv[]) {
   MODULE module;
   FILES files;
   SYSTEM system;
-  char infile[NAMELEN];
+  char *sPrimaryFile = NULL;
   fnReadOption fnRead[MODULEOPTEND]; // XXX Pointers?
   fnWriteOutput fnWrite[MODULEOUTEND];
   fnUpdateVariable ***fnUpdate;
   fnIntegrate fnOneStep;
 
+  control.sGitVersion = NULL;
 #ifdef GITVERSION
-  strcpy(control.sGitVersion, GITVERSION);
+  fvFormattedString(&control.sGitVersion, GITVERSION);
 #else
-  strcpy(control.sGitVersion, "Unknown");
+  fvFormattedString(&control.sGitVersion, "Unknown");
 #endif
+
+  system.cName = NULL;
 
   /** Must initialize all options and outputs for all modules
      independent of what is selected. This allows a complete
@@ -89,7 +91,8 @@ int main_impl(int argc, char *argv[]) {
   control.Evolve.iOneStep = 0;
 
   /* Copy executable file name to the files struct. */
-  strcpy(files.cExe, argv[0]);
+  files.cExe = NULL;
+  fvFormattedString(&files.cExe, argv[0]); // XXX This isn't working!
 
   if (argc == 1) {
     fprintf(stderr,
@@ -106,23 +109,23 @@ int main_impl(int argc, char *argv[]) {
   control.Io.bOverwrite = -1;
 
   /* Check for flags */
-  for (iOption = 1; iOption < argc; iOption++) {
-    if (memcmp(argv[iOption], "-v", 2) == 0) {
+  for (iArg = 1; iArg < argc; iArg++) {
+    if (memcmp(argv[iArg], "-v", 2) == 0) {
       control.Io.iVerbose = 5;
-      iVerbose            = iOption;
+      iVerbose            = iArg;
     }
-    if (memcmp(argv[iOption], "-q", 2) == 0) {
+    if (memcmp(argv[iArg], "-q", 2) == 0) {
       control.Io.iVerbose = 0;
-      iQuiet              = iOption;
+      iQuiet              = iArg;
     }
-    if (memcmp(argv[iOption], "-f", 2) == 0) {
+    if (memcmp(argv[iArg], "-f", 2) == 0) {
       control.Io.bOverwrite = 1;
-      iOverwrite            = iOption;
+      iOverwrite            = iArg;
     }
-    if (memcmp(argv[iOption], "-h", 2) == 0) {
+    if (memcmp(argv[iArg], "-h", 2) == 0) {
       Help(options, output, files.cExe, 0);
     }
-    if (memcmp(argv[iOption], "-H", 2) == 0) {
+    if (memcmp(argv[iArg], "-H", 2) == 0) {
       Help(options, output, files.cExe, 1);
     }
   }
@@ -133,15 +136,17 @@ int main_impl(int argc, char *argv[]) {
   }
 
   /* Now identify input file, usually vpl.in */
-  for (iOption = 1; iOption < argc; iOption++) {
-    if (iOption != iVerbose && iOption != iQuiet && iOption != iOverwrite) {
-      strcpy(infile, argv[iOption]);
+  for (iArg = 1; iArg < argc; iArg++) {
+    if (iArg != iVerbose && iArg != iQuiet && iArg != iOverwrite) {
+      fvFormattedString(&sPrimaryFile, argv[iArg]);
     }
   }
 
+  CheckFileExists(sPrimaryFile);
+
   /* Read input files */
   ReadOptions(&body, &control, &files, &module, options, output, &system,
-              &update, fnRead, infile);
+              &update, fnRead, sPrimaryFile);
 
   if (control.Io.iVerbose >= VERBINPUT) {
     printf("Input files read.\n");

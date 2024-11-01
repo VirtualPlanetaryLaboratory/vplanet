@@ -120,13 +120,15 @@
 /* @cond DOXYGEN_OVERRIDE */
 
 void GetWords(char cLine[], char[MAXARRAY][OPTLEN], int *, int *);
-
+int iGetNumLines(char *);
+void CheckFileExists(char *);
+void RecordCommentsAndWhiteSpace(INFILE *);
 void InitializeOptions(OPTIONS *, fnReadOption *);
 void ReadOptions(BODY **, CONTROL *, FILES *, MODULE *, OPTIONS *, OUTPUT *,
                  SYSTEM *, UPDATE **, fnReadOption *, char[]);
 
 double dNegativeDouble(OPTIONS, char[], int);
-void AddOptionStringArray(char[], char[], char[MAXARRAY][OPTLEN], int *, int *,
+void AddOptionStringArray(char[], char[], char***, int *, int *,
                           int *, int);
 void AddOptionDoubleArray(char[], char[], double *, int *, int *, int *, int);
 void NotPrimaryInput(int, char[], char[], int, int);

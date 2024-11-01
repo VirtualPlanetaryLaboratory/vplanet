@@ -441,134 +441,134 @@ void fvVerifyHaltRadheat(BODY *, CONTROL *, OPTIONS *, int, int *);
 #define OUT_SURFENFLUXRADTOTAL 1195
 
 void fvWrite26AlPowerMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWrite26AlEnFlux(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void fvWriteD26AlPowerDt(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWrite26AlTimescale(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWrite26AlMassMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWrite26AlNumMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void fvWrite26AlPowerCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWrite26AlMassCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWrite26AlNumCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 
 void fvWrite40KPowerMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWrite40KEnFlux(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWriteD40KPowerDt(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWrite40KTimescale(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWrite40KMassMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void fvWrite40KNumMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void fvWrite40KPowerCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWrite40KMassCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWrite40KNumCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void fvWrite40KPowerCrust(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWrite40KMassCrust(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWrite40KNumCrust(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 
 void fvWrite232ThPowerMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWrite232ThEnFlux(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWriteD232ThPowerDt(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWrite232ThTimescale(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void fvWrite232ThMassMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWrite232ThNumMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWrite232ThPowerCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void fvWrite232ThMassCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWrite232ThNumCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWrite232ThPowerCrust(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                            UPDATE *, int, double *, char[]);
+                            UPDATE *, int, double *, char**);
 void fvWrite232ThMassCrust(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void fvWrite232ThNumCrust(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 
 void fvWrite238UPowerMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWrite238UEnFlux(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void fvWriteD238UPowerDt(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWrite238UTimescale(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWrite238UMassMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWrite238UNumMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void fvWrite238UPowerCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWrite238UMassCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWrite238UNumCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWrite238UPowerCrust(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void fvWrite238UMassCrust(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWrite238UNumCrust(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 
 void fvWrite235UPowerMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWrite235UEnFlux(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void fvWriteD235UPowerDt(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWrite235UTimescale(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWrite235UMassMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWrite235UNumMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void fvWrite235UPowerCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWrite235UMassCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWrite235UNumCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWrite235UPowerCrust(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void fvWrite235UMassCrust(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWrite235UNumCrust(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 
 void fvWriteRadPowerMan(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void fvWriteRadPowerCore(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char[]);
+                         UPDATE *, int, double *, char**);
 void fvWriteRadPowerCrust(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWriteRadPowerTotal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void fvWriteRadEnFlux(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 
 void fvHelpOutputRadheat(OUTPUT *);
 void fvInitializeOutputRadheat(OUTPUT *, fnWriteOutput[]);

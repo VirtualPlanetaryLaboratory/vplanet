@@ -573,199 +573,210 @@ void ReadHostBinMass1(BODY *body, CONTROL *control, FILES *files,
 }
 
 void InitializeOptionsGalHabit(OPTIONS *options, fnReadOption fnRead[]) {
-  sprintf(options[OPT_GALACDENSITY].cName, "dGalacDensity");
-  sprintf(options[OPT_GALACDENSITY].cDescr, "Density of galactic environment");
-  sprintf(options[OPT_GALACDENSITY].cDefault,
-          "0.102"); // need to find updated value
-  sprintf(options[OPT_GALACDENSITY].cDimension, "mass/length^3");
+  fvFormattedString(&options[OPT_GALACDENSITY].cName, "dGalacDensity");
+  fvFormattedString(&options[OPT_GALACDENSITY].cDescr,
+                    "Density of galactic environment");
+  fvFormattedString(&options[OPT_GALACDENSITY].cDefault,
+                    "0.102"); // need to find updated value
+  fvFormattedString(&options[OPT_GALACDENSITY].cDimension, "mass/length^3");
   options[OPT_GALACDENSITY].dDefault   = 0.102;
   options[OPT_GALACDENSITY].iType      = 2;
   options[OPT_GALACDENSITY].bMultiFile = 0;
   fnRead[OPT_GALACDENSITY]             = &ReadGalacDensity;
 
-  sprintf(options[OPT_RANDSEED].cName, "iRandSeed");
-  sprintf(options[OPT_RANDSEED].cDescr,
-          "Seed for random number generator (stellar encounters)");
-  sprintf(options[OPT_RANDSEED].cDefault, "42");
+  fvFormattedString(&options[OPT_RANDSEED].cName, "iRandSeed");
+  fvFormattedString(&options[OPT_RANDSEED].cDescr,
+                    "Seed for random number generator (stellar encounters)");
+  fvFormattedString(&options[OPT_RANDSEED].cDefault, "42");
   options[OPT_RANDSEED].dDefault   = 42;
   options[OPT_RANDSEED].iType      = 1;
   options[OPT_RANDSEED].bMultiFile = 0;
   fnRead[OPT_RANDSEED]             = &ReadRandSeed;
 
-  sprintf(options[OPT_ENCOUNTERRAD].cName, "dEncounterRad");
-  sprintf(options[OPT_ENCOUNTERRAD].cDescr,
-          "Radius at which stellar encounters occur");
-  sprintf(options[OPT_ENCOUNTERRAD].cDefault, "206265 AU");
-  sprintf(options[OPT_ENCOUNTERRAD].cDimension, "length");
+  fvFormattedString(&options[OPT_ENCOUNTERRAD].cName, "dEncounterRad");
+  fvFormattedString(&options[OPT_ENCOUNTERRAD].cDescr,
+                    "Radius at which stellar encounters occur");
+  fvFormattedString(&options[OPT_ENCOUNTERRAD].cDefault, "206265 AU");
+  fvFormattedString(&options[OPT_ENCOUNTERRAD].cDimension, "length");
   options[OPT_ENCOUNTERRAD].dDefault   = 206265.0 * AUM;
   options[OPT_ENCOUNTERRAD].iType      = 2;
   options[OPT_ENCOUNTERRAD].bMultiFile = 0;
   fnRead[OPT_ENCOUNTERRAD]             = &ReadEncounterRad;
 
-  sprintf(options[OPT_RFORM].cName, "dRForm");
-  sprintf(options[OPT_RFORM].cDescr, "Galactic formation radius");
-  sprintf(options[OPT_RFORM].cDefault, "4.5 kpc");
-  sprintf(options[OPT_RFORM].cDimension, "length");
+  fvFormattedString(&options[OPT_RFORM].cName, "dRForm");
+  fvFormattedString(&options[OPT_RFORM].cDescr, "Galactic formation radius");
+  fvFormattedString(&options[OPT_RFORM].cDefault, "4.5 kpc");
+  fvFormattedString(&options[OPT_RFORM].cDimension, "length");
   options[OPT_RFORM].dDefault   = 4.5;
   options[OPT_RFORM].iType      = 2;
   options[OPT_RFORM].bMultiFile = 0;
   fnRead[OPT_RFORM]             = &ReadRForm;
 
-  sprintf(options[OPT_TMIGRATION].cName, "dTMigration");
-  sprintf(options[OPT_TMIGRATION].cDescr, "Time of radial migration");
-  sprintf(options[OPT_TMIGRATION].cDefault, "3 Gy");
-  sprintf(options[OPT_TMIGRATION].cDimension, "time");
+  fvFormattedString(&options[OPT_TMIGRATION].cName, "dTMigration");
+  fvFormattedString(&options[OPT_TMIGRATION].cDescr,
+                    "Time of radial migration");
+  fvFormattedString(&options[OPT_TMIGRATION].cDefault, "3 Gy");
+  fvFormattedString(&options[OPT_TMIGRATION].cDimension, "time");
   options[OPT_TMIGRATION].dDefault   = 3e9 * YEARSEC;
   options[OPT_TMIGRATION].iType      = 2;
   options[OPT_TMIGRATION].bMultiFile = 0;
   options[OPT_TMIGRATION].dNeg       = YEARSEC;
-  sprintf(options[OPT_TMIGRATION].cNeg, "Years");
+  fvFormattedString(&options[OPT_TMIGRATION].cNeg, "Years");
   fnRead[OPT_TMIGRATION] = &ReadTMigration;
 
-  sprintf(options[OPT_RADIALMIGR].cName, "bRadialMigr");
-  sprintf(options[OPT_RADIALMIGR].cDescr, "Use radial migration?");
-  sprintf(options[OPT_RADIALMIGR].cDefault, "0");
+  fvFormattedString(&options[OPT_RADIALMIGR].cName, "bRadialMigr");
+  fvFormattedString(&options[OPT_RADIALMIGR].cDescr, "Use radial migration?");
+  fvFormattedString(&options[OPT_RADIALMIGR].cDefault, "0");
   options[OPT_RADIALMIGR].dDefault   = 0;
   options[OPT_RADIALMIGR].iType      = 0;
   options[OPT_RADIALMIGR].bMultiFile = 0;
   fnRead[OPT_RADIALMIGR]             = &ReadRadialMigr;
 
-  sprintf(options[OPT_GASDENSITY].cName, "dGasDensity");
-  sprintf(options[OPT_GASDENSITY].cDescr, "Local ISM density");
-  sprintf(options[OPT_GASDENSITY].cDefault, "0.05 Msun pc^3");
-  sprintf(options[OPT_GASDENSITY].cDimension, "mass/length^3");
+  fvFormattedString(&options[OPT_GASDENSITY].cName, "dGasDensity");
+  fvFormattedString(&options[OPT_GASDENSITY].cDescr, "Local ISM density");
+  fvFormattedString(&options[OPT_GASDENSITY].cDefault, "0.05 Msun pc^3");
+  fvFormattedString(&options[OPT_GASDENSITY].cDimension, "mass/length^3");
   options[OPT_GASDENSITY].dDefault   = 0.05;
   options[OPT_GASDENSITY].iType      = 2;
   options[OPT_GASDENSITY].bMultiFile = 0;
   fnRead[OPT_GASDENSITY]             = &ReadGasDensity;
 
-  sprintf(options[OPT_DMDENSITY].cName, "dDMDensity");
-  sprintf(options[OPT_DMDENSITY].cDescr, "Local dark matter density");
-  sprintf(options[OPT_DMDENSITY].cDefault, "0.01 Msun pc^3");
-  sprintf(options[OPT_DMDENSITY].cDimension, "mass/length^3");
+  fvFormattedString(&options[OPT_DMDENSITY].cName, "dDMDensity");
+  fvFormattedString(&options[OPT_DMDENSITY].cDescr,
+                    "Local dark matter density");
+  fvFormattedString(&options[OPT_DMDENSITY].cDefault, "0.01 Msun pc^3");
+  fvFormattedString(&options[OPT_DMDENSITY].cDimension, "mass/length^3");
   options[OPT_DMDENSITY].dDefault   = 0.01;
   options[OPT_DMDENSITY].iType      = 2;
   options[OPT_DMDENSITY].bMultiFile = 0;
   fnRead[OPT_DMDENSITY]             = &ReadDMDensity;
 
-  sprintf(options[OPT_STARSCALEL].cName, "dStarScaleL");
-  sprintf(options[OPT_STARSCALEL].cDescr, "Stellar radial scale length in MW");
-  sprintf(options[OPT_STARSCALEL].cDefault, "2.4 kpc");
-  sprintf(options[OPT_STARSCALEL].cDimension, "length");
+  fvFormattedString(&options[OPT_STARSCALEL].cName, "dStarScaleL");
+  fvFormattedString(&options[OPT_STARSCALEL].cDescr,
+                    "Stellar radial scale length in MW");
+  fvFormattedString(&options[OPT_STARSCALEL].cDefault, "2.4 kpc");
+  fvFormattedString(&options[OPT_STARSCALEL].cDimension, "length");
   options[OPT_STARSCALEL].dDefault   = 2.4;
   options[OPT_STARSCALEL].iType      = 2;
   options[OPT_STARSCALEL].bMultiFile = 0;
   fnRead[OPT_STARSCALEL]             = &ReadStarScaleL;
 
 
-  sprintf(options[OPT_STELLARENC].cName, "bStellarEnc");
-  sprintf(options[OPT_STELLARENC].cDescr, "Model stellar encounters?");
-  sprintf(options[OPT_STELLARENC].cDefault, "1");
+  fvFormattedString(&options[OPT_STELLARENC].cName, "bStellarEnc");
+  fvFormattedString(&options[OPT_STELLARENC].cDescr,
+                    "Model stellar encounters?");
+  fvFormattedString(&options[OPT_STELLARENC].cDefault, "1");
   options[OPT_STELLARENC].dDefault   = 1;
   options[OPT_STELLARENC].iType      = 0;
   options[OPT_STELLARENC].bMultiFile = 0;
   fnRead[OPT_STELLARENC]             = &ReadStellarEnc;
 
-  sprintf(options[OPT_OUTPUTENC].cName, "bOutputEnc");
-  sprintf(options[OPT_OUTPUTENC].cDescr,
-          "Output stellar encounter information?");
-  sprintf(options[OPT_OUTPUTENC].cDefault, "0");
+  fvFormattedString(&options[OPT_OUTPUTENC].cName, "bOutputEnc");
+  fvFormattedString(&options[OPT_OUTPUTENC].cDescr,
+                    "Output stellar encounter information?");
+  fvFormattedString(&options[OPT_OUTPUTENC].cDefault, "0");
   options[OPT_OUTPUTENC].dDefault   = 0;
   options[OPT_OUTPUTENC].iType      = 0;
   options[OPT_OUTPUTENC].bMultiFile = 0;
   fnRead[OPT_OUTPUTENC]             = &ReadOutputEnc;
 
-  sprintf(options[OPT_TIMEEVOLVELDISP].cName, "bTimeEvolVelDisp");
-  sprintf(options[OPT_TIMEEVOLVELDISP].cDescr,
-          "Scale velocity dispersion of stars with sqrt(t)?");
-  sprintf(options[OPT_TIMEEVOLVELDISP].cDefault, "1");
-  sprintf(options[OPT_TIMEEVOLVELDISP].cDimension, "length/time");
+  fvFormattedString(&options[OPT_TIMEEVOLVELDISP].cName, "bTimeEvolVelDisp");
+  fvFormattedString(&options[OPT_TIMEEVOLVELDISP].cDescr,
+                    "Scale velocity dispersion of stars with sqrt(t)?");
+  fvFormattedString(&options[OPT_TIMEEVOLVELDISP].cDefault, "1");
+  fvFormattedString(&options[OPT_TIMEEVOLVELDISP].cDimension, "length/time");
   options[OPT_TIMEEVOLVELDISP].dDefault   = 1;
   options[OPT_TIMEEVOLVELDISP].iType      = 0;
   options[OPT_TIMEEVOLVELDISP].bMultiFile = 0;
   fnRead[OPT_TIMEEVOLVELDISP]             = &ReadTimeEvolVelDisp;
 
-  sprintf(options[OPT_HOSTBINARY].cName, "bHostBinary");
-  sprintf(options[OPT_HOSTBINARY].cDescr,
-          "Include 3 body interactions with binary star");
-  sprintf(options[OPT_HOSTBINARY].cDefault, "0");
+  fvFormattedString(&options[OPT_HOSTBINARY].cName, "bHostBinary");
+  fvFormattedString(&options[OPT_HOSTBINARY].cDescr,
+                    "Include 3 body interactions with binary star");
+  fvFormattedString(&options[OPT_HOSTBINARY].cDefault, "0");
   options[OPT_HOSTBINARY].dDefault   = 0;
   options[OPT_HOSTBINARY].iType      = 0;
   options[OPT_HOSTBINARY].bMultiFile = 0;
   fnRead[OPT_HOSTBINARY]             = &ReadHostBinary;
 
-  sprintf(options[OPT_GALACTIDES].cName, "bGalacTides");
-  sprintf(options[OPT_GALACTIDES].cDescr, "Include galactic tides");
-  sprintf(options[OPT_GALACTIDES].cDefault, "1");
+  fvFormattedString(&options[OPT_GALACTIDES].cName, "bGalacTides");
+  fvFormattedString(&options[OPT_GALACTIDES].cDescr, "Include galactic tides");
+  fvFormattedString(&options[OPT_GALACTIDES].cDefault, "1");
   options[OPT_GALACTIDES].dDefault   = 1;
   options[OPT_GALACTIDES].iType      = 0;
   options[OPT_GALACTIDES].bMultiFile = 0;
   fnRead[OPT_GALACTIDES]             = &ReadGalacTides;
 
-  sprintf(options[OPT_MINSTELLARAPPROACH].cName, "dMinStellarApproach");
-  sprintf(options[OPT_MINSTELLARAPPROACH].cDescr,
-          "Minimum close approach distance to primary");
-  sprintf(options[OPT_MINSTELLARAPPROACH].cDefault, "1 AU");
-  sprintf(options[OPT_MINSTELLARAPPROACH].cDimension, "length");
+  fvFormattedString(&options[OPT_MINSTELLARAPPROACH].cName,
+                    "dMinStellarApproach");
+  fvFormattedString(&options[OPT_MINSTELLARAPPROACH].cDescr,
+                    "Minimum close approach distance to primary");
+  fvFormattedString(&options[OPT_MINSTELLARAPPROACH].cDefault, "1 AU");
+  fvFormattedString(&options[OPT_MINSTELLARAPPROACH].cDimension, "length");
   options[OPT_MINSTELLARAPPROACH].dDefault   = AUM;
   options[OPT_MINSTELLARAPPROACH].iType      = 2;
   options[OPT_MINSTELLARAPPROACH].bMultiFile = 0;
   options[OPT_MINSTELLARAPPROACH].dNeg       = AUM;
-  sprintf(options[OPT_MINSTELLARAPPROACH].cNeg, "AU");
+  fvFormattedString(&options[OPT_MINSTELLARAPPROACH].cNeg, "AU");
   fnRead[OPT_MINSTELLARAPPROACH] = &ReadMinStellarApproach;
 
-  sprintf(options[OPT_HOSTBINECC].cName, "dHostBinEcc");
-  sprintf(options[OPT_HOSTBINECC].cDescr, "eccentricity of host binary");
-  sprintf(options[OPT_HOSTBINECC].cDefault, "0.51");
-  sprintf(options[OPT_HOSTBINECC].cDimension, "nd");
+  fvFormattedString(&options[OPT_HOSTBINECC].cName, "dHostBinEcc");
+  fvFormattedString(&options[OPT_HOSTBINECC].cDescr,
+                    "eccentricity of host binary");
+  fvFormattedString(&options[OPT_HOSTBINECC].cDefault, "0.51");
+  fvFormattedString(&options[OPT_HOSTBINECC].cDimension, "nd");
   options[OPT_HOSTBINECC].dDefault   = 0.51;
   options[OPT_HOSTBINECC].iType      = 2;
   options[OPT_HOSTBINECC].bMultiFile = 0;
   fnRead[OPT_HOSTBINECC]             = &ReadHostBinEcc;
 
-  sprintf(options[OPT_HOSTBINSEMI].cName, "dHostBinSemi");
-  sprintf(options[OPT_HOSTBINSEMI].cDescr, "Semi-major of host binary");
-  sprintf(options[OPT_HOSTBINSEMI].cDefault, "17.57 AU");
-  sprintf(options[OPT_HOSTBINSEMI].cDimension, "length");
+  fvFormattedString(&options[OPT_HOSTBINSEMI].cName, "dHostBinSemi");
+  fvFormattedString(&options[OPT_HOSTBINSEMI].cDescr,
+                    "Semi-major of host binary");
+  fvFormattedString(&options[OPT_HOSTBINSEMI].cDefault, "17.57 AU");
+  fvFormattedString(&options[OPT_HOSTBINSEMI].cDimension, "length");
   options[OPT_HOSTBINSEMI].dDefault   = 17.57 * AUM;
   options[OPT_HOSTBINSEMI].iType      = 2;
   options[OPT_HOSTBINSEMI].bMultiFile = 0;
   options[OPT_HOSTBINSEMI].dNeg       = AUM;
-  sprintf(options[OPT_HOSTBINSEMI].cNeg, "AU");
+  fvFormattedString(&options[OPT_HOSTBINSEMI].cNeg, "AU");
   fnRead[OPT_HOSTBINSEMI] = &ReadHostBinSemi;
 
-  sprintf(options[OPT_HOSTBININC].cName, "dHostBinInc");
-  sprintf(options[OPT_HOSTBININC].cDescr, "inclination of host binary");
-  sprintf(options[OPT_HOSTBININC].cDefault, "60.0 deg");
-  sprintf(options[OPT_HOSTBININC].cDimension, "angle");
+  fvFormattedString(&options[OPT_HOSTBININC].cName, "dHostBinInc");
+  fvFormattedString(&options[OPT_HOSTBININC].cDescr,
+                    "inclination of host binary");
+  fvFormattedString(&options[OPT_HOSTBININC].cDefault, "60.0 deg");
+  fvFormattedString(&options[OPT_HOSTBININC].cDimension, "angle");
   options[OPT_HOSTBININC].dDefault   = 60.0 * DEGRAD;
   options[OPT_HOSTBININC].iType      = 2;
   options[OPT_HOSTBININC].bMultiFile = 0;
   fnRead[OPT_HOSTBININC]             = &ReadHostBinInc;
 
-  sprintf(options[OPT_HOSTBINARGP].cName, "dHostBinArgP");
-  sprintf(options[OPT_HOSTBINARGP].cDescr, "Arg periapse of host binary");
-  sprintf(options[OPT_HOSTBINARGP].cDefault, "0.0");
-  sprintf(options[OPT_HOSTBINARGP].cDimension, "angle");
+  fvFormattedString(&options[OPT_HOSTBINARGP].cName, "dHostBinArgP");
+  fvFormattedString(&options[OPT_HOSTBINARGP].cDescr,
+                    "Arg periapse of host binary");
+  fvFormattedString(&options[OPT_HOSTBINARGP].cDefault, "0.0");
+  fvFormattedString(&options[OPT_HOSTBINARGP].cDimension, "angle");
   options[OPT_HOSTBINARGP].dDefault   = 0.0;
   options[OPT_HOSTBINARGP].iType      = 2;
   options[OPT_HOSTBINARGP].bMultiFile = 0;
   fnRead[OPT_HOSTBINARGP]             = &ReadHostBinArgP;
 
-  sprintf(options[OPT_HOSTBINLONGA].cName, "dHostBinLongA");
-  sprintf(options[OPT_HOSTBINLONGA].cDescr,
-          "Long of ascending node of host binary");
-  sprintf(options[OPT_HOSTBINLONGA].cDefault, "0.0");
-  sprintf(options[OPT_HOSTBINLONGA].cDimension, "angle");
+  fvFormattedString(&options[OPT_HOSTBINLONGA].cName, "dHostBinLongA");
+  fvFormattedString(&options[OPT_HOSTBINLONGA].cDescr,
+                    "Long of ascending node of host binary");
+  fvFormattedString(&options[OPT_HOSTBINLONGA].cDefault, "0.0");
+  fvFormattedString(&options[OPT_HOSTBINLONGA].cDimension, "angle");
   options[OPT_HOSTBINLONGA].dDefault   = 0.0;
   options[OPT_HOSTBINLONGA].iType      = 2;
   options[OPT_HOSTBINLONGA].bMultiFile = 0;
   fnRead[OPT_HOSTBINLONGA]             = &ReadHostBinLongA;
 
-  sprintf(options[OPT_HOSTBINMASS1].cName, "dHostBinMass1");
-  sprintf(options[OPT_HOSTBINMASS1].cDescr, "mass of larger host binary star");
-  sprintf(options[OPT_HOSTBINMASS1].cDefault, "1.1 Msun");
-  sprintf(options[OPT_HOSTBINMASS1].cDimension, "mass");
+  fvFormattedString(&options[OPT_HOSTBINMASS1].cName, "dHostBinMass1");
+  fvFormattedString(&options[OPT_HOSTBINMASS1].cDescr,
+                    "mass of larger host binary star");
+  fvFormattedString(&options[OPT_HOSTBINMASS1].cDefault, "1.1 Msun");
+  fvFormattedString(&options[OPT_HOSTBINMASS1].cDimension, "mass");
   options[OPT_HOSTBINMASS1].dDefault   = 1.1 * MSUN;
   options[OPT_HOSTBINMASS1].iType      = 2;
   options[OPT_HOSTBINMASS1].bMultiFile = 0;
@@ -1076,7 +1087,7 @@ void VerifyGalHabit(BODY *body, CONTROL *control, FILES *files,
   int i, iEqn;
   int n;
   double dSigma, dDMR, dStarR, dGasR, dCurrentAge;
-  char cOut[3 * NAMELEN];
+  char *cOut;
   FILE *fOut;
 
   srand(system->iSeed);
@@ -1164,7 +1175,8 @@ void VerifyGalHabit(BODY *body, CONTROL *control, FILES *files,
 
   if (iBody >= 1) {
     if (system->bOutputEnc) {
-      sprintf(cOut, "%s.%s.Encounters", system->cName, body[iBody].cName);
+      fvFormattedString(&cOut, "%s.%s.Encounters", system->cName,
+                        body[iBody].cName);
       fOut = fopen(cOut, "w");
       fprintf(fOut,
               "#time encdt tstart MV mass sigma impx impy impz u_rel v_rel "
@@ -1412,13 +1424,13 @@ void VerifyHaltGalHabit(BODY *body, CONTROL *control, OPTIONS *options,
 
 void WriteBodyPeriQ(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dSemi * (1.0 - body[iBody].dEcc);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1427,71 +1439,80 @@ void WriteBodyPeriQ(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBodyEccX(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   *dTmp = body[iBody].dEccX;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteBodyEccY(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   *dTmp = body[iBody].dEccY;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteBodyEccZ(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   *dTmp = body[iBody].dEccZ;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteBodyAngMX(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dAngMX;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteBodyAngMY(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dAngMY;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteBodyAngMZ(BODY *body, CONTROL *control, OUTPUT *output,
                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                    double *dTmp, char cUnit[]) {
+                    double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dAngMZ;
+  fvFormattedString(cUnit, "");
 }
 
 
 void WriteNEncounters(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   *dTmp = (double)system->iNEncounters;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteNBadImpulse(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   *dTmp = (double)body[iBody].iBadImpulse;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteFVelDisp(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   *dTmp = system->dScalingFVelDisp;
+  fvFormattedString(cUnit, "");
 }
 
 void WriteDEccDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   double dex, dey, dez;
 
   if (body[iBody].bGalacTides) {
@@ -1509,7 +1530,7 @@ void WriteDEccDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1518,7 +1539,7 @@ void WriteDEccDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteDIncDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
   double dhx, dhy, dhz, qx, qy, qz;
 
   if (body[iBody].bGalacTides) {
@@ -1553,7 +1574,7 @@ void WriteDIncDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     *dTmp /= fdUnitsAngle(units->iAngle);
@@ -1563,7 +1584,7 @@ void WriteDIncDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteDLongADtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
                             SYSTEM *system, UNITS *units, UPDATE *update,
-                            int iBody, double *dTmp, char cUnit[]) {
+                            int iBody, double *dTmp, char **cUnit) {
   double dhx, dhy, dhz, qx, qy, qz;
 
   if (body[iBody].bGalacTides) {
@@ -1598,7 +1619,7 @@ void WriteDLongADtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     *dTmp /= fdUnitsAngle(units->iAngle);
@@ -1608,7 +1629,7 @@ void WriteDLongADtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteDArgPDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   double dex, dey, dez, dhx, dhy, dhz, qx, qy, qz, dLAdt, dedt;
 
   if (body[iBody].bGalacTides) {
@@ -1651,7 +1672,7 @@ void WriteDArgPDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     *dTmp /= fdUnitsAngle(units->iAngle);
@@ -1661,121 +1682,124 @@ void WriteDArgPDtGalHTidal(BODY *body, CONTROL *control, OUTPUT *output,
 
 void InitializeOutputGalHabit(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
-  sprintf(output[OUT_PERIQ].cName, "PeriQ");
-  sprintf(output[OUT_PERIQ].cDescr, "Pericenter distance");
-  sprintf(output[OUT_PERIQ].cNeg, "AU");
+  fvFormattedString(&output[OUT_PERIQ].cName, "PeriQ");
+  fvFormattedString(&output[OUT_PERIQ].cDescr, "Pericenter distance");
+  fvFormattedString(&output[OUT_PERIQ].cNeg, "AU");
   output[OUT_PERIQ].bNeg       = 1;
   output[OUT_PERIQ].dNeg       = 1. / AUM;
   output[OUT_PERIQ].iNum       = 1;
   output[OUT_PERIQ].iModuleBit = GALHABIT;
   fnWrite[OUT_PERIQ]           = &WriteBodyPeriQ;
 
-  sprintf(output[OUT_ECCX].cName, "EccX");
-  sprintf(output[OUT_ECCX].cDescr, "X component of ecc vector");
-  sprintf(output[OUT_ECCX].cNeg, " ");
+  fvFormattedString(&output[OUT_ECCX].cName, "EccX");
+  fvFormattedString(&output[OUT_ECCX].cDescr, "X component of ecc vector");
+  fvFormattedString(&output[OUT_ECCX].cNeg, " ");
   output[OUT_ECCX].bNeg       = 0;
   output[OUT_ECCX].iNum       = 1;
   output[OUT_ECCX].iModuleBit = GALHABIT;
   fnWrite[OUT_ECCX]           = &WriteBodyEccX;
 
-  sprintf(output[OUT_ECCY].cName, "EccY");
-  sprintf(output[OUT_ECCY].cDescr, "Y component of ecc vector");
-  sprintf(output[OUT_ECCY].cNeg, " ");
+  fvFormattedString(&output[OUT_ECCY].cName, "EccY");
+  fvFormattedString(&output[OUT_ECCY].cDescr, "Y component of ecc vector");
+  fvFormattedString(&output[OUT_ECCY].cNeg, " ");
   output[OUT_ECCY].bNeg       = 0;
   output[OUT_ECCY].iNum       = 1;
   output[OUT_ECCY].iModuleBit = GALHABIT;
   fnWrite[OUT_ECCY]           = &WriteBodyEccY;
 
-  sprintf(output[OUT_ECCZ].cName, "EccZ");
-  sprintf(output[OUT_ECCZ].cDescr, "Z component of ecc vector");
-  sprintf(output[OUT_ECCZ].cNeg, " ");
+  fvFormattedString(&output[OUT_ECCZ].cName, "EccZ");
+  fvFormattedString(&output[OUT_ECCZ].cDescr, "Z component of ecc vector");
+  fvFormattedString(&output[OUT_ECCZ].cNeg, " ");
   output[OUT_ECCZ].bNeg       = 0;
   output[OUT_ECCZ].iNum       = 1;
   output[OUT_ECCZ].iModuleBit = GALHABIT;
   fnWrite[OUT_ECCZ]           = &WriteBodyEccZ;
 
-  sprintf(output[OUT_ANGMX].cName, "AngMX");
-  sprintf(output[OUT_ANGMX].cDescr, "X component of angular mom vector");
-  sprintf(output[OUT_ANGMX].cNeg, " ");
+  fvFormattedString(&output[OUT_ANGMX].cName, "AngMX");
+  fvFormattedString(&output[OUT_ANGMX].cDescr,
+                    "X component of angular mom vector");
+  fvFormattedString(&output[OUT_ANGMX].cNeg, " ");
   output[OUT_ANGMX].bNeg       = 0;
   output[OUT_ANGMX].iNum       = 1;
   output[OUT_ANGMX].iModuleBit = GALHABIT;
   fnWrite[OUT_ANGMX]           = &WriteBodyAngMX;
 
-  sprintf(output[OUT_ANGMY].cName, "AngMY");
-  sprintf(output[OUT_ANGMY].cDescr, "Y component of angular mom vector");
-  sprintf(output[OUT_ANGMY].cNeg, " ");
+  fvFormattedString(&output[OUT_ANGMY].cName, "AngMY");
+  fvFormattedString(&output[OUT_ANGMY].cDescr,
+                    "Y component of angular mom vector");
+  fvFormattedString(&output[OUT_ANGMY].cNeg, " ");
   output[OUT_ANGMY].bNeg       = 0;
   output[OUT_ANGMY].iNum       = 1;
   output[OUT_ANGMY].iModuleBit = GALHABIT;
   fnWrite[OUT_ANGMY]           = &WriteBodyAngMY;
 
-  sprintf(output[OUT_ANGMZ].cName, "AngMZ");
-  sprintf(output[OUT_ANGMZ].cDescr, "Z component of angular mom vector");
-  sprintf(output[OUT_ANGMZ].cNeg, " ");
+  fvFormattedString(&output[OUT_ANGMZ].cName, "AngMZ");
+  fvFormattedString(&output[OUT_ANGMZ].cDescr,
+                    "Z component of angular mom vector");
+  fvFormattedString(&output[OUT_ANGMZ].cNeg, " ");
   output[OUT_ANGMZ].bNeg       = 0;
   output[OUT_ANGMZ].iNum       = 1;
   output[OUT_ANGMZ].iModuleBit = GALHABIT;
   fnWrite[OUT_ANGMZ]           = &WriteBodyAngMZ;
 
-  sprintf(output[OUT_NENCOUNTERS].cName, "NEncounters");
-  sprintf(output[OUT_NENCOUNTERS].cDescr,
-          "cumulative number of stellar encounters");
-  sprintf(output[OUT_NENCOUNTERS].cNeg, " ");
+  fvFormattedString(&output[OUT_NENCOUNTERS].cName, "NEncounters");
+  fvFormattedString(&output[OUT_NENCOUNTERS].cDescr,
+                    "cumulative number of stellar encounters");
+  fvFormattedString(&output[OUT_NENCOUNTERS].cNeg, " ");
   output[OUT_NENCOUNTERS].bNeg       = 0;
   output[OUT_NENCOUNTERS].iNum       = 1;
   output[OUT_NENCOUNTERS].iModuleBit = GALHABIT;
   fnWrite[OUT_NENCOUNTERS]           = &WriteNEncounters;
 
-  sprintf(output[OUT_NBADIMPULSE].cName, "NBadImpulse");
-  sprintf(output[OUT_NBADIMPULSE].cDescr,
-          "cumulative number of questionable encounters");
-  sprintf(output[OUT_NBADIMPULSE].cNeg, " ");
+  fvFormattedString(&output[OUT_NBADIMPULSE].cName, "NBadImpulse");
+  fvFormattedString(&output[OUT_NBADIMPULSE].cDescr,
+                    "cumulative number of questionable encounters");
+  fvFormattedString(&output[OUT_NBADIMPULSE].cNeg, " ");
   output[OUT_NBADIMPULSE].bNeg       = 0;
   output[OUT_NBADIMPULSE].iNum       = 1;
   output[OUT_NBADIMPULSE].iModuleBit = GALHABIT;
   fnWrite[OUT_NBADIMPULSE]           = &WriteNBadImpulse;
 
-  sprintf(output[OUT_FVELDISP].cName, "FVelDisp");
-  sprintf(output[OUT_FVELDISP].cDescr,
-          "Scaling factor for velocity dispersion");
-  sprintf(output[OUT_FVELDISP].cNeg, " ");
+  fvFormattedString(&output[OUT_FVELDISP].cName, "FVelDisp");
+  fvFormattedString(&output[OUT_FVELDISP].cDescr,
+                    "Scaling factor for velocity dispersion");
+  fvFormattedString(&output[OUT_FVELDISP].cNeg, " ");
   output[OUT_FVELDISP].bNeg       = 0;
   output[OUT_FVELDISP].iNum       = 1;
   output[OUT_FVELDISP].iModuleBit = GALHABIT;
   fnWrite[OUT_FVELDISP]           = &WriteFVelDisp;
 
-  sprintf(output[OUT_DECCDTGALHTIDAL].cName, "DEccDtGalHTidal");
-  sprintf(output[OUT_DECCDTGALHTIDAL].cDescr,
-          "Body's tidal decc/dt in GalHabit");
-  sprintf(output[OUT_DECCDTGALHTIDAL].cNeg, "1/year");
+  fvFormattedString(&output[OUT_DECCDTGALHTIDAL].cName, "DEccDtGalHTidal");
+  fvFormattedString(&output[OUT_DECCDTGALHTIDAL].cDescr,
+                    "Body's tidal decc/dt in GalHabit");
+  fvFormattedString(&output[OUT_DECCDTGALHTIDAL].cNeg, "1/year");
   output[OUT_DECCDTGALHTIDAL].bNeg       = 1;
   output[OUT_DECCDTGALHTIDAL].dNeg       = YEARSEC;
   output[OUT_DECCDTGALHTIDAL].iModuleBit = GALHABIT;
   fnWrite[OUT_DECCDTGALHTIDAL]           = &WriteDEccDtGalHTidal;
 
-  sprintf(output[OUT_DINCDTGALHTIDAL].cName, "DIncDtGalHTidal");
-  sprintf(output[OUT_DINCDTGALHTIDAL].cDescr,
-          "Body's tidal dinc/dt in GalHabit");
-  sprintf(output[OUT_DINCDTGALHTIDAL].cNeg, "1/year");
+  fvFormattedString(&output[OUT_DINCDTGALHTIDAL].cName, "DIncDtGalHTidal");
+  fvFormattedString(&output[OUT_DINCDTGALHTIDAL].cDescr,
+                    "Body's tidal dinc/dt in GalHabit");
+  fvFormattedString(&output[OUT_DINCDTGALHTIDAL].cNeg, "1/year");
   output[OUT_DINCDTGALHTIDAL].bNeg       = 1;
   output[OUT_DINCDTGALHTIDAL].dNeg       = YEARSEC / DEGRAD;
   output[OUT_DINCDTGALHTIDAL].iModuleBit = GALHABIT;
   fnWrite[OUT_DINCDTGALHTIDAL]           = &WriteDIncDtGalHTidal;
 
-  sprintf(output[OUT_DARGPDTGALHTIDAL].cName, "DArgPDtGalHTidal");
-  sprintf(output[OUT_DARGPDTGALHTIDAL].cDescr,
-          "Body's tidal dargp/dt in GalHabit");
-  sprintf(output[OUT_DARGPDTGALHTIDAL].cNeg, "1/year");
+  fvFormattedString(&output[OUT_DARGPDTGALHTIDAL].cName, "DArgPDtGalHTidal");
+  fvFormattedString(&output[OUT_DARGPDTGALHTIDAL].cDescr,
+                    "Body's tidal dargp/dt in GalHabit");
+  fvFormattedString(&output[OUT_DARGPDTGALHTIDAL].cNeg, "1/year");
   output[OUT_DARGPDTGALHTIDAL].bNeg       = 1;
   output[OUT_DARGPDTGALHTIDAL].dNeg       = YEARSEC / DEGRAD;
   output[OUT_DARGPDTGALHTIDAL].iModuleBit = GALHABIT;
   fnWrite[OUT_DARGPDTGALHTIDAL]           = &WriteDArgPDtGalHTidal;
 
-  sprintf(output[OUT_DLONGADTGALHTIDAL].cName, "DLongADtGalHTidal");
-  sprintf(output[OUT_DLONGADTGALHTIDAL].cDescr,
-          "Body's tidal dlonga/dt in GalHabit");
-  sprintf(output[OUT_DLONGADTGALHTIDAL].cNeg, "1/year");
+  fvFormattedString(&output[OUT_DLONGADTGALHTIDAL].cName, "DLongADtGalHTidal");
+  fvFormattedString(&output[OUT_DLONGADTGALHTIDAL].cDescr,
+                    "Body's tidal dlonga/dt in GalHabit");
+  fvFormattedString(&output[OUT_DLONGADTGALHTIDAL].cNeg, "1/year");
   output[OUT_DLONGADTGALHTIDAL].bNeg       = 1;
   output[OUT_DLONGADTGALHTIDAL].dNeg       = YEARSEC / DEGRAD;
   output[OUT_DLONGADTGALHTIDAL].iModuleBit = GALHABIT;
@@ -1851,7 +1875,7 @@ void PropsAuxGalHabit(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   body[iBody].dEcc =
         sqrt(pow(body[iBody].dEccX, 2) + pow(body[iBody].dEccY, 2) +
              pow(body[iBody].dEccZ, 2));
- 
+
   body[iBody].dAngM = sqrt(1.0 - pow(body[iBody].dEcc, 2));
 
   body[iBody].dInc   = acos(body[iBody].dAngMZ / body[iBody].dAngM);
@@ -1897,7 +1921,7 @@ void ForceBehaviorGalHabit(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
                            int iModule) {
   double dp, dkzi, dVMax, dCurrentAge, dMeanATmp, C;
   double sinw, cosw, cosw_alt, sign;
-  char cOut[3 * NAMELEN];
+  char *cOut;
   int idr;
   FILE *fOut;
 
@@ -2015,7 +2039,8 @@ void ForceBehaviorGalHabit(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
 
     /* write out encounter info */
     if (system->bOutputEnc) {
-      sprintf(cOut, "%s.%s.Encounters", system->cName, body[iBody].cName);
+      fvFormattedString(&cOut, "%s.%s.Encounters", system->cName,
+                        body[iBody].cName);
       fOut = fopen(cOut, "a");
       // fprintf(fOut,"#time MV mass sigma impx impy impz u_s v_s w_s u_r v_r
       // w_r u_sun v_sun w_sun Rx Ry Rz\n");
@@ -2809,12 +2834,12 @@ void NextEncounterTime(SYSTEM *system, EVOLVE *evolve, double dTime) {
 }
 
 void testrand(SYSTEM *system) {
-  char cOut[NAMELEN];
+  char *cOut;
   FILE *fOut;
   double n = 0, m, y = 100;
   int i;
 
-  sprintf(cOut, "randoms");
+  fvFormattedString(&cOut, "randoms");
   fOut = fopen(cOut, "w");
 
   for (i = 0; i <= 100000; i++) {
@@ -2984,7 +3009,7 @@ double fndGalHabitDEccZDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fndGalHabitDAngMXDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
   double dJ;
-  dJ  = sqrt((1.0 - pow(body[iaBody[0]].dEcc, 2)));
+  dJ = sqrt((1.0 - pow(body[iaBody[0]].dEcc, 2)));
 
   return sin(body[iaBody[0]].dLongA) * sin(body[iaBody[0]].dInc) *
                fndGalHabitDJDt(body, system, iaBody) +
@@ -2994,7 +3019,7 @@ double fndGalHabitDAngMXDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
 
 double fndGalHabitDAngMYDtTidal(BODY *body, SYSTEM *system, int *iaBody) {
   double dJ;
-  dJ  = sqrt((1.0 - pow(body[iaBody[0]].dEcc, 2)));
+  dJ = sqrt((1.0 - pow(body[iaBody[0]].dEcc, 2)));
 
   return -cos(body[iaBody[0]].dLongA) * sin(body[iaBody[0]].dInc) *
                fndGalHabitDJDt(body, system, iaBody) +

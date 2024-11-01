@@ -10,6 +10,7 @@
 #include <ctype.h>
 #include <float.h>
 #include <math.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -182,8 +183,8 @@ typedef struct VERIFY VERIFY;
  */
 struct BODY {
   /* Body Properties */
-  char cName[NAMELEN]; /**< Body's Name */
-  char sColor[OPTLEN]; /**< Body color (for plotting) */
+  char *cName;  /**< Body's Name */
+  char *sColor; /**< Body color (for plotting) */
 
   int bMantle; /**< Is there a mantle? */
   int bOcean;  /**< Is there an ocean? */
@@ -264,6 +265,8 @@ struct BODY {
   double dThermTemp; /**< Thermosphere's temperature in Lehmer-Catling model */
   double dAtmGasConst; /**< Atmosphere's gas constant in Lehmer-Catling model */
   double dFXUV;        /**< XUV Flux at planet's atmosphere */
+  double dFXUVLast;    /**< XUV at planet during last time step */
+  double dFXUVCumulative;
   double dJeansTime;   /**< Jeans timescale for atmospheric escape */
   double dFlowTemp;    /**< Temperature of the hydrodynamic flow */
   double dRocheRadius; /**< Radius of the Roche lobe */
@@ -368,22 +371,22 @@ struct BODY {
   double dPrecRate;   /**< Value to set fixed precession rate to */
   int bCalcDynEllip; /**< Calc dyn ellipticity from spin, radius, mass, inertia?
                       */
-  int bRelaxDynEllip; /**< shape of planet relaxes when spun down */
-  int bReadOrbitData; /**< Use orbit data from file rather than distorb */
-  char cFileOrbitData[NAMELEN]; /**< read orbital data from this file
-                                   (distorb=0) */
-  double *daTimeSeries;         /**< time series for orbital data */
-  double *daSemiSeries;         /**< time series for orbital data */
-  double *daEccSeries;          /**< time series for orbital data */
-  double *daIncSeries;          /**< time series for orbital data */
-  double *daArgPSeries;         /**< time series for orbital data */
-  double *daLongASeries;        /**< time series for orbital data */
-  double *daMeanASeries;        /**< time series for orbital data */
-  int iCurrentStep;             /**< index for time series arrays */
-  double *daHeccSeries;         /**< time series for orbital data */
-  double *daKeccSeries;         /**< time series for orbital data */
-  double *daPincSeries;         /**< time series for orbital data */
-  double *daQincSeries;         /**< time series for orbital data */
+  int bRelaxDynEllip;     /**< shape of planet relaxes when spun down */
+  int bReadOrbitData;     /**< Use orbit data from file rather than distorb */
+  char *cFileOrbitData;   /**< read orbital data from this file
+                                     (distorb=0) */
+  double *daTimeSeries;   /**< time series for orbital data */
+  double *daSemiSeries;   /**< time series for orbital data */
+  double *daEccSeries;    /**< time series for orbital data */
+  double *daIncSeries;    /**< time series for orbital data */
+  double *daArgPSeries;   /**< time series for orbital data */
+  double *daLongASeries;  /**< time series for orbital data */
+  double *daMeanASeries;  /**< time series for orbital data */
+  int iCurrentStep;       /**< index for time series arrays */
+  double *daHeccSeries;   /**< time series for orbital data */
+  double *daKeccSeries;   /**< time series for orbital data */
+  double *daPincSeries;   /**< time series for orbital data */
+  double *daQincSeries;   /**< time series for orbital data */
   double dPdot;           /**< inclination derivative used for obliquity evol */
   double dQdot;           /**< inclination derivative used for obliquity evol */
   int iNLines;            /**< Number of lines of orbital data file */
@@ -400,15 +403,15 @@ struct BODY {
                           currently) */
   int iTidePerts;      /**< Number of Tidal Perturbers */
   int *iaTidePerts;    /**< Body #'s of Tidal Perturbers */
-  char saTidePerts[MAXARRAY][NAMELEN]; /**< Names of Tidal Perturbers */
-  double dK2Man;                       /**< Mantle k2 love number */
-  double dK2Ocean;                     /**< Ocean's Love Number */
-  double dK2Env;                       /**< Envelope's Love Number */
-  double dTidalQMan;                   /**< Tidal Q of the Mantle */
-  double dTidalQOcean;                 /**< Body's Ocean Component to Tidal Q */
-  double dTidalQEnv;       /**< Body's Envelope Component to Tidal Q */
-  double dImK2Man;         /**< Mantle Im(k2) love number */
-  double dImK2ManOrbModel; /**< Mantle Im(k2) model for DB15 orbital eqns */
+  char *saTidePerts[MAXARRAY]; /**< Names of Tidal Perturbers */
+  double dK2Man;               /**< Mantle k2 love number */
+  double dK2Ocean;             /**< Ocean's Love Number */
+  double dK2Env;               /**< Envelope's Love Number */
+  double dTidalQMan;           /**< Tidal Q of the Mantle */
+  double dTidalQOcean;         /**< Body's Ocean Component to Tidal Q */
+  double dTidalQEnv;           /**< Body's Envelope Component to Tidal Q */
+  double dImK2Man;             /**< Mantle Im(k2) love number */
+  double dImK2ManOrbModel;     /**< Mantle Im(k2) model for DB15 orbital eqns */
   double dImK2Ocean;  /**< Envelope Component to Imaginary part of Love's K_2 */
   double dImK2Env;    /**< Envelope Component to Imaginary part of Love's K_2 */
   double dTidalQ;     /**< Body's Tidal Q */
@@ -621,7 +624,7 @@ struct BODY {
                          Ro>ROSSBYCRIT */
   int bEvolveRG; /**< Whether or not to evolve radius of gyration? Defaults to 0
                   */
-  double dLuminosityInitial;           
+  double dLuminosityInitial;
   double dLuminosityAmplitude;
   double dLuminosityFrequency;
   double dLuminosityPhase;
@@ -698,21 +701,21 @@ struct BODY {
   double dPlanckA; /**< Constant term in Blackbody linear approximation */
   double dPlanckB; /**< Linear coeff in Blackbody linear approx (sensitivity) */
   double dPrecA0;  /**< Initial pA value used when distrot is not called */
-  int bReadOrbitOblData; /**< Use orbit and obliquity data from file rather
-                             than distrot */
-  char cFileOrbitOblData[NAMELEN]; /**< read orbital and obliquity data from
+  int bReadOrbitOblData;   /**< Use orbit and obliquity data from file rather
+                               than distrot */
+  char *sFileOrbitOblData; /**< read orbital and obliquity data from
                                        this file (distorb=0) */
-  double *daOblSeries;             /**< time series for obliquity data */
-  double *daPrecASeries;           /**< time series for obliquity data */
-  double dRefHeight;      /**< Ref height of "surface" in elevation feedback */
-  int iReRunSeas;         /**< When to rerun EBM in ice sheet model */
-  double dSeaIceConduct;  /**< Conductivity of sea ice */
-  int bSeaIceModel;       /**< Use sea ice model? */
-  double dSeasDeltat;     /**< Time step of seasonal model */
-  double dSeasDeltax;     /**< Spacing of grid points in seasonal model */
-  double dSeasOutputTime; /**< When to output seasonal data */
-  double dSeasNextOutput; /**< Next time step to output seasonal data */
-  int bSkipSeas;          /**< Ann model will be used if in snowball state */
+  double *daOblSeries;     /**< time series for obliquity data */
+  double *daPrecASeries;   /**< time series for obliquity data */
+  double dRefHeight;       /**< Ref height of "surface" in elevation feedback */
+  int iReRunSeas;          /**< When to rerun EBM in ice sheet model */
+  double dSeaIceConduct;   /**< Conductivity of sea ice */
+  int bSeaIceModel;        /**< Use sea ice model? */
+  double dSeasDeltat;      /**< Time step of seasonal model */
+  double dSeasDeltax;      /**< Spacing of grid points in seasonal model */
+  double dSeasOutputTime;  /**< When to output seasonal data */
+  double dSeasNextOutput;  /**< Next time step to output seasonal data */
+  int bSkipSeas;           /**< Ann model will be used if in snowball state */
   int bSkipSeasEnabled; /**< Allow ann model to be used if in snowball state? */
   int bSnowball;        /**< Is planet in snowball state (oceans are frozen)? */
   double
@@ -1038,7 +1041,7 @@ struct BODY {
 typedef double (*fnLaplaceFunction)(double, int);
 
 struct SYSTEM {
-  char cName[NAMELEN]; /**< System's Name */
+  char *cName; /**< System's Name */
 
   int iNumBodies; /** Number of bodies in the system; redundant with Evolve! */
 
@@ -1851,7 +1854,7 @@ struct CONTROL {
   IO Io;
   UNITS *Units;
 
-  char sGitVersion[64];
+  char *sGitVersion;
 
   /* Move to BODY */
   int *iMassRad; /**< Mass-Radius Relationship */
@@ -1916,13 +1919,13 @@ depends on the total number of modules available. */
  * regarding the files that read in. */
 
 struct INFILE {
-  char cIn[NAMELEN]; /**< File Name */
-  int *bLineOK;      /**< Line number Format OK? */
-  int iNumLines;     /**< Number of Input Lines */
+  char *cIn;     /**< File Name */
+  int *bLineOK;  /**< Line number Format OK? */
+  int iNumLines; /**< Number of Input Lines */
   /* Species file for PHOTOCHEM */
-  char cSpecies[NAMELEN]; /**< Name of Chemical Species N/I */
+  // char cSpecies[NAMELEN]; /**< Name of Chemical Species N/I */
   /* Reaction file for PHOTOCHEM */
-  char cReactions[NAMELEN]; /**< Names of Chemical Reactions N/I */
+  // char cReactions[NAMELEN]; /**< Names of Chemical Reactions N/I */
 
   /* Aerosol scattering files */
   /* Aqueous file -- add to SpeciesFile? */
@@ -1933,13 +1936,13 @@ struct INFILE {
  * regarding the output files. */
 
 struct OUTFILE {
-  char cOut[2 * NAMELEN + 10];       /**< Output File Name */
-  int iNumCols;                      /**< Number of Columns in Output File
-                                        (system.planet+.forward/backward) */
-  char caCol[MODULEOUTEND][OPTLEN];  /**< Output Value Name */
-  int bNeg[MODULEOUTEND];            /**< Use Negative Option Units? */
-  int iNumGrid;                      /**< Number of grid outputs */
-  char caGrid[MODULEOUTEND][OPTLEN]; /**< Gridded output name */
+  char *cOut;             /**< Output File Name */
+  int iNumCols;           /**< Number of Columns in Output File
+                             (system.planet+.forward/backward) */
+  char **caCol;           /**< Output Value Name */
+  int bNeg[MODULEOUTEND]; /**< Use Negative Option Units? */
+  int iNumGrid;           /**< Number of grid outputs */
+  char **caGrid;          /**< Gridded output name */
 };
 
 
@@ -1947,9 +1950,9 @@ struct OUTFILE {
  * regarding every file. */
 
 struct FILES {
-  char cExe[LINE];        /**< Name of Executable */
-  OUTFILE *Outfile;       /**< Output File Name for Forward Integration */
-  char cLog[NAMELEN + 4]; /**< Log File Name (+4 to allow for ".log" suffix) */
+  char *cExe;       /**< Name of Executable */
+  OUTFILE *Outfile; /**< Output File Name for Forward Integration */
+  char *cLog;       /**< Log File Name (+4 to allow for ".log" suffix) */
   INFILE *Infile;
   int iNumInputs; /**< Number of Input Files */
 };
@@ -1958,28 +1961,28 @@ struct FILES {
  * regarding the options, including their file data. */
 
 struct OPTIONS {
-  char cName[OPTLEN];           /**< Option Name */
-  char cDescr[OPTDESCR];        /**< Brief Description of Option */
-  char cLongDescr[OPTLONDESCR]; /**< Long Description of Option */
-  char cValues[OPTDESCR];       /**< Description of permitted values / ranges */
-  int iType; /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for
-                array. */
-  char cDefault[OPTDESCR]; /**< Description of Default Value */
+  char *cName;      /**< Option Name */
+  char *cDescr;     /**< Brief Description of Option */
+  char *cLongDescr; /**< Long Description of Option */
+  char *cValues;    /**< Description of permitted values / ranges */
+  int iType;      /**< Cast of input. 0=bool; 1=int; 2=double; 3=string; +10 for
+                     array. */
+  char *cDefault; /**< Description of Default Value */
   /** Qualitative description of the option, included for connection wtih
       bigplanet. Options are: time, length, mass, angle, energy, pressure,
       amperes. Units may be combined with standard mathematical operations, e.g.
       energy/time, or mass*length/time^2.
    */
-  char cDimension[OPTDESCR];
+  char *cDimension;
   double dDefault; /**< Default Value */
   int iModuleBit;  /**< Bitwise sum of modules permitted to read option */
   int bMultiFile;  /**< Option Permitted in Multiple Input Files? */
   int iMultiIn;
   int *iLine; /**< Option's Line number in Input File */
   char *iFile;
-  char cFile[MAXFILES][OPTLEN]; /**< File Name Where Set */
-  int bNeg;                     /**< Is There a Negative Option? */
-  char cNeg[OPTDESCR];          /**< Description of Negative Unit Conversion */
+  char **cFile;  /**< File Name Where Set */
+  int bNeg;      /**< Is There a Negative Option? */
+  char *cNeg;    /**< Description of Negative Unit Conversion */
   int iFileType; /**< What type of file can option be in? 0 = primary only, 1 =
                     body file only, 2 = any file */
   double dNeg;   /**< Conversion Factor to System Units */
@@ -1987,37 +1990,16 @@ struct OPTIONS {
 
 /* OUTPUT contains the data regarding every output parameters */
 
-/* Some output variables must combine output from different modules.
- * These functions do that combining. XXX I think this is defunct!
-
- typedef double (*fnOutputModule)(BODY*,SYSTEM*,UPDATE*,int,int); */
-
-/* GRIDOUTPUT will be part of OPTIONS, and contains data for latitudinal
- * parameters in POISE */
-// typedef struct {
-//   char cName[OPTLEN];    /**< Output Name */
-//   char cDescr[LINE];     /**< Output Description */
-//   int bNeg;              /**< Is There a Negative Option? */
-//   int *bDoNeg;           /**< Should the Output use "Negative" Units? */
-//   char cNeg[NAMELEN];    /**< Units of Negative Option */
-//   double dNeg;           /**< Conversion Factor for Negative Option */
-//   int iNum;              /**< Number of Columns for Output */
-//
-//   /* Now add vector output functions */
-//   fnOutputModule **fnOutput; /**< Function Pointers to Write Output */
-//
-// } GRIDOUTPUT;
-
 struct OUTPUT {
-  char cName[OPTLEN];           /**< Output Name */
-  char cDescr[OUTDESCR];        /**< Output Description */
-  char cLongDescr[OUTLONDESCR]; /**< Output Long Description */
-  int bNeg;                     /**< Is There a Negative Option? */
-  int iModuleBit;      /**< Bit flag for module to check output parameters */
-  int *bDoNeg;         /**< Should the Output use "Negative" Units? */
-  char cNeg[OUTDESCR]; /**< Units of Negative Option */
-  double dNeg;         /**< Conversion Factor for Negative Option */
-  int iNum;            /**< Number of Columns for Output */
+  char *cName;      /**< Output Name */
+  char *cDescr;     /**< Output Description */
+  char *cLongDescr; /**< Output Long Description */
+  int bNeg;         /**< Is There a Negative Option? */
+  int iModuleBit;   /**< Bit flag for module to check output parameters */
+  int *bDoNeg;      /**< Should the Output use "Negative" Units? */
+  char *cNeg;       /**< Units of Negative Option */
+  double dNeg;      /**< Conversion Factor for Negative Option */
+  int iNum;         /**< Number of Columns for Output */
   int bGrid; /**< Is output quantity gridded (e.g. a function of latitude)? */
 
   //   GRIDOUTPUT *GridOutput;     /**< Output for latitudinal climate params,
@@ -2027,7 +2009,7 @@ struct OUTPUT {
 typedef void (*fnReadOption)(BODY *, CONTROL *, FILES *, OPTIONS *, SYSTEM *,
                              int);
 typedef void (*fnWriteOutput)(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                              UPDATE *, int, double *, char[]);
+                              UPDATE *, int, double *, char **);
 
 
 /*

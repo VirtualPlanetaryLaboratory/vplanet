@@ -1,0 +1,6 @@
+sName        Jupiter
+saModules    atmesc
+dMass        -317.83
+dRadius      -11.2
+dSemi        5.20880408
+saOutputOrder    Time -FXUV -CumulativeXUVFlux

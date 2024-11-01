@@ -1,0 +1,7 @@
+# Planet a parameters
+sName         Venus                      # Body's name
+saModules     atmesc
+dMass         -0.815
+dRadius       -0.9499
+dSemi         -0.723
+saOutputOrder Time -FXUV -CumulativeXUVFlux

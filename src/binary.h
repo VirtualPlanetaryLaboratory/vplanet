@@ -122,39 +122,39 @@ void InitializeOutputFunctionBinary(OUTPUT *, int, int);
 void InitializeOutputBinary(OUTPUT *, fnWriteOutput[]);
 void FinalizeOutputFunctionBinary(OUTPUT *, int, int);
 void WriteFreeEccBinary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void WriteFreeIncBinary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void WriteLL13N0Binary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteLL13K0Binary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteLL13V0Binary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteCBPRBinary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
+                     int, double *, char**);
 void WriteCBPR0Binary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void WriteBinPriRBinary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void WriteBinPriPhiBinary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void WriteBinSecRBinary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void WriteBinSecPhiBinary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void WriteCBPZBinary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char[]);
+                     int, double *, char**);
 void WriteCBPZDotBinary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void WriteCBPPhiBinary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteCBPRDotBinary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void WriteCBPPhiDotBinary(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void WriteCBPInsol(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 
 /* Logging Functions */
 void LogOptionsBinary(CONTROL *, FILE *);

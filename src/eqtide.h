@@ -186,76 +186,76 @@ void FinalizeUpdateSemiEqtide(BODY *, UPDATE *, int *, int, int, int);
 
 void HelpOutputEqtide(OUTPUT *);
 void WriteBodyDsemiDtEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                            UPDATE *, int, double *, char[]);
+                            UPDATE *, int, double *, char**);
 void WriteBodyDeccDtEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void WriteDOblDtEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteDSemiDtEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void WriteDEccDtEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteDMeanMotionDtEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                              UPDATE *, int, double *, char[]);
+                              UPDATE *, int, double *, char**);
 void WriteDOrbPerDtEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void WriteDRotPerDtEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                          UPDATE *, int, double *, char[]);
+                          UPDATE *, int, double *, char**);
 void WriteDRotRateDtEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void WriteEccTimescaleEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                             UPDATE *, int, double *, char[]);
+                             UPDATE *, int, double *, char**);
 void WriteEqRotPer(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteEqRotPerCont(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteEqRotPerDiscrete(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void WriteEqRotRate(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char[]);
+                    int, double *, char**);
 void WriteEqRotRateCont(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char[]);
+                        UPDATE *, int, double *, char**);
 void WriteEqRotRateDiscrete(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                            UPDATE *, int, double *, char[]);
+                            UPDATE *, int, double *, char**);
 void WriteGammaOrb(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteGammaRot(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteOblTimescaleEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                             UPDATE *, int, double *, char[]);
+                             UPDATE *, int, double *, char**);
 void WriteRotTimescaleEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                             UPDATE *, int, double *, char[]);
+                             UPDATE *, int, double *, char**);
 void WriteSemiTimescaleEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                              UPDATE *, int, double *, char[]);
+                              UPDATE *, int, double *, char**);
 void WritePowerEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void WriteSurfEnFluxEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char[]);
+                           UPDATE *, int, double *, char**);
 void WriteEqPower(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void WriteEqSurfEnFlux(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char[]);
+                       int, double *, char**);
 void WriteTidalQ(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                 double *, char[]);
+                 double *, char**);
 void WriteTidalTau(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteTideLock(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteLockTime(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 // void
 // WriteImK2(BODY*,CONTROL*,OUTPUT*,SYSTEM*,UNITS*,UPDATE*,int,double*,char[]);
 void WriteK2Ocean(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char[]);
+                  double *, char**);
 void WriteK2Env(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                double *, char[]);
+                double *, char**);
 void WriteTidalQOcean(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 void WriteTidalQEnv(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char[]);
+                    int, double *, char**);
 void InitializeOutputEqtide(OUTPUT *, fnWriteOutput[]);
 void WriteTidalRadius(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char[]);
+                      int, double *, char**);
 
 /* Logging Functions */
 void LogOptionsEqtide(CONTROL *, FILE *);

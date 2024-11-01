@@ -121,37 +121,37 @@ int fbCheckMutualIncDistorb(BODY *, EVOLVE *, HALT *, IO *, UPDATE *, int);
 
 void HelpOutputDistOrb(OUTPUT *);
 void WriteBodyDEccDtDistOrb(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                            UPDATE *, int, double *, char[]);
+                            UPDATE *, int, double *, char**);
 void WriteBodyDSincDtDistOrb(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                             UPDATE *, int, double *, char[]);
+                             UPDATE *, int, double *, char**);
 void WriteBodyDLongPDtDistOrb(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                              UPDATE *, int, double *, char[]);
+                              UPDATE *, int, double *, char**);
 void WriteBodyDLongADtDistOrb(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                              UPDATE *, int, double *, char[]);
+                              UPDATE *, int, double *, char**);
 void WriteBodyDIncDtDistOrb(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                            UPDATE *, int, double *, char[]);
+                            UPDATE *, int, double *, char**);
 void WriteBodySinc(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteBodyLongP(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char[]);
+                    int, double *, char**);
 void WriteBodyArgP(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteBodyHecc(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteBodyKecc(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteBodyPinc(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteBodyQinc(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                   int, double *, char[]);
+                   int, double *, char**);
 void WriteBodyDHeccDtDistOrb(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                             UPDATE *, int, double *, char[]);
+                             UPDATE *, int, double *, char**);
 void WriteBodyDKeccDtDistOrb(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                             UPDATE *, int, double *, char[]);
+                             UPDATE *, int, double *, char**);
 void WriteBodyDPincDtDistOrb(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                             UPDATE *, int, double *, char[]);
+                             UPDATE *, int, double *, char**);
 void WriteBodyDQincDtDistOrb(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                             UPDATE *, int, double *, char[]);
+                             UPDATE *, int, double *, char**);
 void InitializeOutputDistOrb(OUTPUT *, fnWriteOutput[]);
 void WriteEigen(CONTROL *, SYSTEM *);
 

@@ -11,12 +11,17 @@ jobs:
     strategy:
       matrix:
         os: [macos-14]
-        python-version: ['3.10', '3.11']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Install Xcode v15.4
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.4'
 
       - name: Set up Python
         id: setup_python
@@ -35,8 +40,11 @@ jobs:
         if: steps.setup_python.outcome == 'success'
         run: |
           make opt
-          pytest
+          pytest --tb=short --junitxml=junit/test-results.xml
 
-      - name: Get unique id
-        uses: Tiryoh/gha-jobid-action@v1
-        id: jobs
+      - name: Check test ouptut created
+        id: check_test_file
+        uses: andstor/file-existence-action@v3
+        with:
+          files: "${{ github.workspace }}/junit/test-results.xml"
+          fail: true

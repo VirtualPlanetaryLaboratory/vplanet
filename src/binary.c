@@ -416,68 +416,68 @@ void ReadHaltRocheLobe(BODY *body, CONTROL *control, FILES *files,
 void InitializeOptionsBinary(OPTIONS *options, fnReadOption fnRead[]) {
   int iOpt, iFile;
 
-  sprintf(options[OPT_FREEECC].cName, "dFreeEcc");
-  sprintf(options[OPT_FREEECC].cDescr, "Circumbinary planet free eccentricity");
-  sprintf(options[OPT_FREEECC].cDefault, "0.0");
-  sprintf(options[OPT_FREEECC].cDimension, "nd");
+  fvFormattedString(&options[OPT_FREEECC].cName, "dFreeEcc");
+  fvFormattedString(&options[OPT_FREEECC].cDescr, "Circumbinary planet free eccentricity");
+  fvFormattedString(&options[OPT_FREEECC].cDefault, "0.0");
+  fvFormattedString(&options[OPT_FREEECC].cDimension, "nd");
   options[OPT_FREEECC].dDefault   = 0.0;
   options[OPT_FREEECC].iType      = 2;
   options[OPT_FREEECC].bMultiFile = 1;
   fnRead[OPT_FREEECC]             = &ReadFreeEcc;
-  sprintf(options[OPT_FREEECC].cLongDescr,
+  fvFormattedString(&options[OPT_FREEECC].cLongDescr,
           "The free eccentricity of a circumbinary planet with the BINARY "
           "module.\n"
           "Must be in the range [0,1).");
 
-  sprintf(options[OPT_FREEINC].cName, "dFreeInc");
-  sprintf(options[OPT_FREEINC].cDescr, "Circumbinary planet free inclination");
-  sprintf(options[OPT_FREEINC].cDefault, "0.0 degrees");
-  sprintf(options[OPT_FREEINC].cDimension, "angle");
+  fvFormattedString(&options[OPT_FREEINC].cName, "dFreeInc");
+  fvFormattedString(&options[OPT_FREEINC].cDescr, "Circumbinary planet free inclination");
+  fvFormattedString(&options[OPT_FREEINC].cDefault, "0.0 degrees");
+  fvFormattedString(&options[OPT_FREEINC].cDimension, "angle");
   options[OPT_FREEINC].dDefault   = 0.0;
   options[OPT_FREEINC].iType      = 2;
   options[OPT_FREEINC].bMultiFile = 1;
   fnRead[OPT_FREEINC]             = &ReadFreeInc;
-  sprintf(options[OPT_FREEINC].cLongDescr,
+  fvFormattedString(&options[OPT_FREEINC].cLongDescr,
           "The free inclination of a circumbinary planet with the BINARY "
           "module.\n"
           "Must be in the range [0,pi).");
 
-  sprintf(options[OPT_LL13PHIAB].cName, "dLL13PhiAB");
-  sprintf(options[OPT_LL13PHIAB].cDescr,
+  fvFormattedString(&options[OPT_LL13PHIAB].cName, "dLL13PhiAB");
+  fvFormattedString(&options[OPT_LL13PHIAB].cDescr,
           "Binary Initial Mean Anomaly for use in the BINARY module");
-  sprintf(options[OPT_LL13PHIAB].cDefault, "0.0 degrees");
-  sprintf(options[OPT_LL13PHIAB].cDimension, "angle");
+  fvFormattedString(&options[OPT_LL13PHIAB].cDefault, "0.0 degrees");
+  fvFormattedString(&options[OPT_LL13PHIAB].cDimension, "angle");
   options[OPT_LL13PHIAB].dDefault   = 0.0;
   options[OPT_LL13PHIAB].iType      = 2;
   options[OPT_LL13PHIAB].bMultiFile = 1;
   fnRead[OPT_LL13PHIAB]             = &ReadLL13PhiAB;
 
-  sprintf(options[OPT_CBPM0].cName, "dCBPM0");
-  sprintf(options[OPT_CBPM0].cDescr,
+  fvFormattedString(&options[OPT_CBPM0].cName, "dCBPM0");
+  fvFormattedString(&options[OPT_CBPM0].cDescr,
           "Circumbinary planet initial mean anomaly for use in the BINARY "
           "module");
-  sprintf(options[OPT_CBPM0].cDefault, "0.0 degrees");
-  sprintf(options[OPT_CBPM0].cDimension, "angle");
+  fvFormattedString(&options[OPT_CBPM0].cDefault, "0.0 degrees");
+  fvFormattedString(&options[OPT_CBPM0].cDimension, "angle");
   options[OPT_CBPM0].dDefault   = 0.0;
   options[OPT_CBPM0].iType      = 2;
   options[OPT_CBPM0].bMultiFile = 1;
   fnRead[OPT_CBPM0]             = &ReadCBPM0;
 
-  sprintf(options[OPT_CBPZETA].cName, "dCBPZeta");
-  sprintf(options[OPT_CBPZETA].cDescr,
+  fvFormattedString(&options[OPT_CBPZETA].cName, "dCBPZeta");
+  fvFormattedString(&options[OPT_CBPZETA].cDescr,
           "Circumbinary planet initial z oscillation phase angle");
-  sprintf(options[OPT_CBPZETA].cDefault, "0.0 degrees");
-  sprintf(options[OPT_CBPZETA].cDimension, "angle");
+  fvFormattedString(&options[OPT_CBPZETA].cDefault, "0.0 degrees");
+  fvFormattedString(&options[OPT_CBPZETA].cDimension, "angle");
   options[OPT_CBPZETA].dDefault   = 0.0;
   options[OPT_CBPZETA].iType      = 2;
   options[OPT_CBPZETA].bMultiFile = 1;
   fnRead[OPT_CBPZETA]             = &ReadCBPZeta;
 
-  sprintf(options[OPT_CBPPSI].cName, "dCBPPsi");
-  sprintf(options[OPT_CBPPSI].cDescr,
+  fvFormattedString(&options[OPT_CBPPSI].cName, "dCBPPsi");
+  fvFormattedString(&options[OPT_CBPPSI].cDescr,
           "Circumbinary planet initial R, phi oscillation phase angle");
-  sprintf(options[OPT_CBPPSI].cDefault, "0.0 degrees");
-  sprintf(options[OPT_CBPPSI].cDimension, "angle");
+  fvFormattedString(&options[OPT_CBPPSI].cDefault, "0.0 degrees");
+  fvFormattedString(&options[OPT_CBPPSI].cDimension, "angle");
   options[OPT_CBPPSI].dDefault   = 0.0;
   options[OPT_CBPPSI].iType      = 2;
   options[OPT_CBPPSI].bMultiFile = 1;
@@ -489,52 +489,52 @@ void InitializeOptionsBinary(OPTIONS *options, fnReadOption fnRead[]) {
    * order modifications to the theory are added.
    */
 
-  sprintf(options[OPT_LL13N0].cName, "dLL13N0");
-  sprintf(options[OPT_LL13N0].cDescr, "Lee+Leung 2013 Mean Motion");
-  sprintf(options[OPT_LL13N0].cDefault, "1 /yr");
-  sprintf(options[OPT_LL13N0].cDimension, "time^-1");
+  fvFormattedString(&options[OPT_LL13N0].cName, "dLL13N0");
+  fvFormattedString(&options[OPT_LL13N0].cDescr, "Lee+Leung 2013 Mean Motion");
+  fvFormattedString(&options[OPT_LL13N0].cDefault, "1 /yr");
+  fvFormattedString(&options[OPT_LL13N0].cDimension, "time^-1");
   options[OPT_LL13N0].dDefault   = 1. / YEARSEC;
   options[OPT_LL13N0].iType      = 2;
   options[OPT_LL13N0].bMultiFile = 1;
   options[OPT_LL13N0].dNeg       = 1. / YEARSEC;
-  sprintf(options[OPT_LL13N0].cNeg, "/Year");
+  fvFormattedString(&options[OPT_LL13N0].cNeg, "/Year");
   fnRead[OPT_LL13N0] = &ReadLL13N0;
 
-  sprintf(options[OPT_LL13K0].cName, "dLL13K0");
-  sprintf(options[OPT_LL13K0].cDescr,
+  fvFormattedString(&options[OPT_LL13K0].cName, "dLL13K0");
+  fvFormattedString(&options[OPT_LL13K0].cDescr,
           "Lee+Leung 2013 Radial Epicyclic Frequency");
-  sprintf(options[OPT_LL13K0].cDefault, "1 /yr");
-  sprintf(options[OPT_LL13K0].cDimension, "time^-1");
+  fvFormattedString(&options[OPT_LL13K0].cDefault, "1 /yr");
+  fvFormattedString(&options[OPT_LL13K0].cDimension, "time^-1");
   options[OPT_LL13K0].dDefault   = 1. / YEARSEC;
   options[OPT_LL13K0].iType      = 2;
   options[OPT_LL13K0].bMultiFile = 1;
   options[OPT_LL13K0].dNeg       = 1. / YEARSEC;
-  sprintf(options[OPT_LL13K0].cNeg, "/Year");
+  fvFormattedString(&options[OPT_LL13K0].cNeg, "/Year");
   fnRead[OPT_LL13K0] = &ReadLL13K0;
 
-  sprintf(options[OPT_LL13V0].cName, "dLL13V0");
-  sprintf(options[OPT_LL13V0].cDescr,
+  fvFormattedString(&options[OPT_LL13V0].cName, "dLL13V0");
+  fvFormattedString(&options[OPT_LL13V0].cDescr,
           "Lee+Leung 2013 Radial Epicyclic Frequency");
-  sprintf(options[OPT_LL13V0].cDefault, "1 /yr");
-  sprintf(options[OPT_LL13V0].cDimension, "time^-1");
+  fvFormattedString(&options[OPT_LL13V0].cDefault, "1 /yr");
+  fvFormattedString(&options[OPT_LL13V0].cDimension, "time^-1");
   options[OPT_LL13V0].dDefault   = 1. / YEARSEC;
   options[OPT_LL13V0].iType      = 2;
   options[OPT_LL13V0].bMultiFile = 1;
   options[OPT_LL13V0].dNeg       = 1. / YEARSEC;
-  sprintf(options[OPT_LL13V0].cNeg, "/Year");
+  fvFormattedString(&options[OPT_LL13V0].cNeg, "/Year");
   fnRead[OPT_LL13V0] = &ReadLL13V0;
 
-  sprintf(options[OPT_HALTHOLMAN].cName, "bHaltHolmanUnstable");
-  sprintf(options[OPT_HALTHOLMAN].cDescr,
+  fvFormattedString(&options[OPT_HALTHOLMAN].cName, "bHaltHolmanUnstable");
+  fvFormattedString(&options[OPT_HALTHOLMAN].cDescr,
           "Halt when CBP is Holman-Wiegert Unstable?");
-  sprintf(options[OPT_HALTHOLMAN].cDefault, "0");
+  fvFormattedString(&options[OPT_HALTHOLMAN].cDefault, "0");
   options[OPT_HALTHOLMAN].iType = 0;
   fnRead[OPT_HALTHOLMAN]        = &ReadHaltHolmanUnstable;
 
-  sprintf(options[OPT_HALTROCHELOBE].cName, "bHaltRocheLobe");
-  sprintf(options[OPT_HALTROCHELOBE].cDescr,
+  fvFormattedString(&options[OPT_HALTROCHELOBE].cName, "bHaltRocheLobe");
+  fvFormattedString(&options[OPT_HALTROCHELOBE].cDescr,
           "Halt when Roche lobe crossing occurs?");
-  sprintf(options[OPT_HALTROCHELOBE].cDefault, "0");
+  fvFormattedString(&options[OPT_HALTROCHELOBE].cDefault, "0");
   options[OPT_HALTROCHELOBE].iType = 0;
   fnRead[OPT_HALTROCHELOBE]        = &ReadHaltRocheLobe;
 }
@@ -1018,7 +1018,7 @@ void VerifyHaltBinary(BODY *body, CONTROL *control, OPTIONS *options, int iBody,
 
 void WriteFreeEccBinary(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   // Note: Only makes sense for planets (iBodyType == 0)
   if (body[iBody].iBodyType == 0) {
     *dTmp = body[iBody].dFreeEcc;
@@ -1026,12 +1026,12 @@ void WriteFreeEccBinary(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp = -1;
   }
 
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteFreeIncBinary(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
   // Note: Only makes sense for planets (iBodyType == 0)
   if (body[iBody].iBodyType == 0) {
     *dTmp = body[iBody].dFreeInc;
@@ -1041,7 +1041,7 @@ void WriteFreeIncBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -1051,7 +1051,7 @@ void WriteFreeIncBinary(BODY *body, CONTROL *control, OUTPUT *output,
 /** Write the binary primary star radial position */
 void WriteBinPriRBinary(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
 
   // Compute current binary true anomaly
   double meanAnomaly = body[1].dMeanMotion * body[0].dAge + body[1].dLL13PhiAB;
@@ -1069,7 +1069,7 @@ void WriteBinPriRBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[1].dMass * radius * dInvMass;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1079,7 +1079,7 @@ void WriteBinPriRBinary(BODY *body, CONTROL *control, OUTPUT *output,
 /** Write the binary secondary star radial position */
 void WriteBinSecRBinary(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
 
   // Compute current binary true anomaly
   double meanAnomaly = body[1].dMeanMotion * body[1].dAge + body[1].dLL13PhiAB;
@@ -1097,7 +1097,7 @@ void WriteBinSecRBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = body[0].dMass * radius * dInvMass;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1107,7 +1107,7 @@ void WriteBinSecRBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBinPriPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
 
   // Compute current binary true anomaly
   double meanAnomaly = body[1].dMeanMotion * body[0].dAge + body[1].dLL13PhiAB;
@@ -1117,7 +1117,7 @@ void WriteBinPriPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fndEccToTrue(eccAnomaly, body[1].dEcc);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -1127,7 +1127,7 @@ void WriteBinPriPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteBinSecPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
 
   // Compute current binary true anomaly
   double meanAnomaly = body[1].dMeanMotion * body[1].dAge + body[1].dLL13PhiAB;
@@ -1138,7 +1138,7 @@ void WriteBinSecPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = fndEccToTrue(eccAnomaly, body[1].dEcc) + PI;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -1148,7 +1148,7 @@ void WriteBinSecPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteCBPPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   if (body[iBody].iBodyType == 0) {
     *dTmp = body[iBody].dCBPPhi;
   } else {
@@ -1157,7 +1157,7 @@ void WriteCBPPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsAngle(units->iAngle);
     fsUnitsAngle(units->iAngle, cUnit);
@@ -1166,12 +1166,12 @@ void WriteCBPPhiBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteCBPPhiDotBinary(BODY *body, CONTROL *control, OUTPUT *output,
                           SYSTEM *system, UNITS *units, UPDATE *update,
-                          int iBody, double *dTmp, char cUnit[]) {
+                          int iBody, double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dCBPPhiDot;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsRate(units->iTime, cUnit);
@@ -1180,7 +1180,7 @@ void WriteCBPPhiDotBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteLL13N0Binary(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   // Note: Only applies to planets (iBodyType == 0)
   if (body[iBody].iBodyType == 0) {
     *dTmp = body[iBody].dLL13N0;
@@ -1190,7 +1190,7 @@ void WriteLL13N0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -1200,7 +1200,7 @@ void WriteLL13N0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteLL13K0Binary(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   // Note: Only applies to planets (iBodyType == 0)
   if (body[iBody].iBodyType == 0) {
     *dTmp = body[iBody].dLL13K0;
@@ -1210,7 +1210,7 @@ void WriteLL13K0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -1219,7 +1219,7 @@ void WriteLL13K0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteLL13V0Binary(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   // Note: Only applies to planets (iBodyType == 0)
   if (body[iBody].iBodyType == 0) {
     *dTmp = body[iBody].dLL13V0;
@@ -1229,7 +1229,7 @@ void WriteLL13V0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime);
     fsUnitsTime(units->iTime, cUnit);
@@ -1239,12 +1239,12 @@ void WriteLL13V0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 /** Write the circumbinary planet orbital radius (CBPR) */
 void WriteCBPRBinary(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dCBPR;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1254,12 +1254,12 @@ void WriteCBPRBinary(BODY *body, CONTROL *control, OUTPUT *output,
 /** Write the circumbinary planet guiding radius (CBPR0) */
 void WriteCBPR0Binary(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dR0;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1268,12 +1268,12 @@ void WriteCBPR0Binary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteCBPZBinary(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dCBPZ;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
@@ -1282,12 +1282,12 @@ void WriteCBPZBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteCBPRDotBinary(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dCBPRDot;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) / fdUnitsLength(units->iLength);
     fsUnitsVel(units, cUnit);
@@ -1296,12 +1296,12 @@ void WriteCBPRDotBinary(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteCBPZDotBinary(BODY *body, CONTROL *control, OUTPUT *output,
                         SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                        double *dTmp, char cUnit[]) {
+                        double *dTmp, char **cUnit) {
 
   *dTmp = body[iBody].dCBPZDot;
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp *= fdUnitsTime(units->iTime) / fdUnitsLength(units->iLength);
     fsUnitsVel(units, cUnit);
@@ -1312,7 +1312,7 @@ void WriteCBPZDotBinary(BODY *body, CONTROL *control, OUTPUT *output,
    orbit assuming P_bin << P_cbp */
 void WriteCBPInsol(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
 
   // Make sure that this is a planet, if not, -1
   if (iBody < 2 || body[iBody].iBodyType != 0) {
@@ -1322,165 +1322,165 @@ void WriteCBPInsol(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   }
 
   // Always in units of insolation received by Earth
-  strcpy(cUnit, "F/F_Earth");
+  fvFormattedString(cUnit, "F/F_Earth");
 }
 
 void InitializeOutputBinary(OUTPUT *output, fnWriteOutput fnWrite[]) {
-  sprintf(output[OUT_FREEECC].cName, "FreeEcc");
-  sprintf(output[OUT_FREEECC].cDescr, "CBP's Free Eccentricity in BINARY");
+  fvFormattedString(&output[OUT_FREEECC].cName, "FreeEcc");
+  fvFormattedString(&output[OUT_FREEECC].cDescr, "CBP's Free Eccentricity in BINARY");
   output[OUT_FREEECC].bNeg       = 0;
   output[OUT_FREEECC].iNum       = 1;
   output[OUT_FREEECC].iModuleBit = BINARY;
   fnWrite[OUT_FREEECC]           = &WriteFreeEccBinary;
 
-  sprintf(output[OUT_FREEINC].cName, "FreeInc");
-  sprintf(output[OUT_FREEINC].cDescr, "CBP's Free Inclination in BINARY");
-  sprintf(output[OUT_FREEINC].cNeg, "Deg");
+  fvFormattedString(&output[OUT_FREEINC].cName, "FreeInc");
+  fvFormattedString(&output[OUT_FREEINC].cDescr, "CBP's Free Inclination in BINARY");
+  fvFormattedString(&output[OUT_FREEINC].cNeg, "Deg");
   output[OUT_FREEINC].bNeg       = 1;
   output[OUT_FREEINC].dNeg       = 1. / DEGRAD;
   output[OUT_FREEINC].iNum       = 1;
   output[OUT_FREEINC].iModuleBit = BINARY;
   fnWrite[OUT_FREEINC]           = &WriteFreeIncBinary;
 
-  sprintf(output[OUT_CBPPHI].cName, "CBPPhi");
-  sprintf(output[OUT_CBPPHI].cDescr, "CBP Orbital Azimuthal Angle in BINARY");
-  sprintf(output[OUT_CBPPHI].cNeg, "Deg");
+  fvFormattedString(&output[OUT_CBPPHI].cName, "CBPPhi");
+  fvFormattedString(&output[OUT_CBPPHI].cDescr, "CBP Orbital Azimuthal Angle in BINARY");
+  fvFormattedString(&output[OUT_CBPPHI].cNeg, "Deg");
   output[OUT_CBPPHI].bNeg       = 1;
   output[OUT_CBPPHI].dNeg       = 1.0 / DEGRAD;
   output[OUT_CBPPHI].iNum       = 1;
   output[OUT_CBPPHI].iModuleBit = BINARY;
   fnWrite[OUT_CBPPHI]           = &WriteCBPPhiBinary;
 
-  sprintf(output[OUT_BINPRIPHI].cName, "BinPriPhi");
-  sprintf(output[OUT_BINPRIPHI].cDescr,
+  fvFormattedString(&output[OUT_BINPRIPHI].cName, "BinPriPhi");
+  fvFormattedString(&output[OUT_BINPRIPHI].cDescr,
           "Binary primary star azimuthal angle in BINARY");
-  sprintf(output[OUT_BINPRIPHI].cNeg, "Deg");
+  fvFormattedString(&output[OUT_BINPRIPHI].cNeg, "Deg");
   output[OUT_BINPRIPHI].bNeg       = 1;
   output[OUT_BINPRIPHI].dNeg       = 1.0 / DEGRAD;
   output[OUT_BINPRIPHI].iNum       = 1;
   output[OUT_BINPRIPHI].iModuleBit = BINARY;
   fnWrite[OUT_BINPRIPHI]           = &WriteBinPriPhiBinary;
 
-  sprintf(output[OUT_BINSECPHI].cName, "BinSecPhi");
-  sprintf(output[OUT_BINSECPHI].cDescr,
+  fvFormattedString(&output[OUT_BINSECPHI].cName, "BinSecPhi");
+  fvFormattedString(&output[OUT_BINSECPHI].cDescr,
           "Binary secondary star azimuthal angle in BINARY");
-  sprintf(output[OUT_BINSECPHI].cNeg, "Deg");
+  fvFormattedString(&output[OUT_BINSECPHI].cNeg, "Deg");
   output[OUT_BINSECPHI].bNeg       = 1;
   output[OUT_BINSECPHI].dNeg       = 1.0 / DEGRAD;
   output[OUT_BINSECPHI].iNum       = 1;
   output[OUT_BINSECPHI].iModuleBit = BINARY;
   fnWrite[OUT_BINSECPHI]           = &WriteBinSecPhiBinary;
 
-  sprintf(output[OUT_LL13N0].cName, "LL13N0");
-  sprintf(output[OUT_LL13N0].cDescr, "CBP Mean Motion in BINARY");
-  sprintf(output[OUT_LL13N0].cNeg, "1/year");
+  fvFormattedString(&output[OUT_LL13N0].cName, "LL13N0");
+  fvFormattedString(&output[OUT_LL13N0].cDescr, "CBP Mean Motion in BINARY");
+  fvFormattedString(&output[OUT_LL13N0].cNeg, "1/year");
   output[OUT_LL13N0].bNeg       = 1;
   output[OUT_LL13N0].dNeg       = 1. / YEARSEC;
   output[OUT_LL13N0].iNum       = 1;
   output[OUT_LL13N0].iModuleBit = BINARY;
   fnWrite[OUT_LL13N0]           = &WriteLL13N0Binary;
 
-  sprintf(output[OUT_LL13K0].cName, "LL13K0");
-  sprintf(output[OUT_LL13K0].cDescr,
+  fvFormattedString(&output[OUT_LL13K0].cName, "LL13K0");
+  fvFormattedString(&output[OUT_LL13K0].cDescr,
           "Leung+Lee 2013 Radial epicyclic frequency");
-  sprintf(output[OUT_LL13K0].cNeg, "1/year");
+  fvFormattedString(&output[OUT_LL13K0].cNeg, "1/year");
   output[OUT_LL13K0].bNeg       = 1;
   output[OUT_LL13K0].dNeg       = 1. / YEARSEC;
   output[OUT_LL13K0].iNum       = 1;
   output[OUT_LL13K0].iModuleBit = BINARY;
   fnWrite[OUT_LL13K0]           = &WriteLL13K0Binary;
 
-  sprintf(output[OUT_LL13V0].cName, "LL13V0");
-  sprintf(output[OUT_LL13V0].cDescr,
+  fvFormattedString(&output[OUT_LL13V0].cName, "LL13V0");
+  fvFormattedString(&output[OUT_LL13V0].cDescr,
           "CBP vertical epicyclic frequency in BINARY");
-  sprintf(output[OUT_LL13V0].cNeg, "1/year");
+  fvFormattedString(&output[OUT_LL13V0].cNeg, "1/year");
   output[OUT_LL13V0].bNeg       = 1;
   output[OUT_LL13V0].dNeg       = 1. / YEARSEC;
   output[OUT_LL13V0].iNum       = 1;
   output[OUT_LL13V0].iModuleBit = BINARY;
   fnWrite[OUT_LL13V0]           = &WriteLL13V0Binary;
 
-  sprintf(output[OUT_CBPR].cName, "CBPR");
-  sprintf(output[OUT_CBPR].cDescr, "CBP's Orbital Radius in BINARY");
+  fvFormattedString(&output[OUT_CBPR].cName, "CBPR");
+  fvFormattedString(&output[OUT_CBPR].cDescr, "CBP's Orbital Radius in BINARY");
   output[OUT_CBPR].bNeg = 1;
-  sprintf(output[OUT_CBPR].cNeg, "AU");
+  fvFormattedString(&output[OUT_CBPR].cNeg, "AU");
   output[OUT_CBPR].dNeg       = 1.0 / AUM;
   output[OUT_CBPR].iNum       = 1;
   output[OUT_CBPR].iModuleBit = BINARY;
   fnWrite[OUT_CBPR]           = &WriteCBPRBinary;
 
-  sprintf(output[OUT_BINPRIR].cName, "BinPriR");
-  sprintf(output[OUT_BINPRIR].cDescr,
+  fvFormattedString(&output[OUT_BINPRIR].cName, "BinPriR");
+  fvFormattedString(&output[OUT_BINPRIR].cDescr,
           "Radial position of binary primary star for module BINARY");
   output[OUT_BINPRIR].bNeg = 1;
-  sprintf(output[OUT_BINPRIR].cNeg, "AU");
+  fvFormattedString(&output[OUT_BINPRIR].cNeg, "AU");
   output[OUT_BINPRIR].dNeg       = 1.0 / AUM;
   output[OUT_BINPRIR].iNum       = 1;
   output[OUT_BINPRIR].iModuleBit = BINARY;
   fnWrite[OUT_BINPRIR]           = &WriteBinPriRBinary;
 
-  sprintf(output[OUT_BINSECR].cName, "BinSecR");
-  sprintf(output[OUT_BINSECR].cDescr,
+  fvFormattedString(&output[OUT_BINSECR].cName, "BinSecR");
+  fvFormattedString(&output[OUT_BINSECR].cDescr,
           "Radial position of binary secondary star for module BINARY");
   output[OUT_BINSECR].bNeg = 1;
-  sprintf(output[OUT_BINSECR].cNeg, "AU");
+  fvFormattedString(&output[OUT_BINSECR].cNeg, "AU");
   output[OUT_BINSECR].dNeg       = 1.0 / AUM;
   output[OUT_BINSECR].iNum       = 1;
   output[OUT_BINSECR].iModuleBit = BINARY;
   fnWrite[OUT_BINSECR]           = &WriteBinSecRBinary;
 
-  sprintf(output[OUT_CBPR0].cName, "R0");
-  sprintf(output[OUT_CBPR0].cDescr,
+  fvFormattedString(&output[OUT_CBPR0].cName, "R0");
+  fvFormattedString(&output[OUT_CBPR0].cDescr,
           "CBP's Orbital Guiding Center Radius in BINARY");
   output[OUT_CBPR0].bNeg = 1;
-  sprintf(output[OUT_CBPR0].cNeg, "AU");
+  fvFormattedString(&output[OUT_CBPR0].cNeg, "AU");
   output[OUT_CBPR0].dNeg       = 1.0 / AUM;
   output[OUT_CBPR0].iNum       = 1;
   output[OUT_CBPR0].iModuleBit = BINARY;
   fnWrite[OUT_CBPR0]           = &WriteCBPR0Binary;
 
-  sprintf(output[OUT_CBPZ].cName, "CBPZ");
-  sprintf(
-        output[OUT_CBPZ].cDescr,
+  fvFormattedString(&output[OUT_CBPZ].cName, "CBPZ");
+  fvFormattedString(
+        &output[OUT_CBPZ].cDescr,
         "CBP's Orbital Cylindrical Height Out of the Orbital Plane in BINARY");
   output[OUT_CBPZ].bNeg = 1;
-  sprintf(output[OUT_CBPZ].cNeg, "AU");
+  fvFormattedString(&output[OUT_CBPZ].cNeg, "AU");
   output[OUT_CBPZ].dNeg       = 1.0 / AUM;
   output[OUT_CBPZ].iNum       = 1;
   output[OUT_CBPZ].iModuleBit = BINARY;
   fnWrite[OUT_CBPZ]           = &WriteCBPZBinary;
 
-  sprintf(output[OUT_CBPRDOT].cName, "CBPRDot");
-  sprintf(output[OUT_CBPRDOT].cDescr,
+  fvFormattedString(&output[OUT_CBPRDOT].cName, "CBPRDot");
+  fvFormattedString(&output[OUT_CBPRDOT].cDescr,
           "CBP's Radial Orbital Velocity in BINARY");
-  sprintf(output[OUT_CBPRDOT].cNeg, "/day");
+  fvFormattedString(&output[OUT_CBPRDOT].cNeg, "/day");
   output[OUT_CBPRDOT].bNeg       = 0;
   output[OUT_CBPRDOT].dNeg       = DAYSEC;
   output[OUT_CBPRDOT].iNum       = 1;
   output[OUT_CBPRDOT].iModuleBit = BINARY;
   fnWrite[OUT_CBPRDOT]           = &WriteCBPRDotBinary;
 
-  sprintf(output[OUT_CBPZDOT].cName, "CBPZDot");
-  sprintf(output[OUT_CBPZDOT].cDescr, "CBP's Z Orbital Velocity in BINARY");
-  sprintf(output[OUT_CBPZDOT].cNeg, "/day");
+  fvFormattedString(&output[OUT_CBPZDOT].cName, "CBPZDot");
+  fvFormattedString(&output[OUT_CBPZDOT].cDescr, "CBP's Z Orbital Velocity in BINARY");
+  fvFormattedString(&output[OUT_CBPZDOT].cNeg, "/day");
   output[OUT_CBPZDOT].bNeg       = 0;
   output[OUT_CBPZDOT].dNeg       = DAYSEC;
   output[OUT_CBPZDOT].iNum       = 1;
   output[OUT_CBPZDOT].iModuleBit = BINARY;
   fnWrite[OUT_CBPZDOT]           = &WriteCBPZDotBinary;
 
-  sprintf(output[OUT_CBPPHIDOT].cName, "CBPPhiDot");
-  sprintf(output[OUT_CBPPHIDOT].cDescr,
+  fvFormattedString(&output[OUT_CBPPHIDOT].cName, "CBPPhiDot");
+  fvFormattedString(&output[OUT_CBPPHIDOT].cDescr,
           "CBP's Phi Angular Orbital Velocity in BINARY");
-  sprintf(output[OUT_CBPPHIDOT].cNeg, "/day");
+  fvFormattedString(&output[OUT_CBPPHIDOT].cNeg, "/day");
   output[OUT_CBPPHIDOT].bNeg       = 0;
   output[OUT_CBPPHIDOT].dNeg       = DAYSEC;
   output[OUT_CBPPHIDOT].iNum       = 1;
   output[OUT_CBPPHIDOT].iModuleBit = BINARY;
   fnWrite[OUT_CBPPHIDOT]           = &WriteCBPPhiDotBinary;
 
-  sprintf(output[OUT_CBPINSOL].cName, "CBPInsol");
-  sprintf(output[OUT_CBPINSOL].cDescr,
+  fvFormattedString(&output[OUT_CBPINSOL].cName, "CBPInsol");
+  fvFormattedString(&output[OUT_CBPINSOL].cDescr,
           "CBP's binary Orbit-Averaged Insolation in BINARY");
   output[OUT_CBPINSOL].bNeg       = 0;
   output[OUT_CBPINSOL].iNum       = 1;

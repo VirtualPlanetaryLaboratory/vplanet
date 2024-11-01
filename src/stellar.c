@@ -36,7 +36,7 @@ void BodyCopyStellar(BODY *dest, BODY *src, int foo, int iNumBodies,
   dest[iBody].dLuminosityFrequency = src[iBody].dLuminosityFrequency;
   dest[iBody].dLuminosityPhase     = src[iBody].dLuminosityPhase;
   dest[iBody].dLXRay               = src[iBody].dLXRay;
-  dest[iBody].dLEUV                 =src[iBody].dLEUV;///SSS
+  dest[iBody].dLEUV                 =src[iBody].dLEUV;
 }
 
 /**************** STELLAR options ********************/
@@ -169,11 +169,13 @@ void ReadMagBrakingModel(BODY *body, CONTROL *control, FILES *files,
       body[iFile - 1].iMagBrakingModel = STELLAR_DJDT_SK72;
     } else if (!memcmp(sLower(cTmp), "ma", 2)) {
       body[iFile - 1].iMagBrakingModel = STELLAR_DJDT_MA15;
+    } else if (!memcmp(sLower(cTmp), "br", 2)) {
+      body[iFile - 1].iMagBrakingModel = STELLAR_DJDT_BR21;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
                 "ERROR: Unknown argument to %s: %s. Options are REINERS, "
-                "SKUMANICH, MATT, or NONE.\n",
+                "SKUMANICH, MATT, BREIMANN21 or NONE.\n",
                 options->cName, cTmp);
       }
       LineExit(files->Infile[iFile].cIn, lTmp);
@@ -358,7 +360,7 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   }
 }
 
-///SSS #start functions for choosing the xray & uv options
+
  
   void ReadLXRayModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                   SYSTEM *system, int iFile) {
@@ -424,7 +426,7 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
-    body[iFile - 1].iLEUVModel = EUV_MODEL_NONE; ///sss
+    body[iFile - 1].iLEUVModel = EUV_MODEL_NONE; 
   }
 }
   
@@ -612,92 +614,93 @@ void ReadHaltEndBaraffeGrid(BODY *body, CONTROL *control, FILES *files,
 void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   int iOpt, iFile;
 
-  sprintf(options[OPT_SATXUVFRAC].cName, "dSatXUVFrac");
-  sprintf(options[OPT_SATXUVFRAC].cDescr, "Saturated XUV luminosity fraction");
-  sprintf(options[OPT_SATXUVFRAC].cDefault, "1e-3");
-  sprintf(options[OPT_SATXUVFRAC].cDimension, "nd");
+  fvFormattedString(&options[OPT_SATXUVFRAC].cName, "dSatXUVFrac");
+  fvFormattedString(&options[OPT_SATXUVFRAC].cDescr, "Saturated XUV luminosity fraction");
+  fvFormattedString(&options[OPT_SATXUVFRAC].cDefault, "1e-3");
+  fvFormattedString(&options[OPT_SATXUVFRAC].cDimension, "nd");
   options[OPT_SATXUVFRAC].dDefault   = 1.e-3;
   options[OPT_SATXUVFRAC].iType      = 2;
   options[OPT_SATXUVFRAC].bMultiFile = 1;
   fnRead[OPT_SATXUVFRAC]             = &ReadSatXUVFrac;
-  sprintf(
-        options[OPT_SATXUVFRAC].cLongDescr,
+  fvFormattedString(
+        &options[OPT_SATXUVFRAC].cLongDescr,
         "After formation stars emit a nearly constant amount of XUV radiation\n"
         "for a time called the \"saturated\" phase. This parameter sets that "
         "value\n"
         "relative to the total (bolometric) luminosity. Must lie in range "
         "[0,1].");
 
-  sprintf(options[OPT_SATXUVTIME].cName, "dSatXUVTime");
-  sprintf(options[OPT_SATXUVTIME].cDescr, "XUV saturation time");
-  sprintf(options[OPT_SATXUVTIME].cDefault, "0.1 Gyr");
-  sprintf(options[OPT_SATXUVTIME].cDimension, "time");
+  fvFormattedString(&options[OPT_SATXUVTIME].cName, "dSatXUVTime");
+  fvFormattedString(&options[OPT_SATXUVTIME].cDescr, "XUV saturation time");
+  fvFormattedString(&options[OPT_SATXUVTIME].cDefault, "0.1 Gyr");
+  fvFormattedString(&options[OPT_SATXUVTIME].cDimension, "time");
   options[OPT_SATXUVTIME].dDefault   = 1.e8 * YEARSEC;
   options[OPT_SATXUVTIME].iType      = 0;
   options[OPT_SATXUVTIME].bMultiFile = 1;
   options[OPT_SATXUVTIME].dNeg       = 1e9 * YEARSEC;
-  sprintf(options[OPT_SATXUVTIME].cNeg, "Gyr");
+  fvFormattedString(&options[OPT_SATXUVTIME].cNeg, "Gyr");
   fnRead[OPT_SATXUVTIME] = &ReadSatXUVTime;
-  sprintf(options[OPT_SATXUVTIME].cLongDescr,
+  fvFormattedString(&options[OPT_SATXUVTIME].cLongDescr,
           "The time a star will remain in its \"saturated\" phase.");
 
- sprintf(options[OPT_ROSSBYSAT].cName, "dRossbySat"); //What put in in files
-  sprintf(options[OPT_ROSSBYSAT].cDescr, "Saturated Rossby number for xuv fraction");
-  sprintf(options[OPT_ROSSBYSAT].cDefault, "0.0605");
-  sprintf(options[OPT_ROSSBYSAT].cDimension, "nd"); //non dimensional
+  fvFormattedString(options[OPT_ROSSBYSAT].cName, "dRossbySat"); //What put in in files
+  fvFormattedString(options[OPT_ROSSBYSAT].cDescr, "Saturated Rossby number for xuv fraction");
+  fvFormattedString(options[OPT_ROSSBYSAT].cDefault, "0.0605");
+  fvFormattedString(options[OPT_ROSSBYSAT].cDimension, "nd"); //non dimensional
   options[OPT_ROSSBYSAT].dDefault   = 0.0605;
   options[OPT_ROSSBYSAT].iType      = 2; //tells is a double
   options[OPT_ROSSBYSAT].bMultiFile = 1; //exist in multiple files?
   fnRead[OPT_ROSSBYSAT]             = &ReadRossbySat; //pointers again
-  sprintf(
+  fvFormattedString(
         options[OPT_ROSSBYSAT].cLongDescr,
         "Johnstone 2021 Rossby Saturation;");
-  sprintf(options[OPT_R_XSAT].cName, "dR_xSat"); //What put in in files
-  sprintf(options[OPT_R_XSAT].cDescr, "Saturated XUV luminosity fraction Johnstone 2021");
-  sprintf(options[OPT_R_XSAT].cDefault, "5e-4"); //should this be true though? actually be what i have below?
-  sprintf(options[OPT_R_XSAT].cDimension, "nd"); //non dimensional
+
+  fvFormattedString(options[OPT_R_XSAT].cName, "dR_xSat"); //What put in in files
+  fvFormattedString(options[OPT_R_XSAT].cDescr, "Saturated XUV luminosity fraction Johnstone 2021");
+  fvFormattedString(options[OPT_R_XSAT].cDefault, "5e-4"); //should this be true though? actually be what i have below?
+  fvFormattedString(options[OPT_R_XSAT].cDimension, "nd"); //non dimensional
   options[OPT_R_XSAT].dDefault   = 0.0005135;
   options[OPT_R_XSAT].iType      = 2; //tells is a double
   options[OPT_R_XSAT].bMultiFile = 1; //exist in multiple files?
   fnRead[OPT_R_XSAT]             = &ReadRossR_xSat; //pointers again
-  sprintf(
+  fvFormattedString(
         options[OPT_R_XSAT].cLongDescr,
         "Johnstone 2021 R_x);");
 
-  sprintf(options[OPT_JOHNSTONEBETA1].cName, "dJohnstoneBeta1"); //What put in in files
-  sprintf(options[OPT_JOHNSTONEBETA1].cDescr, "Johnstone Beta1");
-  sprintf(options[OPT_JOHNSTONEBETA1].cDefault, "1e-3");
-  sprintf(options[OPT_JOHNSTONEBETA1].cDimension, "nd"); //non dimensional
+  fvFormattedString(options[OPT_JOHNSTONEBETA1].cName, "dJohnstoneBeta1"); //What put in in files
+  fvFormattedString(options[OPT_JOHNSTONEBETA1].cDescr, "Johnstone Beta1");
+  fvFormattedString(options[OPT_JOHNSTONEBETA1].cDefault, "1e-3");
+  fvFormattedString(options[OPT_JOHNSTONEBETA1].cDimension, "nd"); //non dimensional
   options[OPT_JOHNSTONEBETA1].dDefault   = -0.135;
   options[OPT_JOHNSTONEBETA1].iType      = 2; //tells is a double
   options[OPT_JOHNSTONEBETA1].bMultiFile = 1; //exist in multiple files?
   fnRead[OPT_JOHNSTONEBETA1]             = &ReadJohnstoneBeta1; //pointers again
-  sprintf(
+  fvFormattedString(
         options[OPT_JOHNSTONEBETA1].cLongDescr,
         "Johnstone 2021 Beta1");
 
-  sprintf(options[OPT_JOHNSTONEBETA2].cName, "dJohnstoneBeta2"); //What put in in files
-  sprintf(options[OPT_JOHNSTONEBETA2].cDescr, "Johnstone Beta2");
-  sprintf(options[OPT_JOHNSTONEBETA2].cDefault, "1e-3");
-  sprintf(options[OPT_JOHNSTONEBETA2].cDimension, "nd"); //non dimensional
+  fvFormattedString(options[OPT_JOHNSTONEBETA2].cName, "dJohnstoneBeta2"); //What put in in files
+  fvFormattedString(options[OPT_JOHNSTONEBETA2].cDescr, "Johnstone Beta2");
+  fvFormattedString(options[OPT_JOHNSTONEBETA2].cDefault, "1e-3");
+  fvFormattedString(options[OPT_JOHNSTONEBETA2].cDimension, "nd"); //non dimensional
   options[OPT_JOHNSTONEBETA2].dDefault   = -1.889;
   options[OPT_JOHNSTONEBETA2].iType      = 2; //tells is a double
   options[OPT_JOHNSTONEBETA2].bMultiFile = 1; //exist in multiple files?
   fnRead[OPT_JOHNSTONEBETA2]             = &ReadJohnstoneBeta2; //pointers again
-  sprintf(
+  fvFormattedString(
         options[OPT_JOHNSTONEBETA2].cLongDescr,
         "Johnstone 2021 Beta2");
 
 ///SSS 
 
-  sprintf(options[OPT_LXRAYMODEL].cName, "sXRayModel");
-  sprintf(options[OPT_LXRAYMODEL].cDescr, "XRAY Model");
-  sprintf(options[OPT_LXRAYMODEL].cDefault, "NONE");
-  sprintf(options[OPT_LXRAYMODEL].cValues, "JOHNSTONE NONE");
+  fvFormattedString(options[OPT_LXRAYMODEL].cName, "sXRayModel");
+  fvFormattedString(options[OPT_LXRAYMODEL].cDescr, "XRAY Model");
+  fvFormattedString(options[OPT_LXRAYMODEL].cDefault, "NONE");
+  fvFormattedString(options[OPT_LXRAYMODEL].cValues, "JOHNSTONE NONE");
   options[OPT_LXRAYMODEL].iType      = 3;
   options[OPT_LXRAYMODEL].bMultiFile = 1;
   fnRead[OPT_LXRAYMODEL]             = &ReadLXRayModel;
-  sprintf(
+  fvFormattedString(
         options[OPT_LXRAYMODEL].cLongDescr,
         "If none selected, no model chosen "
         "JOHNSTONE will use the Johnstone 2021  "
@@ -705,14 +708,14 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
         "(---). \n");
 
   
-  sprintf(options[OPT_LEUVMODEL].cName, "sEUVModel");
-  sprintf(options[OPT_LEUVMODEL].cDescr, "EUV Model");
-  sprintf(options[OPT_LEUVMODEL].cDefault, "SANZFORCADA");
-  sprintf(options[OPT_LEUVMODEL].cValues, "SANZFORCADA JOHNSTONE NONE");
+  fvFormattedString(options[OPT_LEUVMODEL].cName, "sEUVModel");
+  fvFormattedString(options[OPT_LEUVMODEL].cDescr, "EUV Model");
+  fvFormattedString(options[OPT_LEUVMODEL].cDefault, "SANZFORCADA");
+  fvFormattedString(options[OPT_LEUVMODEL].cValues, "SANZFORCADA JOHNSTONE NONE");
   options[OPT_LEUVMODEL].iType      = 3;
   options[OPT_LEUVMODEL].bMultiFile = 1;
   fnRead[OPT_LEUVMODEL]             = &ReadLEUVModel;
-  sprintf(
+  fvFormattedString(
         options[OPT_LEUVMODEL].cLongDescr,
         "If SANZFORCADA is selected,uses Sanz-Forcada 2011, "
         "to calculate\n"
@@ -722,35 +725,35 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
         "(---). \n");
 
 
+///sss 10/28/24
 
 
 
 
 
-
-  sprintf(options[OPT_XUVBETA].cName, "dXUVBeta");
-  sprintf(options[OPT_XUVBETA].cDescr, "XUV decay power law exponent");
-  sprintf(options[OPT_XUVBETA].cDefault, "1.23");
-  sprintf(options[OPT_XUVBETA].cDimension, "nd");
+  fvFormattedString(&options[OPT_XUVBETA].cName, "dXUVBeta");
+  fvFormattedString(&options[OPT_XUVBETA].cDescr, "XUV decay power law exponent");
+  fvFormattedString(&options[OPT_XUVBETA].cDefault, "1.23");
+  fvFormattedString(&options[OPT_XUVBETA].cDimension, "nd");
   options[OPT_XUVBETA].dDefault   = 1.23;
   options[OPT_XUVBETA].iType      = 2;
   options[OPT_XUVBETA].bMultiFile = 1;
   fnRead[OPT_XUVBETA]             = &ReadXUVBeta;
-  sprintf(options[OPT_XUVBETA].cLongDescr,
+  fvFormattedString(&options[OPT_XUVBETA].cLongDescr,
           "After the \"saturation\" phase, the ratio of the XUV to total "
           "luminosity\n"
           "will follow a power law followinfg this exponent. Units are "
           "gigayears.");
 
-  sprintf(options[OPT_STELLARMODEL].cName, "sStellarModel");
-  sprintf(options[OPT_STELLARMODEL].cDescr, "Stellar evolution model");
-  sprintf(options[OPT_STELLARMODEL].cDefault, "BARAFFE");
-  sprintf(options[OPT_STELLARMODEL].cValues, "BARAFFE PROXIMA SINEWAVE NONE");
+  fvFormattedString(&options[OPT_STELLARMODEL].cName, "sStellarModel");
+  fvFormattedString(&options[OPT_STELLARMODEL].cDescr, "Stellar evolution model");
+  fvFormattedString(&options[OPT_STELLARMODEL].cDefault, "BARAFFE");
+  fvFormattedString(&options[OPT_STELLARMODEL].cValues, "BARAFFE PROXIMA SINEWAVE NONE");
   options[OPT_STELLARMODEL].iType      = 3;
   options[OPT_STELLARMODEL].bMultiFile = 1;
   fnRead[OPT_STELLARMODEL]             = &ReadStellarModel;
-  sprintf(
-        options[OPT_STELLARMODEL].cLongDescr,
+  fvFormattedString(
+        &options[OPT_STELLARMODEL].cLongDescr,
         "If BARAFFE is selected, luminosity, effective temperature, radius, "
         "and\n"
         "radius of gyration will follow the model of Baraffe, I. et al.\n"
@@ -759,15 +762,15 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
         "(2016, arXiv:1608.06919). SINEWAVE produces oscillatory luminosity.\n"
         "NONE will leave them constant.\n");
 
-  sprintf(options[OPT_MAGBRAKINGMODEL].cName, "sMagBrakingModel");
-  sprintf(options[OPT_MAGBRAKINGMODEL].cDescr, "Magnetic braking model.");
-  sprintf(options[OPT_MAGBRAKINGMODEL].cDefault, "REINERS");
-  sprintf(options[OPT_MAGBRAKINGMODEL].cValues,
+  fvFormattedString(&options[OPT_MAGBRAKINGMODEL].cName, "sMagBrakingModel");
+  fvFormattedString(&options[OPT_MAGBRAKINGMODEL].cDescr, "Magnetic braking model.");
+  fvFormattedString(&options[OPT_MAGBRAKINGMODEL].cDefault, "REINERS");
+  fvFormattedString(&options[OPT_MAGBRAKINGMODEL].cValues,
           "REINERS, SKUMANICH, MATT, NONE");
   options[OPT_MAGBRAKINGMODEL].iType      = 3;
   options[OPT_MAGBRAKINGMODEL].bMultiFile = 1;
   fnRead[OPT_MAGBRAKINGMODEL]             = &ReadMagBrakingModel;
-  sprintf(options[OPT_STELLARMODEL].cLongDescr,
+  fvFormattedString(&options[OPT_STELLARMODEL].cLongDescr,
           "If REINERS is selected, the stellar magnetic braking model of\n"
           "Reiners & Mohanty (2012, ApJ, 746, 43) is used to modify the "
           "rotation rate.\n"
@@ -775,27 +778,27 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
           "MATT uses the model from Matt, S. et al. (2015, ApJ, 799, 23).\n"
           "NONE applies no magnetic torque.\n");
 
-  sprintf(options[OPT_WINDMODEL].cName, "sWindModel");
-  sprintf(options[OPT_WINDMODEL].cDescr, "Wind Angular Momentum Loss Model");
-  sprintf(options[OPT_WINDMODEL].cDefault, "REINERS");
+  fvFormattedString(&options[OPT_WINDMODEL].cName, "sWindModel");
+  fvFormattedString(&options[OPT_WINDMODEL].cDescr, "Wind Angular Momentum Loss Model");
+  fvFormattedString(&options[OPT_WINDMODEL].cDefault, "REINERS");
   options[OPT_WINDMODEL].iType      = 3;
   options[OPT_WINDMODEL].bMultiFile = 1;
   fnRead[OPT_WINDMODEL]             = &ReadWindModel;
-  sprintf(options[OPT_WINDMODEL].cLongDescr,
+  fvFormattedString(&options[OPT_WINDMODEL].cLongDescr,
           "If REINERS is selected, the stellar wind model of Reiners and "
           "Mohanty\n"
           "(2012, ApJ, 746, 43) is used to modify the rotation rate.");
 
-  sprintf(options[OPT_XUVMODEL].cName, "sXUVModel");
-  sprintf(options[OPT_XUVMODEL].cDescr, "XUV Evolution Model");
-  sprintf(options[OPT_XUVMODEL].cDefault, "RIBAS");
-  sprintf(options[OPT_XUVMODEL].cValues, "RIBAS REINERS JOHNSTONE CALCULATED NONE");
+  fvFormattedString(&options[OPT_XUVMODEL].cName, "sXUVModel");
+  fvFormattedString(&options[OPT_XUVMODEL].cDescr, "XUV Evolution Model");
+  fvFormattedString(&options[OPT_XUVMODEL].cDefault, "RIBAS");
+  fvFormattedString(&options[OPT_XUVMODEL].cValues, "RIBAS REINERS JOHNSTONE CALCULATED NONE");
   options[OPT_XUVMODEL].iType      = 3;
   options[OPT_XUVMODEL].bMultiFile = 1;
   options[OPT_XUVMODEL].iModuleBit = STELLAR;
   fnRead[OPT_XUVMODEL]             = &ReadXUVModel;
-  sprintf(
-        options[OPT_XUVMODEL].cLongDescr,
+  fvFormattedString(
+        &options[OPT_XUVMODEL].cLongDescr,
         "This parameter sets the XUV evolution model used in STELLAR. Setting\n"
         "this to RIBAS (default) will evolve the XUV luminosity according to \n"
         "the saturated power law of Ribas et al (2005, ApJ, 611, 680),\n"
@@ -808,93 +811,93 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
         "parameter to NONE, in which case the XUV luminosity will remain "
         "constant.");
 
-  sprintf(options[OPT_HZMODEL].cName, "sHZModel");
-  sprintf(options[OPT_HZMODEL].cDescr, "Habitable Zone Model: Kopparapu13");
-  sprintf(options[OPT_HZMODEL].cDefault, "Kopparapu13");
+  fvFormattedString(&options[OPT_HZMODEL].cName, "sHZModel");
+  fvFormattedString(&options[OPT_HZMODEL].cDescr, "Habitable Zone Model: Kopparapu13");
+  fvFormattedString(&options[OPT_HZMODEL].cDefault, "Kopparapu13");
   options[OPT_HZMODEL].iType      = 3;
   options[OPT_HZMODEL].bMultiFile = 1;
   fnRead[OPT_HZMODEL]             = &ReadHZModel;
-  sprintf(options[OPT_HZMODEL].cLongDescr,
+  fvFormattedString(&options[OPT_HZMODEL].cLongDescr,
           "If KOPPARAPU13 is selected then the Recent Venus, Runaway "
           "Greenhouse,\n"
           "Maximum Greenhouse, and Early Mars habitable zone limits will be\n"
           "calculated from Kopparapu, R. et al. (2013, ApJ, 765, 131).");
 
-  sprintf(options[OPT_HALTENDBARAFFEFGRID].cName, "bHaltEndBaraffeGrid");
-  sprintf(options[OPT_HALTENDBARAFFEFGRID].cDescr,
+  fvFormattedString(&options[OPT_HALTENDBARAFFEFGRID].cName, "bHaltEndBaraffeGrid");
+  fvFormattedString(&options[OPT_HALTENDBARAFFEFGRID].cDescr,
           "Halt when we reach the end of the Baraffe+15 grid?");
-  sprintf(options[OPT_HALTENDBARAFFEFGRID].cDefault, "1");
+  fvFormattedString(&options[OPT_HALTENDBARAFFEFGRID].cDefault, "1");
   options[OPT_HALTENDBARAFFEFGRID].iType = 0;
   fnRead[OPT_HALTENDBARAFFEFGRID]        = &ReadHaltEndBaraffeGrid;
-  sprintf(options[OPT_HALTENDBARAFFEFGRID].cLongDescr,
+  fvFormattedString(&options[OPT_HALTENDBARAFFEFGRID].cLongDescr,
           "The BARRAFFE stellar model will only compute parameters until the "
           "end of\n"
           "the main sequence. Setting this flag to 1 will halt the code if the "
           "end\n"
           "of the model grid is reached.");
 
-  sprintf(options[OPT_ROSSBYCUT].cName, "bRossbyCut");
-  sprintf(options[OPT_ROSSBYCUT].cDescr,
+  fvFormattedString(&options[OPT_ROSSBYCUT].cName, "bRossbyCut");
+  fvFormattedString(&options[OPT_ROSSBYCUT].cDescr,
           "Terminate magnetic braking when Rossby number > 2.08?");
-  sprintf(options[OPT_ROSSBYCUT].cDefault, "0"); // XXX Units?
+  fvFormattedString(&options[OPT_ROSSBYCUT].cDefault, "0"); // XXX Units?
   options[OPT_ROSSBYCUT].iType      = 0;
   options[OPT_ROSSBYCUT].bMultiFile = 1;
   options[OPT_ROSSBYCUT].iModuleBit = STELLAR;
   fnRead[OPT_ROSSBYCUT]             = &ReadRossbyCut;
-  sprintf(options[OPT_ROSSBYCUT].cLongDescr,
+  fvFormattedString(&options[OPT_ROSSBYCUT].cLongDescr,
           "Van Saders, J. et al. (2019, ApJ, 872, 128) find that when the "
           "stellar\n"
           "Rossby number exceeds 2.08, then the magnetic braking is quenched. "
           "This\n"
           "flag enforces that behavior.");
 
-  sprintf(options[OPT_EVOVLERG].cName, "bEvolveRG");
-  sprintf(options[OPT_EVOVLERG].cDescr, "Evolve stellar radius of gyration?");
-  sprintf(options[OPT_EVOVLERG].cDefault, "1");
+  fvFormattedString(&options[OPT_EVOVLERG].cName, "bEvolveRG");
+  fvFormattedString(&options[OPT_EVOVLERG].cDescr, "Evolve stellar radius of gyration?");
+  fvFormattedString(&options[OPT_EVOVLERG].cDefault, "1");
   options[OPT_EVOVLERG].iType      = 0;
   options[OPT_EVOVLERG].bMultiFile = 1;
   options[OPT_EVOVLERG].iModuleBit = STELLAR;
   fnRead[OPT_EVOVLERG]             = &ReadEvolveRG;
-  sprintf(options[OPT_EVOVLERG].cLongDescr,
+  fvFormattedString(&options[OPT_EVOVLERG].cLongDescr,
           "Set this flag to 0 to ignore the role of mass concentration in "
           "stellar\n"
           "evolution. Only useful for testing purposes.");
 
-  sprintf(options[OPT_LUMAMPLITUDE].cName, "dLuminosityAmplitude");
-  sprintf(options[OPT_LUMAMPLITUDE].cDescr,
+  fvFormattedString(&options[OPT_LUMAMPLITUDE].cName, "dLuminosityAmplitude");
+  fvFormattedString(&options[OPT_LUMAMPLITUDE].cDescr,
           "Amplitude of luminosity oscillation for SINEWAVE stellar model");
-  sprintf(options[OPT_LUMAMPLITUDE].cDefault, "0.001");
+  fvFormattedString(&options[OPT_LUMAMPLITUDE].cDefault, "0.001");
   options[OPT_LUMAMPLITUDE].dDefault   = 0.001;
   options[OPT_LUMAMPLITUDE].iType      = 0;
   options[OPT_LUMAMPLITUDE].bMultiFile = 1;
   options[OPT_LUMAMPLITUDE].iModuleBit = STELLAR;
   options[OPT_LUMAMPLITUDE].dNeg       = LSUN;
-  sprintf(options[OPT_LUMAMPLITUDE].cNeg, "Solar Luminosity (LSUN)");
+  fvFormattedString(&options[OPT_LUMAMPLITUDE].cNeg, "Solar Luminosity (LSUN)");
   fnRead[OPT_LUMAMPLITUDE] = &ReadLuminosityAmplitude;
 
-  sprintf(options[OPT_LUMPERIOD].cName, "dLuminosityPeriod");
-  sprintf(options[OPT_LUMPERIOD].cDescr,
+  fvFormattedString(&options[OPT_LUMPERIOD].cName, "dLuminosityPeriod");
+  fvFormattedString(&options[OPT_LUMPERIOD].cDescr,
           "Period of luminosity oscillation for SINEWAVE stellar model");
-  sprintf(options[OPT_LUMPERIOD].cDefault, "0.001");
+  fvFormattedString(&options[OPT_LUMPERIOD].cDefault, "0.001");
   options[OPT_LUMPERIOD].dDefault   = 0.001;
   options[OPT_LUMPERIOD].iType      = 0;
   options[OPT_LUMPERIOD].bMultiFile = 1;
   options[OPT_LUMPERIOD].iModuleBit = STELLAR;
   options[OPT_LUMPERIOD].dNeg       = YEARSEC;
-  sprintf(options[OPT_LUMPERIOD].cNeg, "Years");
+  fvFormattedString(&options[OPT_LUMPERIOD].cNeg, "Years");
   fnRead[OPT_LUMPERIOD] = &ReadLuminosityPeriod;
 
-  sprintf(options[OPT_LUMPHASE].cName, "dLuminosityPhase");
-  sprintf(
-        options[OPT_LUMPHASE].cDescr,
+  fvFormattedString(&options[OPT_LUMPHASE].cName, "dLuminosityPhase");
+  fvFormattedString(
+        &options[OPT_LUMPHASE].cDescr,
         "Phase of luminosity oscillation at age=0 for SINEWAVE stellar model");
-  sprintf(options[OPT_LUMPHASE].cDefault, "0");
+  fvFormattedString(&options[OPT_LUMPHASE].cDefault, "0");
   options[OPT_LUMPHASE].dDefault   = 0;
   options[OPT_LUMPHASE].iType      = 0;
   options[OPT_LUMPHASE].bMultiFile = 1;
   options[OPT_LUMPHASE].iModuleBit = STELLAR;
   options[OPT_LUMPHASE].dNeg       = DEGRAD;
-  sprintf(options[OPT_LUMPHASE].cNeg, "Degrees");
+  fvFormattedString(&options[OPT_LUMPHASE].cNeg, "Degrees");
   fnRead[OPT_LUMPHASE] = &ReadLuminosityPhase;
 }
 
@@ -1275,34 +1278,7 @@ void fnPropsAuxStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
 
 } else if (body[iBody].iXUVModel == STELLAR_MODEL_JOHNSTONE) { ///sss remove clean
 
-    // JOHNSTONE 2020 power-law model SSS
-        //double dRossbyNumber, dJohnstonecon1, dJohnstonecon2;
-        //dRossbyNumber = (fdRossbyNumber(body,iBody)*(0.95/(PERIODSUN/fdCranmerSaar2011TauCZ(TEFFSUN)))); //C&S in terms of js
-        //dJohnstonecon1= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta1))); 
-        //dJohnstonecon2= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta2)));
-
-   ///SSS If undefined Johnstone variables, must define them 
-   //  if (JS variables undefined) {
-   //   fprintf(stderr, "ERROR! Must define values for Johnstone Beta 1 and Beta 2 "
-   //                   "to use Johnstone model!\n");
-   //   exit(1);
-   // }
-
-
-
-  //if (dRossbyNumber <= body[iBody].dRossbySat) {
-
-    // body[iBody].dLXUV = dJohnstonecon1*pow(dRossbyNumber,body[iBody].dJohnstoneBeta1);
-
-      
-   // } else {
-      
-   //    body[iBody].dLXUV = dJohnstonecon2*pow(dRossbyNumber,body[iBody].dJohnstoneBeta2);
-  
-   //  }
- // body[iBody].dLXUV*=body[iBody].dLuminosity; 
-
- //SSS
+   
  
   } else {
 
@@ -1364,7 +1340,7 @@ void NullStellarDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
   }
 }
 
-///SSS 
+
 void VerifyLXRay(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, int iBody){
     if (body[iBody].iLXRAYModel == XRAY_MODEL_NONE) {
       printf("No XRay Model Chosen %d ",iBody);
@@ -1488,7 +1464,7 @@ void VerifyStellar(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     exit(EXIT_INPUT);
   }
 
-    ///SSS
+    
   VerifyLXRay(body,control,options,update,iBody);
   VerifyLEUV(body,control,options,update, iBody);
   VerifyXUV(body,control,options,update, iBody);
@@ -1668,12 +1644,12 @@ void VerifyHaltStellar(BODY *body, CONTROL *control, OPTIONS *options,
 
 void WriteLuminosity(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                     double *dTmp, char cUnit[]) {
+                     double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dLuminosity;
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -1682,7 +1658,7 @@ void WriteLuminosity(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteTemperature(BODY *body, CONTROL *control, OUTPUT *output,
                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                      double *dTmp, char cUnit[]) {
+                      double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dTemperature;
   // Kelvin only
   fsUnitsTemp(0, cUnit);
@@ -1690,7 +1666,7 @@ void WriteTemperature(BODY *body, CONTROL *control, OUTPUT *output,
 
 void WriteLXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
   if (body[iBody].iXUVModel == STELLAR_MODEL_RIBAS){
     *dTmp = body[iBody].dLXUV;
  } else if (body[iBody].iXUVModel == STELLAR_MODEL_CALCULATED) {
@@ -1699,7 +1675,7 @@ void WriteLXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -1708,22 +1684,31 @@ void WriteLXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteLXUVFrac(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = body[iBody].dLXUV / body[iBody].dLuminosity;
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
 }
 
 void WriteRossbyNumber(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp =
        fdRossbyNumber(body,iBody);
-  strcpy(cUnit, "");
+  fvFormattedString(cUnit, "");
+        body[iBody].dRotPer / fdCranmerSaar2011TauCZ(body[iBody].dTemperature);
+  fvFormattedString(cUnit, "");
+}
+
+void WriteWindTorque(BODY *body, CONTROL *control, OUTPUT *output,
+                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                       double *dTmp, char **cUnit) {
+  *dTmp = fdDJDtMagBrakingStellar(body, system, &iBody);
+  fvFormattedString(cUnit, "");
 }
 
 void WriteDRotPerDtStellar(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
-                           int iBody, double *dTmp, char cUnit[]) {
+                           int iBody, double *dTmp, char **cUnit) {
   double dDeriv;
   int iPert;
 
@@ -1734,17 +1719,17 @@ void WriteDRotPerDtStellar(BODY *body, CONTROL *control, OUTPUT *output,
   *dTmp = dDeriv * (-2 * PI / (body[iBody].dRotRate * body[iBody].dRotRate));
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
-    strcpy(cUnit, "");
+    fvFormattedString(cUnit, "");
   }
 }
 
 
-/// SSS 
+
 void WriteLEUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system, //eventually need to be LEUV name change
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char ** cUnit) {
   *dTmp = fdLEUV(body,iBody);
 
   if (output->bDoNeg[iBody]) {
@@ -1757,7 +1742,7 @@ void WriteLEUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system, //e
 
 void WriteLXRay(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
-               char cUnit[]) {
+               char **cUnit) {
   *dTmp = fdLXRAY(body,iBody);
 
   if (output->bDoNeg[iBody]) {
@@ -1776,9 +1761,9 @@ void WriteLXRay(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
-  sprintf(output[OUT_LUMINOSITY].cName, "Luminosity");
-  sprintf(output[OUT_LUMINOSITY].cDescr, "Luminosity");
-  sprintf(output[OUT_LUMINOSITY].cNeg, "LSUN");
+  fvFormattedString(&output[OUT_LUMINOSITY].cName, "Luminosity");
+  fvFormattedString(&output[OUT_LUMINOSITY].cDescr, "Luminosity");
+  fvFormattedString(&output[OUT_LUMINOSITY].cNeg, "LSUN");
   output[OUT_LUMINOSITY].bNeg       = 1;
   output[OUT_LUMINOSITY].dNeg       = 1. / LSUN;
   output[OUT_LUMINOSITY].iNum       = 1;
@@ -1786,25 +1771,26 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_LUMINOSITY]           = &WriteLuminosity;
 
   // Maybe change to TEFF? XXX
-  sprintf(output[OUT_TEMPERATURE].cName, "Temperature");
-  sprintf(output[OUT_TEMPERATURE].cDescr, "Effective Temperature");
+  fvFormattedString(&output[OUT_TEMPERATURE].cName, "Temperature");
+  fvFormattedString(&output[OUT_TEMPERATURE].cDescr, "Effective Temperature");
   output[OUT_TEMPERATURE].bNeg       = 0;
   output[OUT_TEMPERATURE].iNum       = 1;
   output[OUT_TEMPERATURE].iModuleBit = STELLAR;
   fnWrite[OUT_TEMPERATURE]           = &WriteTemperature;
 
-  sprintf(output[OUT_LXUV].cName, "LXUVStellar");
-  sprintf(output[OUT_LXUV].cDescr, "Base X-ray /XUV Luminosity"); 
-  sprintf(output[OUT_LXUV].cNeg, "LSUN");
+  fvFormattedString(&output[OUT_LXUV].cName, "LXUVStellar");
+  fvFormattedString(&output[OUT_LXUV].cDescr, "Base X-ray/XUV Luminosity");
+  fvFormattedString(&output[OUT_LXUV].cNeg, "LSUN");
   output[OUT_LXUV].bNeg       = 1;
   output[OUT_LXUV].dNeg       = 1. / LSUN;
   output[OUT_LXUV].iNum       = 1;
   output[OUT_LXUV].iModuleBit = STELLAR;
   fnWrite[OUT_LXUV]           = &WriteLXUV;
 
-  sprintf(output[OUT_LEUV].cName, "EUVStellar");
-  sprintf(output[OUT_LEUV].cDescr, "Base EUV /XUV Luminosity"); 
-  sprintf(output[OUT_LEUV].cNeg, "LSUN");
+///replace with fvformatted like below
+  fvFormattedString(output[OUT_LEUV].cName, "EUVStellar");
+  fvFormattedString(output[OUT_LEUV].cDescr, "Base EUV /XUV Luminosity"); 
+  fvFormattedString(output[OUT_LEUV].cNeg, "LSUN");
   output[OUT_LEUV].bNeg       = 1;
   output[OUT_LEUV].dNeg       = 1. / LSUN;
   output[OUT_LEUV].iNum       = 1;
@@ -1812,9 +1798,9 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_LEUV]           = &WriteLEUV;
 
 
-  sprintf(output[OUT_LXRAY].cName, "XRayStellar");
-  sprintf(output[OUT_LXRAY].cDescr, "Base X-ray /XUV Luminosity"); 
-  sprintf(output[OUT_LXRAY].cNeg, "LSUN");
+  fvFormattedString(output[OUT_LXRAY].cName, "XRayStellar");
+  fvFormattedString(output[OUT_LXRAY].cDescr, "Base X-ray /XUV Luminosity"); 
+  fvFormattedString(output[OUT_LXRAY].cNeg, "LSUN");
   output[OUT_LXRAY].bNeg       = 1;
   output[OUT_LXRAY].dNeg       = 1. / LSUN;
   output[OUT_LXRAY].iNum       = 1;
@@ -1822,24 +1808,33 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_LXRAY]           = &WriteLXRay;
 
 
-  sprintf(output[OUT_LXUVFRAC].cName, "LXUVFrac");
-  sprintf(output[OUT_LXUVFRAC].cDescr, "Fraction of luminosity in XUV");
+  fvFormattedString(output[OUT_LXUVFRAC].cName, "LXUVFrac");
+  fvFormattedString(output[OUT_LXUVFRAC].cDescr, "Fraction of luminosity in XUV");
+  fvFormattedString(&output[OUT_LXUVFRAC].cName, "LXUVFrac");
+  fvFormattedString(&output[OUT_LXUVFRAC].cDescr, "Fraction of luminosity in XUV");
   output[OUT_LXUVFRAC].bNeg       = 0;
   output[OUT_LXUVFRAC].iNum       = 1;
   output[OUT_LXUVFRAC].iModuleBit = STELLAR;
   fnWrite[OUT_LXUVFRAC]           = &WriteLXUVFrac;
 
-  sprintf(output[OUT_ROSSBYNUMBER].cName, "RossbyNumber");
-  sprintf(output[OUT_ROSSBYNUMBER].cDescr, "Rossby Number");
+  fvFormattedString(&output[OUT_ROSSBYNUMBER].cName, "RossbyNumber");
+  fvFormattedString(&output[OUT_ROSSBYNUMBER].cDescr, "Rossby Number");
   output[OUT_ROSSBYNUMBER].bNeg       = 0;
   output[OUT_ROSSBYNUMBER].iNum       = 1;
   output[OUT_ROSSBYNUMBER].iModuleBit = STELLAR;
   fnWrite[OUT_ROSSBYNUMBER]           = &WriteRossbyNumber;
 
-  sprintf(output[OUT_DROTPERDTSTELLAR].cName, "DRotPerDtStellar");
-  sprintf(output[OUT_DROTPERDTSTELLAR].cDescr,
+  fvFormattedString(&output[OUT_WINDTORQUE].cName, "WindTorque");
+  fvFormattedString(&output[OUT_WINDTORQUE].cDescr, "Stellar Wind Torque");
+  output[OUT_WINDTORQUE].bNeg       = 0;
+  output[OUT_WINDTORQUE].iNum       = 1;
+  output[OUT_WINDTORQUE].iModuleBit = STELLAR;
+  fnWrite[OUT_WINDTORQUE]           = &WriteWindTorque;
+
+  fvFormattedString(&output[OUT_DROTPERDTSTELLAR].cName, "DRotPerDtStellar");
+  fvFormattedString(&output[OUT_DROTPERDTSTELLAR].cDescr,
           "Time Rate of Change of Rotation Period in STELLAR");
-  sprintf(output[OUT_DROTPERDTSTELLAR].cNeg, "days/Myr");
+  fvFormattedString(&output[OUT_DROTPERDTSTELLAR].cNeg, "days/Myr");
   output[OUT_DROTPERDTSTELLAR].bNeg       = 1;
   output[OUT_DROTPERDTSTELLAR].dNeg       = DAYSEC / (YEARSEC * 1e6);
   output[OUT_DROTPERDTSTELLAR].iNum       = 1;
@@ -2171,16 +2166,19 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
   double dOmegaCrit;
   double dTauCZ;
   double dT0;
-  double dR0; // Rossby number
+  double dRo; // Rossby number
+  double dFracBreak; // fraction of breakup spin rate
+  double dbetaSq; // "beta" factor for Breimann+21 torque, squared
+  double dFmag; // magnetic-activity function for Breimann+21 torque
 
   // If using bRossbyCut, magnetic braking terminates when the rossby number
   // exceeds 2.08 following the model of van Saders et al. (2018)
   if (body[iaBody[0]].bRossbyCut) {
-    dR0 = body[iaBody[0]].dRotPer /
+    dRo = body[iaBody[0]].dRotPer /
           fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
 
     // Rossby number exceeds threshold: cease magnetic braking
-    if (dR0 > ROSSBYCRIT) {
+    if (dRo > ROSSBYCRIT) {
       return dTINY;
     }
   }
@@ -2227,20 +2225,22 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
              body[iaBody[0]].dRotRate;
 
     return dDJDt; // Return positive amount of los angular momentum
-  } else if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_MA15) {
+  } 
+  // Matt+15 magnetic braking model
+  else if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_MA15) {
 
-    // Compute convective turnover timescale and normalized torque
+    // Compute convective turnover timescale
     dTauCZ = fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
 
     // Compute Rossby number
-    dR0 = body[iaBody[0]].dRotPer / dTauCZ;
+    dRo = body[iaBody[0]].dRotPer / dTauCZ;
 
     // Compute Matt+2015 normalized torque
     dT0 = MATT15T0 * pow(body[iaBody[0]].dRadius / RSUN, 3.1) *
           sqrt(body[iaBody[0]].dMass / MSUN);
 
     // Is the magnetic braking saturated?
-    if (dR0 <= MATT15R0SUN / MATT15X) {
+    if (dRo <= MATT15R0SUN / MATT15X) {
       // Saturated
       dDJDt = -dT0 * MATT15X * MATT15X *
               (body[iaBody[0]].dRotRate / MATT15OMEGASUN);
@@ -2249,6 +2249,51 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
       dDJDt = -dT0 * (dTauCZ / MATT15TAUCZ) * (dTauCZ / MATT15TAUCZ) *
               pow(body[iaBody[0]].dRotRate / MATT15OMEGASUN, 3);
     }
+
+    return -dDJDt; // Return positive amount of lost angular momentum
+  } 
+  // Breimann+21 magnetic braking model
+  else if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_BR21) {
+
+    // Notes:
+    //   To be self-consistent (i.e., to reproduce the solar spin rate):
+    //   BREIM21TAUSUN should be set to whatever solar value is given by 
+    //   the turnover timescale used.
+    //   Torque normalization BREIM21T0 should be proportional to
+    //   the adopted value of solar rotation rate BREIM21OMEGASUN.
+    //   To use Breimann+21 "Standard" torque parameters, set:
+    //   BREIM21KS = 450.0
+    //   BREIM21PS = 0.2
+    //   BREIM21P = 2.0
+    //   To reduce Breimann+21 torque to Matt+15, set parameters to:
+    //   BREIM21KS = 100.0
+    //   BREIM21PS = 0.0
+    //   BREIM21P = 2.0
+    //   dbetaSq = 1.0
+
+    // Compute convective turnover timescale
+    dTauCZ = fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
+
+    // Compute Rossby number, normalized to solar value.
+    dRo = BREIM21OMEGASUN * BREIM21TAUSUN / body[iaBody[0]].dRotRate / dTauCZ;
+
+    // Compute fraction of breakup spin rate
+    dFracBreak = body[iaBody[0]].dRotRate * 
+          pow(body[iaBody[0]].dRadius,1.5) / sqrt(BIGG * body[iaBody[0]].dMass);
+
+    // Compute beta factor squared (due to centrifugal acceleration of wind)
+    dbetaSq = (1.0 + dFracBreak*dFracBreak / (0.0716*0.0716));
+    // dbetaSq = 1.0;   // to reduce to Matt+15 formulation, for development
+
+    // Compute magnetic-activity function (this captures sat/unsat behavior)
+    dFmag = min(BREIM21KS * pow(dRo, BREIM21PS), 1.0/pow(dRo, BREIM21P));
+
+    // Compute torque normalization.
+    dT0 = -BREIM21T0*2.0/BREIM21P * pow(body[iaBody[0]].dRadius / RSUN, 3.1) *
+          sqrt(body[iaBody[0]].dMass / MSUN);
+
+    // Put it all together for the total torque
+    dDJDt = dT0 * body[iaBody[0]].dRotRate/BREIM21OMEGASUN / pow(dbetaSq,0.22) * dFmag;
 
     return -dDJDt; // Return positive amount of lost angular momentum
   }
@@ -2487,11 +2532,10 @@ double fdRossbyNumber(BODY *body , int iBody) {
 
  double dRossbyNumber = body[iBody].dRotPer / fdCranmerSaar2011TauCZ(body[iBody].dTemperature);
  return dRossbyNumber;
-//this is the Cranmer and Saar rossby number, will need to change name eventually w/different versions
+
 }
 
-///SSS 
-///pick between johnstone or none option 
+
 double fdLXRAY(BODY* body, int iBody){
   if (body[iBody].iLXRAYModel == XRAY_MODEL_JOHNSTONE){
      double dRossbyNumber, dJohnstonecon1, dJohnstonecon2;

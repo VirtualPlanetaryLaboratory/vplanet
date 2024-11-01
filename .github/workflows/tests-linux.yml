@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
         exclude:
           - os: ubuntu-22.04
             python-version: '3.6'
@@ -34,35 +34,40 @@ jobs:
         if: steps.setup_python.outcome == 'success'
         shell: bash -l {0}
         run: |
+          sudo apt-get update
           python -m pip install -U pip
           python -m pip install -e .
           pip install pytest pytest-cov
           sudo apt install lcov
 
-      - name: Run tests and generate coverage
+      - name: Run tests 
+        id: test
         if: steps.install.outcome == 'success'
         shell: bash -l {0}
-        run: make coverage
+        run: |
+          make opt
+          pytest --tb=short --junitxml=junit/test-results.xml
 
-      - name: Check test ouptut created
+      - name: Check test output created
         id: check_test_file
         uses: andstor/file-existence-action@v3
         with:
-          files: "/home/runner/work/vplanet/vplanet/junit/test-results.xml"
+          files: "${{ github.workspace }}/junit/test-results.xml"
           fail: true
 
-      - name: Get unique id
-        uses: Tiryoh/gha-jobid-action@v1
-        id: jobs
-
       - name: Publish unit test results
+        if: ${{ matrix.os == 'ubuntu-22.04' && matrix.python-version == '3.9' }}
         uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
         with:
           files: junit/test-*.xml
 
-      - name: CodeCov
-        if:  ${{ matrix.os }} == ubuntu-22.04 &&  ${{ matrix.python-version }} == '3.9'
+      - name: Generate coverage
+        id: coverage
+        if: ${{ matrix.os == 'ubuntu-22.04' && matrix.python-version == '3.9' && steps.test.outcome == 'success' && steps.check_test_file.outcome == 'success' }}
+        run: make coverage
+
+      - name: Upload to CodeCov
+        if: ${{ matrix.os == 'ubuntu-22.04' && matrix.python-version == '3.9' }}
         uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

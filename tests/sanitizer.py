@@ -6,7 +6,6 @@ import sys
 # XXX Near duplicates in maketest.py, 02/06/24
 def Main():
     BuildVPLanet()
-    print("")
     dir_list = CollectAllTests()
 
     tot_fail = 0
@@ -28,6 +27,9 @@ def Main():
         f = open(outfile, "r")
         for line in f:
             if ("ABORTING" in line):
+                fail = 1
+                tot_fail += 1
+        if (line != "Simulation completed.\n"):
                 fail = 1
                 tot_fail += 1
         if fail:

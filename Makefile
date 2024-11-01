@@ -51,6 +51,9 @@ opt:
 cpp:
 	g++ -o bin/vplanet src/*.c -lm -O3 -fopenmp -fpermissive -w -DGITVERSION=\"$(GITVERSION)\"
 
+warnings:
+		-gcc -g -D DEBUG -Wunused-but-set-variable -Wunused-variable -Wfloat-equal -o bin/vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
+
 parallel:
 	gcc -o bin/vplanet src/*.c -lm -O3 -fopenmp -DGITVERSION=\"$(GITVERSION)\"
 
@@ -68,9 +71,12 @@ test:
 	-pytest --tb=short
 
 coverage:
-	-mkdir -p gcov && cd gcov && gcc -coverage -o ../bin/vplanet ../src/*.c -lm
-	-python -m pytest --tb=short tests --junitxml=junit/test-results.xml
-	-lcov --capture --directory gcov --output-file .coverage && genhtml .coverage --output-directory gcov/html
+	-rm -f ./gcov/*.gcda ./gcov/*.gcno ./.coverage
+	-mkdir -p ./gcov
+	-cd gcov && gcc -coverage -o ./../bin/vplanet ./../src/*.c -lm
+	-python -m pytest --tb=short tests --junitxml=./junit/test-results.xml
+	-lcov --capture --directory ./gcov --output-file ./.coverage
+	-genhtml ./.coverage --output-directory ./gcov/html
 
 docs:
 	-make -C docs html && echo 'Documentation available at `docs/.build/html/index.html`.'

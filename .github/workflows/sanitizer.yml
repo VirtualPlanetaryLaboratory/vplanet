@@ -7,8 +7,8 @@ on:
 
 jobs:
   sanitizer:
-    name: Run address-sanitizer on Ubuntu
-    runs-on: ubuntu-latest
+    name: Run address-sanitizer on macOS
+    runs-on: macos-13
     strategy:
       fail-fast: false
 

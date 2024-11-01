@@ -1,0 +1,6 @@
+sName        Earth
+saModules    atmesc
+dMass        3.0018090452e-06
+dRadius      -1.
+dSemi        1.00000321
+saOutputOrder    Time -FXUV -CumulativeXUVFlux

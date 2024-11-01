@@ -6,11 +6,12 @@ import sys
 # XXX Near duplicates in maketest.py, 02/06/24
 def Main():
     BuildVPLanet()
-    print("")
     dir_list = CollectAllTests()
 
     tot_fail = 0
     tot_test = 0
+    logfile = open("memcheck.log","w")
+    logfile.write("The following directories were NOT memcheck clean:\n")
     for dir in dir_list:
         tot_test += 1
         sys.stdout.write(dir)
@@ -32,10 +33,12 @@ def Main():
         if n_errors > 0:
             tot_fail += 1
             print(": FAIL",flush=True)
+            logfile.write(dir+'\n')
         else:
             print(": pass",flush=True)
         os.chdir("../../")
 
+    logfile.close()
     print("Done! ")
 
     if tot_fail == 0:

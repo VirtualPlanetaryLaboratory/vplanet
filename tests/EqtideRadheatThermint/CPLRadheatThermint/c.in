@@ -1,0 +1,66 @@
+# Planet c's parameters
+sName		c			# Body's name
+saModules 	radheat thermint eqtide
+
+# Physical Properties
+dMass       -2.8857142857142857
+dRadius		-1.367  			# Radius, negative -> Earth radii
+# Orbital Properties
+dEcc        0.08571428571428572
+dSemi       -0.03984 		# Semi-major axis, negative -> AU
+
+# mantle parameters that we will change
+#dActViscMan    500000
+
+
+# EQTIDE Parameters
+bForceEqSpin  1
+dObliquity    0
+dRadGyra     0.5
+dTidalQ      10     #
+dK2          0.299   # Love number of degree 2 (Yoder 1995)
+saTidePerts  sun    # Names of perturbing bodies (only central body may have >1)
+bFixOrbit    0
+#bTideLock   1
+
+# RADHEAT Parameters
+# *Num* are in numbers of atoms, negative -> Earth vals
+### 40K
+d40KPowerMan      -1
+d40KPowerCore     -1
+d40KPowerCrust    -1
+### 232Th
+d232ThPowerMan	  -1
+d232ThPowerCore	  -1
+d232ThPowerCrust  -1
+### 235U
+d235UPowerMan     -1
+d235UPowerCore	  -1
+d235UPowerCrust	  -1
+### 238U
+d238UPowerMan	    -1
+d238UPowerCore	  -1
+d238UPowerCrust	  -1
+
+### THERMINT inputs.
+dTMan               3500
+dTCore              5500
+dEruptEff           0.2
+dViscJumpMan        2.0
+dTrefLind           5600
+dImK2ManOrbModel    2
+dShModRef           1e5 
+dStiffness          1.71e13 
+dActViscMan         309285.71428571426
+
+saOutputOrder -Time -TMan -TUMan -TLMan -TCMB -TCore $
+    -HflowUMan -HflowMeltMan -RadPowerMan -RadPowerCore -RadPowerCrust $
+    -HflowCMB -HflowSecMan -HFlowSurf $
+    -TDotMan -TDotCore -TJumpLMan -TJumpUMan -RIC -RayleighMan -ViscUMan -ViscLMan $
+    -MeltMassFluxMan FMeltUMan $
+    -MagMom -CoreBuoyTherm -CoreBuoyCompo -CoreBuoyTotal -MagPauseRad $
+    -BLUMan -BLLMan $
+     K2 ImK2 SemiMajorAxis Eccentricity ShmodUMan MeanMotion ViscUManArr $
+     ChiOC ChiIC MassChiOC MassChiIC MassOC MassIC $
+    -RadPowerTotal SurfEnFluxEqtide -PowerEqtide TideLock TidalQ -SurfEnFluxTotal 
+

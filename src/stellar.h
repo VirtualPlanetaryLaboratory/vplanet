@@ -235,8 +235,8 @@ double fdJohnstoneBeta1(BODY *, int *);
 double fdJohnstoneBeta2(BODY *, int *);
 double fdRossbyNumber(BODY *, int *);
 double fdLXRAY(BODY *, int *);
-double fdLEUV(BODY *,int *);
-double fdLXUVCalc(BODY *,int *);
+double fdLEUV(BODY *, int *);
+double fdLXUVCalc(BODY *, int *);
 
 
 /* Dummy functions */

@@ -643,80 +643,74 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_SATXUVTIME].cLongDescr,
           "The time a star will remain in its \"saturated\" phase.");
 
-  fvFormattedString(options[OPT_ROSSBYSAT].cName, "dRossbySat"); //What put in in files
-  fvFormattedString(options[OPT_ROSSBYSAT].cDescr, "Saturated Rossby number for xuv fraction");
-  fvFormattedString(options[OPT_ROSSBYSAT].cDefault, "0.0605");
-  fvFormattedString(options[OPT_ROSSBYSAT].cDimension, "nd"); //non dimensional
+  fvFormattedString(&options[OPT_ROSSBYSAT].cName, "dRossbySat"); //What put in in files
+  fvFormattedString(&options[OPT_ROSSBYSAT].cDescr, "Saturated Rossby number for xuv fraction");
+  fvFormattedString(&options[OPT_ROSSBYSAT].cDefault, "0.0605");
+  fvFormattedString(&options[OPT_ROSSBYSAT].cDimension, "nd"); //non dimensional
   options[OPT_ROSSBYSAT].dDefault   = 0.0605;
   options[OPT_ROSSBYSAT].iType      = 2; //tells is a double
   options[OPT_ROSSBYSAT].bMultiFile = 1; //exist in multiple files?
   fnRead[OPT_ROSSBYSAT]             = &ReadRossbySat; //pointers again
-  fvFormattedString(
-        options[OPT_ROSSBYSAT].cLongDescr,
+  fvFormattedString(&options[OPT_ROSSBYSAT].cLongDescr,
         "Johnstone 2021 Rossby Saturation;");
 
-  fvFormattedString(options[OPT_R_XSAT].cName, "dR_xSat"); //What put in in files
-  fvFormattedString(options[OPT_R_XSAT].cDescr, "Saturated XUV luminosity fraction Johnstone 2021");
-  fvFormattedString(options[OPT_R_XSAT].cDefault, "5e-4"); //should this be true though? actually be what i have below?
-  fvFormattedString(options[OPT_R_XSAT].cDimension, "nd"); //non dimensional
+  fvFormattedString(&options[OPT_R_XSAT].cName, "dR_xSat"); //What put in in files
+  fvFormattedString(&options[OPT_R_XSAT].cDescr, "Saturated XUV luminosity fraction Johnstone 2021");
+  fvFormattedString(&options[OPT_R_XSAT].cDefault, "5e-4"); //should this be true though? actually be what i have below?
+  fvFormattedString(&options[OPT_R_XSAT].cDimension, "nd"); //non dimensional
   options[OPT_R_XSAT].dDefault   = 0.0005135;
   options[OPT_R_XSAT].iType      = 2; //tells is a double
   options[OPT_R_XSAT].bMultiFile = 1; //exist in multiple files?
   fnRead[OPT_R_XSAT]             = &ReadRossR_xSat; //pointers again
-  fvFormattedString(
-        options[OPT_R_XSAT].cLongDescr,
+  fvFormattedString(&options[OPT_R_XSAT].cLongDescr,
         "Johnstone 2021 R_x);");
 
-  fvFormattedString(options[OPT_JOHNSTONEBETA1].cName, "dJohnstoneBeta1"); //What put in in files
-  fvFormattedString(options[OPT_JOHNSTONEBETA1].cDescr, "Johnstone Beta1");
-  fvFormattedString(options[OPT_JOHNSTONEBETA1].cDefault, "1e-3");
-  fvFormattedString(options[OPT_JOHNSTONEBETA1].cDimension, "nd"); //non dimensional
+  fvFormattedString(&options[OPT_JOHNSTONEBETA1].cName, "dJohnstoneBeta1"); //What put in in files
+  fvFormattedString(&options[OPT_JOHNSTONEBETA1].cDescr, "Johnstone Beta1");
+  fvFormattedString(&options[OPT_JOHNSTONEBETA1].cDefault, "1e-3");
+  fvFormattedString(&options[OPT_JOHNSTONEBETA1].cDimension, "nd"); //non dimensional
   options[OPT_JOHNSTONEBETA1].dDefault   = -0.135;
   options[OPT_JOHNSTONEBETA1].iType      = 2; //tells is a double
   options[OPT_JOHNSTONEBETA1].bMultiFile = 1; //exist in multiple files?
   fnRead[OPT_JOHNSTONEBETA1]             = &ReadJohnstoneBeta1; //pointers again
-  fvFormattedString(
-        options[OPT_JOHNSTONEBETA1].cLongDescr,
+  fvFormattedString(&options[OPT_JOHNSTONEBETA1].cLongDescr,
         "Johnstone 2021 Beta1");
 
-  fvFormattedString(options[OPT_JOHNSTONEBETA2].cName, "dJohnstoneBeta2"); //What put in in files
-  fvFormattedString(options[OPT_JOHNSTONEBETA2].cDescr, "Johnstone Beta2");
-  fvFormattedString(options[OPT_JOHNSTONEBETA2].cDefault, "1e-3");
-  fvFormattedString(options[OPT_JOHNSTONEBETA2].cDimension, "nd"); //non dimensional
+  fvFormattedString(&options[OPT_JOHNSTONEBETA2].cName, "dJohnstoneBeta2"); //What put in in files
+  fvFormattedString(&options[OPT_JOHNSTONEBETA2].cDescr, "Johnstone Beta2");
+  fvFormattedString(&options[OPT_JOHNSTONEBETA2].cDefault, "1e-3");
+  fvFormattedString(&options[OPT_JOHNSTONEBETA2].cDimension, "nd"); //non dimensional
   options[OPT_JOHNSTONEBETA2].dDefault   = -1.889;
   options[OPT_JOHNSTONEBETA2].iType      = 2; //tells is a double
   options[OPT_JOHNSTONEBETA2].bMultiFile = 1; //exist in multiple files?
   fnRead[OPT_JOHNSTONEBETA2]             = &ReadJohnstoneBeta2; //pointers again
-  fvFormattedString(
-        options[OPT_JOHNSTONEBETA2].cLongDescr,
+  fvFormattedString(&options[OPT_JOHNSTONEBETA2].cLongDescr,
         "Johnstone 2021 Beta2");
 
 ///SSS 
 
-  fvFormattedString(options[OPT_LXRAYMODEL].cName, "sXRayModel");
-  fvFormattedString(options[OPT_LXRAYMODEL].cDescr, "XRAY Model");
-  fvFormattedString(options[OPT_LXRAYMODEL].cDefault, "NONE");
-  fvFormattedString(options[OPT_LXRAYMODEL].cValues, "JOHNSTONE NONE");
+  fvFormattedString(&options[OPT_LXRAYMODEL].cName, "sXRayModel");
+  fvFormattedString(&options[OPT_LXRAYMODEL].cDescr, "XRAY Model");
+  fvFormattedString(&options[OPT_LXRAYMODEL].cDefault, "NONE");
+  fvFormattedString(&options[OPT_LXRAYMODEL].cValues, "JOHNSTONE NONE");
   options[OPT_LXRAYMODEL].iType      = 3;
   options[OPT_LXRAYMODEL].bMultiFile = 1;
   fnRead[OPT_LXRAYMODEL]             = &ReadLXRayModel;
-  fvFormattedString(
-        options[OPT_LXRAYMODEL].cLongDescr,
+  fvFormattedString(&options[OPT_LXRAYMODEL].cLongDescr,
         "If none selected, no model chosen "
         "JOHNSTONE will use the Johnstone 2021  "
         "calculations\n"
         "(---). \n");
 
   
-  fvFormattedString(options[OPT_LEUVMODEL].cName, "sEUVModel");
-  fvFormattedString(options[OPT_LEUVMODEL].cDescr, "EUV Model");
-  fvFormattedString(options[OPT_LEUVMODEL].cDefault, "SANZFORCADA");
-  fvFormattedString(options[OPT_LEUVMODEL].cValues, "SANZFORCADA JOHNSTONE NONE");
+  fvFormattedString(&options[OPT_LEUVMODEL].cName, "sEUVModel");
+  fvFormattedString(&options[OPT_LEUVMODEL].cDescr, "EUV Model");
+  fvFormattedString(&options[OPT_LEUVMODEL].cDefault, "SANZFORCADA");
+  fvFormattedString(&options[OPT_LEUVMODEL].cValues, "SANZFORCADA JOHNSTONE NONE");
   options[OPT_LEUVMODEL].iType      = 3;
   options[OPT_LEUVMODEL].bMultiFile = 1;
   fnRead[OPT_LEUVMODEL]             = &ReadLEUVModel;
-  fvFormattedString(
-        options[OPT_LEUVMODEL].cLongDescr,
+  fvFormattedString(&options[OPT_LEUVMODEL].cLongDescr,
         "If SANZFORCADA is selected,uses Sanz-Forcada 2011, "
         "to calculate\n"
         "the EUV from the star.\n"
@@ -1670,7 +1664,7 @@ void WriteLXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   if (body[iBody].iXUVModel == STELLAR_MODEL_RIBAS){
     *dTmp = body[iBody].dLXUV;
  } else if (body[iBody].iXUVModel == STELLAR_MODEL_CALCULATED) {
-  *dTmp = fdLXUVCalc(body,iBody);
+  *dTmp = fdLXUVCalc(body,&iBody);
   }
 
   if (output->bDoNeg[iBody]) {
@@ -1684,25 +1678,16 @@ void WriteLXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteLXUVFrac(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char **cUnit) {
+                   char cUnit[]) {
   *dTmp = body[iBody].dLXUV / body[iBody].dLuminosity;
   fvFormattedString(cUnit, "");
 }
 
 void WriteRossbyNumber(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char **cUnit) {
+                       double *dTmp, char cUnit[]) {
   *dTmp =
-       fdRossbyNumber(body,iBody);
-  fvFormattedString(cUnit, "");
         body[iBody].dRotPer / fdCranmerSaar2011TauCZ(body[iBody].dTemperature);
-  fvFormattedString(cUnit, "");
-}
-
-void WriteWindTorque(BODY *body, CONTROL *control, OUTPUT *output,
-                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char **cUnit) {
-  *dTmp = fdDJDtMagBrakingStellar(body, system, &iBody);
   fvFormattedString(cUnit, "");
 }
 
@@ -1730,11 +1715,12 @@ void WriteDRotPerDtStellar(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteLEUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system, //eventually need to be LEUV name change
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
                char ** cUnit) {
-  *dTmp = fdLEUV(body,iBody);
+  *dTmp = fdLEUV(body,&iBody);
+  
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -1743,11 +1729,11 @@ void WriteLEUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system, //e
 void WriteLXRay(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
                char **cUnit) {
-  *dTmp = fdLXRAY(body,iBody);
+  *dTmp = fdLXRAY(body,&iBody);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
-    strcpy(cUnit, output->cNeg);
+    fvFormattedString(cUnit, output->cNeg);
   } else {
     *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
     fsUnitsPower(units, cUnit);
@@ -1788,9 +1774,9 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_LXUV]           = &WriteLXUV;
 
 ///replace with fvformatted like below
-  fvFormattedString(output[OUT_LEUV].cName, "EUVStellar");
-  fvFormattedString(output[OUT_LEUV].cDescr, "Base EUV /XUV Luminosity"); 
-  fvFormattedString(output[OUT_LEUV].cNeg, "LSUN");
+  fvFormattedString(&output[OUT_LEUV].cName, "EUVStellar");
+  fvFormattedString(&output[OUT_LEUV].cDescr, "Base EUV /XUV Luminosity"); 
+  fvFormattedString(&output[OUT_LEUV].cNeg, "LSUN");
   output[OUT_LEUV].bNeg       = 1;
   output[OUT_LEUV].dNeg       = 1. / LSUN;
   output[OUT_LEUV].iNum       = 1;
@@ -1798,9 +1784,9 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_LEUV]           = &WriteLEUV;
 
 
-  fvFormattedString(output[OUT_LXRAY].cName, "XRayStellar");
-  fvFormattedString(output[OUT_LXRAY].cDescr, "Base X-ray /XUV Luminosity"); 
-  fvFormattedString(output[OUT_LXRAY].cNeg, "LSUN");
+  fvFormattedString(&output[OUT_LXRAY].cName, "XRayStellar");
+  fvFormattedString(&output[OUT_LXRAY].cDescr, "Base X-ray /XUV Luminosity"); 
+  fvFormattedString(&output[OUT_LXRAY].cNeg, "LSUN");
   output[OUT_LXRAY].bNeg       = 1;
   output[OUT_LXRAY].dNeg       = 1. / LSUN;
   output[OUT_LXRAY].iNum       = 1;
@@ -1808,8 +1794,8 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_LXRAY]           = &WriteLXRay;
 
 
-  fvFormattedString(output[OUT_LXUVFRAC].cName, "LXUVFrac");
-  fvFormattedString(output[OUT_LXUVFRAC].cDescr, "Fraction of luminosity in XUV");
+  fvFormattedString(&output[OUT_LXUVFRAC].cName, "LXUVFrac");
+  fvFormattedString(&output[OUT_LXUVFRAC].cDescr, "Fraction of luminosity in XUV");
   fvFormattedString(&output[OUT_LXUVFRAC].cName, "LXUVFrac");
   fvFormattedString(&output[OUT_LXUVFRAC].cDescr, "Fraction of luminosity in XUV");
   output[OUT_LXUVFRAC].bNeg       = 0;
@@ -2539,7 +2525,7 @@ double fdRossbyNumber(BODY *body , int iBody) {
 double fdLXRAY(BODY* body, int iBody){
   if (body[iBody].iLXRAYModel == XRAY_MODEL_JOHNSTONE){
      double dRossbyNumber, dJohnstonecon1, dJohnstonecon2;
-        dRossbyNumber = (fdRossbyNumber(body,iBody)*(0.95/(PERIODSUN))*fdCranmerSaar2011TauCZ(TEFFSUN)); 
+        dRossbyNumber = (fdRossbyNumber(body,&iBody)*(0.95/(PERIODSUN))*fdCranmerSaar2011TauCZ(TEFFSUN)); 
         dJohnstonecon1= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta1))); 
         dJohnstonecon2= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta2)));
 
@@ -2564,7 +2550,7 @@ double fdLXRAY(BODY* body, int iBody){
  
 
 double fdLEUV( BODY *body, int iBody) {
-  double dXRay = fdLXRAY(body,iBody);
+  double dXRay = fdLXRAY(body,&iBody);
   if (body[iBody].iLEUVModel == EUV_MODEL_JOHNSTONE){
     /// Vplanet takes Radius and Lxray in terms of SI, need to convert these to work with our functions
     ///vplanet takes cm^2-> m^2
@@ -2601,9 +2587,9 @@ double fdLEUV( BODY *body, int iBody) {
 
 double fdLXUVCalc(BODY *body, int iBody){
   
-  double dLXRay= fdLXRAY(body,iBody); 
+  double dLXRay= fdLXRAY(body,&iBody); 
 
-  double dLEUV= fdLEUV(body,iBody);
+  double dLEUV= fdLEUV(body,&iBody);
 
   double dLXUV = dLXRay + dLEUV;
 

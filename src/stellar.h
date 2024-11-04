@@ -230,13 +230,13 @@ double fdDEDtRotRadGyraStellar(BODY *, SYSTEM *, int *);
 double fdDEDtRotBrakeStellar(BODY *, SYSTEM *, int *);
 double fdDEDtStellar(BODY *, SYSTEM *, int *);
 double fdCranmerSaar2011TauCZ(double);
-double fdR_xSat(BODY *, int *);
-double fdJohnstoneBeta1(BODY *, int *);
-double fdJohnstoneBeta2(BODY *, int *);
-double fdRossbyNumber(BODY *, int *);
-double fdLXRAY(BODY *, int *);
-double fdLEUV(BODY *, int *);
-double fdLXUVCalc(BODY *, int *);
+double fdR_xSat(BODY *, int );
+double fdJohnstoneBeta1(BODY *, int );
+double fdJohnstoneBeta2(BODY *, int );
+double fdRossbyNumber(BODY *, int);
+double fdLXRAY(BODY *, int );
+double fdLEUV(BODY *, int );
+double fdLXUVCalc(BODY *, int );
 
 
 /* Dummy functions */

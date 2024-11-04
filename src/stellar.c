@@ -1664,7 +1664,7 @@ void WriteLXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   if (body[iBody].iXUVModel == STELLAR_MODEL_RIBAS){
     *dTmp = body[iBody].dLXUV;
  } else if (body[iBody].iXUVModel == STELLAR_MODEL_CALCULATED) {
-  *dTmp = fdLXUVCalc(body,&iBody);
+  *dTmp = fdLXUVCalc(body,iBody);
   }
 
   if (output->bDoNeg[iBody]) {
@@ -1678,16 +1678,23 @@ void WriteLXUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
 void WriteLXUVFrac(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                    UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                   char cUnit[]) {
+                   char **cUnit) {
   *dTmp = body[iBody].dLXUV / body[iBody].dLuminosity;
   fvFormattedString(cUnit, "");
 }
 
 void WriteRossbyNumber(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char cUnit[]) {
+                       double *dTmp, char **cUnit) {
   *dTmp =
         body[iBody].dRotPer / fdCranmerSaar2011TauCZ(body[iBody].dTemperature);
+  fvFormattedString(cUnit, "");
+}
+
+void WriteWindTorque(BODY *body, CONTROL *control, OUTPUT *output,
+                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                       double *dTmp, char **cUnit) {
+  *dTmp = fdDJDtMagBrakingStellar(body, system, &iBody);
   fvFormattedString(cUnit, "");
 }
 
@@ -1715,7 +1722,7 @@ void WriteDRotPerDtStellar(BODY *body, CONTROL *control, OUTPUT *output,
 void WriteLEUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system, //eventually need to be LEUV name change
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
                char ** cUnit) {
-  *dTmp = fdLEUV(body,&iBody);
+  *dTmp = fdLEUV(body,iBody);
   
 
   if (output->bDoNeg[iBody]) {
@@ -1729,7 +1736,7 @@ void WriteLEUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system, //e
 void WriteLXRay(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
                char **cUnit) {
-  *dTmp = fdLXRAY(body,&iBody);
+  *dTmp = fdLXRAY(body,iBody);
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -1774,7 +1781,7 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_LXUV]           = &WriteLXUV;
 
 ///replace with fvformatted like below
-  fvFormattedString(&output[OUT_LEUV].cName, "EUVStellar");
+  fvFormattedString(&output[OUT_LEUV].cName, "LEUVStellar");
   fvFormattedString(&output[OUT_LEUV].cDescr, "Base EUV /XUV Luminosity"); 
   fvFormattedString(&output[OUT_LEUV].cNeg, "LSUN");
   output[OUT_LEUV].bNeg       = 1;
@@ -1784,7 +1791,7 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_LEUV]           = &WriteLEUV;
 
 
-  fvFormattedString(&output[OUT_LXRAY].cName, "XRayStellar");
+  fvFormattedString(&output[OUT_LXRAY].cName, "LXRayStellar");
   fvFormattedString(&output[OUT_LXRAY].cDescr, "Base X-ray /XUV Luminosity"); 
   fvFormattedString(&output[OUT_LXRAY].cNeg, "LSUN");
   output[OUT_LXRAY].bNeg       = 1;
@@ -2525,7 +2532,7 @@ double fdRossbyNumber(BODY *body , int iBody) {
 double fdLXRAY(BODY* body, int iBody){
   if (body[iBody].iLXRAYModel == XRAY_MODEL_JOHNSTONE){
      double dRossbyNumber, dJohnstonecon1, dJohnstonecon2;
-        dRossbyNumber = (fdRossbyNumber(body,&iBody)*(0.95/(PERIODSUN))*fdCranmerSaar2011TauCZ(TEFFSUN)); 
+        dRossbyNumber = (fdRossbyNumber(body,iBody)*(0.95/(PERIODSUN))*fdCranmerSaar2011TauCZ(TEFFSUN)); 
         dJohnstonecon1= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta1))); 
         dJohnstonecon2= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta2)));
 
@@ -2550,7 +2557,7 @@ double fdLXRAY(BODY* body, int iBody){
  
 
 double fdLEUV( BODY *body, int iBody) {
-  double dXRay = fdLXRAY(body,&iBody);
+  double dXRay = fdLXRAY(body,iBody);
   if (body[iBody].iLEUVModel == EUV_MODEL_JOHNSTONE){
     /// Vplanet takes Radius and Lxray in terms of SI, need to convert these to work with our functions
     ///vplanet takes cm^2-> m^2
@@ -2587,9 +2594,9 @@ double fdLEUV( BODY *body, int iBody) {
 
 double fdLXUVCalc(BODY *body, int iBody){
   
-  double dLXRay= fdLXRAY(body,&iBody); 
+  double dLXRay= fdLXRAY(body,iBody); 
 
-  double dLEUV= fdLEUV(body,&iBody);
+  double dLEUV= fdLEUV(body,iBody);
 
   double dLXUV = dLXRay + dLEUV;
 

@@ -1270,8 +1270,8 @@ void fnPropsAuxStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
       body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
     }
 
-} else if (body[iBody].iXUVModel == STELLAR_MODEL_JOHNSTONE) { ///sss remove clean
-
+} else if (body[iBody].iXUVModel == STELLAR_MODEL_CALCULATED) { ///sss remove clean
+  body[iBody].dLXUV=fdLXUVCalc(body,iBody);
    
  
   } else {
@@ -1772,7 +1772,7 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fnWrite[OUT_TEMPERATURE]           = &WriteTemperature;
 
   fvFormattedString(&output[OUT_LXUV].cName, "LXUVStellar");
-  fvFormattedString(&output[OUT_LXUV].cDescr, "Base X-ray/XUV Luminosity");
+  fvFormattedString(&output[OUT_LXUV].cDescr, "XUV Luminosity");
   fvFormattedString(&output[OUT_LXUV].cNeg, "LSUN");
   output[OUT_LXUV].bNeg       = 1;
   output[OUT_LXUV].dNeg       = 1. / LSUN;
@@ -1782,7 +1782,7 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
 ///replace with fvformatted like below
   fvFormattedString(&output[OUT_LEUV].cName, "LEUVStellar");
-  fvFormattedString(&output[OUT_LEUV].cDescr, "Base EUV /XUV Luminosity"); 
+  fvFormattedString(&output[OUT_LEUV].cDescr, " EUV Luminosity "); 
   fvFormattedString(&output[OUT_LEUV].cNeg, "LSUN");
   output[OUT_LEUV].bNeg       = 1;
   output[OUT_LEUV].dNeg       = 1. / LSUN;
@@ -1792,7 +1792,7 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
 
   fvFormattedString(&output[OUT_LXRAY].cName, "LXRayStellar");
-  fvFormattedString(&output[OUT_LXRAY].cDescr, "Base X-ray /XUV Luminosity"); 
+  fvFormattedString(&output[OUT_LXRAY].cDescr, " X-ray Luminosity"); 
   fvFormattedString(&output[OUT_LXRAY].cNeg, "LSUN");
   output[OUT_LXRAY].bNeg       = 1;
   output[OUT_LXRAY].dNeg       = 1. / LSUN;
@@ -2531,19 +2531,19 @@ double fdRossbyNumber(BODY *body , int iBody) {
 
 double fdLXRAY(BODY* body, int iBody){
   if (body[iBody].iLXRAYModel == XRAY_MODEL_JOHNSTONE){
-     double dRossbyNumber, dJohnstonecon1, dJohnstonecon2;
-        dRossbyNumber = (fdRossbyNumber(body,iBody)*(0.95/(PERIODSUN))*fdCranmerSaar2011TauCZ(TEFFSUN)); 
-        dJohnstonecon1= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta1))); 
-        dJohnstonecon2= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta2)));
+    double dRossbyNumber, dJohnstonecon1, dJohnstonecon2;
+    dRossbyNumber = (fdRossbyNumber(body,iBody)*(0.95/(PERIODSUN))*fdCranmerSaar2011TauCZ(TEFFSUN)); 
+    dJohnstonecon1= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta1))); 
+    dJohnstonecon2= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta2)));
 
-  if (dRossbyNumber <= body[iBody].dRossbySat) {
+    if (dRossbyNumber <= body[iBody].dRossbySat) { ///these also need to be changed from LXUV to LXray
 
-     body[iBody].dLXUV= dJohnstonecon1*pow(dRossbyNumber,body[iBody].dJohnstoneBeta1);
+      body[iBody].dLXUV= dJohnstonecon1*pow(dRossbyNumber,body[iBody].dJohnstoneBeta1);
 
       
     } else {
       
-       body[iBody].dLXUV = dJohnstonecon2*pow(dRossbyNumber,body[iBody].dJohnstoneBeta2); 
+      body[iBody].dLXUV = dJohnstonecon2*pow(dRossbyNumber,body[iBody].dJohnstoneBeta2); 
   
      } 
   
@@ -2584,7 +2584,7 @@ double fdLEUV( BODY *body, int iBody) {
     double m3,k3;
     m3=0.860;
     k3=4.80;
-    double dEUVSanzForcada = (pow(10.,(k3))*pow((dXRay*1e7),(m3)))*1e-7 ;
+    double dEUVSanzForcada = (pow(10.,(k3))*pow((dXRay*1e7),(m3)))*1e-7;
 
     return dEUVSanzForcada; 
    }

@@ -1337,12 +1337,12 @@ void NullStellarDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
 
 void VerifyLXRay(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, int iBody){
     if (body[iBody].iLXRAYModel == XRAY_MODEL_NONE) {
-      printf("No XRay Model Chosen %d ",iBody);
+      printf("No XRay Model Chosen  ");
    }
        
     else if (body[iBody].iLXRAYModel == XRAY_MODEL_JOHNSTONE){
       printf(
-              "Chosen XRay Model is Johnstone et al 2021 %d", iBody);
+              "Chosen XRay Model is Johnstone et al 2021 ");
   }
 }
 
@@ -1355,18 +1355,17 @@ void VerifyLEUV(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, in
       }
       if (body[iBody].iXUVModel == STELLAR_MODEL_NONE){
            printf(
-              "No EUV model chosen %d ",
-              iBody);
+              "No EUV model chosen ");
 
       }
 
   } else if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA) { //doesn't need to assume Johnstone is picked for Xray
-        printf( "Chosen EUV model is Sanz-Forcada et al 2011 %d",iBody);
+        printf( "Chosen EUV model is Sanz-Forcada et al 2011");
     
     
 } else if (body[iBody].iLEUVModel == EUV_MODEL_JOHNSTONE) {
     
-     printf("Chosen EUV model is Johnstone et al 2021 %d ",iBody);
+     printf("Chosen EUV model is Johnstone et al 2021");
      }
 
 }
@@ -1380,24 +1379,26 @@ void VerifyXUV(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, int
     if (body[iBody].iLEUVModel == EUV_MODEL_NONE) {
       if (body[iBody].iXUVModel == STELLAR_MODEL_RIBAS){
         
-         printf("Chosen XUV model is Ribas et al 2005  %d",iBody);
+         printf("Chosen XUV model is Ribas et al 2005");
       }
       if (body[iBody].iXUVModel == STELLAR_MODEL_NONE){
-          printf("No XUV Model Chosen %d",iBody);
+          ///printf("No XUV Model Chosen %d",iBody);
+          printf("No XUV Model Chosen ");
+
 
       }
     }
     if (body[iBody].iXUVModel == STELLAR_MODEL_CALCULATED) {
         if (body[iBody].iLEUVModel == EUV_MODEL_JOHNSTONE)
-         printf("summation model JS %d  ",iBody);
+         printf("summation model JS");
           
 
         if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA)
-         printf("summation model SF %d  ",iBody);
+         printf("summation model SF");
           
 
         if (body[iBody].iLEUVModel == EUV_MODEL_NONE)
-         printf("Error,please choose EUV model or default values  %d  ",iBody);
+         printf("Error,please choose EUV model or default values");
            
       }
      
@@ -1405,7 +1406,7 @@ void VerifyXUV(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, int
     if (body[iBody].iLEUVModel == EUV_MODEL_JOHNSTONE) {
 
       if (body[iBody].iXUVModel == STELLAR_MODEL_NONE){
-          printf("No model XUV model chosen, Johnstone et al 2021 EUV model is on %d! ",iBody);
+          printf("No model XUV model chosen, Johnstone et al 2021 EUV model is on! ");
 
       }
     }
@@ -1413,7 +1414,7 @@ void VerifyXUV(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, int
     if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA) {
 
       if (body[iBody].iXUVModel == STELLAR_MODEL_NONE){
-          printf("No model XUV model chosen, Sanz-Forcada et al 2011 EUV model is on %d! ",iBody);
+          printf("No model XUV model chosen, Sanz-Forcada et al 2011 EUV model is on! ");
 
       }
     }

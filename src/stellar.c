@@ -406,9 +406,14 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   if (lTmp >= 0) {
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (!memcmp(sLower(cTmp), "sa", 2)) {
-      body[iFile - 1].iLEUVModel = EUV_MODEL_SANZFORCADA;
-    } else if (!memcmp(sLower(cTmp), "no", 2)) {
+    if (!memcmp(sLower(cTmp), "sa11", 2)) {
+      body[iFile - 1].iLEUVModel = EUV_MODEL_SANZFORCADA2011;
+
+    } if (!memcmp(sLower(cTmp), "sa22", 2)) {
+      body[iFile - 1].iLEUVModel = EUV_MODEL_SANZFORCADA2022;
+
+    } 
+    else if (!memcmp(sLower(cTmp), "no", 2)) {
       body[iFile - 1].iLEUVModel = EUV_MODEL_NONE;
     
     
@@ -418,7 +423,7 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
-                "ERROR: Unknown argument to %s: %s. Options are SANZFORCADA, JOHNSTONE "
+                "ERROR: Unknown argument to %s: %s. Options are SANZ-FORCADA 2011,SANZ-FORCADA 2022, JOHNSTONE "
                 "or NONE.\n",
                 options->cName, cTmp);
       }
@@ -705,13 +710,13 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   
   fvFormattedString(&options[OPT_LEUVMODEL].cName, "sEUVModel");
   fvFormattedString(&options[OPT_LEUVMODEL].cDescr, "EUV Model");
-  fvFormattedString(&options[OPT_LEUVMODEL].cDefault, "SANZFORCADA");
-  fvFormattedString(&options[OPT_LEUVMODEL].cValues, "SANZFORCADA JOHNSTONE NONE");
+  fvFormattedString(&options[OPT_LEUVMODEL].cDefault, "SANZFORCADA2011");
+  fvFormattedString(&options[OPT_LEUVMODEL].cValues, "SANZFORCADA2011 SANZFORCADA2022 JOHNSTONE NONE");
   options[OPT_LEUVMODEL].iType      = 3;
   options[OPT_LEUVMODEL].bMultiFile = 1;
   fnRead[OPT_LEUVMODEL]             = &ReadLEUVModel;
   fvFormattedString(&options[OPT_LEUVMODEL].cLongDescr,
-        "If SANZFORCADA is selected,uses Sanz-Forcada 2011, "
+        "If SANZFORCADA2011 is selected,uses Sanz-Forcada 2011, "
         "to calculate\n"
         "the EUV from the star.\n"
         ". JOHNSTONE will use the Johnstone 2021 EUV "
@@ -1359,8 +1364,11 @@ void VerifyLEUV(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, in
 
       }
 
-  } else if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA) { //doesn't need to assume Johnstone is picked for Xray
+  } else if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2011) { //doesn't need to assume Johnstone is picked for Xray
         printf( "Chosen EUV model is Sanz-Forcada et al 2011");
+
+  } else if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2022) { //doesn't need to assume Johnstone is picked for Xray
+        printf( "Chosen EUV model is Sanz-Forcada et al 2022");
     
     
 } else if (body[iBody].iLEUVModel == EUV_MODEL_JOHNSTONE) {
@@ -1393,9 +1401,11 @@ void VerifyXUV(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, int
          printf("summation model JS");
           
 
-        if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA)
-         printf("summation model SF");
-          
+        if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2011)
+         printf("summation model SF2011");
+
+        if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2022)
+         printf("summation model SF2022"); 
 
         if (body[iBody].iLEUVModel == EUV_MODEL_NONE)
          printf("Error,please choose EUV model or default values");
@@ -1411,7 +1421,7 @@ void VerifyXUV(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, int
       }
     }
     
-    if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA) {
+    if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2011) {
 
       if (body[iBody].iXUVModel == STELLAR_MODEL_NONE){
           printf("No model XUV model chosen, Sanz-Forcada et al 2011 EUV model is on! ");
@@ -2581,15 +2591,29 @@ double fdLEUV( BODY *body, int iBody) {
     return dEUVJohnstone;}
 
 //same deal for Sanz-Forcada, takes input for Xrays in W, need erg/s, then output again in W
-  if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA){
+  if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2011){
     double m3,k3;
     m3=0.860;
     k3=4.80;
-    double dEUVSanzForcada = (pow(10.,(k3))*pow((dXRay*1e7),(m3)))*1e-7;
+    double dEUVSanzForcada1 = (pow(10.,(k3))*pow((dXRay*1e7),(m3)))*1e-7;
 
-    return dEUVSanzForcada; 
+    return dEUVSanzForcada1; 
    }
-   return -1;
+  
+
+  if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2022){
+    double m4,k4;
+    m4=0.793;
+    k4=6.53;
+    double dEUVSanzForcada2 = (pow(10.,(k4))*pow((dXRay*1e7),(m4)))*1e-7;
+
+    return dEUVSanzForcada2; 
+   }
+  
+  
+  
+
+
 }
 
 

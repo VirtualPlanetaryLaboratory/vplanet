@@ -12,47 +12,47 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/HabEvapCore
-   examples/HLossTides
-   examples/RadHeat
-   examples/MagneticBraking
    examples/STEEP
+   examples/BinaryTides
+   examples/ParameterSweep
+   examples/FfdProxCen
+   examples/AtmEscFlareProxCen
+   examples/DiffLimWaterEscape
+   examples/SS_NBody
+   examples/RadHeat
+   examples/VenusApproxInterior
+   examples/MiniNeptuneEvap
    examples/StellarEvol
+   examples/MagneticBraking
+   examples/HLossTides
    examples/SSDistOrbDistRot
    examples/IceBelts
-   examples/ApseLock
-   examples/MDwarfLuminosity
-   examples/CircumbinaryOrbit
-   examples/BinaryTides
-   examples/SS_NBody
-   examples/GalaxyEffects
-   examples/TidalEarth
-   examples/AbioticO2
-   examples/LuminosityCycle
-   examples/WaterLossTides
-   examples/MagmOc_Trappist1g
-   examples/VenusApproxInterior
-   examples/HabitableZone
-   examples/CosmicShoreline
    examples/NBodyAtmEsc
-   examples/AtmEscKepler-36
-   examples/MiniNeptuneEvap
-   examples/MagmOc_GJ1132b
-   examples/TideLock
-   examples/MagmOc_Earth
-   examples/AtmEscRegimes
-   examples/FfdProxCen
-   examples/CassiniMulti
-   examples/DiffLimWaterEscape
-   examples/AtmEscFlareProxCen
-   examples/CassiniStates
-   examples/DampedCBP
-   examples/EarthInterior
-   examples/VenusWaterLoss
-   examples/ParameterSweep
-   examples/IoHeat
-   examples/EarthClimate
+   examples/CosmicShoreline
+   examples/CircumbinaryOrbit
    examples/ChaoticResonances
+   examples/MDwarfLuminosity
+   examples/TidalEarth
+   examples/EarthClimate
+   examples/TideLock
+   examples/AbioticO2
+   examples/VenusWaterLoss
+   examples/MagmOc_GJ1132b
+   examples/DampedCBP
+   examples/AtmEscRegimes
+   examples/CassiniStates
+   examples/CassiniMulti
+   examples/AtmEscKepler-36
+   examples/EarthInterior
+   examples/HabitableZone
+   examples/MagmOc_Earth
+   examples/LuminosityCycle
+   examples/ApseLock
+   examples/WaterLossTides
+   examples/GalaxyEffects
+   examples/IoHeat
+   examples/MagmOc_Trappist1g
+   examples/HabEvapCore
 
 
 Broken

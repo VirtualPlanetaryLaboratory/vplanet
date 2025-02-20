@@ -21,7 +21,7 @@
    <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/discussions">
      <img src="https://img.shields.io/badge/Discussions-orange.svg">
   </a>
-   <a href="[https://github.com/VirtualPlanetaryLaboratory/vplanet/discussions](https://virtualplanetarylaboratory.github.io/vplanet/authors.html)">
+   <a href="https://virtualplanetarylaboratory.github.io/vplanet/authors.html)">
      <img src="https://img.shields.io/badge/Authors-purple.svg">
   </a>
   

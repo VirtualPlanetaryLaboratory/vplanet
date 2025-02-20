@@ -127,8 +127,8 @@ If you believe you have encountered a bug, please raise an issue using the [Issu
 
 If you use this code to generate results used in any publication or conference contribution, please cite [Barnes, R. et al. (2020), PASP, 132, 24502](https://ui.adsabs.harvard.edu/abs/2020PASP..132b4502B/abstract).
 
-`VPLanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, 80NSSC17K048, 13-13NAI7_0024, 80NSSC20K0229, and 80NSSC20K0261. We also acknowledge support from the University of Washington and the Carnegie Institute for Science.
+`VPLanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, 80NSSC17K048, 13-13NAI7_0024, 80NSSC20K0229, and 80NSSC20K0261. We also acknowledge additional support from the University of Washington, the Carnegie Institute for Science, and the Austrian Space Research Institude (IWF).
 
 Enjoy!
 
-© 2018-2024 The VPLanet Team.
+© 2018-2025 The VPLanet Team.

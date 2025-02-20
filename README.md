@@ -21,7 +21,10 @@
    <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/discussions">
      <img src="https://img.shields.io/badge/Discussions-orange.svg">
   </a>
-  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg">
+   <a href="[https://github.com/VirtualPlanetaryLaboratory/vplanet/discussions](https://virtualplanetarylaboratory.github.io/vplanet/authors.html)">
+     <img src="https://img.shields.io/badge/Authors-purple.svg">
+  </a>
+  
   <br>
   <img src="https://img.shields.io/badge/Unit%20Tests-19,667-darkblue.svg">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-linux.yml/badge.svg">
@@ -46,7 +49,7 @@
   </a>
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml/badge.svg">
   <img src="https://img.shields.io/badge/Ubuntu%2022-3.6%20--%203.11-7d93c7.svg">
-
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg">
 </p>
 
 ### Overview

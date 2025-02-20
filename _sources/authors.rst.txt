@@ -21,7 +21,7 @@ up the continuous integration and documentation.
 **Peter Driscoll (UW, Carnegie Institute for Science)** developed the ThermInt module, contributed to RadHeat, and
 connected them both to EqTide.
 
-**Patrick Barth (MPIA, St Andrews, IWF Graz)* developed the first version of the magma ocean model.
+**Patrick Barth (MPIA, St Andrews, IWF Graz)** developed the first version of the magma ocean model.
 
 **Ludmila Carone (IWF Graz)** is leading the development of the magma ocean model from its 1st version (with Patrick Barth) to include multi-species outgassing and radiative transfer.
 

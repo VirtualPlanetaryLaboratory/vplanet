@@ -9,7 +9,7 @@
     <img src="https://img.shields.io/badge/Read-the_docs-blue.svg?style=flat">
   </a>
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/docs.yml/badge.svg">  
-  <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract">
+  <a href="https://iopscience.iop.org/article/10.1088/1538-3873/ab3ce8">
     <img src="https://img.shields.io/badge/Read-the_paper-orange.svg?style=flat">
   </a>
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet/conduct.html">

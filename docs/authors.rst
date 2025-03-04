@@ -5,52 +5,53 @@ Authors
 expertise. The following list give the names and contributions of all
 developers.
 
-**Rory Barnes** is the lead developer who conceived the project, implemented the
+**Rory Barnes (University of Washington [UW])** is the lead developer who conceived the project, implemented the
 matrices and vectors of function pointers, designed the I/O scheme, and
 maintains this repository. He also wrote most of the top-level files, such as
 vplanet.h, control.c, etc. He also developed EqTide and RadHeat. He can be
 reached at rory@astro.washington.edu.
 
-**Russell Deitrick** developed the DistOrb, DistRot, GalHabit and POISE modules,
+**Russell Deitrick (UW, Canadian Centre for Climate Modelling and Analysis)** developed the DistOrb, DistRot, GalHabit and POISE modules,
 as well as VSPACE.
 
-**Rodrigo Luger** developed the AtmEsc and STELLAR modules, as well as the
+**Rodrigo Luger (UW, Anthropic AI)** developed the AtmEsc and STELLAR modules, as well as the
 accompanying VPLOT resource. He also designed this repository, including setting
 up the continuous integration and documentation.
 
-**David Fleming** developed the BINARY module and has contributed to STELLAR,
+**Peter Driscoll (UW, Carnegie Institute for Science)** developed the ThermInt module, contributed to RadHeat, and
+connected them both to EqTide.
+
+**Patrick Barth (MPIA, St Andrews, IWF Graz)** developed the first version of the magma ocean model.
+
+**Ludmila Carone (IWF Graz)** is leading the development of the magma ocean model from its 1st version (with Patrick Barth) to include multi-species outgassing and radiative transfer.
+
+**David Fleming (UW, Bayer)** developed the BINARY module and has contributed to STELLAR,
 AtmEsc, and EqTide. He also wrote the first version ofBigPlanet.
 
-**Hayden Smotherman** developed SpiNBody and has contributed to various
+**Hayden Smotherman (UW)** developed SpiNBody and has contributed to various
 subroutines that have significantly increased the efficiency of the executable.
 He also added OpenMP functionality for multithreading.
 
-**Peter Driscoll** developed the ThermInt module, contributed to RadHeat, and
-connected them both to EqTide.
+**Laura Amaral (UNAM, ASU)** developed the FLARE module and contributed to AtmEsc.
 
-**Patrick Barth** developed the MagmOc module. He also assisted in AtmEsc
-development.
-
-**Laura Amaral** developed the FLARE module and contributed to AtmEsc.
-
-**Thomas Quinn** assisted in the development of DistOrb, DistRot, and GalHabit.
+**Thomas Quinn (UW)** assisted in the development of DistOrb, DistRot, and GalHabit.
 He also found many bugs with valgrind and address-sanitizer.
 
-**Caitlyn Wilhelm** added forced eccentricity and obliquity oscillations to
+**Caitlyn Wilhelm (UW)** added forced eccentricity and obliquity oscillations to
 POISE, and assisted in debugging it. She also built the BigPlanet and
 MultiPlanet scripts.
 
-**Rodolfo Garcia** assisted in AtmEsc and ThermInt development.
+**Rodolfo Garcia (UW)** assisted in AtmEsc and ThermInt development.
 
-**Ludmila Carone** assisted in the development of the MagmOc module.
-
-**Billy Quarles** enabled POISE to read in previously computed orbital and rotational
+**Billy Quarles (Valdosta St.)** enabled POISE to read in previously computed orbital and rotational
 data.
 
-**Pramod Gupta** ported VPLanet to Windows 10.
+**Sean Matt (U. of Oklahoma)** added the Briemann stellar torque model.
 
-**Diego McDonald** added the Lehmer-Catling model to AtmEsc.
+**Pramod Gupta (UW)** ported VPLanet to Windows 10.
 
-**Benjamin Guyer** assisted in the coupling of EqTide and ThermInt.
+**Diego McDonald (UW, Berkeley)** added the Lehmer-Catling model to AtmEsc.
 
-**Lyan Guez** contributed to the development of the mpstatus script.
+**Benjamin Guyer (UW)** assisted in the coupling of EqTide and ThermInt.
+
+**Lyan Guez (UW, St. Andrews)** contributed to the development of the mpstatus script.

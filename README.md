@@ -9,7 +9,7 @@
     <img src="https://img.shields.io/badge/Read-the_docs-blue.svg?style=flat">
   </a>
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/docs.yml/badge.svg">  
-  <a href="https://ui.adsabs.harvard.edu/abs/2019arXiv190506367B/abstract">
+  <a href="https://iopscience.iop.org/article/10.1088/1538-3873/ab3ce8">
     <img src="https://img.shields.io/badge/Read-the_paper-orange.svg?style=flat">
   </a>
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet/conduct.html">
@@ -21,7 +21,10 @@
    <a href="https://github.com/VirtualPlanetaryLaboratory/vplanet/discussions">
      <img src="https://img.shields.io/badge/Discussions-orange.svg">
   </a>
-  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg">
+   <a href="https://virtualplanetarylaboratory.github.io/vplanet/authors.html">
+     <img src="https://img.shields.io/badge/Authors-purple.svg">
+  </a>
+  
   <br>
   <img src="https://img.shields.io/badge/Unit%20Tests-19,667-darkblue.svg">
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/tests-linux.yml/badge.svg">
@@ -46,7 +49,7 @@
   </a>
   <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/examples.yml/badge.svg">
   <img src="https://img.shields.io/badge/Ubuntu%2022-3.6%20--%203.11-7d93c7.svg">
-
+  <img src="https://github.com/VirtualPlanetaryLaboratory/vplanet/actions/workflows/pip-install.yml/badge.svg">
 </p>
 
 ### Overview
@@ -124,8 +127,8 @@ If you believe you have encountered a bug, please raise an issue using the [Issu
 
 If you use this code to generate results used in any publication or conference contribution, please cite [Barnes, R. et al. (2020), PASP, 132, 24502](https://ui.adsabs.harvard.edu/abs/2020PASP..132b4502B/abstract).
 
-`VPLanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, 80NSSC17K048, 13-13NAI7_0024, 80NSSC20K0229, and 80NSSC20K0261. We also acknowledge support from the University of Washington and the Carnegie Institute for Science.
+`VPLanet` development has been supported by NASA grants NNA13AA93A, NNX15AN35G, 80NSSC17K048, 13-13NAI7_0024, 80NSSC20K0229, and 80NSSC20K0261. We also acknowledge additional support from the University of Washington, the Carnegie Institute for Science, and the Austrian Space Research Institude (IWF).
 
 Enjoy!
 
-© 2018-2024 The VPLanet Team.
+© 2018-2025 The VPLanet Team.

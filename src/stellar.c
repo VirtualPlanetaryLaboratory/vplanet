@@ -406,24 +406,23 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   if (lTmp >= 0) {
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
-    if (!memcmp(sLower(cTmp), "sa11", 2)) {
+    if (!memcmp(sLower(cTmp), "sa", 2)) {
       body[iFile - 1].iLEUVModel = EUV_MODEL_SANZFORCADA2011;
 
-    } if (!memcmp(sLower(cTmp), "sa22", 2)) {
-      body[iFile - 1].iLEUVModel = EUV_MODEL_SANZFORCADA2022;
-
-    } 
-    else if (!memcmp(sLower(cTmp), "no", 2)) {
+    }else if (!memcmp(sLower(cTmp), "no", 2)) {
       body[iFile - 1].iLEUVModel = EUV_MODEL_NONE;
     
     
     } else if (!memcmp(sLower(cTmp), "jo", 2)) {
       body[iFile - 1].iLEUVModel = EUV_MODEL_JOHNSTONE;
+    
+    } else if (!memcmp(sLower(cTmp), "fs", 2)) {
+      body[iFile - 1].iLEUVModel = EUV_MODEL_SANZFORCADA2025;
 
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
-                "ERROR: Unknown argument to %s: %s. Options are SANZ-FORCADA 2011,SANZ-FORCADA 2022, JOHNSTONE "
+                "ERROR: Unknown argument to %s: %s. Options are SANZ-FORCADA 2011,SANZ-FORCADA 2025, JOHNSTONE "
                 "or NONE.\n",
                 options->cName, cTmp);
       }
@@ -711,7 +710,7 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_LEUVMODEL].cName, "sEUVModel");
   fvFormattedString(&options[OPT_LEUVMODEL].cDescr, "EUV Model");
   fvFormattedString(&options[OPT_LEUVMODEL].cDefault, "SANZFORCADA2011");
-  fvFormattedString(&options[OPT_LEUVMODEL].cValues, "SANZFORCADA2011 SANZFORCADA2022 JOHNSTONE NONE");
+  fvFormattedString(&options[OPT_LEUVMODEL].cValues, "SANZFORCADA2011 SANZFORCADA2025 JOHNSTONE NONE");
   options[OPT_LEUVMODEL].iType      = 3;
   options[OPT_LEUVMODEL].bMultiFile = 1;
   fnRead[OPT_LEUVMODEL]             = &ReadLEUVModel;
@@ -1364,14 +1363,16 @@ void VerifyLEUV(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, in
 
       }
 
-  } else if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2011) { //doesn't need to assume Johnstone is picked for Xray
+  } if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2011) { 
         printf( "Chosen EUV model is Sanz-Forcada et al 2011");
 
-  } else if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2022) { //doesn't need to assume Johnstone is picked for Xray
-        printf( "Chosen EUV model is Sanz-Forcada et al 2022");
+
+
+  } if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2025) {
+        printf( "Chosen EUV model is Sanz-Forcada et al 2025");
     
     
-} else if (body[iBody].iLEUVModel == EUV_MODEL_JOHNSTONE) {
+  } else if (body[iBody].iLEUVModel == EUV_MODEL_JOHNSTONE) {
     
      printf("Chosen EUV model is Johnstone et al 2021");
      }
@@ -1400,12 +1401,11 @@ void VerifyXUV(BODY * body, CONTROL*control, OPTIONS*options, UPDATE*update, int
         if (body[iBody].iLEUVModel == EUV_MODEL_JOHNSTONE)
          printf("summation model JS");
           
-
         if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2011)
          printf("summation model SF2011");
 
-        if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2022)
-         printf("summation model SF2022"); 
+        if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2025)
+         printf("summation model SF2025"); 
 
         if (body[iBody].iLEUVModel == EUV_MODEL_NONE)
          printf("Error,please choose EUV model or default values");
@@ -1730,7 +1730,7 @@ void WriteDRotPerDtStellar(BODY *body, CONTROL *control, OUTPUT *output,
 
 
 
-void WriteLEUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system, //eventually need to be LEUV name change
+void WriteLEUV(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system, 
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
                char ** cUnit) {
   *dTmp = fdLEUV(body,iBody);
@@ -2391,7 +2391,7 @@ double fdLuminosityFunctionBaraffe(double dAge, double dMass) {
   } else {
     if (iError == STELLAR_ERR_OUTOFBOUNDS_LO) {
       fprintf(stderr,
-              "ERROR: Luninosity out of bounds (low) in fdBaraffe().\n");
+              "ERROR: Luminosity out of bounds (low) in fdBaraffe().\n");
     } else if (iError == STELLAR_ERR_FILE) {
       fprintf(stderr,
               "ERROR: File access error in Luminosity routine fdBaraffe().\n");
@@ -2595,25 +2595,29 @@ double fdLEUV( BODY *body, int iBody) {
     double m3,k3;
     m3=0.860;
     k3=4.80;
-    double dEUVSanzForcada1 = (pow(10.,(k3))*pow((dXRay*1e7),(m3)))*1e-7;
+    double dEUVSanzForcada = (pow(10.,(k3))*pow((dXRay*1e7),(m3)))*1e-7;
 
-    return dEUVSanzForcada1; 
+    return dEUVSanzForcada; 
    }
-  
 
-  if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2022){
+   
+  
+   if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2025){
     double m4,k4;
-    m4=0.793;
-    k4=6.53;
-    double dEUVSanzForcada2 = (pow(10.,(k4))*pow((dXRay*1e7),(m4)))*1e-7;
+    m4=0.841;
+    k4=5.63176;
+    double dEUVSanzForcada = (pow(10.,(k4))*pow((dXRay*1e7),(m4)))*1e-7;
 
-    return dEUVSanzForcada2; 
-   }
-  
-  
-  
+    return dEUVSanzForcada; 
+    } 
 
 
+   return -1;
+
+
+
+  
+   
 }
 
 

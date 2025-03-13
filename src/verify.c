@@ -245,9 +245,9 @@ void VerifyOrbit(BODY *body, CONTROL *control, FILES files, OPTIONS *options,
 
   /* Was anything set? */
   if (dSemi == 0 && dMeanMotion == 0 && dPeriod == 0) {
-    fprintf(stderr, "ERROR: Must set one of %s, %s or %s.\n",
+    fprintf(stderr, "ERROR: Must set one of %s, %s, or %s for body \"%s.\" Are you sure the first file listed to %s is the central body?\n",
             options[OPT_ORBSEMI].cName, options[OPT_ORBMEANMOTION].cName,
-            options[OPT_ORBPER].cName);
+            options[OPT_ORBPER].cName, body[iFile-1].cName, options[OPT_BODYFILES].cName );
     exit(EXIT_INPUT);
   }
 

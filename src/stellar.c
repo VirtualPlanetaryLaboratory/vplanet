@@ -37,6 +37,10 @@ void BodyCopyStellar(BODY *dest, BODY *src, int foo, int iNumBodies,
   dest[iBody].dLuminosityPhase     = src[iBody].dLuminosityPhase;
   dest[iBody].dLXRay               = src[iBody].dLXRay;
   dest[iBody].dLEUV                 =src[iBody].dLEUV;
+  dest[iBody].dR_xSat = src[iBody].dR_xSat;
+  dest[iBody].dJohnstoneBeta1 = src[iBody].dJohnstoneBeta1;
+  dest[iBody].dJohnstoneBeta2 = src[iBody].dJohnstoneBeta2;
+  dest[iBody].dRossbySat = src[iBody].dRossbySat;
 }
 
 /**************** STELLAR options ********************/
@@ -2544,6 +2548,7 @@ double fdLXRAY(BODY* body, int iBody){
   if (body[iBody].iLXRAYModel == XRAY_MODEL_JOHNSTONE){
     double dRossbyNumber, dJohnstonecon1, dJohnstonecon2;
     dRossbyNumber = (fdRossbyNumber(body,iBody)*(0.95/(PERIODSUN))*fdCranmerSaar2011TauCZ(TEFFSUN)); 
+    
     dJohnstonecon1= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta1))); 
     dJohnstonecon2= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta2)));
 

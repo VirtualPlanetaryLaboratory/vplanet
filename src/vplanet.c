@@ -150,6 +150,7 @@ int main_impl(int argc, char *argv[]) {
 
   if (control.Io.iVerbose >= VERBINPUT) {
     printf("Input files read.\n");
+    fflush(stdout);
   }
 
   /* Check that user options are mutually compatible */
@@ -158,6 +159,7 @@ int main_impl(int argc, char *argv[]) {
 
   if (control.Io.iVerbose >= VERBINPUT) {
     printf("Input files verified.\n");
+  fflush(stdout);
   }
 
   control.Evolve.dTime      = 0;
@@ -168,6 +170,7 @@ int main_impl(int argc, char *argv[]) {
              fnUpdate, fnWrite, 0);
     if (control.Io.iVerbose >= VERBPROG) {
       printf("Log file written.\n");
+      fflush(stdout);
     }
   }
 
@@ -183,6 +186,7 @@ int main_impl(int argc, char *argv[]) {
                update, fnUpdate, fnWrite, 1);
       if (control.Io.iVerbose >= VERBPROG) {
         printf("Log file updated.\n");
+        fflush(stdout);
       }
     }
   }
@@ -191,6 +195,7 @@ int main_impl(int argc, char *argv[]) {
 
   if (control.Io.iVerbose >= VERBPROG) {
     printf("Simulation completed.\n");
+    fflush(stdout);
     // printf("Total time: %.4e [sec]\n",
     // difftime(end.tv_usec,start.tv_usec)/1e6);
   }

@@ -1022,6 +1022,14 @@ void fnNullDerivatives(BODY *body, EVOLVE *evolve, MODULE *module,
   }
 }
 
+void InitializeCumulativeVariables(BODY *body,CONTROL *control,SYSTEM *system) {
+  int iBody;
+
+  for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {
+    body[iBody].dFXUVCumulative = 0;
+  }
+}
+
 void VerifyMantle(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                   int iBody) {
 
@@ -1190,6 +1198,7 @@ void VerifyOptions(BODY *body, CONTROL *control, FILES *files, MODULE *module,
   PropertiesAuxiliary(body, control, system, update);
   CalculateDerivatives(body, system, update, *fnUpdate,
                        control->Evolve.iNumBodies);
+  InitializeCumulativeVariables(body,control,system);
 
   control->Io.dNextOutput = control->Evolve.dTime + control->Io.dOutputTime;
 }

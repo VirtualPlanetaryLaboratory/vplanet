@@ -3842,7 +3842,7 @@ void LogBodyAtmEsc(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 
   for (iOut = OUTSTARTATMESC; iOut < OUTENDATMESC; iOut++) {
     if (output[iOut].iNum > 0) {
-      // fprintf(stderr,"%d\n",iOut);
+      // fprintf(stderr,"%d\n",iOut); // Keep for debugging
       WriteLogEntry(body, control, &output[iOut], system, update, fnWrite[iOut],
                     fp, iBody);
     }

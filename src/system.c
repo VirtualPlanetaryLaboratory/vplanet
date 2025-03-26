@@ -1118,7 +1118,6 @@ double fdBondiRadius(BODY *body, int iBody) {
 
 void fvCumulativeXUVFlux(BODY *body,EVOLVE *evolve,SYSTEM *system,double dDt,int iBody) {
   if (evolve->bFirstStep) {
-    body[iBody].dFXUVCumulative = 0;
     if (body[iBody].bCalcFXUV) {
       body[iBody].dFXUV = fdXUVFlux(body, iBody);
     }

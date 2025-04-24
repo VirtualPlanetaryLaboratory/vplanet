@@ -30,5 +30,5 @@ Expected output
    :width: 100%
    :align: center
 
-Luminosity (top) and effective temperature (bottom) evolutions for the SineWave and None choices for the
+Luminosity (top), effective temperature (middle), and XUV luminosity evolutions for the SineWave and None choices for the
 sStellarModel option.

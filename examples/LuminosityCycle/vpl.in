@@ -8,10 +8,10 @@ sUnitLength               AU
 sUnitTime                 YEARS
 sUnitAngle                d
 bDoLog                    1
-iDigits                   6
+iDigits                   16
 dMinValue                 1e-10
 bDoForward                1
 bVarDt                    1
 dEta                      0.01
-dStopTime                 1000
-dOutputTime               1
+dStopTime                 100
+dOutputTime               0.1

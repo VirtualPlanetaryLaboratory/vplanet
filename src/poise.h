@@ -26,8 +26,11 @@
 #define ALBTAYLOR 1
 
 /* Land Geography */
-#define UNIFORM3 0
-#define MODERN 1
+#define GEOGRAPHYUNIFORM 0
+#define GEOGRAPHYMODERN 1
+#define GEOGRAPHYRANDOM 2
+#define GEOGRAPHYPOLAR 3
+#define GEOGRAPHYEQUATORIAL 4
 
 // Constants for the ice model
 #define LFICE 3.34e5  // ???
@@ -39,6 +42,8 @@
   1.733e3         // coeff of ice deformability at T>=263K (Pa^-3 s^-1 - ref?)
 #define Q1ICE 6e4 // energy in ice deformation at T<263K (J/mol)
 #define Q2ICE 13.9e4 // energy in ice deformation at T>=263 (J/mol)
+#define LANDFRACMAX 0.99
+#define LANDFRACMIN 0.01
 
 // Constant for the lithospheric model
 #define nGLEN 3.0                  // Glen's law coefficient
@@ -78,14 +83,16 @@
 #define OPT_SKIPSEASENABLED 1921
 #define OPT_DIFFROT 1922
 #define OPT_SPINUPTOL 1923
-#define OPT_READORBITOBLDATA  1924
-#define OPT_FILEORBITOBLDATA  1925
+#define OPT_READORBITOBLDATA 1924
+#define OPT_FILEORBITOBLDATA 1925
 
 #define OPT_LANDFRAC 1940
-#define OPT_HEATCAPLAND 1942
-#define OPT_HEATCAPWATER 1943
-#define OPT_FRZTSEAICE 1944
-//#define OPT_LATENTHEAT    1945
+#define OPT_LANDFRACMEAN 1941
+#define OPT_LANDFRACAMP 1942
+#define OPT_HEATCAPLAND 1943
+#define OPT_HEATCAPWATER 1944
+#define OPT_FRZTSEAICE 1945
+// #define OPT_LATENTHEAT    1945
 #define OPT_ICECONDUCT 1946
 #define OPT_MIXINGDEPTH 1947
 #define OPT_NULANDWATER 1948
@@ -111,6 +118,7 @@
 #define OPT_ECCAMP 1968
 #define OPT_ECCPER 1969
 #define OPT_MINICEHEIGHT 1970
+#define OPT_LANDWATERLATITUDE 1980
 
 #define OPT_OLRMODEL 1998
 #define OPT_CLIMATEMODEL 1999
@@ -178,6 +186,7 @@
 #define OUT_NORTHICEBELTLATSEA 1973
 #define OUT_SOUTHICEBELTLATLAND 1974
 #define OUT_SOUTHICEBELTLATSEA 1975
+#define OUT_LANDFRACGLOBAL 1976
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -190,7 +199,7 @@ void HelpOptionsPoise(OPTIONS *);
 void InitializeOptionsPoise(OPTIONS *, fnReadOption[]);
 void ReadOptionsPoise(BODY *, CONTROL *, FILES *, OPTIONS *, SYSTEM *,
                       fnReadOption[], int);
-void ReadOrbitOblData(BODY*,CONTROL*,FILES*,OPTIONS*,SYSTEM*,int);
+void ReadOrbitOblData(BODY *, CONTROL *, FILES *, OPTIONS *, SYSTEM *, int);
 
 /* Verify Functions */
 void VerifyPoise(BODY *, CONTROL *, FILES *, OPTIONS *, OUTPUT *, SYSTEM *,
@@ -209,39 +218,39 @@ void FinalizeUpdateIceMassPoise(BODY *, UPDATE *, int *, int, int, int);
 
 void HelpOutputPoise(OUTPUT *);
 void WriteTGlobal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char**);
+                  double *, char **);
 void WriteAlbedoGlobal(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char**);
+                       int, double *, char **);
 void WriteTempLat(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char**);
+                  double *, char **);
 void WriteTempMinLW(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char**);
+                    int, double *, char **);
 void WriteTempMaxLW(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char**);
+                    int, double *, char **);
 void WriteAlbedoLat(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char**);
+                    int, double *, char **);
 void WriteAnnualInsol(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char**);
+                      int, double *, char **);
 void WriteDailyInsol(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char**);
+                     int, double *, char **);
 void WritePlanckB(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char**);
+                  double *, char **);
 void WritePlanckBAvg(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char**);
+                     int, double *, char **);
 void WriteSeasonalTemp(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char**);
+                       int, double *, char **);
 void WriteSeasonalFluxes(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char**);
+                         UPDATE *, int, double *, char **);
 void WriteSeasonalIceBalance(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                             UPDATE *, int, double *, char**);
+                             UPDATE *, int, double *, char **);
 void WriteFluxMerid(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char**);
+                    int, double *, char **);
 void WriteFluxIn(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                 double *, char**);
+                 double *, char **);
 void WriteFluxOut(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char**);
+                  double *, char **);
 void WriteDivFlux(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char**);
+                  double *, char **);
 void InitializeOutputPoise(OUTPUT *, fnWriteOutput[]);
 
 /* Logging Functions */
@@ -302,5 +311,5 @@ double fdPoiseDIceMassDtFlow(BODY *, SYSTEM *, int *);
 
 double fdEccTrueAnomaly(double, double);
 double fdAlbedoTOA350(double, double, double, double);
-
+double fdLandFracGlobal(BODY *, int);
 /* @endcond */

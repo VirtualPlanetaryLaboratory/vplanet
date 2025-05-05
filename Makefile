@@ -4,10 +4,12 @@
 GITVERSION := $(shell git describe --tags --abbrev=40 --always)
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
+CC = gcc
 GCC_FLAGS1 = -fPIC -Wl,-Bsymbolic-functions -c
 GCC_FLAGS2 = -shared -Wl,-Bsymbolic-functions,-soname,vplanetlib.so
 endif
 ifeq ($(UNAME_S),Darwin)
+CC = clang
 GCC_FLAGS1 = -fPIC -c
 GCC_FLAGS2 = -shared -Wl,-install_name,vplanetlib.so
 endif
@@ -17,7 +19,7 @@ default:
 	-python setup.py develop
 
 legacy:
-	-gcc -o bin/vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
+	-$(CC) -o bin/vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 	@echo ""
 	@echo "=========================================================================================================="
 	@echo 'To add vplanet to your $$PATH, please run the appropriate command for your shell type:'
@@ -30,13 +32,13 @@ legacy:
 	@echo "=========================================================================================================="
 
 debug:
-	-gcc -g -D DEBUG -o bin/vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
+	-$(CC) -g -D DEBUG -o bin/vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 
 debug_no_AE:
-	-gcc -g -o bin/vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
+	-$(CC) -g -o bin/vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 
 opt:
-	-gcc -o bin/vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
+	-$(CC) -o bin/vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
 	@echo ""
 	@echo "=========================================================================================================="
 	@echo 'To add vplanet to your $$PATH, please run the appropriate command for your shell type:'
@@ -52,28 +54,28 @@ cpp:
 	g++ -o bin/vplanet src/*.c -lm -O3 -fopenmp -fpermissive -w -DGITVERSION=\"$(GITVERSION)\"
 
 warnings:
-		-gcc -g -D DEBUG -Wunused-but-set-variable -Wunused-variable -Wfloat-equal -o bin/vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
+	-$(CC)-g -D DEBUG -Wunused-but-set-variable -Wunused-variable -Wfloat-equal -o bin/vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 
 parallel:
-	gcc -o bin/vplanet src/*.c -lm -O3 -fopenmp -DGITVERSION=\"$(GITVERSION)\"
+	$(CC) -o bin/vplanet src/*.c -lm -O3 -fopenmp -DGITVERSION=\"$(GITVERSION)\"
 
 profile:
-	-gcc -pg -o bin/vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
+	-$(CC) -pg -o bin/vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 
 optprof:
-	-gcc -pg -o bin/vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
+	-$(CC) -pg -o bin/vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
 
 sanitize:
-	-gcc -g -fsanitize=address -o bin/vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
+	-$(CC) -g -fsanitize=address -o bin/vplanet src/*.c -lm -DGITVERSION=\"$(GITVERSION)\"
 
 test:
-	-gcc -o bin/vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
+	-$(CC) -o bin/vplanet src/*.c -lm -O3 -DGITVERSION=\"$(GITVERSION)\"
 	-pytest --tb=short
 
 coverage:
 	-rm -f ./gcov/*.gcda ./gcov/*.gcno ./.coverage
 	-mkdir -p ./gcov
-	-cd gcov && gcc -coverage -o ./../bin/vplanet ./../src/*.c -lm
+	-cd gcov && $(CC) -coverage -o ./../bin/vplanet ./../src/*.c -lm
 	-python -m pytest --tb=short tests --junitxml=./junit/test-results.xml
 	-lcov --capture --directory ./gcov --output-file ./.coverage
 	-genhtml ./.coverage --output-directory ./gcov/html
@@ -82,8 +84,8 @@ docs:
 	-make -C docs html && echo 'Documentation available at `docs/.build/html/index.html`.'
 
 shared:
-	-gcc ${GCC_FLAGS1} src/*.c
-	-gcc ${GCC_FLAGS2} -o bin/vplanetlib.so *.o -lc
+	-$(CC) ${GCC_FLAGS1} src/*.c
+	-$(CC) ${GCC_FLAGS2} -o bin/vplanetlib.so *.o -lc
 
 clean:
 	rm -f bin/vplanet

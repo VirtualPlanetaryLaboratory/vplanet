@@ -29,8 +29,10 @@
 #define ATMESC_LEHMER17                                                        \
   11 /**< Flag: Lehmer & Catling (2017) planet radius model */
 #define ATMESC_BOL16                                                           \
-  12            /**< Flag: Bolmont (2016) XUV absorption efficiency model */
-#define ATMESC_LS2016 13 /**< Schaefer et al (2016) atmospheric escape model */
+  12 /**< Flag: Bolmont (2016) XUV absorption efficiency model */
+#define ATMESC_LS2016                                                          \
+  13            /**< Schaefer et al (2016) atmospheric escape model            \
+                 */
 #define QOH 16. /**< Atomic mass ratio oxygen/hydrogen */
 
 /* Options Info */
@@ -162,45 +164,57 @@ void FinalizeUpdateMassAtmEsc(BODY *, UPDATE *, int *, int, int, int);
 #define OUT_HESCAPEREGIME 1230 /**< Hydrogen envelope escape regime */
 #define OUT_RRCRITICALFLUX                                                     \
   1231 /**< Critical flux between RR and energy-limited escape */
-#define OUT_CROSSOVERMASS 1232 /**< Crossover mass, tells us whether oxygen is escaping */
-#define OUT_WATERESCAPEREGIME 1233 /**< What water escape regime is the sim currently in (energy limited, diffusion limited, etc) */
-#define OUT_FXUVCRITDRAG 1234 /**< The critical drag XUV Flux, FXUV > FXUVCritDrag for drag of heavier species to occur */
-#define OUT_HREFFLUX 1235 /**< The hydrogen reference flux (I can't believe this wasn't an output yet) */
-#define OUT_XO2 1236 /**< The molecular oxygen mixing ratio */
+#define OUT_CROSSOVERMASS                                                      \
+  1232 /**< Crossover mass, tells us whether oxygen is escaping */
+#define OUT_WATERESCAPEREGIME                                                  \
+  1233 /**< What water escape regime is the sim currently in (energy limited,  \
+          diffusion limited, etc) */
+#define OUT_FXUVCRITDRAG                                                       \
+  1234 /**< The critical drag XUV Flux, FXUV > FXUVCritDrag for drag of        \
+          heavier species to occur */
+#define OUT_HREFFLUX                                                           \
+  1235 /**< The hydrogen reference flux (I can't believe this wasn't an output \
+          yet) */
+#define OUT_XO2 1236  /**< The molecular oxygen mixing ratio */
 #define OUT_XH2O 1237 /**< The water mixing ratio */
-#define OUT_HDIFFFLUX 1238 /**< The diffusion limited flux (the true flux in the diffusion regime) */
-#define OUT_HREFODRAGMOD 1239 /**< Multiply by H ref flux to get H flux with drag of oxgyen */
+#define OUT_HDIFFFLUX                                                          \
+  1238 /**< The diffusion limited flux (the true flux in the diffusion regime) \
+        */
+#define OUT_HREFODRAGMOD                                                       \
+  1239 /**< Multiply by H ref flux to get H flux with drag of oxgyen */
 #define OUT_KTIDE 1240 /**< Gravitational enhancement of mass loss */
-#define OUT_CUMULATIVEFXUV 1250 
+#define OUT_CUMULATIVEFXUV 1250
+#define OUT_RGFLUX                                                             \
+  1260 /**< Incident bolometric flux to trigger a runaway greenhouse */
 
 void InitializeOutputAtmEsc(OUTPUT *, fnWriteOutput[]);
 void InitializeOutputFunctionAtmEsc(OUTPUT *, int, int);
 void FinalizeOutputFunctionAtmEsc(OUTPUT *, int, int);
 
 void WriteSurfaceWaterMass(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char**);
+                           UPDATE *, int, double *, char **);
 void WriteOxygenMass(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                     int, double *, char**);
+                     int, double *, char **);
 void WriteOxygenMantleMass(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                           UPDATE *, int, double *, char**);
+                           UPDATE *, int, double *, char **);
 void WriteEnvelopeMass(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                       int, double *, char**);
+                       int, double *, char **);
 void WriteRGLimit(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *, int,
-                  double *, char**);
+                  double *, char **);
 void WriteBondiRadius(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char**);
+                      int, double *, char **);
 void WriteRocheRadius(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                      int, double *, char**);
+                      int, double *, char **);
 void WriteOxygenMixingRatio(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                            UPDATE *, int, double *, char**);
+                            UPDATE *, int, double *, char **);
 void WriteOxygenEta(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
-                    int, double *, char**);
+                    int, double *, char **);
 void WriteAtmXAbsEffH2O(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char**);
+                        UPDATE *, int, double *, char **);
 void WriteRRCriticalFlux(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                         UPDATE *, int, double *, char**);
+                         UPDATE *, int, double *, char **);
 void WriteHEscapeRegime(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
-                        UPDATE *, int, double *, char**);
+                        UPDATE *, int, double *, char **);
 
 /* Logging Functions */
 void LogOptionsAtmEsc(CONTROL *, FILE *);

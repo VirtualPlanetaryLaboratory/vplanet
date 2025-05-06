@@ -4064,6 +4064,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_TEMPLANDLAT].dNeg  = 1;
   output[OUT_TEMPLANDLAT].iNum  = 1;
   output[OUT_TEMPLANDLAT].bGrid = 1;
+  output[OUT_TEMPMAXWATER].iModuleBit = POISE;
   fnWrite[OUT_TEMPLANDLAT]      = &WriteTempLandLat;
 
   fvFormattedString(&output[OUT_TEMPWATERLAT].cName, "TempWaterLat");
@@ -4075,6 +4076,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_TEMPWATERLAT].dNeg  = 1;
   output[OUT_TEMPWATERLAT].iNum  = 1;
   output[OUT_TEMPWATERLAT].bGrid = 1;
+  output[OUT_TEMPMAXWATER].iModuleBit = POISE;
   fnWrite[OUT_TEMPWATERLAT]      = &WriteTempWaterLat;
 
   fvFormattedString(&output[OUT_LATITUDE].cName, "Latitude");
@@ -4100,6 +4102,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ALBEDOLANDLAT].bNeg  = 0;
   output[OUT_ALBEDOLANDLAT].iNum  = 1;
   output[OUT_ALBEDOLANDLAT].bGrid = 1;
+  output[OUT_TEMPMAXWATER].iModuleBit = POISE;
   fnWrite[OUT_ALBEDOLANDLAT]      = &WriteAlbedoLandLat;
 
   fvFormattedString(&output[OUT_ALBEDOWATERLAT].cName, "AlbedoWaterLat");
@@ -4108,6 +4111,7 @@ void InitializeOutputPoise(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_ALBEDOWATERLAT].bNeg  = 0;
   output[OUT_ALBEDOWATERLAT].iNum  = 1;
   output[OUT_ALBEDOWATERLAT].bGrid = 1;
+  output[OUT_TEMPMAXWATER].iModuleBit = POISE;
   fnWrite[OUT_ALBEDOWATERLAT]      = &WriteAlbedoWaterLat;
 
   fvFormattedString(&output[OUT_ANNUALINSOL].cName, "AnnInsol");

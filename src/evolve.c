@@ -438,7 +438,11 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       daDerivVar = 0;
       iNumEqns   = update[iBody].iNumEqns[iVar];
       for (iEqn = 0; iEqn < iNumEqns; iEqn++) {
-        daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        if (update[iBody].iaType[iVar][0] != 0) {
+          daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        } else {
+          daDerivVar += evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        }
         evolve->daDerivProc[0][iBody][iVar][iEqn] =
               evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
@@ -481,7 +485,11 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       daDerivVar = 0;
       iNumEqns   = update[iBody].iNumEqns[iVar];
       for (iEqn = 0; iEqn < iNumEqns; iEqn++) {
-        daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        if (update[iBody].iaType[iVar][0] != 0) {
+          daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        } else {
+          daDerivVar += evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        }
         evolve->daDerivProc[1][iBody][iVar][iEqn] =
               evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
@@ -525,7 +533,11 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
       daDerivVar = 0;
       iNumEqns   = update[iBody].iNumEqns[iVar];
       for (iEqn = 0; iEqn < iNumEqns; iEqn++) {
-        daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        if (update[iBody].iaType[iVar][0] != 0) {
+          daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        } else {
+          daDerivVar += evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        }
         evolve->daDerivProc[2][iBody][iVar][iEqn] =
               evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
       }
@@ -575,7 +587,11 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
         evolve->daDeriv[3][iBody][iVar] = 0;
         iNumEqns                        = update[iBody].iNumEqns[iVar];
         for (iEqn = 0; iEqn < iNumEqns; iEqn++) {
+        if (update[iBody].iaType[iVar][0] != 0) {
           daDerivVar += iDir * evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        } else {
+          daDerivVar += evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
+        }
           evolve->daDerivProc[3][iBody][iVar][iEqn] =
                 evolve->tmpUpdate[iBody].daDerivProc[iVar][iEqn];
         }

@@ -36,11 +36,11 @@ void BodyCopyStellar(BODY *dest, BODY *src, int foo, int iNumBodies,
   dest[iBody].dLuminosityFrequency = src[iBody].dLuminosityFrequency;
   dest[iBody].dLuminosityPhase     = src[iBody].dLuminosityPhase;
   dest[iBody].dLXRay               = src[iBody].dLXRay;
-  dest[iBody].dLEUV                 =src[iBody].dLEUV;
-  dest[iBody].dR_xSat = src[iBody].dR_xSat;
-  dest[iBody].dJohnstoneBeta1 = src[iBody].dJohnstoneBeta1;
-  dest[iBody].dJohnstoneBeta2 = src[iBody].dJohnstoneBeta2;
-  dest[iBody].dRossbySat = src[iBody].dRossbySat;
+  dest[iBody].dLEUV                =src[iBody].dLEUV;
+  dest[iBody].dR_xSat              = src[iBody].dR_xSat;
+  dest[iBody].dJohnstoneBeta1      = src[iBody].dJohnstoneBeta1;
+  dest[iBody].dJohnstoneBeta2      = src[iBody].dJohnstoneBeta2;
+  dest[iBody].dRossbySat           = src[iBody].dRossbySat;
 }
 
 /**************** STELLAR options ********************/
@@ -345,11 +345,11 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       body[iFile - 1].iXUVModel = STELLAR_MODEL_CALCULATED; ///changed from SF to calc
 
     
-    } else if (!memcmp(sLower(cTmp), "jo", 2)) {
-      body[iFile - 1].iXUVModel = STELLAR_MODEL_JOHNSTONE;
+    } ///else if (!memcmp(sLower(cTmp), "jo", 2)) {
+      ///body[iFile - 1].iXUVModel = STELLAR_MODEL_JOHNSTONE;
 
      
-    } else {
+     else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
                 "ERROR: Unknown argument to %s: %s. Options are RIBAS, REINERS,JOHNSTONE "

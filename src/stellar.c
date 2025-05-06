@@ -31,7 +31,7 @@ void BodyCopyStellar(BODY *dest, BODY *src, int foo, int iNumBodies,
   dest[iBody].dLXUV                = src[iBody].dLXUV;
   dest[iBody].bRossbyCut           = src[iBody].bRossbyCut;
   dest[iBody].bEvolveRG            = src[iBody].bEvolveRG;
-  dest[iBody].dLuminosityInitial = src[iBody].dLuminosityInitial;
+  dest[iBody].dLuminosityInitial   = src[iBody].dLuminosityInitial;
   dest[iBody].dLuminosityAmplitude = src[iBody].dLuminosityAmplitude;
   dest[iBody].dLuminosityFrequency = src[iBody].dLuminosityFrequency;
   dest[iBody].dLuminosityPhase     = src[iBody].dLuminosityPhase;
@@ -623,7 +623,8 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   int iOpt, iFile;
 
   fvFormattedString(&options[OPT_SATXUVFRAC].cName, "dSatXUVFrac");
-  fvFormattedString(&options[OPT_SATXUVFRAC].cDescr, "Saturated XUV luminosity fraction");
+  fvFormattedString(&options[OPT_SATXUVFRAC].cDescr,
+                    "Saturated XUV luminosity fraction");
   fvFormattedString(&options[OPT_SATXUVFRAC].cDefault, "1e-3");
   fvFormattedString(&options[OPT_SATXUVFRAC].cDimension, "nd");
   options[OPT_SATXUVFRAC].dDefault   = 1.e-3;
@@ -649,7 +650,7 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_SATXUVTIME].cNeg, "Gyr");
   fnRead[OPT_SATXUVTIME] = &ReadSatXUVTime;
   fvFormattedString(&options[OPT_SATXUVTIME].cLongDescr,
-          "The time a star will remain in its \"saturated\" phase.");
+                    "The time a star will remain in its \"saturated\" phase.");
 
   fvFormattedString(&options[OPT_ROSSBYSAT].cName, "dRossbySat"); //What put in in files
   fvFormattedString(&options[OPT_ROSSBYSAT].cDescr, "Saturated Rossby number for xuv fraction");
@@ -734,23 +735,27 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
 
 
   fvFormattedString(&options[OPT_XUVBETA].cName, "dXUVBeta");
-  fvFormattedString(&options[OPT_XUVBETA].cDescr, "XUV decay power law exponent");
+  fvFormattedString(&options[OPT_XUVBETA].cDescr,
+                    "XUV decay power law exponent");
   fvFormattedString(&options[OPT_XUVBETA].cDefault, "1.23");
   fvFormattedString(&options[OPT_XUVBETA].cDimension, "nd");
   options[OPT_XUVBETA].dDefault   = 1.23;
   options[OPT_XUVBETA].iType      = 2;
   options[OPT_XUVBETA].bMultiFile = 1;
   fnRead[OPT_XUVBETA]             = &ReadXUVBeta;
-  fvFormattedString(&options[OPT_XUVBETA].cLongDescr,
-          "After the \"saturation\" phase, the ratio of the XUV to total "
-          "luminosity\n"
-          "will follow a power law followinfg this exponent. Units are "
-          "gigayears.");
+  fvFormattedString(
+        &options[OPT_XUVBETA].cLongDescr,
+        "After the \"saturation\" phase, the ratio of the XUV to total "
+        "luminosity\n"
+        "will follow a power law followinfg this exponent. Units are "
+        "gigayears.");
 
   fvFormattedString(&options[OPT_STELLARMODEL].cName, "sStellarModel");
-  fvFormattedString(&options[OPT_STELLARMODEL].cDescr, "Stellar evolution model");
+  fvFormattedString(&options[OPT_STELLARMODEL].cDescr,
+                    "Stellar evolution model");
   fvFormattedString(&options[OPT_STELLARMODEL].cDefault, "BARAFFE");
-  fvFormattedString(&options[OPT_STELLARMODEL].cValues, "BARAFFE PROXIMA SINEWAVE NONE");
+  fvFormattedString(&options[OPT_STELLARMODEL].cValues,
+                    "BARAFFE PROXIMA SINEWAVE NONE");
   options[OPT_STELLARMODEL].iType      = 3;
   options[OPT_STELLARMODEL].bMultiFile = 1;
   fnRead[OPT_STELLARMODEL]             = &ReadStellarModel;
@@ -765,31 +770,35 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
         "NONE will leave them constant.\n");
 
   fvFormattedString(&options[OPT_MAGBRAKINGMODEL].cName, "sMagBrakingModel");
-  fvFormattedString(&options[OPT_MAGBRAKINGMODEL].cDescr, "Magnetic braking model.");
+  fvFormattedString(&options[OPT_MAGBRAKINGMODEL].cDescr,
+                    "Magnetic braking model.");
   fvFormattedString(&options[OPT_MAGBRAKINGMODEL].cDefault, "REINERS");
   fvFormattedString(&options[OPT_MAGBRAKINGMODEL].cValues,
-          "REINERS, SKUMANICH, MATT, NONE");
+                    "REINERS, SKUMANICH, MATT, NONE");
   options[OPT_MAGBRAKINGMODEL].iType      = 3;
   options[OPT_MAGBRAKINGMODEL].bMultiFile = 1;
   fnRead[OPT_MAGBRAKINGMODEL]             = &ReadMagBrakingModel;
-  fvFormattedString(&options[OPT_STELLARMODEL].cLongDescr,
-          "If REINERS is selected, the stellar magnetic braking model of\n"
-          "Reiners & Mohanty (2012, ApJ, 746, 43) is used to modify the "
-          "rotation rate.\n"
-          "SKUMANICH uses the model from Skumanich, A. (1972, ApJ, 171, 565).\n"
-          "MATT uses the model from Matt, S. et al. (2015, ApJ, 799, 23).\n"
-          "NONE applies no magnetic torque.\n");
+  fvFormattedString(
+        &options[OPT_STELLARMODEL].cLongDescr,
+        "If REINERS is selected, the stellar magnetic braking model of\n"
+        "Reiners & Mohanty (2012, ApJ, 746, 43) is used to modify the "
+        "rotation rate.\n"
+        "SKUMANICH uses the model from Skumanich, A. (1972, ApJ, 171, 565).\n"
+        "MATT uses the model from Matt, S. et al. (2015, ApJ, 799, 23).\n"
+        "NONE applies no magnetic torque.\n");
 
   fvFormattedString(&options[OPT_WINDMODEL].cName, "sWindModel");
-  fvFormattedString(&options[OPT_WINDMODEL].cDescr, "Wind Angular Momentum Loss Model");
+  fvFormattedString(&options[OPT_WINDMODEL].cDescr,
+                    "Wind Angular Momentum Loss Model");
   fvFormattedString(&options[OPT_WINDMODEL].cDefault, "REINERS");
   options[OPT_WINDMODEL].iType      = 3;
   options[OPT_WINDMODEL].bMultiFile = 1;
   fnRead[OPT_WINDMODEL]             = &ReadWindModel;
-  fvFormattedString(&options[OPT_WINDMODEL].cLongDescr,
-          "If REINERS is selected, the stellar wind model of Reiners and "
-          "Mohanty\n"
-          "(2012, ApJ, 746, 43) is used to modify the rotation rate.");
+  fvFormattedString(
+        &options[OPT_WINDMODEL].cLongDescr,
+        "If REINERS is selected, the stellar wind model of Reiners and "
+        "Mohanty\n"
+        "(2012, ApJ, 746, 43) is used to modify the rotation rate.");
 
   fvFormattedString(&options[OPT_XUVMODEL].cName, "sXUVModel");
   fvFormattedString(&options[OPT_XUVMODEL].cDescr, "XUV Evolution Model");
@@ -814,60 +823,68 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
         "constant.");
 
   fvFormattedString(&options[OPT_HZMODEL].cName, "sHZModel");
-  fvFormattedString(&options[OPT_HZMODEL].cDescr, "Habitable Zone Model: Kopparapu13");
+  fvFormattedString(&options[OPT_HZMODEL].cDescr,
+                    "Habitable Zone Model: Kopparapu13");
   fvFormattedString(&options[OPT_HZMODEL].cDefault, "Kopparapu13");
   options[OPT_HZMODEL].iType      = 3;
   options[OPT_HZMODEL].bMultiFile = 1;
   fnRead[OPT_HZMODEL]             = &ReadHZModel;
-  fvFormattedString(&options[OPT_HZMODEL].cLongDescr,
-          "If KOPPARAPU13 is selected then the Recent Venus, Runaway "
-          "Greenhouse,\n"
-          "Maximum Greenhouse, and Early Mars habitable zone limits will be\n"
-          "calculated from Kopparapu, R. et al. (2013, ApJ, 765, 131).");
+  fvFormattedString(
+        &options[OPT_HZMODEL].cLongDescr,
+        "If KOPPARAPU13 is selected then the Recent Venus, Runaway "
+        "Greenhouse,\n"
+        "Maximum Greenhouse, and Early Mars habitable zone limits will be\n"
+        "calculated from Kopparapu, R. et al. (2013, ApJ, 765, 131).");
 
-  fvFormattedString(&options[OPT_HALTENDBARAFFEFGRID].cName, "bHaltEndBaraffeGrid");
+  fvFormattedString(&options[OPT_HALTENDBARAFFEFGRID].cName,
+                    "bHaltEndBaraffeGrid");
   fvFormattedString(&options[OPT_HALTENDBARAFFEFGRID].cDescr,
-          "Halt when we reach the end of the Baraffe+15 grid?");
+                    "Halt when we reach the end of the Baraffe+15 grid?");
   fvFormattedString(&options[OPT_HALTENDBARAFFEFGRID].cDefault, "1");
   options[OPT_HALTENDBARAFFEFGRID].iType = 0;
   fnRead[OPT_HALTENDBARAFFEFGRID]        = &ReadHaltEndBaraffeGrid;
-  fvFormattedString(&options[OPT_HALTENDBARAFFEFGRID].cLongDescr,
-          "The BARRAFFE stellar model will only compute parameters until the "
-          "end of\n"
-          "the main sequence. Setting this flag to 1 will halt the code if the "
-          "end\n"
-          "of the model grid is reached.");
+  fvFormattedString(
+        &options[OPT_HALTENDBARAFFEFGRID].cLongDescr,
+        "The BARRAFFE stellar model will only compute parameters until the "
+        "end of\n"
+        "the main sequence. Setting this flag to 1 will halt the code if the "
+        "end\n"
+        "of the model grid is reached.");
 
   fvFormattedString(&options[OPT_ROSSBYCUT].cName, "bRossbyCut");
   fvFormattedString(&options[OPT_ROSSBYCUT].cDescr,
-          "Terminate magnetic braking when Rossby number > 2.08?");
+                    "Terminate magnetic braking when Rossby number > 2.08?");
   fvFormattedString(&options[OPT_ROSSBYCUT].cDefault, "0"); // XXX Units?
   options[OPT_ROSSBYCUT].iType      = 0;
   options[OPT_ROSSBYCUT].bMultiFile = 1;
   options[OPT_ROSSBYCUT].iModuleBit = STELLAR;
   fnRead[OPT_ROSSBYCUT]             = &ReadRossbyCut;
-  fvFormattedString(&options[OPT_ROSSBYCUT].cLongDescr,
-          "Van Saders, J. et al. (2019, ApJ, 872, 128) find that when the "
-          "stellar\n"
-          "Rossby number exceeds 2.08, then the magnetic braking is quenched. "
-          "This\n"
-          "flag enforces that behavior.");
+  fvFormattedString(
+        &options[OPT_ROSSBYCUT].cLongDescr,
+        "Van Saders, J. et al. (2019, ApJ, 872, 128) find that when the "
+        "stellar\n"
+        "Rossby number exceeds 2.08, then the magnetic braking is quenched. "
+        "This\n"
+        "flag enforces that behavior.");
 
   fvFormattedString(&options[OPT_EVOVLERG].cName, "bEvolveRG");
-  fvFormattedString(&options[OPT_EVOVLERG].cDescr, "Evolve stellar radius of gyration?");
+  fvFormattedString(&options[OPT_EVOVLERG].cDescr,
+                    "Evolve stellar radius of gyration?");
   fvFormattedString(&options[OPT_EVOVLERG].cDefault, "1");
   options[OPT_EVOVLERG].iType      = 0;
   options[OPT_EVOVLERG].bMultiFile = 1;
   options[OPT_EVOVLERG].iModuleBit = STELLAR;
   fnRead[OPT_EVOVLERG]             = &ReadEvolveRG;
-  fvFormattedString(&options[OPT_EVOVLERG].cLongDescr,
-          "Set this flag to 0 to ignore the role of mass concentration in "
-          "stellar\n"
-          "evolution. Only useful for testing purposes.");
+  fvFormattedString(
+        &options[OPT_EVOVLERG].cLongDescr,
+        "Set this flag to 0 to ignore the role of mass concentration in "
+        "stellar\n"
+        "evolution. Only useful for testing purposes.");
 
   fvFormattedString(&options[OPT_LUMAMPLITUDE].cName, "dLuminosityAmplitude");
-  fvFormattedString(&options[OPT_LUMAMPLITUDE].cDescr,
-          "Amplitude of luminosity oscillation for SINEWAVE stellar model");
+  fvFormattedString(
+        &options[OPT_LUMAMPLITUDE].cDescr,
+        "Amplitude of luminosity oscillation for SINEWAVE stellar model");
   fvFormattedString(&options[OPT_LUMAMPLITUDE].cDefault, "0.001");
   options[OPT_LUMAMPLITUDE].dDefault   = 0.001;
   options[OPT_LUMAMPLITUDE].iType      = 0;
@@ -878,8 +895,9 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   fnRead[OPT_LUMAMPLITUDE] = &ReadLuminosityAmplitude;
 
   fvFormattedString(&options[OPT_LUMPERIOD].cName, "dLuminosityPeriod");
-  fvFormattedString(&options[OPT_LUMPERIOD].cDescr,
-          "Period of luminosity oscillation for SINEWAVE stellar model");
+  fvFormattedString(
+        &options[OPT_LUMPERIOD].cDescr,
+        "Period of luminosity oscillation for SINEWAVE stellar model");
   fvFormattedString(&options[OPT_LUMPERIOD].cDefault, "0.001");
   options[OPT_LUMPERIOD].dDefault   = 0.001;
   options[OPT_LUMPERIOD].iType      = 0;
@@ -1295,7 +1313,9 @@ void fnForceBehaviorStellar(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
                             SYSTEM *system, UPDATE *update,
                             fnUpdateVariable ***fnUpdate, int iBody,
                             int iModule) {
-  // Nothing
+  if (body[iBody].iStellarModel == STELLAR_MODEL_SINEWAVE) {
+    body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
+  }
 }
 
 void AssignStellarDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
@@ -1707,8 +1727,8 @@ void WriteRossbyNumber(BODY *body, CONTROL *control, OUTPUT *output,
 }
 
 void WriteWindTorque(BODY *body, CONTROL *control, OUTPUT *output,
-                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char **cUnit) {
+                     SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                     double *dTmp, char **cUnit) {
   *dTmp = fdDJDtMagBrakingStellar(body, system, &iBody);
   fvFormattedString(cUnit, "");
 }
@@ -1819,7 +1839,8 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fvFormattedString(&output[OUT_LXUVFRAC].cName, "LXUVFrac");
   fvFormattedString(&output[OUT_LXUVFRAC].cDescr, "Fraction of luminosity in XUV");
   fvFormattedString(&output[OUT_LXUVFRAC].cName, "LXUVFrac");
-  fvFormattedString(&output[OUT_LXUVFRAC].cDescr, "Fraction of luminosity in XUV");
+  fvFormattedString(&output[OUT_LXUVFRAC].cDescr,
+                    "Fraction of luminosity in XUV");
   output[OUT_LXUVFRAC].bNeg       = 0;
   output[OUT_LXUVFRAC].iNum       = 1;
   output[OUT_LXUVFRAC].iModuleBit = STELLAR;
@@ -1841,7 +1862,7 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_DROTPERDTSTELLAR].cName, "DRotPerDtStellar");
   fvFormattedString(&output[OUT_DROTPERDTSTELLAR].cDescr,
-          "Time Rate of Change of Rotation Period in STELLAR");
+                    "Time Rate of Change of Rotation Period in STELLAR");
   fvFormattedString(&output[OUT_DROTPERDTSTELLAR].cNeg, "days/Myr");
   output[OUT_DROTPERDTSTELLAR].bNeg       = 1;
   output[OUT_DROTPERDTSTELLAR].dNeg       = DAYSEC / (YEARSEC * 1e6);
@@ -1995,7 +2016,7 @@ double fdTemperature(BODY *body, SYSTEM *system, int *iaBody) {
     }
   }
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_SINEWAVE) {
-    foo = fdEffectiveTemperature(body,iaBody[0]);
+    foo = fdEffectiveTemperature(body, iaBody[0]);
     return foo;
   }
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE ||
@@ -2030,7 +2051,7 @@ double fdRadGyra(BODY *body, SYSTEM *system, int *iaBody) {
     }
   }
   if (body[iaBody[0]].iStellarModel == STELLAR_MODEL_NONE ||
-      body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST||
+      body[iaBody[0]].iStellarModel == STELLAR_MODEL_CONST ||
       body[iaBody[0]].iStellarModel == STELLAR_MODEL_SINEWAVE) {
     return body[iaBody[0]].dRadGyra;
   } else {
@@ -2174,10 +2195,10 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
   double dOmegaCrit;
   double dTauCZ;
   double dT0;
-  double dRo; // Rossby number
+  double dRo;        // Rossby number
   double dFracBreak; // fraction of breakup spin rate
-  double dbetaSq; // "beta" factor for Breimann+21 torque, squared
-  double dFmag; // magnetic-activity function for Breimann+21 torque
+  double dbetaSq;    // "beta" factor for Breimann+21 torque, squared
+  double dFmag;      // magnetic-activity function for Breimann+21 torque
 
   // If using bRossbyCut, magnetic braking terminates when the rossby number
   // exceeds 2.08 following the model of van Saders et al. (2018)
@@ -2233,7 +2254,7 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
              body[iaBody[0]].dRotRate;
 
     return dDJDt; // Return positive amount of los angular momentum
-  } 
+  }
   // Matt+15 magnetic braking model
   else if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_MA15) {
 
@@ -2259,13 +2280,13 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
     }
 
     return -dDJDt; // Return positive amount of lost angular momentum
-  } 
+  }
   // Breimann+21 magnetic braking model
   else if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_BR21) {
 
     // Notes:
     //   To be self-consistent (i.e., to reproduce the solar spin rate):
-    //   BREIM21TAUSUN should be set to whatever solar value is given by 
+    //   BREIM21TAUSUN should be set to whatever solar value is given by
     //   the turnover timescale used.
     //   Torque normalization BREIM21T0 should be proportional to
     //   the adopted value of solar rotation rate BREIM21OMEGASUN.
@@ -2286,22 +2307,24 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
     dRo = BREIM21OMEGASUN * BREIM21TAUSUN / body[iaBody[0]].dRotRate / dTauCZ;
 
     // Compute fraction of breakup spin rate
-    dFracBreak = body[iaBody[0]].dRotRate * 
-          pow(body[iaBody[0]].dRadius,1.5) / sqrt(BIGG * body[iaBody[0]].dMass);
+    dFracBreak = body[iaBody[0]].dRotRate * pow(body[iaBody[0]].dRadius, 1.5) /
+                 sqrt(BIGG * body[iaBody[0]].dMass);
 
     // Compute beta factor squared (due to centrifugal acceleration of wind)
-    dbetaSq = (1.0 + dFracBreak*dFracBreak / (0.0716*0.0716));
+    dbetaSq = (1.0 + dFracBreak * dFracBreak / (0.0716 * 0.0716));
     // dbetaSq = 1.0;   // to reduce to Matt+15 formulation, for development
 
     // Compute magnetic-activity function (this captures sat/unsat behavior)
-    dFmag = min(BREIM21KS * pow(dRo, BREIM21PS), 1.0/pow(dRo, BREIM21P));
+    dFmag = min(BREIM21KS * pow(dRo, BREIM21PS), 1.0 / pow(dRo, BREIM21P));
 
     // Compute torque normalization.
-    dT0 = -BREIM21T0*2.0/BREIM21P * pow(body[iaBody[0]].dRadius / RSUN, 3.1) *
+    dT0 = -BREIM21T0 * 2.0 / BREIM21P *
+          pow(body[iaBody[0]].dRadius / RSUN, 3.1) *
           sqrt(body[iaBody[0]].dMass / MSUN);
 
     // Put it all together for the total torque
-    dDJDt = dT0 * body[iaBody[0]].dRotRate/BREIM21OMEGASUN / pow(dbetaSq,0.22) * dFmag;
+    dDJDt = dT0 * body[iaBody[0]].dRotRate / BREIM21OMEGASUN /
+            pow(dbetaSq, 0.22) * dFmag;
 
     return -dDJDt; // Return positive amount of lost angular momentum
   }
@@ -2644,9 +2667,10 @@ double fdLXUVCalc(BODY *body, int iBody){
 
 double fdLuminosityFunctionSineWave(BODY *body, int iBody) {
   double dLuminosity =
-      body[iBody].dLuminosityInitial + body[iBody].dLuminosityAmplitude *
-      sin(body[iBody].dAge * body[iBody].dLuminosityFrequency +
-      body[iBody].dLuminosityPhase);
+        body[iBody].dLuminosityInitial +
+        body[iBody].dLuminosityAmplitude *
+              sin(body[iBody].dAge * body[iBody].dLuminosityFrequency +
+                  body[iBody].dLuminosityPhase);
   return dLuminosity;
 }
 

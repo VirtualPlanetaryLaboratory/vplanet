@@ -454,8 +454,8 @@ void InitializeIntegrationFiles(BODY *body, CONTROL *control, FILES *files,
 }
 
 
-void PrintIntegrationOptionWarnings(CONTROL *control, FILES *files,
-                                    OPTIONS *options) {
+void PrintIntegrationWarnings(CONTROL *control, FILES *files,
+                              OPTIONS *options) {
   int iFile;
 
   if (!control->Evolve.bDoBackward && !control->Evolve.bDoForward) {
@@ -553,24 +553,56 @@ void VerifyOutputTime(CONTROL *control, FILES *files, OPTIONS *options) {
   }
 }
 
-void VerifyOneOfStopTimeAndAgeTimeSet(CONTROL *control, FILES *files,
-                                      OPTIONS *options) {
+void StopTimeFromAge(CONTROL *control, FILES *files, OPTIONS *options,
+                     SYSTEM *system, int iFileStopAge) {
+  int iFile, iFileAge = -1;
+
+  for (iFile = 0; iFile < files->iNumInputs; iFile++) {
+    if (options[OPT_AGE].iLine[iFile] > 0) {
+      iFileAge = iFile;
+    }
+  }
+  if (iFileAge == -1) {
+    DoubleLineExit(options[OPT_STOPAGE].cFile[iFileStopAge],
+                   options[OPT_AGE].cFile[iFileAge],
+                   options[OPT_STOPAGE].iLine[iFileStopAge],
+                   options[OPT_AGE].iLine[iFileAge]);
+  }
+
+  control->Evolve.dStopTime = fabs(control->Evolve.dStopAge - system->dAge);
 }
 
-void AssignStopTime(CONTROL *control, FILES *files, OPTIONS *options) {
-}
+void AssignStopTime(CONTROL *control, FILES *files, OPTIONS *options,
+                    SYSTEM *system) {
+  int iFile, iFileStopTime = -1, iFileStopAge = -1;
 
-void VerifyIntegrationDuration(CONTROL *control, FILES *files,
-                               OPTIONS *options) {
-  VerifyOneOfStopTimeAndAgeTimeSet(control, files, options);
-  AssignStopTime(control, files, options);
-}
+  for (iFile = 0; iFile < files->iNumInputs; iFile++) {
+    if (options[OPT_STOPTIME].iLine[iFile] > 0) {
+      iFileStopTime = iFile;
+    }
+    if (options[OPT_STOPAGE].iLine[iFile] > 0) {
+      iFileStopAge = iFile;
+    }
+  }
 
-void VerifyIntegrationOptions(CONTROL *control, FILES *files,
-                              OPTIONS *options) {
-  PrintIntegrationOptionWarnings(control, files, options);
-  VerifyOutputTime(control, files, options);
-  VerifyIntegrationDuration(control, files, options);
+  if (iFileStopTime >= 0 && iFileStopAge == -1) {
+    return; // control->Evolve.dStopTime assigned in ReadStopTime
+  }
+
+  if (iFileStopTime >= 0 && iFileStopAge >= 0) {
+    DoubleLineExit(options[OPT_STOPTIME].cFile[iFileStopTime],
+                   options[OPT_STOPAGE].cFile[iFileStopAge],
+                   options[OPT_STOPTIME].iLine[iFileStopTime],
+                   options[OPT_STOPAGE].iLine[iFileStopAge]);
+  }
+
+  if (iFileStopTime == -1 && iFileStopAge == -1) {
+    control->Evolve.dStopTime = options->dDefault;
+  }
+
+  if (iFileStopTime == -1 && iFileStopAge >= 0) {
+    StopTimeFromAge(control, files, options, system, iFileStopAge);
+  }
 }
 
 void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
@@ -581,7 +613,10 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
   if (control->Evolve.iDir == NO_INTEGRATION) {
     return;
   }
-  VerifyIntegrationOptions(control, files, options);
+
+  PrintIntegrationWarnings(control, files, options);
+  AssignStopTime(control, files, options, system);
+  VerifyOutputTime(control, files, options);
   AssignIntegrationMethod(control, options, fnOneStep);
   InitializeIntegrationFiles(body, control, files, options, system);
 }

@@ -1027,6 +1027,7 @@ typedef double (*fnLaplaceFunction)(double, int);
 
 struct SYSTEM {
   char *cName; /**< System's Name */
+  double dAge;
 
   int iNumBodies; /** Number of bodies in the system; redundant with Evolve! */
 

@@ -1196,7 +1196,6 @@ void VerifyLayers(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
 void VerifyAge(BODY *body, CONTROL *control, FILES *files,OPTIONS *options) {
   int bPrimaryAgeSet, iFile, iBody;
-  double dAge;
 
   bPrimaryAgeSet = 0;
   for (iFile = 0; iFile < control->Evolve.iNumBodies+1; iFile++) {
@@ -1217,7 +1216,7 @@ void VerifyAge(BODY *body, CONTROL *control, FILES *files,OPTIONS *options) {
             options[OPT_AGE].cName, options[OPT_FORMATIONAGE].cName, body[iBody].cName, 
             options[OPT_PRIMARYAGE].cName);
         }
-        body[iBody].dAge = dAge;
+        body[iBody].dAge = body[0].dAge;
       }
       if (options[OPT_FORMATIONAGE].iLine[iBody + 1] > -1) {
         body[iBody].dAge = body[0].dAge - body[1].dFormationAge;

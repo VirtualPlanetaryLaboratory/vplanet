@@ -605,6 +605,17 @@ void AssignStopTime(CONTROL *control, FILES *files, OPTIONS *options,
   }
 }
 
+void AssignBodyAges(BODY *body, CONTROL *control, FILES *files,
+                    OPTIONS *options, SYSTEM *system) {
+  int iBody;
+
+  for (iBody = 0; iBody < files->iNumInputs - 1; iBody++) {
+    if (options[OPT_AGE].iLine[iBody + 1] == -1) {
+      body[iBody].dAge = system->dAge;
+    }
+  }
+}
+
 void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
                        OPTIONS *options, SYSTEM *system,
                        fnIntegrate *fnOneStep) {
@@ -619,6 +630,7 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
   VerifyOutputTime(control, files, options);
   AssignIntegrationMethod(control, options, fnOneStep);
   InitializeIntegrationFiles(body, control, files, options, system);
+  AssignBodyAges(body, control, files, options, system);
 }
 
 /*

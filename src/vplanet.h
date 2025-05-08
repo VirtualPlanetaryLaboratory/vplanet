@@ -1027,6 +1027,7 @@ typedef double (*fnLaplaceFunction)(double, int);
 
 struct SYSTEM {
   char *cName; /**< System's Name */
+  double dAge;
 
   int iNumBodies; /** Number of bodies in the system; redundant with Evolve! */
 
@@ -1741,6 +1742,7 @@ struct EVOLVE {
   double dTime;     /**< Integration Time */
   double dEta;      /**< Variable Timestep Coefficient */
   double dStopTime; /**< Integration Stop Time */
+  double dStopAge;  /**< Age to stop at */
   double dTimeStep; /**< Integration Time step */
   int bVarDt;       /**< Use Variable Timestep? */
   int iTotalSteps;  /**< Total Number of Steps */

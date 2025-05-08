@@ -11,4 +11,4 @@ dEcc                      0.
 dEnvelopeMass             -0.81818
 dMass                     -1.81818
 bAtmEscAuto 1
-saOutputOrder             Time -EnvelopeMass Radius -Mass DeltaTime
+saOutputOrder             Time Age -EnvelopeMass Radius -Mass DeltaTime

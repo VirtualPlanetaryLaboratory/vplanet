@@ -553,27 +553,26 @@ void VerifyOutputTime(CONTROL *control, FILES *files, OPTIONS *options) {
   }
 }
 
-void StopTimeFromAge(CONTROL *control, FILES *files, OPTIONS *options,
-                     SYSTEM *system, int iFileStopAge) {
+void StopTimeFromAge(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                     int iFileStopAge) {
   int iFile, iFileAge = -1;
 
   for (iFile = 0; iFile < files->iNumInputs; iFile++) {
-    if (options[OPT_AGE].iLine[iFile] > 0) {
+    if (options[OPT_PRIMARYAGE].iLine[iFile] > 0) {
       iFileAge = iFile;
     }
   }
   if (iFileAge == -1) {
-    DoubleLineExit(options[OPT_STOPAGE].cFile[iFileStopAge],
-                   options[OPT_AGE].cFile[iFileAge],
-                   options[OPT_STOPAGE].iLine[iFileStopAge],
-                   options[OPT_AGE].iLine[iFileAge]);
+    if (control->Io.iVerbose >= VERBINPUT) {
+      fprintf(stderr,"ERROR: If %s is set, must also set %s.",options[OPT_STOPAGE].cName,options[OPT_PRIMARYAGE].cName);
+    }
+    LineExit(options[OPT_STOPAGE].cFile[iFileStopAge],options[OPT_STOPAGE].iLine[iFileStopAge]);
   }
 
-  control->Evolve.dStopTime = fabs(control->Evolve.dStopAge - system->dAge);
+  control->Evolve.dStopTime = fabs(control->Evolve.dStopAge - body[0].dAge);
 }
 
-void AssignStopTime(CONTROL *control, FILES *files, OPTIONS *options,
-                    SYSTEM *system) {
+void AssignStopTime(BODY *body, CONTROL *control, FILES *files, OPTIONS *options) {
   int iFile, iFileStopTime = -1, iFileStopAge = -1;
 
   for (iFile = 0; iFile < files->iNumInputs; iFile++) {
@@ -590,6 +589,9 @@ void AssignStopTime(CONTROL *control, FILES *files, OPTIONS *options,
   }
 
   if (iFileStopTime >= 0 && iFileStopAge >= 0) {
+    if (control->Io.iVerbose >= VERBINPUT) {
+      fprintf(stderr,"ERROR: Cannot set both %s and %s.",options[OPT_STOPTIME].cName,options[OPT_STOPAGE].cName);
+    }
     DoubleLineExit(options[OPT_STOPTIME].cFile[iFileStopTime],
                    options[OPT_STOPAGE].cFile[iFileStopAge],
                    options[OPT_STOPTIME].iLine[iFileStopTime],
@@ -601,20 +603,20 @@ void AssignStopTime(CONTROL *control, FILES *files, OPTIONS *options,
   }
 
   if (iFileStopTime == -1 && iFileStopAge >= 0) {
-    StopTimeFromAge(control, files, options, system, iFileStopAge);
+    StopTimeFromAge(body,control, files, options,iFileStopAge);
   }
 }
 
-void AssignBodyAges(BODY *body, CONTROL *control, FILES *files,
-                    OPTIONS *options, SYSTEM *system) {
-  int iBody;
+// void AssignBodyAges(BODY *body, CONTROL *control, FILES *files,
+//                     OPTIONS *options, SYSTEM *system) {
+//   int iBody;
 
-  for (iBody = 0; iBody < files->iNumInputs - 1; iBody++) {
-    if (options[OPT_AGE].iLine[iBody + 1] == -1) {
-      body[iBody].dAge = system->dAge;
-    }
-  }
-}
+//   for (iBody = 0; iBody < files->iNumInputs - 1; iBody++) {
+//     if (options[OPT_AGE].iLine[iBody + 1] == -1) {
+//       body[iBody].dAge = system->dAge;
+//     }
+//   }
+// }
 
 void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
                        OPTIONS *options, SYSTEM *system,
@@ -626,11 +628,11 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
   }
 
   PrintIntegrationWarnings(control, files, options);
-  AssignStopTime(control, files, options, system);
+  AssignStopTime(body,control, files, options);
   VerifyOutputTime(control, files, options);
   AssignIntegrationMethod(control, options, fnOneStep);
   InitializeIntegrationFiles(body, control, files, options, system);
-  AssignBodyAges(body, control, files, options, system);
+  //AssignBodyAges(body, control, files, options, system);
 }
 
 /*
@@ -1192,30 +1194,38 @@ void VerifyLayers(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   VerifyEnvelope(body, control, files, options, iBody);
 }
 
-void VerifyAge(BODY *body, CONTROL *control, OPTIONS *options) {
-  int bAgeSet, iBody;
+void VerifyAge(BODY *body, CONTROL *control, FILES *files,OPTIONS *options) {
+  int bPrimaryAgeSet, iFile, iBody;
   double dAge;
 
-  // Assume age wasn't set
-  bAgeSet = 0;
-  for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
-    if (options[OPT_AGE].iLine[iBody + 1] > -1) {
-      // Age was set!
-      bAgeSet = 1;
-      dAge    = body[iBody].dAge;
+  bPrimaryAgeSet = 0;
+  for (iFile = 0; iFile < control->Evolve.iNumBodies+1; iFile++) {
+    if (options[OPT_PRIMARYAGE].iLine[iFile] > -1) {
+      bPrimaryAgeSet = 1;
     }
   }
 
-  // For now, all bodies must be the same age
-  if (bAgeSet) {
-    if (control->Io.iVerbose == VERBALL) {
-      printf("INFO: Age set in one file, all bodies will have this age.\n");
-    }
-    for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
-      body[iBody].dAge = dAge;
+  if (bPrimaryAgeSet) {
+    for (iBody = 1; iBody < control->Evolve.iNumBodies; iBody++) {
+      if (options[OPT_AGE].iLine[iBody + 1] > -1 && options[OPT_FORMATIONAGE].iLine[iBody + 1] > -1) {
+        DoubleLineExit(files->Infile[iBody+1].cIn,files->Infile[iBody+1].cIn,
+            options[OPT_AGE].iLine[iBody+1],options[OPT_FORMATIONAGE].iLine[iBody]+1);
+      }
+      if (options[OPT_AGE].iLine[iBody + 1] == -1 && options[OPT_FORMATIONAGE].iLine[iBody + 1] == -1) {
+        if (control->Io.iVerbose >= VERBINPUT) {
+          fprintf(stderr,"INFO: Neither %s or %s set for body %s; setting its age  to %s.\n",
+            options[OPT_AGE].cName, options[OPT_FORMATIONAGE].cName, body[iBody].cName, 
+            options[OPT_PRIMARYAGE].cName);
+        }
+        body[iBody].dAge = dAge;
+      }
+      if (options[OPT_FORMATIONAGE].iLine[iBody + 1] > -1) {
+        body[iBody].dAge = body[0].dAge - body[1].dFormationAge;
+      }
     }
   }
 }
+
 /**
 
  * Master Verify subroutine
@@ -1233,7 +1243,7 @@ void VerifyOptions(BODY *body, CONTROL *control, FILES *files, MODULE *module,
 
   control->Evolve.dTime = 0;
 
-  VerifyAge(body, control, options);
+  VerifyAge(body, control, files, options);
   VerifyNames(body, control, options);
 
   // Need to know integration type before we can initialize CONTROL

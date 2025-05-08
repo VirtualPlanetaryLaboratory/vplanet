@@ -190,6 +190,7 @@ struct BODY {
   int iBodyType; /**< Type of object: 0=star, 1=rocky planet, 2 = giant */
 
   double dAge;       /**< Body's Age */
+  double dFormationAge; /**< Age of formation relative to primary */
   double dMass;      /**< Body's Mass */
   double dSolidMass; /**< Mass of a body's solid component */
   double dRadius;    /**< Radius of body */

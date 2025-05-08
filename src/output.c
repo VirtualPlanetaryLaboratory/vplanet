@@ -576,8 +576,8 @@ void WriteLXUVTot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
   } else {
-    *dTmp /= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
-    fsUnitsEnergyFlux(units, cUnit);
+    *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
+    fsUnitsPower(units, cUnit);
   }
 }
 

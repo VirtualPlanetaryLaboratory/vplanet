@@ -1091,7 +1091,7 @@ void ReadSystemName(CONTROL *control, FILES *files, OPTIONS *options,
   }
 }
 
-void ReadSystemAge(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+void ReadPrimaryAge(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                    SYSTEM *system, int iFile) {
   int lTmp = -1;
   double dTmp;
@@ -1102,14 +1102,14 @@ void ReadSystemAge(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     CheckDuplication(files, options, files->Infile[iFile].cIn, lTmp,
                      control->Io.iVerbose);
     if (dTmp < 0) {
-      system->dAge = dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
+      body[0].dAge = dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
                                             control->Io.iVerbose);
     } else {
-      system->dAge = dTmp * fdUnitsTime(control->Units[iFile].iTime);
+      body[0].dAge = dTmp * fdUnitsTime(control->Units[iFile].iTime);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
-    AssignDefaultDouble(options, &system->dAge, files->iNumInputs);
+    AssignDefaultDouble(options, &body[0].dAge, files->iNumInputs);
   }
 }
 
@@ -1277,16 +1277,20 @@ int bOptionAlreadyFound(int *iLine, int iNumFiles) {
 
 void ReadAge(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
              SYSTEM *system, int iFile) {
-  /* This parameter cannot exist in primary input file */
+  /* This parameter cannot exist in primary input file or the primary body file */
   int lTmp = -1;
   double dTmp;
 
   AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
                   control->Io.iVerbose);
   if (lTmp >= 0) {
-    /* Option was found */
     NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
                     control->Io.iVerbose);
+    if (iFile == 1) {
+      fprintf(stderr,"ERROR: Cannot set %s in the primary's body file (%s). ",options->cName,files->Infile[0].cIn);
+      fprintf(stderr,"Use \"dPrimaryAge\" instead.\n");
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
     if (dTmp < 0) {
       body[iFile - 1].dAge =
             dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
@@ -1295,8 +1299,37 @@ void ReadAge(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       body[iFile - 1].dAge = dTmp * fdUnitsTime(control->Units[iFile].iTime);
     }
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
-  } else if (iFile > 0) {
+  } else if (iFile > 1) { // Don't assign default if primary body file
     AssignDefaultDouble(options, &body[iFile - 1].dAge, files->iNumInputs);
+  }
+}
+
+void ReadFormationAge(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+             SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary input file or the primary body file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                control->Io.iVerbose);
+    if (iFile == 1) {
+      fprintf(stderr,"ERROR: Cannot set %s in the primary's body file (%s). ",options->cName,files->Infile[0].cIn);
+      fprintf(stderr,"Use \"dPrimaryAge\" instead.\n");
+      LineExit(files->Infile[iFile].cIn,lTmp);
+    }
+    if (dTmp < 0) {
+      body[iFile - 1].dFormationAge =
+            dTmp * dNegativeDouble(*options, files->Infile[iFile].cIn,
+                                   control->Io.iVerbose);
+    } else {
+      body[iFile - 1].dFormationAge = dTmp * fdUnitsTime(control->Units[iFile].iTime);
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    AssignDefaultDouble(options, &body[iFile - 1].dFormationAge, files->iNumInputs);
   }
 }
 
@@ -1503,11 +1536,10 @@ void ReadStopAge(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                      control->Io.iVerbose);
     if (dTmp < 0) {
       if (control->Io.iVerbose >= VERBERR) {
-        fprintf(stderr, "ERROR: %s must be greater than 0.\n", options->cName);
+        fprintf(stderr, "ERROR: %s must be non-negative.\n", options->cName);
       }
       LineExit(files->Infile[iFile].cIn, lTmp);
     }
-    /* Convert stop time to cgs */
     control->Evolve.dStopAge = dTmp * fdUnitsTime(control->Units[iFile].iTime);
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
@@ -3769,11 +3801,11 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_AGE].iFileType  = 2;
   fnRead[OPT_AGE]             = &ReadAge;
 
-  int iOpt = OPT_SYSTEMAGE;
-  fvFormattedString(&options[iOpt].cName, "dSystemAge");
-  fvFormattedString(&options[iOpt].cDescr, "System Age");
+  int iOpt = OPT_PRIMARYAGE;
+  fvFormattedString(&options[iOpt].cName, "dPrimaryAge");
+  fvFormattedString(&options[iOpt].cDescr, "Age of the Primary Body");
   fvFormattedString(&options[iOpt].cDefault, "0");
-  fvFormattedString(&options[iOpt].cNeg, "1 Gyr");
+  fvFormattedString(&options[iOpt].cNeg, "Gyr");
   fvFormattedString(&options[iOpt].cDimension, "time");
   options[iOpt].dDefault   = 0;
   options[iOpt].iType      = 2;
@@ -3781,7 +3813,7 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   options[iOpt].bNeg       = 1;
   options[iOpt].dNeg       = 1e9 * YEARSEC;
   options[iOpt].iFileType  = 2;
-  fnRead[iOpt]             = &ReadSystemAge;
+  fnRead[iOpt]             = &ReadPrimaryAge;
 
   fvFormattedString(&options[OPT_ALBEDOGLOBAL].cName, "dAlbedoGlobal");
   fvFormattedString(&options[OPT_ALBEDOGLOBAL].cDescr,
@@ -3877,6 +3909,20 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   options[iOpt].dNeg       = YEARSEC;
   options[iOpt].iFileType  = 2;
   fnRead[iOpt]             = &ReadStopAge;
+
+  iOpt = OPT_FORMATIONAGE;
+  fvFormattedString(&options[iOpt].cName, "dFormationAge");
+  fvFormattedString(&options[iOpt].cDescr, "Body's formation age relative to the primary");
+  fvFormattedString(&options[iOpt].cDefault, "0");
+  fvFormattedString(&options[iOpt].cNeg, "Myr");
+  fvFormattedString(&options[iOpt].cDimension, "time");
+  options[iOpt].dDefault   = 0;
+  options[iOpt].iType      = 2;
+  options[iOpt].iModuleBit = 0;
+  options[iOpt].bNeg       = 1;
+  options[iOpt].dNeg       = 1e6*YEARSEC;
+  options[iOpt].iFileType  = 2;
+  fnRead[iOpt]             = &ReadFormationAge;
 
   fvFormattedString(&options[OPT_TIMESTEP].cName, "dTimeStep");
   fvFormattedString(&options[OPT_TIMESTEP].cDescr, "Integration Timestep");

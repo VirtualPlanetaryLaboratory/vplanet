@@ -354,17 +354,20 @@ void IntegrationWarning(char cName1[], char cName2[], char cName3[],
   /* Backward file name */
 }
 
-void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
-                       OPTIONS *options, SYSTEM *system,
-                       fnIntegrate *fnOneStep) {
-  int iFile, iFile1 = 0, iFile2 = 0;
-  char *cTmp=NULL;
+void AssignIntegrationDirection(CONTROL *control) {
 
+  if (control->Evolve.bDoBackward) {
+    control->Evolve.iDir = BACKWARD_INTEGRATION;
+  } else if (control->Evolve.bDoForward) {
+    control->Evolve.iDir = FORWARD_INTEGRATION;
+  } else {
+    control->Evolve.iDir = NO_INTEGRATION;
+  }
+}
 
-  // Initialize iDir to 0, i.e. assume no integrations requested to start
-  control->Evolve.iDir = 0;
+void VerifyOneDirectionOnly(CONTROL *control, FILES *files, OPTIONS *options) {
+  int iFile, iFile1, iFile2;
 
-  /* Were both Forward and Backward Set? */
   if (control->Evolve.bDoBackward && control->Evolve.bDoForward) {
     fprintf(stderr, "ERROR: Both %s and %s set. Only one is allowed.\n",
             options[OPT_BACK].cName, options[OPT_FORW].cName);
@@ -381,38 +384,55 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
           options[OPT_BACK].cFile[iFile1], options[OPT_FORW].cFile[iFile2],
           options[OPT_BACK].iLine[iFile1], options[OPT_FORW].iLine[iFile2]);
   }
+}
 
-  /* Fix backward output file */
+void VerifyIntegrationDirection(CONTROL *control, FILES *files,
+                                OPTIONS *options) {
+
+  VerifyOneDirectionOnly(control, files, options);
+  AssignIntegrationDirection(control);
+}
+
+void SetBackwardFile(BODY *body, CONTROL *control, FILES *files,
+                     OPTIONS *options, SYSTEM *system) {
+  int iFile;
+
   if (control->Evolve.bDoBackward) {
     for (iFile = 1; iFile < files->iNumInputs; iFile++) {
       if (options[OPT_OUTFILE].iLine[iFile] == -1) {
-        fvFormattedString(&files->Outfile[iFile - 1].cOut, "%s.%s.backward", system->cName,
-                body[iFile - 1].cName);
+        fvFormattedString(&files->Outfile[iFile - 1].cOut, "%s.%s.backward",
+                          system->cName, body[iFile - 1].cName);
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr, "INFO: %s not set, defaulting to %s.\n",
                   options[OPT_OUTFILE].cName, files->Outfile[iFile - 1].cOut);
         }
       }
     }
-    control->Evolve.iDir = -1;
   }
+}
 
-  /* Fix forward output file */
+void SetForwardFile(BODY *body, CONTROL *control, FILES *files,
+                    OPTIONS *options, SYSTEM *system) {
+  int iFile;
+
   if (control->Evolve.bDoForward) {
     for (iFile = 1; iFile < files->iNumInputs; iFile++) {
       if (options[OPT_OUTFILE].iLine[iFile] == -1) {
-        fvFormattedString(&files->Outfile[iFile - 1].cOut, "%s.%s.forward", system->cName,
-                body[iFile - 1].cName);
+        fvFormattedString(&files->Outfile[iFile - 1].cOut, "%s.%s.forward",
+                          system->cName, body[iFile - 1].cName);
         if (control->Io.iVerbose >= VERBINPUT) {
           fprintf(stderr, "INFO: %s not set, defaulting to %s.\n",
                   options[OPT_OUTFILE].cName, files->Outfile[iFile - 1].cOut);
         }
       }
     }
-    control->Evolve.iDir = 1;
   }
+}
 
-  /* Check for file existence */
+void CheckIntegrationFileExistence(CONTROL *control, FILES *files,
+                                   OPTIONS *options) {
+  int iFile;
+
   for (iFile = 0; iFile < files->iNumInputs - 1; iFile++) {
     if (bFileExists(files->Outfile[iFile].cOut)) {
       if (!control->Io.bOverwrite) {
@@ -424,8 +444,20 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
       unlink(files->Outfile[iFile].cOut);
     }
   }
+}
 
-  /* Was DoBackward or DoForward NOT set? */
+void InitializeIntegrationFiles(BODY *body, CONTROL *control, FILES *files,
+                                OPTIONS *options, SYSTEM *system) {
+  SetBackwardFile(body, control, files, options, system);
+  SetForwardFile(body, control, files, options, system);
+  CheckIntegrationFileExistence(control, files, options);
+}
+
+
+void PrintIntegrationWarnings(CONTROL *control, FILES *files,
+                              OPTIONS *options) {
+  int iFile;
+
   if (!control->Evolve.bDoBackward && !control->Evolve.bDoForward) {
     for (iFile = 0; iFile < files->iNumInputs; iFile++) {
       if (options[OPT_ETA].iLine[iFile] > -1) {
@@ -471,13 +503,17 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
       }
     }
   }
+}
+
+void AssignIntegrationMethod(CONTROL *control, OPTIONS *options,
+                             fnIntegrate *fnOneStep) {
+  char *cTmp = NULL;
 
   if (control->Evolve.iOneStep == EULER) {
     *fnOneStep = &EulerStep;
   } else if (control->Evolve.iOneStep == RUNGEKUTTA) {
     *fnOneStep = &RungeKutta4Step;
   } else {
-    /* Assign Default */
     fvFormattedString(&cTmp, options[OPT_INTEGRATIONMETHOD].cDefault);
     if (control->Io.iVerbose >= VERBINPUT) {
       fprintf(stderr, "INFO: %s not set, defaulting to %s.\n",
@@ -493,8 +529,11 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
       *fnOneStep               = &RungeKutta4Step;
     }
   }
+}
 
-  /* Make sure output interval is less than stop time */
+void VerifyOutputTime(CONTROL *control, FILES *files, OPTIONS *options) {
+  int iFile, iFile1, iFile2;
+
   if (control->Evolve.dStopTime < control->Io.dOutputTime) {
     fprintf(stderr, "ERROR: %s < %s is not allowed.\n",
             options[OPT_STOPTIME].cName, options[OPT_OUTPUTTIME].cName);
@@ -512,6 +551,86 @@ void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
                    options[OPT_STOPTIME].iLine[iFile1],
                    options[OPT_OUTPUTTIME].iLine[iFile2]);
   }
+}
+
+void StopTimeFromAge(CONTROL *control, FILES *files, OPTIONS *options,
+                     SYSTEM *system, int iFileStopAge) {
+  int iFile, iFileAge = -1;
+
+  for (iFile = 0; iFile < files->iNumInputs; iFile++) {
+    if (options[OPT_AGE].iLine[iFile] > 0) {
+      iFileAge = iFile;
+    }
+  }
+  if (iFileAge == -1) {
+    DoubleLineExit(options[OPT_STOPAGE].cFile[iFileStopAge],
+                   options[OPT_AGE].cFile[iFileAge],
+                   options[OPT_STOPAGE].iLine[iFileStopAge],
+                   options[OPT_AGE].iLine[iFileAge]);
+  }
+
+  control->Evolve.dStopTime = fabs(control->Evolve.dStopAge - system->dAge);
+}
+
+void AssignStopTime(CONTROL *control, FILES *files, OPTIONS *options,
+                    SYSTEM *system) {
+  int iFile, iFileStopTime = -1, iFileStopAge = -1;
+
+  for (iFile = 0; iFile < files->iNumInputs; iFile++) {
+    if (options[OPT_STOPTIME].iLine[iFile] > 0) {
+      iFileStopTime = iFile;
+    }
+    if (options[OPT_STOPAGE].iLine[iFile] > 0) {
+      iFileStopAge = iFile;
+    }
+  }
+
+  if (iFileStopTime >= 0 && iFileStopAge == -1) {
+    return; // control->Evolve.dStopTime assigned in ReadStopTime
+  }
+
+  if (iFileStopTime >= 0 && iFileStopAge >= 0) {
+    DoubleLineExit(options[OPT_STOPTIME].cFile[iFileStopTime],
+                   options[OPT_STOPAGE].cFile[iFileStopAge],
+                   options[OPT_STOPTIME].iLine[iFileStopTime],
+                   options[OPT_STOPAGE].iLine[iFileStopAge]);
+  }
+
+  if (iFileStopTime == -1 && iFileStopAge == -1) {
+    control->Evolve.dStopTime = options->dDefault;
+  }
+
+  if (iFileStopTime == -1 && iFileStopAge >= 0) {
+    StopTimeFromAge(control, files, options, system, iFileStopAge);
+  }
+}
+
+void AssignBodyAges(BODY *body, CONTROL *control, FILES *files,
+                    OPTIONS *options, SYSTEM *system) {
+  int iBody;
+
+  for (iBody = 0; iBody < files->iNumInputs - 1; iBody++) {
+    if (options[OPT_AGE].iLine[iBody + 1] == -1) {
+      body[iBody].dAge = system->dAge;
+    }
+  }
+}
+
+void VerifyIntegration(BODY *body, CONTROL *control, FILES *files,
+                       OPTIONS *options, SYSTEM *system,
+                       fnIntegrate *fnOneStep) {
+
+  VerifyIntegrationDirection(control, files, options);
+  if (control->Evolve.iDir == NO_INTEGRATION) {
+    return;
+  }
+
+  PrintIntegrationWarnings(control, files, options);
+  AssignStopTime(control, files, options, system);
+  VerifyOutputTime(control, files, options);
+  AssignIntegrationMethod(control, options, fnOneStep);
+  InitializeIntegrationFiles(body, control, files, options, system);
+  AssignBodyAges(body, control, files, options, system);
 }
 
 /*

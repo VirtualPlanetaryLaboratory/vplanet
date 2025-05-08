@@ -37,6 +37,7 @@
 #define OPT_ETA 130
 #define OPT_OUTPUTTIME 140
 #define OPT_STOPTIME 150
+#define OPT_STOPAGE 155
 #define OPT_TIMESTEP 160
 #define OPT_VARDT 170
 #define OPT_BODYNAME 180
@@ -128,8 +129,7 @@ void ReadOptions(BODY **, CONTROL *, FILES *, MODULE *, OPTIONS *, OUTPUT *,
                  SYSTEM *, UPDATE **, fnReadOption *, char[]);
 
 double dNegativeDouble(OPTIONS, char[], int);
-void AddOptionStringArray(char[], char[], char***, int *, int *,
-                          int *, int);
+void AddOptionStringArray(char[], char[], char ***, int *, int *, int *, int);
 void AddOptionDoubleArray(char[], char[], double *, int *, int *, int *, int);
 void NotPrimaryInput(int, char[], char[], int, int);
 void AddOptionDouble(char[], char[], double *, int *, int);

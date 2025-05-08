@@ -1442,8 +1442,6 @@ void ReadOutputTime(BODY *body, CONTROL *control, FILES *files,
   }
 }
 
-/* Backward integration stop time */
-
 void ReadStopTime(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                   SYSTEM *system, int iFile) {
   /* This parameter can exist in any file, but only once */
@@ -1467,6 +1465,32 @@ void ReadStopTime(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else {
     AssignDefaultDouble(options, &control->Evolve.dStopTime, files->iNumInputs);
+  }
+}
+
+void ReadStopAge(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                 SYSTEM *system, int iFile) {
+  /* This parameter can exist in any file, but only once */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    /* Option was found */
+    CheckDuplication(files, options, files->Infile[iFile].cIn, lTmp,
+                     control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr, "ERROR: %s must be greater than 0.\n", options->cName);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    /* Convert stop time to cgs */
+    control->Evolve.dStopAge = dTmp * fdUnitsTime(control->Units[iFile].iTime);
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else {
+    AssignDefaultDouble(options, &control->Evolve.dStopAge, files->iNumInputs);
   }
 }
 
@@ -2617,7 +2641,7 @@ void fvAllocateOutputArrays(char ****saMatch, char ***saOutput, int **baNeg,
 
   for (iIndex = 0; iIndex < iNumArgs; iIndex++) {
     (*saMatch)[iIndex] =
-          malloc(MAXARRAY * sizeof(char*)); // Could be this many matches
+          malloc(MAXARRAY * sizeof(char *)); // Could be this many matches
     for (iMatch = 0; iMatch < MAXARRAY; iMatch++) {
       (*saMatch)[iIndex][iMatch] = NULL;
     }
@@ -3804,6 +3828,20 @@ void InitializeOptionsGeneral(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_STOPTIME].dNeg       = YEARSEC;
   options[OPT_STOPTIME].iFileType  = 2;
   fnRead[OPT_STOPTIME]             = &ReadStopTime;
+
+  int iOpt = OPT_STOPAGE;
+  fvFormattedString(&options[iOpt].cName, "dStopAge");
+  fvFormattedString(&options[iOpt].cDescr, "Age to stop integration");
+  fvFormattedString(&options[iOpt].cDefault, "10 Gigayears");
+  fvFormattedString(&options[iOpt].cNeg, "Years");
+  fvFormattedString(&options[iOpt].cDimension, "time");
+  options[iOpt].dDefault   = 1e10 * YEARSEC;
+  options[iOpt].iType      = 2;
+  options[iOpt].iModuleBit = 0;
+  options[iOpt].bNeg       = 1;
+  options[iOpt].dNeg       = YEARSEC;
+  options[iOpt].iFileType  = 2;
+  fnRead[iOpt]             = &ReadStopAge;
 
   fvFormattedString(&options[OPT_TIMESTEP].cName, "dTimeStep");
   fvFormattedString(&options[OPT_TIMESTEP].cDescr, "Integration Timestep");

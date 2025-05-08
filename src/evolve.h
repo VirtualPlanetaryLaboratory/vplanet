@@ -14,9 +14,13 @@
 #define EULER 1
 #define RUNGEKUTTA 2
 
+#define NO_INTEGRATION 0
+#define FORWARD_INTEGRATION 1
+#define BACKWARD_INTEGRATION -1
+
 /* @cond DOXYGEN_OVERRIDE */
 
-double fdTrapezoidalArea(double,double,double);
+double fdTrapezoidalArea(double, double, double);
 void PropertiesAuxiliary(BODY *, CONTROL *, SYSTEM *, UPDATE *);
 void fdGetUpdateInfo(BODY *, CONTROL *, SYSTEM *, UPDATE *,
                      fnUpdateVariable ***);

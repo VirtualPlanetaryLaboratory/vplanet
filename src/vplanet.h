@@ -1741,6 +1741,7 @@ struct EVOLVE {
   double dTime;     /**< Integration Time */
   double dEta;      /**< Variable Timestep Coefficient */
   double dStopTime; /**< Integration Stop Time */
+  double dStopAge;  /**< Age to stop at */
   double dTimeStep; /**< Integration Time step */
   int bVarDt;       /**< Use Variable Timestep? */
   int iTotalSteps;  /**< Total Number of Steps */

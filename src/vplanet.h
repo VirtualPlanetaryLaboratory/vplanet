@@ -68,20 +68,22 @@
 #define MEARTH 5.972186e24     // Earth's mass; Prsa et al. 2016
 #define MSUN 1.988416e30       // Sun's mass; Prsa et al. 2016
 #define RSUN 6.957e8           // Sun's radius; Prsa et al. 2016
-#define TEFFSUN 5770           //Sun's effective temperature
-#define PERIODSUN 2353252      //Sun's rotation period; 27.24 days; Johnstone et al. 2021 Note: C&S use 25.3d
-#define ROSSBYSUN  1.960       //Sun's Rossby Number, Cranmer&Saar 2011
-#define YEARSEC 3.15576e7      // Seconds per year
-#define DAYSEC 86400           // Seconds per day
-#define REARTH 6.3781e6        // Earth's Equatorial Radius; Prsa et al. 2016
-#define RJUP 7.1492e7          // Jupiter's Equatorial Radius; Prsa et al. 2016
-#define RNEP 2.4764e7          // Neptune's Radius
-#define MNEP 1.0244e26         // Neptune's Mass
-#define RHOEARTH 5515          // Earth's Density
-#define eEARTH 0.016710219     // Earth's Eccentricity
-#define MJUP 1.898130e27       // Jupiter's mass; Prsa et al. 2016
-#define YEARDAY 365.25         // Days per year
-#define MSAT 5.6851e26         // Saturns' Mass
+#define TEFFSUN 5770           // Sun's effective temperature
+#define PERIODSUN                                                              \
+  2353252 // Sun's rotation period; 27.24 days; Johnstone et al. 2021 Note: C&S
+          // use 25.3d
+#define ROSSBYSUN 1.960    // Sun's Rossby Number, Cranmer&Saar 2011
+#define YEARSEC 3.15576e7  // Seconds per year
+#define DAYSEC 86400       // Seconds per day
+#define REARTH 6.3781e6    // Earth's Equatorial Radius; Prsa et al. 2016
+#define RJUP 7.1492e7      // Jupiter's Equatorial Radius; Prsa et al. 2016
+#define RNEP 2.4764e7      // Neptune's Radius
+#define MNEP 1.0244e26     // Neptune's Mass
+#define RHOEARTH 5515      // Earth's Density
+#define eEARTH 0.016710219 // Earth's Eccentricity
+#define MJUP 1.898130e27   // Jupiter's mass; Prsa et al. 2016
+#define YEARDAY 365.25     // Days per year
+#define MSAT 5.6851e26     // Saturns' Mass
 #define DEGRAD 0.017453292519444445 // Degrees per radian
 #define TOMASS 1.39e21              // Mass of one terrestrial ocean in kg (TO)
 #define ATOMMASS 1.660538921e-27    // Atomic Mass
@@ -192,21 +194,21 @@ struct BODY {
 
   int iBodyType; /**< Type of object: 0=star, 1=rocky planet, 2 = giant */
 
-  double dAge;       /**< Body's Age */
+  double dAge;          /**< Body's Age */
   double dFormationAge; /**< Age of formation relative to primary */
-  double dMass;      /**< Body's Mass */
-  double dSolidMass; /**< Mass of a body's solid component */
-  double dRadius;    /**< Radius of body */
-  double dDensity;   /**< Bulk density of body*/
-  double dGravAccel; /**< Body's gravitational acceleration */
-  double dK2;        /**< Body's Total Love number */
-  double dImK2;      /**< Imaginary part of Love's k_2 (total) */
-  double dObliquity; /**< Body's Obliquity */
-  double dCosObl;    /**< Cosine of body's obliquity */
-  double dRotRate;   /**< Body's Rotation Rate */
-  double dRotPer;    /**< Body's Rotation Period */
-  double dRotVel;    /**< Body's Rotational Velocity */
-  double dRadGyra;   /**< Body's Radius of Gyration */
+  double dMass;         /**< Body's Mass */
+  double dSolidMass;    /**< Mass of a body's solid component */
+  double dRadius;       /**< Radius of body */
+  double dDensity;      /**< Bulk density of body*/
+  double dGravAccel;    /**< Body's gravitational acceleration */
+  double dK2;           /**< Body's Total Love number */
+  double dImK2;         /**< Imaginary part of Love's k_2 (total) */
+  double dObliquity;    /**< Body's Obliquity */
+  double dCosObl;       /**< Cosine of body's obliquity */
+  double dRotRate;      /**< Body's Rotation Rate */
+  double dRotPer;       /**< Body's Rotation Period */
+  double dRotVel;       /**< Body's Rotational Velocity */
+  double dRadGyra;      /**< Body's Radius of Gyration */
 
   /* Orbital Properties. By convention, these are stored in the
    * second element in the BODY array and, if using binary
@@ -633,9 +635,8 @@ struct BODY {
   double dR_xSat;
   double dJohnstoneBeta1;
   double dJohnstoneBeta2;
-  double dLXRay; //double check this doesn't pull Ribas values in stellar model 
+  double dLXRay; // double check this doesn't pull Ribas values in stellar model
   double dLEUV;
-  
 
 
   /* POISE parameters */
@@ -2184,6 +2185,8 @@ typedef void (*fnLogBodyModule)(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UPDATE *,
                                 fnWriteOutput *, FILE *, int);
 typedef void (*fnLogModule)(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UPDATE *,
                             fnWriteOutput *, FILE *);
+
+typedef double(fnRootFunction)(BODY *, SYSTEM *, UPDATE *, double, int);
 
 struct MODULE {
   int *iNumModules; /**< Number of Modules per Body */

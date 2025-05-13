@@ -84,13 +84,13 @@ controlled by multiple processes.
 @return The timescale of the variable's change: |x/Sum(dx/dt)|
 */
 double fdTimescaleMulti(double dVar, double *dDeriv, int iNum) {
-  double dTime,dTotalDerivative;
+  double dTime, dTotalDerivative;
   int iPert;
 
   dTotalDerivative = 0;
   for (iPert = 0; iPert < iNum; iPert++) {
     if (dDeriv[iPert] != 0) {
-      dTotalDerivative += dDeriv[iPert]; 
+      dTotalDerivative += dDeriv[iPert];
     }
   }
   dTime = fabs(dVar / dTotalDerivative);
@@ -461,7 +461,7 @@ void BodyCopy(BODY *dest, BODY *src, EVOLVE *evolve) {
     dest[iBody].dLostEng      = src[iBody].dLostEng;
     dest[iBody].dAlbedoGlobal = src[iBody].dAlbedoGlobal;
     dest[iBody].bCalcDynEllip = src[iBody].bCalcDynEllip;
-    dest[iBody].dRadGyra = src[iBody].dRadGyra;
+    dest[iBody].dRadGyra      = src[iBody].dRadGyra;
 
     dest[iBody].bBinary   = src[iBody].bBinary;
     dest[iBody].bDistOrb  = src[iBody].bDistOrb;
@@ -583,9 +583,9 @@ double fdLehmerRadius(BODY *body, int iNumBodies, int iBody) {
   // Set floor for surface pressure to prevent overflow error
   if (body[iBody].dPresSurf > 1e-100) {
     dRadXUV = body[iBody].dRadSolid * body[iBody].dRadSolid /
-            (body[iBody].dScaleHeight *
-                   log(body[iBody].dPresXUV / body[iBody].dPresSurf) +
-             body[iBody].dRadSolid);
+              (body[iBody].dScaleHeight *
+                     log(body[iBody].dPresXUV / body[iBody].dPresSurf) +
+               body[iBody].dRadSolid);
   } else {
     dRadXUV = body[iBody].dRadSolid;
   }
@@ -689,13 +689,14 @@ double fdImK2Total(BODY *body, int iBody) {
   @return Upper mantle k2 Love number
 */
 double fdK2Man(BODY *body, int iBody) {
-  double dK2Man = 1.5 / (1 + 9.5 * body[iBody].dShmodUMan / body[iBody].dStiffness);
+  double dK2Man =
+        1.5 / (1 + 9.5 * body[iBody].dShmodUMan / body[iBody].dStiffness);
   return dK2Man;
 }
 
 double fdTidalQMan(BODY *body, int iBody) {
   double dTidalQMan = body[iBody].dDynamViscos * body[iBody].dMeanMotion /
-         body[iBody].dShmodUMan;
+                      body[iBody].dShmodUMan;
   return dTidalQMan;
 }
 
@@ -771,11 +772,11 @@ double fdHflowSecMan(BODY *body, EVOLVE *evolve, int iBody) {
   double dHflowSecMan = 0;
 
   if (body[iBody].bThermint) {
-    dHflowSecMan += fdPowerThermint(body, iBody); 
+    dHflowSecMan += fdPowerThermint(body, iBody);
   }
   if (body[iBody].bEqtide) {
-    dHflowSecMan -= fdTidePower(body,iBody,evolve->iEqtideModel);
-  }  // XXX Should add RadHeat here
+    dHflowSecMan -= fdTidePower(body, iBody, evolve->iEqtideModel);
+  } // XXX Should add RadHeat here
   return dHflowSecMan;
 }
 
@@ -1139,24 +1140,24 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge,
    * Adapted from the method described in
    * http://en.wikipedia.org/wiki/Trilinear_interpolation */
   if (m < MASSLEN - 1) {
-    dm   = (dMassEarth - daLopezMass[m]) / (daLopezMass[m + 1] - daLopezMass[m]);
+    dm = (dMassEarth - daLopezMass[m]) / (daLopezMass[m + 1] - daLopezMass[m]);
   } else {
-    dm   = (dMassEarth - daLopezMass[m]) / (daLopezMass[m] - daLopezMass[m-1]);
+    dm = (dMassEarth - daLopezMass[m]) / (daLopezMass[m] - daLopezMass[m - 1]);
   }
   if (c < COMPLEN - 1) {
-    dc   = (dComp - daLopezComp[c]) / (daLopezComp[c+1] - daLopezComp[c]);
+    dc = (dComp - daLopezComp[c]) / (daLopezComp[c + 1] - daLopezComp[c]);
   } else {
-    dc   = (dComp - daLopezComp[c]) / (daLopezComp[c] - daLopezComp[c-1]);
+    dc = (dComp - daLopezComp[c]) / (daLopezComp[c] - daLopezComp[c - 1]);
   }
   if (f < FLUXLEN - 1) {
-    df   = (dFlux - daLopezFlux[f]) / (daLopezFlux[f + 1] - daLopezFlux[f]);
+    df = (dFlux - daLopezFlux[f]) / (daLopezFlux[f + 1] - daLopezFlux[f]);
   } else {
-    df   = (dFlux - daLopezFlux[f]) / (daLopezFlux[f] - daLopezFlux[f-1]);
+    df = (dFlux - daLopezFlux[f]) / (daLopezFlux[f] - daLopezFlux[f - 1]);
   }
   if (t < TIMELEN - 1) {
-    dt   = (dAgeYears - daLopezAge[t]) / (daLopezAge[t + 1] - daLopezAge[t]);
+    dt = (dAgeYears - daLopezAge[t]) / (daLopezAge[t + 1] - daLopezAge[t]);
   } else {
-    dt   = (dAgeYears - daLopezAge[t]) / (daLopezAge[t + 1] - daLopezAge[t]);
+    dt = (dAgeYears - daLopezAge[t]) / (daLopezAge[t + 1] - daLopezAge[t]);
   }
   R000 = daLopezRadius[m][c][f][z][t] * (1 - dm) +
          daLopezRadius[m + 1][c][f][z][t] * dm;
@@ -1525,14 +1526,63 @@ void fdHabitableZoneKopparapu2013(BODY *body, int iNumBodies,
   }
 }
 
-double fdEffectiveTemperature(BODY *body,int iBody) {
-  double dTeff = pow((body[iBody].dLuminosity/(4*PI*SIGMA*body[iBody].dRadius*body[iBody].dRadius)),0.25);
+double fdEffectiveTemperature(BODY *body, int iBody) {
+  double dTeff =
+        pow((body[iBody].dLuminosity /
+             (4 * PI * SIGMA * body[iBody].dRadius * body[iBody].dRadius)),
+            0.25);
   return dTeff;
 }
 
-double fdEscapeVelocity(BODY *body,int iBody) {
+double fdEscapeVelocity(BODY *body, int iBody) {
   double dEscVel;
 
-  dEscVel = sqrt(2*BIGG*body[iBody].dMass/body[iBody].dRadius);
+  dEscVel = sqrt(2 * BIGG * body[iBody].dMass / body[iBody].dRadius);
   return dEscVel;
+}
+
+double fdBrentQuadratic(BODY *body, SYSTEM *system, UPDATE *update,
+                        double dLowerBound, double dUpperBound,
+                        fnRootFunction *fnRoot, int iBody) {
+  int iMaxIterations = 100;
+  double dTolerance  = 1e-12;
+
+  double dLowerValue = fnRoot(body, system, update, dLowerBound, iBody);
+  double dUpperValue = fnRoot(body, system, update, dUpperBound, iBody);
+
+  if (dLowerValue * dUpperValue > 0) {
+    fprintf(stderr,
+            "Root is not bracketed in: Lower value = %f, upper value = %f\n",
+            dLowerValue, dUpperValue);
+    exit(EXIT_EXE);
+  }
+
+  double dNewBound = dLowerBound, dNewValue = dLowerValue;
+  for (int iter = 0; iter < iMaxIterations; iter++) {
+    double prev_c = dNewBound;
+    dNewBound     = (dLowerBound + dUpperBound) / 2.0;
+    dNewValue     = fnRoot(body, system, update, dNewBound, iBody);
+
+    // Debug print to track progress
+    // printf("Iter %d: a = %f, b = %f, dNewBound = %f, f(a) = %f, f(b) = %f,
+    // f(dNewBound) = %f\n",
+    //     iter, a, b, dNewBound, dLowerValue, dUpperValue, dNewValue);
+
+    if (fabs(dNewValue) < dTolerance ||
+        fabs(dUpperBound - dLowerBound) < dTolerance) {
+      return dNewBound;
+    }
+
+    if (dLowerValue * dNewValue < 0) {
+      dUpperBound = dNewBound;
+      dUpperValue = dNewValue;
+    } else {
+      dLowerBound = dNewBound;
+      dLowerValue = dNewValue;
+    }
+  }
+
+  fprintf(stderr, "BrentQuadratic did not converge after %d iterations.\n",
+          iMaxIterations);
+  exit(EXIT_EXE);
 }

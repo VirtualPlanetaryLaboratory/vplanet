@@ -247,9 +247,12 @@ double fdBondiLimitedDmDt(BODY *, int);
 int fbRREscape(BODY *, int);
 int fbBondiEscape(BODY *, int);
 double fdRRCriticalFlux(BODY *, int);
-void fvAtmEscRegimeChangeOutput(EVOLVE *,int, int);
+void fvAtmEscRegimeChangeOutput(EVOLVE *, int, int);
 double fdKTide(BODY *, IO *, int, int);
-void SetInitialEscapeRegime(BODY *,IO *,int);
+void SetInitialEscapeRegime(BODY *, IO *, int);
+
+double fdLopez12EnvelopeMassFromMassRadiusAge(BODY *, SYSTEM *, UPDATE *,
+                                              double, int);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY *, SYSTEM *, UPDATE *, int, int);

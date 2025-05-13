@@ -244,10 +244,12 @@ int fbDoesWaterEscape(BODY *, EVOLVE *, IO *, int);
 double fdPlanetRadius(BODY *, SYSTEM *, int *);
 double fdXUVEfficiencyBolmont2016(double);
 double fdBondiLimitedDmDt(BODY *, int);
-int fbRRCriticalFlux(BODY *, int);
-int fbBondiCriticalDmDt(BODY *, int);
+int fbRREscape(BODY *, int);
+int fbBondiEscape(BODY *, int);
 double fdRRCriticalFlux(BODY *, int);
-void fvAtmEscRegimeChangeOutput(int, int, double);
+void fvAtmEscRegimeChangeOutput(EVOLVE *,int, int);
+double fdKTide(BODY *, IO *, int, int);
+void SetInitialEscapeRegime(BODY *,IO *,int);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY *, SYSTEM *, UPDATE *, int, int);

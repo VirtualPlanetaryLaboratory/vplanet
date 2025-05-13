@@ -1233,9 +1233,36 @@ void VerifyAge(BODY *body, CONTROL *control, FILES *files,OPTIONS *options) {
   }
 }
 
+void VerifyAtmescStellar(BODY *body,CONTROL *control,UPDATE *update,int iBody) {
+  if (body[iBody].bAtmEscAuto) {
+    if (body[iBody].bBinary) {
+      fprintf(stderr,"ERROR: Cannot set module BINARY with AtmEscAuto.\n");
+      exit(EXIT_INPUT);
+    }
+    body[iBody].dKTide = fdKTide(body,&control->Io, control->Evolve.iNumBodies,iBody);
+    body[iBody].dBondiRadius = fdBondiRadius(body, iBody);
+    body[iBody].dRocheRadius = fdRocheRadius(body, control->Evolve.iNumBodies, iBody);
+    fnPropsAuxStellar(body,&control->Evolve,&control->Io,update,0);
+    body[iBody].dFXUV = fdXUVFlux(body,iBody);
+    SetInitialEscapeRegime(body,&control->Io,iBody);
+  }  
+}
+
+void VerifyCrossBodyModules(BODY *body, UPDATE *update, CONTROL *control, FILES *files, MODULE *module, 
+OPTIONS *options) {
+  int iBody;
+
+  for (iBody = 1;iBody < control->Evolve.iNumBodies;iBody++) {
+    if (body[0].bStellar && body[iBody].bAtmEsc) {
+      VerifyAtmescStellar(body,control,update,iBody);
+    }
+  }
+}
+
+
 /**
 
- * Master Verify subroutine
+ * Main Verify subroutine
 
    This function validates the input options. After this function, the structs
  are prepared for integration.
@@ -1296,7 +1323,11 @@ void VerifyOptions(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     // Verify multi-module couplings
     VerifyModuleMulti(body, update, control, files, module, options, iBody,
                       fnUpdate);
+  }
 
+  VerifyCrossBodyModules(body, update, control, files, module, options);
+
+  for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
     for (iModule = 0; iModule < module->iNumManageDerivs[iBody]; iModule++) {
       module->fnAssignDerivatives[iBody][iModule](body, &(control->Evolve),
                                                   update, *fnUpdate, iBody);

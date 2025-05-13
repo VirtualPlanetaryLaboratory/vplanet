@@ -2283,6 +2283,16 @@ void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
   fclose(fp);
 }
 
+void SetInitialBackwardDerivatives(CONTROL *control,UPDATE *update) {
+  int iBody,iVar;
+
+  for (iBody = 0; iBody<control->Evolve.iNumBodies; iBody++) {
+    for (iVar = 0; iVar < update[iBody].iNumVars; iVar++) {
+      update[iBody].daDeriv[iVar] = -update[iBody].daDeriv[iVar];
+    }
+  } 
+}
+
 void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
                  SYSTEM *system, UPDATE *update, fnWriteOutput *fnWrite) {
   int iBody, iCol, iOut, iSubOut, iExtra = 0, iGrid, iLat, jBody, j;
@@ -2295,6 +2305,10 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
      total number of columns as we go. The calls to fnWrite return the column
      value in the correct units, and output.iNum already contains the
      number of columns. */
+
+  if (control->Evolve.bDoBackward && fbFloatComparison(control->Evolve.dTime,0)) {
+    SetInitialBackwardDerivatives(control,update);
+  }
 
   for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
 

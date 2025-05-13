@@ -7,4 +7,4 @@ sStellarModel             baraffe
 bHaltEndBaraffeGrid       1
 dSatXUVFrac               1.e-3
 dSatXUVTime               -0.1
-saOutputOrder Time -TotEn -TotAngMom -Luminosity -Radius Temperature -RotPer -LXUVTot RadGyra
+saOutputOrder Time Age -TotEn -TotAngMom -Luminosity -Radius Temperature -RotPer -LXUVTot RadGyra

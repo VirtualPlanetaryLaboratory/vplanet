@@ -458,6 +458,25 @@ void ReadInstantO2Sink(BODY *body, CONTROL *control, FILES *files,
   }
 }
 
+void ReadCalcEnvMass(BODY *body, CONTROL *control, FILES *files,
+                       OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn, options->cName, &bTmp, &lTmp,
+                control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].bCalcEnvMass = bTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    AssignDefaultInt(options, &body[iFile - 1].bCalcEnvMass,
+                     files->iNumInputs);
+  }
+}
+
 /**
 Read the parameter that controls water loss once planet reaches HZ.
 
@@ -1037,6 +1056,18 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
         "If set to 1, then all oxygen released by photolysis is immediately\n"
         "removed from the atmosphere. This mimics rapid surface oxidation.\n");
 
+  int iOpt = OPT_CALCENVMASS;
+  fvFormattedString(&options[iOpt].cName, "bCalcEnvMass");
+  fvFormattedString(&options[iOpt].cDescr,
+                    "Calculate envelope mass from mass and radius?");
+  fvFormattedString(&options[iOpt].cDefault, "0");
+  options[iOpt].iType      = 0;
+  options[iOpt].bMultiFile = 1;
+  fnRead[iOpt]             = &ReadCalcEnvMass;
+  fvFormattedString(
+        &options[iOpt].cLongDescr,
+        "If set to 1, then the mass of the envelope, according to the Lopez et al. (2012) model, will be automatically calculated.");
+
   fvFormattedString(&options[OPT_STOPWATERLOSSINHZ].cName,
                     "bStopWaterLossInHZ");
   fvFormattedString(&options[OPT_STOPWATERLOSSINHZ].cDescr,
@@ -1506,6 +1537,63 @@ double fdKTide(BODY *body, IO *io, int iNumBodies, int iBody) {
   return dKTide;
 }
 
+int fiEnvelopeEscapeRegime(BODY *body, int iBody) {
+  if (fbBondiEscape(body, iBody)) {
+    return ATMESC_BONDILIM;
+  } else if (fbRREscape(body, iBody)) {
+    return ATMESC_RRLIM;
+  } else {
+    return ATMESC_ELIM;
+  }
+}
+
+void SetEnergyLimitedEsacpe(BODY *body, UPDATE *update,
+                            fnUpdateVariable ***fnUpdate, int iBody) {
+  body[iBody].iHEscapeRegime                      = ATMESC_ELIM;
+  fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
+  fnUpdate[iBody][update[iBody].iMass][0]         = &fdDEnvelopeMassDt;
+}
+
+void SetRRLimitedEsacpe(BODY *body, UPDATE *update,
+                        fnUpdateVariable ***fnUpdate, int iBody) {
+  body[iBody].iHEscapeRegime                      = ATMESC_RRLIM;
+  fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDtRRLimited;
+  fnUpdate[iBody][update[iBody].iMass][0]         = &fdDEnvelopeMassDtRRLimited;
+}
+
+void SetBondiLimitedEsacpe(BODY *body, UPDATE *update,
+                           fnUpdateVariable ***fnUpdate, int iBody) {
+  body[iBody].iHEscapeRegime = ATMESC_BONDILIM;
+  fnUpdate[iBody][update[iBody].iEnvelopeMass][0] =
+        &fdDEnvelopeMassDtBondiLimited;
+  fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtBondiLimited;
+}
+
+void SetEnvelopeEscapeRegime(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
+                             fnUpdateVariable ***fnUpdate, int iBody) {
+
+  int iHEscapeRegime = fiEnvelopeEscapeRegime(body, iBody);
+
+  if (iHEscapeRegime != body[iBody].iHEscapeRegime) {
+    if (io->iVerbose >= VERBPROG) {
+      fvAtmEscRegimeChangeOutput(body, evolve, body[iBody].iHEscapeRegime,
+                                 iHEscapeRegime,iBody);
+    }
+    if (iHEscapeRegime == ATMESC_ELIM) {
+      SetEnergyLimitedEsacpe(body, update, fnUpdate, iBody);
+    } else if (iHEscapeRegime == ATMESC_RRLIM) {
+      SetRRLimitedEsacpe(body, update, fnUpdate, iBody);
+    } else if (iHEscapeRegime == ATMESC_BONDILIM) {
+      SetBondiLimitedEsacpe(body, update, fnUpdate, iBody);
+    } else {
+      fprintf(stderr, "ERROR: Undefined iHEscapeRegime = %d for body %s!\n",
+              iHEscapeRegime, body[iBody].cName);
+      exit(EXIT_INT);
+    }
+  }
+}
+
+
 /**
 If necessary, change how the code handle hydrogen envelope escape
 
@@ -1534,130 +1622,11 @@ void ForceBehaviorEnvelopeEscape(BODY *body, MODULE *module, EVOLVE *evolve,
     fnUpdate[iBody][update[iBody].iMass][0]         = &fndUpdateFunctionTiny;
   }
 
-  /* In some cases, the final mass loss of an envelope can become very large,
-     resulting in the apparent loss of the solid planet. In those cases, set the
-     envelope mass to 0, mass to dSolidMass, and prevent envelope loss.
-  if (body[iBody].dEnvelopeMass < 0) {
-    body[iBody].dMass = body[iBody].dSolidMass;
-    EnvelopeLost(body,evolve,io,update,fnUpdate,iBody);
-  }
-  */
-
-  // If envelope is below minimum value, but still present, set its mass to 0
-  // and prevent further evolution
-  /*
-  if ((body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) &&
-      (body[iBody].dEnvelopeMass > 0.)) {
-  */
   if (body[iBody].dEnvelopeMass <= body[iBody].dMinEnvelopeMass) {
-    // Let's remove its envelope and prevent further evolution.
     EnvelopeLost(body, evolve, io, update, fnUpdate, iBody);
-  }
-
-  // if (body[iBody].dEnvelopeMass == 0) {
-  //   fprintf(stderr,"Planet %s's envelope lost!",body[iBody].cName);
-  // }
-
-  // Using variable evolution: determine proper escape regime and set
-  // H envelope mass loss derivatives accordingly (if H envelope exists)
-  if (body[iBody].bAtmEscAuto &&
-      body[iBody].dEnvelopeMass > body[iBody].dMinEnvelopeMass &&
-      body[iBody].iHEscapeRegime != ATMESC_NONE) {
-    // If currently energy-limited, see if we should switch to another regime
-    if (body[iBody].iHEscapeRegime == ATMESC_ELIM) {
-      // Is the flux RR-limited?
-      if (fbRRCriticalFlux(body, iBody)) {
-        // Switch regime, derivatives
-        if (io->iVerbose >= VERBPROG) {
-          fvAtmEscRegimeChangeOutput(body[iBody].iHEscapeRegime, ATMESC_RRLIM,
-                                     evolve->dTime / (1e6 * YEARSEC));
-        }
-        body[iBody].iHEscapeRegime = ATMESC_RRLIM;
-        fnUpdate[iBody][update[iBody].iEnvelopeMass][0] =
-              &fdDEnvelopeMassDtRRLimited;
-        fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtRRLimited;
-      }
-      // Is the flux Bondi-limited?
-      if (fbBondiCriticalDmDt(body, iBody)) {
-        // Switch regime, derivatives
-        if (io->iVerbose >= VERBPROG) {
-          fvAtmEscRegimeChangeOutput(body[iBody].iHEscapeRegime,
-                                     ATMESC_BONDILIM,
-                                     evolve->dTime / (1e6 * YEARSEC));
-        }
-        body[iBody].iHEscapeRegime = ATMESC_BONDILIM;
-        fnUpdate[iBody][update[iBody].iEnvelopeMass][0] =
-              &fdDEnvelopeMassDtBondiLimited;
-        fnUpdate[iBody][update[iBody].iMass][0] =
-              &fdDEnvelopeMassDtBondiLimited;
-      }
-    }
-    // If currently RR-limited, see if we should switch to another regime
-    else if (body[iBody].iHEscapeRegime == ATMESC_RRLIM) {
-      // Is the escape now energy-limited?
-      if (!fbRRCriticalFlux(body, iBody)) {
-        // Switch regime, derivatives
-        if (io->iVerbose >= VERBPROG) {
-          fvAtmEscRegimeChangeOutput(body[iBody].iHEscapeRegime, ATMESC_ELIM,
-                                     evolve->dTime / (1e6 * YEARSEC));
-        }
-        body[iBody].iHEscapeRegime                      = ATMESC_ELIM;
-        fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
-        fnUpdate[iBody][update[iBody].iMass][0]         = &fdDEnvelopeMassDt;
-      }
-
-      // Is the escape now Bondi-limited?
-      if (fbBondiCriticalDmDt(body, iBody)) {
-        // Switch regime, derivatives
-        if (io->iVerbose >= VERBPROG) {
-          fvAtmEscRegimeChangeOutput(body[iBody].iHEscapeRegime,
-                                     ATMESC_BONDILIM,
-                                     evolve->dTime / (1e6 * YEARSEC));
-        }
-        body[iBody].iHEscapeRegime = ATMESC_BONDILIM;
-        fnUpdate[iBody][update[iBody].iEnvelopeMass][0] =
-              &fdDEnvelopeMassDtBondiLimited;
-        fnUpdate[iBody][update[iBody].iMass][0] =
-              &fdDEnvelopeMassDtBondiLimited;
-      }
-    }
-    // Flux currently Bondi-limited, but should we switch?
-    else if (body[iBody].iHEscapeRegime == ATMESC_BONDILIM) {
-      // No longer Bondi-limited, see if EL or RR-limited
-      if (!fbBondiCriticalDmDt(body, iBody)) {
-        // RR-limited?
-        if (fbRRCriticalFlux(body, iBody)) {
-          // Switch regime, derivatives
-          if (io->iVerbose >= VERBPROG) {
-            fvAtmEscRegimeChangeOutput(body[iBody].iHEscapeRegime, ATMESC_RRLIM,
-                                       evolve->dTime / (1e6 * YEARSEC));
-          }
-          body[iBody].iHEscapeRegime = ATMESC_RRLIM;
-          fnUpdate[iBody][update[iBody].iEnvelopeMass][0] =
-                &fdDEnvelopeMassDtRRLimited;
-          fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtRRLimited;
-        }
-        // Energy-limited!
-        else {
-          // Switch regime, derivatives
-          if (io->iVerbose >= VERBPROG) {
-            fvAtmEscRegimeChangeOutput(body[iBody].iHEscapeRegime, ATMESC_ELIM,
-                                       evolve->dTime / (1e6 * YEARSEC));
-          }
-          body[iBody].iHEscapeRegime                      = ATMESC_ELIM;
-          fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
-          fnUpdate[iBody][update[iBody].iMass][0]         = &fdDEnvelopeMassDt;
-        }
-      }
-    } else {
-      // Undefined regime! Warn user and switch to energy-limited
-      fprintf(stderr, "WARNING: Undefined iHEscapeRegime = %d for body %s!\n",
-              body[iBody].iHEscapeRegime, body[iBody].cName);
-      fprintf(stderr, "Switching to default energy-limited escape.\n");
-
-      body[iBody].iHEscapeRegime                      = ATMESC_ELIM;
-      fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
-      fnUpdate[iBody][update[iBody].iMass][0]         = &fdDEnvelopeMassDt;
+  } else {
+    if (body[iBody].bAtmEscAuto) {
+      SetEnvelopeEscapeRegime(body, evolve, io, update, fnUpdate, iBody);
     }
   }
 }
@@ -2046,32 +2015,20 @@ void AssignAtmEscDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
           &fdDOxygenMantleMassDt;
   }
   if (body[iBody].dEnvelopeMass > 0) {
-    // Set derivative depending on regime
-    // Energy-limited (or if, transition start as energy-limited)
-    if (body[iBody].bUseEnergyLimited || body[iBody].bAtmEscAuto) {
-      body[iBody].iHEscapeRegime                      = ATMESC_ELIM;
+    if (body[iBody].iHEscapeRegime == ATMESC_ELIM) {
       fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
       fnUpdate[iBody][update[iBody].iMass][0]         = &fdDEnvelopeMassDt;
-    }
-    // Bondi-limited escape
-    else if (body[iBody].bUseBondiLimited) {
-      body[iBody].iHEscapeRegime = ATMESC_BONDILIM;
+    } else if (body[iBody].iHEscapeRegime == ATMESC_BONDILIM) {
       fnUpdate[iBody][update[iBody].iEnvelopeMass][0] =
             &fdDEnvelopeMassDtBondiLimited;
       fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtBondiLimited;
-    }
-    // Radiation/recombination-limited escape
-    else if (body[iBody].bUseRRLimited) {
-      body[iBody].iHEscapeRegime = ATMESC_RRLIM;
+    } else if (body[iBody].iHEscapeRegime == ATMESC_RRLIM) {
       fnUpdate[iBody][update[iBody].iEnvelopeMass][0] =
             &fdDEnvelopeMassDtRRLimited;
       fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtRRLimited;
-    }
-    // Default to energy-limited
-    else {
-      body[iBody].iHEscapeRegime                      = ATMESC_ELIM;
-      fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fdDEnvelopeMassDt;
-      fnUpdate[iBody][update[iBody].iMass][0]         = &fdDEnvelopeMassDt;
+    } else {
+      fprintf(stderr, "ERROR: Unknown envelope escape regime in "
+                      "AssignAtmEscDerivatives!\n");
     }
   }
   fnUpdate[iBody][update[iBody].iRadius][0] =
@@ -2118,6 +2075,92 @@ Verify all the inputs for the atmospheric escape module.
 @param iBody The current BODY number
 @param iModule The current MODULE number
 */
+
+void SetInitialEscapeRegime(BODY *body, IO *io, int iBody) {
+  body[iBody].iHEscapeRegime = fiEnvelopeEscapeRegime(body, iBody);
+
+  if (io->iVerbose >= VERBINPUT) {
+    fprintf(stderr, "INFO: Initial escape regime is ");
+    if (body[iBody].iHEscapeRegime == ATMESC_NONE) {
+      fprintf(stderr, "none.\n");
+    }
+    if (body[iBody].iHEscapeRegime == ATMESC_ELIM) {
+      fprintf(stderr, "energy-limited.\n");
+    }
+    if (body[iBody].iHEscapeRegime == ATMESC_RRLIM) {
+      fprintf(stderr, "radiation/recombination-limited.\n");
+    }
+    if (body[iBody].iHEscapeRegime == ATMESC_BONDILIM) {
+      fprintf(stderr, "Bondi-limited (Roche lobe overflow).\n");
+    }
+  }
+}
+
+void VerifyEscapeRegime(BODY *body, CONTROL *control, int iBody) {
+  // Ensure only 1 escape regime is set
+  int iRegimeCounter = 0;
+
+  if (body[iBody].bUseEnergyLimited) {
+    iRegimeCounter += 1;
+    body[iBody].iHEscapeRegime = ATMESC_ELIM;
+  }
+  if (body[iBody].bUseRRLimited) {
+    iRegimeCounter += 1;
+    body[iBody].iHEscapeRegime = ATMESC_RRLIM;
+  }
+  if (body[iBody].bUseBondiLimited) {
+    iRegimeCounter += 1;
+    body[iBody].iHEscapeRegime = ATMESC_BONDILIM;
+  }
+  if (body[iBody].bAtmEscAuto) {
+    iRegimeCounter += 1;
+    // iHEscapeRegime must be set in VerifyCrossBodyModules
+  }
+
+  // If more than one is set, let the user know what's wrong and quit.
+  if (iRegimeCounter > 1) {
+    if (control->Io.iVerbose >= VERBINPUT) {
+      fprintf(stderr,
+              "ERROR: Multiple H envelope atmospheric regimes are enabled for "
+              "body %s!\n",
+              body[iBody].cName);
+      fprintf(stderr, "\tbUseEnergyLimited = %d\n",
+              body[iBody].bUseEnergyLimited);
+      fprintf(stderr, "\tbUseRRLimited = %d\n", body[iBody].bUseRRLimited);
+      fprintf(stderr, "\tbUseBondiLimited = %d\n",
+              body[iBody].bUseBondiLimited);
+      fprintf(stderr, "\tbAtmEscAuto = %d\n", body[iBody].bAtmEscAuto);
+    }
+    exit(EXIT_INPUT);
+  } else if (iRegimeCounter == 0) {
+    if (control->Io.iVerbose >= VERBINPUT) {
+      fprintf(stderr,
+              "WARNING: No H envelope escape regime set for body %s!\n",
+              body[iBody].cName);
+      fprintf(stderr,
+              "Defaulting to energy-limited escape: bUseEnergyLimited = 1.\n");
+    }
+    body[iBody].bUseEnergyLimited = 1;
+  }
+}
+
+void SetEnvelopeMassFromMassAndRadius(BODY *body, OPTIONS *options,
+                                      SYSTEM *system, UPDATE *update,
+                                      int iBody) {
+  double dMinEnvFrac = 0, dMaxEnvFrac = 1, dRatio;
+
+  if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
+    if (options[OPT_MASS].iLine[iBody + 1] >= 0 &&
+        options[OPT_RADIUS].iLine[iBody + 1] >= 0 &&
+        options[OPT_ENVELOPEMASS].iLine[iBody + 1] == -1) {
+           dRatio =
+            fdBrentQuadratic(body, system, update, dMinEnvFrac, dMaxEnvFrac,
+                    &fdLopez12EnvelopeMassFromMassRadiusAge, iBody);
+          body[iBody].dEnvelopeMass = dRatio * body[iBody].dMass;
+    }
+  }
+}
+
 void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                   OUTPUT *output, SYSTEM *system, UPDATE *update, int iBody,
                   int iModule) {
@@ -2227,11 +2270,12 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       LineExit(files->Infile[iBody + 1].cIn,
                options[OPT_OUTPUTORDER].iLine[iBody + 1]);
     }
-    /* Must initialized the above values to avoid memory leaks. */
+    /* Must initialize the above values to avoid memory leaks. */
     body[iBody].dRadXUV      = -1;
     body[iBody].dRadSolid    = -1;
     body[iBody].dScaleHeight = -1;
     body[iBody].dPresSurf    = -1;
+    SetEnvelopeMassFromMassAndRadius(body, options, system, update, iBody);
   }
   // Should there be additional checks for PROXCEN and NONE???
 
@@ -2243,54 +2287,8 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     bAtmEsc = 1;
   }
 
-  // If envelope is present, pick correct derivative and ensure settings
-  // conflicts don't exist, i.e. can't set energy and Bondi-limited escape!
   if (body[iBody].dEnvelopeMass > 0) {
-
-    // Ensure only 1 escape regime is set
-    int iRegimeCounter = 0;
-
-    if (body[iBody].bUseEnergyLimited) {
-      iRegimeCounter += 1;
-    }
-    if (body[iBody].bUseRRLimited) {
-      iRegimeCounter += 1;
-    }
-    if (body[iBody].bUseBondiLimited) {
-      iRegimeCounter += 1;
-    }
-    if (body[iBody].bAtmEscAuto) {
-      iRegimeCounter += 1;
-    }
-
-    // If more than one is set, let the user know what's wrong and quit.
-    if (iRegimeCounter > 1) {
-      if (control->Io.iVerbose >= VERBINPUT) {
-        fprintf(
-              stderr,
-              "ERROR: Multiple H envelope atmospheric regimes are enabled for "
-              "body %s!\n",
-              body[iBody].cName);
-        fprintf(stderr, "\tbUseEnergyLimited = %d\n",
-                body[iBody].bUseEnergyLimited);
-        fprintf(stderr, "\tbUseRRLimited = %d\n", body[iBody].bUseRRLimited);
-        fprintf(stderr, "\tbUseBondiLimited = %d\n",
-                body[iBody].bUseBondiLimited);
-        fprintf(stderr, "\tbAtmEscAuto = %d\n", body[iBody].bAtmEscAuto);
-      }
-      exit(EXIT_INPUT);
-    } else if (iRegimeCounter == 0) {
-      if (control->Io.iVerbose >= VERBINPUT) {
-        fprintf(stderr,
-                "WARNING: No H envelope escape regime set for body %s!\n",
-                body[iBody].cName);
-        fprintf(
-              stderr,
-              "Defaulting to energy-limited escape: bUseEnergyLimited = 1.\n");
-      }
-      body[iBody].bUseEnergyLimited = 1;
-    }
-
+    VerifyEscapeRegime(body, control, iBody);
     // Verify and set derivatives (including correct H envelope escape regime!)
     VerifyEnvelopeMass(body, options, update, body[iBody].dAge, iBody);
     VerifyMassAtmEsc(body, options, update, body[iBody].dAge, iBody);
@@ -2345,16 +2343,12 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     exit(EXIT_INPUT);
   }
 
-  // If envelope mass exists, compute mass of the solid planet
+  // Setup radius and other radii of interest
+  VerifyRadiusAtmEsc(body, control, options, update, body[iBody].dAge, iBody);
+
   if (body[iBody].dEnvelopeMass > 0) {
     body[iBody].dSolidMass = body[iBody].dMass - body[iBody].dEnvelopeMass;
   }
-
-  // Setup radius and other radii of interest
-  VerifyRadiusAtmEsc(body, control, options, update, body[iBody].dAge, iBody);
-  body[iBody].dBondiRadius = fdBondiRadius(body, iBody);
-  body[iBody].dRocheRadius =
-        fdRocheRadius(body, control->Evolve.iNumBodies, iBody);
 
   control->fnForceBehavior[iBody][iModule]   = &fnForceBehaviorAtmEsc;
   control->fnPropsAux[iBody][iModule]        = &fnPropsAuxAtmEsc;
@@ -2389,7 +2383,7 @@ void InitializeUpdateAtmEsc(BODY *body, UPDATE *update, int iBody) {
     update[iBody].iNumOxygenMantleMass++;
   }
 
-  if (body[iBody].dEnvelopeMass > 0) {
+  if (body[iBody].dEnvelopeMass > 0 || body[iBody].bCalcEnvMass) {
     if (update[iBody].iNumEnvelopeMass == 0) {
       update[iBody].iNumVars++;
     }
@@ -2991,8 +2985,6 @@ void WriteDEnvMassDt(BODY *body, CONTROL *control, OUTPUT *output,
                      SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                      double *dTmp, char **cUnit) {
   *dTmp = *(update[iBody].pdDEnvelopeMassDtAtmesc);
-
-  //*dTmp = fnUpdate[iBody][update[iBody].iEnvelopeMass][0];
 
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
@@ -4088,8 +4080,7 @@ The rate of change of the envelope mass given energy-limited escape.
 */
 double fdDEnvelopeMassDt(BODY *body, SYSTEM *system, int *iaBody) {
 
-  double dMassDt = dTINY;
-  dMassDt =
+  double dMassDt =
         -body[iaBody[0]].dFHRef *
         (body[iaBody[0]].dAtmXAbsEffH / body[iaBody[0]].dAtmXAbsEffH2O) *
         (4 * ATOMMASS * PI * body[iaBody[0]].dRadius * body[iaBody[0]].dRadius *
@@ -4468,7 +4459,7 @@ void fvLinearFit(double *x, double *y, int iLen, double *daCoeffs) {
 
  @return whether or not the flux is radiation/recombination-limited
 */
-int fbRRCriticalFlux(BODY *body, int iBody) {
+int fbRREscape(BODY *body, int iBody) {
 
   // Calculate critical flux for this planet
   double dFCrit = fdRRCriticalFlux(body, iBody);
@@ -4511,7 +4502,7 @@ double fdRRCriticalFlux(BODY *body, int iBody) {
 
  @return whether or not the flux is Bondi-limited
 */
-int fbBondiCriticalDmDt(BODY *body, int iBody) {
+int fbBondiEscape(BODY *body, int iBody) {
 
   // If the planetary radius exceeds the roche radius, assume Bondi-limited mass
   // loss at the Bondi radius
@@ -4532,68 +4523,35 @@ int fbBondiCriticalDmDt(BODY *body, int iBody) {
 
  @return None
 */
-void fvAtmEscRegimeChangeOutput(int iRegimeOld, int iRegimeNew, double dTime) {
+void fvAtmEscRegimeChangeOutput(BODY *body, EVOLVE *evolve, int iRegimeOld,
+                                int iRegimeNew,int iBody) {
+  char *sRegimeOld = NULL, *sRegimeNew = NULL;
 
-  // Define strings to represent atmospheric escape regime name
-  char saBondi[]  = "Bondi-Limited Escape";
-  char saEnergy[] = "Energy-Limited Escape";
-  char saRR[]     = "Radiation/Recombination-Limited Escape";
-  char saNone[]   = "No Escape";
+  if (iRegimeOld == ATMESC_BONDILIM) {
+    fvFormattedString(&sRegimeOld, "Bondi-Limited Escape");
+  } else if (iRegimeOld == ATMESC_RRLIM) {
+    fvFormattedString(&sRegimeOld, "RR-Limited Escape");
+  } else if (iRegimeOld == ATMESC_ELIM) {
+    fvFormattedString(&sRegimeOld, "Energy-Limited Escape");
+  }
 
-  // Initially energy-limited escape
-  if (iRegimeOld == ATMESC_ELIM) {
-    if (iRegimeNew == ATMESC_RRLIM) {
-      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n", saEnergy,
-              saRR, dTime);
-    } else if (iRegimeNew == ATMESC_BONDILIM) {
-      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n", saEnergy,
-              saBondi, dTime);
-    } else if (iRegimeNew == ATMESC_NONE) {
-      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n", saEnergy,
-              saNone, dTime);
-    }
+  if (iRegimeNew == ATMESC_BONDILIM) {
+    fvFormattedString(&sRegimeNew, "Bondi-Limited Escape");
+  } else if (iRegimeNew == ATMESC_RRLIM) {
+    fvFormattedString(&sRegimeNew, "RR-Limited Escape");
+  } else if (iRegimeNew == ATMESC_ELIM) {
+    fvFormattedString(&sRegimeNew, "Energy-Limited Escape");
   }
-  // Initially RR-limited escape
-  else if (iRegimeOld == ATMESC_RRLIM) {
-    if (iRegimeNew == ATMESC_ELIM) {
-      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n", saRR,
-              saEnergy, dTime);
-    } else if (iRegimeNew == ATMESC_BONDILIM) {
-      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n", saRR,
-              saBondi, dTime);
-    } else if (iRegimeNew == ATMESC_NONE) {
-      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n", saRR,
-              saNone, dTime);
-    }
-  }
-  // Initially Bondi-limited escape
-  else if (iRegimeOld == ATMESC_BONDILIM) {
-    if (iRegimeNew == ATMESC_ELIM) {
-      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n", saBondi,
-              saEnergy, dTime);
-    } else if (iRegimeNew == ATMESC_RRLIM) {
-      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n", saBondi,
-              saRR, dTime);
-    } else if (iRegimeNew == ATMESC_NONE) {
-      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n", saBondi,
-              saNone, dTime);
-    }
-  }
-  // Initially None
-  else if (iRegimeOld == ATMESC_NONE) {
-    if (iRegimeNew == ATMESC_ELIM) {
-      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n", saNone,
-              saEnergy, dTime);
-    } else if (iRegimeNew == ATMESC_RRLIM) {
-      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n", saNone,
-              saRR, dTime);
-    } else if (iRegimeNew == ATMESC_BONDILIM) {
-      fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n", saNone,
-              saBondi, dTime);
-    }
-  } else {
-    fprintf(stderr, "ERROR: unknown initial atmospheric escape regime: %d\n",
-            iRegimeOld);
-    exit(1);
-  }
+
+  fprintf(stdout, "Switching %s from %s to %s at t = %.4lf Myr.\n", body[iBody].cName, sRegimeOld,
+          sRegimeNew, evolve->dTime / (YEARSEC * 1e6));
+}
+
+double fdLopez12EnvelopeMassFromMassRadiusAge(BODY *body, SYSTEM *system,
+                                              UPDATE *update, double dRatio,
+                                              int iBody) {
+  double dRadius;
+
+  dRadius = fdLopezRadius(body[iBody].dMass, dRatio, 1., body[iBody].dAge, 0);
+  return dRadius - body[iBody].dRadius;
 }

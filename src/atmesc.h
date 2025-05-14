@@ -75,6 +75,7 @@
 #define OPT_STOPWATERLOSSINHZ                                                  \
   1235                    /**< Stop water loss once planet reaches HZ? */
 #define OPT_MINKTIDE 1240 /**< Minimum KTide value */
+#define OPT_CALCENVMASS 1245 /**< Calculate envelope mass from mass and radius? */
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -244,10 +245,15 @@ int fbDoesWaterEscape(BODY *, EVOLVE *, IO *, int);
 double fdPlanetRadius(BODY *, SYSTEM *, int *);
 double fdXUVEfficiencyBolmont2016(double);
 double fdBondiLimitedDmDt(BODY *, int);
-int fbRRCriticalFlux(BODY *, int);
-int fbBondiCriticalDmDt(BODY *, int);
+int fbRREscape(BODY *, int);
+int fbBondiEscape(BODY *, int);
 double fdRRCriticalFlux(BODY *, int);
-void fvAtmEscRegimeChangeOutput(int, int, double);
+void fvAtmEscRegimeChangeOutput(BODY*,EVOLVE *, int, int, int);
+double fdKTide(BODY *, IO *, int, int);
+void SetInitialEscapeRegime(BODY *, IO *, int);
+
+double fdLopez12EnvelopeMassFromMassRadiusAge(BODY *, SYSTEM *, UPDATE *,
+                                              double, int);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY *, SYSTEM *, UPDATE *, int, int);

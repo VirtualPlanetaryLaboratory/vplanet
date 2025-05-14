@@ -109,8 +109,11 @@ double CalcDynEllipEq(BODY *, int);
 
 void fdHabitableZoneKopparapu2013(BODY *, int, double *);
 
-double fdEffectiveTemperature(BODY*,int);
-double fdEscapeVelocity(BODY *,int);
+double fdEffectiveTemperature(BODY *, int);
+double fdEscapeVelocity(BODY *, int);
+
+double fdBrentQuadratic(BODY *, SYSTEM *, UPDATE *, double, double,
+                        fnRootFunction *, int);
 
 // RB: Move
 

@@ -1,0 +1,30 @@
+# planet
+sName		root         	   # Body's name
+saModules 	atmesc             # Active modules
+
+# Physical Parameters
+
+sPlanetRadiusModel     lopez     # Mass-radius model
+
+# Orbital Parameters
+dEcc                  0.00      # Eccentricity
+dSemi                 -0.07060     # Semi-major axis [AU]
+			dMass -4.292131446326349
+# ATMESC Parameters
+dXFrac                  1.0     # X-Ray/XUV absorption radius in planet radii
+#dAtmXAbsEffH            0.1     # H X-ray/XUV absorption efficiency (epsilon)
+dSurfWaterMass   	      0.0     # Initial water mass, negative -> Earth oceans
+
+dJeansTime		          -12.0   # Time when flow transitions to ballistic escape (Gyr)
+bAtmEscAuto             1
+dThermTemp              880
+dAtmGasConst            4157
+bCalcEnvMass		1
+
+# Output options
+saOutputOrder 	Age Time -Mass -EnvelopeMass -PlanetRadius FXUV  $
+                ThermTemp  DEnvMassDt -RocheRadius
+
+dRadius -2
+
+dAtmXAbsEffH 0.5

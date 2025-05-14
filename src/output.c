@@ -83,16 +83,16 @@ void WriteCriticalSemi(BODY *body, CONTROL *control, OUTPUT *output,
 }
 
 void WriteCumulativeXUVFlux(BODY *body, CONTROL *control, OUTPUT *output,
-                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
-                       double *dTmp, char **cUnit) {
+                            SYSTEM *system, UNITS *units, UPDATE *update,
+                            int iBody, double *dTmp, char **cUnit) {
   *dTmp = body[iBody].dFXUVCumulative;
 
-    if (output->bDoNeg[iBody]) {
+  if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
   } else {
-    *dTmp *= fdUnitsEnergyFlux(units->iTime,units->iMass,units->iLength);
-    fsUnitsEnergyFlux(units,cUnit);
+    *dTmp *= fdUnitsEnergyFlux(units->iTime, units->iMass, units->iLength);
+    fsUnitsEnergyFlux(units, cUnit);
   }
 }
 
@@ -146,11 +146,11 @@ void WriteDensity(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   E
 */
 
-void WriteEscapeVelocity(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
-                 UNITS *units, UPDATE *update, int iBody, double *dTmp,
-                 char **cUnit) {
+void WriteEscapeVelocity(BODY *body, CONTROL *control, OUTPUT *output,
+                         SYSTEM *system, UNITS *units, UPDATE *update,
+                         int iBody, double *dTmp, char **cUnit) {
 
-  *dTmp = fdEscapeVelocity(body,iBody);
+  *dTmp = fdEscapeVelocity(body, iBody);
   if (output->bDoNeg[iBody]) {
     *dTmp *= output->dNeg;
     fvFormattedString(cUnit, output->cNeg);
@@ -553,9 +553,6 @@ void WriteBodyArgP(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 void WriteLXUVTot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
                   char **cUnit) {
-  /* Multiple modules can contribute to this output */
-  int iModule;
-
   if (body[iBody].bFlare && body[iBody].bStellar) {
     *dTmp = body[iBody].dLXUVFlare + body[iBody].dLXUV;
   }
@@ -1347,9 +1344,9 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_DENSITY].iModuleBit = 1;
   fnWrite[OUT_DENSITY]           = &WriteDensity;
 
-/* 
-  E
-*/
+  /*
+    E
+  */
 
   fvFormattedString(&output[OUT_ESCAPEVELOCITY].cName, "EscapeVelocity");
   fvFormattedString(&output[OUT_ESCAPEVELOCITY].cDescr, "Escape Velocity");
@@ -2283,14 +2280,14 @@ void WriteLog(BODY *body, CONTROL *control, FILES *files, MODULE *module,
   fclose(fp);
 }
 
-void SetInitialBackwardDerivatives(CONTROL *control,UPDATE *update) {
-  int iBody,iVar;
+void SetInitialBackwardDerivatives(CONTROL *control, UPDATE *update) {
+  int iBody, iVar;
 
-  for (iBody = 0; iBody<control->Evolve.iNumBodies; iBody++) {
+  for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
     for (iVar = 0; iVar < update[iBody].iNumVars; iVar++) {
       update[iBody].daDeriv[iVar] = -update[iBody].daDeriv[iVar];
     }
-  } 
+  }
 }
 
 void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
@@ -2306,8 +2303,9 @@ void WriteOutput(BODY *body, CONTROL *control, FILES *files, OUTPUT *output,
      value in the correct units, and output.iNum already contains the
      number of columns. */
 
-  if (control->Evolve.bDoBackward && fbFloatComparison(control->Evolve.dTime,0)) {
-    SetInitialBackwardDerivatives(control,update);
+  if (control->Evolve.bDoBackward &&
+      fbFloatComparison(control->Evolve.dTime, 0)) {
+    SetInitialBackwardDerivatives(control, update);
   }
 
   for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {

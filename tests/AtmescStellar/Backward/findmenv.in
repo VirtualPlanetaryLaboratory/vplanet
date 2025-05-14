@@ -23,8 +23,8 @@ bCalcEnvMass		1
 
 # Output options
 saOutputOrder 	Age Time -Mass -EnvelopeMass -PlanetRadius FXUV  $
-                ThermTemp  DEnvMassDt -RocheRadius 
+                ThermTemp  DEnvMassDt -RocheRadius
 
 dRadius -2
 
-dAtmXAbsEffH 0.4893203862174078
+dAtmXAbsEffH 0.5

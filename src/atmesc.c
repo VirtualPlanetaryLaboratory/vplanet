@@ -458,6 +458,25 @@ void ReadInstantO2Sink(BODY *body, CONTROL *control, FILES *files,
   }
 }
 
+void ReadCalcEnvMass(BODY *body, CONTROL *control, FILES *files,
+                       OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn, options->cName, &bTmp, &lTmp,
+                control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].bCalcEnvMass = bTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    AssignDefaultInt(options, &body[iFile - 1].bCalcEnvMass,
+                     files->iNumInputs);
+  }
+}
+
 /**
 Read the parameter that controls water loss once planet reaches HZ.
 
@@ -1037,6 +1056,18 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
         "If set to 1, then all oxygen released by photolysis is immediately\n"
         "removed from the atmosphere. This mimics rapid surface oxidation.\n");
 
+  int iOpt = OPT_CALCENVMASS;
+  fvFormattedString(&options[iOpt].cName, "bCalcEnvMass");
+  fvFormattedString(&options[iOpt].cDescr,
+                    "Calculate envelope mass from mass and radius?");
+  fvFormattedString(&options[iOpt].cDefault, "0");
+  options[iOpt].iType      = 0;
+  options[iOpt].bMultiFile = 1;
+  fnRead[iOpt]             = &ReadCalcEnvMass;
+  fvFormattedString(
+        &options[iOpt].cLongDescr,
+        "If set to 1, then the mass of the envelope, according to the Lopez et al. (2012) model, will be automatically calculated.");
+
   fvFormattedString(&options[OPT_STOPWATERLOSSINHZ].cName,
                     "bStopWaterLossInHZ");
   fvFormattedString(&options[OPT_STOPWATERLOSSINHZ].cDescr,
@@ -1545,8 +1576,8 @@ void SetEnvelopeEscapeRegime(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
 
   if (iHEscapeRegime != body[iBody].iHEscapeRegime) {
     if (io->iVerbose >= VERBPROG) {
-      fvAtmEscRegimeChangeOutput(evolve, body[iBody].iHEscapeRegime,
-                                 iHEscapeRegime);
+      fvAtmEscRegimeChangeOutput(body, evolve, body[iBody].iHEscapeRegime,
+                                 iHEscapeRegime,iBody);
     }
     if (iHEscapeRegime == ATMESC_ELIM) {
       SetEnergyLimitedEsacpe(body, update, fnUpdate, iBody);
@@ -2116,15 +2147,16 @@ void VerifyEscapeRegime(BODY *body, CONTROL *control, int iBody) {
 void SetEnvelopeMassFromMassAndRadius(BODY *body, OPTIONS *options,
                                       SYSTEM *system, UPDATE *update,
                                       int iBody) {
-  double dMinEnvFrac = 0, dMaxEnvFrac = 1;
+  double dMinEnvFrac = 0, dMaxEnvFrac = 1, dRatio;
 
   if (body[iBody].iPlanetRadiusModel == ATMESC_LOP12) {
     if (options[OPT_MASS].iLine[iBody + 1] >= 0 &&
         options[OPT_RADIUS].iLine[iBody + 1] >= 0 &&
-        options[OPT_ENVELOPEMASS].iLine[iBody + 1]) {
-      body[iBody].dEnvelopeMass =
+        options[OPT_ENVELOPEMASS].iLine[iBody + 1] == -1) {
+           dRatio =
             fdBrentQuadratic(body, system, update, dMinEnvFrac, dMaxEnvFrac,
-                             &fdLopez12EnvelopeMassFromMassRadiusAge, iBody);
+                    &fdLopez12EnvelopeMassFromMassRadiusAge, iBody);
+          body[iBody].dEnvelopeMass = dRatio * body[iBody].dMass;
     }
   }
 }
@@ -2238,11 +2270,12 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       LineExit(files->Infile[iBody + 1].cIn,
                options[OPT_OUTPUTORDER].iLine[iBody + 1]);
     }
-    /* Must initialized the above values to avoid memory leaks. */
+    /* Must initialize the above values to avoid memory leaks. */
     body[iBody].dRadXUV      = -1;
     body[iBody].dRadSolid    = -1;
     body[iBody].dScaleHeight = -1;
     body[iBody].dPresSurf    = -1;
+    SetEnvelopeMassFromMassAndRadius(body, options, system, update, iBody);
   }
   // Should there be additional checks for PROXCEN and NONE???
 
@@ -2259,7 +2292,6 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     // Verify and set derivatives (including correct H envelope escape regime!)
     VerifyEnvelopeMass(body, options, update, body[iBody].dAge, iBody);
     VerifyMassAtmEsc(body, options, update, body[iBody].dAge, iBody);
-    SetEnvelopeMassFromMassAndRadius(body, options, system, update, iBody);
     bAtmEsc = 1;
   } else {
     // No H enevelope but Bondi Limited escape is set - warn user and use
@@ -2351,7 +2383,7 @@ void InitializeUpdateAtmEsc(BODY *body, UPDATE *update, int iBody) {
     update[iBody].iNumOxygenMantleMass++;
   }
 
-  if (body[iBody].dEnvelopeMass > 0) {
+  if (body[iBody].dEnvelopeMass > 0 || body[iBody].bCalcEnvMass) {
     if (update[iBody].iNumEnvelopeMass == 0) {
       update[iBody].iNumVars++;
     }
@@ -4491,8 +4523,8 @@ int fbBondiEscape(BODY *body, int iBody) {
 
  @return None
 */
-void fvAtmEscRegimeChangeOutput(EVOLVE *evolve, int iRegimeOld,
-                                int iRegimeNew) {
+void fvAtmEscRegimeChangeOutput(BODY *body, EVOLVE *evolve, int iRegimeOld,
+                                int iRegimeNew,int iBody) {
   char *sRegimeOld = NULL, *sRegimeNew = NULL;
 
   if (iRegimeOld == ATMESC_BONDILIM) {
@@ -4511,7 +4543,7 @@ void fvAtmEscRegimeChangeOutput(EVOLVE *evolve, int iRegimeOld,
     fvFormattedString(&sRegimeNew, "Energy-Limited Escape");
   }
 
-  fprintf(stdout, "Switching from %s to %s at t = %.4lf Myr.\n", sRegimeOld,
+  fprintf(stdout, "Switching %s from %s to %s at t = %.4lf Myr.\n", body[iBody].cName, sRegimeOld,
           sRegimeNew, evolve->dTime / (YEARSEC * 1e6));
 }
 
@@ -4521,5 +4553,5 @@ double fdLopez12EnvelopeMassFromMassRadiusAge(BODY *body, SYSTEM *system,
   double dRadius;
 
   dRadius = fdLopezRadius(body[iBody].dMass, dRatio, 1., body[iBody].dAge, 0);
-  return dRadius;
+  return dRadius - body[iBody].dRadius;
 }

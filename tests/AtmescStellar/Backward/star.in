@@ -1,0 +1,28 @@
+# Host star parameters
+sName		      star                  # Body name
+saModules    	stellar               # Active modules
+
+# Physical properties
+
+
+# STELLAR parameters
+sStellarModel       baraffe
+sXRayModel         jo
+sEUVModel          jo
+sXUVModel          calc
+dRossbySat           0.0605
+dR_xSat              5.134e-4
+dJohnstoneBeta1      -0.135 
+dJohnstoneBeta2      -1.889 
+sMagBrakingModel      Bre
+dSatXUVFrac         1e-3             # XUV Saturation fraction
+dSatXUVTime         -0.1            # XUV Saturation timescale, negative-> in Gyr
+dXUVBeta            1.23            # XUV decay power law exponent
+
+saOutputOrder  Age Time -TotEn -TotAngMom -Luminosity -Radius Temperature $
+            -RotPer -LXUVStellar RadGyra RossbyNumber -LEUVStellar -LXrayStellar $
+            -LXUVTot
+
+dMass 0.8371828895461828
+
+dRotPeriod -11.495353178978258

@@ -234,6 +234,7 @@ struct BODY {
   int bAutoThermTemp; /**< Calculate thermal temperature from environemnt? */
   int bStopWaterLossInHZ; /**< Stop water loss once planet enters habitable
                              zone? */
+  int bCalcEnvMass; /**< Calculate envelope mass from mass and radius? */
 
   int iWaterLossModel;     /**< Water Loss and Oxygen Buildup Model */
   int iAtmXAbsEffH2OModel; /**< Water X-ray/XUV absorption efficiency evolution

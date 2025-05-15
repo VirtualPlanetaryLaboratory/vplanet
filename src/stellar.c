@@ -2569,24 +2569,24 @@ double fdRossbyNumber(BODY *body , int iBody) {
 
 double fdLXRAY(BODY* body, int iBody){
   if (body[iBody].iLXRAYModel == XRAY_MODEL_JOHNSTONE){
-    double dRossbyNumber, dJohnstonecon1, dJohnstonecon2;
+    double dRossbyNumber, dJohnstonecon1, dJohnstonecon2,dLXRay;
     dRossbyNumber = (fdRossbyNumber(body,iBody)*(0.95/(PERIODSUN))*fdCranmerSaar2011TauCZ(TEFFSUN)); 
     
     dJohnstonecon1= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta1))); 
     dJohnstonecon2= (body[iBody].dR_xSat)/(pow((body[iBody].dRossbySat),(body[iBody].dJohnstoneBeta2)));
 
-    if (dRossbyNumber <= body[iBody].dRossbySat) { ///these also need to be changed from LXUV to LXray
+    if (dRossbyNumber <= body[iBody].dRossbySat) { 
 
-      body[iBody].dLXUV= dJohnstonecon1*pow(dRossbyNumber,body[iBody].dJohnstoneBeta1);
+      dLXRay= dJohnstonecon1*pow(dRossbyNumber,body[iBody].dJohnstoneBeta1);
 
       
     } else {
       
-      body[iBody].dLXUV = dJohnstonecon2*pow(dRossbyNumber,body[iBody].dJohnstoneBeta2); 
+      dLXRay = dJohnstonecon2*pow(dRossbyNumber,body[iBody].dJohnstoneBeta2); 
   
      } 
   
-  double dXRay = body[iBody].dLXUV*body[iBody].dLuminosity;  
+  double dXRay = dLXRay*body[iBody].dLuminosity;  
   return dXRay;
   
    }

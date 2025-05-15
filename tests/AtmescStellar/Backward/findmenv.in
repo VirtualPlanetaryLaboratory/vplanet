@@ -19,7 +19,7 @@ dJeansTime		          -12.0   # Time when flow transitions to ballistic escape (
 bAtmEscAuto             1
 dThermTemp              880
 dAtmGasConst            4157
-bCalcEnvMass		1
+bCalcEnvMass		1           #want to calc env, set to 1
 
 # Output options
 saOutputOrder 	Age Time -Mass -EnvelopeMass -PlanetRadius FXUV  $

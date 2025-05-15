@@ -30,4 +30,4 @@ dOutputTime   1e6                           # Output timesteps (assuming in body
 
 
 
-dPrimaryAge 6e6
+dPrimaryAge 6e8 #change back to 6e6 later

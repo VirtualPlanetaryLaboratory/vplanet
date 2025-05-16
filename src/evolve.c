@@ -124,13 +124,16 @@ void CheckProgress(BODY *body, CONTROL *control, SYSTEM *system,
  * Integration Control
  */
 
-double AssignDt(double dMin, double dNextOutput, double dEta) {
+double AssignDt(CONTROL *control, double dMin) {
   /* Compute the next timestep, dt, making sure it's not larger than the output
    * cadence */
 
-  dMin = dEta * dMin;
-  if (dNextOutput < dMin) {
-    dMin = dNextOutput;
+  dMin = control->Evolve.dEta * dMin;
+  if (control->Io.dNextOutput < dMin) {
+    dMin = control->Io.dNextOutput - control->Evolve.dTime;
+  }
+  if (control->Evolve.dStopTime < dMin) {
+    dMin = control->Evolve.dStopTime - control->Evolve.dTime;
   }
   return dMin;
 }
@@ -381,8 +384,7 @@ void EulerStep(BODY *body, CONTROL *control, SYSTEM *system, UPDATE *update,
   if (control->Evolve.bVarDt) {
     /* dDt is the dynamical timescale */
     *dDt = fdGetTimeStep(body, control, system, update, fnUpdate);
-    *dDt = AssignDt(*dDt, (control->Io.dNextOutput - control->Evolve.dTime),
-                    control->Evolve.dEta);
+    *dDt = AssignDt(control, *dDt);
   }
 
   for (iBody = 0; iBody < control->Evolve.iNumBodies; iBody++) {
@@ -420,8 +422,7 @@ void RungeKutta4Step(BODY *body, CONTROL *control, SYSTEM *system,
   /* Adjust dt? */
   if (evolve->bVarDt) {
     /*  This is minimum dynamical timescale */
-    *dDt = AssignDt(*dDt, (control->Io.dNextOutput - evolve->dTime),
-                    evolve->dEta);
+    *dDt = AssignDt(control, *dDt);
   } else {
     *dDt = evolve->dTimeStep;
   }
@@ -660,8 +661,7 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
   /* Adjust dt? */
   if (control->Evolve.bVarDt) {
     /* Now choose the correct timestep */
-    dDt = AssignDt(dDt, (control->Io.dNextOutput - control->Evolve.dTime),
-                   control->Evolve.dEta);
+    dDt = AssignDt(control, dDt);
   } else {
     dDt = control->Evolve.dTimeStep;
   }
@@ -720,7 +720,7 @@ void Evolve(BODY *body, CONTROL *control, FILES *files, MODULE *module,
     control->Evolve.iStepsSinceLastOutput++;
 
     /* Time for Output? */
-    if (control->Evolve.dTime >= control->Io.dNextOutput) {
+    if (control->Evolve.dTime >= control->Io.dNextOutput || control->Evolve.dTime >= control->Evolve.dStopTime) {
       control->Evolve.iTotalSteps += control->Evolve.iStepsSinceLastOutput;
       WriteOutput(body, control, files, output, system, update, fnWrite);
       // Timesteps are synchronized with the output time, so this statement is

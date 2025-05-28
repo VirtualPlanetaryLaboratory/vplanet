@@ -694,7 +694,7 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_R_XSAT].cName, "dR_xSat"); //What put in in files
   fvFormattedString(&options[OPT_R_XSAT].cDescr, "Saturated XUV luminosity fraction Johnstone 2021");
-  fvFormattedString(&options[OPT_R_XSAT].cDefault, "5e-4"); //should this be true though? actually be what i have below?
+  fvFormattedString(&options[OPT_R_XSAT].cDefault, "5.135e-4"); //should this be true though? actually be what i have below?
   fvFormattedString(&options[OPT_R_XSAT].cDimension, "nd"); //non dimensional
   options[OPT_R_XSAT].dDefault   = 0.0005135;
   options[OPT_R_XSAT].iType      = 2; //tells is a double
@@ -705,7 +705,7 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_JOHNSTONEBETA1].cName, "dJohnstoneBeta1"); //What put in in files
   fvFormattedString(&options[OPT_JOHNSTONEBETA1].cDescr, "Johnstone Beta1");
-  fvFormattedString(&options[OPT_JOHNSTONEBETA1].cDefault, "1e-3");
+  fvFormattedString(&options[OPT_JOHNSTONEBETA1].cDefault, "-0.135");
   fvFormattedString(&options[OPT_JOHNSTONEBETA1].cDimension, "nd"); //non dimensional
   options[OPT_JOHNSTONEBETA1].dDefault   = -0.135;
   options[OPT_JOHNSTONEBETA1].iType      = 2; //tells is a double
@@ -716,7 +716,7 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_JOHNSTONEBETA2].cName, "dJohnstoneBeta2"); //What put in in files
   fvFormattedString(&options[OPT_JOHNSTONEBETA2].cDescr, "Johnstone Beta2");
-  fvFormattedString(&options[OPT_JOHNSTONEBETA2].cDefault, "1e-3");
+  fvFormattedString(&options[OPT_JOHNSTONEBETA2].cDefault, "-1.889");
   fvFormattedString(&options[OPT_JOHNSTONEBETA2].cDimension, "nd"); //non dimensional
   options[OPT_JOHNSTONEBETA2].dDefault   = -1.889;
   options[OPT_JOHNSTONEBETA2].iType      = 2; //tells is a double
@@ -727,7 +727,7 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_SANZFORCADACON1].cName, "dSanzForcadaCon1"); //What put in in files
   fvFormattedString(&options[OPT_SANZFORCADACON1].cDescr, "Sanz-Forcada  EUV Constant 1");
-  fvFormattedString(&options[OPT_SANZFORCADACON1].cDefault, "1e-3");
+  fvFormattedString(&options[OPT_SANZFORCADACON1].cDefault, "0.821");
   fvFormattedString(&options[OPT_SANZFORCADACON1].cDimension, "nd"); //non dimensional
   options[OPT_SANZFORCADACON1].dDefault   = 0.821;
   options[OPT_SANZFORCADACON1].iType      = 2; //tells is a double
@@ -738,7 +738,7 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
 
   fvFormattedString(&options[OPT_SANZFORCADACON2].cName, "dSanzForcadaCon2"); //What put in in files
   fvFormattedString(&options[OPT_SANZFORCADACON2].cDescr, "Sanz-Forcada EUV Constant 2");
-  fvFormattedString(&options[OPT_SANZFORCADACON2].cDefault, "1e-3");
+  fvFormattedString(&options[OPT_SANZFORCADACON2].cDefault, "5.63176");
   fvFormattedString(&options[OPT_SANZFORCADACON2].cDimension, "nd"); //non dimensional
   options[OPT_SANZFORCADACON2].dDefault   = 5.63176;
   options[OPT_SANZFORCADACON2].iType      = 2; //tells is a double

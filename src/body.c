@@ -1181,7 +1181,8 @@ double fdLopezRadius(double dMass, double dComp, double dFlux, double dAge,
   R11 = R011 * (1 - dc) + R111 * dc;
   R0  = R00 * (1 - df) + R10 * df;
   R1  = R01 * (1 - df) + R11 * df;
-  return (R0 * (1 - dt) + R1 * dt) * REARTH;
+  double dRadius = (R0 * (1 - dt) + R1 * dt) * REARTH;
+  return dRadius;
 }
 
 /**
@@ -1551,15 +1552,13 @@ double fdBrentQuadratic(BODY *body, SYSTEM *system, UPDATE *update,
   double dUpperValue = fnRoot(body, system, update, dUpperBound, iBody);
 
   if (dLowerValue * dUpperValue > 0) {
-    fprintf(stderr,
-            "Root is not bracketed in: Lower value = %f, upper value = %f\n",
+    fprintf(stderr, "Root is not bracketed in range [%f,%f].\n",
             dLowerValue, dUpperValue);
     exit(EXIT_EXE);
   }
 
   double dNewBound = dLowerBound, dNewValue = dLowerValue;
   for (int iter = 0; iter < iMaxIterations; iter++) {
-    double prev_c = dNewBound;
     dNewBound     = (dLowerBound + dUpperBound) / 2.0;
     dNewValue     = fnRoot(body, system, update, dNewBound, iBody);
 

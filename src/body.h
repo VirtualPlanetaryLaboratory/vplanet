@@ -209,6 +209,7 @@ static double const daLopezComp[] = {
       0.0100000,   0.0200000,   0.0500000,   0.100000,   0.200000,   0.500000};
 static double const daLopezFlux[]  = {0.1, 1., 10.};
 static double const daLopezMetal[] = {1, 50};
+
 static double const daLopezAge[]   = {
       1.0000000E+07, 1.1513954E+07, 1.3257114E+07, 1.5264180E+07,
       1.7575106E+07, 2.0235896E+07, 2.3299518E+07, 2.6826958E+07,
@@ -223,6 +224,7 @@ static double const daLopezAge[]   = {
       2.8117687E+09, 3.2374575E+09, 3.7275937E+09, 4.2919343E+09,
       4.9417134E+09, 5.6898660E+09, 6.5512856E+09, 7.5431201E+09,
       8.6851137E+09, 1.0000000E+10};
+      
 static double const daLopezRadius[MASSLEN][COMPLEN][FLUXLEN][METLEN][TIMELEN] =
       {{{{{1.445836, 1.385246, 1.430933, 1.400800, 1.414283, 1.441308, 1.416683,
            1.412709, 1.414727, 1.355974, 1.381037, 1.347044, 1.316127, 1.325111,

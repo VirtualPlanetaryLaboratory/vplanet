@@ -2080,7 +2080,7 @@ void SetInitialEscapeRegime(BODY *body, IO *io, int iBody) {
   body[iBody].iHEscapeRegime = fiEnvelopeEscapeRegime(body, iBody);
 
   if (io->iVerbose >= VERBINPUT) {
-    fprintf(stderr, "INFO: Initial escape regime is ");
+    fprintf(stderr, "INFO: Planet %s's initial escape regime is ",body[iBody].cName);
     if (body[iBody].iHEscapeRegime == ATMESC_NONE) {
       fprintf(stderr, "none.\n");
     }
@@ -4162,20 +4162,20 @@ double fdPlanetRadius(BODY *body, SYSTEM *system, int *iaBody) {
           fdLehmerRadius(body, system->iNumBodies, iaBody[0]);
   }
 
-  double foo;
+  double dRadius;
   if (body[iaBody[0]].iPlanetRadiusModel == ATMESC_LOP12) {
     // If no envelope, return solid body radius according to Sotin+2007 model
     if (body[iaBody[0]].dEnvelopeMass <= body[iaBody[0]].dMinEnvelopeMass) {
-      foo = fdMassToRad_Sotin07(body[iaBody[0]].dMass);
+      dRadius = fdMassToRad_Sotin07(body[iaBody[0]].dMass);
     }
     // Envelope present: estimate planetary radius using Lopez models
     else {
-      foo = fdLopezRadius(body[iaBody[0]].dMass,
+      dRadius = fdLopezRadius(body[iaBody[0]].dMass,
                           body[iaBody[0]].dEnvelopeMass / body[iaBody[0]].dMass,
                           1., body[iaBody[0]].dAge, 0);
     }
-    if (!isnan(foo)) {
-      return foo;
+    if (!isnan(dRadius)) {
+      return dRadius;
     } else {
       return body[iaBody[0]].dRadius;
     }

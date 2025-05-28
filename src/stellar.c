@@ -41,6 +41,8 @@ void BodyCopyStellar(BODY *dest, BODY *src, int foo, int iNumBodies,
   dest[iBody].dJohnstoneBeta1      = src[iBody].dJohnstoneBeta1;
   dest[iBody].dJohnstoneBeta2      = src[iBody].dJohnstoneBeta2;
   dest[iBody].dRossbySat           = src[iBody].dRossbySat;
+  dest[iBody].dSanzForcadaCon1     = src[iBody].dSanzForcadaCon1;
+  dest[iBody].dSanzForcadaCon2     = src[iBody].dSanzForcadaCon2;
 }
 
 /**************** STELLAR options ********************/
@@ -278,15 +280,42 @@ void ReadJohnstoneBeta2(BODY *body, CONTROL *control, FILES *files, OPTIONS *opt
   }
   }
   
+void ReadSanzForcadaCon1(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                 SYSTEM *system, int iFile) {
+  
+  int lTmp = -1;
+  double dTmp;
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].dSanzForcadaCon1  = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+    } else if (iFile > 0) {
+    body[iFile - 1].dSanzForcadaCon1  = options->dDefault;
+  }
+}
 
 
+void ReadSanzForcadaCon2(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                 SYSTEM *system, int iFile) {
+  
+  int lTmp = -1;
+  double dTmp;
 
-
-
-
-
-
-
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+    if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].dSanzForcadaCon2 = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+    } else if (iFile > 0) {
+    body[iFile - 1].dSanzForcadaCon2 = options->dDefault;
+  }
+  }
+///SSS
 
 
 void ReadWindModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -696,6 +725,29 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_JOHNSTONEBETA2].cLongDescr,
         "Johnstone 2021 Beta2");
 
+  fvFormattedString(&options[OPT_SANZFORCADACON1].cName, "dSanzForcadaCon1"); //What put in in files
+  fvFormattedString(&options[OPT_SANZFORCADACON1].cDescr, "Sanz-Forcada  EUV Constant 1");
+  fvFormattedString(&options[OPT_SANZFORCADACON1].cDefault, "1e-3");
+  fvFormattedString(&options[OPT_SANZFORCADACON1].cDimension, "nd"); //non dimensional
+  options[OPT_SANZFORCADACON1].dDefault   = 0.821;
+  options[OPT_SANZFORCADACON1].iType      = 2; //tells is a double
+  options[OPT_SANZFORCADACON1].bMultiFile = 1; //exist in multiple files?
+  fnRead[OPT_SANZFORCADACON1]             = &ReadSanzForcadaCon1; //pointers again
+  fvFormattedString(&options[OPT_SANZFORCADACON1].cLongDescr,
+        "Sanz Forcada 2025 euv constant 1 ");
+
+  fvFormattedString(&options[OPT_SANZFORCADACON2].cName, "dSanzForcadaCon2"); //What put in in files
+  fvFormattedString(&options[OPT_SANZFORCADACON2].cDescr, "Sanz-Forcada EUV Constant 2");
+  fvFormattedString(&options[OPT_SANZFORCADACON2].cDefault, "1e-3");
+  fvFormattedString(&options[OPT_SANZFORCADACON2].cDimension, "nd"); //non dimensional
+  options[OPT_SANZFORCADACON2].dDefault   = 5.63176;
+  options[OPT_SANZFORCADACON2].iType      = 2; //tells is a double
+  options[OPT_SANZFORCADACON2].bMultiFile = 1; //exist in multiple files?
+  fnRead[OPT_SANZFORCADACON2]             = &ReadSanzForcadaCon2; //pointers again
+  fvFormattedString(&options[OPT_SANZFORCADACON2].cLongDescr,
+        "Sanz-Forcada 2025 euv Constant 2");
+
+
 ///SSS 
 
   fvFormattedString(&options[OPT_LXRAYMODEL].cName, "sXRayModel");
@@ -726,12 +778,6 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
         ". JOHNSTONE will use the Johnstone 2021 EUV "
         "calculations\n"
         "(---). \n");
-
-
-///sss 10/28/24
-
-
-
 
 
   fvFormattedString(&options[OPT_XUVBETA].cName, "dXUVBeta");
@@ -2619,22 +2665,21 @@ double fdLEUV( BODY *body, int iBody) {
     return dEUVJohnstone;}
 
 //same deal for Sanz-Forcada, takes input for Xrays in W, need erg/s, then output again in W
-  if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2011){
-    double m3,k3;
-    m3=0.860;
-    k3=4.80;
-    double dEUVSanzForcada = (pow(10.,(k3))*pow((dXRay*1e7),(m3)))*1e-7;
+  if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2011){ //take in constants from user/body values instead of hard copy
+    //double m3,k3;
+    //m3=0.860; //"constant 1"
+    //k3=4.80; //"constant 2"
+    double dEUVSanzForcada = (pow(10.,(body[iBody].dSanzForcadaCon2))*pow((dXRay*1e7),(body[iBody].dSanzForcadaCon1)))*1e-7;
 
     return dEUVSanzForcada; 
    }
 
-   
   
    if (body[iBody].iLEUVModel == EUV_MODEL_SANZFORCADA2025){
-    double m4,k4;
-    m4=0.841;
-    k4=5.63176;
-    double dEUVSanzForcada = (pow(10.,(k4))*pow((dXRay*1e7),(m4)))*1e-7;
+    //double m4,k4;
+    //m4=0.841; //"constant 1"
+    //k4=5.63176; //"constant 2"
+    double dEUVSanzForcada = (pow(10.,(body[iBody].dSanzForcadaCon2))*pow((dXRay*1e7),(body[iBody].dSanzForcadaCon1)))*1e-7;
 
     return dEUVSanzForcada; 
     } 

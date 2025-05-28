@@ -100,11 +100,14 @@
 #define OPT_LUMPERIOD 1555
 #define OPT_LUMPHASE 1560
 
-/*Johnstone Parameters*/ /*SSS*/
+/*Johnstone AND Sanz-Forcada Parameters*/ /*SSS*/
 #define OPT_ROSSBYSAT 1523
 #define OPT_R_XSAT     1524
 #define OPT_JOHNSTONEBETA1  1525
 #define OPT_JOHNSTONEBETA2  1526
+#define OPT_SANZFORCADACON1 1527
+#define OPT_SANZFORCADACON2 1530
+
 
 
 
@@ -233,7 +236,9 @@ double fdDEDtStellar(BODY *, SYSTEM *, int *);
 double fdCranmerSaar2011TauCZ(double);
 double fdR_xSat(BODY *, int );
 double fdJohnstoneBeta1(BODY *, int );
-double fdJohnstoneBeta2(BODY *, int );
+double fdJohnstoneBeta2(BODY *, int ); 
+double fdSanzForcadaCon1(BODY *, int);
+double fdSanzForcadaCon2(BODY *, int);
 double fdRossbyNumber(BODY *, int);
 double fdLXRAY(BODY *, int );
 double fdLEUV(BODY *, int );

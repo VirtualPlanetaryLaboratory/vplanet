@@ -5,7 +5,7 @@ saModules    	stellar               # Active modules
 # Physical properties
 dMass        	  1.0                 # Mass in Msun
 dRotPeriod      -1.0                # Rotation period, negative -> days
-dAge            1.0e6               # Initial age [yr]
+dPrimaryAge            1.0e6               # Initial age [yr]
 
 # STELLAR parameters
 sStellarModel       baraffe

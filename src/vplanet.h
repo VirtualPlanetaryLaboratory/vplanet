@@ -636,6 +636,8 @@ struct BODY {
   double dR_xSat;
   double dJohnstoneBeta1;
   double dJohnstoneBeta2;
+  double dSanzForcadaCon1;
+  double dSanzForcadaCon2;
   double dLXRay; // double check this doesn't pull Ribas values in stellar model
   double dLEUV;
 

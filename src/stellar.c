@@ -8,6 +8,7 @@
     \rst
         This module implements the Baraffe stellar evolution tracks
         :cite:`Baraffe15`, the Ribas XUV evolution model :cite:`Ribas05`,
+        the Engle XUV evolution models,
         and a simple wind/magnetic braking model.
     \endrst
 
@@ -129,6 +130,10 @@ void ReadStellarModel(BODY *body, CONTROL *control, FILES *files,
       body[iFile - 1].iStellarModel = STELLAR_MODEL_PROXIMACEN;
     } else if (!memcmp(sLower(cTmp), "si", 2)) {
       body[iFile - 1].iStellarModel = STELLAR_MODEL_SINEWAVE;
+    } else if (!memcmp(sLower(cTmp), "engle23e", 8)) {
+      body[iFile - 1].iStellarModel = STELLAR_MODEL_ENGLE24EARLY;
+    } else if (!memcmp(sLower(cTmp), "engle23m", 8)) {
+      body[iFile - 1].iStellarModel = STELLAR_MODEL_ENGLE24MIDLATE;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
@@ -165,11 +170,20 @@ void ReadMagBrakingModel(BODY *body, CONTROL *control, FILES *files,
       body[iFile - 1].iMagBrakingModel = STELLAR_DJDT_MA15;
     } else if (!memcmp(sLower(cTmp), "br", 2)) {
       body[iFile - 1].iMagBrakingModel = STELLAR_DJDT_BR21;
+    } else if (!memcmp(sLower(cTmp), "engle23e", 8)) {
+      body[iFile - 1].iMagBrakingModel = STELLAR_DJDT_ENGLE23EARLY;
+      printf("Magnetic Braking Model set to ENGLE23EARLY for body %d\n", iFile);
+    } else if (!memcmp(sLower(cTmp), "engle23m", 8)) {
+      body[iFile - 1].iMagBrakingModel = STELLAR_DJDT_ENGLE23MIDLATE;
+      printf("Magnetic Braking Model set to ENGLE23MIDLATE for body %d\n", iFile);
+    } else if (!memcmp(sLower(cTmp), "engle23l", 8)) {
+      body[iFile - 1].iMagBrakingModel = STELLAR_DJDT_ENGLE23LATE;
+      printf("Magnetic Braking Model set to ENGLE23LATE for body %d\n", iFile);
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
                 "ERROR: Unknown argument to %s: %s. Options are REINERS, "
-                "SKUMANICH, MATT, BREIMANN21 or NONE.\n",
+                "SKUMANICH, MATT, BREIMANN21, ENGLE23EARLY/MIDLATE/LATE, or NONE.\n",
                 options->cName, cTmp);
       }
       LineExit(files->Infile[iFile].cIn, lTmp);
@@ -224,6 +238,10 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                     control->Io.iVerbose);
     if (!memcmp(sLower(cTmp), "ri", 2)) {
       body[iFile - 1].iXUVModel = STELLAR_MODEL_RIBAS;
+    } else if (!memcmp(sLower(cTmp), "engle24e", 8)) {
+      body[iFile - 1].iXUVModel = STELLAR_MODEL_ENGLE24EARLY;
+    } else if (!memcmp(sLower(cTmp), "engle24m", 8)) {
+      body[iFile - 1].iXUVModel = STELLAR_MODEL_ENGLE24MIDLATE;
     } else if (!memcmp(sLower(cTmp), "no", 2)) {
       body[iFile - 1].iXUVModel = STELLAR_MODEL_NONE;
     } else if (!memcmp(sLower(cTmp), "re", 2)) {
@@ -521,7 +539,8 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   fvFormattedString(&options[OPT_XUVMODEL].cName, "sXUVModel");
   fvFormattedString(&options[OPT_XUVMODEL].cDescr, "XUV Evolution Model");
   fvFormattedString(&options[OPT_XUVMODEL].cDefault, "RIBAS");
-  fvFormattedString(&options[OPT_XUVMODEL].cValues, "RIBAS REINERS NONE");
+  fvFormattedString(&options[OPT_XUVMODEL].cValues, 
+                    "RIBAS ENGLE24EARLY ENGLE24MIDLATE REINERS NONE");
   options[OPT_XUVMODEL].iType      = 3;
   options[OPT_XUVMODEL].bMultiFile = 1;
   options[OPT_XUVMODEL].iModuleBit = STELLAR;
@@ -1012,6 +1031,31 @@ void fnPropsAuxStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
       body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
     }
 
+  } else if (body[iBody].iXUVModel == STELLAR_MODEL_ENGLE24EARLY) {
+
+    // Engle segmented power-law decay model
+    double dAge  = body[iBody].dAge / (1.e9 * YEARSEC);
+    //double dTMin = body[iBody].dSatXUVTime / (1.e9 * YEARSEC);
+    if (log10(dAge) >= -0.2985) {
+      body[iBody].dLXUV = pow(10., (-0.4896 * log10(dAge) - 3.2128 - 0.4469 *
+                          log10(dAge + 0.2985))) * body[iBody].dLuminosity;
+    } else {
+      body[iBody].dLXUV = pow(10., (-0.4896 * log10(dAge) - 3.2128)) *
+                          body[iBody].dLuminosity;
+    }
+
+  } else if (body[iBody].iXUVModel == STELLAR_MODEL_ENGLE24MIDLATE) {
+
+    // Engle segmented power-law decay model
+    double dAge  = body[iBody].dAge / (1.e9 * YEARSEC);
+    if (log10(dAge) >= 0.3545) {
+      body[iBody].dLXUV = pow(10., (-0.1456 * log10(dAge) - 2.8876 - 1.8187 *
+                          log10(dAge - 0.3545))) * body[iBody].dLuminosity;
+    } else {
+      body[iBody].dLXUV = pow(10., (-0.1456 * log10(dAge) - 2.8876)) *
+                          body[iBody].dLuminosity;
+    }
+
   } else {
 
     // Constant XUV fraction
@@ -1356,6 +1400,78 @@ void WriteDRotPerDtStellar(BODY *body, CONTROL *control, OUTPUT *output,
   }
 }
 
+void WriteEmpirRotPerStellar(BODY *body, CONTROL *control, OUTPUT *output,
+                           SYSTEM *system, UNITS *units, UPDATE *update,
+                           int iBody, double *dTmp, char **cUnit) {
+
+    if (body[iBody].iMagBrakingModel == STELLAR_DJDT_ENGLE23EARLY) {
+        // Engle 2023 Early M-dwarf braking law
+        double logAge = log10(body[iBody].dAge / (1e9 * YEARSEC));  // Age in Gyr
+        double dEmpirRotPer;
+
+        if (logAge < (0.0621 * 23.4933 - 1.0437)) {
+            dEmpirRotPer = (logAge + 1.0437) / 0.0621;
+        } else {
+            dEmpirRotPer = 23.4933;  // Initial guess
+            double tolerance = 1e-6;
+            double dRotPerOld;
+
+            do {
+                dRotPerOld = dEmpirRotPer;
+                dEmpirRotPer = (logAge + 1.0437 + 0.0528 * (dRotPerOld - 23.4933)) / 0.0621;
+            } while (fabs(dEmpirRotPer - dRotPerOld) > tolerance);
+        }
+        *dTmp = dEmpirRotPer;
+        fsUnitsTime(1, cUnit);
+
+    } 
+    
+    else if (body[iBody].iMagBrakingModel == STELLAR_DJDT_ENGLE23MIDLATE) {
+        // Engle 2023 Mid-Late M-dwarf braking law
+        double logAge = log10(body[iBody].dAge / (1e9 * YEARSEC));  // Age in Gyr
+        double dEmpirRotPer;
+
+        if (logAge < (0.0561 * 24.1888 - 0.8900)) {
+            dEmpirRotPer = (logAge + 0.8900) / 0.0561;
+        } else {
+            dEmpirRotPer = 24.1888;  // Initial guess
+            double tolerance = 1e-6;
+            double dRotPerOld;
+
+            do {
+                dRotPerOld = dEmpirRotPer;
+                dEmpirRotPer = (logAge + 0.8900 + 0.0521 * (dRotPerOld - 24.1888)) / 0.0561;
+            } while (fabs(dEmpirRotPer - dRotPerOld) > tolerance);
+        }
+        *dTmp = dEmpirRotPer;
+        fsUnitsTime(1, cUnit);
+        
+    } 
+    
+    else if (body[iBody].iMagBrakingModel == STELLAR_DJDT_ENGLE23LATE) {
+        // Engle 2023 Late M-dwarf braking law
+        double logAge = log10(body[iBody].dAge / (1e9 * YEARSEC));  // Age in Gyr
+        double dEmpirRotPer;
+
+        if (logAge < (0.0251 * 25.45 - 0.1615)) {
+            dEmpirRotPer = (logAge + 0.1615) / 0.0251;
+        } else {
+            dEmpirRotPer = 25.45;  // Initial guess
+            double tolerance = 1e-6;
+            double dRotPerOld;
+
+            do {
+                dRotPerOld = dEmpirRotPer;
+                dEmpirRotPer = (logAge + 0.1615 + 0.0212 * (dRotPerOld - 25.45)) / 0.0251;
+            } while (fabs(dEmpirRotPer - dRotPerOld) > tolerance);
+        }
+        *dTmp = dEmpirRotPer;
+        fsUnitsTime(1, cUnit);
+
+    }
+
+}
+
 void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_LUMINOSITY].cName, "Luminosity");
@@ -1415,6 +1531,15 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_DROTPERDTSTELLAR].iNum       = 1;
   output[OUT_DROTPERDTSTELLAR].iModuleBit = STELLAR;
   fnWrite[OUT_DROTPERDTSTELLAR]           = &WriteDRotPerDtStellar;
+  
+  fvFormattedString(&output[OUT_EMPIRROTPERSTELLAR].cName, "EmpirRotPer");
+  fvFormattedString(&output[OUT_EMPIRROTPERSTELLAR].cDescr,
+          "Rotation period according to empirical Engle relationships");
+  fvFormattedString(&output[OUT_EMPIRROTPERSTELLAR].cNeg, "days");
+  output[OUT_EMPIRROTPERSTELLAR].bNeg       = 0;
+  output[OUT_EMPIRROTPERSTELLAR].iNum       = 1;
+  output[OUT_EMPIRROTPERSTELLAR].iModuleBit = STELLAR;
+  fnWrite[OUT_EMPIRROTPERSTELLAR]           = &WriteEmpirRotPerStellar;
 }
 
 /************ STELLAR Logging Functions **************/

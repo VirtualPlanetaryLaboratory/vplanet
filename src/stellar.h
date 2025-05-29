@@ -42,6 +42,12 @@
 #define STELLAR_MODEL_PROXIMACEN 5
 #define STELLAR_MODEL_SINEWAVE 6
 
+#define STELLAR_DJDT_ENGLE23EARLY 7				
+#define STELLAR_DJDT_ENGLE23MIDLATE 8
+#define STELLAR_DJDT_ENGLE23LATE 9
+#define STELLAR_MODEL_ENGLE24EARLY 10
+#define STELLAR_MODEL_ENGLE24MIDLATE 11
+
 #define STELLAR_DJDT_NONE                                                      \
   0 /**< No stellar angular momentum loss via magnetic braking */
 #define STELLAR_DJDT_RM12 1 /**< dJ/dt according to Reiners & Mohanty 2012 */
@@ -95,6 +101,7 @@
 #define OUT_ROSSBYNUMBER 1514
 #define OUT_DROTPERDTSTELLAR 1515
 #define OUT_WINDTORQUE 1516
+#define OUT_EMPIRROTPERSTELLAR 1517
 
 /* @cond DOXYGEN_OVERRIDE */
 

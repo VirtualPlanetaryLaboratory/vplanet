@@ -199,3 +199,9 @@ double fdCranmerSaar2011TauCZ(double);
 double fdSurfEnFluxStellar(BODY *, SYSTEM *, UPDATE *, int, int);
 
 /* @endcond */
+ fdCranmerSaar2011TauCZ(double);
+
+/* Dummy functions */
+double fdSurfEnFluxStellar(BODY *, SYSTEM *, UPDATE *, int, int);
+
+/* @endcond */

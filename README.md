@@ -4,6 +4,8 @@
 
 <h1 align="center">VPLanet: The Virtual Planet Simulator</h1>
 
+### NOTE: GitHub is currently blocking testing for this project, but all unit tests are passing and the code is stable!
+
 <p align="center">
   <a href="https://VirtualPlanetaryLaboratory.github.io/vplanet">
     <img src="https://img.shields.io/badge/Read-the_docs-blue.svg?style=flat">

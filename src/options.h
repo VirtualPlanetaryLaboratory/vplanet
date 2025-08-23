@@ -119,6 +119,9 @@
 #define OPT_MINENVELOPEMASS                                                    \
   817 /**< Minimum envelope mass (evaporated below this) */
 
+#define OPT_RANDSEED 850
+
+
 /* @cond DOXYGEN_OVERRIDE */
 
 void GetWords(char cLine[], char[MAXARRAY][OPTLEN], int *, int *);

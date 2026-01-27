@@ -17,7 +17,7 @@ void InitializeControl(CONTROL *, MODULE *);
 void InitializeControlEvolve(BODY *, CONTROL *, MODULE *, UPDATE *);
 void InitializeControlVerifyProperty(CONTROL *);
 
-void InitializeFiles(FILES *, OPTIONS *, char *,char **, int);
+void InitializeFiles(FILES *, OPTIONS *, char *, char **, int);
 
 void WriteHelpOption(OPTIONS *, int);
 void WriteHelpOutput(OUTPUT *, int);
@@ -38,6 +38,22 @@ double fdUnitsAngle(int);
 double fdUnitsPower(int, int, int);
 double fdUnitsEnergy(int, int, int);
 double fdUnitsEnergyFlux(int, int, int);
+double fdUnitsVel(UNITS *);
+double fdUnitsPressure(UNITS *);
+double fdUnitsMeterCubedPerSecond(UNITS *);
+double fdUnitsMassRate(UNITS *);
+double fdUnitsLengthPerTemperature(UNITS *, double);
+double fdUnitsForce(UNITS *);
+double fdUnitsPowerPerLengthPerTemperature(UNITS *, double);
+double fdUnitsLengthSquaredPerTimeCubed(UNITS *);
+double fdUnitsAcceleration(UNITS *);
+double fdUnitsChargePerTimePerLengthSquared(UNITS *);
+double fdUnitsEnergyPerTemperaturePerMass(UNITS *, double);
+double fdUnitsAngularMomentum(UNITS *);
+double fdUnitsMassPerArea(UNITS *);
+double fdUnitsEnergyFluxPerTemperature(UNITS *, int, int, double);
+double fdUnitsParticleFlux(UNITS *);
+double fdUnitsCharge(void);
 void fsUnitsRateSquared(int, char **);
 // double fdUnitsRate(int);
 
@@ -56,6 +72,21 @@ void fsUnitsPower(UNITS *, char **);
 void fsUnitsEnergy(UNITS *, char **);
 void fsUnitsEnergyFlux(UNITS *, char **);
 void fsUnitsViscosity(UNITS *, char **);
+void fsUnitsPressure(UNITS *, char **);
+void fsUnitsMeterCubedPerSecond(UNITS *, char **);
+void fsUnitsMassRate(UNITS *, char **);
+void fsUnitsLengthPerTemperature(UNITS *, char **);
+void fsUnitsForce(UNITS *, char **);
+void fsUnitsPowerPerLengthPerTemperature(UNITS *, char **);
+void fsUnitsLengthSquaredPerTimeCubed(UNITS *, char **);
+void fsUnitsAcceleration(UNITS *, char **);
+void fsUnitsChargePerTimePerLengthSquared(UNITS *, char **);
+void fsUnitsEnergyPerTemperaturePerMass(UNITS *, char **);
+void fsUnitsAngularMomentum(UNITS *, char **);
+void fsUnitsMassPerArea(UNITS *, char **);
+void fsUnitsEnergyFluxPerTemperature(UNITS *, char **);
+void fsUnitsParticleFlux(UNITS *, char **);
+void fsUnitsCharge(char **);
 
 void InfileCopy(INFILE *, INFILE *);
 

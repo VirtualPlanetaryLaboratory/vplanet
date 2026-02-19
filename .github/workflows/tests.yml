@@ -62,16 +62,9 @@ jobs:
           name: ${{ matrix.os }}-py${{ matrix.python-version }}
           fail_ci_if_error: false
 
-      - name: Publish test results (Linux)
+      - name: Publish test results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always() && runner.os == 'Linux'
-        with:
-          files: junit/test-*.xml
-          check_name: Test Results (py${{ matrix.python-version }} on ${{ matrix.os }})
-
-      - name: Publish test results (macOS)
-        uses: EnricoMi/publish-unit-test-result-action/composite@v2
-        if: always() && runner.os == 'macOS'
         with:
           files: junit/test-*.xml
           check_name: Test Results (py${{ matrix.python-version }} on ${{ matrix.os }})
